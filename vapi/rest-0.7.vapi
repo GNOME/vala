@@ -106,14 +106,22 @@ namespace Rest {
 		[NoAccessorMethod]
 		public bool disable_cookies { get; construct; }
 		[NoAccessorMethod]
-		public string password { owned get; construct; }
+		public string password { owned get; set; }
 		[NoAccessorMethod]
 		public bool ssl_strict { get; set; }
 		[NoAccessorMethod]
 		public string url_format { owned get; set; }
 		public string user_agent { get; set; }
 		[NoAccessorMethod]
-		public string username { owned get; construct; }
+		public string username { owned get; set; }
+		public virtual signal bool authenticate (Rest.ProxyAuth auth, bool retrying);
+	}
+	[CCode (cheader_filename = "rest/oauth-proxy-call.h,rest/oauth-proxy.h,rest/oauth2-proxy-call.h,rest/oauth2-proxy.h,rest/rest-enum-types.h,rest/rest-param.h,rest/rest-params.h,rest/rest-proxy-auth.h,rest/rest-proxy-call.h,rest/rest-proxy.h,rest/rest-xml-node.h,rest/rest-xml-parser.h", type_id = "rest_proxy_auth_get_type ()")]
+	public class ProxyAuth : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected ProxyAuth ();
+		public void pause ();
+		public void unpause ();
 	}
 	[CCode (cheader_filename = "rest/rest-proxy-call.h", type_id = "rest_proxy_call_get_type ()")]
 	public class ProxyCall : GLib.Object {

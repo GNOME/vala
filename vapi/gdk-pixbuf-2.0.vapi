@@ -40,7 +40,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_pixbuf_new_from_stream_at_scale_async", finish_name = "gdk_pixbuf_new_from_stream_finish")]
 		public async Pixbuf.from_stream_at_scale_async (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false)]
-		public Pixbuf.from_xpm_data ([CCode (array_length = false, type = "char**")] string[] data);
+		public Pixbuf.from_xpm_data ([CCode (array_length = false, type = "const char**")] string[] data);
 		public int get_bits_per_sample ();
 		public size_t get_byte_length ();
 		public Gdk.Colorspace get_colorspace ();

@@ -60,7 +60,7 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.Variant gvalue_to_gvariant (GLib.Value gvalue, GLib.VariantType type);
 		[CCode (cheader_filename = "gio/gio.h")]
-		public static void gvariant_to_gvalue (GLib.Variant value, GLib.Value out_gvalue);
+		public static GLib.Value gvariant_to_gvalue (GLib.Variant value);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static bool is_address (string string);
 		[CCode (cheader_filename = "gio/gio.h")]
@@ -720,6 +720,7 @@ namespace GLib {
 		public void export (GLib.DBusObjectSkeleton object);
 		public void export_uniquely (GLib.DBusObjectSkeleton object);
 		public GLib.DBusConnection get_connection ();
+		public bool is_exported (GLib.DBusObjectSkeleton object);
 		public void set_connection (GLib.DBusConnection? connection);
 		public bool unexport (string object_path);
 		public GLib.DBusConnection connection { owned get; set; }
@@ -1449,6 +1450,7 @@ namespace GLib {
 		[HasEmitter]
 		public virtual signal void reply (GLib.MountOperationResult result);
 		public virtual signal void show_processes (string message, GLib.Array<GLib.Pid> processes, [CCode (array_length = false, array_null_terminated = true)] string[] choices);
+		public virtual signal void show_unmount_progress (string message, uint64 time_left, uint64 bytes_left);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public abstract class NativeVolumeMonitor : GLib.VolumeMonitor {
@@ -2112,7 +2114,7 @@ namespace GLib {
 		public unowned string get_warning ();
 		public void set_description (string description);
 		public void set_flags (GLib.TlsPasswordFlags flags);
-		public void set_value ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gssize", type = "guchar*")] uint8[] value);
+		public void set_value ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gssize", type = "const guchar*")] uint8[] value);
 		[CCode (vfunc_name = "set_value")]
 		public virtual void set_value_full ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gssize", type = "guchar*")] owned uint8[] value, GLib.DestroyNotify? notify = GLib.free);
 		public void set_warning (string warning);
@@ -2246,7 +2248,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GActionMapInterface", type_id = "g_action_map_get_type ()")]
 	public interface ActionMap : GLib.ActionGroup, GLib.Object {
 		public abstract void add_action (GLib.Action action);
-		public void add_action_entries ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5, type = "GActionEntry*")] GLib.ActionEntry[] entries, void* user_data);
+		public void add_action_entries ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5, type = "const GActionEntry*")] GLib.ActionEntry[] entries, void* user_data);
 		public abstract unowned GLib.Action lookup_action (string action_name);
 		public abstract void remove_action (string action_name);
 	}
@@ -2301,6 +2303,8 @@ namespace GLib {
 	public interface AsyncResult : GLib.Object {
 		public abstract GLib.Object get_source_object ();
 		public abstract void* get_user_data ();
+		public abstract bool is_tagged (void* tag);
+		public bool legacy_propagate_error () throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_converter_get_type ()")]
 	public interface Converter : GLib.Object {

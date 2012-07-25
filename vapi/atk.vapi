@@ -181,6 +181,7 @@ namespace Atk {
 		public void add (Atk.Relation relation);
 		public void add_relation_by_type (Atk.RelationType relationship, Atk.Object target);
 		public bool contains (Atk.RelationType relationship);
+		public bool contains_target (Atk.RelationType relationship, Atk.Object targe);
 		public int get_n_relations ();
 		public unowned Atk.Relation get_relation (int i);
 		public unowned Atk.Relation get_relation_by_type (Atk.RelationType relationship);

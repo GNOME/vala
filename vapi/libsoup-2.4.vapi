@@ -91,7 +91,7 @@ namespace Soup {
 		public uint hash_by_name ();
 		public bool is_resolved ();
 		public void resolve_async (GLib.MainContext? async_context, GLib.Cancellable? cancellable, Soup.AddressCallback callback);
-		public uint resolve_sync (GLib.Cancellable? cancellable);
+		public uint resolve_sync (GLib.Cancellable? cancellable = null);
 		[NoAccessorMethod]
 		public Soup.AddressFamily family { get; construct; }
 		public string name { get; construct; }
@@ -384,7 +384,7 @@ namespace Soup {
 		public void set_flags (Soup.MessageFlags flags);
 		public void set_http_version (Soup.HTTPVersion version);
 		public void set_redirect (uint status_code, string redirect_uri);
-		public void set_request (string content_type, Soup.MemoryUse req_use, [CCode (array_length_cname = "req_length", array_length_pos = 3.1, array_length_type = "gsize", type = "char*")] uint8[] req_body);
+		public void set_request (string content_type, Soup.MemoryUse req_use, [CCode (array_length_cname = "req_length", array_length_pos = 3.1, array_length_type = "gsize", type = "const char*")] uint8[] req_body);
 		public void set_response (string? content_type, Soup.MemoryUse resp_use, [CCode (array_length_cname = "resp_length", array_length_pos = 3.1, array_length_type = "gsize")] uint8[] resp_body);
 		public void set_status (uint status_code);
 		public void set_status_full (uint status_code, string reason_phrase);
@@ -524,7 +524,7 @@ namespace Soup {
 		public virtual unowned string get_content_type ();
 		public unowned Soup.Session get_session ();
 		public unowned Soup.URI get_uri ();
-		public virtual GLib.InputStream send (GLib.Cancellable? cancellable) throws GLib.Error;
+		public virtual GLib.InputStream send (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async GLib.InputStream send_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public Soup.Session session { get; construct; }
 		public Soup.URI uri { get; construct; }
@@ -681,7 +681,7 @@ namespace Soup {
 		[CCode (has_construct_function = false)]
 		public Socket (string optname1, ...);
 		public void connect_async (GLib.Cancellable? cancellable, Soup.SocketCallback callback);
-		public uint connect_sync (GLib.Cancellable? cancellable);
+		public uint connect_sync (GLib.Cancellable? cancellable = null);
 		public void disconnect ();
 		public int get_fd ();
 		public unowned Soup.Address get_local_address ();
@@ -689,11 +689,11 @@ namespace Soup {
 		public bool is_connected ();
 		public bool is_ssl ();
 		public bool listen ();
-		public Soup.SocketIOStatus read ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize", type = "gpointer")] uint8[] buffer, out size_t nread, GLib.Cancellable? cancellable) throws GLib.Error;
-		public Soup.SocketIOStatus read_until ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize", type = "gpointer")] uint8[] buffer, void* boundary, size_t boundary_len, out size_t nread, bool got_boundary, GLib.Cancellable? cancellable) throws GLib.Error;
-		public bool start_proxy_ssl (string ssl_host, GLib.Cancellable? cancellable);
-		public bool start_ssl (GLib.Cancellable? cancellable);
-		public Soup.SocketIOStatus write ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize", type = "gconstpointer")] uint8[] buffer, out size_t nwrote, GLib.Cancellable? cancellable) throws GLib.Error;
+		public Soup.SocketIOStatus read ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize", type = "gpointer")] uint8[] buffer, out size_t nread, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public Soup.SocketIOStatus read_until ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize", type = "gpointer")] uint8[] buffer, void* boundary, size_t boundary_len, out size_t nread, bool got_boundary, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public bool start_proxy_ssl (string ssl_host, GLib.Cancellable? cancellable = null);
+		public bool start_ssl (GLib.Cancellable? cancellable = null);
+		public Soup.SocketIOStatus write ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize", type = "gconstpointer")] uint8[] buffer, out size_t nwrote, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoAccessorMethod]
 		public GLib.MainContext async_context { owned get; construct; }
 		public bool clean_dispose { construct; }
@@ -992,6 +992,14 @@ namespace Soup {
 		HANDSHAKE_NEEDS_WRITE,
 		CERTIFICATE,
 		HANDSHAKE_FAILED;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_TLD_ERROR_")]
+	public errordomain TLDError {
+		INVALID_HOSTNAME,
+		IS_IP_ADDRESS,
+		NOT_ENOUGH_DOMAINS,
+		NO_BASE_DOMAIN;
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", instance_pos = 2.9)]
@@ -1369,6 +1377,10 @@ namespace Soup {
 	public static bool str_case_equal (void* v1, void* v2);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static uint str_case_hash (void* key);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static bool tld_domain_is_public_suffix (string domain);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static unowned string tld_get_base_domain (string hostname) throws GLib.Error;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void value_array_append (GLib.ValueArray array, GLib.Type type, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]

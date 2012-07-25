@@ -140,7 +140,7 @@ namespace GData {
 		public unowned GData.AuthorizationDomain get_authorization_domain ();
 		public unowned string get_feed_uri ();
 		public unowned GData.Service get_service ();
-		public bool run (GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool run (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool run_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public GData.AuthorizationDomain authorization_domain { get; construct; }
 		public string feed_uri { get; construct; }
@@ -273,7 +273,7 @@ namespace GData {
 		[CCode (has_construct_function = false)]
 		public CalendarService (GData.Authorizer? authorizer);
 		public static unowned GData.AuthorizationDomain get_primary_authorization_domain ();
-		public GData.CalendarEvent insert_event (GData.CalendarEvent event, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.CalendarEvent insert_event (GData.CalendarEvent event, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async void insert_event_async (GData.CalendarEvent event, GLib.Cancellable? cancellable);
 		public GData.Feed query_all_calendars (GData.Query? query, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
 		public async void query_all_calendars_async (GData.Query? query, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);
@@ -300,7 +300,7 @@ namespace GData {
 	public class ClientLoginAuthorizer : GLib.Object, GData.Authorizer {
 		[CCode (has_construct_function = false)]
 		public ClientLoginAuthorizer (string client_id, GLib.Type service_type);
-		public bool authenticate (string username, string password, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool authenticate (string username, string password, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool authenticate_async (string username, string password, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public ClientLoginAuthorizer.for_authorization_domains (string client_id, GLib.List<GData.AuthorizationDomain> authorization_domains);
@@ -367,7 +367,7 @@ namespace GData {
 		public unowned GLib.List<GData.GDOrganization> get_organizations ();
 		public unowned GLib.List<GData.GDPhoneNumber> get_phone_numbers ();
 		[CCode (array_length_pos = 1.5, array_length_type = "gsize")]
-		public uint8[] get_photo (GData.ContactsService service, out string content_type, GLib.Cancellable? cancellable) throws GLib.Error;
+		public uint8[] get_photo (GData.ContactsService service, out string content_type, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (array_length_pos = 1.1)]
 		public async uint8 get_photo_async (GData.ContactsService service, out size_t length, out string content_type) throws GLib.Error;
 		public unowned string get_photo_etag ();
@@ -415,7 +415,7 @@ namespace GData {
 		public void set_name (GData.GDName name);
 		public void set_nickname (string? nickname);
 		public void set_occupation (string? occupation);
-		public bool set_photo (GData.ContactsService service, uint8? data, size_t length, string? content_type, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool set_photo (GData.ContactsService service, uint8? data, size_t length, string? content_type, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool set_photo_async (GData.ContactsService service, uint8? data, size_t length, string? content_type, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void set_priority (string? priority);
 		public void set_sensitivity (string? sensitivity);
@@ -484,9 +484,9 @@ namespace GData {
 		[CCode (has_construct_function = false)]
 		public ContactsService (GData.Authorizer? authorizer);
 		public static unowned GData.AuthorizationDomain get_primary_authorization_domain ();
-		public GData.ContactsContact insert_contact (GData.ContactsContact contact, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.ContactsContact insert_contact (GData.ContactsContact contact, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async void insert_contact_async (GData.ContactsContact contact, GLib.Cancellable? cancellable);
-		public GData.ContactsGroup insert_group (GData.ContactsGroup group, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.ContactsGroup insert_group (GData.ContactsGroup group, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async void insert_group_async (GData.ContactsGroup group, GLib.Cancellable? cancellable);
 		public GData.Feed query_contacts (GData.Query? query, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
 		public async void query_contacts_async (GData.Query? query, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);
@@ -497,8 +497,14 @@ namespace GData {
 	public class DocumentsDocument : GData.DocumentsEntry, GData.AccessHandler {
 		[CCode (has_construct_function = false)]
 		public DocumentsDocument (string? id);
-		public GData.DownloadStream download (GData.DocumentsService service, string export_format, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.DownloadStream download (GData.DocumentsService service, string export_format, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public string get_download_uri (string export_format);
+		public unowned string get_thumbnail_uri ();
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_documents_drawing_get_type ()")]
+	public class DocumentsDrawing : GData.DocumentsDocument, GData.AccessHandler {
+		[CCode (has_construct_function = false)]
+		public DocumentsDrawing (string? id);
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_documents_entry_get_type ()")]
 	public abstract class DocumentsEntry : GData.Entry, GData.AccessHandler {
@@ -571,20 +577,22 @@ namespace GData {
 	public class DocumentsService : GData.Service, GData.Batchable {
 		[CCode (has_construct_function = false)]
 		public DocumentsService (GData.Authorizer? authorizer);
-		public GData.DocumentsEntry add_entry_to_folder (GData.DocumentsEntry entry, GData.DocumentsFolder folder, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.DocumentsEntry add_entry_to_folder (GData.DocumentsEntry entry, GData.DocumentsFolder folder, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GData.DocumentsEntry add_entry_to_folder_async (GData.DocumentsEntry entry, GData.DocumentsFolder folder, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.DocumentsDocument copy_document (GData.DocumentsDocument document, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async GData.DocumentsDocument copy_document_async (GData.DocumentsDocument document, GLib.Cancellable? cancellable) throws GLib.Error;
 		public GData.DocumentsDocument finish_upload (GData.UploadStream upload_stream) throws GLib.Error;
 		public static unowned GData.AuthorizationDomain get_primary_authorization_domain ();
 		public static unowned GData.AuthorizationDomain get_spreadsheet_authorization_domain ();
 		public static string get_upload_uri (GData.DocumentsFolder? folder);
 		public GData.DocumentsFeed query_documents (GData.DocumentsQuery? query, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
 		public async void query_documents_async (GData.DocumentsQuery? query, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);
-		public GData.DocumentsEntry remove_entry_from_folder (GData.DocumentsEntry entry, GData.DocumentsFolder folder, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.DocumentsEntry remove_entry_from_folder (GData.DocumentsEntry entry, GData.DocumentsFolder folder, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GData.DocumentsEntry remove_entry_from_folder_async (GData.DocumentsEntry entry, GData.DocumentsFolder folder, GLib.Cancellable? cancellable) throws GLib.Error;
-		public GData.UploadStream update_document (GData.DocumentsDocument document, string slug, string content_type, GLib.Cancellable? cancellable) throws GLib.Error;
-		public GData.UploadStream update_document_resumable (GData.DocumentsDocument document, string slug, string content_type, int64 content_length, GLib.Cancellable? cancellable) throws GLib.Error;
-		public GData.UploadStream upload_document (GData.DocumentsDocument? document, string slug, string content_type, GData.DocumentsFolder? folder, GLib.Cancellable? cancellable) throws GLib.Error;
-		public GData.UploadStream upload_document_resumable (GData.DocumentsDocument? document, string slug, string content_type, int64 content_length, GData.DocumentsUploadQuery? query, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.UploadStream update_document (GData.DocumentsDocument document, string slug, string content_type, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GData.UploadStream update_document_resumable (GData.DocumentsDocument document, string slug, string content_type, int64 content_length, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GData.UploadStream upload_document (GData.DocumentsDocument? document, string slug, string content_type, GData.DocumentsFolder? folder, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GData.UploadStream upload_document_resumable (GData.DocumentsDocument? document, string slug, string content_type, int64 content_length, GData.DocumentsUploadQuery? query, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_documents_spreadsheet_get_type ()")]
 	public class DocumentsSpreadsheet : GData.DocumentsDocument, GData.AccessHandler {
@@ -612,7 +620,7 @@ namespace GData {
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_download_stream_get_type ()")]
 	public class DownloadStream : GLib.InputStream, GLib.Seekable {
 		[CCode (has_construct_function = false, type = "GInputStream*")]
-		public DownloadStream (GData.Service service, GData.AuthorizationDomain? domain, string download_uri, GLib.Cancellable? cancellable);
+		public DownloadStream (GData.Service service, GData.AuthorizationDomain? domain, string download_uri, GLib.Cancellable? cancellable = null);
 		public unowned GData.AuthorizationDomain get_authorization_domain ();
 		public unowned GLib.Cancellable get_cancellable ();
 		public ssize_t get_content_length ();
@@ -1041,6 +1049,13 @@ namespace GData {
 		public string uri { get; }
 		public string version { get; }
 	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_goa_authorizer_get_type ()")]
+	public class GoaAuthorizer : GLib.Object, GData.Authorizer {
+		[CCode (has_construct_function = false)]
+		public GoaAuthorizer (Goa.Object goa_object);
+		public unowned Goa.Object get_goa_object ();
+		public Goa.Object goa_object { get; construct; }
+	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_link_get_type ()")]
 	public class Link : GData.Parsable, GData.Comparable {
 		[CCode (has_construct_function = false)]
@@ -1082,7 +1097,7 @@ namespace GData {
 	public class MediaContent : GData.Parsable {
 		[CCode (has_construct_function = false)]
 		protected MediaContent ();
-		public GData.DownloadStream download (GData.Service service, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.DownloadStream download (GData.Service service, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public unowned string get_content_type ();
 		public int64 get_duration ();
 		public GData.MediaExpression get_expression ();
@@ -1117,7 +1132,7 @@ namespace GData {
 	public class MediaThumbnail : GData.Parsable {
 		[CCode (has_construct_function = false)]
 		protected MediaThumbnail ();
-		public GData.DownloadStream download (GData.Service service, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.DownloadStream download (GData.Service service, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public uint get_height ();
 		public int64 get_time ();
 		public unowned string get_uri ();
@@ -1137,9 +1152,9 @@ namespace GData {
 		public unowned string get_locale ();
 		public Soup.URI get_proxy_uri ();
 		public uint get_timeout ();
-		public string request_authentication_uri (out string token, out string token_secret, GLib.Cancellable? cancellable) throws GLib.Error;
+		public string request_authentication_uri (out string token, out string token_secret, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async string request_authentication_uri_async (GLib.Cancellable? cancellable, out string token, out string token_secret) throws GLib.Error;
-		public bool request_authorization (string token, string token_secret, string verifier, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool request_authorization (string token, string token_secret, string verifier, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool request_authorization_async (string token, string token_secret, string verifier, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void set_locale (string? locale);
 		public void set_proxy_uri (Soup.URI? proxy_uri);
@@ -1330,15 +1345,15 @@ namespace GData {
 		public PicasaWebService (GData.Authorizer? authorizer);
 		public GData.PicasaWebFile finish_file_upload (GData.UploadStream upload_stream) throws GLib.Error;
 		public static unowned GData.AuthorizationDomain get_primary_authorization_domain ();
-		public GData.PicasaWebUser get_user (string? username, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.PicasaWebUser get_user (string? username, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GData.PicasaWebUser get_user_async (string? username, GLib.Cancellable? cancellable) throws GLib.Error;
-		public GData.PicasaWebAlbum insert_album (GData.PicasaWebAlbum album, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.PicasaWebAlbum insert_album (GData.PicasaWebAlbum album, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async void insert_album_async (GData.PicasaWebAlbum album, GLib.Cancellable? cancellable);
 		public GData.Feed query_all_albums (GData.Query? query, string? username, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
 		public async void query_all_albums_async (GData.Query? query, string? username, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);
 		public GData.Feed query_files (GData.PicasaWebAlbum? album, GData.Query? query, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
 		public async void query_files_async (GData.PicasaWebAlbum? album, GData.Query? query, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);
-		public GData.UploadStream upload_file (GData.PicasaWebAlbum? album, GData.PicasaWebFile file_entry, string slug, string content_type, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.UploadStream upload_file (GData.PicasaWebAlbum? album, GData.PicasaWebFile file_entry, string slug, string content_type, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", lower_case_csuffix = "picasaweb_user", type_id = "gdata_picasaweb_user_get_type ()")]
 	public class PicasaWebUser : GData.Entry {
@@ -1407,27 +1422,27 @@ namespace GData {
 		protected Service ();
 		[NoWrapper]
 		public virtual void append_query_headers (GData.AuthorizationDomain domain, Soup.Message message);
-		public bool delete_entry (GData.AuthorizationDomain? domain, GData.Entry entry, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool delete_entry (GData.AuthorizationDomain? domain, GData.Entry entry, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool delete_entry_async (GData.AuthorizationDomain? domain, GData.Entry entry, GLib.Cancellable? cancellable) throws GLib.Error;
 		public static GLib.List<weak GData.AuthorizationDomain> get_authorization_domains (GLib.Type service_type);
 		public unowned GData.Authorizer get_authorizer ();
 		public unowned string get_locale ();
 		public unowned Soup.URI get_proxy_uri ();
 		public uint get_timeout ();
-		public GData.Entry insert_entry (GData.AuthorizationDomain? domain, string upload_uri, GData.Entry entry, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.Entry insert_entry (GData.AuthorizationDomain? domain, string upload_uri, GData.Entry entry, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GData.Entry insert_entry_async (GData.AuthorizationDomain? domain, string upload_uri, GData.Entry entry, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool is_authorized ();
 		[NoWrapper]
 		public virtual void parse_error_response (GData.OperationType operation_type, uint status, string reason_phrase, string response_body, int length) throws GLib.Error;
 		public GData.Feed query (GData.AuthorizationDomain? domain, string feed_uri, GData.Query? query, GLib.Type entry_type, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
 		public async GData.Feed query_async (GData.AuthorizationDomain? domain, string feed_uri, GData.Query? query, GLib.Type entry_type, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback) throws GLib.Error;
-		public GData.Entry query_single_entry (GData.AuthorizationDomain? domain, string entry_id, GData.Query? query, GLib.Type entry_type, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.Entry query_single_entry (GData.AuthorizationDomain? domain, string entry_id, GData.Query? query, GLib.Type entry_type, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GData.Entry query_single_entry_async (GData.AuthorizationDomain? domain, string entry_id, GData.Query? query, GLib.Type entry_type, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void set_authorizer (GData.Authorizer authorizer);
 		public void set_locale (string? locale);
 		public void set_proxy_uri (Soup.URI? proxy_uri);
 		public void set_timeout (uint timeout);
-		public GData.Entry update_entry (GData.AuthorizationDomain? domain, GData.Entry entry, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.Entry update_entry (GData.AuthorizationDomain? domain, GData.Entry entry, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GData.Entry update_entry_async (GData.AuthorizationDomain? domain, GData.Entry entry, GLib.Cancellable? cancellable) throws GLib.Error;
 		public GData.Authorizer authorizer { get; set; }
 		public string locale { get; set; }
@@ -1437,7 +1452,7 @@ namespace GData {
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_upload_stream_get_type ()")]
 	public class UploadStream : GLib.OutputStream {
 		[CCode (has_construct_function = false, type = "GOutputStream*")]
-		public UploadStream (GData.Service service, GData.AuthorizationDomain? domain, string method, string upload_uri, GData.Entry? entry, string slug, string content_type, GLib.Cancellable? cancellable);
+		public UploadStream (GData.Service service, GData.AuthorizationDomain? domain, string method, string upload_uri, GData.Entry? entry, string slug, string content_type, GLib.Cancellable? cancellable = null);
 		public unowned GData.AuthorizationDomain get_authorization_domain ();
 		public unowned GLib.Cancellable get_cancellable ();
 		public int64 get_content_length ();
@@ -1449,7 +1464,7 @@ namespace GData {
 		public unowned string get_slug ();
 		public unowned string get_upload_uri ();
 		[CCode (has_construct_function = false, type = "GOutputStream*")]
-		public UploadStream.resumable (GData.Service service, GData.AuthorizationDomain? domain, string method, string upload_uri, GData.Entry? entry, string slug, string content_type, int64 content_length, GLib.Cancellable? cancellable);
+		public UploadStream.resumable (GData.Service service, GData.AuthorizationDomain? domain, string method, string upload_uri, GData.Entry? entry, string slug, string content_type, int64 content_length, GLib.Cancellable? cancellable = null);
 		public GData.AuthorizationDomain authorization_domain { get; construct; }
 		public GLib.Cancellable cancellable { get; construct; }
 		public int64 content_length { get; construct; }
@@ -1540,7 +1555,7 @@ namespace GData {
 		public YouTubeService (string developer_key, GData.Authorizer? authorizer);
 		public static GLib.Quark error_quark ();
 		public GData.YouTubeVideo finish_video_upload (GData.UploadStream upload_stream) throws GLib.Error;
-		public GData.APPCategories get_categories (GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.APPCategories get_categories (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GData.APPCategories get_categories_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public unowned string get_developer_key ();
 		public static unowned GData.AuthorizationDomain get_primary_authorization_domain ();
@@ -1550,7 +1565,7 @@ namespace GData {
 		public async void query_standard_feed_async (GData.YouTubeStandardFeedType feed_type, GData.Query? query, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);
 		public GData.Feed query_videos (GData.Query? query, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
 		public async void query_videos_async (GData.Query? query, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);
-		public GData.UploadStream upload_video (GData.YouTubeVideo video, string slug, string content_type, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.UploadStream upload_video (GData.YouTubeVideo video, string slug, string content_type, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public string developer_key { get; construct; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", lower_case_csuffix = "youtube_state", type_id = "gdata_youtube_state_get_type ()")]
@@ -1644,7 +1659,7 @@ namespace GData {
 	public interface Authorizer : GLib.Object {
 		public abstract bool is_authorized_for_domain (GData.AuthorizationDomain domain);
 		public abstract void process_request (GData.AuthorizationDomain? domain, Soup.Message message);
-		public abstract bool refresh_authorization (GLib.Cancellable? cancellable) throws GLib.Error;
+		public abstract bool refresh_authorization (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async bool refresh_authorization_async (GLib.Cancellable? cancellable) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_batchable_get_type ()")]
@@ -1653,13 +1668,13 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_cname = "GDataCommentableInterface", type_id = "gdata_commentable_get_type ()")]
 	public interface Commentable : GData.Entry {
-		public bool delete_comment (GData.Service service, GData.Comment comment_, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool delete_comment (GData.Service service, GData.Comment comment_, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool delete_comment_async (GData.Service service, GData.Comment comment_, GLib.Cancellable? cancellable) throws GLib.Error;
 		[NoWrapper]
 		public abstract string get_insert_comment_uri (GData.Comment comment);
 		[NoWrapper]
 		public abstract string get_query_comments_uri ();
-		public GData.Comment insert_comment (GData.Service service, GData.Comment comment_, GLib.Cancellable? cancellable) throws GLib.Error;
+		public GData.Comment insert_comment (GData.Service service, GData.Comment comment_, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GData.Comment insert_comment_async (GData.Service service, GData.Comment comment_, GLib.Cancellable? cancellable) throws GLib.Error;
 		[NoWrapper]
 		public abstract bool is_comment_deletable (GData.Comment comment);
@@ -1687,24 +1702,6 @@ namespace GData {
 		UPDATE,
 		DELETION
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_CLIENT_LOGIN_AUTHORIZER_ERROR_")]
-	public enum ClientLoginAuthorizerError {
-		BAD_AUTHENTICATION,
-		NOT_VERIFIED,
-		TERMS_NOT_AGREED,
-		CAPTCHA_REQUIRED,
-		ACCOUNT_DELETED,
-		ACCOUNT_DISABLED,
-		SERVICE_DISABLED,
-		ACCOUNT_MIGRATED,
-		INVALID_SECOND_FACTOR;
-		public static GLib.Quark quark ();
-	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_DOCUMENTS_SERVICE_ERROR_INVALID_CONTENT_")]
-	public enum DocumentsServiceError {
-		TYPE;
-		public static GLib.Quark quark ();
-	}
 	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_MEDIA_EXPRESSION_")]
 	public enum MediaExpression {
 		SAMPLE,
@@ -1731,31 +1728,10 @@ namespace GData {
 		AUTHENTICATION,
 		BATCH
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_PARSER_ERROR_")]
-	public enum ParserError {
-		PARSING_STRING,
-		EMPTY_DOCUMENT;
-		public static GLib.Quark quark ();
-	}
 	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_PICASAWEB_")]
 	public enum PicasaWebVisibility {
 		PUBLIC,
 		PRIVATE
-	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_SERVICE_ERROR_")]
-	public enum ServiceError {
-		UNAVAILABLE,
-		PROTOCOL_ERROR,
-		ENTRY_ALREADY_INSERTED,
-		AUTHENTICATION_REQUIRED,
-		NOT_FOUND,
-		CONFLICT,
-		FORBIDDEN,
-		BAD_QUERY_PARAMETER,
-		NETWORK_ERROR,
-		PROXY_ERROR,
-		WITH_BATCH_OPERATION;
-		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_AGE_")]
 	public enum YouTubeAge {
@@ -1783,11 +1759,6 @@ namespace GData {
 		MODERATE,
 		STRICT
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SERVICE_ERROR_")]
-	public enum YouTubeServiceError {
-		API_QUOTA_EXCEEDED,
-		ENTRY_QUOTA_EXCEEDED
-	}
 	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SORT_")]
 	public enum YouTubeSortOrder {
 		NONE,
@@ -1811,6 +1782,50 @@ namespace GData {
 	public enum YouTubeUploader {
 		ALL,
 		PARTNER
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_CLIENT_LOGIN_AUTHORIZER_ERROR_")]
+	public errordomain ClientLoginAuthorizerError {
+		BAD_AUTHENTICATION,
+		NOT_VERIFIED,
+		TERMS_NOT_AGREED,
+		CAPTCHA_REQUIRED,
+		ACCOUNT_DELETED,
+		ACCOUNT_DISABLED,
+		SERVICE_DISABLED,
+		ACCOUNT_MIGRATED,
+		INVALID_SECOND_FACTOR;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_DOCUMENTS_SERVICE_ERROR_INVALID_CONTENT_")]
+	public errordomain DocumentsServiceError {
+		TYPE;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_PARSER_ERROR_")]
+	public errordomain ParserError {
+		PARSING_STRING,
+		EMPTY_DOCUMENT;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_SERVICE_ERROR_")]
+	public errordomain ServiceError {
+		UNAVAILABLE,
+		PROTOCOL_ERROR,
+		ENTRY_ALREADY_INSERTED,
+		AUTHENTICATION_REQUIRED,
+		NOT_FOUND,
+		CONFLICT,
+		FORBIDDEN,
+		BAD_QUERY_PARAMETER,
+		NETWORK_ERROR,
+		PROXY_ERROR,
+		WITH_BATCH_OPERATION;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SERVICE_ERROR_")]
+	public errordomain YouTubeServiceError {
+		API_QUOTA_EXCEEDED,
+		ENTRY_QUOTA_EXCEEDED
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", instance_pos = 4.9)]
 	public delegate void BatchOperationCallback (uint operation_id, GData.BatchOperationType operation_type, GData.Entry entry, GLib.Error error);
@@ -1842,6 +1857,14 @@ namespace GData {
 	public const string DOCUMENTS_ACCESS_ROLE_READER;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_ACCESS_ROLE_WRITER")]
 	public const string DOCUMENTS_ACCESS_ROLE_WRITER;
+	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_DRAWING_JPEG")]
+	public const string DOCUMENTS_DRAWING_JPEG;
+	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_DRAWING_PDF")]
+	public const string DOCUMENTS_DRAWING_PDF;
+	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_DRAWING_PNG")]
+	public const string DOCUMENTS_DRAWING_PNG;
+	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_DRAWING_SVG")]
+	public const string DOCUMENTS_DRAWING_SVG;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_GCONTACT_CALENDAR_FREE_BUSY")]
 	public const string GCONTACT_CALENDAR_FREE_BUSY;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_GCONTACT_CALENDAR_HOME")]

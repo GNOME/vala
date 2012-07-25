@@ -112,7 +112,7 @@ namespace Vte {
 		public void set_visible_bell (bool is_visible);
 		public void set_word_chars (string spec);
 		public void watch_child (GLib.Pid child_pid);
-		public bool write_contents (GLib.OutputStream stream, Vte.TerminalWriteFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool write_contents (GLib.OutputStream stream, Vte.TerminalWriteFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool allow_bold { get; set; }
 		public bool audible_bell { get; set; }
 		[NoAccessorMethod]
