@@ -761,6 +761,28 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			}
 
+			if (symbol is Class && girdata != null) {
+				var class_struct = girdata["glib:type-struct"];
+				if (class_struct != null) {
+					var klass = parser.resolve_node (parent, parser.parse_symbol_from_string (class_struct, source_reference));
+					if (klass != null) {
+						var i = 0;
+						while ( i < klass.members.size ) {
+							var node = klass.members[i];
+							if (node.symbol is Method) {
+								klass.remove_member (node);
+								this.add_member (node);
+
+								Method m = (Method) node.symbol;
+								m.binding = MemberBinding.CLASS;
+							} else {
+								i++;
+							}
+						}
+					}
+				}
+			}
+
 			// process children
 			foreach (var node in members) {
 				node.process (parser);
