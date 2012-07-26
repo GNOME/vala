@@ -2615,11 +2615,13 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		expect (TokenType.OPEN_BRACE);
 		var initializer = new InitializerList (get_src (begin));
-		if (current () != TokenType.CLOSE_BRACE) {
-			do {
-				var init = parse_argument ();
-				initializer.append (init);
-			} while (accept (TokenType.COMMA));
+		while (current () != TokenType.CLOSE_BRACE) {
+			var init = parse_argument ();
+			initializer.append (init);
+
+			if (!accept (TokenType.COMMA)) {
+				break;
+			}
 		}
 		expect (TokenType.CLOSE_BRACE);
 		return initializer;
