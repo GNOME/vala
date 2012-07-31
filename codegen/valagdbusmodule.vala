@@ -1,6 +1,6 @@
 /* valagdbusmodule.vala
  *
- * Copyright (C) 2010  Jürg Billeter
+ * Copyright (C) 2010-2012  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -44,6 +44,8 @@ public class Vala.GDBusModule : GVariantModule {
 			base.visit_error_domain (edomain);
 			return;
 		}
+
+		cfile.add_include ("gio/gio.h");
 
 		generate_error_domain_declaration (edomain, cfile);
 
