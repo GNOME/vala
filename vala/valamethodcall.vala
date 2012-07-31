@@ -1,6 +1,6 @@
 /* valamethodcall.vala
  *
- * Copyright (C) 2006-2011  Jürg Billeter
+ * Copyright (C) 2006-2012  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -332,6 +332,9 @@ public class Vala.MethodCall : Expression {
 					// begin or end call of async method
 					if (ma.member_name != "end") {
 						// begin (possibly implicit)
+						if (ma.member_name != "begin") {
+							Report.deprecated (ma.source_reference, "implicit .begin is deprecated");
+						}
 						params = m.get_async_begin_parameters ();
 						ret_type = new VoidType ();
 					} else {
