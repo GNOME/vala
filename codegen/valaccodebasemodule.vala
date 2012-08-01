@@ -314,6 +314,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public Struct gvalue_type;
 	public Class gvariant_type;
 	public Struct mutex_type;
+	public Struct gmutex_type;
+	public Struct grecmutex_type;
+	public Struct grwlock_type;
+	public Struct gcond_type;
 	public TypeSymbol type_module_type;
 	public TypeSymbol dbus_proxy_type;
 
@@ -325,6 +329,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public bool requires_array_free;
 	public bool requires_array_move;
 	public bool requires_array_length;
+	public bool requires_clear_mutex;
 
 	public Set<string> wrappers;
 	Set<Symbol> generated_external_symbols;
@@ -457,6 +462,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
 			gvariant_type = (Class) glib_ns.scope.lookup ("Variant");
 			mutex_type = (Struct) glib_ns.scope.lookup ("StaticRecMutex");
+
+			if (context.require_glib_version (2, 32)) {
+				gmutex_type = (Struct) glib_ns.scope.lookup ("Mutex");
+				grecmutex_type = (Struct) glib_ns.scope.lookup ("RecMutex");
+				grwlock_type = (Struct) glib_ns.scope.lookup ("RWLock");
+				gcond_type = (Struct) glib_ns.scope.lookup ("Cond");
+			}
 
 			type_module_type = (TypeSymbol) glib_ns.scope.lookup ("TypeModule");
 
@@ -657,6 +669,42 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual void append_vala_array_length () {
 	}
 
+	public void append_vala_clear_mutex (string typename, string funcprefix) {
+		// memset
+		cfile.add_include ("string.h");
+
+		var fun = new CCodeFunction ("_vala_clear_" + typename);
+		fun.modifiers = CCodeModifiers.STATIC;
+		fun.add_parameter (new CCodeParameter ("mutex", typename + " *"));
+
+		push_function (fun);
+
+		ccode.add_declaration (typename, new CCodeVariableDeclarator.zero ("zero_mutex", new CCodeConstant ("{ 0 }")));
+
+		var cmp = new CCodeFunctionCall (new CCodeIdentifier ("memcmp"));
+		cmp.add_argument (new CCodeIdentifier ("mutex"));
+		cmp.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("zero_mutex")));
+		cmp.add_argument (new CCodeIdentifier ("sizeof (" + typename + ")"));
+		ccode.open_if (cmp);
+
+		var mutex_clear = new CCodeFunctionCall (new CCodeIdentifier (funcprefix + "_clear"));
+		mutex_clear.add_argument (new CCodeIdentifier ("mutex"));
+		ccode.add_expression (mutex_clear);
+
+		var mset = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+		mset.add_argument (new CCodeIdentifier ("mutex"));
+		mset.add_argument (new CCodeConstant ("0"));
+		mset.add_argument (new CCodeIdentifier ("sizeof (" + typename + ")"));
+		ccode.add_expression (mset);
+
+		ccode.close ();
+
+		pop_function ();
+
+		cfile.add_function_declaration (fun);
+		cfile.add_function (fun);
+	}
+
 	public override void visit_source_file (SourceFile source_file) {
 		cfile = new CCodeFile ();
 		
@@ -669,6 +717,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		requires_array_free = false;
 		requires_array_move = false;
 		requires_array_length = false;
+		requires_clear_mutex = false;
 
 		wrappers = new HashSet<string> (str_hash, str_equal);
 		generated_external_symbols = new HashSet<Symbol> ();
@@ -705,6 +754,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 		if (requires_array_length) {
 			append_vala_array_length ();
+		}
+		if (requires_clear_mutex) {
+			append_vala_clear_mutex ("GMutex", "g_mutex");
+			append_vala_clear_mutex ("GRecMutex", "g_rec_mutex");
+			append_vala_clear_mutex ("GRWLock", "g_rw_lock");
+			append_vala_clear_mutex ("GCond", "g_cond");
 		}
 
 		if (gvaluecollector_h_needed) {
@@ -3141,6 +3196,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccomma.append_expression (new CCodeConstant ("NULL"));
 
 				return new CCodeConditionalExpression (cisvalid, ccomma, new CCodeConstant ("NULL"));
+			} else if (context.require_glib_version (2, 32) &&
+			           (type.data_type == gmutex_type ||
+			            type.data_type == grecmutex_type ||
+			            type.data_type == grwlock_type ||
+			            type.data_type == gcond_type)) {
+				// g_mutex_clear must not be called for uninitialized mutex
+				// also, g_mutex_clear does not clear the struct
+				requires_clear_mutex = true;
+				ccall.call = new CCodeIdentifier ("_vala_clear_" + get_ccode_name (type.data_type));
+				return ccall;
 			} else {
 				return ccall;
 			}
