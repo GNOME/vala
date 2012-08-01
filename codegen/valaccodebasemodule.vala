@@ -1,6 +1,6 @@
 /* valaccodebasemodule.vala
  *
- * Copyright (C) 2006-2011  Jürg Billeter
+ * Copyright (C) 2006-2012  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -4377,7 +4377,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							}
 							last_param = param;
 						}
-						creation_call.add_argument (new CCodeIdentifier (get_variable_cname (last_param.name)));
+						int nParams = ccode.get_parameter_count ();
+						if (nParams == 0 || !ccode.get_parameter (nParams - 1).ellipsis) {
+							Report.error (expr.source_reference, "`va_list' used in method with fixed args");
+						} else if (nParams == 1) {
+							Report.error (expr.source_reference, "`va_list' used in method without parameter");
+						} else {
+							creation_call.add_argument (new CCodeIdentifier (ccode.get_parameter (nParams - 2).name));
+						}
 					}
 				}
 			}

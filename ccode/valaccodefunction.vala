@@ -1,6 +1,6 @@
 /* valaccodefunction.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2012  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -78,6 +78,14 @@ public class Vala.CCodeFunction : CCodeNode {
 
 	public void insert_parameter (int position, CCodeParameter param) {
 		parameters.insert (position, param);
+	}
+
+	public int get_parameter_count () {
+		return parameters.size;
+	}
+
+	public CCodeParameter get_parameter (int position) {
+		return parameters[position];
 	}
 
 	/**
