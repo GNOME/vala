@@ -1203,6 +1203,11 @@ public class Vala.Scanner {
 		return found;
 	}
 
+	void pp_space () {
+		while (pp_whitespace () || comment ()) {
+		}
+	}
+
 	void pp_directive () {
 		// hash sign
 		current++;
@@ -1217,7 +1222,7 @@ public class Vala.Scanner {
 			return;
 		}
 
-		pp_whitespace ();
+		pp_space ();
 
 		char* begin = current;
 		int len = 0;
@@ -1264,14 +1269,14 @@ public class Vala.Scanner {
 	}
 
 	void pp_eol () {
-		pp_whitespace ();
+		pp_space ();
 		if (current >= end || current[0] != '\n') {
 			Report.error (get_source_reference (0), "syntax error, expected newline");
 		}
 	}
 
 	void parse_pp_if () {
-		pp_whitespace ();
+		pp_space ();
 
 		bool condition = parse_pp_expression ();
 
@@ -1289,7 +1294,7 @@ public class Vala.Scanner {
 	}
 
 	void parse_pp_elif () {
-		pp_whitespace ();
+		pp_space ();
 
 		bool condition = parse_pp_expression ();
 
@@ -1375,9 +1380,9 @@ public class Vala.Scanner {
 		} else if (current[0] == '(') {
 			current++;
 			column++;
-			pp_whitespace ();
+			pp_space ();
 			bool result = parse_pp_expression ();
-			pp_whitespace ();
+			pp_space ();
 			if (current < end && current[0] ==  ')') {
 				current++;
 				column++;
@@ -1395,7 +1400,7 @@ public class Vala.Scanner {
 		if (current < end && current[0] == '!') {
 			current++;
 			column++;
-			pp_whitespace ();
+			pp_space ();
 			return !parse_pp_unary_expression ();
 		}
 
@@ -1404,18 +1409,18 @@ public class Vala.Scanner {
 
 	bool parse_pp_equality_expression () {
 		bool left = parse_pp_unary_expression ();
-		pp_whitespace ();
+		pp_space ();
 		while (true) {
 			if (current < end - 1 && current[0] == '=' && current[1] == '=') {
 				current += 2;
 				column += 2;
-				pp_whitespace ();
+				pp_space ();
 				bool right = parse_pp_unary_expression ();
 				left = (left == right);
 			} else if (current < end - 1 && current[0] == '!' && current[1] == '=') {
 				current += 2;
 				column += 2;
-				pp_whitespace ();
+				pp_space ();
 				bool right = parse_pp_unary_expression ();
 				left = (left != right);
 			} else {
@@ -1427,11 +1432,11 @@ public class Vala.Scanner {
 
 	bool parse_pp_and_expression () {
 		bool left = parse_pp_equality_expression ();
-		pp_whitespace ();
+		pp_space ();
 		while (current < end - 1 && current[0] == '&' && current[1] == '&') {
 			current += 2;
 			column += 2;
-			pp_whitespace ();
+			pp_space ();
 			bool right = parse_pp_equality_expression ();
 			left = left && right;
 		}
@@ -1440,11 +1445,11 @@ public class Vala.Scanner {
 
 	bool parse_pp_or_expression () {
 		bool left = parse_pp_and_expression ();
-		pp_whitespace ();
+		pp_space ();
 		while (current < end - 1 && current[0] == '|' && current[1] == '|') {
 			current += 2;
 			column += 2;
-			pp_whitespace ();
+			pp_space ();
 			bool right = parse_pp_and_expression ();
 			left = left || right;
 		}
