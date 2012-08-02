@@ -1,6 +1,6 @@
 /* valadelegatetype.vala
  *
- * Copyright (C) 2007-2010  Jürg Billeter
+ * Copyright (C) 2007-2012  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,6 +32,7 @@ public class Vala.DelegateType : DataType {
 
 	public DelegateType (Delegate delegate_symbol) {
 		this.delegate_symbol = delegate_symbol;
+		this.is_called_once = (delegate_symbol.get_attribute_string ("CCode", "scope") == "async");
 	}
 
 	public override bool is_invokable () {
