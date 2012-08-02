@@ -1,6 +1,6 @@
 /* glib-2.0.vala
  *
- * Copyright (C) 2006-2011  Jürg Billeter
+ * Copyright (C) 2006-2012  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  * Copyright (C) 2007  Mathias Hasselmann
  *
@@ -1654,6 +1654,7 @@ namespace GLib {
 
 	/* Thread support */
 
+	[CCode (scope = "async")]
 	public delegate G ThreadFunc<G> ();
 	public delegate void Func<G> (G data);
 	
