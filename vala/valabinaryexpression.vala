@@ -243,6 +243,17 @@ public class Vala.BinaryExpression : Expression {
 			return false;
 		}
 
+		if (left.value_type is FieldPrototype) {
+			error = true;
+			Report.error (left.source_reference, "Access to instance member `%s' denied".printf (left.symbol_reference.get_full_name ()));
+			return false;
+		}
+		if (right.value_type is FieldPrototype) {
+			error = true;
+			Report.error (right.source_reference, "Access to instance member `%s' denied".printf (right.symbol_reference.get_full_name ()));
+			return false;
+		}
+
 		left.target_type = left.value_type.copy ();
 		left.target_type.value_owned = false;
 		right.target_type = right.value_type.copy ();
