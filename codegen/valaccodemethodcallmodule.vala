@@ -48,8 +48,6 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				// Enum.VALUE.to_string()
 				var en = (Enum) ma.inner.value_type.data_type;
 				ccall.call = new CCodeIdentifier (generate_enum_tostring_function (en));
-			} else if (context.profile == Profile.POSIX && ma.inner != null && ma.inner.value_type != null && ma.inner.value_type.data_type == string_type.data_type && ma.member_name == "printf") {
-				ccall.call = new CCodeIdentifier (generate_string_printf_function ());
 			}
 		} else if (itype is SignalType) {
 			var sig_type = (SignalType) itype;
@@ -123,12 +121,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		if (m is CreationMethod && m.parent_symbol is Class) {
-			if (context.profile == Profile.GOBJECT) {
-				if (!((Class) m.parent_symbol).is_compact) {
-					ccall.add_argument (get_variable_cexpression ("object_type"));
-				}
-			} else {
-				ccall.add_argument (get_this_cexpression ());
+			if (!((Class) m.parent_symbol).is_compact) {
+				ccall.add_argument (get_variable_cexpression ("object_type"));
 			}
 
 			if (!current_class.is_compact) {
@@ -281,7 +275,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				param.accept (this);
 			}
 			generate_dynamic_method_wrapper ((DynamicMethod) m);
-		} else if (m is CreationMethod && context.profile == Profile.GOBJECT && m.parent_symbol is Class) {
+		} else if (m is CreationMethod && m.parent_symbol is Class) {
 			ccode.add_assignment (get_this_cexpression (), new CCodeCastExpression (ccall, CCodeBaseModule.get_ccode_name (current_class) + "*"));
 
 			if (current_method.body.captured) {
@@ -836,81 +830,6 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		pop_context ();
 
 		return to_string_func;
-	}
-
-	private string generate_string_printf_function () {
-		if (!add_wrapper ("string_printf")) {
-			// wrapper already defined
-			return "string_printf";
-		}
-
-		// declaration
-		var function = new CCodeFunction ("string_printf", "char*");
-		function.add_parameter (new CCodeParameter ("format", "const char*"));
-		function.add_parameter (new CCodeParameter.with_ellipsis ());
-		function.modifiers = CCodeModifiers.STATIC;
-
-		// definition
-		push_context (new EmitContext ());
-		push_function (function);
-
-		ccode.add_declaration ("int", new CCodeVariableDeclarator ("length"));
-		ccode.add_declaration ("va_list", new CCodeVariableDeclarator ("ap"));
-		ccode.add_declaration ("char*", new CCodeVariableDeclarator ("result"));
-
-		var va_start = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
-		va_start.add_argument (new CCodeIdentifier ("ap"));
-		va_start.add_argument (new CCodeIdentifier ("format"));
-
-		ccode.add_expression (va_start);
-
-		var vsnprintf = new CCodeFunctionCall (new CCodeIdentifier ("vsnprintf"));
-		vsnprintf.add_argument (new CCodeConstant ("NULL"));
-		vsnprintf.add_argument (new CCodeConstant ("0"));
-		vsnprintf.add_argument (new CCodeIdentifier ("format"));
-		vsnprintf.add_argument (new CCodeIdentifier ("ap"));
-
-		ccode.add_assignment (new CCodeIdentifier ("length"), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, vsnprintf, new CCodeConstant ("1")));
-
-		var va_end = new CCodeFunctionCall (new CCodeIdentifier ("va_end"));
-		va_end.add_argument (new CCodeIdentifier ("ap"));
-
-		ccode.add_expression (va_end);
-
-		var malloc = new CCodeFunctionCall (new CCodeIdentifier ("malloc"));
-		malloc.add_argument (new CCodeIdentifier ("length"));
-
-		ccode.add_assignment (new CCodeIdentifier ("result"), malloc);
-
-		va_start = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
-		va_start.add_argument (new CCodeIdentifier ("ap"));
-		va_start.add_argument (new CCodeIdentifier ("format"));
-
-		ccode.add_expression (va_start);
-
-		vsnprintf = new CCodeFunctionCall (new CCodeIdentifier ("vsnprintf"));
-		vsnprintf.add_argument (new CCodeIdentifier ("result"));
-		vsnprintf.add_argument (new CCodeIdentifier ("length"));
-		vsnprintf.add_argument (new CCodeIdentifier ("format"));
-		vsnprintf.add_argument (new CCodeIdentifier ("ap"));
-
-		ccode.add_expression (vsnprintf);
-
-		va_end = new CCodeFunctionCall (new CCodeIdentifier ("va_end"));
-		va_end.add_argument (new CCodeIdentifier ("ap"));
-
-		ccode.add_expression (va_end);
-
-		ccode.add_return (new CCodeIdentifier ("result"));
-
-		// append to file
-		cfile.add_include ("stdarg.h");
-		cfile.add_function_declaration (function);
-		cfile.add_function (function);
-
-		pop_context ();
-
-		return "string_printf";
 	}
 }
 

@@ -127,11 +127,7 @@ public class Vala.CatchClause : CodeNode {
 			}
 		} else {
 			// generic catch clause
-			if (context.profile == Profile.GOBJECT) {
-				error_type = new ErrorType (null, null, source_reference);
-			} else {
-				error_type = context.analyzer.error_type;
-			}
+			error_type = new ErrorType (null, null, source_reference);
 		}
 
 		error_type.check (context);

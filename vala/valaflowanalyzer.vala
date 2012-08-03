@@ -847,7 +847,6 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			// exceptional control flow
 			foreach (DataType error_data_type in node.get_error_types()) {
 				var error_type = error_data_type as ErrorType;
-				var error_class = error_data_type.data_type as Class;
 				current_block = last_block;
 				unreachable_reported = true;
 
@@ -858,32 +857,19 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 						mark_unreachable ();
 						break;
 					} else if (jump_target.is_error_target) {
-						if (context.profile == Profile.GOBJECT) {
-							if (jump_target.error_domain == null
-							    || (jump_target.error_domain == error_type.error_domain
-								&& (jump_target.error_code == null
-								    || jump_target.error_code == error_type.error_code))) {
-								// error can always be caught by this catch clause
-								// following catch clauses cannot be reached by this error
-								current_block.connect (jump_target.basic_block);
-								mark_unreachable ();
-								break;
-							} else if (error_type.error_domain == null
-								   || (error_type.error_domain == jump_target.error_domain
-								       && (error_type.error_code == null
-								           || error_type.error_code == jump_target.error_code))) {
-								// error might be caught by this catch clause
-								// unknown at compile time
-								// following catch clauses might still be reached by this error
-								current_block.connect (jump_target.basic_block);
-							}
-						} else if (jump_target.error_class == null || jump_target.error_class == error_class) {
+						if (jump_target.error_domain == null
+						    || (jump_target.error_domain == error_type.error_domain
+							&& (jump_target.error_code == null
+							    || jump_target.error_code == error_type.error_code))) {
 							// error can always be caught by this catch clause
 							// following catch clauses cannot be reached by this error
 							current_block.connect (jump_target.basic_block);
 							mark_unreachable ();
 							break;
-						} else if (jump_target.error_class.is_subtype_of (error_class)) {
+						} else if (error_type.error_domain == null
+							   || (error_type.error_domain == jump_target.error_domain
+							       && (error_type.error_code == null
+							           || error_type.error_code == jump_target.error_code))) {
 							// error might be caught by this catch clause
 							// unknown at compile time
 							// following catch clauses might still be reached by this error
@@ -957,13 +943,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		for (int i = catch_clauses.size - 1; i >= 0; i--) {
 			var catch_clause = catch_clauses[i];
 			if (catch_clause.error_type != null) {
-				if (context.profile == Profile.GOBJECT) {
-					var error_type = catch_clause.error_type as ErrorType;
-					jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, catch_clause.error_type.data_type as ErrorDomain, error_type.error_code, null));
-				} else {
-					var error_class = catch_clause.error_type.data_type as Class;
-					jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, null, null, error_class));
-				}
+				var error_type = catch_clause.error_type as ErrorType;
+				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, catch_clause.error_type.data_type as ErrorDomain, error_type.error_code, null));
 			} else {
 				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, null, null, null));
 			}
@@ -996,14 +977,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 					break;
 				}
 
-				if (context.profile == Profile.GOBJECT) {
-					if (prev_target.error_domain == jump_target.error_domain &&
-					    prev_target.error_code == jump_target.error_code) {
-						Report.error (stmt.source_reference, "double catch clause of same error detected");
-						stmt.error = true;
-						return;
-					}
-				} else if (prev_target.error_class == jump_target.error_class) {
+				if (prev_target.error_domain == jump_target.error_domain &&
+				    prev_target.error_code == jump_target.error_code) {
 					Report.error (stmt.source_reference, "double catch clause of same error detected");
 					stmt.error = true;
 					return;

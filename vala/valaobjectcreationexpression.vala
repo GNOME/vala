@@ -298,7 +298,7 @@ public class Vala.ObjectCreationExpression : Expression {
 				symbol_reference = st.default_construction_method;
 			}
 
-			if (context.profile == Profile.GOBJECT && st.is_simple_type () && symbol_reference == null) {
+			if (st.is_simple_type () && symbol_reference == null) {
 				error = true;
 				Report.error (source_reference, "`%s' does not have a default constructor".printf (st.get_full_name ()));
 				return false;

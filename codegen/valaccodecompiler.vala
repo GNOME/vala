@@ -55,12 +55,10 @@ public class Vala.CCodeCompiler {
 		if (!context.compile_only) {
 			pc += " --libs";
 		}
-		if (context.profile == Profile.GOBJECT) {
-			use_pkgconfig = true;
-			pc += " gobject-2.0";
-			if (context.thread) {
-				pc += " gthread-2.0";
-			}
+		use_pkgconfig = true;
+		pc += " gobject-2.0";
+		if (context.thread) {
+			pc += " gthread-2.0";
 		}
 		foreach (string pkg in context.get_packages ()) {
 			if (package_exists (pkg)) {

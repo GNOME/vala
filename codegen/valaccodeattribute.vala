@@ -606,24 +606,16 @@ public class Vala.CCodeAttribute : AttributeCache {
 		} else if (node is ErrorType) {
 			return "GError*";
 		} else if (node is GenericType) {
-			if (CodeContext.get ().profile == Profile.GOBJECT) {
-				var type = (GenericType) node;
-				if (type.value_owned) {
-					return "gpointer";
-				} else {
-					return "gconstpointer";
-				}
+			var type = (GenericType) node;
+			if (type.value_owned) {
+				return "gpointer";
 			} else {
-				return "void *";
+				return "gconstpointer";
 			}
 		} else if (node is MethodType) {
 			return "gpointer";
 		} else if (node is NullType) {
-			if (CodeContext.get ().profile == Profile.GOBJECT) {
-				return "gpointer";
-			} else {
-				return "void *";
-			}
+			return "gpointer";
 		} else if (node is PointerType) {
 			var type = (PointerType) node;
 			if (type.base_type.data_type != null && type.base_type.data_type.is_reference_type ()) {

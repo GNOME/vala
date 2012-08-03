@@ -827,23 +827,21 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			cmain.add_parameter (new CCodeParameter ("argv", "char **"));
 			push_function (cmain);
 
-			if (context.profile == Profile.GOBJECT) {
-				if (context.mem_profiler) {
-					var mem_profiler_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_mem_set_vtable"));
-					mem_profiler_init_call.line = cmain.line;
-					mem_profiler_init_call.add_argument (new CCodeConstant ("glib_mem_profiler_table"));
-					ccode.add_expression (mem_profiler_init_call);
-				}
-
-				if (context.thread) {
-					var thread_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_thread_init"));
-					thread_init_call.line = cmain.line;
-					thread_init_call.add_argument (new CCodeConstant ("NULL"));
-					ccode.add_expression (thread_init_call);
-				}
-
-				ccode.add_expression (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init")));
+			if (context.mem_profiler) {
+				var mem_profiler_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_mem_set_vtable"));
+				mem_profiler_init_call.line = cmain.line;
+				mem_profiler_init_call.add_argument (new CCodeConstant ("glib_mem_profiler_table"));
+				ccode.add_expression (mem_profiler_init_call);
 			}
+
+			if (context.thread) {
+				var thread_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_thread_init"));
+				thread_init_call.line = cmain.line;
+				thread_init_call.add_argument (new CCodeConstant ("NULL"));
+				ccode.add_expression (thread_init_call);
+			}
+
+			ccode.add_expression (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init")));
 
 			var main_call = new CCodeFunctionCall (new CCodeIdentifier (function.name));
 			if (m.get_parameters ().size == 1) {

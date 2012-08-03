@@ -842,7 +842,7 @@ public class Vala.MemberAccess : Expression {
 		}
 
 		var this_access = inner.symbol_reference is Parameter && inner.symbol_reference.name == "this";
-		var struct_or_array = (inner.value_type is StructValueType && !inner.value_type.nullable) || (CodeContext.get ().profile == Profile.GOBJECT && inner.value_type is ArrayType);
+		var struct_or_array = (inner.value_type is StructValueType && !inner.value_type.nullable) || inner.value_type is ArrayType;
 
 		if (instance && struct_or_array && (symbol_reference is Method || lvalue) && ((inner is MemberAccess && inner.symbol_reference is Variable) || inner is ElementAccess) && !this_access) {
 			inner.lvalue = true;

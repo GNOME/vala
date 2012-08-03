@@ -164,11 +164,7 @@ namespace Archive {
 		public Result open_filename (string filename, size_t _block_size);
 		public Result open_memory (void* buff, size_t size);
 		public Result open_fd (int fd, size_t block_size);
-#if POSIX
-		public Result open_FILE (Posix.FILE file);
-#else
 		public Result open_FILE (GLib.FileStream file);
-#endif
 		public Result next_header (out unowned Entry entry);
 		public int64 header_position ();
 
@@ -224,11 +220,7 @@ namespace Archive {
 		);
 		public Result open_fd (int fd);
 		public Result open_filename (string filename);
-#if POSIX
-		public Result open_FILE (Posix.FILE file);
-#else
 		public Result open_FILE (GLib.FileStream file);
-#endif
 		public Result open_memory (void* buffer, size_t buff_size, out size_t used);
 
 		[CCode (cname="archive_write_header")]

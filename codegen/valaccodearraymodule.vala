@@ -56,14 +56,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			return;
 		}
 
-		CCodeFunctionCall gnew;
-		if (context.profile == Profile.POSIX) {
-			cfile.add_include ("stdlib.h");
-			gnew = new CCodeFunctionCall (new CCodeIdentifier ("calloc"));
-		} else {
-			gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-			gnew.add_argument (new CCodeIdentifier (get_ccode_name (expr.element_type)));
-		}
+		var gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+		gnew.add_argument (new CCodeIdentifier (get_ccode_name (expr.element_type)));
 
 		bool first = true;
 		CCodeExpression cexpr = null;
@@ -87,12 +81,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 		
 		gnew.add_argument (cexpr);
-
-		if (context.profile == Profile.POSIX) {
-			var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-			csizeof.add_argument (new CCodeIdentifier (get_ccode_name (expr.element_type)));
-			gnew.add_argument (csizeof);
-		}
 
 		var temp_var = get_temp_variable (expr.value_type, true, expr);
 		var name_cnode = get_variable_cexpression (temp_var.name);
