@@ -263,14 +263,6 @@ public class Vala.BinaryExpression : Expression {
 		    && operator == BinaryOperator.PLUS) {
 			// string concatenation
 
-			if (context.profile == Profile.DOVA) {
-				var concat_call = new MethodCall (new MemberAccess (left, "concat", source_reference), source_reference);
-				concat_call.add_argument (right);
-				concat_call.target_type = target_type;
-				parent_node.replace_expression (this, concat_call);
-				return concat_call.check (context);
-			}
-
 			if (right.value_type == null || right.value_type.data_type != context.analyzer.string_type.data_type) {
 				error = true;
 				Report.error (source_reference, "Operands must be strings");
@@ -283,16 +275,7 @@ public class Vala.BinaryExpression : Expression {
 			} else {
 				value_type.value_owned = true;
 			}
-		} else if (context.profile == Profile.DOVA && left.value_type.data_type == context.analyzer.list_type.data_type
-		    && operator == BinaryOperator.PLUS) {
-			// list concatenation
-
-			var concat_call = new MethodCall (new MemberAccess (left, "concat", source_reference), source_reference);
-			concat_call.add_argument (right);
-			concat_call.target_type = target_type;
-			parent_node.replace_expression (this, concat_call);
-			return concat_call.check (context);
-		} else if (context.profile != Profile.DOVA && left.value_type is ArrayType && operator == BinaryOperator.PLUS) {
+		} else if (left.value_type is ArrayType && operator == BinaryOperator.PLUS) {
 			// array concatenation
 
 			var array_type = (ArrayType) left.value_type;
@@ -329,11 +312,7 @@ public class Vala.BinaryExpression : Expression {
 					}
 				} else if (right.value_type is PointerType) {
 					// pointer arithmetic: pointer - pointer
-					if (context.profile == Profile.DOVA) {
-						value_type = context.analyzer.long_type;
-					} else {
-						value_type = context.analyzer.size_t_type;
-					}
+					value_type = context.analyzer.size_t_type;
 				}
 			} else {
 				left.target_type.nullable = false;
@@ -424,26 +403,6 @@ public class Vala.BinaryExpression : Expression {
 					left.target_type.nullable = true;
 				} else if (!right.value_type.nullable) {
 					right.target_type.nullable = true;
-				}
-			}
-
-			if (left.value_type.compatible (context.analyzer.string_type)
-			    && right.value_type.compatible (context.analyzer.string_type)) {
-				// string comparison
-				if (context.profile == Profile.DOVA) {
-					var string_ma = new MemberAccess.simple ("string", source_reference);
-					string_ma.qualified = true;
-					var equals_call = new MethodCall (new MemberAccess (string_ma, "equals", source_reference), source_reference);
-					equals_call.add_argument (left);
-					equals_call.add_argument (right);
-					if (operator == BinaryOperator.EQUALITY) {
-						parent_node.replace_expression (this, equals_call);
-						return equals_call.check (context);
-					} else {
-						var not = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, equals_call, source_reference);
-						parent_node.replace_expression (this, not);
-						return not.check (context);
-					}
 				}
 			}
 

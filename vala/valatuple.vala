@@ -71,23 +71,9 @@ public class Vala.Tuple : Expression {
 
 		checked = true;
 
-		if (context.profile != Profile.DOVA) {
-			Report.error (source_reference, "tuples are not supported");
-			error = true;
-			return false;
-		}
-
-		value_type = new ObjectType ((Class) context.root.scope.lookup ("Dova").scope.lookup ("Tuple"));
-		value_type.value_owned = true;
-
-		foreach (var expr in expression_list) {
-			if (!expr.check (context)) {
-				return false;
-			}
-			value_type.add_type_argument (expr.value_type.copy ());
-		}
-
-		return !error;
+		Report.error (source_reference, "tuples are not supported");
+		error = true;
+		return false;
 	}
 
 	public override void emit (CodeGenerator codegen) {

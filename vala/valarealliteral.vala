@@ -78,7 +78,7 @@ public class Vala.RealLiteral : Literal {
 		checked = true;
 
 		var st = (Struct) context.analyzer.root_symbol.scope.lookup (get_type_name ());
-		// ensure attributes are already processed in case of bootstrapping dova-core
+		// ensure attributes are already processed
 		st.check (context);
 
 		value_type = new FloatingType (st);

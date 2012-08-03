@@ -774,7 +774,7 @@ public class Vala.Scanner {
 				len++;
 			}
 			type = get_identifier_or_keyword (begin, len);
-		} else if (current[0] == '@' && source_file.context.profile != Profile.DOVA) {
+		} else if (current[0] == '@') {
 			if (current < end - 1 && current[1] == '"') {
 				type = TokenType.OPEN_TEMPLATE;
 				current += 2;
@@ -1129,13 +1129,6 @@ public class Vala.Scanner {
 						column = 1;
 						token_length_in_chars = 1;
 					} else {
-						if (type == TokenType.STRING_LITERAL && source_file.context.profile == Profile.DOVA && current[0] == '$') {
-							// string template
-							type = TokenType.OPEN_TEMPLATE;
-							current = begin;
-							state_stack += State.TEMPLATE;
-							break;
-						}
 						unichar u = ((string) current).get_char_validated ((long) (end - current));
 						if (u != (unichar) (-1)) {
 							current += u.to_utf8 (null);

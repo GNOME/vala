@@ -193,12 +193,6 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		m.return_block.connect (m.exit_block);
 
-		if (context.profile == Profile.DOVA && m.result_var != null) {
-			// ensure result is defined at end of method
-			var result_ma = new MemberAccess.simple ("result", m.source_reference);
-			result_ma.symbol_reference = m.result_var;
-			m.return_block.add_node (result_ma);
-		}
 		if (m is Method) {
 			// ensure out parameters are defined at end of method
 			foreach (var param in ((Method) m).get_parameters ()) {
@@ -224,7 +218,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (current_block != null) {
 			// end of method body reachable
 
-			if (context.profile != Profile.DOVA && m.has_result) {
+			if (m.has_result) {
 				Report.error (m.source_reference, "missing return statement at end of subroutine body");
 				m.error = true;
 			}

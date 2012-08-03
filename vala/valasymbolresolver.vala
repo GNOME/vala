@@ -75,18 +75,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 			}
 		}
 
-		if (context.profile == Profile.DOVA) {
-			// classes derive from Object by default
-			if (cl.base_class == null) {
-				var any_class = (Class) root_symbol.scope.lookup ("any");
-				if (cl != any_class) {
-					var object_class = (Class) root_symbol.scope.lookup ("Dova").scope.lookup ("Object");
-					cl.add_base_type (new ObjectType (object_class));
-					cl.base_class = object_class;
-				}
-			}
-		}
-
 		current_scope = current_scope.parent_scope;
 	}
 
@@ -119,14 +107,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 				iface.error = true;
 				Report.error (type.source_reference, "Prerequisite cycle (`%s' and `%s')".printf (iface.get_full_name (), type.data_type.get_full_name ()));
 				return;
-			}
-		}
-
-		if (context.profile == Profile.DOVA) {
-			// all interfaces require Object
-			if (iface.get_prerequisites ().size == 0) {
-				var object_class = (Class) root_symbol.scope.lookup ("Dova").scope.lookup ("Object");
-				iface.add_prerequisite (new ObjectType (object_class));
 			}
 		}
 
@@ -481,18 +461,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 	public override void visit_template (Template tmpl) {
 		tmpl.accept_children (this);
-	}
-
-	public override void visit_list_literal (ListLiteral lit) {
-		lit.accept_children (this);
-	}
-
-	public override void visit_set_literal (SetLiteral lit) {
-		lit.accept_children (this);
-	}
-
-	public override void visit_map_literal (MapLiteral lit) {
-		lit.accept_children (this);
 	}
 
 	public override void visit_tuple (Tuple tuple) {

@@ -167,7 +167,7 @@ public class Vala.ForeachStatement : Block {
 		var collection_type = collection.value_type.copy ();
 		collection.target_type = collection_type.copy ();
 		
-		if (context.profile != Profile.DOVA && collection_type.is_array ()) {
+		if (collection_type.is_array ()) {
 			var array_type = (ArrayType) collection_type;
 
 			// can't use inline-allocated array for temporary variable

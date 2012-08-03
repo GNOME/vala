@@ -96,14 +96,6 @@ public class Vala.IntegerLiteral : Literal {
 				type_suffix = "";
 				type_name = "int";
 			}
-		} else if (CodeContext.get ().profile == Profile.DOVA) {
-			if (u) {
-				type_suffix = "UL";
-				type_name = "uint64";
-			} else {
-				type_suffix = "L";
-				type_name = "int64";
-			}
 		} else if (l == 1) {
 			if (u) {
 				type_suffix = "UL";
@@ -123,7 +115,7 @@ public class Vala.IntegerLiteral : Literal {
 		}
 
 		var st = (Struct) context.analyzer.root_symbol.scope.lookup (type_name);
-		// ensure attributes are already processed in case of bootstrapping dova-core
+		// ensure attributes are already processed
 		st.check (context);
 
 		value_type = new IntegerType (st, value, type_name);

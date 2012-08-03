@@ -100,11 +100,6 @@ public class Vala.ObjectType : ReferenceType {
 			return false;
 		}
 
-		if (context.profile == Profile.DOVA && type_symbol.get_full_name () == "Dova.Tuple") {
-			// tuples have variadic generics
-			return true;
-		}
-
 		int n_type_args = get_type_arguments ().size;
 		if (n_type_args > 0 && n_type_args < type_symbol.get_type_parameters ().size) {
 			Report.error (source_reference, "too few type arguments");

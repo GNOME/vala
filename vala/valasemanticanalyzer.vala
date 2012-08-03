@@ -186,22 +186,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
 		uint_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint"));
 
-		if (context.profile != Profile.DOVA) {
-			uchar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uchar"));
-			int8_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int8"));
-			short_type = new IntegerType ((Struct) root_symbol.scope.lookup ("short"));
-			ushort_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ushort"));
-			long_type = new IntegerType ((Struct) root_symbol.scope.lookup ("long"));
-			ulong_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ulong"));
-			size_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("size_t"));
-			ssize_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ssize_t"));
-			double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
-		} else {
-			long_type = int_type;
-			ulong_type = uint_type;
-			size_t_type = uint_type;
-			ssize_t_type = int_type;
-		}
+		uchar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uchar"));
+		int8_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int8"));
+		short_type = new IntegerType ((Struct) root_symbol.scope.lookup ("short"));
+		ushort_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ushort"));
+		long_type = new IntegerType ((Struct) root_symbol.scope.lookup ("long"));
+		ulong_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ulong"));
+		size_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("size_t"));
+		ssize_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ssize_t"));
+		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 
 		var unichar_struct = (Struct) root_symbol.scope.lookup ("unichar");
 		if (unichar_struct != null) {
@@ -223,14 +216,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			gerror_type = (Class) glib_ns.scope.lookup ("Error");
 			regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
-		} else if (context.profile == Profile.DOVA) {
-			var dova_ns = root_symbol.scope.lookup ("Dova");
-
-			object_type = (Class) dova_ns.scope.lookup ("Object");
-			type_type = new ObjectType ((Class) dova_ns.scope.lookup ("Type"));
-			list_type = new ObjectType ((Class) dova_ns.scope.lookup ("List"));
-			tuple_type = new ObjectType ((Class) dova_ns.scope.lookup ("Tuple"));
-			error_type = new ObjectType ((Class) dova_ns.scope.lookup ("Error"));
 		}
 
 		current_symbol = root_symbol;
@@ -629,14 +614,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		while (instance_type is PointerType) {
 			var instance_pointer_type = (PointerType) instance_type;
 			instance_type = instance_pointer_type.base_type;
-		}
-
-		if (CodeContext.get ().profile == Profile.DOVA) {
-			while (instance_type is ArrayType) {
-				var instance_array_type = (ArrayType) instance_type;
-				instance_type = new ObjectType ((Class) CodeContext.get ().root.scope.lookup ("Dova").scope.lookup ("Array"));
-				instance_type.add_type_argument (instance_array_type.element_type);
-			}
 		}
 
 		if (instance_type is DelegateType && ((DelegateType) instance_type).delegate_symbol == type_symbol) {

@@ -207,7 +207,7 @@ public class Vala.Struct : TypeSymbol {
 			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_data_type_for_symbol (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
-		if (!(m.return_type is VoidType) && (CodeContext.get ().profile == Profile.DOVA || m.get_postconditions ().size > 0)) {
+		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
 			m.result_var = new LocalVariable (m.return_type.copy (), "result", null, source_reference);
 			m.result_var.is_result = true;
 		}
@@ -407,9 +407,6 @@ public class Vala.Struct : TypeSymbol {
 	 * instances are passed by value.
 	 */
 	public bool is_simple_type () {
-		if (CodeContext.get ().profile == Profile.DOVA) {
-			return true;
-		}
 		var st = base_struct;
 		if (st != null && st.is_simple_type ()) {
 			return true;

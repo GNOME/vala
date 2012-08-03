@@ -245,8 +245,6 @@ public class Vala.ArrayType : ReferenceType {
 	public override bool is_disposable () {
 		if (fixed_length) {
 			return element_type.is_disposable ();
-		} else if (CodeContext.get ().profile == Profile.DOVA) {
-			return false;
 		} else {
 			return base.is_disposable ();
 		}

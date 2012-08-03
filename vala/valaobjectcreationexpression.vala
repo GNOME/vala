@@ -407,10 +407,8 @@ public class Vala.ObjectCreationExpression : Expression {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
 				// simple statements, no side effects after method call
 			} else if (!(context.analyzer.current_symbol is Block)) {
-				if (context.profile != Profile.DOVA) {
-					// can't handle errors in field initializers
-					Report.error (source_reference, "Field initializers must not throw errors");
-				}
+				// can't handle errors in field initializers
+				Report.error (source_reference, "Field initializers must not throw errors");
 			} else {
 				// store parent_node as we need to replace the expression in the old parent node later on
 				var old_parent_node = parent_node;

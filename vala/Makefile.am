@@ -85,13 +85,11 @@ libvalacore_la_VALASOURCES = \
 	valainterfacetype.vala \
 	valainvalidtype.vala \
 	valalambdaexpression.vala \
-	valalistliteral.vala \
 	valaliteral.vala \
 	valalocalvariable.vala \
 	valalockable.vala \
 	valalockstatement.vala \
 	valaloop.vala \
-	valamapliteral.vala \
 	valamarkupreader.vala \
 	valamemberaccess.vala \
 	valamemberinitializer.vala \
@@ -123,7 +121,6 @@ libvalacore_la_VALASOURCES = \
 	valascanner.vala \
 	valascope.vala \
 	valasemanticanalyzer.vala \
-	valasetliteral.vala \
 	valasignal.vala \
 	valasignaltype.vala \
 	valasizeofexpression.vala \

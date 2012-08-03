@@ -214,9 +214,6 @@ class Vala.Compiler {
 			// default profile
 			context.profile = Profile.GOBJECT;
 			context.add_define ("GOBJECT");
-		} else if (profile == "dova") {
-			context.profile = Profile.DOVA;
-			context.add_define ("DOVA");
 		} else {
 			Report.error (null, "Unknown profile %s".printf (profile));
 		}
@@ -264,11 +261,6 @@ class Vala.Compiler {
 				context.add_external_package ("glib-2.0");
 				context.add_external_package ("gobject-2.0");
 			}
-		} else if (context.profile == Profile.DOVA) {
-			if (!nostdpkg) {
-				/* default package */
-				context.add_external_package ("dova-core-0.1");
-			}
 		}
 
 		if (packages != null) {
@@ -292,8 +284,6 @@ class Vala.Compiler {
 
 		if (context.profile == Profile.GOBJECT) {
 			context.codegen = new GDBusServerModule ();
-		} else if (context.profile == Profile.DOVA) {
-			context.codegen = new DovaErrorModule ();
 		} else {
 			context.codegen = new CCodeDelegateModule ();
 		}

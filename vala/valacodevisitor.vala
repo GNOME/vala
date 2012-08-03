@@ -486,30 +486,6 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operation called for list literals.
-	 *
-	 * @param lit a list literal
-	 */
-	public virtual void visit_list_literal (ListLiteral lit) {
-	}
-
-	/**
-	 * Visit operation called for set literals.
-	 *
-	 * @param lit a set literal
-	 */
-	public virtual void visit_set_literal (SetLiteral lit) {
-	}
-
-	/**
-	 * Visit operation called for map literals.
-	 *
-	 * @param lit a map literal
-	 */
-	public virtual void visit_map_literal (MapLiteral lit) {
-	}
-
-	/**
 	 * Visit operation called for tuples.
 	 *
 	 * @param tuple a tuple

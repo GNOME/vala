@@ -92,17 +92,7 @@ public class Vala.PointerType : DataType {
 	}
 
 	public override Symbol? get_member (string member_name) {
-		if (CodeContext.get ().profile != Profile.DOVA) {
-			return null;
-		}
-
-		Symbol base_symbol = base_type.data_type;
-
-		if (base_symbol == null) {
-			return null;
-		}
-
-		return SemanticAnalyzer.symbol_lookup_inherited (base_symbol, member_name);
+		return null;
 	}
 
 	public override Symbol? get_pointer_member (string member_name) {

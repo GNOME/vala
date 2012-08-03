@@ -254,32 +254,6 @@ public class Vala.Class : ObjectTypeSymbol {
 	 * @param f a field
 	 */
 	public override void add_field (Field f) {
-		if (CodeContext.get ().profile == Profile.DOVA &&
-		    f.binding == MemberBinding.INSTANCE &&
-		    (f.access == SymbolAccessibility.PUBLIC || f.access == SymbolAccessibility.PROTECTED) &&
-		    name != "any" /* temporary workaround */) {
-			// public/protected instance fields not supported, convert to automatic property
-
-			var prop = new Property (f.name, f.variable_type.copy (), null, null, f.source_reference, comment);
-			prop.access = access;
-
-			var get_type = prop.property_type.copy ();
-			get_type.value_owned = true;
-			var set_type = prop.property_type.copy ();
-			set_type.value_owned = false;
-
-			prop.get_accessor = new PropertyAccessor (true, false, false, get_type, null, f.source_reference);
-
-			prop.set_accessor = new PropertyAccessor (false, true, false, set_type, null, f.source_reference);
-
-			f.name = "_%s".printf (f.name);
-			f.access = SymbolAccessibility.PRIVATE;
-			prop.field = f;
-
-			add_property (prop);
-			return;
-		}
-
 		fields.add (f);
 		if (f.access == SymbolAccessibility.PRIVATE && f.binding == MemberBinding.INSTANCE) {
 			has_private_fields = true;
@@ -320,7 +294,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			m.this_parameter = new Parameter ("this", get_this_type ());
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
-		if (!(m.return_type is VoidType) && (CodeContext.get ().profile == Profile.DOVA || m.get_postconditions ().size > 0)) {
+		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
 			if (m.result_var != null) {
 				m.scope.remove (m.result_var.name);
 			}
@@ -559,8 +533,6 @@ public class Vala.Class : ObjectTypeSymbol {
 
 	public bool is_fundamental () {
 		if (!is_compact && base_class == null) {
-			return true;
-		} else if (CodeContext.get ().profile == Profile.DOVA && base_class.base_class == null) {
 			return true;
 		}
 		return false;

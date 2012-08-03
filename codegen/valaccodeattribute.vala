@@ -584,11 +584,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 			}
 		} else if (node is ObjectType) {
 			var type = (ObjectType) node;
-			if (CodeContext.get ().profile == Profile.DOVA) {
-				if (type.type_symbol.get_full_name () == "string") {
-					return "string_t";
-				}
-			}
 
 			string cname;
 			if (!type.value_owned) {
@@ -603,19 +598,11 @@ public class Vala.CCodeAttribute : AttributeCache {
 			if (type.inline_allocated) {
 				return cname;
 			} else {
-				if (CodeContext.get ().profile == Profile.DOVA) {
-					return "DovaArray";
-				} else {
-					return "%s*".printf (cname);
-				}
+				return "%s*".printf (cname);
 			}
 		} else if (node is DelegateType) {
 			var type = (DelegateType) node;
-			if (CodeContext.get ().profile == Profile.DOVA) {
-				return "%s*".printf (CCodeBaseModule.get_ccode_name (type.delegate_symbol));
-			} else {
-				return CCodeBaseModule.get_ccode_name (type.delegate_symbol);
-			}
+			return CCodeBaseModule.get_ccode_name (type.delegate_symbol);
 		} else if (node is ErrorType) {
 			return "GError*";
 		} else if (node is GenericType) {
@@ -1147,14 +1134,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 			if (base_st != null) {
 				return CCodeBaseModule.get_ccode_default_value (base_st);
 			}
-
-			if (CodeContext.get ().profile == Profile.DOVA) {
-				if (st.is_boolean_type ()) {
-					return "false";
-				} else if (st.is_integer_type () || st.is_floating_type ()) {
-					return "0";
-				}
-			}
 		}
 		return "";
 	}
@@ -1177,10 +1156,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 			}
 
 			string infix = "construct";
-
-			if (CodeContext.get ().profile == Profile.DOVA) {
-				infix = "init";
-			}
 
 			if (m.name == ".new") {
 				return "%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (parent), infix);

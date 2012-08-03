@@ -409,11 +409,7 @@ public class Vala.Parser : CodeVisitor {
 		bool value_owned = owned_by_default;
 
 		if (owned_by_default) {
-			if (context.profile == Profile.DOVA) {
-				if (can_weak_ref && accept (TokenType.WEAK)) {
-					value_owned = false;
-				}
-			} else if (accept (TokenType.UNOWNED)) {
+			if (accept (TokenType.UNOWNED)) {
 				value_owned = false;
 			} else if (accept (TokenType.WEAK)) {
 				if (!can_weak_ref && !context.deprecated) {
@@ -422,7 +418,7 @@ public class Vala.Parser : CodeVisitor {
 				value_owned = false;
 			}
 		} else {
-			value_owned = (context.profile != Profile.DOVA && accept (TokenType.OWNED));
+			value_owned = accept (TokenType.OWNED);
 		}
 
 		DataType type;
@@ -463,7 +459,7 @@ public class Vala.Parser : CodeVisitor {
 					// only used for parsing, reject use as real type
 					invalid_array = true;
 				}
-			} while (context.profile != Profile.DOVA && accept (TokenType.COMMA));
+			} while (accept (TokenType.COMMA));
 			expect (TokenType.CLOSE_BRACKET);
 
 			// arrays contain strong references by default
@@ -481,7 +477,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		if (!owned_by_default) {
-			if (context.profile != Profile.DOVA && accept (TokenType.HASH)) {
+			if (accept (TokenType.HASH)) {
 				if (!context.deprecated) {
 					Report.warning (get_last_src (), "deprecated syntax, use `owned` modifier");
 				}
@@ -579,18 +575,10 @@ public class Vala.Parser : CodeVisitor {
 			expr = parse_literal ();
 			break;
 		case TokenType.OPEN_BRACE:
-			if (context.profile == Profile.DOVA) {
-				expr = parse_set_literal ();
-			} else {
-				expr = parse_initializer ();
-			}
+			expr = parse_initializer ();
 			break;
 		case TokenType.OPEN_BRACKET:
-			if (context.profile == Profile.DOVA) {
-				expr = parse_list_literal ();
-			} else {
-				expr = parse_simple_name ();
-			}
+			expr = parse_simple_name ();
 			break;
 		case TokenType.OPEN_PARENS:
 			expr = parse_tuple ();
@@ -632,25 +620,13 @@ public class Vala.Parser : CodeVisitor {
 				expr = parse_member_access (begin, expr);
 				break;
 			case TokenType.OP_PTR:
-				if (context.profile == Profile.DOVA) {
-					found = false;
-				} else {
-					expr = parse_pointer_member_access (begin, expr);
-				}
+				expr = parse_pointer_member_access (begin, expr);
 				break;
 			case TokenType.OPEN_PARENS:
 				expr = parse_method_call (begin, expr);
 				break;
 			case TokenType.OPEN_BRACKET:
 				expr = parse_element_access (begin, expr);
-				break;
-			case TokenType.OPEN_BRACE:
-				var ma = expr as MemberAccess;
-				if (context.profile == Profile.DOVA && ma != null) {
-					expr = parse_object_literal (begin, ma);
-				} else {
-					found = false;
-				}
 				break;
 			case TokenType.OP_INC:
 				expr = parse_post_increment_expression (begin, expr);
@@ -877,27 +853,6 @@ public class Vala.Parser : CodeVisitor {
 		return expr;
 	}
 
-	Expression parse_object_literal (SourceLocation begin, MemberAccess member) throws ParseError {
-		member.creation_member = true;
-
-		var expr = new ObjectCreationExpression (member, get_src (begin));
-
-		expect (TokenType.OPEN_BRACE);
-
-		do {
-			var member_begin = get_location ();
-			string id = parse_identifier ();
-			expect (TokenType.COLON);
-			var member_expr = parse_expression ();
-
-			expr.add_member_initializer (new MemberInitializer (id, member_expr, get_src (member_begin)));
-		} while (accept (TokenType.COMMA));
-
-		expect (TokenType.CLOSE_BRACE);
-
-		return expr;
-	}
-
 	Expression parse_array_creation_expression () throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.NEW);
@@ -939,12 +894,12 @@ public class Vala.Parser : CodeVisitor {
 					size_specified = true;
 				}
 				size_specifier_list.add (size);
-			} while (context.profile != Profile.DOVA && accept (TokenType.COMMA));
+			} while (accept (TokenType.COMMA));
 			expect (TokenType.CLOSE_BRACKET);
 		} while (accept (TokenType.OPEN_BRACKET));
 
 		InitializerList initializer = null;
-		if (context.profile != Profile.DOVA && current () == TokenType.OPEN_BRACE) {
+		if (current () == TokenType.OPEN_BRACE) {
 			initializer = parse_initializer ();
 		}
 		var expr = new ArrayCreationExpression (element_type, size_specifier_list.size, initializer, get_src (begin));
@@ -958,7 +913,7 @@ public class Vala.Parser : CodeVisitor {
 
 	List<MemberInitializer> parse_object_initializer () throws ParseError {
 		var list = new ArrayList<MemberInitializer> ();
-		if (context.profile != Profile.DOVA && accept (TokenType.OPEN_BRACE)) {
+		if (accept (TokenType.OPEN_BRACE)) {
 			do {
 				list.add (parse_member_initializer ());
 			} while (accept (TokenType.COMMA));
@@ -1568,19 +1523,6 @@ public class Vala.Parser : CodeVisitor {
 				}
 
 				if (!is_decl) {
-					if (context.profile == Profile.DOVA && stmt is ReturnStatement) {
-						// split
-						//     return foo;
-						// into
-						//     result = foo;
-						//     return;
-						var ret_stmt = (ReturnStatement) stmt;
-						if (ret_stmt.return_expression != null) {
-							var assignment = new Assignment (new MemberAccess.simple ("result", stmt.source_reference), ret_stmt.return_expression, AssignmentOperator.SIMPLE, stmt.source_reference);
-							ret_stmt.return_expression = null;
-							block.add_statement (new ExpressionStatement (assignment, stmt.source_reference));
-						}
-					}
 					block.add_statement (stmt);
 				}
 			} catch (ParseError e) {
@@ -1683,19 +1625,6 @@ public class Vala.Parser : CodeVisitor {
 		var block = new Block (get_src (get_location ()));
 
 		var stmt = parse_embedded_statement_without_block ();
-		if (context.profile == Profile.DOVA && stmt is ReturnStatement) {
-			// split
-			//     return foo;
-			// into
-			//     result = foo;
-			//     return;
-			var ret_stmt = (ReturnStatement) stmt;
-			if (ret_stmt.return_expression != null) {
-				var assignment = new Assignment (new MemberAccess.simple ("result"), ret_stmt.return_expression);
-				ret_stmt.return_expression = null;
-				block.add_statement (new ExpressionStatement (assignment));
-			}
-		}
 		block.add_statement (stmt);
 
 		return block;
@@ -2187,7 +2116,7 @@ public class Vala.Parser : CodeVisitor {
 
 		method.body.source_reference.end = get_current_src ().end;
 
-		if (!context.experimental && context.profile != Profile.DOVA) {
+		if (!context.experimental) {
 			Report.warning (method.source_reference, "main blocks are experimental");
 		}
 
@@ -2576,9 +2505,6 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
-		if (context.profile == Profile.DOVA) {
-			accept (TokenType.VOLATILE);
-		}
 		var type = parse_type (true, true);
 		string id = parse_identifier ();
 
@@ -2625,58 +2551,6 @@ public class Vala.Parser : CodeVisitor {
 		}
 		expect (TokenType.CLOSE_BRACE);
 		return initializer;
-	}
-
-	ListLiteral parse_list_literal () throws ParseError {
-		var begin = get_location ();
-		expect (TokenType.OPEN_BRACKET);
-		var initializer = new ListLiteral (get_src (begin));
-		if (current () != TokenType.CLOSE_BRACKET) {
-			do {
-				var init = parse_expression ();
-				initializer.add_expression (init);
-			} while (accept (TokenType.COMMA));
-		}
-		expect (TokenType.CLOSE_BRACKET);
-		return initializer;
-	}
-
-	Expression parse_set_literal () throws ParseError {
-		var begin = get_location ();
-		expect (TokenType.OPEN_BRACE);
-		var set = new SetLiteral (get_src (begin));
-		bool first = true;
-		if (current () != TokenType.CLOSE_BRACE) {
-			do {
-				var expr = parse_expression ();
-				if (first && accept (TokenType.COLON)) {
-					// found colon after expression, it's a map
-					rollback (begin);
-					return parse_map_literal ();
-				}
-				first = false;
-				set.add_expression (expr);
-			} while (accept (TokenType.COMMA));
-		}
-		expect (TokenType.CLOSE_BRACE);
-		return set;
-	}
-
-	Expression parse_map_literal () throws ParseError {
-		var begin = get_location ();
-		expect (TokenType.OPEN_BRACE);
-		var map = new MapLiteral (get_src (begin));
-		if (current () != TokenType.CLOSE_BRACE) {
-			do {
-				var key = parse_expression ();
-				map.add_key (key);
-				expect (TokenType.COLON);
-				var value = parse_expression ();
-				map.add_value (value);
-			} while (accept (TokenType.COMMA));
-		}
-		expect (TokenType.CLOSE_BRACE);
-		return map;
 	}
 
 	void parse_method_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
@@ -2741,21 +2615,10 @@ public class Vala.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
-		if (context.profile == Profile.DOVA) {
-			var error_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (new UnresolvedSymbol (null, "Dova"), "Error"), method.source_reference);
-			method.add_error_type (error_type);
-			if (accept (TokenType.THROWS)) {
-				do {
-					parse_type (true, false);
-				} while (accept (TokenType.COMMA));
-				Report.warning (method.source_reference, "`throws' is ignored in the Dova profile");
-			}
-		} else {
-			if (accept (TokenType.THROWS)) {
-				do {
-					method.add_error_type (parse_type (true, false));
-				} while (accept (TokenType.COMMA));
-			}
+		if (accept (TokenType.THROWS)) {
+			do {
+				method.add_error_type (parse_type (true, false));
+			} while (accept (TokenType.COMMA));
 		}
 		while (accept (TokenType.REQUIRES)) {
 			expect (TokenType.OPEN_PARENS);
@@ -2783,9 +2646,7 @@ public class Vala.Parser : CodeVisitor {
 		var type = parse_type (true, true);
 
 		bool getter_owned = false;
-		if (context.profile == Profile.DOVA) {
-			getter_owned = true;
-		} else if (accept (TokenType.HASH)) {
+		if (accept (TokenType.HASH)) {
 			if (!context.deprecated) {
 				Report.warning (get_last_src (), "deprecated syntax, use `owned` modifier before `get'");
 			}
@@ -2819,14 +2680,11 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			prop.external = true;
 		}
-		if (context.profile == Profile.DOVA) {
-		} else {
-			if (accept (TokenType.THROWS)) {
-				do {
-					prop.add_error_type (parse_type (true, false));
-				} while (accept (TokenType.COMMA));
-				Report.error (prop.source_reference, "properties throwing errors are not supported yet");
-			}
+		if (accept (TokenType.THROWS)) {
+			do {
+				prop.add_error_type (parse_type (true, false));
+			} while (accept (TokenType.COMMA));
+			Report.error (prop.source_reference, "properties throwing errors are not supported yet");
 		}
 		expect (TokenType.OPEN_BRACE);
 		while (current () != TokenType.CLOSE_BRACE) {
@@ -2845,7 +2703,7 @@ public class Vala.Parser : CodeVisitor {
 				var accessor_access = parse_access_modifier (SymbolAccessibility.PUBLIC);
 
 				var value_type = type.copy ();
-				value_type.value_owned = (context.profile != Profile.DOVA && accept (TokenType.OWNED));
+				value_type.value_owned = accept (TokenType.OWNED);
 
 				if (accept (TokenType.GET)) {
 					if (prop.get_accessor != null) {
@@ -3292,9 +3150,6 @@ public class Vala.Parser : CodeVisitor {
 			direction = ParameterDirection.REF;
 		}
 
-		if (context.profile == Profile.DOVA) {
-			accept (TokenType.VOLATILE);
-		}
 		DataType type;
 		if (direction == ParameterDirection.IN) {
 			// in parameters are unowned by default
@@ -3353,21 +3208,10 @@ public class Vala.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
-		if (context.profile == Profile.DOVA) {
-			var error_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (new UnresolvedSymbol (null, "Dova"), "Error"), method.source_reference);
-			method.add_error_type (error_type);
-			if (accept (TokenType.THROWS)) {
-				do {
-					parse_type (true, false);
-				} while (accept (TokenType.COMMA));
-				Report.warning (method.source_reference, "`throws' is ignored in the Dova profile");
-			}
-		} else {
-			if (accept (TokenType.THROWS)) {
-				do {
-					method.add_error_type (parse_type (true, false));
-				} while (accept (TokenType.COMMA));
-			}
+		if (accept (TokenType.THROWS)) {
+			do {
+				method.add_error_type (parse_type (true, false));
+			} while (accept (TokenType.COMMA));
 		}
 		while (accept (TokenType.REQUIRES)) {
 			expect (TokenType.OPEN_PARENS);
@@ -3425,21 +3269,10 @@ public class Vala.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
-		if (context.profile == Profile.DOVA) {
-			var error_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (new UnresolvedSymbol (null, "Dova"), "Error"), d.source_reference);
-			d.add_error_type (error_type);
-			if (accept (TokenType.THROWS)) {
-				do {
-					parse_type (true, false);
-				} while (accept (TokenType.COMMA));
-				Report.warning (d.source_reference, "`throws' is ignored in the Dova profile");
-			}
-		} else {
-			if (accept (TokenType.THROWS)) {
-				do {
-					d.add_error_type (parse_type (true, false));
-				} while (accept (TokenType.COMMA));
-			}
+		if (accept (TokenType.THROWS)) {
+			do {
+				d.add_error_type (parse_type (true, false));
+			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.SEMICOLON);
 

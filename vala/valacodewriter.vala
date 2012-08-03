@@ -724,9 +724,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		
 		write_params (m.get_parameters ());
 
-		if (context.profile != Profile.DOVA) {
-			write_error_domains (m.get_error_types ());
-		}
+		write_error_domains (m.get_error_types ());
 
 		write_code_block (m.body);
 
@@ -767,7 +765,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 			write_property_accessor_accessibility (prop.get_accessor);
 
-			if (context.profile != Profile.DOVA && prop.get_accessor.value_type.is_disposable ()) {
+			if (prop.get_accessor.value_type.is_disposable ()) {
 				write_string (" owned");
 			}
 
@@ -779,7 +777,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 			write_property_accessor_accessibility (prop.set_accessor);
 
-			if (context.profile != Profile.DOVA && prop.set_accessor.value_type.value_owned) {
+			if (prop.set_accessor.value_type.value_owned) {
 				write_string (" owned");
 			}
 
@@ -1429,9 +1427,8 @@ public class Vala.CodeWriter : CodeVisitor {
 	private void write_identifier (string s) {
 		char* id = (char*)s;
 		int id_length = (int)s.length;
-		if (context.profile != Profile.DOVA &&
-		    (Vala.Scanner.get_identifier_or_keyword (id, id_length) != Vala.TokenType.IDENTIFIER ||
-		     s.get_char ().isdigit ())) {
+		if (Vala.Scanner.get_identifier_or_keyword (id, id_length) != Vala.TokenType.IDENTIFIER ||
+		    s.get_char ().isdigit ()) {
 			stream.putc ('@'); 
 		}
 		write_string (s);

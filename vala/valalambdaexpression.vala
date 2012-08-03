@@ -164,11 +164,6 @@ public class Vala.LambdaExpression : Expression {
 		}
 		method.owner = context.analyzer.current_symbol.scope;
 
-		if (!(method.return_type is VoidType) && CodeContext.get ().profile == Profile.DOVA) {
-			method.result_var = new LocalVariable (method.return_type.copy (), "result", null, source_reference);
-			method.result_var.is_result = true;
-		}
-
 		var lambda_params = get_parameters ();
 		Iterator<Parameter> lambda_param_it = lambda_params.iterator ();
 
@@ -208,12 +203,7 @@ public class Vala.LambdaExpression : Expression {
 			block.scope.parent_scope = method.scope;
 
 			if (method.return_type.data_type != null) {
-				if (context.profile == Profile.DOVA) {
-					block.add_statement (new ExpressionStatement (new Assignment (new MemberAccess.simple ("result", source_reference), expression_body, AssignmentOperator.SIMPLE, source_reference), source_reference));
-					block.add_statement (new ReturnStatement (null, source_reference));
-				} else {
-					block.add_statement (new ReturnStatement (expression_body, source_reference));
-				}
+				block.add_statement (new ReturnStatement (expression_body, source_reference));
 			} else {
 				block.add_statement (new ExpressionStatement (expression_body, source_reference));
 			}

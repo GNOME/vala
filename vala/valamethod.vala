@@ -769,7 +769,7 @@ public class Vala.Method : Subroutine {
 			entry_point = true;
 			context.entry_point = this;
 
-			if (tree_can_fail && context.profile != Profile.DOVA) {
+			if (tree_can_fail) {
 				Report.error (source_reference, "\"main\" method cannot throw errors");
 			}
 		}

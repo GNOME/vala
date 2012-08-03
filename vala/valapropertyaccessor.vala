@@ -143,12 +143,7 @@ public class Vala.PropertyAccessor : Subroutine {
 				body = new Block (source_reference);
 				var ma = new MemberAccess.simple ("_%s".printf (prop.name), source_reference);
 				if (readable) {
-					if (context.profile == Profile.DOVA) {
-						body.add_statement (new ExpressionStatement (new Assignment (new MemberAccess.simple ("result", source_reference), ma, AssignmentOperator.SIMPLE, source_reference), source_reference));
-						body.add_statement (new ReturnStatement (null, source_reference));
-					} else {
-						body.add_statement (new ReturnStatement (ma, source_reference));
-					}
+					body.add_statement (new ReturnStatement (ma, source_reference));
 				} else {
 					Expression value = new MemberAccess.simple ("value", source_reference);
 					if (value_type.value_owned) {
@@ -161,23 +156,16 @@ public class Vala.PropertyAccessor : Subroutine {
 		}
 
 		if (body != null) {
-			if (readable && context.profile == Profile.DOVA) {
-				result_var = new LocalVariable (value_type.copy (), "result", null, source_reference);
-				result_var.is_result = true;
-
-				result_var.check (context);
-			} else if (writable || construction) {
+			if (writable || construction) {
 				value_parameter = new Parameter ("value", value_type, source_reference);
 				body.scope.add (value_parameter.name, value_parameter);
 			}
 
 			body.check (context);
 
-			if (context.profile != Profile.DOVA) {
-				foreach (DataType body_error_type in body.get_error_types ()) {
-					if (!((ErrorType) body_error_type).dynamic_error) {
-						Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
-					}
+			foreach (DataType body_error_type in body.get_error_types ()) {
+				if (!((ErrorType) body_error_type).dynamic_error) {
+					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
 				}
 			}
 		}
