@@ -1,4 +1,4 @@
-Vte cheader_filename="vte/vte.h"
+Vte cheader_filename="vte/vte.h" replacement="vte-2.90"
 VteReaper cheader_filename="vte/reaper.h"
 VteTerminalAccessible cheader_filename="vte/vteaccess.h"
 VteTerminal::copy_clipboard has_emitter="1"

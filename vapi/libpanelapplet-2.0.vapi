@@ -21,6 +21,7 @@
  */
 
 [CCode (cheader_filename = "panel-applet.h")]
+[Deprecated]
 namespace Panel {
 	public class Applet : Gtk.EventBox {
 		[CCode (has_construct_function = false)]

@@ -4,6 +4,7 @@
  */
 
 [CCode (cheader_filename = "libbonoboui.h")]
+[Deprecated]
 namespace BonoboUI {
 	public struct Verb {
 		public weak string cname;

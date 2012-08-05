@@ -1,4 +1,4 @@
-GConf cheader_filename="gconf/gconf.h"
+GConf cheader_filename="gconf/gconf.h" replacement="GLib.Settings"
 GConfClient cheader_filename="gconf/gconf-client.h"
 GConfClient::error has_emitter="1"
 GConfClient::unreturned_error has_emitter="1"

@@ -1,4 +1,4 @@
-Glade cheader_filename="glade/glade.h"
+Glade cheader_filename="glade/glade.h" replacement="Gtk.Builder"
 
 glade_xml_construct.root nullable="1"
 glade_xml_construct.domain nullable="1"

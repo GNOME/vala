@@ -1,3 +1,4 @@
+Gedit replacement="gedit"
 Gedit*Class hidden="1"
 Gtk*Class hidden="1"
 *.priv hidden="1"

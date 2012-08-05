@@ -1,4 +1,4 @@
-Gdk cheader_filename="gdk/gdkx.h" 
+Gdk cheader_filename="gdk/gdkx.h" replacement="gdk-x11-3.0"
 VisualID name="uint32"
 XID name="uint32"
 XImage name="pointer"
