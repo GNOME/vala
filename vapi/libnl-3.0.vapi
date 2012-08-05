@@ -114,15 +114,15 @@ namespace Netlink {
 
     [CCode (cprefix = "NLA_", cname = "int", cheader_filename = "netlink/attr.h")]
     public enum AttributeType {
-        UNSPEC,     /**< Unspecified type, binary data chunk */
-        U8,         /**< 8 bit integer */
-        U16,        /**< 16 bit integer */
-        U32,        /**< 32 bit integer */
-        U64,        /**< 64 bit integer */
-        STRING,     /**< NUL terminated character string */
-        FLAG,       /**< Flag */
-        MSECS,      /**< Micro seconds (64bit) */
-        NESTED,     /**< Nested attributes */
+        UNSPEC,     // Unspecified type, binary data chunk
+        U8,         // 8 bit integer
+        U16,        // 16 bit integer
+        U32,        // 32 bit integer
+        U64,        // 64 bit integer
+        STRING,     // NUL terminated character string
+        FLAG,       // Flag
+        MSECS,      // Micro seconds (64bit)
+        NESTED,     // Nested attributes
         TYPE_MAX
     }
 
@@ -326,9 +326,9 @@ namespace Netlink {
 
     [CCode (cprefix = "NL_DUMP_", cname = "int", cheader_filename = "netlink/types.h")]
     public enum DumpType {
-        LINE,           /**< Dump object briefly on one line */
-        DETAILS,        /**< Dump all attributes but no statistics */
-        STATS,          /**< Dump all attributes including statistics */
+        LINE,           // Dump object briefly on one line
+        DETAILS,        // Dump all attributes but no statistics
+        STATS,          // Dump all attributes including statistics
     }
 
     [CCode (cname = "struct nl_dump_params", free_function = "", cheader_filename = "netlink/types.h")]
