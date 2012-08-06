@@ -2418,7 +2418,7 @@ namespace Posix {
 
 		public static CpuSet init(int num = 1) {
 			CpuSet cpus = new CpuSet(num);
-			var size = cpus.alloc_size(num);
+			var size = CpuSet.alloc_size(num);
 			cpus.zero_sized(size);
 			return cpus;
 		}
