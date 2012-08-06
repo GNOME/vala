@@ -71,6 +71,7 @@ dist_vapi_DATA = \
 	gnome-vfs-2.0.vapi \
 	gnutls.vapi \
 	gobject-2.0.vapi \
+	gobject-introspection-1.0.vapi \
 	goocanvas.deps \
 	goocanvas.vapi \
 	gsl.vapi \
@@ -326,6 +327,7 @@ GIR_BINDINGS = \
 	gdl-3.0 \
 	gedit \
 	gio-2.0 \
+	gobject-introspection-1.0 \
 	gtksourceview-3.0 \
 	gudev-1.0 \
 	json-glib-1.0 \
@@ -428,6 +430,9 @@ gnome-keyring-1:
 
 gnome-vfs-2.0:
 	$(GENVAPI) --library $(srcdir)/gnome-vfs-2.0 $(PACKAGESDIR)/gnome-vfs-2.0/gnome-vfs-2.0-custom.vala $(PACKAGESDIR)/gnome-vfs-2.0/gnome-vfs-2.0.gi
+
+gobject-introspection-1.0:
+	$(GENVAPI) --library $(srcdir)/gobject-introspection-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GIRepository-2.0.gir
 
 goocanvas:
 	$(GENVAPI) --library $(srcdir)/goocanvas $(PACKAGESDIR)/goocanvas/goocanvas-custom.vala $(PACKAGESDIR)/goocanvas/goocanvas.gi
