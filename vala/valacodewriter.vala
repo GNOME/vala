@@ -1,6 +1,6 @@
 /* valacodewriter.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2012  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -509,6 +509,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			
 		write_string (" ");
 		write_identifier (c.name);
+		write_type_suffix (c.type_reference);
 		if (type == CodeWriterType.FAST && c.value != null) {
 			write_string(" = ");
 			c.value.accept (this);
@@ -545,6 +546,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			
 		write_string (" ");
 		write_identifier (f.name);
+		write_type_suffix (f.variable_type);
 		write_string (";");
 		write_newline ();
 	}
@@ -605,6 +607,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 			write_string (" ");
 			write_identifier (param.name);
+			write_type_suffix (param.variable_type);
 			
 			if (param.initializer != null) {
 				write_string (" = ");
@@ -847,6 +850,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_type (local.variable_type);
 		write_string (" ");
 		write_identifier (local.name);
+		write_type_suffix (local.variable_type);
 		if (local.initializer != null) {
 			write_string (" = ");
 			local.initializer.accept (this);
@@ -1444,6 +1448,13 @@ public class Vala.CodeWriter : CodeVisitor {
 
 	private void write_type (DataType type) {
 		write_string (type.to_qualified_string (current_scope));
+	}
+
+	private void write_type_suffix (DataType type) {
+		var array_type = type as ArrayType;
+		if (array_type != null && array_type.fixed_length) {
+			write_string ("[%d]".printf (array_type.length));
+		}
 	}
 
 	private void write_string (string s) {

@@ -1,6 +1,6 @@
 /* valaarraytype.vala
  *
- * Copyright (C) 2007-2011  Jürg Billeter
+ * Copyright (C) 2007-2012  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -153,7 +153,11 @@ public class Vala.ArrayType : ReferenceType {
 	}
 
 	public override string to_qualified_string (Scope? scope) {
-		return "%s[%s]%s".printf (element_type.to_qualified_string (scope), string.nfill (rank - 1, ','), nullable ? "?" : "");
+		if (!fixed_length) {
+			return "%s[%s]%s".printf (element_type.to_qualified_string (scope), string.nfill (rank - 1, ','), nullable ? "?" : "");
+		} else {
+			return element_type.to_qualified_string (scope);
+		}
 	}
 
 	public override bool compatible (DataType target_type) {
