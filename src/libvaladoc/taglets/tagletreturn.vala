@@ -32,7 +32,10 @@ public class Valadoc.Taglets.Return : InlineContent, Taglet, Block {
 
 	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
 		Api.TypeReference? type_ref = null;
+		bool creation_method = false;
+
 		if (container is Api.Method) {
+			creation_method = ((Api.Method) container).is_constructor;
 			type_ref = ((Api.Method) container).return_type;
 		} else if (container is Api.Delegate) {
 			type_ref = ((Api.Delegate) container).return_type;
@@ -42,7 +45,7 @@ public class Valadoc.Taglets.Return : InlineContent, Taglet, Block {
 			reporter.simple_warning ("%s: %s: @return: warning: @return used outside method/delegate/signal context", file_path, container.get_full_name ());
 		}
 
-		if (type_ref != null && type_ref.data_type == null) {
+		if (type_ref != null && type_ref.data_type == null && !creation_method) {
 			reporter.simple_warning ("%s: %s: @return: warning: Return description declared for void function", file_path, container.get_full_name ());
 		}
 
