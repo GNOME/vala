@@ -1,6 +1,6 @@
 /* valaclass.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2012  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -829,7 +829,7 @@ public class Vala.Class : ObjectTypeSymbol {
 				while (base_class != null && base_class.is_abstract) {
 					foreach (Method base_method in base_class.get_methods ()) {
 						if (base_method.is_abstract) {
-							var override_method = context.analyzer.symbol_lookup_inherited (this, base_method.name) as Method;
+							var override_method = SemanticAnalyzer.symbol_lookup_inherited (this, base_method.name) as Method;
 							if (override_method == null || !override_method.overrides) {
 								error = true;
 								Report.error (source_reference, "`%s' does not implement abstract method `%s'".printf (get_full_name (), base_method.get_full_name ()));
@@ -838,7 +838,7 @@ public class Vala.Class : ObjectTypeSymbol {
 					}
 					foreach (Property base_property in base_class.get_properties ()) {
 						if (base_property.is_abstract) {
-							var override_property = context.analyzer.symbol_lookup_inherited (this, base_property.name) as Property;
+							var override_property = SemanticAnalyzer.symbol_lookup_inherited (this, base_property.name) as Property;
 							if (override_property == null || !override_property.overrides) {
 								error = true;
 								Report.error (source_reference, "`%s' does not implement abstract property `%s'".printf (get_full_name (), base_property.get_full_name ()));

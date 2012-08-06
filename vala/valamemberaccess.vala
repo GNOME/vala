@@ -265,7 +265,7 @@ public class Vala.MemberAccess : Expression {
 					}
 				}
 
-				symbol_reference = context.analyzer.symbol_lookup_inherited (sym, member_name);
+				symbol_reference = SemanticAnalyzer.symbol_lookup_inherited (sym, member_name);
 
 				if (symbol_reference == null) {
 					if (sym is TypeSymbol) {
@@ -800,7 +800,7 @@ public class Vala.MemberAccess : Expression {
 				}
 
 				if (instance && base_method.parent_symbol is TypeSymbol) {
-					inner.target_type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) base_method.parent_symbol);
+					inner.target_type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) base_method.parent_symbol);
 					inner.target_type.value_owned = base_method.this_parameter.variable_type.value_owned;
 				}
 			} else if (symbol_reference is Property) {
@@ -816,12 +816,12 @@ public class Vala.MemberAccess : Expression {
 				}
 
 				if (instance && base_property.parent_symbol != null) {
-					inner.target_type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) base_property.parent_symbol);
+					inner.target_type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) base_property.parent_symbol);
 				}
 			} else if ((symbol_reference is Field
 			            || symbol_reference is Signal)
 			           && instance && symbol_reference.parent_symbol != null) {
-				var parent_type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_reference.parent_symbol);
+				var parent_type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) symbol_reference.parent_symbol);
 				inner.target_type = parent_type.get_actual_type (inner.value_type, null, this);
 			}
 		}
