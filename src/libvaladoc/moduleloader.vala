@@ -125,7 +125,7 @@ public class Valadoc.ModuleLoader : Object {
 
 		string[] segments = driverpath.split (".");
 		if (segments.length != 3 && segments.length != 4) {
-			reporter.simple_error ("Invalid driver version format.");
+			reporter.simple_error ("error: Invalid driver version format.");
 			return null;
 		}
 
@@ -140,7 +140,7 @@ public class Valadoc.ModuleLoader : Object {
 		tmp &= int64.try_parse (segments[2], out segment_c);
 
 		if (!tmp) {
-			reporter.simple_error ("Invalid driver version format.");
+			reporter.simple_error ("error: Invalid driver version format.");
 			return null;
 		}
 
@@ -162,7 +162,7 @@ public class Valadoc.ModuleLoader : Object {
 		}
 
 
-		reporter.simple_error ("No suitable driver found.");
+		reporter.simple_error ("error: No suitable driver found.");
 		return null;
 	}
 

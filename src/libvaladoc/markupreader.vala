@@ -87,7 +87,7 @@ public class Valadoc.MarkupReader : Object {
 			line = 1;
 			column = 1;
 		} catch (FileError e) {
-			reporter.simple_error ("Unable to map file `%s': %s", filename, e.message);
+			reporter.simple_error ("%s: error: Unable to map file: %s", filename, e.message);
 		}
 	}
 
@@ -127,7 +127,7 @@ public class Valadoc.MarkupReader : Object {
 			if (u != (unichar) (-1)) {
 				current += u.to_utf8 (null);
 			} else {
-				reporter.simple_error ("invalid UTF-8 character");
+				reporter.simple_error ("%s:%d: error: invalid UTF-8 character", filename, line);
 			}
 		}
 		if (current == begin) {
@@ -253,7 +253,7 @@ public class Valadoc.MarkupReader : Object {
 		while (current < end && current[0] != end_char) {
 			unichar u = ((string) current).get_char_validated ((long) (end - current));
 			if (u == (unichar) (-1)) {
-				reporter.simple_error ("invalid UTF-8 character");
+				reporter.simple_error ("%s:%d: error: invalid UTF-8 character", filename, line);
 			} else if (u == '&') {
 				char* next_pos = current + u.to_utf8 (null);
 				if (((string) next_pos).has_prefix ("amp;")) {

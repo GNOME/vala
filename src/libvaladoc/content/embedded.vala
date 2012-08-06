@@ -56,7 +56,8 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 
 		// search relative to the current directory / absoulte path
 		if (!FileUtils.test (url, FileTest.EXISTS | FileTest.IS_REGULAR)) {
-			reporter.simple_error ("%s does not exist", url);
+			string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
+			reporter.simple_error ("%s: %s{{: error: %s does not exist", file_path, node_segment, url);
 		} else {
 			package = container.package;
 		}

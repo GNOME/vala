@@ -68,7 +68,7 @@ public class Valadoc.WikiPage : Object, Documentation {
 			FileUtils.get_contents (this.path, out content);
 			this.documentation_str = content;
 		} catch (FileError err) {
-			reporter.simple_error ("Unable to read file `%s': %s", this.path, err.message);
+			reporter.simple_error ("error: Unable to read file `%s': %s", this.path, err.message);
 		}
 	}
 
@@ -122,7 +122,7 @@ public class Valadoc.WikiPageTree : Object {
 				}
 			}
 		} catch (FileError err) {
-			reporter.simple_error ("Unable to open directory `%s': %s", path, err.message);
+			reporter.simple_error ("error: Unable to open directory `%s': %s", path, err.message);
 		}
 	}
 

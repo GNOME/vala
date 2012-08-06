@@ -77,7 +77,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 
 	public override void visit_headline (Headline hl) {
 		// what to do here?
-		reporter.simple_warning ("GtkDoc: Headline elements not supported");
+		reporter.simple_warning ("GtkDoc: warning: Headline elements not supported");
 		current_builder.append ("\n");
 		hl.accept_children (this);
 		current_builder.append ("\n");
@@ -144,7 +144,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			break;
 
 		default:
-			reporter.simple_warning ("GtkDoc: unsupported list type: %s", list.bullet.to_string ());
+			reporter.simple_warning ("GtkDoc: warning: unsupported list type: %s", list.bullet.to_string ());
 			break;
 		}
 
@@ -278,7 +278,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 		} else if (t is Taglets.Link) {
 			((Taglets.Link)t).produce_content().accept (this);
 		} else {
-			reporter.simple_warning ("GtkDoc: Taglet not supported"); // TODO
+			reporter.simple_warning ("GtkDoc: warning: Taglet not supported"); // TODO
 		}
 		current_builder = (owned)old_builder;
 	}

@@ -173,7 +173,7 @@ public class ValaDoc : Object {
 
 		doclet = modules.create_doclet (pluginpath);
 		if (doclet == null) {
-			reporter.simple_error ("failed to load doclet");
+			reporter.simple_error ("error: failed to load doclet");
 			return null;
 		}
 
@@ -186,7 +186,7 @@ public class ValaDoc : Object {
 
 		driver = modules.create_driver (pluginpath);
 		if (driver == null) {
-			reporter.simple_error ("failed to load driver");
+			reporter.simple_error ("error: failed to load driver");
 			return null;
 		}
 
@@ -298,7 +298,7 @@ public class ValaDoc : Object {
 			opt_context.add_main_entries (options, null);
 			opt_context.parse (ref args);
 		} catch (OptionError e) {
-			reporter.simple_error (e.message);
+			reporter.simple_error ("error: %s", e.message);
 			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
 			return quit (reporter);
 		}
@@ -309,12 +309,12 @@ public class ValaDoc : Object {
 		}
 
 		if (directory == null) {
-			reporter.simple_error ("No output directory specified.");
+			reporter.simple_error ("error: No output directory specified.");
 			return quit (reporter);
 		}
 
 		if (!check_pkg_name ()) {
-			reporter.simple_error ("File already exists");
+			reporter.simple_error ("error: File already exists");
 			return quit (reporter);
 		}
 
@@ -322,18 +322,18 @@ public class ValaDoc : Object {
 			if (force == true) {
 				bool tmp = remove_directory (directory);
 				if (tmp == false) {
-					reporter.simple_error ("Can't remove directory.");
+					reporter.simple_error ("error: Can't remove directory.");
 					return quit (reporter);
 				}
 			} else {
-				reporter.simple_error ("File already exists");
+				reporter.simple_error ("error: File already exists");
 				return quit (reporter);
 			}
 		}
 
 		if (wikidirectory != null) {
 			if (!FileUtils.test(wikidirectory, FileTest.IS_DIR)) {
-				reporter.simple_error ("Wiki-directory does not exist.");
+				reporter.simple_error ("error: Wiki-directory does not exist.");
 				return quit (reporter);
 			}
 		}
@@ -343,7 +343,7 @@ public class ValaDoc : Object {
 			int last_hyphen = gir_name.last_index_of_char ('-');
 
 			if (last_hyphen == -1 || !gir_name.has_suffix (".gir")) {
-				reporter.simple_error ("GIR file name `%s' is not well-formed, expected NAME-VERSION.gir", gir_name);
+				reporter.simple_error ("error: GIR file name `%s' is not well-formed, expected NAME-VERSION.gir", gir_name);
 				return quit (reporter);
 			}
 
@@ -352,7 +352,7 @@ public class ValaDoc : Object {
 			gir_version.canon ("0123456789.", '?');
 
 			if (gir_namespace == "" || gir_version == "" || !gir_version[0].isdigit () || gir_version.contains ("?")) {
-				reporter.simple_error ("GIR file name `%s' is not well-formed, expected NAME-VERSION.gir", gir_name);
+				reporter.simple_error ("error: GIR file name `%s' is not well-formed, expected NAME-VERSION.gir", gir_name);
 				return quit (reporter);
 			}
 
@@ -366,7 +366,7 @@ public class ValaDoc : Object {
 			}
 
 			if (report_warning == true) {
-				reporter.simple_error ("No source file specified to be compiled to gir.");
+				reporter.simple_error ("error: No source file specified to be compiled to gir.");
 				return quit (reporter);
 			}
 		}
