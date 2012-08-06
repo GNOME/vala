@@ -1,6 +1,6 @@
 /* valamemberaccess.vala
  *
- * Copyright (C) 2006-2011  Jürg Billeter
+ * Copyright (C) 2006-2012  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -769,6 +769,10 @@ public class Vala.MemberAccess : Expression {
 				inner.symbol_reference = this_parameter;
 			} else {
 				check_lvalue_access ();
+			}
+
+			if (!instance && !klass && may_access_instance_members && inner != null) {
+				Report.warning (source_reference, "Access to static member `%s' with an instance reference".printf (symbol_reference.get_full_name ()));
 			}
 
 			if (context.experimental_non_null && instance && inner.value_type.nullable &&
