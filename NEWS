@@ -1,3 +1,14 @@
+Vala 0.17.4
+===========
+
+ * Warn when accessing static members with an instance reference.
+ * Recompute length when casting between array types.
+ * Support [GenericAccessors] attribute for interfaces.
+ * Deprecate implicit .begin for async methods.
+ * Drop Dova profile.
+ * Drop POSIX profile.
+ * Bug fixes and binding updates.
+
 Vala 0.17.3
 ===========
 
