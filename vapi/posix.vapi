@@ -1360,14 +1360,14 @@ namespace Posix {
 	}
 
 	[SimpleType]
-	[CCode (cname = "struct in_addr", cheader_filename = "sys/socket.h", destroy_function = "")]
+	[CCode (cname = "struct in_addr", cheader_filename = "sys/socket.h,netinet/in.h", destroy_function = "")]
 	public struct InAddr {
 		public uint32 s_addr;
 	}
 
-	[CCode (cname = "struct in6_addr", cheader_filename = "sys/socket.h", destroy_function = "")]
+	[CCode (cname = "struct in6_addr", cheader_filename = "sys/socket.h,netinet/in.h", destroy_function = "")]
 	public struct In6Addr {
-		public uchar[] s6_addr[16];
+		public uint8 s6_addr[16];
 	}
 
 	[CCode (cname = "struct sockaddr", cheader_filename = "sys/socket.h", destroy_function = "")]
