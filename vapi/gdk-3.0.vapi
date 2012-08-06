@@ -6007,12 +6007,16 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint threads_add_timeout_seconds_full (int priority, uint interval, owned GLib.SourceFunc function);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Deprecated (since = "3.6")]
 	public static void threads_enter ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Deprecated (since = "3.6")]
 	public static void threads_init ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Deprecated (since = "3.6")]
 	public static void threads_leave ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Deprecated (since = "3.6")]
 	public static void threads_set_lock_functions (GLib.Callback enter_fn, GLib.Callback leave_fn);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint unicode_to_keyval (uint32 wc);

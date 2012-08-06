@@ -4661,7 +4661,7 @@ namespace Clutter {
 		public unowned Clutter.Animation animatev (ulong mode, uint duration, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5)] string[] properties, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5)] GLib.Value[] values);
 		public Clutter.Vertex apply_relative_transform_to_point (Clutter.Actor? ancestor, Clutter.Vertex point);
 		[NoWrapper]
-		public virtual void apply_transform (ref Cogl.Matrix matrix);
+		public virtual void apply_transform (ref Clutter.Matrix matrix);
 		public Clutter.Vertex apply_transform_to_point (Clutter.Vertex point);
 		public void clear_actions ();
 		public void clear_constraints ();
@@ -4763,7 +4763,9 @@ namespace Clutter {
 		public void get_size (out float width, out float height);
 		public unowned Clutter.Stage get_stage ();
 		public Clutter.TextDirection get_text_direction ();
-		public Cogl.Matrix get_transformation_matrix ();
+		public Clutter.Matrix get_transform ();
+		[Deprecated (since = "1.12")]
+		public Clutter.Matrix get_transformation_matrix ();
 		public unowned Clutter.PaintVolume get_transformed_paint_volume (Clutter.Actor relative_to_ancestor);
 		public void get_transformed_position (out float x, out float y);
 		public void get_transformed_size (out float width, out float height);
@@ -4893,6 +4895,7 @@ namespace Clutter {
 		public void set_shader_param_int (string param, int value);
 		public void set_size (float width, float height);
 		public void set_text_direction (Clutter.TextDirection text_dir);
+		public void set_transform (Clutter.Matrix? transform);
 		public void set_translation (float translate_x, float translate_y, float translate_z);
 		public void set_width (float width);
 		public void set_x (float x);
@@ -5030,6 +5033,8 @@ namespace Clutter {
 		public Clutter.Size size { owned get; set; }
 		public Clutter.TextDirection text_direction { get; set; }
 		[NoAccessorMethod]
+		public bool transform_set { get; }
+		[NoAccessorMethod]
 		public float translation_x { get; set; }
 		[NoAccessorMethod]
 		public float translation_y { get; set; }
@@ -5073,6 +5078,7 @@ namespace Clutter {
 		[HasEmitter]
 		public virtual signal void show ();
 		public virtual signal bool touch_event (Clutter.Event event);
+		public signal void transition_stopped (string name, bool is_finished);
 		public signal void transitions_completed ();
 		[HasEmitter]
 		public virtual signal void unrealize ();
@@ -7300,6 +7306,15 @@ namespace Clutter {
 		public Clutter.Knot copy ();
 		public bool equal (Clutter.Knot knot_b);
 		public void free ();
+	}
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	public struct Matrix : Cogl.Matrix {
+		public static Clutter.Matrix alloc ();
+		public static void free (Clutter.Matrix? matrix);
+		public static GLib.Type get_type ();
+		public static Clutter.Matrix init_from_array (Clutter.Matrix matrix, [CCode (array_length = false)] float[] values);
+		public static Clutter.Matrix init_from_matrix (Clutter.Matrix a, Clutter.Matrix b);
+		public static Clutter.Matrix init_identity (Clutter.Matrix matrix);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	public struct MotionEvent {

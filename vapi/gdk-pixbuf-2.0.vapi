@@ -40,7 +40,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_pixbuf_new_from_stream_at_scale_async", finish_name = "gdk_pixbuf_new_from_stream_finish")]
 		public async Pixbuf.from_stream_at_scale_async (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false)]
-		public Pixbuf.from_xpm_data ([CCode (array_length = false, type = "const char**")] string[] data);
+		public Pixbuf.from_xpm_data ([CCode (array_length = false, array_null_terminated = true)] string[] data);
 		public int get_bits_per_sample ();
 		public size_t get_byte_length ();
 		public Gdk.Colorspace get_colorspace ();
@@ -95,7 +95,7 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		public PixbufAnimation.from_file (string filename) throws GLib.Error;
 		public int get_height ();
-		public Gdk.PixbufAnimationIter get_iter (GLib.TimeVal start_time);
+		public Gdk.PixbufAnimationIter get_iter (GLib.TimeVal? start_time);
 		public unowned Gdk.Pixbuf get_static_image ();
 		public int get_width ();
 		public bool is_static_image ();
@@ -104,7 +104,7 @@ namespace Gdk {
 	public class PixbufAnimationIter : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected PixbufAnimationIter ();
-		public bool advance (GLib.TimeVal current_time);
+		public bool advance (GLib.TimeVal? current_time);
 		public int get_delay_time ();
 		public unowned Gdk.Pixbuf get_pixbuf ();
 		public bool on_currently_loading_frame ();

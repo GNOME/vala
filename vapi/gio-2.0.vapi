@@ -2029,6 +2029,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public TlsCertificate.from_pem (string data, ssize_t length) throws GLib.Error;
 		public unowned GLib.TlsCertificate get_issuer ();
+		public bool is_same (GLib.TlsCertificate cert_two);
 		public static GLib.List<GLib.TlsCertificate> list_new_from_file (string file) throws GLib.Error;
 		public virtual GLib.TlsCertificateFlags verify (GLib.SocketConnectable? identity, GLib.TlsCertificate? trusted_ca);
 		[NoAccessorMethod]
@@ -2380,6 +2381,9 @@ namespace GLib {
 		public abstract async GLib.FileIOStream create_readwrite_async (GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "delete_file")]
 		public abstract bool @delete (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool delete_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[NoWrapper]
+		public abstract async bool delete_file_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.File dup ();
 		[Deprecated (since = "2.22")]
 		public abstract async bool eject_mountable (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
