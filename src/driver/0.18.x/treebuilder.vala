@@ -671,16 +671,18 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 					register_source_file (source_package, source_file);
 
-					if (context.profile == Vala.Profile.POSIX) {
-						// import the Posix namespace by default (namespace of backend-specific standard library)
-						var ns_ref = new Vala.UsingDirective (new Vala.UnresolvedSymbol (null, "Posix", null));
-						source_file.add_using_directive (ns_ref);
-						context.root.add_using_directive (ns_ref);
-					} else if (context.profile == Vala.Profile.GOBJECT) {
+					if (context.profile == Vala.Profile.GOBJECT) {
 						// import the GLib namespace by default (namespace of backend-specific standard library)
 						var ns_ref = new Vala.UsingDirective (new Vala.UnresolvedSymbol (null, "GLib", null));
 						source_file.add_using_directive (ns_ref);
 						context.root.add_using_directive (ns_ref);
+#if VALA_0_17__1_3|| VALA_0_17_0
+					} else if (context.profile == Vala.Profile.POSIX) {
+						// import the Posix namespace by default (namespace of backend-specific standard library)
+						var ns_ref = new Vala.UsingDirective (new Vala.UnresolvedSymbol (null, "Posix", null));
+						source_file.add_using_directive (ns_ref);
+						context.root.add_using_directive (ns_ref);
+#endif
 					}
 
 					context.add_source_file (source_file);
@@ -749,12 +751,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			}
 		}
 
-		if (context.profile == Vala.Profile.POSIX) {
-			// default package
-			if (!add_package (context, "posix")) {
-				Vala.Report.error (null, "posix not found in specified Vala API directories");
-			}
-		} else if (context.profile == Vala.Profile.GOBJECT) {
+		if (context.profile == Vala.Profile.GOBJECT) {
 			int glib_major = 2;
 			int glib_minor = 12;
 
@@ -786,8 +783,14 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			if (!this.add_package (context, "gobject-2.0")) { //
 				Vala.Report.error (null, "gobject-2.0 not found in specified Vala API directories");
 			}
+#if VALA_0_17__1_3 || VALA_0_17_0
+		} else if (context.profile == Vala.Profile.POSIX) {
+			// default package
+			if (!add_package (context, "posix")) {
+				Vala.Report.error (null, "posix not found in specified Vala API directories");
+			}
+#endif
 		}
-
 
 		// add user defined files:
 		add_depencies (context, settings.packages);

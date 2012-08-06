@@ -559,12 +559,14 @@ private class Valadoc.Api.InitializerBuilder : Vala.CodeVisitor {
 		signature.append_literal (lit.to_string (), false);
 	}
 
+#if VALA_0_17__1_3 || VALA_0_17_0
 	/**
 	 * {@inheritDoc}
 	 */
 	public override void visit_list_literal (Vala.ListLiteral lit) {
 		signature.append_literal (lit.to_string (), false);
 	}
+#endif
 
 	/**
 	 * {@inheritDoc}

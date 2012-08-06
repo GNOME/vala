@@ -62,10 +62,18 @@ AC_SUBST(LIBGDKPIXBUF_LIBS)
 ## Drivers:
 ##
 
-PKG_CHECK_MODULES(LIBVALA_0_18_X, libvala-0.18 >= 0.17.1, have_libvala_0_18_x="yes", have_libvala_0_18_x="no")
+PKG_CHECK_MODULES(LIBVALA_0_18_X, libvala-0.18 >= 0.17.4, have_libvala_0_18_x="yes", have_libvala_0_18_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_18_X, test "$have_libvala_0_18_x" = "yes")
 AC_SUBST(LIBVALA_0_18_X_CFLAGS)
 AC_SUBST(LIBVALA_0_18_X_LIBS)
+
+
+
+PKG_CHECK_MODULES(LIBVALA_0_17__1_3, libvala-0.18 >= 0.17.1   libvala-0.18 <= 0.17.3, have_libvala_0_17__1_3="yes", have_libvala_0_17__1_3="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_17__1_3, test "$have_libvala_0_17__1_3" = "yes")
+AC_SUBST(HAVE_LIBVALA_0_17__1_3_CFLAGS)
+AC_SUBST(HAVE_LIBVALA_0_17__1_3_LIBS)
+
 
 
 PKG_CHECK_MODULES(LIBVALA_0_17_0, libvala-0.18 = 0.17.0, have_libvala_0_17_0="yes", have_libvala_0_17_0="no")
@@ -153,7 +161,7 @@ AC_CONFIG_FILES([Makefile
                  src/doclets/gtkdoc/Makefile
                  src/valadoc/Makefile
                  tests/Makefile
-				 ])
+	])
 
 
 AC_OUTPUT
