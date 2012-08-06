@@ -267,6 +267,21 @@ public class Vala.MemberAccess : Expression {
 
 				symbol_reference = SemanticAnalyzer.symbol_lookup_inherited (sym, member_name);
 
+				if (symbol_reference == null && may_access_instance_members) {
+					// used for generated to_string methods in enums
+					symbol_reference = this_parameter.variable_type.get_member (member_name);
+
+					if (symbol_reference != null && is_instance_symbol (symbol_reference)) {
+						// implicit this
+						inner = new MemberAccess (null, "this", source_reference);
+						inner.value_type = this_parameter.variable_type.copy ();
+						inner.value_type.value_owned = false;
+						inner.symbol_reference = this_parameter;
+
+						symbol_reference = inner.value_type.get_member (member_name);
+					}
+				}
+
 				if (symbol_reference == null) {
 					if (sym is TypeSymbol) {
 						// do not allow instance access to outer classes
@@ -831,6 +846,20 @@ public class Vala.MemberAccess : Expression {
 		}
 
 		return !error;
+	}
+
+	static bool is_instance_symbol (Symbol symbol) {
+		if (symbol is Field && ((Field) symbol).binding == MemberBinding.INSTANCE) {
+			return true;
+		} else if (symbol is Method && !(symbol is CreationMethod) && ((Method) symbol).binding == MemberBinding.INSTANCE) {
+			return true;
+		} else if (symbol is Property && ((Property) symbol).binding == MemberBinding.INSTANCE) {
+			return true;
+		} else if (symbol is Signal) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public void check_lvalue_access () {
