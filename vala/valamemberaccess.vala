@@ -787,7 +787,11 @@ public class Vala.MemberAccess : Expression {
 			}
 
 			if (!instance && !klass && !(symbol_reference is CreationMethod) && may_access_instance_members && inner != null) {
-				Report.warning (source_reference, "Access to static member `%s' with an instance reference".printf (symbol_reference.get_full_name ()));
+				if (inner.symbol_reference is Method) {
+					// do not warn when calling .begin or .end on static async method
+				} else {
+					Report.warning (source_reference, "Access to static member `%s' with an instance reference".printf (symbol_reference.get_full_name ()));
+				}
 			}
 
 			if (context.experimental_non_null && instance && inner.value_type.nullable &&
