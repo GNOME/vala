@@ -786,7 +786,7 @@ public class Vala.MemberAccess : Expression {
 				check_lvalue_access ();
 			}
 
-			if (!instance && !klass && may_access_instance_members && inner != null) {
+			if (!instance && !klass && !(symbol_reference is CreationMethod) && may_access_instance_members && inner != null) {
 				Report.warning (source_reference, "Access to static member `%s' with an instance reference".printf (symbol_reference.get_full_name ()));
 			}
 
