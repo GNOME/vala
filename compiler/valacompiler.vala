@@ -1,6 +1,6 @@
 /* valacompiler.vala
  *
- * Copyright (C) 2006-2010  Jürg Billeter
+ * Copyright (C) 2006-2012  Jürg Billeter
  * Copyright (C) 1996-2002, 2004, 2005, 2006 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
@@ -266,6 +266,7 @@ class Vala.Compiler {
 				var source_file = new SourceFile (context, SourceFileType.FAST, rpath);
 				context.add_source_file (source_file);
 			}
+			context.use_fast_vapi = true;
 		}
 		
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {

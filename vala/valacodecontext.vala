@@ -1,6 +1,6 @@
 /* valacodecontext.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2012  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -165,6 +165,8 @@ public class Vala.CodeContext {
 	public bool version_header { get; set; }
 
 	public bool nostdpkg { get; set; }
+
+	public bool use_fast_vapi { get; set; }
 
 	/**
 	 * Returns true if the target version of glib is greater than or 
