@@ -118,9 +118,13 @@ public class Valadoc.ModuleLoader : Object {
 		}
 
 
-		// selected string is a version number:
+		// selected string is a `valac --version` number:
 		if (driverpath.has_prefix ("Vala ")) {
-			driverpath = driverpath.substring (5);
+			if (driverpath.has_suffix ("-dirty")) {
+				driverpath = driverpath.substring (5, driverpath.length - 6 - 5);
+			} else {
+				driverpath = driverpath.substring (5);
+			}
 		}
 
 		string[] segments = driverpath.split (".");
