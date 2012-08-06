@@ -140,11 +140,11 @@ public class Valadoc.TokenType : Object {
 		return ANY_NUMBER;
 	}
 
-	private TokenType (string string_value, int basic_value, Action? action) {
+	private TokenType (string string_value, int basic_value, Action? __action) {
 		_string_value = string_value;
 		_basic_value = basic_value;
-		if (action != null) {
-			_action = (token) => { action (token); };
+		if (__action != null) {
+			_action = (token) => { __action (token); };
 		} else {
 			_action = null;
 		}
