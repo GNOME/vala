@@ -77,7 +77,7 @@ public class Valadoc.Api.Method : Member {
 	/**
 	 * Specifies the virtual or abstract method this method overrides.
 	 */
-	public Method? base_method {
+	public weak Method? base_method {
 		set;
 		get;
 	}
