@@ -44,6 +44,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 	private string[]? comment_lines;
 
+	private Regex? is_numeric_regex = null;
 	private Regex? normalize_regex = null;
 
 	private HashMap<Api.SourceFile, GirMetaData> metadata = new HashMap<Api.SourceFile, GirMetaData> ();
@@ -76,13 +77,14 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 	private string normalize (string text) {
 		try {
-			if (normalize_regex == null) {
-				normalize_regex = new Regex ("( |\n|\t)+");
-			}
 			return normalize_regex.replace (text, -1, 0, " ");
 		} catch (RegexError e) {
 			assert_not_reached ();
 		}
+	}
+
+	private bool is_numeric (string str) {
+		return is_numeric_regex.match (str);
 	}
 
 	private inline Text? split_text (Text text) {
@@ -230,6 +232,13 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		this.reporter = reporter;
 		this.settings = settings;
 		this.tree = tree;
+
+		try {
+			is_numeric_regex = new Regex ("^[+-]?([0-9]*\\.?[0-9]+|[0-9]+\\.?[0-9]*)([eE][+-]?[0-9]+)?$", RegexCompileFlags.OPTIMIZE);
+			normalize_regex = new Regex ("( |\n|\t)+", RegexCompileFlags.OPTIMIZE);
+		} catch (RegexError e) {
+			assert_not_reached ();
+		}
 	}
 
 	private Api.Node? element;
@@ -1493,7 +1502,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	}
 
 	private Inline create_type_link (string name) {
-		if (name == "TRUE" || name == "FALSE" || name == "NULL") {
+		if (name == "TRUE" || name == "FALSE" || name == "NULL" || is_numeric (name)) {
 			var monospaced = factory.create_run (Run.Style.MONOSPACED);
 			monospaced.content.add (factory.create_text (name.down ()));
 			return monospaced;
