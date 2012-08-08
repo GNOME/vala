@@ -1,6 +1,6 @@
 /* valagirwriter.vala
  *
- * Copyright (C) 2008-2011  Jürg Billeter
+ * Copyright (C) 2008-2012  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -823,9 +823,42 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 	}
 
+	void skip_implicit_params (DataType type, ref int index, bool has_array_length) {
+		if (type is ArrayType && has_array_length) {
+			index++;
+		} else if (type is DelegateType) {
+			index++;
+			if (type.value_owned) {
+				index++;
+			}
+		}
+	}
+
 	private void write_params_and_return (List<Parameter> params, DataType? return_type, bool return_array_length, string? return_comment = null, bool constructor = false, DataType? instance_type = null, bool user_data = false) {
 		int last_index = 0;
 		bool ret_is_struct = return_type != null && return_type.is_real_non_null_struct_type ();
+
+		if (params.size != 0 || instance_type != null || (return_type is ArrayType && return_array_length) || (return_type is DelegateType) || ret_is_struct) {
+			int index = 0;
+
+			if (instance_type != null) {
+				index++;
+			}
+
+			foreach (Parameter param in params) {
+				index++;
+
+				skip_implicit_params (param.variable_type, ref index, CCodeBaseModule.get_ccode_array_length (param));
+			}
+
+			if (ret_is_struct) {
+				index++;
+			} else {
+				skip_implicit_params (return_type, ref index, return_array_length);
+			}
+
+			last_index = index - 1;
+		}
 
 		if (return_type != null && !ret_is_struct) {
 			write_param_or_return (return_type, false, ref last_index, return_array_length, null, return_comment, ParameterDirection.IN, constructor);
@@ -855,8 +888,6 @@ public class Vala.GIRWriter : CodeVisitor {
 			} else {
 				write_implicit_params (return_type, ref index, return_array_length, "result", ParameterDirection.OUT);
 			}
-
-			last_index = index - 1;
 
 			if (user_data) {
 				write_indent ();
