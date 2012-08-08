@@ -267,7 +267,7 @@ public class Vala.MemberAccess : Expression {
 
 				symbol_reference = SemanticAnalyzer.symbol_lookup_inherited (sym, member_name);
 
-				if (symbol_reference == null && may_access_instance_members) {
+				if (symbol_reference == null && sym is TypeSymbol && may_access_instance_members) {
 					// used for generated to_string methods in enums
 					symbol_reference = this_parameter.variable_type.get_member (member_name);
 
