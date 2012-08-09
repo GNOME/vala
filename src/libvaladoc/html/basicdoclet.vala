@@ -762,7 +762,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		// interfaces:
 		Gee.LinkedList<Interface> printed_interfaces = new Gee.LinkedList<Interface> ();
-		foreach (TypeReference pre_ref in iface.get_all_implemented_interface_list ()) {
+		foreach (TypeReference pre_ref in iface.get_full_implemented_interface_list ()) {
 			Interface pre = (Interface) unpack_type_reference (pre_ref);
 
 			if (!headline_printed && has_visible_inheritable_children (pre)) {
