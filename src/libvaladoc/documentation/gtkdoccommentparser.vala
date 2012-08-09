@@ -67,7 +67,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 	private void reset (Api.SourceComment comment) {
 		this.scanner.reset (comment.content);
-		this.show_warnings = !comment.file.package.is_package || settings.verbose;
+		this.show_warnings = !comment.file.package.is_package;
 		this.comment_lines = null;
 		this.footnotes.clear ();
 		this.comment = comment;
@@ -213,7 +213,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	}
 
 	private void report_unexpected_token (Token got, string expected) {
-		if (this.show_warnings) {
+		if (!this.show_warnings) {
 			return ;
 		}
 
