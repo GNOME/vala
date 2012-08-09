@@ -55,6 +55,7 @@ libvaladoc_la_VALASOURCES = \
 	api/attributeargument.vala \
 	api/attribute.vala \
 	api/array.vala \
+	api/callable.vala \
 	api/childsymbolregistrar.vala \
 	api/class.vala \
 	api/constant.vala \

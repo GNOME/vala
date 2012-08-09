@@ -42,8 +42,9 @@ public class Valadoc.ErrorReporter : Object {
 		set;
 	}
 
-	public ErrorReporter () {
-		this.stream = GLib.stderr;
+	public Settings? settings {
+		get;
+		set;
 	}
 
 	public int errors {
@@ -56,6 +57,12 @@ public class Valadoc.ErrorReporter : Object {
 		get {
 			return this._warnings + warnings_offset;
 		}
+	}
+
+
+	public ErrorReporter (Settings? settings = null) {
+		this.stream = GLib.stderr;
+		this.settings = settings;
 	}
 
 	private inline void msg (string type, string file, long line, long startpos, long endpos, string errline, string msg_format, va_list args) {
@@ -90,6 +97,15 @@ public class Valadoc.ErrorReporter : Object {
 		this.stream.vprintf (msg_format, args);
 		this.stream.putc ('\n');
 		this._errors++;
+	}
+
+	public void simple_note (string msg_format, ...) {
+		if (_settings == null || _settings.verbose) {
+			var args = va_list();
+			this.stream.vprintf (msg_format, args);
+			this.stream.putc ('\n');
+			this._warnings++;
+		}
 	}
 
 	public void error (string file, long line, long startpos, long endpos, string errline, string msg_format, ...) {

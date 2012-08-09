@@ -84,6 +84,7 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 		link.symbol = _symbol;
 		link.label = symbol_name;
 
+		// TODO: move typeof () to gtkdoc-importer
 		switch (_context) {
 		case SymbolContext.TYPE:
 			Content.Run content = new Content.Run (Run.Style.MONOSPACED);

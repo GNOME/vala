@@ -32,6 +32,30 @@ public class Valadoc.Api.FormalParameter : Symbol {
 		set;
 	}
 
+	/**
+	 * Used to translate imported C-documentation
+	 */
+	internal string? implicit_array_length_cparameter_name {
+		get;
+		set;
+	}
+
+	/**
+	 * Used to translate imported C-documentation
+	 */
+	internal string? implicit_closure_cparameter_name {
+		get;
+		set;
+	}
+
+	/**
+	 * Used to translate imported C-documentation
+	 */
+	internal string? implicit_destroy_cparameter_name {
+		get;
+		set;
+	}
+
 	private FormalParameterType type;
 
 	public FormalParameter (Node parent, SourceFile file, string? name, SymbolAccessibility accessibility, FormalParameterType type, bool ellipsis, void* data) {

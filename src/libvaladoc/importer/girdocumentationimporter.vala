@@ -1,8 +1,8 @@
 /* girdocumentationimporter.vala
  *
  * Copyright (C) 2008-2010  Jürg Billeter
- * Copyright (C) 2011  Luca Bruno
- * Copyright (C) 2011  Florian Brosch
+ * Copyright (C) 2011       Luca Bruno
+ * Copyright (C) 2011-2012  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,7 +27,7 @@
 
 using Valadoc;
 using GLib;
-
+using Gee;
 
 
 public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
@@ -43,6 +43,16 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	private Api.SourceFile file;
 
 	private string parent_c_identifier;
+
+	private struct ImplicitParameterPos {
+		public int parameter;
+		public int position;
+
+		public ImplicitParameterPos (int parameter, int position) {
+			this.parameter = parameter;
+			this.position = position;
+		}
+	}
 
 	public GirDocumentationImporter (Api.Tree tree, DocumentationParser parser, ModuleLoader modules, Settings settings, ErrorReporter reporter) {
 		base (tree, modules, settings);
@@ -65,7 +75,26 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		file = null;
 	}
 
-	private void attach_comment (string cname, Api.GirSourceComment? comment) {
+	private Api.FormalParameter? find_parameter (Api.Node node, string name) {
+		Gee.List<Api.Node> parameters = node.get_children_by_type (Api.NodeType.FORMAL_PARAMETER, false);
+		foreach (Api.Node param in parameters) {
+			if (((Api.FormalParameter) param).name == name) {
+				return (Api.FormalParameter) param;
+			}
+		}
+
+		return null;
+	}
+
+	private inline string? get_cparameter_name (string[] param_names, int length_pos) {
+		if (length_pos < 0 || param_names.length < length_pos) {
+			return null;
+		}
+
+		return param_names[length_pos];
+	}
+
+	private void attach_comment (string cname, Api.GirSourceComment? comment, string[]? param_names = null, ImplicitParameterPos[]? destroy_notifies = null, ImplicitParameterPos[]? closures = null, ImplicitParameterPos[]? array_lengths = null, int array_length_ret = -1) {
 		if (comment == null) {
 			return ;
 		}
@@ -75,12 +104,49 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			return;
 		}
 
+		if (param_names != null) {
+			foreach (ImplicitParameterPos pos in destroy_notifies) {
+				Api.FormalParameter? param = find_parameter (node, param_names[pos.parameter]);
+				if (param == null) {
+					continue ;
+				}
+
+				param.implicit_destroy_cparameter_name = get_cparameter_name (param_names, pos.position);
+			}
+
+			foreach (ImplicitParameterPos pos in closures) {
+				Api.FormalParameter? param = find_parameter (node, param_names[pos.parameter]);
+				if (param == null) {
+					continue ;
+				}
+
+				param.implicit_closure_cparameter_name = get_cparameter_name (param_names, pos.position);
+			}
+
+			foreach (ImplicitParameterPos pos in array_lengths) {
+				Api.FormalParameter? param = find_parameter (node, param_names[pos.parameter]);
+				if (param == null) {
+					continue ;
+				}
+
+				param.implicit_array_length_cparameter_name = get_cparameter_name (param_names, pos.position);
+			}
+
+			if (node is Api.Callable) {
+				((Api.Callable) node).implicit_array_length_cparameter_name = get_cparameter_name (param_names, array_length_ret);
+			}
+		}
+
 		Content.Comment? content = this.parser.parse (node, comment);
 		if (content == null) {
 			return;
 		}
 
 		node.documentation = content;
+	}
+
+	private void warning (string message) {
+		reporter.warning (this.file.relative_path, this.begin.line, this.begin.column, this.end.column, this.reader.get_line_content (this.begin.line), message);
 	}
 
 	private void error (string message) {
@@ -299,20 +365,39 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		end_element ("member");
 	}
 
-	private void parse_return_value (out Api.SourceComment? comment = null) {
+	private void parse_return_value (out Api.SourceComment? comment, out int array_length_ret) {
 		start_element ("return-value");
 		next ();
 
 		comment = parse_doc ();
 
-		parse_type ();
+		parse_type (out array_length_ret);
 
 		end_element ("return-value");
 	}
 
-	private void parse_parameter (out Api.SourceComment? comment, out string param_name) {
+	private void parse_parameter (out Api.SourceComment? comment, out string param_name, out int destroy_pos, out int closure_pos, out int array_length_pos) {
 		start_element ("parameter");
 		param_name = reader.get_attribute ("name");
+		array_length_pos = -1;
+		destroy_pos = -1;
+		closure_pos = -1;
+
+		string? closure = reader.get_attribute ("closure");
+		if (closure != null) {
+			closure_pos = int.parse (closure);
+			if (closure_pos < 0) {
+				warning ("invalid closure position");
+			}
+		}
+
+		string? destroy = reader.get_attribute ("destroy");
+		if (destroy != null) {
+			destroy_pos = int.parse (destroy);
+			if (destroy_pos < 0) {
+				warning ("invalid destroy position");
+			}
+		}
 		next ();
 
 		comment = parse_doc ();
@@ -324,14 +409,28 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 			end_element ("varargs");
 		} else {
-			parse_type ();
+			parse_type (out array_length_pos);
 		}
 
 		end_element ("parameter");
 	}
 
-	private void parse_type () {
-		skip_element ();
+	private void parse_type (out int array_length_pos = null) {
+		array_length_pos = -1;
+
+		if (reader.name == "array") {
+			string? length = reader.get_attribute ("length");
+			if (length != null) {
+				array_length_pos = int.parse (length);
+				if (array_length_pos < 0) {
+					warning ("invalid array lenght position");
+				}
+			}
+
+			skip_element ();
+		} else {
+			skip_element ();
+		}
 	}
 
 	private void parse_record () {
@@ -508,9 +607,15 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 		Api.GirSourceComment? comment = parse_symbol_doc ();
 
+		ImplicitParameterPos[] destroy_notifies = new ImplicitParameterPos[0];
+		ImplicitParameterPos[] array_lengths = new ImplicitParameterPos[0];
+		ImplicitParameterPos[] closures = new ImplicitParameterPos[0];
+		string[] param_names = new string[0];
+		int array_length_ret = -1;
+
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
 			Api.SourceComment? return_comment;
-			parse_return_value (out return_comment);
+			parse_return_value (out return_comment, out array_length_ret);
 			if (return_comment != null) {
 				if (comment == null) {
 					comment = new Api.GirSourceComment ("", file, begin.line, begin.column, end.line, end.column);
@@ -524,11 +629,27 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			start_element ("parameters");
 			next ();
 
-			while (current_token == MarkupTokenType.START_ELEMENT) {
+			for (int pcount = 0; current_token == MarkupTokenType.START_ELEMENT; pcount++) {
 				Api.SourceComment? param_comment;
+				int array_length_pos;
+				int destroy_pos;
+				int closure_pos;
 				string? param_name;
 
-				parse_parameter (out param_comment, out param_name);
+				parse_parameter (out param_comment, out param_name, out destroy_pos, out closure_pos, out array_length_pos);
+				param_names += param_name;
+
+				if (destroy_pos >= 0 && pcount != destroy_pos) {
+					destroy_notifies += ImplicitParameterPos (pcount, destroy_pos);
+				}
+
+				if (closure_pos >= 0 && pcount != closure_pos) {
+					closures += ImplicitParameterPos (pcount, closure_pos);
+				}
+
+				if (array_length_pos >= 0 && pcount != destroy_pos) {
+					array_lengths += ImplicitParameterPos (pcount, array_length_pos);
+				}
 
 				if (param_comment != null) {
 					if (comment == null) {
@@ -541,7 +662,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			end_element ("parameters");
 		}
 
-		attach_comment (c_identifier, comment);
+		attach_comment (c_identifier, comment, param_names, destroy_notifies, closures, array_lengths, array_length_ret);
 		end_element (element_name);
 	}
 

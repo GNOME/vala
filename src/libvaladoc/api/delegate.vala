@@ -27,8 +27,17 @@ using Valadoc.Content;
 /**
  * Represents a Delegate.
  */
-public class Valadoc.Api.Delegate : TypeSymbol {
+public class Valadoc.Api.Delegate : TypeSymbol, Callable {
 	private string? cname;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	internal string? implicit_array_length_cparameter_name {
+		get;
+		set;
+	}
+
 
 	public Delegate (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, bool is_static, void* data) {
 		base (parent, file, name, accessibility, comment, false, data);
@@ -45,9 +54,7 @@ public class Valadoc.Api.Delegate : TypeSymbol {
 	}
 
 	/**
-	 * The return type of this callback.
-	 *
-	 * @return The return type of this callback or null for void
+	 * {@inheritDoc}
 	 */
 	public TypeReference? return_type {
 		set;

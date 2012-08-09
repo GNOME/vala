@@ -27,9 +27,19 @@ using Valadoc.Content;
 /**
  * Represents an signal.
  */
-public class Valadoc.Api.Signal : Member {
+public class Valadoc.Api.Signal : Member, Callable {
 	private string? dbus_name;
 	private string? cname;
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	internal string? implicit_array_length_cparameter_name {
+		get;
+		set;
+	}
+
 
 	public Signal (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dbus_name, bool is_dbus_visible, bool is_virtual, void* data) {
 		base (parent, file, name, accessibility, comment, data);
@@ -56,9 +66,7 @@ public class Valadoc.Api.Signal : Member {
 	}
 
 	/**
-	 * The return type of this signal.
-	 *
-	 * @return The return type of this signal or null for void
+	 * {@inheritDoc}
 	 */
 	public TypeReference? return_type {
 		set;

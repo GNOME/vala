@@ -20,20 +20,29 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
-using Gee;
 using Valadoc.Content;
+using Gee;
 
 
 /**
  * Represents a function or a method.
  */
-public class Valadoc.Api.Method : Member {
+public class Valadoc.Api.Method : Member, Callable {
 	private string? finish_function_cname;
 	private string? dbus_result_name;
 	private string? dbus_name;
 	private string? cname;
 
 	private MethodBindingType binding_type;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	internal string? implicit_array_length_cparameter_name {
+		get;
+		set;
+	}
+
 
 	public Method (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dbus_name, string? dbus_result_name, string? finish_function_cname, MethodBindingType binding_type, bool is_yields, bool is_dbus_visible, bool is_constructor, void* data) {
 		base (parent, file, name, accessibility, comment, data);
@@ -83,9 +92,7 @@ public class Valadoc.Api.Method : Member {
 	}
 
 	/**
-	 * The return type of this method.
-	 *
-	 * @return The return type of this method or null for void
+	 * {@inheritDoc}
 	 */
 	public TypeReference? return_type {
 		set;

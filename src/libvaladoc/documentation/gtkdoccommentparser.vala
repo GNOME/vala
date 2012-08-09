@@ -1537,15 +1537,13 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			}
 		}
 
-		return null;
+		return {id};
 	}
 
-	private string? resolve_parameter_ctype (string parameter_name, out string? param_name) {
-		string[]? parts = split_type_name (current.content);
-		param_name = null;
-		if (parts == null) {
-			return null;
-		}
+	private string? resolve_parameter_ctype (string parameter_name, out string? param_name, out string? param_array_name, out bool is_return_type_len) {
+		string[]? parts = split_type_name (parameter_name);
+		is_return_type_len = false;
+		param_array_name = null;
 
 		Api.FormalParameter? param = null; // type parameter or formal parameter
 		foreach (Api.Node node in this.element.get_children_by_type (Api.NodeType.FORMAL_PARAMETER, false)) {
@@ -1553,10 +1551,31 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				param = node as Api.FormalParameter;
 				break;
 			}
+
+			if (((Api.FormalParameter) node).implicit_array_length_cparameter_name == parts[0]) {
+				param_array_name = ((Api.FormalParameter) node).name;
+				break;
+			}
+		}
+
+		if (this.element is Api.Callable && ((Api.Callable) this.element).implicit_array_length_cparameter_name == parts[0]) {
+			is_return_type_len = true;
+		}
+
+		if (parts.length == 1) {
+			param_name = parameter_name;
+			return null;
 		}
 
 
-		Api.Item? inner = param.parameter_type;
+		Api.Item? inner = null;
+
+		if (param_array_name != null || is_return_type_len) {
+			inner = tree.search_symbol_str (null, "int");
+		} else if (param != null) {
+			inner = param.parameter_type;
+		}
+
 		while (inner != null) {
 			if (inner is Api.TypeReference) {
 				inner = ((Api.TypeReference) inner).data_type;
@@ -1571,6 +1590,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 
 		if (inner == null) {
+			param_name = parameter_name;
 			return null;
 		}
 
@@ -1671,17 +1691,27 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				run.content.add (this.create_type_link (current.content));
 				next ();
 			} else if (current.type == TokenType.GTKDOC_PARAM) {
+				string? param_array_name;
+				bool is_return_type_len;
 				string? param_name;
-				string? cname = resolve_parameter_ctype (current.content, out param_name);
-				Run current_run = factory.create_run (Run.Style.MONOSPACED);
 
-				if (cname == null) {
-					current_run.content.add (factory.create_text (current.content));
-					run.content.add (current_run);
+				string? cname = resolve_parameter_ctype (current.content, out param_name, out param_array_name, out is_return_type_len);
+				Run current_run = factory.create_run (Run.Style.MONOSPACED);
+				run.content.add (current_run);
+
+				if (is_return_type_len) {
+					Run keyword_run = factory.create_run (Run.Style.LANG_KEYWORD);
+					keyword_run.content.add (factory.create_text ("return"));
+					current_run.content.add (keyword_run);
+
+					current_run.content.add (factory.create_text (".length"));
+				} else if (param_array_name != null) {
+					current_run.content.add (factory.create_text (param_array_name + ".length"));
 				} else {
 					current_run.content.add (factory.create_text (param_name));
-					run.content.add (current_run);
+				}
 
+				if (cname != null) {
 					run.content.add (factory.create_text ("."));
 
 					Taglets.Link link = factory.create_taglet ("link") as Taglets.Link;

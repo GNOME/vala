@@ -198,6 +198,8 @@ public class ValaDoc : Object {
 	private int run (ErrorReporter reporter) {
 		// settings:
 		var settings = new Valadoc.Settings ();
+		reporter.settings = settings;
+
 		settings.pkg_name = this.get_pkg_name ();
 		settings.gir_namespace = this.gir_namespace;
 		settings.gir_version = this.gir_version;

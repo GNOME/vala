@@ -37,10 +37,8 @@ public class Valadoc.Taglets.Return : InlineContent, Taglet, Block {
 		if (container is Api.Method) {
 			creation_method = ((Api.Method) container).is_constructor;
 			type_ref = ((Api.Method) container).return_type;
-		} else if (container is Api.Delegate) {
-			type_ref = ((Api.Delegate) container).return_type;
-		} else if (container is Api.Signal) {
-			type_ref = ((Api.Signal) container).return_type;
+		} else if (container is Api.Callable) {
+			type_ref = ((Api.Callable) container).return_type;
 		} else {
 			reporter.simple_warning ("%s: %s: @return: warning: @return used outside method/delegate/signal context", file_path, container.get_full_name ());
 		}
