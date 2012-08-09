@@ -67,9 +67,10 @@ public class Valadoc.Api.Interface : TypeSymbol {
 	/**
 	 * Returns a list of all preconditioned interfaces
 	 */
+	// TODO: rename to get_full_...
 	public Collection<TypeReference> get_all_implemented_interface_list () {
 		if (_full_implemented_interfaces == null) {
-			_full_implemented_interfaces = new HashSet<TypeReference> ();
+			_full_implemented_interfaces = new LinkedList<TypeReference> ();
 			_full_implemented_interfaces.add_all (this.interfaces);
 
 			if (base_type != null) {

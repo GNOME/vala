@@ -160,7 +160,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 	 */
 	public Collection<TypeReference> get_full_implemented_interface_list () {
 		if (_full_implemented_interfaces == null) {
-			_full_implemented_interfaces = new HashSet<TypeReference> ();
+			_full_implemented_interfaces = new LinkedList<TypeReference> ();
 			_full_implemented_interfaces.add_all (this.interfaces);
 
 			if (base_type != null) {

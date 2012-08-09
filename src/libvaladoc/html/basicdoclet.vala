@@ -128,6 +128,25 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 
+	private TypeSymbol? unpack_type_reference (TypeReference? type_reference) {
+		Api.Item pos = type_reference;
+
+		while (pos != null) {
+			if (pos is TypeReference) {
+				pos = ((TypeReference) pos).data_type;
+			} else if (pos is Api.Array) {
+				pos = ((Api.Array) pos).data_type;
+			} else if (pos is Pointer) {
+				pos = ((Pointer) pos).data_type;
+			} else {
+				assert (pos is TypeSymbol);
+				return (TypeSymbol) pos;
+			}
+		}
+
+		return null;
+	}
+
 
 	protected void write_navi_entry_html_template (string style, string content, bool is_deprecated) {
 		writer.start_tag ("li", {"class", style});
@@ -536,7 +555,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		return list;
 	}
 
-	private void write_known_symbols_node (Gee.Collection<Api.Node> nodes2, Api.Node container, string headline) {
+	private void write_known_symbols_note (Gee.Collection<Api.Node> nodes2, Api.Node container, string headline) {
 		var nodes = get_accessible_nodes_from_list (nodes2);
 		if (nodes.size == 0) {
 			return ;
@@ -578,7 +597,12 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			for (int p = 0; p < list_sizes[i] && iter.next (); p++) {
 				var node = iter.get ();
 				writer.start_tag ("li", {"class", cssresolver.resolve (node)});
-				writer.link (get_link (node, container), node.name);
+				string link = get_link (node, container);
+				if (link == null) {
+					writer.text (node.name);
+				} else {
+					writer.link (link, node.name);
+				}
 				writer.end_tag ("li");
 			}
 
@@ -607,13 +631,15 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		if (node is Class) {
 			var cl = node as Class;
-			write_known_symbols_node (cl.get_known_child_classes (), cl, "All known sub-classes:");
-			write_known_symbols_node (cl.get_known_derived_interfaces (), cl, "Required by:");
+			write_known_symbols_note (cl.get_known_child_classes (), cl, "All known sub-classes:");
+			write_known_symbols_note (cl.get_known_derived_interfaces (), cl, "Required by:");
 		} else if (node is Interface) {
 			var iface = node as Interface;
-			write_known_symbols_node (iface.get_known_implementations (), iface, "All known implementing classes:");
-			write_known_symbols_node (iface.get_known_related_interfaces (), iface, "All known sub-interfaces:");
+			write_known_symbols_note (iface.get_known_implementations (), iface, "All known implementing classes:");
+			write_known_symbols_note (iface.get_known_related_interfaces (), iface, "All known sub-interfaces:");
 		}
+		// TODO: All known sub-structs
+
 
 		if (node.parent is Namespace) {
 			writer.simple_tag ("br");
@@ -621,7 +647,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			write_package_note (node);
 		}
 
-		if (!(node is Method || node is Delegate || node is Api.Signal)) { // avoids exception listings & implementations
+		if (!(node is Method || node is Delegate || node is Api.Signal)) {
+			// avoids exception listings & implementations
+
 			if (node.has_children ({
 					Api.NodeType.ERROR_CODE,
 					Api.NodeType.ENUM_VALUE,
@@ -653,7 +681,122 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 				write_children (node, Api.NodeType.FIELD, "Fields", node);
 			}
 		}
+
+		if (node is Class) {
+			write_inherited_symbols_note_for_class ((Class) node, node);
+		} else if (node is Interface) {
+			write_inherited_symbols_note_for_interface ((Interface) node, node);
+		} else if (node is Struct) {
+			write_inherited_symbols_note_for_struct ((Struct) node, node);
+		}
+
 		writer.end_tag ("div");
+	}
+
+	private static NodeType[] inheritable_members = {
+			NodeType.CONSTANT,
+			NodeType.PROPERTY,
+			NodeType.DELEGATE,
+			NodeType.STATIC_METHOD,
+			NodeType.METHOD,
+			NodeType.SIGNAL,
+			NodeType.FIELD,
+		};
+
+	private inline bool has_visible_inheritable_children (TypeSymbol symbol) {
+		return symbol.has_visible_children_by_types (inheritable_members, _settings);
+	}
+
+	private void write_inherited_members_headline () {
+		writer.start_tag ("h3", {"class", css_title}).text ("Inherited Members:").end_tag ("h3");
+	}
+
+	private void write_inherited_symbols_note_for_class (Class cl, Api.Node container) {
+		bool headline_printed = false;
+
+		// class hierarchy:
+		Class base_class = unpack_type_reference (cl.base_type) as Class;
+		while (base_class != null) {
+			if (!headline_printed && has_visible_inheritable_children (base_class)) {
+				write_inherited_members_headline ();
+				headline_printed = true;
+			}
+
+			write_inherited_symbols_note (base_class, "class", container);
+			base_class = unpack_type_reference (base_class.base_type) as Class;
+		}
+
+
+		// implemented interfaces
+		Gee.LinkedList<Interface> printed_interfaces = new Gee.LinkedList<Interface> ();
+		foreach (TypeReference iface_ref in cl.get_full_implemented_interface_list ()) {
+			Interface iface = (Interface) unpack_type_reference (iface_ref);
+
+			if (!headline_printed && has_visible_inheritable_children (iface)) {
+				write_inherited_members_headline ();
+				headline_printed = true;
+			} else if (printed_interfaces.contains (iface)) {
+				continue ;
+			}
+
+			write_inherited_symbols_note (iface, "interface", container);
+			printed_interfaces.add (iface);
+		}
+	}
+
+	private void write_inherited_symbols_note_for_interface (Interface iface, Api.Node container) {
+		bool headline_printed = false;
+
+		// class hierarchy:
+		Class base_class = unpack_type_reference (iface.base_type) as Class;
+		while (base_class != null) {
+			if (!headline_printed && has_visible_inheritable_children (base_class)) {
+				write_inherited_members_headline ();
+				headline_printed = true;
+			}
+
+			write_inherited_symbols_note (base_class, "class", container);
+			base_class = unpack_type_reference (base_class.base_type) as Class;
+		}
+
+
+		// interfaces:
+		Gee.LinkedList<Interface> printed_interfaces = new Gee.LinkedList<Interface> ();
+		foreach (TypeReference pre_ref in iface.get_all_implemented_interface_list ()) {
+			Interface pre = (Interface) unpack_type_reference (pre_ref);
+
+			if (!headline_printed && has_visible_inheritable_children (pre)) {
+				write_inherited_members_headline ();
+				headline_printed = true;
+			} else if (printed_interfaces.contains (pre)) {
+				continue ;
+			}
+
+			write_inherited_symbols_note (pre, "interface", container);
+			printed_interfaces.add (pre);
+		}
+	}
+
+	private void write_inherited_symbols_note_for_struct (Struct str, Api.Node container) {
+		Struct base_struct = unpack_type_reference (str.base_type) as Struct;
+		if (base_struct != null && has_visible_inheritable_children (base_struct)) {
+			write_inherited_members_headline ();
+			write_inherited_symbols_note (base_struct, "struct", container);
+		}
+	}
+
+	private void write_inherited_symbols_note (TypeSymbol symbol, string type, Api.Node container) {
+		write_known_symbols_note (symbol.get_children_by_types (inheritable_members, false), container, "All known members inherited from %s %s".printf (type, symbol.get_full_name ()));
+
+		/*
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.CONSTANT, false), container, "All known constants inherited from %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.PROPERTY, false), container, "All known properties inherited from %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.DELEGATE, false), container, "All known delegates inherited from %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.STATIC_METHOD, false), container, "All known static methods inherited from %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.METHOD, false), container, "All known methods inherited from %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.SIGNAL, false), container, "All known signals inherited from %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.FIELD, false), container, "All known fields inherited from  %s %s".printf (type, symbol.get_full_name ()));
+		*/
 	}
 
 	protected void write_child_namespaces (Api.Node node, Api.Node? parent) {
@@ -698,7 +841,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	protected void write_child_dependencies (Package package, Api.Node? parent) {
-		Gee.Collection<Package> deps = package.get_full_dependency_list ();
+		Gee.Collection<Package>? deps = package.get_full_dependency_list ();
 		if (deps.size == 0) {
 			return;
 		}
@@ -706,7 +849,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.start_tag ("h2", {"class", css_title}).text ("Dependencies:").end_tag ("h2");
 		writer.start_tag ("ul", {"class", css_inline_navigation});
 		foreach (Package p in deps) {
-			string link = this.get_link (p, parent);
+			string? link = this.get_link (p, parent);
 			if (link == null) {
 				writer.start_tag ("li", {"class", cssresolver.resolve (p), "id", p.name}).text (p.name).end_tag ("li");
 			} else {

@@ -144,6 +144,7 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	private Map<string,Node> per_name_children;
 	private Map<NodeType?, Gee.List<Node>> per_type_children;
 
+
 	public Node (Node? parent, SourceFile? file, string? name, void* data) {
 		base (data);
 
@@ -165,6 +166,7 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	/**
 	 * {@inheritDoc}
 	 */
+	// TODO: rename to is_visible
 	public abstract bool is_browsable (Settings settings);
 
 	/**
@@ -211,12 +213,45 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	}
 
 	/**
+	 * Specifies whether this node has at least one visible child with the given type
+	 *
+	 * @param type a node type
+	 */
+	public bool has_visible_children_by_type (NodeType type, Settings settings) {
+		Gee.List<Node>? all_children = per_type_children.get (type);
+		if (all_children != null) {
+			foreach (Node node in all_children) {
+				if (node.is_browsable (settings)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Specifies whether this node has at least one visible child with the given types
+	 *
+	 * @param types a list of node types
+	 */
+	public bool has_visible_children_by_types (NodeType[] types, Settings settings) {
+		foreach (NodeType type in types) {
+			if (has_visible_children_by_type (type, settings)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Specifies whether this node has at least one child with the given type
 	 *
 	 * @param type a node type
 	 */
 	public bool has_children_by_type (NodeType type) {
-		Gee.List<Node> all_children = per_type_children.get (type);
+		Gee.List<Node>? all_children = per_type_children.get (type);
 		return all_children != null && !all_children.is_empty;
 	}
 
@@ -306,6 +341,7 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	 * Visits all children of this node with the specified Visitor.
 	 *
 	 * @param visitor the visitor to be called while traversing
+	 * @param filtered specifies whether nodes which are not browsable should appear in the list
 	 */
 	public void accept_all_children (Visitor visitor, bool filtered = true) {
 		foreach (Gee.List<Node> children in per_type_children.values) {
