@@ -174,7 +174,7 @@ public class Valadoc.Api.Method : Member, Callable {
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
-		signature.append_keyword (get_accessibility_modifier ());
+		signature.append_keyword (accessibility.to_string ());
 
 		if (!is_constructor) {
 			if (is_static) {

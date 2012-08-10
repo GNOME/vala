@@ -24,10 +24,16 @@ using Gee;
 
 public interface Valadoc.Documentation : Object {
 
+	/**
+	 * The corresponding package
+	 */
 	public abstract Api.Package? package {
 		get;
 	}
 
+	/**
+	 * The corresponding file name
+	 */
 	public abstract string? get_filename ();
 }
 

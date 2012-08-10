@@ -170,10 +170,8 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	public abstract bool is_browsable (Settings settings);
 
 	/**
-	 * The corresponding file name
+	 * {@inheritDoc}
 	 */
-	//TODO: rm
-	[Deprecated]
 	public string? get_filename () {
 		if (file == null) {
 			return null;

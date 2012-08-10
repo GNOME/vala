@@ -103,7 +103,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 		var signature = new SignatureBuilder ();
 
 		if (!is_public) {
-			signature.append_keyword (get_accessibility_modifier ());
+			signature.append_keyword (accessibility.to_string ());
 		}
 		if (is_set || is_construct) {
 			if (is_construct) {

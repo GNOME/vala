@@ -59,7 +59,7 @@ public class Valadoc.Api.Enum : TypeSymbol {
 	 */
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
-			.append_keyword (get_accessibility_modifier ())
+			.append_keyword (accessibility.to_string ())
 			.append_keyword ("enum")
 			.append_symbol (this)
 			.get ();

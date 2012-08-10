@@ -154,7 +154,7 @@ public class Valadoc.Api.Interface : TypeSymbol {
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
-		signature.append_keyword (get_accessibility_modifier ());
+		signature.append_keyword (accessibility.to_string ());
 		signature.append_keyword ("interface");
 		signature.append_symbol (this);
 

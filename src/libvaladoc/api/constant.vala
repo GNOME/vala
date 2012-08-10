@@ -55,7 +55,7 @@ public class Valadoc.Api.Constant : Member {
 	 */
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
-			.append_keyword (get_accessibility_modifier ())
+			.append_keyword (accessibility.to_string ())
 			.append_keyword ("const")
 			.append_content (constant_type.signature)
 			.append_symbol (this)

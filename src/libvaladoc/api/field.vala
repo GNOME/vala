@@ -78,7 +78,7 @@ public class Valadoc.Api.Field : Member {
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
-		signature.append_keyword (get_accessibility_modifier ());
+		signature.append_keyword (accessibility.to_string ());
 		if (is_static) {
 			signature.append_keyword ("static");
 		}

@@ -52,6 +52,9 @@ public class Valadoc.WikiPage : Object, Documentation {
 
 	private Api.Package _package;
 
+	/**
+	 * The corresponding file name
+	 */
 	public string? get_filename () {
 		return Path.get_basename(this.path);
 	}

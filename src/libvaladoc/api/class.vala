@@ -238,7 +238,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
-		signature.append_keyword (get_accessibility_modifier ());
+		signature.append_keyword (accessibility.to_string ());
 		if (is_abstract) {
 			signature.append_keyword ("abstract");
 		}

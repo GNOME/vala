@@ -89,7 +89,7 @@ public class Valadoc.Api.Delegate : TypeSymbol, Callable {
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
-		signature.append_keyword (get_accessibility_modifier ());
+		signature.append_keyword (accessibility.to_string ());
 		signature.append_keyword ("delegate");
 		signature.append_content (return_type.signature);
 		signature.append_symbol (this);
