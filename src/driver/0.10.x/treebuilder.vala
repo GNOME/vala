@@ -70,7 +70,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			this.package = package;
 		}
 
-		public Namespace get_namespace (Vala.Namespace vns, SourceFile? file) {
+		private bool is_source_file (Vala.SourceFile file) {
+			return (file.filename.has_suffix (".vala") || file.filename.has_suffix (".gs"));
+		}
+
+		public Namespace get_namespace (Vala.Namespace vns, SourceFile file) {
 			Namespace? ns = namespaces.get (vns);
 			if (ns != null) {
 				return ns;
@@ -80,7 +84,10 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			SourceComment? comment = null;
 			if (vns.source_reference != null) {
 				foreach (Vala.Comment c in vns.get_comments()) {
-					if (c.source_reference.file == vns.source_reference.file) {
+					if (c.source_reference.file == file.data ||
+						(is_source_file (c.source_reference.file)
+						 && is_source_file ((Vala.SourceFile) file.data))
+					) {
 						Vala.SourceReference pos = c.source_reference;
 						comment = new SourceComment (c.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
 						break;
@@ -271,7 +278,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	}
 
 	private SourceFile register_source_file (PackageMetaData meta_data, Vala.SourceFile source_file) {
-		SourceFile file = new SourceFile (meta_data.package, source_file.get_relative_filename (), source_file.get_csource_filename ());
+		SourceFile file = new SourceFile (meta_data.package, source_file.get_relative_filename (), source_file.get_csource_filename (), source_file);
 		files.set (source_file, file);
 
 		meta_data.register_source_file (source_file);
