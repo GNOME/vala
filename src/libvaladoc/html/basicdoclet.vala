@@ -637,8 +637,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			var iface = node as Interface;
 			write_known_symbols_note (iface.get_known_implementations (), iface, "All known implementing classes:");
 			write_known_symbols_note (iface.get_known_related_interfaces (), iface, "All known sub-interfaces:");
+		} else if (node is Struct) {
+			var stru = node as Struct;
+			write_known_symbols_note (stru.get_known_child_structs (), stru, "All known sub-structs:");
 		}
-		// TODO: All known sub-structs
 
 
 		if (node.parent is Namespace) {
