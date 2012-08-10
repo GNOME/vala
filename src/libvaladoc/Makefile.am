@@ -74,6 +74,7 @@ libvaladoc_la_VALASOURCES = \
 	api/methodbindingtype.vala \
 	api/namespace.vala \
 	api/node.vala \
+	api/nodetype.vala \
 	api/ownership.vala \
 	api/package.vala \
 	api/pointer.vala \
