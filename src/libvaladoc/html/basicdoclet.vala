@@ -702,7 +702,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			NodeType.STATIC_METHOD,
 			NodeType.METHOD,
 			NodeType.SIGNAL,
-			NodeType.FIELD,
+			NodeType.FIELD
 		};
 
 	private inline bool has_visible_inheritable_children (TypeSymbol symbol) {
