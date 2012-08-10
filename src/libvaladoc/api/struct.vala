@@ -95,6 +95,24 @@ public class Valadoc.Api.Struct : TypeSymbol {
 	}
 
 
+	private Set<Struct> _known_child_structs = new TreeSet<Struct> ();
+
+	/**
+	 * Returns a list of all known structs based on this struct
+	 */
+	public Collection<Struct> get_known_child_structs () {
+		return _known_child_structs.read_only_view;
+	}
+
+	public void register_child_struct (Struct stru) {
+		if (this.base_type != null) {
+			((Struct) this.base_type.data_type).register_child_struct (stru);
+		}
+
+		_known_child_structs.add (stru);
+	}
+
+
 	/**
 	 * {@inheritDoc}
 	 */

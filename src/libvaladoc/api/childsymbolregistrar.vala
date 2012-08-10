@@ -82,6 +82,10 @@ public class Valadoc.Api.ChildSymbolRegistrar : Visitor {
 	 * {@inheritDoc}
 	 */
 	public override void visit_struct (Struct item) {
+		if (item.base_type != null) {
+			((Struct) item.base_type.data_type).register_child_struct (item);
+		}
+
 		item.accept_all_children (this, false);
 	}
 
