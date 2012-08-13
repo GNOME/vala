@@ -709,6 +709,11 @@ public class Vala.GObjectModule : GTypeModule {
 			return false;
 		}
 
+		if (type_sym is Interface && prop.is_virtual) {
+			// GObject does not support virtual interface properties
+			return false;
+		}
+
 		if (type_sym is Interface && type_sym.get_attribute ("DBus") != null) {
 			// GObject properties not currently supported in D-Bus interfaces
 			return false;

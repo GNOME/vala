@@ -298,7 +298,7 @@ public class Vala.Property : Symbol, Lockable {
 				var sym = type.data_type.scope.lookup (name);
 				if (sym is Property) {
 					var base_property = (Property) sym;
-					if (base_property.is_abstract) {
+					if (base_property.is_abstract || base_property.is_virtual) {
 						string invalid_match;
 						if (!compatible (base_property, out invalid_match)) {
 							error = true;

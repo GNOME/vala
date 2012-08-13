@@ -2147,6 +2147,19 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
+		foreach (Property prop in iface.get_properties ()) {
+			if (prop.is_virtual) {
+				if (prop.get_accessor != null) {
+					string cname = CCodeBaseModule.get_ccode_real_name (prop.get_accessor);
+					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), new CCodeIdentifier (cname));
+				}
+				if (prop.set_accessor != null) {
+					string cname = CCodeBaseModule.get_ccode_real_name (prop.set_accessor);
+					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), new CCodeIdentifier (cname));
+				}
+			}
+		}
+
 		ccode.close ();
 
 		pop_context ();
