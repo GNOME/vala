@@ -16,6 +16,7 @@ TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) $(srcdir)/testrunner.sh
 
 TESTS = \
 	libvaladoc/errorreporter.vala \
+	libvaladoc/markupreader.vala \
 	libvaladoc/gtkdoc-scanner.vala \
 	libvaladoc/parser/manyrule.vala \
 	libvaladoc/parser/oneofrule.vala \
