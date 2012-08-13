@@ -257,30 +257,30 @@ namespace Wnck {
 		public int current_row;
 		public int current_col;
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_CLIENT_TYPE_")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_CLIENT_TYPE_", type_id = "wnck_client_type_get_type ()")]
 	public enum ClientType {
 		APPLICATION,
 		PAGER
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_MOTION_")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_MOTION_", type_id = "wnck_motion_direction_get_type ()")]
 	public enum MotionDirection {
 		UP,
 		DOWN,
 		LEFT,
 		RIGHT
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_PAGER_DISPLAY_")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_PAGER_DISPLAY_", type_id = "wnck_pager_display_mode_get_type ()")]
 	public enum PagerDisplayMode {
 		NAME,
 		CONTENT
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_TASKLIST_")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_TASKLIST_", type_id = "wnck_tasklist_grouping_type_get_type ()")]
 	public enum TasklistGroupingType {
 		NEVER_GROUP,
 		AUTO_GROUP,
 		ALWAYS_GROUP
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_ACTION_")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_ACTION_", type_id = "wnck_window_actions_get_type ()")]
 	[Flags]
 	public enum WindowActions {
 		MOVE,
@@ -303,7 +303,7 @@ namespace Wnck {
 		ABOVE,
 		BELOW
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_GRAVITY_")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_GRAVITY_", type_id = "wnck_window_gravity_get_type ()")]
 	public enum WindowGravity {
 		CURRENT,
 		NORTHWEST,
@@ -317,7 +317,7 @@ namespace Wnck {
 		SOUTHEAST,
 		STATIC
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_CHANGE_")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_CHANGE_", type_id = "wnck_window_move_resize_mask_get_type ()")]
 	[Flags]
 	public enum WindowMoveResizeMask {
 		X,
@@ -325,7 +325,7 @@ namespace Wnck {
 		WIDTH,
 		HEIGHT
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_STATE_")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_STATE_", type_id = "wnck_window_state_get_type ()")]
 	[Flags]
 	public enum WindowState {
 		MINIMIZED,
@@ -342,7 +342,7 @@ namespace Wnck {
 		ABOVE,
 		BELOW
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_WINDOW_", type_id = "wnck_window_type_get_type ()")]
 	public enum WindowType {
 		NORMAL,
 		DESKTOP,
@@ -353,14 +353,14 @@ namespace Wnck {
 		UTILITY,
 		SPLASHSCREEN
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h", cname = "_WnckLayoutCorner", cprefix = "WNCK_LAYOUT_CORNER_")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cname = "_WnckLayoutCorner", cprefix = "WNCK_LAYOUT_CORNER_", has_type_id = false)]
 	public enum _LayoutCorner {
 		TOPLEFT,
 		TOPRIGHT,
 		BOTTOMRIGHT,
 		BOTTOMLEFT
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h", cname = "_WnckLayoutOrientation", cprefix = "WNCK_LAYOUT_ORIENTATION_")]
+	[CCode (cheader_filename = "libwnck/libwnck.h", cname = "_WnckLayoutOrientation", cprefix = "WNCK_LAYOUT_ORIENTATION_", has_type_id = false)]
 	public enum _LayoutOrientation {
 		HORIZONTAL,
 		VERTICAL

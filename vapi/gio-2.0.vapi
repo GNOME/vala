@@ -2697,7 +2697,7 @@ namespace GLib {
 		public unowned GLib.Resource get_resource ();
 		public void init ();
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_APP_INFO_CREATE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_APP_INFO_CREATE_", type_id = "g_app_info_create_flags_get_type ()")]
 	[Flags]
 	public enum AppInfoCreateFlags {
 		NONE,
@@ -2705,7 +2705,7 @@ namespace GLib {
 		SUPPORTS_URIS,
 		SUPPORTS_STARTUP_NOTIFICATION
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_APPLICATION_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_APPLICATION_", type_id = "g_application_flags_get_type ()")]
 	[Flags]
 	public enum ApplicationFlags {
 		FLAGS_NONE,
@@ -2716,7 +2716,7 @@ namespace GLib {
 		SEND_ENVIRONMENT,
 		NON_UNIQUE
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_ASK_PASSWORD_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_ASK_PASSWORD_", type_id = "g_ask_password_flags_get_type ()")]
 	[Flags]
 	public enum AskPasswordFlags {
 		NEED_PASSWORD,
@@ -2725,20 +2725,20 @@ namespace GLib {
 		SAVING_SUPPORTED,
 		ANONYMOUS_SUPPORTED
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_BUS_NAME_OWNER_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_BUS_NAME_OWNER_FLAGS_", type_id = "g_bus_name_owner_flags_get_type ()")]
 	[Flags]
 	public enum BusNameOwnerFlags {
 		NONE,
 		ALLOW_REPLACEMENT,
 		REPLACE
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_BUS_NAME_WATCHER_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_BUS_NAME_WATCHER_FLAGS_", type_id = "g_bus_name_watcher_flags_get_type ()")]
 	[Flags]
 	public enum BusNameWatcherFlags {
 		NONE,
 		AUTO_START
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_BUS_TYPE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_BUS_TYPE_", type_id = "g_bus_type_get_type ()")]
 	public enum BusType {
 		STARTER,
 		NONE,
@@ -2757,33 +2757,33 @@ namespace GLib {
 		INPUT_AT_END,
 		FLUSH
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_CONVERTER_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_CONVERTER_", type_id = "g_converter_result_get_type ()")]
 	public enum ConverterResult {
 		ERROR,
 		CONVERTED,
 		FINISHED,
 		FLUSHED
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_CREDENTIALS_TYPE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_CREDENTIALS_TYPE_", type_id = "g_credentials_type_get_type ()")]
 	public enum CredentialsType {
 		INVALID,
 		LINUX_UCRED,
 		FREEBSD_CMSGCRED,
 		OPENBSD_SOCKPEERCRED
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_CALL_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_CALL_FLAGS_", type_id = "g_dbus_call_flags_get_type ()")]
 	[Flags]
 	public enum DBusCallFlags {
 		NONE,
 		NO_AUTO_START
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_CAPABILITY_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_CAPABILITY_FLAGS_", type_id = "g_dbus_capability_flags_get_type ()")]
 	[Flags]
 	public enum DBusCapabilityFlags {
 		NONE,
 		UNIX_FD_PASSING
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_CONNECTION_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_CONNECTION_FLAGS_", type_id = "g_dbus_connection_flags_get_type ()")]
 	[Flags]
 	public enum DBusConnectionFlags {
 		NONE,
@@ -2793,25 +2793,25 @@ namespace GLib {
 		MESSAGE_BUS_CONNECTION,
 		DELAY_MESSAGE_PROCESSING
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_INTERFACE_SKELETON_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_INTERFACE_SKELETON_FLAGS_", type_id = "g_dbus_interface_skeleton_flags_get_type ()")]
 	[Flags]
 	public enum DBusInterfaceSkeletonFlags {
 		NONE,
 		HANDLE_METHOD_INVOCATIONS_IN_THREAD
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_MESSAGE_BYTE_ORDER_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_MESSAGE_BYTE_ORDER_", type_id = "g_dbus_message_byte_order_get_type ()")]
 	public enum DBusMessageByteOrder {
 		BIG_ENDIAN,
 		LITTLE_ENDIAN
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_MESSAGE_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_MESSAGE_FLAGS_", type_id = "g_dbus_message_flags_get_type ()")]
 	[Flags]
 	public enum DBusMessageFlags {
 		NONE,
 		NO_REPLY_EXPECTED,
 		NO_AUTO_START
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_MESSAGE_HEADER_FIELD_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_MESSAGE_HEADER_FIELD_", type_id = "g_dbus_message_header_field_get_type ()")]
 	public enum DBusMessageHeaderField {
 		INVALID,
 		PATH,
@@ -2824,7 +2824,7 @@ namespace GLib {
 		SIGNATURE,
 		NUM_UNIX_FDS
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_MESSAGE_TYPE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_MESSAGE_TYPE_", type_id = "g_dbus_message_type_get_type ()")]
 	public enum DBusMessageType {
 		INVALID,
 		METHOD_CALL,
@@ -2832,20 +2832,20 @@ namespace GLib {
 		ERROR,
 		SIGNAL
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_OBJECT_MANAGER_CLIENT_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_OBJECT_MANAGER_CLIENT_FLAGS_", type_id = "g_dbus_object_manager_client_flags_get_type ()")]
 	[Flags]
 	public enum DBusObjectManagerClientFlags {
 		NONE,
 		DO_NOT_AUTO_START
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_PROPERTY_INFO_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_PROPERTY_INFO_FLAGS_", type_id = "g_dbus_property_info_flags_get_type ()")]
 	[Flags]
 	public enum DBusPropertyInfoFlags {
 		NONE,
 		READABLE,
 		WRITABLE
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_PROXY_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_PROXY_FLAGS_", type_id = "g_dbus_proxy_flags_get_type ()")]
 	[Flags]
 	public enum DBusProxyFlags {
 		NONE,
@@ -2854,50 +2854,50 @@ namespace GLib {
 		DO_NOT_AUTO_START,
 		GET_INVALIDATED_PROPERTIES
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_SEND_MESSAGE_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_SEND_MESSAGE_FLAGS_", type_id = "g_dbus_send_message_flags_get_type ()")]
 	[Flags]
 	public enum DBusSendMessageFlags {
 		NONE,
 		PRESERVE_SERIAL
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_SERVER_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_SERVER_FLAGS_", type_id = "g_dbus_server_flags_get_type ()")]
 	[Flags]
 	public enum DBusServerFlags {
 		NONE,
 		RUN_IN_THREAD,
 		AUTHENTICATION_ALLOW_ANONYMOUS
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_SIGNAL_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_SIGNAL_FLAGS_", type_id = "g_dbus_signal_flags_get_type ()")]
 	[Flags]
 	public enum DBusSignalFlags {
 		NONE,
 		NO_MATCH_RULE
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_SUBTREE_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_SUBTREE_FLAGS_", type_id = "g_dbus_subtree_flags_get_type ()")]
 	[Flags]
 	public enum DBusSubtreeFlags {
 		NONE,
 		DISPATCH_TO_UNENUMERATED_NODES
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DATA_STREAM_BYTE_ORDER_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DATA_STREAM_BYTE_ORDER_", type_id = "g_data_stream_byte_order_get_type ()")]
 	public enum DataStreamByteOrder {
 		BIG_ENDIAN,
 		LITTLE_ENDIAN,
 		HOST_ENDIAN
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DATA_STREAM_NEWLINE_TYPE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DATA_STREAM_NEWLINE_TYPE_", type_id = "g_data_stream_newline_type_get_type ()")]
 	public enum DataStreamNewlineType {
 		LF,
 		CR,
 		CR_LF,
 		ANY
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DRIVE_START_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DRIVE_START_", type_id = "g_drive_start_flags_get_type ()")]
 	[Flags]
 	public enum DriveStartFlags {
 		NONE
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DRIVE_START_STOP_TYPE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DRIVE_START_STOP_TYPE_", type_id = "g_drive_start_stop_type_get_type ()")]
 	public enum DriveStartStopType {
 		UNKNOWN,
 		SHUTDOWN,
@@ -2905,27 +2905,27 @@ namespace GLib {
 		MULTIDISK,
 		PASSWORD
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_EMBLEM_ORIGIN_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_EMBLEM_ORIGIN_", type_id = "g_emblem_origin_get_type ()")]
 	public enum EmblemOrigin {
 		UNKNOWN,
 		DEVICE,
 		LIVEMETADATA,
 		TAG
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_ATTRIBUTE_INFO_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_ATTRIBUTE_INFO_", type_id = "g_file_attribute_info_flags_get_type ()")]
 	[Flags]
 	public enum FileAttributeInfoFlags {
 		NONE,
 		COPY_WITH_FILE,
 		COPY_WHEN_MOVED
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_ATTRIBUTE_STATUS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_ATTRIBUTE_STATUS_", type_id = "g_file_attribute_status_get_type ()")]
 	public enum FileAttributeStatus {
 		UNSET,
 		SET,
 		ERROR_SETTING
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_ATTRIBUTE_TYPE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_ATTRIBUTE_TYPE_", type_id = "g_file_attribute_type_get_type ()")]
 	public enum FileAttributeType {
 		INVALID,
 		STRING,
@@ -2938,7 +2938,7 @@ namespace GLib {
 		OBJECT,
 		STRINGV
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_COPY_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_COPY_", type_id = "g_file_copy_flags_get_type ()")]
 	[Flags]
 	public enum FileCopyFlags {
 		NONE,
@@ -2949,14 +2949,14 @@ namespace GLib {
 		NO_FALLBACK_FOR_MOVE,
 		TARGET_DEFAULT_PERMS
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_CREATE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_CREATE_", type_id = "g_file_create_flags_get_type ()")]
 	[Flags]
 	public enum FileCreateFlags {
 		NONE,
 		PRIVATE,
 		REPLACE_DESTINATION
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_MONITOR_EVENT_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_MONITOR_EVENT_", type_id = "g_file_monitor_event_get_type ()")]
 	public enum FileMonitorEvent {
 		CHANGED,
 		CHANGES_DONE_HINT,
@@ -2967,20 +2967,20 @@ namespace GLib {
 		UNMOUNTED,
 		MOVED
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_MONITOR_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_MONITOR_", type_id = "g_file_monitor_flags_get_type ()")]
 	[Flags]
 	public enum FileMonitorFlags {
 		NONE,
 		WATCH_MOUNTS,
 		SEND_MOVED
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_QUERY_INFO_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_QUERY_INFO_", type_id = "g_file_query_info_flags_get_type ()")]
 	[Flags]
 	public enum FileQueryInfoFlags {
 		NONE,
 		NOFOLLOW_SYMLINKS
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_TYPE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_TYPE_", type_id = "g_file_type_get_type ()")]
 	public enum FileType {
 		UNKNOWN,
 		REGULAR,
@@ -2990,18 +2990,18 @@ namespace GLib {
 		SHORTCUT,
 		MOUNTABLE
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILESYSTEM_PREVIEW_TYPE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILESYSTEM_PREVIEW_TYPE_", type_id = "g_filesystem_preview_type_get_type ()")]
 	public enum FilesystemPreviewType {
 		IF_ALWAYS,
 		IF_LOCAL,
 		NEVER
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_IO_MODULE_SCOPE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_IO_MODULE_SCOPE_", type_id = "g_io_module_scope_flags_get_type ()")]
 	public enum IOModuleScopeFlags {
 		NONE,
 		BLOCK_DUPLICATES
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_IO_STREAM_SPLICE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_IO_STREAM_SPLICE_", type_id = "g_io_stream_splice_flags_get_type ()")]
 	[Flags]
 	public enum IOStreamSpliceFlags {
 		NONE,
@@ -3009,37 +3009,37 @@ namespace GLib {
 		CLOSE_STREAM2,
 		WAIT_FOR_BOTH
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_MOUNT_MOUNT_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_MOUNT_MOUNT_", type_id = "g_mount_mount_flags_get_type ()")]
 	[Flags]
 	public enum MountMountFlags {
 		NONE
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_MOUNT_OPERATION_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_MOUNT_OPERATION_", type_id = "g_mount_operation_result_get_type ()")]
 	public enum MountOperationResult {
 		HANDLED,
 		ABORTED,
 		UNHANDLED
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_MOUNT_UNMOUNT_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_MOUNT_UNMOUNT_", type_id = "g_mount_unmount_flags_get_type ()")]
 	[Flags]
 	public enum MountUnmountFlags {
 		NONE,
 		FORCE
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_OUTPUT_STREAM_SPLICE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_OUTPUT_STREAM_SPLICE_", type_id = "g_output_stream_splice_flags_get_type ()")]
 	[Flags]
 	public enum OutputStreamSpliceFlags {
 		NONE,
 		CLOSE_SOURCE,
 		CLOSE_TARGET
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_PASSWORD_SAVE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_PASSWORD_SAVE_", type_id = "g_password_save_get_type ()")]
 	public enum PasswordSave {
 		NEVER,
 		FOR_SESSION,
 		PERMANENTLY
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOLVER_RECORD_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOLVER_RECORD_", type_id = "g_resolver_record_type_get_type ()")]
 	public enum ResolverRecordType {
 		SRV,
 		MX,
@@ -3047,18 +3047,18 @@ namespace GLib {
 		SOA,
 		NS
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOURCE_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOURCE_FLAGS_", type_id = "g_resource_flags_get_type ()")]
 	[Flags]
 	public enum ResourceFlags {
 		NONE,
 		COMPRESSED
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOURCE_LOOKUP_FLAGS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOURCE_LOOKUP_FLAGS_", type_id = "g_resource_lookup_flags_get_type ()")]
 	[Flags]
 	public enum ResourceLookupFlags {
 		NONE
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SETTINGS_BIND_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SETTINGS_BIND_", type_id = "g_settings_bind_flags_get_type ()")]
 	[Flags]
 	public enum SettingsBindFlags {
 		DEFAULT,
@@ -3068,7 +3068,7 @@ namespace GLib {
 		GET_NO_CHANGES,
 		INVERT_BOOLEAN
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SOCKET_CLIENT_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SOCKET_CLIENT_", type_id = "g_socket_client_event_get_type ()")]
 	public enum SocketClientEvent {
 		RESOLVING,
 		RESOLVED,
@@ -3080,14 +3080,14 @@ namespace GLib {
 		TLS_HANDSHAKED,
 		COMPLETE
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SOCKET_FAMILY_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SOCKET_FAMILY_", type_id = "g_socket_family_get_type ()")]
 	public enum SocketFamily {
 		INVALID,
 		UNIX,
 		IPV4,
 		IPV6
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SOCKET_MSG_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SOCKET_MSG_", type_id = "g_socket_msg_flags_get_type ()")]
 	[Flags]
 	public enum SocketMsgFlags {
 		NONE,
@@ -3095,7 +3095,7 @@ namespace GLib {
 		PEEK,
 		DONTROUTE
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SOCKET_PROTOCOL_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SOCKET_PROTOCOL_", type_id = "g_socket_protocol_get_type ()")]
 	public enum SocketProtocol {
 		UNKNOWN,
 		DEFAULT,
@@ -3103,25 +3103,25 @@ namespace GLib {
 		UDP,
 		SCTP
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SOCKET_TYPE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SOCKET_TYPE_", type_id = "g_socket_type_get_type ()")]
 	public enum SocketType {
 		INVALID,
 		STREAM,
 		DATAGRAM,
 		SEQPACKET
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TEST_DBUS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TEST_DBUS_", type_id = "g_test_dbus_flags_get_type ()")]
 	[Flags]
 	public enum TestDBusFlags {
 		NONE
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_AUTHENTICATION_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_AUTHENTICATION_", type_id = "g_tls_authentication_mode_get_type ()")]
 	public enum TlsAuthenticationMode {
 		NONE,
 		REQUESTED,
 		REQUIRED
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_CERTIFICATE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_CERTIFICATE_", type_id = "g_tls_certificate_flags_get_type ()")]
 	[Flags]
 	public enum TlsCertificateFlags {
 		UNKNOWN_CA,
@@ -3133,23 +3133,23 @@ namespace GLib {
 		GENERIC_ERROR,
 		VALIDATE_ALL
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_DATABASE_LOOKUP_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_DATABASE_LOOKUP_", type_id = "g_tls_database_lookup_flags_get_type ()")]
 	public enum TlsDatabaseLookupFlags {
 		NONE,
 		KEYPAIR
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_DATABASE_VERIFY_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_DATABASE_VERIFY_", type_id = "g_tls_database_verify_flags_get_type ()")]
 	[Flags]
 	public enum TlsDatabaseVerifyFlags {
 		NONE
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_INTERACTION_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_INTERACTION_", type_id = "g_tls_interaction_result_get_type ()")]
 	public enum TlsInteractionResult {
 		UNHANDLED,
 		HANDLED,
 		FAILED
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_PASSWORD_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_PASSWORD_", type_id = "g_tls_password_flags_get_type ()")]
 	[Flags]
 	public enum TlsPasswordFlags {
 		NONE,
@@ -3157,13 +3157,13 @@ namespace GLib {
 		MANY_TRIES,
 		FINAL_TRY
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_REHANDSHAKE_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_REHANDSHAKE_", type_id = "g_tls_rehandshake_mode_get_type ()")]
 	public enum TlsRehandshakeMode {
 		NEVER,
 		SAFELY,
 		UNSAFELY
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_UNIX_SOCKET_ADDRESS_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_UNIX_SOCKET_ADDRESS_", type_id = "g_unix_socket_address_type_get_type ()")]
 	public enum UnixSocketAddressType {
 		INVALID,
 		ANONYMOUS,
@@ -3171,7 +3171,7 @@ namespace GLib {
 		ABSTRACT,
 		ABSTRACT_PADDED
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_ZLIB_COMPRESSOR_FORMAT_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_ZLIB_COMPRESSOR_FORMAT_", type_id = "g_zlib_compressor_format_get_type ()")]
 	public enum ZlibCompressorFormat {
 		ZLIB,
 		GZIP,

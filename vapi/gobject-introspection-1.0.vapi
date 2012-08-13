@@ -301,26 +301,26 @@ namespace GI {
 	[CCode (cheader_filename = "girepository.h", cname = "_GIBaseInfoStub", has_type_id = false)]
 	public struct _BaseInfoStub {
 	}
-	[CCode (cheader_filename = "girepository.h", cprefix = "GI_ARRAY_TYPE_")]
+	[CCode (cheader_filename = "girepository.h", cprefix = "GI_ARRAY_TYPE_", has_type_id = false)]
 	public enum ArrayType {
 		C,
 		ARRAY,
 		PTR_ARRAY,
 		BYTE_ARRAY
 	}
-	[CCode (cheader_filename = "girepository.h", cprefix = "GI_DIRECTION_")]
+	[CCode (cheader_filename = "girepository.h", cprefix = "GI_DIRECTION_", has_type_id = false)]
 	public enum Direction {
 		IN,
 		OUT,
 		INOUT
 	}
-	[CCode (cheader_filename = "girepository.h", cprefix = "GI_FIELD_IS_")]
+	[CCode (cheader_filename = "girepository.h", cprefix = "GI_FIELD_IS_", has_type_id = false)]
 	[Flags]
 	public enum FieldInfoFlags {
 		READABLE,
 		WRITABLE
 	}
-	[CCode (cheader_filename = "girepository.h", cprefix = "GI_FUNCTION_")]
+	[CCode (cheader_filename = "girepository.h", cprefix = "GI_FUNCTION_", has_type_id = false)]
 	[Flags]
 	public enum FunctionInfoFlags {
 		IS_METHOD,
@@ -330,7 +330,7 @@ namespace GI {
 		WRAPS_VFUNC,
 		THROWS
 	}
-	[CCode (cheader_filename = "girepository.h", cprefix = "GI_INFO_TYPE_")]
+	[CCode (cheader_filename = "girepository.h", cprefix = "GI_INFO_TYPE_", has_type_id = false)]
 	public enum InfoType {
 		INVALID,
 		FUNCTION,
@@ -354,33 +354,33 @@ namespace GI {
 		UNRESOLVED;
 		public static unowned string to_string (GI.InfoType type);
 	}
-	[CCode (cheader_filename = "girepository.h", cprefix = "G_IREPOSITORY_ERROR_")]
+	[CCode (cheader_filename = "girepository.h", cprefix = "G_IREPOSITORY_ERROR_", has_type_id = false)]
 	public enum RepositoryError {
 		TYPELIB_NOT_FOUND,
 		NAMESPACE_MISMATCH,
 		NAMESPACE_VERSION_CONFLICT,
 		LIBRARY_NOT_FOUND
 	}
-	[CCode (cheader_filename = "girepository.h", cprefix = "G_IREPOSITORY_LOAD_FLAG_")]
+	[CCode (cheader_filename = "girepository.h", cprefix = "G_IREPOSITORY_LOAD_FLAG_", has_type_id = false)]
 	[Flags]
 	public enum RepositoryLoadFlags {
 		[CCode (cname = "G_IREPOSITORY_LOAD_FLAG_LAZY")]
 		IREPOSITORY_LOAD_FLAG_LAZY
 	}
-	[CCode (cheader_filename = "girepository.h", cprefix = "GI_SCOPE_TYPE_")]
+	[CCode (cheader_filename = "girepository.h", cprefix = "GI_SCOPE_TYPE_", has_type_id = false)]
 	public enum ScopeType {
 		INVALID,
 		CALL,
 		ASYNC,
 		NOTIFIED
 	}
-	[CCode (cheader_filename = "girepository.h", cprefix = "GI_TRANSFER_")]
+	[CCode (cheader_filename = "girepository.h", cprefix = "GI_TRANSFER_", has_type_id = false)]
 	public enum Transfer {
 		NOTHING,
 		CONTAINER,
 		EVERYTHING
 	}
-	[CCode (cheader_filename = "girepository.h", cprefix = "GI_TYPE_TAG_")]
+	[CCode (cheader_filename = "girepository.h", cprefix = "GI_TYPE_TAG_", has_type_id = false)]
 	public enum TypeTag {
 		VOID,
 		BOOLEAN,
@@ -406,7 +406,7 @@ namespace GI {
 		UNICHAR;
 		public static unowned string to_string (GI.TypeTag type);
 	}
-	[CCode (cheader_filename = "girepository.h", cprefix = "GI_VFUNC_")]
+	[CCode (cheader_filename = "girepository.h", cprefix = "GI_VFUNC_", has_type_id = false)]
 	[Flags]
 	public enum VFuncInfoFlags {
 		MUST_CHAIN_UP,
@@ -414,7 +414,7 @@ namespace GI {
 		MUST_NOT_OVERRIDE,
 		THROWS
 	}
-	[CCode (cheader_filename = "girepository.h", cprefix = "G_INVOKE_ERROR_")]
+	[CCode (cheader_filename = "girepository.h", cprefix = "G_INVOKE_ERROR_", has_type_id = false)]
 	public enum nvokeError {
 		FAILED,
 		SYMBOL_NOT_FOUND,

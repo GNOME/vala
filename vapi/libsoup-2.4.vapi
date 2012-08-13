@@ -807,24 +807,24 @@ namespace Soup {
 		public int64 start;
 		public int64 end;
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_ADDRESS_FAMILY_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_ADDRESS_FAMILY_", type_id = "soup_address_family_get_type ()")]
 	public enum AddressFamily {
 		INVALID,
 		IPV4,
 		IPV6
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_CACHE_RESPONSE_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_CACHE_RESPONSE_", type_id = "soup_cache_response_get_type ()")]
 	public enum CacheResponse {
 		FRESH,
 		NEEDS_VALIDATION,
 		STALE
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_CACHE_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_CACHE_", type_id = "soup_cache_type_get_type ()")]
 	public enum CacheType {
 		SINGLE_USER,
 		SHARED
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_CACHE_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_CACHE_", type_id = "soup_cacheability_get_type ()")]
 	[Flags]
 	public enum Cacheability {
 		CACHEABLE,
@@ -832,7 +832,7 @@ namespace Soup {
 		INVALIDATES,
 		VALIDATES
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_CONNECTION_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_CONNECTION_", type_id = "soup_connection_state_get_type ()")]
 	public enum ConnectionState {
 		NEW,
 		CONNECTING,
@@ -841,13 +841,13 @@ namespace Soup {
 		REMOTE_DISCONNECTED,
 		DISCONNECTED
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_COOKIE_JAR_ACCEPT_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_COOKIE_JAR_ACCEPT_", type_id = "soup_cookie_jar_accept_policy_get_type ()")]
 	public enum CookieJarAcceptPolicy {
 		ALWAYS,
 		NEVER,
 		NO_THIRD_PARTY
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_DATE_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_DATE_", type_id = "soup_date_format_get_type ()")]
 	public enum DateFormat {
 		HTTP,
 		COOKIE,
@@ -857,7 +857,7 @@ namespace Soup {
 		ISO8601,
 		ISO8601_XMLRPC
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_ENCODING_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_ENCODING_", type_id = "soup_encoding_get_type ()")]
 	public enum Encoding {
 		UNRECOGNIZED,
 		NONE,
@@ -866,18 +866,18 @@ namespace Soup {
 		CHUNKED,
 		BYTERANGES
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_EXPECTATION_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_EXPECTATION_", type_id = "soup_expectation_get_type ()")]
 	[Flags]
 	public enum Expectation {
 		UNRECOGNIZED,
 		CONTINUE
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_HTTP_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_HTTP_", type_id = "soup_http_version_get_type ()")]
 	public enum HTTPVersion {
 		@1_0,
 		@1_1
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_STATUS_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_STATUS_", type_id = "soup_known_status_code_get_type ()")]
 	public enum KnownStatusCode {
 		NONE,
 		CANCELLED,
@@ -943,21 +943,21 @@ namespace Soup {
 		INSUFFICIENT_STORAGE,
 		NOT_EXTENDED
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_LOGGER_LOG_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_LOGGER_LOG_", type_id = "soup_logger_log_level_get_type ()")]
 	public enum LoggerLogLevel {
 		NONE,
 		MINIMAL,
 		HEADERS,
 		BODY
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_MEMORY_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_MEMORY_", type_id = "soup_memory_use_get_type ()")]
 	public enum MemoryUse {
 		STATIC,
 		TAKE,
 		COPY,
 		TEMPORARY
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_MESSAGE_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_MESSAGE_", type_id = "soup_message_flags_get_type ()")]
 	[Flags]
 	public enum MessageFlags {
 		NO_REDIRECT,
@@ -967,13 +967,13 @@ namespace Soup {
 		CERTIFICATE_TRUSTED,
 		NEW_CONNECTION
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_MESSAGE_HEADERS_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_MESSAGE_HEADERS_", type_id = "soup_message_headers_type_get_type ()")]
 	public enum MessageHeadersType {
 		REQUEST,
 		RESPONSE,
 		MULTIPART
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_SOCKET_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_SOCKET_", type_id = "soup_socket_io_status_get_type ()")]
 	public enum SocketIOStatus {
 		OK,
 		WOULD_BLOCK,

@@ -250,14 +250,14 @@ namespace Gdl {
 		public Cairo.RectangleInt rect;
 		public GLib.Value extra;
 	}
-	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_BAR_")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_BAR_", type_id = "gdl_dock_bar_style_get_type ()")]
 	public enum DockBarStyle {
 		ICONS,
 		TEXT,
 		BOTH,
 		AUTO
 	}
-	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_ITEM_BEH_")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_ITEM_BEH_", type_id = "gdl_dock_item_behavior_get_type ()")]
 	[Flags]
 	public enum DockItemBehavior {
 		NORMAL,
@@ -274,12 +274,12 @@ namespace Gdl {
 		CANT_ICONIFY,
 		NO_GRIP
 	}
-	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_ITEM_BUTTON_IMAGE_")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_ITEM_BUTTON_IMAGE_", has_type_id = false)]
 	public enum DockItemButtonImageType {
 		CLOSE,
 		ICONIFY
 	}
-	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_", type_id = "gdl_dock_item_flags_get_type ()")]
 	[Flags]
 	public enum DockItemFlags {
 		IN_DRAG,
@@ -287,7 +287,7 @@ namespace Gdl {
 		ICONIFIED,
 		USER_ACTION
 	}
-	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_", type_id = "gdl_dock_object_flags_get_type ()")]
 	[Flags]
 	public enum DockObjectFlags {
 		AUTOMATIC,
@@ -295,13 +295,13 @@ namespace Gdl {
 		IN_REFLOW,
 		IN_DETACH
 	}
-	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_PARAM_")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_PARAM_", type_id = "gdl_dock_param_flags_get_type ()")]
 	[Flags]
 	public enum DockParamFlags {
 		EXPORT,
 		AFTER
 	}
-	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_", type_id = "gdl_dock_placement_get_type ()")]
 	public enum DockPlacement {
 		NONE,
 		TOP,
@@ -311,7 +311,7 @@ namespace Gdl {
 		CENTER,
 		FLOATING
 	}
-	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_SWITCHER_STYLE_")]
+	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_SWITCHER_STYLE_", type_id = "gdl_switcher_style_get_type ()")]
 	public enum SwitcherStyle {
 		TEXT,
 		ICON,

@@ -581,7 +581,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void can_undo_changed ();
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_BRACKET_MATCH_")]
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_BRACKET_MATCH_", type_id = "gtk_source_bracket_match_type_get_type ()")]
 	[GIR (name = "BracketMatchType")]
 	public enum SourceBracketMatchType {
 		NONE,
@@ -589,7 +589,7 @@ namespace Gtk {
 		NOT_FOUND,
 		FOUND
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_COMPLETION_ACTIVATION_")]
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_COMPLETION_ACTIVATION_", type_id = "gtk_source_completion_activation_get_type ()")]
 	[Flags]
 	[GIR (name = "CompletionActivation")]
 	public enum SourceCompletionActivation {
@@ -597,7 +597,7 @@ namespace Gtk {
 		INTERACTIVE,
 		USER_REQUESTED
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_DRAW_SPACES_")]
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_DRAW_SPACES_", type_id = "gtk_source_draw_spaces_flags_get_type ()")]
 	[Flags]
 	[GIR (name = "DrawSpacesFlags")]
 	public enum SourceDrawSpacesFlags {
@@ -610,14 +610,14 @@ namespace Gtk {
 		TRAILING,
 		ALL
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_GUTTER_RENDERER_ALIGNMENT_MODE_")]
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_GUTTER_RENDERER_ALIGNMENT_MODE_", type_id = "gtk_source_gutter_renderer_alignment_mode_get_type ()")]
 	[GIR (name = "GutterRendererAlignmentMode")]
 	public enum SourceGutterRendererAlignmentMode {
 		CELL,
 		FIRST,
 		LAST
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_GUTTER_RENDERER_STATE_")]
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_GUTTER_RENDERER_STATE_", type_id = "gtk_source_gutter_renderer_state_get_type ()")]
 	[Flags]
 	[GIR (name = "GutterRendererState")]
 	public enum SourceGutterRendererState {
@@ -626,7 +626,7 @@ namespace Gtk {
 		PRELIT,
 		SELECTED
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_SMART_HOME_END_")]
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_SMART_HOME_END_", type_id = "gtk_source_smart_home_end_type_get_type ()")]
 	[GIR (name = "SmartHomeEndType")]
 	public enum SourceSmartHomeEndType {
 		DISABLED,
@@ -634,7 +634,7 @@ namespace Gtk {
 		AFTER,
 		ALWAYS
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_VIEW_GUTTER_POSITION_")]
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_VIEW_GUTTER_POSITION_", type_id = "gtk_source_view_gutter_position_get_type ()")]
 	[GIR (name = "ViewGutterPosition")]
 	public enum SourceViewGutterPosition {
 		LINES,

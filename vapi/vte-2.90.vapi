@@ -189,7 +189,7 @@ namespace Vte {
 	[CCode (cheader_filename = "vte/vte.h", cname = "_VteCharAttributes", has_type_id = false)]
 	public struct _CharAttributes {
 	}
-	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_PTY_")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_PTY_", type_id = "vte_pty_flags_get_type ()")]
 	[Flags]
 	public enum PtyFlags {
 		NO_LASTLOG,
@@ -199,25 +199,25 @@ namespace Vte {
 		NO_FALLBACK,
 		DEFAULT
 	}
-	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_ANTI_ALIAS_")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_ANTI_ALIAS_", type_id = "vte_terminal_anti_alias_get_type ()")]
 	public enum TerminalAntiAlias {
 		USE_DEFAULT,
 		FORCE_ENABLE,
 		FORCE_DISABLE
 	}
-	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_CURSOR_BLINK_")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_CURSOR_BLINK_", type_id = "vte_terminal_cursor_blink_mode_get_type ()")]
 	public enum TerminalCursorBlinkMode {
 		SYSTEM,
 		ON,
 		OFF
 	}
-	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_CURSOR_SHAPE_")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_CURSOR_SHAPE_", type_id = "vte_terminal_cursor_shape_get_type ()")]
 	public enum TerminalCursorShape {
 		BLOCK,
 		IBEAM,
 		UNDERLINE
 	}
-	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_ERASE_")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_ERASE_", type_id = "vte_terminal_erase_binding_get_type ()")]
 	public enum TerminalEraseBinding {
 		AUTO,
 		ASCII_BACKSPACE,
@@ -225,7 +225,7 @@ namespace Vte {
 		DELETE_SEQUENCE,
 		TTY
 	}
-	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_TERMINAL_WRITE_")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_TERMINAL_WRITE_", type_id = "vte_terminal_write_flags_get_type ()")]
 	public enum TerminalWriteFlags {
 		DEFAULT
 	}

@@ -586,13 +586,13 @@ namespace Pango {
 		public int width;
 		public int height;
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_ALIGN_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_ALIGN_", type_id = "pango_alignment_get_type ()")]
 	public enum Alignment {
 		LEFT,
 		CENTER,
 		RIGHT
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_ATTR_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_ATTR_", type_id = "pango_attr_type_get_type ()")]
 	public enum AttrType {
 		INVALID,
 		LANGUAGE,
@@ -620,7 +620,7 @@ namespace Pango {
 		public static unowned string get_name (Pango.AttrType type);
 		public static Pango.AttrType register (string name);
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_BIDI_TYPE_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_BIDI_TYPE_", type_id = "pango_bidi_type_get_type ()")]
 	public enum BidiType {
 		L,
 		LRE,
@@ -643,14 +643,14 @@ namespace Pango {
 		ON;
 		public static Pango.BidiType for_unichar (unichar ch);
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_COVERAGE_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_COVERAGE_", type_id = "pango_coverage_level_get_type ()")]
 	public enum CoverageLevel {
 		NONE,
 		FALLBACK,
 		APPROXIMATE,
 		EXACT
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_DIRECTION_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_DIRECTION_", type_id = "pango_direction_get_type ()")]
 	public enum Direction {
 		LTR,
 		RTL,
@@ -660,14 +660,14 @@ namespace Pango {
 		WEAK_RTL,
 		NEUTRAL
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_ELLIPSIZE_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_ELLIPSIZE_", type_id = "pango_ellipsize_mode_get_type ()")]
 	public enum EllipsizeMode {
 		NONE,
 		START,
 		MIDDLE,
 		END
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_FONT_MASK_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_FONT_MASK_", type_id = "pango_font_mask_get_type ()")]
 	[Flags]
 	public enum FontMask {
 		FAMILY,
@@ -678,7 +678,7 @@ namespace Pango {
 		SIZE,
 		GRAVITY
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_GRAVITY_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_GRAVITY_", type_id = "pango_gravity_get_type ()")]
 	public enum Gravity {
 		SOUTH,
 		EAST,
@@ -690,20 +690,20 @@ namespace Pango {
 		public static Pango.Gravity get_for_script_and_width (Pango.Script script, bool wide, Pango.Gravity base_gravity, Pango.GravityHint hint);
 		public static double to_rotation (Pango.Gravity gravity);
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_GRAVITY_HINT_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_GRAVITY_HINT_", type_id = "pango_gravity_hint_get_type ()")]
 	public enum GravityHint {
 		NATURAL,
 		STRONG,
 		LINE
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_RENDER_PART_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_RENDER_PART_", type_id = "pango_render_part_get_type ()")]
 	public enum RenderPart {
 		FOREGROUND,
 		BACKGROUND,
 		UNDERLINE,
 		STRIKETHROUGH
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_SCRIPT_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_SCRIPT_", type_id = "pango_script_get_type ()")]
 	public enum Script {
 		INVALID_CODE,
 		COMMON,
@@ -787,7 +787,7 @@ namespace Pango {
 		public static Pango.Script for_unichar (unichar ch);
 		public static Pango.Language get_sample_language (Pango.Script script);
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_STRETCH_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_STRETCH_", type_id = "pango_stretch_get_type ()")]
 	public enum Stretch {
 		ULTRA_CONDENSED,
 		EXTRA_CONDENSED,
@@ -799,17 +799,17 @@ namespace Pango {
 		EXTRA_EXPANDED,
 		ULTRA_EXPANDED
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_STYLE_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_STYLE_", type_id = "pango_style_get_type ()")]
 	public enum Style {
 		NORMAL,
 		OBLIQUE,
 		ITALIC
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_TAB_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_TAB_", type_id = "pango_tab_align_get_type ()")]
 	public enum TabAlign {
 		LEFT
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_UNDERLINE_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_UNDERLINE_", type_id = "pango_underline_get_type ()")]
 	public enum Underline {
 		NONE,
 		SINGLE,
@@ -817,12 +817,12 @@ namespace Pango {
 		LOW,
 		ERROR
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_VARIANT_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_VARIANT_", type_id = "pango_variant_get_type ()")]
 	public enum Variant {
 		NORMAL,
 		SMALL_CAPS
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_WEIGHT_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_WEIGHT_", type_id = "pango_weight_get_type ()")]
 	public enum Weight {
 		THIN,
 		ULTRALIGHT,
@@ -836,7 +836,7 @@ namespace Pango {
 		HEAVY,
 		ULTRAHEAVY
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_WRAP_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_WRAP_", type_id = "pango_wrap_mode_get_type ()")]
 	public enum WrapMode {
 		WORD,
 		CHAR,

@@ -489,23 +489,23 @@ namespace Atk {
 		public int width;
 		public int height;
 	}
-	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_XY_")]
+	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_XY_", type_id = "atk_coord_type_get_type ()")]
 	public enum CoordType {
 		SCREEN,
 		WINDOW
 	}
-	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_HYPERLINK_IS_")]
+	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_HYPERLINK_IS_", type_id = "atk_hyperlink_state_flags_get_type ()")]
 	[Flags]
 	public enum HyperlinkStateFlags {
 		INLINE
 	}
-	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_KEY_EVENT_")]
+	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_KEY_EVENT_", type_id = "atk_key_event_type_get_type ()")]
 	public enum KeyEventType {
 		PRESS,
 		RELEASE,
 		LAST_DEFINED
 	}
-	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_LAYER_")]
+	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_LAYER_", type_id = "atk_layer_get_type ()")]
 	public enum Layer {
 		INVALID,
 		BACKGROUND,
@@ -516,7 +516,7 @@ namespace Atk {
 		OVERLAY,
 		WINDOW
 	}
-	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_RELATION_")]
+	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_RELATION_", type_id = "atk_relation_type_get_type ()")]
 	public enum RelationType {
 		NULL,
 		CONTROLLED_BY,
@@ -543,7 +543,7 @@ namespace Atk {
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.RelationType register (string name);
 	}
-	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_ROLE_")]
+	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_ROLE_", type_id = "atk_role_get_type ()")]
 	public enum Role {
 		INVALID,
 		ACCEL_LABEL,
@@ -656,7 +656,7 @@ namespace Atk {
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.Role register (string name);
 	}
-	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_STATE_")]
+	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_STATE_", type_id = "atk_state_type_get_type ()")]
 	public enum StateType {
 		INVALID,
 		ACTIVE,
@@ -705,7 +705,7 @@ namespace Atk {
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.StateType register (string name);
 	}
-	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_TEXT_ATTR_")]
+	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_TEXT_ATTR_", type_id = "atk_text_attribute_get_type ()")]
 	public enum TextAttribute {
 		INVALID,
 		LEFT_MARGIN,
@@ -745,7 +745,7 @@ namespace Atk {
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.TextAttribute register (string name);
 	}
-	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_TEXT_BOUNDARY_")]
+	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_TEXT_BOUNDARY_", type_id = "atk_text_boundary_get_type ()")]
 	public enum TextBoundary {
 		CHAR,
 		WORD_START,
@@ -755,7 +755,7 @@ namespace Atk {
 		LINE_START,
 		LINE_END
 	}
-	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_TEXT_CLIP_")]
+	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_TEXT_CLIP_", type_id = "atk_text_clip_type_get_type ()")]
 	public enum TextClipType {
 		NONE,
 		MIN,

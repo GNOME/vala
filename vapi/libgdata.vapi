@@ -1695,20 +1695,20 @@ namespace GData {
 		public static bool from_hexadecimal (string hexadecimal, out GData.Color color);
 		public string to_hexadecimal ();
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_BATCH_OPERATION_")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_BATCH_OPERATION_", type_id = "gdata_batch_operation_type_get_type ()")]
 	public enum BatchOperationType {
 		QUERY,
 		INSERTION,
 		UPDATE,
 		DELETION
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_MEDIA_EXPRESSION_")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_MEDIA_EXPRESSION_", type_id = "gdata_media_expression_get_type ()")]
 	public enum MediaExpression {
 		SAMPLE,
 		FULL,
 		NONSTOP
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_MEDIA_")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_MEDIA_", type_id = "gdata_media_medium_get_type ()")]
 	public enum MediaMedium {
 		UNKNOWN,
 		IMAGE,
@@ -1717,7 +1717,7 @@ namespace GData {
 		DOCUMENT,
 		EXECUTABLE
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_OPERATION_")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_OPERATION_", type_id = "gdata_operation_type_get_type ()")]
 	public enum OperationType {
 		QUERY,
 		INSERTION,
@@ -1728,44 +1728,44 @@ namespace GData {
 		AUTHENTICATION,
 		BATCH
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_PICASAWEB_")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_PICASAWEB_", type_id = "gdata_picasaweb_visibility_get_type ()")]
 	public enum PicasaWebVisibility {
 		PUBLIC,
 		PRIVATE
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_AGE_")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_AGE_", type_id = "gdata_youtube_age_get_type ()")]
 	public enum YouTubeAge {
 		ALL_TIME,
 		TODAY,
 		THIS_WEEK,
 		THIS_MONTH
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_FORMAT_")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_FORMAT_", type_id = "gdata_youtube_format_get_type ()")]
 	public enum YouTubeFormat {
 		UNKNOWN,
 		RTSP_H263_AMR,
 		HTTP_SWF,
 		RTSP_MPEG4_AAC
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_PERMISSION_")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_PERMISSION_", type_id = "gdata_youtube_permission_get_type ()")]
 	public enum YouTubePermission {
 		ALLOWED,
 		DENIED,
 		MODERATED
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SAFE_SEARCH_")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SAFE_SEARCH_", type_id = "gdata_youtube_safe_search_get_type ()")]
 	public enum YouTubeSafeSearch {
 		NONE,
 		MODERATE,
 		STRICT
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SORT_")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SORT_", type_id = "gdata_youtube_sort_order_get_type ()")]
 	public enum YouTubeSortOrder {
 		NONE,
 		ASCENDING,
 		DESCENDING
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_", type_id = "gdata_youtube_standard_feed_type_get_type ()")]
 	public enum YouTubeStandardFeedType {
 		TOP_RATED_FEED,
 		TOP_FAVORITES_FEED,
@@ -1778,7 +1778,7 @@ namespace GData {
 		RECENTLY_FEATURED_FEED,
 		WATCH_ON_MOBILE_FEED
 	}
-	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_UPLOADER_")]
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_UPLOADER_", type_id = "gdata_youtube_uploader_get_type ()")]
 	public enum YouTubeUploader {
 		ALL,
 		PARTNER

@@ -209,14 +209,14 @@ namespace Json {
 		public abstract Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
 		public abstract void set_property (GLib.ParamSpec pspec, GLib.Value value);
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_NODE_")]
+	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_NODE_", has_type_id = false)]
 	public enum NodeType {
 		OBJECT,
 		ARRAY,
 		VALUE,
 		NULL
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PARSER_ERROR_")]
+	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PARSER_ERROR_", has_type_id = false)]
 	public enum ParserError {
 		PARSE,
 		TRAILING_COMMA,
@@ -225,12 +225,12 @@ namespace Json {
 		INVALID_BAREWORD,
 		UNKNOWN
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PATH_ERROR_INVALID_")]
+	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PATH_ERROR_INVALID_", has_type_id = false)]
 	public enum PathError {
 		[CCode (cname = "JSON_PATH_ERROR_INVALID_QUERY")]
 		PATH_ERROR_INVALID_QUERY
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_READER_ERROR_")]
+	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_READER_ERROR_", has_type_id = false)]
 	public enum ReaderError {
 		NO_ARRAY,
 		INVALID_INDEX,

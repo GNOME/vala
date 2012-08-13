@@ -184,13 +184,13 @@ namespace Rest {
 		public XmlParser ();
 		public Rest.XmlNode parse_from_data (string data, int64 len);
 	}
-	[CCode (cheader_filename = "rest/rest-param.h", cprefix = "REST_MEMORY_")]
+	[CCode (cheader_filename = "rest/rest-param.h", cprefix = "REST_MEMORY_", has_type_id = false)]
 	public enum MemoryUse {
 		STATIC,
 		TAKE,
 		COPY
 	}
-	[CCode (cheader_filename = "rest/oauth-proxy.h", cname = "OAuthSignatureMethod", cprefix = "")]
+	[CCode (cheader_filename = "rest/oauth-proxy.h", cname = "OAuthSignatureMethod", cprefix = "", type_id = "oauth_signature_method_get_type ()")]
 	public enum OAuthSignatureMethod {
 		PLAINTEXT,
 		HMAC_SHA1

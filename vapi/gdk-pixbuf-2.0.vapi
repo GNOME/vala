@@ -174,30 +174,30 @@ namespace Gdk {
 		public uint8[] serialize ();
 		public GLib.StringBuilder to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_COLORSPACE_")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_COLORSPACE_", type_id = "gdk_colorspace_get_type ()")]
 	public enum Colorspace {
 		RGB
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_INTERP_")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_INTERP_", type_id = "gdk_interp_type_get_type ()")]
 	public enum InterpType {
 		NEAREST,
 		TILES,
 		BILINEAR,
 		HYPER
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_PIXBUF_ALPHA_")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_PIXBUF_ALPHA_", type_id = "gdk_pixbuf_alpha_mode_get_type ()")]
 	public enum PixbufAlphaMode {
 		BILEVEL,
 		FULL
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_PIXBUF_ROTATE_")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_PIXBUF_ROTATE_", type_id = "gdk_pixbuf_rotation_get_type ()")]
 	public enum PixbufRotation {
 		NONE,
 		COUNTERCLOCKWISE,
 		UPSIDEDOWN,
 		CLOCKWISE
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", cprefix = "GDK_PIXDATA_DUMP_")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", cprefix = "GDK_PIXDATA_DUMP_", has_type_id = false)]
 	[Flags]
 	public enum PixdataDumpType {
 		PIXDATA_STREAM,
@@ -209,7 +209,7 @@ namespace Gdk {
 		CONST,
 		RLE_DECODER
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", cprefix = "GDK_PIXDATA_")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", cprefix = "GDK_PIXDATA_", has_type_id = false)]
 	[Flags]
 	public enum PixdataType {
 		COLOR_TYPE_RGB,

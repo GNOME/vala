@@ -1201,32 +1201,32 @@ namespace Mx {
 	[CCode (cheader_filename = "mx/mx.h", has_type_id = false)]
 	public struct SettingsProviderIface {
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_ACTOR_MANAGER_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_ACTOR_MANAGER_", type_id = "mx_actor_manager_error_get_type ()")]
 	public enum ActorManagerError {
 		CONTAINER_DESTROYED,
 		ACTOR_DESTROYED,
 		CREATION_FAILED,
 		UNKNOWN_OPERATION
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_ALIGN_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_ALIGN_", type_id = "mx_align_get_type ()")]
 	public enum Align {
 		START,
 		MIDDLE,
 		END
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_APPLICATION_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_APPLICATION_", type_id = "mx_application_flags_get_type ()")]
 	[Flags]
 	public enum ApplicationFlags {
 		SINGLE_INSTANCE,
 		KEEP_ALIVE
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_DRAG_AXIS_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_DRAG_AXIS_", type_id = "mx_drag_axis_get_type ()")]
 	public enum DragAxis {
 		NONE,
 		X,
 		Y
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_FOCUS_DIRECTION_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_FOCUS_DIRECTION_", type_id = "mx_focus_direction_get_type ()")]
 	public enum FocusDirection {
 		OUT,
 		UP,
@@ -1236,7 +1236,7 @@ namespace Mx {
 		NEXT,
 		PREVIOUS
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_FOCUS_HINT_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_FOCUS_HINT_", type_id = "mx_focus_hint_get_type ()")]
 	public enum FocusHint {
 		FIRST,
 		LAST,
@@ -1247,7 +1247,7 @@ namespace Mx {
 		FROM_RIGHT;
 		public static Mx.FocusHint from_direction (Mx.FocusDirection direction);
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_FONT_WEIGHT_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_FONT_WEIGHT_", type_id = "mx_font_weight_get_type ()")]
 	public enum FontWeight {
 		NORMAL,
 		BOLD,
@@ -1255,45 +1255,45 @@ namespace Mx {
 		LIGHTER;
 		public static void set_from_string (GLib.Value value, string str);
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_IMAGE_SCALE_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_IMAGE_SCALE_", type_id = "mx_image_scale_mode_get_type ()")]
 	public enum ImageScaleMode {
 		NONE,
 		FIT,
 		CROP
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_KINETIC_SCROLL_VIEW_STATE_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_KINETIC_SCROLL_VIEW_STATE_", type_id = "mx_kinetic_scroll_view_state_get_type ()")]
 	public enum KineticScrollViewState {
 		IDLE,
 		PANNING,
 		SCROLLING,
 		CLAMPING
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_LONG_PRESS_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_LONG_PRESS_", type_id = "mx_long_press_action_get_type ()")]
 	public enum LongPressAction {
 		QUERY,
 		ACTION,
 		CANCEL
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_ORIENTATION_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_ORIENTATION_", type_id = "mx_orientation_get_type ()")]
 	public enum Orientation {
 		HORIZONTAL,
 		VERTICAL
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_POSITION_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_POSITION_", type_id = "mx_position_get_type ()")]
 	public enum Position {
 		TOP,
 		RIGHT,
 		BOTTOM,
 		LEFT
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_SCROLL_POLICY_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_SCROLL_POLICY_", type_id = "mx_scroll_policy_get_type ()")]
 	public enum ScrollPolicy {
 		NONE,
 		HORIZONTAL,
 		VERTICAL,
 		BOTH
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_STYLE_CHANGED_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_STYLE_CHANGED_", type_id = "mx_style_changed_flags_get_type ()")]
 	[Flags]
 	public enum StyleChangedFlags {
 		NONE,
@@ -1307,12 +1307,12 @@ namespace Mx {
 		[CCode (cname = "MX_STYLE_ERROR_INVALID_FILE")]
 		INVALID_FILE
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_TOOLTIP_ANIMATION_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_TOOLTIP_ANIMATION_", type_id = "mx_tooltip_animation_get_type ()")]
 	public enum TooltipAnimation {
 		BOUNCE,
 		FADE
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_WINDOW_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_WINDOW_", type_id = "mx_window_rotation_get_type ()")]
 	public enum WindowRotation {
 		[CCode (cname = "MX_WINDOW_ROTATION_0")]
 		@0,

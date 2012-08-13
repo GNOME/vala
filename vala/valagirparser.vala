@@ -2060,6 +2060,13 @@ public class Vala.GirParser : CodeVisitor {
 					en.set_attribute ("Flags", true);
 				}
 				sym = en;
+
+				var type_id = reader.get_attribute ("glib:get-type");
+				if (type_id == null) {
+					en.set_attribute_bool ("CCode", "has_type_id", false);
+				} else {
+					en.set_attribute_string ("CCode", "type_id", "%s ()".printf (type_id));
+				}
 			}
 			current.symbol = sym;
 		} else {

@@ -7415,14 +7415,14 @@ namespace Clutter {
 		public void free ();
 		public Clutter.Vertex init (float x, float y, float z);
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ACTOR_ALIGN_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ACTOR_ALIGN_", type_id = "clutter_actor_align_get_type ()")]
 	public enum ActorAlign {
 		FILL,
 		START,
 		CENTER,
 		END
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ACTOR_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ACTOR_", type_id = "clutter_actor_flags_get_type ()")]
 	[Flags]
 	public enum ActorFlags {
 		MAPPED,
@@ -7431,20 +7431,20 @@ namespace Clutter {
 		VISIBLE,
 		NO_LAYOUT
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ALIGN_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ALIGN_", type_id = "clutter_align_axis_get_type ()")]
 	public enum AlignAxis {
 		X_AXIS,
 		Y_AXIS,
 		BOTH
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_", type_id = "clutter_allocation_flags_get_type ()")]
 	[Flags]
 	public enum AllocationFlags {
 		ALLOCATION_NONE,
 		ABSOLUTE_ORIGIN_CHANGED,
 		DELEGATE_LAYOUT
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_", type_id = "clutter_animation_mode_get_type ()")]
 	public enum AnimationMode {
 		CUSTOM_MODE,
 		LINEAR,
@@ -7488,7 +7488,7 @@ namespace Clutter {
 		EASE_IN_OUT,
 		ANIMATION_LAST
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_BIN_ALIGNMENT_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_BIN_ALIGNMENT_", type_id = "clutter_bin_alignment_get_type ()")]
 	[Deprecated (since = "1.12")]
 	public enum BinAlignment {
 		FIXED,
@@ -7497,7 +7497,7 @@ namespace Clutter {
 		END,
 		CENTER
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_BIND_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_BIND_", type_id = "clutter_bind_coordinate_get_type ()")]
 	public enum BindCoordinate {
 		X,
 		Y,
@@ -7507,13 +7507,13 @@ namespace Clutter {
 		SIZE,
 		ALL
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_BOX_ALIGNMENT_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_BOX_ALIGNMENT_", type_id = "clutter_box_alignment_get_type ()")]
 	public enum BoxAlignment {
 		START,
 		END,
 		CENTER
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_CONTENT_GRAVITY_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_CONTENT_GRAVITY_", type_id = "clutter_content_gravity_get_type ()")]
 	public enum ContentGravity {
 		TOP_LEFT,
 		TOP,
@@ -7527,7 +7527,7 @@ namespace Clutter {
 		RESIZE_FILL,
 		RESIZE_ASPECT
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_REPEAT_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_REPEAT_", type_id = "clutter_content_repeat_get_type ()")]
 	[Flags]
 	public enum ContentRepeat {
 		NONE,
@@ -7535,25 +7535,25 @@ namespace Clutter {
 		Y_AXIS,
 		BOTH
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_DRAG_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_DRAG_", type_id = "clutter_drag_axis_get_type ()")]
 	public enum DragAxis {
 		AXIS_NONE,
 		X_AXIS,
 		Y_AXIS
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_EFFECT_PAINT_ACTOR_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_EFFECT_PAINT_ACTOR_", type_id = "clutter_effect_paint_flags_get_type ()")]
 	[Flags]
 	public enum EffectPaintFlags {
 		[CCode (cname = "CLUTTER_EFFECT_PAINT_ACTOR_DIRTY")]
 		ACTOR_DIRTY
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_EVENT_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_EVENT_", type_id = "clutter_event_flags_get_type ()")]
 	[Flags]
 	public enum EventFlags {
 		NONE,
 		FLAG_SYNTHETIC
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_", type_id = "clutter_event_type_get_type ()")]
 	public enum EventType {
 		NOTHING,
 		KEY_PRESS,
@@ -7593,18 +7593,18 @@ namespace Clutter {
 		[CCode (cname = "clutter_feature_get_all")]
 		public static Clutter.FeatureFlags @get ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_FLOW_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_FLOW_", type_id = "clutter_flow_orientation_get_type ()")]
 	public enum FlowOrientation {
 		HORIZONTAL,
 		VERTICAL
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_FONT_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_FONT_", type_id = "clutter_font_flags_get_type ()")]
 	[Flags]
 	public enum FontFlags {
 		MIPMAPPING,
 		HINTING
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_GRAVITY_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_GRAVITY_", type_id = "clutter_gravity_get_type ()")]
 	public enum Gravity {
 		NONE,
 		NORTH,
@@ -7617,14 +7617,14 @@ namespace Clutter {
 		NORTH_WEST,
 		CENTER
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_GRID_POSITION_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_GRID_POSITION_", type_id = "clutter_grid_position_get_type ()")]
 	public enum GridPosition {
 		LEFT,
 		RIGHT,
 		TOP,
 		BOTTOM
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_INIT_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_INIT_", type_id = "clutter_init_error_get_type ()")]
 	public enum InitError {
 		SUCCESS,
 		ERROR_UNKNOWN,
@@ -7633,7 +7633,7 @@ namespace Clutter {
 		ERROR_INTERNAL;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_INPUT_AXIS_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_INPUT_AXIS_", type_id = "clutter_input_axis_get_type ()")]
 	public enum InputAxis {
 		IGNORE,
 		X,
@@ -7645,7 +7645,7 @@ namespace Clutter {
 		DISTANCE,
 		LAST
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_", type_id = "clutter_input_device_type_get_type ()")]
 	public enum InputDeviceType {
 		POINTER_DEVICE,
 		KEYBOARD_DEVICE,
@@ -7659,24 +7659,24 @@ namespace Clutter {
 		CURSOR_DEVICE,
 		N_DEVICE_TYPES
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_INPUT_MODE_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_INPUT_MODE_", type_id = "clutter_input_mode_get_type ()")]
 	public enum InputMode {
 		MASTER,
 		SLAVE,
 		FLOATING
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_INTERPOLATION_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_INTERPOLATION_", type_id = "clutter_interpolation_get_type ()")]
 	public enum Interpolation {
 		LINEAR,
 		CUBIC
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_LONG_PRESS_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_LONG_PRESS_", type_id = "clutter_long_press_state_get_type ()")]
 	public enum LongPressState {
 		QUERY,
 		ACTIVATE,
 		CANCEL
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_", type_id = "clutter_modifier_type_get_type ()")]
 	[Flags]
 	public enum ModifierType {
 		SHIFT_MASK,
@@ -7712,18 +7712,18 @@ namespace Clutter {
 		RELEASE_MASK,
 		MODIFIER_MASK
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_OFFSCREEN_REDIRECT_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_OFFSCREEN_REDIRECT_", type_id = "clutter_offscreen_redirect_get_type ()")]
 	[Flags]
 	public enum OffscreenRedirect {
 		AUTOMATIC_FOR_OPACITY,
 		ALWAYS
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ORIENTATION_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ORIENTATION_", type_id = "clutter_orientation_get_type ()")]
 	public enum Orientation {
 		HORIZONTAL,
 		VERTICAL
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_PATH_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_PATH_", type_id = "clutter_path_node_type_get_type ()")]
 	public enum PathNodeType {
 		MOVE_TO,
 		LINE_TO,
@@ -7733,42 +7733,42 @@ namespace Clutter {
 		REL_LINE_TO,
 		REL_CURVE_TO
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_PICK_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_PICK_", type_id = "clutter_pick_mode_get_type ()")]
 	public enum PickMode {
 		NONE,
 		REACTIVE,
 		ALL
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_REPAINT_FLAGS_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_REPAINT_FLAGS_", type_id = "clutter_repaint_flags_get_type ()")]
 	[Flags]
 	public enum RepaintFlags {
 		PRE_PAINT,
 		POST_PAINT,
 		QUEUE_REDRAW_ON_ADD
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_REQUEST_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_REQUEST_", type_id = "clutter_request_mode_get_type ()")]
 	public enum RequestMode {
 		HEIGHT_FOR_WIDTH,
 		WIDTH_FOR_HEIGHT
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_", type_id = "clutter_rotate_axis_get_type ()")]
 	public enum RotateAxis {
 		X_AXIS,
 		Y_AXIS,
 		Z_AXIS
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ROTATE_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ROTATE_", type_id = "clutter_rotate_direction_get_type ()")]
 	public enum RotateDirection {
 		CW,
 		CCW
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SCALING_FILTER_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SCALING_FILTER_", type_id = "clutter_scaling_filter_get_type ()")]
 	public enum ScalingFilter {
 		LINEAR,
 		NEAREST,
 		TRILINEAR
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SCROLL_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SCROLL_", type_id = "clutter_scroll_direction_get_type ()")]
 	public enum ScrollDirection {
 		UP,
 		DOWN,
@@ -7776,7 +7776,7 @@ namespace Clutter {
 		RIGHT,
 		SMOOTH
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SCROLL_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SCROLL_", type_id = "clutter_scroll_mode_get_type ()")]
 	[Flags]
 	public enum ScrollMode {
 		NONE,
@@ -7784,32 +7784,32 @@ namespace Clutter {
 		VERTICALLY,
 		BOTH
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SHADER_ERROR_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SHADER_ERROR_", has_type_id = false)]
 	public enum ShaderError {
 		NO_ASM,
 		NO_GLSL,
 		COMPILE
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_", type_id = "clutter_shader_type_get_type ()")]
 	public enum ShaderType {
 		VERTEX_SHADER,
 		FRAGMENT_SHADER
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SNAP_EDGE_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SNAP_EDGE_", type_id = "clutter_snap_edge_get_type ()")]
 	public enum SnapEdge {
 		TOP,
 		RIGHT,
 		BOTTOM,
 		LEFT
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_STAGE_STATE_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_STAGE_STATE_", type_id = "clutter_stage_state_get_type ()")]
 	[Flags]
 	public enum StageState {
 		FULLSCREEN,
 		OFFSCREEN,
 		ACTIVATED
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_COLOR_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_COLOR_", type_id = "clutter_static_color_get_type ()")]
 	public enum StaticColor {
 		WHITE,
 		BLACK,
@@ -7857,12 +7857,12 @@ namespace Clutter {
 		ALUMINIUM_6,
 		TRANSPARENT
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_STEP_MODE_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_STEP_MODE_", type_id = "clutter_step_mode_get_type ()")]
 	public enum StepMode {
 		START,
 		END
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SWIPE_DIRECTION_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SWIPE_DIRECTION_", type_id = "clutter_swipe_direction_get_type ()")]
 	[Flags]
 	public enum SwipeDirection {
 		UP,
@@ -7870,19 +7870,19 @@ namespace Clutter {
 		LEFT,
 		RIGHT
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TABLE_ALIGNMENT_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TABLE_ALIGNMENT_", type_id = "clutter_table_alignment_get_type ()")]
 	public enum TableAlignment {
 		START,
 		CENTER,
 		END
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TEXT_DIRECTION_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TEXT_DIRECTION_", type_id = "clutter_text_direction_get_type ()")]
 	public enum TextDirection {
 		DEFAULT,
 		LTR,
 		RTL
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TEXTURE_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TEXTURE_", type_id = "clutter_texture_flags_get_type ()")]
 	[Flags]
 	public enum TextureFlags {
 		NONE,
@@ -7890,18 +7890,18 @@ namespace Clutter {
 		RGB_FLAG_PREMULT,
 		YUV_FLAG_YUV2
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TEXTURE_QUALITY_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TEXTURE_QUALITY_", type_id = "clutter_texture_quality_get_type ()")]
 	public enum TextureQuality {
 		LOW,
 		MEDIUM,
 		HIGH
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TIMELINE_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TIMELINE_", type_id = "clutter_timeline_direction_get_type ()")]
 	public enum TimelineDirection {
 		FORWARD,
 		BACKWARD
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_UNIT_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_UNIT_", type_id = "clutter_unit_type_get_type ()")]
 	public enum UnitType {
 		PIXEL,
 		EM,
@@ -7909,13 +7909,13 @@ namespace Clutter {
 		POINT,
 		CM
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_X11_FILTER_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_X11_FILTER_", type_id = "clutter_x11_filter_return_get_type ()")]
 	public enum X11FilterReturn {
 		CONTINUE,
 		TRANSLATE,
 		REMOVE
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_X11_XINPUT_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_X11_XINPUT_", type_id = "clutter_x11_xinput_event_types_get_type ()")]
 	public enum X11XInputEventTypes {
 		KEY_PRESS_EVENT,
 		KEY_RELEASE_EVENT,
