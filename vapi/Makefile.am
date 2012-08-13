@@ -308,7 +308,6 @@ GIDL_BINDINGS = \
 	libsexy \
 	libsoup-2.2 \
 	loudmouth-1.0 \
-	pango \
 	purple \
 	rest-0.6 \
 	rest-extras-0.6 \
@@ -338,6 +337,7 @@ GIR_BINDINGS = \
 	libwnck-3.0 \
 	mx-1.0 \
 	packagekit-glib2 \
+	pango \
 	pangocairo \
 	poppler-glib \
 	rest-0.7 \
@@ -583,7 +583,7 @@ packagekit-glib2:
 	$(GENVAPI) --library $(srcdir)/packagekit-glib2 --metadatadir $(METADATADIR) --pkg gio-2.0 $(GIRDIR)/PackageKitGlib-1.0.gir
 
 pango:
-	$(GENVAPI) --library $(srcdir)/pango $(PACKAGESDIR)/pango/pango-custom.vala $(PACKAGESDIR)/pango/pango.gi
+	$(GENVAPI) --library $(srcdir)/pango --metadatadir $(METADATADIR) $(METADATADIR)/Pango-1.0-custom.vala $(GIRDIR)/Pango-1.0.gir
 
 pangocairo:
 	$(GENVAPI) --library $(srcdir)/pangocairo --metadatadir $(METADATADIR) $(GIRDIR)/PangoCairo-1.0.gir

@@ -1,0 +1,75 @@
+AttrClass struct=false
+
+Attr*.attr skip
+AttrColor struct=false base_type="Pango.Attribute"
+AttrFloat struct=false base_type="Pango.Attribute"
+AttrFontDesc struct=false base_type="Pango.Attribute"
+AttrInt struct=false base_type="Pango.Attribute"
+// AttrIterator struct=false base_type="Pango.Attribute"
+AttrLanguage struct=false base_type="Pango.Attribute"
+AttrShape struct=false base_type="Pango.Attribute"
+AttrSize struct=false base_type="Pango.Attribute"
+AttrString struct=false base_type="Pango.Attribute"
+Attribute struct=false
+
+// Generics
+AttrShape
+  .data type="T"
+  .copy_func skip=false type_arguments="T"
+
+// Fields
+AttrColor
+  .color unowned=false
+GlyphString
+  .glyphs array unowned=false array_length_field="num_glyphs"
+  .log_clusters array unowned=false array_length_field="num_glyphs"
+LayoutLine
+  .runs type_arguments="Pango.LayoutRun"
+
+// G-I doesn't support non-GObject, non-GBoxed return values
+AttrIterator
+  .copy skip=false
+  .get skip=false
+AttrList
+  .get_iterator skip=false
+Attribute
+  .copy skip=false
+Coverage
+  .copy skip=false
+Font
+  .find_shaper skip=false
+  .get_coverage skip=false
+attr_*_new skip=false
+
+// Nullability of return values
+AttrIterator
+  .get nullable
+AttrList
+  .filter nullable
+Font
+  .get_font_map nullable
+Layout
+  .get_font_description nullable
+
+// Variadic
+TabArray
+  .new_with_positions skip=false
+
+// g-i uses _ScriptForLang intead of ScriptForLang.  There is a bug,
+// bug I can't find it right now.
+_ScriptForLang skip
+
+read_line
+  .stream type="GLib.FileStream"
+  .str out=false
+scan_string
+  .out out=false
+
+// Backwards compatability
+AttrClass
+  .copy type="GLib.Callback" skip=false
+  .destroy type="GLib.Callback" skip=false
+  .equal type="GLib.Callback"
+Color struct
+GlyphItemIter struct
+Matrix struct
