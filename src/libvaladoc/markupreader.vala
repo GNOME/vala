@@ -146,6 +146,9 @@ public class Valadoc.MarkupReader : Object {
 			return MarkupTokenType.END_ELEMENT;
 		}
 
+		content = null;
+		name = null;
+
 		space ();
 
 		MarkupTokenType type = MarkupTokenType.NONE;

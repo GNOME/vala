@@ -23,6 +23,11 @@ TESTS = \
 	libvaladoc/parser/sequencerule.vala \
 	libvaladoc/parser/optionalrule.vala \
 	libvaladoc/parser/stubrule.vala \
+	drivers/driver-0-10.vala \
+	drivers/driver-0-12.vala \
+	drivers/driver-0-14.vala \
+	drivers/driver-0-16.vala \
+	drivers/driver-0-18.vala \
 	$(NULL)
 
 check-TESTS: $(TESTS)
@@ -30,6 +35,8 @@ check-TESTS: $(TESTS)
 
 EXTRA_DIST = \
 	testrunner.sh \
+	generic-api-test.vala \
+	helpers.vala \
 	$(TESTS) \
 	$(NULL)
 
