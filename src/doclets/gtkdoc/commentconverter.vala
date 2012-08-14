@@ -277,6 +277,10 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			this.see_also = see_also;
 		} else if (t is Taglets.Link) {
 			((Taglets.Link)t).produce_content().accept (this);
+		} else if (t is Taglets.Throws) {
+			var taglet = (Taglets.Throws) t;
+			var link = get_docbook_link (taglet.error_domain) ?? taglet.error_domain_name;
+			old_builder.append_printf ("\n<para>%s will be returned in @error %s</para>", link, current_builder.str);
 		} else {
 			reporter.simple_warning ("GtkDoc: warning: Taglet not supported"); // TODO
 		}
