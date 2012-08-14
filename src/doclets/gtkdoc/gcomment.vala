@@ -53,13 +53,13 @@ public class Gtkdoc.GComment {
 	public string[] returns_annotations;
 	public Gee.List<Header> versioning = new Gee.LinkedList<Header> ();
 	public string[] see_also;
+	public bool is_section;
 
 	public string to_string () {
 		var builder = new StringBuilder ();
 
-		builder.append_printf ("/**\n * %s", symbol);
+		builder.append_printf ("/**\n * %s", (is_section ? "SECTION:%s" : "%s:").printf (symbol));
 		if (symbol_annotations != null && symbol_annotations.length > 0) {
-			builder.append_c (':');
 			foreach (var annotation in symbol_annotations) {
 				builder.append_printf (" (%s)", annotation);
 			}

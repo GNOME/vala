@@ -178,7 +178,8 @@ public class Gtkdoc.Generator : Api.Visitor {
 			return;
 		}
 
-		var gcomment = create_gcomment ("SECTION:%s".printf (get_section (filename)), comment);
+		var gcomment = create_gcomment (get_section (filename), comment);
+		gcomment.is_section = true;
 		gcomment.short_description = true;
 		file_data.section_comment = gcomment;
 	}
