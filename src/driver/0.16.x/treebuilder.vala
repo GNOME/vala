@@ -1038,7 +1038,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceFile? file = get_source_file (element);
 		SourceComment? comment = create_comment (element.comment);
 
-		Delegate node = new Delegate (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), element.has_target, element);
+		Delegate node = new Delegate (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), !element.has_target, element);
 		node.return_type = create_type_reference (element.return_type, node, node);
 		symbol_map.set (element, node);
 		parent.add_child (node);
