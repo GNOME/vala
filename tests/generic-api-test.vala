@@ -673,7 +673,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 	// (.Delegate check)
 	assert (del.get_cname () == "TestClassGlobalFoo");
 	assert (del.return_type != null);
-	//assert (del.is_static == false);
+	assert (del.is_static == false);
 	// (.Symbol check)
 	assert (del.is_deprecated == false);
 	assert (del.accessibility == Api.SymbolAccessibility.PUBLIC);
@@ -1086,7 +1086,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 	// (.Delegate check)
 	assert (del.get_cname () == "TestInterfaceGlobalFoo");
 	assert (del.return_type != null);
-	//assert (del.is_static == false);
+	assert (del.is_static == false);
 	// (.Symbol check)
 	assert (del.is_deprecated == false);
 	assert (del.accessibility == Api.SymbolAccessibility.PUBLIC);
@@ -2411,7 +2411,7 @@ public static void test_global_ns (Api.Namespace global_ns, Api.Package pkg) {
 	assert (del != null);
 	// (.Delegate check)
 	assert (del.get_cname () == "test_delegate_global");
-	assert (del.is_static == true);
+	assert (del.is_static == false);
 	// (.TypeSymbol check)
 	assert (del.is_basic_type == false);
 	// (.Symbol check)
