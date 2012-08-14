@@ -208,8 +208,8 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			break;
 
 		case Run.Style.MONOSPACED:
-			current_builder.append ("<blockquote>");
-			tag = "blockquote";
+			current_builder.append ("<code>");
+			tag = "code";
 			break;
 		}
 		run.accept_children (this);
