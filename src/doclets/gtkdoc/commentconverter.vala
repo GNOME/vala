@@ -100,7 +100,13 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 
 	public override void visit_symbol_link (SymbolLink sl) {
 		if (sl.symbol != null) {
-			current_builder.append (get_docbook_link (sl.symbol, is_dbus) ?? sl.label);
+			// If the symbol is a method and it doesn't have a constructor, fall back to linking to the class
+			if (sl.symbol is Method && ((Method) sl.symbol).is_constructor &&
+			    ((Method) sl.symbol).parent is Class && ((Class) ((Method) sl.symbol).parent).is_abstract) {
+				current_builder.append (get_docbook_link (((Method) sl.symbol).parent, is_dbus) ?? sl.label);
+			} else {
+				current_builder.append (get_docbook_link (sl.symbol, is_dbus) ?? sl.label);
+			}
 		} else {
 			current_builder.append (sl.label);
 		}
