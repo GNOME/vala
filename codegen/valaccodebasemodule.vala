@@ -1239,7 +1239,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (f.initializer != null) {
 					var rhs = get_cvalue (f.initializer);
 					if (!is_constant_ccode_expression (rhs)) {
-						if (f.parent_symbol is Class) {
+						if (is_gtypeinstance) {
 							if (f.initializer is InitializerList) {
 								ccode.open_block ();
 
