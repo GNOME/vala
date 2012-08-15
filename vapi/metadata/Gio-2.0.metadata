@@ -325,6 +325,11 @@ StaticResource
 // Need to ask about this... annotated as out, but that seems wrong
 DBus*Info.generate_xml.string_builder out=false
 
+// out_serial must not be out in the async function
+DBusConnection
+  .send_message_with_reply skip
+  .send_message_with_reply_finish skip
+
 // Back compat
 TlsCertificate abstract=false
 DataInputStream
