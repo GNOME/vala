@@ -1,6 +1,6 @@
 /* valagasyncmodule.vala
  *
- * Copyright (C) 2008-2010  Jürg Billeter
+ * Copyright (C) 2008-2012  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -110,20 +110,14 @@ public class Vala.GAsyncModule : GSignalModule {
 		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("_data_", new CCodeIdentifier ("_data")));
 
 		foreach (Parameter param in m.get_parameters ()) {
-			if (param.direction != ParameterDirection.OUT) {
+			if (!param.captured && param.direction != ParameterDirection.OUT) {
 				var param_type = param.variable_type.copy ();
 				if (!param_type.value_owned) {
 					param_type.value_owned = !no_implicit_copy (param_type);
 				}
 
 				if (requires_destroy (param_type)) {
-					// do not try to access closure blocks
-					bool old_captured = param.captured;
-					param.captured = false;
-
 					ccode.add_expression (destroy_parameter (param));
-
-					param.captured = old_captured;
 				}
 			}
 		}
