@@ -1766,6 +1766,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	void capture_parameter (Parameter param, CCodeStruct data, int block_id) {
 		generate_type_declaration (param.variable_type, cfile);
 
+		var m = param.parent_symbol as Method;
+		bool coroutine = m != null && m.coroutine;
+
 		var param_type = param.variable_type.copy ();
 		if (!param.variable_type.value_owned) {
 			param_type.value_owned = !no_implicit_copy (param.variable_type);
@@ -1775,7 +1778,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		// create copy if necessary as captured variables may need to be kept alive
 		param.captured = false;
 		var value = load_parameter (param);
-		if (requires_copy (param_type) && !param.variable_type.value_owned) {
+		if (requires_copy (param_type) && !param.variable_type.value_owned && !coroutine) {
 			// directly access parameters in ref expressions
 			value = copy_value (value, param);
 		}
