@@ -318,6 +318,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public Struct grecmutex_type;
 	public Struct grwlock_type;
 	public Struct gcond_type;
+	public Class gsource_type;
 	public TypeSymbol type_module_type;
 	public TypeSymbol dbus_proxy_type;
 
@@ -460,6 +461,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		gquark_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Quark"));
 		gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
 		gvariant_type = (Class) glib_ns.scope.lookup ("Variant");
+		gsource_type = (Class) glib_ns.scope.lookup ("Source");
 		mutex_type = (Struct) glib_ns.scope.lookup ("StaticRecMutex");
 
 		if (context.require_glib_version (2, 32)) {

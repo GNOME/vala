@@ -150,6 +150,21 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						type_param_index++;
 					}
 				}
+			} else if (current_class.base_class == gsource_type) {
+				// g_source_new
+
+				string class_prefix = CCodeBaseModule.get_ccode_lower_case_name (current_class);
+
+				var funcs = new CCodeDeclaration ("const GSourceFuncs");
+				funcs.modifiers = CCodeModifiers.STATIC;
+				funcs.add_declarator (new CCodeVariableDeclarator ("_source_funcs", new CCodeConstant ("{ %s_real_prepare, %s_real_check, %s_real_dispatch, %s_finalize}".printf (class_prefix, class_prefix, class_prefix, class_prefix))));
+				ccode.add_statement (funcs);
+
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_source_funcs")));
+
+				var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				csizeof.add_argument (new CCodeIdentifier (get_ccode_name (current_class)));
+				ccall.add_argument (csizeof);
 			}
 		} else if (m is CreationMethod && m.parent_symbol is Struct) {
 			ccall.add_argument (get_this_cexpression ());
@@ -794,6 +809,12 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			// assign new value
 			store_value (unary.inner.target_value, transform_value (unary.target_value, unary.inner.value_type, arg));
+		}
+
+		if (m is CreationMethod && m.parent_symbol is Class && current_class.base_class == gsource_type) {
+			var cinitcall = new CCodeFunctionCall (new CCodeIdentifier ("%s_instance_init".printf (get_ccode_lower_case_name (current_class, null))));
+			cinitcall.add_argument (get_this_cexpression ());
+			ccode.add_expression (cinitcall);
 		}
 	}
 

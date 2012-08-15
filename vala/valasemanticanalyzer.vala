@@ -161,6 +161,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType list_type;
 	public DataType tuple_type;
 	public DataType error_type;
+	public Class gsource_type;
 
 	public int next_lambda_id = 0;
 
@@ -215,6 +216,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		gerror_type = (Class) glib_ns.scope.lookup ("Error");
 		regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
+
+		gsource_type = (Class) glib_ns.scope.lookup ("Source");
 
 		current_symbol = root_symbol;
 		context.root.check (context);

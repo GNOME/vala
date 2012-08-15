@@ -60,6 +60,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		bool is_gtypeinstance = !cl.is_compact;
 		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
+		bool is_gsource = cl.base_class == gsource_type;
 
 		if (is_gtypeinstance) {
 			decl_space.add_type_declaration (new CCodeNewline ());
@@ -83,7 +84,7 @@ public class Vala.GTypeModule : GErrorModule {
 			decl_space.add_type_declaration (new CCodeNewline ());
 		}
 
-		if (cl.is_compact && cl.base_class != null) {
+		if (cl.is_compact && cl.base_class != null && !is_gsource) {
 			decl_space.add_type_declaration (new CCodeTypeDefinition (get_ccode_name (cl.base_class), new CCodeVariableDeclarator (get_ccode_name (cl))));
 		} else {
 			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (get_ccode_name (cl)), new CCodeVariableDeclarator (get_ccode_name (cl))));
@@ -155,7 +156,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			decl_space.add_function_declaration (function);
-		} else if (!is_gtypeinstance) {
+		} else if (!is_gtypeinstance && !is_gsource) {
 			if (cl.base_class == null) {
 				var function = new CCodeFunction (get_ccode_lower_case_prefix (cl) + "free", "void");
 				if (cl.access == SymbolAccessibility.PRIVATE) {
@@ -197,6 +198,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		bool is_gtypeinstance = !cl.is_compact;
 		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
+		bool is_gsource = cl.base_class == gsource_type;
 
 		var instance_struct = new CCodeStruct ("_%s".printf (get_ccode_name (cl)));
 		var type_struct = new CCodeStruct ("_%sClass".printf (get_ccode_name (cl)));
@@ -350,7 +352,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		if (!cl.is_compact || cl.base_class == null) {
+		if (!cl.is_compact || cl.base_class == null || is_gsource) {
 			// derived compact classes do not have a struct
 			decl_space.add_type_definition (instance_struct);
 		}
@@ -574,7 +576,7 @@ public class Vala.GTypeModule : GErrorModule {
 			begin_class_finalize_function (cl);
 			begin_finalize_function (cl);
 		} else {
-			if (cl.base_class == null) {
+			if (cl.base_class == null || cl.base_class == gsource_type) {
 				begin_instance_init_function (cl);
 				begin_finalize_function (cl);
 			}
@@ -698,7 +700,7 @@ public class Vala.GTypeModule : GErrorModule {
 				cfile.add_function (unref_fun);
 			}
 		} else {
-			if (cl.base_class == null) {
+			if (cl.base_class == null || cl.base_class == gsource_type) {
 				// derived compact classes do not have fields
 				add_instance_init_function (cl);
 				add_finalize_function (cl);
@@ -1645,7 +1647,9 @@ public class Vala.GTypeModule : GErrorModule {
 	private void begin_finalize_function (Class cl) {
 		push_context (instance_finalize_context);
 
-		if (!cl.is_compact) {
+		bool is_gsource = cl.base_class == gsource_type;
+
+		if (!cl.is_compact || is_gsource) {
 			var fundamental_class = cl;
 			while (fundamental_class.base_class != null) {
 				fundamental_class = fundamental_class.base_class;
@@ -1657,10 +1661,19 @@ public class Vala.GTypeModule : GErrorModule {
 
 			push_function (func);
 
-			CCodeFunctionCall ccall = generate_instance_cast (new CCodeIdentifier ("obj"), cl);
+			if (is_gsource) {
+				cfile.add_function_declaration (func);
+			}
+
+			CCodeExpression ccast;
+			if (!cl.is_compact) {
+				ccast = generate_instance_cast (new CCodeIdentifier ("obj"), cl);
+			} else {
+				ccast = new CCodeCastExpression (new CCodeIdentifier ("obj"), get_ccode_name (cl) + "*");
+			}
 
 			ccode.add_declaration ("%s *".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("self"));
-			ccode.add_assignment (new CCodeIdentifier ("self"), ccall);
+			ccode.add_assignment (new CCodeIdentifier ("self"), ccast);
 		} else {
 			var function = new CCodeFunction (get_ccode_lower_case_prefix (cl) + "free", "void");
 			if (cl.access == SymbolAccessibility.PRIVATE) {
@@ -1707,7 +1720,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			cfile.add_function_declaration (instance_finalize_context.ccode);
-		} else {
+		} else if (cl.base_class == null) {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 			ccall.add_argument (new CCodeIdentifier (get_ccode_name (cl)));
 			ccall.add_argument (new CCodeIdentifier ("self"));

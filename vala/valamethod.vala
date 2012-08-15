@@ -589,7 +589,7 @@ public class Vala.Method : Subroutine {
 
 			if (parent_symbol is Class) {
 				var cl = (Class) parent_symbol;
-				if (cl.is_compact) {
+				if (cl.is_compact && cl != context.analyzer.gsource_type) {
 					Report.error (source_reference, "Virtual methods may not be declared in compact classes");
 					return false;
 				}

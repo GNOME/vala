@@ -1584,8 +1584,8 @@ namespace GLib {
 
 	[Compact]
 	[CCode (ref_function = "g_source_ref", unref_function = "g_source_unref")]
-	public class Source {
-		public Source (SourceFuncs source_funcs, uint struct_size /* = sizeof (Source) */);
+	public abstract class Source {
+		protected Source ();
 		public void set_funcs (SourceFuncs funcs);
 		public uint attach (MainContext? context);
 		public void destroy ();
@@ -1611,6 +1611,10 @@ namespace GLib {
 		public static bool remove (uint id);
 		public static bool remove_by_funcs_user_data (void* user_data);
 		public static bool remove_by_user_data (void* user_data);
+
+		protected abstract bool prepare (out int timeout_);
+		protected abstract bool check ();
+		protected abstract bool dispatch (SourceFunc _callback);
 	}
 
 	[CCode (has_target = false)]
