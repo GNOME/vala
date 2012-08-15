@@ -576,7 +576,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public DBusMessage.from_blob ([CCode (array_length_cname = "blob_len", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] blob, GLib.DBusCapabilityFlags capabilities) throws GLib.Error;
 		public unowned string get_arg0 ();
-		public GLib.Variant get_body ();
+		public unowned GLib.Variant get_body ();
 		public GLib.DBusMessageByteOrder get_byte_order ();
 		public unowned string get_destination ();
 		public unowned string get_error_name ();

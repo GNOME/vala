@@ -351,6 +351,8 @@ AppInfo
   .launch.files nullable
   .launch_uris.uris nullable
 AsyncReadyCallback.source_object nullable
+DBusMessage
+  .get_body unowned
 DBusSubtreeDispatchFunc nullable unowned
 DBusSubtreeVTable.enumerate skip=false
 InputStream
