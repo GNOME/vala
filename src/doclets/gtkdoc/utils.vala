@@ -98,6 +98,9 @@ namespace Gtkdoc {
 		} else if (item is Api.Constant) {
 			var cname = ((Api.Constant)item).get_cname ();
 			return """<link linkend="%s:CAPS"><literal>%s</literal></link>""".printf (to_docbook_id (cname), cname);
+		} else if (item is Api.ErrorCode) {
+			var cname = ((Api.ErrorCode)item).get_cname ();
+			return """<link linkend="%s:CAPS"><literal>%s</literal></link>""".printf (to_docbook_id (cname), cname);
 		} else if (item is Api.Property) {
 			string name;
 			string parent;
