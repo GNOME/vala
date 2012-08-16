@@ -967,12 +967,12 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		// Process property type
 		if (element.get_accessor != null) {
 			var accessor = element.get_accessor;
-			node.getter = new PropertyAccessor (node, file, element.name, get_access_modifier(element), accessor.get_cname(), get_property_accessor_type (accessor), get_property_ownership (accessor), accessor);
+			node.getter = new PropertyAccessor (node, file, element.name, get_access_modifier(accessor), accessor.get_cname(), get_property_accessor_type (accessor), get_property_ownership (accessor), accessor);
 		}
 
 		if (element.set_accessor != null) {
 			var accessor = element.set_accessor;
-			node.setter = new PropertyAccessor (node, file, element.name, get_access_modifier(element), accessor.get_cname(), get_property_accessor_type (accessor), get_property_ownership (accessor), accessor);
+			node.setter = new PropertyAccessor (node, file, element.name, get_access_modifier(accessor), accessor.get_cname(), get_property_accessor_type (accessor), get_property_ownership (accessor), accessor);
 		}
 
 		process_attributes (node, element.attributes);
