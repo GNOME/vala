@@ -107,7 +107,7 @@ namespace Pango {
 	public class AttrString : Pango.Attribute {
 		public weak string value;
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", free_function = "pango_attribute_destroy")]
 	[Compact]
 	public class Attribute {
 		public uint end_index;

@@ -46,6 +46,11 @@ namespace Pango {
 		public AttrSize (int size);
 	}
 
+	[CCode (cheader_filename = "pango/pango.h", free_function = "pango_attribute_destroy")]
+	[Compact]
+	public class Attribute {
+	}
+
 	[CCode (cheader_filename = "pango/pango.h", ref_function = "pango_coverage_ref", unref_function = "pango_coverage_unref")]
 	[Compact]
 	public class Coverage {
