@@ -808,6 +808,12 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			see_also += get_docbook_link (m);
 			finish_gcomment.see_also = see_also;
 		}
+
+		if (m.is_constructor && !m.get_cname ().has_suffix ("_new")) {
+			// Hide secondary _construct methods from the documentation (the primary _construct method is hidden in visit_class())
+			var file_data = get_file_data (m.get_filename ());
+			file_data.private_section_lines.add (m.get_cname ().replace ("_new", "_construct"));
+		}
 	}
 
 	/**
