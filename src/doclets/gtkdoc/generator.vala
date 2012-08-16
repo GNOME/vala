@@ -612,19 +612,27 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			return;
 		}
 
-		add_comment (prop.get_filename(), "%s:%s".printf (current_cname, prop.get_cname ()), prop.documentation);
+		var gcomment = add_comment (prop.get_filename(), "%s:%s".printf (current_cname, prop.get_cname ()), prop.documentation);
 		prop.accept_all_children (this);
 
 		if (prop.getter != null && !prop.getter.is_private && prop.getter.is_get) {
-			var gcomment = add_symbol (prop.get_filename(), prop.getter.get_cname ());
-			gcomment.headers.add (new Header ("self", "the %s instance to query".printf (get_docbook_link (prop.parent)), 1));
-			gcomment.returns = "the value of the %s property".printf (get_docbook_link (prop));
+			var getter_gcomment = add_symbol (prop.get_filename(), prop.getter.get_cname ());
+			getter_gcomment.headers.add (new Header ("self", "the %s instance to query".printf (get_docbook_link (prop.parent)), 1));
+			getter_gcomment.returns = "the value of the %s property".printf (get_docbook_link (prop));
+			getter_gcomment.brief_comment = "Get and return the current value of the %s property.".printf (get_docbook_link (prop));
+
+			/* Copy versioning headers such as deprecation and since lines. */
+			getter_gcomment.versioning = gcomment.versioning;
 		}
 
 		if (prop.setter != null && !prop.setter.is_private && prop.setter.is_set) {
-			var gcomment = add_symbol (prop.get_filename(), prop.setter.get_cname ());
-			gcomment.headers.add (new Header ("self", "the %s instance to modify".printf (get_docbook_link (prop.parent)), 1));
-			gcomment.headers.add (new Header ("value", "the new value of the %s property".printf (get_docbook_link (prop)), 2));
+			var setter_gcomment = add_symbol (prop.get_filename(), prop.setter.get_cname ());
+			setter_gcomment.headers.add (new Header ("self", "the %s instance to modify".printf (get_docbook_link (prop.parent)), 1));
+			setter_gcomment.headers.add (new Header ("value", "the new value of the %s property".printf (get_docbook_link (prop)), 2));
+			setter_gcomment.brief_comment = "Set the value of the %s property to @value.".printf (get_docbook_link (prop));
+
+			/* Copy versioning headers such as deprecation and since lines. */
+			setter_gcomment.versioning = gcomment.versioning;
 		}
 	}
 
