@@ -31,6 +31,26 @@ public class Gtkdoc.Generator : Api.Visitor {
 		public GComment section_comment;
 		public Gee.List<GComment> comments;
 		public Gee.List<string> section_lines;
+		public Gee.List<string> standard_section_lines;
+		public Gee.List<string> private_section_lines;
+
+		public void register_section_line (string? line) {
+			if (line != null) {
+				section_lines.add (line);
+			}
+		}
+
+		public void register_standard_section_line (string? line) {
+			if (line != null) {
+				standard_section_lines.add (line);
+			}
+		}
+
+		public void register_private_section_line (string? line) {
+			if (line != null) {
+				private_section_lines.add (line);
+			}
+		}
 	}
 
 	public Gee.List<DBus.Interface> dbus_interfaces = new Gee.LinkedList<DBus.Interface>();
@@ -102,6 +122,23 @@ public class Gtkdoc.Generator : Api.Visitor {
 			foreach (var section_line in file_data.section_lines) {
 				sections_writer.write_line (section_line);
 			}
+
+			if (file_data.standard_section_lines.size > 0) {
+				sections_writer.write_line ("<SUBSECTION Standard>");
+
+				foreach (var section_line in file_data.standard_section_lines) {
+					sections_writer.write_line (section_line);
+				}
+			}
+
+			if (file_data.private_section_lines.size > 0) {
+				sections_writer.write_line ("<SUBSECTION Private>");
+
+				foreach (var section_line in file_data.private_section_lines) {
+					sections_writer.write_line (section_line);
+				}
+			}
+
 			sections_writer.write_line ("</SECTION>");
 		}
 		sections_writer.close ();
@@ -122,6 +159,8 @@ public class Gtkdoc.Generator : Api.Visitor {
 			file_data.section_comment = null;
 			file_data.comments = new Gee.LinkedList<GComment>();
 			file_data.section_lines = new Gee.LinkedList<string>();
+			file_data.standard_section_lines = new Gee.LinkedList<string>();
+			file_data.private_section_lines = new Gee.LinkedList<string>();
 			files_data[filename] = file_data;
 		}
 		return file_data;
@@ -215,7 +254,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 	private GComment add_symbol (string filename, string cname, Content.Comment? comment = null, string? symbol = null, string[]? returns_annotations = null) {
 		var file_data = get_file_data (filename);
 
-		file_data.section_lines.add (cname);
+		file_data.register_section_line (cname);
 
 		var gcomment = create_gcomment (symbol ?? cname, comment, returns_annotations);
 		file_data.comments.add (gcomment);
@@ -312,6 +351,15 @@ public class Gtkdoc.Generator : Api.Visitor {
 			dbus_interfaces.add (current_dbus_interface);
 		}
 
+		// Standard symbols
+		var file_data = get_file_data (iface.get_filename ());
+
+		file_data.register_standard_section_line (iface.get_type_cast_macro_name ());
+		file_data.register_standard_section_line (iface.get_interface_macro_name ());
+		file_data.register_standard_section_line (iface.get_is_type_macro_name ());
+		file_data.register_standard_section_line (iface.get_type_macro_name ());
+		file_data.register_standard_section_line (iface.get_type_function_name ());
+
 		current_cname = old_cname;
 		current_headers = old_headers;
 		current_dbus_interface = old_dbus_interface;
@@ -397,6 +445,19 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			gcomment.long_comment = "If you want the GValue to hold its own reference to @v_object, use <link linkend=\"%s\"><function>%s()</function></link> instead.".printf (to_docbook_id (cl.get_set_value_function_cname ()), cl.get_set_value_function_cname ());
 		}
 
+		// Standard/Private symbols
+		var file_data = get_file_data (cl.get_filename ());
+
+		file_data.register_standard_section_line (cl.get_is_type_macro_name ());
+		file_data.register_standard_section_line (cl.get_is_class_type_macro_name ());
+		file_data.register_standard_section_line (cl.get_type_cast_macro_name ());
+		file_data.register_standard_section_line (cl.get_class_type_macro_name ());
+		file_data.register_standard_section_line (cl.get_class_macro_name ());
+		file_data.register_standard_section_line (cl.get_type_function_name ());
+
+		file_data.register_private_section_line (cl.get_private_cname ());
+		file_data.register_private_section_line (((cl.nspace.name != null)? cl.nspace.name.down () + "_" : "") + to_lower_case (cl.name) + "_construct");
+
 		current_cname = old_cname;
 		current_headers = old_headers;
 		current_class = old_class;
@@ -457,6 +518,12 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		edomain.accept_all_children (this);
 		add_symbol (edomain.get_filename(), edomain.get_cname(), edomain.documentation);
 
+		// Standard symbols
+		var file_data = get_file_data (edomain.get_filename ());
+
+		file_data.register_standard_section_line (edomain.get_quark_function_name ());
+		file_data.register_standard_section_line (edomain.get_quark_macro_name ());
+
 		current_headers = old_headers;
 	}
 
@@ -471,6 +538,12 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 
 		en.accept_all_children (this);
 		add_symbol (en.get_filename(), en.get_cname(), en.documentation);
+
+		// Standard symbols
+		var file_data = get_file_data (en.get_filename ());
+
+		file_data.register_standard_section_line (en.get_type_macro_name ());
+		file_data.register_standard_section_line (en.get_type_function_name ());
 
 		current_headers = old_headers;
 	}
@@ -569,7 +642,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 	}
 
 	public override void visit_method (Api.Method m) {
-		if ((m.is_constructor && current_class.is_abstract) || m.is_override || m.is_private || (!m.is_abstract && !m.is_virtual && m.base_method != null)) {
+		if ((m.is_constructor && current_class != null && current_class.is_abstract) || m.is_override || m.is_private || (!m.is_abstract && !m.is_virtual && m.base_method != null)) {
 			return;
 		}
 
