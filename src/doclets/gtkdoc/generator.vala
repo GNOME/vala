@@ -621,6 +621,13 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			getter_gcomment.returns = "the value of the %s property".printf (get_docbook_link (prop));
 			getter_gcomment.brief_comment = "Get and return the current value of the %s property.".printf (get_docbook_link (prop));
 
+			if (prop.property_type != null && prop.property_type.data_type is Api.Array) {
+				var array_type = prop.property_type.data_type;
+				for (uint dim = 1; array_type != null && array_type is Api.Array; dim++, array_type = ((Api.Array) array_type).data_type) {
+					gcomment.headers.add (new Header ("result_length%u".printf (dim), "return location for the length of the property's value"));
+				}
+			}
+
 			/* Copy versioning headers such as deprecation and since lines. */
 			getter_gcomment.versioning = gcomment.versioning;
 		}
@@ -630,6 +637,13 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			setter_gcomment.headers.add (new Header ("self", "the %s instance to modify".printf (get_docbook_link (prop.parent)), 1));
 			setter_gcomment.headers.add (new Header ("value", "the new value of the %s property".printf (get_docbook_link (prop)), 2));
 			setter_gcomment.brief_comment = "Set the value of the %s property to @value.".printf (get_docbook_link (prop));
+
+			if (prop.property_type != null && prop.property_type.data_type is Api.Array) {
+				var array_type = prop.property_type.data_type;
+				for (uint dim = 1; array_type != null && array_type is Api.Array; dim++, array_type = ((Api.Array) array_type).data_type) {
+					gcomment.headers.add (new Header ("value_length%u".printf (dim), "length of the property's new value"));
+				}
+			}
 
 			/* Copy versioning headers such as deprecation and since lines. */
 			setter_gcomment.versioning = gcomment.versioning;
