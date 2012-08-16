@@ -30,8 +30,8 @@ using Valadoc.Content;
 public class Valadoc.Api.Enum : TypeSymbol {
 	private string cname;
 
-	public Enum (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, void* data) {
-		base (parent, file, name, accessibility, comment, false, data);
+	public Enum (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? type_macro_name, string? type_function_name, void* data) {
+		base (parent, file, name, accessibility, comment, type_macro_name, null, null, type_function_name, false, data);
 		this.cname = cname;
 	}
 

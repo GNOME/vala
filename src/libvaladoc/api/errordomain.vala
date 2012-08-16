@@ -28,12 +28,16 @@ using Valadoc.Content;
  * Represents an error domain declaration.
  */
 public class Valadoc.Api.ErrorDomain : TypeSymbol {
+	private string? quark_function_name;
+	private string? quark_macro_name;
 	private string? dbus_name;
 	private string? cname;
 
-	public ErrorDomain (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dbus_name, void* data) {
-		base (parent, file, name, accessibility, comment, false, data);
+	public ErrorDomain (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? quark_macro_name, string? quark_function_name, string? dbus_name, void* data) {
+		base (parent, file, name, accessibility, comment, null, null, null, null, false, data);
 
+		this.quark_function_name = quark_function_name;
+		this.quark_macro_name = quark_macro_name;
 		this.dbus_name = dbus_name;
 		this.cname = cname;
 	}
@@ -50,6 +54,20 @@ public class Valadoc.Api.ErrorDomain : TypeSymbol {
 	 */
 	public string? get_dbus_name () {
 		return dbus_name;
+	}
+
+	/**
+	 * Gets the name of the quark() function which represents the error domain
+	 */
+	public string get_quark_function_name () {
+		return quark_function_name;
+	}
+
+	/**
+	 * Gets the name of the quark macro which represents the error domain
+	 */
+	public string get_quark_macro_name () {
+		return quark_macro_name;
 	}
 
 	/**

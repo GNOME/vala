@@ -358,11 +358,125 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		} else if (symbol is Vala.Field) {
 			return ((Vala.Field) symbol).get_cname ();
 		} else {
-message ("--%s--", symbol.name);
 			assert_not_reached ();
 		}
 #else
 		return Vala.CCodeBaseModule.get_ccode_name (symbol);
+#endif
+	}
+
+	private string? get_quark_macro_name (Vala.ErrorDomain element) {
+#if VALA_0_13_0 || VALA_0_13_1
+		return element.get_upper_case_cname ();
+#else
+		return Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null);
+#endif
+	}
+
+	private string? get_private_cname (Vala.Class element) {
+		if (element.is_compact) {
+			return null;
+		}
+
+		string? cname = get_cname (element);
+		return (cname != null)? cname + "Private" : null;
+	}
+
+	private string? get_class_macro_name (Vala.Class element) {
+		if (element.is_compact) {
+			return null;
+		}
+
+#if VALA_0_13_0 || VALA_0_13_1
+		return "%s_GET_CLASS".printf (element.get_upper_case_cname ());
+#else
+		return "%s_GET_CLASS".printf (Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null));
+#endif
+	}
+
+	private string? get_class_type_macro_name (Vala.Class element) {
+		if (element.is_compact) {
+			return null;
+		}
+
+#if VALA_0_13_0 || VALA_0_13_1
+		return "%s_CLASS".printf (element.get_upper_case_cname ());
+#else
+		return "%s_CLASS".printf (Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null));
+#endif
+	}
+
+	private string? get_is_type_macro_name (Vala.TypeSymbol element) {
+#if VALA_0_13_0 || VALA_0_13_1
+		var cl = element as Vala.Class;
+		if (cl != null && cl.type_check_function != null) {
+			return cl.type_check_function;
+		} else if ((cl != null && cl.is_compact) || element is Vala.Struct || element is Vala.Enum || element is Vala.Delegate) {
+			return null;
+		} else {
+			return element.get_upper_case_cname ("IS_");
+		}
+#else
+		string? name = Vala.CCodeBaseModule.get_ccode_type_check_function (element);
+		return (name != null && name != "")? name : null;
+#endif
+	}
+
+	private string? get_is_class_type_macro_name (Vala.TypeSymbol element) {
+		string? name = get_is_type_macro_name (element);
+		return (name != null)? name + "_CLASS" : null;
+	}
+
+	private string? get_type_function_name (Vala.TypeSymbol element) {
+		if ((element is Vala.Class && ((Vala.Class) element).is_compact) || element is Vala.ErrorDomain || element is Vala.Delegate) {
+			return null;
+		}
+
+#if VALA_0_13_0 || VALA_0_13_1
+		return "%s_get_type".printf (element.get_lower_case_cname ());
+#else
+		return "%s_get_type".printf (Vala.CCodeBaseModule.get_ccode_lower_case_name (element, null));
+#endif
+	}
+
+	private string? get_type_macro_name (Vala.TypeSymbol element) {
+		if ((element is Vala.Class && ((Vala.Class) element).is_compact) || element is Vala.ErrorDomain || element is Vala.Delegate) {
+			return null;
+		}
+
+
+#if VALA_0_13_0 || VALA_0_13_1
+		return element.get_type_id ();
+#else
+		return Vala.CCodeBaseModule.get_ccode_type_id (element);
+#endif
+	}
+
+	private string? get_type_cast_macro_name (Vala.TypeSymbol element) {
+		if ((element is Vala.Class && !((Vala.Class) element).is_compact) || element is Vala.Interface) {
+#if VALA_0_13_0 || VALA_0_13_1
+			return element.get_upper_case_cname ();
+#else
+			return Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null);
+#endif
+		} else {
+			return null;
+		}
+	}
+
+	private string? get_interface_macro_name (Vala.Interface element) {
+#if VALA_0_13_0 || VALA_0_13_1
+		return "%s_GET_INTERFACE".printf (element.get_upper_case_cname ());
+#else
+		return "%s_GET_INTERFACE".printf (Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null));
+#endif
+	}
+
+	private string get_quark_function_name (Vala.ErrorDomain element) {
+#if VALA_0_13_0 || VALA_0_13_1
+		return element.get_lower_case_cprefix () + "quark";
+#else
+		return Vala.CCodeBaseModule.get_ccode_lower_case_prefix (element) + "quark";
 #endif
 	}
 
@@ -901,7 +1015,8 @@ message ("--%s--", symbol.name);
 
 		bool is_basic_type = element.base_class == null && element.name == "string";
 
-		Class node = new Class (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), Vala.GDBusModule.get_dbus_name (element), get_ccode_type_id (element), get_param_spec_function (element), get_ref_function (element), get_unref_function (element), get_take_value_function (element), get_get_value_function (element), get_set_value_function (element), element.is_fundamental (), element.is_abstract, is_basic_type, element);
+		Class node = new Class (parent, file, element.name, get_access_modifier (element), comment, get_cname (element), get_private_cname (element), get_class_macro_name (element), get_type_macro_name (element), get_is_type_macro_name (element), get_type_cast_macro_name (element), get_type_function_name (element), get_class_type_macro_name (element), get_is_class_type_macro_name (element), Vala.GDBusModule.get_dbus_name (element), get_ccode_type_id (element), get_param_spec_function (element), get_ref_function (element), get_unref_function (element), get_take_value_function (element), get_get_value_function (element), get_set_value_function (element), element.is_fundamental (), element.is_abstract, is_basic_type, element);
+
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -933,7 +1048,7 @@ message ("--%s--", symbol.name);
 		SourceFile? file = get_source_file (element);
 		SourceComment? comment = create_comment (element.comment);
 
-		Interface node = new Interface (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), Vala.GDBusModule.get_dbus_name (element), element);
+		Interface node = new Interface (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), get_type_macro_name (element), get_is_type_macro_name (element), get_type_cast_macro_name (element), get_type_function_name (element), get_interface_macro_name (element), Vala.GDBusModule.get_dbus_name (element), element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -961,7 +1076,7 @@ message ("--%s--", symbol.name);
 
 		bool is_basic_type = element.base_type == null && (element.is_boolean_type () || element.is_floating_type () || element.is_integer_type ());
 
-		Struct node = new Struct (parent, file, element.name, get_access_modifier(element), comment, get_cname(element), get_ccode_type_id (element), get_dup_function (element), get_free_function (element), is_basic_type, element);
+		Struct node = new Struct (parent, file, element.name, get_access_modifier(element), comment, get_cname(element), get_type_macro_name (element), get_type_function_name (element), get_ccode_type_id (element), get_dup_function (element), get_free_function (element), is_basic_type, element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -1096,7 +1211,7 @@ message ("--%s--", symbol.name);
 		SourceFile? file = get_source_file (element);
 		SourceComment? comment = create_comment (element.comment);
 
-		Symbol node = new Enum (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), element);
+		Symbol node = new Enum (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), get_type_macro_name (element), get_type_function_name (element), element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -1145,7 +1260,7 @@ message ("--%s--", symbol.name);
 		SourceFile? file = get_source_file (element);
 		SourceComment? comment = create_comment (element.comment);
 
-		Symbol node = new ErrorDomain (parent, file, element.name, get_access_modifier(element), comment, get_cname(element), Vala.GDBusModule.get_dbus_name (element), element);
+		Symbol node = new ErrorDomain (parent, file, element.name, get_access_modifier (element), comment, get_cname (element), get_quark_macro_name (element), get_quark_function_name (element), Vala.GDBusModule.get_dbus_name (element), element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 

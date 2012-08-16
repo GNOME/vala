@@ -29,9 +29,18 @@ using Gee;
  */
 public abstract class Valadoc.Api.TypeSymbol : Symbol {
 	private SourceComment? source_comment;
+	private string? type_macro_name;
+	private string? is_type_macro_name;
+	private string? type_cast_macro_name;
+	private string? type_function_name;
 
-	public TypeSymbol (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, bool is_basic_type, void* data) {
+	public TypeSymbol (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? type_macro_name, string? is_type_macro_name, string? type_cast_macro_name, string? type_function_name, bool is_basic_type, void* data) {
 		base (parent, file, name, accessibility, data);
+
+		this.type_cast_macro_name = type_cast_macro_name;
+		this.is_type_macro_name = is_type_macro_name;
+		this.type_function_name = type_function_name;
+		this.type_macro_name = type_macro_name;
 
 		this.is_basic_type = is_basic_type;
 		this.source_comment = comment;
@@ -43,6 +52,34 @@ public abstract class Valadoc.Api.TypeSymbol : Symbol {
 	public bool is_basic_type {
 		private set;
 		get;
+	}
+
+	/**
+	 * Gets the name of the GType macro which represents the type symbol
+	 */
+	public string get_type_macro_name () {
+		return type_macro_name;
+	}
+
+	/**
+	 * Gets the name of the GType macro which casts a type instance to the given type.
+	 */
+	public string get_type_cast_macro_name () {
+		return type_cast_macro_name;
+	}
+
+	/**
+	 * Gets the name of the GType macro which determines whether a type instance is of a given type.
+	 */
+	public string get_is_type_macro_name () {
+		return is_type_macro_name;
+	}
+
+	/**
+	 * Gets the name of the get_type() function which represents the type symbol
+	 */
+	public string get_type_function_name () {
+		return type_function_name;
 	}
 
 	/**

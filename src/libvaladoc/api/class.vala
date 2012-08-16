@@ -38,14 +38,21 @@ public class Valadoc.Api.Class : TypeSymbol {
 	private string? param_spec_function_name;
 	private string? ref_function_name;
 	private string? type_id;
+	private string? is_class_type_macro_name;
+	private string? class_type_macro_name;
+	private string? class_macro_name;
+	private string? private_cname;
 	private string? cname;
 
-
-	public Class (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dbus_name, string? type_id, string? param_spec_function_name, string? ref_function_name, string? unref_function_name, string? take_value_function_cname, string? get_value_function_cname, string? set_value_function_cname, bool is_fundamental, bool is_abstract, bool is_basic_type, void* data) {
-		base (parent, file, name, accessibility, comment, is_basic_type, data);
+	public Class (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? private_cname, string? class_macro_name, string? type_macro_name, string? is_type_macro_name, string? type_cast_macro_name, string? type_function_name, string? class_type_macro_name, string? is_class_type_macro_name, string? dbus_name, string? type_id, string? param_spec_function_name, string? ref_function_name, string? unref_function_name, string? take_value_function_cname, string? get_value_function_cname, string? set_value_function_cname, bool is_fundamental, bool is_abstract, bool is_basic_type, void* data) {
+		base (parent, file, name, accessibility, comment, type_macro_name, is_type_macro_name, type_cast_macro_name, type_function_name, is_basic_type, data);
 
 		this.interfaces = new ArrayList<TypeReference> ();
 
+		this.is_class_type_macro_name = is_class_type_macro_name;
+		this.class_type_macro_name = class_type_macro_name;
+		this.class_macro_name = class_macro_name;
+		this.private_cname = private_cname;
 		this.dbus_name = dbus_name;
 		this.type_id = type_id;
 		this.cname = cname;
@@ -76,6 +83,13 @@ public class Valadoc.Api.Class : TypeSymbol {
 	 */
 	public string? get_cname () {
 		return cname;
+	}
+
+	/**
+	 * Returns the name of this class' private data structure as it is used in C.
+	 */
+	public string? get_private_cname () {
+		return private_cname;
 	}
 
 	/**
@@ -140,6 +154,27 @@ public class Valadoc.Api.Class : TypeSymbol {
 	 */
 	public string? get_dbus_name () {
 		return dbus_name;
+	}
+
+	/**
+	 * Gets the name of the GType macro which returns the class struct.
+	 */
+	public string get_class_macro_name () {
+		return class_macro_name;
+	}
+
+	/**
+	 * Gets the name of the GType macro which returns the type of the class.
+	 */
+	public string get_class_type_macro_name () {
+		return class_type_macro_name;
+	}
+
+	/**
+	 * Gets the name of the GType macro which returns whether a class instance is of a given type.
+	 */
+	public string get_is_class_type_macro_name () {
+		return is_class_type_macro_name;
 	}
 
 	/**

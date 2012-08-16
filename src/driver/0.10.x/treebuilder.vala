@@ -238,16 +238,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 	}
 
-	private SourceComment? create_comment (Vala.Comment? comment) {
-		if (comment != null) {
-			Vala.SourceReference pos = comment.source_reference;
-			SourceFile file = files.get (pos.file);
-			return new SourceComment (comment.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
-		}
-
-		return null;
-	}
-
 	private string get_method_name (Vala.Method element) {
 		if (element is Vala.CreationMethod) {
 			if (element.name == ".new") {
@@ -258,6 +248,93 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 
 		return element.name;
+	}
+
+	private string? get_quark_macro_name (Vala.ErrorDomain element) {
+		return element.get_upper_case_cname ();
+	}
+
+	private string? get_private_cname (Vala.Class element) {
+		if (element.is_compact) {
+			return null;
+		}
+
+		string? cname = element.get_cname ();
+		return (cname != null)? cname + "Private" : null;
+	}
+
+	private string? get_class_macro_name (Vala.Class element) {
+		if (element.is_compact) {
+			return null;
+		}
+
+		return "%s_GET_CLASS".printf (element.get_upper_case_cname ());
+	}
+
+	private string? get_class_type_macro_name (Vala.Class element) {
+		if (element.is_compact) {
+			return null;
+		}
+
+		return "%s_CLASS".printf (element.get_upper_case_cname ());
+	}
+
+	private string? get_is_type_macro_name (Vala.TypeSymbol element) {
+		var cl = element as Vala.Class;
+		if (cl != null && cl.type_check_function != null) {
+			return cl.type_check_function;
+		} else if ((cl != null && cl.is_compact) || element is Vala.Struct || element is Vala.Enum || element is Vala.Delegate) {
+			return null;
+		} else {
+			return element.get_upper_case_cname ("IS_");
+		}
+	}
+
+	private string? get_is_class_type_macro_name (Vala.TypeSymbol element) {
+		string? name = get_is_type_macro_name (element);
+		return (name != null)? name + "_CLASS" : null;
+	}
+
+	private string? get_type_function_name (Vala.TypeSymbol element) {
+		if ((element is Vala.Class && ((Vala.Class) element).is_compact) || element is Vala.ErrorDomain || element is Vala.Delegate) {
+			return null;
+		}
+
+		return "%s_get_type".printf (element.get_lower_case_cname ());
+	}
+
+	private string? get_type_cast_macro_name (Vala.TypeSymbol element) {
+		if ((element is Vala.Class && !((Vala.Class) element).is_compact) || element is Vala.Interface) {
+			return element.get_upper_case_cname ();
+		} else {
+			return null;
+		}
+	}
+
+	private string? get_type_macro_name (Vala.TypeSymbol element) {
+		if ((element is Vala.Class && ((Vala.Class) element).is_compact) || element is Vala.ErrorDomain || element is Vala.Delegate) {
+			return null;
+		}
+
+		return element.get_type_id ();
+	}
+
+	private string? get_interface_macro_name (Vala.Interface element) {
+		return "%s_GET_INTERFACE".printf (element.get_upper_case_cname ());
+	}
+
+	private string get_quark_function_name (Vala.ErrorDomain element) {
+		return element.get_lower_case_cprefix () + "quark";
+	}
+
+	private SourceComment? create_comment (Vala.Comment? comment) {
+		if (comment != null) {
+			Vala.SourceReference pos = comment.source_reference;
+			SourceFile file = files.get (pos.file);
+			return new SourceComment (comment.content, file, pos.first_line, pos.first_column, pos.last_line, pos.last_column);
+		}
+
+		return null;
 	}
 
 	private PackageMetaData? get_package_meta_data (Package pkg) {
@@ -783,7 +860,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		bool is_basic_type = element.base_class == null && element.name == "string";
 
-		Class node = new Class (parent, file, element.name, get_access_modifier (element), comment, element.get_cname (), Vala.GDBusModule.get_dbus_name (element), element.get_type_id (), element.get_param_spec_function (), element.get_ref_function (), element.get_unref_function (), element.get_take_value_function (), element.get_get_value_function (), element.get_set_value_function (), element.is_fundamental (), element.is_abstract, is_basic_type, element);
+		Class node = new Class (parent, file, element.name, get_access_modifier (element), comment, element.get_cname (), get_private_cname (element), get_class_macro_name (element), get_type_macro_name (element), get_is_type_macro_name (element), get_type_cast_macro_name (element), get_type_function_name (element), get_class_type_macro_name (element), get_is_class_type_macro_name (element), Vala.GDBusModule.get_dbus_name (element), element.get_type_id (), element.get_param_spec_function (), element.get_ref_function (), element.get_unref_function (), element.get_take_value_function (), element.get_get_value_function (), element.get_set_value_function (), element.is_fundamental (), element.is_abstract, is_basic_type, element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -815,7 +892,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceFile? file = get_source_file (element);
 		SourceComment? comment = create_comment (element.comment);
 
-		Interface node = new Interface (parent, file, element.name, get_access_modifier(element), comment, element.get_cname (), Vala.GDBusModule.get_dbus_name (element), element);
+		Interface node = new Interface (parent, file, element.name, get_access_modifier(element), comment, element.get_cname (), get_type_macro_name (element), get_is_type_macro_name (element), get_type_cast_macro_name (element), get_type_function_name (element), get_interface_macro_name (element), Vala.GDBusModule.get_dbus_name (element), element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -843,7 +920,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		bool is_basic_type = element.base_type == null && (element.is_boolean_type () || element.is_floating_type () || element.is_integer_type ());
 
-		Struct node = new Struct (parent, file, element.name, get_access_modifier (element), comment, element.get_cname(), element.get_type_id (), element.get_dup_function (), element.get_free_function (), is_basic_type, element);
+		Struct node = new Struct (parent, file, element.name, get_access_modifier (element), comment, element.get_cname(), get_type_macro_name (element), get_type_function_name (element), element.get_type_id (), element.get_dup_function (), element.get_free_function (), is_basic_type, element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -978,7 +1055,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceFile? file = get_source_file (element);
 		SourceComment? comment = create_comment (element.comment);
 
-		Symbol node = new Api.Enum (parent, file, element.name, get_access_modifier(element), comment, element.get_cname (), element);
+		Symbol node = new Api.Enum (parent, file, element.name, get_access_modifier(element), comment, element.get_cname (), get_type_macro_name (element), get_type_function_name (element), element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -1027,7 +1104,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceFile? file = get_source_file (element);
 		SourceComment? comment = create_comment (element.comment);
 
-		Symbol node = new ErrorDomain (parent, file, element.name, get_access_modifier(element), comment, element.get_cname(), Vala.GDBusModule.get_dbus_name (element), element);
+		Symbol node = new ErrorDomain (parent, file, element.name, get_access_modifier (element), comment, element.get_cname (), get_quark_macro_name (element), get_quark_function_name (element), Vala.GDBusModule.get_dbus_name (element), element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 

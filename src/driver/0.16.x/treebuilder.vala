@@ -297,6 +297,77 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return Vala.CCodeBaseModule.get_ccode_name (symbol);
 	}
 
+	private string? get_quark_macro_name (Vala.ErrorDomain element) {
+		return Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null);
+	}
+
+	private string? get_private_cname (Vala.Class element) {
+		if (element.is_compact) {
+			return null;
+		}
+
+		string? cname = get_cname (element);
+		return (cname != null)? cname + "Private" : null;
+	}
+
+	private string? get_class_macro_name (Vala.Class element) {
+		if (element.is_compact) {
+			return null;
+		}
+
+		return "%s_GET_CLASS".printf (Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null));
+	}
+
+	private string? get_class_type_macro_name (Vala.Class element) {
+		if (element.is_compact) {
+			return null;
+		}
+
+		return "%s_CLASS".printf (Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null));
+	}
+
+	private string? get_is_type_macro_name (Vala.TypeSymbol element) {
+		string name = Vala.CCodeBaseModule.get_ccode_type_check_function (element);
+		return (name != null && name != "")? name : null;
+	}
+
+	private string? get_is_class_type_macro_name (Vala.TypeSymbol element) {
+		string? name = get_is_type_macro_name (element);
+		return (name != null)? name + "_CLASS" : null;
+	}
+
+	private string? get_type_function_name (Vala.TypeSymbol element) {
+		if ((element is Vala.Class && ((Vala.Class) element).is_compact) || element is Vala.ErrorDomain || element is Vala.Delegate) {
+			return null;
+		}
+
+		return "%s_get_type".printf (Vala.CCodeBaseModule.get_ccode_lower_case_name (element, null));
+	}
+
+	private string? get_type_macro_name (Vala.TypeSymbol element) {
+		if ((element is Vala.Class && ((Vala.Class) element).is_compact) || element is Vala.ErrorDomain || element is Vala.Delegate) {
+			return null;
+		}
+
+		return Vala.CCodeBaseModule.get_ccode_type_id (element);
+	}
+
+	private string? get_type_cast_macro_name (Vala.TypeSymbol element) {
+		if ((element is Vala.Class && !((Vala.Class) element).is_compact) || element is Vala.Interface) {
+			return Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null);
+		} else {
+			return null;
+		}
+	}
+
+	private string? get_interface_macro_name (Vala.Interface element) {
+		return "%s_GET_INTERFACE".printf (Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null));
+	}
+
+	private string get_quark_function_name (Vala.ErrorDomain element) {
+		return Vala.CCodeBaseModule.get_ccode_lower_case_prefix (element) + "quark";
+	}
+
 	private SourceComment? create_comment (Vala.Comment? comment) {
 #if VALA_0_15_0
 		if (comment != null) {
@@ -860,7 +931,8 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		bool is_basic_type = element.base_class == null && element.name == "string";
 
-		Class node = new Class (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), Vala.GDBusModule.get_dbus_name (element), get_ccode_type_id (element), get_param_spec_function (element), get_ref_function (element), get_unref_function (element), get_take_value_function (element), get_get_value_function (element), get_set_value_function (element), element.is_fundamental (), element.is_abstract, is_basic_type, element);
+		Class node = new Class (parent, file, element.name, get_access_modifier (element), comment, get_cname (element), get_private_cname (element), get_class_macro_name (element), get_type_macro_name (element), get_is_type_macro_name (element), get_type_cast_macro_name (element), get_type_function_name (element), get_class_type_macro_name (element), get_is_class_type_macro_name (element), Vala.GDBusModule.get_dbus_name (element), get_ccode_type_id (element), get_param_spec_function (element), get_ref_function (element), get_unref_function (element), get_take_value_function (element), get_get_value_function (element), get_set_value_function (element), element.is_fundamental (), element.is_abstract, is_basic_type, element);
+
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -892,7 +964,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceFile? file = get_source_file (element);
 		SourceComment? comment = create_comment (element.comment);
 
-		Interface node = new Interface (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), Vala.GDBusModule.get_dbus_name (element), element);
+		Interface node = new Interface (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), get_type_macro_name (element), get_is_type_macro_name (element), get_type_cast_macro_name (element), get_type_function_name (element), get_interface_macro_name (element), Vala.GDBusModule.get_dbus_name (element), element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -920,7 +992,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		bool is_basic_type = element.base_type == null && (element.is_boolean_type () || element.is_floating_type () || element.is_integer_type ());
 
-		Struct node = new Struct (parent, file, element.name, get_access_modifier (element), comment, get_cname (element), get_ccode_type_id (element), get_dup_function (element), get_free_function (element), is_basic_type, element);
+		Struct node = new Struct (parent, file, element.name, get_access_modifier (element), comment, get_cname (element), get_type_macro_name (element), get_type_function_name (element), get_ccode_type_id (element), get_dup_function (element), get_free_function (element), is_basic_type, element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -1055,7 +1127,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceFile? file = get_source_file (element);
 		SourceComment? comment = create_comment (element.comment);
 
-		Symbol node = new Enum (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), element);
+		Symbol node = new Enum (parent, file, element.name, get_access_modifier(element), comment, get_cname (element), get_type_macro_name (element), get_type_function_name (element), element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -1104,7 +1176,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceFile? file = get_source_file (element);
 		SourceComment? comment = create_comment (element.comment);
 
-		Symbol node = new ErrorDomain (parent, file, element.name, get_access_modifier(element), comment, get_cname(element), Vala.GDBusModule.get_dbus_name (element), element);
+		Symbol node = new ErrorDomain (parent, file, element.name, get_access_modifier (element), comment, get_cname (element), get_quark_macro_name (element), get_quark_function_name (element), Vala.GDBusModule.get_dbus_name (element), element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
