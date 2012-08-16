@@ -204,7 +204,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		return headers;
 	}
 
-	private void set_section_comment (string filename, string section_name, Content.Comment? comment) {
+	private void set_section_comment (string filename, string section_name, Content.Comment? comment, string symbol_full_name) {
 		var file_data = get_file_data (filename);
 		if (file_data.title == null) {
 			file_data.title = section_name;
@@ -221,6 +221,14 @@ public class Gtkdoc.Generator : Api.Visitor {
 		gcomment.is_section = true;
 		gcomment.short_description = true;
 		file_data.section_comment = gcomment;
+
+		/* gtk-doc will warn about missing long descriptions (e.g.
+		 * “alias-details:Long_Description” in *-undocumented.txt), so
+		 * forward that as a Valadoc warning so that it doesn’t get lost
+		 * in the gtk-doc output files. */
+		if (gcomment.long_comment == null || gcomment.long_comment == "") {
+			reporter.simple_warning ("Missing long description in the documentation for ‘%s’ which forms gtk-doc section ‘%s’.", symbol_full_name, section_name);
+		}
 	}
 
 	private GComment create_gcomment (string symbol, Content.Comment? comment, string[]? returns_annotations = null, bool is_dbus = false) {
@@ -323,7 +331,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 	public override void visit_namespace (Api.Namespace ns) {
 		if (ns.get_filename () != null && ns.documentation != null) {
-			set_section_comment (ns.get_filename (), get_section (ns.get_filename ()), ns.documentation);
+			set_section_comment (ns.get_filename (), get_section (ns.get_filename ()), ns.documentation, ns.get_full_name ());
 		}
 
 		ns.accept_all_children (this);
@@ -344,7 +352,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		iface.accept_all_children (this);
 
 		add_symbol (iface.get_filename(), iface.get_cname(), iface.documentation, null);
-		set_section_comment (iface.get_filename(), iface.get_cname(), iface.documentation);
+		set_section_comment (iface.get_filename(), iface.get_cname(), iface.documentation, iface.get_full_name ());
 
 		if (current_dbus_interface != null) {
 			current_dbus_interface.write (settings, reporter);
@@ -408,7 +416,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		cl.accept_all_children (this);
 
 		add_symbol (cl.get_filename(), cl.get_cname(), cl.documentation, null);
-		set_section_comment (cl.get_filename(), cl.get_cname(), cl.documentation);
+		set_section_comment (cl.get_filename(), cl.get_cname(), cl.documentation, cl.get_full_name ());
 
 		if (current_dbus_interface != null) {
 			current_dbus_interface.write (settings, reporter);
