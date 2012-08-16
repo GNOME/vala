@@ -543,6 +543,12 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 
 		add_symbol (st.get_filename(), st.get_dup_function_cname ());
 		add_symbol (st.get_filename(), st.get_free_function_cname ());
+
+
+		var file_data = get_file_data (st.get_filename ());
+
+		file_data.register_standard_section_line (st.get_type_macro_name ());
+		file_data.register_standard_section_line (st.get_type_function_name ());
 	}
 
 	/**
