@@ -351,6 +351,29 @@ public class Gtkdoc.Generator : Api.Visitor {
 			dbus_interfaces.add (current_dbus_interface);
 		}
 
+		// Interface struct
+		current_headers.clear ();
+
+		var abstract_methods = iface.get_children_by_types ({NodeType.METHOD}, false);
+		foreach (var m in abstract_methods) {
+			// List all protected methods, even if they're not marked as browsable
+			if (m.is_browsable (settings) || ((Symbol) m).is_protected) {
+				visit_abstract_method ((Api.Method) m);
+			}
+		}
+
+		var abstract_properties = iface.get_children_by_types ({NodeType.PROPERTY}, false);
+		foreach (var prop in abstract_properties) {
+			// List all protected properties, even if they're not marked as browsable
+			if (prop.is_browsable (settings) || ((Symbol) prop).is_protected) {
+				visit_abstract_property ((Api.Property) prop);
+			}
+		}
+
+		add_custom_header ("parent_iface", "the parent interface structure");
+		var gcomment = add_symbol (iface.get_filename (), iface.get_cname () + "Iface");
+		gcomment.brief_comment = "Interface for creating %s implementations.".printf (get_docbook_link (iface));
+
 		// Standard symbols
 		var file_data = get_file_data (iface.get_filename ());
 
@@ -444,6 +467,29 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			gcomment.brief_comment = "Sets the contents of a %s derived <link linkend=\"GValue\"><type>GValue</type></link> to @v_object and takes over the ownership of the callers reference to @v_object; the caller doesn't have to unref it any more (i.e. the reference count of the object is not increased).".printf (get_docbook_type_link (cl));
 			gcomment.long_comment = "If you want the GValue to hold its own reference to @v_object, use <link linkend=\"%s\"><function>%s()</function></link> instead.".printf (to_docbook_id (cl.get_set_value_function_cname ()), cl.get_set_value_function_cname ());
 		}
+
+		// Class struct
+		current_headers.clear ();
+
+		var abstract_methods = cl.get_children_by_types ({NodeType.METHOD}, false);
+		foreach (var m in abstract_methods) {
+			// List all protected methods, even if they're not marked as browsable
+			if (m.is_browsable (settings) || ((Symbol) m).is_protected) {
+				visit_abstract_method ((Api.Method) m);
+			}
+		}
+
+		var abstract_properties = cl.get_children_by_types ({NodeType.PROPERTY}, false);
+		foreach (var prop in abstract_properties) {
+			// List all protected properties, even if they're not marked as browsable
+			if (prop.is_browsable (settings) || ((Symbol) prop).is_protected) {
+				visit_abstract_property ((Api.Property) prop);
+			}
+		}
+
+		add_custom_header ("parent_class", "the parent class structure");
+		gcomment = add_symbol (cl.get_filename (), cl.get_cname () + "Class");
+		gcomment.brief_comment = "The class structure for %s. All the fields in this structure are private and should never be accessed directly.".printf (get_docbook_type_link (cl));
 
 		// Standard/Private symbols
 		var file_data = get_file_data (cl.get_filename ());
@@ -727,6 +773,46 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			var see_also = finish_gcomment.see_also; // vala bug
 			see_also += get_docbook_link (m);
 			finish_gcomment.see_also = see_also;
+		}
+	}
+
+	/**
+	 * Visit abstract methods
+	 */
+	private void visit_abstract_method (Api.Method m) {
+		if (!m.is_abstract && !m.is_virtual) {
+			return;
+		}
+
+		if (!m.is_private && !m.is_protected && !m.is_internal) {
+			add_custom_header (m.name, "virtual method called by %s".printf (get_docbook_link (m)));
+
+			if (m.is_yields) {
+				add_custom_header (m.name + "_finish", "asynchronous finish function for <structfield>%s</structfield>, called by %s".printf (m.name, get_docbook_link (m)));
+			}
+		} else {
+			add_custom_header (m.name, "virtual method used internally");
+
+			if (m.is_yields) {
+				add_custom_header (m.name + "_finish", "asynchronous finish function used internally");
+			}
+		}
+	}
+
+	/**
+	 * Visit abstract properties
+	 */
+	private void visit_abstract_property (Api.Property prop) {
+		if (!prop.is_abstract && !prop.is_virtual) {
+			return;
+		}
+
+		if (prop.getter != null && !prop.getter.is_private && !prop.getter.is_internal && prop.getter.is_get) {
+			add_custom_header ("get_" + prop.name, "getter method for the abstract property %s".printf (get_docbook_link (prop)));
+		}
+
+		if (prop.setter != null && !prop.setter.is_private && !prop.setter.is_internal && prop.setter.is_set && !prop.setter.is_construct) {
+			add_custom_header ("set_" + prop.name, "setter method for the abstract property %s".printf (get_docbook_link (prop)));
 		}
 	}
 
