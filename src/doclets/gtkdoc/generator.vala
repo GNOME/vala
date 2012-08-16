@@ -681,6 +681,10 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			visit_thrown_error_domain (ex);
 		}
 
+		if (!d.is_static) {
+			add_custom_header ("user_data", "data to pass to the delegate function", {"closure"});
+		}
+
 		add_symbol (d.get_filename(), d.get_cname(), d.documentation);
 
 		current_headers = old_headers;
