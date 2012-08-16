@@ -60,6 +60,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 	private Gee.Map<string, FileData> files_data = new Gee.HashMap<string, FileData>();
 	private string current_cname;
 	private Gee.List<Header> current_headers;
+	private Api.Tree current_tree;
 	private Class current_class;
 	private Method current_method;
 	private Delegate current_delegate;
@@ -81,6 +82,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 	public bool execute (Settings settings, Api.Tree tree, ErrorReporter reporter) {
 		this.settings = settings;
 		this.reporter = reporter;
+		this.current_tree = tree;
 		tree.accept (this);
 		var code_dir = Path.build_filename (settings.path, "ccomments");
 		var sections = Path.build_filename (settings.path, "%s-sections.txt".printf (settings.pkg_name));
@@ -351,13 +353,16 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 		iface.accept_all_children (this);
 
-		add_symbol (iface.get_filename(), iface.get_cname(), iface.documentation, null);
+		var gcomment = add_symbol (iface.get_filename(), iface.get_cname(), iface.documentation, null);
 		set_section_comment (iface.get_filename(), iface.get_cname(), iface.documentation, iface.get_full_name ());
 
 		if (current_dbus_interface != null) {
 			current_dbus_interface.write (settings, reporter);
 			dbus_interfaces.add (current_dbus_interface);
 		}
+
+		// Handle attributes for things like deprecation.
+		process_attributes (iface, gcomment);
 
 		// Interface struct
 		current_headers.clear ();
@@ -379,7 +384,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		}
 
 		add_custom_header ("parent_iface", "the parent interface structure");
-		var gcomment = add_symbol (iface.get_filename (), iface.get_cname () + "Iface");
+		gcomment = add_symbol (iface.get_filename (), iface.get_cname () + "Iface");
 		gcomment.brief_comment = "Interface for creating %s implementations.".printf (get_docbook_link (iface));
 
 		// Standard symbols
@@ -422,6 +427,9 @@ public class Gtkdoc.Generator : Api.Visitor {
 			current_dbus_interface.write (settings, reporter);
 			dbus_interfaces.add (current_dbus_interface);
 		}
+
+		// Handle attributes for things like deprecation.
+		process_attributes (cl, gcomment);
 
 		if (cl.is_fundamental && cl.base_type == null) {
 			var filename = cl.get_filename ();
@@ -525,7 +533,10 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		current_headers = new Gee.LinkedList<Header>();
 
 		st.accept_all_children (this);
-		add_symbol (st.get_filename(), st.get_cname(), st.documentation);
+		var gcomment = add_symbol (st.get_filename(), st.get_cname(), st.documentation);
+
+		// Handle attributes for things like deprecation.
+		process_attributes (st, gcomment);
 
 		current_cname = old_cname;
 		current_headers = old_headers;
@@ -570,7 +581,10 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		current_headers = new Gee.LinkedList<Header>();
 
 		edomain.accept_all_children (this);
-		add_symbol (edomain.get_filename(), edomain.get_cname(), edomain.documentation);
+		var gcomment = add_symbol (edomain.get_filename(), edomain.get_cname(), edomain.documentation);
+
+		// Handle attributes for things like deprecation.
+		process_attributes (edomain, gcomment);
 
 		// Standard symbols
 		var file_data = get_file_data (edomain.get_filename ());
@@ -591,7 +605,10 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		current_headers = new Gee.LinkedList<Header>();
 
 		en.accept_all_children (this);
-		add_symbol (en.get_filename(), en.get_cname(), en.documentation);
+		var gcomment = add_symbol (en.get_filename(), en.get_cname(), en.documentation);
+	
+		// Handle attributes for things like deprecation.
+		process_attributes (en, gcomment);
 
 		// Standard symbols
 		var file_data = get_file_data (en.get_filename ());
@@ -614,6 +631,9 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 
 		var gcomment = add_comment (prop.get_filename(), "%s:%s".printf (current_cname, prop.get_cname ()), prop.documentation);
 		prop.accept_all_children (this);
+
+		// Handle attributes for things like deprecation.
+		process_attributes (prop, gcomment);
 
 		if (prop.getter != null && !prop.getter.is_private && prop.getter.is_get) {
 			var getter_gcomment = add_symbol (prop.get_filename(), prop.getter.get_cname ());
@@ -657,16 +677,23 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 
 		if (current_headers == null) {
 			// field not in class/struct/interface
-			add_symbol (f.get_filename(), f.get_cname(), f.documentation);
+			var gcomment = add_symbol (f.get_filename(), f.get_cname(), f.documentation);
+			f.accept_all_children (this);
+	
+			// Handle attributes for things like deprecation.
+			process_attributes (f, gcomment);
 		} else {
 			add_header (f.get_cname (), f.documentation);
+			f.accept_all_children (this);
 		}
-		f.accept_all_children (this);
 	}
 
 	public override void visit_constant (Api.Constant c) {
-		add_symbol (c.get_filename(), c.get_cname(), c.documentation);
+		var gcomment = add_symbol (c.get_filename(), c.get_cname(), c.documentation);
 		c.accept_all_children (this);
+
+		// Handle attributes for things like deprecation.
+		process_attributes (c, gcomment);
 	}
 
 	public override void visit_delegate (Api.Delegate d) {
@@ -685,7 +712,10 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			add_custom_header ("user_data", "data to pass to the delegate function", {"closure"});
 		}
 
-		add_symbol (d.get_filename(), d.get_cname(), d.documentation);
+		var gcomment = add_symbol (d.get_filename(), d.get_cname(), d.documentation);
+	
+		// Handle attributes for things like deprecation.
+		process_attributes (d, gcomment);
 
 		current_headers = old_headers;
 		current_delegate = old_delegate;
@@ -715,6 +745,9 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			current_dbus_member.comment = dbuscomment;
 			current_dbus_interface.add_signal (current_dbus_member);
 		}
+
+		// Handle attributes for things like deprecation.
+		process_attributes (sig, gcomment);
 
 		current_headers = old_headers;
 		current_signal = old_signal;
@@ -775,6 +808,9 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		} else {
 			gcomment = add_symbol (m.get_filename(), m.get_cname (), m.documentation, null, annotations);
 		}
+
+		// Handle attributes for things like deprecation.
+		process_attributes (m, gcomment);
 
 		remove_custom_header ("self");
 
@@ -915,5 +951,67 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			current_dbus_member.add_parameter (dparam);
 		}
 		param.accept_all_children (this);
+	}
+
+	private void process_attributes (Symbol sym, GComment gcomment) {
+		// Handle the ‘Deprecated’ attribute.
+		var deprecated_attribute = sym.get_attribute ("Deprecated");
+
+		if (deprecated_attribute != null) {
+			var _since = deprecated_attribute.get_argument ("since");
+			string? since = null;
+			if (_since != null) {
+				since = _since.value;
+
+				// Strip surrounding quotation marks.
+				if (since.has_prefix ("\"")) {
+					since = since[1:since.length - 1];
+				}
+				if (since.has_suffix ("\"")) {
+					since = since[0:-1];
+				}
+			}
+
+			var replacement = deprecated_attribute.get_argument ("replacement");
+			string? replacement_symbol_name = null;
+			Api.Node? replacement_symbol = null;
+
+			if (replacement != null) {
+				replacement_symbol_name = replacement.value;
+
+				// Strip surrounding quotation marks.
+				if (replacement_symbol_name.has_prefix ("\"")) {
+					replacement_symbol_name = replacement_symbol_name[1:replacement_symbol_name.length - 1];
+				}
+				if (replacement_symbol_name.has_suffix ("\"")) {
+					replacement_symbol_name = replacement_symbol_name[0:-1];
+				}
+
+				// Strip any trailing brackets.
+				if (replacement_symbol_name.has_suffix ("()")) {
+					replacement_symbol_name = replacement_symbol_name[0:-2];
+				}
+
+				replacement_symbol = current_tree.search_symbol_str (sym, replacement.value);
+			}
+
+			if (replacement != null && replacement_symbol == null) {
+				reporter.simple_warning ("Couldn’t resolve replacement symbol ‘%s’ for ‘Deprecated’ attribute on %s.", replacement_symbol_name, sym.get_full_name ());
+			}
+
+			var deprecation_string = "No replacement specified.";
+
+			if (since != null && replacement_symbol != null) {
+				deprecation_string = "%s: Replaced by %s.".printf (since, get_docbook_link (replacement_symbol));
+			} else if (since != null && replacement_symbol == null) {
+				deprecation_string = "%s: No replacement specified.".printf (since);
+			} else if (since == null && replacement_symbol != null) {
+				deprecation_string = "Replaced by %s.".printf (get_docbook_link (replacement_symbol));
+			} else {
+				reporter.simple_warning ("Missing ‘since’ and ‘replacement’ arguments to ‘Deprecated’ attribute on %s.", sym.get_full_name ());
+			}
+
+			gcomment.versioning.add (new Header ("Deprecated", deprecation_string));
+		}
 	}
 }
