@@ -102,9 +102,15 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
-		if (!is_public) {
+		// FIXME
+		if (!do_document) {
+			return signature.get ();
+		}
+
+		if (((Property) parent).accessibility != accessibility) {
 			signature.append_keyword (accessibility.to_string ());
 		}
+
 		if (is_set || is_construct) {
 			if (is_construct) {
 				signature.append_keyword ("construct");
