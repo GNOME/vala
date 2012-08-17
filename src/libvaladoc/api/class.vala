@@ -250,6 +250,12 @@ public class Valadoc.Api.Class : TypeSymbol {
 		get;
 	}
 
+	public bool is_compact {
+		get {
+			return base_type == null && get_attribute ("Compact") != null;
+		}
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

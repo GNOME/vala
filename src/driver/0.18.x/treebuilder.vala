@@ -220,6 +220,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 				"ErrorBase",
 				"NoReturn",
 				"NoThrow",
+				"Compact",
 				"Assert",
 				"Flags"
 			};
