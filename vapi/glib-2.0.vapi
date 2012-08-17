@@ -3043,6 +3043,12 @@ namespace GLib {
 		}
 	}
 
+	[CCode (cname = "struct utimbuf", cheader_filename = "sys/types.h,utime.h")]
+	public struct UTimBuf {
+		time_t actime;       /* access time */
+		time_t modtime;      /* modification time */
+	}
+
 	[CCode (lower_case_cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
 	namespace FileUtils {
 		public static bool get_contents (string filename, out string contents, out size_t length = null) throws FileError;
@@ -3066,6 +3072,8 @@ namespace GLib {
 		public static int unlink (string filename);
 		[CCode (cname = "g_chmod")]
 		public static int chmod (string filename, int mode);
+		[CCode (cname = "g_utime")]
+		public static int utime (string filename, UTimBuf? times = null);
 		
 		[CCode (cname = "symlink")]
 		public static int symlink (string oldpath, string newpath);
