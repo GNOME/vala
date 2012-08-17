@@ -240,6 +240,22 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 	}
 
+	private string? get_free_function_name (Vala.Class element) {
+		if (!element.is_compact) {
+			return null;
+		}
+
+		return element.get_free_function ();
+	}
+
+	private string? get_finalize_function_name (Vala.Class element) {
+		if (!element.is_fundamental ()) {
+			return null;
+		}
+
+		return "%s_finalize".printf (element.get_lower_case_cname ());
+	}
+
 	private string? get_quark_macro_name (Vala.ErrorDomain element) {
 		return element.get_upper_case_cname ();
 	}
@@ -911,7 +927,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		bool is_basic_type = element.base_class == null && element.name == "string";
 
-		Class node = new Class (parent, file, element.name, get_access_modifier (element), comment, element.get_cname (), get_private_cname (element), get_class_macro_name (element), get_type_macro_name (element), get_is_type_macro_name (element), get_type_cast_macro_name (element), get_type_function_name (element), get_class_type_macro_name (element), get_is_class_type_macro_name (element), Vala.GDBusModule.get_dbus_name (element), element.get_type_id (), element.get_param_spec_function (), element.get_ref_function (), element.get_unref_function (), element.get_take_value_function (), element.get_get_value_function (), element.get_set_value_function (), element.is_fundamental (), element.is_abstract, is_basic_type, element);
+		Class node = new Class (parent, file, element.name, get_access_modifier (element), comment, element.get_cname (), get_private_cname (element), get_class_macro_name (element), get_type_macro_name (element), get_is_type_macro_name (element), get_type_cast_macro_name (element), get_type_function_name (element), get_class_type_macro_name (element), get_is_class_type_macro_name (element), Vala.GDBusModule.get_dbus_name (element), element.get_type_id (), element.get_param_spec_function (), element.get_ref_function (), element.get_unref_function (), get_free_function_name (element), get_finalize_function_name (element), element.get_take_value_function (), element.get_get_value_function (), element.get_set_value_function (), element.is_fundamental (), element.is_abstract, is_basic_type, element);
 
 		symbol_map.set (element, node);
 		parent.add_child (node);

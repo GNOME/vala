@@ -260,6 +260,22 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return Vala.CCodeBaseModule.get_ccode_unref_function (sym);
 	}
 
+	private string? get_finalize_function_name (Vala.Class element) {
+		if (!element.is_fundamental ()) {
+			return null;
+		}
+
+		return "%s_finalize".printf (Vala.CCodeBaseModule.get_ccode_lower_case_name (element, null));
+	}
+
+	private string? get_free_function_name (Vala.Class element) {
+		if (!element.is_compact) {
+			return null;
+		}
+
+		return Vala.CCodeBaseModule.get_ccode_free_function (element);
+	}
+
 	private string? get_finish_name (Vala.Method m) {
 		return Vala.CCodeBaseModule.get_ccode_finish_name (m);
 	}
@@ -931,7 +947,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		bool is_basic_type = element.base_class == null && element.name == "string";
 
-		Class node = new Class (parent, file, element.name, get_access_modifier (element), comment, get_cname (element), get_private_cname (element), get_class_macro_name (element), get_type_macro_name (element), get_is_type_macro_name (element), get_type_cast_macro_name (element), get_type_function_name (element), get_class_type_macro_name (element), get_is_class_type_macro_name (element), Vala.GDBusModule.get_dbus_name (element), get_ccode_type_id (element), get_param_spec_function (element), get_ref_function (element), get_unref_function (element), get_take_value_function (element), get_get_value_function (element), get_set_value_function (element), element.is_fundamental (), element.is_abstract, is_basic_type, element);
+		Class node = new Class (parent, file, element.name, get_access_modifier (element), comment, get_cname (element), get_private_cname (element), get_class_macro_name (element), get_type_macro_name (element), get_is_type_macro_name (element), get_type_cast_macro_name (element), get_type_function_name (element), get_class_type_macro_name (element), get_is_class_type_macro_name (element), Vala.GDBusModule.get_dbus_name (element), get_ccode_type_id (element), get_param_spec_function (element), get_ref_function (element), get_unref_function (element), get_free_function_name (element), get_finalize_function_name (element), get_take_value_function (element), get_get_value_function (element), get_set_value_function (element), element.is_fundamental (), element.is_abstract, is_basic_type, element);
 
 		symbol_map.set (element, node);
 		parent.add_child (node);

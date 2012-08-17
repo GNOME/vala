@@ -35,8 +35,10 @@ public class Valadoc.Api.Class : TypeSymbol {
 	private string? get_value_function_cname;
 	private string? set_value_function_cname;
 	private string? unref_function_name;
-	private string? param_spec_function_name;
 	private string? ref_function_name;
+	private string? free_function_name;
+	private string? finalize_function_name;
+	private string? param_spec_function_name;
 	private string? type_id;
 	private string? is_class_type_macro_name;
 	private string? class_type_macro_name;
@@ -44,7 +46,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 	private string? private_cname;
 	private string? cname;
 
-	public Class (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? private_cname, string? class_macro_name, string? type_macro_name, string? is_type_macro_name, string? type_cast_macro_name, string? type_function_name, string? class_type_macro_name, string? is_class_type_macro_name, string? dbus_name, string? type_id, string? param_spec_function_name, string? ref_function_name, string? unref_function_name, string? take_value_function_cname, string? get_value_function_cname, string? set_value_function_cname, bool is_fundamental, bool is_abstract, bool is_basic_type, void* data) {
+	public Class (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? private_cname, string? class_macro_name, string? type_macro_name, string? is_type_macro_name, string? type_cast_macro_name, string? type_function_name, string? class_type_macro_name, string? is_class_type_macro_name, string? dbus_name, string? type_id, string? param_spec_function_name, string? ref_function_name, string? unref_function_name, string? free_function_name, string? finalize_function_name, string? take_value_function_cname, string? get_value_function_cname, string? set_value_function_cname, bool is_fundamental, bool is_abstract, bool is_basic_type, void* data) {
 		base (parent, file, name, accessibility, comment, type_macro_name, is_type_macro_name, type_cast_macro_name, type_function_name, is_basic_type, data);
 
 		this.interfaces = new ArrayList<TypeReference> ();
@@ -61,6 +63,8 @@ public class Valadoc.Api.Class : TypeSymbol {
 
 		this.unref_function_name = unref_function_name;
 		this.ref_function_name = ref_function_name;
+		this.finalize_function_name = finalize_function_name;
+		this.free_function_name = free_function_name;
 
 		this.take_value_function_cname = take_value_function_cname;
 		this.get_value_function_cname = get_value_function_cname;
@@ -119,6 +123,26 @@ public class Valadoc.Api.Class : TypeSymbol {
 	 */
 	public string? get_unref_function_cname () {
 		return unref_function_name;
+	}
+
+	/**
+	 * Returns the C function name that frees the
+	 * instances of this data type.
+	 *
+	 * @return the name of the C function or null
+	 */
+	public string? get_free_function_name () {
+		return free_function_name;
+	}
+
+	/**
+	 * Returns the C function name that finalizes the
+	 * instances of this data type.
+	 *
+	 * @return the name of the C function or null
+	 */
+	public string? get_finalize_function_name () {
+		return finalize_function_name;
 	}
 
 	/**
