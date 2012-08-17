@@ -338,6 +338,10 @@ namespace Posix {
 	public void endgrent ();
 	public unowned Group? getgrent ();
 	public void setgrent ();
+	[CCode (cheader_filename = "grp.h")]
+	public unowned Group? getgrgid (gid_t gid);
+	[CCode (cheader_filename = "grp.h")]
+	public unowned Group? getgrnam (string name);
 
 	[CCode (cheader_filename = "netinet/in.h")]
 	public const int INET_ADDRSTRLEN;
@@ -722,6 +726,8 @@ namespace Posix {
 	public void setpwent ();
 	[CCode (cheader_filename = "pwd.h")]
 	public unowned Passwd? getpwnam (string name);
+	[CCode (cheader_filename = "pwd.h")]
+	public unowned Passwd? getpwuid (uid_t uid);
 
 	[CCode (cheader_filename = "sys/resource.h")]
 	public const int PRIO_PROCESS;
