@@ -998,7 +998,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 					replacement_symbol_name = replacement_symbol_name[0:-2];
 				}
 
-				replacement_symbol = current_tree.search_symbol_str (sym, replacement.value);
+				replacement_symbol = current_tree.search_symbol_str (sym, replacement_symbol_name);
 			}
 
 			if (replacement != null && replacement_symbol == null) {
@@ -1008,11 +1008,11 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			var deprecation_string = "No replacement specified.";
 
 			if (since != null && replacement_symbol != null) {
-				deprecation_string = "%s: Replaced by %s.".printf (since, get_docbook_link (replacement_symbol));
+				deprecation_string = "%s: Replaced by %s.".printf (since, get_gtkdoc_link (replacement_symbol));
 			} else if (since != null && replacement_symbol == null) {
 				deprecation_string = "%s: No replacement specified.".printf (since);
 			} else if (since == null && replacement_symbol != null) {
-				deprecation_string = "Replaced by %s.".printf (get_docbook_link (replacement_symbol));
+				deprecation_string = "Replaced by %s.".printf (get_gtkdoc_link (replacement_symbol));
 			} else {
 				reporter.simple_warning ("Missing ‘since’ and ‘replacement’ arguments to ‘Deprecated’ attribute on %s.", sym.get_full_name ());
 			}

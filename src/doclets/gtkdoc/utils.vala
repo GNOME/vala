@@ -60,6 +60,8 @@ namespace Gtkdoc {
 			return ((Api.Delegate)item).get_cname ();
 		} else if (item is Api.Enum) {
 			return ((Api.Enum)item).get_cname ();
+		} else if (item is Api.EnumValue) {
+			return ((Api.EnumValue)item).get_cname ();
 		}
 		return null;
 	}
@@ -75,6 +77,39 @@ namespace Gtkdoc {
 
 	public string get_docbook_type_link (Api.Class cls) {
 		return """<link linkend="%s:CAPS"><literal>%s</literal></link>""".printf (to_docbook_id (cls.get_type_id ()), cls.get_type_id ());
+	}
+
+	public string? get_gtkdoc_link (Api.Node symbol) {
+		if (symbol is Class || symbol is Interface || symbol is Struct || symbol is Enum || symbol is ErrorDomain) {
+			return "#%s".printf (get_cname (symbol));
+		}
+
+		if (symbol is Method) {
+			return "%s ()".printf (((Method) symbol).get_cname ());
+		}
+
+		if (symbol is Constant || symbol is Api.EnumValue || symbol is ErrorCode) {
+			return "%%%s".printf (get_cname (symbol));
+		}
+
+		if (symbol is Api.Signal) {
+			return "#%s::%s".printf (get_cname (symbol.parent), ((Api.Signal) symbol).get_cname ());
+		}
+
+		if (symbol is Property) {
+			return "#%s:%s".printf (get_cname (symbol.parent), ((Property) symbol).get_cname ());
+		}
+
+		if (symbol is Field && (symbol.parent is Class || symbol.parent is Struct)) {
+			var field = symbol as Field;
+			if (field.is_static) {
+				return field.get_cname ();
+			} else {
+				return "#%s.%s".printf (get_cname (symbol.parent), field.get_cname ());
+			}
+		}
+
+		return get_cname (symbol) ?? symbol.get_full_name ();
 	}
 
 	public string? get_docbook_link (Api.Item item, bool is_dbus = false, bool is_async_finish = false) {
