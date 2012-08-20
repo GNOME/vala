@@ -1,0 +1,15 @@
+* parent="Gst.Video"
+Video* name="Video(.+)"
+VIDEO_* name="VIDEO_(.+)"
+video_* name="video_(.+)"
+
+VideoOverlay
+  .set_render_rectangle#virtual_method virtual
+  .set_render_rectangle#method name="try_set_render_rectangle"
+  .set_window_handle.handle type="uint*"
+  .got_window_handle.handle type="uint*"
+
+// Generics
+VideoCodecFrame
+  .get_user_data skip
+  .set_user_data skip

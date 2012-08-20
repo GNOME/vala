@@ -1,0 +1,11 @@
+* parent="Gst.Tag"
+Tag* name="Tag(.+)"
+TAG_* name="TAG_(.+)"
+tag_* name="tag_(.+)"
+
+TAG_CAPTURING_* parent="Gst.Tag.Capturing" name="TAG_CAPTURING_(.+)"
+TAG_CDDA_* parent="Gst.Tag.CDDA" name="TAG_CDDA_(.+)"
+TAG_CMML_* parent="Gst.Tag.CMML" name="TAG_CMML_(.+)"
+TAG_IMAGE_* parent="Gst.Tag.Image" name="TAG_IMAGE_(.+)"
+TAG_MUSICBRAINZ_* parent="Gst.Tag.MusicBrainz" name="TAG_MUSICBRAINZ_(.+)"
+tag_list_* parent="Gst.Tag.List" name="tag_list_(.+)"

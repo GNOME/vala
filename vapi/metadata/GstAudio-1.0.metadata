@@ -1,0 +1,15 @@
+* parent="Gst.Audio"
+Audio* name="Audio(.+)"
+AUDIO_* name="AUDIO_(.+)"
+
+// Field ownership
+AudioBaseSink.provided_clock unowned=false
+AudioClock.*#field skip
+
+// Non-boxed return type
+buffer_get_audio_downmix_meta_for_channels skip=false
+buffer_add_audio_downmix_meta skip=false
+
+// No way to annotate virtual methods without invokers
+AudioSink.write.data type="uint8[]" array_length_idx=1
+AudioSrc.read.data type="uint8[]" array_length_idx=1

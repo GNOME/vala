@@ -114,14 +114,32 @@ dist_vapi_DATA = \
 	gstreamer-video-0.10.deps \
 	gstreamer-video-0.10.vapi \
 	gstreamer-1.0.vapi \
+	gstreamer-app-1.0.vapi \
+	gstreamer-app-1.0.deps \
+	gstreamer-audio-1.0.vapi \
+	gstreamer-audio-1.0.deps \
 	gstreamer-base-1.0.vapi \
 	gstreamer-base-1.0.deps \
 	gstreamer-check-1.0.vapi \
 	gstreamer-check-1.0.deps \
 	gstreamer-controller-1.0.vapi \
 	gstreamer-controller-1.0.deps \
+	gstreamer-fft-1.0.vapi \
+	gstreamer-fft-1.0.deps \
 	gstreamer-net-1.0.vapi \
 	gstreamer-net-1.0.deps \
+	gstreamer-pbutils-1.0.vapi \
+	gstreamer-pbutils-1.0.deps \
+	gstreamer-rtp-1.0.vapi \
+	gstreamer-rtp-1.0.deps \
+	gstreamer-rtsp-1.0.vapi \
+	gstreamer-rtsp-1.0.deps \
+	gstreamer-sdp-1.0.vapi \
+	gstreamer-sdp-1.0.deps \
+	gstreamer-tag-1.0.vapi \
+	gstreamer-tag-1.0.deps \
+	gstreamer-video-1.0.vapi \
+	gstreamer-video-1.0.deps \
 	gtk+-2.0.deps \
 	gtk+-2.0.vapi \
 	gtk+-3.0.deps \
@@ -333,6 +351,15 @@ GSTREAMER_1_0_BINDINGS = \
 	gstreamer-check-1.0 \
 	gstreamer-controller-1.0 \
 	gstreamer-net-1.0 \
+	gstreamer-app-1.0 \
+	gstreamer-audio-1.0 \
+	gstreamer-fft-1.0 \
+	gstreamer-pbutils-1.0 \
+	gstreamer-rtp-1.0 \
+	gstreamer-sdp-1.0 \
+	gstreamer-rtsp-1.0 \
+	gstreamer-tag-1.0 \
+	gstreamer-video-1.0 \
 	$(NULL)
 
 GIR_BINDINGS = \
@@ -518,17 +545,44 @@ gstreamer-video-0.10:
 gstreamer-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Gst-1.0-custom.vala $(GIRDIR)/Gst-1.0.gir
 
+gstreamer-app-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-app-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstApp-1.0.gir
+
+gstreamer-audio-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-audio-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstAudio-1.0.gir
+
 gstreamer-base-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-base-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GstBase-1.0-custom.vala $(GIRDIR)/GstBase-1.0.gir
 
 gstreamer-check-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-check-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GstCheck-1.0-custom.vala $(GIRDIR)/GstCheck-1.0.gir
 
+gstreamer-fft-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-fft-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GstFft-1.0-custom.vala $(GIRDIR)/GstFft-1.0.gir
+
 gstreamer-controller-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-controller-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstController-1.0.gir
 
 gstreamer-net-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-net-1.0 --pkg gstreamer-1.0 --pkg gio-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstNet-1.0.gir
+
+gstreamer-pbutils-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-pbutils-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstPbutils-1.0.gir
+
+gstreamer-rtp-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-rtp-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstRtp-1.0.gir
+
+gstreamer-rtsp-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-rtsp-1.0 --pkg gstreamer-sdp-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstRtsp-1.0.gir
+
+gstreamer-sdp-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-sdp-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstSdp-1.0.gir
+
+gstreamer-tag-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-tag-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstTag-1.0.gir
+
+gstreamer-video-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-video-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstVideo-1.0.gir
 
 gtk+-2.0:
 	$(GENVAPI) --library $(srcdir)/gtk+-2.0 $(PACKAGESDIR)/gtk+-2.0/gtk+-2.0-custom.vala $(PACKAGESDIR)/gtk+-2.0/gtk+-2.0.gi

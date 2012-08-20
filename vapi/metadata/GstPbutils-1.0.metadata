@@ -1,0 +1,8 @@
+* parent="Gst.PbUtils"
+pb_utils_* name="pb_utils_(.+)"
+
+*Class skip
+
+codec_utils_aac_* parent="Gst.PbUtils.Codec.AAC" name="codec_utils_aac_(.+)"
+codec_utils_h264_* parent="Gst.PbUtils.Codec.H264" name="codec_utils_h264_(.+)"
+codec_utils_mpeg4video_* parent="Gst.PbUtils.Codec.MPEG4Video" name="codec_utils_mpeg4video_(.+)"

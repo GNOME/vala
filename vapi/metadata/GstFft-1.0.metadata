@@ -1,0 +1,2 @@
+* parent="Gst.FFT"
+FFT* name="FFT(.+)"

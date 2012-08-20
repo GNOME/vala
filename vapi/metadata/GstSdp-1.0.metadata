@@ -1,0 +1,6 @@
+* parent="Gst.SDP"
+SDP* name="SDP(.+)"
+SDP_* name="SDP_(.+)"
+sdp_* name="sdp_(.+)"
+
+SDPMessage struct=false
