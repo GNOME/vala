@@ -25,7 +25,13 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
+	// TODO: rename
 	public string error_domain_name { private set; get; }
+
+	/**
+	 * Thrown  Error domain or Error code
+	 */
+	// TODO: rename
 	public Api.Node error_domain { private set; get; }
 
 	public Rule? get_parser_rule (Rule run_rule) {
@@ -55,11 +61,12 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 		}
 
 
-		// Check if the method is allowed to throw the given type:
+		// Check if the method is allowed to throw the given type or error code:
 		Gee.List<Api.Node> exceptions = container.get_children_by_types ({Api.NodeType.ERROR_DOMAIN, Api.NodeType.CLASS}, false);
+		Api.Item expected_error_domain = (error_domain is Api.ErrorCode)? error_domain.parent : error_domain;
 		bool report_warning = true;
 		foreach (Api.Node exception in exceptions) {
-			if (exception == error_domain || exception is Api.Class) {
+			if (exception == expected_error_domain || (exception is Api.Class && expected_error_domain is Api.ErrorDomain)) {
 				report_warning = false;
 				break;
 			}
