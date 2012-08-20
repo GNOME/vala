@@ -146,7 +146,7 @@ div.main_code_definition {
 	padding-bottom: 5px;
 	padding-top: 5px;
 
-	font: monospace;
+	font-family: monospace;
 	border-color: #aaaaff;
 	background-color: #eeeeff;
 	border-style: solid;
@@ -180,7 +180,7 @@ div.main_block_content {
 }
 
 span.leaf_code_definition {
-	font: monospace;
+	font-family: monospace;
 }
 
 
@@ -521,9 +521,14 @@ ul.no_bullet li {
 }
 
 .css_content_literal {
-	font: monospace;
+	font-family: monospace;
 	color: #ff01ff;
 }
+
+code {
+	font-family: monospace;
+}
+
 .main_code_definition a, .leaf_code_definition a {
 	text-decoration: none;
 	color: inherit;

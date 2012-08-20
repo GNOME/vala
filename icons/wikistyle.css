@@ -163,7 +163,7 @@ div.main_code_definition {
 	padding-bottom: 5px;
 	padding-top: 5px;
 
-	font: monospace;
+	font-family: monospace;
 	font-size: 10;
 	border-color: #aaaaff;
 	background-color: #eeeeff;
@@ -520,8 +520,12 @@ ul.no_bullet li {
 }
 
 .css_content_literal {
-	font: monospace;
+	font-family: monospace;
 	color: #ff01ff;
+}
+
+code {
+	font-family: monospace;
 }
 
 .deprecated {
