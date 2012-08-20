@@ -1,0 +1,6 @@
+* parent="Gst.Net"
+Net* name="Net(.+)"
+net_* name="net_(.+)"
+
+NET_TIME_PACKET_SIZE parent="Gst.Net.TimePacket" name="SIZE"
+net_time_packet_* parent="Gst.Net.TimePacket" name="net_time_packet_(.+)"

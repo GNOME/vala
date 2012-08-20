@@ -1,0 +1,17 @@
+* parent="Gst.Base"
+Base* name="Base(.+)"
+BASE_* name="BASE_(.+)"
+
+// Fields
+BitReader
+  .data array array_length_field="size"
+  .size skip
+ByteReader
+  .data array array_length_field="size"
+  .size skip
+ByteWriter struct=false
+  .new* skip=false
+
+// Non-boxed types
+BitReader struct=false
+ByteReader struct=false

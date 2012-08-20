@@ -1,0 +1,130 @@
+Gst experimental
+Bin
+  .children unowned=false
+  .child_bus unowned=false
+  .clock_provider unowned=false
+  .messages unowned=false
+  .provided_clock unowned=false
+Bus
+  .add_watch_full name="add_watch"
+Element
+  .bus unowned=false
+  .clock unowned=false
+  .pads unowned=false
+  .sinkpads type="GLib.List<unowned Gst.Pad>"
+  .srcpads type="GLib.List<unowned Gst.Pad>"
+  .state_cond unowned=false
+MapInfo
+  .data array array_length_field="size"
+init_get_option_group skip=false
+init.argv unowned
+
+ControlSource
+  .get_value_array.values array array_length_idx=2
+
+// Nullability of return values
+Buffer
+  .get_meta nullable
+  .iterate_meta nullable
+ElementFactory
+  .get_metadata_keys nullable
+
+// Variadic
+Bin
+  .add_many skip=false
+Element
+  .link_many skip=false
+
+// Generics
+AtomicQueue
+  .peek skip
+  .pop skip
+  .push skip
+MiniObject
+  .get_qdata skip
+  .set_qdata skip
+Buffer
+  .new_wrapped_full skip
+
+// Rename *_full functions
+Bus
+  .add_signal_watch skip
+  .add_signal_watch_full name="add_signal_watch"
+Caps
+  .intersect skip
+  .intersect_full name="intersect"
+Element
+  .link_pads skip
+  .link_pads_full name="link_pads"
+Pad
+  .link skip
+  .link_full name="link"
+  .set_activate_function_full name="set_activate_function"
+  .set_activatemode_function_full name="set_activatemode_function"
+  .set_chain_function_full name="set_chain_function"
+  .set_chain_list_function_full name="set_chain_list_function"
+  .set_event_function_full name="set_event_function"
+  .set_getrange_function_full name="set_getrange_function"
+  .set_iterate_internal_links_function_full name="set_iterate_internal_links_function"
+  .set_link_function_full name="set_link_function"
+  .set_query_function_full name="set_query_function"
+  .set_unlink_function_full name="set_unlink_function"
+parse_bin_from_description skip
+parse_bin_from_description_full name="parse_bin_from_description"
+parse_launch skip
+parse_launch_full name="parse_launch"
+parse_launchv skip
+parse_launchv_full name="parse_launchv"
+
+// Default values
+Bus
+  .add_signal_watch_full.priority default=GLib.Priority.DEFAULT
+Caps
+  .intersect_full.mode default=Gst.CapsIntersectMode.ZIG_ZAG
+Element
+  .link_pads_full.flags default=Gst.PadLinkCheck.DEFAULT
+Pad
+  .link_full.flags default=Gst.PadLinkCheck.DEFAULT
+parse_bin_from_description_full.context default=null
+parse_bin_from_description_full.flags default=Gst.ParseFlags.NONE
+parse_launch_full.context default=null
+parse_launch_full.flags default=Gst.ParseFlags.NONE
+parse_launchv_full.context default=null
+parse_launchv_full.flags default=Gst.ParseFlags.NONE
+
+// Gst.MiniObject inheritance
+MiniObject struct=false
+  .make_writable skip=false
+Buffer base_type="Gst.MiniObject"
+  .mini_object skip
+Caps base_type="Gst.MiniObject"
+  .mini_object skip
+Event base_type="Gst.MiniObject"
+  .mini_object skip
+Memory base_type="Gst.MiniObject"
+  .mini_object skip
+Message base_type="Gst.MiniObject"
+  .mini_object skip
+Query base_type="Gst.MiniObject"
+  .mini_object skip
+TagList base_type="Gst.MiniObject"
+  .mini_object skip
+Toc base_type="Gst.MiniObject"
+TocEntry base_type="Gst.MiniObject"
+
+// Reparenting
+TAG_* parent="Gst.Tags" name="TAG_(.+)"
+tag_* parent="Gst.Tags" name="tag_(.+)"
+value_* parent="Gst.Value" name="value_(.+)"
+util_* parent="Gst.Util" name="util_(.+)"
+debug_* parent="Gst.Debug" name="debug_(.+)"
+DEBUG_* parent="Gst.Debug" name="DEBUG_(.+)"
+ELEMENT_FACTORY_KLASS_* parent="Gst.ElementFactoryKlass" name="ELEMENT_FACTORY_KLASS_(.+)"
+ELEMENT_FACTORY_TYPE_* parent="Gst.ElementFactoryType" name="ELEMENT_FACTORY_TYPE_(.+)"
+uri_* parent="Gst.URI" name="uri_(.+)"
+
+formats_contains parent="Gst.Format" name="contains"
+
+// No way to make reparented functions instance methods
+FlowReturn.custom_error_2 skip
+flow_get_name skip // parent="Gst.FlowReturn" name="get_name"

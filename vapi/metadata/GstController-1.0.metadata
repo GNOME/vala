@@ -1,0 +1,5 @@
+* parent="Gst.Controller"
+
+TimedValueControlSource
+  .find_control_point_iter skip=false
+  .values type="GLib.Sequence<Gst.Controller.ControlPoint?>"

@@ -113,6 +113,15 @@ dist_vapi_DATA = \
 	gstreamer-tag-0.10.vapi \
 	gstreamer-video-0.10.deps \
 	gstreamer-video-0.10.vapi \
+	gstreamer-1.0.vapi \
+	gstreamer-base-1.0.vapi \
+	gstreamer-base-1.0.deps \
+	gstreamer-check-1.0.vapi \
+	gstreamer-check-1.0.deps \
+	gstreamer-controller-1.0.vapi \
+	gstreamer-controller-1.0.deps \
+	gstreamer-net-1.0.vapi \
+	gstreamer-net-1.0.deps \
 	gtk+-2.0.deps \
 	gtk+-2.0.vapi \
 	gtk+-3.0.deps \
@@ -318,6 +327,14 @@ GIDL_BINDINGS = \
 	webkit-1.0 \
 	$(NULL)
 
+GSTREAMER_1_0_BINDINGS = \
+	gstreamer-1.0 \
+	gstreamer-base-1.0 \
+	gstreamer-check-1.0 \
+	gstreamer-controller-1.0 \
+	gstreamer-net-1.0 \
+	$(NULL)
+
 GIR_BINDINGS = \
 	atk \
 	clutter-1.0 \
@@ -343,6 +360,7 @@ GIR_BINDINGS = \
 	rest-0.7 \
 	udisks2 \
 	vte-2.90 \
+	$(GSTREAMER_1_0_BINDINGS) \
 	$(NULL)
 
 BINDINGS = $(GIR_BINDINGS) $(GIDL_BINDINGS)
@@ -360,6 +378,8 @@ GEDIT_GIRDIR=$$($(PKG_CONFIG) gedit --variable=prefix)/share/gedit/gir-1.0
 gir-bindings: $(GIR_BINDINGS)
 
 gidl-bindings: $(GIDL_BINDINGS)
+
+gstreamer-1.0-bindings: $(GSTREAMER_1_0_BINDINGS)
 
 all-bindings: gir-bindings gidl-bindings
 
@@ -494,6 +514,21 @@ gstreamer-tag-0.10:
 
 gstreamer-video-0.10:
 	$(GENVAPI) --library $(srcdir)/gstreamer-video-0.10 $(PACKAGESDIR)/gstreamer-video-0.10/gstreamer-video-0.10-custom.vala $(PACKAGESDIR)/gstreamer-video-0.10/gstreamer-video-0.10.gi
+
+gstreamer-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Gst-1.0-custom.vala $(GIRDIR)/Gst-1.0.gir
+
+gstreamer-base-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-base-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GstBase-1.0-custom.vala $(GIRDIR)/GstBase-1.0.gir
+
+gstreamer-check-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-check-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GstCheck-1.0-custom.vala $(GIRDIR)/GstCheck-1.0.gir
+
+gstreamer-controller-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-controller-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstController-1.0.gir
+
+gstreamer-net-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-net-1.0 --pkg gstreamer-1.0 --pkg gio-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstNet-1.0.gir
 
 gtk+-2.0:
 	$(GENVAPI) --library $(srcdir)/gtk+-2.0 $(PACKAGESDIR)/gtk+-2.0/gtk+-2.0-custom.vala $(PACKAGESDIR)/gtk+-2.0/gtk+-2.0.gi
