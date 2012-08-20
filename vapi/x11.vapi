@@ -319,6 +319,13 @@ namespace X {
 		public uchar[] modifiermap;
 	}
 
+	public const ulong AllPlanes;
+
+	[SimpleType]
+	[CCode (cname = "XPointer")]
+	public struct Pointer {
+	}
+
 	[SimpleType]
 	[IntegerType (rank = 9)]
 	[CCode (cname = "Atom", type_id = "G_TYPE_LONG",
@@ -430,6 +437,27 @@ namespace X {
 	public struct KeyCode {
 	}
 
+	[Compact]
+	[CCode (cname = "XImage", free_function = "XDestroyImage")]
+	public class Image {
+		public int width;
+		public int height;
+		public int xoffset;
+		public int format;
+		public char *data;
+		public int byte_order;
+		public int bitmap_unit;
+		public int bitmap_bit_order;
+		public int bitmap_pad;
+		public int depth;
+		public int bytes_per_line;
+		public int bits_per_pixel;
+		public ulong red_mask;
+		public ulong green_mask;
+		public ulong blue_mask;
+		public Pointer obdata;
+	}
+
 	[CCode (ref_function = "", unref_function = "")]
 	[Compact]
 	public class Visual {
@@ -452,8 +480,42 @@ namespace X {
 		public int height;
 	}
 
+	[CCode (cprefix = "", cname = "int")]
+	public enum ImageFormat {
+		XYBitmap,
+		XYPixmap,
+		ZPixmap;
+	}
+
 	[CCode (cname = "XCreateWindow")]
 	public Window create_window (Display display, Window parent, int x, int y, uint width, uint height, uint border_width, int depth, uint @class, Visual? visual, X.CW valuemask, ref SetWindowAttributes attributes);
+
+	[CCode (cname = "XCreateImage")]
+	public unowned Image create_image (Display display, Visual u, uint depth, int format, int offset, char *data, uint width, uint height, int bitmap_pad, int bytes_per_line);
+
+	[CCode (cname = "XInitImage")]
+	public Status init_image (Image img);
+
+	[CCode (cname = "XGetImage")]
+	public Image get_image (Display display, Drawable d, int x, int y, uint width, uint height, ulong plane_mask, int format);
+
+	[CCode (cname = "XGetSubImage")]
+	public Image get_sub_image (Display display, Drawable d, int x, int y, uint width, uint height, ulong plane_mask, int format, Image img, int dest_x, int dest_y);
+
+	[CCode (cname = "XPutImage")]
+	public int put_image (Display display, Drawable d, GC gc, Image img, int src_x, int src_y, int dest_x, int dest_y, uint width, uint height);
+
+	[CCode (cname = "XGetPixel")]
+	public ulong get_pixel (Image img, int x, int y);
+
+	[CCode (cname = "XPutPixel")]
+	public int put_pixel (Image img, int x, int y, ulong pixel);
+
+	[CCode (cname = "XSubImage")]
+	public Image sub_image (Image img, int x, int y, uint width, uint height);
+
+	[CCode (cname = "XAddPixel")]
+	public int add_pixel (Image img, long @value);
 
 	[CCode (cname = "XSetWindowAttributes")]
 	public struct SetWindowAttributes {
