@@ -74,7 +74,8 @@ public class Vala.GirParser : CodeVisitor {
 		BASE_TYPE,
 		FINISH_NAME,
 		SYMBOL_TYPE,
-		INSTANCE_IDX;
+		INSTANCE_IDX,
+		EXPERIMENTAL;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -1033,6 +1034,11 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				if (metadata.get_bool (ArgumentType.DEPRECATED)) {
 					symbol.set_attribute ("Deprecated", true);
+				}
+
+				// experimental
+				if (metadata.has_argument (ArgumentType.EXPERIMENTAL)) {
+					symbol.set_attribute ("Experimental", true);
 				}
 
 				if (parent.symbol is Namespace) {
