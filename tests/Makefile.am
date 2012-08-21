@@ -35,9 +35,9 @@ check-TESTS: $(TESTS)
 
 EXTRA_DIST = \
 	testrunner.sh \
-	drivers/api-test.data.vapi
-	drivers/generic-api-test.vala
-	libvaladoc/parser/generic-scanner.vala
+	drivers/api-test.data.vapi \
+	drivers/generic-api-test.vala \
+	libvaladoc/parser/generic-scanner.vala \
 	$(TESTS) \
 	$(NULL)
 
