@@ -2765,8 +2765,6 @@ public class Vala.Parser : CodeVisitor {
 				prop.field = new Field ("_%s".printf (prop.name), variable_type, prop.initializer, prop.source_reference);
 				prop.field.access = SymbolAccessibility.PRIVATE;
 				prop.field.binding = prop.binding;
-			} else if (prop.initializer != null) {
-				Report.error (prop.initializer.source_reference, "only automatic properties can have default values");
 			}
 		}
 
