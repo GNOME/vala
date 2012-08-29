@@ -452,8 +452,13 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 				if (replacement_node == null) {
 					writer.text (replacement_name);
 				} else {
-					string css = cssresolver.resolve (replacement_node);
-					writer.link (get_link (replacement_node, pos), replacement_node.get_full_name (), css);
+					string? link = get_link (replacement_node, pos);
+					if (link != null) {
+						string css = cssresolver.resolve (replacement_node);
+						writer.link (link, replacement_node.get_full_name (), css);
+					} else {
+						writer.start_tag ("code").text (replacement_node.get_full_name ()).end_tag ("code");
+					}
 				}
 				writer.text (".");
 			}
@@ -508,8 +513,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 				writer.link (linker.get_package_link (pkg, settings), pkg.name);
 				// brief description
 				writer.end_tag ("li");
-			}
-			else {
+			} else {
 				writer.start_tag ("li", {"class", cssresolver.resolve (pkg)});
 				writer.text (pkg.name);
 				writer.end_tag ("li");
