@@ -3732,33 +3732,53 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	void skip_type_argument_list () throws ParseError {
 		if (accept (TokenType.OF)) {
-			do {
-				skip_type ();
-			} while (accept (TokenType.COMMA));
+    		if (accept (TokenType.OPEN_PARENS)) {
+			    do {
+		            skip_type ();
+			    } while (accept (TokenType.COMMA));
+			    expect (TokenType.CLOSE_PARENS);
+    		} else {
+			    do {
+		            skip_type ();
+			    } while (accept (TokenType.COMMA));
+			}
 		}
 	}
 
+    
 	// try to parse type argument list
 	List<DataType>? parse_type_argument_list (bool maybe_expression) throws ParseError {
 		var begin = get_location ();
 		if (accept (TokenType.OF)) {
 			var list = new ArrayList<DataType> ();
-			do {
-				switch (current ()) {
-				case TokenType.VOID:
-				case TokenType.DYNAMIC:
-				case TokenType.UNOWNED:
-				case TokenType.WEAK:
-				case TokenType.IDENTIFIER:
-					var type = parse_type ();
+			var inParens = false;
 
-					list.add (type);
-					break;
-				default:
-					rollback (begin);
-					return null;
-				}
-			} while (accept (TokenType.COMMA));
+			// Optional parens allow multi arg types in function signature: "dict of (int, string)"
+			// See: https://bugzilla.gnome.org/show_bug.cgi?id=611191
+			if (accept (TokenType.OPEN_PARENS)) {
+			    inParens = true;
+			}
+			    			
+		    do {
+			    switch (current ()) {
+			    case TokenType.VOID:
+			    case TokenType.DYNAMIC:
+			    case TokenType.UNOWNED:
+			    case TokenType.WEAK:
+			    case TokenType.IDENTIFIER:
+				    var type = parse_type ();
+
+				    list.add (type);
+				    break;
+			    default:
+				    rollback (begin);
+				    return null;
+			    }
+		    } while (accept (TokenType.COMMA));
+		    
+		    if (inParens) {
+			    expect (TokenType.CLOSE_PARENS);
+			}
 
 			return list;
 		}
