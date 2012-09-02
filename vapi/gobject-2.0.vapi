@@ -381,9 +381,9 @@ namespace GLib {
 
 	[CCode (destroy_function = "g_weak_ref_clear")]
 	public struct WeakRef {
-		public WeakRef (GLib.Object object);
+		public WeakRef (GLib.Object? object);
 		public GLib.Object? get ();
-		public void set (GLib.Object object);
+		public void set (GLib.Object? object);
 	}
 
 	[CCode (instance_pos = 0)]
