@@ -307,6 +307,9 @@ namespace X {
 
 		[CCode (cname = "XMoveWindow")]
 		public void move_window (Window window, int x, int y);
+
+		[CCode (cname = "XQueryExtension")]
+		public bool query_extension(string name, out int major_opcode, out int first_event_return, out int first_error_return);
 	}
 
 	[Compact]
@@ -736,7 +739,8 @@ namespace X {
 		SelectionNotify,
 		ColormapNotify,
 		ClientMessage,
-		MappingNotify
+		MappingNotify,
+		GenericEvent
 	}
 
 	// union
@@ -762,6 +766,8 @@ namespace X {
 		public PropertyEvent xproperty;
 		public SelectionEvent xselection;
 		public ClientMessageEvent xclient;
+		public GenericEvent xgeneric;
+		public GenericEventCookie xcookie;
 	}
 
 	[CCode (cname = "XAnyEvent")]
@@ -1025,6 +1031,27 @@ namespace X {
 		public Atom message_type;
 		public int format;
 		public ClientMessageEventData data;
+	}
+
+	[CCode (cname = "XGenericEvent")]
+	public struct GenericEvent {
+		public int type;
+		public ulong serial;
+		public bool send_event;
+		public unowned Display display;
+		public int extension;
+		public int evtype;
+	}
+
+	[CCode (cname = "XGenericEventCookie")]
+	public struct GenericEventCookie {
+		public int type;
+		public ulong serial;
+		public bool send_event;
+		public unowned Display display;
+		public int extension;
+		public uint cookie;
+		public void *data;
 	}
 
 	[CCode (cname = "RECTANGLE", has_type_id = false)]
