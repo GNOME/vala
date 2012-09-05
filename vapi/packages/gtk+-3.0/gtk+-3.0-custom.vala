@@ -101,6 +101,7 @@ namespace Gtk {
 		UNSORTED
 	}
 
+	[Deprecated (since = "3.0", replacement = "StyleContext")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Style {
 		[NoWrapper]
