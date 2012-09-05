@@ -1430,6 +1430,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		en.set_attribute_string ("CCode", "cprefix", common_prefix);
 		
 		foreach (weak IdlNode value2 in en_node.values) {
+			EnumValue ev = new EnumValue (value2.name.substring (common_prefix.length), null);
+
 			var val_attributes = get_attributes (value2.name);
 			bool is_hidden = false;
 			if (val_attributes != null) {
@@ -1437,12 +1439,19 @@ public class Vala.GIdlParser : CodeVisitor {
 					var nv = attr.split ("=", 2);
 					if (nv[0] == "hidden" && eval(nv[1]) == "1") {
 						is_hidden = true;
+					} else if (nv[0] == "deprecated") {
+						if (eval (nv[1]) == "1") {
+							ev.set_attribute ("Deprecated", true);
+						}
+					}  else if (nv[0] == "replacement") {
+						ev.set_attribute_string ("Deprecated", "replacement", eval (nv[1]));
+					} else if (nv[0] == "deprecated_since") {
+						ev.set_attribute_string ("Deprecated", "since", eval (nv[1]));
 					}
 				}
 			}
 
 			if (!is_hidden) {
-				var ev = new EnumValue (value2.name.substring (common_prefix.length), null);
 				en.add_value (ev);
 			}
 		}

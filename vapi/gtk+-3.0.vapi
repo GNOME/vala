@@ -7282,6 +7282,7 @@ namespace Gtk {
 	public enum ResizeMode {
 		PARENT,
 		QUEUE,
+		[Deprecated]
 		IMMEDIATE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RESPONSE_")]
