@@ -264,10 +264,19 @@ public class Vala.GAsyncModule : GSignalModule {
 				var old_captured = param.captured;
 				param.captured = false;
 				current_method.coroutine = false;
-				var value = load_parameter (param);
-				if (requires_copy (param_type) && !param.variable_type.value_owned) {
-					value = copy_value (value, param);
+
+				TargetValue value;
+				if (param.variable_type.value_owned) {
+					// do not use load_parameter for reference/ownership transfer
+					// otherwise delegate destroy notify will not be moved
+					value = get_parameter_cvalue (param);
+				} else  {
+					value = load_parameter (param);
+					if (requires_copy (param_type)) {
+						value = copy_value (value, param);
+					}
 				}
+
 				current_method.coroutine = true;
 
 				store_parameter (param, value);
