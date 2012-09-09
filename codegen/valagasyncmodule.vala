@@ -255,11 +255,6 @@ public class Vala.GAsyncModule : GSignalModule {
 		emit_context.push_symbol (m);
 		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
-				var param_type = param.variable_type.copy ();
-				if (!param_type.value_owned) {
-					param_type.value_owned = !no_implicit_copy (param_type);
-				}
-
 				// create copy if necessary as variables in async methods may need to be kept alive
 				var old_captured = param.captured;
 				param.captured = false;
@@ -272,9 +267,6 @@ public class Vala.GAsyncModule : GSignalModule {
 					value = get_parameter_cvalue (param);
 				} else  {
 					value = load_parameter (param);
-					if (requires_copy (param_type)) {
-						value = copy_value (value, param);
-					}
 				}
 
 				current_method.coroutine = true;

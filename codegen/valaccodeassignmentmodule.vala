@@ -165,8 +165,36 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		store_value (get_local_cvalue (local), value);
 	}
 
-	public override void store_parameter (Parameter param, TargetValue value) {
-		if (requires_destroy (param.variable_type)) {
+	public override void store_parameter (Parameter param, TargetValue _value, bool capturing_parameter = false) {
+		var value = _value;
+
+		bool capturing_parameter_in_coroutine = capturing_parameter && is_in_coroutine ();
+
+		var param_type = param.variable_type.copy ();
+		if (param.captured || is_in_coroutine ()) {
+			if (!param_type.value_owned && !no_implicit_copy (param_type)) {
+				// parameter value has been implicitly copied into a heap data structure
+				// treat parameter as owned
+				param_type.value_owned = true;
+
+				var old_coroutine = is_in_coroutine ();
+				if (old_coroutine) {
+					current_method.coroutine = false;
+				}
+
+				if (requires_copy (param_type) && !capturing_parameter_in_coroutine) {
+					// do not copy value when capturing parameter in coroutine
+					// as the value was already copied on coroutine initialization
+					value = copy_value (value, param);
+				}
+
+				if (old_coroutine) {
+					current_method.coroutine = true;
+				}
+			}
+		}
+
+		if (requires_destroy (param_type)) {
 			/* unref old value */
 			ccode.add_expression (destroy_parameter (param));
 		}
