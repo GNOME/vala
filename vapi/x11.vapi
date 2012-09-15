@@ -1185,6 +1185,7 @@ namespace X {
 
 	public const X.Atom XA_ATOM;
 	public const X.Atom XA_CARDINAL;
+	public const X.Atom XA_STRING;
 	public const X.Atom XA_WINDOW;
 	public const X.Atom XA_WM_CLASS;
 	public const X.Atom XA_WM_HINTS;
