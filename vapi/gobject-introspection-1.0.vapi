@@ -45,12 +45,14 @@ namespace GI {
 	public class CallableInfo : GI.BaseInfo {
 		[CCode (has_construct_function = false)]
 		protected CallableInfo ();
+		public static bool can_throw_gerror (GI.CallableInfo info);
 		public static GI.ArgInfo get_arg (GI.CallableInfo info, int n);
 		public static GI.Transfer get_caller_owns (GI.CallableInfo info);
 		public static int get_n_args (GI.CallableInfo info);
 		public static unowned string get_return_attribute (GI.CallableInfo info, string name);
 		public static GI.TypeInfo get_return_type (GI.CallableInfo info);
 		public static bool invoke (GI.CallableInfo info, void* function, GI.Argument in_args, int n_in_args, GI.Argument out_args, int n_out_args, GI.Argument return_value, bool is_method, bool @throws) throws GLib.Error;
+		public static bool is_method (GI.CallableInfo info);
 		public static bool iterate_return_attributes (GI.CallableInfo info, GI.AttributeIter iterator, out unowned string name, out unowned string value);
 		public static void load_arg (GI.CallableInfo info, int n, out unowned GI.ArgInfo arg);
 		public static void load_return_type (GI.CallableInfo info, out unowned GI.TypeInfo type);
@@ -102,6 +104,7 @@ namespace GI {
 		[CCode (has_construct_function = false)]
 		protected InterfaceInfo ();
 		public static GI.FunctionInfo find_method (GI.InterfaceInfo info, string name);
+		public static GI.SignalInfo find_signal (GI.InterfaceInfo info, string name);
 		public static GI.VFuncInfo find_vfunc (GI.InterfaceInfo info, string name);
 		public static GI.ConstantInfo get_constant (GI.InterfaceInfo info, int n);
 		public static GI.StructInfo get_iface_struct (GI.InterfaceInfo info);

@@ -783,7 +783,17 @@ namespace Pango {
 		VAI,
 		CARIAN,
 		LYCIAN,
-		LYDIAN;
+		LYDIAN,
+		BATAK,
+		BRAHMI,
+		MANDAIC,
+		CHAKMA,
+		MEROITIC_CURSIVE,
+		MEROITIC_HIEROGLYPHS,
+		MIAO,
+		SHARADA,
+		SORA_SOMPENG,
+		TAKRI;
 		public static Pango.Script for_unichar (unichar ch);
 		public static Pango.Language get_sample_language (Pango.Script script);
 	}

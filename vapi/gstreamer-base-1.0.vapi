@@ -371,6 +371,7 @@ namespace Gst {
 			public void set_latency (Gst.ClockTime min_latency, Gst.ClockTime max_latency);
 			public void set_min_frame_size (uint min_size);
 			public void set_passthrough (bool passthrough);
+			public void set_pts_interpolation (bool pts_interpolate);
 			[NoWrapper]
 			public virtual bool set_sink_caps (Gst.Caps caps);
 			public void set_syncable (bool syncable);
@@ -486,7 +487,7 @@ namespace Gst {
 			public Gst.FlowReturn wait (Gst.ClockTime time, out Gst.ClockTimeDiff jitter);
 			public Gst.ClockReturn wait_clock (Gst.ClockTime time, out Gst.ClockTimeDiff jitter);
 			[NoWrapper]
-			public virtual Gst.FlowReturn wait_eos (Gst.Event event);
+			public virtual Gst.FlowReturn wait_event (Gst.Event event);
 			public Gst.FlowReturn wait_preroll ();
 			[NoAccessorMethod]
 			public bool @async { get; set; }
@@ -533,7 +534,9 @@ namespace Gst {
 			public virtual Gst.FlowReturn fill (uint64 offset, uint size, Gst.Buffer buf);
 			[NoWrapper]
 			public virtual Gst.Caps fixate (Gst.Caps caps);
+			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
 			public uint get_blocksize ();
+			public Gst.BufferPool get_buffer_pool ();
 			[NoWrapper]
 			public virtual Gst.Caps get_caps (Gst.Caps filter);
 			public bool get_do_timestamp ();
@@ -598,6 +601,8 @@ namespace Gst {
 			public virtual bool filter_meta (Gst.Query query, GLib.Type api, Gst.Structure @params);
 			[NoWrapper]
 			public virtual Gst.Caps fixate_caps (Gst.PadDirection direction, Gst.Caps caps, Gst.Caps othercaps);
+			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
+			public Gst.BufferPool get_buffer_pool ();
 			[NoWrapper]
 			public virtual bool get_unit_size (Gst.Caps caps, size_t size);
 			public bool is_in_place ();

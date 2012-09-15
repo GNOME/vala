@@ -4792,7 +4792,7 @@ namespace Gdk {
 	public class Keymap : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Keymap ();
-		public void add_virtual_modifiers (out Gdk.ModifierType state);
+		public void add_virtual_modifiers (ref Gdk.ModifierType state);
 		public bool get_caps_lock_state ();
 		public static unowned Gdk.Keymap get_default ();
 		public Pango.Direction get_direction ();
@@ -4804,7 +4804,7 @@ namespace Gdk {
 		public bool get_num_lock_state ();
 		public bool have_bidi_layouts ();
 		public uint lookup_key (Gdk.KeymapKey key);
-		public bool map_virtual_modifiers (out Gdk.ModifierType state);
+		public bool map_virtual_modifiers (ref Gdk.ModifierType state);
 		public bool translate_keyboard_state (uint hardware_keycode, Gdk.ModifierType state, int group, out uint keyval, out int effective_group, out int level, out Gdk.ModifierType consumed_modifiers);
 		public signal void direction_changed ();
 		public signal void keys_changed ();

@@ -34,9 +34,13 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static string get_description (string type);
 		[CCode (cheader_filename = "gio/gio.h")]
+		public static string get_generic_icon_name (string type);
+		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.Icon get_icon (string type);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static string? get_mime_type (string type);
+		[CCode (cheader_filename = "gio/gio.h")]
+		public static GLib.Icon get_symbolic_icon (string type);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static string guess (string? filename, [CCode (array_length_cname = "data_size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[]? data, out bool result_uncertain);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gio/gio.h")]
@@ -177,6 +181,8 @@ namespace GLib {
 		public const string STANDARD_SIZE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_STANDARD_SORT_ORDER")]
 		public const string STANDARD_SORT_ORDER;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_STANDARD_SYMBOLIC_ICON")]
+		public const string STANDARD_SYMBOLIC_ICON;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET")]
 		public const string STANDARD_SYMLINK_TARGET;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_STANDARD_TARGET_URI")]
@@ -467,9 +473,9 @@ namespace GLib {
 		protected DBusConnection ();
 		public uint add_filter (owned GLib.DBusMessageFilterFunction filter_function);
 		public async GLib.Variant call (string? bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public GLib.Variant call_sync (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GLib.Variant call_sync (string? bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GLib.Variant call_with_unix_fd_list (string? bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.UnixFDList? fd_list = null, GLib.Cancellable? cancellable = null, out GLib.UnixFDList? out_fd_list = null) throws GLib.Error;
-		public GLib.Variant call_with_unix_fd_list_sync (string bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.UnixFDList? fd_list = null, out GLib.UnixFDList? out_fd_list = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GLib.Variant call_with_unix_fd_list_sync (string? bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.UnixFDList? fd_list = null, out GLib.UnixFDList? out_fd_list = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool close_sync (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool emit_signal (string? destination_bus_name, string object_path, string interface_name, string signal_name, GLib.Variant? parameters) throws GLib.Error;
@@ -1015,6 +1021,7 @@ namespace GLib {
 		public unowned string get_name ();
 		public int64 get_size ();
 		public int32 get_sort_order ();
+		public unowned GLib.Icon get_symbolic_icon ();
 		public unowned string get_symlink_target ();
 		public bool has_attribute (string attribute);
 		public bool has_namespace (string name_space);
@@ -1044,6 +1051,7 @@ namespace GLib {
 		public void set_name (string name);
 		public void set_size (int64 size);
 		public void set_sort_order (int32 sort_order);
+		public void set_symbolic_icon (GLib.Icon icon);
 		public void set_symlink_target (string symlink_target);
 		public void unset_attribute_mask ();
 	}
@@ -1382,6 +1390,10 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public MenuItem (string? label, string? detailed_action);
 		[CCode (has_construct_function = false)]
+		public MenuItem.from_model (GLib.MenuModel model, int item_index);
+		public GLib.Variant get_attribute_value (string attribute, GLib.VariantType expected_value);
+		public GLib.MenuModel get_link (string link);
+		[CCode (has_construct_function = false)]
 		public MenuItem.section (string? label, GLib.MenuModel section);
 		public void set_action_and_target (string? action, string? format_string, ...);
 		public void set_action_and_target_value (string? action, GLib.Variant? target_value);
@@ -1450,7 +1462,7 @@ namespace GLib {
 		[HasEmitter]
 		public virtual signal void reply (GLib.MountOperationResult result);
 		public virtual signal void show_processes (string message, GLib.Array<GLib.Pid> processes, [CCode (array_length = false, array_null_terminated = true)] string[] choices);
-		public virtual signal void show_unmount_progress (string message, uint64 time_left, uint64 bytes_left);
+		public virtual signal void show_unmount_progress (string message, int64 time_left, int64 bytes_left);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public abstract class NativeVolumeMonitor : GLib.VolumeMonitor {
@@ -2355,6 +2367,7 @@ namespace GLib {
 		public abstract string get_name ();
 		public virtual unowned string get_sort_key ();
 		public abstract GLib.DriveStartStopType get_start_stop_type ();
+		public abstract GLib.Icon get_symbolic_icon ();
 		public abstract GLib.List<GLib.Volume> get_volumes ();
 		public abstract bool has_media ();
 		public abstract bool has_volumes ();
@@ -2381,9 +2394,8 @@ namespace GLib {
 		public abstract async GLib.FileIOStream create_readwrite_async (GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "delete_file")]
 		public abstract bool @delete (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public async bool delete_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[NoWrapper]
-		public abstract async bool delete_file_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (vfunc_name = "delete_file_async")]
+		public abstract async bool delete_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.File dup ();
 		[Deprecated (since = "2.22")]
 		public abstract async bool eject_mountable (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -2509,6 +2521,7 @@ namespace GLib {
 		public abstract string get_name ();
 		public abstract GLib.File get_root ();
 		public virtual unowned string get_sort_key ();
+		public abstract GLib.Icon get_symbolic_icon ();
 		public abstract string get_uuid ();
 		public abstract GLib.Volume get_volume ();
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -2644,6 +2657,7 @@ namespace GLib {
 		public abstract GLib.Mount get_mount ();
 		public abstract string get_name ();
 		public virtual unowned string get_sort_key ();
+		public abstract GLib.Icon get_symbolic_icon ();
 		public abstract string get_uuid ();
 		[CCode (vfunc_name = "mount_fn")]
 		public abstract async bool mount (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;

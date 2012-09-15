@@ -293,8 +293,8 @@ namespace Soup {
 	public class CookieJar : GLib.Object, Soup.SessionFeature {
 		[CCode (has_construct_function = false)]
 		public CookieJar ();
-		public void add_cookie (Soup.Cookie cookie);
-		public void add_cookie_with_first_party (Soup.URI first_party, Soup.Cookie cookie);
+		public void add_cookie (owned Soup.Cookie cookie);
+		public void add_cookie_with_first_party (Soup.URI first_party, owned Soup.Cookie cookie);
 		public GLib.SList<Soup.Cookie> all_cookies ();
 		public void delete_cookie (Soup.Cookie cookie);
 		public Soup.CookieJarAcceptPolicy get_accept_policy ();
@@ -506,6 +506,16 @@ namespace Soup {
 		public int get_length ();
 		public bool get_part (int part, out unowned Soup.MessageHeaders headers, out unowned Soup.Buffer body);
 		public void to_message (Soup.MessageHeaders dest_headers, Soup.MessageBody dest_body);
+	}
+	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_multipart_input_stream_get_type ()")]
+	public class MultipartInputStream : GLib.FilterInputStream, GLib.PollableInputStream {
+		[CCode (has_construct_function = false)]
+		public MultipartInputStream (Soup.Message msg, GLib.InputStream base_stream);
+		public unowned Soup.MessageHeaders get_headers ();
+		public GLib.InputStream next_part (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async GLib.InputStream next_part_async (int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
+		[NoAccessorMethod]
+		public Soup.Message message { owned get; construct; }
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_proxy_resolver_default_get_type ()")]
 	public class ProxyResolverDefault : GLib.Object, Soup.ProxyURIResolver, Soup.SessionFeature {
@@ -799,7 +809,7 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
 	public struct MessageHeadersIter {
-		public void init (Soup.MessageHeaders hdrs);
+		public static void init (out Soup.MessageHeadersIter iter, Soup.MessageHeaders hdrs);
 		public bool next (out unowned string name, out unowned string value);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
@@ -965,7 +975,8 @@ namespace Soup {
 		OVERWRITE_CHUNKS,
 		CONTENT_DECODED,
 		CERTIFICATE_TRUSTED,
-		NEW_CONNECTION
+		NEW_CONNECTION,
+		IDEMPOTENT
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_MESSAGE_HEADERS_", type_id = "soup_message_headers_type_get_type ()")]
 	public enum MessageHeadersType {
@@ -1174,6 +1185,8 @@ namespace Soup {
 	public const int MISC_H;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_MULTIPART_H")]
 	public const int MULTIPART_H;
+	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_MULTIPART_INPUT_STREAM_H")]
+	public const int MULTIPART_INPUT_STREAM_H;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_PASSWORD_MANAGER_H")]
 	public const int PASSWORD_MANAGER_H;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_PROXY_RESOLVER_DEFAULT_H")]

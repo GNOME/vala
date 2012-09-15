@@ -109,18 +109,19 @@ namespace Gst {
 			public Gst.FlowReturn finish_frame (Gst.Buffer buf, int frames);
 			[NoWrapper]
 			public virtual void flush (bool hard);
+			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
 			public Gst.Audio.Info get_audio_info ();
 			public int get_delay ();
 			public bool get_drainable ();
 			public int get_estimate_rate ();
 			public void get_latency (out Gst.ClockTime min, out Gst.ClockTime max);
 			public int get_max_errors ();
-			public int64 get_min_latency ();
+			public Gst.ClockTime get_min_latency ();
 			public bool get_needs_format ();
 			public void get_parse_state (bool sync, bool eos);
 			public bool get_plc ();
 			public int get_plc_aware ();
-			public int64 get_tolerance ();
+			public Gst.ClockTime get_tolerance ();
 			[NoWrapper]
 			public virtual Gst.FlowReturn handle_frame (Gst.Buffer buffer);
 			public void merge_tags (Gst.TagList tags, Gst.TagMergeMode mode);
@@ -139,12 +140,12 @@ namespace Gst {
 			public virtual bool set_format (Gst.Caps caps);
 			public void set_latency (Gst.ClockTime min, Gst.ClockTime max);
 			public void set_max_errors (int num);
-			public void set_min_latency (int64 num);
+			public void set_min_latency (Gst.ClockTime num);
 			public void set_needs_format (bool enabled);
 			public bool set_output_format (Gst.Audio.Info info);
 			public void set_plc (bool enabled);
 			public void set_plc_aware (bool plc);
-			public void set_tolerance (int64 tolerance);
+			public void set_tolerance (Gst.ClockTime tolerance);
 			[NoWrapper]
 			public virtual bool sink_event (Gst.Event event);
 			[NoWrapper]
@@ -175,6 +176,7 @@ namespace Gst {
 			public Gst.FlowReturn finish_frame (Gst.Buffer buffer, int samples);
 			[NoWrapper]
 			public virtual void flush ();
+			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
 			public Gst.Audio.Info get_audio_info ();
 			public bool get_drainable ();
 			public int get_frame_max ();
@@ -186,7 +188,7 @@ namespace Gst {
 			public int get_lookahead ();
 			public bool get_mark_granule ();
 			public bool get_perfect_timestamp ();
-			public int64 get_tolerance ();
+			public Gst.ClockTime get_tolerance ();
 			[NoWrapper]
 			public virtual Gst.Caps getcaps (Gst.Caps filter);
 			[NoWrapper]
@@ -214,7 +216,7 @@ namespace Gst {
 			public void set_mark_granule (bool enabled);
 			public bool set_output_format (Gst.Caps caps);
 			public void set_perfect_timestamp (bool enabled);
-			public void set_tolerance (int64 tolerance);
+			public void set_tolerance (Gst.ClockTime tolerance);
 			[NoWrapper]
 			public virtual bool sink_event (Gst.Event event);
 			[NoWrapper]
@@ -273,6 +275,7 @@ namespace Gst {
 			public size_t size;
 			public Gst.Audio.RingBufferSpec spec;
 			public int state;
+			public Gst.ClockTime timestamps;
 			public int waiting;
 			[CCode (has_construct_function = false)]
 			protected RingBuffer ();
@@ -290,19 +293,22 @@ namespace Gst {
 			public bool device_is_open ();
 			public bool is_acquired ();
 			public bool is_active ();
+			public bool is_flushing ();
 			public void may_start (bool allowed);
 			public virtual bool open_device ();
 			public static bool parse_caps (Gst.Audio.RingBufferSpec spec, Gst.Caps caps);
 			public virtual bool pause ();
 			public bool prepare_read (int segment, uint8 readptr, int len);
-			public uint read (uint64 sample, uint8 data, uint len);
+			public uint read (uint64 sample, uint8 data, uint len, Gst.ClockTime timestamp);
 			public virtual bool release ();
 			[NoWrapper]
 			public virtual bool resume ();
 			public uint64 samples_done ();
+			public void set_callback (Gst.Audio.RingBufferCallback cb);
 			public void set_channel_positions (Gst.Audio.ChannelPosition position);
 			public void set_flushing (bool flushing);
 			public void set_sample (uint64 sample);
+			public void set_timestamp (int readseg, Gst.ClockTime timestamp);
 			public virtual bool start ();
 			public virtual bool stop ();
 		}
@@ -340,7 +346,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool prepare (Gst.Audio.RingBufferSpec spec);
 			[NoWrapper]
-			public virtual uint read ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "guint", type = "gpointer")] uint8[] data);
+			public virtual uint read ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "guint", type = "gpointer")] uint8[] data, Gst.ClockTime timestamp);
 			[NoWrapper]
 			public virtual void reset ();
 			[NoWrapper]
@@ -611,7 +617,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GST_TAG_CDDA_TRACK_TAGS")]
 		public const string TAG_CDDA_TRACK_TAGS;
 		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_buffer_clip")]
-		public static Gst.Buffer audio_buffer_clip (Gst.Buffer buffer, Gst.Segment segment, int rate, int bpf);
+		public static Gst.Buffer audio_buffer_clip (owned Gst.Buffer buffer, Gst.Segment segment, int rate, int bpf);
 		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_buffer_reorder_channels")]
 		public static bool audio_buffer_reorder_channels (Gst.Buffer buffer, Gst.Audio.Format format, int channels, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] from, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] to);
 		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_channel_positions_from_mask")]

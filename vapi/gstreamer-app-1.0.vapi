@@ -13,6 +13,10 @@ namespace Gst {
 			public bool get_emit_signals ();
 			public uint get_max_buffers ();
 			public bool is_eos ();
+			[NoWrapper]
+			public virtual Gst.FlowReturn new_preroll ();
+			[NoWrapper]
+			public virtual Gst.FlowReturn new_sample ();
 			public void set_caps (Gst.Caps caps);
 			public void set_drop (bool drop);
 			public void set_emit_signals (bool emit);
@@ -23,8 +27,6 @@ namespace Gst {
 			[NoAccessorMethod]
 			public virtual bool eos { get; }
 			public uint max_buffers { get; set; }
-			public virtual signal void new_preroll ();
-			public virtual signal void new_sample ();
 			[HasEmitter]
 			public virtual signal Gst.Sample pull_preroll ();
 			[HasEmitter]

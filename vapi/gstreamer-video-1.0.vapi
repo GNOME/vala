@@ -62,8 +62,11 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.FlowReturn finish ();
 			public Gst.FlowReturn finish_frame (owned Gst.Video.CodecFrame frame);
+			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
+			public Gst.BufferPool get_buffer_pool ();
 			public int get_estimate_rate ();
 			public Gst.Video.CodecFrame get_frame (int frame_number);
+			public GLib.List<Gst.Video.CodecFrame> get_frames ();
 			public void get_latency (out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
 			public Gst.ClockTimeDiff get_max_decode_time (Gst.Video.CodecFrame frame);
 			public int get_max_errors ();
@@ -113,8 +116,10 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.FlowReturn finish ();
 			public Gst.FlowReturn finish_frame (owned Gst.Video.CodecFrame frame);
+			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
 			public bool get_discont ();
 			public Gst.Video.CodecFrame get_frame (int frame_number);
+			public GLib.List<Gst.Video.CodecFrame> get_frames ();
 			public void get_latency (out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
 			public Gst.Video.CodecFrame get_oldest_frame ();
 			public Gst.Video.CodecState get_output_state ();
@@ -181,15 +186,19 @@ namespace Gst {
 		[Compact]
 		[GIR (name = "VideoOverlayRectangle")]
 		public class OverlayRectangle {
-			[CCode (has_construct_function = false)]
-			public OverlayRectangle.argb (Gst.Buffer pixels, int render_x, int render_y, uint render_width, uint render_height, Gst.Video.OverlayFormatFlags flags);
 			public Gst.Video.OverlayRectangle copy ();
 			public Gst.Video.OverlayFormatFlags get_flags ();
 			public float get_global_alpha ();
 			public unowned Gst.Buffer get_pixels_argb (Gst.Video.OverlayFormatFlags flags);
+			public unowned Gst.Buffer get_pixels_ayuv (Gst.Video.OverlayFormatFlags flags);
+			public unowned Gst.Buffer get_pixels_raw (Gst.Video.OverlayFormatFlags flags);
 			public unowned Gst.Buffer get_pixels_unscaled_argb (Gst.Video.OverlayFormatFlags flags);
+			public unowned Gst.Buffer get_pixels_unscaled_ayuv (Gst.Video.OverlayFormatFlags flags);
+			public unowned Gst.Buffer get_pixels_unscaled_raw (Gst.Video.OverlayFormatFlags flags);
 			public bool get_render_rectangle (out int render_x, out int render_y, out uint render_width, out uint render_height);
 			public uint get_seqnum ();
+			[CCode (has_construct_function = false)]
+			public OverlayRectangle.raw (Gst.Buffer pixels, int render_x, int render_y, uint render_width, uint render_height, Gst.Video.OverlayFormatFlags flags);
 			public void set_global_alpha (float global_alpha);
 			public void set_render_rectangle (int render_x, int render_y, uint render_width, uint render_height);
 		}
@@ -387,6 +396,7 @@ namespace Gst {
 			public weak size_t[] offset;
 			[CCode (array_length = false, array_null_terminated = true)]
 			public weak int[] stride;
+			public void align (Gst.Video.Alignment align);
 			public bool convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
 			public bool from_caps (Gst.Caps caps);
 			public void init ();
@@ -561,7 +571,9 @@ namespace Gst {
 			[CCode (cname = "GST_VIDEO_FORMAT_r210")]
 			R210,
 			I420_10BE,
-			I420_10LE
+			I420_10LE,
+			I422_10BE,
+			I422_10LE
 		}
 		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]

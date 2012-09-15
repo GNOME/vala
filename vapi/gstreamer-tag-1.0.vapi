@@ -89,9 +89,7 @@ namespace Gst {
 			[CCode (cheader_filename = "gst/tag/gsttagdemux.h,gst/tag/gsttagmux.h,gst/tag/tag.h,gst/tag/xmpwriter.h")]
 			public static Gst.Buffer to_vorbiscomment_buffer (Gst.TagList list, uint8 id_data, uint id_data_length, string vendor_string);
 			[CCode (cheader_filename = "gst/tag/gsttagdemux.h,gst/tag/gsttagmux.h,gst/tag/tag.h,gst/tag/xmpwriter.h")]
-			public static Gst.Buffer to_xmp_buffer (Gst.TagList list, bool read_only);
-			[CCode (cheader_filename = "gst/tag/gsttagdemux.h,gst/tag/gsttagmux.h,gst/tag/tag.h,gst/tag/xmpwriter.h")]
-			public static Gst.Buffer to_xmp_buffer_full (Gst.TagList list, bool read_only, string schemas);
+			public static Gst.Buffer to_xmp_buffer (Gst.TagList list, bool read_only, string schemas);
 		}
 		namespace MusicBrainz {
 			[CCode (cheader_filename = "gst/tag/gsttagdemux.h,gst/tag/gsttagmux.h,gst/tag/tag.h,gst/tag/xmpwriter.h", cname = "GST_TAG_MUSICBRAINZ_ALBUMARTISTID")]

@@ -961,7 +961,6 @@ namespace Gst {
 		public uint32 seqnum;
 		public uint64 timestamp;
 		public Gst.EventType type;
-		public void add_stream_config_header (Gst.Buffer buf);
 		[CCode (has_construct_function = false)]
 		public Event.buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool @async);
 		[CCode (has_construct_function = false)]
@@ -977,7 +976,6 @@ namespace Gst {
 		public Event.flush_stop (bool reset_time);
 		[CCode (has_construct_function = false)]
 		public Event.gap (Gst.ClockTime timestamp, Gst.ClockTime duration);
-		public uint get_n_stream_config_headers ();
 		public uint32 get_seqnum ();
 		public unowned Gst.Structure get_structure ();
 		public bool has_name (string name);
@@ -990,15 +988,12 @@ namespace Gst {
 		public void parse_flush_stop (out bool reset_time);
 		public void parse_gap (out Gst.ClockTime timestamp, out Gst.ClockTime duration);
 		public void parse_latency (out Gst.ClockTime latency);
-		public bool parse_nth_stream_config_header (uint index, out unowned Gst.Buffer buf);
 		public void parse_qos (out Gst.QOSType type, out double proportion, out Gst.ClockTimeDiff diff, out Gst.ClockTime timestamp);
 		public void parse_seek (out double rate, out Gst.Format format, out Gst.SeekFlags flags, out Gst.SeekType start_type, out int64 start, out Gst.SeekType stop_type, out int64 stop);
 		public void parse_segment (out unowned Gst.Segment segment);
 		public void parse_segment_done (out Gst.Format format, out int64 position);
 		public void parse_sink_message (out Gst.Message msg);
 		public void parse_step (out Gst.Format format, out uint64 amount, out double rate, out bool flush, out bool intermediate);
-		public void parse_stream_config (out Gst.StreamConfigFlags flags);
-		public bool parse_stream_config_setup_data (out unowned Gst.Buffer buf);
 		public void parse_stream_start (out string stream_id);
 		public void parse_tag (out unowned Gst.TagList taglist);
 		public void parse_toc (out Gst.Toc toc, out bool updated);
@@ -1014,13 +1009,10 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Event.segment_done (Gst.Format format, int64 position);
 		public void set_seqnum (uint32 seqnum);
-		public void set_stream_config_setup_data (Gst.Buffer buf);
 		[CCode (has_construct_function = false)]
 		public Event.sink_message (string name, Gst.Message msg);
 		[CCode (has_construct_function = false)]
 		public Event.step (Gst.Format format, uint64 amount, double rate, bool flush, bool intermediate);
-		[CCode (has_construct_function = false)]
-		public Event.stream_config (Gst.StreamConfigFlags flags);
 		[CCode (has_construct_function = false)]
 		public Event.stream_start (string stream_id);
 		[CCode (has_construct_function = false)]
@@ -1130,7 +1122,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Message.custom (Gst.MessageType type, Gst.Object src, owned Gst.Structure structure);
 		[CCode (has_construct_function = false)]
-		public Message.duration (Gst.Object src, Gst.Format format, int64 duration);
+		public Message.duration_changed (Gst.Object src);
 		[CCode (has_construct_function = false)]
 		public Message.element (Gst.Object src, owned Gst.Structure structure);
 		[CCode (has_construct_function = false)]
@@ -1152,7 +1144,6 @@ namespace Gst {
 		public void parse_buffering_stats (out Gst.BufferingMode mode, out int avg_in, out int avg_out, out int64 buffering_left);
 		public void parse_clock_lost (out unowned Gst.Clock clock);
 		public void parse_clock_provide (out unowned Gst.Clock clock, out bool ready);
-		public void parse_duration (out Gst.Format format, out int64 duration);
 		public void parse_error (out GLib.Error gerror, out string debug);
 		public void parse_info (out GLib.Error gerror, out string debug);
 		public void parse_new_clock (out unowned Gst.Clock clock);
@@ -1311,6 +1302,7 @@ namespace Gst {
 		[CCode (cname = "gst_pad_link_full")]
 		public Gst.PadLinkReturn link (Gst.Pad sinkpad, Gst.PadLinkCheck flags = Gst.PadLinkCheck.DEFAULT);
 		public void mark_reconfigure ();
+		public static unowned string mode_get_name (Gst.PadMode mode);
 		public bool needs_reconfigure ();
 		public bool pause_task ();
 		public bool peer_query (Gst.Query query);
@@ -1520,6 +1512,7 @@ namespace Gst {
 		public uint get_n_scheduling_modes ();
 		public unowned Gst.Structure get_structure ();
 		public bool has_scheduling_mode (Gst.PadMode mode);
+		public bool has_scheduling_mode_with_flags (Gst.PadMode mode, Gst.SchedulingFlags flags);
 		[CCode (has_construct_function = false)]
 		public Query.latency ();
 		public void parse_accept_caps (out Gst.Caps caps);
@@ -1579,7 +1572,6 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected Registry ();
 		public bool add_feature (owned Gst.PluginFeature feature);
-		public void add_path (string path);
 		public bool add_plugin (owned Gst.Plugin plugin);
 		public bool check_feature_version (string feature_name, uint min_major, uint min_minor, uint min_micro);
 		public GLib.List<Gst.PluginFeature> feature_filter ([CCode (delegate_target_pos = 2.1)] Gst.PluginFeatureFilter filter, bool first);
@@ -1591,7 +1583,6 @@ namespace Gst {
 		public GLib.List<Gst.PluginFeature> get_feature_list (GLib.Type type);
 		public GLib.List<Gst.PluginFeature> get_feature_list_by_plugin (string name);
 		public uint32 get_feature_list_cookie ();
-		public GLib.List<weak string> get_path_list ();
 		public GLib.List<Gst.Plugin> get_plugin_list ();
 		public Gst.Plugin lookup (string filename);
 		public Gst.PluginFeature lookup_feature (string name);
@@ -1851,7 +1842,7 @@ namespace Gst {
 		public abstract GLib.Object get_child_by_name (string name);
 		public abstract uint get_children_count ();
 		public GLib.Value get_property (string name);
-		public static bool lookup (GLib.Object object, string name, out GLib.Object target, out unowned GLib.ParamSpec pspec);
+		public bool lookup (string name, out GLib.Object target, out unowned GLib.ParamSpec pspec);
 		public void set_property (string name, GLib.Value value);
 		[HasEmitter]
 		public virtual signal void child_added (GLib.Object child, string name);
@@ -2231,7 +2222,6 @@ namespace Gst {
 		FLUSH_STOP,
 		STREAM_START,
 		CAPS,
-		STREAM_CONFIG,
 		SEGMENT,
 		TAG,
 		BUFFERSIZE,
@@ -2360,7 +2350,7 @@ namespace Gst {
 		ELEMENT,
 		SEGMENT_START,
 		SEGMENT_DONE,
-		DURATION,
+		DURATION_CHANGED,
 		LATENCY,
 		ASYNC_START,
 		ASYNC_DONE,
@@ -2626,11 +2616,6 @@ namespace Gst {
 		SUCCESS,
 		ASYNC,
 		NO_PREROLL
-	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STREAM_CONFIG_FLAG_", has_type_id = false)]
-	public enum StreamConfigFlags {
-		[CCode (cname = "GST_STREAM_CONFIG_FLAG_NONE")]
-		STREAM_CONFIG_FLAG_NONE
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STREAM_STATUS_TYPE_", has_type_id = false)]
 	public enum StreamStatusType {
@@ -2995,8 +2980,6 @@ namespace Gst {
 	public const int VALUE_LESS_THAN;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_VALUE_UNORDERED")]
 	public const int VALUE_UNORDERED;
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static bool child_proxy_lookup (GLib.Object object, string name, out GLib.Object target, out unowned GLib.ParamSpec pspec);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void deinit ();
 	[CCode (cheader_filename = "gst/gst.h")]

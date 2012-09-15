@@ -36,6 +36,8 @@ namespace Vte {
 		public long get_char_width ();
 		public int get_child_exit_status ();
 		public long get_column_count ();
+		public unowned string get_current_directory_uri ();
+		public unowned string get_current_file_uri ();
 		public Vte.TerminalCursorBlinkMode get_cursor_blink_mode ();
 		public void get_cursor_position (out long column, out long row);
 		public Vte.TerminalCursorShape get_cursor_shape ();
@@ -129,6 +131,8 @@ namespace Vte {
 		public bool background_transparent { get; set; }
 		[NoAccessorMethod]
 		public Vte.TerminalEraseBinding backspace_binding { get; set; }
+		public string current_directory_uri { get; }
+		public string current_file_uri { get; }
 		public Vte.TerminalCursorBlinkMode cursor_blink_mode { get; set; }
 		public Vte.TerminalCursorShape cursor_shape { get; set; }
 		[NoAccessorMethod]
@@ -160,6 +164,8 @@ namespace Vte {
 		public virtual signal void contents_changed ();
 		[HasEmitter]
 		public virtual signal void copy_clipboard ();
+		public signal void current_directory_uri_changed ();
+		public signal void current_file_uri_changed ();
 		public virtual signal void cursor_moved ();
 		public virtual signal void decrease_font_size ();
 		public virtual signal void deiconify_window ();

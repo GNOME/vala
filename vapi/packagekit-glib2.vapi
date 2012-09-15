@@ -64,8 +64,6 @@ namespace Pk {
 		public Pk.Results download_packages ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, string directory, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_client_download_packages_async")]
 		public async void download_packages_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, string directory, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		[CCode (cname = "pk_client_error_quark")]
-		public static GLib.Quark error_quark ();
 		[CCode (cname = "pk_client_generic_finish")]
 		public Pk.Results generic_finish (GLib.AsyncResult res) throws GLib.Error;
 		[CCode (cname = "pk_client_get_background")]
@@ -107,7 +105,7 @@ namespace Pk {
 		[CCode (cname = "pk_client_get_packages_async")]
 		public async void get_packages_async (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (cname = "pk_client_get_progress")]
-		public Pk.Progress get_progress (string transaction_id, GLib.Cancellable? cancellable) throws GLib.Error;
+		public Pk.Progress get_progress (string transaction_id, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cname = "pk_client_get_progress_async")]
 		public async Pk.Progress get_progress_async (string transaction_id, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (cname = "pk_client_get_repo_list")]
@@ -127,13 +125,13 @@ namespace Pk {
 		[CCode (cname = "pk_client_get_updates_async")]
 		public async void get_updates_async (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (cname = "pk_client_install_files")]
-		public Pk.Results install_files (bool only_trusted, [CCode (array_length = false, array_null_terminated = true)] string[] files, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public Pk.Results install_files (Pk.Bitfield transaction_flags, [CCode (array_length = false, array_null_terminated = true)] string[] files, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_client_install_files_async")]
-		public async void install_files_async (bool only_trusted, [CCode (array_length = false, array_null_terminated = true)] string[] files, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public async void install_files_async (Pk.Bitfield transaction_flags, [CCode (array_length = false, array_null_terminated = true)] string[] files, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (cname = "pk_client_install_packages")]
-		public Pk.Results install_packages (bool only_trusted, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public Pk.Results install_packages (Pk.Bitfield transaction_flags, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_client_install_packages_async")]
-		public async void install_packages_async (bool only_trusted, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public async void install_packages_async (Pk.Bitfield transaction_flags, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (cname = "pk_client_install_signature")]
 		public Pk.Results install_signature (Pk.SigType type, string key_id, string package_id, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_client_install_signature_async")]
@@ -143,13 +141,13 @@ namespace Pk {
 		[CCode (cname = "pk_client_refresh_cache_async")]
 		public async void refresh_cache_async (bool force, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (cname = "pk_client_remove_packages")]
-		public Pk.Results remove_packages ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool allow_deps, bool autoremove, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public Pk.Results remove_packages (Pk.Bitfield transaction_flags, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool allow_deps, bool autoremove, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_client_remove_packages_async")]
-		public async void remove_packages_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool allow_deps, bool autoremove, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public async void remove_packages_async (Pk.Bitfield transaction_flags, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool allow_deps, bool autoremove, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (cname = "pk_client_repair_system")]
-		public Pk.Results repair_system (bool only_trusted, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public Pk.Results repair_system (Pk.Bitfield transaction_flags, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_client_repair_system_async")]
-		public async void repair_system_async (bool only_trusted, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public async void repair_system_async (Pk.Bitfield transaction_flags, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (cname = "pk_client_repo_enable")]
 		public Pk.Results repo_enable (string repo_id, bool enabled, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_client_repo_enable_async")]
@@ -162,10 +160,6 @@ namespace Pk {
 		public Pk.Results resolve (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] packages, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_client_resolve_async")]
 		public async void resolve_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] packages, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		[CCode (cname = "pk_client_rollback")]
-		public Pk.Results rollback (string transaction_id, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		[CCode (cname = "pk_client_rollback_async")]
-		public async void rollback_async (string transaction_id, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (cname = "pk_client_search_details")]
 		public Pk.Results search_details (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_client_search_details_async")]
@@ -190,36 +184,12 @@ namespace Pk {
 		public void set_interactive (bool interactive);
 		[CCode (cname = "pk_client_set_locale")]
 		public void set_locale (string locale);
-		[CCode (cname = "pk_client_simulate_install_files")]
-		public Pk.Results simulate_install_files ([CCode (array_length = false, array_null_terminated = true)] string[] files, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		[CCode (cname = "pk_client_simulate_install_files_async")]
-		public async void simulate_install_files_async ([CCode (array_length = false, array_null_terminated = true)] string[] files, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		[CCode (cname = "pk_client_simulate_install_packages")]
-		public Pk.Results simulate_install_packages ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		[CCode (cname = "pk_client_simulate_install_packages_async")]
-		public async void simulate_install_packages_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		[CCode (cname = "pk_client_simulate_remove_packages")]
-		public Pk.Results simulate_remove_packages ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool autoremove, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		[CCode (cname = "pk_client_simulate_remove_packages_async")]
-		public async void simulate_remove_packages_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool autoremove, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		[CCode (cname = "pk_client_simulate_repair_system")]
-		public Pk.Results simulate_repair_system (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		[CCode (cname = "pk_client_simulate_repair_system_async")]
-		public async void simulate_repair_system_async (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		[CCode (cname = "pk_client_simulate_update_packages")]
-		public Pk.Results simulate_update_packages ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		[CCode (cname = "pk_client_simulate_update_packages_async")]
-		public async void simulate_update_packages_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (cname = "pk_client_test")]
 		public static void test (void* user_data);
 		[CCode (cname = "pk_client_update_packages")]
-		public Pk.Results update_packages (bool only_trusted, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public Pk.Results update_packages (Pk.Bitfield transaction_flags, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_client_update_packages_async")]
-		public async void update_packages_async (bool only_trusted, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		[CCode (cname = "pk_client_update_system")]
-		public Pk.Results update_system (bool only_trusted, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		[CCode (cname = "pk_client_update_system_async")]
-		public async void update_system_async (bool only_trusted, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public async void update_packages_async (Pk.Bitfield transaction_flags, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (cname = "pk_client_upgrade_system")]
 		public Pk.Results upgrade_system (string distro_id, Pk.UpgradeKind upgrade_kind, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_client_upgrade_system_async")]
@@ -256,14 +226,12 @@ namespace Pk {
 		public async Pk.Authorize can_authorize_async (string action_id, GLib.Cancellable? cancellable) throws GLib.Error;
 		[NoWrapper]
 		public virtual void connection_changed (bool connected);
-		[CCode (cname = "pk_control_error_quark")]
-		public static GLib.Quark error_quark ();
 		[CCode (cname = "pk_control_get_daemon_state_async")]
 		public async string get_daemon_state_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (cname = "pk_control_get_network_state_async")]
 		public async Pk.Network get_network_state_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (cname = "pk_control_get_properties")]
-		public bool get_properties (GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool get_properties (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cname = "pk_control_get_properties_async")]
 		public async bool get_properties_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (cname = "pk_control_get_tid_async")]
@@ -271,25 +239,21 @@ namespace Pk {
 		[CCode (cname = "pk_control_get_time_since_action_async")]
 		public async uint get_time_since_action_async (Pk.Role role, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (array_length = false, array_null_terminated = true, cname = "pk_control_get_transaction_list")]
-		public string[] get_transaction_list (GLib.Cancellable? cancellable) throws GLib.Error;
+		public string[] get_transaction_list (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (array_length = false, array_null_terminated = true, cname = "pk_control_get_transaction_list_async")]
 		public async string[] get_transaction_list_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		[NoWrapper]
 		public virtual void network_state_changed ();
 		[CCode (cname = "pk_control_set_proxy")]
-		public bool set_proxy (string proxy_http, string proxy_ftp, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool set_proxy (string proxy_http, string proxy_ftp, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cname = "pk_control_set_proxy2")]
-		public bool set_proxy2 (string proxy_http, string proxy_https, string proxy_ftp, string proxy_socks, string no_proxy, string pac, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool set_proxy2 (string proxy_http, string proxy_https, string proxy_ftp, string proxy_socks, string no_proxy, string pac, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cname = "pk_control_set_proxy2_async")]
 		public async void set_proxy2_async (string proxy_http, string proxy_https, string proxy_ftp, string proxy_socks, string no_proxy, string pac, GLib.Cancellable? cancellable);
 		[CCode (cname = "pk_control_set_proxy_async")]
 		public async bool set_proxy_async (string proxy_http, string proxy_ftp, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (cname = "pk_control_set_root")]
-		public bool set_root (string root, GLib.Cancellable? cancellable) throws GLib.Error;
-		[CCode (cname = "pk_control_set_root_async")]
-		public async bool set_root_async (string root, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (cname = "pk_control_suggest_daemon_quit")]
-		public bool suggest_daemon_quit (GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool suggest_daemon_quit (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cname = "pk_control_suggest_daemon_quit_async")]
 		public async bool suggest_daemon_quit_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (cname = "pk_control_test")]
@@ -310,8 +274,9 @@ namespace Pk {
 		public uint64 groups { get; set; }
 		[NoAccessorMethod]
 		public virtual bool locked { get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public string mime_types { owned get; set; }
+		public string[] mime_types { owned get; set; }
 		[NoAccessorMethod]
 		public uint network_state { get; set; }
 		[NoAccessorMethod]
@@ -332,11 +297,11 @@ namespace Pk {
 		[CCode (cname = "pk_desktop_new", has_construct_function = false)]
 		public Desktop ();
 		[CCode (cname = "pk_desktop_get_files_for_package")]
-		public GLib.GenericArray<void*> get_files_for_package (string package) throws GLib.Error;
+		public GLib.GenericArray<weak void*> get_files_for_package (string package) throws GLib.Error;
 		[CCode (cname = "pk_desktop_get_package_for_file")]
 		public string get_package_for_file (string filename) throws GLib.Error;
 		[CCode (cname = "pk_desktop_get_shown_for_package")]
-		public GLib.GenericArray<void*> get_shown_for_package (string package) throws GLib.Error;
+		public GLib.GenericArray<weak void*> get_shown_for_package (string package) throws GLib.Error;
 		[CCode (cname = "pk_desktop_open_database")]
 		public bool open_database () throws GLib.Error;
 		[CCode (cname = "pk_desktop_test")]
@@ -363,10 +328,6 @@ namespace Pk {
 	public class DistroUpgrade : Pk.Source {
 		[CCode (cname = "pk_distro_upgrade_new", has_construct_function = false)]
 		public DistroUpgrade ();
-		[CCode (cname = "pk_distro_upgrade_enum_from_string")]
-		public static Pk.DistroUpgradeEnum enum_from_string (string upgrade);
-		[CCode (cname = "pk_distro_upgrade_enum_to_string")]
-		public static unowned string enum_to_string (Pk.DistroUpgradeEnum upgrade);
 		[CCode (cname = "pk_distro_upgrade_get_id")]
 		public unowned string get_id ();
 		[CCode (cname = "pk_distro_upgrade_get_state")]
@@ -384,10 +345,6 @@ namespace Pk {
 	public class Error : Pk.Source {
 		[CCode (cname = "pk_error_new", has_construct_function = false)]
 		public Error ();
-		[CCode (cname = "pk_error_enum_from_string")]
-		public static Pk.ErrorEnum enum_from_string (string code);
-		[CCode (cname = "pk_error_enum_to_string")]
-		public static unowned string enum_to_string (Pk.ErrorEnum code);
 		[CCode (cname = "pk_error_get_code")]
 		public Pk.ErrorEnum get_code ();
 		[CCode (cname = "pk_error_get_details")]
@@ -420,6 +377,23 @@ namespace Pk {
 		[NoAccessorMethod]
 		public string package_id { owned get; set; }
 	}
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", type_id = "pk_item_progress_get_type ()")]
+	public class ItemProgress : Pk.Source {
+		[CCode (cname = "pk_item_progress_new", has_construct_function = false)]
+		public ItemProgress ();
+		[CCode (cname = "pk_item_progress_get_package_id")]
+		public unowned string get_package_id ();
+		[CCode (cname = "pk_item_progress_get_percentage")]
+		public uint get_percentage ();
+		[CCode (cname = "pk_item_progress_get_status")]
+		public Pk.Status get_status ();
+		[NoAccessorMethod]
+		public string package_id { owned get; set; }
+		[NoAccessorMethod]
+		public uint percentage { get; set; }
+		[NoAccessorMethod]
+		public uint status { get; set; }
+	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", type_id = "pk_media_change_required_get_type ()")]
 	public class MediaChangeRequired : Pk.Source {
 		[CCode (cname = "pk_media_change_required_new", has_construct_function = false)]
@@ -435,10 +409,6 @@ namespace Pk {
 	public class Message : Pk.Source {
 		[CCode (cname = "pk_message_new", has_construct_function = false)]
 		public Message ();
-		[CCode (cname = "pk_message_enum_from_string")]
-		public static Pk.MessageEnum enum_from_string (string message);
-		[CCode (cname = "pk_message_enum_to_string")]
-		public static unowned string enum_to_string (Pk.MessageEnum message);
 		[CCode (cname = "pk_message_get_details")]
 		public unowned string get_details ();
 		[CCode (cname = "pk_message_get_kind")]
@@ -520,12 +490,14 @@ namespace Pk {
 		public uint64 size { get; set; }
 		[NoAccessorMethod]
 		public string summary { owned get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public string update_bugzilla_url { owned get; set; }
+		public string[] update_bugzilla_urls { owned get; set; }
 		[NoAccessorMethod]
 		public string update_changelog { owned get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public string update_cve_url { owned get; set; }
+		public string[] update_cve_urls { owned get; set; }
 		[NoAccessorMethod]
 		public string update_issued { owned get; set; }
 		[NoAccessorMethod]
@@ -540,8 +512,9 @@ namespace Pk {
 		public string update_updated { owned get; set; }
 		[NoAccessorMethod]
 		public string update_updates { owned get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public string update_vendor_url { owned get; set; }
+		public string[] update_vendor_urls { owned get; set; }
 		[NoAccessorMethod]
 		public string url { owned get; set; }
 		public virtual signal void changed ();
@@ -554,6 +527,8 @@ namespace Pk {
 		public bool add_package (Pk.Package package);
 		[CCode (cname = "pk_package_sack_add_package_by_id")]
 		public bool add_package_by_id (string package_id) throws GLib.Error;
+		[CCode (cname = "pk_package_sack_add_packages_from_file")]
+		public bool add_packages_from_file (GLib.File file) throws GLib.Error;
 		[NoWrapper]
 		public virtual void changed ();
 		[CCode (cname = "pk_package_sack_clear")]
@@ -565,9 +540,9 @@ namespace Pk {
 		[CCode (cname = "pk_package_sack_find_by_id")]
 		public Pk.Package find_by_id (string package_id);
 		[CCode (cname = "pk_package_sack_get_array")]
-		public GLib.GenericArray<weak void*> get_array ();
+		public GLib.GenericArray<weak Pk.Package> get_array ();
 		[CCode (cname = "pk_package_sack_get_details")]
-		public bool get_details (GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool get_details (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cname = "pk_package_sack_get_details_async")]
 		public async void get_details_async (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (array_length = false, array_null_terminated = true, cname = "pk_package_sack_get_ids")]
@@ -577,7 +552,7 @@ namespace Pk {
 		[CCode (cname = "pk_package_sack_get_total_bytes")]
 		public uint64 get_total_bytes ();
 		[CCode (cname = "pk_package_sack_get_update_detail")]
-		public bool get_update_detail (GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool get_update_detail (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cname = "pk_package_sack_get_update_detail_async")]
 		public async void get_update_detail_async (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (cname = "pk_package_sack_merge_generic_finish")]
@@ -589,7 +564,7 @@ namespace Pk {
 		[CCode (cname = "pk_package_sack_remove_package_by_id")]
 		public bool remove_package_by_id (string package_id);
 		[CCode (cname = "pk_package_sack_resolve")]
-		public bool resolve (GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool resolve (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cname = "pk_package_sack_resolve_async")]
 		public async void resolve_async (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (cname = "pk_package_sack_sort")]
@@ -609,10 +584,12 @@ namespace Pk {
 		public bool set_allow_cancel (bool allow_cancel);
 		[CCode (cname = "pk_progress_set_caller_active")]
 		public bool set_caller_active (bool caller_active);
+		[CCode (cname = "pk_progress_set_download_size_remaining")]
+		public bool set_download_size_remaining (uint64 download_size_remaining);
 		[CCode (cname = "pk_progress_set_elapsed_time")]
 		public bool set_elapsed_time (uint elapsed_time);
 		[CCode (cname = "pk_progress_set_item_progress")]
-		public bool set_item_progress (string package_id, uint percentage);
+		public bool set_item_progress (Pk.ItemProgress item_progress);
 		[CCode (cname = "pk_progress_set_package")]
 		public bool set_package (Pk.Package package);
 		[CCode (cname = "pk_progress_set_package_id")]
@@ -627,8 +604,6 @@ namespace Pk {
 		public bool set_speed (uint speed);
 		[CCode (cname = "pk_progress_set_status")]
 		public bool set_status (Pk.Status status);
-		[CCode (cname = "pk_progress_set_subpercentage")]
-		public bool set_subpercentage (int subpercentage);
 		[CCode (cname = "pk_progress_set_transaction_id")]
 		public bool set_transaction_id (string package_id);
 		[CCode (cname = "pk_progress_set_uid")]
@@ -640,11 +615,11 @@ namespace Pk {
 		[NoAccessorMethod]
 		public bool caller_active { get; set; }
 		[NoAccessorMethod]
+		public uint download_size_remaining { get; set; }
+		[NoAccessorMethod]
 		public uint elapsed_time { get; set; }
 		[NoAccessorMethod]
-		public string item_progress_id { owned get; set; }
-		[NoAccessorMethod]
-		public int item_progress_value { get; set; }
+		public Pk.ItemProgress item_progress { owned get; set; }
 		[NoAccessorMethod]
 		public Pk.Package package { owned get; set; }
 		[NoAccessorMethod]
@@ -659,8 +634,6 @@ namespace Pk {
 		public uint speed { get; set; }
 		[NoAccessorMethod]
 		public uint status { get; set; }
-		[NoAccessorMethod]
-		public int subpercentage { get; set; }
 		[NoAccessorMethod]
 		public string transaction_id { owned get; set; }
 		[NoAccessorMethod]
@@ -756,7 +729,7 @@ namespace Pk {
 		[CCode (cname = "pk_results_get_message_array")]
 		public GLib.GenericArray<weak Pk.Message> get_message_array ();
 		[CCode (cname = "pk_results_get_package_array")]
-		public GLib.GenericArray<Pk.Package> get_package_array ();
+		public GLib.GenericArray<weak Pk.Package> get_package_array ();
 		[CCode (cname = "pk_results_get_package_sack")]
 		public Pk.PackageSack get_package_sack ();
 		[CCode (cname = "pk_results_get_repo_detail_array")]
@@ -767,8 +740,12 @@ namespace Pk {
 		public GLib.GenericArray<weak Pk.RequireRestart> get_require_restart_array ();
 		[CCode (cname = "pk_results_get_require_restart_worst")]
 		public Pk.Restart get_require_restart_worst ();
+		[CCode (cname = "pk_results_get_role")]
+		public Pk.Role get_role ();
 		[CCode (cname = "pk_results_get_transaction_array")]
 		public GLib.GenericArray<weak Pk.TransactionPast> get_transaction_array ();
+		[CCode (cname = "pk_results_get_transaction_flags")]
+		public Pk.Bitfield get_transaction_flags ();
 		[CCode (cname = "pk_results_get_update_detail_array")]
 		public GLib.GenericArray<weak Pk.UpdateDetail> get_update_detail_array ();
 		[CCode (cname = "pk_results_set_error_code")]
@@ -783,6 +760,8 @@ namespace Pk {
 		public Pk.Progress progress { owned get; set; }
 		[NoAccessorMethod]
 		public uint role { get; set; }
+		[NoAccessorMethod]
+		public uint64 transaction_flags { get; set; }
 	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", type_id = "pk_service_pack_get_type ()")]
 	public class ServicePack : GLib.Object {
@@ -816,62 +795,106 @@ namespace Pk {
 		public Task ();
 		[CCode (cname = "pk_task_download_packages_async")]
 		public async void download_packages_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, string directory, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_download_packages_sync")]
+		public Pk.Results download_packages_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, string directory, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[NoWrapper]
 		public virtual void eula_question (uint request, Pk.Results results);
 		[CCode (cname = "pk_task_generic_finish")]
 		public Pk.Results generic_finish (GLib.AsyncResult res) throws GLib.Error;
 		[CCode (cname = "pk_task_get_categories_async")]
 		public async void get_categories_async (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_get_categories_sync")]
+		public Pk.Results get_categories_sync (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_get_depends_async")]
 		public async void get_depends_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_get_depends_sync")]
+		public Pk.Results get_depends_sync (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_get_details_async")]
 		public async void get_details_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_get_details_sync")]
+		public Pk.Results get_details_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_get_files_async")]
 		public async void get_files_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_get_files_sync")]
+		public Pk.Results get_files_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_get_interactive")]
 		public bool get_interactive ();
+		[CCode (cname = "pk_task_get_only_download")]
+		public bool get_only_download ();
 		[CCode (cname = "pk_task_get_packages_async")]
 		public async void get_packages_async (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_get_packages_sync")]
+		public Pk.Results get_packages_sync (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_get_repo_list_async")]
 		public async void get_repo_list_async (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_get_repo_list_sync")]
+		public Pk.Results get_repo_list_sync (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_get_requires_async")]
 		public async void get_requires_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_get_requires_sync")]
+		public Pk.Results get_requires_sync (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_get_simulate")]
 		public bool get_simulate ();
 		[CCode (cname = "pk_task_get_update_detail_async")]
 		public async void get_update_detail_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_get_update_detail_sync")]
+		public Pk.Results get_update_detail_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_get_updates_async")]
 		public async void get_updates_async (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_get_updates_sync")]
+		public Pk.Results get_updates_sync (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_install_files_async")]
 		public async void install_files_async ([CCode (array_length = false, array_null_terminated = true)] string[] files, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_install_files_sync")]
+		public Pk.Results install_files_sync ([CCode (array_length = false, array_null_terminated = true)] string[] files, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_install_packages_async")]
 		public async void install_packages_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_install_packages_sync")]
+		public Pk.Results install_packages_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[NoWrapper]
 		public virtual void key_question (uint request, Pk.Results results);
 		[NoWrapper]
 		public virtual void media_change_question (uint request, Pk.Results results);
 		[CCode (cname = "pk_task_refresh_cache_async")]
 		public async void refresh_cache_async (bool force, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_refresh_cache_sync")]
+		public Pk.Results refresh_cache_sync (bool force, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_remove_packages_async")]
 		public async void remove_packages_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool allow_deps, bool autoremove, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_remove_packages_sync")]
+		public Pk.Results remove_packages_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool allow_deps, bool autoremove, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_repair_system_async")]
 		public async void repair_system_async (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_repair_system_sync")]
+		public Pk.Results repair_system_sync (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_repo_enable_async")]
 		public async void repo_enable_async (string repo_id, bool enabled, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_repo_enable_sync")]
+		public Pk.Results repo_enable_sync (string repo_id, bool enabled, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_resolve_async")]
 		public async void resolve_async (Pk.Bitfield filters, string packages, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		[CCode (cname = "pk_task_rollback_async")]
-		public async void rollback_async (string transaction_id, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_resolve_sync")]
+		public Pk.Results resolve_sync (Pk.Bitfield filters, string packages, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_search_details_async")]
 		public async void search_details_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_search_details_sync")]
+		public Pk.Results search_details_sync (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_search_files_async")]
 		public async void search_files_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_search_files_sync")]
+		public Pk.Results search_files_sync (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_search_groups_async")]
 		public async void search_groups_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_search_groups_sync")]
+		public Pk.Results search_groups_sync (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_search_names_async")]
 		public async void search_names_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_search_names_sync")]
+		public Pk.Results search_names_sync (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_set_interactive")]
 		public void set_interactive (bool interactive);
+		[CCode (cname = "pk_task_set_only_download")]
+		public void set_only_download (bool only_download);
 		[CCode (cname = "pk_task_set_simulate")]
 		public void set_simulate (bool simulate);
 		[NoWrapper]
@@ -882,16 +905,20 @@ namespace Pk {
 		public virtual void untrusted_question (uint request, Pk.Results results);
 		[CCode (cname = "pk_task_update_packages_async")]
 		public async void update_packages_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		[CCode (cname = "pk_task_update_system_async")]
-		public async void update_system_async (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_update_packages_sync")]
+		public Pk.Results update_packages_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (cname = "pk_task_user_accepted")]
 		public bool user_accepted (uint request);
 		[CCode (cname = "pk_task_user_declined")]
 		public bool user_declined (uint request);
 		[CCode (cname = "pk_task_what_provides_async")]
 		public async void what_provides_async (Pk.Bitfield filters, Pk.Provides provides, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		[CCode (cname = "pk_task_what_provides_sync")]
+		public Pk.Results what_provides_sync (Pk.Bitfield filters, Pk.Provides provides, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[NoAccessorMethod]
 		public bool interactive { get; set; }
+		[NoAccessorMethod]
+		public bool only_download { get; set; }
 		[NoAccessorMethod]
 		public bool simulate { get; set; }
 	}
@@ -931,16 +958,19 @@ namespace Pk {
 	public class UpdateDetail : Pk.Source {
 		[CCode (cname = "pk_update_detail_new", has_construct_function = false)]
 		public UpdateDetail ();
+		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public string bugzilla_url { owned get; set; }
+		public string[] bugzilla_urls { owned get; set; }
 		[NoAccessorMethod]
 		public string changelog { owned get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public string cve_url { owned get; set; }
+		public string[] cve_urls { owned get; set; }
 		[NoAccessorMethod]
 		public string issued { owned get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public string obsoletes { owned get; set; }
+		public string[] obsoletes { owned get; set; }
 		[NoAccessorMethod]
 		public string package_id { owned get; set; }
 		[NoAccessorMethod]
@@ -951,10 +981,12 @@ namespace Pk {
 		public string update_text { owned get; set; }
 		[NoAccessorMethod]
 		public string updated { owned get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public string updates { owned get; set; }
+		public string[] updates { owned get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public string vendor_url { owned get; set; }
+		public string[] vendor_urls { owned get; set; }
 	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	[SimpleType]
@@ -965,7 +997,7 @@ namespace Pk {
 		public uint value;
 		public weak global::string string;
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkAuthorizeEnum", cprefix = "PK_AUTHORIZE_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkAuthorizeEnum", cprefix = "PK_AUTHORIZE_ENUM_", type_id = "pk_authorize_enum_get_type ()")]
 	[GIR (name = "AuthorizeEnum")]
 	public enum Authorize {
 		UNKNOWN,
@@ -974,33 +1006,14 @@ namespace Pk {
 		INTERACTIVE,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_CLIENT_ERROR_")]
-	public enum ClientError {
-		FAILED,
-		FAILED_AUTH,
-		NO_TID,
-		ALREADY_TID,
-		ROLE_UNKNOWN,
-		CANNOT_START_DAEMON,
-		INVALID_INPUT,
-		INVALID_FILE,
-		NOT_SUPPORTED,
-		DECLINED_SIMULATION,
-		LAST
-	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_CONTROL_ERROR_")]
-	public enum ControlError {
-		FAILED,
-		CANNOT_START_DAEMON
-	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_DISTRO_UPGRADE_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_DISTRO_UPGRADE_ENUM_", type_id = "pk_distro_upgrade_enum_get_type ()")]
 	public enum DistroUpgradeEnum {
 		UNKNOWN,
 		STABLE,
 		UNSTABLE,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_ERROR_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_ERROR_ENUM_", type_id = "pk_error_enum_get_type ()")]
 	public enum ErrorEnum {
 		UNKNOWN,
 		OOM,
@@ -1068,9 +1081,11 @@ namespace Pk {
 		INSTALL_ROOT_INVALID,
 		CANNOT_FETCH_SOURCES,
 		CANCELLED_PRIORITY,
+		UNFINISHED_TRANSACTION,
+		LOCK_REQUIRED,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkExitEnum", cprefix = "PK_EXIT_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkExitEnum", cprefix = "PK_EXIT_ENUM_", type_id = "pk_exit_enum_get_type ()")]
 	[GIR (name = "ExitEnum")]
 	public enum Exit {
 		UNKNOWN,
@@ -1084,9 +1099,10 @@ namespace Pk {
 		NEED_UNTRUSTED,
 		CANCELLED_PRIORITY,
 		SKIP_TRANSACTION,
+		REPAIR_REQUIRED,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkFilterEnum", cprefix = "PK_FILTER_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkFilterEnum", cprefix = "PK_FILTER_ENUM_", type_id = "pk_filter_enum_get_type ()")]
 	[GIR (name = "FilterEnum")]
 	public enum Filter {
 		UNKNOWN,
@@ -1117,7 +1133,7 @@ namespace Pk {
 		NOT_APPLICATION,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkGroupEnum", cprefix = "PK_GROUP_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkGroupEnum", cprefix = "PK_GROUP_ENUM_", type_id = "pk_group_enum_get_type ()")]
 	[GIR (name = "GroupEnum")]
 	public enum Group {
 		UNKNOWN,
@@ -1157,7 +1173,7 @@ namespace Pk {
 		NEWEST,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkInfoEnum", cprefix = "PK_INFO_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkInfoEnum", cprefix = "PK_INFO_ENUM_", type_id = "pk_info_enum_get_type ()")]
 	[GIR (name = "InfoEnum")]
 	public enum Info {
 		UNKNOWN,
@@ -1187,7 +1203,7 @@ namespace Pk {
 		TRUSTED,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkMediaTypeEnum", cprefix = "PK_MEDIA_TYPE_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkMediaTypeEnum", cprefix = "PK_MEDIA_TYPE_ENUM_", type_id = "pk_media_type_enum_get_type ()")]
 	[GIR (name = "MediaTypeEnum")]
 	public enum MediaType {
 		UNKNOWN,
@@ -1196,7 +1212,7 @@ namespace Pk {
 		DISC,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_MESSAGE_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_MESSAGE_ENUM_", type_id = "pk_message_enum_get_type ()")]
 	public enum MessageEnum {
 		UNKNOWN,
 		BROKEN_MIRROR,
@@ -1206,7 +1222,6 @@ namespace Pk {
 		BACKEND_ERROR,
 		DAEMON_ERROR,
 		CACHE_BEING_REBUILT,
-		UNTRUSTED_PACKAGE,
 		NEWER_PACKAGE_EXISTS,
 		COULD_NOT_FIND_PACKAGE,
 		CONFIG_FILES_CHANGED,
@@ -1217,7 +1232,7 @@ namespace Pk {
 		OTHER_UPDATES_HELD_BACK,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkNetworkEnum", cprefix = "PK_NETWORK_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkNetworkEnum", cprefix = "PK_NETWORK_ENUM_", type_id = "pk_network_enum_get_type ()")]
 	[GIR (name = "NetworkEnum")]
 	public enum Network {
 		UNKNOWN,
@@ -1228,7 +1243,7 @@ namespace Pk {
 		MOBILE,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_PACKAGE_SACK_SORT_TYPE_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_PACKAGE_SACK_SORT_TYPE_", type_id = "pk_package_sack_sort_type_get_type ()")]
 	public enum PackageSackSortType {
 		NAME,
 		INFO,
@@ -1236,12 +1251,11 @@ namespace Pk {
 		SUMMARY,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_PROGRESS_TYPE_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_PROGRESS_TYPE_", type_id = "pk_progress_type_get_type ()")]
 	public enum ProgressType {
 		PACKAGE_ID,
 		TRANSACTION_ID,
 		PERCENTAGE,
-		SUBPERCENTAGE,
 		ALLOW_CANCEL,
 		STATUS,
 		ROLE,
@@ -1249,12 +1263,13 @@ namespace Pk {
 		ELAPSED_TIME,
 		REMAINING_TIME,
 		SPEED,
+		DOWNLOAD_SIZE_REMAINING,
 		UID,
 		PACKAGE,
 		ITEM_PROGRESS,
 		INVALID
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkProvidesEnum", cprefix = "PK_PROVIDES_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkProvidesEnum", cprefix = "PK_PROVIDES_ENUM_", type_id = "pk_provides_enum_get_type ()")]
 	[GIR (name = "ProvidesEnum")]
 	public enum Provides {
 		UNKNOWN,
@@ -1268,9 +1283,10 @@ namespace Pk {
 		PLASMA_SERVICE,
 		SHARED_LIB,
 		PYTHON,
+		LANGUAGE_SUPPORT,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkRestartEnum", cprefix = "PK_RESTART_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkRestartEnum", cprefix = "PK_RESTART_ENUM_", type_id = "pk_restart_enum_get_type ()")]
 	[GIR (name = "RestartEnum")]
 	public enum Restart {
 		UNKNOWN,
@@ -1282,7 +1298,7 @@ namespace Pk {
 		SECURITY_SYSTEM,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkRoleEnum", cprefix = "PK_ROLE_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkRoleEnum", cprefix = "PK_ROLE_ENUM_", type_id = "pk_role_enum_get_type ()")]
 	[GIR (name = "RoleEnum")]
 	public enum Role {
 		UNKNOWN,
@@ -1303,36 +1319,29 @@ namespace Pk {
 		REPO_ENABLE,
 		REPO_SET_DATA,
 		RESOLVE,
-		ROLLBACK,
 		SEARCH_DETAILS,
 		SEARCH_FILE,
 		SEARCH_GROUP,
 		SEARCH_NAME,
 		UPDATE_PACKAGES,
-		UPDATE_SYSTEM,
 		WHAT_PROVIDES,
 		ACCEPT_EULA,
 		DOWNLOAD_PACKAGES,
 		GET_DISTRO_UPGRADES,
 		GET_CATEGORIES,
 		GET_OLD_TRANSACTIONS,
-		SIMULATE_INSTALL_FILES,
-		SIMULATE_INSTALL_PACKAGES,
-		SIMULATE_REMOVE_PACKAGES,
-		SIMULATE_UPDATE_PACKAGES,
 		UPGRADE_SYSTEM,
 		REPAIR_SYSTEM,
-		SIMULATE_REPAIR_SYSTEM,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkSigTypeEnum", cprefix = "PK_SIGTYPE_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkSigTypeEnum", cprefix = "PK_SIGTYPE_ENUM_", type_id = "pk_sig_type_enum_get_type ()")]
 	[GIR (name = "SigTypeEnum")]
 	public enum SigType {
 		UNKNOWN,
 		GPG,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkStatusEnum", cprefix = "PK_STATUS_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkStatusEnum", cprefix = "PK_STATUS_ENUM_", type_id = "pk_status_enum_get_type ()")]
 	[GIR (name = "StatusEnum")]
 	public enum Status {
 		UNKNOWN,
@@ -1350,7 +1359,6 @@ namespace Pk {
 		OBSOLETE,
 		DEP_RESOLVE,
 		SIG_CHECK,
-		ROLLBACK,
 		TEST_COMMIT,
 		COMMIT,
 		REQUEST,
@@ -1374,7 +1382,16 @@ namespace Pk {
 		COPY_FILES,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkUpdateStateEnum", cprefix = "PK_UPDATE_STATE_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkTransactionFlagEnum", cprefix = "PK_TRANSACTION_FLAG_ENUM_", type_id = "pk_transaction_flag_enum_get_type ()")]
+	[GIR (name = "TransactionFlagEnum")]
+	public enum TransactionFlag {
+		NONE,
+		ONLY_TRUSTED,
+		SIMULATE,
+		ONLY_DOWNLOAD,
+		LAST
+	}
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkUpdateStateEnum", cprefix = "PK_UPDATE_STATE_ENUM_", type_id = "pk_update_state_enum_get_type ()")]
 	[GIR (name = "UpdateStateEnum")]
 	public enum UpdateState {
 		UNKNOWN,
@@ -1383,7 +1400,7 @@ namespace Pk {
 		TESTING,
 		LAST
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkUpgradeKindEnum", cprefix = "PK_UPGRADE_KIND_ENUM_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkUpgradeKindEnum", cprefix = "PK_UPGRADE_KIND_ENUM_", type_id = "pk_upgrade_kind_enum_get_type ()")]
 	[GIR (name = "UpgradeKindEnum")]
 	public enum UpgradeKind {
 		UNKNOWN,
@@ -1396,20 +1413,33 @@ namespace Pk {
 	public errordomain CatalogError {
 		FAILED
 	}
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_CLIENT_ERROR_")]
+	public errordomain ClientError {
+		FAILED,
+		FAILED_AUTH,
+		NO_TID,
+		ALREADY_TID,
+		ROLE_UNKNOWN,
+		CANNOT_START_DAEMON,
+		INVALID_INPUT,
+		INVALID_FILE,
+		NOT_SUPPORTED,
+		DECLINED_SIMULATION,
+		LAST
+	}
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_CONTROL_ERROR_")]
+	public errordomain ControlError {
+		FAILED,
+		CANNOT_START_DAEMON
+	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_SERVICE_PACK_ERROR_")]
 	public errordomain ServicePackError {
-		[CCode (cname = "PK_SERVICE_PACK_ERROR_FAILED_SETUP")]
-		FAILEDSETUP,
-		[CCode (cname = "PK_SERVICE_PACK_ERROR_FAILED_DOWNLOAD")]
-		FAILEDDOWNLOAD,
-		[CCode (cname = "PK_SERVICE_PACK_ERROR_FAILED_EXTRACTION")]
-		FAILEDEXTRACTION,
-		[CCode (cname = "PK_SERVICE_PACK_ERROR_FAILED_CREATE")]
-		FAILEDCREATE,
-		[CCode (cname = "PK_SERVICE_PACK_ERROR_NOTHING_TO_DO")]
-		NOTHINGTODO,
-		[CCode (cname = "PK_SERVICE_PACK_ERROR_NOT_COMPATIBLE")]
-		NOTCOMPATIBLE
+		FAILED_SETUP,
+		FAILED_DOWNLOAD,
+		FAILED_EXTRACTION,
+		FAILED_CREATE,
+		NOTHING_TO_DO,
+		NOT_COMPATIBLE
 	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", instance_pos = 1.9)]
 	public delegate bool PackageSackFilterFunc (Pk.Package package);
@@ -1449,6 +1479,8 @@ namespace Pk {
 	public const string SERVICE_PACK_FILE_EXTENSION;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PK_SERVICE_PACK_GROUP_NAME")]
 	public const string SERVICE_PACK_GROUP_NAME;
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PK_SYSTEM_PACKAGE_CACHE_FILENAME")]
+	public const string SYSTEM_PACKAGE_CACHE_FILENAME;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PK_SYSTEM_PACKAGE_LIST_FILENAME")]
 	public const string SYSTEM_PACKAGE_LIST_FILENAME;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_authorize_type_enum_from_string")]
@@ -1459,20 +1491,32 @@ namespace Pk {
 	public static void bitfield_test (void* user_data);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_catalog_error_quark")]
 	public static GLib.Quark catalog_error_quark ();
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_client_error_quark")]
+	public static GLib.Quark client_error_quark ();
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_common_test")]
 	public static void common_test (void* user_data);
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_control_error_quark")]
+	public static GLib.Quark control_error_quark ();
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_debug_add_log_domain")]
 	public static void debug_add_log_domain (string log_domain);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_debug_is_verbose")]
 	public static bool debug_is_verbose ();
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_debug_set_verbose")]
 	public static void debug_set_verbose (bool verbose);
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_distro_upgrade_enum_from_string")]
+	public static Pk.DistroUpgradeEnum distro_upgrade_enum_from_string (string upgrade);
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_distro_upgrade_enum_to_string")]
+	public static unowned string distro_upgrade_enum_to_string (Pk.DistroUpgradeEnum upgrade);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_enum_find_string")]
 	public static unowned string enum_find_string (Pk.EnumMatch table, uint value);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_enum_find_value")]
 	public static uint enum_find_value (Pk.EnumMatch table, string string);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_enum_test")]
 	public static void enum_test (void* user_data);
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_error_enum_from_string")]
+	public static Pk.ErrorEnum error_enum_from_string (string code);
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_error_enum_to_string")]
+	public static unowned string error_enum_to_string (Pk.ErrorEnum code);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_exit_enum_from_string")]
 	public static Pk.Exit exit_enum_from_string (string exit);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_exit_enum_to_string")]
@@ -1583,6 +1627,10 @@ namespace Pk {
 	public static Pk.MediaType media_type_enum_from_string (string media_type);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_media_type_enum_to_string")]
 	public static unowned string media_type_enum_to_string (Pk.MediaType media_type);
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_message_enum_from_string")]
+	public static Pk.MessageEnum message_enum_from_string (string message);
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_message_enum_to_string")]
+	public static unowned string message_enum_to_string (Pk.MessageEnum message);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_network_enum_from_string")]
 	public static Pk.Network network_enum_from_string (string network);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_network_enum_to_string")]
@@ -1619,6 +1667,14 @@ namespace Pk {
 	public static unowned string status_enum_to_localised_text (Pk.Status status);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_status_enum_to_string")]
 	public static unowned string status_enum_to_string (Pk.Status status);
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_transaction_flag_bitfield_from_string")]
+	public static Pk.Bitfield transaction_flag_bitfield_from_string (string transaction_flags);
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_transaction_flag_bitfield_to_string")]
+	public static string transaction_flag_bitfield_to_string (Pk.Bitfield transaction_flags);
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_transaction_flag_enum_from_string")]
+	public static Pk.TransactionFlag transaction_flag_enum_from_string (string transaction_flag);
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_transaction_flag_enum_to_string")]
+	public static unowned string transaction_flag_enum_to_string (Pk.TransactionFlag transaction_flag);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_update_state_enum_from_string")]
 	public static Pk.UpdateState update_state_enum_from_string (string update_state);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_update_state_enum_to_string")]
