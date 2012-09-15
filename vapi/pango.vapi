@@ -48,7 +48,7 @@ namespace Pango {
 	public class AttrInt : Pango.Attribute {
 		public int value;
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", free_function = "pango_attr_iterator_destroy")]
 	[Compact]
 	public class AttrIterator {
 		public Pango.AttrIterator copy ();

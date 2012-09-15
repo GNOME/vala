@@ -23,6 +23,11 @@ namespace Pango {
 		public AttrFontDesc (Pango.FontDescription desc);
 	}
 
+	[CCode (cheader_filename = "pango/pango.h", free_function = "pango_attr_iterator_destroy")]
+	[Compact]
+	public class AttrIterator {
+	}
+
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Compact]
 	public class AttrLanguage {
