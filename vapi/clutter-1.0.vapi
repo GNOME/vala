@@ -6087,7 +6087,7 @@ namespace Clutter {
 	public class ListModel : Clutter.Model, Clutter.Scriptable {
 		[CCode (has_construct_function = false, type = "ClutterModel*")]
 		public ListModel (uint n_columns, ...);
-		[CCode (has_construct_function = false, type = "ClutterModel*")]
+		[CCode (cname = "clutter_list_model_newv", has_construct_function = false, type = "ClutterModel*")]
 		public ListModel.newv ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5, array_length_type = "guint")] GLib.Type[] types, [CCode (array_length_cname = "n_columns", array_length_pos = 0.5, array_length_type = "guint")] string[] names);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_margin_get_type ()")]

@@ -52,7 +52,7 @@ namespace Peas {
 		public virtual bool call (string method_name, GI.Argument args);
 		public void @foreach (Peas.ExtensionSetForeachFunc func);
 		public unowned Peas.Extension get_extension (Peas.PluginInfo info);
-		[CCode (has_construct_function = false)]
+		[CCode (cname = "peas_extension_set_newv", has_construct_function = false)]
 		public ExtensionSet.newv (Peas.Engine? engine, GLib.Type exten_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 2.5, array_length_type = "guint")] GLib.Parameter[] parameters);
 		public void* construct_properties { construct; }
 		[NoAccessorMethod]

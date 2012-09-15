@@ -2795,6 +2795,10 @@ public class Vala.GirParser : CodeVisitor {
 			var m = new CreationMethod (null, name, current.source_reference);
 			m.has_construct_function = false;
 
+			if (name != null && !current.name.has_prefix ("new_")) {
+				m.set_attribute_string ("CCode", "cname", current.girdata["c:identifier"]);
+			}
+
 			string parent_ctype = null;
 			if (current.parent.symbol is Class) {
 				parent_ctype = current.parent.get_cname ();
