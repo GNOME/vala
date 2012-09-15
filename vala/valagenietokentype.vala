@@ -1,6 +1,6 @@
 /* valagenietokentype.vala
  *
- * Copyright (C) 2008  Jamie McCracken, Jürg Billeter
+ * Copyright (C) 2008-2012  Jamie McCracken, Jürg Billeter
  * Based on code by Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
@@ -137,12 +137,13 @@ public enum Vala.Genie.TokenType {
 	PUBLIC,
 	RAISE,
 	RAISES,
-	REAL_LITERAL,
 	READONLY,
+	REAL_LITERAL,
 	REF,
 	REGEX_LITERAL,
 	REQUIRES,
 	RETURN,
+	SEALED,
 	SEMICOLON,
 	SET,
 	SIZEOF,
@@ -253,7 +254,7 @@ public enum Vala.Genie.TokenType {
 		case NULL: return "`null'";
 		case OF: return "`of'";		
 		case OUT: return "`out'";
-		case OP_AND: return "`&&'";
+		case OP_AND: return "`and'";
 		case OP_DEC: return "`--'";
 		case OP_EQ: return "`=='";
 		case OP_GE: return "`>='";
@@ -263,7 +264,7 @@ public enum Vala.Genie.TokenType {
 		case OP_LT: return "`<'";
 		case OP_NE: return "`!='";
 		case OP_NEG: return "`!'";
-		case OP_OR: return "`||'";
+		case OP_OR: return "`or'";
 		case OP_PTR: return "`->'";
 		case OP_SHIFT_LEFT: return "`<<'";
 		case OPEN_BRACE: return "`{'";
@@ -289,6 +290,7 @@ public enum Vala.Genie.TokenType {
 		case REGEX_LITERAL: return "regex literal";
 		case REQUIRES: return "`requires'";
 		case RETURN: return "`return'";
+		case SEALED: return "`sealed'";
 		case SEMICOLON: return "`;'";
 		case SET: return "`set'";
 		case SIZEOF: return "`sizeof'";

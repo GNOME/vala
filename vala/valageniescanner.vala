@@ -283,7 +283,7 @@ public class Vala.Genie.Scanner {
 		state_stack = null;
 	}
 
-	TokenType get_identifier_or_keyword (char* begin, int len) {
+	public static TokenType get_identifier_or_keyword (char* begin, int len) {
 		switch (len) {
 		case 2:
 			switch (begin[0]) {
@@ -538,6 +538,9 @@ public class Vala.Genie.Scanner {
 				break;
 			case 's':
 				switch (begin[1]) {
+				case 'e':
+					if (matches (begin, "sealed")) return TokenType.SEALED;
+					break;
 				case 'i':
 					if (matches (begin, "sizeof")) return TokenType.SIZEOF;
 					break;
@@ -736,7 +739,10 @@ public class Vala.Genie.Scanner {
 							break;
 						}
 					} else if (current[0] == '\n') {
-						break;
+						current++;
+						line++;
+						column = 1;
+						token_length_in_chars = 1;
 					} else {
 						unichar u = ((string) current).get_char_validated ((long) (end - current));
 						if (u != (unichar) (-1)) {
@@ -748,7 +754,7 @@ public class Vala.Genie.Scanner {
 						}
 					}
 				}
-				if (current >= end || current[0] == '\n') {
+				if (current >= end) {
 					Report.error (get_source_reference (token_length_in_chars), "syntax error, expected \"");
 					state_stack.length--;
 					return read_token (out token_begin, out token_end);
@@ -817,7 +823,7 @@ public class Vala.Genie.Scanner {
 		
 		/* handle automatic line continuations (when inside parens or braces) */
 		while (current < end && current[0] == '\n' && (open_parens_count > 0 || open_brace_count > 0)) {
-		    current++;
+			current++;
 			line++;
 			skip_space_tabs ();
 		}
@@ -941,7 +947,7 @@ public class Vala.Genie.Scanner {
 				}
 				type = TokenType.REAL_LITERAL;
 			} else if (current < end && current == begin + 1
-			           && begin[0] == '0' && begin[1] == 'x' && begin[2].isxdigit ()) {
+					   && begin[0] == '0' && begin[1] == 'x' && begin[2].isxdigit ()) {
 				// hexadecimal integer literal
 				current++;
 				while (current < end && current[0].isxdigit ()) {
@@ -1176,7 +1182,6 @@ public class Vala.Genie.Scanner {
 				case TokenType.COMMA:
 				case TokenType.MINUS:
 				case TokenType.OP_AND:
-				case TokenType.OP_DEC:
 				case TokenType.OP_EQ:
 				case TokenType.OP_GE:
 				case TokenType.OP_GT:
@@ -1222,7 +1227,7 @@ public class Vala.Genie.Scanner {
 					token_length_in_chars = 6;
 					current += 3;
 					while (current < end - 4) {
-						if (current[0] == '"' && current[1] == '"' && current[2] == '"') {
+						if (current[0] == '"' && current[1] == '"' && current[2] == '"' && current[3] != '"') {
 							break;
 						} else if (current[0] == '\n') {
 							current++;
@@ -1285,7 +1290,10 @@ public class Vala.Genie.Scanner {
 							break;
 						}
 					} else if (current[0] == '\n') {
-						break;
+						current++;
+						line++;
+						column = 1;
+						token_length_in_chars = 1;
 					} else {
 						unichar u = ((string) current).get_char_validated ((long) (end - current));
 						if (u != (unichar) (-1)) {
@@ -1296,8 +1304,12 @@ public class Vala.Genie.Scanner {
 							Report.error (get_source_reference (token_length_in_chars), "invalid UTF-8 character");
 						}
 					}
+					if (current < end && begin[0] == '\'' && current[0] != '\'') {
+						// multiple characters in single character literal
+						Report.error (get_source_reference (token_length_in_chars), "invalid character literal");
+					}
 				}
-				if (current < end && current[0] != '\n') {
+				if (current < end) {
 					current++;
 				} else {
 					Report.error (get_source_reference (token_length_in_chars), "syntax error, expected %c".printf (begin[0]));
@@ -1313,7 +1325,6 @@ public class Vala.Genie.Scanner {
 					Report.error (get_source_reference (0), "invalid UTF-8 character");
 				}
 				column++;
-				last_token = TokenType.STRING_LITERAL;
 				return read_token (out token_begin, out token_end);
 			}
 		}
@@ -1363,7 +1374,7 @@ public class Vala.Genie.Scanner {
 		return tab_count;
 	}
 
-	bool matches (char* begin, string keyword) {
+	static bool matches (char* begin, string keyword) {
 		char* keyword_array = (char *) keyword;
 		long len = keyword.length;
 		for (int i = 0; i < len; i++) {
@@ -1416,9 +1427,10 @@ public class Vala.Genie.Scanner {
 	}
 
 	bool comment (bool file_comment = false) {
-		if (current > end - 2
-		    || current[0] != '/'
-		    || (current[1] != '/' && current[1] != '*')) {
+		if (current == null
+			|| current > end - 2
+			|| current[0] != '/'
+			|| (current[1] != '/' && current[1] != '*')) {
 			return false;
 		}
 
@@ -1457,7 +1469,7 @@ public class Vala.Genie.Scanner {
 				return false;
 			}
 
-            if (current[2] == '*' || file_comment) {
+			if (current[2] == '*' || file_comment) {
 				source_reference = get_source_reference (0);
 			}
 
@@ -1465,7 +1477,7 @@ public class Vala.Genie.Scanner {
 			char* begin = current;
 
 			while (current < end - 1
-			       && (current[0] != '*' || current[1] != '/')) {
+				   && (current[0] != '*' || current[1] != '/')) {
 				if (current[0] == '\n') {
 					line++;
 					column = 0;
@@ -1512,7 +1524,7 @@ public class Vala.Genie.Scanner {
 		}
 	}
 
-    public void parse_file_comments () {
+	public void parse_file_comments () {
 		while (whitespace () || comment (true)) {
 		}
 		
@@ -1520,6 +1532,10 @@ public class Vala.Genie.Scanner {
 
 	void push_comment (string comment_item, SourceReference source_reference, bool file_comment) {
 		if (comment_item[0] == '*') {
+			if (_comment != null) {
+				// extra doc comment, add it to source file comments
+				source_file.add_comment (_comment);
+			}
 			_comment = new Comment (comment_item, source_reference);
 		}
 
@@ -1554,12 +1570,17 @@ public class Vala.Genie.Scanner {
 		return found;
 	}
 
+	void pp_space () {
+		while (pp_whitespace () || comment ()) {
+		}
+	}
+
 	void pp_directive () {
 		// hash sign
 		current++;
 		column++;
 
-		pp_whitespace ();
+		pp_space ();
 
 		char* begin = current;
 		int len = 0;
@@ -1582,11 +1603,11 @@ public class Vala.Genie.Scanner {
 		}
 
 		if (conditional_stack.length > 0
-		    && conditional_stack[conditional_stack.length - 1].skip_section) {
+			&& conditional_stack[conditional_stack.length - 1].skip_section) {
 			// skip lines until next preprocessing directive
 			bool bol = false;
 			while (current < end) {
-				if (bol && current[0] == '#') {
+				if (bol && current < end && current[0] == '#') {
 					// go back to begin of line
 					current -= (column - 1);
 					column = 1;
@@ -1606,14 +1627,14 @@ public class Vala.Genie.Scanner {
 	}
 
 	void pp_eol () {
-		pp_whitespace ();
+		pp_space ();
 		if (current >= end || current[0] != '\n') {
 			Report.error (get_source_reference (0), "syntax error, expected newline");
 		}
 	}
 
 	void parse_pp_if () {
-		pp_whitespace ();
+		pp_space ();
 
 		bool condition = parse_pp_expression ();
 
@@ -1631,7 +1652,7 @@ public class Vala.Genie.Scanner {
 	}
 
 	void parse_pp_elif () {
-		pp_whitespace ();
+		pp_space ();
 
 		bool condition = parse_pp_expression ();
 
@@ -1643,7 +1664,7 @@ public class Vala.Genie.Scanner {
 		}
 
 		if (condition && !conditional_stack[conditional_stack.length - 1].matched
-		    && (conditional_stack.length == 1 || !conditional_stack[conditional_stack.length - 2].skip_section)) {
+			&& (conditional_stack.length == 1 || !conditional_stack[conditional_stack.length - 2].skip_section)) {
 			// condition true => process code within if
 			conditional_stack[conditional_stack.length - 1].matched = true;
 			conditional_stack[conditional_stack.length - 1].skip_section = false;
@@ -1662,7 +1683,7 @@ public class Vala.Genie.Scanner {
 		}
 
 		if (!conditional_stack[conditional_stack.length - 1].matched
-		    && (conditional_stack.length == 1 || !conditional_stack[conditional_stack.length - 2].skip_section)) {
+			&& (conditional_stack.length == 1 || !conditional_stack[conditional_stack.length - 2].skip_section)) {
 			// condition true => process code within if
 			conditional_stack[conditional_stack.length - 1].matched = true;
 			conditional_stack[conditional_stack.length - 1].skip_section = false;
@@ -1717,9 +1738,9 @@ public class Vala.Genie.Scanner {
 		} else if (current[0] == '(') {
 			current++;
 			column++;
-			pp_whitespace ();
+			pp_space ();
 			bool result = parse_pp_expression ();
-			pp_whitespace ();
+			pp_space ();
 			if (current < end && current[0] ==  ')') {
 				current++;
 				column++;
@@ -1737,7 +1758,7 @@ public class Vala.Genie.Scanner {
 		if (current < end && current[0] == '!') {
 			current++;
 			column++;
-			pp_whitespace ();
+			pp_space ();
 			return !parse_pp_unary_expression ();
 		}
 
@@ -1746,18 +1767,18 @@ public class Vala.Genie.Scanner {
 
 	bool parse_pp_equality_expression () {
 		bool left = parse_pp_unary_expression ();
-		pp_whitespace ();
+		pp_space ();
 		while (true) {
 			if (current < end - 1 && current[0] == '=' && current[1] == '=') {
 				current += 2;
 				column += 2;
-				pp_whitespace ();
+				pp_space ();
 				bool right = parse_pp_unary_expression ();
 				left = (left == right);
 			} else if (current < end - 1 && current[0] == '!' && current[1] == '=') {
 				current += 2;
 				column += 2;
-				pp_whitespace ();
+				pp_space ();
 				bool right = parse_pp_unary_expression ();
 				left = (left != right);
 			} else {
@@ -1769,11 +1790,11 @@ public class Vala.Genie.Scanner {
 
 	bool parse_pp_and_expression () {
 		bool left = parse_pp_equality_expression ();
-		pp_whitespace ();
+		pp_space ();
 		while (current < end - 1 && current[0] == '&' && current[1] == '&') {
 			current += 2;
 			column += 2;
-			pp_whitespace ();
+			pp_space ();
 			bool right = parse_pp_equality_expression ();
 			left = left && right;
 		}
@@ -1782,11 +1803,11 @@ public class Vala.Genie.Scanner {
 
 	bool parse_pp_or_expression () {
 		bool left = parse_pp_and_expression ();
-		pp_whitespace ();
+		pp_space ();
 		while (current < end - 1 && current[0] == '|' && current[1] == '|') {
 			current += 2;
 			column += 2;
-			pp_whitespace ();
+			pp_space ();
 			bool right = parse_pp_and_expression ();
 			left = left || right;
 		}
