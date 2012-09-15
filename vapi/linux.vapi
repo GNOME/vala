@@ -1029,7 +1029,7 @@ namespace Linux {
     public int backtrace (void* buffer, int size);
 
     [CCode (cheader_filename = "execinfo.h", array_length = false)]
-    public string[] backtrace_symbols (void* buffer, int size);
+    public unowned string[] backtrace_symbols (void* buffer, int size);
 
     [CCode (cheader_filename = "execinfo.h")]
     public void backtrace_symbols_fd (void* buffer, int size, int fd);
