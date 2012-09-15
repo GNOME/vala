@@ -128,6 +128,8 @@ namespace Clutter {
 
 	[CCode (type_id = "CLUTTER_TYPE_UNITS", cheader_filename = "clutter/clutter.h")]
 	public struct Units {
+		[CCode (cname = "clutter_units_from_cm")]
+		public Units.from_cm (float cm);
 		[CCode (cname = "clutter_units_from_em")]
 		public Units.from_em (float em);
 		[CCode (cname = "clutter_units_from_em_for_font")]

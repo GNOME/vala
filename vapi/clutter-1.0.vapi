@@ -4680,6 +4680,7 @@ namespace Clutter {
 		public unowned Clutter.Action get_action (string name);
 		public GLib.List<weak Clutter.Action> get_actions ();
 		public Clutter.ActorBox get_allocation_box ();
+		[Deprecated (since = "1.12")]
 		public Clutter.Geometry get_allocation_geometry ();
 		public void get_allocation_vertices (Clutter.Actor? ancestor, [CCode (array_length = false)] Clutter.Vertex[] verts);
 		[Deprecated (since = "1.12")]
@@ -4693,6 +4694,7 @@ namespace Clutter {
 		[Deprecated (since = "1.8")]
 		public static unowned Clutter.Actor get_by_gid (uint32 id_);
 		public unowned Clutter.Actor get_child_at_index (int index_);
+		public Clutter.Matrix get_child_transform ();
 		public GLib.List<weak Clutter.Actor> get_children ();
 		public void get_clip (out float xoff, out float yoff, out float width, out float height);
 		public bool get_clip_to_allocation ();
@@ -4844,6 +4846,7 @@ namespace Clutter {
 		public void set_child_above_sibling (Clutter.Actor child, Clutter.Actor? sibling);
 		public void set_child_at_index (Clutter.Actor child, int index_);
 		public void set_child_below_sibling (Clutter.Actor child, Clutter.Actor? sibling);
+		public void set_child_transform (Clutter.Matrix? transform);
 		public void set_clip (float xoff, float yoff, float width, float height);
 		public void set_clip_to_allocation (bool clip_set);
 		public void set_content (Clutter.Content? content);
@@ -4932,7 +4935,12 @@ namespace Clutter {
 		[NoAccessorMethod]
 		public bool background_color_set { get; }
 		[NoAccessorMethod]
+		public bool child_transform_set { get; }
+		[Deprecated (since = "1.12")]
+		[NoAccessorMethod]
 		public Clutter.Geometry clip { get; set; }
+		[NoAccessorMethod]
+		public Clutter.Rect clip_rect { owned get; set; }
 		public bool clip_to_allocation { get; set; }
 		[NoAccessorMethod]
 		public Clutter.Constraint constraints { set; }
@@ -5066,9 +5074,11 @@ namespace Clutter {
 		public virtual signal bool key_release_event (Clutter.KeyEvent event);
 		public virtual signal bool leave_event (Clutter.CrossingEvent event);
 		public virtual signal bool motion_event (Clutter.MotionEvent event);
+		[Deprecated (since = "1.12")]
 		[HasEmitter]
 		public virtual signal void paint ();
 		public virtual signal void parent_set (Clutter.Actor? old_parent);
+		[Deprecated (since = "1.12")]
 		public virtual signal void pick (Clutter.Color color);
 		[HasEmitter]
 		public virtual signal void queue_relayout ();
@@ -5729,14 +5739,20 @@ namespace Clutter {
 	public class DragAction : Clutter.Action {
 		[CCode (has_construct_function = false, type = "ClutterAction*")]
 		public DragAction ();
+		public bool get_drag_area (out unowned Clutter.Rect drag_area);
 		public Clutter.DragAxis get_drag_axis ();
 		public unowned Clutter.Actor get_drag_handle ();
 		public void get_drag_threshold (out uint x_threshold, out uint y_threshold);
 		public void get_motion_coords (out float motion_x, out float motion_y);
 		public void get_press_coords (out float press_x, out float press_y);
+		public void set_drag_area (Clutter.Rect? drag_area);
 		public void set_drag_axis (Clutter.DragAxis axis);
 		public void set_drag_handle (Clutter.Actor? handle);
 		public void set_drag_threshold (int x_threshold, int y_threshold);
+		[NoAccessorMethod]
+		public Clutter.Rect drag_area { owned get; set; }
+		[NoAccessorMethod]
+		public bool drag_area_set { get; }
 		public Clutter.DragAxis drag_axis { get; set; }
 		public Clutter.Actor drag_handle { get; set; }
 		[NoAccessorMethod]
@@ -5879,10 +5895,18 @@ namespace Clutter {
 	public class GestureAction : Clutter.Action {
 		[CCode (has_construct_function = false, type = "ClutterAction*")]
 		public GestureAction ();
+		public void cancel ();
+		[NoWrapper]
+		public virtual bool gesture_prepare (Clutter.Actor actor);
+		public unowned Clutter.InputDevice get_device (uint point);
 		public void get_motion_coords (uint device, out float motion_x, out float motion_y);
+		public float get_motion_delta (uint device, out float delta_x, out float delta_y);
+		public uint get_n_current_points ();
 		public int get_n_touch_points ();
 		public void get_press_coords (uint device, out float press_x, out float press_y);
 		public void get_release_coords (uint device, out float release_x, out float release_y);
+		public unowned Clutter.EventSequence get_sequence (uint point);
+		public float get_velocity (uint device, out float velocity_x, out float velocity_y);
 		public void set_n_touch_points (int nb_points);
 		public virtual signal bool gesture_begin (Clutter.Actor actor);
 		public virtual signal void gesture_cancel (Clutter.Actor actor);
@@ -6190,6 +6214,27 @@ namespace Clutter {
 		public void set_width (float width);
 		public void union (Clutter.PaintVolume another_pv);
 		public void union_box (Clutter.ActorBox box);
+	}
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_pan_action_get_type ()")]
+	public class PanAction : Clutter.GestureAction {
+		[CCode (has_construct_function = false, type = "ClutterAction*")]
+		public PanAction ();
+		public double get_acceleration_factor ();
+		public double get_deceleration ();
+		public bool get_interpolate ();
+		public void get_interpolated_coords (out float interpolated_x, out float interpolated_y);
+		public void get_interpolated_delta (out float delta_x, out float delta_y);
+		public Clutter.PanAxis get_pan_axis ();
+		public void set_acceleration_factor (double factor);
+		public void set_deceleration (double rate);
+		public void set_interpolate (bool should_interpolate);
+		public void set_pan_axis (Clutter.PanAxis axis);
+		public double acceleration_factor { get; set; }
+		public double deceleration { get; set; }
+		public bool interpolate { get; set; }
+		public Clutter.PanAxis pan_axis { get; set; }
+		public virtual signal bool pan (Clutter.Actor actor, bool is_interpolated);
+		public virtual signal void pan_stopped (Clutter.Actor actor);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", lower_case_csuffix = "param_units", type_id = "clutter_param_units_get_type ()")]
 	public class ParamSpecUnit : GLib.ParamSpec {
@@ -7022,6 +7067,17 @@ namespace Clutter {
 		public void remove_all ();
 		public void remove_transition (Clutter.Transition transition);
 	}
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_zoom_action_get_type ()")]
+	public class ZoomAction : Clutter.GestureAction {
+		[CCode (has_construct_function = false, type = "ClutterAction*")]
+		public ZoomAction ();
+		public void get_focal_point (out unowned Clutter.Point point);
+		public void get_transformed_focal_point (out unowned Clutter.Point point);
+		public Clutter.ZoomAxis get_zoom_axis ();
+		public void set_zoom_axis (Clutter.ZoomAxis axis);
+		public Clutter.ZoomAxis zoom_axis { get; set; }
+		public virtual signal bool zoom (Clutter.Actor actor, Clutter.Point focal_point, double factor);
+	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_animatable_get_type ()")]
 	public interface Animatable : GLib.Object {
 		[Deprecated (since = "1.8")]
@@ -7201,8 +7257,8 @@ namespace Clutter {
 		public void destroy ();
 		public void init (Clutter.Actor root);
 		public bool is_valid ();
-		public bool next (out Clutter.Actor child);
-		public bool prev (out Clutter.Actor child);
+		public bool next (out unowned Clutter.Actor child);
+		public bool prev (out unowned Clutter.Actor child);
 		public void remove ();
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
@@ -7387,6 +7443,8 @@ namespace Clutter {
 	public struct Units {
 		public Clutter.Units copy ();
 		public void free ();
+		[CCode (cname = "clutter_units_from_cm")]
+		public Units.from_cm (float cm);
 		[CCode (cname = "clutter_units_from_em")]
 		public Units.from_em (float em);
 		[CCode (cname = "clutter_units_from_em_for_font")]
@@ -7723,6 +7781,12 @@ namespace Clutter {
 		HORIZONTAL,
 		VERTICAL
 	}
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_PAN_", type_id = "clutter_pan_axis_get_type ()")]
+	public enum PanAxis {
+		AXIS_NONE,
+		X_AXIS,
+		Y_AXIS
+	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_PATH_", type_id = "clutter_path_node_type_get_type ()")]
 	public enum PathNodeType {
 		MOVE_TO,
@@ -7923,6 +7987,12 @@ namespace Clutter {
 		BUTTON_RELEASE_EVENT,
 		MOTION_NOTIFY_EVENT,
 		LAST_EVENT
+	}
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ZOOM_", type_id = "clutter_zoom_axis_get_type ()")]
+	public enum ZoomAxis {
+		X_AXIS,
+		Y_AXIS,
+		BOTH
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_IMAGE_ERROR_INVALID_")]
 	public errordomain ImageError {
