@@ -191,7 +191,7 @@ namespace Xml {
 		public static Doc* read_memory (string text, int len, string? url = null, string? encoding = null, int options = 0);
 	}
 
-	[CCode (cname = "xmlParserOption", cprefix = "XML_PARSE_", cheader_filename = "libxml/parser.h")]
+	[CCode (cname = "xmlParserOption", cprefix = "XML_PARSE_", cheader_filename = "libxml/parser.h", has_type_id = false)]
 	public enum ParserOption {
 		RECOVER,
 		NOENT,
@@ -212,7 +212,7 @@ namespace Xml {
 		COMPACT,
 	}
 
-	[CCode (cname = "xmlCharEncoding", cprefix = "XML_CHAR_ENCODING_", cheader_filename = "libxml/encoding.h")]
+	[CCode (cname = "xmlCharEncoding", cprefix = "XML_CHAR_ENCODING_", cheader_filename = "libxml/encoding.h", has_type_id = false)]
 	public enum CharEncoding {
 		ERROR,
 		NONE,
@@ -300,7 +300,7 @@ namespace Xml {
 		public weak string elem;
 	}
 
-	[CCode (cname = "xmlAttributeDefault", cprefix = "XML_ATTRIBUTE_", cheader_filename = "libxml/tree.h")]
+	[CCode (cname = "xmlAttributeDefault", cprefix = "XML_ATTRIBUTE_", cheader_filename = "libxml/tree.h", has_type_id = false)]
 	public enum AttributeDefault {
 		NONE,
 		REQUIRED,
@@ -308,7 +308,7 @@ namespace Xml {
 		FIXED
 	}
 
-	[CCode (cname = "xmlAttributeType", cprefix = "XML_ATTRIBUTE_", cheader_filename = "libxml/tree.h")]
+	[CCode (cname = "xmlAttributeType", cprefix = "XML_ATTRIBUTE_", cheader_filename = "libxml/tree.h", has_type_id = false)]
 	public enum AttributeType {
 		CDATA,
 		ID,
@@ -487,7 +487,7 @@ namespace Xml {
 		public weak string prefix;
 	}
 
-	[CCode (cname = "xmlElementType", cprefix = "XML_", cheader_filename = "libxml/tree.h")]
+	[CCode (cname = "xmlElementType", cprefix = "XML_", cheader_filename = "libxml/tree.h", has_type_id = false)]
 	public enum ElementType {
 		ELEMENT_NODE,
 		ATTRIBUTE_NODE,
@@ -527,7 +527,7 @@ namespace Xml {
 		public const string prefix;
 	}
 
-	[CCode (cname = "xmlElementContentType", cprefix = "XML_ELEMENT_CONTENT_", cheader_filename = "libxml/tree.h")]
+	[CCode (cname = "xmlElementContentType", cprefix = "XML_ELEMENT_CONTENT_", cheader_filename = "libxml/tree.h", has_type_id = false)]
 	public enum ElementContentType {
 		PCDATA,
 		ELEMENT,
@@ -535,7 +535,7 @@ namespace Xml {
 		OR
 	}
 
-	[CCode (cname = "xmlElementContentOccur", cprefix = "XML_ELEMENT_CONTENT_", cheader_filename = "libxml/tree.h")]
+	[CCode (cname = "xmlElementContentOccur", cprefix = "XML_ELEMENT_CONTENT_", cheader_filename = "libxml/tree.h", has_type_id = false)]
 	public enum ElementContentOccur {
 		ONCE,
 		OPT,
@@ -570,7 +570,7 @@ namespace Xml {
 		public int checked;
 	}
 
-	[CCode (cname = "xmlEntityType", cprefix = "XML_", cheader_filename = "libxml/tree.h")]
+	[CCode (cname = "xmlEntityType", cprefix = "XML_", cheader_filename = "libxml/tree.h", has_type_id = false)]
 	public enum EntityType {
 		INTERNAL_GENERAL_ENTITY,
 		EXTERNAL_GENERAL_PARSED_ENTITY,
@@ -1062,7 +1062,7 @@ namespace Xml {
 
 	/* xmlreader - the XMLReader implementation */
 
-	[CCode (cname = "xmlParserProperties", cprefix = "XML_PARSER_", cheader_filename = "libxml/xmlreader.h")]
+	[CCode (cname = "xmlParserProperties", cprefix = "XML_PARSER_", cheader_filename = "libxml/xmlreader.h", has_type_id = false)]
 	public enum ParserProperties {
 		LOADDTD,
 		DEFAULTATTRS,
@@ -1070,7 +1070,7 @@ namespace Xml {
 		SUBST_ENTITIES
 	}
 
-	[CCode (cname = "xmlParserSeverities", cprefix = "XML_PARSER_SEVERITY_", cheader_filename = "libxml/xmlreader.h")]
+	[CCode (cname = "xmlParserSeverities", cprefix = "XML_PARSER_SEVERITY_", cheader_filename = "libxml/xmlreader.h", has_type_id = false)]
 	public enum ParserSeverities {
 		VALIDITY_WARNING,
 		VALIDITY_ERROR,
@@ -1078,7 +1078,7 @@ namespace Xml {
 		ERROR
 	}
 
-	[CCode (cname = "xmlReaderTypes", cheader_filename = "libxml/xmlreader.h")]
+	[CCode (cname = "xmlReaderTypes", cheader_filename = "libxml/xmlreader.h", has_type_id = false)]
 	public enum ReaderType {
 		NONE,
 		ELEMENT,
@@ -1334,7 +1334,7 @@ namespace Xml {
 	public class TextReaderLocator {
 	}
 
-	[CCode (cname = "xmlTextReaderMode", cprefix = "XML_TEXTREADER_MODE_", cheader_filename = "libxml/xmlreader.h")]
+	[CCode (cname = "xmlTextReaderMode", cprefix = "XML_TEXTREADER_MODE_", cheader_filename = "libxml/xmlreader.h", has_type_id = false)]
 	public enum TextReaderMode {
 		INITIAL,
 		INTERACTIVE,
@@ -1390,7 +1390,7 @@ namespace Xml {
 			public Context (Doc* doc);
 		}
 
-		[CCode (cname = "xmlXPathError", cprefix = "XPATH_", cheader_filename = "libxml/xpath.h")]
+		[CCode (cname = "xmlXPathError", cprefix = "XPATH_", cheader_filename = "libxml/xpath.h", has_type_id = false)]
 		public enum Error {
 			EXPRESSION_OK,
 			NUMBER_ERROR,
@@ -1434,7 +1434,7 @@ namespace Xml {
 			public int index2;
 		}
 
-		[CCode (cname = "xmlXPathObjectType", cprefix = "XPATH_", cheader_filename = "libxml/xpath.h")]
+		[CCode (cname = "xmlXPathObjectType", cprefix = "XPATH_", cheader_filename = "libxml/xpath.h", has_type_id = false)]
 		public enum ObjectType {
 			UNDEFINED,
 			NODESET,
@@ -1628,7 +1628,7 @@ namespace Xml {
 		public void* node;
 	}
 
-	[CCode (cname = "xmlErrorLevel", cprefix = "XML_ERR_", cheader_filename = "libxml/xmlerror.h")]
+	[CCode (cname = "xmlErrorLevel", cprefix = "XML_ERR_", cheader_filename = "libxml/xmlerror.h", has_type_id = false)]
 	public enum ErrorLevel {
 		NONE = 0,
 		WARNING = 1,
@@ -1654,7 +1654,7 @@ namespace Html {
 	[CCode (cname = "htmlHandleOmittedElem", cheader_filename = "libxml/HTMLparser.h")]
 	public static bool handle_omitted_elem (bool val);
 
-	[CCode (cname = "htmlParserOption", cprefix = "HTML_PARSE_", cheader_filename = "libxml/HTMLparser.h")]
+	[CCode (cname = "htmlParserOption", cprefix = "HTML_PARSE_", cheader_filename = "libxml/HTMLparser.h", has_type_id = false)]
 	public enum ParserOption {
 		RECOVER,
 		NOERROR,
@@ -1665,7 +1665,7 @@ namespace Html {
 		COMPACT,
 	}
 
-	[CCode (cname = "htmlStatus", cprefix = "HTML_", cheader_filename = "libxml/HTMLparser.h")]
+	[CCode (cname = "htmlStatus", cprefix = "HTML_", cheader_filename = "libxml/HTMLparser.h", has_type_id = false)]
 	public enum Status {
 		NA,
 		INVALID,
