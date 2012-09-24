@@ -1,6 +1,6 @@
 /* valasignal.vala
  *
- * Copyright (C) 2006-2011  Jürg Billeter
+ * Copyright (C) 2006-2012  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -184,6 +184,11 @@ public class Vala.Signal : Symbol, Lockable {
 		return_type.check (context);
 		
 		foreach (Parameter param in parameters) {
+			if (param.ellipsis) {
+				Report.error  (param.source_reference, "Signals with variable argument lists are not supported");
+				return false;
+			}
+
 			param.check (context);
 		}
 
