@@ -83,12 +83,15 @@ public abstract class Vala.Expression : CodeNode {
 			var expr = parent_node as Expression;
 			var stmt = parent_node as Statement;
 			var local = parent_node as LocalVariable;
+			var initializer = parent_node as MemberInitializer;
 			if (stmt != null) {
 				return (Statement) parent_node;
 			} else if (expr != null) {
 				return expr.parent_statement;
 			} else if (local != null) {
 				return (Statement) local.parent_node;
+			} else if (initializer != null) {
+				return ((Expression)initializer.parent_node).parent_statement;
 			} else {
 				return null;
 			}
