@@ -394,7 +394,7 @@ GIR_BINDINGS = \
 
 BINDINGS = $(GIR_BINDINGS) $(GIDL_BINDINGS)
 
-VAPIGEN = $(top_builddir)/vapigen/vapigen
+VAPIGEN = $(top_builddir)/vapigen/vapigen$(EXEEXT)
 VAPIGENFLAGS = --vapidir $(srcdir)
 GENVAPI = $(VAPIGEN) $(VAPIGENFLAGS)
 METADATADIR = $(srcdir)/metadata
