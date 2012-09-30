@@ -31,7 +31,6 @@
 #include <glib/gstdio.h>
 #include <glib-object.h>
 #include <signal.h>
-#include <sys/wait.h> /* waitpid */
 #include <gmodule.h>
 #include "scanner.h"
 #include "gidlparser.h"
@@ -39,6 +38,10 @@
 #include "gidlnode.h"
 #include "gidlwriter.h"
 #include "grealpath.h"
+
+#ifndef _WIN32
+#include <sys/wait.h> /* waitpid */
+#endif
 
 
 typedef GType (*TypeFunction) (void);
@@ -1600,12 +1603,28 @@ g_igenerator_start_preprocessor (GIGenerator *igenerator,
 
   close (cpp_out);
 
+#ifndef _WIN32
   if (waitpid (pid, &status, 0) > 0)
+#else
+  /* We don't want to include <windows.h> as it clashes horribly
+   * with token names from scannerparser.h. So just declare
+   * WaitForSingleObject, GetExitCodeProcess and INFINITE here.
+   */
+  extern unsigned long __stdcall WaitForSingleObject(void*, int);
+  extern int __stdcall GetExitCodeProcess(void*, int*);
+#define INFINITE 0xffffffff
+
+  WaitForSingleObject (pid, INFINITE);
+
+  if (GetExitCodeProcess (pid, &status))
+#endif
     {
       if (status != 0)
 	{
 	  g_spawn_close_pid (pid);
+#ifndef _WIN32
 	  kill (pid, SIGKILL);
+#endif
 
 	  g_error ("cpp returned error code: %d\n", status);
 	  unlink (tmpname);

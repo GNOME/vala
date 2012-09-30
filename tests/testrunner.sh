@@ -28,9 +28,9 @@ vapidir=$topsrcdir/vapi
 
 export G_DEBUG=fatal_warnings
 
-VALAC=$topbuilddir/compiler/valac
+VALAC=$topbuilddir/compiler/valac$EXEEXT
 VALAFLAGS="--vapidir $vapidir --disable-warnings --main main --save-temps -X -g -X -O0 -X -pipe -X -lm -X -Werror=return-type -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast"
-VAPIGEN=$topbuilddir/vapigen/vapigen
+VAPIGEN=$topbuilddir/vapigen/vapigen$EXEEXT
 VAPIGENFLAGS="--vapidir $vapidir"
 
 # Incorporate the user's CFLAGS. Matters if the user decided to insert

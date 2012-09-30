@@ -10,5 +10,5 @@ EXTRA_DIST = \
 
 if ENABLE_UNVERSIONED
 install-exec-hook:
-	cd $(DESTDIR)$(bindir) && $(LN_S) -f vala-gen-introspect@PACKAGE_SUFFIX@$(EXEEXT) vala-gen-introspect$(EXEEXT)
+	cd $(DESTDIR)$(bindir) && $(LN_S) -f vala-gen-introspect@PACKAGE_SUFFIX@ vala-gen-introspect
 endif

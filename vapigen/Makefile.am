@@ -1,6 +1,6 @@
 NULL =
 
-VALAC = $(top_builddir)/compiler/valac
+VALAC = $(top_builddir)/compiler/valac$(EXEEXT)
 
 SUBDIRS = \
 	vala-gen-introspect \
