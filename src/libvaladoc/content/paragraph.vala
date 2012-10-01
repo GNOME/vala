@@ -41,5 +41,21 @@ public class Valadoc.Content.Paragraph : InlineContent, Block, StyleAttributes {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_paragraph (this);
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Paragraph p = new Paragraph ();
+		p.parent = new_parent;
+
+		p.horizontal_align = horizontal_align;
+		p.vertical_align = vertical_align;
+		p.style = style;
+
+		foreach (Inline element in content) {
+			Inline copy = element.copy (p) as Inline;
+			p.content.add (copy);
+		}
+
+		return p;
+	}
 }
 

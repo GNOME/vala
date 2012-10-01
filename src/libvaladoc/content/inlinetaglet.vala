@@ -51,6 +51,8 @@ public abstract class Valadoc.Content.InlineTaglet : ContentElement, Taglet, Inl
 
 	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
 		ContentElement element = get_content ();
+		element.parent = this;
+
 		element.check (api_root, container, file_path, reporter, settings);
 	}
 

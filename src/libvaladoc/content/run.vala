@@ -126,5 +126,17 @@ public class Valadoc.Content.Run : InlineContent, Inline {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_run (this);
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Run run = new Run (style);
+		run.parent = new_parent;
+
+		foreach (Inline element in content) {
+			Inline copy = element.copy (run) as Inline;
+			run.content.add (copy);
+		}
+
+		return run;
+	}
 }
 

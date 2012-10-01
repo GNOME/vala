@@ -154,4 +154,14 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 		// empty source blocks are visible as well
 		return false;
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		SourceCode source_code = new SourceCode ();
+		source_code.parent = new_parent;
+
+		source_code.language = language;
+		source_code.code = code;
+
+		return source_code;
+	}
 }

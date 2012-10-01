@@ -41,5 +41,17 @@ public class Valadoc.Taglets.Deprecated : InlineContent, Taglet, Block {
 	public override bool is_empty () {
 		return false;
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Deprecated deprecated = new Deprecated ();
+		deprecated.parent = new_parent;
+
+		foreach (Inline element in content) {
+			Inline copy = element.copy (deprecated) as Inline;
+			deprecated.content.add (copy);
+		}
+
+		return deprecated;
+	}
 }
 

@@ -42,4 +42,16 @@ public class Valadoc.Content.ListItem : BlockContent {
 	public override void accept_children (ContentVisitor visitor) {
 		base.accept_children (visitor);
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		ListItem item = new ListItem ();
+		item.parent = new_parent;
+
+		foreach (Block block in content) {
+			Block copy = block.copy (item) as Block;
+			item.content.add (copy);
+		}
+
+		return item;
+	}
 }

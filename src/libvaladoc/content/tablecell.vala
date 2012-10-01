@@ -50,5 +50,23 @@ public class Valadoc.Content.TableCell : InlineContent, StyleAttributes {
 		// empty cells are displayed as well
 		return false;
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		TableCell cell = new TableCell ();
+		cell.parent = new_parent;
+
+		cell.horizontal_align = horizontal_align;
+		cell.vertical_align = vertical_align;
+		cell.colspan = colspan;
+		cell.rowspan = rowspan;
+		cell.style = style;
+
+		foreach (Inline element in content) {
+			Inline copy = element.copy (cell) as Inline;
+			cell.content.add (copy);
+		}
+
+		return cell;
+	}
 }
 

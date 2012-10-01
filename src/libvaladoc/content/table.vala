@@ -39,6 +39,7 @@ public class Valadoc.Content.Table : ContentElement, Block {
 
 		// Check individual rows
 		foreach (var row in _rows) {
+			row.parent = this;
 			row.check (api_root, container, file_path, reporter, settings);
 		}
 	}
@@ -55,6 +56,18 @@ public class Valadoc.Content.Table : ContentElement, Block {
 
 	public override bool is_empty () {
 		return false;
+	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Table table = new Table ();
+		table.parent = new_parent;
+
+		foreach (var row in _rows) {
+			TableRow copy = row.copy (table) as TableRow;
+			table.rows.add (copy);
+		}
+
+		return table;
 	}
 }
 

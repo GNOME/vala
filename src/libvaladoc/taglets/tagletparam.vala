@@ -104,4 +104,33 @@ public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_taglet (this);
 	}
+
+	public Gee.List<ContentElement>? get_inheritable_documentation () {
+		return content;
+	}
+
+	public bool inheritable (Taglet taglet) {
+		if (taglet is Taglets.Param == false) {
+			return false;
+		}
+
+		Taglets.Param t = (Taglets.Param) taglet;
+		return (parameter == t.parameter || parameter_name == t.parameter_name);
+	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Param param = new Param ();
+		param.parent = new_parent;
+
+		param.parameter_name = parameter_name;
+		param.parameter = parameter;
+		param.position = position;
+
+		foreach (Inline element in content) {
+			Inline copy = element.copy (param) as Inline;
+			param.content.add (copy);
+		}
+
+		return param;
+	}
 }

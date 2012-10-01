@@ -25,6 +25,10 @@ using GLib;
 
 
 public abstract class Valadoc.Content.ContentElement : Object {
+	public ContentElement parent { get; internal set; }
+
+	public abstract ContentElement copy (ContentElement? new_parent = null);
+
 
 	public virtual void configure (Settings settings, ResourceLocator locator) {
 	}

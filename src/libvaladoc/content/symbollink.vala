@@ -47,5 +47,11 @@ public class Valadoc.Content.SymbolLink : ContentElement, Inline {
 	public override bool is_empty () {
 		return false;
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		SymbolLink link = new SymbolLink (symbol, label);
+		link.parent = new_parent;
+		return link;
+	}
 }
 

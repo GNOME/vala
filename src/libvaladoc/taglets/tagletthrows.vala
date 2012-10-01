@@ -81,5 +81,33 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_taglet (this);
 	}
+
+	public Gee.List<ContentElement>? get_inheritable_documentation () {
+		return content;
+	}
+
+	public bool inheritable (Taglet taglet) {
+		if (taglet is Taglets.Throws == false) {
+			return false;
+		}
+
+		Taglets.Throws t = (Taglets.Throws) taglet;
+		return (error_domain == t.error_domain || error_domain_name == t.error_domain_name);
+	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Throws tr = new Throws ();
+		tr.parent = new_parent;
+
+		tr.error_domain_name = error_domain_name;
+		tr.error_domain = error_domain;
+
+		foreach (Inline element in content) {
+			Inline copy = element.copy (tr) as Inline;
+			tr.content.add (copy);
+		}
+
+		return tr;
+	}
 }
 

@@ -31,5 +31,19 @@ public class Valadoc.Content.Page : BlockContent {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_page (this);
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		assert (new_parent == null);
+
+		Content.Page page = new Content.Page ();
+		page.parent = new_parent;
+
+		foreach (Block block in content) {
+			Block copy = block.copy (page) as Block;
+			page.content.add (copy);
+		}
+
+		return page;
+	}
 }
 

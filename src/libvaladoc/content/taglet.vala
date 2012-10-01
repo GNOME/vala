@@ -26,5 +26,13 @@ using Gee;
 public interface Valadoc.Content.Taglet : ContentElement {
 
 	public abstract Rule? get_parser_rule (Rule run_rule);
+
+	public virtual Gee.List<Inline>? get_inheritable_documentation () {
+		return null;
+	}
+
+	public virtual bool inheritable (Taglet taglet) {
+		return false;
+	}
 }
 

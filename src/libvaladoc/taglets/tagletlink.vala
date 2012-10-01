@@ -106,4 +106,18 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 	public override bool is_empty () {
 		return false;
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Link link = new Link ();
+		link.parent = new_parent;
+
+		link.settings = settings;
+		link.locator = locator;
+
+		link.symbol_name = symbol_name;
+		link._context = _context;
+		link._symbol = _symbol;
+
+		return link;
+	}
 }

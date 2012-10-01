@@ -70,4 +70,19 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 	public override bool is_empty () {
 		return false;
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Embedded embedded = new Embedded ();
+		embedded.parent = new_parent;
+
+		embedded.horizontal_align = horizontal_align;
+		embedded.vertical_align = vertical_align;
+		embedded._locator = _locator;
+		embedded.caption = caption;
+		embedded.package = package;
+		embedded.style = style;
+		embedded.url = url;
+
+		return embedded;
+	}
 }

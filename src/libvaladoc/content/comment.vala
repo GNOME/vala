@@ -21,17 +21,23 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
+using Valadoc.Taglets;
 using Gee;
 
 
 public class Valadoc.Content.Comment : BlockContent {
-	public Gee.List<Taglet> taglets { get { return _taglets; } }
+	private Gee.LinkedList<InheritDoc> inheritdocs = new Gee.LinkedList<InheritDoc> ();
 
+	public Gee.List<Taglet> taglets { get { return _taglets; } }
 	private Gee.List<Taglet> _taglets;
 
 	internal Comment () {
 		base ();
 		_taglets = new ArrayList<Taglet> ();
+	}
+
+	internal void register_inheritdoc (InheritDoc taglet) {
+		inheritdocs.add (taglet);
 	}
 
 	public override void configure (Settings settings, ResourceLocator locator) {
@@ -41,7 +47,12 @@ public class Valadoc.Content.Comment : BlockContent {
 		base.check (api_root, container, file_path, reporter, settings);
 
 		foreach (Taglet element in _taglets) {
+			element.parent = this;
 			element.check (api_root, container, file_path, reporter, settings);
+		}
+
+		foreach (InheritDoc element in inheritdocs) {
+			element.transform (api_root, container, file_path, reporter, settings);
 		}
 	}
 
@@ -69,6 +80,25 @@ public class Valadoc.Content.Comment : BlockContent {
 		}
 
 		return selected_taglets;
+	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		assert (new_parent == null);
+
+		Comment comment = new Comment ();
+		comment.parent = new_parent;
+
+		foreach (Block element in content) {
+			Block copy = element.copy (comment) as Block;
+			comment.content.add (copy);
+		}
+
+		foreach (Taglet taglet in _taglets) {
+			Taglet copy = taglet.copy (comment) as Taglet;
+			comment.taglets.add (copy);
+		}
+
+		return comment;
 	}
 }
 

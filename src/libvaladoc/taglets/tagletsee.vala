@@ -63,4 +63,13 @@ public class Valadoc.Taglets.See : ContentElement, Taglet, Block {
 	public override bool is_empty () {
 		return false;
 	}
-}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		See see = new See ();
+		see.parent = new_parent;
+
+		see.symbol_name = symbol_name;
+		see.symbol = symbol;
+
+		return see;
+	}}

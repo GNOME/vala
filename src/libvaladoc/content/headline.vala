@@ -24,7 +24,7 @@
 using Gee;
 
 
-public class Valadoc.Content.Headline : Block, InlineContent {
+public class Valadoc.Content.Headline : InlineContent, Block {
 	public int level { get; set; }
 
 	internal Headline () {
@@ -44,9 +44,21 @@ public class Valadoc.Content.Headline : Block, InlineContent {
 		visitor.visit_headline (this);
 	}
 
-
 	public override bool is_empty () {
 		return false;
+	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Headline headline = new Headline ();
+		headline.parent = new_parent;
+		headline.level = level;
+
+		foreach (Inline element in content) {
+			Inline copy = element.copy (headline) as Inline;
+			headline.content.add (copy);
+		}
+
+		return headline;
 	}
 }
 

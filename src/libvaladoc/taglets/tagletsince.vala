@@ -48,4 +48,14 @@ public class Valadoc.Taglets.Since : ContentElement, Taglet, Block {
 	public override bool is_empty () {
 		return false;
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Since since = new Since ();
+		since.parent = new_parent;
+
+		since.version = version;
+
+		return since;
+	}
 }
+

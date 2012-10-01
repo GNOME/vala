@@ -37,6 +37,7 @@ public class Valadoc.Content.TableRow : ContentElement {
 	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
 		// Check individual cells
 		foreach (var cell in _cells) {
+			cell.parent = this;
 			cell.check (api_root, container, file_path, reporter, settings);
 		}
 	}
@@ -53,6 +54,18 @@ public class Valadoc.Content.TableRow : ContentElement {
 
 	public override bool is_empty () {
 		return false;
+	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		TableRow row = new TableRow ();
+		row.parent = new_parent;
+
+		foreach (TableCell cell in _cells) {
+			TableCell copy = cell.copy (row) as TableCell;
+			row.cells.add (copy);
+		}
+
+		return row;
 	}
 }
 

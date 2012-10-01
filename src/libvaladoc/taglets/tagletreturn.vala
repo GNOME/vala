@@ -53,4 +53,24 @@ public class Valadoc.Taglets.Return : InlineContent, Taglet, Block {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_taglet (this);
 	}
+
+	public Gee.List<ContentElement>? get_inheritable_documentation () {
+		return content;
+	}
+
+	public bool inheritable (Taglet taglet) {
+		return taglet is Taglets.Return;
+	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Return ret = new Return ();
+		ret.parent = new_parent;
+
+		foreach (Inline element in content) {
+			Inline copy = element.copy (ret) as Inline;
+			ret.content.add (copy);
+		}
+
+		return ret;
+	}
 }

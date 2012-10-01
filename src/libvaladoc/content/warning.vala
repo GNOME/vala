@@ -37,5 +37,17 @@ public class Valadoc.Content.Warning : BlockContent, Block {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_warning (this);
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Warning warning = new Warning ();
+		warning.parent = new_parent;
+
+		foreach (Block block in content) {
+			Block copy = block.copy (warning) as Block;
+			warning.content.add (copy);
+		}
+
+		return warning;
+	}
 }
 

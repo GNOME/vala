@@ -35,6 +35,7 @@ public class Valadoc.Content.Link : InlineContent, Inline {
 	}
 
 	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+		base.check (api_root, container, file_path, reporter, settings);
 		//TODO: check url
 	}
 
@@ -44,5 +45,18 @@ public class Valadoc.Content.Link : InlineContent, Inline {
 
 	public override bool is_empty () {
 		return false;
+	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Link link = new Link ();
+		link.parent = new_parent;
+		link.url = url;
+
+		foreach (Inline element in content) {
+			Inline copy = element.copy (link) as Inline;
+			link.content.add (copy);
+		}
+
+		return link;
 	}
 }

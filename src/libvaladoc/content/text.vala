@@ -48,5 +48,11 @@ public class Valadoc.Content.Text : ContentElement, Inline {
 	public override bool is_empty () {
 		return content == "";
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Text text = new Text (content);
+		text.parent = new_parent;
+		return text;
+	}
 }
 

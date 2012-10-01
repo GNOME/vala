@@ -112,6 +112,7 @@ public class Valadoc.Content.List : ContentElement, Block {
 	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
 		// Check individual list items
 		foreach (ListItem element in _items) {
+			element.parent = this;
 			element.check (api_root, container, file_path, reporter, settings);
 		}
 	}
@@ -128,5 +129,18 @@ public class Valadoc.Content.List : ContentElement, Block {
 
 	public override bool is_empty () {
 		return _items.size == 0;
+	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Content.List list = new Content.List ();
+		list.parent = new_parent;
+		list.bullet = bullet;
+
+		foreach (ListItem item in items) {
+			ListItem copy = item.copy (list) as ListItem;
+			list.items.add (copy);
+		}
+
+		return list;
 	}
 }

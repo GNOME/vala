@@ -37,6 +37,7 @@ public abstract class Valadoc.Content.BlockContent : ContentElement {
 
 	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
 		foreach (Block element in _content) {
+			element.parent = this;
 			element.check (api_root, container, file_path, reporter, settings);
 		}
 	}

@@ -25,9 +25,34 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Taglets.InheritDoc : InlineTaglet {
+	private Taglet? parent_taglet = null;
 	private Api.Node? _inherited;
 
+	private Comment root {
+		get {
+			ContentElement pos;
+			for (pos = this; pos.parent != null; pos = pos.parent);
+			// inheritDoc is only allowed in source comments
+			assert (pos is Comment);
+			return (Comment) pos;
+		}
+	}
+
 	public override Rule? get_parser_rule (Rule run_rule) {
+		return null;
+	}
+
+	private Taglet? find_parent_taglet () {
+		if (_inherited == null || _inherited.documentation == null) {
+			return null;
+		}
+
+		ContentElement pos;
+		for (pos = this.parent; pos != null && pos is Taglet == false; pos = pos.parent);
+		if (pos is Taglet) {
+			return (Taglet) pos;
+		}
+
 		return null;
 	}
 
@@ -49,6 +74,12 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 			api_root.push_unbrowsable_documentation_dependency (_inherited);
 		}
 
+		parent_taglet = find_parent_taglet ();
+		if (parent_taglet == null) {
+			root.register_inheritdoc (this);
+		}
+
+
 		// TODO report error if inherited is null
 
 		// TODO postpone check after complete parse of the api tree comments
@@ -56,20 +87,150 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 		//base.check (api_root, container, reporter);
 	}
 
-	public override ContentElement produce_content () {
-		if (_inherited != null && _inherited.documentation != null) {
-			Paragraph inherited_paragraph = _inherited.documentation.content.get (0) as Paragraph;
+	private Run[]? split_run (Inline? separator) {
+		if (separator == null) {
+			return null;
+		}
 
-			Run paragraph = new Run (Run.Style.NONE);
-			foreach (var element in inherited_paragraph.content) {
-				paragraph.content.add (element);
+		ContentElement parent = separator.parent;
+		Gee.List<Inline> parent_content = null;
+
+		if (parent is Run && ((Run) parent).style == Run.Style.NONE) {
+			parent_content = ((Run) parent).content;
+		} else if (parent is Paragraph) {
+			parent_content = ((Paragraph) parent).content;
+		}
+
+		if (parent_content != null) {
+			Run right_run = new Run (Run.Style.NONE);
+			Run left_run = new Run (Run.Style.NONE);
+			bool separated = false;
+
+			foreach (var current in parent_content) {
+				if (current == separator) {
+					separated = true;
+				} else if (separated) {
+					right_run.content.add (current);
+					current.parent = right_run;
+				} else {
+					left_run.content.add (current);
+					current.parent = left_run;
+				}
 			}
-			return paragraph;
+
+			return { left_run, right_run };
+		}
+
+		return null;
+	}
+
+	internal void transform (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+		ContentElement separator = this;
+		Run right_run = null;
+		Run left_run = null;
+		Run[]? parts;
+
+		while ((parts = split_run (separator as Inline)) != null) {
+			if (left_run != null) {
+				parts[0].content.add (left_run);
+				left_run.parent = parts[0];
+			}
+
+			if (right_run != null) {
+				parts[1].content.insert (0, right_run);
+				right_run.parent = parts[1];
+			}
+
+			separator = separator.parent;
+			right_run = parts[1];
+			left_run = parts[0];
+		}
+
+		if (separator is Paragraph == false || separator.parent is Comment == false) {
+			reporter.simple_error ("%s: %s: @inheritDoc: error: Parent documentation can't be copied to this location.", file_path, container.get_full_name ());
+			return ;
+		}
+
+		Comment comment = separator.parent as Comment;
+		assert (comment != null);
+
+		int insert_pos = comment.content.index_of ((Paragraph) separator);
+		int start_pos = insert_pos;
+		assert (insert_pos >= 0);
+
+		foreach (Block block in _inherited.documentation.content) {
+			comment.content.insert (insert_pos, (Block) block.copy (comment));
+			insert_pos++;
+		}
+
+		if (right_run != null) {
+			if (comment.content[insert_pos - 1] is Paragraph) {
+				((Paragraph) comment.content[insert_pos - 1]).content.add (right_run);
+				right_run.parent = comment.content[insert_pos - 1];
+			} else {
+				Paragraph p = new Paragraph ();
+				p.content.add (right_run);
+				right_run.parent = p;
+				p.parent = comment;
+				comment.content.insert (insert_pos, p);
+			}
+		}
+
+		if (left_run != null) {
+			if (comment.content[start_pos] is Paragraph) {
+				((Paragraph) comment.content[start_pos]).content.insert (0, left_run);
+				left_run.parent = comment.content[start_pos];
+			} else {
+				Paragraph p = new Paragraph ();
+				p.content.add (left_run);
+				left_run.parent = p;
+				p.parent = comment;
+				comment.content.insert (start_pos, p);
+			}
+		}
+
+		comment.content.remove ((Paragraph) separator);
+	}
+
+	private Run content_copy (Gee.List<Inline>? content) {
+		Run run = new Run (Run.Style.NONE);
+		run.parent = this;
+
+		if (content != null) {
+			foreach (Inline item in content) {
+				run.content.add ((Inline) item.copy (this));
+			}
+		}
+
+		return run;
+	}
+
+	public override ContentElement produce_content () {
+		if (_inherited != null && _inherited.documentation != null && parent_taglet != null) {
+			Gee.List<Taglet> parent_taglets = _inherited.documentation.find_taglets (null, parent_taglet.get_type ());
+			foreach (Taglet parent in parent_taglets) {
+				// we only care about the first match:
+				if (parent.inheritable (parent_taglet)) {
+					return content_copy (parent.get_inheritable_documentation ());
+				}
+			}
 		}
 		return new Text ("");
 	}
 
 	public override bool is_empty () {
 		return false;
+	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		InheritDoc doc = new InheritDoc ();
+		doc.parent = new_parent;
+
+		doc.settings = settings;
+		doc.locator = locator;
+
+		doc._inherited = _inherited;
+
+		return doc;
 	}
 }

@@ -37,5 +37,17 @@ public class Valadoc.Content.Note : BlockContent, Block {
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_note (this);
 	}
+
+	public override ContentElement copy (ContentElement? new_parent = null) {
+		Note note = new Note ();
+		note.parent = new_parent;
+
+		foreach (Block block in content) {
+			Block copy = block.copy (note) as Block;
+			note.content.add (copy);
+		}
+
+		return note;
+	}
 }
 
