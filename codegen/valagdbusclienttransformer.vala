@@ -328,7 +328,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		// create proxy class
 		var proxy = new Class (iface.name+"Proxy", iface.source_reference, null);
 		proxy.add_base_type (data_type ("GLib.DBusProxy"));
-		proxy.add_base_type (context.analyzer.get_data_type_for_symbol (iface));
+		proxy.add_base_type (SemanticAnalyzer.get_data_type_for_symbol (iface));
 		proxy.access = iface.access;
 		iface.parent_symbol.add_class (proxy);
 

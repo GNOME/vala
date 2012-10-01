@@ -224,7 +224,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 		}
 
 		Method m;
-		var type = context.analyzer.get_data_type_for_symbol (st);
+		var type = SemanticAnalyzer.get_data_type_for_symbol (st);
 		if (!wrapper_method (data_type ("GLib.Variant"), "gvariant_serialize_struct "+type.to_string(), out m)) {
 			m.add_parameter (new Parameter ("st", type, b.source_reference));
 			push_builder (new CodeBuilder.for_subroutine (m));
@@ -361,7 +361,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 		}
 
 		Method m;
-		var type = context.analyzer.get_data_type_for_symbol (st);
+		var type = SemanticAnalyzer.get_data_type_for_symbol (st);
 		type.value_owned = true;
 		if (!wrapper_method (type, "gvariant_deserialize_struct "+type.to_string(), out m)) {
 			m.add_parameter (new Parameter ("variant", data_type ("GLib.Variant", false), b.source_reference));
@@ -443,7 +443,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 		if (en.scope.lookup ("from_string") != null) {
 			return;
 		}
-		var m = new Method ("from_string", context.analyzer.get_data_type_for_symbol (en), en.source_reference);
+		var m = new Method ("from_string", SemanticAnalyzer.get_data_type_for_symbol (en), en.source_reference);
 		m.add_error_type (data_type ("GLib.DBusError.INVALID_ARGS"));
 		m.add_parameter (new Parameter ("str", data_type ("string", false), en.source_reference));
 		en.add_method (m);

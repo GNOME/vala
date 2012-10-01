@@ -100,7 +100,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 
 	// only qualified types, will slightly simplify the work of SymbolResolver
 	public DataType data_type (string s, bool value_owned = true, bool nullable = false) {
-		DataType type = context.analyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s));
+		DataType type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s));
 		type.value_owned = value_owned;
 		type.nullable = nullable;
 		return type;

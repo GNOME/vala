@@ -39,7 +39,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 	string generate_dbus_method_wrapper (Method m, ObjectTypeSymbol sym) {
 		Method wrapper;
 		wrapper_method (new VoidType (), "gdbus_server "+m.get_full_name (), out wrapper);
-		var object_type = context.analyzer.get_data_type_for_symbol (sym);
+		var object_type = SemanticAnalyzer.get_data_type_for_symbol (sym);
 		wrapper.add_parameter (new Parameter ("object", object_type));
 		wrapper.add_parameter (new Parameter ("arguments", data_type ("GLib.Variant", false)));
 		wrapper.add_parameter (new Parameter ("invocation", data_type ("GLib.DBusMethodInvocation", false)));
@@ -171,7 +171,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		sym.add_method (im);
 
 		push_builder (new CodeBuilder.for_subroutine (im));
-		var object_type = context.analyzer.get_data_type_for_symbol (sym);
+		var object_type = SemanticAnalyzer.get_data_type_for_symbol (sym);
 		var object = b.add_temp_declaration (null, expression (@"($object_type) (((Object[])user_data)[0])"));
 		b.open_switch (expression ("method_name"), null);
 		b.add_return ();
@@ -209,7 +209,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		sym.add_method (m);
 
 		push_builder (new CodeBuilder.for_subroutine (m));
-		var object_type = context.analyzer.get_data_type_for_symbol (sym);
+		var object_type = SemanticAnalyzer.get_data_type_for_symbol (sym);
 		var object = b.add_temp_declaration (null, expression (@"($object_type) (((Object[])user_data)[0])"));
 		b.open_switch (expression ("property_name"), null);
 		b.add_return (expression ("null"));
@@ -246,7 +246,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		sym.add_method (m);
 
 		push_builder (new CodeBuilder.for_subroutine (m));
-		var object_type = context.analyzer.get_data_type_for_symbol (sym);
+		var object_type = SemanticAnalyzer.get_data_type_for_symbol (sym);
 		var object = b.add_temp_declaration (null, expression (@"($object_type) (((Object[])user_data)[0])"));
 		b.open_switch (expression ("property_name"), null);
 		b.add_return (expression ("false"));
