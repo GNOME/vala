@@ -22,7 +22,7 @@ namespace UDisks {
 	public class Client : GLib.Object, GLib.AsyncInitable, GLib.Initable {
 		[CCode (cname = "udisks_client_new", has_construct_function = false)]
 		public async Client (GLib.Cancellable? cancellable) throws GLib.Error;
-		public UDisks.Block get_block_for_dev (int block_device_number);
+		public UDisks.Block get_block_for_dev (uint64 block_device_number);
 		public UDisks.Block get_block_for_drive (UDisks.Drive drive, bool get_physical);
 		public GLib.List<UDisks.Block> get_block_for_label (string label);
 		public GLib.List<UDisks.Block> get_block_for_uuid (string uuid);
@@ -30,6 +30,7 @@ namespace UDisks {
 		public UDisks.Drive get_drive_for_block (UDisks.Block block);
 		public void get_drive_info (UDisks.Drive drive, out string out_name, out string out_description, out GLib.Icon out_drive_icon, out string out_media_description, out GLib.Icon out_media_icon);
 		public string get_id_for_display (string usage, string type, string version, bool long_string);
+		public string get_job_description (UDisks.Job job);
 		public GLib.List<UDisks.Job> get_jobs_for_object (UDisks.Object object);
 		public UDisks.Loop get_loop_for_block (UDisks.Block block);
 		public unowned UDisks.Manager get_manager ();
@@ -266,18 +267,24 @@ namespace UDisks {
 		public bool call_get_secret_configuration_sync (GLib.Variant arg_options, out GLib.Variant out_configuration, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_open_for_backup (GLib.Variant arg_options, GLib.UnixFDList? fd_list, GLib.Cancellable? cancellable, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list) throws GLib.Error;
 		public bool call_open_for_backup_sync (GLib.Variant arg_options, GLib.UnixFDList? fd_list, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool call_open_for_benchmark (GLib.Variant arg_options, GLib.UnixFDList? fd_list, GLib.Cancellable? cancellable, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list) throws GLib.Error;
+		public bool call_open_for_benchmark_sync (GLib.Variant arg_options, GLib.UnixFDList? fd_list, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_open_for_restore (GLib.Variant arg_options, GLib.UnixFDList? fd_list, GLib.Cancellable? cancellable, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list) throws GLib.Error;
 		public bool call_open_for_restore_sync (GLib.Variant arg_options, GLib.UnixFDList? fd_list, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_remove_configuration_item (GLib.Variant arg_item, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_remove_configuration_item_sync (GLib.Variant arg_item, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool call_rescan (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_rescan_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_update_configuration_item (GLib.Variant arg_old_item, GLib.Variant arg_new_item, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_update_configuration_item_sync (GLib.Variant arg_old_item, GLib.Variant arg_new_item, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_add_configuration_item (owned GLib.DBusMethodInvocation invocation);
 		public void complete_format (owned GLib.DBusMethodInvocation invocation);
 		public void complete_get_secret_configuration (owned GLib.DBusMethodInvocation invocation, GLib.Variant configuration);
 		public void complete_open_for_backup (owned GLib.DBusMethodInvocation invocation, GLib.UnixFDList? fd_list, GLib.Variant fd);
+		public void complete_open_for_benchmark (owned GLib.DBusMethodInvocation invocation, GLib.UnixFDList? fd_list, GLib.Variant fd);
 		public void complete_open_for_restore (owned GLib.DBusMethodInvocation invocation, GLib.UnixFDList? fd_list, GLib.Variant fd);
 		public void complete_remove_configuration_item (owned GLib.DBusMethodInvocation invocation);
+		public void complete_rescan (owned GLib.DBusMethodInvocation invocation);
 		public void complete_update_configuration_item (owned GLib.DBusMethodInvocation invocation);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
@@ -326,21 +333,30 @@ namespace UDisks {
 		public virtual signal bool handle_format (GLib.DBusMethodInvocation invocation, string arg_type, GLib.Variant arg_options);
 		public virtual signal bool handle_get_secret_configuration (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_open_for_backup (GLib.DBusMethodInvocation invocation, GLib.UnixFDList? fd_list, GLib.Variant arg_options);
+		public virtual signal bool handle_open_for_benchmark (GLib.DBusMethodInvocation invocation, GLib.UnixFDList? fd_list, GLib.Variant arg_options);
 		public virtual signal bool handle_open_for_restore (GLib.DBusMethodInvocation invocation, GLib.UnixFDList? fd_list, GLib.Variant arg_options);
 		public virtual signal bool handle_remove_configuration_item (GLib.DBusMethodInvocation invocation, GLib.Variant arg_item, GLib.Variant arg_options);
+		public virtual signal bool handle_rescan (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_update_configuration_item (GLib.DBusMethodInvocation invocation, GLib.Variant arg_old_item, GLib.Variant arg_new_item, GLib.Variant arg_options);
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_drive_get_type ()")]
 	public interface Drive : GLib.Object {
 		public async bool call_eject (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_eject_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool call_set_configuration (GLib.Variant arg_value, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_set_configuration_sync (GLib.Variant arg_value, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_eject (owned GLib.DBusMethodInvocation invocation);
+		public void complete_set_configuration (owned GLib.DBusMethodInvocation invocation);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
+		[NoAccessorMethod]
+		public abstract GLib.Variant configuration { owned get; set; }
 		[NoAccessorMethod]
 		public abstract string connection_bus { owned get; set; }
 		[NoAccessorMethod]
 		public abstract bool ejectable { get; set; }
+		[NoAccessorMethod]
+		public abstract string id { owned get; set; }
 		[NoAccessorMethod]
 		public abstract string media { owned get; set; }
 		[NoAccessorMethod]
@@ -389,9 +405,18 @@ namespace UDisks {
 		[NoAccessorMethod]
 		public abstract string wwn { owned get; set; }
 		public virtual signal bool handle_eject (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
+		public virtual signal bool handle_set_configuration (GLib.DBusMethodInvocation invocation, GLib.Variant arg_value, GLib.Variant arg_options);
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_drive_ata_get_type ()")]
 	public interface DriveAta : GLib.Object {
+		public async bool call_pm_get_state (GLib.Variant arg_options, GLib.Cancellable? cancellable, out uint8 out_state) throws GLib.Error;
+		public bool call_pm_get_state_sync (GLib.Variant arg_options, out uint8 out_state, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool call_pm_standby (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_pm_standby_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool call_pm_wakeup (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_pm_wakeup_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool call_security_erase_unit (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_security_erase_unit_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_smart_get_attributes (GLib.Variant arg_options, GLib.Cancellable? cancellable, out GLib.Variant out_attributes) throws GLib.Error;
 		public bool call_smart_get_attributes_sync (GLib.Variant arg_options, out GLib.Variant out_attributes, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_smart_selftest_abort (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -400,12 +425,36 @@ namespace UDisks {
 		public bool call_smart_selftest_start_sync (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_smart_update (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_smart_update_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public void complete_pm_get_state (owned GLib.DBusMethodInvocation invocation, uint8 state);
+		public void complete_pm_standby (owned GLib.DBusMethodInvocation invocation);
+		public void complete_pm_wakeup (owned GLib.DBusMethodInvocation invocation);
+		public void complete_security_erase_unit (owned GLib.DBusMethodInvocation invocation);
 		public void complete_smart_get_attributes (owned GLib.DBusMethodInvocation invocation, GLib.Variant attributes);
 		public void complete_smart_selftest_abort (owned GLib.DBusMethodInvocation invocation);
 		public void complete_smart_selftest_start (owned GLib.DBusMethodInvocation invocation);
 		public void complete_smart_update (owned GLib.DBusMethodInvocation invocation);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
+		[NoAccessorMethod]
+		public abstract bool aam_enabled { get; set; }
+		[NoAccessorMethod]
+		public abstract bool aam_supported { get; set; }
+		[NoAccessorMethod]
+		public abstract int aam_vendor_recommended_value { get; set; }
+		[NoAccessorMethod]
+		public abstract bool apm_enabled { get; set; }
+		[NoAccessorMethod]
+		public abstract bool apm_supported { get; set; }
+		[NoAccessorMethod]
+		public abstract bool pm_enabled { get; set; }
+		[NoAccessorMethod]
+		public abstract bool pm_supported { get; set; }
+		[NoAccessorMethod]
+		public abstract int security_enhanced_erase_unit_minutes { get; set; }
+		[NoAccessorMethod]
+		public abstract int security_erase_unit_minutes { get; set; }
+		[NoAccessorMethod]
+		public abstract bool security_frozen { get; set; }
 		[NoAccessorMethod]
 		public abstract bool smart_enabled { get; set; }
 		[NoAccessorMethod]
@@ -428,6 +477,10 @@ namespace UDisks {
 		public abstract double smart_temperature { get; set; }
 		[NoAccessorMethod]
 		public abstract uint64 smart_updated { get; set; }
+		public virtual signal bool handle_pm_get_state (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
+		public virtual signal bool handle_pm_standby (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
+		public virtual signal bool handle_pm_wakeup (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
+		public virtual signal bool handle_security_erase_unit (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_smart_get_attributes (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_smart_selftest_abort (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_smart_selftest_start (GLib.DBusMethodInvocation invocation, string arg_type, GLib.Variant arg_options);
@@ -479,14 +532,22 @@ namespace UDisks {
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
+		public abstract bool cancelable { get; set; }
+		[NoAccessorMethod]
 		public abstract uint64 expected_end_time { get; set; }
 		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
 		public abstract string[] objects { owned get; set; }
 		[NoAccessorMethod]
+		public abstract string operation { owned get; set; }
+		[NoAccessorMethod]
 		public abstract double progress { get; set; }
 		[NoAccessorMethod]
+		public abstract bool progress_valid { get; set; }
+		[NoAccessorMethod]
 		public abstract uint64 start_time { get; set; }
+		[NoAccessorMethod]
+		public abstract uint started_by_uid { get; set; }
 		public virtual signal void completed (bool arg_success, string arg_message);
 		public virtual signal bool handle_cancel (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 	}
@@ -589,7 +650,7 @@ namespace UDisks {
 		[NoAccessorMethod]
 		public abstract string table { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string type_ { owned get; set; }
+		public abstract string type { owned get; set; }
 		[NoAccessorMethod]
 		public abstract string uuid { owned get; set; }
 		public virtual signal bool handle_delete (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
@@ -605,7 +666,7 @@ namespace UDisks {
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
-		public abstract string type_ { owned get; set; }
+		public abstract string type { owned get; set; }
 		public virtual signal bool handle_create_partition (GLib.DBusMethodInvocation invocation, uint64 arg_offset, uint64 arg_size, string arg_type, string arg_name, GLib.Variant arg_options);
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_swapspace_get_type ()")]
@@ -623,8 +684,18 @@ namespace UDisks {
 		public virtual signal bool handle_start (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_stop (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 	}
+	[CCode (cheader_filename = "udisks/udisks.h", cprefix = "UDISKS_PARTITION_TYPE_INFO_FLAGS_", type_id = "udisks_partition_type_info_flags_get_type ()")]
+	[Flags]
+	public enum PartitionTypeInfoFlags {
+		NONE,
+		SWAP,
+		RAID,
+		HIDDEN,
+		CREATE_ONLY,
+		SYSTEM
+	}
 	[CCode (cheader_filename = "udisks/udisks.h", cprefix = "UDISKS_ERROR_")]
-	public enum Error {
+	public errordomain Error {
 		FAILED,
 		CANCELLED,
 		ALREADY_CANCELLED,
@@ -641,16 +712,6 @@ namespace UDisks {
 		WOULD_WAKEUP,
 		DEVICE_BUSY;
 		public static GLib.Quark quark ();
-	}
-	[CCode (cheader_filename = "udisks/udisks.h", cprefix = "UDISKS_PARTITION_TYPE_INFO_FLAGS_")]
-	[Flags]
-	public enum PartitionTypeInfoFlags {
-		NONE,
-		SWAP,
-		RAID,
-		HIDDEN,
-		CREATE_ONLY,
-		SYSTEM
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", cname = "UDISKS_ERROR_NUM_ENTRIES")]
 	public const int ERROR_NUM_ENTRIES;

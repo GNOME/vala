@@ -1983,6 +1983,10 @@ namespace Gst {
 		public void* data;
 		public uint64 offset;
 		public uint size;
+		public unowned Gst.Buffer get_buffer ();
+		public Gst.BufferList get_buffer_list ();
+		public unowned Gst.Event get_event ();
+		public unowned Gst.Query get_query ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
 	public struct ParamSpecFraction {
@@ -2849,7 +2853,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate Gst.Iterator PadIterIntLinkFunction (Gst.Pad pad, Gst.Object parent);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate Gst.PadLinkReturn PadLinkFunction (Gst.Pad pad, Gst.Pad peer);
+	public delegate Gst.PadLinkReturn PadLinkFunction (Gst.Pad pad, Gst.Object parent, Gst.Pad peer);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 2.9)]
 	public delegate Gst.PadProbeReturn PadProbeCallback (Gst.Pad pad, Gst.PadProbeInfo info);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
@@ -2857,7 +2861,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 2.9)]
 	public delegate bool PadStickyEventsForeachFunction (Gst.Pad pad, Gst.Event event);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate void PadUnlinkFunction (Gst.Pad pad);
+	public delegate void PadUnlinkFunction (Gst.Pad pad, Gst.Object parent);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 1.9)]
 	public delegate bool PluginFeatureFilter (Gst.PluginFeature feature);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 1.9)]

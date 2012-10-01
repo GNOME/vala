@@ -120,6 +120,7 @@ namespace Wnck {
 		public void set_grouping (Wnck.TasklistGroupingType grouping);
 		public void set_grouping_limit (int limit);
 		public void set_include_all_workspaces (bool include_all_workspaces);
+		public void set_orientation (Gtk.Orientation orient);
 		public void set_switch_workspace_on_unminimize (bool switch_workspace_on_unminimize);
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_window_get_type ()")]
