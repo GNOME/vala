@@ -20,9 +20,13 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
-
 using Valadoc;
 using Gee;
+
+
+[CCode (name = "TOP_SRC_DIR")]
+extern const string TOP_SRC_DIR;
+
 
 public static void test_enum_global (Api.Enum? en, Api.Package pkg, Api.Namespace global_ns) {
 	assert (en != null);
@@ -2575,7 +2579,7 @@ public static void test_driver (string driver_path) {
 	var reporter = new ErrorReporter ();
 
 	settings.source_files = {
-			"../../tests/drivers/api-test.data.vapi"
+			TOP_SRC_DIR + "/tests/drivers/api-test.data.vapi"
 		};
 
 	settings._protected = false;
