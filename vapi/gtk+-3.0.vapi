@@ -576,7 +576,7 @@ namespace Gtk {
 		public unowned GLib.MenuModel get_menubar ();
 		public unowned Gtk.Window get_window_by_id (uint id);
 		public unowned GLib.List<weak Gtk.Window> get_windows ();
-		public uint inhibit (Gtk.Window window, Gtk.ApplicationInhibitFlags flags, string reason);
+		public uint inhibit (Gtk.Window? window, Gtk.ApplicationInhibitFlags flags, string? reason);
 		public bool is_inhibited (Gtk.ApplicationInhibitFlags flags);
 		public void remove_accelerator (string action_name, GLib.Variant parameter);
 		public void remove_window (Gtk.Window window);
