@@ -470,7 +470,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
 		public static Gst.RTSP.Result transport_parse (string str, Gst.RTSP.Transport transport);
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
-		public static Gst.RTSP.Result url_parse (string urlstr, Gst.RTSP.Url url);
+		public static Gst.RTSP.Result url_parse (string urlstr, out Gst.RTSP.Url url);
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
 		public static unowned string version_as_text (Gst.RTSP.Version version);
 	}

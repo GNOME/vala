@@ -13,3 +13,7 @@ VideoOverlay
 VideoCodecFrame
   .get_user_data skip
   .set_user_data skip
+
+// Bug #685833
+VideoCodecFrame
+  .abidata skip

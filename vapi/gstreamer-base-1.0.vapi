@@ -621,6 +621,7 @@ namespace Gst {
 			public void set_gap_aware (bool gap_aware);
 			public void set_in_place (bool in_place);
 			public void set_passthrough (bool passthrough);
+			public void set_prefer_passthrough (bool prefer_passthrough);
 			public void set_qos_enabled (bool enabled);
 			[NoWrapper]
 			public virtual bool sink_event (Gst.Event event);

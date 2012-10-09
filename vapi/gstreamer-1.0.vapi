@@ -891,7 +891,7 @@ namespace Gst {
 		public bool link_pads (string? srcpadname, Gst.Element dest, string? destpadname, Gst.PadLinkCheck flags = Gst.PadLinkCheck.DEFAULT);
 		public bool link_pads_filtered (string? srcpadname, Gst.Element dest, string? destpadname, Gst.Caps? filter);
 		public void lost_state ();
-		public static Gst.Element make_from_uri (Gst.URIType type, string uri, string? elementname) throws GLib.Error;
+		public static unowned Gst.Element make_from_uri (Gst.URIType type, string uri, string? elementname) throws GLib.Error;
 		public void message_full (Gst.MessageType type, GLib.Quark domain, int code, owned string? text, owned string? debug, string file, string function, int line);
 		public bool post_message (owned Gst.Message message);
 		public virtual Gst.Clock provide_clock ();
@@ -2590,6 +2590,7 @@ namespace Gst {
 		END
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_SEGMENT_FLAG_", has_type_id = false)]
+	[Flags]
 	public enum SegmentFlags {
 		NONE,
 		RESET,

@@ -7,7 +7,6 @@ RTP_PAYLOAD_* parent="Gst.RTP.Payload" name="RTP_PAYLOAD_(.+)"
 
 RTPBuffer struct=false base_type="Gst.Buffer"
   .buffer skip
-  .n_map skip
   .map unowned=false
 
 RTCP* parent="Gst.RTPC" name="RTCP(.+)"
