@@ -1,4 +1,4 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/video/video.h"
+Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/video/video.h" gir_namespace="GstVideo" gir_version="0.10"
 GstBaseVideoCodec base_class="GstElement"
 GstBaseVideoCodecClass hidden="1"
 GstBaseVideoDecoder base_class="GstBaseVideoCodec"

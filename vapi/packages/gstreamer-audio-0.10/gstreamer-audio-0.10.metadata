@@ -1,4 +1,4 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/audio/audio.h"
+Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/audio/audio.h" gir_namespace="GstAudio" gir_version="0.10"
 GstAudioChannelPosition cheader_filename="gst/audio/multichannel.h"
 GstAudioFilterClass name="pointer"
 GstBaseAudioSinkSlaveMethod cheader_filename="gst/audio/gstbaseaudiosink.h"
