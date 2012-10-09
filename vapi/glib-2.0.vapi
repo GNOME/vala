@@ -4281,7 +4281,7 @@ namespace GLib {
 	
 	/* GTree */
 	
-	public delegate bool TraverseFunc (void* key, void* value);
+	public delegate bool TraverseFunc<K,V> (K key, V value);
 	
 	[CCode (cprefix = "G_", has_type_id = false)]
 	public enum TraverseType {
@@ -4300,7 +4300,9 @@ namespace GLib {
 	[CCode (free_function = "g_tree_destroy")]
 #endif
 	public class Tree<K,V> {
-		public Tree (CompareFunc<K> key_compare_func);
+		[CCode (cname = "g_tree_new_full", simple_generics = true)]
+		public Tree (CompareDataFunc<K> key_compare_func);
+		[Deprecated (since = "vala-0.20", replacement = "Tree ()")]
 		public Tree.with_data (CompareDataFunc<K> key_compare_func);
 		public Tree.full (CompareDataFunc<K> key_compare_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
 		public void insert (owned K key, owned V value);
@@ -4308,8 +4310,8 @@ namespace GLib {
 		public int nnodes ();
 		public int height ();
 		public unowned V lookup (K key);
-		public bool lookup_extended (K lookup_key, K orig_key, V value);
-		public void foreach (TraverseFunc traverse_func);
+		public bool lookup_extended (K lookup_key, out unowned K orig_key, out unowned V value);
+		public void foreach (TraverseFunc<K,V> traverse_func);
 		public unowned V search (TreeSearchFunc<K> search_func);
 		[CCode (cname = "g_tree_search")]
 		public unowned V search_key (CompareFunc<K> search_func, K key);
