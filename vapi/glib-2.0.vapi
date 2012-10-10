@@ -3615,7 +3615,7 @@ namespace GLib {
 		public static int32 rand_int ();
 		public static int32 rand_int_range (int32 begin, int32 end);
 		public static double rand_double ();
-		public static double rand_double_range ();
+		public static double rand_double_range (double begin, double end);
 		public static void log_set_fatal_handler (LogFatalFunc log_func);
 	}
 
