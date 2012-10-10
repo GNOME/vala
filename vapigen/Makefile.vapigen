@@ -53,6 +53,7 @@ $(1): $$($(_vapi_name)_GIR)
 	  --library $(1:.vapi=) \
 	  $(foreach _vapi_metadatadir_name,$(if $($(_vapi_name)_METADATADIRS),$($(_vapi_name)_METADATADIRS),$(VAPIGEN_METADATADIRS)),--metadatadir $(_vapi_metadatadir_name)) \
 	  $(foreach _vapi_dir_name,$(if $($(_vapi_name)_VAPIDIRS),$($(_vapi_name)_VAPIDIRS),$(VAPIGEN_VAPIDIRS)),--vapidir $(_vapi_dir_name)) \
+	  $(foreach _gir_dir_name,$(if $($(_vapi_name)_GIRDIRS),$($(_vapi_name)_GIRDIRS),$(VAPIGEN_GIRDIRS)),--girdir $(_gir_dir_name)) \
 	  $(foreach _vapi_dep_name,$(if $($(_vapi_name)_DEPS),$($(_vapi_name)_DEPS),$(VAPIGEN_DEPS)),--pkg $(_vapi_dep_name)) \
 	  $$($(_vapi_name)_FILES)
 endef
