@@ -227,7 +227,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
   
 	public override void visit_source_code (SourceCode code) {
 		current_builder.append ("<programlisting>");
-		current_builder.append (code.code);
+		current_builder.append (Markup.escape_text (code.code));
 		current_builder.append ("</programlisting>");
 	}
   
@@ -294,7 +294,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 	}
   
 	public override void visit_text (Text t) {
-		current_builder.append (t.content);
+		current_builder.append (Markup.escape_text (t.content));
 		t.accept_children (this);
 	}
 }
