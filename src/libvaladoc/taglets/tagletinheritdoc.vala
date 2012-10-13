@@ -75,7 +75,7 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 		}
 
 		parent_taglet = find_parent_taglet ();
-		if (parent_taglet == null) {
+		if (parent_taglet == null && _inherited != null && _inherited.documentation != null) {
 			root.register_inheritdoc (this);
 		}
 
