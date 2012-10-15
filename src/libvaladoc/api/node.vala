@@ -58,8 +58,13 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 		per_name_children = new HashMap<string,Node> ();
 		per_type_children = new HashMap<NodeType?, Gee.List<Node>> (int_hash, int_equal);
 
+		if (name != null && (is_keyword (name) || name[0].isdigit ())) {
+			this.name = "@" + name;
+		} else {
+			this.name = name;
+		}
+
 		this.parent = parent;
-		this.name = name;
 		this.file = file;
 	}
 
@@ -89,7 +94,11 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 
 	public void add_child (Symbol child) {
 		if (child.name != null) {
-			per_name_children.set (child.name, child);
+			if (child.name[0] == '@') {
+				per_name_children.set (child.name.next_char (), child);
+			} else {
+				per_name_children.set (child.name, child);
+			}
 		} else {
 			// Special case for the root namespace
 			per_name_children.set ("", child);
@@ -259,7 +268,11 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	}
 
 	public Node? find_by_name (string name) {
-		return per_name_children.get (name);
+		if (name[0] == '@') {
+			return per_name_children.get (name.next_char ());
+		} else {
+			return per_name_children.get (name);
+		}
 	}
 
 	private Namespace? _nspace = null;
@@ -339,6 +352,354 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	 */
 	public int compare_to (Node node) {
 		return strcmp (name, node.name);
+	}
+
+	private bool is_keyword (string name) {
+		switch (name[0]) {
+		case 'a':
+			switch (name[1]) {
+			case 'b':
+				return name == "abstract";
+
+			case 's':
+				if (name[2] == '\0') {
+					return true;
+				}
+
+				return name == "async";
+			}
+			break;
+
+		case 'b':
+			switch (name[1]) {
+			case 'a':
+				return name == "base";
+
+			case 'r':
+				return name == "break";
+			}
+			break;
+
+		case 'c':
+			switch (name[1]) {
+			case 'a':
+				switch (name[2]) {
+				case 's':
+					return name == "case";
+
+				case 't':
+					return name == "catch";
+				}
+				break;
+
+			case 'l':
+				return name == "class";
+
+			case 'o':
+				if (name[2] != 'n') {
+					return false;
+				}
+
+				switch (name[3]) {
+				case 's':
+					if (name[4] == 't') {
+						switch (name[5]) {
+						case '\0':
+							return true;
+
+						case 'r':
+							return name == "construct";
+						}
+					}
+					break;
+
+				case 't':
+					return name == "continue";
+				}
+				break;
+			}
+			break;
+
+		case 'd':
+			switch (name[1]) {
+			case 'e':
+				switch (name[2]) {
+				case 'f':
+					return name == "default";
+
+				case 'l':
+					if (name[3] != 'e') {
+						return false;
+					}
+
+					switch (name[4]) {
+					case 'g':
+						return name == "delegate";
+
+					case 't':
+						return name == "delete";
+					}
+					break;
+				}
+				break;
+
+			case 'o':
+				return name[2] == '\0';
+
+			case 'y':
+				return name == "dynamic";
+			}
+			break;
+
+		case 'e':
+			switch (name[1]) {
+			case 'l':
+				return name == "else";
+
+			case 'n':
+				switch (name[2]) {
+				case 's':
+					return name == "ensures";
+
+				case 'u':
+					return name == "enum";
+				}
+				break;
+
+			case 'r':
+				return name == "errordomain";
+
+			case 'x':
+				return name == "extern";
+			}
+			break;
+
+		case 'f':
+			switch (name[1]) {
+			case 'a':
+				return name == "false";
+
+			case 'i':
+				return name == "finally";
+
+			case 'o':
+				if (name[2] != 'r') {
+					return false;
+				}
+
+				switch (name[3]) {
+				case '\0':
+					return true;
+
+				case 'e':
+					return name == "foreach";
+				}
+				break;
+			}
+			break;
+
+		case 'g':
+			return name == "get";
+
+		case 'i':
+			switch (name[1]) {
+			case 'f':
+				return name[2] == '\0';
+
+			case 'n':
+				switch (name[2]) {
+				case '\0':
+					return true;
+
+				case 'l':
+					return name == "inline";
+
+				case 't':
+					return name == "interface" || name == "internal";
+				}
+				break;
+
+			case 's':
+				return name[2] == '\0';
+			}
+			break;
+
+		case 'l':
+			return name == "lock";
+
+		case 'n':
+			switch (name[1]) {
+			case 'a':
+				return name == "namespace";
+
+			case 'e':
+				return name == "new";
+
+			case 'u':
+				return name == "null";
+			}
+			break;
+
+		case 'o':
+			switch (name[1]) {
+			case 'u':
+				return name == "out";
+
+			case 'v':
+				return name == "override";
+
+			case 'w':
+				return name == "owned";
+			}
+			break;
+
+		case 'p':
+			switch (name[1]) {
+			case 'a':
+				return name == "params";
+
+			case 'r':
+				switch (name[2]) {
+				case 'i':
+					return name == "private";
+
+				case 'o':
+					return name == "protected";
+				}
+				break;
+			case 'u':
+				return name == "public";
+			}
+			break;
+
+		case 'r':
+			if (name[1] != 'e') {
+				return false;
+			}
+
+			switch (name[2]) {
+			case 'f':
+				return name[3] == '\0';
+
+			case 'q':
+				return name == "requires";
+
+			case 't':
+				return name == "return";
+			}
+			break;
+
+		case 's':
+			switch (name[1]) {
+			case 'e':
+				switch (name[2]) {
+				case 'a':
+					return name == "sealed";
+
+				case 't':
+					return name[3] == '\0';
+				}
+				break;
+
+			case 'i':
+				switch (name[2]) {
+				case 'g':
+					return name == "signal";
+				case 'z':
+					return name == "sizeof";
+				}
+				break;
+
+			case 't':
+				switch (name[2]) {
+				case 'a':
+					return name == "static";
+
+				case 'r':
+					return name == "struct";
+				}
+				break;
+
+			case 'w':
+				return name == "switch";
+			}
+			break;
+
+		case 't':
+			switch (name[1]) {
+			case 'h':
+				switch (name[2]) {
+				case 'i':
+					return name == "this";
+
+				case 'r':
+					if (name[3] == 'o' && name[4] == 'w') {
+						return name[5] == '\0' || (name[5] == 's' && name[6] == '\0');
+					}
+					break;
+				}
+				break;
+
+			case 'r':
+				switch (name[2]) {
+				case 'u':
+					return name == "true";
+
+				case 'y':
+					return name[3] == '\0';
+				}
+				break;
+
+			case 'y':
+				return name == "typeof";
+			}
+			break;
+
+		case 'u':
+			switch (name[1]) {
+			case 'n':
+				return name == "unowned";
+
+			case 's':
+				return name == "using";
+			}
+			break;
+
+		case 'v':
+			switch (name[1]) {
+			case 'a':
+				return name == "var";
+
+			case 'i':
+				return name == "virtual";
+
+			case 'o':
+				switch (name[2]) {
+				case 'i':
+					return name == "void";
+
+				case 'l':
+					return name == "volatile";
+				}
+				break;
+			}
+			break;
+
+		case 'w':
+			switch (name[1]) {
+			case 'e':
+				return name == "weak";
+
+			case 'h':
+				return name == "while";
+			}
+			break;
+
+		case 'y':
+			return name == "yield";
+		}
+
+		return false;
 	}
 }
 
