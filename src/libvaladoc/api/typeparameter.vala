@@ -53,5 +53,10 @@ public class Valadoc.Api.TypeParameter : Symbol {
 	public override void accept (Visitor visitor) {
 		visitor.visit_type_parameter (this);
 	}
+
+	public override bool is_browsable (Settings settings) {
+		return false;
+	}
+
 }
 
