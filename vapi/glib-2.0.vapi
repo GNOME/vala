@@ -4026,8 +4026,8 @@ namespace GLib {
 		public bool remove_fast (void *data);
 		public void remove_index_fast (uint index);
 		public void remove_range (uint index, uint length);
-		public void sort (CompareFunc compare_func);
-		public void sort_with_data (CompareDataFunc compare_func);
+		public void sort (CompareFunc<void**> compare_func);
+		public void sort_with_data (CompareDataFunc<void**> compare_func);
 		public void set_free_func (GLib.DestroyNotify? element_free_function);
 		public void set_size (int length);
 
