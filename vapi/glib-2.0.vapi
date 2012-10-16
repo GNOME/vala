@@ -1830,6 +1830,7 @@ namespace GLib {
 	[Compact]
 	[CCode (ref_function = "g_async_queue_ref", unref_function = "g_async_queue_unref")]
 	public class AsyncQueue<G> {
+		[CCode (cname = "g_async_queue_new_full", simple_generics = true)]
 		public AsyncQueue ();
 		public void push (owned G data);
 		public void push_sorted (owned G data, CompareDataFunc<G> func);
