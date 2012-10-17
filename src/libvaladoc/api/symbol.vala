@@ -91,6 +91,15 @@ public abstract class Valadoc.Api.Symbol : Node {
 		if (!settings._protected && this.is_protected) {
 			return false;
 		}
+
+		Item? pos = parent;
+		while (pos != null && pos is Symbol && pos is Namespace == false) {
+			if (((Symbol) pos).is_browsable (settings) == false) {
+				return false;
+			}
+			pos = pos.parent;
+		}
+
 		return true;
 	}
 
