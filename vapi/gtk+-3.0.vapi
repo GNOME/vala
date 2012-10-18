@@ -8402,7 +8402,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void icon_size_register_alias (string alias, Gtk.IconSize target);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void init ([CCode (array_length_pos = 0.9)] ref unowned string[] argv);
+	public static void init ([CCode (array_length_pos = 0.9)] ref unowned string[]? argv);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool init_check ([CCode (array_length_pos = 0.9)] ref unowned string[] argv);
 	[CCode (cheader_filename = "gtk/gtk.h")]
