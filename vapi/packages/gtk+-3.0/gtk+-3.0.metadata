@@ -295,6 +295,7 @@ gtk_file_chooser_list_filters transfer_ownership="1" type_arguments="unowned Fil
 gtk_file_chooser_list_shortcut_folder_uris nullable="1" transfer_ownership="1" type_arguments="string"
 gtk_file_chooser_list_shortcut_folders nullable="1" transfer_ownership="1" type_arguments="string"
 GtkFixed.children type_arguments="Widget"
+gtk_font_chooser_dialog_new.* nullable="1"
 gtk_font_chooser_set_filter_func.filter transfer_ownership="1"
 gtk_font_chooser_set_filter_func.data hidden="1"
 gtk_font_chooser_set_filter_func.destroy hidden="1"

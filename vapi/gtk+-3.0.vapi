@@ -1998,7 +1998,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class FontChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.FontChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public FontChooserDialog (string title, Gtk.Window parent);
+		public FontChooserDialog (string? title, Gtk.Window? parent);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class FontChooserWidget : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable, Gtk.FontChooser {
