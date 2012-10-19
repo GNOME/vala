@@ -841,7 +841,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				ccode.add_expression (thread_init_call);
 			}
 
-			ccode.add_expression (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init")));
+			if (!context.require_glib_version (2, 36)) {
+				ccode.add_expression (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init")));
+			}
 
 			var main_call = new CCodeFunctionCall (new CCodeIdentifier (function.name));
 			if (m.get_parameters ().size == 1) {
