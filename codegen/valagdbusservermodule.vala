@@ -505,7 +505,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					string length_cname = get_array_length_cname ("result", dim);
 
-					ccode.add_declaration ("int", new CCodeVariableDeclarator (length_cname));
+					ccode.add_declaration ("int", new CCodeVariableDeclarator.zero (length_cname, new CCodeConstant ("0")));
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
 				}
 			}
