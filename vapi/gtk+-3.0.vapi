@@ -1914,7 +1914,7 @@ namespace Gtk {
 		public void set_title (string title);
 		public void set_width_chars (int n_chars);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public FileChooserButton.with_dialog (Gtk.Widget dialog);
+		public FileChooserButton.with_dialog (Gtk.Dialog dialog);
 		public Gtk.FileChooser dialog { construct; }
 		public bool focus_on_click { get; set; }
 		public string title { get; set; }
