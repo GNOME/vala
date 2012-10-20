@@ -3632,7 +3632,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ScaleButton : Gtk.Button, Atk.Implementor, Gtk.Buildable, Gtk.Actionable, Gtk.Activatable, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public ScaleButton (Gtk.IconSize size, double min, double max, double step, [CCode (array_length = false)] string[] icons);
+		public ScaleButton (Gtk.IconSize size, double min = 0.0, double max = 100.0, double step = 2.0, [CCode (array_length = false)] string[]? icons = null);
 		public unowned Gtk.Adjustment get_adjustment ();
 		public unowned Gtk.Widget get_minus_button ();
 		public unowned Gtk.Widget get_plus_button ();

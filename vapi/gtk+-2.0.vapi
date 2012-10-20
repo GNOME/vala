@@ -3615,7 +3615,7 @@ namespace Gtk {
 		public weak Gtk.Widget minus_button;
 		public weak Gtk.Widget plus_button;
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public ScaleButton (Gtk.IconSize size, double min, double max, double step, [CCode (array_length = false)] string[] icons);
+		public ScaleButton (Gtk.IconSize size, double min = 0.0, double max = 100.0, double step = 2.0, [CCode (array_length = false)] string[]? icons = null);
 		public unowned Gtk.Adjustment get_adjustment ();
 		public unowned Gtk.Widget get_minus_button ();
 		public unowned Gtk.Widget get_plus_button ();
