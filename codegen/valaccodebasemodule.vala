@@ -1088,16 +1088,26 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				ccode.add_assignment (lhs, rhs);
 
-				if (f.variable_type is ArrayType && get_ccode_array_length (f) &&
-				    f.initializer is ArrayCreationExpression) {
+				if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
 					var array_type = (ArrayType) f.variable_type;
 					var field_value = get_field_cvalue (f, load_this_parameter ((TypeSymbol) f.parent_symbol));
 
-					List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var array_len_lhs = get_array_length_cvalue (field_value, dim);
-						var size = sizes[dim - 1];
-						ccode.add_assignment (array_len_lhs, get_cvalue (size));
+					var glib_value = (GLibValue) f.initializer.target_value;
+					if (glib_value.array_length_cvalues != null) {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							var array_len_lhs = get_array_length_cvalue (field_value, dim);
+							ccode.add_assignment (array_len_lhs, get_array_length_cvalue (glib_value, dim));
+						}
+					} else if (glib_value.array_null_terminated) {
+						requires_array_length = true;
+						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+						len_call.add_argument (get_cvalue_ (glib_value));
+
+						ccode.add_assignment (get_array_length_cvalue (field_value, 1), len_call);
+					} else {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							ccode.add_assignment (get_array_length_cvalue (field_value, dim), new CCodeConstant ("-1"));
+						}
 					}
 
 					if (array_type.rank == 1 && f.is_internal_symbol ()) {
@@ -1267,16 +1277,26 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 								ccode.add_assignment (lhs, rhs);
 							}
 
-							if (f.variable_type is ArrayType && get_ccode_array_length (f) &&
-							    f.initializer is ArrayCreationExpression) {
+							if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
 								var array_type = (ArrayType) f.variable_type;
 								var field_value = get_field_cvalue (f, null);
 
-								List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
-								for (int dim = 1; dim <= array_type.rank; dim++) {
-									var array_len_lhs = get_array_length_cvalue (field_value, dim);
-									var size = sizes[dim - 1];
-									ccode.add_assignment (array_len_lhs, get_cvalue (size));
+								var glib_value = (GLibValue) f.initializer.target_value;
+								if (glib_value.array_length_cvalues != null) {
+									for (int dim = 1; dim <= array_type.rank; dim++) {
+										var array_len_lhs = get_array_length_cvalue (field_value, dim);
+										ccode.add_assignment (array_len_lhs, get_array_length_cvalue (glib_value, dim));
+									}
+								} else if (glib_value.array_null_terminated) {
+									requires_array_length = true;
+									var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+									len_call.add_argument (get_cvalue_ (glib_value));
+
+									ccode.add_assignment (get_array_length_cvalue (field_value, 1), len_call);
+								} else {
+									for (int dim = 1; dim <= array_type.rank; dim++) {
+										ccode.add_assignment (get_array_length_cvalue (field_value, dim), new CCodeConstant ("-1"));
+									}
 								}
 							}
 						} else {
