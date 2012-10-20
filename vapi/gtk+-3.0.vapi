@@ -2115,8 +2115,8 @@ namespace Gtk {
 	public class HSV : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public HSV ();
-		public void get_color (double h, double s, double v);
-		public void get_metrics (int size, int ring_width);
+		public void get_color (out double h, out double s, out double v);
+		public void get_metrics (out int size, out int ring_width);
 		public bool is_adjusting ();
 		public void set_color (double h, double s, double v);
 		public void set_metrics (int size, int ring_width);
