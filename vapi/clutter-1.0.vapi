@@ -4725,7 +4725,7 @@ namespace Clutter {
 		public float get_height ();
 		public unowned Clutter.Actor get_last_child ();
 		public unowned Clutter.LayoutManager get_layout_manager ();
-		public void get_margin (out unowned Clutter.Margin margin);
+		public void get_margin (Clutter.Margin margin);
 		public float get_margin_bottom ();
 		public float get_margin_left ();
 		public float get_margin_right ();
@@ -5739,7 +5739,7 @@ namespace Clutter {
 	public class DragAction : Clutter.Action {
 		[CCode (has_construct_function = false, type = "ClutterAction*")]
 		public DragAction ();
-		public bool get_drag_area (out unowned Clutter.Rect drag_area);
+		public bool get_drag_area (Clutter.Rect drag_area);
 		public Clutter.DragAxis get_drag_axis ();
 		public unowned Clutter.Actor get_drag_handle ();
 		public void get_drag_threshold (out uint x_threshold, out uint y_threshold);
@@ -5967,7 +5967,7 @@ namespace Clutter {
 		public unowned Clutter.InputDevice get_associated_device ();
 		public Clutter.InputAxis get_axis (uint index_);
 		public bool get_axis_value ([CCode (array_length = false)] double[] axes, Clutter.InputAxis axis, out double value);
-		public bool get_coords (Clutter.EventSequence? sequence, out unowned Clutter.Point point);
+		public bool get_coords (Clutter.EventSequence? sequence, Clutter.Point point);
 		[Deprecated (since = "1.12")]
 		public void get_device_coords (out int x, out int y);
 		public int get_device_id ();
@@ -6324,17 +6324,17 @@ namespace Clutter {
 		public Clutter.Rect copy ();
 		public bool equals (Clutter.Rect b);
 		public void free ();
-		public void get_center (out unowned Clutter.Point center);
+		public void get_center (Clutter.Point center);
 		public float get_height ();
 		public float get_width ();
 		public float get_x ();
 		public float get_y ();
 		public unowned Clutter.Rect init (float x, float y, float width, float height);
 		public void inset (float d_x, float d_y);
-		public bool intersection (Clutter.Rect b, out unowned Clutter.Rect res);
+		public bool intersection (Clutter.Rect b, Clutter.Rect? res);
 		public Clutter.Rect normalize ();
 		public void offset (float d_x, float d_y);
-		public void union (Clutter.Rect b, out unowned Clutter.Rect res);
+		public void union (Clutter.Rect b, Clutter.Rect res);
 		public static unowned Clutter.Rect zero ();
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_rectangle_get_type ()")]
@@ -6979,7 +6979,7 @@ namespace Clutter {
 		[Deprecated (since = "1.10")]
 		public Clutter.Timeline clone ();
 		public bool get_auto_reverse ();
-		public bool get_cubic_bezier_progress (out unowned Clutter.Point c_1, out unowned Clutter.Point c_2);
+		public bool get_cubic_bezier_progress (Clutter.Point c_1, Clutter.Point c_2);
 		public int get_current_repeat ();
 		public uint get_delay ();
 		public uint get_delta ();
@@ -7071,8 +7071,8 @@ namespace Clutter {
 	public class ZoomAction : Clutter.GestureAction {
 		[CCode (has_construct_function = false, type = "ClutterAction*")]
 		public ZoomAction ();
-		public void get_focal_point (out unowned Clutter.Point point);
-		public void get_transformed_focal_point (out unowned Clutter.Point point);
+		public void get_focal_point (Clutter.Point point);
+		public void get_transformed_focal_point (Clutter.Point point);
 		public Clutter.ZoomAxis get_zoom_axis ();
 		public void set_zoom_axis (Clutter.ZoomAxis axis);
 		public Clutter.ZoomAxis zoom_axis { get; set; }
