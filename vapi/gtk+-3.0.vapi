@@ -3334,18 +3334,18 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public RadioButton (GLib.SList<Gtk.RadioButton>? group);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public RadioButton.from_widget (Gtk.RadioButton radio_group_member);
+		public RadioButton.from_widget (Gtk.RadioButton? radio_group_member);
 		public unowned GLib.SList<Gtk.RadioButton> get_group ();
 		public void join_group (Gtk.RadioButton group_source);
 		public void set_group (GLib.SList<Gtk.RadioButton> group);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public RadioButton.with_label (GLib.SList<Gtk.RadioButton>? group, string label);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public RadioButton.with_label_from_widget (Gtk.RadioButton radio_group_member, string label);
+		public RadioButton.with_label_from_widget (Gtk.RadioButton? radio_group_member, string label);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public RadioButton.with_mnemonic (GLib.SList<Gtk.RadioButton>? group, string label);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public RadioButton.with_mnemonic_from_widget (Gtk.RadioButton radio_group_member, string label);
+		public RadioButton.with_mnemonic_from_widget (Gtk.RadioButton? radio_group_member, string label);
 		[NoAccessorMethod]
 		public Gtk.RadioButton group { set; }
 		public virtual signal void group_changed ();
