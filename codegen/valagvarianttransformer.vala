@@ -70,7 +70,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 	}
 
 	Expression serialize_basic (BasicTypeInfo basic_type, Expression expr) {
-		var new_call = (ObjectCreationExpression) expression (@"new GLib.Variant.$(basic_type.type_name)()");
+		var new_call = (ObjectCreationExpression) expression (@"new GLib.Variant.$(basic_type.type_name) ()");
 		new_call.add_argument (expr);
 		return new_call;
 	}
@@ -151,20 +151,20 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 
 	Expression serialize_array (ArrayType array_type, Expression array_expr) {
 		Method m;
-		if (!wrapper_method (data_type ("GLib.Variant"), "gvariant_serialize_array "+array_type.to_string(), out m)) {
+		if (!wrapper_method (data_type ("GLib.Variant"), "gvariant_serialize_array " + array_type.to_string (), out m)) {
 			m.add_parameter (new Parameter ("array", copy_type (array_type, false), b.source_reference));
 			push_builder (new CodeBuilder.for_subroutine (m));
 
 			string[] indices = new string[array_type.rank];
-			for (int dim=1; dim <= array_type.rank; dim++) {
-				indices[dim-1] = b.add_temp_declaration (null, new IntegerLiteral ("0"));
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				indices[dim - 1] = b.add_temp_declaration (null, new IntegerLiteral ("0"));
 			}
 			b.add_return (serialize_array_dim (array_type, 1, indices, "array"));
 
 			pop_builder ();
 			check (m);
 		}
-		var call = (MethodCall) expression (m.name+"()");
+		var call = (MethodCall) expression (m.name + " ()");
 		call.add_argument (array_expr);
 		return call;
 	}
@@ -174,14 +174,14 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 
 		var builder = b.add_temp_declaration (null, builderinit);
 
-		Expression length = expression (array_var+".length");
+		Expression length = expression (array_var + ".length");
 		if (array_type.rank > 1) {
 			ElementAccess ea = new ElementAccess (length, b.source_reference);
-			ea.append_index (new IntegerLiteral ((dim-1).to_string (), b.source_reference));
+			ea.append_index (new IntegerLiteral ((dim - 1).to_string (), b.source_reference));
 			length = ea;
 		}
 
-		var index = indices[dim-1];
+		var index = indices[dim - 1];
 		var forcond = new BinaryExpression (BinaryOperator.LESS_THAN, expression (index), length, b.source_reference);
 		var foriter = new PostfixExpression (expression (index), true, b.source_reference);
 		b.open_for (null, forcond, foriter);
@@ -191,7 +191,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			element_variant = serialize_array_dim (array_type, dim + 1, indices, array_var);
 		} else {
 			var element_expr = new ElementAccess (expression (array_var), b.source_reference);
-			for (int i=0; i < dim; i++) {
+			for (int i = 0; i < dim; i++) {
 				element_expr.append_index (expression (indices[i]));
 			}
 			if (is_gvariant_type (array_type.element_type)) {
@@ -203,12 +203,12 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			}
 		}
 
-		var builder_add = (MethodCall) expression (builder+".add_value ()");
+		var builder_add = (MethodCall) expression (builder + ".add_value ()");
 		builder_add.add_argument (element_variant);
 		b.add_expression (builder_add);
 		b.close ();
 
-		return (MethodCall) expression (builder+".end ()");
+		return (MethodCall) expression (builder + ".end ()");
 	}
 
 	Expression? serialize_struct (Struct st, Expression expr) {
@@ -225,7 +225,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 
 		Method m;
 		var type = SemanticAnalyzer.get_data_type_for_symbol (st);
-		if (!wrapper_method (data_type ("GLib.Variant"), "gvariant_serialize_struct "+type.to_string(), out m)) {
+		if (!wrapper_method (data_type ("GLib.Variant"), "gvariant_serialize_struct " + type.to_string (), out m)) {
 			m.add_parameter (new Parameter ("st", type, b.source_reference));
 			push_builder (new CodeBuilder.for_subroutine (m));
 
@@ -237,7 +237,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 					continue;
 				}
 
-				var serialized_field = "st."+f.name;
+				var serialized_field = "st." + f.name;
 				if (is_gvariant_type (f.variable_type)) {
 					serialized_field = @"new GLib.Variant.variant ($serialized_field)";
 				}
@@ -249,14 +249,14 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			check (m);
 		}
 
-		var call = (MethodCall) expression (m.name+"()");
+		var call = (MethodCall) expression (m.name + " ()");
 		call.add_argument (expr);
 		return call;
 	}
 
 	Expression? serialize_hash_table (ObjectType type, Expression expr) {
 		Method m;
-		if (!wrapper_method (data_type ("GLib.Variant"), "gvariant_serialize_hash_table "+type.to_string(), out m)) {
+		if (!wrapper_method (data_type ("GLib.Variant"), "gvariant_serialize_hash_table " + type.to_string (), out m)) {
 			m.add_parameter (new Parameter ("ht", copy_type (type, false), b.source_reference));
 			push_builder (new CodeBuilder.for_subroutine (m));
 
@@ -270,14 +270,14 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			string serialized_key = is_gvariant_type (key_type) ? "new GLib.Variant.variant (k1)" : "k1";
 			string serialized_value = is_gvariant_type (value_type) ? "new GLib.Variant.variant (v1)" : "v1";
 
-			var for_each = expression (@"ht.for_each ((k,v) => { GLib.Variant k1 = k; GLib.Variant v1 = v; $builder.add (\"{?*}\", $serialized_key, $serialized_value); })");
+			var for_each = expression (@"ht.for_each ((k, v) => { GLib.Variant k1 = k; GLib.Variant v1 = v; $builder.add (\"{?*}\", $serialized_key, $serialized_value); })");
 			b.add_expression (for_each);
 			b.add_return (expression (@"$builder.end ()"));
 
 			pop_builder ();
 			check (m);
 		}
-		var call = (MethodCall) expression (m.name+"()");
+		var call = (MethodCall) expression (m.name + " ()");
 		call.add_argument (expr);
 		return call;
 	}
@@ -294,7 +294,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 
 	Expression deserialize_array (ArrayType array_type, Expression expr) {
 		Method m;
-		if (!wrapper_method (copy_type (array_type, true), "gvariant_deserialize_array "+array_type.to_string(), out m)) {
+		if (!wrapper_method (copy_type (array_type, true), "gvariant_deserialize_array " + array_type.to_string (), out m)) {
 			m.add_parameter (new Parameter ("variant", data_type ("GLib.Variant", false), b.source_reference));
 			push_builder (new CodeBuilder.for_subroutine (m));
 
@@ -304,11 +304,11 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			var array = b.add_temp_declaration (copy_type (array_type, true));
 
 			string[] indices = new string[array_type.rank];
-			for (int dim=1; dim <= array_type.rank; dim++) {
+			for (int dim = 1; dim <= array_type.rank; dim++) {
 				string length = b.add_temp_declaration (data_type ("size_t"));
 				b.add_assignment (expression (length), expression (@"$iterator.n_children ()"));
 				array_new.append_size (expression (length));
-				indices[dim-1] = b.add_temp_declaration (null, expression ("0"));
+				indices[dim - 1] = b.add_temp_declaration (null, expression ("0"));
 				if (dim < array_type.rank) {
 					b.add_expression (expression (@"$iterator.next_value ()"));
 				}
@@ -320,7 +320,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			pop_builder ();
 			check (m);
 		}
-		var call = (MethodCall) expression (m.name+"()");
+		var call = (MethodCall) expression (m.name + " ()");
 		call.add_argument (expr);
 		return call;
 	}
@@ -363,7 +363,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 		Method m;
 		var type = SemanticAnalyzer.get_data_type_for_symbol (st);
 		type.value_owned = true;
-		if (!wrapper_method (type, "gvariant_deserialize_struct "+type.to_string(), out m)) {
+		if (!wrapper_method (type, "gvariant_deserialize_struct " + type.to_string (), out m)) {
 			m.add_parameter (new Parameter ("variant", data_type ("GLib.Variant", false), b.source_reference));
 			push_builder (new CodeBuilder.for_subroutine (m));
 
@@ -386,14 +386,14 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			pop_builder ();
 			check (m);
 		}
-		var call = (MethodCall) expression (m.name+"()");
+		var call = (MethodCall) expression (m.name + " ()");
 		call.add_argument (expr);
 		return call;
 	}
 
 	Expression deserialize_hash_table (DataType type, Expression expr) {
 		Method m;
-		if (!wrapper_method (copy_type (type, true), "gvariant_deserialize_hash_table "+type.to_string(), out m)) {
+		if (!wrapper_method (copy_type (type, true), "gvariant_deserialize_hash_table " + type.to_string (), out m)) {
 			m.add_parameter (new Parameter ("variant", data_type ("GLib.Variant", false), b.source_reference));
 			push_builder (new CodeBuilder.for_subroutine (m));
 
@@ -426,7 +426,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			pop_builder ();
 			check (m);
 		}
-		var call = (MethodCall) expression (m.name+"()");
+		var call = (MethodCall) expression (m.name + " ()");
 		call.add_argument (expr);
 		return call;
 	}
@@ -456,7 +456,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 		foreach (var enum_value in en.get_values ()) {
 			string dbus_value = get_dbus_value (enum_value, enum_value.name);
 			b.add_section (expression (@"\"$dbus_value\""));
-			b.add_return (expression (@"$(en.get_full_name()).$(enum_value.name)"));
+			b.add_return (expression (@"$(en.get_full_name ()).$(enum_value.name)"));
 		}
 		b.close ();
 		pop_builder ();
@@ -477,7 +477,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 		b.add_return (expression ("null"));
 		foreach (var enum_value in en.get_values ()) {
 			string dbus_value = get_dbus_value (enum_value, enum_value.name);
-			b.add_section (expression (@"$(en.get_full_name()).$(enum_value.name)"));
+			b.add_section (expression (@"$(en.get_full_name ()).$(enum_value.name)"));
 			b.add_return (expression (@"\"$dbus_value\""));
 		}
 		b.close ();
@@ -509,7 +509,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 		if (is_string_marshalled_enum (type.data_type)) {
 			get_basic_type_info ("s", out basic_type);
 			result = deserialize_basic (basic_type, expr.inner);
-			var call = (MethodCall) expression (@"$(type.data_type.get_full_name()).from_string ()");
+			var call = (MethodCall) expression (@"$(type.data_type.get_full_name ()).from_string ()");
 			call.add_argument (result);
 			result = call;
 		} else if (get_basic_type_info (get_type_signature (type), out basic_type)) {
@@ -518,10 +518,8 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			result = deserialize_array ((ArrayType) type, expr.inner);
 		} else if (type.data_type is Struct) {
 			result = deserialize_struct ((Struct) type.data_type, expr.inner);
-		} else if (type is ObjectType) {
-			if (type.data_type.get_full_name () == "GLib.HashTable") {
-				result = deserialize_hash_table ((ObjectType) type, expr.inner);
-			}
+		} else if (type is ObjectType && type.data_type.get_full_name () == "GLib.HashTable") {
+			result = deserialize_hash_table ((ObjectType) type, expr.inner);
 		}
 
 		context.analyzer.replaced_nodes.add (expr.inner);

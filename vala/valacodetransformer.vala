@@ -74,7 +74,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 	}
 
 	public string temp_func_cname () {
-		return "_vala_func_"+CodeNode.get_temp_name ().substring (1);
+		return "_vala_func_" + CodeNode.get_temp_name ().substring (1);
 	}
 
 	public bool wrapper_method (DataType return_type, string? cache_key, out Method m, Symbol? parent = null) {
@@ -107,7 +107,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 	}
 
 	public Expression expression (string str) {
-		return new Parser().parse_expression_string (str, b.source_reference);
+		return new Parser ().parse_expression_string (str, b.source_reference);
 	}
 
 	public void check (CodeNode node) {

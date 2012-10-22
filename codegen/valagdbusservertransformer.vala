@@ -38,7 +38,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 
 	string generate_dbus_method_wrapper (Method m, ObjectTypeSymbol sym) {
 		Method wrapper;
-		wrapper_method (new VoidType (), "gdbus_server "+m.get_full_name (), out wrapper);
+		wrapper_method (new VoidType (), "gdbus_server " + m.get_full_name (), out wrapper);
 		var object_type = SemanticAnalyzer.get_data_type_for_symbol (sym);
 		wrapper.add_parameter (new Parameter ("object", object_type));
 		wrapper.add_parameter (new Parameter ("arguments", data_type ("GLib.Variant", false)));
@@ -52,13 +52,13 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		Method ready = null;
 		CodeBuilder ready_builder = null;
 		if (m.coroutine) {
-			wrapper_method (new VoidType (), "gdbus_server_async_ready "+m.get_full_name (), out ready);
+			wrapper_method (new VoidType (), "gdbus_server_async_ready " + m.get_full_name (), out ready);
 			ready.add_parameter (new Parameter ("source_object", data_type ("GLib.Object", false)));
 			ready.add_parameter (new Parameter ("res", data_type ("GLib.AsyncResult", false)));
 			ready.add_parameter (new Parameter ("invocation", data_type ("GLib.DBusMethodInvocation", false)));
 			ready_builder = new CodeBuilder.for_subroutine (ready);
 
-			finish_call = (MethodCall) expression (@"(($object_type)(source_object)).$(m.name).end (res)");
+			finish_call = (MethodCall) expression (@"(($object_type) source_object).$(m.name).end (res)");
 		}
 
 		var out_args = new string[0];
@@ -98,7 +98,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		}
 
 		if (m.coroutine) {
-			call.add_argument (expression (@"(s,r) => $(ready.name) (s, r, invocation)"));
+			call.add_argument (expression (@"(s, r) => $(ready.name) (s, r, invocation)"));
 			b.add_expression (call);
 			push_builder (ready_builder);
 		}
@@ -119,7 +119,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		fd_list = null;
 		var reply = b.add_temp_declaration (null, expression ("new GLib.DBusMessage.method_reply (invocation.get_message ())"));
 		var builder = b.add_temp_declaration (null, expression ("new GLib.VariantBuilder (GLib.VariantType.TUPLE)"));
-		for (int i=0; i < out_args.length; i++) {
+		for (int i = 0; i < out_args.length; i++) {
 			write_dbus_value (out_types[i], builder, out_args[i], ref fd_list);
 		}
 		if (result != null) {
@@ -129,7 +129,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		if (fd_list != null) {
 			b.add_expression (expression (@"$reply.set_unix_fd_list ($fd_list)"));
 		}
-		b.add_expression (expression (@"invocation.get_connection().send_message ($reply, GLib.DBusSendMessageFlags.NONE, null)"));
+		b.add_expression (expression (@"invocation.get_connection ().send_message ($reply, GLib.DBusSendMessageFlags.NONE, null)"));
 
 		if (m.coroutine) {
 			pop_builder ();
@@ -172,7 +172,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 
 		push_builder (new CodeBuilder.for_subroutine (im));
 		var object_type = SemanticAnalyzer.get_data_type_for_symbol (sym);
-		var object = b.add_temp_declaration (null, expression (@"($object_type) (((Object[])user_data)[0])"));
+		var object = b.add_temp_declaration (null, expression (@"($object_type) (((Object[]) user_data)[0])"));
 		b.open_switch (expression ("method_name"), null);
 		b.add_return ();
 		foreach (var m in sym.get_methods ()) {
@@ -210,7 +210,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 
 		push_builder (new CodeBuilder.for_subroutine (m));
 		var object_type = SemanticAnalyzer.get_data_type_for_symbol (sym);
-		var object = b.add_temp_declaration (null, expression (@"($object_type) (((Object[])user_data)[0])"));
+		var object = b.add_temp_declaration (null, expression (@"($object_type) (((Object[]) user_data)[0])"));
 		b.open_switch (expression ("property_name"), null);
 		b.add_return (expression ("null"));
 		foreach (var prop in sym.get_properties ()) {
@@ -247,7 +247,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 
 		push_builder (new CodeBuilder.for_subroutine (m));
 		var object_type = SemanticAnalyzer.get_data_type_for_symbol (sym);
-		var object = b.add_temp_declaration (null, expression (@"($object_type) (((Object[])user_data)[0])"));
+		var object = b.add_temp_declaration (null, expression (@"($object_type) (((Object[]) user_data)[0])"));
 		b.open_switch (expression ("property_name"), null);
 		b.add_return (expression ("false"));
 		foreach (var prop in sym.get_properties ()) {

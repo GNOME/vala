@@ -62,9 +62,9 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 				return expression (@"new GLib.Socket.from_fd ($fd_list.get ($fd_index))");
 			}
 		} else if (type_name == "GLib.Variant") {
-			return expression (@"$iter.next_value().get_variant ()");
+			return expression (@"$iter.next_value ().get_variant ()");
 		} else {
-			return expression (@"($(type)) ($iter.next_value ())");
+			return expression (@"($type) ($iter.next_value ())");
 		}
 	}
 
@@ -93,7 +93,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 
 		// create the message
 		var reply = b.add_temp_declaration (data_type ("GLib.DBusMessage"));
-		var message = b.add_temp_declaration (null, expression (@"new GLib.DBusMessage.method_call (this.get_name(), this.get_object_path (), $interface_name, \"$method_name\")"));
+		var message = b.add_temp_declaration (null, expression (@"new GLib.DBusMessage.method_call (this.get_name (), this.get_object_path (), $interface_name, \"$method_name\")"));
 		var builder = b.add_temp_declaration (null, expression (@"new GLib.VariantBuilder (GLib.VariantType.TUPLE)"));
 
 		// fill the message
@@ -117,12 +117,12 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 
 		// send the message
 		if (is_dbus_no_reply (m)) {
-			b.add_expression (expression (@"this.get_connection().send_message ($message, GLib.DBusSendMessageFlags.NO_REPLY_EXPECTED, null)"));
+			b.add_expression (expression (@"this.get_connection ().send_message ($message, GLib.DBusSendMessageFlags.NO_REPLY_EXPECTED, null)"));
 		} else {
 			var yield_str = m.coroutine ? "yield " : "";
 			var method_str = m.coroutine ? "send_message_with_reply" : "send_message_with_reply_sync";
 			var timeout_str = method_timeout > 0 ? @"$method_timeout" : "this.get_default_timeout ()";
-			b.add_expression (expression (@"$reply = $yield_str this.get_connection().$method_str ($message, GLib.DBusSendMessageFlags.NONE, $timeout_str, null, $cancellable)"));
+			b.add_expression (expression (@"$reply = $yield_str this.get_connection ().$method_str ($message, GLib.DBusSendMessageFlags.NONE, $timeout_str, null, $cancellable)"));
 
 			b.add_expression (expression (@"$reply.to_gerror ()"));
 		}
@@ -132,7 +132,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		string fd_index = null;
 		if (has_result) {
 			var iter = b.add_temp_declaration (data_type ("GLib.VariantIter"));
-			b.add_expression (expression (@"$iter = $reply.get_body().iterator ()"));
+			b.add_expression (expression (@"$iter = $reply.get_body ().iterator ()"));
 			foreach (var param in m.get_parameters ()) {
 				if (param.direction == ParameterDirection.OUT) {
 					b.add_assignment (expression (param.name), read_dbus_value (param.variable_type, iter, reply, ref fd_list, ref fd_index));
@@ -194,7 +194,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		foreach (var param in sig.get_parameters ()) {
 			var temp = b.add_temp_declaration (copy_type (param.variable_type, true));
 			if (is_gvariant_type (param.variable_type)) {
-				b.add_expression (expression (@"$temp = $iter.next_value().get_variant ()"));
+				b.add_expression (expression (@"$temp = $iter.next_value ().get_variant ()"));
 			} else {
 				b.add_expression (expression (@"$temp = ($(param.variable_type)) ($iter.next_value ())"));
 			}
@@ -326,7 +326,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		}
 
 		// create proxy class
-		var proxy = new Class (iface.name+"Proxy", iface.source_reference, null);
+		var proxy = new Class (iface.name + "Proxy", iface.source_reference, null);
 		proxy.add_base_type (data_type ("GLib.DBusProxy"));
 		proxy.add_base_type (SemanticAnalyzer.get_data_type_for_symbol (iface));
 		proxy.access = iface.access;
@@ -350,7 +350,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
 
 		Method wrapper;
-		var cache_key = "gdbus_client_dynamic_method_call "+m.return_type.to_string ();
+		var cache_key = "gdbus_client_dynamic_method_call " + m.return_type.to_string ();
 		foreach (var param in m.get_parameters ()) {
 			cache_key = "%s %s".printf (cache_key, param.variable_type.to_string ());
 		}
