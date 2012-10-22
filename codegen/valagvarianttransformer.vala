@@ -405,13 +405,14 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			var value_type = type_args.get (1);
 
 			Expression hash_table_new;
+			var hash_table_new_type = copy_type (type, true, false);
 			if (key_type.data_type == context.analyzer.string_type.data_type) {
-				hash_table_new = expression (@"new $type (GLib.str_hash, GLib.str_equal)");
+				hash_table_new = expression (@"new $hash_table_new_type (GLib.str_hash, GLib.str_equal)");
 			} else {
-				hash_table_new = expression (@"new $type (GLib.direct_hash, GLib.direct_equal)");
+				hash_table_new = expression (@"new $hash_table_new_type (GLib.direct_hash, GLib.direct_equal)");
 			}
 
-			var hash_table = b.add_temp_declaration (copy_type (type, true), hash_table_new);
+			var hash_table = b.add_temp_declaration (hash_table_new_type, hash_table_new);
 			var new_variant = b.add_temp_declaration (data_type ("GLib.Variant"));
 
 			b.open_while (expression (@"($new_variant = $iterator.next_value ()) != null"));
