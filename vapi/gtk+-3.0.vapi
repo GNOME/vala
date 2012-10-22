@@ -1373,7 +1373,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ColorChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.ColorChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public ColorChooserDialog (string title, Gtk.Window parent);
+		public ColorChooserDialog (string? title, Gtk.Window? parent);
 		[NoAccessorMethod]
 		public bool show_editor { get; set; }
 	}
