@@ -40,7 +40,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		public bool current_method_inner_error;
 		public bool current_method_return;
 		public int next_coroutine_state = 1;
-		public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 		public Map<string,int> closure_variable_count_map = new HashMap<string,int> (str_hash, str_equal);
 		public Map<LocalVariable,int> closure_variable_clash_map = new HashMap<LocalVariable,int> ();
 
@@ -347,7 +346,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public Set<string> wrappers;
 	Set<Symbol> generated_external_symbols;
 
-	public Map<string,string> variable_name_map { get { return emit_context.variable_name_map; } }
+	public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 
 	public static int ccode_attribute_cache_index = CodeNode.get_attribute_cache_index ();
 
