@@ -522,6 +522,10 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			result = deserialize_hash_table ((ObjectType) type, expr.inner);
 		}
 
+		if (result == null) {
+			Report.error (type.source_reference, "GVariant deserialization of type `%s' is not supported".printf (type.to_string ()));
+		}
+
 		context.analyzer.replaced_nodes.add (expr.inner);
 		expr.inner = result;
 		b.check (this);
@@ -559,6 +563,10 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			result = serialize_struct ((Struct) type.data_type, expr);
 		} else if (type is ObjectType && type.data_type.get_full_name () == "GLib.HashTable") {
 			result = serialize_hash_table ((ObjectType) type, expr);
+		}
+
+		if (result == null) {
+			Report.error (type.source_reference, "GVariant serialization of type `%s' is not supported".printf (type.to_string ()));
 		}
 
 		result.target_type = target_type;
