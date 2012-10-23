@@ -226,7 +226,7 @@ namespace Atk {
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_add_focus_tracker")]
 		public static uint add_focus_tracker (Atk.EventListener focus_tracker);
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_add_global_event_listener")]
-		public static uint add_global_event_listener (GLib.SignalEmissionHook listener, string event_type);
+		public static uint add_global_event_listener ([CCode (type = "GSignalEmissionHook")] Atk.SignalEmissionHook listener, string event_type);
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_add_key_event_listener")]
 		public static uint add_key_event_listener (Atk.KeySnoopFunc listener);
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_focus_tracker_init")]
@@ -774,6 +774,8 @@ namespace Atk {
 	public delegate int KeySnoopFunc (Atk.KeyEventStruct event);
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
 	public delegate void PropertyChangeHandler (Atk.Object Param1, Atk.PropertyValues Param2);
+	[CCode (cheader_filename = "atk/atk.h", cname = "GSignalEmissionHook", has_target = false)]
+	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] Atk.Value[] param_values, void* data);
 	[CCode (cheader_filename = "atk/atk.h")]
 	[Deprecated (replacement = "Atk.Util.add_focus_tracker", since = "vala-0.16")]
 	public static uint add_focus_tracker (Atk.EventListener focus_tracker);

@@ -19,6 +19,7 @@ Text.get_bounded_ranges skip
 // Move static methods into classes (mostly Util)
 add_focus_tracker parent="Atk.Util"
 add_global_event_listener parent="Atk.Util"
+  .listener type="Atk.SignalEmissionHook"
 add_key_event_listener parent="Atk.Util"
 focus_tracker_init parent="Atk.Util"
 focus_tracker_notify parent="Atk.Util"

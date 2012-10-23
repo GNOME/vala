@@ -52,6 +52,8 @@ namespace Atk {
 	public delegate int KeySnoopFunc (Atk.KeyEventStruct event);
 	[CCode (has_target = false)]
 	public delegate void PropertyChangeHandler (Atk.Object Param1, Atk.PropertyValues Param2);
+	[CCode (cname = "GSignalEmissionHook", has_target = false)]
+	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] Value[] param_values, void* data);
 
 	[Deprecated (replacement = "Atk.Util.add_focus_tracker", since = "vala-0.16")]
 	public static uint add_focus_tracker (Atk.EventListener focus_tracker);
