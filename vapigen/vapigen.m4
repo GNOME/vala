@@ -16,15 +16,20 @@ dnl You should have received a copy of the GNU Lesser General Public
 dnl License along with this library; if not, write to the Free Software
 dnl Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
-# VAPIGEN_CHECK([VERSION], [API_VERSION], [FOUND-INTROSPECTION], [DEFAULT])
+# VAPIGEN_CHECK([VERSION], [API_VERSION], [FOUND_INTROSPECTION], [DEFAULT])
 # --------------------------------------
 # Check vapigen existence and version
 #
 # See http://live.gnome.org/Vala/UpstreamGuide for detailed documentation
 AC_DEFUN([VAPIGEN_CHECK],
 [
-  AC_BEFORE([GOBJECT_INTROSPECTION_CHECK],[$0])
-  AC_BEFORE([GOBJECT_INTROSPECTION_REQUIRE],[$0])
+  AS_IF([test "x$3" != "xyes"], [
+      m4_provide_if([GOBJECT_INTROSPECTION_CHECK], [], [
+          m4_provide_if([GOBJECT_INTROSPECTION_REQUIRE], [], [
+              AC_MSG_ERROR([[You must call GOBJECT_INTROSPECTION_CHECK or GOBJECT_INTROSPECTION_REQUIRE before using VAPIGEN_CHECK unless using the FOUND_INTROSPECTION argument is "yes"]])
+            ])
+        ])
+    ])
 
   AC_ARG_ENABLE([vala],
     [AS_HELP_STRING([--enable-vala[=@<:@no/auto/yes@:>@]],[build Vala bindings @<:@default=]ifelse($4,,auto,$4)[@:>@])],,[
