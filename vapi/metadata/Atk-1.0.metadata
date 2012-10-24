@@ -1,20 +1,10 @@
 * cheader_filename="atk/atk.h"
 
 // Handle AttributeSet properly
-AttributeSet skip
-Attribute skip
 attribute_set_free skip
-Document.get_attributes type="unowned GLib.SList<Attribute?>"
-EditableText.set_run_attributes.attrib_set  type="GLib.SList<Attribute?>"
-Object.get_attributes type="unowned GLib.SList<Attribute?>"
-Text
-  .get_default_attributes type="GLib.SList<Attribute?>"
-  .get_run_attributes type="GLib.SList<Attribute?>"
 
 KeyEventStruct.string name="str"
 Rectangle struct
-TextRange.content skip
-Text.get_bounded_ranges skip
 
 // Move static methods into classes (mostly Util)
 add_focus_tracker parent="Atk.Util"
@@ -42,28 +32,21 @@ RelationSet.relations type_arguments="Atk.Relation" deprecated
 _PropertyValues name="PropertyValues"
 _Registry* skip
 
-// Should be fixed upstream
-Implementor* skip // g-ir-scanner doesn't realize this is an interface
-Component.add_focus_handler skip=false
-Document.get_attributes vfunc_name="get_document_attributes"
-Document.get_attribute_value vfunc_name="get_document_attribute_value"
-Document.get_locale vfunc_name="get_document_locale"
-Document.set_attribute_value vfunc_name="set_document_attribute"
-Object.connect_property_change_handler skip=false
-Relation.get_target type_arguments="Atk.Object"
-Relation.new.targets array array_length_idx=1
-StateSet.add_states.types array array_length_idx=1
-StateSet.contains_states.types array array_length_idx=1
-Text
-  .free_ranges.ranges array
-  .get_run_attributes.*_offset out
-  .get_selection.*_offset out
-  .get_text_after_offset.*_offset out
-  .get_text_at_offset.*_offset out
-  .get_text_before_offset.*_offset out
-Function skip
-KeySnoopFunc skip
+// G-I doesn't distinguish between abstract and virtual
+Document.*#virtual_method virtual
+Text.get_bounded_ranges#virtual_method virtual
+
+// Callbacks without user data
 add_focus_tracker skip=false
+focus_tracker_init skip=false
 add_global_event_listener skip=false
 add_key_event_listener skip=false
-focus_tracker_init skip=false
+Object.connect_property_change_handler skip=false
+Component.add_focus_handler skip=false
+
+// Ownership of fields
+TextRange.content unowned=false
+Attribute.* unowned=false
+
+// Should be fixed upstream
+Implementor* skip // g-ir-scanner doesn't realize this is an interface

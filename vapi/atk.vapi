@@ -2,6 +2,10 @@
 
 [CCode (cprefix = "Atk", gir_namespace = "Atk", gir_version = "1.0", lower_case_cprefix = "atk_")]
 namespace Atk {
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Compact]
+	public class AttributeSet : GLib.SList<Atk.Attribute?> {
+	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_gobject_accessible_get_type ()")]
 	public class GObjectAccessible : Atk.Object {
 		[CCode (has_construct_function = false)]
@@ -61,7 +65,7 @@ namespace Atk {
 		protected Object ();
 		public bool add_relationship (Atk.RelationType relationship, Atk.Object target);
 		public virtual uint connect_property_change_handler (Atk.PropertyChangeHandler handler);
-		public virtual unowned GLib.SList<Atk.Attribute?> get_attributes ();
+		public virtual unowned Atk.AttributeSet get_attributes ();
 		public virtual unowned string get_description ();
 		public virtual int get_index_in_parent ();
 		[NoWrapper]
@@ -156,7 +160,7 @@ namespace Atk {
 	public class Relation : GLib.Object {
 		public Atk.RelationType relationship;
 		[CCode (has_construct_function = false)]
-		public Relation ([CCode (array_length_cname = "n_targets", array_length_pos = 1.5, type = "AtkObject**")] Atk.Object[] targets, Atk.RelationType relationship);
+		public Relation ([CCode (array_length_cname = "n_targets", array_length_pos = 1.5)] Atk.Object[] targets, Atk.RelationType relationship);
 		public void add_target (Atk.Object target);
 		public Atk.RelationType get_relation_type ();
 		public unowned GLib.GenericArray<Atk.Object> get_target ();
@@ -181,7 +185,7 @@ namespace Atk {
 		public void add (Atk.Relation relation);
 		public void add_relation_by_type (Atk.RelationType relationship, Atk.Object target);
 		public bool contains (Atk.RelationType relationship);
-		public bool contains_target (Atk.RelationType relationship, Atk.Object targe);
+		public bool contains_target (Atk.RelationType relationship, Atk.Object target);
 		public int get_n_relations ();
 		public unowned Atk.Relation get_relation (int i);
 		public unowned Atk.Relation get_relation_by_type (Atk.RelationType relationship);
@@ -201,17 +205,17 @@ namespace Atk {
 		[CCode (has_construct_function = false)]
 		public StateSet ();
 		public bool add_state (Atk.StateType type);
-		public void add_states ([CCode (array_length_cname = "n_types", array_length_pos = 1.1, type = "AtkStateType*")] Atk.StateType[] types);
+		public void add_states ([CCode (array_length_cname = "n_types", array_length_pos = 1.1)] Atk.StateType[] types);
 		public Atk.StateSet and_sets (Atk.StateSet compare_set);
 		public void clear_states ();
 		public bool contains_state (Atk.StateType type);
-		public bool contains_states ([CCode (array_length_cname = "n_types", array_length_pos = 1.1, type = "AtkStateType*")] Atk.StateType[] types);
+		public bool contains_states ([CCode (array_length_cname = "n_types", array_length_pos = 1.1)] Atk.StateType[] types);
 		public bool is_empty ();
 		public Atk.StateSet or_sets (Atk.StateSet compare_set);
 		public bool remove_state (Atk.StateType type);
 		public Atk.StateSet xor_sets (Atk.StateSet compare_set);
 	}
-	[CCode (cheader_filename = "atk/atk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", has_destroy_function = false, type_id = "atk_text_range_get_type ()")]
+	[CCode (cheader_filename = "atk/atk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "atk_text_range_get_type ()")]
 	[Compact]
 	public class TextRange {
 		public Atk.TextRectangle bounds;
@@ -283,9 +287,9 @@ namespace Atk {
 		[CCode (vfunc_name = "get_document_attribute_value")]
 		public virtual unowned string get_attribute_value (string attribute_name);
 		[CCode (vfunc_name = "get_document_attributes")]
-		public virtual unowned GLib.SList<Atk.Attribute?> get_attributes ();
-		public abstract void* get_document ();
-		public abstract unowned string get_document_type ();
+		public virtual unowned Atk.AttributeSet get_attributes ();
+		public virtual void* get_document ();
+		public virtual unowned string get_document_type ();
 		[CCode (vfunc_name = "get_document_locale")]
 		public virtual unowned string get_locale ();
 		[CCode (vfunc_name = "set_document_attribute")]
@@ -301,7 +305,7 @@ namespace Atk {
 		public abstract void delete_text (int start_pos, int end_pos);
 		public abstract void insert_text (string string, int length, int position);
 		public abstract void paste_text (int position);
-		public abstract bool set_run_attributes ([CCode (type = "AtkAttributeSet*")] GLib.SList<Atk.Attribute?> attrib_set, int start_offset, int end_offset);
+		public abstract bool set_run_attributes (Atk.AttributeSet attrib_set, int start_offset, int end_offset);
 		public abstract void set_text_contents (string string);
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_hyperlink_impl_get_type ()")]
@@ -395,18 +399,18 @@ namespace Atk {
 		public static unowned string attribute_get_value (Atk.TextAttribute attr, int index_);
 		[Deprecated (replacement = "TextAttribute.register", since = "vala-0.16")]
 		public static Atk.TextAttribute attribute_register (string name);
-		public static void free_ranges ([CCode (array_length = false, type = "AtkTextRange**")] Atk.TextRange[] ranges);
+		public static void free_ranges ([CCode (array_length = false)] Atk.TextRange[] ranges);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public virtual Atk.TextRange[] get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
 		public abstract int get_caret_offset ();
 		public abstract unichar get_character_at_offset (int offset);
 		public abstract int get_character_count ();
 		public abstract void get_character_extents (int offset, int x, int y, int width, int height, Atk.CoordType coords);
-		public abstract GLib.SList<Atk.Attribute?> get_default_attributes ();
+		public abstract Atk.AttributeSet get_default_attributes ();
 		public abstract int get_n_selections ();
 		public abstract int get_offset_at_point (int x, int y, Atk.CoordType coords);
 		public abstract void get_range_extents (int start_offset, int end_offset, Atk.CoordType coord_type, Atk.TextRectangle rect);
-		public abstract GLib.SList<Atk.Attribute?> get_run_attributes (int offset, out int start_offset, out int end_offset);
+		public abstract Atk.AttributeSet get_run_attributes (int offset, out int start_offset, out int end_offset);
 		public abstract string get_selection (int selection_num, out int start_offset, out int end_offset);
 		public abstract string get_text (int start_offset, int end_offset);
 		public abstract string get_text_after_offset (int offset, Atk.TextBoundary boundary_type, out int start_offset, out int end_offset);
@@ -443,7 +447,7 @@ namespace Atk {
 		public signal void resize ();
 		public signal void restore ();
 	}
-	[CCode (cheader_filename = "atk/atk.h", has_destroy_function = false)]
+	[CCode (cheader_filename = "atk/atk.h", has_type_id = false)]
 	public struct Attribute {
 		public string name;
 		public string value;
@@ -768,12 +772,12 @@ namespace Atk {
 	public delegate void EventListenerInit ();
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
 	public delegate void FocusHandler (Atk.Object arg0, bool arg1);
-	[CCode (cheader_filename = "atk/atk.h")]
+	[CCode (cheader_filename = "atk/atk.h", instance_pos = 0.9)]
 	public delegate bool Function ();
-	[CCode (cheader_filename = "atk/atk.h")]
+	[CCode (cheader_filename = "atk/atk.h", instance_pos = 1.9)]
 	public delegate int KeySnoopFunc (Atk.KeyEventStruct event);
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
-	public delegate void PropertyChangeHandler (Atk.Object Param1, Atk.PropertyValues Param2);
+	public delegate void PropertyChangeHandler (Atk.Object obj, Atk.PropertyValues vals);
 	[CCode (cheader_filename = "atk/atk.h", cname = "GSignalEmissionHook", has_target = false)]
 	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] Atk.Value[] param_values, void* data);
 	[CCode (cheader_filename = "atk/atk.h")]

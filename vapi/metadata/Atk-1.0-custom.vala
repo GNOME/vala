@@ -1,8 +1,6 @@
 namespace Atk {
-	[CCode (cheader_filename = "atk/atk.h", has_destroy_function = false)]
-	public struct Attribute {
-		public string name;
-		public string value;
+	[Compact]
+	public class AttributeSet : GLib.SList<Atk.Attribute?> {
 	}
 	public interface Implementor : GLib.Object {
 		public abstract unowned Atk.Object ref_accessible ();
@@ -30,11 +28,6 @@ namespace Atk {
 		[Deprecated (replacement = "StateType.register", since = "vala-0.16")]
 		public static Atk.StateType type_register (string name);
 	}
-	[CCode (copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "atk_text_range_get_type ()", has_destroy_function = false)]
-	[Compact]
-	public class TextRange {
-		public string content;
-	}
 	public interface Text : GLib.Object {
 		[Deprecated (replacement = "TextAttribute.for_name", since = "vala-0.16")]
 		public static Atk.TextAttribute attribute_for_name (string name);
@@ -44,14 +37,10 @@ namespace Atk {
 		public static unowned string attribute_get_value (Atk.TextAttribute attr, int index_);
 		[Deprecated (replacement = "TextAttribute.register", since = "vala-0.16")]
 		public static Atk.TextAttribute attribute_register (string name);
-		[CCode (array_length = false, array_null_terminated = true)]
-		public virtual Atk.TextRange[] get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
 	}
 
-	public delegate bool Function ();
-	public delegate int KeySnoopFunc (Atk.KeyEventStruct event);
 	[CCode (has_target = false)]
-	public delegate void PropertyChangeHandler (Atk.Object Param1, Atk.PropertyValues Param2);
+	public delegate void PropertyChangeHandler (Atk.Object obj, Atk.PropertyValues vals);
 	[CCode (cname = "GSignalEmissionHook", has_target = false)]
 	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] Value[] param_values, void* data);
 
