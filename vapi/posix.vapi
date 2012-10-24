@@ -353,7 +353,7 @@ namespace Posix {
 	[CCode (cheader_filename = "arpa/inet.h")]
 	public unowned string inet_ntoa (InAddr addr);
 	[CCode (cheader_filename = "arpa/inet.h")]
-	public unowned string inet_ntop (int af, void* src, uint8[] dst);
+	public unowned string? inet_ntop (int af, void* src, uint8[] dst);
 	[CCode (cheader_filename = "arpa/inet.h")]
 	public int inet_pton (int af, string src, void* dst);
 	[CCode (cheader_filename = "arpa/inet.h")]
