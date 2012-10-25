@@ -28,7 +28,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 
 	public CodeBuilder b;
 	public ArrayList<CodeBuilder> builder_stack = new ArrayList<CodeBuilder> ();
-	public HashMap<string, CodeNode> wrapper_cache = new HashMap<string, CodeNode> (str_hash, str_equal);
+	public HashMap<string, CodeNode> wrapper_cache;
 
 	public void push_builder (CodeBuilder builder) {
 		builder_stack.add (b);
@@ -47,12 +47,13 @@ public class Vala.CodeTransformer : CodeVisitor {
 	 */
 	public void transform (CodeContext context) {
 		this.context = context;
-
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
 			if (file.file_type == SourceFileType.SOURCE ||
 			    (context.header_filename != null && file.file_type == SourceFileType.FAST)) {
+				/* clear wrapper cache for every file */
+				wrapper_cache = new HashMap<string, CodeNode> (str_hash, str_equal);
 				file.accept (this);
 			}
 		}

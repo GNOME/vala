@@ -28,10 +28,6 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		source_file.accept_children (this);
 	}
 
-	public override void visit_namespace (Namespace ns) {
-		ns.accept_children (this);
-	}
-
 	public override void visit_class (Class cl) {
 		cl.accept_children (this);
 	}
