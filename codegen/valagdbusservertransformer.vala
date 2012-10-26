@@ -106,7 +106,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		b.open_try ();
 		string result = null;
 		if (m.has_result) {
-			result = b.add_temp_declaration (m.return_type);
+			result = b.add_temp_declaration (copy_type (m.return_type));
 			b.add_assignment (expression (result), finish_call);
 		} else {
 			b.add_expression (finish_call);
