@@ -26,7 +26,8 @@ using Valadoc.Content;
 
 namespace Gtkdoc.Config {
 	public static bool nohtml;
-	public static string library_filename;
+	[CCode (array_length = false, array_null_terminated = true)]
+	public static string[] library_filenames;
 	[CCode (array_length = false, array_null_terminated = true)]
 	public static string[] ignore_headers;
 	[CCode (array_length = false, array_null_terminated = true)]
@@ -35,7 +36,7 @@ namespace Gtkdoc.Config {
 	public static string ignore_decorators;
 
 	private static const GLib.OptionEntry[] options = {
-			{ "library", 'l', 0, OptionArg.FILENAME, ref library_filename, "Shared library path", "FILENAME" },
+			{ "library", 'l', 0, OptionArg.FILENAME_ARRAY, ref library_filenames, "Shared library path", "FILENAME" },
 			{ "ignore-headers", 'x', 0, OptionArg.FILENAME_ARRAY, ref ignore_headers, "A list of header files to not scan", "FILES" },
 			{ "deprecated-guards", 'd', 0, OptionArg.STRING, ref deprecated_guards, "A |-separated list of symbols used as deprecation guards", "GUARDS" },
 			{ "ignore-decorators", 0, 0, OptionArg.STRING, ref ignore_decorators, "A |-separated list of addition decorators in declarations that should be ignored", "DECS" },
@@ -243,11 +244,20 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 	}
 
 	private bool scangobj () {
-		if (Config.library_filename == null) {
+		if (Config.library_filenames == null) {
 			return true;
 		}
 
-		var library = realpath (Config.library_filename);
+		StringBuilder library_paths = new StringBuilder ();
+		StringBuilder library_dirs = new StringBuilder ();
+		foreach (string library in Config.library_filenames) {
+			string so_path = realpath (library);
+			string name = Path.get_dirname (so_path);
+			library_dirs.append (name);
+			library_paths.append (so_path);
+			library_paths.append_c (' ');
+			library_dirs.append_c (':');
+		}
 
 		string[] pc = new string[] { "pkg-config" };
 
@@ -290,7 +300,6 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 			}
 
 			libs = libs.strip ();
-
 			string[] args = { "gtkdoc-scangobj",
 							  "--module", settings.pkg_name,
 							  "--types", "%s.types".printf (settings.pkg_name),
@@ -298,13 +307,15 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 
 			string[] env = { "CFLAGS=%s %s".printf (cflags,
 							Environment.get_variable ("CFLAGS") ?? ""),
-							"LDFLAGS=%s %s %s".printf (libs, library,
+							"LDFLAGS=%s %s %s".printf (libs, library_paths.str,
 							Environment.get_variable ("LDFLAGS") ?? ""),
-							"LD_LIBRARY_PATH=%s:%s".printf (Path.get_dirname (library),
+							"LD_LIBRARY_PATH=%s%s".printf (library_dirs.str,
 							Environment.get_variable ("LD_LIBRARY_PATH") ?? "")};
+
 			foreach (var evar in Environment.list_variables()) {
-				if (evar != "CFLAGS" && evar != "LDFLAGS" && evar != "LD_LIBRARY_PATH")
+				if (evar != "CFLAGS" && evar != "LDFLAGS" && evar != "LD_LIBRARY_PATH") {
 					env += "%s=%s".printf (evar, Environment.get_variable(evar));
+				}
 			}
 
 			Process.spawn_sync (settings.path, args, env, SpawnFlags.SEARCH_PATH, null, null, null);
