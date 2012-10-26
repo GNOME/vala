@@ -61,6 +61,7 @@ public class Vala.CCodeTransformer : CodeTransformer {
 	}
 
 	public override void visit_constant (Constant c) {
+		c.active = true;
 		c.accept_children (this);
 	}
 
@@ -101,13 +102,6 @@ public class Vala.CCodeTransformer : CodeTransformer {
 	}
 
 	public override void visit_block (Block b) {
-		foreach (LocalVariable local in b.get_local_variables ()) {
-			local.active = true;
-		}
-		foreach (Constant constant in b.get_local_constants ()) {
-			constant.active = true;
-		}
-
 		b.accept_children (this);
 
 		foreach (LocalVariable local in b.get_local_variables ()) {
@@ -123,6 +117,7 @@ public class Vala.CCodeTransformer : CodeTransformer {
 	}
 
 	public override void visit_local_variable (LocalVariable local) {
+		local.active = true;
 		local.accept_children (this);
 	}
 
