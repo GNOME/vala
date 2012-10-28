@@ -134,6 +134,8 @@ dist_vapi_DATA = \
 	gstreamer-rtp-1.0.deps \
 	gstreamer-rtsp-1.0.vapi \
 	gstreamer-rtsp-1.0.deps \
+	gstreamer-rtsp-server-1.0.vapi \
+	gstreamer-rtsp-server-1.0.deps \
 	gstreamer-sdp-1.0.vapi \
 	gstreamer-sdp-1.0.deps \
 	gstreamer-tag-1.0.vapi \
@@ -359,6 +361,7 @@ GSTREAMER_1_0_BINDINGS = \
 	gstreamer-rtp-1.0 \
 	gstreamer-sdp-1.0 \
 	gstreamer-rtsp-1.0 \
+	gstreamer-rtsp-server-1.0 \
 	gstreamer-tag-1.0 \
 	gstreamer-video-1.0 \
 	$(NULL)
@@ -576,6 +579,9 @@ gstreamer-rtp-1.0:
 
 gstreamer-rtsp-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-rtsp-1.0 --pkg gstreamer-sdp-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstRtsp-1.0.gir
+
+gstreamer-rtsp-server-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-rtsp-server-1.0 --pkg gstreamer-rtsp-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstRtspServer-1.0.gir
 
 gstreamer-sdp-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-sdp-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstSdp-1.0.gir
