@@ -572,7 +572,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	}
 
 	private void parse_callback () {
-		skip_element ();
+		parse_function ("callback");
 	}
 
 	private void parse_constructor () {
@@ -588,6 +588,10 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		case "function":
 		case "method":
 			c_identifier = reader.get_attribute ("c:identifier");
+			break;
+
+		case "callback":
+			c_identifier = reader.get_attribute ("c:type");
 			break;
 
 		case "virtual-method":
