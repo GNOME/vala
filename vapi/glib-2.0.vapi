@@ -2873,6 +2873,8 @@ namespace GLib {
 		public static bool spawn_command_line_sync (string command_line, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
 		[CCode (cname = "g_spawn_close_pid")]
 		public static void close_pid (Pid pid);
+		[CCode (cname = "g_spawn_check_exit_status")]
+		public static bool check_exit_status (int exit_status) throws GLib.Error;
 		
 		/* these macros are required to examine the exit status of a process */
 		[CCode (cname = "WIFEXITED", cheader_filename = "sys/wait.h")]
