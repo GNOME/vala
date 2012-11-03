@@ -661,6 +661,10 @@ public struct uint64 {
 [CCode (cname = "gfloat", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_FLOAT", marshaller_type_name = "FLOAT", get_value_function = "g_value_get_float", set_value_function = "g_value_set_float", default_value = "0.0F")]
 [FloatingType (rank = 1)]
 public struct float {
+	[CCode (cname = "FLT_ROUNDS")]
+	public static int ROUNDS;
+	[CCode (cname = "FLT_RADIX")]
+	public static int RADIX;
 	[CCode (cname = "FLT_MANT_DIG")]
 	public static int MANT_DIG;
 	[CCode (cname = "FLT_DIG")]
