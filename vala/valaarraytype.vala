@@ -71,6 +71,9 @@ public class Vala.ArrayType : ReferenceType {
 		} else if (member_name == "move") {
 			return get_move_method ();
 		} else if (member_name == "resize") {
+			if (rank > 1) {
+				return null;
+			}
 			return get_resize_method ();
 		}
 		return null;
