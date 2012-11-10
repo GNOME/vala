@@ -5025,14 +5025,21 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// recompute array length when casting to other array type
 			var array_type = expr.type_reference as ArrayType;
 			if (array_type != null && expr.inner.value_type is ArrayType) {
-				var sizeof_to = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-				sizeof_to.add_argument (new CCodeConstant (get_ccode_name (array_type.element_type)));
+				if (array_type.element_type is GenericType || ((ArrayType) expr.inner.value_type).element_type is GenericType) {
+					// element size unknown for generic arrays, retain array length as is
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						append_array_length (expr, get_array_length_cexpression (expr.inner, dim));
+					}
+				} else {
+					var sizeof_to = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+					sizeof_to.add_argument (new CCodeConstant (get_ccode_name (array_type.element_type)));
 
-				var sizeof_from = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-				sizeof_from.add_argument (new CCodeConstant (get_ccode_name (((ArrayType) expr.inner.value_type).element_type)));
+					var sizeof_from = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+					sizeof_from.add_argument (new CCodeConstant (get_ccode_name (((ArrayType) expr.inner.value_type).element_type)));
 
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					append_array_length (expr, new CCodeBinaryExpression (CCodeBinaryOperator.DIV, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, get_array_length_cexpression (expr.inner, dim), sizeof_from), sizeof_to));
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						append_array_length (expr, new CCodeBinaryExpression (CCodeBinaryOperator.DIV, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, get_array_length_cexpression (expr.inner, dim), sizeof_from), sizeof_to));
+					}
 				}
 			} else if (array_type != null) {
 				// cast from non-array to array, set invalid length
