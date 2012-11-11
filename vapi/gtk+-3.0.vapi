@@ -5642,6 +5642,7 @@ namespace Gtk {
 		public unowned Gdk.Visual get_visual ();
 		public unowned Gdk.Window get_window ();
 		public void grab_default ();
+		public bool has_grab ();
 		[Deprecated (replacement = "StyleContext", since = "3,0")]
 		public bool has_rc_style ();
 		public bool has_screen ();
