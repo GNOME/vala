@@ -2076,7 +2076,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Grid ();
 		public void attach (Gtk.Widget child, int left, int top, int width, int height);
-		public void attach_next_to (Gtk.Widget child, Gtk.Widget sibling, Gtk.PositionType side, int width, int height);
+		public void attach_next_to (Gtk.Widget child, Gtk.Widget? sibling, Gtk.PositionType side, int width, int height);
 		public unowned Gtk.Widget get_child_at (int left, int top);
 		public bool get_column_homogeneous ();
 		public uint get_column_spacing ();
