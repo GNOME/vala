@@ -606,7 +606,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						var cl = (Class) m.parent_symbol;
 						ccode.add_declaration (get_ccode_name (cl) + "*", new CCodeVariableDeclarator.zero ("self", new CCodeConstant ("NULL")));
 
-						if (cl.is_fundamental ()) {
+						if (cl.is_fundamental () && !((CreationMethod) m).chain_up) {
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
 							ccall.add_argument (get_variable_cexpression ("object_type"));
 							ccode.add_assignment (get_this_cexpression (), new CCodeCastExpression (ccall, get_ccode_name (cl) + "*"));
