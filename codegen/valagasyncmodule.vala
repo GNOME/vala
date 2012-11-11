@@ -202,9 +202,9 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		var create_result = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
 
-		var cl = m.parent_symbol as Class;
+		var t = m.parent_symbol as TypeSymbol;
 		if (!(m is CreationMethod) && m.binding == MemberBinding.INSTANCE &&
-		    cl != null && cl.is_subtype_of (gobject_type)) {
+		    t != null && t.is_subtype_of (gobject_type)) {
 			var gobject_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
 			gobject_cast.add_argument (new CCodeIdentifier ("self"));
 
