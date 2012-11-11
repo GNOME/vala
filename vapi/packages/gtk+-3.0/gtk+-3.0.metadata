@@ -1213,7 +1213,6 @@ GtkWidget::grab_broken_event.event namespace_name="Gdk" type_name="EventGrabBrok
 GtkWidget::hierarchy_changed.previous_toplevel nullable="1"
 GtkWidget::has_default has_emitter="1"
 GtkWidget::has_focus has_emitter="1"
-GtkWidget::has_grab has_emitter="1"
 GtkWidget::is_drawable has_emitter="1"
 GtkWidget::leave_notify_event.event namespace_name="Gdk" type_name="EventCrossing"
 GtkWidget::map_event.event namespace_name="Gdk" type_name="EventAny"
