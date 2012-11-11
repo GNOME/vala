@@ -3670,13 +3670,13 @@ namespace Linux {
         [CCode (cname = "struct uinput_user_dev", cheader_filename = "linux/uinput.h")]
         struct UserDevice
         {
-            string name;
+            char name[80];
             Input.Id id;
             int ff_effects_max;
-            int[] absmax;
-            int[] absmin;
-            int[] absfuzz;
-            int[] absflat;
+            int absmax[64];
+            int absmin[64];
+            int absfuzz[64];
+            int absflat[64];
         }
     }
 
