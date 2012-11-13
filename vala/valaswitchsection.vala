@@ -44,6 +44,10 @@ public class Vala.SwitchSection : Block {
 	 * @param label a switch label
 	 */
 	public void add_label (SwitchLabel label) {
+		if (labels.size == 0) {
+			this.source_reference = label.source_reference;
+		}
+
 		labels.add (label);
 		label.section = this;
 	}

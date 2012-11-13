@@ -1811,6 +1811,7 @@ public class Vala.Parser : CodeVisitor {
 		var stmt = new SwitchStatement (condition, get_src (begin));
 		expect (TokenType.OPEN_BRACE);
 		while (current () != TokenType.CLOSE_BRACE) {
+			begin = get_location ();
 			var section = new SwitchSection (get_src (begin));
 			do {
 				if (accept (TokenType.CASE)) {
