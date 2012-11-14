@@ -229,6 +229,7 @@ gtk_container_get_children transfer_ownership="1" type_arguments="unowned Widget
 gtk_container_get_focus_chain.focusable_widgets is_out="1" takes_ownership="1" type_arguments="Widget"
 gtk_container_set_focus_chain.focusable_widgets type_arguments="Widget"
 GtkContainerClass name="pointer"
+gtk_css_provider_get_named.variant nullable="1"
 GtkDestroyNotify has_target="0"
 gtk_dialog_get_content_area type_name="Box" ctype="GtkWidget*"
 gtk_dialog_new_with_buttons.title nullable="1"

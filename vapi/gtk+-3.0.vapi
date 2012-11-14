@@ -1588,7 +1588,7 @@ namespace Gtk {
 		public CssProvider ();
 		public static GLib.Quark error_quark ();
 		public static unowned Gtk.CssProvider get_default ();
-		public static unowned Gtk.CssProvider get_named (string name, string variant);
+		public static unowned Gtk.CssProvider get_named (string name, string? variant);
 		public bool load_from_data (string data, ssize_t length) throws GLib.Error;
 		public bool load_from_file (GLib.File file) throws GLib.Error;
 		public bool load_from_path (string path) throws GLib.Error;
