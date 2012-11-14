@@ -893,7 +893,7 @@ namespace Gst {
 		public void lost_state ();
 		public static unowned Gst.Element make_from_uri (Gst.URIType type, string uri, string? elementname) throws GLib.Error;
 		public void message_full (Gst.MessageType type, GLib.Quark domain, int code, owned string? text, owned string? debug, string file, string function, int line);
-		public bool post_message (owned Gst.Message message);
+		public virtual bool post_message (owned Gst.Message message);
 		public virtual Gst.Clock provide_clock ();
 		public virtual bool query (Gst.Query query);
 		public bool query_convert (ref Gst.Format src_format, int64 src_val, Gst.Format dest_format, out int64 dest_val);
@@ -1597,7 +1597,7 @@ namespace Gst {
 	[Compact]
 	public class Sample {
 		[CCode (has_construct_function = false)]
-		public Sample (Gst.Buffer? buffer, Gst.Caps? caps, Gst.Segment segment, owned Gst.Structure? info);
+		public Sample (Gst.Buffer? buffer, Gst.Caps? caps, Gst.Segment? segment, owned Gst.Structure? info);
 		public unowned Gst.Buffer get_buffer ();
 		public unowned Gst.Caps get_caps ();
 		public unowned Gst.Structure get_info ();
