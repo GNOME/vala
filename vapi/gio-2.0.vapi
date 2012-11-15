@@ -916,23 +916,17 @@ namespace GLib {
 		[NoAccessorMethod]
 		public GLib.Icon gicon { owned get; construct; }
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
-	[Compact]
-	public class FileAttributeInfo {
-		public GLib.FileAttributeInfoFlags flags;
-		public weak string name;
-		public GLib.FileAttributeType type;
-	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_file_attribute_info_list_ref", type_id = "g_file_attribute_info_list_get_type ()", unref_function = "g_file_attribute_info_list_unref")]
 	[Compact]
 	public class FileAttributeInfoList {
-		public weak GLib.FileAttributeInfo infos;
+		[CCode (array_length_cname = "n_infos")]
+		public GLib.FileAttributeInfo[] infos;
 		public int n_infos;
 		[CCode (has_construct_function = false)]
 		public FileAttributeInfoList ();
 		public void add (string name, GLib.FileAttributeType type, GLib.FileAttributeInfoFlags flags);
 		public GLib.FileAttributeInfoList dup ();
-		public unowned GLib.FileAttributeInfo lookup (string name);
+		public unowned GLib.FileAttributeInfo? lookup (string name);
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_file_attribute_matcher_ref", type_id = "g_file_attribute_matcher_get_type ()", unref_function = "g_file_attribute_matcher_unref")]
 	[Compact]
@@ -957,7 +951,7 @@ namespace GLib {
 		public unowned GLib.File get_container ();
 		public bool has_pending ();
 		public bool is_closed ();
-		public virtual GLib.FileInfo next_file (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual GLib.FileInfo? next_file (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async GLib.List<GLib.FileInfo> next_files_async (int num_files, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_pending (bool pending);
 		public GLib.File container { construct; }
@@ -1026,7 +1020,7 @@ namespace GLib {
 		public bool has_attribute (string attribute);
 		public bool has_namespace (string name_space);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public string[] list_attributes (string name_space);
+		public string[]? list_attributes (string name_space);
 		public void remove_attribute (string attribute);
 		public void set_attribute (string attribute, GLib.FileAttributeType type, void* value_p);
 		public void set_attribute_boolean (string attribute, bool attr_value);
@@ -1712,7 +1706,7 @@ namespace GLib {
 		public SettingsSchemaSource.from_directory (string directory, GLib.SettingsSchemaSource? parent, bool trusted) throws GLib.Error;
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static unowned GLib.SettingsSchemaSource get_default ();
-		public GLib.SettingsSchema lookup (string schema_id, bool recursive);
+		public GLib.SettingsSchema? lookup (string schema_id, bool recursive);
 		public GLib.SettingsSchemaSource @ref ();
 		public void unref ();
 	}
@@ -2650,7 +2644,7 @@ namespace GLib {
 		public abstract async bool eject_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (array_length = false, array_null_terminated = true)]
 		public abstract string[] enumerate_identifiers ();
-		public abstract GLib.File get_activation_root ();
+		public abstract GLib.File? get_activation_root ();
 		public abstract GLib.Drive get_drive ();
 		public abstract GLib.Icon get_icon ();
 		public abstract string get_identifier (string kind);
@@ -2689,6 +2683,12 @@ namespace GLib {
 		public weak GLib.DBusSubtreeEnumerateFunc enumerate;
 		public weak GLib.DBusSubtreeIntrospectFunc introspect;
 		public weak GLib.DBusSubtreeDispatchFunc dispatch;
+	}
+	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
+	public struct FileAttributeInfo {
+		public weak string name;
+		public GLib.FileAttributeType type;
+		public GLib.FileAttributeInfoFlags flags;
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	public struct InputVector {

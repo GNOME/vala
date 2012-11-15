@@ -82,7 +82,6 @@ DBusAuthObserver.authorize_authenticated_peer virtual
 DBusConnection
   .*.observer#parameter default=null
   .send_message_with_reply*.out_serial default=null
-  .send_message_with_reply_finish throws="GLib.IOError"
   .send_message_with_reply_sync throws="GLib.IOError"
 DBusInterfaceSkeleton
   .get_vtable skip=false nullable unowned=false
@@ -110,7 +109,10 @@ Drive
 File
   .monitor_dir* throws="GLib.IOError"
   .monitor_file throws="GLib.IOError"
-FileAttributeInfo struct=false
+FileInfo
+  .list_attributes nullable
+FileEnumerator
+  .next_file nullable
 IOModuleScope
   .free skip
 IOStream
@@ -160,6 +162,8 @@ Settings
   .change_event skip
   .get skip=false sentinel=""
   .set skip=false sentinel=""
+SettingsSchemaSource
+  .lookup nullable
 SimpleAction
   .enabled skip
   .name skip
@@ -203,6 +207,7 @@ Vfs
   .local_file_add_info.extra_data default=null
   .local_file_add_info.free_extra_data nullable default=null
 Volume
+  .get_activation_root nullable
   .get_sort_key#virtual_method virtual
 ZlibCompressor
   .new.level default=-1
@@ -318,6 +323,10 @@ file_* skip
 icon_* skip
 initable_* skip
 
+// Structs incorrectly returned by value
+FileAttributeInfoList
+  .lookup nullable
+
 // Bug #: cannot set ownership of fields
 StaticResource
   .resource unowned=false
@@ -355,6 +364,8 @@ DBusMessage
   .get_body unowned
 DBusSubtreeDispatchFunc nullable unowned
 DBusSubtreeVTable.enumerate skip=false
+FileAttributeInfoList
+  .infos array array_length_field="n_infos" unowned=false
 InputStream
   .read*.buffer type="uint8[]" array_length_idx=1
 LoadableIcon
