@@ -215,6 +215,8 @@ dist_vapi_DATA = \
 	libwnck-1.0.vapi \
 	libwnck-3.0.deps \
 	libwnck-3.0.vapi \
+	libxklavier.vapi \
+	libxklavier.deps \
 	libxml-2.0.vapi \
 	linux.deps \
 	linux.vapi \
@@ -393,6 +395,7 @@ GIR_BINDINGS = \
 	udisks2 \
 	vte-2.90 \
 	$(GSTREAMER_1_0_BINDINGS) \
+	libxklavier \
 	$(NULL)
 
 BINDINGS = $(GIR_BINDINGS) $(GIDL_BINDINGS)
@@ -672,6 +675,9 @@ libwnck-1.0:
 
 libwnck-3.0:
 	$(GENVAPI) --library $(srcdir)/libwnck-3.0 --metadatadir $(METADATADIR) --pkg gio-2.0 --pkg gtk+-3.0 $(GIRDIR)/Wnck-3.0.gir
+
+libxklavier:
+	$(GENVAPI) --library $(srcdir)/libxklavier --metadatadir $(METADATADIR) --pkg x11 $(GIRDIR)/Xkl-1.0.gir $(METADATADIR)/Xkl-1.0-custom.vala
 
 loudmouth-1.0:
 	$(GENVAPI) --library $(srcdir)/loudmouth-1.0 $(PACKAGESDIR)/loudmouth-1.0/loudmouth-1.0-custom.vala $(PACKAGESDIR)/loudmouth-1.0/loudmouth-1.0.gi
