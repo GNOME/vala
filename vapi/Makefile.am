@@ -9,6 +9,8 @@ dist_vapi_DATA = \
 	alsa.vapi \
 	alsa.deps \
 	atk.vapi \
+	atspi-2.vapi \
+	atspi-2.deps \
 	avahi-client.vapi \
 	avahi-gobject.deps \
 	avahi-gobject.vapi \
@@ -370,6 +372,7 @@ GSTREAMER_1_0_BINDINGS = \
 
 GIR_BINDINGS = \
 	atk \
+	atspi-2 \
 	clutter-1.0 \
 	cogl-pango \
 	gdk-3.0 \
@@ -420,6 +423,9 @@ all-bindings: gir-bindings gidl-bindings
 
 atk:
 	$(GENVAPI) --library $(srcdir)/atk --metadatadir $(METADATADIR) $(METADATADIR)/Atk-1.0-custom.vala $(GIRDIR)/Atk-1.0.gir
+
+atspi-2:
+	$(GENVAPI) --library $(srcdir)/atspi-2 --metadatadir $(METADATADIR) $(GIRDIR)/Atspi-2.0.gir
 
 clutter-1.0:
 	$(GENVAPI) --library $(srcdir)/clutter-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Clutter-1.0-custom.vala --pkg atk --pkg cairo --pkg pango --pkg cogl-1.0 --pkg json-glib-1.0 $(GIRDIR)/Clutter-1.0.gir
