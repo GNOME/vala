@@ -115,8 +115,27 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		_parser.set_root_rule (file);
 	}
 
-	private void add_documentation (string symbol_name, StringBuilder? comment, string filename, SourceLocation src_ref) {
+	private enum InsertionMode {
+		APPEND,
+		PREPEND,
+		REPLACE
+	}
+
+	private void add_documentation (string _symbol_name, StringBuilder? comment, string filename, SourceLocation src_ref) {
 		Api.Node? symbol = null;
+
+		InsertionMode insertion_mode;
+		string symbol_name;
+		if (_symbol_name.has_suffix ("::append")) {
+			symbol_name = _symbol_name.substring (0, _symbol_name.length - 8);
+			insertion_mode = InsertionMode.APPEND;
+		} else if (_symbol_name.has_suffix ("::prepend")) {
+			symbol_name = _symbol_name.substring (0, _symbol_name.length - 9);
+			insertion_mode = InsertionMode.PREPEND;
+		} else {
+			symbol_name = _symbol_name;
+			insertion_mode = InsertionMode.REPLACE;
+		}
 
 		if (symbol_name.has_prefix ("c::")) {
 			symbol = tree.search_symbol_cstr (null, symbol_name.substring (3));
@@ -135,8 +154,25 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		if (comment != null) {
 			var docu = _doc_parser.parse_comment_str (symbol, comment.str, filename, src_ref.line, src_ref.column);
 			if (docu != null) {
-				symbol.documentation = docu;
+				if (symbol.documentation == null || insertion_mode == InsertionMode.REPLACE) {
+					if (insertion_mode == InsertionMode.APPEND) {
+						docu.content.insert (0, factory.create_paragraph ());
+					}
+					symbol.documentation = docu;
+				} else if (insertion_mode == InsertionMode.APPEND) {
+					symbol.documentation.content.add_all (docu.content);
+					merge_taglets (symbol.documentation, docu);
+				} else if (insertion_mode == InsertionMode.PREPEND) {
+					symbol.documentation.content.insert_all (0, docu.content);
+					merge_taglets (symbol.documentation, docu);
+				}
 			}
+		}
+	}
+
+	private void merge_taglets (Comment comment, Comment imported) {
+		foreach (Taglet taglet in imported.taglets) {
+			imported.taglets.add (taglet);
 		}
 	}
 
