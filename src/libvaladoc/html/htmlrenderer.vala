@@ -463,11 +463,11 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	public override void visit_source_code (SourceCode element) {
-		writer.start_tag ("pre", {"class", "main_source"});
 		writer.set_wrap (false);
+		writer.start_tag ("pre", {"class", "main_source"});
 		write_string (element.code);
-		writer.set_wrap (true);
 		writer.end_tag ("pre");
+		writer.set_wrap (true);
 	}
 
 	public override void visit_table (Table element) {

@@ -123,6 +123,29 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 		}
 	}
 
+	private inline bool is_empty_string (string line) {
+		for (int i = 0; line[i] != '\0'; i++) {
+			if (line[i].isspace () == false) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private string strip_code (string code) {
+		string[] lines = code.split ("\n");
+		for (int i = lines.length - 1; i >= 0 && is_empty_string (lines[i]); i--) {
+			lines[i] = null;
+		}
+
+		string** _lines = lines;
+		for (int i = 0; lines[i] != null && is_empty_string (lines[i]); i++) {
+			_lines = &lines[i + 1];
+		}
+
+		return string.joinv ("\n", (string[]) _lines);
+	}
 	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
 		string[] splitted = code.split ("\n", 2);
 		if (splitted[0].strip () == "") {
@@ -140,10 +163,11 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 				if (_language == null && name != "none") {
 					string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
 					reporter.simple_warning ("%s: %s{{{: warning: Unsupported programming language '%s'", file_path, node_segment, name);
-					return ;
 				}
 			}
 		}
+
+		code = strip_code (code);
 	}
 
 	public override void accept (ContentVisitor visitor) {
