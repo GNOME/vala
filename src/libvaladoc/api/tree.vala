@@ -274,14 +274,21 @@ public class Valadoc.Api.Tree {
 	 * @param import_directories List of directories where to find the files
 	 */
 	public void import_documentation (DocumentationImporter[] importers, string[] packages, string[] import_directories) {
+		HashSet<string> processed = new HashSet<string> ();
 		foreach (string pkg_name in packages) {
 			bool imported = false;
 			foreach (DocumentationImporter importer in importers) {
 				string? path = get_file_path ("%s.%s".printf (pkg_name, importer.file_extension), import_directories);
+				if (path == null) {
+					continue;
+				}
 
-				if (path != null) {
+				path = realpath (path);
+				imported = true;
+
+				if (!processed.contains (path)) {
 					importer.process (path);
-					imported = true;
+					processed.add (path);
 				}
 			}
 
