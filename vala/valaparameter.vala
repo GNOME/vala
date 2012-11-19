@@ -147,6 +147,11 @@ public class Vala.Parameter : Variable {
 				return false;
 			}
 
+			if (has_attribute_argument ("CCode", "scope") && variable_type is DelegateType) {
+				var delegate_type = (DelegateType) variable_type;
+				delegate_type.is_called_once = get_attribute_string ("CCode", "scope") == "async";
+			}
+
 			if (initializer != null) {
 				initializer.target_type = variable_type.copy ();
 				initializer.check (context);
