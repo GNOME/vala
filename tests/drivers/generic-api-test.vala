@@ -2625,7 +2625,7 @@ public static void test_driver (string driver_path) {
 			gobj = true;
 			break;
 
-		case "out":
+		case "@out":
 			test_package_out (pkg);
 			test = true;
 			break;
