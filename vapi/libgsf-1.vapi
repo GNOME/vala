@@ -55,7 +55,7 @@ namespace Gsf {
 	public class Infile : Gsf.Input {
 		[CCode (has_construct_function = false)]
 		protected Infile ();
-		public unowned Gsf.Input child_by_aname (string[] names);
+		public unowned Gsf.Input child_by_aname ([CCode (array_length = false)] string[] names);
 		public virtual unowned Gsf.Input? child_by_index (int i);
 		public virtual unowned Gsf.Input? child_by_name (string name);
 		public unowned Gsf.Input child_by_vaname (void* names);
