@@ -2428,7 +2428,6 @@ namespace GLib {
 		public DateTime add_weeks (int weeks);
 		public DateTime add_days (int days);
 		public DateTime add_hours (int hours);
-		public DateTime add_milliseconds (int milliseconds);
 		public DateTime add_minutes (int minutes);
 		public DateTime add_seconds (double seconds);
 		public DateTime add_full (int years, int months, int days, int hours = 0, int minutes = 0, double seconds = 0);
