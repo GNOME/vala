@@ -4043,6 +4043,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (cname = "GPtrArray", cprefix = "g_ptr_array_", ref_function = "g_ptr_array_ref", unref_function = "g_ptr_array_unref", type_id = "G_TYPE_PTR_ARRAY")]
+	[GIR (name = "PtrArray")]
 	public class GenericArray<G> {
 		[CCode (cname = "g_ptr_array_new_with_free_func", simple_generics = true)]
 		public GenericArray ();
