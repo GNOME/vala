@@ -1269,7 +1269,12 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("<type name=\"gpointer\" c:type=\"%s\"/>\n", CCodeBaseModule.get_ccode_name (type));
 		} else if (type.data_type != null) {
 			write_indent ();
-			buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"", gi_type_name (type.data_type), CCodeBaseModule.get_ccode_name (type));
+			string type_name = gi_type_name (type.data_type);
+			bool is_array = false;
+			if ((type_name == "GLib.Array") || (type_name == "GLib.PtrArray")) {
+				is_array = true;
+			}
+			buffer.append_printf ("<%s name=\"%s\" c:type=\"%s\"", is_array ? "array" : "type", gi_type_name (type.data_type), CCodeBaseModule.get_ccode_name (type));
 
 			List<DataType> type_arguments = type.get_type_arguments ();
 			if (type_arguments.size == 0) {
@@ -1284,7 +1289,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 				indent--;
 				write_indent ();
-				buffer.append_printf ("</type>\n");
+				buffer.append_printf ("</%s>\n", is_array ? "array" : "type");
 			}
 		} else if (type is DelegateType) {
 			var deleg_type = (DelegateType) type;
