@@ -18,6 +18,7 @@ MapInfo
   .data array array_length_field="size"
 init_get_option_group skip=false
 init.argv unowned
+init_check.argv unowned
 
 ControlSource
   .get_value_array.values array array_length_idx=2

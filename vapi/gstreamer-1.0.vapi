@@ -2996,7 +2996,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void init ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static bool init_check ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref string[]? argv) throws GLib.Error;
+	public static bool init_check ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.OptionGroup init_get_option_group ();
 	[CCode (cheader_filename = "gst/gst.h")]
