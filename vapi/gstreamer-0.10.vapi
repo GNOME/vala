@@ -472,7 +472,7 @@ namespace Gst {
 		public virtual unowned Gst.Pad request_new_pad (Gst.PadTemplate templ, string? name);
 		[NoWrapper]
 		public virtual unowned Gst.Pad request_new_pad_full (Gst.PadTemplate templ, string name, Gst.Caps caps);
-		public unowned Gst.Pad request_pad (Gst.PadTemplate templ, string name, Gst.Caps caps);
+		public Gst.Pad? request_pad (Gst.PadTemplate templ, string? name, Gst.Caps? caps);
 		public bool requires_clock ();
 		public bool seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType cur_type, int64 cur, Gst.SeekType stop_type, int64 stop);
 		public bool seek_simple (Gst.Format format, Gst.SeekFlags seek_flags, int64 seek_pos);
@@ -2302,9 +2302,9 @@ namespace Gst {
 		[CCode (cname = "GST_STATE_TRANSITION")]
 		public static Gst.StateChange transition (Gst.State cur, Gst.State next);
 		[CCode (cname = "GST_STATE_TRANSITION_CURRENT")]
-		public static Gst.State transition_current ();
+		public Gst.State transition_current ();
 		[CCode (cname = "GST_STATE_TRANSITION_NEXT")]
-		public static Gst.State transition_next ();
+		public Gst.State transition_next ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STATE_CHANGE_")]
 	public enum StateChangeReturn {
