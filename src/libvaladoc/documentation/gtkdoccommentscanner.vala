@@ -157,6 +157,21 @@ public class Valadoc.Gtkdoc.Scanner {
 					start = (string) ((char*) pos + 8);
 					pos = (string) ((char*) pos + 7);
 					builder.append_c ('@');
+				} else if (pos.has_prefix ("&nbsp;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 6);
+					pos = (string) ((char*) pos + 5);
+					builder.append_c (' ');
+				} else if (pos.has_prefix ("&quot;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 6);
+					pos = (string) ((char*) pos + 5);
+					builder.append_c ('"');
+				} else if (pos.has_prefix ("&apos;")) {
+					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
+					start = (string) ((char*) pos + 6);
+					pos = (string) ((char*) pos + 5);
+					builder.append_c ('\'');
 				} else if (pos.has_prefix ("&lpar;")) {
 					builder.append_len (start, (ssize_t) ((char*) pos - (char*) start));
 					start = (string) ((char*) pos + 6);
