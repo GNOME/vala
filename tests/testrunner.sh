@@ -30,7 +30,7 @@ export G_DEBUG=fatal_warnings
 export PKG_CONFIG_PATH=../../src/libvaladoc
 
 VALAC=valac
-VALAFLAGS="-X -D -X TOP_SRC_DIR=\"$topsrcdir\" --vapidir $topsrcdir/src/libvaladoc --pkg valadoc-1.0 --pkg gee-1.0 --disable-warnings --main main --save-temps -X -g -X -O0 -X -pipe -X -lm -X -Werror=return-type -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast -X -L$topsrcdir//src/libvaladoc/.libs -X -I$topsrcdir/src/libvaladoc $topsrcdir/tests/libvaladoc/parser/generic-scanner.vala $topsrcdir/tests/drivers/generic-api-test.vala"
+VALAFLAGS="-X -D -X TOP_SRC_DIR=\"$topsrcdir\" --vapidir $topsrcdir/src/libvaladoc --pkg valadoc-1.0 --pkg gee-0.8 --disable-warnings --main main --save-temps -X -g -X -O0 -X -pipe -X -lm -X -Werror=return-type -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast -X -L$topsrcdir//src/libvaladoc/.libs -X -I$topsrcdir/src/libvaladoc $topsrcdir/tests/libvaladoc/parser/generic-scanner.vala $topsrcdir/tests/drivers/generic-api-test.vala"
 VAPIGEN=$topbuilddir/vapigen/vapigen
 VAPIGENFLAGS=
 

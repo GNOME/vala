@@ -54,7 +54,7 @@ public class Valadoc.MarkupReader : Object {
 	private int line;
 	private int column;
 
-	private Map<string, string> attributes = new HashMap<string, string> (str_hash, str_equal);
+	private Map<string, string> attributes = new HashMap<string, string> ();
 	private bool empty_element;
 
 	private ErrorReporter reporter;
@@ -109,7 +109,7 @@ public class Valadoc.MarkupReader : Object {
 	 * @return map of current attributes
 	 */
 	public Map<string,string> get_attributes () {
-		var result = new HashMap<string,string> (str_hash, str_equal);
+		var result = new HashMap<string, string> ();
 		foreach (var key in attributes.keys) {
 			result.set (key, attributes.get (key));
 		}

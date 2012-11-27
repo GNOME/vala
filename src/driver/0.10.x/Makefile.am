@@ -43,7 +43,7 @@ libdriver_la_SOURCES =      \
 
 
 libdriver.vala.stamp: $(libdriver_la_VALASOURCES)
-	$(VALAC) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(top_srcdir)/src/libvaladoc --pkg vala-0.10 --pkg gee-1.0 --pkg valadoc-1.0 --vapidir $(VERSIONED_VAPI_DIR) --basedir . $^
+	$(VALAC) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(top_srcdir)/src/libvaladoc --pkg vala-0.10 --pkg gee-0.8 --pkg valadoc-1.0 --vapidir $(VERSIONED_VAPI_DIR) --basedir . $^
 	touch $@
 
 

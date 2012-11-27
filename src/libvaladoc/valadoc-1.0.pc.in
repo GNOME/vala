@@ -9,6 +9,6 @@ vapidir=@datadir@/vala/vapi
 Name: Valadoc
 Description: The Vala documentation compiler library
 Version: @VERSION@
-Requires: libgvc gee-1.0 gmodule-2.0
+Requires: libgvc gee-0.8 gmodule-2.0
 Libs: -L${libdir} -lvaladoc
 Cflags: -I${includedir}/valadoc-1.0

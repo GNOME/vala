@@ -132,7 +132,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		Run? sec = null;
 
 		Iterator<Inline> iter = run.content.iterator ();
-		for (bool has_next = iter.first (); has_next; has_next = iter.next ()) {
+		for (bool has_next = iter.next (); has_next; has_next = iter.next ()) {
 			Inline item = iter.get ();
 			if (sec == null) {
 				Inline? tmp = split_inline (item);
@@ -163,7 +163,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		Paragraph? sec = null;
 
 		Iterator<Inline> iter = p.content.iterator ();
-		for (bool has_next = iter.first (); has_next; has_next = iter.next ()) {
+		for (bool has_next = iter.next (); has_next; has_next = iter.next ()) {
 			Inline item = iter.get ();
 			if (sec == null) {
 				Inline? tmp = split_inline (item);
@@ -262,7 +262,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 
 		MapIterator<string, Api.SourceComment> iter = gir_comment.parameter_iterator ();
-		for (bool has_next = iter.first (); has_next; has_next = iter.next ()) {
+		for (bool has_next = iter.next (); has_next; has_next = iter.next ()) {
 			Taglets.Param? taglet = this.parse_block_taglet (iter.get_value (), "param") as Taglets.Param;
 			if (taglet == null) {
 				return null;

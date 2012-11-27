@@ -48,15 +48,15 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	 */
 	public abstract NodeType node_type { get; }
 
-	private Map<string,Node> per_name_children;
-	private Map<NodeType?, Gee.List<Node>> per_type_children;
+	private Map<string, Node> per_name_children;
+	private Map<NodeType, Gee.List<Node>> per_type_children;
 
 
 	public Node (Node? parent, SourceFile? file, string? name, void* data) {
 		base (data);
 
-		per_name_children = new HashMap<string,Node> ();
-		per_type_children = new HashMap<NodeType?, Gee.List<Node>> (int_hash, int_equal);
+		per_name_children = new HashMap<string, Node> ();
+		per_type_children = new HashMap<NodeType, Gee.List<Node>> ();
 
 		if (name != null && (is_keyword (name) || name[0].isdigit ())) {
 			this.name = "@" + name;
