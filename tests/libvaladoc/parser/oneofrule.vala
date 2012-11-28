@@ -33,7 +33,7 @@ public static void main () {
 	Rule rule = Rule.one_of ({
 			Valadoc.TokenType.EQUAL_1,
 			Valadoc.TokenType.EQUAL_2,
-			Valadoc.TokenType.EQUAL_3,
+			Valadoc.TokenType.EQUAL_3
 		});
 
 
