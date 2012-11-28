@@ -51,16 +51,19 @@ PKG_CHECK_MODULES(LIBGEE, gee-0.8 >= $LIBGEE_REQUIRED)
 AC_SUBST(LIBGEE_CFLAGS)
 AC_SUBST(LIBGEE_LIBS)
 
-PKG_CHECK_MODULES(LIBGDKPIXBUF, gdk-pixbuf-2.0 >= $LIBGDKPIXBUF_REQUIRED)
-AC_SUBST(LIBGDKPIXBUF_CFLAGS)
-AC_SUBST(LIBGDKPIXBUF_LIBS)
-
 
 
 
 ##
 ## Drivers:
 ##
+
+PKG_CHECK_MODULES(LIBVALA_0_20_X, libvala-0.20 >= 0.17.4, have_libvala_0_20_x="yes", have_libvala_0_20_x="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_20_X, test "$have_libvala_0_20_x" = "yes")
+AC_SUBST(LIBVALA_0_20_X_CFLAGS)
+AC_SUBST(LIBVALA_0_20_X_LIBS)
+
+
 
 PKG_CHECK_MODULES(LIBVALA_0_18_X, libvala-0.18 >= 0.17.4, have_libvala_0_18_x="yes", have_libvala_0_18_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_18_X, test "$have_libvala_0_18_x" = "yes")
@@ -155,6 +158,7 @@ AC_CONFIG_FILES([Makefile
 				 src/driver/0.14.x/Makefile
 				 src/driver/0.16.x/Makefile
 				 src/driver/0.18.x/Makefile
+				 src/driver/0.20.x/Makefile
                  src/doclets/Makefile
                  src/doclets/htm/Makefile
                  src/doclets/devhelp/Makefile
