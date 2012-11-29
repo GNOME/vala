@@ -27,6 +27,7 @@ class Vala.Compiler {
 	static string basedir;
 	static string directory;
 	static bool version;
+	static bool api_version;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] sources;
 	[CCode (array_length = false, array_null_terminated = true)]
@@ -97,6 +98,7 @@ class Vala.Compiler {
 		{ "basedir", 'b', 0, OptionArg.FILENAME, ref basedir, "Base source directory", "DIRECTORY" },
 		{ "directory", 'd', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
+		{ "api-version", 0, 0, OptionArg.NONE, ref api_version, "Display API version number", null },
 		{ "ccode", 'C', 0, OptionArg.NONE, ref ccode_only, "Output C code", null },
 		{ "header", 'H', 0, OptionArg.FILENAME, ref header_filename, "Output C header file", "FILE" },
 		{ "use-header", 0, 0, OptionArg.NONE, ref use_header, "Use C header file", null },
@@ -527,6 +529,9 @@ class Vala.Compiler {
 		
 		if (version) {
 			stdout.printf ("Vala %s\n", Config.BUILD_VERSION);
+			return 0;
+		} else if (api_version) {
+			stdout.printf ("%s\n", Config.PACKAGE_SUFFIX.substring (1));
 			return 0;
 		}
 		
