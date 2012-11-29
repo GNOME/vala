@@ -128,7 +128,10 @@ public class Valadoc.ModuleLoader : Object {
 		}
 
 		string[] segments = driverpath.split (".");
-		if (segments.length != 3 && segments.length != 4) {
+		if (segments.length != 2 && // e.g. 0.20, --pkg-version
+			segments.length != 3 && // e.g. 0.20.3, --version
+			segments.length != 4)   // e.g. Vala 0.18.0.60-a4cdb, --version
+		{
 			reporter.simple_error ("error: Invalid driver version format.");
 			return null;
 		}
@@ -136,12 +139,15 @@ public class Valadoc.ModuleLoader : Object {
 
 		int64 segment_a;
 		int64 segment_b;
-		int64 segment_c;
+		int64 segment_c = 0;
 		bool tmp;
 
 		tmp  = int64.try_parse (segments[0], out segment_a);
 		tmp &= int64.try_parse (segments[1], out segment_b);
-		tmp &= int64.try_parse (segments[2], out segment_c);
+
+		if (segments.length > 2) {
+			tmp &= int64.try_parse (segments[2], out segment_c);
+		}
 
 		if (!tmp) {
 			reporter.simple_error ("error: Invalid driver version format.");

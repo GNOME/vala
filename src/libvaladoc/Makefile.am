@@ -1,6 +1,6 @@
 NULL =
 
-DEFAULT_DRIVER = "`$(VALAC) --version`"
+DEFAULT_DRIVER = "`$(VALAC) --api-version >& /dev/null; if [ $$? = 0 ]; then $(VALAC) --api-version; else $(VALAC) --version; fi`"
 
 
 AM_CFLAGS = \
