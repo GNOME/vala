@@ -64,19 +64,16 @@ AC_SUBST(LIBVALA_0_20_X_CFLAGS)
 AC_SUBST(LIBVALA_0_20_X_LIBS)
 
 
-
 PKG_CHECK_MODULES(LIBVALA_0_18_X, libvala-0.18 >= 0.17.4, have_libvala_0_18_x="yes", have_libvala_0_18_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_18_X, test "$have_libvala_0_18_x" = "yes")
 AC_SUBST(LIBVALA_0_18_X_CFLAGS)
 AC_SUBST(LIBVALA_0_18_X_LIBS)
 
 
-
 PKG_CHECK_MODULES(LIBVALA_0_17__1_3, libvala-0.18 >= 0.17.1   libvala-0.18 <= 0.17.3, have_libvala_0_17__1_3="yes", have_libvala_0_17__1_3="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_17__1_3, test "$have_libvala_0_17__1_3" = "yes")
 AC_SUBST(HAVE_LIBVALA_0_17__1_3_CFLAGS)
 AC_SUBST(HAVE_LIBVALA_0_17__1_3_LIBS)
-
 
 
 PKG_CHECK_MODULES(LIBVALA_0_17_0, libvala-0.18 = 0.17.0, have_libvala_0_17_0="yes", have_libvala_0_17_0="no")
@@ -115,35 +112,6 @@ AC_SUBST(LIBVALA_0_13_0_CFLAGS)
 AC_SUBST(LIBVALA_0_13_0_LIBS)
 
 
-#PKG_CHECK_MODULES(LIBVALA_0_13_X, libvala-0.14 >= 0.13.1 libvala-0.14 < 0.14.0, have_libvala_0_13_x="yes", have_libvala_0_13_x="no")
-#AM_CONDITIONAL(HAVE_LIBVALA_0_13_X, test "$have_libvala_0_13_x" = "yes")
-#AC_SUBST(LIBVALA_0_13_X_CFLAGS)
-#AC_SUBST(LIBVALA_0_13_X_LIBS)
-
-
-#PKG_CHECK_MODULES(LIBVALA_0_13_X, libvala-0.14 >= 0.13.0 libvala-0.14 <= 0.13.1, have_libvala_0_13_0_1="yes", have_libvala_0_13_0_1="no")
-#AM_CONDITIONAL(HAVE_LIBVALA_0_13_0_1, test "$have_libvala_0_13_0_1" = "yes")
-#AC_SUBST(LIBVALA_0_13_X_CFLAGS)
-#AC_SUBST(LIBVALA_0_13_X_LIBS)
-
-
-PKG_CHECK_MODULES(LIBVALA_0_12_X, libvala-0.12 >= 0.11.1, have_libvala_0_12_x="yes", have_libvala_0_12_x="no")
-AM_CONDITIONAL(HAVE_LIBVALA_0_12_X, test "$have_libvala_0_12_x" = "yes")
-AC_SUBST(LIBVALA_0_12_X_CFLAGS)
-AC_SUBST(LIBVALA_0_12_X_LIBS)
-
-
-PKG_CHECK_MODULES(LIBVALA_0_12_0, libvala-0.12 = 0.11.0, have_libvala_0_12_0="yes", have_libvala_0_12_0="no")
-AM_CONDITIONAL(HAVE_LIBVALA_0_12_0, test "$have_libvala_0_12_0" = "yes")
-AC_SUBST(LIBVALA_0_12_0_CFLAGS)
-AC_SUBST(LIBVALA_0_12_0_LIBS)
-
-
-PKG_CHECK_MODULES(LIBVALA_0_10_X, vala-0.10 >= 0.10, have_libvala_0_10_x="yes", have_libvala_0_10_x="no")
-AM_CONDITIONAL(HAVE_LIBVALA_0_10_X, test "$have_libvala_0_10_x" = "yes")
-AC_SUBST(LIBVALA_0_10_X_CFLAGS)
-AC_SUBST(LIBVALA_0_10_X_LIBS)
-
 
 AC_CONFIG_FILES([Makefile
                  src/libvaladoc/valadoc-1.0.pc
@@ -153,8 +121,6 @@ AC_CONFIG_FILES([Makefile
                  doc/Makefile
                  src/libvaladoc/Makefile
                  src/driver/Makefile
-				 src/driver/0.10.x/Makefile
-				 src/driver/0.12.x/Makefile
 				 src/driver/0.14.x/Makefile
 				 src/driver/0.16.x/Makefile
 				 src/driver/0.18.x/Makefile

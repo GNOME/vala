@@ -149,8 +149,6 @@ public class Valadoc.ModuleLoader : Object {
 		}
 
 		DriverMetaData[] lut = {
-				DriverMetaData (0, 10,  0, 10,  "0.10.x"),
-				DriverMetaData (0, 11,  0, 12,  "0.12.x"),
 				DriverMetaData (0, 13,  0, 14,  "0.14.x"),
 				DriverMetaData (0, 15,  0, 16,  "0.16.x"),
 				DriverMetaData (0, 17,  0, 18,  "0.18.x"),
