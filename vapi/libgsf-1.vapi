@@ -171,9 +171,9 @@ namespace Gsf {
 	[CCode (cheader_filename = "gsf/gsf-input-memory.h", type_id = "GSF_INPUT_MEMORY_TYPE")]
 	public class InputMemory : Gsf.Input {
 		[CCode (has_construct_function = false, type = "GsfInput*")]
-		public InputMemory (uchar buf, Gsf.off_t length, bool needs_free);
+		public InputMemory ([CCode (array_length_type = "Gsf.off_t")] uint8[] buf, bool needs_free);
 		[CCode (has_construct_function = false, type = "GsfInput*")]
-		public InputMemory.clone (uchar buf, Gsf.off_t length);
+		public InputMemory.clone ([CCode (array_length_type = "Gsf.off_t")] uint8[] buf);
 		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputMemory.from_bzip (Gsf.Input source) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "GsfInput*")]
