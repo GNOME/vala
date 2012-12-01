@@ -1521,7 +1521,7 @@ namespace GLib {
 		[CCode (cname = "g_main_current_source")]
 		public static unowned Source current_source ();
 		public static unowned MainContext? get_thread_default ();
-		public static unowned MainContext ref_thread_default ();
+		public static MainContext ref_thread_default ();
 		public void push_thread_default ();
 		public void pop_thread_default ();
 		[CCode (cname = "g_main_context_invoke_full")]
