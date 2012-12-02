@@ -1335,7 +1335,7 @@ namespace Linux {
         public static int getifaddrs (out IfAddrs ifap);
 
         [CCode (cprefix = "IFA_", has_type_id = false, cheader_filename = "linux/if_addr.h")]
-        enum IfAddrType {
+        public enum IfAddrType {
             UNSPEC,
             ADDRESS,
             LOCAL,
@@ -1352,7 +1352,7 @@ namespace Linux {
         public Linux.Netlink.RtAttr* IFA_RTA (Linux.Network.IfAddrMsg* msg);
 
         [CCode (cprefix = "ARPHRD_", has_type_id = false, cheader_filename = "linux/if_arp.h")]
-        enum IfArpHeaderType {
+        public enum IfArpHeaderType {
             NETROM,
             ETHER,
             EETHER,
@@ -1417,7 +1417,7 @@ namespace Linux {
         }
 
         [CCode (cprefix = "ARPOP_", has_type_id = false, cheader_filename = "linux/if_arp.h")]
-        enum IfArpOpcode {
+        public enum IfArpOpcode {
             REQUEST,
             REPLY,
             RREQUEST,
