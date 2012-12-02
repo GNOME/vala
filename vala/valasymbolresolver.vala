@@ -451,6 +451,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		stmt.accept_children (this);
 	}
 
+	public override void visit_delete_statement (DeleteStatement stmt) {
+		stmt.accept_children (this);
+	}
+
 	public override void visit_catch_clause (CatchClause clause) {
 		clause.accept_children (this);
 	}
