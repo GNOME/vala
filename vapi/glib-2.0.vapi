@@ -1469,7 +1469,11 @@ namespace GLib {
 	namespace AtomicInt {
 		public static int get ([CCode (type = "volatile gint *")] ref int atomic);
 		public static void set ([CCode (type = "volatile gint *")] ref int atomic, int newval);
+#if GLIB_2_30
+		public static int add ([CCode (type = "volatile gint *")] ref int atomic, int val);
+#else
 		public static void add ([CCode (type = "volatile gint *")] ref int atomic, int val);
+#endif
 		[Deprecated (since = "2.30", replacement = "add")]
 		public static int exchange_and_add ([CCode (type = "volatile gint *")] ref int atomic, int val);
 		public static bool compare_and_exchange ([CCode (type = "volatile gint *")] ref int atomic, int oldval, int newval);
