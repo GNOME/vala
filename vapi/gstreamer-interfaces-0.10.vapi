@@ -129,7 +129,7 @@ namespace Gst {
 		public void probe_property_name (string name);
 		public signal void probe_needed (void* pspec);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/interfaces/streamvolume.h")]
 	public interface StreamVolume : GLib.Object {
 		public static double convert_volume (Gst.StreamVolumeFormat from, Gst.StreamVolumeFormat to, double val);
 		public bool get_mute ();
@@ -273,7 +273,7 @@ namespace Gst {
 		COMMANDS,
 		ANGLES
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STREAM_VOLUME_FORMAT_")]
+	[CCode (cheader_filename = "gst/interfaces/streamvolume.h", cprefix = "GST_STREAM_VOLUME_FORMAT_")]
 	public enum StreamVolumeFormat {
 		LINEAR,
 		CUBIC,
