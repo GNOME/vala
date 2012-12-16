@@ -63,8 +63,7 @@ namespace Pixman {
 
 	[CCode (cname = "struct pixman_transform", has_type_id = false)]
 	public struct Transform {
-		[CCode (array_length = false)]
-		public Pixman.Fixed[,] matrix;
+		public Pixman.Fixed matrix[9];
 
 		[CCode (cname = "pixman_transform_init_identity")]
 		public Transform.identity ();
@@ -404,7 +403,7 @@ namespace Pixman {
 		public bool supported_source ();
 	}
 
-	[CCode (cname = "pixman_image_t", cprefix = "pixman_", ref_function = "pixman_image_ref", unref_function = "pixman_image_unref", has_type_id = false)]
+	[CCode (cname = "pixman_image_t", cprefix = "pixman_image_", ref_function = "pixman_image_ref", unref_function = "pixman_image_unref", has_type_id = false)]
 	public class Image {
 		[CCode (cname = "pixman_image_create_solid_fill")]
 		public Image.solid_fill (Pixman.Color color);
@@ -415,7 +414,7 @@ namespace Pixman {
 		[CCode (cname = "pixman_image_create_conical_gradient")]
 		public Image.conical_gradient (Pixman.PointFixed center, Pixman.Fixed angle, Pixman.GradientStop[] stops);
 		[CCode (cname = "pixman_image_create_bits")]
-		public Image.bits (Pixman.Format format, int width, int height, [CCode (type = "uint32_t*", array_length = false)] uint8[] bits, int rowstride_bytes);
+		public Image.bits (Pixman.Format format, int width, int height, [CCode (type = "uint32_t*", array_length = false)] uint8[]? bits, int rowstride_bytes);
 
 		public bool set_clip_region (Pixman.Region16 clip_region);
 		public Pixman.Region16 clip_region { set; }
@@ -427,7 +426,7 @@ namespace Pixman {
 		public Pixman.Transform transform { set; }
 		public void set_repeat (Pixman.Repeat repeat);
 		public Pixman.Repeat repeat { set; }
-		public bool set_filter (Pixman.Filter filter, Pixman.Fixed[] filter_params);
+		public bool set_filter (Pixman.Filter filter, Pixman.Fixed[]? filter_params);
 		public void set_source_clipping (bool source_clipping);
 		public bool source_clipping { set; }
 		public void set_alpha_map (Pixman.Image alpha_map, int16 x, int16 y);
@@ -437,7 +436,7 @@ namespace Pixman {
 		public bool set_indexed (Pixman.Indexed indexed);
 		public Pixman.Indexed indexed { set; }
 		[CCode (array_length = false)]
-		public uint32[] get_data ();
+		public unowned uint32[] get_data ();
 		public int get_width ();
 		public int width { get; }
 		public int get_height ();
@@ -450,12 +449,15 @@ namespace Pixman {
 		public bool fill_rectangles (Pixman.Operation op, Pixman.Color color, [CCode (array_length_pos = 2.1)] Pixman.Rectangle16[] rects);
 
 		public static bool compute_composite_region (Pixman.Region16 region, Pixman.Image src_image, Pixman.Image? mask_image, Pixman.Image dst_image, int src_x, int src_y, int mask_x, int mask_y, int dest_x, int dest_y, int width, int height);
-		[CCode (cname = "pixman_image_composite")]
 		public static void composite (Pixman.Operation op, Pixman.Image src, Pixman.Image? mask, Pixman.Image dest, int16 src_x, int16 src_y, int16 mask_x, int16 mask_y, int16 dest_x, int16 dest_y, uint16 width, uint16 height);
 
+		[CCode (cname = "pixman_rasterize_edges")]
 		public void rasterize_edges (Pixman.Edge l, Pixman.Edge r, Pixman.Fixed t, Pixman.Fixed b);
+		[CCode (cname = "pixman_add_traps")]
 		public void add_traps (int16 x_off, int16 y_off, [CCode (array_length_pos = 2.9)] Pixman.Trap[] traps);
+		[CCode (cname = "pixman_add_trapezoids")]
 		public void add_trapezoids (int16 x_off, int y_off, [CCode (array_length_pos = 2.9)] Pixman.Trap[] traps);
+		[CCode (cname = "pixman_rasterize_trapezoid")]
 		public void rasterize_trapezoid (Pixman.Trapezoid trap, int x_off, int y_off);
 	}
 
