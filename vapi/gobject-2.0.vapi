@@ -96,6 +96,7 @@ namespace GLib {
 	}
 
 	[CCode (cprefix = "G_TYPE_DEBUG_", has_type_id = false)]
+	[Flags]
 	public enum TypeDebugFlags {
 		NONE,
 		OBJECTS,
@@ -268,6 +269,7 @@ namespace GLib {
 	}
 
 	[CCode (cprefix = "G_PARAM_", has_type_id = false)]
+	[Flags]
 	public enum ParamFlags {
 		READABLE,
 		WRITABLE,
@@ -278,7 +280,10 @@ namespace GLib {
 		STATIC_NICK,
 		STATIC_BLURB,
 		READWRITE,
-		STATIC_STRINGS
+		STATIC_STRINGS,
+		USER_SHIFT,
+		DEPRECATED,
+		MASK
 	}
 
 	[CCode (lower_case_csuffix = "object_class")]
@@ -292,8 +297,8 @@ namespace GLib {
 	public struct ObjectConstructParam {
 	}
 
-	[Flags]
 	[CCode (cprefix = "G_BINDING_")]
+	[Flags]
 	public enum BindingFlags {
 		DEFAULT,
 		BIDIRECTIONAL,
@@ -523,16 +528,21 @@ namespace GLib {
 	public delegate bool SignalEmissionHook (SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] Value[] param_values);
 
 	[CCode (cprefix = "G_SIGNAL_", has_type_id = false)]
+	[Flags]
 	public enum SignalFlags {
 		RUN_FIRST,
 		RUN_LAST,
 		RUN_CLEANUP,
+		NO_RECURSE,
 		DETAILED,
 		ACTION,
-		NO_HOOKS
+		NO_HOOKS,
+		MUST_COLLECT,
+		DEPRECATED
 	}
 
 	[CCode (cprefix = "G_CONNECT_", has_type_id = false)]
+	[Flags]
 	public enum ConnectFlags {
 		AFTER,
 		SWAPPED
