@@ -1687,7 +1687,7 @@ namespace Html {
 		[CCode (cname = "htmlNewDoc")]
 		public Doc (string? uri = null, string? external_id = null);
 
-		[CCode (cname = "htmlNewNoDtD")]
+		[CCode (cname = "htmlNewDocNoDtD")]
 		public Doc.new_no_dtd (string? uri = null, string? external_id = null);
 
 		[CCode (cname = "htmlSAXParseDoc")]
