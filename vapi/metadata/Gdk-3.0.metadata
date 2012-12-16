@@ -56,7 +56,7 @@ EventMotion
 FilterFunc.data closure=2
 init*.argv unowned
 parse_args.argv unowned
-property_change.data array array_length_idx=6
+property_change.data array
 selection_property_get skip=false
         .data array
 threads_add_idle skip=false

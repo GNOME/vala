@@ -5945,7 +5945,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void pre_parse_libgtk_only ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void property_change (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, int format, Gdk.PropMode mode, [CCode (array_length_cname = "nelements", array_length_pos = 6.1, type = "const guchar*")] uint8[] data);
+	public static void property_change (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, int format, Gdk.PropMode mode, [CCode (array_length = false, type = "const guchar*")] uint8[] data, int nelements);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void property_delete (Gdk.Window window, Gdk.Atom property);
 	[CCode (cheader_filename = "gdk/gdk.h")]
