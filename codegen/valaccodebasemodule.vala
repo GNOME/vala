@@ -2686,6 +2686,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return equal_func;
 		}
 
+		if (st.base_struct != null) {
+			return generate_struct_equal_function (st.base_struct);
+		}
+
 		var function = new CCodeFunction (equal_func, "gboolean");
 		function.modifiers = CCodeModifiers.STATIC;
 
