@@ -71,6 +71,7 @@ class Vala.Compiler {
 	static string cc_command;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] cc_options;
+	static string pkg_config_command;
 	static string dump_tree;
 	static bool save_temps;
 	[CCode (array_length = false, array_null_terminated = true)]
@@ -131,6 +132,7 @@ class Vala.Compiler {
 		{ "enable-gobject-tracing", 0, 0, OptionArg.NONE, ref gobject_tracing, "Enable GObject creation tracing", null },
 		{ "cc", 0, 0, OptionArg.STRING, ref cc_command, "Use COMMAND as C compiler command", "COMMAND" },
 		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, ref cc_options, "Pass OPTION to the C compiler", "OPTION..." },
+		{ "pkg-config", 0, 0, OptionArg.STRING, ref pkg_config_command, "Use COMMAND as pkg-config command", "COMMAND" },
 		{ "dump-tree", 0, 0, OptionArg.FILENAME, ref dump_tree, "Write code tree to FILE", "FILE" },
 		{ "save-temps", 0, 0, OptionArg.NONE, ref save_temps, "Keep temporary files", null },
 		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
@@ -442,10 +444,13 @@ class Vala.Compiler {
 			if (cc_command == null && Environment.get_variable ("CC") != null) {
 				cc_command = Environment.get_variable ("CC");
 			}
+			if (pkg_config_command == null && Environment.get_variable ("PKG_CONFIG") != null) {
+				pkg_config_command = Environment.get_variable ("PKG_CONFIG");
+			}
 			if (cc_options == null) {
-				ccompiler.compile (context, cc_command, new string[] { });
+				ccompiler.compile (context, cc_command, new string[] { }, pkg_config_command);
 			} else {
-				ccompiler.compile (context, cc_command, cc_options);
+				ccompiler.compile (context, cc_command, cc_options, pkg_config_command);
 			}
 		}
 

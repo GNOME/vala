@@ -29,8 +29,8 @@ public class Vala.CCodeCompiler {
 	public CCodeCompiler () {
 	}
 
-	static bool package_exists(string package_name) {
-		string pc = "pkg-config --exists " + package_name;
+	static bool package_exists(string package_name, string? pkg_config_command = "pkg-config") {
+		string pc = pkg_config_command + " --exists " + package_name;
 		int exit_status;
 
 		try {
@@ -48,10 +48,14 @@ public class Vala.CCodeCompiler {
 	 *
 	 * @param context a code context
 	 */
-	public void compile (CodeContext context, string? cc_command, string[] cc_options) {
+	public void compile (CodeContext context, string? cc_command, string[] cc_options, string? pkg_config_command = null) {
 		bool use_pkgconfig = false;
 
-		string pc = "pkg-config --cflags";
+		if (pkg_config_command == null) {
+			pkg_config_command = "pkg-config";
+		}
+
+		string pc = pkg_config_command + " --cflags";
 		if (!context.compile_only) {
 			pc += " --libs";
 		}
@@ -61,7 +65,7 @@ public class Vala.CCodeCompiler {
 			pc += " gthread-2.0";
 		}
 		foreach (string pkg in context.get_packages ()) {
-			if (package_exists (pkg)) {
+			if (package_exists (pkg, pkg_config_command)) {
 				use_pkgconfig = true;
 				pc += " " + pkg;
 			}
