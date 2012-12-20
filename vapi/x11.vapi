@@ -567,11 +567,38 @@ namespace X {
 		public Screen screen;		/* back pointer to correct screen */
 	}
 
+	[CCode (cname = "ParentRelative")]
+	public const ulong PARENT_RELATIVE;
+
 	[CCode (cname = "CopyFromParent")]
-	public const int COPY_FROM_PARENT;
+	public const ulong COPY_FROM_PARENT;
+
+	[CCode (cname = "PointerWindow")]
+	public const ulong POINTER_WINDOW;
+
+	[CCode (cname = "InputFocus")]
+	public const ulong INPUT_FOCUS;
+
+	[CCode (cname = "PointerRoot")]
+	public const ulong POINTER_ROOT;
+
+	[CCode (cname = "AnyPropertyType")]
+	public const ulong ANY_PROPERTY_TYPE;
+
+	[CCode (cname = "AnyKey")]
+	public const ulong ANY_KEY;
+
+	[CCode (cname = "AnyButton")]
+	public const ulong ANY_BUTTON;
+
+	[CCode (cname = "AllTemporary")]
+	public const ulong ALL_TEMPORARY;
 
 	[CCode (cname = "CurrentTime")]
 	public const ulong CURRENT_TIME;
+
+	[CCode (cname = "NoSymbol")]
+	public const ulong NO_SYMBOL;
 
 	[CCode (cname = "Success")]
 	public int Success;
@@ -632,6 +659,7 @@ namespace X {
 	}
 
 	[CCode (cprefix = "CW", cname = "int")]
+	[Flags]
 	public enum CW {
 		BackPixmap,
 		BackPixel,
@@ -664,6 +692,7 @@ namespace X {
 	}
 
 	[CCode (cprefix = "")]
+	[Flags]
 	public enum EventMask {
 		NoEventMask,
 		KeyPressMask,
@@ -694,6 +723,7 @@ namespace X {
 	}
 
 	[CCode (cprefix = "")]
+	[Flags]
 	public enum KeyMask {
 		ShiftMask,
 		LockMask,
@@ -1183,15 +1213,73 @@ namespace X {
 
 	public const X.ID None;
 
+	public const X.Atom XA_PRIMARY;
+	public const X.Atom XA_SECONDARY;
+	public const X.Atom XA_ARC;
 	public const X.Atom XA_ATOM;
+	public const X.Atom XA_BITMAP;
 	public const X.Atom XA_CARDINAL;
+	public const X.Atom XA_COLORMAP;
+	public const X.Atom XA_CURSOR;
+	public const X.Atom XA_CUT_BUFFER0;
+	public const X.Atom XA_CUT_BUFFER1;
+	public const X.Atom XA_CUT_BUFFER2;
+	public const X.Atom XA_CUT_BUFFER3;
+	public const X.Atom XA_CUT_BUFFER4;
+	public const X.Atom XA_CUT_BUFFER5;
+	public const X.Atom XA_CUT_BUFFER6;
+	public const X.Atom XA_CUT_BUFFER7;
+	public const X.Atom XA_DRAWABLE;
+	public const X.Atom XA_FONT;
+	public const X.Atom XA_INTEGER;
+	public const X.Atom XA_PIXMAP;
+	public const X.Atom XA_POINT;
+	public const X.Atom XA_RECTANGLE;
+	public const X.Atom XA_RESOURCE_MANAGER;
+	public const X.Atom XA_RGB_COLOR_MAP;
+	public const X.Atom XA_RGB_BEST_MAP;
+	public const X.Atom XA_RGB_BLUE_MAP;
+	public const X.Atom XA_RGB_DEFAULT_MAP;
+	public const X.Atom XA_RGB_GRAY_MAP;
+	public const X.Atom XA_RGB_GREEN_MAP;
+	public const X.Atom XA_RGB_RED_MAP;
 	public const X.Atom XA_STRING;
+	public const X.Atom XA_VISUALID;
 	public const X.Atom XA_WINDOW;
-	public const X.Atom XA_WM_CLASS;
+	public const X.Atom XA_WM_COMMAND;
 	public const X.Atom XA_WM_HINTS;
+	public const X.Atom XA_WM_CLIENT_MACHINE;
 	public const X.Atom XA_WM_ICON_NAME;
+	public const X.Atom XA_WM_ICON_SIZE;
 	public const X.Atom XA_WM_NAME;
 	public const X.Atom XA_WM_NORMAL_HINTS;
+	public const X.Atom XA_WM_SIZE_HINTS;
+	public const X.Atom XA_WM_ZOOM_HINTS;
+	public const X.Atom XA_MIN_SPACE;
+	public const X.Atom XA_NORM_SPACE;
+	public const X.Atom XA_MAX_SPACE;
+	public const X.Atom XA_END_SPACE;
+	public const X.Atom XA_SUPERSCRIPT_X;
+	public const X.Atom XA_SUPERSCRIPT_Y;
+	public const X.Atom XA_SUBSCRIPT_X;
+	public const X.Atom XA_SUBSCRIPT_Y;
+	public const X.Atom XA_UNDERLINE_POSITION;
+	public const X.Atom XA_UNDERLINE_THICKNESS;
+	public const X.Atom XA_STRIKEOUT_ASCENT;
+	public const X.Atom XA_STRIKEOUT_DESCENT;
+	public const X.Atom XA_ITALIC_ANGLE;
+	public const X.Atom XA_X_HEIGHT;
+	public const X.Atom XA_QUAD_WIDTH;
+	public const X.Atom XA_WEIGHT;
+	public const X.Atom XA_POINT_SIZE;
+	public const X.Atom XA_RESOLUTION;
+	public const X.Atom XA_COPYRIGHT;
+	public const X.Atom XA_NOTICE;
+	public const X.Atom XA_FONT_NAME;
+	public const X.Atom XA_FAMILY_NAME;
+	public const X.Atom XA_FULL_NAME;
+	public const X.Atom XA_CAP_HEIGHT;
+	public const X.Atom XA_WM_CLASS;
 	public const X.Atom XA_WM_TRANSIENT_FOR;
 
 	public const uint XK_Num_Lock;
