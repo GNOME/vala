@@ -457,6 +457,14 @@ class Vala.Compiler {
 			i++;
 		}
 
+		if (version) {
+			stdout.printf ("Vala %s\n", Config.BUILD_VERSION);
+			return 0;
+		} else if (api_version) {
+			stdout.printf ("%s\n", Config.PACKAGE_SUFFIX.substring (1));
+			return 0;
+		}
+		
 		if (args[i] == null) {
 			stderr.printf ("No source file specified.\n");
 			return 1;
