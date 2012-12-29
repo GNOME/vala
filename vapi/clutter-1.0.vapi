@@ -5899,14 +5899,15 @@ namespace Clutter {
 		[NoWrapper]
 		public virtual bool gesture_prepare (Clutter.Actor actor);
 		public unowned Clutter.InputDevice get_device (uint point);
-		public void get_motion_coords (uint device, out float motion_x, out float motion_y);
-		public float get_motion_delta (uint device, out float delta_x, out float delta_y);
+		public unowned Clutter.Event get_last_event (uint point);
+		public void get_motion_coords (uint point, out float motion_x, out float motion_y);
+		public float get_motion_delta (uint point, out float delta_x, out float delta_y);
 		public uint get_n_current_points ();
 		public int get_n_touch_points ();
-		public void get_press_coords (uint device, out float press_x, out float press_y);
-		public void get_release_coords (uint device, out float release_x, out float release_y);
+		public void get_press_coords (uint point, out float press_x, out float press_y);
+		public void get_release_coords (uint point, out float release_x, out float release_y);
 		public unowned Clutter.EventSequence get_sequence (uint point);
-		public float get_velocity (uint device, out float velocity_x, out float velocity_y);
+		public float get_velocity (uint point, out float velocity_x, out float velocity_y);
 		public void set_n_touch_points (int nb_points);
 		public virtual signal bool gesture_begin (Clutter.Actor actor);
 		public virtual signal void gesture_cancel (Clutter.Actor actor);
@@ -6223,7 +6224,9 @@ namespace Clutter {
 		public double get_deceleration ();
 		public bool get_interpolate ();
 		public void get_interpolated_coords (out float interpolated_x, out float interpolated_y);
-		public void get_interpolated_delta (out float delta_x, out float delta_y);
+		public float get_interpolated_delta (out float delta_x, out float delta_y);
+		public void get_motion_coords (uint point, out float motion_x, out float motion_y);
+		public float get_motion_delta (uint point, out float delta_x, out float delta_y);
 		public Clutter.PanAxis get_pan_axis ();
 		public void set_acceleration_factor (double factor);
 		public void set_deceleration (double rate);
@@ -6715,7 +6718,9 @@ namespace Clutter {
 	public class SwipeAction : Clutter.GestureAction {
 		[CCode (has_construct_function = false, type = "ClutterAction*")]
 		public SwipeAction ();
+		[Deprecated (since = "1.14")]
 		public virtual signal void swept (Clutter.Actor actor, Clutter.SwipeDirection direction);
+		public virtual signal bool swipe (Clutter.Actor actor, Clutter.SwipeDirection direction);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_table_layout_get_type ()")]
 	public class TableLayout : Clutter.LayoutManager {
@@ -6760,6 +6765,12 @@ namespace Clutter {
 		public uint row_spacing { get; set; }
 		[Deprecated (since = "1.12")]
 		public bool use_animations { get; set; }
+	}
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_tap_action_get_type ()")]
+	public class TapAction : Clutter.GestureAction {
+		[CCode (has_construct_function = false, type = "ClutterAction*")]
+		public TapAction ();
+		public virtual signal void tap (Clutter.Actor actor);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_text_get_type ()")]
 	public class Text : Clutter.Actor, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable {
