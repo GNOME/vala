@@ -18,6 +18,9 @@ namespace GtkClutter {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Embed ();
 		public unowned Clutter.Actor get_stage ();
+		public bool get_use_layout_size ();
+		public void set_use_layout_size (bool use_layout_size);
+		public bool use_layout_size { get; set construct; }
 	}
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h", type_id = "gtk_clutter_texture_get_type ()")]
 	public class Texture : Clutter.Texture, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable {
