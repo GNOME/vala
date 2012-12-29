@@ -1494,6 +1494,8 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int chmod (string filename, mode_t mode);
 	[CCode (cheader_filename = "sys/stat.h")]
+	public int fchmod (int fd, mode_t mode);
+	[CCode (cheader_filename = "sys/stat.h")]
 	public mode_t umask (mode_t mask);
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int mkdir (string path, mode_t mode);
