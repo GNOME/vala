@@ -122,6 +122,7 @@ namespace Pango {
 	public class Context : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Context ();
+		public void changed ();
 		public Pango.Direction get_base_dir ();
 		public Pango.Gravity get_base_gravity ();
 		public unowned Pango.FontDescription get_font_description ();
@@ -131,6 +132,7 @@ namespace Pango {
 		public Pango.Language get_language ();
 		public Pango.Matrix get_matrix ();
 		public Pango.FontMetrics get_metrics (Pango.FontDescription? desc, Pango.Language? language);
+		public uint get_serial ();
 		public void list_families ([CCode (array_length_cname = "n_families", array_length_pos = 1.1)] out Pango.FontFamily[] families);
 		public Pango.Font load_font (Pango.FontDescription desc);
 		public Pango.Fontset load_fontset (Pango.FontDescription desc, Pango.Language language);
@@ -234,6 +236,7 @@ namespace Pango {
 		[CCode (has_construct_function = false)]
 		protected FontMap ();
 		public Pango.Context create_context ();
+		public uint get_serial ();
 		public void list_families ([CCode (array_length_cname = "n_families", array_length_pos = 1.1)] out Pango.FontFamily[] families);
 		public Pango.Font load_font (Pango.Context context, Pango.FontDescription desc);
 		public Pango.Fontset load_fontset (Pango.Context context, Pango.FontDescription desc, Pango.Language language);
@@ -347,6 +350,7 @@ namespace Pango {
 		public unowned Pango.LogAttr[] get_log_attrs_readonly ();
 		public void get_pixel_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public void get_pixel_size (out int width, out int height);
+		public uint get_serial ();
 		public bool get_single_paragraph_mode ();
 		public void get_size (out int width, out int height);
 		public int get_spacing ();
@@ -964,6 +968,10 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static uint8 log2vis_get_embedding_levels (string text, int length, Pango.Direction pbase_dir);
 	[CCode (cheader_filename = "pango/pango.h")]
+	public static bool markup_parser_finish (GLib.MarkupParseContext context, out Pango.AttrList attr_list, out string text, out unichar accel_char) throws GLib.Error;
+	[CCode (cheader_filename = "pango/pango.h")]
+	public static unowned GLib.MarkupParseContext markup_parser_new (unichar accel_marker);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool parse_enum (GLib.Type type, string? str, out int value, bool warn, out string possible_values);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool parse_markup (string markup_text, int length, unichar accel_marker, out Pango.AttrList attr_list, out string text, out unichar accel_char) throws GLib.Error;
@@ -995,6 +1003,8 @@ namespace Pango {
 	public static Pango.Language script_get_sample_language (Pango.Script script);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static void shape (string text, int length, Pango.Analysis analysis, Pango.GlyphString glyphs);
+	[CCode (cheader_filename = "pango/pango.h")]
+	public static void shape_full (string item_text, int item_length, string? paragraph_text, int paragraph_length, Pango.Analysis analysis, Pango.GlyphString glyphs);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool skip_space (ref string pos);
 	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "pango/pango.h")]
