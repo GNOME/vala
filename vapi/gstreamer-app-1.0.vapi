@@ -44,7 +44,7 @@ namespace Gst {
 			public uint64 get_max_bytes ();
 			public int64 get_size ();
 			public Gst.App.StreamType get_stream_type ();
-			public virtual Gst.FlowReturn push_buffer (Gst.Buffer buffer);
+			public virtual Gst.FlowReturn push_buffer (owned Gst.Buffer buffer);
 			public void set_caps (Gst.Caps caps);
 			public void set_emit_signals (bool emit);
 			public void set_latency (uint64 min, uint64 max);

@@ -994,7 +994,7 @@ namespace Gst {
 		public void parse_segment_done (out Gst.Format format, out int64 position);
 		public void parse_sink_message (out Gst.Message msg);
 		public void parse_step (out Gst.Format format, out uint64 amount, out double rate, out bool flush, out bool intermediate);
-		public void parse_stream_start (out string stream_id);
+		public void parse_stream_start (out unowned string stream_id);
 		public void parse_tag (out unowned Gst.TagList taglist);
 		public void parse_toc (out Gst.Toc toc, out bool updated);
 		public void parse_toc_select (out string uid);
@@ -2465,7 +2465,17 @@ namespace Gst {
 		QUERY_DOWNSTREAM,
 		QUERY_UPSTREAM,
 		PUSH,
-		PULL
+		PULL,
+		BLOCKING,
+		DATA_DOWNSTREAM,
+		DATA_UPSTREAM,
+		DATA_BOTH,
+		BLOCK_DOWNSTREAM,
+		BLOCK_UPSTREAM,
+		EVENT_BOTH,
+		QUERY_BOTH,
+		ALL_BOTH,
+		SCHEDULING
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PAD_TEMPLATE_FLAG_", has_type_id = false)]
 	[Flags]
@@ -2939,24 +2949,6 @@ namespace Gst {
 	public const int MSECOND;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_NSECOND")]
 	public const int NSECOND;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PAD_PROBE_TYPE_ALL_BOTH")]
-	public const int PAD_PROBE_TYPE_ALL_BOTH;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PAD_PROBE_TYPE_BLOCKING")]
-	public const int PAD_PROBE_TYPE_BLOCKING;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PAD_PROBE_TYPE_BLOCK_DOWNSTREAM")]
-	public const int PAD_PROBE_TYPE_BLOCK_DOWNSTREAM;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PAD_PROBE_TYPE_BLOCK_UPSTREAM")]
-	public const int PAD_PROBE_TYPE_BLOCK_UPSTREAM;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PAD_PROBE_TYPE_DATA_BOTH")]
-	public const int PAD_PROBE_TYPE_DATA_BOTH;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PAD_PROBE_TYPE_DATA_DOWNSTREAM")]
-	public const int PAD_PROBE_TYPE_DATA_DOWNSTREAM;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PAD_PROBE_TYPE_EVENT_BOTH")]
-	public const int PAD_PROBE_TYPE_EVENT_BOTH;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PAD_PROBE_TYPE_QUERY_BOTH")]
-	public const int PAD_PROBE_TYPE_QUERY_BOTH;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PAD_PROBE_TYPE_SCHEDULING")]
-	public const int PAD_PROBE_TYPE_SCHEDULING;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_CONTROLLABLE")]
 	public const int PARAM_CONTROLLABLE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_MUTABLE_PAUSED")]

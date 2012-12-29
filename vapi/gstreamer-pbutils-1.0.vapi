@@ -229,7 +229,7 @@ namespace Gst {
 			[CCode (cname = "gst_encoding_profile_set_preset")]
 			public void set_preset (string preset);
 			[CCode (cname = "gst_encoding_profile_set_restriction")]
-			public void set_restriction (Gst.Caps restriction);
+			public void set_restriction (owned Gst.Caps restriction);
 		}
 		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstEncodingTarget", type_id = "gst_encoding_target_get_type ()")]
 		[GIR (name = "EncodingTarget")]

@@ -73,6 +73,7 @@ namespace Gst {
 			public Gst.Video.CodecFrame get_oldest_frame ();
 			public Gst.Video.CodecState get_output_state ();
 			public bool get_packetized ();
+			public double get_qos_proportion ();
 			[NoWrapper]
 			public virtual Gst.FlowReturn handle_frame (Gst.Video.CodecFrame frame);
 			public Gst.FlowReturn have_frame ();

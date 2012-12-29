@@ -56,9 +56,9 @@ namespace Gst {
 		public class Watch {
 			public uint attach (GLib.MainContext context);
 			public void reset ();
-			public Gst.RTSP.Result send_message (Gst.RTSP.Message message, uint id);
+			public Gst.RTSP.Result send_message (Gst.RTSP.Message message, out uint id);
 			public void unref ();
-			public Gst.RTSP.Result write_data (uint8 data, uint size, uint id);
+			public Gst.RTSP.Result write_data (uint8 data, uint size, out uint id);
 		}
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h", type_id = "gst_rtsp_extension_get_type ()")]
 		[GIR (name = "RTSPExtension")]
@@ -97,20 +97,20 @@ namespace Gst {
 			public Gst.RTSP.Result append_headers (GLib.StringBuilder str);
 			public Gst.RTSP.Result dump ();
 			public Gst.RTSP.Result free ();
-			public Gst.RTSP.Result get_body (uint8 data, uint size);
-			public Gst.RTSP.Result get_header (Gst.RTSP.HeaderField field, string value, int indx);
+			public Gst.RTSP.Result get_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] out unowned uint8[] data);
+			public Gst.RTSP.Result get_header (Gst.RTSP.HeaderField field, out unowned string value, int indx);
 			public Gst.RTSP.MsgType get_type ();
 			public Gst.RTSP.Result init ();
 			public Gst.RTSP.Result init_data (uint8 channel);
 			public Gst.RTSP.Result init_request (Gst.RTSP.Method method, string uri);
-			public Gst.RTSP.Result init_response (Gst.RTSP.StatusCode code, string reason, Gst.RTSP.Message request);
-			public Gst.RTSP.Result parse_data (uint8 channel);
-			public Gst.RTSP.Result parse_request (Gst.RTSP.Method method, string uri, Gst.RTSP.Version version);
-			public Gst.RTSP.Result parse_response (Gst.RTSP.StatusCode code, string reason, Gst.RTSP.Version version);
+			public Gst.RTSP.Result init_response (Gst.RTSP.StatusCode code, string? reason, Gst.RTSP.Message? request);
+			public Gst.RTSP.Result parse_data (out uint8 channel);
+			public Gst.RTSP.Result parse_request (out Gst.RTSP.Method method, out string uri, out Gst.RTSP.Version version);
+			public Gst.RTSP.Result parse_response (out Gst.RTSP.StatusCode code, out string reason, out Gst.RTSP.Version version);
 			public Gst.RTSP.Result remove_header (Gst.RTSP.HeaderField field, int indx);
-			public Gst.RTSP.Result set_body (uint8 data, uint size);
-			public Gst.RTSP.Result steal_body (uint8 data, uint size);
-			public Gst.RTSP.Result take_body (uint8 data, uint size);
+			public Gst.RTSP.Result set_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+			public Gst.RTSP.Result steal_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] out uint8[] data);
+			public Gst.RTSP.Result take_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] owned uint8[] data);
 			public Gst.RTSP.Result take_header (Gst.RTSP.HeaderField field, string value);
 			public Gst.RTSP.Result unset ();
 		}
@@ -426,11 +426,11 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h", cname = "GST_RTSP_DEFAULT_PORT")]
 		public const int _DEFAULT_PORT;
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
-		public static Gst.RTSP.Result connection_accept (GLib.Socket socket, Gst.RTSP.Connection conn, GLib.Cancellable? cancellable = null);
+		public static Gst.RTSP.Result connection_accept (GLib.Socket socket, out Gst.RTSP.Connection conn, GLib.Cancellable? cancellable = null);
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
-		public static Gst.RTSP.Result connection_create (Gst.RTSP.Url url, Gst.RTSP.Connection conn);
+		public static Gst.RTSP.Result connection_create (Gst.RTSP.Url url, out Gst.RTSP.Connection conn);
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
-		public static Gst.RTSP.Result connection_create_from_socket (GLib.Socket socket, string ip, uint16 port, string initial_buffer, Gst.RTSP.Connection conn);
+		public static Gst.RTSP.Result connection_create_from_socket (GLib.Socket socket, string ip, uint16 port, string initial_buffer, out Gst.RTSP.Connection conn);
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
 		public static Gst.RTSP.HeaderField find_header_field (string header);
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
@@ -440,13 +440,13 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
 		public static unowned string header_as_text (Gst.RTSP.HeaderField field);
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
-		public static Gst.RTSP.Result message_new (Gst.RTSP.Message msg);
+		public static Gst.RTSP.Result message_new (out Gst.RTSP.Message msg);
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
-		public static Gst.RTSP.Result message_new_data (Gst.RTSP.Message msg, uint8 channel);
+		public static Gst.RTSP.Result message_new_data (out Gst.RTSP.Message msg, uint8 channel);
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
-		public static Gst.RTSP.Result message_new_request (Gst.RTSP.Message msg, Gst.RTSP.Method method, string uri);
+		public static Gst.RTSP.Result message_new_request (out Gst.RTSP.Message msg, Gst.RTSP.Method method, string uri);
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
-		public static Gst.RTSP.Result message_new_response (Gst.RTSP.Message msg, Gst.RTSP.StatusCode code, string reason, Gst.RTSP.Message request);
+		public static Gst.RTSP.Result message_new_response (out Gst.RTSP.Message msg, Gst.RTSP.StatusCode code, string? reason, Gst.RTSP.Message? request);
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
 		public static unowned string method_as_text (Gst.RTSP.Method method);
 		[CCode (cheader_filename = "gst/rtsp/gstrtsp-enumtypes.h,gst/rtsp/gstrtspconnection.h,gst/rtsp/gstrtspdefs.h,gst/rtsp/gstrtspextension.h,gst/rtsp/gstrtspmessage.h,gst/rtsp/gstrtsprange.h,gst/rtsp/gstrtsptransport.h,gst/rtsp/gstrtspurl.h")]
