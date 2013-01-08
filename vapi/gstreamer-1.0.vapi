@@ -2065,8 +2065,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_BIN_FLAG_", has_type_id = false)]
 	[Flags]
 	public enum BinFlags {
-		[CCode (cname = "GST_BIN_FLAG_LAST")]
-		BIN_FLAG_LAST
+		NO_RESYNC,
+		LAST
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_BUFFER_COPY_", has_type_id = false)]
 	[Flags]
@@ -2162,7 +2162,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_CLOCK_TYPE_", has_type_id = false)]
 	public enum ClockType {
 		REALTIME,
-		MONOTONIC
+		MONOTONIC,
+		OTHER
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_DEBUG_", has_type_id = false)]
 	public enum DebugColorFlags {
