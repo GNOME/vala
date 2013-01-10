@@ -5442,7 +5442,7 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_bin_layout_get_type ()")]
 	public class BinLayout : Clutter.LayoutManager {
 		[CCode (has_construct_function = false, type = "ClutterLayoutManager*")]
-		public BinLayout (Clutter.BinAlignment x_align, Clutter.BinAlignment y_align);
+		public BinLayout (Clutter.BinAlignment x_align = Clutter.BinAlignment.START, Clutter.BinAlignment y_align = Clutter.BinAlignment.START);
 		[Deprecated (since = "1.12")]
 		public void add (Clutter.Actor child, Clutter.BinAlignment x_align, Clutter.BinAlignment y_align);
 		[Deprecated (since = "1.12")]
@@ -7560,10 +7560,14 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_BIN_ALIGNMENT_", type_id = "clutter_bin_alignment_get_type ()")]
 	[Deprecated (since = "1.12")]
 	public enum BinAlignment {
+		[Deprecated]
 		FIXED,
+		[Deprecated]
 		FILL,
 		START,
+		[Deprecated]
 		END,
+		[Deprecated]
 		CENTER
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_BIND_", type_id = "clutter_bind_coordinate_get_type ()")]
