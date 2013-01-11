@@ -7558,7 +7558,6 @@ namespace Clutter {
 		ANIMATION_LAST
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_BIN_ALIGNMENT_", type_id = "clutter_bin_alignment_get_type ()")]
-	[Deprecated (since = "1.12")]
 	public enum BinAlignment {
 		[Deprecated]
 		FIXED,

@@ -203,7 +203,7 @@ Rect.alloc symbol_type="function"
 Size.alloc symbol_type="function"
 Vertex.alloc symbol_type="function"
 
-BinAlignment deprecated=false
+BinAlignment deprecated=false deprecated_since=null
 BinAlignment.* deprecated
 BinAlignment.start deprecated=false
 BinLayout.new.*_align default=Clutter.BinAlignment.START
