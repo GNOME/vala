@@ -468,7 +468,9 @@ namespace Xml {
 		public Node* prev;
 		public Doc* doc;
 
+		[CCode (cname = "ExternalID")]
 		public weak string external_id;
+		[CCode (cname = "SystemID")]
 		public weak string system_id;
 
 		[CCode (cname = "xmlNewDtd")]
