@@ -448,6 +448,12 @@ namespace Xml {
 
 		[CCode (cname = "xmlStringLenGetNodeList")]
 		public Node* string_len_get_node_list (string str, int len);
+
+		[CCode (cname = "xmlSearchNs")]
+		public Ns* search_ns(Node* node, string? prefix);
+
+		[CCode (cname = "xmlSearchNsByHref")]
+		public Ns* search_ns_by_href(Node* node, string? href);
 	}
 
 	[Compact]
