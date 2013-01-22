@@ -1691,9 +1691,11 @@ namespace GLib {
 		[CCode (simple_generics = true)]
 		public static unowned Thread<T> self<T> ();
 		public T join ();
+		[Deprecated (since = "2.32")]
 		public void set_priority (ThreadPriority priority);
 		public static void yield ();
 		public static void exit (T retval);
+		[Deprecated (since = "2.32")]
 		public static void @foreach (Func<Thread> thread_func);
 
 		[CCode (cname = "g_usleep")]
