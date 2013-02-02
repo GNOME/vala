@@ -7313,7 +7313,7 @@ namespace Clutter {
 		public Color.from_pixel (uint32 pixel);
 		[CCode (cname = "clutter_color_from_string")]
 		public Color.from_string (string str);
-		public static Clutter.Color get_static (Clutter.StaticColor color);
+		public static unowned Clutter.Color? get_static (Clutter.StaticColor color);
 		public uint hash ();
 		public Clutter.Color init (uint8 red, uint8 green, uint8 blue, uint8 alpha);
 		public Clutter.Color interpolate (Clutter.Color final, double progress);

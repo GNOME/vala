@@ -167,6 +167,9 @@ ZoomAction
 	.get_focal_point.point out=false
 	.get_transformed_focal_point.point out=false
 
+// Struct return values
+color_get_static nullable
+
 // Remove for clutter-2.0
 /////////////////////////
 
