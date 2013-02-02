@@ -2896,6 +2896,11 @@ public class Vala.GirParser : CodeVisitor {
 			next ();
 
 			while (current_token == MarkupTokenType.START_ELEMENT) {
+				if (reader.name == "instance-parameter") {
+					skip_element ();
+					continue;
+				}
+
 				if (!push_metadata ()) {
 					skip_element ();
 					continue;
