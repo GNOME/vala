@@ -630,6 +630,24 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		eval.accept_all_children (this);
 	}
 
+	private string combine_comments (string? brief, string? @long) {
+		StringBuilder builder = new StringBuilder ();
+		if (brief != null) {
+			builder.append (brief.strip ());
+		}
+
+		string _long = (@long != null)? @long.strip () : "";
+		if (builder.len > 0 && _long != "") {
+			builder.append ("\n\n");
+		}
+
+		if (_long != "") {
+			builder.append (_long);
+		}
+
+		return (owned) builder.str;
+	}
+
 	public override void visit_property (Api.Property prop) {
 		if (prop.is_override || prop.is_private || (!prop.is_abstract && !prop.is_virtual && prop.base_property != null)) {
 			return;
@@ -646,6 +664,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			getter_gcomment.headers.add (new Header ("self", "the %s instance to query".printf (get_docbook_link (prop.parent)), 1));
 			getter_gcomment.returns = "the value of the %s property".printf (get_docbook_link (prop));
 			getter_gcomment.brief_comment = "Get and return the current value of the %s property.".printf (get_docbook_link (prop));
+			getter_gcomment.long_comment = combine_comments (gcomment.brief_comment, gcomment.long_comment);
 
 			if (prop.property_type != null && prop.property_type.data_type is Api.Array) {
 				var array_type = prop.property_type.data_type;
@@ -663,6 +682,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			setter_gcomment.headers.add (new Header ("self", "the %s instance to modify".printf (get_docbook_link (prop.parent)), 1));
 			setter_gcomment.headers.add (new Header ("value", "the new value of the %s property".printf (get_docbook_link (prop)), 2));
 			setter_gcomment.brief_comment = "Set the value of the %s property to @value.".printf (get_docbook_link (prop));
+			setter_gcomment.long_comment = combine_comments (gcomment.brief_comment, gcomment.long_comment);
 
 			if (prop.property_type != null && prop.property_type.data_type is Api.Array) {
 				var array_type = prop.property_type.data_type;
