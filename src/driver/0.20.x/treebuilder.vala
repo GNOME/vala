@@ -170,8 +170,8 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			type_ref.data_type = create_pointer ((Vala.PointerType) vtyperef,  type_ref, caller);
 		} else if (vtyperef is Vala.ArrayType) {
 			type_ref.data_type = create_array ((Vala.ArrayType) vtyperef,  type_ref, caller);
-		} else if (vtyperef is Vala.GenericType) {
-			type_ref.data_type = new TypeParameter (caller, caller.get_source_file (), ((Vala.GenericType) vtyperef).type_parameter.name, vtyperef);
+		//} else if (vtyperef is Vala.GenericType) {
+		//	type_ref.data_type = new TypeParameter (caller, caller.get_source_file (), ((Vala.GenericType) vtyperef).type_parameter.name, vtyperef);
 		}
 
 		// type parameters:
@@ -1206,6 +1206,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceFile? file = get_source_file (element);
 
 		Symbol node = new TypeParameter (parent, file, element.name, element);
+		symbol_map.set (element, node);
 		parent.add_child (node);
 
 		process_children (node, element);
