@@ -83,6 +83,8 @@ public class Valadoc.Drivers.SymbolResolver : Visitor {
 			}
 		} else if (vtyperef is Vala.DelegateType) {
 			reference.data_type = resolve (((Vala.DelegateType) vtyperef).delegate_symbol);
+		} else if (vtyperef is Vala.GenericType) {
+			reference.data_type = resolve (((Vala.GenericType) vtyperef).type_parameter);
 		} else if (vtyperef.data_type != null) {
 			reference.data_type = resolve (vtyperef.data_type);
 		}
