@@ -560,6 +560,17 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		current_dbus_interface = old_dbus_interface;
 	}
 
+	private string[]? create_see_function_array (string?[] functions) {
+		string[] arr = new string[] {};
+		foreach (string? func in functions) {
+			if (func != null) {
+				arr += func + "()";
+			}
+		}
+
+		return (arr.length > 0)? arr : null;
+	}
+
 	public override void visit_struct (Api.Struct st) {
 		var old_cname = current_cname;
 		var old_headers = current_headers;
@@ -575,14 +586,53 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		current_cname = old_cname;
 		current_headers = old_headers;
 
-		add_symbol (st.get_filename(), st.get_dup_function_cname ());
-		add_symbol (st.get_filename(), st.get_free_function_cname ());
-
-
 		var file_data = get_file_data (st.get_filename ());
 
 		file_data.register_standard_section_line (st.get_type_macro_name ());
 		file_data.register_standard_section_line (st.get_type_function_name ());
+
+		string? dup_function_cname = st.get_dup_function_cname ();
+		string? free_function_cname = st.get_free_function_cname ();
+		string? copy_function_cname = st.get_copy_function_cname ();
+		string? destroy_function_cname = st.get_destroy_function_cname ();
+		if (dup_function_cname != null) {
+			var dup_gcomment = add_symbol (st.get_filename (), dup_function_cname);
+			dup_gcomment.headers.add (new Header ("self", "the instance to duplicate"));
+			if (free_function_cname != null) {
+				dup_gcomment.returns = "a copy of @self, free with %s()".printf (free_function_cname);
+			} else {
+				dup_gcomment.returns = "a copy of @self";
+			}
+
+			dup_gcomment.brief_comment = "Creates a copy of self.";
+			dup_gcomment.see_also = create_see_function_array ({copy_function_cname, destroy_function_cname, free_function_cname});
+		}
+
+		if (free_function_cname != null) {
+			var free_gcomment = add_symbol (st.get_filename (), free_function_cname);
+			free_gcomment.headers.add (new Header ("self", "the struct to free"));
+			free_gcomment.brief_comment = "Frees the heap-allocated struct.";
+			free_gcomment.see_also = create_see_function_array ({dup_function_cname, copy_function_cname, destroy_function_cname});
+		}
+
+		if (copy_function_cname != null) {
+			var copy_gcomment = add_symbol (st.get_filename (), copy_function_cname);
+			copy_gcomment.headers.add (new Header ("self", "the struct to copy"));
+			if (destroy_function_cname != null) {
+				copy_gcomment.headers.add (new Header ("dest", "a unused struct. Use %s() to free the content.".printf (destroy_function_cname)));
+			} else {
+				copy_gcomment.headers.add (new Header ("dest", "a unused struct."));
+			}
+			copy_gcomment.brief_comment = "Creates a copy of self.";
+			copy_gcomment.see_also = create_see_function_array ({dup_function_cname, destroy_function_cname, free_function_cname});
+		}
+
+		if (destroy_function_cname != null) {
+			var destroy_gcomment = add_symbol (st.get_filename (), destroy_function_cname);
+			destroy_gcomment.headers.add (new Header ("self", "the struct to destroy"));
+			destroy_gcomment.brief_comment = "Frees the content of the struct pointed by @self.";
+			destroy_gcomment.see_also = create_see_function_array ({dup_function_cname, copy_function_cname, free_function_cname});
+		}
 	}
 
 	/**
