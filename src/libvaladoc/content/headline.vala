@@ -32,7 +32,9 @@ public class Valadoc.Content.Headline : InlineContent, Block {
 		_level = 0;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 		// TODO report error if level == 0 ?
 		// TODO: content.size == 0?
 

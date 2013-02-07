@@ -33,7 +33,10 @@ public class Valadoc.Api.ErrorDomain : TypeSymbol {
 	private string? dbus_name;
 	private string? cname;
 
-	public ErrorDomain (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? quark_macro_name, string? quark_function_name, string? dbus_name, void* data) {
+	public ErrorDomain (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
+						SourceComment? comment, string? cname, string? quark_macro_name,
+						string? quark_function_name, string? dbus_name, void* data)
+	{
 		base (parent, file, name, accessibility, comment, null, null, null, null, false, data);
 
 		this.quark_function_name = quark_function_name;

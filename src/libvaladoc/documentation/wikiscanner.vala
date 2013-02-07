@@ -345,7 +345,9 @@ public class Valadoc.WikiScanner : Object, Scanner {
 		}
 	}
 
-	private void look_for_three (unichar c, TokenType one, TokenType two, TokenType three) throws ParserError {
+	private void look_for_three (unichar c, TokenType one, TokenType two, TokenType three)
+								 throws ParserError
+	{
 		if (get_next_char (1) == c) {
 			if (get_next_char (2) == c) {
 				emit_token (three);
@@ -359,7 +361,9 @@ public class Valadoc.WikiScanner : Object, Scanner {
 		}
 	}
 
-	private void look_for_five (unichar c, TokenType one, TokenType two, TokenType three, TokenType four, TokenType five) throws ParserError {
+	private void look_for_five (unichar c, TokenType one, TokenType two, TokenType three,
+								TokenType four, TokenType five) throws ParserError
+	{
 		if (get_next_char (1) == c) {
 			if (get_next_char (2) == c) {
 				if (get_next_char (3) == c) {

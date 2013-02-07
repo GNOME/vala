@@ -65,8 +65,11 @@ public class Valadoc.ErrorReporter : Object {
 		this.settings = settings;
 	}
 
-	private inline void msg (string type, string file, long line, long startpos, long endpos, string errline, string msg_format, va_list args) {
-		this.stream.printf ("%s:%lu.%lu-%lu.%lu: %s: ", file, line, startpos, line, endpos, type);
+	private inline void msg (string type, string file, long line, long startpos, long endpos,
+							 string errline, string msg_format, va_list args)
+	{
+		this.stream.printf ("%s:%lu.%lu-%lu.%lu: %s: ", file, line, startpos,
+							line, endpos, type);
 		this.stream.vprintf (msg_format, args);
 		this.stream.putc ('\n');
 
@@ -108,13 +111,17 @@ public class Valadoc.ErrorReporter : Object {
 		}
 	}
 
-	public void error (string file, long line, long startpos, long endpos, string errline, string msg_format, ...) {
+	public void error (string file, long line, long startpos, long endpos, string errline,
+					   string msg_format, ...)
+	{
 		var args = va_list();
 		this.msg ("error", file, line, startpos, endpos, errline, msg_format, args);
 		this._errors++;
 	}
 
-	public void warning (string file, long line, long startpos, long endpos, string errline, string msg_format, ...) {
+	public void warning (string file, long line, long startpos, long endpos, string errline,
+						 string msg_format, ...)
+	{
 		var args = va_list();
 		this.msg ("warning", file, line, startpos, endpos, errline, msg_format, args);
 		this._warnings++;

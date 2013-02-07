@@ -40,7 +40,11 @@ public class Valadoc.Drivers.Driver : Object, Valadoc.Driver {
 			gir_directory = settings.gir_directory;
 		}
 
-		gir_writer.write_file ((Vala.CodeContext) tree.data, gir_directory, settings.gir_namespace, settings.gir_version, settings.pkg_name);
+		gir_writer.write_file ((Vala.CodeContext) tree.data,
+							   gir_directory,
+							   settings.gir_namespace,
+							   settings.gir_version,
+							   settings.pkg_name);
 	}
 
 	public Api.Tree? build (Settings settings, ErrorReporter reporter) {

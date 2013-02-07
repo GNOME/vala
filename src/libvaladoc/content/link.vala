@@ -25,7 +25,10 @@ using Gee;
 
 
 public class Valadoc.Content.Link : InlineContent, Inline {
-	public string url { get; set; }
+	public string url {
+		get;
+		set;
+	}
 
 	internal Link () {
 		base ();
@@ -34,7 +37,9 @@ public class Valadoc.Content.Link : InlineContent, Inline {
 	public override void configure (Settings settings, ResourceLocator locator) {
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 		base.check (api_root, container, file_path, reporter, settings);
 		//TODO: check url
 	}

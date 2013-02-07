@@ -25,7 +25,11 @@ using Gee;
 
 
 public class Valadoc.Content.Table : ContentElement, Block {
-	public Gee.List<TableRow> rows { get { return _rows; } }
+	public Gee.List<TableRow> rows {
+		get {
+			return _rows;
+		}
+	}
 
 	private Gee.List<TableRow> _rows;
 
@@ -34,7 +38,9 @@ public class Valadoc.Content.Table : ContentElement, Block {
 		_rows = new ArrayList<TableRow> ();
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 		// Check the table consistency in term of row/column number
 
 		// Check individual rows

@@ -32,7 +32,9 @@ public class Valadoc.Api.TypeReference : Item {
 	private string? dbus_type_signature;
 	private Ownership ownership;
 
-	public TypeReference (Item parent, Ownership ownership, bool pass_ownership, bool is_dynamic, bool is_nullable, string? dbus_type_signature, void* data) {
+	public TypeReference (Item parent, Ownership ownership, bool pass_ownership, bool is_dynamic,
+						  bool is_nullable, string? dbus_type_signature, void* data)
+	{
 		base (data);
 
 		this.dbus_type_signature = dbus_type_signature;

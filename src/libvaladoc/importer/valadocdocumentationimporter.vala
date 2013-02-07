@@ -42,7 +42,9 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 
 	private ErrorReporter reporter;
 
-	public ValadocDocumentationImporter (Api.Tree tree, DocumentationParser parser, ModuleLoader modules, Settings settings, ErrorReporter reporter) {
+	public ValadocDocumentationImporter (Api.Tree tree, DocumentationParser parser, ModuleLoader modules,
+										 Settings settings, ErrorReporter reporter)
+	{
 		base (tree, modules, settings);
 		this.factory = new Content.ContentFactory (settings, this, modules);
 		this.reporter = reporter;
@@ -121,7 +123,9 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		REPLACE
 	}
 
-	private void add_documentation (string _symbol_name, StringBuilder? comment, string filename, SourceLocation src_ref) {
+	private void add_documentation (string _symbol_name, StringBuilder? comment, string filename,
+									SourceLocation src_ref)
+	{
 		Api.Node? symbol = null;
 
 		InsertionMode insertion_mode;

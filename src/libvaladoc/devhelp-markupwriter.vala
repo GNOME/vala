@@ -39,7 +39,13 @@ public class Valadoc.Devhelp.MarkupWriter : Valadoc.MarkupWriter {
 	}
 
 	public MarkupWriter start_book (string title, string lang, string link, string name, string version, string author) {
-		this.start_tag ("book", {"xmlns", "http://www.devhelp.net/book", "title", title, "language", lang, "name", name, "version", version, "author", author, "link", link});
+		this.start_tag ("book", {"xmlns", "http://www.devhelp.net/book",
+								 "title", title,
+								 "language", lang,
+								 "name", name,
+								 "version", version,
+								 "author", author,
+								 "link", link});
 		return this;
 	}
 

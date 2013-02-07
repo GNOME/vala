@@ -31,7 +31,11 @@ using Gee;
 
 
 public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
-	public override string file_extension { get { return "gir"; } }
+	public override string file_extension {
+		get {
+			return "gir";
+		}
+	}
 
 	private MarkupTokenType current_token;
 	private MarkupSourceLocation begin;
@@ -54,14 +58,18 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		}
 	}
 
-	public GirDocumentationImporter (Api.Tree tree, DocumentationParser parser, ModuleLoader modules, Settings settings, ErrorReporter reporter) {
+	public GirDocumentationImporter (Api.Tree tree, DocumentationParser parser,
+									 ModuleLoader modules, Settings settings,
+									 ErrorReporter reporter)
+	{
 		base (tree, modules, settings);
 		this.reporter = reporter;
 		this.parser = parser;
 	}
 
 	public override void process (string source_file) {
-		this.file = new Api.SourceFile (new Api.Package (Path.get_basename (source_file), true, null), source_file, null, null);
+		this.file = new Api.SourceFile (new Api.Package (Path.get_basename (source_file), true, null),
+										source_file, null, null);
 		this.reader = new MarkupReader (source_file, reporter);
 
 		// xml prolog
@@ -94,7 +102,14 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		return param_names[length_pos];
 	}
 
-	private void attach_comment (string cname, Api.GirSourceComment? comment, string[]? param_names = null, ImplicitParameterPos[]? destroy_notifies = null, ImplicitParameterPos[]? closures = null, ImplicitParameterPos[]? array_lengths = null, int array_length_ret = -1) {
+	private void attach_comment (string cname,
+								 Api.GirSourceComment? comment,
+								 string[]? param_names = null,
+								 ImplicitParameterPos[]? destroy_notifies = null,
+								 ImplicitParameterPos[]? closures = null,
+								 ImplicitParameterPos[]? array_lengths = null,
+								 int array_length_ret = -1)
+	{
 		if (comment == null) {
 			return ;
 		}
@@ -111,7 +126,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 					continue ;
 				}
 
-				param.implicit_destroy_cparameter_name = get_cparameter_name (param_names, pos.position);
+				param.implicit_destroy_cparameter_name
+					= get_cparameter_name (param_names, pos.position);
 			}
 
 			foreach (ImplicitParameterPos pos in closures) {
@@ -120,7 +136,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 					continue ;
 				}
 
-				param.implicit_closure_cparameter_name = get_cparameter_name (param_names, pos.position);
+				param.implicit_closure_cparameter_name
+					= get_cparameter_name (param_names, pos.position);
 			}
 
 			foreach (ImplicitParameterPos pos in array_lengths) {
@@ -129,11 +146,13 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 					continue ;
 				}
 
-				param.implicit_array_length_cparameter_name = get_cparameter_name (param_names, pos.position);
+				param.implicit_array_length_cparameter_name
+					= get_cparameter_name (param_names, pos.position);
 			}
 
 			if (node is Api.Callable) {
-				((Api.Callable) node).implicit_array_length_cparameter_name = get_cparameter_name (param_names, array_length_ret);
+				((Api.Callable) node).implicit_array_length_cparameter_name
+					= get_cparameter_name (param_names, array_length_ret);
 			}
 		}
 
@@ -146,11 +165,13 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	}
 
 	private void warning (string message) {
-		reporter.warning (this.file.relative_path, this.begin.line, this.begin.column, this.end.column, this.reader.get_line_content (this.begin.line), message);
+		reporter.warning (this.file.relative_path, this.begin.line, this.begin.column, this.end.column,
+						  this.reader.get_line_content (this.begin.line), message);
 	}
 
 	private void error (string message) {
-		reporter.error (this.file.relative_path, this.begin.line, this.begin.column, this.end.column, this.reader.get_line_content (this.begin.line), message);
+		reporter.error (this.file.relative_path, this.begin.line, this.begin.column, this.end.column,
+						this.reader.get_line_content (this.begin.line), message);
 	}
 
 	private void next () {
@@ -177,7 +198,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	private void parse_repository () {
 		start_element ("repository");
 		if (reader.get_attribute ("version") != GIR_VERSION) {
-			error ("unsupported GIR version %s (supported: %s)".printf (reader.get_attribute ("version"), GIR_VERSION));
+			error ("unsupported GIR version %s (supported: %s)"
+				.printf (reader.get_attribute ("version"), GIR_VERSION));
 			return;
 		}
 		next ();
@@ -299,7 +321,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		Api.GirSourceComment? comment = null;
 
 		if (current_token == MarkupTokenType.TEXT) {
-			comment = new Api.GirSourceComment (reader.content, file, begin.line, begin.column, end.line, end.column);
+			comment = new Api.GirSourceComment (reader.content, file, begin.line,
+												begin.column, end.line, end.column);
 			next ();
 		}
 
@@ -318,7 +341,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		Api.SourceComment? comment = null;
 
 		if (current_token == MarkupTokenType.TEXT) {
-			comment = new Api.SourceComment (reader.content, file, begin.line, begin.column, end.line, end.column);
+			comment = new Api.SourceComment (reader.content, file, begin.line,
+											 begin.column, end.line, end.column);
 			next ();
 		}
 
@@ -376,7 +400,9 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		end_element ("return-value");
 	}
 
-	private void parse_parameter (out Api.SourceComment? comment, out string param_name, out int destroy_pos, out int closure_pos, out int array_length_pos) {
+	private void parse_parameter (out Api.SourceComment? comment, out string param_name,
+								  out int destroy_pos,
+								  out int closure_pos, out int array_length_pos) {
 		start_element ("parameter");
 		param_name = reader.get_attribute ("name");
 		array_length_pos = -1;
@@ -560,7 +586,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 	private void parse_property () {
 		start_element ("property");
-		string c_identifier = "%s:%s".printf (parent_c_identifier, reader.get_attribute ("name").replace ("-", "_"));
+		string c_identifier = "%s:%s".printf (parent_c_identifier, reader.get_attribute ("name")
+			.replace ("-", "_"));
 		next ();
 
 		Api.GirSourceComment? comment = parse_symbol_doc ();
@@ -595,11 +622,13 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			break;
 
 		case "virtual-method":
-			c_identifier = "%s->%s".printf (this.parent_c_identifier, reader.get_attribute ("name").replace ("-", "_"));
+			c_identifier = "%s->%s".printf (this.parent_c_identifier, reader.get_attribute ("name")
+				.replace ("-", "_"));
 			break;
 
 		case "glib:signal":
-			c_identifier = "%s::%s".printf (this.parent_c_identifier, reader.get_attribute ("name").replace ("-", "_"));
+			c_identifier = "%s::%s".printf (this.parent_c_identifier, reader.get_attribute ("name")
+				.replace ("-", "_"));
 			break;
 
 		default:
@@ -622,7 +651,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			parse_return_value (out return_comment, out array_length_ret);
 			if (return_comment != null) {
 				if (comment == null) {
-					comment = new Api.GirSourceComment ("", file, begin.line, begin.column, end.line, end.column);
+					comment = new Api.GirSourceComment ("", file, begin.line, begin.column,
+														end.line, end.column);
 				}
 				comment.return_comment = return_comment;
 			}
@@ -640,7 +670,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				int closure_pos;
 				string? param_name;
 
-				parse_parameter (out param_comment, out param_name, out destroy_pos, out closure_pos, out array_length_pos);
+				parse_parameter (out param_comment, out param_name, out destroy_pos,
+								 out closure_pos, out array_length_pos);
 				param_names += param_name;
 
 				if (destroy_pos >= 0 && pcount != destroy_pos) {
@@ -657,7 +688,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 				if (param_comment != null) {
 					if (comment == null) {
-						comment = new Api.GirSourceComment ("", file, begin.line, begin.column, end.line, end.column);
+						comment = new Api.GirSourceComment ("", file, begin.line, begin.column,
+															end.line, end.column);
 					}
 
 					comment.add_parameter_content (param_name, param_comment);
@@ -666,7 +698,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			end_element ("parameters");
 		}
 
-		attach_comment (c_identifier, comment, param_names, destroy_notifies, closures, array_lengths, array_length_ret);
+		attach_comment (c_identifier, comment, param_names, destroy_notifies, closures,
+						array_lengths, array_length_ret);
 		end_element (element_name);
 	}
 

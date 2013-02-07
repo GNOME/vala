@@ -39,7 +39,8 @@ public class Valadoc.Taglets.See : ContentElement, Taglet, Block {
 		});
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings) {
 		if (symbol_name.has_prefix ("c::")) {
 			symbol_name = symbol_name.substring (3);
 			symbol = api_root.search_symbol_cstr (container, symbol_name);
@@ -52,7 +53,8 @@ public class Valadoc.Taglets.See : ContentElement, Taglet, Block {
 
 		if (symbol == null) {
 			// TODO use ContentElement's source reference
-			reporter.simple_warning ("%s: %s: @see: warning: %s does not exist", file_path, container.get_full_name (), symbol_name);
+			reporter.simple_warning ("%s: %s: @see: warning: %s does not exist",
+									 file_path, container.get_full_name (), symbol_name);
 		}
 	}
 

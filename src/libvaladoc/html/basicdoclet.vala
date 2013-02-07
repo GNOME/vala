@@ -26,8 +26,16 @@ using Valadoc.Api;
 
 
 public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
-	public Html.LinkHelper linker { protected set; get; }
-	public Settings settings { protected set; get; }
+	public Html.LinkHelper linker {
+		protected set;
+		get;
+	}
+
+	public Settings settings {
+		protected set;
+		get;
+	}
+
 	protected Api.Tree tree;
 	protected HtmlRenderer _renderer;
 	protected Html.MarkupWriter writer;
@@ -120,7 +128,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	protected virtual string get_img_path (Api.Node element, string type) {
-		return Path.build_filename (settings.path, element.package.name, "img", element.get_full_name () + "." + type);
+		return Path.build_filename (settings.path, element.package.name, "img",
+									element.get_full_name () + "." + type);
 	}
 
 	protected virtual string get_icon_directory () {
@@ -162,7 +171,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("li");
 	}
 
-	protected void write_navi_entry_html_template_with_link (string style, string link, string content, bool is_deprecated) {
+	protected void write_navi_entry_html_template_with_link (string style, string link,
+															 string content, bool is_deprecated)
+	{
 		writer.start_tag ("li", {"class", style});
 
 		if (is_deprecated) {
@@ -176,7 +187,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("li");
 	}
 
-	protected void write_navi_entry (Api.Node element, Api.Node? pos, string style, bool link, bool full_name = false) {
+	protected void write_navi_entry (Api.Node element, Api.Node? pos, string style,
+									 bool link, bool full_name = false)
+	{
 		string name;
 
 		if (full_name == true && element is Namespace) {
@@ -190,13 +203,18 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		bool is_deprecated = element is Symbol && ((Symbol) element).is_deprecated;
 
 		if (link == true) {
-			this.write_navi_entry_html_template_with_link (style, this.get_link (element, pos), name, is_deprecated);
+			this.write_navi_entry_html_template_with_link (style,
+														   this.get_link (element, pos),
+														   name,
+														   is_deprecated);
 		} else {
 			this.write_navi_entry_html_template (style, name, is_deprecated);
 		}
 	}
 
-	protected void write_wiki_pages (Api.Tree tree, string css_path_wiki, string js_path_wiki, string contentp) {
+	protected void write_wiki_pages (Api.Tree tree, string css_path_wiki, string js_path_wiki,
+									 string contentp)
+	{
 		if (tree.wikitree == null) {
 			return ;
 		}
@@ -221,8 +239,13 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		}
 	}
 
-	protected virtual void write_wiki_page (WikiPage page, string contentp, string css_path, string js_path, string pkg_name) {
-		GLib.FileStream file = GLib.FileStream.open (Path.build_filename(contentp, page.name.substring (0, page.name.length-7).replace ("/", ".")+"htm"), "w");
+	protected virtual void write_wiki_page (WikiPage page, string contentp, string css_path,
+											string js_path, string pkg_name)
+	{
+		GLib.FileStream file = GLib.FileStream.open (
+			Path.build_filename (contentp, page.name.substring (0, page.name.length-7).replace ("/", ".")+"htm"),
+			"w");
+
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		this.write_file_header (css_path, js_path, pkg_name);
@@ -374,8 +397,13 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		}
 
 		writer.start_tag ("div", {"class", css_package_note});
-		writer.start_tag ("b").text ("Package:").end_tag ("b");
-		writer.text (" ").start_tag ("a", {"href", get_link (element.package, element)}).text (package).end_tag ("a");
+		writer.start_tag ("b")
+			.text ("Package:")
+			.end_tag ("b");
+		writer.text (" ")
+			.start_tag ("a", {"href", get_link (element.package, element)})
+			.text (package)
+			.end_tag ("a");
 		writer.end_tag ("div");
 	}
 
@@ -390,8 +418,13 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		}
 
 		writer.start_tag ("div", {"class", css_namespace_note});
-		writer.start_tag ("b").text ("Namespace:").end_tag ("b");
-		writer.text (" ").start_tag ("a", {"href", get_link (ns, element)}).text (ns.get_full_name()).end_tag ("a");
+		writer.start_tag ("b")
+			.text ("Namespace:")
+			.end_tag ("b");
+		writer.text (" ")
+			.start_tag ("a", {"href", get_link (ns, element)})
+			.text (ns.get_full_name())
+			.end_tag ("a");
 		writer.end_tag ("div");
 	}
 
@@ -446,7 +479,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 			if (replacement != null) {
 				string replacement_name = replacement.get_value_as_string ();
-				Api.Node? replacement_node = tree.search_symbol_str (pos, replacement_name.substring (1, replacement_name.length - 2));
+				Api.Node? replacement_node = tree.search_symbol_str (pos,
+					replacement_name.substring (1, replacement_name.length - 2));
 
 				writer.text (" Use ");
 				if (replacement_node == null) {
@@ -457,7 +491,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 						string css = cssresolver.resolve (replacement_node);
 						writer.link (link, replacement_node.get_full_name (), css);
 					} else {
-						writer.start_tag ("code").text (replacement_node.get_full_name ()).end_tag ("code");
+						writer.start_tag ("code")
+							.text (replacement_node.get_full_name ())
+							.end_tag ("code");
 					}
 				}
 				writer.text (".");
@@ -530,17 +566,25 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	public void write_package_index_content (Api.Tree tree) {
 		writer.start_tag ("div", {"class", css_style_content});
-		writer.start_tag ("h1", {"class", css_title}).text ("Packages:").end_tag ("h1");
+		writer.start_tag ("h1", {"class", css_title})
+			.text ("Packages:")
+			.end_tag ("h1");
 		writer.simple_tag ("hr", {"class", css_headline_hr});
 
-		WikiPage? wikiindex = (tree.wikitree == null)? null : tree.wikitree.search ("index.valadoc");
+		WikiPage? wikiindex = (tree.wikitree == null)
+			? null
+			: tree.wikitree.search ("index.valadoc");
 		if (wikiindex != null) {
 			_renderer.set_container (wikiindex);
 			_renderer.render (wikiindex.documentation);
 		}
 
-		writer.start_tag ("h2", {"class", css_title}).text ("Content:").end_tag ("h2");
-		writer.start_tag ("h3", {"class", css_title}).text ("Packages:").end_tag ("h3");
+		writer.start_tag ("h2", {"class", css_title})
+			.text ("Content:")
+			.end_tag ("h2");
+		writer.start_tag ("h3", {"class", css_title})
+			.text ("Packages:")
+			.end_tag ("h3");
 		this.write_navi_packages_inline (tree);
 		writer.end_tag ("div");
 	}
@@ -574,9 +618,15 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		// headline:
 		writer.start_tag ("div", {"class", css_box_headline});
-		writer.start_tag ("div", {"class", css_box_headline_text}).text (headline).end_tag ("div");
+		writer.start_tag ("div", {"class", css_box_headline_text})
+			.text (headline)
+			.end_tag ("div");
 		writer.start_tag ("div", {"class", css_box_headline_toggle});
-		writer.start_tag ("img", {"onclick", "toggle_box  (this, '" + html_id + "')", "src", Path.build_filename (get_icon_directory (), "coll_open.png")});
+		writer.start_tag ("img", {"onclick",
+								  "toggle_box  (this, '" + html_id + "')",
+								  "src",
+								  Path.build_filename (get_icon_directory (),
+								  "coll_open.png")});
 		writer.raw_text ("&nbsp;");
 		writer.end_tag ("div");
 		writer.end_tag ("div");
@@ -621,10 +671,14 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	public void write_symbol_content (Api.Node node) {
 		writer.start_tag ("div", {"class", css_style_content});
-		writer.start_tag ("h1", {"class", css_title}).text (node.name).end_tag ("h1");
+		writer.start_tag ("h1", {"class", css_title})
+			.text (node.name)
+			.end_tag ("h1");
 		writer.simple_tag ("hr", {"class", css_headline_hr});
 		this.write_image_block (node);
-		writer.start_tag ("h2", {"class", css_title}).text ("Description:").end_tag ("h2");
+		writer.start_tag ("h2", {"class", css_title})
+			.text ("Description:")
+			.end_tag ("h2");
 		writer.start_tag ("div", {"class", css_code_definition});
 		if (node is Symbol) {
 			this.write_attributes ((Symbol) node, node);
@@ -635,15 +689,25 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		if (node is Class) {
 			var cl = node as Class;
-			write_known_symbols_note (cl.get_known_child_classes (), cl, "All known sub-classes:");
-			write_known_symbols_note (cl.get_known_derived_interfaces (), cl, "Required by:");
+			write_known_symbols_note (cl.get_known_child_classes (),
+									  cl,
+									  "All known sub-classes:");
+			write_known_symbols_note (cl.get_known_derived_interfaces (),
+									  cl,
+									  "Required by:");
 		} else if (node is Interface) {
 			var iface = node as Interface;
-			write_known_symbols_note (iface.get_known_implementations (), iface, "All known implementing classes:");
-			write_known_symbols_note (iface.get_known_related_interfaces (), iface, "All known sub-interfaces:");
+			write_known_symbols_note (iface.get_known_implementations (),
+									  iface,
+									  "All known implementing classes:");
+			write_known_symbols_note (iface.get_known_related_interfaces (),
+									  iface,
+									  "All known sub-interfaces:");
 		} else if (node is Struct) {
 			var stru = node as Struct;
-			write_known_symbols_note (stru.get_known_child_structs (), stru, "All known sub-structs:");
+			write_known_symbols_note (stru.get_known_child_structs (),
+									  stru,
+									  "All known sub-structs:");
 		}
 
 
@@ -714,7 +778,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	private void write_inherited_members_headline () {
-		writer.start_tag ("h3", {"class", css_title}).text ("Inherited Members:").end_tag ("h3");
+		writer.start_tag ("h3", {"class", css_title})
+			.text ("Inherited Members:")
+			.end_tag ("h3");
 	}
 
 	private void write_inherited_symbols_note_for_class (Class cl, Api.Node container) {
@@ -792,16 +858,32 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	private void write_inherited_symbols_note (TypeSymbol symbol, string type, Api.Node container) {
-		write_known_symbols_note (symbol.get_children_by_types (inheritable_members, false), container, "All known members inherited from %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_types (inheritable_members, false),
+								  container,
+								  "All known members inherited from %s %s".printf (type, symbol.get_full_name ()));
 
 		/*
-		write_known_symbols_note (symbol.get_children_by_type (NodeType.CONSTANT, false), container, "All known constants inherited from %s %s".printf (type, symbol.get_full_name ()));
-		write_known_symbols_note (symbol.get_children_by_type (NodeType.PROPERTY, false), container, "All known properties inherited from %s %s".printf (type, symbol.get_full_name ()));
-		write_known_symbols_note (symbol.get_children_by_type (NodeType.DELEGATE, false), container, "All known delegates inherited from %s %s".printf (type, symbol.get_full_name ()));
-		write_known_symbols_note (symbol.get_children_by_type (NodeType.STATIC_METHOD, false), container, "All known static methods inherited from %s %s".printf (type, symbol.get_full_name ()));
-		write_known_symbols_note (symbol.get_children_by_type (NodeType.METHOD, false), container, "All known methods inherited from %s %s".printf (type, symbol.get_full_name ()));
-		write_known_symbols_note (symbol.get_children_by_type (NodeType.SIGNAL, false), container, "All known signals inherited from %s %s".printf (type, symbol.get_full_name ()));
-		write_known_symbols_note (symbol.get_children_by_type (NodeType.FIELD, false), container, "All known fields inherited from  %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.CONSTANT, false),
+			container,
+			"All known constants inherited from %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.PROPERTY, false),
+			container,
+			"All known properties inherited from %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.DELEGATE, false),
+			container,
+			"All known delegates inherited from %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.STATIC_METHOD, false),
+			container,
+			"All known static methods inherited from %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.METHOD, false),
+			container,
+			"All known methods inherited from %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.SIGNAL, false),
+			container,
+			"All known signals inherited from %s %s".printf (type, symbol.get_full_name ()));
+		write_known_symbols_note (symbol.get_children_by_type (NodeType.FIELD, false),
+			container,
+			"All known fields inherited from  %s %s".printf (type, symbol.get_full_name ()));
 		*/
 	}
 
@@ -821,7 +903,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		bool with_childs = parent != null && parent is Package;
 
-		writer.start_tag ("h3", {"class", css_title}).text ("Namespaces:").end_tag ("h3");
+		writer.start_tag ("h3", {"class", css_title})
+			.text ("Namespaces:")
+			.end_tag ("h3");
 		writer.start_tag ("ul", {"class", css_inline_navigation});
 		foreach (Namespace child in namespaces) {
 			if (child.name != null) {
@@ -852,12 +936,16 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			return;
 		}
 
-		writer.start_tag ("h2", {"class", css_title}).text ("Dependencies:").end_tag ("h2");
+		writer.start_tag ("h2", {"class", css_title})
+			.text ("Dependencies:")
+			.end_tag ("h2");
 		writer.start_tag ("ul", {"class", css_inline_navigation});
 		foreach (Package p in deps) {
 			string? link = this.get_link (p, parent);
 			if (link == null) {
-				writer.start_tag ("li", {"class", cssresolver.resolve (p), "id", p.name}).text (p.name).end_tag ("li");
+				writer.start_tag ("li", {"class", cssresolver.resolve (p), "id", p.name})
+					.text (p.name)
+					.end_tag ("li");
 			} else {
 				writer.start_tag ("li", {"class", cssresolver.resolve (p)});
 				writer.link (get_link (p, parent), p.name);
@@ -870,7 +958,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected void write_children (Api.Node node, Api.NodeType type, string type_string, Api.Node? container) {
 		var children = node.get_children_by_type (type);
 		if (children.size > 0) {
-			writer.start_tag ("h3", {"class", css_title}).text (type_string).text (":").end_tag ("h3");
+			writer.start_tag ("h3", {"class", css_title})
+				.text (type_string)
+				.text (":")
+				.end_tag ("h3");
 			writer.start_tag ("ul", {"class", css_inline_navigation});
 			foreach (Api.Node child in children) {
 				writer.start_tag ("li", {"class", cssresolver.resolve (child)});
@@ -910,22 +1001,37 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			var chart = new Charts.Hierarchy (image_factory, element);
 			chart.save (this.get_img_path (element, "png"), "png");
 
-			writer.start_tag ("h2", {"class", css_title}).text ("Object Hierarchy:").end_tag ("h2");
+			writer.start_tag ("h2", {"class", css_title})
+				.text ("Object Hierarchy:")
+				.end_tag ("h2");
 
-			writer.simple_tag ("img", {"class", css_diagram, "usemap", "#"+element.get_full_name (),"alt", "Object hierarchy for %s".printf (element.name), "src", this.get_img_path_html (element, "png")});
+			writer.simple_tag ("img", {"class",
+									   css_diagram,
+									   "usemap",
+									   "#"+element.get_full_name (),
+									   "alt",
+									   "Object hierarchy for %s".printf (element.name),
+									   "src",
+									   this.get_img_path_html (element, "png")});
 			writer.add_usemap (chart);
 		}
 	}
 
 	public void write_namespace_content (Namespace node, Api.Node? parent) {
 		writer.start_tag ("div", {"class", css_style_content});
-		writer.start_tag ("h1", {"class", css_title}).text (node.name == null ? "Global Namespace" : node.get_full_name ()).end_tag ("h1");
+		writer.start_tag ("h1", {"class", css_title})
+			.text (node.name == null ? "Global Namespace" : node.get_full_name ())
+			.end_tag ("h1");
 		writer.simple_tag ("hr", {"class", css_hr});
-		writer.start_tag ("h2", {"class", css_title}).text ("Description:").end_tag ("h2");
+		writer.start_tag ("h2", {"class", css_title})
+			.text ("Description:")
+			.end_tag ("h2");
 
 		this.write_documentation (node, parent);
 
-		writer.start_tag ("h2", {"class", css_title}).text ("Content:").end_tag ("h2");
+		writer.start_tag ("h2", {"class", css_title})
+			.text ("Content:")
+			.end_tag ("h2");
 
 		if (node.name == null) {
 			this.write_child_namespaces ((Package) node.parent, parent);
@@ -947,9 +1053,13 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected void write_package_content (Package node, Api.Node? parent) {
 		writer.start_tag ("div", {"class", css_style_content});
-		writer.start_tag ("h1", {"class", css_title, "id", node.name}).text (node.name).end_tag ("h1");
+		writer.start_tag ("h1", {"class", css_title, "id", node.name})
+			.text (node.name)
+			.end_tag ("h1");
 		writer.simple_tag ("hr", {"class", css_headline_hr});
-		writer.start_tag ("h2", {"class", css_title}).text ("Description:").end_tag ("h2");
+		writer.start_tag ("h2", {"class", css_title})
+			.text ("Description:")
+			.end_tag ("h2");
 
 
 		WikiPage? wikipage = (tree.wikitree == null)? null : tree.wikitree.search ("index.valadoc");
@@ -958,7 +1068,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			_renderer.render (wikipage.documentation);
 		}
 
-		writer.start_tag ("h2", {"class", css_title}).text ("Content:").end_tag ("h2");
+		writer.start_tag ("h2", {"class", css_title})
+			.text ("Content:")
+			.end_tag ("h2");
 
 		this.write_child_namespaces (node, parent);
 
@@ -984,9 +1096,14 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.start_tag ("html");
 		writer.start_tag ("head");
 		if (title == null) {
-			writer.start_tag ("title").text ("Vala Binding Reference").end_tag ("title");
+			writer.start_tag ("title")
+				.text ("Vala Binding Reference")
+				.end_tag ("title");
 		} else {
-			writer.start_tag ("title").text (title).text (" &ndash; Vala Binding Reference").end_tag ("title");
+			writer.start_tag ("title")
+				.text (title)
+				.text (" &ndash; Vala Binding Reference")
+				.end_tag ("title");
 		}
 		writer.stylesheet_link (css);
 		writer.javascript_link (js);

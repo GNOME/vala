@@ -64,7 +64,8 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			current_builder.append_printf ("<title>%s</title>", em.caption);
 		}
 
-		current_builder.append_printf ("<mediaobject><imageobject><imagedata fileref=\"%s\"/></imageobject>", em.url);
+		current_builder.append_printf ("<mediaobject><imageobject><imagedata fileref=\"%s\"/></imageobject>",
+									   em.url);
 
 		if (em.caption != null) {
 			current_builder.append_printf ("<textobject><phrase>%s</phrase></textobject>", em.caption);
@@ -150,7 +151,8 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			break;
 
 		default:
-			reporter.simple_warning ("GtkDoc: warning: unsupported list type: %s", list.bullet.to_string ());
+			reporter.simple_warning ("GtkDoc: warning: unsupported list type: %s",
+									 list.bullet.to_string ());
 			break;
 		}
 
@@ -286,7 +288,9 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 		} else if (t is Taglets.Throws) {
 			var taglet = (Taglets.Throws) t;
 			var link = get_docbook_link (taglet.error_domain) ?? taglet.error_domain_name;
-			old_builder.append_printf ("\n<para>%s will be returned in @error %s</para>", link, current_builder.str);
+			old_builder.append_printf ("\n<para>%s will be returned in @error %s</para>",
+									   link,
+									   current_builder.str);
 		} else {
 			reporter.simple_warning ("GtkDoc: warning: Taglet not supported"); // TODO
 		}

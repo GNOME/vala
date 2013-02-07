@@ -41,6 +41,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 	private bool show_warnings;
 	private Api.SourceComment comment;
+	private unowned string instance_param_name;
 
 	private string[]? comment_lines;
 
@@ -224,7 +225,14 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			this.comment_lines = this.comment.content.split ("\n");
 		}
 
-		this.reporter.warning (this.comment.file.get_name (), comment.first_line + got.line, startpos + 1, endpos + 1, this.comment_lines[got.line], "Unexpected Token: %s (Expected: %s)", got.to_string (), expected);
+		this.reporter.warning (this.comment.file.get_name (),
+							   comment.first_line + got.line,
+							   startpos + 1,
+							   endpos + 1,
+							   this.comment_lines[got.line],
+							   "Unexpected Token: %s (Expected: %s)",
+							   got.to_string (),
+							   expected);
 	}
 
 	public Parser (Settings settings, ErrorReporter reporter, Api.Tree tree, ModuleLoader modules) {
@@ -234,7 +242,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		this.tree = tree;
 
 		try {
-			is_numeric_regex = new Regex ("^[+-]?([0-9]*\\.?[0-9]+|[0-9]+\\.?[0-9]*)([eE][+-]?[0-9]+)?$", RegexCompileFlags.OPTIMIZE);
+			is_numeric_regex = new Regex ("^[+-]?([0-9]*\\.?[0-9]+|[0-9]+\\.?[0-9]*)([eE][+-]?[0-9]+)?$",
+				RegexCompileFlags.OPTIMIZE);
 			normalize_regex = new Regex ("( |\n|\t)+", RegexCompileFlags.OPTIMIZE);
 		} catch (RegexError e) {
 			assert_not_reached ();
@@ -245,6 +254,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 	public Comment? parse (Api.Node element, Api.GirSourceComment gir_comment) {
 		this.current_metadata = get_metadata_for_comment (gir_comment);
+		this.instance_param_name = gir_comment.instance_param_name;
 		this.element = element;
 
 		Comment? comment = this.parse_main_content (gir_comment);
@@ -371,7 +381,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	}
 
 	private bool check_xml_open_tag (string tagname) {
-		if ((current.type == TokenType.XML_OPEN && current.content != tagname) || current.type != TokenType.XML_OPEN) {
+		if ((current.type == TokenType.XML_OPEN && current.content != tagname)
+			|| current.type != TokenType.XML_OPEN)
+		{
 			return false;
 		}
 
@@ -380,7 +392,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	}
 
 	private bool check_xml_close_tag (string tagname) {
-		if ((current.type == TokenType.XML_CLOSE && current.content != tagname) || current.type != TokenType.XML_CLOSE) {
+		if ((current.type == TokenType.XML_CLOSE && current.content != tagname)
+			|| current.type != TokenType.XML_CLOSE)
+		{
 			return false;
 		}
 
@@ -423,7 +437,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		next ();
 
 		// TODO: check xml
-		while (!(current.type == TokenType.XML_CLOSE && current.content == tagname) && current.type != TokenType.EOF) {
+		while (!(current.type == TokenType.XML_CLOSE && current.content == tagname)
+			&& current.type != TokenType.EOF)
+		{
 			if (current.type == TokenType.XML_OPEN) {
 			} else if (current.type == TokenType.XML_CLOSE) {
 			} else if (current.type == TokenType.XML_COMMENT) {
@@ -473,7 +489,10 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 
 
-		if (current.type == TokenType.GTKDOC_FUNCTION || current.type == TokenType.GTKDOC_CONST || current.type == TokenType.GTKDOC_TYPE || current.type == TokenType.WORD || current.type == TokenType.GTKDOC_PROPERTY || current.type == TokenType.GTKDOC_SIGNAL) {
+		if (current.type == TokenType.GTKDOC_FUNCTION || current.type == TokenType.GTKDOC_CONST
+			|| current.type == TokenType.GTKDOC_TYPE || current.type == TokenType.WORD
+			|| current.type == TokenType.GTKDOC_PROPERTY || current.type == TokenType.GTKDOC_SIGNAL)
+		{
 			taglet = this.create_type_link (current.content) as InlineTaglet;
 			assert (taglet != null);
 		}
@@ -629,7 +648,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return parse_docbook_itemizedlist ("orderedlist", Content.List.Bullet.ORDERED);
 	}
 
-	private LinkedList<Block>? parse_docbook_itemizedlist (string tag_name = "itemizedlist", Content.List.Bullet bullet_type = Content.List.Bullet.UNORDERED) {
+	private LinkedList<Block>? parse_docbook_itemizedlist (string tag_name = "itemizedlist",
+										   Content.List.Bullet bullet_type = Content.List.Bullet.UNORDERED)
+	{
 		if (!check_xml_open_tag (tag_name)) {
 			this.report_unexpected_token (current, "<%s>".printf (tag_name));
 			return null;
@@ -829,7 +850,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 		StringBuilder builder = new StringBuilder ();
 
-		for (next (); current.type != TokenType.EOF && !(current.type == TokenType.XML_CLOSE && current.content == "programlisting"); next ()) {
+		for (next (); current.type != TokenType.EOF && !(current.type == TokenType.XML_CLOSE
+			&& current.content == "programlisting"); next ())
+		{
 			if (current.type == TokenType.WORD) {
 				builder.append (current.content);
 			} else if (current.type != TokenType.XML_COMMENT) {
@@ -1540,7 +1563,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return {id};
 	}
 
-	private string? resolve_parameter_ctype (string parameter_name, out string? param_name, out string? param_array_name, out bool is_return_type_len) {
+	private string? resolve_parameter_ctype (string parameter_name, out string? param_name,
+											 out string? param_array_name, out bool is_return_type_len)
+	{
 		string[]? parts = split_type_name (parameter_name);
 		is_return_type_len = false;
 		param_array_name = null;
@@ -1558,7 +1583,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			}
 		}
 
-		if (this.element is Api.Callable && ((Api.Callable) this.element).implicit_array_length_cparameter_name == parts[0]) {
+		if (this.element is Api.Callable
+			&& ((Api.Callable) this.element).implicit_array_length_cparameter_name == parts[0])
+		{
 			is_return_type_len = true;
 		}
 

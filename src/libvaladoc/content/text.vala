@@ -25,7 +25,10 @@ using Gee;
 
 
 public class Valadoc.Content.Text : ContentElement, Inline {
-	public string content { get; set; }
+	public string content {
+		get;
+		set;
+	}
 
 	construct {
 		_content = "";
@@ -37,7 +40,9 @@ public class Valadoc.Content.Text : ContentElement, Inline {
 		}
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 	}
 
 	public override void accept (ContentVisitor visitor) {

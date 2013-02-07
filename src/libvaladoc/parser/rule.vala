@@ -117,15 +117,19 @@ public abstract class Valadoc.Rule : Object {
 		return false;
 	}
 
-	protected bool try_to_apply (Object? scheme_element, Token token, ParserCallback parser, out bool handled) throws ParserError {
+	protected bool try_to_apply (Object? scheme_element, Token token, ParserCallback parser,
+								 out bool handled) throws ParserError
+	{
 		#if VERY_HARD_DEBUG
 			{
 				TokenType? scheme_token = scheme_element as TokenType;
 				Rule? scheme_rule = scheme_element as Rule;
 				if (scheme_token != null) {
-					message ("TryToApply: token='%s'; scheme_token='%s'", token.to_string (), scheme_token.to_string ());
+					message ("TryToApply: token='%s'; scheme_token='%s'", token.to_string (),
+						scheme_token.to_string ());
 				} else if (scheme_rule != null) {
-					message ("TryToApply: token='%s'; scheme_rule='%s'", token.to_string (), scheme_rule.to_string (parser.get_rule_state ()));
+					message ("TryToApply: token='%s'; scheme_rule='%s'", token.to_string (),
+						scheme_rule.to_string (parser.get_rule_state ()));
 				} else {
 					assert (scheme_element != null);
 				}

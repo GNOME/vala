@@ -25,7 +25,11 @@ using Gee;
 
 
 public abstract class Valadoc.Content.InlineContent : ContentElement {
-	public Gee.List<Inline> content { get { return _content; } }
+	public Gee.List<Inline> content {
+		get {
+			return _content;
+		}
+	}
 
 	private Gee.List<Inline> _content;
 
@@ -36,7 +40,9 @@ public abstract class Valadoc.Content.InlineContent : ContentElement {
 	internal InlineContent () {
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 		foreach (Inline element in _content) {
 			element.parent = this;
 			element.check (api_root, container, file_path, reporter, settings);

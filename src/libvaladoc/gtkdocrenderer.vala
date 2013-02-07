@@ -65,21 +65,34 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 		writer.set_wrap (false);
 
 		if (item is Api.Method) {
-			writer.start_tag ("function").text (((Api.Method)item).get_cname ()).end_tag ("function");
+			writer.start_tag ("function")
+				.text (((Api.Method)item).get_cname ())
+				.end_tag ("function");
 		} else if (item is Api.FormalParameter) {
-			writer.start_tag ("parameter").text (((Api.FormalParameter)item).name ?? "...").end_tag ("parameter");
+			writer.start_tag ("parameter").
+				text (((Api.FormalParameter)item).name ?? "...")
+				.end_tag ("parameter");
 		} else if (item is Api.Constant) {
-			writer.start_tag ("constant").text (((Api.Constant)item).get_cname ()).end_tag ("constant");
+			writer.start_tag ("constant").text (((Api.Constant)item)
+				.get_cname ())
+				.end_tag ("constant");
 		} else if (item is Api.Property) {
 			// TODO: use docbook-tags instead
-			writer.text ("#").text (get_cname(item.parent)).text (":").text (((Api.Property)item).get_cname ().replace ("_", "-"));
+			writer.text ("#").text (get_cname(item.parent))
+				.text (":")
+				.text (((Api.Property)item)
+				.get_cname ().replace ("_", "-"));
 		} else if (item is Api.Signal) {
 			// TODO: use docbook-tags instead
-			writer.text ("#").text (get_cname(item.parent)).text ("::").text (((Api.Signal)item).get_cname ().replace ("_", "-"));
+			writer.text ("#").text (get_cname(item.parent))
+				.text ("::")
+				.text (((Api.Signal)item).get_cname ().replace ("_", "-"));
 		} else if (item is Api.Namespace) {
 			writer.text (((Api.Namespace) item).get_full_name ());
 		} else {
-			writer.start_tag ("type").text (get_cname (item)).end_tag ("type");
+			writer.start_tag ("type")
+				.text (get_cname (item))
+				.end_tag ("type");
 		}
 
 		writer.set_wrap (true);
@@ -128,15 +141,23 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 	public override void visit_embedded (Embedded element) {
 		writer.start_tag ("figure");
 		if (element.caption != null) {
-			writer.start_tag ("title").text (element.caption).end_tag ("title");
+			writer.start_tag ("title")
+				.text (element.caption)
+				.end_tag ("title");
 		}
 
 		writer.start_tag ("mediaobject");
 
-		writer.start_tag ("imageobject").simple_tag ("imagedata", {"fileref", element.url}).end_tag ("imageobject");
+		writer.start_tag ("imageobject")
+			.simple_tag ("imagedata", {"fileref", element.url})
+			.end_tag ("imageobject");
 
 		if (element.caption != null) {
-			writer.start_tag ("textobject").start_tag ("phrase").text (element.caption).end_tag ("phrase").end_tag ("textobject");
+			writer.start_tag ("textobject")
+				.start_tag ("phrase")
+				.text (element.caption)
+				.end_tag ("phrase")
+				.end_tag ("textobject");
 		}
 
 		writer.end_tag ("mediaobject");
@@ -277,9 +298,11 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 	}
 
 	public override void visit_source_code (SourceCode element) {
-		writer.start_tag ("example").start_tag ("programlisting");
+		writer.start_tag ("example")
+			.start_tag ("programlisting");
 		writer.text (element.code);
-		writer.end_tag ("programlisting").end_tag ("example");
+		writer.end_tag ("programlisting")
+			.end_tag ("example");
 	}
 
 	public override void visit_table (Table element) {
@@ -395,7 +418,8 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 			}
 
 			writer.set_wrap (false);
-			writer.text ("\nSince: ").text (taglet.version);
+			writer.text ("\nSince: ")
+				.text (taglet.version);
 			writer.set_wrap (true);
 			separated = true;
 
@@ -438,7 +462,9 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 			}
 
 			if (first) {
-				writer.start_tag ("para").text ("This function may throw:").end_tag ("para");
+				writer.start_tag ("para")
+					.text ("This function may throw:")
+					.end_tag ("para");
 				writer.start_tag ("table");
 			}
 

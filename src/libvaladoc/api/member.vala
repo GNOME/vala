@@ -26,7 +26,9 @@ using Gee;
 public abstract class Valadoc.Api.Member : Symbol {
 	private SourceComment? source_comment;
 
-	public Member (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, void* data) {
+	public Member (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
+				   SourceComment? comment, void* data)
+	{
 		base (parent, file, name, accessibility, data);
 
 		this.source_comment = comment;

@@ -59,7 +59,9 @@ namespace Gtkdoc.DBus {
 			if (direction == Direction.NONE) {
 				return """<parameter><type>'%s'</type> %s</parameter>""".printf (signature, name);
 			} else {
-				return """<parameter>%s <type>'%s'</type> %s</parameter>""".printf (direction.to_string(), signature, name);
+				return """<parameter>%s <type>'%s'</type> %s</parameter>""".printf (direction.to_string(),
+																					signature,
+																					name);
 			}
 		}
 	}
@@ -88,9 +90,15 @@ namespace Gtkdoc.DBus {
 
 			if (link) {
 				builder.append_printf ("""
-<link linkend="%s-%s">%s</link>%s(""", iface.get_docbook_id (), get_docbook_id (), name, string.nfill (indent-name.length, ' '));
+<link linkend="%s-%s">%s</link>%s(""",
+									   iface.get_docbook_id (),
+									   get_docbook_id (),
+									   name,
+									   string.nfill (indent-name.length, ' '));
 			} else {
-				builder.append_printf ("\n%s%s(", name, string.nfill (indent-name.length, ' '));
+				builder.append_printf ("\n%s%s(",
+									   name,
+									   string.nfill (indent-name.length, ' '));
 			}
 
 			if (parameters.size > 0) {
@@ -114,7 +122,11 @@ namespace Gtkdoc.DBus {
 		public Gee.List<Member> methods = new Gee.LinkedList<Member>();
 		public Gee.List<Member> signals = new Gee.LinkedList<Member>();
 
-		public Interface (string package_name, string name, string purpose = "", string description = "") {
+		public Interface (string package_name,
+						  string name,
+						  string purpose = "",
+						  string description = "")
+		{
 			this.package_name = package_name;
 			this.name = name;
 			this.purpose = purpose;
@@ -139,10 +151,12 @@ namespace Gtkdoc.DBus {
 			var xml_dir = Path.build_filename (settings.path, "xml");
 			DirUtils.create_with_parents (xml_dir, 0777);
 
-			var xml_file = Path.build_filename (xml_dir, "%s.xml".printf (to_docbook_id (name)));
+			var xml_file = Path.build_filename (xml_dir,
+												"%s.xml".printf (to_docbook_id (name)));
 			var writer = new TextWriter (xml_file, "w");
 			if (!writer.open ()) {
-				reporter.simple_error ("GtkDoc: error: unable to open %s for writing", writer.filename);
+				reporter.simple_error ("GtkDoc: error: unable to open %s for writing",
+									   writer.filename);
 				return false;
 			}
 			writer.write_line (to_string (reporter));
@@ -182,7 +196,13 @@ namespace Gtkdoc.DBus {
 <refnamediv>
 <refname>%s</refname>
 <refpurpose>%s</refpurpose>
-</refnamediv>""", docbook_id, docbook_id, name, package_name.up (), name, purpose ?? "");
+</refnamediv>""",
+								docbook_id,
+								docbook_id,
+								name,
+								package_name.up (),
+								name,
+								purpose ?? "");
 
 			/*
 			 * Methods
@@ -236,7 +256,12 @@ namespace Gtkdoc.DBus {
 <programlisting>%s
 </programlisting>
 %s
-</refsect2>""", docbook_id, method.get_docbook_id (), method.name, method.to_string (method_indent, false), method.comment != null ? method.comment.to_docbook (reporter) : "");
+</refsect2>""",
+							docbook_id,
+							method.get_docbook_id (),
+							method.name,
+							method.to_string (method_indent, false),
+							method.comment != null ? method.comment.to_docbook (reporter) : "");
 				}
 
 				builder.append ("</refsect1>");
@@ -257,7 +282,12 @@ namespace Gtkdoc.DBus {
 <programlisting>%s
 </programlisting>
 %s
-</refsect2>""", docbook_id, sig.get_docbook_id (), sig.name, sig.to_string (signal_indent, false), sig.comment != null ? sig.comment.to_docbook (reporter) : "");
+</refsect2>""",
+						docbook_id,
+						sig.get_docbook_id (),
+						sig.name,
+						sig.to_string (signal_indent, false),
+						sig.comment != null ? sig.comment.to_docbook (reporter) : "");
 				}
 
 				builder.append ("</refsect1>");

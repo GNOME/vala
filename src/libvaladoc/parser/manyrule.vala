@@ -46,7 +46,9 @@ internal class Valadoc.ManyRule : Rule {
 		return false;
 	}
 
-	public override bool accept_token (Token token, ParserCallback parser, Rule.Forward forward) throws ParserError {
+	public override bool accept_token (Token token, ParserCallback parser, Rule.Forward forward)
+									   throws ParserError
+	{
 		var state = parser.get_rule_state () as State;
 		if (state == null) {
 			state = new State ();
@@ -102,6 +104,9 @@ internal class Valadoc.ManyRule : Rule {
 		if (state == null) {
 			state = new State ();
 		}
-		return "%-15s%-15s(started=%s;done_one=%s)".printf (name != null ? name : " ", "[many]", state.started.to_string (), state.done_one.to_string ());
+		return "%-15s%-15s(started=%s;done_one=%s)".printf (name != null ? name : " ",
+															"[many]",
+															state.started.to_string (),
+															state.done_one.to_string ());
 	}
 }

@@ -30,7 +30,8 @@ public class Valadoc.Taglets.Return : InlineContent, Taglet, Block {
 		return run_rule;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings) {
 		Api.TypeReference? type_ref = null;
 		bool creation_method = false;
 
@@ -40,11 +41,13 @@ public class Valadoc.Taglets.Return : InlineContent, Taglet, Block {
 		} else if (container is Api.Callable) {
 			type_ref = ((Api.Callable) container).return_type;
 		} else {
-			reporter.simple_warning ("%s: %s: @return: warning: @return used outside method/delegate/signal context", file_path, container.get_full_name ());
+			reporter.simple_warning ("%s: %s: @return: warning: @return used outside method/delegate/signal context",
+									 file_path, container.get_full_name ());
 		}
 
 		if (type_ref != null && type_ref.data_type == null && !creation_method) {
-			reporter.simple_warning ("%s: %s: @return: warning: Return description declared for void function", file_path, container.get_full_name ());
+			reporter.simple_warning ("%s: %s: @return: warning: Return description declared for void function",
+									 file_path, container.get_full_name ());
 		}
 
 		base.check (api_root, container, file_path, reporter, settings);

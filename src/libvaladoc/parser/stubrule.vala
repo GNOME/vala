@@ -42,7 +42,9 @@ public class Valadoc.StubRule : Rule {
 		return _rule.starts_with_token (token);
 	}
 
-	public override bool accept_token (Token token, ParserCallback parser, Rule.Forward forward) throws ParserError {
+	public override bool accept_token (Token token, ParserCallback parser, Rule.Forward forward)
+									   throws ParserError
+	{
 		return _rule.accept_token (token, parser, forward);
 	}
 

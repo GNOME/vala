@@ -30,7 +30,10 @@ using Valadoc.Content;
 public class Valadoc.Api.Field : Member {
 	private string? cname;
 
-	public Field (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, bool is_static, bool is_volatile, void* data) {
+	public Field (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
+				  SourceComment? comment, string? cname, bool is_static, bool is_volatile,
+				  void* data)
+	{
 		base (parent, file, name, accessibility, comment, data);
 
 		this.is_static = !(parent is Namespace) && is_static;

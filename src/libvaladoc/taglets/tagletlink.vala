@@ -51,7 +51,8 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 		});
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings) {
 		if (symbol_name.has_prefix ("c::")) {
 			_symbol_name = _symbol_name.substring (3);
 			_symbol = api_root.search_symbol_cstr (container, symbol_name);
@@ -73,7 +74,8 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 
 		if (_symbol == null && symbol_name != "main") {
 			string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
-			reporter.simple_warning ("%s: %s@link: warning: %s does not exist", file_path, node_segment, symbol_name);
+			reporter.simple_warning ("%s: %s@link: warning: %s does not exist",
+									 file_path, node_segment, symbol_name);
 		}
 
 		base.check (api_root, container, file_path, reporter, settings);

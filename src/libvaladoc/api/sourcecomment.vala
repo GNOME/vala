@@ -71,7 +71,9 @@ public class Valadoc.Api.SourceComment {
 		get;
 	}
 
-	public SourceComment (string content, SourceFile file, int first_line, int first_column, int last_line, int last_column) {
+	public SourceComment (string content, SourceFile file, int first_line, int first_column,
+						  int last_line, int last_column)
+	{
 		this.first_column = first_column;
 		this.last_column = last_column;
 		this.first_line = first_line;

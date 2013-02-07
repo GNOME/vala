@@ -41,7 +41,10 @@ public class Valadoc.Api.Signal : Member, Callable {
 	}
 
 
-	public Signal (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dbus_name, bool is_dbus_visible, bool is_virtual, void* data) {
+	public Signal (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
+				   SourceComment? comment, string? cname, string? dbus_name, bool is_dbus_visible,
+				   bool is_virtual, void* data)
+	{
 		base (parent, file, name, accessibility, comment, data);
 
 		this.dbus_name = dbus_name;

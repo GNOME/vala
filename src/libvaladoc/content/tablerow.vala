@@ -25,7 +25,11 @@ using Gee;
 
 
 public class Valadoc.Content.TableRow : ContentElement {
-	public Gee.List<TableCell> cells { get { return _cells; } }
+	public Gee.List<TableCell> cells {
+		get {
+			return _cells;
+		}
+	}
 
 	private Gee.List<TableCell> _cells;
 
@@ -34,7 +38,9 @@ public class Valadoc.Content.TableRow : ContentElement {
 		_cells = new ArrayList<TableCell> ();
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 		// Check individual cells
 		foreach (var cell in _cells) {
 			cell.parent = this;

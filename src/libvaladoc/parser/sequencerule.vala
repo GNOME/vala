@@ -67,7 +67,9 @@ internal class Valadoc.SequenceRule : Rule {
 		return true;
 	}
 
-	public override bool accept_token (Token token, ParserCallback parser, Rule.Forward forward) throws ParserError {
+	public override bool accept_token (Token token, ParserCallback parser,
+									   Rule.Forward forward) throws ParserError
+	{
 		var state = parser.get_rule_state () as State;
 		if (state == null) {
 			state = new State ();

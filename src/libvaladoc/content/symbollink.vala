@@ -25,8 +25,15 @@ using Gee;
 
 
 public class Valadoc.Content.SymbolLink : ContentElement, Inline {
-	public Api.Node symbol { get; set; }
-	public string label { get; set; }
+	public Api.Node symbol {
+		get;
+		set;
+	}
+
+	public string label {
+		get;
+		set;
+	}
 
 	internal SymbolLink (Api.Node? symbol = null, string? label = null) {
 		base ();
@@ -37,7 +44,9 @@ public class Valadoc.Content.SymbolLink : ContentElement, Inline {
 	public override void configure (Settings settings, ResourceLocator locator) {
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 	}
 
 	public override void accept (ContentVisitor visitor) {

@@ -46,8 +46,17 @@ public class Valadoc.Api.Class : TypeSymbol {
 	private string? private_cname;
 	private string? cname;
 
-	public Class (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? private_cname, string? class_macro_name, string? type_macro_name, string? is_type_macro_name, string? type_cast_macro_name, string? type_function_name, string? class_type_macro_name, string? is_class_type_macro_name, string? dbus_name, string? type_id, string? param_spec_function_name, string? ref_function_name, string? unref_function_name, string? free_function_name, string? finalize_function_name, string? take_value_function_cname, string? get_value_function_cname, string? set_value_function_cname, bool is_fundamental, bool is_abstract, bool is_basic_type, void* data) {
-		base (parent, file, name, accessibility, comment, type_macro_name, is_type_macro_name, type_cast_macro_name, type_function_name, is_basic_type, data);
+	public Class (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
+				  SourceComment? comment, string? cname, string? private_cname, string? class_macro_name,
+				  string? type_macro_name, string? is_type_macro_name, string? type_cast_macro_name,
+				  string? type_function_name, string? class_type_macro_name, string? is_class_type_macro_name,
+				  string? dbus_name, string? type_id, string? param_spec_function_name, string? ref_function_name,
+				  string? unref_function_name, string? free_function_name, string? finalize_function_name,
+				  string? take_value_function_cname, string? get_value_function_cname, string? set_value_function_cname,
+				  bool is_fundamental, bool is_abstract, bool is_basic_type, void* data)
+	{
+		base (parent, file, name, accessibility, comment, type_macro_name,
+			is_type_macro_name, type_cast_macro_name, type_function_name, is_basic_type, data);
 
 		this.interfaces = new ArrayList<TypeReference> ();
 

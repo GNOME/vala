@@ -25,15 +25,28 @@ using Gee;
 
 
 public class Valadoc.Content.Paragraph : InlineContent, Block, StyleAttributes {
-	public HorizontalAlign? horizontal_align { get; set; }
-	public VerticalAlign? vertical_align { get; set; }
-	public string? style { get; set; }
+	public HorizontalAlign? horizontal_align {
+		get;
+		set;
+	}
+
+	public VerticalAlign? vertical_align {
+		get;
+		set;
+	}
+
+	public string? style {
+		get;
+		set;
+	}
 
 	internal Paragraph () {
 		base ();
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 		// Check inline content
 		base.check (api_root, container, file_path, reporter, settings);
 	}

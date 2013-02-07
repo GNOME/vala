@@ -97,9 +97,17 @@ public class Valadoc.Content.List : ContentElement, Block {
 		}
 	}
 
-	public Bullet bullet { get; set; }
+	public Bullet bullet {
+		get;
+		set;
+	}
+
 	// TODO add initial value (either a number or some letters)
-	public Gee.List<ListItem> items { get { return _items; } }
+	public Gee.List<ListItem> items {
+		get {
+			return _items;
+		}
+	}
 
 	private Gee.List<ListItem> _items;
 
@@ -109,7 +117,9 @@ public class Valadoc.Content.List : ContentElement, Block {
 		_items = new ArrayList<ListItem> ();
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 		// Check individual list items
 		foreach (ListItem element in _items) {
 			element.parent = this;

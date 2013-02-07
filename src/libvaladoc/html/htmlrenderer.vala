@@ -70,7 +70,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	private void write_resolved_symbol_link (Api.Node symbol, string? given_label) {
 		if (symbol == _container || symbol == _owner) {
-			writer.start_tag ("span", {"css", cssresolver.resolve (symbol)}).text (symbol.name).end_tag ("span");
+			writer.start_tag ("span", {"css", cssresolver.resolve (symbol)})
+				.text (symbol.name)
+				.end_tag ("span");
 		} else {
 			var label = (given_label == null || given_label == "") ? symbol.get_full_name () : given_label;
 			var url = get_url (symbol);
@@ -108,7 +110,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		write_taglets (
 			() => {
 				writer.start_tag ("p", {"class", "main_title"});
-				writer.start_tag ("b").text ("Deprecated: ").end_tag ("b");
+				writer.start_tag ("b")
+					.text ("Deprecated: ")
+					.end_tag ("b");
 			},
 			() => {
 				writer.end_tag ("p");
@@ -158,7 +162,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 		write_taglets (
 			() => {
-				writer.start_tag ("h2", {"class", "main_title"}).text ("Parameters:").end_tag ("h2");
+				writer.start_tag ("h2", {"class", "main_title"})
+					.text ("Parameters:")
+					.end_tag ("h2");
 				writer.start_tag ("table", {"class", "main_parameter_table"});
 			},
 			() => {
@@ -174,7 +180,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 				}
 
 				writer.start_tag ("tr", unknown_parameter_css);
-				writer.start_tag ("td", {"class", "main_parameter_table_name"}).text (param.parameter_name).end_tag ("td");
+				writer.start_tag ("td", {"class", "main_parameter_table_name"})
+					.text (param.parameter_name)
+					.end_tag ("td");
 				writer.start_tag ("td");
 				param.accept_children (this);
 				writer.end_tag ("td");
@@ -184,7 +192,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Return));
 		write_taglets (
 			() => {
-				writer.start_tag ("h2", {"class", "main_title"}).text ("Returns:").end_tag ("h2");
+				writer.start_tag ("h2", {"class", "main_title"})
+					.text ("Returns:")
+					.end_tag ("h2");
 				writer.start_tag ("table", {"class", "main_parameter_table"});
 			},
 			() => {
@@ -204,7 +214,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Throws));
 		write_taglets (
 			() => {
-				writer.start_tag ("h2", {"class", "main_title"}).text ("Exceptions:").end_tag ("h2");
+				writer.start_tag ("h2", {"class", "main_title"})
+					.text ("Exceptions:")
+					.end_tag ("h2");
 				writer.start_tag ("table", {"class", "main_parameter_table"});
 			},
 			() => {
@@ -215,7 +227,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 			(taglet) => {
 				var exception = taglet as Taglets.Throws;
 				writer.start_tag ("tr");
-				writer.start_tag ("td", {"class", "main_parameter_table_name"}).text (exception.error_domain_name).end_tag ("td");
+				writer.start_tag ("td", {"class", "main_parameter_table_name"})
+					.text (exception.error_domain_name)
+					.end_tag ("td");
 				writer.start_tag ("td");
 				exception.accept_children (this);
 				writer.end_tag ("td");
@@ -225,7 +239,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Since));
 		write_taglets (
 			() => {
-				writer.start_tag ("h2", {"class", "main_title"}).text ("Since:").end_tag ("h2");
+				writer.start_tag ("h2", {"class", "main_title"})
+					.text ("Since:")
+					.end_tag ("h2");
 				writer.start_tag ("p");
 			},
 			() => {
@@ -241,7 +257,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.See));
 		write_taglets (
 			() => {
-				writer.start_tag ("h2", {"class", "main_title"}).text ("See also:").end_tag ("h2");
+				writer.start_tag ("h2", {"class", "main_title"})
+					.text ("See also:")
+					.end_tag ("h2");
 				writer.start_tag ("p");
 			},
 			() => {
@@ -264,7 +282,8 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	public override void visit_embedded (Embedded element) {
 		var caption = element.caption;
 
-		var absolute_path = Path.build_filename (settings.path, element.package.name, "img", Path.get_basename (element.url));
+		var absolute_path = Path.build_filename (settings.path, element.package.name, "img",
+												 Path.get_basename (element.url));
 		var relative_path = Path.build_filename ("img", Path.get_basename (element.url));
 
 		copy_file (element.url, absolute_path);
@@ -402,7 +421,10 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	private void visit_notification_block (BlockContent element, string headline) {
 		writer.start_tag ("div", {"class", "main_notification_block"});
-		writer.start_tag ("span", {"class", "main_block_headline"}).text (headline).end_tag ("span").text (" ");
+		writer.start_tag ("span", {"class", "main_block_headline"})
+			.text (headline)
+			.end_tag ("span")
+			.text (" ");
 		writer.start_tag ("div", {"class", "main_block_content"});
 		element.accept_children (this);
 		writer.end_tag ("div");

@@ -25,14 +25,23 @@ using Gee;
 
 
 public class Valadoc.Content.WikiLink : InlineContent, Inline {
-	public WikiPage page { get; internal set; }
-	public string name { get; set; }
+	public WikiPage page {
+		internal set;
+		get;
+	}
+
+	public string name {
+		get;
+		set;
+	}
 
 	internal WikiLink () {
 		base ();
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 		base.check (api_root, container, file_path, reporter, settings);
 
 		page = api_root.wikitree.search (name);

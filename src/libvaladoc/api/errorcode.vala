@@ -32,7 +32,9 @@ public class Valadoc.Api.ErrorCode : Symbol {
 	private string? dbus_name;
 	private string? cname;
 
-	public ErrorCode (ErrorDomain parent, SourceFile file, string name, SourceComment? comment, string? cname, string? dbus_name, void* data) {
+	public ErrorCode (ErrorDomain parent, SourceFile file, string name, SourceComment? comment,
+					  string? cname, string? dbus_name, void* data)
+	{
 		base (parent, file, name, parent.accessibility, data);
 
 		this.source_comment = comment;

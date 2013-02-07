@@ -29,14 +29,18 @@ public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
 		// avoid broken implicit copy
 		unowned FileStream _stream = stream;
 
-		base ((str) => { _stream.printf (str); }, xml_declaration);
+		base ((str) => {
+			_stream.printf (str);
+		}, xml_declaration);
 	}
 
 	public MarkupWriter.builder (StringBuilder builder, bool xml_declaration = true) {
 		// avoid broken implicit copy
 		unowned StringBuilder _builder = builder;
 
-		base ((str) => { _builder.append (str); }, xml_declaration);
+		base ((str) => {
+			_builder.append (str);
+		}, xml_declaration);
 	}
 
 	public MarkupWriter add_usemap (Charts.Chart chart) {

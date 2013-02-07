@@ -32,7 +32,10 @@ public class Valadoc.Api.Property : Member {
 	private string? dbus_name;
 	private string? cname;
 
-	public Property (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? dbus_name, bool is_dbus_visible, PropertyBindingType binding_type, void* data) {
+	public Property (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
+					 SourceComment? comment, string? cname, string? dbus_name, bool is_dbus_visible,
+					 PropertyBindingType binding_type, void* data)
+	{
 		base (parent, file, name, accessibility, comment, data);
 
 		this.is_dbus_visible = is_dbus_visible;

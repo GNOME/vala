@@ -76,11 +76,14 @@ namespace Gtkdoc {
 	}
 
 	public string get_docbook_type_link (Api.Class cls) {
-		return """<link linkend="%s:CAPS"><literal>%s</literal></link>""".printf (to_docbook_id (cls.get_type_id ()), cls.get_type_id ());
+		return """<link linkend="%s:CAPS"><literal>%s</literal></link>"""
+			.printf (to_docbook_id (cls.get_type_id ()), cls.get_type_id ());
 	}
 
 	public string? get_gtkdoc_link (Api.Node symbol) {
-		if (symbol is Class || symbol is Interface || symbol is Struct || symbol is Enum || symbol is ErrorDomain) {
+		if (symbol is Class || symbol is Interface || symbol is Struct || symbol is Enum
+			|| symbol is ErrorDomain)
+		{
 			return "#%s".printf (get_cname (symbol));
 		}
 
@@ -127,15 +130,18 @@ namespace Gtkdoc {
 				}
 				parent = "";
 			}
-			return """<link linkend="%s%s"><function>%s()</function></link>""".printf (to_docbook_id (parent), to_docbook_id (name), name);
+			return """<link linkend="%s%s"><function>%s()</function></link>"""
+				.printf (to_docbook_id (parent), to_docbook_id (name), name);
 		} else if (item is Api.FormalParameter) {
 			return "<parameter>%s</parameter>".printf (((Api.FormalParameter)item).name);
 		} else if (item is Api.Constant) {
 			var cname = ((Api.Constant)item).get_cname ();
-			return """<link linkend="%s:CAPS"><literal>%s</literal></link>""".printf (to_docbook_id (cname), cname);
+			return """<link linkend="%s:CAPS"><literal>%s</literal></link>"""
+				.printf (to_docbook_id (cname), cname);
 		} else if (item is Api.ErrorCode) {
 			var cname = ((Api.ErrorCode)item).get_cname ();
-			return """<link linkend="%s:CAPS"><literal>%s</literal></link>""".printf (to_docbook_id (cname), cname);
+			return """<link linkend="%s:CAPS"><literal>%s</literal></link>"""
+				.printf (to_docbook_id (cname), cname);
 		} else if (item is Api.Property) {
 			string name;
 			string parent;
@@ -146,7 +152,8 @@ namespace Gtkdoc {
 				name = ((Api.Property)item).get_cname ();
 				parent = get_cname (item.parent);
 			}
-			return """<link linkend="%s--%s"><type>"%s"</type></link>""".printf (to_docbook_id (parent), to_docbook_id (name), name);
+			return """<link linkend="%s--%s"><type>"%s"</type></link>"""
+				.printf (to_docbook_id (parent), to_docbook_id (name), name);
 		} else if (item is Api.Signal) {
 			string name;
 			string parent;
@@ -158,11 +165,13 @@ namespace Gtkdoc {
 				name = name.replace ("_", "-");
 				parent = get_cname (item.parent);
 			}
-			return """<link linkend="%s-%s"><type>"%s"</type></link>""".printf (to_docbook_id (parent), to_docbook_id (name), name);
+			return """<link linkend="%s-%s"><type>"%s"</type></link>"""
+				.printf (to_docbook_id (parent), to_docbook_id (name), name);
 		} else {
 			var cname = get_cname (item);
 			if (cname != null) {
-				return """<link linkend="%s"><type>%s</type></link>""".printf (to_docbook_id (cname), cname);
+				return """<link linkend="%s"><type>%s</type></link>"""
+					.printf (to_docbook_id (cname), cname);
 			}
 		}
 		return null;
@@ -210,7 +219,9 @@ namespace Gtkdoc {
 			Process.spawn_command_line_sync (pc, null, null, out exit_status);
 			return (0 == exit_status);
 		} catch (SpawnError e) {
-			reporter.simple_warning ("GtkDoc: warning: Error pkg-config --exists %s: %s", package_name, e.message);
+			reporter.simple_warning ("GtkDoc: warning: Error pkg-config --exists %s: %s",
+									 package_name,
+									 e.message);
 			return false;
 		}
 	}

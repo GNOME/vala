@@ -42,10 +42,13 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 		});
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 		// context check:
 		if (container is Api.Method == false && container is Api.Delegate == false) {
-			reporter.simple_warning ("%s: %s: @throws: warning: @throws used outside method/delegate context", file_path, container.get_full_name ());
+			reporter.simple_warning ("%s: %s: @throws: warning: @throws used outside method/delegate context",
+									 file_path, container.get_full_name ());
 			base.check (api_root, container, file_path, reporter, settings);
 			return ;
 		}
@@ -55,24 +58,32 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 		error_domain = api_root.search_symbol_str (container, error_domain_name);
 		if (error_domain == null) {
 			// TODO use ContentElement's source reference
-			reporter.simple_error ("%s: %s: @throws: error: %s does not exist", file_path, container.get_full_name (), error_domain_name);
+			reporter.simple_error ("%s: %s: @throws: error: %s does not exist",
+								   file_path, container.get_full_name (), error_domain_name);
 			base.check (api_root, container, file_path, reporter, settings);
 			return ;
 		}
 
 
 		// Check if the method is allowed to throw the given type or error code:
-		Gee.List<Api.Node> exceptions = container.get_children_by_types ({Api.NodeType.ERROR_DOMAIN, Api.NodeType.CLASS}, false);
-		Api.Item expected_error_domain = (error_domain is Api.ErrorCode)? error_domain.parent : error_domain;
+		Gee.List<Api.Node> exceptions = container.get_children_by_types ({Api.NodeType.ERROR_DOMAIN,
+																		  Api.NodeType.CLASS},
+																		 false);
+		Api.Item expected_error_domain = (error_domain is Api.ErrorCode)
+			? error_domain.parent
+			: error_domain;
 		bool report_warning = true;
 		foreach (Api.Node exception in exceptions) {
-			if (exception == expected_error_domain || (exception is Api.Class && expected_error_domain is Api.ErrorDomain)) {
+			if (exception == expected_error_domain
+				|| (exception is Api.Class && expected_error_domain is Api.ErrorDomain))
+			{
 				report_warning = false;
 				break;
 			}
 		}
 		if (report_warning) {
-			reporter.simple_warning ("%s: %s: @throws: warning: %s does not exist in exception list", file_path, container.get_full_name (), error_domain_name);			
+			reporter.simple_warning ("%s: %s: @throws: warning: %s does not exist in exception list",
+									 file_path, container.get_full_name (), error_domain_name);			
 		}
 
 		base.check (api_root, container, file_path, reporter, settings);

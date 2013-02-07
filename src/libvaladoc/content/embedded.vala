@@ -25,12 +25,31 @@ using Gee;
 
 
 public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes {
-	public string url { get; set; }
-	public string? caption { get; set; }
+	public string url {
+		get;
+		set;
+	}
 
-	public HorizontalAlign? horizontal_align { get; set; }
-	public VerticalAlign? vertical_align { get; set; }
-	public string? style { get; set; }
+	public string? caption {
+		get;
+		set;
+	}
+
+	public HorizontalAlign? horizontal_align {
+		get;
+		set;
+	}
+
+	public VerticalAlign? vertical_align {
+		get;
+		set;
+	}
+
+	public string? style {
+		get;
+		set;
+	}
+
 	public Api.Package package;
 
 	private ResourceLocator _locator;
@@ -43,10 +62,14 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 		_locator = locator;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 		// search relative to our file
 		if (!Path.is_absolute (url)) {
-			string relative_to_file = Path.build_path (Path.DIR_SEPARATOR_S, Path.get_dirname (file_path), url);
+			string relative_to_file = Path.build_path (Path.DIR_SEPARATOR_S,
+													   Path.get_dirname (file_path),
+													   url);
 			if (FileUtils.test (relative_to_file, FileTest.EXISTS | FileTest.IS_REGULAR)) {
 				url = (owned) relative_to_file;
 				package = container.package;

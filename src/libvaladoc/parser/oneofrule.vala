@@ -47,7 +47,9 @@ internal class Valadoc.OneOfRule : Rule {
 		return false;
 	}
 
-	public override bool accept_token (Token token, ParserCallback parser, Rule.Forward forward) throws ParserError {
+	public override bool accept_token (Token token, ParserCallback parser, Rule.Forward forward)
+									   throws ParserError
+	{
 		var state = parser.get_rule_state () as State;
 		if (state == null) {
 			state = new State ();
@@ -88,6 +90,9 @@ internal class Valadoc.OneOfRule : Rule {
 		if (state == null) {
 			state = new State ();
 		}
-		return "%-15s%-15s(selected=%d/%d)".printf (name != null ? name : " ", "[one-of]", state.selected, _scheme.length);
+		return "%-15s%-15s(selected=%d/%d)".printf (name != null ? name : " ",
+													"[one-of]",
+													state.selected,
+													_scheme.length);
 	}
 }

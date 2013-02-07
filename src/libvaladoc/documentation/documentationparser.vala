@@ -28,7 +28,9 @@ using Gee;
 
 public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
-	public DocumentationParser (Settings settings, ErrorReporter reporter, Api.Tree tree, ModuleLoader modules) {
+	public DocumentationParser (Settings settings, ErrorReporter reporter,
+								Api.Tree tree, ModuleLoader modules)
+	{
 		_settings = settings;
 		_reporter = reporter;
 		_tree = tree;
@@ -70,11 +72,14 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			Comment doc_comment = gtkdoc_parser.parse (element, (Api.GirSourceComment) comment);
 			return doc_comment;
 		} else {
-			return parse_comment_str (element, comment.content, comment.file.get_name (), comment.first_line, comment.first_column);
+			return parse_comment_str (element, comment.content, comment.file.get_name (),
+									  comment.first_line, comment.first_column);
 		}
 	}
 
-	public Comment? parse_comment_str (Api.Node element, string content, string filename, int first_line, int first_column) {
+	public Comment? parse_comment_str (Api.Node element, string content, string filename,
+									   int first_line, int first_column)
+	{
 		try {
 			Comment doc_comment = parse_comment (content, filename, first_line, first_column);
 			doc_comment.check (_tree, element, filename, _reporter, _settings);
@@ -102,7 +107,9 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		}
 	}
 
-	private Comment parse_comment (string content, string filename, int first_line, int first_column) throws ParserError {
+	private Comment parse_comment (string content, string filename, int first_line, int first_column)
+								   throws ParserError
+	{
 		_parser = _comment_parser;
 		_scanner = _comment_scanner;
 		_stack.clear ();
@@ -172,7 +179,8 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					((Paragraph) ((ListItem) peek ()).content[0]).content.add (_factory.create_text (" "));
 					return;
 				} else if (list.bullet != bullet) {
-					_parser.error (null, "Invalid bullet type '%s': expected '%s'".printf (bullet_type_string (bullet), bullet_type_string (list.bullet)));
+					_parser.error (null, "Invalid bullet type '%s': expected '%s'"
+						.printf (bullet_type_string (bullet), bullet_type_string (list.bullet)));
 					return;
 				}
 
@@ -236,7 +244,9 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 		if (head is Text) {
 			text_node = (Text) head;
-		} else if (head is InlineContent && ((InlineContent) head).content.size > 0 && ((InlineContent) head).content.last () is Text) {
+		} else if (head is InlineContent && ((InlineContent) head).content.size > 0
+			&& ((InlineContent) head).content.last () is Text)
+		{
 			text_node = (Text) ((InlineContent) head).content.last ();
 		} else {
 			text_node = _factory.create_text ();

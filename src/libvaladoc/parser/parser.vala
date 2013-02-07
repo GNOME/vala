@@ -54,7 +54,9 @@ public class Valadoc.Parser : ParserCallback {
 		_root_rule = root_rule;
 	}
 
-	public void parse (string content, string filename, int first_line, int first_column) throws ParserError {
+	public void parse (string content, string filename, int first_line, int first_column)
+					   throws ParserError
+	{
 		_filename = filename;
 		_first_line = first_line;
 		_first_column = first_column;
@@ -161,7 +163,8 @@ public class Valadoc.Parser : ParserCallback {
 		#if HARD_DEBUG
 			Rule? parent_rule = peek_rule ();
 			if (parent_rule != null) {
-				debug ("Reduced to %2d: %s", rule_stack.size - 1, parent_rule.to_string (peek_state ()));
+				debug ("Reduced to %2d: %s", rule_stack.size - 1,
+					   parent_rule.to_string (peek_state ()));
 			}
 		#endif
 	}
@@ -172,7 +175,8 @@ public class Valadoc.Parser : ParserCallback {
 		Object? state = peek_state (offset);
 		while (parent_rule != null) {
 			#if VERY_HARD_DEBUG
-				debug ("WouldAccept - Offset %d; Index %d: %s", offset, rule_stack.size + offset, parent_rule.to_string (state));
+				debug ("WouldAccept - Offset %d; Index %d: %s", offset,
+					rule_stack.size + offset, parent_rule.to_string (state));
 			#endif
 			if (parent_rule.would_accept_token (token, state)) {
 				#if VERY_HARD_DEBUG
@@ -202,7 +206,8 @@ public class Valadoc.Parser : ParserCallback {
 		Object? state = peek_state (offset);
 		while (parent_rule != null) {
 			#if VERY_HARD_DEBUG
-				debug ("WouldReduce - Offset %d; Index %d: %s", offset, rule_stack.size + offset, parent_rule.to_string (state));
+				debug ("WouldReduce - Offset %d; Index %d: %s", offset,
+					rule_stack.size + offset, parent_rule.to_string (state));
 			#endif
 			if (!parent_rule.would_reduce (token, state)) {
 				break;

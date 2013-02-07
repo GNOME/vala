@@ -56,7 +56,9 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 		return null;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 		// TODO Check that the container is an override of an abstract symbol
 		// Also retrieve that abstract symbol _inherited
 
@@ -124,7 +126,9 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 		return null;
 	}
 
-	internal void transform (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	internal void transform (Api.Tree api_root, Api.Node container, string file_path,
+							 ErrorReporter reporter, Settings settings)
+	{
 		ContentElement separator = this;
 		Run right_run = null;
 		Run left_run = null;
@@ -147,7 +151,8 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 		}
 
 		if (separator is Paragraph == false || separator.parent is Comment == false) {
-			reporter.simple_error ("%s: %s: @inheritDoc: error: Parent documentation can't be copied to this location.", file_path, container.get_full_name ());
+			reporter.simple_error ("%s: %s: @inheritDoc: error: Parent documentation can't be copied to this location.",
+								   file_path, container.get_full_name ());
 			return ;
 		}
 

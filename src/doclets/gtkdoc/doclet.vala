@@ -196,7 +196,8 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 			} else if (filename.has_suffix (".h")) {
 				prepare_h_file (filename);
 			} else {
-				reporter.simple_error ("GtkDoc: error: %s is not a supported source file type. Only .h, and .c files are supported.", relative_filename);
+				reporter.simple_error ("GtkDoc: error: %s is not a supported source file type. Only .h, and .c files are supported.",
+									   relative_filename);
 			}
 		}
 
@@ -353,7 +354,8 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 			try {
 				FileUtils.get_contents (main_file, out contents);
 			} catch (Error e) {
-				reporter.simple_error ("GtkDoc: error: Error while reading main file '%s' contents: %s", main_file, e.message);
+				reporter.simple_error ("GtkDoc: error: Error while reading main file '%s' contents: %s",
+									   main_file, e.message);
 				return false;
 			}
 
@@ -366,12 +368,15 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 				// hackish but prevents us from re-creating the whole main file,
 				// which would more even more hackish
 				var builder = new StringBuilder ();
-				builder.append_printf ("\n<chapter>\n<title>%s D-Bus API Reference</title>\n", settings.pkg_name);
+				builder.append_printf ("\n<chapter>\n<title>%s D-Bus API Reference</title>\n",
+									   settings.pkg_name);
 				foreach (var iface in generator.dbus_interfaces) {
-					builder.append_printf ("<xi:include href=\"xml/%s.xml\"/>\n", to_docbook_id (iface.name));
+					builder.append_printf ("<xi:include href=\"xml/%s.xml\"/>\n",
+						to_docbook_id (iface.name));
 				}
 
-				var hierarchy_file = Path.build_filename (settings.path, "%s.hierarchy".printf (settings.pkg_name));
+				var hierarchy_file = Path.build_filename (settings.path, "%s.hierarchy"
+					.printf (settings.pkg_name));
 				if (FileUtils.test (hierarchy_file, FileTest.EXISTS)) {
 					// if hierarchy exists, gtkdoc-mkdb will output it
 					builder.append ("</chapter>\n<chapter id=\"object-tree\">");
@@ -385,7 +390,8 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 			try {
 				FileUtils.set_contents (main_file, contents);
 			} catch (Error e) {
-				reporter.simple_error ("GtkDoc: error: Error while writing main file '%s' contents: %s", main_file, e.message);
+				reporter.simple_error ("GtkDoc: error: Error while writing main file '%s' contents: %s",
+									   main_file, e.message);
 				return false;
 			}
 		}

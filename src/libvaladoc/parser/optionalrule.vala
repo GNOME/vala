@@ -42,7 +42,9 @@ internal class Valadoc.OptionalRule : Rule {
 		return has_start_token (_scheme, token);
 	}
 
-	public override bool accept_token (Token token, ParserCallback parser, Rule.Forward forward) throws ParserError {
+	public override bool accept_token (Token token, ParserCallback parser, Rule.Forward forward)
+									   throws ParserError
+	{
 		var state = parser.get_rule_state () as State;
 		if (state == null) {
 			state = new State ();
@@ -79,6 +81,8 @@ internal class Valadoc.OptionalRule : Rule {
 		if (state == null) {
 			state = new State ();
 		}
-		return "%-15s%-15s(started=%s)".printf (name != null ? name : " ", "[option]", state.started.to_string ());
+		return "%-15s%-15s(started=%s)".printf (name != null ? name : " ",
+												"[option]",
+												state.started.to_string ());
 	}
 }

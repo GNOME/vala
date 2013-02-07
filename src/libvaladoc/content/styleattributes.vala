@@ -98,8 +98,19 @@ public enum Valadoc.Content.VerticalAlign {
 }
 
 public interface Valadoc.Content.StyleAttributes : ContentElement {
-	public abstract HorizontalAlign? horizontal_align { get; set; }
-	public abstract VerticalAlign? vertical_align { get; set; }
-	public abstract string? style { get; set; }
+	public abstract HorizontalAlign? horizontal_align {
+		get;
+		set;
+	}
+
+	public abstract VerticalAlign? vertical_align {
+		get;
+		set;
+	}
+
+	public abstract string? style {
+		get;
+		set;
+	}
 }
 

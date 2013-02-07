@@ -78,18 +78,29 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 		}
 	}
 
-	public string code { get; set; }
-	public Language? language { get; set; }
+	public string code {
+		get;
+		set;
+	}
+
+	public Language? language {
+		get;
+		set;
+	}
 
 	internal SourceCode () {
 		base ();
 		_language = Language.VALA;
 	}
 
-	private string? get_path (string path, Api.Node container, string source_file_path, ErrorReporter reporter) {
+	private string? get_path (string path, Api.Node container, string source_file_path,
+							  ErrorReporter reporter)
+	{
 		// search relative to our file
 		if (!Path.is_absolute (path)) {
-			string relative_to_file = Path.build_path (Path.DIR_SEPARATOR_S, Path.get_dirname (source_file_path), path);
+			string relative_to_file = Path.build_path (Path.DIR_SEPARATOR_S,
+													   Path.get_dirname (source_file_path),
+													   path);
 			if (FileUtils.test (relative_to_file, FileTest.EXISTS | FileTest.IS_REGULAR)) {
 				return (owned) relative_to_file;
 			}
@@ -106,7 +117,9 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 		return path;
 	}
 
-	private void load_source_code (string _path, Api.Node container, string source_file_path, ErrorReporter reporter) {
+	private void load_source_code (string _path, Api.Node container, string source_file_path,
+								   ErrorReporter reporter)
+	{
 		string? path = get_path (_path, container, source_file_path, reporter);
 		if (path == null) {
 			return ;
@@ -119,7 +132,10 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 			code = (owned) content;
 		} catch (FileError err) {
 			string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
-			reporter.simple_error ("%s: %s{{{: error: Can't read file %s: %s", source_file_path, node_segment, path, err.message);
+			reporter.simple_error ("%s: %s{{{: error: Can't read file %s: %s", source_file_path,
+								   node_segment,
+								   path,
+								   err.message);
 		}
 	}
 
@@ -146,7 +162,9 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 
 		return string.joinv ("\n", (string[]) _lines);
 	}
-	public override void check (Api.Tree api_root, Api.Node container, string file_path, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
 		string[] splitted = code.split ("\n", 2);
 		if (splitted[0].strip () == "") {
 			code = splitted[1] ?? "";
@@ -162,7 +180,8 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 				code = splitted[1] ?? "";
 				if (_language == null && name != "none") {
 					string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
-					reporter.simple_warning ("%s: %s{{{: warning: Unsupported programming language '%s'", file_path, node_segment, name);
+					reporter.simple_warning ("%s: %s{{{: warning: Unsupported programming language '%s'",
+											 file_path, node_segment, name);
 				}
 			}
 		}

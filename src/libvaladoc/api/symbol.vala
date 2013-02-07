@@ -35,7 +35,9 @@ public abstract class Valadoc.Api.Symbol : Node {
 		get;
 	}
 
-	public Symbol (Node parent, SourceFile file, string? name, SymbolAccessibility accessibility, void* data) {
+	public Symbol (Node parent, SourceFile file, string? name, SymbolAccessibility accessibility,
+				   void* data)
+	{
 		base (parent, file, name, data);
 
 		this.accessibility = accessibility;
