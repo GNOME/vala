@@ -25,11 +25,13 @@ public class Gtkdoc.Header {
 	public string[]? annotations;
 	public string? value;
 	public double pos;
+	public bool block;
 
-	public Header (string name, string? value = null, double pos = double.MAX) {
+	public Header (string name, string? value = null, double pos = double.MAX, bool block = true) {
 		this.name = name;
 		this.value = value;
 		this.pos = pos;
+		this.block = block;
 	}
 
 	public int cmp (Header header) {

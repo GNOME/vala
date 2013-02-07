@@ -68,6 +68,24 @@ public class Gtkdoc.Generator : Api.Visitor {
 	private DBus.Interface current_dbus_interface;
 	private DBus.Member current_dbus_member;
 
+	private string combine_inline_docs (string? str1, string? str2) {
+		StringBuilder builder = new StringBuilder ();
+		if (str1 != null) {
+			builder.append (str1._chomp ());
+		}
+
+		if (builder.len > 0 && builder.str[builder.len - 1] != '.' && str2 != null) {
+			builder.append (". ");
+		}
+
+		if (str2 != null) {
+			builder.append_c (' ');
+			builder.append (str2);
+		}
+
+		return (owned) builder.str;
+	}
+
 	private Api.Node? current_method_or_delegate {
 		get {
 			if (current_method != null) {
@@ -180,8 +198,14 @@ public class Gtkdoc.Generator : Api.Visitor {
 			foreach (var lang_header in lang_headers) {
 				if (doc_header.name == lang_header.name) {
 					header.annotations = lang_header.annotations;
-					if (lang_header.value != null) {
+					if (lang_header.value == null) {
+						continue;
+					}
+
+					if (lang_header.block) {
 						header.value += "<para>%s</para>".printf (lang_header.value);
+					} else {
+						header.value = combine_inline_docs (lang_header.value, header.value);
 					}
 				}
 			}
@@ -271,12 +295,12 @@ public class Gtkdoc.Generator : Api.Visitor {
 		return gcomment;
 	}
 
-	private Header? add_custom_header (string name, string? comment, string[]? annotations = null, double pos = double.MAX) {
+	private Header? add_custom_header (string name, string? comment, string[]? annotations = null, double pos = double.MAX, bool block = true) {
 		if (comment == null && annotations == null) {
 			return null;
 		}
 
-		var header = new Header (name, comment, pos);
+		var header = new Header (name, comment, pos, block);
 		header.annotations = annotations;
 		current_headers.add (header);
 		return header;
@@ -384,6 +408,16 @@ public class Gtkdoc.Generator : Api.Visitor {
 		}
 
 		add_custom_header ("parent_iface", "the parent interface structure");
+		if (iface.get_attribute ("GenericAccessors") != null) {
+			var type_parameters = iface.get_children_by_type (NodeType.TYPE_PARAMETER, false);
+			foreach (Api.Node _type in type_parameters) {
+				var type = _type as Api.TypeParameter;
+				string type_name_down = type.name.down ();
+				add_custom_header ("get_%s_type".printf (type_name_down), "The #GType for %s".printf (type_name_down));
+				add_custom_header ("get_%s_dup_func".printf (type_name_down), "A dup function for #%sIface.get_%s_type()".printf (iface.get_cname (), type_name_down));
+				add_custom_header ("get_%s_destroy_func".printf (type_name_down), "A destroy function for #%sIface.get_%s_type()".printf (iface.get_cname (), type_name_down));
+			}
+		}
 		gcomment = add_symbol (iface.get_filename (), iface.get_cname () + "Iface");
 		gcomment.brief_comment = "Interface for creating %s implementations.".printf (get_docbook_link (iface));
 
@@ -656,6 +690,16 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		var gcomment = add_comment (prop.get_filename(), "%s:%s".printf (current_cname, prop.get_cname ()), prop.documentation);
 		prop.accept_all_children (this);
 
+		Api.TypeParameter type_parameter = prop.property_type.data_type as Api.TypeParameter;
+		string? return_type_link = null;
+		if (type_parameter != null) {
+			if (type_parameter.parent is Api.Class) {
+				return_type_link = "#%s:%s-type".printf (get_cname (prop.parent), type_parameter.name.down ());
+			} else if (type_parameter.parent is Api.Interface && ((Api.Symbol) type_parameter.parent).get_attribute ("GenericAccessors") != null) {
+				return_type_link = "#_%sIface.get_%s_type()".printf (get_cname (type_parameter.parent), type_parameter.name.down ());
+			}
+		}
+
 		// Handle attributes for things like deprecation.
 		process_attributes (prop, gcomment);
 
@@ -663,6 +707,9 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			var getter_gcomment = add_symbol (prop.get_filename(), prop.getter.get_cname ());
 			getter_gcomment.headers.add (new Header ("self", "the %s instance to query".printf (get_docbook_link (prop.parent)), 1));
 			getter_gcomment.returns = "the value of the %s property".printf (get_docbook_link (prop));
+			if (return_type_link != null) {
+				getter_gcomment.returns += " of type " + return_type_link;
+			}
 			getter_gcomment.brief_comment = "Get and return the current value of the %s property.".printf (get_docbook_link (prop));
 			getter_gcomment.long_comment = combine_comments (gcomment.brief_comment, gcomment.long_comment);
 
@@ -680,7 +727,8 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		if (prop.setter != null && !prop.setter.is_private && prop.setter.is_set) {
 			var setter_gcomment = add_symbol (prop.get_filename(), prop.setter.get_cname ());
 			setter_gcomment.headers.add (new Header ("self", "the %s instance to modify".printf (get_docbook_link (prop.parent)), 1));
-			setter_gcomment.headers.add (new Header ("value", "the new value of the %s property".printf (get_docbook_link (prop)), 2));
+			string type_desc = (return_type_link != null)? " of type " + return_type_link : "";
+			setter_gcomment.headers.add (new Header ("value", "the new value of the %s property%s".printf (get_docbook_link (prop), type_desc), 2));
 			setter_gcomment.brief_comment = "Set the value of the %s property to @value.".printf (get_docbook_link (prop));
 			setter_gcomment.long_comment = combine_comments (gcomment.brief_comment, gcomment.long_comment);
 
@@ -693,6 +741,11 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 
 			/* Copy versioning headers such as deprecation and since lines. */
 			setter_gcomment.versioning = gcomment.versioning;
+		}
+
+		if (return_type_link != null) {
+			string return_type_desc = "<para>Holds a value from type #%s:%s-type.</para>".printf (get_cname (prop.parent), type_parameter.name.down ());
+			gcomment.long_comment = combine_inline_docs (return_type_desc, gcomment.long_comment);
 		}
 	}
 
@@ -739,6 +792,22 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		}
 
 		var gcomment = add_symbol (d.get_filename(), d.get_cname(), d.documentation);
+		Api.TypeParameter type_parameter = d.return_type.data_type as Api.TypeParameter;
+		if (type_parameter != null) {
+			if (type_parameter.parent is Api.Class) {
+				string return_type_desc = "A value from type #%s:%s-type.".printf (get_cname (d.parent), type_parameter.name.down ());
+				gcomment.returns = combine_inline_docs (return_type_desc, gcomment.returns);
+			} else if (type_parameter.parent is Api.Interface && ((Api.Symbol) type_parameter.parent).get_attribute ("GenericAccessors") != null) {
+				string return_type_desc = "A value from type #_%sIface.get_%s_type().".printf (get_cname (d.parent), type_parameter.name.down ());
+				gcomment.returns = combine_inline_docs (return_type_desc, gcomment.returns);
+			/*
+			} else if (type_parameter.parent is Api.Struct) {
+				// type not stored & not allowed
+			} else if (type_parameter.parent == d) {
+				// type not available as argument
+			*/
+			}
+		}
 	
 		// Handle attributes for things like deprecation.
 		process_attributes (d, gcomment);
@@ -771,6 +840,18 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			current_dbus_member.comment = dbuscomment;
 			current_dbus_interface.add_signal (current_dbus_member);
 		}
+
+		Api.TypeParameter type_parameter = sig.return_type.data_type as Api.TypeParameter;
+		if (type_parameter != null) {
+			if (type_parameter.parent is Api.Class) {
+				string return_type_desc = "A value from type #%s:%s-type.".printf (get_cname (type_parameter.parent), type_parameter.name.down ());
+				gcomment.returns = combine_inline_docs (return_type_desc, gcomment.returns);
+			} else if (type_parameter.parent is Api.Interface && ((Api.Symbol) type_parameter.parent).get_attribute ("GenericAccessors") != null) {
+				string return_type_desc = "A value from type #_%sIface.get_%s_type().".printf (get_cname (type_parameter.parent), type_parameter.name.down ());
+				gcomment.returns = combine_inline_docs (return_type_desc, gcomment.returns);
+			}
+		}
+
 
 		// Handle attributes for things like deprecation.
 		process_attributes (sig, gcomment);
@@ -810,6 +891,28 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 
 		if (!m.is_static && !m.is_constructor) {
 			add_custom_header ("self", "the %s instance".printf (get_docbook_link (m.parent)), null, 0.1);
+		}
+
+		if (m.is_constructor) {
+			// parent type parameters:
+			var type_parameters = ((Api.Node) m.parent).get_children_by_type (NodeType.TYPE_PARAMETER, false);
+			foreach (Api.Node _type in type_parameters) {
+				var type = _type as Api.TypeParameter;
+				string type_name_down = type.name.down ();
+				add_custom_header (type_name_down + "_type", "A #GType");
+				add_custom_header (type_name_down + "_dup_func", "A dup function for @%s_type".printf (type_name_down));
+				add_custom_header (type_name_down + "_destroy_func", "A destroy function for @%s_type".printf (type_name_down));
+			}
+		}
+
+		// type parameters:
+		var type_parameters = m.get_children_by_type (NodeType.TYPE_PARAMETER, false);
+		foreach (Api.Node _type in type_parameters) {
+			var type = _type as Api.TypeParameter;
+			string type_name_down = type.name.down ();
+			add_custom_header (type_name_down + "_type", "The #GType for @%s".printf (type_name_down), null, 0.2);
+			add_custom_header (type_name_down + "_dup_func", "A dup function for @%s_type".printf (type_name_down), null, 0.3);
+			add_custom_header (type_name_down + "_destroy_func", "A destroy function for @%s_type".printf (type_name_down), null, 0.4);
 		}
 
 		m.accept_children ({NodeType.FORMAL_PARAMETER, NodeType.TYPE_PARAMETER}, this);
@@ -854,6 +957,20 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		current_method = old_method;
 		current_dbus_member = old_dbus_member;
 
+		string? return_type_desc = null;
+		Api.TypeParameter type_parameter = m.return_type.data_type as Api.TypeParameter;
+		if (type_parameter != null) {
+			if (type_parameter.parent is Api.Class) {
+				return_type_desc = "A value from type #%s:%s-type.".printf (get_cname (m.parent), type_parameter.name.down ());
+			} else if (type_parameter.parent is Api.Interface && ((Api.Symbol) type_parameter.parent).get_attribute ("GenericAccessors") != null) {
+				return_type_desc = "A value from type #_%sIface.get_%s_type().".printf (get_cname (m.parent), type_parameter.name.down ());
+			} else if (type_parameter.parent is Api.Struct) {
+				// type not stored
+			} else if (type_parameter.parent == m) {
+				return_type_desc = "value from type @%s_type.".printf (type_parameter.name.down ());
+			}
+		}
+
 		if (m.is_yields) {
 			var finish_gcomment = add_symbol (m.get_filename(), m.get_finish_function_cname (), m.documentation);
 			finish_gcomment.headers.clear ();
@@ -869,7 +986,16 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			var see_also = finish_gcomment.see_also; // vala bug
 			see_also += get_docbook_link (m);
 			finish_gcomment.see_also = see_also;
+
+			if (return_type_desc != null) {
+				finish_gcomment.returns = combine_inline_docs (return_type_desc, finish_gcomment.returns);
+			}
+		} else {
+			if (return_type_desc != null) {
+				gcomment.returns = combine_inline_docs (return_type_desc, gcomment.returns);
+			}
 		}
+
 
 		if (m.is_constructor && !m.get_cname ().has_suffix ("_new")) {
 			// Hide secondary _construct methods from the documentation (the primary _construct method is hidden in visit_class())
@@ -929,6 +1055,19 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			direction = "inout";
 		}
 		annotations += direction;
+
+		TypeParameter type_parameter = param.parameter_type.data_type as TypeParameter;
+		if (type_parameter != null) {
+			if (type_parameter.parent is Api.Class) {
+				add_custom_header (param_name, "A parameter from type #%s:%s-type.".printf (get_cname (type_parameter.parent), type_parameter.name.down ()), null, double.MAX, false);
+			} else if (type_parameter.parent is Api.Interface && ((Api.Symbol) type_parameter.parent).get_attribute ("GenericAccessors") != null) {
+				add_custom_header (param_name, "A parameter from type #_%sIface.get_%s_type().".printf (get_cname (type_parameter.parent), type_parameter.name.down ()), null, double.MAX, false);
+			} else if (type_parameter.parent is Api.Struct) {
+				// type not stored
+			} else if (type_parameter.parent is Method) {
+				add_custom_header (param_name, "A parameter from type @%s_type.".printf (type_parameter.name.down ()), null, double.MAX, false);
+			}
+		}
 
 		if (param.parameter_type.is_nullable) {
 			annotations += "allow-none";
