@@ -200,10 +200,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	//
 
 	private void process_attributes (Api.Symbol parent, GLib.List<Vala.Attribute> lst) {
-		// attributes wihtout arguments:
+		// attributes without arguments:
 		string[] attributes = {
 				"ReturnsModifiedPointer",
 				"DestroysInstance",
+				"GenericAccessors",
 				"NoAccessorMethod",
 				"NoArrayLength",
 				"Experimental",
