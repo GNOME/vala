@@ -1049,6 +1049,9 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 		var annotations = new string[]{};
 		var direction = "in";
 
+		// Avoid "Parameter description for * is missing" warnings
+		add_custom_header (param_name, "&nbsp;", null, double.MAX, false);
+
 		if (param.is_out) {
 			direction = "out";
 		} else if (param.is_ref) {
