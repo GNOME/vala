@@ -302,6 +302,14 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return Vala.CCodeBaseModule.get_ccode_dup_function (sym);
 	}
 
+	private string? get_copy_function (Vala.TypeSymbol sym) {
+		return Vala.CCodeBaseModule.get_ccode_copy_function (sym);
+	}
+
+	private string? get_destroy_function (Vala.TypeSymbol sym) {
+		return Vala.CCodeBaseModule.get_ccode_destroy_function (sym);
+	}
+
 	private string? get_free_function (Vala.TypeSymbol sym) {
 		return Vala.CCodeBaseModule.get_ccode_free_function (sym);
 	}
@@ -1009,7 +1017,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		bool is_basic_type = element.base_type == null && (element.is_boolean_type () || element.is_floating_type () || element.is_integer_type ());
 
-		Struct node = new Struct (parent, file, element.name, get_access_modifier (element), comment, get_cname (element), get_type_macro_name (element), get_type_function_name (element), get_ccode_type_id (element), get_dup_function (element), get_free_function (element), is_basic_type, element);
+		Struct node = new Struct (parent, file, element.name, get_access_modifier (element), comment, get_cname (element), get_type_macro_name (element), get_type_function_name (element), get_ccode_type_id (element), get_dup_function (element), get_copy_function (element), get_destroy_function (element), get_free_function (element), is_basic_type, element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 

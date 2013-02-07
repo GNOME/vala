@@ -29,15 +29,19 @@ using Valadoc.Content;
  */
 public class Valadoc.Api.Struct : TypeSymbol {
 	private string? dup_function_cname;
+	private string? copy_function_cname;
 	private string? free_function_cname;
+	private string? destroy_function_cname;
 	private string? type_id;
 	private string? cname;
 
-	public Struct (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? type_macro_name, string? type_function_name, string? type_id, string? dup_function_cname, string? free_function_cname, bool is_basic_type, void* data) {
+	public Struct (Node parent, SourceFile file, string name, SymbolAccessibility accessibility, SourceComment? comment, string? cname, string? type_macro_name, string? type_function_name, string? type_id, string? dup_function_cname, string? copy_function_cname, string? destroy_function_cname, string? free_function_cname, bool is_basic_type, void* data) {
 		base (parent, file, name, accessibility, comment, type_macro_name, null, null, type_function_name, is_basic_type, data);
 
 		this.dup_function_cname = dup_function_cname;
+		this.copy_function_cname = copy_function_cname;
 		this.free_function_cname = free_function_cname;
+		this.destroy_function_cname = destroy_function_cname;
 
 		this.cname = cname;
 	}
@@ -74,10 +78,25 @@ public class Valadoc.Api.Struct : TypeSymbol {
 	}
 
 	/**
+	 * Returns the C function name that copies instances of this data
+	 * type.
+	 */
+	public string? get_copy_function_cname () {
+		return copy_function_cname;
+	}
+
+	/**
 	 * Returns the C function name that frees instances of this data type.
 	 */
 	public string? get_free_function_cname () {
 		return free_function_cname;
+	}
+
+	/**
+	 * Returns the C function name that destroys instances of this data type.
+	 */
+	public string? get_destroy_function_cname () {
+		return destroy_function_cname;
 	}
 
 	/**
