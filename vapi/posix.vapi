@@ -1704,7 +1704,9 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t readlink (string path, char[] buf);
 	[CCode (cheader_filename = "sys/uio.h")]
-	public ssize_t readv (int fd, iovector vector, int iovcnt);
+	public ssize_t readv (int fd, iovector vector, int iovcnt = 1);
+	[CCode (cname = "readv", cheader_filename = "sys/uio.h")]
+	public ssize_t read_vectors (int fd, iovector[] vector);
 	[CCode (cheader_filename = "unistd.h,sys/types.h")]
 	public int setgid (gid_t gid);
 	[CCode (cheader_filename = "unistd.h,sys/types.h")]
@@ -1716,7 +1718,9 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t pwrite (int fd, void* buf, size_t count, off_t offset);
 	[CCode (cheader_filename = "sys/uio.h")]
-	public ssize_t writev (int fd, iovector vector, int iovcnt);
+	public ssize_t writev (int fd, iovector vector, int iovcnt = 1);
+	[CCode (cname = "writev", cheader_filename = "sys/uio.h")]
+	public ssize_t write_vectors (int fd, iovector[] vector);
 	[CCode (cheader_filename = "unistd.h")]
 	public off_t lseek(int fildes, off_t offset, int whence);
 
