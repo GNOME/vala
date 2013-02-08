@@ -744,6 +744,9 @@ namespace Xml {
 		[CCode (cname = "xmlSetListDoc")]
 		public void set_list_doc (Doc* doc);
 
+		[CCode (cname = "xmlSetNs")]
+		public void set_ns (Ns* ns);
+
 		[CCode (cname = "xmlSetNsProp")]
 		public Attr* set_ns_prop (Ns* ns, string name, string value);
 
