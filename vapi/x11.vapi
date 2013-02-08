@@ -542,8 +542,7 @@ namespace X {
 		public Cursor cursor;		/* cursor to be displayed (or None) */
 	}
 
-	[CCode(cname = "XWindowAttributes",
-	       cheader_filename = "X11/Xlib.h,X11/Xatom.h,X11/Xutil.h")]
+	[CCode (cname = "XWindowAttributes", has_destroy_function = false, cheader_filename = "X11/Xlib.h,X11/Xatom.h,X11/Xutil.h")]
 	public struct WindowAttributes {
 		public int x;
 		public int y;			/* location of window */
