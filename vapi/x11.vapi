@@ -313,6 +313,12 @@ namespace X {
 
 		[CCode (cname = "XListProperties")]
 		public X.Atom[] list_properties (Window w);
+
+		[CCode (cname = "XGetVisualInfo")]
+		public X.VisualInfo? get_visual_info (long vinfo_mask, X.VisualInfo template, out int nitems_return);
+
+		[CCode (cname = "XMatchVisualInfo")]
+		public X.Status match_visual_info (int screen, int depth, int @class, out X.VisualInfo vinfo_return);
 	}
 
 	[Compact]
@@ -413,6 +419,21 @@ namespace X {
 	public struct VisualID {
 	}
 
+	[CCode (cname = "XVisualInfo")]
+	public struct VisualInfo {
+		public unowned X.Visual visual;
+		public X.VisualID visualid;
+		public int screen;
+		public int depth;
+		public int @class;
+		public ulong red_mask;
+		public ulong green_mask;
+		public ulong blue_mask;
+		public int colormap_size;
+		public int bits_per_rgb;
+	}
+
+
 	[SimpleType]
 	[IntegerType (rank = 9)]
 	[CCode (cname = "Time")]
@@ -467,6 +488,7 @@ namespace X {
 	[CCode (ref_function = "", unref_function = "")]
 	[Compact]
 	public class Visual {
+		public VisualID get_visual_id ();
 	}
 
 	public struct WindowChanges {
@@ -1261,7 +1283,6 @@ namespace X {
 	public const X.Atom XA_NORM_SPACE;
 	public const X.Atom XA_MAX_SPACE;
 	public const X.Atom XA_END_SPACE;
-	public const X.Atom XA_STRING;
 	public const X.Atom XA_SUPERSCRIPT_X;
 	public const X.Atom XA_SUPERSCRIPT_Y;
 	public const X.Atom XA_SUBSCRIPT_X;
