@@ -608,6 +608,36 @@ namespace Xml {
 		public const string name;
 	}
 
+	[CCode (has_target = false, cname = "xmlHashScannerFull", cheader_filename = "libxml/hash.h")]
+	public delegate void HashScannerFull (void *payload, void *user_data, string name, string name2, string name3);
+
+	[CCode (has_target = false, cname = "xmlHashDeallocator", cheader_filename = "libxml/hash.h")]
+	public delegate void HashDeallocator (void *payload, string name);
+
+	[Compact]
+	[CCode (cname = "xmlHashTable", cheader_filename="libxml/hash.h")]
+	public class HashTable {
+		[CCode (cname = "xmlHashCreate")]
+		public HashTable (int size);
+
+		[CCode (cname = "xmlHashAddEntry")]
+		public int add_entry (string name, void *user_data);
+
+		[CCode (cname = "xmlHashFree")]
+		public void free (HashDeallocator? f);
+
+		[CCode (cname = "xmlHashLookup")]
+		public void *lookup (string name);
+
+		[CCode (cname = "xmlHashRemoveEntry")]
+		public int remove_entry (string name, HashDeallocator? f);
+
+		[CCode (cname = "xmlHashScanFull")]
+		public void scan_full (HashScannerFull f, void *user_data);
+
+		[CCode (cname = "xmlHashSize")]
+		public int size ();
+	}
 
 	[Compact]
 	[CCode (cname = "xmlNode", free_function = "xmlFreeNode", cheader_filename = "libxml/tree.h")]
