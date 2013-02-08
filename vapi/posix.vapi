@@ -1592,6 +1592,13 @@ namespace Posix {
 	public struct dev_t {
 	}
 
+	[CCode (cheader_filename = "sys/types.h")]
+	uint major (dev_t dev);
+	[CCode (cheader_filename = "sys/types.h")]
+	uint minor (dev_t dev);
+	[CCode (cheader_filename = "sys/types.h")]
+	dev_t makedev (int maj, int min);
+
 	[SimpleType]
 	[IntegerType (rank = 9)]
 	[CCode (cheader_filename = "sys/types.h")]
