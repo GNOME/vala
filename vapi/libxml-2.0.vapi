@@ -336,6 +336,19 @@ namespace Xml {
 	}
 
 	[Compact]
+	[CCode (cname = "xmlBuffer", free_function = "xmlBufferFree", cheader_filename = "libxml/tree.h")]
+	public class Buffer {
+		[CCode (cname = "xmlBufferCreate")]
+		public Buffer ();
+
+		[CCode (cname = "xmlBufferContent")]
+		public unowned string content ();
+
+		[CCode (cname = "xmlNodeDump")]
+		public int node_dump (Xml.Doc *doc, Xml.Node *cur, int level, int format);
+	}
+
+	[Compact]
 	[CCode (cname = "xmlDoc", free_function = "xmlFreeDoc", cheader_filename = "libxml/tree.h,libxml/parser.h")]
 	public class Doc {
 		public ElementType type;
