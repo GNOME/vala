@@ -935,8 +935,29 @@ namespace Xml {
 	/* xmlschemas - incomplete XML Schemas structure implementation */
 
 	[Compact]
-	[CCode (cname = "xmlSchemaValidCtxt", cheader_filename = "libxml/xmlreader.h")]
+	[CCode (cname = "xmlSchema", free_function = "xmlSchemaFree", cheader_filename = "libxml/xmlschemas.h")]
+	public class Schema {
+		[CCode (cname = "xmlSchemaDump", instance_pos = -1)]
+		public void dump (GLib.FileStream output);
+	}
+
+	[Compact]
+	[CCode (cname = "xmlSchemaParserCtxt", free_function = "xmlSchemaFreeParserCtxt", cheader_filename = "libxml/xmlschemas.h")]
+	public class SchemaParserCtxt {
+		[CCode (cname = "xmlSchemaNewParserCtxt")]
+		public SchemaParserCtxt (string URL);
+		[CCode (cname = "xmlSchemaNewDocParserCtxt")]
+		public SchemaParserCtxt.from_doc (Xml.Doc doc);
+		[CCode (cname = "xmlSchemaNewMemParserCtxt")]
+		public SchemaParserCtxt.from_buffer (uint8[] buffer);
+		[CCode (cname = "xmlSchemaParse")]
+		public Xml.Schema parse ();
+	}
+
+	[Compact]
+	[CCode (cname = "xmlSchemaValidCtxt", free_function = "xmlSchemaFreeValidCtxt", cheader_filename = "libxml/xmlschemas.h")]
 	public class SchemaValidCtxt {
+		public SchemaValidCtxt (Xml.Schema schema);
 	}
 
 	/* xmlsave */
