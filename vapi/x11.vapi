@@ -310,6 +310,9 @@ namespace X {
 
 		[CCode (cname = "XQueryExtension")]
 		public bool query_extension(string name, out int major_opcode, out int first_event_return, out int first_error_return);
+
+		[CCode (cname = "XListProperties")]
+		public X.Atom[] list_properties (Window w);
 	}
 
 	[Compact]
@@ -1259,6 +1262,7 @@ namespace X {
 	public const X.Atom XA_NORM_SPACE;
 	public const X.Atom XA_MAX_SPACE;
 	public const X.Atom XA_END_SPACE;
+	public const X.Atom XA_STRING;
 	public const X.Atom XA_SUPERSCRIPT_X;
 	public const X.Atom XA_SUPERSCRIPT_Y;
 	public const X.Atom XA_SUBSCRIPT_X;
