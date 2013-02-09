@@ -30,8 +30,18 @@ namespace Curses {
 	public const int COLORS;
 	public const int COLOR_PAIRS;
 
-	public enum Color {
-		BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE
+	[SimpleType]
+	[CCode (cname = "short", has_type_id = false, default_value = "0")]
+	[IntegerType (rank = 4, min = -32768, max = 32767)]
+	public struct Color : short {
+		public const Curses.Color BLACK;
+		public const Curses.Color RED;
+		public const Curses.Color GREEN;
+		public const Curses.Color YELLOW;
+		public const Curses.Color BLUE;
+		public const Curses.Color MAGENTA;
+		public const Curses.Color CYAN;
+		public const Curses.Color WHITE;
 	}
 
 	public enum Acs {
