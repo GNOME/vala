@@ -51,6 +51,9 @@ namespace Vte {
 		public unowned Vte.Pty get_pty_object ();
 		public long get_row_count ();
 		public unowned string get_status_line ();
+		public string get_text ([CCode (delegate_target_pos = 1.5)] Vte.SelectionFunc? is_selected, out GLib.Array<Vte.CharAttributes> attributes);
+		public string get_text_include_trailing_spaces ([CCode (delegate_target_pos = 1.5)] Vte.SelectionFunc? is_selected, out GLib.Array<Vte.CharAttributes> attributes);
+		public string get_text_range (long start_row, long start_col, long end_row, long end_col, [CCode (delegate_target_pos = 5.5)] Vte.SelectionFunc? is_selected, out GLib.Array<Vte.CharAttributes> attributes);
 		public bool get_visible_bell ();
 		public unowned string get_window_title ();
 		public void im_append_menuitems (Gtk.MenuShell menushell);
@@ -192,8 +195,8 @@ namespace Vte {
 		public virtual signal void text_scrolled (int delta);
 		public virtual signal void window_title_changed ();
 	}
-	[CCode (cheader_filename = "vte/vte.h", cname = "_VteCharAttributes", has_type_id = false)]
-	public struct _CharAttributes {
+	[CCode (cheader_filename = "vte/vte.h", has_type_id = false)]
+	public struct CharAttributes {
 	}
 	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_PTY_", type_id = "vte_pty_flags_get_type ()")]
 	[Flags]

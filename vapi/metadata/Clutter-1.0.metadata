@@ -201,6 +201,7 @@ threads_add_timeout_full name="add_full" parent="Clutter.Threads.Timeout"
 util_next_p2 name="next_power_of_2" parent="Clutter.Util"
 
 // Backwards compatibility
+Color.alloc symbol_type="function"
 Point.alloc symbol_type="function"
 Rect.alloc symbol_type="function"
 Size.alloc symbol_type="function"

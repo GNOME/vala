@@ -11,6 +11,11 @@ XMLRPCError parent="Soup.XMLRPC" name="Error"
 xmlrpc_set_response.type skip
 HTTPVersion.http_* name="http_(.+)"
 
+// Backwards compatibility
+Requester deprecated_since="2.42" replacement="Session"
+Requester
+  .request* skip=false unowned=false
+
 // Report upstream
 Soup cheader_filename="libsoup/soup.h"
 add_* skip=false type="unowned GLib.TimeoutSource"

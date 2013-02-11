@@ -428,7 +428,7 @@ atspi-2:
 	$(GENVAPI) --library $(srcdir)/atspi-2 --metadatadir $(METADATADIR) $(GIRDIR)/Atspi-2.0.gir
 
 clutter-1.0:
-	$(GENVAPI) --library $(srcdir)/clutter-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Clutter-1.0-custom.vala --pkg atk --pkg cairo --pkg pango --pkg cogl-1.0 --pkg json-glib-1.0 $(GIRDIR)/Clutter-1.0.gir
+	$(GENVAPI) --library $(srcdir)/clutter-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Clutter-1.0-custom.vala --pkg atk --pkg cairo --pkg pango --pkg cogl-1.0 --pkg cogl-pango-1.0 --pkg json-glib-1.0 $(GIRDIR)/Clutter-1.0.gir
 
 clutter-gtk-0.10:
 	$(GENVAPI) --library $(srcdir)/clutter-gtk-0.10 $(PACKAGESDIR)/clutter-gtk-0.10/clutter-gtk-0.10.gi
@@ -689,7 +689,7 @@ loudmouth-1.0:
 	$(GENVAPI) --library $(srcdir)/loudmouth-1.0 $(PACKAGESDIR)/loudmouth-1.0/loudmouth-1.0-custom.vala $(PACKAGESDIR)/loudmouth-1.0/loudmouth-1.0.gi
 
 mx-1.0:
-	$(GENVAPI) --library $(srcdir)/mx-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Mx-1.0-custom.vala $(GIRDIR)/Mx-1.0.gir
+	$(GENVAPI) --library $(srcdir)/mx-1.0 --metadatadir $(METADATADIR) --pkg clutter-1.0 --pkg cogl-pango-1.0 $(METADATADIR)/Mx-1.0-custom.vala $(GIRDIR)/Mx-1.0.gir
 
 packagekit-glib2:
 	$(GENVAPI) --library $(srcdir)/packagekit-glib2 --metadatadir $(METADATADIR) --pkg gio-2.0 $(GIRDIR)/PackageKitGlib-1.0.gir

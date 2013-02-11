@@ -94,6 +94,12 @@ namespace Gdk {
 		protected PixbufAnimation ();
 		[CCode (has_construct_function = false)]
 		public PixbufAnimation.from_file (string filename) throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		public PixbufAnimation.from_resource (string resource_path) throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		public PixbufAnimation.from_stream (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (cname = "gdk_pixbuf_animation_new_from_stream_async", has_construct_function = false)]
+		public async PixbufAnimation.from_stream_async (GLib.InputStream stream, GLib.Cancellable? cancellable) throws GLib.Error;
 		public int get_height ();
 		public Gdk.PixbufAnimationIter get_iter (GLib.TimeVal? start_time);
 		public unowned Gdk.Pixbuf get_static_image ();

@@ -623,6 +623,7 @@ namespace Atspi {
 		IMAGE_MAP,
 		NOTIFICATION,
 		INFO_BAR,
+		LEVEL_BAR,
 		LAST_DEFINED;
 		public static string get_name (Atspi.Role role);
 	}
@@ -790,8 +791,6 @@ namespace Atspi {
 	public static Atspi.Accessible get_desktop (int i);
 	[CCode (cheader_filename = "atspi/atspi.h")]
 	public static int get_desktop_count ();
-	[CCode (cheader_filename = "atspi/atspi.h")]
-	public static GLib.Array<void*> get_desktop_list ();
 	[CCode (cheader_filename = "atspi/atspi.h")]
 	public static int init ();
 	[CCode (cheader_filename = "atspi/atspi.h")]

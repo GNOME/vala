@@ -2,12 +2,6 @@
 
 [CCode (cprefix = "Gtk", gir_namespace = "GtkSource", gir_version = "3.0", lower_case_cprefix = "gtk_")]
 namespace Gtk {
-	namespace SourceCompletionCapability {
-		[CCode (cheader_filename = "gtksourceview/gtksource.h", cname = "GTK_SOURCE_COMPLETION_CAPABILITY_AUTOMATIC")]
-		public const string AUTOMATIC;
-		[CCode (cheader_filename = "gtksourceview/gtksource.h", cname = "GTK_SOURCE_COMPLETION_CAPABILITY_INTERACTIVE")]
-		public const string INTERACTIVE;
-	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_buffer_get_type ()")]
 	[GIR (name = "Buffer")]
 	public class SourceBuffer : Gtk.TextBuffer {
@@ -70,6 +64,7 @@ namespace Gtk {
 		public unowned Gtk.SourceCompletionInfo get_info_window ();
 		public unowned GLib.List<Gtk.SourceCompletionProvider> get_providers ();
 		public unowned Gtk.SourceView get_view ();
+		[Deprecated (since = "3.8")]
 		public void move_window (Gtk.TextIter iter);
 		[NoWrapper]
 		public virtual bool proposal_activated (Gtk.SourceCompletionProvider provider, Gtk.SourceCompletionProposal proposal);
@@ -107,7 +102,7 @@ namespace Gtk {
 	public class SourceCompletionContext : GLib.InitiallyUnowned {
 		[CCode (has_construct_function = false)]
 		protected SourceCompletionContext ();
-		public void add_proposals (Gtk.SourceCompletionProvider provider, GLib.List<Gtk.SourceCompletionProposal> proposals, bool finished);
+		public void add_proposals (Gtk.SourceCompletionProvider provider, GLib.List<Gtk.SourceCompletionProposal>? proposals, bool finished);
 		public Gtk.SourceCompletionActivation get_activation ();
 		public Gtk.TextIter get_iter ();
 		[NoAccessorMethod]
@@ -123,8 +118,10 @@ namespace Gtk {
 	public class SourceCompletionInfo : Gtk.Window, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		public SourceCompletionInfo ();
+		[Deprecated (since = "3.8")]
 		public unowned Gtk.Widget get_widget ();
 		public void move_to_iter (Gtk.TextView view, Gtk.TextIter? iter);
+		[Deprecated (since = "3.8")]
 		public void set_widget (Gtk.Widget? widget);
 		public virtual signal void before_show ();
 	}
@@ -148,11 +145,6 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string text { owned get; set; }
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h")]
-	[Compact]
-	[GIR (name = "CompletionModel")]
-	public class SourceCompletionModel {
-	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_completion_words_get_type ()")]
 	[GIR (name = "CompletionWords")]
 	public class SourceCompletionWords : GLib.Object, Gtk.SourceCompletionProvider {
@@ -174,16 +166,6 @@ namespace Gtk {
 		public uint proposals_batch_size { get; set construct; }
 		[NoAccessorMethod]
 		public uint scan_batch_size { get; set construct; }
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h")]
-	[Compact]
-	[GIR (name = "ContextEngine")]
-	public class SourceContextEngine {
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h")]
-	[Compact]
-	[GIR (name = "Engine")]
-	public class SourceEngine {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_gutter_get_type ()")]
 	[GIR (name = "Gutter")]
@@ -260,16 +242,6 @@ namespace Gtk {
 		public virtual signal bool query_tooltip (Gtk.TextIter iter, Cairo.RectangleInt area, int x, int y, Gtk.Tooltip tooltip);
 		[HasEmitter]
 		public virtual signal void queue_draw ();
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h")]
-	[Compact]
-	[GIR (name = "GutterRendererLines")]
-	public class SourceGutterRendererLines {
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h")]
-	[Compact]
-	[GIR (name = "GutterRendererMarks")]
-	public class SourceGutterRendererMarks {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_gutter_renderer_pixbuf_get_type ()")]
 	[GIR (name = "GutterRendererPixbuf")]
@@ -381,11 +353,6 @@ namespace Gtk {
 		public signal string query_tooltip_markup (Gtk.SourceMark mark);
 		public signal string query_tooltip_text (Gtk.SourceMark mark);
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h")]
-	[Compact]
-	[GIR (name = "PixbufHelper")]
-	public class SourcePixbufHelper {
-	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_print_compositor_get_type ()")]
 	[GIR (name = "PrintCompositor")]
 	public class SourcePrintCompositor : GLib.Object {
@@ -440,11 +407,6 @@ namespace Gtk {
 		public uint print_line_numbers { get; set; }
 		public uint tab_width { get; set; }
 		public Gtk.WrapMode wrap_mode { get; set; }
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h")]
-	[Compact]
-	[GIR (name = "Regex")]
-	public class SourceRegex {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_style_get_type ()")]
 	[GIR (name = "Style")]
@@ -517,11 +479,6 @@ namespace Gtk {
 		public string[] scheme_ids { get; }
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] search_path { get; set; }
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h")]
-	[Compact]
-	[GIR (name = "UndoManagerDefault")]
-	public class SourceUndoManagerDefault {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_view_get_type ()")]
 	[GIR (name = "View")]

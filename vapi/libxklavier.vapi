@@ -34,6 +34,7 @@ namespace Xkl {
 		public bool get_from_server (Xkl.Engine engine);
 		public void reset ();
 		public void set_layouts ([CCode (array_length = false, array_null_terminated = true)] string[] new_layouts);
+		public void set_model (string new_model);
 		public void set_options ([CCode (array_length = false, array_null_terminated = true)] string[] new_options);
 		public bool set_to_root_window_property (X.Atom rules_atom_name, string rules_file, Xkl.Engine engine);
 		public void set_variants ([CCode (array_length = false, array_null_terminated = true)] string[] new_variants);
@@ -68,7 +69,7 @@ namespace Xkl {
 		[CCode (has_construct_function = false)]
 		protected Engine ();
 		public static void INT__LONG_LONG (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-		public static void VOID__FLAGS_INT_BOOLEAN (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void VOID__ENUM_INT_BOOLEAN (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 		public void allow_one_switch_to_secondary_group ();
 		public bool backup_names_prop ();
 		[NoWrapper]
@@ -121,6 +122,7 @@ namespace Xkl {
 		public uint default_group { get; }
 		[NoAccessorMethod]
 		public void* display { get; construct; }
+		public Xkl.EngineFeatures features { get; }
 		public bool indicators_handling { get; }
 		public uint max_num_groups { get; }
 		public uint num_groups { get; }
@@ -139,7 +141,7 @@ namespace Xkl {
 		public int32 group;
 		public uint32 indicators;
 	}
-	[CCode (cheader_filename = "libxklavier/xklavier.h", cprefix = "XKLF_", has_type_id = false)]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", cprefix = "XKLF_", type_id = "xkl_engine_features_get_type ()")]
 	[Flags]
 	public enum EngineFeatures {
 		CAN_TOGGLE_INDICATORS,
@@ -149,18 +151,16 @@ namespace Xkl {
 		REQUIRES_MANUAL_LAYOUT_MANAGEMENT,
 		DEVICE_DISCOVERY
 	}
-	[CCode (cheader_filename = "libxklavier/xklavier.h", cprefix = "XKLL_", has_type_id = false)]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", cprefix = "XKLL_", type_id = "xkl_engine_listen_modes_get_type ()")]
 	public enum EngineListenModes {
 		MANAGE_WINDOW_STATES,
 		TRACK_KEYBOARD_STATE,
 		MANAGE_LAYOUTS
 	}
-	[CCode (cheader_filename = "libxklavier/xklavier.h", cprefix = "", has_type_id = false)]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", cprefix = "", type_id = "xkl_engine_state_change_get_type ()")]
 	public enum EngineStateChange {
-		[CCode (cname = "GROUP_CHANGED")]
-		ROUP_CHANGED,
-		[CCode (cname = "INDICATORS_CHANGED")]
-		NDICATORS_CHANGED
+		GROUP_CHANGED,
+		INDICATORS_CHANGED
 	}
 	[CCode (cheader_filename = "libxklavier/xklavier.h", has_target = false)]
 	public delegate void ConfigItemProcessFunc (Xkl.ConfigRegistry config, Xkl.ConfigItem item, void* data);

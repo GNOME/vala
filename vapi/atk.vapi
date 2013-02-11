@@ -650,6 +650,7 @@ namespace Atk {
 		IMAGE_MAP,
 		NOTIFICATION,
 		INFO_BAR,
+		LEVEL_BAR,
 		LAST_DEFINED;
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.Role for_name (string name);
@@ -780,6 +781,16 @@ namespace Atk {
 	public delegate void PropertyChangeHandler (Atk.Object obj, Atk.PropertyValues vals);
 	[CCode (cheader_filename = "atk/atk.h", cname = "GSignalEmissionHook", has_target = false)]
 	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] Atk.Value[] param_values, void* data);
+	[CCode (cheader_filename = "atk/atk.h", cname = "ATK_BINARY_AGE")]
+	public const int BINARY_AGE;
+	[CCode (cheader_filename = "atk/atk.h", cname = "ATK_INTERFACE_AGE")]
+	public const int INTERFACE_AGE;
+	[CCode (cheader_filename = "atk/atk.h", cname = "ATK_MAJOR_VERSION")]
+	public const int MAJOR_VERSION;
+	[CCode (cheader_filename = "atk/atk.h", cname = "ATK_MICRO_VERSION")]
+	public const int MICRO_VERSION;
+	[CCode (cheader_filename = "atk/atk.h", cname = "ATK_MINOR_VERSION")]
+	public const int MINOR_VERSION;
 	[CCode (cheader_filename = "atk/atk.h")]
 	[Deprecated (replacement = "Atk.Util.add_focus_tracker", since = "vala-0.16")]
 	public static uint add_focus_tracker (Atk.EventListener focus_tracker);
@@ -793,11 +804,21 @@ namespace Atk {
 	[Deprecated (replacement = "Atk.Util.focus_tracker_notify", since = "vala-0.16")]
 	public static void focus_tracker_notify (Atk.Object object);
 	[CCode (cheader_filename = "atk/atk.h")]
+	public static uint get_binary_age ();
+	[CCode (cheader_filename = "atk/atk.h")]
 	[Deprecated (replacement = "Atk.Registry.get_default.", since = "vala-0.16")]
 	public static unowned Atk.Registry get_default_registry ();
 	[CCode (cheader_filename = "atk/atk.h")]
 	[Deprecated (replacement = "Atk.Util.get_focus_object", since = "vala-0.16")]
 	public static unowned Atk.Object get_focus_object ();
+	[CCode (cheader_filename = "atk/atk.h")]
+	public static uint get_interface_age ();
+	[CCode (cheader_filename = "atk/atk.h")]
+	public static uint get_major_version ();
+	[CCode (cheader_filename = "atk/atk.h")]
+	public static uint get_micro_version ();
+	[CCode (cheader_filename = "atk/atk.h")]
+	public static uint get_minor_version ();
 	[CCode (cheader_filename = "atk/atk.h")]
 	[Deprecated (replacement = "Atk.Util.get_root", since = "vala-0.16")]
 	public static unowned Atk.Object get_root ();

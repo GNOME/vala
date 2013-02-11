@@ -44,6 +44,7 @@ namespace GData {
 		[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_PRESENTATION_PPT")]
 		public const string PPT;
 		[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_PRESENTATION_SWF")]
+		[Deprecated (since = "SWF export has been deprecated in the protocol due to low demand for it; PDF export (using %GDATA_DOCUMENTS_PRESENTATION_PDF) is recommended instead. (Since")]
 		public const string SWF;
 		[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_PRESENTATION_TXT")]
 		public const string TXT;

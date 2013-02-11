@@ -7,7 +7,7 @@ namespace Pk {
 		[CCode (cname = "pk_catalog_new", has_construct_function = false)]
 		public Catalog ();
 		[CCode (cname = "pk_catalog_lookup_async")]
-		public async GLib.GenericArray<weak void*> lookup_async (string filename, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public async void lookup_async (string filename, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[CCode (cname = "pk_catalog_test")]
 		public static void test (void* user_data);
 	}
@@ -296,12 +296,8 @@ namespace Pk {
 	public class Desktop : GLib.Object {
 		[CCode (cname = "pk_desktop_new", has_construct_function = false)]
 		public Desktop ();
-		[CCode (cname = "pk_desktop_get_files_for_package")]
-		public GLib.GenericArray<weak void*> get_files_for_package (string package) throws GLib.Error;
 		[CCode (cname = "pk_desktop_get_package_for_file")]
 		public string get_package_for_file (string filename) throws GLib.Error;
-		[CCode (cname = "pk_desktop_get_shown_for_package")]
-		public GLib.GenericArray<weak void*> get_shown_for_package (string package) throws GLib.Error;
 		[CCode (cname = "pk_desktop_open_database")]
 		public bool open_database () throws GLib.Error;
 		[CCode (cname = "pk_desktop_test")]
@@ -571,6 +567,8 @@ namespace Pk {
 		public void sort (Pk.PackageSackSortType type);
 		[CCode (cname = "pk_package_sack_test")]
 		public static void test (void* user_data);
+		[CCode (cname = "pk_package_sack_to_file")]
+		public bool to_file (GLib.File file) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	[Compact]
@@ -958,6 +956,30 @@ namespace Pk {
 	public class UpdateDetail : Pk.Source {
 		[CCode (cname = "pk_update_detail_new", has_construct_function = false)]
 		public UpdateDetail ();
+		[CCode (array_length = false, array_null_terminated = true, cname = "pk_update_detail_get_bugzilla_urls")]
+		public unowned string[] get_bugzilla_urls ();
+		[CCode (cname = "pk_update_detail_get_changelog")]
+		public unowned string get_changelog ();
+		[CCode (array_length = false, array_null_terminated = true, cname = "pk_update_detail_get_cve_urls")]
+		public unowned string[] get_cve_urls ();
+		[CCode (cname = "pk_update_detail_get_issued")]
+		public unowned string get_issued ();
+		[CCode (array_length = false, array_null_terminated = true, cname = "pk_update_detail_get_obsoletes")]
+		public unowned string[] get_obsoletes ();
+		[CCode (cname = "pk_update_detail_get_package_id")]
+		public unowned string get_package_id ();
+		[CCode (cname = "pk_update_detail_get_restart")]
+		public Pk.Restart get_restart ();
+		[CCode (cname = "pk_update_detail_get_state")]
+		public Pk.UpdateState get_state ();
+		[CCode (cname = "pk_update_detail_get_update_text")]
+		public unowned string get_update_text ();
+		[CCode (cname = "pk_update_detail_get_updated")]
+		public unowned string get_updated ();
+		[CCode (array_length = false, array_null_terminated = true, cname = "pk_update_detail_get_updates")]
+		public unowned string[] get_updates ();
+		[CCode (array_length = false, array_null_terminated = true, cname = "pk_update_detail_get_vendor_urls")]
+		public unowned string[] get_vendor_urls ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
 		public string[] bugzilla_urls { owned get; set; }
@@ -1635,12 +1657,14 @@ namespace Pk {
 	public static Pk.Network network_enum_from_string (string network);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_network_enum_to_string")]
 	public static unowned string network_enum_to_string (Pk.Network network);
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_polkit_agent_close")]
+	public static void polkit_agent_close ();
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_polkit_agent_open")]
+	public static int polkit_agent_open ();
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_provides_enum_from_string")]
 	public static Pk.Provides provides_enum_from_string (string provides);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_provides_enum_to_string")]
 	public static unowned string provides_enum_to_string (Pk.Provides provides);
-	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_ptr_array_to_strv")]
-	public static string[] ptr_array_to_strv (GLib.GenericArray<void*> array);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_restart_enum_from_string")]
 	public static Pk.Restart restart_enum_from_string (string restart);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "pk_restart_enum_to_string")]

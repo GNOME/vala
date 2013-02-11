@@ -120,7 +120,6 @@ namespace Wnck {
 		public void set_grouping (Wnck.TasklistGroupingType grouping);
 		public void set_grouping_limit (int limit);
 		public void set_include_all_workspaces (bool include_all_workspaces);
-		public void set_orientation (Gtk.Orientation orient);
 		public void set_switch_workspace_on_unminimize (bool switch_workspace_on_unminimize);
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_window_get_type ()")]
@@ -145,6 +144,7 @@ namespace Wnck {
 		public unowned Gdk.Pixbuf get_mini_icon ();
 		public unowned string get_name ();
 		public int get_pid ();
+		public unowned string get_role ();
 		public unowned Wnck.Screen get_screen ();
 		public unowned string get_session_id ();
 		public unowned string get_session_id_utf8 ();
@@ -205,9 +205,11 @@ namespace Wnck {
 		public void unshade ();
 		public void unstick ();
 		public virtual signal void actions_changed (Wnck.WindowActions changed_mask, Wnck.WindowActions new_actions);
+		public virtual signal void class_changed ();
 		public virtual signal void geometry_changed ();
 		public virtual signal void icon_changed ();
 		public virtual signal void name_changed ();
+		public virtual signal void role_changed ();
 		public virtual signal void state_changed (Wnck.WindowState changed_mask, Wnck.WindowState new_state);
 		public virtual signal void workspace_changed ();
 	}

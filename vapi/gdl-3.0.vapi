@@ -370,6 +370,7 @@ namespace Gdl {
 	[CCode (cheader_filename = "gdl/gdl.h", cname = "GDL_DOCK_NAME_PROPERTY")]
 	public const string DOCK_NAME_PROPERTY;
 	[CCode (cheader_filename = "gdl/gdl.h", cname = "GDL_DOCK_OBJECT_FLAGS_SHIFT")]
+	[Deprecated (since = "3.6")]
 	public const int DOCK_OBJECT_FLAGS_SHIFT;
 	[CCode (cheader_filename = "gdl/gdl.h")]
 	public static void marshal_VOID__OBJECT_ENUM_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);

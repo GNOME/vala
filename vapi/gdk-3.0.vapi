@@ -4923,6 +4923,7 @@ namespace Gdk {
 		public Gdk.EventMask get_events ();
 		public bool get_focus_on_map ();
 		public void get_frame_extents (out Gdk.Rectangle rect);
+		public Gdk.FullscreenMode get_fullscreen_mode ();
 		public void get_geometry (out int x, out int y, out int width, out int height);
 		public unowned Gdk.Window get_group ();
 		public int get_height ();
@@ -4990,6 +4991,7 @@ namespace Gdk {
 		public void set_device_events (Gdk.Device device, Gdk.EventMask event_mask);
 		public void set_events (Gdk.EventMask event_mask);
 		public void set_focus_on_map (bool focus_on_map);
+		public void set_fullscreen_mode (Gdk.FullscreenMode mode);
 		public void set_functions (Gdk.WMFunction functions);
 		public void set_geometry_hints (Gdk.Geometry geometry, Gdk.WindowHints geom_mask);
 		public void set_group (Gdk.Window? leader);
@@ -5544,6 +5546,11 @@ namespace Gdk {
 		CONTINUE,
 		TRANSLATE,
 		REMOVE
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FULLSCREEN_ON_", type_id = "gdk_fullscreen_mode_get_type ()")]
+	public enum FullscreenMode {
+		CURRENT_MONITOR,
+		ALL_MONITORS
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_OWNERSHIP_", type_id = "gdk_grab_ownership_get_type ()")]
 	public enum GrabOwnership {

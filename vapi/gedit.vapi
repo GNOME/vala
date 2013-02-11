@@ -3,20 +3,16 @@
 [CCode (cprefix = "Gedit", gir_namespace = "Gedit", gir_version = "3.0", lower_case_cprefix = "gedit_")]
 namespace Gedit {
 	[CCode (cheader_filename = "gedit/gedit-app.h", type_id = "gedit_app_get_type ()")]
-	public abstract class App : GLib.Object {
+	public abstract class App : Gtk.Application, GLib.ActionGroup, GLib.ActionMap {
 		[CCode (has_construct_function = false)]
 		protected App ();
 		public unowned Gedit.Window create_window (Gdk.Screen? screen);
-		public unowned Gedit.Window get_active_window ();
-		public static unowned Gedit.App get_default ();
 		public GLib.List<weak Gedit.Document> get_documents ();
 		public Gedit.LockdownMask get_lockdown ();
 		public GLib.List<weak Gedit.View> get_views ();
-		public unowned GLib.List<Gedit.Window> get_windows ();
 		[NoWrapper]
 		public virtual string help_link_id (string name, string link_id);
-		[NoWrapper]
-		public virtual bool last_window_destroyed ();
+		public virtual bool process_window_event (Gedit.Window window, Gdk.Event event);
 		public virtual void set_window_title (Gedit.Window window, string title);
 		public virtual bool show_help (Gtk.Window parent, string name, string link_id);
 		public Gedit.LockdownMask lockdown { get; }
@@ -59,7 +55,7 @@ namespace Gedit {
 		public void set_enable_search_highlighting (bool enable);
 		public void set_language (Gtk.SourceLanguage? lang);
 		public void set_location (GLib.File location);
-		public void set_search_text (string text, uint flags);
+		public void set_search_text (string? text, uint flags);
 		public void set_short_name_for_display (string? short_name);
 		public bool can_search_again { get; }
 		[NoAccessorMethod]
@@ -146,12 +142,13 @@ namespace Gedit {
 		public virtual signal void unregistered (string object_path, string method);
 	}
 	[CCode (cheader_filename = "gedit/gedit-panel.h", type_id = "gedit_panel_get_type ()")]
-	public class Panel : Gtk.VBox, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+	public class Panel : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Panel (Gtk.Orientation orientation);
 		public bool activate_item (Gtk.Widget item);
 		public bool add_item (Gtk.Widget item, string id, string display_name, Gtk.Widget? image);
 		public bool add_item_with_stock_icon (Gtk.Widget item, string id, string display_name, string? stock_id);
+		public unowned Gtk.Widget get_active ();
 		public int get_n_items ();
 		public Gtk.Orientation get_orientation ();
 		public bool item_is_active (Gtk.Widget item);
@@ -183,7 +180,7 @@ namespace Gedit {
 		public void set_window_state (Gedit.WindowState state, int num_of_errors);
 	}
 	[CCode (cheader_filename = "gedit/gedit-tab.h", type_id = "gedit_tab_get_type ()")]
-	public class Tab : Gtk.VBox, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+	public class Tab : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (has_construct_function = false)]
 		protected Tab ();
 		public bool get_auto_save_enabled ();
@@ -199,6 +196,8 @@ namespace Gedit {
 		public bool autosave { get; set; }
 		[NoAccessorMethod]
 		public int autosave_interval { get; set; }
+		[NoAccessorMethod]
+		public bool can_close { get; }
 		[NoAccessorMethod]
 		public string name { owned get; }
 		public Gedit.TabState state { get; }
@@ -218,7 +217,7 @@ namespace Gedit {
 		public virtual signal void drop_uris ([CCode (array_length = false, array_null_terminated = true)] string[] uri_list);
 	}
 	[CCode (cheader_filename = "gedit/gedit-window.h", type_id = "gedit_window_get_type ()")]
-	public class Window : Gtk.Window, Atk.Implementor, Gtk.Buildable {
+	public class Window : Gtk.ApplicationWindow, Atk.Implementor, GLib.ActionGroup, GLib.ActionMap, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		protected Window ();
 		public void close_all_tabs ();
@@ -271,7 +270,7 @@ namespace Gedit {
 		[NoAccessorMethod]
 		public abstract Gedit.Window window { owned get; construct; }
 	}
-	[CCode (cheader_filename = "gedit/gedit-debug.h", cprefix = "GEDIT_")]
+	[CCode (cheader_filename = "gedit/gedit-debug.h", cprefix = "GEDIT_", type_id = "gedit_debug_section_get_type ()")]
 	[Flags]
 	public enum DebugSection {
 		NO_DEBUG,
@@ -293,18 +292,18 @@ namespace Gedit {
 		DEBUG_PANEL,
 		DEBUG_DBUS
 	}
-	[CCode (cheader_filename = "gedit/gedit-document.h", cprefix = "GEDIT_DOCUMENT_COMPRESSION_TYPE_")]
+	[CCode (cheader_filename = "gedit/gedit-document.h", cprefix = "GEDIT_DOCUMENT_COMPRESSION_TYPE_", type_id = "gedit_document_compression_type_get_type ()")]
 	public enum DocumentCompressionType {
 		NONE,
 		GZIP
 	}
-	[CCode (cheader_filename = "gedit/gedit-document.h", cprefix = "GEDIT_DOCUMENT_NEWLINE_TYPE_")]
+	[CCode (cheader_filename = "gedit/gedit-document.h", cprefix = "GEDIT_DOCUMENT_NEWLINE_TYPE_", type_id = "gedit_document_newline_type_get_type ()")]
 	public enum DocumentNewlineType {
 		LF,
 		CR,
 		CR_LF
 	}
-	[CCode (cheader_filename = "gedit/gedit-document.h", cprefix = "GEDIT_DOCUMENT_SAVE_")]
+	[CCode (cheader_filename = "gedit/gedit-document.h", cprefix = "GEDIT_DOCUMENT_SAVE_", type_id = "gedit_document_save_flags_get_type ()")]
 	[Flags]
 	public enum DocumentSaveFlags {
 		IGNORE_MTIME,
@@ -312,7 +311,7 @@ namespace Gedit {
 		PRESERVE_BACKUP,
 		IGNORE_INVALID_CHARS
 	}
-	[CCode (cheader_filename = "gedit/gedit-app.h", cprefix = "GEDIT_LOCKDOWN_")]
+	[CCode (cheader_filename = "gedit/gedit-app.h", cprefix = "GEDIT_LOCKDOWN_", type_id = "gedit_lockdown_mask_get_type ()")]
 	[Flags]
 	public enum LockdownMask {
 		COMMAND_LINE,
@@ -320,14 +319,14 @@ namespace Gedit {
 		PRINT_SETUP,
 		SAVE_TO_DISK
 	}
-	[CCode (cheader_filename = "gedit/gedit-document.h", cprefix = "GEDIT_SEARCH_")]
+	[CCode (cheader_filename = "gedit/gedit-document.h", cprefix = "GEDIT_SEARCH_", type_id = "gedit_search_flags_get_type ()")]
 	[Flags]
 	public enum SearchFlags {
 		DONT_SET_FLAGS,
 		ENTIRE_WORD,
 		CASE_SENSITIVE
 	}
-	[CCode (cheader_filename = "gedit/gedit-tab.h", cprefix = "GEDIT_TAB_")]
+	[CCode (cheader_filename = "gedit/gedit-tab.h", cprefix = "GEDIT_TAB_", type_id = "gedit_tab_state_get_type ()")]
 	public enum TabState {
 		STATE_NORMAL,
 		STATE_LOADING,
@@ -345,27 +344,26 @@ namespace Gedit {
 		STATE_EXTERNALLY_MODIFIED_NOTIFICATION,
 		NUM_OF_STATES
 	}
-	[CCode (cheader_filename = "gedit/gedit-window.h", cprefix = "GEDIT_WINDOW_STATE_")]
+	[CCode (cheader_filename = "gedit/gedit-window.h", cprefix = "GEDIT_WINDOW_STATE_", type_id = "gedit_window_state_get_type ()")]
 	[Flags]
 	public enum WindowState {
 		NORMAL,
 		SAVING,
 		PRINTING,
 		LOADING,
-		ERROR,
-		SAVING_SESSION
+		ERROR
 	}
 	[CCode (cheader_filename = "gedit/gedit-message-bus.h", instance_pos = 2.9)]
 	public delegate void MessageBusForeach (string object_path, string method);
 	[CCode (cheader_filename = "gedit/gedit-message-bus.h", instance_pos = 2.9)]
 	public delegate void MessageCallback (Gedit.MessageBus bus, Gedit.Message message);
-	[CCode (cheader_filename = "gedit/gedit-app.h")]
+	[CCode (cheader_filename = "gedit/gedit-app.h", cname = "GEDIT_LOCKDOWN_ALL")]
 	public const int LOCKDOWN_ALL;
-	[CCode (cheader_filename = "gedit/gedit-document.h")]
+	[CCode (cheader_filename = "gedit/gedit-document.h", cname = "GEDIT_METADATA_ATTRIBUTE_ENCODING")]
 	public const string METADATA_ATTRIBUTE_ENCODING;
-	[CCode (cheader_filename = "gedit/gedit-document.h")]
+	[CCode (cheader_filename = "gedit/gedit-document.h", cname = "GEDIT_METADATA_ATTRIBUTE_LANGUAGE")]
 	public const string METADATA_ATTRIBUTE_LANGUAGE;
-	[CCode (cheader_filename = "gedit/gedit-document.h")]
+	[CCode (cheader_filename = "gedit/gedit-document.h", cname = "GEDIT_METADATA_ATTRIBUTE_POSITION")]
 	public const string METADATA_ATTRIBUTE_POSITION;
 	[CCode (cheader_filename = "gedit/gedit-commands.h")]
 	public static void commands_load_location (Gedit.Window window, GLib.File location, Gedit.Encoding? encoding, int line_pos, int column_pos);
@@ -379,10 +377,14 @@ namespace Gedit {
 	public static void debug (Gedit.DebugSection section, string file, int line, string function);
 	[CCode (cheader_filename = "gedit/gedit-debug.h")]
 	public static void debug_init ();
+	[CCode (cheader_filename = "gedit/gedit-debug.h")]
+	public static void debug_plugin_message (string file, int line, string function, string message);
+	[CCode (cheader_filename = "Gedit-3.0.h")]
+	public static unowned Gtk.Widget dialog_add_button (Gtk.Dialog dialog, string text, string stock_id, int response_id);
+	[CCode (cheader_filename = "Gedit-3.0.h")]
+	public static Gtk.Widget gtk_button_new_with_stock_icon (string label, string stock_id);
 	[CCode (cheader_filename = "gedit/gedit-utils.h")]
 	public static string utils_basename_for_display (GLib.File location);
-	[CCode (cheader_filename = "gedit/gedit-utils.h")]
-	public static bool utils_can_read_from_stdin ();
 	[CCode (cheader_filename = "gedit/gedit-utils.h")]
 	public static bool utils_decode_uri (string uri, out string scheme, out string user, out string port, out string host, out string path);
 	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gedit/gedit-utils.h")]
@@ -404,8 +406,6 @@ namespace Gedit {
 	[CCode (cheader_filename = "gedit/gedit-utils.h")]
 	public static string utils_location_get_dirname_for_display (GLib.File location);
 	[CCode (cheader_filename = "gedit/gedit-utils.h")]
-	public static bool utils_location_has_file_scheme (GLib.File location);
-	[CCode (cheader_filename = "gedit/gedit-utils.h")]
 	public static string utils_make_canonical_uri_from_shell_arg (string str);
 	[CCode (cheader_filename = "gedit/gedit-utils.h")]
 	public static string utils_make_valid_utf8 (string name);
@@ -423,8 +423,6 @@ namespace Gedit {
 	public static string utils_str_end_truncate (string string, uint truncate_length);
 	[CCode (cheader_filename = "gedit/gedit-utils.h")]
 	public static string utils_str_middle_truncate (string string, uint truncate_length);
-	[CCode (cheader_filename = "gedit/gedit-utils.h")]
-	public static void utils_text_iter_assign (Gtk.TextIter iter, Gtk.TextIter other);
 	[CCode (cheader_filename = "gedit/gedit-utils.h")]
 	public static string utils_unescape_search_text (string text);
 	[CCode (cheader_filename = "gedit/gedit-utils.h")]

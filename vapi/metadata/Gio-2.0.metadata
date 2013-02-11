@@ -376,6 +376,8 @@ Socket
 StaticResource
   .data array array_length_field="data_len"
   .padding skip
+Task
+  .get_source_object type="GLib.Object"
 TlsBackend
   .get_certificate_type abstract
   .get_client_connection_type abstract

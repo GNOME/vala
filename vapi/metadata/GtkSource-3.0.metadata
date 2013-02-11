@@ -10,5 +10,3 @@ CompletionProposal
         .equal#virtual_method virtual
         .get_icon#virtual_method virtual
         .hash#virtual_method virtual
-COMPLETION_CAPABILITY_INTERACTIVE name="INTERACTIVE" parent="Gtk.SourceCompletionCapability"
-COMPLETION_CAPABILITY_AUTOMATIC name="AUTOMATIC" parent="Gtk.SourceCompletionCapability"

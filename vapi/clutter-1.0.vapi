@@ -8050,10 +8050,12 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h", instance_pos = 3.9)]
 	public delegate double TimelineProgressFunc (Clutter.Timeline timeline, double elapsed, double total);
 	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_COGL")]
+	[Deprecated (since = "1.10")]
 	public const string COGL;
 	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_CURRENT_TIME")]
 	public const int CURRENT_TIME;
 	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_FLAVOUR")]
+	[Deprecated (since = "1.10")]
 	public const string FLAVOUR;
 	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_MAJOR_VERSION")]
 	public const int MAJOR_VERSION;

@@ -118,7 +118,7 @@ namespace Mx {
 		[CCode (has_construct_function = false)]
 		protected Bin ();
 		public void allocate_child (Clutter.ActorBox box, Clutter.AllocationFlags flags);
-		public void get_alignment (Mx.Align x_align, Mx.Align y_align);
+		public void get_alignment (out Mx.Align x_align, out Mx.Align y_align);
 		public unowned Clutter.Actor get_child ();
 		public void get_fill (out bool x_fill, out bool y_fill);
 		public void set_alignment (Mx.Align x_align, Mx.Align y_align);
@@ -529,10 +529,10 @@ namespace Mx {
 		public uint get_scale_width_threshold ();
 		public uint get_transition_duration ();
 		public void set_allow_upscale (bool allow);
-		public bool set_from_buffer ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize", type = "guchar*")] owned uint8[]? buffer, GLib.DestroyNotify? buffer_free_func) throws GLib.Error;
-		public bool set_from_buffer_at_size ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize", type = "guchar*")] owned uint8[]? buffer, GLib.DestroyNotify? buffer_free_func, int width, int height) throws GLib.Error;
+		public bool set_from_buffer ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize")] owned uint8[]? buffer, GLib.DestroyNotify? buffer_free_func) throws GLib.Error;
+		public bool set_from_buffer_at_size ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize")] owned uint8[]? buffer, GLib.DestroyNotify? buffer_free_func, int width, int height) throws GLib.Error;
 		public bool set_from_cogl_texture (Cogl.Handle texture);
-		public bool set_from_data ([CCode (array_length = false, type = "const guchar*")] uint8[]? data, Cogl.PixelFormat pixel_format, int width, int height, int rowstride) throws GLib.Error;
+		public bool set_from_data ([CCode (array_length = false)] uint8[]? data, Cogl.PixelFormat pixel_format, int width, int height, int rowstride) throws GLib.Error;
 		public bool set_from_file (string filename) throws GLib.Error;
 		public bool set_from_file_at_size (string filename, int width, int height) throws GLib.Error;
 		public void set_image_rotation (float rotation);
@@ -1043,7 +1043,7 @@ namespace Mx {
 		public unowned Clutter.Actor get_border_image ();
 		public bool get_disabled ();
 		public unowned Mx.Menu get_menu ();
-		public void get_padding (Mx.Padding padding);
+		public Mx.Padding get_padding ();
 		public uint get_tooltip_delay ();
 		public unowned string get_tooltip_text ();
 		public void hide_tooltip ();
