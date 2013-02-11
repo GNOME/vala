@@ -300,7 +300,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		if (cl.is_subtype_of (gobject_type)) {
-			string gtype_struct_name = cl.name + "Class";
+			string gtype_struct_name = get_gir_name (cl) + "Class";
 
 			write_indent ();
 			buffer.append_printf ("<class name=\"%s\"", get_gir_name (cl));
