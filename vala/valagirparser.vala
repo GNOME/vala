@@ -1233,9 +1233,9 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	void end_element (string name) {
-		if (current_token != MarkupTokenType.END_ELEMENT || reader.name != name) {
-			// error
-			Report.error (get_current_src (), "expected end element of `%s'".printf (name));
+		while (current_token != MarkupTokenType.END_ELEMENT || reader.name != name) {
+			Report.warning (get_current_src (), "expected end element of `%s'".printf (name));
+			skip_element ();
 		}
 		next ();
 	}
