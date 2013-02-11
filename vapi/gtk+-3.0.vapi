@@ -891,7 +891,7 @@ namespace Gtk {
 		[CCode (cname = "gtk_cell_area_class_find_cell_property")]
 		public class unowned GLib.ParamSpec find_cell_property (string property_name);
 		public virtual bool focus (Gtk.DirectionType direction);
-		public virtual void @foreach (Gtk.CellCallback callback, void* callback_data);
+		public virtual void @foreach (Gtk.CellCallback callback);
 		public virtual void foreach_alloc (Gtk.CellAreaContext context, Gtk.Widget widget, Gdk.Rectangle cell_area, Gdk.Rectangle background_area, Gtk.CellAllocCallback callback, void* callback_data);
 		public void get_cell_allocation (Gtk.CellAreaContext context, Gtk.Widget widget, Gtk.CellRenderer renderer, Gdk.Rectangle cell_area, Gdk.Rectangle allocation);
 		public unowned Gtk.CellRenderer get_cell_at_position (Gtk.CellAreaContext context, Gtk.Widget widget, Gdk.Rectangle cell_area, int x, int y, Gdk.Rectangle alloc_area);
