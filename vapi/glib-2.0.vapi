@@ -2989,7 +2989,7 @@ namespace GLib {
 		[CCode (cname = "EOF", cheader_filename = "stdio.h")]
 		public const int EOF;
 
-		[CCode (cname = "g_fopen")]
+		[CCode (cname = "g_fopen", cheader_filename = "glib/gstdio.h")]
 		public static FileStream? open (string path, string mode);
 		[CCode (cname = "fdopen")]
 		public static FileStream? fdopen (int fildes, string mode);
