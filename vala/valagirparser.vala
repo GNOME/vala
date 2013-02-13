@@ -2026,21 +2026,29 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	GirComment? parse_symbol_doc () {
-		if (reader.name != "doc") {
-			return null;
-		}
-
-		start_element ("doc");
-		next ();
-
 		GirComment? comment = null;
 
-		if (current_token == MarkupTokenType.TEXT) {
-			comment = new GirComment (reader.content, current.source_reference);
-			next ();
+		while (current_token == MarkupTokenType.START_ELEMENT) {
+			unowned string reader_name = reader.name;
+
+			if (reader_name == "doc") {
+				start_element ("doc");
+				next ();
+
+
+				if (current_token == MarkupTokenType.TEXT) {
+					comment = new GirComment (reader.content, current.source_reference);
+					next ();
+				}
+
+				end_element ("doc");
+			} else if (reader_name == "doc-version" || reader_name == "doc-deprecated" || reader_name == "doc-stability") {
+				skip_element ();
+			} else {
+				break;
+			}
 		}
 
-		end_element ("doc");
 		return comment;
 	}
 
