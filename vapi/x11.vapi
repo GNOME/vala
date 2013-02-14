@@ -798,6 +798,7 @@ namespace X {
 	}
 
 	// union
+	[GIR (name = "XEvent")]
 	[CCode (cname = "XEvent")]
 	public struct Event {
 		public int type;
