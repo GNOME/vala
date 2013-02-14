@@ -1,6 +1,0 @@
-Xkl cheader_filename="libxklavier/xklavier.h"
-Engine
-        .filter_events.evt type="X.Event*"
-        .X_state_changed skip
-        .X_config_changed skip
-        .X_new_device skip
