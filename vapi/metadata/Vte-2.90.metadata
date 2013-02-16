@@ -1,15 +1,11 @@
 // Deprecated from start
 Terminal.pty skip
 
+// owned value type arguments
+Pty.new_foreign.fd owned=false
+
+// Nullable return values
 Terminal
   .match_check nullable
   .match_set_cursor.cursor nullable
-
-// Report upstream
-Vte cheader_filename="vte/vte.h"
-Pty.new_foreign.fd owned=false
-Terminal
-  .get_cursor_position.* out
-SelectionFunc.data closure=3
-
 get_user_shell nullable
