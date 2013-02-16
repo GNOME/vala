@@ -75,7 +75,8 @@ public class Vala.GirParser : CodeVisitor {
 		FINISH_NAME,
 		SYMBOL_TYPE,
 		INSTANCE_IDX,
-		EXPERIMENTAL;
+		EXPERIMENTAL,
+		FLOATING;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -2847,6 +2848,9 @@ public class Vala.GirParser : CodeVisitor {
 			if (metadata.has_argument (ArgumentType.VFUNC_NAME)) {
 				method.set_attribute_string ("CCode", "vfunc_name", metadata.get_string (ArgumentType.VFUNC_NAME));
 				method.is_virtual = true;
+			}
+			if (metadata.has_argument (ArgumentType.FLOATING)) {
+				method.returns_floating_reference = metadata.get_bool (ArgumentType.FLOATING);
 			}
 		}
 
