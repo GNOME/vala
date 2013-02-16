@@ -444,8 +444,8 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				var arg_type = ArgumentType.from_string (id);
 				if (arg_type == null) {
-					Report.error (get_src (begin, old_end), "unknown argument");
-					return false;
+					Report.warning (get_src (begin, old_end), "unknown argument `%s'".printf (id));
+					continue;
 				}
 
 				if (current != TokenType.ASSIGN) {
