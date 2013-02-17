@@ -6218,7 +6218,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface ColorChooser : GLib.Object {
-		public abstract void add_palette (Gtk.Orientation orientation, int colors_per_line, int n_colors, Gdk.RGBA colors);
+		public abstract void add_palette (Gtk.Orientation orientation, int colors_per_line, [CCode (array_length_pos = 2.9)] Gdk.RGBA[]? colors);
 		public abstract Gdk.RGBA get_rgba ();
 		public bool get_use_alpha ();
 		public abstract void set_rgba (Gdk.RGBA color);
