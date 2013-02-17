@@ -3976,7 +3976,10 @@ namespace GLib {
 		public unowned StringBuilder prepend_unichar (unichar wc);
 		public unowned StringBuilder prepend_len (string val, ssize_t len);
 		public unowned StringBuilder insert (ssize_t pos, string val);
+		public unowned StringBuilder insert_len (ssize_t pos, string val, ssize_t len);
 		public unowned StringBuilder insert_unichar (ssize_t pos, unichar wc);
+		public unowned StringBuilder overwrite (size_t pos, string val);
+		public unowned StringBuilder overwrite_len (size_t pos, string val, ssize_t len);
 		public unowned StringBuilder erase (ssize_t pos = 0, ssize_t len = -1);
 		public unowned StringBuilder truncate (size_t len = 0);
 
