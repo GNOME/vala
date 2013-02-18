@@ -3308,6 +3308,31 @@ public class Vala.GirParser : CodeVisitor {
 					}
 				}
 			}
+		} else {
+			if (return_type is UnresolvedType && !return_type.nullable) {
+				var st = resolve_symbol (node.parent, ((UnresolvedType) return_type).unresolved_symbol) as Struct;
+				if (st != null) {
+					bool is_simple_type = false;
+					Struct? base_st = st;
+
+					while (base_st != null) {
+						if (base_st.is_simple_type ()) {
+							is_simple_type = true;
+							break;
+						}
+
+						if (base_st.base_type is UnresolvedType) {
+							base_st = resolve_symbol (node.parent, ((UnresolvedType) base_st.base_type).unresolved_symbol) as Struct;
+						} else {
+							base_st = base_st.base_struct;
+						}
+					}
+
+					if (!is_simple_type) {
+						return_type.nullable = true;
+					}
+				}
+			}
 		}
 		if (parameters.size > 1) {
 			ParameterInfo last_param = parameters[parameters.size-1];
