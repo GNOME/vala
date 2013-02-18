@@ -4570,7 +4570,8 @@ namespace GLib {
 		public Variant.variant (Variant value);
 		public Variant.maybe (VariantType? child_type, Variant? child);
 		public Variant.array (VariantType? child_type, Variant[] children);
-		public Variant.fixed_array (VariantType? element_type, [CCode (array_length_type = "gsize")] Variant[] elements, size_t element_size);
+		[CCode (simple_generics = true)]
+		public static Variant new_fixed_array<T> (VariantType? element_type, [CCode (array_length_type = "gsize")] T[] elements, size_t element_size);
 		public Variant.tuple (Variant[] children);
 		public Variant.dict_entry (Variant key, Variant value);
 		public Variant get_variant ();
