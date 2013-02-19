@@ -237,9 +237,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
 		public static Gst.Buffer buffer_new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
 		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
-		public static Gst.RTP.PayloadInfo payload_info_for_name (string media, string encoding_name);
+		public static unowned Gst.RTP.PayloadInfo? payload_info_for_name (string media, string encoding_name);
 		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
-		public static Gst.RTP.PayloadInfo payload_info_for_pt (uint8 payload_type);
+		public static unowned Gst.RTP.PayloadInfo? payload_info_for_pt (uint8 payload_type);
 	}
 	namespace RTPC {
 		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GstRTCPBuffer")]

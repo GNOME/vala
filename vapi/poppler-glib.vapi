@@ -96,7 +96,7 @@ namespace Poppler {
 	public class AnnotMarkup : Poppler.Annot {
 		[CCode (has_construct_function = false)]
 		protected AnnotMarkup ();
-		public GLib.Date get_date ();
+		public GLib.Date? get_date ();
 		public Poppler.AnnotExternalDataType get_external_data ();
 		public string get_label ();
 		public double get_opacity ();
@@ -526,7 +526,7 @@ namespace Poppler {
 		public double y2;
 		[CCode (has_construct_function = false, type = "PopplerRectangle*")]
 		public Rectangle ();
-		public Poppler.Rectangle copy ();
+		public Poppler.Rectangle? copy ();
 		public void free ();
 	}
 	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_ACTION_LAYER_", type_id = "poppler_action_layer_action_get_type ()")]

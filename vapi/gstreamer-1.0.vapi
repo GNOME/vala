@@ -403,9 +403,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static int get_fraction_numerator (GLib.Value value);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static GLib.Value get_fraction_range_max (GLib.Value value);
+		public static unowned GLib.Value? get_fraction_range_max (GLib.Value value);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static GLib.Value get_fraction_range_min (GLib.Value value);
+		public static unowned GLib.Value? get_fraction_range_min (GLib.Value value);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static int64 get_int64_range_max (GLib.Value value);
 		[CCode (cheader_filename = "gst/gst.h")]
@@ -555,7 +555,7 @@ namespace Gst {
 		public Gst.ClockTime pts;
 		[CCode (has_construct_function = false)]
 		public Buffer ();
-		public Gst.Meta add_meta (Gst.MetaInfo info, void* @params);
+		public unowned Gst.Meta? add_meta (Gst.MetaInfo info, void* @params);
 		[CCode (has_construct_function = false)]
 		public Buffer.allocate (Gst.Allocator? allocator, size_t size, Gst.AllocationParams? @params);
 		public Gst.Buffer append (owned Gst.Buffer buf2);
@@ -760,7 +760,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected ControlBinding ();
 		public virtual bool get_g_value_array (Gst.ClockTime timestamp, Gst.ClockTime interval, uint n_values, GLib.Value values);
-		public virtual GLib.Value get_value (Gst.ClockTime timestamp);
+		public virtual GLib.Value? get_value (Gst.ClockTime timestamp);
 		public virtual bool get_value_array (Gst.ClockTime timestamp, Gst.ClockTime interval, uint n_values, void* values);
 		public bool is_disabled ();
 		public void set_disabled (bool disabled);
@@ -1130,7 +1130,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Message.error (Gst.Object src, GLib.Error error, string debug);
 		public uint32 get_seqnum ();
-		public GLib.Value get_stream_status_object ();
+		public unowned GLib.Value? get_stream_status_object ();
 		public unowned Gst.Structure get_structure ();
 		public bool has_name (string name);
 		[CCode (has_construct_function = false)]
@@ -1239,7 +1239,7 @@ namespace Gst {
 		public string get_name ();
 		public Gst.Object get_parent ();
 		public string get_path_string ();
-		public GLib.Value get_value (string property_name, Gst.ClockTime timestamp);
+		public GLib.Value? get_value (string property_name, Gst.ClockTime timestamp);
 		public bool get_value_array (string property_name, Gst.ClockTime timestamp, Gst.ClockTime interval, uint n_values, void* values);
 		public bool has_active_control_bindings ();
 		public bool has_ancestor (Gst.Object ancestor);
@@ -1661,13 +1661,13 @@ namespace Gst {
 		public GLib.Quark get_name_id ();
 		public unowned string get_string (string fieldname);
 		public bool get_uint (string fieldname, out uint value);
-		public GLib.Value get_value (string fieldname);
+		public unowned GLib.Value? get_value (string fieldname);
 		public bool has_field (string fieldname);
 		public bool has_field_typed (string fieldname, GLib.Type type);
 		public bool has_name (string name);
 		[CCode (has_construct_function = false)]
 		public Structure.id_empty (GLib.Quark quark);
-		public GLib.Value id_get_value (GLib.Quark field);
+		public unowned GLib.Value? id_get_value (GLib.Quark field);
 		public bool id_has_field (GLib.Quark field);
 		public bool id_has_field_typed (GLib.Quark field, GLib.Type type);
 		public void id_set_value (GLib.Quark field, GLib.Value value);
@@ -1727,7 +1727,7 @@ namespace Gst {
 		public bool get_uint64 (string tag, out uint64 value);
 		public bool get_uint64_index (string tag, uint index, out uint64 value);
 		public bool get_uint_index (string tag, uint index, out uint value);
-		public GLib.Value get_value_index (string tag, uint index);
+		public unowned GLib.Value? get_value_index (string tag, uint index);
 		public void insert (Gst.TagList from, Gst.TagMergeMode mode);
 		public bool is_empty ();
 		public bool is_equal (Gst.TagList list2);
@@ -1822,7 +1822,7 @@ namespace Gst {
 		protected ValueArray ();
 		public static void append_value (GLib.Value value, GLib.Value append_value);
 		public static uint get_size (GLib.Value value);
-		public static GLib.Value get_value (GLib.Value value, uint index);
+		public static unowned GLib.Value? get_value (GLib.Value value, uint index);
 		public static void prepend_value (GLib.Value value, GLib.Value prepend_value);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_value_list_get_type ()")]
@@ -1832,7 +1832,7 @@ namespace Gst {
 		public static void append_value (GLib.Value value, GLib.Value append_value);
 		public static void concat (out GLib.Value dest, GLib.Value value1, GLib.Value value2);
 		public static uint get_size (GLib.Value value);
-		public static GLib.Value get_value (GLib.Value value, uint index);
+		public static unowned GLib.Value? get_value (GLib.Value value, uint index);
 		public static void merge (out GLib.Value dest, GLib.Value value1, GLib.Value value2);
 		public static void prepend_value (GLib.Value value, GLib.Value prepend_value);
 	}
@@ -1958,8 +1958,8 @@ namespace Gst {
 		public Gst.MetaInfo info;
 		public static bool api_type_has_tag (GLib.Type api, GLib.Quark tag);
 		public static GLib.Type api_type_register (string api, string tags);
-		public static Gst.MetaInfo get_info (string impl);
-		public static Gst.MetaInfo register (GLib.Type api, string impl, size_t size, Gst.MetaInitFunction init_func, Gst.MetaFreeFunction free_func, Gst.MetaTransformFunction transform_func);
+		public static unowned Gst.MetaInfo? get_info (string impl);
+		public static unowned Gst.MetaInfo? register (GLib.Type api, string impl, size_t size, Gst.MetaInitFunction init_func, Gst.MetaFreeFunction free_func, Gst.MetaTransformFunction transform_func);
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
 	public struct MetaInfo {
@@ -2290,7 +2290,7 @@ namespace Gst {
 		[CCode (cname = "gst_formats_contains")]
 		public static bool contains ([CCode (array_length = false, array_null_terminated = true)] Gst.Format[] formats, Gst.Format format);
 		public static Gst.Format get_by_nick (string nick);
-		public static Gst.FormatDefinition get_details (Gst.Format format);
+		public static unowned Gst.FormatDefinition? get_details (Gst.Format format);
 		public static unowned string get_name (Gst.Format format);
 		public static Gst.Iterator iterate_definitions ();
 		public static Gst.Format register (string nick, string description);

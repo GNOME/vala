@@ -5049,7 +5049,7 @@ namespace Gdk {
 		public uint16 red;
 		public uint16 green;
 		public uint16 blue;
-		public Gdk.Color copy ();
+		public Gdk.Color? copy ();
 		public bool equal (Gdk.Color colorb);
 		public void free ();
 		public uint hash ();
@@ -5294,7 +5294,7 @@ namespace Gdk {
 		public double green;
 		public double blue;
 		public double alpha;
-		public Gdk.RGBA copy ();
+		public Gdk.RGBA? copy ();
 		public bool equal (Gdk.RGBA p2);
 		public void free ();
 		public uint hash ();

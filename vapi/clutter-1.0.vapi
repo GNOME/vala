@@ -4606,7 +4606,7 @@ namespace Clutter {
 		[CCode (array_length_pos = 1.1, array_length_type = "gsize", cheader_filename = "clutter/clutter.h")]
 		public static unowned float[] get_shader_matrix (GLib.Value value);
 		[CCode (cheader_filename = "clutter/clutter.h")]
-		public static Clutter.Units get_units (GLib.Value value);
+		public static unowned Clutter.Units? get_units (GLib.Value value);
 		[CCode (cheader_filename = "clutter/clutter.h")]
 		public static void set_color (GLib.Value value, Clutter.Color color);
 		[CCode (cheader_filename = "clutter/clutter.h")]
@@ -6015,15 +6015,15 @@ namespace Clutter {
 		[CCode (has_construct_function = false)]
 		public Interval (GLib.Type gtype, ...);
 		public Clutter.Interval clone ();
-		public GLib.Value compute (double factor);
+		public unowned GLib.Value? compute (double factor);
 		public virtual bool compute_value (double factor, out GLib.Value value);
 		public GLib.Value get_final_value ();
 		public GLib.Value get_initial_value ();
 		public void get_interval (...);
 		public GLib.Type get_value_type ();
 		public bool is_valid ();
-		public GLib.Value peek_final_value ();
-		public GLib.Value peek_initial_value ();
+		public unowned GLib.Value? peek_final_value ();
+		public unowned GLib.Value? peek_initial_value ();
 		public static void register_progress_func (GLib.Type value_type, Clutter.ProgressFunc func);
 		public void set_final (...);
 		public void set_final_value (GLib.Value value);
@@ -7241,10 +7241,10 @@ namespace Clutter {
 		public float y1;
 		public float x2;
 		public float y2;
-		public static Clutter.ActorBox alloc ();
+		public static Clutter.ActorBox? alloc ();
 		public void clamp_to_pixel ();
 		public bool contains (float x, float y);
-		public Clutter.ActorBox copy ();
+		public Clutter.ActorBox? copy ();
 		public bool equal (Clutter.ActorBox box_b);
 		public void free ();
 		[CCode (cname = "clutter_actor_box_from_vertices")]
@@ -7256,7 +7256,7 @@ namespace Clutter {
 		public float get_width ();
 		public float get_x ();
 		public float get_y ();
-		public Clutter.ActorBox init (float x_1, float y_1, float x_2, float y_2);
+		public unowned Clutter.ActorBox? init (float x_1, float y_1, float x_2, float y_2);
 		public void init_rect (float x, float y, float width, float height);
 		public Clutter.ActorBox interpolate (Clutter.ActorBox final, double progress);
 		public void set_origin (float x, float y);
@@ -7302,8 +7302,8 @@ namespace Clutter {
 		public uint8 blue;
 		public uint8 alpha;
 		public Clutter.Color add (Clutter.Color b);
-		public static Clutter.Color alloc ();
-		public Clutter.Color copy ();
+		public static Clutter.Color? alloc ();
+		public Clutter.Color? copy ();
 		public Clutter.Color darken ();
 		public bool equal (Clutter.Color v2);
 		public void free ();
@@ -7315,7 +7315,7 @@ namespace Clutter {
 		public Color.from_string (string str);
 		public static unowned Clutter.Color? get_static (Clutter.StaticColor color);
 		public uint hash ();
-		public Clutter.Color init (uint8 red, uint8 green, uint8 blue, uint8 alpha);
+		public unowned Clutter.Color? init (uint8 red, uint8 green, uint8 blue, uint8 alpha);
 		public Clutter.Color interpolate (Clutter.Color final, double progress);
 		public Clutter.Color lighten ();
 		[CCode (cname = "clutter_color_from_string")]
@@ -7370,18 +7370,18 @@ namespace Clutter {
 	public struct Knot {
 		public int x;
 		public int y;
-		public Clutter.Knot copy ();
+		public Clutter.Knot? copy ();
 		public bool equal (Clutter.Knot knot_b);
 		public void free ();
 	}
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public struct Matrix : Cogl.Matrix {
-		public static Clutter.Matrix alloc ();
+		public static Clutter.Matrix? alloc ();
 		public static void free (Clutter.Matrix? matrix);
 		public static GLib.Type get_type ();
-		public static Clutter.Matrix init_from_array (Clutter.Matrix matrix, [CCode (array_length = false)] float[] values);
-		public static Clutter.Matrix init_from_matrix (Clutter.Matrix a, Clutter.Matrix b);
-		public static Clutter.Matrix init_identity (Clutter.Matrix matrix);
+		public static unowned Clutter.Matrix? init_from_array (Clutter.Matrix matrix, [CCode (array_length = false)] float[] values);
+		public static unowned Clutter.Matrix? init_from_matrix (Clutter.Matrix a, Clutter.Matrix b);
+		public static unowned Clutter.Matrix? init_identity (Clutter.Matrix matrix);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	public struct MotionEvent {
@@ -7401,7 +7401,7 @@ namespace Clutter {
 		public Clutter.PathNodeType type;
 		[CCode (array_length = false, array_null_terminated = true)]
 		public weak Clutter.Knot[] points;
-		public Clutter.PathNode copy ();
+		public Clutter.PathNode? copy ();
 		public bool equal (Clutter.PathNode node_b);
 		public void free ();
 	}
@@ -7452,7 +7452,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "CLUTTER_TYPE_UNITS")]
 	public struct Units {
-		public Clutter.Units copy ();
+		public Clutter.Units? copy ();
 		public void free ();
 		[CCode (cname = "clutter_units_from_cm")]
 		public Units.from_cm (float cm);
@@ -7478,11 +7478,11 @@ namespace Clutter {
 		public float x;
 		public float y;
 		public float z;
-		public static Clutter.Vertex alloc ();
-		public Clutter.Vertex copy ();
+		public static Clutter.Vertex? alloc ();
+		public Clutter.Vertex? copy ();
 		public bool equal (Clutter.Vertex vertex_b);
 		public void free ();
-		public Clutter.Vertex init (float x, float y, float z);
+		public unowned Clutter.Vertex? init (float x, float y, float z);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ACTOR_ALIGN_", type_id = "clutter_actor_align_get_type ()")]
 	public enum ActorAlign {

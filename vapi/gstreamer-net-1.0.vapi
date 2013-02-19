@@ -52,6 +52,6 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/net/gstnet.h")]
 		public static GLib.Type address_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/net/gstnet.h")]
-		public static Gst.MetaInfo address_meta_get_info ();
+		public static unowned Gst.MetaInfo? address_meta_get_info ();
 	}
 }

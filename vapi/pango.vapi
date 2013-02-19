@@ -130,7 +130,7 @@ namespace Pango {
 		public Pango.Gravity get_gravity ();
 		public Pango.GravityHint get_gravity_hint ();
 		public Pango.Language get_language ();
-		public Pango.Matrix get_matrix ();
+		public unowned Pango.Matrix? get_matrix ();
 		public Pango.FontMetrics get_metrics (Pango.FontDescription? desc, Pango.Language? language);
 		public uint get_serial ();
 		public void list_families ([CCode (array_length_cname = "n_families", array_length_pos = 1.1)] out Pango.FontFamily[] families);
@@ -449,10 +449,10 @@ namespace Pango {
 		public virtual void draw_trapezoid (Pango.RenderPart part, double y1_, double x11, double x21, double y2, double x12, double x22);
 		[NoWrapper]
 		public virtual void end ();
-		public Pango.Color get_color (Pango.RenderPart part);
+		public Pango.Color? get_color (Pango.RenderPart part);
 		public unowned Pango.Layout get_layout ();
 		public unowned Pango.LayoutLine get_layout_line ();
-		public Pango.Matrix get_matrix ();
+		public unowned Pango.Matrix? get_matrix ();
 		public virtual void part_changed (Pango.RenderPart part);
 		[NoWrapper]
 		public virtual void prepare_run (Pango.LayoutRun run);
@@ -501,7 +501,7 @@ namespace Pango {
 		public uint16 red;
 		public uint16 green;
 		public uint16 blue;
-		public Pango.Color copy ();
+		public Pango.Color? copy ();
 		public void free ();
 		public bool parse (string spec);
 		public string to_string ();
@@ -532,7 +532,7 @@ namespace Pango {
 		public int end_glyph;
 		public int end_index;
 		public int end_char;
-		public Pango.GlyphItemIter copy ();
+		public Pango.GlyphItemIter? copy ();
 		public void free ();
 		public bool init_end (Pango.GlyphItem glyph_item, string text);
 		public bool init_start (Pango.GlyphItem glyph_item, string text);
@@ -572,7 +572,7 @@ namespace Pango {
 		public double x0;
 		public double y0;
 		public void concat (Pango.Matrix new_matrix);
-		public Pango.Matrix copy ();
+		public Pango.Matrix? copy ();
 		public void free ();
 		public double get_font_scale_factor ();
 		public void rotate (double degrees);

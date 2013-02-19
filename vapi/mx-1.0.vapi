@@ -1007,7 +1007,7 @@ namespace Mx {
 		[CCode (has_construct_function = false)]
 		protected Tooltip ();
 		public unowned string get_text ();
-		public Clutter.Geometry get_tip_area ();
+		public unowned Clutter.Geometry? get_tip_area ();
 		public void hide ();
 		public static bool is_in_browse_mode ();
 		public void set_text (string text);
