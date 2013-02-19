@@ -5921,8 +5921,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			/* target instance is first argument */
 			var cinstance = (CCodeExpression) get_ccodenode (instance);
 
-			if (prop.parent_symbol is Struct) {
-				// we need to pass struct instance by reference
+			if (prop.parent_symbol is Struct && !((Struct) prop.parent_symbol).is_simple_type ()) {
+				// we need to pass struct instance by reference if it isn't a simple-type
 				var instance_value = instance.target_value;
 				if (!get_lvalue (instance_value)) {
 					instance_value = store_temp_value (instance_value, instance);
