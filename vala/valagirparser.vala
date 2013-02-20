@@ -2670,9 +2670,15 @@ public class Vala.GirParser : CodeVisitor {
 		bool no_array_length = true;
 		type = element_get_type (type, true, ref no_array_length);
 
-		var field = new Field (current.name, type, null, current.source_reference);
+		string name = current.name;
+		string cname = current.girdata["name"];
+
+		var field = new Field (name, type, null, current.source_reference);
 		field.access = SymbolAccessibility.PUBLIC;
 		field.comment = comment;
+		if (name != cname) {
+			field.set_attribute_string ("CCode", "cname", cname);
+		}
 		if (type is ArrayType) {
 			if (no_array_length) {
 				field.set_attribute_bool ("CCode", "array_length", false);
