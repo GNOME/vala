@@ -4788,6 +4788,39 @@ namespace Gdk {
 	[Compact]
 	public class EventSequence {
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_frame_clock_get_type ()")]
+	public abstract class FrameClock : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected FrameClock ();
+		public void begin_updating ();
+		public void end_updating ();
+		public Gdk.FrameTimings get_current_timings ();
+		public int64 get_frame_counter ();
+		public int64 get_frame_time ();
+		public int64 get_history_start ();
+		public void get_refresh_info (int64 base_time, int64 refresh_interval_return, int64 presentation_time_return);
+		public Gdk.FrameTimings get_timings (int64 frame_counter);
+		public void request_phase (Gdk.FrameClockPhase phase);
+		public signal void after_paint ();
+		public signal void before_paint ();
+		public signal void flush_events ();
+		public signal void layout ();
+		public signal void paint ();
+		public signal void resume_events ();
+		public signal void update ();
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_frame_timings_get_type ()")]
+	[Compact]
+	public class FrameTimings {
+		public bool get_complete ();
+		public int64 get_frame_counter ();
+		public int64 get_frame_time ();
+		public int64 get_predicted_presentation_time ();
+		public int64 get_presentation_time ();
+		public int64 get_refresh_interval ();
+		public Gdk.FrameTimings @ref ();
+		public void unref ();
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_keymap_get_type ()")]
 	public class Keymap : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -4889,6 +4922,7 @@ namespace Gdk {
 		public void begin_paint_region (Cairo.Region region);
 		public void begin_resize_drag (Gdk.WindowEdge edge, int button, int root_x, int root_y, uint32 timestamp);
 		public void begin_resize_drag_for_device (Gdk.WindowEdge edge, Gdk.Device device, int button, int root_x, int root_y, uint32 timestamp);
+		[Deprecated (since = "3.8")]
 		public void configure_finished ();
 		public static void constrain_size (Gdk.Geometry geometry, uint flags, int width, int height, out int new_width, out int new_height);
 		public void coords_from_parent (double parent_x, double parent_y, out double x, out double y);
@@ -4897,6 +4931,7 @@ namespace Gdk {
 		public void deiconify ();
 		[DestroysInstance]
 		public void destroy ();
+		[Deprecated (since = "3.8")]
 		public void enable_synchronized_configure ();
 		public void end_paint ();
 		public bool ensure_native ();
@@ -4922,6 +4957,7 @@ namespace Gdk {
 		public unowned Gdk.Window get_effective_toplevel ();
 		public Gdk.EventMask get_events ();
 		public bool get_focus_on_map ();
+		public unowned Gdk.FrameClock get_frame_clock ();
 		public void get_frame_extents (out Gdk.Rectangle rect);
 		public Gdk.FullscreenMode get_fullscreen_mode ();
 		public void get_geometry (out int x, out int y, out int width, out int height);
@@ -5546,6 +5582,18 @@ namespace Gdk {
 		CONTINUE,
 		TRANSLATE,
 		REMOVE
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FRAME_CLOCK_PHASE_", type_id = "gdk_frame_clock_phase_get_type ()")]
+	[Flags]
+	public enum FrameClockPhase {
+		NONE,
+		FLUSH_EVENTS,
+		BEFORE_PAINT,
+		UPDATE,
+		LAYOUT,
+		PAINT,
+		RESUME_EVENTS,
+		AFTER_PAINT
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FULLSCREEN_ON_", type_id = "gdk_fullscreen_mode_get_type ()")]
 	public enum FullscreenMode {

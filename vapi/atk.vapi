@@ -76,6 +76,7 @@ namespace Atk {
 		[NoWrapper]
 		public virtual int get_n_children ();
 		public virtual unowned string get_name ();
+		public virtual unowned string get_object_locale ();
 		public virtual unowned Atk.Object get_parent ();
 		public virtual Atk.Role get_role ();
 		public virtual void initialize (void* data);
@@ -289,9 +290,9 @@ namespace Atk {
 		[CCode (vfunc_name = "get_document_attributes")]
 		public virtual unowned Atk.AttributeSet get_attributes ();
 		public virtual void* get_document ();
+		[NoWrapper]
+		public virtual unowned string get_document_locale ();
 		public virtual unowned string get_document_type ();
-		[CCode (vfunc_name = "get_document_locale")]
-		public virtual unowned string get_locale ();
 		[CCode (vfunc_name = "set_document_attribute")]
 		public virtual bool set_attribute_value (string attribute_name, string attribute_value);
 		public signal void load_complete ();

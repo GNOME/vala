@@ -370,7 +370,7 @@ namespace GData {
 		[CCode (array_length_pos = 1.5, array_length_type = "gsize")]
 		public uint8[] get_photo (GData.ContactsService service, out string content_type, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (array_length_pos = 1.1)]
-		public async uint8 get_photo_async (GData.ContactsService service, out size_t length, out string content_type) throws GLib.Error;
+		public async uint8[] get_photo_async (GData.ContactsService service, out string content_type) throws GLib.Error;
 		public unowned string get_photo_etag ();
 		public unowned GLib.List<GData.GDPostalAddress> get_postal_addresses ();
 		public unowned GData.GContactCalendar get_primary_calendar ();
@@ -541,6 +541,11 @@ namespace GData {
 	public class DocumentsFolder : GData.DocumentsEntry, GData.AccessHandler {
 		[CCode (has_construct_function = false)]
 		public DocumentsFolder (string? id);
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_documents_pdf_get_type ()")]
+	public class DocumentsPdf : GData.DocumentsDocument, GData.AccessHandler {
+		[CCode (has_construct_function = false)]
+		public DocumentsPdf (string? id);
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_documents_presentation_get_type ()")]
 	public class DocumentsPresentation : GData.DocumentsDocument, GData.AccessHandler {

@@ -7,7 +7,7 @@ namespace Json {
 	public class Array {
 		[CCode (has_construct_function = false)]
 		public Array ();
-		public void add_array_element (owned Json.Array value);
+		public void add_array_element (owned Json.Array? value);
 		public void add_boolean_element (bool value);
 		public void add_double_element (double value);
 		public void add_element (owned Json.Node node);
@@ -76,6 +76,7 @@ namespace Json {
 	public class Node {
 		[CCode (has_construct_function = false)]
 		public Node (Json.NodeType type);
+		public static Json.Node alloc ();
 		public Json.Node copy ();
 		public Json.Array dup_array ();
 		public Json.Object dup_object ();
@@ -91,6 +92,14 @@ namespace Json {
 		public unowned string get_string ();
 		public GLib.Value get_value ();
 		public GLib.Type get_value_type ();
+		public unowned Json.Node init (Json.NodeType type);
+		public unowned Json.Node init_array (Json.Array? array);
+		public unowned Json.Node init_boolean (bool value);
+		public unowned Json.Node init_double (double value);
+		public unowned Json.Node init_int (int64 value);
+		public unowned Json.Node init_null ();
+		public unowned Json.Node init_object (Json.Object? object);
+		public unowned Json.Node init_string (string? value);
 		public bool is_null ();
 		public void set_array (Json.Array array);
 		public void set_boolean (bool value);
@@ -223,6 +232,7 @@ namespace Json {
 		MISSING_COMMA,
 		MISSING_COLON,
 		INVALID_BAREWORD,
+		EMPTY_MEMBER_NAME,
 		UNKNOWN
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PATH_ERROR_INVALID_", has_type_id = false)]
