@@ -2,6 +2,7 @@
  *
  * Copyright (C) 2008-2009  Jürg Billeter
  * Copyright (C) 2010 Marco Trevisan (Treviño)
+ * Copyright (C) 2013 Nikolay Orliuk
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,6 +21,7 @@
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
  *  Marco Trevisan (Treviño) <mail@3v1n0.net>
+ *  Nikolay Orliuk <virkony@gmail.com>
  */
 
 [CCode (cprefix = "", lower_case_cprefix = "")]
@@ -2567,4 +2569,15 @@ namespace Posix {
 
 	[CCode (cheader_filename = "langinfo.h")]
 	public unowned string nl_langinfo (NLItem item);
+
+	[CCode (cheader_filename = "unistd.h")]
+	public int getopt ([CCode (array_length_pos = 0)] string[] args, string optstring);
+	[CCode (cheader_filename = "unistd.h")]
+	public static string optarg;
+	[CCode (cheader_filename = "unistd.h")]
+	public static int optind;
+	[CCode (cheader_filename = "unistd.h")]
+	public static int opterr;
+	[CCode (cheader_filename = "unistd.h")]
+	public static int optopt;
 }
