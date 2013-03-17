@@ -5584,7 +5584,7 @@ namespace Gtk {
 		public void set_rubber_banding (bool enable);
 		public void set_rules_hint (bool setting);
 		public void set_search_column (int column);
-		public void set_search_entry (Gtk.Entry entry);
+		public void set_search_entry (Gtk.Entry? entry);
 		public void set_search_equal_func (owned Gtk.TreeViewSearchEqualFunc search_equal_func);
 		public void set_search_position_func (owned Gtk.TreeViewSearchPositionFunc func);
 		public void set_show_expanders (bool enabled);
