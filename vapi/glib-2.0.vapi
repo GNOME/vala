@@ -3183,7 +3183,7 @@ namespace GLib {
 	[Compact]
 	[CCode (free_function = "g_option_context_free")]
 	public class OptionContext {
-		public OptionContext (string parameter_string);
+		public OptionContext (string? parameter_string = null);
 		public void set_summary (string summary);
 		public unowned string get_summary ();
 		public void set_description (string description);
