@@ -2425,7 +2425,7 @@ namespace Gtk {
 		public int get_text_column ();
 		public int get_tooltip_column ();
 		public bool get_tooltip_context (out int x, out int y, bool keyboard_tip, out unowned Gtk.TreeModel model, out unowned Gtk.TreePath path, out Gtk.TreeIter iter);
-		public bool get_visible_range (out unowned Gtk.TreePath start_path, out unowned Gtk.TreePath end_path);
+		public bool get_visible_range (out Gtk.TreePath start_path, out Gtk.TreePath end_path);
 		public bool path_is_selected (Gtk.TreePath path);
 		public void scroll_to_path (Gtk.TreePath path, bool use_align, float row_align, float col_align);
 		public void select_path (Gtk.TreePath path);
