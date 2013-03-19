@@ -5050,7 +5050,7 @@ namespace Gtk {
 		public void next ();
 		public void prepend_index (int index_);
 		public bool prev ();
-		public unowned string to_string ();
+		public string to_string ();
 		public bool up ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_tree_row_reference_copy", type_id = "gtk_tree_row_reference_get_type ()")]
@@ -5197,7 +5197,7 @@ namespace Gtk {
 		public int get_tooltip_column ();
 		public bool get_tooltip_context (ref int x, ref int y, bool keyboard_tip, out unowned Gtk.TreeModel model, out unowned Gtk.TreePath path, out Gtk.TreeIter iter);
 		public unowned Gtk.Adjustment get_vadjustment ();
-		public bool get_visible_range (out unowned Gtk.TreePath start_path, out unowned Gtk.TreePath end_path);
+		public bool get_visible_range (out Gtk.TreePath start_path, out Gtk.TreePath end_path);
 		public void get_visible_rect (out Gdk.Rectangle visible_rect);
 		public int insert_column (Gtk.TreeViewColumn column, int position);
 		public int insert_column_with_attributes (int position, string? title, Gtk.CellRenderer cell, ...);
