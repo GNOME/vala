@@ -32,6 +32,8 @@ public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
 
 	public int position { private set; get; default = -1; }
 
+	public bool is_c_self_param { internal set; get; }
+
 	public Rule? get_parser_rule (Rule run_rule) {
 		return Rule.seq ({
 			Rule.option ({ Rule.many ({ TokenType.SPACE }) }),
@@ -105,7 +107,7 @@ public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
 			if (is_implicit) {
 				reporter.simple_note ("%s: %s: @param: warning: Implicit parameter `%s' exposed in documentation",
 									  file_path, container.get_full_name (), parameter_name);
-			} else {
+			} else if (!is_c_self_param) {
 				reporter.simple_warning ("%s: %s: @param: warning: Unknown parameter `%s'",
 										 file_path, container.get_full_name (), parameter_name);
 			}

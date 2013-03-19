@@ -279,6 +279,12 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			}
 
 			taglet.parameter_name = iter.get_key ();
+
+			if (taglet.parameter_name == gir_comment.instance_param_name) {
+				taglet.parameter_name = "this";
+				taglet.is_c_self_param = true;
+			}
+
 			comment.taglets.add (taglet);
 		}
 
@@ -1718,32 +1724,39 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				run.content.add (this.create_type_link (current.content));
 				next ();
 			} else if (current.type == TokenType.GTKDOC_PARAM) {
-				string? param_array_name;
-				bool is_return_type_len;
-				string? param_name;
-
-				string? cname = resolve_parameter_ctype (current.content, out param_name, out param_array_name, out is_return_type_len);
-				Run current_run = factory.create_run (Run.Style.MONOSPACED);
-				run.content.add (current_run);
-
-				if (is_return_type_len) {
-					Run keyword_run = factory.create_run (Run.Style.LANG_KEYWORD);
-					keyword_run.content.add (factory.create_text ("return"));
-					current_run.content.add (keyword_run);
-
-					current_run.content.add (factory.create_text (".length"));
-				} else if (param_array_name != null) {
-					current_run.content.add (factory.create_text (param_array_name + ".length"));
+				if (current.content == instance_param_name) {
+					Content.Run keyword_run = factory.create_run (Content.Run.Style.LANG_KEYWORD);
+					Content.Text text = factory.create_text ("this");
+					keyword_run.content.add (text);
+					run.content.add (keyword_run);
 				} else {
-					current_run.content.add (factory.create_text (param_name));
-				}
+					string? param_array_name;
+					bool is_return_type_len;
+					string? param_name;
 
-				if (cname != null) {
-					run.content.add (factory.create_text ("."));
+					string? cname = resolve_parameter_ctype (current.content, out param_name, out param_array_name, out is_return_type_len);
+					Run current_run = factory.create_run (Run.Style.MONOSPACED);
+					run.content.add (current_run);
 
-					Taglets.Link link = factory.create_taglet ("link") as Taglets.Link;
-					link.symbol_name = cname;
-					run.content.add (link);
+					if (is_return_type_len) {
+						Run keyword_run = factory.create_run (Run.Style.LANG_KEYWORD);
+						keyword_run.content.add (factory.create_text ("return"));
+						current_run.content.add (keyword_run);
+
+						current_run.content.add (factory.create_text (".length"));
+					} else if (param_array_name != null) {
+						current_run.content.add (factory.create_text (param_array_name + ".length"));
+					} else {
+						current_run.content.add (factory.create_text (param_name));
+					}
+
+					if (cname != null) {
+						run.content.add (factory.create_text ("."));
+
+						Taglets.Link link = factory.create_taglet ("link") as Taglets.Link;
+						link.symbol_name = cname;
+						run.content.add (link);
+					}
 				}
 				next ();
 			} else if (current.type == TokenType.GTKDOC_SIGNAL) {

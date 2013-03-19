@@ -663,6 +663,25 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			start_element ("parameters");
 			next ();
 
+			if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "instance-parameter") {
+				string instance_param_name = reader.get_attribute ("name");
+				next ();
+
+				Api.SourceComment? param_comment = parse_doc ();
+				parse_type (null);
+				end_element ("instance-parameter");
+
+				if (param_comment != null) {
+					if (comment == null) {
+						comment = new Api.GirSourceComment ("", file, begin.line, begin.column,
+															end.line, end.column);
+					}
+
+					comment.add_parameter_content (instance_param_name, param_comment);
+					comment.instance_param_name = instance_param_name;
+				}
+			}
+
 			for (int pcount = 0; current_token == MarkupTokenType.START_ELEMENT; pcount++) {
 				Api.SourceComment? param_comment;
 				int array_length_pos;
@@ -700,6 +719,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 		attach_comment (c_identifier, comment, param_names, destroy_notifies, closures,
 						array_lengths, array_length_ret);
+
 		end_element (element_name);
 	}
 

@@ -30,6 +30,7 @@ using Gee;
 public class Valadoc.Api.GirSourceComment : SourceComment {
 	private Map<string, SourceComment> parameters = new HashMap<string, SourceComment> ();
 
+	public string? instance_param_name { set; get; }
 	public SourceComment return_comment { set; get; }
 
 	public MapIterator<string, SourceComment> parameter_iterator () {
