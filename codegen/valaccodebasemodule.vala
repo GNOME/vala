@@ -3200,8 +3200,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return destroy_value (get_field_cvalue (field, instance));
 	}
 
-	// logic in this method is temporarily duplicated in destroy_variable
-	// apply changes to both methods
 	public virtual CCodeExpression destroy_value (TargetValue value, bool is_macro_definition = false) {
 		var type = value.value_type;
 		if (value.actual_value_type != null) {
@@ -3757,6 +3755,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				    (st == null || get_ccode_name (st) != "va_list")) {
 					// GArray and va_list don't use pointer-based generics
 					set_cvalue (expr, convert_from_generic_pointer (get_cvalue (expr), expr.value_type));
+					((GLibValue) expr.target_value).lvalue = false;
 				}
 			}
 
@@ -3775,6 +3774,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (expr.formal_target_type.type_parameter.parent_symbol != garray_type) {
 					// GArray doesn't use pointer-based generics
 					set_cvalue (expr, convert_to_generic_pointer (get_cvalue (expr), expr.target_type));
+					((GLibValue) expr.target_value).lvalue = false;
 				}
 			}
 
@@ -5015,12 +5015,25 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (iface != null || (cl != null && !cl.is_compact)) {
 			// checked cast for strict subtypes of GTypeInstance
 			if (expr.is_silent_cast) {
-				var cexpr = get_cvalue (expr.inner);
+				TargetValue to_cast = expr.inner.target_value;
+				CCodeExpression cexpr;
+				if (!get_lvalue (to_cast)) {
+					to_cast = store_temp_value (to_cast, expr);
+				}
+				cexpr = get_cvalue_ (to_cast);
 				var ccheck = create_type_check (cexpr, expr.type_reference);
 				var ccast = new CCodeCastExpression (cexpr, get_ccode_name (expr.type_reference));
 				var cnull = new CCodeConstant ("NULL");
-
-				set_cvalue (expr, new CCodeConditionalExpression (ccheck, ccast, cnull));
+				var cast_value = new GLibValue (expr.value_type, new CCodeConditionalExpression (ccheck, ccast, cnull));
+				if (requires_destroy (expr.inner.value_type)) {
+					var casted = store_temp_value (cast_value, expr);
+					ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_cvalue_ (casted), new CCodeConstant ("NULL")));
+					ccode.add_expression (destroy_value (to_cast));
+					ccode.close ();
+					expr.target_value = ((GLibValue) casted).copy ();
+				} else {
+					expr.target_value = cast_value;
+				}
 			} else {
 				set_cvalue (expr, generate_instance_cast (get_cvalue (expr.inner), expr.type_reference.data_type));
 			}
@@ -5632,7 +5645,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, result.cvalue);
 		} else {
+			// TODO: rewrite get_implicit_cast_expression to return a GLibValue
+			var old_cexpr = result.cvalue;
 			result.cvalue = get_implicit_cast_expression (result.cvalue, type, target_type, node);
+			result.lvalue = result.lvalue && result.cvalue == old_cexpr;
 		}
 
 		if (requires_temp_value && !(target_type is ArrayType && ((ArrayType) target_type).inline_allocated)) {
