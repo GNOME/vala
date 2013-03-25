@@ -47,7 +47,7 @@ namespace Json {
 		public unowned Json.Builder begin_object ();
 		public unowned Json.Builder end_array ();
 		public unowned Json.Builder end_object ();
-		public Json.Node get_root ();
+		public Json.Node? get_root ();
 		public void reset ();
 		public unowned Json.Builder set_member_name (string member_name);
 	}
@@ -58,7 +58,7 @@ namespace Json {
 		public uint get_indent ();
 		public unichar get_indent_char ();
 		public bool get_pretty ();
-		public unowned Json.Node get_root ();
+		public unowned Json.Node? get_root ();
 		public void set_indent (uint indent_level);
 		public void set_indent_char (unichar indent_char);
 		public void set_pretty (bool is_pretty);
@@ -153,7 +153,7 @@ namespace Json {
 		public static GLib.Quark error_quark ();
 		public uint get_current_line ();
 		public uint get_current_pos ();
-		public unowned Json.Node get_root ();
+		public unowned Json.Node? get_root ();
 		public bool has_assignment (out unowned string variable_name);
 		public bool load_from_data (string data, ssize_t length = -1) throws GLib.Error;
 		public bool load_from_file (string filename) throws GLib.Error;
@@ -292,9 +292,9 @@ namespace Json {
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static string gobject_to_data (GLib.Object gobject, out size_t length);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
-	public static GLib.Variant gvariant_deserialize (Json.Node json_node, string? signature) throws GLib.Error;
+	public static unowned GLib.Variant gvariant_deserialize (Json.Node json_node, string? signature) throws GLib.Error;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
-	public static GLib.Variant gvariant_deserialize_data (string json, ssize_t length, string? signature) throws GLib.Error;
+	public static unowned GLib.Variant gvariant_deserialize_data (string json, ssize_t length, string? signature) throws GLib.Error;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static Json.Node gvariant_serialize (GLib.Variant variant);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]

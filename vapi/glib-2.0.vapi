@@ -460,6 +460,11 @@ public struct uint16 {
 	[CCode (cname = "GUINT16_FROM_LE")]
 	public static uint16 from_little_endian (uint16 val);
 
+	[CCode (cname = "g_htons")]
+	public static uint16 to_network (uint16 val);
+	[CCode (cname = "g_ntohs")]
+	public static uint16 from_network (uint16 val);
+
 	[CCode (cname = "GUINT16_SWAP_BE_PDP")]
 	public uint16 swap_big_endian_pdp ();
 	[CCode (cname = "GUINT16_SWAP_LE_BE")]
@@ -538,6 +543,11 @@ public struct uint32 {
 	public static uint32 from_big_endian (uint32 val);
 	[CCode (cname = "GUINT32_FROM_LE")]
 	public static uint32 from_little_endian (uint32 val);
+
+	[CCode (cname = "g_htonl")]
+	public static uint32 to_network (uint32 val);
+	[CCode (cname = "g_ntohl")]
+	public static uint32 from_network (uint32 val);
 
 	[CCode (cname = "GUINT32_SWAP_BE_PDP")]
 	public uint32 swap_big_endian_pdp ();
