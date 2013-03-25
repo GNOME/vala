@@ -5072,9 +5072,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			var innercexpr = get_cvalue (expr.inner);
-			if (expr.type_reference.data_type is Struct && !expr.type_reference.nullable &&
-				expr.inner.value_type.data_type is Struct && expr.inner.value_type.nullable) {
-				// nullable integer or float or boolean or struct cast to non-nullable
+			if (expr.type_reference is ValueType && !expr.type_reference.nullable &&
+				expr.inner.value_type is ValueType && expr.inner.value_type.nullable) {
+				// nullable integer or float or boolean or struct or enum cast to non-nullable
 				innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, innercexpr);
 			}
 			set_cvalue (expr, new CCodeCastExpression (innercexpr, get_ccode_name (expr.type_reference)));
