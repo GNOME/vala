@@ -1524,6 +1524,18 @@ public class Vala.GIdlParser : CodeVisitor {
 						if (eval (nv[1]) == "1") {
 							cl.set_attribute ("Experimental", true);
 						}
+					} else if (nv[0] == "compact") {
+						if (eval (nv[1]) == "1") {
+							cl.is_compact = true;
+						}
+					} else if (nv[0] == "ref_function") {
+						cl.set_attribute_string ("CCode", "ref_function", eval (nv[1]));
+					} else if (nv[0] == "unref_function") {
+						cl.set_attribute_string ("CCode", "unref_function", eval (nv[1]));
+					} else if (nv[0] == "copy_function") {
+						cl.set_attribute_string ("CCode", "copy_function", eval (nv[1]));
+					} else if (nv[0] == "free_function") {
+						cl.set_attribute_string ("CCode", "free_function", eval (nv[1]));
 					}
 				}
 			}
@@ -1536,8 +1548,10 @@ public class Vala.GIdlParser : CodeVisitor {
 			var parent = parse_type_string (base_class);
 			cl.add_base_type (parent);
 		} else if (node.parent != null) {
-			var parent = parse_type_string (node.parent);
-			cl.add_base_type (parent);
+			if (!cl.is_compact) {
+				var parent = parse_type_string (node.parent);
+				cl.add_base_type (parent);
+			}
 		} else {
 			var gobject_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "Object");
 			cl.add_base_type (new UnresolvedType.from_symbol (gobject_symbol));

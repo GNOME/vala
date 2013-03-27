@@ -2298,8 +2298,9 @@ namespace Gtk {
 		public static unowned Gtk.IconSet lookup_default (string stock_id);
 		public void remove_default ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class IconInfo : GLib.Object {
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_icon_info_copy", free_function = "gtk_icon_info_free")]
+	[Compact]
+	public class IconInfo {
 		[CCode (has_construct_function = false)]
 		protected IconInfo ();
 		public Gtk.IconInfo copy ();
