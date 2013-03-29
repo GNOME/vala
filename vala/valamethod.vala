@@ -327,6 +327,11 @@ public class Vala.Method : Subroutine {
 				return false;
 			}
 			if (!base_param.ellipsis) {
+				if (base_param.direction != param.direction) {
+					invalid_match = "incompatible direction of parameter %d".printf (param_index);
+					return false;
+				}
+
 				actual_base_type = base_param.variable_type.get_actual_type (object_type, null, this);
 				if (!actual_base_type.equals (param.variable_type)) {
 					invalid_match = "incompatible type of parameter %d".printf (param_index);
