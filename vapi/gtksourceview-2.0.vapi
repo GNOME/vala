@@ -174,8 +174,8 @@ namespace Gtk {
 		public void queue_draw ();
 		public void remove (Gtk.CellRenderer renderer);
 		public void reorder (Gtk.CellRenderer renderer, int position);
-		public void set_cell_data_func (Gtk.CellRenderer renderer, Gtk.SourceGutterDataFunc func, void* func_data, GLib.DestroyNotify destroy);
-		public void set_cell_size_func (Gtk.CellRenderer renderer, Gtk.SourceGutterSizeFunc func, void* func_data, GLib.DestroyNotify destroy);
+		public void set_cell_data_func (Gtk.CellRenderer renderer, owned Gtk.SourceGutterDataFunc func);
+		public void set_cell_size_func (Gtk.CellRenderer renderer, owned Gtk.SourceGutterSizeFunc func);
 		[NoAccessorMethod]
 		public Gtk.SourceView view { owned get; construct; }
 		[NoAccessorMethod]
