@@ -149,6 +149,12 @@ public class Vala.Field : Variable, Lockable {
 				return false;
 			}
 
+			if (binding == MemberBinding.STATIC && parent_symbol is Class && ((Class)parent_symbol).is_compact && !initializer.is_constant ()) {
+				error = true;
+				Report.error (source_reference, "Static fields in compact classes cannot have non-constant initializers");
+				return false;
+			}
+
 			if (external) {
 				error = true;
 				Report.error (source_reference, "External fields cannot use initializers");
