@@ -61,7 +61,8 @@ public class Vala.Parser : CodeVisitor {
 		STATIC,
 		VIRTUAL,
 		ASYNC,
-		SEALED
+		SEALED,
+		PARTIAL
 	}
 
 	public Parser () {
@@ -253,6 +254,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.OVERRIDE:
 		case TokenType.OWNED:
 		case TokenType.PARAMS:
+		case TokenType.PARTIAL:
 		case TokenType.PRIVATE:
 		case TokenType.PROTECTED:
 		case TokenType.PUBLIC:
@@ -2733,6 +2735,7 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.NAMESPACE:
 			case TokenType.NEW:
 			case TokenType.OVERRIDE:
+			case TokenType.PARTIAL:
 			case TokenType.PRIVATE:
 			case TokenType.PROTECTED:
 			case TokenType.PUBLIC:
@@ -2842,9 +2845,42 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.SEALED in flags) {
 			cl.is_sealed = true;
 		}
+		if (ModifierFlags.PARTIAL in flags) {
+			if (!context.experimental) {
+				Report.warning (cl.source_reference, "`partial' classes are experimental");
+			}
+			cl.is_partial = true;
+		}
 		if (ModifierFlags.EXTERN in flags) {
 			cl.is_extern = true;
 		}
+
+		var old_cl = parent.scope.lookup (cl.name) as Class;
+		if (old_cl != null && old_cl.is_partial) {
+			if (cl.is_partial != old_cl.is_partial) {
+				Report.error (cl.source_reference, "conflicting partial and not partial declarations of `%s'".printf (cl.name));
+				cl.error = true;
+			}
+			if (cl.access != old_cl.access) {
+				Report.error (cl.source_reference, "partial declarations of `%s' have conflicting accessiblity modifiers".printf (cl.name));
+				cl.error = true;
+			}
+			if (cl.is_abstract != old_cl.is_abstract) {
+				Report.error (cl.source_reference, "partial declarations of `%s' have conflicting abstract modifiers".printf (cl.name));
+				cl.error = true;
+			}
+			if (cl.is_sealed != old_cl.is_sealed) {
+				Report.error (cl.source_reference, "partial declarations of `%s' have conflicting sealed modifiers".printf (cl.name));
+				cl.error = true;
+			}
+			if (cl.error) {
+				Report.notice (old_cl.source_reference, "previous declaration of `%s' was here", old_cl.name);
+				return;
+			}
+
+			cl = old_cl;
+		}
+
 		set_attributes (cl, attrs);
 		foreach (TypeParameter type_param in type_param_list) {
 			cl.add_type_parameter (type_param);
@@ -2854,6 +2890,10 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		parse_declarations (cl);
+
+		if (old_cl != null && old_cl.is_partial) {
+			return;
+		}
 
 		// ensure there is always a default construction method
 		if (scanner.source_file.file_type == SourceFileType.SOURCE
@@ -3530,6 +3570,10 @@ public class Vala.Parser : CodeVisitor {
 				next ();
 				flags |= ModifierFlags.EXTERN;
 				break;
+			case TokenType.PARTIAL:
+				next ();
+				flags |= ModifierFlags.PARTIAL;
+				break;
 			case TokenType.SEALED:
 				next ();
 				flags |= ModifierFlags.SEALED;
@@ -3872,6 +3916,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.NAMESPACE:
 		case TokenType.NEW:
 		case TokenType.OVERRIDE:
+		case TokenType.PARTIAL:
 		case TokenType.PRIVATE:
 		case TokenType.PROTECTED:
 		case TokenType.PUBLIC:

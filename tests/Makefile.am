@@ -451,6 +451,11 @@ TESTS = \
 	objects/class-destroysinstance.vala \
 	objects/class-inner-types.vala \
 	objects/class-new-no-override.vala \
+	objects/class-partial.vala \
+	objects/class-partial-conflict-abstract.test \
+	objects/class-partial-conflict-access.test \
+	objects/class-partial-conflict-partial.test \
+	objects/class-partial-conflict-sealed.test \
 	objects/class-vfunc-base-access.vala \
 	objects/classes.vala \
 	objects/classes-interfaces.vala \

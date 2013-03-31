@@ -115,6 +115,7 @@ public enum Vala.TokenType {
 	OVERRIDE,
 	OWNED,
 	PARAMS,
+	PARTIAL,
 	PERCENT,
 	PLUS,
 	PRIVATE,
@@ -249,6 +250,7 @@ public enum Vala.TokenType {
 		case OVERRIDE: return "`override'";
 		case OWNED: return "`owned'";
 		case PARAMS: return "`params'";
+		case PARTIAL: return "`partial'";
 		case PERCENT: return "`%'";
 		case PLUS: return "`+'";
 		case PRIVATE: return "`private'";

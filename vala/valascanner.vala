@@ -533,7 +533,14 @@ public class Vala.Scanner {
 				}
 				break;
 			case 'p':
-				if (matches (begin, "private")) return TokenType.PRIVATE;
+				switch (begin[1]) {
+				case 'r':
+					if (matches (begin, "private")) return TokenType.PRIVATE;
+					break;
+				case 'a':
+					if (matches (begin, "partial")) return TokenType.PARTIAL;
+					break;
+				}
 				break;
 			case 'u':
 				if (matches (begin, "unowned")) return TokenType.UNOWNED;

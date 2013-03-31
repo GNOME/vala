@@ -37,6 +37,8 @@ public class Vala.Class : ObjectTypeSymbol {
 	 */
 	public bool is_abstract { get; set; }
 
+	public bool is_partial { get; set; }
+
 	/**
 	 * Specifies whether this class is sealed. Sealed classes may not be
 	 * sub-classed.

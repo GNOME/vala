@@ -1,0 +1,10 @@
+Invalid Code
+
+partial abstract class Foo {
+}
+
+partial class Foo {
+}
+
+void main () {
+}
