@@ -270,6 +270,11 @@ public class Vala.SymbolResolver : CodeVisitor {
 		if (st.base_type != null) {
 			// make sure that base type is resolved
 
+			if (current_scope == st.scope) {
+				// recursive declaration in generic base type
+				return new StructValueType (st);
+			}
+
 			var old_scope = current_scope;
 			current_scope = st.scope;
 
