@@ -143,6 +143,12 @@ public class Vala.Field : Variable, Lockable {
 				return false;
 			}
 
+			if (parent_symbol is Namespace && !initializer.is_constant ()) {
+				error = true;
+				Report.error (source_reference, "Non-constant field initializerS not supported in this context");
+				return false;
+			}
+
 			if (external) {
 				error = true;
 				Report.error (source_reference, "External fields cannot use initializers");
