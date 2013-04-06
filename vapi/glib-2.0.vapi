@@ -3449,7 +3449,7 @@ namespace GLib {
 		public string[] split_full (string str, ssize_t string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, int max_tokens = 0) throws RegexError;
 		public string replace (string str, ssize_t string_len, int start_position, string replacement, RegexMatchFlags match_options = 0) throws RegexError;
 		public string replace_literal (string str, ssize_t string_len, int start_position, string replacement, RegexMatchFlags match_options = 0) throws RegexError;
-		public string replace_eval (string str, ssize_t string_len, int start_position, RegexMatchFlags match_options = 0, RegexEvalCallback eval) throws RegexError;
+		public string replace_eval (string str, ssize_t string_len, int start_position, RegexMatchFlags match_options, RegexEvalCallback eval) throws RegexError;
 		public static bool check_replacement (out bool has_references = null) throws RegexError;
 	}
 
