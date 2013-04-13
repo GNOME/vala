@@ -750,7 +750,7 @@ namespace Gtk {
 		public uint add_from_resource (string resource_path) throws GLib.Error;
 		public uint add_from_string (string buffer, size_t length) throws GLib.Error;
 		public uint add_objects_from_file (string filename, [CCode (array_length = false)] string[] object_ids) throws GLib.Error;
-		public uint add_objects_from_resource (string resource_path, string object_ids) throws GLib.Error;
+		public uint add_objects_from_resource (string resource_path, [CCode (array_length = false)] string[] object_ids) throws GLib.Error;
 		public uint add_objects_from_string (string buffer, size_t length, [CCode (array_length = false)] string[] object_ids) throws GLib.Error;
 		public void connect_signals (void* user_data);
 		public void connect_signals_full (Gtk.BuilderConnectFunc func);
