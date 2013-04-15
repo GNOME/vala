@@ -988,12 +988,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
 				if ((direction & 1) == 0) {
-					// no in paramters
+					// no in parameters
 					continue;
 				}
 			} else {
 				if ((direction & 2) == 0) {
-					// no out paramters
+					// no out parameters
 					continue;
 				}
 			}

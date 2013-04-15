@@ -29,7 +29,7 @@ using GLib;
  */
 public class Vala.ElementAccess : Expression {
 	/**
-	 * Expression representing the container on wich we want to access.
+	 * Expression representing the container on which we want to access.
 	 */
 	public Expression container {
 		get {

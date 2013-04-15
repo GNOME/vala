@@ -329,7 +329,7 @@ public class Vala.CodeContext {
 	 */
 	public bool add_external_package (string pkg) {
 		if (has_package (pkg)) {
-			// ignore multiple occurences of the same package
+			// ignore multiple occurrences of the same package
 			return true;
 		}
 

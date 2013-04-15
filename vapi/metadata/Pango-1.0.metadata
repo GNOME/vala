@@ -65,7 +65,7 @@ read_line
 scan_string
   .out out=false
 
-// Backwards compatability
+// Backwards compatibility
 AttrClass
   .copy type="GLib.Callback" skip=false
   .destroy type="GLib.Callback" skip=false

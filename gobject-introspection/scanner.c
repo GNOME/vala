@@ -1501,7 +1501,7 @@ g_igenerator_add_include_idl (GIGenerator *igenerator,
   modules = g_idl_parse_file (filename, &error);
   if (error)
     {
-      g_printerr ("An error occured while parsing %s: %s\n",
+      g_printerr ("An error occurred while parsing %s: %s\n",
 		  filename, error->message);
       return;
     }

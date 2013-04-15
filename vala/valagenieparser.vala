@@ -2648,7 +2648,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		if (ModifierFlags.PRIVATE in flags) {
 			cl.access = SymbolAccessibility.PRIVATE;
 		} else {
-			/* class must always be Public unless its name starts wtih underscore */
+			/* class must always be Public unless its name starts with underscore */
 			if (sym.name[0] == '_') {
 				cl.access = SymbolAccessibility.PRIVATE;
 			} else {

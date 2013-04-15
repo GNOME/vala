@@ -455,7 +455,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					(param.direction == ParameterDirection.IN && type_as_struct != null && !type_as_struct.is_simple_type () && !result.value_type.nullable)) {
 					result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_variable_cname (name)));
 				} else {
-					// Property setters of non simple structs shall replace all occurences
+					// Property setters of non simple structs shall replace all occurrences
 					// of the "value" formal parameter with a dereferencing version of that
 					// parameter.
 					if (current_property_accessor != null &&
