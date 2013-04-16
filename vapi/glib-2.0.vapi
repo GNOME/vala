@@ -1813,7 +1813,18 @@ namespace GLib {
 		public bool timed_wait (Mutex mutex, TimeVal abs_time);
 		public bool wait_until (Mutex mutex, int64 end_time);
 	}
-	
+
+	[CCode (cname = "GThreadFunc")]
+	public delegate G OnceFunc<G> ();
+
+	[CCode (default_value = "G_ONCE_INIT")]
+	public struct Once<G> {
+		[CCode (cname = "g_once")]
+		public unowned G once (OnceFunc<G> function);
+		public static bool init_enter ([CCode (ctype="volatile gsize *")] size_t *value);
+		public static void init_leave ([CCode (ctype="volatile gsize *")] size_t *value, size_t set_value);
+	}
+
 	/* Thread Pools */
 
 	[CCode (cname = "GFunc")]
