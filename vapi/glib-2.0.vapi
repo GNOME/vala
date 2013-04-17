@@ -1672,7 +1672,9 @@ namespace GLib {
 	[CCode (scope = "async")]
 	public delegate G ThreadFunc<G> ();
 	public delegate void Func<G> (G data);
-	
+
+	public uint get_num_processors ();
+
 	[CCode (has_type_id = false)]
 	public enum ThreadPriority {
 		LOW,
