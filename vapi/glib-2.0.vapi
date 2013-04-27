@@ -1748,7 +1748,7 @@ namespace GLib {
 		public bool writer_trylock ();
 		public void writer_unlock ();
 		public void reader_lock ();
-		public bool reader_tryolock ();
+		public bool reader_trylock ();
 		public void reader_unlock ();
 	}
 
