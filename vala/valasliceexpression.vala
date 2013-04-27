@@ -1,7 +1,7 @@
 /* valasliceexpression.vala
  *
  * Copyright (C) 2009 Robin Sonefors
- * Copyright (C) 2009-2010 Jürg Billeter
+ * Copyright (C) 2009-2013 Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -108,6 +108,11 @@ public class Vala.SliceExpression : Expression {
 		if (!container.check (context)) {
 			error = true;
 			return false;
+		}
+
+		if (container.value_type is ArrayType) {
+			start.target_type = context.analyzer.int_type.copy ();
+			stop.target_type = context.analyzer.int_type.copy ();
 		}
 
 		if (!start.check (context)) {
