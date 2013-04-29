@@ -321,6 +321,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public Class gsource_type;
 	public TypeSymbol type_module_type;
 	public TypeSymbol dbus_proxy_type;
+	public Class gtk_widget_type;
 
 	public bool in_plugin = false;
 	public string module_init_param_name;
@@ -492,6 +493,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		dbus_proxy_type = (TypeSymbol) glib_ns.scope.lookup ("DBusProxy");
+
+		var gtk_ns = root_symbol.scope.lookup ("Gtk");
+		if (gtk_ns != null) {
+			gtk_widget_type = (Class) gtk_ns.scope.lookup ("Widget");
+		}
 
 		header_file = new CCodeFile ();
 		header_file.is_header = true;

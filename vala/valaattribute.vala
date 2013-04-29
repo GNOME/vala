@@ -73,11 +73,11 @@ public class Vala.Attribute : CodeNode {
 	 * @param name argument name
 	 * @return     string value
 	 */
-	public string? get_string (string name) {
+	public string? get_string (string name, string? default_value = null) {
 		string value = args.get (name);
 
 		if (value == null) {
-			return null;
+			return default_value;
 		}
 
 		/* remove quotes */

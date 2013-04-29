@@ -36,6 +36,7 @@ libvala_la_VALASOURCES = \
 	valagerrormodule.vala \
 	valagirwriter.vala \
 	valagobjectmodule.vala \
+	valagtkmodule.vala \
 	valagsignalmodule.vala \
 	valagtypemodule.vala \
 	valagvariantmodule.vala \

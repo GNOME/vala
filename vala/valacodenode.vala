@@ -206,12 +206,12 @@ public abstract class Vala.CodeNode {
 	 * @param argument  argument name
 	 * @return          string value
 	 */
-	public string? get_attribute_string (string attribute, string argument) {
+	public string? get_attribute_string (string attribute, string argument, string? default_value = null) {
 		var a = get_attribute (attribute);
 		if (a == null) {
-			return null;
+			return default_value;
 		}
-		return a.get_string (argument);
+		return a.get_string (argument, default_value);
 	}
 
 	/**

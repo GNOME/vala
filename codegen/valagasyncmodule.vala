@@ -22,7 +22,7 @@
 
 using GLib;
 
-public class Vala.GAsyncModule : GSignalModule {
+public class Vala.GAsyncModule : GtkModule {
 	CCodeStruct generate_data_struct (Method m) {
 		string dataname = Symbol.lower_case_to_camel_case (get_ccode_name (m)) + "Data";
 		var data = new CCodeStruct ("_" + dataname);

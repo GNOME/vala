@@ -779,6 +779,10 @@ public class Vala.Method : Subroutine {
 			}
 		}
 
+		if (get_attribute ("GtkCallback") != null) {
+			used = true;
+		}
+
 		return !error;
 	}
 
