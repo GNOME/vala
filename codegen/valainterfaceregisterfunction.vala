@@ -46,7 +46,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	}
 
 	public override string get_base_init_func_name () {
-		return "%s_base_init".printf (get_ccode_lower_case_name (interface_reference));
+		return "NULL";
 	}
 
 	public override string get_class_finalize_func_name () {
@@ -58,7 +58,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	}
 
 	public override string get_class_init_func_name () {
-		return "NULL";
+		return "%s_default_init".printf (get_ccode_lower_case_name (interface_reference));
 	}
 
 	public override string get_instance_struct_size () {

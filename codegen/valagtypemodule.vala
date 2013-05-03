@@ -2208,7 +2208,7 @@ public class Vala.GTypeModule : GErrorModule {
 			cfile.add_type_declaration (signal_array_decl);
 		}
 
-		add_interface_base_init_function (iface);
+		add_interface_default_init_function (iface);
 
 		if (iface.comment != null) {
 			cfile.add_type_member_definition (new CCodeComment (iface.comment.content));
@@ -2225,20 +2225,14 @@ public class Vala.GTypeModule : GErrorModule {
 		pop_context ();
 	}
 
-	private void add_interface_base_init_function (Interface iface) {
+	private void add_interface_default_init_function (Interface iface) {
 		push_context (new EmitContext (iface));
 
-		var base_init = new CCodeFunction ("%s_base_init".printf (get_ccode_lower_case_name (iface, null)), "void");
-		base_init.add_parameter (new CCodeParameter ("iface", "%sIface *".printf (get_ccode_name (iface))));
-		base_init.modifiers = CCodeModifiers.STATIC;
+		var default_init = new CCodeFunction ("%s_default_init".printf (get_ccode_lower_case_name (iface, null)), "void");
+		default_init.add_parameter (new CCodeParameter ("iface", "%sIface *".printf (get_ccode_name (iface))));
+		default_init.modifiers = CCodeModifiers.STATIC;
 
-		push_function (base_init);
-
-		/* make sure not to run the initialization code twice */
-		ccode.add_declaration (get_ccode_name (bool_type), new CCodeVariableDeclarator ("initialized", new CCodeConstant ("FALSE")), CCodeModifiers.STATIC);
-		ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("initialized")));
-
-		ccode.add_assignment (new CCodeIdentifier ("initialized"), new CCodeConstant ("TRUE"));
+		push_function (default_init);
 
 		if (iface.is_subtype_of (gobject_type)) {
 			/* create properties */
@@ -2305,11 +2299,9 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		ccode.close ();
-
 		pop_context ();
 
-		cfile.add_function (base_init);
+		cfile.add_function (default_init);
 	}
 
 	public override void visit_struct (Struct st) {
