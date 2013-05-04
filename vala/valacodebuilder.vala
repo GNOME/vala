@@ -203,6 +203,16 @@ public class Vala.CodeBuilder {
 		stmt.add_catch_clause (new CatchClause (error_type, variable_name, current_block, source_reference));
 	}
 
+	public void add_catch_all (string? variable_name) {
+		add_catch (data_type ("GLib.Error"), variable_name);
+	}
+
+	public void add_catch_uncaught_error () {
+		add_catch_all ("_uncaught_error_");
+		add_expression (expression ("GLib.critical (_uncaught_error_.message)"));
+		add_expression (expression ("GLib.critical (\"file %s: line %d: uncaught error: %s (%s, %d)\", GLib.Log.FILE, GLib.Log.LINE, _uncaught_error_.message, _uncaught_error_.domain.to_string(), _uncaught_error_.code)"));
+	}
+
 	public void add_statement (Statement statement) {
 		current_block.add_statement (statement);
 	}
@@ -246,5 +256,28 @@ public class Vala.CodeBuilder {
 			statement_stack.remove_at (statement_stack.size - 1);
 			current_block = top as Block;
 		} while (current_block == null);
+	}
+
+	/* Utilities for building the code */
+
+	public Expression expression (string str) {
+		return new Parser().parse_expression_string (str, source_reference);
+	}
+
+	// only qualified types, will slightly simplify the work of SymbolResolver
+	public static Symbol symbol_from_string (string symbol_string) {
+		Symbol sym = CodeContext.get().root;
+		foreach (unowned string s in symbol_string.split (".")) {
+			sym = sym.scope.lookup (s);
+		}
+		return sym;
+	}
+
+	// only qualified types, will slightly simplify the work of SymbolResolver
+	public static DataType data_type (string s, bool value_owned = true, bool nullable = false) {
+		DataType type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s));
+		type.value_owned = value_owned;
+		type.nullable = nullable;
+		return type;
 	}
 }

@@ -96,24 +96,16 @@ public class Vala.CodeTransformer : CodeVisitor {
 		return false;
 	}
 
-	public Symbol symbol_from_string (string symbol_string) {
-		Symbol sym = context.root;
-		foreach (unowned string s in symbol_string.split (".")) {
-			sym = sym.scope.lookup (s);
-		}
-		return sym;
+	public Symbol symbol_from_string (string s) {
+		return CodeBuilder.symbol_from_string (s);
 	}
 
-	// only qualified types, will slightly simplify the work of SymbolResolver
 	public DataType data_type (string s, bool value_owned = true, bool nullable = false) {
-		DataType type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) symbol_from_string (s));
-		type.value_owned = value_owned;
-		type.nullable = nullable;
-		return type;
+		return CodeBuilder.data_type (s, value_owned, nullable);
 	}
 
 	public Expression expression (string str) {
-		return new Parser ().parse_expression_string (str, b.source_reference);
+		return b.expression (str);
 	}
 
 	public void check (CodeNode node) {

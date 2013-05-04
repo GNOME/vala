@@ -47,11 +47,12 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 
 		var iter = b.add_temp_declaration (null, expression ("arguments.iterator ()"));
 
-		var call = (MethodCall) expression (@"object.$(m.name) ()");
-		var finish_call = call;
+		MethodCall call;
+		MethodCall finish_call;
 		Method ready = null;
 		CodeBuilder ready_builder = null;
 		if (m.coroutine) {
+			call = (MethodCall) expression (@"object.$(m.name).begin ()");
 			wrapper_method (new VoidType (), "gdbus_server_async_ready " + m.get_full_name (), out ready);
 			ready.add_parameter (new Parameter ("source_object", data_type ("GLib.Object", false)));
 			ready.add_parameter (new Parameter ("res", data_type ("GLib.AsyncResult", false)));
@@ -59,6 +60,8 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 			ready_builder = new CodeBuilder.for_subroutine (ready);
 
 			finish_call = (MethodCall) expression (@"(($object_type) source_object).$(m.name).end (res)");
+		} else {
+			call = finish_call = (MethodCall) expression (@"object.$(m.name) ()");
 		}
 
 		var out_args = new string[0];
@@ -70,11 +73,13 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 			if (param.variable_type is ObjectType) {
 				type_name = param.variable_type.data_type.get_full_name ();
 			}
+
 			if (type_name == "GLib.Cancellable") {
 				call.add_argument (expression ("null"));
 				continue;
 			}
 			if (type_name == "GLib.BusName") {
+				call.add_argument (expression ("(GLib.BusName) invocation.get_sender ()"));
 				continue;
 			}
 
@@ -111,8 +116,8 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		} else {
 			b.add_expression (finish_call);
 		}
-		b.add_catch (data_type ("GLib.Error"), "e");
-		b.add_expression (expression ("invocation.return_gerror (e)"));
+		b.add_catch_all ("_invocation_gerror_");
+		b.add_expression (expression ("invocation.return_gerror (_invocation_gerror_)"));
 		b.add_return ();
 		b.close ();
 
@@ -129,7 +134,10 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		if (fd_list != null) {
 			b.add_expression (expression (@"$reply.set_unix_fd_list ($fd_list)"));
 		}
+		b.open_try ();
 		b.add_expression (expression (@"invocation.get_connection ().send_message ($reply, GLib.DBusSendMessageFlags.NONE, null)"));
+		b.add_catch_uncaught_error ();
+		b.close ();
 
 		if (m.coroutine) {
 			pop_builder ();

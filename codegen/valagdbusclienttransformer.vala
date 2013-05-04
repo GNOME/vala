@@ -267,7 +267,12 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 			// first try cached value
 			var result = b.add_temp_declaration (null, expression (@"get_cached_property (\"$dbus_name\")"));
 			b.open_if (expression (@"$result == null"));
+
+			b.open_try ();
 			b.add_expression (expression (@"$result = call_sync (\"org.freedesktop.DBus.Properties.Get\", new Variant (\"(ss)\", \"$dbus_iface_name\", \"$dbus_name\"), GLib.DBusCallFlags.NONE, $timeout, null)"));
+			b.add_catch_uncaught_error ();
+			b.close ();
+
 			b.add_expression (expression (@"$result.get (\"(v)\", out $result)"));
 			b.close ();
 
