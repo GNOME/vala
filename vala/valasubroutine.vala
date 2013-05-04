@@ -32,9 +32,19 @@ public abstract class Vala.Subroutine : Symbol {
 	/**
 	 * Specifies the generated `result` variable for postconditions.
 	 */
-	public LocalVariable result_var { get; set; }
+	public LocalVariable result_var {
+		get { return _result_var; }
+		set {
+			_result_var = value;
+			if (_result_var != null) {
+				scope.add ("result", _result_var);
+			}
+		}
+	}
 
 	public abstract bool has_result { get; }
+
+	private LocalVariable _result_var;
 
 	protected Subroutine (string? name, SourceReference? source_reference, Comment? comment = null) {
 		base (name, source_reference, comment);
