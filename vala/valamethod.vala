@@ -879,8 +879,11 @@ public class Vala.Method : Subroutine {
 		var glib_ns = CodeContext.get ().root.scope.lookup ("GLib");
 
 		var params = new ArrayList<Parameter> ();
+		Parameter ellipsis = null;
 		foreach (var param in parameters) {
-			if (param.direction == ParameterDirection.IN) {
+			if (param.ellipsis) {
+				ellipsis = param;
+			} else if (param.direction == ParameterDirection.IN) {
 				params.add (param);
 			}
 		}
@@ -896,6 +899,10 @@ public class Vala.Method : Subroutine {
 		callback_param.set_attribute_double ("CCode", "delegate_target_pos", -0.9);
 
 		params.add (callback_param);
+
+		if (ellipsis != null) {
+			params.add (ellipsis);
+		}
 
 		return params;
 	}
