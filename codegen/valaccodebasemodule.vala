@@ -2268,21 +2268,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public override void visit_local_variable (LocalVariable local) {
 		check_type (local.variable_type);
 
-		if (local.initializer != null) {
-			local.initializer.emit (this);
-
-			visit_end_full_expression (local.initializer);
-		}
+		/* Declaration */
 
 		generate_type_declaration (local.variable_type, cfile);
 
-		CCodeExpression rhs = null;
-		if (local.initializer != null && get_cvalue (local.initializer) != null) {
-			rhs = get_cvalue (local.initializer);
-		}
-
 		// captured element variables of foreach statements (without iterator) require local declaration
-		if (!local.captured || is_foreach_element_variable (local)) {
+		var declared = !local.captured || is_foreach_element_variable (local);
+		if (declared) {
 			if (is_in_coroutine ()) {
 				var count = emit_context.closure_variable_count_map.get (local.name);
 				if (count > 0) {
@@ -2296,14 +2288,29 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				// try to initialize uninitialized variables
 				// initialization not necessary for variables stored in closure
-				if (rhs == null || is_simple_struct_creation (local, local.initializer)) {
-					cvar.initializer = default_value_for_type (local.variable_type, true);
-					cvar.init0 = true;
-				}
+				cvar.initializer = default_value_for_type (local.variable_type, true);
+				cvar.init0 = true;
 
 				ccode.add_declaration (get_ccode_name (local.variable_type), cvar);
 			}
+		}
 
+		/* Emit initializer */
+		if (local.initializer != null) {
+			local.initializer.emit (this);
+
+			visit_end_full_expression (local.initializer);
+		}
+
+
+		CCodeExpression rhs = null;
+		if (local.initializer != null && get_cvalue (local.initializer) != null) {
+			rhs = get_cvalue (local.initializer);
+		}
+
+		/* Additional temp variables */
+
+		if (declared) {
 			if (local.variable_type is ArrayType) {
 				// create variables to store array dimensions
 				var array_type = (ArrayType) local.variable_type;
@@ -2337,7 +2344,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 		}
-	
+
+		/* Store the initializer */
+
 		if (rhs != null) {
 			if (!is_simple_struct_creation (local, local.initializer)) {
 				store_local (local, local.initializer.target_value, true);
