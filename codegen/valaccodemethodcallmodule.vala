@@ -714,7 +714,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		}
 
-		if (get_ccode_type (m) != null && get_ccode_type (m) != get_ccode_name (m.return_type)) {
+		if (m != null && get_ccode_type (m) != null && get_ccode_type (m) != get_ccode_name (m.return_type)) {
 			// Bug 699956: Implement cast for method return type if [CCode type=] annotation is specified
 			ccall_expr = new CCodeCastExpression (ccall_expr, get_ccode_name (m.return_type));
 		}
