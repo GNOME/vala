@@ -714,6 +714,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		}
 
+		if (get_ccode_type (m) != null && get_ccode_type (m) != get_ccode_name (m.return_type)) {
+			// Bug 699956: Implement cast for method return type if [CCode type=] annotation is specified
+			ccall_expr = new CCodeCastExpression (ccall_expr, get_ccode_name (m.return_type));
+		}
+
 		if (m is ArrayResizeMethod) {
 			// FIXME: size expression must not be evaluated twice at runtime (potential side effects)
 			Iterator<Expression> arg_it = expr.get_argument_list ().iterator ();
