@@ -1987,73 +1987,73 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		foreach (Method m in iface.get_methods ()) {
-			generate_virtual_method_declaration (m, decl_space, type_struct);
-		}
-
-		foreach (Signal sig in iface.get_signals ()) {
-			if (sig.default_handler != null) {
-				generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
-			}
-		}
-
-		foreach (Property prop in iface.get_properties ()) {
-			if (!prop.is_abstract && !prop.is_virtual) {
-				continue;
-			}
-			generate_type_declaration (prop.property_type, decl_space);
-
-			var t = (ObjectTypeSymbol) prop.parent_symbol;
-
-			bool returns_real_struct = prop.property_type.is_real_non_null_struct_type ();
-
-			var this_type = new ObjectType (t);
-			var cselfparam = new CCodeParameter ("self", get_ccode_name (this_type));
-
-			if (prop.get_accessor != null) {
-				var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
-				vdeclarator.add_parameter (cselfparam);
-				string creturn_type;
-				if (returns_real_struct) {
-					var cvalueparam = new CCodeParameter ("value", get_ccode_name (prop.get_accessor.value_type) + "*");
-					vdeclarator.add_parameter (cvalueparam);
-					creturn_type = "void";
-				} else {
-					creturn_type = get_ccode_name (prop.get_accessor.value_type);
+		foreach (Symbol sym in iface.get_virtuals ()) {
+			Method m;
+			Signal sig;
+			Property prop;
+			if ((m = sym as Method) != null) {
+				generate_virtual_method_declaration (m, decl_space, type_struct);
+			} else if ((sig = sym as Signal) != null) {
+				if (sig.default_handler != null) {
+					generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
 				}
+			} else if ((prop = sym as Property) != null) {
+				generate_type_declaration (prop.property_type, decl_space);
 
-				var array_type = prop.property_type as ArrayType;
-				if (array_type != null) {
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), "int*"));
+				var t = (ObjectTypeSymbol) prop.parent_symbol;
+
+				bool returns_real_struct = prop.property_type.is_real_non_null_struct_type ();
+
+				var this_type = new ObjectType (t);
+				var cselfparam = new CCodeParameter ("self", get_ccode_name (this_type));
+
+				if (prop.get_accessor != null) {
+					var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
+					vdeclarator.add_parameter (cselfparam);
+					string creturn_type;
+					if (returns_real_struct) {
+						var cvalueparam = new CCodeParameter ("value", get_ccode_name (prop.get_accessor.value_type) + "*");
+						vdeclarator.add_parameter (cvalueparam);
+						creturn_type = "void";
+					} else {
+						creturn_type = get_ccode_name (prop.get_accessor.value_type);
 					}
-				}
 
-				var vdecl = new CCodeDeclaration (creturn_type);
-				vdecl.add_declarator (vdeclarator);
-				type_struct.add_declaration (vdecl);
-			}
-			if (prop.set_accessor != null) {
-				var vdeclarator = new CCodeFunctionDeclarator ("set_%s".printf (prop.name));
-				vdeclarator.add_parameter (cselfparam);
-				if (returns_real_struct) {
-					var cvalueparam = new CCodeParameter ("value", get_ccode_name (prop.set_accessor.value_type) + "*");
-					vdeclarator.add_parameter (cvalueparam);
-				} else {
-					var cvalueparam = new CCodeParameter ("value", get_ccode_name (prop.set_accessor.value_type));
-					vdeclarator.add_parameter (cvalueparam);
-				}
-
-				var array_type = prop.property_type as ArrayType;
-				if (array_type != null) {
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), "int"));
+					var array_type = prop.property_type as ArrayType;
+					if (array_type != null) {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), "int*"));
+						}
 					}
-				}
 
-				var vdecl = new CCodeDeclaration ("void");
-				vdecl.add_declarator (vdeclarator);
-				type_struct.add_declaration (vdecl);
+					var vdecl = new CCodeDeclaration (creturn_type);
+					vdecl.add_declarator (vdeclarator);
+					type_struct.add_declaration (vdecl);
+				}
+				if (prop.set_accessor != null) {
+					var vdeclarator = new CCodeFunctionDeclarator ("set_%s".printf (prop.name));
+					vdeclarator.add_parameter (cselfparam);
+					if (returns_real_struct) {
+						var cvalueparam = new CCodeParameter ("value", get_ccode_name (prop.set_accessor.value_type) + "*");
+						vdeclarator.add_parameter (cvalueparam);
+					} else {
+						var cvalueparam = new CCodeParameter ("value", get_ccode_name (prop.set_accessor.value_type));
+						vdeclarator.add_parameter (cvalueparam);
+					}
+
+					var array_type = prop.property_type as ArrayType;
+					if (array_type != null) {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), "int"));
+						}
+					}
+
+					var vdecl = new CCodeDeclaration ("void");
+					vdecl.add_declarator (vdeclarator);
+					type_struct.add_declaration (vdecl);
+				}
+			} else {
+				assert_not_reached ();
 			}
 		}
 

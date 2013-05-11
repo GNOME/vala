@@ -33,6 +33,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	private List<Constant> constants = new ArrayList<Constant> ();
 	private List<Property> properties = new ArrayList<Property> ();
 	private List<Signal> signals = new ArrayList<Signal> ();
+	private List<Symbol> virtuals = new ArrayList<Symbol> ();
 
 	// inner types
 	private List<Class> classes = new ArrayList<Class> ();
@@ -231,6 +232,10 @@ public class Vala.Interface : ObjectTypeSymbol {
 		return signals;
 	}
 
+	public virtual List<Symbol> get_virtuals () {
+		return virtuals;
+	}
+
 	/**
 	 * Adds the specified class as an inner class.
 	 *
@@ -415,8 +420,11 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 		foreach (Method m in methods) {
 			m.check (context);
+			if (m.is_virtual || m.is_abstract) {
+				virtuals.add (m);
+			}
 		}
-		
+
 		foreach (Field f in fields) {
 			f.check (context);
 		}
@@ -425,24 +433,78 @@ public class Vala.Interface : ObjectTypeSymbol {
 			c.check (context);
 		}
 
-		foreach (Property prop in properties) {
-			prop.check (context);
-		}
-		
 		foreach (Signal sig in signals) {
 			sig.check (context);
+			if (sig.is_virtual) {
+				virtuals.add (sig);
+			}
 		}
-		
+
+		foreach (Property prop in properties) {
+			prop.check (context);
+			if (prop.is_virtual || prop.is_abstract) {
+				virtuals.add (prop);
+			}
+		}
+
 		foreach (Class cl in classes) {
 			cl.check (context);
 		}
-		
+
 		foreach (Struct st in structs) {
 			st.check (context);
 		}
 
 		foreach (Delegate d in delegates) {
 			d.check (context);
+		}
+
+		Map<int, Symbol>? positions = new HashMap<int, Symbol> ();
+		bool ordered_seen = false;
+		bool unordered_seen = false;
+		foreach (Symbol sym in virtuals) {
+			int ordering = sym.get_attribute_integer ("CCode", "ordering", -1);
+			if (ordering < -1) {
+				Report.error (sym.source_reference, "%s: Invalid ordering".printf (sym.get_full_name ()));
+				// Mark state as invalid
+				error = true;
+				ordered_seen = true;
+				unordered_seen = true;
+				continue;
+			}
+			bool ordered = ordering != -1;
+			if (ordered && unordered_seen && !ordered_seen) {
+				Report.error (sym.source_reference, "%s: Cannot mix ordered and unordered virtuals".printf (sym.get_full_name ()));
+				error = true;
+			}
+			ordered_seen = ordered_seen || ordered;
+			if (!ordered && !unordered_seen && ordered_seen) {
+				Report.error (sym.source_reference, "%s: Cannot mix ordered and unordered virtuals".printf (sym.get_full_name ()));
+				error = true;
+			}
+			unordered_seen = unordered_seen || !ordered;
+			if (!ordered_seen || !unordered_seen) {
+				if (ordered) {
+					Symbol? prev = positions[ordering];
+					if (prev != null) {
+						Report.error (sym.source_reference, "%s: Duplicate ordering (previous virtual with the same position is %s)".printf (sym.get_full_name (), prev.name));
+						error = true;
+					}
+					positions[ordering] = sym;
+				}
+			}
+		}
+		if (ordered_seen) {
+			for (int i = 0; i < virtuals.size; i++) {
+				Symbol? sym = positions[i];
+				if (sym == null) {
+					Report.error (source_reference, "%s: Gap in ordering in position %d".printf (get_full_name (), i));
+					error = true;
+				}
+				if (!error) {
+					virtuals[i] = sym;
+				}
+			}
 		}
 
 		context.analyzer.current_source_file = old_source_file;
