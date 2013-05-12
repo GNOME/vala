@@ -411,6 +411,9 @@ public class Vala.CCodeAttribute : AttributeCache {
 					_finish_name = ccode.get_string ("finish_name");
 				}
 				if (_finish_name == null) {
+					_finish_name = ccode.get_string ("finish_function");
+				}
+				if (_finish_name == null) {
 					_finish_name = get_finish_name_for_basename (name);
 				}
 			}
