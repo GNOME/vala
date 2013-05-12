@@ -255,6 +255,21 @@ public class Vala.CCodeAttribute : AttributeCache {
 		}
 	}
 
+	public string ctype {
+		get {
+			if (!ctype_set) {
+				if (ccode != null) {
+					_ctype = ccode.get_string ("type");
+					if (_ctype == null) {
+						_ctype = ccode.get_string ("ctype");
+					}
+				}
+				ctype_set = true;
+			}
+			return _ctype;
+		}
+	}
+
 	public string type_id {
 		get {
 			if (_type_id == null) {
@@ -409,9 +424,9 @@ public class Vala.CCodeAttribute : AttributeCache {
 			if (_finish_name == null) {
 				if (ccode != null) {
 					_finish_name = ccode.get_string ("finish_name");
-				}
-				if (_finish_name == null) {
-					_finish_name = ccode.get_string ("finish_function");
+					if (_finish_name == null) {
+						_finish_name = ccode.get_string ("finish_function");
+					}
 				}
 				if (_finish_name == null) {
 					_finish_name = get_finish_name_for_basename (name);
@@ -495,6 +510,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private string _finish_real_name;
 	private string _real_name;
 	private string _delegate_target_name;
+	private string _ctype;
+	private bool ctype_set = false;
 
 	private static int dynamic_method_id;
 

@@ -6187,7 +6187,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public static string? get_ccode_type (CodeNode node) {
-		return node.get_attribute_string ("CCode", "type");
+		return get_ccode_attribute(node).ctype;
 	}
 
 	public static bool get_ccode_simple_generics (Method m) {
