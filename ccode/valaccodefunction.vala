@@ -112,6 +112,9 @@ public class Vala.CCodeFunction : CCodeNode {
 	
 	public override void write (CCodeWriter writer) {
 		writer.write_indent (line);
+		if (CCodeModifiers.INTERNAL in modifiers) {
+			writer.write_string ("G_GNUC_INTERNAL ");
+		}
 		if (CCodeModifiers.STATIC in modifiers) {
 			writer.write_string ("static ");
 		}

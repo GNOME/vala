@@ -42,6 +42,11 @@ public class Vala.CodeContext {
 	public bool deprecated { get; set; }
 
 	/**
+	 * Hide the symbols marked as internal
+	 */
+	public bool hide_internal { get; set; }
+
+	/**
 	 * Do not warn when using experimental features.
 	 */
 	public bool experimental { get; set; }

@@ -820,10 +820,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var regfun = new CCodeFunction (fun_name, "GType");
 		regfun.attributes = "G_GNUC_CONST";
 
-		if (en.access == SymbolAccessibility.PRIVATE) {
+		if (en.is_private_symbol ()) {
 			regfun.modifiers = CCodeModifiers.STATIC;
 			// avoid C warning as this function is not always used
-			regfun.attributes = "G_GNUC_UNUSED";
+			regfun.attributes += " G_GNUC_UNUSED";
+		} else if (context.hide_internal && en.is_internal_symbol ()) {
+			regfun.modifiers = CCodeModifiers.INTERNAL;
 		}
 
 		decl_space.add_function_declaration (regfun);
@@ -1011,6 +1013,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (f.is_private_symbol ()) {
 				flock.modifiers = CCodeModifiers.STATIC;
+			} else if (context.hide_internal && f.is_internal_symbol ()) {
+				flock.modifiers = CCodeModifiers.INTERNAL;
 			} else {
 				flock.modifiers = CCodeModifiers.EXTERN;
 			}
@@ -1028,6 +1032,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					cdecl.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (get_ccode_name (f), dim)));
 					if (f.is_private_symbol ()) {
 						cdecl.modifiers = CCodeModifiers.STATIC;
+					} else if (context.hide_internal && f.is_internal_symbol ()) {
+						cdecl.modifiers = CCodeModifiers.INTERNAL;
 					} else {
 						cdecl.modifiers = CCodeModifiers.EXTERN;
 					}
@@ -1043,6 +1049,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				cdecl.add_declarator (new CCodeVariableDeclarator (get_ccode_delegate_target_name (f)));
 				if (f.is_private_symbol ()) {
 					cdecl.modifiers = CCodeModifiers.STATIC;
+				} else if (context.hide_internal && f.is_internal_symbol ()) {
+					cdecl.modifiers = CCodeModifiers.INTERNAL;
 				} else {
 					cdecl.modifiers = CCodeModifiers.EXTERN;
 				}
@@ -1053,6 +1061,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					cdecl.add_declarator (new CCodeVariableDeclarator (get_delegate_target_destroy_notify_cname  (get_ccode_name (f))));
 					if (f.is_private_symbol ()) {
 						cdecl.modifiers = CCodeModifiers.STATIC;
+					} else if (context.hide_internal && f.is_internal_symbol ()) {
+						cdecl.modifiers = CCodeModifiers.INTERNAL;
 					} else {
 						cdecl.modifiers = CCodeModifiers.EXTERN;
 					}
@@ -1503,6 +1513,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (prop.is_private_symbol () || (!acc.readable && !acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
 			function.modifiers |= CCodeModifiers.STATIC;
+		} else if (context.hide_internal && (prop.is_internal_symbol () || acc.access == SymbolAccessibility.INTERNAL)) {
+			function.modifiers |= CCodeModifiers.INTERNAL;
 		}
 		decl_space.add_function_declaration (function);
 	}
@@ -1605,6 +1617,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (prop.is_private_symbol () || !(acc.readable || acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
 				// accessor function should be private if the property is an internal symbol or it's a construct-only setter
 				function.modifiers |= CCodeModifiers.STATIC;
+			} else if (context.hide_internal && (prop.is_internal_symbol () || acc.access == SymbolAccessibility.INTERNAL)) {
+				function.modifiers |= CCodeModifiers.INTERNAL;
 			}
 
 			push_function (function);
@@ -1728,6 +1742,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (prop.is_private_symbol () || !(acc.readable || acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
 					// accessor function should be private if the property is an internal symbol or it's a construct-only setter
 					function.modifiers |= CCodeModifiers.STATIC;
+				} else if (context.hide_internal && (prop.is_internal_symbol () || acc.access == SymbolAccessibility.INTERNAL)) {
+					function.modifiers |= CCodeModifiers.INTERNAL;
 				}
 			}
 

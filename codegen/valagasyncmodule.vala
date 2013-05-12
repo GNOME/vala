@@ -186,6 +186,8 @@ public class Vala.GAsyncModule : GtkModule {
 			cfile.add_function_declaration (asyncfunc);
 		} else if (m.is_private_symbol ()) {
 			asyncfunc.modifiers |= CCodeModifiers.STATIC;
+		} else if (context.hide_internal && m.is_internal_symbol ()) {
+			asyncfunc.modifiers |= CCodeModifiers.INTERNAL;
 		}
 
 		push_function (asyncfunc);
@@ -337,6 +339,8 @@ public class Vala.GAsyncModule : GtkModule {
 
 			if (m.is_private_symbol ()) {
 				asyncfunc.modifiers |= CCodeModifiers.STATIC;
+			} else if (context.hide_internal && m.is_internal_symbol ()) {
+				asyncfunc.modifiers |= CCodeModifiers.INTERNAL;
 			}
 
 			// do not generate _new functions for creation methods of abstract classes
@@ -352,6 +356,8 @@ public class Vala.GAsyncModule : GtkModule {
 
 			if (m.is_private_symbol ()) {
 				finishfunc.modifiers |= CCodeModifiers.STATIC;
+			} else if (context.hide_internal && m.is_internal_symbol ()) {
+				finishfunc.modifiers |= CCodeModifiers.INTERNAL;
 			}
 
 			// do not generate _new functions for creation methods of abstract classes
@@ -367,6 +373,8 @@ public class Vala.GAsyncModule : GtkModule {
 
 				if (m.is_private_symbol ()) {
 					function.modifiers |= CCodeModifiers.STATIC;
+				} else if (context.hide_internal && m.is_internal_symbol ()) {
+					function.modifiers |= CCodeModifiers.INTERNAL;
 				}
 
 				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
@@ -378,6 +386,8 @@ public class Vala.GAsyncModule : GtkModule {
 
 				if (m.is_private_symbol ()) {
 					function.modifiers |= CCodeModifiers.STATIC;
+				} else if (context.hide_internal && m.is_internal_symbol ()) {
+					function.modifiers |= CCodeModifiers.INTERNAL;
 				}
 
 				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
@@ -517,6 +527,8 @@ public class Vala.GAsyncModule : GtkModule {
 
 		if (m.is_private_symbol () || m.base_method != null || m.base_interface_method != null) {
 			finishfunc.modifiers |= CCodeModifiers.STATIC;
+		} else if (context.hide_internal && m.is_internal_symbol ()) {
+			finishfunc.modifiers |= CCodeModifiers.INTERNAL;
 		}
 
 		push_function (finishfunc);

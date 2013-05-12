@@ -1198,6 +1198,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		cfunc.add_parameter (new CCodeParameter ("error", "GError**"));
 		if (sym.is_private_symbol ()) {
 			cfunc.modifiers |= CCodeModifiers.STATIC;
+		} else if (context.hide_internal && sym.is_internal_symbol ()) {
+			cfunc.modifiers |= CCodeModifiers.INTERNAL;
 		}
 		decl_space.add_function_declaration (cfunc);
 	}
@@ -1219,6 +1221,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		cfunc.add_parameter (new CCodeParameter ("error", "GError**"));
 		if (sym.is_private_symbol ()) {
 			cfunc.modifiers |= CCodeModifiers.STATIC;
+		} else if (context.hide_internal && sym.is_internal_symbol ()) {
+			cfunc.modifiers |= CCodeModifiers.INTERNAL;
 		}
 
 		push_function (cfunc);

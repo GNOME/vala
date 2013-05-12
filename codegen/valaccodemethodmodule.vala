@@ -165,6 +165,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			if (m.is_inline) {
 				function.modifiers |= CCodeModifiers.INLINE;
 			}
+		} else if (context.hide_internal && m.is_internal_symbol () && !m.external) {
+			function.modifiers |= CCodeModifiers.INTERNAL;
 		}
 
 		if (m.deprecated) {
@@ -192,6 +194,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 			if (m.is_private_symbol ()) {
 				function.modifiers |= CCodeModifiers.STATIC;
+			} else if (context.hide_internal && m.is_internal_symbol ()) {
+				function.modifiers |= CCodeModifiers.INTERNAL;
 			}
 
 			cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
@@ -426,6 +430,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					cfile.add_function_declaration (function);
 				} else if (m.is_private_symbol ()) {
 					function.modifiers |= CCodeModifiers.STATIC;
+				} else if (context.hide_internal && m.is_internal_symbol ()) {
+					function.modifiers |= CCodeModifiers.INTERNAL;
 				}
 			} else {
 				if (m.body != null) {
@@ -1178,6 +1184,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		var vfunc = new CCodeFunction (func_name);
 		if (m.is_private_symbol ()) {
 			vfunc.modifiers |= CCodeModifiers.STATIC;
+		} else if (context.hide_internal && m.is_internal_symbol ()) {
+			vfunc.modifiers |= CCodeModifiers.INTERNAL;
 		}
 
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);

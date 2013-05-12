@@ -63,6 +63,7 @@ class Vala.Compiler {
 	static bool disable_assert;
 	static bool enable_checking;
 	static bool deprecated;
+	static bool hide_internal;
 	static bool experimental;
 	static bool experimental_non_null;
 	static bool gobject_tracing;
@@ -122,6 +123,7 @@ class Vala.Compiler {
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
 		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable additional run-time checks", null },
 		{ "enable-deprecated", 0, 0, OptionArg.NONE, ref deprecated, "Enable deprecated features", null },
+		{ "hide-internal", 0, 0, OptionArg.NONE, ref hide_internal, "Hide symbols marked as internal", null },
 		{ "enable-experimental", 0, 0, OptionArg.NONE, ref experimental, "Enable experimental features", null },
 		{ "disable-warnings", 0, 0, OptionArg.NONE, ref disable_warnings, "Disable warnings", null },
 		{ "fatal-warnings", 0, 0, OptionArg.NONE, ref fatal_warnings, "Treat warnings as fatal", null },
@@ -176,6 +178,7 @@ class Vala.Compiler {
 		context.assert = !disable_assert;
 		context.checking = enable_checking;
 		context.deprecated = deprecated;
+		context.hide_internal = hide_internal;
 		context.experimental = experimental;
 		context.experimental_non_null = experimental_non_null;
 		context.gobject_tracing = gobject_tracing;

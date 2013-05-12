@@ -52,7 +52,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	}
 	
 	public override void write (CCodeWriter writer) {
-		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.EXTERN)) == 0) {
+		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.INTERNAL | CCodeModifiers.EXTERN)) == 0) {
 			foreach (CCodeDeclarator decl in declarators) {
 				decl.write_initialization (writer);
 			}
@@ -70,9 +70,12 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	}
 
 	public override void write_declaration (CCodeWriter writer) {
-		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.EXTERN)) != 0) {
+		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.INTERNAL | CCodeModifiers.EXTERN)) != 0) {
 			// combined declaration and initialization for static and extern variables
 			writer.write_indent (line);
+			if ((modifiers & CCodeModifiers.INTERNAL) != 0) {
+				writer.write_string ("G_GNUC_INTERNAL ");
+			}
 			if ((modifiers & CCodeModifiers.STATIC) != 0) {
 				writer.write_string ("static ");
 			}

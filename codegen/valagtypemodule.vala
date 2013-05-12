@@ -93,9 +93,12 @@ public class Vala.GTypeModule : GErrorModule {
 		if (is_fundamental) {
 			var ref_fun = new CCodeFunction (get_ccode_lower_case_prefix (cl) + "ref", "gpointer");
 			var unref_fun = new CCodeFunction (get_ccode_lower_case_prefix (cl) + "unref", "void");
-			if (cl.access == SymbolAccessibility.PRIVATE) {
+			if (cl.is_private_symbol ()) {
 				ref_fun.modifiers = CCodeModifiers.STATIC;
 				unref_fun.modifiers = CCodeModifiers.STATIC;
+			} else if (context.hide_internal && cl.is_internal_symbol ()) {
+				ref_fun.modifiers = CCodeModifiers.INTERNAL;
+				unref_fun.modifiers = CCodeModifiers.INTERNAL;
 			}
 
 			ref_fun.add_parameter (new CCodeParameter ("instance", "gpointer"));
@@ -114,10 +117,12 @@ public class Vala.GTypeModule : GErrorModule {
 			function.add_parameter (new CCodeParameter ("object_type", "GType"));
 			function.add_parameter (new CCodeParameter ("flags", "GParamFlags"));
 
-			if (cl.access == SymbolAccessibility.PRIVATE) {
+			if (cl.is_private_symbol ()) {
 				function.modifiers = CCodeModifiers.STATIC;
 				// avoid C warning as this function is not always used
 				function.attributes = "G_GNUC_UNUSED";
+			} else if (context.hide_internal && cl.is_internal_symbol ()) {
+				function.modifiers = CCodeModifiers.INTERNAL;
 			}
 
 			decl_space.add_function_declaration (function);
@@ -126,8 +131,12 @@ public class Vala.GTypeModule : GErrorModule {
 			function.add_parameter (new CCodeParameter ("value", "GValue*"));
 			function.add_parameter (new CCodeParameter ("v_object", "gpointer"));
 
-			if (cl.access == SymbolAccessibility.PRIVATE) {
+			if (cl.is_private_symbol ()) {
 				function.modifiers = CCodeModifiers.STATIC;
+				// avoid C warning as this function is not always used
+				function.attributes = "G_GNUC_UNUSED";
+			} else if (context.hide_internal && cl.is_internal_symbol ()) {
+				function.modifiers = CCodeModifiers.INTERNAL;
 				// avoid C warning as this function is not always used
 				function.attributes = "G_GNUC_UNUSED";
 			}
@@ -138,10 +147,12 @@ public class Vala.GTypeModule : GErrorModule {
 			function.add_parameter (new CCodeParameter ("value", "GValue*"));
 			function.add_parameter (new CCodeParameter ("v_object", "gpointer"));
 
-			if (cl.access == SymbolAccessibility.PRIVATE) {
+			if (cl.is_private_symbol ()) {
 				function.modifiers = CCodeModifiers.STATIC;
 				// avoid C warning as this function is not always used
 				function.attributes = "G_GNUC_UNUSED";
+			} else if (context.hide_internal && cl.is_internal_symbol ()) {
+				function.modifiers = CCodeModifiers.INTERNAL;
 			}
 
 			decl_space.add_function_declaration (function);
@@ -149,8 +160,12 @@ public class Vala.GTypeModule : GErrorModule {
 			function = new CCodeFunction (get_ccode_get_value_function (cl), "gpointer");
 			function.add_parameter (new CCodeParameter ("value", "const GValue*"));
 
-			if (cl.access == SymbolAccessibility.PRIVATE) {
+			if (cl.is_private_symbol ()) {
 				function.modifiers = CCodeModifiers.STATIC;
+				// avoid C warning as this function is not always used
+				function.attributes = "G_GNUC_UNUSED";
+			} else if (context.hide_internal && cl.is_internal_symbol ()) {
+				function.modifiers = CCodeModifiers.INTERNAL;
 				// avoid C warning as this function is not always used
 				function.attributes = "G_GNUC_UNUSED";
 			}
@@ -159,8 +174,10 @@ public class Vala.GTypeModule : GErrorModule {
 		} else if (!is_gtypeinstance && !is_gsource) {
 			if (cl.base_class == null) {
 				var function = new CCodeFunction (get_ccode_lower_case_prefix (cl) + "free", "void");
-				if (cl.access == SymbolAccessibility.PRIVATE) {
+				if (cl.is_private_symbol ()) {
 					function.modifiers = CCodeModifiers.STATIC;
+				} else if (context.hide_internal && cl.is_internal_symbol ()) {
+					function.modifiers = CCodeModifiers.INTERNAL;
 				}
 
 				function.add_parameter (new CCodeParameter ("self", get_ccode_name (cl) + "*"));
@@ -653,8 +670,10 @@ public class Vala.GTypeModule : GErrorModule {
 				// ref function
 				var ref_fun = new CCodeFunction (get_ccode_lower_case_prefix (cl) + "ref", "gpointer");
 				ref_fun.add_parameter (new CCodeParameter ("instance", "gpointer"));
-				if (cl.access == SymbolAccessibility.PRIVATE) {
+				if (cl.is_private_symbol ()) {
 					ref_fun.modifiers = CCodeModifiers.STATIC;
+				} else if (context.hide_internal && cl.is_internal_symbol ()) {
+					ref_fun.modifiers = CCodeModifiers.INTERNAL;
 				}
 				push_function (ref_fun);
 
@@ -670,8 +689,10 @@ public class Vala.GTypeModule : GErrorModule {
 				// unref function
 				var unref_fun = new CCodeFunction (get_ccode_lower_case_prefix (cl) + "unref", "void");
 				unref_fun.add_parameter (new CCodeParameter ("instance", "gpointer"));
-				if (cl.access == SymbolAccessibility.PRIVATE) {
+				if (cl.is_private_symbol ()) {
 					unref_fun.modifiers = CCodeModifiers.STATIC;
+				} else if (context.hide_internal && cl.is_internal_symbol ()) {
+					unref_fun.modifiers = CCodeModifiers.INTERNAL;
 				}
 				push_function (unref_fun);
 
@@ -909,8 +930,10 @@ public class Vala.GTypeModule : GErrorModule {
 		function.add_parameter (new CCodeParameter ("object_type", "GType"));
 		function.add_parameter (new CCodeParameter ("flags", "GParamFlags"));
 
-		if (cl.access == SymbolAccessibility.PRIVATE) {
+		if (cl.is_private_symbol ()) {
 			function.modifiers = CCodeModifiers.STATIC;
+		} else if (context.hide_internal && cl.is_internal_symbol ()) {
+			function.modifiers = CCodeModifiers.INTERNAL;
 		}
 
 		push_function (function);
@@ -950,8 +973,10 @@ public class Vala.GTypeModule : GErrorModule {
 		function.add_parameter (new CCodeParameter ("value", "GValue*"));
 		function.add_parameter (new CCodeParameter ("v_object", "gpointer"));
 
-		if (cl.access == SymbolAccessibility.PRIVATE) {
+		if (cl.is_private_symbol ()) {
 			function.modifiers = CCodeModifiers.STATIC;
+		} else if (context.hide_internal && cl.is_internal_symbol ()) {
+			function.modifiers = CCodeModifiers.INTERNAL;
 		}
 
 		var vpointer = new CCodeMemberAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"), "v_pointer");
@@ -1018,8 +1043,10 @@ public class Vala.GTypeModule : GErrorModule {
 		function.add_parameter (new CCodeParameter ("value", "GValue*"));
 		function.add_parameter (new CCodeParameter ("v_object", "gpointer"));
 
-		if (cl.access == SymbolAccessibility.PRIVATE) {
+		if (cl.is_private_symbol ()) {
 			function.modifiers = CCodeModifiers.STATIC;
+		} else if (context.hide_internal && cl.is_internal_symbol ()) {
+			function.modifiers = CCodeModifiers.INTERNAL;
 		}
 
 		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
@@ -1082,8 +1109,10 @@ public class Vala.GTypeModule : GErrorModule {
 		var function = new CCodeFunction (get_ccode_get_value_function (cl), "gpointer");
 		function.add_parameter (new CCodeParameter ("value", "const GValue*"));
 
-		if (cl.access == SymbolAccessibility.PRIVATE) {
+		if (cl.is_private_symbol ()) {
 			function.modifiers = CCodeModifiers.STATIC;
+		} else if (context.hide_internal && cl.is_internal_symbol ()) {
+			function.modifiers = CCodeModifiers.INTERNAL;
 		}
 
 		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
@@ -1683,8 +1712,10 @@ public class Vala.GTypeModule : GErrorModule {
 			ccode.add_assignment (new CCodeIdentifier ("self"), ccast);
 		} else {
 			var function = new CCodeFunction (get_ccode_lower_case_prefix (cl) + "free", "void");
-			if (cl.access == SymbolAccessibility.PRIVATE) {
+			if (cl.is_private_symbol ()) {
 				function.modifiers = CCodeModifiers.STATIC;
+			} else if (context.hide_internal && cl.is_internal_symbol ()) {
+				function.modifiers = CCodeModifiers.INTERNAL;
 			}
 
 			function.add_parameter (new CCodeParameter ("self", get_ccode_name (cl) + "*"));
