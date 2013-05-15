@@ -212,6 +212,7 @@ namespace LibUSB {
 
 	[Compact, CCode (cname = "libusb_device_handle", cprefix = "libusb_", free_function = "libusb_close")]
 	public class DeviceHandle {
+		[CCode (cname = "_vala_libusb_device_handle_new")]
 		public DeviceHandle (Device device) {
 			DeviceHandle handle;
 			device.open(out handle);
@@ -241,7 +242,7 @@ namespace LibUSB {
 		public int interrupt_transfer (uint8 endpoint, uint8[] data, out int transferred, uint timeout);
 	}
 
-	[CCode (cname = "libusb_device", cprefix = "libusb_", ref_function = "libusb_ref_device", unref_function = "libusb_unref_device")]
+	[Compact, CCode (cname = "libusb_device", cprefix = "libusb_", ref_function = "libusb_ref_device", unref_function = "libusb_unref_device")]
 	public class Device {
 		public uint8 get_bus_number ();
 		public uint8 get_device_address ();
@@ -256,6 +257,7 @@ namespace LibUSB {
 
 	[Compact, CCode (cname = "libusb_context", cprefix = "libusb_", free_function = "libusb_exit")]
 	public class Context {
+		protected Context ();
 		public static int init (out Context context);
 		public void set_debug (int level);
 		public ssize_t get_device_list ([CCode (array_length = false)] out Device[] list);
