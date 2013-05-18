@@ -94,7 +94,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 				}
 				var arg = b.add_temp_declaration (copy_type (param.variable_type, true));
 				out_args += arg;
-				out_types += param.variable_type;
+				out_types += param.variable_type.copy ();
 				finish_call.add_argument (new UnaryExpression (UnaryOperator.OUT, expression (arg), m.source_reference));
 				if (m.coroutine) {
 					pop_builder ();
@@ -128,7 +128,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 			write_dbus_value (out_types[i], builder, out_args[i], ref fd_list);
 		}
 		if (result != null) {
-			write_dbus_value (m.return_type, builder, result, ref fd_list);
+			write_dbus_value (m.return_type.copy (), builder, result, ref fd_list);
 		}
 		b.add_expression (expression (@"$reply.set_body ($builder.end ())"));
 		if (fd_list != null) {

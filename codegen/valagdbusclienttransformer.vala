@@ -145,7 +145,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 	}
 
 	void generate_dbus_proxy_method (Class proxy_class, Interface iface, Method m) {
-		var proxy = new Method (m.name, m.return_type, m.source_reference);
+		var proxy = new Method (m.name, m.return_type.copy(), m.source_reference);
 		foreach (var param in m.get_parameters ()) {
 			proxy.add_parameter (param.copy ());
 		}
@@ -208,7 +208,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 
 	void generate_dbus_proxy_signals (Class proxy_class, ObjectTypeSymbol sym) {
 		var g_signal = (Signal) symbol_from_string ("GLib.DBusProxy.g_signal");
-		var m = new Method ("g_signal", g_signal.return_type, sym.source_reference);
+		var m = new Method ("g_signal", g_signal.return_type.copy(), sym.source_reference);
 		m.overrides = true;
 		m.access = SymbolAccessibility.PUBLIC;
 		foreach (var param in g_signal.get_parameters ()) {
@@ -359,7 +359,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		foreach (var param in m.get_parameters ()) {
 			cache_key = "%s %s".printf (cache_key, param.variable_type.to_string ());
 		}
-		if (!wrapper_method (m.return_type, cache_key, out wrapper, symbol_from_string ("GLib.DBusProxy"))) {
+		if (!wrapper_method (m.return_type.copy(), cache_key, out wrapper, symbol_from_string ("GLib.DBusProxy"))) {
 			foreach (var param in m.get_parameters ()) {
 				wrapper.add_parameter (param.copy ());
 			}
