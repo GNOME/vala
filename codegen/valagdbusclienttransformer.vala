@@ -219,7 +219,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		push_builder (new CodeBuilder.for_subroutine (m));
 
 		b.open_switch (expression ("signal_name"), null);
-		b.add_expression (expression ("assert_not_reached ()"));
+		b.add_expression (expression ("GLib.assert_not_reached ()"));
 		b.add_break ();
 		foreach (var sig in sym.get_signals ()) {
 			if (sig.access != SymbolAccessibility.PUBLIC) {
