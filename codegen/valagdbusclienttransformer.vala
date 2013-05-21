@@ -311,7 +311,9 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 	}
 
 	public override void visit_interface (Interface iface) {
-		base.visit_interface (iface);
+		if (is_visited (iface)) {
+			base.visit_interface (iface);
+		}
 
 		string dbus_iface_name = get_dbus_name (iface);
 		if (dbus_iface_name == null) {
@@ -334,7 +336,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		var proxy = new Class (iface.name + "Proxy", iface.source_reference, null);
 		proxy.add_base_type (data_type ("GLib.DBusProxy"));
 		proxy.add_base_type (SemanticAnalyzer.get_data_type_for_symbol (iface));
-		proxy.access = iface.access;
+		proxy.access = SymbolAccessibility.PRIVATE;
 		iface.parent_symbol.add_class (proxy);
 
 		generate_dbus_proxy_methods (proxy, iface);
@@ -345,13 +347,32 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 	}
 
 	public override void visit_method_call (MethodCall expr) {
-		var m = expr.call.symbol_reference as DynamicMethod;
-		if (m == null || m.dynamic_type.data_type != symbol_from_string ("GLib.DBusProxy")) {
-			// not a dynamic dbus call
+		var m = expr.call.symbol_reference as Method;
+		if (m is DynamicMethod && ((DynamicMethod) m).dynamic_type.data_type == symbol_from_string ("GLib.DBusProxy")) {
+			generate_dynamic_dbus_call (expr);
+		} else if (m != null && m == symbol_from_string ("GLib.Bus.get_proxy")) {
+			generate_get_proxy_call (expr);
+		} else {
 			base.visit_method_call (expr);
-			return;
 		}
+	}
 
+	private void generate_get_proxy_call (MethodCall expr) {
+		var ma = (MemberAccess) expr.call;
+		var type_arg = ma.get_type_arguments ().get (0);
+		var object_type = type_arg as ObjectType;
+		if (object_type != null && object_type.type_symbol is Interface) {
+			var iface = (Interface) object_type.type_symbol;
+			if (get_dbus_name (iface) != null) {
+				current_namespace = context.analyzer.get_current_namespace (expr);
+				accept_external (iface);
+			}
+		}
+		base.visit_method_call (expr);
+	}
+
+	private void generate_dynamic_dbus_call (MethodCall expr) {
+		var m = (DynamicMethod) expr.call.symbol_reference;
 		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
 
 		Method wrapper;

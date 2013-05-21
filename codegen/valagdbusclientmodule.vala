@@ -77,7 +77,10 @@ public class Vala.GDBusClientModule : GDBusModule {
 				return;
 			}
 
-			proxy_type = new CCodeIdentifier ("%s_PROXY".printf (get_ccode_type_id (iface)));
+			var proxy_class = (Class) CodeBuilder.symbol_from_string (iface.name + "Proxy", iface.parent_symbol);
+			generate_class_declaration (proxy_class, cfile);
+
+			proxy_type = new CCodeIdentifier (get_ccode_type_id (proxy_class));
 			dbus_iface_name = new CCodeConstant ("\"%s\"".printf (get_dbus_name (iface)));
 		} else {
 			// use runtime type information for generic methods

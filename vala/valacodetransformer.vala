@@ -29,6 +29,10 @@ public class Vala.CodeTransformer : CodeVisitor {
 	public CodeBuilder b;
 	public ArrayList<CodeBuilder> builder_stack = new ArrayList<CodeBuilder> ();
 	public HashMap<string, CodeNode> wrapper_cache;
+	/* Keep tracks of generated stuff to avoid cycles */
+	public HashSet<CodeNode> unit_generated = new HashSet<CodeNode> ();
+
+	public Namespace current_namespace = null;
 
 	public void push_builder (CodeBuilder builder) {
 		builder_stack.add (b);
@@ -114,5 +118,19 @@ public class Vala.CodeTransformer : CodeVisitor {
 			return;
 		}
 		node.accept (this);
+	}
+
+	public bool is_visited (CodeNode node) {
+		var file = node.source_reference.file;
+		return file.file_type == SourceFileType.SOURCE || (context.header_filename != null && file.file_type == SourceFileType.FAST);
+	}
+
+	public void accept_external (CodeNode node) {
+		if (node.source_reference != null) {
+			if (!is_visited (node) && !unit_generated.contains (node)) {
+				unit_generated.add (node);
+				check (node);
+			}
+		}
 	}
 }

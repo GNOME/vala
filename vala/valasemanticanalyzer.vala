@@ -156,6 +156,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return (TypeSymbol) sym;
 	}
 
+	public unowned Namespace? get_current_namespace (CodeNode node) {
+		unowned Symbol sym = get_current_symbol (node);
+		while (sym != null && !(sym is Namespace)) {
+			sym = sym.parent_symbol;
+		}
+		return (Namespace) sym;
+	}
+
 	public unowned Class? get_current_class (CodeNode node) {
 		return get_current_type_symbol (node) as Class;
 	}
