@@ -2278,7 +2278,7 @@ namespace Gtk {
 		public void pack_end (Gtk.Widget child);
 		public void pack_start (Gtk.Widget child);
 		public void set_custom_title (Gtk.Widget title_widget);
-		public void set_subtitle (string subtitle);
+		public void set_subtitle (string? subtitle);
 		public void set_title (string title);
 		public Gtk.Widget custom_title { get; set construct; }
 		[NoAccessorMethod]
