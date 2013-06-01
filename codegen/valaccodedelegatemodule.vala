@@ -173,7 +173,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		return base.get_implicit_cast_expression (source_cexpr, expression_type, target_type, node);
 	}
 
-	private string generate_delegate_wrapper (Method m, DelegateType dt, CodeNode? node) {
+	public string generate_delegate_wrapper (Method m, DelegateType dt, CodeNode? node) {
 		var d = dt.delegate_symbol;
 		string delegate_name;
 		var sig = d.parent_symbol as Signal;

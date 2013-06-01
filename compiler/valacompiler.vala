@@ -44,6 +44,8 @@ class Vala.Compiler {
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] fast_vapis;
 	static string target_glib;
+	[CCode (array_length = false, array_null_terminated = true)]
+	static string[] gresources;
 
 	static bool ccode_only;
 	static string header_filename;
@@ -133,6 +135,7 @@ class Vala.Compiler {
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
 		{ "verbose", 'v', 0, OptionArg.NONE, ref verbose_mode, "Print additional messages to the console", null },
 		{ "target-glib", 0, 0, OptionArg.STRING, ref target_glib, "Target version of glib for code generation", "MAJOR.MINOR" },
+		{ "gresources", 0, 0, OptionArg.STRING_ARRAY, ref gresources, "XML of gresources", "FILE..." },
 		{ "enable-version-header", 0, 0, OptionArg.NONE, ref enable_version_header, "Write vala build version in generated files", null },
 		{ "disable-version-header", 0, 0, OptionArg.NONE, ref disable_version_header, "Do not write vala build version in generated files", null },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
@@ -270,6 +273,8 @@ class Vala.Compiler {
 			}
 			context.use_fast_vapi = true;
 		}
+
+		context.gresources = gresources;
 		
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();

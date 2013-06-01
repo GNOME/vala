@@ -23,6 +23,101 @@
 
 
 public class Vala.GtkModule : GSignalModule {
+	/* C class name to Vala class mapping */
+	private HashMap<string, Class> cclass_to_vala_map = null;
+	/* GResource name to real file name mapping */
+	private HashMap<string, string> gresource_to_file_map = null;
+	/* GtkBuilder xml handler to Vala signal mapping */
+	private HashMap<string, Signal> current_handler_to_signal_map = new HashMap<string, Signal>(str_hash, str_equal);
+
+	private void ensure_cclass_to_vala_map () {
+		// map C name of gtypeinstance classes to Vala classes
+		if (cclass_to_vala_map != null) {
+			return;
+		}
+		cclass_to_vala_map = new HashMap<string, Class>(str_hash, str_equal);
+		recurse_cclass_to_vala_map (context.root);
+	}
+
+	private void recurse_cclass_to_vala_map (Namespace ns) {
+		foreach (var cl in ns.get_classes()) {
+			if (!cl.is_compact) {
+				cclass_to_vala_map.set (get_ccode_name (cl), cl);
+			}
+		}
+		foreach (var inner in ns.get_namespaces()) {
+			recurse_cclass_to_vala_map (inner);
+		}
+	}
+
+	private void ensure_gresource_to_file_map () {
+		// map gresource paths to real file names
+		if (gresource_to_file_map != null) {
+			return;
+		}
+		gresource_to_file_map = new HashMap<string, string>(str_hash, str_equal);		
+		foreach (var gresource in context.gresources) {
+			if (!FileUtils.test (gresource, FileTest.EXISTS)) {
+				Report.error (null, "GResources file `%s' does not exist".printf (gresource));
+				continue;
+			}
+			var gresource_dir = Path.get_dirname (gresource);
+			MarkupReader reader = new MarkupReader (gresource);
+
+			int state = 0;
+			string prefix = null;
+
+			MarkupTokenType current_token = reader.read_token (null, null);
+			while (current_token != MarkupTokenType.EOF) {
+				if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "gresource") {
+					prefix = reader.get_attribute ("prefix");
+				} else if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "file") {
+					state = 1;
+				} else if (state == 1 && current_token == MarkupTokenType.TEXT) {
+					var name = reader.content;
+					gresource_to_file_map.set (Path.build_filename (prefix, name), Path.build_filename (gresource_dir, name));
+					state = 0;
+				}
+				current_token = reader.read_token (null, null);
+			}
+		}
+	}
+
+	private void create_handler_to_signal_map (string ui_resource, SourceReference source_reference) {
+		/* Scan a single gtkbuilder file for signal handlers in <object> elements,
+		   and save an handler string -> Vala.Signal mapping for each of them */
+		ensure_cclass_to_vala_map();
+		ensure_gresource_to_file_map();
+
+		current_handler_to_signal_map = new HashMap<string, Signal>(str_hash, str_equal);
+		var ui_file = gresource_to_file_map.get (ui_resource);
+		if (ui_file == null || !FileUtils.test (ui_file, FileTest.EXISTS)) {
+			Report.warning (source_reference, "UI resource does not exist: `%s'".printf (ui_resource));
+			return;
+		}
+
+		MarkupReader reader = new MarkupReader (ui_file);
+		Class current_class = null;
+
+		MarkupTokenType current_token = reader.read_token (null, null);
+		while (current_token != MarkupTokenType.EOF) {
+			if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "object") {
+				var class_name = reader.get_attribute ("class");
+				current_class = cclass_to_vala_map.get (class_name);
+			} else if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "signal") {
+				var signal_name = reader.get_attribute ("name");
+				var handler_name = reader.get_attribute ("handler");
+				if (current_class != null) {
+					var sig = SemanticAnalyzer.symbol_lookup_inherited (current_class, signal_name.replace("-", "_")) as Signal;
+					if (sig != null) {
+						current_handler_to_signal_map.set (handler_name, sig);
+					}
+				}
+			}
+			current_token = reader.read_token (null, null);
+		}
+	}
+
 	private bool is_gtk_template (Class? cl) {
 		return cl != null && gtk_widget_type != null && cl.is_subtype_of (gtk_widget_type) && cl.get_attribute ("GtkTemplate") != null;
 	}
@@ -37,10 +132,12 @@ public class Vala.GtkModule : GSignalModule {
 		/* Gtk builder widget template */
 		var ui = cl.get_attribute_string ("GtkTemplate", "ui");
 		if (ui == null) {
-			Report.error (cl.source_reference, "Empty ui file declaration for Gtk widget template");
+			Report.error (cl.source_reference, "Empty ui resource declaration for Gtk widget template");
 			cl.error = true;
 			return;
 		}
+
+		create_handler_to_signal_map (ui, cl.source_reference);
 
 		var call = new CCodeFunctionCall (new CCodeIdentifier ("gtk_widget_class_set_template_from_resource"));
 		call.add_argument (new CCodeIdentifier ("GTK_WIDGET_CLASS (klass)"));
@@ -80,35 +177,6 @@ public class Vala.GtkModule : GSignalModule {
 		pop_context ();
 	}
 
-	/* Generate a wrapper function that swaps two parameters */
-	private string generate_gtk_swap_callback (Method m) {
-		var wrapper_name = "_vala_gtktemplate_callback_%s".printf (get_ccode_name (m));
-		if (!add_wrapper (wrapper_name)) {
-			return wrapper_name;
-		}
-
-		var function = new CCodeFunction (wrapper_name, "void");
-		function.add_parameter (new CCodeParameter ("connect_object", "gpointer"));
-		function.add_parameter (new CCodeParameter ("object", "gpointer"));
-		function.modifiers = CCodeModifiers.STATIC;
-
-		push_function (function);
-
-		var call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (m)));
-		call.add_argument (new CCodeIdentifier ("object"));
-		if (m.get_parameters().size > 0) {
-			call.add_argument (new CCodeIdentifier ("connect_object"));
-		}
-		ccode.add_expression (call);
-
-		pop_function ();
-
-		cfile.add_function_declaration (function);
-		cfile.add_function (function);
-
-		return wrapper_name;
-	}
-
 	public override void visit_method (Method m) {
 		base.visit_method (m);
 
@@ -121,25 +189,33 @@ public class Vala.GtkModule : GSignalModule {
 			return;
 		}
 
-		push_context (class_init_context);
-
-		/* Map a ui callback to a class method */
-		var gtk_name = m.get_attribute_string ("GtkCallback", "name", m.name);
-		string callback_name;
-		// This is the "swap" option of gtkbuilder/glade.
-		if (!m.get_attribute_bool ("GtkCallback", "swap")) {
-			/* If swap=false, the function is called with (object, data) but we want (data, object).
-			 * Therefore we create a wrapper that swaps the two parameters. */
-			callback_name = generate_gtk_swap_callback (m);
-		} else {
-			callback_name = get_ccode_name (m);
+		/* Handler name as defined in the gtkbuilder xml */
+		var handler_name = m.get_attribute_string ("GtkCallback", "name", m.name);
+		var sig = current_handler_to_signal_map.get (handler_name);
+		if (sig == null) {
+			Report.warning (m.source_reference, "signal not found for handler `%s'".printf (handler_name));
+			return;
 		}
 
-		var call = new CCodeFunctionCall (new CCodeIdentifier ("gtk_widget_class_declare_callback"));
-		call.add_argument (new CCodeIdentifier ("GTK_WIDGET_CLASS (klass)"));
-		call.add_argument (new CCodeConstant ("\"%s\"".printf (gtk_name)));
-		call.add_argument (new CCodeIdentifier ("G_CALLBACK(%s)".printf (callback_name)));
-		ccode.add_expression (call);
+		push_context (class_init_context);
+			
+		if (sig != null) {
+			sig.check (context);
+			var method_type = new MethodType (m);
+			var signal_type = new SignalType (sig);
+			var delegate_type = signal_type.get_handler_type ();
+			if (!method_type.compatible (delegate_type)) {
+				Report.error (m.source_reference, "method `%s' is incompatible with signal `%s', expected `%s'".printf (method_type.to_string (), delegate_type.to_string (), delegate_type.delegate_symbol.get_prototype_string (m.name)));
+			} else {
+				var wrapper = generate_delegate_wrapper (m, signal_type.get_handler_type (), m);
+
+				var call = new CCodeFunctionCall (new CCodeIdentifier ("gtk_widget_class_declare_callback"));
+				call.add_argument (new CCodeIdentifier ("GTK_WIDGET_CLASS (klass)"));
+				call.add_argument (new CCodeConstant ("\"%s\"".printf (handler_name)));
+				call.add_argument (new CCodeIdentifier ("G_CALLBACK(%s)".printf (wrapper)));
+				ccode.add_expression (call);
+			}
+		}
 
 		pop_context ();
 	}
