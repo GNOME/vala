@@ -54,7 +54,7 @@ public class Vala.GSignalModule : GObjectModule {
 			return "gpointer";
 		} else if (t is VoidType) {
 			return "void";
-		} else if (t.data_type == string_type.data_type) {
+		} else if (get_ccode_type_id (t.data_type) == get_ccode_type_id (string_type.data_type)) {
 			return "const char*";
 		} else if (t.data_type is Class || t.data_type is Interface) {
 			return "gpointer";
