@@ -364,7 +364,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 									cexpr = new CCodeConditionalExpression (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cexpr, new CCodeIdentifier ("NULL")), new CCodeIdentifier ("NULL"), closure_new);
 								} else {
 									carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), delegate_target);
-									if (deleg_type.value_owned) {
+									if (deleg_type.value_owned && !deleg_type.is_called_once) {
 										assert (delegate_target_destroy_notify != null);
 										carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param) + 0.01), delegate_target_destroy_notify);
 									}

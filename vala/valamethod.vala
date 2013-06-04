@@ -894,6 +894,7 @@ public class Vala.Method : Subroutine {
 
 		var callback_type = new DelegateType ((Delegate) glib_ns.scope.lookup ("AsyncReadyCallback"));
 		callback_type.nullable = true;
+		callback_type.value_owned = true;
 		callback_type.is_called_once = true;
 
 		var callback_param = new Parameter ("_callback_", callback_type);

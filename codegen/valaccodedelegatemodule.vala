@@ -408,7 +408,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			ccode.add_declaration (return_type_cname, new CCodeVariableDeclarator ("result", ccall));
 		}
 
-		if (d.has_target && !dt.value_owned && dt.is_called_once) {
+		if (d.has_target /* TODO: && dt.value_owned */ && dt.is_called_once) {
 			// destroy notify "self" after the call
 			CCodeExpression? destroy_notify = null;
 			if (m.closure) {
