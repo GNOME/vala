@@ -23,11 +23,20 @@
 using GLib;
 
 public class Vala.GAsyncModule : GtkModule {
+	bool needs_dummy_object (Method m) {
+		var t = m.parent_symbol as TypeSymbol;
+		return t == null || !t.is_subtype_of (gobject_type) || m is CreationMethod || m.binding != MemberBinding.INSTANCE
+			&& !context.require_glib_version (2, 20);
+	}
+
 	CCodeStruct generate_data_struct (Method m) {
 		string dataname = Symbol.lower_case_to_camel_case (get_ccode_name (m)) + "Data";
 		var data = new CCodeStruct ("_" + dataname);
 
 		data.add_field ("int", "_state_");
+		if (needs_dummy_object (m)) {
+			data.add_field ("GObject*", "_dummy_object_");
+		}
 		data.add_field ("GObject*", "_source_object_");
 		data.add_field ("GAsyncResult*", "_res_");
 		data.add_field ("GSimpleAsyncResult*", "_async_result");
@@ -137,6 +146,14 @@ public class Vala.GAsyncModule : GtkModule {
 			}
 		}
 
+		if (needs_dummy_object (m)) {
+			// free dummy object being created in g_simple_async_result_new
+			var dummy_object = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_dummy_object_");
+			var free_dummy_object = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+			free_dummy_object.add_argument (dummy_object);
+
+			ccode.add_expression (free_dummy_object);
+		}
 
 		var freecall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 		freecall.add_argument (new CCodeIdentifier (dataname));
@@ -213,12 +230,15 @@ public class Vala.GAsyncModule : GtkModule {
 			if (context.require_glib_version (2, 20)) {
 				create_result.add_argument (new CCodeConstant ("NULL"));
 			} else {
+				// needs dummy object
 				var object_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
 				object_creation.add_argument (new CCodeConstant ("G_TYPE_OBJECT"));
 				object_creation.add_argument (new CCodeConstant ("0"));
 				object_creation.add_argument (new CCodeConstant ("NULL"));
 
-				create_result.add_argument (object_creation);
+				ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "_dummy_object_"), object_creation);
+
+				create_result.add_argument (new CCodeMemberAccess.pointer (data_var, "_dummy_object_"));
 			}
 		}
 
