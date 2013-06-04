@@ -86,7 +86,7 @@ public class Vala.GtkModule : GSignalModule {
 		}
 	}
 
-	private void process_current_ui_resource (string ui_resource, SourceReference source_reference) {
+	private void process_current_ui_resource (string ui_resource, CodeNode node) {
 		/* Scan a single gtkbuilder file for signal handlers in <object> elements,
 		   and save an handler string -> Vala.Signal mapping for each of them */
 		ensure_cclass_to_vala_map();
@@ -96,7 +96,8 @@ public class Vala.GtkModule : GSignalModule {
 		current_child_to_class_map = null;
 		var ui_file = gresource_to_file_map.get (ui_resource);
 		if (ui_file == null || !FileUtils.test (ui_file, FileTest.EXISTS)) {
-			Report.error (source_reference, "UI resource not found: `%s'".printf (ui_resource));
+			node.error = true;
+			Report.error (node.source_reference, "UI resource not found: `%s'. Please make sure to specify the proper GResources xml files with --gresources.".printf (ui_resource));
 			return;
 		}
 		current_handler_to_signal_map = new HashMap<string, Signal>(str_hash, str_equal);
@@ -150,7 +151,7 @@ public class Vala.GtkModule : GSignalModule {
 			return;
 		}
 
-		process_current_ui_resource (ui, cl.source_reference);
+		process_current_ui_resource (ui, cl);
 
 		var call = new CCodeFunctionCall (new CCodeIdentifier ("gtk_widget_class_set_template_from_resource"));
 		call.add_argument (new CCodeIdentifier ("GTK_WIDGET_CLASS (klass)"));
@@ -162,7 +163,7 @@ public class Vala.GtkModule : GSignalModule {
 		base.visit_field (f);
 
 		var cl = current_class;
-		if (!is_gtk_template (cl)) {
+		if (!is_gtk_template (cl) || cl.error) {
 			return;
 		}
 
@@ -211,7 +212,7 @@ public class Vala.GtkModule : GSignalModule {
 		base.visit_method (m);
 
 		var cl = current_class;
-		if (!is_gtk_template (cl)) {
+		if (!is_gtk_template (cl) || cl.error) {
 			return;
 		}
 
