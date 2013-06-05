@@ -4584,7 +4584,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 								CCodeExpression delegate_target_destroy_notify;
 								var delegate_target = get_delegate_target_cexpression (arg, out delegate_target_destroy_notify);
 								carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), delegate_target);
-								if (deleg_type.value_owned) {
+								if (deleg_type.value_owned && !deleg_type.is_called_once) {
 									carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param) + 0.01), delegate_target_destroy_notify);
 								}
 							}
