@@ -25,7 +25,7 @@ using GLib;
 public class Vala.GAsyncModule : GtkModule {
 	bool needs_dummy_object (Method m) {
 		var t = m.parent_symbol as TypeSymbol;
-		return t == null || !t.is_subtype_of (gobject_type) || m is CreationMethod || m.binding != MemberBinding.INSTANCE
+		return (t == null || !t.is_subtype_of (gobject_type) || m is CreationMethod || m.binding != MemberBinding.INSTANCE)
 			&& !context.require_glib_version (2, 20);
 	}
 
