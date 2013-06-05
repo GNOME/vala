@@ -113,6 +113,9 @@ public class Vala.DelegateType : DataType {
 	}
 
 	public override bool check (CodeContext context) {
+		if (is_called_once && !value_owned) {
+			Report.warning (source_reference, "delegates with scope=\"async\" must be owned");
+		}
 		return delegate_symbol.check (context);
 	}
 

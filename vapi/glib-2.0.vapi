@@ -1693,17 +1693,17 @@ namespace GLib {
 #endif
 	public class Thread<T> {
 #if GLIB_2_32
-		public Thread (string? name, ThreadFunc<T> func);
+		public Thread (string? name, owned ThreadFunc<T> func);
 		[CCode (cname = "g_thread_try_new")]
-		public Thread.try (string? name, ThreadFunc<T> func) throws GLib.Error;
+		public Thread.try (string? name, owned ThreadFunc<T> func) throws GLib.Error;
 #endif
 		public static bool supported ();
 		[Deprecated (since = "2.32", replacement = "new Thread<T> ()")]
 		[CCode (simple_generics = true)]
-		public static unowned Thread<T> create<T> (ThreadFunc<T> func, bool joinable) throws ThreadError;
+		public static unowned Thread<T> create<T> (owned ThreadFunc<T> func, bool joinable) throws ThreadError;
 		[Deprecated (since = "2.32", replacement = "new Thread<T> ()")]
 		[CCode (simple_generics = true)]
-		public static unowned Thread<T> create_full<T> (ThreadFunc<T> func, ulong stack_size, bool joinable, bool bound, ThreadPriority priority) throws ThreadError;
+		public static unowned Thread<T> create_full<T> (owned ThreadFunc<T> func, ulong stack_size, bool joinable, bool bound, ThreadPriority priority) throws ThreadError;
 		[CCode (simple_generics = true)]
 		public static unowned Thread<T> self<T> ();
 		public T join ();
