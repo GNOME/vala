@@ -4096,7 +4096,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (type is DelegateType) {
 			var delegate_type = (DelegateType) type;
 			if (delegate_type.delegate_symbol.has_target && !context.deprecated) {
-				Report.deprecated (node.source_reference, "copying delegates is discouraged");
+				Report.deprecated (node.source_reference, "copying delegates is not supported");
 			}
 			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
 			return result;
