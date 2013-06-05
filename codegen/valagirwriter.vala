@@ -1191,7 +1191,15 @@ public class Vala.GIRWriter : CodeVisitor {
 		DelegateType delegate_type = type as DelegateType;
 
 		if ((type.value_owned && delegate_type == null) || (constructor && !type.data_type.is_subtype_of (ginitiallyunowned_type))) {
-			buffer.append_printf (" transfer-ownership=\"full\"");
+			var any_owned = false;
+			foreach (var generic_arg in type.get_type_arguments ()) {
+				any_owned |= generic_arg.value_owned;
+			}
+			if (type.has_type_arguments () && !any_owned) {
+				buffer.append_printf (" transfer-ownership=\"container\"");
+			} else {
+				buffer.append_printf (" transfer-ownership=\"full\"");
+			}
 		} else {
 			buffer.append_printf (" transfer-ownership=\"none\"");
 		}
