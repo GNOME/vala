@@ -265,9 +265,12 @@ public class Vala.CodeBuilder {
 	}
 
 	// only qualified types, will slightly simplify the work of SymbolResolver
-	public static Symbol symbol_from_string (string symbol_string, Symbol? parent_symbol = null) {
+	public static Symbol? symbol_from_string (string symbol_string, Symbol? parent_symbol = null) {
 		Symbol sym = parent_symbol != null ? parent_symbol : CodeContext.get().root;
 		foreach (unowned string s in symbol_string.split (".")) {
+			if (sym == null) {
+				break;
+			}
 			sym = sym.scope.lookup (s);
 		}
 		return sym;
