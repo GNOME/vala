@@ -2161,6 +2161,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					return_out_parameter (param);
 				}
 			}
+			// check postconditions
+			foreach (var postcondition in m.get_postconditions ()) {
+				create_postcondition_statement (postcondition);
+			}
 		} else if (b.parent_symbol is PropertyAccessor) {
 			var acc = (PropertyAccessor) b.parent_symbol;
 			if (acc.value_parameter != null && !acc.value_parameter.captured && requires_destroy (acc.value_parameter.variable_type)) {
