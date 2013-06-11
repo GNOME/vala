@@ -1113,27 +1113,78 @@ public class Vala.CCodeAttribute : AttributeCache {
 	}
 
 	private string get_default_param_spec_function () {
-		if (sym is Class) {
-			var cl = (Class) sym;
-			if (cl.is_fundamental ()) {
-				return CCodeBaseModule.get_ccode_lower_case_name (cl, "param_spec_");
-			} else if (cl.base_class != null) {
-				return CCodeBaseModule.get_ccode_param_spec_function (cl.base_class);
-			} else if (type_id == "G_TYPE_POINTER") {
+		if (node is Symbol) {
+			if (sym is Class) {
+				var cl = (Class) sym;
+				if (cl.is_fundamental ()) {
+					return CCodeBaseModule.get_ccode_lower_case_name (cl, "param_spec_");
+				} else if (cl.base_class != null) {
+					return CCodeBaseModule.get_ccode_param_spec_function (cl.base_class);
+				} else if (type_id == "G_TYPE_POINTER") {
+					return "g_param_spec_pointer";
+				} else {
+					return "g_param_spec_boxed";
+				}
+			} else if (sym is Interface) {
+				foreach (var prereq in ((Interface) sym).get_prerequisites ()) {
+					var func = CCodeBaseModule.get_ccode_param_spec_function (prereq.data_type);
+					if (func != "") {
+						return func;
+					}
+				}
 				return "g_param_spec_pointer";
-			} else {
-				return "g_param_spec_boxed";
-			}
-		} else if (sym is Interface) {
-			foreach (var prereq in ((Interface) sym).get_prerequisites ()) {
-				var func = CCodeBaseModule.get_ccode_param_spec_function (prereq.data_type);
-				if (func != "") {
-					return func;
+			} else if (sym is Enum) {
+				var e = sym as Enum;
+				if (CCodeBaseModule.get_ccode_has_type_id (e)) {
+					if (e.is_flags) {
+						return "g_param_spec_flags";
+					} else {
+						return "g_param_spec_enum";
+					}
+				} else {
+					if (e.is_flags) {
+						return "g_param_spec_uint";
+					} else {
+						return "g_param_spec_int";
+					}
+				}
+			} else if (sym is Struct) {
+				var type_id = CCodeBaseModule.get_ccode_type_id (sym);
+				if (type_id == "G_TYPE_INT") {
+					return "g_param_spec_int";
+				} else if (type_id == "G_TYPE_UINT") {
+					return "g_param_spec_uint";
+				} else if (type_id == "G_TYPE_INT64") {
+					return "g_param_spec_int64";
+				} else if (type_id == "G_TYPE_UINT64") {
+					return "g_param_spec_uint64";
+				} else if (type_id == "G_TYPE_LONG") {
+					return "g_param_spec_long";
+				} else if (type_id == "G_TYPE_ULONG") {
+					return "g_param_spec_ulong";
+				} else if (type_id == "G_TYPE_BOOLEAN") {
+					return "g_param_spec_boolean";
+				} else if (type_id == "G_TYPE_CHAR") {
+					return "g_param_spec_char";
+				} else if (type_id == "G_TYPE_UCHAR") {
+					return "g_param_spec_uchar";
+				}else if (type_id == "G_TYPE_FLOAT") {
+					return "g_param_spec_float";
+				} else if (type_id == "G_TYPE_DOUBLE") {
+					return "g_param_spec_double";
+				} else if (type_id == "G_TYPE_GTYPE") {
+					return "g_param_spec_gtype";
+				} else {
+					return "g_param_spec_boxed";
 				}
 			}
-			return "g_param_spec_pointer";
+		} else if (node is ArrayType && ((ArrayType)node).element_type.data_type == CodeContext.get().analyzer.string_type.data_type) {
+			return "g_param_spec_boxed";
+		} else if (node is DataType && ((DataType) node).data_type != null) {
+			return CCodeBaseModule.get_ccode_param_spec_function (((DataType) node).data_type);
 		}
-		return "";
+
+		return "g_param_spec_pointer";
 	}
 
 	private string get_default_default_value () {

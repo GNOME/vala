@@ -668,6 +668,27 @@ public class Vala.GObjectModule : GTypeModule {
 
 		if (is_gobject_property (prop) && prop.parent_symbol is Class) {
 			prop_enum.add_value (new CCodeEnumValue (get_ccode_upper_case_name (prop)));
+
+			if (prop.initializer != null && prop.set_accessor != null && !prop.set_accessor.automatic_body) {
+				// generate a custom initializer if it couldn't be done at class_init time
+				bool has_spec_initializer = prop.property_type.data_type is Enum;
+				if (!has_spec_initializer && prop.property_type.data_type is Struct) {
+					var param_spec_func = get_ccode_param_spec_function (prop.property_type.data_type);
+					has_spec_initializer = param_spec_func != "g_param_spec_boxed";
+				}
+				if (!has_spec_initializer) {
+					push_context (instance_init_context);
+
+					prop.initializer.emit (this);
+
+					var inst_ma = new MemberAccess.simple ("this");
+					inst_ma.target_value = new GLibValue (get_data_type_for_symbol ((Class) prop.parent_symbol), new CCodeIdentifier ("self"), true);
+					store_property (prop, inst_ma, prop.initializer.target_value);
+
+					temp_ref_values.clear ();			
+					pop_context ();
+				}
+			}
 		}
 	}
 

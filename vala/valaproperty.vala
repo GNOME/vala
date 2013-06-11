@@ -132,7 +132,17 @@ public class Vala.Property : Symbol, Lockable {
 	/**
 	 * Specifies the default value of this property.
 	 */
-	public Expression initializer { get; set; }
+	public Expression initializer {
+		get {
+			return _initializer;
+		}
+		set {
+			_initializer = value;
+			_initializer.parent_node = this;
+		}
+	}
+
+	private Expression _initializer;
 
 	private bool lock_used = false;
 
@@ -247,6 +257,12 @@ public class Vala.Property : Symbol, Lockable {
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (property_type == old_type) {
 			property_type = new_type;
+		}
+	}
+
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		if (initializer == old_node) {
+			initializer = new_node;
 		}
 	}
 
