@@ -36,6 +36,7 @@ TESTS = \
 	namespaces.vala \
 	methods/lambda.vala \
 	methods/closures.vala \
+	methods/prepostconditions.vala \
 	methods/symbolresolution.vala \
 	methods/bug595538.vala \
 	methods/bug596726.vala \
