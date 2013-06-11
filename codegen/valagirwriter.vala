@@ -1215,7 +1215,7 @@ public class Vala.GIRWriter : CodeVisitor {
 				index + 1 : (type.value_owned ? index - 1 : index);
 			buffer.append_printf (" closure=\"%i\"", closure_index);
 			if (type.value_owned) {
-				buffer.append_printf (" destroy=\"%i\"", closure_index + 1);
+				buffer.append_printf (" scope=\"notified\" destroy=\"%i\"", closure_index + 1);
 			}
 
 			if (delegate_type.is_called_once) {
