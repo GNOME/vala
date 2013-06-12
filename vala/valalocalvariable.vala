@@ -35,6 +35,7 @@ public class Vala.LocalVariable : Variable {
 
 	public bool captured { get; set; }
 
+	/* Currently ignored due to GCC 4.8 being strict on possibly uninitialized variables */
 	public bool no_init { get; set; }
 
 	/**
