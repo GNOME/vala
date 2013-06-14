@@ -1495,7 +1495,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		foreach (Vala.SourceFile vfile in context.get_source_files ()) {
 			if (vfile.file_type == Vala.SourceFileType.PACKAGE
 				&& vfile.get_nodes ().size > 0
-				&& files.contains (vfile) == false)
+				&& files.has_key (vfile) == false)
 			{
 				Package vdpkg = new Package (get_package_name (vfile.filename), true, null);
 				register_source_file (register_package (vdpkg), vfile);
