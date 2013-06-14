@@ -65,7 +65,7 @@ public class Valadoc.MarkupReader : Object {
 
 		lines = content.split ("\n");
 		begin = content;
-		end = begin + content.size ();
+		end = begin + content.length;
 		current = begin;
 
 		column = 1;
