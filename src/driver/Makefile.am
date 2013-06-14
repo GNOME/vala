@@ -38,12 +38,17 @@ if HAVE_LIBVALA_0_20_X
 DRIVER_0_20_X_DIR = 0.20.x
 endif
 
+if HAVE_LIBVALA_0_22_X
+DRIVER_0_22_X_DIR = 0.22.x
+endif
+
 
 SUBDIRS = \
 	$(DRIVER_0_14_X_DIR) \
 	$(DRIVER_0_16_X_DIR) \
 	$(DRIVER_0_18_X_DIR) \
 	$(DRIVER_0_20_X_DIR) \
+	$(DRIVER_0_22_X_DIR) \
 	$(NULL)
 
 

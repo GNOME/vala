@@ -58,6 +58,12 @@ AC_SUBST(LIBGEE_LIBS)
 ## Drivers:
 ##
 
+PKG_CHECK_MODULES(LIBVALA_0_22_X, libvala-0.22 >= 0.17.4, have_libvala_0_22_x="yes", have_libvala_0_22_x="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_22_X, test "$have_libvala_0_22_x" = "yes")
+AC_SUBST(LIBVALA_0_22_X_CFLAGS)
+AC_SUBST(LIBVALA_0_22_X_LIBS)
+
+
 PKG_CHECK_MODULES(LIBVALA_0_20_X, libvala-0.20 >= 0.17.4, have_libvala_0_20_x="yes", have_libvala_0_20_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_20_X, test "$have_libvala_0_20_x" = "yes")
 AC_SUBST(LIBVALA_0_20_X_CFLAGS)
@@ -125,6 +131,7 @@ AC_CONFIG_FILES([Makefile
 				 src/driver/0.16.x/Makefile
 				 src/driver/0.18.x/Makefile
 				 src/driver/0.20.x/Makefile
+				 src/driver/0.22.x/Makefile
                  src/doclets/Makefile
                  src/doclets/htm/Makefile
                  src/doclets/devhelp/Makefile
