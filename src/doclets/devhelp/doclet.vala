@@ -99,7 +99,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (filepath, "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
-		write_file_header (this.css_path, this.js_path, pkg_name);
+		write_file_header (Valadoc.Devhelp.Doclet.css_path, Valadoc.Devhelp.Doclet.js_path, pkg_name);
 		write_package_content (package, package);
 		write_file_footer ();
 		file = null;

@@ -148,15 +148,15 @@ public class ValaDoc : Object {
 	}
 
 	private string get_pkg_name () {
-		if (this.pkg_name == null) {
-			if (this.directory.has_suffix ("/")) {
-				this.pkg_name = GLib.Path.get_dirname (this.directory);
+		if (ValaDoc.pkg_name == null) {
+			if (ValaDoc.directory.has_suffix ("/")) {
+				ValaDoc.pkg_name = GLib.Path.get_dirname (ValaDoc.directory);
 			} else {
-				this.pkg_name = GLib.Path.get_basename (this.directory);
+				ValaDoc.pkg_name = GLib.Path.get_basename (ValaDoc.directory);
 			}
 		}
 
-		return this.pkg_name;
+		return ValaDoc.pkg_name;
 	}
 
 	private ModuleLoader? create_module_loader (ErrorReporter reporter, out Doclet? doclet, out Driver? driver) {
@@ -201,25 +201,25 @@ public class ValaDoc : Object {
 		reporter.settings = settings;
 
 		settings.pkg_name = this.get_pkg_name ();
-		settings.gir_namespace = this.gir_namespace;
-		settings.gir_version = this.gir_version;
-		if (this.gir_name != null) {
-			settings.gir_name = GLib.Path.get_basename (this.gir_name);
-			settings.gir_directory = GLib.Path.get_dirname (this.gir_name);
+		settings.gir_namespace = ValaDoc.gir_namespace;
+		settings.gir_version = ValaDoc.gir_version;
+		if (ValaDoc.gir_name != null) {
+			settings.gir_name = GLib.Path.get_basename (ValaDoc.gir_name);
+			settings.gir_directory = GLib.Path.get_dirname (ValaDoc.gir_name);
 			if (settings.gir_directory == "") {
-				settings.gir_directory = GLib.Path.get_dirname (this.directory);
+				settings.gir_directory = GLib.Path.get_dirname (ValaDoc.directory);
 			}
 		}
-		settings.pkg_version = this.pkg_version;
-		settings.add_inherited = this.add_inherited;
-		settings._protected = this._protected;
-		settings._internal = this._internal;
-		settings.with_deps = this.with_deps;
-		settings._private = this._private;
-		settings.path = realpath (this.directory);
-		settings.verbose = this.verbose;
-		settings.wiki_directory = this.wikidirectory;
-		settings.pluginargs = this.pluginargs;
+		settings.pkg_version = ValaDoc.pkg_version;
+		settings.add_inherited = ValaDoc.add_inherited;
+		settings._protected = ValaDoc._protected;
+		settings._internal = ValaDoc._internal;
+		settings.with_deps = ValaDoc.with_deps;
+		settings._private = ValaDoc._private;
+		settings.path = realpath (ValaDoc.directory);
+		settings.verbose = ValaDoc.verbose;
+		settings.wiki_directory = ValaDoc.wikidirectory;
+		settings.pluginargs = ValaDoc.pluginargs;
 
 		settings.experimental = experimental;
 		settings.experimental_non_null = experimental_non_null;
@@ -280,7 +280,7 @@ public class ValaDoc : Object {
 			return quit (reporter);
 		}
 
-		if (this.gir_name != null) {
+		if (ValaDoc.gir_name != null) {
 			driver.write_gir (settings, reporter);
 			if (reporter.errors > 0) {
 				return quit (reporter);
