@@ -27,7 +27,7 @@ using Gee;
 
 
 
-public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
+public class Valadoc.Html.Doclet : Valadoc.Html.BasicDoclet {
 	private const string css_path_package = "style.css";
 	private const string css_path_wiki = "../style.css";
 	private const string css_path = "../style.css";
@@ -84,7 +84,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename (settings.path, "index.html"), "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
-		write_file_header (Valadoc.HtmlDoclet.css_path_package, Valadoc.HtmlDoclet.js_path_package, settings.pkg_name);
+		write_file_header (Valadoc.Html.Doclet.css_path_package, Valadoc.Html.Doclet.js_path_package, settings.pkg_name);
 		write_navi_packages (tree);
 		write_package_index_content (tree);
 		write_file_footer ();
@@ -112,7 +112,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename (path, "index.htm"), "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
-		write_file_header (Valadoc.HtmlDoclet.css_path, Valadoc.HtmlDoclet.js_path, pkg_name);
+		write_file_header (Valadoc.Html.Doclet.css_path, Valadoc.Html.Doclet.js_path, pkg_name);
 		write_navi_package (package);
 		write_package_content (package, package);
 		write_file_footer ();
@@ -128,7 +128,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 			writer = new Html.MarkupWriter (file);
 			_renderer.set_writer (writer);
-			write_file_header (Valadoc.HtmlDoclet.css_path, Valadoc.HtmlDoclet.js_path, ns.get_full_name () + " &ndash; " + ns.package.name);
+			write_file_header (Valadoc.Html.Doclet.css_path, Valadoc.Html.Doclet.js_path, ns.get_full_name () + " &ndash; " + ns.package.name);
 			write_navi_symbol (ns);
 			write_namespace_content (ns, ns);
 			write_file_footer ();
@@ -214,6 +214,6 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 
 
 public Type register_plugin (Valadoc.ModuleLoader module_loader) {
-	return typeof ( Valadoc.HtmlDoclet );
+	return typeof ( Valadoc.Html.Doclet );
 }
 
