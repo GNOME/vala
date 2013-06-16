@@ -1756,6 +1756,29 @@
 				<parameter name="func_data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<callback name="GtkListBoxFilterFunc">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="row" type="GtkListBoxRow*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
+		<callback name="GtkListBoxSortFunc">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="row1" type="GtkListBoxRow*"/>
+				<parameter name="row2" type="GtkListBoxRow*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
+		<callback name="GtkListBoxUpdateHeaderFunc">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="row" type="GtkListBoxRow*"/>
+				<parameter name="before" type="GtkListBoxRow*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<callback name="GtkMenuDetachFunc">
 			<return-type type="void"/>
 			<parameters>
@@ -4977,6 +5000,8 @@
 			<member name="GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT" value="3"/>
 			<member name="GTK_STACK_TRANSITION_TYPE_SLIDE_UP" value="4"/>
 			<member name="GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN" value="5"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT" value="6"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN" value="7"/>
 		</enum>
 		<enum name="GtkStateType" type-name="GtkStateType" get-type="gtk_state_type_get_type">
 			<member name="GTK_STATE_NORMAL" value="0"/>
@@ -15391,6 +15416,216 @@
 				<interface name="AtkHyperlinkImpl"/>
 			</implements>
 		</object>
+		<object name="GtkListBox" parent="GtkContainer" type-name="GtkListBox" get-type="gtk_list_box_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="drag_highlight_row" symbol="gtk_list_box_drag_highlight_row">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="row" type="GtkListBoxRow*"/>
+				</parameters>
+			</method>
+			<method name="drag_unhighlight_row" symbol="gtk_list_box_drag_unhighlight_row">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+				</parameters>
+			</method>
+			<method name="get_activate_on_single_click" symbol="gtk_list_box_get_activate_on_single_click">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+				</parameters>
+			</method>
+			<method name="get_adjustment" symbol="gtk_list_box_get_adjustment">
+				<return-type type="GtkAdjustment*"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+				</parameters>
+			</method>
+			<method name="get_row_at_index" symbol="gtk_list_box_get_row_at_index">
+				<return-type type="GtkListBoxRow*"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="index_" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_row_at_y" symbol="gtk_list_box_get_row_at_y">
+				<return-type type="GtkListBoxRow*"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="y" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_selected_row" symbol="gtk_list_box_get_selected_row">
+				<return-type type="GtkListBoxRow*"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+				</parameters>
+			</method>
+			<method name="get_selection_mode" symbol="gtk_list_box_get_selection_mode">
+				<return-type type="GtkSelectionMode"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+				</parameters>
+			</method>
+			<method name="invalidate_filter" symbol="gtk_list_box_invalidate_filter">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+				</parameters>
+			</method>
+			<method name="invalidate_headers" symbol="gtk_list_box_invalidate_headers">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+				</parameters>
+			</method>
+			<method name="invalidate_sort" symbol="gtk_list_box_invalidate_sort">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_list_box_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="select_row" symbol="gtk_list_box_select_row">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="row" type="GtkListBoxRow*"/>
+				</parameters>
+			</method>
+			<method name="set_activate_on_single_click" symbol="gtk_list_box_set_activate_on_single_click">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="single" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_adjustment" symbol="gtk_list_box_set_adjustment">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="adjustment" type="GtkAdjustment*"/>
+				</parameters>
+			</method>
+			<method name="set_filter_func" symbol="gtk_list_box_set_filter_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="filter_func" type="GtkListBoxFilterFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="set_header_func" symbol="gtk_list_box_set_header_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="update_header" type="GtkListBoxUpdateHeaderFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="set_placeholder" symbol="gtk_list_box_set_placeholder">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="placeholder" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="set_selection_mode" symbol="gtk_list_box_set_selection_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="mode" type="GtkSelectionMode"/>
+				</parameters>
+			</method>
+			<method name="set_sort_func" symbol="gtk_list_box_set_sort_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="sort_func" type="GtkListBoxSortFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<property name="activate-on-single-click" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="selection-mode" type="GtkSelectionMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="activate-cursor-row" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+				</parameters>
+			</signal>
+			<signal name="move-cursor" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="step" type="GtkMovementStep"/>
+					<parameter name="count" type="gint"/>
+				</parameters>
+			</signal>
+			<signal name="row-activated" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="row" type="GtkListBoxRow*"/>
+				</parameters>
+			</signal>
+			<signal name="row-selected" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="row" type="GtkListBoxRow*"/>
+				</parameters>
+			</signal>
+			<signal name="toggle-cursor-row" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkListBoxAccessible" parent="GtkContainerAccessible" type-name="GtkListBoxAccessible" get-type="gtk_list_box_accessible_get_type">
+			<implements>
+				<interface name="AtkComponent"/>
+				<interface name="AtkSelection"/>
+			</implements>
+		</object>
+		<object name="GtkListBoxRow" parent="GtkBin" type-name="GtkListBoxRow" get-type="gtk_list_box_row_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="changed" symbol="gtk_list_box_row_changed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="row" type="GtkListBoxRow*"/>
+				</parameters>
+			</method>
+			<method name="get_header" symbol="gtk_list_box_row_get_header">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="row" type="GtkListBoxRow*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_list_box_row_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="set_header" symbol="gtk_list_box_row_set_header">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="row" type="GtkListBoxRow*"/>
+					<parameter name="header" type="GtkWidget*"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="GtkListStore" parent="GObject" type-name="GtkListStore" get-type="gtk_list_store_get_type">
 			<implements>
 				<interface name="GtkTreeModel"/>
@@ -19968,6 +20203,57 @@
 				<interface name="AtkComponent"/>
 			</implements>
 		</object>
+		<object name="GtkSearchBar" parent="GtkBin" type-name="GtkSearchBar" get-type="gtk_search_bar_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="connect_entry" symbol="gtk_search_bar_connect_entry">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="bar" type="GtkSearchBar*"/>
+					<parameter name="entry" type="GtkEntry*"/>
+				</parameters>
+			</method>
+			<method name="get_search_mode" symbol="gtk_search_bar_get_search_mode">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="bar" type="GtkSearchBar*"/>
+				</parameters>
+			</method>
+			<method name="get_show_close_button" symbol="gtk_search_bar_get_show_close_button">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="bar" type="GtkSearchBar*"/>
+				</parameters>
+			</method>
+			<method name="handle_event" symbol="gtk_search_bar_handle_event">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="bar" type="GtkSearchBar*"/>
+					<parameter name="event" type="GdkEvent*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_search_bar_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="set_search_mode" symbol="gtk_search_bar_set_search_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="bar" type="GtkSearchBar*"/>
+					<parameter name="search_mode" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_show_close_button" symbol="gtk_search_bar_set_show_close_button">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="bar" type="GtkSearchBar*"/>
+					<parameter name="visible" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="search-mode-enabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-close-button" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+		</object>
 		<object name="GtkSearchEntry" parent="GtkEntry" type-name="GtkSearchEntry" get-type="gtk_search_entry_get_type">
 			<implements>
 				<interface name="AtkImplementor"/>
@@ -20144,8 +20430,6 @@
 			<property name="gtk-scrolled-window-placement" type="GtkCornerType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-shell-shows-app-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-shell-shows-menubar" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="gtk-show-input-method-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="gtk-show-unicode-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-sound-theme-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-split-cursor" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-theme-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -33076,6 +33360,8 @@
 		<constant name="GTK_STYLE_CLASS_LEFT" type="char*" value="left"/>
 		<constant name="GTK_STYLE_CLASS_LEVEL_BAR" type="char*" value="level-bar"/>
 		<constant name="GTK_STYLE_CLASS_LINKED" type="char*" value="linked"/>
+		<constant name="GTK_STYLE_CLASS_LIST" type="char*" value="list"/>
+		<constant name="GTK_STYLE_CLASS_LIST_ROW" type="char*" value="list-row"/>
 		<constant name="GTK_STYLE_CLASS_MARK" type="char*" value="mark"/>
 		<constant name="GTK_STYLE_CLASS_MENU" type="char*" value="menu"/>
 		<constant name="GTK_STYLE_CLASS_MENUBAR" type="char*" value="menubar"/>

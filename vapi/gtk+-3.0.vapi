@@ -2811,6 +2811,50 @@ namespace Gtk {
 		protected LinkButtonAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class ListBox : Gtk.Container, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public ListBox ();
+		public void drag_highlight_row (Gtk.ListBoxRow row);
+		public void drag_unhighlight_row ();
+		public bool get_activate_on_single_click ();
+		public unowned Gtk.Adjustment get_adjustment ();
+		public unowned Gtk.ListBoxRow get_row_at_index (int index_);
+		public unowned Gtk.ListBoxRow get_row_at_y (int y);
+		public unowned Gtk.ListBoxRow get_selected_row ();
+		public Gtk.SelectionMode get_selection_mode ();
+		public void invalidate_filter ();
+		public void invalidate_headers ();
+		public void invalidate_sort ();
+		public void select_row (Gtk.ListBoxRow row);
+		public void set_activate_on_single_click (bool single);
+		public void set_adjustment (Gtk.Adjustment adjustment);
+		public void set_filter_func (Gtk.ListBoxFilterFunc filter_func, GLib.DestroyNotify destroy);
+		public void set_header_func (Gtk.ListBoxUpdateHeaderFunc update_header, GLib.DestroyNotify destroy);
+		public void set_placeholder (Gtk.Widget placeholder);
+		public void set_selection_mode (Gtk.SelectionMode mode);
+		public void set_sort_func (Gtk.ListBoxSortFunc sort_func, GLib.DestroyNotify destroy);
+		public bool activate_on_single_click { get; set; }
+		public Gtk.SelectionMode selection_mode { get; set; }
+		public virtual signal void activate_cursor_row ();
+		public virtual signal void move_cursor (Gtk.MovementStep step, int count);
+		public virtual signal void row_activated (Gtk.ListBoxRow row);
+		public virtual signal void row_selected (Gtk.ListBoxRow row);
+		public virtual signal void toggle_cursor_row ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class ListBoxAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Selection {
+		[CCode (has_construct_function = false)]
+		protected ListBoxAccessible ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class ListBoxRow : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public ListBoxRow ();
+		public void changed ();
+		public unowned Gtk.Widget get_header ();
+		public void set_header (Gtk.Widget header);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ListStore : GLib.Object, Gtk.TreeModel, Gtk.TreeDragSource, Gtk.TreeDragDest, Gtk.TreeSortable, Gtk.Buildable {
 		[CCode (has_construct_function = false, sentinel = "")]
 		public ListStore (int n_columns, ...);
@@ -4001,6 +4045,20 @@ namespace Gtk {
 		protected ScrolledWindowAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class SearchBar : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public SearchBar ();
+		public void connect_entry (Gtk.Entry entry);
+		public bool get_search_mode ();
+		public bool get_show_close_button ();
+		public bool handle_event (Gdk.Event event);
+		public void set_search_mode (bool search_mode);
+		public void set_show_close_button (bool visible);
+		[NoAccessorMethod]
+		public bool search_mode_enabled { get; set; }
+		public bool show_close_button { get; set construct; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class SearchEntry : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.Editable, Gtk.CellEditable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SearchEntry ();
@@ -4172,10 +4230,6 @@ namespace Gtk {
 		public bool gtk_shell_shows_app_menu { get; set; }
 		[NoAccessorMethod]
 		public bool gtk_shell_shows_menubar { get; set; }
-		[NoAccessorMethod]
-		public bool gtk_show_input_method_menu { get; set; }
-		[NoAccessorMethod]
-		public bool gtk_show_unicode_menu { get; set; }
 		[NoAccessorMethod]
 		public string gtk_sound_theme_name { owned get; set; }
 		[NoAccessorMethod]
@@ -7902,7 +7956,9 @@ namespace Gtk {
 		SLIDE_RIGHT,
 		SLIDE_LEFT,
 		SLIDE_UP,
-		SLIDE_DOWN
+		SLIDE_DOWN,
+		SLIDE_LEFT_RIGHT,
+		SLIDE_UP_DOWN
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_STATE_FLAG_")]
 	[Flags]
@@ -8122,6 +8178,12 @@ namespace Gtk {
 	public delegate void IconViewForeachFunc (Gtk.IconView icon_view, Gtk.TreePath path);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
 	public delegate int KeySnoopFunc (Gtk.Widget grab_widget, Gdk.EventKey event, void* func_data);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public delegate bool ListBoxFilterFunc (Gtk.ListBoxRow row);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public delegate int ListBoxSortFunc (Gtk.ListBoxRow row1, Gtk.ListBoxRow row2);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public delegate void ListBoxUpdateHeaderFunc (Gtk.ListBoxRow row, Gtk.ListBoxRow before);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
 	public delegate void MenuDetachFunc (Gtk.Widget attach_widget, Gtk.Menu menu);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -8655,6 +8717,10 @@ namespace Gtk {
 	public const string STYLE_CLASS_LEVEL_BAR;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_LINKED;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_LIST;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_LIST_ROW;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_MARK;
 	[CCode (cheader_filename = "gtk/gtk.h")]
