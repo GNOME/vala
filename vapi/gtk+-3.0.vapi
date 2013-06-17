@@ -2825,14 +2825,14 @@ namespace Gtk {
 		public void invalidate_filter ();
 		public void invalidate_headers ();
 		public void invalidate_sort ();
-		public void select_row (Gtk.ListBoxRow row);
+		public void select_row (Gtk.ListBoxRow? row);
 		public void set_activate_on_single_click (bool single);
-		public void set_adjustment (Gtk.Adjustment adjustment);
-		public void set_filter_func (Gtk.ListBoxFilterFunc filter_func, GLib.DestroyNotify destroy);
-		public void set_header_func (Gtk.ListBoxUpdateHeaderFunc update_header, GLib.DestroyNotify destroy);
-		public void set_placeholder (Gtk.Widget placeholder);
+		public void set_adjustment (Gtk.Adjustment? adjustment);
+		public void set_filter_func (Gtk.ListBoxFilterFunc? filter_func, GLib.DestroyNotify? destroy);
+		public void set_header_func (Gtk.ListBoxUpdateHeaderFunc? update_header, GLib.DestroyNotify? destroy);
+		public void set_placeholder (Gtk.Widget? placeholder);
 		public void set_selection_mode (Gtk.SelectionMode mode);
-		public void set_sort_func (Gtk.ListBoxSortFunc sort_func, GLib.DestroyNotify destroy);
+		public void set_sort_func (Gtk.ListBoxSortFunc? sort_func, GLib.DestroyNotify? destroy);
 		public bool activate_on_single_click { get; set; }
 		public Gtk.SelectionMode selection_mode { get; set; }
 		public virtual signal void activate_cursor_row ();
@@ -2852,7 +2852,7 @@ namespace Gtk {
 		public ListBoxRow ();
 		public void changed ();
 		public unowned Gtk.Widget get_header ();
-		public void set_header (Gtk.Widget header);
+		public void set_header (Gtk.Widget? header);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ListStore : GLib.Object, Gtk.TreeModel, Gtk.TreeDragSource, Gtk.TreeDragDest, Gtk.TreeSortable, Gtk.Buildable {
