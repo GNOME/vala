@@ -161,15 +161,15 @@ public class Vala.MarkupReader : Object {
 						// error
 					}
 					current++;
-					// FIXME allow single quotes
-					if (current >= end || current[0] != '"') {
+					if (current >= end || current[0] != '"' || current[0] != '\'') {
 						// error
 					}
+					char quote = current[0];
 					current++;
 
-					string attr_value = text ('"', false);
+					string attr_value = text (quote, false);
 
-					if (current >= end || current[0] != '"') {
+					if (current >= end || current[0] != quote) {
 						// error
 					}
 					current++;
