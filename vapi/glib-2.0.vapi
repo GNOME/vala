@@ -4421,6 +4421,40 @@ namespace GLib {
 		public static bool match_simple (string pattern, string str);
 	}
 
+	[CCode (lower_case_cprefix = "glib_version_")]
+	namespace Version {
+		[CCode (cname = "glib_major_version")]
+		public const uint major;
+		[CCode (cname = "glib_minor_version")]
+		public const uint minor;
+		[CCode (cname = "glib_micro_version")]
+		public const uint micro;
+		[CCode (cname = "glib_check_version")]
+		public static unowned string? check (uint required_major, uint required_minor = 0, uint required_micro = 0);
+
+		[CCode (cname = "GLIB_MAJOR_VERSION")]
+		public const uint MAJOR;
+		[CCode (cname = "GLIB_MINOR_VERSION")]
+		public const uint MINOR;
+		[CCode (cname = "GLIB_MICRO_VERSION")]
+		public const uint MICRO;
+		[CCode (cname = "GLIB_CHECK_VERSION")]
+		public static bool CHECK (uint required_major, uint required_minor = 0, uint required_micro = 0);
+
+		public const uint @2_26;
+		public const uint @2_28;
+		public const uint @2_30;
+		public const uint @2_32;
+		public const uint @2_34;
+		public const uint @2_36;
+		public const uint @2_38;
+
+		[CCode (cname = "glib_binary_age")]
+		public const uint binary_age;
+		[CCode (cname = "glib_interface_age")]
+		public const uint interface_age;
+	}
+
 	namespace Win32 {
 		public string error_message (int error);
 		public string getlocale ();
