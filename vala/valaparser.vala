@@ -2685,6 +2685,12 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			prop.external = true;
 		}
+		if ((prop.is_abstract && prop.is_virtual)
+			|| (prop.is_abstract && prop.overrides)
+			|| (prop.is_virtual && prop.overrides)) {
+			throw new ParseError.SYNTAX (get_error ("only one of `abstract', `virtual', or `override' may be specified"));
+		}
+
 		if (accept (TokenType.THROWS)) {
 			do {
 				prop.add_error_type (parse_type (true, false));
