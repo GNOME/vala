@@ -167,16 +167,22 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 
 			if (expr.inner is BaseAccess) {
+				var base_prop = prop;
 				if (prop.base_property != null) {
-					var base_class = (Class) prop.base_property.parent_symbol;
+					base_prop = prop.base_property;
+				} else if (prop.base_interface_property != null) {
+					base_prop = prop.base_interface_property;
+				}
+				if (base_prop.parent_symbol is Class) {
+					var base_class = (Class) base_prop.parent_symbol;
 					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class, null))));
 					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class, null))));
 					
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
 					ccall.add_argument (get_cvalue (expr.inner));
 					set_cvalue (expr, ccall);
-				} else if (prop.base_interface_property != null) {
-					var base_iface = (Interface) prop.base_interface_property.parent_symbol;
+				} else if (base_prop.parent_symbol is Interface) {
+					var base_iface = (Interface) base_prop.parent_symbol;
 					string parent_iface_var = "%s_%s_parent_iface".printf (get_ccode_lower_case_name (current_class), get_ccode_lower_case_name (base_iface));
 
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), "get_%s".printf (prop.name)));
