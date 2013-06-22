@@ -5010,19 +5010,21 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
-		var valuecast = try_cast_value_to_type (get_cvalue (expr.inner), expr.inner.value_type, expr.type_reference, expr);
-		if (valuecast != null) {
-			set_cvalue (expr, valuecast);
-			return;
-		}
-
-		var variantcast = try_cast_variant_to_type (expr.inner.target_value, expr.type_reference, expr);
-		if (variantcast != null) {
-			expr.target_value = variantcast;
-			return;
-		}
-
 		generate_type_declaration (expr.type_reference, cfile);
+
+		if (!expr.is_non_null_cast) {
+			var valuecast = try_cast_value_to_type (get_cvalue (expr.inner), expr.inner.value_type, expr.type_reference, expr);
+			if (valuecast != null) {
+				set_cvalue (expr, valuecast);
+				return;
+			}
+
+			var variantcast = try_cast_variant_to_type (expr.inner.target_value, expr.type_reference, expr);
+			if (variantcast != null) {
+				expr.target_value = variantcast;
+				return;
+			}
+		}
 
 		var cl = expr.type_reference.data_type as Class;
 		var iface = expr.type_reference.data_type as Interface;
