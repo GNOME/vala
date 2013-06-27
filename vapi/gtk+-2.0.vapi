@@ -4375,7 +4375,7 @@ namespace Gtk {
 		public unowned Gtk.TextMark get_selection_bound ();
 		public bool get_selection_bounds (out Gtk.TextIter start, out Gtk.TextIter end);
 		public Gdk.Atom[] get_serialize_formats ();
-		public unowned string get_slice (Gtk.TextIter start, Gtk.TextIter end, bool include_hidden_chars);
+		public string get_slice (Gtk.TextIter start, Gtk.TextIter end, bool include_hidden_chars);
 		public void get_start_iter (out Gtk.TextIter iter);
 		public unowned Gtk.TextTagTable get_tag_table ();
 		public string get_text (Gtk.TextIter start, Gtk.TextIter end, bool include_hidden_chars);
