@@ -108,7 +108,7 @@ public class Vala.GtkModule : GSignalModule {
 
 		MarkupTokenType current_token = reader.read_token (null, null);
 		while (current_token != MarkupTokenType.EOF) {
-			if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "object") {
+			if (current_token == MarkupTokenType.START_ELEMENT && (reader.name == "template" || reader.name == "object")) {
 				var class_name = reader.get_attribute ("class");
 				if (class_name != null) {
 					current_class = cclass_to_vala_map.get (class_name);
