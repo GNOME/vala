@@ -7479,6 +7479,25 @@
 			<constructor name="new" symbol="gtk_builder_new">
 				<return-type type="GtkBuilder*"/>
 			</constructor>
+			<constructor name="new_from_file" symbol="gtk_builder_new_from_file">
+				<return-type type="GtkBuilder*"/>
+				<parameters>
+					<parameter name="filename" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_resource" symbol="gtk_builder_new_from_resource">
+				<return-type type="GtkBuilder*"/>
+				<parameters>
+					<parameter name="resource_path" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_string" symbol="gtk_builder_new_from_string">
+				<return-type type="GtkBuilder*"/>
+				<parameters>
+					<parameter name="string" type="gchar*"/>
+					<parameter name="length" type="gssize"/>
+				</parameters>
+			</constructor>
 			<method name="set_translation_domain" symbol="gtk_builder_set_translation_domain">
 				<return-type type="void"/>
 				<parameters>
@@ -20430,6 +20449,8 @@
 			<property name="gtk-scrolled-window-placement" type="GtkCornerType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-shell-shows-app-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-shell-shows-menubar" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-show-input-method-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-show-unicode-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-sound-theme-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-split-cursor" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-theme-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -29769,6 +29790,12 @@
 					<parameter name="timestamp" type="guint32"/>
 				</parameters>
 			</method>
+			<method name="close" symbol="gtk_window_close">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GtkWindow*"/>
+				</parameters>
+			</method>
 			<method name="deiconify" symbol="gtk_window_deiconify">
 				<return-type type="void"/>
 				<parameters>
@@ -31529,6 +31556,12 @@
 					<parameter name="chooser" type="GtkFileChooser*"/>
 				</parameters>
 			</method>
+			<method name="get_current_name" symbol="gtk_file_chooser_get_current_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="chooser" type="GtkFileChooser*"/>
+				</parameters>
+			</method>
 			<method name="get_do_overwrite_confirmation" symbol="gtk_file_chooser_get_do_overwrite_confirmation">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -33176,14 +33209,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="903"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="907"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="7"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="9"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

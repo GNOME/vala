@@ -761,6 +761,12 @@ namespace Gtk {
 		public void connect_signals_full (Gtk.BuilderConnectFunc func);
 		public static GLib.Quark error_quark ();
 		public void expose_object (string name, GLib.Object object);
+		[CCode (has_construct_function = false)]
+		public Builder.from_file (string filename);
+		[CCode (has_construct_function = false)]
+		public Builder.from_resource (string resource_path);
+		[CCode (has_construct_function = false)]
+		public Builder.from_string (string str, ssize_t length);
 		public unowned GLib.Object get_object (string name);
 		public GLib.SList<weak GLib.Object> get_objects ();
 		public unowned string get_translation_domain ();
@@ -4231,6 +4237,10 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool gtk_shell_shows_menubar { get; set; }
 		[NoAccessorMethod]
+		public bool gtk_show_input_method_menu { get; set; }
+		[NoAccessorMethod]
+		public bool gtk_show_unicode_menu { get; set; }
+		[NoAccessorMethod]
 		public string gtk_sound_theme_name { owned get; set; }
 		[NoAccessorMethod]
 		public bool gtk_split_cursor { get; set; }
@@ -6436,6 +6446,7 @@ namespace Gtk {
 		public void add_mnemonic (uint keyval, Gtk.Widget target);
 		public void begin_move_drag (int button, int root_x, int root_y, uint32 timestamp);
 		public void begin_resize_drag (Gdk.WindowEdge edge, int button, int root_x, int root_y, uint32 timestamp);
+		public void close ();
 		public void deiconify ();
 		public void fullscreen ();
 		public bool get_accept_focus ();
@@ -6732,6 +6743,7 @@ namespace Gtk {
 		public string get_current_folder ();
 		public unowned GLib.File get_current_folder_file ();
 		public string get_current_folder_uri ();
+		public unowned string get_current_name ();
 		public bool get_do_overwrite_confirmation ();
 		public unowned Gtk.Widget get_extra_widget ();
 		public unowned GLib.File get_file ();
