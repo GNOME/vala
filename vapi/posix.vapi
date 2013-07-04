@@ -2260,6 +2260,15 @@ namespace Posix {
 	public int mlock(void *addr, size_t len);
 	[CCode (cheader_filename = "sys/mman.h")]
 	public int munlock(void *addr, size_t len);
+	// sys/mman.h - Process Memory Locking
+	[CCode (cheader_filename = "sys/mman.h")]
+	public const int MCL_CURRENT;
+	[CCode (cheader_filename = "sys/mman.h")]
+	public const int MCL_FUTURE;
+	[CCode (cheader_filename = "sys/mman.h")]
+	public int mlockall (int flags);
+	[CCode (cheader_filename = "sys/mman.h")]
+	public int munlockall ();
 	// sys/mman.h - [XSI] X/Open System Interfaces
 	[CCode (cheader_filename = "sys/mman.h")]
 	public int msync(void *addr, size_t len, int flags);
