@@ -90,7 +90,7 @@ namespace Soup {
 		public uint hash_by_ip ();
 		public uint hash_by_name ();
 		public bool is_resolved ();
-		public void resolve_async (GLib.MainContext? async_context, GLib.Cancellable? cancellable, Soup.AddressCallback callback);
+		public void resolve_async (GLib.MainContext? async_context, GLib.Cancellable? cancellable, [CCode (scope = "async")] owned Soup.AddressCallback callback);
 		public uint resolve_sync (GLib.Cancellable? cancellable = null);
 		[NoAccessorMethod]
 		public Soup.AddressFamily family { get; construct; }
@@ -645,10 +645,10 @@ namespace Soup {
 		[NoWrapper]
 		public virtual void kick ();
 		public void pause_message (Soup.Message msg);
-		public void prefetch_dns (string hostname, GLib.Cancellable? cancellable, Soup.AddressCallback? callback);
+		public void prefetch_dns (string hostname, GLib.Cancellable? cancellable, [CCode (scope = "async")] owned Soup.AddressCallback? callback);
 		[Deprecated (since = "2.38")]
 		public void prepare_for_uri (Soup.URI uri);
-		public virtual void queue_message (owned Soup.Message msg, Soup.SessionCallback? callback);
+		public virtual void queue_message (owned Soup.Message msg, [CCode (scope = "async")] owned Soup.SessionCallback? callback);
 		public bool redirect_message (Soup.Message msg);
 		public void remove_feature (Soup.SessionFeature feature);
 		public void remove_feature_by_type (GLib.Type feature_type);
@@ -728,7 +728,7 @@ namespace Soup {
 	public class Socket : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Socket (string optname1, ...);
-		public void connect_async (GLib.Cancellable? cancellable, Soup.SocketCallback callback);
+		public void connect_async (GLib.Cancellable? cancellable, [CCode (scope = "async")] owned Soup.SocketCallback callback);
 		public uint connect_sync (GLib.Cancellable? cancellable = null);
 		public void disconnect ();
 		public int get_fd ();
@@ -822,7 +822,7 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupPasswordManagerInterface", type_id = "soup_password_manager_get_type ()")]
 	public interface PasswordManager : Soup.SessionFeature, GLib.Object {
-		public abstract void get_passwords_async (Soup.Message msg, Soup.Auth auth, bool retrying, GLib.MainContext async_context, GLib.Cancellable? cancellable, Soup.PasswordManagerCallback callback);
+		public abstract void get_passwords_async (Soup.Message msg, Soup.Auth auth, bool retrying, GLib.MainContext async_context, GLib.Cancellable? cancellable, [CCode (scope = "async")] owned Soup.PasswordManagerCallback callback);
 		public abstract void get_passwords_sync (Soup.Message msg, Soup.Auth auth, GLib.Cancellable? cancellable = null);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupProxyResolverInterface", type_id = "soup_proxy_resolver_get_type ()")]
@@ -833,7 +833,7 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupProxyURIResolverInterface", type_id = "soup_proxy_uri_resolver_get_type ()")]
 	public interface ProxyURIResolver : Soup.SessionFeature, GLib.Object {
-		public abstract void get_proxy_uri_async (Soup.URI uri, GLib.MainContext? async_context, GLib.Cancellable? cancellable, Soup.ProxyURIResolverCallback callback);
+		public abstract void get_proxy_uri_async (Soup.URI uri, GLib.MainContext? async_context, GLib.Cancellable? cancellable, [CCode (scope = "async")] owned Soup.ProxyURIResolverCallback callback);
 		public abstract uint get_proxy_uri_sync (Soup.URI uri, GLib.Cancellable? cancellable, out Soup.URI proxy_uri);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupSessionFeatureInterface", type_id = "soup_session_feature_get_type ()")]

@@ -2734,13 +2734,14 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	class ParameterInfo {
-		public ParameterInfo (Parameter param, int array_length_idx, int closure_idx, int destroy_idx) {
+		public ParameterInfo (Parameter param, int array_length_idx, int closure_idx, int destroy_idx, bool is_async = false) {
 			this.param = param;
 			this.array_length_idx = array_length_idx;
 			this.closure_idx = closure_idx;
 			this.destroy_idx = destroy_idx;
 			this.vala_idx = 0.0F;
 			this.keep = true;
+			this.is_async = is_async;
 		}
 
 		public Parameter param;
@@ -2749,6 +2750,7 @@ public class Vala.GirParser : CodeVisitor {
 		public int closure_idx;
 		public int destroy_idx;
 		public bool keep;
+		public bool is_async;
 	}
 
 	void parse_function (string element_name) {
@@ -2940,7 +2942,7 @@ public class Vala.GirParser : CodeVisitor {
 					comment.add_content_for_parameter ((param.ellipsis)? "..." : param.name, param_comment);
 				}
 
-				var info = new ParameterInfo (param, array_length_idx, closure_idx, destroy_idx);
+				var info = new ParameterInfo (param, array_length_idx, closure_idx, destroy_idx, scope == "async");
 
 				if (s is Method && scope == "async") {
 					var unresolved_type = param.variable_type as UnresolvedType;
@@ -3387,42 +3389,61 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		foreach (ParameterInfo info in parameters) {
-			if (info.keep) {
+			if (!info.keep) {
+				continue;
+			}
 
-				/* add_parameter sets carray_length_parameter_position and cdelegate_target_parameter_position
-				   so do it first*/
-				if (s is Method) {
-					((Method) s).add_parameter (info.param);
-				} else if (s is Delegate) {
-					((Delegate) s).add_parameter (info.param);
-				} else if (s is Signal) {
-					((Signal) s).add_parameter (info.param);
+			/* add_parameter sets carray_length_parameter_position and cdelegate_target_parameter_position
+			   so do it first*/
+			if (s is Method) {
+				((Method) s).add_parameter (info.param);
+			} else if (s is Delegate) {
+				((Delegate) s).add_parameter (info.param);
+			} else if (s is Signal) {
+				((Signal) s).add_parameter (info.param);
+			}
+
+			if (info.array_length_idx != -1) {
+				if ((info.array_length_idx) >= parameters.size) {
+					Report.error (get_current_src (), "invalid array_length index");
+					continue;
+				}
+				set_array_ccode (info.param, parameters[info.array_length_idx]);
+			}
+
+			if (info.closure_idx != -1) {
+				if ((info.closure_idx) >= parameters.size) {
+					Report.error (get_current_src (), "invalid closure index");
+					continue;
+				}
+				if ("%g".printf (parameters[info.closure_idx].vala_idx) != "%g".printf (info.vala_idx + 0.1)) {
+					info.param.set_attribute_double ("CCode", "delegate_target_pos", parameters[info.closure_idx].vala_idx);
+				}
+			}
+			if (info.destroy_idx != -1) {
+				if (info.destroy_idx >= parameters.size) {
+					Report.error (get_current_src (), "invalid destroy index");
+					continue;
+				}
+				if ("%g".printf (parameters[info.destroy_idx].vala_idx) != "%g".printf (info.vala_idx + 0.2)) {
+					info.param.set_attribute_double ("CCode", "destroy_notify_pos", parameters[info.destroy_idx].vala_idx);
+				}
+			}
+
+			if (info.is_async) {
+				var resolved_type = info.param.variable_type;
+				if (resolved_type is UnresolvedType) {
+					var resolved_symbol = resolve_symbol (node.parent, ((UnresolvedType) resolved_type).unresolved_symbol);
+					if (resolved_symbol is Delegate) {
+						resolved_type = new DelegateType ((Delegate) resolved_symbol);
+					}
 				}
 
-				if (info.array_length_idx != -1) {
-					if ((info.array_length_idx) >= parameters.size) {
-						Report.error (get_current_src (), "invalid array_length index");
-						continue;
-					}
-					set_array_ccode (info.param, parameters[info.array_length_idx]);
-				}
-
-				if (info.closure_idx != -1) {
-					if ((info.closure_idx) >= parameters.size) {
-						Report.error (get_current_src (), "invalid closure index");
-						continue;
-					}
-					if ("%g".printf (parameters[info.closure_idx].vala_idx) != "%g".printf (info.vala_idx + 0.1)) {
-						info.param.set_attribute_double ("CCode", "delegate_target_pos", parameters[info.closure_idx].vala_idx);
-					}
-				}
-				if (info.destroy_idx != -1) {
-					if (info.destroy_idx >= parameters.size) {
-						Report.error (get_current_src (), "invalid destroy index");
-						continue;
-					}
-					if ("%g".printf (parameters[info.destroy_idx].vala_idx) != "%g".printf (info.vala_idx + 0.2)) {
-						info.param.set_attribute_double ("CCode", "destroy_notify_pos", parameters[info.destroy_idx].vala_idx);
+				if (resolved_type is DelegateType) {
+					var d = ((DelegateType) resolved_type).delegate_symbol;
+					if (!(d.name == "DestroyNotify" && d.parent_symbol.name == "GLib")) {
+						info.param.set_attribute_string ("CCode", "scope", "async");
+						info.param.variable_type.value_owned = true;
 					}
 				}
 			}
