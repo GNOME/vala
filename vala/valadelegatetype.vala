@@ -120,6 +120,6 @@ public class Vala.DelegateType : DataType {
 	}
 
 	public override bool is_disposable () {
-		return delegate_symbol.has_target && value_owned;
+		return delegate_symbol.has_target && value_owned && !is_called_once;
 	}
 }

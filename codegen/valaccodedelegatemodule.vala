@@ -73,7 +73,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				if (param_d.has_target) {
 					cparam = new CCodeParameter (get_delegate_target_cname (get_variable_cname (param.name)), "void*");
 					cfundecl.add_parameter (cparam);
-					if (deleg_type.value_owned) {
+					if (deleg_type.is_disposable ()) {
 						cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)), "GDestroyNotify*");
 						cfundecl.add_parameter (cparam);
 					}
@@ -97,7 +97,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			if (result_d.has_target) {
 				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), "void**");
 				cfundecl.add_parameter (cparam);
-				if (deleg_type.value_owned) {
+				if (deleg_type.is_disposable ()) {
 					cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname ("result"), "GDestroyNotify*");
 					cfundecl.add_parameter (cparam);
 				}
@@ -248,7 +248,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			if (deleg_type.delegate_symbol.has_target) {
 				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), "void**");
 				cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (d)), cparam);
-				if (deleg_type.value_owned) {
+				if (deleg_type.is_disposable ()) {
 					cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname ("result"), "GDestroyNotify*");
 					cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (d) + 0.01), cparam);
 				}
@@ -341,7 +341,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				if (deleg_type.delegate_symbol.has_target) {
 					var ctarget = new CCodeIdentifier (get_ccode_delegate_target_name (d_params.get (i)));
 					carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), ctarget);
-					if (deleg_type.value_owned) {
+					if (deleg_type.is_disposable ()) {
 						var ctarget_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (d_params.get (i).name));
 						carg_map.set (get_param_pos (get_ccode_delegate_target_pos (m) + 0.01), ctarget_destroy_notify);
 					}
@@ -367,7 +367,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			if (deleg_type.delegate_symbol.has_target) {
 				var ctarget = new CCodeIdentifier (get_delegate_target_cname ("result"));
 				carg_map.set (get_param_pos (get_ccode_delegate_target_pos (m)), ctarget);
-				if (deleg_type.value_owned) {
+				if (deleg_type.is_disposable ()) {
 					var ctarget_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname ("result"));
 					carg_map.set (get_param_pos (get_ccode_delegate_target_pos (m) + 0.01), ctarget_destroy_notify);
 				}
@@ -478,7 +478,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), get_variable_cexpression (cparam.name));
 				}
-				if (deleg_type.value_owned) {
+				if (deleg_type.is_disposable ()) {
 					cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)), target_destroy_notify_ctypename);
 					cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (param) + 0.01), cparam);
 					if (carg_map != null) {

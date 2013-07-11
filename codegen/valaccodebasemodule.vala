@@ -1048,7 +1048,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 				decl_space.add_type_member_declaration (cdecl);
 
-				if (delegate_type.value_owned) {
+				if (delegate_type.value_owned && !delegate_type.is_called_once) {
 					cdecl = new CCodeDeclaration ("GDestroyNotify");
 					cdecl.add_declarator (new CCodeVariableDeclarator (get_delegate_target_destroy_notify_cname  (get_ccode_name (f))));
 					if (f.is_private_symbol ()) {
@@ -1250,7 +1250,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						}
 						cfile.add_type_member_declaration (target_def);
 
-						if (delegate_type.value_owned) {
+						if (delegate_type.is_disposable ()) {
 							var target_destroy_notify_def = new CCodeDeclaration ("GDestroyNotify");
 							target_destroy_notify_def.add_declarator (new CCodeVariableDeclarator (get_delegate_target_destroy_notify_cname (get_ccode_name (f)), new CCodeConstant ("NULL")));
 							if (!f.is_private_symbol ()) {
@@ -1823,7 +1823,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		} else if (deleg_type != null && deleg_type.delegate_symbol.has_target) {
 			data.add_field ("gpointer", get_ccode_delegate_target_name (param));
-			if (param.variable_type.value_owned) {
+			if (param.variable_type.is_disposable ()) {
 				data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
 				// reference transfer for delegates
 				var lvalue = get_parameter_cvalue (param);
@@ -2416,7 +2416,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (!deleg_type.delegate_symbol.has_target) {
 				value.delegate_target_cvalue = new CCodeConstant ("NULL");
 				((GLibValue) value).lvalue = false;
-			} else if (!deleg_type.value_owned) {
+			} else if (!deleg_type.is_disposable ()) {
 				value.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
 				((GLibValue) value).lvalue = false;
 			}
@@ -3543,7 +3543,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 			ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_ccode_delegate_target_name (param))), get_delegate_target_cvalue (value));
-			if (delegate_type.value_owned) {
+			if (delegate_type.is_disposable ()) {
 				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_destroy_notify_cname (param.name))), get_delegate_target_destroy_notify_cvalue (get_parameter_cvalue (param)));
 			}
 		}
@@ -3612,7 +3612,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 				var target_r = get_delegate_target_cvalue (temp_value);
 				ccode.add_assignment (target_l, target_r);
-				if (delegate_type.value_owned) {
+				if (delegate_type.is_disposable ()) {
 					var target_l_destroy_notify = get_result_cexpression (get_delegate_target_destroy_notify_cname ("result"));
 					if (!is_in_coroutine ()) {
 						target_l_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l_destroy_notify);
@@ -4583,7 +4583,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 								CCodeExpression delegate_target_destroy_notify;
 								var delegate_target = get_delegate_target_cexpression (arg, out delegate_target_destroy_notify);
 								carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), delegate_target);
-								if (deleg_type.value_owned && !deleg_type.is_called_once) {
+								if (deleg_type.is_disposable ()) {
 									carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param) + 0.01), delegate_target_destroy_notify);
 								}
 							}

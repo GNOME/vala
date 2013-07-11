@@ -100,7 +100,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (get_ccode_delegate_target_pos (m)), get_variable_cexpression (cparam.name));
 				}
-				if (deleg_type.value_owned) {
+				if (deleg_type.is_disposable ()) {
 					cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname ("result"), "GDestroyNotify*");
 					cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (m) + 0.01), cparam);
 					if (carg_map != null) {
@@ -582,7 +582,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 								vardecl = new CCodeVariableDeclarator.zero ("_vala_" + get_ccode_delegate_target_name (param), new CCodeConstant ("NULL"));
 								ccode.add_declaration ("void *", vardecl);
 
-								if (deleg_type.value_owned) {
+								if (deleg_type.is_disposable ()) {
 									vardecl = new CCodeVariableDeclarator.zero (get_delegate_target_destroy_notify_cname (get_variable_cname ("_vala_" + param.name)), new CCodeConstant ("NULL"));
 									ccode.add_declaration ("GDestroyNotify", vardecl);
 								}

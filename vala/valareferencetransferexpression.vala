@@ -94,8 +94,10 @@ public class Vala.ReferenceTransferExpression : Expression {
 			return false;
 		}
 
+		var is_owned_delegate = inner.value_type is DelegateType && inner.value_type.value_owned;
 		if (!inner.value_type.is_disposable ()
-		    && !(inner.value_type is PointerType)) {
+		    && !(inner.value_type is PointerType)
+			&& !is_owned_delegate) {
 			error = true;
 			Report.error (source_reference, "No reference to be transferred");
 			return false;
