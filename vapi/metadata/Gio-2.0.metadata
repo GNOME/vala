@@ -327,9 +327,13 @@ initable_* skip
 FileAttributeInfoList
   .lookup nullable
 
-// Bug #: cannot set ownership of fields
+// Bug #561619: fields
 StaticResource
   .resource unowned=false
+
+// Bug #: virtual vs. abstract
+Icon
+  .serialize#virtual_method virtual
 
 // Need to ask about this... annotated as out, but that seems wrong
 DBus*Info.generate_xml.string_builder out=false
