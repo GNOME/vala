@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gdk", gir_namespace = "GdkPixbuf", gir_version = "2.0", lower_case_cprefix = "gdk_")]
 namespace Gdk {
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
-	public class Pixbuf : GLib.Object, GLib.Icon {
+	public class Pixbuf : GLib.Object, GLib.Icon, GLib.LoadableIcon {
 		[CCode (has_construct_function = false)]
 		public Pixbuf (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
 		public Gdk.Pixbuf add_alpha (bool substitute_color, uint8 r, uint8 g, uint8 b);
@@ -146,6 +146,7 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		public PixbufLoader.with_type (string image_type) throws GLib.Error;
 		public bool write ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] buf) throws GLib.Error;
+		public bool write_bytes (GLib.Bytes buffer) throws GLib.Error;
 		public virtual signal void area_prepared ();
 		public virtual signal void area_updated (int x, int y, int width, int height);
 		public virtual signal void closed ();
