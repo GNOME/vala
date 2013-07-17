@@ -493,6 +493,8 @@ namespace Gdk {
 		public const int AudioLowerVolume;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_AudioMedia")]
 		public const int AudioMedia;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_AudioMicMute")]
+		public const int AudioMicMute;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_AudioMute")]
 		public const int AudioMute;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_AudioNext")]
@@ -4614,9 +4616,11 @@ namespace Gdk {
 		public int get_n_keys ();
 		public unowned string get_name ();
 		public void get_position (out unowned Gdk.Screen screen, out int x, out int y);
+		public void get_position_double (out unowned Gdk.Screen screen, out double x, out double y);
 		public Gdk.InputSource get_source ();
 		public void get_state (Gdk.Window window, [CCode (array_length = false, type = "gdouble*")] double[] axes, out Gdk.ModifierType mask);
 		public unowned Gdk.Window get_window_at_position (out int win_x, out int win_y);
+		public unowned Gdk.Window get_window_at_position_double (out double win_x, out double win_y);
 		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor? cursor, uint32 time_);
 		public GLib.List<weak Gdk.Atom> list_axes ();
 		public GLib.List<weak Gdk.Device>? list_slave_devices ();
@@ -4668,6 +4672,7 @@ namespace Gdk {
 		public unowned Gdk.DeviceManager get_device_manager ();
 		public Gdk.Event get_event ();
 		public void get_maximal_cursor_size (out uint width, out uint height);
+		[Deprecated (since = "3.10")]
 		public int get_n_screens ();
 		public unowned string get_name ();
 		[Deprecated (since = "3.0")]
@@ -4858,6 +4863,7 @@ namespace Gdk {
 		public void get_monitor_geometry (int monitor_num, out Gdk.Rectangle dest);
 		public int get_monitor_height_mm (int monitor_num);
 		public string get_monitor_plug_name (int monitor_num);
+		public int get_monitor_scale_factor (int monitor_num);
 		public int get_monitor_width_mm (int monitor_num);
 		public Gdk.Rectangle get_monitor_workarea (int monitor_num);
 		public int get_n_monitors ();
@@ -4927,6 +4933,7 @@ namespace Gdk {
 		public static void constrain_size (Gdk.Geometry geometry, uint flags, int width, int height, out int new_width, out int new_height);
 		public void coords_from_parent (double parent_x, double parent_y, out double x, out double y);
 		public void coords_to_parent (double x, double y, out double parent_x, out double parent_y);
+		public Cairo.Surface create_similar_image_surface (int format, int width, int height, int scale);
 		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
 		public void deiconify ();
 		[DestroysInstance]
@@ -4944,6 +4951,7 @@ namespace Gdk {
 		public bool get_accept_focus ();
 		public unowned Cairo.Pattern get_background_pattern ();
 		public GLib.List<weak Gdk.Window> get_children ();
+		public GLib.List<weak Gdk.Window> get_children_with_user_data (void* user_data);
 		public Cairo.Region get_clip_region ();
 		public bool get_composited ();
 		public unowned Gdk.Cursor get_cursor ();
@@ -4951,6 +4959,7 @@ namespace Gdk {
 		public unowned Gdk.Cursor get_device_cursor (Gdk.Device device);
 		public Gdk.EventMask get_device_events (Gdk.Device device);
 		public unowned Gdk.Window get_device_position (Gdk.Device device, out int x, out int y, out Gdk.ModifierType mask);
+		public unowned Gdk.Window get_device_position_double (Gdk.Device device, out double x, out double y, out Gdk.ModifierType mask);
 		public unowned Gdk.Display get_display ();
 		public Gdk.DragProtocol get_drag_protocol (out Gdk.Window target);
 		public unowned Gdk.Window get_effective_parent ();
@@ -4971,6 +4980,7 @@ namespace Gdk {
 		public void get_position (out int x, out int y);
 		public void get_root_coords (int x, int y, out int root_x, out int root_y);
 		public void get_root_origin (out int x, out int y);
+		public int get_scale_factor ();
 		public unowned Gdk.Screen get_screen ();
 		public Gdk.EventMask get_source_events (Gdk.InputSource source);
 		public Gdk.WindowState get_state ();
@@ -5804,7 +5814,8 @@ namespace Gdk {
 		FULLSCREEN,
 		ABOVE,
 		BELOW,
-		FOCUSED
+		FOCUSED,
+		TILED
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_WINDOW_", type_id = "gdk_window_type_get_type ()")]
 	public enum WindowType {
@@ -5845,6 +5856,8 @@ namespace Gdk {
 	public delegate Gdk.FilterReturn FilterFunc (Gdk.XEvent xevent, Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 1.9)]
 	public delegate bool WindowChildFunc (Gdk.Window window);
+	[CCode (cheader_filename = "gdk/gdk.h", has_target = false)]
+	public delegate void WindowInvalidateHandlerFunc (Gdk.Window window, Cairo.Region region);
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_BUTTON_MIDDLE")]
 	public const int BUTTON_MIDDLE;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_BUTTON_PRIMARY")]
@@ -5889,6 +5902,8 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_set_source_window (Cairo.Context cr, Gdk.Window window, double x, double y);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static Cairo.Surface cairo_surface_create_from_pixbuf (Gdk.Pixbuf pixbuf, int scale, Gdk.Window for_window);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void disable_multidevice ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_abort (Gdk.DragContext context, uint32 time_);
@@ -5931,6 +5946,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static unowned Gdk.Window get_default_root_window ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Deprecated (since = "3.8")]
 	public static string get_display ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static unowned string get_display_arg_name ();
@@ -6033,6 +6049,8 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Deprecated (replacement = "Selection.send_notify_for_display", since = "vala-0.12")]
 	public static void selection_send_notify_for_display (Gdk.Display display, Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static void set_allowed_backends (string backends);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void set_double_click_time (uint msec);
 	[CCode (cheader_filename = "gdk/gdk.h")]
