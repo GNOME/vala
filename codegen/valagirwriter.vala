@@ -816,7 +816,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		} else if (type is DelegateType) {
 			var data_type = new PointerType (new VoidType ());
 			write_param_or_return (data_type, true, ref index, false, "%s_target".printf (name), null, direction);
-			if (type.value_owned) {
+			var deleg_type = (DelegateType) type;
+			if (deleg_type.is_disposable ()) {
 				var notify_type = new DelegateType (CodeContext.get ().root.scope.lookup ("GLib").scope.lookup ("DestroyNotify") as Delegate);
 				write_param_or_return (notify_type, true, ref index, false, "%s_target_destroy_notify".printf (name), null, direction);
 			}
@@ -828,7 +829,8 @@ public class Vala.GIRWriter : CodeVisitor {
 			index++;
 		} else if (type is DelegateType) {
 			index++;
-			if (type.value_owned) {
+			var deleg_type = (DelegateType) type;
+			if (deleg_type.is_disposable ()) {
 				index++;
 			}
 		}
