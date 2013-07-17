@@ -16,6 +16,7 @@ TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' L
 
 TESTS = \
 	basic-types/integers.vala \
+	basic-types/escape-chars.vala \
 	basic-types/floats.vala \
 	basic-types/strings.vala \
 	basic-types/arrays.vala \
