@@ -65,7 +65,7 @@ namespace Atk {
 		protected Object ();
 		public bool add_relationship (Atk.RelationType relationship, Atk.Object target);
 		public virtual uint connect_property_change_handler (Atk.PropertyChangeHandler handler);
-		public virtual unowned Atk.AttributeSet get_attributes ();
+		public virtual Atk.AttributeSet get_attributes ();
 		public virtual unowned string get_description ();
 		public virtual int get_index_in_parent ();
 		[NoWrapper]
@@ -459,6 +459,7 @@ namespace Atk {
 		public uint state;
 		public uint keyval;
 		public int length;
+		[CCode (cname = "string")]
 		public weak string str;
 		public uint16 keycode;
 		public uint32 timestamp;
