@@ -60,10 +60,14 @@ namespace Gst {
 			protected TimedValueControlSource ();
 			[CCode (cname = "gst_timed_value_control_source_find_control_point_iter")]
 			public unowned GLib.SequenceIter find_control_point_iter (Gst.ClockTime timestamp);
+			[CCode (cname = "gst_timed_value_control_source_get_all")]
+			public GLib.List<weak Gst.TimedValue?> get_all ();
 			[CCode (cname = "gst_timed_value_control_source_get_count")]
 			public int get_count ();
 			[CCode (cname = "gst_timed_value_control_source_set")]
 			public bool @set (Gst.ClockTime timestamp, double value);
+			[CCode (cname = "gst_timed_value_control_source_set_from_list")]
+			public bool set_from_list (GLib.SList<Gst.TimedValue?> timedvalues);
 			[CCode (cname = "gst_timed_value_control_source_unset")]
 			public bool unset (Gst.ClockTime timestamp);
 			[CCode (cname = "gst_timed_value_control_source_unset_all")]

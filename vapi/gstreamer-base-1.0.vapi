@@ -315,7 +315,7 @@ namespace Gst {
 			[CCode (cname = "gst_collect_pads_available")]
 			public uint available ();
 			[CCode (cname = "gst_collect_pads_clip_running_time")]
-			public Gst.FlowReturn clip_running_time (Gst.Base.CollectData cdata, Gst.Buffer buf, Gst.Buffer outbuf, void* user_data);
+			public Gst.FlowReturn clip_running_time (Gst.Base.CollectData cdata, Gst.Buffer buf, Gst.Buffer? outbuf, void* user_data);
 			[CCode (cname = "gst_collect_pads_event_default")]
 			public bool event_default (Gst.Base.CollectData data, Gst.Event event, bool discard);
 			[CCode (cname = "gst_collect_pads_flush")]
@@ -698,7 +698,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "GstCollectPadsQueryFunction", instance_pos = 3.9)]
 		public delegate bool CollectPadsQueryFunction (Gst.Base.CollectPads pads, Gst.Base.CollectData pad, Gst.Query query);
 		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "GstTypeFindHelperGetRangeFunction", has_target = false)]
-		public delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, Gst.Object parent, uint64 offset, uint length, Gst.Buffer buffer);
+		public delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, Gst.Object? parent, uint64 offset, uint length, Gst.Buffer buffer);
 		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "GST_BASE_PARSE_FLAG_DRAINING")]
 		public const int PARSE_FLAG_DRAINING;
 		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "GST_BASE_PARSE_FLAG_LOST_SYNC")]
@@ -710,12 +710,12 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "gst_type_find_helper")]
 		public static Gst.Caps type_find_helper (Gst.Pad src, uint64 size);
 		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "gst_type_find_helper_for_buffer")]
-		public static Gst.Caps type_find_helper_for_buffer (Gst.Object obj, Gst.Buffer buf, out Gst.TypeFindProbability prob);
+		public static Gst.Caps type_find_helper_for_buffer (Gst.Object? obj, Gst.Buffer buf, out Gst.TypeFindProbability prob);
 		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "gst_type_find_helper_for_data")]
-		public static Gst.Caps type_find_helper_for_data (Gst.Object obj, uint8 data, size_t size, out Gst.TypeFindProbability prob);
+		public static Gst.Caps type_find_helper_for_data (Gst.Object? obj, uint8 data, size_t size, out Gst.TypeFindProbability prob);
 		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "gst_type_find_helper_for_extension")]
 		public static Gst.Caps type_find_helper_for_extension (Gst.Object? obj, string extension);
 		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "gst_type_find_helper_get_range")]
-		public static Gst.Caps type_find_helper_get_range (Gst.Object obj, Gst.Object parent, Gst.Base.TypeFindHelperGetRangeFunction func, uint64 size, string extension, out Gst.TypeFindProbability prob);
+		public static Gst.Caps type_find_helper_get_range (Gst.Object obj, Gst.Object? parent, Gst.Base.TypeFindHelperGetRangeFunction func, uint64 size, string extension, out Gst.TypeFindProbability prob);
 	}
 }
