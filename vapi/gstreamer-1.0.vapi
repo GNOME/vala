@@ -1703,7 +1703,7 @@ namespace Gst {
 		public void @foreach (Gst.TagForeachFunc func);
 		[CCode (has_construct_function = false)]
 		public TagList.from_string (string str);
-		public bool get_boolean (string tag, bool value);
+		public bool get_boolean (string tag, out bool value);
 		public bool get_boolean_index (string tag, uint index, out bool value);
 		public bool get_date (string tag, out GLib.Date value);
 		public bool get_date_index (string tag, uint index, out GLib.Date value);

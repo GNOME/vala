@@ -16,6 +16,8 @@ Element
   .state_cond unowned=false
 MapInfo
   .data array array_length_field="size"
+TagList
+  .get_boolean.value out
 init_get_option_group skip=false
 init.argv unowned
 init_check.argv unowned
