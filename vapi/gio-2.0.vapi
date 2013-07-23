@@ -1568,6 +1568,13 @@ namespace GLib {
 		[CCode (cname = "g_source_set_callback")]
 		public void set_callback ([CCode (type = "GSourceFunc")] owned GLib.PollableSourceFunc func);
 	}
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_property_action_get_type ()")]
+	public class PropertyAction : GLib.Object, GLib.Action {
+		[CCode (has_construct_function = false)]
+		public PropertyAction (string name, void* object, string property_name);
+		public GLib.Object object { construct; }
+		public string property_name { construct; }
+	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_proxy_address_get_type ()")]
 	public class ProxyAddress : GLib.InetSocketAddress, GLib.SocketConnectable {
 		[CCode (has_construct_function = false, type = "GSocketAddress*")]
@@ -2301,7 +2308,9 @@ namespace GLib {
 		public abstract GLib.Variant get_state ();
 		public abstract GLib.Variant get_state_hint ();
 		public abstract unowned GLib.VariantType get_state_type ();
+		public static bool name_is_valid (string action_name);
 		public static bool parse_detailed_name (string detailed_name, out string action_name, out GLib.Variant target_value) throws GLib.Error;
+		public static string print_detailed_name (string action_name, GLib.Variant parameter);
 		public abstract bool enabled { get; }
 		public abstract string name { get; }
 		public abstract GLib.VariantType parameter_type { get; }
@@ -3768,7 +3777,11 @@ namespace GLib {
 	[Deprecated (replacement = "IOExtensionPoint.VOLUME_MONITOR", since = "vala-0.16")]
 	public const string VOLUME_MONITOR_EXTENSION_POINT_NAME;
 	[CCode (cheader_filename = "gio/gio.h")]
+	public static bool action_name_is_valid (string action_name);
+	[CCode (cheader_filename = "gio/gio.h")]
 	public static bool action_parse_detailed_name (string detailed_name, out string action_name, out GLib.Variant target_value) throws GLib.Error;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public static string action_print_detailed_name (string action_name, GLib.Variant parameter);
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_content_type_can_be_executable")]
 	[Deprecated (replacement = "GLib.ContentType.can_be_executable", since = "vala-0.12")]
 	public static bool g_content_type_can_be_executable (string type);

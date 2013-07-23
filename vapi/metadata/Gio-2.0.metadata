@@ -154,6 +154,10 @@ OutputStream
   .write_finish throws="GLib.IOError"
   .write_fn skip
   .write_all throws="GLib.IOError"
+PropertyAction
+  .name skip
+  .parameter_type skip
+  .state_type skip
 Resolver
   .lookup_service_async skip
   .lookup_service#virtual_method skip=false name="lookup_service_fn" type="GLib.List<GLib.SrvTarget>"
@@ -358,25 +362,14 @@ ActionGroup
   .get_action* nullable
   .get_action_enabled nullable=false
   .get_action_state_type unowned
-ActionMap
-  .add_action_entries.entries type="GLib.ActionEntry[]" array_length_idx=1
-AppInfo
-  .launch.files nullable
-  .launch_uris.uris nullable
 AsyncReadyCallback.source_object nullable
 DBusMessage
   .get_body unowned
-DBusSubtreeDispatchFunc nullable unowned
 DBusSubtreeVTable.enumerate skip=false
 FileAttributeInfoList
   .infos array array_length_field="n_infos" unowned=false
-InputStream
-  .read*.buffer type="uint8[]" array_length_idx=1
 LoadableIcon
   .load_finish.type out nullable unowned=false default=null
-Socket
-  .receive.buffer type="uint8[]" array_length_idx=1
-  .receive_with_blocking.buffer type="uint8[]" array_length_idx=1
 StaticResource
   .data array array_length_field="data_len"
   .padding skip
