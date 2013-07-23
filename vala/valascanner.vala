@@ -230,12 +230,12 @@ public class Vala.Scanner {
 							current++;
 							token_length_in_chars++;
 							int digit_length;
-							for (digit_length = 0; digit_length < 2 && current < end && current[0].isxdigit (); digit_length++) {
+							for (digit_length = 0; current < end && current[0].isxdigit (); digit_length++) {
 								current++;
 								token_length_in_chars++;
 							}
-							if (digit_length != 2) {
-								Report.error (get_source_reference (token_length_in_chars), "\\x requires two hex digits");
+							if (digit_length < 1) {
+								Report.error (get_source_reference (token_length_in_chars), "\\x requires at least one hex digit");
 							}
 							break;
 						default:
@@ -728,12 +728,12 @@ public class Vala.Scanner {
 							current++;
 							token_length_in_chars++;
 							int digit_length;
-							for (digit_length = 0; digit_length < 2 && current < end && current[0].isxdigit (); digit_length++) {
+							for (digit_length = 0; current < end && current[0].isxdigit (); digit_length++) {
 								current++;
 								token_length_in_chars++;
 							}
-							if (digit_length != 2) {
-								Report.error (get_source_reference (token_length_in_chars), "\\x requires two hex digits");
+							if (digit_length < 1) {
+								Report.error (get_source_reference (token_length_in_chars), "\\x requires at least one hex digit");
 							}
 							break;
 						default:
@@ -1162,12 +1162,12 @@ public class Vala.Scanner {
 							current++;
 							token_length_in_chars++;
 							int digit_length;
-							for (digit_length = 0; digit_length < 2 && current < end && current[0].isxdigit (); digit_length++) {
+							for (digit_length = 0; current < end && current[0].isxdigit (); digit_length++) {
 								current++;
 								token_length_in_chars++;
 							}
-							if (digit_length != 2) {
-								Report.error (get_source_reference (token_length_in_chars), "\\x requires two hex digits");
+							if (digit_length < 1) {
+								Report.error (get_source_reference (token_length_in_chars), "\\x requires at least one hex digit");
 							}
 							break;
 						default:
