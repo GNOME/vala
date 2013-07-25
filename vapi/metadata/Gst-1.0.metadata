@@ -100,6 +100,7 @@ MiniObject struct=false
   .make_writable skip=false
 Buffer base_type="Gst.MiniObject"
   .mini_object skip
+BufferList base_type="Gst.MiniObject"
 Caps base_type="Gst.MiniObject"
   .mini_object skip
 Event base_type="Gst.MiniObject"
@@ -110,6 +111,7 @@ Message base_type="Gst.MiniObject"
   .mini_object skip
 Query base_type="Gst.MiniObject"
   .mini_object skip
+Sample base_type="Gst.MiniObject"
 TagList base_type="Gst.MiniObject"
   .mini_object skip
 Toc base_type="Gst.MiniObject"
@@ -131,3 +133,9 @@ formats_contains parent="Gst.Format" name="contains"
 // No way to make reparented functions instance methods
 FlowReturn.custom_error_2 skip
 flow_get_name skip // parent="Gst.FlowReturn" name="get_name"
+
+// Upstream
+Query
+  .parse_nth_allocation_param.allocator unowned=false
+Structure
+  .copy unowned=false

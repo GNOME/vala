@@ -9,7 +9,7 @@ namespace Gst {
 			[CCode (has_construct_function = false, type = "GstBufferPool*")]
 			public BufferPool ();
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_codec_frame_get_type ()")]
+		[CCode (cheader_filename = "gst/video/gstvideoutils.h", ref_function = "gst_video_codec_frame_ref", type_id = "gst_video_codec_frame_get_type ()", unref_function = "gst_video_codec_frame_unref")]
 		[Compact]
 		[GIR (name = "VideoCodecFrame")]
 		public class CodecFrame {
@@ -23,7 +23,11 @@ namespace Gst {
 			public uint32 presentation_frame_number;
 			public Gst.ClockTime pts;
 			public uint32 system_frame_number;
+			[CCode (simple_generics = true)]
+			public T get_user_data<T> ();
 			public Gst.Video.CodecFrame @ref ();
+			[CCode (simple_generics = true)]
+			public void set_user_data<T> (owned T user_data);
 			public void unref ();
 		}
 		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_codec_state_get_type ()")]
@@ -169,10 +173,10 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.FlowReturn transform_frame_ip (Gst.Video.Frame frame);
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_overlay_composition_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video-overlay-composition.h", ref_function = "gst_video_overlay_composition_ref", type_id = "gst_video_overlay_composition_get_type ()", unref_function = "gst_video_overlay_composition_unref")]
 		[Compact]
 		[GIR (name = "VideoOverlayComposition")]
-		public class OverlayComposition {
+		public class OverlayComposition : Gst.MiniObject {
 			[CCode (has_construct_function = false)]
 			public OverlayComposition (Gst.Video.OverlayRectangle rectangle);
 			public void add_rectangle (Gst.Video.OverlayRectangle rectangle);
@@ -183,10 +187,10 @@ namespace Gst {
 			public Gst.Video.OverlayComposition make_writable ();
 			public uint n_rectangles ();
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_overlay_rectangle_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video-overlay-composition.h", ref_function = "gst_video_overlay_rectangle_ref", type_id = "gst_video_overlay_rectangle_get_type ()", unref_function = "gst_video_overlay_rectangle_unref")]
 		[Compact]
 		[GIR (name = "VideoOverlayRectangle")]
-		public class OverlayRectangle {
+		public class OverlayRectangle : Gst.MiniObject {
 			public Gst.Video.OverlayRectangle copy ();
 			public Gst.Video.OverlayFormatFlags get_flags ();
 			public float get_global_alpha ();

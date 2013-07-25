@@ -459,7 +459,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool union (out GLib.Value dest, GLib.Value value1, GLib.Value value2);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_allocation_params_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", copy_function = "gst_allocation_params_copy", free_function = "gst_allocation_params_free", type_id = "gst_allocation_params_get_type ()")]
 	[Compact]
 	public class AllocationParams {
 		public size_t align;
@@ -485,7 +485,7 @@ namespace Gst {
 		public static void register (string name, owned Gst.Allocator allocator);
 		public void set_default ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_atomic_queue_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_atomic_queue_ref", type_id = "gst_atomic_queue_get_type ()", unref_function = "gst_atomic_queue_unref")]
 	[Compact]
 	public class AtomicQueue<T> {
 		[CCode (has_construct_function = false)]
@@ -544,7 +544,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected Bitmask ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_buffer_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_buffer_ref", type_id = "gst_buffer_get_type ()", unref_function = "gst_buffer_unref")]
 	[Compact]
 	public class Buffer : Gst.MiniObject {
 		public Gst.ClockTime dts;
@@ -599,9 +599,9 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Buffer.wrapped ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_buffer_list_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_buffer_list_ref", type_id = "gst_buffer_list_get_type ()", unref_function = "gst_buffer_list_unref")]
 	[Compact]
-	public class BufferList {
+	public class BufferList : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
 		public BufferList ();
 		public bool @foreach (Gst.BufferListFunc func);
@@ -673,7 +673,7 @@ namespace Gst {
 		public virtual signal void message (Gst.Message message);
 		public virtual signal void sync_message (Gst.Message message);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_caps_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_caps_ref", type_id = "gst_caps_get_type ()", unref_function = "gst_caps_unref")]
 	[Compact]
 	public class Caps : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
@@ -777,7 +777,7 @@ namespace Gst {
 		public bool get_value (Gst.ClockTime timestamp, double value);
 		public bool get_value_array (Gst.ClockTime timestamp, Gst.ClockTime interval, [CCode (array_length_cname = "n_values", array_length_pos = 2.5, array_length_type = "guint", type = "gdouble*")] double[] values);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_date_time_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_date_time_ref", type_id = "gst_date_time_get_type ()", unref_function = "gst_date_time_unref")]
 	[Compact]
 	public class DateTime {
 		[CCode (has_construct_function = false)]
@@ -955,7 +955,7 @@ namespace Gst {
 		public bool list_is_type (Gst.ElementFactoryListType type);
 		public static unowned Gst.Element make (string factoryname, string? name);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_event_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_event_ref", type_id = "gst_event_get_type ()", unref_function = "gst_event_unref")]
 	[Compact]
 	public class Event : Gst.MiniObject {
 		public uint32 seqnum;
@@ -1059,7 +1059,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected IntRange ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_iterator_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", copy_function = "gst_iterator_copy", free_function = "gst_iterator_free", type_id = "gst_iterator_get_type ()")]
 	[Compact]
 	public class Iterator {
 		public uint32 cookie;
@@ -1080,7 +1080,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Iterator.single (GLib.Type type, GLib.Value object);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_memory_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_memory_ref", type_id = "gst_memory_get_type ()", unref_function = "gst_memory_unref")]
 	[Compact]
 	public class Memory : Gst.MiniObject {
 		public size_t align;
@@ -1100,7 +1100,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Memory.wrapped (Gst.MemoryFlags flags, [CCode (array_length_cname = "size", array_length_pos = 4.33333, array_length_type = "gsize")] uint8[] data, size_t maxsize, size_t offset, [CCode (delegate_target_pos = 4.66667)] GLib.DestroyNotify? notify);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_message_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_message_ref", type_id = "gst_message_get_type ()", unref_function = "gst_message_unref")]
 	[Compact]
 	public class Message : Gst.MiniObject {
 		public uint32 seqnum;
@@ -1380,7 +1380,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected ParamFraction ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_parse_context_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", free_function = "gst_parse_context_free", type_id = "gst_parse_context_get_type ()")]
 	[Compact]
 	public class ParseContext {
 		[CCode (has_construct_function = false)]
@@ -1477,7 +1477,7 @@ namespace Gst {
 		public static Gst.FlowReturn getrange_default (Gst.Pad pad, Gst.Object parent, uint64 offset, uint size, out Gst.Buffer buffer);
 		public static Gst.Iterator iterate_internal_links_default (Gst.Pad pad, Gst.Object? parent);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_query_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_query_ref", type_id = "gst_query_get_type ()", unref_function = "gst_query_unref")]
 	[Compact]
 	public class Query : Gst.MiniObject {
 		public Gst.QueryType type;
@@ -1528,7 +1528,7 @@ namespace Gst {
 		public void parse_latency (out bool live, out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
 		public void parse_n_formats (out uint n_formats);
 		public GLib.Type parse_nth_allocation_meta (uint index, out Gst.Structure @params);
-		public void parse_nth_allocation_param (uint index, out unowned Gst.Allocator allocator, out unowned Gst.AllocationParams @params);
+		public void parse_nth_allocation_param (uint index, out Gst.Allocator allocator, out unowned Gst.AllocationParams @params);
 		public void parse_nth_allocation_pool (uint index, out Gst.BufferPool pool, out uint size, out uint min_buffers, out uint max_buffers);
 		public bool parse_nth_buffering_range (uint index, out int64 start, out int64 stop);
 		public void parse_nth_format (out uint nth, out Gst.Format format);
@@ -1593,9 +1593,9 @@ namespace Gst {
 		public signal void feature_added (Gst.PluginFeature feature);
 		public signal void plugin_added (Gst.Plugin plugin);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_sample_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_sample_ref", type_id = "gst_sample_get_type ()", unref_function = "gst_sample_unref")]
 	[Compact]
-	public class Sample {
+	public class Sample : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
 		public Sample (Gst.Buffer? buffer, Gst.Caps? caps, Gst.Segment? segment, owned Gst.Structure? info);
 		public unowned Gst.Buffer get_buffer ();
@@ -1603,7 +1603,7 @@ namespace Gst {
 		public unowned Gst.Structure get_info ();
 		public unowned Gst.Segment get_segment ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_segment_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", copy_function = "gst_segment_copy", free_function = "gst_segment_free", type_id = "gst_segment_get_type ()")]
 	[Compact]
 	public class Segment {
 		public double applied_rate;
@@ -1630,12 +1630,12 @@ namespace Gst {
 		public uint64 to_running_time (Gst.Format format, uint64 position);
 		public uint64 to_stream_time (Gst.Format format, uint64 position);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_structure_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", copy_function = "gst_structure_copy", free_function = "gst_structure_free", type_id = "gst_structure_get_type ()")]
 	[Compact]
 	public class Structure {
 		public GLib.Type type;
 		public bool can_intersect (Gst.Structure struct2);
-		public unowned Gst.Structure copy ();
+		public Gst.Structure copy ();
 		[CCode (has_construct_function = false)]
 		public Structure.empty (string name);
 		public void fixate ();
@@ -1694,7 +1694,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public Gst.ClockType clock_type { get; set; }
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_tag_list_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_tag_list_ref", type_id = "gst_tag_list_get_type ()", unref_function = "gst_tag_list_unref")]
 	[Compact]
 	public class TagList : Gst.MiniObject {
 		public void add_value (Gst.TagMergeMode mode, string tag, GLib.Value value);
@@ -1774,7 +1774,7 @@ namespace Gst {
 		public virtual void prepare () throws GLib.Error;
 		public virtual void* push (Gst.TaskPoolFunction func) throws GLib.Error;
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_toc_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_toc_ref", type_id = "gst_toc_get_type ()", unref_function = "gst_toc_unref")]
 	[Compact]
 	public class Toc : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
@@ -1788,7 +1788,7 @@ namespace Gst {
 		public void merge_tags (Gst.TagList? tags, Gst.TagMergeMode mode);
 		public void set_tags (owned Gst.TagList? tags);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_toc_entry_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_toc_entry_ref", type_id = "gst_toc_entry_get_type ()", unref_function = "gst_toc_entry_unref")]
 	[Compact]
 	public class TocEntry : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
