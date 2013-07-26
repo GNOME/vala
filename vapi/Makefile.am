@@ -695,7 +695,7 @@ pangocairo:
 	$(GENVAPI) --library $(srcdir)/pangocairo --metadatadir $(METADATADIR) $(GIRDIR)/PangoCairo-1.0.gir
 
 poppler-glib:
-	$(GENVAPI) --library $(srcdir)/poppler-glib --metadatadir $(METADATADIR) $(GIRDIR)/Poppler-0.18.gir
+	$(GENVAPI) --library $(srcdir)/poppler-glib --pkg cairo --pkg gio-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/Poppler-0.18.gir
 
 purple:
 	$(GENVAPI) --library $(srcdir)/purple $(PACKAGESDIR)/purple/purple-custom.vala $(PACKAGESDIR)/purple/purple.gi

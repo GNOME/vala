@@ -52,6 +52,7 @@ namespace Poppler {
 		public int get_page_index ();
 		public void set_color (Poppler.Color? poppler_color);
 		public void set_contents (string contents);
+		public void set_flags (Poppler.AnnotFlag flags);
 	}
 	[CCode (cheader_filename = "poppler.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "poppler_annot_callout_line_get_type ()")]
 	[Compact]
@@ -183,6 +184,10 @@ namespace Poppler {
 		public Document.from_data (string data, int length, string? password) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Document.from_file (string uri, string? password) throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		public Document.from_gfile (GLib.File file, string? password, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		public Document.from_stream (GLib.InputStream stream, int64 length, string? password, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.List<Poppler.Attachment> get_attachments ();
 		public string get_author ();
 		public long get_creation_date ();
@@ -388,6 +393,7 @@ namespace Poppler {
 		protected Page ();
 		public void add_annot (Poppler.Annot annot);
 		public GLib.List<Poppler.Rectangle> find_text (string text);
+		public GLib.List<Poppler.Rectangle> find_text_with_options (string text, Poppler.FindFlags options);
 		public static void free_annot_mapping (GLib.List<Poppler.AnnotMapping> list);
 		public static void free_form_field_mapping (GLib.List<Poppler.FormFieldMapping> list);
 		public static void free_image_mapping (GLib.List<Poppler.ImageMapping> list);
@@ -413,6 +419,7 @@ namespace Poppler {
 		public Cairo.Surface get_thumbnail ();
 		public bool get_thumbnail_size (out int width, out int height);
 		public Poppler.PageTransition get_transition ();
+		public void remove_annot (Poppler.Annot annot);
 		public void render ([CCode (type = "cairo_t*")] Cairo.Context cairo);
 		public void render_for_printing ([CCode (type = "cairo_t*")] Cairo.Context cairo);
 		public void render_for_printing_with_options ([CCode (type = "cairo_t*")] Cairo.Context cairo, Poppler.PrintFlags options);
@@ -645,6 +652,14 @@ namespace Poppler {
 		FITBH,
 		FITBV,
 		NAMED
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_FIND_", type_id = "poppler_find_flags_get_type ()")]
+	[Flags]
+	public enum FindFlags {
+		DEFAULT,
+		CASE_SENSITIVE,
+		BACKWARDS,
+		WHOLE_WORDS_ONLY
 	}
 	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_FONT_TYPE_", type_id = "poppler_font_type_get_type ()")]
 	public enum FontType {
