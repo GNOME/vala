@@ -1444,10 +1444,10 @@ namespace GLib {
 		public bool get_item_attribute (int item_index, string attribute, string format_string, ...);
 		public virtual GLib.Variant get_item_attribute_value (int item_index, string attribute, GLib.VariantType? expected_type);
 		[NoWrapper]
-		public virtual void get_item_attributes (int item_index, GLib.HashTable<void*,void*> attributes);
+		public virtual void get_item_attributes (int item_index, [CCode (type = "GHashTable**")] out GLib.HashTable<string,GLib.Variant>? attributes);
 		public virtual GLib.MenuModel get_item_link (int item_index, string link);
 		[NoWrapper]
-		public virtual void get_item_links (int item_index, GLib.HashTable<void*,void*> links);
+		public virtual void get_item_links (int item_index, [CCode (type = "GHashTable**")] out GLib.HashTable<string,GLib.MenuModel>? links);
 		public virtual int get_n_items ();
 		public virtual bool is_mutable ();
 		public virtual GLib.MenuAttributeIter iterate_item_attributes (int item_index);

@@ -142,6 +142,8 @@ MenuItem
   .set_attribute skip=false
 MenuModel
   .get_item_attribute skip=false
+  .get_item_attributes.attributes out type="GLib.HashTable<string,GLib.Variant>?"
+  .get_item_links.links out type="GLib.HashTable<string,GLib.MenuModel>?"
 Mount
   .get_sort_key#virtual_method virtual
 OutputStream
