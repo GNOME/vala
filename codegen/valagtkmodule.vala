@@ -132,15 +132,43 @@ public class Vala.GtkModule : GSignalModule {
 		}
 	}
 
-	private bool is_gtk_template (Class? cl) {
-		return cl != null && gtk_widget_type != null && cl.is_subtype_of (gtk_widget_type) && cl.get_attribute ("GtkTemplate") != null;
+	private bool is_gtk_template (Class cl) {
+		var attr = cl.get_attribute ("GtkTemplate");
+		if (attr != null) {
+			if (gtk_widget_type == null || !cl.is_subtype_of (gtk_widget_type)) {
+				if (!cl.error) {
+					Report.error (attr.source_reference, "subclassing Gtk.Widget is required for using Gtk templates");
+					cl.error = true;
+				}
+				return false;
+			}
+			if (!context.require_glib_version (2, 38)) {
+				if (!cl.error) {
+					Report.error (attr.source_reference, "glib 2.38 is required for using Gtk templates (with --target-glib=2.38)");
+					cl.error = true;
+				}
+				return false;
+			}
+			return true;
+		}
+		return false;
 	}
 
 	public override void generate_class_init (Class cl) {
 		base.generate_class_init (cl);
 
-		if (!is_gtk_template (cl)) {
+		if (cl.error || !is_gtk_template (cl)) {
 			return;
+		}
+
+		// this check is necessary because calling get_instance_private_offset otherwise will result in an error
+		if (cl.has_private_fields) {
+			var private_offset = "%s_private_offset".printf (get_ccode_name (cl));
+			ccode.add_declaration ("gint", new CCodeVariableDeclarator (private_offset));
+
+			var cgetprivcall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_get_instance_private_offset"));
+			cgetprivcall.add_argument (new CCodeIdentifier ("klass"));
+			ccode.add_assignment (new CCodeIdentifier (private_offset), cgetprivcall);
 		}
 
 		/* Gtk builder widget template */
@@ -163,7 +191,7 @@ public class Vala.GtkModule : GSignalModule {
 		base.visit_field (f);
 
 		var cl = current_class;
-		if (!is_gtk_template (cl) || cl.error) {
+		if (cl == null || cl.error || !is_gtk_template (cl)) {
 			return;
 		}
 
@@ -190,15 +218,21 @@ public class Vala.GtkModule : GSignalModule {
 
 		var internal_child = f.get_attribute_bool ("GtkChild", "internal");
 
-		var offset = new CCodeFunctionCall (new CCodeIdentifier ("G_STRUCT_OFFSET"));
+		CCodeExpression offset;
 		if (f.is_private_symbol ()) {
-			offset.add_argument (new CCodeIdentifier ("%sPrivate".printf (get_ccode_name (cl))));
+			// new glib api, we add the private struct offset to get the final field offset out of the instance
+			var private_field_offset = new CCodeFunctionCall (new CCodeIdentifier ("G_STRUCT_OFFSET"));
+			private_field_offset.add_argument (new CCodeIdentifier ("%sPrivate".printf (get_ccode_name (cl))));
+			private_field_offset.add_argument (new CCodeIdentifier (get_ccode_name (f)));
+			offset = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("%s_private_offset".printf (get_ccode_name (cl))), private_field_offset);
 		} else {
-			offset.add_argument (new CCodeIdentifier (get_ccode_name (cl)));
+			var offset_call = new CCodeFunctionCall (new CCodeIdentifier ("G_STRUCT_OFFSET"));
+			offset_call.add_argument (new CCodeIdentifier (get_ccode_name (cl)));
+			offset_call.add_argument (new CCodeIdentifier (get_ccode_name (f)));
+			offset = offset_call;
 		}
-		offset.add_argument (new CCodeIdentifier (get_ccode_name (f)));
 
-		var call = new CCodeFunctionCall (new CCodeIdentifier ("gtk_widget_class_automate_child"));
+		var call = new CCodeFunctionCall (new CCodeIdentifier ("gtk_widget_class_bind_template_child_full"));
 		call.add_argument (new CCodeIdentifier ("GTK_WIDGET_CLASS (klass)"));
 		call.add_argument (new CCodeConstant ("\"%s\"".printf (gtk_name)));
 		call.add_argument (new CCodeConstant (internal_child ? "TRUE" : "FALSE"));
@@ -212,7 +246,7 @@ public class Vala.GtkModule : GSignalModule {
 		base.visit_method (m);
 
 		var cl = current_class;
-		if (!is_gtk_template (cl) || cl.error) {
+		if (cl == null || cl.error || !is_gtk_template (cl)) {
 			return;
 		}
 
@@ -240,7 +274,7 @@ public class Vala.GtkModule : GSignalModule {
 			} else {
 				var wrapper = generate_delegate_wrapper (m, signal_type.get_handler_type (), m);
 
-				var call = new CCodeFunctionCall (new CCodeIdentifier ("gtk_widget_class_declare_callback"));
+				var call = new CCodeFunctionCall (new CCodeIdentifier ("gtk_widget_class_bind_template_callback_full"));
 				call.add_argument (new CCodeIdentifier ("GTK_WIDGET_CLASS (klass)"));
 				call.add_argument (new CCodeConstant ("\"%s\"".printf (handler_name)));
 				call.add_argument (new CCodeIdentifier ("G_CALLBACK(%s)".printf (wrapper)));
@@ -253,7 +287,7 @@ public class Vala.GtkModule : GSignalModule {
 
 
 	public override void generate_instance_init (Class cl) {
-		if (!is_gtk_template (cl)) {
+		if (cl == null || cl.error || !is_gtk_template (cl)) {
 			return;
 		}
 
