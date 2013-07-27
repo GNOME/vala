@@ -66,6 +66,8 @@ namespace Gdk {
 	public class X11Keymap : Gdk.Keymap {
 		[CCode (has_construct_function = false)]
 		protected X11Keymap ();
+		public static int get_group_for_state (Gdk.Keymap keymap, uint state);
+		public static bool key_is_modifier (Gdk.Keymap keymap, uint keycode);
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	[Compact]
@@ -105,7 +107,11 @@ namespace Gdk {
 		public static X.Window get_xid (Gdk.Window window);
 		public static unowned Gdk.Window lookup_for_display (Gdk.Display display, X.Window window);
 		public static void move_to_current_desktop (Gdk.Window window);
+		public static void set_frame_sync_enabled (Gdk.Window window, bool frame_sync_enabled);
+		public static void set_hide_titlebar_when_maximized (Gdk.Window window, bool hide_titlebar_when_maximized);
+		public static void set_theme_variant (Gdk.Window window, string variant);
 		public static void set_user_time (Gdk.Window window, uint32 timestamp);
+		public static void set_utf8_property (Gdk.Window window, string name, string value);
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	[Compact]

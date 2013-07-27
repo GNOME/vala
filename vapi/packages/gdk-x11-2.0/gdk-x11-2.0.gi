@@ -1,18 +1,6 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="Gdk">
-		<function name="gdkx_visual_get" symbol="gdkx_visual_get">
-			<return-type type="GdkVisual*"/>
-			<parameters>
-				<parameter name="xvisualid" type="VisualID"/>
-			</parameters>
-		</function>
-		<function name="net_wm_supports" symbol="gdk_net_wm_supports">
-			<return-type type="gboolean"/>
-			<parameters>
-				<parameter name="property" type="GdkAtom"/>
-			</parameters>
-		</function>
 		<function name="x11_atom_to_xatom" symbol="gdk_x11_atom_to_xatom">
 			<return-type type="Atom"/>
 			<parameters>
@@ -96,10 +84,43 @@
 				<parameter name="size" type="gint"/>
 			</parameters>
 		</function>
+		<function name="x11_display_string_to_compound_text" symbol="gdk_x11_display_string_to_compound_text">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="display" type="GdkDisplay*"/>
+				<parameter name="str" type="gchar*"/>
+				<parameter name="encoding" type="GdkAtom*"/>
+				<parameter name="format" type="gint*"/>
+				<parameter name="ctext" type="guchar**"/>
+				<parameter name="length" type="gint*"/>
+			</parameters>
+		</function>
+		<function name="x11_display_text_property_to_text_list" symbol="gdk_x11_display_text_property_to_text_list">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="display" type="GdkDisplay*"/>
+				<parameter name="encoding" type="GdkAtom"/>
+				<parameter name="format" type="gint"/>
+				<parameter name="text" type="guchar*"/>
+				<parameter name="length" type="gint"/>
+				<parameter name="list" type="gchar***"/>
+			</parameters>
+		</function>
 		<function name="x11_display_ungrab" symbol="gdk_x11_display_ungrab">
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="display" type="GdkDisplay*"/>
+			</parameters>
+		</function>
+		<function name="x11_display_utf8_to_compound_text" symbol="gdk_x11_display_utf8_to_compound_text">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="display" type="GdkDisplay*"/>
+				<parameter name="str" type="gchar*"/>
+				<parameter name="encoding" type="GdkAtom*"/>
+				<parameter name="format" type="gint*"/>
+				<parameter name="ctext" type="guchar**"/>
+				<parameter name="length" type="gint*"/>
 			</parameters>
 		</function>
 		<function name="x11_drawable_get_xdisplay" symbol="gdk_x11_drawable_get_xdisplay">
@@ -114,16 +135,16 @@
 				<parameter name="drawable" type="GdkDrawable*"/>
 			</parameters>
 		</function>
-		<function name="x11_gc_get_xdisplay" symbol="gdk_x11_gc_get_xdisplay">
-			<return-type type="Display*"/>
+		<function name="x11_free_compound_text" symbol="gdk_x11_free_compound_text">
+			<return-type type="void"/>
 			<parameters>
-				<parameter name="gc" type="GdkGC*"/>
+				<parameter name="ctext" type="guchar*"/>
 			</parameters>
 		</function>
-		<function name="x11_gc_get_xgc" symbol="gdk_x11_gc_get_xgc">
-			<return-type type="GC"/>
+		<function name="x11_free_text_list" symbol="gdk_x11_free_text_list">
+			<return-type type="void"/>
 			<parameters>
-				<parameter name="gc" type="GdkGC*"/>
+				<parameter name="list" type="gchar**"/>
 			</parameters>
 		</function>
 		<function name="x11_get_default_root_xwindow" symbol="gdk_x11_get_default_root_xwindow">
@@ -241,6 +262,12 @@
 				<parameter name="property" type="GdkAtom"/>
 			</parameters>
 		</function>
+		<function name="x11_set_sm_client_id" symbol="gdk_x11_set_sm_client_id">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="sm_client_id" type="gchar*"/>
+			</parameters>
+		</function>
 		<function name="x11_ungrab_server" symbol="gdk_x11_ungrab_server">
 			<return-type type="void"/>
 		</function>
@@ -250,10 +277,24 @@
 				<parameter name="visual" type="GdkVisual*"/>
 			</parameters>
 		</function>
+		<function name="x11_window_foreign_new_for_display" symbol="gdk_x11_window_foreign_new_for_display">
+			<return-type type="GdkWindow*"/>
+			<parameters>
+				<parameter name="display" type="GdkDisplay*"/>
+				<parameter name="window" type="Window"/>
+			</parameters>
+		</function>
 		<function name="x11_window_get_drawable_impl" symbol="gdk_x11_window_get_drawable_impl">
 			<return-type type="GdkDrawable*"/>
 			<parameters>
 				<parameter name="window" type="GdkWindow*"/>
+			</parameters>
+		</function>
+		<function name="x11_window_lookup_for_display" symbol="gdk_x11_window_lookup_for_display">
+			<return-type type="GdkWindow*"/>
+			<parameters>
+				<parameter name="display" type="GdkDisplay*"/>
+				<parameter name="window" type="Window"/>
 			</parameters>
 		</function>
 		<function name="x11_window_move_to_current_desktop" symbol="gdk_x11_window_move_to_current_desktop">
@@ -280,19 +321,6 @@
 			<parameters>
 				<parameter name="display" type="GdkDisplay*"/>
 				<parameter name="xatom" type="Atom"/>
-			</parameters>
-		</function>
-		<function name="xid_table_lookup" symbol="gdk_xid_table_lookup">
-			<return-type type="gpointer"/>
-			<parameters>
-				<parameter name="xid" type="XID"/>
-			</parameters>
-		</function>
-		<function name="xid_table_lookup_for_display" symbol="gdk_xid_table_lookup_for_display">
-			<return-type type="gpointer"/>
-			<parameters>
-				<parameter name="display" type="GdkDisplay*"/>
-				<parameter name="xid" type="XID"/>
 			</parameters>
 		</function>
 	</namespace>

@@ -253,6 +253,20 @@
 		<object name="GdkX11DragContext" parent="GdkDragContext" type-name="GdkX11DragContext" get-type="gdk_x11_drag_context_get_type">
 		</object>
 		<object name="GdkX11Keymap" parent="GdkKeymap" type-name="GdkX11Keymap" get-type="gdk_x11_keymap_get_type">
+			<method name="get_group_for_state" symbol="gdk_x11_keymap_get_group_for_state">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="keymap" type="GdkKeymap*"/>
+					<parameter name="state" type="guint"/>
+				</parameters>
+			</method>
+			<method name="key_is_modifier" symbol="gdk_x11_keymap_key_is_modifier">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="keymap" type="GdkKeymap*"/>
+					<parameter name="keycode" type="guint"/>
+				</parameters>
+			</method>
 		</object>
 		<object name="GdkX11Screen" parent="GdkScreen" type-name="GdkX11Screen" get-type="gdk_x11_screen_get_type">
 			<method name="get_monitor_output" symbol="gdk_x11_screen_get_monitor_output">
@@ -336,11 +350,40 @@
 					<parameter name="window" type="GdkWindow*"/>
 				</parameters>
 			</method>
+			<method name="set_frame_sync_enabled" symbol="gdk_x11_window_set_frame_sync_enabled">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="frame_sync_enabled" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_hide_titlebar_when_maximized" symbol="gdk_x11_window_set_hide_titlebar_when_maximized">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="hide_titlebar_when_maximized" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_theme_variant" symbol="gdk_x11_window_set_theme_variant">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="variant" type="char*"/>
+				</parameters>
+			</method>
 			<method name="set_user_time" symbol="gdk_x11_window_set_user_time">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="window" type="GdkWindow*"/>
 					<parameter name="timestamp" type="guint32"/>
+				</parameters>
+			</method>
+			<method name="set_utf8_property" symbol="gdk_x11_window_set_utf8_property">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
 		</object>
