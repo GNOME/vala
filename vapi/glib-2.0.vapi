@@ -1616,6 +1616,10 @@ namespace GLib {
 		public unowned MainContext get_context ();
 		public void set_callback (owned SourceFunc func);
 		public void set_callback_indirect (void* callback_data, SourceCallbackFuncs callback_funcs);
+		public void* add_unix_fd (int fd, IOCondition events);
+		public void remove_unix_fd (void* tag);
+		public void modify_unix_fd (void* tag, IOCondition new_events);
+		public IOCondition query_unix_fd (void* tag);
 		public void add_poll (ref PollFD fd);
 		public void remove_poll (ref PollFD fd);
 		public void add_child_source (Source child_source);
@@ -1623,6 +1627,8 @@ namespace GLib {
 		public int64 get_time ();
 		[Deprecated (since = "2.28", replacement = "get_time")]
 		public void get_current_time (out TimeVal timeval);
+		public void set_ready_time (int64 ready_time);
+		public int64 get_ready_time ();
 		public static bool remove (uint id);
 		public static bool remove_by_funcs_user_data (void* user_data);
 		public static bool remove_by_user_data (void* user_data);
