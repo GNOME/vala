@@ -2229,6 +2229,8 @@ namespace GLib {
 		public static string compute_for_data (ChecksumType checksum_type, uchar[] data);
 		[CCode (cname = "g_compute_checksum_for_string")]
 		public static string compute_for_string (ChecksumType checksum_type, string str, size_t length = -1);
+		[CCode (cname = "g_compute_checksum_for_bytes")]
+		public static string compute_for_bytes (ChecksumType checksum_type, Bytes data);
 	}
 
 	/* Secure HMAC Digests */
@@ -3163,6 +3165,7 @@ namespace GLib {
 		public MappedFile (string filename, bool writable) throws FileError;
 		public size_t get_length ();
 		public unowned char* get_contents ();
+		public Bytes get_bytes ();
 	}
 
 	[CCode (cname = "stdin", cheader_filename = "stdio.h")]
@@ -3361,7 +3364,11 @@ namespace GLib {
 	public delegate bool RegexEvalCallback (MatchInfo match_info, StringBuilder result);
 
 	[Compact]
+#if GLIB_2_30
+	[CCode (ref_function = "g_match_info_ref", unref_function = "g_match_info_unref", type_id = "G_TYPE_MATCH_INFO")]
+#else
 	[CCode (free_function = "g_match_info_free")]
+#endif
 	public class MatchInfo {
 		public unowned Regex get_regex ();
 		public unowned string get_string ();
@@ -3398,7 +3405,11 @@ namespace GLib {
 	}
 
 	[Compact]
+#if GLIB_2_36
+	[CCode (ref_function = "g_markup_parse_context_ref", unref_function = "g_markup_parse_context_unref", type_id = "G_TYPE_MARKUP_PARSE_CONTEXT")]
+#else
 	[CCode (free_function = "g_markup_parse_context_free")]
+#endif
 	public class MarkupParseContext {
 		public MarkupParseContext (MarkupParser parser, MarkupParseFlags _flags, void* user_data, DestroyNotify? user_data_dnotify);
 		public bool parse (string text, ssize_t text_len) throws MarkupError;
@@ -3466,7 +3477,7 @@ namespace GLib {
 
 	[Compact]
 #if GLIB_2_32
-	[CCode (free_function = "g_key_file_free", ref_function = "g_key_file_ref", unref_function = "g_key_file_unref", type_id = "G_KEY_FILE")]
+	[CCode (ref_function = "g_key_file_ref", unref_function = "g_key_file_unref", type_id = "G_TYPE_KEY_FILE")]
 #else
 	[CCode (free_function = "g_key_file_free")]
 #endif
@@ -4034,6 +4045,8 @@ namespace GLib {
 				return res;
 			}
 		}
+
+		public static Bytes free_to_bytes (StringBuilder str);
 	}
 
 	/* String Chunks */
@@ -4672,6 +4685,14 @@ namespace GLib {
 
 		public static Variant parse (VariantType? type, string text, char *limit = null, char **endptr = null) throws GLib.VariantParseError;
 		public Variant.parsed (string format_string, ...);
+
+		public bool check_format_string (string format_string, bool copy_only);
+
+		public Variant.from_bytes (VariantType type, Bytes bytes, bool trusted);
+		public Bytes get_data_as_bytes ();
+
+		public Variant.printf (string format_string, ...);
+		public Variant.take_string (string str);
 	}
 
 	public errordomain VariantParseError {
