@@ -2,6 +2,7 @@
 
 [CCode (gir_namespace = "Gtk", gir_version = "3.0")]
 namespace Gtk {
+	[Deprecated (since = "3.10")]
 	namespace Stock {
 		[CCode (cheader_filename = "gtk/gtk.h")]
 		public const string ABOUT;
@@ -1115,6 +1116,8 @@ namespace Gtk {
 		public string stock_id { owned get; set; }
 		[NoAccessorMethod]
 		public uint stock_size { get; set; }
+		[NoAccessorMethod]
+		public Cairo.Surface surface { owned get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class CellRendererProgress : Gtk.CellRenderer, Gtk.Orientable {
@@ -2356,6 +2359,7 @@ namespace Gtk {
 		public IconInfo.for_pixbuf (Gtk.IconTheme icon_theme, Gdk.Pixbuf pixbuf);
 		public void free ();
 		public bool get_attach_points (Gdk.Point[] points);
+		public int get_base_scale ();
 		public int get_base_size ();
 		public unowned Gdk.Pixbuf get_builtin_pixbuf ();
 		public unowned string get_display_name ();
@@ -2363,6 +2367,7 @@ namespace Gtk {
 		public unowned string get_filename ();
 		public Gdk.Pixbuf load_icon () throws GLib.Error;
 		public async unowned Gdk.Pixbuf load_icon_async (GLib.Cancellable cancellable) throws GLib.Error;
+		public Cairo.Surface load_surface (Gdk.Window for_window) throws GLib.Error;
 		public Gdk.Pixbuf load_symbolic (Gdk.RGBA fg, Gdk.RGBA? success_color = null, Gdk.RGBA? warning_color = null, Gdk.RGBA? error_color = null, out bool was_symbolic = null) throws GLib.Error;
 		public async unowned Gdk.Pixbuf load_symbolic_async (Gdk.RGBA fg, Gdk.RGBA success_color, Gdk.RGBA warning_color, Gdk.RGBA error_color, GLib.Cancellable cancellable) throws GLib.Error;
 		public Gdk.Pixbuf load_symbolic_for_context (Gtk.StyleContext context, out bool was_symbolic = null) throws GLib.Error;
@@ -2386,8 +2391,11 @@ namespace Gtk {
 		public IconSet.from_pixbuf (Gdk.Pixbuf pixbuf);
 		public void get_sizes (Gtk.IconSize[] sizes);
 		[Deprecated (replacement = "set_render_icon_pixbuf", since = "3.0")]
-		public unowned Gdk.Pixbuf render_icon (Gtk.Style style, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
-		public unowned Gdk.Pixbuf render_icon_pixbuf (Gtk.StyleContext context, Gtk.IconSize size);
+		public Gdk.Pixbuf render_icon (Gtk.Style style, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
+		[Deprecated (since = "3.10")]
+		public Gdk.Pixbuf render_icon_pixbuf (Gtk.StyleContext context, Gtk.IconSize size);
+		[Deprecated (since = "3.10")]
+		public Cairo.Surface render_icon_surface (Gtk.StyleContext context, Gtk.IconSize size, int scale, Gdk.Window for_window);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_icon_source_copy", type_id = "gtk_icon_source_get_type ()")]
 	[Compact]
@@ -2420,7 +2428,8 @@ namespace Gtk {
 		public IconTheme ();
 		public static void add_builtin_icon (string icon_name, int size, Gdk.Pixbuf pixbuf);
 		public void append_search_path (string path);
-		public Gtk.IconInfo choose_icon ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, Gtk.IconLookupFlags flags);
+		public Gtk.IconInfo? choose_icon ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, Gtk.IconLookupFlags flags);
+		public Gtk.IconInfo? choose_icon_for_scale (string[] icon_names, int size, int scale, Gtk.IconLookupFlags flags);
 		public static GLib.Quark error_quark ();
 		public static unowned Gtk.IconTheme get_default ();
 		public unowned string get_example_icon_name ();
@@ -2431,8 +2440,12 @@ namespace Gtk {
 		public GLib.List<string> list_contexts ();
 		public GLib.List<string> list_icons (string? context);
 		public Gdk.Pixbuf? load_icon (string icon_name, int size, Gtk.IconLookupFlags flags) throws GLib.Error;
-		public Gtk.IconInfo lookup_by_gicon (GLib.Icon icon, int size, Gtk.IconLookupFlags flags);
-		public Gtk.IconInfo lookup_icon (string icon_name, int size, Gtk.IconLookupFlags flags);
+		public Gdk.Pixbuf? load_icon_for_scale (string icon_name, int size, int scale, Gtk.IconLookupFlags flags) throws GLib.Error;
+		public Cairo.Surface? load_surface (string icon_name, int size, int scale, Gdk.Window for_window, Gtk.IconLookupFlags flags) throws GLib.Error;
+		public Gtk.IconInfo? lookup_by_gicon (GLib.Icon icon, int size, Gtk.IconLookupFlags flags);
+		public Gtk.IconInfo? lookup_by_gicon_for_scale (GLib.Icon icon, int size, int scale, Gtk.IconLookupFlags flags);
+		public Gtk.IconInfo? lookup_icon (string icon_name, int size, Gtk.IconLookupFlags flags);
+		public Gtk.IconInfo? lookup_icon_for_scale (string icon_name, int size, int scale, Gtk.IconLookupFlags flags);
 		public void prepend_search_path (string path);
 		public bool rescan_if_needed ();
 		public void set_custom_theme (string theme_name);
@@ -2560,6 +2573,8 @@ namespace Gtk {
 		public Image.from_resource (string resource_path);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Image.from_stock (string stock_id, Gtk.IconSize size);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Image.from_surface (Cairo.Surface surface);
 		public unowned Gdk.PixbufAnimation get_animation ();
 		public void get_gicon (out unowned GLib.Icon gicon, Gtk.IconSize size);
 		public void get_icon_name (out unowned string icon_name, out Gtk.IconSize size);
@@ -2576,6 +2591,7 @@ namespace Gtk {
 		public void set_from_pixbuf (Gdk.Pixbuf pixbuf);
 		public void set_from_resource (string resource_path);
 		public void set_from_stock (string stock_id, Gtk.IconSize size);
+		public void set_from_surface (Cairo.Surface surface);
 		public void set_pixel_size (int pixel_size);
 		[NoAccessorMethod]
 		public string file { owned get; set; }
@@ -2597,6 +2613,8 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string stock { owned get; set; }
 		public Gtk.ImageType storage_type { get; }
+		[NoAccessorMethod]
+		public Cairo.Surface surface { owned get; set; }
 		[NoAccessorMethod]
 		public bool use_fallback { get; set; }
 	}
@@ -2642,12 +2660,15 @@ namespace Gtk {
 		public unowned Gtk.Widget get_action_area ();
 		public unowned Gtk.Container get_content_area ();
 		public Gtk.MessageType get_message_type ();
+		public bool get_show_close_button ();
 		public void set_default_response (int response_id);
 		public void set_message_type (Gtk.MessageType message_type);
 		public void set_response_sensitive (int response_id, bool setting);
+		public void set_show_close_button (bool setting);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public InfoBar.with_buttons (...);
 		public Gtk.MessageType message_type { get; set construct; }
+		public bool show_close_button { get; set construct; }
 		public virtual signal void close ();
 		[HasEmitter]
 		public virtual signal void response (int response_id);
@@ -2858,6 +2879,7 @@ namespace Gtk {
 		public ListBoxRow ();
 		public void changed ();
 		public unowned Gtk.Widget get_header ();
+		public int get_index ();
 		public void set_header (Gtk.Widget? header);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -3695,6 +3717,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected Range ();
 		public unowned Gtk.Adjustment get_adjustment ();
+		public unowned Gdk.Window get_event_window ();
 		public double get_fill_level ();
 		public bool get_flippable ();
 		public bool get_inverted ();
@@ -4613,6 +4636,7 @@ namespace Gtk {
 		public unowned Gtk.StyleContext get_parent ();
 		public unowned Gtk.WidgetPath get_path ();
 		public void get_property (string property, Gtk.StateFlags state, GLib.Value value);
+		public int get_scale ();
 		public unowned Gdk.Screen get_screen ();
 		public unowned Gtk.CssSection get_section (string property);
 		public Gtk.StateFlags get_state ();
@@ -4676,6 +4700,7 @@ namespace Gtk {
 		public void set_junction_sides (Gtk.JunctionSides sides);
 		public void set_parent (Gtk.StyleContext parent);
 		public void set_path (Gtk.WidgetPath path);
+		public void set_scale (int scale);
 		public void set_screen (Gdk.Screen screen);
 		public void set_state (Gtk.StateFlags flags);
 		public bool state_is_running (Gtk.StateType state, double progress);
@@ -5306,6 +5331,8 @@ namespace Gtk {
 		public virtual void render_icon (Cairo.Context cr, Gdk.Pixbuf pixbuf, double x, double y);
 		[NoWrapper]
 		public virtual unowned Gdk.Pixbuf render_icon_pixbuf (Gtk.IconSource source, Gtk.IconSize size);
+		[NoWrapper]
+		public virtual void render_icon_surface (Cairo.Context cr, Cairo.Surface surface, double x, double y);
 		[NoWrapper]
 		public virtual void render_layout (Cairo.Context cr, double x, double y, Pango.Layout layout);
 		[NoWrapper]
@@ -6003,8 +6030,10 @@ namespace Gtk {
 		public virtual void adjust_size_allocation (Gtk.Orientation orientation, ref int minimum_size, ref int natural_size, ref int allocated_pos, ref int allocated_size);
 		[NoWrapper]
 		public virtual void adjust_size_request (Gtk.Orientation orientation, ref int minimum_size, ref int natural_size);
-		[CCode (cname = "gtk_widget_class_automate_child")]
-		public class void automate_child (string name, bool internal_child, ssize_t struct_offset);
+		[CCode (cname = "gtk_widget_class_bind_template_callback_full")]
+		public class void bind_template_callback_full (string callback_name, GLib.Callback callback_symbol);
+		[CCode (cname = "gtk_widget_class_bind_template_child_full")]
+		public class void bind_template_child_full (string name, bool internal_child, ssize_t struct_offset);
 		public bool child_focus (Gtk.DirectionType direction);
 		[Deprecated (replacement = "get_path", since = "3.0")]
 		public void class_path (out uint path_length, out unowned string path, out unowned string path_reversed);
@@ -6014,8 +6043,6 @@ namespace Gtk {
 		public virtual void compute_expand_internal (out bool hexpand, out bool vexpand);
 		public Pango.Context create_pango_context ();
 		public Pango.Layout create_pango_layout (string? text);
-		[CCode (cname = "gtk_widget_class_declare_callback")]
-		public class void declare_callback (string callback_name, GLib.Callback callback_symbol);
 		public void destroyed (out unowned Gtk.Widget widget_pointer);
 		public bool device_is_shadowed (Gdk.Device device);
 		[NoWrapper]
@@ -6032,7 +6059,6 @@ namespace Gtk {
 		public void get_allocation (out Gtk.Allocation allocation);
 		public unowned Gtk.Widget get_ancestor (GLib.Type widget_type);
 		public bool get_app_paintable ();
-		public unowned GLib.Object get_automated_child (GLib.Type widget_type, string name);
 		public bool get_can_default ();
 		public bool get_can_focus ();
 		[Deprecated (replacement = "get_preferred_size", since = "3.0")]
@@ -6094,6 +6120,7 @@ namespace Gtk {
 		public virtual Gtk.SizeRequestMode get_request_mode ();
 		public Gtk.Requisition get_requisition ();
 		public unowned Gdk.Window get_root_window ();
+		public int get_scale_factor ();
 		public unowned Gdk.Screen get_screen ();
 		public bool get_sensitive ();
 		public unowned Gtk.Settings get_settings ();
@@ -6105,6 +6132,7 @@ namespace Gtk {
 		public unowned Gtk.Style get_style ();
 		public unowned Gtk.StyleContext get_style_context ();
 		public bool get_support_multidevice ();
+		public unowned GLib.Object get_template_child (GLib.Type widget_type, string name);
 		public unowned string get_tooltip_markup ();
 		public unowned string get_tooltip_text ();
 		public unowned Gtk.Window get_tooltip_window ();
@@ -6288,6 +6316,7 @@ namespace Gtk {
 		public double opacity { get; set; }
 		public Gtk.Container parent { get; set; }
 		public bool receives_default { get; set; }
+		public int scale_factor { get; }
 		public bool sensitive { get; set; }
 		public Gtk.Style style { get; set; }
 		public string tooltip_markup { get; set; }
@@ -6964,6 +6993,7 @@ namespace Gtk {
 		public abstract bool iter_parent (out Gtk.TreeIter iter, Gtk.TreeIter child);
 		public virtual bool iter_previous (ref Gtk.TreeIter iter);
 		public virtual void ref_node (Gtk.TreeIter iter);
+		public void rows_reordered_with_length (Gtk.TreePath path, Gtk.TreeIter iter, int new_order, int length);
 		public virtual void unref_node (Gtk.TreeIter iter);
 		[HasEmitter]
 		public signal void row_changed (Gtk.TreePath path, Gtk.TreeIter iter);
@@ -7308,7 +7338,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CELL_RENDERER_ACCEL_MODE_")]
 	public enum CellRendererAccelMode {
 		GTK,
-		OTHER
+		OTHER,
+		MODIFIER_TAP
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CELL_RENDERER_MODE_")]
 	public enum CellRendererMode {
@@ -7511,7 +7542,8 @@ namespace Gtk {
 		ICON_SET,
 		ANIMATION,
 		ICON_NAME,
-		GICON
+		GICON,
+		SURFACE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_INPUT_HINT_")]
 	[Flags]
@@ -9173,6 +9205,8 @@ namespace Gtk {
 	[Deprecated (replacement = "StyleContext.render_icon_pixbuf", since = "vala-0.16")]
 	public static unowned Gdk.Pixbuf render_icon_pixbuf (Gtk.StyleContext context, Gtk.IconSource source, Gtk.IconSize size);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static void render_icon_surface (Gtk.StyleContext context, Cairo.Context cr, Cairo.Surface surface, double x, double y);
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void render_insertion_cursor (Gtk.StyleContext context, Cairo.Context cr, double x, double y, Pango.Layout layout, int index, Pango.Direction direction);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Deprecated (replacement = "StyleContext.render_layout", since = "vala-0.16")]
@@ -9218,6 +9252,7 @@ namespace Gtk {
 	[Deprecated (replacement = "Gtk.Stock.list_ids", since = "vala-0.12")]
 	public static GLib.SList<string> stock_list_ids ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "Gtk.Stock.set_translate_func", since = "vala-0.22")]
 	public static void stock_set_translate_func (string domain, owned Gtk.TranslateFunc func);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void target_table_free (Gtk.TargetEntry[] targets);

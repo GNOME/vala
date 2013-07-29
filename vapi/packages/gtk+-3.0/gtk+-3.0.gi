@@ -1188,6 +1188,16 @@
 				<parameter name="size" type="GtkIconSize"/>
 			</parameters>
 		</function>
+		<function name="render_icon_surface" symbol="gtk_render_icon_surface">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="context" type="GtkStyleContext*"/>
+				<parameter name="cr" type="cairo_t*"/>
+				<parameter name="surface" type="cairo_surface_t*"/>
+				<parameter name="x" type="gdouble"/>
+				<parameter name="y" type="gdouble"/>
+			</parameters>
+		</function>
 		<function name="render_insertion_cursor" symbol="gtk_render_insertion_cursor">
 			<return-type type="void"/>
 			<parameters>
@@ -1332,39 +1342,6 @@
 				<parameter name="uri" type="gchar*"/>
 				<parameter name="timestamp" type="guint32"/>
 				<parameter name="error" type="GError**"/>
-			</parameters>
-		</function>
-		<function name="stock_add" symbol="gtk_stock_add">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="items" type="GtkStockItem*"/>
-				<parameter name="n_items" type="guint"/>
-			</parameters>
-		</function>
-		<function name="stock_add_static" symbol="gtk_stock_add_static">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="items" type="GtkStockItem*"/>
-				<parameter name="n_items" type="guint"/>
-			</parameters>
-		</function>
-		<function name="stock_list_ids" symbol="gtk_stock_list_ids">
-			<return-type type="GSList*"/>
-		</function>
-		<function name="stock_lookup" symbol="gtk_stock_lookup">
-			<return-type type="gboolean"/>
-			<parameters>
-				<parameter name="stock_id" type="gchar*"/>
-				<parameter name="item" type="GtkStockItem*"/>
-			</parameters>
-		</function>
-		<function name="stock_set_translate_func" symbol="gtk_stock_set_translate_func">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="domain" type="gchar*"/>
-				<parameter name="func" type="GtkTranslateFunc"/>
-				<parameter name="data" type="gpointer"/>
-				<parameter name="notify" type="GDestroyNotify"/>
 			</parameters>
 		</function>
 		<function name="target_table_free" symbol="gtk_target_table_free">
@@ -2270,6 +2247,41 @@
 			<field name="origin" type="gchar*"/>
 			<field name="value" type="GValue"/>
 		</struct>
+		<struct name="GtkStock">
+			<method name="add" symbol="gtk_stock_add">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="items" type="GtkStockItem*"/>
+					<parameter name="n_items" type="guint"/>
+				</parameters>
+			</method>
+			<method name="add_static" symbol="gtk_stock_add_static">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="items" type="GtkStockItem*"/>
+					<parameter name="n_items" type="guint"/>
+				</parameters>
+			</method>
+			<method name="list_ids" symbol="gtk_stock_list_ids">
+				<return-type type="GSList*"/>
+			</method>
+			<method name="lookup" symbol="gtk_stock_lookup">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stock_id" type="gchar*"/>
+					<parameter name="item" type="GtkStockItem*"/>
+				</parameters>
+			</method>
+			<method name="set_translate_func" symbol="gtk_stock_set_translate_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="domain" type="gchar*"/>
+					<parameter name="func" type="GtkTranslateFunc"/>
+					<parameter name="data" type="gpointer"/>
+					<parameter name="notify" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+		</struct>
 		<struct name="GtkStockItem">
 			<method name="copy" symbol="gtk_stock_item_copy">
 				<return-type type="GtkStockItem*"/>
@@ -2542,6 +2554,16 @@
 					<parameter name="icon_set" type="GtkIconSet*"/>
 					<parameter name="context" type="GtkStyleContext*"/>
 					<parameter name="size" type="GtkIconSize"/>
+				</parameters>
+			</method>
+			<method name="render_icon_surface" symbol="gtk_icon_set_render_icon_surface">
+				<return-type type="cairo_surface_t*"/>
+				<parameters>
+					<parameter name="icon_set" type="GtkIconSet*"/>
+					<parameter name="context" type="GtkStyleContext*"/>
+					<parameter name="size" type="GtkIconSize"/>
+					<parameter name="scale" type="int"/>
+					<parameter name="for_window" type="GdkWindow*"/>
 				</parameters>
 			</method>
 			<method name="unref" symbol="gtk_icon_set_unref">
@@ -4534,6 +4556,7 @@
 		<enum name="GtkCellRendererAccelMode" type-name="GtkCellRendererAccelMode" get-type="gtk_cell_renderer_accel_mode_get_type">
 			<member name="GTK_CELL_RENDERER_ACCEL_MODE_GTK" value="0"/>
 			<member name="GTK_CELL_RENDERER_ACCEL_MODE_OTHER" value="1"/>
+			<member name="GTK_CELL_RENDERER_ACCEL_MODE_MODIFIER_TAP" value="2"/>
 		</enum>
 		<enum name="GtkCellRendererMode" type-name="GtkCellRendererMode" get-type="gtk_cell_renderer_mode_get_type">
 			<member name="GTK_CELL_RENDERER_MODE_INERT" value="0"/>
@@ -4657,6 +4680,7 @@
 			<member name="GTK_IMAGE_ANIMATION" value="4"/>
 			<member name="GTK_IMAGE_ICON_NAME" value="5"/>
 			<member name="GTK_IMAGE_GICON" value="6"/>
+			<member name="GTK_IMAGE_SURFACE" value="7"/>
 		</enum>
 		<enum name="GtkInputPurpose" type-name="GtkInputPurpose" get-type="gtk_input_purpose_get_type">
 			<member name="GTK_INPUT_PURPOSE_FREE_FORM" value="0"/>
@@ -9160,6 +9184,7 @@
 			<property name="stock-detail" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stock-id" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stock-size" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="surface" type="cairo_surface_t*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkCellRendererProgress" parent="GtkCellRenderer" type-name="GtkCellRendererProgress" get-type="gtk_cell_renderer_progress_get_type">
 			<implements>
@@ -13556,6 +13581,12 @@
 					<parameter name="n_points" type="gint*"/>
 				</parameters>
 			</method>
+			<method name="get_base_scale" symbol="gtk_icon_info_get_base_scale">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="icon_info" type="GtkIconInfo*"/>
+				</parameters>
+			</method>
 			<method name="get_base_size" symbol="gtk_icon_info_get_base_size">
 				<return-type type="gint"/>
 				<parameters>
@@ -13608,6 +13639,14 @@
 				<parameters>
 					<parameter name="icon_info" type="GtkIconInfo*"/>
 					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="load_surface" symbol="gtk_icon_info_load_surface">
+				<return-type type="cairo_surface_t*"/>
+				<parameters>
+					<parameter name="icon_info" type="GtkIconInfo*"/>
+					<parameter name="for_window" type="GdkWindow*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -13723,6 +13762,16 @@
 					<parameter name="flags" type="GtkIconLookupFlags"/>
 				</parameters>
 			</method>
+			<method name="choose_icon_for_scale" symbol="gtk_icon_theme_choose_icon_for_scale">
+				<return-type type="GtkIconInfo*"/>
+				<parameters>
+					<parameter name="icon_theme" type="GtkIconTheme*"/>
+					<parameter name="icon_names" type="gchar*[]"/>
+					<parameter name="size" type="gint"/>
+					<parameter name="scale" type="gint"/>
+					<parameter name="flags" type="GtkIconLookupFlags"/>
+				</parameters>
+			</method>
 			<method name="error_quark" symbol="gtk_icon_theme_error_quark">
 				<return-type type="GQuark"/>
 			</method>
@@ -13786,6 +13835,29 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="load_icon_for_scale" symbol="gtk_icon_theme_load_icon_for_scale">
+				<return-type type="GdkPixbuf*"/>
+				<parameters>
+					<parameter name="icon_theme" type="GtkIconTheme*"/>
+					<parameter name="icon_name" type="gchar*"/>
+					<parameter name="size" type="gint"/>
+					<parameter name="scale" type="gint"/>
+					<parameter name="flags" type="GtkIconLookupFlags"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="load_surface" symbol="gtk_icon_theme_load_surface">
+				<return-type type="cairo_surface_t*"/>
+				<parameters>
+					<parameter name="icon_theme" type="GtkIconTheme*"/>
+					<parameter name="icon_name" type="gchar*"/>
+					<parameter name="size" type="gint"/>
+					<parameter name="scale" type="gint"/>
+					<parameter name="for_window" type="GdkWindow*"/>
+					<parameter name="flags" type="GtkIconLookupFlags"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="lookup_by_gicon" symbol="gtk_icon_theme_lookup_by_gicon">
 				<return-type type="GtkIconInfo*"/>
 				<parameters>
@@ -13795,12 +13867,32 @@
 					<parameter name="flags" type="GtkIconLookupFlags"/>
 				</parameters>
 			</method>
+			<method name="lookup_by_gicon_for_scale" symbol="gtk_icon_theme_lookup_by_gicon_for_scale">
+				<return-type type="GtkIconInfo*"/>
+				<parameters>
+					<parameter name="icon_theme" type="GtkIconTheme*"/>
+					<parameter name="icon" type="GIcon*"/>
+					<parameter name="size" type="gint"/>
+					<parameter name="scale" type="gint"/>
+					<parameter name="flags" type="GtkIconLookupFlags"/>
+				</parameters>
+			</method>
 			<method name="lookup_icon" symbol="gtk_icon_theme_lookup_icon">
 				<return-type type="GtkIconInfo*"/>
 				<parameters>
 					<parameter name="icon_theme" type="GtkIconTheme*"/>
 					<parameter name="icon_name" type="gchar*"/>
 					<parameter name="size" type="gint"/>
+					<parameter name="flags" type="GtkIconLookupFlags"/>
+				</parameters>
+			</method>
+			<method name="lookup_icon_for_scale" symbol="gtk_icon_theme_lookup_icon_for_scale">
+				<return-type type="GtkIconInfo*"/>
+				<parameters>
+					<parameter name="icon_theme" type="GtkIconTheme*"/>
+					<parameter name="icon_name" type="gchar*"/>
+					<parameter name="size" type="gint"/>
+					<parameter name="scale" type="gint"/>
 					<parameter name="flags" type="GtkIconLookupFlags"/>
 				</parameters>
 			</method>
@@ -14509,6 +14601,12 @@
 					<parameter name="size" type="GtkIconSize"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_from_surface" symbol="gtk_image_new_from_surface">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="surface" type="cairo_surface_t*"/>
+				</parameters>
+			</constructor>
 			<method name="set_from_animation" symbol="gtk_image_set_from_animation">
 				<return-type type="void"/>
 				<parameters>
@@ -14569,6 +14667,13 @@
 					<parameter name="size" type="GtkIconSize"/>
 				</parameters>
 			</method>
+			<method name="set_from_surface" symbol="gtk_image_set_from_surface">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="image" type="GtkImage*"/>
+					<parameter name="surface" type="cairo_surface_t*"/>
+				</parameters>
+			</method>
 			<method name="set_pixel_size" symbol="gtk_image_set_pixel_size">
 				<return-type type="void"/>
 				<parameters>
@@ -14587,6 +14692,7 @@
 			<property name="resource" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stock" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="storage-type" type="GtkImageType" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="surface" type="cairo_surface_t*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="use-fallback" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkImageAccessible" parent="GtkWidgetAccessible" type-name="GtkImageAccessible" get-type="gtk_image_accessible_get_type">
@@ -14729,6 +14835,12 @@
 					<parameter name="info_bar" type="GtkInfoBar*"/>
 				</parameters>
 			</method>
+			<method name="get_show_close_button" symbol="gtk_info_bar_get_show_close_button">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="info_bar" type="GtkInfoBar*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gtk_info_bar_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
@@ -14767,7 +14879,15 @@
 					<parameter name="setting" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_show_close_button" symbol="gtk_info_bar_set_show_close_button">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="info_bar" type="GtkInfoBar*"/>
+					<parameter name="setting" type="gboolean"/>
+				</parameters>
+			</method>
 			<property name="message-type" type="GtkMessageType" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="show-close-button" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<signal name="close" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -15630,6 +15750,12 @@
 			</method>
 			<method name="get_header" symbol="gtk_list_box_row_get_header">
 				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="row" type="GtkListBoxRow*"/>
+				</parameters>
+			</method>
+			<method name="get_index" symbol="gtk_list_box_row_get_index">
+				<return-type type="gint"/>
 				<parameters>
 					<parameter name="row" type="GtkListBoxRow*"/>
 				</parameters>
@@ -19143,6 +19269,12 @@
 					<parameter name="range" type="GtkRange*"/>
 				</parameters>
 			</method>
+			<method name="get_event_window" symbol="gtk_range_get_event_window">
+				<return-type type="GdkWindow*"/>
+				<parameters>
+					<parameter name="range" type="GtkRange*"/>
+				</parameters>
+			</method>
 			<method name="get_fill_level" symbol="gtk_range_get_fill_level">
 				<return-type type="gdouble"/>
 				<parameters>
@@ -21934,6 +22066,12 @@
 					<parameter name="value" type="GValue*"/>
 				</parameters>
 			</method>
+			<method name="get_scale" symbol="gtk_style_context_get_scale">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="context" type="GtkStyleContext*"/>
+				</parameters>
+			</method>
 			<method name="get_screen" symbol="gtk_style_context_get_screen">
 				<return-type type="GdkScreen*"/>
 				<parameters>
@@ -22151,6 +22289,13 @@
 				<parameters>
 					<parameter name="context" type="GtkStyleContext*"/>
 					<parameter name="path" type="GtkWidgetPath*"/>
+				</parameters>
+			</method>
+			<method name="set_scale" symbol="gtk_style_context_set_scale">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="GtkStyleContext*"/>
+					<parameter name="scale" type="gint"/>
 				</parameters>
 			</method>
 			<method name="set_screen" symbol="gtk_style_context_set_screen">
@@ -24303,6 +24448,16 @@
 					<parameter name="engine" type="GtkThemingEngine*"/>
 					<parameter name="source" type="GtkIconSource*"/>
 					<parameter name="size" type="GtkIconSize"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="render_icon_surface">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="engine" type="GtkThemingEngine*"/>
+					<parameter name="cr" type="cairo_t*"/>
+					<parameter name="surface" type="cairo_surface_t*"/>
+					<parameter name="x" type="gdouble"/>
+					<parameter name="y" type="gdouble"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="render_layout">
@@ -27559,21 +27714,21 @@
 					<parameter name="child_property" type="gchar*"/>
 				</parameters>
 			</method>
-			<method name="class_automate_child" symbol="gtk_widget_class_automate_child">
+			<method name="class_bind_template_callback_full" symbol="gtk_widget_class_bind_template_callback_full">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget_class" type="GtkWidgetClass*"/>
+					<parameter name="callback_name" type="gchar*"/>
+					<parameter name="callback_symbol" type="GCallback"/>
+				</parameters>
+			</method>
+			<method name="class_bind_template_child_full" symbol="gtk_widget_class_bind_template_child_full">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="widget_class" type="GtkWidgetClass*"/>
 					<parameter name="name" type="gchar*"/>
 					<parameter name="internal_child" type="gboolean"/>
 					<parameter name="struct_offset" type="gssize"/>
-				</parameters>
-			</method>
-			<method name="class_declare_callback" symbol="gtk_widget_class_declare_callback">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="widget_class" type="GtkWidgetClass*"/>
-					<parameter name="callback_name" type="gchar*"/>
-					<parameter name="callback_symbol" type="GCallback"/>
 				</parameters>
 			</method>
 			<method name="class_find_style_property" symbol="gtk_widget_class_find_style_property">
@@ -27765,14 +27920,6 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
-				</parameters>
-			</method>
-			<method name="get_automated_child" symbol="gtk_widget_get_automated_child">
-				<return-type type="GObject*"/>
-				<parameters>
-					<parameter name="widget" type="GtkWidget*"/>
-					<parameter name="widget_type" type="GType"/>
-					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_can_default" symbol="gtk_widget_get_can_default">
@@ -28070,6 +28217,12 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="get_scale_factor" symbol="gtk_widget_get_scale_factor">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
 			<method name="get_screen" symbol="gtk_widget_get_screen">
 				<return-type type="GdkScreen*"/>
 				<parameters>
@@ -28124,6 +28277,14 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="get_template_child" symbol="gtk_widget_get_template_child">
+				<return-type type="GObject*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="widget_type" type="GType"/>
+					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_tooltip_markup" symbol="gtk_widget_get_tooltip_markup">
@@ -29093,6 +29254,7 @@
 			<property name="opacity" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="parent" type="GtkContainer*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="receives-default" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="scale-factor" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="sensitive" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="style" type="GtkStyle*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="tooltip-markup" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -32951,6 +33113,16 @@
 					<parameter name="new_order" type="gint*"/>
 				</parameters>
 			</method>
+			<method name="rows_reordered_with_length" symbol="gtk_tree_model_rows_reordered_with_length">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tree_model" type="GtkTreeModel*"/>
+					<parameter name="path" type="GtkTreePath*"/>
+					<parameter name="iter" type="GtkTreeIter*"/>
+					<parameter name="new_order" type="gint*"/>
+					<parameter name="length" type="gint"/>
+				</parameters>
+			</method>
 			<method name="unref_node" symbol="gtk_tree_model_unref_node">
 				<return-type type="void"/>
 				<parameters>
@@ -33209,14 +33381,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="907"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="909"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="7"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="9"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="9"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
@@ -33259,111 +33431,6 @@
 		<constant name="GTK_PRINT_SETTINGS_WIN32_DRIVER_EXTRA" type="char*" value="win32-driver-extra"/>
 		<constant name="GTK_PRINT_SETTINGS_WIN32_DRIVER_VERSION" type="char*" value="win32-driver-version"/>
 		<constant name="GTK_PRIORITY_RESIZE" type="int" value="10"/>
-		<constant name="GTK_STOCK_ABOUT" type="char*" value="gtk-about"/>
-		<constant name="GTK_STOCK_ADD" type="char*" value="gtk-add"/>
-		<constant name="GTK_STOCK_APPLY" type="char*" value="gtk-apply"/>
-		<constant name="GTK_STOCK_BOLD" type="char*" value="gtk-bold"/>
-		<constant name="GTK_STOCK_CANCEL" type="char*" value="gtk-cancel"/>
-		<constant name="GTK_STOCK_CAPS_LOCK_WARNING" type="char*" value="gtk-caps-lock-warning"/>
-		<constant name="GTK_STOCK_CDROM" type="char*" value="gtk-cdrom"/>
-		<constant name="GTK_STOCK_CLEAR" type="char*" value="gtk-clear"/>
-		<constant name="GTK_STOCK_CLOSE" type="char*" value="gtk-close"/>
-		<constant name="GTK_STOCK_COLOR_PICKER" type="char*" value="gtk-color-picker"/>
-		<constant name="GTK_STOCK_CONNECT" type="char*" value="gtk-connect"/>
-		<constant name="GTK_STOCK_CONVERT" type="char*" value="gtk-convert"/>
-		<constant name="GTK_STOCK_COPY" type="char*" value="gtk-copy"/>
-		<constant name="GTK_STOCK_CUT" type="char*" value="gtk-cut"/>
-		<constant name="GTK_STOCK_DELETE" type="char*" value="gtk-delete"/>
-		<constant name="GTK_STOCK_DIALOG_AUTHENTICATION" type="char*" value="gtk-dialog-authentication"/>
-		<constant name="GTK_STOCK_DIALOG_ERROR" type="char*" value="gtk-dialog-error"/>
-		<constant name="GTK_STOCK_DIALOG_INFO" type="char*" value="gtk-dialog-info"/>
-		<constant name="GTK_STOCK_DIALOG_QUESTION" type="char*" value="gtk-dialog-question"/>
-		<constant name="GTK_STOCK_DIALOG_WARNING" type="char*" value="gtk-dialog-warning"/>
-		<constant name="GTK_STOCK_DIRECTORY" type="char*" value="gtk-directory"/>
-		<constant name="GTK_STOCK_DISCARD" type="char*" value="gtk-discard"/>
-		<constant name="GTK_STOCK_DISCONNECT" type="char*" value="gtk-disconnect"/>
-		<constant name="GTK_STOCK_DND" type="char*" value="gtk-dnd"/>
-		<constant name="GTK_STOCK_DND_MULTIPLE" type="char*" value="gtk-dnd-multiple"/>
-		<constant name="GTK_STOCK_EDIT" type="char*" value="gtk-edit"/>
-		<constant name="GTK_STOCK_EXECUTE" type="char*" value="gtk-execute"/>
-		<constant name="GTK_STOCK_FILE" type="char*" value="gtk-file"/>
-		<constant name="GTK_STOCK_FIND" type="char*" value="gtk-find"/>
-		<constant name="GTK_STOCK_FIND_AND_REPLACE" type="char*" value="gtk-find-and-replace"/>
-		<constant name="GTK_STOCK_FLOPPY" type="char*" value="gtk-floppy"/>
-		<constant name="GTK_STOCK_FULLSCREEN" type="char*" value="gtk-fullscreen"/>
-		<constant name="GTK_STOCK_GOTO_BOTTOM" type="char*" value="gtk-goto-bottom"/>
-		<constant name="GTK_STOCK_GOTO_FIRST" type="char*" value="gtk-goto-first"/>
-		<constant name="GTK_STOCK_GOTO_LAST" type="char*" value="gtk-goto-last"/>
-		<constant name="GTK_STOCK_GOTO_TOP" type="char*" value="gtk-goto-top"/>
-		<constant name="GTK_STOCK_GO_BACK" type="char*" value="gtk-go-back"/>
-		<constant name="GTK_STOCK_GO_DOWN" type="char*" value="gtk-go-down"/>
-		<constant name="GTK_STOCK_GO_FORWARD" type="char*" value="gtk-go-forward"/>
-		<constant name="GTK_STOCK_GO_UP" type="char*" value="gtk-go-up"/>
-		<constant name="GTK_STOCK_HARDDISK" type="char*" value="gtk-harddisk"/>
-		<constant name="GTK_STOCK_HELP" type="char*" value="gtk-help"/>
-		<constant name="GTK_STOCK_HOME" type="char*" value="gtk-home"/>
-		<constant name="GTK_STOCK_INDENT" type="char*" value="gtk-indent"/>
-		<constant name="GTK_STOCK_INDEX" type="char*" value="gtk-index"/>
-		<constant name="GTK_STOCK_INFO" type="char*" value="gtk-info"/>
-		<constant name="GTK_STOCK_ITALIC" type="char*" value="gtk-italic"/>
-		<constant name="GTK_STOCK_JUMP_TO" type="char*" value="gtk-jump-to"/>
-		<constant name="GTK_STOCK_JUSTIFY_CENTER" type="char*" value="gtk-justify-center"/>
-		<constant name="GTK_STOCK_JUSTIFY_FILL" type="char*" value="gtk-justify-fill"/>
-		<constant name="GTK_STOCK_JUSTIFY_LEFT" type="char*" value="gtk-justify-left"/>
-		<constant name="GTK_STOCK_JUSTIFY_RIGHT" type="char*" value="gtk-justify-right"/>
-		<constant name="GTK_STOCK_LEAVE_FULLSCREEN" type="char*" value="gtk-leave-fullscreen"/>
-		<constant name="GTK_STOCK_MEDIA_FORWARD" type="char*" value="gtk-media-forward"/>
-		<constant name="GTK_STOCK_MEDIA_NEXT" type="char*" value="gtk-media-next"/>
-		<constant name="GTK_STOCK_MEDIA_PAUSE" type="char*" value="gtk-media-pause"/>
-		<constant name="GTK_STOCK_MEDIA_PLAY" type="char*" value="gtk-media-play"/>
-		<constant name="GTK_STOCK_MEDIA_PREVIOUS" type="char*" value="gtk-media-previous"/>
-		<constant name="GTK_STOCK_MEDIA_RECORD" type="char*" value="gtk-media-record"/>
-		<constant name="GTK_STOCK_MEDIA_REWIND" type="char*" value="gtk-media-rewind"/>
-		<constant name="GTK_STOCK_MEDIA_STOP" type="char*" value="gtk-media-stop"/>
-		<constant name="GTK_STOCK_MISSING_IMAGE" type="char*" value="gtk-missing-image"/>
-		<constant name="GTK_STOCK_NETWORK" type="char*" value="gtk-network"/>
-		<constant name="GTK_STOCK_NEW" type="char*" value="gtk-new"/>
-		<constant name="GTK_STOCK_NO" type="char*" value="gtk-no"/>
-		<constant name="GTK_STOCK_OK" type="char*" value="gtk-ok"/>
-		<constant name="GTK_STOCK_OPEN" type="char*" value="gtk-open"/>
-		<constant name="GTK_STOCK_ORIENTATION_LANDSCAPE" type="char*" value="gtk-orientation-landscape"/>
-		<constant name="GTK_STOCK_ORIENTATION_PORTRAIT" type="char*" value="gtk-orientation-portrait"/>
-		<constant name="GTK_STOCK_ORIENTATION_REVERSE_LANDSCAPE" type="char*" value="gtk-orientation-reverse-landscape"/>
-		<constant name="GTK_STOCK_ORIENTATION_REVERSE_PORTRAIT" type="char*" value="gtk-orientation-reverse-portrait"/>
-		<constant name="GTK_STOCK_PAGE_SETUP" type="char*" value="gtk-page-setup"/>
-		<constant name="GTK_STOCK_PASTE" type="char*" value="gtk-paste"/>
-		<constant name="GTK_STOCK_PREFERENCES" type="char*" value="gtk-preferences"/>
-		<constant name="GTK_STOCK_PRINT" type="char*" value="gtk-print"/>
-		<constant name="GTK_STOCK_PRINT_ERROR" type="char*" value="gtk-print-error"/>
-		<constant name="GTK_STOCK_PRINT_PAUSED" type="char*" value="gtk-print-paused"/>
-		<constant name="GTK_STOCK_PRINT_PREVIEW" type="char*" value="gtk-print-preview"/>
-		<constant name="GTK_STOCK_PRINT_REPORT" type="char*" value="gtk-print-report"/>
-		<constant name="GTK_STOCK_PRINT_WARNING" type="char*" value="gtk-print-warning"/>
-		<constant name="GTK_STOCK_PROPERTIES" type="char*" value="gtk-properties"/>
-		<constant name="GTK_STOCK_QUIT" type="char*" value="gtk-quit"/>
-		<constant name="GTK_STOCK_REDO" type="char*" value="gtk-redo"/>
-		<constant name="GTK_STOCK_REFRESH" type="char*" value="gtk-refresh"/>
-		<constant name="GTK_STOCK_REMOVE" type="char*" value="gtk-remove"/>
-		<constant name="GTK_STOCK_REVERT_TO_SAVED" type="char*" value="gtk-revert-to-saved"/>
-		<constant name="GTK_STOCK_SAVE" type="char*" value="gtk-save"/>
-		<constant name="GTK_STOCK_SAVE_AS" type="char*" value="gtk-save-as"/>
-		<constant name="GTK_STOCK_SELECT_ALL" type="char*" value="gtk-select-all"/>
-		<constant name="GTK_STOCK_SELECT_COLOR" type="char*" value="gtk-select-color"/>
-		<constant name="GTK_STOCK_SELECT_FONT" type="char*" value="gtk-select-font"/>
-		<constant name="GTK_STOCK_SORT_ASCENDING" type="char*" value="gtk-sort-ascending"/>
-		<constant name="GTK_STOCK_SORT_DESCENDING" type="char*" value="gtk-sort-descending"/>
-		<constant name="GTK_STOCK_SPELL_CHECK" type="char*" value="gtk-spell-check"/>
-		<constant name="GTK_STOCK_STOP" type="char*" value="gtk-stop"/>
-		<constant name="GTK_STOCK_STRIKETHROUGH" type="char*" value="gtk-strikethrough"/>
-		<constant name="GTK_STOCK_UNDELETE" type="char*" value="gtk-undelete"/>
-		<constant name="GTK_STOCK_UNDERLINE" type="char*" value="gtk-underline"/>
-		<constant name="GTK_STOCK_UNDO" type="char*" value="gtk-undo"/>
-		<constant name="GTK_STOCK_UNINDENT" type="char*" value="gtk-unindent"/>
-		<constant name="GTK_STOCK_YES" type="char*" value="gtk-yes"/>
-		<constant name="GTK_STOCK_ZOOM_100" type="char*" value="gtk-zoom-100"/>
-		<constant name="GTK_STOCK_ZOOM_FIT" type="char*" value="gtk-zoom-fit"/>
-		<constant name="GTK_STOCK_ZOOM_IN" type="char*" value="gtk-zoom-in"/>
-		<constant name="GTK_STOCK_ZOOM_OUT" type="char*" value="gtk-zoom-out"/>
 		<constant name="GTK_STYLE_CLASS_ACCELERATOR" type="char*" value="accelerator"/>
 		<constant name="GTK_STYLE_CLASS_ARROW" type="char*" value="arrow"/>
 		<constant name="GTK_STYLE_CLASS_BACKGROUND" type="char*" value="background"/>
