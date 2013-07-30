@@ -1833,6 +1833,14 @@ namespace GLib {
 		public unowned G once (OnceFunc<G> function);
 		public static bool init_enter ([CCode (ctype="volatile gsize *")] size_t *value);
 		public static void init_leave ([CCode (ctype="volatile gsize *")] size_t *value, size_t set_value);
+		public OnceStatus status;
+	}
+
+	[CCode (cprefix = "G_ONCE_STATUS_", has_type_id = false)]
+	public enum OnceStatus {
+		NOTCALLED,
+		PROGRESS,
+		READY
 	}
 
 	/* Thread Pools */
@@ -1933,6 +1941,20 @@ namespace GLib {
 		[CCode (cname = "g_slice_free1")]
 		public static void free (size_t block_size, void* mem_block);
 		public static void free_chain_with_offset (size_t block_size, void *mem_chain, size_t next_offset);
+		public static int64 get_config (SliceConfig ckey);
+		[CCode (array_length_cname = "n_values", array_length_type = "guint")]
+		public static int64[] get_config_state (SliceConfig ckey, int64 address);
+		public static void set_config (SliceConfig ckey, int64 value);
+	}
+
+	[CCode (cprefix = "G_SLICE_CONFIG_", has_type_id = false)]
+	public enum SliceConfig {
+		ALWAYS_MALLOC,
+		BYPASS_MAGAZINES,
+		WORKING_SET_MSECS,
+		COLOR_INCREMENT,
+		CHUNK_SIZES,
+		CONTENTION_COUNTER
 	}
 
 	/* IO Channels */
@@ -2032,10 +2054,12 @@ namespace GLib {
 	public delegate bool IOFunc (IOChannel source, IOCondition condition);
 
 	[CCode (cprefix = "G_IO_FLAG_", has_type_id = false)]
+	[Flags]
 	public enum IOFlags {
 		APPEND,
 		NONBLOCK,
 		IS_READABLE,
+		IS_WRITABLE,
 		IS_WRITEABLE,
 		IS_SEEKABLE,
 		MASK,
@@ -2094,6 +2118,7 @@ namespace GLib {
 	/* Message Logging */
 	
 	[CCode (cprefix = "G_LOG_", has_type_id = false)]
+	[Flags]
 	public enum LogLevelFlags {
 		/* log flags */
 		FLAG_RECURSION,
@@ -2212,7 +2237,8 @@ namespace GLib {
 	public enum ChecksumType {
 		MD5,
 		SHA1,
-		SHA256;
+		SHA256,
+		SHA512;
 
 		public ssize_t get_length ();
 	}
@@ -2669,6 +2695,7 @@ namespace GLib {
 	public string format_size (uint64 size, FormatSizeFlags flags = FormatSizeFlags.DEFAULT);
 
 	[CCode (cprefix = "G_FORMAT_SIZE_", has_type_id = false)]
+	[Flags]
 	public enum FormatSizeFlags {
 		DEFAULT,
 		LONG_FORMAT,
@@ -2756,8 +2783,7 @@ namespace GLib {
 	}
 
 	[CCode (cprefix = "G_TOKEN_", has_type_id = false)]
-	public enum TokenType
-	{
+	public enum TokenType {
 		EOF,
 		LEFT_PAREN,
 		RIGHT_PAREN,
@@ -2813,8 +2839,7 @@ namespace GLib {
 	}
 
 	[CCode (cprefix = "G_ERR_", has_type_id = false)]
-	public enum ErrorType
-	{
+	public enum ErrorType {
 		UNKNOWN,
 		UNEXP_EOF,
 		UNEXP_EOF_IN_STRING,
@@ -2870,7 +2895,7 @@ namespace GLib {
 		CHDIR,
 		ACCES,
 		PERM,
-		TOOBIG,
+		TOO_BIG,
 		NOEXEC,
 		NAMETOOLONG,
 		NOENT,
@@ -2888,6 +2913,7 @@ namespace GLib {
 	}
 
 	[CCode (cprefix = "G_SPAWN_", has_type_id = false)]
+	[Flags]
 	public enum SpawnFlags {
 		LEAVE_DESCRIPTORS_OPEN,
 		DO_NOT_REAP_CHILD,
@@ -2895,7 +2921,8 @@ namespace GLib {
 		STDOUT_TO_DEV_NULL,
 		STDERR_TO_DEV_NULL,
 		CHILD_INHERITS_STDIN,
-		FILE_AND_ARGV_ZERO
+		FILE_AND_ARGV_ZERO,
+		SEARCH_PATH_FROM_ENVP
 	}
 
 	public delegate void SpawnChildSetupFunc ();
@@ -3003,6 +3030,7 @@ namespace GLib {
 	}
 
 	[CCode (has_type_id = false)]
+	[Flags]
 	public enum FileTest {
 		IS_REGULAR,
 		IS_SYMLINK,
@@ -3299,10 +3327,64 @@ namespace GLib {
 		COMPILE,
 		OPTIMIZE,
 		REPLACE,
-		MATCH
+		MATCH,
+		INTERNAL,
+		STRAY_BACKSLASH,
+		MISSING_CONTROL_CHAR,
+		UNRECOGNIZED_ESCAPE,
+		QUANTIFIERS_OUT_OF_ORDER,
+		QUANTIFIER_TOO_BIG,
+		UNTERMINATED_CHARACTER_CLASS,
+		INVALID_ESCAPE_IN_CHARACTER_CLASS,
+		RANGE_OUT_OF_ORDER,
+		NOTHING_TO_REPEAT,
+		UNRECOGNIZED_CHARACTER,
+		POSIX_NAMED_CLASS_OUTSIDE_CLASS,
+		UNMATCHED_PARENTHESIS,
+		INEXISTENT_SUBPATTERN_REFERENCE,
+		UNTERMINATED_COMMENT,
+		EXPRESSION_TOO_LARGE,
+		MEMORY_ERROR,
+		VARIABLE_LENGTH_LOOKBEHIND,
+		MALFORMED_CONDITION,
+		TOO_MANY_CONDITIONAL_BRANCHES,
+		ASSERTION_EXPECTED,
+		UNKNOWN_POSIX_CLASS_NAME,
+		POSIX_COLLATING_ELEMENTS_NOT_SUPPORTED,
+		HEX_CODE_TOO_LARGE,
+		INVALID_CONDITION,
+		SINGLE_BYTE_MATCH_IN_LOOKBEHIND,
+		INFINITE_LOOP,
+		MISSING_SUBPATTERN_NAME_TERMINATOR,
+		DUPLICATE_SUBPATTERN_NAME,
+		MALFORMED_PROPERTY,
+		UNKNOWN_PROPERTY,
+		SUBPATTERN_NAME_TOO_LONG,
+		TOO_MANY_SUBPATTERNS,
+		INVALID_OCTAL_VALUE,
+		TOO_MANY_BRANCHES_IN_DEFINE,
+		DEFINE_REPETION,
+		INCONSISTENT_NEWLINE_OPTIONS,
+		MISSING_BACK_REFERENCE,
+		INVALID_RELATIVE_REFERENCE,
+		BACKTRACKING_CONTROL_VERB_ARGUMENT_FORBIDDEN,
+		UNKNOWN_BACKTRACKING_CONTROL_VERB,
+		NUMBER_TOO_BIG,
+		MISSING_SUBPATTERN_NAME,
+		MISSING_DIGIT,
+		INVALID_DATA_CHARACTER,
+		EXTRA_SUBPATTERN_NAME,
+		BACKTRACKING_CONTROL_VERB_ARGUMENT_REQUIRED,
+		INVALID_CONTROL_CHAR,
+		MISSING_NAME,
+		NOT_SUPPORTED_IN_CLASS,
+		TOO_MANY_FORWARD_REFERENCES,
+		NAME_TOO_LONG,
+		CHARACTER_VALUE_TOO_LARGE
 	}
 
 	[CCode (cprefix = "G_REGEX_", has_type_id = false)]
+	[Flags]
 	public enum RegexCompileFlags {
 		CASELESS,
 		MULTILINE,
@@ -3317,10 +3399,14 @@ namespace GLib {
 		DUPNAMES,
 		NEWLINE_CR,
 		NEWLINE_LF,
-		NEWLINE_CRLF
+		NEWLINE_CRLF,
+		NEWLINE_ANYCRLF,
+		BSR_ANYCRLF,
+		JAVASCRIPT_COMPAT
 	}
 
 	[CCode (cprefix = "G_REGEX_MATCH_", has_type_id = false)]
+	[Flags]
 	public enum RegexMatchFlags {
 		ANCHORED,
 		NOTBOL,
@@ -3330,7 +3416,13 @@ namespace GLib {
 		NEWLINE_CR,
 		NEWLINE_LF,
 		NEWLINE_CRLF,
-		NEWLINE_ANY
+		NEWLINE_ANY,
+		NEWLINE_ANYCRLF,
+		BSR_ANYCRLF,
+		BSR_ANY,
+		PARTIAL_SOFT,
+		PARTIAL_HARD,
+		NOTEMPTY_ATSTART
 	}
 
 	[Compact]
@@ -3399,6 +3491,7 @@ namespace GLib {
 	}
 
 	[CCode (cprefix = "G_MARKUP_", has_type_id = false)]
+	[Flags]
 	public enum MarkupParseFlags {
 		TREAT_CDATA_AS_TEXT,
 		PREFIX_ERROR_POSITION
@@ -3536,6 +3629,7 @@ namespace GLib {
 	}
 	
 	[CCode (cprefix = "G_KEY_FILE_", has_type_id = false)]
+	[Flags]
 	public enum KeyFileFlags {
 		NONE,
 		KEEP_COMMENTS,
@@ -3544,29 +3638,34 @@ namespace GLib {
 
 	[CCode (cprefix = "G_KEY_FILE_DESKTOP_")]
 	namespace KeyFileDesktop {
-		public static const string GROUP;
-		public static const string KEY_TYPE;
-		public static const string KEY_VERSION;
-		public static const string KEY_NAME;
-		public static const string KEY_GENERIC_NAME;
-		public static const string KEY_NO_DISPLAY;
-		public static const string KEY_COMMENT;
-		public static const string KEY_ICON;
-		public static const string KEY_HIDDEN;
-		public static const string KEY_ONLY_SHOW_IN;
-		public static const string KEY_NOT_SHOW_IN;
-		public static const string KEY_TRY_EXEC;
-		public static const string KEY_EXEC;
-		public static const string KEY_PATH;
-		public static const string KEY_TERMINAL;
-		public static const string KEY_MIME_TYPE;
-		public static const string KEY_CATEGORIES;
-		public static const string KEY_STARTUP_NOTIFY;
-		public static const string KEY_STARTUP_WM_CLASS;
-		public static const string KEY_URL;
-		public static const string TYPE_APPLICATION;
-		public static const string TYPE_LINK;
-		public static const string TYPE_DIRECTORY;
+		public const string GROUP;
+		public const string KEY_ACTIONS;
+		public const string KEY_CATEGORIES;
+		public const string KEY_COMMENT;
+		public const string KEY_DBUS_ACTIVATABLE;
+		public const string KEY_EXEC;
+		public const string KEY_FULLNAME;
+		public const string KEY_GENERIC_NAME;
+		public const string KEY_GETTEXT_DOMAIN;
+		public const string KEY_HIDDEN;
+		public const string KEY_ICON;
+		public const string KEY_KEYWORDS;
+		public const string KEY_MIME_TYPE;
+		public const string KEY_NAME;
+		public const string KEY_NOT_SHOW_IN;
+		public const string KEY_NO_DISPLAY;
+		public const string KEY_ONLY_SHOW_IN;
+		public const string KEY_PATH;
+		public const string KEY_STARTUP_NOTIFY;
+		public const string KEY_STARTUP_WM_CLASS;
+		public const string KEY_TERMINAL;
+		public const string KEY_TRY_EXEC;
+		public const string KEY_TYPE;
+		public const string KEY_URL;
+		public const string KEY_VERSION;
+		public const string TYPE_APPLICATION;
+		public const string TYPE_DIRECTORY;
+		public const string TYPE_LINK;
 	}
 
 	/* Bookmark file parser */
@@ -3654,9 +3753,11 @@ namespace GLib {
 		public static void timer_start ();
 		public static double timer_elapsed ();
 		public static double timer_last ();
+		[Deprecated (since = "2.38", replacement = "trap_subprocess")]
 		public static bool trap_fork (uint64 usec_timeout, TestTrapFlags test_trap_flags);
 		public static bool trap_has_passed ();
 		public static bool trap_reached_timeout ();
+		public static void trap_subprocess (string test_path, uint64 usec_timeout, TestSubprocessFlags test_flags);
 		public static void trap_assert_passed ();
 		public static void trap_assert_failed ();
 		public static void trap_assert_stdout (string soutpattern);
@@ -3706,6 +3807,14 @@ namespace GLib {
 	public delegate void TestFunc (void* fixture);
 	public delegate void TestDataFunc ();
 #endif
+
+	[CCode (cprefix = "G_TEST_SUBPROCESS_INHERIT_", has_type_id = false)]
+	[Flags]
+	public enum TestSubprocessFlags {
+		STDIN,
+		STDOUT,
+		STDERR
+	}
 
 	[Flags]
 	[CCode (cprefix = "G_TEST_TRAP_", has_type_id = false)]
@@ -4215,7 +4324,10 @@ namespace GLib {
 	public enum TraverseFlags {
 		LEAVES,
 		NON_LEAVES,
-		ALL
+		ALL,
+		MASK,
+		LEAFS,
+		NON_LEAFS
 	}
 
 	[Compact]
@@ -4696,7 +4808,24 @@ namespace GLib {
 	}
 
 	public errordomain VariantParseError {
-		FAILED
+		FAILED,
+		BASIC_TYPE_EXPECTED,
+		CANNOT_INFER_TYPE,
+		DEFINITE_TYPE_EXPECTED,
+		INPUT_NOT_AT_END,
+		INVALID_CHARACTER,
+		INVALID_FORMAT_STRING,
+		INVALID_OBJECT_PATH,
+		INVALID_SIGNATURE,
+		INVALID_TYPE_STRING,
+		NO_COMMON_TYPE,
+		NUMBER_OUT_OF_RANGE,
+		NUMBER_TOO_BIG,
+		TYPE_ERROR,
+		UNEXPECTED_TOKEN,
+		UNKNOWN_KEYWORD,
+		UNTERMINATED_STRING_CONSTANT,
+		VALUE_EXPECTED
 	}
 
 	[Compact]
@@ -4950,7 +5079,8 @@ namespace GLib {
 		HANGUL_LVT_SYLLABLE,
 		CLOSE_PARANTHESIS,
 		CONDITIONAL_JAPANESE_STARTER,
-		HEBREW_LETTER
+		HEBREW_LETTER,
+		REGIONAL_INDICATOR
 	}
 
 	[CCode (cname = "GNormalizeMode", cprefix = "G_NORMALIZE_", has_type_id = false)]
