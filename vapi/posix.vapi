@@ -1347,6 +1347,29 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/socket.h")]
 	public const int SHUT_RDWR;
 
+	[CCode (cheader_filename = "netdb.h")]
+	public const int AI_PASSIVE;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int AI_CANONNAME;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int AI_NUMERICHOST;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int AI_V4MAPPED;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int AI_ALL;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int AI_ADDRCONFIG;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int AI_IDN;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int AI_CANONIDN;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int AI_IDN_ALLOW_UNASSIGNED;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int AI_IDN_USE_STD3_ASCII_RULES;
+	[CCode (cheader_filename = "netdb.h")]
+	public const int AI_NUMERICSERV;
+
 	[CCode (cheader_filename = "sys/socket.h", sentinel = "")]
 	public int accept (int sfd, ... );
 	[CCode (cheader_filename = "sys/socket.h", sentinel = "")]
@@ -1373,6 +1396,12 @@ namespace Posix {
 	public int socket (int domain, int type, int protocol);
 	[CCode (cheader_filename = "sys/socket.h")]
 	public int socketpair (int domain, int type, int protocol, [CCode (array_length = false)] int[] sv);
+	[CCode (cheader_filename = "netdb.h")]
+	public int getaddrinfo (string node, string service, AddrInfo hints, out AddrInfo *res);
+	[CCode (cheader_filename = "netdb.h")]
+	public void freeaddrinfo (AddrInfo *res);
+	[CCode (cheader_filename = "netdb.h")]
+	public unowned string gai_strerror (int errcode);
 
 	[CCode (cname = "socklen_t", cheader_filename = "sys/socket.h", default_value = "0")]
 	public struct socklen_t : int {
@@ -1410,6 +1439,18 @@ namespace Posix {
 		public uint32 sin6_flowinfo;
 		public In6Addr sin6_addr;
 		public uint32 sin6_scope_id;
+	}
+
+	[CCode (cname = "struct addrinfo", cheader_filename = "netdb.h", destroy_function = "")]
+	public struct AddrInfo {
+		public int ai_flags;
+		public int ai_family;
+		public int ai_socktype;
+		public int ai_protocol;
+		public socklen_t ai_addrlen;
+		public SockAddr *ai_addr;
+		public string ai_canonname;
+		public AddrInfo *ai_next;
 	}
 
 	[CCode (cheader_filename = "sys/stat.h")]
