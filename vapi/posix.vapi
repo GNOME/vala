@@ -1332,6 +1332,8 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/socket.h")]
 	public const int SOCK_STREAM;
 	[CCode (cheader_filename = "sys/socket.h")]
+	public const int AF_UNSPEC;
+	[CCode (cheader_filename = "sys/socket.h")]
 	public const int AF_INET;
 	[CCode (cheader_filename = "sys/socket.h")]
 	public const int AF_INET6;
