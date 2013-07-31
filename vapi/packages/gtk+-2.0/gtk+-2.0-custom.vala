@@ -21,6 +21,11 @@
  */
 
 namespace Gtk {
+	public class AboutDialog {
+		public static void set_email_hook (owned Gtk.AboutDialogActivateLinkFunc func);
+		public static void set_url_hook (owned Gtk.AboutDialogActivateLinkFunc func);
+	}
+
 	public class AccelGroup {
 		public Gtk.AccelKey* find (Gtk.AccelGroupFindFunc find_func);
 	}
@@ -32,13 +37,153 @@ namespace Gtk {
 		public int height;
 	}
 
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class ComboBoxEntry : Gtk.ComboBox, Atk.Implementor, Gtk.Buildable, Gtk.CellEditable, Gtk.CellLayout {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public ComboBoxEntry ();
+		public int get_text_column ();
+		public void set_text_column (int text_column);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public ComboBoxEntry.text ();
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public ComboBoxEntry.with_model (Gtk.TreeModel model, int text_column);
+		public int text_column { get; set; }
+	}
+
 	public class Container {
 		[CCode (vfunc_name = "forall")]
 		public virtual void forall_internal(bool include_internal, Gtk.Callback callback);
 	}
 
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class Curve : Gtk.DrawingArea, Atk.Implementor, Gtk.Buildable {
+		[CCode (array_length = false)]
+		public weak float[] ctlpoint;
+		public int cursor_type;
+		public int grab_point;
+		public int height;
+		public int last;
+		public int num_ctlpoints;
+		public int num_points;
+		public weak Gdk.Pixmap pixmap;
+		public Gdk.Point point;
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Curve ();
+		public void get_vector (int veclen, float[] vector);
+		public void reset ();
+		public void set_curve_type (Gtk.CurveType type);
+		public void set_gamma (float gamma_);
+		public void set_range (float min_x, float max_x, float min_y, float max_y);
+		public void set_vector (int veclen, float[] vector);
+		[NoAccessorMethod]
+		public Gtk.CurveType curve_type { get; set; }
+		[NoAccessorMethod]
+		public float max_x { get; set; }
+		[NoAccessorMethod]
+		public float max_y { get; set; }
+		[NoAccessorMethod]
+		public float min_x { get; set; }
+		[NoAccessorMethod]
+		public float min_y { get; set; }
+		public virtual signal void curve_type_changed ();
+	}
+
+	public class Fixed {
+		public bool get_has_window ();
+		public void set_has_window (bool has_window);
+	}
+
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class GammaCurve : Gtk.VBox, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+		[CCode (array_length = false)]
+		public weak Gtk.Widget[] button;
+		public weak Gtk.Widget curve;
+		public float gamma;
+		public weak Gtk.Widget gamma_dialog;
+		public weak Gtk.Widget gamma_text;
+		public weak Gtk.Widget table;
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public GammaCurve ();
+	}
+
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class HRuler : Gtk.Ruler, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public HRuler ();
+	}
+
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class InputDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
+		[CCode (array_length = false)]
+		public weak Gtk.Widget[] axis_items;
+		public weak Gtk.Widget axis_list;
+		public weak Gtk.Widget axis_listbox;
+		public weak Gtk.Widget close_button;
+		public weak Gdk.Device current_device;
+		public weak Gtk.Widget keys_list;
+		public weak Gtk.Widget keys_listbox;
+		public weak Gtk.Widget mode_optionmenu;
+		public weak Gtk.Widget save_button;
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public InputDialog ();
+		public virtual signal void disable_device (Gdk.Device device);
+		public virtual signal void enable_device (Gdk.Device device);
+	}
+
+	public class LinkButton {
+		public static void set_uri_hook (owned Gtk.LinkButtonUriFunc func);
+	}
+
 	public class Notebook {
+		public void* get_group ();
 		public int page_num (Widget child);
+		public void query_tab_label_packing (Gtk.Widget child, bool? expand, bool? fill, Gtk.PackType? pack_type);
+		public void set_group (void* group);
+		public void set_tab_label_packing (Gtk.Widget child, bool expand, bool fill, Gtk.PackType pack_type);
+		public static void set_window_creation_hook (owned Gtk.NotebookWindowCreationFunc func);
+	}
+
+	public class Range {
+		public Gtk.UpdateType get_update_policy ();
+		public void set_update_policy (Gtk.UpdateType policy);
+	}
+
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class Ruler : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+		public weak Gdk.Pixmap backing_store;
+		public weak Gdk.GC non_gr_exp_gc;
+		public int slider_size;
+		public int xsrc;
+		public int ysrc;
+		[CCode (has_construct_function = false)]
+		protected Ruler ();
+		public virtual void draw_pos ();
+		public virtual void draw_ticks ();
+		public Gtk.MetricType get_metric ();
+		public void get_range (double lower, double upper, double position, double max_size);
+		public void set_metric (Gtk.MetricType metric);
+		public void set_range (double lower, double upper, double position, double max_size);
+		[NoAccessorMethod]
+		public double lower { get; set; }
+		[NoAccessorMethod]
+		public double max_size { get; set; }
+		public Gtk.MetricType metric { get; set; }
+		[NoAccessorMethod]
+		public double position { get; set; }
+		[NoAccessorMethod]
+		public double upper { get; set; }
+	}
+
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Compact]
+	public class RulerMetric {
+		public weak string abbrev;
+		public weak string metric_name;
+		public double pixels_per_unit;
+		[CCode (array_length = false)]
+		public weak double[] ruler_scale;
+		[CCode (array_length = false)]
+		public weak int[] subdivide;
 	}
 
 	public class StatusIcon {
@@ -48,6 +193,12 @@ namespace Gtk {
 
 	public class UIManager {
 		public uint new_merge_id ();
+	}
+
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class VRuler : Gtk.Ruler, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public VRuler ();
 	}
 
 	public class Widget {
@@ -91,6 +242,13 @@ namespace Gtk {
 		public extern void unset_flags (WidgetFlags flags);
 	}
 
+	public class Window {
+		public void get_frame_dimensions (int left, int top, int right, int bottom);
+		public bool get_has_frame ();
+		public void set_frame_dimensions (int left, int top, int right, int bottom);
+		public void set_has_frame (bool setting);
+	}
+
 	public interface Editable {
 		[CCode (vfunc_name = "set_selection_bounds")]
 		public abstract void select_region (int start_pos, int end_pos);
@@ -130,6 +288,9 @@ namespace Gtk {
 	public delegate bool TreeViewSearchEqualFunc (TreeModel model, int column, string key, TreeIter iter);
 
 	public delegate string CalendarDetailFunc (Gtk.Calendar calendar, uint year, uint month, uint day);
+
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static unowned string set_locale ();
 
 	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ABOUT")]
 	public const string STOCK_ABOUT;
