@@ -183,6 +183,9 @@ GdkXEvent is_value_type="1"
 gdk_devices_list type_arguments="Device"
 gdk_list_visuals type_arguments="unowned Visual" transfer_ownership="1"
 
+# Prefixed keys are available since 2.21.8
+GDK_KEY_* parent="Key"
+
 # Deprecated before vapi was created
 gdk_*_ref hidden="1"
 gdk_*_unref hidden="1"
