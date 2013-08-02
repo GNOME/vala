@@ -1,3 +1,11 @@
+Vala 0.21.1
+===========
+
+ * Support \uXXXX escape sequences.
+ * Support specifying vfunc order in interfaces to define ABI.
+ * Support GTK+ widget templates.
+ * Bug fixes and binding updates.
+
 Vala 0.20.1
 ===========
 
