@@ -6022,7 +6022,7 @@ namespace Gtk {
 		public void add_device_events (Gdk.Device device, Gdk.EventMask events);
 		public void add_events (int events);
 		public void add_mnemonic_label (Gtk.Widget label);
-		public uint add_tick_callback (Gtk.TickCallback callback, GLib.DestroyNotify notify);
+		public uint add_tick_callback (owned Gtk.TickCallback callback);
 		[NoWrapper]
 		public virtual void adjust_baseline_allocation (int baseline);
 		[NoWrapper]
