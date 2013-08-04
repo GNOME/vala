@@ -594,7 +594,7 @@ public class Vala.GObjectModule : GTypeModule {
 		}
 
 		string connect_wrapper_name = "_%sconnect".printf (get_dynamic_signal_cname (sig));
-		var func = new CCodeFunction (connect_wrapper_name, "void");
+		var func = new CCodeFunction (connect_wrapper_name, "gulong");
 		func.add_parameter (new CCodeParameter ("obj", "gpointer"));
 		func.add_parameter (new CCodeParameter ("signal_name", "const char *"));
 		func.add_parameter (new CCodeParameter ("handler", "GCallback"));
@@ -617,7 +617,7 @@ public class Vala.GObjectModule : GTypeModule {
 		}
 
 		string connect_wrapper_name = "_%sconnect_after".printf (get_dynamic_signal_cname (sig));
-		var func = new CCodeFunction (connect_wrapper_name, "void");
+		var func = new CCodeFunction (connect_wrapper_name, "gulong");
 		func.add_parameter (new CCodeParameter ("obj", "gpointer"));
 		func.add_parameter (new CCodeParameter ("signal_name", "const char *"));
 		func.add_parameter (new CCodeParameter ("handler", "GCallback"));
@@ -660,7 +660,7 @@ public class Vala.GObjectModule : GTypeModule {
 			}
 		}
 
-		ccode.add_expression (call);
+		ccode.add_return (call);
 	}
 
 	public override void visit_property (Property prop) {
