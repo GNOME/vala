@@ -2852,6 +2852,7 @@ namespace Gtk {
 		public void invalidate_filter ();
 		public void invalidate_headers ();
 		public void invalidate_sort ();
+		public void prepend (Gtk.Widget child);
 		public void select_row (Gtk.ListBoxRow? row);
 		public void set_activate_on_single_click (bool single);
 		public void set_adjustment (Gtk.Adjustment? adjustment);

@@ -15632,6 +15632,13 @@
 			<constructor name="new" symbol="gtk_list_box_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
+			<method name="prepend" symbol="gtk_list_box_prepend">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="child" type="GtkWidget*"/>
+				</parameters>
+			</method>
 			<method name="select_row" symbol="gtk_list_box_select_row">
 				<return-type type="void"/>
 				<parameters>
