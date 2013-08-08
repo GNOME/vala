@@ -13228,6 +13228,12 @@
 					<parameter name="bar" type="GtkHeaderBar*"/>
 				</parameters>
 			</method>
+			<method name="get_show_close_button" symbol="gtk_header_bar_get_show_close_button">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="bar" type="GtkHeaderBar*"/>
+				</parameters>
+			</method>
 			<method name="get_subtitle" symbol="gtk_header_bar_get_subtitle">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -13264,6 +13270,13 @@
 					<parameter name="title_widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="set_show_close_button" symbol="gtk_header_bar_set_show_close_button">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="bar" type="GtkHeaderBar*"/>
+					<parameter name="setting" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_subtitle" symbol="gtk_header_bar_set_subtitle">
 				<return-type type="void"/>
 				<parameters>
@@ -13280,6 +13293,7 @@
 			</method>
 			<property name="custom-title" type="GtkWidget*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="hpadding" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-close-button" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="subtitle" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -33394,14 +33408,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="910"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="911"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="10"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="11"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="9"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

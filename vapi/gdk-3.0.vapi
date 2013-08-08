@@ -4587,9 +4587,12 @@ namespace Gdk {
 		public Cursor.from_name (Gdk.Display display, string name);
 		[CCode (has_construct_function = false)]
 		public Cursor.from_pixbuf (Gdk.Display display, Gdk.Pixbuf pixbuf, int x, int y);
+		[CCode (has_construct_function = false)]
+		public Cursor.from_surface (Gdk.Display display, Cairo.Surface surface, double x, double y);
 		public Gdk.CursorType get_cursor_type ();
 		public unowned Gdk.Display get_display ();
 		public Gdk.Pixbuf? get_image ();
+		public Cairo.Surface? get_surface (double x_hot, double y_hot);
 		[Deprecated (since = "3.0")]
 		public Gdk.Cursor @ref ();
 		[Deprecated (since = "3.0")]

@@ -40,6 +40,8 @@ Window.get_frame_extents skip
 
 // Should send upstream
 add_option_entries_libgtk_only skip=false
+Cursor
+        .get_surface nullable
 Device
         .free_history.events array array_length_idx=1
         .get_axis_value.value out

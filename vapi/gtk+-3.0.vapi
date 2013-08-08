@@ -2282,16 +2282,19 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public HeaderBar ();
 		public unowned Gtk.Widget get_custom_title ();
+		public bool get_show_close_button ();
 		public unowned string get_subtitle ();
 		public unowned string get_title ();
 		public void pack_end (Gtk.Widget child);
 		public void pack_start (Gtk.Widget child);
 		public void set_custom_title (Gtk.Widget title_widget);
+		public void set_show_close_button (bool setting);
 		public void set_subtitle (string? subtitle);
 		public void set_title (string title);
 		public Gtk.Widget custom_title { get; set construct; }
 		[NoAccessorMethod]
 		public int hpadding { get; set; }
+		public bool show_close_button { get; set; }
 		[NoAccessorMethod]
 		public int spacing { get; set; }
 		public string subtitle { get; set; }
