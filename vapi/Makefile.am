@@ -288,7 +288,7 @@ dist_noinst_DATA = \
 	$(NULL)
 
 GIDL_BINDINGS = \
-	clutter-gtk-1.0 \
+	clutter-gtk-0.10 \
 	cogl-1.0 \
 	gconf-2.0 \
 	gdk-2.0 \
@@ -298,6 +298,7 @@ GIDL_BINDINGS = \
 	gdu \
 	gdk-gtk \
 	gedit-2.20 \
+	gio-unix-2.0 \
 	gnome-desktop-2.0 \
 	gnome-keyring-1 \
 	gnome-vfs-2.0 \
@@ -339,6 +340,7 @@ GIDL_BINDINGS = \
 	librsvg-2.0 \
 	libsexy \
 	libsoup-2.2 \
+	libwnck-1.0 \
 	loudmouth-1.0 \
 	purple \
 	rest-0.6 \
@@ -372,7 +374,8 @@ GIR_BINDINGS = \
 	atk \
 	atspi-2 \
 	clutter-1.0 \
-	cogl-pango \
+	clutter-gtk-1.0 \
+	cogl-pango-1.0 \
 	gdk-3.0 \
 	gdk-pixbuf-2.0 \
 	gdl-3.0 \
@@ -383,7 +386,7 @@ GIR_BINDINGS = \
 	gudev-1.0 \
 	json-glib-1.0 \
 	libgdata \
-	libgnome-menu-3.0.vapi \
+	libgnome-menu-3.0 \
 	libpeas-1.0 \
 	libsoup-2.4 \
 	libwnck-3.0 \
