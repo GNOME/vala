@@ -10,13 +10,21 @@ namespace GLib {
 		public DesktopAppInfo.from_filename (string filename);
 		[CCode (has_construct_function = false)]
 		public DesktopAppInfo.from_keyfile (GLib.KeyFile key_file);
+		public string get_action_name (string action_name);
+		public bool get_boolean (string key);
 		public unowned string get_categories ();
 		public unowned string get_filename ();
 		public unowned string get_generic_name ();
 		public bool get_is_hidden ();
+		public unowned string[] get_keywords ();
 		public bool get_nodisplay ();
 		public bool get_show_in (string desktop_env);
+		public unowned string get_startup_wm_class ();
+		public unowned string get_string (string key);
+		public bool has_key (string key);
+		public void launch_action (string action_name, GLib.AppLaunchContext launch_context);
 		public bool launch_uris_as_manager (GLib.List uris, GLib.AppLaunchContext launch_context, GLib.SpawnFlags spawn_flags, GLib.SpawnChildSetupFunc user_setup, void* user_setup_data, GLib.DesktopAppLaunchCallback pid_callback, void* pid_callback_data) throws GLib.Error;
+		public unowned string[] list_actions ();
 		public static void set_desktop_env (string desktop_env);
 		public string filename { get; construct; }
 	}
@@ -24,10 +32,22 @@ namespace GLib {
 	public class UnixConnection : GLib.SocketConnection {
 		[CCode (has_construct_function = false)]
 		protected UnixConnection ();
-		public unowned GLib.Credentials receive_credentials (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GLib.Credentials receive_credentials (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async GLib.Credentials receive_credentials_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public int receive_fd (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool send_credentials (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool send_credentials_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool send_fd (int fd, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gio/gunixcredentialsmessage.h")]
+	public class UnixCredentialsMessage : GLib.SocketControlMessage {
+		[CCode (has_construct_function = false, type = "GSocketControlMessage*")]
+		public UnixCredentialsMessage ();
+		public unowned GLib.Credentials get_credentials ();
+		public static bool is_supported ();
+		[CCode (has_construct_function = false, type = "GSocketControlMessage*")]
+		public UnixCredentialsMessage.with_credentials (GLib.Credentials credentials);
+		public GLib.Credentials credentials { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gunixfdmessage.h")]
 	public class UnixFDMessage : GLib.SocketControlMessage {
@@ -41,11 +61,10 @@ namespace GLib {
 		public GLib.UnixFDList fd_list { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gunixinputstream.h")]
-	public class UnixInputStream : GLib.InputStream, GLib.PollableInputStream {
+	public class UnixInputStream : GLib.InputStream, GLib.PollableInputStream, GLib.FileDescriptorBased {
 		[CCode (has_construct_function = false, type = "GInputStream*")]
 		public UnixInputStream (int fd, bool close_fd);
 		public bool get_close_fd ();
-		public int get_fd ();
 		public void set_close_fd (bool close_fd);
 		public bool close_fd { get; set; }
 		public int fd { get; construct; }
@@ -68,11 +87,13 @@ namespace GLib {
 		[CCode (cname = "g_unix_mount_guess_can_eject")]
 		public bool guess_can_eject ();
 		[CCode (cname = "g_unix_mount_guess_icon")]
-		public unowned GLib.Icon guess_icon ();
+		public GLib.Icon guess_icon ();
 		[CCode (cname = "g_unix_mount_guess_name")]
-		public unowned string guess_name ();
+		public string guess_name ();
 		[CCode (cname = "g_unix_mount_guess_should_display")]
 		public bool guess_should_display ();
+		[CCode (cname = "g_unix_mount_guess_symbolic_icon")]
+		public GLib.Icon guess_symbolic_icon ();
 		[CCode (cname = "g_unix_mount_is_readonly")]
 		public bool is_readonly ();
 		[CCode (cname = "g_unix_mount_is_system_internal")]
@@ -97,19 +118,20 @@ namespace GLib {
 		public unowned string get_device_path ();
 		public unowned string get_fs_type ();
 		public unowned string get_mount_path ();
+		public unowned string get_options ();
 		public bool guess_can_eject ();
-		public unowned GLib.Icon guess_icon ();
-		public unowned string guess_name ();
+		public GLib.Icon guess_icon ();
+		public string guess_name ();
+		public GLib.Icon guess_symbolic_icon ();
 		public bool is_loopback ();
 		public bool is_readonly ();
 		public bool is_user_mountable ();
 	}
 	[CCode (cheader_filename = "gio/gunixoutputstream.h")]
-	public class UnixOutputStream : GLib.OutputStream, GLib.PollableOutputStream {
+	public class UnixOutputStream : GLib.OutputStream, GLib.PollableOutputStream, GLib.FileDescriptorBased {
 		[CCode (has_construct_function = false, type = "GOutputStream*")]
 		public UnixOutputStream (int fd, bool close_fd);
 		public bool get_close_fd ();
-		public int get_fd ();
 		public void set_close_fd (bool close_fd);
 		public bool close_fd { get; set; }
 		public int fd { get; construct; }

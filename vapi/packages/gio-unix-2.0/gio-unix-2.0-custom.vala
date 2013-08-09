@@ -37,11 +37,13 @@ namespace GLib {
 		[CCode (cname = "g_unix_mount_guess_can_eject")]
 		public bool guess_can_eject ();
 		[CCode (cname = "g_unix_mount_guess_icon")]
-		public unowned GLib.Icon guess_icon ();
+		public GLib.Icon guess_icon ();
 		[CCode (cname = "g_unix_mount_guess_name")]
-		public unowned string guess_name ();
+		public string guess_name ();
 		[CCode (cname = "g_unix_mount_guess_should_display")]
 		public bool guess_should_display ();
+		[CCode (cname = "g_unix_mount_guess_symbolic_icon")]
+		public GLib.Icon guess_symbolic_icon ();
 		[CCode (cname = "g_unix_mount_is_readonly")]
 		public bool is_readonly ();
 		[CCode (cname = "g_unix_mount_is_system_internal")]

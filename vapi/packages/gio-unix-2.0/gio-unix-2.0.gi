@@ -69,6 +69,12 @@
 				<parameter name="mount_entry" type="GUnixMountEntry*"/>
 			</parameters>
 		</function>
+		<function name="g_unix_mount_guess_symbolic_icon" symbol="g_unix_mount_guess_symbolic_icon">
+			<return-type type="GIcon*"/>
+			<parameters>
+				<parameter name="mount_entry" type="GUnixMountEntry*"/>
+			</parameters>
+		</function>
 		<function name="g_unix_mount_is_readonly" symbol="g_unix_mount_is_readonly">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -149,6 +155,12 @@
 					<parameter name="mount_point" type="GUnixMountPoint*"/>
 				</parameters>
 			</method>
+			<method name="get_options" symbol="g_unix_mount_point_get_options">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="mount_point" type="GUnixMountPoint*"/>
+				</parameters>
+			</method>
 			<method name="guess_can_eject" symbol="g_unix_mount_point_guess_can_eject">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -163,6 +175,12 @@
 			</method>
 			<method name="guess_name" symbol="g_unix_mount_point_guess_name">
 				<return-type type="char*"/>
+				<parameters>
+					<parameter name="mount_point" type="GUnixMountPoint*"/>
+				</parameters>
+			</method>
+			<method name="guess_symbolic_icon" symbol="g_unix_mount_point_guess_symbolic_icon">
+				<return-type type="GIcon*"/>
 				<parameters>
 					<parameter name="mount_point" type="GUnixMountPoint*"/>
 				</parameters>
@@ -190,6 +208,20 @@
 			<implements>
 				<interface name="GAppInfo"/>
 			</implements>
+			<method name="get_action_name" symbol="g_desktop_app_info_get_action_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+					<parameter name="action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_boolean" symbol="g_desktop_app_info_get_boolean">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+					<parameter name="key" type="char*"/>
+				</parameters>
+			</method>
 			<method name="get_categories" symbol="g_desktop_app_info_get_categories">
 				<return-type type="char*"/>
 				<parameters>
@@ -214,6 +246,12 @@
 					<parameter name="info" type="GDesktopAppInfo*"/>
 				</parameters>
 			</method>
+			<method name="get_keywords" symbol="g_desktop_app_info_get_keywords">
+				<return-type type="char**"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+				</parameters>
+			</method>
 			<method name="get_nodisplay" symbol="g_desktop_app_info_get_nodisplay">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -225,6 +263,34 @@
 				<parameters>
 					<parameter name="info" type="GDesktopAppInfo*"/>
 					<parameter name="desktop_env" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_startup_wm_class" symbol="g_desktop_app_info_get_startup_wm_class">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_string" symbol="g_desktop_app_info_get_string">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+					<parameter name="key" type="char*"/>
+				</parameters>
+			</method>
+			<method name="has_key" symbol="g_desktop_app_info_has_key">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+					<parameter name="key" type="char*"/>
+				</parameters>
+			</method>
+			<method name="launch_action" symbol="g_desktop_app_info_launch_action">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+					<parameter name="action_name" type="gchar*"/>
+					<parameter name="launch_context" type="GAppLaunchContext*"/>
 				</parameters>
 			</method>
 			<method name="launch_uris_as_manager" symbol="g_desktop_app_info_launch_uris_as_manager">
@@ -239,6 +305,12 @@
 					<parameter name="pid_callback" type="GDesktopAppLaunchCallback"/>
 					<parameter name="pid_callback_data" type="gpointer"/>
 					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="list_actions" symbol="g_desktop_app_info_list_actions">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
 				</parameters>
 			</method>
 			<constructor name="new" symbol="g_desktop_app_info_new">
@@ -276,6 +348,23 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="receive_credentials_async" symbol="g_unix_connection_receive_credentials_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="connection" type="GUnixConnection*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="receive_credentials_finish" symbol="g_unix_connection_receive_credentials_finish">
+				<return-type type="GCredentials*"/>
+				<parameters>
+					<parameter name="connection" type="GUnixConnection*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="receive_fd" symbol="g_unix_connection_receive_fd">
 				<return-type type="gint"/>
 				<parameters>
@@ -289,6 +378,23 @@
 				<parameters>
 					<parameter name="connection" type="GUnixConnection*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="send_credentials_async" symbol="g_unix_connection_send_credentials_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="connection" type="GUnixConnection*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="send_credentials_finish" symbol="g_unix_connection_send_credentials_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="connection" type="GUnixConnection*"/>
+					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -322,54 +428,6 @@
 				</parameters>
 			</constructor>
 			<property name="credentials" type="GCredentials*" readable="1" writable="1" construct="0" construct-only="1"/>
-		</object>
-		<object name="GUnixFDList" parent="GObject" type-name="GUnixFDList" get-type="g_unix_fd_list_get_type">
-			<method name="append" symbol="g_unix_fd_list_append">
-				<return-type type="gint"/>
-				<parameters>
-					<parameter name="list" type="GUnixFDList*"/>
-					<parameter name="fd" type="gint"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="get" symbol="g_unix_fd_list_get">
-				<return-type type="gint"/>
-				<parameters>
-					<parameter name="list" type="GUnixFDList*"/>
-					<parameter name="index_" type="gint"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="get_length" symbol="g_unix_fd_list_get_length">
-				<return-type type="gint"/>
-				<parameters>
-					<parameter name="list" type="GUnixFDList*"/>
-				</parameters>
-			</method>
-			<constructor name="new" symbol="g_unix_fd_list_new">
-				<return-type type="GUnixFDList*"/>
-			</constructor>
-			<constructor name="new_from_array" symbol="g_unix_fd_list_new_from_array">
-				<return-type type="GUnixFDList*"/>
-				<parameters>
-					<parameter name="fds" type="gint*"/>
-					<parameter name="n_fds" type="gint"/>
-				</parameters>
-			</constructor>
-			<method name="peek_fds" symbol="g_unix_fd_list_peek_fds">
-				<return-type type="gint*"/>
-				<parameters>
-					<parameter name="list" type="GUnixFDList*"/>
-					<parameter name="length" type="gint*"/>
-				</parameters>
-			</method>
-			<method name="steal_fds" symbol="g_unix_fd_list_steal_fds">
-				<return-type type="gint*"/>
-				<parameters>
-					<parameter name="list" type="GUnixFDList*"/>
-					<parameter name="length" type="gint*"/>
-				</parameters>
-			</method>
 		</object>
 		<object name="GUnixFDMessage" parent="GSocketControlMessage" type-name="GUnixFDMessage" get-type="g_unix_fd_message_get_type">
 			<method name="append_fd" symbol="g_unix_fd_message_append_fd">
@@ -407,6 +465,7 @@
 		<object name="GUnixInputStream" parent="GInputStream" type-name="GUnixInputStream" get-type="g_unix_input_stream_get_type">
 			<implements>
 				<interface name="GPollableInputStream"/>
+				<interface name="GFileDescriptorBased"/>
 			</implements>
 			<method name="get_close_fd" symbol="g_unix_input_stream_get_close_fd">
 				<return-type type="gboolean"/>
@@ -464,6 +523,7 @@
 		<object name="GUnixOutputStream" parent="GOutputStream" type-name="GUnixOutputStream" get-type="g_unix_output_stream_get_type">
 			<implements>
 				<interface name="GPollableOutputStream"/>
+				<interface name="GFileDescriptorBased"/>
 			</implements>
 			<method name="get_close_fd" symbol="g_unix_output_stream_get_close_fd">
 				<return-type type="gboolean"/>
