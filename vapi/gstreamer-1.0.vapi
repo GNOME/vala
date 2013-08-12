@@ -1403,7 +1403,7 @@ namespace Gst {
 		public void set_auto_flush_bus (bool auto_flush);
 		public bool set_clock (Gst.Clock clock);
 		public void set_delay (Gst.ClockTime delay);
-		public void use_clock (Gst.Clock clock);
+		public void use_clock (Gst.Clock? clock);
 		public bool auto_flush_bus { get; set; }
 		public uint64 delay { get; set; }
 	}

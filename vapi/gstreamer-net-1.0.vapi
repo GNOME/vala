@@ -33,7 +33,7 @@ namespace Gst {
 		[GIR (name = "NetTimeProvider")]
 		public class TimeProvider : Gst.Object {
 			[CCode (has_construct_function = false)]
-			public TimeProvider (Gst.Clock clock, string address, int port);
+			public TimeProvider (Gst.Clock clock, string? address, int port);
 			[NoAccessorMethod]
 			public bool active { get; set; }
 			[NoAccessorMethod]

@@ -135,7 +135,5 @@ FlowReturn.custom_error_2 skip
 flow_get_name skip // parent="Gst.FlowReturn" name="get_name"
 
 // Upstream
-Query
-  .parse_nth_allocation_param.allocator unowned=false
-Structure
-  .copy unowned=false
+Pipeline
+  .use_clock.clock nullable
