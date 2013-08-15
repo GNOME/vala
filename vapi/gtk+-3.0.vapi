@@ -783,6 +783,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Button ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Button.from_icon_name (string icon_name, Gtk.IconSize size);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Button.from_stock (string stock_id);
 		public void get_alignment (out float xalign, out float yalign);
 		public bool get_always_show_image ();
@@ -2852,6 +2854,7 @@ namespace Gtk {
 		public unowned Gtk.ListBoxRow get_row_at_y (int y);
 		public unowned Gtk.ListBoxRow get_selected_row ();
 		public Gtk.SelectionMode get_selection_mode ();
+		public void insert (Gtk.Widget child, int position);
 		public void invalidate_filter ();
 		public void invalidate_headers ();
 		public void invalidate_sort ();
@@ -8918,6 +8921,8 @@ namespace Gtk {
 	public static int distribute_natural_allocation (int extra_space, uint n_requested_sizes, Gtk.RequestedSize sizes);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gdk.DragContext drag_begin (Gtk.Widget widget, Gtk.TargetList targets, Gdk.DragAction actions, int button, Gdk.Event? event);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static unowned Gdk.DragContext drag_begin_with_coordinates (Gtk.Widget widget, Gtk.TargetList targets, Gdk.DragAction actions, int button, Gdk.Event event, int x, int y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool drag_check_threshold (Gtk.Widget widget, int start_x, int start_y, int current_x, int current_y);
 	[CCode (cheader_filename = "gtk/gtk.h")]

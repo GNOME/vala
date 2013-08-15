@@ -160,6 +160,18 @@
 				<parameter name="event" type="GdkEvent*"/>
 			</parameters>
 		</function>
+		<function name="drag_begin_with_coordinates" symbol="gtk_drag_begin_with_coordinates">
+			<return-type type="GdkDragContext*"/>
+			<parameters>
+				<parameter name="widget" type="GtkWidget*"/>
+				<parameter name="targets" type="GtkTargetList*"/>
+				<parameter name="actions" type="GdkDragAction"/>
+				<parameter name="button" type="gint"/>
+				<parameter name="event" type="GdkEvent*"/>
+				<parameter name="x" type="gint"/>
+				<parameter name="y" type="gint"/>
+			</parameters>
+		</function>
 		<function name="drag_check_threshold" symbol="gtk_drag_check_threshold">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -7647,6 +7659,13 @@
 			</method>
 			<constructor name="new" symbol="gtk_button_new">
 				<return-type type="GtkWidget*"/>
+			</constructor>
+			<constructor name="new_from_icon_name" symbol="gtk_button_new_from_icon_name">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="icon_name" type="gchar*"/>
+					<parameter name="size" type="GtkIconSize"/>
+				</parameters>
 			</constructor>
 			<constructor name="new_from_stock" symbol="gtk_button_new_from_stock">
 				<return-type type="GtkWidget*"/>
@@ -15623,6 +15642,14 @@
 				<return-type type="GtkSelectionMode"/>
 				<parameters>
 					<parameter name="list_box" type="GtkListBox*"/>
+				</parameters>
+			</method>
+			<method name="insert" symbol="gtk_list_box_insert">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list_box" type="GtkListBox*"/>
+					<parameter name="child" type="GtkWidget*"/>
+					<parameter name="position" type="gint"/>
 				</parameters>
 			</method>
 			<method name="invalidate_filter" symbol="gtk_list_box_invalidate_filter">

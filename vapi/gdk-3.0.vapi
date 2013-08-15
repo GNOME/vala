@@ -4774,6 +4774,7 @@ namespace Gdk {
 		public bool get_click_count (out uint click_count);
 		public bool get_coords (out double x_win, out double y_win);
 		public unowned Gdk.Device get_device ();
+		public Gdk.EventType get_event_type ();
 		public bool get_keycode (out uint16 keycode);
 		public bool get_keyval (out uint keyval);
 		public bool get_root_coords (out double x_root, out double y_root);
