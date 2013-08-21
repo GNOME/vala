@@ -208,6 +208,13 @@
 					<parameter name="startup_id" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_window_scale" symbol="gdk_x11_display_set_window_scale">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="display" type="GdkDisplay*"/>
+					<parameter name="scale" type="gint"/>
+				</parameters>
+			</method>
 			<method name="string_to_compound_text" symbol="gdk_x11_display_string_to_compound_text">
 				<return-type type="gint"/>
 				<parameters>
@@ -348,6 +355,16 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="window" type="GdkWindow*"/>
+				</parameters>
+			</method>
+			<method name="set_frame_extents" symbol="gdk_x11_window_set_frame_extents">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="left" type="int"/>
+					<parameter name="right" type="int"/>
+					<parameter name="top" type="int"/>
+					<parameter name="bottom" type="int"/>
 				</parameters>
 			</method>
 			<method name="set_frame_sync_enabled" symbol="gdk_x11_window_set_frame_sync_enabled">

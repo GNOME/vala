@@ -1747,6 +1747,7 @@ namespace Gtk {
 		public unowned string get_placeholder_text ();
 		public double get_progress_fraction ();
 		public double get_progress_pulse_step ();
+		public unowned Pango.TabArray? get_tabs ();
 		public unowned string get_text ();
 		public void get_text_area (out Gdk.Rectangle text_area);
 		[NoWrapper]
@@ -1784,6 +1785,7 @@ namespace Gtk {
 		public void set_placeholder_text (string text);
 		public void set_progress_fraction (double fraction);
 		public void set_progress_pulse_step (double fraction);
+		public void set_tabs (Pango.TabArray tabs);
 		public void set_text (string text);
 		public void set_visibility (bool visible);
 		public void set_width_chars (int n_chars);
@@ -1860,6 +1862,7 @@ namespace Gtk {
 		public int selection_bound { get; }
 		[NoAccessorMethod]
 		public Gtk.ShadowType shadow_type { get; set; }
+		public Pango.TabArray tabs { get; set; }
 		public string text { get; set; }
 		public uint text_length { get; }
 		[NoAccessorMethod]
@@ -8730,6 +8733,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_COMBOBOX_ENTRY;
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_CONTEXT_MENU;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_CURSOR_HANDLE;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_DEFAULT;
@@ -8800,6 +8805,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_RAISED;
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_READ_ONLY;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_RIGHT;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_RUBBERBAND;
@@ -8823,6 +8830,8 @@ namespace Gtk {
 	public const string STYLE_CLASS_SPINBUTTON;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_SPINNER;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_TITLEBAR;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_TOOLBAR;
 	[CCode (cheader_filename = "gtk/gtk.h")]

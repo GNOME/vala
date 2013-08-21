@@ -11311,6 +11311,12 @@
 					<parameter name="entry" type="GtkEntry*"/>
 				</parameters>
 			</method>
+			<method name="get_tabs" symbol="gtk_entry_get_tabs">
+				<return-type type="PangoTabArray*"/>
+				<parameters>
+					<parameter name="entry" type="GtkEntry*"/>
+				</parameters>
+			</method>
 			<method name="get_text" symbol="gtk_entry_get_text">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -11562,6 +11568,13 @@
 					<parameter name="fraction" type="gdouble"/>
 				</parameters>
 			</method>
+			<method name="set_tabs" symbol="gtk_entry_set_tabs">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="entry" type="GtkEntry*"/>
+					<parameter name="tabs" type="PangoTabArray*"/>
+				</parameters>
+			</method>
 			<method name="set_text" symbol="gtk_entry_set_text">
 				<return-type type="void"/>
 				<parameters>
@@ -11637,6 +11650,7 @@
 			<property name="secondary-icon-tooltip-text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="selection-bound" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="shadow-type" type="GtkShadowType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tabs" type="PangoTabArray*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="text-length" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="truncate-multiline" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -33435,14 +33449,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="911"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="912"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="11"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="12"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="9"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
@@ -33494,6 +33508,7 @@
 		<constant name="GTK_STYLE_CLASS_CELL" type="char*" value="cell"/>
 		<constant name="GTK_STYLE_CLASS_CHECK" type="char*" value="check"/>
 		<constant name="GTK_STYLE_CLASS_COMBOBOX_ENTRY" type="char*" value="combobox-entry"/>
+		<constant name="GTK_STYLE_CLASS_CONTEXT_MENU" type="char*" value="context-menu"/>
 		<constant name="GTK_STYLE_CLASS_CURSOR_HANDLE" type="char*" value="cursor-handle"/>
 		<constant name="GTK_STYLE_CLASS_DEFAULT" type="char*" value="default"/>
 		<constant name="GTK_STYLE_CLASS_DIM_LABEL" type="char*" value="dim-label"/>
@@ -33529,6 +33544,7 @@
 		<constant name="GTK_STYLE_CLASS_QUESTION" type="char*" value="question"/>
 		<constant name="GTK_STYLE_CLASS_RADIO" type="char*" value="radio"/>
 		<constant name="GTK_STYLE_CLASS_RAISED" type="char*" value="raised"/>
+		<constant name="GTK_STYLE_CLASS_READ_ONLY" type="char*" value="read-only"/>
 		<constant name="GTK_STYLE_CLASS_RIGHT" type="char*" value="right"/>
 		<constant name="GTK_STYLE_CLASS_RUBBERBAND" type="char*" value="rubberband"/>
 		<constant name="GTK_STYLE_CLASS_SCALE" type="char*" value="scale"/>
@@ -33541,6 +33557,7 @@
 		<constant name="GTK_STYLE_CLASS_SLIDER" type="char*" value="slider"/>
 		<constant name="GTK_STYLE_CLASS_SPINBUTTON" type="char*" value="spinbutton"/>
 		<constant name="GTK_STYLE_CLASS_SPINNER" type="char*" value="spinner"/>
+		<constant name="GTK_STYLE_CLASS_TITLEBAR" type="char*" value="titlebar"/>
 		<constant name="GTK_STYLE_CLASS_TOOLBAR" type="char*" value="toolbar"/>
 		<constant name="GTK_STYLE_CLASS_TOOLTIP" type="char*" value="tooltip"/>
 		<constant name="GTK_STYLE_CLASS_TOP" type="char*" value="top"/>

@@ -35,6 +35,7 @@ namespace Gdk {
 		public static void grab (Gdk.Display display);
 		public static void set_cursor_theme (Gdk.Display display, string theme, int size);
 		public static void set_startup_notification_id (Gdk.Display display, string startup_id);
+		public static void set_window_scale (Gdk.Display display, int scale);
 		public static int string_to_compound_text (Gdk.Display display, string str, out Gdk.Atom encoding, int format, uchar[] ctext, int length);
 		public static int text_property_to_text_list (Gdk.Display display, Gdk.Atom encoding, int format, uchar[] text, int length, string list);
 		public static void ungrab (Gdk.Display display);
@@ -107,6 +108,7 @@ namespace Gdk {
 		public static X.Window get_xid (Gdk.Window window);
 		public static unowned Gdk.Window lookup_for_display (Gdk.Display display, X.Window window);
 		public static void move_to_current_desktop (Gdk.Window window);
+		public static void set_frame_extents (Gdk.Window window, int left, int right, int top, int bottom);
 		public static void set_frame_sync_enabled (Gdk.Window window, bool frame_sync_enabled);
 		public static void set_hide_titlebar_when_maximized (Gdk.Window window, bool hide_titlebar_when_maximized);
 		public static void set_theme_variant (Gdk.Window window, string variant);
