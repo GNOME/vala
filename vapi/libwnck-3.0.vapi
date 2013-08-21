@@ -120,6 +120,8 @@ namespace Wnck {
 		public void set_grouping (Wnck.TasklistGroupingType grouping);
 		public void set_grouping_limit (int limit);
 		public void set_include_all_workspaces (bool include_all_workspaces);
+		public void set_middle_click_close (bool middle_click_close);
+		public void set_orientation (Gtk.Orientation orient);
 		public void set_switch_workspace_on_unminimize (bool switch_workspace_on_unminimize);
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_window_get_type ()")]
@@ -368,8 +370,16 @@ namespace Wnck {
 		HORIZONTAL,
 		VERTICAL
 	}
+	[CCode (cheader_filename = "libwnck/libwnck.h", cname = "WNCK_DEFAULT_ICON_SIZE")]
+	public const int DEFAULT_ICON_SIZE;
+	[CCode (cheader_filename = "libwnck/libwnck.h", cname = "WNCK_DEFAULT_MINI_ICON_SIZE")]
+	public const int DEFAULT_MINI_ICON_SIZE;
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public static void set_client_type (Wnck.ClientType ewmh_sourceindication_client_type);
+	[CCode (cheader_filename = "libwnck/libwnck.h")]
+	public static void set_default_icon_size (size_t size);
+	[CCode (cheader_filename = "libwnck/libwnck.h")]
+	public static void set_default_mini_icon_size (size_t size);
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public static void shutdown ();
 }
