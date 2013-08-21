@@ -2,6 +2,11 @@ namespace Atk {
 	[Compact]
 	public class AttributeSet : GLib.SList<Atk.Attribute?> {
 	}
+	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_document_get_type ()")]
+	public interface Document : GLib.Object {
+		[Deprecated (replacement = "Document.get_locale", since = "vala-0.22")]
+		public virtual unowned string get_document_locale ();
+	}
 	public interface Implementor : GLib.Object {
 		public abstract unowned Atk.Object ref_accessible ();
 	}
@@ -37,6 +42,12 @@ namespace Atk {
 		public static unowned string attribute_get_value (Atk.TextAttribute attr, int index_);
 		[Deprecated (replacement = "TextAttribute.register", since = "vala-0.16")]
 		public static Atk.TextAttribute attribute_register (string name);
+	}
+
+	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_ROLE_", type_id = "atk_role_get_type ()")]
+	public enum Role {
+		[Deprecated (replacement = "Role.ACCELERATOR_LABEL", since = "vala-0.22")]
+		ACCEL_LABEL
 	}
 
 	[CCode (has_target = false)]

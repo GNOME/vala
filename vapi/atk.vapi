@@ -23,7 +23,6 @@ namespace Atk {
 		public virtual int get_start_index ();
 		public virtual string get_uri (int i);
 		public bool is_inline ();
-		[NoWrapper]
 		public virtual bool is_selected_link ();
 		public virtual bool is_valid ();
 		[NoWrapper]
@@ -68,9 +67,7 @@ namespace Atk {
 		public virtual Atk.AttributeSet get_attributes ();
 		public virtual unowned string get_description ();
 		public virtual int get_index_in_parent ();
-		[NoWrapper]
 		public virtual Atk.Layer get_layer ();
-		[NoWrapper]
 		public virtual int get_mdi_zorder ();
 		public int get_n_accessible_children ();
 		[NoWrapper]
@@ -123,7 +120,7 @@ namespace Atk {
 		public virtual signal void active_descendant_changed (void* child);
 		public virtual signal void children_changed (uint change_index, void* changed_child);
 		public virtual signal void focus_event (bool focus_in);
-		public signal void property_change (void* object);
+		public signal void property_change (void* arg1);
 		public virtual signal void state_change (string name, bool state_set);
 		public virtual signal void visible_data_changed ();
 	}
@@ -290,9 +287,11 @@ namespace Atk {
 		[CCode (vfunc_name = "get_document_attributes")]
 		public virtual unowned Atk.AttributeSet get_attributes ();
 		public virtual void* get_document ();
-		[NoWrapper]
+		[Deprecated (replacement = "Document.get_locale", since = "vala-0.22")]
 		public virtual unowned string get_document_locale ();
 		public virtual unowned string get_document_type ();
+		[CCode (vfunc_name = "get_document_locale")]
+		public virtual unowned string get_locale ();
 		[CCode (vfunc_name = "set_document_attribute")]
 		public virtual bool set_attribute_value (string attribute_name, string attribute_value);
 		public signal void load_complete ();
@@ -413,6 +412,7 @@ namespace Atk {
 		public abstract void get_range_extents (int start_offset, int end_offset, Atk.CoordType coord_type, Atk.TextRectangle rect);
 		public abstract Atk.AttributeSet get_run_attributes (int offset, out int start_offset, out int end_offset);
 		public abstract string get_selection (int selection_num, out int start_offset, out int end_offset);
+		public abstract string get_string_at_offset (int offset, Atk.TextGranularity granularity, out int start_offset, out int end_offset);
 		public abstract string get_text (int start_offset, int end_offset);
 		public abstract string get_text_after_offset (int offset, Atk.TextBoundary boundary_type, out int start_offset, out int end_offset);
 		public abstract string get_text_at_offset (int offset, Atk.TextBoundary boundary_type, out int start_offset, out int end_offset);
@@ -423,10 +423,9 @@ namespace Atk {
 		public virtual signal void text_attributes_changed ();
 		public virtual signal void text_caret_moved (int location);
 		public virtual signal void text_changed (int position, int length);
-		public signal void text_insert (int object, int p0, string p1);
-		public signal void text_remove (int object, int p0, string p1);
+		public signal void text_insert (int arg1, int arg2, string arg3);
+		public signal void text_remove (int arg1, int arg2, string arg3);
 		public virtual signal void text_selection_changed ();
-		public signal void text_update (int object, int p0, int p1, string p2);
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_value_get_type ()")]
 	public interface Value : GLib.Object {
@@ -551,8 +550,11 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_ROLE_", type_id = "atk_role_get_type ()")]
 	public enum Role {
-		INVALID,
+		[Deprecated (replacement = "Role.ACCELERATOR_LABEL", since = "vala-0.22")]
 		ACCEL_LABEL,
+		INVALID,
+		[CCode (cname = "ATK_ROLE_ACCEL_LABEL")]
+		ACCELERATOR_LABEL,
 		ALERT,
 		ANIMATION,
 		ARROW,
@@ -769,12 +771,20 @@ namespace Atk {
 		MAX,
 		BOTH
 	}
+	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_TEXT_GRANULARITY_", type_id = "atk_text_granularity_get_type ()")]
+	public enum TextGranularity {
+		CHAR,
+		WORD,
+		SENTENCE,
+		LINE,
+		PARAGRAPH
+	}
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
 	public delegate void EventListener (Atk.Object obj);
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
 	public delegate void EventListenerInit ();
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
-	public delegate void FocusHandler (Atk.Object arg0, bool arg1);
+	public delegate void FocusHandler (Atk.Object object, bool focus_in);
 	[CCode (cheader_filename = "atk/atk.h", instance_pos = 0.9)]
 	public delegate bool Function ();
 	[CCode (cheader_filename = "atk/atk.h", instance_pos = 1.9)]
