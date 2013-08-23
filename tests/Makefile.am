@@ -100,6 +100,7 @@ TESTS = \
 	delegates/bug595639.vala \
 	delegates/bug638415.vala \
 	delegates/bug639751.vala \
+	delegates/bug659778.vala \
 	delegates/bug703804.vala \
 	objects/chainup.vala \
 	objects/classes.vala \

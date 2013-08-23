@@ -3092,6 +3092,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							unref_function = "g_free";
 						}
 					}
+				} else if (type is EnumValueType) {
+					unref_function = null;
 				} else {
 					var st = (Struct) type.data_type;
 					if (!get_ccode_has_destroy_function (st)) {
