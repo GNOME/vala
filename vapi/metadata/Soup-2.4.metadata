@@ -19,9 +19,6 @@ Requester
 // Report upstream
 Soup cheader_filename="libsoup/soup.h"
 add_* skip=false type="unowned GLib.TimeoutSource"
-Address.equal_by_ip.* type="Soup.Address"
-Address.equal_by_name.* type="Soup.Address"
-// AddressCallback.data skip
 AuthDomain
 	.accepts#method skip
 	.challenge#virtual_method vfunc_name="challenge"
@@ -45,46 +42,33 @@ Message
 	.request_*#property skip
 	.response_*#property skip
 	.set_request.req_body type="uint8[]" array_length_idx=3
-	.set_response.resp_body type="uint8[]" array_length_idx=3
 MessageHeaders
-	.get_content_disposition.* out unowned=false
-	.get_content_type.* out unowned=false
-	.get_content_*.params type_arguments="string,string"
 	.get_ranges.ranges out type="Soup.Range[]" array_length_idx=2
-	.set_content_disposition.params type_arguments="string,string" nullable
-	.set_content_type.params type_arguments="string,string" nullable
-Multipart.get_part
-	.headers out
-	.body out
 Server
 	.new skip=false
 	.async_context type="GLib.MainContext"
 Session
 	.async_context type="GLib.MainContext"
 	.get_features type_arguments="weak Soup.SessionFeature"
+	.send_async.cancellable#parameter default=null
 Session*.new_with_options skip=false
 Socket
 	.async_context type="GLib.MainContext"
 	.new skip=false
 	.read.buffer type="uint8[]" array_length_idx=1
-	.read.nread out
 	.read_until.buffer type="uint8[]" array_length_idx=1
 	.read_until.nread out
 	.write.buffer type="uint8[]" array_length_idx=1
-	.write.nwrote out
-	.*.cancellable nullable
 URI
 	.new_with_base skip
 	.set_query_from_fields skip=false
 uri_encode.escape_extra nullable
 // uri_host_*.* type="Soup.URI"
-ProxyURIResolver
-	.get_proxy_uri_sync.proxy_uri out
 ProxyURIResolverCallback.user_data skip
 xmlrpc_* skip=false
 // xmlrpc_build_method_call.params array array_length_idx=2
 xmlrpc_extract_method_response throws="Soup.XMLRPC.Fault"
-        .error skip
+	.error skip
 	.type skip
 value_* skip=false
 

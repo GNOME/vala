@@ -19,7 +19,7 @@ namespace Soup {
 	[Deprecated (replacement = "Soup.ProxyURIResolver")]
 	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupProxyResolverInterface", type_id = "soup_proxy_resolver_get_type ()")]
 	public interface ProxyResolver : Soup.SessionFeature, GLib.Object {
-		public abstract void get_proxy_async (Soup.Message msg, GLib.MainContext async_context, GLib.Cancellable? cancellable, Soup.ProxyResolverCallback callaback);
+		public abstract void get_proxy_async (Soup.Message msg, GLib.MainContext async_context, GLib.Cancellable? cancellable, Soup.ProxyResolverCallback callback);
 		public abstract uint get_proxy_sync (Soup.Message msg, GLib.Cancellable? cancellable, out unowned Soup.Address addr);
 	}
 
@@ -91,5 +91,9 @@ namespace Soup {
 	public static Soup.Message form_request_new_from_multipart (string uri, Soup.Multipart multipart);
 	[Deprecated (since = "vala-0.14", replacement = "SSLError.quark")]
 	public static GLib.Quark ssl_error_quark ();
+
+	public static unowned string status_get_phrase (uint status_code);
+	public static uint status_proxify (uint status_code);
+
 	public delegate void ProxyResolverCallback (Soup.ProxyResolver p1, Soup.Message p2, uint p3, Soup.Address p4);
 }
