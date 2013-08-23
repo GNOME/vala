@@ -1858,7 +1858,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				data.add_field ("Block%dData *".printf (parent_block_id), "_data%d_".printf (parent_block_id));
 			} else {
 				if (get_this_type () != null) {
-					data.add_field ("%s *".printf (get_ccode_name (current_type_symbol)), "self");
+					data.add_field (get_ccode_name (get_data_type_for_symbol (current_type_symbol)), "self");
 				}
 
 				if (current_method != null) {
@@ -2021,7 +2021,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (get_this_type () != null) {
 				// assign "self" for type parameters
-				ccode.add_declaration ("%s *".printf (get_ccode_name (current_type_symbol)), new CCodeVariableDeclarator ("self"));
+				ccode.add_declaration(get_ccode_name (get_data_type_for_symbol (current_type_symbol)), new CCodeVariableDeclarator ("self"));
 				ccode.add_assignment (new CCodeIdentifier ("self"), new CCodeMemberAccess.pointer (outer_block, "self"));
 			}
 
@@ -2115,9 +2115,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_expression (unref_call);
 				ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), new CCodeConstant ("NULL"));
 			} else {
-				if (get_this_type () != null) {
-					// reference count for self is not increased in finalizers
-					if (!is_in_destructor ()) {
+				var this_type = get_this_type ();
+				if (this_type != null) {
+					if (this_type.is_disposable () && !is_in_destructor ()) {
+						// reference count for self is not increased in finalizers
 						var this_value = new GLibValue (get_data_type_for_symbol (current_type_symbol), new CCodeIdentifier ("self"), true);
 						ccode.add_expression (destroy_value (this_value));
 					}
@@ -5455,6 +5456,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			set_delegate_target (lambda, delegate_target);
 		} else if (get_this_type () != null) {
 			CCodeExpression delegate_target = get_result_cexpression ("self");
+			delegate_target = convert_to_generic_pointer (delegate_target, get_this_type ());
 			if (expr_owned || delegate_type.is_called_once) {
 				if (get_this_type () != null) {
 					var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_this_type (), lambda.source_reference));

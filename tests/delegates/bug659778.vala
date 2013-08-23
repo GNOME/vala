@@ -3,7 +3,28 @@ delegate G DoSomething<G>(G g);
 void do_something<G> (DoSomething<G> f) {}
 
 enum TE {
-	T
+	T;
+	public void f() {
+		do_something<TE> ((x) => {
+			switch (this) {
+			case T:
+				return T;
+			default:
+				assert_not_reached ();
+			}
+        });
+	}
+	public void g(int i) {
+		do_something<TE> ((x) => {
+			switch (this) {
+			case T:
+				i++;
+				return T;
+			default:
+				assert_not_reached ();
+			}
+		});
+	}
 }
 
 class Test {
@@ -22,6 +43,9 @@ class Test {
 }
 
 int main() {
+	TE t = TE.T;
+	t.f ();
+	t.g (0);
 	Test t2 = new Test ();
 	t2.f ();
 	return 0;
