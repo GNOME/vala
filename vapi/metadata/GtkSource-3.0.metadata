@@ -1,4 +1,5 @@
 * name="(.+)/Source\\1"
+utils_* name="utils_(.+)" parent="Gtk.SourceUtils"
 GtkSource name="Gtk" cprefix="Gtk" lower_case_cprefix="gtk_"
 Completion
         .show#method name="start"
@@ -10,3 +11,6 @@ CompletionProposal
         .equal#virtual_method virtual
         .get_icon#virtual_method virtual
         .hash#virtual_method virtual
+SearchContext
+        .get_regex_error nullable
+        .regex_error type="GLib.Error?"
