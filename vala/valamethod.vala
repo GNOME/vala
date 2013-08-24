@@ -661,7 +661,7 @@ public class Vala.Method : Subroutine {
 				error = true;
 				Report.error (param.source_reference, "Reference parameters are not supported for async methods");
 			}
-			if (optional_param && param.initializer == null) {
+			if (optional_param && param.initializer == null && !param.ellipsis) {
 				Report.warning (param.source_reference, "parameter without default follows parameter with default");
 			} else if (param.initializer != null) {
 				optional_param = true;
