@@ -170,7 +170,7 @@ namespace Archive {
 
 		[CCode (cname="archive_read_data")]
 		public ssize_t read_data (void* buffer, size_t size);
-		[CCode (cname="archive_read_block")]
+		[CCode (cname="archive_read_data_block")]
 		public Result read_data_block (out void* buff, out size_t size, out Posix.off_t offset);
 		[CCode (cname="archive_read_data_skip")]
 		public Result read_data_skip ();
