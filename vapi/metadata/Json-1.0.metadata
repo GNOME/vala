@@ -13,6 +13,10 @@ BoxedDeserializeFunc skip=false
 boxed_register_serialize_func skip=false
 boxed_register_deserialize_func skip=false
 
+// Floating references
+gvariant_deserialize unowned=false floating
+gvariant_deserialize_data unowned=false floating
+
 Object.add_member replacement="Json.Object.set_member"
 Serializable cheader_filename="json-glib/json-glib.h,json-glib/json-gobject.h"
 	     .deserialize_property.value out

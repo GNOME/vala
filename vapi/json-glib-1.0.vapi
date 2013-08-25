@@ -291,10 +291,10 @@ namespace Json {
 	public static Json.Node gobject_serialize (GLib.Object gobject);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static string gobject_to_data (GLib.Object gobject, out size_t length);
-	[CCode (cheader_filename = "json-glib/json-glib.h")]
-	public static unowned GLib.Variant gvariant_deserialize (Json.Node json_node, string? signature) throws GLib.Error;
-	[CCode (cheader_filename = "json-glib/json-glib.h")]
-	public static unowned GLib.Variant gvariant_deserialize_data (string json, ssize_t length, string? signature) throws GLib.Error;
+	[CCode (cheader_filename = "json-glib/json-glib.h", returns_floating_reference = true)]
+	public static GLib.Variant gvariant_deserialize (Json.Node json_node, string? signature) throws GLib.Error;
+	[CCode (cheader_filename = "json-glib/json-glib.h", returns_floating_reference = true)]
+	public static GLib.Variant gvariant_deserialize_data (string json, ssize_t length, string? signature) throws GLib.Error;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static Json.Node gvariant_serialize (GLib.Variant variant);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
