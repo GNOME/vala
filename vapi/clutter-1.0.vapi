@@ -5082,6 +5082,7 @@ namespace Clutter {
 		public virtual signal void pick (Clutter.Color color);
 		[HasEmitter]
 		public virtual signal void queue_relayout ();
+		[Deprecated (since = "1.16")]
 		[HasEmitter]
 		public virtual signal void realize ();
 		public virtual signal bool scroll_event (Clutter.ScrollEvent event);
@@ -5090,6 +5091,7 @@ namespace Clutter {
 		public virtual signal bool touch_event (Clutter.Event event);
 		public signal void transition_stopped (string name, bool is_finished);
 		public signal void transitions_completed ();
+		[Deprecated (since = "1.16")]
 		[HasEmitter]
 		public virtual signal void unrealize ();
 	}
@@ -5625,7 +5627,7 @@ namespace Clutter {
 		[CCode (has_construct_function = false)]
 		protected Canvas ();
 		public static Clutter.Content @new ();
-		public void set_size (int width, int height);
+		public bool set_size (int width, int height);
 		[NoAccessorMethod]
 		public int height { get; set; }
 		[NoAccessorMethod]
@@ -5730,6 +5732,8 @@ namespace Clutter {
 		public unowned GLib.SList<Clutter.InputDevice> peek_devices ();
 		[NoWrapper]
 		public virtual void remove_device (Clutter.InputDevice device);
+		[NoWrapper]
+		public virtual void select_stage_events (Clutter.Stage stage);
 		[NoAccessorMethod]
 		public Clutter.Backend backend { owned get; construct; }
 		public signal void device_added (Clutter.InputDevice device);
@@ -5820,7 +5824,7 @@ namespace Clutter {
 		public Clutter.EventFlags get_flags ();
 		public uint16 get_key_code ();
 		public uint get_key_symbol ();
-		public uint32 get_key_unicode ();
+		public unichar get_key_unicode ();
 		public void get_position (Clutter.Point position);
 		public unowned Clutter.Actor get_related ();
 		public void get_scroll_delta (out double dx, out double dy);
@@ -5843,7 +5847,7 @@ namespace Clutter {
 		public void set_flags (Clutter.EventFlags flags);
 		public void set_key_code (uint16 key_code);
 		public void set_key_symbol (uint key_sym);
-		public void set_key_unicode (uint32 key_unicode);
+		public void set_key_unicode (unichar key_unicode);
 		public void set_related (Clutter.Actor? actor);
 		public void set_scroll_delta (double dx, double dy);
 		public void set_scroll_direction (Clutter.ScrollDirection direction);
@@ -5872,12 +5876,14 @@ namespace Clutter {
 		public Clutter.FlowOrientation get_orientation ();
 		public void get_row_height (out float min_height, out float max_height);
 		public float get_row_spacing ();
+		public bool get_snap_to_grid ();
 		public void set_column_spacing (float spacing);
 		public void set_column_width (float min_width, float max_width);
 		public void set_homogeneous (bool homogeneous);
 		public void set_orientation (Clutter.FlowOrientation orientation);
 		public void set_row_height (float min_height, float max_height);
 		public void set_row_spacing (float spacing);
+		public void set_snap_to_grid (bool snap_to_grid);
 		public float column_spacing { get; set; }
 		public bool homogeneous { get; set; }
 		[NoAccessorMethod]
@@ -5890,6 +5896,7 @@ namespace Clutter {
 		public float min_row_height { get; set; }
 		public Clutter.FlowOrientation orientation { get; set construct; }
 		public float row_spacing { get; set; }
+		public bool snap_to_grid { get; set; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_gesture_action_get_type ()")]
 	public class GestureAction : Clutter.Action {
@@ -5909,6 +5916,7 @@ namespace Clutter {
 		public unowned Clutter.EventSequence get_sequence (uint point);
 		public float get_velocity (uint point, out float velocity_x, out float velocity_y);
 		public void set_n_touch_points (int nb_points);
+		public int n_touch_points { get; set; }
 		public virtual signal bool gesture_begin (Clutter.Actor actor);
 		public virtual signal void gesture_cancel (Clutter.Actor actor);
 		public virtual signal void gesture_end (Clutter.Actor actor);
@@ -6170,6 +6178,8 @@ namespace Clutter {
 		protected OffscreenEffect ();
 		public virtual Cogl.Handle create_texture (float width, float height);
 		public unowned Cogl.Material get_target ();
+		public bool get_target_rect (out unowned Clutter.Rect rect);
+		[Deprecated (since = "1.14")]
 		public bool get_target_size (out float width, out float height);
 		public unowned Cogl.Handle get_texture ();
 		public virtual void paint_target ();
@@ -6788,6 +6798,7 @@ namespace Clutter {
 		public Clutter.Color get_color ();
 		public Clutter.Color get_cursor_color ();
 		public int get_cursor_position ();
+		public void get_cursor_rect (out unowned Clutter.Rect rect);
 		public uint get_cursor_size ();
 		public bool get_cursor_visible ();
 		public bool get_editable ();
@@ -6882,6 +6893,8 @@ namespace Clutter {
 		public string text { get; set; }
 		public bool use_markup { get; set; }
 		public virtual signal void activate ();
+		public virtual signal void cursor_changed ();
+		[Deprecated (since = "1.16")]
 		public virtual signal void cursor_event (Clutter.Geometry geometry);
 		[HasEmitter]
 		public signal void delete_text (int start_pos, int end_pos);
@@ -6984,6 +6997,7 @@ namespace Clutter {
 	public class Timeline : GLib.Object, Clutter.Scriptable {
 		[CCode (has_construct_function = false)]
 		public Timeline (uint msecs);
+		public void add_marker (string marker_name, double progress);
 		public void add_marker_at_time (string marker_name, uint msecs);
 		public void advance (uint msecs);
 		public void advance_to_marker (string marker_name);
@@ -7350,7 +7364,9 @@ namespace Clutter {
 		public int y;
 		public uint width;
 		public uint height;
+		[Deprecated (since = "1.16")]
 		public bool intersects (Clutter.Geometry geometry1);
+		[Deprecated (since = "1.16")]
 		public Clutter.Geometry union (Clutter.Geometry geometry_b);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
@@ -8086,6 +8102,8 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Deprecated (since = "1.10")]
 	public static void clear_glyph_cache ();
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	public static void disable_accessibility ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static void do_event (Clutter.Event event);
 	[CCode (cheader_filename = "clutter/clutter.h")]
