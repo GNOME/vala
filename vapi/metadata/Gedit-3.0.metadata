@@ -29,6 +29,8 @@ Document.save#method name="do_save"
 
 commands_* cheader_filename="gedit/gedit-commands.h"
 debug* cheader_filename="gedit/gedit-debug.h"
+dialog_add_button cheader_filename="gedit/gedit-utils.h"
+gtk_button_new_with_stock_icon cheader_filename="gedit/gedit-utils.h"
 marshal_* skip=true
 utils_* cheader_filename="gedit/gedit-utils.h"
 
