@@ -30,6 +30,7 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 
 	private enum SymbolContext {
 		NORMAL,
+		FINISH,
 		TYPE
 	}
 
@@ -58,6 +59,22 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 			_symbol = api_root.search_symbol_cstr (container, symbol_name);
 			_context = SymbolContext.NORMAL;
 
+			if (_symbol == null && _symbol_name.has_suffix ("_finish")) {
+				string tmp = _symbol_name.substring (0, _symbol_name.length - 7);
+
+				_symbol = api_root.search_symbol_cstr (container, tmp + "_async") as Api.Method;
+				if (_symbol != null && ((Api.Method) _symbol).is_yields) {
+					_context = SymbolContext.FINISH;
+				} else {
+					_symbol = api_root.search_symbol_cstr (container, tmp) as Api.Method;
+					if (_symbol != null && ((Api.Method) _symbol).is_yields) {
+						_context = SymbolContext.FINISH;
+					} else {
+						_symbol = null;
+					}
+				}
+			}
+
 			if (_symbol == null) {
 				_symbol = api_root.search_symbol_type_cstr (symbol_name);
 				if (_symbol != null) {
@@ -67,6 +84,10 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 
 			if (_symbol != null) {
 				symbol_name = _symbol.name;
+
+				if (_context == SymbolContext.FINISH) {
+					symbol_name = symbol_name + ".end";
+				}
 			}
 		} else {
 			_symbol = api_root.search_symbol_str (container, symbol_name);
@@ -88,6 +109,10 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 
 		// TODO: move typeof () to gtkdoc-importer
 		switch (_context) {
+		case SymbolContext.FINISH:
+			// covered by symbol_name
+			return link;
+
 		case SymbolContext.TYPE:
 			Content.Run content = new Content.Run (Run.Style.MONOSPACED);
 

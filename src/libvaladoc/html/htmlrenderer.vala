@@ -69,12 +69,12 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	private void write_resolved_symbol_link (Api.Node symbol, string? given_label) {
+		var label = (given_label == null || given_label == "") ? symbol.get_full_name () : given_label;
 		if (symbol == _container || symbol == _owner) {
 			writer.start_tag ("span", {"css", cssresolver.resolve (symbol)})
-				.text (symbol.name)
+				.text (label)
 				.end_tag ("span");
 		} else {
-			var label = (given_label == null || given_label == "") ? symbol.get_full_name () : given_label;
 			var url = get_url (symbol);
 			if (url == null) {
 				write_unresolved_symbol_link (label);
