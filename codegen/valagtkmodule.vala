@@ -199,11 +199,18 @@ public class Vala.GtkModule : GSignalModule {
 		base.visit_field (f);
 
 		var cl = current_class;
-		if (cl == null || cl.error || !is_gtk_template (cl)) {
+		if (cl == null || cl.error) {
 			return;
 		}
 
 		if (f.binding != MemberBinding.INSTANCE || f.get_attribute ("GtkChild") == null) {
+			return;
+		}
+
+		/* If the field has a [GtkChild] attribute but its class doesn'thave a
+			 [GtkTemplate] attribute, we throw an error */
+		if (!is_gtk_template (cl)) {
+			Report.error (f.source_reference, "[GtkChild] is only allowed in classes with a [GtkTemplate] attribute");
 			return;
 		}
 
