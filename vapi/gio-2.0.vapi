@@ -1763,9 +1763,13 @@ namespace GLib {
 	public class SimpleActionGroup : GLib.Object, GLib.ActionGroup, GLib.ActionMap {
 		[CCode (has_construct_function = false)]
 		public SimpleActionGroup ();
+		[Deprecated (since = "2.38")]
 		public void add_entries ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5)] GLib.ActionEntry[] entries, void* user_data);
+		[Deprecated (since = "2.38")]
 		public void insert (GLib.Action action);
+		[Deprecated (since = "2.38")]
 		public unowned GLib.Action lookup (string action_name);
+		[Deprecated (since = "2.38")]
 		public void remove (string action_name);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -2501,7 +2505,7 @@ namespace GLib {
 		public abstract bool has_uri_scheme (string uri_scheme);
 		public abstract uint hash ();
 		public abstract bool is_native ();
-		public bool load_contents (GLib.Cancellable? cancellable = null, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
+		public bool load_contents (GLib.Cancellable? cancellable, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
 		public async bool load_contents_async (GLib.Cancellable? cancellable = null, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
 		public async bool load_partial_contents_async (GLib.Cancellable? cancellable = null, GLib.FileReadMoreCallback read_more_callback, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
 		public abstract bool make_directory (GLib.Cancellable? cancellable = null) throws GLib.Error;

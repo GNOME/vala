@@ -107,6 +107,7 @@ DBusServer
 Drive
   .get_sort_key#virtual_method virtual
 File
+  .load_contents.cancellable#parameter default=()
   .monitor_dir* throws="GLib.IOError"
   .monitor_file throws="GLib.IOError"
 FileInfo
