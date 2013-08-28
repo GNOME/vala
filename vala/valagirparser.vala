@@ -427,6 +427,14 @@ public class Vala.GirParser : CodeVisitor {
 					expr = new MemberAccess (expr, get_string (), get_current_src ());
 				}
 				return expr;
+			case TokenType.OPEN_PARENS:
+				// empty tuple => no expression
+				if (next () != TokenType.CLOSE_PARENS) {
+					Report.error (get_current_src (), "expected `)', got %s".printf (current.to_string ()));
+					break;
+				}
+				expr = new Tuple (src);
+				break;
 			default:
 				Report.error (src, "expected literal or symbol got %s".printf (current.to_string ()));
 				break;
@@ -2278,6 +2286,11 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			}
 			param.initializer = metadata.get_expression (ArgumentType.DEFAULT);
+
+			// empty tuple used for parameters without initializer
+			if (param.initializer is Tuple) {
+				param.initializer = null;
+			}
 		}
 		end_element ("parameter");
 		return param;
