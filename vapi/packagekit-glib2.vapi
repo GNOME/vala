@@ -170,6 +170,8 @@ namespace Pk {
 		[NoAccessorMethod]
 		public uint network_state { get; set; }
 		[NoAccessorMethod]
+		public uint64 provides { get; set; }
+		[NoAccessorMethod]
 		public uint64 roles { get; set; }
 		[NoAccessorMethod]
 		public uint version_major { get; }
@@ -875,6 +877,8 @@ namespace Pk {
 		NOT_COLLECTIONS,
 		APPLICATION,
 		NOT_APPLICATION,
+		DOWNLOADED,
+		NOT_DOWNLOADED,
 		LAST;
 		public static Pk.Bitfield bitfield_from_string (string filters);
 		public static string bitfield_to_string (Pk.Bitfield filters);
