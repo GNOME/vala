@@ -2195,7 +2195,7 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
-	Parameter parse_parameter (out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null, out string? scope = null, out Comment? comment, string? default_name = null) {
+	Parameter parse_parameter (out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null, out string? scope = null, out Comment? comment = null, string? default_name = null) {
 		Parameter param;
 
 		array_length_idx = -1;
