@@ -624,7 +624,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class AspectFrame : Gtk.Frame, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public AspectFrame (string label, float xalign, float yalign, float ratio, bool obey_child);
+		public AspectFrame (string? label, float xalign, float yalign, float ratio, bool obey_child);
 		public void @set (float xalign, float yalign, float ratio, bool obey_child);
 		[NoAccessorMethod]
 		public bool obey_child { get; set; }
@@ -2151,11 +2151,11 @@ namespace Gtk {
 		public virtual void compute_child_allocation (Gtk.Allocation allocation);
 		public unowned string get_label ();
 		public void get_label_align (float xalign, float yalign);
-		public unowned Gtk.Widget get_label_widget ();
+		public unowned Gtk.Widget? get_label_widget ();
 		public Gtk.ShadowType get_shadow_type ();
-		public void set_label (string label);
+		public void set_label (string? label);
 		public void set_label_align (float xalign, float yalign);
-		public void set_label_widget (Gtk.Widget label_widget);
+		public void set_label_widget (Gtk.Widget? label_widget);
 		public void set_shadow_type (Gtk.ShadowType type);
 		public string label { get; set; }
 		public Gtk.Widget label_widget { get; set; }
