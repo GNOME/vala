@@ -2297,15 +2297,11 @@ namespace Gtk {
 		public void set_subtitle (string? subtitle);
 		public void set_title (string title);
 		public Gtk.Widget custom_title { get; set construct; }
-		[NoAccessorMethod]
-		public int hpadding { get; set; }
 		public bool show_close_button { get; set; }
 		[NoAccessorMethod]
 		public int spacing { get; set; }
 		public string subtitle { get; set; }
 		public string title { get; set; }
-		[NoAccessorMethod]
-		public int vpadding { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtkimmodule.h")]
 	public class IMContext : GLib.Object {
@@ -2705,6 +2701,7 @@ namespace Gtk {
 		public void get_layout_offsets (out int x, out int y);
 		public bool get_line_wrap ();
 		public Pango.WrapMode get_line_wrap_mode ();
+		public int get_lines ();
 		public int get_max_width_chars ();
 		public uint get_mnemonic_keyval ();
 		public unowned Gtk.Widget get_mnemonic_widget ();
@@ -2724,6 +2721,7 @@ namespace Gtk {
 		public void set_label (string str);
 		public void set_line_wrap (bool wrap);
 		public void set_line_wrap_mode (Pango.WrapMode wrap_mode);
+		public void set_lines (int lines);
 		public void set_markup (string str);
 		public void set_markup_with_mnemonic (string str);
 		public void set_max_width_chars (int n_chars);
@@ -2746,6 +2744,7 @@ namespace Gtk {
 		public Pango.EllipsizeMode ellipsize { get; set; }
 		public Gtk.Justification justify { get; set; }
 		public string label { get; set; }
+		public int lines { get; set; }
 		public int max_width_chars { get; set; }
 		public uint mnemonic_keyval { get; }
 		public Gtk.Widget mnemonic_widget { get; set; }

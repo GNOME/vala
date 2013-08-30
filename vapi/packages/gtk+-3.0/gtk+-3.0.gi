@@ -13325,12 +13325,10 @@
 				</parameters>
 			</method>
 			<property name="custom-title" type="GtkWidget*" readable="1" writable="1" construct="1" construct-only="0"/>
-			<property name="hpadding" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-close-button" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="subtitle" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="vpadding" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkIMContext" parent="GObject" type-name="GtkIMContext" get-type="gtk_im_context_get_type">
 			<method name="delete_surrounding" symbol="gtk_im_context_delete_surrounding">
@@ -15045,6 +15043,12 @@
 					<parameter name="label" type="GtkLabel*"/>
 				</parameters>
 			</method>
+			<method name="get_lines" symbol="gtk_label_get_lines">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="label" type="GtkLabel*"/>
+				</parameters>
+			</method>
 			<method name="get_max_width_chars" symbol="gtk_label_get_max_width_chars">
 				<return-type type="gint"/>
 				<parameters>
@@ -15182,6 +15186,13 @@
 					<parameter name="wrap_mode" type="PangoWrapMode"/>
 				</parameters>
 			</method>
+			<method name="set_lines" symbol="gtk_label_set_lines">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="label" type="GtkLabel*"/>
+					<parameter name="lines" type="gint"/>
+				</parameters>
+			</method>
 			<method name="set_markup" symbol="gtk_label_set_markup">
 				<return-type type="void"/>
 				<parameters>
@@ -15279,6 +15290,7 @@
 			<property name="ellipsize" type="PangoEllipsizeMode" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="justify" type="GtkJustification" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="lines" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="max-width-chars" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="mnemonic-keyval" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="mnemonic-widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -33449,14 +33461,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="912"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="913"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="12"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="13"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="9"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
