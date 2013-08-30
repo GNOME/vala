@@ -564,6 +564,7 @@ namespace Gst {
 		public void copy_into (Gst.Buffer src, Gst.BufferCopyFlags flags, size_t offset, size_t size);
 		public Gst.Buffer copy_region (Gst.BufferCopyFlags flags, size_t offset, size_t size);
 		public size_t extract (size_t offset, void* dest, size_t size);
+		public void extract_dup (size_t offset, size_t size, [CCode (array_length_cname = "dest_size", array_length_pos = 3.1, array_length_type = "gsize")] out uint8[] dest);
 		public size_t fill (size_t offset, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] src);
 		public bool find_memory (size_t offset, size_t size, out uint idx, out uint length, out size_t skip);
 		public bool foreach_meta (Gst.BufferForeachMetaFunc func);
@@ -1515,19 +1516,19 @@ namespace Gst {
 		public bool has_scheduling_mode_with_flags (Gst.PadMode mode, Gst.SchedulingFlags flags);
 		[CCode (has_construct_function = false)]
 		public Query.latency ();
-		public void parse_accept_caps (out Gst.Caps caps);
+		public void parse_accept_caps (out unowned Gst.Caps caps);
 		public void parse_accept_caps_result (bool result);
 		public void parse_allocation (out unowned Gst.Caps caps, out bool need_pool);
 		public void parse_buffering_percent (out bool busy, out int percent);
 		public void parse_buffering_range (out Gst.Format format, out int64 start, out int64 stop, out int64 estimated_total);
 		public void parse_buffering_stats (out Gst.BufferingMode mode, out int avg_in, out int avg_out, out int64 buffering_left);
-		public void parse_caps (out Gst.Caps filter);
-		public void parse_caps_result (out Gst.Caps caps);
+		public void parse_caps (out unowned Gst.Caps filter);
+		public void parse_caps_result (out unowned Gst.Caps caps);
 		public void parse_convert (out Gst.Format src_format, out int64 src_value, out Gst.Format dest_format, out int64 dest_value);
 		public void parse_duration (out Gst.Format format, out int64 duration);
 		public void parse_latency (out bool live, out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
 		public void parse_n_formats (out uint n_formats);
-		public GLib.Type parse_nth_allocation_meta (uint index, out Gst.Structure @params);
+		public GLib.Type parse_nth_allocation_meta (uint index, out unowned Gst.Structure @params);
 		public void parse_nth_allocation_param (uint index, out Gst.Allocator allocator, out unowned Gst.AllocationParams @params);
 		public void parse_nth_allocation_pool (uint index, out Gst.BufferPool pool, out uint size, out uint min_buffers, out uint max_buffers);
 		public bool parse_nth_buffering_range (uint index, out int64 start, out int64 stop);
