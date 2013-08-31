@@ -1422,7 +1422,7 @@ namespace Posix {
 	public struct SockAddr {
 		public int sa_family;
 		[CCode (array_length = false)]
-		public char[] data;
+		public char[] sa_data;
 	}
 
 	[CCode (cname = "struct sockaddr_in", cheader_filename = "netinet/in.h", destroy_function = "")]
