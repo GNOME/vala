@@ -38,6 +38,8 @@ dist_vapi_DATA = \
 	fuse.deps \
 	fuse.vapi \
 	gconf-2.0.vapi \
+	geocode-glib-1.0.deps \
+	geocode-glib-1.0.vapi \
 	glib-2.0.vapi \
 	gdk-2.0.deps \
 	gdk-2.0.vapi \
@@ -380,6 +382,7 @@ GIR_BINDINGS = \
 	gdk-pixbuf-2.0 \
 	gdl-3.0 \
 	gedit \
+	geocode-glib-1.0 \
 	gio-2.0 \
 	gobject-introspection-1.0 \
 	gtksourceview-3.0 \
@@ -444,6 +447,9 @@ cogl-pango-1.0:
 
 gconf-2.0:
 	$(GENVAPI) --library $(srcdir)/gconf-2.0 $(PACKAGESDIR)/gconf-2.0/gconf-2.0.gi
+
+geocode-glib-1.0:
+	$(GENVAPI) --library $(srcdir)/geocode-glib-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GeocodeGlib-1.0.gir
 
 gdk-2.0:
 	$(GENVAPI) --library $(srcdir)/gdk-2.0 $(PACKAGESDIR)/gdk-2.0/gdk-2.0-custom.vala $(PACKAGESDIR)/gdk-2.0/gdk-2.0.gi
