@@ -276,11 +276,23 @@
 			</method>
 		</object>
 		<object name="GdkX11Screen" parent="GdkScreen" type-name="GdkX11Screen" get-type="gdk_x11_screen_get_type">
+			<method name="get_current_desktop" symbol="gdk_x11_screen_get_current_desktop">
+				<return-type type="guint32"/>
+				<parameters>
+					<parameter name="screen" type="GdkScreen*"/>
+				</parameters>
+			</method>
 			<method name="get_monitor_output" symbol="gdk_x11_screen_get_monitor_output">
 				<return-type type="XID"/>
 				<parameters>
 					<parameter name="screen" type="GdkScreen*"/>
 					<parameter name="monitor_num" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_number_of_desktops" symbol="gdk_x11_screen_get_number_of_desktops">
+				<return-type type="guint32"/>
+				<parameters>
+					<parameter name="screen" type="GdkScreen*"/>
 				</parameters>
 			</method>
 			<method name="get_screen_number" symbol="gdk_x11_screen_get_screen_number">
@@ -338,6 +350,12 @@
 					<parameter name="window" type="Window"/>
 				</parameters>
 			</method>
+			<method name="get_desktop" symbol="gdk_x11_window_get_desktop">
+				<return-type type="guint32"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+				</parameters>
+			</method>
 			<method name="get_xid" symbol="gdk_x11_window_get_xid">
 				<return-type type="Window"/>
 				<parameters>
@@ -355,6 +373,13 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="window" type="GdkWindow*"/>
+				</parameters>
+			</method>
+			<method name="move_to_desktop" symbol="gdk_x11_window_move_to_desktop">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="desktop" type="guint32"/>
 				</parameters>
 			</method>
 			<method name="set_frame_extents" symbol="gdk_x11_window_set_frame_extents">

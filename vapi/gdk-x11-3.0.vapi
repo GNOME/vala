@@ -78,7 +78,9 @@ namespace Gdk {
 	public class X11Screen : Gdk.Screen {
 		[CCode (has_construct_function = false)]
 		protected X11Screen ();
+		public static uint32 get_current_desktop (Gdk.Screen screen);
 		public static X.ID get_monitor_output (Gdk.Screen screen, int monitor_num);
+		public static uint32 get_number_of_desktops (Gdk.Screen screen);
 		public static int get_screen_number (Gdk.Screen screen);
 		public static unowned string get_window_manager_name (Gdk.Screen screen);
 		public static unowned X.Screen get_xscreen (Gdk.Screen screen);
@@ -105,9 +107,11 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected X11Window ();
 		public static unowned Gdk.Window foreign_new_for_display (Gdk.Display display, X.Window window);
+		public static uint32 get_desktop (Gdk.Window window);
 		public static X.Window get_xid (Gdk.Window window);
 		public static unowned Gdk.Window lookup_for_display (Gdk.Display display, X.Window window);
 		public static void move_to_current_desktop (Gdk.Window window);
+		public static void move_to_desktop (Gdk.Window window, uint32 desktop);
 		public static void set_frame_extents (Gdk.Window window, int left, int right, int top, int bottom);
 		public static void set_frame_sync_enabled (Gdk.Window window, bool frame_sync_enabled);
 		public static void set_hide_titlebar_when_maximized (Gdk.Window window, bool hide_titlebar_when_maximized);
