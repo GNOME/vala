@@ -930,7 +930,7 @@ namespace Soup {
 		@1_0,
 		@1_1
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_STATUS_CODE_", type_id = "soup_known_status_code_get_type ()")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_STATUS_", type_id = "soup_known_status_code_get_type ()")]
 	[Deprecated (replacement = "StatusCode", since = "vala-0.22")]
 	public enum KnownStatusCode {
 		NONE,

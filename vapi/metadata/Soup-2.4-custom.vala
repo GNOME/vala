@@ -97,7 +97,7 @@ namespace Soup {
 	[Deprecated (since = "vala-0.22", replacement = "StatusCode.proxify")]
 	public static uint status_proxify (uint status_code);
 	[Deprecated (since = "vala-0.22", replacement = "StatusCode")]
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_STATUS_CODE_", type_id = "soup_known_status_code_get_type ()")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_STATUS_", type_id = "soup_known_status_code_get_type ()")]
 	public enum KnownStatusCode {
 		NONE,
 		CANCELLED,
