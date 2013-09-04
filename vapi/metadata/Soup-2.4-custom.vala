@@ -92,8 +92,77 @@ namespace Soup {
 	[Deprecated (since = "vala-0.14", replacement = "SSLError.quark")]
 	public static GLib.Quark ssl_error_quark ();
 
+	[Deprecated (since = "vala-0.22", replacement = "StatusCode.get_phrase")]
 	public static unowned string status_get_phrase (uint status_code);
+	[Deprecated (since = "vala-0.22", replacement = "StatusCode.proxify")]
 	public static uint status_proxify (uint status_code);
+	[Deprecated (since = "vala-0.22", replacement = "StatusCode")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_STATUS_CODE_", type_id = "soup_known_status_code_get_type ()")]
+	public enum KnownStatusCode {
+		NONE,
+		CANCELLED,
+		CANT_RESOLVE,
+		CANT_RESOLVE_PROXY,
+		CANT_CONNECT,
+		CANT_CONNECT_PROXY,
+		SSL_FAILED,
+		IO_ERROR,
+		MALFORMED,
+		TRY_AGAIN,
+		TOO_MANY_REDIRECTS,
+		TLS_FAILED,
+		CONTINUE,
+		SWITCHING_PROTOCOLS,
+		PROCESSING,
+		OK,
+		CREATED,
+		ACCEPTED,
+		NON_AUTHORITATIVE,
+		NO_CONTENT,
+		RESET_CONTENT,
+		PARTIAL_CONTENT,
+		MULTI_STATUS,
+		MULTIPLE_CHOICES,
+		MOVED_PERMANENTLY,
+		FOUND,
+		MOVED_TEMPORARILY,
+		SEE_OTHER,
+		NOT_MODIFIED,
+		USE_PROXY,
+		NOT_APPEARING_IN_THIS_PROTOCOL,
+		TEMPORARY_REDIRECT,
+		BAD_REQUEST,
+		UNAUTHORIZED,
+		PAYMENT_REQUIRED,
+		FORBIDDEN,
+		NOT_FOUND,
+		METHOD_NOT_ALLOWED,
+		NOT_ACCEPTABLE,
+		PROXY_AUTHENTICATION_REQUIRED,
+		PROXY_UNAUTHORIZED,
+		REQUEST_TIMEOUT,
+		CONFLICT,
+		GONE,
+		LENGTH_REQUIRED,
+		PRECONDITION_FAILED,
+		REQUEST_ENTITY_TOO_LARGE,
+		REQUEST_URI_TOO_LONG,
+		UNSUPPORTED_MEDIA_TYPE,
+		REQUESTED_RANGE_NOT_SATISFIABLE,
+		INVALID_RANGE,
+		EXPECTATION_FAILED,
+		UNPROCESSABLE_ENTITY,
+		LOCKED,
+		FAILED_DEPENDENCY,
+		INTERNAL_SERVER_ERROR,
+		NOT_IMPLEMENTED,
+		BAD_GATEWAY,
+		SERVICE_UNAVAILABLE,
+		GATEWAY_TIMEOUT,
+		HTTP_VERSION_NOT_SUPPORTED,
+		INSUFFICIENT_STORAGE,
+		NOT_EXTENDED
+	}
 
 	public delegate void ProxyResolverCallback (Soup.ProxyResolver p1, Soup.Message p2, uint p3, Soup.Address p4);
 }

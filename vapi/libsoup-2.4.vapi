@@ -930,7 +930,8 @@ namespace Soup {
 		@1_0,
 		@1_1
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_KNOWN_STATUS_CODE_", type_id = "soup_known_status_code_get_type ()")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_STATUS_CODE_", type_id = "soup_known_status_code_get_type ()")]
+	[Deprecated (replacement = "StatusCode", since = "vala-0.22")]
 	public enum KnownStatusCode {
 		NONE,
 		CANCELLED,
@@ -1524,8 +1525,10 @@ namespace Soup {
 	[Deprecated (replacement = "SSLError.quark", since = "vala-0.14")]
 	public static GLib.Quark ssl_error_quark ();
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated (replacement = "StatusCode.get_phrase", since = "vala-0.22")]
 	public static unowned string status_get_phrase (uint status_code);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated (replacement = "StatusCode.proxify", since = "vala-0.22")]
 	public static uint status_proxify (uint status_code);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool str_case_equal (void* v1, void* v2);

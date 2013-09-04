@@ -12,6 +12,7 @@ xmlrpc_set_response.type skip
 HTTPVersion.http_* name="http_(.+)"
 
 // Backwards compatibility
+KnownStatusCode skip
 Requester deprecated_since="2.42" replacement="Session"
 Requester
   .request* skip=false unowned=false
