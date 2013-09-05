@@ -7,7 +7,7 @@ namespace Mx {
 		[CCode (has_construct_function = false)]
 		public Action ();
 		[CCode (has_construct_function = false)]
-		public Action.full (string name, string display_name, Mx.ActionCallbackFunc? activated_cb);
+		public Action.full (string name, string display_name, [CCode (scope = "async")] owned Mx.ActionCallbackFunc? activated_cb);
 		public bool get_active ();
 		public unowned string get_display_name ();
 		public unowned string get_icon ();
@@ -264,7 +264,7 @@ namespace Mx {
 		[CCode (has_construct_function = false)]
 		protected Clipboard ();
 		public static unowned Mx.Clipboard get_default ();
-		public void get_text (Mx.ClipboardCallbackFunc callback);
+		public void get_text ([CCode (scope = "async")] owned Mx.ClipboardCallbackFunc callback);
 		public void set_text (string text);
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_combo_box_get_type ()")]
