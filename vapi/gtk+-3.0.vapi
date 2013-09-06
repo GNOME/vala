@@ -359,6 +359,7 @@ namespace Gtk {
 		public Gtk.Widget widget { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "GLib.Action", since = "3.10")]
 	public class Action : GLib.Object, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		public Action (string name, string? label, string? tooltip, string? stock_id);
@@ -428,6 +429,7 @@ namespace Gtk {
 		public virtual signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (since = "3.10")]
 	public class ActionGroup : GLib.Object, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		public ActionGroup (string name);
@@ -2344,6 +2346,7 @@ namespace Gtk {
 		public void set_context_id (string context_id);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Deprecated (replacement = "Gtk.IconTheme", since = "3.10")]
 	public class IconFactory : GLib.Object, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		public IconFactory ();
@@ -2370,14 +2373,14 @@ namespace Gtk {
 		public bool get_embedded_rect (out Gdk.Rectangle rectangle);
 		public unowned string get_filename ();
 		public Gdk.Pixbuf load_icon () throws GLib.Error;
-		public async unowned Gdk.Pixbuf load_icon_async (GLib.Cancellable cancellable) throws GLib.Error;
+		public async Gdk.Pixbuf load_icon_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public Cairo.Surface load_surface (Gdk.Window for_window) throws GLib.Error;
 		public Gdk.Pixbuf load_symbolic (Gdk.RGBA fg, Gdk.RGBA? success_color = null, Gdk.RGBA? warning_color = null, Gdk.RGBA? error_color = null, out bool was_symbolic = null) throws GLib.Error;
-		public async unowned Gdk.Pixbuf load_symbolic_async (Gdk.RGBA fg, Gdk.RGBA success_color, Gdk.RGBA warning_color, Gdk.RGBA error_color, GLib.Cancellable cancellable) throws GLib.Error;
+		public async Gdk.Pixbuf load_symbolic_async (Gdk.RGBA fg, Gdk.RGBA? success_color = null, Gdk.RGBA? warning_color = null, Gdk.RGBA? error_color = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public Gdk.Pixbuf load_symbolic_for_context (Gtk.StyleContext context, out bool was_symbolic = null) throws GLib.Error;
-		public async unowned Gdk.Pixbuf load_symbolic_for_context_async (Gtk.StyleContext context, GLib.Cancellable cancellable) throws GLib.Error;
+		public async Gdk.Pixbuf load_symbolic_for_context_async (Gtk.StyleContext context, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Deprecated (replacement = "load_symbolic_for_context", since = "3.0")]
-		public unowned Gdk.Pixbuf load_symbolic_for_style (Gtk.Style style, Gtk.StateType state, bool was_symbolic) throws GLib.Error;
+		public Gdk.Pixbuf load_symbolic_for_style (Gtk.Style style, Gtk.StateType state, out bool was_symbolic = null) throws GLib.Error;
 		public void set_raw_coordinates (bool raw_coordinates);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -2386,6 +2389,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_icon_set_ref", type_id = "gtk_icon_set_get_type ()", unref_function = "gtk_icon_set_unref")]
 	[Compact]
+	[Deprecated (replacement = "Gtk.IconTheme", since = "3.10")]
 	public class IconSet {
 		[CCode (has_construct_function = false)]
 		public IconSet ();
@@ -2393,7 +2397,7 @@ namespace Gtk {
 		public Gtk.IconSet copy ();
 		[CCode (has_construct_function = false)]
 		public IconSet.from_pixbuf (Gdk.Pixbuf pixbuf);
-		public void get_sizes (Gtk.IconSize[] sizes);
+		public void get_sizes (out Gtk.IconSize[] sizes);
 		[Deprecated (replacement = "set_render_icon_pixbuf", since = "3.0")]
 		public Gdk.Pixbuf render_icon (Gtk.Style style, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
 		[Deprecated (since = "3.10")]
@@ -2403,6 +2407,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_icon_source_copy", type_id = "gtk_icon_source_get_type ()")]
 	[Compact]
+	[Deprecated (replacement = "Gtk.IconTheme", since = "3.10")]
 	public class IconSource {
 		[CCode (has_construct_function = false)]
 		public IconSource ();
@@ -2438,7 +2443,8 @@ namespace Gtk {
 		public static unowned Gtk.IconTheme get_default ();
 		public unowned string get_example_icon_name ();
 		public static unowned Gtk.IconTheme get_for_screen (Gdk.Screen screen);
-		public int get_icon_sizes (string icon_name);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public int[] get_icon_sizes (string icon_name);
 		public void get_search_path (out string[] path);
 		public bool has_icon (string icon_name);
 		public GLib.List<string> list_contexts ();

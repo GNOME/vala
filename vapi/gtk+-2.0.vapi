@@ -2106,8 +2106,8 @@ namespace Gtk {
 		public Gtk.IconSet copy ();
 		[CCode (has_construct_function = false)]
 		public IconSet.from_pixbuf (Gdk.Pixbuf pixbuf);
-		public void get_sizes (Gtk.IconSize[] sizes);
-		public unowned Gdk.Pixbuf render_icon (Gtk.Style style, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
+		public void get_sizes (out Gtk.IconSize[] sizes);
+		public Gdk.Pixbuf render_icon (Gtk.Style style, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_icon_source_copy", type_id = "gtk_icon_source_get_type ()")]
 	[Compact]
@@ -2145,7 +2145,8 @@ namespace Gtk {
 		public static unowned Gtk.IconTheme get_default ();
 		public unowned string get_example_icon_name ();
 		public static unowned Gtk.IconTheme get_for_screen (Gdk.Screen screen);
-		public int get_icon_sizes (string icon_name);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public int[] get_icon_sizes (string icon_name);
 		public void get_search_path (out string[] path);
 		public bool has_icon (string icon_name);
 		public GLib.List<string> list_contexts ();
