@@ -30,7 +30,7 @@ namespace Gst {
 			public void set_user_data<T> (owned T user_data);
 			public void unref ();
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_codec_state_get_type ()")]
+		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", ref_function = "gst_video_codec_state_ref", type_id = "gst_video_codec_state_get_type ()", unref_function = "gst_video_codec_state_unref")]
 		[Compact]
 		[GIR (name = "VideoCodecState")]
 		public class CodecState {

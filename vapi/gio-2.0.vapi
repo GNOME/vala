@@ -465,6 +465,8 @@ namespace GLib {
 		public string key;
 		public int ref_count;
 		public string value;
+		public GLib.DBusAnnotationInfo @ref ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_arg_info_ref", type_id = "g_dbus_arg_info_get_type ()", unref_function = "g_dbus_arg_info_unref")]
 	[Compact]
@@ -474,6 +476,8 @@ namespace GLib {
 		public string name;
 		public int ref_count;
 		public string signature;
+		public GLib.DBusArgInfo @ref ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_auth_observer_get_type ()")]
 	public class DBusAuthObserver : GLib.Object {
@@ -561,6 +565,8 @@ namespace GLib {
 		public unowned GLib.DBusMethodInfo lookup_method (string name);
 		public unowned GLib.DBusPropertyInfo lookup_property (string name);
 		public unowned GLib.DBusSignalInfo lookup_signal (string name);
+		public GLib.DBusInterfaceInfo @ref ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_interface_skeleton_get_type ()")]
 	public abstract class DBusInterfaceSkeleton : GLib.Object, GLib.DBusInterface {
@@ -664,6 +670,8 @@ namespace GLib {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusArgInfo[] out_args;
 		public int ref_count;
+		public GLib.DBusMethodInfo @ref ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_method_invocation_get_type ()")]
 	public class DBusMethodInvocation : GLib.Object {
@@ -703,6 +711,8 @@ namespace GLib {
 		public DBusNodeInfo.for_xml (string xml_data) throws GLib.Error;
 		public void generate_xml (uint indent, GLib.StringBuilder string_builder);
 		public unowned GLib.DBusInterfaceInfo lookup_interface (string name);
+		public GLib.DBusNodeInfo @ref ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_object_manager_client_get_type ()")]
 	public class DBusObjectManagerClient : GLib.Object, GLib.AsyncInitable, GLib.DBusObjectManager, GLib.Initable, GLib.AsyncInitable, GLib.DBusObjectManager, GLib.Initable {
@@ -773,7 +783,7 @@ namespace GLib {
 		public string g_object_path { owned get; set construct; }
 		public virtual signal bool authorize_method (GLib.DBusInterfaceSkeleton interface_, GLib.DBusMethodInvocation invocation);
 	}
-	[CCode (cheader_filename = "gio/gio.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "g_dbus_property_info_get_type ()")]
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_property_info_ref", type_id = "g_dbus_property_info_get_type ()", unref_function = "g_dbus_property_info_unref")]
 	[Compact]
 	public class DBusPropertyInfo {
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -782,6 +792,8 @@ namespace GLib {
 		public string name;
 		public int ref_count;
 		public string signature;
+		public GLib.DBusPropertyInfo @ref ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class DBusProxy : GLib.Object, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable {
@@ -865,6 +877,8 @@ namespace GLib {
 		public GLib.DBusArgInfo[] args;
 		public string name;
 		public int ref_count;
+		public GLib.DBusSignalInfo @ref ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class DataInputStream : GLib.BufferedInputStream, GLib.Seekable {
@@ -944,6 +958,8 @@ namespace GLib {
 		public void add (string name, GLib.FileAttributeType type, GLib.FileAttributeInfoFlags flags);
 		public GLib.FileAttributeInfoList dup ();
 		public unowned GLib.FileAttributeInfo? lookup (string name);
+		public GLib.FileAttributeInfoList @ref ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_file_attribute_matcher_ref", type_id = "g_file_attribute_matcher_get_type ()", unref_function = "g_file_attribute_matcher_unref")]
 	[Compact]
@@ -954,8 +970,10 @@ namespace GLib {
 		public unowned string enumerate_next ();
 		public bool matches (string attribute);
 		public bool matches_only (string attribute);
+		public GLib.FileAttributeMatcher @ref ();
 		public GLib.FileAttributeMatcher subtract (GLib.FileAttributeMatcher subtract);
 		public string to_string ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_file_enumerator_get_type ()")]
 	public class FileEnumerator : GLib.Object {
@@ -1203,6 +1221,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public IOModuleScope (GLib.IOModuleScopeFlags flags);
 		public void block (string basename);
+		public void free ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Compact]
@@ -1646,6 +1665,8 @@ namespace GLib {
 		public static GLib.Resource load (string filename) throws GLib.Error;
 		public GLib.Bytes lookup_data (string path, GLib.ResourceLookupFlags lookup_flags) throws GLib.Error;
 		public GLib.InputStream open_stream (string path, GLib.ResourceLookupFlags lookup_flags) throws GLib.Error;
+		public GLib.Resource @ref ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Settings : GLib.Object {
@@ -1729,7 +1750,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		protected SettingsBackend ();
 	}
-	[CCode (cheader_filename = "gio/gio.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "g_settings_schema_get_type ()")]
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_settings_schema_ref", type_id = "g_settings_schema_get_type ()", unref_function = "g_settings_schema_unref")]
 	[Compact]
 	public class SettingsSchema {
 		public unowned string get_id ();
@@ -1737,7 +1758,7 @@ namespace GLib {
 		public GLib.SettingsSchema @ref ();
 		public void unref ();
 	}
-	[CCode (cheader_filename = "gio/gio.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "g_settings_schema_source_get_type ()")]
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_settings_schema_source_ref", type_id = "g_settings_schema_source_get_type ()", unref_function = "g_settings_schema_source_unref")]
 	[Compact]
 	public class SettingsSchemaSource {
 		[CCode (has_construct_function = false)]
@@ -2023,6 +2044,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public SrvTarget (string hostname, uint16 port, uint16 priority, uint16 weight);
 		public GLib.SrvTarget copy ();
+		public void free ();
 		public unowned string get_hostname ();
 		public uint16 get_port ();
 		public uint16 get_priority ();

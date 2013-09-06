@@ -545,53 +545,6 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_tls_error_quark")]
 	public static GLib.Quark g_tls_error_quark ();
 
-	/*** Bug #: GIR parser doesn't pick up ref/unref functions ***/
-
-	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_annotation_info_ref", type_id = "g_dbus_annotation_info_get_type ()", unref_function = "g_dbus_annotation_info_unref")]
-	[Compact]
-	public class DBusAnnotationInfo {
-	}
-
-	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_arg_info_ref", type_id = "g_dbus_arg_info_get_type ()", unref_function = "g_dbus_arg_info_unref")]
-	[Compact]
-	public class DBusArgInfo {
-	}
-
-	[CCode (ref_function = "g_dbus_interface_info_ref", type_id = "g_dbus_interface_info_get_type ()", unref_function = "g_dbus_interface_info_unref")]
-	[Compact]
-	public class DBusInterfaceInfo {
-	}
-
-	[CCode (ref_function = "g_dbus_method_info_ref", type_id = "g_dbus_method_info_get_type ()", unref_function = "g_dbus_method_info_unref")]
-	[Compact]
-	public class DBusMethodInfo {
-	}
-
-	[CCode (ref_function = "g_dbus_node_info_ref", type_id = "g_dbus_node_info_get_type ()", unref_function = "g_dbus_node_info_unref")]
-	[Compact]
-	public class DBusNodeInfo {
-	}
-
-	[CCode (ref_function = "g_dbus_signal_info_ref", type_id = "g_dbus_signal_info_get_type ()", unref_function = "g_dbus_signal_info_unref")]
-	[Compact]
-	public class DBusSignalInfo {
-	}
-
-	[CCode (ref_function = "g_file_attribute_info_list_ref", type_id = "g_file_attribute_info_list_get_type ()", unref_function = "g_file_attribute_info_list_unref")]
-	[Compact]
-	public class FileAttributeInfoList {
-	}
-
-	[CCode (ref_function = "g_file_attribute_matcher_ref", type_id = "g_file_attribute_matcher_get_type ()", unref_function = "g_file_attribute_matcher_unref")]
-	[Compact]
-	public class FileAttributeMatcher {
-	}
-
-	[CCode (ref_function = "g_resource_ref", type_id = "g_resource_get_type ()", unref_function = "g_resource_unref")]
-	[Compact]
-	public class Resource {
-	}
-
 	[CCode (cheader_filename = "gio/gio.h", has_target = false, cname = "GSettingsBindGetMapping")]
 	public delegate bool SettingsBindGetMappingShared (GLib.Value value, GLib.Variant variant, void* user_data);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false, cname = "GSettingsBindSetMapping")]

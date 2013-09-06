@@ -56,8 +56,9 @@ namespace Rest {
 		[CCode (has_construct_function = false)]
 		protected OAuthProxyCall ();
 		public void parse_token_reponse ();
+		public void parse_token_response ();
 	}
-	[CCode (cheader_filename = "rest/rest-param.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "rest_param_get_type ()")]
+	[CCode (cheader_filename = "rest/rest-param.h", ref_function = "rest_param_ref", type_id = "rest_param_get_type ()", unref_function = "rest_param_unref")]
 	[Compact]
 	public class Param {
 		[CCode (has_construct_function = false)]
@@ -160,7 +161,7 @@ namespace Rest {
 		[NoAccessorMethod]
 		public Rest.Proxy proxy { owned get; construct; }
 	}
-	[CCode (cheader_filename = "rest/rest-xml-node.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "rest_xml_node_get_type ()")]
+	[CCode (cheader_filename = "rest/rest-xml-node.h", ref_function = "rest_xml_node_ref", type_id = "rest_xml_node_get_type ()", unref_function = "rest_xml_node_unref")]
 	[Compact]
 	public class XmlNode {
 		public weak GLib.HashTable<void*,void*> attrs;
@@ -242,7 +243,7 @@ namespace Rest {
 		HTTP_HTTP_VERSION_NOT_SUPPORTED;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "rest/oauth-proxy.h", cname = "OAuthProxyAuthCallback", instance_pos = 3.9)]
+	[CCode (cheader_filename = "rest/oauth-proxy.h", instance_pos = 3.9)]
 	public delegate void OAuthProxyAuthCallback (Rest.OAuthProxy proxy, GLib.Error? error, GLib.Object? weak_object);
 	[CCode (cheader_filename = "rest/rest-proxy-call.h", instance_pos = 3.9)]
 	public delegate void ProxyCallAsyncCallback (Rest.ProxyCall call, GLib.Error? error, GLib.Object? weak_object);

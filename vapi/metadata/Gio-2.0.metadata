@@ -114,8 +114,6 @@ FileInfo
   .list_attributes nullable
 FileEnumerator
   .next_file nullable
-IOModuleScope
-  .free skip
 IOStream
   .close* skip
   .input_stream abstract
@@ -193,8 +191,6 @@ SocketControlMessage
   .serialize.data type="uint8[]"
 SocketListener
   .accept*.source_object#parameter default=null
-SrvTarget
-  .free skip
 srv_target_list_sort type_arguments="GLib.SrvTarget" skip=false
 srv_target_list_sort.targets type_arguments="GLib.SrvTarget" owned
 StaticResource
@@ -267,21 +263,6 @@ proxy_get_default_for_protocol skip
 proxy_resolver_get_default skip
 simple_async_report_gerror_in_idle parent="GLib.SimpleAsyncResult" name="report_gerror_in_idle"
 tls_* skip
-
-
-// Bug #666796: GIR parser doesn't pick up ref/unref functions
-DBus*Info
-  .ref skip
-  .unref skip
-FileAttributeInfoList
-  .ref skip
-  .unref skip
-FileAttributeMatcher
-  .ref skip
-  .unref skip
-Resource
-  .ref skip
-  .unref skip
 
 // Bug #659886: Async constuctors don't work
 DBusConnection

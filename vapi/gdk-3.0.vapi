@@ -4818,7 +4818,7 @@ namespace Gdk {
 		public signal void resume_events ();
 		public signal void update ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_frame_timings_get_type ()")]
+	[CCode (cheader_filename = "gdk/gdk.h", ref_function = "gdk_frame_timings_ref", type_id = "gdk_frame_timings_get_type ()", unref_function = "gdk_frame_timings_unref")]
 	[Compact]
 	public class FrameTimings {
 		public bool get_complete ();

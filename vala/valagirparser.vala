@@ -3016,14 +3016,14 @@ public class Vala.GirParser : CodeVisitor {
 		push_node (element_get_name (name), true);
 
 		Class cl;
+		bool require_copy_free = false;
 		if (current.new_symbol) {
 			cl = new Class (current.name, current.source_reference);
 			cl.is_compact = true;
 			var typeid = reader.get_attribute ("glib:get-type");
 			if (typeid != null) {
+				require_copy_free = true;
 				cl.set_attribute_string ("CCode", "type_id", "%s ()".printf (typeid));
-				cl.set_attribute_string ("CCode", "free_function", "g_boxed_free");
-				cl.set_attribute_string ("CCode", "copy_function", "g_boxed_copy");
 			}
 
 			current.symbol = cl;
@@ -3041,6 +3041,9 @@ public class Vala.GirParser : CodeVisitor {
 
 		cl.comment = parse_symbol_doc ();
 
+		Node? ref_method = null;
+		Node? unref_method = null;
+
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (!push_metadata ()) {
 				skip_element ();
@@ -3053,6 +3056,12 @@ public class Vala.GirParser : CodeVisitor {
 				parse_constructor ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
+				var cname = old_current.get_cname ();
+				if (cname.has_suffix ("_ref")) {
+					ref_method = old_current;
+				} else if (cname.has_suffix ("_unref")) {
+					unref_method = old_current;
+				}
 			} else if (reader.name == "function") {
 				skip_element ();
 			} else if (reader.name == "union") {
@@ -3064,6 +3073,16 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			pop_metadata ();
+		}
+
+		// Add ccode-attributes for ref/unref methodes if available
+		// otherwise fallback to default g_boxed_copy/free
+		if (ref_method != null && unref_method != null) {
+			cl.set_attribute_string ("CCode", "ref_function", ref_method.get_cname ());
+			cl.set_attribute_string ("CCode", "unref_function", unref_method.get_cname ());
+		} else if (require_copy_free) {
+			cl.set_attribute_string ("CCode", "copy_function", "g_boxed_copy");
+			cl.set_attribute_string ("CCode", "free_function", "g_boxed_free");
 		}
 
 		pop_node ();
