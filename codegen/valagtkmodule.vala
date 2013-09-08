@@ -58,7 +58,7 @@ public class Vala.GtkModule : GSignalModule {
 		if (gresource_to_file_map != null) {
 			return;
 		}
-		gresource_to_file_map = new HashMap<string, string>(str_hash, str_equal);		
+		gresource_to_file_map = new HashMap<string, string>(str_hash, str_equal);
 		foreach (var gresource in context.gresources) {
 			if (!FileUtils.test (gresource, FileTest.EXISTS)) {
 				Report.error (null, "GResources file `%s' does not exist".printf (gresource));
@@ -106,9 +106,13 @@ public class Vala.GtkModule : GSignalModule {
 		MarkupReader reader = new MarkupReader (ui_file);
 		Class current_class = null;
 
+		bool template_tag_found = false;
 		MarkupTokenType current_token = reader.read_token (null, null);
 		while (current_token != MarkupTokenType.EOF) {
 			if (current_token == MarkupTokenType.START_ELEMENT && (reader.name == "template" || reader.name == "object")) {
+				if (reader.name == "template") {
+					template_tag_found = true;
+				}
 				var class_name = reader.get_attribute ("class");
 				if (class_name != null) {
 					current_class = cclass_to_vala_map.get (class_name);
@@ -129,6 +133,10 @@ public class Vala.GtkModule : GSignalModule {
 				}
 			}
 			current_token = reader.read_token (null, null);
+		}
+
+		if (!template_tag_found) {
+			Report.error (node.source_reference, "ui resource `%s' does not describe a valid composite template".printf (ui_resource));
 		}
 	}
 
@@ -263,7 +271,7 @@ public class Vala.GtkModule : GSignalModule {
 		}
 
 		push_context (class_init_context);
-			
+
 		if (sig != null) {
 			sig.check (context);
 			var method_type = new MethodType (m);
