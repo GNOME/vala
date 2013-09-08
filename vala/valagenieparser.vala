@@ -835,8 +835,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 					i++;
 					
 					if (p_expr != null) { 
-						
-						
 						if (p_expr is StringLiteral) {
 							var s_exp = (StringLiteral) p_expr;
 							var len = s_exp.value.length;
@@ -846,14 +844,16 @@ public class Vala.Genie.Parser : CodeVisitor {
 								var st =  s_exp.value.substring (0, len-1);
 								st += s;
 								s_exp.value = st;
+							} else {
+								string s = "\"\\n\"";
+								p_expr = new StringLiteral (s, get_src (begin));
 							}
 						} else {
-							string s = "\"\\n\"";
-							var rhs = new StringLiteral (s, get_src (begin));
-							p_expr = new BinaryExpression (BinaryOperator.PLUS, p_expr, rhs, get_src (begin));
+							string s = "\"%s\\n\"";
+							var s_exp = new StringLiteral (s, get_src (begin));
+							list.add (s_exp);
 						}
 					}
-				
 				} 
 				list.add (p_expr);
 
