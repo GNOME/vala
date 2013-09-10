@@ -53,6 +53,35 @@ AC_SUBST(LIBGEE_LIBS)
 
 
 
+AC_MSG_CHECKING([for CGRAPH])
+valadoc_tmp_LIBADD="$LIBADD"
+valadoc_tmp_CFLAGS="$CFLAGGS"
+LIBADD="$LIBADD $LIBGVC_LIBS"
+CFLAGS="$CFLAGS $LIBGVC_CFLAGS"
+AC_RUN_IFELSE(
+	[AC_LANG_SOURCE([
+		#include <gvc.h>
+
+		int main(void) {
+			#ifdef WITH_CGRAPH
+				return 0;
+			#else
+				return -1;
+			#endif
+		}
+	])], [
+		AC_MSG_RESULT([yes])
+		VALAFLAGS="$VALAFLAGS -D WITH_CGRAPH"
+		have_cgraph=yes
+	], [
+		AC_MSG_RESULT([no])
+		have_cgraph=no
+	]
+)
+LIBADD="$valadoc_tmp_LIBADD"
+CFLAGS="$valadoc_tmp_CFLAGS"
+AM_CONDITIONAL(HAVE_CGRAPH, test "$have_cgraph" = "yes")
+
 
 ##
 ## Drivers:

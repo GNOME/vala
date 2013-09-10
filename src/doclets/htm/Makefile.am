@@ -4,10 +4,21 @@ NULL =
 AM_CFLAGS =  -g \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
 	-I ../../libvaladoc/ \
+	$(LIBGVC_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(LIBGEE_CFLAGS) \
 	$(NULL)
 
+# Without the LIBGVC_CFLAGS, we get 
+# make[5]: Entering directory `/home/richard/.local/src/valadoc/src/doclets/devhelp'
+#  CC       doclet.lo
+# In file included from /usr/include/graphviz/gvc.h:17:0,
+#                  from ../../libvaladoc/valadoc-1.0.h:15,
+#                  from doclet.c:28:
+# /usr/include/graphviz/types.h:49:20: fatal error: cgraph.h: No such file or directory
+#  #include <cgraph.h>
+#                     ^
+# compilation terminated.
 
 
 BUILT_SOURCES = libdoclet.vala.stamp

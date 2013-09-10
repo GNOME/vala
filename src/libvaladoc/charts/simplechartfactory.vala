@@ -31,7 +31,11 @@ public class Valadoc.Charts.SimpleFactory : Charts.Factory {
 	}
 
 	public override Gvc.Graph create_graph (Api.Node item) {
+		#if WITH_CGRAPH
+		var graph = new Gvc.Graph (item.get_full_name (), Gvc.Agdirected, 0);
+		#else
 		var graph = new Gvc.Graph (item.get_full_name (), Gvc.GraphKind.AGDIGRAPH);
+		#endif
 		return graph;
 	}
 

@@ -5,6 +5,7 @@ AM_CFLAGS =  -g \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
 	-I ../../libvaladoc/ \
 	$(GLIB_CFLAGS) \
+	$(LIBGVC_CFLAGS) \
 	$(LIBGEE_CFLAGS) \
 	$(NULL)
 

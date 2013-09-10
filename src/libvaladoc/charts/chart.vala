@@ -27,7 +27,9 @@ public class Valadoc.Charts.Chart : Api.Visitor {
 	protected Factory factory;
 
 	static construct {
+		#if !WITH_CGRAPH
 		Gvc.init ();
+		#endif
 	}
 
 	public Chart (Factory factory, Api.Node node) {
