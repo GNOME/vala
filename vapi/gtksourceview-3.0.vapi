@@ -348,6 +348,7 @@ namespace Gtk {
 		public unowned GLib.Icon get_gicon ();
 		public unowned string get_icon_name ();
 		public unowned Gdk.Pixbuf get_pixbuf ();
+		[Deprecated (since = "3.10")]
 		public unowned string get_stock_id ();
 		public string get_tooltip_markup (Gtk.SourceMark mark);
 		public string get_tooltip_text (Gtk.SourceMark mark);
@@ -356,12 +357,14 @@ namespace Gtk {
 		public void set_gicon (GLib.Icon gicon);
 		public void set_icon_name (string icon_name);
 		public void set_pixbuf (Gdk.Pixbuf pixbuf);
+		[Deprecated (since = "3.10")]
 		public void set_stock_id (string stock_id);
 		[NoAccessorMethod]
 		public Gdk.RGBA background { get; set; }
 		public GLib.Icon gicon { get; set; }
 		public string icon_name { get; set; }
 		public Gdk.Pixbuf pixbuf { get; set; }
+		[Deprecated (since = "3.10")]
 		public string stock_id { get; set; }
 		public signal string query_tooltip_markup (Gtk.SourceMark mark);
 		public signal string query_tooltip_text (Gtk.SourceMark mark);
@@ -435,17 +438,15 @@ namespace Gtk {
 		public int get_occurrence_position (Gtk.TextIter match_start, Gtk.TextIter match_end);
 		public int get_occurrences_count ();
 		public GLib.Error? get_regex_error ();
-		public Gtk.SourceRegexSearchState get_regex_state ();
 		public unowned Gtk.SourceSearchSettings get_settings ();
-		public bool replace (Gtk.TextIter match_start, Gtk.TextIter match_end, string replace, int replace_length);
-		public uint replace_all (string replace, int replace_length);
+		public bool replace (Gtk.TextIter match_start, Gtk.TextIter match_end, string replace, int replace_length) throws GLib.Error;
+		public uint replace_all (string replace, int replace_length) throws GLib.Error;
 		public void set_highlight (bool highlight);
 		public void set_settings (Gtk.SourceSearchSettings? settings);
 		public Gtk.SourceBuffer buffer { get; construct; }
 		public bool highlight { get; set construct; }
 		public int occurrences_count { get; }
 		public GLib.Error? regex_error { owned get; }
-		public Gtk.SourceRegexSearchState regex_state { get; }
 		public Gtk.SourceSearchSettings settings { get; set construct; }
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_search_settings_get_type ()")]
@@ -689,14 +690,6 @@ namespace Gtk {
 		CURSOR,
 		PRELIT,
 		SELECTED
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_REGEX_SEARCH_", type_id = "gtk_source_regex_search_state_get_type ()")]
-	[GIR (name = "RegexSearchState")]
-	public enum SourceRegexSearchState {
-		NO_ERROR,
-		COMPILATION_ERROR,
-		MATCHING_ERROR,
-		REPLACE_ERROR
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_SMART_HOME_END_", type_id = "gtk_source_smart_home_end_type_get_type ()")]
 	[GIR (name = "SmartHomeEndType")]
