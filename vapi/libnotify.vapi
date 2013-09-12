@@ -10,6 +10,7 @@ namespace Notify {
 		public void clear_hints ();
 		public bool close () throws GLib.Error;
 		public int get_closed_reason ();
+		public void set_app_name (string app_name);
 		public void set_category (string category);
 		public void set_hint (string key, GLib.Variant value);
 		public void set_hint_byte (string key, uchar value);
@@ -19,11 +20,13 @@ namespace Notify {
 		public void set_hint_string (string key, string value);
 		public void set_hint_uint32 (string key, uint value);
 		public void set_icon_from_pixbuf (Gdk.Pixbuf icon);
-		public void set_image_from_pixbuf (Gdk.Pixbuf image);
+		public void set_image_from_pixbuf (Gdk.Pixbuf pixbuf);
 		public void set_timeout (int timeout);
 		public void set_urgency (Notify.Urgency urgency);
 		public bool show () throws GLib.Error;
 		public bool update (string summary, string body, string icon);
+		[NoAccessorMethod]
+		public string app_name { owned get; set; }
 		[NoAccessorMethod]
 		public string body { owned get; set construct; }
 		public int closed_reason { get; }
@@ -63,6 +66,8 @@ namespace Notify {
 	public static bool init (string app_name);
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static bool is_initted ();
+	[CCode (cheader_filename = "libnotify/notify.h")]
+	public static void set_app_name (string app_name);
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static void uninit ();
 }

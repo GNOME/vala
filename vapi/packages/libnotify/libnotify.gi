@@ -25,6 +25,12 @@
 		<function name="is_initted" symbol="notify_is_initted">
 			<return-type type="gboolean"/>
 		</function>
+		<function name="set_app_name" symbol="notify_set_app_name">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="app_name" type="char*"/>
+			</parameters>
+		</function>
 		<function name="uninit" symbol="notify_uninit">
 			<return-type type="void"/>
 		</function>
@@ -86,6 +92,13 @@
 					<parameter name="icon" type="char*"/>
 				</parameters>
 			</constructor>
+			<method name="set_app_name" symbol="notify_notification_set_app_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="notification" type="NotifyNotification*"/>
+					<parameter name="app_name" type="char*"/>
+				</parameters>
+			</method>
 			<method name="set_category" symbol="notify_notification_set_category">
 				<return-type type="void"/>
 				<parameters>
@@ -161,7 +174,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="notification" type="NotifyNotification*"/>
-					<parameter name="image" type="GdkPixbuf*"/>
+					<parameter name="pixbuf" type="GdkPixbuf*"/>
 				</parameters>
 			</method>
 			<method name="set_timeout" symbol="notify_notification_set_timeout">
@@ -194,6 +207,7 @@
 					<parameter name="icon" type="char*"/>
 				</parameters>
 			</method>
+			<property name="app-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="body" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="closed-reason" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="icon-name" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
@@ -209,7 +223,7 @@
 		<constant name="NOTIFY_EXPIRES_DEFAULT" type="int" value="-1"/>
 		<constant name="NOTIFY_EXPIRES_NEVER" type="int" value="0"/>
 		<constant name="NOTIFY_VERSION_MAJOR" type="int" value="0"/>
-		<constant name="NOTIFY_VERSION_MICRO" type="int" value="0"/>
+		<constant name="NOTIFY_VERSION_MICRO" type="int" value="6"/>
 		<constant name="NOTIFY_VERSION_MINOR" type="int" value="7"/>
 	</namespace>
 </api>
