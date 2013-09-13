@@ -1,3 +1,10 @@
+Vala 0.21.2
+===========
+
+ * Recognize ref/unref functions in .gir files.
+ * Add geocode-glib bindings.
+ * Bug fixes and binding updates.
+
 Vala 0.21.1
 ===========
 
