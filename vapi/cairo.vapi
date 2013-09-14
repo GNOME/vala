@@ -716,15 +716,14 @@ namespace Cairo {
 		[CCode (cname = "cairo_pdf_surface_create_for_stream")]
 		public PdfSurface.for_stream (WriteFunc write_func, double width_in_points, double height_in_points);
 		public void set_size (double width_in_points, double height_in_points);
-		public void restrict_to_Version (PdfVersion version);
-		public static void get_versions (out unowned PdfVersion[] versions);
+		public void restrict_to_version (PdfVersion version);
 	}
 
 	[Compact]
 	[CCode (cname = "cairo_surface_t")]
 	public class RecordingSurface : Surface {
 		[CCode (cname = "cairo_recording_surface_create")]
-		public RecordingSurface (Rectangle? extents = null);
+		public RecordingSurface (Content content, Rectangle? extents = null);
 		public void ink_extents (out double x0, out double y0, out double width, out double height);
 		public bool get_extents (out Rectangle extents);
 	}
@@ -768,7 +767,6 @@ namespace Cairo {
 		[CCode (cname = "cairo_svg_surface_create_for_stream")]
 		public SvgSurface.for_stream (WriteFunc write_func, double width_in_points, double height_in_points);
 		public void restrict_to_version (SvgVersion version);
-		public static void get_versions (out unowned SvgVersion[] versions);
 	}
 	
 	[CCode (cname = "cairo_svg_version_t", cprefix = "CAIRO_SVG_")]
@@ -777,6 +775,8 @@ namespace Cairo {
 		VERSION_1_2;
 		[CCode (cname = "cairo_svg_version_to_string")]
 		public unowned string to_string ();
+		[CCode (cname = "cairo_svg_get_versions")]
+		public static void get_versions (out unowned SvgVersion[] versions);
 	}
 
 	[CCode (cname = "cairo_pdf_version_t", cprefix = "CAIRO_PDF_")]
@@ -785,7 +785,7 @@ namespace Cairo {
 		VERSION_1_5;
 		[CCode (cname = "cairo_pdf_version_to_string")]
 		public unowned string to_string ();
-		[CCode (cname = "cairo_ps_get_levels")]
+		[CCode (cname = "cairo_pdf_get_versions")]
 		public static void get_versions (out unowned PdfVersion[] versions);
 	}
 
