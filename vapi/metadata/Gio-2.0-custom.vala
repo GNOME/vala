@@ -14,6 +14,12 @@ namespace GLib {
 		public void set_callback ([CCode (type = "GSourceFunc")] owned CancellableSourceFunc func);
 	}
 
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_menu_model_get_type ()")]
+	public abstract class MenuModel : GLib.Object {
+		[NoWrapper]
+		public virtual void get_item_links (int item_index, [CCode (type = "GHashTable**")] out GLib.HashTable<string,GLib.MenuModel>? links);
+	}
+
 	public class DBusConnection : GLib.Object, GLib.AsyncInitable, GLib.Initable {
 		[CCode (cname = "g_dbus_connection_new", finish_function = "g_dbus_connection_new_finish")]
 		public static async GLib.DBusConnection @new (GLib.IOStream stream, string guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
