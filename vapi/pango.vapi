@@ -235,6 +235,7 @@ namespace Pango {
 	public abstract class FontMap : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected FontMap ();
+		public void changed ();
 		public Pango.Context create_context ();
 		public uint get_serial ();
 		public void list_families ([CCode (array_length_cname = "n_families", array_length_pos = 1.1)] out Pango.FontFamily[] families);
@@ -365,7 +366,7 @@ namespace Pango {
 		public bool is_wrapped ();
 		public void move_cursor_visually (bool strong, int old_index, int old_trailing, int direction, out int new_index, out int new_trailing);
 		public void set_alignment (Pango.Alignment alignment);
-		public void set_attributes (owned Pango.AttrList? attrs);
+		public void set_attributes (Pango.AttrList? attrs);
 		public void set_auto_dir (bool auto_dir);
 		public void set_ellipsize (Pango.EllipsizeMode ellipsize);
 		public void set_font_description (Pango.FontDescription? desc);

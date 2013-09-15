@@ -193,6 +193,7 @@ namespace GI {
 		public unowned string get_version (string namespace_);
 		public bool is_registered (string namespace_, string? version);
 		public unowned string load_typelib (GI.Typelib typelib, GI.RepositoryLoadFlags flags) throws GLib.Error;
+		public static void prepend_library_path (string directory);
 		public static void prepend_search_path (string directory);
 		public unowned GI.Typelib require (string namespace_, string? version, GI.RepositoryLoadFlags flags) throws GLib.Error;
 		public unowned GI.Typelib require_private (string typelib_dir, string namespace_, string? version, GI.RepositoryLoadFlags flags) throws GLib.Error;

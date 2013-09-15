@@ -1465,8 +1465,6 @@ namespace GLib {
 		[NoWrapper]
 		public virtual void get_item_attributes (int item_index, [CCode (type = "GHashTable**")] out GLib.HashTable<string,GLib.Variant>? attributes);
 		public virtual GLib.MenuModel get_item_link (int item_index, string link);
-		[NoWrapper]
-		public virtual void get_item_links (int item_index, [CCode (type = "GHashTable**")] out GLib.HashTable<string,GLib.MenuModel>? links);
 		public virtual int get_n_items ();
 		public virtual bool is_mutable ();
 		public virtual GLib.MenuAttributeIter iterate_item_attributes (int item_index);
@@ -2534,6 +2532,7 @@ namespace GLib {
 		public abstract async bool make_directory_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool make_directory_with_parents (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract bool make_symbolic_link (string symlink_value, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract bool measure_disk_usage_finish (GLib.AsyncResult result, out uint64 disk_usage, out uint64 num_dirs, out uint64 num_files) throws GLib.Error;
 		public GLib.FileMonitor monitor (GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "monitor_dir")]
 		public abstract GLib.FileMonitor monitor_directory (GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;
@@ -3090,6 +3089,14 @@ namespace GLib {
 		PRIVATE,
 		REPLACE_DESTINATION
 	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_MEASURE_", type_id = "g_file_measure_flags_get_type ()")]
+	[Flags]
+	public enum FileMeasureFlags {
+		NONE,
+		REPORT_ANY_ERROR,
+		APPARENT_SIZE,
+		NO_XDEV
+	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_MONITOR_EVENT_", type_id = "g_file_monitor_event_get_type ()")]
 	public enum FileMonitorEvent {
 		CHANGED,
@@ -3484,6 +3491,8 @@ namespace GLib {
 	public delegate string[] DBusSubtreeEnumerateFunc (GLib.DBusConnection connection, string sender, string object_path);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 4.9)]
 	public delegate GLib.DBusInterfaceInfo DBusSubtreeIntrospectFunc (GLib.DBusConnection connection, string sender, string object_path, string node);
+	[CCode (cheader_filename = "gio/gio.h", instance_pos = 4.9)]
+	public delegate void FileMeasureProgressCallback (bool reporting, uint64 current_size, uint64 num_dirs, uint64 num_files);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	public delegate void FileProgressCallback (int64 current_num_bytes, int64 total_num_bytes);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]

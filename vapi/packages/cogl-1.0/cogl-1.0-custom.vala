@@ -194,4 +194,10 @@ namespace Cogl {
 		[CCode (cname = "cogl_matrix_multiply")]
 		public Matrix.multiply (Cogl.Matrix a, Cogl.Matrix b);
 	}
+
+	[SimpleType]
+	[GIR (name = "Bool")]
+	[BooleanType]
+	public struct Bool : bool {
+	}
 }

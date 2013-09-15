@@ -274,6 +274,12 @@ namespace Cogl {
 		public Cogl.Fixed sin ();
 		public Cogl.Fixed tan ();
 	}
+	[BooleanType]
+	[CCode (cheader_filename = "cogl/cogl.h")]
+	[GIR (name = "Bool")]
+	[SimpleType]
+	public struct Bool : bool {
+	}
 	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
 	public struct Color {
 		public uchar red;

@@ -505,12 +505,6 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool underline_set { get; construct; }
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksource.h")]
-	[GIR (name = "StyleClass")]
-	public class SourceStyleClass : GLib.ObjectClass {
-		[CCode (has_construct_function = false)]
-		protected SourceStyleClass ();
-	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_style_scheme_get_type ()")]
 	[GIR (name = "StyleScheme")]
 	public class SourceStyleScheme : GLib.Object {

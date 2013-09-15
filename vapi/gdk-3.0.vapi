@@ -4784,6 +4784,7 @@ namespace Gdk {
 		public unowned Gdk.Device get_source_device ();
 		public bool get_state (out Gdk.ModifierType state);
 		public uint32 get_time ();
+		public unowned Gdk.Window get_window ();
 		public static void handler_set (owned Gdk.EventFunc func);
 		public static Gdk.Event peek ();
 		public void put ();

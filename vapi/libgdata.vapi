@@ -1175,13 +1175,21 @@ namespace GData {
 		[CCode (has_construct_function = false)]
 		protected Parsable ();
 		[CCode (has_construct_function = false)]
+		public Parsable.from_json (GLib.Type parsable_type, string json, int length) throws GLib.Error;
+		[CCode (has_construct_function = false)]
 		public Parsable.from_xml (GLib.Type parsable_type, string xml, int length) throws GLib.Error;
+		[NoWrapper]
+		public virtual void get_json (Json.Builder builder);
 		[NoWrapper]
 		public virtual void get_namespaces (GLib.HashTable<void*,void*> namespaces);
 		[NoWrapper]
 		public virtual void get_xml (GLib.StringBuilder xml_string);
 		[NoWrapper]
+		public virtual bool parse_json (Json.Reader reader) throws GLib.Error;
+		[NoWrapper]
 		public virtual bool parse_xml (Xml.Doc doc, Xml.Node node) throws GLib.Error;
+		[NoWrapper]
+		public virtual bool post_parse_json () throws GLib.Error;
 		[NoWrapper]
 		public virtual bool post_parse_xml () throws GLib.Error;
 		[NoWrapper]
@@ -1831,7 +1839,8 @@ namespace GData {
 	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SERVICE_ERROR_")]
 	public errordomain YouTubeServiceError {
 		API_QUOTA_EXCEEDED,
-		ENTRY_QUOTA_EXCEEDED
+		ENTRY_QUOTA_EXCEEDED,
+		CHANNEL_REQUIRED
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", instance_pos = 4.9)]
 	public delegate void BatchOperationCallback (uint operation_id, GData.BatchOperationType operation_type, GData.Entry entry, GLib.Error error);

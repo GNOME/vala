@@ -327,6 +327,7 @@ namespace Pk {
 		public static string[] ids_remove_id (string package_ids, string package_id);
 		public static void ids_test (void* user_data);
 		public static string ids_to_string (string package_ids);
+		public bool parse (string data) throws GLib.Error;
 		public void print ();
 		public bool set_id (string package_id) throws GLib.Error;
 		public static void test (void* user_data);
@@ -657,6 +658,16 @@ namespace Pk {
 	public class TransactionPast : Pk.Source {
 		[CCode (has_construct_function = false)]
 		public TransactionPast ();
+		public unowned string get_cmdline ();
+		public unowned string get_data ();
+		public GLib.DateTime get_datetime ();
+		public uint get_duration ();
+		public unowned string get_id ();
+		public Pk.Role get_role ();
+		public bool get_succeeded ();
+		public unowned string get_timespec ();
+		public int64 get_timestamp ();
+		public uint get_uid ();
 		[NoAccessorMethod]
 		public string cmdline { owned get; set; }
 		[NoAccessorMethod]

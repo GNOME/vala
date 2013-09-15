@@ -50,6 +50,7 @@ namespace UDisks {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_partition_table_subtypes (string partition_table_type);
 		public unowned string get_partition_table_type_for_display (string partition_table_type);
+		public unowned string get_partition_type_and_subtype_for_display (string partition_table_type, string partition_table_subtype, string partition_type);
 		public unowned string get_partition_type_for_display (string partition_table_type, string partition_type);
 		public GLib.List<UDisks.PartitionTypeInfo> get_partition_type_infos (string partition_table_type, string? partition_table_subtype);
 		public GLib.List<UDisks.Partition> get_partitions (UDisks.PartitionTable table);

@@ -1,3 +1,5 @@
+Cache.interfaces skip
+
 DeviceListener
 	.new_simple skip=false
 

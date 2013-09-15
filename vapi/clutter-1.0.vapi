@@ -5833,6 +5833,7 @@ namespace Clutter {
 		public unowned Clutter.InputDevice get_source_device ();
 		public unowned Clutter.Stage get_stage ();
 		public Clutter.ModifierType get_state ();
+		public void get_state_full (out Clutter.ModifierType button_state, out Clutter.ModifierType base_state, out Clutter.ModifierType latched_state, out Clutter.ModifierType locked_state, out Clutter.ModifierType effective_state);
 		public uint32 get_time ();
 		[CCode (cname = "clutter_event_type")]
 		public Clutter.EventType get_type ();
@@ -5990,6 +5991,7 @@ namespace Clutter {
 		public unowned Clutter.Actor get_grabbed_actor ();
 		public bool get_has_cursor ();
 		public bool get_key (uint index_, out uint keyval, out Clutter.ModifierType modifiers);
+		public Clutter.ModifierType get_modifier_state ();
 		public uint get_n_axes ();
 		public uint get_n_keys ();
 		public unowned Clutter.Actor get_pointer_actor ();
@@ -8175,6 +8177,8 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Deprecated (since = "1.8")]
 	public static void set_motion_events_enabled (bool enable);
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	public static void set_windowing_backend (string backend_type);
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Deprecated (replacement = "Threads.add_repaint_func", since = "vala-0.14")]
 	public static uint threads_add_repaint_func (GLib.SourceFunc func, void* data, GLib.DestroyNotify notify);

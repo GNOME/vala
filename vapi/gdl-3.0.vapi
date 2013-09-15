@@ -166,6 +166,10 @@ namespace Gdl {
 		public int locked { get; set; }
 		[NoAccessorMethod]
 		public Gdl.SwitcherStyle switcher_style { get; set; }
+		[NoAccessorMethod]
+		public Gtk.PositionType tab_pos { get; set; }
+		[NoAccessorMethod]
+		public bool tab_reorderable { get; set; }
 		public virtual signal void layout_changed ();
 	}
 	[CCode (cheader_filename = "gdl/gdl.h", type_id = "gdl_dock_notebook_get_type ()")]
@@ -285,6 +289,10 @@ namespace Gdl {
 		public int insert_page (Gtk.Widget page, Gtk.Widget tab_widget, string label, string tooltips, string stock_id, Gdk.Pixbuf pixbuf_icon, int position);
 		[NoAccessorMethod]
 		public Gdl.SwitcherStyle switcher_style { get; set; }
+		[NoAccessorMethod]
+		public Gtk.PositionType tab_pos { get; set; }
+		[NoAccessorMethod]
+		public bool tab_reorderable { get; set; }
 	}
 	[CCode (cheader_filename = "gdl/gdl.h", has_type_id = false)]
 	public struct DockRequest {

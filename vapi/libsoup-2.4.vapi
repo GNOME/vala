@@ -607,6 +607,12 @@ namespace Soup {
 		public void run_async ();
 		public void unpause_message (Soup.Message msg);
 		public GLib.MainContext async_context { get; owned construct; }
+		[CCode (array_length = false, array_null_terminated = true)]
+		[NoAccessorMethod]
+		public string[] http_aliases { owned get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
+		[NoAccessorMethod]
+		public string[] https_aliases { owned get; set; }
 		[NoAccessorMethod]
 		public Soup.Address @interface { owned get; construct; }
 		public uint port { get; construct; }
@@ -1349,6 +1355,10 @@ namespace Soup {
 	public const string SERVER_ASYNC_CONTEXT;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_SERVER_H")]
 	public const int SERVER_H;
+	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_SERVER_HTTPS_ALIASES")]
+	public const string SERVER_HTTPS_ALIASES;
+	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_SERVER_HTTP_ALIASES")]
+	public const string SERVER_HTTP_ALIASES;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_SERVER_INTERFACE")]
 	public const string SERVER_INTERFACE;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_SERVER_PORT")]
