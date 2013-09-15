@@ -92,11 +92,11 @@ namespace Soup {
 	[Deprecated (since = "vala-0.14", replacement = "SSLError.quark")]
 	public static GLib.Quark ssl_error_quark ();
 
-	[Deprecated (since = "vala-0.22", replacement = "StatusCode.get_phrase")]
+	[Deprecated (since = "vala-0.22", replacement = "Status.get_phrase")]
 	public static unowned string status_get_phrase (uint status_code);
-	[Deprecated (since = "vala-0.22", replacement = "StatusCode.proxify")]
+	[Deprecated (since = "vala-0.22", replacement = "Status.proxify")]
 	public static uint status_proxify (uint status_code);
-	[Deprecated (since = "vala-0.22", replacement = "StatusCode")]
+	[Deprecated (since = "vala-0.22", replacement = "Status")]
 	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_STATUS_", type_id = "soup_known_status_code_get_type ()")]
 	public enum KnownStatusCode {
 		NONE,
