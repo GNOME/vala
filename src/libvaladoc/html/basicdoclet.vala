@@ -36,6 +36,12 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		get;
 	}
 
+	public string wiki_index_name {
+		default = "index.valadoc";
+		protected set;
+		get;
+	}
+
 	protected Api.Tree tree;
 	protected HtmlRenderer _renderer;
 	protected Html.MarkupWriter writer;
@@ -233,7 +239,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		DirUtils.create (Path.build_filename (contentp, "img"), 0777);
 
 		foreach (WikiPage page in pages) {
-			if (page.name != "index.valadoc") {
+			if (page.name != wiki_index_name) {
 				write_wiki_page (page, contentp, css_path_wiki, js_path_wiki, this.settings.pkg_name);
 			}
 		}
@@ -573,7 +579,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		WikiPage? wikiindex = (tree.wikitree == null)
 			? null
-			: tree.wikitree.search ("index.valadoc");
+			: tree.wikitree.search (wiki_index_name);
 		if (wikiindex != null) {
 			_renderer.set_container (wikiindex);
 			_renderer.render (wikiindex.documentation);
@@ -1062,7 +1068,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			.end_tag ("h2");
 
 
-		WikiPage? wikipage = (tree.wikitree == null)? null : tree.wikitree.search ("index.valadoc");
+		WikiPage? wikipage = (tree.wikitree == null)? null : tree.wikitree.search (wiki_index_name);
 		if (wikipage != null) {
 			_renderer.set_container (parent);
 			_renderer.render (wikipage.documentation);
