@@ -205,7 +205,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			if (m.is_variadic ()) {
 				// _constructv function
 				function = new CCodeFunction (get_constructv_name ((CreationMethod) m));
-				function.modifiers |= CCodeModifiers.STATIC;
 
 				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 				generate_cparameters (m, decl_space, cparam_map, function);
@@ -411,10 +410,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		if (m.is_inline) {
 			function.modifiers |= CCodeModifiers.INLINE;
-		}
-
-		if (m is CreationMethod && m.is_variadic ()) {
-			function.modifiers |= CCodeModifiers.STATIC;
 		}
 
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
