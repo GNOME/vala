@@ -1011,7 +1011,10 @@ namespace Xml {
 	[Compact]
 	[CCode (cname = "xmlSchemaValidCtxt", free_function = "xmlSchemaFreeValidCtxt", cheader_filename = "libxml/xmlschemas.h")]
 	public class SchemaValidCtxt {
+		[CCode (cname = "xmlSchemaNewValidCtxt")]
 		public SchemaValidCtxt (Xml.Schema schema);
+		[CCode (cname = "xmlSchemaValidateDoc")]
+		public int validate_doc (Xml.Doc doc);
 	}
 
 	/* xmlsave */
