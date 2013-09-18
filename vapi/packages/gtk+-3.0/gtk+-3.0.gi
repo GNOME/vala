@@ -5170,6 +5170,7 @@
 			<member name="GTK_DEBUG_NO_CSS_CACHE" value="8192"/>
 			<member name="GTK_DEBUG_BASELINES" value="16384"/>
 			<member name="GTK_DEBUG_PIXEL_CACHE" value="32768"/>
+			<member name="GTK_DEBUG_NO_PIXEL_CACHE" value="65536"/>
 		</flags>
 		<flags name="GtkDestDefaults" type-name="GtkDestDefaults" get-type="gtk_dest_defaults_get_type">
 			<member name="GTK_DEST_DEFAULT_MOTION" value="1"/>
@@ -10441,6 +10442,7 @@
 			<implements>
 				<interface name="AtkComponent"/>
 				<interface name="AtkAction"/>
+				<interface name="AtkSelection"/>
 			</implements>
 		</object>
 		<object name="GtkComboBoxText" parent="GtkComboBox" type-name="GtkComboBoxText" get-type="gtk_combo_box_text_get_type">
@@ -15844,6 +15846,12 @@
 					<parameter name="header" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<signal name="activate" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="row" type="GtkListBoxRow*"/>
+				</parameters>
+			</signal>
 		</object>
 		<object name="GtkListStore" parent="GObject" type-name="GtkListStore" get-type="gtk_list_store_get_type">
 			<implements>
@@ -33461,14 +33469,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="914"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="916"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="14"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="16"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="9"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

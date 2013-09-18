@@ -1562,7 +1562,7 @@ namespace Gtk {
 		public virtual signal void popup ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class ComboBoxAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Action {
+	public class ComboBoxAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Action, Atk.Selection {
 		[CCode (has_construct_function = false)]
 		protected ComboBoxAccessible ();
 	}
@@ -2896,6 +2896,7 @@ namespace Gtk {
 		public unowned Gtk.Widget get_header ();
 		public int get_index ();
 		public void set_header (Gtk.Widget? header);
+		public virtual signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ListStore : GLib.Object, Gtk.TreeModel, Gtk.TreeDragSource, Gtk.TreeDragDest, Gtk.TreeSortable, Gtk.Buildable {
@@ -7420,7 +7421,8 @@ namespace Gtk {
 		SIZE_REQUEST,
 		NO_CSS_CACHE,
 		BASELINES,
-		PIXEL_CACHE
+		PIXEL_CACHE,
+		NO_PIXEL_CACHE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DELETE_")]
 	public enum DeleteType {
