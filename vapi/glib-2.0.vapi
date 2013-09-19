@@ -1001,7 +1001,6 @@ public class string {
 	[Deprecated (replacement = "string.index_of_nth_char")]
 	[CCode (cname = "g_utf8_offset_to_pointer")]
 	public unowned string utf8_offset (long offset);
-	[Deprecated (replacement = "string.substring")]
 	public unowned string offset (long offset) {
 		return (string) ((char*) this + offset);
 	}
