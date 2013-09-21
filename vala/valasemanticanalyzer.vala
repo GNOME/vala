@@ -150,6 +150,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType unichar_type;
 	public DataType double_type;
 	public DataType type_type;
+	public DataType va_list_type;
 	public Class object_type;
 	public StructValueType gvalue_type;
 	public ObjectType gvariant_type;
@@ -196,6 +197,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		size_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("size_t"));
 		ssize_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ssize_t"));
 		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
+		va_list_type = new StructValueType ((Struct) root_symbol.scope.lookup ("va_list"));
 
 		var unichar_struct = (Struct) root_symbol.scope.lookup ("unichar");
 		if (unichar_struct != null) {

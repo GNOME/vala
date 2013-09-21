@@ -6205,6 +6205,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return get_ccode_attribute(sym).real_name;
 	}
 
+	public static string get_ccode_constructv_name (CreationMethod m) {
+		const string infix = "constructv";
+
+		var parent = m.parent_symbol as Class;
+
+		if (m.name == ".new") {
+			return "%s%s".printf (get_ccode_lower_case_prefix (parent), infix);
+		} else {
+			return "%s%s_%s".printf (get_ccode_lower_case_prefix (parent), infix, m.name);
+		}
+	}
+
 	public static string get_ccode_vfunc_name (Method m) {
 		return get_ccode_attribute(m).vfunc_name;
 	}

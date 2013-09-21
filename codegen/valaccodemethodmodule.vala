@@ -204,25 +204,13 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 			if (m.is_variadic ()) {
 				// _constructv function
-				function = new CCodeFunction (get_constructv_name ((CreationMethod) m));
+				function = new CCodeFunction (get_ccode_constructv_name ((CreationMethod) m));
 
 				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 				generate_cparameters (m, decl_space, cparam_map, function);
 
 				decl_space.add_function_declaration (function);
 			}
-		}
-	}
-
-	private string get_constructv_name (CreationMethod m) {
-		const string infix = "constructv";
-
-		var parent = m.parent_symbol as Class;
-
-		if (m.name == ".new") {
-			return "%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (parent), infix);
-		} else {
-			return "%s%s_%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (parent), infix, m.name);
 		}
 	}
 
@@ -289,7 +277,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	public override void visit_method (Method m) {
 		string real_name = get_ccode_real_name (m);
 		if (m is CreationMethod && m.is_variadic ()) {
-			real_name = get_constructv_name ((CreationMethod) m);
+			real_name = get_ccode_constructv_name ((CreationMethod) m);
 		}
 
 		push_context (new EmitContext (m));
@@ -1182,7 +1170,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		push_function (vfunc);
 
-		string constructor = (m.is_variadic ()) ? get_constructv_name (m) : get_ccode_real_name (m);
+		string constructor = (m.is_variadic ()) ? get_ccode_constructv_name (m) : get_ccode_real_name (m);
 		var vcall = new CCodeFunctionCall (new CCodeIdentifier (constructor));
 
 		if (self_as_first_parameter) {

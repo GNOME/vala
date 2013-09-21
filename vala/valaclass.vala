@@ -151,7 +151,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	/**
 	 * Specifies the default construction method.
 	 */
-	public Method default_construction_method { get; set; }
+	public CreationMethod default_construction_method { get; set; }
 	
 	/**
 	 * Specifies the instance constructor.
@@ -303,7 +303,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 		if (m is CreationMethod) {
 			if (m.name == null) {
-				default_construction_method = m;
+				default_construction_method = (CreationMethod) m;
 				m.name = ".new";
 			}
 

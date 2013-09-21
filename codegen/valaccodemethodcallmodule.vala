@@ -48,6 +48,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				// Enum.VALUE.to_string()
 				var en = (Enum) ma.inner.value_type.data_type;
 				ccall.call = new CCodeIdentifier (generate_enum_tostring_function (en));
+			} else if (expr.is_constructv_chainup) {
+				ccall.call = new CCodeIdentifier (get_ccode_constructv_name ((CreationMethod) m));
 			}
 		} else if (itype is SignalType) {
 			var sig_type = (SignalType) itype;
@@ -61,7 +63,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			var cl = (Class) ((ObjectType) itype).type_symbol;
 			m = cl.default_construction_method;
 			generate_method_declaration (m, cfile);
-			ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (m)));
+			var real_name = get_ccode_real_name (m);
+			if (expr.is_constructv_chainup) {
+				real_name = get_ccode_constructv_name ((CreationMethod) m);
+			}
+			ccall = new CCodeFunctionCall (new CCodeIdentifier (real_name));
 		} else if (itype is StructValueType) {
 			// constructor
 			var st = (Struct) ((StructValueType) itype).type_symbol;
@@ -598,7 +604,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			 * except when using printf-style arguments */
 			if (m == null) {
 				in_arg_map.set (get_param_pos (-1, true), new CCodeConstant ("NULL"));
-			} else if (!m.printf_format && !m.scanf_format && get_ccode_sentinel (m) != "") {
+			} else if (!m.printf_format && !m.scanf_format && get_ccode_sentinel (m) != "" && !expr.is_constructv_chainup) {
 				in_arg_map.set (get_param_pos (-1, true), new CCodeConstant (get_ccode_sentinel (m)));
 			}
 		}

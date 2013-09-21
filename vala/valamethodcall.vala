@@ -41,6 +41,11 @@ public class Vala.MethodCall : Expression {
 
 	public bool is_assert { get; private set; }
 
+	/**
+	 * Whether this chain up uses the constructv function with va_list.
+	 */
+	public bool is_constructv_chainup { get; private set; }
+
 	public Expression _call;
 	
 	private List<Expression> argument_list = new ArrayList<Expression> ();
@@ -213,6 +218,8 @@ public class Vala.MethodCall : Expression {
 
 		var mtype = call.value_type;
 
+		CreationMethod base_cm = null;
+
 		if (mtype is ObjectType || call.symbol_reference == context.analyzer.object_type) {
 			// constructor chain-up
 			var cm = context.analyzer.find_current_method () as CreationMethod;
@@ -230,7 +237,7 @@ public class Vala.MethodCall : Expression {
 			if (mtype is ObjectType) {
 				var otype = (ObjectType) mtype;
 				var cl = (Class) otype.type_symbol;
-				var base_cm = cl.default_construction_method;
+				base_cm = cl.default_construction_method;
 				if (base_cm == null) {
 					error = true;
 					Report.error (source_reference, "chain up to `%s' not supported".printf (cl.get_full_name ()));
@@ -301,7 +308,7 @@ public class Vala.MethodCall : Expression {
 			}
 			cm.chain_up = true;
 
-			var base_cm = (CreationMethod) call.symbol_reference;
+			base_cm = (CreationMethod) call.symbol_reference;
 			if (!base_cm.has_construct_function) {
 				error = true;
 				Report.error (source_reference, "chain up to `%s' not supported".printf (base_cm.get_full_name ()));
@@ -718,6 +725,14 @@ public class Vala.MethodCall : Expression {
 		if (!context.analyzer.check_arguments (this, mtype, params, get_argument_list ())) {
 			error = true;
 			return false;
+		}
+
+		/* Check for constructv chain up */
+		if (base_cm != null && base_cm.is_variadic () && args.size == base_cm.get_parameters ().size) {
+			var this_last_arg = args[args.size-1];
+			if (this_last_arg.value_type is StructValueType && this_last_arg.value_type.data_type == context.analyzer.va_list_type.data_type) {
+				is_constructv_chainup = true;
+			}
 		}
 
 		if (may_throw) {
