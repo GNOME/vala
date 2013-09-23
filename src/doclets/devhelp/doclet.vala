@@ -129,7 +129,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 			}
 
 			_devhelpwriter.simple_tag ("keyword", {"type", typekeyword,
-												   "name", node.name,
+												   "name", node.get_full_name (),
 												   "link", get_link (node, node.package)});
 		}
 		_devhelpwriter.end_functions ();
