@@ -182,6 +182,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 			node.accept_all_children (this);
 			_devhelpwriter.end_sub ();
 		}
+		this.nodes.add (node);
 	}
 
 	public override void visit_namespace (Namespace item) {
