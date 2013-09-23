@@ -1,3 +1,9 @@
+Vala 0.22.0
+===========
+
+ * Support chain up to constructv functions.
+ * Bug fixes and binding updates.
+
 Vala 0.21.2
 ===========
 
