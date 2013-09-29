@@ -45,11 +45,6 @@ public class Vala.Parameter : Variable {
 	public bool captured { get; set; }
 
 	/**
-	 * The base parameter of this parameter relative to the base method.
-	 */
-	public Parameter base_parameter { get; set; }
-
-	/**
 	 * Creates a new formal parameter.
 	 *
 	 * @param name   parameter name
@@ -182,15 +177,6 @@ public class Vala.Parameter : Variable {
 			if (!context.analyzer.is_type_accessible (this, variable_type)) {
 				error = true;
 				Report.error (source_reference, "parameter type `%s` is less accessible than method `%s`".printf (variable_type.to_string (), parent_symbol.get_full_name ()));
-			}
-		}
-
-		var m = parent_symbol as Method;
-		if (m != null) {
-			Method base_method = m.base_method != null ? m.base_method : m.base_interface_method;
-			if (base_method != null && base_method != m) {
-				int index = m.get_parameters ().index_of (this);
-				base_parameter = base_method.get_parameters ().get (index);
 			}
 		}
 
