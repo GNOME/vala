@@ -2560,7 +2560,7 @@ namespace Posix {
 		public int glob (string pattern, int flags = 0, GlobErrorFunction? errfunc = null);
 	}
 
-	[CCode (cheader_filename = "langinfo.h", cprefix = "", has_type_id = false)]
+	[CCode (cheader_filename = "langinfo.h", cname = "nl_item", cprefix = "", has_type_id = false)]
 	public enum NLItem {
 		ABDAY_1,
 		ABDAY_2,
