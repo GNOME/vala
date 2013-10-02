@@ -514,10 +514,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 		Variable versioned_var;
 		if (var_symbol is LocalVariable) {
-			versioned_var = new LocalVariable (var_symbol.variable_type, var_symbol.name, null, var_symbol.source_reference);
+			versioned_var = new LocalVariable (var_symbol.variable_type.copy (), var_symbol.name, null, var_symbol.source_reference);
 		} else {
 			// parameter
-			versioned_var = new Parameter (var_symbol.name, var_symbol.variable_type, var_symbol.source_reference);
+			versioned_var = new Parameter (var_symbol.name, var_symbol.variable_type.copy (), var_symbol.source_reference);
 		}
 		variable_stack.add (versioned_var);
 		return versioned_var;
