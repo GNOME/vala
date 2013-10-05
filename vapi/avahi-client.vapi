@@ -124,20 +124,6 @@ namespace Avahi {
 
 		[CCode(cname="avahi_string_list_parse")]
 		public static int deserialize (char[] data, out StringList dest);
-		[Deprecated (since = "vala-0.16", replacement = "deserialize")]
-		[CCode (cname = "avahi_string_list_parse_dup")]
-		public static StringList parse(char[] data) throws Error {
-			StringList dest;
-
-			int errno = deserialize (data, out dest);
-			if (errno < 0) {
-				var err = new Error.FAILURE(strerror(errno));
-				err.code = errno;
-				throw err;
-			}
-
-			return dest;
-		}
 	}
 
 
@@ -176,21 +162,6 @@ namespace Avahi {
 			return errno;
 		}
 
-		[Deprecated (since = "vala-0.16", replacement = "join_service_name")]
-		[CCode (cname = "_vala_avahi_service_name_join")]
-		public string service_name_join (string name, string type, string domain) throws Error {
-			uint8[] dest = new uint8[DOMAIN_NAME_MAX];
-
-			int errno = _service_name_join(dest, name, type, domain);
-			if (errno < 0) {
-				var err = new Error.FAILURE(strerror(errno));
-				err.code = errno;
-				throw err;
-			}
-
-			return (string) dest;
-		}
-
 		[CCode (cname = "avahi_service_name_split")]
 		public int _service_name_split(string src, [CCode (array_length_type = "size_t")] uint8[] name, [CCode (array_length_type = "size_t")] uint8[] type, [CCode (array_length_type = "size_t")] uint8[] domain);
 
@@ -209,26 +180,6 @@ namespace Avahi {
 			}
 
 			return errno;
-		}
-
-		[Deprecated (since = "vala-0.16", replacement = "split_service_name")]
-		[CCode (cname = "avahi_service_name_split_dup")]
-		public void service_name_split(string src, out string name, out string type, out string domain) throws Error {
-			uint8[] name_data = new uint8[LABEL_MAX];
-			uint8[] type_data = new uint8[DOMAIN_NAME_MAX];
-			uint8[] domain_data = new uint8[DOMAIN_NAME_MAX];
-
-			int errno = _service_name_split (src, name_data, type_data, domain_data);
-
-			if (errno < 0) {
-				var err = new Error.FAILURE(strerror(errno));
-				err.code = errno;
-				throw err;
-			}
-
-			name = (string) name_data;
-			type = (string) type_data;
-			domain = (string) domain_data;
 		}
 
 		public bool is_valid_service_type_generic(string s);
