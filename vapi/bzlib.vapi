@@ -28,7 +28,7 @@ namespace BZLib {
 		FLUSH,
 		FINISH
 	}
-	
+
 	[CCode (cname = "int", cprefix = "BZ_")]
 	public enum Status {
 		OK,
@@ -45,7 +45,7 @@ namespace BZLib {
 		OUTBUFF_FULL,
 		CONFIG_ERROR
 	}
-	
+
 	[CCode (cname = "bz_stream")]
 	public struct Stream {
 		public string next_in;

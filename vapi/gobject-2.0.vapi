@@ -293,7 +293,7 @@ namespace GLib {
 		public unowned ParamSpec[] list_properties ();
 		public void install_property (uint property_id, ParamSpec pspec);
 	}
-	
+
 	public struct ObjectConstructParam {
 	}
 

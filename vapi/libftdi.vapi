@@ -1,8 +1,8 @@
 [CCode (cprefix = "FTDI_", lower_case_prefix = "ftdi_", cheader_filename = "ftdi.h")]
 namespace FTDI {
-	
+
 	public const int DEFAULT_EEPROM_SIZE;
-	
+
 	[CCode (cname = "enum ftdi_chip_type", cprefix = "TYPE_")]
 	public enum ChipType {
 		AM,
@@ -32,7 +32,7 @@ namespace FTDI {
 		BITS_7,
 		BITS_8
 	}
-	
+
 	[CCode (cname = "enum ftdi_break_type", cprefix="BREAK_")]
 	public enum BreakType {
 		OFF,
@@ -67,7 +67,7 @@ namespace FTDI {
 		public const int DO_READ;
 		public const int WRITE_TMS;
 	}
-	
+
 	[CCode (cprefix="")]
 	namespace MPSSECommands {
 		public const int SET_BITS_LOW;
@@ -81,10 +81,10 @@ namespace FTDI {
 		public const int WAIT_ON_HIGH;
 		public const int WAIT_ON_LOW;
 	}
-	
+
 	[CCode (cname="DIV_VALUE")]
 	public int div_value (int rate);
-		
+
 	[CCode (cprefix="")]
 	namespace HostEmultationModeCommands {
 		public const int SEND_IMMEDIATE;
@@ -95,7 +95,7 @@ namespace FTDI {
 		public const int WRITE_SHORT;
 		public const int WRITE_EXTENDED;
 	}
-	
+
 	[CCode (cprefix="SIO_")]
 	public const int RESET;
 	[CCode (cprefix="SIO_")]
@@ -152,9 +152,9 @@ namespace FTDI {
 	public const int SET_RTS_HIGH;
 	[CCode (cprefix="SIO_")]
 	public const int SET_RTS_LOW;
-	
+
 	public const int URB_USERCONTEXT_COOKIE;
-	
+
 	[CCode (cname = "struct ftdi_device_list", destroy_function = "ftdi_list_free")]
 	public struct DeviceList {
 		public DeviceList* next;
@@ -234,7 +234,7 @@ namespace FTDI {
 		public int write_eeprom ([CCode (array_length = false)] uchar[] eeprom);
 		public int erase_eeprom ();
 		public unowned string get_error_string ();
-		
+
 		public USB.DeviceHandle usb_dev;
 		public int usb_read_timeout;
 		public int usb_write_timeout;

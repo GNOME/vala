@@ -80,7 +80,7 @@ namespace Gtk {
 	public class MozEmbed : Gtk.Bin {
 		public MozEmbed ();
 		public void load_url (string url);
-	
+
 		public void stop_load ();
 		public unowned bool can_go_back ();
 		public unowned bool can_go_forward ();

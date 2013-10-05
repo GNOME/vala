@@ -30,14 +30,14 @@ namespace Cairo {
 		public Status status ();
 		public void save ();
 		public void restore ();
-		
+
 		public unowned Surface get_target ();
 		public void push_group ();
 		public void push_group_with_content (Content content);
 		public Pattern pop_group ();
 		public void pop_group_to_source ();
 		public unowned Surface get_group_target ();
-		
+
 		public void set_source_rgb (double red, double green, double blue);
 		public void set_source_rgba (double red, double green, double blue, double alpha);
 		public void set_source (Pattern source);
@@ -49,32 +49,32 @@ namespace Cairo {
 
 		public void set_antialias (Antialias antialias);
 		public Antialias get_antialias ();
-		
+
 		public void set_dash (double[]? dashes, double offset);
 		public void get_dash (double[]? dashes, double[]? offset);
 		public int get_dash_count ();
 
 		public void set_fill_rule (FillRule fill_rule);
 		public FillRule get_fill_rule ();
-		
+
 		public void set_line_cap (LineCap line_cap);
 		public LineCap get_line_cap ();
-		
+
 		public void set_line_join (LineJoin line_join);
 		public LineJoin get_line_join ();
-		
+
 		public void set_line_width (double width);
 		public double get_line_width ();
-		
+
 		public void set_miter_limit (double limit);
 		public double get_miter_limit ();
-		
+
 		public void set_operator (Operator op);
 		public Operator get_operator ();
-		
+
 		public void set_tolerance (double tolerance);
 		public double get_tolerance ();
-		
+
 		public void clip ();
 		public void clip_preserve ();
 		public void clip_extents (out double x1, out double y1, out double x2, out double y2);
@@ -89,7 +89,7 @@ namespace Cairo {
 
 		public void mask (Pattern pattern);
 		public void mask_surface (Surface surface, double surface_x, double surface_y);
-		
+
 		public void paint ();
 		public void paint_with_alpha (double alpha);
 
@@ -100,57 +100,57 @@ namespace Cairo {
 
 		public void copy_page ();
 		public void show_page ();
-		
+
 		public Path copy_path ();
 		public Path copy_path_flat ();
-		
+
 		public void append_path (Path path);
-		
+
 		public void get_current_point (out double x, out double y);
 		public bool has_current_point ();
-		
+
 		public void new_path ();
 		public void new_sub_path ();
 		public void close_path ();
-		
+
 		public void arc (double xc, double yc, double radius, double angle1, double angle2);
 		public void arc_negative (double xc, double yc, double radius, double angle1, double angle2);
 
 		public void curve_to (double x1, double y1, double x2, double y2, double x3, double y3);
 		public void line_to (double x, double y);
 		public void move_to (double x, double y);
-		
+
 		public void rectangle (double x, double y, double width, double height);
-		
+
 		public void glyph_path (Glyph[] glyphs);
 		public void text_path (string utf8);
-		
+
 		public void rel_curve_to (double dx1, double dy1, double dx2, double dy2, double dx3, double dy3);
 		public void rel_line_to (double dx, double dy);
 		public void rel_move_to (double dx, double dy);
-		
+
 		public void translate (double tx, double ty);
 		public void scale (double sx, double sy);
 		public void rotate (double angle);
 		public void transform (Matrix matrix);
 		public void identity_matrix ();
-		
+
 		public void user_to_device (ref double x, ref double y);
 		public void user_to_device_distance (ref double dx, ref double dy);
 		public void device_to_user (ref double x, ref double y);
 		public void device_to_user_distance (ref double dx, ref double dy);
-		
+
 		public void select_font_face (string family, FontSlant slant, FontWeight weight);
 		public void set_font_size (double size);
 		public void set_font_matrix (Matrix matrix);
 		public void get_font_matrix (out Matrix matrix);
 		public void set_font_options (FontOptions options);
 		public void get_font_options (out FontOptions options);
-		
+
 		public void show_text (string utf8);
 		public void show_glyphs (Glyph[] glyphs);
 		public Status show_text_glyphs (string utf8, int utf8_len, out Glyph[] glyphs, out TextCluster[] clusters, out TextClusterFlags cluster_flags);
-		
+
 		public unowned FontFace get_font_face ();
 		public void font_extents (out FontExtents extents);
 		public void set_font_face (FontFace font_face);
@@ -163,7 +163,7 @@ namespace Cairo {
 
 		public uint get_reference_count ();
 	}
-	
+
 	[CCode (cname = "cairo_antialias_t")]
 	public enum Antialias {
 		DEFAULT,
@@ -171,27 +171,27 @@ namespace Cairo {
 		GRAY,
 		SUBPIXEL
 	}
-	
+
 	[CCode (cname = "cairo_fill_rule_t")]
 	public enum FillRule {
 		WINDING,
 		EVEN_ODD
 	}
-	
+
 	[CCode (cname = "cairo_line_cap_t")]
 	public enum LineCap {
 		BUTT,
 		ROUND,
 		SQUARE
 	}
-	
+
 	[CCode (cname = "cairo_line_join_t")]
 	public enum LineJoin {
 		MITER,
 		ROUND,
 		BEVEL
 	}
-	
+
 	[CCode (cname = "cairo_operator_t")]
 	public enum Operator {
 		CLEAR,
@@ -224,7 +224,7 @@ namespace Cairo {
 		HSL_COLOR,
 		HSL_LUMINOSITY
 	}
-	
+
 	[Compact]
 	[CCode (free_function = "cairo_path_destroy", cname = "cairo_path_t")]
 	public class Path {
@@ -233,23 +233,23 @@ namespace Cairo {
 		public PathData[] data;
 		public int num_data;
 	}
-	
+
 	[CCode (cname = "cairo_path_data_t")]
 	public struct PathData {
 		public PathDataHeader header;
 		public PathDataPoint point;
 	}
-	
+
 	public struct PathDataHeader {
 		public PathDataType type;
 		public int length;
 	}
-	
+
 	public struct PathDataPoint {
 		public double x;
 		public double y;
 	}
-	
+
 	[CCode (cprefix = "CAIRO_PATH_", cname = "cairo_path_data_type_t")]
 	public enum PathDataType {
 		MOVE_TO,
@@ -257,7 +257,7 @@ namespace Cairo {
 		CURVE_TO,
 		CLOSE_PATH
 	}
-	
+
 	[Compact]
 	[CCode (ref_function = "cairo_pattern_reference", unref_function = "cairo_pattern_destroy", cname = "cairo_pattern_t")]
 	public class Pattern {
@@ -274,15 +274,15 @@ namespace Cairo {
 		public Pattern.linear (double x0, double y0, double x1, double y1);
 		[CCode (cname = "cairo_pattern_create_radial")]
 		public Pattern.radial (double cx0, double cy0, double radius0, double cx1, double cy1, double radius1);
-		
+
 		public Status status ();
-		
+
 		public void set_extend (Extend extend);
 		public Extend get_extend ();
-		
+
 		public void set_filter (Filter filter);
 		public Filter get_filter ();
-		
+
 		public void set_matrix (Matrix matrix);
 		public void get_matrix (out Matrix matrix);
 
@@ -290,7 +290,7 @@ namespace Cairo {
 		public Status get_linear_points (out double x0, out double y0, out double x1, out double y1);
 		public Status get_color_stop_rgba (int index, out double offset, out double red, out double green, out double blue, out double alpha);
 		public Status get_surface (out unowned Surface surface);
-		
+
 		public PatternType get_type ();
 	}
 
@@ -349,7 +349,7 @@ namespace Cairo {
 		REFLECT,
 		PAD
 	}
-	
+
 	[CCode (cname = "cairo_filter_t")]
 	public enum Filter {
 		FAST,
@@ -410,20 +410,20 @@ namespace Cairo {
 		double x;
 		double y;
 	}
-	
+
 	[CCode (cname = "cairo_font_slant_t")]
 	public enum FontSlant {
 		NORMAL,
 		ITALIC,
 		OBLIQUE
 	}
-	
+
 	[CCode (cname = "cairo_font_weight_t")]
 	public enum FontWeight {
 		NORMAL,
 		BOLD
 	}
-	
+
 	[Compact]
 	[CCode (ref_function = "cairo_font_face_reference", unref_function = "cairo_font_face_destroy", cname = "cairo_font_face_t")]
 	public class FontFace {
@@ -466,7 +466,7 @@ namespace Cairo {
 		public void set_unicode_to_glyph_func (UserScaledFontUnicodeToGlyphFunc unicode_to_glyph_func);
 		public UserScaledFontUnicodeToGlyphFunc get_unicode_to_glyph_func ();
 	}
-	
+
 	[CCode (cname = "cairo_font_type_t")]
 	public enum FontType {
 		TOY,
@@ -474,7 +474,7 @@ namespace Cairo {
 		WIN32,
 		ATSUI
 	}
-	
+
 	[Compact]
 	[CCode (ref_function = "cairo_scaled_font_reference", unref_function = "cairo_scaled_font_destroy", cname = "cairo_scaled_font_t")]
 	public class ScaledFont {
@@ -525,7 +525,7 @@ namespace Cairo {
 	public enum TextClusterFlags {
 		BACKWARD
 	}
-	
+
 	[CCode (cname = "cairo_text_extents_t")]
 	public struct TextExtents {
 		public double x_bearing;
@@ -535,7 +535,7 @@ namespace Cairo {
 		public double x_advance;
 		public double y_advance;
 	}
-	
+
 	[Compact]
 	[CCode (copy_function = "cairo_font_options_copy", free_function = "cairo_font_options_destroy", cname = "cairo_font_options_t")]
 	public class FontOptions {
@@ -554,7 +554,7 @@ namespace Cairo {
 		public void set_hint_metrics (HintMetrics hint_metrics);
 		public HintMetrics get_hint_metrics ();
 	}
-	
+
 	[CCode (cname = "cairo_subpixel_order_t")]
 	public enum SubpixelOrder {
 		DEFAULT,
@@ -563,7 +563,7 @@ namespace Cairo {
 		VRGB,
 		VBGR
 	}
-	
+
 	[CCode (cname = "cairo_hint_style_t")]
 	public enum HintStyle {
 		DEFAULT,
@@ -572,7 +572,7 @@ namespace Cairo {
 		MEDIUM,
 		FULL
 	}
-	
+
 	[CCode (cname = "cairo_hint_metrics_t")]
 	public enum HintMetrics {
 		DEFAULT,
@@ -589,7 +589,7 @@ namespace Cairo {
 		XLIB,
 		XML
 	}
-	
+
 	[Compact]
 	[CCode (ref_function = "cairo_device_reference", unref_function = "cairo_device_destroy", cname = "cairo_device_t", cheader_filename = "cairo.h")]
 	public class Device {
@@ -654,14 +654,14 @@ namespace Cairo {
 		[CCode (cname = "cairo_win32_surface_get_image")]
 		public Surface? win32_get_image ();
 	}
-	
+
 	[CCode (cname = "cairo_content_t")]
 	public enum Content {
 		COLOR,
 		ALPHA,
 		COLOR_ALPHA
 	}
-	
+
 	[CCode (cname = "cairo_surface_type_t")]
 	public enum SurfaceType {
 		IMAGE,
@@ -676,7 +676,7 @@ namespace Cairo {
 		DIRECTFB,
 		SVG
 	}
-	
+
 	[CCode (cname = "cairo_format_t")]
 	public enum Format {
 		ARGB32,
@@ -687,7 +687,7 @@ namespace Cairo {
 
 		public int stride_for_width (int width);
 	}
-	
+
 	[Compact]
 	[CCode (cname = "cairo_surface_t")]
 	public class ImageSurface : Surface {
@@ -707,7 +707,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_image_surface_create_from_png_stream")]
 		public ImageSurface.from_png_stream (ReadFunc read_func);
 	}
-	
+
 	[Compact]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-pdf.h")]
 	public class PdfSurface : Surface {
@@ -732,7 +732,7 @@ namespace Cairo {
 	public delegate Status ReadFunc (uchar[] data);
 	[CCode (instance_pos = 0, cname = "cairo_write_func_t")]
 	public delegate Status WriteFunc (uchar[] data);
-	
+
 	[Compact]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-ps.h")]
 	public class PsSurface : Surface {
@@ -768,7 +768,7 @@ namespace Cairo {
 		public SvgSurface.for_stream (WriteFunc write_func, double width_in_points, double height_in_points);
 		public void restrict_to_version (SvgVersion version);
 	}
-	
+
 	[CCode (cname = "cairo_svg_version_t", cprefix = "CAIRO_SVG_")]
 	public enum SvgVersion {
 		VERSION_1_1,
@@ -816,7 +816,7 @@ namespace Cairo {
 		public int get_height ();
 		public int get_depth ();
 	}
-	
+
 	[CCode (cname = "cairo_matrix_t", has_type_id = false)]
 	public struct Matrix {
 		[CCode (cname = "cairo_matrix_init")]
@@ -913,7 +913,7 @@ namespace Cairo {
 		public const string PNG;
 		public const string URI;
 	}
-	
+
 	public int version ();
 	public unowned string version_string ();
 }

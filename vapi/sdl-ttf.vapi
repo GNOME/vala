@@ -66,7 +66,7 @@ namespace SDLTTF {
 		public string style();
 
 		[CCode (cname="TTF_GlyphMetrics")]
-		public int metrics(uint16 ch, ref int minx, ref int maxx, 
+		public int metrics(uint16 ch, ref int minx, ref int maxx,
 			ref int miny, ref int maxy, ref int advance);
 
 		[CCode (cname="TTF_SizeText")]

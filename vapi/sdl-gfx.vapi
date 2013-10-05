@@ -151,7 +151,7 @@ namespace SDLGraphics {
 
 		[CCode (cname="trigonRGBA")]
 		public static int outline_rgba(SDL.Surface dst, int16 x1, int16 y1,
-			int16 x2, int16 y2, int16 x3, int16 y3, 
+			int16 x2, int16 y2, int16 x3, int16 y3,
 			uchar r, uchar g, uchar b, uchar a);
 
 		[CCode (cname="aatrigonColor")]
@@ -160,7 +160,7 @@ namespace SDLGraphics {
 
 		[CCode (cname="aatrigonRGBA")]
 		public static int outline_rgba_aa(SDL.Surface dst, int16 x1, int16 y1,
-			int16 x2, int16 y2, int16 x3, int16 y3, 
+			int16 x2, int16 y2, int16 x3, int16 y3,
 			uchar r, uchar g, uchar b, uchar a);
 
 		[CCode (cname="filledTrigonColor")]
@@ -169,7 +169,7 @@ namespace SDLGraphics {
 
 		[CCode (cname="filledTrigonRGBA")]
 		public static int fill_rgba(SDL.Surface dst, int16 x1, int16 y1,
-			int16 x2, int16 y2, int16 x3, int16 y3, 
+			int16 x2, int16 y2, int16 x3, int16 y3,
 			uchar r, uchar g, uchar b, uchar a);
 	}// Trigon
 
@@ -239,11 +239,11 @@ namespace SDLGraphics {
 			double zoomx, double zoomy, int smooth);
 
 		[CCode (cname="rotozoomSurfaceSize")]
-		public static void rotozoom_size(int width, int height, double degrees, 
+		public static void rotozoom_size(int width, int height, double degrees,
 			double zoom, ref int dstwidth, ref int dstheight);
 
 		[CCode (cname="rotozoomSurfaceSizeXY")]
-		public static void rotozoom_size_xy(int width, int height, double degrees, 
+		public static void rotozoom_size_xy(int width, int height, double degrees,
 			double zoomx, double zoomy, ref int dstwidth, ref int dstheight);
 
 		[CCode (cname="zoomSurface")]
@@ -251,7 +251,7 @@ namespace SDLGraphics {
 			double zoomy, int smooth);
 
 		[CCode (cname="zoomSurfaceSize")]
-		public static void zoom_size(int width, int height, double zoomx, 
+		public static void zoom_size(int width, int height, double zoomx,
 			double zoomy, ref int dstwidth, ref int dstheight);
 	}// RotoZoom
 

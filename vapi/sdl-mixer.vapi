@@ -117,7 +117,7 @@ namespace SDLMixer {
 	[Compact]
 	public class Effect {
 		[CCode (cname="Mix_RegisterEffect")]
-		public static int register(int chan, EffectCallback f, 
+		public static int register(int chan, EffectCallback f,
 			EffectDoneCallback? d, void* arg);
 
 		[CCode (cname="Mix_UnregisterEffect")]

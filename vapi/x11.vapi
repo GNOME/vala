@@ -270,10 +270,10 @@ namespace X {
 		public void query_tree (Window w, out Window root_return, out Window parent_return, out Window[] children_return);
 
 		[CCode (cname = "XTranslateCoordinates")]
-		public bool translate_coordinates (Window src_w, Window dest_w, int src_x, int src_y, out int dest_x_return, out int dest_y_return, out Window child_return);		
+		public bool translate_coordinates (Window src_w, Window dest_w, int src_x, int src_y, out int dest_x_return, out int dest_y_return, out Window child_return);
 
 		[CCode (cname = "XQueryPointer")]
-		public bool query_pointer (Window w, out Window root_retur, out Window child_retur, out int root_x_return, out int root_y_return, out int win_x_return, out int win_y_return, out uint mask_return);	
+		public bool query_pointer (Window w, out Window root_retur, out Window child_retur, out int root_x_return, out int root_y_return, out int win_x_return, out int win_y_return, out uint mask_return);
 
 		[CCode (cname = "XSetWMNormalHints")]
 		public void set_wm_normal_hints (Window w, SizeHints hints);

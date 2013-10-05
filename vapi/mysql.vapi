@@ -254,7 +254,7 @@ namespace Mysql {
 		public uint fetch_count ();
 		public uint num_fields ();
 		public uint num_rows ();
-		
+
 		public bool data_seek (ulong offset);
 	}
 	[CCode (cname = "MYSQL_FIELD")]
@@ -281,7 +281,7 @@ namespace Mysql {
 		public FieldType type;
 		public void *extension;
 	}
-	
+
 	public unowned string get_client_info ();
 	public ulong get_client_version ();
 	public void debug (string msg);

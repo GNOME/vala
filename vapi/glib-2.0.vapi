@@ -21,7 +21,7 @@
  * As a special exception, if you use inline functions from this file, this
  * file does not by itself cause the resulting executable to be covered by
  * the GNU Lesser General Public License.
- * 
+ *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
  *	Raffaele Sandrini <rasa@gmx.ch>
@@ -1046,7 +1046,7 @@ public class string {
 	public bool validate (ssize_t max_len = -1, out char* end = null);
 	[CCode (cname = "g_utf8_normalize")]
 	public string normalize (ssize_t len = -1, GLib.NormalizeMode mode = GLib.NormalizeMode.DEFAULT);
-	
+
 	[CCode (cname = "g_utf8_strup")]
 	public string up (ssize_t len = -1);
 	[CCode (cname = "g_utf8_strdown")]
@@ -1062,7 +1062,7 @@ public class string {
 
 	[CCode (cname = "g_locale_to_utf8")]
 	public string locale_to_utf8 (ssize_t len, out size_t bytes_read, out size_t bytes_written, out GLib.Error error = null);
-  
+
 	[CCode (cname = "g_strchomp")]
 	public unowned string _chomp();
 	public string chomp () {
@@ -1094,10 +1094,10 @@ public class string {
 		result._delimit (delimiters, new_delimiter);
 		return result;
 	}
-	
+
 	[CCode (cname = "g_str_hash")]
 	public uint hash ();
-	
+
 	[Deprecated (replacement = "int.parse")]
 	[CCode (cname = "atoi")]
 	public int to_int ();
@@ -1281,7 +1281,7 @@ namespace GLib {
 	namespace Math {
 		[CCode (cname = "G_E")]
 		public const double E;
-		
+
 		[CCode (cname = "G_PI")]
 		public const double PI;
 
@@ -1497,7 +1497,7 @@ namespace GLib {
 		public bool is_running ();
 		public unowned MainContext get_context ();
 	}
-	
+
 	namespace Priority {
 		public const int HIGH;
 		public const int DEFAULT;
@@ -1541,7 +1541,7 @@ namespace GLib {
 		public void invoke (owned SourceFunc function, [CCode (pos = 0.1)] int priority = Priority.DEFAULT);
 		public void invoke_full (int priority, owned SourceFunc function);
 	}
-	
+
 	[CCode (has_target = false)]
 	public delegate int PollFunc (PollFD[] ufds, int timeout_);
 
@@ -1578,18 +1578,18 @@ namespace GLib {
 	}
 
 	public delegate void ChildWatchFunc (Pid pid, int status);
-	
+
 	[CCode (cname = "GSource")]
 	public class ChildWatchSource : Source {
 		public ChildWatchSource (Pid pid);
 	}
-	
+
 	namespace ChildWatch {
 		[CCode (cname = "g_child_watch_add_full")]
 		public static uint add (Pid pid, owned ChildWatchFunc function, [CCode (pos = 0.1)] int priority = Priority.DEFAULT_IDLE);
 		public static uint add_full (int priority, Pid pid, owned ChildWatchFunc function);
 	}
-	
+
 	public struct PollFD {
 		public int fd;
 		public IOCondition events;
@@ -1669,7 +1669,7 @@ namespace GLib {
 		public SourceCallbackUnrefFunc unref;
 		public SourceCallbackGetFunc @get;
 	}
-	
+
 	public delegate bool SourceFunc ();
 
 	public errordomain ThreadError {
@@ -1691,7 +1691,7 @@ namespace GLib {
 		HIGH,
 		URGENT
 	}
-	
+
 	[Compact]
 #if GLIB_2_32
 	[CCode (ref_function = "g_thread_ref", unref_function = "g_thread_unref")]
@@ -1870,7 +1870,7 @@ namespace GLib {
 		public static void set_max_idle_time (uint interval);
 		public static uint get_max_idle_time ();
 	}
-	
+
 	/* Asynchronous Queues */
 
 	[Compact]
@@ -1899,7 +1899,7 @@ namespace GLib {
 	}
 
 	/* Memory Allocation */
-	
+
 	public static void* malloc (size_t n_bytes);
 	public static void* malloc0 (size_t n_bytes);
 	public static void* realloc (void* mem, size_t n_bytes);
@@ -1907,7 +1907,7 @@ namespace GLib {
 	public static void* try_malloc (size_t n_bytes);
 	public static void* try_malloc0 (size_t n_bytes);
 	public static void* try_realloc (void* mem, size_t n_bytes);
-	
+
 	public static void free (void* mem);
 
 	public class MemVTable {
@@ -2018,7 +2018,7 @@ namespace GLib {
 		SET,
 		END
 	}
-	
+
 	[CCode (has_type_id = false)]
 	public enum IOStatus {
 		ERROR,
@@ -2081,7 +2081,7 @@ namespace GLib {
 		public int code;
 		public string message;
 	}
-	
+
 	/* Message Output and Debugging Functions */
 
 	[PrintfFormat]
@@ -2115,7 +2115,7 @@ namespace GLib {
 	public static void breakpoint ();
 
 	/* Message Logging */
-	
+
 	[CCode (cprefix = "G_LOG_", has_type_id = false)]
 	[Flags]
 	public enum LogLevelFlags {
@@ -2138,7 +2138,7 @@ namespace GLib {
 	[Diagnostics]
 	[PrintfFormat]
 	public void log (string? log_domain, LogLevelFlags log_level, string format, ...);
-	
+
 	[Diagnostics]
 	[PrintfFormat]
 	public void message (string format, ...);
@@ -2189,7 +2189,7 @@ namespace GLib {
 	public unowned string strerror (int errnum);
 
 	/* Character Set Conversions */
-	
+
 	public static string convert (string str, ssize_t len, string to_codeset, string from_codeset, out size_t bytes_read = null, out size_t bytes_written = null) throws ConvertError;
 	public static bool get_charset (out unowned string charset);
 
@@ -2220,7 +2220,7 @@ namespace GLib {
 	}
 
 	/* Base64 Encoding */
-	
+
 	namespace Base64 {
 		public static size_t encode_step (uchar[] _in, bool break_lines, char* _out, ref int state, ref int save);
 		public static size_t encode_close (bool break_lines, char* _out, ref int state, ref int save);
@@ -2321,7 +2321,7 @@ namespace GLib {
 		[CCode (cname = "g_date_get_days_in_month")]
 		public uchar get_days_in_month (DateYear year);
 		[CCode (cname = "g_date_valid_month")]
-		public bool valid (); 
+		public bool valid ();
 	}
 
 	public struct DateYear : ushort {
@@ -2350,7 +2350,7 @@ namespace GLib {
 		SUNDAY;
 
 		[CCode (cname = "g_date_valid_weekday")]
-		public bool valid (); 
+		public bool valid ();
 	}
 
 	[CCode (cprefix = "G_DATE_", has_type_id = false)]
@@ -2561,7 +2561,7 @@ namespace GLib {
 		public double next_double ();
 		public double double_range (double begin, double end);
 	}
-	
+
 	namespace Random {
 		public static void set_seed (uint32 seed);
 		public static bool boolean ();
@@ -2572,9 +2572,9 @@ namespace GLib {
 		public static double next_double ();
 		public static double double_range (double begin, double end);
 	}
-	
+
 	/* Miscellaneous Utility Functions */
-	
+
 	namespace Environment {
 		[CCode (cname = "g_get_application_name")]
 		public static unowned string? get_application_name ();
@@ -2941,7 +2941,7 @@ namespace GLib {
 		public static void close_pid (Pid pid);
 		[CCode (cname = "g_spawn_check_exit_status")]
 		public static bool check_exit_status (int exit_status) throws GLib.Error;
-		
+
 		/* these macros are required to examine the exit status of a process */
 		[CCode (cname = "WIFEXITED", cheader_filename = "sys/wait.h")]
 		public static bool if_exited (int status);
@@ -2971,7 +2971,7 @@ namespace GLib {
 		[CCode (cname = "signal", cheader_filename = "signal.h")]
 		public SignalHandlerFunc @signal (ProcessSignal signum, SignalHandlerFunc handler);
 	}
-	
+
 	[CCode (cname = "int", has_type_id = false, cheader_filename = "signal.h", cprefix = "SIG")]
 	public enum ProcessSignal {
 		HUP,
@@ -2996,8 +2996,8 @@ namespace GLib {
 		TTIN,
 		TTOU
 	}
-		
-	
+
+
 	/* File Utilities */
 
 	public errordomain FileError {
@@ -3131,7 +3131,7 @@ namespace GLib {
 		public static int open_tmp (string tmpl, out string name_used) throws FileError;
 		public static string read_link (string filename) throws FileError;
 		public static int error_from_errno (int err_no);
-		
+
 		[CCode (cname = "g_mkstemp")]
 		public static int mkstemp (string tmpl);
 		[CCode (cname = "g_rename")]
@@ -3144,7 +3144,7 @@ namespace GLib {
 		public static int chmod (string filename, int mode);
 		[CCode (cname = "g_utime")]
 		public static int utime (string filename, UTimBuf? times = null);
-		
+
 		[CCode (cname = "symlink")]
 		public static int symlink (string oldpath, string newpath);
 
@@ -3167,7 +3167,7 @@ namespace GLib {
 		public unowned string? read_name ();
 		public void rewind ();
 	}
-	
+
 	[CCode (cheader_filename = "glib/gstdio.h")]
 	namespace DirUtils {
 		[CCode (cname = "g_mkdir")]
@@ -3200,7 +3200,7 @@ namespace GLib {
 
 	[CCode (cname = "stdout", cheader_filename = "stdio.h")]
 	public static FileStream stdout;
-	
+
 	[CCode (cname = "stderr", cheader_filename = "stdio.h")]
 	public static FileStream stderr;
 
@@ -3279,7 +3279,7 @@ namespace GLib {
 		DOUBLE,
 		INT64
 	}
-	
+
 	[Flags]
 	[CCode (cprefix = "G_OPTION_FLAG_", has_type_id = false)]
 	public enum OptionFlags {
@@ -3291,7 +3291,7 @@ namespace GLib {
 		OPTIONAL_ARG,
 		NOALIAS
 	}
-	
+
 	public struct OptionEntry {
 		public unowned string long_name;
 		public char short_name;
@@ -3513,17 +3513,17 @@ namespace GLib {
 		public void* pop ();
 		public void* get_user_data ();
 	}
-	
+
 	public delegate void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_names, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_values) throws MarkupError;
-	
+
 	public delegate void MarkupParserEndElementFunc (MarkupParseContext context, string element_name) throws MarkupError;
-	
+
 	public delegate void MarkupParserTextFunc (MarkupParseContext context, string text, size_t text_len) throws MarkupError;
-	
+
 	public delegate void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, size_t text_len) throws MarkupError;
-	
+
 	public delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error);
-	
+
 	public struct MarkupParser {
 		[CCode (delegate_target = false)]
 		public unowned MarkupParserStartElementFunc start_element;
@@ -3626,7 +3626,7 @@ namespace GLib {
 		public void remove_key (string group_name, string key) throws KeyFileError;
 		public void remove_comment (string group_name, string key) throws KeyFileError;
 	}
-	
+
 	[CCode (cprefix = "G_KEY_FILE_", has_type_id = false)]
 	[Flags]
 	public enum KeyFileFlags {
@@ -3848,7 +3848,7 @@ namespace GLib {
 		public void delete_link (List<G> link_);
 		[ReturnsModifiedPointer ()]
 		public void remove_all (G data);
-		
+
 		public uint length ();
 		public List<unowned G> copy ();
 		[ReturnsModifiedPointer ()]
@@ -3868,17 +3868,17 @@ namespace GLib {
 		public unowned List<G> nth (uint n);
 		public unowned G nth_data (uint n);
 		public unowned List<G> nth_prev (uint n);
-		
+
 		public unowned List<G> find (G data);
 		public unowned List<G> find_custom (G data, CompareFunc<G> func);
 		public int position (List<G> llink);
 		public int index (G data);
-		
+
 		public G data;
 		public List<G> next;
 		public unowned List<G> prev;
 	}
-	
+
 	/* Singly-Linked Lists */
 
 	[Compact]
@@ -3948,7 +3948,7 @@ namespace GLib {
 		public unowned List<G> head;
 		public unowned List<G> tail;
 		public uint length;
-	
+
 		public Queue ();
 
 		public void clear ();
@@ -4447,11 +4447,11 @@ namespace GLib {
 		public unowned G index (uint index);
 		public void set_size (uint length);
 	}
-	
+
 	/* GTree */
-	
+
 	public delegate bool TraverseFunc<K,V> (K key, V value);
-	
+
 	[CCode (cprefix = "G_", has_type_id = false)]
 	public enum TraverseType {
 		IN_ORDER,
@@ -4487,9 +4487,9 @@ namespace GLib {
 		public bool remove (K key);
 		public bool steal (K key);
 	}
-	
+
 	/* Internationalization */
-	
+
 	[CCode (cname = "_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
 	public static unowned string _ (string str);
 	[CCode (cname = "Q_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
@@ -4512,7 +4512,7 @@ namespace GLib {
 	public static unowned string dpgettext (string? domain, string msgctxid, size_t msgidoffset);
 	[CCode (cname = "g_dpgettext2", cheader_filename = "glib/gi18n-lib.h")]
 	public static unowned string dpgettext2 (string? domain, string context, string msgid);
-	
+
 	[CCode (cname = "int", cprefix = "LC_", cheader_filename = "locale.h", has_type_id = false)]
 	public enum LocaleCategory {
 		ALL,
@@ -4523,7 +4523,7 @@ namespace GLib {
 		NUMERIC,
 		TIME
 	}
-	
+
 	namespace Intl {
 		[CCode (cname = "setlocale", cheader_filename = "locale.h")]
 		public static unowned string? setlocale (LocaleCategory category, string? locale);

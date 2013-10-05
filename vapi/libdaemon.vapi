@@ -39,7 +39,7 @@ namespace Daemon {
 		WARNING,
 		NOTICE,
 		INFO,
-		DEBUG 
+		DEBUG
 	}
 
         [CCode (cname = "int", cprefix = "SIG")]

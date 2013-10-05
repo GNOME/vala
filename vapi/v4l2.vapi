@@ -37,14 +37,14 @@ namespace V4l2
 		INTERLACED_TB,
 		INTERLACED_BT
 	}
-	
+
 	[CCode (cname="V4L2_FIELD_HAS_TOP")]
 	public bool field_has_top (uint32 field);
 	[CCode (cname="V4L2_FIELD_HAS_BOTTOM")]
 	public bool field_has_bottom (uint32 field);
 	[CCode (cname="V4L2_FIELD_HAS_BOTH")]
 	public bool field_has_both (uint32 field);
-	
+
 	[CCode (cprefix="V4L2_BUF_TYPE_")]
 	public enum BufferType
 	{
@@ -58,7 +58,7 @@ namespace V4l2
 		VIDEO_OUTPUT_OVERLAY,
 		PRIVATE
 	}
-	
+
 	[CCode (cprefix="V4L2_CTRL_TYPE_")]
 	public enum ControlType
 	{
@@ -69,7 +69,7 @@ namespace V4l2
 		INTEGER64,
 		CTRL_CLASS
 	}
-	
+
 	[CCode (cprefix="V4L2_TUNER_")]
 	public enum TunerType
 	{
@@ -77,7 +77,7 @@ namespace V4l2
 		ANALOG_TV,
 		DIGITAL_TV
 	}
-	
+
 	[CCode (cprefix="V4L2_MEMORY_")]
 	public enum Memory
 	{
@@ -85,7 +85,7 @@ namespace V4l2
 		USERPTR,
 		OVERLAY
 	}
-	
+
 	[CCode (cprefix="V4L2_COLORSPACE_")]
 	public enum Colorspace
 	{
@@ -98,7 +98,7 @@ namespace V4l2
 		JPEG,
 		SRGB
 	}
-	
+
 	[CCode (cprefix="V4L2_PRIORITY_")]
 	public enum Priority
 	{
@@ -108,7 +108,7 @@ namespace V4l2
 		RECORD,
 		DEFAULT
 	}
-	
+
 	[CCode (cname="struct v4l2_rect")]
 	public struct Rect
 	{
@@ -117,14 +117,14 @@ namespace V4l2
 		public int32 width;
 		public int32 height;
 	}
-	
+
 	[CCode (cname="struct v4l2_fract")]
 	public struct Fraction
 	{
 		public uint32 numerator;
 		public uint32 denominator;
 	}
-	
+
 	[CCode (cprefix="V4L2_CAP_")]
 	public enum Capabilities
 	{
@@ -145,7 +145,7 @@ namespace V4l2
 		ASYNCIO,
 		STREAMING
 	}
-	
+
 	[CCode (cname="struct v4l2_capability")]
 	public struct Capability
 	{
@@ -156,7 +156,7 @@ namespace V4l2
 		public uint32 capabilities;
 		public uint32[] reserved;
 	}
-	
+
 	[CCode (cprefix="V4L2_PIX_FMT_")]
 	public enum PixelFormatType
 	{
@@ -211,7 +211,7 @@ namespace V4l2
 		PJPG,
 		YVYU
 	}
-	
+
 	[CCode (cname="struct v4l2_pix_format")]
 	public struct PixelFormat
 	{
@@ -224,13 +224,13 @@ namespace V4l2
 		public Colorspace colorspace;
 		public uint32 priv;
 	}
-	
+
 	[CCode (cprefix="V4L2_FMT_FLAG_")]
 	public enum FormatFlag
 	{
 		COMPRESSED
 	}
-	
+
 	[CCode (cname="struct v4l2_fmtdesc")]
 	public struct FormatDescriptor
 	{
@@ -240,7 +240,7 @@ namespace V4l2
 		public unowned string description;
 		public uint pixelformat;
 	}
-	
+
 	[CCode (cprefix="V4L2_FRMSIZE_TYPE_")]
 	public enum FramesizeTypes
 	{
@@ -248,14 +248,14 @@ namespace V4l2
 		CONTINUOUS,
 		STEPWISE
 	}
-	
+
 	[CCode (cname="struct v4l2_frmsize_discrete")]
 	public struct FramesizeDiscrete
 	{
 		public uint32 width;
 		public uint32 height;
 	}
-	
+
 	[CCode (cname="struct v4l2_frmsize_stepwise")]
 	public struct FramesizeStepwise
 	{
@@ -266,7 +266,7 @@ namespace V4l2
 		public uint32 max_height;
 		public uint32 step_height;
 	}
-	
+
 	[CCode (cname="struct v4l2_frmsizeenum")]
 	public struct FramsizeEnum
 	{
@@ -276,7 +276,7 @@ namespace V4l2
 		public FramesizeDiscrete discrete;
 		public FramesizeStepwise stepwise;
 	}
-	
+
 	[CCode (cprefix="V4L2_FRMIVAL_TYPE_")]
 	public enum FrameivalTypes
 	{
@@ -284,7 +284,7 @@ namespace V4l2
 		CONTINUOUS,
 		STEPWISE
 	}
-	
+
 	[CCode (cname="struct v4l2_frmival_stepwise")]
 	public struct FrameivalStepwise
 	{
@@ -292,7 +292,7 @@ namespace V4l2
 		public Fraction max;
 		public Fraction step;
 	}
-	
+
 	[CCode (cname="struct v4l2_frmivalenum")]
 	public struct FrameivalEnum
 	{
@@ -304,7 +304,7 @@ namespace V4l2
 		public Fraction discrete;
 		public Fraction stepwise;
 	}
-	
+
 	[CCode (cname="struct v4l2_timecode")]
 	public struct Timecode
 	{
@@ -316,7 +316,7 @@ namespace V4l2
 		public uint8 hours;
 		public uint8 userbits[4];
 	}
-	
+
 	[CCode (cprefix="V4L2_TC_TYPE_")]
 	public enum TimecodeType
 	{
@@ -326,14 +326,14 @@ namespace V4l2
 		50FPS,
 		60FPS
 	}
-	
+
 	[CCode (cprefix="V4L2_TC_FLAGS_")]
 	public enum TimecodeFlags
 	{
 		DROPFRAME,
 		COLORFRAME
 	}
-	
+
 	[CCode (cprefix="V4L2_TC_USERBITS_")]
 	public enum TimecodeUserbits
 	{
@@ -341,8 +341,8 @@ namespace V4l2
 		USERDEFINED,
 		8BITCHARS
 	}
-	
-	
+
+
 	[CCode (cname="struct v4l2_jpegcompression")]
 	public struct JpegCompression
 	{
@@ -354,7 +354,7 @@ namespace V4l2
 		public char COM_data[60];
 		public uint32 jpeg_markers;
 	}
-	
+
 	[CCode (cprefix="V4L2_JPEG_MARKER_")]
 	public enum JpegMarker
 	{
@@ -364,7 +364,7 @@ namespace V4l2
 		COM,
 		APP
 	}
-	
+
 	[CCode (cname="struct v4l2_requestbuffers")]
 	public struct RequestBuffers
 	{
@@ -372,14 +372,14 @@ namespace V4l2
 		public BufferType type;
 		public Memory memory;
 	}
-	
+
 	[CCode (cname="m")]
 	public struct M
 	{
 		public uint32 offset;
 		public ulong userptr;
 	}
-	
+
 	[CCode (cname="struct v4l2_buffer")]
 	public struct Buffer
 	{
@@ -397,7 +397,7 @@ namespace V4l2
 		public uint32 input;
 		public uint32 reserved;
 	}
-	
+
 	[CCode (cprefix="V4L2_BUF_FLAG_")]
 	public enum BufferFlags
 	{
@@ -410,7 +410,7 @@ namespace V4l2
 		TIMECODE,
 		INPUT
 	}
-	
+
 	[CCode (cname="struct v4l2_framebuffer")]
 	public struct FrameBuffer
 	{
@@ -419,7 +419,7 @@ namespace V4l2
 		public void* @base;
 		public PixelFormat fmt;
 	}
-	
+
 	[CCode (cprefix="V4L2_FBUF_CAP_")]
 	public enum FrameBufferCapabilites
 	{
@@ -431,7 +431,7 @@ namespace V4l2
 		GLOBAL_ALPHA,
 		LOCAL_INV_ALPHA
 	}
-	
+
 	[CCode (cprefix="V4L2_FBUF_FLAG_")]
 	public enum FrameBufferFlags
 	{
@@ -442,14 +442,14 @@ namespace V4l2
 		GLOBAL_ALPHA,
 		LOCAL_INV_ALPHA
 	}
-	
+
 	[CCode (cname="struct v4l2_clip")]
 	public struct Clip
 	{
 		public Rect c;
 		public Clip* next;
 	}
-	
+
 	[CCode (cname="struct v4l2_window")]
 	public struct Window
 	{
@@ -461,7 +461,7 @@ namespace V4l2
 		public void* bitmap;
 		public uint8 global_alpha;
 	}
-	
+
 	[CCode (cname="struct v4l2_captureparm")]
 	public struct CaptureParm
 	{
@@ -471,12 +471,12 @@ namespace V4l2
 		public uint32 extendedmode;
 		public uint32 readbuffers;
 	}
-	
+
 	[CCode (cprefix="V4L2_")]
 	public const uint32 MODE_HIGHQUALITY;
 	[CCode (cprefix="V4L2_")]
 	public const uint32 CAP_TIMEPERFRAME;
-	
+
 	[CCode (cname="struct v4l2_outputparm")]
 	public struct OutputParm
 	{
@@ -486,7 +486,7 @@ namespace V4l2
 		public uint32 extendedmode;
 		public uint32 writebuffers;
 	}
-	
+
 	[CCode (cname="struct v4l2_cropcap")]
 	public struct CropCap
 	{
@@ -495,14 +495,14 @@ namespace V4l2
 		public Rect defrect;
 		public Fraction pixelaspect;
 	}
-	
+
 	[CCode (cname="struct v4l2_crop")]
 	public struct Crop
 	{
 		public BufferType type;
 		public Rect c;
 	}
-	
+
 	[CCode (cprefix="V4L2_STD_")]
 	public enum Standards
 	{
@@ -548,7 +548,7 @@ namespace V4l2
 		UNKNOWN,
 		ALL
 	}
-	
+
 	[CCode (cname="v4l2_std_id")]
 	public struct StdId : uint64 { }
 
@@ -561,7 +561,7 @@ namespace V4l2
 		public Fraction frameperiod;
 		public uint32 framelines;
 	}
-	
+
 	[CCode (cname="struct v4l2_input")]
 	public struct Input
 	{
@@ -573,14 +573,14 @@ namespace V4l2
 		public StdId std;
 		public uint32 status;
 	}
-	
+
 	[CCode (cprefix="V4L2_INPUT_TYPE_")]
 	public enum InputType
 	{
 		TUNER,
 		CAMERA
 	}
-	
+
 	[CCode (cprefix="V4L2_IN_ST_")]
 	public enum InputStatus
 	{
@@ -596,7 +596,7 @@ namespace V4l2
 		NO_ACCESS,
 		VTR
 	}
-	
+
 	[CCode (cname="struct v4l2_output")]
 	public struct Output
 	{
@@ -607,7 +607,7 @@ namespace V4l2
 		public uint32 modulator;
 		public StdId std;
 	}
-	
+
 	[CCode (cprefix="V4L2_OUTPUT_TYPE_")]
 	public enum OutputType
 	{
@@ -615,14 +615,14 @@ namespace V4l2
 		ANALOG,
 		ANALOGVGAOVERLAY
 	}
-	
+
 	[CCode (cname="struct v4l2_control")]
 	public struct Control
 	{
 		public uint32 id;
 		public int32 @value;
 	}
-	
+
 	[CCode (cname="struct v4l2_ext_control")]
 	public struct ExtControl
 	{
@@ -631,7 +631,7 @@ namespace V4l2
 		public int64 value64;
 		public void* reserved;
 	}
-	
+
 	[CCode (cname="struct v4l2_ext_controls")]
 	public struct ExtControls
 	{
@@ -640,7 +640,7 @@ namespace V4l2
 		public uint32 error_idx;
 		public ExtControl* controls;
 	}
-	
+
 	[CCode (cprefix="V4L2_CTRL_CLASS_")]
 	public enum ControlClass
 	{
@@ -648,14 +648,14 @@ namespace V4l2
 		MPEG,
 		CAMERA
 	}
-	
+
 	[CCode (cprefix="V4L2_")]
 	public const uint32 CTRL_ID_MASK;
 	[CCode (cname="V4L2_CTRL_ID2CLASS")]
 	public uint32 ctrl_id2class (uint32 id);
 	[CCode (cname="V4L2_CTRL_DRIVER_PRIV")]
 	public uint32 ctrl_driver_priv (uint32 id);
-	
+
 	[CCode (cname="struct v4l2_queryctrl")]
 	public struct QueryControl
 	{
@@ -668,7 +668,7 @@ namespace V4l2
 		public int32 default_value;
 		public uint32 flags;
 	}
-	
+
 	[CCode (cname="struct v4l2_querymenu")]
 	public struct QueryMenu
 	{
@@ -677,7 +677,7 @@ namespace V4l2
 		public unowned string name;
 		public uint32 reserved;
 	}
-	
+
 	[CCode (cprefix="V4L2_CTRL_FLAG_")]
 	public enum ControlFlags
 	{
@@ -689,7 +689,7 @@ namespace V4l2
 		SLIDER,
 		NEXT_CTRL
 	}
-	
+
 	[CCode (cprefix="V4L2_CID_")]
 	public enum UserClassControlIds
 	{
@@ -726,7 +726,7 @@ namespace V4l2
 		COLOR_KILLER,
 		LASTP1
 	}
-	
+
 	[CCode (cprefix="V4L2_CID_POWER_LINE_FREQUENCY_")]
 	public enum PowerLineFrequency
 	{
@@ -734,7 +734,7 @@ namespace V4l2
 		50HZ,
 		60HZ
 	}
-	
+
 	[CCode (cprefix="V4L2_CID_MPEG_")]
 	public enum MpegClassControlIds
 	{
@@ -769,9 +769,9 @@ namespace V4l2
 		VIDEO_BITRATE_PEAK,
 		VIDEO_TEMPORAL_DECIMATION,
 		VIDEO_MUTE,
-		VIDEO_MUTE_YUV 
+		VIDEO_MUTE_YUV
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_STREAM_TYPE_")]
 	public enum MpegStreamType
 	{
@@ -782,14 +782,14 @@ namespace V4l2
 		MPEG1_VCD,
 		MPEG2_SVCD
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_STREAM_VBI_FMT_")]
 	public enum MpegStreamVbiFmt
 	{
 		NONE,
 		IVTV
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_AUDIO_SAMPLING_FREQ_")]
 	public enum MpegAudioSamplingFreq
 	{
@@ -797,7 +797,7 @@ namespace V4l2
 		@48000,
 		@32000
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_AUDIO_ENCODING_")]
 	public enum MpegAudioEncoding
 	{
@@ -805,7 +805,7 @@ namespace V4l2
 		LAYER_2,
 		LAYER_3
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_AUDIO_L1_BITRATE_")]
 	public enum MpegAudioL1Bitrate
 	{
@@ -824,7 +824,7 @@ namespace V4l2
 		416K,
 		448K
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_AUDIO_L2_BITRATE_")]
 	public enum MpegAudioL2Bitrate
 	{
@@ -843,7 +843,7 @@ namespace V4l2
 		320K,
 		384K
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_AUDIO_L3_BITRATE_")]
 	public enum MpegAudioL3Bitrate
 	{
@@ -862,7 +862,7 @@ namespace V4l2
 		256K,
 		320K,
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_AUDIO_MODE_")]
 	public enum MpegAudioMode
 	{
@@ -871,7 +871,7 @@ namespace V4l2
 		DUAL,
 		MONO
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_AUDIO_MODE_EXTENSION_")]
 	public enum MpegAudioModeExtension
 	{
@@ -880,7 +880,7 @@ namespace V4l2
 		BOUND_12,
 		BOUND_16
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_AUDIO_EMPHASIS_")]
 	public enum MpegAudioEmphasis
 	{
@@ -888,21 +888,21 @@ namespace V4l2
 		50_DIV_15_uS,
 		CCITT_J17,
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_AUDIO_CRC_")]
 	public enum MpegAudioCrc
 	{
 		NONE,
 		CRC16
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_VIDEO_ENCODING_")]
 	public enum MpegVideoEncoding
 	{
 		MPEG_1,
 		MPEG_2
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_VIDEO_ASPECT_")]
 	public enum MpegVideoAspect
 	{
@@ -911,14 +911,14 @@ namespace V4l2
 		16x9,
 		221x100
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_VIDEO_BITRATE_MODE_")]
 	public enum MpegVideoBitrateMode
 	{
 		VBR,
 		CBR
 	}
-	
+
 	[CCode (cprefix="V4L2_CID_MPEG_CX2341X_")]
 	public enum MpegCx2341xClassControlIds
 	{
@@ -936,14 +936,14 @@ namespace V4l2
 		VIDEO_CHROMA_MEDIAN_FILTER_TOP,
 		STREAM_INSERT_NAV_PACKETS
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_CX2341X_VIDEO_SPATIAL_FILTER_MODE_")]
 	public enum MpegCx2341xVideoSpatialFilterMode
 	{
 		MANUAL,
 		AUTO,
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_CX2341X_VIDEO_LUMA_SPATIAL_FILTER_TYPE_")]
 	public enum MpegCx2341xVideoLumaSpatialFilterType
 	{
@@ -953,21 +953,21 @@ namespace V4l2
 		2D_HV_SEPARABLE,
 		2D_SYM_NON_SEPARABLE,
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_CX2341X_VIDEO_CHROMA_SPATIAL_FILTER_TYPE_")]
 	public enum MpegCx2341xVideoChromaSpatialFilterType
 	{
 		OFF,
 		1D_HOR
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_CX2341X_VIDEO_TEMPORAL_FILTER_MODE_")]
 	public enum MpegCx2341xVideoTemporalFilterMode
 	{
 		MANUAL,
 		AUTO
 	}
-	
+
 	[CCode (cprefix="V4L2_MPEG_CX2341X_VIDEO_MEDIAN_FILTER_TYPE_")]
 	public enum MpegCx2341xVideoMedianFilterType
 	{
@@ -977,7 +977,7 @@ namespace V4l2
 		HOR_VERT,
 		DIAG
 	}
-	
+
 	[CCode (cprefix="V4L2_CID_")]
 	public enum CameraClassControlIds
 	{
@@ -996,7 +996,7 @@ namespace V4l2
 		FOCUS_RELATIVE,
 		FOCUS_AUTO
 	}
-	
+
 	[CCode (cprefix="V4L2_EXPOSURE_")]
 	public enum ExposureAutoType
 	{
@@ -1020,7 +1020,7 @@ namespace V4l2
 		public int32 @signal;
 		public int32 afc;
 	}
-	
+
 	[CCode (cname="struct v4l2_modulator")]
 	public struct Modulator
 	{
@@ -1031,7 +1031,7 @@ namespace V4l2
 		public uint32 rangehigh;
 		public uint32 txsubchans;
 	}
-	
+
 	[CCode (cprefix="V4L2_TUNER_CAP_")]
 	public enum TunerCapabilities
 	{
@@ -1042,7 +1042,7 @@ namespace V4l2
 		SAP,
 		LANG1
 	}
-	
+
 	[CCode (cprefix="V4L2_TUNER_SUB_")]
 	public enum TunerSubs
 	{
@@ -1052,7 +1052,7 @@ namespace V4l2
 		SAP,
 		LANG1
 	}
-	
+
 	[CCode (cprefix="V4L2_TUNER_MODE_")]
 	public enum TunerModes
 	{
@@ -1063,7 +1063,7 @@ namespace V4l2
 		LANG1,
 		LANG1_LANG2
 	}
-	
+
 	[CCode (cname="struct v4l2_frequency")]
 	public struct Frequency
 	{
@@ -1071,7 +1071,7 @@ namespace V4l2
 		public TunerType type;
 		public uint32 frequency;
 	}
-	
+
 	[CCode (cname="struct v4l2_hw_freq_seek")]
 	public struct HwFreqSeek
 	{
@@ -1080,7 +1080,7 @@ namespace V4l2
 		public uint32 seek_upward;
 		public uint32 wrap_around;
 	}
-	
+
 	[CCode (cname="struct v4l2_audio")]
 	public struct Audio
 	{
@@ -1089,7 +1089,7 @@ namespace V4l2
 		public uint32 capability;
 		public uint32 mode;
 	}
-	
+
 	[CCode (cprefix="V4L2_AUDCAP_")]
 	public enum AudioCapabilities
 	{
@@ -1099,7 +1099,7 @@ namespace V4l2
 
 	[CCode (cprefix="V4L2_")]
 	public const uint32 AUDMODE_AVL;
-	
+
 	[CCode (cname="struct v4l2_audioout")]
 	public struct AudioOut
 	{
@@ -1108,7 +1108,7 @@ namespace V4l2
 		public uint32 capability;
 		public uint32 mode;
 	}
-	
+
 	[CCode (cprefix="V4L2_ENC_IDX_FRAME_")]
 	public enum EncIdxFrame
 	{
@@ -1117,7 +1117,7 @@ namespace V4l2
 		B,
 		MASK
 	}
-	
+
 	[CCode (cname="struct v4l2_enc_idx_entry")]
 	public struct EncIdxEntry
 	{
@@ -1126,10 +1126,10 @@ namespace V4l2
 		public uint32 length;
 		public uint32 flags;
 	}
-	
+
 	[CCode (cprefix="V4L2_")]
 	public const int ENC_IDX_ENTRIES;
-	
+
 	[CCode (cname="struct v4l2_enc_idx")]
 	public struct EncIdx
 	{
@@ -1137,7 +1137,7 @@ namespace V4l2
 		public uint32 entries_cap;
 		public EncIdxEntry[] entry;
 	}
-	
+
 	[CCode (cprefix="V4L2_ENC_CMD_")]
 	public enum EncCmd
 	{
@@ -1147,13 +1147,13 @@ namespace V4l2
 		RESUME,
 		STOP_AT_GOP_END
 	}
-	
+
 	[CCode (cname="struct raw")]
 	public struct Raw
 	{
 		public uint32 data[8];
 	}
-	
+
 	[CCode (cname="struct v4l2_encoder_cmd")]
 	public struct EncoderCmd
 	{
@@ -1161,7 +1161,7 @@ namespace V4l2
 		public uint32 flags;
 		public Raw raw;
 	}
-	
+
 	[CCode (cname="struct v4l2_vbi_format")]
 	public struct VbiFormat
 	{
@@ -1173,14 +1173,14 @@ namespace V4l2
 		public uint32 count[2];
 		public uint32 flags;
 	}
-	
+
 	[CCode (cprefix="V4L2_VBI_")]
 	public enum VbiFlags
 	{
 		UNSYNC,
 		INTERLACED
 	}
-	
+
 	[CCode (cname="struct v4l2_sliced_vbi_format")]
 	public struct SlicedVbiFormat
 	{
@@ -1189,7 +1189,7 @@ namespace V4l2
 		public uint32 io_size;
 		public uint32[] reserved;
 	}
-	
+
 	[CCode (cprefix="V4L2_SLICED_")]
 	public enum SlicedType
 	{
@@ -1201,7 +1201,7 @@ namespace V4l2
 		VBI_625,
 		T
 	}
-	
+
 	[CCode (cname="struct v4l2_sliced_vbi_cap")]
 	public struct SlicedVbiCap
 	{
@@ -1209,7 +1209,7 @@ namespace V4l2
 		public uint16[] service_lines;
 		public BufferType type;
 	}
-	
+
 	[CCode (cname="struct v4l2_sliced_vbi_data")]
 	public struct SlicedVbiData
 	{
@@ -1218,7 +1218,7 @@ namespace V4l2
 		public uint32 line;
 		public uint8 data[48];
 	}
-	
+
 	public struct Fmt
 	{
 		public PixelFormat pix;
@@ -1227,28 +1227,28 @@ namespace V4l2
 		public SlicedVbiFormat sliced;
 		public uint8 raw_data[200];
 	}
-	
+
 	[CCode (cname="struct v4l2_format")]
 	public struct Format
 	{
 		public BufferType type;
 		public Fmt fmt;
 	}
-	
+
 	public struct Parm
 	{
 		public CaptureParm capture;
 		public OutputParm output;
 		public uint8 raw_data[200];
 	}
-	
+
 	[CCode (cname="struct v4l2_streamparm")]
 	public struct StreamParm
 	{
 		public BufferType type;
 		public unowned Parm parm;
 	}
-	
+
 	[CCode (cprefix="V4L2_CHIP_MATCH_")]
 	public enum ChipMatch
 	{
@@ -1256,7 +1256,7 @@ namespace V4l2
 		I2C_DRIVER,
 		I2C_ADDR
 	}
-	
+
 	[CCode (cname="struct v4l2_register")]
 	public struct Register
 	{
@@ -1265,7 +1265,7 @@ namespace V4l2
 		public uint64 reg;
 		public uint64 val;
 	}
-	
+
 	[CCode (cname="struct v4l2_chip_ident")]
 	public struct ChipIdent
 	{
@@ -1274,7 +1274,7 @@ namespace V4l2
 		public uint32 ident;
 		public uint32 revision;
 	}
-	
+
 	public const int VIDIOC_QUERYCAP;
 	public const int VIDIOC_RESERVED;
 	public const int VIDIOC_ENUM_FMT;

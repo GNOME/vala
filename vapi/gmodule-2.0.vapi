@@ -23,7 +23,7 @@
 [CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "gmodule.h", gir_namespace = "GModule", gir_version = "2.0")]
 namespace GLib {
 	/* Dynamic Loading of Modules */
-	
+
 	[Compact]
 	[CCode (free_function = "g_module_close", cheader_filename = "gmodule.h")]
 	public class Module {
@@ -36,7 +36,7 @@ namespace GLib {
 		public void make_resident ();
 		public static unowned string error ();
 	}
-	
+
 	[CCode (cprefix = "G_MODULE_")]
 	public enum ModuleFlags {
 		BIND_LAZY,
