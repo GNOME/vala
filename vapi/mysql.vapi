@@ -159,7 +159,7 @@ namespace Mysql {
 		FIELD_IS_RENAMED
 	}
 
-	[CCode (cname = "enum_cursor_type", cprefix = "CURSOR_TYPE_")]
+	[CCode (cname = "enum_cursor_type", cprefix = "CURSOR_TYPE_", has_type_id = false)]
 	public enum CursorType {
 		NO_CURSOR,
 		READ_ONLY,
@@ -257,7 +257,7 @@ namespace Mysql {
 
 		public bool data_seek (ulong offset);
 	}
-	[CCode (cname = "MYSQL_FIELD")]
+	[CCode (cname = "MYSQL_FIELD", has_type_id = false)]
 	public struct Field {
 		public unowned string name;
 		public unowned string org_name;

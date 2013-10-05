@@ -44,6 +44,7 @@ namespace Curses {
 		public const Curses.Color WHITE;
 	}
 
+	[CCode (has_type_id = false)]
 	public enum Acs {
 		ULCORNER, LLCORNER, URCORNER, LRCORNER, LTEE, RTEE,
 		BTEE, TTEE, HLINE, VLINE, PLUS, S1, S9, DIAMOND,
@@ -433,13 +434,14 @@ namespace Curses {
 	public int vidputs(ulong attrs, VidputsPutcFunc putc);
 	public int vline(ulong ch, int n);
 
-	[CCode (cprefix = "A_")]
+	[CCode (cprefix = "A_", has_type_id = false)]
 	public enum Attribute {
 		NORMAL, ATTRIBUTES, CHARTEXT, COLOR, STANDOUT,
 		UNDERLINE, REVERSE, BLINK, DIM, BOLD, ALTCHARSET, INVIS,
 		PROTECT, HORIZONTAL, LEFT, LOW, RIGHT, TOP, VERTICAL
 	}
 
+	[CCode (has_type_id = false)]
 	public enum Key {
 		CODE_YES, MIN, BREAK, SRESET, RESET, DOWN, UP, LEFT,
 		RIGHT, HOME, BACKSPACE, F0, /* XXX F(n), */ DL, IL, DC,
@@ -457,7 +459,7 @@ namespace Curses {
 	}
 
 	/* TODO: mouse + wide char support */
-	[CCode (cname="MEVENT")]
+	[CCode (cname="MEVENT", has_type_id = false)]
 	public struct MouseEvent {
 		short id;
 		int x;
@@ -466,18 +468,20 @@ namespace Curses {
 		long bstate;
 	}
 
-	[CCode (cprefix="")]
+	[CCode (cprefix="", has_type_id = false)]
 	public enum MouseMask {
 		ALL_MOUSE_EVENTS,
 		REPORT_MOUSE_POSITION
 	}
 
+	[CCode (has_type_id = false)]
 	public enum Button {
 		SHIFT,
 		CTRL,
 		ALT,
 	}
 
+	[CCode (has_type_id = false)]
 	public enum Button1 {
 		PRESSED,
 		RELEASED,
@@ -486,6 +490,7 @@ namespace Curses {
 		TRIPLE_CLICKED
 	}
 
+	[CCode (has_type_id = false)]
 	public enum Button2 {
 		PRESSED,
 		RELEASED,
@@ -494,6 +499,7 @@ namespace Curses {
 		TRIPLE_CLICKED
 	}
 
+	[CCode (has_type_id = false)]
 	public enum Button3 {
 		PRESSED,
 		RELEASED,
@@ -502,6 +508,7 @@ namespace Curses {
 		TRIPLE_CLICKED
 	}
 
+	[CCode (has_type_id = false)]
 	public enum Button4 {
 		PRESSED,
 		RELEASED,
@@ -510,6 +517,7 @@ namespace Curses {
 		TRIPLE_CLICKED
 	}
 
+	[CCode (has_type_id = false)]
 	public enum Button5 {
 		PRESSED,
 		RELEASED,

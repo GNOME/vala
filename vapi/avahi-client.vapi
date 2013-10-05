@@ -29,7 +29,7 @@ namespace Avahi {
     /* Network addresses */
 
 	[SimpleType]
-	[CCode(cheader_filename="avahi-common/address.h", cname="AvahiProtocol", cprefix="AVAHI_PROTO_", lower_case_cprefix="avahi_proto_")]
+	[CCode(cheader_filename="avahi-common/address.h", cname="AvahiProtocol", cprefix="AVAHI_PROTO_", lower_case_cprefix="avahi_proto_", has_type_id = false)]
 	public enum Protocol {
 		INET,
 		INET6,
@@ -46,7 +46,7 @@ namespace Avahi {
 	}
 
 	[SimpleType]
-	[CCode(cheader_filename="avahi-common/address.h", cname="AvahiIfIndex")]
+	[CCode(cheader_filename="avahi-common/address.h", cname="AvahiIfIndex", has_type_id = false)]
 	public struct Interface {
 		[CCode(cname="AVAHI_IF_UNSPEC")]
 		public static Interface UNSPEC;
@@ -55,7 +55,7 @@ namespace Avahi {
 		public bool is_valid();
 	}
 
-	[CCode(cheader_filename="avahi-common/address.h", cname="AvahiAddress", cprefix="avahi_address_")]
+	[CCode(cheader_filename="avahi-common/address.h", cname="AvahiAddress", cprefix="avahi_address_", has_type_id = false)]
 	public struct Address {
 		public Protocol proto;
 
@@ -253,7 +253,7 @@ namespace Avahi {
 	/* Entry group */
 
 	[Flags]
-	[CCode(cheader_filename="avahi-common/defs.h", cname="AvahiPublishFlags", cfrefix="AVAHI_PUBLISH_")]
+	[CCode(cheader_filename="avahi-common/defs.h", cname="AvahiPublishFlags", cfrefix="AVAHI_PUBLISH_", has_type_id = false)]
 	public enum PublishFlags {
 		UNIQUE,
 		NO_PROBE,

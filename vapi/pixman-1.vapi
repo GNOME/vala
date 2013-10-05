@@ -15,11 +15,11 @@ namespace Pixman {
 		public static unowned string library_string ();
 	}
 
-	[SimpleType, IntegerType (rank = 6), CCode (cname = "pixman_fixed_16_16_t")]
+	[SimpleType, IntegerType (rank = 6), CCode (cname = "pixman_fixed_16_16_t", has_type_id = false)]
 	public struct Fixed1616 : int32 {
 	}
 
-	[SimpleType, IntegerType (rank = 6), CCode (cname = "pixman_fixed_t")]
+	[SimpleType, IntegerType (rank = 6), CCode (cname = "pixman_fixed_t", has_type_id = false)]
 	public struct Fixed : Fixed1616 {
 		[CCode (cname = "pixman_double_to_fixed")]
 		public Fixed.double (double val);

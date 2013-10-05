@@ -23,7 +23,7 @@
 [CCode (cprefix = "PQ", cheader_filename = "postgresql/libpq-fe.h")]
 namespace Postgres {
 
-	[CCode (cname = "ConnStatusType", cprefix = "CONNECTION_")]
+	[CCode (cname = "ConnStatusType", cprefix = "CONNECTION_", has_type_id = false)]
 	public enum ConnectionStatus {
 		OK,
 		BAD,
@@ -36,7 +36,7 @@ namespace Postgres {
 		NEEDED
 	}
 
-	[CCode (cname = "PostgresPollingStatusType", cprefix = "PGRES_POLLING_")]
+	[CCode (cname = "PostgresPollingStatusType", cprefix = "PGRES_POLLING_", has_type_id = false)]
 	public enum PollingStatus {
 		FAILED,
 		READING,
@@ -45,7 +45,7 @@ namespace Postgres {
 		ACTIVE
 	}
 
-	[CCode (cname = "ExecStatusType", cprefix = "PGRES_")]
+	[CCode (cname = "ExecStatusType", cprefix = "PGRES_", has_type_id = false)]
 	public enum ExecStatus {
 		EMPTY_QUERY,
 		COMMAND_OK,
@@ -57,7 +57,7 @@ namespace Postgres {
 		FATAL_ERROR
 	}
 
-	[CCode (cname = "PGTransactionStatusType", cprefix = "PQTRANS_")]
+	[CCode (cname = "PGTransactionStatusType", cprefix = "PQTRANS_", has_type_id = false)]
 	public enum TransactionStatus {
 		IDLE,
 		ACTIVE,
@@ -66,7 +66,7 @@ namespace Postgres {
 		UNKNOWN
 	}
 
-	[CCode (cname = "PGVerbosity", cprefix = "PQERRORS_")]
+	[CCode (cname = "PGVerbosity", cprefix = "PQERRORS_", has_type_id = false)]
 	public enum Verbosity {
 		TERSE,
 		DEFAULT,
@@ -105,7 +105,7 @@ namespace Postgres {
 	[CCode (cname = "PQnoticeProcessor")]
 	public delegate void NoticeProcessorFunc (void* arg, string message);
 
-	[CCode (cname = "PQprintOpt")]
+	[CCode (cname = "PQprintOpt", has_type_id = false)]
 	public struct PrintOpt {
 		public bool     header;
 		public bool     align;
@@ -131,14 +131,14 @@ namespace Postgres {
 		public int    dispsize;
 	}
 
-	[CCode (cname = "PQArgBlock")]
+	[CCode (cname = "PQArgBlock", has_type_id = false)]
 	public struct ArgBlock {
 		public int len;
 		public int isint;
 	}
 
 	[SimpleType]
-	[CCode (cname = "uint", default_value = "0U", type_signature = "u")]
+	[CCode (cname = "uint", default_value = "0U", type_signature = "u", has_type_id = false)]
 	public struct Oid {
 	}
 

@@ -44,7 +44,7 @@ namespace Archive {
 	// In reality a "void (*_progress_func)(void *)" parameter without name.
 	public delegate void ExtractProgressCallback ();
 
-	[CCode (cprefix="ARCHIVE_", cname="int")]
+	[CCode (cprefix="ARCHIVE_", cname="int", has_type_id = false)]
 	public enum Result {
 		EOF,
 		OK,
@@ -53,7 +53,7 @@ namespace Archive {
 		FAILED
 	}
 
-	[CCode (cname="int")]
+	[CCode (cname="int", has_type_id = false)]
 	public enum Compression {
 		NONE,
 		GZIP,
@@ -63,7 +63,7 @@ namespace Archive {
 		LZMA
 	}
 
-	[CCode (cname="int")]
+	[CCode (cname="int", has_type_id = false)]
 	public enum Format {
 		BASE_MASK,
 		CPIO,
@@ -90,7 +90,7 @@ namespace Archive {
 		MTREE
 	}
 
-	[CCode (cprefix="ARCHIVE_EXTRACT_", cname="int")]
+	[CCode (cprefix="ARCHIVE_EXTRACT_", cname="int", has_type_id = false)]
 	public enum ExtractFlags {
 		OWNER,
 		PERM,

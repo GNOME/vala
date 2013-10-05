@@ -1,6 +1,6 @@
 [CCode (cprefix = "usb_", cheader_filename = "usb.h")]
 namespace USB {
-	[CCode (cprefix = "USB_CLASS_", cheader_filename = "usb.h")]
+	[CCode (cprefix = "USB_CLASS_", cheader_filename = "usb.h", has_type_id = false)]
 	public enum Class {
 		PER_INTERFACE,
 		AUDIO,
@@ -14,7 +14,7 @@ namespace USB {
 		VENDOR_SPEC
 	}
 
-	[CCode (cprefix = "USB_DT_", cheader_filename = "usb.h")]
+	[CCode (cprefix = "USB_DT_", cheader_filename = "usb.h", has_type_id = false)]
 	public enum DescriptorType {
 		DEVICE,
 		CONFIG,
@@ -27,7 +27,7 @@ namespace USB {
 		HUB
 	}
 
-	[CCode (cprefix = "USB_DT_", cheader_filename = "usb.h")]
+	[CCode (cprefix = "USB_DT_", cheader_filename = "usb.h", has_type_id = false)]
 	public enum DescriptorSize {
 		[CCode (cname = "USB_DT_DEVICE_SIZE")]
 		DEVICE,
@@ -43,7 +43,7 @@ namespace USB {
 		HUB_NONVAR
 	}
 
-	[CCode (cprefix = "USB_ENDPOINT_", cheader_filename = "usb.h")]
+	[CCode (cprefix = "USB_ENDPOINT_", cheader_filename = "usb.h", has_type_id = false)]
 	public enum EndpointAttribute {
 		ADDRESS_MASK,
 		IN,
@@ -55,7 +55,7 @@ namespace USB {
 		TYPE_INTERRUPT,
 	}
 
-	[CCode (cprefix = "USB_ENDPOINT_", cheader_filename = "usb.h")]
+	[CCode (cprefix = "USB_ENDPOINT_", cheader_filename = "usb.h", has_type_id = false)]
 	public enum EndpointAddress {
 		ADDRESS_MASK,
 		DIR_MASK,
@@ -63,7 +63,7 @@ namespace USB {
 		OUT
 	}
 
-	[CCode (cprefix = "USB_REQ_", cheader_filename = "usb.h")]
+	[CCode (cprefix = "USB_REQ_", cheader_filename = "usb.h", has_type_id = false)]
 	public enum Request {
 		GET_STATUS,
 		CLEAR_FEATURE,
@@ -78,7 +78,7 @@ namespace USB {
 		SYNCH_FRAME
 	}
 
-	[CCode (cprefix = "USB_TYPE_", cheader_filename = "usb.h")]
+	[CCode (cprefix = "USB_TYPE_", cheader_filename = "usb.h", has_type_id = false)]
 	public enum Type {
 		STANDARD,
 		CLASS,
@@ -86,7 +86,7 @@ namespace USB {
 		RESERVED
 	}
 
-	[CCode (cname = "struct usb_endpoint_descriptor", cheader_filename = "usb.h")]
+	[CCode (cname = "struct usb_endpoint_descriptor", cheader_filename = "usb.h", has_type_id = false)]
 	public struct EndpointDescriptor {
 		public uint8 bLength;
 		public uint8 bDescriptorType;
@@ -101,7 +101,7 @@ namespace USB {
 		public uchar[] extra;
 	}
 
-	[CCode (cname = "struct usb_interface_descriptor", cheader_filename = "usb.h")]
+	[CCode (cname = "struct usb_interface_descriptor", cheader_filename = "usb.h", has_type_id = false)]
 	public struct InterfaceDescriptor {
 		public uint8 bLength;
 		public uint8 bDescriptorType;
@@ -120,7 +120,7 @@ namespace USB {
 		public uchar[] extra;
 	}
 
-	[CCode (cname = "struct usb_interface", cheader_filename = "usb.h")]
+	[CCode (cname = "struct usb_interface", cheader_filename = "usb.h", has_type_id = false)]
 	public struct Interface {
 		[CCode (array_length_cname = "num_altsetting")]
 		public InterfaceDescriptor[] altsetting;
@@ -143,7 +143,7 @@ namespace USB {
 		public uchar[] extra;
 	}
 
-	[CCode (cname = "struct usb_device_descriptor", cheader_filename = "usb.h")]
+	[CCode (cname = "struct usb_device_descriptor", cheader_filename = "usb.h", has_type_id = false)]
 	public struct DeviceDescriptor {
 		public uint8 bLength;
 		public uint8 bDescriptorType;

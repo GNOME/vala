@@ -16,7 +16,7 @@ namespace LibMagic {
 	}
 
 	[Flags]
-	[CCode (cprefix = "MAGIC_", cname = "int")]
+	[CCode (cprefix = "MAGIC_", cname = "int", has_type_id = false)]
 	public enum Flags {
 		NONE,
 		DEBUG,

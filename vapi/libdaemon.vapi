@@ -22,7 +22,7 @@
 
 [CCode (lower_case_cprefix = "daemon_", cheader_filename = "signal.h,libdaemon/daemon.h")]
 namespace Daemon {
-        [CCode (cname = "int", cprefix = "DAEMON_LOG_")]
+	[CCode (cname = "int", cprefix = "DAEMON_LOG_", has_type_id = false)]
  	public enum LogFlags {
 		SYSLOG,
 		STDERR,
@@ -30,7 +30,7 @@ namespace Daemon {
 		AUTO
 	}
 
-        [CCode (cname = "int", cprefix = "LOG_")]
+	[CCode (cname = "int", cprefix = "LOG_", has_type_id = false)]
 	public enum LogPriority {
 		EMERG,
 		ALERT,
@@ -42,7 +42,7 @@ namespace Daemon {
 		DEBUG
 	}
 
-        [CCode (cname = "int", cprefix = "SIG")]
+	[CCode (cname = "int", cprefix = "SIG", has_type_id = false)]
 	public enum Sig {
 		HUP,
 		INT,

@@ -334,7 +334,7 @@ namespace X {
 	public const ulong AllPlanes;
 
 	[SimpleType]
-	[CCode (cname = "XPointer")]
+	[CCode (cname = "XPointer", has_type_id = false)]
 	public struct Pointer {
 	}
 
@@ -343,24 +343,24 @@ namespace X {
 	[CCode (cname = "Atom", type_id = "G_TYPE_LONG",
 		marshaller_type_name = "LONG",
 		get_value_function = "g_value_get_long",
-		set_value_function = "g_value_set_long")]
+		set_value_function = "g_value_set_long", has_type_id = false)]
 	public struct Atom {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname = "Colormap")]
+	[CCode (cname = "Colormap", has_type_id = false)]
 	public struct Colormap {
 	}
 
 	[SimpleType]
-	[CCode (cname = "GC")]
+	[CCode (cname = "GC", has_type_id = false)]
 	public struct GC {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname = "Status")]
+	[CCode (cname = "Status", has_type_id = false)]
 	public struct Status {
 	}
 
@@ -371,7 +371,7 @@ namespace X {
 		marshaller_type_name = "INT",
 		get_value_function = "g_value_get_int",
 		set_value_function = "g_value_set_int", default_value = "0",
-		type_signature = "i")]
+		type_signature = "i", has_type_id = false)]
 	public struct ID {
 	}
 
@@ -381,7 +381,7 @@ namespace X {
 		marshaller_type_name = "INT",
 		get_value_function = "g_value_get_int",
 		set_value_function = "g_value_set_int", default_value = "0",
-		type_signature = "i")]
+		type_signature = "i", has_type_id = false)]
 	public struct Drawable : ID
 	{
 	}
@@ -392,7 +392,7 @@ namespace X {
 		marshaller_type_name = "INT",
 		get_value_function = "g_value_get_int",
 		set_value_function = "g_value_set_int", default_value = "0",
-		type_signature = "i")]
+		type_signature = "i", has_type_id = false)]
 	public struct Window : Drawable {
 	}
 
@@ -403,23 +403,23 @@ namespace X {
 		marshaller_type_name = "INT",
 		get_value_function = "g_value_get_int",
 		set_value_function = "g_value_set_int", default_value = "0",
-		type_signature = "i")]
+		type_signature = "i", has_type_id = false)]
 	public struct Pixmap : Drawable	{
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname = "Mask")]
+	[CCode (cname = "Mask", has_type_id = false)]
 	public struct Mask {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname = "VisualID")]
+	[CCode (cname = "VisualID", has_type_id = false)]
 	public struct VisualID {
 	}
 
-	[CCode (cname = "XVisualInfo")]
+	[CCode (cname = "XVisualInfo", has_type_id = false)]
 	public struct VisualInfo {
 		public unowned X.Visual visual;
 		public X.VisualID visualid;
@@ -436,31 +436,31 @@ namespace X {
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname = "Time")]
+	[CCode (cname = "Time", has_type_id = false)]
 	public struct Time {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname = "Cursor")]
+	[CCode (cname = "Cursor", has_type_id = false)]
 	public struct Cursor {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname = "GContext")]
+	[CCode (cname = "GContext", has_type_id = false)]
 	public struct GContext {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname = "KeySym")]
+	[CCode (cname = "KeySym", has_type_id = false)]
 	public struct KeySym {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname = "KeyCode")]
+	[CCode (cname = "KeyCode", has_type_id = false)]
 	public struct KeyCode {
 	}
 
@@ -508,7 +508,7 @@ namespace X {
 		public int height;
 	}
 
-	[CCode (cprefix = "", cname = "int")]
+	[CCode (cprefix = "", cname = "int", has_type_id = false)]
 	public enum ImageFormat {
 		XYBitmap,
 		XYPixmap,
@@ -545,7 +545,7 @@ namespace X {
 	[CCode (cname = "XAddPixel")]
 	public int add_pixel (Image img, long @value);
 
-	[CCode (cname = "XSetWindowAttributes")]
+	[CCode (cname = "XSetWindowAttributes", has_type_id = false)]
 	public struct SetWindowAttributes {
 		public Pixmap background_pixmap;	/* background or None or ParentRelative */
 		public ulong background_pixel;	/* background pixel */
@@ -564,7 +564,7 @@ namespace X {
 		public Cursor cursor;		/* cursor to be displayed (or None) */
 	}
 
-	[CCode (cname = "XWindowAttributes", has_destroy_function = false, cheader_filename = "X11/Xlib.h,X11/Xatom.h,X11/Xutil.h")]
+	[CCode (cname = "XWindowAttributes", has_destroy_function = false, cheader_filename = "X11/Xlib.h,X11/Xatom.h,X11/Xutil.h", has_type_id = false)]
 	public struct WindowAttributes {
 		public int x;
 		public int y;			/* location of window */
@@ -630,7 +630,7 @@ namespace X {
 	[CCode (cname = "XFree")]
 	public int free (void* data);
 
-	[CCode (cprefix = "", cname = "int")]
+	[CCode (cprefix = "", cname = "int", has_type_id = false)]
 	public enum ErrorCode {
 		[CCode (cname = "Success")]
 		SUCCESS,
@@ -674,7 +674,7 @@ namespace X {
 		LAST_EXTENSION_ERROR
 	}
 
-	[CCode (cprefix = "", cname = "int")]
+	[CCode (cprefix = "", cname = "int", has_type_id = false)]
 	public enum WindowClass {
 		[CCode (cname = "InputOutput")]
 		INPUT_OUTPUT,
@@ -709,7 +709,7 @@ namespace X {
 		WinGravity
 	}
 
-	[CCode (cprefix = "GrabMode")]
+	[CCode (cprefix = "GrabMode", has_type_id = false)]
 	public enum GrabMode {
 		Sync,
 		Async
@@ -759,7 +759,7 @@ namespace X {
 		Mod5Mask
 	}
 
-	[CCode (cprefix = "")]
+	[CCode (cprefix = "", has_type_id = false)]
 	public enum EventType {
 		KeyPress,
 		KeyRelease,
@@ -799,7 +799,7 @@ namespace X {
 
 	// union
 	[GIR (name = "XEvent")]
-	[CCode (cname = "XEvent")]
+	[CCode (cname = "XEvent", has_type_id = false)]
 	public struct Event {
 		public int type;
 		public AnyEvent xany;
@@ -825,7 +825,7 @@ namespace X {
 		public GenericEventCookie xcookie;
 	}
 
-	[CCode (cname = "XAnyEvent")]
+	[CCode (cname = "XAnyEvent", has_type_id = false)]
 	public struct AnyEvent {
 		public int type;
 		public ulong serial;
@@ -834,7 +834,7 @@ namespace X {
 		public Window window;
 	}
 
-	[CCode (cname = "XKeyEvent")]
+	[CCode (cname = "XKeyEvent", has_type_id = false)]
 	public struct KeyEvent {
 		public int type;
 		public ulong serial;
@@ -853,7 +853,7 @@ namespace X {
 		public bool same_screen;
 	}
 
-	[CCode (cname = "XButtonEvent")]
+	[CCode (cname = "XButtonEvent", has_type_id = false)]
 	public struct ButtonEvent {
 		public int type;
 		public ulong serial;
@@ -871,7 +871,7 @@ namespace X {
 		public bool same_screen;
 	}
 
-	[CCode (cname = "XMotionEvent")]
+	[CCode (cname = "XMotionEvent", has_type_id = false)]
 	public struct MotionEvent {
 		public int type;
 		public ulong serial;
@@ -889,7 +889,7 @@ namespace X {
 		public bool same_screen;
 	}
 
-	[CCode (cname = "XCrossingEvent")]
+	[CCode (cname = "XCrossingEvent", has_type_id = false)]
 	public struct CrossingEvent {
 		public int type;
 		public ulong serial;
@@ -910,7 +910,7 @@ namespace X {
 		public uint state;
 	}
 
-	[CCode (cname = "XCreateWindowEvent")]
+	[CCode (cname = "XCreateWindowEvent", has_type_id = false)]
 	public struct CreateWindowEvent {
 		public int type;
 		public ulong serial;
@@ -926,7 +926,7 @@ namespace X {
 		public bool override_redirect;
 	}
 
-	[CCode (cname = "XDestroyWindowEvent")]
+	[CCode (cname = "XDestroyWindowEvent", has_type_id = false)]
 	public struct DestroyWindowEvent {
 		public int type;
 		public ulong serial;
@@ -936,7 +936,7 @@ namespace X {
 		public Window window;
 	}
 
-	[CCode (cname = "XUnmapEvent")]
+	[CCode (cname = "XUnmapEvent", has_type_id = false)]
 	public struct UnmapEvent {
 		public int type;
 		public ulong serial;
@@ -947,7 +947,7 @@ namespace X {
 		public bool from_configure;
 	}
 
-	[CCode (cname = "XMapEvent")]
+	[CCode (cname = "XMapEvent", has_type_id = false)]
 	public struct MapEvent {
 		public int type;
 		public ulong serial;
@@ -958,7 +958,7 @@ namespace X {
 		public bool override_redirect;
 	}
 
-	[CCode (cname = "XMapRequestEvent")]
+	[CCode (cname = "XMapRequestEvent", has_type_id = false)]
 	public struct MapRequestEvent {
 		public int type;
 		public ulong serial;
@@ -968,7 +968,7 @@ namespace X {
 		public Window window;
 	}
 
-	[CCode (cname = "XReparentEvent")]
+	[CCode (cname = "XReparentEvent", has_type_id = false)]
 	public struct ReparentEvent {
 		public int type;
 		public ulong serial;
@@ -982,7 +982,7 @@ namespace X {
 		public bool override_redirect;
 	}
 
-	[CCode (cname = "XConfigureEvent")]
+	[CCode (cname = "XConfigureEvent", has_type_id = false)]
 	public struct ConfigureEvent {
 		public int type;
 		public ulong serial;
@@ -999,7 +999,7 @@ namespace X {
 		public bool override_redirect;
 	}
 
-	[CCode (cname = "XGravityEvent")]
+	[CCode (cname = "XGravityEvent", has_type_id = false)]
 	public struct GravityEvent {
 		public int type;
 		public ulong serial;
@@ -1011,7 +1011,7 @@ namespace X {
 		public int y;
 	}
 
-	[CCode (cname = "XConfigureRequestEvent")]
+	[CCode (cname = "XConfigureRequestEvent", has_type_id = false)]
 	public struct ConfigureRequestEvent {
 		public int type;
 		public ulong serial;
@@ -1029,7 +1029,7 @@ namespace X {
 		public ulong value_mask;
 	}
 
-	[CCode (cname = "XCirculateEvent")]
+	[CCode (cname = "XCirculateEvent", has_type_id = false)]
 	public struct CirculateEvent {
 		public int type;
 		public ulong serial;
@@ -1040,7 +1040,7 @@ namespace X {
 		public int place;
 	}
 
-	[CCode (cname = "XCirculateRequestEvent")]
+	[CCode (cname = "XCirculateRequestEvent", has_type_id = false)]
 	public struct CirculateRequestEvent {
 		public int type;
 		public ulong serial;
@@ -1051,7 +1051,7 @@ namespace X {
 		public int place;
 	}
 
-	[CCode (cname = "XPropertyEvent")]
+	[CCode (cname = "XPropertyEvent", has_type_id = false)]
 	public struct PropertyEvent {
 		public int type;
 		public ulong serial;
@@ -1063,7 +1063,7 @@ namespace X {
 		public int state;
 	}
 
-	[CCode (cname = "XSelectionEvent")]
+	[CCode (cname = "XSelectionEvent", has_type_id = false)]
 	public struct SelectionEvent {
 		public int type;
 		public ulong serial;
@@ -1076,7 +1076,7 @@ namespace X {
 		public ulong time;
 	}
 
-	[CCode (cname = "XClientMessageEvent")]
+	[CCode (cname = "XClientMessageEvent", has_type_id = false)]
 	public struct ClientMessageEvent {
 		public int type;
 		public ulong serial;	/* # of last request processed by server */
@@ -1088,7 +1088,7 @@ namespace X {
 		public ClientMessageEventData data;
 	}
 
-	[CCode (cname = "XGenericEvent")]
+	[CCode (cname = "XGenericEvent", has_type_id = false)]
 	public struct GenericEvent {
 		public int type;
 		public ulong serial;
@@ -1098,7 +1098,7 @@ namespace X {
 		public int evtype;
 	}
 
-	[CCode (cname = "XGenericEventCookie")]
+	[CCode (cname = "XGenericEventCookie", has_type_id = false)]
 	public struct GenericEventCookie {
 		public int type;
 		public ulong serial;
@@ -1109,7 +1109,7 @@ namespace X {
 		public void *data;
 	}
 
-	[CCode (cname = "RECTANGLE", has_type_id = false)]
+	[CCode (cname = "RECTANGLE", has_type_id = false, has_type_id = false)]
 	public struct Rectangle {
 		public short x;
 		public short y;
@@ -1124,21 +1124,21 @@ namespace X {
 		public unowned long[] l;
 	}
 
-	[CCode (cprefix = "Queued")]
+	[CCode (cprefix = "Queued", has_type_id = false)]
 	public enum QueuedMode {
 		Already,
 		AfterFlush,
 		AfterReading
 	}
 
-	[CCode (cprefix = "PropMode")]
+	[CCode (cprefix = "PropMode", has_type_id = false)]
 	public enum PropMode {
 		Replace,
 		Prepend,
 		Append
 	}
 
-	[CCode (cprefix = "")]
+	[CCode (cprefix = "", has_type_id = false)]
 	public enum AllowEventsMode {
 		AsyncPointer,
 		SyncPointer,
@@ -1150,14 +1150,14 @@ namespace X {
 		SyncBoth
 	}
 
-	[CCode (cprefix = "")]
+	[CCode (cprefix = "", has_type_id = false)]
 	public enum MapState {
 		IsUnmapped,
 		IsUnviewable,
 		IsViewable
 	}
 
-	[CCode (cprefix = "RevertTo")]
+	[CCode (cprefix = "RevertTo", has_type_id = false)]
 	public enum RevertTo {
 		None,
 		PointerRoot,

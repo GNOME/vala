@@ -116,7 +116,7 @@ namespace TagLib
 		}
 	}
 
-	[CCode (cname = "TagLib_File_Type", cprefix = "TagLib_File_")]
+	[CCode (cname = "TagLib_File_Type", cprefix = "TagLib_File_", has_type_id = false)]
 	public enum FileType
 	{
 		MPEG,
@@ -133,7 +133,7 @@ namespace TagLib
 		[CCode (cname = "taglib_id3v2_set_default_text_encoding")]
 		public void set_default_text_encoding (Encoding encoding);
 
-		[CCode (cname = "TagLib_ID3v2_Encoding", cprefix = "TagLib_ID3v2_")]
+		[CCode (cname = "TagLib_ID3v2_Encoding", cprefix = "TagLib_ID3v2_", has_type_id = false)]
 		public enum Encoding {
 			Latin1,
 			UTF16,

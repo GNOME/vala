@@ -164,7 +164,7 @@ namespace Cairo {
 		public uint get_reference_count ();
 	}
 
-	[CCode (cname = "cairo_antialias_t")]
+	[CCode (cname = "cairo_antialias_t", has_type_id = false)]
 	public enum Antialias {
 		DEFAULT,
 		NONE,
@@ -172,27 +172,27 @@ namespace Cairo {
 		SUBPIXEL
 	}
 
-	[CCode (cname = "cairo_fill_rule_t")]
+	[CCode (cname = "cairo_fill_rule_t", has_type_id = false)]
 	public enum FillRule {
 		WINDING,
 		EVEN_ODD
 	}
 
-	[CCode (cname = "cairo_line_cap_t")]
+	[CCode (cname = "cairo_line_cap_t", has_type_id = false)]
 	public enum LineCap {
 		BUTT,
 		ROUND,
 		SQUARE
 	}
 
-	[CCode (cname = "cairo_line_join_t")]
+	[CCode (cname = "cairo_line_join_t", has_type_id = false)]
 	public enum LineJoin {
 		MITER,
 		ROUND,
 		BEVEL
 	}
 
-	[CCode (cname = "cairo_operator_t")]
+	[CCode (cname = "cairo_operator_t", has_type_id = false)]
 	public enum Operator {
 		CLEAR,
 		SOURCE,
@@ -234,23 +234,25 @@ namespace Cairo {
 		public int num_data;
 	}
 
-	[CCode (cname = "cairo_path_data_t")]
+	[CCode (cname = "cairo_path_data_t", has_type_id = false)]
 	public struct PathData {
 		public PathDataHeader header;
 		public PathDataPoint point;
 	}
 
+	[CCode (cname = "struct { cairo_path_data_type_t type; int length; }", has_type_id = false)]
 	public struct PathDataHeader {
 		public PathDataType type;
 		public int length;
 	}
 
+	[CCode (cname = "struct { double x, y; }", has_type_id = false)]
 	public struct PathDataPoint {
 		public double x;
 		public double y;
 	}
 
-	[CCode (cprefix = "CAIRO_PATH_", cname = "cairo_path_data_type_t")]
+	[CCode (cprefix = "CAIRO_PATH_", cname = "cairo_path_data_type_t", has_type_id = false)]
 	public enum PathDataType {
 		MOVE_TO,
 		LINE_TO,
@@ -342,7 +344,7 @@ namespace Cairo {
 		public RasterSourceFinishFunc get_finish ();
 	}
 
-	[CCode (cname = "cairo_extend_t")]
+	[CCode (cname = "cairo_extend_t", has_type_id = false)]
 	public enum Extend {
 		NONE,
 		REPEAT,
@@ -350,7 +352,7 @@ namespace Cairo {
 		PAD
 	}
 
-	[CCode (cname = "cairo_filter_t")]
+	[CCode (cname = "cairo_filter_t", has_type_id = false)]
 	public enum Filter {
 		FAST,
 		GOOD,
@@ -360,7 +362,7 @@ namespace Cairo {
 		GAUSSIAN
 	}
 
-	[CCode (cname = "cairo_pattern_type_t")]
+	[CCode (cname = "cairo_pattern_type_t", has_type_id = false)]
 	public enum PatternType {
 		SOLID,
 		SURFACE,
@@ -397,28 +399,28 @@ namespace Cairo {
 		public Status xor_rectangle (RectangleInt rectangle);
 	}
 
-	[CCode (cname = "cairo_region_overlap_t")]
+	[CCode (cname = "cairo_region_overlap_t", has_type_id = false)]
 	public enum RegionOverlap {
 		IN,
 		OUT,
 		PART
 	}
 
-	[CCode (cname = "cairo_glyph_t")]
+	[CCode (cname = "cairo_glyph_t", has_type_id = false)]
 	public struct Glyph {
 		ulong index;
 		double x;
 		double y;
 	}
 
-	[CCode (cname = "cairo_font_slant_t")]
+	[CCode (cname = "cairo_font_slant_t", has_type_id = false)]
 	public enum FontSlant {
 		NORMAL,
 		ITALIC,
 		OBLIQUE
 	}
 
-	[CCode (cname = "cairo_font_weight_t")]
+	[CCode (cname = "cairo_font_weight_t", has_type_id = false)]
 	public enum FontWeight {
 		NORMAL,
 		BOLD
@@ -467,7 +469,7 @@ namespace Cairo {
 		public UserScaledFontUnicodeToGlyphFunc get_unicode_to_glyph_func ();
 	}
 
-	[CCode (cname = "cairo_font_type_t")]
+	[CCode (cname = "cairo_font_type_t", has_type_id = false)]
 	public enum FontType {
 		TOY,
 		FT,
@@ -506,7 +508,7 @@ namespace Cairo {
 	public class UserScaledFont {
 	}
 
-	[CCode (cname = "cairo_font_extents_t")]
+	[CCode (cname = "cairo_font_extents_t", has_type_id = false)]
 	public struct FontExtents {
 		public double ascent;
 		public double descent;
@@ -515,18 +517,18 @@ namespace Cairo {
 		public double max_y_advance;
 	}
 
-	[CCode (cname = "cairo_text_cluster_t")]
+	[CCode (cname = "cairo_text_cluster_t", has_type_id = false)]
 	public struct TextCluster {
 		public int num_bytes;
 		public int num_glyphs;
 	}
 
-	[CCode (cname = "cairo_text_cluster_flags_t", cprefix = "CAIRO_TEXT_CLUSTER_FLAG_")]
+	[CCode (cname = "cairo_text_cluster_flags_t", cprefix = "CAIRO_TEXT_CLUSTER_FLAG_", has_type_id = false)]
 	public enum TextClusterFlags {
 		BACKWARD
 	}
 
-	[CCode (cname = "cairo_text_extents_t")]
+	[CCode (cname = "cairo_text_extents_t", has_type_id = false)]
 	public struct TextExtents {
 		public double x_bearing;
 		public double y_bearing;
@@ -555,7 +557,7 @@ namespace Cairo {
 		public HintMetrics get_hint_metrics ();
 	}
 
-	[CCode (cname = "cairo_subpixel_order_t")]
+	[CCode (cname = "cairo_subpixel_order_t", has_type_id = false)]
 	public enum SubpixelOrder {
 		DEFAULT,
 		RGB,
@@ -564,7 +566,7 @@ namespace Cairo {
 		VBGR
 	}
 
-	[CCode (cname = "cairo_hint_style_t")]
+	[CCode (cname = "cairo_hint_style_t", has_type_id = false)]
 	public enum HintStyle {
 		DEFAULT,
 		NONE,
@@ -573,14 +575,14 @@ namespace Cairo {
 		FULL
 	}
 
-	[CCode (cname = "cairo_hint_metrics_t")]
+	[CCode (cname = "cairo_hint_metrics_t", has_type_id = false)]
 	public enum HintMetrics {
 		DEFAULT,
 		OFF,
 		ON
 	}
 
-	[CCode (cname = "cairo_device_type_t")]
+	[CCode (cname = "cairo_device_type_t", has_type_id = false)]
 	public enum DeviceType {
 		DRM,
 		GL,
@@ -655,14 +657,14 @@ namespace Cairo {
 		public Surface? win32_get_image ();
 	}
 
-	[CCode (cname = "cairo_content_t")]
+	[CCode (cname = "cairo_content_t", has_type_id = false)]
 	public enum Content {
 		COLOR,
 		ALPHA,
 		COLOR_ALPHA
 	}
 
-	[CCode (cname = "cairo_surface_type_t")]
+	[CCode (cname = "cairo_surface_type_t", has_type_id = false)]
 	public enum SurfaceType {
 		IMAGE,
 		PDF,
@@ -677,7 +679,7 @@ namespace Cairo {
 		SVG
 	}
 
-	[CCode (cname = "cairo_format_t")]
+	[CCode (cname = "cairo_format_t", has_type_id = false)]
 	public enum Format {
 		ARGB32,
 		RGB24,
@@ -769,7 +771,7 @@ namespace Cairo {
 		public void restrict_to_version (SvgVersion version);
 	}
 
-	[CCode (cname = "cairo_svg_version_t", cprefix = "CAIRO_SVG_")]
+	[CCode (cname = "cairo_svg_version_t", cprefix = "CAIRO_SVG_", has_type_id = false)]
 	public enum SvgVersion {
 		VERSION_1_1,
 		VERSION_1_2;
@@ -779,7 +781,7 @@ namespace Cairo {
 		public static void get_versions (out unowned SvgVersion[] versions);
 	}
 
-	[CCode (cname = "cairo_pdf_version_t", cprefix = "CAIRO_PDF_")]
+	[CCode (cname = "cairo_pdf_version_t", cprefix = "CAIRO_PDF_", has_type_id = false)]
 	public enum PdfVersion {
 		VERSION_1_4,
 		VERSION_1_5;
@@ -789,7 +791,7 @@ namespace Cairo {
 		public static void get_versions (out unowned PdfVersion[] versions);
 	}
 
-	[CCode (cname = "cairo_ps_level_t", cprefix = "CAIRO_PS_")]
+	[CCode (cname = "cairo_ps_level_t", cprefix = "CAIRO_PS_", has_type_id = false)]
 	public enum PsLevel {
 		LEVEL_2,
 		LEVEL_3;
@@ -864,7 +866,7 @@ namespace Cairo {
 		public Rectangle[] rectangles;
 	}
 
-	[CCode (cname = "cairo_status_t")]
+	[CCode (cname = "cairo_status_t", has_type_id = false)]
 	public enum Status {
 		SUCCESS,
 		NO_MEMORY,

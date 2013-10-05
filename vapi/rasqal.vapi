@@ -28,6 +28,7 @@ namespace Rasqal {
 	[Compact]
 	[CCode (cname = "rasqal_graph_pattern")]
 	public class GraphPattern {
+		[CCode (has_type_id = false)]
 		public enum Operator {
 			BASIC,
 			OPTIONAL,
@@ -41,7 +42,7 @@ namespace Rasqal {
 		public void print (GLib.FileStream fh);
 	}
 
-	[CCode (cprefix = "RASQAL_EXPR_")]
+	[CCode (cprefix = "RASQAL_EXPR_", has_type_id = false)]
 	public enum Op {
 		AND,
 		OR,
@@ -67,7 +68,7 @@ namespace Rasqal {
 	[Compact]
 	[CCode (cname = "rasqal_literal", free_function = "rasqal_free_literal")]
 	public class Literal {
-		[CCode (cprefix = "RASQAL_LITERAL_")]
+		[CCode (cprefix = "RASQAL_LITERAL_", has_type_id = false)]
 		public enum Type {
 			BLANK,
 			URI,

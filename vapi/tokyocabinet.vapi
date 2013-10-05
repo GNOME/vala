@@ -94,7 +94,7 @@ namespace TokyoCabinet {
 		[CCode (has_target = false)]
 		public delegate int CompareDatumFunc (TokyoCabinet.List.Datum a, TokyoCabinet.List.Datum b);
 
-		[CCode (cname = "TCLISTDATUM")]
+		[CCode (cname = "TCLISTDATUM", has_type_id = false)]
 		public struct Datum {
 			[CCode (cname = "ptr", array_length_cname = "size")]
 			public uint8[] data;
@@ -483,7 +483,7 @@ namespace TokyoCabinet {
 		public uint64 size { get { return this.get_size (); } }
 	}
 
-	[CCode (cname = "int", cprefix = "TCE", cheader_filename = "tchdb.h")]
+	[CCode (cname = "int", cprefix = "TCE", cheader_filename = "tchdb.h", has_type_id = false)]
 	public enum ErrorCode {
 		SUCCESS,
 		THREAD,
@@ -513,7 +513,7 @@ namespace TokyoCabinet {
 
 	[Compact, CCode (cname = "TCHDB", cprefix = "tchdb", free_function = "tchdbdel", cheader_filename = "tchdb.h")]
 	public class HDB {
-		[Flags, CCode (cname = "uint8_t", cprefix = "HDBT", cheader_filename = "tchdb.h")]
+		[Flags, CCode (cname = "uint8_t", cprefix = "HDBT", cheader_filename = "tchdb.h", has_type_id = false)]
 		public enum TuningOption {
 			LARGE,
 			DEFLATE,
@@ -522,7 +522,7 @@ namespace TokyoCabinet {
 			EXCODEC
 		}
 
-		[Flags, CCode (cname = "uint8_t", cprefix = "HDBO", cheader_filename = "tchdb.h")]
+		[Flags, CCode (cname = "uint8_t", cprefix = "HDBO", cheader_filename = "tchdb.h", has_type_id = false)]
 		public enum OpenMode {
 			READER,
 			WRITER,
@@ -626,7 +626,7 @@ namespace TokyoCabinet {
 
 		[Compact, CCode (cname = "BDBCUR", cprefix = "tcbdbcur", free_function = "tcbdbcurdel", cheader_filename = "tcbdb.h")]
 		public class Cursor {
-			[CCode (cname = "int", cprefix = "BDBCP")]
+			[CCode (cname = "int", cprefix = "BDBCP", has_type_id = false)]
 			public enum PutMode {
 				CURRENT,
 				BEFORE,
@@ -664,7 +664,7 @@ namespace TokyoCabinet {
 			public bool record (TokyoCabinet.XString kxstr, TokyoCabinet.XString vxstr);
 		}
 
-		[Flags, CCode (cname = "int", cprefix = "BDBO", cheader_filename = "tcbdb.h")]
+		[Flags, CCode (cname = "int", cprefix = "BDBO", cheader_filename = "tcbdb.h", has_type_id = false)]
 		public enum OpenMode {
 			READER,
 			WRITER,
@@ -674,7 +674,7 @@ namespace TokyoCabinet {
 			LCKNB
 		}
 
-		[Flags, CCode (cname = "uint8_t", cprefix = "BDBT", cheader_filename = "tcbdb.h")]
+		[Flags, CCode (cname = "uint8_t", cprefix = "BDBT", cheader_filename = "tcbdb.h", has_type_id = false)]
 		public enum TuningOption {
 			LARGE,
 			DEFLATE,

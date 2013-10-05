@@ -31,6 +31,7 @@ namespace Orc {
 	public class Compiler {
 	}
 
+	[CCode (has_type_id = false)]
 	public enum CompileResult {
 		OK,
 		UNKNOWN_COMPILE,
@@ -70,7 +71,7 @@ namespace Orc {
 		public void set_stride (int _var, int stride);
 	}
 
-	[CCode (cprefix = "ORC_DEBUG_")]
+	[CCode (cprefix = "ORC_DEBUG_", has_type_id = false)]
 	public enum DebugLevel {
 		NONE,
 		ERROR,

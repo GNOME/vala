@@ -30,7 +30,7 @@ namespace Gvc {
 	[CCode (cname = "aginit")]
 	public void init ();
 
-	[CCode (cprefix = "")]
+	[CCode (cprefix = "", has_type_id = false)]
 	public enum GraphKind {
 		AGRAPH,
 		AGRAPHSTRICT,
@@ -39,7 +39,7 @@ namespace Gvc {
 		AGMETAGRAPH,
 	}
 
-	[CCode (cname = "agerrlevel_t", cheader_filename = "gvc.h", cprefix = "")]
+	[CCode (cname = "agerrlevel_t", cheader_filename = "gvc.h", cprefix = "", has_type_id = false)]
 	public enum ErrorLevel {
 		AGWARN,
 		AGERR,

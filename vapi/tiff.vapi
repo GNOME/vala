@@ -23,25 +23,25 @@
 [CCode (cname = "", lower_case_cprefix = "", cheader_filename = "tiffio.h")]
 namespace Tiff {
 
-	[CCode (cname = "TIFFDataType", cprefix = "TIFF_")]
+	[CCode (cname = "TIFFDataType", cprefix = "TIFF_", has_type_id = false)]
 	public enum DataType {
 		NOTYPE, BYTE, ASCII, SHORT, LONG, RATIONAL, SBYTE, UNDEFINED, SSHORT,
 		SLONG, SRATIONAL, FLOAT, DOUBLE, IFD
 	}
 
-	[CCode (cname = "TIFFIgnoreSense", cprefix = "TIS_")]
+	[CCode (cname = "TIFFIgnoreSense", cprefix = "TIS_", has_type_id = false)]
 	public enum IgnoreSense {
 		STORE, EXTRACT, EMPTY
 	}
 
-	[CCode (cname = "TIFFHeader")]
+	[CCode (cname = "TIFFHeader", has_type_id = false)]
 	public struct Header {
 		public uint16 tiff_magic;
 		public uint16 tiff_version;
 		public uint32 tiff_diroff;
 	}
 
-	[CCode (cname = "TIFFDirEntry")]
+	[CCode (cname = "TIFFDirEntry", has_type_id = false)]
 	public struct DirEntry {
 		public uint16 tdir_tag;
 		public uint16 tdir_type;
@@ -49,7 +49,7 @@ namespace Tiff {
 		public uint32 tdir_offset;
 	}
 
-	[CCode (cname = "TIFFCIELabToRGB")]
+	[CCode (cname = "TIFFCIELabToRGB", has_type_id = false)]
 	public struct CIELabToRGB {
 		public int range;
 		public float rstep;
@@ -67,14 +67,14 @@ namespace Tiff {
 		public float[] Yb2b;
 	}
 
-	[CCode (cname = "TIFFCodec")]
+	[CCode (cname = "TIFFCodec", has_type_id = false)]
 	public struct Codec {
 		public string name;
 		public uint16 scheme;
 		public InitMethod init;
 	}
 
-	[CCode (cname = "TIFFDisplay")]
+	[CCode (cname = "TIFFDisplay", has_type_id = false)]
 	public struct Display {
 		public float[][] d_mat;
 		public float d_YCR;
@@ -91,7 +91,7 @@ namespace Tiff {
 		public float d_gammaB;
 	}
 
-	[CCode (cname = "TIFFFieldInfo")]
+	[CCode (cname = "TIFFFieldInfo", has_type_id = false)]
 	public struct FieldInfo {
 		public ttag_t field_tag;
 		public short field_readcount;
@@ -110,7 +110,7 @@ namespace Tiff {
 		TileSeparateRoutine separate;
 	}
 
-	[CCode (cname = "TIFFRGBAImage")]
+	[CCode (cname = "TIFFRGBAImage", has_type_id = false)]
 	public struct RGBAImage {
 		public int get;
 		public TIFF tif;
@@ -137,7 +137,7 @@ namespace Tiff {
 		public int col_offset;
 	}
 
-	[CCode (cname = "TIFFTagMethods")]
+	[CCode (cname = "TIFFTagMethods", has_type_id = false)]
 	public struct TagMethods {
 		/* *****************************
 		public TIFFVSetMethod vsetfield;
@@ -146,14 +146,14 @@ namespace Tiff {
 		public PrintMethod printdir;
 	}
 
-	[CCode (cname = "TIFFTagValue")]
+	[CCode (cname = "TIFFTagValue", has_type_id = false)]
 	public struct TagValue {
 		public const FieldInfo info;
 		public int count;
 		public void* value;
 	}
 
-	[CCode (cname = "TIFFYCbCrToRGB")]
+	[CCode (cname = "TIFFYCbCrToRGB", has_type_id = false)]
 	public struct YCbCrToRGB {
 		public RGBValue clamptab;
 		public int Cr_r_tab;
@@ -163,28 +163,28 @@ namespace Tiff {
 		public int32[] Y_tab;
 	}
 
-	[CCode (cname = "TIFFRGBValue")]
+	[CCode (cname = "TIFFRGBValue", has_type_id = false)]
 	public struct RGBValue : uchar { }
 
 	[CCode (cname = "void")]
 	[Compact]
 	public class tdata_t { }
-	[CCode (cname = "uint16")]
+	[CCode (cname = "uint16", has_type_id = false)]
 	public struct tdir_t : uint16 { }
 	[CCode (cname = "void")]
 	[Compact]
 	public class thandle_t { }
-	[CCode (cname = "uint32")]
+	[CCode (cname = "uint32", has_type_id = false)]
 	public struct toff_t : uint32 { }
-	[CCode (cname = "uint16")]
+	[CCode (cname = "uint16", has_type_id = false)]
 	public struct tsample_t : uint16 { }
-	[CCode (cname = "int32")]
+	[CCode (cname = "int32", has_type_id = false)]
 	public struct tsize_t : int32 { }
-	[CCode (cname = "uint32")]
+	[CCode (cname = "uint32", has_type_id = false)]
 	public struct tstrip_t : uint32 { }
-	[CCode (cname = "uint32")]
+	[CCode (cname = "uint32", has_type_id = false)]
 	public struct ttag_t : uint32 { }
-	[CCode (cname = "uint32")]
+	[CCode (cname = "uint32", has_type_id = false)]
 	public struct ttile_t : uint32 { }
 
 	[CCode (has_target = false)]

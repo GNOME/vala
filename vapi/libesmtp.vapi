@@ -27,7 +27,7 @@
 [CCode (cheader_filename="libesmtp.h")]
 namespace Smtp {
 	[SimpleType]
-	[CCode (cname="smtp_session_t", free_function="smtp_destroy_session")]
+	[CCode (cname="smtp_session_t", free_function="smtp_destroy_session", has_type_id = false)]
 	public struct Session {
 		[CCode (cname="smtp_create_session")]
 		public Session ();
@@ -66,7 +66,7 @@ namespace Smtp {
 	}
 
 	[SimpleType]
-	[CCode (cname="smtp_message_t", free_function="g_free")]
+	[CCode (cname="smtp_message_t", free_function="g_free", has_type_id = false)]
 	public struct Message {
 		[CCode (cname="smtp_set_reverse_path")]
 		public int set_reverse_path (string mailbox);
@@ -107,7 +107,7 @@ namespace Smtp {
 	}
 
 	[SimpleType]
-	[CCode (cname="smtp_session_t", free_function="g_free")]
+	[CCode (cname="smtp_session_t", free_function="g_free", has_type_id = false)]
 	public struct Recipient {
 		[CCode (cname="smtp_recipient_check_complete")]
 		public int check_complete ();
@@ -119,7 +119,7 @@ namespace Smtp {
 		public void get_application_data ();
 	}
 
-	[CCode (cname="smtp_status_t")]
+	[CCode (cname="smtp_status_t", has_type_id = false)]
 	public struct Status {
 		int code;
 		string text;
@@ -129,7 +129,7 @@ namespace Smtp {
 	}
 
 	[SimpleType]
-	[CCode (cname="smtp_etrn_node_t")]
+	[CCode (cname="smtp_etrn_node_t", has_type_id = false)]
 	public struct EtrnNode {
 		[CCode (cname="smtp_etrn_node_status")]
 		public Smtp.Status node_status ();
@@ -140,7 +140,7 @@ namespace Smtp {
 	}
 
 	[SimpleType]
-	[CCode (cname="auth_context_t", cheader_filename="auth-client.h", free_function="auth_destroy_context")]
+	[CCode (cname="auth_context_t", cheader_filename="auth-client.h", free_function="auth_destroy_context", has_type_id = false)]
 	public struct AuthContext {
 		[CCode (cname="auth_set_mechanism_flags")]
 		public int set_mechanism_flags (uint @set, uint clear);
@@ -162,7 +162,7 @@ namespace Smtp {
 		public int set_external_id (string identity);
 	}
 
-	[CCode (cname="auth_client_request_t", cheader_filename="auth-client.h")]
+	[CCode (cname="auth_client_request_t", cheader_filename="auth-client.h", has_type_id = false)]
 	public struct AuthClientRequest {
 		string name;
 		uint flags;
@@ -226,20 +226,20 @@ namespace Smtp {
 	[CCode (cname="auth_recode_t", cheader_filename="auth-client.h", has_target=false)]
 	public delegate int AuthRecode (void *ctx, out string dstbuf, out int dstlen, string srcbuf, int srclen);
 
-	[CCode (cname="header_option", cprefix="Hdr_")]
+	[CCode (cname="header_option", cprefix="Hdr_", has_type_id = false)]
 	public enum HeaderOption {
 		OVERRIDE,
 		PROHIBIT
 	}
 
-	[CCode (cname="ret_flags", cprefix="Ret_")]
+	[CCode (cname="ret_flags", cprefix="Ret_", has_type_id = false)]
 	public enum RetFlags {
 		NOTSET,
 		FULL,
 		HDRS
 	}
 
-	[CCode (cname="notify_flags", cprefix="Notify_")]
+	[CCode (cname="notify_flags", cprefix="Notify_", has_type_id = false)]
 	public enum NotifyFlags {
 		NOTSET,
 		NEVER,
@@ -248,7 +248,7 @@ namespace Smtp {
 		DELAY
 	}
 
-	[CCode (cname="e8bitmime_body", cprefix="E8bitmime_")]
+	[CCode (cname="e8bitmime_body", cprefix="E8bitmime_", has_type_id = false)]
 	public enum E8BitMimeBody {
 		NOTSET,
 		@7BIT,
@@ -256,14 +256,14 @@ namespace Smtp {
 		BINARYMIME
 	}
 
-	[CCode (cname="by_mode", cprefix="By_")]
+	[CCode (cname="by_mode", cprefix="By_", has_type_id = false)]
 	public enum ByMode {
 		NOTSET,
 		NOTIFY,
 		RETURN
 	}
 
-	[CCode (cname="starttls_option", cprefix="Starttls_")]
+	[CCode (cname="starttls_option", cprefix="Starttls_", has_type_id = false)]
 	public enum StartTlsOption {
 		DISABLED,
 		ENABLED,

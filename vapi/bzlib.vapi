@@ -22,14 +22,14 @@
 
 [CCode (cheader_filename = "bzlib.h")]
 namespace BZLib {
-	[CCode (cname = "int", cprefix = "BZ_")]
+	[CCode (cname = "int", cprefix = "BZ_", has_type_id = false)]
 	public enum Action {
 		RUN,
 		FLUSH,
 		FINISH
 	}
 
-	[CCode (cname = "int", cprefix = "BZ_")]
+	[CCode (cname = "int", cprefix = "BZ_", has_type_id = false)]
 	public enum Status {
 		OK,
 		RUN_OK,
@@ -46,7 +46,7 @@ namespace BZLib {
 		CONFIG_ERROR
 	}
 
-	[CCode (cname = "bz_stream")]
+	[CCode (cname = "bz_stream", has_type_id = false)]
 	public struct Stream {
 		public string next_in;
 		public uint avail_in;

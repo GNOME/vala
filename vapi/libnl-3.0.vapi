@@ -112,7 +112,7 @@ namespace Netlink {
         public uint16    maxlen;
     }
 
-    [CCode (cprefix = "NLA_", cname = "int", cheader_filename = "netlink/attr.h")]
+    [CCode (cprefix = "NLA_", cname = "int", cheader_filename = "netlink/attr.h", has_type_id = false)]
     public enum AttributeType {
         UNSPEC,     // Unspecified type, binary data chunk
         U8,         // 8 bit integer
@@ -164,14 +164,14 @@ namespace Netlink {
         public int set_all (CallbackKind kind, MessageCallbackFunc func);
     }
 
-    [CCode (cname = "enum nl_cb_action", cprefix = "NL_", cheader_filename = "netlink/netlink.h")]
+    [CCode (cname = "enum nl_cb_action", cprefix = "NL_", cheader_filename = "netlink/netlink.h", has_type_id = false)]
     public enum CallbackAction {
         OK,         //   Proceed with whatever comes next.
         SKIP,       //   Skip this message.
         STOP,       //   Stop parsing altogether and discard remaining messages.
     }
 
-    [CCode (cname = "enum nl_cb_kind", cprefix = "NL_CB_", cheader_filename = "netlink/netlink.h")]
+    [CCode (cname = "enum nl_cb_kind", cprefix = "NL_CB_", cheader_filename = "netlink/netlink.h", has_type_id = false)]
     public enum CallbackKind {
         DEFAULT,    // 	 Default handlers (quiet).
         VERBOSE,    // 	 Verbose default handlers (error messages printed).
@@ -179,7 +179,7 @@ namespace Netlink {
         CUSTOM,     // 	 Customized handler specified by the user.
     }
 
-    [CCode (cname = "enum nl_cb_type", cprefix = "NL_CB_", cheader_filename = "netlink/netlink.h")]
+    [CCode (cname = "enum nl_cb_type", cprefix = "NL_CB_", cheader_filename = "netlink/netlink.h", has_type_id = false)]
     public enum CallbackType {
         VALID,      // 	 Message is valid.
         FINISH,     // 	 Last message in a series of multi part messages received.
@@ -324,14 +324,14 @@ namespace Netlink {
 
     }
 
-    [CCode (cprefix = "NL_DUMP_", cname = "int", cheader_filename = "netlink/types.h")]
+    [CCode (cprefix = "NL_DUMP_", cname = "int", cheader_filename = "netlink/types.h", has_type_id = false)]
     public enum DumpType {
         LINE,           // Dump object briefly on one line
         DETAILS,        // Dump all attributes but no statistics
         STATS,          // Dump all attributes including statistics
     }
 
-    [CCode (cname = "struct nl_dump_params", free_function = "", cheader_filename = "netlink/types.h")]
+    [CCode (cname = "struct nl_dump_params", free_function = "", cheader_filename = "netlink/types.h", has_type_id = false)]
     public struct DumpParams {
         public DumpType dp_type;
         public int dp_prefix;

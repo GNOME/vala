@@ -255,7 +255,7 @@ namespace SDLGraphics {
 			double zoomy, ref int dstwidth, ref int dstheight);
 	}// RotoZoom
 
-	[CCode (cheader_filename="SDL_framerate.h", cname="FPSmanager", free_function="g_free")]
+	[CCode (cheader_filename="SDL_framerate.h", cname="FPSmanager", free_function="g_free", has_type_id = false)]
        public struct FramerateManager {
 		[CCode (cname="SDL_initFramerate")]
 		public void init();

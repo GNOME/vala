@@ -62,7 +62,7 @@ namespace Readline {
 	[CCode (cname = "rl_cpifunc_t", has_target = false)]
 	public delegate unowned string?   CpiFunc (int s);
 
-	[CCode (cname = "KEYMAP_ENTRY")]
+	[CCode (cname = "KEYMAP_ENTRY", has_type_id = false)]
 	public struct KeyMap {
 		public char type;
 		public CommandFunc function;
@@ -98,7 +98,7 @@ namespace Readline {
 	[CCode (cname = "RL_VERSION_MINOR")]
 	public const int VERSION_MINOR;
 
-	[CCode (cname = "enum undo_code", cprefix = "UNDO_")]
+	[CCode (cname = "enum undo_code", cprefix = "UNDO_", has_type_id = false)]
 	public enum UndoCode {
 		DELETE,
 		INSERT,
@@ -106,7 +106,7 @@ namespace Readline {
 		END
 	}
 
-	[CCode (cname = "UNDO_LIST")]
+	[CCode (cname = "UNDO_LIST", has_type_id = false)]
 	public struct UndoList {
 		public void*    next;
 		public int      start;
@@ -118,7 +118,7 @@ namespace Readline {
 	[CCode (cname = "rl_undo_list")]
 	public UndoList undo_list;
 
-	[CCode (cname = "FUNMAP")]
+	[CCode (cname = "FUNMAP", has_type_id = false)]
 	public struct FunMap {
 		public string      name;
 		public CommandFunc function;
@@ -1163,7 +1163,7 @@ namespace Readline {
 	[CCode (cname = "RL_ISSTATE")]
 	public int is_state (uint s);
 
-	[CCode (cname = "struct readline_state")]
+	[CCode (cname = "struct readline_state", has_type_id = false)]
 	public struct State {
 		public int point;
 		public int end;
@@ -1200,14 +1200,14 @@ namespace Readline {
 
 	[CCode (lower_case_cprefix = "", cheader_filename = "readline/history.h")]
 	namespace History {
-		[CCode (cname = "HIST_ENTRY")]
+		[CCode (cname = "HIST_ENTRY", has_type_id = false)]
 		public struct Entry {
 			public string line;
 			public string timestamp;
 			public void* data;
 		}
 
-		[CCode (cname = "HISTORY_STATE")]
+		[CCode (cname = "HISTORY_STATE", has_type_id = false)]
 		public struct State {
 			public unowned History.Entry[]? entries;
 			public int offset;

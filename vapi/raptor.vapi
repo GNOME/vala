@@ -22,6 +22,7 @@
 
 [CCode (cheader_filename = "raptor.h")]
 namespace Raptor {
+	[CCode (has_type_id = false)]
 	public enum IdentifierType {
 		RESOURCE,
 		ANONYMOUS,

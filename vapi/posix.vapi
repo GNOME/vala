@@ -328,7 +328,7 @@ namespace Posix {
 	[CCode (cheader_filename = "fcntl.h")]
 	public int posix_fallocate (int fd, long offset, long len);
 
-	[CCode (cname = "struct flock", cheader_filename = "fcntl.h")]
+	[CCode (cname = "struct flock", cheader_filename = "fcntl.h", has_type_id = false)]
 	public struct Flock {
 		public int l_type;
 		public int l_whence;
@@ -687,7 +687,7 @@ namespace Posix {
 	[CCode (cheader_filename = "netdb.h,sys/socket.h")]
 	public int getnameinfo (SockAddr sa, socklen_t salen, char[] node, char[] service, int flags);
 
-	[CCode (cheader_filename = "poll.h", cname = "struct pollfd")]
+	[CCode (cheader_filename = "poll.h", cname = "struct pollfd", has_type_id = false)]
 	public struct pollfd {
 		public int fd;
 		public int events;
@@ -711,7 +711,7 @@ namespace Posix {
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cheader_filename = "poll.h", cname = "nfds_t")]
+	[CCode (cheader_filename = "poll.h", cname = "nfds_t", has_type_id = false)]
 	public struct nfds_t {
 	}
 
@@ -925,11 +925,11 @@ namespace Posix {
 
 	[SimpleType]
 	[IntegerType (rank = 6)]
-	[CCode (cname = "pid_t", default_value = "0", cheader_filename = "sys/types.h")]
+	[CCode (cname = "pid_t", default_value = "0", cheader_filename = "sys/types.h", has_type_id = false)]
 	public struct pid_t {
 	}
 
-	[CCode (cname = "struct sigaction", cheader_filename = "signal.h")]
+	[CCode (cname = "struct sigaction", cheader_filename = "signal.h", has_type_id = false)]
 	public struct sigaction_t {
 		sighandler_t     sa_handler;
 		siginfohandler_t sa_sigaction;
@@ -938,13 +938,13 @@ namespace Posix {
 	}
 
 	[SimpleType]
-	[CCode (cname = "sigval_t", cheader_filename = "signal.h")]
+	[CCode (cname = "sigval_t", cheader_filename = "signal.h", has_type_id = false)]
 	public struct sigval_t {
 		int   sival_int;
 		void* sival_ptr;
 	}
 
-	[CCode (cname = "siginfo_t", cheader_filename = "signal.h")]
+	[CCode (cname = "siginfo_t", cheader_filename = "signal.h", has_type_id = false)]
 	public struct siginfo_t {
 		int	     si_signo;
 		int      si_errno;
@@ -1403,36 +1403,36 @@ namespace Posix {
 	[CCode (cheader_filename = "netdb.h")]
 	public unowned string gai_strerror (int errcode);
 
-	[CCode (cname = "socklen_t", cheader_filename = "sys/socket.h", default_value = "0")]
+	[CCode (cname = "socklen_t", cheader_filename = "sys/socket.h", default_value = "0", has_type_id = false)]
 	public struct socklen_t : int {
 	}
 
 	[SimpleType]
-	[CCode (cname = "struct in_addr", cheader_filename = "sys/socket.h,netinet/in.h", destroy_function = "")]
+	[CCode (cname = "struct in_addr", cheader_filename = "sys/socket.h,netinet/in.h", destroy_function = "", has_type_id = false)]
 	public struct InAddr {
 		public uint32 s_addr;
 	}
 
-	[CCode (cname = "struct in6_addr", cheader_filename = "sys/socket.h,netinet/in.h", destroy_function = "")]
+	[CCode (cname = "struct in6_addr", cheader_filename = "sys/socket.h,netinet/in.h", destroy_function = "", has_type_id = false)]
 	public struct In6Addr {
 		public uint8 s6_addr[16];
 	}
 
-	[CCode (cname = "struct sockaddr", cheader_filename = "sys/socket.h", destroy_function = "")]
+	[CCode (cname = "struct sockaddr", cheader_filename = "sys/socket.h", destroy_function = "", has_type_id = false)]
 	public struct SockAddr {
 		public int sa_family;
 		[CCode (array_length = false)]
 		public char[] sa_data;
 	}
 
-	[CCode (cname = "struct sockaddr_in", cheader_filename = "netinet/in.h", destroy_function = "")]
+	[CCode (cname = "struct sockaddr_in", cheader_filename = "netinet/in.h", destroy_function = "", has_type_id = false)]
 	public struct SockAddrIn {
 		public int sin_family;
 		public uint16 sin_port;
 		public InAddr sin_addr;
 	}
 
-	[CCode (cname = "struct sockaddr_in6", cheader_filename = "netinet/in.h", destroy_function = "")]
+	[CCode (cname = "struct sockaddr_in6", cheader_filename = "netinet/in.h", destroy_function = "", has_type_id = false)]
 	public struct SockAddrIn6 {
 		public int sin6_family;
 		public uint16 sin6_port;
@@ -1441,7 +1441,7 @@ namespace Posix {
 		public uint32 sin6_scope_id;
 	}
 
-	[CCode (cname = "struct addrinfo", cheader_filename = "netdb.h", destroy_function = "")]
+	[CCode (cname = "struct addrinfo", cheader_filename = "netdb.h", destroy_function = "", has_type_id = false)]
 	public struct AddrInfo {
 		public int ai_flags;
 		public int ai_family;
@@ -1519,7 +1519,7 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/stat.h")]
 	public bool S_ISSOCK (mode_t mode);
 
-	[CCode (cheader_filename = "sys/stat.h", cname = "struct stat")]
+	[CCode (cheader_filename = "sys/stat.h", cname = "struct stat", has_type_id = false)]
 	public struct Stat {
 		public dev_t st_dev;
 		public ino_t st_ino;
@@ -1574,23 +1574,23 @@ namespace Posix {
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cheader_filename = "sys/types.h", cname = "key_t")]
+	[CCode (cheader_filename = "sys/types.h", cname = "key_t", has_type_id = false)]
 	public struct key_t {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cheader_filename = "sys/statvfs.h")]
+	[CCode (cheader_filename = "sys/statvfs.h", has_type_id = false)]
 	public struct fsblkcnt_t {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cheader_filename = "sys/statvfs.h")]
+	[CCode (cheader_filename = "sys/statvfs.h", has_type_id = false)]
 	public struct fsfilcnt_t {
 	}
 
-	[CCode (cheader_filename = "sys/statvfs.h", cname = "struct statvfs")]
+	[CCode (cheader_filename = "sys/statvfs.h", cname = "struct statvfs", has_type_id = false)]
 	public struct statvfs {
 		public ulong f_bsize;
 		public ulong f_frsize;
@@ -1609,31 +1609,31 @@ namespace Posix {
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname="off_t", cheader_filename = "sys/types.h")]
+	[CCode (cname="off_t", cheader_filename = "sys/types.h", has_type_id = false)]
 	public struct off_t {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cheader_filename = "sys/types.h")]
+	[CCode (cheader_filename = "sys/types.h", has_type_id = false)]
 	public struct uid_t {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cheader_filename = "sys/types.h")]
+	[CCode (cheader_filename = "sys/types.h", has_type_id = false)]
 	public struct gid_t {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname = "mode_t", cheader_filename = "sys/types.h")]
+	[CCode (cname = "mode_t", cheader_filename = "sys/types.h", has_type_id = false)]
 	public struct mode_t {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cheader_filename = "sys/types.h")]
+	[CCode (cheader_filename = "sys/types.h", has_type_id = false)]
 	public struct dev_t {
 	}
 
@@ -1646,29 +1646,29 @@ namespace Posix {
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cheader_filename = "sys/types.h")]
+	[CCode (cheader_filename = "sys/types.h", has_type_id = false)]
 	public struct ino_t {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cheader_filename = "sys/types.h")]
+	[CCode (cheader_filename = "sys/types.h", has_type_id = false)]
 	public struct nlink_t {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cheader_filename = "sys/types.h")]
+	[CCode (cheader_filename = "sys/types.h", has_type_id = false)]
 	public struct blksize_t {
 	}
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cheader_filename = "sys/types.h")]
+	[CCode (cheader_filename = "sys/types.h", has_type_id = false)]
 	public struct blkcnt_t {
 	}
 
-	[CCode (cheader_filename = "time.h")]
+	[CCode (cheader_filename = "time.h", has_type_id = false)]
 	[IntegerType (rank = 8)]
 	public struct clock_t {
 		[CCode (cname = "clock")]
@@ -1688,7 +1688,7 @@ namespace Posix {
 		public int tm_isdst;
 	}
 
-	[CCode (cname = "struct timespec", cheader_filename = "time.h")]
+	[CCode (cname = "struct timespec", cheader_filename = "time.h", has_type_id = false)]
 	public struct timespec {
 		public time_t tv_sec;
 		public long tv_nsec;
@@ -1706,7 +1706,7 @@ namespace Posix {
 
 	[SimpleType]
 	[IntegerType]
-	[CCode (cheader_filename = "time.h")]
+	[CCode (cheader_filename = "time.h", has_type_id = false)]
 	public struct clockid_t {
 	}
 
@@ -1731,7 +1731,7 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/time.h,sys/resource.h")]
 	public int setpriority (int which, int who, int prio);
 
-	[CCode (cname = "struct iovec", cheader_filename = "sys/uio.h")]
+	[CCode (cname = "struct iovec", cheader_filename = "sys/uio.h", has_type_id = false)]
 	public struct iovector {
 		public void* iov_base;
 		public size_t iov_len;
@@ -1973,24 +1973,24 @@ namespace Posix {
 	public int nice (int inc);
 
 	[SimpleType]
-	[CCode (cname = "cc_t", cheader_filename = "termios.h")]
+	[CCode (cname = "cc_t", cheader_filename = "termios.h", has_type_id = false)]
 	[IntegerType (rank = 3, min = 0, max = 255)]
 	public struct cc_t {
 	}
 
 	[SimpleType]
-	[CCode (cname = "speed_t", cheader_filename = "termios.h")]
+	[CCode (cname = "speed_t", cheader_filename = "termios.h", has_type_id = false)]
 	[IntegerType (rank = 7)]
 	public struct speed_t {
 	}
 
 	[SimpleType]
-	[CCode (cname = "tcflag_t", cheader_filename = "termios.h")]
+	[CCode (cname = "tcflag_t", cheader_filename = "termios.h", has_type_id = false)]
 	[IntegerType (rank = 7)]
 	public struct tcflag_t {
 	}
 
-	[CCode (cname="struct termios", cheader_filename = "termios.h")]
+	[CCode (cname="struct termios", cheader_filename = "termios.h", has_type_id = false)]
 	public struct termios
 	{
 		public tcflag_t c_iflag;
@@ -2246,11 +2246,11 @@ namespace Posix {
 	[CCode (cheader_filename = "termios.h")]
 	public const speed_t B230400;
 
-	[CCode (cname = "fd_set", cheader_filename = "sys/select.h")]
+	[CCode (cname = "fd_set", cheader_filename = "sys/select.h", has_type_id = false)]
 	public struct fd_set {
 	}
 
-	[CCode (cname = "struct timeval", cheader_filename = "sys/time.h")]
+	[CCode (cname = "struct timeval", cheader_filename = "sys/time.h", has_type_id = false)]
 	public struct timeval {
 		public time_t tv_sec;
 		public long tv_usec;
@@ -2260,7 +2260,7 @@ namespace Posix {
 		public int set_time_of_day (void * timezone = null);
 	}
 
-	[CCode (cname = "sigset_t", cheader_filename = "sys/select.h")]
+	[CCode (cname = "sigset_t", cheader_filename = "sys/select.h", has_type_id = false)]
 	public struct sigset_t {
 	}
 
@@ -2322,7 +2322,7 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/mman.h")]
 	public const int MS_SYNC;
 
-	[CCode (cname = "struct utsname", cheader_filename = "sys/utsname.h")]
+	[CCode (cname = "struct utsname", cheader_filename = "sys/utsname.h", has_type_id = false)]
 	public struct utsname {
 		public unowned string sysname;
 		public unowned string nodename;
@@ -2390,7 +2390,7 @@ namespace Posix {
 	[CCode(cheader_filename = "sched.h", cprefix = "sched_")]
 	namespace Sched {
 		[SimpleType]
-		[CCode (cname = "struct sched_param")]
+		[CCode (cname = "struct sched_param", has_type_id = false)]
 		public struct Param {
 			public int sched_priority;
 		}
@@ -2408,7 +2408,7 @@ namespace Posix {
 
 		public static int rr_get_interval(Posix.pid_t pid, out Posix.timespec? interval);
 
-		[CCode (cprefix = "SCHED_", cname = "int")]
+		[CCode (cprefix = "SCHED_", cname = "int", has_type_id = false)]
 		public enum Algorithm {
 			OTHER,
 			FIFO,
@@ -2547,7 +2547,7 @@ namespace Posix {
 	[CCode (cheader_filename = "glob.h")]
 	public const int GLOB_NOMATCH;
 
-	[CCode (cheader_filename = "glob.h", cname = "glob_t", destroy_function = "globfree")]
+	[CCode (cheader_filename = "glob.h", cname = "glob_t", destroy_function = "globfree", has_type_id = false)]
 	public struct Glob {
 		[CCode (cname = "gl_pathc")]
 		public size_t pathc;
@@ -2560,7 +2560,7 @@ namespace Posix {
 		public int glob (string pattern, int flags = 0, GlobErrorFunction? errfunc = null);
 	}
 
-	[CCode (cheader_filename = "langinfo.h", cprefix = "")]
+	[CCode (cheader_filename = "langinfo.h", cprefix = "", has_type_id = false)]
 	public enum NLItem {
 		ABDAY_1,
 		ABDAY_2,

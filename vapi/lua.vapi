@@ -38,7 +38,7 @@ namespace Lua {
 	// option for multiple returns in `lua_pcall' and `lua_call'
 	public const int MULTRET;
 
-	[CCode (cheader_filename = "lauxlib.h")]
+	[CCode (cheader_filename = "lauxlib.h", has_type_id = false)]
 	public enum Reference
 	{
 		[CCode (cname = "LUA_REFNIL")]
@@ -63,7 +63,7 @@ namespace Lua {
 
 	// thread status
 
-	[CCode (cprefix = "LUA_", cname = "int")]
+	[CCode (cprefix = "LUA_", cname = "int", has_type_id = false)]
 	public enum ThreadStatus {
 		YIELD,
 		ERRRUN,
@@ -74,7 +74,7 @@ namespace Lua {
 
 	// basic types
 
-	[CCode (cprefix = "LUA_T", cname = "int")]
+	[CCode (cprefix = "LUA_T", cname = "int", has_type_id = false)]
 	public enum Type {
 		NONE,
 		NIL,
@@ -88,7 +88,7 @@ namespace Lua {
 		THREAD
 	}
 
-	[CCode (cprefix = "LUA_GC", cname = "int")]
+	[CCode (cprefix = "LUA_GC", cname = "int", has_type_id = false)]
 	public enum GarbageCollection {
 		STOP,
 		RESTART,
@@ -104,7 +104,7 @@ namespace Lua {
 
 	// Event codes
 
-	[CCode (cprefix = "LUA_HOOK", cname = "int")]
+	[CCode (cprefix = "LUA_HOOK", cname = "int", has_type_id = false)]
 	public enum EventHook {
 		CALL,
 		RET,
@@ -116,7 +116,7 @@ namespace Lua {
 	// Event masks
 
 	[Flags]
-	[CCode (cprefix = "LUA_MASK", cname = "int")]
+	[CCode (cprefix = "LUA_MASK", cname = "int", has_type_id = false)]
 	public enum EventMask {
 		CALL,
 		RET,
@@ -155,7 +155,7 @@ namespace Lua {
 	public delegate void HookFunc (LuaVM vm, ref Debug ar);
 
 	[SimpleType]
-	[CCode (cname = "lua_Debug")]
+	[CCode (cname = "lua_Debug", has_type_id = false)]
 	public struct Debug {
 		public EventHook event;
 		public unowned string name;

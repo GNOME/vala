@@ -41,7 +41,7 @@ namespace GnuTLS
 
 	public unowned string? check_version (string? req_version);
 
-	[CCode (cname = "gnutls_cipher_algorithm_t", cprefix = "GNUTLS_CIPHER_")]
+	[CCode (cname = "gnutls_cipher_algorithm_t", cprefix = "GNUTLS_CIPHER_", has_type_id = false)]
 	public enum CipherAlgorithm {
 		UNKNOWN,
 		NULL,
@@ -70,7 +70,7 @@ namespace GnuTLS
 		public static unowned CipherAlgorithm[] list ();
 	}
 
-	[CCode (cname = "gnutls_kx_algorithm_t", cprefix = "GNUTLS_KX_")]
+	[CCode (cname = "gnutls_kx_algorithm_t", cprefix = "GNUTLS_KX_", has_type_id = false)]
 	public enum KXAlgorithm	{
 		UNKNOWN,
 		RSA,
@@ -92,7 +92,7 @@ namespace GnuTLS
 		public static unowned KXAlgorithm[] list ();
 	}
 
-	[CCode (cname = "gnutls_mac_algorithm_t", cprefix = "GNUTLS_MAC_")]
+	[CCode (cname = "gnutls_mac_algorithm_t", cprefix = "GNUTLS_MAC_", has_type_id = false)]
 	public enum MacAlgorithm {
 		UNKNOWN,
 		NULL,
@@ -114,7 +114,7 @@ namespace GnuTLS
 		public static unowned MacAlgorithm[] list ();
 	}
 
-	[CCode (cname = "gnutls_digest_algorithm_t", cprefix = "GNUTLS_DIG_")]
+	[CCode (cname = "gnutls_digest_algorithm_t", cprefix = "GNUTLS_DIG_", has_type_id = false)]
 	public enum DigestAlgorithm {
 		NULL,
 		MD5,
@@ -133,7 +133,7 @@ namespace GnuTLS
 	[CCode (cname = "GNUTLS_MAX_ALGORITHM_NUM")]
 	public const int MAX_ALGORITHM_NUM;
 
-	[CCode (cname = "gnutls_pk_algorithm_t", cprefix = "GNUTLS_PK_")]
+	[CCode (cname = "gnutls_pk_algorithm_t", cprefix = "GNUTLS_PK_", has_type_id = false)]
 	public enum PKAlgorithm {
 		UNKNOWN,
 		RSA,
@@ -143,7 +143,7 @@ namespace GnuTLS
 		public unowned string? get_name ();
 	}
 
-	[CCode (cname = "gnutls_sign_algorithm_t", cprefix = "GNUTLS_SIGN_")]
+	[CCode (cname = "gnutls_sign_algorithm_t", cprefix = "GNUTLS_SIGN_", has_type_id = false)]
 	public enum SignAlgorithm {
 		UNKNOWN,
 		RSA_SHA1,
@@ -160,7 +160,7 @@ namespace GnuTLS
 		public unowned string? get_name ();
 	}
 
-	[CCode (cname = "gnutls_compression_method_t", cprefix = "GNUTLS_COMP_")]
+	[CCode (cname = "gnutls_compression_method_t", cprefix = "GNUTLS_COMP_", has_type_id = false)]
 	public enum CompressionMethod {
 		UNKNOWN,
 		NULL,
@@ -176,13 +176,13 @@ namespace GnuTLS
 		public static unowned CompressionMethod[] list ();
 	}
 
-	[CCode (cname = "gnutls_params_type_t", cprefix = "GNUTLS_PARAMS_")]
+	[CCode (cname = "gnutls_params_type_t", cprefix = "GNUTLS_PARAMS_", has_type_id = false)]
 	public enum ParamsType {
 		RSA_EXPORT,
 		DH
 	}
 
-	[CCode (cname = "gnutls_credentials_type_t", cprefix = "GNUTLS_CRD_")]
+	[CCode (cname = "gnutls_credentials_type_t", cprefix = "GNUTLS_CRD_", has_type_id = false)]
 	public enum CredentialsType {
 		CERTIFICATE,
 		ANON,
@@ -191,13 +191,13 @@ namespace GnuTLS
 		IA
 	}
 
-	[CCode (cname = "gnutls_alert_level_t", cprefix = "GNUTLS_AL_")]
+	[CCode (cname = "gnutls_alert_level_t", cprefix = "GNUTLS_AL_", has_type_id = false)]
 	public enum AlertLevel {
 		WARNING,
 		FATAL
 	}
 
-	[CCode (cname = "gnutls_alert_description_t", cprefix = "GNUTLS_A_")]
+	[CCode (cname = "gnutls_alert_description_t", cprefix = "GNUTLS_A_", has_type_id = false)]
 	public enum AlertDescription {
 		CLOSE_NOTIFY,
 		UNEXPECTED_MESSAGE,
@@ -234,7 +234,7 @@ namespace GnuTLS
 		public unowned string? get_name ();
 	}
 
-	[CCode (cname = "gnutls_handshake_description_t", cprefix = "GNUTLS_HANDSHAKE_")]
+	[CCode (cname = "gnutls_handshake_description_t", cprefix = "GNUTLS_HANDSHAKE_", has_type_id = false)]
 	public enum HandshakeDescription {
 		HELLO_REQUEST,
 		CLIENT_HELLO,
@@ -253,7 +253,7 @@ namespace GnuTLS
 	 * in openpgp keys and x.509 certificate verification.
 	 */
 	[Flags]
-	[CCode (cname = "gnutls_certificate_status_t", cprefix = "GNUTLS_CERT_")]
+	[CCode (cname = "gnutls_certificate_status_t", cprefix = "GNUTLS_CERT_", has_type_id = false)]
 	public enum CertificateStatus {
 		INVALID,             // will be set if the certificate was not verified.
 		REVOKED,             // in X.509 this will be set only if CRLs are checked
@@ -262,32 +262,32 @@ namespace GnuTLS
 		INSECURE_ALGORITHM
 	}
 
-	[CCode (cname = "gnutls_certificate_request_t", cprefix = "GNUTLS_CERT_")]
+	[CCode (cname = "gnutls_certificate_request_t", cprefix = "GNUTLS_CERT_", has_type_id = false)]
 	public enum CertificateRequest {
 		IGNORE,
 		REQUEST,
 		REQUIRE
 	}
 
-//	[CCode (cname = "gnutls_openpgp_crt_status_t", cprefix = "GNUTLS_OPENPGP_")]
+//	[CCode (cname = "gnutls_openpgp_crt_status_t", cprefix = "GNUTLS_OPENPGP_", has_type_id = false)]
 //	public enum OpenPGP.CertificateStatus {
 //		CERT,
 //		CERT_FINGERPRINT
 //	}
 //
-//	[CCode (cname = "gnutls_connection_end_t", cprefix = "GNUTLS_")]
+//	[CCode (cname = "gnutls_connection_end_t", cprefix = "GNUTLS_", has_type_id = false)]
 //	public enum ConnectionEnd {
 //		SERVER,
 //		CLIENT
 //	}
 
-	[CCode (cname = "gnutls_close_request_t", cprefix = "GNUTLS_SHUT_")]
+	[CCode (cname = "gnutls_close_request_t", cprefix = "GNUTLS_SHUT_", has_type_id = false)]
 	public enum CloseRequest {
 		RDWR,
 		WR
 	}
 
-	[CCode (cname = "gnutls_protocol_t", cprefix = "GNUTLS_")]
+	[CCode (cname = "gnutls_protocol_t", cprefix = "GNUTLS_", has_type_id = false)]
 	public enum Protocol {
 		SSL3,
 		TLS1,    // == TLS1_0
@@ -305,7 +305,7 @@ namespace GnuTLS
 		public static unowned Protocol[] list ();
 	}
 
-	[CCode (cname = "gnutls_certificate_type_t", cprefix = "GNUTLS_CRT_")]
+	[CCode (cname = "gnutls_certificate_type_t", cprefix = "GNUTLS_CRT_", has_type_id = false)]
 	public enum CertificateType {
 		UNKNOWN,
 		X509,
@@ -319,7 +319,7 @@ namespace GnuTLS
 		public static unowned CertificateType[] list ();
 	}
 
-	[CCode (cname = "gnutls_certificate_print_formats_t", cprefix = "GNUTLS_CRT_PRINT_")]
+	[CCode (cname = "gnutls_certificate_print_formats_t", cprefix = "GNUTLS_CRT_PRINT_", has_type_id = false)]
 	public enum CertificatePrintFormats {
 		FULL,
 		ONELINE,
@@ -327,7 +327,7 @@ namespace GnuTLS
 	}
 
 	[Flags]
-	[CCode (cname = "unsigned int", cprefix = "GNUTLS_KEY_")]
+	[CCode (cname = "unsigned int", cprefix = "GNUTLS_KEY_", has_type_id = false)]
 	public enum KeyUsage
 	{
 		DIGITAL_SIGNATURE,
@@ -341,7 +341,7 @@ namespace GnuTLS
 		DECIPHER_ONLY
 	}
 
-	[CCode (cname = "gnutls_server_name_type_t", cprefix = "GNUTLS_NAME_")]
+	[CCode (cname = "gnutls_server_name_type_t", cprefix = "GNUTLS_NAME_", has_type_id = false)]
 	public enum ServerNameType {
 		DNS;
 	}
@@ -409,13 +409,13 @@ namespace GnuTLS
 	}
 
 	[SimpleType]
-	[CCode (cname = "gnutls_datum_t")]
+	[CCode (cname = "gnutls_datum_t", has_type_id = false)]
 	public struct Datum {
 		public void* data;
 		public uint size;
 	}
 
-	[CCode (cname = "gnutls_params_st")]
+	[CCode (cname = "gnutls_params_st", has_type_id = false)]
 	public struct Params {
 		public ParamsType type;
 		[CCode (cname = "params.dh")]
@@ -434,7 +434,7 @@ namespace GnuTLS
 	                                       [CCode (array_length_pos = "1.8", array_length_type = "size_t")] uint8[] out_oprfi);
 
 	/* Supplemental data, RFC 4680. */
-	[CCode (cname = "gnutls_supplemental_data_format_type_t")]
+	[CCode (cname = "gnutls_supplemental_data_format_type_t", has_type_id = false)]
 	public enum SupplementalDataFormatType {
 		USER_MAPPING_DATA;
 
@@ -797,14 +797,14 @@ namespace GnuTLS
 		public const string KP_ANY;
 
 
-		[CCode (cname = "gnutls_x509_crt_fmt_t", cprefix = "GNUTLS_X509_FMT_")]
+		[CCode (cname = "gnutls_x509_crt_fmt_t", cprefix = "GNUTLS_X509_FMT_", has_type_id = false)]
 		public enum CertificateFormat {
 			DER,
 			PEM
 		}
 
 		[Flags]
-		[CCode (cname = "gnutls_certificate_import_flags", cprefix = "GNUTLS_X509_CRT_")]
+		[CCode (cname = "gnutls_certificate_import_flags", cprefix = "GNUTLS_X509_CRT_", has_type_id = false)]
 		public enum CertificateImportFlags {
 			/* Fail if the certificates in the buffer are more than the space
 			* allocated for certificates. The error code will be
@@ -814,7 +814,7 @@ namespace GnuTLS
 		}
 
 		[Flags]
-		[CCode (cname = "unsigned int", cprefix = "GNUTLS_CRL_REASON_")]
+		[CCode (cname = "unsigned int", cprefix = "GNUTLS_CRL_REASON_", has_type_id = false)]
 		public enum RevocationReasons {
 			UNUSED,
 			KEY_COMPROMISE,
@@ -828,7 +828,7 @@ namespace GnuTLS
 		}
 
 		[Flags]
-		[CCode (cname = "gnutls_certificate_verify_flags", cprefix = "GNUTLS_VERIFY_")]
+		[CCode (cname = "gnutls_certificate_verify_flags", cprefix = "GNUTLS_VERIFY_", has_type_id = false)]
 		public enum CertificateVerifyFlags
 		{
 			// If set a signer does not have to be a certificate authority. This
@@ -858,7 +858,7 @@ namespace GnuTLS
 			ALLOW_SIGN_RSA_MD5
 		}
 
-		[CCode (cname = "gnutls_x509_subject_alt_name_t")]
+		[CCode (cname = "gnutls_x509_subject_alt_name_t", has_type_id = false)]
 		public enum SubjectAltName {
 			DNSNAME,
 			RFC822NAME,
@@ -897,7 +897,7 @@ namespace GnuTLS
 		public int rdn_get_by_oid (ref Datum idn, string oid, int index, uint raw_flag, void* buf, ref size_t buf_size);
 
 		[SimpleType]
-		[CCode (cname = "gnutls_x509_ava_st")]
+		[CCode (cname = "gnutls_x509_ava_st", has_type_id = false)]
 		public struct Ava
 		{
 			[CCode (cname = "oid.data", array_length_cname = "oid.size")]
@@ -1119,7 +1119,7 @@ namespace GnuTLS
 
 		// Flags for the gnutls_x509_privkey_export_pkcs8() function.
 		[Flags]
-		[CCode (cname = "gnutls_pkcs_encrypt_flags_t", cprefix = "GNUTLS_PKCS_")]
+		[CCode (cname = "gnutls_pkcs_encrypt_flags_t", cprefix = "GNUTLS_PKCS_", has_type_id = false)]
 		public enum PKCSEncryptFlags {
 			PLAIN,
 			USE_PKCS12_3DES,
@@ -1228,7 +1228,7 @@ namespace GnuTLS
 			public int verify_mac (string pass);
 		}
 
-		[CCode (cheader_filename = "gnutls/pkcs12.h", cname = "gnutls_pkcs12_bag_type_t", cprefix = "GNUTLS_BAG_")]
+		[CCode (cheader_filename = "gnutls/pkcs12.h", cname = "gnutls_pkcs12_bag_type_t", cprefix = "GNUTLS_BAG_", has_type_id = false)]
 		public enum PKCS12BagType {
 			EMPTY,
 			PKCS8_ENCRYPTED_KEY,
@@ -1277,7 +1277,7 @@ namespace GnuTLS
 		[CCode (has_target = false)]
 		public delegate int RecvKeyFunc (Session session, uint8[] keyfpr, out Datum key);
 
-		[CCode (cname = "gnutls_openpgp_crt_fmt_t", cprefix = "GNUTLS_OPENPGP_FMT_")]
+		[CCode (cname = "gnutls_openpgp_crt_fmt_t", cprefix = "GNUTLS_OPENPGP_FMT_", has_type_id = false)]
 		public enum CertificateFormat {
 			RAW,
 			BASE64
@@ -1629,7 +1629,7 @@ namespace GnuTLS
 
 // PSK stuff
 
-	[CCode (cname = "gnutls_psk_key_flags", cprefix = "GNUTLS_PSK_KEY_")]
+	[CCode (cname = "gnutls_psk_key_flags", cprefix = "GNUTLS_PSK_KEY_", has_type_id = false)]
 	public enum PSKKeyFlags
 	{
 		RAW,
@@ -1703,7 +1703,7 @@ namespace GnuTLS
 ////
 
 	[SimpleType]
-	[CCode (cname = "gnutls_retr_st")]
+	[CCode (cname = "gnutls_retr_st", has_type_id = false)]
 	public struct RetrStruct
 	{
 		public CertificateType type;
@@ -1740,7 +1740,7 @@ namespace GnuTLS
 	                    size_t seed_size, void* seed, size_t output_size, void* output);
 
 	// Gnutls error codes. The mapping to a TLS alert is also shown in comments.
-	[CCode (cname = "int", cprefix = "GNUTLS_E_", lower_case_cprefix = "gnutls_error_")]
+	[CCode (cname = "int", cprefix = "GNUTLS_E_", lower_case_cprefix = "gnutls_error_", has_type_id = false)]
 	public enum ErrorCode {
 
 		SUCCESS,

@@ -1,6 +1,6 @@
 [CCode (cprefix = "libusb_", cheader_filename = "libusb.h")]
 namespace LibUSB {
-	[CCode (cname = "enum libusb_class_code", cprefix = "LIBUSB_CLASS_")]
+	[CCode (cname = "enum libusb_class_code", cprefix = "LIBUSB_CLASS_", has_type_id = false)]
 	public enum ClassCode {
 		PER_INTERFACE,
 		AUDIO,
@@ -14,7 +14,7 @@ namespace LibUSB {
 		VENDOR_SPEC
 	}
 
-	[CCode (cname = "enum libusb_descriptor_type", cprefix = "LIBUSB_DT_")]
+	[CCode (cname = "enum libusb_descriptor_type", cprefix = "LIBUSB_DT_", has_type_id = false)]
 	public enum DescriptorType {
 		DEVICE,
 		CONFIG,
@@ -46,7 +46,7 @@ namespace LibUSB {
 		public const int DIRECTION;
 	}
 
-	[CCode (cname = "enum libusb_endpoint_direction", cprefix = "LIBUSB_ENDPOINT_")]
+	[CCode (cname = "enum libusb_endpoint_direction", cprefix = "LIBUSB_ENDPOINT_", has_type_id = false)]
 	public enum EndpointDirection {
 		IN,
 		OUT,
@@ -54,7 +54,7 @@ namespace LibUSB {
 		MASK
 	}
 
-	[CCode (cname = "enum libusb_transfer_type", cprefix = "LIBUSB_TRANSFER_TYPE_")]
+	[CCode (cname = "enum libusb_transfer_type", cprefix = "LIBUSB_TRANSFER_TYPE_", has_type_id = false)]
 	public enum TransferType {
 		CONTROL,
 		ISOCHRONOUS,
@@ -62,7 +62,7 @@ namespace LibUSB {
 		INTERRUPT
 	}
 
-	[CCode (cname = "enum libusb_standard_request", cprefix = "LIBUSB_REQUEST_")]
+	[CCode (cname = "enum libusb_standard_request", cprefix = "LIBUSB_REQUEST_", has_type_id = false)]
 	public enum StandardRequest {
 		GET_STATUS,
 		CLEAR_FEATURE,
@@ -76,7 +76,7 @@ namespace LibUSB {
 		SYNCH_FRAME
 	}
 
-	[CCode (cname = "enum libusb_request_type", cprefix = "LIBUSB_REQUEST_TYPE_")]
+	[CCode (cname = "enum libusb_request_type", cprefix = "LIBUSB_REQUEST_TYPE_", has_type_id = false)]
 	public enum RequestType {
 		STANDARD,
 		CLASS,
@@ -84,7 +84,7 @@ namespace LibUSB {
 		RESERVED
 	}
 
-	[CCode (cname = "enum libusb_request_recipient", cprefix = "LIBUSB_RECIPIENT_")]
+	[CCode (cname = "enum libusb_request_recipient", cprefix = "LIBUSB_RECIPIENT_", has_type_id = false)]
 	public enum RequestRecipient {
 		DEVICE,
 		INTERFACE,
@@ -92,7 +92,7 @@ namespace LibUSB {
 		OTHER
 	}
 
-	[CCode (cname =	"enum libusb_iso_sync_type", cprefix = "LIBUSB_ISO_SYNC_TYPE_")]
+	[CCode (cname =	"enum libusb_iso_sync_type", cprefix = "LIBUSB_ISO_SYNC_TYPE_", has_type_id = false)]
 	public enum IsoSyncType {
 		NONE,
 		ASYNC,
@@ -101,7 +101,7 @@ namespace LibUSB {
 		MASK
 	}
 
-	[CCode (cname = "enum libusb_iso_usage_type", cprefix = "LIBUSB_ISO_USAGE_TYPE_")]
+	[CCode (cname = "enum libusb_iso_usage_type", cprefix = "LIBUSB_ISO_USAGE_TYPE_", has_type_id = false)]
 	public enum IsoUsageType {
 		DATA,
 		FEEDBACK,
@@ -109,7 +109,7 @@ namespace LibUSB {
 		MASK
 	}
 
-	[CCode (cname = "enum libusb_error", cprefix = "LIBUSB_ERROR_")]
+	[CCode (cname = "enum libusb_error", cprefix = "LIBUSB_ERROR_", has_type_id = false)]
 	public enum Error {
 		[CCode (cname = "LIBUSB_SUCCESS")]
 		SUCCESS,
@@ -128,14 +128,14 @@ namespace LibUSB {
 		OTHER
 	}
 
-	[CCode (cname = "enum libusb_transfer_flags", cprefix = "LIBUSB_TRANSFER_")]
+	[CCode (cname = "enum libusb_transfer_flags", cprefix = "LIBUSB_TRANSFER_", has_type_id = false)]
 	public enum TransferFlags {
 		SHORT_NOT_OK,
 		FREE_BUFFER,
 		FREE_TRANSFER
 	}
 
-	[CCode (cname = "struct libusb_device_descriptor")]
+	[CCode (cname = "struct libusb_device_descriptor", has_type_id = false)]
 	public struct DeviceDescriptor {
 		public uint8 bLength;
 		public uint8 bDescriptorType;
@@ -156,7 +156,7 @@ namespace LibUSB {
 		public DeviceDescriptor (Device device);
 	}
 
-	[CCode (cname = "struct libusb_endpoint_descriptor", cprefix = "libusb_")]
+	[CCode (cname = "struct libusb_endpoint_descriptor", cprefix = "libusb_", has_type_id = false)]
 	public struct EndpointDescriptor {
 		public uint8 bLength;
 		public uint8 bDescriptorType;
@@ -170,7 +170,7 @@ namespace LibUSB {
 		public uint8[] extra;
 	}
 
-	[CCode (cname = "struct libusb_interface_descriptor")]
+	[CCode (cname = "struct libusb_interface_descriptor", has_type_id = false)]
 	public struct InterfaceDescriptor {
 		public uint8 bLength;
 		public uint8 bDescriptorType;
@@ -187,7 +187,7 @@ namespace LibUSB {
 		public uint8[] extra;
 	}
 
-	[CCode (cname = "struct libusb_interface")]
+	[CCode (cname = "struct libusb_interface", has_type_id = false)]
 	public struct Interface {
 		[CCode (array_length_cname = "num_altsetting")]
 		public InterfaceDescriptor[] altsetting;
@@ -294,7 +294,7 @@ namespace LibUSB {
 		public uint16 wLength;
 	}
 
-	[CCode (cname = "enum libusb_transfer_status", cprefix = "LIBUSB_TRANSFER_")]
+	[CCode (cname = "enum libusb_transfer_status", cprefix = "LIBUSB_TRANSFER_", has_type_id = false)]
 	public enum TransferStatus {
 		COMPLETED,
 		ERROR,
@@ -305,7 +305,7 @@ namespace LibUSB {
 		OVERFLOW
 	}
 
-	[CCode (cname = "struct libusb_iso_packet_descriptor")]
+	[CCode (cname = "struct libusb_iso_packet_descriptor", has_type_id = false)]
 	public struct IsoPacketDescriptor {
 		public uint length;
 		public uint actual_length;

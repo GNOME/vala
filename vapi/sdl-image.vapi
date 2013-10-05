@@ -3,7 +3,7 @@
 namespace SDLImage {
 	//! Defines
 
-	[CCode (cname = "int", cprefix = "IMG_INIT_")]
+	[CCode (cname = "int", cprefix = "IMG_INIT_", has_type_id = false)]
 	public enum InitFlags {
 	    JPG,
 	    PNG,

@@ -99,7 +99,7 @@ namespace Netlink {
         public uint16    maxlen;
     }
 
-    [CCode (cprefix = "NLA_", cname = "int", cheader_filename = "netlink/attr.h")]
+    [CCode (cprefix = "NLA_", cname = "int", cheader_filename = "netlink/attr.h", has_type_id = false)]
     public enum AttributeType {
         UNSPEC,
         U8,
@@ -151,14 +151,14 @@ namespace Netlink {
         public int set_all (CallbackKind kind, MessageCallbackFunc func);
     }
 
-    [CCode (cname = "enum nl_cb_action", cprefix = "NL_", cheader_filename = "netlink/netlink.h")]
+    [CCode (cname = "enum nl_cb_action", cprefix = "NL_", cheader_filename = "netlink/netlink.h", has_type_id = false)]
     public enum CallbackAction {
         OK,
         SKIP,
         STOP,
     }
 
-    [CCode (cname = "enum nl_cb_kind", cprefix = "NL_CB_", cheader_filename = "netlink/netlink.h")]
+    [CCode (cname = "enum nl_cb_kind", cprefix = "NL_CB_", cheader_filename = "netlink/netlink.h", has_type_id = false)]
     public enum CallbackKind {
         DEFAULT,
         VERBOSE,
@@ -166,7 +166,7 @@ namespace Netlink {
         CUSTOM,
     }
 
-    [CCode (cname = "enum nl_cb_type", cprefix = "NL_CB_", cheader_filename = "netlink/netlink.h")]
+    [CCode (cname = "enum nl_cb_type", cprefix = "NL_CB_", cheader_filename = "netlink/netlink.h", has_type_id = false)]
     public enum CallbackType {
         VALID,
         FINISH,
@@ -303,7 +303,7 @@ namespace Netlink {
 
     }
 
-    [CCode (cprefix = "NL_DUMP_", cname = "int", cheader_filename = "netlink/types.h")]
+    [CCode (cprefix = "NL_DUMP_", cname = "int", cheader_filename = "netlink/types.h", has_type_id = false)]
     public enum DumpType {
         LINE,
         DETAILS,
@@ -311,7 +311,7 @@ namespace Netlink {
         ENV,
     }
 
-    [CCode (cname = "struct nl_dump_params", free_function = "", cheader_filename = "netlink/types.h")]
+    [CCode (cname = "struct nl_dump_params", free_function = "", cheader_filename = "netlink/types.h", has_type_id = false)]
     public struct DumpParams {
         public DumpType dp_type;
         public int dp_prefix;

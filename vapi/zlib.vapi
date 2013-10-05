@@ -27,7 +27,7 @@ using GLib;
 
 [CCode (lower_case_cprefix = "", cheader_filename = "zlib.h")]
 namespace ZLib {
-	[CCode (cname="int", cprefix="Z_")]
+	[CCode (cname="int", cprefix="Z_", has_type_id = false)]
 	public enum Flush {
 		NO_FLUSH,
 		SYNC_FLUSH,
@@ -35,7 +35,7 @@ namespace ZLib {
 		FINISH,
 		BLOCK
 	}
-	[CCode (cname="int", cprefix="Z_")]
+	[CCode (cname="int", cprefix="Z_", has_type_id = false)]
 	public enum Status {
 		OK,
 		STREAM_END,
@@ -47,14 +47,14 @@ namespace ZLib {
 		BUF_ERROR,
 		VERSION_ERROR
 	}
-	[CCode (cname="int", cprefix="Z_")]
+	[CCode (cname="int", cprefix="Z_", has_type_id = false)]
 	public enum Level {
 		NO_COMPRESSION,
 		BEST_SPEED,
 		BEST_COMPRESSION,
 		DEFAULT_COMPRESSION
 	}
-	[CCode (cname="int", cprefix="Z_")]
+	[CCode (cname="int", cprefix="Z_", has_type_id = false)]
 	public enum Strategy {
 		DEFAULT_STRATEGY,
 		FILTERED,
@@ -62,17 +62,17 @@ namespace ZLib {
 		RLE,
 		FIXED
 	}
-	[CCode (cname="int", cprefix="Z_")]
+	[CCode (cname="int", cprefix="Z_", has_type_id = false)]
 	public enum Data {
 		BINARY,
 		ASCII,
 		UNKNOWN
 	}
-	[CCode (cname="int", cprefix="Z_")]
+	[CCode (cname="int", cprefix="Z_", has_type_id = false)]
 	public enum Algorithm {
 		DEFLATED
 	}
-	[CCode (cname="int", cprefix="Z_")]
+	[CCode (cname="int", cprefix="Z_", has_type_id = false)]
 	public enum Initial {
 		NULL
 	}
@@ -88,7 +88,7 @@ namespace ZLib {
 		[CCode (cname = "ZLIB_VER_REVISION")]
 		public const int REVISION;
 	}
-	[CCode (cname = "z_stream", destroy_function = "deflateEnd")]
+	[CCode (cname = "z_stream", destroy_function = "deflateEnd", has_type_id = false)]
 	public struct Stream {
 		[CCode (array_length_cname = "avail_in", array_length_type = "ulong")]
 		public unowned uint8[] next_in;
@@ -104,7 +104,7 @@ namespace ZLib {
 		public int data_type;
 		public ulong adler;
 	}
-	[CCode (cname = "z_stream", destroy_function = "deflateEnd")]
+	[CCode (cname = "z_stream", destroy_function = "deflateEnd", has_type_id = false)]
 	public struct DeflateStream : Stream {
 		[CCode (cname = "deflateInit")]
 		public DeflateStream (int level = Level.DEFAULT_COMPRESSION);
@@ -129,7 +129,7 @@ namespace ZLib {
 		[CCode (cname = "deflateSetHeader")]
 		public int set_header (GZHeader head);
 	}
-	[CCode (cname = "z_stream", destroy_function = "inflateEnd")]
+	[CCode (cname = "z_stream", destroy_function = "inflateEnd", has_type_id = false)]
 	public struct InflateStream : Stream {
 		[CCode (cname = "inflateInit")]
 		public InflateStream ();
@@ -155,7 +155,7 @@ namespace ZLib {
 		public static ulong adler32 (ulong crc = 0UL, [CCode (array_length_type = "guint")] uint8[]? buf = null);
 		public static ulong crc32 (ulong crc = 0UL, [CCode (array_length_type = "guint")] uint8[]? buf = null);
 	}
-	[CCode (cname = "gz_header")]
+	[CCode (cname = "gz_header", has_type_id = false)]
 	public struct GZHeader {
 		public int text;
 		public ulong time;

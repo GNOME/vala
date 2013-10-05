@@ -25,7 +25,7 @@ namespace Gsl
 	/*
 	 * Physical Constants
 	 */
-	[CCode (cprefix="GSL_CONST_NUM_", cheader_filename="gsl/gsl_const_num.h")]
+	[CCode (cprefix="GSL_CONST_NUM_", cheader_filename="gsl/gsl_const_num.h", has_type_id = false)]
 	public enum ConstNum
 	{
 		FINE_STRUCTURE,
@@ -48,7 +48,7 @@ namespace Gsl
 		YOCTO
 	}
 
-	[CCode (cprefix="GSL_CONST_CGS_", cheader_filename="gsl/gsl_const_cgs.h")]
+	[CCode (cprefix="GSL_CONST_CGS_", cheader_filename="gsl/gsl_const_cgs.h", has_type_id = false)]
 	public enum ConstCGS
 	{
 		SPEED_OF_LIGHT,
@@ -151,7 +151,7 @@ namespace Gsl
 		THOMSON_CROSS_SECTION
 	}
 
-	[CCode (cprefix="GSL_CONST_CGSM_", cheader_filename="gsl/gsl_const_cgsm.h")]
+	[CCode (cprefix="GSL_CONST_CGSM_", cheader_filename="gsl/gsl_const_cgsm.h", has_type_id = false)]
 	public enum ConstCGSM
 	{
 		SPEED_OF_LIGHT,
@@ -254,7 +254,7 @@ namespace Gsl
 		THOMSON_CROSS_SECTION
 	}
 
-	[CCode (cprefix="GSL_CONST_MKS_", cheader_filename="gsl/gsl_const_mks.h")]
+	[CCode (cprefix="GSL_CONST_MKS_", cheader_filename="gsl/gsl_const_mks.h", has_type_id = false)]
 	public enum ConstMKS
 	{
 		SPEED_OF_LIGHT,
@@ -360,7 +360,7 @@ namespace Gsl
 		DEBYE
 	}
 
-	[CCode (cprefix="GSL_CONST_MKSA_", cheader_filename="gsl/gsl_const_mksa.h")]
+	[CCode (cprefix="GSL_CONST_MKSA_", cheader_filename="gsl/gsl_const_mksa.h", has_type_id = false)]
 	public enum ConstMKSA
 	{
 		SPEED_OF_LIGHT,
@@ -470,7 +470,7 @@ namespace Gsl
 	/*
 	 * Error Handling
 	 */
-	[CCode (cprefix="GSL_", cheader_filename="gsl/gsl_errno.h")]
+	[CCode (cprefix="GSL_", cheader_filename="gsl/gsl_errno.h", has_type_id = false)]
 	public enum Status
 	{
 		SUCCESS,
@@ -510,7 +510,7 @@ namespace Gsl
 		EOF
 	}
 
-	[CCode (cprefix="GSL_PREC_", cheader_filename="gsl/gsl_mode.h")]
+	[CCode (cprefix="GSL_PREC_", cheader_filename="gsl/gsl_mode.h", has_type_id = false)]
 	public enum Mode
 	{
 		DOUBLE,
@@ -545,7 +545,7 @@ namespace Gsl
 	/*
 	 * Mathematical Functions
 	 */
-	[CCode (cprefix="", cheader_filename="gsl/gsl_math.h")]
+	[CCode (cprefix="", cheader_filename="gsl/gsl_math.h", has_type_id = false)]
 	public enum MathConst
 	{
 		M_E,
@@ -574,7 +574,7 @@ namespace Gsl
 	public delegate void _FunctionFdf (double x, void* params, out double f, out double df);
 
 	[SimpleType]
-	[CCode (cname="gsl_function", cheader_filename="gsl/gsl_math.h")]
+	[CCode (cname="gsl_function", cheader_filename="gsl/gsl_math.h", has_type_id = false)]
 	public struct Function
 	{
 		public _Function function;
@@ -582,7 +582,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_function_fdf", cheader_filename="gsl/gsl_math.h")]
+	[CCode (cname="gsl_function_fdf", cheader_filename="gsl/gsl_math.h", has_type_id = false)]
 	public struct FunctionFdf
 	{
 		public _Function f;
@@ -596,7 +596,7 @@ namespace Gsl
 	 * Complex Numbers
 	 */
 	[SimpleType]
-	[CCode (cname="gsl_complex", cheader_filename="gsl/gsl_complex.h,gsl/gsl_complex_math.h")]
+	[CCode (cname="gsl_complex", cheader_filename="gsl/gsl_complex.h,gsl/gsl_complex_math.h", has_type_id = false)]
 	public struct Complex
 	{
 		[CCode (cname="dat[0]")]
@@ -712,7 +712,7 @@ namespace Gsl
 	 * Special Functions
 	 */
 	[SimpleType]
-	[CCode (cname="gsl_sf_result", cheader_filename="gsl/gsl_sf_result.h")]
+	[CCode (cname="gsl_sf_result", cheader_filename="gsl/gsl_sf_result.h", has_type_id = false)]
 	public struct Result
 	{
 		public double val;
@@ -720,7 +720,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_sf_result_e10", cheader_filename="gsl/gsl_sf_result.h")]
+	[CCode (cname="gsl_sf_result_e10", cheader_filename="gsl/gsl_sf_result.h", has_type_id = false)]
 	public struct ResultE10
 	{
 		public double val;
@@ -1499,7 +1499,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_vector_view", cheader_filename="gsl/gsl_vector_double.h")]
+	[CCode (cname="gsl_vector_view", cheader_filename="gsl/gsl_vector_double.h", has_type_id = false)]
 	public struct VectorView
 	{
 		public unowned Vector vector;
@@ -1573,7 +1573,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_vector_complex_view", cheader_filename="gsl/gsl_vector_complex_double.h")]
+	[CCode (cname="gsl_vector_complex_view", cheader_filename="gsl/gsl_vector_complex_double.h", has_type_id = false)]
 	public struct VectorComplexView
 	{
 		public unowned VectorComplex vector;
@@ -1649,7 +1649,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_matrix_view", cheader_filename="gsl/gsl_matrix_double.h")]
+	[CCode (cname="gsl_matrix_view", cheader_filename="gsl/gsl_matrix_double.h", has_type_id = false)]
 	public struct MatrixView
 	{
 		public unowned Matrix matrix;
@@ -1744,7 +1744,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_matrix_complex_view", cheader_filename="gsl/gsl_matrix_complex_double.h")]
+	[CCode (cname="gsl_matrix_complex_view", cheader_filename="gsl/gsl_matrix_complex_double.h", has_type_id = false)]
 	public struct MatrixComplexView
 	{
 		public unowned MatrixComplex matrix;
@@ -2089,7 +2089,7 @@ namespace Gsl
 	/*
 	 * Eigensystems
 	 */
-	[CCode (cname="gsl_eigen_sort_t", cprefix="GSL_EIGEN_SORT_", cheader_filename="gsl/gsl_eigen.h")]
+	[CCode (cname="gsl_eigen_sort_t", cprefix="GSL_EIGEN_SORT_", cheader_filename="gsl/gsl_eigen.h", has_type_id = false)]
 	public enum EigenSortType
 	{
 		VAL_ASC,
@@ -2322,7 +2322,7 @@ namespace Gsl
 	/*
 	 * Fast Fourier Transforms (FFTs)
 	 */
-	[CCode (cname="gsl_fft_direction", cheader_filename="gsl/gsl_fft.h")]
+	[CCode (cname="gsl_fft_direction", cheader_filename="gsl/gsl_fft.h", has_type_id = false)]
 	public enum FFTDirection
 	{
 		forward = -1,
@@ -2439,14 +2439,14 @@ namespace Gsl
 	/*
 	 * Numerical Integration
 	 */
-	[CCode (cprefix="GSL_INTEG_", cheader_filename="gsl/gsl_integration.h")]
+	[CCode (cprefix="GSL_INTEG_", cheader_filename="gsl/gsl_integration.h", has_type_id = false)]
 	public enum QAWO
 	{
 		COSINE,
 		SINE
 	}
 
-	[CCode (cprefix="GSL_INTEG_", cheader_filename="gsl/gsl_integration.h")]
+	[CCode (cprefix="GSL_INTEG_", cheader_filename="gsl/gsl_integration.h", has_type_id = false)]
 	public enum GaussRules
 	{
 		GAUSS15,
@@ -2549,7 +2549,7 @@ namespace Gsl
 	public delegate double RNGGetDouble (void* state);
 
 	[SimpleType]
-	[CCode (cname="gsl_rng_type", cheader_filename="gsl/gsl_rng.h")]
+	[CCode (cname="gsl_rng_type", cheader_filename="gsl/gsl_rng.h", has_type_id = false)]
 	public struct RNGType
 	{
 		public string name;
@@ -2805,7 +2805,7 @@ namespace Gsl
 	public delegate int QRNGGetState2 (void* state, uint dimension, out double x);
 
 	[SimpleType]
-	[CCode (cname="gsl_qrng_type", cheader_filename="gsl/gsl_qrng.h")]
+	[CCode (cname="gsl_qrng_type", cheader_filename="gsl/gsl_qrng.h", has_type_id = false)]
 	public struct QRNGType
 	{
   		public string name;
@@ -3220,7 +3220,7 @@ namespace Gsl
 	public delegate int NTupleFunc (void* ntuple_data, void* params);
 
 	[SimpleType]
-	[CCode (cname="gsl_ntuple_select_fn", cheader_filename="gsl/gsl_ntuple.h")]
+	[CCode (cname="gsl_ntuple_select_fn", cheader_filename="gsl/gsl_ntuple.h", has_type_id = false)]
 	public struct NTupleSelectFn
 	{
 		public NTupleFunc function;
@@ -3228,7 +3228,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_ntuple_value_fn", cheader_filename="gsl/gsl_ntuple.h")]
+	[CCode (cname="gsl_ntuple_value_fn", cheader_filename="gsl/gsl_ntuple.h", has_type_id = false)]
 	public struct NTupleValueFn
 	{
 		public NTupleFunc function;
@@ -3256,7 +3256,7 @@ namespace Gsl
 	/*
 	 * Monte Carlo Integration
 	 */
-	[CCode (cprefix="GSL_VEGAS_MODE_", cheader_filename="gsl/gsl_monte_vegas.h")]
+	[CCode (cprefix="GSL_VEGAS_MODE_", cheader_filename="gsl/gsl_monte_vegas.h", has_type_id = false)]
 	public enum MonteVegasMode
 	{
 		IMPORTANCE,
@@ -3268,7 +3268,7 @@ namespace Gsl
 	public delegate double MonteFunc ([CCode (array_length = false)] double[] x_array, size_t dim, void* params);
 
 	[SimpleType]
-	[CCode (cname="gsl_monte_function", cheader_filanema="gsl/gsl_monte.h")]
+	[CCode (cname="gsl_monte_function", cheader_filanema="gsl/gsl_monte.h", has_type_id = false)]
 	public struct MonteFunction
 	{
 		public MonteFunc f;
@@ -3369,7 +3369,7 @@ namespace Gsl
 	 * Simulated Annealing
 	 */
 	[SimpleType]
-	[CCode (cname="gsl_siman_params_t", cheader_filename="gsl/gsl_siman.h")]
+	[CCode (cname="gsl_siman_params_t", cheader_filename="gsl/gsl_siman.h", has_type_id = false)]
 	public struct SimanParams
 	{
 		public int n_tries;
@@ -3381,7 +3381,7 @@ namespace Gsl
 		public double t_min;
 	}
 
-	[CCode (lower_case_cprefix="gsl_siman_", cheader_filename="gsl/gsl_siman.h")]
+	[CCode (lower_case_cprefix="gsl_siman_", cheader_filename="gsl/gsl_siman.h", has_type_id = false)]
 	namespace Siman
 	{
 		[CCode (has_target = false)]
@@ -3407,7 +3407,7 @@ namespace Gsl
 	/*
 	 * Ordinary Differential Equations
 	 */
-	[CCode (cprefix="GSL_ODEIV_HADJ_", cheader_filename="gsl/gsl_odeiv.h")]
+	[CCode (cprefix="GSL_ODEIV_HADJ_", cheader_filename="gsl/gsl_odeiv.h", has_type_id = false)]
 	public enum OdeivHadjustTypes
 	{
 		INC,
@@ -3439,7 +3439,7 @@ namespace Gsl
 	public delegate void OdeivControlFree (void* state);
 
 	[SimpleType]
-	[CCode (cname="gsl_odeiv_system", cheader_filename="gsl/gsl_odeiv.h")]
+	[CCode (cname="gsl_odeiv_system", cheader_filename="gsl/gsl_odeiv.h", has_type_id = false)]
 	public struct OdeivSystem
 	{
 		public OdeivFunction function;
@@ -3449,7 +3449,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_odeiv_step_type", cheader_filename="gsl/gsl_odeiv.h")]
+	[CCode (cname="gsl_odeiv_step_type", cheader_filename="gsl/gsl_odeiv.h", has_type_id = false)]
 	public struct OdeivStepType
 	{
 		public string name;
@@ -3496,7 +3496,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_odeiv_control_type", cheader_filename="gsl/gsl_odeiv.h")]
+	[CCode (cname="gsl_odeiv_control_type", cheader_filename="gsl/gsl_odeiv.h", has_type_id = false)]
 	public struct OdeivControlType
 	{
 		public string name;
@@ -3582,7 +3582,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_interp_type", cheader_filename="gsl/gsl_interp.h")]
+	[CCode (cname="gsl_interp_type", cheader_filename="gsl/gsl_interp.h", has_type_id = false)]
 	public struct InterpType
 	{
 		public string name;
@@ -3754,6 +3754,7 @@ namespace Gsl
 	/*
 	 * Wavelet Transforms
 	 */
+	[CCode (has_type_id = false)]
 	public enum WaveletDirection
 	{
 		forward = 1,
@@ -3764,7 +3765,7 @@ namespace Gsl
 	public delegate int WaveletInit (double** h1, double** g1, double** h2, double** g2, size_t* nc, size_t* offset, size_t member);
 
 	[SimpleType]
-	[CCode (cname="gsl_wavelet_type", cheader_filename="gsl/gsl_wavelet.h")]
+	[CCode (cname="gsl_wavelet_type", cheader_filename="gsl/gsl_wavelet.h", has_type_id = false)]
 	public struct WaveletType
 	{
 		public string name;
@@ -3878,7 +3879,7 @@ namespace Gsl
 	public delegate int RootFdfsolverIterate (void* state, FunctionFdf* d, double* root);
 
 	[SimpleType]
-	[CCode (cname="gsl_root_fsolver_type", cheader_filename="gsl/gsl_roots.h")]
+	[CCode (cname="gsl_root_fsolver_type", cheader_filename="gsl/gsl_roots.h", has_type_id = false)]
 	public struct RootFsolverType
 	{
 		public string name;
@@ -3906,7 +3907,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_root_fdfsolver_type", cheader_filename="gsl/gsl_roots.h")]
+	[CCode (cname="gsl_root_fdfsolver_type", cheader_filename="gsl/gsl_roots.h", has_type_id = false)]
 	public struct RootFdfsolverType
 	{
 		public string name;
@@ -3967,7 +3968,7 @@ namespace Gsl
 	public delegate int MinBracketingFunction (Function* f, double* x_minimum, double* f_minimum, double* x_lower, double* f_lower, double* x_upper, double* f_upper, size_t eval_max);
 
 	[SimpleType]
-	[CCode (cname="gsl_min_fminimizer_type", cheader_filename="gsl/gsl_min.h")]
+	[CCode (cname="gsl_min_fminimizer_type", cheader_filename="gsl/gsl_min.h", has_type_id = false)]
 	public struct MinFminimizerType
 	{
 		public string name;
@@ -4042,7 +4043,7 @@ namespace Gsl
 	public delegate int MultirootFdfFree (void* state);
 
 	[SimpleType]
-	[CCode (cname="gsl_multiroot_function", cheader_filename="gsl/gsl_multiroots.h")]
+	[CCode (cname="gsl_multiroot_function", cheader_filename="gsl/gsl_multiroots.h", has_type_id = false)]
 	public struct MultirootFunction
 	{
 		public MultirootF f;
@@ -4054,7 +4055,7 @@ namespace Gsl
 	public static int multiroot_fdjacobian (MultirootFunction* F, Vector x, Vector f, double epsrel, Matrix jacobian);
 
 	[SimpleType]
-	[CCode (cname="gsl_multiroot_fsolver_type", cheader_filename="gsl/gsl_multiroots.h")]
+	[CCode (cname="gsl_multiroot_fsolver_type", cheader_filename="gsl/gsl_multiroots.h", has_type_id = false)]
 	public struct MultirootFsolverType
 	{
 		public string name;
@@ -4085,7 +4086,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_multiroot_function_fdf", cheader_filename="gsl/gsl_multiroots.h")]
+	[CCode (cname="gsl_multiroot_function_fdf", cheader_filename="gsl/gsl_multiroots.h", has_type_id = false)]
 	public struct MultirootFunctionFdf
 	{
 		public MultirootF f;
@@ -4096,7 +4097,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_multiroot_fdfsolver_type", cheader_filename="gsl/gsl_multiroots.h")]
+	[CCode (cname="gsl_multiroot_fdfsolver_type", cheader_filename="gsl/gsl_multiroots.h", has_type_id = false)]
 	public struct MultirootFdfsolverType
 	{
 		public string name;
@@ -4172,7 +4173,7 @@ namespace Gsl
 	public delegate int MultiminFFree (void* state);
 
 	[SimpleType]
-	[CCode (cname="gsl_multimin_function", cheader_filename="gsl/gsl_multimin.h")]
+	[CCode (cname="gsl_multimin_function", cheader_filename="gsl/gsl_multimin.h", has_type_id = false)]
 	public struct MultiminFunction
 	{
 		public MultiminF f;
@@ -4181,7 +4182,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_multimin_function_fdf", cheader_filename="gsl/gsl_multimin.h")]
+	[CCode (cname="gsl_multimin_function_fdf", cheader_filename="gsl/gsl_multimin.h", has_type_id = false)]
 	public struct MultiminFunctionFdf
 	{
 		public MultiminF f;
@@ -4195,7 +4196,7 @@ namespace Gsl
 	public static int multimin_diff (MultiminFunction* f, Vector x, Vector g);
 
 	[SimpleType]
-	[CCode (cname="gsl_multimin_fminimizer_type", cheader_filename="gsl/gsl_multimin.h")]
+	[CCode (cname="gsl_multimin_fminimizer_type", cheader_filename="gsl/gsl_multimin.h", has_type_id = false)]
 	public struct MultiminFminimizerType
 	{
 		public string name;
@@ -4244,7 +4245,7 @@ namespace Gsl
 	public delegate int MultiminFdfFree (void* state);
 
 	[SimpleType]
-	[CCode (cname="gsl_multimin_fdfminimizer_type", cheader_filename="gsl/gsl_multimin.h")]
+	[CCode (cname="gsl_multimin_fdfminimizer_type", cheader_filename="gsl/gsl_multimin.h", has_type_id = false)]
 	public struct MultiminFdfminimizerType
 	{
 		public string name;
@@ -4372,7 +4373,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_multifit_function", cheader_filename="gls/gsl_multifit_nlin.h")]
+	[CCode (cname="gsl_multifit_function", cheader_filename="gls/gsl_multifit_nlin.h", has_type_id = false)]
 	public struct MultifitFunction
 	{
 		public MultifitF f;
@@ -4382,7 +4383,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_multifit_fsolver_type", cheader_filename="gsl/gsl_multifit_nlin.h")]
+	[CCode (cname="gsl_multifit_fsolver_type", cheader_filename="gsl/gsl_multifit_nlin.h", has_type_id = false)]
 	public struct MultifitFsolverType
 	{
 		public string name;
@@ -4413,7 +4414,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_multifit_function_fdf", cheader_filename="gsl/gsl_multifit_nlin.h")]
+	[CCode (cname="gsl_multifit_function_fdf", cheader_filename="gsl/gsl_multifit_nlin.h", has_type_id = false)]
 	public struct MultifitFunctionFdf
 	{
 		public MultifitF f;
@@ -4425,7 +4426,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_multifit_fdfsolver_type", cheader_filename="gsl/gsl_multifit_nlin.h")]
+	[CCode (cname="gsl_multifit_fdfsolver_type", cheader_filename="gsl/gsl_multifit_nlin.h", has_type_id = false)]
 	public struct MultifitFdfsolverType
 	{
 		public string name;

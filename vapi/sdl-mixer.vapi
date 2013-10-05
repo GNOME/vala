@@ -27,12 +27,12 @@ namespace SDLMixer {
 	public delegate void EffectCallback(int chan, void* stream, int len, void* udata);
 	public delegate void EffectDoneCallback(int chan, void* udata);
 
-	[CCode (cname="int", cprefix="MIX_")]
+	[CCode (cname="int", cprefix="MIX_", has_type_id = false)]
 	public enum FadeStatus {
 		NO_FADING, FADING_OUT, FADING_IN
 	}// FadeStatus
 
-	[CCode (cname="int", cprefix="MUS_")]
+	[CCode (cname="int", cprefix="MUS_", has_type_id = false)]
 	public enum MusicType {
 		NONE, CMD, WAV, MOD, MID, OGG, MP3, MP3_MAD
 	}// MusicType
@@ -127,7 +127,7 @@ namespace SDLMixer {
 		public static int unregister_all(int channel);
 	}// Effect
 
-	[CCode (cname="int")]
+	[CCode (cname="int", has_type_id = false)]
 	[SimpleType]
 	public struct Channel: int {
 		[CCode (cname="Mix_AllocateChannels")]
@@ -188,7 +188,7 @@ namespace SDLMixer {
 		public Chunk? get_chunk();
 	}// Channel
 
-	[CCode (cname="int")]
+	[CCode (cname="int", has_type_id = false)]
 	[SimpleType]
 	public struct ChannelGroup: int {
 		[CCode (cname="Mix_GroupChannel")]

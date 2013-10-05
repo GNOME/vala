@@ -49,7 +49,7 @@ namespace Xcb {
 
 	public const char COPY_FROM_PARENT;
 
-	[CCode (cname = "xcb_window_class_t")]
+	[CCode (cname = "xcb_window_class_t", has_type_id = false)]
 	public enum WindowClass {
 		COPY_FROM_PARENT,
 		INPUT_OUTPUT,
@@ -124,7 +124,7 @@ namespace Xcb {
 		public uint16 height;
 	}
 
-	[CCode (cname = "xcb_cw_t")]
+	[CCode (cname = "xcb_cw_t", has_type_id = false)]
 	public enum CW {
 		BACK_PIXMAP,
 		BACK_PIXEL,
@@ -143,7 +143,7 @@ namespace Xcb {
 		CURSOR
 	}
 
-	[CCode (cname = "xcb_event_mask_t")]
+	[CCode (cname = "xcb_event_mask_t", has_type_id = false)]
 	public enum EventMask {
 		NO_EVENT,
 		KEY_PRESS,
@@ -188,7 +188,7 @@ namespace Xcb {
 	}
 
 	[SimpleType]
-	[CCode (cname = "xcb_screen_iterator_t")]
+	[CCode (cname = "xcb_screen_iterator_t", has_type_id = false)]
 	public struct ScreenIterator {
 		public unowned Screen data;
 		public int rem;
@@ -213,7 +213,7 @@ namespace Xcb {
 		public Window* children();
 	}
 
-	[CCode (cname = "xcb_depth_iterator_t")]
+	[CCode (cname = "xcb_depth_iterator_t", has_type_id = false)]
 	public struct DepthIterator {
 		public unowned Depth data;
 		public int rem;
@@ -221,7 +221,7 @@ namespace Xcb {
 		public void next ();
 	}
 
-	[CCode (cname = "xcb_visualtype_iterator_t")]
+	[CCode (cname = "xcb_visualtype_iterator_t", has_type_id = false)]
 	public struct VisualTypeIterator {
 		public unowned VisualType data;
 		public int rem;
@@ -237,16 +237,16 @@ namespace Xcb {
 	public VoidCookie map_window (Connection connection, Window wid);
 
 	[SimpleType]
-	[CCode (cname = "xcb_void_cookie_t")]
+	[CCode (cname = "xcb_void_cookie_t", has_type_id = false)]
 	public struct VoidCookie {
 	}
 
 	[SimpleType]
-	[CCode (cname = "xcb_query_tree_cookie_t")]
+	[CCode (cname = "xcb_query_tree_cookie_t", has_type_id = false)]
 	public struct QueryTreeCookie {
 	}
 
-	[CCode (cname = "xcb_rectangle_t")]
+	[CCode (cname = "xcb_rectangle_t", has_type_id = false)]
 	public struct Rectangle {
 		public int16 x;
 		public int16 y;
@@ -266,7 +266,7 @@ namespace Xcb {
 			marshaller_type_name = "INT",
 			get_value_function = "g_value_get_int",
 			set_value_function = "g_value_set_int", default_value = "0",
-			type_signature = "i")]
+			type_signature = "i", has_type_id = false)]
 	public struct Drawable : uint32 {
 	}
 
@@ -276,7 +276,7 @@ namespace Xcb {
 			marshaller_type_name = "INT",
 			get_value_function = "g_value_get_int",
 			set_value_function = "g_value_set_int", default_value = "0",
-			type_signature = "i")]
+			type_signature = "i", has_type_id = false)]
 	public struct Window : Drawable {
 	}
 

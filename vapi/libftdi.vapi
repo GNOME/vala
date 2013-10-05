@@ -3,7 +3,7 @@ namespace FTDI {
 
 	public const int DEFAULT_EEPROM_SIZE;
 
-	[CCode (cname = "enum ftdi_chip_type", cprefix = "TYPE_")]
+	[CCode (cname = "enum ftdi_chip_type", cprefix = "TYPE_", has_type_id = false)]
 	public enum ChipType {
 		AM,
 		BM,
@@ -11,7 +11,7 @@ namespace FTDI {
 		R
 	}
 
-	[CCode (cname = "enum ftdi_parity_type", cprefix = "")]
+	[CCode (cname = "enum ftdi_parity_type", cprefix = "", has_type_id = false)]
 	public enum ParityType {
 		NONE,
 		ODD,
@@ -20,26 +20,26 @@ namespace FTDI {
 		SPACE
 	}
 
-	[CCode (cname = "enum ftdi_stopbits_type", cprefix = "STOP_")]
+	[CCode (cname = "enum ftdi_stopbits_type", cprefix = "STOP_", has_type_id = false)]
 	public enum StopBitsType {
 		BIT_1,
 		BIT_15,
 		BIT_2
 	}
 
-	[CCode (cname = "enum ftdi_bits_type", cprefix = "")]
+	[CCode (cname = "enum ftdi_bits_type", cprefix = "", has_type_id = false)]
 	public enum BitsType {
 		BITS_7,
 		BITS_8
 	}
 
-	[CCode (cname = "enum ftdi_break_type", cprefix="BREAK_")]
+	[CCode (cname = "enum ftdi_break_type", cprefix="BREAK_", has_type_id = false)]
 	public enum BreakType {
 		OFF,
 		ON,
 	}
 
-	[CCode (cprefix = "BITMODE_", cname = "ftdi_mpsse_mode")]
+	[CCode (cprefix = "BITMODE_", cname = "ftdi_mpsse_mode", has_type_id = false)]
 	public enum MPSSEMode {
 		RESET,
 		BITBANG,
@@ -50,7 +50,7 @@ namespace FTDI {
 		CBUS
 	}
 
-	[CCode (cname = "enum ftdi_interface", cprefix = "INTERFACE_")]
+	[CCode (cname = "enum ftdi_interface", cprefix = "INTERFACE_", has_type_id = false)]
 	public enum Interface {
 		ANY,
 		A,
@@ -155,13 +155,13 @@ namespace FTDI {
 
 	public const int URB_USERCONTEXT_COOKIE;
 
-	[CCode (cname = "struct ftdi_device_list", destroy_function = "ftdi_list_free")]
+	[CCode (cname = "struct ftdi_device_list", destroy_function = "ftdi_list_free", has_type_id = false)]
 	public struct DeviceList {
 		public DeviceList* next;
 		public USB.Device* dev;
 	}
 
-	[CCode (cname = "struct ftdi_eeprom", cprefix="ftdi_eeprom_")]
+	[CCode (cname = "struct ftdi_eeprom", cprefix="ftdi_eeprom_", has_type_id = false)]
 	public struct EEPROM {
 		public int vendor_id;
 		public int product_id;
