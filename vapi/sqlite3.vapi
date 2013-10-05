@@ -251,7 +251,7 @@ namespace Sqlite {
 	[CCode (cname = "SQLITE_UTF16_ALIGNED")]
 	public const int UTF16_ALIGNED;
 
-	[CCode (cname = "int", cprefix = "SQLITE_")]
+	[CCode (cname = "int", cprefix = "SQLITE_", has_type_id = false)]
 	public enum Action {
 		CREATE_INDEX,
 		CREATE_TABLE,
@@ -288,7 +288,7 @@ namespace Sqlite {
 		COPY
 	}
 
-	[CCode (cname = "int", cprefix = "SQLITE_CONFIG_")]
+	[CCode (cname = "int", cprefix = "SQLITE_CONFIG_", has_type_id = false)]
 	public enum Config {
 		SINGLETHREAD,
 		MULTITHREAD,
@@ -307,12 +307,12 @@ namespace Sqlite {
 		LOG,
 	}
 
-	[CCode (cname = "int", cprefix = "SQLITE_DBSTATUS_")]
+	[CCode (cname = "int", cprefix = "SQLITE_DBSTATUS_", has_type_id = false)]
 	public enum DatabaseStatus {
 		LOOKASIDE_USED
 	}
 
-	[CCode (cname = "int", cprefix = "SQLITE_LIMIT_")]
+	[CCode (cname = "int", cprefix = "SQLITE_LIMIT_", has_type_id = false)]
 	public enum Limit {
 		LENGTH,
 		SQL_LENGTH,
@@ -327,13 +327,13 @@ namespace Sqlite {
 		TRIGGER_DEPTH
 	}
 
-	[CCode (cname = "int", cprefix = "SQLITE_STMTSTATUS_")]
+	[CCode (cname = "int", cprefix = "SQLITE_STMTSTATUS_", has_type_id = false)]
 	public enum StatementStatus {
 		FULLSCAN_STEP,
 		SORT
 	}
 
-	[CCode (cname = "int", cprefix = "SQLITE_STATUS_")]
+	[CCode (cname = "int", cprefix = "SQLITE_STATUS_", has_type_id = false)]
 	public enum Status {
 		MEMORY_USED,
 		PAGECACHE_USED,
