@@ -1039,7 +1039,7 @@ namespace SDL {
 		public static void pause(int pause_on);
 
 		[CCode (cname="SDL_LoadWAV_RW")]
-		public static unowned AudioSpec? load(RWops src, int freesrc=0, ref AudioSpec spec, out uint8[] audio_buf);
+		public static unowned AudioSpec? load(RWops src, int freesrc, ref AudioSpec spec, out uint8[] audio_buf);
 
 		[CCode (cname="SDL_FreeWAV")]
 		public static void free(uchar* audio_buf);

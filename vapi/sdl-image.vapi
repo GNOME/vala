@@ -30,7 +30,7 @@ namespace SDLImage {
 	public static SDL.Surface? load_rw(SDL.RWops src, bool freesrc = false);
 
 	[CCode (cname = "IMG_LoadTyped_RW")]
-	public static SDL.Surface? load_rw_typed(SDL.RWops src, bool freesrc = false, string type);
+	public static SDL.Surface? load_rw_typed(SDL.RWops src, bool freesrc, string type);
 
 	[CCode (cname = "IMG_LoadCUR_RW")]
 	public static SDL.Surface? load_cur(SDL.RWops src);
