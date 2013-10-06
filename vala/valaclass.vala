@@ -225,10 +225,11 @@ public class Vala.Class : ObjectTypeSymbol {
 	 * @param type a class or interface reference
 	 */
 	public void add_base_type (DataType type) {
-		base_types.add (type);
-		type.parent_node = this;
+		var copy = type.copy ();
+		base_types.add (copy);
+		copy.parent_node = this;
 	}
-
+	
 	/**
 	 * Returns a copy of the base type list.
 	 *
@@ -556,6 +557,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		for (int i = 0; i < base_types.size; i++) {
 			if (base_types[i] == old_type) {
 				base_types[i] = new_type;
+				new_type.parent_node = this;
 				return;
 			}
 		}

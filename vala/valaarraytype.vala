@@ -32,7 +32,7 @@ public class Vala.ArrayType : ReferenceType {
 	public DataType element_type {
 		get { return _element_type; }
 		set {
-			_element_type = value;
+			_element_type = value.copy ();
 			_element_type.parent_node = this;
 		}
 	}

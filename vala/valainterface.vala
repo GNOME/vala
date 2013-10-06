@@ -95,8 +95,9 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @param type an interface or class reference
 	 */
 	public void add_prerequisite (DataType type) {
-		prerequisites.add (type);
-		type.parent_node = this;
+		var copy = type.copy ();
+		prerequisites.add (copy);
+		copy.parent_node = this;
 	}
 
 	/**
@@ -106,7 +107,9 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @param type an interface or class reference
 	 */
 	public void prepend_prerequisite (DataType type) {
-		prerequisites.insert (0, type);
+		var copy = type.copy ();
+		prerequisites.insert (0, copy);
+		copy.parent_node = this;
 	}
 
 	/**
@@ -349,6 +352,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 		for (int i = 0; i < prerequisites.size; i++) {
 			if (prerequisites[i] == old_type) {
 				prerequisites[i] = new_type;
+				new_type.parent_node = this;
 				return;
 			}
 		}

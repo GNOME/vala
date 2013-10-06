@@ -39,8 +39,9 @@ public class Vala.PropertyAccessor : Subroutine {
 	public DataType? value_type {
 		get { return _value_type; }
 		set {
-			_value_type = value;
+			_value_type = null;
 			if (value != null) {
+				_value_type = value.copy ();
 				_value_type.parent_node = this;
 			}
 		}

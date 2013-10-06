@@ -32,7 +32,7 @@ public class Vala.PointerType : DataType {
 	public DataType base_type {
 		get { return _base_type; }
 		set {
-			_base_type = value;
+			_base_type = value.copy ();
 			_base_type.parent_node = this;
 		}
 	}

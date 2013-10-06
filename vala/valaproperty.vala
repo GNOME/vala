@@ -33,8 +33,9 @@ public class Vala.Property : Symbol, Lockable {
 	public DataType? property_type {
 		get { return _data_type; }
 		set {
-			_data_type = value;
+			_data_type = null;
 			if (value != null) {
+				_data_type = value.copy ();
 				_data_type.parent_node = this;
 			}
 		}

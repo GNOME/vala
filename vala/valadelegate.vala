@@ -32,7 +32,7 @@ public class Vala.Delegate : TypeSymbol {
 	public DataType return_type {
 		get { return _return_type; }
 		set {
-			_return_type = value;
+			_return_type = value.copy ();
 			_return_type.parent_node = this;
 		}
 	}

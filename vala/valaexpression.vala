@@ -31,18 +31,71 @@ public abstract class Vala.Expression : CodeNode {
 	 * 
 	 * The semantic analyzer computes this value.
 	 */
-	public DataType value_type { get; set; }
+	public DataType value_type {
+		get {
+			return _value_type;
+		}
 
-	public DataType? formal_value_type { get; set; }
+		set {
+			_value_type = null;
+			if (value != null) {
+				_value_type = value.copy ();
+				_value_type.parent_node = this;
+			}
+		}
+	}
+
+	private DataType _value_type;
+
+	public DataType? formal_value_type {
+		get {
+			return _formal_value_type;
+		}
+		set {
+			_formal_value_type = null;
+			if (value != null) {
+				_formal_value_type = value.copy ();
+				_formal_value_type.parent_node = this;
+			}
+		}
+	}
+
+	private DataType _formal_value_type;
 
 	/*
 	 * The static type this expression is expected to have.
 	 *
 	 * The semantic analyzer computes this value, lambda expressions use it.
 	 */
-	public DataType target_type { get; set; }
+	public DataType target_type {
+		get {
+			return _target_type;
+		}
+		set {
+			_target_type = null;
+			if (value != null) {
+				_target_type = value.copy ();
+				_target_type.parent_node = this;
+			}
+		}
+	}
 
-	public DataType? formal_target_type { get; set; }
+	private DataType _target_type;
+
+	public DataType? formal_target_type {
+		get {
+			return _formal_target_type;
+		}
+		set {
+			_formal_target_type = null;
+			if (value != null) {
+				_formal_target_type = value.copy ();
+				_formal_target_type.parent_node = this;
+			}
+		}
+	}
+
+	private DataType _formal_target_type;
 
 	/**
 	 * The symbol this expression refers to.
