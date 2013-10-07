@@ -71,9 +71,8 @@ public abstract class Vala.DataType : CodeNode {
 		if (type_argument_list == null) {
 			type_argument_list = new ArrayList<DataType> ();
 		}
-		var copy = arg.copy ();
-		type_argument_list.add (copy);
-		copy.parent_node = this;
+		type_argument_list.add (arg);
+		arg.parent_node = this;
 	}
 	
 	/**
@@ -252,7 +251,6 @@ public abstract class Vala.DataType : CodeNode {
 			for (int i = 0; i < type_argument_list.size; i++) {
 				if (type_argument_list[i] == old_type) {
 					type_argument_list[i] = new_type;
-					new_type.parent_node = this;
 					return;
 				}
 			}

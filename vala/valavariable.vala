@@ -42,9 +42,8 @@ public class Vala.Variable : Symbol {
 	public DataType? variable_type {
 		get { return _variable_type; }
 		set {
-			_variable_type = null;
-			if (value != null) {
-				_variable_type = value.copy ();
+			_variable_type = value;
+			if (_variable_type != null) {
 				_variable_type.parent_node = this;
 			}
 		}

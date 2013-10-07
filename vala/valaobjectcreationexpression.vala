@@ -32,7 +32,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	public DataType type_reference {
 		get { return _data_type; }
 		set {
-			_data_type = value.copy ();
+			_data_type = value;
 			_data_type.parent_node = this;
 		}
 	}

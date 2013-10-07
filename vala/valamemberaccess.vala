@@ -102,9 +102,8 @@ public class Vala.MemberAccess : Expression {
 	 * @param arg a type reference
 	 */
 	public void add_type_argument (DataType arg) {
-		var copy = arg.copy ();
-		type_argument_list.add (copy);
-		copy.parent_node = this;
+		type_argument_list.add (arg);
+		arg.parent_node = this;
 	}
 	
 	/**
@@ -161,7 +160,6 @@ public class Vala.MemberAccess : Expression {
 		for (int i = 0; i < type_argument_list.size; i++) {
 			if (type_argument_list[i] == old_type) {
 				type_argument_list[i] = new_type;
-				new_type.parent_node = this;
 				return;
 			}
 		}
