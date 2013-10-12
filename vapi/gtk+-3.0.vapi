@@ -4776,7 +4776,7 @@ namespace Gtk {
 		public SymbolicColor.mix (Gtk.SymbolicColor color1, Gtk.SymbolicColor color2, double factor);
 		[CCode (has_construct_function = false)]
 		public SymbolicColor.name (string name);
-		public bool resolve (Gtk.StyleProperties props, Gdk.RGBA resolved_color);
+		public bool resolve (Gtk.StyleProperties props, out Gdk.RGBA resolved_color);
 		[CCode (has_construct_function = false)]
 		public SymbolicColor.shade (Gtk.SymbolicColor color, double factor);
 		public unowned string to_string ();
