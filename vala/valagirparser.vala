@@ -2863,6 +2863,10 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (symbol_type == "function") {
 				m.binding = MemberBinding.STATIC;
 			}
+			if (metadata.has_argument (ArgumentType.FLOATING)) {
+				m.returns_floating_reference = metadata.get_bool (ArgumentType.FLOATING);
+				m.return_type.value_owned = true;
+			}
 		}
 
 		if (s is Method && !(s is CreationMethod)) {
@@ -2877,9 +2881,6 @@ public class Vala.GirParser : CodeVisitor {
 			if (metadata.has_argument (ArgumentType.VFUNC_NAME)) {
 				method.set_attribute_string ("CCode", "vfunc_name", metadata.get_string (ArgumentType.VFUNC_NAME));
 				method.is_virtual = true;
-			}
-			if (metadata.has_argument (ArgumentType.FLOATING)) {
-				method.returns_floating_reference = metadata.get_bool (ArgumentType.FLOATING);
 			}
 		}
 

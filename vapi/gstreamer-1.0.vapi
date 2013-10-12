@@ -509,7 +509,7 @@ namespace Gst {
 		public bool polling;
 		public Gst.Clock provided_clock;
 		public bool state_dirty;
-		[CCode (has_construct_function = false, type = "GstElement*")]
+		[CCode (has_construct_function = false, returns_floating_reference = true, type = "GstElement*")]
 		public Bin (string name);
 		public bool add (owned Gst.Element element);
 		[NoWrapper]
@@ -892,7 +892,8 @@ namespace Gst {
 		public bool link_pads (string? srcpadname, Gst.Element dest, string? destpadname, Gst.PadLinkCheck flags = Gst.PadLinkCheck.DEFAULT);
 		public bool link_pads_filtered (string? srcpadname, Gst.Element dest, string? destpadname, Gst.Caps? filter);
 		public void lost_state ();
-		public static unowned Gst.Element make_from_uri (Gst.URIType type, string uri, string? elementname) throws GLib.Error;
+		[CCode (returns_floating_reference = true)]
+		public static Gst.Element make_from_uri (Gst.URIType type, string uri, string? elementname) throws GLib.Error;
 		public void message_full (Gst.MessageType type, GLib.Quark domain, int code, owned string? text, owned string? debug, string file, string function, int line);
 		public virtual bool post_message (owned Gst.Message message);
 		public virtual Gst.Clock provide_clock ();
@@ -939,7 +940,8 @@ namespace Gst {
 		public bool can_sink_any_caps (Gst.Caps caps);
 		public bool can_src_all_caps (Gst.Caps caps);
 		public bool can_src_any_caps (Gst.Caps caps);
-		public unowned Gst.Element create (string? name);
+		[CCode (returns_floating_reference = true)]
+		public Gst.Element create (string? name);
 		public static Gst.ElementFactory find (string name);
 		public GLib.Type get_element_type ();
 		public unowned string get_metadata (string key);
@@ -954,7 +956,8 @@ namespace Gst {
 		public static GLib.List<Gst.ElementFactory> list_filter (GLib.List<Gst.ElementFactory> list, Gst.Caps caps, Gst.PadDirection direction, bool subsetonly);
 		public static GLib.List<Gst.ElementFactory> list_get_elements (Gst.ElementFactoryListType type, Gst.Rank minrank);
 		public bool list_is_type (Gst.ElementFactoryListType type);
-		public static unowned Gst.Element make (string factoryname, string? name);
+		[CCode (returns_floating_reference = true)]
+		public static Gst.Element make (string factoryname, string? name);
 	}
 	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_event_ref", type_id = "gst_event_get_type ()", unref_function = "gst_event_unref")]
 	[Compact]
@@ -1036,7 +1039,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_ghost_pad_get_type ()")]
 	public class GhostPad : Gst.ProxyPad {
-		[CCode (has_construct_function = false, type = "GstPad*")]
+		[CCode (has_construct_function = false, returns_floating_reference = true, type = "GstPad*")]
 		public GhostPad (string? name, Gst.Pad target);
 		public static bool activate_mode_default (Gst.Pad pad, Gst.Object? parent, Gst.PadMode mode, bool active);
 		public bool @construct ();
@@ -1266,7 +1269,7 @@ namespace Gst {
 	public class Pad : Gst.Object {
 		public void* element_private;
 		public weak Gst.PadTemplate padtemplate;
-		[CCode (has_construct_function = false)]
+		[CCode (has_construct_function = false, returns_floating_reference = true)]
 		public Pad (string name, Gst.PadDirection direction);
 		public bool activate_mode (Gst.PadMode mode, bool active);
 		public ulong add_probe (Gst.PadProbeType mask, owned Gst.PadProbeCallback callback);
@@ -1363,7 +1366,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_pad_template_get_type ()")]
 	public class PadTemplate : Gst.Object {
-		[CCode (has_construct_function = false)]
+		[CCode (has_construct_function = false, returns_floating_reference = true)]
 		public PadTemplate (string name_template, Gst.PadDirection direction, Gst.PadPresence presence, Gst.Caps caps);
 		public Gst.Caps get_caps ();
 		public Gst.Caps caps { owned get; construct; }
@@ -1394,7 +1397,7 @@ namespace Gst {
 	public class Pipeline : Gst.Bin, Gst.ChildProxy {
 		public weak Gst.Clock fixed_clock;
 		public Gst.ClockTime stream_time;
-		[CCode (has_construct_function = false, type = "GstElement*")]
+		[CCode (has_construct_function = false, returns_floating_reference = true, type = "GstElement*")]
 		public Pipeline (string? name);
 		public void auto_clock ();
 		public bool get_auto_flush_bus ();
@@ -2995,9 +2998,9 @@ namespace Gst {
 	public static bool is_initialized ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.ParamSpec param_spec_fraction (string name, string nick, string blurb, int min_num, int min_denom, int max_num, int max_denom, int default_num, int default_denom, GLib.ParamFlags flags);
-	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_bin_from_description_full")]
+	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_bin_from_description_full", returns_floating_reference = true)]
 	public static Gst.Bin parse_bin_from_description (string bin_description, bool ghost_unlinked_pads, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
-	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_launch_full")]
+	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_launch_full", returns_floating_reference = true)]
 	public static Gst.Element parse_launch (string pipeline_description, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_launchv_full")]
 	public static Gst.Element parse_launchv ([CCode (array_length = false, array_null_terminated = true)] string[] argv, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;

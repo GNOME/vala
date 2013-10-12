@@ -79,6 +79,19 @@ parse_launch_full name="parse_launch"
 parse_launchv skip
 parse_launchv_full name="parse_launchv"
 
+// Floating references (bug #657202)
+parse_bin_from_description_full floating
+PadTemplate.new floating
+Element.make_from_uri floating
+GhostPad.new floating
+Pipeline.new floating
+Pad.new floating
+ElementFactory
+  .create floating
+  .make floating
+Bin.new floating
+parse_launch_full floating
+
 // Default values
 Bus
   .add_signal_watch_full.priority default=GLib.Priority.DEFAULT
