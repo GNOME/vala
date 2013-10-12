@@ -21,3 +21,6 @@ VideoOverlayRectangle base_type="Gst.MiniObject"
 // Bug #685833
 VideoCodecFrame
   .abidata skip
+
+VideoInfo
+  .finfo nullable unowned=false

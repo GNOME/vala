@@ -384,7 +384,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", has_type_id = false)]
 		[GIR (name = "VideoInfo")]
 		public struct Info {
-			public Gst.Video.FormatInfo finfo;
+			public Gst.Video.FormatInfo? finfo;
 			public Gst.Video.InterlaceMode interlace_mode;
 			public Gst.Video.Flags flags;
 			public int width;
