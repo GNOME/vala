@@ -928,7 +928,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			if (!cl.is_compact && vcall == null && (direction & 1) == 1) {
 				cparam_map.set (get_param_pos (get_ccode_instance_pos (m)), new CCodeParameter ("object_type", "GType"));
 			}
-		} else if (m.binding == MemberBinding.INSTANCE || (m.parent_symbol is Struct && m is CreationMethod)) {
+		} else if ((m.binding == MemberBinding.INSTANCE || (m.parent_symbol is Struct && m is CreationMethod))
+		    && (direction != 2 || get_ccode_finish_instance (m))) {
 			TypeSymbol parent_type = find_parent_type (m);
 			DataType this_type;
 			if (parent_type is Class) {
