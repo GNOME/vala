@@ -75,6 +75,7 @@ public class Vala.GirParser : CodeVisitor {
 		DESTROYS_INSTANCE,
 		BASE_TYPE,
 		FINISH_NAME,
+		FINISH_INSTANCE,
 		SYMBOL_TYPE,
 		INSTANCE_IDX,
 		EXPERIMENTAL,
@@ -3147,6 +3148,9 @@ public class Vala.GirParser : CodeVisitor {
 
 		if (metadata.has_argument (ArgumentType.FINISH_NAME)) {
 			s.set_attribute_string ("CCode", "finish_name", metadata.get_string (ArgumentType.FINISH_NAME));
+		}
+		if (metadata.has_argument (ArgumentType.FINISH_INSTANCE)) {
+			s.set_attribute_bool ("CCode", "finish_instance", metadata.get_bool (ArgumentType.FINISH_INSTANCE));
 		}
 
 		int instance_idx = -2;

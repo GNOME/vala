@@ -455,6 +455,21 @@ public class Vala.CCodeAttribute : AttributeCache {
 		}
 	}
 
+	public bool finish_instance {
+		get {
+			if (_finish_instance == null) {
+				Method m = node as Method;
+				bool is_creation_method = m is CreationMethod;
+				if (ccode == null || m == null || m.is_abstract || m.is_virtual) {
+					_finish_instance = !is_creation_method;
+				} else {
+					_finish_instance = ccode.get_bool ("finish_instance", !is_creation_method);
+				}
+			}
+			return _finish_instance;
+		}
+	}
+
 	public string delegate_target_name {
 		get {
 			if (_delegate_target_name == null) {
@@ -536,6 +551,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private string _finish_name;
 	private string _finish_vfunc_name;
 	private string _finish_real_name;
+	private bool? _finish_instance;
 	private string _real_name;
 	private string _delegate_target_name;
 	private string _ctype;

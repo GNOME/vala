@@ -4738,6 +4738,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 
+			if (m != null && m.parent_symbol is Class) {
+				if (get_ccode_finish_instance (m)) {
+					var tmp = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_source_object_");
+					out_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), tmp);
+				}
+			}
+
 			// append C arguments in the right order
 
 			int last_pos;
@@ -6225,6 +6232,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public static bool get_ccode_is_gboxed (TypeSymbol sym) {
 		return get_ccode_free_function (sym) == "g_boxed_free";
+	}
+
+	public static bool get_ccode_finish_instance (CodeNode node) {
+		return get_ccode_attribute (node).finish_instance;
 	}
 
 	public static string get_ccode_type_id (CodeNode node) {

@@ -226,8 +226,15 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (instance_value));
 			}
 
-			in_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), instance);
-			out_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), instance);
+			if (expr.is_yield_expression) {
+				in_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), instance);
+				if (get_ccode_finish_instance (m)) {
+					out_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), instance);
+				}
+			} else if (ma.member_name != "end" || get_ccode_finish_instance (m)) {
+				out_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), instance);
+				in_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), instance);
+			}
 		} else if (m != null && m.binding == MemberBinding.CLASS) {
 			var cl = (Class) m.parent_symbol;
 			var cast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_upper_case_name (cl, null) + "_CLASS"));
