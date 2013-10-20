@@ -107,7 +107,7 @@ namespace Gdk {
 		public bool save_to_callbackv ([CCode (delegate_target_pos = 1.5)] Gdk.PixbufSaveFunc save_func, string type, [CCode (array_length = false, array_null_terminated = true)] string[] option_keys, [CCode (array_length = false, array_null_terminated = true)] string[] option_values) throws GLib.Error;
 		[Version (since = "2.14")]
 		public bool save_to_stream (GLib.OutputStream stream, string type, GLib.Cancellable? cancellable = null, ...) throws GLib.Error;
-		[CCode (finish_name = "gdk_pixbuf_save_to_stream_finish")]
+		[CCode (finish_instance = false, finish_name = "gdk_pixbuf_save_to_stream_finish", sentinel = "NULL")]
 		[Version (since = "2.24")]
 		public async void save_to_stream_async (GLib.OutputStream stream, string type, GLib.Cancellable? cancellable = null, ...) throws GLib.Error;
 		[Version (since = "2.36")]
