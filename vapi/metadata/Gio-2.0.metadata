@@ -417,3 +417,5 @@ TlsBackend
   .get_client_connection_type abstract
   .get_file_database_type abstract
   .get_server_connection_type abstract
+IOStream
+  .splice_async finish_instance=false
