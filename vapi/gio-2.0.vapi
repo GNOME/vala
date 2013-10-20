@@ -1474,6 +1474,7 @@ namespace GLib {
 		public bool is_closed ();
 		[Version (since = "2.22")]
 		public bool set_pending () throws GLib.Error;
+		[CCode (finish_instance = false)]
 		[Version (since = "2.28")]
 		public async bool splice_async (GLib.IOStream stream2, GLib.IOStreamSpliceFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoAccessorMethod]
