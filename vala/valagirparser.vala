@@ -1041,7 +1041,11 @@ public class Vala.GirParser : CodeVisitor {
 				} else if (girdata["deprecated-version"] != null) {
 					symbol.set_attribute_string ("Deprecated", "since", girdata.get ("deprecated-version"));
 				}
-				if (metadata.get_bool (ArgumentType.DEPRECATED)) {
+				if (metadata.has_argument (ArgumentType.DEPRECATED)) {
+					if (metadata.get_bool (ArgumentType.DEPRECATED)) {						
+						symbol.set_attribute ("Deprecated", true);
+					}
+				} else if (girdata["deprecated"] != null) {
 					symbol.set_attribute ("Deprecated", true);
 				}
 
@@ -2025,7 +2029,15 @@ public class Vala.GirParser : CodeVisitor {
 		}
 	}
 
+	void skip_other_docs () {
+		while (current_token == MarkupTokenType.START_ELEMENT && (reader.name == "doc-deprecated" || reader.name == "doc-version")) {
+			skip_element ();
+		}
+	}
+
 	GirComment? parse_symbol_doc () {
+		skip_other_docs ();
+
 		if (reader.name != "doc") {
 			return null;
 		}
@@ -2041,10 +2053,14 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		end_element ("doc");
+
+		skip_other_docs ();
 		return comment;
 	}
 
 	Comment? parse_doc () {
+		skip_other_docs ();
+
 		if (reader.name != "doc") {
 			return null;
 		}
@@ -2060,6 +2076,8 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		end_element ("doc");
+
+		skip_other_docs ();
 		return comment;
 	}
 

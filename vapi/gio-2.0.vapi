@@ -1227,10 +1227,14 @@ namespace GLib {
 	[Compact]
 	public class IOSchedulerJob {
 		[CCode (cheader_filename = "gio/gio.h", cname = "g_io_scheduler_cancel_all_jobs")]
+		[Deprecated]
 		public static void cancel_all ();
 		[CCode (cheader_filename = "gio/gio.h", cname = "g_io_scheduler_push_job")]
+		[Deprecated]
 		public static void push ([CCode (delegate_target_pos = 1.33333, destroy_notify_pos = 1.66667)] owned GLib.IOSchedulerJobFunc job_func, int io_priority, GLib.Cancellable? cancellable = null);
+		[Deprecated]
 		public bool send_to_mainloop (owned GLib.SourceFunc func);
+		[Deprecated]
 		public void send_to_mainloop_async (owned GLib.SourceFunc func);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -1734,6 +1738,7 @@ namespace GLib {
 		public bool has_unapplied { get; }
 		[NoAccessorMethod]
 		public string path { owned get; construct; }
+		[Deprecated]
 		[NoAccessorMethod]
 		public string schema { owned get; construct; }
 		[NoAccessorMethod]

@@ -425,6 +425,7 @@ namespace Poppler {
 		public void render_for_printing_with_options ([CCode (type = "cairo_t*")] Cairo.Context cairo, Poppler.PrintFlags options);
 		public void render_selection ([CCode (type = "cairo_t*")] Cairo.Context cairo, Poppler.Rectangle selection, Poppler.Rectangle old_selection, Poppler.SelectionStyle style, Poppler.Color glyph_color, Poppler.Color background_color);
 		public void render_to_ps (Poppler.PSFile ps_file);
+		[Deprecated]
 		public static void selection_region_free (GLib.List<Poppler.Rectangle> region);
 		public string label { owned get; }
 	}
