@@ -1041,7 +1041,11 @@ public class Vala.GirParser : CodeVisitor {
 				} else if (girdata["deprecated-version"] != null) {
 					symbol.set_attribute_string ("Deprecated", "since", girdata.get ("deprecated-version"));
 				}
-				if (metadata.get_bool (ArgumentType.DEPRECATED)) {
+				if (metadata.has_argument (ArgumentType.DEPRECATED)) {
+					if (metadata.get_bool (ArgumentType.DEPRECATED)) {						
+						symbol.set_attribute ("Deprecated", true);
+					}
+				} else if (girdata["deprecated"] != null) {
 					symbol.set_attribute ("Deprecated", true);
 				}
 
@@ -2053,21 +2057,29 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	Comment? parse_doc () {
-		if (reader.name != "doc") {
-			return null;
-		}
-
-		start_element ("doc");
-		next ();
-
 		Comment? comment = null;
 
-		if (current_token == MarkupTokenType.TEXT) {
-			comment = new Comment (reader.content, current.source_reference);
-			next ();
+		while (current_token == MarkupTokenType.START_ELEMENT) {
+			unowned string reader_name = reader.name;
+
+			if (reader_name == "doc") {
+				start_element ("doc");
+				next ();
+
+
+				if (current_token == MarkupTokenType.TEXT) {
+					comment = new Comment (reader.content, current.source_reference);
+					next ();
+				}
+
+				end_element ("doc");
+			} else if (reader_name == "doc-version" || reader_name == "doc-deprecated" || reader_name == "doc-stability") {
+				skip_element ();
+			} else {
+				break;
+			}
 		}
 
-		end_element ("doc");
 		return comment;
 	}
 

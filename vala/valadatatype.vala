@@ -442,11 +442,11 @@ public abstract class Vala.DataType : CodeNode {
 	}
 
 	public virtual DataType get_actual_type (DataType? derived_instance_type, MemberAccess? method_access, CodeNode node_reference) {
-		if (derived_instance_type == null && method_access == null) {
-			return this;
-		}
+		DataType result = this.copy ();
 
-		DataType result = this;
+		if (derived_instance_type == null && method_access == null) {
+			return result;
+		}
 
 		if (result is GenericType) {
 			result = SemanticAnalyzer.get_actual_type (derived_instance_type, method_access, (GenericType) result, node_reference);
@@ -454,7 +454,6 @@ public abstract class Vala.DataType : CodeNode {
 			// they can never be resolved and are not related to the instance type
 		} else if (result.type_argument_list != null) {
 			// recursely get actual types for type arguments
-			result = result.copy ();
 			for (int i = 0; i < result.type_argument_list.size; i++) {
 				result.type_argument_list[i] = result.type_argument_list[i].get_actual_type (derived_instance_type, method_access, node_reference);
 			}

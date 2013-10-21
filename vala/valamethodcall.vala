@@ -579,7 +579,7 @@ public class Vala.MethodCall : Expression {
 			}
 		}
 
-		formal_value_type = ret_type;
+		formal_value_type = ret_type.copy ();
 		value_type = formal_value_type.get_actual_type (target_object_type, call as MemberAccess, this);
 
 		bool may_throw = false;
