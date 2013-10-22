@@ -725,9 +725,9 @@ namespace GLib {
 		public unowned string get_name ();
 		public string? get_name_owner ();
 		[CCode (cname = "g_dbus_object_manager_client_new", finish_function = "g_dbus_object_manager_client_new_finish")]
-		public static async GLib.DBusObjectManagerClient @new (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc get_proxy_type_func, GLib.Cancellable? cancellable = null);
+		public static async GLib.DBusObjectManagerClient @new (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cname = "g_dbus_object_manager_client_new_for_bus", finish_function = "g_dbus_object_manager_client_new_for_bus_finish")]
-		public static async GLib.DBusObjectManagerClient new_for_bus (GLib.BusType bus_type, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc get_proxy_type_func, GLib.Cancellable? cancellable = null);
+		public static async GLib.DBusObjectManagerClient new_for_bus (GLib.BusType bus_type, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "GDBusObjectManager*")]
 		public DBusObjectManagerClient.sync (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string? name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc? get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.BusType bus_type { construct; }
