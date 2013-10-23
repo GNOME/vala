@@ -263,11 +263,11 @@ namespace Gtk {
 		public unowned Gdk.Pixbuf get_pixbuf ();
 		[Deprecated (since = "3.10")]
 		public unowned string get_stock_id ();
-		public void set_gicon (GLib.Icon icon);
-		public void set_icon_name (string icon_name);
-		public void set_pixbuf (Gdk.Pixbuf pixbuf);
+		public void set_gicon (GLib.Icon? icon);
+		public void set_icon_name (string? icon_name);
+		public void set_pixbuf (Gdk.Pixbuf? pixbuf);
 		[Deprecated (since = "3.10")]
-		public void set_stock_id (string stock_id);
+		public void set_stock_id (string? stock_id);
 		public GLib.Icon gicon { get; set; }
 		public string icon_name { get; set; }
 		public Gdk.Pixbuf pixbuf { get; set; }
