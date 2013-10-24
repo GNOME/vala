@@ -59,7 +59,7 @@ namespace Notify {
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static unowned string get_app_name ();
 	[CCode (cheader_filename = "libnotify/notify.h")]
-	public static unowned GLib.List get_server_caps ();
+	public static GLib.List<string> get_server_caps ();
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static bool get_server_info (out unowned string ret_name, out unowned string ret_vendor, out unowned string ret_version, out unowned string ret_spec_version);
 	[CCode (cheader_filename = "libnotify/notify.h")]
