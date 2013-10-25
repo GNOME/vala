@@ -4068,7 +4068,7 @@ namespace GLib {
 
 	public struct HashTableIter<K,V> {
 		public HashTableIter (GLib.HashTable<K,V> table);
-		public bool next (out unowned K key, out unowned V value);
+		public bool next ([CCode (type = "gpointer*")] out unowned K key, [CCode (type = "gpointer*")] out unowned V value);
 		public void remove ();
 		public void steal ();
 		public unowned GLib.HashTable<K,V> get_hash_table ();
