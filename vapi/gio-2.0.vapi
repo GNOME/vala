@@ -2533,7 +2533,7 @@ namespace GLib {
 		public abstract uint hash ();
 		public abstract bool is_native ();
 		public bool load_contents (GLib.Cancellable? cancellable, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
-		public async bool load_contents_async (GLib.Cancellable? cancellable = null, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
+		public async bool load_contents_async (GLib.Cancellable? cancellable = null, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize", type = "char**")] out uint8[] contents, out string etag_out) throws GLib.Error;
 		public async bool load_partial_contents_async (GLib.Cancellable? cancellable = null, GLib.FileReadMoreCallback read_more_callback, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
 		public abstract bool make_directory (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async bool make_directory_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -2577,7 +2577,7 @@ namespace GLib {
 		public abstract GLib.FileOutputStream replace (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async GLib.FileOutputStream replace_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool replace_contents ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, out string new_etag, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public async bool replace_contents_async ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string new_etag) throws GLib.Error;
+		public async bool replace_contents_async ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize", type = "const char*")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string new_etag) throws GLib.Error;
 		public abstract GLib.FileIOStream replace_readwrite (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async GLib.FileIOStream replace_readwrite_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.File resolve_relative_path (string relative_path);
