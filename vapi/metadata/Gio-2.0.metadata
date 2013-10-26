@@ -108,9 +108,6 @@ Drive
   .get_sort_key#virtual_method virtual
 File
   .load_contents.cancellable#parameter default=()
-  .load_contents_async.contents#parameter type="char**"
-  .load_partial_contents_async.contents#parameter type="char**"
-  .replace_contents_async.contents#parameter type="const char*"
   .monitor_dir* throws="GLib.IOError"
   .monitor_file throws="GLib.IOError"
 FileInfo
