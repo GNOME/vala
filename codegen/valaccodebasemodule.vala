@@ -5491,7 +5491,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public TargetValue transform_value (TargetValue value, DataType? target_type, CodeNode node) {
 		var type = value.value_type;
 		var result = ((GLibValue) value).copy ();
-		var requires_temp_value = false;
 
 		if (type.value_owned
 		    && type.floating_reference) {
@@ -5547,7 +5546,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					temp_ref_values.insert (0, ((GLibValue) temp_value).copy ());
 					store_value (temp_value, result);
 					result.cvalue = get_cvalue_ (temp_value);
-					requires_temp_value = false;
 				}
 			}
 		}
@@ -5608,7 +5606,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_expression (ccall);
 
 			result = (GLibValue) temp_value;
-			requires_temp_value = false;
 		} else if (gvariant_boxing) {
 			// implicit conversion to GVariant
 			string variant_func = "_variant_new%d".printf (++next_variant_function_id);
@@ -5643,7 +5640,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cfile.add_function (cfunc);
 
 			result.cvalue = ccall;
-			requires_temp_value = true;
+			result.value_type.value_owned = true;
+
+			result = (GLibValue) store_temp_value (result, node);
+			if (!target_type.value_owned) {
+				// value leaked
+				temp_ref_values.insert (0, ((GLibValue) result).copy ());
+			}
 		} else if (boxing) {
 			// value needs to be boxed
 
@@ -5651,7 +5654,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (!result.lvalue || !result.value_type.equals (value.value_type)) {
 				result.cvalue = get_implicit_cast_expression (result.cvalue, value.value_type, result.value_type, node);
 				result = (GLibValue) store_temp_value (result, node);
-				requires_temp_value = false;
 			}
 			result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, result.cvalue);
 			result.lvalue = false;
@@ -5665,10 +5667,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var old_cexpr = result.cvalue;
 			result.cvalue = get_implicit_cast_expression (result.cvalue, type, target_type, node);
 			result.lvalue = result.lvalue && result.cvalue == old_cexpr;
-		}
-
-		if (requires_temp_value && !(target_type is ArrayType && ((ArrayType) target_type).inline_allocated)) {
-			result = (GLibValue) store_temp_value (result, node);
 		}
 
 		if (!gvalue_boxing && !gvariant_boxing && target_type.value_owned && (!type.value_owned || boxing || unboxing) && requires_copy (target_type) && !(type is NullType)) {
