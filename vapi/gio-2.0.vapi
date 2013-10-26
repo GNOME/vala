@@ -193,6 +193,8 @@ namespace GLib {
 		public const string STANDARD_TYPE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAILING_FAILED")]
 		public const string THUMBNAILING_FAILED;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_IS_VALID")]
+		public const string THUMBNAIL_IS_VALID;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_PATH")]
 		public const string THUMBNAIL_PATH;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_TIME_ACCESS")]
@@ -301,13 +303,15 @@ namespace GLib {
 		public int run ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] string[]? argv = null);
 		[NoWrapper]
 		public virtual void run_mainloop ();
-		[Deprecated (since = "2.32:Use the #GActionMap interface instead.  Never ever mix use of this API with use of #GActionMap on the same @application or things will go very badly wrong.  This function is known to introduce buggy behaviour (ie")]
+		public void send_notification (string? id, GLib.Notification notification);
+		[Deprecated (since = "2.32")]
 		public void set_action_group (GLib.ActionGroup? action_group);
 		public void set_application_id (string? application_id);
 		public void set_default ();
 		public void set_flags (GLib.ApplicationFlags flags);
 		public void set_inactivity_timeout (uint inactivity_timeout);
 		public void unmark_busy ();
+		public void withdraw_notification (string id);
 		public GLib.ActionGroup action_group { set; }
 		public string application_id { get; set construct; }
 		public GLib.ApplicationFlags flags { get; set; }
@@ -1109,6 +1113,7 @@ namespace GLib {
 		public void set_rate_limit (int limit_msecs);
 		[NoAccessorMethod]
 		public bool cancelled { get; }
+		public GLib.MainContext context { construct; }
 		[NoAccessorMethod]
 		public int rate_limit { get; set; }
 		public virtual signal void changed (GLib.File file, GLib.File? other_file, GLib.FileMonitorEvent event_type);
@@ -1412,6 +1417,10 @@ namespace GLib {
 		public void insert_item (int position, GLib.MenuItem item);
 		public void insert_section (int position, string? label, GLib.MenuModel section);
 		public void insert_submenu (int position, string? label, GLib.MenuModel submenu);
+		public static void markup_parser_start (GLib.MarkupParseContext context, string domain, GLib.HashTable<void*,void*> objects);
+		public static void markup_parser_start_menu (GLib.MarkupParseContext context, string domain, GLib.HashTable<void*,void*> objects);
+		public static void markup_print_stderr (GLib.MenuModel model);
+		public static GLib.StringBuilder markup_print_string (GLib.StringBuilder string, GLib.MenuModel model, int indent, int tabstop);
 		public void prepend (string? label, string? detailed_action);
 		public void prepend_item (GLib.MenuItem item);
 		public void prepend_section (string? label, GLib.MenuModel section);
@@ -1541,6 +1550,19 @@ namespace GLib {
 		public string protocol { get; construct; }
 		public string scheme { get; set; }
 		public string service { get; construct; }
+	}
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_notification_get_type ()")]
+	public class Notification : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Notification (string title);
+		public void add_button (string label, string detailed_action);
+		public void add_button_with_target_value (string label, string action, GLib.Variant? target);
+		public void set_body (string? body);
+		public void set_default_action (string detailed_action);
+		public void set_default_action_and_target_value (string action, GLib.Variant? target);
+		public void set_icon (GLib.Icon icon);
+		public void set_title (string title);
+		public void set_urgent (bool urgent);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public abstract class OutputStream : GLib.Object {
@@ -1738,7 +1760,7 @@ namespace GLib {
 		public bool has_unapplied { get; }
 		[NoAccessorMethod]
 		public string path { owned get; construct; }
-		[Deprecated]
+		[Deprecated (since = "2.32")]
 		[NoAccessorMethod]
 		public string schema { owned get; construct; }
 		[NoAccessorMethod]
@@ -2056,6 +2078,54 @@ namespace GLib {
 		public uint16 get_weight ();
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.List<GLib.SrvTarget> list_sort (owned GLib.List<GLib.SrvTarget> targets);
+	}
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_subprocess_get_type ()")]
+	public class Subprocess : GLib.Object, GLib.Initable {
+		[CCode (has_construct_function = false)]
+		protected Subprocess ();
+		public bool communicate (GLib.Bytes stdin_buf, GLib.Cancellable? cancellable = null, out GLib.Bytes stdout_buf, out GLib.Bytes stderr_buf) throws GLib.Error;
+		public async bool communicate_async (GLib.Bytes stdin_buf, GLib.Cancellable? cancellable = null, out GLib.Bytes stdout_buf, out GLib.Bytes stderr_buf) throws GLib.Error;
+		public bool communicate_utf8 (string stdin_buf, GLib.Cancellable? cancellable = null, out string stdout_buf, out string stderr_buf) throws GLib.Error;
+		public async bool communicate_utf8_async (string stdin_buf, GLib.Cancellable? cancellable = null, out string stdout_buf, out string stderr_buf) throws GLib.Error;
+		public void force_exit ();
+		public int get_exit_status ();
+		public unowned string get_identifier ();
+		public bool get_if_exited ();
+		public bool get_if_signaled ();
+		public int get_status ();
+		public bool get_successful ();
+		public int get_term_sig ();
+		[CCode (cname = "g_subprocess_newv", has_construct_function = false)]
+		public Subprocess.newv (string argv, GLib.SubprocessFlags flags) throws GLib.Error;
+		public void send_signal (int signal_num);
+		public bool wait (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool wait_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public bool wait_check (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool wait_check_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] argv { construct; }
+		public GLib.SubprocessFlags flags { construct; }
+	}
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_subprocess_launcher_get_type ()")]
+	public class SubprocessLauncher : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public SubprocessLauncher (GLib.SubprocessFlags flags);
+		public unowned string getenv (string variable);
+		public void set_child_setup (owned GLib.SpawnChildSetupFunc child_setup);
+		public void set_cwd (string cwd);
+		public void set_environ (string environ);
+		public void set_flags (GLib.SubprocessFlags flags);
+		public void set_stderr_file_path (string path);
+		public void set_stdin_file_path (string path);
+		public void set_stdout_file_path (string path);
+		public void setenv (string variable, string value, bool overwrite);
+		public GLib.Subprocess spawnv (string argv) throws GLib.Error;
+		public void take_fd (int source_fd, int target_fd);
+		public void take_stderr_fd (int fd);
+		public void take_stdin_fd (int fd);
+		public void take_stdout_fd (int fd);
+		public void unsetenv (string variable);
+		public GLib.SubprocessFlags flags { construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_task_get_type ()")]
 	public class Task : GLib.Object, GLib.AsyncResult {
@@ -2907,7 +2977,8 @@ namespace GLib {
 		INVALID,
 		LINUX_UCRED,
 		FREEBSD_CMSGCRED,
-		OPENBSD_SOCKPEERCRED
+		OPENBSD_SOCKPEERCRED,
+		SOLARIS_UCRED
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_CALL_FLAGS_", type_id = "g_dbus_call_flags_get_type ()")]
 	[Flags]
@@ -2990,7 +3061,8 @@ namespace GLib {
 		DO_NOT_LOAD_PROPERTIES,
 		DO_NOT_CONNECT_SIGNALS,
 		DO_NOT_AUTO_START,
-		GET_INVALIDATED_PROPERTIES
+		GET_INVALIDATED_PROPERTIES,
+		DO_NOT_AUTO_START_AT_CONSTRUCTION
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_SEND_MESSAGE_FLAGS_", type_id = "g_dbus_send_message_flags_get_type ()")]
 	[Flags]
@@ -3258,6 +3330,19 @@ namespace GLib {
 		STREAM,
 		DATAGRAM,
 		SEQPACKET
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SUBPROCESS_FLAGS_", type_id = "g_subprocess_flags_get_type ()")]
+	[Flags]
+	public enum SubprocessFlags {
+		NONE,
+		STDIN_PIPE,
+		STDIN_INHERIT,
+		STDOUT_PIPE,
+		STDOUT_SILENCE,
+		STDERR_PIPE,
+		STDERR_SILENCE,
+		STDERR_MERGE,
+		INHERIT_FDS
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TEST_DBUS_", type_id = "g_test_dbus_flags_get_type ()")]
 	[Flags]
