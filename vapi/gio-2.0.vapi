@@ -1417,10 +1417,6 @@ namespace GLib {
 		public void insert_item (int position, GLib.MenuItem item);
 		public void insert_section (int position, string? label, GLib.MenuModel section);
 		public void insert_submenu (int position, string? label, GLib.MenuModel submenu);
-		public static void markup_parser_start (GLib.MarkupParseContext context, string domain, GLib.HashTable<void*,void*> objects);
-		public static void markup_parser_start_menu (GLib.MarkupParseContext context, string domain, GLib.HashTable<void*,void*> objects);
-		public static void markup_print_stderr (GLib.MenuModel model);
-		public static GLib.StringBuilder markup_print_string (GLib.StringBuilder string, GLib.MenuModel model, int indent, int tabstop);
 		public void prepend (string? label, string? detailed_action);
 		public void prepend_item (GLib.MenuItem item);
 		public void prepend_section (string? label, GLib.MenuModel section);
@@ -1710,17 +1706,20 @@ namespace GLib {
 		public void @get (string key, string format, ...);
 		public bool get_boolean (string key);
 		public GLib.Settings get_child (string name);
+		public GLib.Variant get_default_value (string key);
 		public double get_double (string key);
 		public int get_enum (string key);
 		public uint get_flags (string key);
 		public bool get_has_unapplied ();
 		public int get_int (string key);
 		public void* get_mapped (string key, GLib.SettingsGetMapping mapping);
+		[Deprecated (since = "2.40")]
 		public GLib.Variant get_range (string key);
 		public string get_string (string key);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_strv (string key);
 		public uint get_uint (string key);
+		public GLib.Variant get_user_value (string key);
 		public GLib.Variant get_value (string key);
 		public bool is_writable (string name);
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -1728,9 +1727,12 @@ namespace GLib {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] list_keys ();
 		[CCode (array_length = false, array_null_terminated = true)]
+		[Deprecated (since = "2.40")]
 		public static unowned string[] list_relocatable_schemas ();
 		[CCode (array_length = false, array_null_terminated = true)]
+		[Deprecated (since = "2.40")]
 		public static unowned string[] list_schemas ();
+		[Deprecated (since = "2.40")]
 		public bool range_check (string key, GLib.Variant value);
 		public void reset (string key);
 		public void revert ();
@@ -1781,8 +1783,22 @@ namespace GLib {
 	[Compact]
 	public class SettingsSchema {
 		public unowned string get_id ();
+		public GLib.SettingsSchemaKey get_key (string key);
 		public unowned string get_path ();
+		public bool has_key (string key);
 		public GLib.SettingsSchema @ref ();
+		public void unref ();
+	}
+	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_settings_schema_key_ref", type_id = "g_settings_schema_key_get_type ()", unref_function = "g_settings_schema_key_unref")]
+	[Compact]
+	public class SettingsSchemaKey {
+		public GLib.Variant get_default_value ();
+		public unowned string get_description ();
+		public GLib.Variant get_range ();
+		public unowned string get_summary ();
+		public unowned GLib.VariantType get_value_type ();
+		public bool range_check (GLib.Variant value);
+		public GLib.SettingsSchemaKey @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_settings_schema_source_ref", type_id = "g_settings_schema_source_get_type ()", unref_function = "g_settings_schema_source_unref")]
@@ -1792,6 +1808,7 @@ namespace GLib {
 		public SettingsSchemaSource.from_directory (string directory, GLib.SettingsSchemaSource? parent, bool trusted) throws GLib.Error;
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static unowned GLib.SettingsSchemaSource get_default ();
+		public void list_schemas (bool recursive, out string non_relocatable, out string relocatable);
 		public GLib.SettingsSchema? lookup (string schema_id, bool recursive);
 		public GLib.SettingsSchemaSource @ref ();
 		public void unref ();
@@ -2292,6 +2309,9 @@ namespace GLib {
 		public virtual GLib.TlsInteractionResult ask_password (GLib.TlsPassword password, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async GLib.TlsInteractionResult ask_password_async (GLib.TlsPassword password, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.TlsInteractionResult invoke_ask_password (GLib.TlsPassword password, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GLib.TlsInteractionResult invoke_request_certificate (GLib.TlsConnection connection, GLib.TlsCertificateRequestFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual GLib.TlsInteractionResult request_certificate (GLib.TlsConnection connection, GLib.TlsCertificateRequestFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async GLib.TlsInteractionResult request_certificate_async (GLib.TlsConnection connection, GLib.TlsCertificateRequestFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class TlsPassword : GLib.Object {
@@ -3366,6 +3386,10 @@ namespace GLib {
 		INSECURE,
 		GENERIC_ERROR,
 		VALIDATE_ALL
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_CERTIFICATE_REQUEST_", type_id = "g_tls_certificate_request_flags_get_type ()")]
+	public enum TlsCertificateRequestFlags {
+		NONE
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_DATABASE_LOOKUP_", type_id = "g_tls_database_lookup_flags_get_type ()")]
 	public enum TlsDatabaseLookupFlags {
