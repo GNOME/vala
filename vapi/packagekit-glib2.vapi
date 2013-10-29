@@ -196,6 +196,12 @@ namespace Pk {
 	public class Details : Pk.Source {
 		[CCode (has_construct_function = false)]
 		public Details ();
+		public unowned string get_description ();
+		public Pk.Group get_group ();
+		public unowned string get_license ();
+		public unowned string get_package_id ();
+		public uint64 get_size ();
+		public unowned string get_url ();
 		[NoAccessorMethod]
 		public string description { owned get; set; }
 		[NoAccessorMethod]
@@ -640,7 +646,6 @@ namespace Pk {
 		public bool user_declined (uint request);
 		public async void what_provides_async (Pk.Bitfield filters, Pk.Provides provides, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results what_provides_sync (Pk.Bitfield filters, Pk.Provides provides, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		public bool interactive { get; set; }
 		public bool only_download { get; set; }
 		public bool simulate { get; set; }
 	}
