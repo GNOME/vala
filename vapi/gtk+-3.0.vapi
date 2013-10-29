@@ -579,6 +579,7 @@ namespace Gtk {
 		public Application (string application_id, GLib.ApplicationFlags flags);
 		public void add_accelerator (string accelerator, string action_name, GLib.Variant? parameter);
 		public void add_window (Gtk.Window window);
+		public string get_accels_for_action (string detailed_action_name);
 		public unowned Gtk.Window get_active_window ();
 		public unowned GLib.MenuModel get_app_menu ();
 		public unowned GLib.MenuModel get_menubar ();
@@ -586,8 +587,10 @@ namespace Gtk {
 		public unowned GLib.List<weak Gtk.Window> get_windows ();
 		public uint inhibit (Gtk.Window? window, Gtk.ApplicationInhibitFlags flags, string? reason);
 		public bool is_inhibited (Gtk.ApplicationInhibitFlags flags);
+		public string list_action_descriptions ();
 		public void remove_accelerator (string action_name, GLib.Variant? parameter);
 		public void remove_window (Gtk.Window window);
+		public void set_accels_for_action (string detailed_action_name, string accels);
 		public void set_app_menu (GLib.MenuModel app_menu);
 		public void set_menubar (GLib.MenuModel menubar);
 		public void uninhibit (uint cookie);
@@ -770,11 +773,13 @@ namespace Gtk {
 		public Builder.from_resource (string resource_path);
 		[CCode (has_construct_function = false)]
 		public Builder.from_string (string str, ssize_t length);
+		public unowned Gtk.Application get_application ();
 		public unowned GLib.Object get_object (string name);
 		public GLib.SList<weak GLib.Object> get_objects ();
 		public unowned string get_translation_domain ();
 		public virtual GLib.Type get_type_from_name (string type_name);
 		public unowned GLib.Callback lookup_callback_symbol (string callback_name);
+		public void set_application (Gtk.Application application);
 		public void set_translation_domain (string domain);
 		public bool value_from_string (GLib.ParamSpec pspec, string str, GLib.Value value) throws GLib.Error;
 		public bool value_from_string_type (GLib.Type type, string str, GLib.Value value) throws GLib.Error;
@@ -2076,6 +2081,72 @@ namespace Gtk {
 		public weak Gtk.Widget widget;
 		public int x;
 		public int y;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class FlowBox : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public FlowBox ();
+		public bool get_activate_on_single_click ();
+		public unowned Gtk.FlowBoxChild get_child_at_index (int idx);
+		public uint get_column_spacing ();
+		public bool get_homogeneous ();
+		public uint get_max_children_per_line ();
+		public uint get_min_children_per_line ();
+		public uint get_row_spacing ();
+		public GLib.List<weak Gtk.FlowBoxChild> get_selected_children ();
+		public Gtk.SelectionMode get_selection_mode ();
+		public void insert (Gtk.Widget widget, int position);
+		public void invalidate_filter ();
+		public void invalidate_sort ();
+		public void select_child (Gtk.FlowBoxChild child);
+		public void selected_foreach (owned Gtk.FlowBoxForeachFunc? func);
+		public void set_activate_on_single_click (bool single);
+		public void set_column_spacing (uint spacing);
+		public void set_filter_func (owned Gtk.FlowBoxFilterFunc? filter_func);
+		public void set_hadjustment (Gtk.Adjustment adjustment);
+		public void set_homogeneous (bool homogeneous);
+		public void set_max_children_per_line (uint n_children);
+		public void set_min_children_per_line (uint n_children);
+		public void set_row_spacing (uint spacing);
+		public void set_selection_mode (Gtk.SelectionMode mode);
+		public void set_sort_func (owned Gtk.FlowBoxSortFunc? sort_func);
+		public void set_vadjustment (Gtk.Adjustment adjustment);
+		public void unselect_child (Gtk.FlowBoxChild child);
+		public bool activate_on_single_click { get; set; }
+		public uint column_spacing { get; set; }
+		public bool homogeneous { get; set; }
+		public uint max_children_per_line { get; set; }
+		public uint min_children_per_line { get; set; }
+		public uint row_spacing { get; set; }
+		public Gtk.SelectionMode selection_mode { get; set; }
+		public virtual signal void activate_cursor_child ();
+		public virtual signal void child_activated (Gtk.Widget child);
+		public virtual signal void move_cursor (Gtk.MovementStep step, int count);
+		[HasEmitter]
+		public virtual signal void select_all ();
+		public virtual signal void selected_children_changed ();
+		public virtual signal void toggle_cursor_child ();
+		[HasEmitter]
+		public virtual signal void unselect_all ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class FlowBoxAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Selection {
+		[CCode (has_construct_function = false)]
+		protected FlowBoxAccessible ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class FlowBoxChild : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public FlowBoxChild ();
+		public void changed ();
+		public int get_index ();
+		public bool is_selected ();
+		public virtual signal void activate ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class FlowBoxChildAccessible : Gtk.ContainerAccessible, Atk.Component {
+		[CCode (has_construct_function = false)]
+		protected FlowBoxChildAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class FontButton : Gtk.Button, Atk.Implementor, Gtk.Buildable, Gtk.Actionable, Gtk.Activatable, Gtk.FontChooser {
@@ -5197,6 +5268,8 @@ namespace Gtk {
 		public bool backward_display_line (Gtk.TextIter iter);
 		public bool backward_display_line_start (Gtk.TextIter iter);
 		public void buffer_to_window_coords (Gtk.TextWindowType win, int buffer_x, int buffer_y, out int window_x, out int window_y);
+		[NoWrapper]
+		public virtual Gtk.TextBuffer create_buffer ();
 		public bool forward_display_line (Gtk.TextIter iter);
 		public bool forward_display_line_end (Gtk.TextIter iter);
 		public bool get_accepts_tab ();
@@ -5553,7 +5626,7 @@ namespace Gtk {
 		public void set_style (Gtk.ToolbarStyle style);
 		public void unset_icon_size ();
 		public void unset_style ();
-		public int icon_size { get; set; }
+		public Gtk.IconSize icon_size { get; set; }
 		[NoAccessorMethod]
 		public bool icon_size_set { get; set; }
 		public bool show_arrow { get; set; }
@@ -8025,7 +8098,16 @@ namespace Gtk {
 		SLIDE_UP,
 		SLIDE_DOWN,
 		SLIDE_LEFT_RIGHT,
-		SLIDE_UP_DOWN
+		SLIDE_UP_DOWN,
+		OVER_UP,
+		OVER_DOWN,
+		OVER_LEFT,
+		OVER_RIGHT,
+		UNDER_UP,
+		UNDER_DOWN,
+		UNDER_LEFT,
+		UNDER_RIGHT,
+		OVER_UP_DOWN
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_STATE_FLAG_")]
 	[Flags]
@@ -8239,6 +8321,12 @@ namespace Gtk {
 	public delegate bool EntryCompletionMatchFunc (Gtk.EntryCompletion completion, string key, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool FileFilterFunc (Gtk.FileFilterInfo filter_info);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public delegate bool FlowBoxFilterFunc (Gtk.FlowBoxChild child);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public delegate void FlowBoxForeachFunc (Gtk.FlowBox box, Gtk.FlowBoxChild child);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public delegate int FlowBoxSortFunc (Gtk.FlowBoxChild child1, Gtk.FlowBoxChild child2);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool FontFilterFunc (Pango.FontFamily family, Pango.FontFace face);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -8798,6 +8886,8 @@ namespace Gtk {
 	public const string STYLE_CLASS_MENUBAR;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_MENUITEM;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_NEEDS_ATTENTION;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_NOTEBOOK;
 	[CCode (cheader_filename = "gtk/gtk.h")]

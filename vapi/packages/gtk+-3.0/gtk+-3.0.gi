@@ -1721,6 +1721,29 @@
 				<parameter name="data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<callback name="GtkFlowBoxFilterFunc">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="child" type="GtkFlowBoxChild*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
+		<callback name="GtkFlowBoxForeachFunc">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="box" type="GtkFlowBox*"/>
+				<parameter name="child" type="GtkFlowBoxChild*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
+		<callback name="GtkFlowBoxSortFunc">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="child1" type="GtkFlowBoxChild*"/>
+				<parameter name="child2" type="GtkFlowBoxChild*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<callback name="GtkFontFilterFunc">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -5038,6 +5061,15 @@
 			<member name="GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN" value="5"/>
 			<member name="GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT" value="6"/>
 			<member name="GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN" value="7"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_OVER_UP" value="8"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_OVER_DOWN" value="9"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_OVER_LEFT" value="10"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_OVER_RIGHT" value="11"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_UNDER_UP" value="12"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_UNDER_DOWN" value="13"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_UNDER_LEFT" value="14"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT" value="15"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN" value="16"/>
 		</enum>
 		<enum name="GtkStateType" type-name="GtkStateType" get-type="gtk_state_type_get_type">
 			<member name="GTK_STATE_NORMAL" value="0"/>
@@ -6847,6 +6879,13 @@
 					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
 			</method>
+			<method name="get_accels_for_action" symbol="gtk_application_get_accels_for_action">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+					<parameter name="detailed_action_name" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="get_active_window" symbol="gtk_application_get_active_window">
 				<return-type type="GtkWindow*"/>
 				<parameters>
@@ -6894,6 +6933,12 @@
 					<parameter name="flags" type="GtkApplicationInhibitFlags"/>
 				</parameters>
 			</method>
+			<method name="list_action_descriptions" symbol="gtk_application_list_action_descriptions">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gtk_application_new">
 				<return-type type="GtkApplication*"/>
 				<parameters>
@@ -6914,6 +6959,14 @@
 				<parameters>
 					<parameter name="application" type="GtkApplication*"/>
 					<parameter name="window" type="GtkWindow*"/>
+				</parameters>
+			</method>
+			<method name="set_accels_for_action" symbol="gtk_application_set_accels_for_action">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+					<parameter name="detailed_action_name" type="gchar*"/>
+					<parameter name="accels" type="gchar**"/>
 				</parameters>
 			</method>
 			<method name="set_app_menu" symbol="gtk_application_set_app_menu">
@@ -7480,6 +7533,12 @@
 					<parameter name="object" type="GObject*"/>
 				</parameters>
 			</method>
+			<method name="get_application" symbol="gtk_builder_get_application">
+				<return-type type="GtkApplication*"/>
+				<parameters>
+					<parameter name="builder" type="GtkBuilder*"/>
+				</parameters>
+			</method>
 			<method name="get_object" symbol="gtk_builder_get_object">
 				<return-type type="GObject*"/>
 				<parameters>
@@ -7535,6 +7594,13 @@
 					<parameter name="length" type="gssize"/>
 				</parameters>
 			</constructor>
+			<method name="set_application" symbol="gtk_builder_set_application">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="builder" type="GtkBuilder*"/>
+					<parameter name="application" type="GtkApplication*"/>
+				</parameters>
+			</method>
 			<method name="set_translation_domain" symbol="gtk_builder_set_translation_domain">
 				<return-type type="void"/>
 				<parameters>
@@ -12507,6 +12573,302 @@
 					<parameter name="y" type="gint"/>
 				</parameters>
 			</method>
+		</object>
+		<object name="GtkFlowBox" parent="GtkContainer" type-name="GtkFlowBox" get-type="gtk_flow_box_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GtkOrientable"/>
+			</implements>
+			<method name="get_activate_on_single_click" symbol="gtk_flow_box_get_activate_on_single_click">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</method>
+			<method name="get_child_at_index" symbol="gtk_flow_box_get_child_at_index">
+				<return-type type="GtkFlowBoxChild*"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="idx" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_column_spacing" symbol="gtk_flow_box_get_column_spacing">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</method>
+			<method name="get_homogeneous" symbol="gtk_flow_box_get_homogeneous">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</method>
+			<method name="get_max_children_per_line" symbol="gtk_flow_box_get_max_children_per_line">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</method>
+			<method name="get_min_children_per_line" symbol="gtk_flow_box_get_min_children_per_line">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</method>
+			<method name="get_row_spacing" symbol="gtk_flow_box_get_row_spacing">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</method>
+			<method name="get_selected_children" symbol="gtk_flow_box_get_selected_children">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</method>
+			<method name="get_selection_mode" symbol="gtk_flow_box_get_selection_mode">
+				<return-type type="GtkSelectionMode"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</method>
+			<method name="insert" symbol="gtk_flow_box_insert">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="position" type="gint"/>
+				</parameters>
+			</method>
+			<method name="invalidate_filter" symbol="gtk_flow_box_invalidate_filter">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</method>
+			<method name="invalidate_sort" symbol="gtk_flow_box_invalidate_sort">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_flow_box_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="select_all" symbol="gtk_flow_box_select_all">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</method>
+			<method name="select_child" symbol="gtk_flow_box_select_child">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="child" type="GtkFlowBoxChild*"/>
+				</parameters>
+			</method>
+			<method name="selected_foreach" symbol="gtk_flow_box_selected_foreach">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="func" type="GtkFlowBoxForeachFunc"/>
+					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="set_activate_on_single_click" symbol="gtk_flow_box_set_activate_on_single_click">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="single" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_column_spacing" symbol="gtk_flow_box_set_column_spacing">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="spacing" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_filter_func" symbol="gtk_flow_box_set_filter_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="filter_func" type="GtkFlowBoxFilterFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="set_hadjustment" symbol="gtk_flow_box_set_hadjustment">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="adjustment" type="GtkAdjustment*"/>
+				</parameters>
+			</method>
+			<method name="set_homogeneous" symbol="gtk_flow_box_set_homogeneous">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="homogeneous" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_max_children_per_line" symbol="gtk_flow_box_set_max_children_per_line">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="n_children" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_min_children_per_line" symbol="gtk_flow_box_set_min_children_per_line">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="n_children" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_row_spacing" symbol="gtk_flow_box_set_row_spacing">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="spacing" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_selection_mode" symbol="gtk_flow_box_set_selection_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="mode" type="GtkSelectionMode"/>
+				</parameters>
+			</method>
+			<method name="set_sort_func" symbol="gtk_flow_box_set_sort_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="sort_func" type="GtkFlowBoxSortFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="set_vadjustment" symbol="gtk_flow_box_set_vadjustment">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="adjustment" type="GtkAdjustment*"/>
+				</parameters>
+			</method>
+			<method name="unselect_all" symbol="gtk_flow_box_unselect_all">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</method>
+			<method name="unselect_child" symbol="gtk_flow_box_unselect_child">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="child" type="GtkFlowBoxChild*"/>
+				</parameters>
+			</method>
+			<property name="activate-on-single-click" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="column-spacing" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="homogeneous" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="max-children-per-line" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="min-children-per-line" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="row-spacing" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="selection-mode" type="GtkSelectionMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="activate-cursor-child" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</signal>
+			<signal name="child-activated" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="child" type="GtkWidget*"/>
+				</parameters>
+			</signal>
+			<signal name="move-cursor" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="step" type="GtkMovementStep"/>
+					<parameter name="count" type="gint"/>
+				</parameters>
+			</signal>
+			<signal name="select-all" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</signal>
+			<signal name="selected-children-changed" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</signal>
+			<signal name="toggle-cursor-child" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</signal>
+			<signal name="unselect-all" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkFlowBoxAccessible" parent="GtkContainerAccessible" type-name="GtkFlowBoxAccessible" get-type="gtk_flow_box_accessible_get_type">
+			<implements>
+				<interface name="AtkComponent"/>
+				<interface name="AtkSelection"/>
+			</implements>
+		</object>
+		<object name="GtkFlowBoxChild" parent="GtkBin" type-name="GtkFlowBoxChild" get-type="gtk_flow_box_child_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="changed" symbol="gtk_flow_box_child_changed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="child" type="GtkFlowBoxChild*"/>
+				</parameters>
+			</method>
+			<method name="get_index" symbol="gtk_flow_box_child_get_index">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="child" type="GtkFlowBoxChild*"/>
+				</parameters>
+			</method>
+			<method name="is_selected" symbol="gtk_flow_box_child_is_selected">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="child" type="GtkFlowBoxChild*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_flow_box_child_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<signal name="activate" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="child" type="GtkFlowBoxChild*"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkFlowBoxChildAccessible" parent="GtkContainerAccessible" type-name="GtkFlowBoxChildAccessible" get-type="gtk_flow_box_child_accessible_get_type">
+			<implements>
+				<interface name="AtkComponent"/>
+			</implements>
 		</object>
 		<object name="GtkFontButton" parent="GtkButton" type-name="GtkFontButton" get-type="gtk_font_button_get_type">
 			<implements>
@@ -24225,6 +24587,12 @@
 					<parameter name="text_view" type="GtkTextView*"/>
 				</parameters>
 			</signal>
+			<vfunc name="create_buffer">
+				<return-type type="GtkTextBuffer*"/>
+				<parameters>
+					<parameter name="text_view" type="GtkTextView*"/>
+				</parameters>
+			</vfunc>
 		</object>
 		<object name="GtkTextViewAccessible" parent="GtkContainerAccessible" type-name="GtkTextViewAccessible" get-type="gtk_text_view_accessible_get_type">
 			<implements>
@@ -25475,7 +25843,7 @@
 					<parameter name="toolbar" type="GtkToolbar*"/>
 				</parameters>
 			</method>
-			<property name="icon-size" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-size" type="GtkIconSize" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="icon-size-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-arrow" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="toolbar-style" type="GtkToolbarStyle" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -33474,15 +33842,15 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1000"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1101"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="0"/>
-		<constant name="GTK_MINOR_VERSION" type="int" value="10"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="1"/>
+		<constant name="GTK_MINOR_VERSION" type="int" value="11"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
 		<constant name="GTK_PAPER_NAME_A5" type="char*" value="iso_a5"/>
@@ -33560,6 +33928,7 @@
 		<constant name="GTK_STYLE_CLASS_MENU" type="char*" value="menu"/>
 		<constant name="GTK_STYLE_CLASS_MENUBAR" type="char*" value="menubar"/>
 		<constant name="GTK_STYLE_CLASS_MENUITEM" type="char*" value="menuitem"/>
+		<constant name="GTK_STYLE_CLASS_NEEDS_ATTENTION" type="char*" value="needs-attention"/>
 		<constant name="GTK_STYLE_CLASS_NOTEBOOK" type="char*" value="notebook"/>
 		<constant name="GTK_STYLE_CLASS_OSD" type="char*" value="osd"/>
 		<constant name="GTK_STYLE_CLASS_PANE_SEPARATOR" type="char*" value="pane-separator"/>
