@@ -2100,10 +2100,10 @@ namespace GLib {
 	public class Subprocess : GLib.Object, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		protected Subprocess ();
-		public bool communicate (GLib.Bytes stdin_buf, GLib.Cancellable? cancellable = null, out GLib.Bytes stdout_buf, out GLib.Bytes stderr_buf) throws GLib.Error;
-		public async bool communicate_async (GLib.Bytes stdin_buf, GLib.Cancellable? cancellable = null, out GLib.Bytes stdout_buf, out GLib.Bytes stderr_buf) throws GLib.Error;
-		public bool communicate_utf8 (string stdin_buf, GLib.Cancellable? cancellable = null, out string stdout_buf, out string stderr_buf) throws GLib.Error;
-		public async bool communicate_utf8_async (string stdin_buf, GLib.Cancellable? cancellable = null, out string stdout_buf, out string stderr_buf) throws GLib.Error;
+		public bool communicate (GLib.Bytes stdin_buf, GLib.Cancellable? cancellable, out GLib.Bytes stdout_buf, out GLib.Bytes stderr_buf) throws GLib.Error;
+		public async bool communicate_async (GLib.Bytes stdin_buf, GLib.Cancellable? cancellable, out GLib.Bytes stdout_buf, out GLib.Bytes stderr_buf) throws GLib.Error;
+		public bool communicate_utf8 (string stdin_buf, GLib.Cancellable? cancellable, out string stdout_buf, out string stderr_buf) throws GLib.Error;
+		public async bool communicate_utf8_async (string stdin_buf, GLib.Cancellable? cancellable, out string stdout_buf, out string stderr_buf) throws GLib.Error;
 		public void force_exit ();
 		public int get_exit_status ();
 		public unowned string get_identifier ();

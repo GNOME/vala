@@ -194,6 +194,8 @@ srv_target_list_sort type_arguments="GLib.SrvTarget" skip=false
 srv_target_list_sort.targets type_arguments="GLib.SrvTarget" owned
 StaticResource
   .next type="StaticResource*"
+Subprocess
+  .communicate*.cancellable#parameter default=()
 TlsDatabase
   .create_certificate_handle nullable
 TlsPassword
