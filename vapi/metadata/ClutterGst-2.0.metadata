@@ -1,0 +1,8 @@
+MAJOR_VERSION name="MAJOR" parent="ClutterGst.Version"
+MINOR_VERSION name="MINOR" parent="ClutterGst.Version"
+MICRO_VERSION name="MICRO" parent="ClutterGst.Version"
+VERSION_HEX name="HEX" parent="ClutterGst.Version"
+VERSION_S name="STRING" parent="ClutterGst.Version"
+
+init.argv unowned
+init_with_args.argv unowned
