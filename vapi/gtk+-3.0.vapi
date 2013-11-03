@@ -3817,7 +3817,7 @@ namespace Gtk {
 		public int get_min_slider_size ();
 		[NoWrapper]
 		public virtual void get_range_border (Gtk.Border border_);
-		public void get_range_rect (Gdk.Rectangle range_rect);
+		public Gdk.Rectangle get_range_rect ();
 		public bool get_restrict_to_fill_level ();
 		public int get_round_digits ();
 		public bool get_show_fill_level ();
