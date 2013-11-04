@@ -266,6 +266,18 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		var register_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_register_type".printf (get_ccode_lower_case_name (type_symbol, null))));
 		register_call.add_argument (new CCodeIdentifier (module_init_param_name));
 		ccode.add_expression (register_call);
+
+		var iface = type_symbol as Interface;
+		if (iface != null) {
+			string? dbus_name = GDBusModule.get_dbus_name(type_symbol);
+
+			if (dbus_name != null) {
+				string proxy_cname = get_ccode_lower_case_prefix (type_symbol) + "proxy";
+				var register_proxy = new CCodeFunctionCall (new CCodeIdentifier ("%s_register_dynamic_type".printf (proxy_cname)));
+				register_proxy.add_argument (new CCodeIdentifier (module_init_param_name));
+				ccode.add_expression (register_proxy);
+			}
+		}
 	}
 
 	/**
