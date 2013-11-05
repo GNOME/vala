@@ -230,6 +230,8 @@ dist_vapi_DATA = \
 	mx-1.0.vapi \
 	mysql.vapi \
 	orc-0.4.vapi \
+	packagekit-glib2.deps \
+	packagekit-glib2.vapi \
 	pango.deps \
 	pango.vapi \
 	pangocairo.deps \
