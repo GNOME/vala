@@ -904,6 +904,10 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			}
 		}
 
+		for (int i = 2; i <= 16; i += 2) {
+			context.add_define ("VALA_0_%d".printf (i));
+		}
+
 		if (context.profile == Vala.Profile.POSIX) {
 			// default package
 			if (!add_package (context, "posix")) {
