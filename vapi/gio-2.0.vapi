@@ -254,6 +254,13 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_VOLUME_IDENTIFIER_KIND_UUID")]
 		public const string UUID;
 	}
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_app_info_monitor_get_type ()")]
+	public class AppInfoMonitor : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected AppInfoMonitor ();
+		public static GLib.AppInfoMonitor @get ();
+		public signal void changed ();
+	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_app_launch_context_get_type ()")]
 	public class AppLaunchContext : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -2629,7 +2636,8 @@ namespace GLib {
 		public abstract async bool make_directory_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool make_directory_with_parents (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract bool make_symbolic_link (string symlink_value, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract bool measure_disk_usage_finish (GLib.AsyncResult result, out uint64 disk_usage, out uint64 num_dirs, out uint64 num_files) throws GLib.Error;
+		public abstract bool measure_disk_usage (GLib.FileMeasureFlags flags, GLib.Cancellable? cancellable, [CCode (delegate_target_pos = 3.5)] GLib.FileMeasureProgressCallback? progress_callback, out uint64 disk_usage, out uint64 num_dirs, out uint64 num_files) throws GLib.Error;
+		public abstract async bool measure_disk_usage_async (GLib.FileMeasureFlags flags, int io_priority, GLib.Cancellable? cancellable, GLib.FileMeasureProgressCallback? progress_callback, out uint64 disk_usage, out uint64 num_dirs, out uint64 num_files) throws GLib.Error;
 		public GLib.FileMonitor monitor (GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "monitor_dir")]
 		public abstract GLib.FileMonitor monitor_directory (GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;

@@ -331,6 +331,12 @@
 					<parameter name="key_file" type="GKeyFile*"/>
 				</parameters>
 			</constructor>
+			<method name="search" symbol="g_desktop_app_info_search">
+				<return-type type="gchar***"/>
+				<parameters>
+					<parameter name="search_string" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="set_desktop_env" symbol="g_desktop_app_info_set_desktop_env">
 				<return-type type="void"/>
 				<parameters>

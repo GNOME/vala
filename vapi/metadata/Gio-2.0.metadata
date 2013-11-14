@@ -351,6 +351,13 @@ AsyncReadyCallback.source_object nullable
 DBusMessage
   .get_body unowned
 DBusSubtreeVTable.enumerate skip=false
+File
+  .measure_disk_usage skip=false
+  .measure_disk_usage_async skip=false
+  .measure_disk_usage_finish skip=false
+  .measure_disk_usage.* default=()
+  .measure_disk_usage_async.* default=()
+  .measure_disk_usage_finish.* default=()
 FileAttributeInfoList
   .infos array array_length_field="n_infos" unowned=false
 LoadableIcon

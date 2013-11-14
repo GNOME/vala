@@ -25,6 +25,7 @@ namespace GLib {
 		public void launch_action (string action_name, GLib.AppLaunchContext launch_context);
 		public bool launch_uris_as_manager (GLib.List uris, GLib.AppLaunchContext launch_context, GLib.SpawnFlags spawn_flags, GLib.SpawnChildSetupFunc user_setup, void* user_setup_data, GLib.DesktopAppLaunchCallback pid_callback, void* pid_callback_data) throws GLib.Error;
 		public unowned string[] list_actions ();
+		public static void*[] search (string search_string);
 		public static void set_desktop_env (string desktop_env);
 		public string filename { get; construct; }
 	}
