@@ -3490,6 +3490,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PlacesSidebar ();
 		public void add_shortcut (GLib.File location);
+		public bool get_local_only ();
 		public unowned GLib.File get_location ();
 		public unowned GLib.File get_nth_bookmark (int n);
 		public Gtk.PlacesOpenFlags get_open_flags ();
@@ -3497,10 +3498,12 @@ namespace Gtk {
 		public bool get_show_desktop ();
 		public unowned GLib.SList list_shortcuts ();
 		public void remove_shortcut (GLib.File location);
+		public void set_local_only (bool local_only);
 		public void set_location (GLib.File location);
 		public void set_open_flags (Gtk.PlacesOpenFlags flags);
 		public void set_show_connect_to_server (bool show_connect_to_server);
 		public void set_show_desktop (bool show_desktop);
+		public bool local_only { get; set; }
 		public GLib.File location { get; set; }
 		public Gtk.PlacesOpenFlags open_flags { get; set; }
 		public bool show_connect_to_server { get; set; }
@@ -4494,6 +4497,7 @@ namespace Gtk {
 		public void add_titled (Gtk.Widget child, string name, string title);
 		public bool get_homogeneous ();
 		public uint get_transition_duration ();
+		public bool get_transition_running ();
 		public Gtk.StackTransitionType get_transition_type ();
 		public unowned Gtk.Widget get_visible_child ();
 		public unowned string get_visible_child_name ();
@@ -4505,6 +4509,7 @@ namespace Gtk {
 		public void set_visible_child_name (string name);
 		public bool homogeneous { get; set construct; }
 		public uint transition_duration { get; set construct; }
+		public bool transition_running { get; }
 		public Gtk.StackTransitionType transition_type { get; set construct; }
 		public Gtk.Widget visible_child { get; set; }
 		public string visible_child_name { get; set; }
@@ -8121,7 +8126,9 @@ namespace Gtk {
 		FOCUSED,
 		BACKDROP,
 		DIR_LTR,
-		DIR_RTL
+		DIR_RTL,
+		LINK,
+		VISITED
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_STATE_")]
 	public enum StateType {

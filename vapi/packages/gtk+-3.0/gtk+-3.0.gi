@@ -5287,6 +5287,8 @@
 			<member name="GTK_STATE_FLAG_BACKDROP" value="64"/>
 			<member name="GTK_STATE_FLAG_DIR_LTR" value="128"/>
 			<member name="GTK_STATE_FLAG_DIR_RTL" value="256"/>
+			<member name="GTK_STATE_FLAG_LINK" value="512"/>
+			<member name="GTK_STATE_FLAG_VISITED" value="1024"/>
 		</flags>
 		<flags name="GtkTargetFlags" type-name="GtkTargetFlags" get-type="gtk_target_flags_get_type">
 			<member name="GTK_TARGET_SAME_APP" value="1"/>
@@ -18253,6 +18255,12 @@
 					<parameter name="location" type="GFile*"/>
 				</parameters>
 			</method>
+			<method name="get_local_only" symbol="gtk_places_sidebar_get_local_only">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
+				</parameters>
+			</method>
 			<method name="get_location" symbol="gtk_places_sidebar_get_location">
 				<return-type type="GFile*"/>
 				<parameters>
@@ -18300,6 +18308,13 @@
 					<parameter name="location" type="GFile*"/>
 				</parameters>
 			</method>
+			<method name="set_local_only" symbol="gtk_places_sidebar_set_local_only">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
+					<parameter name="local_only" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_location" symbol="gtk_places_sidebar_set_location">
 				<return-type type="void"/>
 				<parameters>
@@ -18328,6 +18343,7 @@
 					<parameter name="show_desktop" type="gboolean"/>
 				</parameters>
 			</method>
+			<property name="local-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="location" type="GFile*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="open-flags" type="GtkPlacesOpenFlags" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-connect-to-server" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -21444,6 +21460,12 @@
 					<parameter name="stack" type="GtkStack*"/>
 				</parameters>
 			</method>
+			<method name="get_transition_running" symbol="gtk_stack_get_transition_running">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stack" type="GtkStack*"/>
+				</parameters>
+			</method>
 			<method name="get_transition_type" symbol="gtk_stack_get_transition_type">
 				<return-type type="GtkStackTransitionType"/>
 				<parameters>
@@ -21510,6 +21532,7 @@
 			</method>
 			<property name="homogeneous" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="transition-duration" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="transition-running" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="transition-type" type="GtkStackTransitionType" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="visible-child" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visible-child-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>

@@ -4969,6 +4969,7 @@ namespace Gdk {
 		public Gdk.DragProtocol get_drag_protocol (out Gdk.Window target);
 		public unowned Gdk.Window get_effective_parent ();
 		public unowned Gdk.Window get_effective_toplevel ();
+		public bool get_event_compression ();
 		public Gdk.EventMask get_events ();
 		public bool get_focus_on_map ();
 		public unowned Gdk.FrameClock get_frame_clock ();
@@ -5040,6 +5041,7 @@ namespace Gdk {
 		public void set_decorations (Gdk.WMDecoration decorations);
 		public void set_device_cursor (Gdk.Device device, Gdk.Cursor cursor);
 		public void set_device_events (Gdk.Device device, Gdk.EventMask event_mask);
+		public void set_event_compression (bool event_compression);
 		public void set_events (Gdk.EventMask event_mask);
 		public void set_focus_on_map (bool focus_on_map);
 		public void set_fullscreen_mode (Gdk.FullscreenMode mode);
