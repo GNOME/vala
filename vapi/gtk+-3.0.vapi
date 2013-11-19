@@ -2361,16 +2361,19 @@ namespace Gtk {
 		public HeaderBar ();
 		public unowned Gtk.Widget get_custom_title ();
 		public bool get_show_close_button ();
+		public bool get_show_fallback_app_menu ();
 		public unowned string get_subtitle ();
 		public unowned string get_title ();
 		public void pack_end (Gtk.Widget child);
 		public void pack_start (Gtk.Widget child);
 		public void set_custom_title (Gtk.Widget title_widget);
 		public void set_show_close_button (bool setting);
+		public void set_show_fallback_app_menu (bool setting);
 		public void set_subtitle (string? subtitle);
 		public void set_title (string title);
 		public Gtk.Widget custom_title { get; set construct; }
 		public bool show_close_button { get; set; }
+		public bool show_fallback_app_menu { get; set; }
 		[NoAccessorMethod]
 		public int spacing { get; set; }
 		public string subtitle { get; set; }
@@ -4354,6 +4357,8 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool gtk_shell_shows_app_menu { get; set; }
 		[NoAccessorMethod]
+		public bool gtk_shell_shows_desktop { get; set; }
+		[NoAccessorMethod]
 		public bool gtk_shell_shows_menubar { get; set; }
 		[NoAccessorMethod]
 		public bool gtk_show_input_method_menu { get; set; }
@@ -6183,8 +6188,10 @@ namespace Gtk {
 		public bool get_hexpand_set ();
 		public bool get_mapped ();
 		public int get_margin_bottom ();
+		public int get_margin_end ();
 		public int get_margin_left ();
 		public int get_margin_right ();
+		public int get_margin_start ();
 		public int get_margin_top ();
 		public Gdk.ModifierType get_modifier_mask (Gdk.ModifierIntent intent);
 		[Deprecated (replacement = "StyleContext with a custom StyleProvider", since = "3.0")]
@@ -6337,8 +6344,10 @@ namespace Gtk {
 		public void set_hexpand_set (bool @set);
 		public void set_mapped (bool mapped);
 		public void set_margin_bottom (int margin);
+		public void set_margin_end (int margin);
 		public void set_margin_left (int margin);
 		public void set_margin_right (int margin);
+		public void set_margin_start (int margin);
 		public void set_margin_top (int margin);
 		public void set_no_show_all (bool no_show_all);
 		public void set_opacity (double opacity);
@@ -6408,8 +6417,10 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public int margin { get; set; }
 		public int margin_bottom { get; set; }
+		public int margin_end { get; set; }
 		public int margin_left { get; set; }
 		public int margin_right { get; set; }
+		public int margin_start { get; set; }
 		public int margin_top { get; set; }
 		public string name { get; set; }
 		public bool no_show_all { get; set; }

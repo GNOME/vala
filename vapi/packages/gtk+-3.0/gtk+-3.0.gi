@@ -13633,6 +13633,12 @@
 					<parameter name="bar" type="GtkHeaderBar*"/>
 				</parameters>
 			</method>
+			<method name="get_show_fallback_app_menu" symbol="gtk_header_bar_get_show_fallback_app_menu">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="bar" type="GtkHeaderBar*"/>
+				</parameters>
+			</method>
 			<method name="get_subtitle" symbol="gtk_header_bar_get_subtitle">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -13676,6 +13682,13 @@
 					<parameter name="setting" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_show_fallback_app_menu" symbol="gtk_header_bar_set_show_fallback_app_menu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="bar" type="GtkHeaderBar*"/>
+					<parameter name="setting" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_subtitle" symbol="gtk_header_bar_set_subtitle">
 				<return-type type="void"/>
 				<parameters>
@@ -13692,6 +13705,7 @@
 			</method>
 			<property name="custom-title" type="GtkWidget*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="show-close-button" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-fallback-app-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="subtitle" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -21051,6 +21065,7 @@
 			<property name="gtk-recent-files-max-age" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-scrolled-window-placement" type="GtkCornerType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-shell-shows-app-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-shell-shows-desktop" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-shell-shows-menubar" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-show-input-method-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-show-unicode-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -28536,6 +28551,12 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="get_margin_end" symbol="gtk_widget_get_margin_end">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
 			<method name="get_margin_left" symbol="gtk_widget_get_margin_left">
 				<return-type type="gint"/>
 				<parameters>
@@ -28543,6 +28564,12 @@
 				</parameters>
 			</method>
 			<method name="get_margin_right" symbol="gtk_widget_get_margin_right">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="get_margin_start" symbol="gtk_widget_get_margin_start">
 				<return-type type="gint"/>
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
@@ -29398,6 +29425,13 @@
 					<parameter name="margin" type="gint"/>
 				</parameters>
 			</method>
+			<method name="set_margin_end" symbol="gtk_widget_set_margin_end">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="margin" type="gint"/>
+				</parameters>
+			</method>
 			<method name="set_margin_left" symbol="gtk_widget_set_margin_left">
 				<return-type type="void"/>
 				<parameters>
@@ -29406,6 +29440,13 @@
 				</parameters>
 			</method>
 			<method name="set_margin_right" symbol="gtk_widget_set_margin_right">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="margin" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_margin_start" symbol="gtk_widget_set_margin_start">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
@@ -29730,8 +29771,10 @@
 			<property name="is-focus" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="margin" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="margin-bottom" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="margin-end" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="margin-left" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="margin-right" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="margin-start" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="margin-top" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="no-show-all" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -33872,7 +33915,7 @@
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="1"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="2"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="11"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
