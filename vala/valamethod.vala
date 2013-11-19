@@ -180,7 +180,7 @@ public class Vala.Method : Subroutine {
 	private DataType _return_type;
 
 	private weak Method _base_method;
-	private Method _base_interface_method;
+	private weak Method _base_interface_method;
 	private bool base_methods_valid;
 
 	Method? callback_method;
