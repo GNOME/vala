@@ -5139,9 +5139,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (target_destroy_notify != null) {
 				ccode.add_assignment (target_destroy_notify, new CCodeConstant ("NULL"));
 			}
+		} else if (expr.inner.value_type is ArrayType) {
+			var array_type = (ArrayType) expr.inner.value_type;
+			var glib_value = (GLibValue) expr.inner.target_value;
+
+			ccode.add_assignment (get_cvalue (expr.inner), new CCodeConstant ("NULL"));
+			if (glib_value.array_length_cvalues != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					ccode.add_assignment (get_array_length_cvalue (glib_value, dim), new CCodeConstant ("0"));
+				}
+			}
 		} else {
 			ccode.add_assignment (get_cvalue (expr.inner), new CCodeConstant ("NULL"));
-		}
+		}			
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {

@@ -96,6 +96,10 @@ void test_static_array () {
 void test_reference_transfer () {
 	var baz = (owned) foo;
 	baz = (owned) bar;
+
+	var data = new string[]{"foo"};
+	var data2 = (owned) data;
+	assert (data.length == 0);
 }
 
 void test_length_assignment () {
@@ -121,4 +125,3 @@ void main () {
 	test_length_assignment ();
 	test_inline_array ();
 }
-
