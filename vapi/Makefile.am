@@ -206,6 +206,8 @@ dist_vapi_DATA = \
 	libpanelapplet-2.0.vapi \
 	libpeas-1.0.deps \
 	libpeas-1.0.vapi \
+	libpeas-gtk-1.0.deps \
+	libpeas-gtk-1.0.vapi \
 	libpq.vapi \
 	librsvg-2.0.vapi \
 	librsvg-2.0.deps \
@@ -397,6 +399,7 @@ GIR_BINDINGS = \
 	libgdata \
 	libgnome-menu-3.0 \
 	libpeas-1.0 \
+	libpeas-gtk-1.0 \
 	libsoup-2.4 \
 	libwnck-3.0 \
 	mx-1.0 \
@@ -681,6 +684,9 @@ liboobs-1:
 
 libpeas-1.0:
 	$(GENVAPI) --library $(srcdir)/libpeas-1.0 --pkg gio-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/Peas-1.0.gir
+
+libpeas-gtk-1.0:
+	$(GENVAPI) --library $(srcdir)/libpeas-gtk-1.0 --pkg libpeas-1.0 --pkg gtk+-3.0 --metadatadir $(METADATADIR) $(GIRDIR)/PeasGtk-1.0.gir
 
 librsvg-2.0:
 	$(GENVAPI) --library $(srcdir)/librsvg-2.0 $(PACKAGESDIR)/librsvg-2.0/librsvg-2.0.gi
