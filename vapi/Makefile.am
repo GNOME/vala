@@ -343,7 +343,6 @@ GIDL_BINDINGS = \
 	libgnome-menu \
 	libgnomeui-2.0 \
 	libgsf-1 \
-	libnotify \
 	liboobs-1 \
 	librsvg-2.0 \
 	libsexy \
@@ -398,6 +397,7 @@ GIR_BINDINGS = \
 	json-glib-1.0 \
 	libgdata \
 	libgnome-menu-3.0 \
+	libnotify \
 	libpeas-1.0 \
 	libpeas-gtk-1.0 \
 	libsoup-2.4 \
@@ -677,7 +677,7 @@ libgsf-1:
 	$(GENVAPI) --library $(srcdir)/libgsf-1 $(PACKAGESDIR)/libgsf-1/libgsf-1-custom.vala $(PACKAGESDIR)/libgsf-1/libgsf-1.gi
 
 libnotify:
-	$(GENVAPI) --library $(srcdir)/libnotify $(PACKAGESDIR)/libnotify/libnotify.gi
+	$(GENVAPI) --library $(srcdir)/libnotify --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/Notify-0.7.gir
 
 liboobs-1:
 	$(GENVAPI) --library $(srcdir)/liboobs-1 $(PACKAGESDIR)/liboobs-1/liboobs-1.gi

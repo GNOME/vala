@@ -1,0 +1,5 @@
+* cheader_filename="libnotify/notify.h"
+
+Notification
+	.set_hint_byte.value type="uchar"
+	.set_hint_byte_array.value type="uchar[]"
