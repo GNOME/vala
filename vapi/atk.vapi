@@ -297,17 +297,22 @@ namespace Atk {
 		public virtual unowned string get_attribute_value (string attribute_name);
 		[CCode (vfunc_name = "get_document_attributes")]
 		public virtual unowned Atk.AttributeSet get_attributes ();
+		public virtual int get_current_page_number ();
+		[Deprecated]
 		public virtual void* get_document ();
 		[Deprecated (replacement = "Document.get_locale", since = "vala-0.22")]
 		public virtual unowned string get_document_locale ();
+		[Deprecated]
 		public virtual unowned string get_document_type ();
 		[CCode (vfunc_name = "get_document_locale")]
 		[Deprecated]
 		public virtual unowned string get_locale ();
+		public virtual int get_page_count ();
 		[CCode (vfunc_name = "set_document_attribute")]
 		public virtual bool set_attribute_value (string attribute_name, string attribute_value);
 		public signal void load_complete ();
 		public signal void load_stopped ();
+		public signal void page_changed (int page_number);
 		public signal void reload ();
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_editable_text_get_type ()")]
@@ -671,6 +676,18 @@ namespace Atk {
 		NOTIFICATION,
 		INFO_BAR,
 		LEVEL_BAR,
+		TITLE_BAR,
+		BLOCK_QUOTE,
+		AUDIO,
+		VIDEO,
+		DEFINITION,
+		ARTICLE,
+		LANDMARK,
+		LOG,
+		MARQUEE,
+		MATH,
+		RATING,
+		TIMER,
 		LAST_DEFINED;
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.Role for_name (string name);
@@ -722,6 +739,8 @@ namespace Atk {
 		DEFAULT,
 		ANIMATED,
 		VISITED,
+		CHECKABLE,
+		HAS_POPUP,
 		LAST_DEFINED;
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.StateType for_name (string name);
