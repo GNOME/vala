@@ -751,7 +751,7 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void push_matrix ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void read_pixels (int x, int y, int width, int height, Cogl.ReadPixelsFlags source, Cogl.PixelFormat format, uchar pixels);
+	public static void read_pixels (int x, int y, int width, int height, Cogl.ReadPixelsFlags source, Cogl.PixelFormat format, [CCode (array_length = false)] uint8[] pixels);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static GLib.Type read_pixels_flags_get_type ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
