@@ -8344,7 +8344,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void rc_set_default_files (string filenames);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void rgb_to_hsv (double r, double g, double b, double h, double s, double v);
+	public static void rgb_to_hsv (double r, double g, double b, out double h, out double s, out double v);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void selection_add_target (Gtk.Widget widget, Gdk.Atom selection, Gdk.Atom target, uint info);
 	[CCode (cheader_filename = "gtk/gtk.h")]

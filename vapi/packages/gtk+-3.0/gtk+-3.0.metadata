@@ -1330,5 +1330,8 @@ gtk_render_layout deprecated_since="vala-0.16" replacement="StyleContext.render_
 gtk_render_line deprecated_since="vala-0.16" replacement="StyleContext.render_line"
 gtk_render_option deprecated_since="vala-0.16" replacement="StyleContext.render_option"
 gtk_render_slider deprecated_since="vala-0.16" replacement="StyleContext.render_slider"
+gtk_rgb_to_hsv.h is_out="1"
+gtk_rgb_to_hsv.s is_out="1"
+gtk_rgb_to_hsv.v is_out="1"
 
 *._g_sealed__* hidden="1"

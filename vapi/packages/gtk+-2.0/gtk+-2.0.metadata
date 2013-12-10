@@ -1002,3 +1002,6 @@ GtkWidget::selection_notify_event.event namespace_name="Gdk" type_name="EventSel
 GtkWidget::selection_request_event.event namespace_name="Gdk" type_name="EventSelection"
 GtkWidget::visibility_event.event namespace_name="Gdk" type_name="EventVisibility"
 GtkWidget::window_state_event.event namespace_name="Gdk" type_name="EventWindowState"
+gtk_rgb_to_hsv.h is_out="1"
+gtk_rgb_to_hsv.s is_out="1"
+gtk_rgb_to_hsv.v is_out="1"
