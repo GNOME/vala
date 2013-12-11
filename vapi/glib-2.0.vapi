@@ -1711,6 +1711,7 @@ namespace GLib {
 		public static unowned Thread<T> create_full<T> (owned ThreadFunc<T> func, ulong stack_size, bool joinable, bool bound, ThreadPriority priority) throws ThreadError;
 		[CCode (simple_generics = true)]
 		public static unowned Thread<T> self<T> ();
+		[DestroysInstance]
 		public T join ();
 		[Deprecated (since = "2.32")]
 		public void set_priority (ThreadPriority priority);
