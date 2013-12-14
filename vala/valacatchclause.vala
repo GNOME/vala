@@ -117,6 +117,11 @@ public class Vala.CatchClause : CodeNode {
 		checked = true;
 
 		if (error_type != null) {
+			if (!(error_type is ErrorType)) {
+				Report.error (source_reference, "clause must catch a valid error type, found `%s' instead".printf (error_type.to_string ()));
+				error = true;
+			}
+
 			if (variable_name != null) {
 				error_variable = new LocalVariable (error_type.copy (), variable_name);
 
@@ -131,7 +136,6 @@ public class Vala.CatchClause : CodeNode {
 		}
 
 		error_type.check (context);
-
 		body.check (context);
 
 		return !error;
