@@ -1898,10 +1898,10 @@ namespace Html {
 		public weak string name;
 		public weak string desc;
 
-		[CCode (cname = "htmlEntityDesc")]
+		[CCode (cname = "htmlEntityLookup")]
 		public static EntityDesc* lookup ([CCode (type = "xmlChar*")] string name);
 
-		[CCode (cname = "htmlEntityValueDesc")]
+		[CCode (cname = "htmlEntityValueLookup")]
 		public static EntityDesc* value_lookup (uint value);
 	}
 
