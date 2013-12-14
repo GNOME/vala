@@ -1676,7 +1676,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cfile.add_function (function);
 		}
 
-		if (!prop.is_abstract) {
+		if (!prop.is_abstract && acc.body != null) {
 			bool is_virtual = prop.base_property != null || prop.base_interface_property != null;
 
 			string cname = get_ccode_real_name (acc);
