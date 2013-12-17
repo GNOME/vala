@@ -2360,20 +2360,20 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public HeaderBar ();
 		public unowned Gtk.Widget get_custom_title ();
+		public bool get_has_subtitle ();
 		public bool get_show_close_button ();
-		public bool get_show_fallback_app_menu ();
 		public unowned string get_subtitle ();
 		public unowned string get_title ();
 		public void pack_end (Gtk.Widget child);
 		public void pack_start (Gtk.Widget child);
 		public void set_custom_title (Gtk.Widget title_widget);
+		public void set_has_subtitle (bool setting);
 		public void set_show_close_button (bool setting);
-		public void set_show_fallback_app_menu (bool setting);
 		public void set_subtitle (string? subtitle);
 		public void set_title (string title);
 		public Gtk.Widget custom_title { get; set construct; }
+		public bool has_subtitle { get; set; }
 		public bool show_close_button { get; set; }
-		public bool show_fallback_app_menu { get; set; }
 		[NoAccessorMethod]
 		public int spacing { get; set; }
 		public string subtitle { get; set; }
@@ -3815,7 +3815,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected Range ();
 		public unowned Gtk.Adjustment get_adjustment ();
-		public unowned Gdk.Window get_event_window ();
 		public double get_fill_level ();
 		public bool get_flippable ();
 		public bool get_inverted ();
@@ -7718,7 +7717,11 @@ namespace Gtk {
 		LGPL_3_0,
 		BSD,
 		MIT_X11,
-		ARTISTIC
+		ARTISTIC,
+		GPL_2_0_ONLY,
+		GPL_3_0_ONLY,
+		LGPL_2_1_ONLY,
+		LGPL_3_0_ONLY
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_MENU_DIR_")]
 	public enum MenuDirectionType {
@@ -9128,6 +9131,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool events_pending ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static void exit (int error_code);
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint get_binary_age ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static Gdk.Event get_current_event ();
@@ -9145,6 +9150,8 @@ namespace Gtk {
 	public static unowned Gtk.Widget get_event_widget (Gdk.Event event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint get_interface_age ();
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static Gtk.TextDirection get_locale_direction ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint get_major_version ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -9377,6 +9384,8 @@ namespace Gtk {
 	public static void selection_remove_all (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void set_debug_flags (uint flags);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static unowned string set_locale ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void show_about_dialog (Gtk.Window? parent, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]

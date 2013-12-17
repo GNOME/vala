@@ -4935,7 +4935,7 @@ namespace Gdk {
 		public void begin_resize_drag_for_device (Gdk.WindowEdge edge, Gdk.Device device, int button, int root_x, int root_y, uint32 timestamp);
 		[Deprecated (since = "3.8")]
 		public void configure_finished ();
-		public static void constrain_size (Gdk.Geometry geometry, uint flags, int width, int height, out int new_width, out int new_height);
+		public static void constrain_size (Gdk.Geometry geometry, Gdk.WindowHints flags, int width, int height, out int new_width, out int new_height);
 		public void coords_from_parent (double parent_x, double parent_y, out double x, out double y);
 		public void coords_to_parent (double x, double y, out double parent_x, out double parent_y);
 		public Cairo.Surface create_similar_image_surface (int format, int width, int height, int scale);
@@ -5057,6 +5057,7 @@ namespace Gdk {
 		public void set_opaque_region (Cairo.Region region);
 		public void set_override_redirect (bool override_redirect);
 		public void set_role (string role);
+		public void set_shadow_width (int left, int right, int top, int bottom);
 		public void set_skip_pager_hint (bool skips_pager);
 		public void set_skip_taskbar_hint (bool skips_taskbar);
 		public void set_source_events (Gdk.InputSource source, Gdk.EventMask event_mask);
@@ -5874,6 +5875,10 @@ namespace Gdk {
 	public const int BUTTON_SECONDARY;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_CURRENT_TIME")]
 	public const int CURRENT_TIME;
+	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_EVENT_PROPAGATE")]
+	public const bool EVENT_PROPAGATE;
+	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_EVENT_STOP")]
+	public const bool EVENT_STOP;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_MAX_TIMECOORD_AXES")]
 	public const int MAX_TIMECOORD_AXES;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_PARENT_RELATIVE")]

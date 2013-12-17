@@ -442,6 +442,12 @@
 		<function name="events_pending" symbol="gtk_events_pending">
 			<return-type type="gboolean"/>
 		</function>
+		<function name="exit" symbol="gtk_exit">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="error_code" type="gint"/>
+			</parameters>
+		</function>
 		<function name="false" symbol="gtk_false">
 			<return-type type="gboolean"/>
 		</function>
@@ -477,6 +483,9 @@
 		</function>
 		<function name="get_interface_age" symbol="gtk_get_interface_age">
 			<return-type type="guint"/>
+		</function>
+		<function name="get_locale_direction" symbol="gtk_get_locale_direction">
+			<return-type type="GtkTextDirection"/>
 		</function>
 		<function name="get_major_version" symbol="gtk_get_major_version">
 			<return-type type="guint"/>
@@ -1339,6 +1348,9 @@
 			<parameters>
 				<parameter name="flags" type="guint"/>
 			</parameters>
+		</function>
+		<function name="set_locale" symbol="gtk_set_locale">
+			<return-type type="gchar*"/>
 		</function>
 		<function name="show_about_dialog" symbol="gtk_show_about_dialog">
 			<return-type type="void"/>
@@ -4749,6 +4761,10 @@
 			<member name="GTK_LICENSE_BSD" value="6"/>
 			<member name="GTK_LICENSE_MIT_X11" value="7"/>
 			<member name="GTK_LICENSE_ARTISTIC" value="8"/>
+			<member name="GTK_LICENSE_GPL_2_0_ONLY" value="9"/>
+			<member name="GTK_LICENSE_GPL_3_0_ONLY" value="10"/>
+			<member name="GTK_LICENSE_LGPL_2_1_ONLY" value="11"/>
+			<member name="GTK_LICENSE_LGPL_3_0_ONLY" value="12"/>
 		</enum>
 		<enum name="GtkMenuDirectionType" type-name="GtkMenuDirectionType" get-type="gtk_menu_direction_type_get_type">
 			<member name="GTK_MENU_DIR_PARENT" value="0"/>
@@ -13627,13 +13643,13 @@
 					<parameter name="bar" type="GtkHeaderBar*"/>
 				</parameters>
 			</method>
-			<method name="get_show_close_button" symbol="gtk_header_bar_get_show_close_button">
+			<method name="get_has_subtitle" symbol="gtk_header_bar_get_has_subtitle">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="bar" type="GtkHeaderBar*"/>
 				</parameters>
 			</method>
-			<method name="get_show_fallback_app_menu" symbol="gtk_header_bar_get_show_fallback_app_menu">
+			<method name="get_show_close_button" symbol="gtk_header_bar_get_show_close_button">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="bar" type="GtkHeaderBar*"/>
@@ -13675,14 +13691,14 @@
 					<parameter name="title_widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
-			<method name="set_show_close_button" symbol="gtk_header_bar_set_show_close_button">
+			<method name="set_has_subtitle" symbol="gtk_header_bar_set_has_subtitle">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="bar" type="GtkHeaderBar*"/>
 					<parameter name="setting" type="gboolean"/>
 				</parameters>
 			</method>
-			<method name="set_show_fallback_app_menu" symbol="gtk_header_bar_set_show_fallback_app_menu">
+			<method name="set_show_close_button" symbol="gtk_header_bar_set_show_close_button">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="bar" type="GtkHeaderBar*"/>
@@ -13704,8 +13720,8 @@
 				</parameters>
 			</method>
 			<property name="custom-title" type="GtkWidget*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="has-subtitle" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-close-button" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="show-fallback-app-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="subtitle" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -19744,12 +19760,6 @@
 			</implements>
 			<method name="get_adjustment" symbol="gtk_range_get_adjustment">
 				<return-type type="GtkAdjustment*"/>
-				<parameters>
-					<parameter name="range" type="GtkRange*"/>
-				</parameters>
-			</method>
-			<method name="get_event_window" symbol="gtk_range_get_event_window">
-				<return-type type="GdkWindow*"/>
 				<parameters>
 					<parameter name="range" type="GtkRange*"/>
 				</parameters>
@@ -33908,14 +33918,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1101"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1103"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="2"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="11"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
