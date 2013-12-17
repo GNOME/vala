@@ -2107,10 +2107,10 @@ namespace GLib {
 	public class Subprocess : GLib.Object, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		protected Subprocess ();
-		public bool communicate (GLib.Bytes stdin_buf, GLib.Cancellable? cancellable, out GLib.Bytes stdout_buf, out GLib.Bytes stderr_buf) throws GLib.Error;
-		public async bool communicate_async (GLib.Bytes stdin_buf, GLib.Cancellable? cancellable, out GLib.Bytes stdout_buf, out GLib.Bytes stderr_buf) throws GLib.Error;
-		public bool communicate_utf8 (string stdin_buf, GLib.Cancellable? cancellable, out string stdout_buf, out string stderr_buf) throws GLib.Error;
-		public async bool communicate_utf8_async (string stdin_buf, GLib.Cancellable? cancellable, out string stdout_buf, out string stderr_buf) throws GLib.Error;
+		public bool communicate (GLib.Bytes? stdin_buf, GLib.Cancellable? cancellable, out GLib.Bytes stdout_buf, out GLib.Bytes stderr_buf) throws GLib.Error;
+		public async bool communicate_async (GLib.Bytes? stdin_buf, GLib.Cancellable? cancellable, out GLib.Bytes stdout_buf, out GLib.Bytes stderr_buf) throws GLib.Error;
+		public bool communicate_utf8 (string? stdin_buf, GLib.Cancellable? cancellable, out string stdout_buf, out string stderr_buf) throws GLib.Error;
+		public async bool communicate_utf8_async (string? stdin_buf, GLib.Cancellable? cancellable, out string stdout_buf, out string stderr_buf) throws GLib.Error;
 		public void force_exit ();
 		public int get_exit_status ();
 		public unowned string get_identifier ();
@@ -2120,7 +2120,7 @@ namespace GLib {
 		public bool get_successful ();
 		public int get_term_sig ();
 		[CCode (cname = "g_subprocess_newv", has_construct_function = false)]
-		public Subprocess.newv (string argv, GLib.SubprocessFlags flags) throws GLib.Error;
+		public Subprocess.newv ([CCode (array_length = false, array_null_terminated = true)] string[] argv, GLib.SubprocessFlags flags) throws GLib.Error;
 		public void send_signal (int signal_num);
 		public bool wait (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool wait_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -2143,7 +2143,7 @@ namespace GLib {
 		public void set_stdin_file_path (string path);
 		public void set_stdout_file_path (string path);
 		public void setenv (string variable, string value, bool overwrite);
-		public GLib.Subprocess spawnv (string argv) throws GLib.Error;
+		public GLib.Subprocess spawnv ([CCode (array_length = false, array_null_terminated = true)] string[] argv) throws GLib.Error;
 		public void take_fd (int source_fd, int target_fd);
 		public void take_stderr_fd (int fd);
 		public void take_stdin_fd (int fd);
@@ -2676,6 +2676,7 @@ namespace GLib {
 		public abstract async GLib.FileOutputStream replace_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool replace_contents ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, out string new_etag, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool replace_contents_async ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string new_etag) throws GLib.Error;
+		public async void replace_contents_bytes_async (GLib.Bytes bytes, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null);
 		public abstract GLib.FileIOStream replace_readwrite (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async GLib.FileIOStream replace_readwrite_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.File resolve_relative_path (string relative_path);
