@@ -111,6 +111,31 @@ namespace Xcb {
 		
 		public VoidCookie reparent_window(Window window, Window parent, uint16 x, uint16 y);
 		public VoidCookie reparent_window_checked(Window window, Window parent, uint16 x, uint16 y);
+
+		public GetGeometryCookie get_geometry(Drawable drawable);
+		public GetGeometryCookie get_geometry_unchecked(Drawable drawable);
+		public GetGeometryReply ? get_geometry_reply(GetGeometryCookie cookie, out GenericError ? e);
+	}
+ 
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "xcb_get_geometry_cookie_t", has_type_id = false)]
+	public struct GetGeometryCookie {
+	}
+
+	[CCode (cname = "xcb_get_geometry_reply_t", ref_function = "", unref_function = "free")]
+	public class GetGeometryReply {
+		public uint8      response_type;
+		public uint8      depth;
+		public uint16     sequence;
+		public uint32     length;
+		public Window     root;
+		public int16      x;
+		public int16      y;
+		public uint16     width;
+		public uint16     height;
+		public uint16     border_width;
+		public uint8      pad0[2];
 	}
 
 	[SimpleType]
@@ -158,10 +183,12 @@ namespace Xcb {
 	[Compact]
 	[CCode (cname = "xcb_get_property_reply_t", ref_function = "", unref_function = "free")]
 	public class GetPropertyReply {
+		public uint8 format;
+		public Atom type;
 		[CCode (cname = "xcb_get_property_value_length")]
 		public int32 value_length();
 		[CCode (cname = "xcb_get_property_value")]
-		public void *value();
+		public unowned void *value();
 	}
 
 	[Compact]
@@ -525,6 +552,24 @@ namespace Xcb {
 		public uint16 value_mask;
 	}
 
+	[Compact]
+	[CCode (cname = "xcb_configure_notify_event_t", ref_function = "", unref_function = "")]
+	public class ConfigureNotifyEvent {
+		public uint8      response_type;
+		public uint8      pad0;
+		public uint16     sequence;
+		public Window     event;
+		public Window     window;
+		public Window     above_sibling;
+		public int16      x;
+		public int16      y;
+		public uint16     width;
+		public uint16     height;
+		public uint16     border_width;
+		public uint8      override_redirect;
+		public uint8      pad1;
+	}
+
 	[CCode (cname = "xcb_cw_t", has_type_id = false)]
 	public enum CW {
 		BACK_PIXMAP,
@@ -655,10 +700,12 @@ namespace Xcb {
 		public uint16 height;
 	}
 
+	[SimpleType]
 	[CCode (cname = "xcb_visualid_t", has_type_id = false)]
 	public struct VisualID : uint32 {
 	}
 
+	[SimpleType]
 	[CCode (cname = "xcb_button_t", has_type_id = false)]
 	public struct Button : uint8 {
 	}

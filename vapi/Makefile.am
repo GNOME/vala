@@ -286,6 +286,7 @@ dist_vapi_DATA = \
 	webkit-1.0.vapi \
 	x11.vapi \
 	xcb.vapi \
+	xcb-icccm.vapi \
 	xtst.vapi \
 	xtst.deps \
 	zlib.vapi \
