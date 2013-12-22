@@ -1,3 +1,12 @@
+Vala 0.23.1
+===========
+
+ * GIR parser updates.
+ * Switch libnotify bindings to .gir.
+ * Add libpeas-gtk-1.0 bindings.
+ * Add xcb-icccm bindings.
+ * Bug fixes and binding updates.
+
 Vala 0.22.0
 ===========
 
