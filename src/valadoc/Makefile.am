@@ -7,7 +7,7 @@ AM_CFLAGS =                                 \
 	-DPACKAGE_DATADIR=\"$(libdir)/valadoc\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\"        \
 	-DDEFAULT_DRIVER=\"$(DEFAULT_DRIVER)\"         \
-	-I ../libvaladoc/                       \
+	-I $(top_builddir)/src/libvaladoc/                       \
 	$(GLIB_CFLAGS)                          \
 	$(LIBGEE_CFLAGS)                        \
 	$(GMODULE_CFLAGS)                       \
@@ -32,7 +32,7 @@ valadoc_SOURCES = \
 
 
 valadoc_LDADD =                 \
-	../libvaladoc/libvaladoc.la \
+	$(top_builddir)/src/libvaladoc/libvaladoc.la \
 	$(GLIB_LIBS)                \
 	$(GMODULE_LIBS)             \
 	$(LIBGVC_LIBS)              \
@@ -41,7 +41,7 @@ valadoc_LDADD =                 \
 
 
 valadoc.vala.stamp: $(valadoc_VALASOURCES)
-	$(VALAC) -C --pkg config --pkg gee-0.8 --pkg gmodule-2.0 --vapidir $(top_srcdir)/src/vapi/ --vapidir ../libvaladoc/ --pkg valadoc-1.0 $^
+	$(VALAC) -C --pkg config --pkg gee-0.8 --pkg gmodule-2.0 --vapidir $(top_srcdir)/src/vapi/ --vapidir $(top_builddir)/src/libvaladoc/ --pkg valadoc-1.0 $^
 	touch $@
 
 

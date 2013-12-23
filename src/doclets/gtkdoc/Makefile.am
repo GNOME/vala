@@ -3,7 +3,7 @@ NULL =
 
 AM_CFLAGS =  -g \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
-	-I ../../libvaladoc/ \
+	-I $(top_builddir)/src/libvaladoc/ \
 	$(GLIB_CFLAGS) \
 	$(LIBGVC_CFLAGS) \
 	$(LIBGEE_CFLAGS) \
@@ -47,7 +47,7 @@ libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES)
 
 
 libdoclet_la_LIBADD = \
-	../../libvaladoc/libvaladoc.la \
+	$(top_builddir)/src/libvaladoc/libvaladoc.la \
 	$(GLIB_LIBS) \
 	$(LIBGEE_LIBS) \
 	$(NULL)
