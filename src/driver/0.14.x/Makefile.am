@@ -16,6 +16,7 @@ AM_CFLAGS =  -g \
 	-I ../../libvaladoc/ \
 	$(GLIB_CFLAGS) \
 	$(LIBGEE_CFLAGS) \
+	$(LIBGVC_CFLAGS) \
 	$(LIBVALA_0_14_X_CFLAGS) \
 	$(LIBVALA_0_13_0_CFLAGS) \
 	$(LIBVALA_0_13_1_CFLAGS) \
@@ -63,6 +64,7 @@ libdriver_la_LIBADD = \
 	$(LIBVALA_0_13_0_LIBS) \
 	$(LIBVALA_0_13_1_LIBS) \
 	$(LIBGEE_LIBS) \
+	$(LIBGVC_LIBS) \
 	$(NULL)
 
 
