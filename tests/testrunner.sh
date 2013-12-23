@@ -21,19 +21,16 @@
 # 	Jürg Billeter <j@bitron.ch>
 
 builddir=$PWD
-topbuilddir=$builddir/..
-srcdir=$PWD/`dirname $0`
-topsrcdir=$srcdir/..
+topbuilddir=$TOPBUILDDIR
+topsrcdir=$TOPSRCDIR
 vapidir=$topsrcdir/vapi
 
 export G_DEBUG=fatal_warnings
-export PKG_CONFIG_PATH=../../src/libvaladoc
+export PKG_CONFIG_PATH=$topbuilddir/src/libvaladoc
+export LD_LIBRARY_PATH=$topbuilddir/src/libvaladoc/.libs
 
 VALAC=valac
-VALAFLAGS="-X -D -X TOP_SRC_DIR=\"$topsrcdir\" --vapidir $topsrcdir/src/libvaladoc --pkg valadoc-1.0 --pkg gee-0.8 --disable-warnings --main main --save-temps -X -g -X -O0 -X -pipe -X -lm -X -Werror=return-type -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast -X -L$topsrcdir//src/libvaladoc/.libs -X -I$topsrcdir/src/libvaladoc $topsrcdir/tests/libvaladoc/parser/generic-scanner.vala $topsrcdir/tests/drivers/generic-api-test.vala"
-VAPIGEN=$topbuilddir/vapigen/vapigen
-VAPIGENFLAGS=
-
+VALAFLAGS="-X -D -X TOP_SRC_DIR=\"$topsrcdir\" --vapidir $topbuilddir/src/libvaladoc --pkg valadoc-1.0 --pkg gee-0.8 --disable-warnings --main main --save-temps -X -g -X -O0 -X -pipe -X -lm -X -Werror=return-type -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast -X -L$topbuilddir/src/libvaladoc/.libs -X -I$topbuilddir/src/libvaladoc $topsrcdir/tests/libvaladoc/parser/generic-scanner.vala $topsrcdir/tests/drivers/generic-api-test.vala"
 
 testdir=_test
 rm -rf $testdir
@@ -68,7 +65,7 @@ for testfile in "$@"; do
 
 		echo "	case \"/$testpath\": $ns.main (); break;" >> main.vala
 		echo "namespace $ns {" > $SOURCEFILE
-		cat "$srcdir/$testfile" >> $SOURCEFILE
+		cat "$topsrcdir/tests/$testfile" >> $SOURCEFILE
 		echo "}" >> $SOURCEFILE
 
 		echo "./test$EXEEXT /$testpath" > check

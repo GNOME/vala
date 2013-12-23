@@ -12,7 +12,7 @@ BUILT_SOURCES = \
 noinst_PROGRAMS = \
 	$(NULL)
 
-TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) $(srcdir)/testrunner.sh
+TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) TOPBUILDDIR=$(abs_top_builddir) TOPSRCDIR=$(abs_top_srcdir) $(srcdir)/testrunner.sh
 
 TESTS = \
 	libvaladoc/errorreporter.vala \
@@ -32,7 +32,7 @@ TESTS = \
 	$(NULL)
 
 check-TESTS: $(TESTS)
-	@EXEEXT=$(EXEEXT) $(srcdir)/testrunner.sh $(TESTS)
+	@EXEEXT=$(EXEEXT) TOPBUILDDIR=$(abs_top_builddir) TOPSRCDIR=$(abs_top_srcdir) $(srcdir)/testrunner.sh $(TESTS)
 
 EXTRA_DIST = \
 	testrunner.sh \

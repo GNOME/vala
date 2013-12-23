@@ -12,10 +12,12 @@ Makefile
 *.deps
 .deps
 .libs
+.dirstamp
 
 config.*
 aclocal.m4
 autom4te.cache
+build-aux
 ChangeLog
 configure
 depcomp
