@@ -41,8 +41,8 @@ libdoclet_la_SOURCES =  \
 	$(NULL)
 
 
-libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES)
-	$(VALAC) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(top_srcdir)/src/libvaladoc --pkg gee-0.8 --pkg valadoc-1.0 --basedir . $^
+libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES) Makefile
+	$(VALAC) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(top_srcdir)/src/libvaladoc --pkg gee-0.8 --pkg valadoc-1.0 $(filter %.vala %.c,$^)
 	touch $@
 
 

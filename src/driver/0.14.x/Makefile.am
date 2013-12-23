@@ -52,8 +52,8 @@ libdriver_la_SOURCES =      \
 	$(NULL)
 
 
-libdriver.vala.stamp: $(libdriver_la_VALASOURCES)
-	$(VALAC) $(VALA_FLAGS) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(VERSIONED_VAPI_DIR) --vapidir $(top_srcdir)/src/libvaladoc --pkg libvala-0.14 --pkg gee-0.8 --pkg valadoc-1.0 --basedir . $(VALA_FLAGS) $^
+libdriver.vala.stamp: $(libdriver_la_VALASOURCES) Makefile
+	$(VALAC) $(VALA_FLAGS) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(VERSIONED_VAPI_DIR) --vapidir $(top_srcdir)/src/libvaladoc --pkg libvala-0.14 --pkg gee-0.8 --pkg valadoc-1.0 $(filter %.vala %.c,$^)
 	touch $@
 
 

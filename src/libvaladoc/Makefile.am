@@ -172,8 +172,8 @@ libvaladocinclude_HEADERS = \
 libvaladocincludedir = $(includedir)/
 
 
-libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
-	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-0.8 --pkg libgvc --pkg gmodule-2.0 --pkg libgvc --vapidir $(top_srcdir)/src/vapi --pkg config --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
+libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES) Makefile
+	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-0.8 --pkg libgvc --pkg gmodule-2.0 --vapidir $(top_srcdir)/src/vapi --pkg config --library valadoc-1.0 $(filter %.vala %.c,$^)
 	touch $@
 
 

@@ -40,8 +40,8 @@ valadoc_LDADD =                 \
 	$(NULL)
 
 
-valadoc.vala.stamp: $(valadoc_VALASOURCES)
-	$(VALAC) -C --pkg config --pkg gee-0.8 --pkg gmodule-2.0 --vapidir $(top_srcdir)/src/vapi/ --vapidir $(top_builddir)/src/libvaladoc/ --pkg valadoc-1.0 $^
+valadoc.vala.stamp: $(valadoc_VALASOURCES) Makefile
+	$(VALAC) -C --pkg config --pkg gee-0.8 --pkg gmodule-2.0 --vapidir $(top_srcdir)/src/vapi/ --vapidir $(top_builddir)/src/libvaladoc/ --pkg valadoc-1.0 $(filter %.vala %.c,$^)
 	touch $@
 
 
