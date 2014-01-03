@@ -185,6 +185,7 @@ TESTS = \
 	dbus/bug596862.vala \
 	dbus/bug602003.test \
 	gir/bug651773.test \
+	gir/bug667751.test \
 	$(NULL)
 
 check-TESTS: $(TESTS)

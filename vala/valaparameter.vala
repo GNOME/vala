@@ -102,7 +102,7 @@ public class Vala.Parameter : Variable {
 
 	public Parameter copy () {
 		if (!ellipsis) {
-			var result = new Parameter (name, variable_type, source_reference);
+			var result = new Parameter (name, variable_type.copy (), source_reference);
 			result.params_array = params_array;
 			result.direction = this.direction;
 			result.initializer = this.initializer;

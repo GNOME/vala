@@ -1,7 +1,7 @@
 /* valagirparser.vala
  *
  * Copyright (C) 2008-2012  Jürg Billeter
- * Copyright (C) 2011  Luca Bruno
+ * Copyright (C) 2011-2014  Luca Bruno
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -524,7 +524,7 @@ public class Vala.GirParser : CodeVisitor {
 		public Node (string? name) {
 			this.name = name;
 		}
-
+			
 		public void add_member (Node node) {
 			var nodes = scope[node.name];
 			if (nodes == null) {
@@ -772,7 +772,7 @@ public class Vala.GirParser : CodeVisitor {
 					}
 				}
 			}
-
+			
 			if (symbol is Class && girdata != null) {
 				var class_struct = girdata["glib:type-struct"];
 				if (class_struct != null) {
@@ -3289,16 +3289,23 @@ public class Vala.GirParser : CodeVisitor {
 		   to guess it from the base type */
 		DataType base_type = null;
 		Symbol type_sym = null;
+		Node base_node = null;
 		bool simple_type = false;
 		if (alias.base_type is UnresolvedType) {
 			base_type = alias.base_type;
-			type_sym = resolve_symbol (alias.parent, ((UnresolvedType) base_type).unresolved_symbol);
+			base_node = resolve_node (alias.parent, ((UnresolvedType) base_type).unresolved_symbol);
+			if (base_node != null) {
+				type_sym = base_node.symbol;
+			}
 		} else if (alias.base_type is PointerType && ((PointerType) alias.base_type).base_type is VoidType) {
 			// gpointer, if it's a struct make it a simpletype
 			simple_type = true;
 		} else {
 			base_type = alias.base_type;
 			type_sym = base_type.data_type;
+			if (type_sym != null) {
+				base_node = resolve_node (alias.parent, parse_symbol_from_string (type_sym.get_full_name (), alias.source_reference));
+			}
 		}
 
 		if (type_sym is Struct && ((Struct) type_sym).is_simple_type ()) {
@@ -3325,10 +3332,41 @@ public class Vala.GirParser : CodeVisitor {
 			cl.comment = alias.comment;
 			cl.external = true;
 			alias.symbol = cl;
+		} else if (type_sym is Delegate) {
+			var orig = (Delegate) type_sym;
+			if (base_node != null) {
+				base_node.process (this);
+				orig = (Delegate) base_node.symbol;
+			}
+			
+			var deleg = new Delegate (alias.name, orig.return_type.copy (), alias.source_reference);
+			deleg.access = orig.access;
+			deleg.has_target = orig.has_target;
+			
+			foreach (var param in orig.get_parameters ()) {
+				deleg.add_parameter (param.copy ());
+			}
+			
+			foreach (var error_type in orig.get_error_types ()) {
+				deleg.add_error_type (error_type.copy ());
+			}
+			
+			foreach (var attribute in orig.attributes) {
+				deleg.attributes.append (attribute);
+			}
+			
+			deleg.external = true;
+			
+			alias.symbol = deleg;
 		}
 	}
 
 	void process_callable (Node node) {
+		if (node.element_type == "alias" && node.symbol is Delegate) {
+			// processed in parse_alias
+			return;
+		}
+		
 		var s = node.symbol;
 		List<ParameterInfo> parameters = node.parameters;
 
