@@ -3343,7 +3343,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		if (return_type is ArrayType && node.return_array_length_idx >= 0) {
 			if (node.return_array_length_idx >= parameters.size) {
-				Report.error (get_current_src (), "invalid array length index");
+				Report.error (return_type.source_reference, "invalid array length index");
 			} else {
 				parameters[node.return_array_length_idx].keep = false;
 				node.array_length_parameters.add (node.return_array_length_idx);
@@ -3458,7 +3458,7 @@ public class Vala.GirParser : CodeVisitor {
 
 			if (info.array_length_idx != -1) {
 				if ((info.array_length_idx) >= parameters.size) {
-					Report.error (get_current_src (), "invalid array_length index");
+					Report.error (info.param.source_reference, "invalid array_length index");
 					continue;
 				}
 				set_array_ccode (info.param, parameters[info.array_length_idx]);
@@ -3466,7 +3466,7 @@ public class Vala.GirParser : CodeVisitor {
 
 			if (info.closure_idx != -1) {
 				if ((info.closure_idx) >= parameters.size) {
-					Report.error (get_current_src (), "invalid closure index");
+					Report.error (info.param.source_reference, "invalid closure index");
 					continue;
 				}
 				if ("%g".printf (parameters[info.closure_idx].vala_idx) != "%g".printf (info.vala_idx + 0.1)) {
@@ -3475,7 +3475,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 			if (info.destroy_idx != -1) {
 				if (info.destroy_idx >= parameters.size) {
-					Report.error (get_current_src (), "invalid destroy index");
+					Report.error (info.param.source_reference, "invalid destroy index");
 					continue;
 				}
 				if ("%g".printf (parameters[info.destroy_idx].vala_idx) != "%g".printf (info.vala_idx + 0.2)) {
