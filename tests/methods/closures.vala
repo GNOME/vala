@@ -1,5 +1,17 @@
 delegate int Func ();
 
+class Foo : Object {
+	public void bar (MainLoop loop) {
+		Object o = new Object ();
+		SourceFunc f = () => {
+			o = null;
+			loop.quit ();
+			return false;
+		};
+		GLib.Idle.add ((owned) f);
+	}
+}
+
 [CCode (has_target = false)]
 delegate void NoTargetFunc ();
 
@@ -19,5 +31,11 @@ void B ([CCode (array_length = false, array_null_terminated = true)] int[] array
 void main () {
 	int result = A (10, () => 1, () => -1, () => -1, () => 1, () => 0);
 	assert (result == -67);
+
+	var foo = new Foo ();
+	var loop = new MainLoop ();
+	foo.bar (loop);
+	loop.run ();
+	assert (foo.ref_count == 1);
 }
 

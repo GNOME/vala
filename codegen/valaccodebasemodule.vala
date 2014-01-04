@@ -2117,6 +2117,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else {
 				var this_type = get_this_type ();
 				if (this_type != null) {
+					this_type = this_type.copy ();
+					this_type.value_owned = true;
 					if (this_type.is_disposable () && !is_in_destructor ()) {
 						// reference count for self is not increased in finalizers
 						var this_value = new GLibValue (get_data_type_for_symbol (current_type_symbol), new CCodeIdentifier ("self"), true);
