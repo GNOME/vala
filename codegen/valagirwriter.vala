@@ -141,7 +141,7 @@ public class Vala.GIRWriter : CodeVisitor {
 	 * @param context  a code context
 	 * @param filename a relative or absolute filename
 	 */
-	public void write_file (CodeContext context, string directory, string gir_namespace, string gir_version, string package) {
+	public void write_file (CodeContext context, string directory, string gir_filename, string gir_namespace, string gir_version, string package) {
 		this.context = context;
 		this.directory = directory;
 		this.gir_namespace = gir_namespace;
@@ -159,7 +159,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		indent--;
 		buffer.append_printf ("</repository>\n");
 
-		string filename = "%s%c%s-%s.gir".printf (directory, Path.DIR_SEPARATOR, gir_namespace, gir_version);
+		string filename = "%s%c%s".printf (directory, Path.DIR_SEPARATOR, gir_filename);
 		stream = FileStream.open (filename, "w");
 		if (stream == null) {
 			Report.error (null, "unable to open `%s' for writing".printf (filename));

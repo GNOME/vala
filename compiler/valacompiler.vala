@@ -351,14 +351,15 @@ class Vala.Compiler {
 
 		if (library != null) {
 			if (gir != null) {
-				long gir_len = gir.length;
-				int last_hyphen = gir.last_index_of_char ('-');
+				string gir_base = Path.get_basename(gir);
+				long gir_len = gir_base.length;
+				int last_hyphen = gir_base.last_index_of_char ('-');
 
-				if (last_hyphen == -1 || !gir.has_suffix (".gir")) {
+				if (last_hyphen == -1 || !gir_base.has_suffix (".gir")) {
 					Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir".printf (gir));
 				} else {
-					string gir_namespace = gir.substring (0, last_hyphen);
-					string gir_version = gir.substring (last_hyphen + 1, gir_len - last_hyphen - 5);
+					string gir_namespace = gir_base.substring (0, last_hyphen);
+					string gir_version = gir_base.substring (last_hyphen + 1, gir_len - last_hyphen - 5);
 					gir_version.canon ("0123456789.", '?');
 					if (gir_namespace == "" || gir_version == "" || !gir_version[0].isdigit () || gir_version.contains ("?")) {
 						Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir".printf (gir));
@@ -371,7 +372,7 @@ class Vala.Compiler {
 							gir_directory = context.directory;
 						}
 
-						gir_writer.write_file (context, gir_directory, gir_namespace, gir_version, library);
+						gir_writer.write_file (context, gir_directory, gir, gir_namespace, gir_version, library);
 					}
 				}
 
