@@ -5105,7 +5105,7 @@ namespace Gtk {
 	public class TextMark : GLib.Object {
 		public void* segment;
 		[CCode (has_construct_function = false)]
-		public TextMark (string name, bool left_gravity);
+		public TextMark (string? name, bool left_gravity = false);
 		public unowned Gtk.TextBuffer get_buffer ();
 		public bool get_deleted ();
 		public bool get_left_gravity ();

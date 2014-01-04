@@ -668,6 +668,8 @@ GtkTextBufferDeserializeFunc.data type_name="uint8" is_array="1" array_length_ty
 GtkTextBufferDeserializeFunc.length hidden="1"
 GtkTextBufferDeserializeFunc.user_data hidden="1"
 GtkTextBufferDeserializeFunc has_target="1" instance_pos="5.9"
+gtk_text_mark_new.name nullable="1"
+gtk_text_mark_new.left_gravity default_value="false"
 GtkTextIter is_value_type="1"
 gtk_text_iter_get_marks transfer_ownership="1" type_arguments="unowned TextMark"
 gtk_text_iter_get_tags transfer_ownership="1" type_arguments="unowned TextTag"
