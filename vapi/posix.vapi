@@ -2359,6 +2359,10 @@ namespace Posix {
 		public int putc (char c);
 		[CCode (cname = "fputs", instance_pos = -1)]
 		public int puts (string s);
+		[CCode (cname = "fwrite", instance_pos = -1)]
+		public size_t write (void *ptr, size_t size, size_t nmemb);
+		[CCode (cname = "fread", instance_pos = -1)]
+		public size_t read (void *ptr, size_t size, size_t nmemb);
 		[CCode (cname = "fgetc")]
 		public int getc ();
 		[CCode (cname = "fgets", instance_pos = -1)]
