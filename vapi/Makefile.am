@@ -345,7 +345,6 @@ GIDL_BINDINGS = \
 	libgnomeui-2.0 \
 	libgsf-1 \
 	liboobs-1 \
-	librsvg-2.0 \
 	libsexy \
 	libsoup-2.2 \
 	libwnck-1.0 \
@@ -401,6 +400,7 @@ GIR_BINDINGS = \
 	libnotify \
 	libpeas-1.0 \
 	libpeas-gtk-1.0 \
+	librsvg-2.0 \
 	libsoup-2.4 \
 	libwnck-3.0 \
 	mx-1.0 \
@@ -690,7 +690,7 @@ libpeas-gtk-1.0:
 	$(GENVAPI) --library $(srcdir)/libpeas-gtk-1.0 --pkg libpeas-1.0 --pkg gtk+-3.0 --metadatadir $(METADATADIR) $(GIRDIR)/PeasGtk-1.0.gir
 
 librsvg-2.0:
-	$(GENVAPI) --library $(srcdir)/librsvg-2.0 $(PACKAGESDIR)/librsvg-2.0/librsvg-2.0.gi
+	$(GENVAPI) --library $(srcdir)/librsvg-2.0 --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/Rsvg-2.0-custom.vala $(GIRDIR)/Rsvg-2.0.gir
 
 libsexy:
 	$(GENVAPI) --library $(srcdir)/libsexy $(PACKAGESDIR)/libsexy/libsexy.gi
