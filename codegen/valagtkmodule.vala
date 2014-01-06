@@ -2,7 +2,7 @@
 /* valagtkmodule.vala
  *
  * Copyright (C) 2013  Jürg Billeter
- * Copyright (C) 2013  Luca Bruno
+ * Copyright (C) 2013-2014  Luca Bruno
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -126,7 +126,13 @@ public class Vala.GtkModule : GSignalModule {
 				var signal_name = reader.get_attribute ("name");
 				var handler_name = reader.get_attribute ("handler");
 				if (current_class != null) {
-					var sig = SemanticAnalyzer.symbol_lookup_inherited (current_class, signal_name.replace("-", "_")) as Signal;
+					var sep_idx = signal_name.index_of ("::");
+					if (sep_idx >= 0) {
+						// detailed signal, we don't care about the detail
+						signal_name = signal_name.substring (0, sep_idx);
+					}
+					
+					var sig = SemanticAnalyzer.symbol_lookup_inherited (current_class, signal_name.replace ("-", "_")) as Signal;
 					if (sig != null) {
 						current_handler_to_signal_map.set (handler_name, sig);
 					}
