@@ -1,8 +1,0 @@
-Gdk cheader_filename="gdk/gdkx.h" 
-VisualID name="uint32"
-XID name="uint32"
-XImage name="pointer"
-GC name="pointer"
-Display name="pointer"
-gdk_x11_display_broadcast_startup_message ellipsis="1"
-GdkEventTranslator hidden="1"
