@@ -4175,6 +4175,13 @@
 					<parameter name="first_index" type="gint"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_from_indicesv" symbol="gtk_tree_path_new_from_indicesv">
+				<return-type type="GtkTreePath*"/>
+				<parameters>
+					<parameter name="indices" type="gint*"/>
+					<parameter name="length" type="gsize"/>
+				</parameters>
+			</constructor>
 			<constructor name="new_from_string" symbol="gtk_tree_path_new_from_string">
 				<return-type type="GtkTreePath*"/>
 				<parameters>
@@ -5692,6 +5699,14 @@
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
 			</implements>
+			<method name="get_accel" symbol="gtk_accel_label_get_accel">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="accel_label" type="GtkAccelLabel*"/>
+					<parameter name="accelerator_key" type="guint*"/>
+					<parameter name="accelerator_mods" type="GdkModifierType*"/>
+				</parameters>
+			</method>
 			<method name="get_accel_widget" symbol="gtk_accel_label_get_accel_widget">
 				<return-type type="GtkWidget*"/>
 				<parameters>
@@ -6209,6 +6224,44 @@
 					<parameter name="proxy" type="GtkWidget*"/>
 				</parameters>
 			</vfunc>
+		</object>
+		<object name="GtkActionBar" parent="GtkContainer" type-name="GtkActionBar" get-type="gtk_action_bar_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="get_center_widget" symbol="gtk_action_bar_get_center_widget">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="bar" type="GtkActionBar*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_action_bar_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="pack_end" symbol="gtk_action_bar_pack_end">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="bar" type="GtkActionBar*"/>
+					<parameter name="child" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="pack_start" symbol="gtk_action_bar_pack_start">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="bar" type="GtkActionBar*"/>
+					<parameter name="child" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="set_center_widget" symbol="gtk_action_bar_set_center_widget">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="bar" type="GtkActionBar*"/>
+					<parameter name="center_widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<property name="center-widget" type="GtkWidget*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkActionGroup" parent="GObject" type-name="GtkActionGroup" get-type="gtk_action_group_get_type">
 			<implements>
@@ -13643,6 +13696,12 @@
 					<parameter name="bar" type="GtkHeaderBar*"/>
 				</parameters>
 			</method>
+			<method name="get_decoration_layout" symbol="gtk_header_bar_get_decoration_layout">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="bar" type="GtkHeaderBar*"/>
+				</parameters>
+			</method>
 			<method name="get_has_subtitle" symbol="gtk_header_bar_get_has_subtitle">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -13691,6 +13750,13 @@
 					<parameter name="title_widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="set_decoration_layout" symbol="gtk_header_bar_set_decoration_layout">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="bar" type="GtkHeaderBar*"/>
+					<parameter name="layout" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="set_has_subtitle" symbol="gtk_header_bar_set_has_subtitle">
 				<return-type type="void"/>
 				<parameters>
@@ -13720,6 +13786,8 @@
 				</parameters>
 			</method>
 			<property name="custom-title" type="GtkWidget*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="decoration-layout" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="decoration-layout-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-subtitle" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-close-button" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -14055,6 +14123,12 @@
 			</method>
 			<method name="get_filename" symbol="gtk_icon_info_get_filename">
 				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="icon_info" type="GtkIconInfo*"/>
+				</parameters>
+			</method>
+			<method name="is_symbolic" symbol="gtk_icon_info_is_symbolic">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="icon_info" type="GtkIconInfo*"/>
 				</parameters>
@@ -15740,6 +15814,7 @@
 			<implements>
 				<interface name="AtkComponent"/>
 				<interface name="AtkText"/>
+				<interface name="AtkHypertext"/>
 			</implements>
 		</object>
 		<object name="GtkLayout" parent="GtkContainer" type-name="GtkLayout" get-type="gtk_layout_get_type">
@@ -16814,6 +16889,13 @@
 			<property name="direction" type="GtkArrowType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="menu-model" type="GMenuModel*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="popup" type="GtkMenu*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkMenuButtonAccessible" parent="GtkToggleButtonAccessible" type-name="GtkMenuButtonAccessible" get-type="gtk_menu_button_accessible_get_type">
+			<implements>
+				<interface name="AtkComponent"/>
+				<interface name="AtkAction"/>
+				<interface name="AtkImage"/>
+			</implements>
 		</object>
 		<object name="GtkMenuItem" parent="GtkBin" type-name="GtkMenuItem" get-type="gtk_menu_item_get_type">
 			<implements>
@@ -21035,6 +21117,7 @@
 			<property name="gtk-cursor-blink-timeout" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-cursor-theme-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-cursor-theme-size" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-decoration-layout" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-dnd-drag-threshold" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-double-click-distance" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-double-click-time" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -33918,14 +34001,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1103"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1104"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="4"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="11"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

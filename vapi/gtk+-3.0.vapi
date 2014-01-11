@@ -310,6 +310,7 @@ namespace Gtk {
 	public class AccelLabel : Gtk.Label, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AccelLabel (string str);
+		public void get_accel (uint accelerator_key, Gdk.ModifierType accelerator_mods);
 		public unowned Gtk.Widget get_accel_widget ();
 		public uint get_accel_width ();
 		public bool refetch ();
@@ -427,6 +428,18 @@ namespace Gtk {
 		public bool visible_vertical { get; set; }
 		[HasEmitter]
 		public virtual signal void activate ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class ActionBar : Gtk.Container, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public ActionBar ();
+		public unowned Gtk.Widget get_center_widget ();
+		public void pack_end (Gtk.Widget child);
+		public void pack_start (Gtk.Widget child);
+		public void set_center_widget (Gtk.Widget? center_widget);
+		public Gtk.Widget center_widget { get; set construct; }
+		[NoAccessorMethod]
+		public int spacing { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Deprecated (since = "3.10")]
@@ -2360,6 +2373,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public HeaderBar ();
 		public unowned Gtk.Widget get_custom_title ();
+		public unowned string get_decoration_layout ();
 		public bool get_has_subtitle ();
 		public bool get_show_close_button ();
 		public unowned string get_subtitle ();
@@ -2367,11 +2381,15 @@ namespace Gtk {
 		public void pack_end (Gtk.Widget child);
 		public void pack_start (Gtk.Widget child);
 		public void set_custom_title (Gtk.Widget title_widget);
+		public void set_decoration_layout (string layout);
 		public void set_has_subtitle (bool setting);
 		public void set_show_close_button (bool setting);
 		public void set_subtitle (string? subtitle);
 		public void set_title (string title);
 		public Gtk.Widget custom_title { get; set construct; }
+		public string decoration_layout { get; set; }
+		[NoAccessorMethod]
+		public bool decoration_layout_set { get; set; }
 		public bool has_subtitle { get; set; }
 		public bool show_close_button { get; set; }
 		[NoAccessorMethod]
@@ -2446,6 +2464,7 @@ namespace Gtk {
 		public unowned string get_display_name ();
 		public bool get_embedded_rect (out Gdk.Rectangle rectangle);
 		public unowned string get_filename ();
+		public bool is_symbolic ();
 		public Gdk.Pixbuf load_icon () throws GLib.Error;
 		public async Gdk.Pixbuf load_icon_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public Cairo.Surface load_surface (Gdk.Window for_window) throws GLib.Error;
@@ -2848,7 +2867,7 @@ namespace Gtk {
 		public virtual signal void populate_popup (Gtk.Menu menu);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class LabelAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Text {
+	public class LabelAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Text, Atk.Hypertext {
 		[CCode (has_construct_function = false)]
 		protected LabelAccessible ();
 	}
@@ -3121,6 +3140,11 @@ namespace Gtk {
 		public Gtk.ArrowType direction { get; set; }
 		public GLib.MenuModel menu_model { get; set; }
 		public Gtk.Menu popup { get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class MenuButtonAccessible : Gtk.ToggleButtonAccessible, Atk.Component, Atk.Action, Atk.Image {
+		[CCode (has_construct_function = false)]
+		protected MenuButtonAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class MenuItem : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.Activatable, Gtk.Actionable {
@@ -4275,6 +4299,8 @@ namespace Gtk {
 		public string gtk_cursor_theme_name { owned get; set; }
 		[NoAccessorMethod]
 		public int gtk_cursor_theme_size { get; set; }
+		[NoAccessorMethod]
+		public string gtk_decoration_layout { owned get; set; }
 		[NoAccessorMethod]
 		public int gtk_dnd_drag_threshold { get; set; }
 		[NoAccessorMethod]
@@ -5719,6 +5745,8 @@ namespace Gtk {
 		public TreePath.first ();
 		[CCode (has_construct_function = false, sentinel = "-1")]
 		public TreePath.from_indices (...);
+		[CCode (has_construct_function = false)]
+		public TreePath.from_indicesv (int indices, size_t length);
 		[CCode (has_construct_function = false)]
 		public TreePath.from_string (string path);
 		public int get_depth ();
