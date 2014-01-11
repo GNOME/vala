@@ -4,11 +4,19 @@ interface Foo : Object {
 	}
 }
 
+class Bar {
+}
+
 class Baz : Object, Foo {
 }
 
 void foo<T> (owned T bar) {
 	bar = null;
+}
+
+bool is_check<G> () {
+	var o = new Bar ();
+	return o is G;
 }
 
 void main () {
@@ -19,4 +27,7 @@ void main () {
 	var baz = new Baz ();
 	baz.foo<Object> (bar);
 	assert (baz.ref_count == 1);
+	
+	assert (is_check<Bar> ());
+	assert (!is_check<Baz> ());
 }

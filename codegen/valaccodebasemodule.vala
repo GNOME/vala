@@ -5349,13 +5349,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var type_domain = new CCodeIdentifier (get_ccode_upper_case_name (et.error_domain));
 			return new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, instance_domain, type_domain);
 		} else {
-			string type_id = get_ccode_type_id (type.data_type);
-			if (type_id == "") {
+			var type_id = get_type_id_expression (type);
+			if (type_id == null) {
 				return new CCodeInvalidExpression ();
 			}
 			var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_CHECK_INSTANCE_TYPE"));
 			ccheck.add_argument ((CCodeExpression) ccodenode);
-			ccheck.add_argument (new CCodeIdentifier (type_id));
+			ccheck.add_argument (type_id);
 			return ccheck;
 		}
 	}
