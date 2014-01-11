@@ -196,7 +196,6 @@ public class Vala.BinaryExpression : Expression {
 		if (operator == BinaryOperator.COALESCE) {
 			var local = new LocalVariable (null, get_temp_name (), left, source_reference);
 			var decl = new DeclarationStatement (local, source_reference);
-			decl.check (context);
 
 			var right_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, right.source_reference), right, AssignmentOperator.SIMPLE, right.source_reference), right.source_reference);
 
@@ -210,6 +209,11 @@ public class Vala.BinaryExpression : Expression {
 
 			insert_statement (context.analyzer.insert_block, decl);
 			insert_statement (context.analyzer.insert_block, if_stmt);
+
+			if (!decl.check (context)) {
+				error = true;
+				return false;
+			}
 
 			if (!if_stmt.check (context)) {
 				error = true;
