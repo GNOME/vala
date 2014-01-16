@@ -1,5 +1,3 @@
-# src/Makefile.am
-
 NULL =
 
 if HAVE_LIBVALA_0_13_0
@@ -55,5 +53,4 @@ SUBDIRS = \
 	$(DRIVER_0_22_X_DIR) \
 	$(DRIVER_0_24_X_DIR) \
 	$(NULL)
-
 

@@ -1,11 +1,9 @@
-# src/Makefile.am
-
 NULL =
 
-
-SUBDIRS = htm \
-          devhelp \
-          gtkdoc \
-          $(NULL)
+SUBDIRS = \
+	htm \
+	devhelp \
+	gtkdoc \
+	$(NULL)
 
 

@@ -1,7 +1,4 @@
-# src/Makefile.am
-
 NULL =
-
 
 SUBDIRS = \
 	libvaladoc \
@@ -10,4 +7,8 @@ SUBDIRS = \
 	driver \
 	$(NULL)
 
+EXTRA_DIST = \
+	vapi/config.vapi \
+	vapi/libgvc.vapi \
+	$(NULL)
 

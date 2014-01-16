@@ -10,8 +10,7 @@ if HAVE_LIBVALA_0_13_1
 VALA_FLAGS = -D VALA_0_13_1
 endif
 
-
-AM_CFLAGS =  -g \
+AM_CFLAGS = \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
 	-I $(top_builddir)/src/libvaladoc/ \
 	$(GLIB_CFLAGS) \
@@ -20,23 +19,28 @@ AM_CFLAGS =  -g \
 	$(LIBVALA_0_14_X_CFLAGS) \
 	$(LIBVALA_0_13_0_CFLAGS) \
 	$(LIBVALA_0_13_1_CFLAGS) \
+	-g \
+	-w \
 	$(NULL)
 
-
+AM_VALAFLAGS = \
+	$(VALAFLAGS) \
+	--vapidir $(VERSIONED_VAPI_DIR) \
+	--vapidir $(top_srcdir)/src/vapi \
+	--vapidir $(top_srcdir)/src/libvaladoc \
+	--basedir $(srcdir) \
+	--directory $(builddir) \
+	-C \
+	-g \
+	$(NULL)
 
 BUILT_SOURCES = libdriver.vala.stamp
 
+driver_LTLIBRARIES = libdriver.la
 
 driverdir = $(libdir)/valadoc/drivers/0.14.x
 
-
 libdriver_la_LDFLAGS = -module -avoid-version -no-undefined
-
-
-driver_LTLIBRARIES =  \
-	libdriver.la \
-	$(NULL)
-
 
 libdriver_la_VALASOURCES = \
 	initializerbuilder.vala \
@@ -45,17 +49,18 @@ libdriver_la_VALASOURCES = \
 	driver.vala \
 	$(NULL)
 
-
-libdriver_la_SOURCES =      \
-	libdriver.vala.stamp                 \
+nodist_libdriver_la_SOURCES = \
 	$(libdriver_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-
 libdriver.vala.stamp: $(libdriver_la_VALASOURCES) Makefile
-	$(VALAC) $(VALA_FLAGS) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(VERSIONED_VAPI_DIR) --vapidir $(top_srcdir)/src/libvaladoc --pkg libvala-0.14 --pkg gee-0.8 --pkg valadoc-1.0 $(filter %.vala %.c,$^)
+	$(VALAC) \
+		$(AM_VALAFLAGS) \
+		--pkg libvala-0.14 \
+		--pkg gee-0.8 \
+		--pkg valadoc-1.0 \
+		$(filter %.vala %.c,$^)
 	touch $@
-
 
 libdriver_la_LIBADD = \
 	$(top_builddir)/src/libvaladoc/libvaladoc.la \
@@ -67,12 +72,12 @@ libdriver_la_LIBADD = \
 	$(LIBGVC_LIBS) \
 	$(NULL)
 
-
-EXTRA_DIST = $(libdriver_la_VALASOURCES) libdriver.vala.stamp 
-
-
-MAINTAINERCLEANFILES = \
-	$(libdriver_la_VALASOURCES:.vala=.c) \
+EXTRA_DIST = \
+	$(libdriver_la_VALASOURCES) \
 	$(NULL)
 
+CLEANFILES = \
+	$(BUILT_SOURCES) \
+	$(nodist_libdriver_la_SOURCES) \
+	$(NULL)
 

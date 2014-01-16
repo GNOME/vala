@@ -1,43 +1,38 @@
 NULL =
 
-
 iconsdir = $(datadir)/valadoc/icons
 
-
-dist_icons_DATA =        \
-	tip.png              \
-	warning.png          \
-	abstractclass.png    \
-	abstractmethod.png   \
-	staticmethod.png     \
-	devhelpstyle.css     \
-	wikistyle.css        \
-	style.css            \
-	class.png            \
-	interface.png        \
-	packages.png         \
-	constant.png         \
-	method.png           \
-	property.png         \
-	delegate.png         \
-	errordomain.png      \
-	errorcode.png        \
-	namespace.png        \
-	signal.png           \
-	enum.png             \
-	enumvalue.png        \
-	field.png            \
-	package.png          \
-	struct.png           \
+dist_icons_DATA = \
+	abstractclass.png \
+	abstractmethod.png \
 	abstractproperty.png \
-	constructor.png      \
-	virtualmethod.png    \
-	virtualproperty.png  \
-	scripts.js           \
-	coll_close.png       \
-	coll_open.png        \
+	class.png \
+	coll_close.png \
+	coll_open.png \
+	constant.png \
+	constructor.png \
+	delegate.png \
+	devhelpstyle.css \
+	enum.png \
+	enumvalue.png \
+	errorcode.png \
+	errordomain.png \
+	field.png \
+	interface.png \
+	method.png \
+	namespace.png \
+	package.png \
+	packages.png \
+	property.png \
+	scripts.js \
+	signal.png \
+	staticmethod.png \
+	struct.png \
+	style.css \
+	tip.png \
+	virtualmethod.png \
+	virtualproperty.png \
+	warning.png \
+	wikistyle.css \
 	$(NULL)
-
-
-
 

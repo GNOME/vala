@@ -1,50 +1,53 @@
 NULL =
 
-
-AM_CFLAGS =  -g \
+AM_CFLAGS = \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
 	-I $(top_builddir)/src/libvaladoc/ \
 	$(GLIB_CFLAGS) \
-	$(LIBGVC_CFLAGS) \
 	$(LIBGEE_CFLAGS) \
+	$(LIBGVC_CFLAGS) \
+	-g \
+	-w \
 	$(NULL)
 
-
+AM_VALAFLAGS = \
+	$(VALAFLAGS) \
+	--vapidir $(top_srcdir)/src/vapi \
+	--vapidir $(top_builddir)/src/libvaladoc \
+	--basedir $(srcdir) \
+	--directory $(builddir) \
+	-C \
+	-g \
+	$(NULL)
 
 BUILT_SOURCES = libdoclet.vala.stamp
 
+doclet_LTLIBRARIES = libdoclet.la
 
 docletdir = $(libdir)/valadoc/doclets/gtkdoc
 
-
 libdoclet_la_LDFLAGS = -module -avoid-version -no-undefined
 
-
-doclet_LTLIBRARIES =  \
-	libdoclet.la      \
-	$(NULL)
-
-
 libdoclet_la_VALASOURCES = \
-	commentconverter.vala	\
-	dbus.vala		\
-	doclet.vala           	\
-	gcomment.vala		\
-	generator.vala		\
-	utils.vala		\
+	commentconverter.vala \
+	dbus.vala \
+	doclet.vala \
+	gcomment.vala \
+	generator.vala \
+	utils.vala \
 	$(NULL)
 
-
-libdoclet_la_SOURCES =  \
-	libdoclet.vala.stamp \
+nodist_libdoclet_la_SOURCES = \
 	$(libdoclet_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-
 libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES) Makefile
-	$(VALAC) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(top_srcdir)/src/libvaladoc --pkg gee-0.8 --pkg valadoc-1.0 $(filter %.vala %.c,$^)
+	$(VALAC) \
+		$(AM_VALAFLAGS) \
+		--pkg gee-0.8 \
+		--pkg valadoc-1.0 \
+		$(filter %.vala %.c,$^)
 	touch $@
-
 
 libdoclet_la_LIBADD = \
 	$(top_builddir)/src/libvaladoc/libvaladoc.la \
@@ -52,11 +55,12 @@ libdoclet_la_LIBADD = \
 	$(LIBGEE_LIBS) \
 	$(NULL)
 
+EXTRA_DIST = \
+	$(libdoclet_la_VALASOURCES) \
+	$(NULL)
 
-EXTRA_DIST = $(libdoclet_la_VALASOURCES)  libdoclet.vala.stamp 
-
-
-MAINTAINERCLEANFILES = \
-	$(libdoclet_la_VALASOURCES:.vala=.c) \
+CLEANFILES = \
+	$(BUILT_SOURCES) \
+	$(nodist_libdoclet_la_SOURCES) \
 	$(NULL)
 

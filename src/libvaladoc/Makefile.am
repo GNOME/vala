@@ -2,26 +2,34 @@ NULL =
 
 DEFAULT_DRIVER = "`$(VALAC) --api-version >& /dev/null; if [ $$? = 0 ]; then $(VALAC) --api-version; else $(VALAC) --version; fi`"
 
-
 AM_CFLAGS = \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
-	-DPACKAGE_DATADIR=\"$(libdir)/valadoc\"         \
-	-DPACKAGE_VERSION=\"$(VERSION)\"                \
-	-DDEFAULT_DRIVER=\"$(DEFAULT_DRIVER)\"          \
-	$(LIBGVC_CFLAGS)                                \
-	$(GLIB_CFLAGS)                                  \
-	$(LIBGEE_CFLAGS)                                \
-	$(GMODULE_CFLAGS)                               \
+	-DPACKAGE_DATADIR=\"$(libdir)/valadoc\" \
+	-DPACKAGE_VERSION=\"$(VERSION)\" \
+	-DDEFAULT_DRIVER=\"$(DEFAULT_DRIVER)\" \
+	$(LIBGVC_CFLAGS) \
+	$(GLIB_CFLAGS) \
+	$(LIBGEE_CFLAGS) \
+	$(GMODULE_CFLAGS) \
+	-g \
+	-w \
 	$(NULL)
 
-
-BUILT_SOURCES = libvaladoc.vala.stamp
-
-
-lib_LTLIBRARIES =   \
-	libvaladoc.la   \
+AM_VALAFLAGS = \
+	$(VALAFLAGS) \
+	--vapidir $(top_srcdir)/src/vapi/ \
+	--basedir $(srcdir) \
+	--directory $(builddir) \
+	-C \
+	-g \
 	$(NULL)
 
+BUILT_SOURCES = \
+	libvaladoc.vala.stamp \
+	valadoc-1.0.h \
+	$(NULL)
+
+lib_LTLIBRARIES = libvaladoc.la
 
 libvaladoc_la_VALASOURCES = \
 	doclet.vala \
@@ -157,60 +165,59 @@ libvaladoc_la_VALASOURCES = \
 	html/htmlrenderer.vala \
 	$(NULL)
 
-
-libvaladoc_la_SOURCES =                \
-	libvaladoc.vala.stamp              \
+nodist_libvaladoc_la_SOURCES = \
 	$(libvaladoc_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-
-libvaladocinclude_HEADERS = \
-	valadoc-1.0.h           \
-	$(NULL)
-
-
-libvaladocincludedir = $(includedir)/
-
-
+valadoc-1.0.vapi valadoc-1.0.h: libvaladoc.vala.stamp
 libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES) Makefile
-	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-0.8 --pkg libgvc --pkg gmodule-2.0 --vapidir $(top_srcdir)/src/vapi --pkg config --library valadoc-1.0 $(filter %.vala %.c,$^)
+	$(VALAC) \
+		$(AM_VALAFLAGS) \
+		-H valadoc-1.0.h \
+		--library valadoc-1.0 \
+		--vapi valadoc-1.0.vapi \
+		--pkg config \
+		--pkg gee-0.8 \
+		--pkg gmodule-2.0 \
+		--pkg libgvc \
+		$(filter %.vala %.c,$^)
 	touch $@
-
 
 libvaladoc_la_LDFLAGS = -no-undefined
 
-
 libvaladoc_la_LIBADD = \
-	$(LIBGVC_LIBS)     \
-	$(LIBGEE_LIBS)     \
-	$(GLIB_LIBS)       \
-	$(GMODULE_LIBS)    \
+	$(LIBGVC_LIBS) \
+	$(LIBGEE_LIBS) \
+	$(GLIB_LIBS) \
+	$(GMODULE_LIBS) \
 	$(NULL)
 
-
-EXTRA_DIST =                     \
-	$(libvaladoc_la_VALASOURCES) \
-	libvaladoc.vala.stamp        \
-	valadoc-1.0.vapi             \
-	valadoc-1.0.deps             \
-	$(NULL)
-
-
-MAINTAINERCLEANFILES =                    \
-	valadoc-1.0.vapi                      \
-	valadoc-1.0.h                         \
-	valadoc-1.0.gir                       \
-	$(libvaladoc_la_VALASOURCES:.vala=.c) \
+libvaladocincludedir = $(includedir)/
+nodist_libvaladocinclude_HEADERS = \
+	valadoc-1.0.h           \
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = valadoc-1.0.pc
-
+nodist_pkgconfig_DATA = valadoc-1.0.pc
 
 vapidir = $(datadir)/vala/vapi
-vapi_DATA =     \
+nodist_vapi_DATA = \
 	valadoc-1.0.vapi \
 	valadoc-1.0.deps \
 	$(NULL)
 
+EXTRA_DIST = \
+	$(libvaladoc_la_VALASOURCES) \
+	valadoc-1.0.deps.in \
+	valadoc-1.0.pc.in \
+	$(NULL)
+
+CLEANFILES = \
+	$(BUILT_SOURCES) \
+	$(nodist_libvaladoc_la_SOURCES) \
+	valadoc-1.0.deps \
+	valadoc-1.0.pc \
+	valadoc-1.0.vapi \
+	valadoc-1.0.h \
+	$(NULL)
 
