@@ -203,7 +203,7 @@ public struct short {
 	[CCode (cname = "CLAMP")]
 	public short clamp (short low, short high);
 	[CCode (cname = "abs", cheader_filename = "stdlib.h")]
-	public static short abs ();
+	public short abs ();
 }
 
 [SimpleType]
