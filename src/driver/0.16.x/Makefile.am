@@ -3,7 +3,7 @@ NULL =
 VERSIONED_VAPI_DIR=`pkg-config libvala-0.16 --variable vapidir`
 
 if HAVE_LIBVALA_0_15_0
-VALA_FLAGS = -D VALA_0_15_0
+VALAFLAGS = -D VALA_0_15_0
 endif
 
 AM_CFLAGS = \
