@@ -1,6 +1,6 @@
 /* glib-2.0.vala
  *
- * Copyright (C) 2006-2012  Jürg Billeter
+ * Copyright (C) 2006-2014  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  * Copyright (C) 2007  Mathias Hasselmann
  *
@@ -202,6 +202,8 @@ public struct short {
 	public static short max (short a, short b);
 	[CCode (cname = "CLAMP")]
 	public short clamp (short low, short high);
+	[CCode (cname = "abs", cheader_filename = "stdlib.h")]
+	public static short abs ();
 }
 
 [SimpleType]
