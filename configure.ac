@@ -11,8 +11,7 @@ AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_SRCDIR([configure.ac])
 AM_INIT_AUTOMAKE([1.11 foreign tar-ustar dist-xz no-dist-gzip subdir-objects])
 
-AM_MAINTAINER_MODE
-
+AM_MAINTAINER_MODE([enable])
 
 AC_PROG_CC
 AC_PROG_INSTALL
