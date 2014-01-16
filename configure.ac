@@ -133,7 +133,7 @@ src/driver/0.20.x/Makefile
 src/driver/0.22.x/Makefile
 src/driver/0.24.x/Makefile
 src/doclets/Makefile
-src/doclets/htm/Makefile
+src/doclets/html/Makefile
 src/doclets/devhelp/Makefile
 src/doclets/gtkdoc/Makefile
 src/valadoc/Makefile

@@ -1,7 +1,7 @@
 NULL =
 
 SUBDIRS = \
-	htm \
+	html \
 	devhelp \
 	gtkdoc \
 	$(NULL)
