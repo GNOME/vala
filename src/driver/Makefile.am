@@ -1,17 +1,5 @@
 NULL =
 
-if HAVE_LIBVALA_0_13_0
-DRIVER_0_14_X_DIR = 0.14.x
-endif
-
-if HAVE_LIBVALA_0_13_1
-DRIVER_0_14_X_DIR = 0.14.x
-endif
-
-if HAVE_LIBVALA_0_14_X
-DRIVER_0_14_X_DIR = 0.14.x
-endif
-
 if HAVE_LIBVALA_0_15_0
 DRIVER_0_16_X_DIR = 0.16.x
 endif
@@ -46,7 +34,6 @@ endif
 
 
 SUBDIRS = \
-	$(DRIVER_0_14_X_DIR) \
 	$(DRIVER_0_16_X_DIR) \
 	$(DRIVER_0_18_X_DIR) \
 	$(DRIVER_0_20_X_DIR) \

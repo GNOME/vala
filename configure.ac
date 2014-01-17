@@ -107,15 +107,6 @@ AM_CONDITIONAL(HAVE_LIBVALA_0_16_X, test "$have_libvala_0_16_x" = "yes")
 PKG_CHECK_MODULES(LIBVALA_0_15_0, libvala-0.16 = 0.15.0, have_libvala_0_15_0="yes", have_libvala_0_15_0="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_15_0, test "$have_libvala_0_15_0" = "yes")
 
-PKG_CHECK_MODULES(LIBVALA_0_14_X, libvala-0.14 >= 0.13.2, have_libvala_0_14_x="yes", have_libvala_0_14_x="no")
-AM_CONDITIONAL(HAVE_LIBVALA_0_14_X, test "$have_libvala_0_14_x" = "yes")
-
-PKG_CHECK_MODULES(LIBVALA_0_13_1, libvala-0.14 = 0.13.1, have_libvala_0_13_1="yes", have_libvala_0_13_1="no")
-AM_CONDITIONAL(HAVE_LIBVALA_0_13_1, test "$have_libvala_0_13_1" = "yes")
-
-PKG_CHECK_MODULES(LIBVALA_0_13_0, libvala-0.14 = 0.13.0, have_libvala_0_13_0="yes", have_libvala_0_13_0="no")
-AM_CONDITIONAL(HAVE_LIBVALA_0_13_0, test "$have_libvala_0_13_0" = "yes")
-
 
 AC_CONFIG_FILES([
 Makefile
@@ -126,7 +117,6 @@ icons/Makefile
 doc/Makefile
 src/libvaladoc/Makefile
 src/driver/Makefile
-src/driver/0.14.x/Makefile
 src/driver/0.16.x/Makefile
 src/driver/0.18.x/Makefile
 src/driver/0.20.x/Makefile
