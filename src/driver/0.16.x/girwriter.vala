@@ -24,8 +24,6 @@
 using Valadoc.Api;
 
 
-#if ! VALA_0_15_0
-
 /**
  * Code visitor generating .gir file for the public interface.
  */
@@ -203,6 +201,4 @@ public class Valadoc.Drivers.GirWriter : Vala.GIRWriter {
 	}
 }
 
-
-#endif
 

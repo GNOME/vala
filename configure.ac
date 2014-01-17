@@ -95,17 +95,8 @@ AM_CONDITIONAL(HAVE_LIBVALA_0_20_X, test "$have_libvala_0_20_x" = "yes")
 PKG_CHECK_MODULES(LIBVALA_0_18_X, libvala-0.18 >= 0.17.4, have_libvala_0_18_x="yes", have_libvala_0_18_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_18_X, test "$have_libvala_0_18_x" = "yes")
 
-PKG_CHECK_MODULES(LIBVALA_0_17__1_3, libvala-0.18 >= 0.17.1 libvala-0.18 <= 0.17.3, have_libvala_0_17__1_3="yes", have_libvala_0_17__1_3="no")
-AM_CONDITIONAL(HAVE_LIBVALA_0_17__1_3, test "$have_libvala_0_17__1_3" = "yes")
-
-PKG_CHECK_MODULES(LIBVALA_0_17_0, libvala-0.18 = 0.17.0, have_libvala_0_17_0="yes", have_libvala_0_17_0="no")
-AM_CONDITIONAL(HAVE_LIBVALA_0_17_0, test "$have_libvala_0_17_0" = "yes")
-
 PKG_CHECK_MODULES(LIBVALA_0_16_X, libvala-0.16 >= 0.15.1, have_libvala_0_16_x="yes", have_libvala_0_16_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_16_X, test "$have_libvala_0_16_x" = "yes")
-
-PKG_CHECK_MODULES(LIBVALA_0_15_0, libvala-0.16 = 0.15.0, have_libvala_0_15_0="yes", have_libvala_0_15_0="no")
-AM_CONDITIONAL(HAVE_LIBVALA_0_15_0, test "$have_libvala_0_15_0" = "yes")
 
 
 AC_CONFIG_FILES([

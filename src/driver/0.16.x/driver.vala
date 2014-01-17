@@ -33,11 +33,7 @@ public class Valadoc.Drivers.Driver : Object, Valadoc.Driver {
 	private Api.Tree? tree;
 
 	public void write_gir (Settings settings, ErrorReporter reporter) {
-#if VALA_0_15_0
-		var gir_writer = new Vala.GIRWriter ();
-#else
 		var gir_writer = new Drivers.GirWriter (resolver);
-#endif
 
 		// put .gir file in current directory unless -d has been explicitly specified
 		string gir_directory = ".";
@@ -45,7 +41,7 @@ public class Valadoc.Drivers.Driver : Object, Valadoc.Driver {
 			gir_directory = settings.gir_directory;
 		}
 
-		gir_writer.write_file ((Vala.CodeContext) tree.data, 
+		gir_writer.write_file ((Vala.CodeContext) tree.data,
 							   gir_directory,
 							   settings.gir_namespace,
 							   settings.gir_version,

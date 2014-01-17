@@ -86,37 +86,19 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 					) {
 						Vala.SourceReference pos = c.source_reference;
 						if (c is Vala.GirComment) {
-#if VALA_0_17_0
-							comment = new GirSourceComment (c.content,
-															file,
-															pos.first_line,
-															pos.first_column,
-															pos.last_line,
-															pos.last_column);
-#else
 							comment = new GirSourceComment (c.content,
 															file,
 															pos.begin.line,
 															pos.begin.column,
 															pos.end.line,
 															pos.end.column);
-#endif
 						} else {
-#if VALA_0_17_0
-							comment = new SourceComment (c.content,
-														 file,
-														 pos.first_line,
-														 pos.first_column,
-														 pos.last_line,
-														 pos.last_column);
-#else
 							comment = new SourceComment (c.content,
 														 file,
 														 pos.begin.line,
 														 pos.begin.column,
 														 pos.end.line,
 														 pos.end.column);
-#endif
 						}
 						break;
 					}
@@ -365,78 +347,42 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			Vala.SourceReference pos = comment.source_reference;
 			SourceFile file = files.get (pos.file);
 			if (comment is Vala.GirComment) {
-#if VALA_0_17_0
-				var tmp = new GirSourceComment (comment.content,
-												file,
-												pos.first_line,
-												pos.first_column,
-												pos.last_line,
-												pos.last_column);
-#else
 				var tmp = new GirSourceComment (comment.content,
 												file,
 												pos.begin.line,
 												pos.begin.column,
 												pos.end.line,
 												pos.end.column);
-#endif
 				if (((Vala.GirComment) comment).return_content != null) {
 					Vala.SourceReference return_pos = ((Vala.GirComment) comment).return_content.source_reference;
-#if VALA_0_17_0
-					tmp.return_comment = new SourceComment (((Vala.GirComment) comment).return_content.content,
-															file,
-															return_pos.first_line,
-															return_pos.first_column,
-															return_pos.last_line,
-															return_pos.last_column);
-#else
 					tmp.return_comment = new SourceComment (((Vala.GirComment) comment).return_content.content,
 															file,
 															return_pos.begin.line,
 															return_pos.begin.column,
 															return_pos.end.line,
 															return_pos.end.column);
-#endif
 				}
 
 				Vala.MapIterator<string, Vala.Comment> it = ((Vala.GirComment) comment).parameter_iterator ();
 				while (it.next ()) {
 					Vala.Comment vala_param = it.get_value ();
 					Vala.SourceReference param_pos = vala_param.source_reference;
-#if VALA_0_17_0
-					var param_comment = new SourceComment (vala_param.content,
-														   file,
-														   param_pos.first_line,
-														   param_pos.first_column,
-														   param_pos.last_line,
-														   param_pos.last_column);
-#else
 					var param_comment = new SourceComment (vala_param.content,
 														   file,
 														   param_pos.begin.line,
 														   param_pos.begin.column,
 														   param_pos.end.line,
 														   param_pos.end.column);
-#endif
 					tmp.add_parameter_content (it.get_key (), param_comment);
 				}
 				return tmp;
 			} else {
-#if VALA_0_17_0
-				return new SourceComment (comment.content,
-										  file,
-										  pos.first_line,
-										  pos.first_column,
-										  pos.last_line,
-										  pos.last_column);
-#else
 				return new SourceComment (comment.content,
 										  file,
 										  pos.begin.line,
 										  pos.begin.column,
 										  pos.end.line,
 										  pos.end.column);
-#endif
 			}
 		}
 
@@ -862,13 +808,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 						var ns_ref = new Vala.UsingDirective (new Vala.UnresolvedSymbol (null, "GLib", null));
 						source_file.add_using_directive (ns_ref);
 						context.root.add_using_directive (ns_ref);
-#if VALA_0_17__1_3|| VALA_0_17_0
-					} else if (context.profile == Vala.Profile.POSIX) {
-						// import the Posix namespace by default (namespace of backend-specific standard library)
-						var ns_ref = new Vala.UsingDirective (new Vala.UnresolvedSymbol (null, "Posix", null));
-						source_file.add_using_directive (ns_ref);
-						context.root.add_using_directive (ns_ref);
-#endif
 					}
 
 					context.add_source_file (source_file);
@@ -978,13 +917,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			if (!this.add_package (context, "gobject-2.0")) { //
 				Vala.Report.error (null, "gobject-2.0 not found in specified Vala API directories");
 			}
-#if VALA_0_17__1_3 || VALA_0_17_0
-		} else if (context.profile == Vala.Profile.POSIX) {
-			// default package
-			if (!add_package (context, "posix")) {
-				Vala.Report.error (null, "posix not found in specified Vala API directories");
-			}
-#endif
 		}
 
 		// add user defined files:

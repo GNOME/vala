@@ -1,19 +1,7 @@
 NULL =
 
-if HAVE_LIBVALA_0_15_0
-DRIVER_0_16_X_DIR = 0.16.x
-endif
-
 if HAVE_LIBVALA_0_16_X
 DRIVER_0_16_X_DIR = 0.16.x
-endif
-
-if HAVE_LIBVALA_0_17_0
-DRIVER_0_18_X_DIR = 0.18.x
-endif
-
-if HAVE_LIBVALA_0_17__1_3
-DRIVER_0_18_X_DIR = 0.18.x
 endif
 
 if HAVE_LIBVALA_0_18_X
