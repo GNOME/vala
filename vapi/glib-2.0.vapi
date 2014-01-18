@@ -1302,6 +1302,9 @@ namespace GLib {
 		[CCode (cname = "G_SQRT2")]
 		public const double SQRT2;
 
+		[CCode (cname = "G_LOG_2_BASE_10")]
+		public const double LOG_2_BASE_10;
+
 		/* generated from <bits/mathcalls.h> of glibc */
 		public static double acos (double x);
 		public static float acosf (float x);
