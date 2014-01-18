@@ -2973,7 +2973,7 @@ namespace Gtk {
 		public virtual signal void activate_cursor_row ();
 		public virtual signal void move_cursor (Gtk.MovementStep step, int count);
 		public virtual signal void row_activated (Gtk.ListBoxRow row);
-		public virtual signal void row_selected (Gtk.ListBoxRow row);
+		public virtual signal void row_selected (Gtk.ListBoxRow? row);
 		public virtual signal void toggle_cursor_row ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
