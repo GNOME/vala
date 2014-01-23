@@ -15,6 +15,7 @@ namespace Gtk {
 		public SourceBuffer (Gtk.TextTagTable? table);
 		public bool backward_iter_to_source_mark (Gtk.TextIter iter, string? category);
 		public void begin_not_undoable_action ();
+		public void change_case (Gtk.SourceChangeCaseType case_type, Gtk.TextIter start, Gtk.TextIter end);
 		public unowned Gtk.SourceMark create_source_mark (string? name, string category, Gtk.TextIter where);
 		public void end_not_undoable_action ();
 		public void ensure_highlight (Gtk.TextIter start, Gtk.TextIter end);
@@ -52,7 +53,7 @@ namespace Gtk {
 		public Gtk.SourceStyleScheme style_scheme { get; set; }
 		public Gtk.SourceUndoManager undo_manager { get; set construct; }
 		public virtual signal void bracket_matched (Gtk.TextIter iter, Gtk.SourceBracketMatchType state);
-		public signal void highlight_updated (Gtk.TextIter object, Gtk.TextIter p0);
+		public signal void highlight_updated (Gtk.TextIter start, Gtk.TextIter end);
 		[HasEmitter]
 		public virtual signal void redo ();
 		public signal void source_mark_updated (Gtk.TextMark mark);
@@ -182,20 +183,25 @@ namespace Gtk {
 	public class SourceGutter : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected SourceGutter ();
+		[Deprecated (since = "3.12")]
 		public void get_padding (int xpad, int ypad);
 		public unowned Gtk.SourceGutterRenderer get_renderer_at_pos (int x, int y);
+		[Deprecated (since = "3.12")]
 		public unowned Gdk.Window get_window ();
 		public bool insert (Gtk.SourceGutterRenderer renderer, int position);
 		public void queue_draw ();
 		public void remove (Gtk.SourceGutterRenderer renderer);
 		public void reorder (Gtk.SourceGutterRenderer renderer, int position);
+		[Deprecated (since = "3.12")]
 		public void set_padding (int xpad, int ypad);
 		[NoAccessorMethod]
 		public Gtk.SourceView view { owned get; construct; }
 		[NoAccessorMethod]
 		public Gtk.TextWindowType window_type { get; construct; }
+		[Deprecated (since = "3.12")]
 		[NoAccessorMethod]
 		public int xpad { get; set construct; }
+		[Deprecated (since = "3.12")]
 		[NoAccessorMethod]
 		public int ypad { get; set construct; }
 	}
@@ -497,6 +503,10 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool line_background_set { get; construct; }
 		[NoAccessorMethod]
+		public string scale { owned get; construct; }
+		[NoAccessorMethod]
+		public bool scale_set { get; construct; }
+		[NoAccessorMethod]
 		public bool strikethrough { get; construct; }
 		[NoAccessorMethod]
 		public bool strikethrough_set { get; construct; }
@@ -647,6 +657,14 @@ namespace Gtk {
 		OUT_OF_RANGE,
 		NOT_FOUND,
 		FOUND
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_CHANGE_CASE_", type_id = "gtk_source_change_case_type_get_type ()")]
+	[GIR (name = "ChangeCaseType")]
+	public enum SourceChangeCaseType {
+		LOWER,
+		UPPER,
+		TOGGLE,
+		TITLE
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_COMPLETION_ACTIVATION_", type_id = "gtk_source_completion_activation_get_type ()")]
 	[Flags]
