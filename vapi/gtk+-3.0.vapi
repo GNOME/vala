@@ -1711,6 +1711,7 @@ namespace Gtk {
 		public unowned Gtk.Widget get_action_area ();
 		[CCode (type = "GtkWidget*")]
 		public unowned Gtk.Box get_content_area ();
+		public unowned Gtk.Widget get_header_bar ();
 		public int get_response_for_widget (Gtk.Widget widget);
 		public unowned Gtk.Widget get_widget_for_response (int response_id);
 		public int run ();
@@ -1721,6 +1722,8 @@ namespace Gtk {
 		public void set_response_sensitive (int response_id, bool setting);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Dialog.with_buttons (string? title, Gtk.Window? parent, Gtk.DialogFlags flags, ...);
+		[NoAccessorMethod]
+		public int use_header_bar { get; construct; }
 		public virtual signal void close ();
 		[HasEmitter]
 		public virtual signal void response (int response_id);
@@ -3557,6 +3560,23 @@ namespace Gtk {
 		public Gdk.Window socket_window { get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class Popover : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Popover (Gtk.Widget relative_to);
+		public bool get_modal ();
+		public bool get_pointing_to (Cairo.RectangleInt rect);
+		public Gtk.PositionType get_position ();
+		public unowned Gtk.Widget get_relative_to ();
+		public void set_modal (bool modal);
+		public void set_pointing_to (Cairo.RectangleInt rect);
+		public void set_position (Gtk.PositionType position);
+		public void set_relative_to (Gtk.Widget relative_to);
+		public bool modal { get; set; }
+		public Cairo.RectangleInt pointing_to { get; set; }
+		public Gtk.PositionType position { get; set construct; }
+		public Gtk.Widget relative_to { get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class PrintContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected PrintContext ();
@@ -4302,6 +4322,8 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string gtk_decoration_layout { owned get; set; }
 		[NoAccessorMethod]
+		public bool gtk_dialogs_use_header { get; set; }
+		[NoAccessorMethod]
 		public int gtk_dnd_drag_threshold { get; set; }
 		[NoAccessorMethod]
 		public int gtk_double_click_distance { get; set; }
@@ -4525,6 +4547,7 @@ namespace Gtk {
 		public Stack ();
 		public void add_named (Gtk.Widget child, string name);
 		public void add_titled (Gtk.Widget child, string name, string title);
+		public unowned Gtk.Widget get_child_by_name (string name);
 		public bool get_homogeneous ();
 		public uint get_transition_duration ();
 		public bool get_transition_running ();
@@ -4960,6 +4983,13 @@ namespace Gtk {
 		public void add_uri_targets (uint info);
 		public bool find (Gdk.Atom target, uint info);
 		public void remove (Gdk.Atom target);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Compact]
+	public class TargetPair {
+		public uint flags;
+		public uint info;
+		public Gdk.Atom target;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Deprecated (since = "3.4")]
@@ -5746,7 +5776,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, sentinel = "-1")]
 		public TreePath.from_indices (...);
 		[CCode (has_construct_function = false)]
-		public TreePath.from_indicesv (int indices, size_t length);
+		public TreePath.from_indicesv ([CCode (array_length_pos = 1.9)] int[] indices);
 		[CCode (has_construct_function = false)]
 		public TreePath.from_string (string path);
 		public int get_depth ();
@@ -6738,6 +6768,8 @@ namespace Gtk {
 		public string icon_name { get; set; }
 		[NoAccessorMethod]
 		public bool is_active { get; }
+		[NoAccessorMethod]
+		public bool is_maximized { get; }
 		public bool mnemonics_visible { get; set; }
 		public bool modal { get; set; }
 		public bool resizable { get; set; }
@@ -7453,7 +7485,8 @@ namespace Gtk {
 		EDGE,
 		START,
 		END,
-		CENTER
+		CENTER,
+		EXPAND
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_BUTTONS_")]
 	public enum ButtonsType {
@@ -7568,7 +7601,8 @@ namespace Gtk {
 	[Flags]
 	public enum DialogFlags {
 		MODAL,
-		DESTROY_WITH_PARENT
+		DESTROY_WITH_PARENT,
+		USE_HEADER_BAR
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DIR_")]
 	public enum DirectionType {
@@ -9037,6 +9071,10 @@ namespace Gtk {
 	public const string STYLE_REGION_TAB;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int TEXT_VIEW_PRIORITY_VALIDATE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const int TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const int TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool accel_groups_activate (GLib.Object object, uint accel_key, Gdk.ModifierType accel_mods);
 	[CCode (cheader_filename = "gtk/gtk.h")]
