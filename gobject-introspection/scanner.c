@@ -1531,12 +1531,15 @@ g_igenerator_start_preprocessor (GIGenerator *igenerator,
   int tmp;
   char *tmpname;
 
-  cpp_argv = g_new0 (char *, g_list_length (cpp_options) + 4);
+  cpp_argv = g_new0 (char *, g_list_length (cpp_options) + 5);
   cpp_argv[cpp_argc++] = "cpp";
   cpp_argv[cpp_argc++] = "-C";
 
   /* Disable GCC extensions as we cannot parse them yet */
   cpp_argv[cpp_argc++] = "-U__GNUC__";
+
+  /* Help system headers cope with the lack of __GNUC__ by pretending to be lint */
+  cpp_argv[cpp_argc++] = "-Dlint";
 
   for (l = cpp_options; l; l = l->next)
     cpp_argv[cpp_argc++] = (char*)l->data;
