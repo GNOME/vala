@@ -730,8 +730,8 @@ public class Vala.GObjectModule : GTypeModule {
 			return false;
 		}
 
-		if (type_sym is Interface && prop.is_virtual) {
-			// GObject does not support virtual interface properties
+		if (type_sym is Interface && !prop.is_abstract) {
+			// GObject does not support non-abstract interface properties
 			return false;
 		}
 
