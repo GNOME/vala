@@ -724,9 +724,9 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			use_temp = false;
 		}
 		var local = variable as LocalVariable;
-		if (local != null && local.floating) {
-			// floating locals are generated internally and safe to
-			// access without temporary variable
+		if (local != null && local.name[0] == '.') {
+			// already a temporary variable generated internally
+			// and safe to access without temporary variable
 			use_temp = false;
 		}
 
