@@ -730,8 +730,9 @@ public class Vala.GObjectModule : GTypeModule {
 			return false;
 		}
 
-		if (type_sym is Interface && !prop.is_abstract) {
-			// GObject does not support non-abstract interface properties
+		if (type_sym is Interface && !prop.is_abstract && !prop.external && !prop.external_package) {
+			// GObject does not support non-abstract interface properties,
+			// however we assume external properties always are GObject properties
 			return false;
 		}
 
