@@ -5121,6 +5121,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public override void visit_pointer_indirection (PointerIndirection expr) {
 		set_cvalue (expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_cvalue (expr.inner)));
+		((GLibValue) expr.target_value).lvalue = get_lvalue (expr.inner.target_value);
 	}
 
 	public override void visit_addressof_expression (AddressofExpression expr) {
