@@ -957,8 +957,33 @@ public class string {
 	public string[] split (string delimiter, int max_tokens = 0);
 	[CCode (cname = "g_strsplit_set", array_length = false, array_null_terminated = true)]
 	public string[] split_set (string delimiters, int max_tokens = 0);
-	[CCode (cname = "g_strjoinv")]
-	public static string joinv (string separator, [CCode (array_length = false, array_null_terminated = true)] string[] str_array);
+	[CCode (cname = "g_stpcpy")]
+	private static void* copy_to_buffer (void* dest, string src);
+	[CCode (cname = "_vala_g_strjoinv")]
+	public static string joinv (string? separator, string[]? str_array) {
+		if (separator == null) {
+			separator = "";
+		}
+		if (str_array != null) {
+			int i;
+			size_t len = 1;
+			for (i = 0 ; (str_array.length != -1 && i < str_array.length) || (str_array.length == -1 && str_array[i] != null) ; i++) {
+				len += str_array[i].length;
+			}
+			len += separator.length * (i - 1);
+
+			string* res = GLib.malloc (len);
+			void* ptr = string.copy_to_buffer ((void*) res, str_array[0]);
+			for (i = 1 ; str_array[i] != null ; i++) {
+				ptr = string.copy_to_buffer (ptr, separator);
+				ptr = string.copy_to_buffer (ptr, str_array[i]);
+			}
+
+			return (owned) res;
+		} else {
+			return "";
+		}
+	}
 	[CCode (cname = "g_strjoin")]
 	public static string join (string separator, ...);
 	[CCode (cname = "g_strnfill")]
