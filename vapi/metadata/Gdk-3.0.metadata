@@ -25,7 +25,7 @@ Window
         .add_filter skip=false
         .remove_filter skip=false
 WindowRedirect skip
-EventKey
+EventKey struct=false
         .string skip
 RGBA struct
 ModifierType
@@ -53,8 +53,25 @@ Window
         .destroy destroys_instance
         .destroy_notify skip
 synthesize_window_state skip
-EventMotion
+EventAny struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventButton struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventConfigure struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventCrossing struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventDND struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventExpose struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventFocus struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventGrabBroken struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventMotion struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
         .axes array
+EventOwnerChange struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventProperty struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventProximity struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventScroll struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventSelection struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventSetting struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventTouch struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventVisibility struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventWindowState struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 FilterFunc.data closure=2
 init*.argv unowned
 parse_args.argv unowned
