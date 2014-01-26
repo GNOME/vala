@@ -2150,7 +2150,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		for (int i = local_vars.size - 1; i >= 0; i--) {
 			var local = local_vars[i];
 			local.active = false;
-			if (!local.unreachable && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
+			if (!local.unreachable && !local.captured && requires_destroy (local.variable_type)) {
 				ccode.add_expression (destroy_local (local));
 			}
 		}
@@ -3463,7 +3463,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		// free in reverse order
 		for (int i = local_vars.size - 1; i >= 0; i--) {
 			var local = local_vars[i];
-			if (!local.unreachable && local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
+			if (!local.unreachable && local.active && !local.captured && requires_destroy (local.variable_type)) {
 				ccode.add_expression (destroy_local (local));
 			}
 		}

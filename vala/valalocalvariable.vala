@@ -28,11 +28,6 @@ using GLib;
 public class Vala.LocalVariable : Variable {
 	public bool is_result { get; set; }
 
-	/**
-	 * Floating variables may only be accessed exactly once.
-	 */
-	public bool floating { get; set; }
-
 	public bool captured { get; set; }
 
 	/* Currently ignored due to GCC 4.8 being strict on possibly uninitialized variables */
