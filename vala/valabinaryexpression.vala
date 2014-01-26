@@ -198,8 +198,24 @@ public class Vala.BinaryExpression : Expression {
 				error = true;
 				return false;
 			}
-			
-			var local = new LocalVariable (left.value_type != null ? left.value_type.copy () : null, get_temp_name (), left, source_reference);
+
+			if (!right.check (context)) {
+				error = true;
+				return false;
+			}
+
+			DataType local_type = null;
+			if (left.value_type != null) {
+				local_type = left.value_type.copy ();
+				if (right.value_type != null && right.value_type.value_owned) {
+					// value owned if either left or right is owned
+					local_type.value_owned = true;
+				}
+			} else if (right.value_type != null) {
+				local_type = right.value_type.copy ();
+			}
+		
+			var local = new LocalVariable (local_type, get_temp_name (), left, source_reference);
 			var decl = new DeclarationStatement (local, source_reference);
 
 			var right_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, right.source_reference), right, AssignmentOperator.SIMPLE, right.source_reference), right.source_reference);
