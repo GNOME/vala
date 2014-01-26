@@ -63,6 +63,7 @@ TESTS = \
 	control-flow/foreach.vala \
 	control-flow/switch.vala \
 	control-flow/sideeffects.vala \
+	control-flow/bug639482.vala \
 	control-flow/bug652549.vala \
 	control-flow/bug665904.vala \
 	control-flow/bug691514.vala	\

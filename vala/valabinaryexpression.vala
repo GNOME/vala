@@ -221,10 +221,18 @@ public class Vala.BinaryExpression : Expression {
 			}
 
 			var ma = new MemberAccess.simple (local.name, source_reference);
-			ma.target_type = target_type;
-			ma.check (context);
+			Expression replace = ma;
 
-			parent_node.replace_expression (this, ma);
+			if (target_type == null) {
+				replace = new ReferenceTransferExpression (replace, source_reference);
+				replace.target_type = local.variable_type.copy ();
+				replace.target_type.value_owned = true;
+			} else {
+				replace.target_type = target_type.copy ();
+			}
+			replace.check (context);
+
+			parent_node.replace_expression (this, replace);
 
 			return true;
 		}
