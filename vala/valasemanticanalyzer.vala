@@ -271,7 +271,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (sym is LocalVariable) {
 			var local = (LocalVariable) sym;
 			var type = local.variable_type.copy ();
-			if (!lvalue && !local.floating) {
+			if (!lvalue) {
 				type.value_owned = false;
 			}
 			return type;
@@ -764,6 +764,22 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return false;
 	}
 
+	// Create an access to a temporary variable, with proper reference transfer if needed
+	public static Expression create_temp_access (LocalVariable local, DataType? target_type) {
+		Expression temp_access = new MemberAccess.simple (local.name, local.source_reference);
+
+		var target_owned = target_type == null || target_type.value_owned;
+		if (target_owned && local.variable_type.is_disposable ()) {
+			temp_access = new ReferenceTransferExpression (temp_access, local.source_reference);
+			temp_access.target_type = target_type != null ? target_type.copy () : local.variable_type.copy ();
+			temp_access.target_type.value_owned = true;
+		} else {
+			temp_access.target_type = target_type != null ? target_type.copy () : null;
+		}
+		
+		return temp_access;
+	}
+	
 	public void visit_member_initializer (MemberInitializer init, DataType type) {
 		init.symbol_reference = symbol_lookup_inherited (type.data_type, init.name);
 		if (!(init.symbol_reference is Field || init.symbol_reference is Property)) {
