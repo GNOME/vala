@@ -194,7 +194,12 @@ public class Vala.BinaryExpression : Expression {
 		}
 
 		if (operator == BinaryOperator.COALESCE) {
-			var local = new LocalVariable (null, get_temp_name (), left, source_reference);
+			if (!left.check (context)) {
+				error = true;
+				return false;
+			}
+			
+			var local = new LocalVariable (left.value_type != null ? left.value_type.copy () : null, get_temp_name (), left, source_reference);
 			var decl = new DeclarationStatement (local, source_reference);
 
 			var right_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, right.source_reference), right, AssignmentOperator.SIMPLE, right.source_reference), right.source_reference);
@@ -220,19 +225,10 @@ public class Vala.BinaryExpression : Expression {
 				return false;
 			}
 
-			var ma = new MemberAccess.simple (local.name, source_reference);
-			Expression replace = ma;
+			var temp_access = SemanticAnalyzer.create_temp_access (local, target_type);
+			temp_access.check (context);
 
-			if (target_type == null) {
-				replace = new ReferenceTransferExpression (replace, source_reference);
-				replace.target_type = local.variable_type.copy ();
-				replace.target_type.value_owned = true;
-			} else {
-				replace.target_type = target_type.copy ();
-			}
-			replace.check (context);
-
-			parent_node.replace_expression (this, replace);
+			parent_node.replace_expression (this, temp_access);
 
 			return true;
 		}
