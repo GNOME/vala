@@ -35,3 +35,6 @@ coverage
 lcov.info
 
 *~
+
+build-aux/test-driver
+
