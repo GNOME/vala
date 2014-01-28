@@ -175,8 +175,8 @@ public class Vala.Assignment : Expression {
 				var sig = (Signal) ma.symbol_reference;
 				right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type, this));
 			} else {
-				right.formal_target_type = ma.formal_value_type;
-				right.target_type = ma.value_type;
+				right.formal_target_type = ma.formal_value_type.copy ();
+				right.target_type = ma.value_type.copy ();
 			}
 		} else if (left is ElementAccess) {
 			var ea = (ElementAccess) left;

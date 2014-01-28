@@ -745,17 +745,17 @@ public class Vala.MethodCall : Expression {
 				// store parent_node as we need to replace the expression in the old parent node later on
 				var old_parent_node = parent_node;
 
-				var local = new LocalVariable (value_type, get_temp_name (), null, source_reference);
+				var local = new LocalVariable (value_type.copy (), get_temp_name (), null, source_reference);
 				var decl = new DeclarationStatement (local, source_reference);
 
 				insert_statement (context.analyzer.insert_block, decl);
+
+				var temp_access = SemanticAnalyzer.create_temp_access (local, target_type);
 
 				// don't set initializer earlier as this changes parent_node and parent_statement
 				local.initializer = this;
 				decl.check (context);
 
-				var temp_access = SemanticAnalyzer.create_temp_access (local, target_type);
-				temp_access.check (context);
 
 				// move temp variable to insert block to ensure the
 				// variable is in the same block as the declaration
@@ -765,6 +765,7 @@ public class Vala.MethodCall : Expression {
 				context.analyzer.insert_block.add_local_variable (local);
 
 				old_parent_node.replace_expression (this, temp_access);
+				temp_access.check (context);
 			}
 		}
 
