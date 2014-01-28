@@ -1,4 +1,3 @@
-
 /* valagtkmodule.vala
  *
  * Copyright (C) 2013  Jürg Billeter
@@ -32,6 +31,8 @@ public class Vala.GtkModule : GSignalModule {
 	private HashMap<string, Signal> current_handler_to_signal_map = new HashMap<string, Signal>(str_hash, str_equal);
 	/* GtkBuilder xml child to Vala class mapping */
 	private HashMap<string, Class> current_child_to_class_map = new HashMap<string, Class>(str_hash, str_equal);
+	/* Required custom application-specific gtype classes to be ref'd before initializing the template */
+	private HashSet<Class> current_required_app_classes = new HashSet<Class>();
 
 	private void ensure_cclass_to_vala_map () {
 		// map C name of gtypeinstance classes to Vala classes
@@ -199,6 +200,8 @@ public class Vala.GtkModule : GSignalModule {
 		call.add_argument (new CCodeIdentifier ("GTK_WIDGET_CLASS (klass)"));
 		call.add_argument (new CCodeConstant ("\""+cl.get_attribute_string ("GtkTemplate", "ui")+"\""));
 		ccode.add_expression (call);
+
+		current_required_app_classes.clear ();
 	}
 
 	public override void visit_field (Field f) {
@@ -261,6 +264,10 @@ public class Vala.GtkModule : GSignalModule {
 		ccode.add_expression (call);
 
 		pop_context ();
+		
+		if (!field_class.external && !field_class.external_package) {
+			current_required_app_classes.add (field_class);
+		}
 	}
 
 	public override void visit_method (Method m) {
@@ -307,11 +314,18 @@ public class Vala.GtkModule : GSignalModule {
 	}
 
 
-	public override void generate_instance_init (Class cl) {
+	public override void end_instance_init (Class cl) {
 		if (cl == null || cl.error || !is_gtk_template (cl)) {
 			return;
 		}
 
+		foreach (var req in current_required_app_classes) {
+			/* ensure custom application widgets are initialized */
+			var call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_ensure"));
+			call.add_argument (get_type_id_expression (SemanticAnalyzer.get_data_type_for_symbol (req)));
+			ccode.add_expression (call);
+		}
+		
 		var call = new CCodeFunctionCall (new CCodeIdentifier ("gtk_widget_init_template"));
 		call.add_argument (new CCodeIdentifier ("GTK_WIDGET (self)"));
 		ccode.add_expression (call);

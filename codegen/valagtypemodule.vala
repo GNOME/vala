@@ -1166,7 +1166,7 @@ public class Vala.GTypeModule : GErrorModule {
 	public virtual void generate_class_init (Class cl) {
 	}
 
-	public virtual void generate_instance_init (Class cl) {
+	public virtual void end_instance_init (Class cl) {
 	}
 
 	private void begin_class_init_function (Class cl) {
@@ -1573,12 +1573,14 @@ public class Vala.GTypeModule : GErrorModule {
 			func.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), ccall);
 		}
 
-		generate_instance_init (cl);
-
 		pop_context ();
 	}
 
 	private void add_instance_init_function (Class cl) {
+		push_context (instance_init_context);
+		end_instance_init (cl);
+		pop_context ();
+		
 		cfile.add_function (instance_init_context.ccode);
 	}
 
