@@ -964,19 +964,23 @@ public class string {
 		if (separator == null) {
 			separator = "";
 		}
-		if (str_array != null) {
+		if (str_array != null || str_array.length > 0 || (str_array.length == -1 && str_array[0] != null)) {
 			int i;
 			size_t len = 1;
 			for (i = 0 ; (str_array.length != -1 && i < str_array.length) || (str_array.length == -1 && str_array[i] != null) ; i++) {
-				len += str_array[i].length;
+				len += (str_array[i] != null) ? str_array[i].length : 0;
 			}
+			if (i == 0) {
+				return "";
+			}
+			str_array.length = i;
 			len += separator.length * (i - 1);
 
 			string* res = GLib.malloc (len);
 			void* ptr = string.copy_to_buffer ((void*) res, str_array[0]);
-			for (i = 1 ; str_array[i] != null ; i++) {
+			for (i = 1 ; i < str_array.length ; i++) {
 				ptr = string.copy_to_buffer (ptr, separator);
-				ptr = string.copy_to_buffer (ptr, str_array[i]);
+				ptr = string.copy_to_buffer (ptr, str_array[i] ?? "");
 			}
 
 			return (owned) res;
