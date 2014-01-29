@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
- * 	Jukka-Pekka Iivonen <jp0409@jippii.fi>
+ *	Jukka-Pekka Iivonen <jp0409@jippii.fi>
  */
 
 #if LIBPQ_9_3
@@ -93,6 +93,14 @@ namespace Postgres {
 		SOURCE_FUNCTION
 	}
 
+	[CCode (cname = "PGPing", cprefix = "PQPING_", has_type_id = false)]
+	public enum Ping {
+		OK,
+		REJECT,
+		NO_RESPONCE,
+		NO_ATTEMPT
+	}
+
 	[Compact]
 	[CCode (cname = "PGnotify", free_function = "PQfreemem")]
 	public class Notify {
@@ -124,7 +132,7 @@ namespace Postgres {
 	}
 
 	[Compact]
-	[CCode (free_function = "PQconninfoFree", cname = "PQconninfoOption")]
+	[CCode (cname = "PQconninfoOption", free_function = "PQconninfoFree")]
 	public class ConnectionOptions {
 		public string keyword;
 		public string envvar;
@@ -327,6 +335,12 @@ namespace Postgres {
 
 		[CCode (cname = "PQisnonblocking")]
 		public int is_non_blocking ();
+
+		[CCode (cname = "PQping"]
+		public Ping ping();
+		 
+		[CCode (cname = "PQpingParams")]
+		public Ping ping_params(string keywords, string values, int expand_dbname);
 
 		[CCode (cname = "PQflush")]
 		public int flush ();
