@@ -3906,6 +3906,9 @@ namespace GLib {
 
 		public unowned List<G> find (G data);
 		public unowned List<G> find_custom (G data, CompareFunc<G> func);
+		[CCode (cname = "g_list_find_custom", simple_generics = true)]
+		public unowned List<G> search<T> (T data, SearchFunc<T,G> func);
+
 		public int position (List<G> llink);
 		public int index (G data);
 
@@ -3960,6 +3963,9 @@ namespace GLib {
 
 		public unowned SList<G> find (G data);
 		public unowned SList<G> find_custom (G data, CompareFunc<G> func);
+		[CCode (cname = "g_slist_find_custom", simple_generics = true)]
+		public unowned SList<G> search<T> (T data, SearchFunc<T,G> func);
+
 		public int position (SList<G> llink);
 		public int index (G data);
 
@@ -3974,6 +3980,9 @@ namespace GLib {
 
 	[CCode (cname = "g_strcmp0")]
 	public static GLib.CompareFunc<string> strcmp;
+
+	[CCode (has_target = false)]
+	public delegate int SearchFunc<G,T> (G a, T b);
 
 	/* Double-ended Queues */
 
@@ -3993,6 +4002,8 @@ namespace GLib {
 		public Queue copy ();
 		public unowned List<G> find (G data);
 		public unowned List<G> find_custom (G data, CompareFunc<G> func);
+		[CCode (cname = "g_queue_find_custom", simple_generics = true)]
+		public unowned List<G> search<T> (T data, SearchFunc<T,G> func);
 		public void sort (CompareDataFunc<G> compare_func);
 		public void push_head (owned G data);
 		public void push_tail (owned G data);
