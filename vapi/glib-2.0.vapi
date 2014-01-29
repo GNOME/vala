@@ -4913,8 +4913,15 @@ namespace GLib {
 	[CCode (cname = "G_STATIC_ASSERT", cheader_filename = "glib.h")]
 	public static void static_assert (bool expression);
 
-	[CCode (simple_generics = true)]
-	private static void qsort_with_data<T> (T[] elems, size_t size, [CCode (type = "GCompareDataFunc")] GLib.CompareDataFunc<T> compare_func);
+	[CCode (simple_generics = true, cname = "g_qsort_with_data")]
+	private static void _qsort_with_data<T> (T[] elems, size_t size, [CCode (type = "GCompareDataFunc")] GLib.CompareDataFunc<T> compare_func);
+
+	[CCode (cname = "_vala_g_qsort_with_data")]
+	public static void qsort_with_data<T> (T[] elems, size_t size, [CCode (type = "GCompareDataFunc")] GLib.CompareDataFunc<T> compare_func) {
+		_qsort_with_data<T*> (elems, size, (a, b) => {
+				return compare_func (*a, *b);
+			});
+	}
 
 	/* Unix-specific functions. All of these have to include glib-unix.h. */
 	namespace Unix {
