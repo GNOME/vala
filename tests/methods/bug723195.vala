@@ -1,4 +1,4 @@
-private static int main (string[] args) {
+void main () {
 	string[] a = { "foo", "bar", null, "baz" };
 
 	a.length = 0;
@@ -20,6 +20,4 @@ private static int main (string[] args) {
 	assert (string.joinv (":", a) == "foo:bar");
 
 	assert (string.joinv (":", null) == "");
-
-	return 0;
 }
