@@ -63,7 +63,11 @@ public class Vala.CodeTransformer : CodeVisitor {
 		}
 	}
 
-	public static DataType copy_type (DataType type, bool? value_owned = null, bool? nullable = null) {
+	public static DataType? copy_type (DataType? type, bool? value_owned = null, bool? nullable = null) {
+		if (type == null) {
+			return null;
+		}
+
 		var ret = type.copy ();
 		if (value_owned != null) {
 			ret.value_owned = value_owned;

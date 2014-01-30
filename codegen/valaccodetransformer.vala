@@ -369,15 +369,15 @@ public class Vala.CCodeTransformer : CodeTransformer {
 			} else {
 				// store parent_node as we need to replace the expression in the old parent node later on
 				var old_parent_node = expr.parent_node;
-				var formal_target_type = expr.target_type != null ? expr.target_type.copy () : null;
-				var target_type = expr.target_type != null ? expr.target_type.copy () : null;
+				var formal_target_type = copy_type (expr.target_type);
+				var target_type = copy_type (expr.target_type);
 				push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
 
 				// FIXME: use create_temp_access behavior
-				var replacement = expression (b.add_temp_declaration (expr.value_type.copy (), expr, true));
+				var replacement = expression (b.add_temp_declaration (copy_type (expr.value_type), expr, true));
 
-				replacement.target_type = target_type.copy ();
-				replacement.formal_target_type = formal_target_type.copy ();
+				replacement.target_type = copy_type (target_type);
+				replacement.formal_target_type = copy_type (formal_target_type);
 				context.analyzer.replaced_nodes.add (expr);
 				old_parent_node.replace_expression (expr, replacement);
 				b.check (this);
@@ -391,8 +391,8 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		// convert to if statement
 		Expression replacement = null;
 		var old_parent_node = expr.parent_node;
-		var formal_target_type = expr.target_type != null ? expr.target_type.copy () : null;
-		var target_type = expr.target_type != null ? expr.target_type.copy () : null;
+		var formal_target_type = copy_type (expr.target_type);
+		var target_type = copy_type (expr.target_type);
 		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
 
 		var result = b.add_temp_declaration (expr.value_type);
@@ -443,7 +443,13 @@ public class Vala.CCodeTransformer : CodeTransformer {
 			b.close ();
 			replacement = expression (result);
 		} else if (expr.operator == BinaryOperator.COALESCE) {
-			replacement = new ConditionalExpression (new BinaryExpression (BinaryOperator.EQUALITY, expr.left, new NullLiteral (expr.source_reference), expr.source_reference), expr.right, expr.left, expr.source_reference);
+			var is_owned = expr.left.value_type.value_owned || expr.right.value_type.value_owned;
+			var result = b.add_temp_declaration (copy_type (expr.value_type, is_owned, true), expr.left);
+
+			b.open_if (expression (@"$result == null"));
+			b.add_assignment (expression (result), expr.right);
+			b.close ();
+			replacement = expression (result);
 		} else if (expr.operator == BinaryOperator.IN && !(expr.left.value_type.compatible (context.analyzer.int_type) && expr.right.value_type.compatible (context.analyzer.int_type)) && !(expr.right.value_type is ArrayType)) {
 			// neither enums nor array, it's contains()
 			var call = new MethodCall (new MemberAccess (expr.right, "contains", expr.source_reference), expr.source_reference);
@@ -518,5 +524,9 @@ public class Vala.CCodeTransformer : CodeTransformer {
 				check (replacement);
 			}
 		}
+	}
+
+	public override void visit_assignment (Assignment a) {
+		a.accept_children (this);
 	}
 }
