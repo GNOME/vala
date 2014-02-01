@@ -70,6 +70,10 @@ public class Vala.CCodeTransformer : CodeTransformer {
 	}
 
 	public override void visit_method (Method m) {
+		if (m.body == null) {
+			return;
+		}
+
 		m.accept_children (this);
 	}
 
@@ -421,7 +425,7 @@ public class Vala.CCodeTransformer : CodeTransformer {
 
 		Expression replacement = null;
 		var old_parent_node = expr.parent_node;
-		var target_type = expr.target_type != null ? expr.target_type.copy () : null;
+		var target_type = copy_type (expr.target_type);
 		push_builder (new CodeBuilder (context, parent_statement, expr.source_reference));
 
 		if (context.analyzer.get_current_non_local_symbol (expr) is Block

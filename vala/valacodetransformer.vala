@@ -54,12 +54,9 @@ public class Vala.CodeTransformer : CodeVisitor {
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
-			if (file.file_type == SourceFileType.SOURCE ||
-			    (context.header_filename != null && file.file_type == SourceFileType.FAST)) {
-				/* clear wrapper cache for every file */
-				wrapper_cache = new HashMap<string, CodeNode> (str_hash, str_equal);
-				file.accept (this);
-			}
+			/* clear wrapper cache for every file */
+			wrapper_cache = new HashMap<string, CodeNode> (str_hash, str_equal);
+			file.accept (this);
 		}
 	}
 
