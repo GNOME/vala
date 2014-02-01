@@ -344,4 +344,27 @@ public class Vala.CCodeTransformer : CodeTransformer {
 			}
 		}
 	}
+
+	public override void visit_template (Template expr) {
+		begin_replace_expression (expr);
+
+		Expression replacement;
+
+		var expression_list = expr.get_expressions ();
+		if (expression_list.size == 0) {
+			replacement = expression ("\"\"");
+		} else {
+			replacement = stringify (expression_list[0]);
+			if (expression_list.size > 1) {
+				var concat = (MethodCall) expression (@"$replacement.concat()");
+				for (int i = 1; i < expression_list.size; i++) {
+					concat.add_argument (stringify (expression_list[i]));
+				}
+				replacement = concat;
+			}
+		}
+		replacement.target_type = expr.target_type;
+
+		end_replace_expression (replacement);
+	}
 }
