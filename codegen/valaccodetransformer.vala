@@ -404,9 +404,7 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		b.add_assignment (expression (result), expr.false_expression);
 		b.close ();
 
-		replacement = expression (result);
-		replacement.target_type = target_type;
-		replacement.formal_target_type = formal_target_type;
+		replacement = return_temp_access (result, expr.value_type, target_type, formal_target_type);
 		context.analyzer.replaced_nodes.add (expr);
 		old_parent_node.replace_expression (expr, replacement);
 		b.check (this);
