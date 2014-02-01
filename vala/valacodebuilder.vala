@@ -46,6 +46,12 @@ public class Vala.CodeBuilder {
 		m.body.add_statement (current_block);
 	}
 
+	public void cleanup () {
+		if (current_block.first_statement == null) {
+			insert_block.remove_statement (current_block);
+		}
+	}
+
 	public void check (CodeTransformer transformer) {
 		foreach (var node in decl_nodes) {
 			transformer.check (node);
