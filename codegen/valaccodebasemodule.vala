@@ -4403,47 +4403,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public override void visit_postfix_expression (PostfixExpression expr) {
-		MemberAccess ma = find_property_access (expr.inner);
-		if (ma != null) {
-			// property postfix expression
-			var prop = (Property) ma.symbol_reference;
-
-			// increment/decrement property
-			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
-			var cexpr = new CCodeBinaryExpression (op, get_cvalue (expr.inner), new CCodeConstant ("1"));
-			store_property (prop, ma.inner, new GLibValue (expr.value_type, cexpr));
-
-			// return previous value
-			expr.target_value = expr.inner.target_value;
-			return;
-		}
-
-		// assign current value to temp variable
-		var temp_value = store_temp_value (expr.inner.target_value, expr);
-
-		// increment/decrement variable
-		var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
-		var cexpr = new CCodeBinaryExpression (op, get_cvalue_ (temp_value), new CCodeConstant ("1"));
-		ccode.add_assignment (get_cvalue (expr.inner), cexpr);
-
-		// return previous value
-		expr.target_value = temp_value;
-	}
-
-	private MemberAccess? find_property_access (Expression expr) {
-		if (!(expr is MemberAccess)) {
-			return null;
-		}
-
-		var ma = (MemberAccess) expr;
-		if (ma.symbol_reference is Property) {
-			return ma;
-		}
-
-		return null;
-	}
-
 	static bool is_limited_generic_type (GenericType type) {
 		unowned Class? cl = type.type_parameter.parent_symbol as Class;
 		unowned Struct? st = type.type_parameter.parent_symbol as Struct;

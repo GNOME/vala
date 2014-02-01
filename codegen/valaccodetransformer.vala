@@ -367,4 +367,16 @@ public class Vala.CCodeTransformer : CodeTransformer {
 
 		end_replace_expression (replacement);
 	}
+
+	public override void visit_postfix_expression (PostfixExpression expr) {
+		begin_replace_expression (expr);
+
+		var result = b.add_temp_declaration (copy_type (expr.value_type), expr.inner);
+		var op = expr.increment ? "+ 1" : "- 1";
+		b.add_expression (expression (@"$(expr.inner) = $result $op"));
+
+		var replacement = return_temp_access (result, expr.value_type, expr.target_type);
+
+		end_replace_expression (replacement);
+	}
 }
