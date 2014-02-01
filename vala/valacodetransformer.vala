@@ -42,6 +42,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 	}
 
 	public void pop_builder () {
+		b.cleanup ();
 		b = builder_stack.remove_at (builder_stack.size - 1);
 	}
 
