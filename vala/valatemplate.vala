@@ -51,14 +51,6 @@ public class Vala.Template : Expression {
 		return false;
 	}
 
-	Expression stringify (Expression expr) {
-		if (expr is StringLiteral) {
-			return expr;
-		} else {
-			return new MethodCall (new MemberAccess (expr, "to_string", expr.source_reference), expr.source_reference);
-		}
-	}
-
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		int index = expression_list.index_of (old_node);
 		if (index >= 0) {
@@ -74,25 +66,17 @@ public class Vala.Template : Expression {
 
 		checked = true;
 
-		Expression expr;
-
-		if (expression_list.size == 0) {
-			expr = new StringLiteral ("\"\"", source_reference);
-		} else {
-			expr = stringify (expression_list[0]);
-			if (expression_list.size > 1) {
-				var concat = new MethodCall (new MemberAccess (expr, "concat", source_reference), source_reference);
-				for (int i = 1; i < expression_list.size; i++) {
-					concat.add_argument (stringify (expression_list[i]));
-				}
-				expr = concat;
+		foreach (var expr in expression_list) {
+			if (!expr.check (context)) {
+				error = true;
+				continue;
 			}
 		}
-		expr.target_type = target_type;
 
-		context.analyzer.replaced_nodes.add (this);
-		parent_node.replace_expression (this, expr);
-		return expr.check (context);
+		value_type = context.analyzer.string_type.copy ();
+		value_type.value_owned = true;
+
+		return !error;
 	}
 }
 

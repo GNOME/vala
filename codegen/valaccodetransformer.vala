@@ -443,7 +443,6 @@ public class Vala.CCodeTransformer : CodeTransformer {
 			b.close ();
 			replacement = expression (result);
 		} else if (expr.operator == BinaryOperator.COALESCE) {
-			var is_owned = expr.left.value_type.value_owned || expr.right.value_type.value_owned;
 			var result = b.add_temp_declaration (copy_type (expr.value_type), expr.left);
 
 			b.open_if (expression (@"$result == null"));
@@ -525,6 +524,41 @@ public class Vala.CCodeTransformer : CodeTransformer {
 				check (replacement);
 			}
 		}
+	}
+
+	Expression stringify (Expression expr) {
+		if (expr.value_type.data_type != null && expr.value_type.data_type.is_subtype_of (context.analyzer.string_type.data_type)) {
+			return expr;
+		} else {
+			return expression (@"($expr).to_string ()");
+		}
+	}
+
+	public override void visit_template (Template expr) {
+		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
+
+		Expression replacement;
+
+		var expression_list = expr.get_expressions ();
+		if (expression_list.size == 0) {
+			replacement = expression ("\"\"");
+		} else {
+			replacement = stringify (expression_list[0]);
+			if (expression_list.size > 1) {
+				var concat = (MethodCall) expression (@"($replacement).concat()");
+				for (int i = 1; i < expression_list.size; i++) {
+					concat.add_argument (stringify (expression_list[i]));
+				}
+				replacement = concat;
+			}
+		}
+		replacement.target_type = expr.target_type;
+
+		context.analyzer.replaced_nodes.add (expr);
+		expr.parent_node.replace_expression (expr, replacement);
+		b.check (this);
+		pop_builder ();
+		check (replacement);
 	}
 
 	public override void visit_assignment (Assignment a) {
