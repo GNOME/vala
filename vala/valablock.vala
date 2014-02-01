@@ -197,6 +197,23 @@ public class Vala.Block : Symbol, Statement {
 		stmt.prev = new_stmt;
 	}
 
+	public void remove_statement (Statement stmt) {
+		var prev = stmt.prev;
+		var next = stmt.next;
+
+		if (prev != null) {
+			prev.next = next;
+		} else {
+			first_statement = next;
+		}
+
+		if (next != null) {
+			next.prev = prev;
+		} else {
+			last_statement = prev;
+		}
+	}
+
 	public void replace_statement (Statement old_stmt, Statement new_stmt) {
 		new_stmt.parent_node = this;
 		new_stmt.prev = old_stmt.prev;
