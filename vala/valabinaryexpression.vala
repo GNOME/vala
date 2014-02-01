@@ -194,6 +194,8 @@ public class Vala.BinaryExpression : Expression {
 
 		if (operator == BinaryOperator.COALESCE) {
 			left.target_type.nullable = true;
+			left.target_type.value_owned = left.value_type.value_owned || right.value_type.value_owned;
+
 			right.target_type = left.target_type.copy ();
 			value_type = left.target_type.copy ();
 		} else if (left.value_type.data_type == context.analyzer.string_type.data_type

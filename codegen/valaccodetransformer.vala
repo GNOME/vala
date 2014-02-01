@@ -444,12 +444,13 @@ public class Vala.CCodeTransformer : CodeTransformer {
 			replacement = expression (result);
 		} else if (expr.operator == BinaryOperator.COALESCE) {
 			var is_owned = expr.left.value_type.value_owned || expr.right.value_type.value_owned;
-			var result = b.add_temp_declaration (copy_type (expr.value_type, is_owned, true), expr.left);
+			var result = b.add_temp_declaration (copy_type (expr.value_type), expr.left);
 
 			b.open_if (expression (@"$result == null"));
 			b.add_assignment (expression (result), expr.right);
 			b.close ();
-			replacement = expression (result);
+
+			replacement = return_temp_access (result, expr.value_type, target_type);
 		} else if (expr.operator == BinaryOperator.IN && !(expr.left.value_type.compatible (context.analyzer.int_type) && expr.right.value_type.compatible (context.analyzer.int_type)) && !(expr.right.value_type is ArrayType)) {
 			// neither enums nor array, it's contains()
 			var call = new MethodCall (new MemberAccess (expr.right, "contains", expr.source_reference), expr.source_reference);
