@@ -225,6 +225,14 @@ public class Vala.CodeTransformer : CodeVisitor {
 		return (literal != null && !literal.value);
 	}
 
+	public Expression stringify (Expression expr) {
+		if (expr.value_type != null && expr.value_type.data_type != null && expr.value_type.data_type.is_subtype_of (context.analyzer.string_type.data_type)) {
+			return expr;
+		} else {
+			return expression (@"$expr.to_string ()");
+		}
+	}
+
 	public override void visit_addressof_expression (Vala.AddressofExpression expr) {
 		expr.accept_children (this);
 	}
