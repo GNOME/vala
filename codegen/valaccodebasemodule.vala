@@ -2412,7 +2412,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 			// compiler-internal variable
 			if (!variable_name_map.contains (name)) {
-				variable_name_map.set (name, "_tmp%d_".printf (next_temp_var_id));
+				variable_name_map.set (name, "_ctmp%d_".printf (next_temp_var_id));
 				next_temp_var_id++;
 			}
 			return variable_name_map.get (name);

@@ -51,6 +51,25 @@ public class Vala.Template : Expression {
 		return false;
 	}
 
+	public override string to_string () {
+		var b = new StringBuilder ();
+		b.append ("@\"");
+
+		foreach (var expr in expression_list) {
+			if (expr is StringLiteral) {
+				unowned string value = ((StringLiteral) expr).value;
+				b.append (value.substring (1, (uint) (value.length - 2)));
+			} else {
+				b.append ("$(");
+				b.append (expr.to_string ());
+				b.append_c (')');
+			}
+		}
+
+		b.append_c ('"');
+		return b.str;
+	}
+
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		int index = expression_list.index_of (old_node);
 		if (index >= 0) {

@@ -530,7 +530,7 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		if (expr.value_type.data_type != null && expr.value_type.data_type.is_subtype_of (context.analyzer.string_type.data_type)) {
 			return expr;
 		} else {
-			return expression (@"($expr).to_string ()");
+			return expression (@"$expr.to_string ()");
 		}
 	}
 
@@ -545,7 +545,7 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		} else {
 			replacement = stringify (expression_list[0]);
 			if (expression_list.size > 1) {
-				var concat = (MethodCall) expression (@"($replacement).concat()");
+				var concat = (MethodCall) expression (@"$replacement.concat()");
 				for (int i = 1; i < expression_list.size; i++) {
 					concat.add_argument (stringify (expression_list[i]));
 				}
