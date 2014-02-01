@@ -561,6 +561,22 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		check (replacement);
 	}
 
+	public override void visit_postfix_expression (PostfixExpression expr) {
+		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
+
+		var result = b.add_temp_declaration (copy_type (expr.value_type), expr.inner);
+		var op = expr.increment ? "+ 1" : "- 1";
+		b.add_expression (expression (@"$(expr.inner) = $result $op"));
+
+		var replacement = return_temp_access (result, expr.value_type, expr.target_type);
+
+		context.analyzer.replaced_nodes.add (expr);
+		expr.parent_node.replace_expression (expr, replacement);
+		b.check (this);
+		pop_builder ();
+		check (replacement);
+	}
+
 	public override void visit_assignment (Assignment a) {
 		a.accept_children (this);
 	}
