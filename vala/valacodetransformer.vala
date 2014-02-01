@@ -77,6 +77,23 @@ public class Vala.CodeTransformer : CodeVisitor {
 		return ret;
 	}
 
+	// Create an access to a temporary variable, with proper reference transfer if needed to avoid unnecessary copies
+	public Expression return_temp_access (string local, DataType value_type, DataType? target_type, DataType? formal_target_type = null) {
+		Expression temp_access = new MemberAccess.simple (local, b.source_reference);
+
+		var target_owned = target_type != null && target_type.value_owned;
+		if (target_owned && value_type.is_disposable ()) {
+			temp_access = new ReferenceTransferExpression (temp_access, b.source_reference);
+			temp_access.target_type = target_type != null ? target_type.copy () : value_type.copy ();
+			temp_access.target_type.value_owned = true;
+			temp_access.formal_target_type = copy_type (formal_target_type);
+		} else {
+			temp_access.target_type = copy_type (target_type);
+		}
+
+		return temp_access;
+	}
+
 	public bool get_cached_wrapper (string key, out CodeNode node) {
 		node = wrapper_cache.get (key);
 		return node != null;

@@ -377,11 +377,9 @@ public class Vala.CCodeTransformer : CodeTransformer {
 				var target_type = copy_type (expr.target_type);
 				push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
 
-				// FIXME: use create_temp_access behavior
-				var replacement = expression (b.add_temp_declaration (copy_type (expr.value_type), expr, true));
+				var local = b.add_temp_declaration (copy_type (expr.value_type), expr);
+				var replacement = return_temp_access (local, expr.value_type, target_type, formal_target_type);
 
-				replacement.target_type = copy_type (target_type);
-				replacement.formal_target_type = copy_type (formal_target_type);
 				context.analyzer.replaced_nodes.add (expr);
 				old_parent_node.replace_expression (expr, replacement);
 				b.check (this);
@@ -514,13 +512,13 @@ public class Vala.CCodeTransformer : CodeTransformer {
 				Report.error (expr.source_reference, "Field initializers must not throw errors");
 			} else {
 				var old_parent_node = expr.parent_node;
-				var target_type = expr.target_type != null ? expr.target_type.copy () : null;
+				var target_type = copy_type (expr.target_type);
+				var formal_target_type = copy_type (expr.formal_target_type);
 				push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
 
-				// FIXME: use create_temp_access behavior
-				var replacement = expression (b.add_temp_declaration (expr.value_type, expr, true));
+				var local = b.add_temp_declaration (expr.value_type, expr);
+				var replacement = return_temp_access (local, expr.value_type, target_type, formal_target_type);
 
-				replacement.target_type = target_type;
 				context.analyzer.replaced_nodes.add (expr);
 				old_parent_node.replace_expression (expr, replacement);
 				b.check (this);

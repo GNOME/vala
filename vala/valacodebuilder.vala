@@ -247,9 +247,8 @@ public class Vala.CodeBuilder {
 		add_statement (new ContinueStatement (source_reference));
 	}
 
-	public string add_temp_declaration (DataType? type, Expression? initializer = null, bool floating = false) {
+	public string add_temp_declaration (DataType? type, Expression? initializer = null) {
 		var local = new LocalVariable (type, CodeNode.get_temp_name (), initializer, source_reference);
-		// FIXME: use create_temp_access behavior
 		var stmt = new DeclarationStatement (local, source_reference);
 		insert_block.insert_before (insert_statement, stmt);
 		decl_nodes.add (stmt);
