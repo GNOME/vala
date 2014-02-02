@@ -272,6 +272,10 @@ public class Vala.CodeBuilder {
 		return new Parser().parse_expression_string (str, source_reference);
 	}
 
+	public void statements (string str) {
+		new Parser().parse_statements_string (str, current_block, source_reference);
+	}
+
 	// only qualified types, will slightly simplify the work of SymbolResolver
 	public static Symbol? symbol_from_string (string symbol_string, Symbol? parent_symbol = null) {
 		Symbol sym = parent_symbol != null ? parent_symbol : CodeContext.get().root;

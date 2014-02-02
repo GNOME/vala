@@ -184,6 +184,10 @@ public class Vala.CodeTransformer : CodeVisitor {
 		return b.expression (str);
 	}
 
+	public void statements (string str) {
+		b.statements (str);
+	}
+
 	public void check (CodeNode node) {
 		var sym = context.analyzer.get_current_symbol (node);
 		if (sym != null) {
