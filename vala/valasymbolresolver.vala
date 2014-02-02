@@ -29,7 +29,7 @@ using GLib;
  */
 public class Vala.SymbolResolver : CodeVisitor {
 	Symbol root_symbol;
-	Scope current_scope;
+	public Scope current_scope;
 
 	/**
 	 * Resolve symbol names in the specified code context.
