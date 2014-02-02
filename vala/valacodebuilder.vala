@@ -35,6 +35,7 @@ public class Vala.CodeBuilder {
 		this.source_reference = source_reference;
 
 		current_block = new Block (source_reference);
+		current_block.owner = context.analyzer.get_current_symbol (insert_statement).scope;
 		insert_block = context.analyzer.get_current_block (insert_statement);
 		insert_block.insert_before (insert_statement, current_block);
 		this.insert_statement = current_block;
