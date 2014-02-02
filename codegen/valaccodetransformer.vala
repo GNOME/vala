@@ -166,11 +166,12 @@ public class Vala.CCodeTransformer : CodeTransformer {
 	public override void visit_while_statement (WhileStatement stmt) {
 		// convert to simple loop
 		push_builder (new CodeBuilder (context, stmt, stmt.source_reference));
-
+		Expression cond = null;
 		if (!always_false (stmt.condition)) {
 			b.open_loop ();
 			if (!always_true (stmt.condition)) {
-				b.open_if (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.condition.source_reference));
+				cond = expression (@"!$(stmt.condition)");
+				b.open_if (cond);
 				b.add_break ();
 				b.close ();
 			}

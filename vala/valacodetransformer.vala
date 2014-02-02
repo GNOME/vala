@@ -133,6 +133,10 @@ public class Vala.CodeTransformer : CodeVisitor {
 	}
 
 	public void check (CodeNode node) {
+		var sym = context.analyzer.get_current_symbol (node);
+		if (sym != null) {
+			context.resolver.current_scope = sym.scope;
+		}
 		node.accept (context.resolver);
 		if (!node.check (context)) {
 			return;
