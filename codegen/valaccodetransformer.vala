@@ -165,12 +165,12 @@ public class Vala.CCodeTransformer : CodeTransformer {
 
 	public override void visit_while_statement (WhileStatement stmt) {
 		// convert to simple loop
-		push_builder (new CodeBuilder (context, stmt, stmt.source_reference));
-		Expression cond = null;
+		begin_replace_statement (stmt);
+
 		if (!always_false (stmt.condition)) {
 			b.open_loop ();
 			if (!always_true (stmt.condition)) {
-				cond = expression (@"!$(stmt.condition)");
+				var cond = expression (@"!$(stmt.condition)");
 				b.open_if (cond);
 				b.add_break ();
 				b.close ();
@@ -179,18 +179,13 @@ public class Vala.CCodeTransformer : CodeTransformer {
 			b.close ();
 		}
 
-		var parent_block = context.analyzer.get_current_block (stmt);
-		context.analyzer.replaced_nodes.add (stmt);
-		parent_block.replace_statement (stmt, new EmptyStatement (stmt.source_reference));
-
 		stmt.body.checked = false;
-		b.check (this);
-		pop_builder ();
+		end_replace_statement ();
 	}
 
 	public override void visit_do_statement (DoStatement stmt) {
 		// convert to simple loop
-		push_builder (new CodeBuilder (context, stmt, stmt.source_reference));
+		begin_replace_statement (stmt);
 
 		b.open_loop ();
 		// do not generate variable and if block if condition is always true
@@ -204,21 +199,16 @@ public class Vala.CCodeTransformer : CodeTransformer {
 			b.add_assignment (expression (notfirst), expression ("true"));
 			b.close ();
 		}
+		stmt.body.checked = false;
 		b.add_statement (stmt.body);
 		b.close ();
 
-		var parent_block = context.analyzer.get_current_block (stmt);
-		context.analyzer.replaced_nodes.add (stmt);
-		parent_block.replace_statement (stmt, new EmptyStatement (stmt.source_reference));
-
-		stmt.body.checked = false;
-		b.check (this);
-		pop_builder ();
+		end_replace_statement ();
 	}
 
 	public override void visit_for_statement (ForStatement stmt) {
 		// convert to simple loop
-		push_builder (new CodeBuilder (context, stmt, stmt.source_reference));
+		begin_replace_statement (stmt);
 
 		// initializer
 		foreach (var init_expr in stmt.get_initializer ()) {
@@ -246,17 +236,13 @@ public class Vala.CCodeTransformer : CodeTransformer {
 			b.close ();
 		}
 
-		var parent_block = context.analyzer.get_current_block (stmt);
-		context.analyzer.replaced_nodes.add (stmt);
-		parent_block.replace_statement (stmt, new EmptyStatement (stmt.source_reference));
-
 		stmt.body.checked = false;
-		b.check (this);
-		pop_builder ();
+		end_replace_statement ();
 	}
 
 	public override void visit_foreach_statement (ForeachStatement stmt) {
-		push_builder (new CodeBuilder (context, stmt, stmt.source_reference));
+		begin_replace_statement (stmt);
+
 		var collection = b.add_temp_declaration (stmt.collection.value_type, stmt.collection);
 
 		stmt.body.remove_local_variable (stmt.element_variable);
@@ -311,13 +297,8 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		b.add_statement (stmt.body);
 		b.close ();
 
-		var parent_block = context.analyzer.get_current_block (stmt);
-		context.analyzer.replaced_nodes.add (stmt);
-		parent_block.replace_statement (stmt, new EmptyStatement (stmt.source_reference));
-
 		stmt.body.checked = false;
-		b.check (this);
-		pop_builder ();
+		end_replace_statement ();
 	}
 
 	public override void visit_break_statement (BreakStatement stmt) {
@@ -372,20 +353,14 @@ public class Vala.CCodeTransformer : CodeTransformer {
 				// can't handle errors in field initializers
 				Report.error (expr.source_reference, "Field initializers must not throw errors");
 			} else {
-				// store parent_node as we need to replace the expression in the old parent node later on
-				var old_parent_node = expr.parent_node;
 				var formal_target_type = copy_type (expr.target_type);
 				var target_type = copy_type (expr.target_type);
-				push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
+				begin_replace_expression (expr);
 
 				var local = b.add_temp_declaration (copy_type (expr.value_type), expr);
 				var replacement = return_temp_access (local, expr.value_type, target_type, formal_target_type);
 
-				context.analyzer.replaced_nodes.add (expr);
-				old_parent_node.replace_expression (expr, replacement);
-				b.check (this);
-				pop_builder ();
-				check (replacement);
+				end_replace_expression (replacement);
 			}
 		}
 	}
@@ -393,10 +368,9 @@ public class Vala.CCodeTransformer : CodeTransformer {
 	public override void visit_conditional_expression (ConditionalExpression expr) {
 		// convert to if statement
 		Expression replacement = null;
-		var old_parent_node = expr.parent_node;
 		var formal_target_type = copy_type (expr.target_type);
 		var target_type = copy_type (expr.target_type);
-		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
+		begin_replace_expression (expr);
 
 		var result = b.add_temp_declaration (expr.value_type);
 		b.open_if (expr.condition);
@@ -406,11 +380,7 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		b.close ();
 
 		replacement = return_temp_access (result, expr.value_type, target_type, formal_target_type);
-		context.analyzer.replaced_nodes.add (expr);
-		old_parent_node.replace_expression (expr, replacement);
-		b.check (this);
-		pop_builder ();
-		check (replacement);
+		end_replace_expression (replacement);
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {
@@ -421,9 +391,8 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		}
 
 		Expression replacement = null;
-		var old_parent_node = expr.parent_node;
 		var target_type = copy_type (expr.target_type);
-		push_builder (new CodeBuilder (context, parent_statement, expr.source_reference));
+		begin_replace_expression (expr);
 
 		if (context.analyzer.get_current_non_local_symbol (expr) is Block
 		    && (expr.operator == BinaryOperator.AND || expr.operator == BinaryOperator.OR)) {
@@ -460,13 +429,9 @@ public class Vala.CCodeTransformer : CodeTransformer {
 
 		if (replacement != null) {
 			replacement.target_type = target_type;
-			context.analyzer.replaced_nodes.add (expr);
-			old_parent_node.replace_expression (expr, replacement);
-			b.check (this);
-			pop_builder ();
-			check (replacement);
+			end_replace_expression (replacement);
 		} else {
-			pop_builder ();
+			end_replace_expression (null);
 			base.visit_binary_expression (expr);
 		}
 	}
@@ -479,10 +444,9 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		}
 
 		if (expr.operator == UnaryOperator.INCREMENT || expr.operator == UnaryOperator.DECREMENT) {
-			var old_parent_node = expr.parent_node;
-			var target_type = expr.target_type != null ? expr.target_type.copy () : null;
+			var target_type = copy_type (expr.target_type);
+			begin_replace_expression (expr);
 
-			push_builder (new CodeBuilder (context, parent_statement, expr.source_reference));
 			Expression replacement;
 			if (expr.operator == UnaryOperator.INCREMENT) {
 				replacement = expression (@"$(expr.inner) = $(expr.inner) + 1");
@@ -490,12 +454,8 @@ public class Vala.CCodeTransformer : CodeTransformer {
 				replacement = expression (@"$(expr.inner) = $(expr.inner) - 1");
 			}
 			replacement.target_type = target_type;
-			context.analyzer.replaced_nodes.add (expr);
-			old_parent_node.replace_expression (expr, replacement);
-			b.check (this);
 
-			pop_builder ();
-			check (replacement);
+			end_replace_expression (replacement);
 			return;
 		}
 
@@ -510,19 +470,14 @@ public class Vala.CCodeTransformer : CodeTransformer {
 				// can't handle errors in field initializers
 				Report.error (expr.source_reference, "Field initializers must not throw errors");
 			} else {
-				var old_parent_node = expr.parent_node;
 				var target_type = copy_type (expr.target_type);
 				var formal_target_type = copy_type (expr.formal_target_type);
-				push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
+				begin_replace_expression (expr);
 
 				var local = b.add_temp_declaration (expr.value_type, expr);
 				var replacement = return_temp_access (local, expr.value_type, target_type, formal_target_type);
 
-				context.analyzer.replaced_nodes.add (expr);
-				old_parent_node.replace_expression (expr, replacement);
-				b.check (this);
-				pop_builder ();
-				check (replacement);
+				end_replace_expression (replacement);
 			}
 		}
 	}
@@ -536,7 +491,7 @@ public class Vala.CCodeTransformer : CodeTransformer {
 	}
 
 	public override void visit_template (Template expr) {
-		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
+		begin_replace_expression (expr);
 
 		Expression replacement;
 
@@ -555,15 +510,11 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		}
 		replacement.target_type = expr.target_type;
 
-		context.analyzer.replaced_nodes.add (expr);
-		expr.parent_node.replace_expression (expr, replacement);
-		b.check (this);
-		pop_builder ();
-		check (replacement);
+		end_replace_expression (replacement);
 	}
 
 	public override void visit_postfix_expression (PostfixExpression expr) {
-		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
+		begin_replace_expression (expr);
 
 		var result = b.add_temp_declaration (copy_type (expr.value_type), expr.inner);
 		var op = expr.increment ? "+ 1" : "- 1";
@@ -571,11 +522,7 @@ public class Vala.CCodeTransformer : CodeTransformer {
 
 		var replacement = return_temp_access (result, expr.value_type, expr.target_type);
 
-		context.analyzer.replaced_nodes.add (expr);
-		expr.parent_node.replace_expression (expr, replacement);
-		b.check (this);
-		pop_builder ();
-		check (replacement);
+		end_replace_expression (replacement);
 	}
 
 	public override void visit_assignment (Assignment a) {

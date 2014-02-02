@@ -46,6 +46,58 @@ public class Vala.CodeTransformer : CodeVisitor {
 		builder_stack.remove_at (builder_stack.size - 1);
 	}
 
+	class ReplaceStatementData {
+		internal Statement stmt;
+		internal Block parent_block;
+	}
+
+	public void begin_replace_statement (Statement stmt) {
+		push_builder (new CodeBuilder (context, stmt, stmt.source_reference));
+
+		var data = new ReplaceStatementData ();
+		data.stmt = stmt;
+		data.parent_block = context.analyzer.get_current_block (stmt);
+		b.replaced = (owned) data;
+	}
+
+	public void end_replace_statement () {
+		var data = (ReplaceStatementData) (owned) b.replaced;
+
+		context.analyzer.replaced_nodes.add (data.stmt);
+		data.parent_block.replace_statement (data.stmt, new EmptyStatement (data.stmt.source_reference));
+
+		b.check (this);
+		pop_builder ();
+	}
+
+	class ReplaceExpressionData {
+		internal Expression expr;
+		internal CodeNode parent_node;
+	}
+
+	public void begin_replace_expression (owned Expression expr) {
+		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
+
+		var data = new ReplaceExpressionData ();
+		data.expr = expr;
+		data.parent_node = expr.parent_node;
+		b.replaced = (owned) data;
+	}
+
+	public void end_replace_expression (Expression? replacement) {
+		var data = (ReplaceExpressionData) (owned) b.replaced;
+
+		if (replacement != null) {
+			context.analyzer.replaced_nodes.add (data.expr);
+			data.parent_node.replace_expression (data.expr, replacement);
+			b.check (this);
+		}
+		pop_builder ();
+		if (replacement != null) {
+			check (replacement);
+		}
+	}
+
 	/**
 	 * Transform the code tree for the specified code context.
 	 *
