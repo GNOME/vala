@@ -1052,7 +1052,7 @@ public class Vala.GirParser : CodeVisitor {
 
 				// experimental
 				if (metadata.has_argument (ArgumentType.EXPERIMENTAL)) {
-					symbol.set_attribute ("Experimental", true);
+					symbol.set_attribute ("Experimental", metadata.get_bool (ArgumentType.EXPERIMENTAL));
 				}
 
 				if (parent.symbol is Namespace) {
