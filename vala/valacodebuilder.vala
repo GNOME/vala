@@ -30,7 +30,7 @@ public class Vala.CodeBuilder {
 	public ArrayList<CodeNode> decl_nodes = new ArrayList<CodeNode> ();
 	public SourceReference source_reference;
 
-	public void* replaced = null;
+	public void* data = null;
 
 	public CodeBuilder (CodeContext context, Statement insert_statement, SourceReference source_reference) {
 		this.source_reference = source_reference;

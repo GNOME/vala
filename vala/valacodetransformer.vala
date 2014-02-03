@@ -57,11 +57,11 @@ public class Vala.CodeTransformer : CodeVisitor {
 		var data = new ReplaceStatementData ();
 		data.stmt = stmt;
 		data.parent_block = context.analyzer.get_current_block (stmt);
-		b.replaced = (owned) data;
+		b.data = (owned) data;
 	}
 
 	public void end_replace_statement () {
-		var data = (ReplaceStatementData) (owned) b.replaced;
+		var data = (ReplaceStatementData) (owned) b.data;
 
 		context.analyzer.replaced_nodes.add (data.stmt);
 		data.parent_block.replace_statement (data.stmt, new EmptyStatement (data.stmt.source_reference));
@@ -81,11 +81,11 @@ public class Vala.CodeTransformer : CodeVisitor {
 		var data = new ReplaceExpressionData ();
 		data.expr = expr;
 		data.parent_node = expr.parent_node;
-		b.replaced = (owned) data;
+		b.data = (owned) data;
 	}
 
 	public void end_replace_expression (Expression? replacement) {
-		var data = (ReplaceExpressionData) (owned) b.replaced;
+		var data = (ReplaceExpressionData) (owned) b.data;
 
 		if (replacement != null) {
 			context.analyzer.replaced_nodes.add (data.expr);
