@@ -854,7 +854,7 @@ public class Vala.GirParser : CodeVisitor {
 					}
 					if (!(m is CreationMethod)) {
 						if (metadata.has_argument (ArgumentType.DESTROYS_INSTANCE)) {
-							m.set_attribute ("DestroysInstance", true);
+							m.set_attribute ("DestroysInstance", metadata.get_bool (ArgumentType.DESTROYS_INSTANCE));
 						}
 						// merge custom vfunc
 						if (metadata.has_argument (ArgumentType.VFUNC_NAME)) {
