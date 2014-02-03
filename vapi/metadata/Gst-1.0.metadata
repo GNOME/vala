@@ -31,7 +31,7 @@ Buffer
   .iterate_meta nullable
 ElementFactory
   .get_metadata_keys nullable
-
+  .get_static_pad_templates type="unowned GLib.List<unowned Gst.StaticPadTemplate?>"
 // Variadic
 Bin
   .add_many skip=false
