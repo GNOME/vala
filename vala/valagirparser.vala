@@ -76,7 +76,8 @@ public class Vala.GirParser : CodeVisitor {
 		SYMBOL_TYPE,
 		INSTANCE_IDX,
 		EXPERIMENTAL,
-		FLOATING;
+		FLOATING,
+		TYPE_ID;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -1676,6 +1677,19 @@ public class Vala.GirParser : CodeVisitor {
 		return name;
 	}
 
+	string? element_get_type_id () {
+		var type_id = metadata.get_string (ArgumentType.TYPE_ID);
+		if (type_id != null) {
+			return type_id;
+		}
+
+		type_id = reader.get_attribute ("glib:get-type");
+		if (type_id != null) {
+			type_id += " ()";
+		}
+		return type_id;
+	}
+	
 	void set_array_ccode (Symbol sym, ParameterInfo info) {
 		sym.set_attribute_double ("CCode", "array_length_pos", info.vala_idx);
 		if (sym is Parameter) {
@@ -1953,7 +1967,7 @@ public class Vala.GirParser : CodeVisitor {
 					} else {
 						parse_boxed ("record");
 					}
-				} else if (reader.get_attribute ("glib:get-type") != null) {
+				} else if (element_get_type_id () != null) {
 					parse_boxed ("record");
 				} else if (!reader.get_attribute ("name").has_suffix ("Private")) {
 					if (reader.get_attribute ("glib:is-gtype-struct-for") == null && reader.get_attribute ("disguised") == "1") {
@@ -1971,7 +1985,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "glib:boxed") {
 				parse_boxed ("glib:boxed");
 			} else if (reader.name == "union") {
-				if (reader.get_attribute ("glib:get-type") != null && !metadata.get_bool (ArgumentType.STRUCT)) {
+				if (element_get_type_id () != null && !metadata.get_bool (ArgumentType.STRUCT)) {
 					parse_boxed ("union");
 				} else {
 					parse_union ();
@@ -2098,11 +2112,11 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				sym = en;
 
-				var type_id = reader.get_attribute ("glib:get-type");
+				var type_id = element_get_type_id ();
 				if (type_id == null) {
 					en.set_attribute_bool ("CCode", "has_type_id", false);
 				} else {
-					en.set_attribute_string ("CCode", "type_id", "%s ()".printf (type_id));
+					en.set_attribute_string ("CCode", "type_id", type_id);
 				}
 			}
 			current.symbol = sym;
@@ -2488,11 +2502,11 @@ public class Vala.GirParser : CodeVisitor {
 		if (current.new_symbol) {
 			st = new Struct (element_get_name (), current.source_reference);
 			current.symbol = st;
-			var type_id = reader.get_attribute ("glib:get-type");
+			var type_id = element_get_type_id ();
 			if (type_id == null) {
 				st.set_attribute_bool ("CCode", "has_type_id", false);
 			} else {
-				st.set_attribute_string ("CCode", "type_id", "%s ()".printf (type_id));
+				st.set_attribute_string ("CCode", "type_id", type_id);
 			}
 		} else {
 			st = (Struct) current.symbol;
@@ -2556,7 +2570,7 @@ public class Vala.GirParser : CodeVisitor {
 		var parent = reader.get_attribute ("parent");
 		if (current.new_symbol) {
 			cl = new Class (current.name, current.source_reference);
-			cl.set_attribute_string ("CCode", "type_id", "%s ()".printf (reader.get_attribute ("glib:get-type")));
+			cl.set_attribute_string ("CCode", "type_id", element_get_type_id ());
 			cl.is_abstract = metadata.get_bool (ArgumentType.ABSTRACT, reader.get_attribute ("abstract") == "1");
 
 			if (parent != null) {
@@ -2636,9 +2650,9 @@ public class Vala.GirParser : CodeVisitor {
 		Interface iface;
 		if (current.new_symbol) {
 			iface = new Interface (current.name, current.source_reference);
-			var typeid = reader.get_attribute ("glib:get-type");
+			var typeid = element_get_type_id ();
 			if (typeid != null) {
-				iface.set_attribute_string ("CCode", "type_id", "%s ()".printf (typeid));
+				iface.set_attribute_string ("CCode", "type_id", typeid);
 			}
 
 			current.symbol = iface;
@@ -3041,10 +3055,10 @@ public class Vala.GirParser : CodeVisitor {
 		if (current.new_symbol) {
 			cl = new Class (current.name, current.source_reference);
 			cl.is_compact = true;
-			var typeid = reader.get_attribute ("glib:get-type");
+			var typeid = element_get_type_id ();
 			if (typeid != null) {
 				require_copy_free = true;
-				cl.set_attribute_string ("CCode", "type_id", "%s ()".printf (typeid));
+				cl.set_attribute_string ("CCode", "type_id", typeid);
 			}
 
 			current.symbol = cl;
