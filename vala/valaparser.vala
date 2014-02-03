@@ -31,6 +31,8 @@ public class Vala.Parser : CodeVisitor {
 	CodeContext context;
 	bool compiler_code = false;
 	SourceReference? from_string_reference = null;
+	Expression[]? replacements = null;
+	int replacement_index = 0;
 
 	// token buffer
 	TokenInfo[] tokens;
@@ -337,10 +339,12 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	public Expression? parse_expression_string (string str, SourceReference source_reference) {
+	public Expression? parse_expression_string (string str, owned Expression[]? replacements, SourceReference source_reference) {
 		compiler_code = true;
 		context = source_reference.file.context;
 		from_string_reference = source_reference;
+		this.replacements = (owned) replacements;
+		replacement_index = 0;
 
 		scanner = new Scanner.from_string (str, source_reference.file);
 		index = -1;
@@ -358,10 +362,12 @@ public class Vala.Parser : CodeVisitor {
 		return null;
 	}
 
-	public void parse_statements_string (string str, Block block, SourceReference source_reference) {
+	public void parse_statements_string (string str, Block block, owned Expression[]? replacements, SourceReference source_reference) {
 		compiler_code = true;
 		context = source_reference.file.context;
 		from_string_reference = source_reference;
+		this.replacements = (owned) replacements;
+		replacement_index = 0;
 
 		scanner = new Scanner.from_string (str, source_reference.file);
 		index = -1;
@@ -704,7 +710,18 @@ public class Vala.Parser : CodeVisitor {
 			expr = parse_typeof_expression ();
 			break;
 		default:
-			expr = parse_simple_name ();
+			if (compiler_code && current () == TokenType.PERCENT) {
+				var begin2 = get_location ();
+				next ();
+				if (accept (TokenType.INTERR)) {
+					expr = replacements[replacement_index++];
+				} else {
+					rollback (begin2);
+					expr = parse_simple_name ();
+				}
+			} else {
+				expr = parse_simple_name ();
+			}
 			break;
 		}
 

@@ -367,7 +367,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			m.add_parameter (new Parameter ("variant", data_type ("GLib.Variant", false), b.source_reference));
 			push_builder (new CodeBuilder.for_subroutine (m));
 
-			var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter"), expression (@"variant.iterator ()"));
+			var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter"), expression ("variant.iterator ()"));
 
 			var result = b.add_temp_declaration (type, expression ("{}"));
 
@@ -397,7 +397,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			m.add_parameter (new Parameter ("variant", data_type ("GLib.Variant", false), b.source_reference));
 			push_builder (new CodeBuilder.for_subroutine (m));
 
-			var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter"), expression (@"variant.iterator ()"));
+			var iterator = b.add_temp_declaration (data_type ("GLib.VariantIter"), expression ("variant.iterator ()"));
 
 			var type_args = type.get_type_arguments ();
 			assert (type_args.size == 2);

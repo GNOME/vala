@@ -180,12 +180,12 @@ public class Vala.CodeTransformer : CodeVisitor {
 		return CodeBuilder.data_type (s, value_owned, nullable);
 	}
 
-	public Expression expression (string str) {
-		return b.expression (str);
+	public Expression expression (string str, Expression[]? replacements = null) {
+		return b.expression (str, replacements);
 	}
 
-	public void statements (string str) {
-		b.statements (str);
+	public void statements (string str, owned Expression[]? replacements = null) {
+		b.statements (str, (owned) replacements);
 	}
 
 	public void check (CodeNode node) {
