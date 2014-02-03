@@ -185,12 +185,12 @@ public class Vala.CodeTransformer : CodeVisitor {
 		return CodeBuilder.data_type (s, value_owned, nullable);
 	}
 
-	public Expression expression (string str) {
-		return b.expression (str);
+	public Expression expression (string str, owned Expression[]? replacements = null) {
+		return b.expression (str, (owned) replacements);
 	}
 
-	public void statements (string str) {
-		b.statements (str);
+	public void statements (string str, owned Expression[]? replacements = null) {
+		b.statements (str, (owned) replacements);
 	}
 
 	public void check (CodeNode node) {
@@ -223,7 +223,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 		if (expr.value_type != null && expr.value_type.type_symbol != null && expr.value_type.type_symbol.is_subtype_of (context.analyzer.string_type.type_symbol)) {
 			return expr;
 		} else {
-			return expression (@"$expr.to_string ()");
+			return expression (@"%?.to_string ()", {expr});
 		}
 	}
 

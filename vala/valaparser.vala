@@ -31,6 +31,8 @@ public class Vala.Parser : CodeVisitor {
 	CodeContext context;
 	bool compiler_code = false;
 	SourceReference? from_string_reference = null;
+	Expression[]? replacements = null;
+	int replacement_index = 0;
 
 	// token buffer
 	TokenInfo[] tokens;
@@ -369,12 +371,14 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	public Expression? parse_expression_string (string str, SourceReference source_reference) {
+	public Expression? parse_expression_string (string str, owned Expression[]? replacements, SourceReference source_reference) {
 		Expression? result = null;
 
 		compiler_code = true;
 		context = source_reference.file.context;
 		from_string_reference = source_reference;
+		this.replacements = (owned) replacements;
+		replacement_index = 0;
 
 		scanner = new Scanner.from_string (str, source_reference.file);
 		index = -1;
@@ -388,17 +392,25 @@ public class Vala.Parser : CodeVisitor {
 			Report.error (source_reference, "internal error: %s".printf (e.message));
 		}
 
+		if (replacements.length > 0 && ++replacement_index != replacements.length) {
+			Report.error (source_reference, "internal error: %i replacements for %i placeholders".printf (replacements.length, replacement_index));
+		}
+
 		scanner = null;
+		replacement_index = 0;
+		this.replacements = null;
 		from_string_reference = null;
 		compiler_code = false;
 
 		return result;
 	}
 
-	public void parse_statements_string (string str, Block block, SourceReference source_reference) {
+	public void parse_statements_string (string str, Block block, owned Expression[]? replacements, SourceReference source_reference) {
 		compiler_code = true;
 		context = source_reference.file.context;
 		from_string_reference = source_reference;
+		this.replacements = (owned) replacements;
+		replacement_index = 0;
 
 		scanner = new Scanner.from_string (str, source_reference.file);
 		index = -1;
@@ -412,7 +424,13 @@ public class Vala.Parser : CodeVisitor {
 			Report.error (source_reference, "internal error: %s".printf (e.message));
 		}
 
+		if (replacements.length > 0 && ++replacement_index != replacements.length) {
+			Report.error (source_reference, "internal error: %i replacements for %i placeholders".printf (replacements.length, replacement_index));
+		}
+
 		scanner = null;
+		replacement_index = 0;
+		this.replacements = null;
 		from_string_reference = null;
 		compiler_code = false;
 	}
@@ -756,7 +774,18 @@ public class Vala.Parser : CodeVisitor {
 			expr = parse_typeof_expression ();
 			break;
 		default:
-			expr = parse_simple_name ();
+			if (compiler_code && current () == TokenType.PERCENT) {
+				var inner_begin = get_location ();
+				next ();
+				if (accept (TokenType.INTERR)) {
+					expr = (owned) replacements[replacement_index++];
+				} else {
+					rollback (inner_begin);
+					expr = parse_simple_name ();
+				}
+			} else {
+				expr = parse_simple_name ();
+			}
 			break;
 		}
 
