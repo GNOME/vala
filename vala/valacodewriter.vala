@@ -1,6 +1,6 @@
 /* valacodewriter.vala
  *
- * Copyright (C) 2006-2012  Jürg Billeter
+ * Copyright (C) 2006-2014  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -1547,7 +1547,7 @@ public class Vala.CodeWriter : CodeVisitor {
 				continue;
 			}
 
-			if (!(node is Parameter)) {
+			if (!(node is Parameter) && !(node is PropertyAccessor)) {
 				write_indent ();
 			}
 
@@ -1571,7 +1571,7 @@ public class Vala.CodeWriter : CodeVisitor {
 				stream.printf (")");
 			}
 			stream.printf ("]");
-			if (node is Parameter) {
+			if (node is Parameter || node is PropertyAccessor) {
 				write_string (" ");
 			} else {
 				write_newline ();
