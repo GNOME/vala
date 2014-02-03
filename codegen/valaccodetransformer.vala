@@ -174,10 +174,7 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		if (!always_false (stmt.condition)) {
 			b.open_loop ();
 			if (!always_true (stmt.condition)) {
-				var cond = expression ("!%?", {stmt.condition});
-				b.open_if (cond);
-				b.add_break ();
-				b.close ();
+				statements ("if (!%?) { break; }", {stmt.condition});
 			}
 			b.add_statement (stmt.body);
 			b.close ();
@@ -195,13 +192,13 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		// do not generate variable and if block if condition is always true
 		if (!always_true (stmt.condition)) {
 			var notfirst = b.add_temp_declaration (null, expression ("false"));
-			b.open_if (expression (notfirst));
-			b.open_if (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, stmt.condition, stmt.source_reference));
-			b.add_break ();
-			b.close ();
-			b.add_else ();
-			b.add_assignment (expression (notfirst), expression ("true"));
-			b.close ();
+			statements (@"if ($notfirst) {
+							if (!%?) {
+								break;
+							}
+						} else {
+							$notfirst = true;
+						}", {stmt.condition});
 		}
 		stmt.body.checked = false;
 		b.add_statement (stmt.body);
@@ -403,19 +400,21 @@ public class Vala.CCodeTransformer : CodeTransformer {
 		    && (expr.operator == BinaryOperator.AND || expr.operator == BinaryOperator.OR)) {
 			var is_and = expr.operator == BinaryOperator.AND;
 			var result = b.add_temp_declaration (data_type ("bool"));
-			b.open_if (expr.left);
+
 			if (is_and) {
-				b.add_assignment (expression (result), expr.right);
+				statements (@"if (%?) {
+							$result = %?;
+							} else {
+							$result = false;
+							}", {expr.left, expr.right});
 			} else {
-				statements (@"$result = true;");
+				statements (@"if (%?) {
+							$result = true;
+							} else {
+							$result = %?;
+							}", {expr.left, expr.right});
 			}
-			b.add_else ();
-			if (is_and) {
-				statements (@"$result = false;");
-			} else {
-				b.add_assignment (expression (result), expr.right);
-			}
-			b.close ();
+
 			replacement = expression (result);
 		} else if (expr.operator == BinaryOperator.COALESCE) {
 			var result = b.add_temp_declaration (copy_type (expr.value_type), expr.left);

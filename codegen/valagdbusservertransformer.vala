@@ -117,8 +117,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 			b.add_expression (finish_call);
 		}
 		b.add_catch_all ("_invocation_gerror_");
-		b.add_expression (expression ("invocation.return_gerror (_invocation_gerror_)"));
-		b.add_return ();
+		statements ("invocation.return_gerror (_invocation_gerror_); return;");
 		b.close ();
 
 		fd_list = null;
@@ -130,12 +129,12 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		if (result != null) {
 			write_dbus_value (m.return_type.copy (), builder, result, ref fd_list);
 		}
-		b.add_expression (expression (@"$reply.set_body ($builder.end ())"));
+		statements (@"$reply.set_body ($builder.end ());");
 		if (fd_list != null) {
-			b.add_expression (expression (@"$reply.set_unix_fd_list ($fd_list)"));
+			statements (@"$reply.set_unix_fd_list ($fd_list);");
 		}
 		b.open_try ();
-		b.add_expression (expression (@"invocation.get_connection ().send_message ($reply, GLib.DBusSendMessageFlags.NONE, null)"));
+		statements (@"invocation.get_connection ().send_message ($reply, GLib.DBusSendMessageFlags.NONE, null);");
 		b.add_catch_uncaught_error ();
 		b.close ();
 
@@ -191,7 +190,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 			}
 			b.add_section (expression (@"\"$(get_dbus_name_for_member (m))\""));
 			var wrapper = generate_dbus_method_wrapper (m, sym);
-			b.add_expression (expression (@"$wrapper ($object, _parameters_, invocation)"));
+			statements (@"$wrapper ($object, _parameters_, invocation);");
 			b.add_break ();
 		}
 		b.close ();
@@ -220,7 +219,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		var object_type = SemanticAnalyzer.get_data_type_for_symbol (sym);
 		var object = b.add_temp_declaration (null, expression (@"($object_type) (((GLib.Object[]) user_data)[0])"));
 		b.open_switch (expression ("property_name"), null);
-		b.add_return (expression ("null"));
+		statements ("return null;");
 		foreach (var prop in sym.get_properties ()) {
 			if (prop.binding != MemberBinding.INSTANCE
 			    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC
@@ -229,7 +228,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 				continue;
 			}
 			b.add_section (expression (@"\"$(get_dbus_name_for_member (prop))\""));
-			b.add_return (expression (@"$object.$(prop.name)"));
+			statements (@"return $object.$(prop.name);");
 		}
 		pop_builder ();
 		check (m);
@@ -257,7 +256,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		var object_type = SemanticAnalyzer.get_data_type_for_symbol (sym);
 		var object = b.add_temp_declaration (null, expression (@"($object_type) (((GLib.Object[]) user_data)[0])"));
 		b.open_switch (expression ("property_name"), null);
-		b.add_return (expression ("false"));
+		statements ("return false;");
 		foreach (var prop in sym.get_properties ()) {
 			if (prop.binding != MemberBinding.INSTANCE
 			    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC
@@ -266,8 +265,8 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 				continue;
 			}
 			b.add_section (expression (@"\"$(get_dbus_name_for_member (prop))\""));
-			b.add_expression (expression (@"$object.$(prop.name) = ($(prop.property_type)) value"));
-			b.add_return (expression ("true"));
+			statements (@"$object.$(prop.name) = ($(prop.property_type)) value;
+						return true;");
 		}
 		pop_builder ();
 		check (m);
@@ -293,12 +292,12 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		var builder = b.add_temp_declaration (null, expression ("new GLib.VariantBuilder (GLib.VariantType.TUPLE)"));
 		foreach (var param in sig.get_parameters ()) {
 			if (is_gvariant_type (param.variable_type)) {
-				b.add_expression (expression (@"$builder.add (\"v\", $(param.name))"));
+				statements (@"$builder.add (\"v\", $(param.name));");
 			} else {
-				b.add_expression (expression (@"$builder.add_value ($(param.name))"));
+				statements (@"$builder.add_value ($(param.name));");
 			}
 		}
-		b.add_expression (expression (@"((GLib.DBusConnection) _data[1]).emit_signal (null, (string) _data[2], \"$dbus_iface_name\", \"$(get_dbus_name_for_member (sig))\", $builder.end ())"));
+		statements (@"((GLib.DBusConnection) _data[1]).emit_signal (null, (string) _data[2], \"$dbus_iface_name\", \"$(get_dbus_name_for_member (sig))\", $builder.end ());");
 		pop_builder ();
 		check (m);
 	}

@@ -241,7 +241,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 				if (is_gvariant_type (f.variable_type)) {
 					serialized_field = @"new GLib.Variant.variant ($serialized_field)";
 				}
-				b.add_expression (expression (@"$builder.add_value ($serialized_field)"));
+				statements (@"$builder.add_value ($serialized_field);");
 			}
 			b.add_return (expression (@"$builder.end ()"));
 
@@ -270,9 +270,8 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			string serialized_key = is_gvariant_type (key_type) ? "new GLib.Variant.variant (k1)" : "k1";
 			string serialized_value = is_gvariant_type (value_type) ? "new GLib.Variant.variant (v1)" : "v1";
 
-			var for_each = expression (@"ht.for_each ((k, v) => { GLib.Variant k1 = k; GLib.Variant v1 = v; $builder.add (\"{?*}\", $serialized_key, $serialized_value); })");
-			b.add_expression (for_each);
-			b.add_return (expression (@"$builder.end ()"));
+			statements (@"ht.for_each ((k, v) => { GLib.Variant k1 = k; GLib.Variant v1 = v; $builder.add (\"{?*}\", $serialized_key, $serialized_value); });
+						return $builder.end ();");
 
 			pop_builder ();
 			check (m);
@@ -310,7 +309,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 				array_new.append_size (expression (length));
 				indices[dim - 1] = b.add_temp_declaration (null, expression ("0"));
 				if (dim < array_type.rank) {
-					b.add_expression (expression (@"$iterator.next_value ()"));
+					statements (@"$iterator.next_value ();");
 				}
 			}
 			b.add_assignment (expression (array), array_new);
@@ -377,9 +376,9 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 				}
 
 				if (is_gvariant_type (f.variable_type)) {
-					b.add_expression (expression (@"$result.$(f.name) = $iterator.next_value ().get_variant ()"));
+					statements (@"$result.$(f.name) = $iterator.next_value ().get_variant ();");
 				} else {
-					b.add_expression (expression (@"$result.$(f.name) = ($(f.variable_type)) ($iterator.next_value ())"));
+					statements (@"$result.$(f.name) = ($(f.variable_type)) ($iterator.next_value ());");
 				}
 			}
 			b.add_return (expression (result));
@@ -415,15 +414,17 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			var hash_table = b.add_temp_declaration (hash_table_new_type, hash_table_new);
 			var new_variant = b.add_temp_declaration (data_type ("GLib.Variant"));
 
-			b.open_while (expression (@"($new_variant = $iterator.next_value ()) != null"));
 			var serialized_key = @"$new_variant.get_child_value (0)";
 			serialized_key = is_gvariant_type (key_type) ? @"$serialized_key.get_variant ()" : @"($key_type)($serialized_key)";
 			var serialized_value = @"$new_variant.get_child_value (1)";
 			serialized_value = is_gvariant_type (value_type) ? @"$serialized_value.get_variant ()" : @"($value_type)($serialized_value)";
-			b.add_expression (expression (@"$hash_table.insert ($serialized_key, $serialized_value)"));
-			b.close ();
 
-			b.add_return (expression (hash_table));
+			statements (@"while (($new_variant = $iterator.next_value ()) != null) {
+						$hash_table.insert ($serialized_key, $serialized_value);
+						}
+						return $hash_table;
+						");
+
 			pop_builder ();
 			check (m);
 		}
@@ -453,11 +454,11 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 		push_builder (new CodeBuilder.for_subroutine (m));
 
 		b.open_switch (expression ("str"), null);
-		b.add_throw (expression ("new GLib.DBusError.INVALID_ARGS (\"Invalid value for enum `%s'\")".printf (get_ccode_name (en))));
+		statements ("throw new GLib.DBusError.INVALID_ARGS (\"Invalid value for enum `%s'\");".printf (get_ccode_name (en)));
 		foreach (var enum_value in en.get_values ()) {
 			string dbus_value = get_dbus_value (enum_value, enum_value.name);
 			b.add_section (expression (@"\"$dbus_value\""));
-			b.add_return (expression (@"$(en.get_full_name ()).$(enum_value.name)"));
+			statements (@"return $(en.get_full_name ()).$(enum_value.name);");
 		}
 		b.close ();
 		pop_builder ();
@@ -546,10 +547,9 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 			return;
 		}
 
-		push_builder (new CodeBuilder (context, expr.parent_statement, expr.source_reference));
-		var old_parent_node = expr.parent_node;
-		var target_type = expr.target_type.copy ();
-		var type = expr.value_type;
+		var target_type = copy_type (expr.target_type);
+		var type = copy_type (expr.value_type);
+		begin_replace_expression (expr);
 
 		BasicTypeInfo basic_type;
 		Expression result = null;
@@ -571,10 +571,6 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 		}
 
 		result.target_type = target_type;
-		context.analyzer.replaced_nodes.add (expr);
-		old_parent_node.replace_expression (expr, result);
-		b.check (this);
-		pop_builder ();
-		check (result);
+		end_replace_expression (result);
 	}
 }

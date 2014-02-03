@@ -50,9 +50,9 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 			if (fd_list == null) {
 				fd_list = b.add_temp_declaration (data_type ("GLib.UnixFDList"), null);
 				fd_index = b.add_temp_declaration (null, expression ("0"));
-				b.add_expression (expression (@"$fd_list = $message.get_unix_fd_list ()"));
+				statements (@"$fd_list = $message.get_unix_fd_list ();");
 			}
-			b.add_expression (expression (@"$iter.next (\"h\", out $fd_index)"));
+			statements (@"$iter.next (\"h\", out $fd_index);");
 			if (type_name == "GLib.UnixInputStream") {
 				return expression (@"new GLib.UnixInputStream ($fd_list.get ($fd_index), true)");
 			} else if (type_name == "GLib.UnixOutputStream") {
@@ -80,11 +80,11 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 			if (fd_list == null) {
 				fd_list = b.add_temp_declaration (null, expression ("new GLib.UnixFDList ()"));
 			}
-			b.add_expression (expression (@"$builder.add (\"h\", $fd_list.append ($value.get_fd ()))"));
+			statements (@"$builder.add (\"h\", $fd_list.append ($value.get_fd ()));");
 		} else if (type_name == "GLib.Variant") {
-			b.add_expression (expression (@"$builder.add (\"v\", $value)"));
+			statements (@"$builder.add (\"v\", $value);");
 		} else {
-			b.add_expression (expression (@"$builder.add_value ($value)"));
+			statements (@"$builder.add_value ($value);");
 		}
 	}
 
@@ -110,21 +110,21 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 				has_result = true;
 			}
 		}
-		b.add_expression (expression (@"$message.set_body ($builder.end ())"));
+		statements (@"$message.set_body ($builder.end ());");
 		if (fd_list != null) {
-			b.add_expression (expression (@"$message.set_unix_fd_list ($fd_list)"));
+			statements (@"$message.set_unix_fd_list ($fd_list);");
 		}
 
 		// send the message
 		if (is_dbus_no_reply (m)) {
-			b.add_expression (expression (@"this.get_connection ().send_message ($message, GLib.DBusSendMessageFlags.NO_REPLY_EXPECTED, null)"));
+			statements (@"this.get_connection ().send_message ($message, GLib.DBusSendMessageFlags.NO_REPLY_EXPECTED, null);");
 		} else {
 			var yield_str = m.coroutine ? "yield " : "";
 			var method_str = m.coroutine ? "send_message_with_reply" : "send_message_with_reply_sync";
 			var timeout_str = method_timeout > 0 ? @"$method_timeout" : "this.get_default_timeout ()";
-			b.add_expression (expression (@"$reply = $yield_str this.get_connection ().$method_str ($message, GLib.DBusSendMessageFlags.NONE, $timeout_str, null, $cancellable)"));
+			statements (@"$reply = $yield_str this.get_connection ().$method_str ($message, GLib.DBusSendMessageFlags.NONE, $timeout_str, null, $cancellable);");
 
-			b.add_expression (expression (@"$reply.to_gerror ()"));
+			statements (@"$reply.to_gerror ();");
 		}
 
 		// deserialize the result
@@ -132,7 +132,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		string fd_index = null;
 		if (has_result) {
 			var iter = b.add_temp_declaration (data_type ("GLib.VariantIter"));
-			b.add_expression (expression (@"$iter = $reply.get_body ().iterator ()"));
+			statements (@"$iter = $reply.get_body ().iterator ();");
 			foreach (var param in m.get_parameters ()) {
 				if (param.direction == ParameterDirection.OUT) {
 					b.add_assignment (expression (param.name), read_dbus_value (param.variable_type, iter, reply, ref fd_list, ref fd_index));
@@ -194,9 +194,9 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		foreach (var param in sig.get_parameters ()) {
 			var temp = b.add_temp_declaration (copy_type (param.variable_type, true));
 			if (is_gvariant_type (param.variable_type)) {
-				b.add_expression (expression (@"$temp = $iter.next_value ().get_variant ()"));
+				statements (@"$temp = $iter.next_value ().get_variant ();");
 			} else {
-				b.add_expression (expression (@"$temp = ($(param.variable_type)) ($iter.next_value ())"));
+				statements (@"$temp = ($(param.variable_type)) ($iter.next_value ());");
 			}
 			call.add_argument (expression (temp));
 		}
@@ -219,7 +219,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		push_builder (new CodeBuilder.for_subroutine (m));
 
 		b.open_switch (expression ("signal_name"), null);
-		b.add_expression (expression ("GLib.assert_not_reached ()"));
+		statements ("GLib.assert_not_reached ();");
 		b.add_break ();
 		foreach (var sig in sym.get_signals ()) {
 			if (sig.access != SymbolAccessibility.PUBLIC) {
@@ -228,7 +228,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 
 			b.add_section (expression (@"\"$(get_dbus_name_for_member (sig))\""));
 			var handler_name = generate_dbus_proxy_signal (proxy_class, sig, sym);
-			b.add_expression (expression (@"$handler_name (parameters)"));
+			statements (@"$handler_name (parameters);");
 			b.add_break ();
 		}
 		b.close ();
@@ -269,14 +269,14 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 			b.open_if (expression (@"$result == null"));
 
 			b.open_try ();
-			b.add_expression (expression (@"$result = call_sync (\"org.freedesktop.DBus.Properties.Get\", new Variant (\"(ss)\", \"$dbus_iface_name\", \"$dbus_name\"), GLib.DBusCallFlags.NONE, $timeout, null)"));
+			statements (@"$result = call_sync (\"org.freedesktop.DBus.Properties.Get\", new GLib.Variant (\"(ss)\", \"$dbus_iface_name\", \"$dbus_name\"), GLib.DBusCallFlags.NONE, $timeout, null);");
 			b.add_catch_uncaught_error ();
 			b.close ();
 
-			b.add_expression (expression (@"$result.get (\"(v)\", out $result)"));
+			statements (@"$result.get (\"(v)\", out $result);");
 			b.close ();
 
-			b.add_return (expression (@"($(prop.property_type)) ($result)"));
+			statements (@"return ($(prop.property_type)) ($result);");
 			pop_builder ();
 		}
 
@@ -285,7 +285,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 			proxy_set = new PropertyAccessor (false, true, false, prop.set_accessor.value_type, null, prop.set_accessor.source_reference);
 			push_builder (new CodeBuilder.for_subroutine (proxy_set));
 			var variant = b.add_temp_declaration (data_type ("GLib.Variant"), expression ("value"));
-			b.add_expression (expression (@"call_sync (\"org.freedesktop.DBus.Properties.Set\", new Variant (\"(ssv)\", \"$dbus_iface_name\", \"$dbus_name\", $variant), GLib.DBusCallFlags.NONE, $timeout, null)"));
+			statements (@"call_sync (\"org.freedesktop.DBus.Properties.Set\", new GLib.Variant (\"(ssv)\", \"$dbus_iface_name\", \"$dbus_name\", $variant), GLib.DBusCallFlags.NONE, $timeout, null);");
 			pop_builder ();
 		}
 
