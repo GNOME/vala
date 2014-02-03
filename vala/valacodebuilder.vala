@@ -267,12 +267,12 @@ public class Vala.CodeBuilder {
 
 	/* Utilities for building the code */
 
-	public Expression expression (string str) {
-		return new Parser().parse_expression_string (str, source_reference);
+	public Expression expression (string str, owned Expression[]? replacements = null) {
+		return new Parser().parse_expression_string (str, (owned) replacements, source_reference);
 	}
 
-	public void statements (string str) {
-		new Parser().parse_statements_string (str, current_block, source_reference);
+	public void statements (string str, owned Expression[]? replacements = null) {
+		new Parser().parse_statements_string (str, current_block, (owned) replacements, source_reference);
 	}
 
 	// only qualified types, will slightly simplify the work of SymbolResolver
