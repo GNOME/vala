@@ -359,8 +359,11 @@ public class Vala.CCodeTransformer : CodeTransformer {
 				var replacement = return_temp_access (local, expr.value_type, target_type, formal_target_type);
 
 				end_replace_expression (replacement);
+				return;
 			}
 		}
+
+		expr.accept_children (this);
 	}
 
 	public override void visit_conditional_expression (ConditionalExpression expr) {
@@ -476,8 +479,11 @@ public class Vala.CCodeTransformer : CodeTransformer {
 				var replacement = return_temp_access (local, expr.value_type, target_type, formal_target_type);
 
 				end_replace_expression (replacement);
+				return;
 			}
 		}
+
+		expr.accept_children (this);
 	}
 
 	Expression stringify (Expression expr) {
@@ -525,5 +531,13 @@ public class Vala.CCodeTransformer : CodeTransformer {
 
 	public override void visit_assignment (Assignment a) {
 		a.accept_children (this);
+	}
+
+	public override void visit_cast_expression (CastExpression expr) {
+		expr.accept_children (this);
+	}
+
+	public override void visit_lambda_expression (LambdaExpression expr) {
+		expr.accept_children (this);
 	}
 }
