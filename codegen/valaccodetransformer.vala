@@ -222,8 +222,11 @@ public class Vala.CCodeTransformer : CodeTransformer {
 				var replacement = return_temp_access (local, expr.value_type, target_type, formal_target_type);
 
 				end_replace_expression (replacement);
+				return;
 			}
 		}
+
+		expr.accept_children (this);
 	}
 
 	public override void visit_conditional_expression (ConditionalExpression expr) {
@@ -341,8 +344,11 @@ public class Vala.CCodeTransformer : CodeTransformer {
 				var replacement = return_temp_access (local, expr.value_type, target_type, formal_target_type);
 
 				end_replace_expression (replacement);
+				return;
 			}
 		}
+
+		expr.accept_children (this);
 	}
 
 	public override void visit_template (Template expr) {
