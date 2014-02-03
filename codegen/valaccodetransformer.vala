@@ -78,6 +78,10 @@ public class Vala.CCodeTransformer : CodeTransformer {
 	}
 
 	public override void visit_creation_method (CreationMethod m) {
+		if (m.body == null) {
+			return;
+		}
+
 		m.accept_children (this);
 	}
 
@@ -538,6 +542,55 @@ public class Vala.CCodeTransformer : CodeTransformer {
 	}
 
 	public override void visit_lambda_expression (LambdaExpression expr) {
+		expr.accept_children (this);
+	}
+
+
+	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
+		expr.accept_children (this);
+	}
+
+	public override void visit_member_access (MemberAccess expr) {
+		expr.accept_children (this);
+	}
+
+	public override void visit_element_access (ElementAccess expr) {
+		expr.accept_children (this);
+	}
+
+	public override void visit_slice_expression (SliceExpression expr) {
+		expr.accept_children (this);
+	}
+
+	public override void visit_base_access (BaseAccess expr) {
+		expr.accept_children (this);
+	}
+
+	public override void visit_sizeof_expression (SizeofExpression expr) {
+		expr.accept_children (this);
+	}
+
+	public override void visit_typeof_expression (TypeofExpression expr) {
+		expr.accept_children (this);
+	}
+
+	public override void visit_named_argument (NamedArgument expr) {
+		expr.accept_children (this);
+	}
+
+	public override void visit_pointer_indirection (PointerIndirection expr) {
+		expr.accept_children (this);
+	}
+
+	public override void visit_addressof_expression (AddressofExpression expr) {
+		expr.accept_children (this);
+	}
+
+	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
+		expr.accept_children (this);
+	}
+
+	public override void visit_type_check (TypeCheck expr) {
 		expr.accept_children (this);
 	}
 }
