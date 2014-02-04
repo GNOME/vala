@@ -1,3 +1,11 @@
+Vala 0.23.2
+===========
+
+ * Bind GDK event structures as compact classes.
+ * Switch gdk-x11-3.0 bindings to .gir.
+ * Switch librsvg-2.0 bindings to .gir.
+ * Bug fixes and binding updates.
+
 Vala 0.23.1
 ===========
 
