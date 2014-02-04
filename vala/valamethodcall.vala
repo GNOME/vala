@@ -161,6 +161,10 @@ public class Vala.MethodCall : Expression {
 			var d = ((DelegateType) mtype).delegate_symbol;
 			d.get_error_types (collection, source_reference);
 		}
+
+		foreach (Expression expr in argument_list) {
+			expr.get_error_types (collection, source_reference);
+		}
 	}
 
 	public override bool check (CodeContext context) {
