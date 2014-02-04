@@ -7365,6 +7365,7 @@
 					<parameter name="assistant" type="GtkAssistant*"/>
 				</parameters>
 			</method>
+			<property name="use-header-bar" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
 			<signal name="apply" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -12567,6 +12568,74 @@
 					<parameter name="action" type="GtkFileChooserAction"/>
 				</parameters>
 			</constructor>
+			<signal name="desktop-folder" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkFileChooserWidget*"/>
+				</parameters>
+			</signal>
+			<signal name="down-folder" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkFileChooserWidget*"/>
+				</parameters>
+			</signal>
+			<signal name="home-folder" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkFileChooserWidget*"/>
+				</parameters>
+			</signal>
+			<signal name="location-popup" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkFileChooserWidget*"/>
+					<parameter name="p0" type="char*"/>
+				</parameters>
+			</signal>
+			<signal name="location-popup-on-paste" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkFileChooserWidget*"/>
+				</parameters>
+			</signal>
+			<signal name="location-toggle-popup" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkFileChooserWidget*"/>
+				</parameters>
+			</signal>
+			<signal name="quick-bookmark" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkFileChooserWidget*"/>
+					<parameter name="p0" type="gint"/>
+				</parameters>
+			</signal>
+			<signal name="recent-shortcut" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkFileChooserWidget*"/>
+				</parameters>
+			</signal>
+			<signal name="search-shortcut" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkFileChooserWidget*"/>
+				</parameters>
+			</signal>
+			<signal name="show-hidden" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkFileChooserWidget*"/>
+				</parameters>
+			</signal>
+			<signal name="up-folder" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkFileChooserWidget*"/>
+				</parameters>
+			</signal>
 		</object>
 		<object name="GtkFileFilter" parent="GInitiallyUnowned" type-name="GtkFileFilter" get-type="gtk_file_filter_get_type">
 			<implements>

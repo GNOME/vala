@@ -686,6 +686,8 @@ namespace Gtk {
 		public void set_page_title (Gtk.Widget page, string title);
 		public void set_page_type (Gtk.Widget page, Gtk.AssistantPageType type);
 		public void update_buttons_state ();
+		[NoAccessorMethod]
+		public int use_header_bar { get; construct; }
 		public virtual signal void apply ();
 		public virtual signal void cancel ();
 		public virtual signal void close ();
@@ -2059,6 +2061,17 @@ namespace Gtk {
 	public class FileChooserWidget : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable, Gtk.FileChooser, Gtk.FileChooserEmbed {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FileChooserWidget (Gtk.FileChooserAction action);
+		public virtual signal void desktop_folder ();
+		public virtual signal void down_folder ();
+		public virtual signal void home_folder ();
+		public virtual signal void location_popup (string p0);
+		public virtual signal void location_popup_on_paste ();
+		public virtual signal void location_toggle_popup ();
+		public virtual signal void quick_bookmark (int p0);
+		public virtual signal void recent_shortcut ();
+		public virtual signal void search_shortcut ();
+		public virtual signal void show_hidden ();
+		public virtual signal void up_folder ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class FileFilter : GLib.InitiallyUnowned, Gtk.Buildable {
