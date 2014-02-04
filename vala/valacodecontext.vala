@@ -139,6 +139,11 @@ public class Vala.CodeContext {
 	public string[] metadata_directories { get; set; default = {}; }
 
 	/**
+	 * List of directories where to find plugins.
+	 */
+	public string[] plugin_directories;
+
+	/**
 	 * Produce debug information.
 	 */
 	public bool debug { get; set; }
@@ -227,6 +232,11 @@ public class Vala.CodeContext {
 	public SemanticAnalyzer analyzer { get; private set; }
 
 	public FlowAnalyzer flow_analyzer { get; private set; }
+
+	/**
+	 * The head of the transformers chain.
+	 */
+	public CodeTransformer transformer { get; set; }
 
 	/**
 	 * The selected code generator.
@@ -503,6 +513,77 @@ public class Vala.CodeContext {
 		}
 
 		used_attr.check_unused (this);
+	}
+
+	public void load_plugins () {
+		if (!Module.supported ()) {
+			return;
+		}
+
+		if (plugin_directories != null) {
+			foreach (string dir in plugin_directories) {
+				load_plugins_in_directory (dir);
+			}
+		}
+
+		load_plugins_in_directory (Config.PACKAGE_LIBDIR);
+	}
+
+	public void load_plugins_in_directory (string dirname) {
+		Dir dir;
+		try {
+			dir = Dir.open (dirname, 0);
+		} catch (Error e) {
+			return;
+		}
+
+		string? name = null;
+
+		while ((name = dir.read_name ()) != null) {
+			string path = Path.build_filename (dirname, name);
+			if (FileUtils.test (path, FileTest.IS_DIR)) {
+				continue;
+			}
+			if (!name.has_prefix ("valaplugin")) {
+				continue;
+			}
+
+			var mod = Module.open (path, ModuleFlags.BIND_LOCAL);
+
+			if (mod == null) {
+				if (verbose_mode) {
+					stdout.printf ("Could not load module: %s\n", path);
+				}
+				continue;
+			} else {
+				if (verbose_mode) {
+					stdout.printf ("Loaded module: %s\n", path);
+				}
+			}
+
+			void* function;
+			if (!mod.symbol ("vala_plugin_register", out function) || function == null) {
+				if (verbose_mode) {
+					stdout.printf ("Could not load entry point for module %s\n", path);
+				}
+				continue;
+			}
+
+			unowned RegisterPluginFunction register_plugin = (RegisterPluginFunction) function;
+			register_plugin (this);
+
+			mod.make_resident ();
+		}
+	}
+
+	/**
+	 * Set the given transformer as the head transformer
+	 */
+	public void register_transformer (CodeTransformer transformer) {
+		transformer.next = this.transformer;
+		// Setting .head, will recursively set the head for the next transformers
+		transformer.head = transformer;
+		this.transformer = transformer;
 	}
 
 	public void add_define (string define) {
@@ -813,3 +894,5 @@ public class Vala.CodeContext {
 		return output;
 	}
 }
+
+public delegate void Vala.RegisterPluginFunction (Vala.CodeContext context);

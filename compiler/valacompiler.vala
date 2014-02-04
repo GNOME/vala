@@ -38,6 +38,8 @@ class Vala.Compiler {
 	static string[] gir_directories;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] metadata_directories;
+	[CCode (array_length = false, array_null_terminated = true)]
+	static string[] plugin_directories;
 	static string vapi_filename;
 	static string library;
 	static string shared_library;
@@ -105,6 +107,7 @@ class Vala.Compiler {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
 		{ "girdir", 0, 0, OptionArg.FILENAME_ARRAY, ref gir_directories, "Look for .gir files in DIRECTORY", "DIRECTORY..." },
 		{ "metadatadir", 0, 0, OptionArg.FILENAME_ARRAY, ref metadata_directories, "Look for GIR .metadata files in DIRECTORY", "DIRECTORY..." },
+		{ "plugindir", 0, 0, OptionArg.FILENAME_ARRAY, ref plugin_directories, "Look for Vala compiler plugins in DIRECTORY", "DIRECTORY..." },
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "vapi", 0, 0, OptionArg.FILENAME, ref vapi_filename, "Output VAPI file name", "FILE" },
 		{ "library", 0, 0, OptionArg.STRING, ref library, "Library name", "NAME" },
@@ -270,6 +273,7 @@ class Vala.Compiler {
 		context.vapi_comments = vapi_comments;
 		context.gir_directories = gir_directories;
 		context.metadata_directories = metadata_directories;
+		context.plugin_directories = plugin_directories;
 		context.debug = debug;
 		context.mem_profiler = mem_profiler;
 		context.save_temps = save_temps;
@@ -403,9 +407,10 @@ class Vala.Compiler {
 			}
 		}
 
-		var transformer = new GDBusServerTransformer ();
-		transformer.head = transformer;
-		transformer.transform (context);
+		context.register_transformer (new GDBusServerTransformer ());
+		context.load_plugins ();
+
+		context.transformer.transform (context);
 
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();

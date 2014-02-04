@@ -24,17 +24,81 @@
  * Code visitor for transforming the code tree.
  */
 public class Vala.CodeTransformer : CodeVisitor {
-	public CodeContext context;
+	public CodeContext context {
+		get {
+			return _head._context;
+		}
+		set {
+			_head._context = value;
+		}
+	}
+	CodeContext _context;
 
-	public CodeBuilder b;
-	public ArrayList<CodeBuilder> builder_stack = new ArrayList<CodeBuilder> ();
-	public HashMap<string, CodeNode> wrapper_cache;
+	public CodeBuilder b {
+		get {
+			return _head._b;
+		}
+		set {
+			_head._b = value;
+		}
+	}
+	CodeBuilder _b;
+
+	public ArrayList<CodeBuilder> builder_stack {
+		get {
+			return _head._builder_stack;
+		}
+		set {
+			_head._builder_stack = value;
+		}
+	}
+	ArrayList<CodeBuilder> _builder_stack;
+
+	public HashMap<string, CodeNode> wrapper_cache {
+		get {
+			return _head._wrapper_cache;
+		}
+		set {
+			_head._wrapper_cache = value;
+		}
+	}
+	HashMap<string, CodeNode> _wrapper_cache;
+
 	/* Keep tracks of generated stuff to avoid cycles */
-	public HashSet<CodeNode> unit_generated = new HashSet<CodeNode> ();
+	public HashSet<CodeNode> unit_generated {
+		get {
+			return _head._unit_generated;
+		}
+		set {
+			_head._unit_generated = value;
+		}
+	}
+	HashSet<CodeNode> _unit_generated;
 
-	public Namespace current_namespace = null;
+	public Namespace current_namespace {
+		get {
+			return _head._current_namespace;
+		}
+		set {
+			_head._current_namespace = value;
+		}
+	}
+	Namespace _current_namespace;
 
-	public weak CodeTransformer head;
+	public weak CodeTransformer head {
+		get {
+			return _head;
+		}
+
+		set {
+			_head = value;
+			if (next != null) {
+				next.head = value;
+			}
+		}
+	}
+	private CodeTransformer _head;
+
 	public CodeTransformer next;
 
 	public void push_builder (CodeBuilder builder) {
@@ -108,6 +172,9 @@ public class Vala.CodeTransformer : CodeVisitor {
 	 */
 	public void transform (CodeContext context) {
 		this.context = context;
+		builder_stack = new ArrayList<CodeBuilder> ();
+		unit_generated = new HashSet<CodeNode> ();
+
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
@@ -327,10 +394,6 @@ public class Vala.CodeTransformer : CodeVisitor {
 
 	public override void visit_block (Block b) {
 		next.visit_block (b);
-	}
-
-	public override void visit_empty_statement (EmptyStatement stmt) {
-		next.visit_empty_statement (stmt);
 	}
 
 	public override void visit_declaration_statement (DeclarationStatement stmt) {

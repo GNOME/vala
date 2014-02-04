@@ -23,6 +23,7 @@
 [CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "config.h")]
 namespace Config {
 	public const string PACKAGE_DATADIR;
+	public const string PACKAGE_LIBDIR;
 	public const string PACKAGE_SUFFIX;
 	public const string PACKAGE_VALADOC_LIBDIR;
 	public const string PACKAGE_VALADOC_ICONDIR;
