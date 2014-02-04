@@ -521,12 +521,14 @@ public class Vala.CodeContext {
 		}
 
 		if (plugin_directories != null) {
+			if (!experimental) {
+				Report.warning (null, "plugins are experimental and their API is unstable");
+			}
+
 			foreach (string dir in plugin_directories) {
 				load_plugins_in_directory (dir);
 			}
 		}
-
-		load_plugins_in_directory (Config.PACKAGE_LIBDIR);
 	}
 
 	public void load_plugins_in_directory (string dirname) {

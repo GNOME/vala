@@ -8,7 +8,6 @@ AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
-	-DPACKAGE_LIBDIR=\"$(pkglibdir)\"	\
 	$(NULL)
 
 BUILT_SOURCES = vala.vala.stamp $(srcdir)/valaversion.vala
