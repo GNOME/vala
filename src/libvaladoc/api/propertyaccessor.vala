@@ -76,7 +76,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	 */
 	public bool is_set {
 		get {
-			return type == PropertyAccessorType.SET || type == PropertyAccessorType.CONSTRUCT;
+			return type == PropertyAccessorType.SET;
 		}
 	}
 
