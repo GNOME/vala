@@ -430,16 +430,13 @@ namespace Gtk {
 		public virtual signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class ActionBar : Gtk.Container, Atk.Implementor, Gtk.Buildable {
+	public class ActionBar : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ActionBar ();
 		public unowned Gtk.Widget get_center_widget ();
 		public void pack_end (Gtk.Widget child);
 		public void pack_start (Gtk.Widget child);
 		public void set_center_widget (Gtk.Widget? center_widget);
-		public Gtk.Widget center_widget { get; set construct; }
-		[NoAccessorMethod]
-		public int spacing { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Deprecated (since = "3.10")]
@@ -1348,6 +1345,18 @@ namespace Gtk {
 		public Gtk.TreeModel model { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class CenterBox : Gtk.Container, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public CenterBox ();
+		public unowned Gtk.Widget get_center_widget ();
+		public void pack_end (Gtk.Widget child);
+		public void pack_start (Gtk.Widget child);
+		public void set_center_widget (Gtk.Widget center_widget);
+		public Gtk.Widget center_widget { get; set construct; }
+		[NoAccessorMethod]
+		public int spacing { get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class CheckButton : Gtk.ToggleButton, Atk.Implementor, Gtk.Buildable, Gtk.Actionable, Gtk.Activatable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CheckButton ();
@@ -1768,6 +1777,7 @@ namespace Gtk {
 		public unowned Pango.Layout get_layout ();
 		public void get_layout_offsets (out int x, out int y);
 		public int get_max_length ();
+		public int get_max_width_chars ();
 		public bool get_overwrite_mode ();
 		public unowned string get_placeholder_text ();
 		public double get_progress_fraction ();
@@ -1806,6 +1816,7 @@ namespace Gtk {
 		public void set_input_purpose (Gtk.InputPurpose purpose);
 		public void set_invisible_char (unichar ch);
 		public void set_max_length (int max);
+		public void set_max_width_chars (int n_chars);
 		public void set_overwrite_mode (bool overwrite);
 		public void set_placeholder_text (string text);
 		public void set_progress_fraction (double fraction);
@@ -1839,6 +1850,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool invisible_char_set { get; set; }
 		public int max_length { get; set; }
+		public int max_width_chars { get; set; }
 		public bool overwrite_mode { get; set; }
 		public string placeholder_text { get; set; }
 		[NoAccessorMethod]
@@ -2149,7 +2161,7 @@ namespace Gtk {
 		public uint row_spacing { get; set; }
 		public Gtk.SelectionMode selection_mode { get; set; }
 		public virtual signal void activate_cursor_child ();
-		public virtual signal void child_activated (Gtk.Widget child);
+		public virtual signal void child_activated (Gtk.FlowBoxChild child);
 		public virtual signal void move_cursor (Gtk.MovementStep step, int count);
 		[HasEmitter]
 		public virtual signal void select_all ();
@@ -3147,15 +3159,21 @@ namespace Gtk {
 		public unowned Gtk.Widget get_align_widget ();
 		public Gtk.ArrowType get_direction ();
 		public unowned GLib.MenuModel get_menu_model ();
+		public unowned Gtk.Popover get_popover ();
 		public unowned Gtk.Menu get_popup ();
+		public bool get_use_popover ();
 		public void set_align_widget (Gtk.Widget align_widget);
 		public void set_direction (Gtk.ArrowType direction);
 		public void set_menu_model (GLib.MenuModel menu_model);
-		public void set_popup (Gtk.Widget popup);
+		public void set_popover (Gtk.Widget popover);
+		public void set_popup (Gtk.Widget menu);
+		public void set_use_popover (bool use_popover);
 		public Gtk.Container align_widget { get; set; }
 		public Gtk.ArrowType direction { get; set; }
 		public GLib.MenuModel menu_model { get; set; }
+		public Gtk.Popover popover { get; set; }
 		public Gtk.Menu popup { get; set; }
+		public bool use_popover { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class MenuButtonAccessible : Gtk.ToggleButtonAccessible, Atk.Component, Atk.Action, Atk.Image {
@@ -3576,18 +3594,21 @@ namespace Gtk {
 	public class Popover : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Popover (Gtk.Widget relative_to);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Popover.from_model (Gtk.Widget relative_to, GLib.MenuModel model);
 		public bool get_modal ();
-		public bool get_pointing_to (Cairo.RectangleInt rect);
+		public bool get_pointing_to (Gdk.Rectangle rect);
 		public Gtk.PositionType get_position ();
 		public unowned Gtk.Widget get_relative_to ();
 		public void set_modal (bool modal);
-		public void set_pointing_to (Cairo.RectangleInt rect);
+		public void set_pointing_to (Gdk.Rectangle rect);
 		public void set_position (Gtk.PositionType position);
 		public void set_relative_to (Gtk.Widget relative_to);
 		public bool modal { get; set; }
 		public Cairo.RectangleInt pointing_to { get; set; }
 		public Gtk.PositionType position { get; set construct; }
 		public Gtk.Widget relative_to { get; set; }
+		public virtual signal void closed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class PrintContext : GLib.Object {
@@ -6184,7 +6205,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public VolumeButton ();
 		[NoAccessorMethod]
-		public bool use_symbolic { get; set; }
+		public bool use_symbolic { get; set construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Widget : GLib.InitiallyUnowned, Atk.Implementor, Gtk.Buildable {
@@ -8935,6 +8956,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_DEFAULT;
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_DESTRUCTIVE_ACTION;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_DIM_LABEL;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_DND;
@@ -9028,6 +9051,8 @@ namespace Gtk {
 	public const string STYLE_CLASS_SPINBUTTON;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_SPINNER;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_SUGGESTED_ACTION;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_TITLEBAR;
 	[CCode (cheader_filename = "gtk/gtk.h")]
