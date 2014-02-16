@@ -299,6 +299,8 @@ namespace GLib {
 		public uint get_inactivity_timeout ();
 		public bool get_is_registered ();
 		public bool get_is_remote ();
+		[NoWrapper]
+		public virtual int handle_local_options (GLib.VariantDict options);
 		public void hold ();
 		public static bool id_is_valid (string application_id);
 		[NoWrapper]
@@ -1865,7 +1867,7 @@ namespace GLib {
 		public unowned T get_op_res_gpointer<T> ();
 		public ssize_t get_op_res_gssize ();
 		public void* get_source_tag ();
-		public static bool is_valid (GLib.AsyncResult result, GLib.Object source, void* source_tag);
+		public static bool is_valid (GLib.AsyncResult result, GLib.Object? source, void* source_tag);
 		public bool propagate_error () throws GLib.Error;
 		[CCode (cheader_filename = "gio/gio.h", cname = "g_simple_async_report_gerror_in_idle")]
 		public static async void report_gerror_in_idle (GLib.Object? object, GLib.Error error);
