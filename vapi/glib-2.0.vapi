@@ -1129,6 +1129,10 @@ public class string {
 	[CCode (cname = "g_str_hash")]
 	public uint hash ();
 
+	[CCode (cname = "g_str_is_ascii")]
+	public bool is_ascii ();
+	[CCode (instance_pos = "1.5", cname = "g_str_match_string")]
+	public bool match_string (string search_term, bool accept_alternates);
 	[Deprecated (replacement = "int.parse")]
 	[CCode (cname = "atoi")]
 	public int to_int ();
@@ -1147,6 +1151,8 @@ public class string {
 	[Deprecated (replacement = "uint64.parse")]
 	[CCode (cname = "g_ascii_strtoull")]
 	public uint64 to_uint64 (out unowned string endptr = null, int _base = 0);
+	[CCode (cname = "g_str_tokenize_and_fold", array_length = false, array_null_terminated = true)]
+	public string[] tokenize_and_fold (string transit_locale, out string[] alternates);
 
 	[Deprecated (replacement = "bool.parse")]
 	public bool to_bool () {
@@ -2147,6 +2153,8 @@ namespace GLib {
 	public static void assert_true (bool expr);
 	[Assert]
 	public static void assert_null (void* expr);
+	[Assert]
+	public static void assert_nonnull (void* expr);
 	[NoReturn]
 	public static void assert_not_reached ();
 
@@ -2196,6 +2204,9 @@ namespace GLib {
 	[Diagnostics]
 	[PrintfFormat]
 	public void debug (string format, ...);
+	[Diagnostics]
+	[PrintfFormat]
+	public void info (string format, ...);
 
 	public delegate void LogFunc (string? log_domain, LogLevelFlags log_levels, string message);
 
@@ -3650,6 +3661,7 @@ namespace GLib {
 		[CCode (array_length_type = "gsize")]
 		public double[] get_double_list (string group_name, string key) throws KeyFileError;
 		public string get_comment (string? group_name, string? key) throws KeyFileError;
+		public bool save_to_file (string filename) throws GLib.FileError;
 		public void set_value (string group_name, string key, string value);
 		public void set_string (string group_name, string key, string str);
 		public void set_locale_string (string group_name, string key, string locale, string str);
@@ -4277,6 +4289,7 @@ namespace GLib {
 		public void foreach (GLib.Func<G> func);
 		[CCode (cname = "g_ptr_array_index")]
 		public unowned G get (uint index);
+		public void insert (int index, owned G data);
 		public bool remove (G data);
 		public void remove_index (uint index);
 		public bool remove_fast (G data);
@@ -4662,6 +4675,7 @@ namespace GLib {
 		public bool have_widechar_api ();
 		[CCode (cname = "G_WIN32_IS_NT_BASED")]
 		public bool is_nt_based ();
+		public string[] get_command_line ();
 	}
 
 	[Compact]
@@ -4871,6 +4885,8 @@ namespace GLib {
 
 		public Variant.printf (string format_string, ...);
 		public Variant.take_string (string str);
+
+		public static void parse_error_print_context (GLib.VariantParseError error, string source_str);
 	}
 
 	public errordomain VariantParseError {
@@ -4913,6 +4929,19 @@ namespace GLib {
 		public void add (string format_string, ...);
 		[CCode (returns_floating_reference = true)]
 		public Variant end ();
+	}
+
+	[Compact, CCode (ref_function = "g_variant_dict_ref", unref_function = "g_variant_dict_unref")]
+	public class VariantDict {
+		public VariantDict (GLib.Variant from_asv);
+		public bool lookup (string key, string format_string, ...);
+		public GLib.Variant lookup_value (string key, GLib.VariantType expected_type);
+		public bool contains (string key);
+		public void insert (string key, string fornat_string);
+		public void insert_value (string key, GLib.Variant value);
+		public bool remove (string key);
+		public void clear ();
+		public GLib.Variant end ();
 	}
 
 	[CCode (cname = "char", const_cname = "const char", copy_function = "g_strdup", free_function = "g_free", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", param_spec_function = "g_param_spec_string", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string", take_value_function = "g_value_take_string", type_signature = "o")]
