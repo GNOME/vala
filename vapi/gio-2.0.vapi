@@ -279,6 +279,8 @@ namespace GLib {
 	public class Application : GLib.Object, GLib.ActionGroup, GLib.ActionMap {
 		[CCode (has_construct_function = false)]
 		public Application (string? application_id, GLib.ApplicationFlags flags);
+		public void add_main_option_entries (GLib.OptionEntry entries);
+		public void add_option_group (GLib.OptionGroup group);
 		[NoWrapper]
 		public virtual void add_platform_data (GLib.VariantBuilder builder);
 		[NoWrapper]
@@ -359,6 +361,7 @@ namespace GLib {
 		public void set_exit_status (int exit_status);
 		public GLib.Variant arguments { construct; }
 		public bool is_remote { get; }
+		public GLib.Variant options { construct; }
 		public GLib.Variant platform_data { construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_buffered_input_stream_get_type ()")]
@@ -1336,6 +1339,8 @@ namespace GLib {
 	public class InetSocketAddress : GLib.SocketAddress, GLib.SocketConnectable {
 		[CCode (has_construct_function = false, type = "GSocketAddress*")]
 		public InetSocketAddress (GLib.InetAddress address, uint16 port);
+		[CCode (has_construct_function = false, type = "GSocketAddress*")]
+		public InetSocketAddress.from_string (string address, uint port);
 		public unowned GLib.InetAddress get_address ();
 		public uint32 get_flowinfo ();
 		public uint16 get_port ();
@@ -1790,9 +1795,9 @@ namespace GLib {
 	[Compact]
 	public class SettingsSchema {
 		public unowned string get_id ();
-		public GLib.SettingsSchemaKey get_key (string key);
+		public GLib.SettingsSchemaKey get_key (string name);
 		public unowned string get_path ();
-		public bool has_key (string key);
+		public bool has_key (string name);
 		public GLib.SettingsSchema @ref ();
 		public void unref ();
 	}
@@ -1886,6 +1891,7 @@ namespace GLib {
 	public class SimpleProxyResolver : GLib.Object, GLib.ProxyResolver {
 		[CCode (has_construct_function = false)]
 		protected SimpleProxyResolver ();
+		public static GLib.ProxyResolver @new (string? default_proxy, string? ignore_hosts);
 		public void set_default_proxy (string default_proxy);
 		public void set_ignore_hosts (string ignore_hosts);
 		public void set_uri_proxy (string uri_scheme, string proxy);
@@ -2117,6 +2123,9 @@ namespace GLib {
 		public bool get_if_exited ();
 		public bool get_if_signaled ();
 		public int get_status ();
+		public unowned GLib.InputStream get_stderr_pipe ();
+		public unowned GLib.OutputStream get_stdin_pipe ();
+		public unowned GLib.InputStream get_stdout_pipe ();
 		public bool get_successful ();
 		public int get_term_sig ();
 		[CCode (cname = "g_subprocess_newv", has_construct_function = false)]
@@ -2137,7 +2146,7 @@ namespace GLib {
 		public unowned string getenv (string variable);
 		public void set_child_setup (owned GLib.SpawnChildSetupFunc child_setup);
 		public void set_cwd (string cwd);
-		public void set_environ (string environ);
+		public void set_environ (string env);
 		public void set_flags (GLib.SubprocessFlags flags);
 		public void set_stderr_file_path (string path);
 		public void set_stdin_file_path (string path);
@@ -2438,7 +2447,7 @@ namespace GLib {
 		public abstract unowned GLib.VariantType get_state_type ();
 		public static bool name_is_valid (string action_name);
 		public static bool parse_detailed_name (string detailed_name, out string action_name, out GLib.Variant target_value) throws GLib.Error;
-		public static string print_detailed_name (string action_name, GLib.Variant parameter);
+		public static string print_detailed_name (string action_name, GLib.Variant? target_value);
 		public abstract bool enabled { get; }
 		public abstract string name { get; }
 		public abstract GLib.VariantType parameter_type { get; }
@@ -2676,7 +2685,7 @@ namespace GLib {
 		public abstract async GLib.FileOutputStream replace_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool replace_contents ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, out string new_etag, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool replace_contents_async ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string new_etag) throws GLib.Error;
-		public async void replace_contents_bytes_async (GLib.Bytes bytes, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null);
+		public async void replace_contents_bytes_async (GLib.Bytes contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null);
 		public abstract GLib.FileIOStream replace_readwrite (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async GLib.FileIOStream replace_readwrite_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.File resolve_relative_path (string relative_path);
@@ -2687,7 +2696,7 @@ namespace GLib {
 		public bool set_attribute_string (string attribute, string value, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool set_attribute_uint32 (string attribute, uint32 value, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool set_attribute_uint64 (string attribute, uint64 value, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async bool set_attributes_async (GLib.FileInfo info, GLib.FileQueryInfoFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out FileInfo info_out) throws GLib.Error;
+		public abstract async bool set_attributes_async (GLib.FileInfo info, GLib.FileQueryInfoFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out GLib.FileInfo info_out) throws GLib.Error;
 		public abstract bool set_attributes_from_info (GLib.FileInfo info, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.File set_display_name (string display_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async GLib.File set_display_name_async (string display_name, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -3941,7 +3950,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public static bool action_parse_detailed_name (string detailed_name, out string action_name, out GLib.Variant target_value) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h")]
-	public static string action_print_detailed_name (string action_name, GLib.Variant parameter);
+	public static string action_print_detailed_name (string action_name, GLib.Variant? target_value);
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_content_type_can_be_executable")]
 	[Deprecated (replacement = "GLib.ContentType.can_be_executable", since = "vala-0.12")]
 	public static bool g_content_type_can_be_executable (string type);
