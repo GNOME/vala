@@ -2141,6 +2141,12 @@ namespace GLib {
 
 	[Assert]
 	public static void assert (bool expr);
+	[Assert]
+	public static void assert_false (bool expr);
+	[Assert]
+	public static void assert_true (bool expr);
+	[Assert]
+	public static void assert_null (void* expr);
 	[NoReturn]
 	public static void assert_not_reached ();
 
@@ -3467,6 +3473,7 @@ namespace GLib {
 		public RegexCompileFlags get_compile_flags ();
 		public RegexMatchFlags get_match_flags ();
 		public int get_max_backref ();
+		public int get_max_lookbehind ();
 		public int get_capture_count ();
 		public int get_string_number (string name);
 		public static string escape_string (string str, int length = -1);
@@ -3761,6 +3768,12 @@ namespace GLib {
 	/* Testing */
 
 	namespace Test {
+		[CCode (cprefix = "G_TEST_", has_type_id = false)]
+		public enum FileType {
+			DIST,
+			BUILT
+		}
+
 		[PrintfFormat]
 		public static void minimized_result (double minimized_quantity, string format, ...);
 		[PrintfFormat]
@@ -3779,9 +3792,17 @@ namespace GLib {
 		public static void add_func (string testpath, Callback test_funcvoid);
 #endif
 		public static void add_data_func (string testpath, [CCode (delegate_target_pos = 1.9)] TestDataFunc test_funcvoid);
+		public static string build_filename (GLib.Test.FileType file_type, params string[] path_segments);
 		public static void fail ();
+		public static bool failed ();
+		public static unowned string get_dir (GLib.Test.FileType file_type);
+		public static unowned string get_filename (GLib.Test.FileType file_type, params string[] path_segments);
+		public static void incomplete (string msg);
 		[PrintfFormat]
 		public static void message (string format, ...);
+		public static void set_nonfatal_assertions ();
+		public static void skip (string msg);
+		public static bool subprocess ();
 		public static void bug_base (string uri_pattern);
 		public static void bug (string bug_uri_snippet);
 		public static void timer_start ();
