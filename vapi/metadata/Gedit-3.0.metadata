@@ -1,3 +1,5 @@
+Gedit deprecated_since="3.12" replacement="bindings distributed with gedit"
+
 App cheader_filename="gedit/gedit-app.h"
 AppActivatable cheader_filename="gedit/gedit-app-activatable.h"
 LockdownMask cheader_filename="gedit/gedit-app.h"
