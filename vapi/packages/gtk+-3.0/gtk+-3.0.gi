@@ -7420,6 +7420,12 @@
 					<parameter name="box" type="GtkBox*"/>
 				</parameters>
 			</method>
+			<method name="get_center_widget" symbol="gtk_box_get_center_widget">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="box" type="GtkBox*"/>
+				</parameters>
+			</method>
 			<method name="get_homogeneous" symbol="gtk_box_get_homogeneous">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -7483,6 +7489,13 @@
 				<parameters>
 					<parameter name="box" type="GtkBox*"/>
 					<parameter name="position" type="GtkBaselinePosition"/>
+				</parameters>
+			</method>
+			<method name="set_center_widget" symbol="gtk_box_set_center_widget">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkBox*"/>
+					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
 			<method name="set_child_packing" symbol="gtk_box_set_child_packing">
@@ -9621,44 +9634,6 @@
 			<property name="draw-sensitive" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="fit-model" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="model" type="GtkTreeModel*" readable="1" writable="1" construct="0" construct-only="0"/>
-		</object>
-		<object name="GtkCenterBox" parent="GtkContainer" type-name="GtkCenterBox" get-type="gtk_center_box_get_type">
-			<implements>
-				<interface name="AtkImplementor"/>
-				<interface name="GtkBuildable"/>
-			</implements>
-			<method name="get_center_widget" symbol="gtk_center_box_get_center_widget">
-				<return-type type="GtkWidget*"/>
-				<parameters>
-					<parameter name="box" type="GtkCenterBox*"/>
-				</parameters>
-			</method>
-			<constructor name="new" symbol="gtk_center_box_new">
-				<return-type type="GtkWidget*"/>
-			</constructor>
-			<method name="pack_end" symbol="gtk_center_box_pack_end">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="box" type="GtkCenterBox*"/>
-					<parameter name="child" type="GtkWidget*"/>
-				</parameters>
-			</method>
-			<method name="pack_start" symbol="gtk_center_box_pack_start">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="box" type="GtkCenterBox*"/>
-					<parameter name="child" type="GtkWidget*"/>
-				</parameters>
-			</method>
-			<method name="set_center_widget" symbol="gtk_center_box_set_center_widget">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="box" type="GtkCenterBox*"/>
-					<parameter name="center_widget" type="GtkWidget*"/>
-				</parameters>
-			</method>
-			<property name="center-widget" type="GtkWidget*" readable="1" writable="1" construct="1" construct-only="0"/>
-			<property name="spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkCheckButton" parent="GtkToggleButton" type-name="GtkCheckButton" get-type="gtk_check_button_get_type">
 			<implements>
@@ -18743,6 +18718,14 @@
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
 			</implements>
+			<method name="bind_model" symbol="gtk_popover_bind_model">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="popover" type="GtkPopover*"/>
+					<parameter name="model" type="GMenuModel*"/>
+					<parameter name="action_namespace" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="get_modal" symbol="gtk_popover_get_modal">
 				<return-type type="gboolean"/>
 				<parameters>

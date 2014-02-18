@@ -749,6 +749,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Box (Gtk.Orientation orientation, int spacing);
 		public Gtk.BaselinePosition get_baseline_position ();
+		public unowned Gtk.Widget get_center_widget ();
 		public bool get_homogeneous ();
 		public int get_spacing ();
 		public void pack_end (Gtk.Widget child, bool expand = true, bool fill = true, uint padding = 0);
@@ -756,6 +757,7 @@ namespace Gtk {
 		public void query_child_packing (Gtk.Widget child, out bool expand, out bool fill, out uint padding, out Gtk.PackType pack_type);
 		public void reorder_child (Gtk.Widget child, int position);
 		public void set_baseline_position (Gtk.BaselinePosition position);
+		public void set_center_widget (Gtk.Widget widget);
 		public void set_child_packing (Gtk.Widget child, bool expand, bool fill, uint padding, Gtk.PackType pack_type);
 		public void set_homogeneous (bool homogeneous);
 		public void set_spacing (int spacing);
@@ -1343,18 +1345,6 @@ namespace Gtk {
 		public bool draw_sensitive { get; set; }
 		public bool fit_model { get; set; }
 		public Gtk.TreeModel model { get; set; }
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class CenterBox : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public CenterBox ();
-		public unowned Gtk.Widget get_center_widget ();
-		public void pack_end (Gtk.Widget child);
-		public void pack_start (Gtk.Widget child);
-		public void set_center_widget (Gtk.Widget center_widget);
-		public Gtk.Widget center_widget { get; set construct; }
-		[NoAccessorMethod]
-		public int spacing { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class CheckButton : Gtk.ToggleButton, Atk.Implementor, Gtk.Buildable, Gtk.Actionable, Gtk.Activatable {
@@ -3594,6 +3584,7 @@ namespace Gtk {
 	public class Popover : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Popover (Gtk.Widget relative_to);
+		public void bind_model (GLib.MenuModel model, string action_namespace);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Popover.from_model (Gtk.Widget relative_to, GLib.MenuModel model);
 		public bool get_modal ();
