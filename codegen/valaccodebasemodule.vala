@@ -403,6 +403,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		reserved_identifiers.add ("volatile");
 		reserved_identifiers.add ("while");
 
+		// C11 keywords
+		reserved_identifiers.add ("_Alignas");
+		reserved_identifiers.add ("_Alignof");
+		reserved_identifiers.add ("_Atomic");
+		reserved_identifiers.add ("_Generic");
+		reserved_identifiers.add ("_Noreturn");
+		reserved_identifiers.add ("_Static_assert");
+		reserved_identifiers.add ("_Thread_local");
+
 		// MSVC keywords
 		reserved_identifiers.add ("cdecl");
 
