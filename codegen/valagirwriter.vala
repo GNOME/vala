@@ -1222,7 +1222,11 @@ public class Vala.GIRWriter : CodeVisitor {
 				buffer.append (" scope=\"async\"");
 			} else if (type.value_owned) {
 				buffer.append_printf (" scope=\"notified\" destroy=\"%i\"", closure_index + 1);
+			} else {
+				buffer.append (" scope=\"call\"");
 			}
+		} else if (delegate_type != null) {
+			buffer.append (" scope=\"call\"");
 		}
 
 		buffer.append_printf (">\n");
