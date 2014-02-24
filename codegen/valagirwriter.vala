@@ -814,12 +814,14 @@ public class Vala.GIRWriter : CodeVisitor {
 			var int_type = new IntegerType (CodeContext.get ().root.scope.lookup ("int") as Struct);
 			write_param_or_return (int_type, true, ref index, has_array_length, "%s_length1".printf (name), null, direction);
 		} else if (type is DelegateType) {
-			var data_type = new PointerType (new VoidType ());
-			write_param_or_return (data_type, true, ref index, false, "%s_target".printf (name), null, direction);
 			var deleg_type = (DelegateType) type;
-			if (deleg_type.is_disposable ()) {
-				var notify_type = new DelegateType (CodeContext.get ().root.scope.lookup ("GLib").scope.lookup ("DestroyNotify") as Delegate);
-				write_param_or_return (notify_type, true, ref index, false, "%s_target_destroy_notify".printf (name), null, direction);
+			if (deleg_type.delegate_symbol.has_target) {
+				var data_type = new PointerType (new VoidType ());
+				write_param_or_return (data_type, true, ref index, false, "%s_target".printf (name), null, direction);
+				if (deleg_type.is_disposable ()) {
+					var notify_type = new DelegateType (CodeContext.get ().root.scope.lookup ("GLib").scope.lookup ("DestroyNotify") as Delegate);
+					write_param_or_return (notify_type, true, ref index, false, "%s_target_destroy_notify".printf (name), null, direction);
+				}
 			}
 		}
 	}
