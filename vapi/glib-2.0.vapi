@@ -3197,7 +3197,7 @@ namespace GLib {
 		[CCode (cname = "g_utime")]
 		public static int utime (string filename, UTimBuf? times = null);
 
-		[CCode (cname = "symlink")]
+		[CCode (cname = "symlink", cheader_filename = "unistd.h")]
 		public static int symlink (string oldpath, string newpath);
 
 		[CCode (cname = "close", cheader_filename = "unistd.h")]
