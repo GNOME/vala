@@ -343,6 +343,7 @@ namespace Posix {
 		public string gr_name;
 		public string gr_passwd;
 		public gid_t gr_gid;
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] gr_mem;
 	}
 	[CCode (cheader_filename = "grp.h")]
