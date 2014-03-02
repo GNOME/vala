@@ -54,6 +54,7 @@ public class Vala.GirParser : CodeVisitor {
 		DEPRECATED_SINCE,
 		ARRAY,
 		ARRAY_LENGTH_IDX,
+		ARRAY_NULL_TERMINATED,
 		DEFAULT,
 		OUT,
 		REF,
@@ -1611,7 +1612,7 @@ public class Vala.GirParser : CodeVisitor {
 	/*
 	 * The changed is a faster way to check whether the type has changed and it may affect the C declaration.
 	 */
-	DataType? element_get_type (DataType orig_type, bool owned_by_default, ref bool no_array_length, out bool changed = null) {
+	DataType? element_get_type (DataType orig_type, bool owned_by_default, ref bool no_array_length, ref bool array_null_terminated, out bool changed = null) {
 		changed = false;
 		var type = orig_type;
 
@@ -1637,8 +1638,11 @@ public class Vala.GirParser : CodeVisitor {
 			type.nullable = metadata.get_bool (ArgumentType.NULLABLE, type.nullable);
 		}
 
-		if (type is ArrayType && !(orig_type is ArrayType)) {
-			no_array_length = true;
+		if (type is ArrayType) {
+			if (!(orig_type is ArrayType)) {
+				no_array_length = true;
+			}
+			array_null_terminated = metadata.get_bool (ArgumentType.ARRAY_NULL_TERMINATED, array_null_terminated);
 		}
 
 		return type;
@@ -2018,7 +2022,8 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		bool no_array_length = false;
-		current.base_type = element_get_type (parse_type (null, null, true), true, ref no_array_length);
+		bool array_null_terminated = false;
+		current.base_type = element_get_type (parse_type (null, null, true), true, ref no_array_length, ref array_null_terminated);
 
 		pop_node ();
 		end_element ("alias");
@@ -2224,7 +2229,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (allow_none == "1") {
 			type.nullable = true;
 		}
-		type = element_get_type (type, true, ref no_array_length);
+		type = element_get_type (type, true, ref no_array_length, ref array_null_terminated);
 		end_element ("return-value");
 		return type;
 	}
@@ -2292,7 +2297,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			bool changed;
-			type = element_get_type (type, direction == "out" || direction == "inout", ref no_array_length, out changed);
+			type = element_get_type (type, direction == "out" || direction == "inout", ref no_array_length, ref array_null_terminated, out changed);
 			if (!changed) {
 				// discard ctype, duplicated information
 				ctype = null;
@@ -2715,7 +2720,8 @@ public class Vala.GirParser : CodeVisitor {
 
 		var type = parse_type ();
 		bool no_array_length = true;
-		type = element_get_type (type, true, ref no_array_length);
+		bool array_null_terminated = false;
+		type = element_get_type (type, true, ref no_array_length, ref array_null_terminated);
 
 		string name = current.name;
 		string cname = current.girdata["name"];
@@ -2753,7 +2759,7 @@ public class Vala.GirParser : CodeVisitor {
 		bool no_array_length;
 		bool array_null_terminated;
 		var type = parse_type (null, null, false, out no_array_length, out array_null_terminated);
-		type = element_get_type (type, true, ref no_array_length);
+		type = element_get_type (type, true, ref no_array_length, ref array_null_terminated);
 		var prop = new Property (current.name, type, null, null, current.source_reference);
 		prop.comment = comment;
 		prop.access = SymbolAccessibility.PUBLIC;
