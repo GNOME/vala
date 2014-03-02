@@ -9,7 +9,7 @@ AM_CPPFLAGS = \
 BUILT_SOURCES = ccode.vala.stamp
 
 noinst_LTLIBRARIES = \
-	libvalaccode.la
+	libvalaccode.la \
 	$(NULL)
 
 libvalaccode_la_VALASOURCES = \

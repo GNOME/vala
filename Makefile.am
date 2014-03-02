@@ -98,7 +98,7 @@ gen-ChangeLog:
 	fi
 
 CLEANFILES = \
-	libvala@PACKAGE_SUFFIX@.pc
+	libvala@PACKAGE_SUFFIX@.pc \
 	$(NULL)
 
 EXTRA_DIST = \

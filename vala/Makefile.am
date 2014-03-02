@@ -10,7 +10,7 @@ AM_CPPFLAGS = \
 BUILT_SOURCES = vala.vala.stamp
 
 noinst_LTLIBRARIES = \
-	libvalacore.la
+	libvalacore.la \
 	$(NULL)
 
 libvalacore_la_VALASOURCES = \
