@@ -2578,7 +2578,7 @@ namespace Gtk {
 	public class IconView : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.CellLayout, Gtk.Scrollable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public IconView ();
-		public void convert_widget_to_bin_window_coords (int wx, int wy, int bx, int by);
+		public void convert_widget_to_bin_window_coords (int wx, int wy, out int bx, out int by);
 		public unowned Cairo.Surface create_drag_icon (Gtk.TreePath path);
 		public void enable_model_drag_dest (Gtk.TargetEntry[] targets, Gdk.DragAction actions);
 		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gtk.TargetEntry[] targets, Gdk.DragAction actions);
