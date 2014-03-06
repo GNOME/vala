@@ -60,7 +60,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		if (!ready) {
 			function.add_parameter (new CCodeParameter ("self", get_ccode_name (sym) + "*"));
-			function.add_parameter (new CCodeParameter ("parameters", "GVariant*"));
+			function.add_parameter (new CCodeParameter ("_parameters_", "GVariant*"));
 			function.add_parameter (new CCodeParameter ("invocation", "GDBusMethodInvocation*"));
 		} else {
 			function.add_parameter (new CCodeParameter ("source_object", "GObject *"));
@@ -95,7 +95,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 			var iter_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_init"));
 			iter_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_arguments_iter")));
-			iter_init.add_argument (new CCodeIdentifier ("parameters"));
+			iter_init.add_argument (new CCodeIdentifier ("_parameters_"));
 			ccode.add_expression (iter_init);
 		}
 
