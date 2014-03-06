@@ -225,14 +225,15 @@ namespace Cogl {
 		public Texture.from_bitmap (Cogl.Bitmap bmp_handle, Cogl.TextureFlags flags, Cogl.PixelFormat internal_format);
 		public Texture.from_data (uint width, uint height, Cogl.TextureFlags flags, Cogl.PixelFormat format, Cogl.PixelFormat internal_format, uint rowstride, [CCode (array_length = false)] uchar[] data);
 		public Texture.from_file (string filename, Cogl.TextureFlags flags, Cogl.PixelFormat internal_format) throws GLib.Error;
-		public int get_data (Cogl.PixelFormat format, uint rowstride, uchar[] data);
+		public Texture.from_sub_texture (Cogl.Texture full_texture, int sub_x, int sub_y, int sub_width, int sub_height);
+		public int get_data (Cogl.PixelFormat format, uint rowstride, [CCode (array_length = false)] uint8[] data);
 		public Cogl.PixelFormat get_format ();
 		public uint get_height ();
 		public int get_max_waste ();
 		public uint get_rowstride ();
 		public uint get_width ();
 		public bool is_sliced ();
-		public bool set_region (int src_x, int src_y, int dst_x, int dst_y, uint dst_width, uint dst_height, int width, int height, Cogl.PixelFormat format, uint rowstride, uchar[] data);
+		public bool set_region (int src_x, int src_y, int dst_x, int dst_y, uint dst_width, uint dst_height, int width, int height, Cogl.PixelFormat format, uint rowstride, [CCode (array_length = false)] uint8[] data);
 		public Texture.with_size (uint width, uint height, Cogl.TextureFlags flags, Cogl.PixelFormat internal_format);
 	}
 	[CCode (cheader_filename = "cogl/cogl.h")]
