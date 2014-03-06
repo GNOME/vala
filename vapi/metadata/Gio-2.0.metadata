@@ -54,6 +54,7 @@ Action
   .parameter_type nullable
   .state nullable
   .state_type nullable
+  .get_state_hint nullable
 PropertyAction
   .state nullable
 ActionEntry

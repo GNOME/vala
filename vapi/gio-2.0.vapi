@@ -2445,7 +2445,7 @@ namespace GLib {
 		public abstract unowned string get_name ();
 		public abstract unowned GLib.VariantType get_parameter_type ();
 		public abstract GLib.Variant get_state ();
-		public abstract GLib.Variant get_state_hint ();
+		public abstract GLib.Variant? get_state_hint ();
 		public abstract unowned GLib.VariantType get_state_type ();
 		public static bool name_is_valid (string action_name);
 		public static bool parse_detailed_name (string detailed_name, out string action_name, out GLib.Variant target_value) throws GLib.Error;
