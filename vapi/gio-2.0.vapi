@@ -2452,9 +2452,9 @@ namespace GLib {
 		public static string print_detailed_name (string action_name, GLib.Variant? target_value);
 		public abstract bool enabled { get; }
 		public abstract string name { get; }
-		public abstract GLib.VariantType parameter_type { get; }
-		public abstract GLib.Variant state { owned get; }
-		public abstract GLib.VariantType state_type { get; }
+		public abstract GLib.VariantType? parameter_type { get; }
+		public abstract GLib.Variant? state { owned get; }
+		public abstract GLib.VariantType? state_type { get; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GActionGroupInterface", type_id = "g_action_group_get_type ()")]
 	public interface ActionGroup : GLib.Object {
