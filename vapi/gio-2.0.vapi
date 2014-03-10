@@ -279,7 +279,7 @@ namespace GLib {
 	public class Application : GLib.Object, GLib.ActionGroup, GLib.ActionMap {
 		[CCode (has_construct_function = false)]
 		public Application (string? application_id, GLib.ApplicationFlags flags);
-		public void add_main_option_entries ([CCode (array_length = false, array_null_terminated = true, type = "const GOptionEntry*")] GLib.OptionEntry[] entries);
+		public void add_main_option_entries ([CCode (array_length = false, array_null_terminated = true)] GLib.OptionEntry[] entries);
 		public void add_option_group (GLib.OptionGroup group);
 		[NoWrapper]
 		public virtual void add_platform_data (GLib.VariantBuilder builder);
@@ -299,8 +299,6 @@ namespace GLib {
 		public uint get_inactivity_timeout ();
 		public bool get_is_registered ();
 		public bool get_is_remote ();
-		[NoWrapper]
-		public virtual int handle_local_options (GLib.VariantDict options);
 		public void hold ();
 		public static bool id_is_valid (string application_id);
 		[NoWrapper]
@@ -332,6 +330,7 @@ namespace GLib {
 		[HasEmitter]
 		public virtual signal void activate ();
 		public virtual signal int command_line (GLib.ApplicationCommandLine command_line);
+		public virtual signal int handle_local_options (GLib.VariantDict options);
 		[HasEmitter]
 		public virtual signal void open ([CCode (array_length_cname = "n_files", array_length_pos = 1.5)] GLib.File[] files, string hint);
 		public virtual signal void shutdown ();
@@ -349,6 +348,7 @@ namespace GLib {
 		public unowned string[] get_environ ();
 		public int get_exit_status ();
 		public bool get_is_remote ();
+		public unowned GLib.VariantDict get_options_dict ();
 		public GLib.Variant? get_platform_data ();
 		public virtual GLib.InputStream get_stdin ();
 		public unowned string getenv (string name);
@@ -4116,4 +4116,8 @@ namespace GLib {
 	public static GLib.Bytes resources_lookup_data (string path, GLib.ResourceLookupFlags lookup_flags) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h")]
 	public static GLib.InputStream resources_open_stream (string path, GLib.ResourceLookupFlags lookup_flags) throws GLib.Error;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public static void resources_register (GLib.Resource resource);
+	[CCode (cheader_filename = "gio/gio.h")]
+	public static void resources_unregister (GLib.Resource resource);
 }
