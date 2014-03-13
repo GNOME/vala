@@ -39,7 +39,7 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 	/**
 	 * The optional declarator suffix.
 	 */
-	public string? declarator_suffix { get; set; }
+	public CCodeDeclaratorSuffix? declarator_suffix { get; set; }
 
 	/**
 	 * Initializer only used to zero memory, safe to initialize as part
@@ -47,13 +47,13 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 	 */
 	public bool init0 { get; set; }
 
-	public CCodeVariableDeclarator (string name, CCodeExpression? initializer = null, string? declarator_suffix = null) {
+	public CCodeVariableDeclarator (string name, CCodeExpression? initializer = null, CCodeDeclaratorSuffix? declarator_suffix = null) {
 		this.name = name;
 		this.initializer = initializer;
 		this.declarator_suffix = declarator_suffix;
 	}
 
-	public CCodeVariableDeclarator.zero (string name, CCodeExpression? initializer, string? declarator_suffix = null) {
+	public CCodeVariableDeclarator.zero (string name, CCodeExpression? initializer, CCodeDeclaratorSuffix? declarator_suffix = null) {
 		this.name = name;
 		this.initializer = initializer;
 		this.declarator_suffix = declarator_suffix;
@@ -62,8 +62,9 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 
 	public override void write (CCodeWriter writer) {
 		writer.write_string (name);
+
 		if (declarator_suffix != null) {
-			writer.write_string (declarator_suffix);
+			declarator_suffix.write (writer);
 		}
 
 		if (initializer != null) {
@@ -74,8 +75,9 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 
 	public override void write_declaration (CCodeWriter writer) {
 		writer.write_string (name);
+
 		if (declarator_suffix != null) {
-			writer.write_string (declarator_suffix);
+			declarator_suffix.write (writer);
 		}
 
 		if (initializer != null && init0) {
@@ -94,6 +96,31 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 
 			writer.write_string (";");
 			writer.write_newline ();
+		}
+	}
+}
+
+public class Vala.CCodeDeclaratorSuffix {
+	public bool array;
+	public CCodeExpression? array_length;
+	public bool deprecated;
+
+	public CCodeDeclaratorSuffix.with_array (CCodeExpression? array_length = null) {
+		this.array_length = array_length;
+		array = true;
+	}
+
+	public void write (CCodeWriter writer) {
+		if (array) {
+			writer.write_string ("[");
+			if (array_length != null) {
+				array_length.write (writer);
+			}
+			writer.write_string ("]");
+		}
+
+		if (deprecated) {
+			writer.write_string (" G_GNUC_DEPRECATED");
 		}
 	}
 }

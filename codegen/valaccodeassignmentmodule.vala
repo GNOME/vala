@@ -104,7 +104,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			// simple assignments do not work in C
 			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			sizeof_call.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
-			var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);
+			var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, get_ccodenode (array_type.length), sizeof_call);
 
 			var ccopy = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
 			ccopy.add_argument (get_cvalue_ (lvalue));

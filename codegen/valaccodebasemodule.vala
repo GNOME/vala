@@ -1897,7 +1897,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (local.captured) {
 					generate_type_declaration (local.variable_type, cfile);
 
-					data.add_field (get_ccode_name (local.variable_type), get_local_cname (local) + get_ccode_declarator_suffix (local.variable_type));
+					data.add_field (get_ccode_name (local.variable_type), get_local_cname (local), get_ccode_declarator_suffix (local.variable_type));
 
 					if (local.variable_type is ArrayType) {
 						var array_type = (ArrayType) local.variable_type;
@@ -2311,7 +2311,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 				emit_context.closure_variable_count_map.set (local.name, count + 1);
 
-				closure_struct.add_field (get_ccode_name (local.variable_type), get_local_cname (local) + get_ccode_declarator_suffix (local.variable_type));
+				closure_struct.add_field (get_ccode_name (local.variable_type), get_local_cname (local), get_ccode_declarator_suffix (local.variable_type));
 			} else {
 				var cvar = new CCodeVariableDeclarator (get_local_cname (local), null, get_ccode_declarator_suffix (local.variable_type));
 
@@ -6309,16 +6309,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return blurb;
 	}
 
-	public static string get_ccode_declarator_suffix (DataType type) {
+	public CCodeDeclaratorSuffix? get_ccode_declarator_suffix (DataType type) {
 		var array_type = type as ArrayType;
 		if (array_type != null) {
 			if (array_type.fixed_length) {
-				return "[%d]".printf (array_type.length);
+				return new CCodeDeclaratorSuffix.with_array (get_ccodenode (array_type.length));
 			} else if (array_type.inline_allocated) {
-				return "[]";
+				return new CCodeDeclaratorSuffix.with_array ();
 			}
 		}
-		return "";
+		return null;
 	}
 
 	public CCodeConstant get_signal_canonical_constant (Signal sig, string? detail = null) {

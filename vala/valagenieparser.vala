@@ -602,21 +602,16 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		// inline-allocated array
 		if (type != null && accept (TokenType.OPEN_BRACKET)) {
-			int array_length = -1;
+			Expression array_length = null;
 
 			if (current () != TokenType.CLOSE_BRACKET) {
-				if (current () != TokenType.INTEGER_LITERAL) {
-					throw new ParseError.SYNTAX (get_error ("expected `]' or integer literal"));
- 				}
-
-				var length_literal = (IntegerLiteral) parse_literal ();
-				array_length = int.parse (length_literal.value);
+				array_length = parse_expression ();
  			}
 			expect (TokenType.CLOSE_BRACKET);
 
 			var array_type = new ArrayType (type, 1, get_src (begin));
 			array_type.inline_allocated = true;
-			if (array_length > 0) {
+			if (array_length != null) {
 				array_type.fixed_length = true;
 				array_type.length = array_length;
 			}

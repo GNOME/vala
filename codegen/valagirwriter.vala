@@ -1262,8 +1262,9 @@ public class Vala.GIRWriter : CodeVisitor {
 
 			write_indent ();
 			buffer.append_printf ("<array");
-			if (array_type.fixed_length) {
-				buffer.append_printf (" fixed-size=\"%i\"", array_type.length);
+			if (array_type.fixed_length && array_type.length is IntegerLiteral) {
+				var lit = (IntegerLiteral) array_type.length;
+				buffer.append_printf (" fixed-size=\"%i\"", int.parse (lit.value));
 			} else if (index != -1) {
 				buffer.append_printf (" length=\"%i\"", index);
 			}

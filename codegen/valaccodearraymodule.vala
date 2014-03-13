@@ -117,7 +117,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var array_type = value.value_type as ArrayType;
 
 		if (array_type != null && array_type.fixed_length) {
-			return new CCodeConstant (array_type.length.to_string ());
+			return get_ccodenode (array_type.length);
 		}
 
 		// dim == -1 => total size over all dimensions
@@ -452,7 +452,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_destroy"));
 			ccall.add_argument (get_cvalue_ (value));
-			ccall.add_argument (new CCodeConstant ("%d".printf (array_type.length)));
+			ccall.add_argument (get_ccodenode (array_type.length));
 			ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), "GDestroyNotify"));
 
 			return ccall;
@@ -559,7 +559,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			ccode.add_declaration ("int", new CCodeVariableDeclarator ("i"));
 
 			ccode.open_for (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")),
-			                   new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeConstant ("%d".printf (array_type.length))),
+			                   new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), get_ccodenode (array_type.length)),
 			                   new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
 
 
@@ -573,7 +573,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			sizeof_call.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
-			dup_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call));
+			dup_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, get_ccodenode (array_type.length), sizeof_call));
 
 			ccode.add_expression (dup_call);
 		}

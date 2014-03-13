@@ -46,7 +46,15 @@ public class Vala.ArrayType : ReferenceType {
 	/**
 	 * The length of this fixed-length array.
 	 */
-	public int length { get; set; }
+	public Expression? length {
+		get { return _length; }
+		set {
+			_length = value;
+			if (_length != null) {
+				_length.parent_node = this;
+			}
+		}
+	}
 
 	/**
 	 * The rank of this array.
@@ -54,6 +62,7 @@ public class Vala.ArrayType : ReferenceType {
 	public int rank { get; set; }
 
 	private DataType _element_type;
+	private Expression _length;
 
 	private ArrayLengthField length_field;
 	private ArrayResizeMethod resize_method;
@@ -231,6 +240,16 @@ public class Vala.ArrayType : ReferenceType {
 			error = true;
 			return false;
 		}
+
+		if (fixed_length && length != null) {
+			length.check (context);
+
+			if (length.value_type == null || !(length.value_type is IntegerType) || !length.is_constant ()) {
+				Report.error (length.source_reference, "Expression of constant integer type expected");
+				return false;
+			}
+		}
+
 		return element_type.check (context);
 	}
 

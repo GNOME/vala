@@ -59,7 +59,7 @@ public class Vala.CCodeStruct : CCodeNode {
 	 * @param type_name field type
 	 * @param name      member name
 	 */
-	public void add_field (string type_name, string name, string? declarator_suffix = null) {
+	public void add_field (string type_name, string name, CCodeDeclaratorSuffix? declarator_suffix = null) {
 		var decl = new CCodeDeclaration (type_name);
 		decl.add_declarator (new CCodeVariableDeclarator (name, null, declarator_suffix));
 		add_declaration (decl);

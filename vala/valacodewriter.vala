@@ -1456,7 +1456,9 @@ public class Vala.CodeWriter : CodeVisitor {
 	private void write_type_suffix (DataType type) {
 		var array_type = type as ArrayType;
 		if (array_type != null && array_type.fixed_length) {
-			write_string ("[%d]".printf (array_type.length));
+			write_string ("[");
+			array_type.length.accept (this);
+			write_string ("]");
 		}
 	}
 
