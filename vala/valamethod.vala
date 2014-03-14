@@ -648,8 +648,8 @@ public class Vala.Method : Subroutine {
 			return_type.check (context);
 		}
 
-		if (parameters.size == 1 && parameters[0].ellipsis && body != null) {
-			// accept just `...' for external methods for convenience
+		if (parameters.size == 1 && parameters[0].ellipsis && body != null && binding != MemberBinding.INSTANCE) {
+			// accept just `...' for external methods and instance methods
 			error = true;
 			Report.error (parameters[0].source_reference, "Named parameter required before `...'");
 		}
