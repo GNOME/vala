@@ -1287,7 +1287,7 @@ namespace Gtk {
 		public void prepend_text (string text);
 		public void remove_text (int position);
 		public void set_active (int index_);
-		public void set_active_iter (Gtk.TreeIter iter);
+		public void set_active_iter (Gtk.TreeIter? iter);
 		public void set_add_tearoffs (bool add_tearoffs);
 		public void set_button_sensitivity (Gtk.SensitivityType sensitivity);
 		public void set_column_span_column (int column_span);
