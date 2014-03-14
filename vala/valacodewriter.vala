@@ -847,6 +847,9 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_local_variable (LocalVariable local) {
+		if (local.variable_type.is_weak ()) {
+			write_string ("unowned ");
+		}
 		write_type (local.variable_type);
 		write_string (" ");
 		write_identifier (local.name);
