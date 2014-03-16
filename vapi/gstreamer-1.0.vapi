@@ -511,7 +511,7 @@ namespace Gst {
 		public bool state_dirty;
 		[CCode (has_construct_function = false, returns_floating_reference = true, type = "GstElement*")]
 		public Bin (string name);
-		public bool add (owned Gst.Element element);
+		public bool add (Gst.Element element);
 		[NoWrapper]
 		public virtual bool add_element (Gst.Element element);
 		public void add_many (Gst.Element element_1, ...);

@@ -36,6 +36,7 @@ ElementFactory
 // Variadic
 Bin
   .add_many skip=false
+  .add.element owned=false
   .add_many.element_1 owned=false
 Element
   .link_many skip=false
