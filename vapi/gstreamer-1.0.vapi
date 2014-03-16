@@ -514,7 +514,7 @@ namespace Gst {
 		public bool add (owned Gst.Element element);
 		[NoWrapper]
 		public virtual bool add_element (Gst.Element element);
-		public void add_many (owned Gst.Element element_1, ...);
+		public void add_many (Gst.Element element_1, ...);
 		public Gst.Pad find_unlinked_pad (Gst.PadDirection direction);
 		public Gst.Element get_by_interface (GLib.Type iface);
 		public Gst.Element get_by_name (string name);
