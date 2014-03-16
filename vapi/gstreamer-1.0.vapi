@@ -857,7 +857,7 @@ namespace Gst {
 		public void abort_state ();
 		[CCode (cname = "gst_element_class_add_metadata")]
 		public class void add_metadata (string key, string value);
-		public bool add_pad (owned Gst.Pad pad);
+		public bool add_pad (Gst.Pad pad);
 		[CCode (cname = "gst_element_class_add_pad_template")]
 		public class void add_pad_template (owned Gst.PadTemplate templ);
 		[CCode (cname = "gst_element_class_add_static_metadata")]

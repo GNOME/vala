@@ -8,6 +8,7 @@ Bin
 Bus
   .add_watch_full name="add_watch"
 Element
+  .add_pad.pad owned=false
   .bus unowned=false
   .clock unowned=false
   .pads unowned=false
