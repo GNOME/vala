@@ -2257,7 +2257,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						m.set_attribute ("DestroysInstance", true, m.source_reference);
 					}
 				} else if (nv[0] == "nullable") {
-					if (eval (nv[1]) == "1") {
+					if (eval (nv[1]) == "1" && !(return_type is VoidType)) {
 						return_type.nullable = true;
 					}
 				} else if (nv[0] == "sentinel") {
@@ -2447,7 +2447,7 @@ public class Vala.GIdlParser : CodeVisitor {
 							}
 						}
 					} else if (nv[0] == "nullable") {
-						if (eval (nv[1]) == "1") {
+						if (eval (nv[1]) == "1" && !(param_type is VoidType)) {
 							param_type.nullable = true;
 						}
 					} else if (nv[0] == "transfer_ownership") {
@@ -2732,7 +2732,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						prop.set_attribute ("Experimental", true);
 					}
 				} else if (nv[0] == "nullable") {
-					if (eval (nv[1]) == "1") {
+					if (eval (nv[1]) == "1" && !(prop.property_type is VoidType)) {
 						prop.property_type.nullable = true;
 					}
 				} else if (nv[0] == "abstract") {
@@ -3120,7 +3120,7 @@ public class Vala.GIdlParser : CodeVisitor {
 							p.direction = ParameterDirection.REF;
 						}
 					} else if (nv[0] == "nullable") {
-						if (eval (nv[1]) == "1") {
+						if (eval (nv[1]) == "1" && !(param_type is VoidType)) {
 							param_type.nullable = true;
 						}
 					} else if (nv[0] == "transfer_ownership") {
