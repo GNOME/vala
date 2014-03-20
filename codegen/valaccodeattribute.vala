@@ -1303,6 +1303,13 @@ public class Vala.CCodeAttribute : AttributeCache {
 			if (param.base_parameter != null) {
 				return CCodeBaseModule.get_ccode_array_length (param.base_parameter);
 			}
+		} else if (node is Method) {
+			var method = (Method) node;
+			if (method.base_method != null && method.base_method != method) {
+				return CCodeBaseModule.get_ccode_array_length (method.base_method);
+			} else if (method.base_interface_method != null && method.base_interface_method != method) {
+				return CCodeBaseModule.get_ccode_array_length (method.base_interface_method);
+			}
 		}
 		return true;
 	}
@@ -1312,6 +1319,13 @@ public class Vala.CCodeAttribute : AttributeCache {
 			var param = (Parameter) node;
 			if (param.base_parameter != null) {
 				return CCodeBaseModule.get_ccode_array_null_terminated (param.base_parameter);
+			}
+		} else if (node is Method) {
+			var method = (Method) node;
+			if (method.base_method != null && method.base_method != method) {
+				return CCodeBaseModule.get_ccode_array_null_terminated (method.base_method);
+			} else if (method.base_interface_method != null && method.base_interface_method != method) {
+				return CCodeBaseModule.get_ccode_array_null_terminated (method.base_interface_method);
 			}
 		}
 		return false;
