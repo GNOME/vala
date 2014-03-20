@@ -1601,6 +1601,7 @@ namespace Gst {
 		[NoWrapper]
 		public abstract Gst.URIType get_type_full (GLib.Type type);
 		public abstract unowned string get_uri ();
+		[CCode (vfunc_name = "get_type")]
 		public uint get_uri_type ();
 		public abstract bool set_uri (string uri);
 		[HasEmitter]
