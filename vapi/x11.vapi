@@ -1105,6 +1105,7 @@ namespace X {
 		public bool send_event;
 		public unowned Display display;
 		public int extension;
+		public int evtype;
 		public uint cookie;
 		public void *data;
 	}
