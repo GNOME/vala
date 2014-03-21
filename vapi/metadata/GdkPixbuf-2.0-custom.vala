@@ -17,9 +17,9 @@ namespace Gdk {
 		public bool save (string filename, string type, ...) throws GLib.Error;
 		public bool save_to_buffer ([CCode (array_length_type = "gsize", type = "gchar**")] out uint8[] buffer, string type, ...) throws GLib.Error;
 		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, string type, ...) throws GLib.Error;
-		public bool save_to_stream (GLib.OutputStream stream, string type, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public bool save_to_stream (GLib.OutputStream stream, string type, GLib.Cancellable? cancellable = null, ...) throws GLib.Error;
 		[CCode (finish_name = "gdk_pixbuf_save_to_stream_finish")]
-		public async bool save_to_stream_async (GLib.OutputStream stream, string type, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool save_to_stream_async (GLib.OutputStream stream, string type, GLib.Cancellable? cancellable = null, ...) throws GLib.Error;
 	}
 
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", instance_pos = -0.9)]
