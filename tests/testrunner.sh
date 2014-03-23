@@ -96,7 +96,7 @@ function sourceend() {
 				echo "  </namespace>" >> $SOURCEFILE
 				echo "</repository>" >> $SOURCEFILE
 			fi
-			echo "$VAPIGEN $VAPIGENFLAGS --library $ns $ns.gir && tail -n +5 $ns.vapi|head -n -1|diff -wu $ns.vapi.ref -" > check
+			echo "$VAPIGEN $VAPIGENFLAGS --library $ns $ns.gir && tail -n +5 $ns.vapi|sed '\$d'|diff -wu $ns.vapi.ref -" > check
 		else
 			echo "}" >> $SOURCEFILE
 			echo "./test$EXEEXT /$testpath" > check
