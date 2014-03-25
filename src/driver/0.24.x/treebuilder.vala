@@ -585,6 +585,9 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 	private PropertyAccessorType get_property_accessor_type (Vala.PropertyAccessor element) {
 		if (element.construction) {
+			if (element.writable) {
+				return (PropertyAccessorType.CONSTRUCT | PropertyAccessorType.SET);
+			}
 			return PropertyAccessorType.CONSTRUCT;
 		} else if (element.writable) {
 			return PropertyAccessorType.SET;

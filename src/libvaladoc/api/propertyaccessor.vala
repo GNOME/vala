@@ -67,7 +67,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	 */
 	public bool is_construct {
 		get {
-			return type == PropertyAccessorType.CONSTRUCT;
+			return (type & PropertyAccessorType.CONSTRUCT) != 0;
 		}
 	}
 
@@ -76,7 +76,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	 */
 	public bool is_set {
 		get {
-			return type == PropertyAccessorType.SET;
+			return (type & PropertyAccessorType.SET) != 0;
 		}
 	}
 
@@ -85,7 +85,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	 */
 	public bool is_get {
 		get {
-			return type == PropertyAccessorType.GET;
+			return (type & PropertyAccessorType.GET) != 0;
 		}
 	}
 

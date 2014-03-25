@@ -21,19 +21,19 @@
  */
 
 public enum Valadoc.Api.PropertyAccessorType {
-	CONSTRUCT,
-	SET,
-	GET;
+	CONSTRUCT = 1 << 0,
+	SET = 1 << 1,
+	GET = 1 << 2;
 
 	public string to_string () {
-		switch (this) {
-		case PropertyAccessorType.CONSTRUCT:
+		if ((this & PropertyAccessorType.CONSTRUCT) != 0) {
+			if ((this & PropertyAccessorType.SET) != 0) {
+				return "construct set";
+			}
 			return "construct";
-
-		case PropertyAccessorType.SET:
+		} else if ((this & PropertyAccessorType.SET) != 0) {
 			return "set";
-
-		case PropertyAccessorType.GET:
+		} else if ((this & PropertyAccessorType.GET) != 0) {
 			return "get";
 		}
 
