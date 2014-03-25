@@ -28,6 +28,7 @@ TESTS = \
 	drivers/driver-0-20.vala \
 	drivers/driver-0-22.vala \
 	drivers/driver-0-24.vala \
+	drivers/driver-0-26.vala \
 	$(NULL)
 
 check-TESTS: $(TESTS)
