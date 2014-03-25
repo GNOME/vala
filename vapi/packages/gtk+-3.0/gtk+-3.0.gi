@@ -18803,6 +18803,11 @@
 				</parameters>
 			</signal>
 		</object>
+		<object name="GtkPopoverAccessible" parent="GtkContainerAccessible" type-name="GtkPopoverAccessible" get-type="gtk_popover_accessible_get_type">
+			<implements>
+				<interface name="AtkComponent"/>
+			</implements>
+		</object>
 		<object name="GtkPrintContext" parent="GObject" type-name="GtkPrintContext" get-type="gtk_print_context_get_type">
 			<method name="create_pango_context" symbol="gtk_print_context_create_pango_context">
 				<return-type type="PangoContext*"/>
@@ -32019,6 +32024,14 @@
 					<parameter name="cell" type="GtkCellAccessible*"/>
 				</parameters>
 			</method>
+			<method name="update_relationset" symbol="gtk_cell_accessible_parent_update_relationset">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="parent" type="GtkCellAccessibleParent*"/>
+					<parameter name="cell" type="GtkCellAccessible*"/>
+					<parameter name="relationset" type="AtkRelationSet*"/>
+				</parameters>
+			</method>
 			<vfunc name="activate">
 				<return-type type="void"/>
 				<parameters>
@@ -32079,6 +32092,14 @@
 				<parameters>
 					<parameter name="parent" type="GtkCellAccessibleParent*"/>
 					<parameter name="cell" type="GtkCellAccessible*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="update_relationset">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="parent" type="GtkCellAccessibleParent*"/>
+					<parameter name="cell" type="GtkCellAccessible*"/>
+					<parameter name="relationset" type="AtkRelationSet*"/>
 				</parameters>
 			</vfunc>
 		</interface>
@@ -34242,15 +34263,15 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1106"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1200"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="6"/>
-		<constant name="GTK_MINOR_VERSION" type="int" value="11"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="0"/>
+		<constant name="GTK_MINOR_VERSION" type="int" value="12"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
 		<constant name="GTK_PAPER_NAME_A5" type="char*" value="iso_a5"/>

@@ -3602,6 +3602,11 @@ namespace Gtk {
 		public virtual signal void closed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class PopoverAccessible : Gtk.ContainerAccessible, Atk.Component {
+		[CCode (has_construct_function = false)]
+		protected PopoverAccessible ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class PrintContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected PrintContext ();
@@ -6897,6 +6902,7 @@ namespace Gtk {
 		public abstract int get_child_index (Gtk.CellAccessible cell);
 		public abstract Gtk.CellRendererState get_renderer_state (Gtk.CellAccessible cell);
 		public abstract bool grab_focus (Gtk.CellAccessible cell);
+		public abstract void update_relationset (Gtk.CellAccessible cell, Atk.RelationSet relationset);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface CellEditable : Gtk.Widget {
