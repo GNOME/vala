@@ -5989,11 +5989,17 @@ namespace Clutter {
 		public void get_press_coords (uint point, out float press_x, out float press_y);
 		public void get_release_coords (uint point, out float release_x, out float release_y);
 		public unowned Clutter.EventSequence get_sequence (uint point);
+		public void get_threshold_trigger_distance (out float x, out float y);
 		public Clutter.GestureTriggerEdge get_threshold_trigger_egde ();
 		public float get_velocity (uint point, out float velocity_x, out float velocity_y);
 		public void set_n_touch_points (int nb_points);
+		public void set_threshold_trigger_distance (float x, float y);
 		public void set_threshold_trigger_edge (Clutter.GestureTriggerEdge edge);
 		public int n_touch_points { get; set; }
+		[NoAccessorMethod]
+		public float threshold_trigger_distance_x { get; construct; }
+		[NoAccessorMethod]
+		public float threshold_trigger_distance_y { get; construct; }
 		[NoAccessorMethod]
 		public Clutter.GestureTriggerEdge threshold_trigger_edge { get; construct; }
 		public virtual signal bool gesture_begin (Clutter.Actor actor);
