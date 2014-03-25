@@ -16,6 +16,19 @@ namespace Geocode {
 		[CCode (cheader_filename = "geocode-glib/geocode-glib.h", cname = "GEOCODE_LOCATION_ACCURACY_UNKNOWN")]
 		public const int UNKNOWN;
 	}
+	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_id = "geocode_bounding_box_get_type ()")]
+	public class BoundingBox : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public BoundingBox (double top, double bottom, double left, double right);
+		public double get_bottom ();
+		public double get_left ();
+		public double get_right ();
+		public double get_top ();
+		public double bottom { get; construct; }
+		public double left { get; construct; }
+		public double right { get; construct; }
+		public double top { get; construct; }
+	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_id = "geocode_forward_get_type ()")]
 	public class Forward : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -24,27 +37,45 @@ namespace Geocode {
 		public Forward.for_params (GLib.HashTable<string,GLib.Value?> @params);
 		[CCode (has_construct_function = false)]
 		public Forward.for_string (string str);
+		public uint get_answer_count ();
+		public bool get_bounded ();
 		public GLib.List<weak Geocode.Place> search () throws GLib.Error;
 		public async GLib.List<weak Geocode.Place> search_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_answer_count (uint count);
+		public void set_bounded (bool bounded);
+		public void set_search_area (Geocode.BoundingBox box);
+		public uint answer_count { get; set; }
+		public bool bounded { get; set; }
+		[NoAccessorMethod]
+		public Geocode.BoundingBox search_area { owned get; set; }
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_id = "geocode_location_get_type ()")]
 	public class Location : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Location (double latitude, double longitude, double accuracy = LocationAccuracy.UNKNOWN);
 		public double get_accuracy ();
+		public double get_altitude ();
+		public Geocode.LocationCRS get_crs ();
 		public unowned string get_description ();
 		public double get_distance_from (Geocode.Location locb);
 		public double get_latitude ();
 		public double get_longitude ();
 		public uint64 get_timestamp ();
 		public void set_description (string description);
+		public bool set_from_uri (string uri) throws GLib.Error;
+		public string to_uri (Geocode.LocationURIScheme scheme);
 		[CCode (has_construct_function = false)]
 		public Location.with_description (double latitude, double longitude, double accuracy, string description);
-		public double accuracy { get; construct; }
+		[NoAccessorMethod]
+		public double accuracy { get; set; }
+		[NoAccessorMethod]
+		public double altitude { get; set; }
+		public Geocode.LocationCRS crs { get; construct; }
 		public string description { get; set; }
-		public double latitude { get; construct; }
-		public double longitude { get; construct; }
+		[NoAccessorMethod]
+		public double latitude { get; set; }
+		[NoAccessorMethod]
+		public double longitude { get; set; }
 		public uint64 timestamp { get; }
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_id = "geocode_place_get_type ()")]
@@ -53,6 +84,7 @@ namespace Geocode {
 		public Place (string name, Geocode.PlaceType place_type);
 		public unowned string get_administrative_area ();
 		public unowned string get_area ();
+		public unowned Geocode.BoundingBox get_bounding_box ();
 		public unowned string get_building ();
 		public unowned string get_continent ();
 		public unowned string get_country ();
@@ -61,6 +93,7 @@ namespace Geocode {
 		public unowned GLib.Icon get_icon ();
 		public unowned Geocode.Location get_location ();
 		public unowned string get_name ();
+		public unowned string get_osm_id ();
 		public Geocode.PlaceType get_place_type ();
 		public unowned string get_postal_code ();
 		public unowned string get_state ();
@@ -69,6 +102,7 @@ namespace Geocode {
 		public unowned string get_town ();
 		public void set_administrative_area (string admin_area);
 		public void set_area (string area);
+		public void set_bounding_box (Geocode.BoundingBox bbox);
 		public void set_building (string building);
 		public void set_continent (string continent);
 		public void set_country (string country);
@@ -85,15 +119,17 @@ namespace Geocode {
 		public Place.with_location (string name, Geocode.PlaceType place_type, Geocode.Location location);
 		public string administrative_area { get; set; }
 		public string area { get; set; }
+		public Geocode.BoundingBox bounding_box { get; set; }
 		public string building { get; set; }
 		public string continent { get; set; }
 		public string country { get; set; }
 		public string country_code { get; set; }
 		public string county { get; set; }
-		[NoAccessorMethod]
-		public GLib.Icon icon { owned get; set; }
+		public GLib.Icon icon { get; }
 		public Geocode.Location location { get; set; }
 		public string name { get; set; }
+		[NoAccessorMethod]
+		public string osm_id { owned get; set; }
 		public Geocode.PlaceType place_type { get; construct; }
 		public string postal_code { get; set; }
 		public string state { get; set; }
@@ -109,6 +145,14 @@ namespace Geocode {
 		public Reverse.for_location (Geocode.Location location);
 		public Geocode.Place resolve () throws GLib.Error;
 		public async Geocode.Place resolve_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", cprefix = "GEOCODE_LOCATION_CRS_", type_id = "geocode_location_crs_get_type ()")]
+	public enum LocationCRS {
+		WGS84
+	}
+	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", cprefix = "GEOCODE_LOCATION_URI_SCHEME_", type_id = "geocode_location_uri_scheme_get_type ()")]
+	public enum LocationURIScheme {
+		GEO
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", cprefix = "GEOCODE_PLACE_TYPE_", type_id = "geocode_place_type_get_type ()")]
 	public enum PlaceType {
