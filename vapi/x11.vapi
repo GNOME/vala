@@ -518,6 +518,12 @@ namespace X {
 	[CCode (cname = "XCreateWindow")]
 	public Window create_window (Display display, Window parent, int x, int y, uint width, uint height, uint border_width, int depth, uint @class, Visual? visual, X.CW valuemask, ref SetWindowAttributes attributes);
 
+	[CCode (cname = "XClearWindow")]
+	public int ClearWindow (X.Display display, X.Window w);
+
+	[CCode (cname = "XCreatePixmap")]
+	public int CreatePixmap (X.Display display, X.Drawable d, uint width, uint height, uint depth);
+
 	[CCode (cname = "XCreateImage")]
 	public unowned Image create_image (Display display, Visual u, uint depth, int format, int offset, char *data, uint width, uint height, int bitmap_pad, int bytes_per_line);
 
@@ -563,6 +569,9 @@ namespace X {
 		public Colormap colormap;		/* color map to be associated with window */
 		public Cursor cursor;		/* cursor to be displayed (or None) */
 	}
+
+	[CCode (cname = "XSetWindowBackgroundPixmap")]
+	public int SetWindowBackgroundPixmap (X.Display display, X.Window w, int Pixmap);
 
 	[CCode (cname = "XWindowAttributes", has_destroy_function = false, cheader_filename = "X11/Xlib.h,X11/Xatom.h,X11/Xutil.h", has_type_id = false)]
 	public struct WindowAttributes {
@@ -716,6 +725,13 @@ namespace X {
 	}
 
 	[CCode (cprefix = "")]
+	public enum CloseMode {
+		DestroyAll,
+		RetainPermanent,
+		RetainTemporary
+	}
+
+	[CCode (cprefix = "")]
 	[Flags]
 	public enum EventMask {
 		NoEventMask,
@@ -807,6 +823,11 @@ namespace X {
 		public ButtonEvent xbutton;
 		public MotionEvent xmotion;
 		public CrossingEvent xcrossing;
+		public FocusChangeEvent xfocus;
+		public ExposeEvent xexpose;
+		public GraphicsExposeEvent xgraphicsexpose;
+		public NoExposeEvent xnoexpose;
+		public VisibilityEvent xvisibility;
 		public CreateWindowEvent xcreatewindow;
 		public DestroyWindowEvent xdestroywindow;
 		public UnmapEvent xunmap;
@@ -815,12 +836,19 @@ namespace X {
 		public ReparentEvent xreparent;
 		public ConfigureEvent xconfigure;
 		public GravityEvent xgravity;
+		public ResizeRequestEvent xresizerequest;
 		public ConfigureRequestEvent xconfigurerequest;
 		public CirculateEvent xcirculate;
 		public CirculateRequestEvent xcirculaterequest;
 		public PropertyEvent xproperty;
+		public SelectionClearEvent xselectionclear;
+		public SelectionRequestEvent xselectionrequest;
 		public SelectionEvent xselection;
+		public ColormapEvent xcolormap;
 		public ClientMessageEvent xclient;
+		public MappingEvent xmapping;
+		public ErrorEvent xerror;
+		public KeymapEvent xkeymap;
 		public GenericEvent xgeneric;
 		public GenericEventCookie xcookie;
 	}
@@ -908,6 +936,67 @@ namespace X {
 		public bool same_screen;
 		public bool focus;
 		public uint state;
+	}
+
+	[CCode (cname = "XFocusChangeEvent", has_type_id = false)]
+	public struct FocusChangeEvent {
+		public int type;
+		public ulong serial;
+		public bool send_event;
+		public unowned Display display;
+		public Window window;
+		public int mode;
+		public int detail;
+	}
+
+	[CCode (cname = "XExposeEvent", has_type_id = false)]
+	public struct ExposeEvent {
+		public int type;
+		public ulong serial;
+		public bool send_event;
+		public unowned Display display;
+		public Window window;
+		public int x;
+		public int y;
+		public int width;
+		public int height;
+		public int count;
+	}
+
+	[CCode (cname = "XGraphicsExposeEvent", has_type_id = false)]
+	public struct GraphicsExposeEvent {
+		public int type;
+		public ulong serial;
+		public bool send_event;
+		public unowned Display display;
+		public Window window;
+		public int x;
+		public int y;
+		public int width;
+		public int height;
+		public int count;
+		public int major_code;
+		public int minor_code;
+	}
+
+	[CCode (cname = "XNoExposeEvent", has_type_id = false)]
+	public struct NoExposeEvent {
+		public int type;
+		public ulong serial;
+		public bool send_event;
+		public unowned Display display;
+		public Window window;
+		public int state;
+	}
+
+	[CCode (cname = "XVisibilityEvent", has_type_id = false)]
+	public struct VisibilityEvent {
+		public int type;
+		public ulong serial;
+		public bool send_event;
+		public unowned Display display;
+		public Window window;
+		public int state;
 	}
 
 	[CCode (cname = "XCreateWindowEvent", has_type_id = false)]
@@ -1011,6 +1100,17 @@ namespace X {
 		public int y;
 	}
 
+	[CCode (cname = "XResizeRequestEvent", has_type_id = false)]
+	public struct ResizeRequestEvent {
+		public int type;
+		public ulong serial;
+		public bool send_event;
+		public unowned Display display;
+		public Window window;
+		public int width;
+		public int height;
+	}
+
 	[CCode (cname = "XConfigureRequestEvent", has_type_id = false)]
 	public struct ConfigureRequestEvent {
 		public int type;
@@ -1063,6 +1163,31 @@ namespace X {
 		public int state;
 	}
 
+	[CCode (cname = "XSelectionClearEvent", has_type_id = false)]
+	public struct SelectionClearEvent {
+		public int type;
+		public ulong serial;
+		public bool send_event;
+		public unowned Display display;
+		public Window window;
+		public Atom selection;
+		public ulong time;
+	}
+
+	[CCode (cname = "XSelectionRequestEvent", has_type_id = false)]
+	public struct SelectionRequestEvent {
+		public int type;
+		public ulong serial;
+		public bool send_event;
+		public unowned Display display;
+		public Window owner;
+		public Window requestor;
+		public Atom selection;
+		public Atom target;
+		public Atom property;
+		public ulong time;
+	}
+
 	[CCode (cname = "XSelectionEvent", has_type_id = false)]
 	public struct SelectionEvent {
 		public int type;
@@ -1076,6 +1201,18 @@ namespace X {
 		public ulong time;
 	}
 
+	[CCode (cname = "XColormapEvent", has_type_id = false)]
+	public struct ColormapEvent {
+		public int type;
+		public ulong serial;
+		public bool send_event;
+		public unowned Display display;
+		public Window window;
+		public Colormap colormap;
+		public bool @new;
+		public int state;
+	}
+
 	[CCode (cname = "XClientMessageEvent", has_type_id = false)]
 	public struct ClientMessageEvent {
 		public int type;
@@ -1086,6 +1223,39 @@ namespace X {
 		public Atom message_type;
 		public int format;
 		public ClientMessageEventData data;
+	}
+
+	[CCode (cname = "XMappingEvent", has_type_id = false)]
+	public struct MappingEvent {
+		public int type;
+		public ulong serial;
+		public bool send_event;
+		public unowned Display display;
+		public Window window;
+		public int request;
+		public int first_keycode;
+		public int count;
+	}
+
+	[CCode (cname = "XErrorEvent", has_type_id = false)]
+	public struct ErrorEvent {
+		public int type;
+		public unowned Display display;
+		public ID resourceid;
+		public ulong serial;
+		public uchar error_code;
+		public uchar request_code;
+		public uchar minor_code;
+	}
+
+	[CCode (cname = "XKeymapEvent", has_type_id = false)]
+	public struct KeymapEvent {
+		public int type;
+		public ulong serial;
+		public bool send_event;
+		public unowned Display display;
+		public Window window;
+		public unowned char[] key_vector;
 	}
 
 	[CCode (cname = "XGenericEvent", has_type_id = false)]
