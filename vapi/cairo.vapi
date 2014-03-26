@@ -169,7 +169,10 @@ namespace Cairo {
 		DEFAULT,
 		NONE,
 		GRAY,
-		SUBPIXEL
+		SUBPIXEL,
+		FAST,
+		GOOD,
+		BEST
 	}
 
 	[CCode (cname = "cairo_fill_rule_t", has_type_id = false)]
@@ -367,7 +370,9 @@ namespace Cairo {
 		SOLID,
 		SURFACE,
 		LINEAR,
-		RADIAL
+		RADIAL,
+		MESH,
+		RASTER_SOURCE
 	}
 
 	[Compact]
@@ -474,7 +479,8 @@ namespace Cairo {
 		TOY,
 		FT,
 		WIN32,
-		ATSUI
+		QUARTZ,
+		USER
 	}
 
 	[Compact]
@@ -589,7 +595,9 @@ namespace Cairo {
 		SCRIPT,
 		XCB,
 		XLIB,
-		XML
+		XML,
+		COGL,
+		WIN32
 	}
 
 	[Compact]
@@ -676,7 +684,21 @@ namespace Cairo {
 		WIN32,
 		BEOS,
 		DIRECTFB,
-		SVG
+		SVG,
+		OS2,
+		WIN32_PRINTING,
+		QUARTZ_IMAGE,
+		SCRIPT,
+		QT,
+		RECORDING,
+		VG,
+		GL,
+		DRM,
+		TEE,
+		XML,
+		SKIA,
+		SUBSURFACE,
+		COGL
 	}
 
 	[CCode (cname = "cairo_format_t", has_type_id = false)]
@@ -685,7 +707,8 @@ namespace Cairo {
 		RGB24,
 		A8,
 		A1,
-		RGB16_565;
+		RGB16_565,
+		RGB30;
 
 		public int stride_for_width (int width);
 	}
@@ -903,7 +926,10 @@ namespace Cairo {
 		INVALID_SIZE,
 		USER_FONT_NOT_IMPLEMENTED,
 		DEVICE_TYPE_MISMATCH,
-		DEVICE_ERROR;
+		DEVICE_ERROR,
+		INVALID_MESH_CONSTRUCTION,
+		DEVICE_FINISHED,
+		JBIG2_GLOBAL_MISSING;
 		[CCode (cname = "cairo_status_to_string")]
 		public unowned string to_string ();
 	}
@@ -914,6 +940,10 @@ namespace Cairo {
 		public const string JPEG;
 		public const string PNG;
 		public const string URI;
+		public const string UNIQUE_ID;
+		public const string JBIG2;
+		public const string JBIG2_GLOBAL;
+		public const string JBIG2_GLOBAL_ID;
 	}
 
 	public int version ();
