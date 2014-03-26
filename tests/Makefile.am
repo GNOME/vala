@@ -72,6 +72,7 @@ TESTS = \
 	control-flow/bug665904.vala \
 	control-flow/bug691514.vala	\
 	enums/enums.vala \
+	enums/flags.vala \
 	enums/bug673879.vala \
 	structs/structs.vala \
 	structs/gvalue.vala \
