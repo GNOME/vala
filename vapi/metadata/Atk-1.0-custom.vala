@@ -50,8 +50,6 @@ namespace Atk {
 		ACCEL_LABEL
 	}
 
-	[CCode (has_target = false)]
-	public delegate void PropertyChangeHandler (Atk.Object obj, Atk.PropertyValues vals);
 	[CCode (cname = "GSignalEmissionHook", has_target = false)]
 	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] Value[] param_values, void* data);
 

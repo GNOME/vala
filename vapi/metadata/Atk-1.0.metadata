@@ -6,6 +6,13 @@ attribute_set_free skip
 KeyEventStruct.string name="str"
 Rectangle struct
 
+Document
+	.get_attribute_value vfunc_name="get_document_attribute_value"
+	.get_attributes vfunc_name="get_document_attributes"
+	.get_document_locale skip
+	.get_locale vfunc_name="get_document_locale"
+	.set_attribute_value vfunc_name="set_document_attribute"
+
 // Move static methods into classes (mostly Util)
 add_focus_tracker parent="Atk.Util"
 add_global_event_listener parent="Atk.Util"
@@ -28,13 +35,13 @@ text_free_ranges skip
 Socket.embedded_plug_id skip=false deprecated
 RelationSet.relations type_arguments="Atk.Relation" deprecated
 
-// GObject Introspection bug #581525
-_PropertyValues name="PropertyValues"
-_Registry* skip
+// Backward compatibility
+Role.edit_bar name="editbar"
 
 // G-I doesn't distinguish between abstract and virtual
 Document.*#virtual_method virtual
 Text.get_bounded_ranges#virtual_method virtual
+Text.get_bounded_ranges array array_null_terminated unowned=false
 
 // Callbacks without user data
 add_focus_tracker skip=false
