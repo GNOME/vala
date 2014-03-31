@@ -2,23 +2,21 @@
 
 [CCode (cprefix = "CoglPango", gir_namespace = "CoglPango", gir_version = "1.0", lower_case_cprefix = "cogl_pango_")]
 namespace CoglPango {
-	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
-	public class FontMap : Pango.FontMap {
-		[CCode (has_construct_function = false)]
-		protected FontMap ();
-		public static void clear_glyph_cache (Pango.CairoFontMap font_map);
-		public static Pango.Context create_context (Pango.CairoFontMap font_map);
-		public static unowned Pango.Renderer get_renderer (Pango.CairoFontMap font_map);
-		public static Cogl.Bool get_use_mipmapping (Pango.CairoFontMap font_map);
-		public static Pango.FontMap @new ();
-		public static void set_resolution (Pango.CairoFontMap font_map, double dpi);
-		public static void set_use_mipmapping (Pango.CairoFontMap font_map, Cogl.Bool value);
-	}
 	[CCode (cheader_filename = "cogl-pango/cogl-pango.h", type_id = "cogl_pango_renderer_get_type ()")]
 	public class Renderer : Pango.Renderer {
 		[CCode (has_construct_function = false)]
 		protected Renderer ();
 		public void* context { construct; }
+	}
+	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
+	public interface FontMap : Pango.CairoFontMap, GLib.Object {
+		public static void clear_glyph_cache (CoglPango.FontMap font_map);
+		public static Pango.Context create_context (CoglPango.FontMap font_map);
+		public static unowned Pango.Renderer get_renderer (CoglPango.FontMap font_map);
+		public static Cogl.Bool get_use_mipmapping (CoglPango.FontMap font_map);
+		public static Pango.FontMap @new ();
+		public static void set_resolution (CoglPango.FontMap font_map, double dpi);
+		public static void set_use_mipmapping (CoglPango.FontMap font_map, Cogl.Bool value);
 	}
 	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
 	public static void ensure_glyph_cache_for_layout (Pango.Layout layout);

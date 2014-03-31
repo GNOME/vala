@@ -3352,6 +3352,16 @@ public class Vala.GirParser : CodeVisitor {
 			cl.comment = alias.comment;
 			cl.external = true;
 			alias.symbol = cl;
+		} else if (type_sym is Interface) {
+			// this is not a correct alias, but what can we do otherwise?
+			var iface = new Interface (alias.name, alias.source_reference);
+			iface.access = SymbolAccessibility.PUBLIC;
+			if (base_type != null) {
+				iface.add_prerequisite (base_type);
+			}
+			iface.comment = alias.comment;
+			iface.external = true;
+			alias.symbol = iface;
 		} else if (type_sym is Delegate) {
 			var orig = (Delegate) type_sym;
 			if (base_node != null) {
