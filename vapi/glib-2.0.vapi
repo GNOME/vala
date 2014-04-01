@@ -1671,6 +1671,12 @@ namespace GLib {
 		public static bool remove (uint id);
 		public static bool remove_by_funcs_user_data (void* user_data);
 		public static bool remove_by_user_data (void* user_data);
+#if GLIB_2_32
+		[CCode (cname = "G_SOURCE_CONTINUE")]
+		public static const bool CONTINUE;
+		[CCode (cname = "G_SOURCE_REMOVE")]
+		public static const bool REMOVE;
+#endif
 
 		protected abstract bool prepare (out int timeout_);
 		protected abstract bool check ();
