@@ -519,10 +519,10 @@ namespace X {
 	public Window create_window (Display display, Window parent, int x, int y, uint width, uint height, uint border_width, int depth, uint @class, Visual? visual, X.CW valuemask, ref SetWindowAttributes attributes);
 
 	[CCode (cname = "XClearWindow")]
-	public int ClearWindow (X.Display display, X.Window w);
+	public int clear_window (X.Display display, X.Window w);
 
 	[CCode (cname = "XCreatePixmap")]
-	public int CreatePixmap (X.Display display, X.Drawable d, uint width, uint height, uint depth);
+	public X.Pixmap create_pixmap (X.Display display, X.Drawable d, uint width, uint height, uint depth);
 
 	[CCode (cname = "XCreateImage")]
 	public unowned Image create_image (Display display, Visual u, uint depth, int format, int offset, char *data, uint width, uint height, int bitmap_pad, int bytes_per_line);
@@ -571,7 +571,7 @@ namespace X {
 	}
 
 	[CCode (cname = "XSetWindowBackgroundPixmap")]
-	public int SetWindowBackgroundPixmap (X.Display display, X.Window w, int Pixmap);
+	public int set_window_background_pixmap (X.Display display, X.Window w, X.Pixmap background_pixmap);
 
 	[CCode (cname = "XWindowAttributes", has_destroy_function = false, cheader_filename = "X11/Xlib.h,X11/Xatom.h,X11/Xutil.h", has_type_id = false)]
 	public struct WindowAttributes {
