@@ -126,6 +126,7 @@ namespace GI {
 		protected ObjectInfo ();
 		public static GI.FunctionInfo find_method (GI.ObjectInfo info, string name);
 		public static GI.FunctionInfo find_method_using_interfaces (GI.ObjectInfo info, string name, out GI.ObjectInfo implementor);
+		public static GI.SignalInfo find_signal (GI.ObjectInfo info, string name);
 		public static GI.VFuncInfo find_vfunc (GI.ObjectInfo info, string name);
 		public static GI.VFuncInfo find_vfunc_using_interfaces (GI.ObjectInfo info, string name, out GI.ObjectInfo implementor);
 		public static bool get_abstract (GI.ObjectInfo info);
@@ -301,9 +302,6 @@ namespace GI {
 	}
 	[CCode (cheader_filename = "girepository.h", has_type_id = false)]
 	public struct AttributeIter {
-	}
-	[CCode (cheader_filename = "girepository.h", cname = "_GIBaseInfoStub", has_type_id = false)]
-	public struct _BaseInfoStub {
 	}
 	[CCode (cheader_filename = "girepository.h", cprefix = "GI_ARRAY_TYPE_", has_type_id = false)]
 	public enum ArrayType {
