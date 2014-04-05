@@ -306,7 +306,6 @@ GIDL_BINDINGS = \
 	gdl-1.0 \
 	gdu \
 	gdk-gtk \
-	gedit-2.20 \
 	gio-unix-2.0 \
 	gnome-desktop-2.0 \
 	gnome-keyring-1 \

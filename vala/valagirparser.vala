@@ -1221,6 +1221,7 @@ public class Vala.GirParser : CodeVisitor {
 	public void parse_file (SourceFile source_file) {
 		metadata_stack = new ArrayList<Metadata> ();
 		metadata = Metadata.empty;
+		cheader_filenames = null;
 
 		this.current_source_file = source_file;
 		reader = new MarkupReader (source_file.filename);
