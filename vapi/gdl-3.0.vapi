@@ -266,7 +266,7 @@ namespace Gdl {
 	public class DockTablabel : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		public bool active;
 		public uint drag_handle_size;
-		public Gdk.EventButton drag_start_event;
+		public weak Gdk.EventButton drag_start_event;
 		public weak Gdk.Window event_window;
 		public bool pre_drag;
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
