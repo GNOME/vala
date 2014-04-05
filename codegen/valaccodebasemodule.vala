@@ -3115,10 +3115,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					unref_function = null;
 				} else {
 					var st = (Struct) type.data_type;
-					if (!get_ccode_has_destroy_function (st)) {
-						generate_struct_destroy_function (st);
+					if (st.is_disposable ()) {
+						if (!get_ccode_has_destroy_function (st)) {
+							generate_struct_destroy_function (st);
+						}
+						unref_function = get_ccode_destroy_function (st);
+					} else {
+						unref_function = null;
 					}
-					unref_function = get_ccode_destroy_function (st);
 				}
 			}
 			if (unref_function == null) {
