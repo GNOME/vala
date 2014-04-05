@@ -388,7 +388,6 @@ GIR_BINDINGS = \
 	gdk-3.0 \
 	gdk-pixbuf-2.0 \
 	gdl-3.0 \
-	gedit \
 	geocode-glib-1.0 \
 	gio-2.0 \
 	gobject-introspection-1.0 \
