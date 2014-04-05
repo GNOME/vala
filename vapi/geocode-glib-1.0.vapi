@@ -185,7 +185,11 @@ namespace Geocode {
 		ESTATE,
 		HISTORICAL_TOWN,
 		OCEAN,
-		SEA
+		SEA,
+		SCHOOL,
+		PLACE_OF_WORSHIP,
+		RESTAURANT,
+		BAR
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", cprefix = "GEOCODE_ERROR_")]
 	public errordomain Error {
