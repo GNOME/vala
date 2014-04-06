@@ -141,6 +141,7 @@ TESTS = \
 	objects/bug643711.vala \
 	objects/bug646362.vala \
 	objects/bug646792.vala \
+	objects/bug647018.vala \
 	objects/bug653138.vala \
 	objects/bug654702.vala \
 	objects/bug663134.vala \

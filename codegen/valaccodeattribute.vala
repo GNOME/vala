@@ -575,11 +575,15 @@ public class Vala.CCodeAttribute : AttributeCache {
 				}
 				return "%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (sym.parent_symbol).up (), sym.name);
 			} else if (sym is Field) {
+				var cname = sym.name;
 				if (((Field) sym).binding == MemberBinding.STATIC) {
-					return "%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (sym.parent_symbol), sym.name);
-				} else {
-					return sym.name;
+					cname = "%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (sym.parent_symbol), sym.name);
 				}
+				if (cname[0].isdigit ()) {
+					Report.error (node.source_reference, "Field name starts with a digit. Use the `cname' attribute to provide a valid C name if intended");
+					return "";
+				}
+				return cname;
 			} else if (sym is CreationMethod) {
 				var m = (CreationMethod) sym;
 				string infix;

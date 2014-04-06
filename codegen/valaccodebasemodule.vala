@@ -2237,6 +2237,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public string get_local_cname (LocalVariable local) {
 		var cname = get_variable_cname (local.name);
+		if (cname[0].isdigit ()) {
+			cname = "_%s_".printf (cname);
+		}
 		if (is_in_coroutine ()) {
 			var clash_index = emit_context.closure_variable_clash_map.get (local);
 			if (clash_index > 0) {

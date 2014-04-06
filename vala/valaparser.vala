@@ -2507,7 +2507,6 @@ public class Vala.Parser : CodeVisitor {
 		var flags = parse_member_declaration_modifiers ();
 		var type = parse_type (true, true);
 		string id = parse_identifier ();
-
 		type = parse_inline_array_type (type);
 
 		var f = new Field (id, type, null, get_src (begin), comment);
