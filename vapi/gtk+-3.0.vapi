@@ -600,7 +600,7 @@ namespace Gtk {
 		public string list_action_descriptions ();
 		public void remove_accelerator (string action_name, GLib.Variant? parameter);
 		public void remove_window (Gtk.Window window);
-		public void set_accels_for_action (string detailed_action_name, string accels);
+		public void set_accels_for_action (string detailed_action_name, [CCode (array_length = false, array_null_terminated = true)] string[] accels);
 		public void set_app_menu (GLib.MenuModel app_menu);
 		public void set_menubar (GLib.MenuModel menubar);
 		public void uninhibit (uint cookie);
