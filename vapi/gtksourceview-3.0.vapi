@@ -30,8 +30,8 @@ namespace Gtk {
 		public GLib.SList<weak Gtk.SourceMark> get_source_marks_at_line (int line, string? category);
 		public unowned Gtk.SourceStyleScheme get_style_scheme ();
 		public unowned Gtk.SourceUndoManager get_undo_manager ();
-		public bool iter_backward_to_context_class_toggle (Gtk.TextIter iter, string context_class);
-		public bool iter_forward_to_context_class_toggle (Gtk.TextIter iter, string context_class);
+		public bool iter_backward_to_context_class_toggle (ref Gtk.TextIter iter, string context_class);
+		public bool iter_forward_to_context_class_toggle (ref Gtk.TextIter iter, string context_class);
 		public bool iter_has_context_class (Gtk.TextIter iter, string context_class);
 		public void remove_source_marks (Gtk.TextIter start, Gtk.TextIter end, string? category);
 		public void set_highlight_matching_brackets (bool highlight);
