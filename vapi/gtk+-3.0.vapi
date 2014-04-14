@@ -5004,7 +5004,7 @@ namespace Gtk {
 	[Compact]
 	public class TargetList {
 		[CCode (has_construct_function = false)]
-		public TargetList (Gtk.TargetEntry[] targets);
+		public TargetList (Gtk.TargetEntry[]? targets);
 		public void add (Gdk.Atom target, uint flags, uint info);
 		public void add_image_targets (uint info, bool writable);
 		public void add_rich_text_targets (uint info, bool deserializable, Gtk.TextBuffer buffer);
