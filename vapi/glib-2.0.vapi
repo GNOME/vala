@@ -3312,6 +3312,7 @@ namespace GLib {
 		public void set_translate_func (TranslateFunc func, DestroyNotify? destroy_notify);
 		public void set_translation_domain (string domain);
 		public bool parse ([CCode (array_length_pos = 0.9)] ref unowned string[] argv) throws OptionError;
+		public bool parse_strv ([CCode (array_length = false, array_null_terminated = true)] ref string[] argv) throws OptionError;
 		public void set_help_enabled (bool help_enabled);
 		public bool get_help_enabled ();
 		public void set_ignore_unknown_options (bool ignore_unknown);
