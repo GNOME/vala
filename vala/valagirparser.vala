@@ -2217,6 +2217,7 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("return-value");
 
 		string transfer = reader.get_attribute ("transfer-ownership");
+		string nullable = reader.get_attribute ("nullable");
 		string allow_none = reader.get_attribute ("allow-none");
 		next ();
 
@@ -2227,7 +2228,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (transfer == "full" || transfer == "container") {
 			type.value_owned = true;
 		}
-		if (allow_none == "1") {
+		if (nullable == "1" || allow_none == "1") {
 			type.nullable = true;
 		}
 		type = element_get_type (type, true, ref no_array_length, ref array_null_terminated);
@@ -2260,6 +2261,7 @@ public class Vala.GirParser : CodeVisitor {
 			direction = reader.get_attribute ("direction");
 		}
 		string transfer = reader.get_attribute ("transfer-ownership");
+		string nullable = reader.get_attribute ("nullable");
 		string allow_none = reader.get_attribute ("allow-none");
 
 		scope = element_get_string ("scope", ArgumentType.SCOPE);
@@ -2293,7 +2295,7 @@ public class Vala.GirParser : CodeVisitor {
 			if (transfer == "full" || transfer == "container" || destroy != null) {
 				type.value_owned = true;
 			}
-			if (allow_none == "1" && direction != "out") {
+			if (nullable == "1" || (allow_none == "1" && direction != "out")) {
 				type.nullable = true;
 			}
 
@@ -2714,6 +2716,7 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("field");
 		push_node (element_get_name (), false);
 
+		string nullable = reader.get_attribute ("nullable");
 		string allow_none = reader.get_attribute ("allow-none");
 		next ();
 
@@ -2739,7 +2742,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 			field.set_attribute_bool ("CCode", "array_null_terminated", true);
 		}
-		if (allow_none == "1") {
+		if (nullable == "1" || allow_none == "1") {
 			type.nullable = true;
 		}
 		current.symbol = field;
