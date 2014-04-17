@@ -2130,7 +2130,7 @@ namespace Gtk {
 		public void invalidate_filter ();
 		public void invalidate_sort ();
 		public void select_child (Gtk.FlowBoxChild child);
-		public void selected_foreach (owned Gtk.FlowBoxForeachFunc? func);
+		public void selected_foreach (Gtk.FlowBoxForeachFunc func);
 		public void set_activate_on_single_click (bool single);
 		public void set_column_spacing (uint spacing);
 		public void set_filter_func (owned Gtk.FlowBoxFilterFunc? filter_func);

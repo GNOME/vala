@@ -318,7 +318,6 @@ gtk_file_chooser_list_shortcut_folder_uris nullable="1" transfer_ownership="1" t
 gtk_file_chooser_list_shortcut_folders nullable="1" transfer_ownership="1" type_arguments="string"
 GtkFixed.children type_arguments="Widget"
 gtk_flow_box_get_selected_children transfer_ownership="1" type_arguments="unowned FlowBoxChild"
-gtk_flow_box_selected_foreach.func transfer_ownership="1" nullable="1"
 gtk_flow_box_selected_foreach.data hidden="1"
 gtk_flow_box_set_filter_func.filter_func transfer_ownership="1" nullable="1"
 gtk_flow_box_set_filter_func.destroy hidden="1"
