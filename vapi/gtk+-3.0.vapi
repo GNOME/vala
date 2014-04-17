@@ -2972,6 +2972,7 @@ namespace Gtk {
 		public unowned Gtk.ListBoxRow get_row_at_index (int index_);
 		public unowned Gtk.ListBoxRow get_row_at_y (int y);
 		public unowned Gtk.ListBoxRow get_selected_row ();
+		public GLib.List<weak Gtk.ListBoxRow> get_selected_rows ();
 		public Gtk.SelectionMode get_selection_mode ();
 		public void insert (Gtk.Widget child, int position);
 		public void invalidate_filter ();
@@ -2979,6 +2980,7 @@ namespace Gtk {
 		public void invalidate_sort ();
 		public void prepend (Gtk.Widget child);
 		public void select_row (Gtk.ListBoxRow? row);
+		public void selected_foreach (Gtk.ListBoxForeachFunc func);
 		public void set_activate_on_single_click (bool single);
 		public void set_adjustment (Gtk.Adjustment? adjustment);
 		public void set_filter_func (owned Gtk.ListBoxFilterFunc? filter_func);
@@ -2986,13 +2988,19 @@ namespace Gtk {
 		public void set_placeholder (Gtk.Widget? placeholder);
 		public void set_selection_mode (Gtk.SelectionMode mode);
 		public void set_sort_func (owned Gtk.ListBoxSortFunc? sort_func);
+		public void unselect_row (Gtk.ListBoxRow row);
 		public bool activate_on_single_click { get; set; }
 		public Gtk.SelectionMode selection_mode { get; set; }
 		public virtual signal void activate_cursor_row ();
 		public virtual signal void move_cursor (Gtk.MovementStep step, int count);
 		public virtual signal void row_activated (Gtk.ListBoxRow row);
 		public virtual signal void row_selected (Gtk.ListBoxRow? row);
+		[HasEmitter]
+		public virtual signal void select_all ();
+		public virtual signal void selected_rows_changed ();
 		public virtual signal void toggle_cursor_row ();
+		[HasEmitter]
+		public virtual signal void unselect_all ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ListBoxAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Selection {
@@ -3006,6 +3014,7 @@ namespace Gtk {
 		public void changed ();
 		public unowned Gtk.Widget get_header ();
 		public int get_index ();
+		public bool is_selected ();
 		public void set_header (Gtk.Widget? header);
 		public virtual signal void activate ();
 	}
@@ -8449,6 +8458,8 @@ namespace Gtk {
 	public delegate int KeySnoopFunc (Gtk.Widget grab_widget, Gdk.EventKey event, void* func_data);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool ListBoxFilterFunc (Gtk.ListBoxRow row);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public delegate void ListBoxForeachFunc (Gtk.ListBox box, Gtk.ListBoxRow row);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate int ListBoxSortFunc (Gtk.ListBoxRow row1, Gtk.ListBoxRow row2);
 	[CCode (cheader_filename = "gtk/gtk.h")]
