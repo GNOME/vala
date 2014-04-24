@@ -3556,6 +3556,7 @@ namespace Gtk {
 		public Gtk.PlacesOpenFlags get_open_flags ();
 		public bool get_show_connect_to_server ();
 		public bool get_show_desktop ();
+		public bool get_show_enter_location ();
 		public unowned GLib.SList list_shortcuts ();
 		public void remove_shortcut (GLib.File location);
 		public void set_local_only (bool local_only);
@@ -3563,11 +3564,13 @@ namespace Gtk {
 		public void set_open_flags (Gtk.PlacesOpenFlags flags);
 		public void set_show_connect_to_server (bool show_connect_to_server);
 		public void set_show_desktop (bool show_desktop);
+		public void set_show_enter_location (bool show_enter_location);
 		public bool local_only { get; set; }
 		public GLib.File location { get; set; }
 		public Gtk.PlacesOpenFlags open_flags { get; set; }
 		public bool show_connect_to_server { get; set; }
 		public bool show_desktop { get; set; }
+		public bool show_enter_location { get; set; }
 		public virtual signal int drag_action_ask (int p0);
 		public virtual signal int drag_action_requested (Gdk.DragContext p0, GLib.Object p1, void* p2);
 		public virtual signal void drag_perform_drop (GLib.Object p0, void* p1, int p2);
@@ -4924,9 +4927,13 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Switch ();
 		public bool get_active ();
+		public bool get_state ();
 		public void set_active (bool is_active);
+		public void set_state (bool state);
 		public bool active { get; set; }
+		public bool state { get; set; }
 		public virtual signal void activate ();
+		public virtual signal bool state_set (bool state);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class SwitchAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Action {

@@ -18605,6 +18605,12 @@
 					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
 				</parameters>
 			</method>
+			<method name="get_show_enter_location" symbol="gtk_places_sidebar_get_show_enter_location">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
+				</parameters>
+			</method>
 			<method name="list_shortcuts" symbol="gtk_places_sidebar_list_shortcuts">
 				<return-type type="GSList*"/>
 				<parameters>
@@ -18656,11 +18662,19 @@
 					<parameter name="show_desktop" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_show_enter_location" symbol="gtk_places_sidebar_set_show_enter_location">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
+					<parameter name="show_enter_location" type="gboolean"/>
+				</parameters>
+			</method>
 			<property name="local-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="location" type="GFile*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="open-flags" type="GtkPlacesOpenFlags" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-connect-to-server" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-desktop" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-enter-location" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="drag-action-ask" when="LAST">
 				<return-type type="gint"/>
 				<parameters>
@@ -18704,6 +18718,12 @@
 				</parameters>
 			</signal>
 			<signal name="show-connect-to-server" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkPlacesSidebar*"/>
+				</parameters>
+			</signal>
+			<signal name="show-enter-location" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="object" type="GtkPlacesSidebar*"/>
@@ -23343,6 +23363,12 @@
 					<parameter name="sw" type="GtkSwitch*"/>
 				</parameters>
 			</method>
+			<method name="get_state" symbol="gtk_switch_get_state">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="sw" type="GtkSwitch*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gtk_switch_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
@@ -23353,11 +23379,26 @@
 					<parameter name="is_active" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_state" symbol="gtk_switch_set_state">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="sw" type="GtkSwitch*"/>
+					<parameter name="state" type="gboolean"/>
+				</parameters>
+			</method>
 			<property name="active" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="state" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="activate" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="sw" type="GtkSwitch*"/>
+				</parameters>
+			</signal>
+			<signal name="state-set" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="sw" type="GtkSwitch*"/>
+					<parameter name="state" type="gboolean"/>
 				</parameters>
 			</signal>
 		</object>
