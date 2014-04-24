@@ -1822,7 +1822,7 @@ namespace GLib {
 		public SettingsSchemaSource.from_directory (string directory, GLib.SettingsSchemaSource? parent, bool trusted) throws GLib.Error;
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static unowned GLib.SettingsSchemaSource get_default ();
-		public void list_schemas (bool recursive, out string non_relocatable, out string relocatable);
+		public void list_schemas (bool recursive, [CCode (array_length = false, array_null_terminated = true)] out string[] non_relocatable, [CCode (array_length = false, array_null_terminated = true)] out string[] relocatable);
 		public GLib.SettingsSchema? lookup (string schema_id, bool recursive);
 		public GLib.SettingsSchemaSource @ref ();
 		public void unref ();
@@ -3497,7 +3497,11 @@ namespace GLib {
 		INVALID_FILE_CONTENT,
 		SELINUX_SECURITY_CONTEXT_UNKNOWN,
 		ADT_AUDIT_DATA_UNKNOWN,
-		OBJECT_PATH_IN_USE;
+		OBJECT_PATH_IN_USE,
+		UNKNOWN_OBJECT,
+		UNKNOWN_INTERFACE,
+		UNKNOWN_PROPERTY,
+		PROPERTY_READ_ONLY;
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static string encode_gerror (GLib.Error error);
 		[CCode (cheader_filename = "gio/gio.h")]
