@@ -336,7 +336,7 @@ namespace Postgres {
 		[CCode (cname = "PQisnonblocking")]
 		public int is_non_blocking ();
 
-		[CCode (cname = "PQping"]
+		[CCode (cname = "PQping")]
 		public Ping ping();
 		 
 		[CCode (cname = "PQpingParams")]
