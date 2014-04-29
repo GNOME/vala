@@ -442,12 +442,6 @@
 		<function name="events_pending" symbol="gtk_events_pending">
 			<return-type type="gboolean"/>
 		</function>
-		<function name="exit" symbol="gtk_exit">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="error_code" type="gint"/>
-			</parameters>
-		</function>
 		<function name="false" symbol="gtk_false">
 			<return-type type="gboolean"/>
 		</function>
@@ -1348,9 +1342,6 @@
 			<parameters>
 				<parameter name="flags" type="guint"/>
 			</parameters>
-		</function>
-		<function name="set_locale" symbol="gtk_set_locale">
-			<return-type type="gchar*"/>
 		</function>
 		<function name="show_about_dialog" symbol="gtk_show_about_dialog">
 			<return-type type="void"/>
@@ -34376,7 +34367,7 @@
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="0"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="1"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="13"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

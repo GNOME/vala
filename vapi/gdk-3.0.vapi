@@ -4614,6 +4614,7 @@ namespace Gdk {
 		public bool get_has_cursor ();
 		public bool get_history (Gdk.Window window, uint32 start, uint32 stop, [CCode (array_length_cname = "n_events", array_length_pos = 4.1)] out Gdk.TimeCoord[] events);
 		public bool get_key (uint index_, out uint keyval, out Gdk.ModifierType modifiers);
+		public unowned Gdk.Window get_last_event_window ();
 		public Gdk.InputMode get_mode ();
 		public int get_n_axes ();
 		public int get_n_keys ();
@@ -5009,6 +5010,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
 	[Compact]
+	[Deprecated (since = "3.12")]
 	public class EventVisibility : Gdk.Event {
 		public int8 send_event;
 		public Gdk.VisibilityState state;
@@ -5934,7 +5936,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_set_source_window (Cairo.Context cr, Gdk.Window window, double x, double y);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Cairo.Surface cairo_surface_create_from_pixbuf (Gdk.Pixbuf pixbuf, int scale, Gdk.Window for_window);
+	public static Cairo.Surface cairo_surface_create_from_pixbuf (Gdk.Pixbuf pixbuf, int scale, Gdk.Window? for_window);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void disable_multidevice ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -5966,11 +5968,11 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void error_trap_push ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool events_get_angle (Gdk.Event event1, Gdk.Event event2, double angle);
+	public static bool events_get_angle (Gdk.Event event1, Gdk.Event event2, out double angle);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool events_get_center (Gdk.Event event1, Gdk.Event event2, double x, double y);
+	public static bool events_get_center (Gdk.Event event1, Gdk.Event event2, out double x, out double y);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool events_get_distance (Gdk.Event event1, Gdk.Event event2, double distance);
+	public static bool events_get_distance (Gdk.Event event1, Gdk.Event event2, out double distance);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool events_pending ();
 	[CCode (cheader_filename = "gdk/gdk.h")]

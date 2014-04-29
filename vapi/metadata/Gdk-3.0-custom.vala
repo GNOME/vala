@@ -61,12 +61,6 @@ namespace Gdk {
 	public const Gdk.Atom SELECTION_SECONDARY;
 	[CCode (cheader_filename = "gdk/gdk.h")]
 
-	public static bool events_get_angle (Gdk.Event event1, Gdk.Event event2, double angle);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool events_get_center (Gdk.Event event1, Gdk.Event event2, double x, double y);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool events_get_distance (Gdk.Event event1, Gdk.Event event2, double distance);
-
 	[Deprecated (replacement = "Selection.convert", since = "vala-0.12")]
 	public static void selection_convert (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, uint32 time_);
 	[Deprecated (replacement = "Selection.owner_get", since = "vala-0.12")]
