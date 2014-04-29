@@ -9250,8 +9250,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool events_pending ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void exit (int error_code);
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint get_binary_age ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static Gdk.Event get_current_event ();
@@ -9503,8 +9501,6 @@ namespace Gtk {
 	public static void selection_remove_all (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void set_debug_flags (uint flags);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned string set_locale ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void show_about_dialog (Gtk.Window? parent, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
