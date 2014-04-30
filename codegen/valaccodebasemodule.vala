@@ -6025,9 +6025,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public static string get_ccode_upper_case_name (Symbol sym, string? infix = null) {
 		if (sym is Property) {
-			return "%s_%s".printf (get_ccode_lower_case_name (sym.parent_symbol), Symbol.camel_case_to_lower_case (sym.name)).up ();
+			return "%s_%s".printf (get_ccode_lower_case_name (sym.parent_symbol), Symbol.camel_case_to_lower_case (sym.name)).ascii_up ();
 		} else {
-			return get_ccode_lower_case_name (sym, infix).up ();
+			return get_ccode_lower_case_name (sym, infix).ascii_up ();
 		}
 	}
 

@@ -1171,6 +1171,10 @@ public class string {
 	public int ascii_casecmp (string s2);
 	[CCode (cname = "g_ascii_strncasecmp")]
 	public int ascii_ncasecmp (string s2, size_t n);
+	[CCode (cname = "g_ascii_strup")]
+	public string ascii_up (ssize_t len = -1);
+	[CCode (cname = "g_ascii_strdown")]
+	public string ascii_down (ssize_t len = -1);
 
 	[CCode (cname = "g_utf8_skip")]
 	public static char[] skip;
