@@ -55,10 +55,6 @@ Layout
 TabArray
   .new_with_positions skip=false
 
-// g-i uses _ScriptForLang intead of ScriptForLang.  There is a bug,
-// bug I can't find it right now.
-_ScriptForLang skip
-
 read_line
   .stream type="GLib.FileStream"
   .str out=false

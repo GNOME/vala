@@ -450,7 +450,7 @@ namespace Pango {
 		public virtual void draw_trapezoid (Pango.RenderPart part, double y1_, double x11, double x21, double y2, double x12, double x22);
 		[NoWrapper]
 		public virtual void end ();
-		public Pango.Color? get_color (Pango.RenderPart part);
+		public unowned Pango.Color? get_color (Pango.RenderPart part);
 		public unowned Pango.Layout get_layout ();
 		public unowned Pango.LayoutLine get_layout_line ();
 		public unowned Pango.Matrix? get_matrix ();
@@ -590,6 +590,13 @@ namespace Pango {
 		public int y;
 		public int width;
 		public int height;
+	}
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
+	public struct ScriptForLang {
+		[CCode (array_length = false, array_null_terminated = true)]
+		public weak char[] lang;
+		[CCode (array_length = false, array_null_terminated = true)]
+		public weak Pango.Script[] scripts;
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_ALIGN_", type_id = "pango_alignment_get_type ()")]
 	public enum Alignment {
