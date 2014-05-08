@@ -399,7 +399,7 @@ namespace Sqlite {
 		public static int64 used ();
 		[CCode (cname = "sqlite3_memory_highwater")]
 		public static int64 highwater (int reset = 0);
-		[Deprecated (since = "3.7.2", replacement = "Sqlite.Memory.soft_heap_limit64")]
+		[Version (deprecated_since = "3.7.2", replacement = "Sqlite.Memory.soft_heap_limit64")]
 		[CCode (cname = "sqlite3_soft_heap_limit")]
 		public static void soft_heap_limit (int limit);
 		[CCode (cname = "sqlite3_soft_heap_limit64")]
