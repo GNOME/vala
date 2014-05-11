@@ -3372,9 +3372,9 @@ namespace GLib {
 	public class OptionGroup {
 		public OptionGroup (string name, string description, string help_description, void* user_data = null, DestroyNotify? destroy = null);
 		public void add_entries ([CCode (array_length = false)] OptionEntry[] entries);
-		public void set_parse_hooks (OptionParseFunc pre_parse_func, OptionParseFunc post_parse_hook);
-		public void set_error_hook (OptionErrorFunc error_func);
-		public void set_translate_func (TranslateFunc func, DestroyNotify? destroy_notify);
+		public void set_parse_hooks (OptionParseFunc? pre_parse_func, OptionParseFunc? post_parse_hook);
+		public void set_error_hook (OptionErrorFunc? error_func);
+		public void set_translate_func (owned TranslateFunc? func);
 		public void set_translation_domain (string domain);
 	}
 
