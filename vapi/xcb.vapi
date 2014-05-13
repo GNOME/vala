@@ -29,6 +29,8 @@ namespace Xcb {
 	public class Connection {
 		[CCode (cname = "xcb_connect")]
 		public Connection (string? display = null, out int screen = null);
+		[CCode (cname = "xcb_connection_has_error")]
+		public int has_error ();
 
 		public void flush ();
 		public uint32 generate_id ();
@@ -116,7 +118,19 @@ namespace Xcb {
 		public GetGeometryCookie get_geometry_unchecked(Drawable drawable);
 		public GetGeometryReply ? get_geometry_reply(GetGeometryCookie cookie, out GenericError ? e);
 	}
- 
+
+	[CCode (cprefix = "XCB_CONN_", cname = "int", has_type_id = false)]
+	public enum ConnectionError
+	{
+		ERROR,
+		CLOSED_EXT_NOTSUPPORTED,
+		CLOSED_MEM_INSUFFICIENT,
+		CLOSED_REQ_LEN_EXCEED,
+		CLOSED_PARSE_ERR,
+		CLOSED_INVALID_SCREEN,
+		CLOSED_FDPASSING_FAILED,
+	}
+
 	[SimpleType]
 	[IntegerType (rank = 9)]
 	[CCode (cname = "xcb_get_geometry_cookie_t", has_type_id = false)]
