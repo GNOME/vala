@@ -644,6 +644,7 @@ namespace Xcb {
 		public uint16 width_in_millimeters;
 		public uint16 height_in_millimeters;
 		public VisualID root_visual;
+		public int allowed_depths_length ();
 		public DepthIterator allowed_depths_iterator ();
 	}
 
@@ -680,7 +681,7 @@ namespace Xcb {
 		public unowned Depth data;
 		public int rem;
 		[CCode (cname = "xcb_depth_next")]
-		public void next ();
+		public static void next (ref DepthIterator iter);
 	}
 
 	[SimpleType]
