@@ -647,6 +647,7 @@ namespace Xcb {
 	[CCode (cname = "xcb_depth_t", ref_function = "", unref_function = "")]
 	public class Depth {
 		public uint8 depth;
+		public int visuals_length ();
 		public VisualTypeIterator visuals_iterator ();
 	}
 
@@ -668,12 +669,13 @@ namespace Xcb {
 		public void next ();
 	}
 
+	[SimpleType]
 	[CCode (cname = "xcb_visualtype_iterator_t", has_type_id = false)]
 	public struct VisualTypeIterator {
 		public unowned VisualType data;
 		public int rem;
 		[CCode (cname = "xcb_visualtype_next")]
-		public void next ();
+		public static void next (ref VisualTypeIterator iter);
 	}
 
 	[Deprecated (since = "vala-0.14", replacement = "Xcb.Connection")]
