@@ -345,10 +345,30 @@ namespace Xcb {
 		SIBLING,
 		STACK_MODE
 	}
+
+	[CCode (cname = "xcb_image_order_t", has_type_id = false)]
+	public enum ImageOrder {
+		LSB_FIRST,
+		MSB_FIRST
+	}
 	
 	[Compact]
 	[CCode (cname = "xcb_setup_t", ref_function = "", unref_function = "")]
 	public class Setup {
+		public uint8 status;
+		public uint16 protocol_major_version;
+		public uint16 protocol_minor_version;
+		public uint32 release_number;
+		public uint32 resource_id_base;
+		public uint32 resource_id_mask;
+		public uint32 motion_buffer_size;
+		public uint32 maximum_request_length;
+		public uint8 image_byte_order;
+		public uint8 bitmap_format_bit_order;
+		public uint8 bitmap_format_scanline_unit;
+		public uint8 bitmap_format_scanline_pad;
+		public Keycode min_keycode;
+		public Keycode max_keycode;
 		public int roots_length ();
 		public ScreenIterator roots_iterator ();
 	}
@@ -637,13 +657,20 @@ namespace Xcb {
 	[CCode (cname = "xcb_screen_t", ref_function = "", unref_function = "")]
 	public class Screen {
 		public Window root;
+		public Colormap default_colormap;
 		public uint32 white_pixel;
 		public uint32 black_pixel;
+		public uint32 current_input_masks;
 		public uint16 width_in_pixels;
 		public uint16 height_in_pixels;
 		public uint16 width_in_millimeters;
 		public uint16 height_in_millimeters;
+		public uint16 min_installed_maps;
+		public uint16 max_installed_maps;
 		public VisualID root_visual;
+		public uint8 backing_stores;
+		public uint8 save_unders;
+		public uint8 root_depth;
 		public int allowed_depths_length ();
 		public DepthIterator allowed_depths_iterator ();
 	}
@@ -738,12 +765,26 @@ namespace Xcb {
 	public struct Window : uint32 {
 	}
 
+	[CCode (cname = "xcb_visual_class_t", has_type_id = false)]
+	public enum VisualClass {
+		STATIC_GRAY,
+		GRAY_SCALE,
+		STATIC_COLOR,
+		PSEUDO_COLOR,
+		TRUE_COLOR,
+		DIRECT_COLOR
+	}
+
 	[Compact]
 	[CCode (cname = "xcb_visualtype_t", ref_function = "", unref_function = "")]
 	public class VisualType {
 		public VisualID visual_id;
 		public uint8 _class;
 		public uint8 bits_per_rgb_value;
+		public uint16 colormap_entries;
+		public uint32 red_mask;
+		public uint32 green_mask;
+		public uint32 blue_mask;
 	}
 }
 
