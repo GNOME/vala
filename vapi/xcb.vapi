@@ -639,6 +639,7 @@ namespace Xcb {
 		public unowned Screen data;
 		public int rem;
 		public int index;
+		[CCode (cname = "xcb_screen_next")]
 		public static void next (ref ScreenIterator iter);
 	}
 
