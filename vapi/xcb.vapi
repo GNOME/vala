@@ -369,6 +369,8 @@ namespace Xcb {
 		public uint8 bitmap_format_scanline_pad;
 		public Keycode min_keycode;
 		public Keycode max_keycode;
+		public int pixmap_formats_length ();
+		public FormatIterator pixmap_formats_iterator ();
 		public int roots_length ();
 		public ScreenIterator roots_iterator ();
 	}
@@ -651,6 +653,24 @@ namespace Xcb {
 		PROPERTY_CHANGE,
 		COLOR_MAP_CHANGE,
 		OWNER_GRAB_BUTTON
+	}
+
+	[Compact]
+	[CCode (cname = "xcb_format_t", ref_function = "", unref_function = "")]
+	public class Format {
+		public uint8 depth;
+		public uint8 bits_per_pixel;
+		public uint8 scanline_pad;
+	}
+
+	[SimpleType]
+	[CCode (cname = "xcb_format_iterator_t", has_type_id = false)]
+	public struct FormatIterator {
+		public unowned Format data;
+		public int rem;
+		public int index;
+		[CCode (cname = "xcb_format_next")]
+		public static void next (ref FormatIterator iter);
 	}
 
 	[Compact]
