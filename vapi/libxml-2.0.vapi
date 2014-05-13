@@ -995,7 +995,7 @@ namespace Xml {
 	public delegate void* OutputOpenCallback (string filename);
 
 	[CCode (has_target = false, cname = "xmlOutputWriteCallback", cheader_filename = "libxml/xmlIO.h")]
-	public delegate int OutputWriteCallback ([CCode (array_length = false)] char[] buffer, int len);
+	public delegate int OutputWriteCallback (void * context, [CCode (array_length = false)] char[] buffer, int len);
 
 	[CCode (has_target = false, cname = "xmlOutputCloseCallback", cheader_filename = "libxml/xmlIO.h")]
 	public delegate int OutputCloseCallback (void * context);
