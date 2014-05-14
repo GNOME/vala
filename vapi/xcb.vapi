@@ -126,6 +126,22 @@ namespace Xcb {
 		public VoidCookie create_pixmap (uint8 depth, Pixmap pid, Drawable drawable, uint16 width, uint16 height);
 		public VoidCookie free_pixmap_checked (Pixmap pid);
 		public VoidCookie free_pixmap (Pixmap pid);
+
+		public VoidCookie create_gc_checked (GContext cid, Drawable drawable, uint32 value_mask = 0, [CCode (array_length = false)] uint32[]? value_list = null);
+		public VoidCookie create_gc (GContext cid, Drawable drawable, uint32 value_mask = 0, [CCode (array_length = false)] uint32[]? value_list = null);
+		public VoidCookie change_gc_checked (GContext gc, uint32 value_mask, [CCode (array_length = false)] uint32[]? value_list);
+		public VoidCookie change_gc (GContext gc, uint32 value_mask, [CCode (array_length = false)] uint32[]? value_list);
+		public VoidCookie copy_gc_checked (GContext src_gc, GContext dst_gc, uint32 value_mask);
+		public VoidCookie copy_gc (GContext src_gc, GContext dst_gc, uint32 value_mask);
+		public VoidCookie free_gc_checked (GContext gc);
+		public VoidCookie free_gc (GContext gc);
+
+		public VoidCookie clear_area_checked (uint8 exposures, Window window, int16 x, int16 y, uint16 width, uint16 height);
+		public VoidCookie clear_area (uint8 exposures, Window window, int16 x, int16 y, uint16 width, uint16 height);
+		public VoidCookie copy_area_checked (Drawable src_drawable, Drawable dst_drawable, GContext gc, int16 src_x, int16 src_y, int16 dst_x, int16 dst_y, uint16 width, uint16 height);
+		public VoidCookie copy_area (Drawable src_drawable, Drawable dst_drawable, GContext gc, int16 src_x, int16 src_y, int16 dst_x, int16 dst_y, uint16 width, uint16 height);
+		public VoidCookie copy_plane_checked (Drawable src_drawable, Drawable dst_drawable, GContext gc, int16 src_x, int16 src_y, int16 dst_x, int16 dst_y, uint16 width, uint16 height, uint32 bit_plane);
+		public VoidCookie copy_plane (Drawable src_drawable, Drawable dst_drawable, GContext gc, int16 src_x, int16 src_y, int16 dst_x, int16 dst_y, uint16 width, uint16 height, uint32 bit_plane);
 	}
 
 	[CCode (cprefix = "XCB_CONN_", cname = "int", has_type_id = false)]
@@ -905,6 +921,11 @@ namespace Xcb {
 	}
 
 	[SimpleType]
+	[CCode (cname = "xcb_gcontext_t", has_type_id = false)]
+	public struct GContext : uint32 {
+	}
+
+	[SimpleType]
 	[CCode (cname = "xcb_drawable_t", has_type_id = false)]
 	public struct Drawable : uint32 {
 	}
@@ -939,6 +960,110 @@ namespace Xcb {
 		public uint32 red_mask;
 		public uint32 green_mask;
 		public uint32 blue_mask;
+	}
+
+	[CCode (cname = "xcb_gc_t", has_type_id = false)]
+	public enum GC
+	{
+		FUNCTION,
+		PLANE_MASK,
+		FOREGROUND,
+		BACKGROUND,
+		LINE_WIDTH,
+		LINE_STYLE,
+		CAP_STYLE,
+		JOIN_STYLE,
+		FILL_STYLE,
+		FILL_RULE,
+		TILE,
+		STIPPLE,
+		TILE_STIPPLE_ORIGIN_X,
+		TILE_STIPPLE_ORIGIN_Y,
+		FONT,
+		SUBWINDOW_MODE,
+		GRAPHICS_EXPOSURES,
+		CLIP_ORIGIN_X,
+		CLIP_ORIGIN_Y,
+		CLIP_MASK,
+		DASH_OFFSET,
+		DASH_LIST,
+		ARC_MODE
+	}
+
+	[CCode (cname = "xcb_gx_t", has_type_id = false)]
+	public enum GX
+	{
+		CLEAR,
+		AND,
+		AND_REVERSE,
+		COPY,
+		AND_INVERTED,
+		NOOP,
+		XOR,
+		OR,
+		NOR,
+		EQUIV,
+		INVERT,
+		OR_REVERSE,
+		COPY_INVERTED,
+		OR_INVERTED,
+		NAND,
+		SET
+	}
+
+	[CCode (cname = "xcb_line_style_t", has_type_id = false)]
+	public enum LineStyle
+	{
+		SOLID,
+		ON_OFF_DASH,
+		DOUBLE_DASH
+	}
+
+	[CCode (cname = "xcb_cap_style_t", has_type_id = false)]
+	public enum CapStyle
+	{
+		NOT_LAST,
+		BUTT,
+		ROUND,
+		PROJECTING
+	}
+
+	[CCode (cname = "xcb_join_style_t", has_type_id = false)]
+	public enum JoinStyle
+	{
+		MITER,
+		ROUND,
+		BEVEL
+	}
+
+	[CCode (cname = "xcb_fill_style_t", has_type_id = false)]
+	public enum FillStyle
+	{
+		SOLID,
+		TILED,
+		STIPPLED,
+		OPAQUE_STIPPLED
+	}
+
+	[CCode (cname = "xcb_fill_rule_t", has_type_id = false)]
+	public enum FillRuleStyle
+	{
+		EVEN_ODD,
+		WINDING
+	}
+
+	[CCode (cname = "xcb_subwindow_mode_t", has_type_id = false)]
+	public enum SubwindowMode
+	{
+		CLIP_BY_CHILDREN,
+		INCLUDE_INFERIORS
+	}
+
+	[CCode (cname = "xcb_arc_mode_t", has_type_id = false)]
+	public enum ArcMode
+	{
+		CHORD,
+		PIE_SLICE
 	}
 }
 
