@@ -66,6 +66,10 @@ namespace Xcb {
 			return this.vala_intern_atom(only_if_exists,(uint16)name.length,name);
 		}
 		public InternAtomReply intern_atom_reply(InternAtomCookie cookie, out GenericError? e);
+
+		public GetAtomNameCookie get_atom_name(Atom atom);
+		public GetAtomNameCookie get_atom_name_unchecked(Atom atom);
+		public GetAtomNameReply get_atom_name_reply(GetAtomNameCookie cookie, out GenericError? e);
 		
 		[CCode (cname = "xcb_change_property")]
 		private VoidCookie vala_change_property(PropMode mode, Window window, AtomT property, AtomT type, uint8 format, uint32 len, void *data);
@@ -153,12 +157,6 @@ namespace Xcb {
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname = "xcb_intern_atom_cookie_t", has_type_id = false)]
-	public struct InternAtomCookie {
-	}
-
-	[SimpleType]
-	[IntegerType (rank = 9)]
 	[CCode (cname = "xcb_get_window_attributes_cookie_t", has_type_id = false)]
 	public struct GetWindowAttributesCookie {
 	}
@@ -203,6 +201,12 @@ namespace Xcb {
 		public unowned void *value();
 	}
 
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "xcb_intern_atom_cookie_t", has_type_id = false)]
+	public struct InternAtomCookie {
+	}
+
 	[Compact]
 	[CCode (cname = "xcb_intern_atom_reply_t", ref_function = "", unref_function = "free")]
 	public class InternAtomReply {
@@ -210,6 +214,23 @@ namespace Xcb {
 		private uint16   sequence;
 		public  uint32   length;
 		public  AtomT    atom;
+	}
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "xcb_get_atom_name_cookie_t", has_type_id = false)]
+	public struct GetAtomNameCookie {
+	}
+
+	[Compact]
+	[CCode (cname = "xcb_get_atom_name_reply_t", ref_function = "", unref_function = "free")]
+	public class GetAtomNameReply {
+		private uint8    response_type;
+		private uint16   sequence;
+		public  uint32   length;
+		public  uint16   name_len;
+		[CCode (cname = "xcb_get_atom_name_name")]
+		public unowned string name ();
 	}
 	
 	[SimpleType]
