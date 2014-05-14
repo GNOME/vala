@@ -149,7 +149,6 @@ namespace Xcb {
 		public uint16     width;
 		public uint16     height;
 		public uint16     border_width;
-		public uint8      pad0[2];
 	}
 
 	[SimpleType]
@@ -185,7 +184,6 @@ namespace Xcb {
 		public uint32       all_event_masks;
 		public uint32       your_event_mask;
 		public uint16       do_not_propagate_mask;
-		public uint8        pad0[2];
 	}
 
 	[SimpleType]
@@ -209,7 +207,6 @@ namespace Xcb {
 	[CCode (cname = "xcb_intern_atom_reply_t", ref_function = "", unref_function = "free")]
 	public class InternAtomReply {
 		private uint8    response_type;
-		private uint8    pad0;
 		private uint16   sequence;
 		public  uint32   length;
 		public  AtomT    atom;
@@ -420,7 +417,6 @@ namespace Xcb {
 		uint16 event_y;
 		uint16 state;
 		uint8 same_screen;
-		uint8 pad0;
 	}
 
 	[Compact]
@@ -438,7 +434,6 @@ namespace Xcb {
 		uint16 event_y;
 		uint16 state;
 		uint8 same_screen;
-		uint8 pad0;
 	}
 
 	[Compact]
@@ -493,13 +488,11 @@ namespace Xcb {
 		public uint16 event_y;
 		public uint16 state;
 		public uint8 same_screen;
-		public uint8 pad0;
 	}
 
 	[Compact]
 	[CCode (cname = "xcb_expose_event_t", ref_function = "", unref_function = "")]
 	public class ExposeEvent : GenericEvent {
-		public uint8 pad0;
 		public uint16 sequence;
 		public Window window;
 		public uint16 x;
@@ -507,14 +500,12 @@ namespace Xcb {
 		public uint16 width;
 		public uint16 height;
 		public uint16 count;
-		public uint8 pad1[2];
 	}
 
 	[Compact]
 	[CCode (cname = "xcb_create_notify_event_t", ref_function = "", unref_function = "")]
 	public class CreateNotifyEvent {
 		public uint8 response_type;
-		public uint8 pad0;
 		public uint16 sequence;
 		public Window parent;
 		public Window window;
@@ -524,14 +515,12 @@ namespace Xcb {
 		public uint16 height;
 		public uint16 border_width;
 		public uint8 override_redirect;
-		public uint8 pad1;
 	}
 
 	[Compact]
 	[CCode (cname = "xcb_destroy_notify_event_t", ref_function = "", unref_function = "")]
 	public class DestroyNotifyEvent {
 		public uint8 response_type;
-		public uint8 pad0;
 		public uint16 sequence;
 		public Window event;
 		public Window window;
@@ -541,31 +530,26 @@ namespace Xcb {
 	[CCode (cname = "xcb_unmap_notify_event_t", ref_function = "", unref_function = "")]
 	public class UnmapNotifyEvent {
 		public uint8 response_type;
-		public uint8 pad0;
 		public uint16 sequence;
 		public Window event;
 		public Window window;
 		public uint8 from_configure;
-		public uint8 pad1[3];
 	}
 
 	[Compact]
 	[CCode (cname = "xcb_map_notify_event_t", ref_function = "", unref_function = "")]
 	public class MapNotifyEvent {
 		public uint8 response_type;
-		public uint8 pad0;
 		public uint16 sequence;
 		public Window event;
 		public Window window;
 		public uint8 override_redirect;
-		public uint8 pad1[3];
 	}
 
 	[Compact]
 	[CCode (cname = "xcb_map_request_event_t", ref_function = "", unref_function = "")]
 	public class MapRequestEvent {
 		public uint8 response_type;
-		public uint8 pad0;
 		public uint16 sequence;
 		public Window parent;
 		public Window window;
@@ -592,7 +576,6 @@ namespace Xcb {
 	[CCode (cname = "xcb_configure_notify_event_t", ref_function = "", unref_function = "")]
 	public class ConfigureNotifyEvent {
 		public uint8      response_type;
-		public uint8      pad0;
 		public uint16     sequence;
 		public Window     event;
 		public Window     window;
@@ -603,7 +586,6 @@ namespace Xcb {
 		public uint16     height;
 		public uint16     border_width;
 		public uint8      override_redirect;
-		public uint8      pad1;
 	}
 
 	[CCode (cname = "xcb_cw_t", has_type_id = false)]
