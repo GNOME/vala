@@ -1,0 +1,3 @@
+DOM* parent="WebKit.DOM" name="DOM(.+)"
+
+DOMEventTarget.add_event_listener skip
