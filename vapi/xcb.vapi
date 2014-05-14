@@ -503,6 +503,56 @@ namespace Xcb {
 	}
 
 	[Compact]
+	[CCode (cname = "xcb_enter_notify_event_t", ref_function = "", unref_function = "")]
+	public class EnterNotifyEvent : GenericEvent {
+		uint8 detail;
+		uint16 sequence;
+		Timestamp time;
+		public Window root;
+		public Window event;
+		public Window child;
+		public uint16 root_x;
+		public uint16 root_y;
+		public uint16 event_x;
+		public uint16 event_y;
+		public uint16 state;
+		public uint8 mode;
+		public uint8 same_screen_focus;
+	}
+
+	[Compact]
+	[CCode (cname = "xcb_leave_notify_event_t", ref_function = "", unref_function = "")]
+	public class LeaveNotifyEvent : GenericEvent {
+		uint8 detail;
+		uint16 sequence;
+		Timestamp time;
+		public Window root;
+		public Window event;
+		public Window child;
+		public uint16 root_x;
+		public uint16 root_y;
+		public uint16 event_x;
+		public uint16 event_y;
+		public uint16 state;
+		public uint8 mode;
+		public uint8 same_screen_focus;
+	}
+
+	[Compact]
+	[CCode (cname = "xcb_keymap_notify_event_t", ref_function = "", unref_function = "")]
+	public class KeymapNotifyEvent : GenericEvent {
+		uint8[] keys;
+	}
+
+	[Compact]
+	[CCode (cname = "xcb_visibility_notify_event_t", ref_function = "", unref_function = "")]
+	public class VisibilityNotifyEvent : GenericEvent {
+		uint16 sequence;
+		public Window window;
+		public uint8 state;
+	}
+
+	[Compact]
 	[CCode (cname = "xcb_create_notify_event_t", ref_function = "", unref_function = "")]
 	public class CreateNotifyEvent {
 		public uint8 response_type;
@@ -556,6 +606,18 @@ namespace Xcb {
 	}
 
 	[Compact]
+	[CCode (cname = "xcb_reparent_notify_event_t", ref_function = "", unref_function = "")]
+	public class ReparentNotifyEvent : GenericEvent {
+		uint16 sequence;
+		public Window event;
+		public Window window;
+		public Window parent;
+		public int16 x;
+		public int16 y;
+		public uint8 override_redirect;
+	}
+
+	[Compact]
 	[CCode (cname = "xcb_configure_request_event_t", ref_function = "", unref_function = "")]
 	public class ConfigureRequestEvent {
 		public uint8 response_type;
@@ -586,6 +648,65 @@ namespace Xcb {
 		public uint16     height;
 		public uint16     border_width;
 		public uint8      override_redirect;
+	}
+
+	[Compact]
+	[CCode (cname = "xcb_gravity_notify_event_t", ref_function = "", unref_function = "")]
+	public class GravityNotifyEvent : GenericEvent {
+		uint16 sequence;
+		public Window event;
+		public Window window;
+		public int16 x;
+		public int16 y;
+	}
+
+	[Compact]
+	[CCode (cname = "xcb_circulate_notify_event_t", ref_function = "", unref_function = "")]
+	public class CirculateNotifyEvent : GenericEvent {
+		uint16 sequence;
+		public Window event;
+		public Window window;
+		public uint8 place;
+	}
+
+	[Compact]
+	[CCode (cname = "xcb_property_notify_event_t", ref_function = "", unref_function = "")]
+	public class PropertyNotifyEvent : GenericEvent {
+		uint16 sequence;
+		public Window window;
+		public Atom atom;
+		public Timestamp time;
+		public uint8 state;
+	}
+
+	[Compact]
+	[CCode (cname = "xcb_selection_notify_event_t", ref_function = "", unref_function = "")]
+	public class SelectionNotifyEvent : GenericEvent {
+		uint16 sequence;
+		public Timestamp time;
+		public Window requestor;
+		public Atom selection;
+		public Atom target;
+		public Atom property;
+	}
+
+	[Compact]
+	[CCode (cname = "xcb_colormap_notify_event_t", ref_function = "", unref_function = "")]
+	public class ColormapNotifyEvent : GenericEvent {
+		uint16 sequence;
+		public Window window;
+		public Colormap colormap;
+		public uint8 _new;
+		public uint8 state;
+	}
+
+	[Compact]
+	[CCode (cname = "xcb_mapping_notify_event_t", ref_function = "", unref_function = "")]
+	public class MappingNotifyEvent : GenericEvent {
+		uint16 sequence;
+		public uint8 request;
+		public Keycode first_keycode;
+		public uint8 count;
 	}
 
 	[CCode (cname = "xcb_cw_t", has_type_id = false)]
