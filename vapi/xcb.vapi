@@ -121,6 +121,11 @@ namespace Xcb {
 		public GetGeometryCookie get_geometry(Drawable drawable);
 		public GetGeometryCookie get_geometry_unchecked(Drawable drawable);
 		public GetGeometryReply ? get_geometry_reply(GetGeometryCookie cookie, out GenericError ? e);
+
+		public VoidCookie create_pixmap_checked (uint8 depth, Pixmap pid, Drawable drawable, uint16 width, uint16 height);
+		public VoidCookie create_pixmap (uint8 depth, Pixmap pid, Drawable drawable, uint16 width, uint16 height);
+		public VoidCookie free_pixmap_checked (Pixmap pid);
+		public VoidCookie free_pixmap (Pixmap pid);
 	}
 
 	[CCode (cprefix = "XCB_CONN_", cname = "int", has_type_id = false)]
@@ -902,6 +907,11 @@ namespace Xcb {
 	[SimpleType]
 	[CCode (cname = "xcb_drawable_t", has_type_id = false)]
 	public struct Drawable : uint32 {
+	}
+
+	[SimpleType]
+	[CCode (cname = "xcb_pixmap_t", has_type_id = false)]
+	public struct Pixmap : uint32 {
 	}
 
 	[SimpleType]
