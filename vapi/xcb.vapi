@@ -1251,6 +1251,38 @@ namespace Xcb {
 		}
 	}
 
+	[CCode (cname = "xcb_get_property_reply_t", ref_function = "", unref_function = "free")]
+	public class GetPropertyReply {
+		public uint8 format;
+		public Atom type;
+		public uint32 bytes_after;
+		private uint32 value_len;
+		[CCode (cname = "xcb_get_property_value")]
+		public unowned void *value ();
+		public string value_as_string () {
+			GLib.assert (format == 8);
+			return "%.*s".printf (value_len, value ());
+		}
+		public unowned uint8[] value_as_uint8_array () {
+			GLib.assert (format == 8);
+			unowned uint8[] res = (uint8[]) value ();
+			res.length = (int) value_len;
+			return res;
+		}
+		public unowned uint16[] value_as_uint16_array () {
+			GLib.assert (format == 16);
+			unowned uint16[] res = (uint16[]) value ();
+			res.length = (int) value_len;
+			return res;
+		}
+		public unowned uint32[] value_as_uint32_array () {
+			GLib.assert (format == 32);
+			unowned uint32[] res = (uint32[]) value ();
+			res.length = (int) value_len;
+			return res;
+		}
+	}
+
 	[SimpleType]
 	[IntegerType (rank = 9)]
 	[CCode (cname = "xcb_list_fonts_with_info_cookie_t", has_type_id = false)]
