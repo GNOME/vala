@@ -1,0 +1,6 @@
+// Skip functions which require JavaScriptCore until a VAPI is written
+JavascriptResult
+  .get_global_context skip
+  .get_value skip
+WebView
+  .get_javascript_global_context skip
