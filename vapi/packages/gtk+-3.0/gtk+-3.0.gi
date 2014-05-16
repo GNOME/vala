@@ -5098,6 +5098,9 @@
 			<member name="GTK_STACK_TRANSITION_TYPE_UNDER_LEFT" value="14"/>
 			<member name="GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT" value="15"/>
 			<member name="GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN" value="16"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP" value="17"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT" value="18"/>
+			<member name="GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT" value="19"/>
 		</enum>
 		<enum name="GtkStateType" type-name="GtkStateType" get-type="gtk_state_type_get_type">
 			<member name="GTK_STATE_NORMAL" value="0"/>
@@ -5231,6 +5234,7 @@
 			<member name="GTK_DEBUG_BASELINES" value="16384"/>
 			<member name="GTK_DEBUG_PIXEL_CACHE" value="32768"/>
 			<member name="GTK_DEBUG_NO_PIXEL_CACHE" value="65536"/>
+			<member name="GTK_DEBUG_INTERACTIVE" value="131072"/>
 		</flags>
 		<flags name="GtkDestDefaults" type-name="GtkDestDefaults" get-type="gtk_dest_defaults_get_type">
 			<member name="GTK_DEST_DEFAULT_MOTION" value="1"/>
@@ -5255,6 +5259,10 @@
 			<member name="GTK_ICON_LOOKUP_USE_BUILTIN" value="4"/>
 			<member name="GTK_ICON_LOOKUP_GENERIC_FALLBACK" value="8"/>
 			<member name="GTK_ICON_LOOKUP_FORCE_SIZE" value="16"/>
+			<member name="GTK_ICON_LOOKUP_FORCE_REGULAR" value="32"/>
+			<member name="GTK_ICON_LOOKUP_FORCE_SYMBOLIC" value="64"/>
+			<member name="GTK_ICON_LOOKUP_DIR_LTR" value="128"/>
+			<member name="GTK_ICON_LOOKUP_DIR_RTL" value="256"/>
 		</flags>
 		<flags name="GtkInputHints" type-name="GtkInputHints" get-type="gtk_input_hints_get_type">
 			<member name="GTK_INPUT_HINT_NONE" value="0"/>
@@ -8271,6 +8279,14 @@
 			</method>
 			<method name="attribute_disconnect" symbol="gtk_cell_area_attribute_disconnect">
 				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="GtkCellArea*"/>
+					<parameter name="renderer" type="GtkCellRenderer*"/>
+					<parameter name="attribute" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="attribute_get_column" symbol="gtk_cell_area_attribute_get_column">
+				<return-type type="gint"/>
 				<parameters>
 					<parameter name="area" type="GtkCellArea*"/>
 					<parameter name="renderer" type="GtkCellRenderer*"/>
@@ -24403,7 +24419,7 @@
 				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="add" symbol="gtk_text_tag_table_add">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="table" type="GtkTextTagTable*"/>
 					<parameter name="tag" type="GtkTextTag*"/>
@@ -31463,6 +31479,12 @@
 					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_interactive_debugging" symbol="gtk_window_set_interactive_debugging">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="enable" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_keep_above" symbol="gtk_window_set_keep_above">
 				<return-type type="void"/>
 				<parameters>
@@ -31677,6 +31699,12 @@
 				<parameters>
 					<parameter name="window" type="GtkWindow*"/>
 					<parameter name="focus" type="GtkWidget*"/>
+				</parameters>
+			</signal>
+			<signal name="toggle-debugging" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
 			</signal>
 		</object>
@@ -34360,7 +34388,7 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1300"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1301"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>

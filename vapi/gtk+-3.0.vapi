@@ -938,6 +938,7 @@ namespace Gtk {
 		public void add_with_properties (Gtk.CellRenderer renderer, ...);
 		public void attribute_connect (Gtk.CellRenderer renderer, string attribute, int column);
 		public void attribute_disconnect (Gtk.CellRenderer renderer, string attribute);
+		public int attribute_get_column (Gtk.CellRenderer renderer, string attribute);
 		public void cell_get (Gtk.CellRenderer renderer, ...);
 		public void cell_get_property (Gtk.CellRenderer renderer, string property_name, GLib.Value value);
 		public void cell_get_valist (Gtk.CellRenderer renderer, string first_property_name, void* var_args);
@@ -5361,7 +5362,7 @@ namespace Gtk {
 	public class TextTagTable : GLib.Object, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		public TextTagTable ();
-		public void add (Gtk.TextTag tag);
+		public bool add (Gtk.TextTag tag);
 		public void @foreach (Gtk.TextTagTableForeach func);
 		public int get_size ();
 		public unowned Gtk.TextTag lookup (string name);
@@ -6770,6 +6771,7 @@ namespace Gtk {
 		public bool set_icon_from_file (string filename) throws GLib.Error;
 		public void set_icon_list (GLib.List<Gdk.Pixbuf> list);
 		public void set_icon_name (string name);
+		public static void set_interactive_debugging (bool enable);
 		public void set_keep_above (bool setting);
 		public void set_keep_below (bool setting);
 		public void set_mnemonic_modifier (Gdk.ModifierType modifier);
@@ -6843,6 +6845,7 @@ namespace Gtk {
 		public virtual signal void keys_changed ();
 		[HasEmitter]
 		public virtual signal void set_focus (Gtk.Widget? focus);
+		public virtual signal void toggle_debugging ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class WindowAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Window {
@@ -7623,7 +7626,8 @@ namespace Gtk {
 		NO_CSS_CACHE,
 		BASELINES,
 		PIXEL_CACHE,
-		NO_PIXEL_CACHE
+		NO_PIXEL_CACHE,
+		INTERACTIVE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DELETE_")]
 	public enum DeleteType {
@@ -7728,7 +7732,11 @@ namespace Gtk {
 		FORCE_SVG,
 		USE_BUILTIN,
 		GENERIC_FALLBACK,
-		FORCE_SIZE
+		FORCE_SIZE,
+		FORCE_REGULAR,
+		FORCE_SYMBOLIC,
+		DIR_LTR,
+		DIR_RTL
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_SIZE_")]
 	public enum IconSize {
@@ -8235,7 +8243,10 @@ namespace Gtk {
 		UNDER_DOWN,
 		UNDER_LEFT,
 		UNDER_RIGHT,
-		OVER_UP_DOWN
+		OVER_UP_DOWN,
+		OVER_DOWN_UP,
+		OVER_LEFT_RIGHT,
+		OVER_RIGHT_LEFT
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_STATE_FLAG_")]
 	[Flags]
