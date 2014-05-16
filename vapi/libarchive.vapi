@@ -53,14 +53,38 @@ namespace Archive {
 		FAILED
 	}
 
+	// see libarchive/archive.h, l. 218 ff.
 	[CCode (cname="int", has_type_id = false)]
+	public enum Filter {
+		NONE,
+		GZIP,
+		BZIP2,
+		COMPRESS,
+		PROGRAM,
+		LZMA,
+		XZ,
+		UU,
+		RPM,
+		LZIP,
+		LRZIP,
+		LZOP,
+		GRZIP
+	}
+
+	[CCode (cname="int", has_type_id = false)]
+	[Deprecated (since="3.0", replacement="Filter")]
 	public enum Compression {
 		NONE,
 		GZIP,
 		BZIP2,
 		COMPRESS,
 		PROGRAM,
-		LZMA
+		LZMA,
+		XZ,
+		UU,
+		RPM,
+		LZIP,
+		LRZIP
 	}
 
 	[CCode (cname="int", has_type_id = false)]
@@ -113,10 +137,20 @@ namespace Archive {
 		public int64 position_compressed ();
 		public int64 position_uncompressed ();
 
+		[Deprecated (since="3.0", replacement="Archive.filter_code (0)")]
 		public Compression compression ();
 		public Format format ();
+		// Filter #0 is the one closest to the format, -1 is a synonym
+		// for the last filter, which is always the pseudo-filter that
+		// wraps the client callbacks. (libarchive/archive.h, l. 955)
+		public Filter filter_code (int filter_no);
+
 		public unowned string compression_name ();
 		public unowned string format_name ();
+		public unowned string filter_name (int filter_no);
+
+		public int filter_count ();
+		public int file_count ();
 
 		public int errno ();
 		public unowned string error_string ();
@@ -130,23 +164,59 @@ namespace Archive {
 	[CCode (cname="struct archive", free_function="archive_read_finish")]
 	public class Read : Archive {
 		public Read ();
+		// see https://github.com/libarchive/libarchive/wiki/Libarchive3#functions-that-are-being-renamed
+		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_all ()")]
 		public Result support_compression_all ();
+		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_bzip2 ()")]
 		public Result support_compression_bzip2 ();
+		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_compress ()")]
 		public Result support_compression_compress ();
+		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_gzip ()")]
 		public Result support_compression_gzip ();
+		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_lzma ()")]
 		public Result support_compression_lzma ();
+		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_none ()")]
 		public Result support_compression_none ();
+		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_program (string command)")]
 		public Result support_compression_program (string command);
+		public Result support_filter_all ();
+		public Result support_filter_bzip2 ();
+		public Result support_filter_compress ();
+		public Result support_filter_gzip ();
+		public Result support_filter_grzip ();
+		public Result support_filter_lrzip ();
+		public Result support_filter_lzip ();
+		public Result support_filter_lzma ();
+		public Result support_filter_lzop ();
+		public Result support_filter_none ();
+		public Result support_filter_program (string command);
+		// TODO support_filter_program_signature (string, const void *, size_t)
+		public Result support_filter_rpm ();
+		public Result support_filter_uu ();
+		public Result support_filter_xz ();
+		public Result support_format_7zip ();
 		public Result support_format_all ();
 		public Result support_format_ar ();
+		public Result support_format_by_code (Format format_code);
+		public Result support_format_cab ();
 		public Result support_format_cpio ();
 		public Result support_format_empty ();
 		public Result support_format_gnutar ();
 		public Result support_format_iso9660 ();
+		public Result support_format_lha ();
 		public Result support_format_mtree ();
+		public Result support_format_rar ();
 		public Result support_format_raw ();
 		public Result support_format_tar ();
+		public Result support_format_xar ();
 		public Result support_format_zip ();
+		public Result support_format_zip_streamable ();
+		public Result support_format_zip_seekable ();
+
+		public Result set_format (Format format_code);
+		public Result append_filter (Filter filter_code);
+		public Result append_filter_program (string cmd);
+		// TODO append_filter_program_signature (string, const void *, size_t);
 
 		public Result open (
 			[CCode (delegate_target_pos = 0.9)] OpenCallback ocb,
@@ -189,23 +259,53 @@ namespace Archive {
 	[CCode (cname = "struct archive", free_function="archive_write_finish")]
 	public class Write : Archive {
 		public Write ();
+		// see https://github.com/libarchive/libarchive/wiki/Libarchive3#functions-that-are-being-renamed
+		[Deprecated (since="3.0", replacement="Archive.Write.add_filter_bzip2 ()")]
 		public Result set_compression_bzip2 ();
+		[Deprecated (since="3.0", replacement="Archive.Write.add_filter_compress ()")]
 		public Result set_compression_compress ();
+		[Deprecated (since="3.0", replacement="Archive.Write.add_filter_gzip ()")]
 		public Result set_compression_gzip ();
+		[Deprecated (since="3.0", replacement="Archive.Write.add_filter_lzma ()")]
+		public Result set_compression_lzma ();
+		[Deprecated (since="3.0", replacement="Archive.Write.add_filter_none ()")]
 		public Result set_compression_none ();
 		public Result set_compression_program (string cmd);
+		public Result add_filter (Filter filter_code);
+		public Result add_filter_by_name (string name);
+		public Result add_filter_b64encode ();
+		public Result add_filter_bzip2 ();
+		public Result add_filter_compress ();
+		public Result add_filter_grzip ();
+		public Result add_filter_gzip ();
+		public Result add_filter_lrzip ();
+		public Result add_filter_lzip ();
+		public Result add_filter_lzma ();
+		public Result add_filter_lzop ();
+		public Result add_filter_none ();
+		public Result add_filter_program (string cmd);
+		public Result add_filter_uuencode ();
+		public Result add_filter_xz ();
 		public Result set_format (Format format);
 		public Result set_format_by_name (string name);
+		public Result set_format_7zip ();
 		public Result set_format_ar_bsd ();
 		public Result set_format_ar_svr4 ();
 		public Result set_format_cpio ();
 		public Result set_format_cpio_newc ();
+		public Result set_format_gnutar ();
+		public Result set_format_iso9660 ();
 		public Result set_format_mtree ();
+		public Result set_format_mtree_classic ();
 		public Result set_format_pax ();
 		public Result set_format_pax_restricted ();
+		public Result set_format_raw ();
 		public Result set_format_shar ();
 		public Result set_format_shar_dump ();
 		public Result set_format_ustar ();
+		public Result set_format_v7tar ();
+		public Result set_format_xar ();
+		public Result set_format_zip ();
 
 		public Result set_bytes_per_block (int bytes_per_block);
 		public int get_bytes_per_block ();
