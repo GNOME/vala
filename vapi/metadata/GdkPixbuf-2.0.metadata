@@ -19,10 +19,5 @@ Pixbuf
         .from_pixdata.copy_pixels default=true
         .new_from_inline.copy_pixels default=true
 
-// Bug #660879: nullability of return values
-Pixbuf
-        .composite_color_simple nullable
-        .flip nullable
-
 // Bug #666798: delegates which throw exceptions
 PixbufSaveFunc skip

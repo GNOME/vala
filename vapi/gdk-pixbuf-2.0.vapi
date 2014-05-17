@@ -10,7 +10,7 @@ namespace Gdk {
 		public Gdk.Pixbuf apply_embedded_orientation ();
 		public void composite (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type, int overall_alpha);
 		public void composite_color (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type, int overall_alpha, int check_x, int check_y, int check_size, uint32 color1, uint32 color2);
-		public Gdk.Pixbuf? composite_color_simple (int dest_width, int dest_height, Gdk.InterpType interp_type, int overall_alpha, int check_size, uint32 color1, uint32 color2);
+		public Gdk.Pixbuf composite_color_simple (int dest_width, int dest_height, Gdk.InterpType interp_type, int overall_alpha, int check_size, uint32 color1, uint32 color2);
 		public Gdk.Pixbuf copy ();
 		public void copy_area (int src_x, int src_y, int width, int height, Gdk.Pixbuf dest_pixbuf, int dest_x, int dest_y);
 		public void fill (uint32 pixel);
@@ -44,7 +44,7 @@ namespace Gdk {
 		public int get_bits_per_sample ();
 		public size_t get_byte_length ();
 		public Gdk.Colorspace get_colorspace ();
-		public static unowned Gdk.PixbufFormat get_file_info (string filename, out int width, out int height);
+		public static unowned Gdk.PixbufFormat? get_file_info (string filename, out int width, out int height);
 		public static GLib.SList<weak Gdk.PixbufFormat> get_formats ();
 		public bool get_has_alpha ();
 		public int get_height ();
@@ -62,7 +62,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_pixbuf_new_from_stream_at_scale_async", finish_name = "gdk_pixbuf_new_from_stream_finish")]
 		[Deprecated (replacement = "Pixbuf.from_stream_at_scale_async", since = "vala-0.18")]
 		public static async Gdk.Pixbuf new_from_stream_at_scale_async (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public Gdk.Pixbuf rotate_simple (Gdk.PixbufRotation angle);
+		public Gdk.Pixbuf? rotate_simple (Gdk.PixbufRotation angle);
 		public void saturate_and_pixelate (Gdk.Pixbuf dest, float saturation, bool pixelate);
 		public bool save (string filename, string type, ...) throws GLib.Error;
 		public bool save_to_buffer ([CCode (array_length_type = "gsize", type = "gchar**")] out uint8[] buffer, string type, ...) throws GLib.Error;
@@ -138,7 +138,7 @@ namespace Gdk {
 		public PixbufLoader ();
 		public bool close () throws GLib.Error;
 		public unowned Gdk.PixbufAnimation get_animation ();
-		public unowned Gdk.PixbufFormat get_format ();
+		public unowned Gdk.PixbufFormat? get_format ();
 		public unowned Gdk.Pixbuf get_pixbuf ();
 		public void set_size (int width, int height);
 		[CCode (has_construct_function = false)]
