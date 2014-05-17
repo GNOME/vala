@@ -2371,7 +2371,6 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				next ();
 				var element_type = parse_type ();
-				element_type.value_owned = true;
 				end_element ("array");
 				return new ArrayType (element_type, 1, src);
 			}
