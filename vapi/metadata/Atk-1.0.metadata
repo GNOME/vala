@@ -41,7 +41,9 @@ Role.edit_bar name="editbar"
 // G-I doesn't distinguish between abstract and virtual
 Document.*#virtual_method virtual
 Text.get_bounded_ranges#virtual_method virtual
-Text.get_bounded_ranges array array_null_terminated unowned=false
+
+// Can't document callback fields
+Text.get_bounded_ranges#virtual_method array array_null_terminated unowned=false
 
 // Callbacks without user data
 add_focus_tracker skip=false
