@@ -1,6 +1,6 @@
 # Written for GooCanvas v0.15
 
-Goo cprefix="Goo" lower_case_cprefix="goo_" cheader_filename="goocanvas.h"
+Goo cprefix="Goo" lower_case_cprefix="goo_" cheader_filename="goocanvas.h" replacement="goocanvas-2.0"
 
 # Goo.Canvas
 GooCanvas.root_item_model hidden="1"
