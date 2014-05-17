@@ -602,6 +602,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "is_array") {
 					if (eval (nv[1]) == "1") {
+						return_type.value_owned = true;
 						return_type = new ArrayType (return_type, 1, return_type.source_reference);
 						cb.return_type = return_type;
 					}
@@ -685,6 +686,7 @@ public class Vala.GIdlParser : CodeVisitor {
 							}
 						} else if (nv[0] == "is_array") {
 							if (eval (nv[1]) == "1") {
+								param_type.value_owned = true;
 								param_type = new ArrayType (param_type, 1, param_type.source_reference);
 								p.variable_type = param_type;
 								if (!out_requested) {
@@ -1882,6 +1884,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (type == null) {
 				return element_type;
 			}
+			element_type.value_owned = true;
 			return new ArrayType (element_type, 1, element_type.source_reference);
 		} else if (type_node.tag == TypeTag.LIST) {
 			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "List");
@@ -1915,6 +1918,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			} else if (n == "guchar" || n == "guint8") {
 				type.unresolved_symbol = new UnresolvedSymbol (null, "uchar");
 				if (type_node.is_pointer) {
+					type.value_owned = true;
 					return new ArrayType (type, 1, type.source_reference);
 				}
 			} else if (n == "gushort") {
@@ -1946,10 +1950,12 @@ public class Vala.GIdlParser : CodeVisitor {
 			} else if (n == "GType") {
 				type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "Type");
 				if (type_node.is_pointer) {
+					type.value_owned = true;
 					return new ArrayType (type, 1, type.source_reference);
 				}
 			} else if (n == "GStrv") {
 				type.unresolved_symbol = new UnresolvedSymbol (null, "string");
+				type.value_owned = true;
 				return new ArrayType (type, 1, type.source_reference);
 			} else {
 				var named_type = parse_type_string (n);
@@ -2172,6 +2178,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		if (array_data != null && array_data.length > 0) {
+			type.value_owned = true;
 			type = new ArrayType (type, array_dimension_data.length + 1, source_reference);
 		}
 
@@ -2264,6 +2271,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					m.set_attribute_string ("CCode", "sentinel", eval (nv[1]));
 				} else if (nv[0] == "is_array") {
 					if (eval (nv[1]) == "1") {
+						return_type.value_owned = true;
 						return_type = new ArrayType (return_type, 1, return_type.source_reference);
 						m.return_type = return_type;
 					}
@@ -2412,6 +2420,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					var nv = attr.split ("=", 2);
 					if (nv[0] == "is_array") {
 						if (eval (nv[1]) == "1") {
+							param_type.value_owned = true;
 							param_type = new ArrayType (param_type, 1, param_type.source_reference);
 							p.variable_type = param_type;
 							if (!out_requested) {
@@ -2527,6 +2536,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (last_param != null && p.name == "n_" + last_param.name) {
 				if (!(last_param_type is ArrayType)) {
 					// last_param is array, p is array length
+					last_param_type.value_owned = true;
 					last_param_type = new ArrayType (last_param_type, 1, last_param_type.source_reference);
 					last_param.variable_type = last_param_type;
 					last_param.direction = ParameterDirection.IN;
@@ -2824,6 +2834,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "is_array") {
 					if (eval (nv[1]) == "1") {
+						type.value_owned = true;
 						type = new ArrayType (type, 1, type.source_reference);
 					}
 				} else if (nv[0] == "weak") {
@@ -3096,6 +3107,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						}
 					} else if (nv[0] == "is_array") {
 						if (eval (nv[1]) == "1") {
+							param_type.value_owned = true;
 							param_type = new ArrayType (param_type, 1, param_type.source_reference);
 							p.variable_type = param_type;
 							p.direction = ParameterDirection.IN;

@@ -1594,6 +1594,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		if (array_data != null && array_data.length != 0) {
+			type.value_owned = true;
 			type = new ArrayType (type, (int) array_data.length - 1, source_reference);
 		}
 
@@ -1627,6 +1628,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			if (!(type is ArrayType) && metadata.get_bool (ArgumentType.ARRAY)) {
+				type.value_owned = true;
 				type = new ArrayType (type, 1, type.source_reference);
 				changed = true;
 			}
@@ -2371,6 +2373,7 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				next ();
 				var element_type = parse_type ();
+				element_type.value_owned = true;
 				end_element ("array");
 				return new ArrayType (element_type, 1, src);
 			}
@@ -2418,7 +2421,9 @@ public class Vala.GirParser : CodeVisitor {
 		} else if (type_name == "gpointer") {
 			type = new PointerType (new VoidType (get_current_src ()), get_current_src ());
 		} else if (type_name == "GObject.Strv") {
-			type = new ArrayType (new UnresolvedType.from_symbol (new UnresolvedSymbol (null, "string")), 1, get_current_src ());
+			var element_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, "string"));
+			element_type.value_owned = true;
+			type = new ArrayType (element_type, 1, get_current_src ());
 			no_array_length = true;
 			array_null_terminated = true;
 		} else {
