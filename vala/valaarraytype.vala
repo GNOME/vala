@@ -165,10 +165,15 @@ public class Vala.ArrayType : ReferenceType {
 	}
 
 	public override string to_qualified_string (Scope? scope) {
+		var elem_str = element_type.to_qualified_string (scope);
+		if (element_type.is_weak ()) {
+			elem_str = "(unowned %s)".printf (elem_str);
+		}
+		
 		if (!fixed_length) {
-			return "%s[%s]%s".printf (element_type.to_qualified_string (scope), string.nfill (rank - 1, ','), nullable ? "?" : "");
+			return "%s[%s]%s".printf (elem_str, string.nfill (rank - 1, ','), nullable ? "?" : "");
 		} else {
-			return element_type.to_qualified_string (scope);
+			return elem_str;
 		}
 	}
 
