@@ -22,6 +22,7 @@ TESTS = \
 	basic-types/arrays.vala \
 	basic-types/pointers.vala \
 	basic-types/sizeof.vala \
+	basic-types/bug571486.vala \
 	basic-types/bug591552.vala \
 	basic-types/bug595751.vala \
 	basic-types/bug596637.vala \
