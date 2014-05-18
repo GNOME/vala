@@ -1,11 +1,1 @@
-// Report upstream
-Client.query_by* nullable
-Device
-	.get_device_file nullable
-	.get_driver nullable
-	.get_parent* skip=false nullable unowned=false
-	.get_property nullable
-	.get_property_as_strv nullable
-	.get_sysfs_attr nullable
-	.get_sysfs_attr_as_strv nullable
 DeviceNumber skip

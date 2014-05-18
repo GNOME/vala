@@ -51,11 +51,14 @@ namespace GUdev {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[]? get_sysfs_attr_as_strv (string name);
 		public uint64 get_sysfs_attr_as_uint64 (string name);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public unowned string[] get_sysfs_attr_keys ();
 		public unowned string get_sysfs_path ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_tags ();
 		public uint64 get_usec_since_initialized ();
 		public bool has_property (string key);
+		public bool has_sysfs_attr (string key);
 	}
 	[CCode (cheader_filename = "gudev/gudev.h", type_id = "g_udev_enumerator_get_type ()")]
 	public class Enumerator : GLib.Object {
