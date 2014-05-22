@@ -256,6 +256,37 @@ namespace Archive {
 		public Result close ();
 	}
 
+	[Compact]
+	[CCode (cname = "struct archive", free_function="archive_read_finish")]
+	public class ReadDisk : Read {
+		public ReadDisk ();
+		public Result set_symlink_logical ();
+		public Result set_symlink_physical ();
+		public Result set_symlink_hybrid ();
+		public Result entry_from_file (Entry entry, int fd, Posix.Stat stat);
+		public unowned string gname (Posix.gid_t gid);
+		public unowned string uname (Posix.uid_t uid);
+		public Result set_standard_lookup ();
+
+		// HACK, they have no name in C. May not work correctly.
+		[CCode (instance_pos = 0, cname="void")]
+		public delegate unowned string GNameLookup (Posix.gid_t gid);
+		[CCode (instance_pos = 0, cname="void")]
+		public delegate unowned string UNameLookup (Posix.uid_t uid);
+		[CCode (instance_pos = 0, cname="void")]
+		public delegate void Cleanup ();
+
+		public Result set_gname_lookup (
+			GNameLookup lookup,
+			Cleanup? cleanup = null
+		);
+
+		public Result set_uname_lookup (
+			UNameLookup lookup,
+			Cleanup? cleanup = null
+		);
+	}
+
 	[CCode (cname = "struct archive", free_function="archive_write_finish")]
 	public class Write : Archive {
 		public Write ();
