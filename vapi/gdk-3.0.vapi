@@ -5300,6 +5300,7 @@ namespace Gdk {
 		public void shape_combine_region (Cairo.Region? shape_region, int offset_x, int offset_y);
 		public void show ();
 		public void show_unraised ();
+		public bool show_window_menu (Gdk.Event event);
 		public void stick ();
 		public void thaw_toplevel_updates_libgtk_only ();
 		public void thaw_updates ();
