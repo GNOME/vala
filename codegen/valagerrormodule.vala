@@ -171,7 +171,9 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			// eliminates C warnings
 		} else {
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, inner_error, new CCodeConstant ("NULL"));
-			ccode.open_if (ccond);
+			var unlikely = new CCodeFunctionCall (new CCodeIdentifier ("G_UNLIKELY"));
+			unlikely.add_argument (ccond);
+			ccode.open_if (unlikely);
 		}
 
 		if (current_try != null) {
