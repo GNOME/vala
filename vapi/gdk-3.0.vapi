@@ -4756,6 +4756,7 @@ namespace Gdk {
 		public bool get_click_count (out uint click_count);
 		public bool get_coords (out double x_win, out double y_win);
 		public unowned Gdk.Device? get_device ();
+		public unowned Gdk.EventSequence get_event_sequence ();
 		public Gdk.EventType get_event_type ();
 		public bool get_keycode (out uint16 keycode);
 		public bool get_keyval (out uint keyval);
@@ -4978,7 +4979,7 @@ namespace Gdk {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_sequence_get_type ()")]
 	[Compact]
 	public class EventSequence {
 	}
@@ -5333,11 +5334,17 @@ namespace Gdk {
 		public uint16 red;
 		public uint16 green;
 		public uint16 blue;
+		[Deprecated (since = "3.14")]
 		public Gdk.Color? copy ();
+		[Deprecated (since = "3.14")]
 		public bool equal (Gdk.Color colorb);
+		[Deprecated (since = "3.14")]
 		public void free ();
+		[Deprecated (since = "3.14")]
 		public uint hash ();
+		[Deprecated (since = "3.14")]
 		public static bool parse (string spec, out Gdk.Color color);
+		[Deprecated (since = "3.14")]
 		public string to_string ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]

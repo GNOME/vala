@@ -2181,6 +2181,8 @@
 			<field name="n_args" type="guint"/>
 			<field name="args" type="GtkBindingArg*"/>
 		</struct>
+		<struct name="GtkEventControllerClass">
+		</struct>
 		<struct name="GtkFileFilterInfo">
 			<field name="contains" type="GtkFileFilterFlags"/>
 			<field name="filename" type="gchar*"/>
@@ -2192,6 +2194,24 @@
 			<field name="widget" type="GtkWidget*"/>
 			<field name="x" type="gint"/>
 			<field name="y" type="gint"/>
+		</struct>
+		<struct name="GtkGestureClass">
+		</struct>
+		<struct name="GtkGestureDragClass">
+		</struct>
+		<struct name="GtkGestureLongPressClass">
+		</struct>
+		<struct name="GtkGestureMultiPressClass">
+		</struct>
+		<struct name="GtkGesturePanClass">
+		</struct>
+		<struct name="GtkGestureRotateClass">
+		</struct>
+		<struct name="GtkGestureSingleClass">
+		</struct>
+		<struct name="GtkGestureSwipeClass">
+		</struct>
+		<struct name="GtkGestureZoomClass">
 		</struct>
 		<struct name="GtkIMContextInfo">
 			<field name="context_id" type="gchar*"/>
@@ -4677,6 +4697,11 @@
 			<member name="GTK_ENTRY_ICON_PRIMARY" value="0"/>
 			<member name="GTK_ENTRY_ICON_SECONDARY" value="1"/>
 		</enum>
+		<enum name="GtkEventSequenceState" type-name="GtkEventSequenceState" get-type="gtk_event_sequence_state_get_type">
+			<member name="GTK_EVENT_SEQUENCE_NONE" value="0"/>
+			<member name="GTK_EVENT_SEQUENCE_CLAIMED" value="1"/>
+			<member name="GTK_EVENT_SEQUENCE_DENIED" value="2"/>
+		</enum>
 		<enum name="GtkExpanderStyle" type-name="GtkExpanderStyle" get-type="gtk_expander_style_get_type">
 			<member name="GTK_EXPANDER_COLLAPSED" value="0"/>
 			<member name="GTK_EXPANDER_SEMI_COLLAPSED" value="1"/>
@@ -4842,6 +4867,16 @@
 			<member name="GTK_PAGE_SET_EVEN" value="1"/>
 			<member name="GTK_PAGE_SET_ODD" value="2"/>
 		</enum>
+		<enum name="GtkPanDirection" type-name="GtkPanDirection" get-type="gtk_pan_direction_get_type">
+			<member name="GTK_PAN_DIRECTION_LEFT" value="0"/>
+			<member name="GTK_PAN_DIRECTION_RIGHT" value="1"/>
+			<member name="GTK_PAN_DIRECTION_UP" value="2"/>
+			<member name="GTK_PAN_DIRECTION_DOWN" value="3"/>
+		</enum>
+		<enum name="GtkPanOrientation" type-name="GtkPanOrientation" get-type="gtk_pan_orientation_get_type">
+			<member name="GTK_PAN_ORIENTATION_VERTICAL" value="0"/>
+			<member name="GTK_PAN_ORIENTATION_HORIZONTAL" value="1"/>
+		</enum>
 		<enum name="GtkPathPriorityType" type-name="GtkPathPriorityType" get-type="gtk_path_priority_type_get_type">
 			<member name="GTK_PATH_PRIO_LOWEST" value="0"/>
 			<member name="GTK_PATH_PRIO_GTK" value="4"/>
@@ -4911,6 +4946,12 @@
 			<member name="GTK_PRINT_STATUS_PRINTING" value="6"/>
 			<member name="GTK_PRINT_STATUS_FINISHED" value="7"/>
 			<member name="GTK_PRINT_STATUS_FINISHED_ABORTED" value="8"/>
+		</enum>
+		<enum name="GtkPropagationPhase" type-name="GtkPropagationPhase" get-type="gtk_propagation_phase_get_type">
+			<member name="GTK_PHASE_NONE" value="0"/>
+			<member name="GTK_PHASE_CAPTURE" value="1"/>
+			<member name="GTK_PHASE_BUBBLE" value="2"/>
+			<member name="GTK_PHASE_TARGET" value="3"/>
 		</enum>
 		<enum name="GtkRcTokenType" type-name="GtkRcTokenType" get-type="gtk_rc_token_type_get_type">
 			<member name="GTK_RC_TOKEN_INVALID" value="270"/>
@@ -12366,6 +12407,55 @@
 			<property name="above-child" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visible-window" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
+		<object name="GtkEventController" parent="GObject" type-name="GtkEventController" get-type="gtk_event_controller_get_type">
+			<method name="get_event_mask" symbol="gtk_event_controller_get_event_mask">
+				<return-type type="GdkEventMask"/>
+				<parameters>
+					<parameter name="controller" type="GtkEventController*"/>
+				</parameters>
+			</method>
+			<method name="get_widget" symbol="gtk_event_controller_get_widget">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="controller" type="GtkEventController*"/>
+				</parameters>
+			</method>
+			<method name="handle_event" symbol="gtk_event_controller_handle_event">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="controller" type="GtkEventController*"/>
+					<parameter name="event" type="GdkEvent*"/>
+				</parameters>
+			</method>
+			<method name="reset" symbol="gtk_event_controller_reset">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="controller" type="GtkEventController*"/>
+				</parameters>
+			</method>
+			<method name="set_event_mask" symbol="gtk_event_controller_set_event_mask">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="controller" type="GtkEventController*"/>
+					<parameter name="event_mask" type="GdkEventMask"/>
+				</parameters>
+			</method>
+			<property name="event-mask" type="GdkEventMask" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<signal name="handle-event" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="object" type="GtkEventController*"/>
+					<parameter name="p0" type="GdkEvent*"/>
+				</parameters>
+			</signal>
+			<signal name="reset" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkEventController*"/>
+				</parameters>
+			</signal>
+		</object>
 		<object name="GtkExpander" parent="GtkBin" type-name="GtkExpander" get-type="gtk_expander_get_type">
 			<implements>
 				<interface name="AtkImplementor"/>
@@ -13422,6 +13512,460 @@
 			<implements>
 				<interface name="AtkComponent"/>
 			</implements>
+		</object>
+		<object name="GtkGesture" parent="GtkEventController" type-name="GtkGesture" get-type="gtk_gesture_get_type">
+			<method name="attach" symbol="gtk_gesture_attach">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+					<parameter name="phase" type="GtkPropagationPhase"/>
+				</parameters>
+			</method>
+			<method name="detach" symbol="gtk_gesture_detach">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+				</parameters>
+			</method>
+			<method name="get_bounding_box" symbol="gtk_gesture_get_bounding_box">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+					<parameter name="rect" type="GdkRectangle*"/>
+				</parameters>
+			</method>
+			<method name="get_bounding_box_center" symbol="gtk_gesture_get_bounding_box_center">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+					<parameter name="x" type="gdouble*"/>
+					<parameter name="y" type="gdouble*"/>
+				</parameters>
+			</method>
+			<method name="get_device" symbol="gtk_gesture_get_device">
+				<return-type type="GdkDevice*"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+				</parameters>
+			</method>
+			<method name="get_group" symbol="gtk_gesture_get_group">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+				</parameters>
+			</method>
+			<method name="get_last_event" symbol="gtk_gesture_get_last_event">
+				<return-type type="GdkEvent*"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+					<parameter name="sequence" type="GdkEventSequence*"/>
+				</parameters>
+			</method>
+			<method name="get_last_updated_sequence" symbol="gtk_gesture_get_last_updated_sequence">
+				<return-type type="GdkEventSequence*"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+				</parameters>
+			</method>
+			<method name="get_point" symbol="gtk_gesture_get_point">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+					<parameter name="sequence" type="GdkEventSequence*"/>
+					<parameter name="x" type="gdouble*"/>
+					<parameter name="y" type="gdouble*"/>
+				</parameters>
+			</method>
+			<method name="get_sequence_state" symbol="gtk_gesture_get_sequence_state">
+				<return-type type="GtkEventSequenceState"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+					<parameter name="sequence" type="GdkEventSequence*"/>
+				</parameters>
+			</method>
+			<method name="get_sequences" symbol="gtk_gesture_get_sequences">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+				</parameters>
+			</method>
+			<method name="get_window" symbol="gtk_gesture_get_window">
+				<return-type type="GdkWindow*"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+				</parameters>
+			</method>
+			<method name="group" symbol="gtk_gesture_group">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="group_gesture" type="GtkGesture*"/>
+					<parameter name="gesture" type="GtkGesture*"/>
+				</parameters>
+			</method>
+			<method name="handles_sequence" symbol="gtk_gesture_handles_sequence">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+					<parameter name="sequence" type="GdkEventSequence*"/>
+				</parameters>
+			</method>
+			<method name="is_active" symbol="gtk_gesture_is_active">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+				</parameters>
+			</method>
+			<method name="is_grouped_with" symbol="gtk_gesture_is_grouped_with">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+					<parameter name="other" type="GtkGesture*"/>
+				</parameters>
+			</method>
+			<method name="is_recognized" symbol="gtk_gesture_is_recognized">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+				</parameters>
+			</method>
+			<method name="set_sequence_state" symbol="gtk_gesture_set_sequence_state">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+					<parameter name="sequence" type="GdkEventSequence*"/>
+					<parameter name="state" type="GtkEventSequenceState"/>
+				</parameters>
+			</method>
+			<method name="set_state" symbol="gtk_gesture_set_state">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+					<parameter name="state" type="GtkEventSequenceState"/>
+				</parameters>
+			</method>
+			<method name="set_window" symbol="gtk_gesture_set_window">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+					<parameter name="window" type="GdkWindow*"/>
+				</parameters>
+			</method>
+			<method name="ungroup" symbol="gtk_gesture_ungroup">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesture*"/>
+				</parameters>
+			</method>
+			<property name="n-points" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="window" type="GdkWindow*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="begin" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGesture*"/>
+					<parameter name="p0" type="GdkEventSequence*"/>
+				</parameters>
+			</signal>
+			<signal name="cancel" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGesture*"/>
+					<parameter name="p0" type="GdkEventSequence*"/>
+				</parameters>
+			</signal>
+			<signal name="end" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGesture*"/>
+					<parameter name="p0" type="GdkEventSequence*"/>
+				</parameters>
+			</signal>
+			<signal name="sequence-state-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGesture*"/>
+					<parameter name="p0" type="GdkEventSequence*"/>
+					<parameter name="p1" type="GtkEventSequenceState"/>
+				</parameters>
+			</signal>
+			<signal name="update" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGesture*"/>
+					<parameter name="p0" type="GdkEventSequence*"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkGestureDrag" parent="GtkGestureSingle" type-name="GtkGestureDrag" get-type="gtk_gesture_drag_get_type">
+			<method name="get_offset" symbol="gtk_gesture_drag_get_offset">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureDrag*"/>
+					<parameter name="x" type="gdouble*"/>
+					<parameter name="y" type="gdouble*"/>
+				</parameters>
+			</method>
+			<method name="get_start_point" symbol="gtk_gesture_drag_get_start_point">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureDrag*"/>
+					<parameter name="x" type="gdouble*"/>
+					<parameter name="y" type="gdouble*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_gesture_drag_new">
+				<return-type type="GtkGesture*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</constructor>
+			<signal name="drag-begin" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureDrag*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+			<signal name="drag-end" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureDrag*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+			<signal name="drag-update" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureDrag*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkGestureLongPress" parent="GtkGestureSingle" type-name="GtkGestureLongPress" get-type="gtk_gesture_long_press_get_type">
+			<constructor name="new" symbol="gtk_gesture_long_press_new">
+				<return-type type="GtkGesture*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</constructor>
+			<signal name="cancelled" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureLongPress*"/>
+				</parameters>
+			</signal>
+			<signal name="pressed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureLongPress*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkGestureMultiPress" parent="GtkGestureSingle" type-name="GtkGestureMultiPress" get-type="gtk_gesture_multi_press_get_type">
+			<method name="get_area" symbol="gtk_gesture_multi_press_get_area">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureMultiPress*"/>
+					<parameter name="rect" type="GdkRectangle*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_gesture_multi_press_new">
+				<return-type type="GtkGesture*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</constructor>
+			<method name="set_area" symbol="gtk_gesture_multi_press_set_area">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureMultiPress*"/>
+					<parameter name="rect" type="GdkRectangle*"/>
+				</parameters>
+			</method>
+			<signal name="pressed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureMultiPress*"/>
+					<parameter name="p0" type="gint"/>
+					<parameter name="p1" type="gdouble"/>
+					<parameter name="p2" type="gdouble"/>
+				</parameters>
+			</signal>
+			<signal name="released" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureMultiPress*"/>
+					<parameter name="p0" type="gint"/>
+					<parameter name="p1" type="gdouble"/>
+					<parameter name="p2" type="gdouble"/>
+				</parameters>
+			</signal>
+			<signal name="stopped" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureMultiPress*"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkGesturePan" parent="GtkGestureDrag" type-name="GtkGesturePan" get-type="gtk_gesture_pan_get_type">
+			<method name="get_orientation" symbol="gtk_gesture_pan_get_orientation">
+				<return-type type="GtkPanOrientation"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesturePan*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_gesture_pan_new">
+				<return-type type="GtkGesture*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="orientation" type="GtkPanOrientation"/>
+				</parameters>
+			</constructor>
+			<method name="set_orientation" symbol="gtk_gesture_pan_set_orientation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGesturePan*"/>
+					<parameter name="orientation" type="GtkPanOrientation"/>
+				</parameters>
+			</method>
+			<property name="orientation" type="GtkPanOrientation" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="pan" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGesturePan*"/>
+					<parameter name="p0" type="GtkPanDirection"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkGestureRotate" parent="GtkGesture" type-name="GtkGestureRotate" get-type="gtk_gesture_rotate_get_type">
+			<method name="get_angle_delta" symbol="gtk_gesture_rotate_get_angle_delta">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureRotate*"/>
+					<parameter name="delta" type="gdouble*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_gesture_rotate_new">
+				<return-type type="GtkGesture*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</constructor>
+			<signal name="angle-changed" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureRotate*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkGestureSingle" parent="GtkGesture" type-name="GtkGestureSingle" get-type="gtk_gesture_single_get_type">
+			<method name="get_button" symbol="gtk_gesture_single_get_button">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureSingle*"/>
+				</parameters>
+			</method>
+			<method name="get_current_button" symbol="gtk_gesture_single_get_current_button">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureSingle*"/>
+				</parameters>
+			</method>
+			<method name="get_current_sequence" symbol="gtk_gesture_single_get_current_sequence">
+				<return-type type="GdkEventSequence*"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureSingle*"/>
+				</parameters>
+			</method>
+			<method name="get_exclusive" symbol="gtk_gesture_single_get_exclusive">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureSingle*"/>
+				</parameters>
+			</method>
+			<method name="get_touch_only" symbol="gtk_gesture_single_get_touch_only">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureSingle*"/>
+				</parameters>
+			</method>
+			<method name="set_button" symbol="gtk_gesture_single_set_button">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureSingle*"/>
+					<parameter name="button" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_exclusive" symbol="gtk_gesture_single_set_exclusive">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureSingle*"/>
+					<parameter name="exclusive" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_touch_only" symbol="gtk_gesture_single_set_touch_only">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureSingle*"/>
+					<parameter name="touch_only" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="button" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="exclusive" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="touch-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkGestureSwipe" parent="GtkGestureSingle" type-name="GtkGestureSwipe" get-type="gtk_gesture_swipe_get_type">
+			<method name="get_velocity" symbol="gtk_gesture_swipe_get_velocity">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureSwipe*"/>
+					<parameter name="velocity_x" type="gdouble*"/>
+					<parameter name="velocity_y" type="gdouble*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_gesture_swipe_new">
+				<return-type type="GtkGesture*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</constructor>
+			<signal name="swipe" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureSwipe*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkGestureZoom" parent="GtkGesture" type-name="GtkGestureZoom" get-type="gtk_gesture_zoom_get_type">
+			<method name="get_scale_delta" symbol="gtk_gesture_zoom_get_scale_delta">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureZoom*"/>
+					<parameter name="scale" type="gdouble*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_gesture_zoom_new">
+				<return-type type="GtkGesture*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</constructor>
+			<signal name="scale-changed" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureZoom*"/>
+					<parameter name="p0" type="gdouble"/>
+				</parameters>
+			</signal>
 		</object>
 		<object name="GtkGrid" parent="GtkContainer" type-name="GtkGrid" get-type="gtk_grid_get_type">
 			<implements>
@@ -21468,6 +22012,7 @@
 			<property name="gtk-keynav-cursor-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-keynav-wrap-around" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-label-select-on-focus" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-long-press-time" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-menu-bar-accel" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-menu-bar-popup-delay" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-menu-images" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>

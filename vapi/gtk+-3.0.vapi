@@ -2001,6 +2001,20 @@ namespace Gtk {
 		public bool visible_window { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class EventController : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected EventController ();
+		public Gdk.EventMask get_event_mask ();
+		public unowned Gtk.Widget get_widget ();
+		public void set_event_mask (Gdk.EventMask event_mask);
+		public Gdk.EventMask event_mask { get; set; }
+		public Gtk.Widget widget { get; construct; }
+		[HasEmitter]
+		public virtual signal bool handle_event (Gdk.Event p0);
+		[HasEmitter]
+		public virtual signal void reset ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Expander : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Expander (string label);
@@ -2274,6 +2288,113 @@ namespace Gtk {
 	public class FrameAccessible : Gtk.ContainerAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected FrameAccessible ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class Gesture : Gtk.EventController {
+		[CCode (has_construct_function = false)]
+		protected Gesture ();
+		public void attach (Gtk.PropagationPhase phase);
+		public void detach ();
+		public bool get_bounding_box (out Gdk.Rectangle rect);
+		public bool get_bounding_box_center (out double x, out double y);
+		public unowned Gdk.Device? get_device ();
+		public GLib.List<weak Gtk.Gesture> get_group ();
+		public unowned Gdk.Event get_last_event (Gdk.EventSequence sequence);
+		public unowned Gdk.EventSequence get_last_updated_sequence ();
+		public bool get_point (Gdk.EventSequence? sequence, out double? x = null, out double? y = null);
+		public Gtk.EventSequenceState get_sequence_state (Gdk.EventSequence sequence);
+		public GLib.List<weak Gdk.EventSequence> get_sequences ();
+		public unowned Gdk.Window? get_window ();
+		public void group (Gtk.Gesture gesture);
+		public bool handles_sequence (Gdk.EventSequence sequence);
+		public bool is_active ();
+		public bool is_grouped_with (Gtk.Gesture other);
+		public bool is_recognized ();
+		public bool set_sequence_state (Gdk.EventSequence sequence, Gtk.EventSequenceState state);
+		public bool set_state (Gtk.EventSequenceState state);
+		public void set_window (Gdk.Window? window);
+		public void ungroup ();
+		[NoAccessorMethod]
+		public uint n_points { get; construct; }
+		public Gdk.Window window { get; set; }
+		public virtual signal void begin (Gdk.EventSequence p0);
+		public virtual signal void cancel (Gdk.EventSequence p0);
+		public virtual signal void end (Gdk.EventSequence p0);
+		public virtual signal void sequence_state_changed (Gdk.EventSequence p0, Gtk.EventSequenceState p1);
+		public virtual signal void update (Gdk.EventSequence p0);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class GestureDrag : Gtk.GestureSingle {
+		[CCode (has_construct_function = false, type = "GtkGesture*")]
+		public GestureDrag (Gtk.Widget widget);
+		public bool get_offset (out double x, out double y);
+		public bool get_start_point (out double x, out double y);
+		public virtual signal void drag_begin (double p0, double p1);
+		public virtual signal void drag_end (double p0, double p1);
+		public virtual signal void drag_update (double p0, double p1);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class GestureLongPress : Gtk.GestureSingle {
+		[CCode (has_construct_function = false, type = "GtkGesture*")]
+		public GestureLongPress (Gtk.Widget widget);
+		public virtual signal void cancelled ();
+		public virtual signal void pressed (double p0, double p1);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class GestureMultiPress : Gtk.GestureSingle {
+		[CCode (has_construct_function = false, type = "GtkGesture*")]
+		public GestureMultiPress (Gtk.Widget widget);
+		public bool get_area (out Gdk.Rectangle rect);
+		public void set_area (Gdk.Rectangle rect);
+		public virtual signal void pressed (int p0, double p1, double p2);
+		public virtual signal void released (int p0, double p1, double p2);
+		public virtual signal void stopped ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class GesturePan : Gtk.GestureDrag {
+		[CCode (has_construct_function = false, type = "GtkGesture*")]
+		public GesturePan (Gtk.Widget widget, Gtk.PanOrientation orientation);
+		public Gtk.PanOrientation get_orientation ();
+		public void set_orientation (Gtk.PanOrientation orientation);
+		public Gtk.PanOrientation orientation { get; set; }
+		public virtual signal void pan (Gtk.PanDirection p0, double p1);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class GestureRotate : Gtk.Gesture {
+		[CCode (has_construct_function = false, type = "GtkGesture*")]
+		public GestureRotate (Gtk.Widget widget);
+		public bool get_angle_delta (out double delta);
+		public virtual signal void angle_changed (double p0, double p1);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class GestureSingle : Gtk.Gesture {
+		[CCode (has_construct_function = false)]
+		protected GestureSingle ();
+		public uint get_button ();
+		public uint get_current_button ();
+		public unowned Gdk.EventSequence get_current_sequence ();
+		public bool get_exclusive ();
+		public bool get_touch_only ();
+		public void set_button (uint button);
+		public void set_exclusive (bool exclusive);
+		public void set_touch_only (bool touch_only);
+		public uint button { get; set; }
+		public bool exclusive { get; set; }
+		public bool touch_only { get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class GestureSwipe : Gtk.GestureSingle {
+		[CCode (has_construct_function = false, type = "GtkGesture*")]
+		public GestureSwipe (Gtk.Widget widget);
+		public bool get_velocity (double velocity_x, double velocity_y);
+		public virtual signal void swipe (double p0, double p1);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class GestureZoom : Gtk.Gesture {
+		[CCode (has_construct_function = false, type = "GtkGesture*")]
+		public GestureZoom (Gtk.Widget widget);
+		public bool get_scale_delta (double scale);
+		public virtual signal void scale_changed (double p0);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_gradient_ref", type_id = "gtk_gradient_get_type ()", unref_function = "gtk_gradient_unref")]
 	[Compact]
@@ -4418,6 +4539,8 @@ namespace Gtk {
 		public bool gtk_keynav_wrap_around { get; set; }
 		[NoAccessorMethod]
 		public bool gtk_label_select_on_focus { get; set; }
+		[NoAccessorMethod]
+		public uint gtk_long_press_time { get; set; }
 		[NoAccessorMethod]
 		public string gtk_menu_bar_accel { owned get; set; }
 		[NoAccessorMethod]
@@ -7678,6 +7801,12 @@ namespace Gtk {
 		PRIMARY,
 		SECONDARY
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_EVENT_SEQUENCE_")]
+	public enum EventSequenceState {
+		NONE,
+		CLAIMED,
+		DENIED
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_EXPANDER_")]
 	public enum ExpanderStyle {
 		COLLAPSED,
@@ -7914,6 +8043,18 @@ namespace Gtk {
 		EVEN,
 		ODD
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PAN_DIRECTION_")]
+	public enum PanDirection {
+		LEFT,
+		RIGHT,
+		UP,
+		DOWN
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PAN_ORIENTATION_")]
+	public enum PanOrientation {
+		VERTICAL,
+		HORIZONTAL
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PATH_PRIO_")]
 	public enum PathPriorityType {
 		LOWEST,
@@ -8001,6 +8142,13 @@ namespace Gtk {
 		PRINTING,
 		FINISHED,
 		FINISHED_ABORTED
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PHASE_")]
+	public enum PropagationPhase {
+		NONE,
+		CAPTURE,
+		BUBBLE,
+		TARGET
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RC_")]
 	[Flags]
