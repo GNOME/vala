@@ -2246,7 +2246,11 @@ public class Vala.GirParser : CodeVisitor {
 		closure_idx = -1;
 		destroy_idx = -1;
 
-		start_element ("parameter");
+		string element_type = reader.name;
+		if (current_token != MarkupTokenType.START_ELEMENT || (element_type != "parameter" && element_type != "instance-parameter")) {
+			Report.error (get_current_src (), "expected start element of `parameter' or `instance-parameter'");
+		}
+		start_element (element_type);
 		string name = reader.get_attribute ("name");
 		if (name == null) {
 			name = default_name;
@@ -2337,7 +2341,7 @@ public class Vala.GirParser : CodeVisitor {
 				param.initializer = null;
 			}
 		}
-		end_element ("parameter");
+		end_element (element_type);
 		return param;
 	}
 
@@ -2972,7 +2976,8 @@ public class Vala.GirParser : CodeVisitor {
 			next ();
 
 			while (current_token == MarkupTokenType.START_ELEMENT) {
-				if (reader.name == "instance-parameter") {
+				if (reader.name == "instance-parameter" &&
+				    !(symbol_type == "function" || symbol_type == "constructor")) {
 					skip_element ();
 					continue;
 				}
