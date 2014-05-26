@@ -5230,39 +5230,22 @@ namespace Clutter {
 	[Deprecated (since = "1.12")]
 	public class Animator : GLib.Object, Clutter.Scriptable {
 		[CCode (has_construct_function = false)]
-		[Deprecated (since = "1.12")]
 		public Animator ();
-		[Deprecated (since = "1.12")]
 		public bool compute_value (GLib.Object object, string property_name, double progress, GLib.Value value);
-		[Deprecated (since = "1.12")]
 		public uint get_duration ();
-		[Deprecated (since = "1.12")]
 		public GLib.List<weak Clutter.AnimatorKey> get_keys (GLib.Object? object, string? property_name, double progress);
-		[Deprecated (since = "1.12")]
 		public unowned Clutter.Timeline get_timeline ();
-		[Deprecated (since = "1.12")]
 		public bool property_get_ease_in (GLib.Object object, string property_name);
-		[Deprecated (since = "1.12")]
 		public Clutter.Interpolation property_get_interpolation (GLib.Object object, string property_name);
-		[Deprecated (since = "1.12")]
 		public void property_set_ease_in (GLib.Object object, string property_name, bool ease_in);
-		[Deprecated (since = "1.12")]
 		public void property_set_interpolation (GLib.Object object, string property_name, Clutter.Interpolation interpolation);
-		[Deprecated (since = "1.12")]
 		public void remove_key (GLib.Object? object, string? property_name, double progress);
-		[Deprecated (since = "1.12")]
 		public void @set (void* first_object, string first_property_name, uint first_mode, ...);
-		[Deprecated (since = "1.12")]
 		public void set_duration (uint duration);
-		[Deprecated (since = "1.12")]
 		public unowned Clutter.Animator set_key (GLib.Object object, string property_name, uint mode, double progress, GLib.Value value);
-		[Deprecated (since = "1.12")]
 		public void set_timeline (Clutter.Timeline timeline);
-		[Deprecated (since = "1.12")]
 		public unowned Clutter.Timeline start ();
-		[Deprecated (since = "1.12")]
 		public uint duration { get; set; }
-		[Deprecated (since = "1.12")]
 		public Clutter.Timeline timeline { get; set; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_animator_key_get_type ()")]
@@ -5333,49 +5316,31 @@ namespace Clutter {
 	public abstract class Behaviour : GLib.Object, Clutter.Scriptable {
 		[CCode (has_construct_function = false)]
 		protected Behaviour ();
-		[Deprecated (since = "1.6")]
 		public void actors_foreach (Clutter.BehaviourForeachFunc func);
 		[NoWrapper]
 		public virtual void alpha_notify (double alpha_value);
-		[Deprecated (since = "1.6")]
 		public void apply (Clutter.Actor actor);
-		[Deprecated (since = "1.6")]
 		public GLib.SList<weak Clutter.Actor> get_actors ();
-		[Deprecated (since = "1.6")]
 		public unowned Clutter.Alpha get_alpha ();
-		[Deprecated (since = "1.6")]
 		public int get_n_actors ();
-		[Deprecated (since = "1.6")]
 		public unowned Clutter.Actor get_nth_actor (int index_);
-		[Deprecated (since = "1.6")]
 		public bool is_applied (Clutter.Actor actor);
-		[Deprecated (since = "1.6")]
 		public void remove (Clutter.Actor actor);
-		[Deprecated (since = "1.6")]
 		public void remove_all ();
-		[Deprecated (since = "1.6")]
 		public void set_alpha (Clutter.Alpha alpha);
-		[Deprecated (since = "1.6")]
 		public Clutter.Alpha alpha { get; set; }
-		[Deprecated (since = "1.6")]
 		public virtual signal void applied (Clutter.Actor actor);
-		[Deprecated (since = "1.6")]
 		public virtual signal void removed (Clutter.Actor actor);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_behaviour_depth_get_type ()")]
 	[Deprecated (since = "1.6")]
 	public class BehaviourDepth : Clutter.Behaviour, Clutter.Scriptable {
 		[CCode (has_construct_function = false, type = "ClutterBehaviour*")]
-		[Deprecated (since = "1.6")]
 		public BehaviourDepth (Clutter.Alpha? alpha, int depth_start, int depth_end);
-		[Deprecated (since = "1.6")]
 		public void get_bounds (out int depth_start, out int depth_end);
-		[Deprecated (since = "1.6")]
 		public void set_bounds (int depth_start, int depth_end);
-		[Deprecated (since = "1.6")]
 		[NoAccessorMethod]
 		public int depth_end { get; set; }
-		[Deprecated (since = "1.6")]
 		[NoAccessorMethod]
 		public int depth_start { get; set; }
 	}
@@ -5418,16 +5383,11 @@ namespace Clutter {
 	[Deprecated (since = "1.6")]
 	public class BehaviourOpacity : Clutter.Behaviour, Clutter.Scriptable {
 		[CCode (has_construct_function = false, type = "ClutterBehaviour*")]
-		[Deprecated (since = "1.6")]
 		public BehaviourOpacity (Clutter.Alpha? alpha, uint8 opacity_start, uint8 opacity_end);
-		[Deprecated (since = "1.6")]
 		public void get_bounds (out uint8 opacity_start, out uint8 opacity_end);
-		[Deprecated (since = "1.6")]
 		public void set_bounds (uint8 opacity_start, uint8 opacity_end);
-		[Deprecated (since = "1.6")]
 		[NoAccessorMethod]
 		public uint opacity_end { get; set; }
-		[Deprecated (since = "1.6")]
 		[NoAccessorMethod]
 		public uint opacity_start { get; set; }
 	}
@@ -5435,20 +5395,14 @@ namespace Clutter {
 	[Deprecated (since = "1.6")]
 	public class BehaviourPath : Clutter.Behaviour, Clutter.Scriptable {
 		[CCode (has_construct_function = false, type = "ClutterBehaviour*")]
-		[Deprecated (since = "1.6")]
 		public BehaviourPath (Clutter.Alpha? alpha, Clutter.Path path);
-		[Deprecated (since = "1.6")]
 		public unowned Clutter.Path get_path ();
-		[Deprecated (since = "1.6")]
 		public void set_path (Clutter.Path path);
 		[CCode (has_construct_function = false, type = "ClutterBehaviour*")]
-		[Deprecated (since = "1.6")]
 		public BehaviourPath.with_description (Clutter.Alpha? alpha, string desc);
 		[CCode (has_construct_function = false, type = "ClutterBehaviour*")]
-		[Deprecated (since = "1.6")]
 		public BehaviourPath.with_knots (Clutter.Alpha? alpha, [CCode (array_length_cname = "n_knots", array_length_pos = 2.1, array_length_type = "guint")] Clutter.Knot[] knots);
 		public Clutter.Path path { get; set; }
-		[Deprecated (since = "1.6")]
 		public virtual signal void knot_reached (uint knot_num);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_behaviour_rotate_get_type ()")]
@@ -5481,22 +5435,15 @@ namespace Clutter {
 	[Deprecated (since = "1.6")]
 	public class BehaviourScale : Clutter.Behaviour, Clutter.Scriptable {
 		[CCode (has_construct_function = false, type = "ClutterBehaviour*")]
-		[Deprecated (since = "1.6")]
 		public BehaviourScale (Clutter.Alpha? alpha, double x_scale_start, double y_scale_start, double x_scale_end, double y_scale_end);
-		[Deprecated (since = "1.6")]
 		public void get_bounds (out double x_scale_start, out double y_scale_start, out double x_scale_end, out double y_scale_end);
-		[Deprecated (since = "1.6")]
 		public void set_bounds (double x_scale_start, double y_scale_start, double x_scale_end, double y_scale_end);
-		[Deprecated (since = "1.6")]
 		[NoAccessorMethod]
 		public double x_scale_end { get; set; }
-		[Deprecated (since = "1.6")]
 		[NoAccessorMethod]
 		public double x_scale_start { get; set; }
-		[Deprecated (since = "1.6")]
 		[NoAccessorMethod]
 		public double y_scale_end { get; set; }
-		[Deprecated (since = "1.6")]
 		[NoAccessorMethod]
 		public double y_scale_start { get; set; }
 	}
@@ -5656,37 +5603,24 @@ namespace Clutter {
 	[Deprecated (since = "1.12")]
 	public class CairoTexture : Clutter.Texture, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
-		[Deprecated (since = "1.12")]
 		public CairoTexture (uint width, uint height);
-		[Deprecated (since = "1.12")]
 		public void clear ();
 		[Deprecated (since = "1.8")]
 		public Cairo.Context create ();
 		[Deprecated (since = "1.8")]
 		public Cairo.Context create_region (int x_offset, int y_offset, int width, int height);
-		[Deprecated (since = "1.12")]
 		public bool get_auto_resize ();
-		[Deprecated (since = "1.12")]
 		public void get_surface_size (out uint width, out uint height);
-		[Deprecated (since = "1.12")]
 		public void invalidate ();
-		[Deprecated (since = "1.12")]
 		public void invalidate_rectangle (Cairo.RectangleInt? rect);
-		[Deprecated (since = "1.12")]
 		public void set_auto_resize (bool value);
-		[Deprecated (since = "1.12")]
 		public void set_surface_size (uint width, uint height);
-		[Deprecated (since = "1.12")]
 		public bool auto_resize { get; set; }
-		[Deprecated (since = "1.12")]
 		[NoAccessorMethod]
 		public uint surface_height { get; set; }
-		[Deprecated (since = "1.12")]
 		[NoAccessorMethod]
 		public uint surface_width { get; set; }
-		[Deprecated (since = "1.12")]
 		public virtual signal Cairo.Surface create_surface (uint width, uint height);
-		[Deprecated (since = "1.12")]
 		public virtual signal bool draw (Cairo.Context cr);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_canvas_get_type ()")]
@@ -6585,45 +6519,27 @@ namespace Clutter {
 	[Deprecated (since = "1.8")]
 	public class Shader : GLib.Object {
 		[CCode (has_construct_function = false)]
-		[Deprecated (since = "1.8")]
 		public Shader ();
-		[Deprecated (since = "1.8")]
 		public bool compile () throws GLib.Error;
 		public static GLib.Quark error_quark ();
-		[Deprecated (since = "1.8")]
 		public unowned Cogl.Handle get_cogl_fragment_shader ();
-		[Deprecated (since = "1.8")]
 		public unowned Cogl.Handle get_cogl_program ();
-		[Deprecated (since = "1.8")]
 		public unowned Cogl.Handle get_cogl_vertex_shader ();
-		[Deprecated (since = "1.8")]
 		public unowned string get_fragment_source ();
-		[Deprecated (since = "1.8")]
 		public bool get_is_enabled ();
-		[Deprecated (since = "1.8")]
 		public unowned string get_vertex_source ();
-		[Deprecated (since = "1.8")]
 		public bool is_compiled ();
-		[Deprecated (since = "1.8")]
 		public void release ();
-		[Deprecated (since = "1.8")]
 		public void set_fragment_source (string data, ssize_t length);
-		[Deprecated (since = "1.8")]
 		public void set_is_enabled (bool enabled);
-		[Deprecated (since = "1.8")]
 		public void set_uniform (string name, GLib.Value value);
-		[Deprecated (since = "1.8")]
 		public void set_vertex_source (string data, ssize_t length);
-		[Deprecated (since = "1.8")]
 		[NoAccessorMethod]
 		public bool compiled { get; }
-		[Deprecated (since = "1.8")]
 		[NoAccessorMethod]
 		public bool enabled { get; set; }
-		[Deprecated (since = "1.8")]
 		[NoAccessorMethod]
 		public string fragment_source { owned get; set; }
-		[Deprecated (since = "1.8")]
 		[NoAccessorMethod]
 		public string vertex_source { owned get; set; }
 	}
@@ -6851,13 +6767,10 @@ namespace Clutter {
 	[Deprecated (since = "1.18")]
 	public class TableLayout : Clutter.LayoutManager {
 		[CCode (has_construct_function = false, type = "ClutterLayoutManager*")]
-		[Deprecated (since = "1.18")]
 		public TableLayout ();
 		[Deprecated (since = "1.12")]
 		public void get_alignment (Clutter.Actor actor, out Clutter.TableAlignment x_align, out Clutter.TableAlignment y_align);
-		[Deprecated (since = "1.18")]
 		public int get_column_count ();
-		[Deprecated (since = "1.18")]
 		public uint get_column_spacing ();
 		[Deprecated (since = "1.12")]
 		public uint get_easing_duration ();
@@ -6867,19 +6780,14 @@ namespace Clutter {
 		public void get_expand (Clutter.Actor actor, out bool x_expand, out bool y_expand);
 		[Deprecated (since = "1.12")]
 		public void get_fill (Clutter.Actor actor, out bool x_fill, out bool y_fill);
-		[Deprecated (since = "1.18")]
 		public int get_row_count ();
-		[Deprecated (since = "1.18")]
 		public uint get_row_spacing ();
-		[Deprecated (since = "1.18")]
 		public void get_span (Clutter.Actor actor, out int column_span, out int row_span);
 		[Deprecated (since = "1.12")]
 		public bool get_use_animations ();
-		[Deprecated (since = "1.18")]
 		public void pack (Clutter.Actor actor, int column, int row);
 		[Deprecated (since = "1.12")]
 		public void set_alignment (Clutter.Actor actor, Clutter.TableAlignment x_align, Clutter.TableAlignment y_align);
-		[Deprecated (since = "1.18")]
 		public void set_column_spacing (uint spacing);
 		[Deprecated (since = "1.12")]
 		public void set_easing_duration (uint msecs);
@@ -6889,19 +6797,15 @@ namespace Clutter {
 		public void set_expand (Clutter.Actor actor, bool x_expand, bool y_expand);
 		[Deprecated (since = "1.12")]
 		public void set_fill (Clutter.Actor actor, bool x_fill, bool y_fill);
-		[Deprecated (since = "1.18")]
 		public void set_row_spacing (uint spacing);
-		[Deprecated (since = "1.18")]
 		public void set_span (Clutter.Actor actor, int column_span, int row_span);
 		[Deprecated (since = "1.12")]
 		public void set_use_animations (bool animate);
-		[Deprecated (since = "1.18")]
 		public uint column_spacing { get; set; }
 		[Deprecated (since = "1.12")]
 		public uint easing_duration { get; set; }
 		[Deprecated (since = "1.12")]
 		public ulong easing_mode { get; set; }
-		[Deprecated (since = "1.18")]
 		public uint row_spacing { get; set; }
 		[Deprecated (since = "1.12")]
 		public bool use_animations { get; set; }
@@ -7222,9 +7126,7 @@ namespace Clutter {
 	public class TimeoutPool {
 		[CCode (has_construct_function = false)]
 		public TimeoutPool (int priority);
-		[Deprecated (since = "1.6")]
 		public uint add (uint fps, owned GLib.SourceFunc func);
-		[Deprecated (since = "1.6")]
 		public void remove (uint id_);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_transition_get_type ()")]
@@ -7557,9 +7459,7 @@ namespace Clutter {
 		public int y;
 		public uint width;
 		public uint height;
-		[Deprecated (since = "1.16")]
 		public bool intersects (Clutter.Geometry geometry1);
-		[Deprecated (since = "1.16")]
 		public Clutter.Geometry union (Clutter.Geometry geometry_b);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]

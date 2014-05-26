@@ -524,6 +524,11 @@ public class Vala.GirParser : CodeVisitor {
 		// alias-specific
 		public DataType base_type;
 
+		public bool deprecated = false;
+		public uint64 deprecated_version = 0;
+		public string? deprecated_since = null;
+		public string? deprecated_replacement = null;
+
 		public Node (string? name) {
 			this.name = name;
 		}
@@ -748,6 +753,26 @@ public class Vala.GirParser : CodeVisitor {
 				return symbol.source_reference.file.get_cinclude_filename ();
 			}
 			return "";
+		}
+
+		private static uint64 parse_version_string (string version) {
+			int64 res = 0;
+			int shift = 16;
+			string[] tokens = version.split (".", 3);
+
+			foreach (unowned string token in tokens) {
+				int64 t;
+
+				if (!int64.try_parse (token, out t))
+					return 0;
+				if (t > 0xffff)
+					return 0;
+
+				res |= (t << shift);
+				shift -= 8;
+			}
+
+			return res;
 		}
 
 		public void process (GirParser parser) {
@@ -1035,21 +1060,29 @@ public class Vala.GirParser : CodeVisitor {
 					}
 				}
 
-				// deprecation
+				// deprecated
 				if (metadata.has_argument (ArgumentType.REPLACEMENT)) {
-					symbol.set_attribute_string ("Deprecated", "replacement", metadata.get_string (ArgumentType.REPLACEMENT));
+					deprecated = true;
+					deprecated_replacement = metadata.get_string (ArgumentType.REPLACEMENT);
 				}
 				if (metadata.has_argument (ArgumentType.DEPRECATED_SINCE)) {
-					symbol.set_attribute_string ("Deprecated", "since",  metadata.get_string (ArgumentType.DEPRECATED_SINCE));
+					deprecated = true;
+					deprecated_since = metadata.get_string (ArgumentType.DEPRECATED_SINCE);
 				} else if (girdata["deprecated-version"] != null) {
-					symbol.set_attribute_string ("Deprecated", "since", girdata.get ("deprecated-version"));
+					deprecated = true;
+					deprecated_since = girdata.get ("deprecated-version");
 				}
 				if (metadata.has_argument (ArgumentType.DEPRECATED)) {
-					if (metadata.get_bool (ArgumentType.DEPRECATED)) {						
-						symbol.set_attribute ("Deprecated", true);
+					deprecated = metadata.get_bool (ArgumentType.DEPRECATED, true);
+					if (!deprecated) {
+						deprecated_since = null;
+						deprecated_replacement = null;
 					}
 				} else if (girdata["deprecated"] != null) {
-					symbol.set_attribute ("Deprecated", true);
+					deprecated = true;
+				}
+				if (deprecated_since != null) {
+					deprecated_version = parse_version_string (deprecated_since);
 				}
 
 				// experimental
@@ -1090,6 +1123,23 @@ public class Vala.GirParser : CodeVisitor {
 
 			if (!(new_symbol && merged) && is_container (symbol)) {
 				foreach (var node in members) {
+					if (this.deprecated_version > 0 && node.deprecated_version > 0) {
+						if (this.deprecated_version <= node.deprecated_version) {
+							node.deprecated = false;
+							node.deprecated_since = null;
+							node.deprecated_replacement = null;
+						}
+					}
+					if (node.deprecated) {
+						node.symbol.set_attribute ("Deprecated", true);
+					}
+					if (node.deprecated_since != null) {
+						node.symbol.set_attribute_string ("Deprecated", "since", node.deprecated_since);
+					}
+					if (node.deprecated_replacement != null) {
+						node.symbol.set_attribute_string ("Deprecated", "replacement", node.deprecated_replacement);
+					}
+
 					if (node.new_symbol && !node.merged && !metadata.get_bool (ArgumentType.HIDDEN)) {
 						add_symbol_to_container (symbol, node.symbol);
 					}
