@@ -78,7 +78,8 @@ public class Vala.GirParser : CodeVisitor {
 		INSTANCE_IDX,
 		EXPERIMENTAL,
 		FLOATING,
-		TYPE_ID;
+		TYPE_ID,
+		RETURN_VOID;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -3440,8 +3441,10 @@ public class Vala.GirParser : CodeVisitor {
 					if (last_param.param.variable_type is UnresolvedType) {
 						var st = resolve_symbol (node.parent, ((UnresolvedType) last_param.param.variable_type).unresolved_symbol) as Struct;
 						if (st != null && !st.is_simple_type () && !last_param.param.variable_type.nullable) {
-							last_param.keep = false;
-							return_type = last_param.param.variable_type.copy ();
+							if (!node.metadata.get_bool (ArgumentType.RETURN_VOID, false)) {
+								last_param.keep = false;
+								return_type = last_param.param.variable_type.copy ();
+							}
 						}
 					}
 				}
