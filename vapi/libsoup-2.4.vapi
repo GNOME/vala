@@ -207,6 +207,7 @@ namespace Soup {
 		public uint8[] data;
 		public size_t length;
 		[CCode (has_construct_function = false)]
+		[Deprecated (replacement = "Buffer.take", since = "2.32")]
 		public Buffer (Soup.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 2.1, array_length_type = "gsize", type = "gconstpointer")] uint8[] data);
 		public Soup.Buffer copy ();
 		public void free ();
@@ -465,6 +466,7 @@ namespace Soup {
 		public int64 length;
 		[CCode (has_construct_function = false)]
 		public MessageBody ();
+		[Deprecated (replacement = "MessageBody.append_take", since = "2.32")]
 		public void append (Soup.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] data);
 		public void append_buffer (Soup.Buffer buffer);
 		public void append_take ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);

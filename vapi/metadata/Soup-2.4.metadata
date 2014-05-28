@@ -86,3 +86,9 @@ xmlrpc_request_new sentinel="G_TYPE_INVALID"
 xmlrpc_set_fault printf_format
 xmlrpc_set_response sentinel="G_TYPE_INVALID"
 xmlrpc_build_fault printf_format
+
+// Simplify memory management
+Buffer
+  .new deprecated_since="2.32" replacement="Buffer.take"
+MessageBody
+  .append deprecated_since="2.32" replacement="MessageBody.append_take"
