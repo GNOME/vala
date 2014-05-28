@@ -4,10 +4,8 @@ BASE_* name="BASE_(.+)"
 
 // Fields
 BitReader
-  .data array array_length_field="size"
   .size skip
 ByteReader
-  .data array array_length_field="size"
   .size skip
 ByteWriter struct=false
   .new* skip=false
@@ -15,3 +13,7 @@ ByteWriter struct=false
 // Non-boxed types
 BitReader struct=false
 ByteReader struct=false
+
+// Backwards compatibility
+Adapter
+  .copy skip=false

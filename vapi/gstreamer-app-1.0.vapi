@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstApp", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace App {
-		[CCode (cheader_filename = "gst/app/gstappsink.h,gst/app/gstappsrc.h", type_id = "gst_app_sink_get_type ()")]
+		[CCode (cheader_filename = "gst/app/app.h", type_id = "gst_app_sink_get_type ()")]
 		[GIR (name = "AppSink")]
 		public class Sink : Gst.Base.Sink, Gst.URIHandler {
 			[CCode (has_construct_function = false)]
@@ -30,12 +30,13 @@ namespace Gst {
 			[HasEmitter]
 			public virtual signal Gst.Sample pull_sample ();
 		}
-		[CCode (cheader_filename = "gst/app/gstappsink.h,gst/app/gstappsrc.h", type_id = "gst_app_src_get_type ()")]
+		[CCode (cheader_filename = "gst/app/app.h", type_id = "gst_app_src_get_type ()")]
 		[GIR (name = "AppSrc")]
 		public class Src : Gst.Base.Src, Gst.URIHandler {
 			[CCode (has_construct_function = false)]
 			protected Src ();
 			public Gst.Caps get_caps ();
+			public uint64 get_current_level_bytes ();
 			public bool get_emit_signals ();
 			public void get_latency (uint64 min, uint64 max);
 			public uint64 get_max_bytes ();
@@ -50,6 +51,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public bool block { get; set; }
 			public Gst.Caps caps { owned get; set; }
+			public uint64 current_level_bytes { get; }
 			public bool emit_signals { get; set; }
 			[NoAccessorMethod]
 			public Gst.Format format { get; set; }
@@ -72,7 +74,7 @@ namespace Gst {
 			public virtual signal Gst.FlowReturn push_buffer (Gst.Buffer buffer);
 			public virtual signal bool seek_data (uint64 offset);
 		}
-		[CCode (cheader_filename = "gst/app/gstappsink.h,gst/app/gstappsrc.h", cprefix = "GST_APP_STREAM_TYPE_", type_id = "gst_app_stream_type_get_type ()")]
+		[CCode (cheader_filename = "gst/app/app.h", cprefix = "GST_APP_STREAM_TYPE_", type_id = "gst_app_stream_type_get_type ()")]
 		[GIR (name = "AppStreamType")]
 		public enum StreamType {
 			STREAM,

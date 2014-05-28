@@ -3,29 +3,29 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstController", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace Controller {
-		[CCode (cheader_filename = "gst/controller/gstargbcontrolbinding.h,gst/controller/gstdirectcontrolbinding.h,gst/controller/gstinterpolationcontrolsource.h,gst/controller/gstlfocontrolsource.h,gst/controller/gsttimedvaluecontrolsource.h,gst/controller/gsttriggercontrolsource.h", cname = "GstARGBControlBinding", type_id = "gst_argb_control_binding_get_type ()")]
+		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstARGBControlBinding", type_id = "gst_argb_control_binding_get_type ()")]
 		[GIR (name = "ARGBControlBinding")]
 		public class ARGBControlBinding : Gst.ControlBinding {
 			[CCode (cname = "gst_argb_control_binding_new", has_construct_function = false, type = "GstControlBinding*")]
 			public ARGBControlBinding (Gst.Object object, string property_name, Gst.ControlSource cs_a, Gst.ControlSource cs_r, Gst.ControlSource cs_g, Gst.ControlSource cs_b);
 			[NoAccessorMethod]
-			public Gst.ControlSource control_source_a { owned get; construct; }
+			public Gst.ControlSource control_source_a { owned get; set construct; }
 			[NoAccessorMethod]
-			public Gst.ControlSource control_source_b { owned get; construct; }
+			public Gst.ControlSource control_source_b { owned get; set construct; }
 			[NoAccessorMethod]
-			public Gst.ControlSource control_source_g { owned get; construct; }
+			public Gst.ControlSource control_source_g { owned get; set construct; }
 			[NoAccessorMethod]
-			public Gst.ControlSource control_source_r { owned get; construct; }
+			public Gst.ControlSource control_source_r { owned get; set construct; }
 		}
-		[CCode (cheader_filename = "gst/controller/gstargbcontrolbinding.h,gst/controller/gstdirectcontrolbinding.h,gst/controller/gstinterpolationcontrolsource.h,gst/controller/gstlfocontrolsource.h,gst/controller/gsttimedvaluecontrolsource.h,gst/controller/gsttriggercontrolsource.h", cname = "GstDirectControlBinding", type_id = "gst_direct_control_binding_get_type ()")]
+		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstDirectControlBinding", type_id = "gst_direct_control_binding_get_type ()")]
 		[GIR (name = "DirectControlBinding")]
 		public class DirectControlBinding : Gst.ControlBinding {
 			[CCode (cname = "gst_direct_control_binding_new", has_construct_function = false, type = "GstControlBinding*")]
 			public DirectControlBinding (Gst.Object object, string property_name, Gst.ControlSource cs);
 			[NoAccessorMethod]
-			public Gst.ControlSource control_source { owned get; construct; }
+			public Gst.ControlSource control_source { owned get; set construct; }
 		}
-		[CCode (cheader_filename = "gst/controller/gstargbcontrolbinding.h,gst/controller/gstdirectcontrolbinding.h,gst/controller/gstinterpolationcontrolsource.h,gst/controller/gstlfocontrolsource.h,gst/controller/gsttimedvaluecontrolsource.h,gst/controller/gsttriggercontrolsource.h", cname = "GstInterpolationControlSource", type_id = "gst_interpolation_control_source_get_type ()")]
+		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstInterpolationControlSource", type_id = "gst_interpolation_control_source_get_type ()")]
 		[GIR (name = "InterpolationControlSource")]
 		public class InterpolationControlSource : Gst.Controller.TimedValueControlSource {
 			[CCode (cname = "gst_interpolation_control_source_new", has_construct_function = false, type = "GstControlSource*")]
@@ -33,7 +33,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public Gst.Controller.InterpolationMode mode { get; set; }
 		}
-		[CCode (cheader_filename = "gst/controller/gstargbcontrolbinding.h,gst/controller/gstdirectcontrolbinding.h,gst/controller/gstinterpolationcontrolsource.h,gst/controller/gstlfocontrolsource.h,gst/controller/gsttimedvaluecontrolsource.h,gst/controller/gsttriggercontrolsource.h", cname = "GstLFOControlSource", type_id = "gst_lfo_control_source_get_type ()")]
+		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstLFOControlSource", type_id = "gst_lfo_control_source_get_type ()")]
 		[GIR (name = "LFOControlSource")]
 		public class LFOControlSource : Gst.ControlSource {
 			[CCode (cname = "gst_lfo_control_source_new", has_construct_function = false, type = "GstControlSource*")]
@@ -49,7 +49,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public Gst.Controller.LFOWaveform waveform { get; set; }
 		}
-		[CCode (cheader_filename = "gst/controller/gstargbcontrolbinding.h,gst/controller/gstdirectcontrolbinding.h,gst/controller/gstinterpolationcontrolsource.h,gst/controller/gstlfocontrolsource.h,gst/controller/gsttimedvaluecontrolsource.h,gst/controller/gsttriggercontrolsource.h", cname = "GstTimedValueControlSource", type_id = "gst_timed_value_control_source_get_type ()")]
+		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstTimedValueControlSource", type_id = "gst_timed_value_control_source_get_type ()")]
 		[GIR (name = "TimedValueControlSource")]
 		public abstract class TimedValueControlSource : Gst.ControlSource {
 			public weak GLib.Mutex @lock;
@@ -73,7 +73,7 @@ namespace Gst {
 			[CCode (cname = "gst_timed_value_control_source_unset_all")]
 			public void unset_all ();
 		}
-		[CCode (cheader_filename = "gst/controller/gstargbcontrolbinding.h,gst/controller/gstdirectcontrolbinding.h,gst/controller/gstinterpolationcontrolsource.h,gst/controller/gstlfocontrolsource.h,gst/controller/gsttimedvaluecontrolsource.h,gst/controller/gsttriggercontrolsource.h", cname = "GstTriggerControlSource", type_id = "gst_trigger_control_source_get_type ()")]
+		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstTriggerControlSource", type_id = "gst_trigger_control_source_get_type ()")]
 		[GIR (name = "TriggerControlSource")]
 		public class TriggerControlSource : Gst.Controller.TimedValueControlSource {
 			[CCode (cname = "gst_trigger_control_source_new", has_construct_function = false, type = "GstControlSource*")]
@@ -81,7 +81,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public int64 tolerance { get; set; }
 		}
-		[CCode (cheader_filename = "gst/controller/gstargbcontrolbinding.h,gst/controller/gstdirectcontrolbinding.h,gst/controller/gstinterpolationcontrolsource.h,gst/controller/gstlfocontrolsource.h,gst/controller/gsttimedvaluecontrolsource.h,gst/controller/gsttriggercontrolsource.h", cname = "GstControlPoint", has_type_id = false)]
+		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstControlPoint", has_type_id = false)]
 		[GIR (name = "ControlPoint")]
 		public struct ControlPoint {
 			public Gst.ClockTime timestamp;
@@ -91,14 +91,14 @@ namespace Gst {
 			[CCode (cname = "cache.cubic.z")]
 			public double cache_cubic_z;
 		}
-		[CCode (cheader_filename = "gst/controller/gstargbcontrolbinding.h,gst/controller/gstdirectcontrolbinding.h,gst/controller/gstinterpolationcontrolsource.h,gst/controller/gstlfocontrolsource.h,gst/controller/gsttimedvaluecontrolsource.h,gst/controller/gsttriggercontrolsource.h", cname = "GstInterpolationMode", cprefix = "GST_INTERPOLATION_MODE_", type_id = "gst_interpolation_mode_get_type ()")]
+		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstInterpolationMode", cprefix = "GST_INTERPOLATION_MODE_", type_id = "gst_interpolation_mode_get_type ()")]
 		[GIR (name = "InterpolationMode")]
 		public enum InterpolationMode {
 			NONE,
 			LINEAR,
 			CUBIC
 		}
-		[CCode (cheader_filename = "gst/controller/gstargbcontrolbinding.h,gst/controller/gstdirectcontrolbinding.h,gst/controller/gstinterpolationcontrolsource.h,gst/controller/gstlfocontrolsource.h,gst/controller/gsttimedvaluecontrolsource.h,gst/controller/gsttriggercontrolsource.h", cname = "GstLFOWaveform", cprefix = "GST_LFO_WAVEFORM_", type_id = "gst_lfo_waveform_get_type ()")]
+		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstLFOWaveform", cprefix = "GST_LFO_WAVEFORM_", type_id = "gst_lfo_waveform_get_type ()")]
 		[GIR (name = "LFOWaveform")]
 		public enum LFOWaveform {
 			SINE,
@@ -107,11 +107,11 @@ namespace Gst {
 			REVERSE_SAW,
 			TRIANGLE
 		}
-		[CCode (cheader_filename = "gst/controller/gstargbcontrolbinding.h,gst/controller/gstdirectcontrolbinding.h,gst/controller/gstinterpolationcontrolsource.h,gst/controller/gstlfocontrolsource.h,gst/controller/gsttimedvaluecontrolsource.h,gst/controller/gsttriggercontrolsource.h", cname = "GstDirectControlBindingConvertGValue", has_target = false)]
+		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstDirectControlBindingConvertGValue", has_target = false)]
 		public delegate void DirectControlBindingConvertGValue (Gst.Controller.DirectControlBinding self, double src_value, GLib.Value dest_value);
-		[CCode (cheader_filename = "gst/controller/gstargbcontrolbinding.h,gst/controller/gstdirectcontrolbinding.h,gst/controller/gstinterpolationcontrolsource.h,gst/controller/gstlfocontrolsource.h,gst/controller/gsttimedvaluecontrolsource.h,gst/controller/gsttriggercontrolsource.h", cname = "GstDirectControlBindingConvertValue", has_target = false)]
+		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstDirectControlBindingConvertValue", has_target = false)]
 		public delegate void DirectControlBindingConvertValue (Gst.Controller.DirectControlBinding self, double src_value, void* dest_value);
-		[CCode (cheader_filename = "gst/controller/gstargbcontrolbinding.h,gst/controller/gstdirectcontrolbinding.h,gst/controller/gstinterpolationcontrolsource.h,gst/controller/gstlfocontrolsource.h,gst/controller/gsttimedvaluecontrolsource.h,gst/controller/gsttriggercontrolsource.h", cname = "gst_timed_value_control_invalidate_cache")]
+		[CCode (cheader_filename = "gst/controller/controller.h", cname = "gst_timed_value_control_invalidate_cache")]
 		public static void timed_value_control_invalidate_cache (Gst.Controller.TimedValueControlSource self);
 	}
 }

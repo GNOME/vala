@@ -5,35 +5,37 @@ namespace Gst {
 	namespace PbUtils {
 		namespace Codec {
 			namespace AAC {
-				[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_caps_set_level_and_profile")]
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_caps_set_level_and_profile")]
 				public static bool caps_set_level_and_profile (Gst.Caps caps, uint8 audio_config, uint len);
-				[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_level")]
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_index_from_sample_rate")]
+				public static int get_index_from_sample_rate (uint rate);
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_level")]
 				public static unowned string get_level (uint8 audio_config, uint len);
-				[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_profile")]
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_profile")]
 				public static unowned string get_profile (uint8 audio_config, uint len);
-				[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_sample_rate_from_index")]
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_sample_rate_from_index")]
 				public static uint get_sample_rate_from_index (uint sr_idx);
 			}
 			namespace H264 {
-				[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_caps_set_level_and_profile")]
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_caps_set_level_and_profile")]
 				public static bool caps_set_level_and_profile (Gst.Caps caps, uint8 sps, uint len);
-				[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_get_level")]
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_get_level")]
 				public static unowned string get_level (uint8 sps, uint len);
-				[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_get_level_idc")]
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_get_level_idc")]
 				public static uint8 get_level_idc (string level);
-				[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_get_profile")]
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_get_profile")]
 				public static unowned string get_profile (uint8 sps, uint len);
 			}
 			namespace MPEG4Video {
-				[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_codec_utils_mpeg4video_caps_set_level_and_profile")]
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_mpeg4video_caps_set_level_and_profile")]
 				public static bool caps_set_level_and_profile (Gst.Caps caps, uint8 vis_obj_seq, uint len);
-				[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_codec_utils_mpeg4video_get_level")]
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_mpeg4video_get_level")]
 				public static unowned string get_level (uint8 vis_obj_seq, uint len);
-				[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_codec_utils_mpeg4video_get_profile")]
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_mpeg4video_get_profile")]
 				public static unowned string get_profile (uint8 vis_obj_seq, uint len);
 			}
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstDiscoverer", type_id = "gst_discoverer_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscoverer", type_id = "gst_discoverer_get_type ()")]
 		[GIR (name = "Discoverer")]
 		public class Discoverer : GLib.Object {
 			[CCode (cname = "gst_discoverer_new", has_construct_function = false)]
@@ -53,7 +55,7 @@ namespace Gst {
 			public virtual signal void source_setup (Gst.Element source);
 			public virtual signal void starting ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstDiscovererAudioInfo", type_id = "gst_discoverer_audio_info_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererAudioInfo", type_id = "gst_discoverer_audio_info_get_type ()")]
 		[GIR (name = "DiscovererAudioInfo")]
 		public class DiscovererAudioInfo : Gst.PbUtils.DiscovererStreamInfo {
 			[CCode (has_construct_function = false)]
@@ -71,7 +73,7 @@ namespace Gst {
 			[CCode (cname = "gst_discoverer_audio_info_get_sample_rate")]
 			public uint get_sample_rate ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstDiscovererContainerInfo", type_id = "gst_discoverer_container_info_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererContainerInfo", type_id = "gst_discoverer_container_info_get_type ()")]
 		[GIR (name = "DiscovererContainerInfo")]
 		public class DiscovererContainerInfo : Gst.PbUtils.DiscovererStreamInfo {
 			[CCode (has_construct_function = false)]
@@ -79,7 +81,7 @@ namespace Gst {
 			[CCode (cname = "gst_discoverer_container_info_get_streams")]
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_streams ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstDiscovererInfo", type_id = "gst_discoverer_info_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererInfo", type_id = "gst_discoverer_info_get_type ()")]
 		[GIR (name = "DiscovererInfo")]
 		public class DiscovererInfo : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -93,7 +95,10 @@ namespace Gst {
 			[CCode (cname = "gst_discoverer_info_get_duration")]
 			public Gst.ClockTime get_duration ();
 			[CCode (cname = "gst_discoverer_info_get_misc")]
+			[Deprecated]
 			public unowned Gst.Structure get_misc ();
+			[CCode (array_length = false, array_null_terminated = true, cname = "gst_discoverer_info_get_missing_elements_installer_details")]
+			public string[] get_missing_elements_installer_details ();
 			[CCode (cname = "gst_discoverer_info_get_result")]
 			public Gst.PbUtils.DiscovererResult get_result ();
 			[CCode (cname = "gst_discoverer_info_get_seekable")]
@@ -115,7 +120,7 @@ namespace Gst {
 			[CCode (cname = "gst_discoverer_info_get_video_streams")]
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_video_streams ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstDiscovererStreamInfo", type_id = "gst_discoverer_stream_info_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererStreamInfo", type_id = "gst_discoverer_stream_info_get_type ()")]
 		[GIR (name = "DiscovererStreamInfo")]
 		public class DiscovererStreamInfo : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -123,11 +128,14 @@ namespace Gst {
 			[CCode (cname = "gst_discoverer_stream_info_get_caps")]
 			public Gst.Caps get_caps ();
 			[CCode (cname = "gst_discoverer_stream_info_get_misc")]
+			[Deprecated]
 			public unowned Gst.Structure get_misc ();
 			[CCode (cname = "gst_discoverer_stream_info_get_next")]
 			public Gst.PbUtils.DiscovererStreamInfo get_next ();
 			[CCode (cname = "gst_discoverer_stream_info_get_previous")]
 			public Gst.PbUtils.DiscovererStreamInfo get_previous ();
+			[CCode (cname = "gst_discoverer_stream_info_get_stream_id")]
+			public unowned string get_stream_id ();
 			[CCode (cname = "gst_discoverer_stream_info_get_stream_type_nick")]
 			public unowned string get_stream_type_nick ();
 			[CCode (cname = "gst_discoverer_stream_info_get_tags")]
@@ -137,7 +145,7 @@ namespace Gst {
 			[CCode (cname = "gst_discoverer_stream_info_list_free")]
 			public static void list_free (GLib.List<Gst.PbUtils.DiscovererStreamInfo> infos);
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstDiscovererSubtitleInfo", type_id = "gst_discoverer_subtitle_info_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererSubtitleInfo", type_id = "gst_discoverer_subtitle_info_get_type ()")]
 		[GIR (name = "DiscovererSubtitleInfo")]
 		public class DiscovererSubtitleInfo : Gst.PbUtils.DiscovererStreamInfo {
 			[CCode (has_construct_function = false)]
@@ -145,7 +153,7 @@ namespace Gst {
 			[CCode (cname = "gst_discoverer_subtitle_info_get_language")]
 			public unowned string get_language ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstDiscovererVideoInfo", type_id = "gst_discoverer_video_info_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererVideoInfo", type_id = "gst_discoverer_video_info_get_type ()")]
 		[GIR (name = "DiscovererVideoInfo")]
 		public class DiscovererVideoInfo : Gst.PbUtils.DiscovererStreamInfo {
 			[CCode (has_construct_function = false)]
@@ -173,13 +181,13 @@ namespace Gst {
 			[CCode (cname = "gst_discoverer_video_info_is_interlaced")]
 			public bool is_interlaced ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstEncodingAudioProfile", type_id = "gst_encoding_audio_profile_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingAudioProfile", type_id = "gst_encoding_audio_profile_get_type ()")]
 		[GIR (name = "EncodingAudioProfile")]
 		public class EncodingAudioProfile : Gst.PbUtils.EncodingProfile {
 			[CCode (cname = "gst_encoding_audio_profile_new", has_construct_function = false)]
 			public EncodingAudioProfile (Gst.Caps format, string? preset, Gst.Caps? restriction, uint presence);
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstEncodingContainerProfile", type_id = "gst_encoding_container_profile_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingContainerProfile", type_id = "gst_encoding_container_profile_get_type ()")]
 		[GIR (name = "EncodingContainerProfile")]
 		public class EncodingContainerProfile : Gst.PbUtils.EncodingProfile {
 			[CCode (cname = "gst_encoding_container_profile_new", has_construct_function = false)]
@@ -191,7 +199,7 @@ namespace Gst {
 			[CCode (cname = "gst_encoding_container_profile_get_profiles")]
 			public unowned GLib.List<Gst.PbUtils.EncodingProfile> get_profiles ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstEncodingProfile", type_id = "gst_encoding_profile_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingProfile", type_id = "gst_encoding_profile_get_type ()")]
 		[GIR (name = "EncodingProfile")]
 		public class EncodingProfile : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -202,6 +210,8 @@ namespace Gst {
 			public static Gst.PbUtils.EncodingProfile from_discoverer (Gst.PbUtils.DiscovererInfo info);
 			[CCode (cname = "gst_encoding_profile_get_description")]
 			public unowned string get_description ();
+			[CCode (cname = "gst_encoding_profile_get_file_extension")]
+			public unowned string get_file_extension ();
 			[CCode (cname = "gst_encoding_profile_get_format")]
 			public Gst.Caps get_format ();
 			[CCode (cname = "gst_encoding_profile_get_input_caps")]
@@ -212,6 +222,8 @@ namespace Gst {
 			public uint get_presence ();
 			[CCode (cname = "gst_encoding_profile_get_preset")]
 			public unowned string get_preset ();
+			[CCode (cname = "gst_encoding_profile_get_preset_name")]
+			public unowned string get_preset_name ();
 			[CCode (cname = "gst_encoding_profile_get_restriction")]
 			public Gst.Caps get_restriction ();
 			[CCode (cname = "gst_encoding_profile_get_type_nick")]
@@ -228,10 +240,14 @@ namespace Gst {
 			public void set_presence (uint presence);
 			[CCode (cname = "gst_encoding_profile_set_preset")]
 			public void set_preset (string preset);
+			[CCode (cname = "gst_encoding_profile_set_preset_name")]
+			public void set_preset_name (string preset_name);
 			[CCode (cname = "gst_encoding_profile_set_restriction")]
 			public void set_restriction (owned Gst.Caps restriction);
+			[NoAccessorMethod]
+			public Gst.Caps restriction_caps { owned get; set; }
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstEncodingTarget", type_id = "gst_encoding_target_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingTarget", type_id = "gst_encoding_target_get_type ()")]
 		[GIR (name = "EncodingTarget")]
 		public class EncodingTarget : GLib.Object {
 			[CCode (cname = "gst_encoding_target_new", has_construct_function = false)]
@@ -257,7 +273,7 @@ namespace Gst {
 			[CCode (cname = "gst_encoding_target_save_to_file")]
 			public bool save_to_file (string filepath) throws GLib.Error;
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstEncodingVideoProfile", type_id = "gst_encoding_video_profile_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingVideoProfile", type_id = "gst_encoding_video_profile_get_type ()")]
 		[GIR (name = "EncodingVideoProfile")]
 		public class EncodingVideoProfile : Gst.PbUtils.EncodingProfile {
 			[CCode (cname = "gst_encoding_video_profile_new", has_construct_function = false)]
@@ -271,7 +287,7 @@ namespace Gst {
 			[CCode (cname = "gst_encoding_video_profile_set_variableframerate")]
 			public void set_variableframerate (bool variableframerate);
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstInstallPluginsContext", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_install_plugins_context_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstInstallPluginsContext", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_install_plugins_context_get_type ()")]
 		[Compact]
 		[GIR (name = "InstallPluginsContext")]
 		public class InstallPluginsContext {
@@ -282,7 +298,7 @@ namespace Gst {
 			[CCode (cname = "gst_install_plugins_context_set_xid")]
 			public void set_xid (uint xid);
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstDiscovererResult", cprefix = "GST_DISCOVERER_", type_id = "gst_discoverer_result_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererResult", cprefix = "GST_DISCOVERER_", type_id = "gst_discoverer_result_get_type ()")]
 		[GIR (name = "DiscovererResult")]
 		public enum DiscovererResult {
 			OK,
@@ -292,7 +308,7 @@ namespace Gst {
 			BUSY,
 			MISSING_PLUGINS
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstInstallPluginsReturn", cprefix = "GST_INSTALL_PLUGINS_", type_id = "gst_install_plugins_return_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstInstallPluginsReturn", cprefix = "GST_INSTALL_PLUGINS_", type_id = "gst_install_plugins_return_get_type ()")]
 		[GIR (name = "InstallPluginsReturn")]
 		public enum InstallPluginsReturn {
 			SUCCESS,
@@ -307,83 +323,93 @@ namespace Gst {
 			HELPER_MISSING,
 			INSTALL_IN_PROGRESS
 		}
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GstInstallPluginsResultFunc", instance_pos = 1.9)]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstInstallPluginsResultFunc", instance_pos = 1.9)]
 		public delegate void InstallPluginsResultFunc (Gst.PbUtils.InstallPluginsReturn result);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GST_ENCODING_CATEGORY_CAPTURE")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GST_ENCODING_CATEGORY_CAPTURE")]
 		public const string ENCODING_CATEGORY_CAPTURE;
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GST_ENCODING_CATEGORY_DEVICE")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GST_ENCODING_CATEGORY_DEVICE")]
 		public const string ENCODING_CATEGORY_DEVICE;
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GST_ENCODING_CATEGORY_ONLINE_SERVICE")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GST_ENCODING_CATEGORY_ONLINE_SERVICE")]
 		public const string ENCODING_CATEGORY_ONLINE_SERVICE;
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GST_ENCODING_CATEGORY_STORAGE_EDITING")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GST_ENCODING_CATEGORY_STORAGE_EDITING")]
 		public const string ENCODING_CATEGORY_STORAGE_EDITING;
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GST_PLUGINS_BASE_VERSION_MAJOR")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GST_PLUGINS_BASE_VERSION_MAJOR")]
 		public const int PLUGINS_BASE_VERSION_MAJOR;
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GST_PLUGINS_BASE_VERSION_MICRO")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GST_PLUGINS_BASE_VERSION_MICRO")]
 		public const int PLUGINS_BASE_VERSION_MICRO;
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GST_PLUGINS_BASE_VERSION_MINOR")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GST_PLUGINS_BASE_VERSION_MINOR")]
 		public const int PLUGINS_BASE_VERSION_MINOR;
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "GST_PLUGINS_BASE_VERSION_NANO")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GST_PLUGINS_BASE_VERSION_NANO")]
 		public const int PLUGINS_BASE_VERSION_NANO;
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h")]
-		public static bool add_codec_description_to_tag_list (Gst.TagList taglist, string codec_tag, Gst.Caps caps);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_encoding_list_all_targets")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+		public static bool add_codec_description_to_tag_list (Gst.TagList taglist, string? codec_tag, Gst.Caps caps);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h265_caps_set_level_tier_and_profile")]
+		public static bool codec_utils_h265_caps_set_level_tier_and_profile (Gst.Caps caps, uint8 profile_tier_level, uint len);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h265_get_level")]
+		public static unowned string codec_utils_h265_get_level (uint8 profile_tier_level, uint len);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h265_get_level_idc")]
+		public static uint8 codec_utils_h265_get_level_idc (string level);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h265_get_profile")]
+		public static unowned string codec_utils_h265_get_profile (uint8 profile_tier_level, uint len);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h265_get_tier")]
+		public static unowned string codec_utils_h265_get_tier (uint8 profile_tier_level, uint len);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_encoding_list_all_targets")]
 		public static GLib.List<Gst.PbUtils.EncodingTarget> encoding_list_all_targets (string? categoryname);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_encoding_list_available_categories")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_encoding_list_available_categories")]
 		public static GLib.List<string> encoding_list_available_categories ();
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static string get_codec_description (Gst.Caps caps);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static string get_decoder_description (Gst.Caps caps);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static string get_element_description (string factory_name);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static string get_encoder_description (Gst.Caps caps);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static string get_sink_description (string protocol);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static string get_source_description (string protocol);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static void init ();
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_install_plugins_async")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_install_plugins_async")]
 		public static Gst.PbUtils.InstallPluginsReturn install_plugins_async ([CCode (array_length = false, array_null_terminated = true)] string[] details, Gst.PbUtils.InstallPluginsContext? ctx, [CCode (scope = "async")] owned Gst.PbUtils.InstallPluginsResultFunc func);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_install_plugins_installation_in_progress")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_install_plugins_installation_in_progress")]
 		public static bool install_plugins_installation_in_progress ();
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_install_plugins_return_get_name")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_install_plugins_return_get_name")]
 		public static unowned string install_plugins_return_get_name (Gst.PbUtils.InstallPluginsReturn ret);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_install_plugins_supported")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_install_plugins_supported")]
 		public static bool install_plugins_supported ();
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_install_plugins_sync")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_install_plugins_sync")]
 		public static Gst.PbUtils.InstallPluginsReturn install_plugins_sync ([CCode (array_length = false, array_null_terminated = true)] string[] details, Gst.PbUtils.InstallPluginsContext? ctx);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_is_missing_plugin_message")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_is_missing_plugin_message")]
 		public static bool is_missing_plugin_message (Gst.Message msg);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_missing_decoder_installer_detail_new")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_decoder_installer_detail_new")]
 		public static string missing_decoder_installer_detail_new (Gst.Caps decode_caps);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_missing_decoder_message_new")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_decoder_message_new")]
 		public static Gst.Message missing_decoder_message_new (Gst.Element element, Gst.Caps decode_caps);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_missing_element_installer_detail_new")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_element_installer_detail_new")]
 		public static string missing_element_installer_detail_new (string factory_name);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_missing_element_message_new")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_element_message_new")]
 		public static Gst.Message missing_element_message_new (Gst.Element element, string factory_name);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_missing_encoder_installer_detail_new")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_encoder_installer_detail_new")]
 		public static string missing_encoder_installer_detail_new (Gst.Caps encode_caps);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_missing_encoder_message_new")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_encoder_message_new")]
 		public static Gst.Message missing_encoder_message_new (Gst.Element element, Gst.Caps encode_caps);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_missing_plugin_message_get_description")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_plugin_message_get_description")]
 		public static string missing_plugin_message_get_description (Gst.Message msg);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_missing_plugin_message_get_installer_detail")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_plugin_message_get_installer_detail")]
 		public static string missing_plugin_message_get_installer_detail (Gst.Message msg);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_missing_uri_sink_installer_detail_new")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_uri_sink_installer_detail_new")]
 		public static string missing_uri_sink_installer_detail_new (string protocol);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_missing_uri_sink_message_new")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_uri_sink_message_new")]
 		public static Gst.Message missing_uri_sink_message_new (Gst.Element element, string protocol);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_missing_uri_source_installer_detail_new")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_uri_source_installer_detail_new")]
 		public static string missing_uri_source_installer_detail_new (string protocol);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_missing_uri_source_message_new")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_uri_source_message_new")]
 		public static Gst.Message missing_uri_source_message_new (Gst.Element element, string protocol);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_plugins_base_version")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_plugins_base_version")]
 		public static void plugins_base_version (out uint major, out uint minor, out uint micro, out uint nano);
-		[CCode (cheader_filename = "gst/pbutils/codec-utils.h,gst/pbutils/descriptions.h,gst/pbutils/encoding-profile.h,gst/pbutils/encoding-target.h,gst/pbutils/gstdiscoverer.h,gst/pbutils/gstpluginsbaseversion.h,gst/pbutils/install-plugins.h,gst/pbutils/missing-plugins.h,gst/pbutils/pbutils-enumtypes.h,gst/pbutils/pbutils.h", cname = "gst_plugins_base_version_string")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_plugins_base_version_string")]
 		public static string plugins_base_version_string ();
 	}
 }

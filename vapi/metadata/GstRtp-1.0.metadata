@@ -16,3 +16,8 @@ rtcp_* parent="Gst.RTPC" name="rtcp_(.+)"
 RTCPBuffer struct=false base_type="Gst.Buffer"
   .buffer skip
   .map unowned=false
+
+// Backwards compatibility
+RTPBuffer
+  .get_payload skip=false
+  .get_extension_data skip=false

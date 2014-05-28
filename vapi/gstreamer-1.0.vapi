@@ -23,6 +23,8 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static GLib.SList<weak Gst.DebugCategory> get_all_categories ();
 		[CCode (cheader_filename = "gst/gst.h")]
+		public static Gst.DebugColorMode get_color_mode ();
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static Gst.DebugLevel get_default_threshold ();
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool is_active ();
@@ -41,11 +43,17 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void set_active (bool active);
 		[CCode (cheader_filename = "gst/gst.h")]
+		public static void set_color_mode (Gst.DebugColorMode mode);
+		[CCode (cheader_filename = "gst/gst.h")]
+		public static void set_color_mode_from_string (string mode);
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static void set_colored (bool colored);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void set_default_threshold (Gst.DebugLevel level);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void set_threshold_for_name (string name, Gst.DebugLevel level);
+		[CCode (cheader_filename = "gst/gst.h")]
+		public static void set_threshold_from_string (string list, bool reset);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void unset_threshold_for_name (string name);
 	}
@@ -228,6 +236,8 @@ namespace Gst {
 		public const string IMAGE;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_IMAGE_ORIENTATION")]
 		public const string IMAGE_ORIENTATION;
+		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_INTERPRETED_BY")]
+		public const string INTERPRETED_BY;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_ISRC")]
 		public const string ISRC;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_KEYWORDS")]
@@ -246,6 +256,8 @@ namespace Gst {
 		public const string LYRICS;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_MAXIMUM_BITRATE")]
 		public const string MAXIMUM_BITRATE;
+		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_MIDI_BASE_NOTE")]
+		public const string MIDI_BASE_NOTE;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_MINIMUM_BITRATE")]
 		public const string MINIMUM_BITRATE;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_NOMINAL_BITRATE")]
@@ -256,6 +268,8 @@ namespace Gst {
 		public const string PERFORMER;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_PREVIEW_IMAGE")]
 		public const string PREVIEW_IMAGE;
+		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_PUBLISHER")]
+		public const string PUBLISHER;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_REFERENCE_LEVEL")]
 		public const string REFERENCE_LEVEL;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_SERIAL")]
@@ -349,6 +363,8 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static int64 greatest_common_divisor_int64 (int64 a, int64 b);
 		[CCode (cheader_filename = "gst/gst.h")]
+		public static uint group_id_next ();
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static double guint64_to_gdouble (uint64 value);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static int32 seqnum_compare (uint32 s1, uint32 s2);
@@ -395,6 +411,8 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static unowned Gst.Caps get_caps (GLib.Value value);
 		[CCode (cheader_filename = "gst/gst.h")]
+		public static unowned Gst.CapsFeatures get_caps_features (GLib.Value value);
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static double get_double_range_max (GLib.Value value);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static double get_double_range_min (GLib.Value value);
@@ -436,6 +454,8 @@ namespace Gst {
 		public static void set_bitmask (GLib.Value value, uint64 bitmask);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void set_caps (GLib.Value value, Gst.Caps caps);
+		[CCode (cheader_filename = "gst/gst.h")]
+		public static void set_caps_features (GLib.Value value, Gst.CapsFeatures features);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void set_double_range (GLib.Value value, double start, double end);
 		[CCode (cheader_filename = "gst/gst.h")]
@@ -561,7 +581,7 @@ namespace Gst {
 		public Gst.Buffer append (owned Gst.Buffer buf2);
 		public void append_memory (owned Gst.Memory mem);
 		public Gst.Buffer append_region (owned Gst.Buffer buf2, ssize_t offset, ssize_t size);
-		public void copy_into (Gst.Buffer src, Gst.BufferCopyFlags flags, size_t offset, size_t size);
+		public bool copy_into (Gst.Buffer src, Gst.BufferCopyFlags flags, size_t offset, size_t size);
 		public Gst.Buffer copy_region (Gst.BufferCopyFlags flags, size_t offset, size_t size);
 		public size_t extract (size_t offset, void* dest, size_t size);
 		public void extract_dup (size_t offset, size_t size, [CCode (array_length_cname = "dest_size", array_length_pos = 3.1, array_length_type = "gsize")] out uint8[] dest);
@@ -569,6 +589,7 @@ namespace Gst {
 		public bool find_memory (size_t offset, size_t size, out uint idx, out uint length, out size_t skip);
 		public bool foreach_meta (Gst.BufferForeachMetaFunc func);
 		public Gst.Memory get_all_memory ();
+		public static uint get_max_memory ();
 		public Gst.Memory get_memory (uint idx);
 		public Gst.Memory get_memory_range (uint idx, int length);
 		public unowned Gst.Meta? get_meta (GLib.Type api);
@@ -576,6 +597,8 @@ namespace Gst {
 		public size_t get_sizes (out size_t offset, out size_t maxsize);
 		public size_t get_sizes_range (uint idx, int length, out size_t offset, out size_t maxsize);
 		public void insert_memory (int idx, owned Gst.Memory mem);
+		public bool is_all_memory_writable ();
+		public bool is_memory_range_writable (uint idx, int length);
 		public unowned Gst.Meta? iterate_meta (void* state);
 		public bool map (out Gst.MapInfo info, Gst.MapFlags flags);
 		public bool map_range (uint idx, int length, out Gst.MapInfo info, Gst.MapFlags flags);
@@ -594,7 +617,7 @@ namespace Gst {
 		public void replace_memory (uint idx, owned Gst.Memory mem);
 		public void replace_memory_range (uint idx, int length, owned Gst.Memory mem);
 		public void resize (ssize_t offset, ssize_t size);
-		public void resize_range (uint idx, int length, ssize_t offset, ssize_t size);
+		public bool resize_range (uint idx, int length, ssize_t offset, ssize_t size);
 		public void set_size (ssize_t size);
 		public void unmap (Gst.MapInfo info);
 		[CCode (has_construct_function = false)]
@@ -629,6 +652,11 @@ namespace Gst {
 		public static uint config_n_options (Gst.Structure config);
 		public static void config_set_allocator (Gst.Structure config, Gst.Allocator allocator, Gst.AllocationParams @params);
 		public static void config_set_params (Gst.Structure config, Gst.Caps caps, uint size, uint min_buffers, uint max_buffers);
+		public static bool config_validate_params (Gst.Structure config, Gst.Caps caps, uint size, uint min_buffers, uint max_buffers);
+		[NoWrapper]
+		public virtual void flush_start ();
+		[NoWrapper]
+		public virtual void flush_stop ();
 		[NoWrapper]
 		public virtual void free_buffer (Gst.Buffer buffer);
 		public Gst.Structure get_config ();
@@ -641,6 +669,7 @@ namespace Gst {
 		public virtual void reset_buffer (Gst.Buffer buffer);
 		public bool set_active (bool active);
 		public virtual bool set_config (owned Gst.Structure config);
+		public void set_flushing (bool flushing);
 		[NoWrapper]
 		public virtual bool start ();
 		[NoWrapper]
@@ -681,6 +710,7 @@ namespace Gst {
 		public Caps.any ();
 		public void append (owned Gst.Caps caps2);
 		public void append_structure (owned Gst.Structure structure);
+		public void append_structure_full (owned Gst.Structure structure, owned Gst.CapsFeatures? features);
 		public bool can_intersect (Gst.Caps caps2);
 		public Gst.Caps copy_nth (uint nth);
 		[CCode (has_construct_function = false)]
@@ -689,6 +719,7 @@ namespace Gst {
 		public Caps.empty_simple (string media_type);
 		public Gst.Caps fixate ();
 		public static Gst.Caps from_string (string string);
+		public unowned Gst.CapsFeatures get_features (uint index);
 		public uint get_size ();
 		public unowned Gst.Structure get_structure (uint index);
 		[CCode (cname = "gst_caps_intersect_full")]
@@ -702,16 +733,43 @@ namespace Gst {
 		public bool is_strictly_equal (Gst.Caps caps2);
 		public bool is_subset (Gst.Caps superset);
 		public bool is_subset_structure (Gst.Structure structure);
+		public bool is_subset_structure_full (Gst.Structure structure, Gst.CapsFeatures? features);
 		public Gst.Caps merge (owned Gst.Caps caps2);
 		public Gst.Caps merge_structure (owned Gst.Structure structure);
+		public Gst.Caps merge_structure_full (owned Gst.Structure structure, owned Gst.CapsFeatures? features);
 		public Gst.Caps normalize ();
 		public void remove_structure (uint idx);
+		public void set_features (uint index, owned Gst.CapsFeatures? features);
 		public void set_value (string field, GLib.Value value);
 		public Gst.Caps simplify ();
 		public Gst.Structure steal_structure (uint index);
 		public Gst.Caps subtract (Gst.Caps subtrahend);
 		public string to_string ();
 		public Gst.Caps truncate ();
+	}
+	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_caps_features_get_type ()")]
+	[Compact]
+	public class CapsFeatures {
+		public void add (string feature);
+		public void add_id (GLib.Quark feature);
+		[CCode (has_construct_function = false)]
+		public CapsFeatures.any ();
+		public bool contains (string feature);
+		public bool contains_id (GLib.Quark feature);
+		public Gst.CapsFeatures copy ();
+		[CCode (has_construct_function = false)]
+		public CapsFeatures.empty ();
+		public void free ();
+		public static Gst.CapsFeatures from_string (string features);
+		public unowned string get_nth (uint i);
+		public GLib.Quark get_nth_id (uint i);
+		public uint get_size ();
+		public bool is_any ();
+		public bool is_equal (Gst.CapsFeatures features2);
+		public void remove (string feature);
+		public void remove_id (GLib.Quark feature);
+		public bool set_parent_refcount (int refcount);
+		public string to_string ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_clock_get_type ()")]
 	public abstract class Clock : Gst.Object {
@@ -754,6 +812,17 @@ namespace Gst {
 		public int window_size { get; set; }
 		[NoAccessorMethod]
 		public int window_threshold { get; set; }
+	}
+	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_context_get_type ()")]
+	[Compact]
+	public class Context {
+		[CCode (has_construct_function = false)]
+		public Context (string context_type, bool persistent);
+		public unowned string get_context_type ();
+		public unowned Gst.Structure get_structure ();
+		public bool has_context_type (string context_type);
+		public bool is_persistent ();
+		public Gst.Structure writable_structure ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_control_binding_get_type ()")]
 	public abstract class ControlBinding : Gst.Object {
@@ -825,6 +894,61 @@ namespace Gst {
 	[Compact]
 	public class DebugMessage {
 		public unowned string @get ();
+	}
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_device_get_type ()")]
+	public abstract class Device : Gst.Object {
+		[CCode (has_construct_function = false)]
+		protected Device ();
+		public virtual Gst.Element create_element (string? name);
+		public Gst.Caps get_caps ();
+		public string get_display_name ();
+		public string get_klass ();
+		public bool has_classes (string classes);
+		public bool has_classesv (string classes);
+		public virtual bool reconfigure_element (Gst.Element element);
+		public Gst.Caps caps { owned get; construct; }
+		public string display_name { owned get; construct; }
+		public string klass { owned get; construct; }
+		public signal void removed ();
+	}
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_device_monitor_get_type ()")]
+	public abstract class DeviceMonitor : Gst.Object {
+		[CCode (has_construct_function = false)]
+		protected DeviceMonitor ();
+		[CCode (cname = "gst_device_monitor_class_add_metadata")]
+		public class void add_metadata (string key, string value);
+		[CCode (cname = "gst_device_monitor_class_add_static_metadata")]
+		public class void add_static_metadata (string key, string value);
+		public bool can_monitor ();
+		public void device_add (owned Gst.Device device);
+		public void device_remove (Gst.Device device);
+		public Gst.Bus get_bus ();
+		public GLib.List<Gst.Device> get_devices ();
+		public unowned Gst.DeviceMonitorFactory get_factory ();
+		[CCode (cname = "gst_device_monitor_class_get_metadata")]
+		public class unowned string get_metadata (string key);
+		public static bool register (Gst.Plugin? plugin, string name, uint rank, GLib.Type type);
+		[CCode (cname = "gst_device_monitor_class_set_metadata")]
+		public class void set_metadata (string longname, string classification, string description, string author);
+		[CCode (cname = "gst_device_monitor_class_set_static_metadata")]
+		public class void set_static_metadata (string longname, string classification, string description, string author);
+		public virtual bool start ();
+		public virtual void stop ();
+	}
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_device_monitor_factory_get_type ()")]
+	public class DeviceMonitorFactory : Gst.PluginFeature {
+		[CCode (has_construct_function = false)]
+		protected DeviceMonitorFactory ();
+		public static Gst.DeviceMonitorFactory find (string name);
+		public Gst.DeviceMonitor @get ();
+		public static Gst.DeviceMonitor get_by_name (string factoryname);
+		public GLib.Type get_device_monitor_type ();
+		public unowned string get_metadata (string key);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] get_metadata_keys ();
+		public bool has_classes (string classes);
+		public bool has_classesv (string classes);
+		public static GLib.List<Gst.DeviceMonitorFactory> list_get_device_monitors (string types, Gst.Rank minrank);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_double_range_get_type ()")]
 	public class DoubleRange {
@@ -913,6 +1037,7 @@ namespace Gst {
 		public void set_base_time (Gst.ClockTime time);
 		public virtual void set_bus (Gst.Bus bus);
 		public virtual bool set_clock (Gst.Clock clock);
+		public virtual void set_context (Gst.Context context);
 		public bool set_locked_state (bool locked_state);
 		[CCode (cname = "gst_element_class_set_metadata")]
 		public class void set_metadata (string longname, string classification, string description, string author);
@@ -980,6 +1105,7 @@ namespace Gst {
 		public Event.flush_stop (bool reset_time);
 		[CCode (has_construct_function = false)]
 		public Event.gap (Gst.ClockTime timestamp, Gst.ClockTime duration);
+		public int64 get_running_time_offset ();
 		public uint32 get_seqnum ();
 		public unowned Gst.Structure get_structure ();
 		public bool has_name (string name);
@@ -991,6 +1117,7 @@ namespace Gst {
 		public void parse_caps (out unowned Gst.Caps caps);
 		public void parse_flush_stop (out bool reset_time);
 		public void parse_gap (out Gst.ClockTime timestamp, out Gst.ClockTime duration);
+		public bool parse_group_id (out uint group_id);
 		public void parse_latency (out Gst.ClockTime latency);
 		public void parse_qos (out Gst.QOSType type, out double proportion, out Gst.ClockTimeDiff diff, out Gst.ClockTime timestamp);
 		public void parse_seek (out double rate, out Gst.Format format, out Gst.SeekFlags flags, out Gst.SeekType start_type, out int64 start, out Gst.SeekType stop_type, out int64 stop);
@@ -998,6 +1125,7 @@ namespace Gst {
 		public void parse_segment_done (out Gst.Format format, out int64 position);
 		public void parse_sink_message (out Gst.Message msg);
 		public void parse_step (out Gst.Format format, out uint64 amount, out double rate, out bool flush, out bool intermediate);
+		public void parse_stream_flags (out Gst.StreamFlags flags);
 		public void parse_stream_start (out unowned string stream_id);
 		public void parse_tag (out unowned Gst.TagList taglist);
 		public void parse_toc (out Gst.Toc toc, out bool updated);
@@ -1012,7 +1140,10 @@ namespace Gst {
 		public Event.segment (Gst.Segment segment);
 		[CCode (has_construct_function = false)]
 		public Event.segment_done (Gst.Format format, int64 position);
+		public void set_group_id (uint group_id);
+		public void set_running_time_offset (int64 offset);
 		public void set_seqnum (uint32 seqnum);
+		public void set_stream_flags (Gst.StreamFlags flags);
 		[CCode (has_construct_function = false)]
 		public Event.sink_message (string name, Gst.Message msg);
 		[CCode (has_construct_function = false)]
@@ -1052,6 +1183,19 @@ namespace Gst {
 		[CCode (has_construct_function = false, type = "GstPad*")]
 		public GhostPad.no_target_from_template (string? name, Gst.PadTemplate templ);
 		public bool set_target (Gst.Pad? newtarget);
+	}
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_global_device_monitor_get_type ()")]
+	public class GlobalDeviceMonitor : Gst.Object {
+		[CCode (has_construct_function = false)]
+		public GlobalDeviceMonitor ();
+		public Gst.Bus get_bus ();
+		public Gst.Caps get_caps_filter ();
+		public string get_classes_filter ();
+		public GLib.List<Gst.Device> get_devices ();
+		public void set_caps_filter (Gst.Caps caps);
+		public void set_classes_filter (string classes);
+		public bool start ();
+		public void stop ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_int64_range_get_type ()")]
 	public class Int64Range {
@@ -1096,6 +1240,7 @@ namespace Gst {
 		public Gst.Memory copy (ssize_t offset, ssize_t size);
 		public size_t get_sizes (size_t offset, size_t maxsize);
 		public bool is_span (Gst.Memory mem2, size_t offset);
+		public bool is_type (string mem_type);
 		public Gst.Memory make_mapped (out Gst.MapInfo info, Gst.MapFlags flags);
 		public bool map (out Gst.MapInfo info, Gst.MapFlags flags);
 		public void resize (ssize_t offset, size_t size);
@@ -1126,6 +1271,10 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Message.custom (Gst.MessageType type, Gst.Object src, owned Gst.Structure structure);
 		[CCode (has_construct_function = false)]
+		public Message.device_added (Gst.Object src, Gst.Device device);
+		[CCode (has_construct_function = false)]
+		public Message.device_removed (Gst.Object src, Gst.Device device);
+		[CCode (has_construct_function = false)]
 		public Message.duration_changed (Gst.Object src);
 		[CCode (has_construct_function = false)]
 		public Message.element (Gst.Object src, owned Gst.Structure structure);
@@ -1138,9 +1287,13 @@ namespace Gst {
 		public unowned Gst.Structure get_structure ();
 		public bool has_name (string name);
 		[CCode (has_construct_function = false)]
+		public Message.have_context (Gst.Object src, owned Gst.Context context);
+		[CCode (has_construct_function = false)]
 		public Message.info (Gst.Object src, GLib.Error error, string debug);
 		[CCode (has_construct_function = false)]
 		public Message.latency (Gst.Object src);
+		[CCode (has_construct_function = false)]
+		public Message.need_context (Gst.Object src, string context_type);
 		[CCode (has_construct_function = false)]
 		public Message.new_clock (Gst.Object src, Gst.Clock clock);
 		public void parse_async_done (out Gst.ClockTime running_time);
@@ -1148,7 +1301,12 @@ namespace Gst {
 		public void parse_buffering_stats (out Gst.BufferingMode mode, out int avg_in, out int avg_out, out int64 buffering_left);
 		public void parse_clock_lost (out unowned Gst.Clock clock);
 		public void parse_clock_provide (out unowned Gst.Clock clock, out bool ready);
+		public bool parse_context_type (out string context_type);
+		public void parse_device_added (out unowned Gst.Device device);
+		public void parse_device_removed (out unowned Gst.Device device);
 		public void parse_error (out GLib.Error gerror, out string debug);
+		public bool parse_group_id (out uint group_id);
+		public void parse_have_context (out Gst.Context context);
 		public void parse_info (out GLib.Error gerror, out string debug);
 		public void parse_new_clock (out unowned Gst.Clock clock);
 		public void parse_progress (out Gst.ProgressType type, out string code, out string text);
@@ -1180,6 +1338,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Message.segment_start (Gst.Object src, Gst.Format format, int64 position);
 		public void set_buffering_stats (Gst.BufferingMode mode, int avg_in, int avg_out, int64 buffering_left);
+		public void set_group_id (uint group_id);
 		public void set_qos_stats (Gst.Format format, uint64 processed, uint64 dropped);
 		public void set_qos_values (int64 jitter, double proportion, int quality);
 		public void set_seqnum (uint32 seqnum);
@@ -1288,6 +1447,7 @@ namespace Gst {
 		public Gst.Caps get_current_caps ();
 		public Gst.PadDirection get_direction ();
 		public void* get_element_private ();
+		public Gst.FlowReturn get_last_flow_return ();
 		public int64 get_offset ();
 		public Gst.PadTemplate get_pad_template ();
 		public Gst.Caps get_pad_template_caps ();
@@ -1295,6 +1455,7 @@ namespace Gst {
 		public Gst.Pad get_peer ();
 		public Gst.FlowReturn get_range (uint64 offset, uint size, out Gst.Buffer buffer);
 		public Gst.Event get_sticky_event (Gst.EventType event_type, uint idx);
+		public string get_stream_id ();
 		public bool has_current_caps ();
 		public bool is_active ();
 		public bool is_blocked ();
@@ -1304,6 +1465,7 @@ namespace Gst {
 		public Gst.Iterator iterate_internal_links_default (Gst.Object? parent);
 		[CCode (cname = "gst_pad_link_full")]
 		public Gst.PadLinkReturn link (Gst.Pad sinkpad, Gst.PadLinkCheck flags = Gst.PadLinkCheck.DEFAULT);
+		public static unowned string link_get_name (Gst.PadLinkReturn ret);
 		public void mark_reconfigure ();
 		public bool needs_reconfigure ();
 		public bool pause_task ();
@@ -1354,6 +1516,7 @@ namespace Gst {
 		public bool start_task (owned Gst.TaskFunction func);
 		public void sticky_events_foreach (Gst.PadStickyEventsForeachFunction foreach_func);
 		public bool stop_task ();
+		public Gst.FlowReturn store_sticky_event (Gst.Event event);
 		public bool unlink (Gst.Pad sinkpad);
 		public void use_fixed_caps ();
 		[NoAccessorMethod]
@@ -1442,6 +1605,7 @@ namespace Gst {
 		protected PluginFeature ();
 		public bool check_version (uint min_major, uint min_minor, uint min_micro);
 		public Gst.Plugin get_plugin ();
+		public unowned string get_plugin_name ();
 		public uint get_rank ();
 		public static GLib.List<Gst.PluginFeature> list_copy (GLib.List<Gst.PluginFeature> list);
 		public static void list_debug (GLib.List<Gst.PluginFeature> list);
@@ -1499,9 +1663,11 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Query.caps (Gst.Caps filter);
 		[CCode (has_construct_function = false)]
+		public Query.context (string context_type);
+		[CCode (has_construct_function = false)]
 		public Query.convert (Gst.Format src_format, int64 value, Gst.Format dest_format);
 		[CCode (has_construct_function = false)]
-		public Query.custom (Gst.QueryType type, Gst.Structure structure);
+		public Query.custom (Gst.QueryType type, owned Gst.Structure? structure);
 		[CCode (has_construct_function = false)]
 		public Query.drain ();
 		[CCode (has_construct_function = false)]
@@ -1527,6 +1693,8 @@ namespace Gst {
 		public void parse_buffering_stats (out Gst.BufferingMode mode, out int avg_in, out int avg_out, out int64 buffering_left);
 		public void parse_caps (out unowned Gst.Caps filter);
 		public void parse_caps_result (out unowned Gst.Caps caps);
+		public void parse_context (out unowned Gst.Context context);
+		public bool parse_context_type (out unowned string context_type);
 		public void parse_convert (out Gst.Format src_format, out int64 src_value, out Gst.Format dest_format, out int64 dest_value);
 		public void parse_duration (out Gst.Format format, out int64 duration);
 		public void parse_latency (out bool live, out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
@@ -1542,9 +1710,13 @@ namespace Gst {
 		public void parse_seeking (out Gst.Format format, out bool seekable, out int64 segment_start, out int64 segment_end);
 		public void parse_segment (out double rate, out Gst.Format format, out int64 start_value, out int64 stop_value);
 		public void parse_uri (out string uri);
+		public void parse_uri_redirection (out string uri);
+		public void parse_uri_redirection_permanent (out bool permanent);
 		[CCode (has_construct_function = false)]
 		public Query.position (Gst.Format format);
 		public void remove_nth_allocation_meta (uint index);
+		public void remove_nth_allocation_param (uint index);
+		public void remove_nth_allocation_pool (uint index);
 		[CCode (has_construct_function = false)]
 		public Query.scheduling ();
 		[CCode (has_construct_function = false)]
@@ -1556,6 +1728,7 @@ namespace Gst {
 		public void set_buffering_range (Gst.Format format, int64 start, int64 stop, int64 estimated_total);
 		public void set_buffering_stats (Gst.BufferingMode mode, int avg_in, int avg_out, int64 buffering_left);
 		public void set_caps_result (Gst.Caps caps);
+		public void set_context (Gst.Context context);
 		public void set_convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
 		public void set_duration (Gst.Format format, int64 duration);
 		public void set_formatsv ([CCode (array_length_cname = "n_formats", array_length_pos = 0.5)] Gst.Format[] formats);
@@ -1567,6 +1740,8 @@ namespace Gst {
 		public void set_seeking (Gst.Format format, bool seekable, int64 segment_start, int64 segment_end);
 		public void set_segment (double rate, Gst.Format format, int64 start_value, int64 stop_value);
 		public void set_uri (string uri);
+		public void set_uri_redirection (string uri);
+		public void set_uri_redirection_permanent (bool permanent);
 		[CCode (has_construct_function = false)]
 		public Query.uri ();
 		public unowned Gst.Structure writable_structure ();
@@ -1629,6 +1804,7 @@ namespace Gst {
 		public bool do_seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, uint64 start, Gst.SeekType stop_type, uint64 stop, bool update);
 		public void free ();
 		public void init (Gst.Format format);
+		public bool offset_running_time (Gst.Format format, int64 offset);
 		public bool set_running_time (Gst.Format format, uint64 running_time);
 		public uint64 to_position (Gst.Format format, uint64 running_time);
 		public uint64 to_running_time (Gst.Format format, uint64 position);
@@ -1661,10 +1837,12 @@ namespace Gst {
 		public GLib.Type get_field_type (string fieldname);
 		public bool get_fraction (string fieldname, out int value_numerator, out int value_denominator);
 		public bool get_int (string fieldname, out int value);
+		public bool get_int64 (string fieldname, out int64 value);
 		public unowned string get_name ();
 		public GLib.Quark get_name_id ();
 		public unowned string get_string (string fieldname);
 		public bool get_uint (string fieldname, out uint value);
+		public bool get_uint64 (string fieldname, out uint64 value);
 		public unowned GLib.Value? get_value (string fieldname);
 		public bool has_field (string fieldname);
 		public bool has_field_typed (string fieldname, GLib.Type type);
@@ -1695,6 +1873,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected SystemClock ();
 		public static Gst.Clock obtain ();
+		public static void set_default (Gst.Clock new_clock);
 		[NoAccessorMethod]
 		public Gst.ClockType clock_type { get; set; }
 	}
@@ -1799,6 +1978,7 @@ namespace Gst {
 		public TocEntry (Gst.TocEntryType type, string uid);
 		public void append_sub_entry (owned Gst.TocEntry subentry);
 		public Gst.TocEntryType get_entry_type ();
+		public bool get_loop (out Gst.TocLoopType loop_type, out int repeat_count);
 		public unowned Gst.TocEntry get_parent ();
 		public bool get_start_stop_times (out int64 start, out int64 stop);
 		public unowned GLib.List<Gst.TocEntry> get_sub_entries ();
@@ -1808,6 +1988,7 @@ namespace Gst {
 		public bool is_alternative ();
 		public bool is_sequence ();
 		public void merge_tags (Gst.TagList? tags, Gst.TagMergeMode mode);
+		public void set_loop (Gst.TocLoopType loop_type, int repeat_count);
 		public void set_start_stop_times (int64 start, int64 stop);
 		public void set_tags (owned Gst.TagList? tags);
 	}
@@ -1826,6 +2007,7 @@ namespace Gst {
 	public class ValueArray {
 		[CCode (has_construct_function = false)]
 		protected ValueArray ();
+		public static void append_and_take_value (GLib.Value value, owned GLib.Value append_value);
 		public static void append_value (GLib.Value value, GLib.Value append_value);
 		public static uint get_size (GLib.Value value);
 		public static unowned GLib.Value? get_value (GLib.Value value, uint index);
@@ -1835,6 +2017,7 @@ namespace Gst {
 	public class ValueList {
 		[CCode (has_construct_function = false)]
 		protected ValueList ();
+		public static void append_and_take_value (GLib.Value value, owned GLib.Value append_value);
 		public static void append_value (GLib.Value value, GLib.Value append_value);
 		public static void concat (out GLib.Value dest, GLib.Value value1, GLib.Value value2);
 		public static uint get_size (GLib.Value value);
@@ -1951,7 +2134,7 @@ namespace Gst {
 	public struct MapInfo {
 		public weak Gst.Memory memory;
 		public Gst.MapFlags flags;
-		[CCode (array_length_cname = "size", array_length_type = "gsize")]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak uint8[] data;
 		public size_t size;
 		public size_t maxsize;
@@ -1962,6 +2145,8 @@ namespace Gst {
 	public struct Meta {
 		public Gst.MetaFlags flags;
 		public Gst.MetaInfo info;
+		[CCode (array_length = false, array_null_terminated = true)]
+		public static unowned string[] api_type_get_tags (GLib.Type api);
 		public static bool api_type_has_tag (GLib.Type api, GLib.Quark tag);
 		public static GLib.Type api_type_register (string api, string tags);
 		public static unowned Gst.MetaInfo? get_info (string impl);
@@ -2082,7 +2267,8 @@ namespace Gst {
 		TIMESTAMPS,
 		META,
 		MEMORY,
-		MERGE
+		MERGE,
+		DEEP
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_BUFFER_FLAG_", type_id = "gst_buffer_flags_get_type ()")]
 	[Flags]
@@ -2097,6 +2283,7 @@ namespace Gst {
 		GAP,
 		DROPPABLE,
 		DELTA_UNIT,
+		TAG_MEMORY,
 		LAST
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_BUFFER_POOL_ACQUIRE_FLAG_", type_id = "gst_buffer_pool_acquire_flags_get_type ()")]
@@ -2190,6 +2377,12 @@ namespace Gst {
 		BG_WHITE,
 		BOLD,
 		UNDERLINE
+	}
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_DEBUG_COLOR_MODE_", type_id = "gst_debug_color_mode_get_type ()")]
+	public enum DebugColorMode {
+		OFF,
+		ON,
+		UNIX
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_DEBUG_GRAPH_SHOW_", type_id = "gst_debug_graph_details_get_type ()")]
 	[Flags]
@@ -2335,6 +2528,8 @@ namespace Gst {
 		NO_SHARE,
 		ZERO_PREFIXED,
 		ZERO_PADDED,
+		PHYSICALLY_CONTIGUOUS,
+		NOT_MAPPABLE,
 		LAST
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_MESSAGE_", type_id = "gst_message_type_get_type ()")]
@@ -2370,6 +2565,11 @@ namespace Gst {
 		TOC,
 		RESET_TIME,
 		STREAM_START,
+		NEED_CONTEXT,
+		HAVE_CONTEXT,
+		EXTENDED,
+		DEVICE_ADDED,
+		DEVICE_REMOVED,
 		ANY;
 		public static unowned string get_name (Gst.MessageType type);
 		public static GLib.Quark to_quark (Gst.MessageType type);
@@ -2415,6 +2615,7 @@ namespace Gst {
 		PROXY_CAPS,
 		PROXY_ALLOCATION,
 		PROXY_SCHEDULING,
+		ACCEPT_INTERSECT,
 		LAST
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PAD_LINK_CHECK_", type_id = "gst_pad_link_check_get_type ()")]
@@ -2491,7 +2692,8 @@ namespace Gst {
 	[Flags]
 	public enum ParseFlags {
 		NONE,
-		FATAL_ERRORS
+		FATAL_ERRORS,
+		NO_SINGLE_ELEMENT_BINS
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PIPELINE_FLAG_", type_id = "gst_pipeline_flags_get_type ()")]
 	[Flags]
@@ -2546,7 +2748,8 @@ namespace Gst {
 		SCHEDULING,
 		ACCEPT_CAPS,
 		CAPS,
-		DRAIN;
+		DRAIN,
+		CONTEXT;
 		public static Gst.QueryTypeFlags get_flags (Gst.QueryType type);
 		public static unowned string get_name (Gst.QueryType type);
 		public static GLib.Quark to_quark (Gst.QueryType type);
@@ -2569,7 +2772,8 @@ namespace Gst {
 	[Flags]
 	public enum SchedulingFlags {
 		SEEKABLE,
-		SEQUENTIAL
+		SEQUENTIAL,
+		BANDWIDTH_LIMITED
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_SEARCH_MODE_", type_id = "gst_search_mode_get_type ()")]
 	public enum SearchMode {
@@ -2628,6 +2832,14 @@ namespace Gst {
 		ASYNC,
 		NO_PREROLL
 	}
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STREAM_FLAG_", type_id = "gst_stream_flags_get_type ()")]
+	[Flags]
+	public enum StreamFlags {
+		NONE,
+		SPARSE,
+		SELECT,
+		UNSELECT
+	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STREAM_STATUS_TYPE_", type_id = "gst_stream_status_type_get_type ()")]
 	public enum StreamStatusType {
 		CREATE,
@@ -2683,6 +2895,13 @@ namespace Gst {
 		TRACK,
 		CHAPTER;
 		public static unowned string get_nick (Gst.TocEntryType type);
+	}
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_TOC_LOOP_", type_id = "gst_toc_loop_type_get_type ()")]
+	public enum TocLoopType {
+		NONE,
+		FORWARD,
+		REVERSE,
+		PING_PONG
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_TOC_SCOPE_", type_id = "gst_toc_scope_get_type ()")]
 	public enum TocScope {
@@ -2768,6 +2987,7 @@ namespace Gst {
 		SYNC,
 		SETTINGS,
 		NO_SPACE_LEFT,
+		NOT_AUTHORIZED,
 		NUM_ERRORS;
 		public static GLib.Quark quark ();
 	}
@@ -2916,6 +3136,8 @@ namespace Gst {
 	public const uint64 BUFFER_OFFSET_NONE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_CAN_INLINE")]
 	public const int CAN_INLINE;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_CAPS_FEATURE_MEMORY_SYSTEM_MEMORY")]
+	public const string CAPS_FEATURE_MEMORY_SYSTEM_MEMORY;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_CLOCK_TIME_NONE")]
 	public const Gst.ClockTime CLOCK_TIME_NONE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_METADATA_AUTHOR")]
@@ -2948,6 +3170,8 @@ namespace Gst {
 	public const int LOCK_FLAG_READWRITE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_MAP_READWRITE")]
 	public const int MAP_READWRITE;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_META_TAG_MEMORY_STR")]
+	public const string META_TAG_MEMORY_STR;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_MSECOND")]
 	public const int MSECOND;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_NSECOND")]
@@ -2962,14 +3186,20 @@ namespace Gst {
 	public const int PARAM_MUTABLE_READY;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_USER_SHIFT")]
 	public const int PARAM_USER_SHIFT;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PTR_FORMAT")]
+	public const string PTR_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_QUERY_NUM_SHIFT")]
 	public const int QUERY_NUM_SHIFT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_QUERY_TYPE_BOTH")]
 	public const int QUERY_TYPE_BOTH;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SECOND")]
 	public const int SECOND;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEGMENT_FORMAT")]
+	public const string SEGMENT_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_TIME_FORMAT")]
 	public const string TIME_FORMAT;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_TOC_REPEAT_COUNT_INFINITE")]
+	public const int TOC_REPEAT_COUNT_INFINITE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_USECOND")]
 	public const int USECOND;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_VALUE_EQUAL")]
@@ -2995,14 +3225,16 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.OptionGroup init_get_option_group ();
 	[CCode (cheader_filename = "gst/gst.h")]
+	public static bool is_caps_features (void* obj);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool is_initialized ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.ParamSpec param_spec_fraction (string name, string nick, string blurb, int min_num, int min_denom, int max_num, int max_denom, int default_num, int default_denom, GLib.ParamFlags flags);
 	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_bin_from_description_full", returns_floating_reference = true)]
-	public static Gst.Bin parse_bin_from_description (string bin_description, bool ghost_unlinked_pads, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
+	public static Gst.Element parse_bin_from_description (string bin_description, bool ghost_unlinked_pads, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_launch_full", returns_floating_reference = true)]
 	public static Gst.Element parse_launch (string pipeline_description, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
-	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_launchv_full")]
+	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_launchv_full", returns_floating_reference = true)]
 	public static Gst.Element parse_launchv ([CCode (array_length = false, array_null_terminated = true)] string[] argv, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static unowned string preset_get_app_dir ();

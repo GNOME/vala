@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstAudio", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace Audio {
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", type_id = "gst_audio_base_sink_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_base_sink_get_type ()")]
 		[GIR (name = "AudioBaseSink")]
 		public class BaseSink : Gst.Base.Sink {
 			public bool eos_rendering;
@@ -37,7 +37,7 @@ namespace Gst {
 			public bool provide_clock { get; set; }
 			public Gst.Audio.BaseSinkSlaveMethod slave_method { get; set; }
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", type_id = "gst_audio_base_src_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_base_src_get_type ()")]
 		[GIR (name = "AudioBaseSrc")]
 		public class BaseSrc : Gst.Base.PushSrc {
 			public weak Gst.Clock clock;
@@ -61,7 +61,7 @@ namespace Gst {
 			public bool provide_clock { get; set; }
 			public Gst.Audio.BaseSrcSlaveMethod slave_method { get; set; }
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", type_id = "gst_audio_cd_src_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_cd_src_get_type ()")]
 		[GIR (name = "AudioCdSrc")]
 		public class CdSrc : Gst.Base.PushSrc, Gst.URIHandler {
 			public weak Gst.TagList tags;
@@ -81,7 +81,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public uint track { get; set; }
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", type_id = "gst_audio_clock_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_clock_get_type ()")]
 		[GIR (name = "AudioClock")]
 		public class Clock : Gst.SystemClock {
 			[CCode (has_construct_function = false, type = "GstClock*")]
@@ -91,7 +91,7 @@ namespace Gst {
 			public static void invalidate (Gst.Clock clock);
 			public void reset (Gst.ClockTime time);
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", type_id = "gst_audio_decoder_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_decoder_get_type ()")]
 		[GIR (name = "AudioDecoder")]
 		public abstract class Decoder : Gst.Element {
 			public weak Gst.Segment input_segment;
@@ -158,7 +158,7 @@ namespace Gst {
 			public bool plc { get; set; }
 			public int64 tolerance { get; set; }
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", type_id = "gst_audio_encoder_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_encoder_get_type ()")]
 		[GIR (name = "AudioEncoder")]
 		public abstract class Encoder : Gst.Element, Gst.Preset {
 			public weak Gst.Segment input_segment;
@@ -230,7 +230,7 @@ namespace Gst {
 			public bool perfect_timestamp { get; set; }
 			public int64 tolerance { get; set; }
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", type_id = "gst_audio_filter_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_filter_get_type ()")]
 		[GIR (name = "AudioFilter")]
 		public abstract class Filter : Gst.Base.Transform {
 			public weak Gst.Audio.Info info;
@@ -239,7 +239,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool setup (Gst.Audio.Info info);
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_audio_info_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_audio_info_get_type ()")]
 		[Compact]
 		[GIR (name = "AudioInfo")]
 		public class Info {
@@ -258,10 +258,11 @@ namespace Gst {
 			public void free ();
 			public bool from_caps (Gst.Caps caps);
 			public void init ();
+			public bool is_equal (Gst.Audio.Info other);
 			public void set_format (Gst.Audio.Format format, int rate, int channels, Gst.Audio.ChannelPosition position);
 			public Gst.Caps to_caps ();
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", type_id = "gst_audio_ring_buffer_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_ring_buffer_get_type ()")]
 		[GIR (name = "AudioRingBuffer")]
 		public abstract class RingBuffer : Gst.Object {
 			public bool acquired;
@@ -312,7 +313,7 @@ namespace Gst {
 			public virtual bool start ();
 			public virtual bool stop ();
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", type_id = "gst_audio_sink_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_sink_get_type ()")]
 		[GIR (name = "AudioSink")]
 		public class Sink : Gst.Audio.BaseSink {
 			[CCode (has_construct_function = false)]
@@ -332,7 +333,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual int write ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "guint", type = "gpointer")] uint8[] data);
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", type_id = "gst_audio_src_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_src_get_type ()")]
 		[GIR (name = "AudioSrc")]
 		public class Src : Gst.Audio.BaseSrc {
 			[CCode (has_construct_function = false)]
@@ -352,7 +353,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool unprepare ();
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GstStreamVolume", type_cname = "GstStreamVolumeInterface", type_id = "gst_stream_volume_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GstStreamVolume", type_cname = "GstStreamVolumeInterface", type_id = "gst_stream_volume_get_type ()")]
 		[GIR (name = "StreamVolume")]
 		public interface StreamVolume : GLib.Object {
 			[CCode (cname = "gst_stream_volume_convert_volume")]
@@ -370,7 +371,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public abstract double volume { get; set; }
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[GIR (name = "AudioCdSrcTrack")]
 		public struct CdSrcTrack {
 			public bool is_audio;
@@ -379,7 +380,7 @@ namespace Gst {
 			public uint end;
 			public weak Gst.TagList tags;
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[GIR (name = "AudioDownmixMeta")]
 		public struct DownmixMeta {
 			public Gst.Meta meta;
@@ -389,7 +390,7 @@ namespace Gst {
 			public int to_channels;
 			public float matrix;
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[GIR (name = "AudioFormatInfo")]
 		public struct FormatInfo {
 			public Gst.Audio.Format format;
@@ -405,7 +406,7 @@ namespace Gst {
 			public weak Gst.Audio.FormatUnpack unpack_func;
 			public weak Gst.Audio.FormatPack pack_func;
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[GIR (name = "AudioRingBufferSpec")]
 		public struct RingBufferSpec {
 			public weak Gst.Caps caps;
@@ -417,14 +418,14 @@ namespace Gst {
 			public int segtotal;
 			public int seglatency;
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cprefix = "GST_AUDIO_BASE_SINK_SLAVE_", type_id = "gst_audio_base_sink_slave_method_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_BASE_SINK_SLAVE_", type_id = "gst_audio_base_sink_slave_method_get_type ()")]
 		[GIR (name = "AudioBaseSinkSlaveMethod")]
 		public enum BaseSinkSlaveMethod {
 			RESAMPLE,
 			SKEW,
 			NONE
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cprefix = "GST_AUDIO_BASE_SRC_SLAVE_", type_id = "gst_audio_base_src_slave_method_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_BASE_SRC_SLAVE_", type_id = "gst_audio_base_src_slave_method_get_type ()")]
 		[GIR (name = "AudioBaseSrcSlaveMethod")]
 		public enum BaseSrcSlaveMethod {
 			RESAMPLE,
@@ -433,7 +434,7 @@ namespace Gst {
 			SKEW,
 			NONE
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cprefix = "", type_id = "gst_audio_cd_src_mode_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "", type_id = "gst_audio_cd_src_mode_get_type ()")]
 		[GIR (name = "AudioCdSrcMode")]
 		public enum CdSrcMode {
 			[CCode (cname = "Stream consists of a single track")]
@@ -441,7 +442,7 @@ namespace Gst {
 			[CCode (cname = "Stream consists of the whole disc")]
 			CONTINUOUS
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cprefix = "GST_AUDIO_CHANNEL_POSITION_", type_id = "gst_audio_channel_position_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_CHANNEL_POSITION_", type_id = "gst_audio_channel_position_get_type ()")]
 		[GIR (name = "AudioChannelPosition")]
 		public enum ChannelPosition {
 			NONE,
@@ -476,14 +477,14 @@ namespace Gst {
 			SURROUND_LEFT,
 			SURROUND_RIGHT
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cprefix = "GST_AUDIO_FLAG_", type_id = "gst_audio_flags_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_FLAG_", type_id = "gst_audio_flags_get_type ()")]
 		[Flags]
 		[GIR (name = "AudioFlags")]
 		public enum Flags {
 			NONE,
 			UNPOSITIONED
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cprefix = "GST_AUDIO_FORMAT_", type_id = "gst_audio_format_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_FORMAT_", type_id = "gst_audio_format_get_type ()")]
 		[GIR (name = "AudioFormat")]
 		public enum Format {
 			UNKNOWN,
@@ -533,7 +534,7 @@ namespace Gst {
 			F32,
 			F64
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cprefix = "GST_AUDIO_FORMAT_FLAG_", type_id = "gst_audio_format_flags_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_FORMAT_FLAG_", type_id = "gst_audio_format_flags_get_type ()")]
 		[Flags]
 		[GIR (name = "AudioFormatFlags")]
 		public enum FormatFlags {
@@ -543,18 +544,18 @@ namespace Gst {
 			COMPLEX,
 			UNPACK
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cprefix = "GST_AUDIO_LAYOUT_", type_id = "gst_audio_layout_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_LAYOUT_", type_id = "gst_audio_layout_get_type ()")]
 		[GIR (name = "AudioLayout")]
 		public enum Layout {
 			INTERLEAVED,
 			NON_INTERLEAVED
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cprefix = "GST_AUDIO_PACK_FLAG_", type_id = "gst_audio_pack_flags_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_PACK_FLAG_", type_id = "gst_audio_pack_flags_get_type ()")]
 		[GIR (name = "AudioPackFlags")]
 		public enum PackFlags {
 			NONE
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cprefix = "GST_AUDIO_RING_BUFFER_FORMAT_TYPE_", type_id = "gst_audio_ring_buffer_format_type_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_RING_BUFFER_FORMAT_TYPE_", type_id = "gst_audio_ring_buffer_format_type_get_type ()")]
 		[GIR (name = "AudioRingBufferFormatType")]
 		public enum RingBufferFormatType {
 			RAW,
@@ -570,91 +571,96 @@ namespace Gst {
 			MPEG2_AAC,
 			MPEG4_AAC
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cprefix = "GST_AUDIO_RING_BUFFER_STATE_", type_id = "gst_audio_ring_buffer_state_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_RING_BUFFER_STATE_", type_id = "gst_audio_ring_buffer_state_get_type ()")]
 		[GIR (name = "AudioRingBufferState")]
 		public enum RingBufferState {
 			STOPPED,
 			PAUSED,
-			STARTED
+			STARTED,
+			ERROR
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GstStreamVolumeFormat", cprefix = "GST_STREAM_VOLUME_FORMAT_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GstStreamVolumeFormat", cprefix = "GST_STREAM_VOLUME_FORMAT_", has_type_id = false)]
 		[GIR (name = "StreamVolumeFormat")]
 		public enum StreamVolumeFormat {
 			LINEAR,
 			CUBIC,
 			DB
 		}
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", instance_pos = 1.9)]
+		[CCode (cheader_filename = "gst/audio/audio.h", instance_pos = 1.9)]
 		public delegate Gst.ClockTime ClockGetTimeFunc (Gst.Clock clock);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", has_target = false)]
+		[CCode (cheader_filename = "gst/audio/audio.h", has_target = false)]
 		public delegate void FormatPack (Gst.Audio.FormatInfo info, Gst.Audio.PackFlags flags, [CCode (array_length = false)] uint8[] src, [CCode (array_length = false)] uint8[] data, int length);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", has_target = false)]
+		[CCode (cheader_filename = "gst/audio/audio.h", has_target = false)]
 		public delegate void FormatUnpack (Gst.Audio.FormatInfo info, Gst.Audio.PackFlags flags, [CCode (array_length = false)] uint8[] dest, [CCode (array_length = false)] uint8[] data, int length);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", instance_pos = 2.9)]
+		[CCode (cheader_filename = "gst/audio/audio.h", instance_pos = 2.9)]
 		public delegate void RingBufferCallback (Gst.Audio.RingBuffer rbuf, [CCode (array_length_cname = "len", array_length_pos = 2.1, array_length_type = "guint")] uint8[] data);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GST_AUDIO_CHANNELS_RANGE")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_CHANNELS_RANGE")]
 		public const string CHANNELS_RANGE;
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GST_AUDIO_DECODER_MAX_ERRORS")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_DECODER_MAX_ERRORS")]
 		public const int DECODER_MAX_ERRORS;
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GST_AUDIO_DECODER_SINK_NAME")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_DECODER_SINK_NAME")]
 		public const string DECODER_SINK_NAME;
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GST_AUDIO_DECODER_SRC_NAME")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_DECODER_SRC_NAME")]
 		public const string DECODER_SRC_NAME;
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GST_AUDIO_DEF_CHANNELS")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_DEF_CHANNELS")]
 		public const int DEF_CHANNELS;
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GST_AUDIO_DEF_FORMAT")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_DEF_FORMAT")]
 		public const string DEF_FORMAT;
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GST_AUDIO_DEF_RATE")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_DEF_RATE")]
 		public const int DEF_RATE;
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GST_AUDIO_ENCODER_SINK_NAME")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_ENCODER_SINK_NAME")]
 		public const string ENCODER_SINK_NAME;
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GST_AUDIO_ENCODER_SRC_NAME")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_ENCODER_SRC_NAME")]
 		public const string ENCODER_SRC_NAME;
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GST_AUDIO_FORMATS_ALL")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_FORMATS_ALL")]
 		public const string FORMATS_ALL;
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "GST_AUDIO_RATE_RANGE")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_META_TAG_AUDIO_CHANNELS_STR")]
+		public const string META_TAG_AUDIO_CHANNELS_STR;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_META_TAG_AUDIO_STR")]
+		public const string META_TAG_AUDIO_STR;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RATE_RANGE")]
 		public const string RATE_RANGE;
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_buffer_clip")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_buffer_clip")]
 		public static Gst.Buffer audio_buffer_clip (owned Gst.Buffer buffer, Gst.Segment segment, int rate, int bpf);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_buffer_reorder_channels")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_buffer_reorder_channels")]
 		public static bool audio_buffer_reorder_channels (Gst.Buffer buffer, Gst.Audio.Format format, int channels, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] from, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] to);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_channel_positions_from_mask")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_from_mask")]
 		public static bool audio_channel_positions_from_mask (uint64 channel_mask, [CCode (array_length_cname = "channels", array_length_pos = 0.5)] Gst.Audio.ChannelPosition[] position);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_channel_positions_to_mask")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_to_mask")]
 		public static bool audio_channel_positions_to_mask ([CCode (array_length_cname = "channels", array_length_pos = 1.5)] Gst.Audio.ChannelPosition[] position, bool force_order, [CCode (array_length = false)] uint64[] channel_mask);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_channel_positions_to_valid_order")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_to_valid_order")]
 		public static bool audio_channel_positions_to_valid_order ([CCode (array_length_cname = "channels", array_length_pos = 1.1)] Gst.Audio.ChannelPosition[] position);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_check_valid_channel_positions")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_check_valid_channel_positions")]
 		public static bool audio_check_valid_channel_positions ([CCode (array_length_cname = "channels", array_length_pos = 1.5)] Gst.Audio.ChannelPosition[] position, bool force_order);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_downmix_meta_api_get_type")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_downmix_meta_api_get_type")]
 		public static GLib.Type audio_downmix_meta_api_get_type ();
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_downmix_meta_get_info")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_downmix_meta_get_info")]
 		public static unowned Gst.MetaInfo? audio_downmix_meta_get_info ();
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_format_build_integer")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_format_build_integer")]
 		public static Gst.Audio.Format audio_format_build_integer (bool sign, int endianness, int width, int depth);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_format_fill_silence")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_format_fill_silence")]
 		public static void audio_format_fill_silence (Gst.Audio.FormatInfo info, [CCode (array_length_cname = "length", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] dest);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_format_from_string")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_format_from_string")]
 		public static Gst.Audio.Format audio_format_from_string (string format);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_format_get_info")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_format_get_info")]
 		public static unowned Gst.Audio.FormatInfo? audio_format_get_info (Gst.Audio.Format format);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_format_info_get_type")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_format_info_get_type")]
 		public static GLib.Type audio_format_info_get_type ();
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_format_to_string")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_format_to_string")]
 		public static unowned string audio_format_to_string (Gst.Audio.Format format);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_get_channel_reorder_map")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_get_channel_reorder_map")]
 		public static bool audio_get_channel_reorder_map (int channels, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] from, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] to, [CCode (array_length = false)] int[] reorder_map);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_iec61937_frame_size")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_iec61937_frame_size")]
 		public static uint audio_iec61937_frame_size (Gst.Audio.RingBufferSpec spec);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_iec61937_payload")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_iec61937_payload")]
 		public static bool audio_iec61937_payload ([CCode (array_length_cname = "src_n", array_length_pos = 1.5, array_length_type = "guint")] uint8[] src, [CCode (array_length_cname = "dst_n", array_length_pos = 2.5, array_length_type = "guint")] uint8[] dst, Gst.Audio.RingBufferSpec spec, int endianness);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_audio_reorder_channels")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_reorder_channels")]
 		public static bool audio_reorder_channels ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] data, Gst.Audio.Format format, int channels, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] from, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] to);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_buffer_add_audio_downmix_meta")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_buffer_add_audio_downmix_meta")]
 		public static unowned Gst.Audio.DownmixMeta? buffer_add_audio_downmix_meta (Gst.Buffer buffer, [CCode (array_length_cname = "from_channels", array_length_pos = 2.5)] Gst.Audio.ChannelPosition[] from_position, [CCode (array_length_cname = "to_channels", array_length_pos = 3.5)] Gst.Audio.ChannelPosition[] to_position, float matrix);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_buffer_get_audio_downmix_meta_for_channels")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_buffer_get_audio_downmix_meta_for_channels")]
 		public static unowned Gst.Audio.DownmixMeta? buffer_get_audio_downmix_meta_for_channels (Gst.Buffer buffer, [CCode (array_length_cname = "to_channels", array_length_pos = 2.1)] Gst.Audio.ChannelPosition[] to_position);
-		[CCode (cheader_filename = "gst/audio/audio-channels.h,gst/audio/audio-enumtypes.h,gst/audio/audio-format.h,gst/audio/audio-info.h,gst/audio/audio.h,gst/audio/gstaudiobasesink.h,gst/audio/gstaudiobasesrc.h,gst/audio/gstaudiocdsrc.h,gst/audio/gstaudioclock.h,gst/audio/gstaudiodecoder.h,gst/audio/gstaudioencoder.h,gst/audio/gstaudiofilter.h,gst/audio/gstaudioiec61937.h,gst/audio/gstaudiometa.h,gst/audio/gstaudioringbuffer.h,gst/audio/gstaudiosink.h,gst/audio/gstaudiosrc.h,gst/audio/streamvolume.h", cname = "gst_stream_volume_convert_volume")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_stream_volume_convert_volume")]
 		public static double stream_volume_convert_volume (Gst.Audio.StreamVolumeFormat from, Gst.Audio.StreamVolumeFormat to, double val);
 	}
 }

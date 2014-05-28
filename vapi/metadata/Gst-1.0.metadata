@@ -15,8 +15,8 @@ Element
   .sinkpads type="GLib.List<unowned Gst.Pad>"
   .srcpads type="GLib.List<unowned Gst.Pad>"
   .state_cond unowned=false
-MapInfo
-  .data array array_length_field="size"
+Pad
+  .ABI skip
 TagList
   .get_boolean.value out
 init_get_option_group skip=false
@@ -94,6 +94,7 @@ ElementFactory
   .make floating
 Bin.new floating
 parse_launch_full floating
+parse_launchv_full floating
 
 // Default values
 Bus
@@ -149,6 +150,10 @@ formats_contains parent="Gst.Format" name="contains"
 // No way to make reparented functions instance methods
 FlowReturn.custom_error_2 skip
 flow_get_name skip // parent="Gst.FlowReturn" name="get_name"
+
+// Backwards compatibility
+Structure
+  .new_from_string skip
 
 // Upstream
 Pipeline

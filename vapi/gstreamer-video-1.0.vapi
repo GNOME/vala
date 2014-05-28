@@ -3,11 +3,21 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstVideo", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace Video {
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", type_id = "gst_video_buffer_pool_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_buffer_pool_get_type ()")]
 		[GIR (name = "VideoBufferPool")]
 		public class BufferPool : Gst.BufferPool {
 			[CCode (has_construct_function = false, type = "GstBufferPool*")]
 			public BufferPool ();
+		}
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Compact]
+		[GIR (name = "VideoChromaResample")]
+		public class ChromaResample {
+			public ChromaResample (Gst.Video.ChromaMethod method, Gst.Video.ChromaSite site, Gst.Video.ChromaFlags flags, Gst.Video.Format format, int h_factor, int v_factor);
+			public void free ();
+			public void get_info (uint n_lines, int offset);
+			[CCode (cname = "gst_video_chroma_resample")]
+			public void resample (void* lines, int width);
 		}
 		[CCode (cheader_filename = "gst/video/gstvideoutils.h", ref_function = "gst_video_codec_frame_ref", type_id = "gst_video_codec_frame_get_type ()", unref_function = "gst_video_codec_frame_unref")]
 		[Compact]
@@ -30,7 +40,7 @@ namespace Gst {
 			public void set_user_data<T> (owned T user_data);
 			public void unref ();
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", ref_function = "gst_video_codec_state_ref", type_id = "gst_video_codec_state_get_type ()", unref_function = "gst_video_codec_state_unref")]
+		[CCode (cheader_filename = "gst/video/video.h", ref_function = "gst_video_codec_state_ref", type_id = "gst_video_codec_state_get_type ()", unref_function = "gst_video_codec_state_unref")]
 		[Compact]
 		[GIR (name = "VideoCodecState")]
 		public class CodecState {
@@ -40,7 +50,7 @@ namespace Gst {
 			public Gst.Video.CodecState @ref ();
 			public void unref ();
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GstColorBalanceChannel", type_id = "gst_color_balance_channel_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GstColorBalanceChannel", type_id = "gst_color_balance_channel_get_type ()")]
 		[GIR (name = "ColorBalanceChannel")]
 		public class ColorBalanceChannel : GLib.Object {
 			public weak string label;
@@ -50,7 +60,7 @@ namespace Gst {
 			protected ColorBalanceChannel ();
 			public virtual signal void value_changed (int value);
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", type_id = "gst_video_decoder_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_decoder_get_type ()")]
 		[GIR (name = "VideoDecoder")]
 		public abstract class Decoder : Gst.Element {
 			[CCode (has_construct_function = false)]
@@ -66,6 +76,8 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.FlowReturn finish ();
 			public Gst.FlowReturn finish_frame (owned Gst.Video.CodecFrame frame);
+			[NoWrapper]
+			public virtual bool flush ();
 			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
 			public Gst.BufferPool get_buffer_pool ();
 			public int get_estimate_rate ();
@@ -74,9 +86,11 @@ namespace Gst {
 			public void get_latency (out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
 			public Gst.ClockTimeDiff get_max_decode_time (Gst.Video.CodecFrame frame);
 			public int get_max_errors ();
+			public bool get_needs_format ();
 			public Gst.Video.CodecFrame get_oldest_frame ();
 			public Gst.Video.CodecState get_output_state ();
 			public bool get_packetized ();
+			public size_t get_pending_frame_size ();
 			public double get_qos_proportion ();
 			[NoWrapper]
 			public virtual Gst.FlowReturn handle_frame (Gst.Video.CodecFrame frame);
@@ -89,6 +103,7 @@ namespace Gst {
 			public virtual Gst.FlowReturn parse (Gst.Video.CodecFrame frame, Gst.Base.Adapter adapter, bool at_eos);
 			[NoWrapper]
 			public virtual bool propose_allocation (Gst.Query query);
+			public void release_frame (owned Gst.Video.CodecFrame frame);
 			[NoWrapper]
 			public virtual bool reset (bool hard);
 			public void set_estimate_rate (bool enabled);
@@ -96,18 +111,23 @@ namespace Gst {
 			public virtual bool set_format (Gst.Video.CodecState state);
 			public void set_latency (Gst.ClockTime min_latency, Gst.ClockTime max_latency);
 			public void set_max_errors (int num);
+			public void set_needs_format (bool enabled);
 			public Gst.Video.CodecState set_output_state (Gst.Video.Format fmt, uint width, uint height, Gst.Video.CodecState? reference);
 			public void set_packetized (bool packetized);
 			[NoWrapper]
 			public virtual bool sink_event (Gst.Event event);
 			[NoWrapper]
+			public virtual bool sink_query (Gst.Query query);
+			[NoWrapper]
 			public virtual bool src_event (Gst.Event event);
+			[NoWrapper]
+			public virtual bool src_query (Gst.Query query);
 			[NoWrapper]
 			public virtual bool start ();
 			[NoWrapper]
 			public virtual bool stop ();
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", type_id = "gst_video_encoder_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_encoder_get_type ()")]
 		[GIR (name = "VideoEncoder")]
 		public abstract class Encoder : Gst.Element, Gst.Preset {
 			[CCode (has_construct_function = false)]
@@ -121,8 +141,9 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.FlowReturn finish ();
 			public Gst.FlowReturn finish_frame (owned Gst.Video.CodecFrame frame);
+			[NoWrapper]
+			public virtual bool flush ();
 			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
-			public bool get_discont ();
 			public Gst.Video.CodecFrame get_frame (int frame_number);
 			public GLib.List<Gst.Video.CodecFrame> get_frames ();
 			public void get_latency (out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
@@ -143,7 +164,6 @@ namespace Gst {
 			public Gst.Caps proxy_getcaps (Gst.Caps caps, Gst.Caps filter);
 			[NoWrapper]
 			public virtual bool reset (bool hard);
-			public void set_discont ();
 			[NoWrapper]
 			public virtual bool set_format (Gst.Video.CodecState state);
 			public void set_headers (owned GLib.List<Gst.Buffer> headers);
@@ -152,13 +172,17 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool sink_event (Gst.Event event);
 			[NoWrapper]
+			public virtual bool sink_query (Gst.Query query);
+			[NoWrapper]
 			public virtual bool src_event (Gst.Event event);
+			[NoWrapper]
+			public virtual bool src_query (Gst.Query query);
 			[NoWrapper]
 			public virtual bool start ();
 			[NoWrapper]
 			public virtual bool stop ();
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", type_id = "gst_video_filter_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_filter_get_type ()")]
 		[GIR (name = "VideoFilter")]
 		public abstract class Filter : Gst.Base.Transform {
 			public Gst.Video.Info in_info;
@@ -207,7 +231,7 @@ namespace Gst {
 			public void set_global_alpha (float global_alpha);
 			public void set_render_rectangle (int render_x, int render_y, uint render_width, uint render_height);
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", type_id = "gst_video_sink_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_sink_get_type ()")]
 		[GIR (name = "VideoSink")]
 		public class Sink : Gst.Base.Sink {
 			public int height;
@@ -220,16 +244,17 @@ namespace Gst {
 			[NoAccessorMethod]
 			public bool show_preroll_frame { get; set construct; }
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GstColorBalance", type_cname = "GstColorBalanceInterface", type_id = "gst_color_balance_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GstColorBalance", type_cname = "GstColorBalanceInterface", type_id = "gst_color_balance_get_type ()")]
 		[GIR (name = "ColorBalance")]
 		public interface ColorBalance : GLib.Object {
 			public abstract Gst.Video.ColorBalanceType get_balance_type ();
 			public abstract int get_value (Gst.Video.ColorBalanceChannel channel);
+			public abstract unowned GLib.List<Gst.Video.ColorBalanceChannel> list_channels ();
 			public abstract void set_value (Gst.Video.ColorBalanceChannel channel, int value);
 			[HasEmitter]
 			public virtual signal void value_changed (Gst.Video.ColorBalanceChannel channel, int value);
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GstNavigation", type_cname = "GstNavigationInterface", type_id = "gst_navigation_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigation", type_cname = "GstNavigationInterface", type_id = "gst_navigation_get_type ()")]
 		[GIR (name = "Navigation")]
 		public interface Navigation : GLib.Object {
 			[CCode (cname = "gst_navigation_event_get_type")]
@@ -263,9 +288,9 @@ namespace Gst {
 			[CCode (cname = "gst_navigation_query_parse_angles")]
 			public static bool query_parse_angles (Gst.Query query, uint cur_angle, uint n_angles);
 			[CCode (cname = "gst_navigation_query_parse_commands_length")]
-			public static bool query_parse_commands_length (Gst.Query query, uint n_cmds);
+			public static bool query_parse_commands_length (Gst.Query query, out uint n_cmds);
 			[CCode (cname = "gst_navigation_query_parse_commands_nth")]
-			public static bool query_parse_commands_nth (Gst.Query query, uint nth, Gst.Video.NavigationCommand cmd);
+			public static bool query_parse_commands_nth (Gst.Query query, uint nth, out Gst.Video.NavigationCommand cmd);
 			[CCode (cname = "gst_navigation_query_set_angles")]
 			public static void query_set_angles (Gst.Query query, uint cur_angle, uint n_angles);
 			[CCode (cname = "gst_navigation_query_set_commandsv")]
@@ -278,7 +303,7 @@ namespace Gst {
 			[CCode (cname = "gst_navigation_send_mouse_event")]
 			public void send_mouse_event (string event, int button, double x, double y);
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", type_id = "gst_video_orientation_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_orientation_get_type ()")]
 		[GIR (name = "VideoOrientation")]
 		public interface Orientation : GLib.Object {
 			public abstract bool get_hcenter (int center);
@@ -290,7 +315,7 @@ namespace Gst {
 			public abstract bool set_vcenter (int center);
 			public abstract bool set_vflip (bool flip);
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", type_id = "gst_video_overlay_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_overlay_get_type ()")]
 		[GIR (name = "VideoOverlay")]
 		public interface Overlay : GLib.Object {
 			public abstract void expose ();
@@ -303,7 +328,7 @@ namespace Gst {
 			[CCode (cname = "gst_video_overlay_set_render_rectangle")]
 			public bool try_set_render_rectangle (int x, int y, int width, int height);
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoAlignment")]
 		public struct Alignment {
 			public uint padding_top;
@@ -314,7 +339,7 @@ namespace Gst {
 			public weak uint[] stride_align;
 			public void reset ();
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoColorimetry")]
 		public struct Colorimetry {
 			public Gst.Video.ColorRange range;
@@ -325,7 +350,7 @@ namespace Gst {
 			public bool matches (string color);
 			public string to_string ();
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoCropMeta")]
 		public struct CropMeta {
 			public Gst.Meta meta;
@@ -334,7 +359,7 @@ namespace Gst {
 			public uint width;
 			public uint height;
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoFormatInfo")]
 		public struct FormatInfo {
 			public Gst.Video.Format format;
@@ -362,10 +387,13 @@ namespace Gst {
 			public weak Gst.Video.FormatUnpack unpack_func;
 			public int pack_lines;
 			public weak Gst.Video.FormatPack pack_func;
+			public Gst.Video.TileMode tile_mode;
+			public uint tile_ws;
+			public uint tile_hs;
 			[CCode (array_length = false, array_null_terminated = true)]
 			public weak void*[] _gst_reserved;
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoFrame")]
 		public struct Frame {
 			public Gst.Video.Info info;
@@ -381,7 +409,17 @@ namespace Gst {
 			public bool map_id (Gst.Video.Info info, Gst.Buffer buffer, int id, Gst.MapFlags flags);
 			public void unmap ();
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
+		[GIR (name = "VideoGLTextureUploadMeta")]
+		public struct GLTextureUploadMeta {
+			public Gst.Meta meta;
+			public Gst.Video.GLTextureOrientation texture_orientation;
+			public uint n_textures;
+			[CCode (array_length = false, array_null_terminated = true)]
+			public weak Gst.Video.GLTextureType[] texture_type;
+			public bool upload (uint texture_id);
+		}
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoInfo")]
 		public struct Info {
 			public Gst.Video.FormatInfo? finfo;
@@ -409,7 +447,7 @@ namespace Gst {
 			public void set_format (Gst.Video.Format format, uint width, uint height);
 			public Gst.Caps to_caps ();
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoMeta")]
 		public struct Meta {
 			public Gst.Meta meta;
@@ -427,19 +465,19 @@ namespace Gst {
 			public bool map (uint plane, Gst.MapInfo info, void* data, int stride, Gst.MapFlags flags);
 			public bool unmap (uint plane, Gst.MapInfo info);
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoMetaTransform")]
 		public struct MetaTransform {
 			public Gst.Video.Info in_info;
 			public Gst.Video.Info out_info;
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoOverlayCompositionMeta")]
 		public struct OverlayCompositionMeta {
 			public Gst.Meta meta;
 			public weak Gst.Video.OverlayComposition overlay;
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoRectangle")]
 		public struct Rectangle {
 			public int x;
@@ -447,7 +485,19 @@ namespace Gst {
 			public int w;
 			public int h;
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_BUFFER_FLAG_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
+		[GIR (name = "VideoRegionOfInterestMeta")]
+		public struct RegionOfInterestMeta {
+			public Gst.Meta meta;
+			public GLib.Quark roi_type;
+			public int id;
+			public int parent_id;
+			public uint x;
+			public uint y;
+			public uint w;
+			public uint h;
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_BUFFER_FLAG_", has_type_id = false)]
 		[Flags]
 		[GIR (name = "VideoBufferFlags")]
 		public enum BufferFlags {
@@ -457,7 +507,20 @@ namespace Gst {
 			ONEFIELD,
 			LAST
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_CHROMA_SITE_", type_id = "gst_video_chroma_site_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_CHROMA_FLAG_", type_id = "gst_video_chroma_flags_get_type ()")]
+		[Flags]
+		[GIR (name = "VideoChromaFlags")]
+		public enum ChromaFlags {
+			NONE,
+			INTERLACED
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_CHROMA_METHOD_", type_id = "gst_video_chroma_method_get_type ()")]
+		[GIR (name = "VideoChromaMethod")]
+		public enum ChromaMethod {
+			NEAREST,
+			LINEAR
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_CHROMA_SITE_", type_id = "gst_video_chroma_site_get_type ()")]
 		[Flags]
 		[GIR (name = "VideoChromaSite")]
 		public enum ChromaSite {
@@ -471,7 +534,7 @@ namespace Gst {
 			MPEG2,
 			DV
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_CODEC_FRAME_FLAG_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_CODEC_FRAME_FLAG_", has_type_id = false)]
 		[Flags]
 		[GIR (name = "VideoCodecFrameFlags")]
 		public enum CodecFrameFlags {
@@ -480,13 +543,13 @@ namespace Gst {
 			FORCE_KEYFRAME,
 			FORCE_KEYFRAME_HEADERS
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GstColorBalanceType", cprefix = "GST_COLOR_BALANCE_", type_id = "gst_color_balance_type_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GstColorBalanceType", cprefix = "GST_COLOR_BALANCE_", type_id = "gst_color_balance_type_get_type ()")]
 		[GIR (name = "ColorBalanceType")]
 		public enum ColorBalanceType {
 			HARDWARE,
 			SOFTWARE
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_COLOR_MATRIX_", type_id = "gst_video_color_matrix_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_COLOR_MATRIX_", type_id = "gst_video_color_matrix_get_type ()")]
 		[GIR (name = "VideoColorMatrix")]
 		public enum ColorMatrix {
 			UNKNOWN,
@@ -496,7 +559,7 @@ namespace Gst {
 			BT601,
 			SMPTE240M
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_COLOR_PRIMARIES_", type_id = "gst_video_color_primaries_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_COLOR_PRIMARIES_", type_id = "gst_video_color_primaries_get_type ()")]
 		[GIR (name = "VideoColorPrimaries")]
 		public enum ColorPrimaries {
 			UNKNOWN,
@@ -507,14 +570,14 @@ namespace Gst {
 			SMPTE240M,
 			FILM
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_COLOR_RANGE_", type_id = "gst_video_color_range_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_COLOR_RANGE_", type_id = "gst_video_color_range_get_type ()")]
 		[GIR (name = "VideoColorRange")]
 		public enum ColorRange {
 			UNKNOWN,
 			@0_255,
 			@16_235
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_FLAG_", type_id = "gst_video_flags_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FLAG_", type_id = "gst_video_flags_get_type ()")]
 		[Flags]
 		[GIR (name = "VideoFlags")]
 		public enum Flags {
@@ -522,7 +585,7 @@ namespace Gst {
 			VARIABLE_FPS,
 			PREMULTIPLIED_ALPHA
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_FORMAT_", type_id = "gst_video_format_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_", type_id = "gst_video_format_get_type ()")]
 		[GIR (name = "VideoFormat")]
 		public enum Format {
 			UNKNOWN,
@@ -578,9 +641,17 @@ namespace Gst {
 			I420_10BE,
 			I420_10LE,
 			I422_10BE,
-			I422_10LE
+			I422_10LE,
+			Y444_10BE,
+			Y444_10LE,
+			GBR,
+			GBR_10BE,
+			GBR_10LE,
+			NV16,
+			NV24,
+			NV12_64Z32
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]
 		[GIR (name = "VideoFormatFlags")]
 		public enum FormatFlags {
@@ -591,9 +662,10 @@ namespace Gst {
 			LE,
 			PALETTE,
 			COMPLEX,
-			UNPACK
+			UNPACK,
+			TILED
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_FRAME_FLAG_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FRAME_FLAG_", has_type_id = false)]
 		[Flags]
 		[GIR (name = "VideoFrameFlags")]
 		public enum FrameFlags {
@@ -603,7 +675,26 @@ namespace Gst {
 			RFF,
 			ONEFIELD
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_INTERLACE_MODE_", type_id = "gst_video_interlace_mode_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_GL_TEXTURE_ORIENTATION_X_", has_type_id = false)]
+		[GIR (name = "VideoGLTextureOrientation")]
+		public enum GLTextureOrientation {
+			NORMAL_Y_NORMAL,
+			NORMAL_Y_FLIP,
+			FLIP_Y_NORMAL,
+			FLIP_Y_FLIP
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_GL_TEXTURE_TYPE_", has_type_id = false)]
+		[GIR (name = "VideoGLTextureType")]
+		public enum GLTextureType {
+			LUMINANCE,
+			LUMINANCE_ALPHA,
+			RGB16,
+			RGB,
+			RGBA,
+			R,
+			RG
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_INTERLACE_MODE_", type_id = "gst_video_interlace_mode_get_type ()")]
 		[GIR (name = "VideoInterlaceMode")]
 		public enum InterlaceMode {
 			PROGRESSIVE,
@@ -611,7 +702,7 @@ namespace Gst {
 			MIXED,
 			FIELDS
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GstNavigationCommand", cprefix = "GST_NAVIGATION_COMMAND_", type_id = "gst_navigation_command_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigationCommand", cprefix = "GST_NAVIGATION_COMMAND_", type_id = "gst_navigation_command_get_type ()")]
 		[GIR (name = "NavigationCommand")]
 		public enum NavigationCommand {
 			INVALID,
@@ -630,7 +721,7 @@ namespace Gst {
 			PREV_ANGLE,
 			NEXT_ANGLE
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GstNavigationEventType", cprefix = "GST_NAVIGATION_EVENT_", type_id = "gst_navigation_event_type_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigationEventType", cprefix = "GST_NAVIGATION_EVENT_", type_id = "gst_navigation_event_type_get_type ()")]
 		[GIR (name = "NavigationEventType")]
 		public enum NavigationEventType {
 			INVALID,
@@ -641,7 +732,7 @@ namespace Gst {
 			MOUSE_MOVE,
 			COMMAND
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GstNavigationMessageType", cprefix = "GST_NAVIGATION_MESSAGE_", type_id = "gst_navigation_message_type_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigationMessageType", cprefix = "GST_NAVIGATION_MESSAGE_", type_id = "gst_navigation_message_type_get_type ()")]
 		[GIR (name = "NavigationMessageType")]
 		public enum NavigationMessageType {
 			INVALID,
@@ -649,27 +740,40 @@ namespace Gst {
 			COMMANDS_CHANGED,
 			ANGLES_CHANGED
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GstNavigationQueryType", cprefix = "GST_NAVIGATION_QUERY_", type_id = "gst_navigation_query_type_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigationQueryType", cprefix = "GST_NAVIGATION_QUERY_", type_id = "gst_navigation_query_type_get_type ()")]
 		[GIR (name = "NavigationQueryType")]
 		public enum NavigationQueryType {
 			INVALID,
 			COMMANDS,
 			ANGLES
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_OVERLAY_FORMAT_FLAG_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_OVERLAY_FORMAT_FLAG_", has_type_id = false)]
 		[GIR (name = "VideoOverlayFormatFlags")]
 		public enum OverlayFormatFlags {
 			NONE,
 			PREMULTIPLIED_ALPHA,
 			GLOBAL_ALPHA
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_PACK_FLAG_", type_id = "gst_video_pack_flags_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_PACK_FLAG_", type_id = "gst_video_pack_flags_get_type ()")]
+		[Flags]
 		[GIR (name = "VideoPackFlags")]
 		public enum PackFlags {
 			NONE,
-			TRUNCATE_RANGE
+			TRUNCATE_RANGE,
+			INTERLACED
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cprefix = "GST_VIDEO_TRANSFER_", type_id = "gst_video_transfer_function_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_TILE_MODE_", type_id = "gst_video_tile_mode_get_type ()")]
+		[GIR (name = "VideoTileMode")]
+		public enum TileMode {
+			UNKNOWN,
+			ZFLIPZ_2X2
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_TILE_TYPE_", type_id = "gst_video_tile_type_get_type ()")]
+		[GIR (name = "VideoTileType")]
+		public enum TileType {
+			INDEXED
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_TRANSFER_", type_id = "gst_video_transfer_function_get_type ()")]
 		[GIR (name = "VideoTransferFunction")]
 		public enum TransferFunction {
 			UNKNOWN,
@@ -684,159 +788,199 @@ namespace Gst {
 			LOG100,
 			LOG316
 		}
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", instance_pos = 2.9)]
+		[CCode (cheader_filename = "gst/video/video.h", instance_pos = 2.9)]
 		public delegate void ConvertSampleCallback (Gst.Sample sample, GLib.Error error);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", has_target = false)]
+		[CCode (cheader_filename = "gst/video/video.h", has_target = false)]
 		public delegate void FormatPack (Gst.Video.FormatInfo info, Gst.Video.PackFlags flags, void* src, int sstride, void* data, int stride, Gst.Video.ChromaSite chroma_site, int y, int width);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", has_target = false)]
+		[CCode (cheader_filename = "gst/video/video.h", has_target = false)]
 		public delegate void FormatUnpack (Gst.Video.FormatInfo info, Gst.Video.PackFlags flags, void* dest, void* data, int stride, int x, int y, int width);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_BUFFER_POOL_OPTION_VIDEO_ALIGNMENT")]
+		[CCode (cheader_filename = "gst/video/video.h", has_target = false)]
+		public delegate bool GLTextureUpload (Gst.Video.GLTextureUploadMeta meta, uint texture_id);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_BUFFER_POOL_OPTION_VIDEO_ALIGNMENT")]
 		public const string BUFFER_POOL_OPTION_VIDEO_ALIGNMENT;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_BUFFER_POOL_OPTION_VIDEO_META")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_BUFFER_POOL_OPTION_VIDEO_GL_TEXTURE_UPLOAD_META")]
+		public const string BUFFER_POOL_OPTION_VIDEO_GL_TEXTURE_UPLOAD_META;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_BUFFER_POOL_OPTION_VIDEO_META")]
 		public const string BUFFER_POOL_OPTION_VIDEO_META;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_COLORIMETRY_BT601")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_CAPS_FEATURE_META_GST_VIDEO_GL_TEXTURE_UPLOAD_META")]
+		public const string CAPS_FEATURE_META_GST_VIDEO_GL_TEXTURE_UPLOAD_META;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_CAPS_FEATURE_META_GST_VIDEO_META")]
+		public const string CAPS_FEATURE_META_GST_VIDEO_META;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION")]
+		public const string CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COLORIMETRY_BT601")]
 		public const string COLORIMETRY_BT601;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_COLORIMETRY_BT709")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COLORIMETRY_BT709")]
 		public const string COLORIMETRY_BT709;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_COLORIMETRY_SMPTE240M")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COLORIMETRY_SMPTE240M")]
 		public const string COLORIMETRY_SMPTE240M;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_COMP_A")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COMP_A")]
 		public const int COMP_A;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_COMP_B")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COMP_B")]
 		public const int COMP_B;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_COMP_G")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COMP_G")]
 		public const int COMP_G;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_COMP_INDEX")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COMP_INDEX")]
 		public const int COMP_INDEX;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_COMP_PALETTE")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COMP_PALETTE")]
 		public const int COMP_PALETTE;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_COMP_R")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COMP_R")]
 		public const int COMP_R;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_COMP_U")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COMP_U")]
 		public const int COMP_U;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_COMP_V")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COMP_V")]
 		public const int COMP_V;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_COMP_Y")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COMP_Y")]
 		public const int COMP_Y;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_DECODER_MAX_ERRORS")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_DECODER_MAX_ERRORS")]
 		public const int DECODER_MAX_ERRORS;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_DECODER_SINK_NAME")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_DECODER_SINK_NAME")]
 		public const string DECODER_SINK_NAME;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_DECODER_SRC_NAME")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_DECODER_SRC_NAME")]
 		public const string DECODER_SRC_NAME;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_ENCODER_SINK_NAME")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_ENCODER_SINK_NAME")]
 		public const string ENCODER_SINK_NAME;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_ENCODER_SRC_NAME")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_ENCODER_SRC_NAME")]
 		public const string ENCODER_SRC_NAME;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_FORMATS_ALL")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_FORMATS_ALL")]
 		public const string FORMATS_ALL;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_FPS_RANGE")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_FPS_RANGE")]
 		public const string FPS_RANGE;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_MAX_COMPONENTS")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_MAX_COMPONENTS")]
 		public const int MAX_COMPONENTS;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_MAX_PLANES")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_MAX_PLANES")]
 		public const int MAX_PLANES;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "GST_VIDEO_SIZE_RANGE")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_META_TAG_VIDEO_COLORSPACE_STR")]
+		public const string META_TAG_VIDEO_COLORSPACE_STR;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_META_TAG_VIDEO_ORIENTATION_STR")]
+		public const string META_TAG_VIDEO_ORIENTATION_STR;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_META_TAG_VIDEO_SIZE_STR")]
+		public const string META_TAG_VIDEO_SIZE_STR;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_META_TAG_VIDEO_STR")]
+		public const string META_TAG_VIDEO_STR;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_OVERLAY_COMPOSITION_BLEND_FORMATS")]
+		public const string OVERLAY_COMPOSITION_BLEND_FORMATS;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_SIZE_RANGE")]
 		public const string SIZE_RANGE;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_TILE_TYPE_MASK")]
+		public const int TILE_TYPE_MASK;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_TILE_TYPE_SHIFT")]
+		public const int TILE_TYPE_SHIFT;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_TILE_X_TILES_MASK")]
+		public const int TILE_X_TILES_MASK;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_TILE_Y_TILES_SHIFT")]
+		public const int TILE_Y_TILES_SHIFT;
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool blend (Gst.Video.Frame dest, Gst.Video.Frame src, int x, int y, float global_alpha);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static void blend_scale_linear_RGBA (Gst.Video.Info src, Gst.Buffer src_buffer, int dest_height, int dest_width, Gst.Video.Info dest, Gst.Buffer dest_buffer);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_buffer_pool_config_get_video_alignment")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_pool_config_get_video_alignment")]
 		public static bool buffer_pool_config_get_video_alignment (Gst.Structure config, Gst.Video.Alignment align);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_buffer_pool_config_set_video_alignment")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_pool_config_set_video_alignment")]
 		public static void buffer_pool_config_set_video_alignment (Gst.Structure config, Gst.Video.Alignment align);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool calculate_display_ratio (uint dar_n, uint dar_d, uint video_width, uint video_height, uint video_par_n, uint video_par_d, uint display_par_n, uint display_par_d);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Video.ChromaSite chroma_from_string (string s);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned string chroma_to_string (Gst.Video.ChromaSite site);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
-		public static void color_range_offsets (Gst.Video.ColorRange range, Gst.Video.FormatInfo info, int offset, out int scale);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static void color_range_offsets (Gst.Video.ColorRange range, Gst.Video.FormatInfo info, out int offset, out int scale);
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Sample convert_sample (Gst.Sample sample, Gst.Caps to_caps, Gst.ClockTime timeout) throws GLib.Error;
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static void convert_sample_async (Gst.Sample sample, Gst.Caps to_caps, Gst.ClockTime timeout, owned Gst.Video.ConvertSampleCallback callback);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static GLib.Type crop_meta_api_get_type ();
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned Gst.MetaInfo? crop_meta_get_info ();
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool event_is_force_key_unit (Gst.Event event);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Event event_new_downstream_force_key_unit (Gst.ClockTime timestamp, Gst.ClockTime stream_time, Gst.ClockTime running_time, bool all_headers, uint count);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Event event_new_still_frame (bool in_still);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Event event_new_upstream_force_key_unit (Gst.ClockTime running_time, bool all_headers, uint count);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool event_parse_downstream_force_key_unit (Gst.Event event, out Gst.ClockTime timestamp, out Gst.ClockTime stream_time, out Gst.ClockTime running_time, out bool all_headers, out uint count);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool event_parse_still_frame (Gst.Event event, bool in_still);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool event_parse_upstream_force_key_unit (Gst.Event event, out Gst.ClockTime running_time, out bool all_headers, out uint count);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Video.Format format_from_fourcc (uint32 fourcc);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
-		public static Gst.Video.Format format_from_masks (int depth, int bpp, int endianness, int red_mask, int green_mask, int blue_mask, int alpha_mask);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static Gst.Video.Format format_from_masks (int depth, int bpp, int endianness, uint red_mask, uint green_mask, uint blue_mask, uint alpha_mask);
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Video.Format format_from_string (string format);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned Gst.Video.FormatInfo? format_get_info (Gst.Video.Format format);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static void* format_get_palette (Gst.Video.Format format, out size_t size);
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static uint32 format_to_fourcc (Gst.Video.Format format);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned string format_to_string (Gst.Video.Format format);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_is_video_overlay_prepare_window_handle_message")]
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static GLib.Type gl_texture_upload_meta_api_get_type ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static unowned Gst.MetaInfo? gl_texture_upload_meta_get_info ();
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_is_video_overlay_prepare_window_handle_message")]
 		public static bool is_video_overlay_prepare_window_handle_message (Gst.Message msg);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static GLib.Type meta_api_get_type ();
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned Gst.MetaInfo? meta_get_info ();
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static GLib.Quark meta_transform_scale_get_quark ();
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_event_get_type")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_get_type")]
 		public static Gst.Video.NavigationEventType navigation_event_get_type (Gst.Event event);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_event_parse_command")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_command")]
 		public static bool navigation_event_parse_command (Gst.Event event, Gst.Video.NavigationCommand command);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_event_parse_key_event")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_key_event")]
 		public static bool navigation_event_parse_key_event (Gst.Event event, string key);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_event_parse_mouse_button_event")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_mouse_button_event")]
 		public static bool navigation_event_parse_mouse_button_event (Gst.Event event, int button, double x, double y);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_event_parse_mouse_move_event")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_mouse_move_event")]
 		public static bool navigation_event_parse_mouse_move_event (Gst.Event event, double x, double y);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_message_get_type")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_message_get_type")]
 		public static Gst.Video.NavigationMessageType navigation_message_get_type (Gst.Message message);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_message_new_angles_changed")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_message_new_angles_changed")]
 		public static Gst.Message navigation_message_new_angles_changed (Gst.Object src, uint cur_angle, uint n_angles);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_message_new_commands_changed")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_message_new_commands_changed")]
 		public static Gst.Message navigation_message_new_commands_changed (Gst.Object src);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_message_new_mouse_over")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_message_new_mouse_over")]
 		public static Gst.Message navigation_message_new_mouse_over (Gst.Object src, bool active);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_message_parse_angles_changed")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_message_parse_angles_changed")]
 		public static bool navigation_message_parse_angles_changed (Gst.Message message, uint cur_angle, uint n_angles);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_message_parse_mouse_over")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_message_parse_mouse_over")]
 		public static bool navigation_message_parse_mouse_over (Gst.Message message, bool active);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_query_get_type")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_query_get_type")]
 		public static Gst.Video.NavigationQueryType navigation_query_get_type (Gst.Query query);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_query_new_angles")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_query_new_angles")]
 		public static Gst.Query navigation_query_new_angles ();
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_query_new_commands")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_query_new_commands")]
 		public static Gst.Query navigation_query_new_commands ();
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_query_parse_angles")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_query_parse_angles")]
 		public static bool navigation_query_parse_angles (Gst.Query query, uint cur_angle, uint n_angles);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_query_parse_commands_length")]
-		public static bool navigation_query_parse_commands_length (Gst.Query query, uint n_cmds);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_query_parse_commands_nth")]
-		public static bool navigation_query_parse_commands_nth (Gst.Query query, uint nth, Gst.Video.NavigationCommand cmd);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_query_set_angles")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_query_parse_commands_length")]
+		public static bool navigation_query_parse_commands_length (Gst.Query query, out uint n_cmds);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_query_parse_commands_nth")]
+		public static bool navigation_query_parse_commands_nth (Gst.Query query, uint nth, out Gst.Video.NavigationCommand cmd);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_query_set_angles")]
 		public static void navigation_query_set_angles (Gst.Query query, uint cur_angle, uint n_angles);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h", cname = "gst_navigation_query_set_commandsv")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_query_set_commandsv")]
 		public static void navigation_query_set_commandsv (Gst.Query query, int n_cmds, Gst.Video.NavigationCommand cmds);
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static GLib.Type overlay_composition_meta_api_get_type ();
-		[CCode (cheader_filename = "gst/video/colorbalance.h,gst/video/colorbalancechannel.h,gst/video/gstvideodecoder.h,gst/video/gstvideoencoder.h,gst/video/gstvideofilter.h,gst/video/gstvideometa.h,gst/video/gstvideopool.h,gst/video/gstvideosink.h,gst/video/gstvideoutils.h,gst/video/navigation.h,gst/video/video-blend.h,gst/video/video-color.h,gst/video/video-enumtypes.h,gst/video/video-event.h,gst/video/video-format.h,gst/video/video-frame.h,gst/video/video-info.h,gst/video/video-overlay-composition.h,gst/video/video.h,gst/video/videoorientation.h,gst/video/videooverlay.h")]
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned Gst.MetaInfo? overlay_composition_meta_get_info ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static GLib.Type region_of_interest_meta_api_get_type ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static unowned Gst.MetaInfo? region_of_interest_meta_get_info ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static uint tile_get_index (Gst.Video.TileMode mode, int x, int y, int x_tiles, int y_tiles);
 	}
 }

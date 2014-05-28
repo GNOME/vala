@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstRtp", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace RTP {
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", type_id = "gst_rtp_base_audio_payload_get_type ()")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", type_id = "gst_rtp_base_audio_payload_get_type ()")]
 		[GIR (name = "RTPBaseAudioPayload")]
 		public class BaseAudioPayload : Gst.RTP.BasePayload {
 			public Gst.ClockTime base_ts;
@@ -23,7 +23,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public bool buffer_list { get; set; }
 		}
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", type_id = "gst_rtp_base_depayload_get_type ()")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", type_id = "gst_rtp_base_depayload_get_type ()")]
 		[GIR (name = "RTPBaseDepayload")]
 		public abstract class BaseDepayload : Gst.Element {
 			public uint clock_rate;
@@ -43,8 +43,10 @@ namespace Gst {
 			public Gst.FlowReturn push_list (Gst.BufferList out_list);
 			[NoWrapper]
 			public virtual bool set_caps (Gst.Caps caps);
+			[NoAccessorMethod]
+			public Gst.Structure stats { owned get; }
 		}
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", type_id = "gst_rtp_base_payload_get_type ()")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", type_id = "gst_rtp_base_payload_get_type ()")]
 		[GIR (name = "RTPBasePayload")]
 		public abstract class BasePayload : Gst.Element {
 			[CCode (has_construct_function = false)]
@@ -84,11 +86,13 @@ namespace Gst {
 			[NoAccessorMethod]
 			public uint ssrc { get; set; }
 			[NoAccessorMethod]
+			public Gst.Structure stats { owned get; }
+			[NoAccessorMethod]
 			public uint timestamp { get; }
 			[NoAccessorMethod]
 			public uint timestamp_offset { get; set; }
 		}
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		[Compact]
 		[GIR (name = "RTPBuffer")]
 		public class Buffer : Gst.Buffer {
@@ -104,6 +108,7 @@ namespace Gst {
 			public uint32 get_csrc (uint8 idx);
 			public uint8 get_csrc_count ();
 			public bool get_extension ();
+			public GLib.Bytes get_extension_bytes (out uint16 bits);
 			public bool get_extension_data (out uint16 bits, [CCode (array_length = false)] out unowned uint8[] data, out uint wordlen);
 			public bool get_extension_onebyte_header (uint8 id, uint nth, [CCode (array_length_cname = "size", array_length_pos = 3.1, array_length_type = "guint")] out unowned uint8[] data);
 			public bool get_extension_twobytes_header (out uint8 appbits, uint8 id, uint nth, [CCode (array_length_cname = "size", array_length_pos = 4.1, array_length_type = "guint")] out unowned uint8[] data);
@@ -114,6 +119,7 @@ namespace Gst {
 			[CCode (array_length = false)]
 			public unowned uint8[] get_payload ();
 			public Gst.Buffer get_payload_buffer ();
+			public GLib.Bytes get_payload_bytes ();
 			public uint get_payload_len ();
 			public Gst.Buffer get_payload_subbuffer (uint offset, uint len);
 			public uint8 get_payload_type ();
@@ -135,7 +141,7 @@ namespace Gst {
 			public void set_version (uint8 version);
 			public void unmap ();
 		}
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", has_type_id = false)]
 		[GIR (name = "RTPPayloadInfo")]
 		public struct PayloadInfo {
 			public uint8 payload_type;
@@ -145,7 +151,7 @@ namespace Gst {
 			public weak string encoding_parameters;
 			public uint bitrate;
 		}
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cprefix = "GST_RTP_PAYLOAD_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cprefix = "GST_RTP_PAYLOAD_", has_type_id = false)]
 		[GIR (name = "RTPPayload")]
 		public enum Payload {
 			PCMU,
@@ -210,39 +216,57 @@ namespace Gst {
 			public const int TS48;
 			public const string TS48_STRING;
 		}
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GST_RTP_VERSION")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_HDREXT_BASE")]
+		public const string HDREXT_BASE;
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_HDREXT_NTP_56")]
+		public const string HDREXT_NTP_56;
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_HDREXT_NTP_56_SIZE")]
+		public const int HDREXT_NTP_56_SIZE;
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_HDREXT_NTP_64")]
+		public const string HDREXT_NTP_64;
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_HDREXT_NTP_64_SIZE")]
+		public const int HDREXT_NTP_64_SIZE;
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_VERSION")]
 		public const int VERSION;
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static void buffer_allocate_data (Gst.Buffer buffer, uint payload_len, uint8 pad_len, uint8 csrc_count);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static uint buffer_calc_header_len (uint8 csrc_count);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static uint buffer_calc_packet_len (uint payload_len, uint8 pad_len, uint8 csrc_count);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static uint buffer_calc_payload_len (uint packet_len, uint8 pad_len, uint8 csrc_count);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static int buffer_compare_seqnum (uint16 seqnum1, uint16 seqnum2);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static uint32 buffer_default_clock_rate (uint8 payload_type);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static uint64 buffer_ext_timestamp (uint64 exttimestamp, uint32 timestamp);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static bool buffer_map (Gst.Buffer buffer, Gst.MapFlags flags, out unowned Gst.RTP.Buffer rtp);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static Gst.Buffer buffer_new_allocate (uint payload_len, uint8 pad_len, uint8 csrc_count);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static Gst.Buffer buffer_new_allocate_len (uint packet_len, uint8 pad_len, uint8 csrc_count);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static Gst.Buffer buffer_new_copy_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] data);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static Gst.Buffer buffer_new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
+		public static bool hdrext_get_ntp_56 (void* data, uint size, uint64 ntptime);
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
+		public static bool hdrext_get_ntp_64 (void* data, uint size, uint64 ntptime);
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
+		public static bool hdrext_set_ntp_56 (void* data, uint size, uint64 ntptime);
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
+		public static bool hdrext_set_ntp_64 (void* data, uint size, uint64 ntptime);
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static unowned Gst.RTP.PayloadInfo? payload_info_for_name (string media, string encoding_name);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static unowned Gst.RTP.PayloadInfo? payload_info_for_pt (uint8 payload_type);
 	}
 	namespace RTPC {
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GstRTCPBuffer")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GstRTCPBuffer")]
 		[Compact]
 		[GIR (name = "RTCPBuffer")]
 		public class Buffer : Gst.Buffer {
@@ -256,7 +280,7 @@ namespace Gst {
 			[CCode (cname = "gst_rtcp_buffer_unmap")]
 			public bool unmap ();
 		}
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GstRTCPPacket", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GstRTCPPacket", has_type_id = false)]
 		[GIR (name = "RTCPPacket")]
 		public struct Packet {
 			public weak Gst.RTPC.Buffer rtcp;
@@ -342,13 +366,14 @@ namespace Gst {
 			[CCode (cname = "gst_rtcp_packet_sr_set_sender_info")]
 			public void sr_set_sender_info (uint32 ssrc, uint64 ntptime, uint32 rtptime, uint32 packet_count, uint32 octet_count);
 		}
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GstRTCPFBType", cprefix = "GST_RTCP_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GstRTCPFBType", cprefix = "GST_RTCP_", has_type_id = false)]
 		[GIR (name = "RTCPFBType")]
 		public enum FBType {
 			FB_TYPE_INVALID,
 			RTPFB_TYPE_NACK,
 			RTPFB_TYPE_TMMBR,
 			RTPFB_TYPE_TMMBN,
+			RTPFB_TYPE_RCTP_SR_REQ,
 			PSFB_TYPE_PLI,
 			PSFB_TYPE_SLI,
 			PSFB_TYPE_RPSI,
@@ -358,7 +383,7 @@ namespace Gst {
 			PSFB_TYPE_TSTN,
 			PSFB_TYPE_VBCN
 		}
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GstRTCPSDESType", cprefix = "GST_RTCP_SDES_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GstRTCPSDESType", cprefix = "GST_RTCP_SDES_", has_type_id = false)]
 		[GIR (name = "RTCPSDESType")]
 		public enum SDESType {
 			INVALID,
@@ -372,7 +397,7 @@ namespace Gst {
 			NOTE,
 			PRIV
 		}
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GstRTCPType", cprefix = "GST_RTCP_TYPE_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GstRTCPType", cprefix = "GST_RTCP_TYPE_", has_type_id = false)]
 		[GIR (name = "RTCPType")]
 		public enum Type {
 			INVALID,
@@ -384,39 +409,39 @@ namespace Gst {
 			RTPFB,
 			PSFB
 		}
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GST_RTCP_MAX_BYE_SSRC_COUNT")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTCP_MAX_BYE_SSRC_COUNT")]
 		public const int MAX_BYE_SSRC_COUNT;
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GST_RTCP_MAX_RB_COUNT")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTCP_MAX_RB_COUNT")]
 		public const int MAX_RB_COUNT;
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GST_RTCP_MAX_SDES")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTCP_MAX_SDES")]
 		public const int MAX_SDES;
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GST_RTCP_MAX_SDES_ITEM_COUNT")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTCP_MAX_SDES_ITEM_COUNT")]
 		public const int MAX_SDES_ITEM_COUNT;
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GST_RTCP_VALID_MASK")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTCP_VALID_MASK")]
 		public const int VALID_MASK;
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GST_RTCP_VALID_VALUE")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTCP_VALID_VALUE")]
 		public const int VALID_VALUE;
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "GST_RTCP_VERSION")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTCP_VERSION")]
 		public const int VERSION;
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "gst_rtcp_buffer_map")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_rtcp_buffer_map")]
 		public static bool buffer_map (Gst.Buffer buffer, Gst.MapFlags flags, Gst.RTPC.Buffer rtcp);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "gst_rtcp_buffer_new")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_rtcp_buffer_new")]
 		public static Gst.Buffer buffer_new (uint mtu);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "gst_rtcp_buffer_new_copy_data")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_rtcp_buffer_new_copy_data")]
 		public static Gst.Buffer buffer_new_copy_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "gst_rtcp_buffer_new_take_data")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_rtcp_buffer_new_take_data")]
 		public static Gst.Buffer buffer_new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "gst_rtcp_buffer_validate")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_rtcp_buffer_validate")]
 		public static bool buffer_validate (Gst.Buffer buffer);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "gst_rtcp_buffer_validate_data")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_rtcp_buffer_validate_data")]
 		public static bool buffer_validate_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "gst_rtcp_ntp_to_unix")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_rtcp_ntp_to_unix")]
 		public static uint64 ntp_to_unix (uint64 ntptime);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "gst_rtcp_sdes_name_to_type")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_rtcp_sdes_name_to_type")]
 		public static Gst.RTPC.SDESType sdes_name_to_type (string name);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "gst_rtcp_sdes_type_to_name")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_rtcp_sdes_type_to_name")]
 		public static unowned string sdes_type_to_name (Gst.RTPC.SDESType type);
-		[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h,gst/rtp/gstrtpbaseaudiopayload.h,gst/rtp/gstrtpbasedepayload.h,gst/rtp/gstrtpbasepayload.h,gst/rtp/gstrtpbuffer.h,gst/rtp/gstrtppayloads.h", cname = "gst_rtcp_unix_to_ntp")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_rtcp_unix_to_ntp")]
 		public static uint64 unix_to_ntp (uint64 unixtime);
 	}
 }

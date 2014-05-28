@@ -24,3 +24,6 @@ VideoCodecFrame
 
 VideoInfo
   .finfo nullable unowned=false
+
+VideoChromaResample skip
+video_chroma_resample skip

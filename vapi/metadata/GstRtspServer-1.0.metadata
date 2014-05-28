@@ -1,6 +1,3 @@
 * cheader_filename="gst/rtsp-server/rtsp-server.h"
 RTSPMedia.new_state#virtual_method name="emit_new_state"
-RTSPMedia.pipeline#field unowned=false
 RTSPMediaFactory.construct nullable
-RTSPMediaMapping.find_factory#virtual_method virtual
-RTSPMediaMapping.find_factory#virtual_method nullable
