@@ -56,7 +56,7 @@ namespace Rsvg {
 		public Handle.with_flags (Rsvg.HandleFlags flags);
 		public bool write ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] buf) throws GLib.Error;
 		public string base_uri { get; set construct; }
-		[Deprecated]
+		[Deprecated (since = "2.36")]
 		[NoAccessorMethod]
 		public string desc { owned get; }
 		[NoAccessorMethod]
@@ -71,10 +71,10 @@ namespace Rsvg {
 		public Rsvg.HandleFlags flags { get; construct; }
 		[NoAccessorMethod]
 		public int height { get; }
-		[Deprecated]
+		[Deprecated (since = "2.36")]
 		[NoAccessorMethod]
 		public string metadata { owned get; }
-		[Deprecated]
+		[Deprecated (since = "2.36")]
 		[NoAccessorMethod]
 		public string title { owned get; }
 		[NoAccessorMethod]

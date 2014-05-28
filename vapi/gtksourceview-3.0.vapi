@@ -113,7 +113,7 @@ namespace Gtk {
 		public Gtk.SourceCompletionActivation get_activation ();
 		public Gtk.TextIter get_iter ();
 		[NoAccessorMethod]
-		public Gtk.SourceCompletionActivation activation { get; set; }
+		public Gtk.SourceCompletionActivation activation { get; set construct; }
 		[NoAccessorMethod]
 		public Gtk.SourceCompletion completion { owned get; construct; }
 		[NoAccessorMethod]

@@ -16,6 +16,7 @@ ProxyCall cheader_filename="rest/rest-proxy-call.h"
 	.upload skip=false
 	.async skip=false name="run_async"
 	.async.weak_object nullable default=null
+  .cancel skip=false
 MemoryUse cheader_filename="rest/rest-param.h"
 ProxyError cheader_filename="rest/rest-proxy.h"
 ProxyCallError cheader_filename="rest/rest-proxy-call.h"
@@ -24,6 +25,8 @@ Params cheader_filename="rest/rest-params.h"
 	.as_string_hash_table skip=false type_arguments="string,string"
 ParamsIter cheader_filename="rest/rest-params.h"
 XmlNode cheader_filename="rest/rest-xml-node.h"
+  .ref skip=false
+  .unref skip=false
 XmlParser cheader_filename="rest/rest-xml-parser.h"
 
 OAuthProxyAuthCallback cheader_filename="rest/oauth-proxy.h"

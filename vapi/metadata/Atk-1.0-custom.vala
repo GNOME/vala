@@ -34,6 +34,8 @@ namespace Atk {
 		public static Atk.StateType type_register (string name);
 	}
 	public interface Text : GLib.Object {
+    [CCode (array_length = false, array_null_terminated = true, cname = "atk_text_get_bounded_ranges")]
+    public virtual Atk.TextRange[] get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
 		[Deprecated (replacement = "TextAttribute.for_name", since = "vala-0.16")]
 		public static Atk.TextAttribute attribute_for_name (string name);
 		[Deprecated (replacement = "TextAttribute.get_name", since = "vala-0.16")]

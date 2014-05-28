@@ -2782,9 +2782,9 @@ namespace GLib {
 		public abstract bool can_poll ();
 		public abstract GLib.PollableSource create_source (GLib.Cancellable? cancellable = null);
 		public abstract bool is_readable ();
-		public ssize_t read_nonblocking ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize", type = "void*")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t read_nonblocking ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "read_nonblocking")]
-		public abstract ssize_t read_nonblocking_fn ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize", type = "void*")] uint8[] buffer) throws GLib.Error;
+		public abstract ssize_t read_nonblocking_fn ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] buffer) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GPollableOutputStreamInterface", type_id = "g_pollable_output_stream_get_type ()")]
 	public interface PollableOutputStream : GLib.OutputStream {
@@ -4107,7 +4107,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public static void networking_init ();
 	[CCode (cheader_filename = "gio/gio.h")]
-	public static ssize_t pollable_stream_read (GLib.InputStream stream, [CCode (array_length_cname = "count", array_length_pos = 2.5, array_length_type = "gsize", type = "void*")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	public static ssize_t pollable_stream_read (GLib.InputStream stream, [CCode (array_length_cname = "count", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h")]
 	public static ssize_t pollable_stream_write (GLib.OutputStream stream, [CCode (array_length_cname = "count", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h")]

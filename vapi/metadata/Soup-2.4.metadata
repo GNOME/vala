@@ -72,6 +72,11 @@ xmlrpc_extract_method_response throws="Soup.XMLRPC.Fault"
 	.error skip
 	.type skip
 value_* skip=false
+ProxyURIResolver
+  .get_proxy_uri_async skip=false
+  .get_proxy_uri_async.callback owned scope="async"
+  .get_proxy_uri_async.async_context nullable
+  .get_proxy_uri_sync.proxy_uri out unowned=false
 
 // Not enough GIR information
 Buffer.data type="uint8[]" array_length_field="length"

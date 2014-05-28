@@ -14,17 +14,17 @@ namespace Notify {
 		public void set_app_name (string app_name);
 		public void set_category (string category);
 		public void set_hint (string key, GLib.Variant? value);
-		[Deprecated]
+		[Deprecated (since = "0.6.")]
 		public void set_hint_byte (string key, [CCode (type = "guchar")] uchar value);
-		[Deprecated]
+		[Deprecated (since = "0.6.")]
 		public void set_hint_byte_array (string key, [CCode (array_length_cname = "len", array_length_pos = 2.1, array_length_type = "gsize")] uchar[] value);
-		[Deprecated]
+		[Deprecated (since = "0.6.")]
 		public void set_hint_double (string key, double value);
-		[Deprecated]
+		[Deprecated (since = "0.6.")]
 		public void set_hint_int32 (string key, int value);
-		[Deprecated]
+		[Deprecated (since = "0.6.")]
 		public void set_hint_string (string key, string value);
-		[Deprecated]
+		[Deprecated (since = "0.6.")]
 		public void set_hint_uint32 (string key, uint value);
 		[Deprecated]
 		public void set_icon_from_pixbuf (Gdk.Pixbuf icon);

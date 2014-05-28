@@ -453,7 +453,7 @@ clutter-gtk-1.0:
 	$(GENVAPI) --library $(srcdir)/clutter-gtk-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GtkClutter-1.0-custom.vala --pkg clutter-1.0 --pkg gtk+-3.0 --pkg cogl-pango-1.0 $(GIRDIR)/GtkClutter-1.0.gir
 
 clutter-gst-1.0:
-	$(GENVAPI) --library $(srcdir)/clutter-gst-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/ClutterGst-1.0-custom.vala --pkg clutter-1.0 --pkg gstreamer-base-0.10 --pkg gstreamer-video-0.10 gstreamer-interfaces-0.10.vapi $(GIRDIR)/ClutterGst-1.0.gir
+	$(GENVAPI) --library $(srcdir)/clutter-gst-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/ClutterGst-1.0-custom.vala --pkg clutter-1.0 --pkg gstreamer-base-0.10 --pkg gstreamer-video-0.10 --pkg gstreamer-interfaces-0.10 --pkg gstreamer-audio-0.10 $(GIRDIR)/ClutterGst-1.0.gir
 
 clutter-gst-2.0:
 	$(GENVAPI) --library $(srcdir)/clutter-gst-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/ClutterGst-2.0-custom.vala --pkg cogl-1.0 --pkg clutter-1.0 --pkg gstreamer-base-1.0 --pkg gstreamer-video-1.0 $(GIRDIR)/ClutterGst-2.0.gir
@@ -648,7 +648,7 @@ hildon-fm-2:
 	$(GENVAPI) --library $(srcdir)/hildon-fm-2 $(PACKAGESDIR)/hildon-fm-2/hildon-fm-2.gi
 
 json-glib-1.0:
-	$(GENVAPI) --library $(srcdir)/json-glib-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Json-1.0-custom.vala --pkg gio-2.0 $(GIRDIR)/Json-1.0.gir
+	$(GENVAPI) --library $(srcdir)/json-glib-1.0 --metadatadir $(METADATADIR) --pkg gio-2.0 $(METADATADIR)/Json-1.0-custom.vala $(GIRDIR)/Json-1.0.gir
 
 libepc-1.0:
 	$(GENVAPI) --library $(srcdir)/libepc-1.0 $(PACKAGESDIR)/libepc-1.0/libepc-1.0.gi

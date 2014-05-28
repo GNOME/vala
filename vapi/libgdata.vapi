@@ -44,7 +44,7 @@ namespace GData {
 		[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_PRESENTATION_PPT")]
 		public const string PPT;
 		[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_PRESENTATION_SWF")]
-		[Deprecated (since = "SWF export has been deprecated in the protocol due to low demand for it; PDF export (using %GDATA_DOCUMENTS_PRESENTATION_PDF) is recommended instead. (Since")]
+		[Deprecated]
 		public const string SWF;
 		[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_DOCUMENTS_PRESENTATION_TXT")]
 		public const string TXT;
@@ -307,13 +307,19 @@ namespace GData {
 		public ClientLoginAuthorizer.for_authorization_domains (string client_id, GLib.List<GData.AuthorizationDomain> authorization_domains);
 		public unowned string get_client_id ();
 		public unowned string get_password ();
+		public unowned GLib.ProxyResolver get_proxy_resolver ();
+		[Deprecated]
 		public Soup.URI get_proxy_uri ();
 		public uint get_timeout ();
 		public unowned string get_username ();
+		public void set_proxy_resolver (GLib.ProxyResolver? proxy_resolver);
+		[Deprecated]
 		public void set_proxy_uri (Soup.URI? proxy_uri);
 		public void set_timeout (uint timeout);
 		public string client_id { get; construct; }
 		public string password { get; }
+		public GLib.ProxyResolver proxy_resolver { get; set; }
+		[Deprecated]
 		public Soup.URI proxy_uri { owned get; set; }
 		public uint timeout { get; set; }
 		public string username { get; }
@@ -511,7 +517,7 @@ namespace GData {
 	public abstract class DocumentsEntry : GData.Entry, GData.AccessHandler {
 		[CCode (has_construct_function = false)]
 		protected DocumentsEntry ();
-		[Deprecated (since = "Use gdata_documents_entry_get_resource_id() instead. See #GDataDocumentsEntry:document-id. (Since")]
+		[Deprecated]
 		public unowned string get_document_id ();
 		public int64 get_edited ();
 		public unowned GData.Author get_last_modified_by ();
@@ -520,7 +526,7 @@ namespace GData {
 		public int64 get_quota_used ();
 		public unowned string get_resource_id ();
 		public void set_writers_can_invite (bool writers_can_invite);
-		[Deprecated (since = "This a substring of the #GDataDocumentsEntry:resource-id, which is more general and should be used instead. (Since")]
+		[Deprecated]
 		public string document_id { get; }
 		public int64 edited { get; }
 		[NoAccessorMethod]
@@ -712,6 +718,120 @@ namespace GData {
 		public string title { get; }
 		public uint total_results { get; }
 		public int64 updated { get; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_query_get_type ()")]
+	public class FreebaseQuery : GData.Query {
+		[CCode (has_construct_function = false)]
+		public FreebaseQuery (string mql);
+		[CCode (has_construct_function = false)]
+		public FreebaseQuery.from_variant (GLib.Variant variant);
+		[NoAccessorMethod]
+		public GLib.Variant variant { owned get; construct; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_result_get_type ()")]
+	public class FreebaseResult : GData.Entry {
+		[CCode (has_construct_function = false)]
+		public FreebaseResult ();
+		public GLib.Variant dup_variant ();
+		[NoAccessorMethod]
+		public GLib.Variant variant { owned get; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_search_query_get_type ()")]
+	public class FreebaseSearchQuery : GData.Query {
+		[CCode (has_construct_function = false)]
+		public FreebaseSearchQuery (string search_terms);
+		public void add_filter (string property, string value);
+		public void add_location (uint64 radius, double lat, double lon);
+		public void close_filter ();
+		public unowned string get_language ();
+		public bool get_stemmed ();
+		public void open_filter (GData.FreebaseSearchFilterType filter_type);
+		public void set_language (string? lang);
+		public void set_stemmed (bool stemmed);
+		public string language { get; set; }
+		public bool stemmed { get; set; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_search_result_get_type ()")]
+	public class FreebaseSearchResult : GData.FreebaseResult {
+		[CCode (has_construct_function = false)]
+		public FreebaseSearchResult ();
+		public unowned GData.FreebaseSearchResultItem get_item (uint i);
+		public uint get_num_items ();
+		public uint get_total_hits ();
+	}
+	[CCode (cheader_filename = "gdata/gdata.h")]
+	[Compact]
+	public class FreebaseSearchResultItem {
+		public unowned string get_id ();
+		public unowned string get_language ();
+		public unowned string get_mid ();
+		public unowned string get_name ();
+		public unowned string get_notable_id ();
+		public unowned string get_notable_name ();
+		public double get_score ();
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_service_get_type ()")]
+	public class FreebaseService : GData.Service {
+		[CCode (has_construct_function = false)]
+		public FreebaseService (string? developer_key, GData.Authorizer? authorizer);
+		public GLib.InputStream get_image (GData.FreebaseTopicValue value, GLib.Cancellable? cancellable, uint max_width, uint max_height) throws GLib.Error;
+		public static unowned GData.AuthorizationDomain get_primary_authorization_domain ();
+		public GData.FreebaseTopicResult get_topic (GData.FreebaseTopicQuery query, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async void get_topic_async (GData.FreebaseTopicQuery query, GLib.Cancellable? cancellable);
+		public GData.FreebaseResult query (GData.FreebaseQuery query, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async void query_async (GData.FreebaseQuery query, GLib.Cancellable? cancellable);
+		public GData.FreebaseSearchResult search (GData.FreebaseSearchQuery query, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async void search_async (GData.FreebaseSearchQuery query, GLib.Cancellable? cancellable);
+		[NoAccessorMethod]
+		public string developer_key { owned get; construct; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", ref_function = "gdata_freebase_topic_object_ref", type_id = "gdata_freebase_topic_object_get_type ()", unref_function = "gdata_freebase_topic_object_unref")]
+	[Compact]
+	public class FreebaseTopicObject {
+		public unowned string get_id ();
+		public uint64 get_property_count (string property);
+		public uint64 get_property_hits (string property);
+		public unowned GData.FreebaseTopicValue get_property_value (string property, int64 item);
+		public GLib.GenericArray<weak string> list_properties ();
+		public GData.FreebaseTopicObject @ref ();
+		public void unref ();
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_topic_query_get_type ()")]
+	public class FreebaseTopicQuery : GData.Query {
+		[CCode (has_construct_function = false)]
+		public FreebaseTopicQuery (string id);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public unowned string[] get_filter ();
+		public unowned string get_language ();
+		public void set_filter ([CCode (array_length = false, array_null_terminated = true)] string[]? filter);
+		public void set_language (string? lang);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] filter { get; set; }
+		public string language { get; set; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_topic_result_get_type ()")]
+	public class FreebaseTopicResult : GData.FreebaseResult {
+		[CCode (has_construct_function = false)]
+		public FreebaseTopicResult ();
+		public GData.FreebaseTopicObject dup_object ();
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", ref_function = "gdata_freebase_topic_value_ref", type_id = "gdata_freebase_topic_value_get_type ()", unref_function = "gdata_freebase_topic_value_unref")]
+	[Compact]
+	public class FreebaseTopicValue {
+		public GLib.Value copy_value ();
+		public unowned string get_creator ();
+		public double get_double ();
+		public int64 get_int ();
+		public unowned string get_language ();
+		public unowned GData.FreebaseTopicObject get_object ();
+		public unowned string get_property ();
+		public unowned string get_string ();
+		public unowned string get_text ();
+		public int64 get_timestamp ();
+		public GLib.Type get_value_type ();
+		public bool is_image ();
+		public GData.FreebaseTopicValue @ref ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_gcontact_calendar_get_type ()")]
 	public class GContactCalendar : GData.Parsable, GData.Comparable {
@@ -1156,6 +1276,8 @@ namespace GData {
 		public OAuth1Authorizer.for_authorization_domains (string? application_name, GLib.List<GData.AuthorizationDomain> authorization_domains);
 		public unowned string get_application_name ();
 		public unowned string get_locale ();
+		public unowned GLib.ProxyResolver get_proxy_resolver ();
+		[Deprecated]
 		public Soup.URI get_proxy_uri ();
 		public uint get_timeout ();
 		public string request_authentication_uri (out string token, out string token_secret, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -1163,10 +1285,14 @@ namespace GData {
 		public bool request_authorization (string token, string token_secret, string verifier, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool request_authorization_async (string token, string token_secret, string verifier, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void set_locale (string? locale);
+		public void set_proxy_resolver (GLib.ProxyResolver? proxy_resolver);
+		[Deprecated]
 		public void set_proxy_uri (Soup.URI? proxy_uri);
 		public void set_timeout (uint timeout);
 		public string application_name { get; construct; }
 		public string locale { get; set; }
+		public GLib.ProxyResolver proxy_resolver { get; set; }
+		[Deprecated]
 		public Soup.URI proxy_uri { owned get; set; }
 		public uint timeout { get; set; }
 	}
@@ -1180,6 +1306,8 @@ namespace GData {
 		public Parsable.from_xml (GLib.Type parsable_type, string xml, int length) throws GLib.Error;
 		[NoWrapper]
 		public virtual void get_json (Json.Builder builder);
+		[CCode (cname = "gdata_parsable_get_json")]
+		public string get_json_string ();
 		[NoWrapper]
 		public virtual void get_namespaces (GLib.HashTable<void*,void*> namespaces);
 		[NoWrapper]
@@ -1441,6 +1569,8 @@ namespace GData {
 		public static GLib.List<weak GData.AuthorizationDomain> get_authorization_domains (GLib.Type service_type);
 		public unowned GData.Authorizer get_authorizer ();
 		public unowned string get_locale ();
+		public unowned GLib.ProxyResolver get_proxy_resolver ();
+		[Deprecated]
 		public unowned Soup.URI get_proxy_uri ();
 		public uint get_timeout ();
 		public GData.Entry insert_entry (GData.AuthorizationDomain? domain, string upload_uri, GData.Entry entry, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -1454,14 +1584,97 @@ namespace GData {
 		public async GData.Entry query_single_entry_async (GData.AuthorizationDomain? domain, string entry_id, GData.Query? query, GLib.Type entry_type, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void set_authorizer (GData.Authorizer authorizer);
 		public void set_locale (string? locale);
+		public void set_proxy_resolver (GLib.ProxyResolver? proxy_resolver);
+		[Deprecated]
 		public void set_proxy_uri (Soup.URI? proxy_uri);
 		public void set_timeout (uint timeout);
 		public GData.Entry update_entry (GData.AuthorizationDomain? domain, GData.Entry entry, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GData.Entry update_entry_async (GData.AuthorizationDomain? domain, GData.Entry entry, GLib.Cancellable? cancellable) throws GLib.Error;
 		public GData.Authorizer authorizer { get; set; }
 		public string locale { get; set; }
+		public GLib.ProxyResolver proxy_resolver { get; set; }
+		[Deprecated]
 		public Soup.URI proxy_uri { get; set; }
 		public uint timeout { get; set; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_tasks_query_get_type ()")]
+	public class TasksQuery : GData.Query {
+		[CCode (has_construct_function = false)]
+		public TasksQuery (string? q);
+		public int64 get_completed_max ();
+		public int64 get_completed_min ();
+		public int64 get_due_max ();
+		public int64 get_due_min ();
+		public bool get_show_completed ();
+		public bool get_show_deleted ();
+		public bool get_show_hidden ();
+		public void set_completed_max (int64 completed_max);
+		public void set_completed_min (int64 completed_min);
+		public void set_due_max (int64 due_max);
+		public void set_due_min (int64 due_min);
+		public void set_show_completed (bool show_completed);
+		public void set_show_deleted (bool show_deleted);
+		public void set_show_hidden (bool show_hidden);
+		public int64 completed_max { get; set; }
+		public int64 completed_min { get; set; }
+		public int64 due_max { get; set; }
+		public int64 due_min { get; set; }
+		public bool show_completed { get; set; }
+		public bool show_deleted { get; set; }
+		public bool show_hidden { get; set; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_tasks_service_get_type ()")]
+	public class TasksService : GData.Service {
+		[CCode (has_construct_function = false)]
+		public TasksService (GData.Authorizer? authorizer);
+		public bool delete_task (GData.TasksTask task, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async void delete_task_async (GData.TasksTask task, GLib.Cancellable? cancellable);
+		public bool delete_tasklist (GData.TasksTasklist tasklist, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async void delete_tasklist_async (GData.TasksTasklist tasklist, GLib.Cancellable? cancellable);
+		public static unowned GData.AuthorizationDomain get_primary_authorization_domain ();
+		public GData.TasksTask insert_task (GData.TasksTask task, GData.TasksTasklist tasklist, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async void insert_task_async (GData.TasksTask task, GData.TasksTasklist tasklist, GLib.Cancellable? cancellable);
+		public GData.TasksTasklist insert_tasklist (GData.TasksTasklist tasklist, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async void insert_tasklist_async (GData.TasksTasklist tasklist, GLib.Cancellable? cancellable);
+		public GData.Feed query_all_tasklists (GData.Query? query, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
+		public async void query_all_tasklists_async (GData.Query? query, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);
+		public GData.Feed query_tasks (GData.TasksTasklist tasklist, GData.Query? query, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
+		public async void query_tasks_async (GData.TasksTasklist tasklist, GData.Query? query, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);
+		public GData.TasksTask update_task (GData.TasksTask task, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async void update_task_async (GData.TasksTask task, GLib.Cancellable? cancellable);
+		public GData.TasksTasklist update_tasklist (GData.TasksTasklist tasklist, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async void update_tasklist_async (GData.TasksTasklist tasklist, GLib.Cancellable? cancellable);
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_tasks_task_get_type ()")]
+	public class TasksTask : GData.Entry {
+		[CCode (has_construct_function = false)]
+		public TasksTask (string? id);
+		public int64 get_completed ();
+		public int64 get_due ();
+		public unowned string get_notes ();
+		public unowned string get_parent ();
+		public unowned string get_position ();
+		public unowned string get_status ();
+		public void set_completed (int64 completed);
+		public void set_due (int64 due);
+		public void set_is_deleted (bool deleted);
+		public void set_notes (string? notes);
+		public void set_status (string? status);
+		public int64 completed { get; set; }
+		public int64 due { get; set; }
+		[NoAccessorMethod]
+		public bool is_deleted { get; set; }
+		[NoAccessorMethod]
+		public bool is_hidden { get; }
+		public string notes { get; set; }
+		public string parent { get; }
+		public string position { get; }
+		public string status { get; set; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_tasks_tasklist_get_type ()")]
+	public class TasksTasklist : GData.Entry {
+		[CCode (has_construct_function = false)]
+		public TasksTasklist (string? id);
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_upload_stream_get_type ()")]
 	public class UploadStream : GLib.OutputStream {
@@ -1715,6 +1928,12 @@ namespace GData {
 		INSERTION,
 		UPDATE,
 		DELETION
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_FREEBASE_SEARCH_FILTER_", type_id = "gdata_freebase_search_filter_type_get_type ()")]
+	public enum FreebaseSearchFilterType {
+		ALL,
+		ANY,
+		NOT
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_MEDIA_EXPRESSION_", type_id = "gdata_media_expression_get_type ()")]
 	public enum MediaExpression {
@@ -2092,6 +2311,8 @@ namespace GData {
 	public const string LINK_EDIT_MEDIA;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_LINK_ENCLOSURE")]
 	public const string LINK_ENCLOSURE;
+	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_LINK_PARENT")]
+	public const string LINK_PARENT;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_LINK_RELATED")]
 	public const string LINK_RELATED;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_LINK_RESUMABLE_CREATE_MEDIA")]

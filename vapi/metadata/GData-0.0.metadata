@@ -12,3 +12,5 @@ CONTACTS_GENDER_* name="CONTACTS_GENDER_(.+)" parent="GData.ContactsGender"
 CONTACTS_GROUP_* name="CONTACTS_GROUP_(.+)" parent="GData.ContactsGroupType"
 CONTACTS_PRIORITY_* name="CONTACTS_PRIORITY_(.+)" parent="GData.ContactsPriority"
 CONTACTS_SENSITIVITY_* name="CONTACTS_SENSITIVITY_(.+)" parent="GData.ContactsSensitivity"
+
+Parsable.get_json#method name="get_json_string"

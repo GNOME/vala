@@ -64,11 +64,11 @@ namespace Wnck {
 	public class Screen : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Screen ();
-		[Deprecated]
+		[Deprecated (since = "2.20")]
 		public void calc_workspace_layout (int num_workspaces, int space_index, Wnck.WorkspaceLayout layout);
 		public void change_workspace_count (int count);
 		public void force_update ();
-		[Deprecated]
+		[Deprecated (since = "2.20")]
 		public static void free_workspace_layout (Wnck.WorkspaceLayout layout);
 		public static unowned Wnck.Screen @get (int index);
 		public unowned Wnck.Window get_active_window ();
@@ -256,7 +256,7 @@ namespace Wnck {
 		public static Wnck.ResourceUsage xid_read (Gdk.Display gdk_display, ulong xid);
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", has_type_id = false)]
-	[Deprecated]
+	[Deprecated (since = "2.20")]
 	public struct WorkspaceLayout {
 		public int rows;
 		public int cols;

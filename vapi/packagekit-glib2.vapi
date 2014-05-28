@@ -2,13 +2,6 @@
 
 [CCode (cprefix = "Pk", gir_namespace = "PackageKitGlib", gir_version = "1.0", lower_case_cprefix = "pk_")]
 namespace Pk {
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", type_id = "pk_catalog_get_type ()")]
-	public class Catalog : GLib.Object {
-		[CCode (has_construct_function = false)]
-		public Catalog ();
-		public async void lookup_async (string filename, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		public static void test (void* user_data);
-	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", type_id = "pk_category_get_type ()")]
 	public class Category : Pk.Source {
 		[CCode (has_construct_function = false)]
@@ -40,6 +33,8 @@ namespace Pk {
 		public async void adopt_async (string transaction_id, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		[NoWrapper]
 		public virtual void changed ();
+		public Pk.Results depends_on (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public async void depends_on_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results download_packages ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, string directory, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void download_packages_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, string directory, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results generic_finish (GLib.AsyncResult res) throws GLib.Error;
@@ -47,14 +42,16 @@ namespace Pk {
 		public uint get_cache_age ();
 		public Pk.Results get_categories (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void get_categories_async (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		public Pk.Results get_depends (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		public async void get_depends_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results get_details ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void get_details_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public Pk.Results get_details_local ([CCode (array_length = false, array_null_terminated = true)] string[] files, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public async void get_details_local_async ([CCode (array_length = false, array_null_terminated = true)] string[] files, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results get_distro_upgrades (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void get_distro_upgrades_async (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results get_files ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void get_files_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public Pk.Results get_files_local ([CCode (array_length = false, array_null_terminated = true)] string[] files, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public async void get_files_local_async ([CCode (array_length = false, array_null_terminated = true)] string[] files, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public bool get_idle ();
 		public bool get_interactive ();
 		public unowned string get_locale ();
@@ -66,8 +63,6 @@ namespace Pk {
 		public async Pk.Progress get_progress_async (string transaction_id, GLib.Cancellable? cancellable) throws GLib.Error;
 		public Pk.Results get_repo_list (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void get_repo_list_async (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		public Pk.Results get_requires (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		public async void get_requires_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results get_update_detail ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void get_update_detail_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results get_updates (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
@@ -86,8 +81,12 @@ namespace Pk {
 		public async void repair_system_async (Pk.Bitfield transaction_flags, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results repo_enable (string repo_id, bool enabled, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void repo_enable_async (string repo_id, bool enabled, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public Pk.Results repo_remove (Pk.Bitfield transaction_flags, string repo_id, bool autoremove, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public async void repo_remove_async (Pk.Bitfield transaction_flags, string repo_id, bool autoremove, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results repo_set_data (string repo_id, string parameter, string value, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void repo_set_data_async (string repo_id, string parameter, string value, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public Pk.Results required_by (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public async void required_by_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results resolve (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] packages, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void resolve_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] packages, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results search_details (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
@@ -105,10 +104,8 @@ namespace Pk {
 		public static void test (void* user_data);
 		public Pk.Results update_packages (Pk.Bitfield transaction_flags, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void update_packages_async (Pk.Bitfield transaction_flags, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		public Pk.Results upgrade_system (string distro_id, Pk.UpgradeKind upgrade_kind, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		public async void upgrade_system_async (string distro_id, Pk.UpgradeKind upgrade_kind, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		public Pk.Results what_provides (Pk.Bitfield filters, Pk.Provides provides, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		public async void what_provides_async (Pk.Bitfield filters, Pk.Provides provides, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public Pk.Results what_provides (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public async void what_provides_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public bool background { get; set; }
 		public uint cache_age { get; set; }
 		public bool idle { get; }
@@ -130,7 +127,6 @@ namespace Pk {
 		[NoWrapper]
 		public virtual void connection_changed (bool connected);
 		public async string get_daemon_state_async (GLib.Cancellable? cancellable) throws GLib.Error;
-		public async Pk.Network get_network_state_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool get_properties (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool get_properties_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async string get_tid_async (GLib.Cancellable? cancellable) throws GLib.Error;
@@ -201,6 +197,7 @@ namespace Pk {
 		public unowned string get_license ();
 		public unowned string get_package_id ();
 		public uint64 get_size ();
+		public unowned string get_summary ();
 		public unowned string get_url ();
 		[NoAccessorMethod]
 		public string description { owned get; set; }
@@ -212,6 +209,8 @@ namespace Pk {
 		public string package_id { owned get; set; }
 		[NoAccessorMethod]
 		public uint64 size { get; set; }
+		[NoAccessorMethod]
+		public string summary { owned get; set; }
 		[NoAccessorMethod]
 		public string url { owned get; set; }
 	}
@@ -258,6 +257,9 @@ namespace Pk {
 		[CCode (has_construct_function = false)]
 		public Files ();
 		[CCode (array_length = false, array_null_terminated = true)]
+		public unowned string[] get_files ();
+		public unowned string get_package_id ();
+		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
 		public string[] files { owned get; set; }
 		[NoAccessorMethod]
@@ -287,17 +289,6 @@ namespace Pk {
 		public string media_text { owned get; set; }
 		[NoAccessorMethod]
 		public uint media_type { get; set; }
-	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", type_id = "pk_message_get_type ()")]
-	public class Message : Pk.Source {
-		[CCode (has_construct_function = false)]
-		public Message ();
-		public unowned string get_details ();
-		public Pk.MessageEnum get_kind ();
-		[NoAccessorMethod]
-		public string details { owned get; set; }
-		[NoAccessorMethod]
-		public uint type { get; set; }
 	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", type_id = "pk_package_get_type ()")]
 	public class Package : Pk.Source {
@@ -336,12 +327,13 @@ namespace Pk {
 		public bool parse (string data) throws GLib.Error;
 		public void print ();
 		public bool set_id (string package_id) throws GLib.Error;
+		public void set_info (Pk.Info info);
+		public void set_summary (string summary);
 		public static void test (void* user_data);
 		[NoAccessorMethod]
 		public string description { owned get; set; }
 		[NoAccessorMethod]
 		public uint group { get; set; }
-		[NoAccessorMethod]
 		public uint info { get; set; }
 		[NoAccessorMethod]
 		public string license { owned get; set; }
@@ -349,8 +341,7 @@ namespace Pk {
 		public string package_id { owned get; }
 		[NoAccessorMethod]
 		public uint64 size { get; set; }
-		[NoAccessorMethod]
-		public string summary { owned get; set; }
+		public string summary { get; set; }
 		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
 		public string[] update_bugzilla_urls { owned get; set; }
@@ -393,6 +384,7 @@ namespace Pk {
 		public Pk.PackageSack filter (Pk.PackageSackFilterFunc filter_cb);
 		public Pk.PackageSack filter_by_info (Pk.Info info);
 		public Pk.Package find_by_id (string package_id);
+		public Pk.Package find_by_id_name_arch (string package_id);
 		public GLib.GenericArray<weak Pk.Package> get_array ();
 		public bool get_details (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async void get_details_async (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
@@ -471,6 +463,9 @@ namespace Pk {
 	public class RepoDetail : Pk.Source {
 		[CCode (has_construct_function = false)]
 		public RepoDetail ();
+		public unowned string get_description ();
+		public bool get_enabled ();
+		public unowned string get_id ();
 		[NoAccessorMethod]
 		public string description { owned get; set; }
 		[NoAccessorMethod]
@@ -518,7 +513,6 @@ namespace Pk {
 		public bool add_eula_required (Pk.EulaRequired item);
 		public bool add_files (Pk.Files item);
 		public bool add_media_change_required (Pk.MediaChangeRequired item);
-		public bool add_message (Pk.Message item);
 		public bool add_package (Pk.Package item);
 		public bool add_repo_detail (Pk.RepoDetail item);
 		public bool add_repo_signature_required (Pk.RepoSignatureRequired item);
@@ -533,7 +527,6 @@ namespace Pk {
 		public Pk.Exit get_exit_code ();
 		public GLib.GenericArray<weak Pk.Files> get_files_array ();
 		public GLib.GenericArray<weak Pk.MediaChangeRequired> get_media_change_required_array ();
-		public GLib.GenericArray<weak Pk.Message> get_message_array ();
 		public GLib.GenericArray<weak Pk.Package> get_package_array ();
 		public Pk.PackageSack get_package_sack ();
 		public GLib.GenericArray<weak Pk.RepoDetail> get_repo_detail_array ();
@@ -556,17 +549,6 @@ namespace Pk {
 		[NoAccessorMethod]
 		public uint64 transaction_flags { get; set; }
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", type_id = "pk_service_pack_get_type ()")]
-	public class ServicePack : GLib.Object {
-		[CCode (has_construct_function = false)]
-		public ServicePack ();
-		public bool check_valid (string filename) throws GLib.Error;
-		public async void create_for_package_ids_async (string filename, string package_ids, string package_ids_exclude, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		public async void create_for_updates_async (string filename, string package_ids_exclude, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		public bool generic_finish (GLib.AsyncResult res) throws GLib.Error;
-		public bool set_temp_directory (string directory);
-		public static void test (void* user_data);
-	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", type_id = "pk_source_get_type ()")]
 	public class Source : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -580,6 +562,8 @@ namespace Pk {
 	public class Task : Pk.Client {
 		[CCode (has_construct_function = false)]
 		public Task ();
+		public async void depends_on_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public Pk.Results depends_on_sync (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void download_packages_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, string directory, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results download_packages_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, string directory, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[NoWrapper]
@@ -587,8 +571,6 @@ namespace Pk {
 		public Pk.Results generic_finish (GLib.AsyncResult res) throws GLib.Error;
 		public async void get_categories_async (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results get_categories_sync (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		public async void get_depends_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		public Pk.Results get_depends_sync (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void get_details_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results get_details_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void get_files_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
@@ -599,8 +581,6 @@ namespace Pk {
 		public Pk.Results get_packages_sync (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void get_repo_list_async (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results get_repo_list_sync (Pk.Bitfield filters, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		public async void get_requires_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		public Pk.Results get_requires_sync (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public bool get_simulate ();
 		public async void get_update_detail_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results get_update_detail_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
@@ -618,10 +598,14 @@ namespace Pk {
 		public Pk.Results refresh_cache_sync (bool force, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void remove_packages_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool allow_deps, bool autoremove, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results remove_packages_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool allow_deps, bool autoremove, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		[NoWrapper]
+		public virtual void repair_question (uint request, Pk.Results results);
 		public async void repair_system_async (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results repair_system_sync (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void repo_enable_async (string repo_id, bool enabled, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results repo_enable_sync (string repo_id, bool enabled, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public async void required_by_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public Pk.Results required_by_sync (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void resolve_async (Pk.Bitfield filters, string packages, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
 		public Pk.Results resolve_sync (Pk.Bitfield filters, string packages, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public async void search_details_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
@@ -644,8 +628,8 @@ namespace Pk {
 		public Pk.Results update_packages_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public bool user_accepted (uint request);
 		public bool user_declined (uint request);
-		public async void what_provides_async (Pk.Bitfield filters, Pk.Provides provides, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
-		public Pk.Results what_provides_sync (Pk.Bitfield filters, Pk.Provides provides, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public async void what_provides_async (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public Pk.Results what_provides_sync (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] values, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public bool only_download { get; set; }
 		public bool simulate { get; set; }
 	}
@@ -990,28 +974,6 @@ namespace Pk {
 		public static Pk.MediaType enum_from_string (string media_type);
 		public static unowned string enum_to_string (Pk.MediaType media_type);
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_MESSAGE_ENUM_", type_id = "pk_message_enum_get_type ()")]
-	public enum MessageEnum {
-		UNKNOWN,
-		BROKEN_MIRROR,
-		CONNECTION_REFUSED,
-		PARAMETER_INVALID,
-		PRIORITY_INVALID,
-		BACKEND_ERROR,
-		DAEMON_ERROR,
-		CACHE_BEING_REBUILT,
-		NEWER_PACKAGE_EXISTS,
-		COULD_NOT_FIND_PACKAGE,
-		CONFIG_FILES_CHANGED,
-		PACKAGE_ALREADY_INSTALLED,
-		AUTOREMOVE_IGNORED,
-		REPO_METADATA_DOWNLOAD_FAILED,
-		REPO_FOR_DEVELOPERS_ONLY,
-		OTHER_UPDATES_HELD_BACK,
-		LAST;
-		public static Pk.MessageEnum from_string (string message);
-		public static unowned string to_string (Pk.MessageEnum message);
-	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkNetworkEnum", cprefix = "PK_NETWORK_ENUM_", type_id = "pk_network_enum_get_type ()")]
 	[GIR (name = "NetworkEnum")]
 	public enum Network {
@@ -1052,25 +1014,6 @@ namespace Pk {
 		TRANSACTION_FLAGS,
 		INVALID
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkProvidesEnum", cprefix = "PK_PROVIDES_ENUM_", type_id = "pk_provides_enum_get_type ()")]
-	[GIR (name = "ProvidesEnum")]
-	public enum Provides {
-		UNKNOWN,
-		ANY,
-		MODALIAS,
-		CODEC,
-		MIMETYPE,
-		FONT,
-		HARDWARE_DRIVER,
-		POSTSCRIPT_DRIVER,
-		PLASMA_SERVICE,
-		SHARED_LIB,
-		PYTHON,
-		LANGUAGE_SUPPORT,
-		LAST;
-		public static Pk.Provides enum_from_string (string provides);
-		public static unowned string enum_to_string (Pk.Provides provides);
-	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkRestartEnum", cprefix = "PK_RESTART_ENUM_", type_id = "pk_restart_enum_get_type ()")]
 	[GIR (name = "RestartEnum")]
 	public enum Restart {
@@ -1090,12 +1033,12 @@ namespace Pk {
 	public enum Role {
 		UNKNOWN,
 		CANCEL,
-		GET_DEPENDS,
+		DEPENDS_ON,
 		GET_DETAILS,
 		GET_FILES,
 		GET_PACKAGES,
 		GET_REPO_LIST,
-		GET_REQUIRES,
+		REQUIRED_BY,
 		GET_UPDATE_DETAIL,
 		GET_UPDATES,
 		INSTALL_FILES,
@@ -1117,8 +1060,10 @@ namespace Pk {
 		GET_DISTRO_UPGRADES,
 		GET_CATEGORIES,
 		GET_OLD_TRANSACTIONS,
-		UPGRADE_SYSTEM,
 		REPAIR_SYSTEM,
+		GET_DETAILS_LOCAL,
+		GET_FILES_LOCAL,
+		REPO_REMOVE,
 		LAST;
 		public static Pk.Bitfield bitfield_from_string (string roles);
 		public static string bitfield_to_string (Pk.Bitfield roles);
@@ -1214,11 +1159,6 @@ namespace Pk {
 		public static Pk.UpgradeKind enum_from_string (string upgrade_kind);
 		public static unowned string enum_to_string (Pk.UpgradeKind upgrade_kind);
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_CATALOG_ERROR_")]
-	public errordomain CatalogError {
-		FAILED;
-		public static GLib.Quark quark ();
-	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_CLIENT_ERROR_")]
 	public errordomain ClientError {
 		FAILED,
@@ -1240,24 +1180,10 @@ namespace Pk {
 		CANNOT_START_DAEMON;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_SERVICE_PACK_ERROR_")]
-	public errordomain ServicePackError {
-		FAILED_SETUP,
-		FAILED_DOWNLOAD,
-		FAILED_EXTRACTION,
-		FAILED_CREATE,
-		NOTHING_TO_DO,
-		NOT_COMPATIBLE;
-		public static GLib.Quark quark ();
-	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", instance_pos = 1.9)]
 	public delegate bool PackageSackFilterFunc (Pk.Package package);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", instance_pos = 2.9)]
 	public delegate void ProgressCallback (Pk.Progress progress, Pk.ProgressType type);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PK_CATALOG_FILE_EXTENSION")]
-	public const string CATALOG_FILE_EXTENSION;
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PK_CATALOG_FILE_HEADER")]
-	public const string CATALOG_FILE_HEADER;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PK_DBUS_INTERFACE")]
 	public const string DBUS_INTERFACE;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PK_DBUS_INTERFACE_TRANSACTION")]
@@ -1284,8 +1210,6 @@ namespace Pk {
 	public const int PACKAGE_ID_NAME;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PK_PACKAGE_ID_VERSION")]
 	public const int PACKAGE_ID_VERSION;
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PK_SERVICE_PACK_FILE_EXTENSION")]
-	public const string SERVICE_PACK_FILE_EXTENSION;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PK_SERVICE_PACK_GROUP_NAME")]
 	public const string SERVICE_PACK_GROUP_NAME;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PK_SYSTEM_PACKAGE_CACHE_FILENAME")]
@@ -1312,78 +1236,6 @@ namespace Pk {
 	public static string iso8601_from_date (GLib.Date date);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static string iso8601_present ();
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__POINTER_UINT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__POINTER_UINT_UINT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_BOOLEAN (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_BOOLEAN (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_BOOLEAN_STRING_UINT_STRING_UINT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_BOOLEAN_UINT_UINT_STRING_UINT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_BOOLEAN (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_BOOLEAN_STRING_UINT_STRING_UINT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING_STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING_STRING_STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING_STRING_STRING_STRING_UINT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING_STRING_STRING_UINT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING_STRING_STRING_UINT64 (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING_STRING_STRING_UINT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_STRING_STRING_STRING_UINT64 (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_UINT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_UINT_STRING_STRING_UINT64 (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_STRING_UINT_UINT_UINT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_UINT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_UINT_STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__STRING_UINT_UINT_UINT_UINT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__UINT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__UINT_STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__UINT_STRING_UINT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__UINT_UINT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void marshal_VOID__UINT_UINT_UINT_UINT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static void polkit_agent_close ();
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]

@@ -455,8 +455,7 @@ namespace Atk {
 		[Deprecated (replacement = "TextAttribute.register", since = "vala-0.16")]
 		public static Atk.TextAttribute attribute_register (string name);
 		public static void free_ranges ([CCode (array_length = false)] Atk.TextRange[] ranges);
-		[CCode (array_length = false, array_null_terminated = true)]
-		[NoWrapper]
+		[CCode (array_length = false, array_null_terminated = true, cname = "atk_text_get_bounded_ranges")]
 		public virtual Atk.TextRange[] get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
 		public abstract int get_caret_offset ();
 		public abstract unichar get_character_at_offset (int offset);

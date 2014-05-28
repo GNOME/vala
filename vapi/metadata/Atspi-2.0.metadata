@@ -1,5 +1,7 @@
 Cache.interfaces skip
 
+DeviceEvent struct
+
 DeviceListener
 	.new_simple skip=false
 
