@@ -1,3 +1,5 @@
+include $(top_srcdir)/Makefile.common
+
 NULL =
 
 AM_CPPFLAGS = \
@@ -26,13 +28,23 @@ valac_SOURCES = \
 	$(NULL)
 
 valac.vala.stamp: $(valac_VALASOURCES)
-	$(VALA_V)$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir $(srcdir)/../gee --pkg gee --vapidir $(srcdir)/../ccode --pkg ccode --vapidir $(srcdir)/../vala --pkg vala --vapidir $(srcdir)/../codegen --pkg codegen --pkg config $^
+	$(VALA_V)$(VALAC) \
+		$(COVERAGE_VALAFLAGS) \
+		$(VALAFLAGS) \
+		-C \
+		--vapidir $(top_srcdir)/vapi --pkg gobject-2.0 \
+		--vapidir $(top_srcdir)/gee --pkg gee \
+		--vapidir $(top_srcdir)/ccode --pkg ccode \
+		--vapidir $(top_srcdir)/vala --pkg vala \
+		--vapidir $(top_srcdir)/codegen --pkg codegen \
+		--pkg config \
+		$^
 	@touch $@
 
 valac_LDADD = \
 	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
-	../codegen/libvala@PACKAGE_SUFFIX@.la \
+	$(top_builddir)/codegen/libvala@PACKAGE_SUFFIX@.la \
 	$(NULL)
 
 EXTRA_DIST = $(valac_VALASOURCES) valac.vala.stamp
@@ -47,7 +59,3 @@ endif
 MAINTAINERCLEANFILES = \
 	$(valac_VALASOURCES:.vala=.c) \
 	$(NULL)
-
-VALA_V = $(VALA_V_$(V))
-VALA_V_ = $(VALA_V_$(AM_DEFAULT_VERBOSITY))
-VALA_V_0 = @echo "  VALAC " $^;

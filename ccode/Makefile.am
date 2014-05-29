@@ -1,3 +1,5 @@
+include $(top_srcdir)/Makefile.common
+
 NULL =
 
 AM_CPPFLAGS = \
@@ -79,7 +81,16 @@ ccodeinclude_HEADERS = \
 	$(NULL)
 
 ccode.vapi ccode.vala.stamp: $(libvalaccode_la_VALASOURCES)
-	$(VALA_V)$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir $(srcdir)/../gee --pkg gee --pkg config -H valaccode.h --library ccode $^
+	$(VALA_V)$(VALAC) \
+		$(COVERAGE_VALAFLAGS) \
+		$(VALAFLAGS) \
+		-C \
+		--vapidir $(top_srcdir)/vapi --pkg gobject-2.0 \
+		--vapidir $(top_srcdir)/gee --pkg gee \
+		--pkg config \
+		-H valaccode.h \
+		--library ccode \
+		$^
 	touch $@
 
 libvalaccode_la_LIBADD = \
@@ -94,7 +105,3 @@ MAINTAINERCLEANFILES = \
 	valaccode.h \
 	$(libvalaccode_la_VALASOURCES:.vala=.c) \
 	$(NULL)
-
-VALA_V = $(VALA_V_$(V))
-VALA_V_ = $(VALA_V_$(AM_DEFAULT_VERBOSITY))
-VALA_V_0 = @echo "  VALAC " $^;

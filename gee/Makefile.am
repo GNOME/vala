@@ -1,3 +1,5 @@
+include $(top_srcdir)/Makefile.common
+
 NULL =
 
 AM_CPPFLAGS = \
@@ -36,7 +38,14 @@ geeinclude_HEADERS = \
 	$(NULL)
 
 gee.vapi gee.vala.stamp: $(libgee_la_VALASOURCES)
-	$(VALA_V)$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 -H valagee.h --library gee $^
+	$(VALA_V)$(VALAC) \
+		$(COVERAGE_VALAFLAGS) \
+		$(VALAFLAGS) \
+		-C \
+		--vapidir $(top_srcdir)/vapi --pkg gobject-2.0 \
+		-H valagee.h \
+		--library gee \
+		$^
 	@touch $@
 
 libgee_la_LIBADD = \
@@ -51,7 +60,3 @@ MAINTAINERCLEANFILES = \
 	valagee.h \
 	$(libgee_la_VALASOURCES:.vala=.c) \
 	$(NULL)
-
-VALA_V = $(VALA_V_$(V))
-VALA_V_ = $(VALA_V_$(AM_DEFAULT_VERBOSITY))
-VALA_V_0 = @echo "  VALAC " $^;

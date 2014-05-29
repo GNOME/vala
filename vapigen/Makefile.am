@@ -1,3 +1,5 @@
+include $(top_srcdir)/Makefile.common
+
 NULL =
 
 VALAC = $(top_builddir)/compiler/valac$(EXEEXT)
@@ -41,23 +43,41 @@ vapicheck_SOURCES = \
 	$(NULL)
 
 vapigen.vala.stamp: $(vapigen_VALASOURCES)
-	$(VALA_V)$(VALAC) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --vapidir $(srcdir)/../gee --pkg gee --vapidir $(srcdir)/../ccode --pkg ccode --vapidir $(srcdir)/../vala --pkg vala --vapidir $(srcdir)/../gobject-introspection --pkg gidl --pkg config $^
+	$(VALA_V)$(VALAC) \
+		$(VALAFLAGS) \
+		-C \
+		--vapidir $(top_srcdir)/vapi \
+		--vapidir $(top_srcdir)/gee --pkg gee \
+		--vapidir $(top_srcdir)/ccode --pkg ccode \
+		--vapidir $(top_srcdir)/vala --pkg vala \
+		--vapidir $(top_srcdir)/gobject-introspection --pkg gidl \
+		--pkg config \
+		$^
 	@touch $@
 
 vapicheck.vala.stamp: $(vapicheck_VALASOURCES)
-	$(VALA_V)$(VALAC) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --vapidir $(srcdir)/../gee --pkg gee --vapidir $(srcdir)/../ccode --pkg ccode --vapidir $(srcdir)/../vala --pkg vala --vapidir $(srcdir)/../gobject-introspection --pkg gidl --pkg config $^
+	$(VALA_V)$(VALAC) \
+		$(VALAFLAGS) \
+		-C \
+		--vapidir $(top_srcdir)/vapi \
+		--vapidir $(top_srcdir)/gee --pkg gee \
+		--vapidir $(top_srcdir)/ccode --pkg ccode \
+		--vapidir $(top_srcdir)/vala --pkg vala \
+		--vapidir $(top_srcdir)/gobject-introspection --pkg gidl \
+		--pkg config \
+		$^
 	@touch $@
 
 vapigen_LDADD = \
 	$(GLIB_LIBS) \
-	../codegen/libvala@PACKAGE_SUFFIX@.la \
-	../gobject-introspection/libgidl.la \
+	$(top_builddir)/codegen/libvala@PACKAGE_SUFFIX@.la \
+	$(top_builddir)/gobject-introspection/libgidl.la \
 	$(NULL)
 
 vapicheck_LDADD = \
 	$(GLIB_LIBS) \
-	../codegen/libvala@PACKAGE_SUFFIX@.la \
-	../gobject-introspection/libgidl.la \
+	$(top_builddir)/codegen/libvala@PACKAGE_SUFFIX@.la \
+	$(top_builddir)/gobject-introspection/libgidl.la \
 	$(NULL)
 
 if ENABLE_UNVERSIONED
@@ -100,7 +120,3 @@ MAINTAINERCLEANFILES = \
 	$(vapigen_VALASOURCES:.vala=.c) \
 	$(vapicheck_VALASOURCES:.vala=.c) \
 	$(NULL)
-
-VALA_V = $(VALA_V_$(V))
-VALA_V_ = $(VALA_V_$(AM_DEFAULT_VERBOSITY))
-VALA_V_0 = @echo "  VALAC " $^;
