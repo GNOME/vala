@@ -126,7 +126,13 @@ public class Vala.GtkModule : GSignalModule {
 			} else if (current_class != null && current_token == MarkupTokenType.START_ELEMENT && reader.name == "signal") {
 				var signal_name = reader.get_attribute ("name");
 				var handler_name = reader.get_attribute ("handler");
+
 				if (current_class != null) {
+					if (signal_name == null || handler_name == null) {
+						Report.error (node.source_reference, "Invalid signal in ui file `%s'".printf (ui_file));
+						current_token = reader.read_token (null, null);
+						continue;
+					}
 					var sep_idx = signal_name.index_of ("::");
 					if (sep_idx >= 0) {
 						// detailed signal, we don't care about the detail
