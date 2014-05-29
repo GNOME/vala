@@ -65,22 +65,6 @@ AC_SUBST(COVERAGE_VALAFLAGS)
 AC_SUBST(COVERAGE_CFLAGS)
 AC_SUBST(COVERAGE_LIBS)
 
-AC_ARG_ENABLE(vapigen, AS_HELP_STRING([--disable-vapigen], [Disable VAPI generator]), enable_vapigen=$enableval, enable_vapigen=yes)
-AM_CONDITIONAL(ENABLE_VAPIGEN, test x$enable_vapigen = xyes)
-
-if test "$enable_vapigen" = "yes"; then
-  vapigen_decl="vapigen=\${bindir}/vapigen${PACKAGE_SUFFIX}"
-  gen_introspect_decl="gen_introspect=\${libdir}/vala${PACKAGE_SUFFIX}/gen-introspect${PACKAGE_SUFFIX}"
-  vala_gen_introspect_decl="vala_gen_introspect=\${bindir}/vala-gen-introspect${PACKAGE_SUFFIX}"
-else
-  vapigen_decl=''
-  gen_introspect_decl=''
-  vala_gen_introspect_decl=''
-fi
-AC_SUBST(vapigen_decl)
-AC_SUBST(gen_introspect_decl)
-AC_SUBST(vala_gen_introspect_decl)
-
 GLIB_REQUIRED=2.18.0
 
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)

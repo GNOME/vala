@@ -7,9 +7,9 @@ datarootdir=@datarootdir@
 datadir=@datadir@
 vapidir=@datadir@/vala@PACKAGE_SUFFIX@/vapi
 
-@vapigen_decl@
-@gen_introspect_decl@
-@vala_gen_introspect_decl@
+vapigen=@bindir@/vapigen@PACKAGE_SUFFIX@
+gen_introspect=@libdir@/vala@PACKAGE_SUFFIX@/gen-introspect@PACKAGE_SUFFIX@
+vala_gen_introspect=@bindir@/vala-gen-introspect@PACKAGE_SUFFIX@
 
 Name: Vala
 Description: The Vala compiler library
