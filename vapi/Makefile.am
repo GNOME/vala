@@ -120,6 +120,8 @@ dist_vapi_DATA = \
 	gstreamer-video-0.10.deps \
 	gstreamer-video-0.10.vapi \
 	gstreamer-1.0.vapi \
+	gstreamer-allocators-1.0.vapi \
+	gstreamer-allocators-1.0.deps \
 	gstreamer-app-1.0.vapi \
 	gstreamer-app-1.0.deps \
 	gstreamer-audio-1.0.vapi \
@@ -136,6 +138,8 @@ dist_vapi_DATA = \
 	gstreamer-net-1.0.deps \
 	gstreamer-pbutils-1.0.vapi \
 	gstreamer-pbutils-1.0.deps \
+	gstreamer-riff-1.0.deps \
+	gstreamer-riff-1.0.vapi \
 	gstreamer-rtp-1.0.vapi \
 	gstreamer-rtp-1.0.deps \
 	gstreamer-rtsp-1.0.vapi \
@@ -368,10 +372,12 @@ GSTREAMER_1_0_BINDINGS = \
 	gstreamer-check-1.0 \
 	gstreamer-controller-1.0 \
 	gstreamer-net-1.0 \
+	gstreamer-allocators-1.0 \
 	gstreamer-app-1.0 \
 	gstreamer-audio-1.0 \
 	gstreamer-fft-1.0 \
 	gstreamer-pbutils-1.0 \
+	gstreamer-riff-1.0 \
 	gstreamer-rtp-1.0 \
 	gstreamer-sdp-1.0 \
 	gstreamer-rtsp-1.0 \
@@ -584,6 +590,9 @@ gstreamer-video-0.10:
 gstreamer-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Gst-1.0-custom.vala $(GIRDIR)/Gst-1.0.gir
 
+gstreamer-allocators-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-allocators-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstAllocators-1.0.gir
+
 gstreamer-app-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-app-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstApp-1.0.gir
 
@@ -607,6 +616,9 @@ gstreamer-net-1.0:
 
 gstreamer-pbutils-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-pbutils-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstPbutils-1.0.gir
+
+gstreamer-riff-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-riff-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstRiff-1.0.gir
 
 gstreamer-rtp-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-rtp-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstRtp-1.0.gir
