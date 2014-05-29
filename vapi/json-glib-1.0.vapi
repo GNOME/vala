@@ -151,7 +151,6 @@ namespace Json {
 	public class Parser : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Parser ();
-		public static GLib.Quark error_quark ();
 		public uint get_current_line ();
 		public uint get_current_pos ();
 		public unowned Json.Node? get_root ();
@@ -175,7 +174,6 @@ namespace Json {
 		[CCode (has_construct_function = false)]
 		public Path ();
 		public bool compile (string expression) throws GLib.Error;
-		public static GLib.Quark error_quark ();
 		public Json.Node match (Json.Node root);
 		public static Json.Node query (string expression, Json.Node root) throws GLib.Error;
 	}
@@ -187,7 +185,6 @@ namespace Json {
 		public int count_members ();
 		public void end_element ();
 		public void end_member ();
-		public static GLib.Quark error_quark ();
 		public bool get_boolean_value ();
 		public double get_double_value ();
 		public unowned GLib.Error get_error ();
@@ -219,15 +216,15 @@ namespace Json {
 		public abstract Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
 		public abstract void set_property (GLib.ParamSpec pspec, GLib.Value value);
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_NODE_", has_type_id = false)]
+	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_NODE_", type_id = "json_node_type_get_type ()")]
 	public enum NodeType {
 		OBJECT,
 		ARRAY,
 		VALUE,
 		NULL
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PARSER_ERROR_", has_type_id = false)]
-	public enum ParserError {
+	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PARSER_ERROR_")]
+	public errordomain ParserError {
 		PARSE,
 		TRAILING_COMMA,
 		MISSING_COMMA,
@@ -235,22 +232,24 @@ namespace Json {
 		INVALID_BAREWORD,
 		EMPTY_MEMBER_NAME,
 		INVALID_DATA,
-		UNKNOWN
+		UNKNOWN;
+		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PATH_ERROR_INVALID_", has_type_id = false)]
-	public enum PathError {
-		[CCode (cname = "JSON_PATH_ERROR_INVALID_QUERY")]
-		PATH_ERROR_INVALID_QUERY
+	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PATH_ERROR_INVALID_")]
+	public errordomain PathError {
+		QUERY;
+		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_READER_ERROR_", has_type_id = false)]
-	public enum ReaderError {
+	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_READER_ERROR_")]
+	public errordomain ReaderError {
 		NO_ARRAY,
 		INVALID_INDEX,
 		NO_OBJECT,
 		INVALID_MEMBER,
 		INVALID_NODE,
 		NO_VALUE,
-		INVALID_TYPE
+		INVALID_TYPE;
+		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", instance_pos = 3.9)]
 	public delegate void ArrayForeach (Json.Array array, uint index_, Json.Node element_node);
