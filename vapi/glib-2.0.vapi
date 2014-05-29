@@ -3246,11 +3246,7 @@ namespace GLib {
 	}
 
 	[Compact]
-#if GLIB_2_22
 	[CCode (ref_function = "g_mapped_file_ref", unref_function = "g_mapped_file_unref")]
-#else
-	[CCode (free_function = "g_mapped_file_free")]
-#endif
 	public class MappedFile {
 		public MappedFile (string filename, bool writable) throws FileError;
 		public size_t get_length ();
@@ -4342,11 +4338,7 @@ namespace GLib {
 	/* Pointer Arrays */
 
 	[Compact, Deprecated (since = "vala-0.26", replacement="GenericArray")]
-#if GLIB_2_22
 	[CCode (ref_function = "g_ptr_array_ref", unref_function = "g_ptr_array_unref", type_id = "G_TYPE_PTR_ARRAY")]
-#else
-	[CCode (free_function = "g_ptr_array_free")]
-#endif
 	public class PtrArray {
 		public PtrArray ();
 		public PtrArray.with_free_func (GLib.DestroyNotify? element_free_func);
@@ -4465,11 +4457,7 @@ namespace GLib {
 	/* Byte Arrays */
 
 	[Compact]
-#if GLIB_2_22
 	[CCode (cprefix = "g_byte_array_", ref_function = "g_byte_array_ref", unref_function = "g_byte_array_unref", type_id = "G_TYPE_BYTE_ARRAY")]
-#else
-	[CCode (cprefix = "g_byte_array_", free_function = "g_byte_array_free")]
-#endif
 	public class ByteArray {
 		public ByteArray ();
 		[CCode (cname = "g_byte_array_sized_new")]
@@ -4596,11 +4584,7 @@ namespace GLib {
 	/* GArray */
 
 	[Compact]
-#if GLIB_2_22
 	[CCode (ref_function = "g_array_ref", unref_function = "g_array_unref", type_id = "G_TYPE_ARRAY")]
-#else
-	[CCode (free_function = "g_array_free")]
-#endif
 	public class Array<G> {
 		[CCode (cname = "len")]
 		public uint length;
@@ -4641,11 +4625,7 @@ namespace GLib {
 	public delegate int TreeSearchFunc<K> (K key);
 
 	[Compact]
-#if GLIB_2_22
 	[CCode (ref_function = "g_tree_ref", unref_function = "g_tree_unref")]
-#else
-	[CCode (free_function = "g_tree_destroy")]
-#endif
 	public class Tree<K,V> {
 		[CCode (cname = "g_tree_new_full", simple_generics = true)]
 		public Tree (CompareDataFunc<K> key_compare_func);
