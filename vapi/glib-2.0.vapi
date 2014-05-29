@@ -1850,6 +1850,7 @@ namespace GLib {
 	}
 
 	[CCode (destroy_function = "g_static_private_free", default_value = "G_STATIC_PRIVATE_INIT")]
+	[Deprecated (since = "glib-2.32")]
 	public struct StaticPrivate {
 		public StaticPrivate ();
 		public void* get ();
