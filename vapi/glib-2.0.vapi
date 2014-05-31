@@ -4148,6 +4148,7 @@ namespace GLib {
 		public void @set (owned K key, owned V value);
 		public List<unowned K> get_keys ();
 		public List<unowned V> get_values ();
+		public (unowned K)[] get_keys_as_array ();
 		public void @foreach (HFunc<K,V> func);
 		[CCode (cname = "g_hash_table_foreach")]
 		public void for_each (HFunc<K,V> func);
