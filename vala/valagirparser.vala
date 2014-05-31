@@ -678,8 +678,12 @@ public class Vala.GirParser : CodeVisitor {
 				return "";
 			}
 			var prefix = symbol.get_attribute_string ("CCode", "cprefix");
-			if (prefix == null && girdata != null) {
+			if (prefix == null && girdata != null && girdata["c:identifier-prefixes"] != null) {
 				prefix = girdata["c:identifier-prefixes"];
+				int idx = prefix.index_of (",");
+				if (idx != -1) {
+					prefix = prefix.substring (0, idx);
+				}
 			}
 			if (prefix == null) {
 				if (symbol is Enum || symbol is ErrorDomain) {
@@ -1910,6 +1914,13 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("namespace");
 
 		string? cprefix = reader.get_attribute ("c:identifier-prefixes");
+		if (cprefix != null) {
+			int idx = cprefix.index_of (",");
+			if (idx != -1) {
+				cprefix = cprefix.substring (0, idx);
+			}
+		}
+
 		string? lower_case_cprefix = reader.get_attribute ("c:symbol-prefixes");
 		string vala_namespace = cprefix;
 		string gir_namespace = reader.get_attribute ("name");
