@@ -314,6 +314,7 @@ namespace GLib {
 		public weak GLib.Object target { get; }
 		public string target_property { get; }
 		public GLib.BindingFlags flags { get; }
+		public void unbind ();
 	}
 
 	[CCode (has_target = false)]
