@@ -36,9 +36,9 @@ namespace Xcb {
 		public uint32 generate_id ();
 		public Setup get_setup ();
 		public GenericEvent wait_for_event ();
-		public GenericEvent poll_for_event();
+		public GenericEvent poll_for_event ();
 		public int get_file_descriptor ();
-		public Xcb.GenericError request_check (Xcb.VoidCookie cookie);
+		public Xcb.GenericError? request_check (Xcb.VoidCookie cookie);
 
 		public VoidCookie create_window (uint8 depth, Window wid, Window parent, int16 x, int16 y, uint16 width, uint16 height, uint16 border_width, uint16 _class, VisualID visual, uint32 value_mask, [CCode (array_length = false)] uint32[]? value_list);
 		public VoidCookie create_window_checked (uint8 depth, Window wid, Window parent, int16 x, int16 y, uint16 width, uint16 height, uint16 border_width, uint16 _class, VisualID visual, uint32 value_mask, [CCode (array_length = false)] uint32[]? value_list);
@@ -69,98 +69,98 @@ namespace Xcb {
 
 		public GetWindowAttributesCookie get_window_attributes (Window wid);
 		public GetWindowAttributesCookie get_window_attributes_unchecked (Window wid);
-		public GetWindowAttributesReply get_window_attributes_reply(GetWindowAttributesCookie cookie, out GenericError? e);
+		public GetWindowAttributesReply? get_window_attributes_reply (GetWindowAttributesCookie cookie, out GenericError? e = null);
 
 		public VoidCookie change_window_attributes (Window wid, uint32 value_mask, [CCode (array_length = false)] uint32[]? value_list);
 		public VoidCookie change_window_attributes_checked (Window wid, uint32 value_mask, [CCode (array_length = false)] uint32[]? value_list);
 
 		public QueryTreeCookie query_tree (Window wid);
 		public QueryTreeCookie query_tree_unchecked (Window wid);
-		public QueryTreeReply query_tree_reply (QueryTreeCookie cookie, out GenericError? e);
+		public QueryTreeReply? query_tree_reply (QueryTreeCookie cookie, out GenericError? e = null);
 
 		[CCode (cname = "xcb_intern_atom")]
-		private InternAtomCookie vala_intern_atom(bool only_if_exists,uint16 len, string name);
+		private InternAtomCookie vala_intern_atom (bool only_if_exists, uint16 len, string name);
 		[CCode (cname = "vala_xcb_intern_atom")]
-		public InternAtomCookie intern_atom(bool only_if_exists,string name) {
-			return this.vala_intern_atom(only_if_exists,(uint16)name.length,name);
+		public InternAtomCookie intern_atom (bool only_if_exists, string name) {
+			return this.vala_intern_atom (only_if_exists, (uint16) name.length, name);
 		}
 		[CCode (cname = "xcb_intern_atom_unchecked")]
-		private InternAtomCookie vala_intern_atom_unchecked(bool only_if_exists,uint16 len, string name);
+		private InternAtomCookie vala_intern_atom_unchecked (bool only_if_exists, uint16 len, string name);
 		[CCode (cname = "vala_xcb_intern_atom_unchecked")]
-		public InternAtomCookie intern_atom_unchecked(bool only_if_exists,string name) {
-			return this.vala_intern_atom(only_if_exists,(uint16)name.length,name);
+		public InternAtomCookie intern_atom_unchecked (bool only_if_exists, string name) {
+			return this.vala_intern_atom (only_if_exists, (uint16) name.length, name);
 		}
-		public InternAtomReply intern_atom_reply(InternAtomCookie cookie, out GenericError? e);
+		public InternAtomReply? intern_atom_reply (InternAtomCookie cookie, out GenericError? e = null);
 
-		public GetAtomNameCookie get_atom_name(AtomT atom);
-		public GetAtomNameCookie get_atom_name_unchecked(AtomT atom);
-		public GetAtomNameReply get_atom_name_reply(GetAtomNameCookie cookie, out GenericError? e);
+		public GetAtomNameCookie get_atom_name (AtomT atom);
+		public GetAtomNameCookie get_atom_name_unchecked (AtomT atom);
+		public GetAtomNameReply? get_atom_name_reply (GetAtomNameCookie cookie, out GenericError? e = null);
 
 		[CCode (cname = "xcb_change_property")]
-		private VoidCookie vala_change_property(PropMode mode, Window window, AtomT property, AtomT type, uint8 format, uint32 len, void *data);
+		private VoidCookie vala_change_property (PropMode mode, Window window, AtomT property, AtomT type, uint8 format, uint32 len, void *data);
 		[CCode (cname = "vala_xcb_change_property")]
-		public VoidCookie change_property_uint8(PropMode mode, Window window, AtomT property, AtomT type, uint32 len, uint8 *data) {
-			return this.vala_change_property(mode,window,property,type, 8, len, (void *)data);
+		public VoidCookie change_property_uint8 (PropMode mode, Window window, AtomT property, AtomT type, uint32 len, uint8 *data) {
+			return this.vala_change_property (mode, window, property, type, 8, len, (void *)data);
 		}
-		public VoidCookie change_property_uint16(PropMode mode, Window window, AtomT property, AtomT type, uint32 len, uint16 *data) {
-			return this.vala_change_property(mode,window,property,type, 16, len, (void *)data);
+		public VoidCookie change_property_uint16 (PropMode mode, Window window, AtomT property, AtomT type, uint32 len, uint16 *data) {
+			return this.vala_change_property (mode, window, property, type, 16, len, (void *)data);
 		}
-		public VoidCookie change_property_uint32(PropMode mode, Window window, AtomT property, AtomT type, uint32 len, uint32 *data) {
-			return this.vala_change_property(mode,window,property,type, 32, len, (void *)data);
+		public VoidCookie change_property_uint32 (PropMode mode, Window window, AtomT property, AtomT type, uint32 len, uint32 *data) {
+			return this.vala_change_property (mode, window, property, type, 32, len, (void *)data);
 		}
-		public VoidCookie change_property_atom(PropMode mode, Window window, AtomT property, AtomT type, uint32 len, AtomT *data) {
-			return this.vala_change_property(mode,window,property,type, 32, len, (void *)data);
+		public VoidCookie change_property_atom (PropMode mode, Window window, AtomT property, AtomT type, uint32 len, AtomT *data) {
+			return this.vala_change_property (mode, window, property, type, 32, len, (void *)data);
 		}
-		public VoidCookie change_property_string(PropMode mode, Window window, AtomT property, AtomT type, string data) {
-			return this.vala_change_property(mode,window,property,type, 8, data.length, (void *)data.data);
+		public VoidCookie change_property_string (PropMode mode, Window window, AtomT property, AtomT type, string data) {
+			return this.vala_change_property (mode, window, property, type, 8, data.length, (void *)data.data);
 		}
 
 		[CCode (cname = "xcb_change_property_checked")]
-		private VoidCookie vala_change_property_checked(PropMode mode, Window window, AtomT property, AtomT type, uint8 format, uint32 len, void *data);
+		private VoidCookie vala_change_property_checked (PropMode mode, Window window, AtomT property, AtomT type, uint8 format, uint32 len, void *data);
 		[CCode (cname = "vala_xcb_change_property_checked")]
-		public VoidCookie change_property_checked_uint8(PropMode mode, Window window, AtomT property, AtomT type, uint32 len, uint8 *data) {
-			return this.vala_change_property(mode,window,property,type, 8, len, (void *)data);
+		public VoidCookie change_property_checked_uint8 (PropMode mode, Window window, AtomT property, AtomT type, uint32 len, uint8 *data) {
+			return this.vala_change_property (mode, window, property, type, 8, len, (void *)data);
 		}
-		public VoidCookie change_property_checked_uint16(PropMode mode, Window window, AtomT property, AtomT type, uint32 len, uint16 *data) {
-			return this.vala_change_property(mode,window,property,type, 16, len, (void *)data);
+		public VoidCookie change_property_checked_uint16 (PropMode mode, Window window, AtomT property, AtomT type, uint32 len, uint16 *data) {
+			return this.vala_change_property (mode, window, property, type, 16, len, (void *)data);
 		}
-		public VoidCookie change_property_checked_uint32(PropMode mode, Window window, AtomT property, AtomT type, uint32 len, uint32 *data) {
-			return this.vala_change_property(mode,window,property,type, 32, len, (void *)data);
+		public VoidCookie change_property_checked_uint32 (PropMode mode, Window window, AtomT property, AtomT type, uint32 len, uint32 *data) {
+			return this.vala_change_property (mode, window, property, type, 32, len, (void *)data);
 		}
-		public VoidCookie change_property_checked_atom(PropMode mode, Window window, AtomT property, AtomT type, uint32 len, AtomT *data) {
-			return this.vala_change_property(mode,window,property,type, 32, len, (void *)data);
+		public VoidCookie change_property_checked_atom (PropMode mode, Window window, AtomT property, AtomT type, uint32 len, AtomT *data) {
+			return this.vala_change_property (mode, window, property, type, 32, len, (void *)data);
 		}
-		public VoidCookie change_property_checked_string(PropMode mode, Window window, AtomT property, AtomT type, string data) {
-			return this.vala_change_property(mode,window,property,type, 8, data.length, (void *)data.data);
+		public VoidCookie change_property_checked_string (PropMode mode, Window window, AtomT property, AtomT type, string data) {
+			return this.vala_change_property (mode, window, property, type, 8, data.length, (void *)data.data);
 		}
 
 		public VoidCookie delete_property_checked (Window window, AtomT property);
 		public VoidCookie delete_property (Window window, AtomT property);
 
-		public GetPropertyCookie get_property(bool _delete, Window window, AtomT property, AtomT type, uint32 long_offset, uint32 long_length);
-		public GetPropertyCookie get_property_unchecked(bool _delete, Window window, AtomT property, AtomT type, uint32 long_offset, uint32 long_length);
-		public GetPropertyReply ? get_property_reply(GetPropertyCookie cookie, out GenericError? e);
+		public GetPropertyCookie get_property (bool _delete, Window window, AtomT property, AtomT type, uint32 long_offset, uint32 long_length);
+		public GetPropertyCookie get_property_unchecked (bool _delete, Window window, AtomT property, AtomT type, uint32 long_offset, uint32 long_length);
+		public GetPropertyReply? get_property_reply (GetPropertyCookie cookie, out GenericError? e = null);
 
 		public ListPropertiesCookie list_properties (Window window);
 		public ListPropertiesCookie list_properties_unchecked (Window window);
-		public ListPropertiesReply? list_properties_reply (ListPropertiesCookie cookie, out GenericError? e);
+		public ListPropertiesReply? list_properties_reply (ListPropertiesCookie cookie, out GenericError? e = null);
 
-		public VoidCookie configure_window(Window window, uint16 value_mask, uint32 *value_list);
-		public VoidCookie configure_window_checked(Window window, uint16 value_mask, uint32 *value_list);
+		public VoidCookie configure_window (Window window, uint16 value_mask, uint32 *value_list);
+		public VoidCookie configure_window_checked (Window window, uint16 value_mask, uint32 *value_list);
 		
-		public VoidCookie reparent_window(Window window, Window parent, uint16 x, uint16 y);
-		public VoidCookie reparent_window_checked(Window window, Window parent, uint16 x, uint16 y);
+		public VoidCookie reparent_window (Window window, Window parent, uint16 x, uint16 y);
+		public VoidCookie reparent_window_checked (Window window, Window parent, uint16 x, uint16 y);
 
-		public GetGeometryCookie get_geometry(Drawable drawable);
-		public GetGeometryCookie get_geometry_unchecked(Drawable drawable);
-		public GetGeometryReply ? get_geometry_reply(GetGeometryCookie cookie, out GenericError ? e);
+		public GetGeometryCookie get_geometry (Drawable drawable);
+		public GetGeometryCookie get_geometry_unchecked (Drawable drawable);
+		public GetGeometryReply? get_geometry_reply (GetGeometryCookie cookie, out GenericError ? e);
 
 		public VoidCookie set_selection_owner_checked (Window owner, AtomT selection, Timestamp time);
 		public VoidCookie set_selection_owner (Window owner, AtomT selection, Timestamp time);
 
 		public GetSelectionOwnerCookie get_selection_owner (AtomT selection);
 		public GetSelectionOwnerCookie get_selection_owner_unchecked (AtomT selection);
-		public GetSelectionOwnerReply get_selection_owner_reply (GetSelectionOwnerCookie cookie, out GenericError? e);
+		public GetSelectionOwnerReply? get_selection_owner_reply (GetSelectionOwnerCookie cookie, out GenericError? e = null);
 
 		public VoidCookie convert_selection_checked (Window requestor, AtomT selection, AtomT target, AtomT property, Timestamp time);
 		public VoidCookie convert_selection (Window requestor, AtomT selection, AtomT target, AtomT property, Timestamp time);
@@ -169,7 +169,7 @@ namespace Xcb {
 
 		public GrabPointerCookie grab_pointer (bool owner_events, Window grab_window, uint16 event_mask, GrabMode pointer_mode, GrabMode keyboard_mode, Window confine_to, Cursor cursor, Timestamp time);
 		public GrabPointerCookie grab_pointer_unchecked (bool owner_events, Window grab_window, uint16 event_mask, GrabMode pointer_mode, GrabMode keyboard_mode, Window confine_to, Cursor cursor, Timestamp time);
-		public GrabPointerReply grab_pointer_reply (GrabPointerCookie cookie, out GenericError? e);
+		public GrabPointerReply? grab_pointer_reply (GrabPointerCookie cookie, out GenericError? e = null);
 
 		public VoidCookie ungrab_pointer_checked (Timestamp time);
 		public VoidCookie ungrab_pointer (Timestamp time);
@@ -185,7 +185,7 @@ namespace Xcb {
 
 		public GrabKeyboardCookie grab_keyboard (bool owner_events, Window grab_window, Timestamp time, GrabMode pointer_mode, GrabMode keyboard_mode);
 		public GrabKeyboardCookie grab_keyboard_unchecked (bool owner_events, Window grab_window, Timestamp time, GrabMode pointer_mode, GrabMode keyboard_mode);
-		public GrabKeyboardReply grab_keyboard_reply (GrabKeyboardCookie cookie, out GenericError? e);
+		public GrabKeyboardReply? grab_keyboard_reply (GrabKeyboardCookie cookie, out GenericError? e = null);
 
 		public VoidCookie ungrab_keyboard_checked (Timestamp time);
 		public VoidCookie ungrab_keyboard (Timestamp time);
@@ -206,15 +206,15 @@ namespace Xcb {
 
 		public QueryPointerCookie query_pointer (Window window);
 		public QueryPointerCookie query_pointer_unchecked (Window window);
-		public QueryPointerReply query_pointer_reply (QueryPointerCookie cookie, out GenericError? e);
+		public QueryPointerReply? query_pointer_reply (QueryPointerCookie cookie, out GenericError? e = null);
 
 		public GetMotionEventsCookie get_motion_events (Window window, Timestamp start, Timestamp stop);
 		public GetMotionEventsCookie get_motion_events_unchecked (Window window, Timestamp start, Timestamp stop);
-		public GetMotionEventsReply get_motion_events_reply (GetMotionEventsCookie cookie, out GenericError? e);
+		public GetMotionEventsReply? get_motion_events_reply (GetMotionEventsCookie cookie, out GenericError? e = null);
 
 		public TranslateCoordinatesCookie translate_coordinates (Window src_window, Window dst_window, int16 src_x, int16 src_y);
 		public TranslateCoordinatesCookie translate_coordinates_unchecked (Window src_window, Window dst_window, int16 src_x, int16 src_y);
-		public TranslateCoordinatesReply translate_coordinates_reply (TranslateCoordinatesCookie cookie, out GenericError? e);
+		public TranslateCoordinatesReply? translate_coordinates_reply (TranslateCoordinatesCookie cookie, out GenericError? e = null);
 
 		public VoidCookie warp_pointer_checked (Window src_window, Window dst_window, int16 src_x, int16 src_y, uint16 src_width, uint16 src_height, int16 dst_x, int16 dst_y);
 		public VoidCookie warp_pointer (Window src_window, Window dst_window, int16 src_x, int16 src_y, uint16 src_width, uint16 src_height, int16 dst_x, int16 dst_y);
@@ -224,7 +224,7 @@ namespace Xcb {
 
 		public GetInputFocusCookie get_input_focus ();
 		public GetInputFocusCookie get_input_focus_unchecked ();
-		public GetInputFocusReply get_input_focus_reply (GetInputFocusCookie cookie, out GenericError? e);
+		public GetInputFocusReply? get_input_focus_reply (GetInputFocusCookie cookie, out GenericError? e = null);
 
 		//query_keymap
 
@@ -246,7 +246,7 @@ namespace Xcb {
 
 		public QueryFontCookie query_font (Fontable font);
 		public QueryFontCookie query_font_unchecked (Fontable font);
-		public QueryFontReply query_font_reply (QueryFontCookie cookie, out GenericError? e);
+		public QueryFontReply? query_font_reply (QueryFontCookie cookie, out GenericError? e = null);
 
 		/*[CCode (cname = "xcb_query_text_extents")]
 		private QueryTextExtentsCookie vala_query_text_extents (Fontable font, uint32 string_len, Char2b* s);
@@ -260,7 +260,7 @@ namespace Xcb {
 		public QueryTextExtentsCookie query_text_extents_unchecked (Fontable font, uint16[] s) { // FIXME: How to handle Char2b?
 			this.vala_query_text_extents_unchecked (font, s.length, s);
 		}
-		public QueryTextExtentsReply query_text_extents_reply (QueryTextExtentsCookie cookie, out GenericError? e);*/
+		public QueryTextExtentsReply? query_text_extents_reply (QueryTextExtentsCookie cookie, out GenericError? e = null);*/
 
 		[CCode (cname = "xcb_list_fonts")]
 		private ListFontsCookie vala_list_fonts (uint16 max_names, uint16 pattern_len, string pattern);
@@ -274,7 +274,7 @@ namespace Xcb {
 		public ListFontsCookie list_fonts_unchecked (uint16 max_names, string pattern) {
 			return this.vala_list_fonts_unchecked (max_names, (uint16) pattern.length, pattern);
 		}
-		public ListFontsReply list_fonts_reply (ListFontsCookie cookie, out GenericError? e);
+		public ListFontsReply? list_fonts_reply (ListFontsCookie cookie, out GenericError? e = null);
 
 		[CCode (cname = "xcb_list_fonts_with_info")]
 		private ListFontsWithInfoCookie vala_list_fonts_with_info (uint16 max_names, uint16 pattern_len, string pattern);
@@ -288,13 +288,13 @@ namespace Xcb {
 		public ListFontsWithInfoCookie list_fonts_with_info_unchecked (uint16 max_names, string pattern) {
 			return this.vala_list_fonts_with_info_unchecked (max_names, (uint16) pattern.length, pattern);
 		}
-		public ListFontsWithInfoReply list_fonts_with_info_reply (ListFontsWithInfoCookie cookie, out GenericError? e);
+		public ListFontsWithInfoReply? list_fonts_with_info_reply (ListFontsWithInfoCookie cookie, out GenericError? e = null);
 
 		//set_font_path
 
 		public GetFontPathCookie get_font_path ();
 		public GetFontPathCookie get_font_path_unchecked ();
-		public GetFontPathReply get_font_path_reply (GetFontPathCookie cookie, out GenericError? e);
+		public GetFontPathReply? get_font_path_reply (GetFontPathCookie cookie, out GenericError? e = null);
 
 		public VoidCookie create_pixmap_checked (uint8 depth, Pixmap pid, Drawable drawable, uint16 width, uint16 height);
 		public VoidCookie create_pixmap (uint8 depth, Pixmap pid, Drawable drawable, uint16 width, uint16 height);
@@ -358,7 +358,7 @@ namespace Xcb {
 
 		public GetImageCookie get_image (ImageFormat format, Drawable drawable, int16 x, int16 y, uint16 width, uint16 height, uint32 plane_mask);
 		public GetImageCookie get_image_unchecked (ImageFormat format, Drawable drawable, int16 x, int16 y, uint16 width, uint16 height, uint32 plane_mask);
-		public GetImageReply get_image_reply (GetImageCookie cookie, out GenericError? e);
+		public GetImageReply? get_image_reply (GetImageCookie cookie, out GenericError? e = null);
 
 		public VoidCookie poly_text_8_checked (Drawable drawable, GContext gc, int16 x, int16 y, [CCode (array_length_pos = 4.9, array_length_type = "uint32_t")] uint8[] items);
 		public VoidCookie poly_text_8 (Drawable drawable, GContext gc, int16 x, int16 y, [CCode (array_length_pos = 4.9, array_length_type = "uint32_t")] uint8[] items);
@@ -398,11 +398,11 @@ namespace Xcb {
 
 		public ListInstalledColormapsCookie list_installed_colormaps (Window window);
 		public ListInstalledColormapsCookie list_installed_colormaps_unchecked (Window window);
-		public ListInstalledColormapsReply list_installed_colormaps_reply (ListInstalledColormapsCookie cookie, out GenericError? e);
+		public ListInstalledColormapsReply? list_installed_colormaps_reply (ListInstalledColormapsCookie cookie, out GenericError? e = null);
 
 		public AllocColorCookie alloc_color (Colormap cmap, uint16 red, uint16 green, uint16 blue);
 		public AllocColorCookie alloc_color_unchecked (Colormap cmap, uint16 red, uint16 green, uint16 blue);
-		public AllocColorReply alloc_color_reply (AllocColorCookie cookie, out GenericError? e);
+		public AllocColorReply? alloc_color_reply (AllocColorCookie cookie, out GenericError? e = null);
 
 		[CCode (cname = "xcb_alloc_named_color")]
 		private AllocNamedColorCookie vala_alloc_named_color (Colormap cmap, uint16 name_len, string name);
@@ -416,15 +416,15 @@ namespace Xcb {
 		public AllocNamedColorCookie alloc_named_color_unchecked (Colormap cmap, string name) {
 			this.vala_alloc_named_color_unchecked (cmap, (uint16) name.length, name);
 		}
-		public AllocNamedColorReply alloc_named_color_reply (AllocNamedColorCookie cookie, out GenericError? e);
+		public AllocNamedColorReply? alloc_named_color_reply (AllocNamedColorCookie cookie, out GenericError? e = null);
 
 		public AllocColorCellsCookie alloc_color_cells (bool contiguous, Colormap cmap, uint16 colors, uint16 planes);
 		public AllocColorCellsCookie alloc_color_cells_unchecked (bool contiguous, Colormap cmap, uint16 colors, uint16 planes);
-		public AllocColorCellsReply alloc_color_cells_reply (AllocColorCellsCookie cookie, out GenericError? e);
+		public AllocColorCellsReply? alloc_color_cells_reply (AllocColorCellsCookie cookie, out GenericError? e = null);
 
 		public AllocColorPlanesCookie alloc_color_planes (bool contiguous, Colormap cmap, uint16 colors, uint16 reds, uint16 greens, uint16 blues);
 		public AllocColorPlanesCookie alloc_color_planes_unchecked (bool contiguous, Colormap cmap, uint16 colors, uint16 reds, uint16 greens, uint16 blues);
-		public AllocColorPlanesReply alloc_color_planes_reply (AllocColorPlanesCookie cookie, out GenericError? e);
+		public AllocColorPlanesReply? alloc_color_planes_reply (AllocColorPlanesCookie cookie, out GenericError? e = null);
 
 		public VoidCookie free_colors_checked (Colormap cmap, uint32 plane_mask, [CCode (array_length_pos = 2.9, array_length_type = "uint32_t")] uint32[] pixels);
 		public VoidCookie free_colors (Colormap cmap, uint32 plane_mask, [CCode (array_length_pos = 2.9, array_length_type = "uint32_t")] uint32[] pixels);
@@ -447,7 +447,7 @@ namespace Xcb {
 
 		public QueryColorsCookie query_colors (Colormap cmap, [CCode (array_length_pos = 1.9, array_length_type = "uint32_t")] uint32[] pixels);
 		public QueryColorsCookie query_colors_unchecked (Colormap cmap, [CCode (array_length_pos = 1.9, array_length_type = "uint32_t")] uint32[] pixels);
-		public QueryColorsReply query_colors_reply (QueryColorsCookie cookie, out GenericError? e);
+		public QueryColorsReply? query_colors_reply (QueryColorsCookie cookie, out GenericError? e = null);
 
 		[CCode (cname = "xcb_lookup_color")]
 		private LookupColorCookie vala_lookup_color (Colormap cmap, uint16 name_len, string name);
@@ -461,7 +461,7 @@ namespace Xcb {
 		public LookupColorCookie lookup_color_unchecked (Colormap cmap, string name) {
 			this.vala_lookup_color_unchecked (cmap, (uint16) name.length, name);
 		}
-		public LookupColorReply lookup_color_reply (LookupColorCookie cookie, out GenericError? e);
+		public LookupColorReply? lookup_color_reply (LookupColorCookie cookie, out GenericError? e = null);
 
 		public VoidCookie create_cursor_checked (Cursor cid, Pixmap source, Pixmap mask, uint16 fore_red, uint16 fore_green, uint16 fore_blue, uint16 back_red, uint16 back_green, uint16 back_blue, uint16 x, uint16 y);
 		public VoidCookie create_cursor (Cursor cid, Pixmap source, Pixmap mask, uint16 fore_red, uint16 fore_green, uint16 fore_blue, uint16 back_red, uint16 back_green, uint16 back_blue, uint16 x, uint16 y);
@@ -477,7 +477,7 @@ namespace Xcb {
 
 		public QueryBestSizeCookie query_best_size (uint8 _class, Drawable drawable, uint16 width, uint16 height); // FIXME: Is there an enum for class?
 		public QueryBestSizeCookie query_best_size_unchecked (uint8 _class, Drawable drawable, uint16 width, uint16 height);
-		public QueryBestSizeReply query_best_size_reply (QueryBestSizeCookie cookie, out GenericError? e);
+		public QueryBestSizeReply? query_best_size_reply (QueryBestSizeCookie cookie, out GenericError? e = null);
 
 		[CCode (cname = "xcb_query_extension")]
 		private QueryExtensionCookie vala_query_extension (uint16 name_len, string name);
@@ -491,11 +491,11 @@ namespace Xcb {
 		public QueryExtensionCookie query_extension_unchecked (string name) {
 			return this.vala_query_extension_unchecked ((uint16) name.length, name);
 		}
-		public QueryExtensionReply query_extension_reply (QueryExtensionCookie cookie, out GenericError? e);
+		public QueryExtensionReply? query_extension_reply (QueryExtensionCookie cookie, out GenericError? e = null);
 
 		public ListExtensionsCookie list_extensions ();
 		public ListExtensionsCookie list_extensions_unchecked ();
-		public ListExtensionsReply list_extensions_reply (ListExtensionsCookie cookie, out GenericError? e);
+		public ListExtensionsReply? list_extensions_reply (ListExtensionsCookie cookie, out GenericError? e = null);
 
 		//change_keyboard_mapping
 
@@ -517,14 +517,14 @@ namespace Xcb {
 
 		public GetScreenSaverCookie get_screen_saver ();
 		public GetScreenSaverCookie get_screen_saver_unchecked ();
-		public GetScreenSaverReply get_screen_saver_reply (GetScreenSaverCookie cookie, out GenericError? e);
+		public GetScreenSaverReply? get_screen_saver_reply (GetScreenSaverCookie cookie, out GenericError? e = null);
 
 		public VoidCookie change_hosts_checked (HostMode mode, Family family, [CCode (array_length_pos = 2.9, array_length_type = "uint16_t")] uint8[] address);
 		public VoidCookie change_hosts (HostMode mode, Family family, [CCode (array_length_pos = 2.9, array_length_type = "uint16_t")] uint8[] address);
 
 		public ListHostsCookie list_hosts ();
 		public ListHostsCookie list_hosts_unchecked ();
-		public ListHostsReply list_hosts_reply (ListHostsCookie cookie, out GenericError? e);
+		public ListHostsReply? list_hosts_reply (ListHostsCookie cookie, out GenericError? e = null);
 
 		public VoidCookie set_access_control_checked (AccessControl mode);
 		public VoidCookie set_access_control (AccessControl mode);
@@ -626,9 +626,9 @@ namespace Xcb {
 		public uint8 format;
 		public AtomT type;
 		[CCode (cname = "xcb_get_property_value_length")]
-		public int32 value_length();
+		public int32 value_length ();
 		[CCode (cname = "xcb_get_property_value")]
-		public unowned void *value();
+		public unowned void *value ();
 	}
 
 	[SimpleType]
@@ -675,7 +675,7 @@ namespace Xcb {
 	public class ListPropertiesReply {
 		private uint16 atoms_len;
 		[CCode (cname = "xcb_list_properties_atoms")]
-		private Atom* vala_atoms();
+		private Atom* vala_atoms ();
 		public Atom[] atoms
 		{
 			get
@@ -2066,7 +2066,7 @@ namespace Xcb {
 		public Window parent;
 		public uint16 children_len;
 		[CCode (cname = "xcb_query_tree_children", array_length = false)]
-		public Window* children();
+		public Window* children ();
 	}
 
 	[SimpleType]
