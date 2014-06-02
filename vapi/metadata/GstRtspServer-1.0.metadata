@@ -1,3 +1,59 @@
-* cheader_filename="gst/rtsp-server/rtsp-server.h"
-RTSPMedia.new_state#virtual_method name="emit_new_state"
-RTSPMediaFactory.construct nullable
+* parent="Gst.RTSPServer"
+RTSP* name="RTSP(.+)"
+rtsp_* name="rtsp_(.+)"
+RTSP_* name="RTSP_(.+)"
+
+RTSP_ADDRESS_POOL_* parent="Gst.RTSPServer.AddressPool" name="RTSP_ADDRESS_POOL_(.+)"
+RTSP_AUTH_* parent="Gst.RTSPServer.Auth" name="RTSP_AUTH_(.+)"
+RTSP_PERM_* parent="Gst.RTSPServer.Permissions" name="RTSP_PERM_(.+)"
+RTSP_TOKEN_* parent="Gst.RTSPServer.Token" name="RTSP_TOKEN_(.+)"
+
+// Symbol name conflicts
+RTSPAuth.check#function name="check_current_context"
+
+// Field ownership
+RTSPAddress
+  .address unowned=false
+  .pool unowned=false
+RTSPThread
+  .context unowned=false
+  .loop unowned=false
+
+// Virtual funcs without wrappers
+RTSPMedia
+  .create_rtpbin skip=false
+RTSPMediaFactory
+  .create_pipeline skip=false type="Gst.Pipeline"
+RTSPServer
+  .create_client skip=false unowned=false
+RTSPSessionPool
+  .create_session skip=false unowned=false
+
+// transfer floating
+RTSPMedia
+  .create_rtpbin floating
+RTSPMediaFactory
+  .create_element floating
+  .create_pipeline floating
+
+// Return non-boxed type
+RTSPContext
+  .get_current skip=false
+
+// Variadic
+RTSPMediaFactory
+  .add_role skip=false
+RTSPPermissions
+  .add_role skip=false
+  .add_role_valist skip=false
+RTSPToken
+  .new skip=false
+  .new_valist skip=false
+
+// Mini-objects
+RTSPPermissions base_type="Gst.MiniObject"
+  .mini_object skip
+RTSPThread base_type="Gst.MiniObject"
+  .mini_object skip
+RTSPToken base_type="Gst.MiniObject"
+  .mini_object skip
