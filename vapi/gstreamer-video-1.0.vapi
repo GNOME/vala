@@ -50,7 +50,7 @@ namespace Gst {
 			public Gst.Video.CodecState @ref ();
 			public void unref ();
 		}
-		[CCode (cheader_filename = "gst/video/video.h", cname = "GstColorBalanceChannel", type_id = "gst_color_balance_channel_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GstColorBalanceChannel", lower_case_cprefix = "gst_color_balance_channel_", type_id = "gst_color_balance_channel_get_type ()")]
 		[GIR (name = "ColorBalanceChannel")]
 		public class ColorBalanceChannel : GLib.Object {
 			public weak string label;
@@ -244,7 +244,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public bool show_preroll_frame { get; set construct; }
 		}
-		[CCode (cheader_filename = "gst/video/video.h", cname = "GstColorBalance", type_cname = "GstColorBalanceInterface", type_id = "gst_color_balance_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GstColorBalance", lower_case_cprefix = "gst_color_balance_", type_cname = "GstColorBalanceInterface", type_id = "gst_color_balance_get_type ()")]
 		[GIR (name = "ColorBalance")]
 		public interface ColorBalance : GLib.Object {
 			public abstract Gst.Video.ColorBalanceType get_balance_type ();
@@ -254,53 +254,31 @@ namespace Gst {
 			[HasEmitter]
 			public virtual signal void value_changed (Gst.Video.ColorBalanceChannel channel, int value);
 		}
-		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigation", type_cname = "GstNavigationInterface", type_id = "gst_navigation_get_type ()")]
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigation", lower_case_cprefix = "gst_navigation_", type_cname = "GstNavigationInterface", type_id = "gst_navigation_get_type ()")]
 		[GIR (name = "Navigation")]
 		public interface Navigation : GLib.Object {
-			[CCode (cname = "gst_navigation_event_get_type")]
 			public static Gst.Video.NavigationEventType event_get_type (Gst.Event event);
-			[CCode (cname = "gst_navigation_event_parse_command")]
 			public static bool event_parse_command (Gst.Event event, Gst.Video.NavigationCommand command);
-			[CCode (cname = "gst_navigation_event_parse_key_event")]
 			public static bool event_parse_key_event (Gst.Event event, string key);
-			[CCode (cname = "gst_navigation_event_parse_mouse_button_event")]
 			public static bool event_parse_mouse_button_event (Gst.Event event, int button, double x, double y);
-			[CCode (cname = "gst_navigation_event_parse_mouse_move_event")]
 			public static bool event_parse_mouse_move_event (Gst.Event event, double x, double y);
-			[CCode (cname = "gst_navigation_message_get_type")]
 			public static Gst.Video.NavigationMessageType message_get_type (Gst.Message message);
-			[CCode (cname = "gst_navigation_message_new_angles_changed")]
 			public static Gst.Message message_new_angles_changed (Gst.Object src, uint cur_angle, uint n_angles);
-			[CCode (cname = "gst_navigation_message_new_commands_changed")]
 			public static Gst.Message message_new_commands_changed (Gst.Object src);
-			[CCode (cname = "gst_navigation_message_new_mouse_over")]
 			public static Gst.Message message_new_mouse_over (Gst.Object src, bool active);
-			[CCode (cname = "gst_navigation_message_parse_angles_changed")]
 			public static bool message_parse_angles_changed (Gst.Message message, uint cur_angle, uint n_angles);
-			[CCode (cname = "gst_navigation_message_parse_mouse_over")]
 			public static bool message_parse_mouse_over (Gst.Message message, bool active);
-			[CCode (cname = "gst_navigation_query_get_type")]
 			public static Gst.Video.NavigationQueryType query_get_type (Gst.Query query);
-			[CCode (cname = "gst_navigation_query_new_angles")]
 			public static Gst.Query query_new_angles ();
-			[CCode (cname = "gst_navigation_query_new_commands")]
 			public static Gst.Query query_new_commands ();
-			[CCode (cname = "gst_navigation_query_parse_angles")]
 			public static bool query_parse_angles (Gst.Query query, uint cur_angle, uint n_angles);
-			[CCode (cname = "gst_navigation_query_parse_commands_length")]
 			public static bool query_parse_commands_length (Gst.Query query, out uint n_cmds);
-			[CCode (cname = "gst_navigation_query_parse_commands_nth")]
 			public static bool query_parse_commands_nth (Gst.Query query, uint nth, out Gst.Video.NavigationCommand cmd);
-			[CCode (cname = "gst_navigation_query_set_angles")]
 			public static void query_set_angles (Gst.Query query, uint cur_angle, uint n_angles);
-			[CCode (cname = "gst_navigation_query_set_commandsv")]
 			public static void query_set_commandsv (Gst.Query query, int n_cmds, Gst.Video.NavigationCommand cmds);
-			[CCode (cname = "gst_navigation_send_command")]
 			public void send_command (Gst.Video.NavigationCommand command);
 			public abstract void send_event (Gst.Structure structure);
-			[CCode (cname = "gst_navigation_send_key_event")]
 			public void send_key_event (string event, string key);
-			[CCode (cname = "gst_navigation_send_mouse_event")]
 			public void send_mouse_event (string event, int button, double x, double y);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_orientation_get_type ()")]

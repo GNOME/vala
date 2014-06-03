@@ -3,48 +3,31 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstBase", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace Base {
-		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAdapter", type_id = "gst_adapter_get_type ()")]
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAdapter", lower_case_cprefix = "gst_adapter_", type_id = "gst_adapter_get_type ()")]
 		[GIR (name = "Adapter")]
 		public class Adapter : GLib.Object {
-			[CCode (cname = "gst_adapter_new", has_construct_function = false)]
+			[CCode (has_construct_function = false)]
 			public Adapter ();
-			[CCode (cname = "gst_adapter_available")]
 			public size_t available ();
-			[CCode (cname = "gst_adapter_available_fast")]
 			public size_t available_fast ();
-			[CCode (cname = "gst_adapter_clear")]
 			public void clear ();
-			[CCode (cname = "gst_adapter_copy")]
 			public void copy ([CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] out unowned uint8[] dest, size_t offset);
-			[CCode (cname = "gst_adapter_copy_bytes")]
 			public GLib.Bytes copy_bytes (size_t offset, size_t size);
-			[CCode (cname = "gst_adapter_flush")]
 			public void flush (size_t flush);
-			[CCode (array_length_pos = 0.1, array_length_type = "gsize", cname = "gst_adapter_map")]
+			[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
 			public unowned uint8[] map ();
-			[CCode (cname = "gst_adapter_masked_scan_uint32")]
 			public ssize_t masked_scan_uint32 (uint32 mask, uint32 pattern, size_t offset, size_t size);
-			[CCode (cname = "gst_adapter_masked_scan_uint32_peek")]
 			public ssize_t masked_scan_uint32_peek (uint32 mask, uint32 pattern, size_t offset, size_t size, uint32 value);
-			[CCode (cname = "gst_adapter_prev_dts")]
 			public Gst.ClockTime prev_dts (out uint64 distance);
-			[CCode (cname = "gst_adapter_prev_dts_at_offset")]
 			public Gst.ClockTime prev_dts_at_offset (size_t offset, out uint64 distance);
-			[CCode (cname = "gst_adapter_prev_pts")]
 			public Gst.ClockTime prev_pts (out uint64 distance);
-			[CCode (cname = "gst_adapter_prev_pts_at_offset")]
 			public Gst.ClockTime prev_pts_at_offset (size_t offset, out uint64 distance);
-			[CCode (cname = "gst_adapter_push")]
 			public void push (owned Gst.Buffer buf);
-			[CCode (array_length_pos = 0.1, array_length_type = "gsize", cname = "gst_adapter_take")]
+			[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
 			public uint8[] take ();
-			[CCode (cname = "gst_adapter_take_buffer")]
 			public Gst.Buffer take_buffer (size_t nbytes);
-			[CCode (cname = "gst_adapter_take_buffer_fast")]
 			public Gst.Buffer take_buffer_fast (size_t nbytes);
-			[CCode (cname = "gst_adapter_take_list")]
 			public GLib.List<Gst.Buffer> take_list (size_t nbytes);
-			[CCode (cname = "gst_adapter_unmap")]
 			public void unmap ();
 		}
 		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "GstBitReader")]
@@ -314,69 +297,43 @@ namespace Gst {
 			public ByteWriter.with_data ([CCode (array_length_type = "guint")] uint8[] data, uint size, bool initialized);
 			public ByteWriter.with_size (uint size, bool fixed);
 		}
-		[CCode (cheader_filename = "gst/base/base.h", cname = "GstCollectPads", type_id = "gst_collect_pads_get_type ()")]
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstCollectPads", lower_case_cprefix = "gst_collect_pads_", type_id = "gst_collect_pads_get_type ()")]
 		[GIR (name = "CollectPads")]
 		public class CollectPads : Gst.Object {
 			public weak GLib.SList<void*> data;
-			[CCode (cname = "gst_collect_pads_new", has_construct_function = false)]
+			[CCode (has_construct_function = false)]
 			public CollectPads ();
-			[CCode (cname = "gst_collect_pads_available")]
 			public uint available ();
-			[CCode (cname = "gst_collect_pads_clip_running_time")]
 			public Gst.FlowReturn clip_running_time (Gst.Base.CollectData cdata, Gst.Buffer buf, Gst.Buffer? outbuf, void* user_data);
-			[CCode (cname = "gst_collect_pads_event_default")]
 			public bool event_default (Gst.Base.CollectData data, Gst.Event event, bool discard);
-			[CCode (cname = "gst_collect_pads_flush")]
 			public uint flush (Gst.Base.CollectData data, uint size);
-			[CCode (cname = "gst_collect_pads_peek")]
 			public Gst.Buffer peek (Gst.Base.CollectData data);
-			[CCode (cname = "gst_collect_pads_pop")]
 			public Gst.Buffer pop (Gst.Base.CollectData data);
-			[CCode (cname = "gst_collect_pads_query_default")]
 			public bool query_default (Gst.Base.CollectData data, Gst.Query query, bool discard);
-			[CCode (cname = "gst_collect_pads_read_buffer")]
 			public Gst.Buffer read_buffer (Gst.Base.CollectData data, uint size);
-			[CCode (cname = "gst_collect_pads_remove_pad")]
 			public bool remove_pad (Gst.Pad pad);
-			[CCode (cname = "gst_collect_pads_set_flushing")]
 			public void set_flushing (bool flushing);
-			[CCode (cname = "gst_collect_pads_set_waiting")]
 			public void set_waiting (Gst.Base.CollectData data, bool waiting);
-			[CCode (cname = "gst_collect_pads_src_event_default")]
 			public bool src_event_default (Gst.Pad pad, Gst.Event event);
-			[CCode (cname = "gst_collect_pads_start")]
 			public void start ();
-			[CCode (cname = "gst_collect_pads_stop")]
 			public void stop ();
-			[CCode (cname = "gst_collect_pads_take_buffer")]
 			public Gst.Buffer take_buffer (Gst.Base.CollectData data, uint size);
 		}
-		[CCode (cheader_filename = "gst/base/base.h", cname = "GstDataQueue", type_id = "gst_data_queue_get_type ()")]
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstDataQueue", lower_case_cprefix = "gst_data_queue_", type_id = "gst_data_queue_get_type ()")]
 		[GIR (name = "DataQueue")]
 		public class DataQueue : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected DataQueue ();
-			[CCode (cname = "gst_data_queue_drop_head")]
 			public bool drop_head (GLib.Type type);
-			[CCode (cname = "gst_data_queue_flush")]
 			public void flush ();
-			[CCode (cname = "gst_data_queue_get_level")]
 			public void get_level (Gst.Base.DataQueueSize level);
-			[CCode (cname = "gst_data_queue_is_empty")]
 			public bool is_empty ();
-			[CCode (cname = "gst_data_queue_is_full")]
 			public bool is_full ();
-			[CCode (cname = "gst_data_queue_limits_changed")]
 			public void limits_changed ();
-			[CCode (cname = "gst_data_queue_peek")]
 			public bool peek (Gst.Base.DataQueueItem item);
-			[CCode (cname = "gst_data_queue_pop")]
 			public bool pop (Gst.Base.DataQueueItem item);
-			[CCode (cname = "gst_data_queue_push")]
 			public bool push (Gst.Base.DataQueueItem item);
-			[CCode (cname = "gst_data_queue_push_force")]
 			public bool push_force (Gst.Base.DataQueueItem item);
-			[CCode (cname = "gst_data_queue_set_flushing")]
 			public void set_flushing (bool flushing);
 			[NoAccessorMethod]
 			public uint current_level_bytes { get; }
@@ -465,7 +422,7 @@ namespace Gst {
 			public void free ();
 			public void init ();
 		}
-		[CCode (cheader_filename = "gst/base/base.h", cname = "GstPushSrc", type_id = "gst_push_src_get_type ()")]
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstPushSrc", lower_case_cprefix = "gst_push_src_", type_id = "gst_push_src_get_type ()")]
 		[GIR (name = "PushSrc")]
 		public class PushSrc : Gst.Base.Src {
 			[CCode (has_construct_function = false)]

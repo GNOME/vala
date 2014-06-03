@@ -639,11 +639,40 @@ public class Vala.GirParser : CodeVisitor {
 
 			var prefix = symbol.get_attribute_string ("CCode", "lower_case_cprefix");
 			if (prefix == null && (symbol is ObjectTypeSymbol || symbol is Struct)) {
-				if (metadata.has_argument (ArgumentType.CPREFIX)) {
+				if (metadata.has_argument (ArgumentType.LOWER_CASE_CPREFIX)) {
+					prefix = metadata.get_string (ArgumentType.LOWER_CASE_CPREFIX);
+				} else if (metadata.has_argument (ArgumentType.CPREFIX)) {
 					prefix = metadata.get_string (ArgumentType.CPREFIX);
 				} else {
 					prefix = symbol.get_attribute_string ("CCode", "cprefix");
 				}
+			}
+
+			if (prefix == null && girdata != null && (girdata.contains ("c:symbol-prefix") || girdata.contains("c:symbol-prefixes"))) {
+				/* Use the prefix in the gir. We look up prefixes up to the root.
+				   If some node does not have girdata, we ignore it as i might be
+				   a namespace created due to reparenting. */
+				unowned Node cur = this;
+				do {
+					if (cur.girdata != null) {
+						var p = cur.girdata["c:symbol-prefix"];
+						if (p == null) {
+							p = cur.girdata["c:symbol-prefixes"];
+							if (p != null) {
+								var idx = p.index_of (",");
+								if (idx >= 0) {
+									p = p.substring (0, idx);
+								}
+							}
+						}
+
+						if (p != null) {
+							prefix = p+"_"+prefix;
+						}
+					}
+
+					cur = cur.parent;
+				} while (cur != null);
 			}
 
 			if (prefix == null) {
@@ -1106,11 +1135,7 @@ public class Vala.GirParser : CodeVisitor {
 
 				// lower_case_cprefix
 				if (get_lower_case_cprefix () != get_default_lower_case_cprefix ()) {
-					if (symbol is Class) {
-						symbol.set_attribute_string ("CCode", "cprefix", get_lower_case_cprefix ());
-					} else {
-						symbol.set_attribute_string ("CCode", "lower_case_cprefix", get_lower_case_cprefix ());
-					}
+					symbol.set_attribute_string ("CCode", "lower_case_cprefix", get_lower_case_cprefix ());
 				}
 				// lower_case_csuffix
 				if (get_lower_case_csuffix () != get_default_lower_case_csuffix ()) {

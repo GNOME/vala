@@ -35,18 +35,14 @@ namespace Gst {
 				public static unowned string get_profile (uint8 vis_obj_seq, uint len);
 			}
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscoverer", type_id = "gst_discoverer_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscoverer", lower_case_cprefix = "gst_discoverer_", type_id = "gst_discoverer_get_type ()")]
 		[GIR (name = "Discoverer")]
 		public class Discoverer : GLib.Object {
-			[CCode (cname = "gst_discoverer_new", has_construct_function = false)]
+			[CCode (has_construct_function = false)]
 			public Discoverer (Gst.ClockTime timeout) throws GLib.Error;
-			[CCode (cname = "gst_discoverer_discover_uri")]
 			public Gst.PbUtils.DiscovererInfo discover_uri (string uri) throws GLib.Error;
-			[CCode (cname = "gst_discoverer_discover_uri_async")]
 			public bool discover_uri_async (string uri);
-			[CCode (cname = "gst_discoverer_start")]
 			public void start ();
-			[CCode (cname = "gst_discoverer_stop")]
 			public void stop ();
 			[NoAccessorMethod]
 			public uint64 timeout { get; set construct; }
@@ -55,247 +51,165 @@ namespace Gst {
 			public virtual signal void source_setup (Gst.Element source);
 			public virtual signal void starting ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererAudioInfo", type_id = "gst_discoverer_audio_info_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererAudioInfo", lower_case_cprefix = "gst_discoverer_audio_info_", type_id = "gst_discoverer_audio_info_get_type ()")]
 		[GIR (name = "DiscovererAudioInfo")]
 		public class DiscovererAudioInfo : Gst.PbUtils.DiscovererStreamInfo {
 			[CCode (has_construct_function = false)]
 			protected DiscovererAudioInfo ();
-			[CCode (cname = "gst_discoverer_audio_info_get_bitrate")]
 			public uint get_bitrate ();
-			[CCode (cname = "gst_discoverer_audio_info_get_channels")]
 			public uint get_channels ();
-			[CCode (cname = "gst_discoverer_audio_info_get_depth")]
 			public uint get_depth ();
-			[CCode (cname = "gst_discoverer_audio_info_get_language")]
 			public unowned string get_language ();
-			[CCode (cname = "gst_discoverer_audio_info_get_max_bitrate")]
 			public uint get_max_bitrate ();
-			[CCode (cname = "gst_discoverer_audio_info_get_sample_rate")]
 			public uint get_sample_rate ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererContainerInfo", type_id = "gst_discoverer_container_info_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererContainerInfo", lower_case_cprefix = "gst_discoverer_container_info_", type_id = "gst_discoverer_container_info_get_type ()")]
 		[GIR (name = "DiscovererContainerInfo")]
 		public class DiscovererContainerInfo : Gst.PbUtils.DiscovererStreamInfo {
 			[CCode (has_construct_function = false)]
 			protected DiscovererContainerInfo ();
-			[CCode (cname = "gst_discoverer_container_info_get_streams")]
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_streams ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererInfo", type_id = "gst_discoverer_info_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererInfo", lower_case_cprefix = "gst_discoverer_info_", type_id = "gst_discoverer_info_get_type ()")]
 		[GIR (name = "DiscovererInfo")]
 		public class DiscovererInfo : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected DiscovererInfo ();
-			[CCode (cname = "gst_discoverer_info_copy")]
 			public Gst.PbUtils.DiscovererInfo copy ();
-			[CCode (cname = "gst_discoverer_info_get_audio_streams")]
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_audio_streams ();
-			[CCode (cname = "gst_discoverer_info_get_container_streams")]
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_container_streams ();
-			[CCode (cname = "gst_discoverer_info_get_duration")]
 			public Gst.ClockTime get_duration ();
-			[CCode (cname = "gst_discoverer_info_get_misc")]
 			[Deprecated]
 			public unowned Gst.Structure get_misc ();
-			[CCode (array_length = false, array_null_terminated = true, cname = "gst_discoverer_info_get_missing_elements_installer_details")]
+			[CCode (array_length = false, array_null_terminated = true)]
 			public string[] get_missing_elements_installer_details ();
-			[CCode (cname = "gst_discoverer_info_get_result")]
 			public Gst.PbUtils.DiscovererResult get_result ();
-			[CCode (cname = "gst_discoverer_info_get_seekable")]
 			public bool get_seekable ();
-			[CCode (cname = "gst_discoverer_info_get_stream_info")]
 			public Gst.PbUtils.DiscovererStreamInfo get_stream_info ();
-			[CCode (cname = "gst_discoverer_info_get_stream_list")]
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_stream_list ();
-			[CCode (cname = "gst_discoverer_info_get_streams")]
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_streams (GLib.Type streamtype);
-			[CCode (cname = "gst_discoverer_info_get_subtitle_streams")]
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_subtitle_streams ();
-			[CCode (cname = "gst_discoverer_info_get_tags")]
 			public unowned Gst.TagList get_tags ();
-			[CCode (cname = "gst_discoverer_info_get_toc")]
 			public unowned Gst.Toc get_toc ();
-			[CCode (cname = "gst_discoverer_info_get_uri")]
 			public unowned string get_uri ();
-			[CCode (cname = "gst_discoverer_info_get_video_streams")]
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_video_streams ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererStreamInfo", type_id = "gst_discoverer_stream_info_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererStreamInfo", lower_case_cprefix = "gst_discoverer_stream_info_", type_id = "gst_discoverer_stream_info_get_type ()")]
 		[GIR (name = "DiscovererStreamInfo")]
 		public class DiscovererStreamInfo : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected DiscovererStreamInfo ();
-			[CCode (cname = "gst_discoverer_stream_info_get_caps")]
 			public Gst.Caps get_caps ();
-			[CCode (cname = "gst_discoverer_stream_info_get_misc")]
 			[Deprecated]
 			public unowned Gst.Structure get_misc ();
-			[CCode (cname = "gst_discoverer_stream_info_get_next")]
 			public Gst.PbUtils.DiscovererStreamInfo get_next ();
-			[CCode (cname = "gst_discoverer_stream_info_get_previous")]
 			public Gst.PbUtils.DiscovererStreamInfo get_previous ();
-			[CCode (cname = "gst_discoverer_stream_info_get_stream_id")]
 			public unowned string get_stream_id ();
-			[CCode (cname = "gst_discoverer_stream_info_get_stream_type_nick")]
 			public unowned string get_stream_type_nick ();
-			[CCode (cname = "gst_discoverer_stream_info_get_tags")]
 			public unowned Gst.TagList get_tags ();
-			[CCode (cname = "gst_discoverer_stream_info_get_toc")]
 			public unowned Gst.Toc get_toc ();
-			[CCode (cname = "gst_discoverer_stream_info_list_free")]
 			public static void list_free (GLib.List<Gst.PbUtils.DiscovererStreamInfo> infos);
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererSubtitleInfo", type_id = "gst_discoverer_subtitle_info_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererSubtitleInfo", lower_case_cprefix = "gst_discoverer_subtitle_info_", type_id = "gst_discoverer_subtitle_info_get_type ()")]
 		[GIR (name = "DiscovererSubtitleInfo")]
 		public class DiscovererSubtitleInfo : Gst.PbUtils.DiscovererStreamInfo {
 			[CCode (has_construct_function = false)]
 			protected DiscovererSubtitleInfo ();
-			[CCode (cname = "gst_discoverer_subtitle_info_get_language")]
 			public unowned string get_language ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererVideoInfo", type_id = "gst_discoverer_video_info_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererVideoInfo", lower_case_cprefix = "gst_discoverer_video_info_", type_id = "gst_discoverer_video_info_get_type ()")]
 		[GIR (name = "DiscovererVideoInfo")]
 		public class DiscovererVideoInfo : Gst.PbUtils.DiscovererStreamInfo {
 			[CCode (has_construct_function = false)]
 			protected DiscovererVideoInfo ();
-			[CCode (cname = "gst_discoverer_video_info_get_bitrate")]
 			public uint get_bitrate ();
-			[CCode (cname = "gst_discoverer_video_info_get_depth")]
 			public uint get_depth ();
-			[CCode (cname = "gst_discoverer_video_info_get_framerate_denom")]
 			public uint get_framerate_denom ();
-			[CCode (cname = "gst_discoverer_video_info_get_framerate_num")]
 			public uint get_framerate_num ();
-			[CCode (cname = "gst_discoverer_video_info_get_height")]
 			public uint get_height ();
-			[CCode (cname = "gst_discoverer_video_info_get_max_bitrate")]
 			public uint get_max_bitrate ();
-			[CCode (cname = "gst_discoverer_video_info_get_par_denom")]
 			public uint get_par_denom ();
-			[CCode (cname = "gst_discoverer_video_info_get_par_num")]
 			public uint get_par_num ();
-			[CCode (cname = "gst_discoverer_video_info_get_width")]
 			public uint get_width ();
-			[CCode (cname = "gst_discoverer_video_info_is_image")]
 			public bool is_image ();
-			[CCode (cname = "gst_discoverer_video_info_is_interlaced")]
 			public bool is_interlaced ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingAudioProfile", type_id = "gst_encoding_audio_profile_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingAudioProfile", lower_case_cprefix = "gst_encoding_audio_profile_", type_id = "gst_encoding_audio_profile_get_type ()")]
 		[GIR (name = "EncodingAudioProfile")]
 		public class EncodingAudioProfile : Gst.PbUtils.EncodingProfile {
-			[CCode (cname = "gst_encoding_audio_profile_new", has_construct_function = false)]
+			[CCode (has_construct_function = false)]
 			public EncodingAudioProfile (Gst.Caps format, string? preset, Gst.Caps? restriction, uint presence);
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingContainerProfile", type_id = "gst_encoding_container_profile_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingContainerProfile", lower_case_cprefix = "gst_encoding_container_profile_", type_id = "gst_encoding_container_profile_get_type ()")]
 		[GIR (name = "EncodingContainerProfile")]
 		public class EncodingContainerProfile : Gst.PbUtils.EncodingProfile {
-			[CCode (cname = "gst_encoding_container_profile_new", has_construct_function = false)]
+			[CCode (has_construct_function = false)]
 			public EncodingContainerProfile (string? name, string? description, Gst.Caps format, string? preset);
-			[CCode (cname = "gst_encoding_container_profile_add_profile")]
 			public bool add_profile (owned Gst.PbUtils.EncodingProfile profile);
-			[CCode (cname = "gst_encoding_container_profile_contains_profile")]
 			public bool contains_profile (Gst.PbUtils.EncodingProfile profile);
-			[CCode (cname = "gst_encoding_container_profile_get_profiles")]
 			public unowned GLib.List<Gst.PbUtils.EncodingProfile> get_profiles ();
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingProfile", type_id = "gst_encoding_profile_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingProfile", lower_case_cprefix = "gst_encoding_profile_", type_id = "gst_encoding_profile_get_type ()")]
 		[GIR (name = "EncodingProfile")]
 		public class EncodingProfile : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected EncodingProfile ();
-			[CCode (cname = "gst_encoding_profile_find")]
 			public static Gst.PbUtils.EncodingProfile find (string targetname, string profilename, string? category);
-			[CCode (cname = "gst_encoding_profile_from_discoverer")]
 			public static Gst.PbUtils.EncodingProfile from_discoverer (Gst.PbUtils.DiscovererInfo info);
-			[CCode (cname = "gst_encoding_profile_get_description")]
 			public unowned string get_description ();
-			[CCode (cname = "gst_encoding_profile_get_file_extension")]
 			public unowned string get_file_extension ();
-			[CCode (cname = "gst_encoding_profile_get_format")]
 			public Gst.Caps get_format ();
-			[CCode (cname = "gst_encoding_profile_get_input_caps")]
 			public Gst.Caps get_input_caps ();
-			[CCode (cname = "gst_encoding_profile_get_name")]
 			public unowned string get_name ();
-			[CCode (cname = "gst_encoding_profile_get_presence")]
 			public uint get_presence ();
-			[CCode (cname = "gst_encoding_profile_get_preset")]
 			public unowned string get_preset ();
-			[CCode (cname = "gst_encoding_profile_get_preset_name")]
 			public unowned string get_preset_name ();
-			[CCode (cname = "gst_encoding_profile_get_restriction")]
 			public Gst.Caps get_restriction ();
-			[CCode (cname = "gst_encoding_profile_get_type_nick")]
 			public unowned string get_type_nick ();
-			[CCode (cname = "gst_encoding_profile_is_equal")]
 			public bool is_equal (Gst.PbUtils.EncodingProfile b);
-			[CCode (cname = "gst_encoding_profile_set_description")]
 			public void set_description (string description);
-			[CCode (cname = "gst_encoding_profile_set_format")]
 			public void set_format (Gst.Caps format);
-			[CCode (cname = "gst_encoding_profile_set_name")]
 			public void set_name (string name);
-			[CCode (cname = "gst_encoding_profile_set_presence")]
 			public void set_presence (uint presence);
-			[CCode (cname = "gst_encoding_profile_set_preset")]
 			public void set_preset (string preset);
-			[CCode (cname = "gst_encoding_profile_set_preset_name")]
 			public void set_preset_name (string preset_name);
-			[CCode (cname = "gst_encoding_profile_set_restriction")]
 			public void set_restriction (owned Gst.Caps restriction);
 			[NoAccessorMethod]
 			public Gst.Caps restriction_caps { owned get; set; }
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingTarget", type_id = "gst_encoding_target_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingTarget", lower_case_cprefix = "gst_encoding_target_", type_id = "gst_encoding_target_get_type ()")]
 		[GIR (name = "EncodingTarget")]
 		public class EncodingTarget : GLib.Object {
-			[CCode (cname = "gst_encoding_target_new", has_construct_function = false)]
+			[CCode (has_construct_function = false)]
 			public EncodingTarget (string name, string category, string description, GLib.List<Gst.PbUtils.EncodingProfile> profiles);
-			[CCode (cname = "gst_encoding_target_add_profile")]
 			public bool add_profile (owned Gst.PbUtils.EncodingProfile profile);
-			[CCode (cname = "gst_encoding_target_get_category")]
 			public unowned string get_category ();
-			[CCode (cname = "gst_encoding_target_get_description")]
 			public unowned string get_description ();
-			[CCode (cname = "gst_encoding_target_get_name")]
 			public unowned string get_name ();
-			[CCode (cname = "gst_encoding_target_get_profile")]
 			public Gst.PbUtils.EncodingProfile get_profile (string name);
-			[CCode (cname = "gst_encoding_target_get_profiles")]
 			public unowned GLib.List<Gst.PbUtils.EncodingProfile> get_profiles ();
-			[CCode (cname = "gst_encoding_target_load")]
 			public static Gst.PbUtils.EncodingTarget load (string name, string? category) throws GLib.Error;
-			[CCode (cname = "gst_encoding_target_load_from_file")]
 			public static Gst.PbUtils.EncodingTarget load_from_file (string filepath) throws GLib.Error;
-			[CCode (cname = "gst_encoding_target_save")]
 			public bool save () throws GLib.Error;
-			[CCode (cname = "gst_encoding_target_save_to_file")]
 			public bool save_to_file (string filepath) throws GLib.Error;
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingVideoProfile", type_id = "gst_encoding_video_profile_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstEncodingVideoProfile", lower_case_cprefix = "gst_encoding_video_profile_", type_id = "gst_encoding_video_profile_get_type ()")]
 		[GIR (name = "EncodingVideoProfile")]
 		public class EncodingVideoProfile : Gst.PbUtils.EncodingProfile {
-			[CCode (cname = "gst_encoding_video_profile_new", has_construct_function = false)]
+			[CCode (has_construct_function = false)]
 			public EncodingVideoProfile (Gst.Caps format, string? preset, Gst.Caps? restriction, uint presence);
-			[CCode (cname = "gst_encoding_video_profile_get_pass")]
 			public uint get_pass ();
-			[CCode (cname = "gst_encoding_video_profile_get_variableframerate")]
 			public bool get_variableframerate ();
-			[CCode (cname = "gst_encoding_video_profile_set_pass")]
 			public void set_pass (uint pass);
-			[CCode (cname = "gst_encoding_video_profile_set_variableframerate")]
 			public void set_variableframerate (bool variableframerate);
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstInstallPluginsContext", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_install_plugins_context_get_type ()")]
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstInstallPluginsContext", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_install_plugins_context_", type_id = "gst_install_plugins_context_get_type ()")]
 		[Compact]
 		[GIR (name = "InstallPluginsContext")]
 		public class InstallPluginsContext {
-			[CCode (cname = "gst_install_plugins_context_new", has_construct_function = false)]
+			[CCode (has_construct_function = false)]
 			public InstallPluginsContext ();
-			[CCode (cname = "gst_install_plugins_context_free")]
 			public void free ();
-			[CCode (cname = "gst_install_plugins_context_set_xid")]
 			public void set_xid (uint xid);
 		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererResult", cprefix = "GST_DISCOVERER_", type_id = "gst_discoverer_result_get_type ()")]

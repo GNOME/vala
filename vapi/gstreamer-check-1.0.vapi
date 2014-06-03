@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstCheck", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace Check {
-		[CCode (cheader_filename = "gst/check/gstbufferstraw.h,gst/check/gstcheck.h,gst/check/gstconsistencychecker.h,gst/check/internal-check.h", cname = "GstStreamConsistency", cprefix = "gst_consistency_checker_", lower_case_cprefix = "gst_consistency_checker_")]
+		[CCode (cheader_filename = "gst/check/gstbufferstraw.h,gst/check/gstcheck.h,gst/check/gstconsistencychecker.h,gst/check/internal-check.h", cname = "GstStreamConsistency", lower_case_cprefix = "gst_consistency_checker_")]
 		[Compact]
 		[GIR (name = "StreamConsistency")]
 		public class StreamConsistency {
@@ -12,37 +12,25 @@ namespace Gst {
 			public void free ();
 			public void reset ();
 		}
-		[CCode (cheader_filename = "gst/check/check.h", cname = "GstTestClock", type_id = "gst_test_clock_get_type ()")]
+		[CCode (cheader_filename = "gst/check/check.h", cname = "GstTestClock", lower_case_cprefix = "gst_test_clock_", type_id = "gst_test_clock_get_type ()")]
 		[GIR (name = "TestClock")]
 		public class TestClock : Gst.Clock {
-			[CCode (cname = "gst_test_clock_new", has_construct_function = false, type = "GstClock*")]
+			[CCode (has_construct_function = false, type = "GstClock*")]
 			public TestClock ();
-			[CCode (cname = "gst_test_clock_advance_time")]
 			public void advance_time (Gst.ClockTimeDiff delta);
-			[CCode (cname = "gst_test_clock_get_next_entry_time")]
 			public Gst.ClockTime get_next_entry_time ();
-			[CCode (cname = "gst_test_clock_has_id")]
 			public bool has_id (Gst.ClockID id);
-			[CCode (cname = "gst_test_clock_id_list_get_latest_time")]
 			public static Gst.ClockTime id_list_get_latest_time (GLib.List<Gst.ClockID?>? pending_list);
-			[CCode (cname = "gst_test_clock_peek_id_count")]
 			public uint peek_id_count ();
-			[CCode (cname = "gst_test_clock_peek_next_pending_id")]
 			public bool peek_next_pending_id (out Gst.ClockID pending_id);
-			[CCode (cname = "gst_test_clock_process_id_list")]
 			public uint process_id_list (GLib.List<Gst.ClockID?>? pending_list);
-			[CCode (cname = "gst_test_clock_process_next_clock_id")]
 			public Gst.ClockID process_next_clock_id ();
-			[CCode (cname = "gst_test_clock_set_time")]
 			public void set_time (Gst.ClockTime new_time);
-			[CCode (cname = "gst_test_clock_wait_for_multiple_pending_ids")]
 			public void wait_for_multiple_pending_ids (uint count, out GLib.List<Gst.ClockID?> pending_list);
-			[CCode (cname = "gst_test_clock_wait_for_next_pending_id")]
 			public void wait_for_next_pending_id (out Gst.ClockID pending_id);
-			[CCode (cname = "gst_test_clock_wait_for_pending_id_count")]
 			[Deprecated]
 			public void wait_for_pending_id_count (uint count);
-			[CCode (cname = "gst_test_clock_new_with_start_time", has_construct_function = false, type = "GstClock*")]
+			[CCode (has_construct_function = false, type = "GstClock*")]
 			public TestClock.with_start_time (Gst.ClockTime start_time);
 			[NoAccessorMethod]
 			public uint64 start_time { get; construct; }

@@ -353,18 +353,13 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool unprepare ();
 		}
-		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GstStreamVolume", type_cname = "GstStreamVolumeInterface", type_id = "gst_stream_volume_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GstStreamVolume", lower_case_cprefix = "gst_stream_volume_", type_cname = "GstStreamVolumeInterface", type_id = "gst_stream_volume_get_type ()")]
 		[GIR (name = "StreamVolume")]
 		public interface StreamVolume : GLib.Object {
-			[CCode (cname = "gst_stream_volume_convert_volume")]
 			public static double convert_volume (Gst.Audio.StreamVolumeFormat from, Gst.Audio.StreamVolumeFormat to, double val);
-			[CCode (cname = "gst_stream_volume_get_mute")]
 			public bool get_mute ();
-			[CCode (cname = "gst_stream_volume_get_volume")]
 			public double get_volume (Gst.Audio.StreamVolumeFormat format);
-			[CCode (cname = "gst_stream_volume_set_mute")]
 			public void set_mute (bool mute);
-			[CCode (cname = "gst_stream_volume_set_volume")]
 			public void set_volume (Gst.Audio.StreamVolumeFormat format, double val);
 			[NoAccessorMethod]
 			public abstract bool mute { get; set; }
