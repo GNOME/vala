@@ -1101,35 +1101,38 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				f.initializer.emit (this);
 
 				var rhs = get_cvalue (f.initializer);
-
-				ccode.add_assignment (lhs, rhs);
-
-				if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
-					var array_type = (ArrayType) f.variable_type;
-					var field_value = get_field_cvalue (f, load_this_parameter ((TypeSymbol) f.parent_symbol));
-
-					var glib_value = (GLibValue) f.initializer.target_value;
-					if (glib_value.array_length_cvalues != null) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							var array_len_lhs = get_array_length_cvalue (field_value, dim);
-							ccode.add_assignment (array_len_lhs, get_array_length_cvalue (glib_value, dim));
+				if (!is_simple_struct_creation (f, f.initializer)) {
+					// otherwise handled in visit_object_creation_expression
+					
+					ccode.add_assignment (lhs, rhs);
+					
+					if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
+						var array_type = (ArrayType) f.variable_type;
+						var field_value = get_field_cvalue (f, load_this_parameter ((TypeSymbol) f.parent_symbol));
+						
+						var glib_value = (GLibValue) f.initializer.target_value;
+						if (glib_value.array_length_cvalues != null) {
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								var array_len_lhs = get_array_length_cvalue (field_value, dim);
+								ccode.add_assignment (array_len_lhs, get_array_length_cvalue (glib_value, dim));
+							}
+						} else if (glib_value.array_null_terminated) {
+							requires_array_length = true;
+							var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+							len_call.add_argument (get_cvalue_ (glib_value));
+							
+							ccode.add_assignment (get_array_length_cvalue (field_value, 1), len_call);
+						} else {
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								ccode.add_assignment (get_array_length_cvalue (field_value, dim), new CCodeConstant ("-1"));
+							}
 						}
-					} else if (glib_value.array_null_terminated) {
-						requires_array_length = true;
-						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
-						len_call.add_argument (get_cvalue_ (glib_value));
-
-						ccode.add_assignment (get_array_length_cvalue (field_value, 1), len_call);
-					} else {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							ccode.add_assignment (get_array_length_cvalue (field_value, dim), new CCodeConstant ("-1"));
+						
+						if (array_type.rank == 1 && f.is_internal_symbol ()) {
+							var lhs_array_size = get_array_size_cvalue (field_value);
+							var rhs_array_len = get_array_length_cvalue (field_value, 1);
+							ccode.add_assignment (lhs_array_size, rhs_array_len);
 						}
-					}
-
-					if (array_type.rank == 1 && f.is_internal_symbol ()) {
-						var lhs_array_size = get_array_size_cvalue (field_value);
-						var rhs_array_len = get_array_length_cvalue (field_value, 1);
-						ccode.add_assignment (lhs_array_size, rhs_array_len);
 					}
 				}
 
@@ -4447,9 +4450,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// value-type initialization or object creation expression with object initializer
 
 			var local = expr.parent_node as LocalVariable;
+			var field = expr.parent_node as Field;
 			var a = expr.parent_node as Assignment;
 			if (local != null && is_simple_struct_creation (local, local.initializer)) {
 				instance = get_cvalue_ (get_local_cvalue (local));
+			} else if (field != null && is_simple_struct_creation (field, field.initializer)) {
+				// field initialization
+				var thisparam = load_this_parameter ((TypeSymbol) field.parent_symbol);
+				instance = get_cvalue_ (get_field_cvalue (field, thisparam));
 			} else if (a != null && a.left.symbol_reference is Variable && is_simple_struct_creation ((Variable) a.left.symbol_reference, a.right)) {
 				if (requires_destroy (a.left.value_type)) {
 					/* unref old value */
@@ -4457,7 +4465,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 
 				local = a.left.symbol_reference as LocalVariable;
-				var field = a.left.symbol_reference as Field;
+				field = a.left.symbol_reference as Field;
 				var param = a.left.symbol_reference as Parameter;
 				if (local != null) {
 					instance = get_cvalue_ (get_local_cvalue (local));

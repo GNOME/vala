@@ -385,7 +385,7 @@ namespace GLib {
 		public unowned GLib.Binding bind_property (string source_property, GLib.Object target, string target_property, GLib.BindingFlags flags = GLib.BindingFlags.DEFAULT, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_to = null, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_from = null);
 	}
 
-	[CCode (destroy_function = "g_weak_ref_clear")]
+	[CCode (destroy_function = "g_weak_ref_clear", lvalue_access = false)]
 	public struct WeakRef {
 		public WeakRef (GLib.Object? object);
 		public GLib.Object? get ();
