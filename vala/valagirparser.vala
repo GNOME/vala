@@ -3199,9 +3199,9 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "method") {
 				parse_method ("method");
 				var cname = old_current.get_cname ();
-				if (cname.has_suffix ("_ref")) {
+				if (cname.has_suffix ("_ref") && (ref_method == null || old_current.name == "ref")) {
 					ref_method = old_current;
-				} else if (cname.has_suffix ("_unref")) {
+				} else if (cname.has_suffix ("_unref") && (unref_method == null || old_current.name == "unref")) {
 					unref_method = old_current;
 				}
 			} else if (reader.name == "function") {
