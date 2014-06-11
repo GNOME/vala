@@ -2004,15 +2004,11 @@ namespace Gtk {
 	public class EventController : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected EventController ();
-		public Gdk.EventMask get_event_mask ();
+		public Gtk.PropagationPhase get_propagation_phase ();
 		public unowned Gtk.Widget get_widget ();
-		public void set_event_mask (Gdk.EventMask event_mask);
-		public Gdk.EventMask event_mask { get; set; }
+		public void set_propagation_phase (Gtk.PropagationPhase phase);
+		public Gtk.PropagationPhase propagation_phase { get; set; }
 		public Gtk.Widget widget { get; construct; }
-		[HasEmitter]
-		public virtual signal bool handle_event (Gdk.Event p0);
-		[HasEmitter]
-		public virtual signal void reset ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Expander : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
@@ -2293,8 +2289,6 @@ namespace Gtk {
 	public class Gesture : Gtk.EventController {
 		[CCode (has_construct_function = false)]
 		protected Gesture ();
-		public void attach (Gtk.PropagationPhase phase);
-		public void detach ();
 		public bool get_bounding_box (out Gdk.Rectangle rect);
 		public bool get_bounding_box_center (out double x, out double y);
 		public unowned Gdk.Device? get_device ();
@@ -2353,17 +2347,17 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class GesturePan : Gtk.GestureDrag {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
-		public GesturePan (Gtk.Widget widget, Gtk.PanOrientation orientation);
-		public Gtk.PanOrientation get_orientation ();
-		public void set_orientation (Gtk.PanOrientation orientation);
-		public Gtk.PanOrientation orientation { get; set; }
+		public GesturePan (Gtk.Widget widget, Gtk.Orientation orientation);
+		public Gtk.Orientation get_orientation ();
+		public void set_orientation (Gtk.Orientation orientation);
+		public Gtk.Orientation orientation { get; set; }
 		public virtual signal void pan (Gtk.PanDirection p0, double p1);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class GestureRotate : Gtk.Gesture {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		public GestureRotate (Gtk.Widget widget);
-		public bool get_angle_delta (out double delta);
+		public double get_angle_delta ();
 		public virtual signal void angle_changed (double p0, double p1);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -2393,7 +2387,7 @@ namespace Gtk {
 	public class GestureZoom : Gtk.Gesture {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		public GestureZoom (Gtk.Widget widget);
-		public bool get_scale_delta (double scale);
+		public double get_scale_delta ();
 		public virtual signal void scale_changed (double p0);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_gradient_ref", type_id = "gtk_gradient_get_type ()", unref_function = "gtk_gradient_unref")]
@@ -6396,6 +6390,7 @@ namespace Gtk {
 		[Deprecated (replacement = "get_preferred_size", since = "3.0")]
 		public void get_child_requisition (out Gtk.Requisition requisition);
 		public bool get_child_visible ();
+		public void get_clip (out Gtk.Allocation clip);
 		public unowned Gtk.Clipboard get_clipboard (Gdk.Atom selection);
 		public unowned string get_composite_name ();
 		public static Gtk.TextDirection get_default_direction ();
@@ -6555,6 +6550,7 @@ namespace Gtk {
 		public void set_can_default (bool can_default);
 		public void set_can_focus (bool can_focus);
 		public void set_child_visible (bool is_visible);
+		public void set_clip (Gtk.Allocation clip);
 		public void set_composite_name (string name);
 		[CCode (cname = "gtk_widget_class_set_connect_func")]
 		public class void set_connect_func (Gtk.BuilderConnectFunc connect_func, void* connect_data, GLib.DestroyNotify connect_data_destroy);
@@ -8050,11 +8046,6 @@ namespace Gtk {
 		UP,
 		DOWN
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PAN_ORIENTATION_")]
-	public enum PanOrientation {
-		VERTICAL,
-		HORIZONTAL
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PATH_PRIO_")]
 	public enum PathPriorityType {
 		LOWEST,
@@ -9125,6 +9116,8 @@ namespace Gtk {
 	public const string STYLE_CLASS_COMBOBOX_ENTRY;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_CONTEXT_MENU;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_CSD;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_CURSOR_HANDLE;
 	[CCode (cheader_filename = "gtk/gtk.h")]

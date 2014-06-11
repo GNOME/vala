@@ -4873,10 +4873,6 @@
 			<member name="GTK_PAN_DIRECTION_UP" value="2"/>
 			<member name="GTK_PAN_DIRECTION_DOWN" value="3"/>
 		</enum>
-		<enum name="GtkPanOrientation" type-name="GtkPanOrientation" get-type="gtk_pan_orientation_get_type">
-			<member name="GTK_PAN_ORIENTATION_VERTICAL" value="0"/>
-			<member name="GTK_PAN_ORIENTATION_HORIZONTAL" value="1"/>
-		</enum>
 		<enum name="GtkPathPriorityType" type-name="GtkPathPriorityType" get-type="gtk_path_priority_type_get_type">
 			<member name="GTK_PATH_PRIO_LOWEST" value="0"/>
 			<member name="GTK_PATH_PRIO_GTK" value="4"/>
@@ -12408,8 +12404,8 @@
 			<property name="visible-window" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkEventController" parent="GObject" type-name="GtkEventController" get-type="gtk_event_controller_get_type">
-			<method name="get_event_mask" symbol="gtk_event_controller_get_event_mask">
-				<return-type type="GdkEventMask"/>
+			<method name="get_propagation_phase" symbol="gtk_event_controller_get_propagation_phase">
+				<return-type type="GtkPropagationPhase"/>
 				<parameters>
 					<parameter name="controller" type="GtkEventController*"/>
 				</parameters>
@@ -12433,28 +12429,15 @@
 					<parameter name="controller" type="GtkEventController*"/>
 				</parameters>
 			</method>
-			<method name="set_event_mask" symbol="gtk_event_controller_set_event_mask">
+			<method name="set_propagation_phase" symbol="gtk_event_controller_set_propagation_phase">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="controller" type="GtkEventController*"/>
-					<parameter name="event_mask" type="GdkEventMask"/>
+					<parameter name="phase" type="GtkPropagationPhase"/>
 				</parameters>
 			</method>
-			<property name="event-mask" type="GdkEventMask" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="propagation-phase" type="GtkPropagationPhase" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<signal name="handle-event" when="LAST">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="object" type="GtkEventController*"/>
-					<parameter name="p0" type="GdkEvent*"/>
-				</parameters>
-			</signal>
-			<signal name="reset" when="LAST">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="object" type="GtkEventController*"/>
-				</parameters>
-			</signal>
 		</object>
 		<object name="GtkExpander" parent="GtkBin" type-name="GtkExpander" get-type="gtk_expander_get_type">
 			<implements>
@@ -13514,19 +13497,6 @@
 			</implements>
 		</object>
 		<object name="GtkGesture" parent="GtkEventController" type-name="GtkGesture" get-type="gtk_gesture_get_type">
-			<method name="attach" symbol="gtk_gesture_attach">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="gesture" type="GtkGesture*"/>
-					<parameter name="phase" type="GtkPropagationPhase"/>
-				</parameters>
-			</method>
-			<method name="detach" symbol="gtk_gesture_detach">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="gesture" type="GtkGesture*"/>
-				</parameters>
-			</method>
 			<method name="get_bounding_box" symbol="gtk_gesture_get_bounding_box">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -13813,7 +13783,7 @@
 		</object>
 		<object name="GtkGesturePan" parent="GtkGestureDrag" type-name="GtkGesturePan" get-type="gtk_gesture_pan_get_type">
 			<method name="get_orientation" symbol="gtk_gesture_pan_get_orientation">
-				<return-type type="GtkPanOrientation"/>
+				<return-type type="GtkOrientation"/>
 				<parameters>
 					<parameter name="gesture" type="GtkGesturePan*"/>
 				</parameters>
@@ -13822,17 +13792,17 @@
 				<return-type type="GtkGesture*"/>
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
-					<parameter name="orientation" type="GtkPanOrientation"/>
+					<parameter name="orientation" type="GtkOrientation"/>
 				</parameters>
 			</constructor>
 			<method name="set_orientation" symbol="gtk_gesture_pan_set_orientation">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="gesture" type="GtkGesturePan*"/>
-					<parameter name="orientation" type="GtkPanOrientation"/>
+					<parameter name="orientation" type="GtkOrientation"/>
 				</parameters>
 			</method>
-			<property name="orientation" type="GtkPanOrientation" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="orientation" type="GtkOrientation" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="pan" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -13844,10 +13814,9 @@
 		</object>
 		<object name="GtkGestureRotate" parent="GtkGesture" type-name="GtkGestureRotate" get-type="gtk_gesture_rotate_get_type">
 			<method name="get_angle_delta" symbol="gtk_gesture_rotate_get_angle_delta">
-				<return-type type="gboolean"/>
+				<return-type type="gdouble"/>
 				<parameters>
 					<parameter name="gesture" type="GtkGestureRotate*"/>
-					<parameter name="delta" type="gdouble*"/>
 				</parameters>
 			</method>
 			<constructor name="new" symbol="gtk_gesture_rotate_new">
@@ -13947,10 +13916,9 @@
 		</object>
 		<object name="GtkGestureZoom" parent="GtkGesture" type-name="GtkGestureZoom" get-type="gtk_gesture_zoom_get_type">
 			<method name="get_scale_delta" symbol="gtk_gesture_zoom_get_scale_delta">
-				<return-type type="gboolean"/>
+				<return-type type="gdouble"/>
 				<parameters>
 					<parameter name="gesture" type="GtkGestureZoom*"/>
-					<parameter name="scale" type="gdouble*"/>
 				</parameters>
 			</method>
 			<constructor name="new" symbol="gtk_gesture_zoom_new">
@@ -29436,6 +29404,13 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="get_clip" symbol="gtk_widget_get_clip">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="clip" type="GtkAllocation*"/>
+				</parameters>
+			</method>
 			<method name="get_clipboard" symbol="gtk_widget_get_clipboard">
 				<return-type type="GtkClipboard*"/>
 				<parameters>
@@ -30314,6 +30289,13 @@
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
 					<parameter name="is_visible" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_clip" symbol="gtk_widget_set_clip">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="clip" type="GtkAllocation*"/>
 				</parameters>
 			</method>
 			<method name="set_composite_name" symbol="gtk_widget_set_composite_name">
@@ -34933,14 +34915,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1301"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1303"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="1"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="13"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
@@ -34993,6 +34975,7 @@
 		<constant name="GTK_STYLE_CLASS_CHECK" type="char*" value="check"/>
 		<constant name="GTK_STYLE_CLASS_COMBOBOX_ENTRY" type="char*" value="combobox-entry"/>
 		<constant name="GTK_STYLE_CLASS_CONTEXT_MENU" type="char*" value="context-menu"/>
+		<constant name="GTK_STYLE_CLASS_CSD" type="char*" value="csd"/>
 		<constant name="GTK_STYLE_CLASS_CURSOR_HANDLE" type="char*" value="cursor-handle"/>
 		<constant name="GTK_STYLE_CLASS_DEFAULT" type="char*" value="default"/>
 		<constant name="GTK_STYLE_CLASS_DESTRUCTIVE_ACTION" type="char*" value="destructive-action"/>
