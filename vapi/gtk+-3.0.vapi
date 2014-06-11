@@ -7080,7 +7080,7 @@ namespace Gtk {
 		public bool use_alpha { get; set; }
 		public signal void color_activated (Gdk.RGBA color);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkEditableInterface")]
 	public interface Editable {
 		public void copy_clipboard ();
 		public void cut_clipboard ();

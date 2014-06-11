@@ -81,6 +81,7 @@ namespace Gtk {
 		public virtual void get_preferred_height_for_width_internal (int width, out int minimum_height, out int natural_height);
 	}
 
+	[CCode (type_cname = "GtkEditableInterface")]
 	public interface Editable {
 		[CCode (vfunc_name = "set_selection_bounds")]
 		public abstract void select_region (int start_pos, int end_pos);
