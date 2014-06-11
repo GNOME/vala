@@ -4164,6 +4164,18 @@ namespace GLib {
 		public uint size ();
 		public bool steal (K key);
 		public void steal_all ();
+		[CCode (cname = "_vala_g_hash_table_take")]
+		public V? take (K key, out bool exists = null) {
+			GLib.HashTable<K,V>? ht = null;
+			void** htp = &ht;
+			*htp = this.lookup (key);
+			exists = this.steal (key);
+			return ht;
+		}
+		public uint length {
+			[CCode (cname = "g_hash_table_get_size")]
+			get;
+		}
 	}
 
 	public struct HashTableIter<K,V> {
