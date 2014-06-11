@@ -15,6 +15,7 @@ namespace GLib {
 		public unowned string get_categories ();
 		public unowned string get_filename ();
 		public unowned string get_generic_name ();
+		public static GLib.List<GLib.DesktopAppInfo> get_implementations (string @interface);
 		public bool get_is_hidden ();
 		public unowned string[] get_keywords ();
 		public bool get_nodisplay ();

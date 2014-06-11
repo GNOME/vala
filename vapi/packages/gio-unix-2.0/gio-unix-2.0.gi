@@ -240,6 +240,12 @@
 					<parameter name="info" type="GDesktopAppInfo*"/>
 				</parameters>
 			</method>
+			<method name="get_implementations" symbol="g_desktop_app_info_get_implementations">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="interface" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="get_is_hidden" symbol="g_desktop_app_info_get_is_hidden">
 				<return-type type="gboolean"/>
 				<parameters>
