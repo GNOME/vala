@@ -89,7 +89,7 @@ namespace GLib {
 	}
 
 	[Compact]
-	[CCode (ref_function = "g_type_class_ref", unref_function = "g_type_class_unref")]
+	[CCode (free_function = "g_type_class_unref")]
 	public class TypeClass {
 		[CCode (cname = "G_TYPE_FROM_CLASS")]
 		public Type get_type ();
