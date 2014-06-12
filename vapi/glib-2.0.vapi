@@ -115,9 +115,9 @@ public struct uchar {
 [IntegerType (rank = 6)]
 public struct int {
 	[CCode (cname = "G_MININT")]
-	public static int MIN;
+	public const int MIN;
 	[CCode (cname = "G_MAXINT")]
-	public static int MAX;
+	public const int MAX;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%i");
@@ -155,9 +155,9 @@ public struct int {
 [IntegerType (rank = 7)]
 public struct uint {
 	[CCode (cname = "0")]
-	public static uint MIN;
+	public const uint MIN;
 	[CCode (cname = "G_MAXUINT")]
-	public static uint MAX;
+	public const uint MAX;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%u");
@@ -189,9 +189,9 @@ public struct uint {
 [IntegerType (rank = 4, min = -32768, max = 32767)]
 public struct short {
 	[CCode (cname = "G_MINSHORT")]
-	public static short MIN;
+	public const short MIN;
 	[CCode (cname = "G_MAXSHORT")]
-	public static short MAX;
+	public const short MAX;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hi");
@@ -212,9 +212,9 @@ public struct short {
 [IntegerType (rank = 5, min = 0, max = 65535)]
 public struct ushort {
 	[CCode (cname = "0U")]
-	public static ushort MIN;
+	public const ushort MIN;
 	[CCode (cname = "G_MAXUSHORT")]
-	public static ushort MAX;
+	public const ushort MAX;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hu");
@@ -233,9 +233,9 @@ public struct ushort {
 [IntegerType (rank = 8)]
 public struct long {
 	[CCode (cname = "G_MINLONG")]
-	public static long MIN;
+	public const long MIN;
 	[CCode (cname = "G_MAXLONG")]
-	public static long MAX;
+	public const long MAX;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%li");
@@ -269,9 +269,9 @@ public struct long {
 [IntegerType (rank = 9)]
 public struct ulong {
 	[CCode (cname = "0UL")]
-	public static ulong MIN;
+	public const ulong MIN;
 	[CCode (cname = "G_MAXULONG")]
-	public static ulong MAX;
+	public const ulong MAX;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%lu");
@@ -300,9 +300,9 @@ public struct ulong {
 [IntegerType (rank = 9)]
 public struct size_t {
 	[CCode (cname = "0UL")]
-	public static ulong MIN;
+	public const ulong MIN;
 	[CCode (cname = "G_MAXSIZE")]
-	public static ulong MAX;
+	public const ulong MAX;
 
 	[CCode (cname = "G_GSIZE_FORMAT")]
 	public const string FORMAT;
@@ -329,9 +329,9 @@ public struct size_t {
 [IntegerType (rank = 8)]
 public struct ssize_t {
 	[CCode (cname = "G_MINSSIZE")]
-	public static long MIN;
+	public const long MIN;
 	[CCode (cname = "G_MAXSSIZE")]
-	public static long MAX;
+	public const long MAX;
 
 	[CCode (cname = "G_GSSIZE_FORMAT")]
 	public const string FORMAT;
@@ -355,9 +355,9 @@ public struct ssize_t {
 [IntegerType (rank = 1, min = -128, max = 127)]
 public struct int8 {
 	[CCode (cname = "G_MININT8")]
-	public static int8 MIN;
+	public const int8 MIN;
 	[CCode (cname = "G_MAXINT8")]
-	public static int8 MAX;
+	public const int8 MAX;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hhi");
@@ -376,9 +376,9 @@ public struct int8 {
 [IntegerType (rank = 3, min = 0, max = 255)]
 public struct uint8 {
 	[CCode (cname = "0U")]
-	public static uint8 MIN;
+	public const uint8 MIN;
 	[CCode (cname = "G_MAXUINT8")]
-	public static uint8 MAX;
+	public const uint8 MAX;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hhu");
@@ -397,9 +397,9 @@ public struct uint8 {
 [IntegerType (rank = 4, min = -32768, max = 32767)]
 public struct int16 {
 	[CCode (cname = "G_MININT16")]
-	public static int16 MIN;
+	public const int16 MIN;
 	[CCode (cname = "G_MAXINT16")]
-	public static int16 MAX;
+	public const int16 MAX;
 
 	[CCode (cname = "G_GINT16_FORMAT")]
 	public const string FORMAT;
@@ -433,9 +433,9 @@ public struct int16 {
 [IntegerType (rank = 5, min = 0, max = 65535)]
 public struct uint16 {
 	[CCode (cname = "0U")]
-	public static uint16 MIN;
+	public const uint16 MIN;
 	[CCode (cname = "G_MAXUINT16")]
-	public static uint16 MAX;
+	public const uint16 MAX;
 
 	[CCode (cname = "G_GUINT16_FORMAT")]
 	public const string FORMAT;
@@ -481,9 +481,9 @@ public struct uint16 {
 [IntegerType (rank = 6)]
 public struct int32 {
 	[CCode (cname = "G_MININT32")]
-	public static int32 MIN;
+	public const int32 MIN;
 	[CCode (cname = "G_MAXINT32")]
-	public static int32 MAX;
+	public const int32 MAX;
 
 	[CCode (cname = "G_GINT32_FORMAT")]
 	public const string FORMAT;
@@ -517,9 +517,9 @@ public struct int32 {
 [IntegerType (rank = 7)]
 public struct uint32 {
 	[CCode (cname = "0U")]
-	public static uint32 MIN;
+	public const uint32 MIN;
 	[CCode (cname = "G_MAXUINT32")]
-	public static uint32 MAX;
+	public const uint32 MAX;
 
 	[CCode (cname = "G_GUINT32_FORMAT")]
 	public const string FORMAT;
@@ -565,9 +565,9 @@ public struct uint32 {
 [IntegerType (rank = 10)]
 public struct int64 {
 	[CCode (cname = "G_MININT64")]
-	public static int64 MIN;
+	public const int64 MIN;
 	[CCode (cname = "G_MAXINT64")]
-	public static int64 MAX;
+	public const int64 MAX;
 
 	[CCode (cname = "G_GINT64_FORMAT")]
 	public const string FORMAT;
@@ -622,9 +622,9 @@ public struct int64 {
 [IntegerType (rank = 11)]
 public struct uint64 {
 	[CCode (cname = "0ULL")]
-	public static uint64 MIN;
+	public const uint64 MIN;
 	[CCode (cname = "G_MAXUINT64")]
-	public static uint64 MAX;
+	public const uint64 MAX;
 
 	[CCode (cname = "G_GUINT64_FORMAT")]
 	public const string FORMAT;
@@ -674,35 +674,35 @@ public struct uint64 {
 [FloatingType (rank = 1)]
 public struct float {
 	[CCode (cname = "FLT_ROUNDS")]
-	public static int ROUNDS;
+	public const int ROUNDS;
 	[CCode (cname = "FLT_RADIX")]
-	public static int RADIX;
+	public const int RADIX;
 	[CCode (cname = "FLT_MANT_DIG")]
-	public static int MANT_DIG;
+	public const int MANT_DIG;
 	[CCode (cname = "FLT_DIG")]
-	public static int DIG;
+	public const int DIG;
 
 	[CCode (cname = "FLT_MIN_EXP")]
-	public static int MIN_EXP;
+	public const int MIN_EXP;
 	[CCode (cname = "FLT_MAX_EXP")]
-	public static int MAX_EXP;
+	public const int MAX_EXP;
 
 	[CCode (cname = "FLT_MIN_10_EXP")]
-	public static int MIN_10_EXP;
+	public const int MIN_10_EXP;
 	[CCode (cname = "FLT_MAX_10_EXP")]
-	public static int MAX_10_EXP;
+	public const int MAX_10_EXP;
 
 	[CCode (cname = "FLT_EPSILON")]
-	public static float EPSILON;
+	public const float EPSILON;
 	[CCode (cname = "FLT_MIN")]
-	public static float MIN;
+	public const float MIN;
 	[CCode (cname = "FLT_MAX")]
-	public static float MAX;
+	public const float MAX;
 
 	[CCode (cname = "NAN")]
-	public static float NAN;
+	public const float NAN;
 	[CCode (cname = "INFINITY")]
-	public static float INFINITY;
+	public const float INFINITY;
 
 	[CCode (cname = "isnan")]
 	public bool is_nan ();
@@ -730,31 +730,31 @@ public struct float {
 [FloatingType (rank = 2)]
 public struct double {
 	[CCode (cname = "DBL_MANT_DIG")]
-	public static int MANT_DIG;
+	public const int MANT_DIG;
 	[CCode (cname = "DBL_DIG")]
-	public static int DIG;
+	public const int DIG;
 
 	[CCode (cname = "DBL_MIN_EXP")]
-	public static int MIN_EXP;
+	public const int MIN_EXP;
 	[CCode (cname = "DBL_MAX_EXP")]
-	public static int MAX_EXP;
+	public const int MAX_EXP;
 
 	[CCode (cname = "DBL_MIN_10_EXP")]
-	public static int MIN_10_EXP;
+	public const int MIN_10_EXP;
 	[CCode (cname = "DBL_MAX_10_EXP")]
-	public static int MAX_10_EXP;
+	public const int MAX_10_EXP;
 
 	[CCode (cname = "DBL_EPSILON")]
-	public static double EPSILON;
+	public const double EPSILON;
 	[CCode (cname = "DBL_MIN")]
-	public static double MIN;
+	public const double MIN;
 	[CCode (cname = "DBL_MAX")]
-	public static double MAX;
+	public const double MAX;
 
 	[CCode (cname = "((double) NAN)")]
-	public static double NAN;
+	public const double NAN;
 	[CCode (cname = "((double) INFINITY)")]
-	public static double INFINITY;
+	public const double INFINITY;
 
 	[CCode (cname = "isnan")]
 	public bool is_nan ();
