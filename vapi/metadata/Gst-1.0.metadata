@@ -1,45 +1,105 @@
 Gst experimental
+
+// Virtual methods without invokers
+DeviceMonitor
+  .probe skip=false type="GLib.List<Gst.Device>"
+Element
+  .request_new_pad skip=false unowned=false nullable
+
+// Return non-boxed types
+MiniObject
+  .copy skip=false
+  .ref skip=false
+poll_new skip=false parent="Gst.Poll" symbol_type="constructor" name="new"
+poll_new_timer skip=false parent="Gst.Poll" symbol_type="constructor" name="new_timer"
+
+// Field ownership
 Bin
   .children unowned=false
   .child_bus unowned=false
   .clock_provider unowned=false
   .messages unowned=false
   .provided_clock unowned=false
-Bus
-  .add_watch_full name="add_watch"
 Element
-  .add_pad.pad owned=false
   .bus unowned=false
   .clock unowned=false
   .pads unowned=false
   .sinkpads type="GLib.List<unowned Gst.Pad>"
   .srcpads type="GLib.List<unowned Gst.Pad>"
   .state_cond unowned=false
+
+// Private anonymous unions get exposed
 Pad
   .ABI skip
-TagList
-  .get_boolean.value out
+
+// Skipped by g-i, but Vala can handle it fine
 init_get_option_group skip=false
+
+// Init func compatibility
 init.argv unowned
 init_check.argv unowned
 
-ControlSource
-  .get_value_array.values array array_length_idx=2
-
-// Nullability of return values
-Buffer
-  .get_meta nullable
-  .iterate_meta nullable
-ElementFactory
-  .get_metadata_keys nullable
-  .get_static_pad_templates type="unowned GLib.List<unowned Gst.StaticPadTemplate?>"
-// Variadic
+// Floating references (bug #657202)
 Bin
-  .add_many skip=false
-  .add.element owned=false
-  .add_many.element_1 owned=false
+  .new floating
+BufferPool
+  .new floating
+ElementFactory
+  .create floating
+  .make floating
+GhostPad
+  .new floating
+Pad
+  .new floating
+  .new_from_template floating
+PadTemplate
+  .new floating
+Pipeline
+  .new floating
 Element
-  .link_many skip=false
+  .make_from_uri floating
+parse_launchv_full floating
+parse_launch_full floating
+parse_bin_from_description_full floating
+
+// Variaidc functions
+*_valist skip=false
+*.*_valist skip=false
+*.*_valist_* skip=false
+debug_log skip=false printf_format
+Caps
+  .set_simple skip=false
+CapsFeatures
+  .new skip=false
+Pad
+  .create_stream_id_printf skip=false printf_format
+Structure
+  .get skip=false
+  .id_get skip=false
+  .id_set skip=false
+  .set skip=false
+  .new skip=false
+TagList
+  .add skip=false
+  .add_values skip=false
+ChildProxy
+  .get skip=false
+  .set skip=false
+TagSetter
+  .add_tags skip=false
+  .add_tag_values skip=false
+TypeFind
+  .suggest_simple skip=false
+
+// params
+Caps
+  .new_full skip
+CapsFeatures
+  .new_id skip
+Structure
+  .remove_fields skip
+Query
+  .set_formats skip
 
 // Generics
 AtomicQueue
@@ -51,9 +111,13 @@ MiniObject
   .set_qdata skip
 Buffer
   .new_wrapped_full skip
+Iterator
+  .filter skip
+  .find_custom skip
 
 // Rename *_full functions
 Bus
+  .add_watch_full name="add_watch"
   .add_signal_watch skip
   .add_signal_watch_full name="add_signal_watch"
 Caps
@@ -82,24 +146,12 @@ parse_launch_full name="parse_launch"
 parse_launchv skip
 parse_launchv_full name="parse_launchv"
 
-// Floating references (bug #657202)
-parse_bin_from_description_full floating
-PadTemplate.new floating
-Element.make_from_uri floating
-GhostPad.new floating
-Pipeline.new floating
-Pad.new floating
-ElementFactory
-  .create floating
-  .make floating
-Bin.new floating
-parse_launch_full floating
-parse_launchv_full floating
-
 // Default values
+debug_log_default.unused default=null
 Bus
   .add_signal_watch_full.priority default=GLib.Priority.DEFAULT
 Caps
+  .append_structure_full.features default=null
   .intersect_full.mode default=Gst.CapsIntersectMode.ZIG_ZAG
 Element
   .link_pads_full.flags default=Gst.PadLinkCheck.DEFAULT
@@ -111,6 +163,13 @@ parse_launch_full.context default=null
 parse_launch_full.flags default=Gst.ParseFlags.NONE
 parse_launchv_full.context default=null
 parse_launchv_full.flags default=Gst.ParseFlags.NONE
+
+// Delegates without targets
+tag_register skip=false
+tag_register_static skip=false
+MiniObject
+  .weak_ref skip=false
+  .weak_unref skip=false
 
 // Gst.MiniObject inheritance
 MiniObject struct=false
@@ -144,17 +203,17 @@ DEBUG_* parent="Gst.Debug" name="DEBUG_(.+)"
 ELEMENT_FACTORY_KLASS_* parent="Gst.ElementFactoryKlass" name="ELEMENT_FACTORY_KLASS_(.+)"
 ELEMENT_FACTORY_TYPE_* parent="Gst.ElementFactoryType" name="ELEMENT_FACTORY_TYPE_(.+)"
 uri_* parent="Gst.URI" name="uri_(.+)"
-
+flow_get_name parent="Gst.FlowReturn" name="get_name" symbol_type="method" instance_idx=0
 formats_contains parent="Gst.Format" name="contains"
 
-// No way to make reparented functions instance methods
-FlowReturn.custom_error_2 skip
-flow_get_name skip // parent="Gst.FlowReturn" name="get_name"
+// Structs as generic type arguments
+ElementFactory.get_static_pad_templates type="GLib.List<weak Gst.StaticPadTemplate?>"
 
 // Backwards compatibility
-Structure
-  .new_from_string skip
+Structure.new_from_string skip
 
 // Upstream
-Pipeline
-  .use_clock.clock nullable
+///////////
+
+// Bug #730957:
+ElementFactory.get_metadata_keys nullable
