@@ -2893,13 +2893,19 @@ namespace GLib {
 		public virtual signal void changed ();
 		public virtual signal void removed ();
 	}
-	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
+	[CCode (cheader_filename = "gio/gio.h")]
 	public struct ActionEntry {
 		public weak string name;
-		public GLib.SimpleActionActivateCallback activate;
+		[Deprecated (replacement = "activate_callback", since = "vala-0.26")]
+		public GLib.SimpleActionActivateCallback? activate;
 		public weak string parameter_type;
 		public weak string state;
-		public GLib.SimpleActionChangeStateCallback change_state;
+		[Deprecated (replacement = "change_state_callback", since = "vala-0.26")]
+		public GLib.SimpleActionChangeStateCallback? change_state;
+		[CCode (cname = "activate")]
+		public GLib.SimpleActionActivateFunc activate_callback;
+		[CCode (cname = "change_state")]
+		public GLib.SimpleActionChangeStateCallback? change_state_callback;
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	public struct DBusErrorEntry {
@@ -3653,10 +3659,16 @@ namespace GLib {
 	public delegate GLib.Variant SettingsBindSetMappingShared (GLib.Value value, GLib.VariantType expected_type, void* user_data);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	public delegate bool SettingsGetMapping (GLib.Variant value, out void* result);
+	[CCode (cheader_filename = "gio/gio.h")]
+	[Deprecated (replacement = "SimplActionActivateFunc", since = "vala-0.26")]
+	public delegate void SimpleActionActivateCallback (GLib.SimpleAction action, GLib.Variant? parameter);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
-	public delegate void SimpleActionActivateCallback (GLib.SimpleAction action, GLib.Variant? parameter, void* user_data);
+	public delegate void SimpleActionActivateFunc (GLib.SimpleAction action, GLib.Variant? parameter, void* user_data);
+	[CCode (cheader_filename = "gio/gio.h")]
+	[Deprecated (replacement = "SimplActionChangeStateFunc", since = "vala-0.26")]
+	public delegate void SimpleActionChangeStateCallback (GLib.SimpleAction action, GLib.Variant value);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
-	public delegate void SimpleActionChangeStateCallback (GLib.SimpleAction action, GLib.Variant value, void* user_data);
+	public delegate void SimpleActionChangeStateFunc (GLib.SimpleAction action, GLib.Variant value, void* user_data);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	public delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable? cancellable = null);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]

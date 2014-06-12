@@ -58,8 +58,7 @@ Action
 PropertyAction
   .state nullable
 ActionEntry
-  .activate type="GLib.SimpleActionActivateCallback"
-  .change_state type="GLib.SimpleActionChangeStateCallback"
+  .*#field skip
 ActionGroup
   .query_action#virtual_method virtual
 Application.handle_local_options#virtual_method skip=false

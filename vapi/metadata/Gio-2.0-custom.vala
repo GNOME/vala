@@ -7,6 +7,20 @@ namespace GLib {
 		public T get_proxy_sync<T> (GLib.BusType bus_type, string name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
+	public struct ActionEntry {
+		public weak string name;
+		[Deprecated (since = "vala-0.26", replacement = "activate_callback")]
+		public GLib.SimpleActionActivateCallback? activate;
+		public weak string parameter_type;
+		public weak string state;
+		[Deprecated (since = "vala-0.26", replacement = "change_state_callback")]
+		public GLib.SimpleActionChangeStateCallback? change_state;
+		[CCode (cname = "activate")]
+		public GLib.SimpleActionActivateFunc activate_callback;
+		[CCode (cname = "change_state")]
+		public GLib.SimpleActionChangeStateCallback? change_state_callback;
+	}
+
 	[Compact]
 	[CCode (cname = "GSource", ref_function = "g_source_ref", unref_function = "g_source_unref")]
 	public class CancellableSource : GLib.Source {
@@ -198,9 +212,13 @@ namespace GLib {
 	}
 
 	[CCode (has_target = false)]
-	public delegate void SimpleActionActivateCallback (SimpleAction action, Variant? parameter, void* user_data);
+	public delegate void SimpleActionActivateFunc (SimpleAction action, Variant? parameter, void* user_data);
 	[CCode (has_target = false)]
-	public delegate void SimpleActionChangeStateCallback (SimpleAction action, Variant value, void* user_data);
+	public delegate void SimpleActionChangeStateFunc (SimpleAction action, Variant value, void* user_data);
+	[Deprecated (since = "vala-0.26", replacement = "SimplActionActivateFunc")]
+	public delegate void SimpleActionActivateCallback (SimpleAction action, Variant? parameter);
+	[Deprecated (since = "vala-0.26", replacement = "SimplActionChangeStateFunc")]
+	public delegate void SimpleActionChangeStateCallback (SimpleAction action, Variant value);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 6.9)]
 	public delegate GLib.Variant DBusInterfaceGetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 7.9)]
