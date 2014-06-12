@@ -22,6 +22,7 @@
 
 using Xcb;
 
+[Deprecated (since = "vala-0.26", replacement = "bindings distributed with vala-extra-vapis")]
 namespace Xcb {
 
 	[CCode (lower_case_cprefix = "xcb_icccm_", cheader_filename = "xcb/xcb_icccm.h")]

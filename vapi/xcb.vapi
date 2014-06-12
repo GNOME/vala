@@ -22,6 +22,7 @@
  *  Sergio Costas <raster@rastersoft.com>
  */
 
+[Deprecated (since = "vala-0.26", replacement = "bindings distributed with vala-extra-vapis")]
 [CCode (lower_case_cprefix = "xcb_", cheader_filename = "xcb/xcb.h,xcb/xproto.h")]
 namespace Xcb {
 	[Compact]
