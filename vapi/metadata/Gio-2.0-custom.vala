@@ -197,8 +197,10 @@ namespace GLib {
 		NO_FLAGS
 	}
 
-	public delegate void SimpleActionActivateCallback (SimpleAction action, Variant? parameter);
-	public delegate void SimpleActionChangeStateCallback (SimpleAction action, Variant value);
+	[CCode (has_target = false)]
+	public delegate void SimpleActionActivateCallback (SimpleAction action, Variant? parameter, void* user_data);
+	[CCode (has_target = false)]
+	public delegate void SimpleActionChangeStateCallback (SimpleAction action, Variant value, void* user_data);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 6.9)]
 	public delegate GLib.Variant DBusInterfaceGetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 7.9)]
