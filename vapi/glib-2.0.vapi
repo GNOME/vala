@@ -4091,6 +4091,31 @@ namespace GLib {
 		public SequenceIter<G> search_iter (G data, SequenceIterCompareFunc<G> iter_cmp);
 		public SequenceIter<G> lookup (G data, CompareDataFunc<G> cmp_func);
 		public SequenceIter<G> lookup_iter (G data, SequenceIterCompareFunc<G> iter_cmp);
+
+		[Deprecated (since = "vala-0.26", replacement = "SequenceIter.foreach_range")]
+		public static void foreach_range (SequenceIter<G> begin, SequenceIter<G> end, Func<G> func);
+		[Deprecated (since = "vala-0.26", replacement = "SequenceIter.insert_before")]
+		public static SequenceIter<G> insert_before (SequenceIter<G> iter, owned G data);
+		[Deprecated (since = "vala-0.26", replacement = "SequenceIter.move_to")]
+		public static void move (SequenceIter<G> src, SequenceIter<G> dest);
+		[Deprecated (since = "vala-0.26", replacement = "SequenceIter.swap")]
+		public static void swap (SequenceIter<G> src, SequenceIter<G> dest);
+		[Deprecated (since = "vala-0.26", replacement = "SequenceIter.sort_changed")]
+		public static void sort_changed (SequenceIter<G> iter, CompareDataFunc<G> cmp_func);
+		[Deprecated (since = "vala-0.26", replacement = "SequenceIter.sort_changed_iter")]
+		public static void sort_changed_iter (SequenceIter<G> iter, SequenceIterCompareFunc<G> iter_cmp);
+		[Deprecated (since = "vala-0.26", replacement = "SequenceIter.remove")]
+		public static void remove (SequenceIter<G> iter);
+		[Deprecated (since = "vala-0.26", replacement = "SequenceIter.remove_range")]
+		public static void remove_range (SequenceIter<G> begin, SequenceIter<G> end);
+		[Deprecated (since = "vala-0.26", replacement = "SequenceIter.move_range")]
+		public static void move_range (SequenceIter<G> dest, SequenceIter<G> begin, SequenceIter<G> end);
+		[Deprecated (since = "vala-0.26", replacement = "SequenceIter.get")]
+		public static unowned G get (SequenceIter<G> iter);
+		[Deprecated (since = "vala-0.26", replacement = "SequenceIter.set")]
+		public static void set (SequenceIter<G> iter, owned G data);
+		[Deprecated (since = "vala-0.26", replacement = "SequenceIter.range_get_midpoint")]
+		public static SequenceIter<G> range_get_midpoint (SequenceIter<G> begin, SequenceIter<G> end);
 	}
 
 	[Compact]
