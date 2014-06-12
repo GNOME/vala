@@ -5587,6 +5587,7 @@ namespace Gtk {
 		public Gtk.Allocation allocation;
 		public Gtk.Requisition requisition;
 		public uchar saved_state;
+		public class uint set_scroll_adjustments_signal;
 		public uchar state;
 		public Gdk.Window window;
 		[CCode (construct_function = "gtk_widget_new", has_new_function = false)]

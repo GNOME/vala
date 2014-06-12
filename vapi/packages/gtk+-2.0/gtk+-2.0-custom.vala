@@ -240,6 +240,8 @@ namespace Gtk {
 
 		[CCode (cname = "GTK_WIDGET_UNSET_FLAGS")]
 		public extern void unset_flags (WidgetFlags flags);
+
+		public class uint set_scroll_adjustments_signal;
 	}
 
 	public class Window {
