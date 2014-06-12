@@ -4078,7 +4078,6 @@ namespace GLib {
 		public Sequence ();
 		public int get_length ();
 		public void @foreach (Func<G> func);
-		public static void foreach_range (SequenceIter<G> begin, SequenceIter<G> end, Func<G> func);
 		public void sort (CompareDataFunc<G> cmp_func);
 		public void sort_iter (SequenceIterCompareFunc<G> func);
 		public SequenceIter<G> get_begin_iter ();
@@ -4086,21 +4085,10 @@ namespace GLib {
 		public SequenceIter<G> get_iter_at_pos (int pos);
 		public SequenceIter<G> append (owned G data);
 		public SequenceIter<G> prepend (owned G data);
-		public static SequenceIter<G> insert_before (SequenceIter<G> iter, owned G data);
-		public static void move (SequenceIter<G> src, SequenceIter<G> dest);
-		public static void swap (SequenceIter<G> src, SequenceIter<G> dest);
 		public SequenceIter<G> insert_sorted (owned G data, CompareDataFunc<G> cmp_func);
 		public SequenceIter<G> insert_sorted_iter (owned G data, SequenceIterCompareFunc<G> iter_cmp);
-		public static void sort_changed (SequenceIter<G> iter, CompareDataFunc<G> cmp_func);
-		public static void sort_changed_iter (SequenceIter<G> iter, SequenceIterCompareFunc<G> iter_cmp);
-		public static void remove (SequenceIter<G> iter);
-		public static void remove_range (SequenceIter<G> begin, SequenceIter<G> end);
-		public static void move_range (SequenceIter<G> dest, SequenceIter<G> begin, SequenceIter<G> end);
 		public SequenceIter<G> search (G data, CompareDataFunc<G> cmp_func);
 		public SequenceIter<G> search_iter (G data, SequenceIterCompareFunc<G> iter_cmp);
-		public static unowned G get (SequenceIter<G> iter);
-		public static void set (SequenceIter<G> iter, owned G data);
-		public static SequenceIter<G> range_get_midpoint (SequenceIter<G> begin, SequenceIter<G> end);
 		public SequenceIter<G> lookup (G data, CompareDataFunc<G> cmp_func);
 		public SequenceIter<G> lookup_iter (G data, SequenceIterCompareFunc<G> iter_cmp);
 	}
@@ -4114,13 +4102,33 @@ namespace GLib {
 		public SequenceIter<G> prev ();
 		public int get_position ();
 		public SequenceIter<G> move (int delta);
-		public Sequence<G> get_sequence ();
+		public unowned Sequence<G> get_sequence ();
 		public int compare (SequenceIter<G> other);
 
+		[CCode (cname = "g_sequence_foreach_range")]
+		public void foreach_range (SequenceIter<G> end, Func<G> func);
+		[CCode (cname = "g_sequence_insert_before")]
+		public SequenceIter<G> insert_before (owned G data);
+		[CCode (cname = "g_sequence_move")]
+		public void move_to (SequenceIter<G> dest);
+		[CCode (cname = "g_sequence_swap")]
+		public void swap (SequenceIter<G> dest);
+		[CCode (cname = "g_sequence_sort_changed")]
+		public void sort_changed (CompareDataFunc<G> cmp_func);
+		[CCode (cname = "g_sequence_sort_changed_iter")]
+		public void sort_changed_iter (SequenceIterCompareFunc<G> iter_cmp);
+		[CCode (cname = "g_sequence_remove")]
+		public void remove ();
+		[CCode (cname = "g_sequence_remove_range")]
+		public void remove_range (SequenceIter<G> end);
+		[CCode (cname = "g_sequence_move_range")]
+		public void move_range (SequenceIter<G> begin, SequenceIter<G> end);
 		[CCode (cname = "g_sequence_get")]
 		public unowned G get ();
 		[CCode (cname = "g_sequence_set")]
 		public void set (owned G data);
+		[CCode (cname = "g_sequence_range_get_midpoint")]
+		public SequenceIter<G> range_get_midpoint (SequenceIter<G> end);
 	}
 
 	public delegate int SequenceIterCompareFunc<G> (SequenceIter<G> a, SequenceIter<G> b);
