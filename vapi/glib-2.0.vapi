@@ -4168,7 +4168,7 @@ namespace GLib {
 		public HashTable.full (HashFunc<K>? hash_func, EqualFunc<K>? key_equal_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
 		public void insert (owned K key, owned V value);
 		public void replace (owned K key, owned V value);
-		[Deprecated (since = "vala-0.26", replacement = "HashSet.add")]
+		[Deprecated (since = "vala-0.26", replacement = "GenericSet.add")]
 		public void add (owned K key);
 		public unowned V? lookup (K key);
 		public bool lookup_extended (K lookup_key, out unowned K orig_key, out unowned V value);
@@ -4212,16 +4212,16 @@ namespace GLib {
 	}
 
 	[Compact, CCode (cname = "GHashTable", lower_case_cprefix = "g_hash_table_", ref_function = "g_hash_table_ref", unref_function = "g_hash_table_unref", type_id = "G_TYPE_HASH_TABLE", type_signature = "a{%s}")]
-	public class HashSet<T> {
+	public class GenericSet<T> {
 		[CCode (cname = "g_hash_table_new_full", simple_generics = true)]
-		public HashSet (HashFunc<T>? hash_func, EqualFunc<T>? equal_func, GLib.DestroyNotify? pass_null_here = null);
+		public GenericSet (HashFunc<T>? hash_func, EqualFunc<T>? equal_func, GLib.DestroyNotify? always_pass_null_here = null);
 		public void add (owned T value);
 		public bool contains (T valule);
 		public bool remove (T value);
 		public void remove_all ();
 		public GLib.List<unowned T> get_values ();
 		[CCode (cname = "g_hash_table_iter_init", instance_pos = -1)]
-		public GLib.HashSetIter<T> iterator ();
+		public GLib.GenericSetIter<T> iterator ();
 		[CCode (cname = "_vala_g_hash_set_foreach")]
 		public void @foreach (GLib.Func<T> func) {
 			((GLib.HashTable<unowned T,T>) this).foreach ((k, v) => func (v));
@@ -4233,7 +4233,7 @@ namespace GLib {
 	}
 
 	[CCode (cname = "GHashTableIter", lower_case_cprefix = "g_hash_table_iter_")]
-	public struct HashSetIter<T> {
+	public struct GenericSetIter<T> {
 		[CCode (cname = "_vala_hash_set_next_value")]
 		public unowned T? next_value () {
 			void* vi = &this;
