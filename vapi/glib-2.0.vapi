@@ -4926,6 +4926,18 @@ namespace GLib {
 		[CCode (array_length_type = "size_t")]
 		public string[] dup_bytestring_array ();
 
+		#if GLIB_2_30
+		public Variant.objv (string[] value);
+		[CCode (array_length_type = "size_t")]
+		#if VALA_0_26
+		public (unowned string)[] get_objv ();
+		#else
+		public string*[] get_objv ();
+		#endif
+		[CCode (array_length_type = "size_t")]
+		public string[] dup_objv ();
+		#endif
+
 		public Variant (string format, ...);
 		// note: the function changes its behaviour when end_ptr is null, so 'out char *' is wrong
 		public Variant.va (string format, char **end_ptr, va_list *app);
