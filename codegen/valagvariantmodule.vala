@@ -394,17 +394,26 @@ public class Vala.GVariantModule : GAsyncModule {
 		if (key_type.data_type == string_type.data_type) {
 			hash_table_new.add_argument (new CCodeIdentifier ("g_str_hash"));
 			hash_table_new.add_argument (new CCodeIdentifier ("g_str_equal"));
+		} else if (key_type.data_type == gvariant_type) {
+			hash_table_new.add_argument (new CCodeIdentifier ("g_variant_hash"));
+			hash_table_new.add_argument (new CCodeIdentifier ("g_variant_equal"));
 		} else {
 			hash_table_new.add_argument (new CCodeIdentifier ("g_direct_hash"));
 			hash_table_new.add_argument (new CCodeIdentifier ("g_direct_equal"));
 		}
+		
 		if (key_type.data_type == string_type.data_type) {
 			hash_table_new.add_argument (new CCodeIdentifier ("g_free"));
+		} else if (key_type.data_type == gvariant_type) {
+			hash_table_new.add_argument (new CCodeCastExpression (new CCodeIdentifier ("g_variant_unref"), "GDestroyNotify"));
 		} else {
 			hash_table_new.add_argument (new CCodeIdentifier ("NULL"));
 		}
+		
 		if (value_type.data_type == string_type.data_type) {
 			hash_table_new.add_argument (new CCodeIdentifier ("g_free"));
+		} else if (value_type.data_type == gvariant_type) {
+			hash_table_new.add_argument (new CCodeCastExpression (new CCodeIdentifier ("g_variant_unref"), "GDestroyNotify"));
 		} else {
 			hash_table_new.add_argument (new CCodeIdentifier ("NULL"));
 		}
