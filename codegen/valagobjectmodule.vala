@@ -79,9 +79,9 @@ public class Vala.GObjectModule : GTypeModule {
 			CCodeConstant func_name_constant;
 			CCodeFunctionCall cinst, cspec;
 
-			func_name = "%s_type".printf (type_param.name.down ());
-			func_name_constant = new CCodeConstant ("\"%s-type\"".printf (type_param.name.down ()));
-			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).up ();
+			func_name = "%s_type".printf (type_param.name.ascii_down ());
+			func_name_constant = new CCodeConstant ("\"%s-type\"".printf (type_param.name.ascii_down ()));
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).ascii_up ();
 			cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 			cinst.add_argument (ccall);
 			cinst.add_argument (new CCodeConstant (enum_value));
@@ -96,9 +96,9 @@ public class Vala.GObjectModule : GTypeModule {
 			prop_enum.add_value (new CCodeEnumValue (enum_value));
 
 
-			func_name = "%s_dup_func".printf (type_param.name.down ());
-			func_name_constant = new CCodeConstant ("\"%s-dup-func\"".printf (type_param.name.down ()));
-			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).up ();
+			func_name = "%s_dup_func".printf (type_param.name.ascii_down ());
+			func_name_constant = new CCodeConstant ("\"%s-dup-func\"".printf (type_param.name.ascii_down ()));
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).ascii_up ();
 			cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 			cinst.add_argument (ccall);
 			cinst.add_argument (new CCodeConstant (enum_value));
@@ -112,9 +112,9 @@ public class Vala.GObjectModule : GTypeModule {
 			prop_enum.add_value (new CCodeEnumValue (enum_value));
 
 
-			func_name = "%s_destroy_func".printf (type_param.name.down ());
-			func_name_constant = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
-			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).up ();
+			func_name = "%s_destroy_func".printf (type_param.name.ascii_down ());
+			func_name_constant = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.ascii_down ()));
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).ascii_up ();
 			cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 			cinst.add_argument (ccall);
 			cinst.add_argument (new CCodeConstant (enum_value));
@@ -358,8 +358,8 @@ public class Vala.GObjectModule : GTypeModule {
 			CCodeMemberAccess cfield;
 			CCodeFunctionCall cgetcall;
 
-			func_name = "%s_type".printf (type_param.name.down ());
-			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).up ();
+			func_name = "%s_type".printf (type_param.name.ascii_down ());
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).ascii_up ();
 			ccode.add_case (new CCodeIdentifier (enum_value));
 			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 			cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_gtype"));
@@ -367,8 +367,8 @@ public class Vala.GObjectModule : GTypeModule {
 			ccode.add_assignment (cfield, cgetcall);
 			ccode.add_break ();
 
-			func_name = "%s_dup_func".printf (type_param.name.down ());
-			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).up ();
+			func_name = "%s_dup_func".printf (type_param.name.ascii_down ());
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).ascii_up ();
 			ccode.add_case (new CCodeIdentifier (enum_value));
 			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 			cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
@@ -376,8 +376,8 @@ public class Vala.GObjectModule : GTypeModule {
 			ccode.add_assignment (cfield, cgetcall);
 			ccode.add_break ();
 
-			func_name = "%s_destroy_func".printf (type_param.name.down ());
-			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).up ();
+			func_name = "%s_destroy_func".printf (type_param.name.ascii_down ());
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).ascii_up ();
 			ccode.add_case (new CCodeIdentifier (enum_value));
 			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 			cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
