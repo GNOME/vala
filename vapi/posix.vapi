@@ -1026,6 +1026,7 @@ namespace Posix {
 	[CCode (cheader_filename = "stdlib.h")]
 	public void _exit (int status);
 
+	[CCode (has_target = false)]
 	public delegate void AtExitFunc ();
 
 	[CCode (cheader_filename = "stdlib.h")]
