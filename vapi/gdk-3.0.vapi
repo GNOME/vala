@@ -5176,6 +5176,7 @@ namespace Gdk {
 		public void enable_synchronized_configure ();
 		public void end_paint ();
 		public bool ensure_native ();
+		[Deprecated (since = "3.14")]
 		public void flush ();
 		public void focus (uint32 timestamp);
 		public void freeze_toplevel_updates_libgtk_only ();

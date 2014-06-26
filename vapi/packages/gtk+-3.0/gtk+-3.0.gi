@@ -35003,10 +35003,13 @@
 		<constant name="GTK_STYLE_CLASS_MENU" type="char*" value="menu"/>
 		<constant name="GTK_STYLE_CLASS_MENUBAR" type="char*" value="menubar"/>
 		<constant name="GTK_STYLE_CLASS_MENUITEM" type="char*" value="menuitem"/>
+		<constant name="GTK_STYLE_CLASS_MESSAGE_DIALOG" type="char*" value="message-dialog"/>
 		<constant name="GTK_STYLE_CLASS_NEEDS_ATTENTION" type="char*" value="needs-attention"/>
 		<constant name="GTK_STYLE_CLASS_NOTEBOOK" type="char*" value="notebook"/>
 		<constant name="GTK_STYLE_CLASS_OSD" type="char*" value="osd"/>
 		<constant name="GTK_STYLE_CLASS_PANE_SEPARATOR" type="char*" value="pane-separator"/>
+		<constant name="GTK_STYLE_CLASS_POPOVER" type="char*" value="popover"/>
+		<constant name="GTK_STYLE_CLASS_POPUP" type="char*" value="popup"/>
 		<constant name="GTK_STYLE_CLASS_PRIMARY_TOOLBAR" type="char*" value="primary-toolbar"/>
 		<constant name="GTK_STYLE_CLASS_PROGRESSBAR" type="char*" value="progressbar"/>
 		<constant name="GTK_STYLE_CLASS_PULSE" type="char*" value="pulse"/>

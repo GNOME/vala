@@ -9173,6 +9173,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_MENUITEM;
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_MESSAGE_DIALOG;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_NEEDS_ATTENTION;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_NOTEBOOK;
@@ -9180,6 +9182,10 @@ namespace Gtk {
 	public const string STYLE_CLASS_OSD;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_PANE_SEPARATOR;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_POPOVER;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_POPUP;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_PRIMARY_TOOLBAR;
 	[CCode (cheader_filename = "gtk/gtk.h")]
