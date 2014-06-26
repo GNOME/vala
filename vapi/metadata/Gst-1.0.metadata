@@ -1,8 +1,6 @@
 Gst experimental
 
 // Virtual methods without invokers
-DeviceMonitor
-  .probe skip=false type="GLib.List<Gst.Device>"
 Element
   .request_new_pad skip=false unowned=false nullable
 
