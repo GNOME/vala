@@ -4374,8 +4374,13 @@ namespace GLib {
 	[CCode (cname = "GPtrArray", cprefix = "g_ptr_array_", ref_function = "g_ptr_array_ref", unref_function = "g_ptr_array_unref", type_id = "G_TYPE_PTR_ARRAY")]
 	[GIR (name = "PtrArray")]
 	public class GenericArray<G> {
+#if GLIB_2_30
+		[CCode (cname = "g_ptr_array_new_full", simple_generics = true)]
+		public GenericArray (uint reserved_size = 0);
+#else
 		[CCode (cname = "g_ptr_array_new_with_free_func", simple_generics = true)]
 		public GenericArray ();
+#endif
 		public void add (owned G data);
 		public void foreach (GLib.Func<G> func);
 		[CCode (cname = "g_ptr_array_index")]
