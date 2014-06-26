@@ -4341,7 +4341,7 @@ namespace GLib {
 
 	/* Pointer Arrays */
 
-	[Compact]
+	[Compact, Deprecated (since = "vala-0.26", replacement="GenericArray")]
 #if GLIB_2_22
 	[CCode (ref_function = "g_ptr_array_ref", unref_function = "g_ptr_array_unref", type_id = "G_TYPE_PTR_ARRAY")]
 #else
