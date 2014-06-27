@@ -1338,7 +1338,15 @@ public class Vala.GIRWriter : CodeVisitor {
 	}
 
 	private string? get_full_gir_name (Symbol sym) {
-		var gir_name = sym.get_attribute_string ("GIR", "name") ?? sym.name;
+		string? gir_name = sym.get_attribute_string ("GIR", "name");
+
+		if (gir_name == null && sym is Namespace) {
+			gir_name = sym.get_attribute_string ("CCode", "gir_namespace");
+		}
+		if (gir_name == null) {
+			gir_name = sym.name;
+		}
+
 		if (sym.parent_symbol == null) {
 			return gir_name;
 		}
