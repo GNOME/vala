@@ -89,7 +89,7 @@ AC_DEFUN([VALA_CHECK_MODULES],
         AC_REQUIRE([_VALA_CHECK_COMPILE_WITH_ARGS])dnl
 		AC_ARG_VAR([$1][_VALAFLAGS], [Vala compiler flags for $1])dnl
 
-        VALA_MODULES="`echo '$2' | sed -e 's/ [[=<>]]\+ [[0-9.]]\+//g'`"
+        VALA_MODULES="`echo $2 | sed -e 's/ [[=<>]]\+ [[0-9.]]\+//g'`"
         for MODULE in $VALA_MODULES; do
             $1[]_VALAFLAGS="$[]$1[]_VALAFLAGS --pkg $MODULE"
         done
