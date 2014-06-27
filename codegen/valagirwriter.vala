@@ -340,7 +340,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("<field name=\"priv\">\n");
 			indent++;
 			write_indent ();
-			buffer.append_printf ("<type name=\"%sPrivate\" c:type=\"%sPrivate*\"/>\n", cl.name, CCodeBaseModule.get_ccode_name (cl));
+			buffer.append_printf ("<type name=\"%sPrivate\" c:type=\"%sPrivate*\"/>\n", get_gir_name (cl), CCodeBaseModule.get_ccode_name (cl));
 			indent--;
 			write_indent ();
 			buffer.append_printf("</field>\n");
@@ -423,7 +423,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("</record>\n");
 
 			write_indent ();
-			buffer.append_printf ("<record name=\"%sPrivate\" c:type=\"%sPrivate\" disguised=\"1\"/>\n", cl.name, CCodeBaseModule.get_ccode_name (cl));
+			buffer.append_printf ("<record name=\"%sPrivate\" c:type=\"%sPrivate\" disguised=\"1\"/>\n", get_gir_name (cl), CCodeBaseModule.get_ccode_name (cl));
 		} else {
 			write_indent ();
 			buffer.append_printf ("<record name=\"%s\"", get_gir_name (cl));
