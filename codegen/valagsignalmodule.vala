@@ -333,6 +333,10 @@ public class Vala.GSignalModule : GObjectModule {
 			flags += "G_SIGNAL_NO_HOOKS";
 		}
 
+		if (sig.get_attribute ("Deprecated") != null && CodeContext.get ().require_glib_version (2, 31)) {
+			flags += "G_SIGNAL_DEPRECATED";
+		}
+
 		csignew.add_argument (new CCodeConstant (string.joinv (" | ", flags)));
 
 		if (sig.default_handler == null) {
