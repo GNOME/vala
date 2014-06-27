@@ -1710,6 +1710,13 @@ public class Vala.GTypeModule : GErrorModule {
 
 			ccode.add_declaration ("%s *".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("self"));
 			ccode.add_assignment (new CCodeIdentifier ("self"), ccast);
+
+			if (!cl.is_compact && cl.base_class == null) {
+				// non-gobject class
+				var call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_handlers_destroy"));
+				call.add_argument (new CCodeIdentifier ("self"));
+				ccode.add_expression (call);
+			}
 		} else {
 			var function = new CCodeFunction (get_ccode_lower_case_prefix (cl) + "free", "void");
 			if (cl.is_private_symbol ()) {
