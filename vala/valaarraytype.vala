@@ -166,7 +166,7 @@ public class Vala.ArrayType : ReferenceType {
 
 	public override string to_qualified_string (Scope? scope) {
 		var elem_str = element_type.to_qualified_string (scope);
-		if (element_type.is_weak () && !(element_type.parent_node is Constant)) {
+		if (element_type.is_weak () && !(parent_node is Constant)) {
 			elem_str = "(unowned %s)".printf (elem_str);
 		}
 		
