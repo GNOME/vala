@@ -1230,9 +1230,8 @@ public class Vala.GTypeModule : GErrorModule {
 				fundamental_class = fundamental_class.base_class;
 			}
 
-			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (fundamental_class, null))));
-			ccall.add_argument (new CCodeIdentifier ("klass"));
-			var finalize_assignment = new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "finalize"), new CCodeIdentifier (get_ccode_lower_case_prefix (cl) + "finalize"));
+			var ccast = new CCodeCastExpression (new CCodeIdentifier ("klass"), get_ccode_name (fundamental_class) + "Class *");
+			var finalize_assignment = new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "finalize"), new CCodeIdentifier (get_ccode_lower_case_prefix (cl) + "finalize"));
 			ccode.add_expression (finalize_assignment);
 		}
 
@@ -1253,9 +1252,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 			// there is currently no default handler for abstract async methods
 			if (!m.is_abstract || !m.coroutine) {
-				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_type))));
-				ccast.add_argument (new CCodeIdentifier ("klass"));
-
+				var ccast = new CCodeCastExpression (new CCodeIdentifier ("klass"), get_ccode_name (base_type) + "Class *");
 				ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_vfunc_name (m.base_method)), new CCodeIdentifier (get_ccode_real_name (m)));
 
 				if (m.coroutine) {
@@ -1269,8 +1266,7 @@ public class Vala.GTypeModule : GErrorModule {
 			if (sig.default_handler == null) {
 				continue;
 			}
-			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (cl, null))));
-			ccast.add_argument (new CCodeIdentifier ("klass"));
+			var ccast = new CCodeCastExpression (new CCodeIdentifier ("klass"), get_ccode_name (cl) + "Class *");
 			ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_vfunc_name (sig.default_handler)), new CCodeIdentifier (get_ccode_real_name (sig.default_handler)));
 		}
 
