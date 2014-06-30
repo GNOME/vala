@@ -69,10 +69,6 @@ public class Vala.RegexLiteral : Literal {
 
 		checked = true;
 
-		if (!context.experimental) {
-			Report.warning (source_reference, "regular expression literals are experimental");
-		}
-
 		try {
 			var regex = new GLib.Regex (value);
 			if (regex != null) { /* Regex is valid. */ }
