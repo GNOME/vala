@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstRtspServer", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace RTSPServer {
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPAddress", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_rtsp_address_", type_id = "gst_rtsp_address_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPAddress", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_rtsp_address_", type_id = "gst_rtsp_address_get_type ()")]
 		[Compact]
 		[GIR (name = "RTSPAddress")]
 		public class Address {
@@ -15,7 +15,7 @@ namespace Gst {
 			public Gst.RTSPServer.Address copy ();
 			public void free ();
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPAddressPool", lower_case_cprefix = "gst_rtsp_address_pool_", type_id = "gst_rtsp_address_pool_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPAddressPool", lower_case_cprefix = "gst_rtsp_address_pool_", type_id = "gst_rtsp_address_pool_get_type ()")]
 		[GIR (name = "RTSPAddressPool")]
 		public class AddressPool : GLib.Object {
 			[CCode (cname = "GST_RTSP_ADDRESS_POOL_ANY_IPV4")]
@@ -31,7 +31,7 @@ namespace Gst {
 			public bool has_unicast_addresses ();
 			public Gst.RTSPServer.AddressPoolResult reserve_address (string ip_address, uint port, uint n_ports, uint ttl, out Gst.RTSPServer.Address address);
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPAuth", lower_case_cprefix = "gst_rtsp_auth_", type_id = "gst_rtsp_auth_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPAuth", lower_case_cprefix = "gst_rtsp_auth_", type_id = "gst_rtsp_auth_get_type ()")]
 		[GIR (name = "RTSPAuth")]
 		public class Auth : GLib.Object {
 			[CCode (cname = "GST_RTSP_AUTH_CHECK_CONNECT")]
@@ -60,7 +60,7 @@ namespace Gst {
 			public void set_default_token (Gst.RTSPServer.Token? token);
 			public void set_tls_certificate (GLib.TlsCertificate? cert);
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPClient", lower_case_cprefix = "gst_rtsp_client_", type_id = "gst_rtsp_client_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPClient", lower_case_cprefix = "gst_rtsp_client_", type_id = "gst_rtsp_client_get_type ()")]
 		[GIR (name = "RTSPClient")]
 		public class Client : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -120,7 +120,7 @@ namespace Gst {
 			[HasEmitter]
 			public signal void send_message (Gst.RTSPServer.Session session, Gst.RTSP.Message message);
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPMedia", lower_case_cprefix = "gst_rtsp_media_", type_id = "gst_rtsp_media_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPMedia", lower_case_cprefix = "gst_rtsp_media_", type_id = "gst_rtsp_media_get_type ()")]
 		[GIR (name = "RTSPMedia")]
 		public class Media : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -198,7 +198,7 @@ namespace Gst {
 			public virtual signal void target_state (int state);
 			public virtual signal void unprepared ();
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPMediaFactory", lower_case_cprefix = "gst_rtsp_media_factory_", type_id = "gst_rtsp_media_factory_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPMediaFactory", lower_case_cprefix = "gst_rtsp_media_factory_", type_id = "gst_rtsp_media_factory_get_type ()")]
 		[GIR (name = "RTSPMediaFactory")]
 		public class MediaFactory : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -244,7 +244,7 @@ namespace Gst {
 			public virtual signal void media_configure (Gst.RTSPServer.Media media);
 			public virtual signal void media_constructed (Gst.RTSPServer.Media media);
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPMediaFactoryURI", lower_case_cprefix = "gst_rtsp_media_factory_uri_", type_id = "gst_rtsp_media_factory_uri_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPMediaFactoryURI", lower_case_cprefix = "gst_rtsp_media_factory_uri_", type_id = "gst_rtsp_media_factory_uri_get_type ()")]
 		[GIR (name = "RTSPMediaFactoryURI")]
 		public class MediaFactoryURI : Gst.RTSPServer.MediaFactory {
 			[CCode (has_construct_function = false)]
@@ -255,7 +255,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public bool use_gstpay { get; set; }
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPMountPoints", lower_case_cprefix = "gst_rtsp_mount_points_", type_id = "gst_rtsp_mount_points_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPMountPoints", lower_case_cprefix = "gst_rtsp_mount_points_", type_id = "gst_rtsp_mount_points_get_type ()")]
 		[GIR (name = "RTSPMountPoints")]
 		public class MountPoints : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -265,7 +265,7 @@ namespace Gst {
 			public Gst.RTSPServer.MediaFactory match (string path, out int matched);
 			public void remove_factory (string path);
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPPermissions", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_rtsp_permissions_", type_id = "gst_rtsp_permissions_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPPermissions", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_rtsp_permissions_", type_id = "gst_rtsp_permissions_get_type ()")]
 		[Compact]
 		[GIR (name = "RTSPPermissions")]
 		public class Permissions : Gst.MiniObject {
@@ -281,7 +281,7 @@ namespace Gst {
 			public bool is_allowed (string role, string permission);
 			public void remove_role (string role);
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPServer", lower_case_cprefix = "gst_rtsp_server_", type_id = "gst_rtsp_server_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPServer", lower_case_cprefix = "gst_rtsp_server_", type_id = "gst_rtsp_server_get_type ()")]
 		[GIR (name = "RTSPServer")]
 		public class Server : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -317,7 +317,7 @@ namespace Gst {
 			public Gst.RTSPServer.SessionPool session_pool { owned get; set; }
 			public virtual signal void client_connected (Gst.RTSPServer.Client client);
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPSession", lower_case_cprefix = "gst_rtsp_session_", type_id = "gst_rtsp_session_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSession", lower_case_cprefix = "gst_rtsp_session_", type_id = "gst_rtsp_session_get_type ()")]
 		[GIR (name = "RTSPSession")]
 		public class Session : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -340,7 +340,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public bool timeout_always_visible { get; set; }
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPSessionMedia", lower_case_cprefix = "gst_rtsp_session_media_", type_id = "gst_rtsp_session_media_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSessionMedia", lower_case_cprefix = "gst_rtsp_session_media_", type_id = "gst_rtsp_session_media_get_type ()")]
 		[GIR (name = "RTSPSessionMedia")]
 		public class SessionMedia : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -356,7 +356,7 @@ namespace Gst {
 			public bool set_state (Gst.State state);
 			public unowned Gst.RTSPServer.StreamTransport set_transport (Gst.RTSPServer.Stream stream, owned Gst.RTSP.Transport tr);
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPSessionPool", lower_case_cprefix = "gst_rtsp_session_pool_", type_id = "gst_rtsp_session_pool_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSessionPool", lower_case_cprefix = "gst_rtsp_session_pool_", type_id = "gst_rtsp_session_pool_get_type ()")]
 		[GIR (name = "RTSPSessionPool")]
 		public class SessionPool : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -376,7 +376,7 @@ namespace Gst {
 			public void set_max_sessions (uint max);
 			public uint max_sessions { get; set; }
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPStream", lower_case_cprefix = "gst_rtsp_stream_", type_id = "gst_rtsp_stream_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPStream", lower_case_cprefix = "gst_rtsp_stream_", type_id = "gst_rtsp_stream_get_type ()")]
 		[GIR (name = "RTSPStream")]
 		public class Stream : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -423,7 +423,7 @@ namespace Gst {
 			public signal void new_rtcp_encoder (Gst.Element object);
 			public signal void new_rtp_encoder (Gst.Element object);
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPStreamTransport", lower_case_cprefix = "gst_rtsp_stream_transport_", type_id = "gst_rtsp_stream_transport_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPStreamTransport", lower_case_cprefix = "gst_rtsp_stream_transport_", type_id = "gst_rtsp_stream_transport_get_type ()")]
 		[GIR (name = "RTSPStreamTransport")]
 		public class StreamTransport : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -443,7 +443,7 @@ namespace Gst {
 			public void set_transport (owned Gst.RTSP.Transport tr);
 			public void set_url (Gst.RTSP.Url url);
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPThread", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_rtsp_thread_", type_id = "gst_rtsp_thread_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPThread", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_rtsp_thread_", type_id = "gst_rtsp_thread_get_type ()")]
 		[Compact]
 		[GIR (name = "RTSPThread")]
 		public class Thread : Gst.MiniObject {
@@ -455,7 +455,7 @@ namespace Gst {
 			public bool reuse ();
 			public void stop ();
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPThreadPool", lower_case_cprefix = "gst_rtsp_thread_pool_", type_id = "gst_rtsp_thread_pool_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPThreadPool", lower_case_cprefix = "gst_rtsp_thread_pool_", type_id = "gst_rtsp_thread_pool_get_type ()")]
 		[GIR (name = "RTSPThreadPool")]
 		public class ThreadPool : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -472,7 +472,7 @@ namespace Gst {
 			public virtual void thread_leave (Gst.RTSPServer.Thread thread);
 			public int max_threads { get; set; }
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPToken", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_rtsp_token_", type_id = "gst_rtsp_token_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPToken", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_rtsp_token_", type_id = "gst_rtsp_token_get_type ()")]
 		[Compact]
 		[GIR (name = "RTSPToken")]
 		public class Token : Gst.MiniObject {
@@ -491,7 +491,7 @@ namespace Gst {
 			public Token.valist (string firstfield, va_list var_args);
 			public unowned Gst.Structure writable_structure ();
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPContext", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPContext", has_type_id = false)]
 		[GIR (name = "RTSPContext")]
 		public struct Context {
 			public weak Gst.RTSPServer.Server server;
@@ -513,13 +513,13 @@ namespace Gst {
 			[CCode (cname = "gst_rtsp_context_push_current")]
 			public void push_current ();
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstSDPInfo", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstSDPInfo", has_type_id = false)]
 		[GIR (name = "SDPInfo")]
 		public struct SDPInfo {
 			public bool is_ipv6;
 			public weak string server_ip;
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPAddressFlags", cprefix = "GST_RTSP_ADDRESS_FLAG_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPAddressFlags", cprefix = "GST_RTSP_ADDRESS_FLAG_", has_type_id = false)]
 		[Flags]
 		[GIR (name = "RTSPAddressFlags")]
 		public enum AddressFlags {
@@ -530,7 +530,7 @@ namespace Gst {
 			MULTICAST,
 			UNICAST
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPAddressPoolResult", cprefix = "GST_RTSP_ADDRESS_POOL_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPAddressPoolResult", cprefix = "GST_RTSP_ADDRESS_POOL_", has_type_id = false)]
 		[GIR (name = "RTSPAddressPoolResult")]
 		public enum AddressPoolResult {
 			OK,
@@ -539,14 +539,14 @@ namespace Gst {
 			ERANGE,
 			ELAST
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPFilterResult", cprefix = "GST_RTSP_FILTER_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPFilterResult", cprefix = "GST_RTSP_FILTER_", has_type_id = false)]
 		[GIR (name = "RTSPFilterResult")]
 		public enum FilterResult {
 			REMOVE,
 			KEEP,
 			REF
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPMediaStatus", cprefix = "GST_RTSP_MEDIA_STATUS_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPMediaStatus", cprefix = "GST_RTSP_MEDIA_STATUS_", has_type_id = false)]
 		[GIR (name = "RTSPMediaStatus")]
 		public enum MediaStatus {
 			UNPREPARED,
@@ -556,44 +556,44 @@ namespace Gst {
 			SUSPENDED,
 			ERROR
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPSuspendMode", cprefix = "GST_RTSP_SUSPEND_MODE_", type_id = "gst_rtsp_suspend_mode_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSuspendMode", cprefix = "GST_RTSP_SUSPEND_MODE_", type_id = "gst_rtsp_suspend_mode_get_type ()")]
 		[GIR (name = "RTSPSuspendMode")]
 		public enum SuspendMode {
 			NONE,
 			PAUSE,
 			RESET
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPThreadType", cprefix = "GST_RTSP_THREAD_TYPE_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPThreadType", cprefix = "GST_RTSP_THREAD_TYPE_", has_type_id = false)]
 		[GIR (name = "RTSPThreadType")]
 		public enum ThreadType {
 			CLIENT,
 			MEDIA
 		}
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPClientSendFunc", instance_pos = 3.9)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPClientSendFunc", instance_pos = 3.9)]
 		public delegate bool ClientSendFunc (Gst.RTSPServer.Client client, Gst.RTSP.Message message, bool close);
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPClientSessionFilterFunc", instance_pos = 2.9)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPClientSessionFilterFunc", instance_pos = 2.9)]
 		public delegate Gst.RTSPServer.FilterResult ClientSessionFilterFunc (Gst.RTSPServer.Client client, Gst.RTSPServer.Session sess);
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPKeepAliveFunc", instance_pos = 0.9)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPKeepAliveFunc", instance_pos = 0.9)]
 		public delegate void KeepAliveFunc ();
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPSendFunc", instance_pos = 2.9)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSendFunc", instance_pos = 2.9)]
 		public delegate bool SendFunc (Gst.Buffer buffer, uint8 channel);
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPServerClientFilterFunc", instance_pos = 2.9)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPServerClientFilterFunc", instance_pos = 2.9)]
 		public delegate Gst.RTSPServer.FilterResult ServerClientFilterFunc (Gst.RTSPServer.Server server, Gst.RTSPServer.Client client);
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPSessionFilterFunc", instance_pos = 2.9)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSessionFilterFunc", instance_pos = 2.9)]
 		public delegate Gst.RTSPServer.FilterResult SessionFilterFunc (Gst.RTSPServer.Session sess, Gst.RTSPServer.SessionMedia media);
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPSessionPoolFilterFunc", instance_pos = 2.9)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSessionPoolFilterFunc", instance_pos = 2.9)]
 		public delegate Gst.RTSPServer.FilterResult SessionPoolFilterFunc (Gst.RTSPServer.SessionPool pool, Gst.RTSPServer.Session session);
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPSessionPoolFunc", instance_pos = 1.9)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSessionPoolFunc", instance_pos = 1.9)]
 		public delegate bool SessionPoolFunc (Gst.RTSPServer.SessionPool pool);
-		[CCode (cheader_filename = "gst/gst.h", cname = "GstRTSPStreamTransportFilterFunc", instance_pos = 2.9)]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPStreamTransportFilterFunc", instance_pos = 2.9)]
 		public delegate Gst.RTSPServer.FilterResult StreamTransportFilterFunc (Gst.RTSPServer.Stream stream, Gst.RTSPServer.StreamTransport trans);
-		[CCode (cheader_filename = "gst/gst.h", cname = "gst_rtsp_context_get_type")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "gst_rtsp_context_get_type")]
 		public static GLib.Type context_get_type ();
-		[CCode (cheader_filename = "gst/gst.h", cname = "gst_rtsp_params_get")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "gst_rtsp_params_get")]
 		public static Gst.RTSP.Result params_get (Gst.RTSPServer.Client client, Gst.RTSPServer.Context ctx);
-		[CCode (cheader_filename = "gst/gst.h", cname = "gst_rtsp_params_set")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "gst_rtsp_params_set")]
 		public static Gst.RTSP.Result params_set (Gst.RTSPServer.Client client, Gst.RTSPServer.Context ctx);
-		[CCode (cheader_filename = "gst/gst.h", cname = "gst_rtsp_sdp_from_media")]
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "gst_rtsp_sdp_from_media")]
 		public static bool sdp_from_media (Gst.SDP.Message sdp, Gst.RTSPServer.SDPInfo info, Gst.RTSPServer.Media media);
 	}
 }
