@@ -3942,10 +3942,10 @@ public class Vala.GirParser : CodeVisitor {
 		var cname = node.get_cname ();
 
 		Parameter first_param = null;
-		if (method.get_parameters ().size > 0) {
-			first_param = method.get_parameters()[0];
+		if (node.parameters.size > 0) {
+			first_param = node.parameters[0].param;
 		}
-		if (first_param != null && first_param.variable_type is UnresolvedType) {
+		if (first_param != null && first_param.direction == ParameterDirection.IN && first_param.variable_type is UnresolvedType) {
 			// check if it's a missed instance method (often happens for structs)
 			var sym = ((UnresolvedType) first_param.variable_type).unresolved_symbol;
 			var parent = resolve_node (ns, sym);
@@ -3955,8 +3955,8 @@ public class Vala.GirParser : CodeVisitor {
 				if (parent.lookup (new_name) == null) {
 					ns.remove_member (node);
 					node.name = new_name;
+					node.parameters.remove_at (0);
 					method.name = new_name;
-					method.get_parameters().remove_at (0);
 					method.binding = MemberBinding.INSTANCE;
 					parent.add_member (node);
 				}
