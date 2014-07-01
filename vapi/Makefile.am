@@ -419,7 +419,8 @@ GIR_BINDINGS = \
 	rest-0.7 \
 	udisks2 \
 	vte-2.90 \
-	webkit-1.0 \
+	webkit2gtk-3.0 \
+	webkit2gtk-web-extension-3.0 \
 	$(GSTREAMER_1_0_BINDINGS) \
 	$(NULL)
 

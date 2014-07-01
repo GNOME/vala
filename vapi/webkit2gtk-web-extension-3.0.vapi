@@ -1547,96 +1547,53 @@ namespace WebKit {
 			public string manifest { owned get; set; }
 			public string version { owned get; set; }
 		}
-		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_html_iframe_element_get_type ()")]
+		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", lower_case_cprefix = "webkit_dom_html_iframe_element_", type_id = "webkit_dom_html_iframe_element_get_type ()")]
 		[GIR (name = "DOMHTMLIFrameElement")]
 		public class HTMLIFrameElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLIFrameElement ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_align")]
 			public string get_align ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_content_document")]
 			public unowned WebKit.DOM.Document get_content_document ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_content_window")]
 			public unowned WebKit.DOM.DOMWindow get_content_window ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_frame_border")]
 			public string get_frame_border ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_height")]
 			public string get_height ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_long_desc")]
 			public string get_long_desc ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_margin_height")]
 			public string get_margin_height ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_margin_width")]
 			public string get_margin_width ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_name")]
 			public string get_name ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_sandbox")]
 			public string get_sandbox ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_scrolling")]
 			public string get_scrolling ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_seamless")]
 			public bool get_seamless ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_src")]
 			public string get_src ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_srcdoc")]
 			public string get_srcdoc ();
-			[CCode (cname = "webkit_dom_html_iframe_element_get_width")]
 			public string get_width ();
-			[CCode (cname = "webkit_dom_html_iframe_element_set_align")]
 			public void set_align (string value);
-			[CCode (cname = "webkit_dom_html_iframe_element_set_frame_border")]
 			public void set_frame_border (string value);
-			[CCode (cname = "webkit_dom_html_iframe_element_set_height")]
 			public void set_height (string value);
-			[CCode (cname = "webkit_dom_html_iframe_element_set_long_desc")]
 			public void set_long_desc (string value);
-			[CCode (cname = "webkit_dom_html_iframe_element_set_margin_height")]
 			public void set_margin_height (string value);
-			[CCode (cname = "webkit_dom_html_iframe_element_set_margin_width")]
 			public void set_margin_width (string value);
-			[CCode (cname = "webkit_dom_html_iframe_element_set_name")]
 			public void set_name (string value);
-			[CCode (cname = "webkit_dom_html_iframe_element_set_sandbox")]
 			public void set_sandbox (string value);
-			[CCode (cname = "webkit_dom_html_iframe_element_set_scrolling")]
 			public void set_scrolling (string value);
-			[CCode (cname = "webkit_dom_html_iframe_element_set_seamless")]
 			public void set_seamless (bool value);
-			[CCode (cname = "webkit_dom_html_iframe_element_set_src")]
 			public void set_src (string value);
-			[CCode (cname = "webkit_dom_html_iframe_element_set_srcdoc")]
 			public void set_srcdoc (string value);
-			[CCode (cname = "webkit_dom_html_iframe_element_set_width")]
 			public void set_width (string value);
-			[NoAccessorMethod]
 			public string align { owned get; set; }
-			[NoAccessorMethod]
-			public WebKit.DOM.Document content_document { owned get; }
-			[NoAccessorMethod]
-			public WebKit.DOM.DOMWindow content_window { owned get; }
-			[NoAccessorMethod]
+			public WebKit.DOM.Document content_document { get; }
+			public WebKit.DOM.DOMWindow content_window { get; }
 			public string frame_border { owned get; set; }
-			[NoAccessorMethod]
 			public string height { owned get; set; }
-			[NoAccessorMethod]
 			public string long_desc { owned get; set; }
-			[NoAccessorMethod]
 			public string margin_height { owned get; set; }
-			[NoAccessorMethod]
 			public string margin_width { owned get; set; }
-			[NoAccessorMethod]
 			public string name { owned get; set; }
-			[NoAccessorMethod]
 			public string sandbox { owned get; set; }
-			[NoAccessorMethod]
 			public string scrolling { owned get; set; }
-			[NoAccessorMethod]
 			public bool seamless { get; set; }
-			[NoAccessorMethod]
 			public string src { owned get; set; }
-			[NoAccessorMethod]
 			public string srcdoc { owned get; set; }
-			[NoAccessorMethod]
 			public string width { owned get; set; }
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_html_image_element_get_type ()")]
@@ -3667,55 +3624,37 @@ namespace WebKit {
 			public unowned WebKit.DOM.VideoTrack item (ulong index);
 			public ulong length { get; }
 		}
-		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_webkit_named_flow_get_type ()")]
+		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", lower_case_cprefix = "webkit_dom_webkit_named_flow_", type_id = "webkit_dom_webkit_named_flow_get_type ()")]
 		[GIR (name = "DOMWebKitNamedFlow")]
 		public class WebKitNamedFlow : WebKit.DOM.Object, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected WebKitNamedFlow ();
-			[CCode (cname = "webkit_dom_webkit_named_flow_get_content")]
 			public unowned WebKit.DOM.NodeList get_content ();
-			[CCode (cname = "webkit_dom_webkit_named_flow_get_content_nodes")]
 			[Deprecated (since = "1.10")]
 			public unowned WebKit.DOM.NodeList get_content_nodes ();
-			[CCode (cname = "webkit_dom_webkit_named_flow_get_first_empty_region_index")]
 			public long get_first_empty_region_index ();
-			[CCode (cname = "webkit_dom_webkit_named_flow_get_name")]
 			public string get_name ();
-			[CCode (cname = "webkit_dom_webkit_named_flow_get_overflow")]
 			[Deprecated (since = "1.10")]
 			public bool get_overflow ();
-			[CCode (cname = "webkit_dom_webkit_named_flow_get_overset")]
 			public bool get_overset ();
-			[CCode (cname = "webkit_dom_webkit_named_flow_get_regions")]
 			public unowned WebKit.DOM.NodeList get_regions ();
-			[CCode (cname = "webkit_dom_webkit_named_flow_get_regions_by_content")]
 			public unowned WebKit.DOM.NodeList get_regions_by_content (WebKit.DOM.Node contentNode);
-			[CCode (cname = "webkit_dom_webkit_named_flow_get_regions_by_content_node")]
 			[Deprecated (since = "1.10")]
 			public unowned WebKit.DOM.NodeList get_regions_by_content_node (WebKit.DOM.Node content_node);
-			[NoAccessorMethod]
 			public long first_empty_region_index { get; }
-			[NoAccessorMethod]
 			public string name { owned get; }
-			[NoAccessorMethod]
 			public bool overset { get; }
 		}
-		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_webkit_point_get_type ()")]
+		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", lower_case_cprefix = "webkit_dom_webkit_point_", type_id = "webkit_dom_webkit_point_get_type ()")]
 		[GIR (name = "DOMWebKitPoint")]
 		public class WebKitPoint : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected WebKitPoint ();
-			[CCode (cname = "webkit_dom_webkit_point_get_x")]
 			public float get_x ();
-			[CCode (cname = "webkit_dom_webkit_point_get_y")]
 			public float get_y ();
-			[CCode (cname = "webkit_dom_webkit_point_set_x")]
 			public void set_x (float value);
-			[CCode (cname = "webkit_dom_webkit_point_set_y")]
 			public void set_y (float value);
-			[NoAccessorMethod]
 			public float x { get; set; }
-			[NoAccessorMethod]
 			public float y { get; set; }
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_wheel_event_get_type ()")]
@@ -3790,8 +3729,8 @@ namespace WebKit {
 	public class Frame : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Frame ();
-		public unowned JS.GlobalContext? get_javascript_context_for_script_world (WebKit.ScriptWorld world);
-		public unowned JS.GlobalContext? get_javascript_global_context ();
+		public void* get_javascript_context_for_script_world (WebKit.ScriptWorld world);
+		public void* get_javascript_global_context ();
 		public unowned string get_uri ();
 		public bool is_main_frame ();
 	}
