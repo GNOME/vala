@@ -7945,7 +7945,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="button" type="GtkButton*"/>
-					<parameter name="newstyle" type="GtkReliefStyle"/>
+					<parameter name="relief" type="GtkReliefStyle"/>
 				</parameters>
 			</method>
 			<method name="set_use_stock" symbol="gtk_button_set_use_stock">
@@ -12359,6 +12359,12 @@
 					<parameter name="iter" type="GtkTreeIter*"/>
 				</parameters>
 			</signal>
+			<signal name="no-matches" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="completion" type="GtkEntryCompletion*"/>
+				</parameters>
+			</signal>
 		</object>
 		<object name="GtkEntryIconAccessible" parent="AtkObject" type-name="GtkEntryIconAccessible" get-type="gtk_entry_icon_accessible_get_type">
 			<implements>
@@ -14894,6 +14900,13 @@
 					<parameter name="icon_name" type="gchar*"/>
 					<parameter name="size" type="gint"/>
 					<parameter name="pixbuf" type="GdkPixbuf*"/>
+				</parameters>
+			</method>
+			<method name="add_resource_path" symbol="gtk_icon_theme_add_resource_path">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="icon_theme" type="GtkIconTheme*"/>
+					<parameter name="path" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="append_search_path" symbol="gtk_icon_theme_append_search_path">
@@ -34915,14 +34928,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1303"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1304"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="4"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="13"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
@@ -34985,6 +34998,7 @@
 		<constant name="GTK_STYLE_CLASS_ENTRY" type="char*" value="entry"/>
 		<constant name="GTK_STYLE_CLASS_ERROR" type="char*" value="error"/>
 		<constant name="GTK_STYLE_CLASS_EXPANDER" type="char*" value="expander"/>
+		<constant name="GTK_STYLE_CLASS_FLAT" type="char*" value="flat"/>
 		<constant name="GTK_STYLE_CLASS_FRAME" type="char*" value="frame"/>
 		<constant name="GTK_STYLE_CLASS_GRIP" type="char*" value="grip"/>
 		<constant name="GTK_STYLE_CLASS_HEADER" type="char*" value="header"/>

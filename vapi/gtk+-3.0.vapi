@@ -823,7 +823,7 @@ namespace Gtk {
 		public void set_image (Gtk.Widget image);
 		public void set_image_position (Gtk.PositionType position);
 		public void set_label (string? label);
-		public void set_relief (Gtk.ReliefStyle newstyle);
+		public void set_relief (Gtk.ReliefStyle relief);
 		public void set_use_stock (bool use_stock);
 		public void set_use_underline (bool use_underline);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -1983,6 +1983,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal bool insert_prefix (string prefix);
 		public virtual signal bool match_selected (Gtk.TreeModel model, Gtk.TreeIter iter);
+		public virtual signal void no_matches ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class EntryIconAccessible : Atk.Object, Atk.Action, Atk.Component {
@@ -2006,6 +2007,8 @@ namespace Gtk {
 		protected EventController ();
 		public Gtk.PropagationPhase get_propagation_phase ();
 		public unowned Gtk.Widget get_widget ();
+		public bool handle_event (Gdk.Event event);
+		public void reset ();
 		public void set_propagation_phase (Gtk.PropagationPhase phase);
 		public Gtk.PropagationPhase propagation_phase { get; set; }
 		public Gtk.Widget widget { get; construct; }
@@ -2663,6 +2666,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public IconTheme ();
 		public static void add_builtin_icon (string icon_name, int size, Gdk.Pixbuf pixbuf);
+		public void add_resource_path (string path);
 		public void append_search_path (string path);
 		public Gtk.IconInfo? choose_icon ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, Gtk.IconLookupFlags flags);
 		public Gtk.IconInfo? choose_icon_for_scale (string[] icon_names, int size, int scale, Gtk.IconLookupFlags flags);
@@ -9136,6 +9140,8 @@ namespace Gtk {
 	public const string STYLE_CLASS_ERROR;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_EXPANDER;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_FLAT;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_FRAME;
 	[CCode (cheader_filename = "gtk/gtk.h")]
