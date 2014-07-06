@@ -408,7 +408,6 @@ GIR_BINDINGS = \
 	libnotify \
 	libpeas-1.0 \
 	libpeas-gtk-1.0 \
-	librsvg-2.0 \
 	libsoup-2.4 \
 	libwnck-3.0 \
 	mx-1.0 \
