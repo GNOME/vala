@@ -396,6 +396,22 @@ public class Vala.ObjectCreationExpression : Expression {
 					error = true;
 					Report.error (source_reference, "Invalid type for argument 1");
 				}
+
+				var format_literal = ex as StringLiteral;
+				if (format_literal != null) {
+					var format = format_literal.eval ();
+					if (!context.analyzer.check_print_format (format, arg_it, source_reference)) {
+						error = true;
+						return false;
+					}
+				}
+
+				arg_it = get_argument_list ().iterator ();
+				arg_it.next ();
+				if (!context.analyzer.check_variadic_arguments (arg_it, 1, source_reference)) {
+					error = true;
+					return false;
+				}
 			}
 		}
 

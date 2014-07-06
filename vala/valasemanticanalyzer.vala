@@ -446,33 +446,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		if (ellipsis) {
-			while (arg_it != null && arg_it.next ()) {
-				var arg = arg_it.get ();
-				if (arg.error) {
-					// ignore inner error
-					expr.error = true;
-					return false;
-				} else if (arg.value_type is SignalType) {
-					arg.error = true;
-					Report.error (arg.source_reference, "Cannot pass signals as arguments");
-					return false;
-				} else if (arg.value_type == null) {
-					// disallow untyped arguments except for type inference of callbacks
-					if (!(arg.symbol_reference is Method)) {
-						expr.error = true;
-						Report.error (expr.source_reference, "Invalid type for argument %d".printf (i + 1));
-						return false;
-					}
-				} else if (arg.target_type != null && !arg.value_type.compatible (arg.target_type)) {
-					// target_type known for printf arguments
-					expr.error = true;
-					Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_string (), arg.target_type.to_string ()));
-					return false;
-				}
-
-				i++;
-			}
+		if (ellipsis && !check_variadic_arguments (arg_it, i, expr.source_reference)) {
+			expr.error = true;
+			return false;
 		} else if (!ellipsis && arg_it != null && arg_it.next ()) {
 			expr.error = true;
 			var m = mtype as MethodType;
@@ -592,6 +568,154 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return false;
 			}
 		}
+		return true;
+	}
+
+	public bool check_variadic_arguments (Iterator<Expression> arg_it, int i, SourceReference source_reference) {
+		while (arg_it != null && arg_it.next ()) {
+			var arg = arg_it.get ();
+			if (arg.error) {
+				// ignore inner error
+				return false;
+			} else if (arg.value_type is SignalType) {
+				arg.error = true;
+				Report.error (arg.source_reference, "Cannot pass signals as arguments");
+				return false;
+			} else if (arg.value_type == null) {
+				// disallow untyped arguments except for type inference of callbacks
+				if (!(arg.symbol_reference is Method)) {
+					Report.error (source_reference, "Invalid type for argument %d".printf (i + 1));
+					return false;
+				}
+			} else if (arg.target_type != null && !arg.value_type.compatible (arg.target_type)) {
+				// target_type known for printf arguments
+				Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_string (), arg.target_type.to_string ()));
+				return false;
+			}
+
+			i++;
+		}
+
+		return true;
+	}
+
+	public bool check_print_format (string format, Iterator<Expression> arg_it, SourceReference source_reference) {
+		bool unsupported_format = false;
+
+		weak string format_it = format;
+		unichar c = format_it.get_char ();
+		while (c != '\0') {
+			if (c != '%') {
+				format_it = format_it.next_char ();
+				c = format_it.get_char ();
+				continue;
+			}
+
+			format_it = format_it.next_char ();
+			c = format_it.get_char ();
+			// flags
+			while (c == '#' || c == '0' || c == '-' || c == ' ' || c == '+') {
+				format_it = format_it.next_char ();
+				c = format_it.get_char ();
+			}
+			// field width
+			while (c >= '0' && c <= '9') {
+				format_it = format_it.next_char ();
+				c = format_it.get_char ();
+			}
+			// precision
+			if (c == '.') {
+				format_it = format_it.next_char ();
+				c = format_it.get_char ();
+				while (c >= '0' && c <= '9') {
+					format_it = format_it.next_char ();
+					c = format_it.get_char ();
+				}
+			}
+			// length modifier
+			int length = 0;
+			if (c == 'h') {
+				length = -1;
+				format_it = format_it.next_char ();
+				c = format_it.get_char ();
+				if (c == 'h') {
+					length = -2;
+					format_it = format_it.next_char ();
+					c = format_it.get_char ();
+				}
+			} else if (c == 'l') {
+				length = 1;
+				format_it = format_it.next_char ();
+				c = format_it.get_char ();
+			} else if (c == 'z') {
+				length = 2;
+				format_it = format_it.next_char ();
+				c = format_it.get_char ();
+			}
+			// conversion specifier
+			DataType param_type = null;
+			if (c == 'd' || c == 'i' || c == 'c') {
+				// integer
+				if (length == -2) {
+					param_type = context.analyzer.int8_type;
+				} else if (length == -1) {
+					param_type = context.analyzer.short_type;
+				} else if (length == 0) {
+					param_type = context.analyzer.int_type;
+				} else if (length == 1) {
+					param_type = context.analyzer.long_type;
+				} else if (length == 2) {
+					param_type = context.analyzer.ssize_t_type;
+				}
+			} else if (c == 'o' || c == 'u' || c == 'x' || c == 'X') {
+				// unsigned integer
+				if (length == -2) {
+					param_type = context.analyzer.uchar_type;
+				} else if (length == -1) {
+					param_type = context.analyzer.ushort_type;
+				} else if (length == 0) {
+					param_type = context.analyzer.uint_type;
+				} else if (length == 1) {
+					param_type = context.analyzer.ulong_type;
+				} else if (length == 2) {
+					param_type = context.analyzer.size_t_type;
+				}
+			} else if (c == 'e' || c == 'E' || c == 'f' || c == 'F'
+					   || c == 'g' || c == 'G' || c == 'a' || c == 'A') {
+				// double
+				param_type = context.analyzer.double_type;
+			} else if (c == 's') {
+				// string
+				param_type = context.analyzer.string_type;
+			} else if (c == 'p') {
+				// pointer
+				param_type = new PointerType (new VoidType ());
+			} else if (c == '%') {
+				// literal %
+			} else {
+				unsupported_format = true;
+				break;
+			}
+			if (c != '\0') {
+				format_it = format_it.next_char ();
+				c = format_it.get_char ();
+			}
+			if (param_type != null) {
+				if (arg_it.next ()) {
+					Expression arg = arg_it.get ();
+
+					arg.target_type = param_type;
+				} else {
+					Report.error (source_reference, "Too few arguments for specified format");
+					return false;
+				}
+			}
+		}
+		if (!unsupported_format && arg_it.next ()) {
+			Report.error (source_reference, "Too many arguments for specified format");
+			return false;
+		}
+
 		return true;
 	}
 
