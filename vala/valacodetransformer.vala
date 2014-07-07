@@ -295,7 +295,7 @@ public class Vala.CodeTransformer : CodeVisitor {
 	}
 
 	public Expression stringify (Expression expr) {
-		if (expr.value_type.data_type != null && expr.value_type.data_type.is_subtype_of (context.analyzer.string_type.data_type)) {
+		if (expr.value_type != null && expr.value_type.data_type != null && expr.value_type.data_type.is_subtype_of (context.analyzer.string_type.data_type)) {
 			return expr;
 		} else {
 			return expression (@"%?.to_string ()", {expr});
