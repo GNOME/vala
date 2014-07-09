@@ -1,12 +1,12 @@
 namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.AppLaunchContext", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.AppLaunchContext", deprecated_since = "vala-0.24")]
 	public class X11AppLaunchContext : Gdk.AppLaunchContext {
 		[CCode (has_construct_function = false)]
 		protected X11AppLaunchContext ();
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.Cursor", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.Cursor", deprecated_since = "vala-0.24")]
 	public class X11Cursor : Gdk.Cursor {
 		[CCode (has_construct_function = false)]
 		protected X11Cursor ();
@@ -14,7 +14,7 @@ namespace Gdk {
 		public static unowned X.Display get_xdisplay (Gdk.Cursor cursor);
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.Display", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.Display", deprecated_since = "vala-0.24")]
 	public class X11Display : Gdk.Display {
 		[CCode (has_construct_function = false)]
 		protected X11Display ();
@@ -35,19 +35,19 @@ namespace Gdk {
 		public static bool utf8_to_compound_text (Gdk.Display display, string str, out Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.DisplayManager", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.DisplayManager", deprecated_since = "vala-0.24")]
 	public class X11DisplayManager : Gdk.DisplayManager {
 		[CCode (has_construct_function = false)]
 		protected X11DisplayManager ();
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.DragContext", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.DragContext", deprecated_since = "vala-0.24")]
 	public class X11DragContext : Gdk.DragContext {
 		[CCode (has_construct_function = false)]
 		protected X11DragContext ();
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.Keymap", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.Keymap", deprecated_since = "vala-0.24")]
 	public class X11Keymap : Gdk.Keymap {
 		[CCode (has_construct_function = false)]
 		protected X11Keymap ();
@@ -55,7 +55,7 @@ namespace Gdk {
 		public static bool key_is_modifier (Gdk.Keymap keymap, uint keycode);
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.Screen", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.Screen", deprecated_since = "vala-0.24")]
 	public class X11Screen : Gdk.Screen {
 		[CCode (has_construct_function = false)]
 		protected X11Screen ();
@@ -70,14 +70,14 @@ namespace Gdk {
 		public virtual signal void window_manager_changed ();
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.Visual", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.Visual", deprecated_since = "vala-0.24")]
 	public class X11Visual : Gdk.Visual {
 		[CCode (has_construct_function = false)]
 		protected X11Visual ();
 		public static unowned X.Visual get_xvisual (Gdk.Visual visual);
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.Window", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.Window", deprecated_since = "vala-0.24")]
 	public class X11Window : Gdk.Window {
 		[CCode (has_construct_function = false)]
 		protected X11Window ();
@@ -95,61 +95,61 @@ namespace Gdk {
 		public static void set_utf8_property (Gdk.Window window, string name, string value);
 	}
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.atom_to_xatom", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.atom_to_xatom", deprecated_since = "vala-0.24")]
 	public static X.Atom x11_atom_to_xatom (Gdk.Atom atom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.atom_to_xatom_for_display", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.atom_to_xatom_for_display", deprecated_since = "vala-0.24")]
 	public static X.Atom x11_atom_to_xatom_for_display (Gdk.Display display, Gdk.Atom atom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.free_compound_text", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.free_compound_text", deprecated_since = "vala-0.24")]
 	public static void x11_free_compound_text (uchar[] ctext);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.free_text_list", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.free_text_list", deprecated_since = "vala-0.24")]
 	public static void x11_free_text_list (string list);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.get_default_root_xwindow", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.get_default_root_xwindow", deprecated_since = "vala-0.24")]
 	public static X.Window x11_get_default_root_xwindow ();
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.get_default_scree", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.get_default_scree", deprecated_since = "vala-0.24")]
 	public static int x11_get_default_screen ();
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.get_default_xdisplay", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.get_default_xdisplay", deprecated_since = "vala-0.24")]
 	public static unowned X.Display x11_get_default_xdisplay ();
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.get_server_time", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.get_server_time", deprecated_since = "vala-0.24")]
 	public static uint32 x11_get_server_time (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.get_xatom_by_name", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.get_xatom_by_name", deprecated_since = "vala-0.24")]
 	public static X.Atom x11_get_xatom_by_name (string atom_name);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.get_xatom_by_name_for_display", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.get_xatom_by_name_for_display", deprecated_since = "vala-0.24")]
 	public static X.Atom x11_get_xatom_by_name_for_display (Gdk.Display display, string atom_name);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.get_xatom_nam", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.get_xatom_nam", deprecated_since = "vala-0.24")]
 	public static unowned string x11_get_xatom_name (X.Atom xatom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.get_xatom_name_for_display", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.get_xatom_name_for_display", deprecated_since = "vala-0.24")]
 	public static unowned string x11_get_xatom_name_for_display (Gdk.Display display, X.Atom xatom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.grab_server", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.grab_server", deprecated_since = "vala-0.24")]
 	public static void x11_grab_server ();
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.Display.lookup_for_xdisplay", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.Display.lookup_for_xdisplay", deprecated_since = "vala-0.24")]
 	public static unowned Gdk.Display x11_lookup_xdisplay (X.Display xdisplay);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.register_standard_event_type", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.register_standard_event_type", deprecated_since = "vala-0.24")]
 	public static void x11_register_standard_event_type (Gdk.Display display, int event_base, int n_events);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.set_sm_client_id", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.set_sm_client_id", deprecated_since = "vala-0.24")]
 	public static void x11_set_sm_client_id (string sm_client_id);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.ungrab_server", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.ungrab_server", deprecated_since = "vala-0.24")]
 	public static void x11_ungrab_server ();
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.xatom_to_atom", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.xatom_to_atom", deprecated_since = "vala-0.24")]
 	public static Gdk.Atom x11_xatom_to_atom (X.Atom xatom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	[Deprecated (replacement = "Gdk.X11.xatom_to_atom_for_display", since = "vala-0.24")]
+	[Version (replacement = "Gdk.X11.xatom_to_atom_for_display", deprecated_since = "vala-0.24")]
 	public static Gdk.Atom x11_xatom_to_atom_for_display (Gdk.Display display, X.Atom xatom);
 
 }
