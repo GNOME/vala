@@ -375,6 +375,7 @@ namespace Gst {
 			public bool remove (Gst.RTSPServer.Session sess);
 			public void set_max_sessions (uint max);
 			public uint max_sessions { get; set; }
+			public virtual signal void session_removed (Gst.RTSPServer.Session session);
 		}
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPStream", lower_case_cprefix = "gst_rtsp_stream_", type_id = "gst_rtsp_stream_get_type ()")]
 		[GIR (name = "RTSPStream")]

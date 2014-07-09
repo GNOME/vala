@@ -177,7 +177,7 @@ namespace Gst {
 			public uint ssrc;
 			public string as_text ();
 			public Gst.RTSP.Result free ();
-			public Gst.RTSP.Result get_media_type (out string media_type);
+			public Gst.RTSP.Result get_media_type (out unowned string media_type);
 			public Gst.RTSP.Result init ();
 		}
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cprefix = "GST_RTSP_AUTH_", type_id = "gst_rtsp_auth_method_get_type ()")]

@@ -299,6 +299,7 @@ namespace GLib {
 		public uint get_inactivity_timeout ();
 		public bool get_is_registered ();
 		public bool get_is_remote ();
+		public unowned string get_resource_base_path ();
 		public void hold ();
 		public static bool id_is_valid (string application_id);
 		[NoWrapper]
@@ -319,6 +320,7 @@ namespace GLib {
 		public void set_default ();
 		public void set_flags (GLib.ApplicationFlags flags);
 		public void set_inactivity_timeout (uint inactivity_timeout);
+		public void set_resource_base_path (string resource_base_path);
 		public void unmark_busy ();
 		public void withdraw_notification (string id);
 		public GLib.ActionGroup action_group { set; }
@@ -327,6 +329,7 @@ namespace GLib {
 		public uint inactivity_timeout { get; set; }
 		public bool is_registered { get; }
 		public bool is_remote { get; }
+		public string resource_base_path { get; set; }
 		[HasEmitter]
 		public virtual signal void activate ();
 		public virtual signal int command_line (GLib.ApplicationCommandLine command_line);
@@ -1571,6 +1574,7 @@ namespace GLib {
 		public void set_default_action (string detailed_action);
 		public void set_default_action_and_target_value (string action, GLib.Variant? target);
 		public void set_icon (GLib.Icon icon);
+		public void set_priority (GLib.NotificationPriority priority);
 		public void set_title (string title);
 		public void set_urgent (bool urgent);
 	}
@@ -3023,6 +3027,7 @@ namespace GLib {
 		INVALID,
 		LINUX_UCRED,
 		FREEBSD_CMSGCRED,
+		NETBSD_UNPCBID,
 		OPENBSD_SOCKPEERCRED,
 		SOLARIS_UCRED
 	}
@@ -3292,6 +3297,13 @@ namespace GLib {
 	public enum MountUnmountFlags {
 		NONE,
 		FORCE
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_NOTIFICATION_PRIORITY_", type_id = "g_notification_priority_get_type ()")]
+	public enum NotificationPriority {
+		NORMAL,
+		LOW,
+		HIGH,
+		URGENT
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_OUTPUT_STREAM_SPLICE_", type_id = "g_output_stream_splice_flags_get_type ()")]
 	[Flags]

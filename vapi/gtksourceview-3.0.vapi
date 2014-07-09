@@ -24,6 +24,7 @@ namespace Gtk {
 		public string[] get_context_classes_at_iter (Gtk.TextIter iter);
 		public bool get_highlight_matching_brackets ();
 		public bool get_highlight_syntax ();
+		public bool get_implicit_trailing_newline ();
 		public unowned Gtk.SourceLanguage get_language ();
 		public int get_max_undo_levels ();
 		public GLib.SList<weak Gtk.SourceMark> get_source_marks_at_iter (Gtk.TextIter iter, string? category);
@@ -36,6 +37,7 @@ namespace Gtk {
 		public void remove_source_marks (Gtk.TextIter start, Gtk.TextIter end, string? category);
 		public void set_highlight_matching_brackets (bool highlight);
 		public void set_highlight_syntax (bool highlight);
+		public void set_implicit_trailing_newline (bool implicit_trailing_newline);
 		public void set_language (Gtk.SourceLanguage? language);
 		public void set_max_undo_levels (int max_undo_levels);
 		public void set_style_scheme (Gtk.SourceStyleScheme? scheme);
@@ -48,6 +50,7 @@ namespace Gtk {
 		public bool can_undo { get; }
 		public bool highlight_matching_brackets { get; set; }
 		public bool highlight_syntax { get; set; }
+		public bool implicit_trailing_newline { get; set construct; }
 		public Gtk.SourceLanguage language { get; set; }
 		public int max_undo_levels { get; set; }
 		public Gtk.SourceStyleScheme style_scheme { get; set; }
@@ -177,6 +180,87 @@ namespace Gtk {
 		public uint proposals_batch_size { get; set construct; }
 		[NoAccessorMethod]
 		public uint scan_batch_size { get; set construct; }
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_source_encoding_get_type ()")]
+	[Compact]
+	[GIR (name = "Encoding")]
+	public class SourceEncoding {
+		public Gtk.SourceEncoding copy ();
+		[CCode (cname = "gtk_source_encoding_get_current")]
+		public static unowned Gtk.SourceEncoding et_current ();
+		[CCode (cname = "gtk_source_encoding_get_from_charset")]
+		public static unowned Gtk.SourceEncoding et_from_charset (string charset);
+		[CCode (cname = "gtk_source_encoding_get_utf8")]
+		public static unowned Gtk.SourceEncoding et_utf8 ();
+		public void free ();
+		public unowned string get_charset ();
+		public unowned string get_name ();
+		[CCode (cname = "gtk_source_encoding_foreach")]
+		public static void oreach (Gtk.SourceEncodingForeachFunc func);
+		public string to_string ();
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_file_get_type ()")]
+	[GIR (name = "File")]
+	public class SourceFile : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public SourceFile ();
+		public Gtk.SourceCompressionType get_compression_type ();
+		public unowned Gtk.SourceEncoding get_encoding ();
+		public unowned GLib.File get_location ();
+		public Gtk.SourceNewlineType get_newline_type ();
+		public void set_location (GLib.File? location);
+		public Gtk.SourceCompressionType compression_type { get; }
+		public Gtk.SourceEncoding encoding { get; }
+		public GLib.File location { get; set; }
+		public Gtk.SourceNewlineType newline_type { get; }
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_file_loader_get_type ()")]
+	[GIR (name = "FileLoader")]
+	public class SourceFileLoader : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public SourceFileLoader (Gtk.SourceBuffer buffer, Gtk.SourceFile file);
+		[CCode (has_construct_function = false)]
+		public SourceFileLoader.from_stream (Gtk.SourceBuffer buffer, Gtk.SourceFile file, GLib.InputStream stream);
+		public unowned Gtk.SourceBuffer get_buffer ();
+		public Gtk.SourceCompressionType get_compression_type ();
+		public unowned Gtk.SourceEncoding get_encoding ();
+		public unowned Gtk.SourceFile get_file ();
+		public unowned GLib.InputStream get_input_stream ();
+		public unowned GLib.File get_location ();
+		public Gtk.SourceNewlineType get_newline_type ();
+		public async bool load_async (int io_priority, GLib.Cancellable? cancellable, owned GLib.FileProgressCallback? progress_callback) throws GLib.Error;
+		public void set_candidate_encodings (GLib.SList<Gtk.SourceEncoding> candidate_encodings);
+		public Gtk.SourceBuffer buffer { get; construct; }
+		public Gtk.SourceFile file { get; construct; }
+		public GLib.InputStream input_stream { get; construct; }
+		public GLib.File location { get; construct; }
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_file_saver_get_type ()")]
+	[GIR (name = "FileSaver")]
+	public class SourceFileSaver : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public SourceFileSaver (Gtk.SourceBuffer buffer, Gtk.SourceFile file);
+		public unowned Gtk.SourceBuffer get_buffer ();
+		public Gtk.SourceCompressionType get_compression_type ();
+		public unowned Gtk.SourceEncoding get_encoding ();
+		public unowned Gtk.SourceFile get_file ();
+		public Gtk.SourceFileSaverFlags get_flags ();
+		public unowned GLib.File get_location ();
+		public Gtk.SourceNewlineType get_newline_type ();
+		public async bool save_async (int io_priority, GLib.Cancellable? cancellable, owned GLib.FileProgressCallback? progress_callback) throws GLib.Error;
+		public void set_compression_type (Gtk.SourceCompressionType compression_type);
+		public void set_encoding (Gtk.SourceEncoding? encoding);
+		public void set_flags (Gtk.SourceFileSaverFlags flags);
+		public void set_newline_type (Gtk.SourceNewlineType newline_type);
+		[CCode (has_construct_function = false)]
+		public SourceFileSaver.with_target (Gtk.SourceBuffer buffer, Gtk.SourceFile file, GLib.File target_location);
+		public Gtk.SourceBuffer buffer { get; construct; }
+		public Gtk.SourceCompressionType compression_type { get; set construct; }
+		public Gtk.SourceEncoding encoding { get; set construct; }
+		public Gtk.SourceFile file { get; construct; }
+		public Gtk.SourceFileSaverFlags flags { get; set construct; }
+		public GLib.File location { get; construct; }
+		public Gtk.SourceNewlineType newline_type { get; set construct; }
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_gutter_get_type ()")]
 	[GIR (name = "Gutter")]
@@ -674,6 +758,12 @@ namespace Gtk {
 		INTERACTIVE,
 		USER_REQUESTED
 	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_COMPRESSION_TYPE_", type_id = "gtk_source_compression_type_get_type ()")]
+	[GIR (name = "CompressionType")]
+	public enum SourceCompressionType {
+		NONE,
+		GZIP
+	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_DRAW_SPACES_", type_id = "gtk_source_draw_spaces_flags_get_type ()")]
 	[Flags]
 	[GIR (name = "DrawSpacesFlags")]
@@ -686,6 +776,15 @@ namespace Gtk {
 		TEXT,
 		TRAILING,
 		ALL
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_FILE_SAVER_FLAGS_", type_id = "gtk_source_file_saver_flags_get_type ()")]
+	[Flags]
+	[GIR (name = "FileSaverFlags")]
+	public enum SourceFileSaverFlags {
+		NONE,
+		IGNORE_INVALID_CHARS,
+		IGNORE_MODIFICATION_TIME,
+		CREATE_BACKUP
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_GUTTER_RENDERER_ALIGNMENT_MODE_", type_id = "gtk_source_gutter_renderer_alignment_mode_get_type ()")]
 	[GIR (name = "GutterRendererAlignmentMode")]
@@ -702,6 +801,13 @@ namespace Gtk {
 		CURSOR,
 		PRELIT,
 		SELECTED
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_NEWLINE_TYPE_", type_id = "gtk_source_newline_type_get_type ()")]
+	[GIR (name = "NewlineType")]
+	public enum SourceNewlineType {
+		LF,
+		CR,
+		CR_LF
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_SMART_HOME_END_", type_id = "gtk_source_smart_home_end_type_get_type ()")]
 	[GIR (name = "SmartHomeEndType")]
@@ -725,4 +831,23 @@ namespace Gtk {
 		[CCode (cname = "gtk_source_completion_error_quark")]
 		public static GLib.Quark uark ();
 	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_FILE_LOADER_ERROR_")]
+	[GIR (name = "FileLoaderError")]
+	public errordomain SourceFileLoaderError {
+		TOO_BIG,
+		ENCODING_AUTO_DETECTION_FAILED,
+		CONVERSION_FALLBACK;
+		[CCode (cname = "gtk_source_file_loader_error_quark")]
+		public static GLib.Quark uark ();
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_FILE_SAVER_ERROR_")]
+	[GIR (name = "FileSaverError")]
+	public errordomain SourceFileSaverError {
+		INVALID_CHARS,
+		EXTERNALLY_MODIFIED;
+		[CCode (cname = "gtk_source_file_saver_error_quark")]
+		public static GLib.Quark uark ();
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", has_target = false)]
+	public delegate void SourceEncodingForeachFunc (Gtk.SourceEncoding encoding, void* userdata);
 }

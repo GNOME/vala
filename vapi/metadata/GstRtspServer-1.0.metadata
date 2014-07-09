@@ -1,7 +1,6 @@
 * parent="Gst.RTSPServer"
 RTSP* name="RTSP(.+)"
 rtsp_* name="rtsp_(.+)"
-RTSP_* name="RTSP_(.+)"
 
 RTSP_ADDRESS_POOL_* parent="Gst.RTSPServer.AddressPool" name="RTSP_ADDRESS_POOL_(.+)"
 RTSP_AUTH_* parent="Gst.RTSPServer.Auth" name="RTSP_AUTH_(.+)"

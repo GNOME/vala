@@ -6676,6 +6676,7 @@ namespace Clutter {
 		public bool use_fog { get; set; }
 		public bool user_resizable { get; set; }
 		public virtual signal void activate ();
+		public signal void after_paint ();
 		public virtual signal void deactivate ();
 		public virtual signal bool delete_event (Clutter.Event event);
 		public virtual signal void fullscreen ();

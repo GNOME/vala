@@ -48,6 +48,7 @@ namespace GI {
 		public static bool can_throw_gerror (GI.CallableInfo info);
 		public static GI.ArgInfo get_arg (GI.CallableInfo info, int n);
 		public static GI.Transfer get_caller_owns (GI.CallableInfo info);
+		public static GI.Transfer get_instance_ownership_transfer (GI.CallableInfo info);
 		public static int get_n_args (GI.CallableInfo info);
 		public static unowned string get_return_attribute (GI.CallableInfo info, string name);
 		public static GI.TypeInfo get_return_type (GI.CallableInfo info);

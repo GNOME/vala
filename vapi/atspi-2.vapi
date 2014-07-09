@@ -51,7 +51,7 @@ namespace Atspi {
 		public string get_localized_role_name () throws GLib.Error;
 		public string get_name () throws GLib.Error;
 		public unowned string get_object_locale () throws GLib.Error;
-		public Atspi.Accessible get_parent () throws GLib.Error;
+		public Atspi.Accessible? get_parent () throws GLib.Error;
 		public uint get_process_id () throws GLib.Error;
 		public GLib.Array<Atspi.Accessible> get_relation_set () throws GLib.Error;
 		public Atspi.Role get_role () throws GLib.Error;
@@ -236,7 +236,7 @@ namespace Atspi {
 	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_component_get_type ()")]
 	public interface Component : GLib.Object {
 		public bool contains (int x, int y, Atspi.CoordType ctype) throws GLib.Error;
-		public Atspi.Accessible get_accessible_at_point (int x, int y, Atspi.CoordType ctype) throws GLib.Error;
+		public Atspi.Accessible? get_accessible_at_point (int x, int y, Atspi.CoordType ctype) throws GLib.Error;
 		public double get_alpha () throws GLib.Error;
 		public Atspi.Rect get_extents (Atspi.CoordType ctype) throws GLib.Error;
 		public Atspi.ComponentLayer get_layer () throws GLib.Error;
@@ -271,7 +271,7 @@ namespace Atspi {
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_hypertext_get_type ()")]
 	public interface Hypertext : GLib.Object {
-		public Atspi.Hyperlink get_link (int link_index) throws GLib.Error;
+		public Atspi.Hyperlink? get_link (int link_index) throws GLib.Error;
 		public int get_link_index (int character_offset) throws GLib.Error;
 		public int get_n_links () throws GLib.Error;
 	}
@@ -339,7 +339,7 @@ namespace Atspi {
 		public bool add_selection (int start_offset, int end_offset) throws GLib.Error;
 		public GLib.HashTable<string,string> get_attribute_run (int offset, bool include_defaults, out int start_offset, out int end_offset) throws GLib.Error;
 		[Deprecated (since = "2.10")]
-		public string get_attribute_value (int offset, string attribute_name) throws GLib.Error;
+		public string? get_attribute_value (int offset, string attribute_name) throws GLib.Error;
 		[Deprecated (since = "2.10")]
 		public GLib.HashTable<string,string> get_attributes (int offset, out int start_offset, out int end_offset) throws GLib.Error;
 		public GLib.Array<Atspi.TextRange> get_bounded_ranges (int x, int y, int width, int height, Atspi.CoordType type, Atspi.TextClipType clipTypeX, Atspi.TextClipType clipTypeY) throws GLib.Error;
@@ -357,7 +357,7 @@ namespace Atspi {
 		public Atspi.TextRange get_text_after_offset (int offset, Atspi.TextBoundaryType type) throws GLib.Error;
 		[Deprecated (since = "2.10")]
 		public Atspi.TextRange get_text_at_offset (int offset, Atspi.TextBoundaryType type) throws GLib.Error;
-		public string get_text_attribute_value (int offset, string attribute_name) throws GLib.Error;
+		public string? get_text_attribute_value (int offset, string attribute_name) throws GLib.Error;
 		public GLib.HashTable<string,string> get_text_attributes (int offset, out int start_offset, out int end_offset) throws GLib.Error;
 		public Atspi.TextRange get_text_before_offset (int offset, Atspi.TextBoundaryType type) throws GLib.Error;
 		public bool remove_selection (int selection_num) throws GLib.Error;

@@ -13,6 +13,124 @@ namespace Gst {
 		[GIR (name = "MIKEYEncryptInfo")]
 		public class MIKEYEncryptInfo {
 		}
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYMessage", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_mikey_message_", type_id = "gst_mikey_message_get_type ()")]
+		[Compact]
+		[GIR (name = "MIKEYMessage")]
+		public class MIKEYMessage : Gst.MiniObject {
+			public uint32 CSB_id;
+			public bool V;
+			public weak GLib.Array<void*> map_info;
+			public Gst.SDP.MIKEYMapType map_type;
+			public weak GLib.Array<void*> payloads;
+			public Gst.SDP.MIKEYPRFFunc prf_func;
+			public Gst.SDP.MIKEYType type;
+			public uint8 version;
+			[CCode (has_construct_function = false)]
+			public MIKEYMessage ();
+			public bool add_cs_srtp (uint8 policy, uint32 ssrc, uint32 roc);
+			public bool add_payload (owned Gst.SDP.MIKEYPayload payload);
+			public bool add_pke (Gst.SDP.MIKEYCacheType C, [CCode (array_length_cname = "data_len", array_length_pos = 1.5, array_length_type = "guint16")] uint8[] data);
+			public bool add_rand ([CCode (array_length_cname = "len", array_length_pos = 0.5, array_length_type = "guint8")] uint8[] rand);
+			public bool add_rand_len (uint8 len);
+			public bool add_t (Gst.SDP.MIKEYTSType type, [CCode (array_length = false)] uint8[] ts_value);
+			public bool add_t_now_ntp_utc ();
+			public unowned Gst.SDP.MIKEYPayload find_payload (Gst.SDP.MIKEYPayloadType type, uint nth);
+			[CCode (has_construct_function = false)]
+			public MIKEYMessage.from_bytes (GLib.Bytes bytes, Gst.SDP.MIKEYDecryptInfo info) throws GLib.Error;
+			[CCode (has_construct_function = false)]
+			public MIKEYMessage.from_data ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] data, Gst.SDP.MIKEYDecryptInfo info) throws GLib.Error;
+			public unowned Gst.SDP.MIKEYMapSRTP? get_cs_srtp (uint idx);
+			public uint get_n_cs ();
+			public uint get_n_payloads ();
+			public unowned Gst.SDP.MIKEYPayload get_payload (uint idx);
+			public bool insert_cs_srtp (int idx, Gst.SDP.MIKEYMapSRTP map);
+			public bool insert_payload (uint idx, owned Gst.SDP.MIKEYPayload payload);
+			public bool remove_cs_srtp (int idx);
+			public bool remove_payload (uint idx);
+			public bool replace_cs_srtp (int idx, Gst.SDP.MIKEYMapSRTP map);
+			public bool replace_payload (uint idx, owned Gst.SDP.MIKEYPayload payload);
+			public bool set_info (uint8 version, Gst.SDP.MIKEYType type, bool V, Gst.SDP.MIKEYPRFFunc prf_func, uint32 CSB_id, Gst.SDP.MIKEYMapType map_type);
+			public GLib.Bytes to_bytes (Gst.SDP.MIKEYEncryptInfo info) throws GLib.Error;
+		}
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayload", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_mikey_payload_", type_id = "gst_mikey_payload_get_type ()")]
+		[Compact]
+		[GIR (name = "MIKEYPayload")]
+		public class MIKEYPayload : Gst.MiniObject {
+			public uint len;
+			public Gst.SDP.MIKEYPayloadType type;
+			[CCode (has_construct_function = false)]
+			public MIKEYPayload (Gst.SDP.MIKEYPayloadType type);
+			public bool kemac_add_sub (owned Gst.SDP.MIKEYPayload newpay);
+			public uint kemac_get_n_sub ();
+			public unowned Gst.SDP.MIKEYPayload kemac_get_sub (uint idx);
+			public bool kemac_remove_sub (uint idx);
+			public bool kemac_set (Gst.SDP.MIKEYEncAlg enc_alg, Gst.SDP.MIKEYMacAlg mac_alg);
+			public bool key_data_set_interval (uint8 vf_len, [CCode (array_length_cname = "vt_len", array_length_pos = 1.66667, array_length_type = "guint8")] uint8[] vt_data);
+			public bool key_data_set_key (Gst.SDP.MIKEYKeyDataType key_type, [CCode (array_length_cname = "key_len", array_length_pos = 1.5, array_length_type = "guint16")] uint8[] key_data);
+			public bool key_data_set_salt ([CCode (array_length_cname = "salt_len", array_length_pos = 0.5, array_length_type = "guint16")] uint8[]? salt_data);
+			public bool key_data_set_spi ([CCode (array_length_cname = "spi_len", array_length_pos = 0.5, array_length_type = "guint8")] uint8[] spi_data);
+			public bool pke_set (Gst.SDP.MIKEYCacheType C, [CCode (array_length_cname = "data_len", array_length_pos = 1.5, array_length_type = "guint16")] uint8[] data);
+			public bool rand_set ([CCode (array_length_cname = "len", array_length_pos = 0.5, array_length_type = "guint8")] uint8[] rand);
+			public bool sp_add_param (uint8 type, [CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "guint8")] uint8[] val);
+			public uint sp_get_n_params ();
+			public unowned Gst.SDP.MIKEYPayloadSPParam? sp_get_param (uint idx);
+			public bool sp_remove_param (uint idx);
+			public bool sp_set (uint policy, Gst.SDP.MIKEYSecProto proto);
+			public bool t_set (Gst.SDP.MIKEYTSType type, [CCode (array_length = false)] uint8[] ts_value);
+		}
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadKEMAC")]
+		[Compact]
+		[GIR (name = "MIKEYPayloadKEMAC")]
+		public class MIKEYPayloadKEMAC : Gst.SDP.MIKEYPayload {
+			public Gst.SDP.MIKEYEncAlg enc_alg;
+			public Gst.SDP.MIKEYMacAlg mac_alg;
+			public weak GLib.Array<void*> subpayloads;
+		}
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadKeyData")]
+		[Compact]
+		[GIR (name = "MIKEYPayloadKeyData")]
+		public class MIKEYPayloadKeyData : Gst.SDP.MIKEYPayload {
+			public uint8 key_data;
+			public uint16 key_len;
+			public Gst.SDP.MIKEYKeyDataType key_type;
+			[CCode (array_length = false, array_null_terminated = true)]
+			public weak uint8[] kv_data;
+			[CCode (array_length = false, array_null_terminated = true)]
+			public weak uint8[] kv_len;
+			public Gst.SDP.MIKEYKVType kv_type;
+			public uint8 salt_data;
+			public uint16 salt_len;
+		}
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadPKE")]
+		[Compact]
+		[GIR (name = "MIKEYPayloadPKE")]
+		public class MIKEYPayloadPKE : Gst.SDP.MIKEYPayload {
+			public Gst.SDP.MIKEYCacheType C;
+			public uint8 data;
+			public uint16 data_len;
+		}
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadRAND")]
+		[Compact]
+		[GIR (name = "MIKEYPayloadRAND")]
+		public class MIKEYPayloadRAND : Gst.SDP.MIKEYPayload {
+			public uint8 len;
+			public uint8 rand;
+		}
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadSP")]
+		[Compact]
+		[GIR (name = "MIKEYPayloadSP")]
+		public class MIKEYPayloadSP : Gst.SDP.MIKEYPayload {
+			public weak GLib.Array<void*> @params;
+			public uint policy;
+			public Gst.SDP.MIKEYSecProto proto;
+		}
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadT")]
+		[Compact]
+		[GIR (name = "MIKEYPayloadT")]
+		public class MIKEYPayloadT : Gst.SDP.MIKEYPayload {
+			public uint8 ts_value;
+			public Gst.SDP.MIKEYTSType type;
+		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_sdp_message_get_type ()")]
 		[Compact]
 		[GIR (name = "SDPMessage")]
@@ -133,162 +251,12 @@ namespace Gst {
 			public uint32 ssrc;
 			public uint32 roc;
 		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYMessage", has_type_id = false)]
-		[GIR (name = "MIKEYMessage")]
-		public struct MIKEYMessage {
-			public uint8 version;
-			public Gst.SDP.MIKEYType type;
-			public bool V;
-			public Gst.SDP.MIKEYPRFFunc prf_func;
-			public uint32 CSB_id;
-			public Gst.SDP.MIKEYMapType map_type;
-			public weak GLib.Array<void*> map_info;
-			public weak GLib.Array<void*> payloads;
-			[CCode (cname = "gst_mikey_message_add_cs_srtp")]
-			public bool add_cs_srtp (uint8 policy, uint32 ssrc, uint32 roc);
-			[CCode (cname = "gst_mikey_message_add_payload")]
-			public bool add_payload (Gst.SDP.MIKEYPayload payload);
-			[CCode (cname = "gst_mikey_message_add_pke")]
-			public bool add_pke (Gst.SDP.MIKEYCacheType C, uint16 data_len, uint8 data);
-			[CCode (cname = "gst_mikey_message_add_rand")]
-			public bool add_rand (uint8 len, uint8 rand);
-			[CCode (cname = "gst_mikey_message_add_rand_len")]
-			public bool add_rand_len (uint8 len);
-			[CCode (cname = "gst_mikey_message_add_t")]
-			public bool add_t (Gst.SDP.MIKEYTSType type, uint8 ts_value);
-			[CCode (cname = "gst_mikey_message_add_t_now_ntp_utc")]
-			public bool add_t_now_ntp_utc ();
-			[CCode (cname = "gst_mikey_message_find_payload")]
-			public unowned Gst.SDP.MIKEYPayload? find_payload (Gst.SDP.MIKEYPayloadType type, uint nth);
-			[CCode (cname = "gst_mikey_message_free")]
-			public void free ();
-			[CCode (cname = "gst_mikey_message_get_cs_srtp")]
-			public unowned Gst.SDP.MIKEYMapSRTP? get_cs_srtp (uint idx);
-			[CCode (cname = "gst_mikey_message_get_n_cs")]
-			public uint get_n_cs ();
-			[CCode (cname = "gst_mikey_message_get_n_payloads")]
-			public uint get_n_payloads ();
-			[CCode (cname = "gst_mikey_message_get_payload")]
-			public unowned Gst.SDP.MIKEYPayload? get_payload (uint idx);
-			[CCode (cname = "gst_mikey_message_insert_cs_srtp")]
-			public bool insert_cs_srtp (int idx, Gst.SDP.MIKEYMapSRTP map);
-			[CCode (cname = "gst_mikey_message_insert_payload")]
-			public bool insert_payload (uint idx, Gst.SDP.MIKEYPayload payload);
-			[CCode (cname = "gst_mikey_message_remove_cs_srtp")]
-			public bool remove_cs_srtp (int idx);
-			[CCode (cname = "gst_mikey_message_remove_payload")]
-			public bool remove_payload (uint idx);
-			[CCode (cname = "gst_mikey_message_replace_cs_srtp")]
-			public bool replace_cs_srtp (int idx, Gst.SDP.MIKEYMapSRTP map);
-			[CCode (cname = "gst_mikey_message_replace_payload")]
-			public bool replace_payload (uint idx, Gst.SDP.MIKEYPayload payload);
-			[CCode (cname = "gst_mikey_message_set_info")]
-			public bool set_info (uint8 version, Gst.SDP.MIKEYType type, bool V, Gst.SDP.MIKEYPRFFunc prf_func, uint32 CSB_id, Gst.SDP.MIKEYMapType map_type);
-			[CCode (cname = "gst_mikey_message_to_bytes")]
-			public GLib.Bytes to_bytes (Gst.SDP.MIKEYEncryptInfo info) throws GLib.Error;
-		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayload", has_type_id = false)]
-		[GIR (name = "MIKEYPayload")]
-		public struct MIKEYPayload {
-			public Gst.SDP.MIKEYPayloadType type;
-			public uint len;
-			public weak Gst.SDP.MIKEYPayloadClearFunc clear_func;
-			[CCode (cname = "gst_mikey_payload_free")]
-			public bool free ();
-			[CCode (cname = "gst_mikey_payload_kemac_add_sub")]
-			public bool kemac_add_sub (Gst.SDP.MIKEYPayload newpay);
-			[CCode (cname = "gst_mikey_payload_kemac_get_n_sub")]
-			public uint kemac_get_n_sub ();
-			[CCode (cname = "gst_mikey_payload_kemac_get_sub")]
-			public unowned Gst.SDP.MIKEYPayload? kemac_get_sub (uint idx);
-			[CCode (cname = "gst_mikey_payload_kemac_remove_sub")]
-			public bool kemac_remove_sub (uint idx);
-			[CCode (cname = "gst_mikey_payload_kemac_set")]
-			public bool kemac_set (Gst.SDP.MIKEYEncAlg enc_alg, Gst.SDP.MIKEYMacAlg mac_alg);
-			[CCode (cname = "gst_mikey_payload_key_data_set_interval")]
-			public bool key_data_set_interval (uint8 vf_len, uint8 vf_data, uint8 vt_len, uint8 vt_data);
-			[CCode (cname = "gst_mikey_payload_key_data_set_key")]
-			public bool key_data_set_key (Gst.SDP.MIKEYKeyDataType key_type, uint16 key_len, uint8 key_data);
-			[CCode (cname = "gst_mikey_payload_key_data_set_salt")]
-			public bool key_data_set_salt (uint16 salt_len, uint8 salt_data);
-			[CCode (cname = "gst_mikey_payload_key_data_set_spi")]
-			public bool key_data_set_spi (uint8 spi_len, uint8 spi_data);
-			[CCode (cname = "gst_mikey_payload_pke_set")]
-			public bool pke_set (Gst.SDP.MIKEYCacheType C, uint16 data_len, uint8 data);
-			[CCode (cname = "gst_mikey_payload_rand_set")]
-			public bool rand_set (uint8 len, uint8 rand);
-			[CCode (cname = "gst_mikey_payload_sp_add_param")]
-			public bool sp_add_param (uint8 type, uint8 len, uint8 val);
-			[CCode (cname = "gst_mikey_payload_sp_get_n_params")]
-			public uint sp_get_n_params ();
-			[CCode (cname = "gst_mikey_payload_sp_get_param")]
-			public unowned Gst.SDP.MIKEYPayloadSPParam? sp_get_param (uint idx);
-			[CCode (cname = "gst_mikey_payload_sp_remove_param")]
-			public bool sp_remove_param (uint idx);
-			[CCode (cname = "gst_mikey_payload_sp_set")]
-			public bool sp_set (uint policy, Gst.SDP.MIKEYSecProto proto);
-			[CCode (cname = "gst_mikey_payload_t_set")]
-			public bool t_set (Gst.SDP.MIKEYTSType type, uint8 ts_value);
-		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadKEMAC", has_type_id = false)]
-		[GIR (name = "MIKEYPayloadKEMAC")]
-		public struct MIKEYPayloadKEMAC {
-			public Gst.SDP.MIKEYPayload pt;
-			public Gst.SDP.MIKEYEncAlg enc_alg;
-			public Gst.SDP.MIKEYMacAlg mac_alg;
-			public weak GLib.Array<void*> subpayloads;
-		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadKeyData", has_type_id = false)]
-		[GIR (name = "MIKEYPayloadKeyData")]
-		public struct MIKEYPayloadKeyData {
-			public Gst.SDP.MIKEYPayload pt;
-			public Gst.SDP.MIKEYKeyDataType key_type;
-			public uint16 key_len;
-			public uint8 key_data;
-			public uint16 salt_len;
-			public uint8 salt_data;
-			public Gst.SDP.MIKEYKVType kv_type;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak uint8[] kv_len;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak uint8[] kv_data;
-		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadPKE", has_type_id = false)]
-		[GIR (name = "MIKEYPayloadPKE")]
-		public struct MIKEYPayloadPKE {
-			public Gst.SDP.MIKEYPayload pt;
-			public Gst.SDP.MIKEYCacheType C;
-			public uint16 data_len;
-			public uint8 data;
-		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadRAND", has_type_id = false)]
-		[GIR (name = "MIKEYPayloadRAND")]
-		public struct MIKEYPayloadRAND {
-			public Gst.SDP.MIKEYPayload pt;
-			public uint8 len;
-			public uint8 rand;
-		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadSP", has_type_id = false)]
-		[GIR (name = "MIKEYPayloadSP")]
-		public struct MIKEYPayloadSP {
-			public Gst.SDP.MIKEYPayload pt;
-			public uint policy;
-			public Gst.SDP.MIKEYSecProto proto;
-			public weak GLib.Array<void*> @params;
-		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadSPParam", has_type_id = false)]
 		[GIR (name = "MIKEYPayloadSPParam")]
 		public struct MIKEYPayloadSPParam {
 			public uint8 type;
 			public uint8 len;
 			public uint8 val;
-		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadT", has_type_id = false)]
-		[GIR (name = "MIKEYPayloadT")]
-		public struct MIKEYPayloadT {
-			public Gst.SDP.MIKEYPayload pt;
-			public Gst.SDP.MIKEYTSType type;
-			public uint8 ts_value;
 		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", has_type_id = false)]
 		[GIR (name = "SDPMedia")]
@@ -485,8 +453,6 @@ namespace Gst {
 			OK,
 			EINVAL
 		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadClearFunc", has_target = false)]
-		public delegate void MIKEYPayloadClearFunc (Gst.SDP.MIKEYPayload payload);
 		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GST_SDP_BWTYPE_AS")]
 		public const string BWTYPE_AS;
 		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GST_SDP_BWTYPE_CT")]

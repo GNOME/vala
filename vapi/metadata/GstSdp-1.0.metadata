@@ -4,3 +4,22 @@ SDP_* name="SDP_(.+)"
 sdp_* name="sdp_(.+)"
 
 SDPMessage struct=false
+
+// Gst.MiniObject inheritance
+MIKEYPayload base_type="Gst.MiniObject"
+  .mini_object skip
+MIKEYMessage base_type="Gst.MiniObject"
+  .mini_object skip
+
+MIKEYPayloadKEMAC struct=false base_type="MIKEYPayload"
+  .pt skip
+MIKEYPayloadKeyData struct=false base_type="MIKEYPayload"
+  .pt skip
+MIKEYPayloadPKE struct=false base_type="MIKEYPayload"
+  .pt skip
+MIKEYPayloadRAND struct=false base_type="MIKEYPayload"
+  .pt skip
+MIKEYPayloadSP struct=false base_type="MIKEYPayload"
+  .pt skip
+MIKEYPayloadT struct=false base_type="MIKEYPayload"
+  .pt skip

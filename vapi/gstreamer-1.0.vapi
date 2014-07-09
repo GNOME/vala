@@ -939,12 +939,10 @@ namespace Gst {
 	public class DeviceMonitor : Gst.Object {
 		[CCode (has_construct_function = false)]
 		public DeviceMonitor ();
+		public uint add_filter (string? classes, Gst.Caps? caps);
 		public Gst.Bus get_bus ();
-		public Gst.Caps get_caps_filter ();
-		public string get_classes_filter ();
 		public GLib.List<Gst.Device> get_devices ();
-		public void set_caps_filter (Gst.Caps caps);
-		public void set_classes_filter (string classes);
+		public bool remove_filter (uint filter_id);
 		public bool start ();
 		public void stop ();
 	}
@@ -956,7 +954,7 @@ namespace Gst {
 		[CCode (cname = "gst_device_provider_class_add_metadata")]
 		public class void add_metadata (string key, string value);
 		[CCode (cname = "gst_device_provider_class_add_static_metadata")]
-		public class void add_static_metadata (string key, string value);
+		public class void add_static_metadata (string key, owned string value);
 		public bool can_monitor ();
 		public void device_add (owned Gst.Device device);
 		public void device_remove (Gst.Device device);
@@ -969,7 +967,7 @@ namespace Gst {
 		[CCode (cname = "gst_device_provider_class_set_metadata")]
 		public class void set_metadata (string longname, string classification, string description, string author);
 		[CCode (cname = "gst_device_provider_class_set_static_metadata")]
-		public class void set_static_metadata (string longname, string classification, string description, string author);
+		public class void set_static_metadata (owned string longname, owned string classification, owned string description, owned string author);
 		public virtual bool start ();
 		public virtual void stop ();
 	}
@@ -984,9 +982,9 @@ namespace Gst {
 		public unowned string? get_metadata (string key);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[]? get_metadata_keys ();
-		public bool has_classes (string classes);
-		public bool has_classesv ([CCode (array_length = false, array_null_terminated = true)] string[] classes);
-		public static GLib.List<Gst.DeviceProviderFactory> list_get_device_providers (string classes, Gst.Rank minrank);
+		public bool has_classes (string? classes);
+		public bool has_classesv ([CCode (array_length = false, array_null_terminated = true)] string[]? classes);
+		public static GLib.List<Gst.DeviceProviderFactory> list_get_device_providers (Gst.Rank minrank);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_double_range_get_type ()")]
 	public class DoubleRange {
