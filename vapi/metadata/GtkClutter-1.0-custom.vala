@@ -1,6 +1,6 @@
 namespace GtkClutter {
 	public errordomain TextureError {
-		[Deprecated (since = "vala-0.16", replacement = "INVALID_STOCK_ID")]
+		[Version (deprecated_since = "vala-0.16", replacement = "INVALID_STOCK_ID")]
 		[CCode (cname = "GTK_CLUTTER_TEXTURE_ERROR_INVALID_STOCK_ID")]
 		ID
 	}
