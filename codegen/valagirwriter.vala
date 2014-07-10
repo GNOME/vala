@@ -282,11 +282,14 @@ public class Vala.GIRWriter : CodeVisitor {
 	}
 
 	private void write_symbol_attributes (Symbol symbol) {
-		if (symbol.deprecated) {
-			buffer.append_printf (" deprecated=\"%s\"", (symbol.replacement == null) ? "" : "Use %s".printf (symbol.replacement));
-			if (symbol.deprecated_since != null) {
-				buffer.append_printf (" deprecated-version=\"%s\"", symbol.deprecated_since);
+		if (symbol.version.deprecated) {
+			buffer.append_printf (" deprecated=\"%s\"", (symbol.version.replacement == null) ? "" : "Use %s".printf (symbol.version.replacement));
+			if (symbol.version.deprecated_since != null) {
+				buffer.append_printf (" deprecated-version=\"%s\"", symbol.version.deprecated_since);
 			}
+		}
+		if (symbol.version.since != null) {
+			buffer.append_printf (" version=\"%s\"", symbol.version.since);
 		}
 	}
 

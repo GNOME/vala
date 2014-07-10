@@ -37,6 +37,70 @@ public class Vala.SourceFile {
 		}
 	}
 
+	private string _package_name;
+
+	public string? package_name {
+		get {
+			if (file_type != SourceFileType.PACKAGE) {
+				return null;
+			}
+
+			if (_package_name == null) {
+				_package_name = Path.get_basename (filename[0:filename.last_index_of_char ('.')]);
+			}
+
+			return _package_name;
+		}
+		set {
+			_package_name = value;
+		}
+	}
+
+	private string? _installed_version = null;
+	private bool _version_requested = false;
+
+	/**
+	 * The installed package version or null
+	 */
+	public string? installed_version {
+		get {
+			if (_version_requested) {
+				return _installed_version;
+			}
+
+			_version_requested = true;
+
+			string pkg_config_name = package_name;
+			if (pkg_config_name == null) {
+				return null;
+			}
+
+			string? standard_output;
+			int exit_status;
+
+			try {
+				Process.spawn_command_line_sync ("pkg-config --silence-errors --modversion %s".printf (pkg_config_name), out standard_output, null, out exit_status);
+				if (exit_status != 0) {
+					return null;
+				}
+			} catch (GLib.SpawnError err) {
+				return null;
+			}
+
+			standard_output = standard_output[0:-1];
+			if (standard_output != "") {
+				_installed_version = standard_output;
+			}
+
+			return _installed_version;
+		}
+		set {
+			_version_requested = value != null;
+			_installed_version = value;
+		}
+	}
+
+
 	/**
 	 * Specifies whether this file is a VAPI package file.
 	 */

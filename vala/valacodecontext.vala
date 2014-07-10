@@ -47,6 +47,11 @@ public class Vala.CodeContext {
 	public bool hide_internal { get; set; }
 
 	/**
+	 * Do not check whether used symbols exist in local packages.
+	 */
+	public bool since_check { get; set; }
+
+	/**
 	 * Do not warn when using experimental features.
 	 */
 	public bool experimental { get; set; }

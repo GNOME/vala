@@ -257,7 +257,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 				// track usage for flow analyzer
 				symbol_reference.used = true;
-				symbol_reference.check_deprecated (source_reference);
+				symbol_reference.version.check (source_reference);
 			}
 
 			if (symbol_reference != null && symbol_reference.access == SymbolAccessibility.PRIVATE) {

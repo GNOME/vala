@@ -694,8 +694,7 @@ public class Vala.MemberAccess : Expression {
 		}
 
 		member.used = true;
-		member.check_deprecated (source_reference);
-		member.check_experimental (source_reference);
+		member.version.check (source_reference);
 
 		if (access == SymbolAccessibility.PROTECTED) {
 			var target_type = (TypeSymbol) member.parent_symbol;
