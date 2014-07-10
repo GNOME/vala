@@ -292,16 +292,22 @@ class Vala.Compiler {
 		context.codegen = new GDBusServerModule ();
 
 		bool has_c_files = false;
+		bool has_h_files = false;
 
 		foreach (string source in sources) {
 			if (context.add_source_filename (source, run_output, true)) {
 				if (source.has_suffix (".c")) {
 					has_c_files = true;
+				} else if (source.has_suffix (".h")) {
+					has_h_files = true;
 				}
 			}
 		}
 		sources = null;
-		
+		if (ccode_only && (has_c_files || has_h_files)) {
+			Report.warning (null, "C header and source files are ignored when -C or --ccode is set");
+		}
+
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
 		}
