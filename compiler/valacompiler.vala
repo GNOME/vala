@@ -188,6 +188,9 @@ class Vala.Compiler {
 		context.version_header = !disable_version_header;
 
 		context.ccode_only = ccode_only;
+		if (ccode_only && cc_options != null) {
+			Report.warning (null, "-X has no effect when -C or --ccode is set");
+		}
 		context.compile_only = compile_only;
 		context.header_filename = header_filename;
 		if (header_filename == null && use_header) {
