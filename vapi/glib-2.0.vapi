@@ -4198,7 +4198,7 @@ namespace GLib {
 			return ht;
 		}
 		public uint length {
-			[CCode (cname = "g_hash_table_get_size")]
+			[CCode (cname = "g_hash_table_size")]
 			get;
 		}
 	}
@@ -4227,7 +4227,7 @@ namespace GLib {
 			((GLib.HashTable<unowned T,T>) this).foreach ((k, v) => func (v));
 		}
 		public uint length {
-			[CCode (cname = "g_hash_table_get_size")]
+			[CCode (cname = "g_hash_table_size")]
 			get;
 		}
 	}
