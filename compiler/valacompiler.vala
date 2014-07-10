@@ -201,6 +201,9 @@ class Vala.Compiler {
 		context.symbols_filename = symbols_filename;
 		context.includedir = includedir;
 		context.output = output;
+		if (output != null && ccode_only) {
+			Report.warning (null, "--output and -o have no effect when -C or --ccode is set");
+		}
 		if (basedir == null) {
 			context.basedir = CodeContext.realpath (".");
 		} else {
