@@ -400,7 +400,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoInfo")]
 		public struct Info {
-			public Gst.Video.FormatInfo? finfo;
+			public weak Gst.Video.FormatInfo? finfo;
 			public Gst.Video.InterlaceMode interlace_mode;
 			public Gst.Video.Flags flags;
 			public int width;

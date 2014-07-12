@@ -23,7 +23,7 @@ VideoCodecFrame
   .abidata skip
 
 VideoInfo
-  .finfo nullable unowned=false
+  .finfo nullable
 
 VideoChromaResample skip
 video_chroma_resample skip
