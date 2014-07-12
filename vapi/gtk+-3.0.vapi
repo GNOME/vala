@@ -7493,7 +7493,7 @@ namespace Gtk {
 		public bool begins_tag (Gtk.TextTag? tag);
 		public bool can_insert (bool default_editability);
 		public int compare (Gtk.TextIter rhs);
-		public Gtk.TextIter copy ();
+		public Gtk.TextIter? copy ();
 		public bool editable (bool default_setting);
 		public bool ends_line ();
 		public bool ends_sentence ();
