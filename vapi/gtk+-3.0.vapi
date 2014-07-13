@@ -592,12 +592,14 @@ namespace Gtk {
 		public string get_accels_for_action (string detailed_action_name);
 		public unowned Gtk.Window get_active_window ();
 		public unowned GLib.MenuModel get_app_menu ();
+		public unowned GLib.Menu get_menu_by_id (string id);
 		public unowned GLib.MenuModel get_menubar ();
 		public unowned Gtk.Window get_window_by_id (uint id);
 		public unowned GLib.List<weak Gtk.Window> get_windows ();
 		public uint inhibit (Gtk.Window? window, Gtk.ApplicationInhibitFlags flags, string? reason);
 		public bool is_inhibited (Gtk.ApplicationInhibitFlags flags);
 		public string list_action_descriptions ();
+		public bool prefers_app_menu ();
 		public void remove_accelerator (string action_name, GLib.Variant? parameter);
 		public void remove_window (Gtk.Window window);
 		public void set_accels_for_action (string detailed_action_name, [CCode (array_length = false, array_null_terminated = true)] string[] accels);
@@ -6962,13 +6964,13 @@ namespace Gtk {
 		[CCode (cname = "activate_default")]
 		[Experimental]
 		public virtual signal void default_activated ();
+		public virtual signal void enable_debugging (bool toggle);
 		[CCode (cname = "activate_focus")]
 		[Experimental]
 		public virtual signal void focus_activated ();
 		public virtual signal void keys_changed ();
 		[HasEmitter]
 		public virtual signal void set_focus (Gtk.Widget? focus);
-		public virtual signal void toggle_debugging ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class WindowAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Window {
@@ -7750,7 +7752,8 @@ namespace Gtk {
 		BASELINES,
 		PIXEL_CACHE,
 		NO_PIXEL_CACHE,
-		INTERACTIVE
+		INTERACTIVE,
+		TOUCHSCREEN
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DELETE_")]
 	public enum DeleteType {
@@ -9187,6 +9190,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_OSD;
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_OVERSHOOT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_PANE_SEPARATOR;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_POPOVER;
@@ -9231,7 +9236,11 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_SPINNER;
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_SUBTITLE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_SUGGESTED_ACTION;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_TITLE;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_TITLEBAR;
 	[CCode (cheader_filename = "gtk/gtk.h")]

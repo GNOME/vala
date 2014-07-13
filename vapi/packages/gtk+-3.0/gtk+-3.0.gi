@@ -5272,6 +5272,7 @@
 			<member name="GTK_DEBUG_PIXEL_CACHE" value="32768"/>
 			<member name="GTK_DEBUG_NO_PIXEL_CACHE" value="65536"/>
 			<member name="GTK_DEBUG_INTERACTIVE" value="131072"/>
+			<member name="GTK_DEBUG_TOUCHSCREEN" value="262144"/>
 		</flags>
 		<flags name="GtkDestDefaults" type-name="GtkDestDefaults" get-type="gtk_dest_defaults_get_type">
 			<member name="GTK_DEST_DEFAULT_MOTION" value="1"/>
@@ -7018,6 +7019,13 @@
 					<parameter name="application" type="GtkApplication*"/>
 				</parameters>
 			</method>
+			<method name="get_menu_by_id" symbol="gtk_application_get_menu_by_id">
+				<return-type type="GMenu*"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+					<parameter name="id" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="get_menubar" symbol="gtk_application_get_menubar">
 				<return-type type="GMenuModel*"/>
 				<parameters>
@@ -7066,6 +7074,12 @@
 					<parameter name="flags" type="GApplicationFlags"/>
 				</parameters>
 			</constructor>
+			<method name="prefers_app_menu" symbol="gtk_application_prefers_app_menu">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+				</parameters>
+			</method>
 			<method name="remove_accelerator" symbol="gtk_application_remove_accelerator">
 				<return-type type="void"/>
 				<parameters>
@@ -32228,6 +32242,13 @@
 					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
 			</signal>
+			<signal name="enable-debugging" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GtkWindow*"/>
+					<parameter name="toggle" type="gboolean"/>
+				</parameters>
+			</signal>
 			<signal name="keys-changed" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -32239,12 +32260,6 @@
 				<parameters>
 					<parameter name="window" type="GtkWindow*"/>
 					<parameter name="focus" type="GtkWidget*"/>
-				</parameters>
-			</signal>
-			<signal name="toggle-debugging" when="LAST">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
 			</signal>
 		</object>
@@ -35021,6 +35036,7 @@
 		<constant name="GTK_STYLE_CLASS_NEEDS_ATTENTION" type="char*" value="needs-attention"/>
 		<constant name="GTK_STYLE_CLASS_NOTEBOOK" type="char*" value="notebook"/>
 		<constant name="GTK_STYLE_CLASS_OSD" type="char*" value="osd"/>
+		<constant name="GTK_STYLE_CLASS_OVERSHOOT" type="char*" value="overshoot"/>
 		<constant name="GTK_STYLE_CLASS_PANE_SEPARATOR" type="char*" value="pane-separator"/>
 		<constant name="GTK_STYLE_CLASS_POPOVER" type="char*" value="popover"/>
 		<constant name="GTK_STYLE_CLASS_POPUP" type="char*" value="popup"/>
@@ -35043,7 +35059,9 @@
 		<constant name="GTK_STYLE_CLASS_SLIDER" type="char*" value="slider"/>
 		<constant name="GTK_STYLE_CLASS_SPINBUTTON" type="char*" value="spinbutton"/>
 		<constant name="GTK_STYLE_CLASS_SPINNER" type="char*" value="spinner"/>
+		<constant name="GTK_STYLE_CLASS_SUBTITLE" type="char*" value="subtitle"/>
 		<constant name="GTK_STYLE_CLASS_SUGGESTED_ACTION" type="char*" value="suggested-action"/>
+		<constant name="GTK_STYLE_CLASS_TITLE" type="char*" value="title"/>
 		<constant name="GTK_STYLE_CLASS_TITLEBAR" type="char*" value="titlebar"/>
 		<constant name="GTK_STYLE_CLASS_TOOLBAR" type="char*" value="toolbar"/>
 		<constant name="GTK_STYLE_CLASS_TOOLTIP" type="char*" value="tooltip"/>
