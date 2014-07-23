@@ -1,3 +1,15 @@
+Vala 0.25.1
+===========
+
+ * Support explicit interface method implementation.
+ * Support (unowned type)[] syntax.
+ * Support non-literal length in fixed-size arrays.
+ * Mark regular expression literals as stable.
+ * GIR parser updates.
+ * Add webkit2gtk-3.0 bindings.
+ * Add gstreamer-allocators-1.0 and gstreamer-riff-1.0 bindings.
+ * Bug fixes and binding updates.
+
 Vala 0.24.0
 ===========
 
