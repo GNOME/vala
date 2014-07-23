@@ -4428,6 +4428,13 @@
 					<parameter name="pos" type="gint"/>
 				</parameters>
 			</method>
+			<method name="iter_get_state" symbol="gtk_widget_path_iter_get_state">
+				<return-type type="GtkStateFlags"/>
+				<parameters>
+					<parameter name="path" type="GtkWidgetPath*"/>
+					<parameter name="pos" type="gint"/>
+				</parameters>
+			</method>
 			<method name="iter_has_class" symbol="gtk_widget_path_iter_has_class">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -4522,6 +4529,14 @@
 					<parameter name="path" type="GtkWidgetPath*"/>
 					<parameter name="pos" type="gint"/>
 					<parameter name="type" type="GType"/>
+				</parameters>
+			</method>
+			<method name="iter_set_state" symbol="gtk_widget_path_iter_set_state">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="path" type="GtkWidgetPath*"/>
+					<parameter name="pos" type="gint"/>
+					<parameter name="state" type="GtkStateFlags"/>
 				</parameters>
 			</method>
 			<method name="length" symbol="gtk_widget_path_length">
@@ -17006,6 +17021,12 @@
 					<parameter name="row" type="GtkListBoxRow*"/>
 				</parameters>
 			</method>
+			<method name="get_activatable" symbol="gtk_list_box_row_get_activatable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="row" type="GtkListBoxRow*"/>
+				</parameters>
+			</method>
 			<method name="get_header" symbol="gtk_list_box_row_get_header">
 				<return-type type="GtkWidget*"/>
 				<parameters>
@@ -17014,6 +17035,12 @@
 			</method>
 			<method name="get_index" symbol="gtk_list_box_row_get_index">
 				<return-type type="gint"/>
+				<parameters>
+					<parameter name="row" type="GtkListBoxRow*"/>
+				</parameters>
+			</method>
+			<method name="get_selectable" symbol="gtk_list_box_row_get_selectable">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="row" type="GtkListBoxRow*"/>
 				</parameters>
@@ -17027,6 +17054,13 @@
 			<constructor name="new" symbol="gtk_list_box_row_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
+			<method name="set_activatable" symbol="gtk_list_box_row_set_activatable">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="row" type="GtkListBoxRow*"/>
+					<parameter name="activatable" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_header" symbol="gtk_list_box_row_set_header">
 				<return-type type="void"/>
 				<parameters>
@@ -17034,6 +17068,15 @@
 					<parameter name="header" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="set_selectable" symbol="gtk_list_box_row_set_selectable">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="row" type="GtkListBoxRow*"/>
+					<parameter name="selectable" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="activatable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="selectable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="activate" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -34943,14 +34986,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1304"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1305"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="4"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="5"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="13"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

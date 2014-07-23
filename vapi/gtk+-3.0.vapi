@@ -3134,10 +3134,16 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ListBoxRow ();
 		public void changed ();
+		public bool get_activatable ();
 		public unowned Gtk.Widget get_header ();
 		public int get_index ();
+		public bool get_selectable ();
 		public bool is_selected ();
+		public void set_activatable (bool activatable);
 		public void set_header (Gtk.Widget? header);
+		public void set_selectable (bool selectable);
+		public bool activatable { get; set; }
+		public bool selectable { get; set; }
 		public virtual signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6788,6 +6794,7 @@ namespace Gtk {
 		public GLib.Type iter_get_object_type (int pos);
 		public uint iter_get_sibling_index (int pos);
 		public unowned Gtk.WidgetPath iter_get_siblings (int pos);
+		public Gtk.StateFlags iter_get_state (int pos);
 		public bool iter_has_class (int pos, string name);
 		public bool iter_has_name (int pos, string name);
 		public bool iter_has_qclass (int pos, GLib.Quark qname);
@@ -6800,6 +6807,7 @@ namespace Gtk {
 		public void iter_remove_region (int pos, string name);
 		public void iter_set_name (int pos, string name);
 		public void iter_set_object_type (int pos, GLib.Type type);
+		public void iter_set_state (int pos, Gtk.StateFlags state);
 		public int length ();
 		public void prepend_type (GLib.Type type);
 		public unowned string to_string ();
