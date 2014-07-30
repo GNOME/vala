@@ -12,7 +12,7 @@
   <mailing-list rdf:resource="http://mail.gnome.org/mailman/listinfo/vala-list" />
   <download-page rdf:resource="http://live.gnome.org/Vala/Release" />
   <bug-database rdf:resource="http://bugzilla.gnome.org/browse.cgi?product=vala" />
-  <category rdf:resource="http://api.gnome.org/doap-extensions#development" />
+  <category rdf:resource="http://api.gnome.org/doap-extensions#core" />
 
   <maintainer>
     <foaf:Person>
