@@ -13,6 +13,7 @@
   <download-page rdf:resource="http://live.gnome.org/Vala/Release" />
   <bug-database rdf:resource="http://bugzilla.gnome.org/browse.cgi?product=vala" />
   <category rdf:resource="http://api.gnome.org/doap-extensions#core" />
+  <programming-language>Vala</programming-language>
 
   <maintainer>
     <foaf:Person>
