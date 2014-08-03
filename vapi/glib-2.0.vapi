@@ -1775,7 +1775,7 @@ namespace GLib {
 	}
 
 #if GLIB_2_32
-	[CCode (destroy_function = "g_mutex_clear")]
+	[CCode (destroy_function = "g_mutex_clear", lvalue_access = false)]
 	public struct Mutex {
 #else
 	[Compact]
@@ -1858,7 +1858,7 @@ namespace GLib {
 	}
 
 #if GLIB_2_32
-	[CCode (destroy_function = "g_cond_clear")]
+	[CCode (destroy_function = "g_cond_clear", lvalue_access = false)]
 	public struct Cond {
 #else
 	[Compact]
