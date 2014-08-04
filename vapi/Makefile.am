@@ -288,10 +288,10 @@ dist_vapi_DATA = \
 	vte-2.90.vapi \
 	webkit-1.0.deps \
 	webkit-1.0.vapi \
-	webkit2gtk-3.0.vapi \
-	webkit2gtk-3.0.deps \
-	webkit2gtk-web-extension-3.0.vapi \
-	webkit2gtk-web-extension-3.0.deps \
+	webkit2gtk-4.0.vapi \
+	webkit2gtk-4.0.deps \
+	webkit2gtk-web-extension-4.0.vapi \
+	webkit2gtk-web-extension-4.0.deps \
 	x11.vapi \
 	xcb.vapi \
 	xcb-icccm.vapi \
@@ -418,8 +418,8 @@ GIR_BINDINGS = \
 	rest-0.7 \
 	udisks2 \
 	vte-2.90 \
-	webkit2gtk-3.0 \
-	webkit2gtk-web-extension-3.0 \
+	webkit2gtk-4.0 \
+	webkit2gtk-web-extension-4.0 \
 	$(GSTREAMER_1_0_BINDINGS) \
 	$(NULL)
 
@@ -773,9 +773,8 @@ vte-2.90:
 webkit-1.0:
 	$(GENVAPI) --library $(srcdir)/webkit-1.0 $(PACKAGESDIR)/webkit-1.0/webkit-1.0.gi
 
-webkit2gtk-3.0:
-	$(GENVAPI) --library $(srcdir)/webkit2gtk-3.0 --metadatadir $(METADATADIR) --pkg gtk+-3.0 --pkg libsoup-2.4 $(GIRDIR)/WebKit2-3.0.gir
+webkit2gtk-4.0:
+	$(GENVAPI) --library $(srcdir)/webkit2gtk-4.0 --metadatadir $(METADATADIR) --pkg gtk+-3.0 --pkg libsoup-2.4 $(GIRDIR)/WebKit2-4.0.gir
 
-webkit2gtk-web-extension-3.0:
-	$(GENVAPI) --library $(srcdir)/webkit2gtk-web-extension-3.0 --metadatadir $(METADATADIR) --pkg gtk+-3.0 $(GIRDIR)/WebKit2WebExtension-3.0.gir
-
+webkit2gtk-web-extension-4.0:
+	$(GENVAPI) --library $(srcdir)/webkit2gtk-web-extension-4.0 --metadatadir $(METADATADIR) --pkg gtk+-3.0 $(GIRDIR)/WebKit2WebExtension-4.0.gir
