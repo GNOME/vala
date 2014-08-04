@@ -188,6 +188,8 @@ namespace Gtk {
 		public Gtk.SourceEncoding copy ();
 		[CCode (cname = "gtk_source_encoding_get_current")]
 		public static unowned Gtk.SourceEncoding et_current ();
+		[CCode (cname = "gtk_source_encoding_get_default_candidates")]
+		public static GLib.SList<weak Gtk.SourceEncoding> et_default_candidates ();
 		[CCode (cname = "gtk_source_encoding_get_from_charset")]
 		public static unowned Gtk.SourceEncoding et_from_charset (string charset);
 		[CCode (cname = "gtk_source_encoding_get_utf8")]

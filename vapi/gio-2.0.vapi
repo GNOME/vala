@@ -299,7 +299,7 @@ namespace GLib {
 		public uint get_inactivity_timeout ();
 		public bool get_is_registered ();
 		public bool get_is_remote ();
-		public unowned string get_resource_base_path ();
+		public unowned string? get_resource_base_path ();
 		public void hold ();
 		public static bool id_is_valid (string application_id);
 		[NoWrapper]

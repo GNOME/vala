@@ -55,6 +55,10 @@ Layout
 TabArray
   .new_with_positions skip=false
 
+// Contains only function pointers without typedefs
+IncludedModule skip
+module_register skip
+
 read_line
   .stream type="GLib.FileStream"
   .str out=false

@@ -55,5 +55,7 @@ namespace Gst {
 		public static GLib.Type address_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/net/net.h")]
 		public static unowned Gst.MetaInfo? address_meta_get_info ();
+		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_buffer_add_net_address_meta")]
+		public static unowned Gst.Net.AddressMeta? buffer_add_net_address_meta (Gst.Buffer buffer, GLib.SocketAddress addr);
 	}
 }

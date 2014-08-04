@@ -5866,7 +5866,7 @@ namespace Clutter {
 		public void set_state (Clutter.ModifierType state);
 		public void set_time (uint32 time_);
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_event_sequence_get_type ()")]
 	[Compact]
 	public class EventSequence {
 	}
