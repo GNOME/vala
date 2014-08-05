@@ -479,5 +479,9 @@ public class Vala.ObjectCreationExpression : Expression {
 		foreach (Expression arg in argument_list) {
 			arg.get_used_variables (collection);
 		}
+
+		foreach (MemberInitializer init in object_initializer) {
+			init.get_used_variables (collection);
+		}
 	}
 }

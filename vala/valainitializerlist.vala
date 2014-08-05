@@ -224,4 +224,10 @@ public class Vala.InitializerList : Expression {
 
 		codegen.visit_expression (this);
 	}
+
+	public override void get_used_variables (Collection<Variable> collection) {
+		foreach (Expression expr in initializers) {
+			expr.get_used_variables (collection);
+		}
+	}
 }

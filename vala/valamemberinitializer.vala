@@ -76,6 +76,10 @@ public class Vala.MemberInitializer : CodeNode {
 		initializer.emit (codegen);
 	}
 
+	public override void get_used_variables (Collection<Variable> collection) {
+		initializer.get_used_variables (collection);
+	}
+
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (initializer == old_node) {
 			initializer = new_node;
