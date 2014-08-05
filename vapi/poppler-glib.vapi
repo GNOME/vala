@@ -50,9 +50,11 @@ namespace Poppler {
 		public string get_modified ();
 		public string get_name ();
 		public int get_page_index ();
+		public Poppler.Rectangle get_rectangle ();
 		public void set_color (Poppler.Color? poppler_color);
 		public void set_contents (string contents);
 		public void set_flags (Poppler.AnnotFlag flags);
+		public void set_rectangle (Poppler.Rectangle poppler_rect);
 	}
 	[CCode (cheader_filename = "poppler.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "poppler_annot_callout_line_get_type ()")]
 	[Compact]
@@ -69,6 +71,13 @@ namespace Poppler {
 		public Poppler.AnnotCalloutLine copy ();
 		public void free ();
 	}
+	[CCode (cheader_filename = "poppler.h", type_id = "poppler_annot_circle_get_type ()")]
+	public class AnnotCircle : Poppler.AnnotMarkup {
+		[CCode (has_construct_function = false, type = "PopplerAnnot*")]
+		public AnnotCircle (Poppler.Document doc, Poppler.Rectangle rect);
+		public Poppler.Color get_interior_color ();
+		public void set_interior_color (Poppler.Color? poppler_color);
+	}
 	[CCode (cheader_filename = "poppler.h", type_id = "poppler_annot_file_attachment_get_type ()")]
 	public class AnnotFileAttachment : Poppler.AnnotMarkup {
 		[CCode (has_construct_function = false)]
@@ -82,6 +91,12 @@ namespace Poppler {
 		protected AnnotFreeText ();
 		public Poppler.AnnotCalloutLine get_callout_line ();
 		public Poppler.AnnotFreeTextQuadding get_quadding ();
+	}
+	[CCode (cheader_filename = "poppler.h", type_id = "poppler_annot_line_get_type ()")]
+	public class AnnotLine : Poppler.AnnotMarkup {
+		[CCode (has_construct_function = false, type = "PopplerAnnot*")]
+		public AnnotLine (Poppler.Document doc, Poppler.Rectangle rect, Poppler.Point start, Poppler.Point end);
+		public void set_vertices (Poppler.Point start, Poppler.Point end);
 	}
 	[CCode (cheader_filename = "poppler.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "poppler_annot_mapping_get_type ()")]
 	[Compact]
@@ -124,6 +139,13 @@ namespace Poppler {
 		protected AnnotScreen ();
 		public unowned Poppler.Action get_action ();
 	}
+	[CCode (cheader_filename = "poppler.h", type_id = "poppler_annot_square_get_type ()")]
+	public class AnnotSquare : Poppler.AnnotMarkup {
+		[CCode (has_construct_function = false, type = "PopplerAnnot*")]
+		public AnnotSquare (Poppler.Document doc, Poppler.Rectangle rect);
+		public Poppler.Color get_interior_color ();
+		public void set_interior_color (Poppler.Color? poppler_color);
+	}
 	[CCode (cheader_filename = "poppler.h", type_id = "poppler_annot_text_get_type ()")]
 	public class AnnotText : Poppler.AnnotMarkup {
 		[CCode (has_construct_function = false, type = "PopplerAnnot*")]
@@ -133,6 +155,21 @@ namespace Poppler {
 		public Poppler.AnnotTextState get_state ();
 		public void set_icon (string icon);
 		public void set_is_open (bool is_open);
+	}
+	[CCode (cheader_filename = "poppler.h", type_id = "poppler_annot_text_markup_get_type ()")]
+	public class AnnotTextMarkup : Poppler.AnnotMarkup {
+		[CCode (has_construct_function = false)]
+		protected AnnotTextMarkup ();
+		public GLib.Array<Poppler.Quadrilateral> get_quadrilaterals ();
+		[CCode (has_construct_function = false, type = "PopplerAnnot*")]
+		public AnnotTextMarkup.highlight (Poppler.Document doc, Poppler.Rectangle rect, GLib.Array<Poppler.Quadrilateral> quadrilaterals);
+		public void set_quadrilaterals (GLib.Array<Poppler.Quadrilateral> quadrilaterals);
+		[CCode (has_construct_function = false, type = "PopplerAnnot*")]
+		public AnnotTextMarkup.squiggly (Poppler.Document doc, Poppler.Rectangle rect, GLib.Array<Poppler.Quadrilateral> quadrilaterals);
+		[CCode (has_construct_function = false, type = "PopplerAnnot*")]
+		public AnnotTextMarkup.strikeout (Poppler.Document doc, Poppler.Rectangle rect, GLib.Array<Poppler.Quadrilateral> quadrilaterals);
+		[CCode (has_construct_function = false, type = "PopplerAnnot*")]
+		public AnnotTextMarkup.underline (Poppler.Document doc, Poppler.Rectangle rect, GLib.Array<Poppler.Quadrilateral> quadrilaterals);
 	}
 	[CCode (cheader_filename = "poppler.h", type_id = "poppler_attachment_get_type ()")]
 	public class Attachment : GLib.Object {
@@ -415,7 +452,10 @@ namespace Poppler {
 		public void get_size (out double width, out double height);
 		public string get_text ();
 		public GLib.List<Poppler.TextAttributes> get_text_attributes ();
+		public GLib.List<Poppler.TextAttributes> get_text_attributes_for_area (Poppler.Rectangle area);
+		public string get_text_for_area (Poppler.Rectangle area);
 		public bool get_text_layout ([CCode (array_length_cname = "n_rectangles", array_length_pos = 1.1, array_length_type = "guint")] out Poppler.Rectangle[] rectangles);
+		public bool get_text_layout_for_area (Poppler.Rectangle area, [CCode (array_length_cname = "n_rectangles", array_length_pos = 2.1, array_length_type = "guint")] out Poppler.Rectangle[] rectangles);
 		public Cairo.Surface get_thumbnail ();
 		public bool get_thumbnail_size (out int width, out int height);
 		public Poppler.PageTransition get_transition ();
@@ -425,7 +465,7 @@ namespace Poppler {
 		public void render_for_printing_with_options ([CCode (type = "cairo_t*")] Cairo.Context cairo, Poppler.PrintFlags options);
 		public void render_selection ([CCode (type = "cairo_t*")] Cairo.Context cairo, Poppler.Rectangle selection, Poppler.Rectangle old_selection, Poppler.SelectionStyle style, Poppler.Color glyph_color, Poppler.Color background_color);
 		public void render_to_ps (Poppler.PSFile ps_file);
-		[Deprecated]
+		[Deprecated (since = "0.16")]
 		public static void selection_region_free (GLib.List<Poppler.Rectangle> region);
 		public string label { owned get; }
 	}
@@ -444,6 +484,103 @@ namespace Poppler {
 		public Poppler.PageTransition copy ();
 		public void free ();
 	}
+	[CCode (cheader_filename = "poppler.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "poppler_point_get_type ()")]
+	[Compact]
+	public class Point {
+		public double x;
+		public double y;
+		[CCode (has_construct_function = false)]
+		public Point ();
+		public Poppler.Point copy ();
+		public void free ();
+	}
+	[CCode (cheader_filename = "poppler.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "poppler_quadrilateral_get_type ()")]
+	[Compact]
+	public class Quadrilateral {
+		public Poppler.Point p1;
+		public Poppler.Point p2;
+		public Poppler.Point p3;
+		public Poppler.Point p4;
+		[CCode (has_construct_function = false)]
+		public Quadrilateral ();
+		public Poppler.Quadrilateral copy ();
+		public void free ();
+	}
+	[CCode (cheader_filename = "poppler.h", type_id = "poppler_structure_element_get_type ()")]
+	public class StructureElement : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected StructureElement ();
+		public string get_abbreviation ();
+		public string get_actual_text ();
+		public string get_alt_text ();
+		public bool get_background_color (out unowned Poppler.Color color);
+		public double get_baseline_shift ();
+		public Poppler.StructureBlockAlign get_block_align ();
+		public bool get_border_color ([CCode (array_length = false)] out unowned Poppler.Color[] colors);
+		public void get_border_style ([CCode (array_length = false)] out Poppler.StructureBorderStyle[] border_styles);
+		public bool get_border_thickness ([CCode (array_length = false)] out double[] border_thicknesses);
+		public bool get_bounding_box (out Poppler.Rectangle bounding_box);
+		public bool get_color (out unowned Poppler.Color color);
+		public uint get_column_count ();
+		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		public double[] get_column_gaps ();
+		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		public double[] get_column_widths ();
+		public double get_end_indent ();
+		public string get_form_description ();
+		public Poppler.StructureFormRole get_form_role ();
+		public Poppler.StructureFormState get_form_state ();
+		public Poppler.StructureGlyphOrientation get_glyph_orientation ();
+		public double get_height ();
+		public string get_id ();
+		public Poppler.StructureInlineAlign get_inline_align ();
+		public Poppler.StructureElementKind get_kind ();
+		public string get_language ();
+		public double get_line_height ();
+		public Poppler.StructureListNumbering get_list_numbering ();
+		public void get_padding ([CCode (array_length = false)] out double[] paddings);
+		public int get_page ();
+		public Poppler.StructurePlacement get_placement ();
+		public Poppler.StructureRubyAlign get_ruby_align ();
+		public Poppler.StructureRubyPosition get_ruby_position ();
+		public double get_space_after ();
+		public double get_space_before ();
+		public double get_start_indent ();
+		public void get_table_border_style ([CCode (array_length = false)] out Poppler.StructureBorderStyle[] border_styles);
+		public uint get_table_column_span ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] get_table_headers ();
+		public void get_table_padding ([CCode (array_length = false)] out double[] paddings);
+		public uint get_table_row_span ();
+		public Poppler.StructureTableScope get_table_scope ();
+		public string get_table_summary ();
+		public string get_text (Poppler.StructureGetTextFlags flags);
+		public Poppler.StructureTextAlign get_text_align ();
+		public bool get_text_decoration_color (out unowned Poppler.Color color);
+		public double get_text_decoration_thickness ();
+		public Poppler.StructureTextDecoration get_text_decoration_type ();
+		public double get_text_indent ();
+		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		public Poppler.TextSpan[] get_text_spans ();
+		public string get_title ();
+		public double get_width ();
+		public Poppler.StructureWritingMode get_writing_mode ();
+		public bool is_block ();
+		public bool is_content ();
+		public bool is_grouping ();
+		public bool is_inline ();
+	}
+	[CCode (cheader_filename = "poppler.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "poppler_structure_element_iter_get_type ()")]
+	[Compact]
+	public class StructureElementIter {
+		[CCode (has_construct_function = false)]
+		public StructureElementIter (Poppler.Document poppler_document);
+		public Poppler.StructureElementIter copy ();
+		public void free ();
+		public Poppler.StructureElementIter get_child ();
+		public Poppler.StructureElement get_element ();
+		public bool next ();
+	}
 	[CCode (cheader_filename = "poppler.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "poppler_text_attributes_get_type ()")]
 	[Compact]
 	public class TextAttributes {
@@ -457,6 +594,18 @@ namespace Poppler {
 		public TextAttributes ();
 		public Poppler.TextAttributes copy ();
 		public void free ();
+	}
+	[CCode (cheader_filename = "poppler.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "poppler_text_span_get_type ()")]
+	[Compact]
+	public class TextSpan {
+		public Poppler.TextSpan copy ();
+		public void free ();
+		public void get_color (out unowned Poppler.Color color);
+		public unowned string get_font_name ();
+		public unowned string get_text ();
+		public bool is_bold_font ();
+		public bool is_fixed_width_font ();
+		public bool is_serif_font ();
 	}
 	[CCode (cheader_filename = "poppler.h", has_type_id = false)]
 	public struct ActionAny {
@@ -780,6 +929,179 @@ namespace Poppler {
 		GLYPH,
 		WORD,
 		LINE
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_BLOCK_ALIGN_", type_id = "poppler_structure_block_align_get_type ()")]
+	public enum StructureBlockAlign {
+		BEFORE,
+		MIDDLE,
+		AFTER,
+		JUSTIFY
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_BORDER_STYLE_", type_id = "poppler_structure_border_style_get_type ()")]
+	public enum StructureBorderStyle {
+		NONE,
+		HIDDEN,
+		DOTTED,
+		DASHED,
+		SOLID,
+		DOUBLE,
+		GROOVE,
+		INSET,
+		OUTSET
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_ELEMENT_", type_id = "poppler_structure_element_kind_get_type ()")]
+	public enum StructureElementKind {
+		CONTENT,
+		OBJECT_REFERENCE,
+		DOCUMENT,
+		PART,
+		ARTICLE,
+		SECTION,
+		DIV,
+		SPAN,
+		QUOTE,
+		NOTE,
+		REFERENCE,
+		BIBENTRY,
+		CODE,
+		LINK,
+		ANNOT,
+		BLOCKQUOTE,
+		CAPTION,
+		NONSTRUCT,
+		TOC,
+		TOC_ITEM,
+		INDEX,
+		PRIVATE,
+		PARAGRAPH,
+		HEADING,
+		HEADING_1,
+		HEADING_2,
+		HEADING_3,
+		HEADING_4,
+		HEADING_5,
+		HEADING_6,
+		LIST,
+		LIST_ITEM,
+		LIST_LABEL,
+		LIST_BODY,
+		TABLE,
+		TABLE_ROW,
+		TABLE_HEADING,
+		TABLE_DATA,
+		TABLE_HEADER,
+		TABLE_FOOTER,
+		TABLE_BODY,
+		RUBY,
+		RUBY_BASE_TEXT,
+		RUBY_ANNOT_TEXT,
+		RUBY_PUNCTUATION,
+		WARICHU,
+		WARICHU_TEXT,
+		WARICHU_PUNCTUATION,
+		FIGURE,
+		FORMULA,
+		FORM
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_FORM_ROLE_", type_id = "poppler_structure_form_role_get_type ()")]
+	public enum StructureFormRole {
+		UNDEFINED,
+		RADIO_BUTTON,
+		PUSH_BUTTON,
+		TEXT_VALUE,
+		CHECKBOX
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_FORM_STATE_", type_id = "poppler_structure_form_state_get_type ()")]
+	public enum StructureFormState {
+		ON,
+		OFF,
+		NEUTRAL
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_GET_TEXT_", type_id = "poppler_structure_get_text_flags_get_type ()")]
+	[Flags]
+	public enum StructureGetTextFlags {
+		NONE,
+		RECURSIVE
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_GLYPH_", type_id = "poppler_structure_glyph_orientation_get_type ()")]
+	public enum StructureGlyphOrientation {
+		[CCode (cname = "POPPLER_STRUCTURE_GLYPH_ORIENTATION_AUTO")]
+		AUTO,
+		[CCode (cname = "POPPLER_STRUCTURE_GLYPH_ORIENTATION_0")]
+		@0,
+		[CCode (cname = "POPPLER_STRUCTURE_GLYPH_ORIENTATION_90")]
+		@90,
+		[CCode (cname = "POPPLER_STRUCTURE_GLYPH_ORIENTATION_180")]
+		@180,
+		[CCode (cname = "POPPLER_STRUCTURE_GLYPH_ORIENTATION_270")]
+		@270
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_INLINE_ALIGN_", type_id = "poppler_structure_inline_align_get_type ()")]
+	public enum StructureInlineAlign {
+		START,
+		CENTER,
+		END
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_LIST_NUMBERING_", type_id = "poppler_structure_list_numbering_get_type ()")]
+	public enum StructureListNumbering {
+		NONE,
+		DISC,
+		CIRCLE,
+		SQUARE,
+		DECIMAL,
+		UPPER_ROMAN,
+		LOWER_ROMAN,
+		UPPER_ALPHA,
+		LOWER_ALPHA
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_PLACEMENT_", type_id = "poppler_structure_placement_get_type ()")]
+	public enum StructurePlacement {
+		BLOCK,
+		INLINE,
+		BEFORE,
+		START,
+		END
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_RUBY_ALIGN_", type_id = "poppler_structure_ruby_align_get_type ()")]
+	public enum StructureRubyAlign {
+		START,
+		CENTER,
+		END,
+		JUSTIFY,
+		DISTRIBUTE
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_RUBY_POSITION_", type_id = "poppler_structure_ruby_position_get_type ()")]
+	public enum StructureRubyPosition {
+		BEFORE,
+		AFTER,
+		WARICHU,
+		INLINE
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_TABLE_SCOPE_", type_id = "poppler_structure_table_scope_get_type ()")]
+	public enum StructureTableScope {
+		ROW,
+		COLUMN,
+		BOTH
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_TEXT_ALIGN_", type_id = "poppler_structure_text_align_get_type ()")]
+	public enum StructureTextAlign {
+		START,
+		CENTER,
+		END,
+		JUSTIFY
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_TEXT_DECORATION_", type_id = "poppler_structure_text_decoration_get_type ()")]
+	public enum StructureTextDecoration {
+		NONE,
+		UNDERLINE,
+		OVERLINE,
+		LINETHROUGH
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_STRUCTURE_WRITING_MODE_", type_id = "poppler_structure_writing_mode_get_type ()")]
+	public enum StructureWritingMode {
+		LR_TB,
+		RL_TB,
+		TB_RL
 	}
 	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_VIEWER_PREFERENCES_", type_id = "poppler_viewer_preferences_get_type ()")]
 	[Flags]
