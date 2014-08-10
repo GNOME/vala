@@ -590,6 +590,7 @@ namespace Gtk {
 		public void add_accelerator (string accelerator, string action_name, GLib.Variant? parameter);
 		public void add_window (Gtk.Window window);
 		public string get_accels_for_action (string detailed_action_name);
+		public string get_actions_for_accel (string accel);
 		public unowned Gtk.Window get_active_window ();
 		public unowned GLib.MenuModel get_app_menu ();
 		public GLib.Menu get_menu_by_id (string id);
@@ -5511,6 +5512,8 @@ namespace Gtk {
 		public void buffer_to_window_coords (Gtk.TextWindowType win, int buffer_x, int buffer_y, out int window_x, out int window_y);
 		[NoWrapper]
 		public virtual Gtk.TextBuffer create_buffer ();
+		[NoWrapper]
+		public virtual void draw_layer (Gtk.Widget widget, Gtk.TextViewLayer layer, Cairo.Context cr);
 		public bool forward_display_line (Gtk.TextIter iter);
 		public bool forward_display_line_end (Gtk.TextIter iter);
 		public bool get_accepts_tab ();
@@ -7692,8 +7695,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CELL_RENDERER_ACCEL_MODE_")]
 	public enum CellRendererAccelMode {
 		GTK,
-		OTHER,
-		MODIFIER_TAP
+		OTHER
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CELL_RENDERER_MODE_")]
 	public enum CellRendererMode {
@@ -7761,7 +7763,8 @@ namespace Gtk {
 		PIXEL_CACHE,
 		NO_PIXEL_CACHE,
 		INTERACTIVE,
-		TOUCHSCREEN
+		TOUCHSCREEN,
+		ACTIONS
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DELETE_")]
 	public enum DeleteType {
@@ -8455,6 +8458,11 @@ namespace Gtk {
 		TEXT_ONLY,
 		CASE_INSENSITIVE
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TEXT_VIEW_LAYER_")]
+	public enum TextViewLayer {
+		BELOW,
+		ABOVE
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TEXT_WINDOW_")]
 	public enum TextWindowType {
 		PRIVATE,
@@ -8568,7 +8576,9 @@ namespace Gtk {
 		VERSION_MISMATCH,
 		DUPLICATE_ID,
 		OBJECT_TYPE_REFUSED,
-		TEMPLATE_MISMATCH
+		TEMPLATE_MISMATCH,
+		INVALID_PROPERTY,
+		INVALID_SIGNAL
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool AccelGroupActivate (Gtk.AccelGroup accel_group, GLib.Object acceleratable, uint keyval, Gdk.ModifierType modifier);

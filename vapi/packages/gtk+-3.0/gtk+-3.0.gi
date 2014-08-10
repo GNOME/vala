@@ -4630,6 +4630,8 @@
 			<member name="GTK_BUILDER_ERROR_DUPLICATE_ID" value="8"/>
 			<member name="GTK_BUILDER_ERROR_OBJECT_TYPE_REFUSED" value="9"/>
 			<member name="GTK_BUILDER_ERROR_TEMPLATE_MISMATCH" value="10"/>
+			<member name="GTK_BUILDER_ERROR_INVALID_PROPERTY" value="11"/>
+			<member name="GTK_BUILDER_ERROR_INVALID_SIGNAL" value="12"/>
 		</enum>
 		<enum name="GtkButtonBoxStyle" type-name="GtkButtonBoxStyle" get-type="gtk_button_box_style_get_type">
 			<member name="GTK_BUTTONBOX_SPREAD" value="1"/>
@@ -4650,7 +4652,6 @@
 		<enum name="GtkCellRendererAccelMode" type-name="GtkCellRendererAccelMode" get-type="gtk_cell_renderer_accel_mode_get_type">
 			<member name="GTK_CELL_RENDERER_ACCEL_MODE_GTK" value="0"/>
 			<member name="GTK_CELL_RENDERER_ACCEL_MODE_OTHER" value="1"/>
-			<member name="GTK_CELL_RENDERER_ACCEL_MODE_MODIFIER_TAP" value="2"/>
 		</enum>
 		<enum name="GtkCellRendererMode" type-name="GtkCellRendererMode" get-type="gtk_cell_renderer_mode_get_type">
 			<member name="GTK_CELL_RENDERER_MODE_INERT" value="0"/>
@@ -5173,6 +5174,10 @@
 			<member name="GTK_TEXT_DIR_LTR" value="1"/>
 			<member name="GTK_TEXT_DIR_RTL" value="2"/>
 		</enum>
+		<enum name="GtkTextViewLayer" type-name="GtkTextViewLayer" get-type="gtk_text_view_layer_get_type">
+			<member name="GTK_TEXT_VIEW_LAYER_BELOW" value="0"/>
+			<member name="GTK_TEXT_VIEW_LAYER_ABOVE" value="1"/>
+		</enum>
 		<enum name="GtkTextWindowType" type-name="GtkTextWindowType" get-type="gtk_text_window_type_get_type">
 			<member name="GTK_TEXT_WINDOW_PRIVATE" value="0"/>
 			<member name="GTK_TEXT_WINDOW_WIDGET" value="1"/>
@@ -5288,6 +5293,7 @@
 			<member name="GTK_DEBUG_NO_PIXEL_CACHE" value="65536"/>
 			<member name="GTK_DEBUG_INTERACTIVE" value="131072"/>
 			<member name="GTK_DEBUG_TOUCHSCREEN" value="262144"/>
+			<member name="GTK_DEBUG_ACTIONS" value="524288"/>
 		</flags>
 		<flags name="GtkDestDefaults" type-name="GtkDestDefaults" get-type="gtk_dest_defaults_get_type">
 			<member name="GTK_DEST_DEFAULT_MOTION" value="1"/>
@@ -7020,6 +7026,13 @@
 				<parameters>
 					<parameter name="application" type="GtkApplication*"/>
 					<parameter name="detailed_action_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_actions_for_accel" symbol="gtk_application_get_actions_for_accel">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="application" type="GtkApplication*"/>
+					<parameter name="accel" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_active_window" symbol="gtk_application_get_active_window">
@@ -25659,6 +25672,14 @@
 					<parameter name="text_view" type="GtkTextView*"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="draw_layer">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="layer" type="GtkTextViewLayer"/>
+					<parameter name="cr" type="cairo_t*"/>
+				</parameters>
+			</vfunc>
 		</object>
 		<object name="GtkTextViewAccessible" parent="GtkContainerAccessible" type-name="GtkTextViewAccessible" get-type="gtk_text_view_accessible_get_type">
 			<implements>
@@ -34986,14 +35007,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1305"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1306"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="5"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="6"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="13"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
