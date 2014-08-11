@@ -5043,7 +5043,7 @@ namespace GLib {
 
 	[Compact, CCode (ref_function = "g_variant_dict_ref", unref_function = "g_variant_dict_unref")]
 	public class VariantDict {
-		public VariantDict (GLib.Variant from_asv);
+		public VariantDict (GLib.Variant? from_asv = null);
 		public bool lookup (string key, string format_string, ...);
 		public GLib.Variant lookup_value (string key, GLib.VariantType expected_type);
 		public bool contains (string key);
