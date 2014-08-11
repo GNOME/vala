@@ -5051,6 +5051,7 @@ namespace GLib {
 		public void insert_value (string key, GLib.Variant value);
 		public bool remove (string key);
 		public void clear ();
+		[CCode (returns_floating_reference = true)]
 		public GLib.Variant end ();
 	}
 
