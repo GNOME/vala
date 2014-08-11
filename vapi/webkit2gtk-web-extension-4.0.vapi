@@ -1306,10 +1306,6 @@ namespace WebKit {
 			public string value { owned get; set; }
 			[NoAccessorMethod]
 			public double value_as_number { get; set; }
-			[NoAccessorMethod]
-			public bool webkit_grammar { get; set; }
-			[NoAccessorMethod]
-			public bool webkit_speech { get; set; }
 			public ulong width { get; set; }
 			public bool will_validate { get; }
 		}

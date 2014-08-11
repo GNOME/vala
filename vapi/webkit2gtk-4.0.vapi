@@ -241,14 +241,24 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected NavigationPolicyDecision ();
 		public unowned string get_frame_name ();
+		[Deprecated (since = "2.6")]
 		public uint get_modifiers ();
+		[Deprecated (since = "2.6")]
 		public uint get_mouse_button ();
+		public unowned WebKit.NavigationAction get_navigation_action ();
+		[Deprecated (since = "2.6")]
 		public WebKit.NavigationType get_navigation_type ();
+		[Deprecated (since = "2.6")]
 		public unowned WebKit.URIRequest get_request ();
 		public string frame_name { get; }
+		[Deprecated (since = "2.6")]
 		public uint modifiers { get; }
+		[Deprecated (since = "2.6")]
 		public uint mouse_button { get; }
+		public WebKit.NavigationAction navigation_action { get; }
+		[Deprecated (since = "2.6")]
 		public WebKit.NavigationType navigation_type { get; }
+		[Deprecated (since = "2.6")]
 		public WebKit.URIRequest request { get; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_plugin_get_type ()")]
@@ -510,8 +520,18 @@ namespace WebKit {
 	public class UserContentManager : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public UserContentManager ();
+		public void add_script (WebKit.UserScript script);
 		public void add_style_sheet (WebKit.UserStyleSheet stylesheet);
+		public void remove_all_scripts ();
 		public void remove_all_style_sheets ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_user_script_ref", type_id = "webkit_user_script_get_type ()", unref_function = "webkit_user_script_unref")]
+	[Compact]
+	public class UserScript {
+		[CCode (has_construct_function = false)]
+		public UserScript (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserScriptInjectionTime injection_time, [CCode (array_length = false, array_null_terminated = true)] string[]? whitelist, [CCode (array_length = false, array_null_terminated = true)] string[]? blacklist);
+		public WebKit.UserScript @ref ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_user_style_sheet_ref", type_id = "webkit_user_style_sheet_get_type ()", unref_function = "webkit_user_style_sheet_unref")]
 	[Compact]
@@ -879,6 +899,11 @@ namespace WebKit {
 	public enum UserContentInjectedFrames {
 		ALL_FRAMES,
 		TOP_FRAME
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_USER_SCRIPT_INJECT_AT_DOCUMENT_", type_id = "webkit_user_script_injection_time_get_type ()")]
+	public enum UserScriptInjectionTime {
+		START,
+		END
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_USER_STYLE_LEVEL_", type_id = "webkit_user_style_level_get_type ()")]
 	public enum UserStyleLevel {
