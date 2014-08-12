@@ -5743,7 +5743,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			result.lvalue = result.lvalue && result.cvalue == old_cexpr;
 		}
 
-		if (!gvalue_boxing && !gvariant_boxing && target_type.value_owned && (!type.value_owned || boxing || unboxing) && requires_copy (target_type) && !(type is NullType)) {
+		bool array_needs_copy = false;
+		if (type is ArrayType && target_type is ArrayType) {
+			var array = (ArrayType) type;
+			var target_array = (ArrayType) target_type;
+			if (target_array.element_type.value_owned && !array.element_type.value_owned) {
+				array_needs_copy = requires_copy (target_array.element_type);
+			}
+		}
+		
+		if (!gvalue_boxing && !gvariant_boxing && target_type.value_owned && (!type.value_owned || boxing || unboxing || array_needs_copy) && requires_copy (target_type) && !(type is NullType)) {
 			// need to copy value
 			var copy = (GLibValue) copy_value (result, node);
 			if (target_type.data_type is Interface && copy == null) {
