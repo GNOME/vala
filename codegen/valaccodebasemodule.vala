@@ -5456,7 +5456,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public override void visit_type_check (TypeCheck expr) {
 		generate_type_declaration (expr.type_reference, cfile);
 
-		set_cvalue (expr, create_type_check (get_cvalue (expr.expression), expr.type_reference));
+		var type = expr.expression.value_type;
+		var pointer_type = type as PointerType;
+		if (pointer_type != null) {
+			type = pointer_type.base_type;
+		}
+		var cl = type.data_type as Class;
+		var iface = type.data_type as Interface;
+		if ((cl != null && !cl.is_compact) || iface != null || type is GenericType || type is ErrorType) {
+			set_cvalue (expr, create_type_check (get_cvalue (expr.expression), expr.type_reference));
+		} else {
+			set_cvalue (expr, new CCodeInvalidExpression ());
+		}
+
 		if (get_cvalue (expr) is CCodeInvalidExpression) {
 			Report.error (expr.source_reference, "type check expressions not supported for compact classes, structs, and enums");
 		}
