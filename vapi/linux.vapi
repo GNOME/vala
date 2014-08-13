@@ -1025,14 +1025,29 @@ namespace Linux {
         DT_WHT
     }
 
-    [CCode (cheader_filename = "execinfo.h")]
+    [Deprecated (since = "vala-0.26", replacement = "Backtrace.get"), CCode (cheader_filename = "execinfo.h")]
     public int backtrace (void* buffer, int size);
 
-    [CCode (cheader_filename = "execinfo.h", array_length = false)]
-    public unowned string[] backtrace_symbols (void* buffer, int size);
+    [Deprecated (since = "vala-0.26", replacement = "Backtrace.symbols"), CCode (cheader_filename = "execinfo.h", array_length = false)]
+    public (unowned string)[]? backtrace_symbols (void* buffer, int size);
 
-    [CCode (cheader_filename = "execinfo.h")]
+    [Deprecated (since = "vala-0.26", replacement = "Backtrace.symbols_fd"), CCode (cheader_filename = "execinfo.h")]
     public void backtrace_symbols_fd (void* buffer, int size, int fd);
+
+    namespace Backtrace {
+      [CCode (cname = "backtrace", cheader_filename = "execinfo.h")]
+      public int @get (void*[] buffer);
+      [CCode (cname = "backtrace_symbols", cheader_filename = "execinfo.h", array_length = false)]
+      private (unowned string)[]? _symbols (void*[] buffer);
+      [CCode (cname = "_vala_backtrace_symbols")]
+      public (unowned string)[]? symbols (void*[] buffer) {
+        (unowned string)[]? s = _symbols (buffer);
+        s.length = buffer.length;
+        return s;
+      }
+      [CCode (cheader_filename = "execinfo.h")]
+      public void symbols_fd (void*[] buffer, int fd);
+    }
 
     [CCode (cheader_filename = "unistd.h")]
     public int sethostname (string name, size_t len);
