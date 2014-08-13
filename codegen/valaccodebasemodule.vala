@@ -5091,6 +5091,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		} else {
 			if (expr.is_silent_cast) {
+				set_cvalue (expr, new CCodeInvalidExpression ());
 				expr.error = true;
 				Report.error (expr.source_reference, "Operation not supported for this type");
 				return;
