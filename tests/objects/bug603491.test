@@ -1,0 +1,12 @@
+Invalid Code
+
+public abstract class Foo : Object {
+	public abstract string baz { get; private set; }
+}
+
+public class Bar : Foo {
+	public override string baz { get; private set; }
+}
+
+void main () {
+}

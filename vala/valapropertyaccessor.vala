@@ -178,6 +178,12 @@ public class Vala.PropertyAccessor : Subroutine {
 			}
 		}
 
+		if ((prop.is_abstract || prop.is_virtual || prop.overrides) && access == SymbolAccessibility.PRIVATE) {
+			error = true;
+			Report.error (source_reference, "Property `%s' with private accessor cannot be marked as abstract, virtual or override".printf (prop.get_full_name ()));
+			return false;
+		}
+
 		if (body != null) {
 			if (writable || construction) {
 				body.scope.add (value_parameter.name, value_parameter);
