@@ -2574,16 +2574,17 @@ public class Vala.Parser : CodeVisitor {
 		var f = new Field (id, type, null, get_src (begin), comment);
 		f.access = access;
 
-		if (parent is Struct && f.access != SymbolAccessibility.PUBLIC) {
-			Report.error (f.source_reference, "accessibility of struct fields can only be `public`");
-		}
-
 		set_attributes (f, attrs);
 		if (ModifierFlags.STATIC in flags) {
 			f.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
 			f.binding = MemberBinding.CLASS;
 		}
+
+		if (parent is Struct && f.access != SymbolAccessibility.PUBLIC && f.binding == MemberBinding.INSTANCE) {
+			Report.error (f.source_reference, "accessibility of struct fields can only be `public`");
+		}
+
 		if (ModifierFlags.ABSTRACT in flags
 		    || ModifierFlags.VIRTUAL in flags
 		    || ModifierFlags.OVERRIDE in flags) {
