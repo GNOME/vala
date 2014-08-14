@@ -462,6 +462,24 @@ public abstract class Vala.DataType : CodeNode {
 		return result;
 	}
 
+	/**
+	 * Search for the type parameter in this formal type and match it in
+	 * value_type.
+	 */
+	public virtual DataType? infer_type_argument (TypeParameter type_param, DataType value_type) {
+		var value_type_arg_it = value_type.get_type_arguments ().iterator ();
+		foreach (var formal_type_arg in this.get_type_arguments ()) {
+			if (value_type_arg_it.next ()) {
+				var inferred_type = formal_type_arg.infer_type_argument (type_param, value_type_arg_it.get ());
+				if (inferred_type != null) {
+					return inferred_type;
+				}
+			}
+		}
+
+		return null;
+	}
+
 	public bool is_weak () {
 		if (this.value_owned) {
 			return false;

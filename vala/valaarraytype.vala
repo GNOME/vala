@@ -272,6 +272,15 @@ public class Vala.ArrayType : ReferenceType {
 		return result;
 	}
 
+	public override DataType? infer_type_argument (TypeParameter type_param, DataType value_type) {
+		var array_type = value_type as ArrayType;
+		if (array_type != null) {
+			return element_type.infer_type_argument (type_param, array_type.element_type);
+		}
+
+		return null;
+	}
+
 	public override bool is_disposable () {
 		if (fixed_length) {
 			return element_type.is_disposable ();

@@ -42,6 +42,16 @@ public class Vala.GenericType : DataType {
 		return result;
 	}
 
+	public override DataType? infer_type_argument (TypeParameter type_param, DataType value_type) {
+		if (type_parameter == type_param) {
+			var ret = value_type.copy ();
+			ret.value_owned = true;
+			return ret;
+		}
+
+		return null;
+	}
+
 	public override string to_qualified_string (Scope? scope = null) {
 		return type_parameter.name;
 	}

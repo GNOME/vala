@@ -536,10 +536,8 @@ public class Vala.MethodCall : Expression {
 							if (arg_it.next ()) {
 								Expression arg = arg_it.get ();
 
-								var generic_type = param.variable_type as GenericType;
-								if (generic_type != null && generic_type.type_parameter == type_param) {
-									type_arg = arg.value_type.copy ();
-									type_arg.value_owned = true;
+								type_arg = param.variable_type.infer_type_argument (type_param, arg.value_type);
+								if (type_arg != null) {
 									break;
 								}
 
@@ -549,11 +547,7 @@ public class Vala.MethodCall : Expression {
 
 						// infer type arguments from expected return type
 						if (type_arg == null && target_type != null) {
-							var generic_type = m.return_type as GenericType;
-							if (generic_type != null && generic_type.type_parameter == type_param) {
-								type_arg = target_type.copy ();
-								type_arg.value_owned = true;
-							}
+							type_arg = m.return_type.infer_type_argument (type_param, target_type);
 						}
 
 						if (type_arg == null) {

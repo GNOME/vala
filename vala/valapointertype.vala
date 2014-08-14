@@ -137,6 +137,15 @@ public class Vala.PointerType : DataType {
 		return result;
 	}
 
+	public override DataType? infer_type_argument (TypeParameter type_param, DataType value_type) {
+		var pointer_type = value_type as PointerType;
+		if (pointer_type != null) {
+			return base_type.infer_type_argument (type_param, pointer_type.base_type);
+		}
+
+		return null;
+	}
+
 	public override bool check (CodeContext context) {
 		error = !base_type.check (context);
 		return !error;
