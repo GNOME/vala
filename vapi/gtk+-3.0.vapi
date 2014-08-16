@@ -9725,7 +9725,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Widget test_create_widget (GLib.Type widget_type, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gtk.Widget test_display_button_window (string window_title, string dialog_text);
+	public static unowned Gtk.Widget test_display_button_window (string window_title, string dialog_text, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Widget test_find_label (Gtk.Widget widget, string label_pattern);
 	[CCode (cheader_filename = "gtk/gtk.h")]
