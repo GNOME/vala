@@ -320,6 +320,22 @@ namespace Gst {
 			public void stop ();
 			public Gst.Buffer take_buffer (Gst.Base.CollectData data, uint size);
 		}
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstDataQueue", lower_case_cprefix = "gst_data_queue_", type_id = "gst_data_queue_get_type ()")]
+		[GIR (name = "DataQueue")]
+		public class DataQueue : GLib.Object {
+			[CCode (has_construct_function = false)]
+			protected DataQueue ();
+			[NoWrapper]
+			public virtual void empty ();
+			[NoWrapper]
+			public virtual void full ();
+			[NoAccessorMethod]
+			public uint current_level_bytes { get; }
+			[NoAccessorMethod]
+			public uint64 current_level_time { get; }
+			[NoAccessorMethod]
+			public uint current_level_visible { get; }
+		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstFlowCombiner", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_flow_combiner_", type_id = "gst_flow_combiner_get_type ()")]
 		[Compact]
 		[GIR (name = "FlowCombiner")]
@@ -701,6 +717,10 @@ namespace Gst {
 		public delegate Gst.FlowReturn CollectPadsFunction (Gst.Base.CollectPads pads);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstCollectPadsQueryFunction", instance_pos = 3.9)]
 		public delegate bool CollectPadsQueryFunction (Gst.Base.CollectPads pads, Gst.Base.CollectData pad, Gst.Query query);
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstDataQueueEmptyCallback", has_target = false)]
+		public delegate void DataQueueEmptyCallback (Gst.Base.DataQueue queue, void* checkdata);
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstDataQueueFullCallback", has_target = false)]
+		public delegate void DataQueueFullCallback (Gst.Base.DataQueue queue, void* checkdata);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstTypeFindHelperGetRangeFunction", has_target = false)]
 		public delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, Gst.Object? parent, uint64 offset, uint length, Gst.Buffer buffer);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GST_BASE_PARSE_FLAG_DRAINING")]

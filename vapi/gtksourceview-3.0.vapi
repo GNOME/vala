@@ -30,7 +30,7 @@ namespace Gtk {
 		public GLib.SList<weak Gtk.SourceMark> get_source_marks_at_iter (Gtk.TextIter iter, string? category);
 		public GLib.SList<weak Gtk.SourceMark> get_source_marks_at_line (int line, string? category);
 		public unowned Gtk.SourceStyleScheme get_style_scheme ();
-		public unowned Gtk.SourceUndoManager get_undo_manager ();
+		public unowned Gtk.SourceUndoManager? get_undo_manager ();
 		public bool iter_backward_to_context_class_toggle (ref Gtk.TextIter iter, string context_class);
 		public bool iter_forward_to_context_class_toggle (ref Gtk.TextIter iter, string context_class);
 		public bool iter_has_context_class (Gtk.TextIter iter, string context_class);
@@ -188,10 +188,8 @@ namespace Gtk {
 		public Gtk.SourceEncoding copy ();
 		[CCode (cname = "gtk_source_encoding_get_current")]
 		public static unowned Gtk.SourceEncoding et_current ();
-		[CCode (cname = "gtk_source_encoding_get_default_candidates")]
-		public static GLib.SList<weak Gtk.SourceEncoding> et_default_candidates ();
 		[CCode (cname = "gtk_source_encoding_get_from_charset")]
-		public static unowned Gtk.SourceEncoding et_from_charset (string charset);
+		public static unowned Gtk.SourceEncoding? et_from_charset (string charset);
 		[CCode (cname = "gtk_source_encoding_get_utf8")]
 		public static unowned Gtk.SourceEncoding et_utf8 ();
 		public void free ();
@@ -409,12 +407,12 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public SourceLanguageManager ();
 		public static unowned Gtk.SourceLanguageManager get_default ();
-		public unowned Gtk.SourceLanguage get_language (string id);
+		public unowned Gtk.SourceLanguage? get_language (string id);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public unowned string[] get_language_ids ();
+		public unowned string[]? get_language_ids ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_search_path ();
-		public unowned Gtk.SourceLanguage guess_language (string? filename, string? content_type);
+		public unowned Gtk.SourceLanguage? guess_language (string? filename, string? content_type);
 		public void set_search_path ([CCode (array_length = false, array_null_terminated = true)] string[]? dirs);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] language_ids { get; }
@@ -427,8 +425,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public SourceMark (string name, string category);
 		public unowned string get_category ();
-		public unowned Gtk.SourceMark next (string? category);
-		public unowned Gtk.SourceMark prev (string category);
+		public unowned Gtk.SourceMark? next (string? category);
+		public unowned Gtk.SourceMark? prev (string category);
 		public string category { get; construct; }
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_mark_attributes_get_type ()")]
@@ -549,7 +547,7 @@ namespace Gtk {
 		public bool get_at_word_boundaries ();
 		public bool get_case_sensitive ();
 		public bool get_regex_enabled ();
-		public unowned string get_search_text ();
+		public unowned string? get_search_text ();
 		public bool get_wrap_around ();
 		public void set_at_word_boundaries (bool at_word_boundaries);
 		public void set_case_sensitive (bool case_sensitive);
@@ -607,12 +605,12 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected SourceStyleScheme ();
 		[CCode (array_length = false, array_null_terminated = true)]
-		public unowned string[] get_authors ();
-		public unowned string get_description ();
-		public unowned string get_filename ();
+		public unowned string[]? get_authors ();
+		public unowned string? get_description ();
+		public unowned string? get_filename ();
 		public unowned string get_id ();
 		public unowned string get_name ();
-		public unowned Gtk.SourceStyle get_style (string style_id);
+		public unowned Gtk.SourceStyle? get_style (string style_id);
 		public string description { get; }
 		public string filename { get; }
 		public string id { get; construct; }

@@ -539,7 +539,7 @@ namespace Gst {
 		public Gst.Clock provided_clock;
 		public bool state_dirty;
 		[CCode (has_construct_function = false, returns_floating_reference = true, type = "GstElement*")]
-		public Bin (string name);
+		public Bin (string? name);
 		public bool add (owned Gst.Element element);
 		[NoWrapper]
 		public virtual bool add_element (Gst.Element element);
