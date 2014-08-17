@@ -5385,6 +5385,7 @@
 			<member name="GTK_STATE_FLAG_DIR_RTL" value="256"/>
 			<member name="GTK_STATE_FLAG_LINK" value="512"/>
 			<member name="GTK_STATE_FLAG_VISITED" value="1024"/>
+			<member name="GTK_STATE_FLAG_CHECKED" value="2048"/>
 		</flags>
 		<flags name="GtkTargetFlags" type-name="GtkTargetFlags" get-type="gtk_target_flags_get_type">
 			<member name="GTK_TARGET_SAME_APP" value="1"/>
@@ -25675,7 +25676,7 @@
 			<vfunc name="draw_layer">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="text_view" type="GtkTextView*"/>
 					<parameter name="layer" type="GtkTextViewLayer"/>
 					<parameter name="cr" type="cairo_t*"/>
 				</parameters>
@@ -35007,14 +35008,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1306"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1307"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="6"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="7"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="13"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

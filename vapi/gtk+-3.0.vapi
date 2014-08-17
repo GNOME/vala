@@ -5513,7 +5513,7 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual Gtk.TextBuffer create_buffer ();
 		[NoWrapper]
-		public virtual void draw_layer (Gtk.Widget widget, Gtk.TextViewLayer layer, Cairo.Context cr);
+		public virtual void draw_layer (Gtk.TextViewLayer layer, Cairo.Context cr);
 		public bool forward_display_line (Gtk.TextIter iter);
 		public bool forward_display_line_end (Gtk.TextIter iter);
 		public bool get_accepts_tab ();
@@ -8419,7 +8419,8 @@ namespace Gtk {
 		DIR_LTR,
 		DIR_RTL,
 		LINK,
-		VISITED
+		VISITED,
+		CHECKED
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_STATE_")]
 	public enum StateType {
