@@ -461,6 +461,7 @@ namespace GLib {
 		public void copy (ref Value dest_value);
 		public unowned Value? reset ();
 		public void init (Type g_type);
+		public void init_from_instance (void* instance);
 		public void unset ();
 		public void set_instance (void* instance);
 		public bool fits_pointer ();
