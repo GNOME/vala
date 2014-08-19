@@ -69,6 +69,39 @@ public class Valadoc.TokenType : Object {
 	public static TokenType VALADOC_TAB;
 	public static TokenType VALADOC_EOL;
 
+
+	// markdown:
+	public static TokenType MARKDOWN_PARAGRAPH;
+	public static TokenType MARKDOWN_ANY_WORD;
+	public static TokenType MARKDOWN_SPACE;
+	public static TokenType MARKDOWN_SOURCE;
+	public static TokenType MARKDOWN_PARAMETER;
+	public static TokenType MARKDOWN_CONSTANT;
+	public static TokenType MARKDOWN_SYMBOL;
+	public static TokenType MARKDOWN_LOCAL_GMEMBER;
+	public static TokenType MARKDOWN_FUNCTION;
+	public static TokenType MARKDOWN_MAIL;
+	public static TokenType MARKDOWN_LINK;
+	public static TokenType MARKDOWN_GREATER_THAN;
+	public static TokenType MARKDOWN_LESS_THAN;
+	public static TokenType MARKDOWN_OPEN_BRACKET;
+	public static TokenType MARKDOWN_CLOSE_BRACKET;
+	public static TokenType MARKDOWN_OPEN_PARENS;
+	public static TokenType MARKDOWN_CLOSE_PARENS;
+	public static TokenType MARKDOWN_EXCLAMATION_MARK;
+	public static TokenType MARKDOWN_HEADLINE_1;
+	public static TokenType MARKDOWN_HEADLINE_2;
+	public static TokenType MARKDOWN_HEADLINE_HASH;
+	public static TokenType MARKDOWN_HEADLINE_END;
+	public static TokenType MARKDOWN_UNORDERED_LIST_ITEM_START;
+	public static TokenType MARKDOWN_UNORDERED_LIST_ITEM_END;
+	public static TokenType MARKDOWN_ORDERED_LIST_ITEM_START;
+	public static TokenType MARKDOWN_ORDERED_LIST_ITEM_END;
+	public static TokenType MARKDOWN_BLOCK_START;
+	public static TokenType MARKDOWN_BLOCK_END;
+	public static TokenType MARKDOWN_EOC;
+
+
 	private static bool initialized = false;
 
 	internal static void init_token_types () {
@@ -119,6 +152,41 @@ public class Valadoc.TokenType : Object {
 			VALADOC_EOL = EOL;
 
 			initialized = true;
+
+
+			// Markdown: (importer)
+			MARKDOWN_PARAGRAPH = new TokenType.basic ("<paragraph>");
+			MARKDOWN_BLOCK_START = new TokenType.basic ("<block>");
+			MARKDOWN_BLOCK_END = new TokenType.basic ("</block>");
+			MARKDOWN_UNORDERED_LIST_ITEM_START = new TokenType.basic ("<unordered-list>");
+			MARKDOWN_UNORDERED_LIST_ITEM_END = new TokenType.basic ("</unordered-list>");
+			MARKDOWN_ORDERED_LIST_ITEM_START = new TokenType.basic ("<ordered-list>");
+			MARKDOWN_ORDERED_LIST_ITEM_END  = new TokenType.basic ("</ordered-list>");
+
+			MARKDOWN_HEADLINE_1 = new TokenType.basic ("<headline-1>");
+			MARKDOWN_HEADLINE_2 = new TokenType.basic ("<headline-2>");
+			MARKDOWN_HEADLINE_HASH = new TokenType.basic ("<hash>");
+			MARKDOWN_HEADLINE_END = new TokenType.basic ("</headline>");
+			MARKDOWN_SOURCE = new TokenType.basic ("<source>");
+			MARKDOWN_PARAMETER = new TokenType.basic ("<parameter>");
+			MARKDOWN_CONSTANT = new TokenType.basic ("<constant>");
+			MARKDOWN_FUNCTION = new TokenType.basic ("<function>");
+			MARKDOWN_SYMBOL = new TokenType.basic ("<symbol>");
+			MARKDOWN_LOCAL_GMEMBER = new TokenType.basic ("<local-gmember>");
+			MARKDOWN_MAIL = new TokenType.basic ("<mail>");
+			MARKDOWN_LINK = new TokenType.basic ("<link>");
+
+			MARKDOWN_OPEN_BRACKET = new TokenType.basic ("[");
+			MARKDOWN_CLOSE_BRACKET = new TokenType.basic ("]");
+			MARKDOWN_OPEN_PARENS = new TokenType.basic ("(");
+			MARKDOWN_CLOSE_PARENS = new TokenType.basic (")");
+			MARKDOWN_EXCLAMATION_MARK = new TokenType.basic ("!");
+			MARKDOWN_GREATER_THAN = GREATER_THAN;
+			MARKDOWN_LESS_THAN = LESS_THAN;
+
+			MARKDOWN_ANY_WORD = ANY_WORD;
+			MARKDOWN_SPACE = SPACE;
+			MARKDOWN_EOC = EOL;
 		}
 	}
 

@@ -28,6 +28,19 @@ using Valadoc.Content;
 public class Valadoc.Taglets.Link : InlineTaglet {
 	public string symbol_name { internal set; get; }
 
+	/**
+	 * Accept leading 's', e.g. #Widgets
+	 */
+	public bool c_accept_plural { internal set; get; }
+
+	/**
+	 * True if symbol_name could only be resolved after removing 's'
+	 *
+	 * E.g. true or #Widgets, false for #Widget
+	 */
+	public bool c_is_plural { private set; get; }
+
+
 	private enum SymbolContext {
 		NORMAL,
 		FINISH,
@@ -54,9 +67,18 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 
 	public override void check (Api.Tree api_root, Api.Node container, string file_path,
 								ErrorReporter reporter, Settings settings) {
+
 		if (symbol_name.has_prefix ("c::")) {
 			_symbol_name = _symbol_name.substring (3);
+			string? singular_symbol_name = (c_accept_plural && _symbol_name.has_suffix ("s"))
+				? symbol_name.substring (0, _symbol_name.length - 1)
+				: null;
+
 			_symbol = api_root.search_symbol_cstr (container, symbol_name);
+			if (_symbol == null && singular_symbol_name != null) {
+				_symbol = api_root.search_symbol_cstr (container, singular_symbol_name);
+				c_is_plural = true;
+			}
 			_context = SymbolContext.NORMAL;
 
 			if (_symbol == null && _symbol_name.has_suffix ("_finish")) {
@@ -77,6 +99,10 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 
 			if (_symbol == null) {
 				_symbol = api_root.search_symbol_type_cstr (symbol_name);
+				if (_symbol == null && singular_symbol_name != null) {
+					_symbol = api_root.search_symbol_type_cstr (singular_symbol_name);
+					c_is_plural = true;
+				}
 				if (_symbol != null) {
 					_context = SymbolContext.TYPE;
 				}
@@ -84,10 +110,6 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 
 			if (_symbol != null) {
 				symbol_name = _symbol.name;
-
-				if (_context == SymbolContext.FINISH) {
-					symbol_name = symbol_name + ".end";
-				}
 			}
 		} else {
 			_symbol = api_root.search_symbol_str (container, symbol_name);
@@ -107,27 +129,39 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 		link.symbol = _symbol;
 		link.label = symbol_name;
 
-		// TODO: move typeof () to gtkdoc-importer
+		Content.Inline content;
 		switch (_context) {
 		case SymbolContext.FINISH:
-			// covered by symbol_name
-			return link;
+			link.label += ".end";
+			content = link;
+			break;
 
 		case SymbolContext.TYPE:
-			Content.Run content = new Content.Run (Run.Style.MONOSPACED);
+			Run run = new Content.Run (Run.Style.MONOSPACED);
+			content = run;
 
 			Content.Run keyword = new Content.Run (Run.Style.LANG_KEYWORD);
 			keyword.content.add (new Content.Text ("typeof"));
-			content.content.add (keyword);
+			run.content.add (keyword);
 
-			content.content.add (new Content.Text (" ("));
-			content.content.add (link);
-			content.content.add (new Content.Text (")"));
-			return content;
+			run.content.add (new Content.Text (" ("));
+			run.content.add (link);
+			run.content.add (new Content.Text (")"));
+			break;
 
 		default:
-			return link;
+			content = link;
+			break;
 		}
+
+		if (c_is_plural == true) {
+			Run run = new Content.Run (Run.Style.NONE);
+			run.content.add (content);
+			run.content.add (new Content.Text ("s"));
+			return run;
+		}
+
+		return content;
 	}
 
 	public override bool is_empty () {

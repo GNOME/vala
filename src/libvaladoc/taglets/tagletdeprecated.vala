@@ -24,7 +24,8 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Taglets.Deprecated : InlineContent, Taglet, Block {
+
+public class Valadoc.Taglets.Deprecated : BlockContent, Taglet, Block {
 	public Rule? get_parser_rule (Rule run_rule) {
 		return run_rule;
 	}
@@ -49,8 +50,8 @@ public class Valadoc.Taglets.Deprecated : InlineContent, Taglet, Block {
 		Deprecated deprecated = new Deprecated ();
 		deprecated.parent = new_parent;
 
-		foreach (Inline element in content) {
-			Inline copy = element.copy (deprecated) as Inline;
+		foreach (Block element in content) {
+			Block copy = element.copy (deprecated) as Block;
 			deprecated.content.add (copy);
 		}
 

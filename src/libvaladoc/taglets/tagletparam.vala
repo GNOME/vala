@@ -25,7 +25,7 @@ using Valadoc.Content;
 using Gee;
 
 
-public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
+public class Valadoc.Taglets.Param : BlockContent, Taglet, Block {
 	public string parameter_name { internal set; get; }
 
 	public weak Api.Symbol? parameter { private set; get; }
@@ -141,8 +141,8 @@ public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
 		param.parameter = parameter;
 		param.position = position;
 
-		foreach (Inline element in content) {
-			Inline copy = element.copy (param) as Inline;
+		foreach (Block element in content) {
+			Block copy = element.copy (param) as Block;
 			param.content.add (copy);
 		}
 

@@ -31,7 +31,11 @@ public class Valadoc.Api.GirSourceComment : SourceComment {
 	private Map<string, SourceComment> parameters = new HashMap<string, SourceComment> ();
 
 	public string? instance_param_name { set; get; }
-	public SourceComment return_comment { set; get; }
+	public SourceComment? return_comment { set; get; }
+	public SourceComment? deprecated_comment { set; get; }
+	public SourceComment? version_comment { get; set; }
+	public SourceComment? stability_comment { get; set; }
+
 
 	public MapIterator<string, SourceComment> parameter_iterator () {
 		return parameters.map_iterator ();

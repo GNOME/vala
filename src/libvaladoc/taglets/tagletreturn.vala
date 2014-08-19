@@ -25,7 +25,7 @@ using Gee;
 using Valadoc.Content;
 
 
-public class Valadoc.Taglets.Return : InlineContent, Taglet, Block {
+public class Valadoc.Taglets.Return : BlockContent, Taglet, Block {
 	public Rule? get_parser_rule (Rule run_rule) {
 		return run_rule;
 	}
@@ -69,8 +69,8 @@ public class Valadoc.Taglets.Return : InlineContent, Taglet, Block {
 		Return ret = new Return ();
 		ret.parent = new_parent;
 
-		foreach (Inline element in content) {
-			Inline copy = element.copy (ret) as Inline;
+		foreach (Block element in content) {
+			Block copy = element.copy (ret) as Block;
 			ret.content.add (copy);
 		}
 

@@ -27,6 +27,7 @@ using Gee;
 
 
 public class Valadoc.DocumentationParser : Object, ResourceLocator {
+	private HashMap<Api.SourceFile, GirMetaData> metadata = new HashMap<Api.SourceFile, GirMetaData> ();
 
 	public DocumentationParser (Settings settings, ErrorReporter reporter,
 								Api.Tree tree, ModuleLoader modules)
@@ -47,11 +48,13 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		_comment_scanner.set_parser (_comment_parser);
 
 		gtkdoc_parser = new Gtkdoc.Parser (settings, reporter, tree, modules);
+		gtkdoc_markdown_parser = new Gtkdoc.MarkdownParser (settings, reporter, tree, modules);
 
 		init_valadoc_rules ();
 	}
 
 	private Gtkdoc.Parser gtkdoc_parser;
+	private Gtkdoc.MarkdownParser gtkdoc_markdown_parser;
 
 	private Settings _settings;
 	private ErrorReporter _reporter;
@@ -69,8 +72,16 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 	public Comment? parse (Api.Node element, Api.SourceComment comment) {
 		if (comment is Api.GirSourceComment) {
-			Comment doc_comment = gtkdoc_parser.parse (element, (Api.GirSourceComment) comment);
-			return doc_comment;
+			Api.GirSourceComment gir_comment = (Api.GirSourceComment) comment;
+			GirMetaData metadata = get_metadata_for_comment (gir_comment);
+
+			if (metadata.is_docbook) {
+				Comment doc_comment = gtkdoc_parser.parse (element, gir_comment, metadata);
+				return doc_comment;
+			} else {
+				Comment doc_comment = gtkdoc_markdown_parser.parse (element, gir_comment, metadata);
+				return doc_comment;
+			}
 		} else {
 			return parse_comment_str (element, comment.content, comment.file.get_name (),
 									  comment.first_line, comment.first_column);
@@ -125,6 +136,17 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		return (Page) pop ();
 	}
 
+	private GirMetaData get_metadata_for_comment (Api.GirSourceComment gir_comment) {
+		GirMetaData metadata = metadata.get (gir_comment.file);
+		if (metadata != null) {
+			return metadata;
+		}
+
+		metadata = new GirMetaData (gir_comment.file.relative_path, _settings.metadata_directories, _reporter);
+		this.metadata.set (gir_comment.file, metadata);
+		return metadata;
+	}
+
 	public string resolve (string path) {
 		return path;
 	}
@@ -146,6 +168,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		return node;
 	}
 
+	private Rule multiline_block_run;
 	private Rule multiline_run;
 	private int current_level = 0;
 	private int[] levels = new int[0];
@@ -769,16 +792,36 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			})
 			.set_name ("Description");
 
+		multiline_block_run =
+			Rule.seq ({
+				multiline_run
+			})
+			.set_start (() => { push (_factory.create_paragraph ()); })
+			.set_reduce (() => {
+				Paragraph p = (Paragraph) pop ();
+				((BlockContent) peek ()).content.add (p);
+			})
+			.set_name ("BlockMultilineRun");
+
 		Rule taglet =
 			Rule.seq ({
 				TokenType.AROBASE,
 				TokenType.any_word ().action ((token) => {
-					var taglet = _factory.create_taglet (token.to_string ());
+
+					string tag_name = token.to_string ();
+					var taglet = _factory.create_taglet (tag_name);
 					if (!(taglet is Block)) {
 						_parser.error (token, "Invalid taglet in this context");
 					}
 					push (taglet);
-					Rule? taglet_rule = taglet.get_parser_rule (multiline_run);
+
+					Rule? taglet_rule;
+					if (taglet is BlockContent) {
+						taglet_rule = taglet.get_parser_rule (multiline_block_run);					
+					} else {
+						taglet_rule = taglet.get_parser_rule (multiline_run);
+					}
+
 					if (taglet_rule != null) {
 						_parser.push_rule (Rule.seq ({ TokenType.SPACE, taglet_rule }));
 					}

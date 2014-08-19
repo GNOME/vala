@@ -24,7 +24,8 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
+
+public class Valadoc.Taglets.Throws : BlockContent, Taglet, Block {
 	// TODO: rename
 	public string error_domain_name { private set; get; }
 
@@ -113,8 +114,8 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 		tr.error_domain_name = error_domain_name;
 		tr.error_domain = error_domain;
 
-		foreach (Inline element in content) {
-			Inline copy = element.copy (tr) as Inline;
+		foreach (Block element in content) {
+			Block copy = element.copy (tr) as Block;
 			tr.content.add (copy);
 		}
 

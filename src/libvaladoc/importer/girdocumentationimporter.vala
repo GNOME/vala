@@ -317,31 +317,67 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	}
 
 	private Api.GirSourceComment? parse_symbol_doc () {
-		if (reader.name != "doc") {
-			return null;
-		}
-
-		start_element ("doc");
-		next ();
-
 		Api.GirSourceComment? comment = null;
 
-		if (current_token == MarkupTokenType.TEXT) {
-			comment = new Api.GirSourceComment (reader.content, file, begin.line,
-												begin.column, end.line, end.column);
+		if (reader.name == "doc") {
+			start_element ("doc");
 			next ();
+
+
+			if (current_token == MarkupTokenType.TEXT) {
+				comment = new Api.GirSourceComment (reader.content, file, begin.line,
+													begin.column, end.line, end.column);
+				next ();
+			}
+
+			end_element ("doc");
 		}
 
-		end_element ("doc");
+		while (true) {
+			if (reader.name == "doc-deprecated") {
+				Api.SourceComment? doc_deprecated = parse_doc ("doc-deprecated");
+				if (doc_deprecated != null) {
+					if (comment == null) {
+						comment = new Api.GirSourceComment ("", file, begin.line, end.line,
+															begin.line, end.line);
+					}
+
+					comment.deprecated_comment = doc_deprecated;
+				}
+			} else if (reader.name == "doc-version") {
+				Api.SourceComment? doc_version = parse_doc ("doc-version");
+				if (doc_version != null) {
+					if (comment == null) {
+						comment = new Api.GirSourceComment ("", file, begin.line, end.line,
+															begin.line, end.line);
+					}
+
+					comment.version_comment = doc_version;
+				}
+			} else if (reader.name == "doc-stability") {
+				Api.SourceComment? doc_stability = parse_doc ("doc-stability");
+				if (doc_stability != null) {
+					if (comment == null) {
+						comment = new Api.GirSourceComment ("", file, begin.line, end.line,
+															begin.line, end.line);
+					}
+
+					comment.stability_comment = doc_stability;
+				}
+			} else {
+				break;
+			}
+		}
+
 		return comment;
 	}
 
-	private Api.SourceComment? parse_doc () {
-		if (reader.name != "doc") {
+	private Api.SourceComment? parse_doc (string element_name = "doc") {
+		if (reader.name != element_name) {
 			return null;
 		}
 
-		start_element ("doc");
+		start_element (element_name);
 		next ();
 
 		Api.SourceComment? comment = null;
@@ -352,7 +388,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			next ();
 		}
 
-		end_element ("doc");
+		end_element (element_name);
 		return comment;
 	}
 

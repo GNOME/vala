@@ -27,6 +27,9 @@ public class Valadoc.GirMetaData : Object {
 	private string? metadata_path = null;
 	private string? resource_dir = null;
 
+	public bool is_docbook { private set; get; default = false; }
+
+
 	/**
 	 * Used to manipulate paths to resources inside gir-files
 	 */
@@ -80,6 +83,10 @@ public class Valadoc.GirMetaData : Object {
 			switch (key) {
 			case "resources":
 				this.resource_dir = key_file.get_string ("General", "resources");
+				break;
+
+			case "is_docbook":
+				this.is_docbook = key_file.get_boolean ("General", "is_docbook");
 				break;
 
 			default:

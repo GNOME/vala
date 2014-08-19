@@ -28,8 +28,11 @@ public abstract class Valadoc.Content.BlockContent : ContentElement {
 
 	private Gee.List<Block> _content;
 
-	internal BlockContent () {
+	construct {
 		_content = new ArrayList<Block> ();
+	}
+
+	internal BlockContent () {
 	}
 
 	public override void configure (Settings settings, ResourceLocator locator) {

@@ -24,10 +24,11 @@ using Gee;
 
 public class Valadoc.Token : Object {
 
-	public Token.from_type (TokenType type, SourceLocation begin, SourceLocation end) {
+	public Token.from_type (TokenType type, SourceLocation begin, SourceLocation end, string? val = null) {
 		_type = type;
 		_begin = begin;
 		_end = end;
+		_value = val;
 	}
 
 	public Token.from_word (string word, SourceLocation begin, SourceLocation end) {
@@ -40,6 +41,7 @@ public class Valadoc.Token : Object {
 	private string? _word = null;
 	private SourceLocation _begin;
 	private SourceLocation _end;
+	private string? _value;
 
 	public bool is_word {
 		get {
@@ -66,6 +68,12 @@ public class Valadoc.Token : Object {
 	public string? word {
 		get {
 			return _word;
+		}
+	}
+
+	public string? value {
+		get {
+			return _value;
 		}
 	}
 
