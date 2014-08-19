@@ -2328,7 +2328,7 @@ namespace GLib {
 	public class Hmac {
 		public Hmac (ChecksumType digest_type, [CCode (array_length_type = "gsize")] uint8[] key);
 		public Hmac copy ();
-		public void update ([CCode (array_length_type = "gssize")] uint8[] data, size_t length);
+		public void update ([CCode (array_length_type = "gssize")] uint8[] data);
 		public unowned string get_string ();
 		public void get_digest ([CCode (array_length = false)] uint8[] buffer, ref size_t digest_len);
 		[CCode (cname = "g_compute_hmac_for_data")]
