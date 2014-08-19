@@ -593,7 +593,7 @@ namespace Gtk {
 		public string get_actions_for_accel (string accel);
 		public unowned Gtk.Window get_active_window ();
 		public unowned GLib.MenuModel get_app_menu ();
-		public GLib.Menu get_menu_by_id (string id);
+		public unowned GLib.Menu get_menu_by_id (string id);
 		public unowned GLib.MenuModel get_menubar ();
 		public unowned Gtk.Window get_window_by_id (uint id);
 		public unowned GLib.List<weak Gtk.Window> get_windows ();
