@@ -42,7 +42,7 @@ namespace Gtk {
 		public static unowned BindingSet @new (string name);
 	}
 
-	public class Container {
+	public abstract class Container {
 		[CCode (vfunc_name = "forall")]
 		[NoWrapper]
 		public virtual void forall_internal(bool include_internal, Gtk.Callback callback);
