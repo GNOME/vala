@@ -1395,7 +1395,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 	}
 
-	private Inline create_type_link (string name) {
+	private Inline create_type_link (string name, bool c_accept_plural = false) {
 		if (name == "TRUE" || name == "FALSE" || name == "NULL" || is_numeric (name)) {
 			var monospaced = factory.create_run (Run.Style.MONOSPACED);
 			monospaced.content.add (factory.create_text (name.down ()));
@@ -1403,6 +1403,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		} else {
 			Taglets.Link? taglet = factory.create_taglet ("link") as Taglets.Link;
 			assert (taglet != null);
+			taglet.c_accept_plural = c_accept_plural;
 			taglet.symbol_name = "c::"+name;
 			return taglet;
 		}
@@ -1625,16 +1626,16 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				}
 				next ();
 			} else if (current.type == TokenType.GTKDOC_SIGNAL) {
-				run.content.add (this.create_type_link ("::"+current.content));
+				run.content.add (this.create_type_link ("::" + current.content, true));
 				next ();
 			} else if (current.type == TokenType.GTKDOC_PROPERTY) {
-				run.content.add (this.create_type_link (":"+current.content));
+				run.content.add (this.create_type_link (":" + current.content, true));
 				next ();
 			} else if (current.type == TokenType.GTKDOC_CONST) {
-				run.content.add (this.create_type_link (current.content));
+				run.content.add (this.create_type_link (current.content, true));
 				next ();
 			} else if (current.type == TokenType.GTKDOC_TYPE) {
-				run.content.add (this.create_type_link (current.content));
+				run.content.add (this.create_type_link (current.content, true));
 				next ();
 			} else if (current.type == TokenType.NEWLINE || current.type == TokenType.SPACE) {
 				append_inline_content_string (run, " ");
