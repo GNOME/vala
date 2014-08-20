@@ -222,17 +222,22 @@ namespace Gtk {
 		public static GLib.SList<string> list_ids ();
 		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static bool lookup (string stock_id, out Gtk.StockItem item);
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public static void set_translate_func (string domain, owned Gtk.TranslateFunc func);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class AboutDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AboutDialog ();
-		public void add_credit_section (string section_name, string people);
-		public unowned string get_artists ();
-		public unowned string get_authors ();
+		public void add_credit_section (string section_name, [CCode (array_length = false, array_null_terminated = true)] string[] people);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public unowned string[] get_artists ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public unowned string[] get_authors ();
 		public unowned string get_comments ();
 		public unowned string get_copyright ();
-		public unowned string get_documenters ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public unowned string[] get_documenters ();
 		public unowned string get_license ();
 		public Gtk.License get_license_type ();
 		public unowned Gdk.Pixbuf get_logo ();
@@ -243,11 +248,11 @@ namespace Gtk {
 		public unowned string get_website ();
 		public unowned string get_website_label ();
 		public bool get_wrap_license ();
-		public void set_artists ([CCode (array_length = false)] string[] artists);
-		public void set_authors ([CCode (array_length = false)] string[] authors);
+		public void set_artists ([CCode (array_length = false, array_null_terminated = true)] string[] artists);
+		public void set_authors ([CCode (array_length = false, array_null_terminated = true)] string[] authors);
 		public void set_comments (string comments);
 		public void set_copyright (string copyright);
-		public void set_documenters ([CCode (array_length = false)] string[] documenters);
+		public void set_documenters ([CCode (array_length = false, array_null_terminated = true)] string[] documenters);
 		public void set_license (string license);
 		public void set_license_type (Gtk.License license_type);
 		public void set_logo (Gdk.Pixbuf logo);
@@ -310,7 +315,7 @@ namespace Gtk {
 	public class AccelLabel : Gtk.Label, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AccelLabel (string str);
-		public void get_accel (uint accelerator_key, Gdk.ModifierType accelerator_mods);
+		public void get_accel (out uint accelerator_key, out Gdk.ModifierType accelerator_mods);
 		public unowned Gtk.Widget get_accel_widget ();
 		public uint get_accel_width ();
 		public bool refetch ();
@@ -589,8 +594,10 @@ namespace Gtk {
 		public Application (string application_id, GLib.ApplicationFlags flags);
 		public void add_accelerator (string accelerator, string action_name, GLib.Variant? parameter);
 		public void add_window (Gtk.Window window);
-		public string get_accels_for_action (string detailed_action_name);
-		public string get_actions_for_accel (string accel);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] get_accels_for_action (string detailed_action_name);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] get_actions_for_accel (string accel);
 		public unowned Gtk.Window get_active_window ();
 		public unowned GLib.MenuModel get_app_menu ();
 		public unowned GLib.Menu get_menu_by_id (string id);
@@ -599,7 +606,8 @@ namespace Gtk {
 		public unowned GLib.List<weak Gtk.Window> get_windows ();
 		public uint inhibit (Gtk.Window? window, Gtk.ApplicationInhibitFlags flags, string? reason);
 		public bool is_inhibited (Gtk.ApplicationInhibitFlags flags);
-		public string list_action_descriptions ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] list_action_descriptions ();
 		public bool prefers_app_menu ();
 		public void remove_accelerator (string action_name, GLib.Variant? parameter);
 		public void remove_window (Gtk.Window window);
@@ -725,13 +733,12 @@ namespace Gtk {
 		public uint parsed;
 		public int priority;
 		public weak string set_name;
-		[CCode (has_construct_function = false)]
-		public BindingSet (string set_name);
 		public bool activate (uint keyval, Gdk.ModifierType modifiers, GLib.Object object);
 		[Deprecated (since = "3.0")]
 		public void add_path (Gtk.PathType path_type, string path_pattern, Gtk.PathPriorityType priority);
-		public static unowned Gtk.BindingSet by_class (void* object_class);
+		public static unowned Gtk.BindingSet by_class (GLib.ObjectClass object_class);
 		public static unowned Gtk.BindingSet find (string set_name);
+		public static unowned Gtk.BindingSet @new (string name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Compact]
@@ -777,9 +784,9 @@ namespace Gtk {
 		public uint add_from_file (string filename) throws GLib.Error;
 		public uint add_from_resource (string resource_path) throws GLib.Error;
 		public uint add_from_string (string buffer, size_t length) throws GLib.Error;
-		public uint add_objects_from_file (string filename, [CCode (array_length = false)] string[] object_ids) throws GLib.Error;
-		public uint add_objects_from_resource (string resource_path, [CCode (array_length = false)] string[] object_ids) throws GLib.Error;
-		public uint add_objects_from_string (string buffer, size_t length, [CCode (array_length = false)] string[] object_ids) throws GLib.Error;
+		public uint add_objects_from_file (string filename, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
+		public uint add_objects_from_resource (string resource_path, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
+		public uint add_objects_from_string (string buffer, size_t length, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
 		public void connect_signals (void* user_data);
 		public void connect_signals_full (Gtk.BuilderConnectFunc func);
 		public static GLib.Quark error_quark ();
@@ -798,8 +805,8 @@ namespace Gtk {
 		public unowned GLib.Callback lookup_callback_symbol (string callback_name);
 		public void set_application (Gtk.Application application);
 		public void set_translation_domain (string domain);
-		public bool value_from_string (GLib.ParamSpec pspec, string str, GLib.Value value) throws GLib.Error;
-		public bool value_from_string_type (GLib.Type type, string str, GLib.Value value) throws GLib.Error;
+		public bool value_from_string (GLib.ParamSpec pspec, string str, out GLib.Value value) throws GLib.Error;
+		public bool value_from_string_type (GLib.Type type, string str, out GLib.Value value) throws GLib.Error;
 		public string translation_domain { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -944,20 +951,20 @@ namespace Gtk {
 		public int attribute_get_column (Gtk.CellRenderer renderer, string attribute);
 		public void cell_get (Gtk.CellRenderer renderer, ...);
 		public void cell_get_property (Gtk.CellRenderer renderer, string property_name, GLib.Value value);
-		public void cell_get_valist (Gtk.CellRenderer renderer, string first_property_name, void* var_args);
+		public void cell_get_valist (Gtk.CellRenderer renderer, string first_property_name, va_list var_args);
 		public void cell_set (Gtk.CellRenderer renderer, ...);
 		public void cell_set_property (Gtk.CellRenderer renderer, string property_name, GLib.Value value);
-		public void cell_set_valist (Gtk.CellRenderer renderer, string first_property_name, void* var_args);
-		public virtual unowned Gtk.CellAreaContext copy_context (Gtk.CellAreaContext context);
-		public virtual unowned Gtk.CellAreaContext create_context ();
+		public void cell_set_valist (Gtk.CellRenderer renderer, string first_property_name, va_list var_args);
+		public virtual Gtk.CellAreaContext copy_context (Gtk.CellAreaContext context);
+		public virtual Gtk.CellAreaContext create_context ();
 		public virtual int event (Gtk.CellAreaContext context, Gtk.Widget widget, Gdk.Event event, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
 		[CCode (cname = "gtk_cell_area_class_find_cell_property")]
 		public class unowned GLib.ParamSpec find_cell_property (string property_name);
 		public virtual bool focus (Gtk.DirectionType direction);
 		public virtual void @foreach (Gtk.CellCallback callback);
-		public virtual void foreach_alloc (Gtk.CellAreaContext context, Gtk.Widget widget, Gdk.Rectangle cell_area, Gdk.Rectangle background_area, Gtk.CellAllocCallback callback, void* callback_data);
-		public void get_cell_allocation (Gtk.CellAreaContext context, Gtk.Widget widget, Gtk.CellRenderer renderer, Gdk.Rectangle cell_area, Gdk.Rectangle allocation);
-		public unowned Gtk.CellRenderer get_cell_at_position (Gtk.CellAreaContext context, Gtk.Widget widget, Gdk.Rectangle cell_area, int x, int y, Gdk.Rectangle alloc_area);
+		public virtual void foreach_alloc (Gtk.CellAreaContext context, Gtk.Widget widget, Gdk.Rectangle cell_area, Gdk.Rectangle background_area, Gtk.CellAllocCallback callback);
+		public Gdk.Rectangle get_cell_allocation (Gtk.CellAreaContext context, Gtk.Widget widget, Gtk.CellRenderer renderer, Gdk.Rectangle cell_area);
+		public unowned Gtk.CellRenderer get_cell_at_position (Gtk.CellAreaContext context, Gtk.Widget widget, Gdk.Rectangle cell_area, int x, int y, out Gdk.Rectangle alloc_area);
 		[NoWrapper]
 		public virtual void get_cell_property (Gtk.CellRenderer renderer, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
 		public unowned string get_current_path_string ();
@@ -965,14 +972,14 @@ namespace Gtk {
 		public unowned Gtk.CellRenderer get_edited_cell ();
 		public unowned Gtk.CellRenderer get_focus_cell ();
 		public unowned Gtk.CellRenderer get_focus_from_sibling (Gtk.CellRenderer renderer);
-		public unowned GLib.List get_focus_siblings (Gtk.CellRenderer renderer);
+		public unowned GLib.List<Gtk.CellRenderer> get_focus_siblings (Gtk.CellRenderer renderer);
 		public virtual void get_preferred_height (Gtk.CellAreaContext context, Gtk.Widget widget, out int minimum_height, out int natural_height);
 		public virtual void get_preferred_height_for_width (Gtk.CellAreaContext context, Gtk.Widget widget, int width, out int minimum_height, out int natural_height);
 		public virtual void get_preferred_width (Gtk.CellAreaContext context, Gtk.Widget widget, out int minimum_width, out int natural_width);
 		public virtual void get_preferred_width_for_height (Gtk.CellAreaContext context, Gtk.Widget widget, int height, out int minimum_width, out int natural_width);
 		public virtual Gtk.SizeRequestMode get_request_mode ();
 		public bool has_renderer (Gtk.CellRenderer renderer);
-		public void inner_cell_area (Gtk.Widget widget, Gdk.Rectangle cell_area, Gdk.Rectangle inner_area);
+		public Gdk.Rectangle inner_cell_area (Gtk.Widget widget, Gdk.Rectangle cell_area);
 		[CCode (cname = "gtk_cell_area_class_install_cell_property")]
 		public class void install_cell_property (uint property_id, GLib.ParamSpec pspec);
 		public virtual bool is_activatable ();
@@ -982,7 +989,7 @@ namespace Gtk {
 		public virtual void remove (Gtk.CellRenderer renderer);
 		public void remove_focus_sibling (Gtk.CellRenderer renderer, Gtk.CellRenderer sibling);
 		public virtual void render (Gtk.CellAreaContext context, Gtk.Widget widget, Cairo.Context cr, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags, bool paint_focus);
-		public void request_renderer (Gtk.CellRenderer renderer, Gtk.Orientation orientation, Gtk.Widget widget, int for_size, int minimum_size, int natural_size);
+		public void request_renderer (Gtk.CellRenderer renderer, Gtk.Orientation orientation, Gtk.Widget widget, int for_size, out int minimum_size, out int natural_size);
 		[NoWrapper]
 		public virtual void set_cell_property (Gtk.CellRenderer renderer, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
 		public void set_focus_cell (Gtk.CellRenderer renderer);
@@ -1009,7 +1016,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected CellAreaContext ();
 		public virtual void allocate (int width, int height);
-		public void get_allocation (int width, int height);
+		public void get_allocation (out int width, out int height);
 		public unowned Gtk.CellArea get_area ();
 		public void get_preferred_height (out int minimum_height, out int natural_height);
 		public virtual void get_preferred_height_for_width (int width, out int minimum_height, out int natural_height);
@@ -1313,7 +1320,7 @@ namespace Gtk {
 	public class CellView : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.CellLayout, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CellView ();
-		public unowned Gtk.TreePath get_displayed_row ();
+		public Gtk.TreePath get_displayed_row ();
 		public bool get_draw_sensitive ();
 		public bool get_fit_model ();
 		public unowned Gtk.TreeModel get_model ();
@@ -1469,15 +1476,15 @@ namespace Gtk {
 		public uint16 get_current_alpha ();
 		[Deprecated (replacement = "get_current_rgba", since = "3.4")]
 		public void get_current_color (out Gdk.Color color);
-		public void get_current_rgba (Gdk.RGBA rgba);
+		public Gdk.RGBA get_current_rgba ();
 		public bool get_has_opacity_control ();
 		public bool get_has_palette ();
 		public uint16 get_previous_alpha ();
 		public void get_previous_color (out Gdk.Color color);
-		public void get_previous_rgba (Gdk.RGBA rgba);
+		public Gdk.RGBA get_previous_rgba ();
 		public bool is_adjusting ();
-		public static bool palette_from_string (string str, Gdk.Color[] colors);
-		public static unowned string palette_to_string (Gdk.Color[] colors);
+		public static bool palette_from_string (string str, out Gdk.Color[] colors);
+		public static string palette_to_string (Gdk.Color[] colors);
 		public static unowned Gtk.ColorSelectionChangePaletteWithScreenFunc set_change_palette_with_screen_hook (Gtk.ColorSelectionChangePaletteWithScreenFunc func);
 		public void set_current_alpha (uint16 alpha);
 		[Deprecated (replacement = "set_current_rgba", since = "3.4")]
@@ -1577,7 +1584,7 @@ namespace Gtk {
 		public string tearoff_title { owned get; set; }
 		public int wrap_width { get; set; }
 		public virtual signal void changed ();
-		public virtual signal unowned string format_entry_text (string path);
+		public virtual signal string format_entry_text (string path);
 		public virtual signal void move_active (Gtk.ScrollType p0);
 		[HasEmitter]
 		public virtual signal bool popdown ();
@@ -1595,7 +1602,7 @@ namespace Gtk {
 		public ComboBoxText ();
 		public void append (string id, string text);
 		public void append_text (string text);
-		public unowned string get_active_text ();
+		public string get_active_text ();
 		public void insert (int position, string id, string text);
 		public void insert_text (int position, string text);
 		public void prepend (string id, string text);
@@ -1612,11 +1619,11 @@ namespace Gtk {
 		public void add_with_properties (Gtk.Widget widget, ...);
 		public void child_get (Gtk.Widget child, ...);
 		public void child_get_property (Gtk.Widget child, string property_name, GLib.Value value);
-		public void child_get_valist (Gtk.Widget child, string first_property_name, void* var_args);
+		public void child_get_valist (Gtk.Widget child, string first_property_name, va_list var_args);
 		public void child_notify (Gtk.Widget child, string child_property);
 		public void child_set (Gtk.Widget child, ...);
 		public void child_set_property (Gtk.Widget child, string property_name, GLib.Value value);
-		public void child_set_valist (Gtk.Widget child, string first_property_name, void* var_args);
+		public void child_set_valist (Gtk.Widget child, string first_property_name, va_list var_args);
 		public virtual GLib.Type child_type ();
 		public static unowned GLib.ParamSpec class_find_child_property (GLib.ObjectClass cclass, string property_name);
 		public static unowned GLib.ParamSpec class_list_child_properties (GLib.ObjectClass cclass, uint n_properties);
@@ -1631,11 +1638,11 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void get_child_property (Gtk.Widget child, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
 		public GLib.List<weak Gtk.Widget> get_children ();
-		public bool get_focus_chain (out GLib.List<Gtk.Widget> focusable_widgets);
+		public bool get_focus_chain (out GLib.List<weak Gtk.Widget> focusable_widgets);
 		public unowned Gtk.Widget get_focus_child ();
 		public unowned Gtk.Adjustment get_focus_hadjustment ();
 		public unowned Gtk.Adjustment get_focus_vadjustment ();
-		public virtual unowned Gtk.WidgetPath get_path_for_child (Gtk.Widget child);
+		public virtual Gtk.WidgetPath get_path_for_child (Gtk.Widget child);
 		public Gtk.ResizeMode get_resize_mode ();
 		[CCode (cname = "gtk_container_class_handle_border_width")]
 		public class void handle_border_width ();
@@ -1679,7 +1686,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public ContainerCellAccessible ();
 		public void add_child (Gtk.CellAccessible child);
-		public unowned GLib.List get_children ();
+		public unowned GLib.List<Gtk.CellAccessible> get_children ();
 		public void remove_child (Gtk.CellAccessible child);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -1692,7 +1699,7 @@ namespace Gtk {
 		public bool load_from_data (string data, ssize_t length) throws GLib.Error;
 		public bool load_from_file (GLib.File file) throws GLib.Error;
 		public bool load_from_path (string path) throws GLib.Error;
-		public unowned string to_string ();
+		public string to_string ();
 		public virtual signal void parsing_error (Gtk.CssSection section, GLib.Error error);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_css_section_ref", type_id = "gtk_css_section_get_type ()", unref_function = "gtk_css_section_unref")]
@@ -1702,7 +1709,7 @@ namespace Gtk {
 		public uint get_end_position ();
 		public unowned GLib.File get_file ();
 		public unowned Gtk.CssSection get_parent ();
-		public Gtk.CssSectionType get_section_type ();
+		public unowned Gtk.CssSectionType get_section_type ();
 		public uint get_start_line ();
 		public uint get_start_position ();
 	}
@@ -1722,7 +1729,7 @@ namespace Gtk {
 		public int run ();
 		[CCode (sentinel = "-1")]
 		public void set_alternative_button_order (...);
-		public void set_alternative_button_order_from_array (int n_params, int new_order);
+		public void set_alternative_button_order_from_array ([CCode (array_length_pos = 0.5)] int[] new_order);
 		public void set_default_response (int response_id);
 		public void set_response_sensitive (int response_id, bool setting);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -1754,7 +1761,7 @@ namespace Gtk {
 		public virtual void get_frame_size (int x, int y, int width, int height);
 		public bool get_has_frame ();
 		public bool get_icon_activatable (Gtk.EntryIconPosition icon_pos);
-		public void get_icon_area (Gtk.EntryIconPosition icon_pos, Gdk.Rectangle icon_area);
+		public Gdk.Rectangle get_icon_area (Gtk.EntryIconPosition icon_pos);
 		public int get_icon_at_pos (int x, int y);
 		public unowned GLib.Icon get_icon_gicon (Gtk.EntryIconPosition icon_pos);
 		public unowned string get_icon_name (Gtk.EntryIconPosition icon_pos);
@@ -1762,8 +1769,8 @@ namespace Gtk {
 		public bool get_icon_sensitive (Gtk.EntryIconPosition icon_pos);
 		public unowned string get_icon_stock (Gtk.EntryIconPosition icon_pos);
 		public Gtk.ImageType get_icon_storage_type (Gtk.EntryIconPosition icon_pos);
-		public unowned string get_icon_tooltip_markup (Gtk.EntryIconPosition icon_pos);
-		public unowned string get_icon_tooltip_text (Gtk.EntryIconPosition icon_pos);
+		public string? get_icon_tooltip_markup (Gtk.EntryIconPosition icon_pos);
+		public string? get_icon_tooltip_text (Gtk.EntryIconPosition icon_pos);
 		public unowned Gtk.Border? get_inner_border ();
 		public Gtk.InputHints get_input_hints ();
 		public Gtk.InputPurpose get_input_purpose ();
@@ -1946,7 +1953,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public EntryCompletion ();
 		public void complete ();
-		public unowned string compute_prefix (string key);
+		public string compute_prefix (string key);
 		public void delete_action (int index_);
 		public unowned string get_completion_prefix ();
 		public unowned Gtk.Widget get_entry ();
@@ -2240,7 +2247,7 @@ namespace Gtk {
 		public unowned Gtk.Widget get_face_list ();
 		public unowned Pango.FontFamily get_family ();
 		public unowned Gtk.Widget get_family_list ();
-		public unowned string get_font_name ();
+		public string get_font_name ();
 		public unowned Gtk.Widget get_preview_entry ();
 		public unowned string get_preview_text ();
 		public int get_size ();
@@ -2248,7 +2255,7 @@ namespace Gtk {
 		public unowned Gtk.Widget get_size_list ();
 		public bool set_font_name (string fontname);
 		public void set_preview_text (string text);
-		public string font_name { get; set; }
+		public string font_name { owned get; set; }
 		public string preview_text { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -2257,7 +2264,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FontSelectionDialog (string title);
 		public unowned Gtk.Widget get_cancel_button ();
-		public unowned string get_font_name ();
+		public string get_font_name ();
 		public unowned Gtk.Widget get_font_selection ();
 		public unowned Gtk.Widget get_ok_button ();
 		public unowned string get_preview_text ();
@@ -2271,7 +2278,7 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void compute_child_allocation (Gtk.Allocation allocation);
 		public unowned string get_label ();
-		public void get_label_align (float xalign, float yalign);
+		public void get_label_align (out float xalign, out float yalign);
 		public unowned Gtk.Widget? get_label_widget ();
 		public Gtk.ShadowType get_shadow_type ();
 		public void set_label (string? label);
@@ -2372,7 +2379,7 @@ namespace Gtk {
 		protected GestureSingle ();
 		public uint get_button ();
 		public uint get_current_button ();
-		public unowned Gdk.EventSequence get_current_sequence ();
+		public Gdk.EventSequence get_current_sequence ();
 		public bool get_exclusive ();
 		public bool get_touch_only ();
 		public void set_button (uint button);
@@ -2386,7 +2393,7 @@ namespace Gtk {
 	public class GestureSwipe : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		public GestureSwipe (Gtk.Widget widget);
-		public bool get_velocity (double velocity_x, double velocity_y);
+		public bool get_velocity (out double velocity_x, out double velocity_y);
 		public virtual signal void swipe (double p0, double p1);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -2404,9 +2411,9 @@ namespace Gtk {
 		public Gradient.linear (double x0, double y0, double x1, double y1);
 		[CCode (has_construct_function = false)]
 		public Gradient.radial (double x0, double y0, double radius0, double x1, double y1, double radius1);
-		public bool resolve (Gtk.StyleProperties props, out unowned Cairo.Pattern resolved_gradient);
-		public unowned Cairo.Pattern resolve_for_context (Gtk.StyleContext context);
-		public unowned string to_string ();
+		public bool resolve (Gtk.StyleProperties props, out Cairo.Pattern resolved_gradient);
+		public Cairo.Pattern resolve_for_context (Gtk.StyleContext context);
+		public string to_string ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Grid : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
@@ -2544,8 +2551,8 @@ namespace Gtk {
 		public virtual bool filter_keypress (Gdk.EventKey event);
 		public virtual void focus_in ();
 		public virtual void focus_out ();
-		public virtual void get_preedit_string (out unowned string str, out Pango.AttrList attrs, out int cursor_pos);
-		public virtual bool get_surrounding (out unowned string text, out int cursor_index);
+		public virtual void get_preedit_string (out string str, out Pango.AttrList attrs, out int cursor_pos);
+		public virtual bool get_surrounding (out string text, out int cursor_index);
 		public virtual void reset ();
 		public virtual void set_client_window (Gdk.Window window);
 		public virtual void set_cursor_location (Gdk.Rectangle area);
@@ -2567,7 +2574,7 @@ namespace Gtk {
 	public class IMContextSimple : Gtk.IMContext {
 		[CCode (has_construct_function = false, type = "GtkIMContext*")]
 		public IMContextSimple ();
-		public void add_table (uint16 data, int max_seq_len, int n_seqs);
+		public void add_table ([CCode (array_length = false)] uint16[] data, int max_seq_len, int n_seqs);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class IMMulticontext : Gtk.IMContext {
@@ -2597,7 +2604,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public IconInfo.for_pixbuf (Gtk.IconTheme icon_theme, Gdk.Pixbuf pixbuf);
 		public void free ();
-		public bool get_attach_points (Gdk.Point[] points);
+		public bool get_attach_points (out Gdk.Point[] points);
 		public int get_base_scale ();
 		public int get_base_size ();
 		public unowned Gdk.Pixbuf get_builtin_pixbuf ();
@@ -2675,7 +2682,7 @@ namespace Gtk {
 		public Gtk.IconInfo? choose_icon_for_scale (string[] icon_names, int size, int scale, Gtk.IconLookupFlags flags);
 		public static GLib.Quark error_quark ();
 		public static unowned Gtk.IconTheme get_default ();
-		public unowned string get_example_icon_name ();
+		public string? get_example_icon_name ();
 		public static unowned Gtk.IconTheme get_for_screen (Gdk.Screen screen);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public int[] get_icon_sizes (string icon_name);
@@ -2694,7 +2701,7 @@ namespace Gtk {
 		public bool rescan_if_needed ();
 		public void set_custom_theme (string theme_name);
 		public void set_screen (Gdk.Screen screen);
-		public void set_search_path (string[] path, int n_elements);
+		public void set_search_path (string[] path);
 		public virtual signal void changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -2702,7 +2709,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public IconView ();
 		public void convert_widget_to_bin_window_coords (int wx, int wy, out int bx, out int by);
-		public unowned Cairo.Surface create_drag_icon (Gtk.TreePath path);
+		public Cairo.Surface create_drag_icon (Gtk.TreePath path);
 		public void enable_model_drag_dest (Gtk.TargetEntry[] targets, Gdk.DragAction actions);
 		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gtk.TargetEntry[] targets, Gdk.DragAction actions);
 		public bool get_activate_on_single_click ();
@@ -2721,7 +2728,7 @@ namespace Gtk {
 		public int get_margin ();
 		public int get_markup_column ();
 		public unowned Gtk.TreeModel get_model ();
-		public unowned Gtk.TreePath get_path_at_pos (int x, int y);
+		public Gtk.TreePath get_path_at_pos (int x, int y);
 		public int get_pixbuf_column ();
 		public bool get_reorderable ();
 		public int get_row_spacing ();
@@ -3154,7 +3161,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ListStore : GLib.Object, Gtk.TreeModel, Gtk.TreeDragSource, Gtk.TreeDragDest, Gtk.TreeSortable, Gtk.Buildable {
-		[CCode (has_construct_function = false, sentinel = "")]
+		[CCode (has_construct_function = false, sentinel = "-1")]
 		public ListStore (int n_columns, ...);
 		public void append (out Gtk.TreeIter iter);
 		public void clear ();
@@ -3163,7 +3170,7 @@ namespace Gtk {
 		public void insert_before (out Gtk.TreeIter iter, Gtk.TreeIter? sibling);
 		[CCode (sentinel = "-1")]
 		public void insert_with_values (out Gtk.TreeIter iter, int position, ...);
-		public void insert_with_valuesv (out Gtk.TreeIter iter, int position, int columns, GLib.Value[] values);
+		public void insert_with_valuesv (out Gtk.TreeIter iter, int position, [CCode (array_length_pos = 4.1)] int[] columns, [CCode (array_length_pos = 4.1)] GLib.Value[] values);
 		public bool iter_is_valid (Gtk.TreeIter iter);
 		public void move_after (ref Gtk.TreeIter iter, Gtk.TreeIter? position);
 		public void move_before (ref Gtk.TreeIter iter, Gtk.TreeIter? position);
@@ -3171,13 +3178,13 @@ namespace Gtk {
 		public ListStore.newv ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
 		public void prepend (out Gtk.TreeIter iter);
 		public bool remove (Gtk.TreeIter iter);
-		public void reorder (int new_order);
+		public void reorder ([CCode (array_length = false, array_null_terminated = true)] int[] new_order);
 		[CCode (sentinel = "-1")]
 		public void @set (Gtk.TreeIter iter, ...);
 		public void set_column_types ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
-		public void set_valist (Gtk.TreeIter iter, void* var_args);
+		public void set_valist (Gtk.TreeIter iter, va_list var_args);
 		public void set_value (Gtk.TreeIter iter, int column, GLib.Value value);
-		public void set_valuesv (Gtk.TreeIter iter, int columns, GLib.Value[] values);
+		public void set_valuesv (Gtk.TreeIter iter, [CCode (array_length_pos = 3.1)] int[] columns, [CCode (array_length_pos = 3.1)] GLib.Value[] values);
 		public void swap (Gtk.TreeIter a, Gtk.TreeIter b);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -3567,7 +3574,7 @@ namespace Gtk {
 	public class OffscreenWindow : Gtk.Window, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public OffscreenWindow ();
-		public unowned Gdk.Pixbuf get_pixbuf ();
+		public Gdk.Pixbuf get_pixbuf ();
 		public unowned Cairo.Surface get_surface ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -3575,7 +3582,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Overlay ();
 		public void add_overlay (Gtk.Widget widget);
-		public virtual signal bool get_child_position (Gtk.Widget widget, Gdk.Rectangle allocation);
+		public virtual signal bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Compact]
@@ -3680,13 +3687,13 @@ namespace Gtk {
 		public PlacesSidebar ();
 		public void add_shortcut (GLib.File location);
 		public bool get_local_only ();
-		public unowned GLib.File get_location ();
-		public unowned GLib.File get_nth_bookmark (int n);
+		public GLib.File get_location ();
+		public GLib.File get_nth_bookmark (int n);
 		public Gtk.PlacesOpenFlags get_open_flags ();
 		public bool get_show_connect_to_server ();
 		public bool get_show_desktop ();
 		public bool get_show_enter_location ();
-		public unowned GLib.SList list_shortcuts ();
+		public GLib.SList<GLib.File> list_shortcuts ();
 		public void remove_shortcut (GLib.File location);
 		public void set_local_only (bool local_only);
 		public void set_location (GLib.File location);
@@ -3695,16 +3702,16 @@ namespace Gtk {
 		public void set_show_desktop (bool show_desktop);
 		public void set_show_enter_location (bool show_enter_location);
 		public bool local_only { get; set; }
-		public GLib.File location { get; set; }
+		public GLib.File location { owned get; set; }
 		public Gtk.PlacesOpenFlags open_flags { get; set; }
 		public bool show_connect_to_server { get; set; }
 		public bool show_desktop { get; set; }
 		public bool show_enter_location { get; set; }
 		public virtual signal int drag_action_ask (int p0);
-		public virtual signal int drag_action_requested (Gdk.DragContext p0, GLib.Object p1, void* p2);
-		public virtual signal void drag_perform_drop (GLib.Object p0, void* p1, int p2);
-		public virtual signal void open_location (GLib.Object p0, Gtk.PlacesOpenFlags p1);
-		public virtual signal void populate_popup (GLib.Object p0, GLib.Object p1, GLib.Object p2);
+		public virtual signal int drag_action_requested (Gdk.DragContext p0, GLib.File p1, GLib.List<GLib.File> p2);
+		public virtual signal void drag_perform_drop (GLib.File p0, GLib.List<GLib.File> p1, int p2);
+		public virtual signal void open_location (GLib.File p0, Gtk.PlacesOpenFlags p1);
+		public virtual signal void populate_popup (Gtk.Menu p0, GLib.File? p1, GLib.Volume? p2);
 		public virtual signal void show_error_message (string p0, string p1);
 	}
 	[CCode (cheader_filename = "gtk/gtkx.h")]
@@ -3729,7 +3736,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Popover.from_model (Gtk.Widget relative_to, GLib.MenuModel model);
 		public bool get_modal ();
-		public bool get_pointing_to (Gdk.Rectangle rect);
+		public bool get_pointing_to (out Gdk.Rectangle rect);
 		public Gtk.PositionType get_position ();
 		public unowned Gtk.Widget get_relative_to ();
 		public void set_modal (bool modal);
@@ -3751,12 +3758,12 @@ namespace Gtk {
 	public class PrintContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected PrintContext ();
-		public unowned Pango.Context create_pango_context ();
-		public unowned Pango.Layout create_pango_layout ();
+		public Pango.Context create_pango_context ();
+		public Pango.Layout create_pango_layout ();
 		public unowned Cairo.Context get_cairo_context ();
 		public double get_dpi_x ();
 		public double get_dpi_y ();
-		public bool get_hard_margins (double top, double bottom, double left, double right);
+		public bool get_hard_margins (out double top, out double bottom, out double left, out double right);
 		public double get_height ();
 		public unowned Gtk.PageSetup get_page_setup ();
 		public unowned Pango.FontMap get_pango_fontmap ();
@@ -3864,10 +3871,10 @@ namespace Gtk {
 		public Gtk.NumberUpLayout get_number_up_layout ();
 		public Gtk.PageOrientation get_orientation ();
 		public unowned string get_output_bin ();
-		public unowned Gtk.PageRange get_page_ranges (int num_ranges);
+		public Gtk.PageRange[] get_page_ranges ();
 		public Gtk.PageSet get_page_set ();
 		public double get_paper_height (Gtk.Unit unit);
-		public unowned Gtk.PaperSize get_paper_size ();
+		public Gtk.PaperSize get_paper_size ();
 		public double get_paper_width (Gtk.Unit unit);
 		public Gtk.PrintPages get_print_pages ();
 		public unowned string get_printer ();
@@ -3898,7 +3905,7 @@ namespace Gtk {
 		public void set_number_up_layout (Gtk.NumberUpLayout number_up_layout);
 		public void set_orientation (Gtk.PageOrientation orientation);
 		public void set_output_bin (string output_bin);
-		public void set_page_ranges (Gtk.PageRange page_ranges, int num_ranges);
+		public void set_page_ranges ([CCode (array_length_pos = 1.1)] Gtk.PageRange[] page_ranges);
 		public void set_page_set (Gtk.PageSet page_set);
 		public void set_paper_height (double height, Gtk.Unit unit);
 		public void set_paper_size (Gtk.PaperSize paper_size);
@@ -4121,7 +4128,7 @@ namespace Gtk {
 		public RcStyle ();
 		public Gtk.RcStyle copy ();
 		[NoWrapper]
-		public virtual unowned Gtk.RcStyle create_rc_style ();
+		public virtual Gtk.RcStyle create_rc_style ();
 		[NoWrapper]
 		public virtual Gtk.Style create_style ();
 		[NoWrapper]
@@ -4199,7 +4206,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_recent_info_ref", type_id = "gtk_recent_info_get_type ()", unref_function = "gtk_recent_info_unref")]
 	[Compact]
 	public class RecentInfo {
-		public unowned GLib.AppInfo create_app_info (string app_name) throws GLib.Error;
+		public GLib.AppInfo create_app_info (string app_name) throws GLib.Error;
 		public bool exists ();
 		public ulong get_added ();
 		public int get_age ();
@@ -4235,7 +4242,7 @@ namespace Gtk {
 		public static unowned Gtk.RecentManager get_default ();
 		public GLib.List<Gtk.RecentInfo> get_items ();
 		public bool has_item (string uri);
-		public unowned Gtk.RecentInfo lookup_item (string uri) throws GLib.Error;
+		public Gtk.RecentInfo lookup_item (string uri) throws GLib.Error;
 		public bool move_item (string uri, string new_uri) throws GLib.Error;
 		public int purge_items () throws GLib.Error;
 		public bool remove_item (string uri) throws GLib.Error;
@@ -4307,14 +4314,14 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ScaleButton : Gtk.Button, Atk.Implementor, Gtk.Buildable, Gtk.Actionable, Gtk.Activatable, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public ScaleButton (Gtk.IconSize size, double min = 0.0, double max = 100.0, double step = 2.0, [CCode (array_length = false)] string[]? icons = null);
+		public ScaleButton (Gtk.IconSize size, double min = 0.0, double max = 100.0, double step = 2.0, [CCode (array_length = false, array_null_terminated = true)] string[]? icons = null);
 		public unowned Gtk.Adjustment get_adjustment ();
 		public unowned Gtk.Widget get_minus_button ();
 		public unowned Gtk.Widget get_plus_button ();
 		public unowned Gtk.Widget get_popup ();
 		public double get_value ();
 		public void set_adjustment (Gtk.Adjustment adjustment);
-		public void set_icons ([CCode (array_length = false)] string[] icons);
+		public void set_icons ([CCode (array_length = false, array_null_terminated = true)] string[] icons);
 		public void set_value (double value);
 		public Gtk.Adjustment adjustment { get; set; }
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -4349,7 +4356,7 @@ namespace Gtk {
 		public int get_min_content_height ();
 		public int get_min_content_width ();
 		public Gtk.CornerType get_placement ();
-		public void get_policy (Gtk.PolicyType hscrollbar_policy, Gtk.PolicyType vscrollbar_policy);
+		public void get_policy (out Gtk.PolicyType hscrollbar_policy, out Gtk.PolicyType vscrollbar_policy);
 		public Gtk.ShadowType get_shadow_type ();
 		public unowned Gtk.Adjustment get_vadjustment ();
 		public unowned Gtk.Widget get_vscrollbar ();
@@ -4426,7 +4433,7 @@ namespace Gtk {
 		public void @set (Gdk.Atom type, int format, uchar[] data);
 		public bool set_pixbuf (Gdk.Pixbuf pixbuf);
 		public bool set_text (string str, int len);
-		public bool set_uris ([CCode (array_length = false)] string[] uris);
+		public bool set_uris ([CCode (array_length = false, array_null_terminated = true)] string[] uris);
 		public bool targets_include_image (bool writable);
 		public bool targets_include_rich_text (Gtk.TextBuffer buffer);
 		public bool targets_include_text ();
@@ -4659,7 +4666,7 @@ namespace Gtk {
 		public void configure (Gtk.Adjustment adjustment, double climb_rate, uint digits);
 		public unowned Gtk.Adjustment get_adjustment ();
 		public uint get_digits ();
-		public void get_increments (double step, double page);
+		public void get_increments (out double step, out double page);
 		public bool get_numeric ();
 		public void get_range (out double min, out double max);
 		public bool get_snap_to_ticks ();
@@ -4772,8 +4779,8 @@ namespace Gtk {
 		public unowned string get_stock ();
 		public Gtk.ImageType get_storage_type ();
 		public unowned string get_title ();
-		public unowned string get_tooltip_markup ();
-		public unowned string get_tooltip_text ();
+		public string get_tooltip_markup ();
+		public string get_tooltip_text ();
 		public bool get_visible ();
 		public uint32 get_x11_window_id ();
 		public bool is_embedded ();
@@ -4810,8 +4817,8 @@ namespace Gtk {
 		public string stock { owned get; set; }
 		public Gtk.ImageType storage_type { get; }
 		public string title { get; set; }
-		public string tooltip_markup { get; set; }
-		public string tooltip_text { get; set; }
+		public string tooltip_markup { owned get; set; }
+		public string tooltip_text { owned get; set; }
 		public bool visible { get; set; }
 		public virtual signal void activate ();
 		public virtual signal bool button_press_event (Gdk.EventButton event);
@@ -4930,7 +4937,7 @@ namespace Gtk {
 		public virtual void init_from_rc (Gtk.RcStyle rc_style);
 		public bool lookup_color (string color_name, out Gdk.Color color);
 		public unowned Gtk.IconSet lookup_icon_set (string stock_id);
-		public virtual unowned Gdk.Pixbuf render_icon (Gtk.IconSource source, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
+		public virtual Gdk.Pixbuf render_icon (Gtk.IconSource source, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
 		public virtual void set_background (Gdk.Window window, Gtk.StateType state_type);
 		[NoAccessorMethod]
 		public Gtk.StyleContext context { owned get; construct; }
@@ -4959,20 +4966,20 @@ namespace Gtk {
 		public Gtk.Border get_padding (Gtk.StateFlags state);
 		public unowned Gtk.StyleContext get_parent ();
 		public unowned Gtk.WidgetPath get_path ();
-		public void get_property (string property, Gtk.StateFlags state, GLib.Value value);
+		public GLib.Value get_property (string property, Gtk.StateFlags state);
 		public int get_scale ();
 		public unowned Gdk.Screen get_screen ();
-		public unowned Gtk.CssSection get_section (string property);
+		public Gtk.CssSection get_section (string property);
 		public Gtk.StateFlags get_state ();
 		public void get_style (...);
 		public void get_style_property (string property_name, GLib.Value value);
-		public void get_style_valist (void* args);
-		public void get_valist (Gtk.StateFlags state, void* args);
+		public void get_style_valist (va_list args);
+		public void get_valist (Gtk.StateFlags state, va_list args);
 		public bool has_class (string class_name);
 		public bool has_region (string region_name, out Gtk.RegionFlags flags_return);
 		public void invalidate ();
-		public unowned GLib.List list_classes ();
-		public unowned GLib.List list_regions ();
+		public GLib.List<weak string> list_classes ();
+		public GLib.List<weak string> list_regions ();
 		public bool lookup_color (string color_name, out Gdk.RGBA color);
 		public unowned Gtk.IconSet lookup_icon_set (string stock_id);
 		public void notify_state_change (Gdk.Window window, void* region_id, Gtk.StateType state, bool state_value);
@@ -5040,17 +5047,17 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public StyleProperties ();
 		public void clear ();
-		public void @get (Gtk.StateFlags state);
-		public bool get_property (string property, Gtk.StateFlags state, GLib.Value value);
-		public void get_valist (Gtk.StateFlags state, void* args);
+		public void @get (Gtk.StateFlags state, ...);
+		public bool get_property (string property, Gtk.StateFlags state, out GLib.Value value);
+		public void get_valist (Gtk.StateFlags state, va_list args);
 		public unowned Gtk.SymbolicColor lookup_color (string name);
-		public static bool lookup_property (string property_name, Gtk.StylePropertyParser parse_func, out unowned GLib.ParamSpec pspec);
+		public static bool lookup_property (string property_name, out unowned Gtk.StylePropertyParser parse_func, out unowned GLib.ParamSpec pspec);
 		public void map_color (string name, Gtk.SymbolicColor color);
 		public void merge (Gtk.StyleProperties props_to_merge, bool replace);
 		public static void register_property (Gtk.StylePropertyParser? parse_func, GLib.ParamSpec pspec);
-		public void @set (Gtk.StateFlags state);
+		public void @set (Gtk.StateFlags state, ...);
 		public void set_property (string property, Gtk.StateFlags state, GLib.Value value);
-		public void set_valist (Gtk.StateFlags state, void* args);
+		public void set_valist (Gtk.StateFlags state, va_list args);
 		public void unset_property (string property, Gtk.StateFlags state);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -5085,7 +5092,7 @@ namespace Gtk {
 		public bool resolve (Gtk.StyleProperties props, out Gdk.RGBA resolved_color);
 		[CCode (has_construct_function = false)]
 		public SymbolicColor.shade (Gtk.SymbolicColor color, double factor);
-		public unowned string to_string ();
+		public string to_string ();
 		[CCode (has_construct_function = false)]
 		public SymbolicColor.win32 (string theme_class, int id);
 	}
@@ -5101,7 +5108,7 @@ namespace Gtk {
 		public uint get_default_row_spacing ();
 		public bool get_homogeneous ();
 		public uint get_row_spacing (uint row);
-		public void get_size (uint rows, uint columns);
+		public void get_size (out uint rows, out uint columns);
 		public void resize (uint rows, uint columns);
 		public void set_col_spacing (uint column, uint spacing);
 		public void set_col_spacings (uint spacing);
@@ -5158,7 +5165,7 @@ namespace Gtk {
 		public void add_table (Gtk.TargetEntry[] targets);
 		public void add_text_targets (uint info);
 		public void add_uri_targets (uint info);
-		public bool find (Gdk.Atom target, uint info);
+		public bool find (Gdk.Atom target, out uint? info);
 		public void remove (Gdk.Atom target);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -5191,7 +5198,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_text_attributes_ref", type_id = "gtk_text_attributes_get_type ()", unref_function = "gtk_text_attributes_unref")]
 	[Compact]
 	public class TextAttributes {
-		public weak Gtk.TextAppearance appearance;
+		public Gtk.TextAppearance appearance;
 		public uint bg_full_height;
 		public Gtk.TextDirection direction;
 		public uint editable;
@@ -5200,7 +5207,7 @@ namespace Gtk {
 		public int indent;
 		public uint invisible;
 		public Gtk.Justification justification;
-		public weak Pango.Language language;
+		public Pango.Language language;
 		public int left_margin;
 		[CCode (array_length = false)]
 		public weak uint[] padding;
@@ -5519,9 +5526,9 @@ namespace Gtk {
 		public bool get_accepts_tab ();
 		public int get_border_window_size (Gtk.TextWindowType type);
 		public unowned Gtk.TextBuffer get_buffer ();
-		public void get_cursor_locations (Gtk.TextIter iter, Gdk.Rectangle strong, Gdk.Rectangle @weak);
+		public void get_cursor_locations (Gtk.TextIter? iter, out Gdk.Rectangle strong, out Gdk.Rectangle @weak);
 		public bool get_cursor_visible ();
-		public unowned Gtk.TextAttributes get_default_attributes ();
+		public Gtk.TextAttributes get_default_attributes ();
 		public bool get_editable ();
 		public unowned Gtk.Adjustment get_hadjustment ();
 		public int get_indent ();
@@ -5539,7 +5546,7 @@ namespace Gtk {
 		public int get_pixels_below_lines ();
 		public int get_pixels_inside_wrap ();
 		public int get_right_margin ();
-		public unowned Pango.TabArray get_tabs ();
+		public Pango.TabArray get_tabs ();
 		public unowned Gtk.Adjustment get_vadjustment ();
 		public void get_visible_rect (out Gdk.Rectangle visible_rect);
 		public unowned Gdk.Window get_window (Gtk.TextWindowType win);
@@ -5593,7 +5600,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool populate_all { get; set; }
 		public int right_margin { get; set; }
-		public Pango.TabArray tabs { get; set; }
+		public Pango.TabArray tabs { owned get; set; }
 		public Gtk.WrapMode wrap_mode { get; set; }
 		public virtual signal void backspace ();
 		public virtual signal void copy_clipboard ();
@@ -5637,10 +5644,10 @@ namespace Gtk {
 		public GLib.Value get_property (string property, Gtk.StateFlags state);
 		public unowned Gdk.Screen get_screen ();
 		public Gtk.StateFlags get_state ();
-		public void get_style ();
+		public void get_style (...);
 		public GLib.Value get_style_property (string property_name);
-		public void get_style_valist (void* args);
-		public void get_valist (Gtk.StateFlags state, void* args);
+		public void get_style_valist (va_list args);
+		public void get_valist (Gtk.StateFlags state, va_list args);
 		public bool has_class (string style_class);
 		public bool has_region (string style_region, out Gtk.RegionFlags flags);
 		public static unowned Gtk.ThemingEngine load (string name);
@@ -5669,7 +5676,7 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void render_icon (Cairo.Context cr, Gdk.Pixbuf pixbuf, double x, double y);
 		[NoWrapper]
-		public virtual unowned Gdk.Pixbuf render_icon_pixbuf (Gtk.IconSource source, Gtk.IconSize size);
+		public virtual Gdk.Pixbuf render_icon_pixbuf (Gtk.IconSource source, Gtk.IconSize size);
 		[NoWrapper]
 		public virtual void render_icon_surface (Cairo.Context cr, Cairo.Surface surface, double x, double y);
 		[NoWrapper]
@@ -5907,9 +5914,9 @@ namespace Gtk {
 		public TreeModelFilter (Gtk.TreeModel child_model, Gtk.TreePath? root);
 		public void clear_cache ();
 		public bool convert_child_iter_to_iter (out Gtk.TreeIter filter_iter, Gtk.TreeIter child_iter);
-		public unowned Gtk.TreePath convert_child_path_to_path (Gtk.TreePath child_path);
+		public Gtk.TreePath convert_child_path_to_path (Gtk.TreePath child_path);
 		public void convert_iter_to_child_iter (out Gtk.TreeIter child_iter, Gtk.TreeIter filter_iter);
-		public unowned Gtk.TreePath convert_path_to_child_path (Gtk.TreePath filter_path);
+		public Gtk.TreePath convert_path_to_child_path (Gtk.TreePath filter_path);
 		public unowned Gtk.TreeModel get_model ();
 		[NoWrapper]
 		public virtual void modify (Gtk.TreeModel child_model, Gtk.TreeIter iter, GLib.Value value, int column);
@@ -5930,9 +5937,9 @@ namespace Gtk {
 		protected TreeModelSort ();
 		public void clear_cache ();
 		public bool convert_child_iter_to_iter (out Gtk.TreeIter sort_iter, Gtk.TreeIter child_iter);
-		public unowned Gtk.TreePath convert_child_path_to_path (Gtk.TreePath child_path);
+		public Gtk.TreePath convert_child_path_to_path (Gtk.TreePath child_path);
 		public void convert_iter_to_child_iter (out Gtk.TreeIter child_iter, Gtk.TreeIter sorted_iter);
-		public unowned Gtk.TreePath convert_path_to_child_path (Gtk.TreePath sorted_path);
+		public Gtk.TreePath convert_path_to_child_path (Gtk.TreePath sorted_path);
 		public unowned Gtk.TreeModel get_model ();
 		public bool iter_is_valid (Gtk.TreeIter iter);
 		public void reset_default_sort_func ();
@@ -6023,7 +6030,7 @@ namespace Gtk {
 		public void insert_before (out Gtk.TreeIter iter, Gtk.TreeIter? parent, Gtk.TreeIter? sibling);
 		[CCode (sentinel = "-1")]
 		public void insert_with_values (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int position, ...);
-		public void insert_with_valuesv (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int position, int columns, GLib.Value[] values);
+		public void insert_with_valuesv (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int position, [CCode (array_length_pos = 5.1)] int[] columns, [CCode (array_length_pos = 5.1)] GLib.Value[] values);
 		public bool is_ancestor (Gtk.TreeIter iter, Gtk.TreeIter descendant);
 		public int iter_depth (Gtk.TreeIter iter);
 		public bool iter_is_valid (Gtk.TreeIter iter);
@@ -6056,7 +6063,7 @@ namespace Gtk {
 		public void convert_tree_to_widget_coords (int tx, int ty, out int wx, out int wy);
 		public void convert_widget_to_bin_window_coords (int wx, int wy, out int bx, out int by);
 		public void convert_widget_to_tree_coords (int wx, int wy, out int tx, out int ty);
-		public unowned Cairo.Surface create_row_drag_icon (Gtk.TreePath path);
+		public Cairo.Surface create_row_drag_icon (Gtk.TreePath path);
 		public void enable_model_drag_dest (Gtk.TargetEntry[] targets, Gdk.DragAction actions);
 		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gtk.TargetEntry[] targets, Gdk.DragAction actions);
 		public void expand_all ();
@@ -6103,11 +6110,11 @@ namespace Gtk {
 		public int insert_column (Gtk.TreeViewColumn column, int position);
 		public int insert_column_with_attributes (int position, string? title, Gtk.CellRenderer cell, ...);
 		public int insert_column_with_data_func (int position, string title, Gtk.CellRenderer cell, owned Gtk.TreeCellDataFunc func);
-		public bool is_blank_at_pos (int x, int y, out unowned Gtk.TreePath path, out unowned Gtk.TreeViewColumn column, int cell_x, int cell_y);
+		public bool is_blank_at_pos (int x, int y, out Gtk.TreePath path, out Gtk.TreeViewColumn column, out int cell_x, out int cell_y);
 		[CCode (cname = "gtk_tree_view_row_expanded")]
 		public bool is_row_expanded (Gtk.TreePath path);
 		public bool is_rubber_banding_active ();
-		public void map_expanded_rows (Gtk.TreeViewMappingFunc func, void* data);
+		public void map_expanded_rows (Gtk.TreeViewMappingFunc func);
 		public void move_column_after (Gtk.TreeViewColumn column, Gtk.TreeViewColumn base_column);
 		public int remove_column (Gtk.TreeViewColumn column);
 		public void scroll_to_cell (Gtk.TreePath? path, Gtk.TreeViewColumn? column, bool use_align, float row_align, float col_align);
@@ -6193,7 +6200,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public TreeViewColumn ();
 		public bool cell_get_position (Gtk.CellRenderer cell_renderer, out int x_offset, out int width);
-		public void cell_get_size (out Gdk.Rectangle cell_area, out int x_offset, out int y_offset, out int width, out int height);
+		public void cell_get_size (Gdk.Rectangle? cell_area, out int x_offset, out int y_offset, out int width, out int height);
 		public bool cell_is_visible ();
 		public void cell_set_cell_data (Gtk.TreeModel tree_model, Gtk.TreeIter iter, bool is_expander, bool is_expanded);
 		public void focus_cell (Gtk.CellRenderer cell);
@@ -6277,7 +6284,7 @@ namespace Gtk {
 		[Deprecated (since = "3.4")]
 		public bool get_add_tearoffs ();
 		public GLib.SList<weak Gtk.Widget> get_toplevels (Gtk.UIManagerItemType types);
-		public unowned string get_ui ();
+		public string get_ui ();
 		public virtual unowned Gtk.Widget get_widget (string path);
 		public void insert_action_group (Gtk.ActionGroup action_group, int pos);
 		public uint new_merge_id ();
@@ -6287,7 +6294,7 @@ namespace Gtk {
 		public void set_add_tearoffs (bool add_tearoffs);
 		[Deprecated (since = "3.4")]
 		public bool add_tearoffs { get; set; }
-		public string ui { get; }
+		public string ui { owned get; }
 		public virtual signal void actions_changed ();
 		public virtual signal void add_widget (Gtk.Widget widget);
 		public virtual signal void connect_proxy (Gtk.Action action, Gtk.Widget proxy);
@@ -6356,7 +6363,7 @@ namespace Gtk {
 	public class Widget : GLib.InitiallyUnowned, Atk.Implementor, Gtk.Buildable {
 		public class uint activate_signal;
 		[CCode (construct_function = "gtk_widget_new", has_new_function = false)]
-		public Widget (...);
+		public Widget (GLib.Type type, ...);
 		public bool activate ();
 		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
 		public void add_device_events (Gdk.Device device, Gdk.EventMask events);
@@ -6377,7 +6384,7 @@ namespace Gtk {
 		public class void bind_template_child_full (string name, bool internal_child, ssize_t struct_offset);
 		public bool child_focus (Gtk.DirectionType direction);
 		[Deprecated (replacement = "get_path", since = "3.0")]
-		public void class_path (out uint path_length, out unowned string path, out unowned string path_reversed);
+		public void class_path (out uint path_length, out string path, out string path_reversed);
 		public virtual bool compute_expand (Gtk.Orientation orientation);
 		[CCode (vfunc_name = "compute_expand")]
 		[NoWrapper]
@@ -6387,7 +6394,8 @@ namespace Gtk {
 		public void destroyed (out unowned Gtk.Widget widget_pointer);
 		public bool device_is_shadowed (Gdk.Device device);
 		[NoWrapper]
-		public virtual void dispatch_child_properties_changed (uint n_pspecs, out unowned GLib.ParamSpec pspecs);
+		public virtual void dispatch_child_properties_changed ([CCode (array_length_pos = 0.5)] out GLib.ParamSpec[] pspecs);
+		[Deprecated (replacement = "StyleContext", since = "3.0")]
 		public void ensure_style ();
 		public void error_bell ();
 		[CCode (cname = "gtk_widget_class_find_style_property")]
@@ -6407,7 +6415,7 @@ namespace Gtk {
 		public bool get_child_visible ();
 		public void get_clip (out Gtk.Allocation clip);
 		public unowned Gtk.Clipboard get_clipboard (Gdk.Atom selection);
-		public unowned string get_composite_name ();
+		public string get_composite_name ();
 		public static Gtk.TextDirection get_default_direction ();
 		[Deprecated (replacement = "StyleContext, and CssProvider.get_default() to obtain a Gtk.StyleProvider with the default widget style information", since = "3.0")]
 		public static unowned Gtk.Style get_default_style ();
@@ -6442,7 +6450,7 @@ namespace Gtk {
 		[Deprecated (replacement = "Gdk.Window.get_device_position", since = "3.4")]
 		public void get_pointer (out int x, out int y);
 		public virtual void get_preferred_height (out int minimum_height, out int natural_height);
-		public virtual void get_preferred_height_and_baseline_for_width (int width, int minimum_height, int natural_height, int minimum_baseline, int natural_baseline);
+		public virtual void get_preferred_height_and_baseline_for_width (int width, out int minimum_height, out int natural_height, out int minimum_baseline, out int natural_baseline);
 		public virtual void get_preferred_height_for_width (int width, out int minimum_height, out int natural_height);
 		[CCode (vfunc_name = "get_preferred_height_for_width")]
 		[NoWrapper]
@@ -6477,8 +6485,8 @@ namespace Gtk {
 		public unowned Gtk.StyleContext get_style_context ();
 		public bool get_support_multidevice ();
 		public unowned GLib.Object get_template_child (GLib.Type widget_type, string name);
-		public unowned string get_tooltip_markup ();
-		public unowned string get_tooltip_text ();
+		public string get_tooltip_markup ();
+		public string get_tooltip_text ();
 		public unowned Gtk.Window get_tooltip_window ();
 		public unowned Gtk.Widget get_toplevel ();
 		public Gtk.Align get_valign ();
@@ -6509,7 +6517,7 @@ namespace Gtk {
 		public bool is_sensitive ();
 		public bool is_toplevel ();
 		public bool is_visible ();
-		public GLib.List<GLib.Closure> list_accel_closures ();
+		public GLib.List<weak GLib.Closure> list_accel_closures ();
 		public GLib.List<weak Gtk.Widget> list_mnemonic_labels ();
 		[CCode (cname = "gtk_widget_class_list_style_properties")]
 		public class unowned GLib.ParamSpec list_style_properties (uint n_properties);
@@ -6533,7 +6541,7 @@ namespace Gtk {
 		public void override_font (Pango.FontDescription? font_desc);
 		public void override_symbolic_color (string name, Gdk.RGBA? color);
 		[Deprecated (replacement = "get_path", since = "3.0")]
-		public void path (out uint path_length, out unowned string path, out unowned string path_reversed);
+		public void path (out uint path_length, out string path, out string path_reversed);
 		public static void pop_composite_child ();
 		public static void push_composite_child ();
 		public void queue_compute_expand ();
@@ -6542,13 +6550,13 @@ namespace Gtk {
 		public virtual void queue_draw_region (Cairo.Region region);
 		public void queue_resize ();
 		public void queue_resize_no_redraw ();
-		public unowned Cairo.Region region_intersect (Cairo.Region region);
+		public Cairo.Region region_intersect (Cairo.Region region);
 		public void register_window (Gdk.Window window);
 		public bool remove_accelerator (Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods);
 		public void remove_mnemonic_label (Gtk.Widget label);
 		public void remove_tick_callback (uint id);
 		public Gdk.Pixbuf render_icon (string stock_id, Gtk.IconSize size, string? detail);
-		public unowned Gdk.Pixbuf render_icon_pixbuf (string stock_id, Gtk.IconSize size);
+		public Gdk.Pixbuf render_icon_pixbuf (string stock_id, Gtk.IconSize size);
 		public void reparent (Gtk.Widget new_parent);
 		[Deprecated (replacement = "reset_style", since = "3.0")]
 		public void reset_rc_styles ();
@@ -6623,7 +6631,7 @@ namespace Gtk {
 		public void style_attach ();
 		public void style_get (...);
 		public void style_get_property (string property_name, ref GLib.Value value);
-		public void style_get_valist (string first_property_name, void* var_args);
+		public void style_get_valist (string first_property_name, va_list var_args);
 		public void thaw_child_notify ();
 		public bool translate_coordinates (Gtk.Widget dest_widget, int src_x, int src_y, out int dest_x, out int dest_y);
 		public void trigger_tooltip_query ();
@@ -6668,8 +6676,8 @@ namespace Gtk {
 		public int scale_factor { get; }
 		public bool sensitive { get; set; }
 		public Gtk.Style style { get; set; }
-		public string tooltip_markup { get; set; }
-		public string tooltip_text { get; set; }
+		public string tooltip_markup { owned get; set; }
+		public string tooltip_text { owned get; set; }
 		public Gtk.Align valign { get; set; }
 		public bool vexpand { get; set; }
 		public bool vexpand_set { get; set; }
@@ -6785,7 +6793,7 @@ namespace Gtk {
 		public int append_for_widget (Gtk.Widget widget);
 		public int append_type (GLib.Type type);
 		public int append_with_siblings (Gtk.WidgetPath siblings, uint sibling_index);
-		public unowned Gtk.WidgetPath copy ();
+		public Gtk.WidgetPath copy ();
 		public GLib.Type get_object_type ();
 		public bool has_parent (GLib.Type type);
 		public bool is_type (GLib.Type type);
@@ -6802,10 +6810,10 @@ namespace Gtk {
 		public bool iter_has_name (int pos, string name);
 		public bool iter_has_qclass (int pos, GLib.Quark qname);
 		public bool iter_has_qname (int pos, GLib.Quark qname);
-		public bool iter_has_qregion (int pos, GLib.Quark qname, Gtk.RegionFlags flags);
+		public bool iter_has_qregion (int pos, GLib.Quark qname, out Gtk.RegionFlags flags);
 		public bool iter_has_region (int pos, string name, out Gtk.RegionFlags flags);
-		public unowned GLib.SList iter_list_classes (int pos);
-		public unowned GLib.SList iter_list_regions (int pos);
+		public GLib.SList<weak string> iter_list_classes (int pos);
+		public GLib.SList<weak string> iter_list_regions (int pos);
 		public void iter_remove_class (int pos, string name);
 		public void iter_remove_region (int pos, string name);
 		public void iter_set_name (int pos, string name);
@@ -6813,7 +6821,7 @@ namespace Gtk {
 		public void iter_set_state (int pos, Gtk.StateFlags state);
 		public int length ();
 		public void prepend_type (GLib.Type type);
-		public unowned string to_string ();
+		public string to_string ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Window : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
@@ -6855,7 +6863,7 @@ namespace Gtk {
 		public double get_opacity ();
 		public void get_position (out int root_x, out int root_y);
 		public bool get_resizable ();
-		public bool get_resize_grip_area (Gdk.Rectangle rect);
+		public bool get_resize_grip_area (out Gdk.Rectangle rect);
 		public unowned string get_role ();
 		public unowned Gdk.Screen get_screen ();
 		public void get_size (out int width, out int height);
@@ -6891,7 +6899,7 @@ namespace Gtk {
 		public void set_default_geometry (int width, int height);
 		public static void set_default_icon (Gdk.Pixbuf icon);
 		public static bool set_default_icon_from_file (string filename) throws GLib.Error;
-		public static void set_default_icon_list (GLib.List<Gdk.Pixbuf> list);
+		public static void set_default_icon_list (owned GLib.List<weak Gdk.Pixbuf> list);
 		public static void set_default_icon_name (string name);
 		public void set_default_size (int width, int height);
 		public void set_deletable (bool setting);
@@ -7007,7 +7015,7 @@ namespace Gtk {
 		public abstract unowned string get_action_name ();
 		public abstract unowned GLib.Variant get_action_target_value ();
 		public abstract void set_action_name (string action_name);
-		public void set_action_target (string format_string);
+		public void set_action_target (string format_string, ...);
 		public abstract void set_action_target_value (GLib.Variant target_value);
 		public void set_detailed_action_name (string detailed_action_name);
 		public string action_name { get; set; }
@@ -7029,15 +7037,15 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface AppChooser : Gtk.Widget {
-		public unowned GLib.AppInfo get_app_info ();
-		public unowned string get_content_type ();
+		public GLib.AppInfo get_app_info ();
+		public string get_content_type ();
 		public void refresh ();
-		public string content_type { get; construct; }
+		public string content_type { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface Buildable : GLib.Object {
 		public abstract void add_child (Gtk.Builder builder, GLib.Object child, string? type);
-		public abstract unowned GLib.Object construct_child (Gtk.Builder builder, string name);
+		public abstract GLib.Object construct_child (Gtk.Builder builder, string name);
 		public abstract void custom_finished (Gtk.Builder builder, GLib.Object? child, string tagname, void* data);
 		public abstract void custom_tag_end (Gtk.Builder builder, GLib.Object? child, string tagname, out void* data);
 		public abstract bool custom_tag_start (Gtk.Builder builder, GLib.Object? child, string tagname, out GLib.MarkupParser parser, out void* data);
@@ -7101,8 +7109,8 @@ namespace Gtk {
 		[NoWrapper]
 		public abstract void do_delete_text (int start_pos, int end_pos);
 		[NoWrapper]
-		public abstract void do_insert_text (string new_text, int new_text_length, int position);
-		public abstract unowned string get_chars (int start_pos, int end_pos);
+		public abstract void do_insert_text (string new_text, int new_text_length, ref int position);
+		public abstract string get_chars (int start_pos, int end_pos);
 		public bool get_editable ();
 		public abstract int get_position ();
 		public abstract bool get_selection_bounds (out int start_pos, out int end_pos);
@@ -7126,18 +7134,18 @@ namespace Gtk {
 		public Gtk.FileChooserAction get_action ();
 		public bool get_create_folders ();
 		public string get_current_folder ();
-		public unowned GLib.File get_current_folder_file ();
+		public GLib.File get_current_folder_file ();
 		public string get_current_folder_uri ();
-		public unowned string get_current_name ();
+		public string get_current_name ();
 		public bool get_do_overwrite_confirmation ();
 		public unowned Gtk.Widget get_extra_widget ();
-		public unowned GLib.File get_file ();
+		public GLib.File get_file ();
 		public string get_filename ();
 		public GLib.SList<string> get_filenames ();
 		public GLib.SList<GLib.File> get_files ();
 		public unowned Gtk.FileFilter get_filter ();
 		public bool get_local_only ();
-		public unowned GLib.File get_preview_file ();
+		public GLib.File get_preview_file ();
 		public string get_preview_filename ();
 		public string get_preview_uri ();
 		public unowned Gtk.Widget get_preview_widget ();
@@ -7182,10 +7190,10 @@ namespace Gtk {
 		public Gtk.FileChooserAction action { get; set; }
 		public bool create_folders { get; set; }
 		public bool do_overwrite_confirmation { get; set; }
-		public Gtk.Widget extra_widget { get; set; }
-		public Gtk.FileFilter filter { get; set; }
+		public Gtk.Widget extra_widget { owned get; set; }
+		public Gtk.FileFilter filter { owned get; set; }
 		public bool local_only { get; set; }
-		public Gtk.Widget preview_widget { get; set; }
+		public Gtk.Widget preview_widget { owned get; set; }
 		public bool preview_widget_active { get; set; }
 		public bool select_multiple { get; set; }
 		public bool show_hidden { get; set; }
@@ -7201,21 +7209,21 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface FontChooser : GLib.Object {
-		public unowned string get_font ();
-		public unowned Pango.FontDescription get_font_desc ();
+		public string get_font ();
+		public Pango.FontDescription get_font_desc ();
 		public abstract unowned Pango.FontFace get_font_face ();
 		public abstract unowned Pango.FontFamily get_font_family ();
 		public abstract int get_font_size ();
-		public unowned string get_preview_text ();
+		public string get_preview_text ();
 		public bool get_show_preview_entry ();
 		public abstract void set_filter_func (owned Gtk.FontFilterFunc filter);
 		public void set_font (string fontname);
 		public void set_font_desc (Pango.FontDescription font_desc);
 		public void set_preview_text (string text);
 		public void set_show_preview_entry (bool show_preview_entry);
-		public string font { get; set; }
-		public Pango.FontDescription font_desc { get; set; }
-		public string preview_text { get; set; }
+		public string font { owned get; set; }
+		public Pango.FontDescription font_desc { owned get; set; }
+		public string preview_text { owned get; set; }
 		public bool show_preview_entry { get; set; }
 		public signal void font_activated (string fontname);
 	}
@@ -7237,8 +7245,8 @@ namespace Gtk {
 	public interface RecentChooser : GLib.Object {
 		public abstract void add_filter (Gtk.RecentFilter filter);
 		public static GLib.Quark error_quark ();
-		public unowned Gtk.RecentInfo get_current_item ();
-		public abstract unowned string get_current_uri ();
+		public Gtk.RecentInfo get_current_item ();
+		public abstract string get_current_uri ();
 		public unowned Gtk.RecentFilter get_filter ();
 		public abstract GLib.List<Gtk.RecentInfo> get_items ();
 		public int get_limit ();
@@ -7251,7 +7259,7 @@ namespace Gtk {
 		public bool get_show_private ();
 		public bool get_show_tips ();
 		public Gtk.RecentSortType get_sort_type ();
-		public unowned string get_uris (size_t length);
+		public string[] get_uris ();
 		public abstract GLib.SList<weak Gtk.RecentFilter> list_filters ();
 		public abstract void remove_filter (Gtk.RecentFilter filter);
 		public abstract void select_all ();
@@ -7269,7 +7277,7 @@ namespace Gtk {
 		public void set_sort_type (Gtk.RecentSortType sort_type);
 		public abstract void unselect_all ();
 		public abstract void unselect_uri (string uri);
-		public Gtk.RecentFilter filter { get; set; }
+		public Gtk.RecentFilter filter { owned get; set; }
 		public int limit { get; set; }
 		public bool local_only { get; set; }
 		public Gtk.RecentManager recent_manager { construct; }
@@ -7292,16 +7300,16 @@ namespace Gtk {
 		public void set_hscroll_policy (Gtk.ScrollablePolicy policy);
 		public void set_vadjustment (Gtk.Adjustment vadjustment);
 		public void set_vscroll_policy (Gtk.ScrollablePolicy policy);
-		public Gtk.Adjustment hadjustment { get; set construct; }
+		public Gtk.Adjustment hadjustment { owned get; set construct; }
 		public Gtk.ScrollablePolicy hscroll_policy { get; set; }
-		public Gtk.Adjustment vadjustment { get; set construct; }
+		public Gtk.Adjustment vadjustment { owned get; set construct; }
 		public Gtk.ScrollablePolicy vscroll_policy { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface StyleProvider {
 		public abstract unowned Gtk.IconFactory get_icon_factory (Gtk.WidgetPath path);
-		public abstract unowned Gtk.StyleProperties get_style (Gtk.WidgetPath path);
-		public abstract bool get_style_property (Gtk.WidgetPath path, Gtk.StateFlags state, GLib.ParamSpec pspec, GLib.Value value);
+		public abstract Gtk.StyleProperties get_style (Gtk.WidgetPath path);
+		public abstract bool get_style_property (Gtk.WidgetPath path, Gtk.StateFlags state, GLib.ParamSpec pspec, out GLib.Value value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface ToolShell : Gtk.Widget {
@@ -7349,7 +7357,7 @@ namespace Gtk {
 		public abstract bool iter_parent (out Gtk.TreeIter iter, Gtk.TreeIter child);
 		public virtual bool iter_previous (ref Gtk.TreeIter iter);
 		public virtual void ref_node (Gtk.TreeIter iter);
-		public void rows_reordered_with_length (Gtk.TreePath path, Gtk.TreeIter iter, int new_order, int length);
+		public void rows_reordered_with_length (Gtk.TreePath path, Gtk.TreeIter? iter, [CCode (array_length_pos = 3.1)] int[] new_order);
 		public virtual void unref_node (Gtk.TreeIter iter);
 		[HasEmitter]
 		public signal void row_changed (Gtk.TreePath path, Gtk.TreeIter iter);
@@ -7389,11 +7397,7 @@ namespace Gtk {
 		public weak Gtk.ActionCallback callback;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public struct Allocation {
-		public int x;
-		public int y;
-		public int width;
-		public int height;
+	public struct Allocation : Gdk.Rectangle {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct BindingArg {
@@ -7541,21 +7545,21 @@ namespace Gtk {
 		public unichar get_char ();
 		public int get_chars_in_line ();
 		public unowned Gtk.TextChildAnchor get_child_anchor ();
-		public unowned Pango.Language get_language ();
+		public Pango.Language get_language ();
 		public int get_line ();
 		public int get_line_index ();
 		public int get_line_offset ();
 		public GLib.SList<weak Gtk.TextMark> get_marks ();
 		public int get_offset ();
 		public unowned Gdk.Pixbuf get_pixbuf ();
-		public unowned string get_slice (Gtk.TextIter end);
+		public string get_slice (Gtk.TextIter end);
 		public GLib.SList<weak Gtk.TextTag> get_tags ();
-		public unowned string get_text (Gtk.TextIter end);
+		public string get_text (Gtk.TextIter end);
 		public GLib.SList<weak Gtk.TextTag> get_toggled_tags (bool toggled_on);
 		public int get_visible_line_index ();
 		public int get_visible_line_offset ();
-		public unowned string get_visible_slice (Gtk.TextIter end);
-		public unowned string get_visible_text (Gtk.TextIter end);
+		public string get_visible_slice (Gtk.TextIter end);
+		public string get_visible_text (Gtk.TextIter end);
 		public bool has_tag (Gtk.TextTag tag);
 		public bool in_range (Gtk.TextIter start, Gtk.TextIter end);
 		public bool inside_sentence ();
@@ -7730,18 +7734,6 @@ namespace Gtk {
 		DEPRECATED,
 		UNKNOWN_VALUE
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_SECTION_")]
-	public enum CssSectionType {
-		DOCUMENT,
-		IMPORT,
-		COLOR_DEFINITION,
-		BINDING_SET,
-		RULESET,
-		SELECTOR,
-		DECLARATION,
-		VALUE,
-		KEYFRAMES
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DEBUG_")]
 	[Flags]
 	public enum DebugFlag {
@@ -7841,13 +7833,6 @@ namespace Gtk {
 		ACCEPT_FILENAME,
 		SELECT_AGAIN
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FILE_CHOOSER_ERROR_")]
-	public enum FileChooserError {
-		NONEXISTENT,
-		BAD_FILENAME,
-		ALREADY_EXISTS,
-		INCOMPLETE_HOSTNAME
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FILE_FILTER_")]
 	[Flags]
 	public enum FileFilterFlags {
@@ -7890,11 +7875,6 @@ namespace Gtk {
 		BUTTON,
 		DND,
 		DIALOG
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_THEME_")]
-	public enum IconThemeError {
-		NOT_FOUND,
-		FAILED
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_VIEW_")]
 	public enum IconViewDropPosition {
@@ -8210,11 +8190,6 @@ namespace Gtk {
 		UNBIND,
 		LAST
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_CHOOSER_ERROR_")]
-	public enum RecentChooserError {
-		NOT_FOUND,
-		INVALID_URI
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_FILTER_")]
 	[Flags]
 	public enum RecentFilterFlags {
@@ -8224,16 +8199,6 @@ namespace Gtk {
 		APPLICATION,
 		GROUP,
 		AGE
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_MANAGER_ERROR_")]
-	public enum RecentManagerError {
-		NOT_FOUND,
-		INVALID_URI,
-		INVALID_ENCODING,
-		NOT_REGISTERED,
-		READ,
-		WRITE,
-		UNKNOWN
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_SORT_")]
 	public enum RecentSortType {
@@ -8580,6 +8545,45 @@ namespace Gtk {
 		TEMPLATE_MISMATCH,
 		INVALID_PROPERTY,
 		INVALID_SIGNAL
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_SECTION_")]
+	public errordomain CssSectionType {
+		DOCUMENT,
+		IMPORT,
+		COLOR_DEFINITION,
+		BINDING_SET,
+		RULESET,
+		SELECTOR,
+		DECLARATION,
+		VALUE,
+		KEYFRAMES
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FILE_CHOOSER_ERROR_")]
+	public errordomain FileChooserError {
+		NONEXISTENT,
+		BAD_FILENAME,
+		ALREADY_EXISTS,
+		INCOMPLETE_HOSTNAME
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_THEME_")]
+	public errordomain IconThemeError {
+		NOT_FOUND,
+		FAILED
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_CHOOSER_ERROR_")]
+	public errordomain RecentChooserError {
+		NOT_FOUND,
+		INVALID_URI
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_MANAGER_ERROR_")]
+	public errordomain RecentManagerError {
+		NOT_FOUND,
+		INVALID_URI,
+		INVALID_ENCODING,
+		NOT_REGISTERED,
+		READ,
+		WRITE,
+		UNKNOWN
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool AccelGroupActivate (Gtk.AccelGroup accel_group, GLib.Object acceleratable, uint keyval, Gdk.ModifierType modifier);

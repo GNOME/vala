@@ -34,11 +34,12 @@ namespace Gtk {
 		public weak string string_data;
 	}
 
-	public struct Allocation {
-		public int x;
-		public int y;
-		public int width;
-		public int height;
+	public struct Allocation : Gdk.Rectangle {
+	}
+
+	[Compact]
+	public class BindingSet {
+		public static unowned BindingSet @new (string name);
 	}
 
 	public class Container {
@@ -62,7 +63,7 @@ namespace Gtk {
 
 	public class Widget {
 		[CCode (has_new_function = false, construct_function = "gtk_widget_new")]
-		public extern Widget (...);
+		public extern Widget (GLib.Type type, ...);
 		public class uint activate_signal;
 		[CCode (vfunc_name = "get_preferred_height")]
 		[NoWrapper]
@@ -490,5 +491,6 @@ namespace Gtk {
 		public static void add_static (Gtk.StockItem[] items);
 		public static GLib.SList<string> list_ids ();
 		public static bool lookup (string stock_id, out Gtk.StockItem item);
+		public static void set_translate_func (string domain, owned Gtk.TranslateFunc func);
 	}
 }

@@ -30,11 +30,12 @@ namespace Gtk {
 		public Gtk.AccelKey* find (Gtk.AccelGroupFindFunc find_func);
 	}
 
-	public struct Allocation {
-		public int x;
-		public int y;
-		public int width;
-		public int height;
+	public struct Allocation : Gdk.Rectangle {
+	}
+
+	[Compact]
+	public class BindingSet {
+		public static unowned BindingSet @new (string name);
 	}
 
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -203,7 +204,7 @@ namespace Gtk {
 
 	public class Widget {
 		[CCode (has_new_function = false, construct_function = "gtk_widget_new")]
-		public extern Widget (...);
+		public extern Widget (GLib.Type type, ...);
 
 		[CCode (cname = "GTK_WIDGET_FLAGS")]
 		public extern WidgetFlags get_flags ();
@@ -511,4 +512,6 @@ namespace Gtk {
 	public static void stock_add_static (Gtk.StockItem[] items);
 	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.list_ids")]
 	public static GLib.SList<string> stock_list_ids ();
+	[Deprecated (since = "vala-0.26", replacement = "Gtk.Stock.set_translate_func")]
+	public static void stock_set_translate_func (string domain, owned Gtk.TranslateFunc func);
 }
