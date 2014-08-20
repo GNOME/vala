@@ -598,11 +598,6 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 		this.gir_comment = gir_comment;
 		this.element = element;
 
-		bool has_instance = false;
-		if (element is Api.Method) {
-			has_instance = !((Api.Method) element).is_static;
-		}
-
 
 		// main:
 		Comment? cmnt = _parse (gir_comment);
@@ -645,10 +640,9 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 			Taglets.Param? taglet = _parse_block_taglet (iter.get_value (), "param") as Taglets.Param;
 			string param_name = iter.get_key ();
 
-			if (taglet != null && !(has_instance && param_name == gir_comment.instance_param_name)) {
-				taglet.parameter_name = param_name;
-				add_taglet (ref cmnt, taglet);
-			}
+			taglet.is_c_self_param = (param_name == gir_comment.instance_param_name);
+			taglet.parameter_name = param_name;
+			add_taglet (ref cmnt, taglet);
 		}
 
 

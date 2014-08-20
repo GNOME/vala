@@ -34,6 +34,9 @@ public class Valadoc.Taglets.Param : BlockContent, Taglet, Block {
 
 	public bool is_c_self_param { internal set; get; }
 
+	public bool is_this { private set; get; }
+
+
 	public Rule? get_parser_rule (Rule run_rule) {
 		return Rule.seq ({
 			Rule.option ({ Rule.many ({ TokenType.SPACE }) }),
@@ -47,6 +50,7 @@ public class Valadoc.Taglets.Param : BlockContent, Taglet, Block {
 	{
 		// Check for the existence of such a parameter
 		unowned string? implicit_return_array_length = null;
+		bool has_instance = has_instance (container);
 		bool is_implicit = false;
 		this.parameter = null;
 
@@ -59,13 +63,16 @@ public class Valadoc.Taglets.Param : BlockContent, Taglet, Block {
 			return ;
 		}
 
-
-		if (parameter_name == "...") {
+		if (is_c_self_param == true && has_instance) {
+			this.parameter_name = "this";
+			this.is_this = true;
+			this.position = 0;
+		} else if (parameter_name == "...") {
 			Gee.List<Api.Node> params = container.get_children_by_type (Api.NodeType.FORMAL_PARAMETER, false);
 			foreach (Api.Node param in params) {
 				if (((Api.FormalParameter) param).ellipsis) {
 					this.parameter = (Api.Symbol) param;
-					this.position = params.size - 1;
+					this.position = (has_instance)? params.size : params.size - 1;
 					break;
 				}
 			}
@@ -73,7 +80,7 @@ public class Valadoc.Taglets.Param : BlockContent, Taglet, Block {
 			Gee.List<Api.Node> params = container.get_children_by_types ({Api.NodeType.FORMAL_PARAMETER,
 																		  Api.NodeType.TYPE_PARAMETER},
 																		 false);
-			int pos = 0;
+			int pos = (has_instance)? 1 : 0;
 
 			foreach (Api.Node param in params) {
 				if (param.name == parameter_name) {
@@ -114,6 +121,14 @@ public class Valadoc.Taglets.Param : BlockContent, Taglet, Block {
 		}
 
 		base.check (api_root, container, file_path, reporter, settings);
+	}
+
+	private bool has_instance (Api.Item element) {
+		if (element is Api.Method) {
+			return !((Api.Method) element).is_static;
+		}
+
+		return false;
 	}
 
 	public override void accept (ContentVisitor visitor) {

@@ -175,7 +175,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 			(taglet) => {
 				var param = taglet as Taglets.Param;
 				string[]? unknown_parameter_css = null;
-				if (param.parameter == null) {
+				if (param.parameter == null && !param.is_this) {
 					unknown_parameter_css = {"class", "main_parameter_table_unknown_parameter"};
 				}
 
