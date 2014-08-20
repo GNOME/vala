@@ -20,9 +20,9 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
-
 using Valadoc.Api;
 using Gee;
+
 
 /**
  * Resolves symbols by C-names
@@ -120,9 +120,9 @@ public class Valadoc.CTypeResolver : Visitor {
 	 * @return the resolved node or null
 	 */
 	public Api.Node? resolve_symbol (Api.Node? element, string _name) {
-		string name = _name.replace ("-", "_");
+		string name = _name.replace ("->", ".").replace ("-", "_");
 
-		if (element != null && _name.has_prefix (":")) {
+		if (element != null && name.has_prefix (":")) {
 			Item parent = element;
 			while (parent != null && !(parent is Class || parent is Interface)) {
 				parent = parent.parent;
@@ -143,16 +143,16 @@ public class Valadoc.CTypeResolver : Visitor {
 			return node;
 		}
 
-		string? alternative = translate_cname_to_g (_name);
+		string? alternative = translate_cname_to_g (name);
 		if (alternative != null) {
 			return nodes.get (alternative);
 		}
 
-		if (element != null && _name.has_prefix (":")) {
+		if (element != null && name.has_prefix (":")) {
 			if (element is Class && ((Class) element).get_cname () != null) {
-				return nodes.get (((Class) element).get_cname () + "." + _name);
+				return nodes.get (((Class) element).get_cname () + "." + name);
 			} else if (element is Struct && ((Struct) element).get_cname () != null) {
-				return nodes.get (((Struct) element).get_cname () + "." + _name);
+				return nodes.get (((Struct) element).get_cname () + "." + name);
 			}
 		}
 
@@ -162,10 +162,10 @@ public class Valadoc.CTypeResolver : Visitor {
 			return this.tree.search_symbol_str (null, "GLib.FileStream.printf");
 		}
 
-		int dotpos = _name.index_of_char ('.');
+		int dotpos = name.index_of_char ('.');
 		if (dotpos > 0) {
-			string fst = _name.substring (0, dotpos);
-			string snd = _name.substring (dotpos + 1);
+			string fst = name.substring (0, dotpos);
+			string snd = name.substring (dotpos + 1);
 			return nodes.get (fst + ":" + snd);
 		}
 
@@ -289,7 +289,7 @@ public class Valadoc.CTypeResolver : Visitor {
 		} else {
 			string parent_cname = get_parent_type_cname (item);
 			if (parent_cname != null) {
-				register_symbol (parent_cname+"->"+item.get_cname (), item);
+				register_symbol (parent_cname + "." + item.get_cname (), item);
 			}
 		}
 	}
@@ -345,7 +345,16 @@ public class Valadoc.CTypeResolver : Visitor {
 	public override void visit_method (Method item) {
 		if (item.is_abstract || item.is_virtual || item.is_override) {
 			string parent_cname = get_parent_type_cname (item);
-			register_symbol (parent_cname + "->" + item.name, item);
+
+			if (item.parent is Class) {
+				register_symbol (parent_cname + "Class." + item.name, item);
+			} else {
+				register_symbol (parent_cname + "Iface." + item.name, item);
+			}
+
+			// Allow to resolve invalid links:
+			register_symbol (parent_cname + "." + item.name, item);
+
 
 			Collection<Interface> interfaces = null;
 			Collection<Class> classes = null;
@@ -359,11 +368,13 @@ public class Valadoc.CTypeResolver : Visitor {
 			}
 
 			foreach (Interface iface in interfaces) {
-				register_symbol (iface.get_cname () + "->" + item.name, item);
+				register_symbol (iface.get_cname () + "Iface." + item.name, item);
+				register_symbol (iface.get_cname () + "." + item.name, item);
 			}
 
 			foreach (Class cl in classes) {
-				register_symbol (cl.get_cname () + "->" + item.name, item);
+				register_symbol (cl.get_cname () + "Class." + item.name, item);
+				register_symbol (cl.get_cname () + "." + item.name, item);
 			}
 		}
 
