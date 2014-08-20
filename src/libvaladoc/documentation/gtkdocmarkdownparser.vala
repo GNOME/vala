@@ -86,8 +86,33 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 					_run = _factory.create_run (Run.Style.LANG_KEYWORD);
 					_run.content.add (_factory.create_text ("throws"));
 				} else {
+					string? param_name;
+					string? param_array_name;
+					bool is_return_type_len;
+
+					ImporterHelper.resolve_parameter_ctype (
+						this._tree,
+						this.element,
+						token.value,
+						out param_name,
+						out param_array_name,
+						out is_return_type_len);
+
 					_run = _factory.create_run (Run.Style.MONOSPACED);
-					_run.content.add (_factory.create_text (token.value));
+
+					if (is_return_type_len) {
+						Run keyword_run = _factory.create_run (Run.Style.LANG_KEYWORD);
+						keyword_run.content.add (_factory.create_text ("return"));
+						_run.content.add (keyword_run);
+
+						_run.content.add (_factory.create_text (".length"));
+					} else if (param_array_name != null) {
+						_run.content.add (_factory.create_text (param_array_name + ".length"));
+					} else {
+						_run.content.add (_factory.create_text (param_name));
+					}
+
+
 				}
 
 				push (_run);

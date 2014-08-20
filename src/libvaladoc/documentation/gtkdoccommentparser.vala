@@ -38,6 +38,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	private ErrorReporter reporter;
 	private Settings settings;
 	private Api.Tree tree;
+	private Api.Node? element;
 
 	private bool show_warnings;
 	private Api.SourceComment comment;
@@ -112,8 +113,6 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			assert_not_reached ();
 		}
 	}
-
-	private Api.Node? element;
 
 	public Comment? parse (Api.Node element, Api.GirSourceComment gir_comment, GirMetaData gir_metadata) {
 		this.instance_param_name = gir_comment.instance_param_name;
@@ -1415,101 +1414,6 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 	}
 
-	private string[]? split_type_name (string id) {
-		unichar c;
-
-		for (unowned string pos = id; (c = pos.get_char ()) != '\0'; pos = pos.next_char ()) {
-			switch (c) {
-			case '-': // ->
-				return {id.substring (0, (long) (((char*) pos) - ((char*) id))), "->", (string) (((char*) pos) + 2)};
-
-			case ':': // : or ::
-				string sep = (pos.next_char ().get_char () == ':')? "::" : ":";
-				return {id.substring (0, (long) (((char*) pos) - ((char*) id))), sep, (string) (((char*) pos) + sep.length)};
-
-			case '.':
-				return {id.substring (0, (long) (((char*) pos) - ((char*) id))), ".", (string) (((char*) pos) + 1)};
-			}
-		}
-
-		return {id};
-	}
-
-	private string? resolve_parameter_ctype (string parameter_name, out string? param_name,
-											 out string? param_array_name, out bool is_return_type_len)
-	{
-		string[]? parts = split_type_name (parameter_name);
-		is_return_type_len = false;
-		param_array_name = null;
-
-		Api.FormalParameter? param = null; // type parameter or formal parameter
-		foreach (Api.Node node in this.element.get_children_by_type (Api.NodeType.FORMAL_PARAMETER, false)) {
-			if (node.name == parts[0]) {
-				param = node as Api.FormalParameter;
-				break;
-			}
-
-			if (((Api.FormalParameter) node).implicit_array_length_cparameter_name == parts[0]) {
-				param_array_name = ((Api.FormalParameter) node).name;
-				break;
-			}
-		}
-
-		if (this.element is Api.Callable
-			&& ((Api.Callable) this.element).implicit_array_length_cparameter_name == parts[0])
-		{
-			is_return_type_len = true;
-		}
-
-		if (parts.length == 1) {
-			param_name = parameter_name;
-			return null;
-		}
-
-
-		Api.Item? inner = null;
-
-		if (param_array_name != null || is_return_type_len) {
-			inner = tree.search_symbol_str (null, "int");
-		} else if (param != null) {
-			inner = param.parameter_type;
-		}
-
-		while (inner != null) {
-			if (inner is Api.TypeReference) {
-				inner = ((Api.TypeReference) inner).data_type;
-			} else if (inner is Api.Pointer) {
-				inner = ((Api.Pointer) inner).data_type;
-			} else if (inner is Api.Array) {
-				inner = ((Api.Array) inner).data_type;
-			} else {
-				break ;
-			}
-		}
-
-
-		if (inner == null) {
-			param_name = parameter_name;
-			return null;
-		}
-
-		string? cname = null;
-		if (inner is Api.ErrorDomain) {
-			cname = ((Api.ErrorDomain) inner).get_cname ();
-		} else if (inner is Api.Struct) {
-			cname = ((Api.Struct) inner).get_cname ();
-		} else if (inner is Api.Class) {
-			cname = ((Api.Class) inner).get_cname ();
-		} else if (inner is Api.Enum) {
-			cname = ((Api.Enum) inner).get_cname ();
-		} else {
-			assert_not_reached ();
-		}
-
-		param_name = (owned) parts[0];
-		return "c::" + cname + parts[1] + parts[2];
-	}
-
 	private Run parse_inline_content () {
 		Run run = factory.create_run (Run.Style.NONE);
 
@@ -1600,7 +1504,14 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 					bool is_return_type_len;
 					string? param_name;
 
-					string? cname = resolve_parameter_ctype (current.content, out param_name, out param_array_name, out is_return_type_len);
+					string? cname = ImporterHelper.resolve_parameter_ctype (
+						this.tree,
+						this.element,
+						current.content,
+						out param_name,
+						out param_array_name,
+						out is_return_type_len);
+
 					Run current_run = factory.create_run (Run.Style.MONOSPACED);
 					run.content.add (current_run);
 

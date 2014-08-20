@@ -27,6 +27,111 @@ using Gee;
 
 namespace Valadoc.ImporterHelper {
 
+	//
+	// resolve-parameter-ctype:
+	//
+
+	internal string? resolve_parameter_ctype (Api.Tree tree, Api.Node element, string parameter_name,
+		out string? param_name, out string? param_array_name, out bool is_return_type_len)
+	{
+		string[]? parts = split_type_name (parameter_name);
+		is_return_type_len = false;
+		param_array_name = null;
+
+		Api.FormalParameter? param = null; // type parameter or formal parameter
+		foreach (Api.Node node in element.get_children_by_type (Api.NodeType.FORMAL_PARAMETER, false)) {
+			if (node.name == parts[0]) {
+				param = node as Api.FormalParameter;
+				break;
+			}
+
+			if (((Api.FormalParameter) node).implicit_array_length_cparameter_name == parts[0]) {
+				param_array_name = ((Api.FormalParameter) node).name;
+				break;
+			}
+		}
+
+		if (element is Api.Callable
+			&& ((Api.Callable) element).implicit_array_length_cparameter_name == parts[0])
+		{
+			is_return_type_len = true;
+		}
+
+		if (parts.length == 1) {
+			param_name = parameter_name;
+			return null;
+		}
+
+
+		Api.Item? inner = null;
+
+		if (param_array_name != null || is_return_type_len) {
+			inner = tree.search_symbol_str (null, "int");
+		} else if (param != null) {
+			inner = param.parameter_type;
+		}
+
+		while (inner != null) {
+			if (inner is Api.TypeReference) {
+				inner = ((Api.TypeReference) inner).data_type;
+			} else if (inner is Api.Pointer) {
+				inner = ((Api.Pointer) inner).data_type;
+			} else if (inner is Api.Array) {
+				inner = ((Api.Array) inner).data_type;
+			} else {
+				break ;
+			}
+		}
+
+
+		if (inner == null) {
+			param_name = parameter_name;
+			return null;
+		}
+
+		string? cname = null;
+		if (inner is Api.ErrorDomain) {
+			cname = ((Api.ErrorDomain) inner).get_cname ();
+		} else if (inner is Api.Struct) {
+			cname = ((Api.Struct) inner).get_cname ();
+		} else if (inner is Api.Class) {
+			cname = ((Api.Class) inner).get_cname ();
+		} else if (inner is Api.Enum) {
+			cname = ((Api.Enum) inner).get_cname ();
+		} else {
+			assert_not_reached ();
+		}
+
+		param_name = (owned) parts[0];
+		return "c::" + cname + parts[1] + parts[2];
+	}
+
+
+	private string[]? split_type_name (string id) {
+		unichar c;
+
+		for (unowned string pos = id; (c = pos.get_char ()) != '\0'; pos = pos.next_char ()) {
+			switch (c) {
+			case '-': // ->
+				return {id.substring (0, (long) (((char*) pos) - ((char*) id))), "->", (string) (((char*) pos) + 2)};
+
+			case ':': // : or ::
+				string sep = (pos.next_char ().get_char () == ':')? "::" : ":";
+				return {id.substring (0, (long) (((char*) pos) - ((char*) id))), sep, (string) (((char*) pos) + sep.length)};
+
+			case '.':
+				return {id.substring (0, (long) (((char*) pos) - ((char*) id))), ".", (string) (((char*) pos) + 1)};
+			}
+		}
+
+		return {id};
+	}
+
+
+
+	//
+	// extract-short-desc:
+	//
 
 	internal void extract_short_desc (Comment comment, ContentFactory factory) {
 		if (comment.content.size == 0) {
@@ -99,7 +204,12 @@ namespace Valadoc.ImporterHelper {
 	}
 
 	private inline Run? split_run (Run run, ContentFactory factory) {
+		if (run.style != Run.Style.NONE) {
+			return null;
+		}
+
 		Run? sec = null;
+
 
 		Iterator<Inline> iter = run.content.iterator ();
 		for (bool has_next = iter.next (); has_next; has_next = iter.next ()) {
