@@ -1,6 +1,6 @@
 * name="(.+)/Source\\1"
 utils_* name="utils_(.+)" parent="Gtk.SourceUtils"
-GtkSource name="Gtk" cprefix="Gtk" lower_case_cprefix="gtk_"
+GtkSource name="Gtk" cprefix="Gtk" lower_case_cprefix="gtk_" deprecated_since="3.13.90" replacement="bindings distributed with gtksourceview-3.0"
 Completion
         .show#method name="start"
 CompletionProvider
