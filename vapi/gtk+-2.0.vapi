@@ -3542,14 +3542,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public RecentChooserMenu.for_manager (Gtk.RecentManager manager);
 		public bool get_show_numbers ();
-		[NoWrapper]
-		public virtual void gtk_recent1 ();
-		[NoWrapper]
-		public virtual void gtk_recent2 ();
-		[NoWrapper]
-		public virtual void gtk_recent3 ();
-		[NoWrapper]
-		public virtual void gtk_recent4 ();
 		public void set_show_numbers (bool show_numbers);
 		public bool show_numbers { get; set; }
 	}
@@ -6449,20 +6441,6 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct TextIter {
-		public void* dummy1;
-		public void* dummy2;
-		public int dummy3;
-		public int dummy4;
-		public int dummy5;
-		public int dummy6;
-		public int dummy7;
-		public int dummy8;
-		public void* dummy9;
-		public void* dummy10;
-		public int dummy11;
-		public int dummy12;
-		public int dummy13;
-		public void* dummy14;
 		public bool backward_char ();
 		public bool backward_chars (int count);
 		public bool backward_cursor_position ();

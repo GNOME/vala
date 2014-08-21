@@ -1147,3 +1147,5 @@ GtkIconThemeError errordomain="1"
 GtkRecentChooserError errordomain="1"
 GtkRecentManagerError errordomain="1"
 
+*.dummy* hidden="1"
+*_gtk_recent* hidden="1"

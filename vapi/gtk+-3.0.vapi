@@ -1736,7 +1736,6 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_drawing_area_get_type ()")]
 	public class DrawingArea : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
-		public void* dummy;
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DrawingArea ();
 	}
@@ -3186,22 +3185,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public LockButton (GLib.Permission permission);
 		public unowned GLib.Permission get_permission ();
-		[NoWrapper]
-		public virtual void reserved0 ();
-		[NoWrapper]
-		public virtual void reserved1 ();
-		[NoWrapper]
-		public virtual void reserved2 ();
-		[NoWrapper]
-		public virtual void reserved3 ();
-		[NoWrapper]
-		public virtual void reserved4 ();
-		[NoWrapper]
-		public virtual void reserved5 ();
-		[NoWrapper]
-		public virtual void reserved6 ();
-		[NoWrapper]
-		public virtual void reserved7 ();
 		public void set_permission (GLib.Permission permission);
 		public GLib.Permission permission { get; set; }
 		[NoAccessorMethod]
@@ -4148,14 +4131,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public RecentChooserMenu.for_manager (Gtk.RecentManager manager);
 		public bool get_show_numbers ();
-		[NoWrapper]
-		public virtual void gtk_recent1 ();
-		[NoWrapper]
-		public virtual void gtk_recent2 ();
-		[NoWrapper]
-		public virtual void gtk_recent3 ();
-		[NoWrapper]
-		public virtual void gtk_recent4 ();
 		public void set_show_numbers (bool show_numbers);
 		public bool show_numbers { get; set; }
 	}
@@ -5088,35 +5063,6 @@ namespace Gtk {
 		public uint n_rows { get; set; }
 		[NoAccessorMethod]
 		public uint row_spacing { get; set; }
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class TableChild {
-		public uint16 bottom_attach;
-		public uint16 left_attach;
-		public uint16 right_attach;
-		public uint16 top_attach;
-		public weak Gtk.Widget widget;
-		public uint xexpand;
-		public uint xfill;
-		public uint16 xpadding;
-		public uint xshrink;
-		public uint yexpand;
-		public uint yfill;
-		public uint16 ypadding;
-		public uint yshrink;
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class TableRowCol {
-		public uint16 allocation;
-		public uint empty;
-		public uint expand;
-		public uint need_expand;
-		public uint need_shrink;
-		public uint16 requisition;
-		public uint shrink;
-		public uint16 spacing;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_target_list_ref", type_id = "gtk_target_list_get_type ()", unref_function = "gtk_target_list_unref")]
 	[Compact]
@@ -7470,20 +7416,6 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct TextIter {
-		public void* dummy1;
-		public void* dummy2;
-		public int dummy3;
-		public int dummy4;
-		public int dummy5;
-		public int dummy6;
-		public int dummy7;
-		public int dummy8;
-		public void* dummy9;
-		public void* dummy10;
-		public int dummy11;
-		public int dummy12;
-		public int dummy13;
-		public void* dummy14;
 		public void assign (Gtk.TextIter other);
 		public bool backward_char ();
 		public bool backward_chars (int count);
