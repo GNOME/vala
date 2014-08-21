@@ -279,6 +279,7 @@ namespace GLib {
 	public class Application : GLib.Object, GLib.ActionGroup, GLib.ActionMap {
 		[CCode (has_construct_function = false)]
 		public Application (string? application_id, GLib.ApplicationFlags flags);
+		public void add_main_option (string long_name, char short_name, int flags, GLib.OptionArg arg, string description, string? arg_description);
 		public void add_main_option_entries ([CCode (array_length = false, array_null_terminated = true)] GLib.OptionEntry[] entries);
 		public void add_option_group (GLib.OptionGroup group);
 		[NoWrapper]

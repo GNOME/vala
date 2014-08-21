@@ -5330,22 +5330,17 @@ namespace Gdk {
 		public string name ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_color_get_type ()")]
+	[Deprecated (since = "3.14")]
 	public struct Color {
 		public uint32 pixel;
 		public uint16 red;
 		public uint16 green;
 		public uint16 blue;
-		[Deprecated (since = "3.14")]
 		public Gdk.Color? copy ();
-		[Deprecated (since = "3.14")]
 		public bool equal (Gdk.Color colorb);
-		[Deprecated (since = "3.14")]
 		public void free ();
-		[Deprecated (since = "3.14")]
 		public uint hash ();
-		[Deprecated (since = "3.14")]
 		public static bool parse (string spec, out Gdk.Color color);
-		[Deprecated (since = "3.14")]
 		public string to_string ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
