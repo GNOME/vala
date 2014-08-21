@@ -332,13 +332,6 @@ namespace Gtk {
 		public virtual signal void accel_changed (uint keyval, Gdk.ModifierType modifier, GLib.Closure accel_closure);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class AccelGroupEntry {
-		public GLib.Quark accel_path_quark;
-		public weak GLib.Closure closure;
-		public Gtk.AccelKey key;
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class AccelLabel : Gtk.Label, Atk.Implementor, Gtk.Buildable {
 		public weak Gtk.AccelGroup accel_group;
 		public uint accel_padding;
@@ -2985,12 +2978,6 @@ namespace Gtk {
 		public unowned Gdk.Pixmap get_pixmap ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class PageRange {
-		public int end;
-		public int start;
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class PageSetup : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public PageSetup ();
@@ -3568,17 +3555,6 @@ namespace Gtk {
 		public Gtk.RecentFilterFlags get_needed ();
 		public void set_name (string name);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class RecentFilterInfo {
-		public int age;
-		public weak string applications;
-		public Gtk.RecentFilterFlags contains;
-		public weak string display_name;
-		public weak string groups;
-		public weak string mime_type;
-		public weak string uri;
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_recent_info_ref", type_id = "gtk_recent_info_get_type ()", unref_function = "gtk_recent_info_unref")]
 	[Compact]
 	public class RecentInfo {
@@ -3962,12 +3938,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Compact]
 	public class SettingsPropertyValue {
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class SettingsValue {
-		public weak string origin;
-		public GLib.Value value;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class SizeGroup : GLib.Object, Gtk.Buildable {
@@ -4378,25 +4348,6 @@ namespace Gtk {
 		public uint torn_off;
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TearoffMenuItem ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class TextAppearance {
-		public Gdk.Color bg_color;
-		public weak Gdk.Bitmap bg_stipple;
-		public uint draw_bg;
-		public Gdk.Color fg_color;
-		public weak Gdk.Bitmap fg_stipple;
-		public uint inside_selection;
-		public uint is_text;
-		public uint pad1;
-		public uint pad2;
-		public uint pad3;
-		public uint pad4;
-		public void* padding1;
-		public int rise;
-		public uint strikethrough;
-		public uint underline;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_text_attributes_ref", type_id = "gtk_text_attributes_get_type ()", unref_function = "gtk_text_attributes_unref")]
 	[Compact]
@@ -6370,6 +6321,12 @@ namespace Gtk {
 		public signal void sort_column_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct AccelGroupEntry {
+		public Gtk.AccelKey key;
+		public weak GLib.Closure closure;
+		public GLib.Quark accel_path_quark;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct AccelKey {
 		public uint accel_key;
 		public Gdk.ModifierType accel_mods;
@@ -6397,6 +6354,11 @@ namespace Gtk {
 		public weak string default_locales;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct PageRange {
+		public int start;
+		public int end;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct RadioActionEntry {
 		public weak string name;
 		public weak string stock_id;
@@ -6417,11 +6379,28 @@ namespace Gtk {
 		public bool is_private;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct RecentFilterInfo {
+		public Gtk.RecentFilterFlags contains;
+		public weak string uri;
+		public weak string display_name;
+		public weak string mime_type;
+		[CCode (array_length = false, array_null_terminated = true)]
+		public weak string[] applications;
+		[CCode (array_length = false, array_null_terminated = true)]
+		public weak string[] groups;
+		public int age;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct Requisition {
 		public int width;
 		public int height;
 		public Gtk.Requisition copy ();
 		public void free ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct SettingsValue {
+		public weak string origin;
+		public GLib.Value value;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct StockItem {
@@ -6438,6 +6417,19 @@ namespace Gtk {
 		public weak string target;
 		public uint flags;
 		public uint info;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct TextAppearance {
+		public Gdk.Color bg_color;
+		public Gdk.Color fg_color;
+		public weak Gdk.Bitmap bg_stipple;
+		public weak Gdk.Bitmap fg_stipple;
+		public int rise;
+		public uint underline;
+		public uint strikethrough;
+		public uint draw_bg;
+		public uint inside_selection;
+		public uint is_text;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct TextIter {
