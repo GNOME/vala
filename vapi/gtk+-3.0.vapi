@@ -297,19 +297,13 @@ namespace Gtk {
 		public bool get_is_locked ();
 		public Gdk.ModifierType get_modifier_mask ();
 		public void @lock ();
-		public unowned Gtk.AccelGroupEntry query (uint accel_key, Gdk.ModifierType accel_mods, uint n_entries);
+		[CCode (array_length_type = "guint")]
+		public unowned Gtk.AccelGroupEntry[] query (uint accel_key, Gdk.ModifierType accel_mods);
 		public void unlock ();
 		public bool is_locked { get; }
 		public Gdk.ModifierType modifier_mask { get; }
 		public virtual signal bool accel_activate (GLib.Object p0, uint p1, Gdk.ModifierType p2);
 		public virtual signal void accel_changed (uint keyval, Gdk.ModifierType modifier, GLib.Closure accel_closure);
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class AccelGroupEntry {
-		public GLib.Quark accel_path_quark;
-		public weak GLib.Closure closure;
-		public Gtk.AccelKey key;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_accel_label_get_type ()")]
 	public class AccelLabel : Gtk.Label, Atk.Implementor, Gtk.Buildable {
@@ -3584,12 +3578,6 @@ namespace Gtk {
 		public void add_overlay (Gtk.Widget widget);
 		public virtual signal bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class PageRange {
-		public int end;
-		public int start;
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_page_setup_get_type ()")]
 	public class PageSetup : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -4192,17 +4180,6 @@ namespace Gtk {
 		public bool filter (Gtk.RecentFilterInfo filter_info);
 		public Gtk.RecentFilterFlags get_needed ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class RecentFilterInfo {
-		public int age;
-		public weak string applications;
-		public Gtk.RecentFilterFlags contains;
-		public weak string display_name;
-		public weak string groups;
-		public weak string mime_type;
-		public weak string uri;
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_recent_info_ref", type_id = "gtk_recent_info_get_type ()", unref_function = "gtk_recent_info_unref")]
 	[Compact]
 	public class RecentInfo {
@@ -4258,13 +4235,6 @@ namespace Gtk {
 		public RendererCellAccessible (Gtk.CellRenderer renderer);
 		[NoAccessorMethod]
 		public Gtk.CellRenderer renderer { owned get; construct; }
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class RequestedSize {
-		public void* data;
-		public int minimum_size;
-		public int natural_size;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_revealer_get_type ()")]
 	public class Revealer : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
@@ -4628,12 +4598,6 @@ namespace Gtk {
 		public string gtk_xft_hintstyle { owned get; set; }
 		[NoAccessorMethod]
 		public string gtk_xft_rgba { owned get; set; }
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class SettingsValue {
-		public weak string origin;
-		public GLib.Value value;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_size_group_get_type ()")]
 	public class SizeGroup : GLib.Object, Gtk.Buildable {
@@ -5180,20 +5144,6 @@ namespace Gtk {
 	public class TearoffMenuItem : Gtk.MenuItem, Atk.Implementor, Gtk.Buildable, Gtk.Activatable, Gtk.Actionable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TearoffMenuItem ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class TextAppearance {
-		public Gdk.Color bg_color;
-		public uint draw_bg;
-		public Gdk.Color fg_color;
-		public uint inside_selection;
-		public uint is_text;
-		[CCode (array_length = false)]
-		public weak Gdk.RGBA[] rgba;
-		public int rise;
-		public uint strikethrough;
-		public uint underline;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_text_attributes_ref", type_id = "gtk_text_attributes_get_type ()", unref_function = "gtk_text_attributes_unref")]
 	[Compact]
@@ -7381,6 +7331,12 @@ namespace Gtk {
 		public signal void sort_column_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct AccelGroupEntry {
+		public Gtk.AccelKey key;
+		public weak GLib.Closure closure;
+		public GLib.Quark accel_path_quark;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct AccelKey {
 		public uint accel_key;
 		public Gdk.ModifierType accel_mods;
@@ -7425,6 +7381,11 @@ namespace Gtk {
 		public weak string default_locales;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct PageRange {
+		public int start;
+		public int end;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct RadioActionEntry {
 		public weak string name;
 		public weak string stock_id;
@@ -7445,11 +7406,34 @@ namespace Gtk {
 		public bool is_private;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct RecentFilterInfo {
+		public Gtk.RecentFilterFlags contains;
+		public weak string uri;
+		public weak string display_name;
+		public weak string mime_type;
+		[CCode (array_length = false, array_null_terminated = true)]
+		public weak string[] applications;
+		[CCode (array_length = false, array_null_terminated = true)]
+		public weak string[] groups;
+		public int age;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct RequestedSize {
+		public void* data;
+		public int minimum_size;
+		public int natural_size;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct Requisition {
 		public int width;
 		public int height;
 		public Gtk.Requisition copy ();
 		public void free ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct SettingsValue {
+		public weak string origin;
+		public GLib.Value value;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct StockItem {
@@ -7470,6 +7454,19 @@ namespace Gtk {
 		public TargetEntry (string target, uint flags, uint info);
 		public Gtk.TargetEntry copy ();
 		public void free ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct TextAppearance {
+		public Gdk.Color bg_color;
+		public Gdk.Color fg_color;
+		public int rise;
+		public uint underline;
+		public uint strikethrough;
+		public uint draw_bg;
+		public uint inside_selection;
+		public uint is_text;
+		[CCode (array_length = false)]
+		public Gdk.RGBA[] rgba;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct TextIter {
