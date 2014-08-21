@@ -9389,7 +9389,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint get_debug_flags ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static Pango.Language get_default_language ();
+	public static unowned Pango.Language get_default_language ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Widget get_event_widget (Gdk.Event event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
