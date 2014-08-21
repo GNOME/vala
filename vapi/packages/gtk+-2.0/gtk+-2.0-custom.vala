@@ -284,13 +284,7 @@ namespace Gtk {
 
 	public delegate void ActionCallback (Action action);
 
-	public delegate void MenuPositionFunc (Gtk.Menu menu, out int x, out int y, out bool push_in);
-
 	public delegate void RadioActionCallback (Action action, Action current);
-
-	public delegate bool TreeViewSearchEqualFunc (TreeModel model, int column, string key, TreeIter iter);
-
-	public delegate string CalendarDetailFunc (Gtk.Calendar calendar, uint year, uint month, uint day);
 
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned string set_locale ();

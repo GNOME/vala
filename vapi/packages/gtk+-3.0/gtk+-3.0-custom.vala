@@ -21,6 +21,7 @@
  */
 
 namespace Gtk {
+	[CCode (type_id = "gtk_accel_group_get_type ()")]
 	public class AccelGroup {
 		public Gtk.AccelKey* find (Gtk.AccelGroupFindFunc find_func);
 	}
@@ -42,25 +43,30 @@ namespace Gtk {
 		public static unowned BindingSet @new (string name);
 	}
 
+	[CCode (type_id = "gtk_container_get_type ()")]
 	public abstract class Container {
 		[CCode (vfunc_name = "forall")]
 		[NoWrapper]
 		public virtual void forall_internal(bool include_internal, Gtk.Callback callback);
 	}
 
+	[CCode (type_id = "gtk_notebook_get_type ()")]
 	public class Notebook {
 		public int page_num (Widget child);
 	}
 
+	[CCode (type_id = "gtk_status_icon_get_type ()")]
 	public class StatusIcon {
 		[CCode (instance_pos = -1)]
 		public void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in);
 	}
 
+	[CCode (type_id = "gtk_ui_manager_get_type ()")]
 	public class UIManager {
 		public uint new_merge_id ();
 	}
 
+	[CCode (type_id = "gtk_widget_get_type ()")]
 	public class Widget {
 		[CCode (has_new_function = false, construct_function = "gtk_widget_new")]
 		public extern Widget (GLib.Type type, ...);
@@ -111,7 +117,7 @@ namespace Gtk {
 		public virtual void copy_to (Gtk.Style dest);
 	}
 
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_style_context_get_type ()")]
 	public class StyleContext {
 		[CCode (cname = "gtk_render_activity")]
 		public void render_activity (Cairo.Context cr, double x, double y, double width, double height);
@@ -136,7 +142,7 @@ namespace Gtk {
 		[CCode (cname = "gtk_render_icon")]
 		public void render_icon (Cairo.Context cr, Gdk.Pixbuf pixbuf, double x, double y);
 		[CCode (cname = "gtk_render_icon_pixbuf")]
-		public unowned Gdk.Pixbuf render_icon_pixbuf (Gtk.IconSource source, Gtk.IconSize size);
+		public Gdk.Pixbuf render_icon_pixbuf (Gtk.IconSource source, Gtk.IconSize size);
 		[CCode (cname = "gtk_render_layout")]
 		public void render_layout (Cairo.Context cr, double x, double y, Pango.Layout layout);
 		[CCode (cname = "gtk_render_line")]
@@ -149,13 +155,7 @@ namespace Gtk {
 
 	public delegate void ActionCallback (Action action);
 
-	public delegate void MenuPositionFunc (Gtk.Menu menu, out int x, out int y, out bool push_in);
-
 	public delegate void RadioActionCallback (Action action, Action current);
-
-	public delegate bool TreeViewSearchEqualFunc (TreeModel model, int column, string key, TreeIter iter);
-
-	public delegate string CalendarDetailFunc (Gtk.Calendar calendar, uint year, uint month, uint day);
 
 	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ABOUT")]
 	public const string STOCK_ABOUT;
