@@ -5583,7 +5583,8 @@ namespace Gtk {
 		public unowned Gtk.RcStyle get_modifier_style ();
 		public bool get_no_show_all ();
 		public unowned Pango.Context get_pango_context ();
-		public unowned Gtk.Widget get_parent ();
+		[CCode (type = "GtkWidget*")]
+		public unowned Gtk.Container? get_parent ();
 		public unowned Gdk.Window get_parent_window ();
 		public void get_pointer (out int x, out int y);
 		public bool get_realized ();
@@ -5685,7 +5686,7 @@ namespace Gtk {
 		public void set_has_window (bool has_window);
 		public void set_mapped (bool mapped);
 		public void set_no_show_all (bool no_show_all);
-		public void set_parent (Gtk.Widget parent);
+		public void set_parent ([CCode (type = "GtkWidget*")] Gtk.Container parent);
 		public void set_parent_window (Gdk.Window parent_window);
 		public void set_realized (bool realized);
 		public void set_receives_default (bool receives_default);

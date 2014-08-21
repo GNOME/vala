@@ -6341,7 +6341,8 @@ namespace Gtk {
 		public bool get_no_show_all ();
 		public double get_opacity ();
 		public unowned Pango.Context get_pango_context ();
-		public unowned Gtk.Widget get_parent ();
+		[CCode (type = "GtkWidget*")]
+		public unowned Gtk.Container? get_parent ();
 		public unowned Gdk.Window get_parent_window ();
 		public unowned Gtk.WidgetPath get_path ();
 		[Deprecated (replacement = "Gdk.Window.get_device_position", since = "3.4")]
@@ -6494,7 +6495,7 @@ namespace Gtk {
 		public void set_margin_top (int margin);
 		public void set_no_show_all (bool no_show_all);
 		public void set_opacity (double opacity);
-		public void set_parent (Gtk.Widget parent);
+		public void set_parent ([CCode (type = "GtkWidget*")] Gtk.Container parent);
 		public void set_parent_window (Gdk.Window parent_window);
 		public void set_realized (bool realized);
 		public void set_receives_default (bool receives_default);
