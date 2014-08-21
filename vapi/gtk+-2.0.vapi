@@ -7550,9 +7550,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void ClipboardURIReceivedFunc (Gtk.Clipboard clipboard, [CCode (array_length = false, array_null_terminated = true)] string[] uris);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate void ColorSelectionChangePaletteFunc (Gdk.Color colors, int n_colors);
+	public delegate void ColorSelectionChangePaletteFunc (Gdk.Color[] colors);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate void ColorSelectionChangePaletteWithScreenFunc (Gdk.Screen screen, Gdk.Color colors, int n_colors);
+	public delegate void ColorSelectionChangePaletteWithScreenFunc (Gdk.Screen screen, Gdk.Color[] colors);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool EntryCompletionMatchFunc (Gtk.EntryCompletion completion, string key, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -7561,8 +7561,8 @@ namespace Gtk {
 	public delegate bool Function ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void IconViewForeachFunc (Gtk.IconView icon_view, Gtk.TreePath path);
-	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate int KeySnoopFunc (Gtk.Widget grab_widget, Gdk.EventKey event, void* func_data);
+	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
+	public delegate int KeySnoopFunc (Gtk.Widget grab_widget, Gdk.EventKey event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void LinkButtonUriFunc (Gtk.LinkButton button, string link_);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
@@ -7572,7 +7572,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
 	public delegate void ModuleDisplayInitFunc (Gdk.Display display);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate void ModuleInitFunc (int argc, string argv);
+	public delegate void ModuleInitFunc (string[]? argv);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate unowned Gtk.Notebook NotebookWindowCreationFunc (Gtk.Notebook source, Gtk.Widget page, int x, int y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -7596,7 +7596,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void TextTagTableForeach (Gtk.TextTag tag);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate unowned string TranslateFunc (string path);
+	public delegate string TranslateFunc (string path);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void TreeCellDataFunc (Gtk.TreeViewColumn tree_column, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -7604,7 +7604,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate int TreeIterCompareFunc (Gtk.TreeModel model, Gtk.TreeIter a, Gtk.TreeIter b);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate void TreeModelFilterModifyFunc (Gtk.TreeModel model, Gtk.TreeIter iter, GLib.Value value, int column);
+	public delegate void TreeModelFilterModifyFunc (Gtk.TreeModel model, Gtk.TreeIter iter, out GLib.Value value, int column);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool TreeModelFilterVisibleFunc (Gtk.TreeModel model, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -8059,9 +8059,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint accelerator_get_default_mod_mask ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned string accelerator_get_label (uint accelerator_key, Gdk.ModifierType accelerator_mods);
+	public static string accelerator_get_label (uint accelerator_key, Gdk.ModifierType accelerator_mods);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned string accelerator_name (uint accelerator_key, Gdk.ModifierType accelerator_mods);
+	public static string accelerator_name (uint accelerator_key, Gdk.ModifierType accelerator_mods);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void accelerator_parse (string accelerator, out uint accelerator_key, out Gdk.ModifierType accelerator_mods);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -8163,7 +8163,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint32 get_current_event_time ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Pango.Language get_default_language ();
+	public static Pango.Language get_default_language ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Widget get_event_widget (Gdk.Event event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -8197,7 +8197,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool init_with_args ([CCode (array_length_pos = 0.9)] ref unowned string[] argv, string parameter_string, [CCode (array_length = false)] GLib.OptionEntry[] entries, string? translation_domain) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static uint key_snooper_install (Gtk.KeySnoopFunc snooper, void* func_data);
+	public static uint key_snooper_install (Gtk.KeySnoopFunc snooper);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void key_snooper_remove (uint snooper_handler_id);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -8255,7 +8255,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void paint_vline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int y1_, int y2_, int x);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool parse_args (int argc, string[] argv);
+	public static bool parse_args ([CCode (array_length_pos = 0.5)] ref unowned string[] argv);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static GLib.Quark print_error_quark ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -8275,33 +8275,33 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void rc_add_default_file (string filename);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned string rc_find_module_in_path (string module_file);
+	public static string rc_find_module_in_path (string module_file);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned string rc_find_pixmap_in_path (Gtk.Settings settings, GLib.Scanner scanner, string pixmap_file);
+	public static string rc_find_pixmap_in_path (Gtk.Settings settings, GLib.Scanner scanner, string pixmap_file);
+	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gtk/gtk.h")]
+	public static unowned string[] rc_get_default_files ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned string rc_get_default_files ();
+	public static string rc_get_im_module_file ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned string rc_get_im_module_file ();
+	public static string rc_get_im_module_path ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned string rc_get_im_module_path ();
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned string rc_get_module_dir ();
+	public static string rc_get_module_dir ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Style rc_get_style (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Style? rc_get_style_by_paths (Gtk.Settings settings, string? widget_path, string? class_path, GLib.Type type);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned string rc_get_theme_dir ();
+	public static string rc_get_theme_dir ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void rc_parse (string filename);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static uint rc_parse_color (GLib.Scanner scanner, Gdk.Color color);
+	public static uint rc_parse_color (GLib.Scanner scanner, out Gdk.Color color);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static uint rc_parse_color_full (GLib.Scanner scanner, Gtk.RcStyle style, Gdk.Color color);
+	public static uint rc_parse_color_full (GLib.Scanner scanner, Gtk.RcStyle style, out Gdk.Color color);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint rc_parse_priority (GLib.Scanner scanner, Gtk.PathPriorityType priority);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static uint rc_parse_state (GLib.Scanner scanner, Gtk.StateType state);
+	public static uint rc_parse_state (GLib.Scanner scanner, out Gtk.StateType state);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void rc_parse_string (string rc_string);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -8313,13 +8313,13 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned GLib.Scanner rc_scanner_new ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void rc_set_default_files (string filenames);
+	public static void rc_set_default_files ([CCode (array_length = false, array_null_terminated = true)] string[] filenames);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void rgb_to_hsv (double r, double g, double b, out double h, out double s, out double v);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void selection_add_target (Gtk.Widget widget, Gdk.Atom selection, Gdk.Atom target, uint info);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void selection_add_targets (Gtk.Widget widget, Gdk.Atom selection, Gtk.TargetEntry[] targets, uint ntargets);
+	public static void selection_add_targets (Gtk.Widget widget, Gdk.Atom selection, [CCode (array_length_pos = 3.1, array_length_type = "guint")] Gtk.TargetEntry[] targets);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool selection_clear (Gtk.Widget widget, Gdk.EventSelection event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -8367,7 +8367,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Widget test_create_widget (GLib.Type widget_type, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gtk.Widget test_display_button_window (string window_title, string dialog_text, ...);
+	public static Gtk.Widget test_display_button_window (string window_title, string dialog_text, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Widget test_find_label (Gtk.Widget widget, string label_pattern);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -8376,8 +8376,8 @@ namespace Gtk {
 	public static unowned Gtk.Widget test_find_widget (Gtk.Widget widget, string label_pattern, GLib.Type widget_type);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void test_init ([CCode (array_length_pos = 0.9)] ref unowned string[] argvp, ...);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned GLib.Type[] test_list_all_types (uint n_types);
+	[CCode (array_length = false, array_length_type = "guint", array_null_terminated = true, cheader_filename = "gtk/gtk.h")]
+	public static unowned GLib.Type[] test_list_all_types ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void test_register_all_types ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -8387,7 +8387,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool test_spin_button_click (Gtk.SpinButton spinner, uint button, bool upwards);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned string test_text_get (Gtk.Widget widget);
+	public static string test_text_get (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void test_text_set (Gtk.Widget widget, string str);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -8395,7 +8395,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool test_widget_send_key (Gtk.Widget widget, uint keyval, Gdk.ModifierType modifiers);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool tree_get_row_drag_data (Gtk.SelectionData selection_data, out unowned Gtk.TreeModel tree_model, out unowned Gtk.TreePath path);
+	public static bool tree_get_row_drag_data (Gtk.SelectionData selection_data, out Gtk.TreeModel tree_model, out Gtk.TreePath path);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool tree_set_row_drag_data (Gtk.SelectionData selection_data, Gtk.TreeModel tree_model, Gtk.TreePath path);
 }
