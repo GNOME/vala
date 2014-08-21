@@ -153,8 +153,10 @@ namespace Gtk {
 		public void render_slider (Cairo.Context cr, double x, double y, double width, double height, Gtk.Orientation orientation);
 	}
 
+	[CCode (type_cname = "GCallback")]
 	public delegate void ActionCallback (Action action);
 
+	[CCode (type_cname = "GCallback")]
 	public delegate void RadioActionCallback (Action action, Action current);
 
 	[Deprecated (since = "vala-0.12", replacement = "Gtk.Stock.ABOUT")]
