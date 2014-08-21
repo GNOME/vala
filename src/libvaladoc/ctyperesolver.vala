@@ -318,6 +318,10 @@ public class Valadoc.CTypeResolver : Visitor {
 		string cname = item.get_cname ();
 		register_symbol (parent_cname+"::"+cname, item);
 
+		if (item.is_virtual) {
+			// only supported by classes
+			register_symbol (parent_cname + "Class." + item.name, item);
+		}
 
 		Collection<Interface> interfaces = null;
 		Collection<Class> classes = null;
@@ -354,28 +358,6 @@ public class Valadoc.CTypeResolver : Visitor {
 
 			// Allow to resolve invalid links:
 			register_symbol (parent_cname + "." + item.name, item);
-
-
-			Collection<Interface> interfaces = null;
-			Collection<Class> classes = null;
-
-			if (item.parent is Interface) {
-				interfaces = ((Api.Interface) item.parent).get_known_related_interfaces ();
-				classes = ((Api.Interface) item.parent).get_known_implementations ();
-			} else if (item.parent is Class) {
-				interfaces = ((Api.Class) item.parent).get_known_derived_interfaces ();
-				classes = ((Api.Class) item.parent).get_known_child_classes ();
-			}
-
-			foreach (Interface iface in interfaces) {
-				register_symbol (iface.get_cname () + "Iface." + item.name, item);
-				register_symbol (iface.get_cname () + "." + item.name, item);
-			}
-
-			foreach (Class cl in classes) {
-				register_symbol (cl.get_cname () + "Class." + item.name, item);
-				register_symbol (cl.get_cname () + "." + item.name, item);
-			}
 		}
 
 		register_symbol (item.get_cname (), item);
