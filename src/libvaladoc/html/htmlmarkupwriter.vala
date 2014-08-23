@@ -88,6 +88,7 @@ public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
 		return name != "html"
 			&& name != "head"
 			&& name != "title"
+			&& name != "meta"
 			&& name != "link"
 			&& name != "body"
 			&& name != "div"
@@ -109,6 +110,7 @@ public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
 
 	protected override bool content_inline_element (string name) {
 		return name == "title"
+			|| name == "meta"
 			|| name == "p"
 			|| name == "a"
 			|| name == "h1"
