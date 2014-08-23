@@ -26,8 +26,6 @@ using Gee;
 
 
 public class Valadoc.Content.Comment : BlockContent {
-	private Gee.LinkedList<InheritDoc> inheritdocs = new Gee.LinkedList<InheritDoc> ();
-
 	public Gee.List<Taglet> taglets { get { return _taglets; } }
 	private Gee.List<Taglet> _taglets;
 
@@ -37,10 +35,6 @@ public class Valadoc.Content.Comment : BlockContent {
 	internal Comment () {
 		base ();
 		_taglets = new ArrayList<Taglet> ();
-	}
-
-	internal void register_inheritdoc (InheritDoc taglet) {
-		inheritdocs.add (taglet);
 	}
 
 	public override void configure (Settings settings, ResourceLocator locator) {
@@ -61,10 +55,6 @@ public class Valadoc.Content.Comment : BlockContent {
 		foreach (Taglet element in _taglets) {
 			element.parent = this;
 			element.check (api_root, container, file_path, reporter, settings);
-		}
-
-		foreach (InheritDoc element in inheritdocs) {
-			element.transform (api_root, container, file_path, reporter, settings);
 		}
 	}
 

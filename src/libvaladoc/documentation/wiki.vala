@@ -79,10 +79,6 @@ public class Valadoc.WikiPage : Object, Documentation {
 	public void parse (DocumentationParser docparser, Api.Package pkg) {
 		documentation = docparser.parse_wikipage (pkg, this);
 	}
-
-	public void check (DocumentationParser docparser, Api.Package pkg) {
-		docparser.check_wikipage (pkg, documentation);
-	}
 }
 
 
@@ -155,7 +151,7 @@ public class Valadoc.WikiPageTree : Object {
 		}
 
 		foreach (WikiPage page in this.wikipages) {
-			page.check (docparser, pkg);
+			docparser.check_wikipage (pkg, page);
 		}
 	}
 }

@@ -176,6 +176,8 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 		link.locator = locator;
 
 		link.symbol_name = symbol_name;
+		link.c_accept_plural = c_accept_plural;
+		link.c_is_plural = c_is_plural;
 		link._context = _context;
 		link._symbol = _symbol;
 

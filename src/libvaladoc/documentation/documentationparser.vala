@@ -138,8 +138,25 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		comment.check (_tree, element, element.get_source_file ().get_name (), _reporter, _settings);
 	}
 
-	public void check_wikipage (Api.Package package, Page page) {
-		page.check (_tree, package, package.get_source_file ().get_name (), _reporter, _settings);
+	public void check_wikipage (Api.Package package, WikiPage page) {
+		page.documentation.check (_tree, package, page.get_filename (), _reporter, _settings);
+	}
+
+	public void transform_inheritdoc (Api.Node taglet_owner, Taglets.InheritDoc taglet) {
+		if (taglet.inherited == null) {
+			return ;
+		}
+
+
+		taglet.inherited.parse_comments (_settings, this);
+		if (taglet.inherited.documentation == null) {
+			return ;
+		}
+
+
+		taglet.inherited.check_comments (_settings, this);
+
+		taglet.transform (_tree, taglet_owner, taglet_owner.get_source_file ().get_name (), _reporter, _settings);
 	}
 
 	private GirMetaData get_metadata_for_comment (Api.GirSourceComment gir_comment) {

@@ -28,7 +28,7 @@ using Gee;
  * Represents a node in the api tree.
  */
 public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Comparable<Node> {
-	protected bool do_document { private set; get; default = false; }
+	protected bool do_document = false;
 	private SourceFile file;
 
 	/**

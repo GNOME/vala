@@ -26,17 +26,12 @@ using Valadoc.Content;
 
 public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 	private Taglet? parent_taglet = null;
-	private Api.Node? _inherited;
 
-	private Comment root {
-		get {
-			ContentElement pos;
-			for (pos = this; pos.parent != null; pos = pos.parent);
-			// inheritDoc is only allowed in source comments
-			assert (pos is Comment);
-			return (Comment) pos;
-		}
+	public Api.Node? inherited {
+		private set;
+		get;
 	}
+
 
 	public override Rule? get_parser_rule (Rule run_rule) {
 		return null;
@@ -72,13 +67,9 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 			_inherited = (Api.Node) ((Api.Struct) container).base_type.data_type;
 		}
 
-		if (_inherited != null) {
-			api_root.push_unbrowsable_documentation_dependency (_inherited);
-		}
-
 		parent_taglet = find_parent_taglet ();
-		if (parent_taglet == null && _inherited != null && _inherited.documentation != null) {
-			root.register_inheritdoc (this);
+		if (parent_taglet == null && _inherited != null) {
+			api_root.register_inheritdoc (container, this);
 		}
 
 

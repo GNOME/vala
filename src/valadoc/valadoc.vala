@@ -1,7 +1,6 @@
 /* valadoc.vala
  *
- * Copyright (C) 2008-2009 Florian Brosch
- * Copyright (C) 2011      Florian Brosch
+ * Copyright (C) 2008-2014 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -265,17 +264,22 @@ public class ValaDoc : Object {
 			return quit (reporter);
 		}
 
-		doctree.process_comments (docparser);
-		if (reporter.errors > 0) {
-			return quit (reporter);
-		}
-
 		DocumentationImporter[] importers = {
 			new ValadocDocumentationImporter (doctree, docparser, modules, settings, reporter),
 			new GirDocumentationImporter (doctree, docparser, modules, settings, reporter)
 		};
 
-		doctree.import_documentation (importers, import_packages, import_directories);
+		doctree.parse_comments (docparser);
+		if (reporter.errors > 0) {
+			return quit (reporter);
+		}
+
+		doctree.import_comments (importers, import_packages, import_directories);
+		if (reporter.errors > 0) {
+			return quit (reporter);
+		}
+
+		doctree.check_comments (docparser);
 		if (reporter.errors > 0) {
 			return quit (reporter);
 		}

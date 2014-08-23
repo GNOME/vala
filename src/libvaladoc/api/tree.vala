@@ -29,7 +29,7 @@ using Gee;
  * The root of the code tree.
  */
 public class Valadoc.Api.Tree {
-	private Deque<Node> unbrowsable_documentation_dependencies = new LinkedList<Node>();
+	private Deque<InheritDocContainer> inheritdocs = new LinkedList<InheritDocContainer> ();
 	private ArrayList<string> external_c_files = new ArrayList<string>();
 	private ArrayList<Package> packages = new ArrayList<Package>();
 	private Package source_package = null;
@@ -37,6 +37,18 @@ public class Valadoc.Api.Tree {
 	private ErrorReporter reporter;
 	private CTypeResolver _cresolver = null;
 	private Package _source_package;
+
+
+	private class InheritDocContainer {
+		public unowned Taglets.InheritDoc taglet;
+		public unowned Api.Node taglet_container;
+
+		public InheritDocContainer (Api.Node taglet_container, Taglets.InheritDoc taglet) {
+			this.taglet_container = taglet_container;
+			this.taglet = taglet;
+		}
+	}
+
 
 	public void add_package(Package package) {
 		this.packages.add (package);
@@ -76,10 +88,6 @@ public class Valadoc.Api.Tree {
 	 */
 	public Collection<Package> get_package_list () {
 		return this.packages.read_only_view;
-	}
-
-	internal bool push_unbrowsable_documentation_dependency (Api.Node node) {
-		return unbrowsable_documentation_dependencies.offer_head (node);
 	}
 
 	private void add_dependencies_to_source_package () {
@@ -246,11 +254,6 @@ public class Valadoc.Api.Tree {
 		return _source_package;
 	}
 
-	public void process_comments (DocumentationParser docparser) {
-		parse_comments (docparser);
-		check_comments (docparser);
-	}
-
 	private void parse_wiki (DocumentationParser docparser) {
 		this.wikitree = new WikiPageTree ();
 		var pkg = get_source_package ();
@@ -260,13 +263,13 @@ public class Valadoc.Api.Tree {
 	}
 
 	private void check_wiki (DocumentationParser docparser) {
-		var pkg = get_source_package ();
+		Package pkg = get_source_package ();
 		if (pkg != null) {
 			wikitree.check (settings, docparser, pkg);
 		}
 	}
 
-	private void parse_comments (DocumentationParser docparser) {
+	public void parse_comments (DocumentationParser docparser) {
 		parse_wiki (docparser);
 
 		foreach (Package pkg in this.packages) {
@@ -276,23 +279,29 @@ public class Valadoc.Api.Tree {
 		}
 	}
 
-	private void check_comments (DocumentationParser docparser) {
+	public void check_comments (DocumentationParser docparser) {
 		check_wiki (docparser);
 
 		foreach (Package pkg in this.packages) {
 			if (pkg.is_browsable (settings)) {
 				pkg.check_comments (settings, docparser);
+				postprocess_inheritdoc (docparser);
 			}
 		}
+	}
 
+	internal void register_inheritdoc (Api.Node container, Taglets.InheritDoc taglet) {
+		inheritdocs.add (new InheritDocContainer (container, taglet));
+	}
 
-		// Parse & check inherited non-public comments:
-		while (!this.unbrowsable_documentation_dependencies.is_empty) {
-			var node = this.unbrowsable_documentation_dependencies.poll_head ();
-			node.parse_comments (settings, docparser);
-			node.check_comments (settings, docparser);
+	private void postprocess_inheritdoc (DocumentationParser docparser) {
+		while (!this.inheritdocs.is_empty) {
+			InheritDocContainer container = this.inheritdocs.poll_head ();
+
+			docparser.transform_inheritdoc (container.taglet_container, container.taglet);
 		}
 	}
+
 
 	/**
 	 * Import documentation from various sources
@@ -301,7 +310,7 @@ public class Valadoc.Api.Tree {
 	 * @param packages sources
 	 * @param import_directories List of directories where to find the files
 	 */
-	public void import_documentation (DocumentationImporter[] importers, string[] packages,
+	public void import_comments (DocumentationImporter[] importers, string[] packages,
 									  string[] import_directories)
 	{
 		HashSet<string> processed = new HashSet<string> ();
