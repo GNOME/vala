@@ -34,8 +34,28 @@ public class Vala.GDBusModule : GVariantModule {
 		return Symbol.lower_case_to_camel_case (symbol.name);
 	}
 
+	public static bool is_dbus_visible (CodeNode node) {
+		var dbus_attribute = node.get_attribute ("DBus");
+		if (dbus_attribute != null
+		    && dbus_attribute.has_argument ("visible")
+		    && !dbus_attribute.get_bool ("visible")) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public static bool is_dbus_no_reply (Method m) {
 		return m.get_attribute_bool ("DBus", "no_reply");
+	}
+
+	public static string dbus_result_name (Method m) {
+		var dbus_name = m.get_attribute_string ("DBus", "result");
+		if (dbus_name != null && dbus_name != "") {
+			return dbus_name;
+		}
+
+		return "result";
 	}
 
 	public override void visit_error_domain (ErrorDomain edomain) {
@@ -214,5 +234,234 @@ public class Vala.GDBusModule : GVariantModule {
 		} else {
 			read_expression (type, iter_expr, target_expr, sym, error_expr, out may_fail);
 		}
+	}
+	CCodeExpression get_method_info (ObjectTypeSymbol sym) {
+		var infos = new CCodeInitializerList ();
+
+		foreach (Method m in sym.get_methods ()) {
+			if (m is CreationMethod || m.binding != MemberBinding.INSTANCE
+			    || m.overrides || m.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+			if (!is_dbus_visible (m)) {
+				continue;
+			}
+
+			var in_args_info = new CCodeInitializerList ();
+			var out_args_info = new CCodeInitializerList ();
+
+			foreach (Parameter param in m.get_parameters ()) {
+				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+					continue;
+				}
+				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
+					continue;
+				}
+
+				var info = new CCodeInitializerList ();
+				info.append (new CCodeConstant ("-1"));
+				info.append (new CCodeConstant ("\"%s\"".printf (param.name)));
+				info.append (new CCodeConstant ("\"%s\"".printf (get_type_signature (param.variable_type, param))));
+
+				var cdecl = new CCodeDeclaration ("const GDBusArgInfo");
+				cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + m.name + "_" + param.name, info));
+				cdecl.modifiers = CCodeModifiers.STATIC;
+				cfile.add_constant_declaration (cdecl);
+
+				if (param.direction == ParameterDirection.IN) {
+					in_args_info.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + m.name + "_" + param.name)));
+				} else {
+					out_args_info.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + m.name + "_" + param.name)));
+				}
+			}
+
+			if (!(m.return_type is VoidType)) {
+				var info = new CCodeInitializerList ();
+				info.append (new CCodeConstant ("-1"));
+				info.append (new CCodeConstant ("\"%s\"".printf (dbus_result_name (m))));
+				info.append (new CCodeConstant ("\"%s\"".printf (get_type_signature (m.return_type, m))));
+
+				var cdecl = new CCodeDeclaration ("const GDBusArgInfo");
+				cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + m.name + "_result", info));
+				cdecl.modifiers = CCodeModifiers.STATIC;
+				cfile.add_constant_declaration (cdecl);
+
+				out_args_info.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + m.name + "_result")));
+			}
+
+			in_args_info.append (new CCodeConstant ("NULL"));
+			out_args_info.append (new CCodeConstant ("NULL"));
+
+			var cdecl = new CCodeDeclaration ("const GDBusArgInfo * const");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + m.name + "_in[]", in_args_info));
+			cdecl.modifiers = CCodeModifiers.STATIC;
+			cfile.add_constant_declaration (cdecl);
+
+			cdecl = new CCodeDeclaration ("const GDBusArgInfo * const");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + m.name + "_out[]", out_args_info));
+			cdecl.modifiers = CCodeModifiers.STATIC;
+			cfile.add_constant_declaration (cdecl);
+
+			var info = new CCodeInitializerList ();
+			info.append (new CCodeConstant ("-1"));
+			info.append (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (m))));
+			info.append (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + m.name + "_in")), "GDBusArgInfo **"));
+			info.append (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + m.name + "_out")), "GDBusArgInfo **"));
+
+			cdecl = new CCodeDeclaration ("const GDBusMethodInfo");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_method_info_" + m.name, info));
+			cdecl.modifiers = CCodeModifiers.STATIC;
+			cfile.add_constant_declaration (cdecl);
+
+			infos.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_method_info_" + m.name)));
+		}
+
+		infos.append (new CCodeConstant ("NULL"));
+
+		var cdecl = new CCodeDeclaration ("const GDBusMethodInfo * const");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_method_info[]", infos));
+		cdecl.modifiers = CCodeModifiers.STATIC;
+		cfile.add_constant_declaration (cdecl);
+
+		return new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_method_info");
+	}
+
+	CCodeExpression get_signal_info (ObjectTypeSymbol sym) {
+		var infos = new CCodeInitializerList ();
+
+		foreach (Signal sig in sym.get_signals ()) {
+			if (sig.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+			if (!is_dbus_visible (sig)) {
+				continue;
+			}
+
+			var args_info = new CCodeInitializerList ();
+
+			foreach (Parameter param in sig.get_parameters ()) {
+				var info = new CCodeInitializerList ();
+				info.append (new CCodeConstant ("-1"));
+				info.append (new CCodeConstant ("\"%s\"".printf (param.name)));
+				info.append (new CCodeConstant ("\"%s\"".printf (get_type_signature (param.variable_type, param))));
+
+				var cdecl = new CCodeDeclaration ("const GDBusArgInfo");
+				cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + get_ccode_name (sig) + "_" + param.name, info));
+				cdecl.modifiers = CCodeModifiers.STATIC;
+				cfile.add_constant_declaration (cdecl);
+
+				args_info.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + get_ccode_name (sig) + "_" + param.name)));
+			}
+
+			args_info.append (new CCodeConstant ("NULL"));
+
+			var cdecl = new CCodeDeclaration ("const GDBusArgInfo * const");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + get_ccode_name (sig) + "[]", args_info));
+			cdecl.modifiers = CCodeModifiers.STATIC;
+			cfile.add_constant_declaration (cdecl);
+
+			var info = new CCodeInitializerList ();
+			info.append (new CCodeConstant ("-1"));
+			info.append (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (sig))));
+			info.append (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + get_ccode_name (sig))), "GDBusArgInfo **"));
+
+			cdecl = new CCodeDeclaration ("const GDBusSignalInfo");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_signal_info_" + get_ccode_name (sig), info));
+			cdecl.modifiers = CCodeModifiers.STATIC;
+			cfile.add_constant_declaration (cdecl);
+
+			infos.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_signal_info_" + get_ccode_name (sig))));
+		}
+
+		infos.append (new CCodeConstant ("NULL"));
+
+		var cdecl = new CCodeDeclaration ("const GDBusSignalInfo * const");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_signal_info[]", infos));
+		cdecl.modifiers = CCodeModifiers.STATIC;
+		cfile.add_constant_declaration (cdecl);
+
+		return new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_signal_info");
+	}
+
+	CCodeExpression get_property_info (ObjectTypeSymbol sym) {
+		var infos = new CCodeInitializerList ();
+
+		foreach (Property prop in sym.get_properties ()) {
+			if (prop.binding != MemberBinding.INSTANCE
+			    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+			if (!is_dbus_visible (prop)) {
+				continue;
+			}
+
+			var info = new CCodeInitializerList ();
+			info.append (new CCodeConstant ("-1"));
+			info.append (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
+			info.append (new CCodeConstant ("\"%s\"".printf (get_type_signature (prop.property_type, prop))));
+			if (prop.get_accessor != null && prop.set_accessor != null) {
+				info.append (new CCodeConstant ("G_DBUS_PROPERTY_INFO_FLAGS_READABLE | G_DBUS_PROPERTY_INFO_FLAGS_WRITABLE"));
+			} else if (prop.get_accessor != null) {
+				info.append (new CCodeConstant ("G_DBUS_PROPERTY_INFO_FLAGS_READABLE"));
+			} else if (prop.set_accessor != null) {
+				info.append (new CCodeConstant ("G_DBUS_PROPERTY_INFO_FLAGS_WRITABLE"));
+			} else {
+				info.append (new CCodeConstant ("G_DBUS_PROPERTY_INFO_FLAGS_NONE"));
+			}
+
+			var cdecl = new CCodeDeclaration ("const GDBusPropertyInfo");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_property_info_" + prop.name, info));
+			cdecl.modifiers = CCodeModifiers.STATIC;
+			cfile.add_constant_declaration (cdecl);
+
+			infos.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_property_info_" + prop.name)));
+		}
+
+		infos.append (new CCodeConstant ("NULL"));
+
+		var cdecl = new CCodeDeclaration ("const GDBusPropertyInfo * const");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_property_info[]", infos));
+		cdecl.modifiers = CCodeModifiers.STATIC;
+		cfile.add_constant_declaration (cdecl);
+
+		return new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_property_info");
+	}
+
+	void declare_interface_info (ObjectTypeSymbol sym) {
+		var info = new CCodeInitializerList ();
+		info.append (new CCodeConstant ("-1"));
+		info.append (new CCodeConstant ("\"%s\"".printf (get_dbus_name (sym))));
+		info.append (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_method_info (sym)), "GDBusMethodInfo **"));
+		info.append (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_signal_info (sym)), "GDBusSignalInfo **"));
+		info.append (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_property_info (sym)), "GDBusPropertyInfo **"));
+
+		var cdecl = new CCodeDeclaration ("const GDBusInterfaceInfo");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_interface_info", info));
+		cdecl.modifiers = CCodeModifiers.STATIC;
+		cfile.add_constant_declaration (cdecl);
+	}
+
+	protected CCodeExpression get_interface_info (ObjectTypeSymbol sym) {
+		return new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_interface_info");
+	}
+
+	public override void visit_class (Class cl) {
+		base.visit_class (cl);
+
+		visit_object_type_symbol (cl);
+	}
+
+	public override void visit_interface (Interface iface) {
+		base.visit_interface (iface);
+
+		visit_object_type_symbol (iface);
+	}
+
+	void visit_object_type_symbol (ObjectTypeSymbol sym) {
+		if (get_dbus_name (sym) == null) {
+			return;
+		}
+
+		declare_interface_info(sym);
 	}
 }
