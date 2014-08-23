@@ -812,6 +812,10 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	private void parse_union () {
 		start_element ("union");
 		this.parent_c_identifier = reader.get_attribute ("c:type");
+		if (this.parent_c_identifier == null) {
+			skip_element ();
+			return ;
+		}
 		next ();
 
 		Api.GirSourceComment? comment = parse_symbol_doc ();
