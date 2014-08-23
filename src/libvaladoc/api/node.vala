@@ -116,15 +116,28 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	/**
 	 * {@inheritDoc}
 	 */
-	internal override void process_comments (Settings settings, DocumentationParser parser) {
+	internal override void parse_comments (Settings settings, DocumentationParser parser) {
 		do_document = true;
 
 		foreach (Node node in per_name_children.values) {
 			if (node.is_browsable (settings)) {
-				node.process_comments (settings, parser);
+				node.parse_comments (settings, parser);
 			}
 		}
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	internal override void check_comments (Settings settings, DocumentationParser parser) {
+
+		foreach (Node node in per_name_children.values) {
+			if (node.is_browsable (settings)) {
+				node.check_comments (settings, parser);
+			}
+		}
+	}
+
 
 	/**
 	 * Specifies whether this node has at least one visible child with the given type

@@ -24,6 +24,7 @@
  * Represents a source file
  */
 public class Valadoc.Api.SourceFile : Object {
+
 	public Package package {
 		private set;
 		get;

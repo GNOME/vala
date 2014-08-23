@@ -36,10 +36,11 @@ public class Valadoc.Api.Namespace : Symbol {
 		this.source_comment = comment;
 	}
 
+
 	/**
 	 * {@inheritDoc}
 	 */
-	internal override void process_comments (Settings settings, DocumentationParser parser) {
+	internal override void parse_comments (Settings settings, DocumentationParser parser) {
 		if (documentation != null) {
 			return ;
 		}
@@ -48,8 +49,20 @@ public class Valadoc.Api.Namespace : Symbol {
 			documentation = parser.parse (this, source_comment);
 		}
 
-		base.process_comments (settings, parser);
+		base.parse_comments (settings, parser);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	internal override void check_comments (Settings settings, DocumentationParser parser) {
+		if (documentation != null) {
+			parser.check (this, documentation);
+		}
+
+		base.check_comments (settings, parser);
+	}
+
 
 	/**
 	 * {@inheritDoc}

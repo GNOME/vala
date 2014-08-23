@@ -22,6 +22,7 @@
 
 using Gee;
 
+
 public class Valadoc.WikiPage : Object, Documentation {
 	public Content.Page documentation {
 		protected set;
@@ -75,22 +76,21 @@ public class Valadoc.WikiPage : Object, Documentation {
 		}
 	}
 
-	public bool parse (DocumentationParser docparser, Api.Package pkg) {
-		documentation = docparser.parse_wikipage (this, pkg);
-		return true;
+	public void parse (DocumentationParser docparser, Api.Package pkg) {
+		documentation = docparser.parse_wikipage (pkg, this);
+	}
+
+	public void check (DocumentationParser docparser, Api.Package pkg) {
+		docparser.check_wikipage (pkg, documentation);
 	}
 }
 
 
 public class Valadoc.WikiPageTree : Object {
 	private ArrayList<WikiPage> wikipages;
-	private ErrorReporter reporter;
-	private Settings settings;
 
-	//TODO: reporter, settings -> create_tree
-	public WikiPageTree (ErrorReporter reporter, Settings settings) {
-		this.reporter = reporter;
-		this.settings = settings;
+
+	public WikiPageTree () {
 	}
 
 	public Collection<WikiPage> get_pages () {
@@ -111,7 +111,7 @@ public class Valadoc.WikiPageTree : Object {
 	}
 
 	private void create_tree_from_path (DocumentationParser docparser, Api.Package package,
-										ErrorReporter reporer, string path, string? nameoffset = null)
+										ErrorReporter reporter, string path, string? nameoffset = null)
 	{
 		try {
 			Dir dir = Dir.open (path);
@@ -135,10 +135,10 @@ public class Valadoc.WikiPageTree : Object {
 		}
 	}
 
-	public void create_tree (DocumentationParser docparser, Api.Package package, ErrorReporter reporer) {
-		weak string path = this.settings.wiki_directory;
+	public void parse (Settings settings, DocumentationParser docparser, Api.Package package, ErrorReporter reporter) {
+		weak string path = settings.wiki_directory;
 		if (path == null) {
-			return;
+			return ;
 		}
 
 		this.wikipages = new ArrayList<WikiPage> ();
@@ -146,6 +146,16 @@ public class Valadoc.WikiPageTree : Object {
 
 		foreach (WikiPage page in this.wikipages) {
 			page.parse (docparser, package);
+		}
+	}
+
+	public void check (Settings settings, DocumentationParser docparser, Api.Package pkg) {
+		if (this.wikipages == null) {
+			return ;
+		}
+
+		foreach (WikiPage page in this.wikipages) {
+			page.check (docparser, pkg);
 		}
 	}
 }

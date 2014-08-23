@@ -36,6 +36,7 @@ public class Valadoc.Api.Tree {
 	private Settings settings;
 	private ErrorReporter reporter;
 	private CTypeResolver _cresolver = null;
+	private Package _source_package;
 
 	public void add_package(Package package) {
 		this.packages.add (package);
@@ -233,36 +234,63 @@ public class Valadoc.Api.Tree {
 	}
 
 	private Package? get_source_package () {
-		foreach (Package pkg in packages) {
-			if (!pkg.is_package) {
-				return pkg;
+		if (_source_package == null) {
+			foreach (Package pkg in packages) {
+				if (!pkg.is_package) {
+					_source_package = pkg;
+					break;
+				}
 			}
 		}
 
-		return null;
-	}
-
-	private void process_wiki (DocumentationParser docparser) {
-		this.wikitree = new WikiPageTree(reporter, settings);
-		var pkg = get_source_package ();
-		if (pkg != null) {
-			wikitree.create_tree (docparser, pkg, reporter);
-		}
+		return _source_package;
 	}
 
 	public void process_comments (DocumentationParser docparser) {
-		process_wiki (docparser);
+		parse_comments (docparser);
+		check_comments (docparser);
+	}
+
+	private void parse_wiki (DocumentationParser docparser) {
+		this.wikitree = new WikiPageTree ();
+		var pkg = get_source_package ();
+		if (pkg != null) {
+			wikitree.parse (settings, docparser, pkg, reporter);
+		}
+	}
+
+	private void check_wiki (DocumentationParser docparser) {
+		var pkg = get_source_package ();
+		if (pkg != null) {
+			wikitree.check (settings, docparser, pkg);
+		}
+	}
+
+	private void parse_comments (DocumentationParser docparser) {
+		parse_wiki (docparser);
 
 		foreach (Package pkg in this.packages) {
 			if (pkg.is_browsable (settings)) {
-				pkg.process_comments (settings, docparser);
+				pkg.parse_comments (settings, docparser);
+			}
+		}
+	}
+
+	private void check_comments (DocumentationParser docparser) {
+		check_wiki (docparser);
+
+		foreach (Package pkg in this.packages) {
+			if (pkg.is_browsable (settings)) {
+				pkg.check_comments (settings, docparser);
 			}
 		}
 
-		// parse inherited non-public comments
+
+		// Parse & check inherited non-public comments:
 		while (!this.unbrowsable_documentation_dependencies.is_empty) {
 			var node = this.unbrowsable_documentation_dependencies.poll_head ();
-			node.process_comments (settings, docparser);
+			node.parse_comments (settings, docparser);
+			node.check_comments (settings, docparser);
 		}
 	}
 

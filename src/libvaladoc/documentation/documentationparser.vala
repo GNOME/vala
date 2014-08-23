@@ -93,14 +93,13 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	{
 		try {
 			Comment doc_comment = parse_comment (content, filename, first_line, first_column);
-			doc_comment.check (_tree, element, filename, _reporter, _settings);
 			return doc_comment;
 		} catch (ParserError error) {
 			return null;
 		}
 	}
 
-	public Page? parse_wikipage (WikiPage page, Api.Package pkg) {
+	public Page? parse_wikipage (Api.Package pkg, WikiPage page) {
 		if (page.documentation != null) {
 			return page.documentation;
 		}
@@ -111,7 +110,6 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 		try {
 			Page documentation = parse_wiki (page.documentation_str, page.get_filename ());
-			documentation.check (_tree, pkg, page.path, _reporter, _settings);
 			return documentation;
 		} catch (ParserError error) {
 			return null;
@@ -134,6 +132,14 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		_stack.clear ();
 		_wiki_parser.parse (content, filename, 0, 0);
 		return (Page) pop ();
+	}
+
+	public void check (Api.Node element, Comment comment) {
+		comment.check (_tree, element, element.get_source_file ().get_name (), _reporter, _settings);
+	}
+
+	public void check_wikipage (Api.Package package, Page page) {
+		page.check (_tree, package, package.get_source_file ().get_name (), _reporter, _settings);
 	}
 
 	private GirMetaData get_metadata_for_comment (Api.GirSourceComment gir_comment) {

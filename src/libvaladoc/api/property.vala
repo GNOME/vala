@@ -125,17 +125,33 @@ public class Valadoc.Api.Property : Member {
 	/**
 	 * {@inheritDoc}
 	 */
-	internal override void process_comments (Settings settings, DocumentationParser parser) {
+	internal override void parse_comments (Settings settings, DocumentationParser parser) {
 		if (getter != null && getter.is_browsable (settings)) {
-			getter.process_comments (settings, parser);
+			getter.parse_comments (settings, parser);
 		}
 
 		if (setter != null && setter.is_browsable (settings)) {
-			setter.process_comments (settings, parser);
+			setter.parse_comments (settings, parser);
 		}
 
-		base.process_comments (settings, parser);
+		base.parse_comments (settings, parser);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	internal override void check_comments (Settings settings, DocumentationParser parser) {
+		if (getter != null && getter.is_browsable (settings)) {
+			getter.check_comments (settings, parser);
+		}
+
+		if (setter != null && setter.is_browsable (settings)) {
+			setter.check_comments (settings, parser);
+		}
+
+		base.check_comments (settings, parser);
+	}
+
 
 	/**
 	 * {@inheritDoc}

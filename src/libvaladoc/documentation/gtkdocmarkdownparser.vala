@@ -671,8 +671,6 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 		}
 
 
-		cmnt.check (_tree, element, gir_comment.file.relative_path, _reporter, _settings);
-
 		this.metadata = null;
 		this.gir_comment = null;
 		this.element = element;

@@ -47,8 +47,12 @@ public abstract class Valadoc.Api.Item : Object {
 		this.data = data;
 	}
 
-	internal virtual void process_comments (Settings settings, DocumentationParser parser) {
+	internal virtual void parse_comments (Settings settings, DocumentationParser parser) {
 	}
+
+	internal virtual void check_comments (Settings settings, DocumentationParser parser) {
+	}
+
 
 	/**
 	 * The signature of this item.

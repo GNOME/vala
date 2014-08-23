@@ -31,6 +31,9 @@ public class Valadoc.Content.Comment : BlockContent {
 	public Gee.List<Taglet> taglets { get { return _taglets; } }
 	private Gee.List<Taglet> _taglets;
 
+	private bool checked = false;
+
+
 	internal Comment () {
 		base ();
 		_taglets = new ArrayList<Taglet> ();
@@ -46,6 +49,13 @@ public class Valadoc.Content.Comment : BlockContent {
 	public override void check (Api.Tree api_root, Api.Node container, string file_path,
 								ErrorReporter reporter, Settings settings)
 	{
+		if (checked == true) {
+			return ;
+		}
+
+		checked = true;
+
+
 		base.check (api_root, container, file_path, reporter, settings);
 
 		foreach (Taglet element in _taglets) {

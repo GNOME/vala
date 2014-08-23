@@ -24,12 +24,28 @@ using Gee;
 
 
 public class Valadoc.Content.Page : BlockContent {
+	private bool checked = false;
+
+
 	internal Page () {
 		base ();
 	}
 
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_page (this);
+	}
+
+	public override void check (Api.Tree api_root, Api.Node container, string file_path,
+								ErrorReporter reporter, Settings settings)
+	{
+		if (checked == true) {
+			return ;
+		}
+
+		checked = true;
+
+
+		base.check (api_root, container, file_path, reporter, settings);
 	}
 
 	public override ContentElement copy (ContentElement? new_parent = null) {

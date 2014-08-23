@@ -165,7 +165,6 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			first = false;
 		}
 
-		comment.check (tree, element, gir_comment.file.relative_path, reporter, settings);
 		return comment;
 	}
 
