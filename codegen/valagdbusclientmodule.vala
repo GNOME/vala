@@ -259,6 +259,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		CCodeExpression proxy_type;
 		CCodeExpression dbus_iface_name;
+		CCodeExpression dbus_iface_info = null;
 
 		var object_type = type_arg as ObjectType;
 		if (object_type != null) {
@@ -271,6 +272,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 			proxy_type = new CCodeIdentifier ("%s_PROXY".printf (get_ccode_type_id (iface)));
 			dbus_iface_name = new CCodeConstant ("\"%s\"".printf (get_dbus_name (iface)));
+			dbus_iface_info = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_interface_info (iface));
 		} else {
 			// use runtime type information for generic methods
 
@@ -389,6 +391,10 @@ public class Vala.GDBusClientModule : GDBusModule {
 		ccall.add_argument (get_cvalue (object_path));
 		ccall.add_argument (new CCodeConstant ("\"g-interface-name\""));
 		ccall.add_argument (dbus_iface_name);
+		if (dbus_iface_info != null) {
+			ccall.add_argument (new CCodeConstant ("\"g-interface-info\""));
+			ccall.add_argument (dbus_iface_info);
+		}
 		ccall.add_argument (new CCodeConstant ("NULL"));
 
 		if (bus_get_proxy_async || conn_get_proxy_async) {
