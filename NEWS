@@ -1,3 +1,12 @@
+Vala 0.25.2
+===========
+
+ * Require and target GLib >= 2.24.
+ * Report warning for private struct fields.
+ * Replace webkit2gtk-3.0 bindings with webkit2gtk-4.0 bindings.
+ * Always build vapigen.
+ * Bug fixes and binding updates.
+
 Vala 0.25.1
 ===========
 
