@@ -1622,9 +1622,10 @@ gtk_rgb_to_hsv.v is_out="1"
 
 // errordomains
 GtkBuilderError errordomain="1"
-GtkCssSectionType errordomain="1"
+GtkCssProviderError errordomain="1"
 GtkFileChooserError errordomain="1"
 GtkIconThemeError errordomain="1"
+GtkPrintError errordomain="1"
 GtkRecentChooserError errordomain="1"
 GtkRecentManagerError errordomain="1"
 

@@ -1704,7 +1704,7 @@ namespace Gtk {
 		public uint get_end_position ();
 		public unowned GLib.File get_file ();
 		public unowned Gtk.CssSection get_parent ();
-		public unowned Gtk.CssSectionType get_section_type ();
+		public Gtk.CssSectionType get_section_type ();
 		public uint get_start_line ();
 		public uint get_start_position ();
 	}
@@ -7656,14 +7656,17 @@ namespace Gtk {
 		TOP_RIGHT,
 		BOTTOM_RIGHT
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_PROVIDER_ERROR_")]
-	public enum CssProviderError {
-		FAILED,
-		SYNTAX,
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_SECTION_")]
+	public enum CssSectionType {
+		DOCUMENT,
 		IMPORT,
-		NAME,
-		DEPRECATED,
-		UNKNOWN_VALUE
+		COLOR_DEFINITION,
+		BINDING_SET,
+		RULESET,
+		SELECTOR,
+		DECLARATION,
+		VALUE,
+		KEYFRAMES
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DEBUG_")]
 	[Flags]
@@ -8015,13 +8018,6 @@ namespace Gtk {
 		SIMPLEX,
 		HORIZONTAL,
 		VERTICAL
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_ERROR_")]
-	public enum PrintError {
-		GENERAL,
-		INTERNAL_ERROR,
-		NOMEM,
-		INVALID_FILE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_OPERATION_ACTION_")]
 	public enum PrintOperationAction {
@@ -8477,17 +8473,14 @@ namespace Gtk {
 		INVALID_PROPERTY,
 		INVALID_SIGNAL
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_SECTION_")]
-	public errordomain CssSectionType {
-		DOCUMENT,
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_PROVIDER_ERROR_")]
+	public errordomain CssProviderError {
+		FAILED,
+		SYNTAX,
 		IMPORT,
-		COLOR_DEFINITION,
-		BINDING_SET,
-		RULESET,
-		SELECTOR,
-		DECLARATION,
-		VALUE,
-		KEYFRAMES
+		NAME,
+		DEPRECATED,
+		UNKNOWN_VALUE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FILE_CHOOSER_ERROR_")]
 	public errordomain FileChooserError {
@@ -8500,6 +8493,13 @@ namespace Gtk {
 	public errordomain IconThemeError {
 		NOT_FOUND,
 		FAILED
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_ERROR_")]
+	public errordomain PrintError {
+		GENERAL,
+		INTERNAL_ERROR,
+		NOMEM,
+		INVALID_FILE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_CHOOSER_ERROR_")]
 	public errordomain RecentChooserError {

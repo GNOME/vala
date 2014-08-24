@@ -7009,13 +7009,6 @@ namespace Gtk {
 		HORIZONTAL,
 		VERTICAL
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_ERROR_")]
-	public enum PrintError {
-		GENERAL,
-		INTERNAL_ERROR,
-		NOMEM,
-		INVALID_FILE
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_OPERATION_ACTION_")]
 	public enum PrintOperationAction {
 		PRINT_DIALOG,
@@ -7496,6 +7489,13 @@ namespace Gtk {
 	public errordomain IconThemeError {
 		NOT_FOUND,
 		FAILED
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_ERROR_")]
+	public errordomain PrintError {
+		GENERAL,
+		INTERNAL_ERROR,
+		NOMEM,
+		INVALID_FILE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_CHOOSER_ERROR_")]
 	public errordomain RecentChooserError {
