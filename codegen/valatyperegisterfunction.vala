@@ -128,20 +128,6 @@ public abstract class Vala.TypeRegisterFunction {
 
 		type_init.add_statement (get_type_interface_init_declaration ());
 
-		if (cl != null && cl.has_class_private_fields && !context.require_glib_version (2, 24)) {
-			CCodeFunctionCall quark_reg_call;
-
-			if (plugin) {
-				quark_reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
-			} else {
-				quark_reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
-			}
-
-			quark_reg_call.add_argument (new CCodeConstant ("\"Vala%sClassPrivate\"".printf (CCodeBaseModule.get_ccode_name (get_type_declaration ()))));
-
-			type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_vala_%s_class_private_quark".printf (CCodeBaseModule.get_ccode_lower_case_name (get_type_declaration ()))), quark_reg_call)));
-		}
-
 		CCodeFunctionCall reg_call;
 		if (get_type_declaration () is Struct) {
 			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_type_register_static"));
@@ -217,7 +203,7 @@ public abstract class Vala.TypeRegisterFunction {
 			type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (type_id_name), reg_call)));
 		}
 
-		 if (cl != null && cl.has_class_private_fields && context.require_glib_version (2, 24)) {
+		 if (cl != null && cl.has_class_private_fields) {
 			CCodeFunctionCall add_class_private_call;
 
 			add_class_private_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_class_private"));
