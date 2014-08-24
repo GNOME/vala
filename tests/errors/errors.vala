@@ -58,7 +58,9 @@ class Maman.Bar : Object {
 		try {
 			throw new BarError.FOO ("error message");
 		} catch (Error e) {
-			return;
+			if (e is BarError && e is BarError.FOO) {
+				return;
+			}
 		}
 
 		assert_not_reached ();
