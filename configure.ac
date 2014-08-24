@@ -86,9 +86,6 @@ AM_CONDITIONAL(HAVE_LIBVALA_0_26_X, test "$have_libvala_0_26_x" = "yes")
 PKG_CHECK_MODULES(LIBVALA_0_24_X, libvala-0.24 > 0.23.1, have_libvala_0_24_x="yes", have_libvala_0_24_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_24_X, test "$have_libvala_0_24_x" = "yes")
 
-PKG_CHECK_MODULES(LIBVALA_0_23_1, libvala-0.24 <= 0.23.1, have_libvala_0_23_1="yes", have_libvala_0_23_1="no")
-AM_CONDITIONAL(HAVE_LIBVALA_0_23_1, test "$have_libvala_0_23_1" = "yes")
-
 PKG_CHECK_MODULES(LIBVALA_0_22_X, libvala-0.22 >= 0.17.4, have_libvala_0_22_x="yes", have_libvala_0_22_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_22_X, test "$have_libvala_0_22_x" = "yes")
 
