@@ -5076,7 +5076,7 @@ namespace Gtk {
 		public void add_table (Gtk.TargetEntry[] targets);
 		public void add_text_targets (uint info);
 		public void add_uri_targets (uint info);
-		public bool find (Gdk.Atom target, out uint? info);
+		public bool find (Gdk.Atom target, out uint info);
 		public void remove (Gdk.Atom target);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
