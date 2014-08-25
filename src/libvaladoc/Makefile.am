@@ -60,6 +60,7 @@ libvaladoc_la_VALASOURCES = \
 	importer/valadocdocumentationimporter.vala \
 	importer/valadocdocumentationimporterscanner.vala \
 	importer/girdocumentationimporter.vala \
+	importer/internalidregistrar.vala \
 	api/symbolaccessibility.vala \
 	api/sourcecomment.vala \
 	api/girsourcecomment.vala \

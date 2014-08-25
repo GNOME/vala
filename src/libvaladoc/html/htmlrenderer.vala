@@ -1,6 +1,6 @@
 /* htmlrenderer.vala
  *
- * Copyright (C) 2008-20012 Florian Brosch, Didier Villevalois
+ * Copyright (C) 2008-20014 Florian Brosch, Didier Villevalois
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -62,26 +62,45 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		return linker.get_relative_link (_container, symbol, settings);
 	}
 
-	private void write_unresolved_symbol_link (string label) {
-		writer.start_tag ("code");
-		writer.text (label);
-		writer.end_tag ("code");
+	private void write_unresolved_symbol_link (string given_symbol_name, InlineContent? label_owner = null) {
+		if (label_owner == null || label_owner.content.size == 0) {
+			writer.start_tag ("code");
+			writer.text (given_symbol_name);
+			writer.end_tag ("code");
+		} else {
+			writer.start_tag ("i");
+			label_owner.accept_children (this);
+			writer.end_tag ("i");
+		}
 	}
 
-	private void write_resolved_symbol_link (Api.Node symbol, string? given_label) {
-		var label = (given_label == null || given_label == "") ? symbol.get_full_name () : given_label;
-		if (symbol == _container || symbol == _owner) {
-			writer.start_tag ("span", {"css", cssresolver.resolve (symbol)})
-				.text (label)
-				.end_tag ("span");
+	private void write_resolved_symbol_link (Api.Node symbol, string? given_symbol_name, InlineContent? label_owner = null) {
+		var symbol_name = (given_symbol_name == null || given_symbol_name == "") ? symbol.get_full_name () : given_symbol_name;
+		string href = (symbol == _container || symbol == _owner)? null : get_url (symbol);
+		string css_class = cssresolver.resolve (symbol);
+		string end_tag_name;
+
+
+		// Start Tag:
+		if (href != null) {
+			writer.start_tag ("a", {"href", href, "class", css_class});
+			end_tag_name = "a";
 		} else {
-			var url = get_url (symbol);
-			if (url == null) {
-				write_unresolved_symbol_link (label);
-			} else {
-				writer.link (url, label, cssresolver.resolve (symbol));
-			}
+			writer.start_tag ("span", {"class", css_class});
+			end_tag_name = "span";
 		}
+
+
+		// Content:
+		if (label_owner != null && label_owner.content.size > 0) {
+			label_owner.accept_children (this);
+		} else {
+			writer.text (symbol_name);
+		}
+
+
+		// End Tag:
+		writer.end_tag (end_tag_name);
 	}
 
 	private delegate void Write ();
@@ -325,9 +344,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	public override void visit_symbol_link (SymbolLink element) {
 		if (element.symbol == null) {
-			write_unresolved_symbol_link (element.label);
+			write_unresolved_symbol_link (element.given_symbol_name, element);
 		} else {
-			write_resolved_symbol_link (element.symbol, element.label);
+			write_resolved_symbol_link (element.symbol, element.given_symbol_name, element);
 		}
 	}
 

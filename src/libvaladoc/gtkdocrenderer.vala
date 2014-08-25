@@ -184,8 +184,20 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 	}
 
 	public override void visit_symbol_link (SymbolLink element) {
+		if (element.content.size > 0) {
+			writer.text ("\"");
+			element.accept_children (this);
+			writer.text ("\" (");
+			visit_symbol_link (element);
+			writer.text (")");
+		} else {
+			visit_symbol_link (element);
+		}
+	}
+
+	public void write_symbol_link (SymbolLink element) {
 		if (element.symbol == null) {
-			writer.text (element.label);
+			writer.text (element.given_symbol_name);
 		} else {
 			write_docbook_link (element.symbol);
 		}

@@ -1,7 +1,7 @@
 /* symbollink.vala
  *
  * Copyright (C) 2008-2009 Didier Villevalois
- * Copyright (C) 2008-2012 Florian Brosch
+ * Copyright (C) 2008-2014 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,21 +24,21 @@
 using Gee;
 
 
-public class Valadoc.Content.SymbolLink : ContentElement, Inline {
+public class Valadoc.Content.SymbolLink : InlineContent, Inline {
 	public Api.Node symbol {
 		get;
 		set;
 	}
 
-	public string label {
+	public string given_symbol_name {
 		get;
 		set;
 	}
 
-	internal SymbolLink (Api.Node? symbol = null, string? label = null) {
+	internal SymbolLink (Api.Node? symbol = null, string? given_symbol_name = null) {
 		base ();
 		_symbol = symbol;
-		_label = label;
+		_given_symbol_name = given_symbol_name;
 	}
 
 	public override void configure (Settings settings, ResourceLocator locator) {
@@ -58,8 +58,14 @@ public class Valadoc.Content.SymbolLink : ContentElement, Inline {
 	}
 
 	public override ContentElement copy (ContentElement? new_parent = null) {
-		SymbolLink link = new SymbolLink (symbol, label);
+		SymbolLink link = new SymbolLink (symbol, _given_symbol_name);
 		link.parent = new_parent;
+
+		foreach (Inline element in content) {
+			Inline copy = element.copy (link) as Inline;
+			link.content.add (copy);
+		}
+
 		return link;
 	}
 }

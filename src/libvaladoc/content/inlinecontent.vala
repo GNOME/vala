@@ -64,5 +64,12 @@ public abstract class Valadoc.Content.InlineContent : ContentElement {
 
 		return true;
 	}
+
+	internal void replace_node (Inline old, Inline replacement) {
+		int index = _content.index_of (old);
+		assert (index >= 0);
+
+		_content.set (index, replacement);
+	}
 }
 

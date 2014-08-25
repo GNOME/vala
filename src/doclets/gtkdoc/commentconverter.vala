@@ -92,7 +92,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			current_builder.append (link.name);
 		}
 	}
-  
+
 	public override void visit_link (Link link) {
 		current_builder.append_printf ("<ulink url=\"%s\">", link.url);
 		link.accept_children (this);
@@ -104,15 +104,15 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			// If the symbol is a method and it doesn't have a constructor, fall back to linking to the class
 			if (sl.symbol is Method && ((Method) sl.symbol).is_constructor &&
 			    ((Method) sl.symbol).parent is Class && ((Class) ((Method) sl.symbol).parent).is_abstract) {
-				current_builder.append (get_docbook_link (((Method) sl.symbol).parent, is_dbus) ?? sl.label);
+				current_builder.append (get_docbook_link (((Method) sl.symbol).parent, is_dbus) ?? sl.given_symbol_name);
 			} else {
-				current_builder.append (get_docbook_link (sl.symbol, is_dbus) ?? sl.label);
+				current_builder.append (get_docbook_link (sl.symbol, is_dbus) ?? sl.given_symbol_name);
 			}
 		} else {
-			current_builder.append (sl.label);
+			current_builder.append (sl.given_symbol_name);
 		}
 	}
-  
+
 	public override void visit_list (Content.List list) {
 		string tag = "orderedlist";
 		switch (list.bullet) {

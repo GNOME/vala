@@ -1,7 +1,7 @@
 /* link.vala
  *
  * Copyright (C) 2008-2009 Didier Villevalois
- * Copyright (C) 2008-2012 Florian Brosch
+ * Copyright (C) 2008-2014 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,9 +26,18 @@ using Gee;
 
 public class Valadoc.Content.Link : InlineContent, Inline {
 	public string url {
-		get;
 		set;
+		get;
 	}
+
+	/**
+	 * Used by importers to transform internal URLs
+	 */
+	public Importer.InternalIdRegistrar id_registrar {
+		internal set;
+		get;
+	}
+
 
 	internal Link () {
 		base ();
@@ -40,8 +49,45 @@ public class Valadoc.Content.Link : InlineContent, Inline {
 	public override void check (Api.Tree api_root, Api.Node container, string file_path,
 								ErrorReporter reporter, Settings settings)
 	{
-		base.check (api_root, container, file_path, reporter, settings);
+	
+		// Internal gktdoc-id? (gir-importer)
+		if (id_registrar != null) {
+			Api.Node? node = id_registrar.map_symbol_id (url);
+			if (node != null) {
+				InlineContent _parent = parent as InlineContent;
+				assert (_parent != null);
+
+				SymbolLink replacement = new SymbolLink (node);
+				replacement.content.add_all (content);
+
+				replacement.check (api_root, container, file_path, reporter, settings);
+				_parent.replace_node (this, replacement);
+				return ;
+			}		
+
+
+			string _url = id_registrar.map_url_id (url);
+			if (_url == null) {
+				string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
+				reporter.simple_warning ("%s: %s[[: warning: unknown imported internal id `%s'", file_path, node_segment, url);
+
+				InlineContent _parent = parent as InlineContent;
+				assert (_parent != null);
+
+				Run replacement = new Run (Run.Style.ITALIC);
+				replacement.content.add_all (content);
+				replacement.check (api_root, container, file_path, reporter, settings);
+
+				_parent.replace_node (this, replacement);
+				return ;
+			}
+
+			url = _url;
+		}
+
+
 		//TODO: check url
+		base.check (api_root, container, file_path, reporter, settings);
 	}
 
 	public override void accept (ContentVisitor visitor) {
@@ -54,6 +100,7 @@ public class Valadoc.Content.Link : InlineContent, Inline {
 
 	public override ContentElement copy (ContentElement? new_parent = null) {
 		Link link = new Link ();
+		link.id_registrar = id_registrar;
 		link.parent = new_parent;
 		link.url = url;
 

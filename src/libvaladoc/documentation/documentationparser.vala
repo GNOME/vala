@@ -27,7 +27,9 @@ using Gee;
 
 
 public class Valadoc.DocumentationParser : Object, ResourceLocator {
-	private HashMap<Api.SourceFile, GirMetaData> metadata = new HashMap<Api.SourceFile, GirMetaData> ();
+	private HashMap<Api.SourceFile, GirMetaData> metadata;
+	private Importer.InternalIdRegistrar id_registrar;
+
 
 	public DocumentationParser (Settings settings, ErrorReporter reporter,
 								Api.Tree tree, ModuleLoader modules)
@@ -49,6 +51,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 		gtkdoc_parser = new Gtkdoc.Parser (settings, reporter, tree, modules);
 		gtkdoc_markdown_parser = new Gtkdoc.MarkdownParser (settings, reporter, tree, modules);
+
+
+		metadata = new HashMap<Api.SourceFile, GirMetaData> ();
+		id_registrar = new Importer.InternalIdRegistrar ();
 
 		init_valadoc_rules ();
 	}
@@ -79,7 +85,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				Comment doc_comment = gtkdoc_parser.parse (element, gir_comment, metadata);
 				return doc_comment;
 			} else {
-				Comment doc_comment = gtkdoc_markdown_parser.parse (element, gir_comment, metadata);
+				Comment doc_comment = gtkdoc_markdown_parser.parse (element, gir_comment, metadata, id_registrar);
 				return doc_comment;
 			}
 		} else {
@@ -166,6 +172,10 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		}
 
 		metadata = new GirMetaData (gir_comment.file.relative_path, _settings.metadata_directories, _reporter);
+		if (metadata.index_sgml != null) {
+			id_registrar.read_index_sgml_file (metadata.index_sgml, _reporter);
+		}
+
 		this.metadata.set (gir_comment.file, metadata);
 		return metadata;
 	}

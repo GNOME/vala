@@ -1,7 +1,7 @@
 /* taglet.vala
  *
  * Copyright (C) 2008-2009 Didier Villevalois
- * Copyright (C) 2008-2012 Florian Brosch
+ * Copyright (C) 2008-2014 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -127,12 +127,12 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 	public override ContentElement produce_content () {
 		var link = new Content.SymbolLink ();
 		link.symbol = _symbol;
-		link.label = symbol_name;
+		link.given_symbol_name = symbol_name;
 
 		Content.Inline content;
 		switch (_context) {
 		case SymbolContext.FINISH:
-			link.label += ".end";
+			link.given_symbol_name += ".end";
 			content = link;
 			break;
 

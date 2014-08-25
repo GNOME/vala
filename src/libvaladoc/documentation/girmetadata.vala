@@ -1,6 +1,6 @@
 /* girmetadata.vala
  *
- * Copyright (C) 2012 Florian Brosch
+ * Copyright (C) 2012-2014 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,6 +20,9 @@
  * 	Brosch Florian <flo.brosch@gmail.com>
  */
 
+using Gee;
+
+
 /**
  * Metadata reader for GIR files
  */
@@ -27,7 +30,9 @@ public class Valadoc.GirMetaData : Object {
 	private string? metadata_path = null;
 	private string? resource_dir = null;
 
+
 	public bool is_docbook { private set; get; default = false; }
+	public string index_sgml { private set; get; default = null; }
 
 
 	/**
@@ -89,6 +94,10 @@ public class Valadoc.GirMetaData : Object {
 				this.is_docbook = key_file.get_boolean ("General", "is_docbook");
 				break;
 
+			case "index_sgml":
+				this.index_sgml = key_file.get_string ("General", "index_sgml");
+				break;
+
 			default:
 				reporter.simple_warning ("%s: warning: Unknown key 'General.%s'", metadata_path, key);
 				break;
@@ -134,6 +143,9 @@ public class Valadoc.GirMetaData : Object {
 		} catch (KeyFileError e) {
 			reporter.simple_error ("%s: error: %s", metadata_path, e.message);
 		}
+
+
+		// Load internal link lut:
 	}
 }
 

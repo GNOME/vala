@@ -40,6 +40,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 	private Valadoc.Token preserved_token = null;
 	private Regex regex_source_lang;
 
+	private Importer.InternalIdRegistrar id_registrar;
 	private GirMetaData metadata;
 	private Api.GirSourceComment gir_comment;
 	private Api.Node element;
@@ -253,6 +254,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 								.set_reduce (() => {
 									Link url = _factory.create_link ();
 									url.url = pop_preserved_link ();
+									url.id_registrar = id_registrar;
 
 									Run label = (Run) peek ();
 									url.content.add_all (label.content);
@@ -517,8 +519,8 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 			}),
 			run,
 			Rule.option ({
-				Valadoc.TokenType.MARKDOWN_HEADLINE_HASH.action (() => {
-					// TODO
+				Valadoc.TokenType.MARKDOWN_HEADLINE_HASH.action ((token) => {
+					id_registrar.register_symbol (token.value, element);
 				})
 			}),
 			Valadoc.TokenType.MARKDOWN_HEADLINE_END
@@ -618,11 +620,11 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 		comment.content.insert (1, note);
 	}
 
-	public Comment? parse (Api.Node element, Api.GirSourceComment gir_comment, GirMetaData metadata, string? this_name = null) {
+	public Comment? parse (Api.Node element, Api.GirSourceComment gir_comment, GirMetaData metadata, Importer.InternalIdRegistrar id_registrar, string? this_name = null) {
 		this.metadata = metadata;
+		this.id_registrar = id_registrar;
 		this.gir_comment = gir_comment;
 		this.element = element;
-
 
 		// main:
 		Comment? cmnt = _parse (gir_comment);
@@ -673,7 +675,8 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 
 		this.metadata = null;
 		this.gir_comment = null;
-		this.element = element;
+		this.id_registrar = null;
+		this.element = null;
 
 		return cmnt;
 	}
