@@ -49,6 +49,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	private Regex? is_numeric_regex = null;
 	private Regex? normalize_regex = null;
 
+	private Importer.InternalIdRegistrar id_registrar = null;
 	private GirMetaData? current_metadata = null;
 
 	private inline string fix_resource_path (string path) {
@@ -114,9 +115,10 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 	}
 
-	public Comment? parse (Api.Node element, Api.GirSourceComment gir_comment, GirMetaData gir_metadata) {
+	public Comment? parse (Api.Node element, Api.GirSourceComment gir_comment, GirMetaData gir_metadata, Importer.InternalIdRegistrar id_registrar) {
 		this.instance_param_name = gir_comment.instance_param_name;
 		this.current_metadata = gir_metadata;
+		this.id_registrar = id_registrar;
 		this.element = element;
 
 		Comment? comment = this.parse_main_content (gir_comment);
@@ -295,7 +297,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	// Rules, Ground:
 	//
 
-	private Inline? parse_docbook_link_tempalte (string tagname) {
+	private Inline? parse_docbook_link_tempalte (string tagname, bool is_internal) {
 		if (!check_xml_open_tag (tagname)) {
 			this.report_unexpected_token (current, "<%s>".printf (tagname));
 			return null;
@@ -320,6 +322,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 
 		var link = factory.create_link ();
+		if (is_internal) {
+			link.id_registrar = id_registrar;
+		}
 		link.url = url;
 
 		if (builder.len == 0) {
@@ -386,8 +391,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 
 		string id = current.attributes.get ("id");
+		id_registrar.register_symbol (id, element);
 		next ();
-		// TODO register xref
 
 		if (!check_xml_close_tag ("anchor")) {
 			this.report_unexpected_token (current, "</anchor>");
@@ -397,7 +402,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		next ();
 	}
 
-	private Run? parse_xref () {
+	private Link? parse_xref () {
 		if (!check_xml_open_tag ("xref")) {
 			this.report_unexpected_token (current, "<xref>");
 			return null;
@@ -405,18 +410,19 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 		string linkend = current.attributes.get ("linkend");
 		next ();
-		// TODO register xref
 
-		Run run = factory.create_run (Run.Style.ITALIC);
-		run.content.add (factory.create_text (linkend));
+		Link link = factory.create_link ();
+		link.content.add (factory.create_text (linkend));
+		link.id_registrar = id_registrar;
+		link.url = linkend;
 
 		if (!check_xml_close_tag ("xref")) {
 			this.report_unexpected_token (current, "</xref>");
-			return run;
+			return link;
 		}
 
 		next ();
-		return run;
+		return link;
 	}
 
 	private Run? parse_highlighted_template (string tag_name, Run.Style style) {
@@ -837,8 +843,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			return null;
 		}
 
-		// TODO: register id
 		string id = current.attributes.get ("id");
+		id_registrar.register_symbol (id, element);
 		next ();
 
 		parse_docbook_spaces ();
@@ -1111,6 +1117,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 
 		string id = current.attributes.get ("id");
+		id_registrar.register_symbol (id, element);
 		next ();
 
 		LinkedList<Block> content = parse_mixed_content ();
@@ -1482,9 +1489,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			} else if (current.type == TokenType.XML_OPEN && current.content == "anchor") {
 				parse_anchor ();
 			} else if (current.type == TokenType.XML_OPEN && current.content == "link") {
-				append_inline_content_not_null (run, parse_docbook_link_tempalte ("link"));
+				append_inline_content_not_null (run, parse_docbook_link_tempalte ("link", true));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "ulink") {
-				append_inline_content_not_null (run, parse_docbook_link_tempalte ("ulink"));
+				append_inline_content_not_null (run, parse_docbook_link_tempalte ("ulink", false));
 			} else if (current.type == TokenType.XML_OPEN && current.content == "xref") {
 				append_inline_content_not_null (run, parse_xref ());
 			} else if (current.type == TokenType.XML_OPEN && current.content == "tag") {

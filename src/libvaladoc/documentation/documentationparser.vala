@@ -82,7 +82,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			GirMetaData metadata = get_metadata_for_comment (gir_comment);
 
 			if (metadata.is_docbook) {
-				Comment doc_comment = gtkdoc_parser.parse (element, gir_comment, metadata);
+				Comment doc_comment = gtkdoc_parser.parse (element, gir_comment, metadata, id_registrar);
 				return doc_comment;
 			} else {
 				Comment doc_comment = gtkdoc_markdown_parser.parse (element, gir_comment, metadata, id_registrar);
