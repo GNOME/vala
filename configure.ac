@@ -80,7 +80,7 @@ AM_CONDITIONAL(HAVE_CGRAPH, test "$have_cgraph" = "yes")
 ## Drivers:
 ##
 
-PKG_CHECK_MODULES(LIBVALA_0_26_X, libvala-0.26 > 0.23.1, have_libvala_0_26_x="yes", have_libvala_0_26_x="no")
+PKG_CHECK_MODULES(LIBVALA_0_26_X, libvala-0.26 > 0.25.2, have_libvala_0_26_x="yes", have_libvala_0_26_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_26_X, test "$have_libvala_0_26_x" = "yes")
 
 PKG_CHECK_MODULES(LIBVALA_0_24_X, libvala-0.24 > 0.23.1, have_libvala_0_24_x="yes", have_libvala_0_24_x="no")

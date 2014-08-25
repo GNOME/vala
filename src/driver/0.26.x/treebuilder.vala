@@ -1175,7 +1175,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 									  comment,
 									  get_nick (element),
 									  Vala.GDBusModule.get_dbus_name_for_member (element),
-									  Vala.GDBusServerModule.is_dbus_visible (element),
+									  Vala.GDBusModule.is_dbus_visible (element),
 									  get_property_binding_type (element),
 									  element);
 		node.property_type = create_type_reference (element.property_type, node, node);
@@ -1226,11 +1226,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								  comment,
 								  get_cname (element),
 								  Vala.GDBusModule.get_dbus_name_for_member (element),
-								  Vala.GDBusServerModule.dbus_result_name (element),
+								  Vala.GDBusModule.dbus_result_name (element),
 								  (element.coroutine)? get_finish_name (element) : null,
 								  get_method_binding_type (element),
 								  element.coroutine,
-								  Vala.GDBusServerModule.is_dbus_visible (element),
+								  Vala.GDBusModule.is_dbus_visible (element),
 								  element is Vala.CreationMethod,
 								  element);
 		node.return_type = create_type_reference (element.return_type, node, node);
@@ -1256,11 +1256,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								  comment,
 								  get_cname (element),
 								  Vala.GDBusModule.get_dbus_name_for_member (element),
-								  Vala.GDBusServerModule.dbus_result_name (element),
+								  Vala.GDBusModule.dbus_result_name (element),
 								  (element.coroutine)? get_finish_name (element) : null,
 								  get_method_binding_type (element),
 								  element.coroutine,
-								  Vala.GDBusServerModule.is_dbus_visible (element),
+								  Vala.GDBusModule.is_dbus_visible (element),
 								  element is Vala.CreationMethod,
 								  element);
 		node.return_type = create_type_reference (element.return_type, node, node);
@@ -1286,7 +1286,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 										  comment,
 										  get_cname (element),
 										  Vala.GDBusModule.get_dbus_name_for_member (element),
-										  Vala.GDBusServerModule.is_dbus_visible (element),
+										  Vala.GDBusModule.is_dbus_visible (element),
 										  element.is_virtual,
 										  element);
 		node.return_type = create_type_reference (element.return_type, node, node);
