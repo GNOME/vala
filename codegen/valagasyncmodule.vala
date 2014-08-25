@@ -169,7 +169,7 @@ public class Vala.GAsyncModule : GtkModule {
 
 		var dataname = Symbol.lower_case_to_camel_case (get_ccode_name (m)) + "Data";
 		var asyncfunc = new CCodeFunction (get_ccode_real_name (m), "void");
-		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> ();
 
 		cparam_map.set (get_param_pos (-1), new CCodeParameter ("_callback_", "GAsyncReadyCallback"));
 		cparam_map.set (get_param_pos (-0.9), new CCodeParameter ("_user_data_", "gpointer"));
@@ -361,8 +361,8 @@ public class Vala.GAsyncModule : GtkModule {
 			var cl = m.parent_symbol as Class;
 
 			var asyncfunc = new CCodeFunction (get_ccode_name (m), "void");
-			var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
-			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+			var cparam_map = new HashMap<int,CCodeParameter> ();
+			var carg_map = new HashMap<int,CCodeExpression> ();
 
 			if (m.is_private_symbol ()) {
 				asyncfunc.modifiers |= CCodeModifiers.STATIC;
@@ -378,8 +378,8 @@ public class Vala.GAsyncModule : GtkModule {
 			}
 
 			var finishfunc = new CCodeFunction (get_ccode_finish_name (m));
-			cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
-			carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+			cparam_map = new HashMap<int,CCodeParameter> ();
+			carg_map = new HashMap<int,CCodeExpression> ();
 
 			if (m.is_private_symbol ()) {
 				finishfunc.modifiers |= CCodeModifiers.STATIC;
@@ -404,7 +404,7 @@ public class Vala.GAsyncModule : GtkModule {
 					function.modifiers |= CCodeModifiers.INTERNAL;
 				}
 
-				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+				cparam_map = new HashMap<int,CCodeParameter> ();
 				generate_cparameters (m, decl_space, cparam_map, function, null, null, null, 1);
 
 				decl_space.add_function_declaration (function);
@@ -417,7 +417,7 @@ public class Vala.GAsyncModule : GtkModule {
 					function.modifiers |= CCodeModifiers.INTERNAL;
 				}
 
-				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+				cparam_map = new HashMap<int,CCodeParameter> ();
 				generate_cparameters (m, decl_space, cparam_map, function, null, null, null, 2);
 
 				decl_space.add_function_declaration (function);
@@ -463,12 +463,12 @@ public class Vala.GAsyncModule : GtkModule {
 
 			if (m.is_abstract || m.is_virtual) {
 				// generate virtual function wrappers
-				var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
-				var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+				var cparam_map = new HashMap<int,CCodeParameter> ();
+				var carg_map = new HashMap<int,CCodeExpression> ();
 				generate_vfunc (m, new VoidType (), cparam_map, carg_map, "", 1);
 
-				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
-				carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+				cparam_map = new HashMap<int,CCodeParameter> ();
+				carg_map = new HashMap<int,CCodeExpression> ();
 				generate_vfunc (m, m.return_type, cparam_map, carg_map, "_finish", 2);
 			}
 		} else {
@@ -494,8 +494,8 @@ public class Vala.GAsyncModule : GtkModule {
 			if (current_type_symbol is Class && !current_class.is_compact && !current_class.is_abstract) {
 				var vfunc = new CCodeFunction (get_ccode_name (m));
 
-				var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
-				var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+				var cparam_map = new HashMap<int,CCodeParameter> ();
+				var carg_map = new HashMap<int,CCodeExpression> ();
 
 				push_function (vfunc);
 
@@ -516,8 +516,8 @@ public class Vala.GAsyncModule : GtkModule {
 
 				vfunc = new CCodeFunction (get_ccode_finish_name (m));
 
-				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
-				carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+				cparam_map = new HashMap<int,CCodeParameter> ();
+				carg_map = new HashMap<int,CCodeExpression> ();
 
 				push_function (vfunc);
 
@@ -546,7 +546,7 @@ public class Vala.GAsyncModule : GtkModule {
 
 		var finishfunc = new CCodeFunction (get_ccode_finish_real_name (m));
 
-		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> ();
 
 		cparam_map.set (get_param_pos (0.1), new CCodeParameter ("_res_", "GAsyncResult*"));
 
@@ -739,7 +739,7 @@ public class Vala.GAsyncModule : GtkModule {
 
 		// add vfunc field to the type struct
 		var vdeclarator = new CCodeFunctionDeclarator (get_ccode_vfunc_name (m));
-		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> ();
 
 		generate_cparameters (m, decl_space, cparam_map, new CCodeFunction ("fake"), vdeclarator, null, null, 1);
 
@@ -749,7 +749,7 @@ public class Vala.GAsyncModule : GtkModule {
 
 		// add vfunc field to the type struct
 		vdeclarator = new CCodeFunctionDeclarator (get_ccode_finish_vfunc_name (m));
-		cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+		cparam_map = new HashMap<int,CCodeParameter> ();
 
 		generate_cparameters (m, decl_space, cparam_map, new CCodeFunction ("fake"), vdeclarator, null, null, 2);
 

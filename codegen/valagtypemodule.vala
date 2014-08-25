@@ -385,7 +385,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		// add vfunc field to the type struct
 		var vdeclarator = new CCodeFunctionDeclarator (get_ccode_vfunc_name (m));
-		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> ();
 
 		if (m.printf_format) {
 			vdeclarator.modifiers |= CCodeModifiers.PRINTF;
@@ -1520,7 +1520,7 @@ public class Vala.GTypeModule : GErrorModule {
 		string cast_args = "%s *".printf (get_ccode_name (base_type));
 
 		var vdeclarator = new CCodeFunctionDeclarator (get_ccode_vfunc_name (m));
-		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> ();
 
 		generate_cparameters (m, cfile, cparam_map, new CCodeFunction ("fake"), vdeclarator, null, null, direction);
 
@@ -1529,7 +1529,7 @@ public class Vala.GTypeModule : GErrorModule {
 		int min_pos;
 		while (true) {
 			min_pos = -1;
-			foreach (int pos in cparam_map.get_keys ()) {
+			foreach (int pos in cparam_map.keys) {
 				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
 					min_pos = pos;
 				}

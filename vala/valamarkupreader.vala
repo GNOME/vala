@@ -41,7 +41,7 @@ public class Vala.MarkupReader {
 	int line;
 	int column;
 
-	Map<string,string> attributes = new HashMap<string,string> (str_hash, str_equal);
+	Map<string,string> attributes = new HashMap<string,string> ();
 	bool empty_element;
 
 	public MarkupReader (string filename) {
@@ -71,8 +71,8 @@ public class Vala.MarkupReader {
 	 * @return map of current attributes
 	 */
 	public Map<string,string> get_attributes () {
-		var result = new HashMap<string,string> (str_hash, str_equal);
-		foreach (var key in attributes.get_keys ()) {
+		var result = new HashMap<string,string> ();
+		foreach (var key in attributes.keys) {
 			result.set (key, attributes.get (key));
 		}
 		return result;

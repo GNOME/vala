@@ -192,7 +192,7 @@ public abstract class Vala.CodeNode {
 	public void remove_attribute_argument (string attribute, string argument) {
 		var a = get_attribute (attribute);
 		if (a != null) {
-			a.args.remove (argument);
+			a.args.unset (argument);
 			if (a.args.size == 0) {
 				attributes.remove (a);
 			}

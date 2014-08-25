@@ -207,7 +207,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		push_function (function);
 
-		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> ();
 
 		if (d.has_target) {
 			var cparam = new CCodeParameter ("self", "gpointer");
@@ -268,7 +268,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		int min_pos;
 		while (true) {
 			min_pos = -1;
-			foreach (int pos in cparam_map.get_keys ()) {
+			foreach (int pos in cparam_map.keys) {
 				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
 					min_pos = pos;
 				}
@@ -283,7 +283,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		// definition
 
-		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+		var carg_map = new HashMap<int,CCodeExpression> ();
 
 		int i = 0;
 		if (m.binding == MemberBinding.INSTANCE || m.closure) {
@@ -392,7 +392,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		last_pos = -1;
 		while (true) {
 			min_pos = -1;
-			foreach (int pos in carg_map.get_keys ()) {
+			foreach (int pos in carg_map.keys) {
 				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
 					min_pos = pos;
 				}

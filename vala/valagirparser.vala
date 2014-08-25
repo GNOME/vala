@@ -121,7 +121,7 @@ public class Vala.GirParser : CodeVisitor {
 				add_child (child);
 			}
 			// merge arguments and take precedence
-			foreach (var key in metadata.args.get_keys ()) {
+			foreach (var key in metadata.args.keys) {
 				args[key] = metadata.args[key];
 			}
 		}
@@ -143,7 +143,7 @@ public class Vala.GirParser : CodeVisitor {
 		public SourceReference source_reference;
 
 		public bool used = false;
-		public Vala.Map<ArgumentType,Argument> args = new HashMap<ArgumentType,Argument> ();
+		public Map<ArgumentType,Argument> args = new HashMap<ArgumentType,Argument> ();
 		public ArrayList<Metadata> children = new ArrayList<Metadata> ();
 
 		public Metadata (string pattern, string? selector = null, SourceReference? source_reference = null) {
@@ -184,7 +184,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		public bool has_argument (ArgumentType key) {
-			return args.contains (key);
+			return args.has_key (key);
 		}
 
 		public Expression? get_expression (ArgumentType arg) {
@@ -511,7 +511,7 @@ public class Vala.GirParser : CodeVisitor {
 		public Metadata metadata = Metadata.empty;
 		public SourceReference source_reference = null;
 		public ArrayList<Node> members = new ArrayList<Node> (); // guarantees fields order
-		public HashMap<string, ArrayList<Node>> scope = new HashMap<string, ArrayList<Node>> (str_hash, str_equal);
+		public HashMap<string, ArrayList<Node>> scope = new HashMap<string, ArrayList<Node>> ();
 
 		public GirComment comment;
 		public Symbol symbol;
@@ -556,7 +556,7 @@ public class Vala.GirParser : CodeVisitor {
 			var nodes = scope[node.name];
 			nodes.remove (node);
 			if (nodes.size == 0) {
-				scope.remove (node.name);
+				scope.unset (node.name);
 			}
 			members.remove (node);
 			node.parent = null;
@@ -656,7 +656,7 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			}
 
-			if (prefix == null && girdata != null && (girdata.contains ("c:symbol-prefix") || girdata.contains("c:symbol-prefixes"))) {
+			if (prefix == null && girdata != null && (girdata.has_key ("c:symbol-prefix") || girdata.has_key ("c:symbol-prefixes"))) {
 				/* Use the prefix in the gir. We look up prefixes up to the root.
 				   If some node does not have girdata, we ignore it as i might be
 				   a namespace created due to reparenting. */
@@ -1283,8 +1283,8 @@ public class Vala.GirParser : CodeVisitor {
 	Node current;
 	Node old_current;
 
-	Set<string> provided_namespaces = new HashSet<string> (str_hash, str_equal);
-	HashMap<UnresolvedSymbol,Symbol> unresolved_symbols_map = new HashMap<UnresolvedSymbol,Symbol> (unresolved_symbol_hash, unresolved_symbol_equal);
+	Set<string> provided_namespaces = new HashSet<string> ();
+	HashMap<UnresolvedSymbol,Symbol> unresolved_symbols_map = new HashMap<UnresolvedSymbol,Symbol> ((a) => {return unresolved_symbol_hash(a);}, (a, b) => {return unresolved_symbol_equal(a, b);});
 	ArrayList<UnresolvedSymbol> unresolved_gir_symbols = new ArrayList<UnresolvedSymbol> ();
 	ArrayList<DataType> unresolved_type_arguments = new ArrayList<DataType> ();
 
@@ -3468,7 +3468,7 @@ public class Vala.GirParser : CodeVisitor {
 			return;
 		}
 
-		foreach (var arg_type in metadata.args.get_keys ()) {
+		foreach (var arg_type in metadata.args.keys) {
 			var arg = metadata.args[arg_type];
 			if (!arg.used) {
 				// if metadata is used and argument is not, then it's a unexpected argument

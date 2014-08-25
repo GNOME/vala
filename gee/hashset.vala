@@ -24,21 +24,46 @@
 
 using GLib;
 
+namespace Vala {
+	public delegate uint HashDataFunc<T> (T v);
+	public delegate bool EqualDataFunc<T> (T a, T b);
+}
+
 /**
- * Hashtable implementation of the Set interface.
+ * Hash table implementation of the {@link Set} interface.
+ *
+ * This implementation is better fit for highly heterogenous values.
+ * In case of high value hashes redundancy or higher amount of data prefer using
+ * tree implementation like {@link TreeSet}.
+ *
+ * @see TreeSet
  */
-public class Vala.HashSet<G> : Set<G> {
+public class Vala.HashSet<G> : AbstractSet<G> {
+	/**
+	 * {@inheritDoc}
+	 */
 	public override int size {
 		get { return _nnodes; }
 	}
 
-	public HashFunc<G> hash_func {
-		set { _hash_func = value; }
+	/**
+	 * {@inheritDoc}
+	 */
+	public override bool read_only {
+		get { return false; }
 	}
 
-	public EqualFunc<G> equal_func {
-		set { _equal_func = value; }
-	}
+	/**
+	 * The elements' hash function.
+	 */
+	[CCode (notify = false)]
+	public HashDataFunc<G> hash_func { private set; get; }
+
+	/**
+	 * The elements' equality testing function.
+	 */
+	[CCode (notify = false)]
+	public EqualDataFunc<G> equal_func { private set; get; }
 
 	private int _array_size;
 	private int _nnodes;
@@ -47,13 +72,25 @@ public class Vala.HashSet<G> : Set<G> {
 	// concurrent modification protection
 	private int _stamp = 0;
 
-	private HashFunc<G> _hash_func;
-	private EqualFunc<G> _equal_func;
-
 	private const int MIN_SIZE = 11;
 	private const int MAX_SIZE = 13845163;
 
-	public HashSet (HashFunc<G> hash_func = GLib.direct_hash, EqualFunc<G> equal_func = GLib.direct_equal) {
+	/**
+	 * Constructs a new, empty hash set.
+	 *
+	 * If not provided, the functions parameters are requested to the
+	 * {@link Functions} function factory methods.
+	 *
+	 * @param hash_func an optional hash function
+	 * @param equal_func an optional equality testing function
+	 */
+	public HashSet (owned HashDataFunc<G>? hash_func = null, owned EqualDataFunc<G>? equal_func = null) {
+		if (hash_func == null) {
+			hash_func = Functions.get_hash_func_for (typeof (G));
+		}
+		if (equal_func == null) {
+			equal_func = Functions.get_equal_func_for (typeof (G));
+		}
 		this.hash_func = hash_func;
 		this.equal_func = equal_func;
 		_array_size = MIN_SIZE;
@@ -61,33 +98,38 @@ public class Vala.HashSet<G> : Set<G> {
 	}
 
 	private Node<G>** lookup_node (G key) {
-		uint hash_value = _hash_func (key);
+		uint hash_value = hash_func (key);
 		Node<G>** node = &_nodes[hash_value % _array_size];
-		while ((*node) != null && (hash_value != (*node)->key_hash || !_equal_func ((*node)->key, key))) {
+		while ((*node) != null && (hash_value != (*node)->key_hash || !equal_func ((*node)->key, key))) {
 			node = &((*node)->next);
 		}
 		return node;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override bool contains (G key) {
 		Node<G>** node = lookup_node (key);
 		return (*node != null);
 	}
 
-	public override Type get_element_type () {
-		return typeof (G);
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public override Vala.Iterator<G> iterator () {
 		return new Iterator<G> (this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override bool add (G key) {
 		Node<G>** node = lookup_node (key);
 		if (*node != null) {
 			return false;
 		} else {
-			uint hash_value = _hash_func (key);
+			uint hash_value = hash_func (key);
 			*node = new Node<G> (key, hash_value);
 			_nnodes++;
 			resize ();
@@ -96,24 +138,20 @@ public class Vala.HashSet<G> : Set<G> {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override bool remove (G key) {
-		Node<G>** node = lookup_node (key);
-		if (*node != null) {
-			Node<G> next = (owned) (*node)->next;
-
-			(*node)->key = null;
-			delete *node;
-
-			*node = (owned) next;
-
-			_nnodes--;
+		bool b = remove_helper(key);
+		if(b) {
 			resize ();
-			_stamp++;
-			return true;
 		}
-		return false;
+		return b;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public override void clear () {
 		for (int i = 0; i < _array_size; i++) {
 			Node<G> node = (owned) _nodes[i];
@@ -125,6 +163,24 @@ public class Vala.HashSet<G> : Set<G> {
 		}
 		_nnodes = 0;
 		resize ();
+	}
+
+	private inline bool remove_helper (G key) {
+		Node<G>** node = lookup_node (key);
+		if (*node != null) {
+			assert (*node != null);
+			Node<G> next = (owned) (*node)->next;
+
+			(*node)->key = null;
+			delete *node;
+
+			*node = (owned) next;
+
+			_nnodes--;
+			_stamp++;
+			return true;
+		}
+		return false;
 	}
 
 	private void resize () {
@@ -166,40 +222,109 @@ public class Vala.HashSet<G> : Set<G> {
 		}
 	}
 
-	private class Iterator<G> : Vala.Iterator<G> {
-		public HashSet<G> set {
-			set {
-				_set = value;
-				_stamp = _set._stamp;
-			}
-		}
-
+	private class Iterator<G> : Object, Traversable<G>, Vala.Iterator<G> {
 		private HashSet<G> _set;
 		private int _index = -1;
 		private weak Node<G> _node;
+		private weak Node<G> _next;
 
 		// concurrent modification protection
 		private int _stamp = 0;
 
 		public Iterator (HashSet set) {
-			this.set = set;
+			_set = set;
+			_stamp = _set._stamp;
 		}
 
-		public override bool next () {
-			if (_node != null) {
-				_node = _node.next;
+		public bool next () {
+			assert (_stamp == _set._stamp);
+			if (!has_next ()) {
+				return false;
 			}
-			while (_node == null && _index + 1 < _set._array_size) {
-				_index++;
-				_node = _set._nodes[_index];
-			}
+			_node = _next;
+			_next = null;
 			return (_node != null);
 		}
 
-		public override G? get () {
+		public bool has_next () {
+			assert (_stamp == _set._stamp);
+			if (_next == null) {
+				_next = _node;
+				if (_next != null) {
+					_next = _next.next;
+				}
+				while (_next == null && _index + 1 < _set._array_size) {
+					_index++;
+					_next = _set._nodes[_index];
+				}
+			}
+			return (_next != null);
+		}
+
+		public new G get () {
 			assert (_stamp == _set._stamp);
 			assert (_node != null);
 			return _node.key;
+		}
+
+		public void remove () {
+			assert (_stamp == _set._stamp);
+			assert (_node != null);
+			has_next ();
+			_set.remove_helper (_node.key);
+			_node = null;
+			_stamp = _set._stamp;
+		}
+
+		public bool read_only {
+			get {
+				return false;
+			}
+		}
+
+		public bool valid {
+			get {
+				return _node != null;
+			}
+		}
+
+		public bool foreach (ForallFunc<G> f) {
+			assert (_stamp == _set._stamp);
+			unowned Node<G>? node = _node, next = _next, current = null, prev = null;
+			if (node != null) {
+				if (!f (node.key)) {
+					return false;
+				}
+				prev = node;
+				current = node.next;
+			}
+			if (next != null) {
+				if (!f (next.key)) {
+					_node = next;
+					_next = null;
+					return false;
+				}
+				prev = next;
+				current = next.next;
+			}
+			do {
+				while (current != null) {
+					if (!f (current.key)) {
+						_node = current;
+						_next = null;
+						return false;
+					}
+					prev = current;
+					current = current.next;
+				}
+				while (current == null && _index + 1 < _set._array_size) {
+					_index++;
+					current = _set._nodes[_index];
+				}
+			} while (current != null);
+			_node = prev;
+			_next = null;
+			return true;
 		}
 	}
 }

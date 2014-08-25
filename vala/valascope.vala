@@ -58,7 +58,7 @@ public class Vala.Scope {
 	public void add (string? name, Symbol sym) {
 		if (name != null) {
 			if (symbol_table == null) {
-				symbol_table = new HashMap<string,Symbol> (str_hash, str_equal);
+				symbol_table = new HashMap<string,Symbol> ();
 			} else if (lookup (name) != null) {
 				owner.error = true;
 				if (owner.name == null && owner.parent_symbol == null) {
@@ -82,7 +82,7 @@ public class Vala.Scope {
 	}
 
 	public void remove (string name) {
-		symbol_table.remove (name);
+		symbol_table.unset (name);
 	}
 
 	/**

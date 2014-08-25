@@ -34,7 +34,7 @@ public class Vala.Attribute : CodeNode {
 	/**
 	 * Contains all specified attribute arguments.
 	 */
-	public Vala.Map<string,string> args = new HashMap<string,string> (str_hash, str_equal);
+	public Map<string,string> args = new HashMap<string,string> ();
 
 	/**
 	 * Creates a new attribute.
@@ -73,7 +73,7 @@ public class Vala.Attribute : CodeNode {
 	 * @return     true if the argument has been found, false otherwise
 	 */
 	public bool has_argument (string name) {
-		return args.contains (name);
+		return args.has_key (name);
 	}
 	
 	/**

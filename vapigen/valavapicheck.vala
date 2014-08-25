@@ -38,7 +38,7 @@ class Vala.VAPICheck : Object {
 
 	private void parse_gidl () {
 		_scope = new ArrayList<string> ();
-		_symbols = new HashSet<string> (str_hash, str_equal);
+		_symbols = new HashSet<string> ();
 
 		try {
 			foreach (weak IdlModule module in Idl.parse_file (gidl.filename)) {

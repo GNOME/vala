@@ -48,7 +48,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var func = new CCodeFunction (get_ccode_name (method));
 		func.modifiers = CCodeModifiers.STATIC;
 
-		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> ();
 
 		generate_cparameters (method, cfile, cparam_map, func);
 
@@ -900,7 +900,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var function = new CCodeFunction (proxy_name);
 		function.modifiers = CCodeModifiers.STATIC;
 
-		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> ();
 
 		generate_cparameters (m, cfile, cparam_map, function);
 
@@ -924,7 +924,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var function = new CCodeFunction (proxy_name, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> ();
 
 		cparam_map.set (get_param_pos (-1), new CCodeParameter ("_callback_", "GAsyncReadyCallback"));
 		cparam_map.set (get_param_pos (-0.9), new CCodeParameter ("_user_data_", "gpointer"));
@@ -949,7 +949,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var function = new CCodeFunction (proxy_name);
 		function.modifiers = CCodeModifiers.STATIC;
 
-		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeParameter> ();
 
 		cparam_map.set (get_param_pos (0.1), new CCodeParameter ("_res_", "GAsyncResult*"));
 

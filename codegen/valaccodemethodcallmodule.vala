@@ -83,7 +83,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			deleg = ((DelegateType) itype).delegate_symbol;
 		}
 
-		var in_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+		var in_arg_map = new HashMap<int,CCodeExpression> ();
 		var out_arg_map = in_arg_map;
 
 		if (m != null && m.coroutine) {
@@ -125,7 +125,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				ccall = finish_call;
 
 				// output arguments used separately
-				out_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+				out_arg_map = new HashMap<int,CCodeExpression> ();
 				// pass GAsyncResult stored in closure to finish function
 				out_arg_map.set (get_param_pos (0.1), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"));
 			}
@@ -672,7 +672,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			last_pos = -1;
 			while (true) {
 				min_pos = -1;
-				foreach (int pos in out_arg_map.get_keys ()) {
+				foreach (int pos in out_arg_map.keys) {
 					if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
 						min_pos = pos;
 					}
@@ -689,7 +689,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			last_pos = -1;
 			while (true) {
 				min_pos = -1;
-				foreach (int pos in in_arg_map.get_keys ()) {
+				foreach (int pos in in_arg_map.keys) {
 					if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
 						min_pos = pos;
 					}

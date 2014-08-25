@@ -51,7 +51,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	 * @param context a code context
 	 */
 	public void parse (CodeContext context) {
-		cname_type_map = new HashMap<string,TypeSymbol> (str_hash, str_equal);
+		cname_type_map = new HashMap<string,TypeSymbol> ();
 
 		this.context = context;
 		context.accept (this);
@@ -88,7 +88,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 
 	private void visit_type (TypeSymbol t) {
-		if (!cname_type_map.contains (get_cname (t))) {
+		if (!cname_type_map.has_key (get_cname (t))) {
 			cname_type_map[get_cname (t)] = t;
 		}
 	}
@@ -104,8 +104,8 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		current_source_file = source_file;
 
-		codenode_attributes_map = new HashMap<string,string> (str_hash, str_equal);
-		codenode_attributes_patterns = new HashMap<PatternSpec*,string> (direct_hash, (EqualFunc<PatternSpec>) PatternSpec.equal);
+		codenode_attributes_map = new HashMap<string,string> ();
+		codenode_attributes_patterns = new HashMap<PatternSpec*,string> ();
 
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			try {
@@ -1586,9 +1586,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		current_data_type = cl;
 		
-		current_type_symbol_set = new HashSet<string> (str_hash, str_equal);
-		var current_type_func_map = new HashMap<string,weak IdlNodeFunction> (str_hash, str_equal);
-		var current_type_vfunc_map = new HashMap<string,string> (str_hash, str_equal);
+		current_type_symbol_set = new HashSet<string> ();
+		var current_type_func_map = new HashMap<string,weak IdlNodeFunction> ();
+		var current_type_vfunc_map = new HashMap<string,string> ();
 		
 		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
@@ -1602,7 +1602,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
 				// Ignore if vfunc (handled below) 
-				if (!current_type_vfunc_map.contains (member.name)) {
+				if (!current_type_vfunc_map.has_key (member.name)) {
 					var m = parse_function ((IdlNodeFunction) member);
 					if (m != null) {
 						cl.add_method (m);
@@ -1708,9 +1708,9 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		current_data_type = iface;
 
-		current_type_symbol_set = new HashSet<string> (str_hash, str_equal);
-		var current_type_func_map = new HashMap<string,weak IdlNodeFunction> (str_hash, str_equal);
-		var current_type_vfunc_map = new HashMap<string,string> (str_hash, str_equal);
+		current_type_symbol_set = new HashSet<string> ();
+		var current_type_func_map = new HashMap<string,weak IdlNodeFunction> ();
+		var current_type_vfunc_map = new HashMap<string,string> ();
 
 		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
@@ -1724,7 +1724,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
 				// Ignore if vfunc (handled below) 
-				if (!current_type_vfunc_map.contains (member.name)) {
+				if (!current_type_vfunc_map.has_key (member.name)) {
 					var m = parse_function ((IdlNodeFunction) member, true);
 					if (m != null) {
 						iface.add_method (m);
@@ -2985,7 +2985,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			var dot_required = (-1 != codenode.index_of_char ('.'));
 			var colon_required = (-1 != codenode.index_of_char (':'));
 
-			var pattern_specs = codenode_attributes_patterns.get_keys ();
+			var pattern_specs = codenode_attributes_patterns.keys;
 			foreach (PatternSpec* pattern in pattern_specs) {
 				var pspec = codenode_attributes_patterns[pattern];
 

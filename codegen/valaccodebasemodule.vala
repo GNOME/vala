@@ -38,8 +38,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		public int next_temp_var_id;
 		public bool current_method_inner_error;
 		public bool current_method_return;
-		public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
-		public Map<string,int> closure_variable_count_map = new HashMap<string,int> (str_hash, str_equal);
+		public Map<string,string> variable_name_map = new HashMap<string,string> ();
+		public Map<string,int> closure_variable_count_map = new HashMap<string,int> ();
 		public Map<LocalVariable,int> closure_variable_clash_map = new HashMap<LocalVariable,int> ();
 
 		public EmitContext (Symbol? symbol = null) {
@@ -342,7 +342,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public static int ccode_attribute_cache_index = CodeNode.get_attribute_cache_index ();
 
 	public CCodeBaseModule () {
-		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);
+		predefined_marshal_set = new HashSet<string> ();
 		predefined_marshal_set.add ("VOID:VOID");
 		predefined_marshal_set.add ("VOID:BOOLEAN");
 		predefined_marshal_set.add ("VOID:CHAR");
@@ -365,7 +365,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		predefined_marshal_set.add ("VOID:VARIANT");
 		predefined_marshal_set.add ("BOOLEAN:BOXED,BOXED");
 
-		reserved_identifiers = new HashSet<string> (str_hash, str_equal);
+		reserved_identifiers = new HashSet<string> ();
 
 		// C99 keywords
 		reserved_identifiers.add ("_Bool");
@@ -716,7 +716,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public override void visit_source_file (SourceFile source_file) {
 		cfile = new CCodeFile ();
 		
-		user_marshal_set = new HashSet<string> (str_hash, str_equal);
+		user_marshal_set = new HashSet<string> ();
 		
 		next_regex_id = 0;
 		
@@ -727,7 +727,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		requires_array_length = false;
 		requires_clear_mutex = false;
 
-		wrappers = new HashSet<string> (str_hash, str_equal);
+		wrappers = new HashSet<string> ();
 		generated_external_symbols = new HashSet<Symbol> ();
 
 		header_file.add_include ("glib.h");
@@ -2308,7 +2308,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				return "result";
 			}
 			// compiler-internal variable
-			if (!variable_name_map.contains (name)) {
+			if (!variable_name_map.has_key (name)) {
 				variable_name_map.set (name, "_tmp%d_".printf (next_temp_var_id));
 				next_temp_var_id++;
 			}
@@ -4611,7 +4611,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			generate_type_declaration (expr.type_reference, cfile);
 
-			var in_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+			var in_arg_map = new HashMap<int,CCodeExpression> ();
 			var out_arg_map = in_arg_map;
 
 			if (m != null && m.coroutine) {
@@ -4623,7 +4623,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				creation_call = finish_call;
 
 				// output arguments used separately
-				out_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+				out_arg_map = new HashMap<int,CCodeExpression> ();
 				// pass GAsyncResult stored in closure to finish function
 				out_arg_map.set (get_param_pos (0.1), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"));
 			}
@@ -4764,7 +4764,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				last_pos = -1;
 				while (true) {
 					min_pos = -1;
-					foreach (int pos in out_arg_map.get_keys ()) {
+					foreach (int pos in out_arg_map.keys) {
 						if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
 							min_pos = pos;
 						}
@@ -4781,7 +4781,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				last_pos = -1;
 				while (true) {
 					min_pos = -1;
-					foreach (int pos in in_arg_map.get_keys ()) {
+					foreach (int pos in in_arg_map.keys) {
 						if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
 							min_pos = pos;
 						}

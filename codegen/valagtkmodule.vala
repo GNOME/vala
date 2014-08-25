@@ -28,9 +28,9 @@ public class Vala.GtkModule : GSignalModule {
 	/* GResource name to real file name mapping */
 	private HashMap<string, string> gresource_to_file_map = null;
 	/* GtkBuilder xml handler to Vala signal mapping */
-	private HashMap<string, Signal> current_handler_to_signal_map = new HashMap<string, Signal>(str_hash, str_equal);
+	private HashMap<string, Signal> current_handler_to_signal_map = new HashMap<string, Signal>();
 	/* GtkBuilder xml child to Vala class mapping */
-	private HashMap<string, Class> current_child_to_class_map = new HashMap<string, Class>(str_hash, str_equal);
+	private HashMap<string, Class> current_child_to_class_map = new HashMap<string, Class>();
 	/* Required custom application-specific gtype classes to be ref'd before initializing the template */
 	private List<Class> current_required_app_classes = new ArrayList<Class>();
 
@@ -39,7 +39,7 @@ public class Vala.GtkModule : GSignalModule {
 		if (cclass_to_vala_map != null) {
 			return;
 		}
-		cclass_to_vala_map = new HashMap<string, Class>(str_hash, str_equal);
+		cclass_to_vala_map = new HashMap<string, Class>();
 		recurse_cclass_to_vala_map (context.root);
 	}
 
@@ -59,7 +59,7 @@ public class Vala.GtkModule : GSignalModule {
 		if (gresource_to_file_map != null) {
 			return;
 		}
-		gresource_to_file_map = new HashMap<string, string>(str_hash, str_equal);
+		gresource_to_file_map = new HashMap<string, string>();
 		foreach (var gresource in context.gresources) {
 			if (!FileUtils.test (gresource, FileTest.EXISTS)) {
 				Report.error (null, "GResources file `%s' does not exist".printf (gresource));
@@ -107,8 +107,8 @@ public class Vala.GtkModule : GSignalModule {
 			Report.error (node.source_reference, "UI resource not found: `%s'. Please make sure to specify the proper GResources xml files with --gresources.".printf (ui_resource));
 			return;
 		}
-		current_handler_to_signal_map = new HashMap<string, Signal>(str_hash, str_equal);
-		current_child_to_class_map = new HashMap<string, Class>(str_hash, str_equal);
+		current_handler_to_signal_map = new HashMap<string, Signal>();
+		current_child_to_class_map = new HashMap<string, Class>();
 
 		MarkupReader reader = new MarkupReader (ui_file);
 		Class current_class = null;

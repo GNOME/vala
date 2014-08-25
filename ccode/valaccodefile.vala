@@ -24,8 +24,8 @@
 public class Vala.CCodeFile {
 	public bool is_header { get; set; }
 
-	Set<string> declarations = new HashSet<string> (str_hash, str_equal);
-	Set<string> includes = new HashSet<string> (str_hash, str_equal);
+	Set<string> declarations = new HashSet<string> ();
+	Set<string> includes = new HashSet<string> ();
 	CCodeFragment comments = new CCodeFragment ();
 	CCodeFragment include_directives = new CCodeFragment ();
 	CCodeFragment type_declaration = new CCodeFragment ();

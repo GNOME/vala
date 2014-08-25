@@ -23,17 +23,15 @@
 using GLib;
 
 /**
- * Implemented by classes that support a simple iteration over instances of the
- * collection.
+ * An object that can provide an {@link Iterator}.
  */
-public abstract class Vala.Iterable<G> {
-	public abstract Type get_element_type ();
-
+[GenericAccessors]
+public interface Vala.Iterable<G> : Object, Traversable<G> {
 	/**
-	 * Returns a Iterator that can be used for simple iteration over a
+	 * Returns a {@link Iterator} that can be used for simple iteration over a
 	 * collection.
 	 *
-	 * @return a Iterator that can be used for simple iteration over a
+	 * @return a {@link Iterator} that can be used for simple iteration over a
 	 *         collection
 	 */
 	public abstract Iterator<G> iterator ();

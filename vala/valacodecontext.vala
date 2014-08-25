@@ -204,9 +204,9 @@ public class Vala.CodeContext {
 	private List<string> c_source_files = new ArrayList<string> ();
 	private Namespace _root = new Namespace (null);
 
-	private List<string> packages = new ArrayList<string> (str_equal);
+	private List<string> packages = new ArrayList<string> ();
 
-	private Set<string> defines = new HashSet<string> (str_hash, str_equal);
+	private Set<string> defines = new HashSet<string> ();
 
 	static StaticPrivate context_stack_key = StaticPrivate ();
 

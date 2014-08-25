@@ -118,7 +118,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		expression.target_type = expression.value_type.copy ();
 		expression.target_type.nullable = false;
 
-		var labelset = new HashSet<string> (str_hash, str_equal);
+		var labelset = new HashSet<string> ();
 		foreach (SwitchSection section in sections) {
 			section.check (context);
 

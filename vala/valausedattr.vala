@@ -27,7 +27,7 @@ using GLib;
  * Code visitor to warn about unused attributes
  */
 public class Vala.UsedAttr : CodeVisitor {
-	public Vala.Map<string,Vala.Set<string>> marked = new HashMap<string,Vala.Set<string>> (str_hash, str_equal);
+	public Vala.Map<string,Vala.Set<string>> marked = new HashMap<string,Vala.Set<string>> ();
 
 	const string[] valac_default_attrs = {
 		"CCode", "type_signature", "default_value", "set_value_function", "type_id", "cprefix", "cheader_filename",
@@ -103,7 +103,7 @@ public class Vala.UsedAttr : CodeVisitor {
 	public void mark (string attribute, string? argument) {
 		var set = marked.get (attribute);
 		if (set == null) {
-			set = new HashSet<string> (str_hash, str_equal);
+			set = new HashSet<string> ();
 			marked.set (attribute, set);
 		}
 
@@ -129,7 +129,7 @@ public class Vala.UsedAttr : CodeVisitor {
 				if (set == null) {
 					Report.warning (attr.source_reference, "attribute `%s' never used".printf (attr.name));
 				} else {
-					foreach (var arg in attr.args.get_keys()) {
+					foreach (var arg in attr.args.keys) {
 						if (!set.contains (arg)) {
 							Report.warning (attr.source_reference, "argument `%s' never used".printf (arg));
 						}

@@ -14,16 +14,68 @@ noinst_LTLIBRARIES = \
 	$(NULL)
 
 libgee_la_VALASOURCES = \
+	abstractbidirlist.vala \
+	abstractbidirsortedmap.vala \
+	abstractbidirsortedset.vala \
+	abstractcollection.vala \
+	abstractlist.vala \
+	abstractmap.vala \
+	abstractmultimap.vala \
+	abstractmultiset.vala \
+	abstractqueue.vala \
+	abstractset.vala \
+	abstractsortedmap.vala \
+	abstractsortedset.vala \
 	arraylist.vala \
+	arrayqueue.vala \
+	bidiriterator.vala \
+	bidirlistiterator.vala \
+	bidirlist.vala \
+	bidirmapiterator.vala \
+	bidirsortedmap.vala \
+	bidirsortedset.vala \
 	collection.vala \
+	comparable.vala \
+	concurrentlist.vala \
+	deque.vala \
+	functions.vala \
+	hashable.vala \
 	hashmap.vala \
+	hashmultimap.vala \
+	hashmultiset.vala \
 	hashset.vala \
+	hazardpointer.vala \
 	iterable.vala \
-	mapiterator.vala \
 	iterator.vala \
+	lazy.vala \
+	linkedlist.vala \
+	listiterator.vala \
 	list.vala \
+	mapiterator.vala \
 	map.vala \
+	multimap.vala \
+	multiset.vala \
+	priorityqueue.vala \
+	queue.vala \
+	readonlybidirlist.vala \
+	readonlybidirsortedmap.vala \
+	readonlybidirsortedset.vala \
+	readonlycollection.vala \
+	readonlylist.vala \
+	readonlymap.vala \
+	readonlyset.vala \
+	readonlysortedmap.vala \
+	readonlysortedset.vala \
 	set.vala \
+	sortedmap.vala \
+	sortedset.vala \
+	timsort.vala \
+	traversable.vala \
+	treemap.vala \
+	treemultimap.vala \
+	treemultiset.vala \
+	treeset.vala \
+	unfolditerator.vala \
 	$(NULL)
 
 libgee_la_SOURCES = \

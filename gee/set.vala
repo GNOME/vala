@@ -21,8 +21,23 @@
  */
 
 /**
- * A set is a collection without duplicates.
+ * A collection without duplicate elements.
  */
-public abstract class Vala.Set<G> : Collection<G> {
+[GenericAccessors]
+public interface Vala.Set<G> : Collection<G> {
+
+	/**
+	 * The read-only view of this set.
+	 */
+	public abstract new Set<G> read_only_view { owned get; }
+
+	/**
+	 * Returns an immutable empty set.
+	 *
+	 * @return an immutable empty set
+	 */
+	public static Set<G> empty<G> () {
+		return new HashSet<G> ().read_only_view;
+	}
 }
 

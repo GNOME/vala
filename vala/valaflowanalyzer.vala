@@ -367,7 +367,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			phi.set (block, 0);
 		}
 
-		foreach (Variable variable in assign.get_keys ()) {
+		foreach (Variable variable in assign.keys) {
 			counter++;
 			foreach (BasicBlock block in assign.get (variable)) {
 				work_list.add (block);

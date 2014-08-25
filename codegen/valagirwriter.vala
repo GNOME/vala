@@ -102,10 +102,10 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	StringBuilder buffer = new StringBuilder();
 	FileStream stream;
-	Vala.HashSet<Namespace> unannotated_namespaces = new Vala.HashSet<Namespace>();
-	Vala.HashSet<Namespace> our_namespaces = new Vala.HashSet<Namespace>();
-	Vala.ArrayList<Vala.Symbol> hierarchy = new Vala.ArrayList<Vala.Symbol>();
-	Vala.ArrayList<Vala.CodeNode> deferred = new Vala.ArrayList<Vala.CodeNode>();
+	HashSet<Namespace> unannotated_namespaces = new HashSet<Namespace>();
+	HashSet<Namespace> our_namespaces = new HashSet<Namespace>();
+	ArrayList<Vala.Symbol> hierarchy = new ArrayList<Vala.Symbol>();
+	ArrayList<Vala.CodeNode> deferred = new ArrayList<Vala.CodeNode>();
 
 	int indent;
 
@@ -123,7 +123,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 	}
 
-	private ArrayList<GIRNamespace?> externals = new ArrayList<GIRNamespace?> ((EqualFunc<GIRNamespace>) GIRNamespace.equal);
+	private ArrayList<GIRNamespace?> externals = new ArrayList<GIRNamespace?> ((a, b) => { return a.equal (b); });
 
 	public void write_includes() {
 		foreach (var i in externals) {
@@ -214,11 +214,11 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	private void write_c_includes (Namespace ns) {
 		// Collect C header filenames
-		Set<string> header_filenames = new HashSet<string> (str_hash, str_equal);
+		Set<string> header_filenames = new HashSet<string> ();
 		foreach (unowned string c_header_filename in CCodeBaseModule.get_ccode_header_filenames (ns).split (",")) {
 			header_filenames.add (c_header_filename);
 		}
-		foreach (Symbol symbol in ns.scope.get_symbol_table ().get_values ()) {
+		foreach (Symbol symbol in ns.scope.get_symbol_table ().values) {
 			foreach (unowned string c_header_filename in CCodeBaseModule.get_ccode_header_filenames (symbol).split (",")) {
 				header_filenames.add (c_header_filename);
 			}
@@ -621,7 +621,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	private void visit_deferred () {
 		var nodes = this.deferred;
-		this.deferred = new Vala.ArrayList<Vala.CodeNode>();
+		this.deferred = new ArrayList<Vala.CodeNode>();
 
 		foreach (var node in nodes) {
 			node.accept (this);
@@ -1365,7 +1365,7 @@ public class Vala.GIRWriter : CodeVisitor {
 	private void write_annotations (CodeNode node) {
 		foreach (Attribute attr in node.attributes) {
 			string name = camel_case_to_canonical (attr.name);
-			foreach (string arg_name in attr.args.get_keys ()) {
+			foreach (string arg_name in attr.args.keys) {
 				string value = attr.args.get (arg_name);
 				if (value.has_prefix ("\"")) {
 					// eval string
