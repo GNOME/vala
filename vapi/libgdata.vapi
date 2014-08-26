@@ -96,11 +96,13 @@ namespace GData {
 		[CCode (has_construct_function = false)]
 		public AccessRule (string id);
 		public int64 get_edited ();
+		public unowned string get_key ();
 		public unowned string get_role ();
 		public void get_scope (out unowned string type, out unowned string value);
 		public void set_role (string role);
 		public void set_scope (string type, string? value);
 		public int64 edited { get; }
+		public string key { get; }
 		public string role { get; set; }
 		[NoAccessorMethod]
 		public string scope_type { owned get; set; }

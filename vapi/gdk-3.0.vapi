@@ -5858,7 +5858,8 @@ namespace Gdk {
 		CHILD,
 		TEMP,
 		FOREIGN,
-		OFFSCREEN
+		OFFSCREEN,
+		SUBSURFACE
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_WINDOW_TYPE_HINT_", type_id = "gdk_window_type_hint_get_type ()")]
 	public enum WindowTypeHint {
