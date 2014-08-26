@@ -1,6 +1,6 @@
 /* gtkcommentparser.vala
  *
- * Copyright (C) 2011-2012  Florian Brosch
+ * Copyright (C) 2011-2014  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -115,42 +115,97 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 	}
 
+	private Note? _parse_note (Api.SourceComment comment) {
+		Comment? cmnt = parse_root_content (comment);
+		if (cmnt == null) {
+			return null;
+		}
+
+		Note note = factory.create_note ();
+		note.content.add_all (cmnt.content);
+
+		return note;
+	}
+
+	private void add_note (ref Comment? comment, Note? note) {
+		if (note == null) {
+			return ;
+		}
+
+		if (comment == null) {
+			comment = factory.create_comment ();
+		}
+
+		if (comment.content.size == 0) {
+			comment.content.add (factory.create_paragraph ());
+		}
+
+		comment.content.insert (1, note);
+	}
+
+	private void add_taglet (ref Comment? comment, Taglet? taglet) {
+		if (taglet == null) {
+			return ;
+		}
+
+		if (comment == null) {
+			comment = factory.create_comment ();
+		}
+
+		comment.taglets.add (taglet);
+	}
+
 	public Comment? parse (Api.Node element, Api.GirSourceComment gir_comment, GirMetaData gir_metadata, Importer.InternalIdRegistrar id_registrar) {
 		this.instance_param_name = gir_comment.instance_param_name;
 		this.current_metadata = gir_metadata;
 		this.id_registrar = id_registrar;
 		this.element = element;
 
-		Comment? comment = this.parse_main_content (gir_comment);
-		if (comment == null) {
-			return null;
+
+		Comment? cmnt = parse_root_content (gir_comment);
+		if (cmnt != null) {
+			ImporterHelper.extract_short_desc (cmnt, factory);
 		}
 
+
+		// deprecated:
+		if (gir_comment.deprecated_comment != null) {
+			Note? note = _parse_note (gir_comment.deprecated_comment);
+			add_note (ref cmnt, note);
+		}
+
+
+		// version:
+		if (gir_comment.version_comment != null) {
+			Note? note = _parse_note (gir_comment.version_comment);
+			add_note (ref cmnt, note);
+		}
+
+		// stability:
+		if (gir_comment.stability_comment != null) {
+			Note? note = _parse_note (gir_comment.stability_comment);
+			add_note (ref cmnt, note);
+		}
+
+
+		// return:
 		if (gir_comment.return_comment != null) {
-			Taglet? taglet = this.parse_block_taglet (gir_comment.return_comment, "return");
-			if (taglet == null) {
-				return null;
-			}
-
-			comment.taglets.add (taglet);
+			Taglet? taglet = parse_block_taglet (gir_comment.return_comment, "return");
+			add_taglet (ref cmnt, taglet);
 		}
 
+
+		// parameters:
 		MapIterator<string, Api.SourceComment> iter = gir_comment.parameter_iterator ();
 		for (bool has_next = iter.next (); has_next; has_next = iter.next ()) {
-			Taglets.Param? taglet = this.parse_block_taglet (iter.get_value (), "param") as Taglets.Param;
-			if (taglet == null) {
-				return null;
-			}
+			Taglets.Param? taglet = parse_block_taglet (iter.get_value (), "param") as Taglets.Param;
+			string param_name = iter.get_key ();
 
-			taglet.parameter_name = iter.get_key ();
-
-			if (taglet.parameter_name == gir_comment.instance_param_name) {
-				taglet.parameter_name = "this";
-				taglet.is_c_self_param = true;
-			}
-
-			comment.taglets.add (taglet);
+			taglet.is_c_self_param = (param_name == gir_comment.instance_param_name);
+			taglet.parameter_name = param_name;
+			add_taglet (ref cmnt, taglet);
 		}
+
 
 		bool first = true;
 		foreach (LinkedList<Block> note in this.footnotes) {
@@ -158,16 +213,16 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 				Paragraph p = note.first () as Paragraph;
 				if (p == null) {
 					p = factory.create_paragraph ();
-					comment.content.add (p);
+					cmnt.content.add (p);
 				}
 
 				p.content.insert (0, factory.create_text ("\n"));
 			}
-			comment.content.add_all (note);
+			cmnt.content.add_all (note);
 			first = false;
 		}
 
-		return comment;
+		return cmnt;
 	}
 
 	private Taglet? parse_block_taglet (Api.SourceComment gir_comment, string taglet_name) {
@@ -192,7 +247,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		return taglet as Taglet;
 	}
 
-	private Comment? parse_main_content (Api.GirSourceComment gir_comment) {
+	private Comment? parse_root_content (Api.SourceComment gir_comment) {
 		this.reset (gir_comment);
 		current = null;
 
@@ -391,7 +446,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 
 		string id = current.attributes.get ("id");
-		id_registrar.register_symbol (id, element);
+		if (id != null) {
+			id_registrar.register_symbol (id, element);
+		}
 		next ();
 
 		if (!check_xml_close_tag ("anchor")) {
@@ -844,7 +901,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 
 		string id = current.attributes.get ("id");
-		id_registrar.register_symbol (id, element);
+		if (id != null) {
+			id_registrar.register_symbol (id, element);
+		}
 		next ();
 
 		parse_docbook_spaces ();
@@ -1117,7 +1176,9 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 
 		string id = current.attributes.get ("id");
-		id_registrar.register_symbol (id, element);
+		if (id != null) {
+			id_registrar.register_symbol (id, element);
+		}
 		next ();
 
 		LinkedList<Block> content = parse_mixed_content ();
