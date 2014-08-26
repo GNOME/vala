@@ -510,10 +510,13 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			return ;
 		}
 
+		bool is_type_struct = (reader.get_attribute ("glib:is-gtype-struct-for") != null);
 		next ();
 
 		Api.GirSourceComment? comment = parse_symbol_doc ();
-		attach_comment (this.parent_c_identifier, comment);
+		if (is_type_struct == false) {
+			attach_comment (this.parent_c_identifier, comment);
+		}
 
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.name == "field") {
