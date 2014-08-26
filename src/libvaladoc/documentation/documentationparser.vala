@@ -173,7 +173,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 		metadata = new GirMetaData (gir_comment.file.relative_path, _settings.metadata_directories, _reporter);
 		if (metadata.index_sgml != null) {
-			id_registrar.read_index_sgml_file (metadata.index_sgml, _reporter);
+			id_registrar.read_index_sgml_file (metadata.index_sgml, metadata.index_sgml_online, _reporter);
 		}
 
 		this.metadata.set (gir_comment.file, metadata);

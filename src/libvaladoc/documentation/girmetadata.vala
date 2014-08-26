@@ -33,7 +33,7 @@ public class Valadoc.GirMetaData : Object {
 
 	public bool is_docbook { private set; get; default = false; }
 	public string index_sgml { private set; get; default = null; }
-
+	public string index_sgml_online { private set; get; default = null; }
 
 	/**
 	 * Used to manipulate paths to resources inside gir-files
@@ -96,6 +96,10 @@ public class Valadoc.GirMetaData : Object {
 
 			case "index_sgml":
 				this.index_sgml = key_file.get_string ("General", "index_sgml");
+				break;
+
+			case "index_sgml_online":
+				this.index_sgml_online = key_file.get_string ("General", "index_sgml_online");
 				break;
 
 			default:
