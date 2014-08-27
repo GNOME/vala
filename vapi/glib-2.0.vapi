@@ -2692,7 +2692,7 @@ namespace GLib {
 		[CCode (cname = "g_get_environ", array_length = false, array_null_terminated = true)]
 		public static string[] get ();
 		[CCode (cname = "g_environ_getenv")]
-		public static string? get_variable ([CCode (array_length = false, array_null_terminated = true)] string[]? envp, string variable);
+		public static unowned string? get_variable ([CCode (array_length = false, array_null_terminated = true)] string[]? envp, string variable);
 		[CCode (cname = "g_environ_setenv", array_length = false, array_null_terminated = true)]
 		public static string[] set_variable ([CCode (array_length = false, array_null_terminated = true)] owned string[]? envp, string variable, string value, bool overwrite = true);
 		[CCode (cname = "g_environ_unsetenv", array_length = false, array_null_terminated = true)]
