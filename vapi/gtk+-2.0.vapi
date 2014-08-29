@@ -6173,11 +6173,11 @@ namespace Gtk {
 		public Gtk.FileChooserAction action { get; set; }
 		public bool create_folders { get; set; }
 		public bool do_overwrite_confirmation { get; set; }
-		public Gtk.Widget extra_widget { owned get; set; }
+		public Gtk.Widget extra_widget { get; set; }
 		public string file_system_backend { construct; }
-		public Gtk.FileFilter filter { owned get; set; }
+		public Gtk.FileFilter filter { get; set; }
 		public bool local_only { get; set; }
-		public Gtk.Widget preview_widget { owned get; set; }
+		public Gtk.Widget preview_widget { get; set; }
 		public bool preview_widget_active { get; set; }
 		public bool select_multiple { get; set; }
 		public bool show_hidden { get; set; }
@@ -6241,7 +6241,7 @@ namespace Gtk {
 		public void set_sort_type (Gtk.RecentSortType sort_type);
 		public abstract void unselect_all ();
 		public abstract void unselect_uri (string uri);
-		public Gtk.RecentFilter filter { owned get; set; }
+		public Gtk.RecentFilter filter { get; set; }
 		public int limit { get; set; }
 		public bool local_only { get; set; }
 		public Gtk.RecentManager recent_manager { construct; }
