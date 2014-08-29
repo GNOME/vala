@@ -95,7 +95,8 @@ public class Valadoc.GirMetaData : Object {
 				break;
 
 			case "index_sgml":
-				this.index_sgml = key_file.get_string ("General", "index_sgml");
+				string tmp = key_file.get_string ("General", "index_sgml");
+				this.index_sgml = Path.build_filename (Path.get_dirname (metadata_path), tmp);
 				break;
 
 			case "index_sgml_online":

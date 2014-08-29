@@ -158,6 +158,8 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		if (comment != null) {
 			var docu = _doc_parser.parse_comment_str (symbol, comment.str, filename, src_ref.line, src_ref.column);
 			if (docu != null) {
+				docu.check (tree, symbol, filename, reporter, settings);
+
 				if (symbol.documentation == null || insertion_mode == InsertionMode.REPLACE) {
 					if (insertion_mode == InsertionMode.APPEND) {
 						docu.content.insert (0, factory.create_paragraph ());

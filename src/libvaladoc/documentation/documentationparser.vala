@@ -141,11 +141,11 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	}
 
 	public void check (Api.Node element, Comment comment) {
-		comment.check (_tree, element, element.get_source_file ().get_name (), _reporter, _settings);
+		comment.check (_tree, element, element.get_source_file ().relative_path, _reporter, _settings);
 	}
 
 	public void check_wikipage (Api.Package package, WikiPage page) {
-		page.documentation.check (_tree, package, page.get_filename (), _reporter, _settings);
+		page.documentation.check (_tree, package, page.path, _reporter, _settings);
 	}
 
 	public void transform_inheritdoc (Api.Node taglet_owner, Taglets.InheritDoc taglet) {
