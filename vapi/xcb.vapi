@@ -621,17 +621,6 @@ namespace Xcb {
 	public struct GetPropertyCookie {
 	}
 
-	[Compact]
-	[CCode (cname = "xcb_get_property_reply_t", ref_function = "", unref_function = "free")]
-	public class GetPropertyReply {
-		public uint8 format;
-		public AtomT type;
-		[CCode (cname = "xcb_get_property_value_length")]
-		public int32 value_length ();
-		[CCode (cname = "xcb_get_property_value")]
-		public unowned void *value ();
-	}
-
 	[SimpleType]
 	[IntegerType (rank = 9)]
 	[CCode (cname = "xcb_intern_atom_cookie_t", has_type_id = false)]
@@ -1252,14 +1241,16 @@ namespace Xcb {
 		}
 	}
 
+	[Compact]
 	[CCode (cname = "xcb_get_property_reply_t", ref_function = "", unref_function = "free")]
 	public class GetPropertyReply {
-		public uint8 format;
-		public Atom type;
+		public AtomT type;
 		public uint32 bytes_after;
 		private uint32 value_len;
 		[CCode (cname = "xcb_get_property_value")]
 		public unowned void *value ();
+		[CCode (cname = "xcb_get_property_value_length")]
+		public int32 value_length ();
 		public string value_as_string () {
 			GLib.assert (format == 8);
 			return "%.*s".printf (value_len, value ());
