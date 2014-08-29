@@ -186,6 +186,7 @@ public class Vala.BinaryExpression : Expression {
 
 			var ma = new MemberAccess.simple (local.name, source_reference);
 			ma.target_type = target_type;
+			ma.formal_target_type = formal_target_type;
 			ma.check (context);
 
 			parent_node.replace_expression (this, ma);
