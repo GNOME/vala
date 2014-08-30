@@ -43,13 +43,28 @@ public class Valadoc.Api.Array : Item {
 		this.parent = parent;
 	}
 
+	private inline bool element_is_owned () {
+		TypeReference reference = data_type as TypeReference;
+		if (reference == null) {
+			return true;
+		}
+
+		return !reference.is_unowned && !reference.is_weak;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	protected override Inline build_signature () {
-		return new SignatureBuilder ()
-			.append_content (data_type.signature)
-			.append ("[]", false)
-			.get ();
+		SignatureBuilder builder = new SignatureBuilder ();
+		if (element_is_owned ()) {
+			builder.append_content (data_type.signature);
+		} else {
+			builder.append ("(", false);
+			builder.append_content (data_type.signature, false);
+			builder.append (")", false);
+		}
+		builder.append ("[]", false);
+		return builder.get ();
 	}
 }
