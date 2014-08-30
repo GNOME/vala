@@ -666,6 +666,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return false;
 		}
 
+		// arrays are unowned, not weak
+		if (element is Vala.ArrayType) {
+			return false;
+		}
+
 		// FormalParameters are weak by default
 		return (element.parent_node is Vala.Parameter == false)? element.is_weak () : false;
 	}
