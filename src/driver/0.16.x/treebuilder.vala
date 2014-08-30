@@ -1291,6 +1291,7 @@ element);
 										  get_access_modifier (element),
 										  comment,
 										  get_cname (element),
+										  (element.default_handler != null)? get_cname (element.default_handler) : null,
 										  Vala.GDBusModule.get_dbus_name_for_member (element),
 										  Vala.GDBusServerModule.is_dbus_visible (element),
 										  element.is_virtual,

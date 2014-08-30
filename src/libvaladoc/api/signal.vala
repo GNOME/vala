@@ -28,6 +28,7 @@ using Valadoc.Content;
  * Represents an signal.
  */
 public class Valadoc.Api.Signal : Member, Callable {
+	private string? default_impl_cname;
 	private string? dbus_name;
 	private string? cname;
 
@@ -42,11 +43,12 @@ public class Valadoc.Api.Signal : Member, Callable {
 
 
 	public Signal (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
-				   SourceComment? comment, string? cname, string? dbus_name, bool is_dbus_visible,
+				   SourceComment? comment, string? cname, string? default_impl_cname, string? dbus_name, bool is_dbus_visible,
 				   bool is_virtual, void* data)
 	{
 		base (parent, file, name, accessibility, comment, data);
 
+		this.default_impl_cname = default_impl_cname;
 		this.dbus_name = dbus_name;
 		this.cname = cname;
 
@@ -59,6 +61,10 @@ public class Valadoc.Api.Signal : Member, Callable {
 	 */
 	public string? get_cname () {
 		return cname;
+	}
+
+	public string? get_default_impl_cname () {
+		return default_impl_cname;
 	}
 
 	/**
