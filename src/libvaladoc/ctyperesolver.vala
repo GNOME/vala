@@ -315,6 +315,7 @@ public class Valadoc.CTypeResolver : Visitor {
 		string parent_cname = get_parent_type_cname (item);
 		assert (parent_cname != null);
 
+		string? default_impl_cname = item.get_default_impl_cname ();
 		string cname = item.get_cname ();
 		register_symbol (parent_cname+"::"+cname, item);
 
@@ -340,6 +341,10 @@ public class Valadoc.CTypeResolver : Visitor {
 
 		foreach (Class cl in classes) {
 			register_symbol (cl.get_cname () + "::" + cname, item);
+		}
+
+		if (default_impl_cname != null) {
+			register_symbol (default_impl_cname, item);
 		}
 	}
 
