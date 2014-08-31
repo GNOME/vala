@@ -6260,7 +6260,7 @@ namespace Gtk {
 	public class Widget : GLib.InitiallyUnowned, Atk.Implementor, Gtk.Buildable {
 		public class uint activate_signal;
 		[CCode (construct_function = "gtk_widget_new", has_new_function = false)]
-		public Widget (GLib.Type type, ...);
+		public Widget (...);
 		public bool activate ();
 		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
 		public void add_device_events (Gdk.Device device, Gdk.EventMask events);

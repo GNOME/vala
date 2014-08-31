@@ -69,7 +69,7 @@ namespace Gtk {
 	[CCode (type_id = "gtk_widget_get_type ()")]
 	public class Widget {
 		[CCode (has_new_function = false, construct_function = "gtk_widget_new")]
-		public extern Widget (GLib.Type type, ...);
+		public extern Widget (...);
 		public class uint activate_signal;
 		[CCode (vfunc_name = "get_preferred_height")]
 		[NoWrapper]
