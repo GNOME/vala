@@ -695,19 +695,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		buffer.append_printf ("<errordomain name=\"%s\"", edomain.name);
-		buffer.append_printf (" get-quark=\"%squark\"", CCodeBaseModule.get_ccode_lower_case_prefix (edomain));
-		buffer.append_printf (" codes=\"%s\"", edomain.name);
-		write_symbol_attributes (edomain);
-		buffer.append_printf (">\n");
-
-		write_annotations (edomain);
-
-		buffer.append_printf ("</errordomain>\n");
-
-		write_indent ();
 		buffer.append_printf ("<enumeration name=\"%s\"", edomain.name);
 		write_ctype_attributes (edomain);
+		buffer.append_printf (" glib:error-domain=\"%s\"", CCodeBaseModule.get_quark_name (edomain));
 		buffer.append_printf (">\n");
 		indent++;
 

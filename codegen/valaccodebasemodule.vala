@@ -6072,6 +6072,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return get_ccode_attribute(sym).ref_function;
 	}
 
+	public static string get_quark_name (ErrorDomain edomain) {
+		return get_ccode_lower_case_name (edomain) + "-quark";
+	}
+
 	public static bool is_reference_counting (TypeSymbol sym) {
 		if (sym is Class) {
 			return get_ccode_ref_function (sym) != null;

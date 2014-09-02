@@ -76,7 +76,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		push_function (cquark_fun);
 
 		var cquark_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
-		cquark_call.add_argument (new CCodeConstant ("\"" + get_ccode_lower_case_name (edomain) + "-quark\""));
+		cquark_call.add_argument (new CCodeConstant ("\"" + CCodeBaseModule.get_quark_name (edomain) + "\""));
 
 		ccode.add_return (cquark_call);
 
