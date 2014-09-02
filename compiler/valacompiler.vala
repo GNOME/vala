@@ -24,6 +24,8 @@
 using GLib;
 
 class Vala.Compiler {
+	private const string DEFAULT_COLORS = "error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01";
+
 	static string basedir;
 	static string directory;
 	static bool version;
@@ -84,6 +86,7 @@ class Vala.Compiler {
 	static bool enable_version_header;
 	static bool disable_version_header;
 	static bool fatal_warnings;
+	static bool disable_diagnostic_colors;
 	static string dependencies;
 
 	static string entry_point;
@@ -140,6 +143,7 @@ class Vala.Compiler {
 		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
 		{ "verbose", 'v', 0, OptionArg.NONE, ref verbose_mode, "Print additional messages to the console", null },
+		{ "no-color", 0, 0, OptionArg.NONE, ref disable_diagnostic_colors, "Disable colored output", null },
 		{ "target-glib", 0, 0, OptionArg.STRING, ref target_glib, "Target version of glib for code generation", "MAJOR.MINOR" },
 		{ "gresources", 0, 0, OptionArg.STRING_ARRAY, ref gresources, "XML of gresources", "FILE..." },
 		{ "enable-version-header", 0, 0, OptionArg.NONE, ref enable_version_header, "Write vala build version in generated files", null },
@@ -147,7 +151,7 @@ class Vala.Compiler {
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
 		{ null }
 	};
-	
+
 	private int quit () {
 		if (context.report.get_errors () == 0 && context.report.get_warnings () == 0) {
 			return 0;
@@ -168,6 +172,17 @@ class Vala.Compiler {
 	private int run () {
 		context = new CodeContext ();
 		CodeContext.push (context);
+
+		if (disable_diagnostic_colors == false) {
+			string[] env_args = Environ.get ();
+			unowned string env_colors = Environ.get_variable (env_args, "VALA_COLORS");
+			if (env_colors != null) {
+				context.report.set_colors (env_colors);
+			} else {
+				context.report.set_colors (DEFAULT_COLORS);
+			}
+		}
+
 
 		// default to build executable
 		if (!ccode_only && !compile_only && output == null) {
@@ -292,7 +307,7 @@ class Vala.Compiler {
 		}
 
 		context.gresources = gresources;
-		
+
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
 		}
@@ -319,7 +334,7 @@ class Vala.Compiler {
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
 		}
-		
+
 		var parser = new Parser ();
 		parser.parse (context);
 
