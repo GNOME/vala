@@ -1245,6 +1245,7 @@ namespace Xcb {
 	[CCode (cname = "xcb_get_property_reply_t", ref_function = "", unref_function = "free")]
 	public class GetPropertyReply {
 		public AtomT type;
+		public uint8 format;
 		public uint32 bytes_after;
 		private uint32 value_len;
 		[CCode (cname = "xcb_get_property_value")]
