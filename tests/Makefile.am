@@ -438,6 +438,7 @@ TESTS = \
 	asynchronous/variadic-invalid.test \
 	asynchronous/variadic-invalid-2.test \
 	asynchronous/yield.vala \
+	generics/arrays-not-supported.test \
 	generics/constructor-chain-up.vala \
 	generics/inference-static-function.vala \
 	generics/parameter-sizeof-initializer.vala \
