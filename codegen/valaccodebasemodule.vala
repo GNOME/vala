@@ -4688,6 +4688,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (delegate_type.delegate_symbol.has_target) {
 				Report.error (type_arg.source_reference, "Delegates with target are not supported as generic type arguments");
 			}
+		} else if (type_arg is ArrayType) {
+			Report.error (type_arg.source_reference, "Arrays are not supported as generic type arguments");
 		} else {
 			Report.error (type_arg.source_reference, "`%s' is not a supported generic type argument, use `?' to box value types".printf (type_arg.to_string ()));
 		}
