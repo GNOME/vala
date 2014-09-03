@@ -841,6 +841,14 @@ public class Vala.Method : Subroutine {
 			if (tree_can_fail) {
 				Report.error (source_reference, "\"main\" method cannot throw errors");
 			}
+
+			if (is_inline) {
+				Report.error (source_reference, "\"main\" method cannot be inline");
+			}
+
+			if (coroutine) {
+				Report.error (source_reference, "\"main\" method cannot be async");
+			}
 		}
 
 		if (get_attribute ("GtkCallback") != null) {
