@@ -930,6 +930,8 @@ namespace Pango {
 	public delegate bool FontsetForeachFunc (Pango.Fontset fontset, Pango.Font font);
 	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_ANALYSIS_FLAG_CENTERED_BASELINE")]
 	public const int ANALYSIS_FLAG_CENTERED_BASELINE;
+	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_ANALYSIS_FLAG_IS_ELLIPSIS")]
+	public const int ANALYSIS_FLAG_IS_ELLIPSIS;
 	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_ATTR_INDEX_FROM_TEXT_BEGINNING")]
 	public const int ATTR_INDEX_FROM_TEXT_BEGINNING;
 	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_ENGINE_TYPE_LANG")]

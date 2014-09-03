@@ -47,6 +47,7 @@ namespace Gdk {
 		public size_t get_byte_length ();
 		public Gdk.Colorspace get_colorspace ();
 		public static unowned Gdk.PixbufFormat? get_file_info (string filename, out int width, out int height);
+		public static async unowned Gdk.PixbufFormat get_file_info_async (string filename, GLib.Cancellable? cancellable, out int width, out int height) throws GLib.Error;
 		public static GLib.SList<weak Gdk.PixbufFormat> get_formats ();
 		public bool get_has_alpha ();
 		public int get_height ();

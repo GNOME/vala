@@ -5544,7 +5544,8 @@ namespace Gdk {
 		ROOTWIN,
 		WIN32_DROPFILES,
 		OLE2,
-		LOCAL
+		LOCAL,
+		WAYLAND
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_", type_id = "gdk_event_mask_get_type ()")]
 	[Flags]
