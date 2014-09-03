@@ -174,6 +174,11 @@ public class Vala.CodeContext {
 	public bool use_fast_vapi { get; set; }
 
 	/**
+	 * Include comments in generated vapi.
+	 */
+	public bool vapi_comments { get; set; }
+
+	/**
 	 * Returns true if the target version of glib is greater than or 
 	 * equal to the specified version.
 	 */

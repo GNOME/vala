@@ -53,6 +53,7 @@ class Vala.Compiler {
 	static string internal_header_filename;
 	static string internal_vapi_filename;
 	static string fast_vapi_filename;
+	static bool vapi_comments;
 	static string symbols_filename;
 	static string includedir;
 	static bool compile_only;
@@ -111,6 +112,7 @@ class Vala.Compiler {
 		{ "internal-vapi", 0, 0, OptionArg.FILENAME, ref internal_vapi_filename, "Output vapi with internal api", "FILE" },
 		{ "fast-vapi", 0, 0, OptionArg.STRING, ref fast_vapi_filename, "Output vapi without performing symbol resolution", null },
 		{ "use-fast-vapi", 0, 0, OptionArg.STRING_ARRAY, ref fast_vapis, "Use --fast-vapi output during this compile", null },
+		{ "vapi-comments", 0, 0, OptionArg.NONE, ref vapi_comments, "Include comments in generated vapi", null },
 		{ "deps", 0, 0, OptionArg.STRING, ref dependencies, "Write make-style dependency information to this file", null },
 		{ "symbols", 0, 0, OptionArg.FILENAME, ref symbols_filename, "Output symbols file", "FILE" },
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
@@ -217,6 +219,7 @@ class Vala.Compiler {
 			context.directory = context.basedir;
 		}
 		context.vapi_directories = vapi_directories;
+		context.vapi_comments = vapi_comments;
 		context.gir_directories = gir_directories;
 		context.metadata_directories = metadata_directories;
 		context.debug = debug;

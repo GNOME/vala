@@ -2,6 +2,7 @@
  *
  * Copyright (C) 2006-2014  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
+ * Copyright (C) 2014       Richard Wiedenhöft
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -155,6 +156,24 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		var comments = ns.get_comments ();
+		if (context.vapi_comments && comments.size > 0) {
+			bool first = true;
+			SourceReference? first_reference = null;
+			foreach (Comment comment in comments) {
+				if (comment.source_reference.file.file_type == SourceFileType.SOURCE) {
+					if (first) {
+						write_comment (comment);
+						first = false;
+						first_reference = comment.source_reference;
+					} else {
+						Report.warning (comment.source_reference, "Comment describes namespace, that was already described by another comment.");
+						Report.notice (first_reference, "Previous comment was here.");
+					}
+				}
+			}
+		}
+
 		write_attributes (ns);
 
 		write_indent ();
@@ -206,6 +225,10 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		if (!check_accessibility (cl)) {
 			return;
+		}
+
+		if (context.vapi_comments && cl.comment != null) {
+			write_comment (cl.comment);
 		}
 
 		write_attributes (cl);
@@ -301,6 +324,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		if (context.vapi_comments && st.comment != null) {
+			write_comment (st.comment);
+		}
+
 		write_attributes (st);
 
 		write_indent ();
@@ -339,6 +366,10 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		if (!check_accessibility (iface)) {
 			return;
+		}
+
+		if (context.vapi_comments && iface.comment != null) {
+			write_comment (iface.comment);
 		}
 
 		write_attributes (iface);
@@ -393,6 +424,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		if (context.vapi_comments && en.comment != null) {
+			write_comment (en.comment);
+		}
+
 		write_attributes (en);
 
 		write_indent ();
@@ -408,6 +443,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			} else {
 				write_string (",");
 				write_newline ();
+			}
+
+			if (context.vapi_comments && ev.comment != null) {
+				write_comment (ev.comment);
 			}
 
 			write_attributes (ev);
@@ -450,6 +489,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		if (context.vapi_comments && edomain.comment != null) {
+			write_comment (edomain.comment);
+		}
+
 		write_attributes (edomain);
 
 		write_indent ();
@@ -465,6 +508,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			} else {
 				write_string (",");
 				write_newline ();
+			}
+
+			if (context.vapi_comments && ecode.comment != null) {
+				write_comment (ecode.comment);
 			}
 
 			write_attributes (ecode);
@@ -499,6 +546,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		if (context.vapi_comments && c.comment != null) {
+			write_comment (c.comment);
+		}
+
 		write_attributes (c);
 
 		write_indent ();
@@ -525,6 +576,10 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		if (!check_accessibility (f)) {
 			return;
+		}
+
+		if (context.vapi_comments && f.comment != null) {
+			write_comment (f.comment);
 		}
 
 		write_attributes (f);
@@ -629,6 +684,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		if (context.vapi_comments && cb.comment != null) {
+			write_comment (cb.comment);
+		}
+
 		write_attributes (cb);
 
 		write_indent ();
@@ -659,6 +718,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		if (context.vapi_comments && c.comment != null) {
+			write_comment (c.comment);
+		}
+
 		write_indent ();
 		write_string ("construct");
 		write_code_block (c.body);
@@ -675,6 +738,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			if (type != CodeWriterType.DUMP) {
 				return;
 			}
+		}
+
+		if (context.vapi_comments && m.comment != null) {
+			write_comment (m.comment);
 		}
 
 		write_attributes (m);
@@ -743,6 +810,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 
+		if (context.vapi_comments && prop.comment != null) {
+			write_comment (prop.comment);
+		}
+
 		write_attributes (prop);
 
 		write_indent ();
@@ -801,6 +872,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 		
+		if (context.vapi_comments && sig.comment != null) {
+			write_comment (sig.comment);
+		}
+
 		write_attributes (sig);
 		
 		write_indent ();
@@ -1429,6 +1504,28 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 		
 		bol = false;
+	}
+
+	private void write_comment (Comment comment) {
+		Regex fix_indent_regex;
+		try {
+			fix_indent_regex = new Regex ("\\n[\\t ]*");
+		} catch (Error e) {
+			assert_not_reached ();
+		}
+
+		string replacement = "\n" + string.nfill (indent, '\t') + " ";
+		string fixed_content;
+		try {
+			fixed_content = fix_indent_regex.replace (comment.content, comment.content.length, 0, replacement);
+		} catch (Error e) {
+			assert_not_reached();
+		}
+
+		write_indent ();
+		write_string ("/*");
+		write_string (fixed_content);
+		write_string ("*/");
 	}
 	
 	private void write_identifier (string s) {
