@@ -571,7 +571,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return true;
 	}
 
-	public bool check_variadic_arguments (Iterator<Expression> arg_it, int i, SourceReference source_reference) {
+	public bool check_variadic_arguments (Iterator<Expression>? arg_it, int i, SourceReference source_reference) {
 		while (arg_it != null && arg_it.next ()) {
 			var arg = arg_it.get ();
 			if (arg.error) {
