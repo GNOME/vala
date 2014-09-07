@@ -89,12 +89,12 @@ namespace Gtk {
 	}
 
 	[CCode (type_cname = "GtkEditableInterface")]
-	public interface Editable {
+	public interface Editable : GLib.Object {
 		[CCode (vfunc_name = "set_selection_bounds")]
 		public abstract void select_region (int start_pos, int end_pos);
 	}
 
-	public interface FileChooserEmbed {
+	public interface FileChooserEmbed : GLib.Object {
 	}
 
 	public interface FileChooser: Gtk.Widget {

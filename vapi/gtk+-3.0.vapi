@@ -7000,7 +7000,7 @@ namespace Gtk {
 		public signal void color_activated (Gdk.RGBA color);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkEditableInterface")]
-	public interface Editable {
+	public interface Editable : GLib.Object {
 		public void copy_clipboard ();
 		public void cut_clipboard ();
 		public void delete_selection ();
@@ -7103,7 +7103,7 @@ namespace Gtk {
 		public signal void update_preview ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public interface FileChooserEmbed {
+	public interface FileChooserEmbed : GLib.Object {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface FontChooser : GLib.Object {

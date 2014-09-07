@@ -6086,7 +6086,7 @@ namespace Gtk {
 		public abstract void set_cell_data_func (Gtk.CellRenderer cell, owned Gtk.CellLayoutDataFunc func);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public interface Editable {
+	public interface Editable : GLib.Object {
 		public void copy_clipboard ();
 		public void cut_clipboard ();
 		public void delete_selection ();
@@ -6189,7 +6189,7 @@ namespace Gtk {
 		public signal void update_preview ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public interface FileChooserEmbed {
+	public interface FileChooserEmbed : GLib.Object {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface Orientable : GLib.Object {
