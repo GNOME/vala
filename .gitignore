@@ -38,3 +38,5 @@ lcov.info
 
 build-aux/test-driver
 
+tests/_test
+
