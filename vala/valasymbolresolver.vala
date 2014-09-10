@@ -96,7 +96,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			if (base_type != null) {
 				if (base_type.is_subtype_of (st)) {
 					st.error = true;
-					Report.error (base_type.source_reference, "Base struct cycle (`%s' and `%s')".printf (st.get_full_name (), base_type.get_full_name ()));
+					Report.error (st.source_reference, "Base struct cycle (`%s' and `%s')".printf (st.get_full_name (), base_type.get_full_name ()));
 					return;
 				}
 			}
@@ -323,9 +323,32 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 	}
 
+	bool has_base_struct_cycle (Struct st, Struct loop_st) {
+		if (!(st.base_type is UnresolvedType)) {
+			return false;
+		}
+
+		var sym = resolve_symbol (((UnresolvedType) st.base_type).unresolved_symbol);
+		unowned Struct? base_struct = sym as Struct;
+		if (base_struct == null) {
+			return false;
+		}
+
+		if (base_struct == loop_st) {
+			return true;
+		}
+
+		return has_base_struct_cycle (base_struct, loop_st);
+	}
+
 	DataType get_type_for_struct (Struct st, Struct base_struct) {
 		if (st.base_type != null) {
 			// make sure that base type is resolved
+
+			if (has_base_struct_cycle (st, st)) {
+				// recursive declaration in base type
+				return new StructValueType (st);
+			}
 
 			if (current_scope == st.scope) {
 				// recursive declaration in generic base type
