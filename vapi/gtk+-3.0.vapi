@@ -693,6 +693,7 @@ namespace Gtk {
 		public virtual signal void apply ();
 		public virtual signal void cancel ();
 		public virtual signal void close ();
+		public virtual signal void escape ();
 		public virtual signal void prepare (Gtk.Widget page);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_bin_get_type ()")]

@@ -7469,6 +7469,12 @@
 					<parameter name="assistant" type="GtkAssistant*"/>
 				</parameters>
 			</signal>
+			<signal name="escape" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkAssistant*"/>
+				</parameters>
+			</signal>
 			<signal name="prepare" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -35008,14 +35014,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1307"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1309"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="7"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="9"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="13"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
