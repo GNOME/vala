@@ -99,6 +99,7 @@ namespace Rest {
 	public class Proxy : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Proxy (string url_format, bool binding_required);
+		public void add_soup_feature (Soup.SessionFeature feature);
 		public bool bind (...);
 		public unowned string get_user_agent ();
 		public virtual Rest.ProxyCall new_call ();

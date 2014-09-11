@@ -5925,6 +5925,8 @@ namespace Clutter {
 		public unowned Clutter.EventSequence get_sequence (uint point);
 		public void get_threshold_trigger_distance (out float x, out float y);
 		public Clutter.GestureTriggerEdge get_threshold_trigger_edge ();
+		[Deprecated (since = "1.20")]
+		public Clutter.GestureTriggerEdge get_threshold_trigger_egde ();
 		public float get_velocity (uint point, out float velocity_x, out float velocity_y);
 		public void set_n_touch_points (int nb_points);
 		public void set_threshold_trigger_distance (float x, float y);
