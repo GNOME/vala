@@ -2675,7 +2675,7 @@ public class Vala.Parser : CodeVisitor {
 			if (ModifierFlags.ABSTRACT in flags
 			    || ModifierFlags.VIRTUAL in flags
 			    || ModifierFlags.OVERRIDE in flags) {
-				throw new ParseError.SYNTAX (get_error ("the modifiers `abstract', `virtual', and `override' are not valid for static methods"));
+				throw new ParseError.SYNTAX (get_error ("the modifiers `abstract', `virtual', and `override' are not valid for %s methods".printf ((ModifierFlags.CLASS in flags) ? "class" : "static")));
 			}
 		}
 
