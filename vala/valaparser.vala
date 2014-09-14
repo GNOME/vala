@@ -2908,13 +2908,16 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.TILDE);
-		parse_identifier ();
+		string identifier = parse_identifier ();
 		expect (TokenType.OPEN_PARENS);
 		expect (TokenType.CLOSE_PARENS);
 		if (ModifierFlags.NEW in flags) {
 			throw new ParseError.SYNTAX (get_error ("`new' modifier not allowed on destructor"));
 		}
 		var d = new Destructor (get_src (begin));
+		if (identifier != parent.name) {
+			Report.error (d.source_reference, "destructor and parent symbol name do not match");
+		}
 		if (ModifierFlags.STATIC in flags) {
 			d.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
