@@ -578,6 +578,32 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 		}
 
+		foreach (var prop in iface.get_properties ()) {
+			if (prop.is_abstract || prop.is_virtual) {
+				if (prop.get_accessor != null) {
+					var m = prop.get_accessor.get_method ();
+					write_indent ();
+					buffer.append_printf("<field name=\"%s\">\n", m.name);
+					indent++;
+					do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false);
+					indent--;
+					write_indent ();
+					buffer.append_printf ("</field>\n");
+				}
+
+				if (prop.set_accessor != null) {
+					var m = prop.set_accessor.get_method ();
+					write_indent ();
+					buffer.append_printf("<field name=\"%s\">\n", m.name);
+					indent++;
+					do_write_signature (m, "callback", true, m.name, CCodeBaseModule.get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false);
+					indent--;
+					write_indent ();
+					buffer.append_printf ("</field>\n");
+				}
+			}
+		}
+
 		indent--;
 		write_indent ();
 		buffer.append_printf ("</record>\n");
@@ -1128,6 +1154,20 @@ public class Vala.GIRWriter : CodeVisitor {
 		indent--;
 		write_indent ();
 		buffer.append_printf ("</property>\n");
+
+		if (prop.get_accessor != null) {
+			var m = prop.get_accessor.get_method ();
+			if (m != null) {
+				visit_method (m);
+			}
+		}
+
+		if (prop.set_accessor != null) {
+			var m = prop.set_accessor.get_method ();
+			if (m != null) {
+				visit_method (m);
+			}
+		}
 	}
 
 	public override void visit_signal (Signal sig) {

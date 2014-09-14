@@ -114,6 +114,30 @@ public class Vala.PropertyAccessor : Subroutine {
 		}
 	}
 
+	/**
+	 * Get the method representing this property accessor
+	 * @return   null if the accessor is neither readable nor writable
+	 */
+	public Method? get_method () {
+		Method? m = null;
+		if (readable) {
+			m = new Method ("get_"+prop.name, value_type, source_reference, comment);
+		} else if (writable) {
+			m = new Method ("set_"+prop.name, new VoidType(), source_reference, comment);
+			m.add_parameter (value_parameter.copy ());
+		}
+
+		if (m != null) {
+			m.owner = prop.owner;
+			m.access = access;
+			m.binding = prop.binding;
+			m.is_abstract = prop.is_abstract;
+			m.is_virtual = prop.is_virtual;
+		}
+
+		return m;
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
@@ -129,6 +153,10 @@ public class Vala.PropertyAccessor : Subroutine {
 		var old_symbol = context.analyzer.current_symbol;
 
 		context.analyzer.current_symbol = this;
+
+		if (writable || construction) {
+			value_parameter = new Parameter ("value", value_type, source_reference);
+		}
 
 		if (prop.source_type == SourceFileType.SOURCE) {
 			if (body == null && !prop.interface_only && !prop.is_abstract) {
@@ -157,7 +185,6 @@ public class Vala.PropertyAccessor : Subroutine {
 
 		if (body != null) {
 			if (writable || construction) {
-				value_parameter = new Parameter ("value", value_type, source_reference);
 				body.scope.add (value_parameter.name, value_parameter);
 			}
 
