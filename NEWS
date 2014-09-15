@@ -1,3 +1,9 @@
+Vala 0.25.4
+===========
+
+ * Add option --vapi-comments.
+ * Bug fixes and binding updates.
+
 Vala 0.25.3
 ===========
 
