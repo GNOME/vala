@@ -197,6 +197,13 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @param prop a property
 	 */
 	public override void add_property (Property prop) {
+		if (prop.field != null) {
+			Report.error (prop.source_reference, "automatic properties are not allowed in interfaces");
+
+			prop.error = true;
+			return;
+		}
+
 		properties.add (prop);
 		scope.add (prop.name, prop);
 

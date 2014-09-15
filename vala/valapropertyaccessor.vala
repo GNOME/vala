@@ -162,11 +162,6 @@ public class Vala.PropertyAccessor : Subroutine {
 			if (body == null && !prop.interface_only && !prop.is_abstract) {
 				/* no accessor body specified, insert default body */
 
-				if (prop.parent_symbol is Interface) {
-					error = true;
-					Report.error (source_reference, "Automatic properties can't be used in interfaces");
-					return false;
-				}
 				automatic_body = true;
 				body = new Block (source_reference);
 				var ma = new MemberAccess.simple ("_%s".printf (prop.name), source_reference);
