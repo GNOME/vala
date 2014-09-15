@@ -2579,7 +2579,9 @@ public class Vala.Parser : CodeVisitor {
 		f.access = access;
 
 		set_attributes (f, attrs);
-		if (ModifierFlags.STATIC in flags) {
+		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
+			Report.error (f.source_reference, "only one of `static' or `class' may be specified");
+		} else if (ModifierFlags.STATIC in flags) {
 			f.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
 			f.binding = MemberBinding.CLASS;
@@ -2640,7 +2642,9 @@ public class Vala.Parser : CodeVisitor {
 		foreach (TypeParameter type_param in type_param_list) {
 			method.add_type_parameter (type_param);
 		}
-		if (ModifierFlags.STATIC in flags) {
+		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
+			Report.error (method.source_reference, "only one of `static' or `class' may be specified");
+		} else if (ModifierFlags.STATIC in flags) {
 			method.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
 			method.binding = MemberBinding.CLASS;
@@ -2731,7 +2735,9 @@ public class Vala.Parser : CodeVisitor {
 		var prop = new Property (id, type, null, null, get_src (begin), comment);
 		prop.access = access;
 		set_attributes (prop, attrs);
-		if (ModifierFlags.STATIC in flags) {
+		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
+			Report.error (prop.source_reference, "only one of `static' or `class' may be specified");
+		} else if (ModifierFlags.STATIC in flags) {
 			prop.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
 			prop.binding = MemberBinding.CLASS;
@@ -2898,7 +2904,9 @@ public class Vala.Parser : CodeVisitor {
 			throw new ParseError.SYNTAX (get_error ("`new' modifier not allowed on constructor"));
 		}
 		var c = new Constructor (get_src (begin));
-		if (ModifierFlags.STATIC in flags) {
+		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
+			Report.error (c.source_reference, "only one of `static' or `class' may be specified");
+		} else if (ModifierFlags.STATIC in flags) {
 			c.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
 			c.binding = MemberBinding.CLASS;
@@ -2922,7 +2930,9 @@ public class Vala.Parser : CodeVisitor {
 		if (identifier != parent.name) {
 			Report.error (d.source_reference, "destructor and parent symbol name do not match");
 		}
-		if (ModifierFlags.STATIC in flags) {
+		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
+			Report.error (d.source_reference, "only one of `static' or `class' may be specified");
+		} else if (ModifierFlags.STATIC in flags) {
 			d.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
 			d.binding = MemberBinding.CLASS;
