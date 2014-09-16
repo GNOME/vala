@@ -65,6 +65,7 @@ TESTS = \
 	arrays/class-field-length-cname.vala \
 	arrays/expression-bracket.test \
 	arrays/field-global-length-cname.vala \
+	arrays/fixed-length-concat-invalid.test \
 	arrays/fixed-length-non-const.test \
 	arrays/struct-field-length-cname.vala \
 	arrays/slice-invalid-start.test \
