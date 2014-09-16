@@ -343,6 +343,10 @@ public class Vala.BinaryExpression : Expression {
 
 			var array_type = (ArrayType) left.value_type;
 
+			if (array_type.inline_allocated) {
+				error = true;
+				Report.error (source_reference, "Array concatenation not supported for fixed length arrays");
+			}
 			if (right.value_type == null || !right.value_type.compatible (array_type.element_type)) {
 				error = true;
 				Report.error (source_reference, "Incompatible operand");
