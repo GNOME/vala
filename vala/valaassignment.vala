@@ -290,6 +290,10 @@ public class Vala.Assignment : Expression {
 						return false;
 					}
 				}
+			} else if (ma.symbol_reference is ArrayLengthField && ((ArrayType) ma.inner.value_type).inline_allocated) {
+				error = true;
+				Report.error (source_reference, "`length' field of fixed length arrays is read-only");
+				return false;
 			} else if (ma.symbol_reference is Variable && right.value_type == null) {
 				unowned Variable variable = (Variable) ma.symbol_reference;
 
