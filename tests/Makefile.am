@@ -75,6 +75,7 @@ TESTS = \
 	arrays/field-global-length-cname.vala \
 	arrays/fixed-length-concat-invalid.test \
 	arrays/fixed-length-non-const.test \
+	arrays/fixed-length-resize-invalid.test \
 	arrays/struct-field-length-cname.vala \
 	arrays/incompatible-integer-elements.test \
 	arrays/slice-invalid-start.test \

@@ -1,0 +1,6 @@
+Invalid Code
+
+void main () {
+	int foo[2] = { 23, 42 };
+	foo.resize (3);
+}
