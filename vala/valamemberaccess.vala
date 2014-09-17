@@ -452,6 +452,14 @@ public class Vala.MemberAccess : Expression {
 					may_access_klass_members = true;
 				}
 			}
+
+			if (symbol_reference is ArrayResizeMethod && inner.value_type is ArrayType) {
+				unowned ArrayType? value_array_type = inner.value_type as ArrayType;
+				if (value_array_type != null && value_array_type.inline_allocated) {
+					Report.error (source_reference, "`resize' is not supported for arrays with fixed length");
+					error = true;
+				}
+			}
 		}
 
 		// enum-type inference
