@@ -89,8 +89,17 @@ public class Vala.LocalVariable : Variable {
 			variable_type.check (context);
 		}
 
+		// Catch initializer list transformation:
+		bool is_initializer_list = false;
+		int initializer_size = -1;
+
 		if (initializer != null) {
 			initializer.target_type = variable_type;
+
+			if (initializer is InitializerList) {
+				initializer_size = ((InitializerList) initializer).size;
+				is_initializer_list = true;
+			}
 
 			initializer.check (context);
 		}
@@ -153,6 +162,20 @@ public class Vala.LocalVariable : Variable {
 			if (!initializer.value_type.compatible (variable_type)) {
 				error = true;
 				Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), variable_type.to_string ()));
+				return false;
+			}
+
+
+			ArrayType variable_array_type = variable_type as ArrayType;
+			if (variable_array_type != null && variable_array_type.inline_allocated && !variable_array_type.fixed_length && is_initializer_list) {
+				variable_array_type.length = new IntegerLiteral (initializer_size.to_string ());
+				variable_array_type.fixed_length = true;
+				variable_array_type.nullable = false;
+			}
+
+			if (variable_array_type != null && variable_array_type.inline_allocated && initializer.value_type is ArrayType == false) {
+				error = true;
+				Report.error (source_reference, "only arrays are allowed as initializer for arrays with fixed length");
 				return false;
 			}
 
