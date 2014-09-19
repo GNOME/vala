@@ -66,7 +66,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_completion_get_type ()")]
 	[GIR (name = "Completion")]
-	public class SourceCompletion : GLib.Object {
+	public class SourceCompletion : GLib.Object, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		protected SourceCompletion ();
 		public bool add_provider (Gtk.SourceCompletionProvider provider) throws GLib.Error;

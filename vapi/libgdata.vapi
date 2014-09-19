@@ -2054,7 +2054,8 @@ namespace GData {
 		BAD_QUERY_PARAMETER,
 		NETWORK_ERROR,
 		PROXY_ERROR,
-		WITH_BATCH_OPERATION;
+		WITH_BATCH_OPERATION,
+		API_QUOTA_EXCEEDED;
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SERVICE_ERROR_")]
@@ -2339,6 +2340,10 @@ namespace GData {
 	public const string PICASAWEB_VIDEO_STATUS_PENDING;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_PICASAWEB_VIDEO_STATUS_READY")]
 	public const string PICASAWEB_VIDEO_STATUS_READY;
+	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_TASKS_STATUS_COMPLETED")]
+	public const string TASKS_STATUS_COMPLETED;
+	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_TASKS_STATUS_NEEDS_ACTION")]
+	public const string TASKS_STATUS_NEEDS_ACTION;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_ACTION_COMMENT")]
 	public const string YOUTUBE_ACTION_COMMENT;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_ACTION_COMMENT_VOTE")]

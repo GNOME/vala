@@ -8290,8 +8290,6 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static bool test_check_color_at_point (Clutter.Actor stage, Clutter.Point point, Clutter.Color color, Clutter.Color result);
 	[CCode (cheader_filename = "clutter/clutter.h")]
-	public static unowned Clutter.Actor test_get_stage ();
-	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static void test_init (int argc, string argv);
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static int test_run ();

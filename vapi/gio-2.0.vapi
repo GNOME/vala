@@ -279,7 +279,7 @@ namespace GLib {
 	public class Application : GLib.Object, GLib.ActionGroup, GLib.ActionMap {
 		[CCode (has_construct_function = false)]
 		public Application (string? application_id, GLib.ApplicationFlags flags);
-		public void add_main_option (string long_name, char short_name, int flags, GLib.OptionArg arg, string description, string? arg_description);
+		public void add_main_option (string long_name, char short_name, GLib.OptionFlags flags, GLib.OptionArg arg, string description, string? arg_description);
 		public void add_main_option_entries ([CCode (array_length = false, array_null_terminated = true)] GLib.OptionEntry[] entries);
 		public void add_option_group (GLib.OptionGroup group);
 		[NoWrapper]
@@ -321,7 +321,7 @@ namespace GLib {
 		public void set_default ();
 		public void set_flags (GLib.ApplicationFlags flags);
 		public void set_inactivity_timeout (uint inactivity_timeout);
-		public void set_resource_base_path (string resource_base_path);
+		public void set_resource_base_path (string? resource_path);
 		public void unmark_busy ();
 		public void withdraw_notification (string id);
 		public GLib.ActionGroup action_group { set; }
@@ -1493,7 +1493,7 @@ namespace GLib {
 		public virtual void get_item_attributes (int item_index, [CCode (type = "GHashTable**")] out GLib.HashTable<string,GLib.Variant>? attributes);
 		public virtual GLib.MenuModel get_item_link (int item_index, string link);
 		[NoWrapper]
-		public virtual void get_item_links (int item_index, [CCode (type = "GHashTable**")] out GLib.HashTable<string,GLib.MenuModel>? links);
+		public virtual void get_item_links (int item_index, out GLib.HashTable<string,GLib.MenuModel> links);
 		public virtual int get_n_items ();
 		public virtual bool is_mutable ();
 		public virtual GLib.MenuAttributeIter iterate_item_attributes (int item_index);

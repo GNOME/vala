@@ -1691,7 +1691,7 @@ namespace Gst {
 		public Query.accept_caps (Gst.Caps caps);
 		public void add_allocation_meta (GLib.Type api, Gst.Structure? @params);
 		public void add_allocation_param (Gst.Allocator? allocator, Gst.AllocationParams? @params);
-		public void add_allocation_pool (Gst.BufferPool pool, uint size, uint min_buffers, uint max_buffers);
+		public void add_allocation_pool (Gst.BufferPool? pool, uint size, uint min_buffers, uint max_buffers);
 		public bool add_buffering_range (int64 start, int64 stop);
 		public void add_scheduling_mode (Gst.PadMode mode);
 		[CCode (has_construct_function = false)]
@@ -1774,7 +1774,7 @@ namespace Gst {
 		public void set_formatsv ([CCode (array_length_cname = "n_formats", array_length_pos = 0.5)] Gst.Format[] formats);
 		public void set_latency (bool live, Gst.ClockTime min_latency, Gst.ClockTime max_latency);
 		public void set_nth_allocation_param (uint index, Gst.Allocator? allocator, Gst.AllocationParams? @params);
-		public void set_nth_allocation_pool (uint index, Gst.BufferPool pool, uint size, uint min_buffers, uint max_buffers);
+		public void set_nth_allocation_pool (uint index, Gst.BufferPool? pool, uint size, uint min_buffers, uint max_buffers);
 		public void set_position (Gst.Format format, int64 cur);
 		public void set_scheduling (Gst.SchedulingFlags flags, int minsize, int maxsize, int align);
 		public void set_seeking (Gst.Format format, bool seekable, int64 segment_start, int64 segment_end);
