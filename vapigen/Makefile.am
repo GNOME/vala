@@ -2,8 +2,6 @@ include $(top_srcdir)/Makefile.common
 
 NULL =
 
-VALAC = $(top_builddir)/compiler/valac$(EXEEXT)
-
 SUBDIRS = \
 	vala-gen-introspect \
 	$(NULL)
