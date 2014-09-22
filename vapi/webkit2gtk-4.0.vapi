@@ -107,6 +107,7 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected Download ();
 		public void cancel ();
+		public bool get_allow_overwrite ();
 		public unowned string get_destination ();
 		public double get_elapsed_time ();
 		public double get_estimated_progress ();
@@ -114,7 +115,9 @@ namespace WebKit {
 		public unowned WebKit.URIRequest get_request ();
 		public unowned WebKit.URIResponse get_response ();
 		public unowned WebKit.WebView get_web_view ();
+		public void set_allow_overwrite (bool allowed);
 		public void set_destination (string uri);
+		public bool allow_overwrite { get; set; }
 		public string destination { get; }
 		public double estimated_progress { get; }
 		public WebKit.URIResponse response { get; }
@@ -495,11 +498,13 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected URIResponse ();
 		public uint64 get_content_length ();
+		public unowned Soup.MessageHeaders get_http_headers ();
 		public unowned string get_mime_type ();
 		public uint get_status_code ();
 		public unowned string get_suggested_filename ();
 		public unowned string get_uri ();
 		public uint64 content_length { get; }
+		public Soup.MessageHeaders http_headers { get; }
 		public string mime_type { get; }
 		public uint status_code { get; }
 		public string suggested_filename { get; }
@@ -686,7 +691,7 @@ namespace WebKit {
 		public virtual signal bool leave_fullscreen ();
 		public virtual signal void load_changed (WebKit.LoadEvent load_event);
 		public virtual signal bool load_failed (WebKit.LoadEvent load_event, string failing_uri, void* error);
-		public virtual signal bool load_failed_with_tls_errors (GLib.TlsCertificate certificate, GLib.TlsCertificateFlags errors, string host);
+		public virtual signal bool load_failed_with_tls_errors (string failing_uri, GLib.TlsCertificate certificate, GLib.TlsCertificateFlags errors);
 		public virtual signal void mouse_target_changed (WebKit.HitTestResult hit_test_result, uint modifiers);
 		public virtual signal bool permission_request (WebKit.PermissionRequest permission_request);
 		public virtual signal bool print (WebKit.PrintOperation print_operation);

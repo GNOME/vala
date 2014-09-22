@@ -2629,11 +2629,13 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected URIResponse ();
 		public uint64 get_content_length ();
+		public Soup.MessageHeaders get_http_headers ();
 		public unowned string get_mime_type ();
 		public uint get_status_code ();
 		public unowned string get_suggested_filename ();
 		public unowned string get_uri ();
 		public uint64 content_length { get; }
+		public Soup.MessageHeaders http_headers { owned get; }
 		public string mime_type { get; }
 		public uint status_code { get; }
 		public string suggested_filename { get; }
