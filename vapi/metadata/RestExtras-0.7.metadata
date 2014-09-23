@@ -1,0 +1,10 @@
+RestExtras name="Rest"
+
+FlickrProxy cheader_filename="rest-extras/flickr-proxy.h"
+FlickrProxyCall cheader_filename="rest-extras/flickr-proxy-call.h"
+
+LastfmProxy cheader_filename="rest-extras/lastfm-proxy.h"
+LastfmProxyCall cheader_filename="rest-extras/lastfm-proxy-call.h"
+
+YoutubeProxy cheader_filename="rest-extras/youtube-proxy.h"
+YoutubeProxyUploadCallback cheader_filename="rest-extras/youtube-proxy.h"

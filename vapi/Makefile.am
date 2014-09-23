@@ -752,6 +752,9 @@ rest-extras-0.6:
 rest-0.7:
 	$(GENVAPI) --library $(srcdir)/rest-0.7 --metadatadir $(METADATADIR) --pkg gio-2.0 $(GIRDIR)/Rest-0.7.gir
 
+rest-extras-0.7:
+	$(GENVAPI) --library $(srcdir)/rest-extras-0.7 --metadatadir $(METADATADIR) --pkg rest-0.7 $(GIRDIR)/RestExtras-0.7.gir
+
 tracker-indexer-module-1.0:
 	$(GENVAPI) --library $(srcdir)/tracker-indexer-module-1.0 $(PACKAGESDIR)/tracker-indexer-module-1.0/tracker-indexer-module-1.0-custom.vala $(PACKAGESDIR)/tracker-indexer-module-1.0/tracker-indexer-module-1.0.gi
 
