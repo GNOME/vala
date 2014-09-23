@@ -170,7 +170,7 @@ public class Vala.HashMap<K,V> : Map<K,V> {
 		}
 	}
 
-	~HashSet () {
+	~HashMap () {
 		clear ();
 	}
 
