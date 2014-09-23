@@ -258,6 +258,8 @@ dist_vapi_DATA = \
 	rest-extras-0.6.vapi \
 	rest-0.7.deps \
 	rest-0.7.vapi \
+	rest-extras-0.7.deps \
+	rest-extras-0.7.vapi \
 	sdl.vapi \
 	sdl-gfx.vapi \
 	sdl-gfx.deps \
@@ -416,6 +418,7 @@ GIR_BINDINGS = \
 	pangocairo \
 	poppler-glib \
 	rest-0.7 \
+	rest-extras-0.7 \
 	udisks2 \
 	vte-2.90 \
 	webkit2gtk-4.0 \
