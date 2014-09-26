@@ -88,6 +88,9 @@ namespace Gtk {
 		public virtual void get_preferred_height_for_width_internal (int width, out int minimum_height, out int natural_height);
 	}
 
+	public interface CellAccessibleParent : GLib.Object {
+	}
+
 	[CCode (type_cname = "GtkEditableInterface")]
 	public interface Editable : GLib.Object {
 		[CCode (vfunc_name = "set_selection_bounds")]
@@ -99,6 +102,15 @@ namespace Gtk {
 
 	public interface FileChooser: Gtk.Widget {
 		public GLib.SList<GLib.File> get_files ();
+	}
+
+	public interface StyleProvider : GLib.Object {
+	}
+
+	public interface TreeDragDest : GLib.Object {
+	}
+
+	public interface TreeDragSource : GLib.Object {
 	}
 
 	[CCode (cname = "gint")]

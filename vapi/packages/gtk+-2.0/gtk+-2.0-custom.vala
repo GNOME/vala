@@ -264,6 +264,12 @@ namespace Gtk {
 		public GLib.SList<GLib.File> get_files ();
 	}
 
+	public interface TreeDragDest : GLib.Object {
+	}
+
+	public interface TreeDragSource : GLib.Object {
+	}
+
 	[CCode (cname = "gint")]
 	public enum SortColumn {
 		[CCode (cname = "GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID")]

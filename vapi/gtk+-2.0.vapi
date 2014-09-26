@@ -6267,12 +6267,12 @@ namespace Gtk {
 		public abstract void rebuild_menu ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public interface TreeDragDest {
+	public interface TreeDragDest : GLib.Object {
 		public abstract bool drag_data_received (Gtk.TreePath dest, Gtk.SelectionData selection_data);
 		public abstract bool row_drop_possible (Gtk.TreePath dest_path, Gtk.SelectionData selection_data);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public interface TreeDragSource {
+	public interface TreeDragSource : GLib.Object {
 		public abstract bool drag_data_delete (Gtk.TreePath path);
 		public abstract bool drag_data_get (Gtk.TreePath path, Gtk.SelectionData selection_data);
 		public abstract bool row_draggable (Gtk.TreePath path);
@@ -8260,9 +8260,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static GLib.Quark print_error_quark ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gtk.PageSetup print_run_page_setup_dialog (Gtk.Window parent, Gtk.PageSetup page_setup, Gtk.PrintSettings settings);
+	public static Gtk.PageSetup print_run_page_setup_dialog (Gtk.Window parent, Gtk.PageSetup page_setup, Gtk.PrintSettings settings);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void print_run_page_setup_dialog_async (Gtk.Window parent, Gtk.PageSetup page_setup, Gtk.PrintSettings settings, Gtk.PageSetupDoneFunc done_cb, void* data);
+	public static void print_run_page_setup_dialog_async (Gtk.Window parent, Gtk.PageSetup page_setup, Gtk.PrintSettings settings, Gtk.PageSetupDoneFunc done_cb);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void propagate_event (Gtk.Widget widget, Gdk.Event event);
 	[CCode (cheader_filename = "gtk/gtk.h")]

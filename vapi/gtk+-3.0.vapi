@@ -6675,15 +6675,6 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void notify_gtk (GLib.Object object, GLib.ParamSpec pspec);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Compact]
-	public class WidgetAuxInfo {
-		public uint halign;
-		public int height;
-		public Gtk.Border margin;
-		public uint valign;
-		public int width;
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_widget_path_ref", type_id = "gtk_widget_path_get_type ()", unref_function = "gtk_widget_path_unref")]
 	[Compact]
 	public class WidgetPath {
@@ -6955,7 +6946,7 @@ namespace Gtk {
 		public abstract void set_name (string name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public interface CellAccessibleParent {
+	public interface CellAccessibleParent : GLib.Object {
 		public abstract void activate (Gtk.CellAccessible cell);
 		public abstract void edit (Gtk.CellAccessible cell);
 		public abstract void expand_collapse (Gtk.CellAccessible cell);
@@ -7205,7 +7196,7 @@ namespace Gtk {
 		public Gtk.ScrollablePolicy vscroll_policy { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public interface StyleProvider {
+	public interface StyleProvider : GLib.Object {
 		public abstract unowned Gtk.IconFactory get_icon_factory (Gtk.WidgetPath path);
 		public abstract Gtk.StyleProperties get_style (Gtk.WidgetPath path);
 		public abstract bool get_style_property (Gtk.WidgetPath path, Gtk.StateFlags state, GLib.ParamSpec pspec, out GLib.Value value);
@@ -7223,12 +7214,12 @@ namespace Gtk {
 		public abstract void rebuild_menu ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public interface TreeDragDest {
+	public interface TreeDragDest : GLib.Object {
 		public abstract bool drag_data_received (Gtk.TreePath dest, Gtk.SelectionData selection_data);
 		public abstract bool row_drop_possible (Gtk.TreePath dest_path, Gtk.SelectionData selection_data);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public interface TreeDragSource {
+	public interface TreeDragSource : GLib.Object {
 		public abstract bool drag_data_delete (Gtk.TreePath path);
 		public abstract bool drag_data_get (Gtk.TreePath path, Gtk.SelectionData selection_data);
 		public abstract bool row_draggable (Gtk.TreePath path);
@@ -9512,9 +9503,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static GLib.Quark print_error_quark ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gtk.PageSetup print_run_page_setup_dialog (Gtk.Window parent, Gtk.PageSetup page_setup, Gtk.PrintSettings settings);
+	public static Gtk.PageSetup print_run_page_setup_dialog (Gtk.Window parent, Gtk.PageSetup page_setup, Gtk.PrintSettings settings);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void print_run_page_setup_dialog_async (Gtk.Window parent, Gtk.PageSetup page_setup, Gtk.PrintSettings settings, Gtk.PageSetupDoneFunc done_cb, void* data);
+	public static void print_run_page_setup_dialog_async (Gtk.Window parent, Gtk.PageSetup page_setup, Gtk.PrintSettings settings, Gtk.PageSetupDoneFunc done_cb);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void propagate_event (Gtk.Widget widget, Gdk.Event event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
