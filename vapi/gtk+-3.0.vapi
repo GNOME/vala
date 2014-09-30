@@ -4551,6 +4551,12 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public int gtk_timeout_repeat { get; set; }
 		[NoAccessorMethod]
+		public string gtk_titlebar_double_click { owned get; set; }
+		[NoAccessorMethod]
+		public string gtk_titlebar_middle_click { owned get; set; }
+		[NoAccessorMethod]
+		public string gtk_titlebar_right_click { owned get; set; }
+		[NoAccessorMethod]
 		public Gtk.IconSize gtk_toolbar_icon_size { get; set; }
 		[NoAccessorMethod]
 		public Gtk.ToolbarStyle gtk_toolbar_style { get; set; }
@@ -6873,7 +6879,7 @@ namespace Gtk {
 		[CCode (cname = "activate_default")]
 		[Experimental]
 		public virtual signal void default_activated ();
-		public virtual signal void enable_debugging (bool toggle);
+		public virtual signal bool enable_debugging (bool toggle);
 		[CCode (cname = "activate_focus")]
 		[Experimental]
 		public virtual signal void focus_activated ();

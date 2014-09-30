@@ -22095,6 +22095,9 @@
 			<property name="gtk-timeout-expand" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-timeout-initial" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-timeout-repeat" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-titlebar-double-click" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-titlebar-middle-click" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-titlebar-right-click" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-toolbar-icon-size" type="GtkIconSize" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-toolbar-style" type="GtkToolbarStyle" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-tooltip-browse-mode-timeout" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -32314,7 +32317,7 @@
 				</parameters>
 			</signal>
 			<signal name="enable-debugging" when="LAST">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="window" type="GtkWindow*"/>
 					<parameter name="toggle" type="gboolean"/>
@@ -35014,15 +35017,15 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1309"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1401"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="1"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="9"/>
-		<constant name="GTK_MINOR_VERSION" type="int" value="13"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="1"/>
+		<constant name="GTK_MINOR_VERSION" type="int" value="14"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
 		<constant name="GTK_PAPER_NAME_A5" type="char*" value="iso_a5"/>
