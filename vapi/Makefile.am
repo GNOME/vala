@@ -21,6 +21,8 @@ dist_vapi_DATA = \
 	ccss-1.vapi \
 	clutter-1.0.deps \
 	clutter-1.0.vapi \
+	clutter-gdk-1.0.deps \
+	clutter-gdk-1.0.vapi \
 	clutter-gst-1.0.deps \
 	clutter-gst-1.0.vapi \
 	clutter-gst-2.0.deps \
@@ -30,6 +32,8 @@ dist_vapi_DATA = \
 	clutter-gtk-1.0.deps \
 	clutter-gtk-1.0.vapi \
 	clutter-json-1.0.vapi \
+	clutter-x11-1.0.deps \
+	clutter-x11-1.0.vapi \
 	cogl-1.0.vapi \
 	cogl-1.0.deps \
 	cogl-pango-1.0.vapi \
@@ -392,9 +396,11 @@ GIR_BINDINGS = \
 	atk \
 	atspi-2 \
 	clutter-1.0 \
+	clutter-gdk-1.0 \
 	clutter-gtk-1.0 \
 	clutter-gst-1.0 \
 	clutter-gst-2.0 \
+	clutter-x11-1.0 \
 	cogl-pango-1.0 \
 	gdk-3.0 \
 	gdk-pixbuf-2.0 \
@@ -455,6 +461,9 @@ atspi-2:
 clutter-1.0:
 	$(GENVAPI) --library $(srcdir)/clutter-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Clutter-1.0-custom.vala --pkg atk --pkg cairo --pkg pango --pkg cogl-1.0 --pkg cogl-pango-1.0 --pkg json-glib-1.0 $(GIRDIR)/Clutter-1.0.gir
 
+clutter-gdk-1.0:
+	$(GENVAPI) --library $(srcdir)/clutter-gdk-1.0 --metadatadir $(METADATADIR) --pkg clutter-1.0 --pkg gdk-3.0 $(GIRDIR)/ClutterGdk-1.0.gir
+
 clutter-gtk-0.10:
 	$(GENVAPI) --library $(srcdir)/clutter-gtk-0.10 $(PACKAGESDIR)/clutter-gtk-0.10/clutter-gtk-0.10.gi
 
@@ -466,6 +475,9 @@ clutter-gst-1.0:
 
 clutter-gst-2.0:
 	$(GENVAPI) --library $(srcdir)/clutter-gst-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/ClutterGst-2.0-custom.vala --pkg cogl-1.0 --pkg clutter-1.0 --pkg gstreamer-base-1.0 --pkg gstreamer-video-1.0 $(GIRDIR)/ClutterGst-2.0.gir
+
+clutter-x11-1.0:
+	$(GENVAPI) --library $(srcdir)/clutter-x11-1.0 --metadatadir $(METADATADIR) --pkg clutter-1.0 --pkg x11 $(GIRDIR)/ClutterX11-1.0.gir
 
 cogl-1.0:
 	$(GENVAPI) --library $(srcdir)/cogl-1.0 $(PACKAGESDIR)/cogl-1.0/cogl-1.0-custom.vala $(PACKAGESDIR)/cogl-1.0/cogl-1.0.gi

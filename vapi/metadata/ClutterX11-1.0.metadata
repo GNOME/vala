@@ -1,0 +1,6 @@
+* skip=false
+
+XInputDevice skip
+
+FilterFunc type="ClutterX11.FilterReturn"
+handle_event type="ClutterX11.FilterReturn"

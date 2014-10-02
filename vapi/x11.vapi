@@ -419,6 +419,7 @@ namespace X {
 	public struct VisualID {
 	}
 
+	[GIR (name = "XVisualInfo")]
 	[CCode (cname = "XVisualInfo", has_type_id = false)]
 	public struct VisualInfo {
 		public unowned X.Visual visual;
