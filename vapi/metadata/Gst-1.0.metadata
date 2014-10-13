@@ -37,11 +37,14 @@ init_get_option_group skip=false
 init.argv unowned
 init_check.argv unowned
 
-// Floating references (bug #657202)
+// Floating references (bug #657202 and bug #702969)
 Bin
   .new floating
+  .add.element owned=false
 BufferPool
   .new floating
+Element
+  .add_pad.pad owned=false
 ElementFactory
   .create floating
   .make floating

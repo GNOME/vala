@@ -5,8 +5,8 @@ namespace Gst {
 
 	[CCode (type_id = "gst_bin_get_type ()")]
 	public class Bin : Gst.Element {
-		public void add_many (params owned Gst.Element[] elements);
-		public void remove_many (params owned Gst.Element[] elements);
+		public void add_many (params Gst.Element[] elements);
+		public void remove_many (params Gst.Element[] elements);
   }
 
 	[Compact, CCode (ref_function = "gst_buffer_ref", type_id = "gst_buffer_get_type ()", unref_function = "gst_buffer_unref")]
