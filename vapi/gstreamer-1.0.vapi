@@ -540,10 +540,10 @@ namespace Gst {
 		public bool state_dirty;
 		[CCode (has_construct_function = false, returns_floating_reference = true, type = "GstElement*")]
 		public Bin (string? name);
-		public bool add (owned Gst.Element element);
+		public bool add (Gst.Element element);
 		[NoWrapper]
 		public virtual bool add_element (Gst.Element element);
-		public void add_many (params owned Gst.Element[] elements);
+		public void add_many (params Gst.Element[] elements);
 		public Gst.Pad? find_unlinked_pad (Gst.PadDirection direction);
 		public Gst.Element get_by_interface (GLib.Type iface);
 		public Gst.Element? get_by_name (string name);
@@ -560,7 +560,7 @@ namespace Gst {
 		public bool remove (Gst.Element element);
 		[NoWrapper]
 		public virtual bool remove_element (Gst.Element element);
-		public void remove_many (params owned Gst.Element[] elements);
+		public void remove_many (params Gst.Element[] elements);
 		[NoAccessorMethod]
 		public bool async_handling { get; set; }
 		[NoAccessorMethod]
@@ -1017,7 +1017,7 @@ namespace Gst {
 		public void abort_state ();
 		[CCode (cname = "gst_element_class_add_metadata")]
 		public class void add_metadata (string key, string value);
-		public bool add_pad (owned Gst.Pad pad);
+		public bool add_pad (Gst.Pad pad);
 		[CCode (cname = "gst_element_class_add_pad_template")]
 		public class void add_pad_template (owned Gst.PadTemplate templ);
 		[CCode (cname = "gst_element_class_add_static_metadata")]
