@@ -344,7 +344,7 @@ namespace Gtk {
 	[Compact]
 	public class AccelMapClass {
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_accessible_get_type ()")]
 	public class Accessible : Atk.Object {
 		[CCode (has_construct_function = false)]
 		protected Accessible ();
@@ -636,7 +636,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Gtk.ShadowType shadow_type { get; set; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_arrow_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_arrow_accessible_get_type ()")]
 	public class ArrowAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Image {
 		[CCode (has_construct_function = false)]
 		protected ArrowAccessible ();
@@ -744,7 +744,7 @@ namespace Gtk {
 		public weak Gtk.BindingSignal next;
 		public weak string signal_name;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_boolean_cell_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_boolean_cell_accessible_get_type ()")]
 	public class BooleanCellAccessible : Gtk.RendererCellAccessible, Atk.Action, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected BooleanCellAccessible ();
@@ -863,7 +863,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void released ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_button_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_button_accessible_get_type ()")]
 	public class ButtonAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Action, Atk.Image {
 		[CCode (has_construct_function = false)]
 		protected ButtonAccessible ();
@@ -925,7 +925,7 @@ namespace Gtk {
 		public virtual signal void prev_month ();
 		public virtual signal void prev_year ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_cell_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_cell_accessible_get_type ()")]
 	public class CellAccessible : Gtk.Accessible, Atk.Action, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected CellAccessible ();
@@ -1385,7 +1385,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void toggled ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_check_menu_item_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_check_menu_item_accessible_get_type ()")]
 	public class CheckMenuItemAccessible : Gtk.MenuItemAccessible, Atk.Component, Atk.Action, Atk.Selection {
 		[CCode (has_construct_function = false)]
 		protected CheckMenuItemAccessible ();
@@ -1587,7 +1587,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void popup ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_combo_box_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_combo_box_accessible_get_type ()")]
 	public class ComboBoxAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Action, Atk.Selection {
 		[CCode (has_construct_function = false)]
 		protected ComboBoxAccessible ();
@@ -1668,7 +1668,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void set_focus_child (Gtk.Widget? child);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_container_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_container_accessible_get_type ()")]
 	public class ContainerAccessible : Gtk.WidgetAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected ContainerAccessible ();
@@ -1677,7 +1677,7 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual int remove_gtk (Gtk.Container container, Gtk.Widget widget, void* data);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_container_cell_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_container_cell_accessible_get_type ()")]
 	public class ContainerCellAccessible : Gtk.CellAccessible, Atk.Action, Atk.Component {
 		[CCode (has_construct_function = false)]
 		public ContainerCellAccessible ();
@@ -1918,7 +1918,7 @@ namespace Gtk {
 		public virtual signal void preedit_changed (string p0);
 		public virtual signal void toggle_overwrite ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_entry_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_entry_accessible_get_type ()")]
 	public class EntryAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.EditableText, Atk.Text, Atk.Action {
 		[CCode (has_construct_function = false)]
 		protected EntryAccessible ();
@@ -1990,7 +1990,7 @@ namespace Gtk {
 		public virtual signal bool match_selected (Gtk.TreeModel model, Gtk.TreeIter iter);
 		public virtual signal void no_matches ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_entry_icon_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_entry_icon_accessible_get_type ()")]
 	public class EntryIconAccessible : Atk.Object, Atk.Action, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected EntryIconAccessible ();
@@ -2050,7 +2050,7 @@ namespace Gtk {
 		public bool use_underline { get; set construct; }
 		public virtual signal void activate ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_expander_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_expander_accessible_get_type ()")]
 	public class ExpanderAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Action {
 		[CCode (has_construct_function = false)]
 		protected ExpanderAccessible ();
@@ -2179,7 +2179,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void unselect_all ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_flow_box_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_flow_box_accessible_get_type ()")]
 	public class FlowBoxAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Selection {
 		[CCode (has_construct_function = false)]
 		protected FlowBoxAccessible ();
@@ -2193,7 +2193,7 @@ namespace Gtk {
 		public bool is_selected ();
 		public virtual signal void activate ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_flow_box_child_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_flow_box_child_accessible_get_type ()")]
 	public class FlowBoxChildAccessible : Gtk.ContainerAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected FlowBoxChildAccessible ();
@@ -2288,7 +2288,7 @@ namespace Gtk {
 		public float label_yalign { get; set; }
 		public Gtk.ShadowType shadow_type { get; set; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_frame_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_frame_accessible_get_type ()")]
 	public class FrameAccessible : Gtk.ContainerAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected FrameAccessible ();
@@ -2793,7 +2793,7 @@ namespace Gtk {
 		public virtual signal void toggle_cursor_item ();
 		public virtual signal void unselect_all ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_icon_view_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_icon_view_accessible_get_type ()")]
 	public class IconViewAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Selection {
 		[CCode (has_construct_function = false)]
 		protected IconViewAccessible ();
@@ -2864,12 +2864,12 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool use_fallback { get; set; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_image_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_image_accessible_get_type ()")]
 	public class ImageAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Image {
 		[CCode (has_construct_function = false)]
 		protected ImageAccessible ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_image_cell_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_image_cell_accessible_get_type ()")]
 	public class ImageCellAccessible : Gtk.RendererCellAccessible, Atk.Action, Atk.Component, Atk.Image {
 		[CCode (has_construct_function = false)]
 		protected ImageCellAccessible ();
@@ -3009,7 +3009,7 @@ namespace Gtk {
 		public virtual signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
 		public virtual signal void populate_popup (Gtk.Menu menu);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_label_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_label_accessible_get_type ()")]
 	public class LabelAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Text, Atk.Hypertext {
 		[CCode (has_construct_function = false)]
 		protected LabelAccessible ();
@@ -3062,7 +3062,7 @@ namespace Gtk {
 		public double value { get; set; }
 		public virtual signal void offset_changed (string name);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_level_bar_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_level_bar_accessible_get_type ()")]
 	public class LevelBarAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Value {
 		[CCode (has_construct_function = false)]
 		protected LevelBarAccessible ();
@@ -3081,7 +3081,7 @@ namespace Gtk {
 		public bool visited { get; set; }
 		public virtual signal bool activate_link ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_link_button_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_link_button_accessible_get_type ()")]
 	public class LinkButtonAccessible : Gtk.ButtonAccessible, Atk.Component, Atk.Action, Atk.Image, Atk.HyperlinkImpl {
 		[CCode (has_construct_function = false)]
 		protected LinkButtonAccessible ();
@@ -3127,7 +3127,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void unselect_all ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_list_box_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_list_box_accessible_get_type ()")]
 	public class ListBoxAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Selection {
 		[CCode (has_construct_function = false)]
 		protected ListBoxAccessible ();
@@ -3149,7 +3149,7 @@ namespace Gtk {
 		public bool selectable { get; set; }
 		public virtual signal void activate ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_list_box_row_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_list_box_row_accessible_get_type ()")]
 	public class ListBoxRowAccessible : Gtk.ContainerAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected ListBoxRowAccessible ();
@@ -3200,7 +3200,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string tooltip_unlock { owned get; set construct; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_lock_button_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_lock_button_accessible_get_type ()")]
 	public class LockButtonAccessible : Gtk.ButtonAccessible, Atk.Component, Atk.Action, Atk.Image {
 		[CCode (has_construct_function = false)]
 		protected LockButtonAccessible ();
@@ -3248,7 +3248,7 @@ namespace Gtk {
 		public string tearoff_title { owned get; set; }
 		public virtual signal void move_scroll (Gtk.ScrollType p0);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_menu_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_menu_accessible_get_type ()")]
 	public class MenuAccessible : Gtk.MenuShellAccessible, Atk.Component, Atk.Selection {
 		[CCode (has_construct_function = false)]
 		protected MenuAccessible ();
@@ -3289,7 +3289,7 @@ namespace Gtk {
 		public Gtk.Menu popup { get; set; }
 		public bool use_popover { get; set; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_menu_button_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_menu_button_accessible_get_type ()")]
 	public class MenuButtonAccessible : Gtk.ToggleButtonAccessible, Atk.Component, Atk.Action, Atk.Image {
 		[CCode (has_construct_function = false)]
 		protected MenuButtonAccessible ();
@@ -3331,7 +3331,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void toggle_size_request (void* requisition);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_menu_item_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_menu_item_accessible_get_type ()")]
 	public class MenuItemAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Action, Atk.Selection {
 		[CCode (has_construct_function = false)]
 		protected MenuItemAccessible ();
@@ -3366,7 +3366,7 @@ namespace Gtk {
 		public virtual signal bool move_selected (int distance);
 		public virtual signal void selection_done ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_menu_shell_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_menu_shell_accessible_get_type ()")]
 	public class MenuShellAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Selection {
 		[CCode (has_construct_function = false)]
 		protected MenuShellAccessible ();
@@ -3515,12 +3515,12 @@ namespace Gtk {
 		public virtual signal bool select_page (bool move_focus);
 		public virtual signal void switch_page (Gtk.Widget page, uint page_num);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_notebook_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_notebook_accessible_get_type ()")]
 	public class NotebookAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Selection {
 		[CCode (has_construct_function = false)]
 		protected NotebookAccessible ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_notebook_page_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_notebook_page_accessible_get_type ()")]
 	public class NotebookPageAccessible : Atk.Object, Atk.Component {
 		[CCode (has_construct_function = false, type = "AtkObject*")]
 		public NotebookPageAccessible (Gtk.NotebookAccessible notebook, Gtk.Widget child);
@@ -3621,7 +3621,7 @@ namespace Gtk {
 		public virtual signal bool move_handle (Gtk.ScrollType scroll);
 		public virtual signal bool toggle_handle_focus ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_paned_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_paned_accessible_get_type ()")]
 	public class PanedAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Value {
 		[CCode (has_construct_function = false)]
 		protected PanedAccessible ();
@@ -3722,7 +3722,7 @@ namespace Gtk {
 		public Gtk.Widget relative_to { get; set; }
 		public virtual signal void closed ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_popover_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_popover_accessible_get_type ()")]
 	public class PopoverAccessible : Gtk.ContainerAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected PopoverAccessible ();
@@ -3920,7 +3920,7 @@ namespace Gtk {
 		public bool show_text { get; set; }
 		public string text { get; set; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_progress_bar_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_progress_bar_accessible_get_type ()")]
 	public class ProgressBarAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Value {
 		[CCode (has_construct_function = false)]
 		protected ProgressBarAccessible ();
@@ -3962,7 +3962,7 @@ namespace Gtk {
 		public Gtk.RadioButton group { set; }
 		public virtual signal void group_changed ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_radio_button_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_radio_button_accessible_get_type ()")]
 	public class RadioButtonAccessible : Gtk.ToggleButtonAccessible, Atk.Component, Atk.Action, Atk.Image {
 		[CCode (has_construct_function = false)]
 		protected RadioButtonAccessible ();
@@ -3986,7 +3986,7 @@ namespace Gtk {
 		public Gtk.RadioMenuItem group { set; }
 		public virtual signal void group_changed ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_radio_menu_item_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_radio_menu_item_accessible_get_type ()")]
 	public class RadioMenuItemAccessible : Gtk.CheckMenuItemAccessible, Atk.Component, Atk.Action, Atk.Selection {
 		[CCode (has_construct_function = false)]
 		protected RadioMenuItemAccessible ();
@@ -4052,7 +4052,7 @@ namespace Gtk {
 		public virtual signal void move_slider (Gtk.ScrollType scroll);
 		public virtual signal void value_changed ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_range_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_range_accessible_get_type ()")]
 	public class RangeAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Value {
 		[CCode (has_construct_function = false)]
 		protected RangeAccessible ();
@@ -4206,7 +4206,7 @@ namespace Gtk {
 		public int size { get; }
 		public virtual signal void changed ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_renderer_cell_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_renderer_cell_accessible_get_type ()")]
 	public class RendererCellAccessible : Gtk.CellAccessible, Atk.Action, Atk.Component {
 		[CCode (has_construct_function = false, type = "AtkObject*")]
 		public RendererCellAccessible (Gtk.CellRenderer renderer);
@@ -4253,7 +4253,7 @@ namespace Gtk {
 		public Gtk.PositionType value_pos { get; set; }
 		public virtual signal string format_value (double value);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_scale_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_scale_accessible_get_type ()")]
 	public class ScaleAccessible : Gtk.RangeAccessible, Atk.Component, Atk.Value {
 		[CCode (has_construct_function = false)]
 		protected ScaleAccessible ();
@@ -4281,7 +4281,7 @@ namespace Gtk {
 		public virtual signal void popup ();
 		public virtual signal void value_changed (double value);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_scale_button_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_scale_button_accessible_get_type ()")]
 	public class ScaleButtonAccessible : Gtk.ButtonAccessible, Atk.Component, Atk.Action, Atk.Image, Atk.Value {
 		[CCode (has_construct_function = false)]
 		protected ScaleButtonAccessible ();
@@ -4334,7 +4334,7 @@ namespace Gtk {
 		public virtual signal void move_focus_out (Gtk.DirectionType direction);
 		public virtual signal bool scroll_child (Gtk.ScrollType scroll, bool horizontal);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_scrolled_window_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_scrolled_window_accessible_get_type ()")]
 	public class ScrolledWindowAccessible : Gtk.ContainerAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected ScrolledWindowAccessible ();
@@ -4649,7 +4649,7 @@ namespace Gtk {
 		public virtual signal void value_changed ();
 		public virtual signal void wrapped ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_spin_button_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_spin_button_accessible_get_type ()")]
 	public class SpinButtonAccessible : Gtk.EntryAccessible, Atk.Component, Atk.EditableText, Atk.Text, Atk.Action, Atk.Value {
 		[CCode (has_construct_function = false)]
 		protected SpinButtonAccessible ();
@@ -4663,7 +4663,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool active { get; set; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_spinner_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_spinner_accessible_get_type ()")]
 	public class SpinnerAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Image {
 		[CCode (has_construct_function = false)]
 		protected SpinnerAccessible ();
@@ -4788,7 +4788,7 @@ namespace Gtk {
 		public virtual signal void text_popped (uint context_id, string text);
 		public virtual signal void text_pushed (uint context_id, string text);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_statusbar_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_statusbar_accessible_get_type ()")]
 	public class StatusbarAccessible : Gtk.ContainerAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected StatusbarAccessible ();
@@ -5020,7 +5020,7 @@ namespace Gtk {
 		public virtual signal void activate ();
 		public virtual signal bool state_set (bool state);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_switch_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_switch_accessible_get_type ()")]
 	public class SwitchAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Action {
 		[CCode (has_construct_function = false)]
 		protected SwitchAccessible ();
@@ -5232,7 +5232,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void remove_tag (Gtk.TextTag tag, Gtk.TextIter start, Gtk.TextIter end);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_text_cell_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_text_cell_accessible_get_type ()")]
 	public class TextCellAccessible : Gtk.RendererCellAccessible, Atk.Action, Atk.Component, Atk.Text {
 		[CCode (has_construct_function = false)]
 		protected TextCellAccessible ();
@@ -5521,7 +5521,7 @@ namespace Gtk {
 		public virtual signal void toggle_cursor_visible ();
 		public virtual signal void toggle_overwrite ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_text_view_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_text_view_accessible_get_type ()")]
 	public class TextViewAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.EditableText, Atk.Text, Atk.StreamableContent {
 		[CCode (has_construct_function = false)]
 		protected TextViewAccessible ();
@@ -5630,7 +5630,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void toggled ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_toggle_button_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_toggle_button_accessible_get_type ()")]
 	public class ToggleButtonAccessible : Gtk.ButtonAccessible, Atk.Component, Atk.Action, Atk.Image {
 		[CCode (has_construct_function = false)]
 		protected ToggleButtonAccessible ();
@@ -5806,7 +5806,7 @@ namespace Gtk {
 		public void set_tip_area (Gdk.Rectangle rect);
 		public static void trigger_tooltip_query (Gdk.Display display);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_toplevel_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_toplevel_accessible_get_type ()")]
 	public class ToplevelAccessible : Atk.Object {
 		[CCode (has_construct_function = false)]
 		protected ToplevelAccessible ();
@@ -6094,7 +6094,7 @@ namespace Gtk {
 		public virtual signal bool toggle_cursor_row ();
 		public virtual signal bool unselect_all ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tree_view_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_tree_view_accessible_get_type ()")]
 	public class TreeViewAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Table, Atk.Selection, Gtk.CellAccessibleParent {
 		[CCode (has_construct_function = false)]
 		protected TreeViewAccessible ();
@@ -6674,7 +6674,7 @@ namespace Gtk {
 		public virtual signal bool visibility_notify_event (Gdk.EventVisibility event);
 		public virtual signal bool window_state_event (Gdk.EventWindowState event);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_widget_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_widget_accessible_get_type ()")]
 	public class WidgetAccessible : Gtk.Accessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected WidgetAccessible ();
@@ -6887,7 +6887,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void set_focus (Gtk.Widget? focus);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_window_accessible_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_window_accessible_get_type ()")]
 	public class WindowAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Window {
 		[CCode (has_construct_function = false)]
 		protected WindowAccessible ();
