@@ -5,7 +5,7 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pangocairo.h", type_id = "pango_cairo_font_get_type ()")]
 	[GIR (name = "Font")]
 	public interface CairoFont : Pango.Font {
-		public unowned Cairo.ScaledFont get_scaled_font ();
+		public unowned Cairo.ScaledFont? get_scaled_font ();
 	}
 	[CCode (cheader_filename = "pango/pangocairo.h", type_id = "pango_cairo_font_map_get_type ()")]
 	[GIR (name = "FontMap")]
@@ -16,24 +16,24 @@ namespace Pango {
 		public Cairo.FontType get_font_type ();
 		public double get_resolution ();
 		public static Pango.FontMap @new ();
-		public static Pango.FontMap new_for_font_type (Cairo.FontType fonttype);
+		public static Pango.FontMap? new_for_font_type (Cairo.FontType fonttype);
 		public void set_default ();
 		public void set_resolution (double dpi);
 	}
 	[CCode (cheader_filename = "pango/pangocairo.h", instance_pos = 3.9)]
 	public delegate void CairoShapeRendererFunc (Cairo.Context cr, Pango.AttrShape attr, bool do_path);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	public static unowned Cairo.FontOptions cairo_context_get_font_options (Pango.Context context);
+	public static unowned Cairo.FontOptions? cairo_context_get_font_options (Pango.Context context);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static double cairo_context_get_resolution (Pango.Context context);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	public static unowned Pango.CairoShapeRendererFunc cairo_context_get_shape_renderer (Pango.Context context);
+	public static unowned Pango.CairoShapeRendererFunc? cairo_context_get_shape_renderer (Pango.Context context);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	public static void cairo_context_set_font_options (Pango.Context context, Cairo.FontOptions options);
+	public static void cairo_context_set_font_options (Pango.Context context, Cairo.FontOptions? options);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_context_set_resolution (Pango.Context context, double dpi);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	public static void cairo_context_set_shape_renderer (Pango.Context context, owned Pango.CairoShapeRendererFunc func);
+	public static void cairo_context_set_shape_renderer (Pango.Context context, owned Pango.CairoShapeRendererFunc? func);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static Pango.Context cairo_create_context (Cairo.Context cr);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
@@ -45,7 +45,7 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static Pango.FontMap cairo_font_map_new ();
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	public static Pango.FontMap cairo_font_map_new_for_font_type (Cairo.FontType fonttype);
+	public static Pango.FontMap? cairo_font_map_new_for_font_type (Cairo.FontType fonttype);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_glyph_string_path (Cairo.Context cr, Pango.Font font, Pango.GlyphString glyphs);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
