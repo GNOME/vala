@@ -4022,7 +4022,7 @@ namespace GLib {
 	[CCode (cname = "g_strcmp0")]
 	public static GLib.CompareFunc<string> strcmp;
 
-	[CCode (has_target = false)]
+	[CCode (cname = "GCompareFunc", has_target = false)]
 	public delegate int SearchFunc<G,T> (G a, T b);
 
 	/* Double-ended Queues */
