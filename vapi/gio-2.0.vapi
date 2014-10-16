@@ -3028,9 +3028,9 @@ namespace GLib {
 		INVALID,
 		LINUX_UCRED,
 		FREEBSD_CMSGCRED,
-		NETBSD_UNPCBID,
 		OPENBSD_SOCKPEERCRED,
-		SOLARIS_UCRED
+		SOLARIS_UCRED,
+		NETBSD_UNPCBID
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_CALL_FLAGS_", type_id = "g_dbus_call_flags_get_type ()")]
 	[Flags]
