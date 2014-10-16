@@ -809,7 +809,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Button ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public Button.from_icon_name (string icon_name, Gtk.IconSize size);
+		public Button.from_icon_name (string icon_name, Gtk.IconSize size = Gtk.IconSize.BUTTON);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Button.from_stock (string stock_id);
 		public void get_alignment (out float xalign, out float yalign);
@@ -2414,8 +2414,8 @@ namespace Gtk {
 	public class Grid : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Grid ();
-		public void attach (Gtk.Widget child, int left, int top, int width, int height);
-		public void attach_next_to (Gtk.Widget child, Gtk.Widget? sibling, Gtk.PositionType side, int width, int height);
+		public void attach (Gtk.Widget child, int left, int top, int width = 1, int height = 1);
+		public void attach_next_to (Gtk.Widget child, Gtk.Widget? sibling, Gtk.PositionType side, int width = 1, int height = 1);
 		public int get_baseline_row ();
 		public unowned Gtk.Widget get_child_at (int left, int top);
 		public bool get_column_homogeneous ();
@@ -7006,7 +7006,7 @@ namespace Gtk {
 		public abstract void do_delete_text (int start_pos, int end_pos);
 		[NoWrapper]
 		public abstract void do_insert_text (string new_text, int new_text_length, ref int position);
-		public abstract string get_chars (int start_pos, int end_pos);
+		public abstract string get_chars (int start_pos = 0, int end_pos = -1);
 		public bool get_editable ();
 		public abstract int get_position ();
 		public abstract bool get_selection_bounds (out int start_pos, out int end_pos);
