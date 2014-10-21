@@ -408,7 +408,6 @@ GIR_BINDINGS = \
 	geocode-glib-1.0 \
 	gio-2.0 \
 	gobject-introspection-1.0 \
-	gtksourceview-3.0 \
 	gudev-1.0 \
 	json-glib-1.0 \
 	libgdata \
