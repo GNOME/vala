@@ -1298,6 +1298,31 @@ namespace GData {
 		public Soup.URI proxy_uri { owned get; set; }
 		public uint timeout { get; set; }
 	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_oauth2_authorizer_get_type ()")]
+	public class OAuth2Authorizer : GLib.Object, GData.Authorizer {
+		[CCode (has_construct_function = false)]
+		public OAuth2Authorizer (string client_id, string client_secret, string redirect_uri, GLib.Type service_type);
+		public string build_authentication_uri (string? login_hint, bool include_granted_scopes);
+		[CCode (has_construct_function = false)]
+		public OAuth2Authorizer.for_authorization_domains (string client_id, string client_secret, string redirect_uri, GLib.List<GData.AuthorizationDomain> authorization_domains);
+		public unowned string get_client_id ();
+		public unowned string get_client_secret ();
+		public unowned string get_locale ();
+		public unowned GLib.ProxyResolver get_proxy_resolver ();
+		public unowned string get_redirect_uri ();
+		public uint get_timeout ();
+		public bool request_authorization (string authorization_code, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool request_authorization_async (string authorization_code, GLib.Cancellable? cancellable) throws GLib.Error;
+		public void set_locale (string? locale);
+		public void set_proxy_resolver (GLib.ProxyResolver? proxy_resolver);
+		public void set_timeout (uint timeout);
+		public string client_id { get; construct; }
+		public string client_secret { get; construct; }
+		public string locale { get; set; }
+		public GLib.ProxyResolver proxy_resolver { get; set; }
+		public string redirect_uri { get; construct; }
+		public uint timeout { get; set; }
+	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_parsable_get_type ()")]
 	public abstract class Parsable : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -2332,6 +2357,10 @@ namespace GData {
 	public const int MICRO_VERSION;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_MINOR_VERSION")]
 	public const int MINOR_VERSION;
+	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_OAUTH2_REDIRECT_URI_OOB")]
+	public const string OAUTH2_REDIRECT_URI_OOB;
+	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_OAUTH2_REDIRECT_URI_OOB_AUTO")]
+	public const string OAUTH2_REDIRECT_URI_OOB_AUTO;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_PICASAWEB_VIDEO_STATUS_FAILED")]
 	public const string PICASAWEB_VIDEO_STATUS_FAILED;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_PICASAWEB_VIDEO_STATUS_FINAL")]

@@ -1369,6 +1369,7 @@ namespace GLib {
 		[CCode (vfunc_name = "read_fn")]
 		public abstract ssize_t read ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public bool read_all ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, out size_t bytes_read, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public async bool read_all_async ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, int io_priority, GLib.Cancellable? cancellable, out size_t bytes_read) throws GLib.Error;
 		public virtual async ssize_t read_async ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public GLib.Bytes read_bytes (size_t count, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GLib.Bytes read_bytes_async (size_t count, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -1598,6 +1599,7 @@ namespace GLib {
 		[CCode (vfunc_name = "write_fn")]
 		public abstract ssize_t write ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public bool write_all ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public async bool write_all_async ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, int io_priority, GLib.Cancellable? cancellable, out size_t bytes_written) throws GLib.Error;
 		public virtual async ssize_t write_async ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public ssize_t write_bytes (GLib.Bytes bytes, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async ssize_t write_bytes_async (GLib.Bytes bytes, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;

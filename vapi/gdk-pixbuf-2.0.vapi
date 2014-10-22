@@ -26,8 +26,10 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_file_at_size (string filename, int width, int height) throws GLib.Error;
 		[CCode (has_construct_function = false)]
+		[Deprecated (since = "2.32")]
 		public Pixbuf.from_inline ([CCode (array_length_cname = "data_length", array_length_pos = 0.5)] uint8[] data, bool copy_pixels = true) throws GLib.Error;
 		[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+		[Deprecated (since = "2.32")]
 		public static Gdk.Pixbuf from_pixdata (Gdk.Pixdata pixdata, bool copy_pixels = true) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_resource (string resource_path) throws GLib.Error;
@@ -53,6 +55,7 @@ namespace Gdk {
 		public int get_height ();
 		public int get_n_channels ();
 		public unowned string get_option (string key);
+		public GLib.HashTable<weak void*,weak void*> get_options ();
 		[CCode (array_length = false)]
 		public unowned uint8[] get_pixels ();
 		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
@@ -183,9 +186,12 @@ namespace Gdk {
 		public uint32 height;
 		[CCode (array_length = false, array_null_terminated = true)]
 		public weak uint8[] pixel_data;
+		[Deprecated (since = "2.32")]
 		public bool deserialize ([CCode (array_length_cname = "stream_length", array_length_pos = 0.5, array_length_type = "guint")] uint8[] stream) throws GLib.Error;
 		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		[Deprecated (since = "2.32")]
 		public uint8[] serialize ();
+		[Deprecated (since = "2.32")]
 		public GLib.StringBuilder to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_COLORSPACE_", type_id = "gdk_colorspace_get_type ()")]

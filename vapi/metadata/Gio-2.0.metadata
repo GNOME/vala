@@ -134,6 +134,8 @@ InputStream
   .close_fn skip
   .read skip
   .read_all throws="GLib.IOError"
+  .read_all_async.io_priority default=()
+  .read_all_async.cancellable default=()
   .read_fn skip
   .read_finish throws="GLib.IOError"
   .skip throws="GLib.IOError"
@@ -161,6 +163,8 @@ OutputStream
   .write_finish throws="GLib.IOError"
   .write_fn skip
   .write_all throws="GLib.IOError"
+  .write_all_async.io_priority default=()
+  .write_all_async.cancellable default=()
 PropertyAction
   .name skip
   .parameter_type skip

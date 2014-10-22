@@ -614,7 +614,7 @@ namespace Soup {
 		public uint get_port ();
 		public GLib.SList<Soup.URI> get_uris ();
 		public bool is_https ();
-		public bool listen (GLib.SocketAddress @interface, Soup.ServerListenOptions options) throws GLib.Error;
+		public bool listen (GLib.SocketAddress address, Soup.ServerListenOptions options) throws GLib.Error;
 		public bool listen_all (uint port, Soup.ServerListenOptions options) throws GLib.Error;
 		public bool listen_fd (int fd, Soup.ServerListenOptions options) throws GLib.Error;
 		public bool listen_local (uint port, Soup.ServerListenOptions options) throws GLib.Error;
