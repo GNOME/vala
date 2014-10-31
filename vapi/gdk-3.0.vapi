@@ -4580,6 +4580,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_cursor_get_type ()")]
 	public class Cursor : GLib.Object {
 		[CCode (has_construct_function = false)]
+		[Deprecated (since = "3.16")]
 		public Cursor (Gdk.CursorType cursor_type);
 		[CCode (has_construct_function = false)]
 		public Cursor.for_display (Gdk.Display display, Gdk.CursorType cursor_type);
@@ -5067,10 +5068,12 @@ namespace Gdk {
 		protected GLContext ();
 		public static void clear_current ();
 		public static unowned Gdk.GLContext get_current ();
-		public unowned Gdk.Visual get_visual ();
+		public Gdk.GLProfile get_profile ();
 		public unowned Gdk.Window get_window ();
 		public void make_current ();
-		public Gdk.Visual visual { get; construct; }
+		public Gdk.GLProfile profile { get; construct; }
+		[NoAccessorMethod]
+		public Gdk.GLContext shared_context { owned get; construct; }
 		public Gdk.Window window { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_keymap_get_type ()")]
@@ -5681,7 +5684,8 @@ namespace Gdk {
 		ALREADY_GRABBED,
 		INVALID_TIME,
 		NOT_VIEWABLE,
-		FROZEN
+		FROZEN,
+		FAILED
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_GRAVITY_", type_id = "gdk_gravity_get_type ()")]
 	public enum Gravity {

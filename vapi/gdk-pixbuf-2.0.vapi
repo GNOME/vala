@@ -55,7 +55,7 @@ namespace Gdk {
 		public int get_height ();
 		public int get_n_channels ();
 		public unowned string get_option (string key);
-		public GLib.HashTable<weak void*,weak void*> get_options ();
+		public GLib.HashTable<weak string,weak string> get_options ();
 		[CCode (array_length = false)]
 		public unowned uint8[] get_pixels ();
 		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
