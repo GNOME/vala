@@ -638,6 +638,8 @@ namespace WebKit {
 			public string ping { owned get; set; }
 			public string port { owned get; }
 			public string protocol { owned get; }
+			[NoAccessorMethod]
+			public string rel { owned get; set; }
 			public string search { owned get; }
 			public string shape { owned get; set; }
 			public string target { owned get; set; }

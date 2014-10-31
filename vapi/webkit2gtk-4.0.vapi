@@ -199,6 +199,7 @@ namespace WebKit {
 		public bool context_is_link ();
 		public bool context_is_media ();
 		public bool context_is_scrollbar ();
+		public bool context_is_selection ();
 		public uint get_context ();
 		public unowned string get_image_uri ();
 		public unowned string get_link_label ();
@@ -587,11 +588,13 @@ namespace WebKit {
 		protected WebInspector ();
 		public void close ();
 		public uint get_attached_height ();
+		public bool get_can_attach ();
 		public unowned string get_inspected_uri ();
 		public unowned WebKit.WebViewBase get_web_view ();
 		public bool is_attached ();
 		public void show ();
 		public uint attached_height { get; }
+		public bool can_attach { get; }
 		public string inspected_uri { get; }
 		[HasEmitter]
 		public signal bool attach ();
@@ -835,7 +838,8 @@ namespace WebKit {
 		IMAGE,
 		MEDIA,
 		EDITABLE,
-		SCROLLBAR
+		SCROLLBAR,
+		SELECTION
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_INSECURE_CONTENT_", type_id = "webkit_insecure_content_event_get_type ()")]
 	public enum InsecureContentEvent {
