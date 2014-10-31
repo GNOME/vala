@@ -573,7 +573,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					// local constant
 					return sym.name;
 				}
-				return "%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (sym.parent_symbol).up (), sym.name);
+				return "%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (sym.parent_symbol).ascii_up (), sym.name);
 			} else if (sym is Field) {
 				var cname = sym.name;
 				if (((Field) sym).binding == MemberBinding.STATIC) {

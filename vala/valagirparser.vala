@@ -716,7 +716,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 			if (prefix == null) {
 				if (symbol is Enum || symbol is ErrorDomain) {
-					prefix = "%s%s".printf (parent.get_lower_case_cprefix ().up (), name);
+					prefix = "%s%s".printf (parent.get_lower_case_cprefix ().ascii_up (), name);
 				} else {
 					prefix = get_cname ();
 				}
@@ -2270,7 +2270,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	void parse_enumeration_member () {
 		start_element ("member");
-		push_node (element_get_name().up().replace ("-", "_"), false);
+		push_node (element_get_name().ascii_up().replace ("-", "_"), false);
 
 		var ev = new EnumValue (current.name, metadata.get_expression (ArgumentType.DEFAULT), current.source_reference);
 		current.symbol = ev;
@@ -2284,7 +2284,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	void parse_error_member () {
 		start_element ("member");
-		push_node (element_get_name().up().replace ("-", "_"), false);
+		push_node (element_get_name().ascii_up().replace ("-", "_"), false);
 
 		ErrorCode ec;
 		string value = reader.get_attribute ("value");

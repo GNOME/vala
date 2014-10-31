@@ -176,7 +176,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 
 	private string fix_const_name (string const_name, Symbol container) {
-		var pref = get_lower_case_cprefix (container).up ();
+		var pref = get_lower_case_cprefix (container).ascii_up ();
 		if (const_name.has_prefix (pref)) {
 			return const_name.substring (pref.length);
 		}
@@ -278,7 +278,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (sym is ObjectTypeSymbol) {
 			return get_cname (sym);
 		} else if (sym is Enum || sym is ErrorDomain) {
-			return "%s_".printf (get_lower_case_cname (sym).up ());
+			return "%s_".printf (get_lower_case_cname (sym).ascii_up ());
 		} else if (sym is Namespace) {
 			if (sym.name != null) {
 				var cprefix = sym.get_attribute_string ("CCode", "cprefix");
