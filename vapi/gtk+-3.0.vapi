@@ -2298,16 +2298,28 @@ namespace Gtk {
 	public class GLArea : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public GLArea ();
+		public void attach_buffers ();
+		public bool get_auto_render ();
 		public unowned Gdk.GLContext get_context ();
 		public bool get_has_alpha ();
 		public bool get_has_depth_buffer ();
+		public bool get_has_stencil_buffer ();
+		public Gdk.GLProfile get_profile ();
 		public void make_current ();
+		public void queue_render ();
+		public void set_auto_render (bool auto_render);
 		public void set_has_alpha (bool has_alpha);
 		public void set_has_depth_buffer (bool has_depth_buffer);
+		public void set_has_stencil_buffer (bool has_stencil_buffer);
+		public void set_profile (Gdk.GLProfile profile);
+		public bool auto_render { get; set; }
 		public Gdk.GLContext context { get; }
 		public bool has_alpha { get; set; }
 		public bool has_depth_buffer { get; set; }
+		public bool has_stencil_buffer { get; set; }
+		public Gdk.GLProfile profile { get; set construct; }
 		public virtual signal bool render (Gdk.GLContext context);
+		public virtual signal void resize (int width, int height);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_get_type ()")]
 	public abstract class Gesture : Gtk.EventController {
@@ -3454,6 +3466,27 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public int ypad { get; set; }
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class ModelButton : Gtk.Button, Atk.Implementor, Gtk.Buildable, Gtk.Actionable, Gtk.Activatable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public ModelButton ();
+		[NoAccessorMethod]
+		public bool active { get; set; }
+		[NoAccessorMethod]
+		public bool centered { get; set; }
+		[NoAccessorMethod]
+		public GLib.Icon icon { owned get; set; }
+		[NoAccessorMethod]
+		public bool iconic { get; set; }
+		[NoAccessorMethod]
+		public bool inverted { get; set; }
+		[NoAccessorMethod]
+		public string menu_name { owned get; set; }
+		[NoAccessorMethod]
+		public Gtk.ButtonRole role { get; set; }
+		[NoAccessorMethod]
+		public string text { owned get; set; }
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_mount_operation_get_type ()")]
 	public class MountOperation : GLib.MountOperation {
 		[CCode (has_construct_function = false, type = "GMountOperation*")]
@@ -3754,6 +3787,12 @@ namespace Gtk {
 	public class PopoverAccessible : Gtk.ContainerAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected PopoverAccessible ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class PopoverMenu : Gtk.Popover, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public PopoverMenu ();
+		public void open_submenu (string name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_print_context_get_type ()")]
 	public class PrintContext : GLib.Object {
@@ -4715,22 +4754,28 @@ namespace Gtk {
 		public void add_named (Gtk.Widget child, string name);
 		public void add_titled (Gtk.Widget child, string name, string title);
 		public unowned Gtk.Widget get_child_by_name (string name);
+		public bool get_hhomogeneous ();
 		public bool get_homogeneous ();
 		public uint get_transition_duration ();
 		public bool get_transition_running ();
 		public Gtk.StackTransitionType get_transition_type ();
+		public bool get_vhomogeneous ();
 		public unowned Gtk.Widget get_visible_child ();
 		public unowned string get_visible_child_name ();
+		public void set_hhomogeneous (bool hhomogeneous);
 		public void set_homogeneous (bool homogeneous);
 		public void set_transition_duration (uint duration);
 		public void set_transition_type (Gtk.StackTransitionType transition);
+		public void set_vhomogeneous (bool vhomogeneous);
 		public void set_visible_child (Gtk.Widget child);
 		public void set_visible_child_full (string name, Gtk.StackTransitionType transition);
 		public void set_visible_child_name (string name);
-		public bool homogeneous { get; set construct; }
+		public bool hhomogeneous { get; set construct; }
+		public bool homogeneous { get; set; }
 		public uint transition_duration { get; set construct; }
 		public bool transition_running { get; }
 		public Gtk.StackTransitionType transition_type { get; set construct; }
+		public bool vhomogeneous { get; set construct; }
 		public Gtk.Widget visible_child { get; set; }
 		public string visible_child_name { get; set; }
 	}
@@ -7650,6 +7695,12 @@ namespace Gtk {
 		END,
 		CENTER,
 		EXPAND
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_BUTTON_ROLE_")]
+	public enum ButtonRole {
+		NORMAL,
+		CHECK,
+		RADIO
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_BUTTONS_")]
 	public enum ButtonsType {

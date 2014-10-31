@@ -4655,6 +4655,11 @@
 			<member name="GTK_BUTTONBOX_CENTER" value="5"/>
 			<member name="GTK_BUTTONBOX_EXPAND" value="6"/>
 		</enum>
+		<enum name="GtkButtonRole" type-name="GtkButtonRole" get-type="gtk_button_role_get_type">
+			<member name="GTK_BUTTON_ROLE_NORMAL" value="0"/>
+			<member name="GTK_BUTTON_ROLE_CHECK" value="1"/>
+			<member name="GTK_BUTTON_ROLE_RADIO" value="2"/>
+		</enum>
 		<enum name="GtkButtonsType" type-name="GtkButtonsType" get-type="gtk_buttons_type_get_type">
 			<member name="GTK_BUTTONS_NONE" value="0"/>
 			<member name="GTK_BUTTONS_OK" value="1"/>
@@ -13578,6 +13583,18 @@
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
 			</implements>
+			<method name="attach_buffers" symbol="gtk_gl_area_attach_buffers">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+				</parameters>
+			</method>
+			<method name="get_auto_render" symbol="gtk_gl_area_get_auto_render">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+				</parameters>
+			</method>
 			<method name="get_context" symbol="gtk_gl_area_get_context">
 				<return-type type="GdkGLContext*"/>
 				<parameters>
@@ -13596,6 +13613,18 @@
 					<parameter name="area" type="GtkGLArea*"/>
 				</parameters>
 			</method>
+			<method name="get_has_stencil_buffer" symbol="gtk_gl_area_get_has_stencil_buffer">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+				</parameters>
+			</method>
+			<method name="get_profile" symbol="gtk_gl_area_get_profile">
+				<return-type type="GdkGLProfile"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+				</parameters>
+			</method>
 			<method name="make_current" symbol="gtk_gl_area_make_current">
 				<return-type type="void"/>
 				<parameters>
@@ -13605,6 +13634,19 @@
 			<constructor name="new" symbol="gtk_gl_area_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
+			<method name="queue_render" symbol="gtk_gl_area_queue_render">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+				</parameters>
+			</method>
+			<method name="set_auto_render" symbol="gtk_gl_area_set_auto_render">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+					<parameter name="auto_render" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_has_alpha" symbol="gtk_gl_area_set_has_alpha">
 				<return-type type="void"/>
 				<parameters>
@@ -13619,14 +13661,39 @@
 					<parameter name="has_depth_buffer" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_has_stencil_buffer" symbol="gtk_gl_area_set_has_stencil_buffer">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+					<parameter name="has_stencil_buffer" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_profile" symbol="gtk_gl_area_set_profile">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+					<parameter name="profile" type="GdkGLProfile"/>
+				</parameters>
+			</method>
+			<property name="auto-render" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="context" type="GdkGLContext*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="has-alpha" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-depth-buffer" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="has-stencil-buffer" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="profile" type="GdkGLProfile" readable="1" writable="1" construct="1" construct-only="0"/>
 			<signal name="render" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="area" type="GtkGLArea*"/>
 					<parameter name="context" type="GdkGLContext*"/>
+				</parameters>
+			</signal>
+			<signal name="resize" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+					<parameter name="width" type="gint"/>
+					<parameter name="height" type="gint"/>
 				</parameters>
 			</signal>
 		</object>
@@ -18357,6 +18424,25 @@
 			<property name="yalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="ypad" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
+		<object name="GtkModelButton" parent="GtkButton" type-name="GtkModelButton" get-type="gtk_model_button_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
+				<interface name="GtkActivatable"/>
+			</implements>
+			<constructor name="new" symbol="gtk_model_button_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<property name="active" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="centered" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon" type="GIcon*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="iconic" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="inverted" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="menu-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="role" type="GtkButtonRole" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
 		<object name="GtkMountOperation" parent="GMountOperation" type-name="GtkMountOperation" get-type="gtk_mount_operation_get_type">
 			<method name="get_parent" symbol="gtk_mount_operation_get_parent">
 				<return-type type="GtkWindow*"/>
@@ -19622,6 +19708,22 @@
 			<implements>
 				<interface name="AtkComponent"/>
 			</implements>
+		</object>
+		<object name="GtkPopoverMenu" parent="GtkPopover" type-name="GtkPopoverMenu" get-type="gtk_popover_menu_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<constructor name="new" symbol="gtk_popover_menu_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="open_submenu" symbol="gtk_popover_menu_open_submenu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="popover" type="GtkPopoverMenu*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
 		</object>
 		<object name="GtkPrintContext" parent="GObject" type-name="GtkPrintContext" get-type="gtk_print_context_get_type">
 			<method name="create_pango_context" symbol="gtk_print_context_create_pango_context">
@@ -22658,6 +22760,12 @@
 					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="get_hhomogeneous" symbol="gtk_stack_get_hhomogeneous">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stack" type="GtkStack*"/>
+				</parameters>
+			</method>
 			<method name="get_homogeneous" symbol="gtk_stack_get_homogeneous">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -22682,6 +22790,12 @@
 					<parameter name="stack" type="GtkStack*"/>
 				</parameters>
 			</method>
+			<method name="get_vhomogeneous" symbol="gtk_stack_get_vhomogeneous">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stack" type="GtkStack*"/>
+				</parameters>
+			</method>
 			<method name="get_visible_child" symbol="gtk_stack_get_visible_child">
 				<return-type type="GtkWidget*"/>
 				<parameters>
@@ -22697,6 +22811,13 @@
 			<constructor name="new" symbol="gtk_stack_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
+			<method name="set_hhomogeneous" symbol="gtk_stack_set_hhomogeneous">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stack" type="GtkStack*"/>
+					<parameter name="hhomogeneous" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_homogeneous" symbol="gtk_stack_set_homogeneous">
 				<return-type type="void"/>
 				<parameters>
@@ -22716,6 +22837,13 @@
 				<parameters>
 					<parameter name="stack" type="GtkStack*"/>
 					<parameter name="transition" type="GtkStackTransitionType"/>
+				</parameters>
+			</method>
+			<method name="set_vhomogeneous" symbol="gtk_stack_set_vhomogeneous">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stack" type="GtkStack*"/>
+					<parameter name="vhomogeneous" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_visible_child" symbol="gtk_stack_set_visible_child">
@@ -22740,10 +22868,12 @@
 					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="homogeneous" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="hhomogeneous" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="homogeneous" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="transition-duration" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="transition-running" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="transition-type" type="GtkStackTransitionType" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="vhomogeneous" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="visible-child" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visible-child-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
@@ -35202,14 +35332,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1500"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1501"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="0"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="1"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="15"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
