@@ -334,6 +334,9 @@ StaticResource
 // Bug #: virtual vs. abstract
 Icon
   .serialize#virtual_method virtual
+File
+  .*_async#virtual_method virtual
+  .measure_disk_usage#virtual_method virtual
 
 // Need to ask about this... annotated as out, but that seems wrong
 DBus*Info.generate_xml.string_builder out=false
