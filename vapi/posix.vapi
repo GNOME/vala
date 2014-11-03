@@ -360,6 +360,34 @@ namespace Posix {
 	[CCode (cheader_filename = "netinet/in.h")]
 	public const int INET6_ADDRSTRLEN;
 
+	[CCode (cheader_filename = "netinet/in.h", cname = "int", cprefix = "IPPROTO_", has_type_id = false)]
+	public enum IPProto {
+		IP,
+		ICMP,
+		IGMP,
+		IPIP,
+		TCP,
+		EGP,
+		PUP,
+		UDP,
+		IDP,
+		TP,
+		DCCP,
+		IPV6,
+		RSVP,
+		GRE,
+		ESP,
+		AH,
+		MTP,
+		BEETPH,
+		ENCAP,
+		PIM,
+		COMP,
+		SCTP,
+		UDPLITE,
+		RAW,
+	}
+
 	[CCode (cheader_filename = "arpa/inet.h")]
 	public uint32 inet_addr (string host);
 	[CCode (cheader_filename = "arpa/inet.h")]
