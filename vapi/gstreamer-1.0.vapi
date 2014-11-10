@@ -2202,7 +2202,7 @@ namespace Gst {
 	public struct MapInfo {
 		public weak Gst.Memory memory;
 		public Gst.MapFlags flags;
-		[CCode (array_length = false, array_null_terminated = true)]
+		[CCode (array_length_cname = "size", array_length_type = "gsize")]
 		public weak uint8[] data;
 		public size_t size;
 		public size_t maxsize;
