@@ -315,6 +315,7 @@ namespace GLib {
 		public weak GLib.Object target { get; }
 		public string target_property { get; }
 		public GLib.BindingFlags flags { get; }
+		[DestroysInstance]
 		public void unbind ();
 	}
 
