@@ -3705,7 +3705,7 @@ namespace Gtk {
 	public class Popover : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Popover (Gtk.Widget relative_to);
-		public void bind_model (GLib.MenuModel model, string action_namespace);
+		public void bind_model (GLib.MenuModel? model, string? action_namespace);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Popover.from_model (Gtk.Widget relative_to, GLib.MenuModel model);
 		public bool get_modal ();
