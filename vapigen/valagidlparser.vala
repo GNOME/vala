@@ -928,6 +928,8 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								cl.set_attribute ("Experimental", true);
 							}
+						} else if (nv[0] == "delegate_target_cname") {
+							cl.set_attribute_string ("CCode", "delegate_target_cname", eval (nv[1]));
 						}
 					}
 				}

@@ -79,7 +79,8 @@ public class Vala.GirParser : CodeVisitor {
 		EXPERIMENTAL,
 		FLOATING,
 		TYPE_ID,
-		RETURN_VOID;
+		RETURN_VOID,
+		DELEGATE_TARGET_CNAME;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -1028,6 +1029,10 @@ public class Vala.GirParser : CodeVisitor {
 					if (colliding.size > 1) {
 						// whatelse has precedence over the field
 						merged = true;
+					}
+
+					if (metadata.has_argument (ArgumentType.DELEGATE_TARGET_CNAME)) {
+						field.set_attribute_string ("CCode", "delegate_target_cname", metadata.get_string (ArgumentType.DELEGATE_TARGET_CNAME));
 					}
 
 					if (field.variable_type is DelegateType && parent.gtype_struct_for != null) {
