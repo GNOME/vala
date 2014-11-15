@@ -3637,7 +3637,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 6.9)]
 	public delegate GLib.Variant DBusInterfaceGetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 7.9)]
-	public delegate void DBusInterfaceMethodCallFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string method_name, GLib.Variant parameters, GLib.DBusMethodInvocation invocation);
+	public delegate void DBusInterfaceMethodCallFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string method_name, GLib.Variant parameters, owned GLib.DBusMethodInvocation invocation);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 7.9)]
 	public delegate bool DBusInterfaceSetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name, GLib.Variant value) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 3.9)]
