@@ -4693,6 +4693,7 @@ namespace Gdk {
 		public unowned GLib.List<Gdk.Device> list_devices ();
 		public void notify_startup_complete (string startup_id);
 		public static unowned Gdk.Display? open (string display_name);
+		[Deprecated (since = "3.16")]
 		public static unowned Gdk.Display? open_default_libgtk_only ();
 		public Gdk.Event? peek_event ();
 		[Deprecated (since = "3.0")]
@@ -5068,9 +5069,11 @@ namespace Gdk {
 		protected GLContext ();
 		public static void clear_current ();
 		public static unowned Gdk.GLContext get_current ();
+		public unowned Gdk.Display get_display ();
 		public Gdk.GLProfile get_profile ();
 		public unowned Gdk.Window get_window ();
 		public void make_current ();
+		public Gdk.Display display { get; construct; }
 		public Gdk.GLProfile profile { get; construct; }
 		[NoAccessorMethod]
 		public Gdk.GLContext shared_context { owned get; construct; }
@@ -5196,6 +5199,7 @@ namespace Gdk {
 		[Deprecated (since = "3.14")]
 		public void flush ();
 		public void focus (uint32 timestamp);
+		[Deprecated (since = "3.16")]
 		public void freeze_toplevel_updates_libgtk_only ();
 		public void freeze_updates ();
 		public void fullscreen ();
@@ -5325,6 +5329,7 @@ namespace Gdk {
 		public void show_unraised ();
 		public bool show_window_menu (Gdk.Event event);
 		public void stick ();
+		[Deprecated (since = "3.16")]
 		public void thaw_toplevel_updates_libgtk_only ();
 		public void thaw_updates ();
 		public void unfullscreen ();
@@ -5954,6 +5959,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const Gdk.Atom SELECTION_SECONDARY;
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Deprecated (since = "3.16")]
 	public static void add_option_entries_libgtk_only (GLib.OptionGroup group);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void beep ();
@@ -6091,6 +6097,7 @@ namespace Gdk {
 	[Deprecated (since = "3.0")]
 	public static void pointer_ungrab (uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Deprecated (since = "3.16")]
 	public static void pre_parse_libgtk_only ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void property_change (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, int format, Gdk.PropMode mode, [CCode (array_length = false, type = "const guchar*")] uint8[] data, int nelements);

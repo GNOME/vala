@@ -9,7 +9,7 @@ namespace Peas {
 		public void add_search_path (string module_dir, string? data_dir);
 		public Peas.Extension create_extension (Peas.PluginInfo info, GLib.Type extension_type, ...);
 		public Peas.Extension create_extensionv (Peas.PluginInfo info, GLib.Type extension_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 2.5, array_length_type = "guint")] GLib.Parameter[]? parameters);
-		public void enable_loader (string loader_id);
+		public void enable_loader (string loader_name);
 		public void garbage_collect ();
 		public static unowned Peas.Engine get_default ();
 		[CCode (array_length = false, array_null_terminated = true)]
