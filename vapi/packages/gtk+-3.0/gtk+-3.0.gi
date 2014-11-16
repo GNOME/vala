@@ -13601,6 +13601,12 @@
 					<parameter name="area" type="GtkGLArea*"/>
 				</parameters>
 			</method>
+			<method name="get_error" symbol="gtk_gl_area_get_error">
+				<return-type type="GError*"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+				</parameters>
+			</method>
 			<method name="get_has_alpha" symbol="gtk_gl_area_get_has_alpha">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -13647,6 +13653,13 @@
 					<parameter name="auto_render" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_error" symbol="gtk_gl_area_set_error">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+					<parameter name="error" type="GError*"/>
+				</parameters>
+			</method>
 			<method name="set_has_alpha" symbol="gtk_gl_area_set_has_alpha">
 				<return-type type="void"/>
 				<parameters>
@@ -13681,6 +13694,12 @@
 			<property name="has-depth-buffer" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-stencil-buffer" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="profile" type="GdkGLProfile" readable="1" writable="1" construct="1" construct-only="0"/>
+			<signal name="create-context" when="LAST">
+				<return-type type="GdkGLContext*"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+				</parameters>
+			</signal>
 			<signal name="render" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -35451,6 +35470,7 @@
 		<constant name="GTK_STYLE_CLASS_SLIDER" type="char*" value="slider"/>
 		<constant name="GTK_STYLE_CLASS_SPINBUTTON" type="char*" value="spinbutton"/>
 		<constant name="GTK_STYLE_CLASS_SPINNER" type="char*" value="spinner"/>
+		<constant name="GTK_STYLE_CLASS_STATUSBAR" type="char*" value="statusbar"/>
 		<constant name="GTK_STYLE_CLASS_SUBTITLE" type="char*" value="subtitle"/>
 		<constant name="GTK_STYLE_CLASS_SUGGESTED_ACTION" type="char*" value="suggested-action"/>
 		<constant name="GTK_STYLE_CLASS_TITLE" type="char*" value="title"/>

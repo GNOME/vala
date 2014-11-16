@@ -2301,6 +2301,7 @@ namespace Gtk {
 		public void attach_buffers ();
 		public bool get_auto_render ();
 		public unowned Gdk.GLContext get_context ();
+		public unowned GLib.Error? get_error ();
 		public bool get_has_alpha ();
 		public bool get_has_depth_buffer ();
 		public bool get_has_stencil_buffer ();
@@ -2308,6 +2309,7 @@ namespace Gtk {
 		public void make_current ();
 		public void queue_render ();
 		public void set_auto_render (bool auto_render);
+		public void set_error (GLib.Error? error);
 		public void set_has_alpha (bool has_alpha);
 		public void set_has_depth_buffer (bool has_depth_buffer);
 		public void set_has_stencil_buffer (bool has_stencil_buffer);
@@ -2318,6 +2320,7 @@ namespace Gtk {
 		public bool has_depth_buffer { get; set; }
 		public bool has_stencil_buffer { get; set; }
 		public Gdk.GLProfile profile { get; set construct; }
+		public virtual signal Gdk.GLContext create_context ();
 		public virtual signal bool render (Gdk.GLContext context);
 		public virtual signal void resize (int width, int height);
 	}
@@ -9289,6 +9292,8 @@ namespace Gtk {
 	public const string STYLE_CLASS_SPINBUTTON;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_SPINNER;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_STATUSBAR;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_SUBTITLE;
 	[CCode (cheader_filename = "gtk/gtk.h")]
