@@ -1152,7 +1152,7 @@ public class string {
 	[CCode (cname = "g_ascii_strtoull")]
 	public uint64 to_uint64 (out unowned string endptr = null, int _base = 0);
 	[CCode (cname = "g_str_tokenize_and_fold", array_length = false, array_null_terminated = true)]
-	public string[] tokenize_and_fold (string transit_locale, out string[] alternates);
+	public string[] tokenize_and_fold (string transit_locale, [CCode (array_length = false, array_null_terminated = true)] out string[] ascii_alternates);
 
 	[Deprecated (replacement = "bool.parse")]
 	public bool to_bool () {
