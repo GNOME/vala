@@ -50,12 +50,14 @@ namespace WebKit {
 		public unowned WebKit.ContextMenuItem get_item_at_position (uint position);
 		public unowned GLib.List<WebKit.ContextMenuItem> get_items ();
 		public uint get_n_items ();
+		public unowned GLib.Variant get_user_data ();
 		public void insert (WebKit.ContextMenuItem item, int position);
 		public unowned WebKit.ContextMenuItem last ();
 		public void move_item (WebKit.ContextMenuItem item, int position);
 		public void prepend (WebKit.ContextMenuItem item);
 		public void remove (WebKit.ContextMenuItem item);
 		public void remove_all ();
+		public void set_user_data (GLib.Variant user_data);
 		[CCode (has_construct_function = false)]
 		public ContextMenu.with_items (GLib.List<WebKit.ContextMenuItem> items);
 	}
@@ -528,8 +530,11 @@ namespace WebKit {
 		public UserContentManager ();
 		public void add_script (WebKit.UserScript script);
 		public void add_style_sheet (WebKit.UserStyleSheet stylesheet);
+		public bool register_script_message_handler (string name);
 		public void remove_all_scripts ();
 		public void remove_all_style_sheets ();
+		public void unregister_script_message_handler (string name);
+		public signal void script_message_received (WebKit.JavascriptResult js_result);
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_user_script_ref", type_id = "webkit_user_script_get_type ()", unref_function = "webkit_user_script_unref")]
 	[Compact]
@@ -550,7 +555,7 @@ namespace WebKit {
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_web_context_get_type ()")]
 	public class WebContext : GLib.Object {
 		[CCode (has_construct_function = false)]
-		protected WebContext ();
+		public WebContext ();
 		public void allow_tls_certificate_for_host (GLib.TlsCertificate certificate, string host);
 		public void clear_cache ();
 		public WebKit.Download download_uri (string uri);
@@ -579,8 +584,10 @@ namespace WebKit {
 		public void set_tls_errors_policy (WebKit.TLSErrorsPolicy policy);
 		public void set_web_extensions_directory (string directory);
 		public void set_web_extensions_initialization_user_data (GLib.Variant user_data);
-		public signal void download_started (WebKit.Download download);
-		public signal void initialize_web_extensions ();
+		[NoAccessorMethod]
+		public string local_storage_directory { owned get; construct; }
+		public virtual signal void download_started (WebKit.Download download);
+		public virtual signal void initialize_web_extensions ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_web_inspector_get_type ()")]
 	public class WebInspector : GLib.Object {
@@ -614,6 +621,7 @@ namespace WebKit {
 		public WebKit.URIResponse response { get; }
 		public string uri { get; }
 		public signal void failed (void* error);
+		public signal void failed_with_tls_errors (GLib.TlsCertificate certificate, GLib.TlsCertificateFlags errors);
 		public signal void finished ();
 		public signal void received_data (uint64 data_length);
 		public signal void sent_request (WebKit.URIRequest request, WebKit.URIResponse redirected_response);

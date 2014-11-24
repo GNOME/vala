@@ -146,6 +146,7 @@ namespace WebKit {
 		public class DOMWindow : WebKit.DOM.Object, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected DOMWindow ();
+			public bool webkit_message_handlers_post_message (string handler, string message);
 			[NoAccessorMethod]
 			public bool closed { get; }
 			[NoAccessorMethod]
@@ -559,7 +560,8 @@ namespace WebKit {
 			public string search { owned get; set; }
 			public string shape { owned get; set; }
 			public string target { owned get; set; }
-			public string text { owned get; }
+			[NoAccessorMethod]
+			public string text { owned get; set; }
 			[NoAccessorMethod]
 			public string type { owned get; set; }
 		}
@@ -2603,6 +2605,36 @@ namespace WebKit {
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_XPATH_RESULT_UNORDERED_NODE_SNAPSHOT_TYPE")]
 		public const int _XPATH_RESULT_UNORDERED_NODE_SNAPSHOT_TYPE;
 	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_context_menu_get_type ()")]
+	public class ContextMenu : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public ContextMenu ();
+		public void append (WebKit.ContextMenuItem item);
+		public uint get_n_items ();
+		public GLib.Variant get_user_data ();
+		public void insert (WebKit.ContextMenuItem item, int position);
+		public void move_item (WebKit.ContextMenuItem item, int position);
+		public void prepend (WebKit.ContextMenuItem item);
+		public void remove (WebKit.ContextMenuItem item);
+		public void remove_all ();
+		public void set_user_data (GLib.Variant user_data);
+	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_context_menu_item_get_type ()")]
+	public class ContextMenuItem : GLib.InitiallyUnowned {
+		[CCode (has_construct_function = false)]
+		public ContextMenuItem (Gtk.Action action);
+		[CCode (has_construct_function = false)]
+		public ContextMenuItem.from_stock_action (WebKit.ContextMenuAction action);
+		[CCode (has_construct_function = false)]
+		public ContextMenuItem.from_stock_action_with_label (WebKit.ContextMenuAction action, string label);
+		public WebKit.ContextMenuAction get_stock_action ();
+		public bool is_separator ();
+		[CCode (has_construct_function = false)]
+		public ContextMenuItem.separator ();
+		public void set_submenu (WebKit.ContextMenu submenu);
+		[CCode (has_construct_function = false)]
+		public ContextMenuItem.with_submenu (string label, WebKit.ContextMenu submenu);
+	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_frame_get_type ()")]
 	public class Frame : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -2611,6 +2643,29 @@ namespace WebKit {
 		public void* get_javascript_global_context ();
 		public unowned string get_uri ();
 		public bool is_main_frame ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_hit_test_result_get_type ()")]
+	public class HitTestResult : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected HitTestResult ();
+		public bool context_is_editable ();
+		public bool context_is_image ();
+		public bool context_is_link ();
+		public bool context_is_media ();
+		public bool context_is_scrollbar ();
+		public bool context_is_selection ();
+		public uint get_context ();
+		public unowned string get_image_uri ();
+		public unowned string get_link_label ();
+		public unowned string get_link_title ();
+		public unowned string get_link_uri ();
+		public unowned string get_media_uri ();
+		public uint context { get; construct; }
+		public string image_uri { get; construct; }
+		public string link_label { get; construct; }
+		public string link_title { get; construct; }
+		public string link_uri { get; construct; }
+		public string media_uri { get; construct; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_script_world_get_type ()")]
 	public class ScriptWorld : GLib.Object {
@@ -2652,6 +2707,13 @@ namespace WebKit {
 		public unowned WebKit.WebPage get_page (uint64 page_id);
 		public signal void page_created (WebKit.WebPage web_page);
 	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_hit_test_result_get_type ()")]
+	public class WebHitTestResult : WebKit.HitTestResult {
+		[CCode (has_construct_function = false)]
+		protected WebHitTestResult ();
+		public unowned WebKit.DOM.Node get_node ();
+		public WebKit.DOM.Node node { get; construct; }
+	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_page_get_type ()")]
 	public class WebPage : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -2661,8 +2723,68 @@ namespace WebKit {
 		public unowned WebKit.Frame get_main_frame ();
 		public unowned string get_uri ();
 		public string uri { get; }
+		public signal bool context_menu (WebKit.ContextMenu context_menu, WebKit.WebHitTestResult hit_test_result);
 		public signal void document_loaded ();
 		public signal bool send_request (WebKit.URIRequest request, WebKit.URIResponse redirected_response);
+	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_CONTEXT_MENU_ACTION_", has_type_id = false)]
+	public enum ContextMenuAction {
+		NO_ACTION,
+		OPEN_LINK,
+		OPEN_LINK_IN_NEW_WINDOW,
+		DOWNLOAD_LINK_TO_DISK,
+		COPY_LINK_TO_CLIPBOARD,
+		OPEN_IMAGE_IN_NEW_WINDOW,
+		DOWNLOAD_IMAGE_TO_DISK,
+		COPY_IMAGE_TO_CLIPBOARD,
+		COPY_IMAGE_URL_TO_CLIPBOARD,
+		OPEN_FRAME_IN_NEW_WINDOW,
+		GO_BACK,
+		GO_FORWARD,
+		STOP,
+		RELOAD,
+		COPY,
+		CUT,
+		PASTE,
+		DELETE,
+		SELECT_ALL,
+		INPUT_METHODS,
+		UNICODE,
+		SPELLING_GUESS,
+		NO_GUESSES_FOUND,
+		IGNORE_SPELLING,
+		LEARN_SPELLING,
+		IGNORE_GRAMMAR,
+		FONT_MENU,
+		BOLD,
+		ITALIC,
+		UNDERLINE,
+		OUTLINE,
+		INSPECT_ELEMENT,
+		OPEN_VIDEO_IN_NEW_WINDOW,
+		OPEN_AUDIO_IN_NEW_WINDOW,
+		COPY_VIDEO_LINK_TO_CLIPBOARD,
+		COPY_AUDIO_LINK_TO_CLIPBOARD,
+		TOGGLE_MEDIA_CONTROLS,
+		TOGGLE_MEDIA_LOOP,
+		ENTER_VIDEO_FULLSCREEN,
+		MEDIA_PLAY,
+		MEDIA_PAUSE,
+		MEDIA_MUTE,
+		DOWNLOAD_VIDEO_TO_DISK,
+		DOWNLOAD_AUDIO_TO_DISK,
+		CUSTOM
+	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_HIT_TEST_RESULT_CONTEXT_", has_type_id = false)]
+	[Flags]
+	public enum HitTestResultContext {
+		DOCUMENT,
+		LINK,
+		IMAGE,
+		MEDIA,
+		EDITABLE,
+		SCROLLBAR,
+		SELECTION
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", has_target = false)]
 	public delegate void WebExtensionInitializeFunction (WebKit.WebExtension extension);

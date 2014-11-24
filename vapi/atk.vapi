@@ -739,6 +739,7 @@ namespace Atk {
 		DESCRIPTION_LIST,
 		DESCRIPTION_TERM,
 		DESCRIPTION_VALUE,
+		STATIC,
 		LAST_DEFINED;
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.Role for_name (string name);

@@ -53,7 +53,7 @@ namespace Atspi {
 		public unowned string get_object_locale () throws GLib.Error;
 		public Atspi.Accessible? get_parent () throws GLib.Error;
 		public uint get_process_id () throws GLib.Error;
-		public GLib.Array<Atspi.Accessible> get_relation_set () throws GLib.Error;
+		public GLib.Array<Atspi.Relation> get_relation_set () throws GLib.Error;
 		public Atspi.Role get_role () throws GLib.Error;
 		public string get_role_name () throws GLib.Error;
 		[Deprecated (since = "2.10")]
@@ -691,6 +691,7 @@ namespace Atspi {
 		MATH,
 		RATING,
 		TIMER,
+		STATIC,
 		LAST_DEFINED;
 		public static string get_name (Atspi.Role role);
 	}
