@@ -349,6 +349,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			} else {
 				result.cvalue = new CCodeIdentifier ("result");
 			}
+			if (array_type != null && !array_type.fixed_length && ((current_method != null && get_ccode_array_length (current_method)) || current_property_accessor != null)) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					result.append_array_length_cvalue (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_array_length_cname ("result", dim))));
+				}
+			}
 		} else if (local.captured) {
 			// captured variables are stored on the heap
 			var block = (Block) local.parent_symbol;
