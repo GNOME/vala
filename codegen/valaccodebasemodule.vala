@@ -742,6 +742,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (requires_assert) {
 			cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("_vala_assert(expr, msg)", new CCodeConstant ("if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);")));
+			cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("_vala_return_if_fail(expr, msg)", new CCodeConstant ("if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return; }")));
+			cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("_vala_return_val_if_fail(expr, msg, val)", new CCodeConstant ("if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return val; }")));
+			cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("_vala_warn_if_fail(expr, msg)", new CCodeConstant ("if G_LIKELY (expr) ; else g_warn_message (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);")));
 		}
 		if (requires_array_free) {
 			append_vala_array_free ();
@@ -6412,11 +6415,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public void create_postcondition_statement (Expression postcondition) {
-		var cassert = new CCodeFunctionCall (new CCodeIdentifier ("g_warn_if_fail"));
+		var cassert = new CCodeFunctionCall (new CCodeIdentifier ("_vala_warn_if_fail"));
 
 		postcondition.emit (this);
 
+		string message = ((string) postcondition.source_reference.begin.pos).substring (0, (int) (postcondition.source_reference.end.pos - postcondition.source_reference.begin.pos));
 		cassert.add_argument (get_cvalue (postcondition));
+		cassert.add_argument (new CCodeConstant ("\"%s\"".printf (message.replace ("\n", " ").escape (""))));
+		requires_assert = true;
 
 		ccode.add_expression (cassert);
 	}

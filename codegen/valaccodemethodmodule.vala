@@ -1121,18 +1121,22 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		ccheck.add_argument (get_cvalue (precondition));
 
+		string message = ((string) precondition.source_reference.begin.pos).substring (0, (int) (precondition.source_reference.end.pos - precondition.source_reference.begin.pos));
+		ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (message.replace ("\n", " ").escape (""))));
+		requires_assert = true;
+
 		if (method_node is CreationMethod) {
-			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
+			ccheck.call = new CCodeIdentifier ("_vala_return_val_if_fail");
 			ccheck.add_argument (new CCodeConstant ("NULL"));
 		} else if (method_node is Method && ((Method) method_node).coroutine) {
 			// _co function
-			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
+			ccheck.call = new CCodeIdentifier ("_vala_return_val_if_fail");
 			ccheck.add_argument (new CCodeConstant ("FALSE"));
 		} else if (ret_type is VoidType) {
 			/* void function */
-			ccheck.call = new CCodeIdentifier ("g_return_if_fail");
+			ccheck.call = new CCodeIdentifier ("_vala_return_if_fail");
 		} else {
-			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
+			ccheck.call = new CCodeIdentifier ("_vala_return_val_if_fail");
 
 			var cdefault = default_value_for_type (ret_type, false);
 			if (cdefault != null) {
