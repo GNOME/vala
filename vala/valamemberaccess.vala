@@ -950,7 +950,7 @@ public class Vala.MemberAccess : Expression {
 		var param = symbol_reference as Parameter;
 		if (local != null) {
 			collection.add (local);
-		} else if (param != null && param.direction == ParameterDirection.OUT) {
+		} else if (param != null && (param.direction == ParameterDirection.OUT || (param.name == "this" && param.parent_symbol is CreationMethod && ((CreationMethod) param.parent_symbol).chain_up))) {
 			collection.add (param);
 		}
 	}

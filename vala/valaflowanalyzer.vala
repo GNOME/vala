@@ -429,7 +429,11 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 							Report.error (used_var.source_reference, "use of possibly unassigned local variable `%s'".printf (used_var.name));
 						} else {
 							// parameter
-							Report.warning (used_var.source_reference, "use of possibly unassigned parameter `%s'".printf (used_var.name));
+							if (used_var.name == "this") {
+								Report.warning (used_var.source_reference, "possible reference to `this' before chaining up");
+							} else {
+								Report.warning (used_var.source_reference, "use of possibly unassigned parameter `%s'".printf (used_var.name));
+							}
 						}
 						continue;
 					}
@@ -461,7 +465,11 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 						Report.error (node.source_reference, "use of possibly unassigned local variable `%s'".printf (var_symbol.name));
 					} else {
 						// parameter
-						Report.warning (node.source_reference, "use of possibly unassigned parameter `%s'".printf (var_symbol.name));
+						if (var_symbol.name == "this") {
+							Report.warning (node.source_reference, "possible reference to `this' before chaining up");
+						} else {
+							Report.warning (node.source_reference, "use of possibly unassigned parameter `%s'".printf (var_symbol.name));
+						}
 					}
 					continue;
 				}

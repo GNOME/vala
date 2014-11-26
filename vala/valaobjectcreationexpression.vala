@@ -46,6 +46,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	public bool is_yield_expression { get; set; }
 
 	public bool struct_creation { get; set; }
+	public bool struct_chainup { get; set; }
 
 	private List<Expression> argument_list = new ArrayList<Expression> ();
 
@@ -535,6 +536,18 @@ public class Vala.ObjectCreationExpression : Expression {
 	}
 
 	public override void get_defined_variables (Collection<Variable> collection) {
+		if (struct_chainup) {
+			var this_parameter = member_name.inner.symbol_reference as Parameter;
+			if (this_parameter == null) {
+				Symbol sym = (Block) parent_statement.parent_node;
+				do {
+					sym = sym.parent_symbol;
+				} while (sym is Block);
+				this_parameter = ((Method) sym).this_parameter;
+			}
+			collection.add (this_parameter);
+		}
+
 		foreach (Expression arg in argument_list) {
 			arg.get_defined_variables (collection);
 		}
