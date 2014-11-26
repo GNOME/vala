@@ -46,6 +46,8 @@ public class Vala.MethodCall : Expression {
 	 */
 	public bool is_constructv_chainup { get; private set; }
 
+	public bool is_chainup { get; private set; }
+
 	private Expression _call;
 	
 	private List<Expression> argument_list = new ArrayList<Expression> ();
@@ -140,28 +142,6 @@ public class Vala.MethodCall : Expression {
 		return call.is_accessible (sym);
 	}
 
-	bool is_chainup () {
-		if (!(call.symbol_reference is CreationMethod)) {
-			return false;
-		}
-
-		var expr = call;
-
-		var ma = (MemberAccess) call;
-		if (ma.inner != null) {
-			expr = ma.inner;
-		}
-
-		ma = expr as MemberAccess;
-		if (ma != null && ma.member_name == "this") {
-			return true;
-		} else if (expr is BaseAccess) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
@@ -231,11 +211,28 @@ public class Vala.MethodCall : Expression {
 		}
 
 		var mtype = call.value_type;
+		var gobject_chainup = call.symbol_reference == context.analyzer.object_type;
+		is_chainup = gobject_chainup;
+
+		if (!gobject_chainup) {
+			var expr = call;
+			var ma = expr as MemberAccess;
+			if (ma != null && ma.symbol_reference is CreationMethod) {
+				expr = ma.inner;
+				ma = expr as MemberAccess;
+			}
+			if (ma != null && ma.member_name == "this") {
+				// this[.with_foo] ()
+				is_chainup = true;
+			} else if (expr is BaseAccess) {
+				// base[.with_foo] ()
+				is_chainup = true;
+			}
+		}
 
 		CreationMethod base_cm = null;
 
-		if (mtype is ObjectType || call.symbol_reference == context.analyzer.object_type) {
-			// constructor chain-up
+		if (is_chainup) {
 			var cm = context.analyzer.find_current_method () as CreationMethod;
 			if (cm == null) {
 				error = true;
@@ -261,8 +258,14 @@ public class Vala.MethodCall : Expression {
 					Report.error (source_reference, "chain up to `%s' not supported".printf (base_cm.get_full_name ()));
 					return false;
 				}
-			} else {
-				// GObject chain up
+			} else if (call.symbol_reference is CreationMethod && call.symbol_reference.parent_symbol is Class) {
+				base_cm = (CreationMethod) call.symbol_reference;
+				if (!base_cm.has_construct_function) {
+					error = true;
+					Report.error (source_reference, "chain up to `%s' not supported".printf (base_cm.get_full_name ()));
+					return false;
+				}
+			} else if (gobject_chainup) {
 				var cl = cm.parent_symbol as Class;
 				if (cl == null || !cl.is_subtype_of (context.analyzer.object_type)) {
 					error = true;
@@ -286,17 +289,6 @@ public class Vala.MethodCall : Expression {
 				return false;
 			}
 
-			if (is_chainup ()) {
-				var cm = context.analyzer.find_current_method () as CreationMethod;
-				if (cm != null) {
-					if (cm.chain_up) {
-						error = true;
-						Report.error (source_reference, "Multiple constructor calls in the same constructor are not permitted");
-						return false;
-					}
-					cm.chain_up = true;
-				}
-			}
 			var struct_creation_expression = new ObjectCreationExpression ((MemberAccess) call, source_reference);
 			struct_creation_expression.struct_creation = true;
 			foreach (Expression arg in get_argument_list ()) {
@@ -307,30 +299,18 @@ public class Vala.MethodCall : Expression {
 			parent_node.replace_expression (this, struct_creation_expression);
 			struct_creation_expression.check (context);
 			return true;
-		} else if (call is MemberAccess
-		           && call.symbol_reference is CreationMethod) {
-			// constructor chain-up
-			var cm = context.analyzer.find_current_method () as CreationMethod;
-			if (cm == null) {
-				error = true;
-				Report.error (source_reference, "use `new' operator to create new objects");
-				return false;
-			} else if (cm.chain_up) {
-				error = true;
-				Report.error (source_reference, "Multiple constructor calls in the same constructor are not permitted");
-				return false;
-			}
-			cm.chain_up = true;
-
-			base_cm = (CreationMethod) call.symbol_reference;
-			if (!base_cm.has_construct_function) {
-				error = true;
-				Report.error (source_reference, "chain up to `%s' not supported".printf (base_cm.get_full_name ()));
-				return false;
-			}
+		} else if (!is_chainup && call is MemberAccess && call.symbol_reference is CreationMethod) {
+			error = true;
+			Report.error (source_reference, "use `new' operator to create new objects");
+			return false;
 		}
 
-		if (mtype != null && mtype.is_invokable ()) {
+		if (!is_chainup && mtype is ObjectType) {
+			// prevent funny stuff like (new Object ()) ()
+			error = true;
+			Report.error (source_reference, "invocation not supported in this context");
+			return false;
+		} else if (mtype != null && mtype.is_invokable ()) {
 			// call ok, expression is invokable
 		} else if (call.symbol_reference is Class) {
 			error = true;
