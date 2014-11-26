@@ -48,6 +48,8 @@ public class Vala.LambdaExpression : Expression {
 
 	private List<Parameter> parameters = new ArrayList<Parameter> ();
 
+	private bool in_creation_method;
+
 	/**
 	 * Creates a new lambda expression.
 	 *
@@ -141,23 +143,27 @@ public class Vala.LambdaExpression : Expression {
 			method.binding = MemberBinding.STATIC;
 		} else {
 			var sym = context.analyzer.current_symbol;
-			while (method.this_parameter == null) {
+			Parameter this_parameter = null;
+			while (this_parameter == null) {
 				if (sym is Property) {
 					var prop = (Property) sym;
-					method.this_parameter = prop.this_parameter;
+					this_parameter = prop.this_parameter;
 				} else if (sym is Constructor) {
 					var c = (Constructor) sym;
-					method.this_parameter = c.this_parameter;
+					this_parameter = c.this_parameter;
 				} else if (sym is Destructor) {
 					var d = (Destructor) sym;
-					method.this_parameter = d.this_parameter;
+					this_parameter = d.this_parameter;
 				} else if (sym is Method) {
 					var m = (Method) sym;
-					method.this_parameter = m.this_parameter;
+					this_parameter = m.this_parameter;
+					in_creation_method = sym is CreationMethod;
 				}
 
 				sym = sym.parent_symbol;
 			}
+			method.this_parameter = new Parameter ("this", this_parameter.variable_type.copy ());
+			method.scope.add ("this", method.this_parameter);
 		}
 		method.owner = context.analyzer.current_symbol.scope;
 
@@ -249,6 +255,17 @@ public class Vala.LambdaExpression : Expression {
 		// require captured variables to be initialized
 		if (method.closure) {
 			method.get_captured_variables ((Collection<LocalVariable>) collection);
+		}
+		if (in_creation_method) {
+			Symbol sym = (Block) parent_statement.parent_node;
+			do {
+				sym = sym.parent_symbol;
+			} while (sym is Block);
+			var m = (CreationMethod) sym;
+
+			if (m.chain_up) {
+				collection.add (m.this_parameter);
+			}
 		}
 	}
 }
