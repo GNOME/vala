@@ -5634,7 +5634,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				set_delegate_target_destroy_notify (lambda, new CCodeConstant ("NULL"));
 			}
 			set_delegate_target (lambda, delegate_target);
-		} else if (get_this_type () != null) {
+		} else if (lambda.method.binding == MemberBinding.INSTANCE && get_this_type () != null) {
 			CCodeExpression delegate_target = get_result_cexpression ("self");
 			delegate_target = convert_to_generic_pointer (delegate_target, get_this_type ());
 			if (expr_owned || delegate_type.is_called_once) {

@@ -281,6 +281,7 @@ public class Vala.MemberAccess : Expression {
 						inner.value_type = this_parameter.variable_type.copy ();
 						inner.value_type.value_owned = false;
 						inner.symbol_reference = this_parameter;
+						inner.symbol_reference.used = true;
 
 						symbol_reference = inner.value_type.get_member (member_name);
 					}
@@ -508,6 +509,17 @@ public class Vala.MemberAccess : Expression {
 				local.captured = true;
 				block.captured = true;
 			}
+
+			// track usage of instance parameter for flow analysis.
+			// When accessing generic type information, instance access
+			// is needed to copy/destroy generic values.
+			var generic_type = local.variable_type as GenericType;
+			if (generic_type != null && generic_type.type_parameter.parent_symbol is TypeSymbol) {
+				var m = context.analyzer.current_method_or_property_accessor as Method;
+				if (m != null && m.binding == MemberBinding.INSTANCE) {
+					m.this_parameter.used = true;
+				}
+			}
 		} else if (member is Parameter) {
 			var param = (Parameter) member;
 			var m = param.parent_symbol as Method;
@@ -546,6 +558,17 @@ public class Vala.MemberAccess : Expression {
 
 					param.captured = true;
 					acc.body.captured = true;
+				}
+			}
+
+			// track usage of instance parameter for flow analysis.
+			// When accessing generic type information, instance access
+			// is needed to copy/destroy generic values.
+			var generic_type = param.variable_type as GenericType;
+			if (generic_type != null && generic_type.type_parameter.parent_symbol is TypeSymbol) {
+				m = context.analyzer.current_method_or_property_accessor as Method;
+				if (m != null && m.binding == MemberBinding.INSTANCE) {
+					m.this_parameter.used = true;
 				}
 			}
 		} else if (member is Field) {
@@ -796,6 +819,7 @@ public class Vala.MemberAccess : Expression {
 				inner.value_type = this_parameter.variable_type.copy ();
 				inner.value_type.value_owned = false;
 				inner.symbol_reference = this_parameter;
+				inner.symbol_reference.used = true;
 			} else {
 				check_lvalue_access ();
 			}

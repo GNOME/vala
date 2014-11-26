@@ -239,6 +239,17 @@ public class Vala.LambdaExpression : Expression {
 
 		method.check (context);
 
+		if (in_creation_method && method.this_parameter != null) {
+			if (!method.this_parameter.used) {
+				method.scope.remove ("this");
+				method.this_parameter = null;
+				method.binding = MemberBinding.STATIC;
+			} else if (m != null && m.this_parameter != null) {
+				// track usage inside nested lambda expressions
+				m.this_parameter.used |= method.this_parameter.used;
+			}
+		}
+
 		value_type = new MethodType (method);
 		value_type.value_owned = target_type.value_owned;
 
@@ -256,7 +267,7 @@ public class Vala.LambdaExpression : Expression {
 		if (method.closure) {
 			method.get_captured_variables ((Collection<LocalVariable>) collection);
 		}
-		if (in_creation_method) {
+		if (in_creation_method && method.this_parameter != null && method.this_parameter.used) {
 			Symbol sym = (Block) parent_statement.parent_node;
 			do {
 				sym = sym.parent_symbol;

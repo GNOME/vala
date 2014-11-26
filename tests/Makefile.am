@@ -62,6 +62,7 @@ TESTS = \
 	chainup/class-object.vala \
 	chainup/class-this.vala \
 	chainup/class-this-foo.vala \
+	chainup/class-with-lambda.vala \
 	chainup/method-lambda-base.vala \
 	chainup/no-chainup.vala \
 	chainup/struct-base.vala \
