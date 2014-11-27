@@ -238,10 +238,6 @@ public class Vala.MethodCall : Expression {
 				error = true;
 				Report.error (source_reference, "invocation not supported in this context");
 				return false;
-			} else if (cm.chain_up) {
-				error = true;
-				Report.error (source_reference, "Multiple constructor calls in the same constructor are not permitted");
-				return false;
 			}
 			cm.chain_up = true;
 

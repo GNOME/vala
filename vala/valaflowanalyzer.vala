@@ -207,6 +207,16 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 					m.return_block.add_node (param_ma);
 				}
 			}
+
+			// ensure instance parameter is defined at end of creation method
+			if (m is CreationMethod) {
+				var cm = (CreationMethod) m;
+				if (cm.chain_up) {
+					var this_ma = new MemberAccess.simple ("this");
+					this_ma.symbol_reference = cm.this_parameter;
+					m.return_block.add_node (this_ma);
+				}
+			}
 		}
 
 		current_block = new BasicBlock ();
@@ -435,7 +445,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 	void check_block_variables (BasicBlock block) {
 		foreach (PhiFunction phi in block.get_phi_functions ()) {
-			Variable versioned_var = process_assignment (var_map, phi.original_variable);
+			Variable versioned_var = process_assignment (var_map, phi.original_variable, phi.original_variable.parent_symbol);
 
 			phi_functions.set (versioned_var, phi);
 		}
@@ -466,7 +476,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			node.get_defined_variables (defined_variables);
 
 			foreach (Variable variable in defined_variables) {
-				process_assignment (var_map, variable);
+				process_assignment (var_map, variable, node);
 			}
 		}
 
@@ -506,7 +516,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
-	Variable process_assignment (Map<Symbol, List<Variable>> var_map, Variable var_symbol) {
+	Variable process_assignment (Map<Symbol, List<Variable>> var_map, Variable var_symbol, CodeNode node_reference) {
 		var variable_stack = var_map.get (var_symbol);
 		if (variable_stack == null) {
 			variable_stack = new ArrayList<Variable> ();
@@ -519,6 +529,11 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (var_symbol is LocalVariable) {
 			versioned_var = new LocalVariable (var_symbol.variable_type.copy (), var_symbol.name, null, var_symbol.source_reference);
 		} else {
+			if (var_symbol.name == "this" && var_symbol.parent_symbol is CreationMethod && ((CreationMethod) var_symbol.parent_symbol).chain_up) {
+				if (variable_stack.size > 0) {
+					Report.warning (node_reference.source_reference, "possible reassignment of `this'");
+				}
+			}
 			// parameter
 			versioned_var = new Parameter (var_symbol.name, var_symbol.variable_type.copy (), var_symbol.source_reference);
 		}
