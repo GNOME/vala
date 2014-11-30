@@ -1546,6 +1546,8 @@ namespace GLib {
 		public unowned string get_hostname ();
 		public uint16 get_port ();
 		public unowned string get_scheme ();
+		[CCode (has_construct_function = false, type = "GSocketConnectable*")]
+		public NetworkAddress.loopback (uint16 port);
 		public static GLib.SocketConnectable parse (string host_and_port, uint16 default_port) throws GLib.Error;
 		public static GLib.SocketConnectable parse_uri (string uri, uint16 default_port) throws GLib.Error;
 		public string hostname { get; construct; }
