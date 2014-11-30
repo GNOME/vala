@@ -3589,7 +3589,8 @@ namespace GLib {
 		PROXY_AUTH_FAILED,
 		PROXY_NEED_AUTH,
 		PROXY_NOT_ALLOWED,
-		BROKEN_PIPE;
+		BROKEN_PIPE,
+		CONNECTION_CLOSED;
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static unowned GLib.IOError from_errno (int err_no);
 		[CCode (cheader_filename = "gio/gio.h")]
