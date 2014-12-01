@@ -38,6 +38,9 @@
 
 int lineno;
 
+#undef YY_BUF_SIZE
+#define YY_BUF_SIZE 1048576
+
 extern int yylex (GIGenerator *igenerator);
 #define YY_DECL int yylex (GIGenerator *igenerator)
 static int yywrap (void);
