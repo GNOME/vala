@@ -2246,6 +2246,7 @@ namespace GLib {
 	/* String Utility Functions */
 
 	public uint strv_length ([CCode (array_length = false, array_null_terminated = true)] string[] str_array);
+	public bool strv_contains ([CCode (array_length = false, array_null_terminated = true)] string[] str_array, string str);
 
 	[CCode (cname = "errno", cheader_filename = "errno.h")]
 	public int errno;
@@ -3323,6 +3324,8 @@ namespace GLib {
 		public void add_group (owned OptionGroup group);
 		public void set_main_group (owned OptionGroup group);
 		public unowned OptionGroup get_main_group ();
+		public void set_strict_posix (bool strict_posix);
+		public bool get_strict_posix ();
 	}
 
 	public delegate unowned string TranslateFunc (string str);
