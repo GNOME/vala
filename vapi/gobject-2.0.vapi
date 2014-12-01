@@ -71,6 +71,8 @@ namespace GLib {
 
 		public void query (out TypeQuery query);
 
+		public int get_instance_count ();
+
 		public TypeClass class_ref ();
 		public unowned TypeClass class_peek ();
 
