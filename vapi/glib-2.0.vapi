@@ -4180,6 +4180,9 @@ namespace GLib {
 		[CCode (cname = "g_hash_table_insert")]
 		public void @set (owned K key, owned V value);
 		public List<unowned K> get_keys ();
+#if VALA_0_26
+		public (unowned K)[] get_keys_as_array ();
+#endif
 		public List<unowned V> get_values ();
 		public void @foreach (HFunc<K,V> func);
 		[CCode (cname = "g_hash_table_foreach")]
@@ -4904,27 +4907,35 @@ namespace GLib {
 
 		public Variant.strv (string[] value);
 		[CCode (array_length_type = "size_t")]
+#if VALA_0_26
+		public (unowned string)[] get_strv ();
+#else
 		public string*[] get_strv ();
+#endif
 		[CCode (array_length_type = "size_t")]
 		public string[] dup_strv ();
 
 		public Variant.bytestring_array (string[] value);
 		[CCode (array_length_type = "size_t")]
+#if VALA_0_26
+		public (unowned string)[] get_bytestring_array ();
+#else
 		public string*[] get_bytestring_array ();
+#endif
 		[CCode (array_length_type = "size_t")]
 		public string[] dup_bytestring_array ();
 
-		#if GLIB_2_30
+#if GLIB_2_30
 		public Variant.objv (string[] value);
 		[CCode (array_length_type = "size_t")]
-		#if VALA_0_26
+#if VALA_0_26
 		public (unowned string)[] get_objv ();
-		#else
+#else
 		public string*[] get_objv ();
-		#endif
+#endif
 		[CCode (array_length_type = "size_t")]
 		public string[] dup_objv ();
-		#endif
+#endif
 
 		public Variant (string format, ...);
 		// note: the function changes its behaviour when end_ptr is null, so 'out char *' is wrong
