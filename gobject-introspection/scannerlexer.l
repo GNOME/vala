@@ -1,5 +1,5 @@
 /* -*- Mode: C -*-
-/* GObject introspection: C lexer
+ * GObject introspection: C lexer
  *
  * Copyright (c) 1997 Sandro Sigala  <ssigala@globalnet.it>
  * Copyright (c) 2007-2008 Jürg Billeter  <j@bitron.ch>
@@ -37,6 +37,7 @@
 #include "grealpath.h"
 
 int lineno;
+char linebuf[2000];
 
 #undef YY_BUF_SIZE
 #define YY_BUF_SIZE 1048576
@@ -45,30 +46,42 @@ extern int yylex (GIGenerator *igenerator);
 #define YY_DECL int yylex (GIGenerator *igenerator)
 static int yywrap (void);
 static void parse_comment (GIGenerator *igenerator);
-static void process_directive (GIGenerator *igenerator);
+static void process_linemarks (GIGenerator *igenerator, gboolean has_line);
 static int check_identifier (GIGenerator *igenerator, const char *);
+static int parse_ignored_macro (void);
+static void print_error (GIGenerator *igenerator);
 %}
 
-intsuffix				([uU][lL]?)|([lL][uU]?)
+%option nounput
+
+intsuffix				([uU][lL]?[lL]?)|([lL][lL]?[uU]?)
 fracconst				([0-9]*\.[0-9]+)|([0-9]+\.)
 exppart					[eE][-+]?[0-9]+
 floatsuffix				[fFlL]
-chartext				([^\'])|(\\.) 
-stringtext				([^\"])|(\\.)
+chartext				([^\\\'])|(\\.)
+stringtext				([^\\\"])|(\\.)
 
 %%
 
-"\n"					{ ++lineno; } /* " */
+\n.*					{ strncpy(linebuf, yytext+1, sizeof(linebuf)); /* save the next line */
+						linebuf[sizeof(linebuf)-1]='\0';
+						/* printf("%4d:%s\n",lineno,linebuf); */
+						yyless(1);      /* give back all but the \n to rescan */
+						++lineno;
+					}
+"\\\n"					{ ++lineno; }
+
 [\t\f\v\r ]+				{ /* Ignore whitespace. */ }
 
 "/*"					{ parse_comment(igenerator); }
-"//".*					{ }
+"//".*					{ /* Ignore C++ style comments. */ }
 
 "#define "[a-zA-Z_][a-zA-Z_0-9]*"("	{ yyless (yyleng - 1); return FUNCTION_MACRO; }
 "#define "[a-zA-Z_][a-zA-Z_0-9]*	{ return OBJECT_MACRO; }
 
-"#"					{ process_directive(igenerator); }
-
+"# "[0-9]+" ".*"\n"			{ process_linemarks(igenerator, FALSE); }
+"#line "[0-9]+" ".*"\n"			{ process_linemarks(igenerator, TRUE); }
+"#"			                { }
 "{"					{ return '{'; }
 "<%"					{ return '{'; }
 "}"					{ return '}'; }
@@ -120,10 +133,40 @@ stringtext				([^\"])|(\\.)
 ","					{ return ','; }
 "->"					{ return ARROW; }
 
-[a-zA-Z_][a-zA-Z_0-9]*			{ if (igenerator->macro_scan) return IDENTIFIER; else REJECT; }
+"__asm"[\t\f\v\r ]+"volatile"  	        { if (!parse_ignored_macro()) REJECT; }
+"__asm__"[\t\f\v\r ]+"volatile"	        { if (!parse_ignored_macro()) REJECT; }
+"__asm__"[\t\f\v\r ]+"__volatile__"	{ if (!parse_ignored_macro()) REJECT; }
+"__asm" 	        	        { if (!parse_ignored_macro()) REJECT; }
+"__asm__" 	        	        { if (!parse_ignored_macro()) REJECT; }
+"__attribute__" 		        { if (!parse_ignored_macro()) REJECT; }
+"__attribute" 		                { if (!parse_ignored_macro()) REJECT; }
+"__const"                               { return CONST; }
+"__extension__"                         { /* Ignore */ }
+"__inline__"                            { return INLINE; }
+"__inline"				{ return INLINE; }
+"__nonnull" 			        { if (!parse_ignored_macro()) REJECT; }
+"_Noreturn" 			        { /* Ignore */ }
+"__signed__"				{ return SIGNED; }
+"__restrict"				{ return RESTRICT; }
+"__restrict__"				{ return RESTRICT; }
+"__typeof"				{ if (!parse_ignored_macro()) REJECT; }
+"__volatile"	        	        { return VOLATILE; }
+"__volatile__"	        	        { return VOLATILE; }
+"_Bool"					{ return BOOL; }
+"typedef char __static_assert_t".*"\n"	{ /* Ignore */ }
+"__cdecl" 	        	        { /* Ignore */ }
+"__declspec(deprecated(".*"))"		{ /* Ignore */ }
+"__declspec"[\t ]*"("[a-z\t ]+")"	{ /* Ignore */ }
+"__stdcall" 			        { /* ignore */ }
+"__w64"					{ /* ignore */ }
+"__int64"				{ return INT; }
+
+
+[a-zA-Z_][a-zA-Z_0-9]*			{ if (igenerator->macro_scan) return check_identifier(igenerator, yytext); else REJECT; }
+
+"asm"           		        { if (!parse_ignored_macro()) REJECT; }
 
 "auto"					{ return AUTO; }
-"_Bool"					{ return BOOL; }
 "break"					{ return BREAK; }
 "case"					{ return CASE; }
 "char"					{ return CHAR; }
@@ -141,6 +184,10 @@ stringtext				([^\"])|(\\.)
 "if"					{ return IF; }
 "inline"				{ return INLINE; }
 "int"					{ return INT; }
+"__uint128_t"				{ return INT; }
+"__int128_t"				{ return INT; }
+"__uint128"				{ return INT; }
+"__int128"				{ return INT; }
 "long"					{ return LONG; }
 "register"				{ return REGISTER; }
 "restrict"				{ return RESTRICT; }
@@ -173,11 +220,12 @@ stringtext				([^\"])|(\\.)
 "\""{stringtext}*"\""			{ return STRING; }
 "L\""{stringtext}*"\""			{ return STRING; }
 
-.					{ fprintf(stderr, "%s:%d: unexpected character `%c'\n", igenerator->current_filename, lineno, yytext[0]); }
+.					{ print_error(igenerator); }
 
 %%
 
-static int yywrap (void)
+static int
+yywrap (void)
 {
   return 1;
 }
@@ -254,7 +302,9 @@ static void parse_comment (GIGenerator *igenerator)
     }
 }
 
-static int check_identifier (GIGenerator *igenerator, const char *s)
+static int
+check_identifier (GIGenerator *igenerator,
+		  const char *s)
 {
 	/*
 	 * This function checks if `s' is a type name or an
@@ -270,49 +320,83 @@ static int check_identifier (GIGenerator *igenerator, const char *s)
 	return IDENTIFIER;
 }
 
-static void process_directive (GIGenerator *igenerator)
+/*
+ * # linenum "filename" flags
+ *  See http://gcc.gnu.org/onlinedocs/cpp/Preprocessor-Output.html
+ **/
+
+static void
+process_linemarks (GIGenerator *igenerator, gboolean has_line)
 {
-	/* extract current filename from #line directives */
-	GString *filename_builder;
-	gboolean in_string, found_filename;
+	char escaped_filename[1025];
+	char *filename;
+	char *real;
 
-	lineno = 0;
-	found_filename = FALSE;
-	in_string = FALSE;
-	filename_builder = g_string_new ("");
+	if (has_line)
+		sscanf(yytext, "#line %d \"%1024[^\"]\"", &lineno, escaped_filename);
+	else
+		sscanf(yytext, "# %d \"%1024[^\"]\"", &lineno, escaped_filename);
 
-	int c = input ();
-	while (c != EOF && c != '\n') {
-		if (!in_string) {
-			if (c == '\"') {
-				in_string = TRUE;
-				found_filename = TRUE;
-			} else if (c >= '0' && c <= '9') {
-				if (!found_filename) {
-					lineno = lineno * 10 + (c - '0');
-				}
-			}
-		} else {
-			if (c == '\"') {
-				in_string = FALSE;
-			} else if (c == '\\') {
-				g_string_append_c (filename_builder, c);
-				c = input ();
-				g_string_append_c (filename_builder, c);
-			} else {
-				g_string_append_c (filename_builder, c);
-			}
-		}
-		c = input ();
-	}
+	filename = g_strcompress (escaped_filename);
 
-	if (filename_builder->len > 0) {
-		char *filename = g_strcompress (filename_builder->str);
-		g_free (igenerator->current_filename);
-		igenerator->current_filename = g_realpath(filename);
-		g_free(filename);
-	}
+        real = g_realpath (filename);
+        if (real)
+          {
+            g_free (filename);
+            filename = real;
+          }
 
-	g_string_free (filename_builder, TRUE);
+        if (igenerator->current_filename)
+          g_free (igenerator->current_filename);
+	igenerator->current_filename = filename;
 }
 
+/*
+ * This parses a macro which is ignored, such as
+ * __attribute__((x)) or __asm__ (x)
+ */
+static int
+parse_ignored_macro (void)
+{
+	int c;
+	int nest;
+
+	while ((c = input ()) != EOF && isspace (c))
+		;
+	if (c != '(')
+		return FALSE;
+
+	nest = 0;
+	while ((c = input ()) != EOF && (nest > 0 || c != ')')) {
+		if (c == '(')
+			nest++;
+		else if (c == ')')
+			nest--;
+		else if (c == '"') {
+			while ((c = input ()) != EOF && c != '"') {
+				if (c == '\\')
+					c = input ();
+			}
+		} else if (c == '\'') {
+			c = input ();
+			if (c == '\\')
+				c = input ();
+			else if (c == '\'')
+				return FALSE;
+			c = input ();
+			if (c != '\'')
+				return FALSE;
+		} else if (c == '\n')
+			lineno++;
+	}
+
+	return TRUE;
+}
+
+static void
+print_error (GIGenerator *igenerator)
+{
+  if (yytext[0]) {
+    fprintf(stderr, "%s:%d: unexpected character `%c'\n", igenerator->current_filename, lineno, yytext[0]);
+  }
+}
