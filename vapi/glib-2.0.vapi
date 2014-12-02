@@ -2245,6 +2245,7 @@ namespace GLib {
 
 	/* String Utility Functions */
 
+	public void strfreev (string** str_array);
 	public uint strv_length ([CCode (array_length = false, array_null_terminated = true)] string[] str_array);
 
 	[CCode (cname = "errno", cheader_filename = "errno.h")]
