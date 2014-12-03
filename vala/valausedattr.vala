@@ -57,6 +57,7 @@ public class Vala.UsedAttr : CodeVisitor {
 		"BooleanType", "",
 		"SimpleType", "",
 		"PrintfFormat", "",
+		"ScanfFormat", "",
 		
 		"GIR", "name", ""
 
