@@ -457,6 +457,12 @@ class Vala.Compiler {
 			context.write_dependencies (dependencies);
 		}
 
+		context.used_attr.check_unused (context);
+
+		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
+			return quit ();
+		}
+		
 		if (!ccode_only) {
 			var ccompiler = new CCodeCompiler ();
 			if (cc_command == null && Environment.get_variable ("CC") != null) {

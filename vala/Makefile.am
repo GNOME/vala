@@ -156,6 +156,7 @@ libvalacore_la_VALASOURCES = \
 	valaunlockstatement.vala \
 	valaunresolvedsymbol.vala \
 	valaunresolvedtype.vala \
+	valausedattr.vala \
 	valausingdirective.vala \
 	valavaluetype.vala \
 	valavariable.vala \

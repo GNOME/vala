@@ -230,10 +230,16 @@ public class Vala.CodeContext {
 	 */
 	public CodeGenerator codegen { get; set; }
 
+	/**
+	 * Mark attributes used by the compiler and report unused at the end.
+	 */
+	public UsedAttr used_attr { get; set; }
+
 	public CodeContext () {
 		resolver = new SymbolResolver ();
 		analyzer = new SemanticAnalyzer ();
 		flow_analyzer = new FlowAnalyzer ();
+		used_attr = new UsedAttr ();
 	}
 
 	/**

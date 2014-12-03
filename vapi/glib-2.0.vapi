@@ -5016,7 +5016,6 @@ namespace GLib {
 	}
 
 	[Compact]
-	[CCode (copy_func = "g_variant_iter_copy", free_func = "g_variant_iter_free")]
 	public class VariantIter {
 		public VariantIter (Variant value);
 		public size_t n_children ();
