@@ -50,6 +50,8 @@ public class Vala.UsedAttr : CodeVisitor {
 		"GenericAccessors", "",
 		"Diagnostics", "",
 		"NoAccessorMethod", "",
+		"HasEmitter", "",
+		"ReturnsModifiedPointer", "",
 		"Deprecated", "since", "replacement", "",
 		
 		"IntegerType", "rank", "min", "max", "",
@@ -58,6 +60,10 @@ public class Vala.UsedAttr : CodeVisitor {
 		"SimpleType", "",
 		"PrintfFormat", "",
 		"ScanfFormat", "",
+
+		"GtkChild", "name", "internal", "",
+		"GtkTemplate", "ui", "",
+		"GtkCallback", "name", "",
 		
 		"GIR", "name", ""
 
