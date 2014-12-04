@@ -183,6 +183,12 @@ public class Vala.LambdaExpression : Expression {
 			}
 
 			Parameter lambda_param = lambda_param_it.get ();
+
+			if (lambda_param.direction != cb_param.direction) {
+				error = true;
+				Report.error (lambda_param.source_reference, "direction of parameter `%s' is incompatible with the target delegate".printf (lambda_param.name));
+			}
+
 			lambda_param.variable_type = cb_param.variable_type.get_actual_type (target_type, null, this);
 			method.add_parameter (lambda_param);
 		}
