@@ -4691,7 +4691,7 @@ namespace GLib {
 
 	namespace Intl {
 		[CCode (cname = "setlocale", cheader_filename = "locale.h")]
-		public static unowned string? setlocale (LocaleCategory category, string? locale);
+		public static unowned string? setlocale (LocaleCategory category = GLib.LocaleCategory.ALL, string? locale = "");
 		[CCode (cname = "bindtextdomain", cheader_filename = "glib/gi18n-lib.h")]
 		public static unowned string? bindtextdomain (string domainname, string? dirname);
 		[CCode (cname = "textdomain", cheader_filename = "glib/gi18n-lib.h")]
