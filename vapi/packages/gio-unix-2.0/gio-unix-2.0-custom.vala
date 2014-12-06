@@ -22,31 +22,20 @@
 
 namespace GLib {
 	[Compact]
-	[CCode (cname = "GUnixMountEntry", cheader_filename = "gio/gunixmounts.h", lower_case_prefix = "g_unix_mount_", free_function = "g_unix_mount_free")]
+	[CCode (cname = "GUnixMountEntry", cheader_filename = "gio/gunixmounts.h", lower_case_cprefix = "g_unix_mount_", free_function = "g_unix_mount_free")]
 	public class UnixMountEntry {
 		[CCode (cname = "g_unix_mount_at")]
 		public UnixMountEntry (string mount_path, uint64 time_read);
-		[CCode (cname = "g_unix_mount_compare")]
 		public int compare (GLib.UnixMountEntry mount);
-		[CCode (cname = "g_unix_mount_get_device_path")]
 		public unowned string get_device_path ();
-		[CCode (cname = "g_unix_mount_get_fs_type")]
 		public unowned string get_fs_type ();
-		[CCode (cname = "g_unix_mount_get_mount_path")]
 		public unowned string get_mount_path ();
-		[CCode (cname = "g_unix_mount_guess_can_eject")]
 		public bool guess_can_eject ();
-		[CCode (cname = "g_unix_mount_guess_icon")]
 		public GLib.Icon guess_icon ();
-		[CCode (cname = "g_unix_mount_guess_name")]
 		public string guess_name ();
-		[CCode (cname = "g_unix_mount_guess_should_display")]
 		public bool guess_should_display ();
-		[CCode (cname = "g_unix_mount_guess_symbolic_icon")]
 		public GLib.Icon guess_symbolic_icon ();
-		[CCode (cname = "g_unix_mount_is_readonly")]
 		public bool is_readonly ();
-		[CCode (cname = "g_unix_mount_is_system_internal")]
 		public bool is_system_internal ();
 
 		[CCode (cname = "g_unix_mounts_get", cheader_filename = "gio/gunixmounts.h")]
