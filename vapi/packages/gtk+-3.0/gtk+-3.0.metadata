@@ -1056,6 +1056,7 @@ gtk_text_buffer_deserialize.data type_name="uint8" is_array="1" array_length_typ
 gtk_text_buffer_deserialize.length hidden="1"
 gtk_text_buffer_insert.iter is_ref="1"
 gtk_text_buffer_insert_interactive.iter is_ref="1"
+gtk_text_buffer_insert_markup.iter is_ref="1"
 gtk_text_buffer_insert_range.iter is_ref="1"
 gtk_text_buffer_insert_range_interactive.iter is_ref="1"
 gtk_text_buffer_insert_with_tags.iter is_ref="1"

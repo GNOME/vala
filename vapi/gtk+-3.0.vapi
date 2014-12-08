@@ -1787,6 +1787,7 @@ namespace Gtk {
 		public uint16 get_text_length ();
 		public bool get_visibility ();
 		public int get_width_chars ();
+		public void grab_focus_without_selecting ();
 		public bool im_context_filter_keypress (Gdk.EventKey event);
 		public int layout_index_to_text_index (int layout_index);
 		public void progress_pulse ();
@@ -5203,6 +5204,8 @@ namespace Gtk {
 		public Gtk.Justification justification;
 		public Pango.Language language;
 		public int left_margin;
+		public int letter_spacing;
+		public uint no_fallback;
 		[CCode (array_length = false)]
 		public weak uint[] padding;
 		public Gdk.Color pg_bg_color;
@@ -5272,6 +5275,7 @@ namespace Gtk {
 		public void insert_at_cursor (string text, int len);
 		public bool insert_interactive (ref Gtk.TextIter iter, string text, int len, bool default_editable);
 		public bool insert_interactive_at_cursor (string text, int len, bool default_editable);
+		public void insert_markup (ref Gtk.TextIter iter, string markup, int len);
 		public void insert_range (ref Gtk.TextIter iter, Gtk.TextIter start, Gtk.TextIter end);
 		public bool insert_range_interactive (ref Gtk.TextIter iter, Gtk.TextIter start, Gtk.TextIter end, bool default_editable);
 		public void insert_with_tags (ref Gtk.TextIter iter, string text, int len, ...);
@@ -5377,6 +5381,10 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool editable_set { get; set; }
 		[NoAccessorMethod]
+		public bool fallback { get; set; }
+		[NoAccessorMethod]
+		public bool fallback_set { get; set; }
+		[NoAccessorMethod]
 		public string family { owned get; set; }
 		[NoAccessorMethod]
 		public bool family_set { get; set; }
@@ -5413,6 +5421,10 @@ namespace Gtk {
 		public int left_margin { get; set; }
 		[NoAccessorMethod]
 		public bool left_margin_set { get; set; }
+		[NoAccessorMethod]
+		public int letter_spacing { get; set; }
+		[NoAccessorMethod]
+		public bool letter_spacing_set { get; set; }
 		[NoAccessorMethod]
 		public string name { owned get; construct; }
 		[NoAccessorMethod]

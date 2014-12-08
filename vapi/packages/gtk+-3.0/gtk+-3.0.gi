@@ -3494,7 +3494,9 @@
 			<field name="invisible" type="guint"/>
 			<field name="bg_full_height" type="guint"/>
 			<field name="editable" type="guint"/>
+			<field name="no_fallback" type="guint"/>
 			<field name="pg_bg_rgba" type="GdkRGBA*"/>
+			<field name="letter_spacing" type="gint"/>
 			<field name="padding" type="guint[]"/>
 		</boxed>
 		<boxed name="GtkTextIter" type-name="GtkTextIter" get-type="gtk_text_iter_get_type">
@@ -11643,6 +11645,12 @@
 			</method>
 			<method name="get_width_chars" symbol="gtk_entry_get_width_chars">
 				<return-type type="gint"/>
+				<parameters>
+					<parameter name="entry" type="GtkEntry*"/>
+				</parameters>
+			</method>
+			<method name="grab_focus_without_selecting" symbol="gtk_entry_grab_focus_without_selecting">
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="entry" type="GtkEntry*"/>
 				</parameters>
@@ -24854,6 +24862,15 @@
 					<parameter name="default_editable" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="insert_markup" symbol="gtk_text_buffer_insert_markup">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="buffer" type="GtkTextBuffer*"/>
+					<parameter name="iter" type="GtkTextIter*"/>
+					<parameter name="markup" type="gchar*"/>
+					<parameter name="len" type="gint"/>
+				</parameters>
+			</method>
 			<method name="insert_pixbuf" symbol="gtk_text_buffer_insert_pixbuf">
 				<return-type type="void"/>
 				<parameters>
@@ -25271,6 +25288,8 @@
 			<property name="direction" type="GtkTextDirection" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="editable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="editable-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="fallback" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="fallback-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="family" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="family-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="font" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -25289,6 +25308,8 @@
 			<property name="language-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="left-margin" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="left-margin-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="letter-spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="letter-spacing-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="paragraph-background" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
 			<property name="paragraph-background-gdk" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -35402,6 +35423,111 @@
 		<constant name="GTK_PRINT_SETTINGS_WIN32_DRIVER_EXTRA" type="char*" value="win32-driver-extra"/>
 		<constant name="GTK_PRINT_SETTINGS_WIN32_DRIVER_VERSION" type="char*" value="win32-driver-version"/>
 		<constant name="GTK_PRIORITY_RESIZE" type="int" value="10"/>
+		<constant name="GTK_STOCK_ABOUT" type="char*" value="gtk-about"/>
+		<constant name="GTK_STOCK_ADD" type="char*" value="gtk-add"/>
+		<constant name="GTK_STOCK_APPLY" type="char*" value="gtk-apply"/>
+		<constant name="GTK_STOCK_BOLD" type="char*" value="gtk-bold"/>
+		<constant name="GTK_STOCK_CANCEL" type="char*" value="gtk-cancel"/>
+		<constant name="GTK_STOCK_CAPS_LOCK_WARNING" type="char*" value="gtk-caps-lock-warning"/>
+		<constant name="GTK_STOCK_CDROM" type="char*" value="gtk-cdrom"/>
+		<constant name="GTK_STOCK_CLEAR" type="char*" value="gtk-clear"/>
+		<constant name="GTK_STOCK_CLOSE" type="char*" value="gtk-close"/>
+		<constant name="GTK_STOCK_COLOR_PICKER" type="char*" value="gtk-color-picker"/>
+		<constant name="GTK_STOCK_CONNECT" type="char*" value="gtk-connect"/>
+		<constant name="GTK_STOCK_CONVERT" type="char*" value="gtk-convert"/>
+		<constant name="GTK_STOCK_COPY" type="char*" value="gtk-copy"/>
+		<constant name="GTK_STOCK_CUT" type="char*" value="gtk-cut"/>
+		<constant name="GTK_STOCK_DELETE" type="char*" value="gtk-delete"/>
+		<constant name="GTK_STOCK_DIALOG_AUTHENTICATION" type="char*" value="gtk-dialog-authentication"/>
+		<constant name="GTK_STOCK_DIALOG_ERROR" type="char*" value="gtk-dialog-error"/>
+		<constant name="GTK_STOCK_DIALOG_INFO" type="char*" value="gtk-dialog-info"/>
+		<constant name="GTK_STOCK_DIALOG_QUESTION" type="char*" value="gtk-dialog-question"/>
+		<constant name="GTK_STOCK_DIALOG_WARNING" type="char*" value="gtk-dialog-warning"/>
+		<constant name="GTK_STOCK_DIRECTORY" type="char*" value="gtk-directory"/>
+		<constant name="GTK_STOCK_DISCARD" type="char*" value="gtk-discard"/>
+		<constant name="GTK_STOCK_DISCONNECT" type="char*" value="gtk-disconnect"/>
+		<constant name="GTK_STOCK_DND" type="char*" value="gtk-dnd"/>
+		<constant name="GTK_STOCK_DND_MULTIPLE" type="char*" value="gtk-dnd-multiple"/>
+		<constant name="GTK_STOCK_EDIT" type="char*" value="gtk-edit"/>
+		<constant name="GTK_STOCK_EXECUTE" type="char*" value="gtk-execute"/>
+		<constant name="GTK_STOCK_FILE" type="char*" value="gtk-file"/>
+		<constant name="GTK_STOCK_FIND" type="char*" value="gtk-find"/>
+		<constant name="GTK_STOCK_FIND_AND_REPLACE" type="char*" value="gtk-find-and-replace"/>
+		<constant name="GTK_STOCK_FLOPPY" type="char*" value="gtk-floppy"/>
+		<constant name="GTK_STOCK_FULLSCREEN" type="char*" value="gtk-fullscreen"/>
+		<constant name="GTK_STOCK_GOTO_BOTTOM" type="char*" value="gtk-goto-bottom"/>
+		<constant name="GTK_STOCK_GOTO_FIRST" type="char*" value="gtk-goto-first"/>
+		<constant name="GTK_STOCK_GOTO_LAST" type="char*" value="gtk-goto-last"/>
+		<constant name="GTK_STOCK_GOTO_TOP" type="char*" value="gtk-goto-top"/>
+		<constant name="GTK_STOCK_GO_BACK" type="char*" value="gtk-go-back"/>
+		<constant name="GTK_STOCK_GO_DOWN" type="char*" value="gtk-go-down"/>
+		<constant name="GTK_STOCK_GO_FORWARD" type="char*" value="gtk-go-forward"/>
+		<constant name="GTK_STOCK_GO_UP" type="char*" value="gtk-go-up"/>
+		<constant name="GTK_STOCK_HARDDISK" type="char*" value="gtk-harddisk"/>
+		<constant name="GTK_STOCK_HELP" type="char*" value="gtk-help"/>
+		<constant name="GTK_STOCK_HOME" type="char*" value="gtk-home"/>
+		<constant name="GTK_STOCK_INDENT" type="char*" value="gtk-indent"/>
+		<constant name="GTK_STOCK_INDEX" type="char*" value="gtk-index"/>
+		<constant name="GTK_STOCK_INFO" type="char*" value="gtk-info"/>
+		<constant name="GTK_STOCK_ITALIC" type="char*" value="gtk-italic"/>
+		<constant name="GTK_STOCK_JUMP_TO" type="char*" value="gtk-jump-to"/>
+		<constant name="GTK_STOCK_JUSTIFY_CENTER" type="char*" value="gtk-justify-center"/>
+		<constant name="GTK_STOCK_JUSTIFY_FILL" type="char*" value="gtk-justify-fill"/>
+		<constant name="GTK_STOCK_JUSTIFY_LEFT" type="char*" value="gtk-justify-left"/>
+		<constant name="GTK_STOCK_JUSTIFY_RIGHT" type="char*" value="gtk-justify-right"/>
+		<constant name="GTK_STOCK_LEAVE_FULLSCREEN" type="char*" value="gtk-leave-fullscreen"/>
+		<constant name="GTK_STOCK_MEDIA_FORWARD" type="char*" value="gtk-media-forward"/>
+		<constant name="GTK_STOCK_MEDIA_NEXT" type="char*" value="gtk-media-next"/>
+		<constant name="GTK_STOCK_MEDIA_PAUSE" type="char*" value="gtk-media-pause"/>
+		<constant name="GTK_STOCK_MEDIA_PLAY" type="char*" value="gtk-media-play"/>
+		<constant name="GTK_STOCK_MEDIA_PREVIOUS" type="char*" value="gtk-media-previous"/>
+		<constant name="GTK_STOCK_MEDIA_RECORD" type="char*" value="gtk-media-record"/>
+		<constant name="GTK_STOCK_MEDIA_REWIND" type="char*" value="gtk-media-rewind"/>
+		<constant name="GTK_STOCK_MEDIA_STOP" type="char*" value="gtk-media-stop"/>
+		<constant name="GTK_STOCK_MISSING_IMAGE" type="char*" value="gtk-missing-image"/>
+		<constant name="GTK_STOCK_NETWORK" type="char*" value="gtk-network"/>
+		<constant name="GTK_STOCK_NEW" type="char*" value="gtk-new"/>
+		<constant name="GTK_STOCK_NO" type="char*" value="gtk-no"/>
+		<constant name="GTK_STOCK_OK" type="char*" value="gtk-ok"/>
+		<constant name="GTK_STOCK_OPEN" type="char*" value="gtk-open"/>
+		<constant name="GTK_STOCK_ORIENTATION_LANDSCAPE" type="char*" value="gtk-orientation-landscape"/>
+		<constant name="GTK_STOCK_ORIENTATION_PORTRAIT" type="char*" value="gtk-orientation-portrait"/>
+		<constant name="GTK_STOCK_ORIENTATION_REVERSE_LANDSCAPE" type="char*" value="gtk-orientation-reverse-landscape"/>
+		<constant name="GTK_STOCK_ORIENTATION_REVERSE_PORTRAIT" type="char*" value="gtk-orientation-reverse-portrait"/>
+		<constant name="GTK_STOCK_PAGE_SETUP" type="char*" value="gtk-page-setup"/>
+		<constant name="GTK_STOCK_PASTE" type="char*" value="gtk-paste"/>
+		<constant name="GTK_STOCK_PREFERENCES" type="char*" value="gtk-preferences"/>
+		<constant name="GTK_STOCK_PRINT" type="char*" value="gtk-print"/>
+		<constant name="GTK_STOCK_PRINT_ERROR" type="char*" value="gtk-print-error"/>
+		<constant name="GTK_STOCK_PRINT_PAUSED" type="char*" value="gtk-print-paused"/>
+		<constant name="GTK_STOCK_PRINT_PREVIEW" type="char*" value="gtk-print-preview"/>
+		<constant name="GTK_STOCK_PRINT_REPORT" type="char*" value="gtk-print-report"/>
+		<constant name="GTK_STOCK_PRINT_WARNING" type="char*" value="gtk-print-warning"/>
+		<constant name="GTK_STOCK_PROPERTIES" type="char*" value="gtk-properties"/>
+		<constant name="GTK_STOCK_QUIT" type="char*" value="gtk-quit"/>
+		<constant name="GTK_STOCK_REDO" type="char*" value="gtk-redo"/>
+		<constant name="GTK_STOCK_REFRESH" type="char*" value="gtk-refresh"/>
+		<constant name="GTK_STOCK_REMOVE" type="char*" value="gtk-remove"/>
+		<constant name="GTK_STOCK_REVERT_TO_SAVED" type="char*" value="gtk-revert-to-saved"/>
+		<constant name="GTK_STOCK_SAVE" type="char*" value="gtk-save"/>
+		<constant name="GTK_STOCK_SAVE_AS" type="char*" value="gtk-save-as"/>
+		<constant name="GTK_STOCK_SELECT_ALL" type="char*" value="gtk-select-all"/>
+		<constant name="GTK_STOCK_SELECT_COLOR" type="char*" value="gtk-select-color"/>
+		<constant name="GTK_STOCK_SELECT_FONT" type="char*" value="gtk-select-font"/>
+		<constant name="GTK_STOCK_SORT_ASCENDING" type="char*" value="gtk-sort-ascending"/>
+		<constant name="GTK_STOCK_SORT_DESCENDING" type="char*" value="gtk-sort-descending"/>
+		<constant name="GTK_STOCK_SPELL_CHECK" type="char*" value="gtk-spell-check"/>
+		<constant name="GTK_STOCK_STOP" type="char*" value="gtk-stop"/>
+		<constant name="GTK_STOCK_STRIKETHROUGH" type="char*" value="gtk-strikethrough"/>
+		<constant name="GTK_STOCK_UNDELETE" type="char*" value="gtk-undelete"/>
+		<constant name="GTK_STOCK_UNDERLINE" type="char*" value="gtk-underline"/>
+		<constant name="GTK_STOCK_UNDO" type="char*" value="gtk-undo"/>
+		<constant name="GTK_STOCK_UNINDENT" type="char*" value="gtk-unindent"/>
+		<constant name="GTK_STOCK_YES" type="char*" value="gtk-yes"/>
+		<constant name="GTK_STOCK_ZOOM_100" type="char*" value="gtk-zoom-100"/>
+		<constant name="GTK_STOCK_ZOOM_FIT" type="char*" value="gtk-zoom-fit"/>
+		<constant name="GTK_STOCK_ZOOM_IN" type="char*" value="gtk-zoom-in"/>
+		<constant name="GTK_STOCK_ZOOM_OUT" type="char*" value="gtk-zoom-out"/>
 		<constant name="GTK_STYLE_CLASS_ACCELERATOR" type="char*" value="accelerator"/>
 		<constant name="GTK_STYLE_CLASS_ARROW" type="char*" value="arrow"/>
 		<constant name="GTK_STYLE_CLASS_BACKGROUND" type="char*" value="background"/>
