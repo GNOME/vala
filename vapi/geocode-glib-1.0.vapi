@@ -94,6 +94,7 @@ namespace Geocode {
 		public unowned Geocode.Location get_location ();
 		public unowned string get_name ();
 		public unowned string get_osm_id ();
+		public Geocode.PlaceOsmType get_osm_type ();
 		public Geocode.PlaceType get_place_type ();
 		public unowned string get_postal_code ();
 		public unowned string get_state ();
@@ -130,6 +131,8 @@ namespace Geocode {
 		public string name { get; set; }
 		[NoAccessorMethod]
 		public string osm_id { owned get; set; }
+		[NoAccessorMethod]
+		public Geocode.PlaceOsmType osm_type { get; set; }
 		public Geocode.PlaceType place_type { get; construct; }
 		public string postal_code { get; set; }
 		public string state { get; set; }
@@ -153,6 +156,13 @@ namespace Geocode {
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", cprefix = "GEOCODE_LOCATION_URI_SCHEME_", type_id = "geocode_location_uri_scheme_get_type ()")]
 	public enum LocationURIScheme {
 		GEO
+	}
+	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", cprefix = "GEOCODE_PLACE_OSM_TYPE_", type_id = "geocode_place_osm_type_get_type ()")]
+	public enum PlaceOsmType {
+		UNKNOWN,
+		NODE,
+		RELATION,
+		WAY
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", cprefix = "GEOCODE_PLACE_TYPE_", type_id = "geocode_place_type_get_type ()")]
 	public enum PlaceType {

@@ -2780,8 +2780,11 @@ namespace GLib {
 	public interface NetworkMonitor : GLib.Initable, GLib.Object {
 		public abstract bool can_reach (GLib.SocketConnectable connectable, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async bool can_reach_async (GLib.SocketConnectable connectable, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GLib.NetworkConnectivity get_connectivity ();
 		public static unowned GLib.NetworkMonitor get_default ();
 		public bool get_network_available ();
+		[NoAccessorMethod]
+		public abstract GLib.NetworkConnectivity connectivity { get; }
 		[NoAccessorMethod]
 		public abstract bool network_available { get; }
 		public virtual signal void network_changed (bool available);
@@ -3303,6 +3306,13 @@ namespace GLib {
 		NONE,
 		FORCE
 	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_NETWORK_CONNECTIVITY_", type_id = "g_network_connectivity_get_type ()")]
+	public enum NetworkConnectivity {
+		LOCAL,
+		LIMITED,
+		PORTAL,
+		FULL
+	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_NOTIFICATION_PRIORITY_", type_id = "g_notification_priority_get_type ()")]
 	public enum NotificationPriority {
 		NORMAL,
@@ -3592,7 +3602,8 @@ namespace GLib {
 		PROXY_NEED_AUTH,
 		PROXY_NOT_ALLOWED,
 		BROKEN_PIPE,
-		CONNECTION_CLOSED;
+		CONNECTION_CLOSED,
+		NOT_CONNECTED;
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static unowned GLib.IOError from_errno (int err_no);
 		[CCode (cheader_filename = "gio/gio.h")]
