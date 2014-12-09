@@ -57,6 +57,7 @@ public class Vala.UsedAttr : CodeVisitor {
 		"ReturnsModifiedPointer", "",
 		"Deprecated", "since", "replacement", "",
 		"Signal", "detailed", "run", "no_recurse", "action", "no_hooks", "",
+		"Description", "nick", "blurb", "",
 		
 		"IntegerType", "rank", "min", "max", "",
 		"FloatingType", "rank", "",
