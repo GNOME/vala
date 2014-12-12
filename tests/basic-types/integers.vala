@@ -1,3 +1,5 @@
+int static_negative_int = -1;
+
 void test_int () {
 	// declaration and initialization
 	int i = 42;
