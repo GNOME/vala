@@ -1342,6 +1342,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else if (cexpr is CCodeCastExpression) {
 			var ccast = (CCodeCastExpression) cexpr;
 			return is_constant_ccode_expression (ccast.inner);
+		} else if (cexpr is CCodeUnaryExpression) {
+			var cunary = (CCodeUnaryExpression) cexpr;
+			switch (cunary.operator) {
+				case CCodeUnaryOperator.PREFIX_INCREMENT:
+				case CCodeUnaryOperator.PREFIX_DECREMENT:
+				case CCodeUnaryOperator.POSTFIX_INCREMENT:
+				case CCodeUnaryOperator.POSTFIX_DECREMENT:
+					return false;
+			}
+			return is_constant_ccode_expression (cunary.inner);
 		} else if (cexpr is CCodeBinaryExpression) {
 			var cbinary = (CCodeBinaryExpression) cexpr;
 			return is_constant_ccode_expression (cbinary.left) && is_constant_ccode_expression (cbinary.right);
