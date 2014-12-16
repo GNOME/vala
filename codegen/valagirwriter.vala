@@ -1268,7 +1268,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (has_array_length) {
 			length_param_index = is_parameter ? index + 1 : index;
 		}
-		write_type (type, length_param_index);
+		write_type (type, length_param_index, direction);
 
 		indent--;
 		write_indent ();
@@ -1286,7 +1286,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf (" glib:get-type=\"%sget_type\"", CCodeBaseModule.get_ccode_lower_case_prefix (symbol));
 	}
 
-	private void write_type (DataType type, int index = -1) {
+	private void write_type (DataType type, int index = -1, ParameterDirection direction = ParameterDirection.IN) {
 		if (type is ArrayType) {
 			var array_type = (ArrayType) type;
 
@@ -1319,7 +1319,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			if ((type_name == "GLib.Array") || (type_name == "GLib.PtrArray")) {
 				is_array = true;
 			}
-			buffer.append_printf ("<%s name=\"%s\" c:type=\"%s\"", is_array ? "array" : "type", gi_type_name (type.data_type), CCodeBaseModule.get_ccode_name (type));
+			buffer.append_printf ("<%s name=\"%s\" c:type=\"%s%s\"", is_array ? "array" : "type", gi_type_name (type.data_type), CCodeBaseModule.get_ccode_name (type), direction == ParameterDirection.IN ? "" : "*");
 
 			List<DataType> type_arguments = type.get_type_arguments ();
 			if (type_arguments.size == 0) {
