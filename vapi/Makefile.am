@@ -27,6 +27,8 @@ dist_vapi_DATA = \
 	clutter-gst-1.0.vapi \
 	clutter-gst-2.0.deps \
 	clutter-gst-2.0.vapi \
+	clutter-gst-3.0.deps \
+	clutter-gst-3.0.vapi \
 	clutter-gtk-0.10.deps \
 	clutter-gtk-0.10.vapi \
 	clutter-gtk-1.0.deps \
@@ -400,6 +402,7 @@ GIR_BINDINGS = \
 	clutter-gtk-1.0 \
 	clutter-gst-1.0 \
 	clutter-gst-2.0 \
+	clutter-gst-3.0 \
 	clutter-x11-1.0 \
 	cogl-pango-1.0 \
 	gdk-3.0 \
@@ -474,6 +477,9 @@ clutter-gst-1.0:
 
 clutter-gst-2.0:
 	$(GENVAPI) --library $(srcdir)/clutter-gst-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/ClutterGst-2.0-custom.vala --pkg cogl-1.0 --pkg clutter-1.0 --pkg gstreamer-base-1.0 --pkg gstreamer-video-1.0 $(GIRDIR)/ClutterGst-2.0.gir
+
+clutter-gst-3.0:
+	$(GENVAPI) --library $(srcdir)/clutter-gst-3.0 --metadatadir $(METADATADIR) $(METADATADIR)/ClutterGst-3.0-custom.vala --pkg cogl-1.0 --pkg clutter-1.0 --pkg gdk-pixbuf-2.0 --pkg gstreamer-1.0 --pkg gstreamer-audio-1.0 --pkg gstreamer-base-1.0 --pkg gstreamer-pbutils-1.0 --pkg gstreamer-video-1.0 $(GIRDIR)/ClutterGst-3.0.gir
 
 clutter-x11-1.0:
 	$(GENVAPI) --library $(srcdir)/clutter-x11-1.0 --metadatadir $(METADATADIR) --pkg clutter-1.0 --pkg x11 $(GIRDIR)/ClutterX11-1.0.gir
