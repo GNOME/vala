@@ -327,7 +327,7 @@ namespace Atspi {
 	public interface TableCell : GLib.Object {
 		public GLib.GenericArray<Atspi.Accessible> get_column_header_cells () throws GLib.Error;
 		public int get_column_index () throws GLib.Error;
-		public int get_column_span (GLib.Error error);
+		public int get_column_span () throws GLib.Error;
 		public void get_row_column_span (out int row, out int column, out int row_span, out int column_span) throws GLib.Error;
 		public GLib.GenericArray<Atspi.Accessible> get_row_header_cells () throws GLib.Error;
 		public int get_row_index () throws GLib.Error;

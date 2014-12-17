@@ -267,6 +267,22 @@ namespace WebKit {
 		[Deprecated (since = "2.6")]
 		public WebKit.URIRequest request { get; }
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_notification_get_type ()")]
+	public class Notification : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Notification ();
+		public unowned string get_body ();
+		public uint64 get_id ();
+		public unowned string get_title ();
+		public string body { get; }
+		public uint64 id { get; }
+		public string title { get; }
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_notification_permission_request_get_type ()")]
+	public class NotificationPermissionRequest : GLib.Object, WebKit.PermissionRequest {
+		[CCode (has_construct_function = false)]
+		protected NotificationPermissionRequest ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_plugin_get_type ()")]
 	public class Plugin : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -536,6 +552,15 @@ namespace WebKit {
 		public void unregister_script_message_handler (string name);
 		public signal void script_message_received (WebKit.JavascriptResult js_result);
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_user_media_permission_request_get_type ()")]
+	public class UserMediaPermissionRequest : GLib.Object, WebKit.PermissionRequest {
+		[CCode (has_construct_function = false)]
+		protected UserMediaPermissionRequest ();
+		[NoAccessorMethod]
+		public bool is_for_audio_device { get; }
+		[NoAccessorMethod]
+		public bool is_for_video_device { get; }
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_user_script_ref", type_id = "webkit_user_script_get_type ()", unref_function = "webkit_user_script_unref")]
 	[Compact]
 	public class UserScript {
@@ -693,6 +718,7 @@ namespace WebKit {
 		public double zoom_level { get; set; }
 		public virtual signal bool authenticate (WebKit.AuthenticationRequest request);
 		public virtual signal void close ();
+		public virtual signal bool close_notification (WebKit.Notification notification);
 		public virtual signal bool context_menu (WebKit.ContextMenu context_menu, Gdk.Event event, WebKit.HitTestResult hit_test_result);
 		public virtual signal void context_menu_dismissed ();
 		public signal Gtk.Widget create (WebKit.NavigationAction navigation_action);
@@ -711,6 +737,7 @@ namespace WebKit {
 		public virtual signal void run_as_modal ();
 		public virtual signal bool run_file_chooser (WebKit.FileChooserRequest request);
 		public virtual signal bool script_dialog (WebKit.ScriptDialog dialog);
+		public virtual signal bool show_notification (WebKit.Notification notification);
 		public virtual signal void submit_form (WebKit.FormSubmissionRequest request);
 		public virtual signal bool web_process_crashed ();
 	}
@@ -1012,4 +1039,8 @@ namespace WebKit {
 	public static uint get_micro_version ();
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static uint get_minor_version ();
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	public static bool user_media_permission_is_for_audio_device (WebKit.UserMediaPermissionRequest request);
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	public static bool user_media_permission_is_for_video_device (WebKit.UserMediaPermissionRequest request);
 }

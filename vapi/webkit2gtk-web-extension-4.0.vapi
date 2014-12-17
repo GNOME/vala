@@ -381,6 +381,7 @@ namespace WebKit {
 			public unowned WebKit.DOM.NodeList get_elements_by_tag_name_ns (string namespaceURI, string localName);
 			public unowned WebKit.DOM.Element get_first_element_child ();
 			public string get_id ();
+			public string get_inner_html ();
 			public unowned WebKit.DOM.Element get_last_element_child ();
 			public unowned WebKit.DOM.Element get_next_element_sibling ();
 			public double get_offset_height ();
@@ -388,6 +389,7 @@ namespace WebKit {
 			public unowned WebKit.DOM.Element get_offset_parent ();
 			public double get_offset_top ();
 			public double get_offset_width ();
+			public string get_outer_html ();
 			public unowned WebKit.DOM.Element get_previous_element_sibling ();
 			public long get_scroll_height ();
 			public long get_scroll_left ();
@@ -413,6 +415,8 @@ namespace WebKit {
 			public void set_attribute_ns (string? namespaceURI, string qualifiedName, string value) throws GLib.Error;
 			public void set_class_name (string value);
 			public void set_id (string value);
+			public void set_inner_html (string value) throws GLib.Error;
+			public void set_outer_html (string value) throws GLib.Error;
 			public void set_scroll_left (long value);
 			public void set_scroll_top (long value);
 			public WebKit.DOM.NamedNodeMap attributes { get; }
@@ -424,6 +428,7 @@ namespace WebKit {
 			public double client_width { get; }
 			public WebKit.DOM.Element first_element_child { get; }
 			public string id { owned get; set; }
+			public string inner_html { owned get; set; }
 			public WebKit.DOM.Element last_element_child { get; }
 			public WebKit.DOM.Element next_element_sibling { get; }
 			public double offset_height { get; }
@@ -431,6 +436,7 @@ namespace WebKit {
 			public WebKit.DOM.Element offset_parent { get; }
 			public double offset_top { get; }
 			public double offset_width { get; }
+			public string outer_html { owned get; set; }
 			public WebKit.DOM.Element previous_element_sibling { get; }
 			public long scroll_height { get; }
 			public long scroll_left { get; set; }
@@ -848,10 +854,12 @@ namespace WebKit {
 			public unowned WebKit.DOM.HTMLCollection get_children ();
 			public string get_content_editable ();
 			public string get_dir ();
+			[Deprecated (since = "2.8")]
 			public string get_inner_html ();
 			public string get_inner_text ();
 			public bool get_is_content_editable ();
 			public string get_lang ();
+			[Deprecated (since = "2.8")]
 			public string get_outer_html ();
 			public string get_outer_text ();
 			public long get_tab_index ();
@@ -859,10 +867,12 @@ namespace WebKit {
 			public void set_access_key (string value);
 			public void set_content_editable (string value) throws GLib.Error;
 			public void set_dir (string value);
-			public void set_inner_html (string value) throws GLib.Error;
+			[Deprecated (since = "2.8")]
+			public void set_inner_html (string contents) throws GLib.Error;
 			public void set_inner_text (string value) throws GLib.Error;
 			public void set_lang (string value);
-			public void set_outer_html (string value) throws GLib.Error;
+			[Deprecated (since = "2.8")]
+			public void set_outer_html (string contents) throws GLib.Error;
 			public void set_outer_text (string value) throws GLib.Error;
 			public void set_tab_index (long value);
 			public void set_title (string value);
@@ -874,11 +884,9 @@ namespace WebKit {
 			public bool draggable { get; set; }
 			[NoAccessorMethod]
 			public bool hidden { get; set; }
-			public string inner_html { owned get; set; }
 			public string inner_text { owned get; set; }
 			public bool is_content_editable { get; }
 			public string lang { owned get; set; }
-			public string outer_html { owned get; set; }
 			public string outer_text { owned get; set; }
 			[NoAccessorMethod]
 			public bool spellcheck { get; set; }
@@ -2562,8 +2570,6 @@ namespace WebKit {
 		public const int _NODE_FILTER_SHOW_TEXT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SKIP")]
 		public const int _NODE_FILTER_SKIP;
-		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_NOTATION_NODE")]
-		public const int _NODE_NOTATION_NODE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_PROCESSING_INSTRUCTION_NODE")]
 		public const int _NODE_PROCESSING_INSTRUCTION_NODE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_TEXT_NODE")]

@@ -1955,6 +1955,7 @@ namespace GLib {
 		public ssize_t receive_with_blocking ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t send ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t send_message (GLib.SocketAddress? address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.OutputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] GLib.SocketControlMessage[]? messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public int send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.OutputMessage[] messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t send_to (GLib.SocketAddress? address, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t send_with_blocking ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_blocking (bool blocking);
@@ -2946,6 +2947,16 @@ namespace GLib {
 	public struct InputVector {
 		public void* buffer;
 		public size_t size;
+	}
+	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
+	public struct OutputMessage {
+		public weak GLib.SocketAddress address;
+		public GLib.OutputVector vectors;
+		public uint num_vectors;
+		public uint bytes_sent;
+		[CCode (array_length = false, array_null_terminated = true)]
+		public weak GLib.SocketControlMessage[] control_messages;
+		public uint num_control_messages;
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	public struct OutputVector {
