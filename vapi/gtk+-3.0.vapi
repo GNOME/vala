@@ -6411,6 +6411,7 @@ namespace Gtk {
 		public class unowned GLib.ParamSpec find_style_property (string property_name);
 		public void freeze_child_notify ();
 		public virtual unowned Atk.Object get_accessible ();
+		public unowned GLib.ActionGroup? get_action_group (string prefix);
 		public int get_allocated_baseline ();
 		public int get_allocated_height ();
 		public int get_allocated_width ();
@@ -6528,6 +6529,8 @@ namespace Gtk {
 		public bool is_toplevel ();
 		public bool is_visible ();
 		public GLib.List<weak GLib.Closure> list_accel_closures ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string*[] list_action_prefixes ();
 		public GLib.List<weak Gtk.Widget> list_mnemonic_labels ();
 		[CCode (cname = "gtk_widget_class_list_style_properties")]
 		public class unowned GLib.ParamSpec list_style_properties (uint n_properties);
@@ -7294,6 +7297,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkScrollableInterface")]
 	public interface Scrollable : GLib.Object {
+		public abstract bool get_border (out Gtk.Border border);
 		public unowned Gtk.Adjustment get_hadjustment ();
 		public Gtk.ScrollablePolicy get_hscroll_policy ();
 		public unowned Gtk.Adjustment get_vadjustment ();
@@ -9326,6 +9330,8 @@ namespace Gtk {
 	public const string STYLE_CLASS_TOUCH_SELECTION;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_TROUGH;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string STYLE_CLASS_UNDERSHOOT;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STYLE_CLASS_VERTICAL;
 	[CCode (cheader_filename = "gtk/gtk.h")]

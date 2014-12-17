@@ -29792,6 +29792,13 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="get_action_group" symbol="gtk_widget_get_action_group">
+				<return-type type="GActionGroup*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="prefix" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="get_allocated_baseline" symbol="gtk_widget_get_allocated_baseline">
 				<return-type type="int"/>
 				<parameters>
@@ -30427,6 +30434,12 @@
 			</method>
 			<method name="list_accel_closures" symbol="gtk_widget_list_accel_closures">
 				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="list_action_prefixes" symbol="gtk_widget_list_action_prefixes">
+				<return-type type="gchar**"/>
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
@@ -34613,6 +34626,13 @@
 			<requires>
 				<interface name="GObject"/>
 			</requires>
+			<method name="get_border" symbol="gtk_scrollable_get_border">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="scrollable" type="GtkScrollable*"/>
+					<parameter name="border" type="GtkBorder*"/>
+				</parameters>
+			</method>
 			<method name="get_hadjustment" symbol="gtk_scrollable_get_hadjustment">
 				<return-type type="GtkAdjustment*"/>
 				<parameters>
@@ -34669,6 +34689,13 @@
 			<property name="hscroll-policy" type="GtkScrollablePolicy" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="vadjustment" type="GtkAdjustment*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="vscroll-policy" type="GtkScrollablePolicy" readable="1" writable="1" construct="0" construct-only="0"/>
+			<vfunc name="get_border">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="scrollable" type="GtkScrollable*"/>
+					<parameter name="border" type="GtkBorder*"/>
+				</parameters>
+			</vfunc>
 		</interface>
 		<interface name="GtkStyleProvider" type-name="GtkStyleProvider" get-type="gtk_style_provider_get_type">
 			<method name="get_icon_factory" symbol="gtk_style_provider_get_icon_factory">
@@ -35373,14 +35400,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1502"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1503"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="2"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="15"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
@@ -35607,6 +35634,7 @@
 		<constant name="GTK_STYLE_CLASS_TOP" type="char*" value="top"/>
 		<constant name="GTK_STYLE_CLASS_TOUCH_SELECTION" type="char*" value="touch-selection"/>
 		<constant name="GTK_STYLE_CLASS_TROUGH" type="char*" value="trough"/>
+		<constant name="GTK_STYLE_CLASS_UNDERSHOOT" type="char*" value="undershoot"/>
 		<constant name="GTK_STYLE_CLASS_VERTICAL" type="char*" value="vertical"/>
 		<constant name="GTK_STYLE_CLASS_VIEW" type="char*" value="view"/>
 		<constant name="GTK_STYLE_CLASS_WARNING" type="char*" value="warning"/>
