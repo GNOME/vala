@@ -7297,7 +7297,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkScrollableInterface")]
 	public interface Scrollable : GLib.Object {
-		public abstract bool get_border (out Gtk.Border border);
+		public virtual bool get_border (out Gtk.Border border);
 		public unowned Gtk.Adjustment get_hadjustment ();
 		public Gtk.ScrollablePolicy get_hscroll_policy ();
 		public unowned Gtk.Adjustment get_vadjustment ();
