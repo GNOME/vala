@@ -70,16 +70,22 @@ public class Vala.GtkModule : GSignalModule {
 
 			int state = 0;
 			string prefix = null;
+			string alias = null;
 
 			MarkupTokenType current_token = reader.read_token (null, null);
 			while (current_token != MarkupTokenType.EOF) {
 				if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "gresource") {
 					prefix = reader.get_attribute ("prefix");
 				} else if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "file") {
+					alias = reader.get_attribute ("alias");
 					state = 1;
 				} else if (state == 1 && current_token == MarkupTokenType.TEXT) {
 					var name = reader.content;
-					gresource_to_file_map.set (Path.build_filename (prefix, name), Path.build_filename (gresource_dir, name));
+					var filename = Path.build_filename (gresource_dir, name);
+					if (alias != null) {
+						gresource_to_file_map.set (Path.build_filename (prefix, alias), filename);
+					}
+					gresource_to_file_map.set (Path.build_filename (prefix, name), filename);
 					state = 0;
 				}
 				current_token = reader.read_token (null, null);
