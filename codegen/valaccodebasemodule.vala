@@ -6322,6 +6322,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return p.get_attribute ("NoAccessorMethod") != null;
 	}
 
+	public static bool get_ccode_concrete_accessor (Property p) {
+		return p.get_attribute ("ConcreteAccessor") != null;
+	}
+
 	public static bool get_ccode_has_type_id (TypeSymbol sym) {
 		return sym.get_attribute_bool ("CCode", "has_type_id", true);
 	}

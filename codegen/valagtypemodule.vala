@@ -1227,7 +1227,7 @@ public class Vala.GTypeModule : GErrorModule {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_type))));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
 
-			if (!get_ccode_no_accessor_method (prop.base_property)) {
+			if (!get_ccode_no_accessor_method (prop.base_property) && !get_ccode_concrete_accessor (prop.base_property)) {
 				if (prop.get_accessor != null) {
 					string cname = CCodeBaseModule.get_ccode_real_name (prop.get_accessor);
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), new CCodeIdentifier (cname));
@@ -1393,7 +1393,7 @@ public class Vala.GTypeModule : GErrorModule {
 			
 			var ciface = new CCodeIdentifier ("iface");
 
-			if (!get_ccode_no_accessor_method (prop.base_interface_property)) {
+			if (!get_ccode_no_accessor_method (prop.base_interface_property) && !get_ccode_concrete_accessor (prop.base_interface_property)) {
 				if (prop.get_accessor != null) {
 					string cname = CCodeBaseModule.get_ccode_real_name (prop.get_accessor);
 					if (prop.is_abstract || prop.is_virtual) {

@@ -982,7 +982,7 @@ public class Vala.GirParser : CodeVisitor {
 					if (prop.get_accessor != null) {
 						var m = getter != null ? getter.symbol as Method : null;
 						// ensure getter vfunc if the property is abstract
-						if (m != null && (m.is_abstract || m.is_virtual || !prop.is_abstract)) {
+						if (m != null) {
 							getter.process (parser);
 							if (m.return_type is VoidType || m.get_parameters().size != 0) {
 								prop.set_attribute ("NoAccessorMethod", true);
@@ -994,26 +994,39 @@ public class Vala.GirParser : CodeVisitor {
 										}
 									}
 								}
+								
 								prop.get_accessor.value_type.value_owned = m.return_type.value_owned;
+
+								if (!m.is_abstract && !m.is_virtual && prop.is_abstract) {
+									prop.set_attribute ("ConcreteAccessor", true);
+								}
 							}
 						} else {
 							prop.set_attribute ("NoAccessorMethod", true);
 						}
 					}
+
 					if (prop.get_attribute ("NoAccessorMethod") == null && prop.set_accessor != null && prop.set_accessor.writable) {
 						var m = setter != null ? setter.symbol as Method : null;
 						// ensure setter vfunc if the property is abstract
-						if (m != null && (m.is_abstract || m.is_virtual || !prop.is_abstract)) {
+						if (m != null) {
 							setter.process (parser);
 							if (!(m.return_type is VoidType) || m.get_parameters().size != 1) {
 								prop.set_attribute ("NoAccessorMethod", true);
+								prop.set_attribute ("ConcreteAccessor", false);
 							} else {
 								prop.set_accessor.value_type.value_owned = m.get_parameters()[0].variable_type.value_owned;
+								if (prop.get_attribute ("ConcreteAccessor") != null && !m.is_abstract && !m.is_virtual && prop.is_abstract) {
+									prop.set_attribute ("ConcreteAccessor", true);
+									prop.set_attribute ("NoAccessorMethod", false);
+								}
 							}
 						} else {
 							prop.set_attribute ("NoAccessorMethod", true);
+							prop.set_attribute ("ConcreteAccessor", false);
 						}
 					}
+
 					if (prop.get_attribute ("NoAccessorMethod") != null) {
 						// gobject defaults
 						if (prop.get_accessor != null) {

@@ -53,6 +53,7 @@ public class Vala.UsedAttr : CodeVisitor {
 		"GenericAccessors", "",
 		"Diagnostics", "",
 		"NoAccessorMethod", "",
+		"ConcreteAccessor", "",
 		"HasEmitter", "",
 		"ReturnsModifiedPointer", "",
 		"Deprecated", "since", "replacement", "",
