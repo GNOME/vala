@@ -1124,13 +1124,13 @@ namespace Mx {
 		public void set_axis (Mx.DragAxis axis);
 		public void set_drag_actor (Clutter.Actor actor);
 		public void set_drag_threshold (uint threshold);
-		[NoAccessorMethod]
+		[ConcreteAccessor]
 		public abstract Mx.DragAxis axis { get; set; }
-		[NoAccessorMethod]
-		public abstract Clutter.Actor drag_actor { owned get; set; }
+		[ConcreteAccessor]
+		public abstract Clutter.Actor drag_actor { get; set; }
 		[NoAccessorMethod]
 		public abstract bool drag_enabled { get; set; }
-		[NoAccessorMethod]
+		[ConcreteAccessor]
 		public abstract uint drag_threshold { get; set; }
 		public virtual signal void drag_begin (float event_x, float event_y, int event_button, Clutter.ModifierType modifiers);
 		public virtual signal void drag_end (float event_x, float event_y);

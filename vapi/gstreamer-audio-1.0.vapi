@@ -361,7 +361,7 @@ namespace Gst {
 			public double get_volume (Gst.Audio.StreamVolumeFormat format);
 			public void set_mute (bool mute);
 			public void set_volume (Gst.Audio.StreamVolumeFormat format, double val);
-			[NoAccessorMethod]
+			[ConcreteAccessor]
 			public abstract bool mute { get; set; }
 			[NoAccessorMethod]
 			public abstract double volume { get; set; }

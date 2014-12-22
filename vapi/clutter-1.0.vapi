@@ -7232,32 +7232,32 @@ namespace Clutter {
 		public void set_subtitle_uri (string uri);
 		[Deprecated (since = "1.12")]
 		public void set_uri (string uri);
+		[ConcreteAccessor]
 		[Deprecated (since = "1.12")]
-		[NoAccessorMethod]
 		public abstract double audio_volume { get; set; }
+		[ConcreteAccessor]
 		[Deprecated (since = "1.12")]
-		[NoAccessorMethod]
 		public abstract double buffer_fill { get; }
+		[ConcreteAccessor]
 		[Deprecated (since = "1.12")]
-		[NoAccessorMethod]
 		public abstract bool can_seek { get; }
+		[ConcreteAccessor]
 		[Deprecated (since = "1.12")]
-		[NoAccessorMethod]
 		public abstract double duration { get; }
+		[ConcreteAccessor]
 		[Deprecated (since = "1.12")]
-		[NoAccessorMethod]
 		public abstract bool playing { get; set; }
+		[ConcreteAccessor]
 		[Deprecated (since = "1.12")]
-		[NoAccessorMethod]
 		public abstract double progress { get; set; }
+		[ConcreteAccessor]
 		[Deprecated (since = "1.12")]
-		[NoAccessorMethod]
 		public abstract string subtitle_font_name { owned get; set; }
+		[ConcreteAccessor]
 		[Deprecated (since = "1.12")]
-		[NoAccessorMethod]
 		public abstract string subtitle_uri { owned get; set; }
+		[ConcreteAccessor]
 		[Deprecated (since = "1.12")]
-		[NoAccessorMethod]
 		public abstract string uri { owned get; set; }
 		[Deprecated (since = "1.12")]
 		public virtual signal void eos ();

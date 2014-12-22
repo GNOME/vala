@@ -2784,9 +2784,9 @@ namespace GLib {
 		public GLib.NetworkConnectivity get_connectivity ();
 		public static unowned GLib.NetworkMonitor get_default ();
 		public bool get_network_available ();
-		[NoAccessorMethod]
+		[ConcreteAccessor]
 		public abstract GLib.NetworkConnectivity connectivity { get; }
-		[NoAccessorMethod]
+		[ConcreteAccessor]
 		public abstract bool network_available { get; }
 		public virtual signal void network_changed (bool available);
 	}
@@ -2861,13 +2861,13 @@ namespace GLib {
 		public void set_server_identity (GLib.SocketConnectable identity);
 		public void set_use_ssl3 (bool use_ssl3);
 		public void set_validation_flags (GLib.TlsCertificateFlags flags);
-		[NoAccessorMethod]
+		[ConcreteAccessor]
 		public abstract GLib.List<GLib.ByteArray> accepted_cas { owned get; }
-		[NoAccessorMethod]
-		public abstract GLib.SocketConnectable server_identity { owned get; set construct; }
-		[NoAccessorMethod]
+		[ConcreteAccessor]
+		public abstract GLib.SocketConnectable server_identity { get; set construct; }
+		[ConcreteAccessor]
 		public abstract bool use_ssl3 { get; set construct; }
-		[NoAccessorMethod]
+		[ConcreteAccessor]
 		public abstract GLib.TlsCertificateFlags validation_flags { get; set construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GTlsFileDatabaseInterface", type_id = "g_tls_file_database_get_type ()")]
