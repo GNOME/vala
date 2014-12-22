@@ -1,17 +1,18 @@
-[CCode (cname = "g_hash_table_get_keys_as_array", array_length_type = "guint", type = "gpointer*")]
-public extern (unowned string)[] g_hash_table_get_keys_as_array (GLib.HashTable<string,string> hash_table);
+string foo = null;
 
-private static int main (string[] args) {
-  var ht = new GLib.HashTable<string,string> (GLib.str_hash, GLib.str_equal);
-  ht["one"] = "hello";
-  ht["two"] = "world";
+(unowned string)[] bar () {
+	(unowned string)[] ret = new (unowned string)[1];
+	ret[0] = foo;
+	return ret;
+}
 
-  string[] keys = g_hash_table_get_keys_as_array (ht);
-  ht = null;
-  
-  foreach (unowned string k in keys) {
-	  assert (k == "one" || k == "two");
-  }
-
-  return 0;
+void main() {
+	foo = "foo";
+	
+	string[] keys = bar();
+	foo = null;
+	
+	foreach (unowned string k in keys) {
+		assert (k == "foo");
+	}
 }
