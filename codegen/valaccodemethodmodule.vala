@@ -361,10 +361,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
-		if (m.coroutine) {
-			next_coroutine_state = 1;
-		}
-
 		var creturn_type = m.return_type;
 		if (m.return_type.is_real_non_null_struct_type ()) {
 			// structs are returned via out parameter
@@ -489,6 +485,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		push_function (function);
 
+		unowned CCodeBlock? co_switch_block = null;
+
 		// generate *_real_* functions for virtual methods
 		// also generate them for abstract methods of classes to prevent faulty subclassing
 		if (!m.is_abstract || (m.is_abstract && current_type_symbol is Class)) {
@@ -500,15 +498,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					ccode.add_case (new CCodeConstant ("0"));
 					ccode.add_goto ("_state_0");
 
-					for (int state = 1; state <= m.yield_count; state++) {
-						ccode.add_case (new CCodeConstant (state.to_string ()));
-						ccode.add_goto ("_state_%d".printf (state));
-					}
-
-
-					// let gcc know that this can't happen
-					ccode.add_default ();
-					ccode.add_expression (new CCodeFunctionCall (new CCodeIdentifier ("g_assert_not_reached")));
+					co_switch_block = ccode.current_block;
 
 					ccode.close ();
 
@@ -732,6 +722,24 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		if (m.body != null) {
 			m.body.emit (this);
+
+			if (co_switch_block != null) {
+				// after counting the number of yields for coroutines, append the case statements to the switch
+				var old_block = ccode.current_block;
+				ccode.current_block = co_switch_block;
+
+				for (int state = 1; state < emit_context.next_coroutine_state; state++) {
+					ccode.add_case (new CCodeConstant (state.to_string ()));
+					ccode.add_goto ("_state_%d".printf (state));
+				}
+
+				// let gcc know that this can't happen
+				ccode.add_default ();
+				ccode.add_expression (new CCodeFunctionCall (new CCodeIdentifier ("g_assert_not_reached")));
+
+				ccode.current_block = old_block;
+				co_switch_block = null;
+			}
 		}
 
 		// we generate the same code if we see a return statement, this handles the case without returns

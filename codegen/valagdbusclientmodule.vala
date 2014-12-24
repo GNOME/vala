@@ -407,7 +407,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		if (bus_get_proxy_async || conn_get_proxy_async) {
 			if (expr.is_yield_expression) {
-				int state = next_coroutine_state++;
+				int state = emit_context.next_coroutine_state++;
 
 				ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_"), new CCodeConstant (state.to_string ()));
 				ccode.add_expression (ccall);

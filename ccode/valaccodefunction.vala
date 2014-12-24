@@ -48,9 +48,13 @@ public class Vala.CCodeFunction : CCodeNode {
 	 */
 	public CCodeLineDirective current_line { get; set; }
 
+	/**
+	 * The current block to be written into.
+	 */
+	public CCodeBlock current_block { get; set; }
+
 	private List<CCodeParameter> parameters = new ArrayList<CCodeParameter> ();
 
-	CCodeBlock current_block;
 	List<CCodeStatement> statement_stack = new ArrayList<CCodeStatement> ();
 
 	public CCodeFunction (string name, string return_type = "void") {

@@ -764,7 +764,7 @@ public class Vala.GAsyncModule : GtkModule {
 		}
 
 		if (stmt.yield_expression == null) {
-			int state = next_coroutine_state++;
+			int state = emit_context.next_coroutine_state++;
 
 			ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_"), new CCodeConstant (state.to_string ()));
 			ccode.add_return (new CCodeConstant ("FALSE"));
