@@ -2204,7 +2204,16 @@ public class Vala.GTypeModule : GErrorModule {
 	public override void visit_property (Property prop) {
 		var cl = current_type_symbol as Class;
 		var st = current_type_symbol as Struct;
-		if (prop.name == "type" && ((cl != null && !cl.is_compact) || (st != null && get_ccode_has_type_id (st)))) {
+
+		var base_prop = prop;
+		if (prop.base_property != null) {
+			base_prop = prop.base_property;
+		} else if (prop.base_interface_property != null) {
+			base_prop = prop.base_interface_property;
+		}
+
+		if (base_prop.get_attribute ("NoAccessorMethod") == null &&
+			prop.name == "type" && ((cl != null && !cl.is_compact) || (st != null && get_ccode_has_type_id (st)))) {
 			Report.error (prop.source_reference, "Property 'type' not allowed");
 			return;
 		}
