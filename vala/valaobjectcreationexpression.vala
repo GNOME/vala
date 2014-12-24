@@ -334,7 +334,6 @@ public class Vala.ObjectCreationExpression : Expression {
 					error = true;
 					Report.error (source_reference, "yield expression not available outside async method");
 				}
-				context.analyzer.current_method.yield_count++;
 			}
 
 			var args = get_argument_list ();

@@ -183,6 +183,7 @@ public class Vala.Method : Subroutine {
 
 	public bool is_async_callback { get; set; }
 
+	[Version (deprecated = true)]
 	public int yield_count { get; set; }
 
 	private List<Parameter> parameters = new ArrayList<Parameter> ();
