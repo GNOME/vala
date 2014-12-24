@@ -41,6 +41,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 		public Map<string,int> closure_variable_count_map = new HashMap<string,int> (str_hash, str_equal);
 		public Map<LocalVariable,int> closure_variable_clash_map = new HashMap<LocalVariable,int> ();
+		public int next_coroutine_state = 1;
 
 		public EmitContext (Symbol? symbol = null) {
 			current_symbol = symbol;
@@ -270,7 +271,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		set { emit_context.current_method_return = value; }
 	}
 
-	public int next_coroutine_state = 1;
+	[Version (deprecated = true)]
+	public int next_coroutine_state;
 	int next_block_id = 0;
 	Map<Block,int> block_map = new HashMap<Block,int> ();
 
@@ -4796,7 +4798,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (expr.is_yield_expression) {
 				// set state before calling async function to support immediate callbacks
-				int state = next_coroutine_state++;
+				int state = emit_context.next_coroutine_state++;
 
 				ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_"), new CCodeConstant (state.to_string ()));
 				ccode.add_expression (async_call);
