@@ -488,6 +488,12 @@ public class Vala.CodeContext {
 		}
 
 		flow_analyzer.analyze (this);
+
+		if (report.get_errors () > 0) {
+			return;
+		}
+
+		used_attr.check_unused (this);
 	}
 
 	public void add_define (string define) {
