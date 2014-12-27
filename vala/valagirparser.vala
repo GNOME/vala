@@ -1028,6 +1028,29 @@ public class Vala.GirParser : CodeVisitor {
 					}
 
 					if (prop.get_attribute ("NoAccessorMethod") != null) {
+						if (!prop.overrides && parent.symbol is Class) {
+							// bug 742012
+							// find base interface property with ConcreteAccessor and this overriding property with NoAccessorMethod
+							var base_prop_node = parser.base_interface_property (this);
+							if (base_prop_node != null) {
+								base_prop_node.process (parser);
+								
+								var base_property = (Property) base_prop_node.symbol;
+								if (base_property.get_attribute ("ConcreteAccessor") != null) {
+									prop.set_attribute ("NoAccessorMethod", false);
+									if (prop.get_accessor != null) {
+										prop.get_accessor.value_type.value_owned = base_property.get_accessor.value_type.value_owned;
+									}
+									if (prop.set_accessor != null) {
+										prop.set_accessor.value_type.value_owned = base_property.set_accessor.value_type.value_owned;
+									}
+									
+								}
+							}
+						}
+					}
+
+					if (prop.get_attribute ("NoAccessorMethod") != null) {
 						// gobject defaults
 						if (prop.get_accessor != null) {
 							prop.get_accessor.value_type.value_owned = true;
@@ -3915,4 +3938,34 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		return true;
 	}
+
+	/* Helper methods */
+
+	Node? base_interface_property (Node prop_node) {
+		var cl = prop_node.parent.symbol as Class;
+		if (cl == null) {
+			return null;
+		}
+
+		foreach (DataType type in cl.get_base_types ()) {
+			if (!(type is UnresolvedType)) {
+				continue;
+			}
+
+			var base_node = resolve_node (prop_node.parent, ((UnresolvedType) type).unresolved_symbol);
+			if (base_node != null && base_node.symbol is Interface) {
+				var base_prop_node = base_node.lookup (prop_node.name);
+				if (base_prop_node != null && base_prop_node.symbol is Property) {
+					var base_property = (Property) base_prop_node.symbol;
+					if (base_property.is_abstract || base_property.is_virtual) {
+						// found
+						return base_prop_node;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
 }
