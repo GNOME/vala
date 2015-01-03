@@ -761,7 +761,7 @@ namespace GData {
 		public uint get_num_items ();
 		public uint get_total_hits ();
 	}
-	[CCode (cheader_filename = "gdata/gdata.h")]
+	[CCode (cheader_filename = "gdata/gdata.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdata_freebase_search_result_item_get_type ()")]
 	[Compact]
 	public class FreebaseSearchResultItem {
 		public unowned string get_id ();

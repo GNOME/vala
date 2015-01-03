@@ -73,6 +73,8 @@ namespace Peas {
 		public void register_extension_factory (GLib.Type iface_type, owned Peas.FactoryFunc factory_func);
 		public void register_extension_type (GLib.Type iface_type, GLib.Type extension_type);
 		[NoAccessorMethod]
+		public bool local_linkage { get; construct; }
+		[NoAccessorMethod]
 		public string module_name { owned get; construct; }
 		[NoAccessorMethod]
 		public string path { owned get; construct; }
