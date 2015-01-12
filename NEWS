@@ -1,3 +1,13 @@
+Vala 0.27.1
+===========
+
+ * Print compiler messages in color.
+ * Add clutter-gdk-1.0 bindings.
+ * Add clutter-gst-3.0 bindings.
+ * Add clutter-x11-1.0 bindings.
+ * Add rest-extras-0.7 bindings.
+ * Bug fix and binding updates.
+
 Vala 0.26.0
 ===========
 
