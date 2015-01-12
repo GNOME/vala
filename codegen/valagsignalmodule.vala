@@ -618,7 +618,7 @@ public class Vala.GSignalModule : GObjectModule {
 			} else {
 				detail_temp_decl = get_temp_variable (gquark_type);
 				emit_temp_var (detail_temp_decl);
-				parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (detail_temp_decl.name)));
+				parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (detail_temp_decl.name)));
 				parse_call.add_argument (new CCodeConstant ("TRUE"));
 			}
 			ccode.add_expression (parse_call);
