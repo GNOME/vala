@@ -174,8 +174,7 @@ class Vala.Compiler {
 		CodeContext.push (context);
 
 		if (disable_diagnostic_colors == false) {
-			string[] env_args = Environ.get ();
-			unowned string env_colors = Environ.get_variable (env_args, "VALA_COLORS");
+			unowned string env_colors = Environment.get_variable ("VALA_COLORS");
 			if (env_colors != null) {
 				context.report.set_colors (env_colors);
 			} else {
