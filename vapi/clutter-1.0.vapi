@@ -501,6 +501,8 @@ namespace Clutter {
 		public const int AudioLowerVolume;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_AudioMedia")]
 		public const int AudioMedia;
+		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_AudioMicMute")]
+		public const int AudioMicMute;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_AudioMute")]
 		public const int AudioMute;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_AudioNext")]
@@ -3483,6 +3485,8 @@ namespace Clutter {
 		public const int dead_abovereversedcomma;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_abovering")]
 		public const int dead_abovering;
+		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_aboveverticalline")]
+		public const int dead_aboveverticalline;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_acute")]
 		public const int dead_acute;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_belowbreve")]
@@ -3501,6 +3505,8 @@ namespace Clutter {
 		public const int dead_belowring;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_belowtilde")]
 		public const int dead_belowtilde;
+		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_belowverticalline")]
+		public const int dead_belowverticalline;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_breve")]
 		public const int dead_breve;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_capital_schwa")]
@@ -3537,6 +3543,10 @@ namespace Clutter {
 		public const int dead_invertedbreve;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_iota")]
 		public const int dead_iota;
+		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_longsolidusoverlay")]
+		public const int dead_longsolidusoverlay;
+		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_lowline")]
+		public const int dead_lowline;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_macron")]
 		public const int dead_macron;
 		[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_KEY_dead_o")]
@@ -5974,7 +5984,9 @@ namespace Clutter {
 		public uint get_n_keys ();
 		public unowned Clutter.Actor get_pointer_actor ();
 		public unowned Clutter.Stage get_pointer_stage ();
+		public unowned string get_product_id ();
 		public GLib.List<weak Clutter.InputDevice> get_slave_devices ();
+		public unowned string get_vendor_id ();
 		public void grab (Clutter.Actor actor);
 		public bool keycode_to_evdev (uint hardware_keycode, uint evdev_keycode);
 		public unowned Clutter.Actor sequence_get_grabbed_actor (Clutter.EventSequence sequence);
@@ -5997,6 +6009,8 @@ namespace Clutter {
 		public uint n_axes { get; }
 		[NoAccessorMethod]
 		public string name { owned get; construct; }
+		public string product_id { get; construct; }
+		public string vendor_id { get; construct; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_interval_get_type ()")]
 	public class Interval : GLib.InitiallyUnowned, Clutter.Scriptable {
@@ -7741,6 +7755,7 @@ namespace Clutter {
 		VERTICAL
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_FONT_", type_id = "clutter_font_flags_get_type ()")]
+	[Deprecated (since = "1.22")]
 	[Flags]
 	public enum FontFlags {
 		MIPMAPPING,
@@ -7753,6 +7768,7 @@ namespace Clutter {
 		BEFORE
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_GRAVITY_", type_id = "clutter_gravity_get_type ()")]
+	[Deprecated (since = "1.22")]
 	public enum Gravity {
 		NONE,
 		NORTH,
@@ -7814,6 +7830,7 @@ namespace Clutter {
 		FLOATING
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_INTERPOLATION_", type_id = "clutter_interpolation_get_type ()")]
+	[Deprecated (since = "1.22")]
 	public enum Interpolation {
 		LINEAR,
 		CUBIC
@@ -7913,6 +7930,7 @@ namespace Clutter {
 		Z_AXIS
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ROTATE_", type_id = "clutter_rotate_direction_get_type ()")]
+	[Deprecated (since = "1.22")]
 	public enum RotateDirection {
 		CW,
 		CCW
@@ -8020,6 +8038,7 @@ namespace Clutter {
 		RIGHT
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TABLE_ALIGNMENT_", type_id = "clutter_table_alignment_get_type ()")]
+	[Deprecated (since = "1.22")]
 	public enum TableAlignment {
 		START,
 		CENTER,
@@ -8032,6 +8051,7 @@ namespace Clutter {
 		RTL
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TEXTURE_", type_id = "clutter_texture_flags_get_type ()")]
+	[Deprecated (since = "1.22")]
 	[Flags]
 	public enum TextureFlags {
 		NONE,
@@ -8040,6 +8060,7 @@ namespace Clutter {
 		YUV_FLAG_YUV2
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TEXTURE_QUALITY_", type_id = "clutter_texture_quality_get_type ()")]
+	[Deprecated (since = "1.22")]
 	public enum TextureQuality {
 		LOW,
 		MEDIUM,
