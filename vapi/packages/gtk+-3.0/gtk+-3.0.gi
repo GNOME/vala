@@ -5196,6 +5196,10 @@
 			<member name="GTK_TEXT_DIR_LTR" value="1"/>
 			<member name="GTK_TEXT_DIR_RTL" value="2"/>
 		</enum>
+		<enum name="GtkTextExtendSelection" type-name="GtkTextExtendSelection" get-type="gtk_text_extend_selection_get_type">
+			<member name="GTK_TEXT_EXTEND_SELECTION_WORD" value="0"/>
+			<member name="GTK_TEXT_EXTEND_SELECTION_LINE" value="1"/>
+		</enum>
 		<enum name="GtkTextViewLayer" type-name="GtkTextViewLayer" get-type="gtk_text_view_layer_get_type">
 			<member name="GTK_TEXT_VIEW_LAYER_BELOW" value="0"/>
 			<member name="GTK_TEXT_VIEW_LAYER_ABOVE" value="1"/>
@@ -25955,6 +25959,16 @@
 					<parameter name="text_view" type="GtkTextView*"/>
 					<parameter name="type" type="GtkDeleteType"/>
 					<parameter name="count" type="gint"/>
+				</parameters>
+			</signal>
+			<signal name="extend-selection" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="text_view" type="GtkTextView*"/>
+					<parameter name="granularity" type="GtkTextExtendSelection"/>
+					<parameter name="location" type="GtkTextIter*"/>
+					<parameter name="start" type="GtkTextIter*"/>
+					<parameter name="end" type="GtkTextIter*"/>
 				</parameters>
 			</signal>
 			<signal name="insert-at-cursor" when="LAST">
