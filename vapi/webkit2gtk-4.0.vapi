@@ -662,6 +662,7 @@ namespace WebKit {
 		public WebKit.Download download_uri (string uri);
 		public void execute_editing_command (string command);
 		public unowned WebKit.BackForwardList get_back_forward_list ();
+		public Gdk.RGBA get_background_color ();
 		public unowned WebKit.WebContext get_context ();
 		public unowned string get_custom_charset ();
 		public double get_estimated_load_progress ();
@@ -681,6 +682,7 @@ namespace WebKit {
 		public void go_back ();
 		public void go_forward ();
 		public void go_to_back_forward_list_item (WebKit.BackForwardListItem list_item);
+		public bool is_editable ();
 		public void load_alternate_html (string content, string content_uri, string? base_uri);
 		public void load_bytes (GLib.Bytes bytes, string? mime_type, string? encoding, string? base_uri);
 		public void load_html (string content, string? base_uri);
@@ -694,7 +696,9 @@ namespace WebKit {
 		public async WebKit.JavascriptResult run_javascript_from_gresource (string resource, GLib.Cancellable? cancellable) throws GLib.Error;
 		public async GLib.InputStream save (WebKit.SaveMode save_mode, GLib.Cancellable? cancellable) throws GLib.Error;
 		public async bool save_to_file (GLib.File file, WebKit.SaveMode save_mode, GLib.Cancellable? cancellable) throws GLib.Error;
+		public void set_background_color (Gdk.RGBA rgba);
 		public void set_custom_charset (string? charset);
+		public void set_editable (bool editable);
 		public void set_settings (WebKit.Settings settings);
 		public void set_zoom_level (double zoom_level);
 		public void stop_loading ();
@@ -704,10 +708,14 @@ namespace WebKit {
 		public WebView.with_settings (WebKit.Settings settings);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public WebView.with_user_content_manager (WebKit.UserContentManager user_content_manager);
+		[NoAccessorMethod]
+		public bool editable { get; set; }
 		public double estimated_load_progress { get; }
 		public void* favicon { get; }
 		[NoAccessorMethod]
 		public bool is_loading { get; }
+		[NoAccessorMethod]
+		public bool is_playing_audio { get; }
 		public WebKit.WebView related_view { construct; }
 		public WebKit.Settings settings { set construct; }
 		public string title { get; }
@@ -927,7 +935,8 @@ namespace WebKit {
 	[Flags]
 	public enum SnapshotOptions {
 		NONE,
-		INCLUDE_SELECTION_HIGHLIGHTING
+		INCLUDE_SELECTION_HIGHLIGHTING,
+		TRANSPARENT_BACKGROUND
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_SNAPSHOT_REGION_", type_id = "webkit_snapshot_region_get_type ()")]
 	public enum SnapshotRegion {

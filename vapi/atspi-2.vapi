@@ -740,6 +740,7 @@ namespace Atspi {
 		VISITED,
 		CHECKABLE,
 		HAS_POPUP,
+		READ_ONLY,
 		LAST_DEFINED
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", cprefix = "ATSPI_TEXT_BOUNDARY_", type_id = "atspi_text_boundary_type_get_type ()")]

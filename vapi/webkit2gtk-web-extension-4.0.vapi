@@ -289,6 +289,8 @@ namespace WebKit {
 			public string charset { owned get; set; }
 			[NoAccessorMethod]
 			public string compat_mode { owned get; }
+			[NoAccessorMethod]
+			public string content_type { owned get; }
 			public string cookie { owned get; set; }
 			[NoAccessorMethod]
 			public WebKit.DOM.HTMLScriptElement current_script { owned get; }

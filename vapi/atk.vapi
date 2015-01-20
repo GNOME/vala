@@ -740,6 +740,10 @@ namespace Atk {
 		DESCRIPTION_TERM,
 		DESCRIPTION_VALUE,
 		STATIC,
+		MATH_FRACTION,
+		MATH_ROOT,
+		SUBSCRIPT,
+		SUPERSCRIPT,
 		LAST_DEFINED;
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.Role for_name (string name);

@@ -4622,8 +4622,10 @@ namespace Gdk {
 		public unowned string get_name ();
 		public void get_position (out unowned Gdk.Screen screen, out int x, out int y);
 		public void get_position_double (out unowned Gdk.Screen screen, out double x, out double y);
+		public unowned string? get_product_id ();
 		public Gdk.InputSource get_source ();
 		public void get_state (Gdk.Window window, [CCode (array_length = false)] double[]? axes, out Gdk.ModifierType mask);
+		public unowned string? get_vendor_id ();
 		public unowned Gdk.Window? get_window_at_position (out int win_x, out int win_y);
 		public unowned Gdk.Window? get_window_at_position_double (out double win_x, out double win_y);
 		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor? cursor, uint32 time_);
@@ -4645,8 +4647,10 @@ namespace Gdk {
 		public Gdk.InputSource input_source { get; construct; }
 		public uint n_axes { get; }
 		public string? name { get; construct; }
+		public string product_id { get; construct; }
 		[NoAccessorMethod]
 		public Gdk.DeviceType type { get; construct; }
+		public string vendor_id { get; construct; }
 		public signal void changed ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_device_manager_get_type ()")]
