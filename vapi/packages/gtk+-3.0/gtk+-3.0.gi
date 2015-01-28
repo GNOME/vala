@@ -9896,6 +9896,12 @@
 					<parameter name="selection" type="GdkAtom"/>
 				</parameters>
 			</method>
+			<method name="get_default" symbol="gtk_clipboard_get_default">
+				<return-type type="GtkClipboard*"/>
+				<parameters>
+					<parameter name="display" type="GdkDisplay*"/>
+				</parameters>
+			</method>
 			<method name="get_display" symbol="gtk_clipboard_get_display">
 				<return-type type="GdkDisplay*"/>
 				<parameters>
@@ -22184,10 +22190,35 @@
 				<interface name="GtkEditable"/>
 				<interface name="GtkCellEditable"/>
 			</implements>
+			<method name="handle_event" symbol="gtk_search_entry_handle_event">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="entry" type="GtkSearchEntry*"/>
+					<parameter name="event" type="GdkEvent*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gtk_search_entry_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
+			<signal name="next-match" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="entry" type="GtkSearchEntry*"/>
+				</parameters>
+			</signal>
+			<signal name="previous-match" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="entry" type="GtkSearchEntry*"/>
+				</parameters>
+			</signal>
 			<signal name="search-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="entry" type="GtkSearchEntry*"/>
+				</parameters>
+			</signal>
+			<signal name="stop-search" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="entry" type="GtkSearchEntry*"/>
@@ -35414,14 +35445,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1503"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1504"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="4"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="15"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

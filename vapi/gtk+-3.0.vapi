@@ -1396,6 +1396,7 @@ namespace Gtk {
 		protected Clipboard ();
 		public void clear ();
 		public static unowned Gtk.Clipboard @get (Gdk.Atom selection);
+		public static unowned Gtk.Clipboard get_default (Gdk.Display display);
 		public unowned Gdk.Display get_display ();
 		public static unowned Gtk.Clipboard get_for_display (Gdk.Display display, Gdk.Atom selection);
 		public unowned GLib.Object get_owner ();
@@ -4434,7 +4435,11 @@ namespace Gtk {
 	public class SearchEntry : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.Editable, Gtk.CellEditable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SearchEntry ();
+		public bool handle_event (Gdk.Event event);
+		public virtual signal void next_match ();
+		public virtual signal void previous_match ();
 		public virtual signal void search_changed ();
+		public virtual signal void stop_search ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_selection_data_copy", type_id = "gtk_selection_data_get_type ()")]
 	[Compact]
