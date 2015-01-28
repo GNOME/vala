@@ -58,7 +58,7 @@ namespace Gtk {
 	[CCode (type_id = "gtk_status_icon_get_type ()")]
 	public class StatusIcon {
 		[CCode (instance_pos = -1)]
-		public void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in);
+		public void position_menu (Gtk.Menu menu, ref int x, ref int y, out bool push_in);
 	}
 
 	[CCode (type_id = "gtk_ui_manager_get_type ()")]
