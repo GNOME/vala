@@ -8396,7 +8396,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool test_widget_send_key (Gtk.Widget widget, uint keyval, Gdk.ModifierType modifiers);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool tree_get_row_drag_data (Gtk.SelectionData selection_data, out Gtk.TreeModel tree_model, out Gtk.TreePath path);
+	public static bool tree_get_row_drag_data (Gtk.SelectionData selection_data, out unowned Gtk.TreeModel tree_model, out Gtk.TreePath path);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool tree_set_row_drag_data (Gtk.SelectionData selection_data, Gtk.TreeModel tree_model, Gtk.TreePath path);
 }
