@@ -172,6 +172,12 @@
 				<parameter name="y" type="gint"/>
 			</parameters>
 		</function>
+		<function name="drag_cancel" symbol="gtk_drag_cancel">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="context" type="GdkDragContext*"/>
+			</parameters>
+		</function>
 		<function name="drag_check_threshold" symbol="gtk_drag_check_threshold">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -12781,6 +12787,7 @@
 					<parameter name="action" type="GtkFileChooserAction"/>
 				</parameters>
 			</constructor>
+			<property name="search-mode" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="desktop-folder" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -22105,6 +22112,13 @@
 			<property name="window-placement" type="GtkCornerType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="window-placement-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="edge-overshot" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkScrolledWindow*"/>
+					<parameter name="p0" type="GtkPositionType"/>
+				</parameters>
+			</signal>
+			<signal name="edge-reached" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="object" type="GtkScrolledWindow*"/>
@@ -35445,14 +35459,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1504"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1505"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="4"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="5"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="15"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

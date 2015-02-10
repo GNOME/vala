@@ -2085,6 +2085,8 @@ namespace Gtk {
 	public class FileChooserWidget : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable, Gtk.FileChooser, Gtk.FileChooserEmbed {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FileChooserWidget (Gtk.FileChooserAction action);
+		[NoAccessorMethod]
+		public bool search_mode { get; set; }
 		public virtual signal void desktop_folder ();
 		public virtual signal void down_folder ();
 		public virtual signal void home_folder ();
@@ -4409,6 +4411,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool window_placement_set { get; set; }
 		public virtual signal void edge_overshot (Gtk.PositionType p0);
+		public virtual signal void edge_reached (Gtk.PositionType p0);
 		public virtual signal void move_focus_out (Gtk.DirectionType direction);
 		public virtual signal bool scroll_child (Gtk.ScrollType scroll, bool horizontal);
 	}
@@ -9441,6 +9444,8 @@ namespace Gtk {
 	public static unowned Gdk.DragContext drag_begin (Gtk.Widget widget, Gtk.TargetList targets, Gdk.DragAction actions, int button, Gdk.Event? event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gdk.DragContext drag_begin_with_coordinates (Gtk.Widget widget, Gtk.TargetList targets, Gdk.DragAction actions, int button, Gdk.Event event, int x, int y);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static void drag_cancel (Gdk.DragContext context);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool drag_check_threshold (Gtk.Widget widget, int start_x, int start_y, int current_x, int current_y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
