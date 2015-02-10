@@ -5073,14 +5073,21 @@ namespace Gdk {
 		protected GLContext ();
 		public static void clear_current ();
 		public static unowned Gdk.GLContext get_current ();
+		public bool get_debug_enabled ();
 		public unowned Gdk.Display get_display ();
+		public bool get_forward_compatible ();
 		public Gdk.GLProfile get_profile ();
+		public void get_required_version (out int? major, out int? minor);
+		public unowned Gdk.GLContext get_shared_context ();
 		public unowned Gdk.Window get_window ();
 		public void make_current ();
+		public bool realize () throws GLib.Error;
+		public void set_debug_enabled (bool enabled);
+		public void set_forward_compatible (bool compatible);
+		public void set_required_version (int major, int minor);
 		public Gdk.Display display { get; construct; }
 		public Gdk.GLProfile profile { get; construct; }
-		[NoAccessorMethod]
-		public Gdk.GLContext shared_context { owned get; construct; }
+		public Gdk.GLContext shared_context { get; construct; }
 		public Gdk.Window window { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_keymap_get_type ()")]
@@ -5678,7 +5685,6 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_GL_PROFILE_", type_id = "gdk_gl_profile_get_type ()")]
 	public enum GLProfile {
 		DEFAULT,
-		LEGACY,
 		@3_2_CORE
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_OWNERSHIP_", type_id = "gdk_grab_ownership_get_type ()")]

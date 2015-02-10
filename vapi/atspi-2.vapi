@@ -692,6 +692,10 @@ namespace Atspi {
 		RATING,
 		TIMER,
 		STATIC,
+		MATH_FRACTION,
+		MATH_ROOT,
+		SUBSCRIPT,
+		SUPERSCRIPT,
 		LAST_DEFINED;
 		public static string get_name (Atspi.Role role);
 	}

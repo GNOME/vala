@@ -42,7 +42,7 @@ namespace Json {
 		public unowned Json.Builder add_int_value (int64 value);
 		public unowned Json.Builder add_null_value ();
 		public unowned Json.Builder add_string_value (string value);
-		public unowned Json.Builder add_value (Json.Node node);
+		public unowned Json.Builder add_value (owned Json.Node node);
 		public unowned Json.Builder begin_array ();
 		public unowned Json.Builder begin_object ();
 		public unowned Json.Builder end_array ();

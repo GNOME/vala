@@ -355,6 +355,7 @@ DataInputStream
   .read_line.length default=null
 
 // Forward upstream
+*_autoptr skip
 content_type_from_mime_type nullable
 content_type_get_mime_type nullable
 ActionGroup

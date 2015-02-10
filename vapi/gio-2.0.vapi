@@ -1377,6 +1377,17 @@ namespace GLib {
 		public virtual ssize_t skip (size_t count, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public virtual async ssize_t skip_async (size_t count, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_list_store_get_type ()")]
+	public class ListStore : GLib.Object, GLib.ListModel {
+		[CCode (has_construct_function = false)]
+		public ListStore (GLib.Type item_type);
+		public void append (void* item);
+		public void insert (uint position, void* item);
+		public void remove (uint position);
+		public void remove_all ();
+		[NoAccessorMethod]
+		public GLib.Type item_type { get; construct; }
+	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_memory_input_stream_get_type ()")]
 	public class MemoryInputStream : GLib.InputStream, GLib.PollableInputStream, GLib.Seekable {
 		[CCode (has_construct_function = false, type = "GInputStream*")]
@@ -1809,6 +1820,8 @@ namespace GLib {
 		public GLib.SettingsSchemaKey get_key (string name);
 		public unowned string get_path ();
 		public bool has_key (string name);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] list_children ();
 		public GLib.SettingsSchema @ref ();
 		public void unref ();
 	}
@@ -1817,6 +1830,7 @@ namespace GLib {
 	public class SettingsSchemaKey {
 		public GLib.Variant get_default_value ();
 		public unowned string get_description ();
+		public unowned string get_name ();
 		public GLib.Variant get_range ();
 		public unowned string get_summary ();
 		public unowned GLib.VariantType get_value_type ();
@@ -1842,6 +1856,7 @@ namespace GLib {
 		public SimpleAction (string name, GLib.VariantType? parameter_type);
 		public void set_enabled (bool enabled);
 		public void set_state (GLib.Variant value);
+		public void set_state_hint (GLib.Variant? state_hint);
 		[CCode (has_construct_function = false)]
 		public SimpleAction.stateful (string name, GLib.VariantType? parameter_type, GLib.Variant state);
 		public signal void activate (GLib.Variant? parameter);
@@ -2740,6 +2755,14 @@ namespace GLib {
 		public static GLib.Object @new (GLib.Type object_type, GLib.Cancellable? cancellable = null, ...) throws GLib.Error;
 		public static GLib.Object new_valist (GLib.Type object_type, string first_property_name, va_list var_args, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public static GLib.Object newv (GLib.Type object_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 1.5, array_length_type = "guint")] GLib.Parameter[] parameters, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gio/gio.h", type_cname = "GListModelInterface", type_id = "g_list_model_get_type ()")]
+	public interface ListModel : GLib.Object {
+		public abstract GLib.Type get_item_type ();
+		public abstract uint get_n_items ();
+		public GLib.Object? get_object (uint position);
+		[HasEmitter]
+		public signal void items_changed (uint position, uint removed, uint added);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_loadable_icon_get_type ()")]
 	public interface LoadableIcon : GLib.Icon, GLib.Object {
