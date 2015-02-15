@@ -5041,7 +5041,7 @@ namespace GLib {
 		public bool lookup (string key, string format_string, ...);
 		public GLib.Variant lookup_value (string key, GLib.VariantType expected_type);
 		public bool contains (string key);
-		public void insert (string key, string fornat_string);
+		public void insert (string key, string format_string, ...);
 		public void insert_value (string key, GLib.Variant value);
 		public bool remove (string key);
 		public void clear ();
