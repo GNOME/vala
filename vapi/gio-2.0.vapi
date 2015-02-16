@@ -288,6 +288,7 @@ namespace GLib {
 		public virtual void after_emit (GLib.Variant platform_data);
 		[NoWrapper]
 		public virtual void before_emit (GLib.Variant platform_data);
+		public void bind_busy_property (void* object, string? property);
 		[NoWrapper]
 		public virtual bool dbus_register (GLib.DBusConnection connection, string object_path) throws GLib.Error;
 		[NoWrapper]
@@ -2758,6 +2759,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GListModelInterface", type_id = "g_list_model_get_type ()")]
 	public interface ListModel : GLib.Object {
+		[NoWrapper]
+		public abstract void* get_item (uint position);
 		public abstract GLib.Type get_item_type ();
 		public abstract uint get_n_items ();
 		public GLib.Object? get_object (uint position);

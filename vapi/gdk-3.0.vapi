@@ -5076,9 +5076,9 @@ namespace Gdk {
 		public bool get_debug_enabled ();
 		public unowned Gdk.Display get_display ();
 		public bool get_forward_compatible ();
-		public Gdk.GLProfile get_profile ();
 		public void get_required_version (out int? major, out int? minor);
 		public unowned Gdk.GLContext get_shared_context ();
+		public void get_version (out int major, out int minor);
 		public unowned Gdk.Window get_window ();
 		public void make_current ();
 		public bool realize () throws GLib.Error;
@@ -5086,7 +5086,6 @@ namespace Gdk {
 		public void set_forward_compatible (bool compatible);
 		public void set_required_version (int major, int minor);
 		public Gdk.Display display { get; construct; }
-		public Gdk.GLProfile profile { get; construct; }
 		public Gdk.GLContext shared_context { get; construct; }
 		public Gdk.Window window { get; construct; }
 	}
@@ -5197,7 +5196,7 @@ namespace Gdk {
 		public static void constrain_size (Gdk.Geometry geometry, Gdk.WindowHints flags, int width, int height, out int new_width, out int new_height);
 		public void coords_from_parent (double parent_x, double parent_y, out double x, out double y);
 		public void coords_to_parent (double x, double y, out double parent_x, out double parent_y);
-		public Gdk.GLContext create_gl_context (Gdk.GLProfile profile) throws GLib.Error;
+		public Gdk.GLContext create_gl_context () throws GLib.Error;
 		public Cairo.Surface create_similar_image_surface (int format, int width, int height, int scale);
 		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
 		public void deiconify ();
@@ -5681,11 +5680,6 @@ namespace Gdk {
 	public enum FullscreenMode {
 		CURRENT_MONITOR,
 		ALL_MONITORS
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_GL_PROFILE_", type_id = "gdk_gl_profile_get_type ()")]
-	public enum GLProfile {
-		DEFAULT,
-		@3_2_CORE
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_OWNERSHIP_", type_id = "gdk_grab_ownership_get_type ()")]
 	public enum GrabOwnership {
