@@ -2309,7 +2309,7 @@ namespace Gtk {
 		public bool get_has_alpha ();
 		public bool get_has_depth_buffer ();
 		public bool get_has_stencil_buffer ();
-		public Gdk.GLProfile get_profile ();
+		public void get_required_version (out int major, out int minor);
 		public void make_current ();
 		public void queue_render ();
 		public void set_auto_render (bool auto_render);
@@ -2317,13 +2317,12 @@ namespace Gtk {
 		public void set_has_alpha (bool has_alpha);
 		public void set_has_depth_buffer (bool has_depth_buffer);
 		public void set_has_stencil_buffer (bool has_stencil_buffer);
-		public void set_profile (Gdk.GLProfile profile);
+		public void set_required_version (int major, int minor);
 		public bool auto_render { get; set; }
 		public Gdk.GLContext context { get; }
 		public bool has_alpha { get; set; }
 		public bool has_depth_buffer { get; set; }
 		public bool has_stencil_buffer { get; set; }
-		public Gdk.GLProfile profile { get; set construct; }
 		public virtual signal Gdk.GLContext create_context ();
 		public virtual signal bool render (Gdk.GLContext context);
 		public virtual signal void resize (int width, int height);
@@ -3131,6 +3130,7 @@ namespace Gtk {
 	public class ListBox : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ListBox ();
+		public void bind_model (GLib.List? model, owned Gtk.ListBoxCreateWidgetFunc create_widget_func);
 		public void drag_highlight_row (Gtk.ListBoxRow row);
 		public void drag_unhighlight_row ();
 		public bool get_activate_on_single_click ();
@@ -3513,6 +3513,7 @@ namespace Gtk {
 		public Notebook ();
 		public int append_page (Gtk.Widget child, Gtk.Widget? tab_label = null);
 		public int append_page_menu (Gtk.Widget child, Gtk.Widget? tab_label, Gtk.Widget? menu_label);
+		public void detach_tab (Gtk.Widget child);
 		public unowned Gtk.Widget get_action_widget (Gtk.PackType pack_type);
 		public int get_current_page ();
 		public unowned string get_group_name ();
@@ -4667,14 +4668,6 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string gtk_xft_rgba { owned get; set; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class Sidebar : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public Sidebar ();
-		public unowned Gtk.Stack get_stack ();
-		public void set_stack (Gtk.Stack stack);
-		public Gtk.Stack stack { get; set; }
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_size_group_get_type ()")]
 	public class SizeGroup : GLib.Object, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
@@ -4792,6 +4785,14 @@ namespace Gtk {
 		public bool vhomogeneous { get; set construct; }
 		public Gtk.Widget visible_child { get; set; }
 		public string visible_child_name { get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class StackSidebar : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public StackSidebar ();
+		public unowned Gtk.Stack get_stack ();
+		public void set_stack (Gtk.Stack stack);
+		public Gtk.Stack stack { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_stack_switcher_get_type ()")]
 	public class StackSwitcher : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
@@ -8703,6 +8704,8 @@ namespace Gtk {
 	public delegate void IconViewForeachFunc (Gtk.IconView icon_view, Gtk.TreePath path);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
 	public delegate int KeySnoopFunc (Gtk.Widget grab_widget, Gdk.EventKey event);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public delegate Gtk.Widget ListBoxCreateWidgetFunc (void* item);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool ListBoxFilterFunc (Gtk.ListBoxRow row);
 	[CCode (cheader_filename = "gtk/gtk.h")]

@@ -1777,6 +1777,13 @@
 				<parameter name="func_data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<callback name="GtkListBoxCreateWidgetFunc">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="item" type="gpointer"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<callback name="GtkListBoxFilterFunc">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -13650,10 +13657,12 @@
 					<parameter name="area" type="GtkGLArea*"/>
 				</parameters>
 			</method>
-			<method name="get_profile" symbol="gtk_gl_area_get_profile">
-				<return-type type="GdkGLProfile"/>
+			<method name="get_required_version" symbol="gtk_gl_area_get_required_version">
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="area" type="GtkGLArea*"/>
+					<parameter name="major" type="int*"/>
+					<parameter name="minor" type="int*"/>
 				</parameters>
 			</method>
 			<method name="make_current" symbol="gtk_gl_area_make_current">
@@ -13706,11 +13715,12 @@
 					<parameter name="has_stencil_buffer" type="gboolean"/>
 				</parameters>
 			</method>
-			<method name="set_profile" symbol="gtk_gl_area_set_profile">
+			<method name="set_required_version" symbol="gtk_gl_area_set_required_version">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="area" type="GtkGLArea*"/>
-					<parameter name="profile" type="GdkGLProfile"/>
+					<parameter name="major" type="int"/>
+					<parameter name="minor" type="int"/>
 				</parameters>
 			</method>
 			<property name="auto-render" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -13718,7 +13728,6 @@
 			<property name="has-alpha" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-depth-buffer" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-stencil-buffer" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="profile" type="GdkGLProfile" readable="1" writable="1" construct="1" construct-only="0"/>
 			<signal name="create-context" when="LAST">
 				<return-type type="GdkGLContext*"/>
 				<parameters>
@@ -17005,6 +17014,16 @@
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
 			</implements>
+			<method name="bind_model" symbol="gtk_list_box_bind_model">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkListBox*"/>
+					<parameter name="model" type="GListModel*"/>
+					<parameter name="create_widget_func" type="GtkListBoxCreateWidgetFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="user_data_free_func" type="GDestroyNotify"/>
+				</parameters>
+			</method>
 			<method name="drag_highlight_row" symbol="gtk_list_box_drag_highlight_row">
 				<return-type type="void"/>
 				<parameters>
@@ -18550,6 +18569,13 @@
 					<parameter name="child" type="GtkWidget*"/>
 					<parameter name="tab_label" type="GtkWidget*"/>
 					<parameter name="menu_label" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="detach_tab" symbol="gtk_notebook_detach_tab">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="notebook" type="GtkNotebook*"/>
+					<parameter name="child" type="GtkWidget*"/>
 				</parameters>
 			</method>
 			<method name="get_action_widget" symbol="gtk_notebook_get_action_widget">
@@ -22432,29 +22458,6 @@
 			<property name="gtk-xft-hintstyle" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-xft-rgba" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
-		<object name="GtkSidebar" parent="GtkBin" type-name="GtkSidebar" get-type="gtk_sidebar_get_type">
-			<implements>
-				<interface name="AtkImplementor"/>
-				<interface name="GtkBuildable"/>
-			</implements>
-			<method name="get_stack" symbol="gtk_sidebar_get_stack">
-				<return-type type="GtkStack*"/>
-				<parameters>
-					<parameter name="sidebar" type="GtkSidebar*"/>
-				</parameters>
-			</method>
-			<constructor name="new" symbol="gtk_sidebar_new">
-				<return-type type="GtkWidget*"/>
-			</constructor>
-			<method name="set_stack" symbol="gtk_sidebar_set_stack">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="sidebar" type="GtkSidebar*"/>
-					<parameter name="stack" type="GtkStack*"/>
-				</parameters>
-			</method>
-			<property name="stack" type="GtkStack*" readable="1" writable="1" construct="0" construct-only="0"/>
-		</object>
 		<object name="GtkSizeGroup" parent="GObject" type-name="GtkSizeGroup" get-type="gtk_size_group_get_type">
 			<implements>
 				<interface name="GtkBuildable"/>
@@ -22953,6 +22956,29 @@
 			<property name="vhomogeneous" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="visible-child" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visible-child-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkStackSidebar" parent="GtkBin" type-name="GtkStackSidebar" get-type="gtk_stack_sidebar_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="get_stack" symbol="gtk_stack_sidebar_get_stack">
+				<return-type type="GtkStack*"/>
+				<parameters>
+					<parameter name="sidebar" type="GtkStackSidebar*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_stack_sidebar_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="set_stack" symbol="gtk_stack_sidebar_set_stack">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="sidebar" type="GtkStackSidebar*"/>
+					<parameter name="stack" type="GtkStack*"/>
+				</parameters>
+			</method>
+			<property name="stack" type="GtkStack*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkStackSwitcher" parent="GtkBox" type-name="GtkStackSwitcher" get-type="gtk_stack_switcher_get_type">
 			<implements>
@@ -35459,14 +35485,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1505"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1507"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="5"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="7"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="15"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
