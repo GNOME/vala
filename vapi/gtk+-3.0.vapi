@@ -3130,7 +3130,7 @@ namespace Gtk {
 	public class ListBox : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ListBox ();
-		public void bind_model (GLib.List? model, owned Gtk.ListBoxCreateWidgetFunc create_widget_func);
+		public void bind_model (GLib.ListModel? model, owned Gtk.ListBoxCreateWidgetFunc create_widget_func);
 		public void drag_highlight_row (Gtk.ListBoxRow row);
 		public void drag_unhighlight_row ();
 		public bool get_activate_on_single_click ();
