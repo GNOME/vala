@@ -141,7 +141,7 @@ InputStream
   .skip throws="GLib.IOError"
   .skip_finish throws="GLib.IOError"
 ListModel
-  .get_item skip=false
+  .get_item#method skip=false abstract
 MemoryOutputStream
   .get_data type="unowned uint8[]"
   .steal_data type="uint8[]"
