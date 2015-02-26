@@ -288,7 +288,7 @@ namespace GLib {
 		public virtual void after_emit (GLib.Variant platform_data);
 		[NoWrapper]
 		public virtual void before_emit (GLib.Variant platform_data);
-		public void bind_busy_property (void* object, string? property);
+		public void bind_busy_property (void* object, string property);
 		[NoWrapper]
 		public virtual bool dbus_register (GLib.DBusConnection connection, string object_path) throws GLib.Error;
 		[NoWrapper]
@@ -299,6 +299,7 @@ namespace GLib {
 		public static unowned GLib.Application get_default ();
 		public GLib.ApplicationFlags get_flags ();
 		public uint get_inactivity_timeout ();
+		public bool get_is_busy ();
 		public bool get_is_registered ();
 		public bool get_is_remote ();
 		public unowned string? get_resource_base_path ();
@@ -323,12 +324,14 @@ namespace GLib {
 		public void set_flags (GLib.ApplicationFlags flags);
 		public void set_inactivity_timeout (uint inactivity_timeout);
 		public void set_resource_base_path (string? resource_path);
+		public void unbind_busy_property (void* object, string property);
 		public void unmark_busy ();
 		public void withdraw_notification (string id);
 		public GLib.ActionGroup action_group { set; }
 		public string application_id { get; set construct; }
 		public GLib.ApplicationFlags flags { get; set; }
 		public uint inactivity_timeout { get; set; }
+		public bool is_busy { get; }
 		public bool is_registered { get; }
 		public bool is_remote { get; }
 		public string resource_base_path { get; set; }
@@ -1008,6 +1011,7 @@ namespace GLib {
 		public unowned GLib.File get_container ();
 		public bool has_pending ();
 		public bool is_closed ();
+		public bool iterate (out unowned GLib.FileInfo out_info, out unowned GLib.File out_child, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual GLib.FileInfo? next_file (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async GLib.List<GLib.FileInfo> next_files_async (int num_files, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_pending (bool pending);
@@ -1908,6 +1912,15 @@ namespace GLib {
 		public void set_op_res_gpointer<T> (owned T op_res);
 		public void set_op_res_gssize (ssize_t op_res);
 		public void take_error (GLib.Error error);
+	}
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_simple_io_stream_get_type ()")]
+	public class SimpleIOStream : GLib.IOStream {
+		[CCode (has_construct_function = false, type = "GIOStream*")]
+		public SimpleIOStream (GLib.InputStream input_stream, GLib.OutputStream output_stream);
+		[NoAccessorMethod]
+		public GLib.InputStream input_stream { owned get; construct; }
+		[NoAccessorMethod]
+		public GLib.OutputStream output_stream { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_simple_permission_get_type ()")]
 	public class SimplePermission : GLib.Permission {

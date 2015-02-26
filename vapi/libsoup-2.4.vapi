@@ -246,13 +246,13 @@ namespace Soup {
 	[Compact]
 	public class ClientContext {
 		[Deprecated]
-		public unowned Soup.Address get_address ();
+		public unowned Soup.Address? get_address ();
 		public unowned Soup.AuthDomain? get_auth_domain ();
 		public unowned string? get_auth_user ();
-		public unowned GLib.Socket get_gsocket ();
-		public unowned string get_host ();
-		public unowned GLib.SocketAddress get_local_address ();
-		public unowned GLib.SocketAddress get_remote_address ();
+		public unowned GLib.Socket? get_gsocket ();
+		public unowned string? get_host ();
+		public unowned GLib.SocketAddress? get_local_address ();
+		public unowned GLib.SocketAddress? get_remote_address ();
 		[Deprecated]
 		public unowned Soup.Socket get_socket ();
 	}
@@ -602,6 +602,7 @@ namespace Soup {
 	public class Server : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Server (string optname1, ...);
+		public bool accept_iostream (GLib.IOStream stream, GLib.SocketAddress? local_addr, GLib.SocketAddress? remote_addr) throws GLib.Error;
 		public void add_auth_domain (Soup.AuthDomain auth_domain);
 		public void add_handler (string? path, owned Soup.ServerCallback callback);
 		public void disconnect ();
@@ -791,6 +792,7 @@ namespace Soup {
 		public bool close_on_dispose { get; set construct; }
 		public int fd { get; construct; }
 		public GLib.Socket gsocket { construct; }
+		public GLib.IOStream iostream { construct; }
 		[NoAccessorMethod]
 		public bool ipv6_only { get; set; }
 		[NoAccessorMethod]

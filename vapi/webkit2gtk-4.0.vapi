@@ -41,6 +41,18 @@ namespace WebKit {
 		public unowned string get_title ();
 		public unowned string get_uri ();
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_color_chooser_request_get_type ()")]
+	public class ColorChooserRequest : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected ColorChooserRequest ();
+		public void cancel ();
+		public void finish ();
+		public Gdk.Rectangle get_element_rectangle ();
+		public Gdk.RGBA get_rgba ();
+		public void set_rgba (Gdk.RGBA rgba);
+		public Gdk.RGBA rgba { get; set construct; }
+		public signal void finished ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_context_menu_get_type ()")]
 	public class ContextMenu : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -271,12 +283,14 @@ namespace WebKit {
 	public class Notification : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Notification ();
+		public void close ();
 		public unowned string get_body ();
 		public uint64 get_id ();
 		public unowned string get_title ();
 		public string body { get; }
 		public uint64 id { get; }
 		public string title { get; }
+		public signal void closed ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_notification_permission_request_get_type ()")]
 	public class NotificationPermissionRequest : GLib.Object, WebKit.PermissionRequest {
@@ -726,7 +740,6 @@ namespace WebKit {
 		public double zoom_level { get; set; }
 		public virtual signal bool authenticate (WebKit.AuthenticationRequest request);
 		public virtual signal void close ();
-		public virtual signal bool close_notification (WebKit.Notification notification);
 		public virtual signal bool context_menu (WebKit.ContextMenu context_menu, Gdk.Event event, WebKit.HitTestResult hit_test_result);
 		public virtual signal void context_menu_dismissed ();
 		public signal Gtk.Widget create (WebKit.NavigationAction navigation_action);
@@ -743,6 +756,7 @@ namespace WebKit {
 		public virtual signal void ready_to_show ();
 		public virtual signal void resource_load_started (WebKit.WebResource resource, WebKit.URIRequest request);
 		public virtual signal void run_as_modal ();
+		public virtual signal bool run_color_chooser (WebKit.ColorChooserRequest request);
 		public virtual signal bool run_file_chooser (WebKit.FileChooserRequest request);
 		public virtual signal bool script_dialog (WebKit.ScriptDialog dialog);
 		public virtual signal bool show_notification (WebKit.Notification notification);

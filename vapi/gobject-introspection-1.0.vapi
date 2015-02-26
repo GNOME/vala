@@ -185,6 +185,8 @@ namespace GI {
 		public static unowned GI.Repository get_default ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_dependencies (string namespace_);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] get_immediate_dependencies (string namespace_);
 		public GI.BaseInfo get_info (string namespace_, int index);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_loaded_namespaces ();

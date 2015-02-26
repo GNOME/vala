@@ -91,6 +91,8 @@ namespace ClutterX11 {
 	[CCode (cheader_filename = "clutter/x11/clutter-x11.h")]
 	public static bool get_use_argb_visual ();
 	[CCode (cheader_filename = "clutter/x11/clutter-x11.h")]
+	public static bool get_use_stereo_stage ();
+	[CCode (cheader_filename = "clutter/x11/clutter-x11.h")]
 	public static X.VisualInfo? get_visual_info ();
 	[CCode (cheader_filename = "clutter/x11/clutter-x11.h")]
 	public static ClutterX11.FilterReturn handle_event (X.Event xevent);
@@ -108,6 +110,8 @@ namespace ClutterX11 {
 	public static bool set_stage_foreign (Clutter.Stage stage, X.Window xwindow);
 	[CCode (cheader_filename = "clutter/x11/clutter-x11.h")]
 	public static void set_use_argb_visual (bool use_argb);
+	[CCode (cheader_filename = "clutter/x11/clutter-x11.h")]
+	public static void set_use_stereo_stage (bool use_stereo);
 	[CCode (cheader_filename = "clutter/x11/clutter-x11.h")]
 	public static void trap_x_errors ();
 	[CCode (cheader_filename = "clutter/x11/clutter-x11.h")]
