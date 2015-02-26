@@ -2373,6 +2373,8 @@ namespace Gtk {
 	public class GestureLongPress : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		public GestureLongPress (Gtk.Widget widget);
+		[NoAccessorMethod]
+		public double delay_factor { get; set; }
 		public virtual signal void cancelled ();
 		public virtual signal void pressed (double p0, double p1);
 	}
@@ -3781,14 +3783,17 @@ namespace Gtk {
 		public bool get_pointing_to (out Gdk.Rectangle rect);
 		public Gtk.PositionType get_position ();
 		public unowned Gtk.Widget get_relative_to ();
+		public bool get_transitions_enabled ();
 		public void set_modal (bool modal);
 		public void set_pointing_to (Gdk.Rectangle rect);
 		public void set_position (Gtk.PositionType position);
 		public void set_relative_to (Gtk.Widget relative_to);
+		public void set_transitions_enabled (bool transitions_enabled);
 		public bool modal { get; set; }
 		public Cairo.RectangleInt pointing_to { get; set; }
 		public Gtk.PositionType position { get; set construct; }
 		public Gtk.Widget relative_to { get; set; }
+		public bool transitions_enabled { get; set; }
 		public virtual signal void closed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_popover_accessible_get_type ()")]
@@ -8705,7 +8710,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
 	public delegate int KeySnoopFunc (Gtk.Widget grab_widget, Gdk.EventKey event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate Gtk.Widget ListBoxCreateWidgetFunc (void* item);
+	public delegate Gtk.Widget ListBoxCreateWidgetFunc (GLib.Object item);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool ListBoxFilterFunc (Gtk.ListBoxRow row);
 	[CCode (cheader_filename = "gtk/gtk.h")]

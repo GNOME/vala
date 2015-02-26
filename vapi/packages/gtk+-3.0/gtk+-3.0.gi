@@ -13974,6 +13974,7 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</constructor>
+			<property name="delay-factor" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="cancelled" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -19722,6 +19723,12 @@
 					<parameter name="popover" type="GtkPopover*"/>
 				</parameters>
 			</method>
+			<method name="get_transitions_enabled" symbol="gtk_popover_get_transitions_enabled">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="popover" type="GtkPopover*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gtk_popover_new">
 				<return-type type="GtkWidget*"/>
 				<parameters>
@@ -19763,10 +19770,18 @@
 					<parameter name="relative_to" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="set_transitions_enabled" symbol="gtk_popover_set_transitions_enabled">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="popover" type="GtkPopover*"/>
+					<parameter name="transitions_enabled" type="gboolean"/>
+				</parameters>
+			</method>
 			<property name="modal" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pointing-to" type="cairo_rectangle_int_t*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="position" type="GtkPositionType" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="relative-to" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="transitions-enabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="closed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -35485,14 +35500,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1507"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1509"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="7"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="9"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="15"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
