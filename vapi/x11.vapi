@@ -598,7 +598,7 @@ namespace X {
 		public long your_event_mask;	/* my event mask */
 		public long do_not_propagate_mask; /* set of events that should not propagate */
 		public bool override_redirect;	/* boolean value for override-redirect */
-		public Screen screen;		/* back pointer to correct screen */
+		public unowned Screen screen;   /* back pointer to correct screen */
 	}
 
 	[CCode (cname = "ParentRelative")]
