@@ -35,6 +35,7 @@ namespace Gtk {
 		public bool iter_backward_to_context_class_toggle (ref Gtk.TextIter iter, string context_class);
 		public bool iter_forward_to_context_class_toggle (ref Gtk.TextIter iter, string context_class);
 		public bool iter_has_context_class (Gtk.TextIter iter, string context_class);
+		public void join_lines (Gtk.TextIter start, Gtk.TextIter end);
 		public void remove_source_marks (Gtk.TextIter start, Gtk.TextIter end, string? category);
 		public void set_highlight_matching_brackets (bool highlight);
 		public void set_highlight_syntax (bool highlight);
@@ -115,7 +116,7 @@ namespace Gtk {
 		protected SourceCompletionContext ();
 		public void add_proposals (Gtk.SourceCompletionProvider provider, GLib.List<Gtk.SourceCompletionProposal>? proposals, bool finished);
 		public Gtk.SourceCompletionActivation get_activation ();
-		public Gtk.TextIter get_iter ();
+		public bool get_iter (out Gtk.TextIter iter);
 		[NoAccessorMethod]
 		public Gtk.SourceCompletionActivation activation { get; set construct; }
 		[NoAccessorMethod]
@@ -526,6 +527,7 @@ namespace Gtk {
 		public async bool forward_async (Gtk.TextIter iter, GLib.Cancellable? cancellable, out Gtk.TextIter match_start, out Gtk.TextIter match_end) throws GLib.Error;
 		public unowned Gtk.SourceBuffer get_buffer ();
 		public bool get_highlight ();
+		public unowned Gtk.SourceStyle get_match_style ();
 		public int get_occurrence_position (Gtk.TextIter match_start, Gtk.TextIter match_end);
 		public int get_occurrences_count ();
 		public GLib.Error? get_regex_error ();
@@ -533,9 +535,11 @@ namespace Gtk {
 		public bool replace (Gtk.TextIter match_start, Gtk.TextIter match_end, string replace, int replace_length) throws GLib.Error;
 		public uint replace_all (string replace, int replace_length) throws GLib.Error;
 		public void set_highlight (bool highlight);
+		public void set_match_style (Gtk.SourceStyle? match_style);
 		public void set_settings (Gtk.SourceSearchSettings? settings);
 		public Gtk.SourceBuffer buffer { get; construct; }
 		public bool highlight { get; set construct; }
+		public Gtk.SourceStyle match_style { get; set construct; }
 		public int occurrences_count { get; }
 		public GLib.Error? regex_error { owned get; }
 		public Gtk.SourceSearchSettings settings { get; set construct; }
@@ -617,6 +621,18 @@ namespace Gtk {
 		public string id { get; construct; }
 		public string name { get; }
 	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_style_scheme_chooser_button_get_type ()")]
+	[GIR (name = "StyleSchemeChooserButton")]
+	public class SourceStyleSchemeChooserButton : Gtk.Button, Atk.Implementor, Gtk.Actionable, Gtk.Activatable, Gtk.Buildable, Gtk.SourceStyleSchemeChooser {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public SourceStyleSchemeChooserButton ();
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_style_scheme_chooser_widget_get_type ()")]
+	[GIR (name = "StyleSchemeChooserWidget")]
+	public class SourceStyleSchemeChooserWidget : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.SourceStyleSchemeChooser {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public SourceStyleSchemeChooserWidget ();
+	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_style_scheme_manager_get_type ()")]
 	[GIR (name = "StyleSchemeManager")]
 	public class SourceStyleSchemeManager : GLib.Object {
@@ -643,6 +659,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SourceView ();
 		public bool get_auto_indent ();
+		public Gtk.SourceBackgroundPatternType get_background_pattern ();
 		public unowned Gtk.SourceCompletion get_completion ();
 		public Gtk.SourceDrawSpacesFlags get_draw_spaces ();
 		public unowned Gtk.SourceGutter get_gutter (Gtk.TextWindowType window_type);
@@ -658,9 +675,11 @@ namespace Gtk {
 		public Gtk.SourceSmartHomeEndType get_smart_home_end ();
 		public uint get_tab_width ();
 		public uint get_visual_column (Gtk.TextIter iter);
+		public void indent_lines (Gtk.TextIter start, Gtk.TextIter end);
 		public void set_auto_indent (bool enable);
+		public void set_background_pattern (Gtk.SourceBackgroundPatternType background_pattern);
 		public void set_draw_spaces (Gtk.SourceDrawSpacesFlags flags);
-		public void set_highlight_current_line (bool hl);
+		public void set_highlight_current_line (bool highlight);
 		public void set_indent_on_tab (bool enable);
 		public void set_indent_width (int width);
 		public void set_insert_spaces_instead_of_tabs (bool enable);
@@ -669,11 +688,13 @@ namespace Gtk {
 		public void set_show_line_marks (bool show);
 		public void set_show_line_numbers (bool show);
 		public void set_show_right_margin (bool show);
-		public void set_smart_home_end (Gtk.SourceSmartHomeEndType smart_he);
+		public void set_smart_home_end (Gtk.SourceSmartHomeEndType smart_home_end);
 		public void set_tab_width (uint width);
+		public void unindent_lines (Gtk.TextIter start, Gtk.TextIter end);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SourceView.with_buffer (Gtk.SourceBuffer buffer);
 		public bool auto_indent { get; set; }
+		public Gtk.SourceBackgroundPatternType background_pattern { get; set; }
 		public Gtk.SourceCompletion completion { get; }
 		public Gtk.SourceDrawSpacesFlags draw_spaces { get; set; }
 		public bool highlight_current_line { get; set; }
@@ -686,8 +707,10 @@ namespace Gtk {
 		public bool show_right_margin { get; set; }
 		public Gtk.SourceSmartHomeEndType smart_home_end { get; set; }
 		public uint tab_width { get; set; }
+		public signal void change_number (int count);
 		public virtual signal void line_mark_activated (Gtk.TextIter iter, Gdk.Event event);
 		public virtual signal void move_lines (bool copy, int step);
+		public signal void move_to_matching_bracket (bool extend_selection);
 		public virtual signal void move_words (int step);
 		public virtual signal void redo ();
 		public virtual signal void show_completion ();
@@ -716,10 +739,17 @@ namespace Gtk {
 		public virtual int get_interactive_delay ();
 		public virtual string get_name ();
 		public virtual int get_priority ();
-		public virtual bool get_start_iter (Gtk.SourceCompletionContext context, Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter);
+		public virtual bool get_start_iter (Gtk.SourceCompletionContext context, Gtk.SourceCompletionProposal proposal, out Gtk.TextIter iter);
 		public virtual bool match (Gtk.SourceCompletionContext context);
 		public virtual void populate (Gtk.SourceCompletionContext context);
 		public virtual void update_info (Gtk.SourceCompletionProposal proposal, Gtk.SourceCompletionInfo info);
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_style_scheme_chooser_get_type ()")]
+	[GIR (name = "StyleSchemeChooser")]
+	public interface SourceStyleSchemeChooser : GLib.Object {
+		public abstract unowned Gtk.SourceStyleScheme get_style_scheme ();
+		public abstract void set_style_scheme (Gtk.SourceStyleScheme scheme);
+		public abstract Gtk.SourceStyleScheme style_scheme { get; set; }
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", type_id = "gtk_source_undo_manager_get_type ()")]
 	[GIR (name = "UndoManager")]
@@ -734,6 +764,12 @@ namespace Gtk {
 		public virtual signal void can_redo_changed ();
 		[HasEmitter]
 		public virtual signal void can_undo_changed ();
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_BACKGROUND_PATTERN_TYPE_", type_id = "gtk_source_background_pattern_type_get_type ()")]
+	[GIR (name = "BackgroundPatternType")]
+	public enum SourceBackgroundPatternType {
+		NONE,
+		GRID
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksource.h", cprefix = "GTK_SOURCE_BRACKET_MATCH_", type_id = "gtk_source_bracket_match_type_get_type ()")]
 	[GIR (name = "BracketMatchType")]

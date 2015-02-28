@@ -5,12 +5,9 @@ Completion
         .show#method name="start"
 CompletionProvider
         .*#virtual_method virtual
-        .get_icon nullable
-        .get_info_widget nullable
 CompletionProposal
         .equal#virtual_method virtual
         .get_icon#virtual_method virtual
         .hash#virtual_method virtual
 SearchContext
-        .get_regex_error nullable
         .regex_error type="GLib.Error?"
