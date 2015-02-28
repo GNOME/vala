@@ -1787,7 +1787,7 @@ namespace GLib {
 		public bool set_uint (string key, uint value);
 		public bool set_value (string key, GLib.Variant value);
 		public static void sync ();
-		public static void unbind (void* object, string property);
+		public static void unbind (GLib.Object object, string property);
 		[CCode (has_construct_function = false)]
 		public Settings.with_backend (string schema_id, GLib.SettingsBackend backend);
 		[CCode (has_construct_function = false)]
