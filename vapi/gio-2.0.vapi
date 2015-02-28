@@ -288,7 +288,7 @@ namespace GLib {
 		public virtual void after_emit (GLib.Variant platform_data);
 		[NoWrapper]
 		public virtual void before_emit (GLib.Variant platform_data);
-		public void bind_busy_property (void* object, string property);
+		public void bind_busy_property (GLib.Object object, string property);
 		[NoWrapper]
 		public virtual bool dbus_register (GLib.DBusConnection connection, string object_path) throws GLib.Error;
 		[NoWrapper]
@@ -324,7 +324,7 @@ namespace GLib {
 		public void set_flags (GLib.ApplicationFlags flags);
 		public void set_inactivity_timeout (uint inactivity_timeout);
 		public void set_resource_base_path (string? resource_path);
-		public void unbind_busy_property (void* object, string property);
+		public void unbind_busy_property (GLib.Object object, string property);
 		public void unmark_busy ();
 		public void withdraw_notification (string id);
 		public GLib.ActionGroup action_group { set; }
@@ -1651,7 +1651,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_property_action_get_type ()")]
 	public class PropertyAction : GLib.Object, GLib.Action {
 		[CCode (has_construct_function = false)]
-		public PropertyAction (string name, void* object, string property_name);
+		public PropertyAction (string name, GLib.Object object, string property_name);
 		public GLib.Object object { construct; }
 		public string property_name { construct; }
 	}
