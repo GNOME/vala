@@ -167,6 +167,7 @@ stringtext				([^\\\"])|(\\.)
 "asm"           		        { if (!parse_ignored_macro()) REJECT; }
 
 "auto"					{ return AUTO; }
+"bool"					{ return BOOL; }
 "break"					{ return BREAK; }
 "case"					{ return CASE; }
 "char"					{ return CHAR; }
