@@ -800,8 +800,10 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 		params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
+			Parameter param = null;
+			
 			if (params_it.next ()) {
-				var param = params_it.get ();
+				param = params_it.get ();
 				if (param.params_array || param.ellipsis) {
 					// ignore ellipsis arguments as we currently don't use temporary variables for them
 					break;
@@ -820,6 +822,15 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			// assign new value
 			store_value (unary.inner.target_value, transform_value (unary.target_value, unary.inner.value_type, arg));
+
+			// handle out null terminated arrays
+			if (param != null && get_ccode_array_null_terminated (param)) {
+				requires_array_length = true;
+				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+				len_call.add_argument (get_cvalue_ (unary.inner.target_value));
+				
+				ccode.add_assignment (get_array_length_cvalue (unary.inner.target_value, 1), len_call);
+			}
 		}
 
 		if (m is CreationMethod && m.parent_symbol is Class && current_class.base_class == gsource_type) {
