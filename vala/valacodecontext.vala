@@ -641,7 +641,8 @@ public class Vala.CodeContext {
 					rpath += Path.DIR_SEPARATOR_S;
 				}
 
-				rpath += start.substring (0, len);
+				// don't use len, substring works on bytes
+				rpath += start.substring (0, (long)((char*)end - (char*)start));
 			}
 		}
 
