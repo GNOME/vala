@@ -207,7 +207,7 @@ public class Vala.GObjectModule : GTypeModule {
 			}
 
 			CCodeExpression cfunc;
-			if (!get_ccode_no_accessor_method (base_prop)) {
+			if (!get_ccode_no_accessor_method (base_prop) && !get_ccode_concrete_accessor (base_prop)) {
 				cfunc = new CCodeIdentifier (get_ccode_name (base_prop.get_accessor));
 			} else {
 				// use the static real function as helper
@@ -314,7 +314,7 @@ public class Vala.GObjectModule : GTypeModule {
 			}
 
 			CCodeExpression cfunc;
-			if (!get_ccode_no_accessor_method (base_prop)) {
+			if (!get_ccode_no_accessor_method (base_prop) && !get_ccode_concrete_accessor (base_prop)) {
 				cfunc = new CCodeIdentifier (get_ccode_name (base_prop.set_accessor));
 			} else {
 				// use the static real function as helper
