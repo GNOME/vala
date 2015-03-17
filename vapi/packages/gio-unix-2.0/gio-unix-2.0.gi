@@ -509,6 +509,9 @@
 			<property name="fd" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GUnixMountMonitor" parent="GObject" type-name="GUnixMountMonitor" get-type="g_unix_mount_monitor_get_type">
+			<method name="get" symbol="g_unix_mount_monitor_get">
+				<return-type type="GUnixMountMonitor*"/>
+			</method>
 			<constructor name="new" symbol="g_unix_mount_monitor_new">
 				<return-type type="GUnixMountMonitor*"/>
 			</constructor>

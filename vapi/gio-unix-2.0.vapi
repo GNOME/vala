@@ -95,7 +95,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
 	public class UnixMountMonitor : GLib.Object {
 		[CCode (has_construct_function = false)]
+		[Deprecated (replacement = "UnixMountMonitor.get", since = "2.44")]
 		public UnixMountMonitor ();
+		public static GLib.UnixMountMonitor @get ();
 		public void set_rate_limit (int limit_msec);
 		public virtual signal void mountpoints_changed ();
 		public virtual signal void mounts_changed ();
