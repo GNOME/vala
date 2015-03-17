@@ -5491,7 +5491,9 @@ namespace Clutter {
 		public void set_color (Clutter.Color? color);
 		[Deprecated (since = "1.10")]
 		public void set_layout_manager (Clutter.LayoutManager manager);
+		[Deprecated (since = "1.10")]
 		public Clutter.Color color { get; set; }
+		[Deprecated (since = "1.10")]
 		[NoAccessorMethod]
 		public bool color_set { get; set; }
 		public Clutter.LayoutManager layout_manager { get; set; }
@@ -6350,14 +6352,22 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_rectangle_get_type ()")]
 	public class Rectangle : Clutter.Actor, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
+		[Deprecated (since = "1.10")]
 		public Rectangle ();
+		[Deprecated (since = "1.10")]
 		public Clutter.Color get_border_color ();
+		[Deprecated (since = "1.10")]
 		public uint get_border_width ();
+		[Deprecated (since = "1.10")]
 		public Clutter.Color get_color ();
+		[Deprecated (since = "1.10")]
 		public void set_border_color (Clutter.Color color);
+		[Deprecated (since = "1.10")]
 		public void set_border_width (uint width);
+		[Deprecated (since = "1.10")]
 		public void set_color (Clutter.Color color);
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
+		[Deprecated (since = "1.10")]
 		public Rectangle.with_color (Clutter.Color color);
 		public Clutter.Color border_color { get; set; }
 		public uint border_width { get; set; }

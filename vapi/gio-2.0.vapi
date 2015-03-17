@@ -2207,6 +2207,7 @@ namespace GLib {
 		public async Task (GLib.Object? source_object, GLib.Cancellable? cancellable = null);
 		public unowned GLib.Cancellable get_cancellable ();
 		public bool get_check_cancellable ();
+		public bool get_completed ();
 		public unowned GLib.MainContext get_context ();
 		public int get_priority ();
 		public bool get_return_on_cancel ();
@@ -2228,6 +2229,7 @@ namespace GLib {
 		public bool set_return_on_cancel (bool return_on_cancel);
 		public void set_source_tag (void* source_tag);
 		public void set_task_data (void* task_data, GLib.DestroyNotify? task_data_destroy);
+		public bool completed { get; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_tcp_connection_get_type ()")]
 	public class TcpConnection : GLib.SocketConnection {
@@ -3003,11 +3005,6 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	public struct StaticResource {
-		[CCode (array_length_cname = "data_len", array_length_type = "gsize")]
-		public weak uint8[] data;
-		public size_t data_len;
-		public GLib.Resource resource;
-		public GLib.StaticResource* next;
 		public void fini ();
 		public unowned GLib.Resource get_resource ();
 		public void init ();
