@@ -13661,8 +13661,8 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="area" type="GtkGLArea*"/>
-					<parameter name="major" type="int*"/>
-					<parameter name="minor" type="int*"/>
+					<parameter name="major" type="gint*"/>
+					<parameter name="minor" type="gint*"/>
 				</parameters>
 			</method>
 			<method name="make_current" symbol="gtk_gl_area_make_current">
@@ -13719,8 +13719,8 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="area" type="GtkGLArea*"/>
-					<parameter name="major" type="int"/>
-					<parameter name="minor" type="int"/>
+					<parameter name="major" type="gint"/>
+					<parameter name="minor" type="gint"/>
 				</parameters>
 			</method>
 			<property name="auto-render" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -16674,7 +16674,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="label" type="GtkLabel*"/>
-					<parameter name="xalign" type="gfloat"/>
+					<parameter name="yalign" type="gfloat"/>
 				</parameters>
 			</method>
 			<property name="angle" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -35500,14 +35500,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1509"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1512"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="9"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="12"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="15"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

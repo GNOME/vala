@@ -3016,7 +3016,7 @@ namespace Gtk {
 		public void set_use_underline (bool setting);
 		public void set_width_chars (int n_chars);
 		public void set_xalign (float xalign);
-		public void set_yalign (float xalign);
+		public void set_yalign (float yalign);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Label.with_mnemonic (string str);
 		public double angle { get; set; }
