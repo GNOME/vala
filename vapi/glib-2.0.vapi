@@ -2266,6 +2266,7 @@ namespace GLib {
 
 	public static string convert (string str, ssize_t len, string to_codeset, string from_codeset, out size_t bytes_read = null, out size_t bytes_written = null) throws ConvertError;
 	public static bool get_charset (out unowned string charset);
+	public static bool get_filename_charsets ([CCode (array_length = false, array_null_terminated = true)] out string[] charsets);
 
 	[SimpleType]
 	public struct IConv {

@@ -1,11 +1,9 @@
 void main () {
 	Intl.setlocale ();
 
-	string input_str = "Álvaro";
-	string[] alternates;
-	var tokens = input_str.tokenize_and_fold (null, out alternates);
+	string[] charsets;
+	var is_utf8 = GLib.get_filename_charsets (out charsets);
 
-	assert ("álvaro" in tokens);
-	assert ("alvaro" in alternates);
+	assert (charsets.length != -1);
 }
 
