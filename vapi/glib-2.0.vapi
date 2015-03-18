@@ -1914,6 +1914,15 @@ namespace GLib {
 		public int get_max_threads ();
 		public uint get_num_threads ();
 		public uint unprocessed ();
+		[CCode (cname = "g_thread_pool_free")]
+		void _free (bool immediate, bool wait);
+		[CCode (cname = "vala__g_thread_pool_free_wrapper")]
+		public static void free (owned ThreadPool? pool, bool immediate, bool wait) {
+			ThreadPool* ptr = (owned) pool;
+			if (ptr != null) {
+				((ThreadPool)ptr)._free (immediate, wait);
+			}
+		}
 		public static void set_max_unused_threads (int max_threads);
 		public static int get_max_unused_threads ();
 		public static uint get_num_unused_threads ();
