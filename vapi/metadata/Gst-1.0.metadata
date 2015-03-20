@@ -220,5 +220,10 @@ Structure.new_from_string skip
 // Upstream
 ///////////
 
+// Upstream backports from 1.5/1.6
+PadChainFunction.buffer owned
+PadChainListFunction.list owned
+PadEventFunction.event owned
+
 // Bug #730957:
 ElementFactory.get_metadata_keys nullable

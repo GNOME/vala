@@ -82,7 +82,7 @@ namespace Gst {
 			[Deprecated]
 			public unowned Gst.Structure get_misc ();
 			[CCode (array_length = false, array_null_terminated = true)]
-			public string[] get_missing_elements_installer_details ();
+			public unowned string[] get_missing_elements_installer_details ();
 			public Gst.PbUtils.DiscovererResult get_result ();
 			public bool get_seekable ();
 			public Gst.PbUtils.DiscovererStreamInfo get_stream_info ();

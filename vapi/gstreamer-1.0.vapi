@@ -3144,11 +3144,11 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool PadActivateModeFunction (Gst.Pad pad, Gst.Object parent, Gst.PadMode mode, bool active);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate Gst.FlowReturn PadChainFunction (Gst.Pad pad, Gst.Object? parent, Gst.Buffer buffer);
+	public delegate Gst.FlowReturn PadChainFunction (Gst.Pad pad, Gst.Object? parent, owned Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate Gst.FlowReturn PadChainListFunction (Gst.Pad pad, Gst.Object? parent, Gst.BufferList list);
+	public delegate Gst.FlowReturn PadChainListFunction (Gst.Pad pad, Gst.Object? parent, owned Gst.BufferList list);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate bool PadEventFunction (Gst.Pad pad, Gst.Object? parent, Gst.Event event);
+	public delegate bool PadEventFunction (Gst.Pad pad, Gst.Object? parent, owned Gst.Event event);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 1.9)]
 	public delegate bool PadForwardFunction (Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]

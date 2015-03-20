@@ -851,7 +851,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool blend (Gst.Video.Frame dest, Gst.Video.Frame src, int x, int y, float global_alpha);
 		[CCode (cheader_filename = "gst/video/video.h")]
-		public static void blend_scale_linear_RGBA (Gst.Video.Info src, Gst.Buffer src_buffer, int dest_height, int dest_width, Gst.Video.Info dest, Gst.Buffer dest_buffer);
+		public static void blend_scale_linear_RGBA (Gst.Video.Info src, Gst.Buffer src_buffer, int dest_height, int dest_width, out Gst.Video.Info dest, out Gst.Buffer dest_buffer);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_pool_config_get_video_alignment")]
 		public static bool buffer_pool_config_get_video_alignment (Gst.Structure config, Gst.Video.Alignment align);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_pool_config_set_video_alignment")]
