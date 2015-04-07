@@ -1,7 +1,7 @@
 /*
  * libnl-2.0.vapi
  *
- * Copyright (C) 2009-2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
+ * Copyright (C) 2009-2015 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,7 +42,7 @@ namespace Netlink {
         public int      build_delete_request (int a, out Message m);
 
         public int      set_label (string label);
-        public string   get_label ();
+        public unowned string   get_label ();
 
         public void     set_family (int family);
         public int      get_family ();
