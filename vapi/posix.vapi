@@ -1432,6 +1432,8 @@ namespace Posix {
 	public void freeaddrinfo (AddrInfo *res);
 	[CCode (cheader_filename = "netdb.h")]
 	public unowned string gai_strerror (int errcode);
+    [CCode (cheader_filename = "netdb.h")]
+    public unowned HostEnt gethostbyname (string name);
 
 	[CCode (cname = "socklen_t", cheader_filename = "sys/socket.h", default_value = "0", has_type_id = false)]
 	public struct socklen_t : int {
@@ -1482,6 +1484,17 @@ namespace Posix {
 		public string ai_canonname;
 		public AddrInfo *ai_next;
 	}
+
+    [CCode (cname = "struct hostent", cheader_filename = "netdb.h", destroy_function = "", has_type_id = false)]
+    public class HostEnt {
+        public string h_name;
+        [CCode (array_length=false, array_null_terminated=true)]
+        public string[] h_aliases;
+        public int h_addrtype;
+        public int h_length;
+        [CCode (array_length=false, array_null_terminated=true)]
+        public string[] h_addr_list;
+    }
 
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int mkfifo (string filename, mode_t mode);
