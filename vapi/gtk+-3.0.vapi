@@ -7529,8 +7529,6 @@ namespace Gtk {
 		public weak string target;
 		public uint flags;
 		public uint info;
-		[CCode (has_construct_function = false)]
-		public TargetEntry (string target, uint flags, uint info);
 		public Gtk.TargetEntry copy ();
 		public void free ();
 	}
