@@ -25423,12 +25423,16 @@
 			<property name="stretch" type="PangoStretch" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stretch-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="strikethrough" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="strikethrough-rgba" type="GdkRGBA*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="strikethrough-rgba-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="strikethrough-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="style" type="PangoStyle" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="style-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="tabs" type="PangoTabArray*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="tabs-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="underline" type="PangoUnderline" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="underline-rgba" type="GdkRGBA*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="underline-rgba-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="underline-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="variant" type="PangoVariant" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="variant-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -35500,15 +35504,15 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1512"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1601"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="1"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="12"/>
-		<constant name="GTK_MINOR_VERSION" type="int" value="15"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="1"/>
+		<constant name="GTK_MINOR_VERSION" type="int" value="16"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
 		<constant name="GTK_PAPER_NAME_A5" type="char*" value="iso_a5"/>
