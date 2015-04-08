@@ -5487,6 +5487,10 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool strikethrough { get; set; }
 		[NoAccessorMethod]
+		public Gdk.RGBA strikethrough_rgba { get; set; }
+		[NoAccessorMethod]
+		public bool strikethrough_rgba_set { get; set; }
+		[NoAccessorMethod]
 		public bool strikethrough_set { get; set; }
 		[NoAccessorMethod]
 		public Pango.Style style { get; set; }
@@ -5498,6 +5502,10 @@ namespace Gtk {
 		public bool tabs_set { get; set; }
 		[NoAccessorMethod]
 		public Pango.Underline underline { get; set; }
+		[NoAccessorMethod]
+		public Gdk.RGBA underline_rgba { get; set; }
+		[NoAccessorMethod]
+		public bool underline_rgba_set { get; set; }
 		[NoAccessorMethod]
 		public bool underline_set { get; set; }
 		[NoAccessorMethod]
