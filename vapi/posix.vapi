@@ -388,6 +388,55 @@ namespace Posix {
 		RAW,
 	}
 
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_NODELAY;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_MAXSEG;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_CORK;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_KEEPIDLE;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_KEEPINTVL;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_KEEPCNT;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_SYNCNT;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_LINGER2;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_DEFER_ACCEPT;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_WINDOW_CLAMP;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_INFO;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_QUICKACK;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_CONGESTION;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_MD5SIG;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_COOKIE_TRANSACTIONS;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_THIN_LINEAR_TIMEOUTS;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_THIN_DUPACK;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_USER_TIMEOUT;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_REPAIR;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_REPAIR_QUEUE;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_QUEUE_SEQ;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_REPAIR_OPTIONS;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_FASTOPEN;
+	[CCode (cheader_filename = "netinet/tcp.h")]
+	public const int TCP_TIMESTAMP;
+
 	[CCode (cheader_filename = "arpa/inet.h")]
 	public uint32 inet_addr (string host);
 	[CCode (cheader_filename = "arpa/inet.h")]
