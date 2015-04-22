@@ -161,7 +161,8 @@ public class Valadoc.ModuleLoader : Object {
 				DriverMetaData (0, 21,  0, 22,  "0.22.x"),
 				DriverMetaData (0, 23,  0, 24,  "0.24.x"),
 				DriverMetaData (0, 25,  0, 26,  "0.26.x"),
-				DriverMetaData (0, 27,  0, 28,  "0.28.x")
+				DriverMetaData (0, 27,  0, 28,  "0.28.x"),
+				DriverMetaData (0, 29,  0, 30,  "0.30.x")
 			};
 
 
