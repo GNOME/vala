@@ -1134,6 +1134,7 @@ namespace GLib {
 		public void set_rate_limit (int limit_msecs);
 		[NoAccessorMethod]
 		public bool cancelled { get; }
+		[Deprecated (since = "2.46")]
 		public GLib.MainContext context { construct; }
 		[NoAccessorMethod]
 		public int rate_limit { get; set; }
@@ -1884,33 +1885,50 @@ namespace GLib {
 	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult, GLib.AsyncResult {
 		[CCode (has_construct_function = false)]
 		public SimpleAsyncResult (GLib.Object? source_object, void* source_tag);
+		[Deprecated (since = "2.46")]
 		public void complete ();
+		[Deprecated (since = "2.46")]
 		public void complete_in_idle ();
 		[CCode (has_construct_function = false)]
 		[PrintfFormat]
 		public SimpleAsyncResult.error (GLib.Object? source_object, GLib.Quark domain, int code, string format, ...);
 		[CCode (has_construct_function = false)]
 		public SimpleAsyncResult.from_error (GLib.Object? source_object, GLib.Error error);
+		[Deprecated (since = "2.46")]
 		public bool get_op_res_gboolean ();
 		[CCode (simple_generics = true)]
 		public unowned T get_op_res_gpointer<T> ();
+		[Deprecated (since = "2.46")]
 		public ssize_t get_op_res_gssize ();
+		[Deprecated (since = "2.46.")]
 		public void* get_source_tag ();
+		[Deprecated (since = "2.46")]
 		public static bool is_valid (GLib.AsyncResult result, GLib.Object? source, void* source_tag);
+		[Deprecated (since = "2.46")]
 		public bool propagate_error () throws GLib.Error;
 		[CCode (cheader_filename = "gio/gio.h", cname = "g_simple_async_report_gerror_in_idle")]
+		[Deprecated (since = "2.46")]
 		public static async void report_gerror_in_idle (GLib.Object? object, GLib.Error error);
+		[Deprecated (since = "2.46")]
 		public void run_in_thread (GLib.SimpleAsyncThreadFunc func, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
+		[Deprecated (since = "2.46")]
 		public void set_check_cancellable (GLib.Cancellable? check_cancellable);
+		[Deprecated (since = "2.46")]
 		[PrintfFormat]
 		public void set_error (GLib.Quark domain, int code, string format, ...);
+		[Deprecated (since = "2.46")]
 		public void set_error_va (GLib.Quark domain, int code, string format, va_list args);
+		[Deprecated (since = "2.46")]
 		public void set_from_error (GLib.Error error);
+		[Deprecated (since = "2.46")]
 		public void set_handle_cancellation (bool handle_cancellation);
+		[Deprecated (since = "2.46")]
 		public void set_op_res_gboolean (bool op_res);
 		[CCode (simple_generics = true)]
 		public void set_op_res_gpointer<T> (owned T op_res);
+		[Deprecated (since = "2.46")]
 		public void set_op_res_gssize (ssize_t op_res);
+		[Deprecated (since = "2.46")]
 		public void take_error (GLib.Error error);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_simple_io_stream_get_type ()")]
@@ -2120,6 +2138,7 @@ namespace GLib {
 		public void set_backlog (int listen_backlog);
 		[NoAccessorMethod]
 		public int listen_backlog { get; set construct; }
+		public virtual signal void event (GLib.SocketListenerEvent event, GLib.Socket socket);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_socket_service_get_type ()")]
 	public class SocketService : GLib.SocketListener {
@@ -2893,6 +2912,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GTlsClientConnectionInterface", type_id = "g_tls_client_connection_get_type ()")]
 	public interface TlsClientConnection : GLib.TlsConnection {
+		public abstract void copy_session_state (GLib.TlsClientConnection source);
 		public GLib.List<GLib.ByteArray> get_accepted_cas ();
 		public unowned GLib.SocketConnectable get_server_identity ();
 		public bool get_use_ssl3 ();
@@ -3290,7 +3310,10 @@ namespace GLib {
 		ATTRIBUTE_CHANGED,
 		PRE_UNMOUNT,
 		UNMOUNTED,
-		MOVED
+		MOVED,
+		RENAMED,
+		MOVED_IN,
+		MOVED_OUT
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_MONITOR_", type_id = "g_file_monitor_flags_get_type ()")]
 	[Flags]
@@ -3298,7 +3321,8 @@ namespace GLib {
 		NONE,
 		WATCH_MOUNTS,
 		SEND_MOVED,
-		WATCH_HARD_LINKS
+		WATCH_HARD_LINKS,
+		WATCH_MOVES
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_FILE_QUERY_INFO_", type_id = "g_file_query_info_flags_get_type ()")]
 	[Flags]
@@ -3426,6 +3450,13 @@ namespace GLib {
 		UNIX,
 		IPV4,
 		IPV6
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SOCKET_LISTENER_", type_id = "g_socket_listener_event_get_type ()")]
+	public enum SocketListenerEvent {
+		BINDING,
+		BOUND,
+		LISTENING,
+		LISTENED
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_SOCKET_MSG_", type_id = "g_socket_msg_flags_get_type ()")]
 	[Flags]

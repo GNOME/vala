@@ -127,6 +127,7 @@ namespace Rest {
 	public class ProxyAuth : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected ProxyAuth ();
+		public void cancel ();
 		public void pause ();
 		public void unpause ();
 	}

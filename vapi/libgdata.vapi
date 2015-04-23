@@ -1748,47 +1748,69 @@ namespace GData {
 		public string parent_comment_uri { get; set; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", lower_case_csuffix = "youtube_content", type_id = "gdata_youtube_content_get_type ()")]
+	[Deprecated]
 	public class YouTubeContent : GData.MediaContent {
 		[CCode (has_construct_function = false)]
 		protected YouTubeContent ();
+		[Deprecated]
 		public GData.YouTubeFormat get_format ();
+		[Deprecated]
 		public GData.YouTubeFormat format { get; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", lower_case_csuffix = "youtube_credit", type_id = "gdata_youtube_credit_get_type ()")]
+	[Deprecated]
 	public class YouTubeCredit : GData.MediaCredit {
 		[CCode (has_construct_function = false)]
 		protected YouTubeCredit ();
+		[Deprecated]
 		public unowned string get_entity_type ();
+		[Deprecated]
 		public string entity_type { get; }
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", lower_case_csuffix = "youtube_feed", type_id = "gdata_youtube_feed_get_type ()")]
+	public class YouTubeFeed : GData.Feed {
+		[CCode (has_construct_function = false)]
+		protected YouTubeFeed ();
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", lower_case_csuffix = "youtube_query", type_id = "gdata_youtube_query_get_type ()")]
 	public class YouTubeQuery : GData.Query {
 		[CCode (has_construct_function = false)]
 		public YouTubeQuery (string? q);
 		public GData.YouTubeAge get_age ();
+		[Deprecated]
 		public GData.YouTubeFormat get_format ();
+		[Deprecated]
 		public unowned string get_language ();
 		public unowned string get_license ();
 		public void get_location (out double latitude, out double longitude, out double radius, out bool has_location);
 		public unowned string get_order_by ();
 		public unowned string get_restriction ();
 		public GData.YouTubeSafeSearch get_safe_search ();
+		[Deprecated]
 		public GData.YouTubeSortOrder get_sort_order ();
+		[Deprecated]
 		public GData.YouTubeUploader get_uploader ();
 		public void set_age (GData.YouTubeAge age);
+		[Deprecated]
 		public void set_format (GData.YouTubeFormat format);
+		[Deprecated]
 		public void set_language (string? language);
 		public void set_license (string? license);
 		public void set_location (double latitude, double longitude, double radius, bool has_location);
 		public void set_order_by (string? order_by);
 		public void set_restriction (string? restriction);
 		public void set_safe_search (GData.YouTubeSafeSearch safe_search);
+		[Deprecated]
 		public void set_sort_order (GData.YouTubeSortOrder sort_order);
+		[Deprecated]
 		public void set_uploader (GData.YouTubeUploader uploader);
 		public GData.YouTubeAge age { get; set; }
+		[Deprecated]
 		public GData.YouTubeFormat format { get; set; }
+		[Deprecated]
 		[NoAccessorMethod]
 		public bool has_location { get; set; }
+		[Deprecated]
 		public string language { get; set; }
 		[NoAccessorMethod]
 		public double latitude { get; set; }
@@ -1800,7 +1822,9 @@ namespace GData {
 		public string order_by { get; set; }
 		public string restriction { get; set; }
 		public GData.YouTubeSafeSearch safe_search { get; set; }
+		[Deprecated]
 		public GData.YouTubeSortOrder sort_order { get; set; }
+		[Deprecated]
 		public GData.YouTubeUploader uploader { get; set; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", lower_case_csuffix = "youtube_service", type_id = "gdata_youtube_service_get_type ()")]
@@ -1843,6 +1867,7 @@ namespace GData {
 		public unowned string get_aspect_ratio ();
 		public unowned GData.MediaCategory get_category ();
 		public void get_coordinates (out double latitude, out double longitude);
+		[Deprecated]
 		public unowned GData.YouTubeCredit get_credit ();
 		public unowned string get_description ();
 		public uint get_duration ();
@@ -1857,16 +1882,19 @@ namespace GData {
 		public unowned GData.YouTubeState get_state ();
 		public unowned GLib.List<GData.MediaThumbnail> get_thumbnails ();
 		public int64 get_uploaded ();
+		[Deprecated]
 		public unowned string get_video_id ();
 		public static string get_video_id_from_uri (string video_uri);
 		public uint get_view_count ();
 		public bool is_restricted_in_country (string country);
+		[Deprecated]
 		public unowned GData.YouTubeContent look_up_content (string type);
 		public void set_access_control (string action, GData.YouTubePermission permission);
 		public void set_aspect_ratio (string? aspect_ratio);
 		public void set_category (GData.MediaCategory category);
 		public void set_coordinates (double latitude, double longitude);
 		public void set_description (string? description);
+		[Deprecated]
 		public void set_is_draft (bool is_draft);
 		public void set_is_private (bool is_private);
 		public void set_keywords ([CCode (array_length = false, array_null_terminated = true)] string[] keywords);
@@ -1876,10 +1904,12 @@ namespace GData {
 		[NoAccessorMethod]
 		public double average_rating { get; }
 		public GData.MediaCategory category { get; set; }
+		[Deprecated]
 		public GData.YouTubeCredit credit { get; }
 		public string description { get; set; }
 		public uint duration { get; }
 		public uint favorite_count { get; }
+		[Deprecated]
 		[NoAccessorMethod]
 		public bool is_draft { get; set; }
 		[NoAccessorMethod]
@@ -1901,6 +1931,7 @@ namespace GData {
 		public int64 recorded { get; set; }
 		public GData.YouTubeState state { get; }
 		public int64 uploaded { get; }
+		[Deprecated]
 		public string video_id { get; }
 		public uint view_count { get; }
 	}
@@ -2001,6 +2032,7 @@ namespace GData {
 		THIS_MONTH
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_FORMAT_", type_id = "gdata_youtube_format_get_type ()")]
+	[Deprecated]
 	public enum YouTubeFormat {
 		UNKNOWN,
 		RTSP_H263_AMR,
@@ -2020,6 +2052,7 @@ namespace GData {
 		STRICT
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SORT_", type_id = "gdata_youtube_sort_order_get_type ()")]
+	[Deprecated]
 	public enum YouTubeSortOrder {
 		NONE,
 		ASCENDING,
@@ -2039,6 +2072,7 @@ namespace GData {
 		WATCH_ON_MOBILE_FEED
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_UPLOADER_", type_id = "gdata_youtube_uploader_get_type ()")]
+	[Deprecated]
 	public enum YouTubeUploader {
 		ALL,
 		PARTNER
@@ -2388,6 +2422,7 @@ namespace GData {
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_ASPECT_RATIO_WIDESCREEN")]
 	public const string YOUTUBE_ASPECT_RATIO_WIDESCREEN;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_CREDIT_ENTITY_PARTNER")]
+	[Deprecated]
 	public const string YOUTUBE_CREDIT_ENTITY_PARTNER;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_LICENSE_CC")]
 	public const string YOUTUBE_LICENSE_CC;
@@ -2396,6 +2431,7 @@ namespace GData {
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_RATING_TYPE_MPAA")]
 	public const string YOUTUBE_RATING_TYPE_MPAA;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_RATING_TYPE_SIMPLE")]
+	[Deprecated]
 	public const string YOUTUBE_RATING_TYPE_SIMPLE;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_RATING_TYPE_V_CHIP")]
 	public const string YOUTUBE_RATING_TYPE_V_CHIP;

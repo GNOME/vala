@@ -50,6 +50,7 @@ Font
   .get_font_map nullable
 Layout
   .get_font_description nullable
+config_key_get* nullable
 
 // Variadic
 TabArray

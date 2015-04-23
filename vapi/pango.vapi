@@ -158,11 +158,13 @@ namespace Pango {
 		public void unref ();
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_engine_get_type ()")]
+	[Deprecated (since = "1.37")]
 	public abstract class Engine : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Engine ();
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_engine_lang_get_type ()")]
+	[Deprecated (since = "1.37")]
 	public abstract class EngineLang : Pango.Engine {
 		[CCode (has_construct_function = false)]
 		protected EngineLang ();
@@ -170,6 +172,7 @@ namespace Pango {
 		public virtual void script_break (string text, int len, Pango.Analysis analysis, Pango.LogAttr attrs, int attrs_len);
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_engine_shape_get_type ()")]
+	[Deprecated (since = "1.37")]
 	public abstract class EngineShape : Pango.Engine {
 		[CCode (has_construct_function = false)]
 		protected EngineShape ();
@@ -253,6 +256,7 @@ namespace Pango {
 		public virtual void changed ();
 		public Pango.Context create_context ();
 		public virtual uint get_serial ();
+		[Deprecated (since = "1.37")]
 		public unowned string get_shape_engine_type ();
 		public virtual void list_families ([CCode (array_length_cname = "n_families", array_length_pos = 1.1)] out Pango.FontFamily[] families);
 		public virtual Pango.Font? load_font (Pango.Context context, Pango.FontDescription desc);
@@ -552,6 +556,7 @@ namespace Pango {
 		public string to_string ();
 	}
 	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
+	[Deprecated (since = "1.37")]
 	public struct EngineInfo {
 		public weak string id;
 		public weak string engine_type;
@@ -560,6 +565,7 @@ namespace Pango {
 		public int n_scripts;
 	}
 	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
+	[Deprecated (since = "1.37")]
 	public struct EngineScriptInfo {
 		public Pango.Script script;
 		public weak string langs;
@@ -935,8 +941,10 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_ATTR_INDEX_FROM_TEXT_BEGINNING")]
 	public const int ATTR_INDEX_FROM_TEXT_BEGINNING;
 	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_ENGINE_TYPE_LANG")]
+	[Deprecated (since = "1.37")]
 	public const string ENGINE_TYPE_LANG;
 	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_ENGINE_TYPE_SHAPE")]
+	[Deprecated (since = "1.37")]
 	public const string ENGINE_TYPE_SHAPE;
 	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_GLYPH_EMPTY")]
 	public const Pango.Glyph GLYPH_EMPTY;
@@ -945,6 +953,7 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_GLYPH_UNKNOWN_FLAG")]
 	public const Pango.Glyph GLYPH_UNKNOWN_FLAG;
 	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_RENDER_TYPE_NONE")]
+	[Deprecated (since = "1.37")]
 	public const string RENDER_TYPE_NONE;
 	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_SCALE")]
 	public const int SCALE;
@@ -1006,8 +1015,10 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static void @break (string text, int length, Pango.Analysis analysis, [CCode (array_length_cname = "attrs_len", array_length_pos = 4.1)] Pango.LogAttr[] attrs);
 	[CCode (cheader_filename = "pango/pango.h")]
+	[Deprecated (since = "1.37")]
 	public static string? config_key_get (string key);
 	[CCode (cheader_filename = "pango/pango.h")]
+	[Deprecated (since = "1.37")]
 	public static string? config_key_get_system (string key);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static void default_break (string text, int length, Pango.Analysis? analysis, Pango.LogAttr attrs, int attrs_len);
@@ -1018,12 +1029,14 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static void find_paragraph_boundary (string text, int length, out int paragraph_delimiter_index, out int next_paragraph_start);
 	[CCode (cheader_filename = "pango/pango.h")]
+	[Deprecated (since = "1.37")]
 	public static unowned string get_lib_subdirectory ();
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static void get_log_attrs (string text, int length, int level, Pango.Language language, [CCode (array_length_cname = "attrs_len", array_length_pos = 5.1)] Pango.LogAttr[] log_attrs);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool get_mirror_char (unichar ch, unichar mirrored_ch);
 	[CCode (cheader_filename = "pango/pango.h")]
+	[Deprecated (since = "1.37")]
 	public static unowned string get_sysconf_subdirectory ();
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Deprecated (replacement = "Pango.Gravity.get_for_matrix", since = "vala-0.18")]

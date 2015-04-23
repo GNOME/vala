@@ -72,6 +72,12 @@ namespace GLib {
 		public async string? read_line_utf8_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t length) throws GLib.IOError, GLib.IOError;
 	}
 
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_file_monitor_get_type ()")]
+	public abstract class FileMonitor : GLib.Object {
+		[Deprecated (since = "2.46")]
+		public GLib.MainContext context { construct; }
+	}
+
 	[Compact]
 	public class IOModuleScope {
 		[CCode (has_construct_function = false)]

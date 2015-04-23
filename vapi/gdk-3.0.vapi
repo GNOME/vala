@@ -5318,7 +5318,7 @@ namespace Gdk {
 		public void set_keep_below (bool setting);
 		public void set_modal_hint (bool modal);
 		public void set_opacity (double opacity);
-		public void set_opaque_region (Cairo.Region region);
+		public void set_opaque_region (Cairo.Region? region);
 		public void set_override_redirect (bool override_redirect);
 		public void set_role (string role);
 		public void set_shadow_width (int left, int right, int top, int bottom);
