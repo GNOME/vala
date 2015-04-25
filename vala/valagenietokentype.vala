@@ -205,7 +205,7 @@ public enum Vala.Genie.TokenType {
 		case CONST: return "`const'";
 		case CONSTRUCT: return "`construct'";
 		case CONTINUE: return "`continue'";
-		case DEDENT: return "`dedent'";
+		case DEDENT: return "end of block (dedent)";
 		case DEF: return "`def'";
 		case DEFAULT: return "`default'";
 		case DELEGATE: return "`delegate'";
@@ -236,7 +236,7 @@ public enum Vala.Genie.TokenType {
 		case IF: return "`if'";
 		case IMPLEMENTS: return "`implements'";
 		case IN: return "`in'";
-		case INDENT: return "`tab indent'";
+		case INDENT: return "block (indent)";
 		case INIT: return "`init'";
 		case INLINE: return "`inline'";
 		case INTEGER_LITERAL: return "integer literal";
