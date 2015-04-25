@@ -2476,7 +2476,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		TokenType cur = current ();
 		TokenType pre =  tokens[index-1].type;
 
-		throw new ParseError.SYNTAX ("expected declaration  but got %s with previous %s", cur.to_string (), pre.to_string());
+		throw new ParseError.SYNTAX ("expected a declaration after %s, but got %s", pre.to_string (), cur.to_string());
 	}
 
 	void parse_declarations (Symbol parent, bool root = false) throws ParseError {
