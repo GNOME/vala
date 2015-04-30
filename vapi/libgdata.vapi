@@ -310,18 +310,18 @@ namespace GData {
 		public unowned string get_client_id ();
 		public unowned string get_password ();
 		public unowned GLib.ProxyResolver get_proxy_resolver ();
-		[Deprecated]
+		[Deprecated (since = "0.15.0")]
 		public Soup.URI get_proxy_uri ();
 		public uint get_timeout ();
 		public unowned string get_username ();
 		public void set_proxy_resolver (GLib.ProxyResolver? proxy_resolver);
-		[Deprecated]
+		[Deprecated (since = "0.15.0")]
 		public void set_proxy_uri (Soup.URI? proxy_uri);
 		public void set_timeout (uint timeout);
 		public string client_id { get; construct; }
 		public string password { get; }
 		public GLib.ProxyResolver proxy_resolver { get; set; }
-		[Deprecated]
+		[Deprecated (since = "0.15.0")]
 		public Soup.URI proxy_uri { owned get; set; }
 		public uint timeout { get; set; }
 		public string username { get; }
@@ -519,8 +519,9 @@ namespace GData {
 	public abstract class DocumentsEntry : GData.Entry, GData.AccessHandler {
 		[CCode (has_construct_function = false)]
 		protected DocumentsEntry ();
-		[Deprecated]
+		[Deprecated (since = "0.11.0")]
 		public unowned string get_document_id ();
+		[Deprecated (since = "0.17.0")]
 		public int64 get_edited ();
 		public unowned GData.Author get_last_modified_by ();
 		public int64 get_last_viewed ();
@@ -528,8 +529,9 @@ namespace GData {
 		public int64 get_quota_used ();
 		public unowned string get_resource_id ();
 		public void set_writers_can_invite (bool writers_can_invite);
-		[Deprecated]
+		[Deprecated (since = "0.11.0")]
 		public string document_id { get; }
+		[Deprecated (since = "0.17.0")]
 		public int64 edited { get; }
 		[NoAccessorMethod]
 		public bool is_deleted { get; set; }
@@ -1279,7 +1281,7 @@ namespace GData {
 		public unowned string get_application_name ();
 		public unowned string get_locale ();
 		public unowned GLib.ProxyResolver get_proxy_resolver ();
-		[Deprecated]
+		[Deprecated (since = "0.15.0")]
 		public Soup.URI get_proxy_uri ();
 		public uint get_timeout ();
 		public string request_authentication_uri (out string token, out string token_secret, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -1288,13 +1290,13 @@ namespace GData {
 		public async bool request_authorization_async (string token, string token_secret, string verifier, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void set_locale (string? locale);
 		public void set_proxy_resolver (GLib.ProxyResolver? proxy_resolver);
-		[Deprecated]
+		[Deprecated (since = "0.15.0")]
 		public void set_proxy_uri (Soup.URI? proxy_uri);
 		public void set_timeout (uint timeout);
 		public string application_name { get; construct; }
 		public string locale { get; set; }
 		public GLib.ProxyResolver proxy_resolver { get; set; }
-		[Deprecated]
+		[Deprecated (since = "0.15.0")]
 		public Soup.URI proxy_uri { owned get; set; }
 		public uint timeout { get; set; }
 	}
@@ -1597,7 +1599,7 @@ namespace GData {
 		public unowned GData.Authorizer get_authorizer ();
 		public unowned string get_locale ();
 		public unowned GLib.ProxyResolver get_proxy_resolver ();
-		[Deprecated]
+		[Deprecated (since = "0.15.0")]
 		public unowned Soup.URI get_proxy_uri ();
 		public uint get_timeout ();
 		public GData.Entry insert_entry (GData.AuthorizationDomain? domain, string upload_uri, GData.Entry entry, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -1612,7 +1614,7 @@ namespace GData {
 		public void set_authorizer (GData.Authorizer authorizer);
 		public void set_locale (string? locale);
 		public void set_proxy_resolver (GLib.ProxyResolver? proxy_resolver);
-		[Deprecated]
+		[Deprecated (since = "0.15.0")]
 		public void set_proxy_uri (Soup.URI? proxy_uri);
 		public void set_timeout (uint timeout);
 		public GData.Entry update_entry (GData.AuthorizationDomain? domain, GData.Entry entry, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -1620,7 +1622,7 @@ namespace GData {
 		public GData.Authorizer authorizer { get; set; }
 		public string locale { get; set; }
 		public GLib.ProxyResolver proxy_resolver { get; set; }
-		[Deprecated]
+		[Deprecated (since = "0.15.0")]
 		public Soup.URI proxy_uri { get; set; }
 		public uint timeout { get; set; }
 	}
@@ -1748,23 +1750,19 @@ namespace GData {
 		public string parent_comment_uri { get; set; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", lower_case_csuffix = "youtube_content", type_id = "gdata_youtube_content_get_type ()")]
-	[Deprecated]
+	[Deprecated (since = "0.17.0")]
 	public class YouTubeContent : GData.MediaContent {
 		[CCode (has_construct_function = false)]
 		protected YouTubeContent ();
-		[Deprecated]
 		public GData.YouTubeFormat get_format ();
-		[Deprecated]
 		public GData.YouTubeFormat format { get; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", lower_case_csuffix = "youtube_credit", type_id = "gdata_youtube_credit_get_type ()")]
-	[Deprecated]
+	[Deprecated (since = "0.17.0")]
 	public class YouTubeCredit : GData.MediaCredit {
 		[CCode (has_construct_function = false)]
 		protected YouTubeCredit ();
-		[Deprecated]
 		public unowned string get_entity_type ();
-		[Deprecated]
 		public string entity_type { get; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", lower_case_csuffix = "youtube_feed", type_id = "gdata_youtube_feed_get_type ()")]
@@ -1777,40 +1775,40 @@ namespace GData {
 		[CCode (has_construct_function = false)]
 		public YouTubeQuery (string? q);
 		public GData.YouTubeAge get_age ();
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public GData.YouTubeFormat get_format ();
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public unowned string get_language ();
 		public unowned string get_license ();
 		public void get_location (out double latitude, out double longitude, out double radius, out bool has_location);
 		public unowned string get_order_by ();
 		public unowned string get_restriction ();
 		public GData.YouTubeSafeSearch get_safe_search ();
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public GData.YouTubeSortOrder get_sort_order ();
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public GData.YouTubeUploader get_uploader ();
 		public void set_age (GData.YouTubeAge age);
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public void set_format (GData.YouTubeFormat format);
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public void set_language (string? language);
 		public void set_license (string? license);
 		public void set_location (double latitude, double longitude, double radius, bool has_location);
 		public void set_order_by (string? order_by);
 		public void set_restriction (string? restriction);
 		public void set_safe_search (GData.YouTubeSafeSearch safe_search);
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public void set_sort_order (GData.YouTubeSortOrder sort_order);
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public void set_uploader (GData.YouTubeUploader uploader);
 		public GData.YouTubeAge age { get; set; }
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public GData.YouTubeFormat format { get; set; }
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		[NoAccessorMethod]
 		public bool has_location { get; set; }
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public string language { get; set; }
 		[NoAccessorMethod]
 		public double latitude { get; set; }
@@ -1822,9 +1820,9 @@ namespace GData {
 		public string order_by { get; set; }
 		public string restriction { get; set; }
 		public GData.YouTubeSafeSearch safe_search { get; set; }
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public GData.YouTubeSortOrder sort_order { get; set; }
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public GData.YouTubeUploader uploader { get; set; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", lower_case_csuffix = "youtube_service", type_id = "gdata_youtube_service_get_type ()")]
@@ -1867,7 +1865,7 @@ namespace GData {
 		public unowned string get_aspect_ratio ();
 		public unowned GData.MediaCategory get_category ();
 		public void get_coordinates (out double latitude, out double longitude);
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public unowned GData.YouTubeCredit get_credit ();
 		public unowned string get_description ();
 		public uint get_duration ();
@@ -1882,19 +1880,19 @@ namespace GData {
 		public unowned GData.YouTubeState get_state ();
 		public unowned GLib.List<GData.MediaThumbnail> get_thumbnails ();
 		public int64 get_uploaded ();
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public unowned string get_video_id ();
 		public static string get_video_id_from_uri (string video_uri);
 		public uint get_view_count ();
 		public bool is_restricted_in_country (string country);
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public unowned GData.YouTubeContent look_up_content (string type);
 		public void set_access_control (string action, GData.YouTubePermission permission);
 		public void set_aspect_ratio (string? aspect_ratio);
 		public void set_category (GData.MediaCategory category);
 		public void set_coordinates (double latitude, double longitude);
 		public void set_description (string? description);
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public void set_is_draft (bool is_draft);
 		public void set_is_private (bool is_private);
 		public void set_keywords ([CCode (array_length = false, array_null_terminated = true)] string[] keywords);
@@ -1904,12 +1902,12 @@ namespace GData {
 		[NoAccessorMethod]
 		public double average_rating { get; }
 		public GData.MediaCategory category { get; set; }
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public GData.YouTubeCredit credit { get; }
 		public string description { get; set; }
 		public uint duration { get; }
 		public uint favorite_count { get; }
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		[NoAccessorMethod]
 		public bool is_draft { get; set; }
 		[NoAccessorMethod]
@@ -1931,7 +1929,7 @@ namespace GData {
 		public int64 recorded { get; set; }
 		public GData.YouTubeState state { get; }
 		public int64 uploaded { get; }
-		[Deprecated]
+		[Deprecated (since = "0.17.0")]
 		public string video_id { get; }
 		public uint view_count { get; }
 	}
@@ -2032,7 +2030,7 @@ namespace GData {
 		THIS_MONTH
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_FORMAT_", type_id = "gdata_youtube_format_get_type ()")]
-	[Deprecated]
+	[Deprecated (since = "0.17.0")]
 	public enum YouTubeFormat {
 		UNKNOWN,
 		RTSP_H263_AMR,
@@ -2052,7 +2050,7 @@ namespace GData {
 		STRICT
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_SORT_", type_id = "gdata_youtube_sort_order_get_type ()")]
-	[Deprecated]
+	[Deprecated (since = "0.17.0")]
 	public enum YouTubeSortOrder {
 		NONE,
 		ASCENDING,
@@ -2072,7 +2070,7 @@ namespace GData {
 		WATCH_ON_MOBILE_FEED
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", cprefix = "GDATA_YOUTUBE_UPLOADER_", type_id = "gdata_youtube_uploader_get_type ()")]
-	[Deprecated]
+	[Deprecated (since = "0.17.0")]
 	public enum YouTubeUploader {
 		ALL,
 		PARTNER
@@ -2422,7 +2420,7 @@ namespace GData {
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_ASPECT_RATIO_WIDESCREEN")]
 	public const string YOUTUBE_ASPECT_RATIO_WIDESCREEN;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_CREDIT_ENTITY_PARTNER")]
-	[Deprecated]
+	[Deprecated (since = "0.17.0")]
 	public const string YOUTUBE_CREDIT_ENTITY_PARTNER;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_LICENSE_CC")]
 	public const string YOUTUBE_LICENSE_CC;
@@ -2431,7 +2429,7 @@ namespace GData {
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_RATING_TYPE_MPAA")]
 	public const string YOUTUBE_RATING_TYPE_MPAA;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_RATING_TYPE_SIMPLE")]
-	[Deprecated]
+	[Deprecated (since = "0.17.0")]
 	public const string YOUTUBE_RATING_TYPE_SIMPLE;
 	[CCode (cheader_filename = "gdata/gdata.h", cname = "GDATA_YOUTUBE_RATING_TYPE_V_CHIP")]
 	public const string YOUTUBE_RATING_TYPE_V_CHIP;

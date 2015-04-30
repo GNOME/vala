@@ -4811,8 +4811,11 @@ namespace Clutter {
 		public void insert_child_at_index (Clutter.Actor child, int index_);
 		public void insert_child_below (Clutter.Actor child, Clutter.Actor? sibling);
 		public bool is_in_clone_paint ();
+		public bool is_mapped ();
+		public bool is_realized ();
 		public bool is_rotated ();
 		public bool is_scaled ();
+		public bool is_visible ();
 		[Deprecated (since = "1.10")]
 		public void lower (Clutter.Actor? above);
 		[Deprecated (since = "1.10")]

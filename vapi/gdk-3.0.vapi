@@ -5103,6 +5103,7 @@ namespace Gdk {
 		public Gdk.ModifierType get_modifier_mask (Gdk.ModifierIntent intent);
 		public uint get_modifier_state ();
 		public bool get_num_lock_state ();
+		public bool get_scroll_lock_state ();
 		public bool have_bidi_layouts ();
 		public uint lookup_key (Gdk.KeymapKey key);
 		public bool map_virtual_modifiers (ref Gdk.ModifierType state);

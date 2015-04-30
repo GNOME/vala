@@ -1726,7 +1726,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool websocket_server_check_handshake (Soup.Message msg, string? origin, [CCode (array_length = false, array_null_terminated = true)] string[]? protocols) throws GLib.Error;
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static bool websocket_server_process_handshake (Soup.Message msg, string? origin, [CCode (array_length = false, array_null_terminated = true)] string[]? protocols);
+	public static bool websocket_server_process_handshake (Soup.Message msg, string? expected_origin, [CCode (array_length = false, array_null_terminated = true)] string[]? protocols);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Deprecated (replacement = "XMLRPC.build_fault", since = "vala-0.12")]
 	[PrintfFormat]
