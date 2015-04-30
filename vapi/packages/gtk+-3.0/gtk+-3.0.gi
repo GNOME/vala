@@ -4661,6 +4661,7 @@
 			<member name="GTK_BUILDER_ERROR_TEMPLATE_MISMATCH" value="10"/>
 			<member name="GTK_BUILDER_ERROR_INVALID_PROPERTY" value="11"/>
 			<member name="GTK_BUILDER_ERROR_INVALID_SIGNAL" value="12"/>
+			<member name="GTK_BUILDER_ERROR_INVALID_ID" value="13"/>
 		</enum>
 		<enum name="GtkButtonBoxStyle" type-name="GtkButtonBoxStyle" get-type="gtk_button_box_style_get_type">
 			<member name="GTK_BUTTONBOX_SPREAD" value="1"/>
@@ -8330,6 +8331,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="cell" type="GtkCellAccessible*"/>
+					<parameter name="emit_signal" type="gboolean"/>
 				</parameters>
 			</vfunc>
 		</object>
@@ -19778,7 +19780,7 @@
 				</parameters>
 			</method>
 			<property name="modal" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="pointing-to" type="cairo_rectangle_int_t*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pointing-to" type="GdkRectangle*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="position" type="GtkPositionType" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="relative-to" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="transitions-enabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -20956,6 +20958,13 @@
 				<return-type type="GSList*"/>
 				<parameters>
 					<parameter name="radio_menu_item" type="GtkRadioMenuItem*"/>
+				</parameters>
+			</method>
+			<method name="join_group" symbol="gtk_radio_menu_item_join_group">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="radio_menu_item" type="GtkRadioMenuItem*"/>
+					<parameter name="group_source" type="GtkRadioMenuItem*"/>
 				</parameters>
 			</method>
 			<constructor name="new" symbol="gtk_radio_menu_item_new">
@@ -35504,7 +35513,7 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1601"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1701"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="1"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
@@ -35512,7 +35521,7 @@
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
 		<constant name="GTK_MICRO_VERSION" type="int" value="1"/>
-		<constant name="GTK_MINOR_VERSION" type="int" value="16"/>
+		<constant name="GTK_MINOR_VERSION" type="int" value="17"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
 		<constant name="GTK_PAPER_NAME_A5" type="char*" value="iso_a5"/>

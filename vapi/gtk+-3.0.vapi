@@ -930,7 +930,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected CellAccessible ();
 		[NoWrapper]
-		public virtual void update_cache ();
+		public virtual void update_cache (bool emit_signal);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_cell_area_get_type ()")]
 	public abstract class CellArea : GLib.InitiallyUnowned, Gtk.CellLayout, Gtk.Buildable {
@@ -3790,7 +3790,7 @@ namespace Gtk {
 		public void set_relative_to (Gtk.Widget relative_to);
 		public void set_transitions_enabled (bool transitions_enabled);
 		public bool modal { get; set; }
-		public Cairo.RectangleInt pointing_to { get; set; }
+		public Gdk.Rectangle pointing_to { get; set; }
 		public Gtk.PositionType position { get; set construct; }
 		public Gtk.Widget relative_to { get; set; }
 		public bool transitions_enabled { get; set; }
@@ -4056,6 +4056,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public RadioMenuItem.from_widget (Gtk.RadioMenuItem group);
 		public unowned GLib.SList<Gtk.RadioMenuItem> get_group ();
+		public void join_group (Gtk.RadioMenuItem group_source);
 		public void set_group (GLib.SList<Gtk.RadioMenuItem>? group);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public RadioMenuItem.with_label (GLib.SList<Gtk.RadioMenuItem>? group, string label);
@@ -8612,7 +8613,8 @@ namespace Gtk {
 		OBJECT_TYPE_REFUSED,
 		TEMPLATE_MISMATCH,
 		INVALID_PROPERTY,
-		INVALID_SIGNAL
+		INVALID_SIGNAL,
+		INVALID_ID
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_PROVIDER_ERROR_")]
 	public errordomain CssProviderError {
