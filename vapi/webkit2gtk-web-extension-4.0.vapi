@@ -172,6 +172,8 @@ namespace WebKit {
 			[NoAccessorMethod]
 			public WebKit.DOM.DOMWindow opener { owned get; }
 			[NoAccessorMethod]
+			public long orientation { get; }
+			[NoAccessorMethod]
 			public long outer_height { get; }
 			[NoAccessorMethod]
 			public long outer_width { get; }
@@ -242,7 +244,7 @@ namespace WebKit {
 			public string get_document_uri ();
 			public string get_domain ();
 			public unowned WebKit.DOM.Element get_element_by_id (string elementId);
-			public WebKit.DOM.NodeList get_elements_by_class_name (string tagname);
+			public WebKit.DOM.NodeList get_elements_by_class_name (string classNames);
 			public WebKit.DOM.NodeList get_elements_by_name (string elementName);
 			public WebKit.DOM.NodeList get_elements_by_tag_name (string tagname);
 			public WebKit.DOM.NodeList get_elements_by_tag_name_ns (string namespaceURI, string localName);
@@ -2100,6 +2102,8 @@ namespace WebKit {
 			public long client_x { get; }
 			public long client_y { get; }
 			public bool ctrl_key { get; }
+			[NoAccessorMethod]
+			public double force { get; }
 			public WebKit.DOM.Node from_element { get; }
 			public bool meta_key { get; }
 			[NoAccessorMethod]

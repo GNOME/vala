@@ -265,15 +265,6 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h", ref_function = "pango_font_metrics_ref", type_id = "pango_font_metrics_get_type ()", unref_function = "pango_font_metrics_unref")]
 	[Compact]
 	public class FontMetrics {
-		public int approximate_char_width;
-		public int approximate_digit_width;
-		public int ascent;
-		public int descent;
-		public uint ref_count;
-		public int strikethrough_position;
-		public int strikethrough_thickness;
-		public int underline_position;
-		public int underline_thickness;
 		[CCode (has_construct_function = false)]
 		public FontMetrics ();
 		public int get_approximate_char_width ();
@@ -639,6 +630,7 @@ namespace Pango {
 		public Pango.Matrix? copy ();
 		public void free ();
 		public double get_font_scale_factor ();
+		public void get_font_scale_factors (out double xscale, out double yscale);
 		public void rotate (double degrees);
 		public void scale (double scale_x, double scale_y);
 		public void transform_distance (ref double dx, ref double dy);

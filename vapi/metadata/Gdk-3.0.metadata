@@ -39,6 +39,9 @@ Device
         .associated_device nullable
         .name nullable
 
+// https://bugzilla.gnome.org/show_bug.cgi?id=748833
+Rectangle skip
+
 // vapigen actually generates the correctly, but in away that breaks BC
 Screen.get_monitor_geometry skip
 Window.get_frame_extents skip

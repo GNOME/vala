@@ -44,6 +44,7 @@ namespace Gdk {
 		public string str;
 	}
 
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Rectangle : Cairo.RectangleInt {
 		public bool intersect (Gdk.Rectangle src2, out Gdk.Rectangle dest);
 		public void union (Gdk.Rectangle src2, out Gdk.Rectangle dest);
