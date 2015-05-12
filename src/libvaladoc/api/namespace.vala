@@ -86,5 +86,12 @@ public class Valadoc.Api.Namespace : Symbol {
 	public override void accept (Visitor visitor) {
 		visitor.visit_namespace (this);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public override bool is_browsable (Settings settings) {
+		return has_visible_children (settings);
+	}
 }
 

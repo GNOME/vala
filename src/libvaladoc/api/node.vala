@@ -173,6 +173,13 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation, Compara
 	}
 
 	/**
+	 * Specifies whether this node has at least one visible child
+	 */
+	public bool has_visible_children (Settings settings) {
+		return has_visible_children_by_types (per_type_children.keys.to_array (), settings);
+	}
+
+	/**
 	 * Specifies whether this node has at least one child with the given type
 	 *
 	 * @param type a node type
