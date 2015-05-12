@@ -191,7 +191,7 @@ public class Valadoc.Api.Tree {
 			return node;
 		}
 
-		if (path.length >= 3 && path[path.length-3] == path[path.length-2]) {
+		if (path.length >= 2 && path[path.length-2] == path[path.length-2]) {
 			path[path.length-2] = path[path.length-2]+"."+path[path.length-1];
 			path.resize (path.length-1);
 			return search_symbol_path (element, path);
