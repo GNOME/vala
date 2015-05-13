@@ -149,7 +149,7 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 
 		if (symbol == null) {
 			if (settings.verbose) {
-				reporter.simple_warning ("%s: warning: Node %s does not exist", filename, symbol_name);
+				reporter.simple_warning (filename, "Node `%s' does not exist", symbol_name);
 			}
 
 			return ;
@@ -191,7 +191,7 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 				_parser.parse ((string) content, filename, 0, 0);
 			}
 		} catch (FileError err) {
-			reporter.simple_error ("error: Unable to map file `%s': %s", filename, err.message);
+			reporter.simple_error (null, "Unable to map file `%s': %s", filename, err.message);
 		} catch (ParserError err) {
 		}
 	}

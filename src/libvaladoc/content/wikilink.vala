@@ -47,7 +47,8 @@ public class Valadoc.Content.WikiLink : InlineContent, Inline {
 		page = api_root.wikitree.search (name);
 		if (page == null) {
 			string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
-			reporter.simple_warning ("%s: %s[[: warning: %s does not exist".printf (file_path, node_segment, name));
+			reporter.simple_warning ("%s: %s[[".printf (file_path, node_segment),
+									 "'%s' does not exist", name);
 			return ;
 		}
 	}

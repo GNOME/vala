@@ -57,8 +57,8 @@ public class Valadoc.Taglets.Param : BlockContent, Taglet, Block {
 		if (container is Api.Callable) {
 			implicit_return_array_length = ((Api.Callable) container).implicit_array_length_cparameter_name;
 		} else {
-			reporter.simple_warning ("%s: %s: @param: warning: @param used outside method/delegate/signal context",
-									 file_path, container.get_full_name ());
+			reporter.simple_warning ("%s: %s: @param".printf (file_path, container.get_full_name ()),
+									 "@param used outside method/delegate/signal context");
 			base.check (api_root, container, file_path, reporter, settings);
 			return ;
 		}
@@ -112,11 +112,11 @@ public class Valadoc.Taglets.Param : BlockContent, Taglet, Block {
 
 		if (this.parameter == null) {
 			if (is_implicit) {
-				reporter.simple_note ("%s: %s: @param: warning: Implicit parameter `%s' exposed in documentation",
-									  file_path, container.get_full_name (), parameter_name);
+				reporter.simple_note ("%s: %s: @param".printf (file_path, container.get_full_name ()),
+									  "Implicit parameter `%s' exposed in documentation", parameter_name);
 			} else if (!is_c_self_param) {
-				reporter.simple_warning ("%s: %s: @param: warning: Unknown parameter `%s'",
-										 file_path, container.get_full_name (), parameter_name);
+				reporter.simple_warning ("%s: %s: @param".printf (file_path, container.get_full_name ()),
+										 "Unknown parameter `%s'", parameter_name);
 			}
 		}
 

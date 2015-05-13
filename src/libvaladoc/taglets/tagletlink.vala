@@ -117,8 +117,8 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 
 		if (_symbol == null && symbol_name != "main") {
 			string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
-			reporter.simple_warning ("%s: %s@link: warning: %s does not exist",
-									 file_path, node_segment, symbol_name);
+			reporter.simple_warning ("%s: %s@link".printf (file_path, node_segment),
+									 "`%s' does not exist", symbol_name);
 		}
 
 		base.check (api_root, container, file_path, reporter, settings);

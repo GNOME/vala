@@ -132,7 +132,7 @@ public class Valadoc.ModuleLoader : Object {
 			segments.length != 3 && // e.g. 0.20.3, --version
 			segments.length != 4)   // e.g. Vala 0.18.0.60-a4cdb, --version
 		{
-			reporter.simple_error ("error: Invalid driver version format.");
+			reporter.simple_error (null, "Invalid driver version format.");
 			return null;
 		}
 
@@ -150,7 +150,7 @@ public class Valadoc.ModuleLoader : Object {
 		}
 
 		if (!tmp) {
-			reporter.simple_error ("error: Invalid driver version format.");
+			reporter.simple_error (null, "Invalid driver version format.");
 			return null;
 		}
 
@@ -174,7 +174,7 @@ public class Valadoc.ModuleLoader : Object {
 		}
 
 
-		reporter.simple_error ("error: No suitable driver found.");
+		reporter.simple_error (null, "No suitable driver found.");
 		return null;
 	}
 

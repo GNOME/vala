@@ -79,8 +79,22 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 
 		// search relative to the current directory / absoulte path
 		if (!FileUtils.test (url, FileTest.EXISTS | FileTest.IS_REGULAR)) {
+			string base_name = Path.get_basename (url);
+
+			foreach (unowned string dir in settings.alternative_ressource_dirs) {
+				string alternative_path = Path.build_path (Path.DIR_SEPARATOR_S,
+														 dir,
+														 base_name);
+				if (FileUtils.test (alternative_path, FileTest.EXISTS | FileTest.IS_REGULAR)) {
+					url = (owned) alternative_path;
+					package = container.package;
+					return ;
+				}
+			}
+
 			string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
-			reporter.simple_error ("%s: %s{{: error: %s does not exist", file_path, node_segment, url);
+			reporter.simple_error ("%s: %s{{".printf (file_path, node_segment),
+								   "'%s' does not exist", url);
 		} else {
 			package = container.package;
 		}

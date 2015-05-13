@@ -151,7 +151,7 @@ public class Gtkdoc.GComment {
 			} else if (header.name == "Since") {
 				since = header.value;
 			} else {
-				reporter.simple_warning ("GtkDoc: warning: Unknown versioning tag '%s'", header.name);
+				reporter.simple_warning ("GtkDoc", "Unknown versioning tag '%s'", header.name);
 			}
 		}
 

@@ -108,7 +108,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 
 		var sections_writer = new TextWriter (sections, "a");
 		if (!sections_writer.open ()) {
-			reporter.simple_error ("GtkDoc: error: unable to open %s for writing", sections_writer.filename);
+			reporter.simple_error ("GtkDoc", "unable to open '%s' for writing", sections_writer.filename);
 			return false;
 		}
 
@@ -118,7 +118,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 			var cwriter = new TextWriter (Path.build_filename (code_dir, "%s.c".printf (basename)), "w");
 
 			if (!cwriter.open ()) {
-				reporter.simple_error ("GtkDoc: error: unable to open %s for writing", cwriter.filename);
+				reporter.simple_error ("GtkDoc", "unable to open '%s' for writing", cwriter.filename);
 				return false;
 			}
 
@@ -259,7 +259,7 @@ public class Gtkdoc.Generator : Api.Visitor {
 		 * forward that as a Valadoc warning so that it doesn’t get lost
 		 * in the gtk-doc output files. */
 		if (gcomment.long_comment == null || gcomment.long_comment == "") {
-			reporter.simple_warning ("Missing long description in the documentation for ‘%s’ which forms gtk-doc section ‘%s’.",
+			reporter.simple_warning ("GtkDoc", "Missing long description in the documentation for ‘%s’ which forms gtk-doc section ‘%s’.",
 									 symbol_full_name,
 									 section_name);
 		}
@@ -1378,7 +1378,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			}
 
 			if (replacement != null && replacement_symbol == null) {
-				reporter.simple_warning ("Couldn’t resolve replacement symbol ‘%s’ for ‘Deprecated’ attribute on %s.",
+				reporter.simple_warning ("GtkDoc", "Couldn’t resolve replacement symbol ‘%s’ for ‘Deprecated’ attribute on %s.",
 										 replacement_symbol_name,
 										 sym.get_full_name ());
 			}
@@ -1392,7 +1392,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			} else if (since == null && replacement_symbol != null) {
 				deprecation_string = "Replaced by %s.".printf (get_gtkdoc_link (replacement_symbol));
 			} else {
-				reporter.simple_warning ("Missing ‘since’ and ‘replacement’ arguments to ‘Deprecated’ attribute on %s.",
+				reporter.simple_warning ("GtkDoc", "Missing ‘since’ and ‘replacement’ arguments to ‘Deprecated’ attribute on %s.",
 										 sym.get_full_name ());
 			}
 

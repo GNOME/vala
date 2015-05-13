@@ -333,7 +333,7 @@ public class Valadoc.Api.Tree {
 			}
 
 			if (imported == false) {
-				reporter.simple_error ("error: %s not found in specified import directories", pkg_name);
+				reporter.simple_error (null, "'%s' not found in specified import directories", pkg_name);
 			}
 		}
 	}

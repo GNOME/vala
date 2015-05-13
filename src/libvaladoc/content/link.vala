@@ -69,7 +69,8 @@ public class Valadoc.Content.Link : InlineContent, Inline {
 			string _url = id_registrar.map_url_id (url);
 			if (_url == null) {
 				string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
-				reporter.simple_warning ("%s: %s[[: warning: unknown imported internal id `%s'", file_path, node_segment, url);
+				reporter.simple_warning ("%s: %s[[".printf (file_path, node_segment),
+										 "unknown imported internal id '%s'", url);
 
 				InlineContent _parent = parent as InlineContent;
 				assert (_parent != null);

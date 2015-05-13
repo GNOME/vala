@@ -109,8 +109,9 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 		// search relative to the current directory / absoulte path
 		if (!FileUtils.test (path, FileTest.EXISTS | FileTest.IS_REGULAR)) {
 			string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
-			code = "File %s does not exist".printf (path);
-			reporter.simple_warning ("%s: %s{{{: warning: %s", source_file_path, node_segment, code);
+			code = "File '%s' does not exist".printf (path);
+			reporter.simple_warning ("%s: %s{{{".printf (source_file_path, node_segment),
+									 "%s", code);
 			return null;
 		}
 
@@ -132,10 +133,8 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 			code = (owned) content;
 		} catch (FileError err) {
 			string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
-			reporter.simple_error ("%s: %s{{{: error: Can't read file %s: %s", source_file_path,
-								   node_segment,
-								   path,
-								   err.message);
+			reporter.simple_error ("%s: %s{{{".printf (source_file_path, node_segment),
+								   "Can't read file '%s': %s", path, err.message);
 		}
 	}
 
@@ -180,8 +179,8 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 				code = splitted[1] ?? "";
 				if (_language == null && name != "none") {
 					string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
-					reporter.simple_warning ("%s: %s{{{: warning: Unsupported programming language '%s'",
-											 file_path, node_segment, name);
+					reporter.simple_warning ("%s: %s{{{".printf (file_path, node_segment),
+											 "Unsupported programming language '%s'", name);
 				}
 			}
 		}

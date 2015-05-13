@@ -142,6 +142,11 @@ public class Valadoc.Settings : Object {
 	public string[] metadata_directories;
 
 	/**
+	 * Alternative paths for ressources
+	 */
+	public string[] alternative_ressource_dirs;
+
+	/**
 	 * A list of all gir directories.
 	 */
 	public string[] gir_directories;

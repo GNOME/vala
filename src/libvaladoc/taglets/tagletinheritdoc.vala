@@ -142,8 +142,8 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 		}
 
 		if (separator is Paragraph == false || separator.parent is Comment == false) {
-			reporter.simple_error ("%s: %s: @inheritDoc: error: Parent documentation can't be copied to this location.",
-								   file_path, container.get_full_name ());
+			reporter.simple_error ("%s: %s: @inheritDoc".printf (file_path, container.get_full_name ()),
+								   "Parent documentation can't be copied to this location.");
 			return ;
 		}
 

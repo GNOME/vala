@@ -104,7 +104,7 @@ public class Valadoc.GirMetaData : Object {
 				break;
 
 			default:
-				reporter.simple_warning ("%s: warning: Unknown key 'General.%s'", metadata_path, key);
+				reporter.simple_warning (metadata_path, "Unknown key 'General.%s'", key);
 				break;
 			}
 		}
@@ -126,10 +126,10 @@ public class Valadoc.GirMetaData : Object {
 			key_file = new KeyFile ();
 			key_file.load_from_file (metadata_path, KeyFileFlags.NONE);
 		} catch (KeyFileError e) {
-			reporter.simple_error ("%s: error: %s\n", metadata_path, e.message);
+			reporter.simple_error (metadata_path, "%s", e.message);
 			return ;
 		} catch (FileError e) {
-			reporter.simple_error ("%s: error: %s\n", metadata_path, e.message);
+			reporter.simple_error (metadata_path, "%s", e.message);
 			return ;
 		}
 
@@ -141,12 +141,12 @@ public class Valadoc.GirMetaData : Object {
 					break;
 
 				default:
-					reporter.simple_warning ("%s: warning: Unknown group '%s'\n", metadata_path, group);
+					reporter.simple_warning (metadata_path, "Unknown group '%s'", group);
 					break;
 				}
 			}
 		} catch (KeyFileError e) {
-			reporter.simple_error ("%s: error: %s", metadata_path, e.message);
+			reporter.simple_error (null, "Unable to read file '%s': %s", metadata_path, e.message);
 		}
 
 

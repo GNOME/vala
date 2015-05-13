@@ -29,6 +29,8 @@ using Gee;
 
 
 public class ValaDoc : Object {
+	private const string DEFAULT_COLORS = "error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01";
+
 	private static string wikidirectory = null;
 	private static string pkg_version = null;
 	private static string docletpath = null;
@@ -49,6 +51,7 @@ public class ValaDoc : Object {
 	private static bool _private = false;
 	private static bool version = false;
 
+	private static bool disable_diagnostic_colors = false;
 	private static bool verbose = false;
 	private static bool force = false;
 
@@ -72,6 +75,8 @@ public class ValaDoc : Object {
 	private static string[] tsources;
 	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] packages;
+	[CCode (array_length = false, array_null_terminated = true)]
+	private static string[] alternative_ressource_dirs;
 	static string target_glib;
 
 	private const GLib.OptionEntry[] options = {
@@ -93,6 +98,7 @@ public class ValaDoc : Object {
 
 		{ "importdir", 0, 0, OptionArg.FILENAME_ARRAY, ref import_directories, "Look for external documentation in DIRECTORY", "DIRECTORY..." },
 		{ "import", 0, 0, OptionArg.STRING_ARRAY, ref import_packages, "Include binding for PACKAGE", "PACKAGE..." },
+		{ "alternative-ressource-dir", 0, 0, OptionArg.STRING_ARRAY, ref alternative_ressource_dirs, "Alternative ressource directories", "DIRECTORY..." },
 
 		{ "wiki", 0, 0, OptionArg.FILENAME, ref wikidirectory, "Wiki directory", "DIRECTORY" },
 
@@ -113,6 +119,7 @@ public class ValaDoc : Object {
 
 		{ "force", 0, 0, OptionArg.NONE, ref force, "force", null },
 		{ "verbose", 0, 0, OptionArg.NONE, ref verbose, "Show all warnings", null },
+		{ "no-color", 0, 0, OptionArg.NONE, ref disable_diagnostic_colors, "Disable colored output", null },
 		{ "target-glib", 0, 0, OptionArg.STRING, ref target_glib, "Target version of glib for code generation", "MAJOR.MINOR" },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref tsources, null, "FILE..." },
 
@@ -172,7 +179,7 @@ public class ValaDoc : Object {
 
 		doclet = modules.create_doclet (pluginpath);
 		if (doclet == null) {
-			reporter.simple_error ("error: failed to load doclet");
+			reporter.simple_error (null, "failed to load doclet");
 			return null;
 		}
 
@@ -185,7 +192,7 @@ public class ValaDoc : Object {
 
 		driver = modules.create_driver (pluginpath);
 		if (driver == null) {
-			reporter.simple_error ("error: failed to load driver");
+			reporter.simple_error (null, "failed to load driver");
 			return null;
 		}
 
@@ -234,6 +241,8 @@ public class ValaDoc : Object {
 
 		settings.profile = profile;
 		settings.defines = defines;
+
+		settings.alternative_ressource_dirs = alternative_ressource_dirs;
 
 
 		// load plugins:
@@ -304,9 +313,18 @@ public class ValaDoc : Object {
 			opt_context.add_main_entries (options, null);
 			opt_context.parse (ref args);
 		} catch (OptionError e) {
-			reporter.simple_error ("error: %s", e.message);
+			reporter.simple_error (null, "%s", e.message);
 			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
 			return quit (reporter);
+		}
+
+		if (disable_diagnostic_colors == false) {
+			unowned string env_colors = Environment.get_variable ("VALA_COLORS");
+			if (env_colors != null) {
+				reporter.set_colors (env_colors);
+			} else {
+				reporter.set_colors (DEFAULT_COLORS);
+			}
 		}
 
 		if (version) {
@@ -315,12 +333,12 @@ public class ValaDoc : Object {
 		}
 
 		if (directory == null) {
-			reporter.simple_error ("error: No output directory specified.");
+			reporter.simple_error (null, "No output directory specified.");
 			return quit (reporter);
 		}
 
 		if (!check_pkg_name ()) {
-			reporter.simple_error ("error: File already exists");
+			reporter.simple_error (null, "File already exists");
 			return quit (reporter);
 		}
 
@@ -328,20 +346,30 @@ public class ValaDoc : Object {
 			if (force == true) {
 				bool tmp = remove_directory (directory);
 				if (tmp == false) {
-					reporter.simple_error ("error: Can't remove directory.");
+					reporter.simple_error (null, "Can't remove directory.");
 					return quit (reporter);
 				}
 			} else {
-				reporter.simple_error ("error: File already exists");
+				reporter.simple_error (null, "File already exists");
 				return quit (reporter);
 			}
 		}
 
 		if (wikidirectory != null) {
 			if (!FileUtils.test(wikidirectory, FileTest.IS_DIR)) {
-				reporter.simple_error ("error: Wiki-directory does not exist.");
+				reporter.simple_error (null, "Wiki-directory does not exist.");
 				return quit (reporter);
 			}
+		}
+
+		foreach (unowned string dir in alternative_ressource_dirs) {
+			if (!FileUtils.test(dir, FileTest.IS_DIR)) {
+				reporter.simple_error (null, "alternative ressource directory '%s' does not exist.".printf (dir));
+				return quit (reporter);
+			}
+		}
+		if (reporter.errors > 0) {
+			return quit (reporter);
 		}
 
 		if (gir_name != null) {
@@ -349,7 +377,7 @@ public class ValaDoc : Object {
 			int last_hyphen = gir_name.last_index_of_char ('-');
 
 			if (last_hyphen == -1 || !gir_name.has_suffix (".gir")) {
-				reporter.simple_error ("error: GIR file name `%s' is not well-formed, expected NAME-VERSION.gir", gir_name);
+				reporter.simple_error (null, "GIR file name '%s' is not well-formed, expected NAME-VERSION.gir", gir_name);
 				return quit (reporter);
 			}
 
@@ -358,7 +386,7 @@ public class ValaDoc : Object {
 			gir_version.canon ("0123456789.", '?');
 
 			if (gir_namespace == "" || gir_version == "" || !gir_version[0].isdigit () || gir_version.contains ("?")) {
-				reporter.simple_error ("error: GIR file name `%s' is not well-formed, expected NAME-VERSION.gir", gir_name);
+				reporter.simple_error (null, "GIR file name '%s' is not well-formed, expected NAME-VERSION.gir", gir_name);
 				return quit (reporter);
 			}
 
@@ -372,10 +400,11 @@ public class ValaDoc : Object {
 			}
 
 			if (report_warning == true) {
-				reporter.simple_error ("error: No source file specified to be compiled to gir.");
+				reporter.simple_error (null, "No source file specified to be compiled to gir.");
 				return quit (reporter);
 			}
 		}
+
 
 		var valadoc = new ValaDoc( );
 		return valadoc.run (reporter);
