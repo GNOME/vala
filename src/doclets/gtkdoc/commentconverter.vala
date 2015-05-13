@@ -228,9 +228,9 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 	}
   
 	public override void visit_source_code (SourceCode code) {
-		current_builder.append ("<programlisting>");
+		current_builder.append ("\n|[\n");
 		current_builder.append (Markup.escape_text (code.code));
-		current_builder.append ("</programlisting>");
+		current_builder.append ("\n]|\n");
 	}
   
 	public override void visit_table (Table t) {
