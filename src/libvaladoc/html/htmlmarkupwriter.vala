@@ -44,9 +44,11 @@ public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
 	}
 
 	public MarkupWriter add_usemap (Charts.Chart chart) {
-		string buf = (string) chart.write_buffer ("cmapx");
-		raw_text ("\n");
-		raw_text (buf);
+		string? buf = (string?) chart.write_buffer ("cmapx");
+		if (buf != null) {
+			raw_text ("\n");
+			raw_text ((!) buf);
+		}
 
 		return this;
 	}
