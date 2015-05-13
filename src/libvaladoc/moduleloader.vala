@@ -174,7 +174,10 @@ public class Valadoc.ModuleLoader : Object {
 		}
 
 
-		reporter.simple_error (null, "No suitable driver found.");
+		reporter.simple_error (null, "No suitable driver found for libvala version " +
+							   "%" + int64.FORMAT_MODIFIER + "d.%" + int64.FORMAT_MODIFIER + "d.%" + int64.FORMAT_MODIFIER + "d. " +
+		                       "Ensure the selected vala version was installed while building valadoc or use --driver to select another one.",
+							   segment_a, segment_b, segment_c);
 		return null;
 	}
 
