@@ -52,7 +52,7 @@ namespace Sqlite {
 		private static void free_table ([CCode (array_length = false)] string[] result);
 		[CCode (cname = "_sqlite3_get_table")]
 		public int get_table (string sql, out string[] resultp, out int nrow, out int ncolumn, out string? errmsg = null) {
-			unowned string sqlite_errmsg;
+			unowned string? sqlite_errmsg;
 			unowned string[] sqlite_resultp;
 
 			var ec = this._get_table (sql, out sqlite_resultp, out nrow, out ncolumn, out sqlite_errmsg);
