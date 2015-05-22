@@ -5373,6 +5373,7 @@
 			<member name="GTK_INPUT_HINT_UPPERCASE_WORDS" value="32"/>
 			<member name="GTK_INPUT_HINT_UPPERCASE_SENTENCES" value="64"/>
 			<member name="GTK_INPUT_HINT_INHIBIT_OSK" value="128"/>
+			<member name="GTK_INPUT_HINT_VERTICAL_WRITING" value="256"/>
 		</flags>
 		<flags name="GtkJunctionSides" type-name="GtkJunctionSides" get-type="gtk_junction_sides_get_type">
 			<member name="GTK_JUNCTION_NONE" value="0"/>
@@ -19700,6 +19701,12 @@
 					<parameter name="action_namespace" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="get_default_widget" symbol="gtk_popover_get_default_widget">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="popover" type="GtkPopover*"/>
+				</parameters>
+			</method>
 			<method name="get_modal" symbol="gtk_popover_get_modal">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -19744,6 +19751,13 @@
 					<parameter name="model" type="GMenuModel*"/>
 				</parameters>
 			</constructor>
+			<method name="set_default_widget" symbol="gtk_popover_set_default_widget">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="popover" type="GtkPopover*"/>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
 			<method name="set_modal" symbol="gtk_popover_set_modal">
 				<return-type type="void"/>
 				<parameters>
@@ -34244,6 +34258,12 @@
 					<parameter name="fontchooser" type="GtkFontChooser*"/>
 				</parameters>
 			</method>
+			<method name="get_font_map" symbol="gtk_font_chooser_get_font_map">
+				<return-type type="PangoFontMap*"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+				</parameters>
+			</method>
 			<method name="get_font_size" symbol="gtk_font_chooser_get_font_size">
 				<return-type type="gint"/>
 				<parameters>
@@ -34285,6 +34305,13 @@
 					<parameter name="font_desc" type="PangoFontDescription*"/>
 				</parameters>
 			</method>
+			<method name="set_font_map" symbol="gtk_font_chooser_set_font_map">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+					<parameter name="fontmap" type="PangoFontMap*"/>
+				</parameters>
+			</method>
 			<method name="set_preview_text" symbol="gtk_font_chooser_set_preview_text">
 				<return-type type="void"/>
 				<parameters>
@@ -34301,6 +34328,7 @@
 			</method>
 			<property name="font" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="font-desc" type="PangoFontDescription*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="font-map" type="PangoFontMap*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="preview-text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-preview-entry" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="font-activated" when="FIRST">

@@ -3779,11 +3779,13 @@ namespace Gtk {
 		public void bind_model (GLib.MenuModel? model, string? action_namespace);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Popover.from_model (Gtk.Widget relative_to, GLib.MenuModel model);
+		public unowned Gtk.Widget? get_default_widget ();
 		public bool get_modal ();
 		public bool get_pointing_to (out Gdk.Rectangle rect);
 		public Gtk.PositionType get_position ();
 		public unowned Gtk.Widget get_relative_to ();
 		public bool get_transitions_enabled ();
+		public void set_default_widget (Gtk.Widget? widget);
 		public void set_modal (bool modal);
 		public void set_pointing_to (Gdk.Rectangle rect);
 		public void set_position (Gtk.PositionType position);
@@ -7242,16 +7244,19 @@ namespace Gtk {
 		public Pango.FontDescription get_font_desc ();
 		public abstract unowned Pango.FontFace get_font_face ();
 		public abstract unowned Pango.FontFamily get_font_family ();
+		public Pango.FontMap? get_font_map ();
 		public abstract int get_font_size ();
 		public string get_preview_text ();
 		public bool get_show_preview_entry ();
 		public abstract void set_filter_func (owned Gtk.FontFilterFunc filter);
 		public void set_font (string fontname);
 		public void set_font_desc (Pango.FontDescription font_desc);
+		public void set_font_map (Pango.FontMap fontmap);
 		public void set_preview_text (string text);
 		public void set_show_preview_entry (bool show_preview_entry);
 		public string font { owned get; set; }
 		public Pango.FontDescription font_desc { owned get; set; }
+		public Pango.FontMap font_map { owned get; set; }
 		public string preview_text { owned get; set; }
 		public bool show_preview_entry { get; set; }
 		public signal void font_activated (string fontname);
@@ -7977,7 +7982,8 @@ namespace Gtk {
 		UPPERCASE_CHARS,
 		UPPERCASE_WORDS,
 		UPPERCASE_SENTENCES,
-		INHIBIT_OSK
+		INHIBIT_OSK,
+		VERTICAL_WRITING
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_INPUT_PURPOSE_")]
 	public enum InputPurpose {
