@@ -1947,7 +1947,7 @@ namespace GData {
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_access_handler_get_type ()")]
 	public interface AccessHandler : GData.Entry {
-		public GData.Feed get_rules (GData.Service service, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
+		public abstract GData.Feed get_rules (GData.Service service, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
 		public async void get_rules_async (GData.Service service, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_cname = "GDataAuthorizerInterface", type_id = "gdata_authorizer_get_type ()")]
