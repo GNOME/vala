@@ -1387,10 +1387,12 @@ namespace GLib {
 	public class ListStore : GLib.Object, GLib.ListModel {
 		[CCode (has_construct_function = false)]
 		public ListStore (GLib.Type item_type);
-		public void append (void* item);
-		public void insert (uint position, void* item);
+		public void append (GLib.Object item);
+		public void insert (uint position, GLib.Object item);
+		public uint insert_sorted (GLib.Object item, GLib.CompareDataFunc compare_func);
 		public void remove (uint position);
 		public void remove_all ();
+		public void splice (uint position, uint n_removals, [CCode (array_length_cname = "n_additions", array_length_pos = 3.1, array_length_type = "guint")] GLib.Object[] additions);
 		[NoAccessorMethod]
 		public GLib.Type item_type { get; construct; }
 	}
