@@ -397,7 +397,7 @@ namespace Lua {
 		public int load_buffer (char[] buffer, string? name = null);
 		[CCode (cname = "luaL_loadstring")]
 		public int load_string (string s);
-		[CCode (cname = "luaL_loadfile")]
+		[CCode (cname = "luaL_loadfile", cheader_filename = "lauxlib.h")]
 		public int load_file (string filename);
 		[CCode (cname = "luaL_dofile", cheader_filename = "lauxlib.h")]
 		public bool do_file (string filename);
