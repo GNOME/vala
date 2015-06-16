@@ -3315,11 +3315,7 @@ namespace GLib {
 	}
 
 	[Compact]
-#if GLIB_2_44
-	[CCode (ref_function = "g_option_context_ref", unref_function = "g_option_context_unref", type_id = "G_TYPE_OPTION_GROUP")]
-#else
 	[CCode (free_function = "g_option_context_free")]
-#endif
 	public class OptionContext {
 		public OptionContext (string? parameter_string = null);
 		public void set_summary (string summary);
