@@ -1392,7 +1392,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Message.warning (Gst.Object src, GLib.Error error, string debug);
 	}
-	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref")]
+	[CCode (cheader_filename = "gst/gst.h", get_value_function = "g_value_get_boxed", ref_function = "gst_mini_object_ref", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", unref_function = "gst_mini_object_unref")]
 	[Compact]
 	public abstract class MiniObject {
 		public weak Gst.MiniObjectDisposeFunction dispose;
