@@ -666,6 +666,7 @@ namespace Gtk {
 		public int get_n_pages ();
 		public unowned Gtk.Widget get_nth_page (int page_num);
 		public bool get_page_complete (Gtk.Widget page);
+		public bool get_page_has_padding (Gtk.Widget page);
 		[Deprecated (since = "3.2")]
 		public unowned Gdk.Pixbuf get_page_header_image (Gtk.Widget page);
 		[Deprecated (since = "3.2")]
@@ -681,6 +682,7 @@ namespace Gtk {
 		public void set_current_page (int page_num);
 		public void set_forward_page_func (owned Gtk.AssistantPageFunc page_func);
 		public void set_page_complete (Gtk.Widget page, bool complete);
+		public void set_page_has_padding (Gtk.Widget page, bool has_padding);
 		[Deprecated (since = "3.2")]
 		public void set_page_header_image (Gtk.Widget page, Gdk.Pixbuf pixbuf);
 		[Deprecated (since = "3.2")]
@@ -3626,6 +3628,9 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Overlay ();
 		public void add_overlay (Gtk.Widget widget);
+		public bool get_overlay_pass_through (Gtk.Widget widget);
+		public void reorder_overlay (Gtk.Widget child, int position);
+		public void set_overlay_pass_through (Gtk.Widget widget, bool pass_through);
 		public virtual signal bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_page_setup_get_type ()")]
@@ -3737,20 +3742,24 @@ namespace Gtk {
 		public bool get_show_connect_to_server ();
 		public bool get_show_desktop ();
 		public bool get_show_enter_location ();
+		public bool get_show_recent ();
 		public GLib.SList<GLib.File> list_shortcuts ();
 		public void remove_shortcut (GLib.File location);
+		public void set_drop_targets_visible (bool visible, Gdk.DragContext context);
 		public void set_local_only (bool local_only);
 		public void set_location (GLib.File location);
 		public void set_open_flags (Gtk.PlacesOpenFlags flags);
 		public void set_show_connect_to_server (bool show_connect_to_server);
 		public void set_show_desktop (bool show_desktop);
 		public void set_show_enter_location (bool show_enter_location);
+		public void set_show_recent (bool show_recent);
 		public bool local_only { get; set; }
 		public GLib.File location { owned get; set; }
 		public Gtk.PlacesOpenFlags open_flags { get; set; }
 		public bool show_connect_to_server { get; set; }
 		public bool show_desktop { get; set; }
 		public bool show_enter_location { get; set; }
+		public bool show_recent { get; set; }
 		public virtual signal int drag_action_ask (int p0);
 		public virtual signal int drag_action_requested (Gdk.DragContext p0, GLib.File p1, GLib.List<GLib.File> p2);
 		public virtual signal void drag_perform_drop (GLib.File p0, GLib.List<GLib.File> p1, int p2);
@@ -7244,19 +7253,18 @@ namespace Gtk {
 		public Pango.FontDescription get_font_desc ();
 		public abstract unowned Pango.FontFace get_font_face ();
 		public abstract unowned Pango.FontFamily get_font_family ();
-		public Pango.FontMap? get_font_map ();
+		public abstract Pango.FontMap? get_font_map ();
 		public abstract int get_font_size ();
 		public string get_preview_text ();
 		public bool get_show_preview_entry ();
 		public abstract void set_filter_func (owned Gtk.FontFilterFunc filter);
 		public void set_font (string fontname);
 		public void set_font_desc (Pango.FontDescription font_desc);
-		public void set_font_map (Pango.FontMap fontmap);
+		public abstract void set_font_map (Pango.FontMap fontmap);
 		public void set_preview_text (string text);
 		public void set_show_preview_entry (bool show_preview_entry);
 		public string font { owned get; set; }
 		public Pango.FontDescription font_desc { owned get; set; }
-		public Pango.FontMap font_map { owned get; set; }
 		public string preview_text { owned get; set; }
 		public bool show_preview_entry { get; set; }
 		public signal void font_activated (string fontname);

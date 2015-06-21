@@ -7357,6 +7357,13 @@
 					<parameter name="page" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="get_page_has_padding" symbol="gtk_assistant_get_page_has_padding">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="assistant" type="GtkAssistant*"/>
+					<parameter name="page" type="GtkWidget*"/>
+				</parameters>
+			</method>
 			<method name="get_page_header_image" symbol="gtk_assistant_get_page_header_image">
 				<return-type type="GdkPixbuf*"/>
 				<parameters>
@@ -7451,6 +7458,14 @@
 					<parameter name="assistant" type="GtkAssistant*"/>
 					<parameter name="page" type="GtkWidget*"/>
 					<parameter name="complete" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_page_has_padding" symbol="gtk_assistant_set_page_has_padding">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="assistant" type="GtkAssistant*"/>
+					<parameter name="page" type="GtkWidget*"/>
+					<parameter name="has_padding" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_page_header_image" symbol="gtk_assistant_set_page_header_image">
@@ -19115,9 +19130,32 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="get_overlay_pass_through" symbol="gtk_overlay_get_overlay_pass_through">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="overlay" type="GtkOverlay*"/>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gtk_overlay_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
+			<method name="reorder_overlay" symbol="gtk_overlay_reorder_overlay">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="overlay" type="GtkOverlay*"/>
+					<parameter name="child" type="GtkWidget*"/>
+					<parameter name="position" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_overlay_pass_through" symbol="gtk_overlay_set_overlay_pass_through">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="overlay" type="GtkOverlay*"/>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="pass_through" type="gboolean"/>
+				</parameters>
+			</method>
 			<signal name="get-child-position" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -19501,6 +19539,12 @@
 					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
 				</parameters>
 			</method>
+			<method name="get_show_recent" symbol="gtk_places_sidebar_get_show_recent">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
+				</parameters>
+			</method>
 			<method name="list_shortcuts" symbol="gtk_places_sidebar_list_shortcuts">
 				<return-type type="GSList*"/>
 				<parameters>
@@ -19515,6 +19559,14 @@
 				<parameters>
 					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
 					<parameter name="location" type="GFile*"/>
+				</parameters>
+			</method>
+			<method name="set_drop_targets_visible" symbol="gtk_places_sidebar_set_drop_targets_visible">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
+					<parameter name="visible" type="gboolean"/>
+					<parameter name="context" type="GdkDragContext*"/>
 				</parameters>
 			</method>
 			<method name="set_local_only" symbol="gtk_places_sidebar_set_local_only">
@@ -19559,12 +19611,20 @@
 					<parameter name="show_enter_location" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_show_recent" symbol="gtk_places_sidebar_set_show_recent">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
+					<parameter name="show_recent" type="gboolean"/>
+				</parameters>
+			</method>
 			<property name="local-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="location" type="GFile*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="open-flags" type="GtkPlacesOpenFlags" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-connect-to-server" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-desktop" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-enter-location" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-recent" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="drag-action-ask" when="LAST">
 				<return-type type="gint"/>
 				<parameters>
@@ -34328,7 +34388,6 @@
 			</method>
 			<property name="font" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="font-desc" type="PangoFontDescription*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="font-map" type="PangoFontMap*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="preview-text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-preview-entry" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="font-activated" when="FIRST">
@@ -34350,6 +34409,12 @@
 					<parameter name="fontchooser" type="GtkFontChooser*"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="get_font_map">
+				<return-type type="PangoFontMap*"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="get_font_size">
 				<return-type type="gint"/>
 				<parameters>
@@ -34363,6 +34428,13 @@
 					<parameter name="filter" type="GtkFontFilterFunc"/>
 					<parameter name="user_data" type="gpointer"/>
 					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_font_map">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+					<parameter name="fontmap" type="PangoFontMap*"/>
 				</parameters>
 			</vfunc>
 		</interface>
@@ -35541,14 +35613,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1701"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1703"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="1"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="1"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="17"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
