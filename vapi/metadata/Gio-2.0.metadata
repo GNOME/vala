@@ -205,9 +205,10 @@ SocketListener
   .accept*.source_object#parameter default=null
 srv_target_list_sort type_arguments="GLib.SrvTarget" skip=false
 srv_target_list_sort.targets type_arguments="GLib.SrvTarget" owned
-StaticResource
-  .next type="StaticResource*"
 Subprocess
+  .new skip=false throws="GLib.Error"
+  .new.error skip
+  .new.argv0 skip
   .communicate*.cancellable#parameter default=()
 TlsDatabase
   .create_certificate_handle nullable
@@ -329,10 +330,6 @@ initable_* skip
 FileAttributeInfoList
   .lookup nullable
 
-// Bug #561619: fields
-StaticResource
-  .resource unowned=false
-
 // Bug #: virtual vs. abstract
 Icon
   .serialize#virtual_method virtual
@@ -379,9 +376,6 @@ FileAttributeInfoList
   .infos array array_length_field="n_infos" unowned=false
 LoadableIcon
   .load_finish.type out nullable unowned=false default=null
-StaticResource
-  .data array array_length_field="data_len"
-  .padding skip
 Task
   .get_source_object type="GLib.Object"
 TlsBackend

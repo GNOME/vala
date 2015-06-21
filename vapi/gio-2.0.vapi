@@ -2174,7 +2174,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_subprocess_get_type ()")]
 	public class Subprocess : GLib.Object, GLib.Initable {
 		[CCode (has_construct_function = false)]
-		protected Subprocess ();
+		public Subprocess (GLib.SubprocessFlags flags, ...) throws GLib.Error;
 		public bool communicate (GLib.Bytes? stdin_buf, GLib.Cancellable? cancellable, out GLib.Bytes stdout_buf, out GLib.Bytes stderr_buf) throws GLib.Error;
 		public async bool communicate_async (GLib.Bytes? stdin_buf, GLib.Cancellable? cancellable, out GLib.Bytes stdout_buf, out GLib.Bytes stderr_buf) throws GLib.Error;
 		public bool communicate_utf8 (string? stdin_buf, GLib.Cancellable? cancellable, out string stdout_buf, out string stderr_buf) throws GLib.Error;
