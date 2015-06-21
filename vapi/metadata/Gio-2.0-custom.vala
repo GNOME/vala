@@ -103,6 +103,11 @@ namespace GLib {
 		public MemoryOutputStream ([CCode (array_length_type = "gsize")] owned uint8[]? data, GLib.ReallocFunc? realloc_function, GLib.DestroyNotify? destroy_function);
 	}
 
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_native_socket_address_get_type ()")]
+	public class NativeSocketAddress : GLib.SocketAddress {
+		public NativeSocketAddress (void* native, size_t len);
+	}
+
 	public abstract class NativeVolumeMonitor : GLib.VolumeMonitor {
 		[NoWrapper]
 		public abstract GLib.Mount get_mount_for_mount_path (string mount_path, GLib.Cancellable? cancellable = null);

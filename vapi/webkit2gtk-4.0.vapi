@@ -371,6 +371,7 @@ namespace WebKit {
 	public class Settings : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Settings ();
+		public bool get_allow_file_access_from_file_urls ();
 		public bool get_allow_modal_dialogs ();
 		public bool get_auto_load_images ();
 		public unowned string get_cursive_font_family ();
@@ -419,6 +420,7 @@ namespace WebKit {
 		public unowned string get_serif_font_family ();
 		public unowned string get_user_agent ();
 		public bool get_zoom_text_only ();
+		public void set_allow_file_access_from_file_urls (bool allowed);
 		public void set_allow_modal_dialogs (bool allowed);
 		public void set_auto_load_images (bool enabled);
 		public void set_cursive_font_family (string cursive_font_family);
@@ -468,6 +470,7 @@ namespace WebKit {
 		public void set_user_agent (string? user_agent);
 		public void set_user_agent_with_application_details (string? application_name, string? application_version);
 		public void set_zoom_text_only (bool zoom_text_only);
+		public bool allow_file_access_from_file_urls { get; set construct; }
 		public bool allow_modal_dialogs { get; set construct; }
 		public bool auto_load_images { get; set construct; }
 		public string cursive_font_family { get; set construct; }
@@ -623,6 +626,8 @@ namespace WebKit {
 		public void set_tls_errors_policy (WebKit.TLSErrorsPolicy policy);
 		public void set_web_extensions_directory (string directory);
 		public void set_web_extensions_initialization_user_data (GLib.Variant user_data);
+		[NoAccessorMethod]
+		public string indexed_db_directory { owned get; construct; }
 		[NoAccessorMethod]
 		public string local_storage_directory { owned get; construct; }
 		public virtual signal void download_started (WebKit.Download download);
@@ -781,7 +786,7 @@ namespace WebKit {
 		public bool get_statusbar_visible ();
 		public bool get_toolbar_visible ();
 		public bool fullscreen { get; construct; }
-		public Cairo.RectangleInt geometry { get; construct; }
+		public Gdk.Rectangle geometry { get; construct; }
 		public bool locationbar_visible { get; construct; }
 		public bool menubar_visible { get; construct; }
 		public bool resizable { get; construct; }

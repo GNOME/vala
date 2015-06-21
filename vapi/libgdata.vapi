@@ -149,6 +149,11 @@ namespace GData {
 		public string feed_uri { get; construct; }
 		public GData.Service service { get; construct; }
 	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_calendar_access_rule_get_type ()")]
+	public class CalendarAccessRule : GData.AccessRule {
+		[CCode (has_construct_function = false)]
+		public CalendarAccessRule (string id);
+	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_calendar_calendar_get_type ()")]
 	public class CalendarCalendar : GData.Entry, GData.AccessHandler {
 		[CCode (has_construct_function = false)]
@@ -513,6 +518,11 @@ namespace GData {
 		public async void query_contacts_async (GData.Query? query, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);
 		public GData.Feed query_groups (GData.Query? query, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
 		public async void query_groups_async (GData.Query? query, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);
+	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_documents_access_rule_get_type ()")]
+	public class DocumentsAccessRule : GData.AccessRule {
+		[CCode (has_construct_function = false)]
+		public DocumentsAccessRule (string id);
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_documents_document_get_type ()")]
 	public class DocumentsDocument : GData.DocumentsEntry, GData.AccessHandler {
@@ -1317,6 +1327,7 @@ namespace GData {
 		[CCode (has_construct_function = false)]
 		public OAuth2Authorizer (string client_id, string client_secret, string redirect_uri, GLib.Type service_type);
 		public string build_authentication_uri (string? login_hint, bool include_granted_scopes);
+		public string dup_refresh_token ();
 		[CCode (has_construct_function = false)]
 		public OAuth2Authorizer.for_authorization_domains (string client_id, string client_secret, string redirect_uri, GLib.List<GData.AuthorizationDomain> authorization_domains);
 		public unowned string get_client_id ();
@@ -1329,12 +1340,15 @@ namespace GData {
 		public async bool request_authorization_async (string authorization_code, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void set_locale (string? locale);
 		public void set_proxy_resolver (GLib.ProxyResolver? proxy_resolver);
+		public void set_refresh_token (string? refresh_token);
 		public void set_timeout (uint timeout);
 		public string client_id { get; construct; }
 		public string client_secret { get; construct; }
 		public string locale { get; set; }
 		public GLib.ProxyResolver proxy_resolver { get; set; }
 		public string redirect_uri { get; construct; }
+		[NoAccessorMethod]
+		public string refresh_token { owned get; set; }
 		public uint timeout { get; set; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_parsable_get_type ()")]

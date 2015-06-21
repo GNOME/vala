@@ -536,6 +536,10 @@ namespace Pango {
 		public weak Pango.Language language;
 		public weak GLib.SList<void*> extra_attrs;
 	}
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
+	public struct AttrFontFeatures {
+		public weak string features;
+	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_color_get_type ()")]
 	public struct Color {
 		public uint16 red;
@@ -683,7 +687,8 @@ namespace Pango {
 		STRIKETHROUGH_COLOR,
 		ABSOLUTE_SIZE,
 		GRAVITY,
-		GRAVITY_HINT;
+		GRAVITY_HINT,
+		FONT_FEATURES;
 		public static unowned string? get_name (Pango.AttrType type);
 		public static Pango.AttrType register (string name);
 	}

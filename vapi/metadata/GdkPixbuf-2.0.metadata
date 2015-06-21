@@ -21,3 +21,5 @@ Pixbuf
 
 // Bug #666798: delegates which throw exceptions
 PixbufSaveFunc skip
+
+*_autoptr skip

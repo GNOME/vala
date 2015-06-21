@@ -285,6 +285,8 @@ namespace Json {
 	[Deprecated (replacement = "Json.gobject_from_data", since = "0.10")]
 	public static GLib.Object construct_gobject (GLib.Type gtype, string data, size_t length) throws GLib.Error;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	public static Json.Node from_string (string str) throws GLib.Error;
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static GLib.Object gobject_deserialize (GLib.Type gtype, Json.Node node);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static GLib.Object gobject_from_data (GLib.Type gtype, string data, ssize_t length = -1) throws GLib.Error;
@@ -303,4 +305,6 @@ namespace Json {
 	[CCode (cheader_filename = "json-glib/json-glib.h,json-glib/json-gobject.h")]
 	[Deprecated (replacement = "Json.gobject_to_data", since = "0.10")]
 	public static string serialize_gobject (GLib.Object gobject, out size_t length);
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	public static string to_string (Json.Node node, bool pretty);
 }

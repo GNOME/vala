@@ -11,6 +11,8 @@ namespace ClutterGdk {
 	[CCode (cheader_filename = "clutter/gdk/clutter-gdk.h")]
 	public static unowned Gdk.Window get_stage_window (Clutter.Stage stage);
 	[CCode (cheader_filename = "clutter/gdk/clutter-gdk.h")]
+	public static unowned Gdk.Visual get_visual ();
+	[CCode (cheader_filename = "clutter/gdk/clutter-gdk.h")]
 	public static Gdk.FilterReturn handle_event (Gdk.Event event);
 	[CCode (cheader_filename = "clutter/gdk/clutter-gdk.h")]
 	public static void set_display (Gdk.Display display);

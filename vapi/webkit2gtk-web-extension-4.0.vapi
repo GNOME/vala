@@ -123,6 +123,10 @@ namespace WebKit {
 			public string substring_data (ulong offset, ulong length) throws GLib.Error;
 			public string data { owned get; set; }
 			public ulong length { get; }
+			[NoAccessorMethod]
+			public WebKit.DOM.Element next_element_sibling { owned get; }
+			[NoAccessorMethod]
+			public WebKit.DOM.Element previous_element_sibling { owned get; }
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_comment_get_type ()")]
 		[GIR (name = "DOMComment")]
@@ -290,6 +294,10 @@ namespace WebKit {
 			public string character_set { owned get; }
 			public string charset { owned get; set; }
 			[NoAccessorMethod]
+			public ulong child_element_count { get; }
+			[NoAccessorMethod]
+			public WebKit.DOM.HTMLCollection children { owned get; }
+			[NoAccessorMethod]
 			public string compat_mode { owned get; }
 			[NoAccessorMethod]
 			public string content_type { owned get; }
@@ -302,6 +310,8 @@ namespace WebKit {
 			public WebKit.DOM.Element document_element { get; }
 			public string document_uri { owned get; set; }
 			public string domain { owned get; }
+			[NoAccessorMethod]
+			public WebKit.DOM.Element first_element_child { owned get; }
 			public WebKit.DOM.HTMLCollection forms { owned get; }
 			public WebKit.DOM.HTMLHeadElement head { get; }
 			[NoAccessorMethod]
@@ -309,6 +319,8 @@ namespace WebKit {
 			public WebKit.DOM.HTMLCollection images { owned get; }
 			public WebKit.DOM.DOMImplementation implementation { owned get; }
 			public string input_encoding { owned get; }
+			[NoAccessorMethod]
+			public WebKit.DOM.Element last_element_child { owned get; }
 			public string last_modified { owned get; }
 			public WebKit.DOM.HTMLCollection links { owned get; }
 			[NoAccessorMethod]
@@ -318,6 +330,8 @@ namespace WebKit {
 			public string preferred_stylesheet_set { owned get; }
 			public string ready_state { owned get; }
 			public string referrer { owned get; }
+			[NoAccessorMethod]
+			public WebKit.DOM.Element scrolling_element { owned get; }
 			public string selected_stylesheet_set { owned get; set; }
 			public WebKit.DOM.StyleSheetList style_sheets { get; }
 			public string title { owned get; set; }
@@ -343,6 +357,14 @@ namespace WebKit {
 		public class DocumentFragment : WebKit.DOM.Node, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected DocumentFragment ();
+			[NoAccessorMethod]
+			public ulong child_element_count { get; }
+			[NoAccessorMethod]
+			public WebKit.DOM.HTMLCollection children { owned get; }
+			[NoAccessorMethod]
+			public WebKit.DOM.Element first_element_child { owned get; }
+			[NoAccessorMethod]
+			public WebKit.DOM.Element last_element_child { owned get; }
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_document_type_get_type ()")]
 		[GIR (name = "DOMDocumentType")]
@@ -375,6 +397,7 @@ namespace WebKit {
 			public string get_attribute_ns (string namespaceURI, string localName);
 			public WebKit.DOM.NamedNodeMap get_attributes ();
 			public ulong get_child_element_count ();
+			public WebKit.DOM.HTMLCollection get_children ();
 			public string get_class_name ();
 			public double get_client_height ();
 			public double get_client_left ();
@@ -425,6 +448,7 @@ namespace WebKit {
 			public void set_scroll_top (long value);
 			public WebKit.DOM.NamedNodeMap attributes { owned get; }
 			public ulong child_element_count { get; }
+			public WebKit.DOM.HTMLCollection children { owned get; }
 			public string class_name { owned get; set; }
 			public double client_height { get; }
 			public double client_left { get; }
@@ -855,6 +879,7 @@ namespace WebKit {
 			protected HTMLElement ();
 			public void click ();
 			public string get_access_key ();
+			[Deprecated (since = "2.10")]
 			public WebKit.DOM.HTMLCollection get_children ();
 			public string get_content_editable ();
 			public string get_dir ();
@@ -881,7 +906,6 @@ namespace WebKit {
 			public void set_tab_index (long value);
 			public void set_title (string value);
 			public string access_key { owned get; set; }
-			public WebKit.DOM.HTMLCollection children { owned get; }
 			public string content_editable { owned get; set; }
 			public string dir { owned get; set; }
 			[NoAccessorMethod]
@@ -2102,8 +2126,6 @@ namespace WebKit {
 			public long client_x { get; }
 			public long client_y { get; }
 			public bool ctrl_key { get; }
-			[NoAccessorMethod]
-			public double force { get; }
 			public WebKit.DOM.Node from_element { get; }
 			public bool meta_key { get; }
 			[NoAccessorMethod]

@@ -6233,6 +6233,7 @@ namespace Clutter {
 		[CCode (has_construct_function = false, type = "ClutterAction*")]
 		public PanAction ();
 		public double get_acceleration_factor ();
+		public float get_constrained_motion_delta (uint point, out float delta_x, out float delta_y);
 		public double get_deceleration ();
 		public bool get_interpolate ();
 		public void get_interpolated_coords (out float interpolated_x, out float interpolated_y);
@@ -7905,7 +7906,8 @@ namespace Clutter {
 	public enum PanAxis {
 		AXIS_NONE,
 		X_AXIS,
-		Y_AXIS
+		Y_AXIS,
+		AXIS_AUTO
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_PATH_", type_id = "clutter_path_node_type_get_type ()")]
 	public enum PathNodeType {

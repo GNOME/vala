@@ -1551,6 +1551,10 @@ namespace GLib {
 		public signal void show_processes (string message, GLib.Array<GLib.Pid> processes, [CCode (array_length = false, array_null_terminated = true)] string[] choices);
 		public virtual signal void show_unmount_progress (string message, int64 time_left, int64 bytes_left);
 	}
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_native_socket_address_get_type ()")]
+	public class NativeSocketAddress : GLib.SocketAddress {
+		public NativeSocketAddress (void* native, size_t len);
+	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public abstract class NativeVolumeMonitor : GLib.VolumeMonitor {
 		[CCode (has_construct_function = false)]
@@ -1655,6 +1659,8 @@ namespace GLib {
 	public class PropertyAction : GLib.Object, GLib.Action {
 		[CCode (has_construct_function = false)]
 		public PropertyAction (string name, GLib.Object object, string property_name);
+		[NoAccessorMethod]
+		public bool invert_boolean { get; construct; }
 		public GLib.Object object { construct; }
 		public string property_name { construct; }
 	}
@@ -1830,6 +1836,8 @@ namespace GLib {
 		public bool has_key (string name);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] list_children ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] list_keys ();
 		public GLib.SettingsSchema @ref ();
 		public void unref ();
 	}
@@ -2093,7 +2101,7 @@ namespace GLib {
 		public GLib.TlsCertificateFlags tls_validation_flags { get; set construct; }
 		[NoAccessorMethod]
 		public GLib.SocketType type { get; set construct; }
-		public virtual signal void event (GLib.SocketClientEvent event, GLib.SocketConnectable connectable, GLib.IOStream connection);
+		public virtual signal void event (GLib.SocketClientEvent event, GLib.SocketConnectable connectable, GLib.IOStream? connection);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SocketConnection : GLib.IOStream {
@@ -3111,7 +3119,8 @@ namespace GLib {
 	[Flags]
 	public enum DBusCallFlags {
 		NONE,
-		NO_AUTO_START
+		NO_AUTO_START,
+		ALLOW_INTERACTIVE_AUTHORIZATION
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_CAPABILITY_FLAGS_", type_id = "g_dbus_capability_flags_get_type ()")]
 	[Flags]
@@ -3145,7 +3154,8 @@ namespace GLib {
 	public enum DBusMessageFlags {
 		NONE,
 		NO_REPLY_EXPECTED,
-		NO_AUTO_START
+		NO_AUTO_START,
+		ALLOW_INTERACTIVE_AUTHORIZATION
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_MESSAGE_HEADER_FIELD_", type_id = "g_dbus_message_header_field_get_type ()")]
 	public enum DBusMessageHeaderField {

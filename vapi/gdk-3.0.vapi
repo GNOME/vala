@@ -5244,6 +5244,7 @@ namespace Gdk {
 		public bool get_modal_hint ();
 		public int get_origin (out int x, out int y);
 		public unowned Gdk.Window get_parent ();
+		public bool get_pass_through ();
 		[Deprecated (since = "3.0")]
 		public unowned Gdk.Window? get_pointer (out int x, out int y, out Gdk.ModifierType mask);
 		public void get_position (out int x, out int y);
@@ -5321,6 +5322,7 @@ namespace Gdk {
 		public void set_opacity (double opacity);
 		public void set_opaque_region (Cairo.Region? region);
 		public void set_override_redirect (bool override_redirect);
+		public void set_pass_through (bool pass_through);
 		public void set_role (string role);
 		public void set_shadow_width (int left, int right, int top, int bottom);
 		public void set_skip_pager_hint (bool skips_pager);
