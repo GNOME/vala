@@ -2736,15 +2736,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	private string generate_struct_equal_function (Struct st) {
+		if (st.base_struct != null) {
+			return generate_struct_equal_function (st.base_struct);
+		}
+
 		string equal_func = "_%sequal".printf (get_ccode_lower_case_prefix (st));
 
 		if (!add_wrapper (equal_func)) {
 			// wrapper already defined
 			return equal_func;
-		}
-
-		if (st.base_struct != null) {
-			return generate_struct_equal_function (st.base_struct);
 		}
 
 		var function = new CCodeFunction (equal_func, "gboolean");
