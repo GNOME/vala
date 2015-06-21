@@ -1039,6 +1039,14 @@ public class Vala.Parser : CodeVisitor {
 		if (operator != UnaryOperator.NONE) {
 			next ();
 			var op = parse_unary_expression ();
+			var lit = op as IntegerLiteral;
+			if (lit != null) {
+				if (operator == UnaryOperator.PLUS) {
+					return lit;
+				} else if (operator == UnaryOperator.MINUS) {
+					return new IntegerLiteral ("-"+lit.value, get_src (begin));
+				}
+			}
 			return new UnaryExpression (operator, op, get_src (begin));
 		}
 		switch (current ()) {
