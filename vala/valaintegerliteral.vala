@@ -79,10 +79,10 @@ public class Vala.IntegerLiteral : Literal {
 		}
 		
 		int64 n = int64.parse (value);
-		if (!u && n > 0x7fffffff) {
+		if (!u && (n > int.MAX || n < int.MIN)) {
 			// value doesn't fit into signed 32-bit
 			l = 2;
-		} else if (u && n > 0xffffffff) {
+		} else if (u && n > uint.MAX) {
 			// value doesn't fit into unsigned 32-bit
 			l = 2;
 		}
