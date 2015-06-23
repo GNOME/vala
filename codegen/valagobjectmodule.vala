@@ -333,9 +333,12 @@ public class Vala.GObjectModule : GTypeModule {
 				ccode.add_assignment (new CCodeIdentifier ("boxed"), cgetcall);
 				ccall.add_argument (new CCodeIdentifier ("boxed"));
 
+				var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("boxed"), new CCodeConstant ("NULL"));
 				var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
 				cstrvlen.add_argument (new CCodeIdentifier ("boxed"));
-				ccall.add_argument (cstrvlen);
+				var ccond = new CCodeConditionalExpression (cisnull, new CCodeConstant ("0"), cstrvlen);
+
+				ccall.add_argument (ccond);
 				ccode.add_expression (ccall);
 				ccode.close ();
 			} else {
