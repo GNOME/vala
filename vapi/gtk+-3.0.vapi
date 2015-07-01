@@ -6808,7 +6808,7 @@ namespace Gtk {
 		public virtual signal void state_flags_changed (Gtk.StateFlags previous_state_flags);
 		public virtual signal void style_set (Gtk.Style? previous_style);
 		public virtual signal void style_updated ();
-		public virtual signal bool touch_event (Gdk.Event event);
+		public virtual signal bool touch_event (Gdk.EventTouch event);
 		[HasEmitter]
 		public virtual signal void unmap ();
 		public virtual signal bool unmap_event (Gdk.EventAny event);
