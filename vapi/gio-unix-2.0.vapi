@@ -24,7 +24,7 @@ namespace GLib {
 		public unowned string get_string (string key);
 		public bool has_key (string key);
 		public void launch_action (string action_name, GLib.AppLaunchContext launch_context);
-		public bool launch_uris_as_manager (GLib.List uris, GLib.AppLaunchContext launch_context, GLib.SpawnFlags spawn_flags, GLib.SpawnChildSetupFunc user_setup, void* user_setup_data, GLib.DesktopAppLaunchCallback pid_callback, void* pid_callback_data) throws GLib.Error;
+		public bool launch_uris_as_manager (GLib.List<string> uris, GLib.AppLaunchContext? launch_context, GLib.SpawnFlags spawn_flags, GLib.SpawnChildSetupFunc? user_setup = null, GLib.DesktopAppLaunchCallback? pid_callback = null) throws GLib.Error;
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] list_actions ();
 		[CCode (array_length = false, array_null_terminated = true)]
