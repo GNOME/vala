@@ -2091,6 +2091,8 @@ namespace Gtk {
 		public FileChooserWidget (Gtk.FileChooserAction action);
 		[NoAccessorMethod]
 		public bool search_mode { get; set; }
+		[NoAccessorMethod]
+		public string subtitle { owned get; }
 		public virtual signal void desktop_folder ();
 		public virtual signal void down_folder ();
 		public virtual signal void home_folder ();
@@ -3741,6 +3743,7 @@ namespace Gtk {
 		public bool get_show_desktop ();
 		public bool get_show_enter_location ();
 		public bool get_show_recent ();
+		public bool get_show_trash ();
 		public GLib.SList<GLib.File> list_shortcuts ();
 		public void remove_shortcut (GLib.File location);
 		public void set_drop_targets_visible (bool visible, Gdk.DragContext context);
@@ -3751,6 +3754,7 @@ namespace Gtk {
 		public void set_show_desktop (bool show_desktop);
 		public void set_show_enter_location (bool show_enter_location);
 		public void set_show_recent (bool show_recent);
+		public void set_show_trash (bool show_trash);
 		public bool local_only { get; set; }
 		public GLib.File location { owned get; set; }
 		public Gtk.PlacesOpenFlags open_flags { get; set; }
@@ -3758,6 +3762,7 @@ namespace Gtk {
 		public bool show_desktop { get; set; }
 		public bool show_enter_location { get; set; }
 		public bool show_recent { get; set; }
+		public bool show_trash { get; set; }
 		public virtual signal int drag_action_ask (int p0);
 		public virtual signal int drag_action_requested (Gdk.DragContext p0, GLib.File p1, GLib.List<GLib.File> p2);
 		public virtual signal void drag_perform_drop (GLib.File p0, GLib.List<GLib.File> p1, int p2);
@@ -6468,6 +6473,7 @@ namespace Gtk {
 		public unowned Gdk.Display get_display ();
 		public bool get_double_buffered ();
 		public int get_events ();
+		public unowned Cairo.FontOptions get_font_options ();
 		public unowned Gdk.FrameClock get_frame_clock ();
 		public Gtk.Align get_halign ();
 		public bool get_has_tooltip ();
@@ -6629,6 +6635,7 @@ namespace Gtk {
 		public void set_direction (Gtk.TextDirection dir);
 		public void set_double_buffered (bool double_buffered);
 		public void set_events (int events);
+		public void set_font_options (Cairo.FontOptions? options);
 		public void set_halign (Gtk.Align align);
 		public void set_has_tooltip (bool has_tooltip);
 		public void set_has_window (bool has_window);
