@@ -50,6 +50,11 @@ namespace Gtk {
 		public virtual void forall_internal(bool include_internal, Gtk.Callback callback);
 	}
 
+	public class CssProvider {
+		[CCode (cname = "gtk_css_provider_load_from_data")]
+		public bool load_from_buffer ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gssize")] uint8[] data) throws GLib.Error;
+	}
+
 	[CCode (type_id = "gtk_notebook_get_type ()")]
 	public class Notebook {
 		public int page_num (Widget child);
