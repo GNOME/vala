@@ -2677,6 +2677,8 @@ namespace GLib {
 		public static unowned string get_user_data_dir ();
 		[CCode (cname = "g_get_user_config_dir")]
 		public static unowned string get_user_config_dir ();
+		[CCode (cname = "g_get_user_runtime_dir")]
+		public static unowned string get_user_runtime_dir ();
 		[CCode (cname = "g_get_user_special_dir")]
 		public static unowned string get_user_special_dir (UserDirectory directory);
 		[CCode (cname = "g_get_system_data_dirs", array_length = false, array_null_terminated = true)]
