@@ -214,6 +214,7 @@ namespace GI {
 	public class StructInfo : GI.BaseInfo {
 		[CCode (has_construct_function = false)]
 		protected StructInfo ();
+		public static GI.FieldInfo find_field (GI.StructInfo info, string name);
 		public static GI.FunctionInfo find_method (GI.StructInfo info, string name);
 		public static size_t get_alignment (GI.StructInfo info);
 		public static GI.FieldInfo get_field (GI.StructInfo info, int n);

@@ -4678,6 +4678,7 @@ namespace Clutter {
 		[NoWrapper]
 		public virtual void apply_transform (ref Clutter.Matrix matrix);
 		public Clutter.Vertex apply_transform_to_point (Clutter.Vertex point);
+		public void bind_model (GLib.ListModel model, owned Clutter.ActorCreateChildFunc create_child_func);
 		public void clear_actions ();
 		public void clear_constraints ();
 		public void clear_effects ();
@@ -5785,6 +5786,8 @@ namespace Clutter {
 		public Clutter.ScrollEvent scroll;
 		public Clutter.StageStateEvent stage_state;
 		public Clutter.TouchEvent touch;
+		public Clutter.TouchpadPinchEvent touchpad_pinch;
+		public Clutter.TouchpadSwipeEvent touchpad_swipe;
 		public Clutter.EventType type;
 		[CCode (has_construct_function = false)]
 		public Event (Clutter.EventType type);
@@ -5803,6 +5806,11 @@ namespace Clutter {
 		public float get_distance (Clutter.Event target);
 		public unowned Clutter.EventSequence get_event_sequence ();
 		public Clutter.EventFlags get_flags ();
+		public void get_gesture_motion_delta (out double dx, out double dy);
+		public Clutter.TouchpadGesturePhase get_gesture_phase ();
+		public double get_gesture_pinch_angle_delta ();
+		public double get_gesture_pinch_scale ();
+		public uint get_gesture_swipe_finger_count ();
 		public uint16 get_key_code ();
 		public uint get_key_symbol ();
 		public unichar get_key_unicode ();
@@ -6095,6 +6103,7 @@ namespace Clutter {
 		public Clutter.LayoutManager manager { get; construct; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_list_model_get_type ()")]
+	[Deprecated (since = "1.24")]
 	public class ListModel : Clutter.Model, Clutter.Scriptable {
 		[CCode (has_construct_function = false, type = "ClutterModel*")]
 		public ListModel (uint n_columns, ...);
@@ -6114,6 +6123,7 @@ namespace Clutter {
 		public void free ();
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_model_get_type ()")]
+	[Deprecated (since = "1.24")]
 	public abstract class Model : GLib.Object, Clutter.Scriptable {
 		[CCode (has_construct_function = false)]
 		protected Model ();
@@ -6155,6 +6165,7 @@ namespace Clutter {
 		public virtual signal void sort_changed ();
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_model_iter_get_type ()")]
+	[Deprecated (since = "1.24")]
 	public abstract class ModelIter : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected ModelIter ();
@@ -7548,6 +7559,35 @@ namespace Clutter {
 		public double axes;
 		public weak Clutter.InputDevice device;
 	}
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
+	public struct TouchpadPinchEvent {
+		public Clutter.EventType type;
+		public uint32 time;
+		public Clutter.EventFlags flags;
+		public weak Clutter.Stage stage;
+		public weak Clutter.Actor source;
+		public Clutter.TouchpadGesturePhase phase;
+		public float x;
+		public float y;
+		public float dx;
+		public float dy;
+		public float angle_delta;
+		public float scale;
+	}
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
+	public struct TouchpadSwipeEvent {
+		public Clutter.EventType type;
+		public uint32 time;
+		public Clutter.EventFlags flags;
+		public weak Clutter.Stage stage;
+		public weak Clutter.Actor source;
+		public Clutter.TouchpadGesturePhase phase;
+		public uint n_fingers;
+		public float x;
+		public float y;
+		public float dx;
+		public float dy;
+	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "CLUTTER_TYPE_UNITS")]
 	public struct Units {
 		public Clutter.Units? copy ();
@@ -7742,6 +7782,8 @@ namespace Clutter {
 		TOUCH_UPDATE,
 		TOUCH_END,
 		TOUCH_CANCEL,
+		TOUCHPAD_PINCH,
+		TOUCHPAD_SWIPE,
 		EVENT_LAST
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_FEATURE_")]
@@ -8086,6 +8128,13 @@ namespace Clutter {
 		FORWARD,
 		BACKWARD
 	}
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TOUCHPAD_GESTURE_PHASE_", type_id = "clutter_touchpad_gesture_phase_get_type ()")]
+	public enum TouchpadGesturePhase {
+		BEGIN,
+		UPDATE,
+		END,
+		CANCEL
+	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_UNIT_", type_id = "clutter_unit_type_get_type ()")]
 	public enum UnitType {
 		PIXEL,
@@ -8143,6 +8192,8 @@ namespace Clutter {
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", instance_pos = 1.9)]
+	public delegate Clutter.Actor ActorCreateChildFunc (GLib.Object item);
+	[CCode (cheader_filename = "clutter/clutter.h", instance_pos = 1.9)]
 	[Deprecated (since = "1.12")]
 	public delegate double AlphaFunc (Clutter.Alpha alpha);
 	[CCode (cheader_filename = "clutter/clutter.h", instance_pos = 2.9)]
@@ -8155,10 +8206,13 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h", instance_pos = 1.9)]
 	public delegate bool EventFilterFunc (Clutter.Event event);
 	[CCode (cheader_filename = "clutter/clutter.h", instance_pos = 2.9)]
+	[Deprecated (since = "1.24")]
 	public delegate bool ModelFilterFunc (Clutter.Model model, Clutter.ModelIter iter);
 	[CCode (cheader_filename = "clutter/clutter.h", instance_pos = 2.9)]
+	[Deprecated (since = "1.24")]
 	public delegate bool ModelForeachFunc (Clutter.Model model, Clutter.ModelIter iter);
 	[CCode (cheader_filename = "clutter/clutter.h", instance_pos = 3.9)]
+	[Deprecated (since = "1.24")]
 	public delegate int ModelSortFunc (Clutter.Model model, GLib.Value a, GLib.Value b);
 	[CCode (cheader_filename = "clutter/clutter.h", instance_pos = 1.9)]
 	public delegate void PathCallback (Clutter.PathNode node);

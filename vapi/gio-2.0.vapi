@@ -2157,6 +2157,8 @@ namespace GLib {
 		public bool is_active ();
 		public void start ();
 		public void stop ();
+		[NoAccessorMethod]
+		public bool active { get; set construct; }
 		public virtual signal bool incoming (GLib.SocketConnection connection, GLib.Object? source_object);
 	}
 	[CCode (cheader_filename = "gio/gio.h", cname = "GSource", ref_function = "g_source_ref", unref_function = "g_source_unref")]

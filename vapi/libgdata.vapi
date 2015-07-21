@@ -160,9 +160,9 @@ namespace GData {
 		public CalendarCalendar (string? id);
 		public unowned string get_access_level ();
 		public GData.Color get_color ();
-		[Deprecated]
+		[Deprecated (since = "0.17.2")]
 		public int64 get_edited ();
-		[Deprecated]
+		[Deprecated (since = "0.17.2")]
 		public uint get_times_cleaned ();
 		public unowned string get_timezone ();
 		public void set_color (GData.Color color);
@@ -171,13 +171,13 @@ namespace GData {
 		public void set_timezone (string? _timezone);
 		public string access_level { get; }
 		public GData.Color color { get; set; }
-		[Deprecated]
+		[Deprecated (since = "0.17.2")]
 		public int64 edited { get; }
 		[NoAccessorMethod]
 		public bool is_hidden { get; set; }
 		[NoAccessorMethod]
 		public bool is_selected { get; set; }
-		[Deprecated]
+		[Deprecated (since = "0.17.2")]
 		public uint times_cleaned { get; }
 		public string timezone { get; set; }
 	}
@@ -235,13 +235,13 @@ namespace GData {
 	public class CalendarFeed : GData.Feed {
 		[CCode (has_construct_function = false)]
 		protected CalendarFeed ();
-		[Deprecated]
+		[Deprecated (since = "0.17.2")]
 		public uint get_times_cleaned ();
-		[Deprecated]
+		[Deprecated (since = "0.17.2")]
 		public unowned string get_timezone ();
-		[Deprecated]
+		[Deprecated (since = "0.17.2")]
 		public uint times_cleaned { get; }
-		[Deprecated]
+		[Deprecated (since = "0.17.2")]
 		public string timezone { get; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_calendar_query_get_type ()")]
@@ -291,9 +291,9 @@ namespace GData {
 		public static unowned GData.AuthorizationDomain get_primary_authorization_domain ();
 		public GData.CalendarEvent insert_calendar_event (GData.CalendarCalendar calendar, GData.CalendarEvent event, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async void insert_calendar_event_async (GData.CalendarCalendar calendar, GData.CalendarEvent event, GLib.Cancellable? cancellable);
-		[Deprecated]
+		[Deprecated (since = "0.17.2")]
 		public GData.CalendarEvent insert_event (GData.CalendarEvent event, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[Deprecated]
+		[Deprecated (since = "0.17.2")]
 		public async void insert_event_async (GData.CalendarEvent event, GLib.Cancellable? cancellable);
 		public GData.Feed query_all_calendars (GData.Query? query, GLib.Cancellable? cancellable, GData.QueryProgressCallback? progress_callback) throws GLib.Error;
 		public async void query_all_calendars_async (GData.Query? query, GLib.Cancellable? cancellable, owned GData.QueryProgressCallback? progress_callback);

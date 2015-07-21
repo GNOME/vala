@@ -125,6 +125,7 @@ namespace Poppler {
 		public void set_opacity (double opacity);
 		public void set_popup (Poppler.Rectangle popup_rect);
 		public void set_popup_is_open (bool is_open);
+		public void set_popup_rectangle (Poppler.Rectangle poppler_rect);
 	}
 	[CCode (cheader_filename = "poppler.h", type_id = "poppler_annot_movie_get_type ()")]
 	public class AnnotMovie : Poppler.Annot {
