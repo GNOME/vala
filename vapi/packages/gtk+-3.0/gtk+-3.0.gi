@@ -12851,6 +12851,12 @@
 					<parameter name="object" type="GtkFileChooserWidget*"/>
 				</parameters>
 			</signal>
+			<signal name="places-shortcut" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkFileChooserWidget*"/>
+				</parameters>
+			</signal>
 			<signal name="quick-bookmark" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -19540,6 +19546,12 @@
 					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
 				</parameters>
 			</method>
+			<method name="get_show_other_locations" symbol="gtk_places_sidebar_get_show_other_locations">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
+				</parameters>
+			</method>
 			<method name="get_show_recent" symbol="gtk_places_sidebar_get_show_recent">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -19618,6 +19630,13 @@
 					<parameter name="show_enter_location" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_show_other_locations" symbol="gtk_places_sidebar_set_show_other_locations">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
+					<parameter name="show_other_locations" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_show_recent" symbol="gtk_places_sidebar_set_show_recent">
 				<return-type type="void"/>
 				<parameters>
@@ -19635,9 +19654,11 @@
 			<property name="local-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="location" type="GFile*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="open-flags" type="GtkPlacesOpenFlags" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="populate-all" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-connect-to-server" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-desktop" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-enter-location" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-other-locations" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-recent" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-trash" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="drag-action-ask" when="LAST">
@@ -19677,9 +19698,9 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="object" type="GtkPlacesSidebar*"/>
-					<parameter name="p0" type="GObject*"/>
-					<parameter name="p1" type="GObject*"/>
-					<parameter name="p2" type="GObject*"/>
+					<parameter name="p0" type="GtkWidget*"/>
+					<parameter name="p1" type="GFile*"/>
+					<parameter name="p2" type="GVolume*"/>
 				</parameters>
 			</signal>
 			<signal name="show-connect-to-server" when="FIRST">
@@ -19700,6 +19721,12 @@
 					<parameter name="object" type="GtkPlacesSidebar*"/>
 					<parameter name="p0" type="char*"/>
 					<parameter name="p1" type="char*"/>
+				</parameters>
+			</signal>
+			<signal name="show-other-locations" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkPlacesSidebar*"/>
 				</parameters>
 			</signal>
 		</object>
@@ -22965,6 +22992,12 @@
 					<parameter name="stack" type="GtkStack*"/>
 				</parameters>
 			</method>
+			<method name="get_interpolate_size" symbol="gtk_stack_get_interpolate_size">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stack" type="GtkStack*"/>
+				</parameters>
+			</method>
 			<method name="get_transition_duration" symbol="gtk_stack_get_transition_duration">
 				<return-type type="guint"/>
 				<parameters>
@@ -23018,6 +23051,13 @@
 					<parameter name="homogeneous" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_interpolate_size" symbol="gtk_stack_set_interpolate_size">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stack" type="GtkStack*"/>
+					<parameter name="interpolate_size" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_transition_duration" symbol="gtk_stack_set_transition_duration">
 				<return-type type="void"/>
 				<parameters>
@@ -23063,6 +23103,7 @@
 			</method>
 			<property name="hhomogeneous" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="homogeneous" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="interpolate-size" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="transition-duration" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="transition-running" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="transition-type" type="GtkStackTransitionType" readable="1" writable="1" construct="1" construct-only="0"/>
@@ -30128,6 +30169,12 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="get_font_map" symbol="gtk_widget_get_font_map">
+				<return-type type="PangoFontMap*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
 			<method name="get_font_options" symbol="gtk_widget_get_font_options">
 				<return-type type="cairo_font_options_t*"/>
 				<parameters>
@@ -31018,6 +31065,13 @@
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
 					<parameter name="events" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_font_map" symbol="gtk_widget_set_font_map">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="fontmap" type="PangoFontMap*"/>
 				</parameters>
 			</method>
 			<method name="set_font_options" symbol="gtk_widget_set_font_options">
@@ -35641,14 +35695,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1704"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1705"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="4"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="5"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="17"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

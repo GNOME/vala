@@ -2099,6 +2099,7 @@ namespace Gtk {
 		public virtual signal void location_popup (string p0);
 		public virtual signal void location_popup_on_paste ();
 		public virtual signal void location_toggle_popup ();
+		public virtual signal void places_shortcut ();
 		public virtual signal void quick_bookmark (int p0);
 		public virtual signal void recent_shortcut ();
 		public virtual signal void search_shortcut ();
@@ -3742,6 +3743,7 @@ namespace Gtk {
 		public bool get_show_connect_to_server ();
 		public bool get_show_desktop ();
 		public bool get_show_enter_location ();
+		public bool get_show_other_locations ();
 		public bool get_show_recent ();
 		public bool get_show_trash ();
 		public GLib.SList<GLib.File> list_shortcuts ();
@@ -3753,14 +3755,18 @@ namespace Gtk {
 		public void set_show_connect_to_server (bool show_connect_to_server);
 		public void set_show_desktop (bool show_desktop);
 		public void set_show_enter_location (bool show_enter_location);
+		public void set_show_other_locations (bool show_other_locations);
 		public void set_show_recent (bool show_recent);
 		public void set_show_trash (bool show_trash);
 		public bool local_only { get; set; }
 		public GLib.File location { owned get; set; }
 		public Gtk.PlacesOpenFlags open_flags { get; set; }
+		[NoAccessorMethod]
+		public bool populate_all { get; set; }
 		public bool show_connect_to_server { get; set; }
 		public bool show_desktop { get; set; }
 		public bool show_enter_location { get; set; }
+		public bool show_other_locations { get; set; }
 		public bool show_recent { get; set; }
 		public bool show_trash { get; set; }
 		public virtual signal int drag_action_ask (int p0);
@@ -3769,6 +3775,9 @@ namespace Gtk {
 		public virtual signal void open_location (GLib.File p0, Gtk.PlacesOpenFlags p1);
 		public virtual signal void populate_popup (Gtk.Menu p0, GLib.File? p1, GLib.Volume? p2);
 		public virtual signal void show_error_message (string p0, string p1);
+		[CCode (cname = "show_other_locations")]
+		[Experimental]
+		public virtual signal void show_other_locations_requested ();
 	}
 	[CCode (cheader_filename = "gtk/gtkx.h", type_id = "gtk_plug_get_type ()")]
 	public class Plug : Gtk.Window, Atk.Implementor, Gtk.Buildable {
@@ -4783,6 +4792,7 @@ namespace Gtk {
 		public unowned Gtk.Widget get_child_by_name (string name);
 		public bool get_hhomogeneous ();
 		public bool get_homogeneous ();
+		public bool get_interpolate_size ();
 		public uint get_transition_duration ();
 		public bool get_transition_running ();
 		public Gtk.StackTransitionType get_transition_type ();
@@ -4791,6 +4801,7 @@ namespace Gtk {
 		public unowned string get_visible_child_name ();
 		public void set_hhomogeneous (bool hhomogeneous);
 		public void set_homogeneous (bool homogeneous);
+		public void set_interpolate_size (bool interpolate_size);
 		public void set_transition_duration (uint duration);
 		public void set_transition_type (Gtk.StackTransitionType transition);
 		public void set_vhomogeneous (bool vhomogeneous);
@@ -4799,6 +4810,7 @@ namespace Gtk {
 		public void set_visible_child_name (string name);
 		public bool hhomogeneous { get; set construct; }
 		public bool homogeneous { get; set; }
+		public bool interpolate_size { get; }
 		public uint transition_duration { get; set construct; }
 		public bool transition_running { get; }
 		public Gtk.StackTransitionType transition_type { get; set construct; }
@@ -6473,6 +6485,7 @@ namespace Gtk {
 		public unowned Gdk.Display get_display ();
 		public bool get_double_buffered ();
 		public int get_events ();
+		public unowned Pango.FontMap get_font_map ();
 		public unowned Cairo.FontOptions get_font_options ();
 		public unowned Gdk.FrameClock get_frame_clock ();
 		public Gtk.Align get_halign ();
@@ -6635,6 +6648,7 @@ namespace Gtk {
 		public void set_direction (Gtk.TextDirection dir);
 		public void set_double_buffered (bool double_buffered);
 		public void set_events (int events);
+		public void set_font_map (Pango.FontMap fontmap);
 		public void set_font_options (Cairo.FontOptions? options);
 		public void set_halign (Gtk.Align align);
 		public void set_has_tooltip (bool has_tooltip);
