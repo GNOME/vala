@@ -2734,6 +2734,13 @@ namespace WebKit {
 		public string suggested_filename { get; }
 		public string uri { get; }
 	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_editor_get_type ()")]
+	public class WebEditor : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected WebEditor ();
+		public unowned WebKit.WebPage get_page ();
+		public signal void selection_changed ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_extension_get_type ()")]
 	public class WebExtension : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -2753,6 +2760,7 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected WebPage ();
 		public unowned WebKit.DOM.Document get_dom_document ();
+		public unowned WebKit.WebEditor get_editor ();
 		public uint64 get_id ();
 		public unowned WebKit.Frame get_main_frame ();
 		public unowned string get_uri ();

@@ -141,6 +141,13 @@ namespace WebKit {
 		public signal void finished ();
 		public signal void received_data (uint64 data_length);
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_editor_state_get_type ()")]
+	public class EditorState : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected EditorState ();
+		public uint get_typing_attributes ();
+		public uint typing_attributes { get; }
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_favicon_database_get_type ()")]
 	public class FaviconDatabase : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -613,10 +620,12 @@ namespace WebKit {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_spell_checking_languages ();
 		public WebKit.TLSErrorsPolicy get_tls_errors_policy ();
+		public unowned WebKit.WebsiteDataManager get_website_data_manager ();
 		public void prefetch_dns (string hostname);
 		public void register_uri_scheme (string scheme, owned WebKit.URISchemeRequestCallback callback);
 		public void set_additional_plugins_directory (string directory);
 		public void set_cache_model (WebKit.CacheModel cache_model);
+		[Deprecated (since = "2.10.")]
 		public void set_disk_cache_directory (string directory);
 		public void set_favicon_database_directory (string? path);
 		public void set_preferred_languages ([CCode (array_length = false, array_null_terminated = true)] string[]? languages);
@@ -626,10 +635,12 @@ namespace WebKit {
 		public void set_tls_errors_policy (WebKit.TLSErrorsPolicy policy);
 		public void set_web_extensions_directory (string directory);
 		public void set_web_extensions_initialization_user_data (GLib.Variant user_data);
-		[NoAccessorMethod]
-		public string indexed_db_directory { owned get; construct; }
+		[CCode (has_construct_function = false)]
+		public WebContext.with_website_data_manager (WebKit.WebsiteDataManager manager);
+		[Deprecated (since = "2.10.")]
 		[NoAccessorMethod]
 		public string local_storage_directory { owned get; construct; }
+		public WebKit.WebsiteDataManager website_data_manager { get; construct; }
 		public virtual signal void download_started (WebKit.Download download);
 		public virtual signal void initialize_web_extensions ();
 	}
@@ -684,6 +695,7 @@ namespace WebKit {
 		public Gdk.RGBA get_background_color ();
 		public unowned WebKit.WebContext get_context ();
 		public unowned string get_custom_charset ();
+		public unowned WebKit.EditorState get_editor_state ();
 		public double get_estimated_load_progress ();
 		public unowned Cairo.Surface get_favicon ();
 		public unowned WebKit.FindController get_find_controller ();
@@ -772,6 +784,25 @@ namespace WebKit {
 	public class WebViewBase : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		protected WebViewBase ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_website_data_manager_get_type ()")]
+	public class WebsiteDataManager : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected WebsiteDataManager ();
+		public unowned string get_base_cache_directory ();
+		public unowned string get_base_data_directory ();
+		public unowned string get_disk_cache_directory ();
+		public unowned string get_indexeddb_directory ();
+		public unowned string get_local_storage_directory ();
+		public unowned string get_offline_application_cache_directory ();
+		public unowned string get_websql_directory ();
+		public string base_cache_directory { get; construct; }
+		public string base_data_directory { get; construct; }
+		public string disk_cache_directory { get; construct; }
+		public string indexeddb_directory { get; construct; }
+		public string local_storage_directory { get; construct; }
+		public string offline_application_cache_directory { get; construct; }
+		public string websql_directory { get; construct; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_window_properties_get_type ()")]
 	public class WindowProperties : GLib.Object {
@@ -881,6 +912,15 @@ namespace WebKit {
 		NONE,
 		FOR_SESSION,
 		PERMANENT
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_EDITOR_TYPING_ATTRIBUTE_", type_id = "webkit_editor_typing_attributes_get_type ()")]
+	[Flags]
+	public enum EditorTypingAttributes {
+		NONE,
+		BOLD,
+		ITALIC,
+		UNDERLINE,
+		STRIKETHROUGH
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_FIND_OPTIONS_", type_id = "webkit_find_options_get_type ()")]
 	[Flags]
