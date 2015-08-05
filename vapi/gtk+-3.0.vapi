@@ -5238,7 +5238,8 @@ namespace Gtk {
 		public uint bg_full_height;
 		public Gtk.TextDirection direction;
 		public uint editable;
-		public weak Pango.FontDescription font;
+		public Pango.FontDescription font;
+		public string font_features;
 		public double font_scale;
 		public int indent;
 		public uint invisible;
@@ -5247,8 +5248,6 @@ namespace Gtk {
 		public int left_margin;
 		public int letter_spacing;
 		public uint no_fallback;
-		[CCode (array_length = false)]
-		public weak uint[] padding;
 		public Gdk.Color pg_bg_color;
 		public Gdk.RGBA pg_bg_rgba;
 		public int pixels_above_lines;
@@ -5256,7 +5255,7 @@ namespace Gtk {
 		public int pixels_inside_wrap;
 		public uint refcount;
 		public int right_margin;
-		public weak Pango.TabArray tabs;
+		public Pango.TabArray tabs;
 		public Gtk.WrapMode wrap_mode;
 		[CCode (has_construct_function = false)]
 		public TextAttributes ();
@@ -5433,6 +5432,10 @@ namespace Gtk {
 		public string font { owned get; set; }
 		[NoAccessorMethod]
 		public Pango.FontDescription font_desc { owned get; set; }
+		[NoAccessorMethod]
+		public string font_features { owned get; set; }
+		[NoAccessorMethod]
+		public bool font_features_set { get; set; }
 		[NoAccessorMethod]
 		public string foreground { set; }
 		[Deprecated (replacement = "foreground_rgba", since = "3.4")]
@@ -6648,7 +6651,7 @@ namespace Gtk {
 		public void set_direction (Gtk.TextDirection dir);
 		public void set_double_buffered (bool double_buffered);
 		public void set_events (int events);
-		public void set_font_map (Pango.FontMap fontmap);
+		public void set_font_map (Pango.FontMap font_map);
 		public void set_font_options (Cairo.FontOptions? options);
 		public void set_halign (Gtk.Align align);
 		public void set_has_tooltip (bool has_tooltip);
@@ -6895,6 +6898,7 @@ namespace Gtk {
 		public void close ();
 		public void deiconify ();
 		public void fullscreen ();
+		public void fullscreen_on_monitor (Gdk.Screen screen, int monitor);
 		public bool get_accept_focus ();
 		public unowned Gtk.Application get_application ();
 		public unowned Gtk.Widget get_attached_to ();

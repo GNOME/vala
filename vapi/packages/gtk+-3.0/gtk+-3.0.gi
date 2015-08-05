@@ -3510,7 +3510,7 @@
 			<field name="no_fallback" type="guint"/>
 			<field name="pg_bg_rgba" type="GdkRGBA*"/>
 			<field name="letter_spacing" type="gint"/>
-			<field name="padding" type="guint[]"/>
+			<field name="font_features" type="gchar*"/>
 		</boxed>
 		<boxed name="GtkTextIter" type-name="GtkTextIter" get-type="gtk_text_iter_get_type">
 			<method name="assign" symbol="gtk_text_iter_assign">
@@ -25523,6 +25523,8 @@
 			<property name="family-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="font" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="font-desc" type="PangoFontDescription*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="font-features" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="font-features-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="foreground" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
 			<property name="foreground-gdk" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="foreground-rgba" type="GdkRGBA*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -31071,7 +31073,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
-					<parameter name="fontmap" type="PangoFontMap*"/>
+					<parameter name="font_map" type="PangoFontMap*"/>
 				</parameters>
 			</method>
 			<method name="set_font_options" symbol="gtk_widget_set_font_options">
@@ -32200,6 +32202,14 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="window" type="GtkWindow*"/>
+				</parameters>
+			</method>
+			<method name="fullscreen_on_monitor" symbol="gtk_window_fullscreen_on_monitor">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GtkWindow*"/>
+					<parameter name="screen" type="GdkScreen*"/>
+					<parameter name="monitor" type="gint"/>
 				</parameters>
 			</method>
 			<method name="get_accept_focus" symbol="gtk_window_get_accept_focus">
