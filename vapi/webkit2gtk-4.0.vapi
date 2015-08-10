@@ -620,6 +620,7 @@ namespace WebKit {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_spell_checking_languages ();
 		public WebKit.TLSErrorsPolicy get_tls_errors_policy ();
+		public uint get_web_process_count_limit ();
 		public unowned WebKit.WebsiteDataManager get_website_data_manager ();
 		public void prefetch_dns (string hostname);
 		public void register_uri_scheme (string scheme, owned WebKit.URISchemeRequestCallback callback);
@@ -635,6 +636,7 @@ namespace WebKit {
 		public void set_tls_errors_policy (WebKit.TLSErrorsPolicy policy);
 		public void set_web_extensions_directory (string directory);
 		public void set_web_extensions_initialization_user_data (GLib.Variant user_data);
+		public void set_web_process_count_limit (uint limit);
 		[CCode (has_construct_function = false)]
 		public WebContext.with_website_data_manager (WebKit.WebsiteDataManager manager);
 		[Deprecated (since = "2.10.")]
@@ -691,6 +693,7 @@ namespace WebKit {
 		public bool can_show_mime_type (string mime_type);
 		public WebKit.Download download_uri (string uri);
 		public void execute_editing_command (string command);
+		public void execute_editing_command_with_argument (string command, string argument);
 		public unowned WebKit.BackForwardList get_back_forward_list ();
 		public Gdk.RGBA get_background_color ();
 		public unowned WebKit.WebContext get_context ();
@@ -1085,8 +1088,12 @@ namespace WebKit {
 	public delegate void URISchemeRequestCallback (WebKit.URISchemeRequest request);
 	[CCode (cheader_filename = "webkit2/webkit2.h", cname = "WEBKIT_EDITING_COMMAND_COPY")]
 	public const string EDITING_COMMAND_COPY;
+	[CCode (cheader_filename = "webkit2/webkit2.h", cname = "WEBKIT_EDITING_COMMAND_CREATE_LINK")]
+	public const string EDITING_COMMAND_CREATE_LINK;
 	[CCode (cheader_filename = "webkit2/webkit2.h", cname = "WEBKIT_EDITING_COMMAND_CUT")]
 	public const string EDITING_COMMAND_CUT;
+	[CCode (cheader_filename = "webkit2/webkit2.h", cname = "WEBKIT_EDITING_COMMAND_INSERT_IMAGE")]
+	public const string EDITING_COMMAND_INSERT_IMAGE;
 	[CCode (cheader_filename = "webkit2/webkit2.h", cname = "WEBKIT_EDITING_COMMAND_PASTE")]
 	public const string EDITING_COMMAND_PASTE;
 	[CCode (cheader_filename = "webkit2/webkit2.h", cname = "WEBKIT_EDITING_COMMAND_REDO")]
