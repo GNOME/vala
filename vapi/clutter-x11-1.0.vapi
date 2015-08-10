@@ -42,20 +42,11 @@ namespace ClutterX11 {
 		[HasEmitter]
 		public virtual signal void update_area (int x, int y, int width, int height);
 	}
-	[CCode (cheader_filename = "clutter/x11/clutter-x11.h", cprefix = "CLUTTER_X11_FILTER_", has_type_id = false)]
+	[CCode (cheader_filename = "clutter/x11/clutter-x11.h", cprefix = "CLUTTER_X11_FILTER_", type_id = "clutter_x11_filter_return_get_type ()")]
 	public enum FilterReturn {
 		CONTINUE,
 		TRANSLATE,
 		REMOVE
-	}
-	[CCode (cheader_filename = "clutter/x11/clutter-x11.h", cprefix = "CLUTTER_X11_XINPUT_", has_type_id = false)]
-	public enum XInputEventTypes {
-		KEY_PRESS_EVENT,
-		KEY_RELEASE_EVENT,
-		BUTTON_PRESS_EVENT,
-		BUTTON_RELEASE_EVENT,
-		MOTION_NOTIFY_EVENT,
-		LAST_EVENT
 	}
 	[CCode (cheader_filename = "clutter/x11/clutter-x11.h", instance_pos = 2.9)]
 	public delegate ClutterX11.FilterReturn FilterFunc (X.Event xev, Clutter.Event cev);

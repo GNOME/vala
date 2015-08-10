@@ -8143,21 +8143,6 @@ namespace Clutter {
 		POINT,
 		CM
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_X11_FILTER_", type_id = "clutter_x11_filter_return_get_type ()")]
-	public enum X11FilterReturn {
-		CONTINUE,
-		TRANSLATE,
-		REMOVE
-	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_X11_XINPUT_", type_id = "clutter_x11_xinput_event_types_get_type ()")]
-	public enum X11XInputEventTypes {
-		KEY_PRESS_EVENT,
-		KEY_RELEASE_EVENT,
-		BUTTON_PRESS_EVENT,
-		BUTTON_RELEASE_EVENT,
-		MOTION_NOTIFY_EVENT,
-		LAST_EVENT
-	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_ZOOM_", type_id = "clutter_zoom_axis_get_type ()")]
 	public enum ZoomAxis {
 		X_AXIS,

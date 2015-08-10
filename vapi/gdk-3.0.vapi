@@ -5214,6 +5214,7 @@ namespace Gdk {
 		public void freeze_toplevel_updates_libgtk_only ();
 		public void freeze_updates ();
 		public void fullscreen ();
+		public void fullscreen_on_monitor (int monitor);
 		public void geometry_changed ();
 		public bool get_accept_focus ();
 		public unowned Cairo.Pattern? get_background_pattern ();

@@ -2855,10 +2855,13 @@ namespace GLib {
 		public GLib.NetworkConnectivity get_connectivity ();
 		public static unowned GLib.NetworkMonitor get_default ();
 		public bool get_network_available ();
+		public bool get_network_metered ();
 		[ConcreteAccessor]
 		public abstract GLib.NetworkConnectivity connectivity { get; }
 		[ConcreteAccessor]
 		public abstract bool network_available { get; }
+		[ConcreteAccessor]
+		public abstract bool network_metered { get; }
 		public virtual signal void network_changed (bool available);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GPollableInputStreamInterface", type_id = "g_pollable_input_stream_get_type ()")]
