@@ -30,6 +30,7 @@ public class Vala.GIRWriter : CodeVisitor {
 	private string directory;
 	private string gir_namespace;
 	private string gir_version;
+	private string gir_shared_library;
 
 	protected virtual string? get_interface_comment (Interface iface) {
 		return null;
@@ -141,11 +142,12 @@ public class Vala.GIRWriter : CodeVisitor {
 	 * @param context  a code context
 	 * @param filename a relative or absolute filename
 	 */
-	public void write_file (CodeContext context, string directory, string gir_filename, string gir_namespace, string gir_version, string package) {
+	public void write_file (CodeContext context, string directory, string gir_filename, string gir_namespace, string gir_version, string package, string? gir_shared_library) {
 		this.context = context;
 		this.directory = directory;
 		this.gir_namespace = gir_namespace;
 		this.gir_version = gir_version;
+		this.gir_shared_library = gir_shared_library;
 
 		var root_symbol = context.root;
 		var glib_ns = root_symbol.scope.lookup ("GLib");
@@ -256,6 +258,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_indent ();
 		buffer.append_printf ("<namespace name=\"%s\" version=\"%s\"", gir_namespace, gir_version);
 		string? cprefix = CCodeBaseModule.get_ccode_prefix (ns);
+		if (gir_shared_library != null) {
+			buffer.append_printf(" shared-library=\"%s\"", gir_shared_library);
+		}
 		if (cprefix != null) {
 			buffer.append_printf (" c:prefix=\"%s\"", cprefix);
 		}
