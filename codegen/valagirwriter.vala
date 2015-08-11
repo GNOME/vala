@@ -142,7 +142,7 @@ public class Vala.GIRWriter : CodeVisitor {
 	 * @param context  a code context
 	 * @param filename a relative or absolute filename
 	 */
-	public void write_file (CodeContext context, string directory, string gir_filename, string gir_namespace, string gir_version, string package, string? gir_shared_library) {
+	public void write_file (CodeContext context, string directory, string gir_filename, string gir_namespace, string gir_version, string package, string? gir_shared_library = null) {
 		this.context = context;
 		this.directory = directory;
 		this.gir_namespace = gir_namespace;
