@@ -1282,7 +1282,7 @@ namespace Posix {
 	[CCode (cheader_filename = "syslog.h")]
 	public int LOG_UPTO (int pri);
 
-	[CCode (cheader_filename = "syslog.h")]
+	[CCode (cheader_filename = "syslog.h"), PrintfFormat]
 	public void syslog (int priority, string format, ... );
 
 	[CCode (cheader_filename = "syslog.h")]
