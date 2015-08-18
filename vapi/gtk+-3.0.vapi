@@ -2148,6 +2148,7 @@ namespace Gtk {
 	public class FlowBox : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FlowBox ();
+		public void bind_model (GLib.ListModel? model, owned Gtk.FlowBoxCreateWidgetFunc create_widget_func);
 		public bool get_activate_on_single_click ();
 		public unowned Gtk.FlowBoxChild get_child_at_index (int idx);
 		public uint get_column_spacing ();
@@ -5583,6 +5584,7 @@ namespace Gtk {
 		public bool forward_display_line_end (Gtk.TextIter iter);
 		public bool get_accepts_tab ();
 		public int get_border_window_size (Gtk.TextWindowType type);
+		public int get_bottom_margin ();
 		public unowned Gtk.TextBuffer get_buffer ();
 		public void get_cursor_locations (Gtk.TextIter? iter, out Gdk.Rectangle strong, out Gdk.Rectangle @weak);
 		public bool get_cursor_visible ();
@@ -5606,6 +5608,7 @@ namespace Gtk {
 		public int get_pixels_inside_wrap ();
 		public int get_right_margin ();
 		public Pango.TabArray get_tabs ();
+		public int get_top_margin ();
 		public unowned Gtk.Adjustment get_vadjustment ();
 		public void get_visible_rect (out Gdk.Rectangle visible_rect);
 		public unowned Gdk.Window get_window (Gtk.TextWindowType win);
@@ -5622,6 +5625,7 @@ namespace Gtk {
 		public void scroll_to_mark (Gtk.TextMark mark, double within_margin, bool use_align, double xalign, double yalign);
 		public void set_accepts_tab (bool accepts_tab);
 		public void set_border_window_size (Gtk.TextWindowType type, int size);
+		public void set_bottom_margin (int bottom_margin);
 		public void set_buffer (Gtk.TextBuffer? buffer);
 		public void set_cursor_visible (bool setting);
 		public void set_editable (bool setting);
@@ -5637,12 +5641,14 @@ namespace Gtk {
 		public void set_pixels_inside_wrap (int pixels_inside_wrap);
 		public void set_right_margin (int right_margin);
 		public void set_tabs (Pango.TabArray tabs);
+		public void set_top_margin (int top_margin);
 		public void set_wrap_mode (Gtk.WrapMode wrap_mode);
 		public bool starts_display_line (Gtk.TextIter iter);
 		public void window_to_buffer_coords (Gtk.TextWindowType win, int window_x, int window_y, out int buffer_x, out int buffer_y);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TextView.with_buffer (Gtk.TextBuffer buffer);
 		public bool accepts_tab { get; set; }
+		public int bottom_margin { get; set; }
 		public Gtk.TextBuffer buffer { get; set; }
 		public bool cursor_visible { get; set; }
 		public bool editable { get; set; }
@@ -5662,6 +5668,7 @@ namespace Gtk {
 		public bool populate_all { get; set; }
 		public int right_margin { get; set; }
 		public Pango.TabArray tabs { owned get; set; }
+		public int top_margin { get; set; }
 		public Gtk.WrapMode wrap_mode { get; set; }
 		public virtual signal void backspace ();
 		public virtual signal void copy_clipboard ();
@@ -8742,6 +8749,8 @@ namespace Gtk {
 	public delegate bool EntryCompletionMatchFunc (Gtk.EntryCompletion completion, string key, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool FileFilterFunc (Gtk.FileFilterInfo filter_info);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public delegate Gtk.Widget FlowBoxCreateWidgetFunc (GLib.Object item);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool FlowBoxFilterFunc (Gtk.FlowBoxChild child);
 	[CCode (cheader_filename = "gtk/gtk.h")]

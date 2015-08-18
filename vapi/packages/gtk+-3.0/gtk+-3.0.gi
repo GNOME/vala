@@ -1730,6 +1730,13 @@
 				<parameter name="data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<callback name="GtkFlowBoxCreateWidgetFunc">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="item" type="gpointer"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<callback name="GtkFlowBoxFilterFunc">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -12986,6 +12993,16 @@
 				<interface name="GtkBuildable"/>
 				<interface name="GtkOrientable"/>
 			</implements>
+			<method name="bind_model" symbol="gtk_flow_box_bind_model">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="model" type="GListModel*"/>
+					<parameter name="create_widget_func" type="GtkFlowBoxCreateWidgetFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="user_data_free_func" type="GDestroyNotify"/>
+				</parameters>
+			</method>
 			<method name="get_activate_on_single_click" symbol="gtk_flow_box_get_activate_on_single_click">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -25732,6 +25749,12 @@
 					<parameter name="type" type="GtkTextWindowType"/>
 				</parameters>
 			</method>
+			<method name="get_bottom_margin" symbol="gtk_text_view_get_bottom_margin">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="text_view" type="GtkTextView*"/>
+				</parameters>
+			</method>
 			<method name="get_buffer" symbol="gtk_text_view_get_buffer">
 				<return-type type="GtkTextBuffer*"/>
 				<parameters>
@@ -25888,6 +25911,12 @@
 					<parameter name="text_view" type="GtkTextView*"/>
 				</parameters>
 			</method>
+			<method name="get_top_margin" symbol="gtk_text_view_get_top_margin">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="text_view" type="GtkTextView*"/>
+				</parameters>
+			</method>
 			<method name="get_vadjustment" symbol="gtk_text_view_get_vadjustment">
 				<return-type type="GtkAdjustment*"/>
 				<parameters>
@@ -26017,6 +26046,13 @@
 					<parameter name="size" type="gint"/>
 				</parameters>
 			</method>
+			<method name="set_bottom_margin" symbol="gtk_text_view_set_bottom_margin">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="text_view" type="GtkTextView*"/>
+					<parameter name="bottom_margin" type="gint"/>
+				</parameters>
+			</method>
 			<method name="set_buffer" symbol="gtk_text_view_set_buffer">
 				<return-type type="void"/>
 				<parameters>
@@ -26122,6 +26158,13 @@
 					<parameter name="tabs" type="PangoTabArray*"/>
 				</parameters>
 			</method>
+			<method name="set_top_margin" symbol="gtk_text_view_set_top_margin">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="text_view" type="GtkTextView*"/>
+					<parameter name="top_margin" type="gint"/>
+				</parameters>
+			</method>
 			<method name="set_wrap_mode" symbol="gtk_text_view_set_wrap_mode">
 				<return-type type="void"/>
 				<parameters>
@@ -26148,6 +26191,7 @@
 				</parameters>
 			</method>
 			<property name="accepts-tab" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="bottom-margin" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="buffer" type="GtkTextBuffer*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="cursor-visible" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="editable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -26165,6 +26209,7 @@
 			<property name="populate-all" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="right-margin" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="tabs" type="PangoTabArray*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="top-margin" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="wrap-mode" type="GtkWrapMode" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="backspace" when="LAST">
 				<return-type type="void"/>
@@ -35705,14 +35750,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1705"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1707"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="5"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="7"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="17"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
