@@ -234,6 +234,12 @@ namespace WebKit {
 		public string link_uri { get; construct; }
 		public string media_uri { get; construct; }
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_install_missing_media_plugins_permission_request_get_type ()")]
+	public class InstallMissingMediaPluginsPermissionRequest : GLib.Object, WebKit.PermissionRequest {
+		[CCode (has_construct_function = false)]
+		protected InstallMissingMediaPluginsPermissionRequest ();
+		public unowned string get_description ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_javascript_result_ref", type_id = "webkit_javascript_result_get_type ()", unref_function = "webkit_javascript_result_unref")]
 	[Compact]
 	public class JavascriptResult {
