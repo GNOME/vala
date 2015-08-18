@@ -49,28 +49,55 @@ namespace Soup {
 		[PrintfFormat]
 		public static string build_fault (int fault_code, string fault_format, ...);
 		[CCode (cheader_filename = "libsoup/soup.h")]
+		[Deprecated]
 		public static string? build_method_call (string method_name, [CCode (array_length_cname = "n_params", array_length_pos = 2.1)] GLib.Value[] @params);
 		[CCode (cheader_filename = "libsoup/soup.h")]
+		[Deprecated]
 		public static string? build_method_response (GLib.Value value);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static string build_request (string method_name, GLib.Variant @params) throws GLib.Error;
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static string build_response (GLib.Variant value) throws GLib.Error;
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static GLib.Quark error_quark ();
 		[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
+		[Deprecated]
 		public static bool extract_method_call (string method_call, int length, out string method_name, ...);
 		[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
+		[Deprecated]
 		public static bool extract_method_response (string method_response, int length, ...) throws Soup.XMLRPC.Fault;
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static GLib.Quark fault_quark ();
 		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static Soup.Message message_new (string uri, string method_name, GLib.Variant @params) throws GLib.Error;
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static void message_set_fault (Soup.Message msg, int fault_code, string fault_format, ...);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static bool message_set_response (Soup.Message msg, GLib.Variant value) throws GLib.Error;
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		[Deprecated]
 		public static bool parse_method_call (string method_call, int length, out string method_name, out GLib.ValueArray @params);
 		[CCode (cheader_filename = "libsoup/soup.h")]
+		[Deprecated]
 		public static bool parse_method_response (string method_response, int length, out GLib.Value value) throws Soup.XMLRPC.Fault;
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static string parse_request (string method_call, int length, out Soup.XMLRPCParams @params) throws GLib.Error;
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static GLib.Variant parse_response (string method_response, int length, string? signature) throws GLib.Error;
 		[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
+		[Deprecated]
 		public static Soup.Message request_new (string uri, string method_name, ...);
 		[CCode (cheader_filename = "libsoup/soup.h")]
+		[Deprecated]
 		[PrintfFormat]
 		public static void set_fault (Soup.Message msg, int fault_code, string fault_format, ...);
 		[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
+		[Deprecated]
 		public static void set_response (Soup.Message msg, ...);
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static Soup.Date variant_get_datetime (GLib.Variant variant) throws GLib.Error;
+		[CCode (cheader_filename = "libsoup/soup.h")]
+		public static GLib.Variant variant_new_datetime (Soup.Date date);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_address_get_type ()")]
 	public class Address : GLib.Object, GLib.SocketConnectable {
@@ -903,6 +930,12 @@ namespace Soup {
 		public virtual signal void error (GLib.Error error);
 		public virtual signal void message (int type, GLib.Bytes message);
 	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Compact]
+	public class XMLRPCParams {
+		public void free ();
+		public GLib.Variant parse (string? signature) throws GLib.Error;
+	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupPasswordManagerInterface", type_id = "soup_password_manager_get_type ()")]
 	public interface PasswordManager : Soup.SessionFeature, GLib.Object {
 		public abstract void get_passwords_async (Soup.Message msg, Soup.Auth auth, bool retrying, GLib.MainContext async_context, GLib.Cancellable? cancellable, [CCode (scope = "async")] owned Soup.PasswordManagerCallback callback);
@@ -1598,6 +1631,8 @@ namespace Soup {
 	public const int VALUE_UTILS_H;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_XMLRPC_H")]
 	public const int XMLRPC_H;
+	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_XMLRPC_OLD_H")]
+	public const int XMLRPC_OLD_H;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static unowned GLib.TimeoutSource add_completion (GLib.MainContext? async_context, GLib.SourceFunc function);
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -1690,34 +1725,49 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static unowned string tld_get_base_domain (string hostname) throws GLib.Error;
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static void value_array_append (GLib.ValueArray array, GLib.Type type, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static void value_array_append_vals (GLib.ValueArray array, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static GLib.ValueArray? value_array_from_args (va_list args);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static bool value_array_get_nth (GLib.ValueArray array, uint index_, GLib.Type type, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static void value_array_insert (GLib.ValueArray array, uint index_, GLib.Type type, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static GLib.ValueArray value_array_new ();
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static GLib.ValueArray value_array_new_with_vals (...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static bool value_array_to_args (GLib.ValueArray array, va_list args);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static void value_hash_insert (GLib.HashTable<string,GLib.Value?> hash, string key, GLib.Type type, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static void value_hash_insert_vals (GLib.HashTable<string,GLib.Value?> hash, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static void value_hash_insert_value (GLib.HashTable<string,GLib.Value?> hash, string key, GLib.Value value);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static bool value_hash_lookup (GLib.HashTable<string,GLib.Value?> hash, string key, GLib.Type type, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static bool value_hash_lookup_vals (GLib.HashTable<string,GLib.Value?> hash, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static GLib.HashTable<string,GLib.Value?> value_hash_new ();
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Deprecated]
 	public static GLib.HashTable<string,GLib.Value?> value_hash_new_with_vals (...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void websocket_client_prepare_handshake (Soup.Message msg, string? origin, [CCode (array_length = false, array_null_terminated = true)] string[]? protocols);

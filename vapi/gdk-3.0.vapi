@@ -4800,6 +4800,8 @@ namespace Gdk {
 		public Gdk.EventSelection selection {[CCode (cname = "(GdkEventSelection *)")]  get; }
 		public Gdk.EventSetting setting {[CCode (cname = "(GdkEventSetting *)")]  get; }
 		public Gdk.EventTouch touch {[CCode (cname = "(GdkEventTouch *)")]  get; }
+		public Gdk.EventTouchpadPinch touchpad_pinch {[CCode (cname = "(GdkEventTouchpadPinch *)")]  get; }
+		public Gdk.EventTouchpadSwipe touchpad_swipe {[CCode (cname = "(GdkEventTouchpadSwipe *)")]  get; }
 		public Gdk.EventVisibility visibility {[CCode (cname = "(GdkEventVisibility *)")]  get; }
 		public Gdk.EventWindowState window_state {[CCode (cname = "(GdkEventWindowState *)")]  get; }
 	}
@@ -5007,6 +5009,42 @@ namespace Gdk {
 		public bool emulating_pointer;
 		public int8 send_event;
 		public weak Gdk.EventSequence sequence;
+		public Gdk.ModifierType state;
+		public uint32 time;
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public double x;
+		public double x_root;
+		public double y;
+		public double y_root;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
+	[Compact]
+	public class EventTouchpadPinch : Gdk.Event {
+		public double angle_delta;
+		public double dx;
+		public double dy;
+		public int8 n_fingers;
+		public Gdk.TouchpadGesturePhase phase;
+		public double scale;
+		public int8 send_event;
+		public Gdk.ModifierType state;
+		public uint32 time;
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public double x;
+		public double x_root;
+		public double y;
+		public double y_root;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
+	[Compact]
+	public class EventTouchpadSwipe : Gdk.Event {
+		public double dx;
+		public double dy;
+		public int8 n_fingers;
+		public Gdk.TouchpadGesturePhase phase;
+		public int8 send_event;
 		public Gdk.ModifierType state;
 		public uint32 time;
 		public Gdk.EventType type;
@@ -5613,6 +5651,7 @@ namespace Gdk {
 		SCROLL_MASK,
 		TOUCH_MASK,
 		SMOOTH_SCROLL_MASK,
+		TOUCHPAD_GESTURE_MASK,
 		ALL_EVENTS_MASK
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_", type_id = "gdk_event_type_get_type ()")]
@@ -5660,6 +5699,8 @@ namespace Gdk {
 		TOUCH_UPDATE,
 		TOUCH_END,
 		TOUCH_CANCEL,
+		TOUCHPAD_SWIPE,
+		TOUCHPAD_PINCH,
 		EVENT_LAST
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FILTER_", type_id = "gdk_filter_return_get_type ()")]
@@ -5807,6 +5848,13 @@ namespace Gdk {
 		ERROR_PARAM,
 		ERROR_FILE,
 		ERROR_MEM
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_TOUCHPAD_GESTURE_PHASE_", type_id = "gdk_touchpad_gesture_phase_get_type ()")]
+	public enum TouchpadGesturePhase {
+		BEGIN,
+		UPDATE,
+		END,
+		CANCEL
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_VISIBILITY_", type_id = "gdk_visibility_state_get_type ()")]
 	public enum VisibilityState {

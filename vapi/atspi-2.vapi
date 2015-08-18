@@ -7,7 +7,7 @@ namespace Atspi {
 		public weak Atspi.Accessible accessible_parent;
 		public weak GLib.HashTable<void*,void*> attributes;
 		public uint cached_properties;
-		public weak GLib.List<void*> children;
+		public weak GLib.GenericArray<void*> children;
 		public weak string description;
 		public int interfaces;
 		public weak string name;

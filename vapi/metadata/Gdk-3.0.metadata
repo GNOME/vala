@@ -63,6 +63,8 @@ EventScroll struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventSelection struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventSetting struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventTouch struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventTouchpadPinch struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventTouchpadSwipe struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventVisibility struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventWindowState struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 FilterFunc.data closure=2

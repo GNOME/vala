@@ -489,6 +489,7 @@ namespace Pango {
 		public virtual void draw_trapezoid (Pango.RenderPart part, double y1_, double x11, double x21, double y2, double x12, double x22);
 		[NoWrapper]
 		public virtual void end ();
+		public uint16 get_alpha (Pango.RenderPart part);
 		public unowned Pango.Color? get_color (Pango.RenderPart part);
 		public unowned Pango.Layout? get_layout ();
 		public unowned Pango.LayoutLine? get_layout_line ();
@@ -496,6 +497,7 @@ namespace Pango {
 		public virtual void part_changed (Pango.RenderPart part);
 		[NoWrapper]
 		public virtual void prepare_run (Pango.LayoutRun run);
+		public void set_alpha (Pango.RenderPart part, uint16 alpha);
 		public void set_color (Pango.RenderPart part, Pango.Color? color);
 		public void set_matrix (Pango.Matrix? matrix);
 	}
@@ -688,7 +690,9 @@ namespace Pango {
 		ABSOLUTE_SIZE,
 		GRAVITY,
 		GRAVITY_HINT,
-		FONT_FEATURES;
+		FONT_FEATURES,
+		FOREGROUND_ALPHA,
+		BACKGROUND_ALPHA;
 		public static unowned string? get_name (Pango.AttrType type);
 		public static Pango.AttrType register (string name);
 	}
@@ -967,11 +971,15 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	public const string VERSION_STRING;
 	[CCode (cheader_filename = "pango/pango.h")]
+	public static Pango.Attribute attr_background_alpha_new (uint16 alpha);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Attribute attr_background_new (uint16 red, uint16 green, uint16 blue);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Attribute attr_fallback_new (bool enable_fallback);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Attribute attr_family_new (string family);
+	[CCode (cheader_filename = "pango/pango.h")]
+	public static Pango.Attribute attr_foreground_alpha_new (uint16 alpha);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Attribute attr_foreground_new (uint16 red, uint16 green, uint16 blue);
 	[CCode (cheader_filename = "pango/pango.h")]

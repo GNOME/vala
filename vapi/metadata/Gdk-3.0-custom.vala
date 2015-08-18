@@ -33,6 +33,8 @@ namespace Gdk {
 		public Gdk.EventSelection selection { [CCode (cname = "(GdkEventSelection *)")] get; }
 		public Gdk.EventSetting setting { [CCode (cname = "(GdkEventSetting *)")] get; }
 		public Gdk.EventTouch touch { [CCode (cname = "(GdkEventTouch *)")] get; }
+		public Gdk.EventTouchpadPinch touchpad_pinch { [CCode (cname = "(GdkEventTouchpadPinch *)")] get; }
+		public Gdk.EventTouchpadSwipe touchpad_swipe { [CCode (cname = "(GdkEventTouchpadSwipe *)")] get; }
 		public Gdk.EventVisibility visibility { [CCode (cname = "(GdkEventVisibility *)")] get; }
 		public Gdk.EventWindowState window_state { [CCode (cname = "(GdkEventWindowState *)")] get; }
 	}
