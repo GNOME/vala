@@ -1411,8 +1411,8 @@ namespace Gtk {
 		public void set_can_store (Gtk.TargetEntry[]? targets);
 		public void set_image (Gdk.Pixbuf pixbuf);
 		public void set_text (string text, int len);
-		public bool set_with_data (Gtk.TargetEntry[] targets, Gtk.ClipboardGetFunc get_func, Gtk.ClipboardClearFunc clear_func);
-		public bool set_with_owner (Gtk.TargetEntry[] targets, Gtk.ClipboardGetFunc get_func, Gtk.ClipboardClearFunc clear_func, GLib.Object owner);
+		public bool set_with_data (Gtk.TargetEntry[] targets, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func);
+		public bool set_with_owner (Gtk.TargetEntry[] targets, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func, GLib.Object owner);
 		public void store ();
 		public Gtk.SelectionData? wait_for_contents (Gdk.Atom target);
 		public Gdk.Pixbuf? wait_for_image ();
