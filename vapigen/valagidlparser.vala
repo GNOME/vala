@@ -2502,6 +2502,8 @@ public class Vala.GIdlParser : CodeVisitor {
 						p.variable_type = param_type = parse_type_from_string (eval (nv[1]), false);
 					} else if (nv[0] == "ctype") {
 						p.set_attribute_string ("CCode", "type", eval (nv[1]));
+					} else if (nv[0] == "scope") {
+						p.set_attribute_string ("CCode", "scope", eval (nv[1]));
 					} else if (nv[0] == "type_arguments") {
 						parse_type_arguments_from_string (param_type, eval (nv[1]));
 					} else if (nv[0] == "default_value") {
