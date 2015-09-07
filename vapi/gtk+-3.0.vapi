@@ -1407,7 +1407,7 @@ namespace Gtk {
 		public void request_rich_text (Gtk.TextBuffer buffer, [CCode (scope = "async")] Gtk.ClipboardRichTextReceivedFunc callback);
 		public void request_targets ([CCode (scope = "async")] Gtk.ClipboardTargetsReceivedFunc callback);
 		public void request_text ([CCode (scope = "async")] Gtk.ClipboardTextReceivedFunc callback);
-		public void request_uris (Gtk.ClipboardURIReceivedFunc callback);
+		public void request_uris ([CCode (scope = "async")] Gtk.ClipboardURIReceivedFunc callback);
 		public void set_can_store (Gtk.TargetEntry[]? targets);
 		public void set_image (Gdk.Pixbuf pixbuf);
 		public void set_text (string text, int len);
