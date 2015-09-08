@@ -106,7 +106,7 @@ namespace Json {
 		public void set_boolean (bool value);
 		public void set_double (double value);
 		public void set_int (int64 value);
-		public void set_object (Json.Object object);
+		public void set_object (Json.Object? object);
 		public void set_parent (Json.Node parent);
 		public void set_string (string value);
 		public void set_value (GLib.Value value);
@@ -130,7 +130,7 @@ namespace Json {
 		public unowned Json.Node get_member (string member_name);
 		public GLib.List<weak string> get_members ();
 		public bool get_null_member (string member_name);
-		public unowned Json.Object get_object_member (string member_name);
+		public unowned Json.Object? get_object_member (string member_name);
 		public uint get_size ();
 		public unowned string get_string_member (string member_name);
 		public GLib.List<weak Json.Node> get_values ();

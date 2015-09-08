@@ -177,6 +177,8 @@ namespace GLib {
 		public const string STANDARD_IS_SYMLINK;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_STANDARD_IS_VIRTUAL")]
 		public const string STANDARD_IS_VIRTUAL;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_STANDARD_IS_VOLATILE")]
+		public const string STANDARD_IS_VOLATILE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_STANDARD_NAME")]
 		public const string STANDARD_NAME;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_STANDARD_SIZE")]
@@ -544,6 +546,7 @@ namespace GLib {
 		[CCode (cname = "g_dbus_connection_new_for_address", finish_function = "g_dbus_connection_new_for_address_finish")]
 		public static async GLib.DBusConnection new_for_address (string address, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public uint register_object<T> (string object_path, T object) throws GLib.IOError;
+		public uint register_object_with_closures (string object_path, GLib.DBusInterfaceInfo interface_info, GLib.Closure? method_call_closure, GLib.Closure? get_property_closure, GLib.Closure? set_property_closure) throws GLib.Error;
 		public uint register_subtree (string object_path, GLib.DBusSubtreeVTable vtable, GLib.DBusSubtreeFlags flags, void* user_data, GLib.DestroyNotify user_data_free_func) throws GLib.Error;
 		public void remove_filter (uint filter_id);
 		public bool send_message (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, out uint32 out_serial) throws GLib.Error;
@@ -1392,6 +1395,7 @@ namespace GLib {
 		public uint insert_sorted (GLib.Object item, GLib.CompareDataFunc compare_func);
 		public void remove (uint position);
 		public void remove_all ();
+		public void sort (GLib.CompareDataFunc compare_func);
 		public void splice (uint position, uint n_removals, [CCode (array_length_cname = "n_additions", array_length_pos = 3.1, array_length_type = "guint")] GLib.Object[] additions);
 		[NoAccessorMethod]
 		public GLib.Type item_type { get; construct; }

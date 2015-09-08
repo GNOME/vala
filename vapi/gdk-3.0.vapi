@@ -5777,7 +5777,8 @@ namespace Gdk {
 		EXTEND_SELECTION,
 		MODIFY_SELECTION,
 		NO_TEXT_INPUT,
-		SHIFT_GROUP
+		SHIFT_GROUP,
+		DEFAULT_MOD_MASK
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_", type_id = "gdk_modifier_type_get_type ()")]
 	[Flags]
