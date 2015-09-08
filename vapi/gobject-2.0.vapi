@@ -146,6 +146,7 @@ namespace GLib {
 		public int values_cmp (Value value1, Value value2);
 		public unowned string get_blurb ();
 		public unowned string get_name ();
+		public Quark get_name_quark ();
 		public unowned string get_nick ();
 		public void* get_qdata (Quark quark);
 		public void set_qdata (Quark quark, void* data);

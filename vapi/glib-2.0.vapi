@@ -1913,6 +1913,7 @@ namespace GLib {
 		public void set_max_threads (int max_threads) throws ThreadError;
 		public int get_max_threads ();
 		public uint get_num_threads ();
+		public bool move_to_front (T data);
 		public uint unprocessed ();
 		[CCode (cname = "g_thread_pool_free")]
 		void _free (bool immediate, bool wait);
@@ -1950,9 +1951,13 @@ namespace GLib {
 		public void unlock ();
 		public void ref_unlocked ();
 		public void unref_and_unlock ();
+		public void push_front (owned G data);
+		public void push_front_unlocked (owned G data);
 		public void push_unlocked (owned G data);
 		public void push_sorted_unlocked (owned G data, CompareDataFunc<G> func);
 		public G pop_unlocked ();
+		public bool remove (G data);
+		public bool remove_unlocked (G data);
 		public G? try_pop_unlocked ();
 		public G? timed_pop_unlocked (ref TimeVal end_time);
 		public int length_unlocked ();
@@ -2168,11 +2173,17 @@ namespace GLib {
 	[Assert]
 	public static void assert (bool expr);
 	[Assert]
+	public static void assert_cmpmem (uint8[] m1, uint8[] m2);
+	[Assert]
+	public static void assert_error (Error? error, Quark error_domain, int error_code);
+	[Assert]
 	public static void assert_false (bool expr);
 	[Assert]
 	public static void assert_true (bool expr);
 	[Assert]
 	public static void assert_null (void* expr);
+	[Assert]
+	public static void assert_no_error (Error? error);
 	[Assert]
 	public static void assert_nonnull (void* expr);
 	[NoReturn]
@@ -2232,6 +2243,7 @@ namespace GLib {
 
 	namespace Log {
 		public static uint set_handler (string? log_domain, LogLevelFlags log_levels, LogFunc log_func);
+		public static void set_handler_full (string? log_domain, LogLevelFlags log_levels, owned LogFunc log_func);
 		public static void set_default_handler (LogFunc log_func);
 		[CCode (delegate_target = false)]
 		public static GLib.LogFunc default_handler;
@@ -4759,6 +4771,10 @@ namespace GLib {
 		public const uint @2_34;
 		public const uint @2_36;
 		public const uint @2_38;
+		public const uint @2_40;
+		public const uint @2_42;
+		public const uint @2_44;
+		public const uint @2_46;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;
