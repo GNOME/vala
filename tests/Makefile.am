@@ -378,6 +378,7 @@ TESTS = \
 	dbus/dicts.test \
 	dbus/bug596862.vala \
 	dbus/bug602003.test \
+	dbus/bug735437.test \
 	dbus/bug782719.test \
 	dbus/bug783002.test \
 	dbus/bug792277.vala \

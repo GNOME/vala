@@ -628,7 +628,9 @@ public class Vala.GVariantModule : GAsyncModule {
 		ccode.add_declaration ("int", new CCodeVariableDeclarator (index_name));
 
 		var gvariant_type = new CCodeFunctionCall (new CCodeIdentifier ("G_VARIANT_TYPE"));
-		gvariant_type.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_signature (array_type))));
+		ArrayType array_type_copy = (ArrayType) array_type.copy ();
+		array_type_copy.rank -= dim - 1;
+		gvariant_type.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_signature (array_type_copy))));
 
 		var builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
 		builder_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (builder_name)));

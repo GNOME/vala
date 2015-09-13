@@ -1,0 +1,68 @@
+Packages: gio-2.0
+D-Bus
+
+Program: client
+
+[DBus (name = "org.example.Test")]
+interface Test : Object {
+	public abstract double[] array () throws DBusError, IOError;
+	public abstract double[,] multi_array () throws DBusError, IOError;
+	public abstract string[,,] multi_array2 () throws DBusError, IOError;
+}
+
+void main () {
+	// client
+	Test test = Bus.get_proxy_sync (BusType.SESSION, "org.example.Test", "/org/example/test");
+
+	var a = test.array ();
+	assert (a.length == 2 && a[0] == 2.0 && a[1] == 3.0);
+
+	var b = test.multi_array ();
+	assert (b.length[0] == 2 && b.length[1] == 2 && b[0,0] == 2.0 && b[0,1] == 3.0 && b[1,0] == 4.0 && b[1,1] == 5.0);
+
+	var c = test.multi_array2 ();
+	assert (c.length[0] == 2 && c.length[1] == 2 && c.length[2] == 2 && c[0,0,0] == "foo" && c[0,0,1] == "bar" && c[1,1,0] == "baz2" && c[1,1,1] == "man2");
+}
+
+Program: server
+
+[DBus (name = "org.example.Test")]
+class Test : Object {
+	public double[] array () {
+		return new double[] { 2.0, 3.0 };
+	}
+
+	public double[,] multi_array () {
+		return new double[,] { { 2.0, 3.0 }, { 4.0, 5.0 } };
+	}
+
+	public string[,,] multi_array2 () {
+		return new string[,,] { { { "foo", "bar" }, { "baz", "man" } }, { { "foo2", "bar2" }, { "baz2", "man2" } } };
+	}
+}
+
+MainLoop main_loop;
+
+void client_exit (Pid pid, int status) {
+	// client finished, terminate server
+	assert (status == 0);
+	main_loop.quit ();
+}
+
+void main () {
+	var conn = Bus.get_sync (BusType.SESSION);
+	conn.register_object ("/org/example/test", new Test ());
+
+	// try to register service in session bus
+	var request_result = conn.call_sync ("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "RequestName",
+	                                      new Variant ("(su)", "org.example.Test", 0x4), null, 0, -1);
+	assert ((uint) request_result.get_child_value (0) == 1);
+
+	// server ready, spawn client
+	Pid client_pid;
+	Process.spawn_async (null, { "test", "/dbus/bug735437/client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
+	ChildWatch.add (client_pid, client_exit);
+
+	main_loop = new MainLoop ();
+	main_loop.run ();
+}
