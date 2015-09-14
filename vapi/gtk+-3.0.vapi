@@ -1620,6 +1620,7 @@ namespace Gtk {
 		public void child_get_property (Gtk.Widget child, string property_name, GLib.Value value);
 		public void child_get_valist (Gtk.Widget child, string first_property_name, va_list var_args);
 		public void child_notify (Gtk.Widget child, string child_property);
+		public void child_notify_by_pspec (Gtk.Widget child, GLib.ParamSpec pspec);
 		public void child_set (Gtk.Widget child, ...);
 		public void child_set_property (Gtk.Widget child, string property_name, GLib.Value value);
 		public void child_set_valist (Gtk.Widget child, string first_property_name, va_list var_args);
@@ -1645,6 +1646,8 @@ namespace Gtk {
 		public Gtk.ResizeMode get_resize_mode ();
 		[CCode (cname = "gtk_container_class_handle_border_width")]
 		public class void handle_border_width ();
+		[CCode (cname = "gtk_container_class_install_child_properties")]
+		public class void install_child_properties ([CCode (array_length_pos = 0.5)] GLib.ParamSpec[] pspecs);
 		[CCode (cname = "gtk_container_class_install_child_property")]
 		public class void install_child_property (uint property_id, GLib.ParamSpec pspec);
 		public void propagate_draw (Gtk.Widget child, Cairo.Context cr);
@@ -6866,6 +6869,7 @@ namespace Gtk {
 		public bool has_parent (GLib.Type type);
 		public bool is_type (GLib.Type type);
 		public void iter_add_class (int pos, string name);
+		public void iter_add_qclass (int pos, GLib.Quark qname);
 		public void iter_add_region (int pos, string name, Gtk.RegionFlags flags);
 		public void iter_clear_classes (int pos);
 		public void iter_clear_regions (int pos);

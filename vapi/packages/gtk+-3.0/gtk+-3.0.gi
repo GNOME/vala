@@ -2441,13 +2441,6 @@
 			<field name="callback" type="GCallback"/>
 			<field name="is_active" type="gboolean"/>
 		</struct>
-		<struct name="GtkWidgetAuxInfo">
-			<field name="width" type="gint"/>
-			<field name="height" type="gint"/>
-			<field name="halign" type="guint"/>
-			<field name="valign" type="guint"/>
-			<field name="margin" type="GtkBorder"/>
-		</struct>
 		<struct name="GtkWindowGeometryInfo">
 		</struct>
 		<boxed name="GtkBorder" type-name="GtkBorder" get-type="gtk_border_get_type">
@@ -4411,6 +4404,14 @@
 					<parameter name="path" type="GtkWidgetPath*"/>
 					<parameter name="pos" type="gint"/>
 					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="iter_add_qclass" symbol="gtk_widget_path_iter_add_qclass">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="path" type="GtkWidgetPath*"/>
+					<parameter name="pos" type="gint"/>
+					<parameter name="qname" type="GQuark"/>
 				</parameters>
 			</method>
 			<method name="iter_add_region" symbol="gtk_widget_path_iter_add_region">
@@ -10912,6 +10913,14 @@
 					<parameter name="child_property" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="child_notify_by_pspec" symbol="gtk_container_child_notify_by_pspec">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="container" type="GtkContainer*"/>
+					<parameter name="child" type="GtkWidget*"/>
+					<parameter name="pspec" type="GParamSpec*"/>
+				</parameters>
+			</method>
 			<method name="child_set" symbol="gtk_container_child_set">
 				<return-type type="void"/>
 				<parameters>
@@ -10955,6 +10964,14 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="klass" type="GtkContainerClass*"/>
+				</parameters>
+			</method>
+			<method name="class_install_child_properties" symbol="gtk_container_class_install_child_properties">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cclass" type="GtkContainerClass*"/>
+					<parameter name="n_pspecs" type="guint"/>
+					<parameter name="pspecs" type="GParamSpec**"/>
 				</parameters>
 			</method>
 			<method name="class_install_child_property" symbol="gtk_container_class_install_child_property">
@@ -35750,14 +35767,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1707"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1708"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="7"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="8"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="17"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
