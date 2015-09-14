@@ -76,7 +76,7 @@ namespace Geocode {
 		public double latitude { get; set; }
 		[NoAccessorMethod]
 		public double longitude { get; set; }
-		public uint64 timestamp { get; }
+		public uint64 timestamp { get; construct; }
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_id = "geocode_place_get_type ()")]
 	public class Place : GLib.Object {

@@ -26,11 +26,11 @@ namespace Gtk {
 		public bool get_highlight_matching_brackets ();
 		public bool get_highlight_syntax ();
 		public bool get_implicit_trailing_newline ();
-		public unowned Gtk.SourceLanguage get_language ();
+		public unowned Gtk.SourceLanguage? get_language ();
 		public int get_max_undo_levels ();
 		public GLib.SList<weak Gtk.SourceMark> get_source_marks_at_iter (Gtk.TextIter iter, string? category);
 		public GLib.SList<weak Gtk.SourceMark> get_source_marks_at_line (int line, string? category);
-		public unowned Gtk.SourceStyleScheme get_style_scheme ();
+		public unowned Gtk.SourceStyleScheme? get_style_scheme ();
 		public unowned Gtk.SourceUndoManager? get_undo_manager ();
 		public bool iter_backward_to_context_class_toggle (ref Gtk.TextIter iter, string context_class);
 		public bool iter_forward_to_context_class_toggle (ref Gtk.TextIter iter, string context_class);
@@ -76,7 +76,7 @@ namespace Gtk {
 		public unowned Gtk.SourceCompletionContext create_context (Gtk.TextIter? position);
 		public unowned Gtk.SourceCompletionInfo get_info_window ();
 		public unowned GLib.List<Gtk.SourceCompletionProvider> get_providers ();
-		public unowned Gtk.SourceView get_view ();
+		public unowned Gtk.SourceView? get_view ();
 		[Deprecated (since = "3.8")]
 		public void move_window (Gtk.TextIter iter);
 		[NoWrapper]
@@ -150,7 +150,11 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public SourceCompletionItem.with_markup (string markup, string text, Gdk.Pixbuf? icon, string? info);
 		[NoAccessorMethod]
+		public GLib.Icon gicon { owned get; set; }
+		[NoAccessorMethod]
 		public Gdk.Pixbuf icon { owned get; set; }
+		[NoAccessorMethod]
+		public string icon_name { owned get; set; }
 		[NoAccessorMethod]
 		public string info { owned get; set; }
 		[NoAccessorMethod]
@@ -237,8 +241,8 @@ namespace Gtk {
 		public Gtk.SourceCompressionType get_compression_type ();
 		public unowned Gtk.SourceEncoding get_encoding ();
 		public unowned Gtk.SourceFile get_file ();
-		public unowned GLib.InputStream get_input_stream ();
-		public unowned GLib.File get_location ();
+		public unowned GLib.InputStream? get_input_stream ();
+		public unowned GLib.File? get_location ();
 		public Gtk.SourceNewlineType get_newline_type ();
 		public async bool load_async (int io_priority, GLib.Cancellable? cancellable, owned GLib.FileProgressCallback? progress_callback) throws GLib.Error;
 		public void set_candidate_encodings (GLib.SList<Gtk.SourceEncoding> candidate_encodings);
@@ -281,7 +285,7 @@ namespace Gtk {
 		protected SourceGutter ();
 		[Deprecated (since = "3.12")]
 		public void get_padding (int xpad, int ypad);
-		public unowned Gtk.SourceGutterRenderer get_renderer_at_pos (int x, int y);
+		public unowned Gtk.SourceGutterRenderer? get_renderer_at_pos (int x, int y);
 		[Deprecated (since = "3.12")]
 		public unowned Gdk.Window get_window ();
 		public bool insert (Gtk.SourceGutterRenderer renderer, int position);
@@ -308,9 +312,9 @@ namespace Gtk {
 		protected SourceGutterRenderer ();
 		public virtual void begin (Cairo.Context cr, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.TextIter start, Gtk.TextIter end);
 		[NoWrapper]
-		public virtual void change_buffer (Gtk.TextBuffer old_buffer);
+		public virtual void change_buffer (Gtk.TextBuffer? old_buffer);
 		[NoWrapper]
-		public virtual void change_view (Gtk.TextView old_view);
+		public virtual void change_view (Gtk.TextView? old_view);
 		public virtual void draw (Cairo.Context cr, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.TextIter start, Gtk.TextIter end, Gtk.SourceGutterRendererState state);
 		public virtual void end ();
 		public void get_alignment (out float xalign, out float yalign);
@@ -396,18 +400,18 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected SourceLanguage ();
 		[CCode (array_length = false, array_null_terminated = true)]
-		public string[] get_globs ();
+		public string[]? get_globs ();
 		public bool get_hidden ();
 		public unowned string get_id ();
-		public unowned string get_metadata (string name);
+		public unowned string? get_metadata (string name);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public string[] get_mime_types ();
+		public string[]? get_mime_types ();
 		public unowned string get_name ();
 		public unowned string get_section ();
-		public unowned string get_style_fallback (string style_id);
+		public unowned string? get_style_fallback (string style_id);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public string[] get_style_ids ();
-		public unowned string get_style_name (string style_id);
+		public string[]? get_style_ids ();
+		public unowned string? get_style_name (string style_id);
 		public bool hidden { get; }
 		public string id { get; }
 		public string name { get; }
@@ -671,7 +675,7 @@ namespace Gtk {
 		public static unowned Gtk.SourceStyleSchemeManager get_default ();
 		public unowned Gtk.SourceStyleScheme get_scheme (string scheme_id);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public unowned string[] get_scheme_ids ();
+		public unowned string[]? get_scheme_ids ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_search_path ();
 		public void prepend_search_path (string path);
@@ -753,8 +757,10 @@ namespace Gtk {
 	[GIR (name = "CompletionProposal")]
 	public interface SourceCompletionProposal : GLib.Object {
 		public virtual bool equal (Gtk.SourceCompletionProposal other);
-		public virtual unowned Gdk.Pixbuf get_icon ();
-		public abstract string get_info ();
+		public abstract unowned GLib.Icon? get_gicon ();
+		public virtual unowned Gdk.Pixbuf? get_icon ();
+		public abstract unowned string? get_icon_name ();
+		public abstract string? get_info ();
 		public abstract string get_label ();
 		public abstract string get_markup ();
 		public abstract string get_text ();
@@ -767,7 +773,9 @@ namespace Gtk {
 	public interface SourceCompletionProvider : GLib.Object {
 		public virtual bool activate_proposal (Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter);
 		public virtual Gtk.SourceCompletionActivation get_activation ();
+		public virtual unowned GLib.Icon? get_gicon ();
 		public virtual unowned Gdk.Pixbuf? get_icon ();
+		public virtual unowned string? get_icon_name ();
 		public virtual unowned Gtk.Widget? get_info_widget (Gtk.SourceCompletionProposal proposal);
 		public virtual int get_interactive_delay ();
 		public virtual string get_name ();
