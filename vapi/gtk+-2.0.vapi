@@ -2315,8 +2315,6 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string stock { owned get; set; }
 		public Gtk.ImageType storage_type { get; }
-		[NoAccessorMethod]
-		public bool use_fallback { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Compact]
@@ -3894,8 +3892,6 @@ namespace Gtk {
 		public int gtk_recent_files_max_age { get; set; }
 		[NoAccessorMethod]
 		public Gtk.CornerType gtk_scrolled_window_placement { get; set; }
-		[NoAccessorMethod]
-		public bool gtk_shell_shows_menubar { get; set; }
 		[NoAccessorMethod]
 		public bool gtk_show_input_method_menu { get; set; }
 		[NoAccessorMethod]

@@ -11981,7 +11981,6 @@
 			<property name="pixmap" type="GdkPixmap*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stock" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="storage-type" type="GtkImageType" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="use-fallback" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="storage_type" type="GtkImageType"/>
 			<field name="data" type="gpointer"/>
 			<field name="mask" type="GdkBitmap*"/>
@@ -16946,7 +16945,6 @@
 			<property name="gtk-recent-files-limit" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-recent-files-max-age" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-scrolled-window-placement" type="GtkCornerType" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="gtk-shell-shows-menubar" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-show-input-method-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-show-unicode-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-sound-theme-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -27662,13 +27660,13 @@
 			</vfunc>
 		</interface>
 		<constant name="GTK_ARG_READWRITE" type="int" value="0"/>
-		<constant name="GTK_BINARY_AGE" type="int" value="2420"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="2428"/>
 		<constant name="GTK_BUTTONBOX_DEFAULT" type="int" value="-1"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="20"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="28"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="2"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="20"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="28"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="24"/>
 		<constant name="GTK_NO_TEXT_INPUT_MOD_MASK" type="int" value="0"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
