@@ -86,7 +86,7 @@ aclocaldir = $(datadir)/aclocal
 aclocal_DATA = vapigen.m4
 endif
 
-pkgconfigdir = $(datadir)/pkgconfig
+pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = vapigen@PACKAGE_SUFFIX@.pc
 
 vapigen@PACKAGE_SUFFIX@.pc: vapigen.pc
