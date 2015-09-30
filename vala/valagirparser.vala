@@ -1455,8 +1455,6 @@ public class Vala.GirParser : CodeVisitor {
 				ns.add_interface ((Interface) sym);
 			} else if (sym is Method) {
 				ns.add_method ((Method) sym);
-			} else if (sym is Namespace) {
-				ns.add_namespace ((Namespace) sym);
 			} else if (sym is Struct) {
 				ns.add_struct ((Struct) sym);
 			}
