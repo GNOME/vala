@@ -35,9 +35,9 @@ public class Vala.RegexLiteral : Literal {
 	/**
 	 * Creates a new regular expression literal.
 	 *
-	 * @param s      the literal value
-	 * @param source reference to source code
-	 * @return       newly created string literal
+	 * @param value             the literal value
+	 * @param source_reference  reference to source code
+	 * @return                  newly created string literal
 	 */
 	public RegexLiteral (string value, SourceReference? source_reference = null) {
 		this.value = value;

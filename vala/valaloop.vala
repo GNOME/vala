@@ -44,9 +44,9 @@ public class Vala.Loop : CodeNode, Statement {
 	/**
 	 * Creates a new loop.
 	 *
-	 * @param body   loop body
-	 * @param source reference to source code
-	 * @return       newly created while statement
+	 * @param body             loop body
+	 * @param source_reference reference to source code
+	 * @return                 newly created while statement
 	 */
 	public Loop (Block body, SourceReference? source_reference = null) {
 		this.body = body;

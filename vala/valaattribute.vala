@@ -51,7 +51,8 @@ public class Vala.Attribute : CodeNode {
 	/**
 	 * Adds an attribute argument.
 	 *
-	 * @param arg named argument
+	 * @param key    argument name
+	 * @param value  argument value
 	 */
 	public void add_argument (string key, string value) {
 		args.set (key, value);

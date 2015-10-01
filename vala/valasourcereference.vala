@@ -46,11 +46,9 @@ public class Vala.SourceReference {
 	/**
 	 * Creates a new source reference.
 	 *
-	 * @param file         a source file
-	 * @param first_line   first line number
-	 * @param first_column first column number
-	 * @param last_line    last line number
-	 * @param last_column  last column number
+	 * @param _file        a source file
+	 * @param begin        the begin of the referenced source code
+	 * @param end          the end of the referenced source code
 	 * @return             newly created source reference
 	 */
 	public SourceReference (SourceFile _file, SourceLocation begin, SourceLocation end) {

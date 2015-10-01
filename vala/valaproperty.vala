@@ -157,12 +157,12 @@ public class Vala.Property : Symbol, Lockable {
 	/**
 	 * Creates a new property.
 	 *
-	 * @param name         property name
-	 * @param type         property type
-	 * @param get_accessor get accessor
-	 * @param set_accessor set/construct accessor
-	 * @param source       reference to source code
-	 * @return             newly created property
+	 * @param name              property name
+	 * @param property_type     property type
+	 * @param get_accessor      get accessor
+	 * @param set_accessor      set/construct accessor
+	 * @param source_reference  reference to source code
+	 * @return                  newly created property
 	 */
 	public Property (string name, DataType? property_type, PropertyAccessor? get_accessor, PropertyAccessor? set_accessor, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);

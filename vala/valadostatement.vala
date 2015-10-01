@@ -58,10 +58,10 @@ public class Vala.DoStatement : CodeNode, Statement {
 	/**
 	 * Creates a new do statement.
 	 *
-	 * @param cond   loop condition
-	 * @param body   loop body
-	 * @param source reference to source code
-	 * @return       newly created do statement
+	 * @param body              loop body
+	 * @param condition         loop condition
+	 * @param source_reference  reference to source code
+	 * @return                  newly created do statement
 	 */
 	public DoStatement (Block body, Expression condition, SourceReference? source_reference = null) {
 		this.condition = condition;

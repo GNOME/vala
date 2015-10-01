@@ -212,8 +212,6 @@ public class Vala.CodeContext {
 
 	/**
 	 * The root namespace of the symbol tree.
-	 *
-	 * @return root namespace
 	 */
 	public Namespace root {
 		get { return _root; }

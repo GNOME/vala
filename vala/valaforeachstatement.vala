@@ -95,11 +95,12 @@ public class Vala.ForeachStatement : Block {
 	/**
 	 * Creates a new foreach statement.
 	 *
-	 * @param type   element type
-	 * @param id     element variable name
-	 * @param col    loop body
-	 * @param source reference to source code
-	 * @return       newly created foreach statement
+	 * @param type_reference    element type
+	 * @param variable_name     element variable name
+	 * @param collection        container
+	 * @param body              loop body
+	 * @param source_reference  reference to source code
+	 * @return                  newly created foreach statement
 	 */
 	public ForeachStatement (DataType? type_reference, string variable_name, Expression collection, Block body, SourceReference source_reference) {
 		base (source_reference);

@@ -209,10 +209,10 @@ public class Vala.Class : ObjectTypeSymbol {
 	/**
 	 * Creates a new class.
 	 *
-	 * @param name   type name
-	 * @param source reference to source code
-	 * @param comment class documentation
-	 * @return       newly created class
+	 * @param name             type name
+	 * @param source_reference reference to source code
+	 * @param comment          class documentation
+	 * @return                 newly created class
 	 */
 	public Class (string name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);

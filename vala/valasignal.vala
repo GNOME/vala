@@ -68,10 +68,10 @@ public class Vala.Signal : Symbol, Lockable {
 	/**
 	 * Creates a new signal.
 	 *
-	 * @param name        signal name
-	 * @param return_type signal return type
-	 * @param source      reference to source code
-	 * @return            newly created signal
+	 * @param name              signal name
+	 * @param return_type       signal return type
+	 * @param source_reference  reference to source code
+	 * @return                  newly created signal
 	 */
 	public Signal (string name, DataType return_type, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);

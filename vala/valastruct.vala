@@ -376,8 +376,6 @@ public class Vala.Struct : TypeSymbol {
 
 	/**
 	 * Sets the rank of this integer or floating point type.
-	 *
-	 * @return the rank if this is an integer or floating point type
 	 */
 	public void set_rank (int rank) {
 		this.rank = rank;

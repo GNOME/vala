@@ -45,9 +45,9 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 	/**
 	 * Creates a new declaration statement.
 	 *
-	 * @param decl   local variable declaration
-	 * @param source reference to source code
-	 * @return       newly created declaration statement
+	 * @param declaration       local variable declaration
+	 * @param source_reference  reference to source code
+	 * @return                  newly created declaration statement
 	 */
 	public DeclarationStatement (Symbol declaration, SourceReference? source_reference) {
 		this.declaration = declaration;

@@ -29,10 +29,10 @@ public class Vala.TypeParameter : Symbol {
 	/**
 	 * Creates a new generic type parameter.
 	 *
-	 * @param name   parameter name
-	 * @param source reference to source code
-	 * @return       newly created generic type parameter
-	 */	
+	 * @param name              parameter name
+	 * @param source_reference  reference to source code
+	 * @return                  newly created generic type parameter
+	 */
 	public TypeParameter (string name, SourceReference source_reference) {
 		base (name, source_reference);
 	}

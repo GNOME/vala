@@ -44,9 +44,9 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 	/**
 	 * Creates a new expression statement.
 	 *
-	 * @param expr   expression to evaluate
-	 * @param source reference to source code
-	 * @return       newly created expression statement
+	 * @param expression        expression to evaluate
+	 * @param source_reference  reference to source code
+	 * @return                  newly created expression statement
 	 */
 	public ExpressionStatement (Expression expression, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;

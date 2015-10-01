@@ -81,12 +81,12 @@ public class Vala.PropertyAccessor : Subroutine {
 	/**
 	 * Creates a new property accessor.
 	 *
-	 * @param readable     true if get accessor, false otherwise
-	 * @param writable     true if set accessor, false otherwise
-	 * @param construction true if construct accessor, false otherwise
-	 * @param body         accessor body
-	 * @param source       reference to source code
-	 * @return             newly created property accessor
+	 * @param readable           true if get accessor, false otherwise
+	 * @param writable           true if set accessor, false otherwise
+	 * @param construction       true if construct accessor, false otherwise
+	 * @param body               accessor body
+	 * @param source_reference   reference to source code
+	 * @return                   newly created property accessor
 	 */
 	public PropertyAccessor (bool readable, bool writable, bool construction, DataType? value_type, Block? body, SourceReference? source_reference, Comment? comment = null) {
 		base (null, source_reference, comment);

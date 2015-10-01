@@ -76,9 +76,9 @@ public class Vala.CatchClause : CodeNode {
 	private LocalVariable _error_variable;
 
 	/**
-	 * Creates a new catch 
+	 * Creates a new catch
 	 *
-	 * @param type_reference   error type
+	 * @param error_type       error type
 	 * @param variable_name    error variable name
 	 * @param body             error handler body
 	 * @param source_reference reference to source code

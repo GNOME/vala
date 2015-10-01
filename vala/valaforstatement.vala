@@ -63,7 +63,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 	/**
 	 * Creates a new for statement.
 	 *
-	 * @param cond             loop condition
+	 * @param condition        loop condition
 	 * @param body             loop body
 	 * @param source_reference reference to source code
 	 * @return                 newly created for statement

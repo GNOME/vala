@@ -99,7 +99,6 @@ public class Vala.SourceFile {
 	 * Creates a new source file.
 	 *
 	 * @param filename source file name
-	 * @param pkg      true if this is a VAPI package file
 	 * @return         newly created source file
 	 */
 	public SourceFile (CodeContext context, SourceFileType type, string filename, string? content = null, bool cmdline = false) {

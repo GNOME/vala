@@ -63,9 +63,9 @@ public class Vala.CastExpression : Expression {
 	/**
 	 * Creates a new cast expression.
 	 *
-	 * @param inner expression to be cast
-	 * @param type  target type
-	 * @return      newly created cast expression
+	 * @param inner           expression to be cast
+	 * @param type_reference  target type
+	 * @return                newly created cast expression
 	 */
 	public CastExpression (Expression inner, DataType type_reference, SourceReference source_reference, bool is_silent_cast) {
 		this.type_reference = type_reference;

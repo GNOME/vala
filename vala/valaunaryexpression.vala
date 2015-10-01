@@ -51,7 +51,7 @@ public class Vala.UnaryExpression : Expression {
 	 * Creates a new unary expression.
 	 *
 	 * @param op     unary operator
-	 * @param inner  operand
+	 * @param _inner operand
 	 * @param source reference to source code
 	 * @return       newly created binary expression
 	 */

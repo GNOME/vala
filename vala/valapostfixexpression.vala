@@ -47,10 +47,10 @@ public class Vala.PostfixExpression : Expression {
 	/**
 	 * Creates a new postfix expression.
 	 *
-	 * @param inner  operand expression
-	 * @param inc    true for increment, false for decrement
-	 * @param source reference to source code
-	 * @return newly created postfix expression
+	 * @param _inner  operand expression
+	 * @param inc     true for increment, false for decrement
+	 * @param source  reference to source code
+	 * @return newly  created postfix expression
 	 */
 	public PostfixExpression (Expression _inner, bool inc, SourceReference source) {
 		inner = _inner;

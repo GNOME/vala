@@ -71,10 +71,10 @@ public class Vala.Delegate : TypeSymbol {
 	/**
 	 * Creates a new delegate.
 	 *
-	 * @param name        delegate type name
-	 * @param return_type return type
-	 * @param source      reference to source code
-	 * @return            newly created delegate
+	 * @param name              delegate type name
+	 * @param return_type       return type
+	 * @param source_reference  reference to source code
+	 * @return                  newly created delegate
 	 */
 	public Delegate (string? name, DataType return_type, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);

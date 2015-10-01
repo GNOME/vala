@@ -206,10 +206,10 @@ public class Vala.Method : Subroutine {
 	/**
 	 * Creates a new method.
 	 *
-	 * @param name        method name
-	 * @param return_type method return type
-	 * @param source      reference to source code
-	 * @return            newly created method
+	 * @param name              method name
+	 * @param return_type       method return type
+	 * @param source_reference  reference to source code
+	 * @return                  newly created method
 	 */
 	public Method (string? name, DataType return_type, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);

@@ -45,7 +45,6 @@ public class Vala.CCodeEnum : CCodeNode {
 	/**
 	 * Adds the specified value to this enum.
 	 *
-	 * @param name  enum value name
 	 * @param value optional numerical value
 	 */
 	public void add_value (CCodeEnumValue value) {

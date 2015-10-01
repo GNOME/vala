@@ -36,10 +36,10 @@ public class Vala.LocalVariable : Variable {
 	/**
 	 * Creates a new local variable.
 	 *
-	 * @param name   name of the variable
-	 * @param init   optional initializer expression
-	 * @param source reference to source code
-	 * @return       newly created variable declarator
+	 * @param name              name of the variable
+	 * @param initializer       optional initializer expression
+	 * @param source_reference  reference to source code
+	 * @return                  newly created variable declarator
 	 */
 	public LocalVariable (DataType? variable_type, string name, Expression? initializer = null, SourceReference? source_reference = null) {
 		base (variable_type, name, initializer, source_reference);

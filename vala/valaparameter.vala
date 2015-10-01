@@ -52,10 +52,10 @@ public class Vala.Parameter : Variable {
 	/**
 	 * Creates a new formal parameter.
 	 *
-	 * @param name   parameter name
-	 * @param type   parameter type
-	 * @param source reference to source code
-	 * @return       newly created formal parameter
+	 * @param name              parameter name
+	 * @param variable_type     parameter type
+	 * @param source_reference  reference to source code
+	 * @return                  newly created formal parameter
 	 */
 	public Parameter (string name, DataType? variable_type, SourceReference? source_reference = null) {
 		base (variable_type, name, null, source_reference);
