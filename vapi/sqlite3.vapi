@@ -29,10 +29,10 @@ namespace Sqlite {
 		public int busy_timeout (int ms);
 		public int changes ();
 		[CCode (cname = "sqlite3_exec")]
-		public int _exec (string sql, Callback? callback = null, [CCode (type = "char**")] out unowned string errmsg = null);
+		public int _exec (string sql, Callback? callback = null, [CCode (type = "char**")] out unowned string? errmsg = null);
 		[CCode (cname = "_sqlite3_exec")]
-		public int exec (string sql, Callback? callback = null, out string errmsg = null) {
-			unowned string sqlite_errmsg;
+		public int exec (string sql, Callback? callback = null, out string? errmsg = null) {
+			unowned string? sqlite_errmsg;
 			var ec = this._exec (sql, callback, out sqlite_errmsg);
 			if (&errmsg != null) {
 				errmsg = sqlite_errmsg;
@@ -52,7 +52,7 @@ namespace Sqlite {
 		private static void free_table ([CCode (array_length = false)] string[] result);
 		[CCode (cname = "_sqlite3_get_table")]
 		public int get_table (string sql, out string[] resultp, out int nrow, out int ncolumn, out string? errmsg = null) {
-			unowned string sqlite_errmsg;
+			unowned string? sqlite_errmsg;
 			unowned string[] sqlite_resultp;
 
 			var ec = this._get_table (sql, out sqlite_resultp, out nrow, out ncolumn, out sqlite_errmsg);
@@ -376,7 +376,7 @@ namespace Sqlite {
 		public double column_double (int col);
 		public int column_int (int col);
 		public int64 column_int64 (int col);
-		public unowned string column_text (int col);
+		public unowned string? column_text (int col);
 		public int column_type (int col);
 		public unowned Value column_value (int col);
 		public unowned string column_name (int index);
