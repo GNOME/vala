@@ -23,8 +23,6 @@ TESTS = \
 	libvaladoc/parser/sequencerule.vala \
 	libvaladoc/parser/optionalrule.vala \
 	libvaladoc/parser/stubrule.vala \
-	drivers/driver-0-16.vala \
-	drivers/driver-0-18.vala \
 	drivers/driver-0-20.vala \
 	drivers/driver-0-22.vala \
 	drivers/driver-0-24.vala \
