@@ -4346,7 +4346,7 @@ namespace GLib {
 		public unowned List<G> find (G data);
 		public unowned List<G> find_custom (G data, CompareFunc<G> func);
 		[CCode (cname = "g_list_find_custom", simple_generics = true)]
-		public unowned List<G> search<T> (T data, SearchFunc<T,G> func);
+		public unowned List<G> search<T> (T data, SearchFunc<G,T> func);
 
 		public int position (List<G> llink);
 		public int index (G data);
@@ -4406,7 +4406,7 @@ namespace GLib {
 		public unowned SList<G> find (G data);
 		public unowned SList<G> find_custom (G data, CompareFunc<G> func);
 		[CCode (cname = "g_slist_find_custom", simple_generics = true)]
-		public unowned SList<G> search<T> (T data, SearchFunc<T,G> func);
+		public unowned SList<G> search<T> (T data, SearchFunc<G,T> func);
 
 		public int position (SList<G> llink);
 		public int index (G data);
@@ -4453,7 +4453,7 @@ namespace GLib {
 		[Version (since = "2.4")]
 		public unowned List<G> find_custom (G data, CompareFunc<G> func);
 		[CCode (cname = "g_queue_find_custom", simple_generics = true)]
-		public unowned List<G> search<T> (T data, SearchFunc<T,G> func);
+		public unowned List<G> search<T> (T data, SearchFunc<G,T> func);
 		[Version (since = "2.4")]
 		public void sort (CompareDataFunc<G> compare_func);
 		public void push_head (owned G data);
