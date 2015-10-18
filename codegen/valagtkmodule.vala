@@ -216,6 +216,14 @@ public class Vala.GtkModule : GSignalModule {
 		current_required_app_classes.clear ();
 	}
 
+	public override void visit_property (Property prop) {
+		if (prop.get_attribute ("GtkChild") != null) {
+			Report.error (prop.source_reference, "Annotating properties with [GtkChild] is not yet supported");
+		}
+
+		base.visit_property (prop);
+	}
+
 	public override void visit_field (Field f) {
 		base.visit_field (f);
 
