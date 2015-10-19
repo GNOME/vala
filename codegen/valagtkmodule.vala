@@ -32,7 +32,7 @@ public class Vala.GtkModule : GSignalModule {
 	/* GtkBuilder xml child to Vala class mapping */
 	private HashMap<string, Class> current_child_to_class_map = new HashMap<string, Class>(str_hash, str_equal);
 	/* Required custom application-specific gtype classes to be ref'd before initializing the template */
-	private HashSet<Class> current_required_app_classes = new HashSet<Class>();
+	private List<Class> current_required_app_classes = new ArrayList<Class>();
 
 	private void ensure_cclass_to_vala_map () {
 		// map C name of gtypeinstance classes to Vala classes
