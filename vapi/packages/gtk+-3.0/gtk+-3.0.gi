@@ -2333,6 +2333,14 @@
 			<field name="origin" type="gchar*"/>
 			<field name="value" type="GValue"/>
 		</struct>
+		<struct name="GtkShortcutsGestureClass">
+		</struct>
+		<struct name="GtkShortcutsGroupClass">
+		</struct>
+		<struct name="GtkShortcutsSectionClass">
+		</struct>
+		<struct name="GtkShortcutsShortcutClass">
+		</struct>
 		<struct name="GtkStock">
 			<method name="add" symbol="gtk_stock_add">
 				<return-type type="void"/>
@@ -7228,6 +7236,12 @@
 				<interface name="GActionGroup"/>
 				<interface name="GActionMap"/>
 			</implements>
+			<method name="get_help_overlay" symbol="gtk_application_window_get_help_overlay">
+				<return-type type="GtkShortcutsWindow*"/>
+				<parameters>
+					<parameter name="window" type="GtkApplicationWindow*"/>
+				</parameters>
+			</method>
 			<method name="get_id" symbol="gtk_application_window_get_id">
 				<return-type type="guint"/>
 				<parameters>
@@ -7246,6 +7260,13 @@
 					<parameter name="application" type="GtkApplication*"/>
 				</parameters>
 			</constructor>
+			<method name="set_help_overlay" symbol="gtk_application_window_set_help_overlay">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GtkApplicationWindow*"/>
+					<parameter name="help_overlay" type="GtkShortcutsWindow*"/>
+				</parameters>
+			</method>
 			<method name="set_show_menubar" symbol="gtk_application_window_set_show_menubar">
 				<return-type type="void"/>
 				<parameters>
@@ -13234,7 +13255,7 @@
 				</parameters>
 			</signal>
 			<signal name="move-cursor" when="LAST">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="box" type="GtkFlowBox*"/>
 					<parameter name="step" type="GtkMovementStep"/>
@@ -14939,6 +14960,13 @@
 			</vfunc>
 		</object>
 		<object name="GtkIMContextSimple" parent="GtkIMContext" type-name="GtkIMContextSimple" get-type="gtk_im_context_simple_get_type">
+			<method name="add_compose_file" symbol="gtk_im_context_simple_add_compose_file">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context_simple" type="GtkIMContextSimple*"/>
+					<parameter name="compose_file" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="add_table" symbol="gtk_im_context_simple_add_table">
 				<return-type type="void"/>
 				<parameters>
@@ -22514,6 +22542,13 @@
 					<parameter name="parser" type="GtkRcPropertyParser"/>
 				</parameters>
 			</method>
+			<method name="reset_property" symbol="gtk_settings_reset_property">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GtkSettings*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="set_double_property" symbol="gtk_settings_set_double_property">
 				<return-type type="void"/>
 				<parameters>
@@ -22631,6 +22666,79 @@
 			<property name="gtk-xft-hinting" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-xft-hintstyle" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-xft-rgba" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkShortcutsGesture" parent="GtkBox" type-name="GtkShortcutsGesture" get-type="gtk_shortcuts_gesture_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GtkOrientable"/>
+			</implements>
+			<property name="icon" type="GIcon*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-size-group" type="GtkSizeGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="subtitle" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="title-size-group" type="GtkSizeGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkShortcutsGroup" parent="GtkBox" type-name="GtkShortcutsGroup" get-type="gtk_shortcuts_group_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GtkOrientable"/>
+			</implements>
+			<property name="accel-size-group" type="GtkSizeGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="title-size-group" type="GtkSizeGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="view" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkShortcutsSection" parent="GtkBox" type-name="GtkShortcutsSection" get-type="gtk_shortcuts_section_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GtkOrientable"/>
+			</implements>
+			<property name="max-height" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="section-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="view-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="change-current-page" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="object" type="GtkShortcutsSection*"/>
+					<parameter name="p0" type="gint"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkShortcutsShortcut" parent="GtkBox" type-name="GtkShortcutsShortcut" get-type="gtk_shortcuts_shortcut_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GtkOrientable"/>
+			</implements>
+			<property name="accel-size-group" type="GtkSizeGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="accelerator" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="title-size-group" type="GtkSizeGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkShortcutsWindow" parent="GtkWindow" type-name="GtkShortcutsWindow" get-type="gtk_shortcuts_window_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<property name="section-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="view-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="close" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkShortcutsWindow*"/>
+				</parameters>
+			</signal>
+			<signal name="search" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkShortcutsWindow*"/>
+				</parameters>
+			</signal>
 		</object>
 		<object name="GtkSizeGroup" parent="GObject" type-name="GtkSizeGroup" get-type="gtk_size_group_get_type">
 			<implements>
@@ -24963,7 +25071,7 @@
 				</parameters>
 			</method>
 			<method name="get_iter_at_line" symbol="gtk_text_buffer_get_iter_at_line">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="buffer" type="GtkTextBuffer*"/>
 					<parameter name="iter" type="GtkTextIter*"/>
@@ -24971,7 +25079,7 @@
 				</parameters>
 			</method>
 			<method name="get_iter_at_line_index" symbol="gtk_text_buffer_get_iter_at_line_index">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="buffer" type="GtkTextBuffer*"/>
 					<parameter name="iter" type="GtkTextIter*"/>
@@ -24980,7 +25088,7 @@
 				</parameters>
 			</method>
 			<method name="get_iter_at_line_offset" symbol="gtk_text_buffer_get_iter_at_line_offset">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="buffer" type="GtkTextBuffer*"/>
 					<parameter name="iter" type="GtkTextIter*"/>
@@ -25513,6 +25621,13 @@
 			<field name="segment" type="gpointer"/>
 		</object>
 		<object name="GtkTextTag" parent="GObject" type-name="GtkTextTag" get-type="gtk_text_tag_get_type">
+			<method name="changed" symbol="gtk_text_tag_changed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tag" type="GtkTextTag*"/>
+					<parameter name="size_changed" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="event" symbol="gtk_text_tag_event">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -35767,7 +35882,7 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1800"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1900"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
@@ -35775,7 +35890,7 @@
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
 		<constant name="GTK_MICRO_VERSION" type="int" value="0"/>
-		<constant name="GTK_MINOR_VERSION" type="int" value="18"/>
+		<constant name="GTK_MINOR_VERSION" type="int" value="19"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
 		<constant name="GTK_PAPER_NAME_A5" type="char*" value="iso_a5"/>

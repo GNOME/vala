@@ -621,8 +621,10 @@ namespace Gtk {
 	public class ApplicationWindow : Gtk.Window, Atk.Implementor, Gtk.Buildable, GLib.ActionGroup, GLib.ActionMap {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ApplicationWindow (Gtk.Application application);
+		public unowned Gtk.ShortcutsWindow get_help_overlay ();
 		public uint get_id ();
 		public bool get_show_menubar ();
+		public void set_help_overlay (Gtk.ShortcutsWindow help_overlay);
 		public void set_show_menubar (bool show_menubar);
 		public bool show_menubar { get; set construct; }
 	}
@@ -2151,7 +2153,7 @@ namespace Gtk {
 	public class FlowBox : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FlowBox ();
-		public void bind_model (GLib.ListModel? model, owned Gtk.FlowBoxCreateWidgetFunc create_widget_func);
+		public void bind_model (GLib.ListModel? model, owned Gtk.FlowBoxCreateWidgetFunc? create_widget_func);
 		public bool get_activate_on_single_click ();
 		public unowned Gtk.FlowBoxChild get_child_at_index (int idx);
 		public uint get_column_spacing ();
@@ -2187,7 +2189,7 @@ namespace Gtk {
 		public Gtk.SelectionMode selection_mode { get; set; }
 		public virtual signal void activate_cursor_child ();
 		public virtual signal void child_activated (Gtk.FlowBoxChild child);
-		public virtual signal void move_cursor (Gtk.MovementStep step, int count);
+		public virtual signal bool move_cursor (Gtk.MovementStep step, int count);
 		[HasEmitter]
 		public virtual signal void select_all ();
 		public virtual signal void selected_children_changed ();
@@ -2616,6 +2618,7 @@ namespace Gtk {
 	public class IMContextSimple : Gtk.IMContext {
 		[CCode (has_construct_function = false, type = "GtkIMContext*")]
 		public IMContextSimple ();
+		public void add_compose_file (string compose_file);
 		public void add_table ([CCode (array_length = false)] uint16[] data, int max_seq_len, int n_seqs);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_im_multicontext_get_type ()")]
@@ -4531,6 +4534,7 @@ namespace Gtk {
 		public static unowned Gtk.Settings get_for_screen (Gdk.Screen screen);
 		public static void install_property (GLib.ParamSpec pspec);
 		public static void install_property_parser (GLib.ParamSpec pspec, Gtk.RcPropertyParser parser);
+		public void reset_property (string name);
 		public void set_double_property (string name, double v_double, string origin);
 		public void set_long_property (string name, long v_long, string origin);
 		public void set_property_value (string name, Gtk.SettingsValue svalue);
@@ -4700,6 +4704,74 @@ namespace Gtk {
 		public string gtk_xft_hintstyle { owned get; set; }
 		[NoAccessorMethod]
 		public string gtk_xft_rgba { owned get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class ShortcutsGesture : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+		[CCode (has_construct_function = false)]
+		protected ShortcutsGesture ();
+		[NoAccessorMethod]
+		public GLib.Icon icon { owned get; set; }
+		[NoAccessorMethod]
+		public Gtk.SizeGroup icon_size_group { set; }
+		[NoAccessorMethod]
+		public string subtitle { owned get; set; }
+		[NoAccessorMethod]
+		public string title { owned get; set; }
+		[NoAccessorMethod]
+		public Gtk.SizeGroup title_size_group { set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class ShortcutsGroup : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+		[CCode (has_construct_function = false)]
+		protected ShortcutsGroup ();
+		[NoAccessorMethod]
+		public Gtk.SizeGroup accel_size_group { set; }
+		[NoAccessorMethod]
+		public uint height { get; }
+		[NoAccessorMethod]
+		public string title { owned get; set; }
+		[NoAccessorMethod]
+		public Gtk.SizeGroup title_size_group { set; }
+		[NoAccessorMethod]
+		public string view { owned get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class ShortcutsSection : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+		[CCode (has_construct_function = false)]
+		protected ShortcutsSection ();
+		[NoAccessorMethod]
+		public uint max_height { get; set; }
+		[NoAccessorMethod]
+		public string section_name { owned get; set; }
+		[NoAccessorMethod]
+		public string title { owned get; set; }
+		[NoAccessorMethod]
+		public string view_name { owned get; set; }
+		public virtual signal bool change_current_page (int p0);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class ShortcutsShortcut : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+		[CCode (has_construct_function = false)]
+		protected ShortcutsShortcut ();
+		[NoAccessorMethod]
+		public Gtk.SizeGroup accel_size_group { set; }
+		[NoAccessorMethod]
+		public string accelerator { owned get; set; }
+		[NoAccessorMethod]
+		public string title { owned get; set; }
+		[NoAccessorMethod]
+		public Gtk.SizeGroup title_size_group { set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class ShortcutsWindow : Gtk.Window, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false)]
+		protected ShortcutsWindow ();
+		[NoAccessorMethod]
+		public string section_name { owned get; set; }
+		[NoAccessorMethod]
+		public string view_name { owned get; set; }
+		public virtual signal void close ();
+		public virtual signal void search ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_size_group_get_type ()")]
 	public class SizeGroup : GLib.Object, Gtk.Buildable {
@@ -5299,9 +5371,9 @@ namespace Gtk {
 		public bool get_has_selection ();
 		public unowned Gtk.TextMark get_insert ();
 		public void get_iter_at_child_anchor (out Gtk.TextIter iter, Gtk.TextChildAnchor anchor);
-		public void get_iter_at_line (out Gtk.TextIter iter, int line_number);
-		public void get_iter_at_line_index (out Gtk.TextIter iter, int line_number, int byte_index);
-		public void get_iter_at_line_offset (out Gtk.TextIter iter, int line_number, int char_offset);
+		public bool get_iter_at_line (out Gtk.TextIter iter, int line_number);
+		public bool get_iter_at_line_index (out Gtk.TextIter iter, int line_number, int byte_index);
+		public bool get_iter_at_line_offset (out Gtk.TextIter iter, int line_number, int char_offset);
 		public void get_iter_at_mark (out Gtk.TextIter iter, Gtk.TextMark mark);
 		public void get_iter_at_offset (out Gtk.TextIter iter, int char_offset);
 		public int get_line_count ();
@@ -5401,6 +5473,7 @@ namespace Gtk {
 	public class TextTag : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public TextTag (string? name = null);
+		public void changed (bool size_changed);
 		public int get_priority ();
 		public void set_priority (int priority);
 		[NoAccessorMethod]
