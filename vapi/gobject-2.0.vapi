@@ -452,6 +452,11 @@ namespace GLib {
 	[CCode (has_target = false)]
 	public delegate void ValueTransform (Value src_value, ref Value dest_value);
 
+	[CCode (has_target = false)]
+	public delegate void* BoxedCopyFunc (void* boxed);
+	[CCode (has_target = false)]
+	public delegate void* BoxedFreeFunc (void* boxed);
+
 	[CCode (copy_function = "g_value_copy", destroy_function = "g_value_unset", type_id = "G_TYPE_VALUE", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", type_signature = "v")]
 	public struct Value {
 		[CCode (cname = "G_VALUE_HOLDS")]
