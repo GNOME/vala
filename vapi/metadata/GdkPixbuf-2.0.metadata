@@ -3,7 +3,6 @@ Pixbuf
         .new_from_stream_at_scale_async skip
         .new_subpixbuf skip
         .save_to_stream_finish skip
-        .gettext skip
 
 // gdk-pixdata.h isn't included by gdk-pixbuf.h
 Pixdata* cheader_filename="gdk-pixbuf/gdk-pixdata.h"
@@ -21,5 +20,3 @@ Pixbuf
 
 // Bug #666798: delegates which throw exceptions
 PixbufSaveFunc skip
-
-*_autoptr skip

@@ -269,6 +269,7 @@ namespace GI {
 	public class VFuncInfo : GI.BaseInfo {
 		[CCode (has_construct_function = false)]
 		protected VFuncInfo ();
+		public static void* get_address (GI.VFuncInfo info, GLib.Type implementor_gtype) throws GLib.Error;
 		public static GI.VFuncInfoFlags get_flags (GI.VFuncInfo info);
 		public static GI.FunctionInfo get_invoker (GI.VFuncInfo info);
 		public static int get_offset (GI.VFuncInfo info);

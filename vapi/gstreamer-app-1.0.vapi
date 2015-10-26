@@ -72,6 +72,8 @@ namespace Gst {
 			public virtual signal void need_data (uint length);
 			[HasEmitter]
 			public virtual signal Gst.FlowReturn push_buffer (Gst.Buffer buffer);
+			[HasEmitter]
+			public virtual signal Gst.FlowReturn push_sample (Gst.Sample sample);
 			public virtual signal bool seek_data (uint64 offset);
 		}
 		[CCode (cheader_filename = "gst/app/app.h", cprefix = "GST_APP_STREAM_TYPE_", type_id = "gst_app_stream_type_get_type ()")]

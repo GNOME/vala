@@ -16,12 +16,13 @@ Attribute struct=false
 AttrShape
   .data type="T"
   .copy_func skip=false type_arguments="T"
+AttrDataCopyFunc skip
 
 // Fields
 AttrColor
   .color unowned=false
 GlyphString
-  .glyphs array unowned=false array_length_field="num_glyphs"
+  .glyphs unowned=false array_length_field="num_glyphs"
   .log_clusters array unowned=false array_length_field="num_glyphs"
 LayoutLine
   .runs type_arguments="Pango.LayoutRun"

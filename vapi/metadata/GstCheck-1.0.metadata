@@ -5,3 +5,7 @@ check_* name="check_(.+)"
 consistency_checker_add_pad skip
 consistency_checker_free skip
 consistency_checker_reset skip
+
+Harness
+	.src_harness skip
+	.sink_harness skip

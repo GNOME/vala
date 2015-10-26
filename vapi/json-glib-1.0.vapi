@@ -216,6 +216,11 @@ namespace Json {
 		public abstract Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
 		public abstract void set_property (GLib.ParamSpec pspec, GLib.Value value);
 	}
+	[CCode (cheader_filename = "json-glib/json-glib.h", has_type_id = false)]
+	public struct ObjectIter {
+		public void init (Json.Object object);
+		public bool next (out unowned string member_name, out unowned Json.Node member_node);
+	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_NODE_", type_id = "json_node_type_get_type ()")]
 	public enum NodeType {
 		OBJECT,

@@ -14,9 +14,11 @@ namespace Gst {
 			public Gst.RTSP.Result flush (bool flush);
 			public Gst.RTSP.Result free ();
 			public unowned string get_ip ();
+			public unowned GLib.Socket get_read_socket ();
 			public bool get_remember_session_id ();
 			public unowned GLib.TlsConnection get_tls () throws GLib.Error;
 			public GLib.TlsDatabase get_tls_database ();
+			public GLib.TlsInteraction get_tls_interaction ();
 			public GLib.TlsCertificateFlags get_tls_validation_flags ();
 			public unowned string get_tunnelid ();
 			public Gst.RTSP.Url get_url ();
@@ -36,6 +38,7 @@ namespace Gst {
 			public Gst.RTSP.Result set_qos_dscp (uint qos_dscp);
 			public void set_remember_session_id (bool remember);
 			public void set_tls_database (GLib.TlsDatabase database);
+			public void set_tls_interaction (GLib.TlsInteraction interaction);
 			public bool set_tls_validation_flags (GLib.TlsCertificateFlags flags);
 			public void set_tunneled (bool tunneled);
 			public Gst.RTSP.Result write (uint8 data, uint size, GLib.TimeVal timeout);
@@ -68,7 +71,7 @@ namespace Gst {
 			public void get_send_backlog (out size_t bytes, out uint messages);
 			public void reset ();
 			public Gst.RTSP.Result send_message (Gst.RTSP.Message message, out uint id);
-			public void set_flushing (bool flush);
+			public void set_flushing (bool flushing);
 			public void set_send_backlog (size_t bytes, uint messages);
 			public void unref ();
 			public Gst.RTSP.Result wait_backlog (GLib.TimeVal timeout);
@@ -108,11 +111,13 @@ namespace Gst {
 			[CCode (cname = "type_data.data.channel")]
 			public uint8 type_data_data_channel;
 			public Gst.RTSP.Result add_header (Gst.RTSP.HeaderField field, string value);
+			public Gst.RTSP.Result add_header_by_name (string header, string value);
 			public Gst.RTSP.Result append_headers (GLib.StringBuilder str);
 			public Gst.RTSP.Result dump ();
 			public Gst.RTSP.Result free ();
 			public Gst.RTSP.Result get_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] out unowned uint8[] data);
 			public Gst.RTSP.Result get_header (Gst.RTSP.HeaderField field, out unowned string value, int indx);
+			public Gst.RTSP.Result get_header_by_name (string header, out unowned string value, int index);
 			public Gst.RTSP.MsgType get_type ();
 			public Gst.RTSP.Result init ();
 			public Gst.RTSP.Result init_data (uint8 channel);
@@ -122,10 +127,12 @@ namespace Gst {
 			public Gst.RTSP.Result parse_request (out Gst.RTSP.Method method, out string uri, out Gst.RTSP.Version version);
 			public Gst.RTSP.Result parse_response (out Gst.RTSP.StatusCode code, out string reason, out Gst.RTSP.Version version);
 			public Gst.RTSP.Result remove_header (Gst.RTSP.HeaderField field, int indx);
+			public Gst.RTSP.Result remove_header_by_name (string header, int index);
 			public Gst.RTSP.Result set_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
 			public Gst.RTSP.Result steal_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] out uint8[] data);
 			public Gst.RTSP.Result take_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] owned uint8[] data);
 			public Gst.RTSP.Result take_header (Gst.RTSP.HeaderField field, owned string value);
+			public Gst.RTSP.Result take_header_by_name (string header, owned string value);
 			public Gst.RTSP.Result unset ();
 		}
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", has_type_id = false)]
@@ -293,10 +300,9 @@ namespace Gst {
 		[Flags]
 		[GIR (name = "RTSPLowerTrans")]
 		public enum LowerTrans {
-			[CCode (cname = "GST_RTSP_LOWER_TRANS_UDP")]
-			UDP_UNICAST,
-			[CCode (cname = "GST_RTSP_LOWER_TRANS_UDP_MCAST")]
-			UDP_MULTICAST,
+			UNKNOWN,
+			UDP,
+			UDP_MCAST,
 			TCP,
 			HTTP,
 			TLS
@@ -320,7 +326,7 @@ namespace Gst {
 			GET,
 			POST
 		}
-		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cprefix = "GST_RTSP_MESSAGE_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cprefix = "GST_RTSP_MESSAGE_", type_id = "gst_rtsp_msg_type_get_type ()")]
 		[GIR (name = "RTSPMsgType")]
 		public enum MsgType {
 			INVALID,
@@ -334,12 +340,13 @@ namespace Gst {
 		[Flags]
 		[GIR (name = "RTSPProfile")]
 		public enum Profile {
+			UNKNOWN,
 			AVP,
 			SAVP,
 			AVPF,
 			SAVPF
 		}
-		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cprefix = "GST_RTSP_RANGE_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cprefix = "GST_RTSP_RANGE_", type_id = "gst_rtsp_range_unit_get_type ()")]
 		[GIR (name = "RTSPRangeUnit")]
 		public enum RangeUnit {
 			SMPTE,
@@ -430,7 +437,7 @@ namespace Gst {
 			RTSP_VERSION_NOT_SUPPORTED,
 			OPTION_NOT_SUPPORTED
 		}
-		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cprefix = "GST_RTSP_TIME_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cprefix = "GST_RTSP_TIME_", type_id = "gst_rtsp_time_type_get_type ()")]
 		[GIR (name = "RTSPTimeType")]
 		public enum TimeType {
 			SECONDS,
@@ -439,7 +446,7 @@ namespace Gst {
 			FRAMES,
 			UTC
 		}
-		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cprefix = "GST_RTSP_TRANS_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cprefix = "GST_RTSP_TRANS_", type_id = "gst_rtsp_trans_mode_get_type ()")]
 		[Flags]
 		[GIR (name = "RTSPTransMode")]
 		public enum TransMode {

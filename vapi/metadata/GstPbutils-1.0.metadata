@@ -7,6 +7,3 @@ codec_utils_aac_* parent="Gst.PbUtils.Codec.AAC" name="codec_utils_aac_(.+)"
 codec_utils_h264_* parent="Gst.PbUtils.Codec.H264" name="codec_utils_h264_(.+)"
 codec_utils_mpeg4video_* parent="Gst.PbUtils.Codec.MPEG4Video" name="codec_utils_mpeg4video_(.+)"
 
-// Upstream backports from 1.5/1.6
-DiscovererInfo
-  .get_missing_elements_installer_details unowned

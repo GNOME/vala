@@ -9,11 +9,35 @@ namespace Gst {
 			[CCode (has_construct_function = false, type = "GstClock*")]
 			public ClientClock (string name, string remote_address, int remote_port, Gst.ClockTime base_time);
 			[NoAccessorMethod]
-			public string address { owned get; set; }
+			public string address { owned get; set construct; }
 			[NoAccessorMethod]
-			public int port { get; set; }
+			public uint64 base_time { get; construct; }
+			[NoAccessorMethod]
+			public Gst.Bus bus { owned get; set; }
+			[NoAccessorMethod]
+			public Gst.Clock internal_clock { owned get; }
+			[NoAccessorMethod]
+			public uint64 minimum_update_interval { get; set; }
+			[NoAccessorMethod]
+			public int port { get; set construct; }
 			[NoAccessorMethod]
 			public uint64 round_trip_limit { get; set; }
+		}
+		[CCode (cheader_filename = "gst/net/net.h", cname = "GstNtpClock", lower_case_cprefix = "gst_ntp_clock_", type_id = "gst_ntp_clock_get_type ()")]
+		[GIR (name = "NtpClock")]
+		public class NtpClock : Gst.Net.ClientClock {
+			[CCode (has_construct_function = false, type = "GstClock*")]
+			public NtpClock (string name, string remote_address, int remote_port, Gst.ClockTime base_time);
+		}
+		[CCode (cheader_filename = "gst/net/net.h", cname = "GstPtpClock", lower_case_cprefix = "gst_ptp_clock_", type_id = "gst_ptp_clock_get_type ()")]
+		[GIR (name = "PtpClock")]
+		public class PtpClock : Gst.SystemClock {
+			[CCode (has_construct_function = false, type = "GstClock*")]
+			public PtpClock (string name, uint domain);
+			[NoAccessorMethod]
+			public uint domain { get; construct; }
+			[NoAccessorMethod]
+			public Gst.Clock internal_clock { owned get; }
 		}
 		[CCode (cheader_filename = "gst/net/net.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_net_time_packet_get_type ()")]
 		[Compact]
@@ -51,11 +75,47 @@ namespace Gst {
 			public Gst.Meta meta;
 			public weak GLib.SocketAddress addr;
 		}
+		[CCode (cheader_filename = "gst/net/net.h", has_type_id = false)]
+		[GIR (name = "NetControlMessageMeta")]
+		public struct ControlMessageMeta {
+			public Gst.Meta meta;
+			public weak GLib.SocketControlMessage message;
+		}
+		[CCode (cheader_filename = "gst/net/net.h", cname = "GstPtpStatisticsCallback", instance_pos = 2.9)]
+		public delegate bool PtpStatisticsCallback (uint8 domain, Gst.Structure stats);
+		[CCode (cheader_filename = "gst/net/net.h", cname = "GST_PTP_CLOCK_ID_NONE")]
+		public const uint64 PTP_CLOCK_ID_NONE;
+		[CCode (cheader_filename = "gst/net/net.h", cname = "GST_PTP_STATISTICS_BEST_MASTER_CLOCK_SELECTED")]
+		public const string PTP_STATISTICS_BEST_MASTER_CLOCK_SELECTED;
+		[CCode (cheader_filename = "gst/net/net.h", cname = "GST_PTP_STATISTICS_NEW_DOMAIN_FOUND")]
+		public const string PTP_STATISTICS_NEW_DOMAIN_FOUND;
+		[CCode (cheader_filename = "gst/net/net.h", cname = "GST_PTP_STATISTICS_PATH_DELAY_MEASURED")]
+		public const string PTP_STATISTICS_PATH_DELAY_MEASURED;
+		[CCode (cheader_filename = "gst/net/net.h", cname = "GST_PTP_STATISTICS_TIME_UPDATED")]
+		public const string PTP_STATISTICS_TIME_UPDATED;
 		[CCode (cheader_filename = "gst/net/net.h")]
 		public static GLib.Type address_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/net/net.h")]
 		public static unowned Gst.MetaInfo? address_meta_get_info ();
 		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_buffer_add_net_address_meta")]
 		public static unowned Gst.Net.AddressMeta? buffer_add_net_address_meta (Gst.Buffer buffer, GLib.SocketAddress addr);
+		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_buffer_add_net_control_message_meta")]
+		public static unowned Gst.Net.ControlMessageMeta? buffer_add_net_control_message_meta (Gst.Buffer buffer, GLib.SocketControlMessage message);
+		[CCode (cheader_filename = "gst/net/net.h")]
+		public static GLib.Type control_message_meta_api_get_type ();
+		[CCode (cheader_filename = "gst/net/net.h")]
+		public static unowned Gst.MetaInfo? control_message_meta_get_info ();
+		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_deinit")]
+		public static void ptp_deinit ();
+		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_init")]
+		public static bool ptp_init (uint64 clock_id, [CCode (array_length = false, array_null_terminated = true)] string[]? interfaces);
+		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_is_initialized")]
+		public static bool ptp_is_initialized ();
+		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_is_supported")]
+		public static bool ptp_is_supported ();
+		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_statistics_callback_add")]
+		public static ulong ptp_statistics_callback_add (owned Gst.Net.PtpStatisticsCallback callback);
+		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_statistics_callback_remove")]
+		public static void ptp_statistics_callback_remove (ulong id);
 	}
 }

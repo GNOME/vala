@@ -1,13 +1,10 @@
 Gst experimental
 
-// Virtual methods without invokers
-Element
-  .request_new_pad skip=false unowned=false nullable
-
 // Return non-boxed types
 MiniObject
   .copy skip=false
   .ref skip=false
+  .unref skip=false
 poll_new skip=false parent="Gst.Poll" symbol_type="constructor" name="new"
 poll_new_timer skip=false parent="Gst.Poll" symbol_type="constructor" name="new_timer"
 
@@ -148,7 +145,7 @@ parse_launchv skip
 parse_launchv_full name="parse_launchv"
 
 // Default values
-debug_log_default.unused default=null
+debug_log_default.user_data default=null
 Bus
   .add_signal_watch_full.priority default=GLib.Priority.DEFAULT
 Caps
@@ -216,14 +213,10 @@ ElementFactory.get_static_pad_templates type="GLib.List<weak Gst.StaticPadTempla
 
 // Backwards compatibility
 Structure.new_from_string skip
+Pipeline
+  .get_clock skip=false
+  .set_clock skip=false
 
 // Upstream
 ///////////
 
-// Upstream backports from 1.5/1.6
-PadChainFunction.buffer owned
-PadChainListFunction.list owned
-PadEventFunction.event owned
-
-// Bug #730957:
-ElementFactory.get_metadata_keys nullable

@@ -12,7 +12,7 @@ namespace Gdl {
 		public GLib.List<weak Gdl.DockObject> get_named_items ();
 		[Deprecated (since = "3.6")]
 		public unowned Gdl.DockPlaceholder get_placeholder_by_name (string name);
-		public unowned Gdl.DockObject get_root ();
+		public unowned Gdl.DockObject? get_root ();
 		public void hide_preview ();
 		public Gtk.Widget new_from (bool floating);
 		public void set_skip_taskbar (bool skip);
@@ -61,7 +61,7 @@ namespace Gdl {
 		public Gdl.DockItemBehavior get_behavior_flags ();
 		public unowned Gtk.Widget get_child ();
 		public void get_drag_area (Gdk.Rectangle rect);
-		public unowned Gtk.Widget get_grip ();
+		public unowned Gtk.Widget? get_grip ();
 		public Gtk.Orientation get_orientation ();
 		public unowned Gtk.Widget get_tablabel ();
 		public void hide_grip ();
@@ -157,7 +157,7 @@ namespace Gdl {
 		public void foreach_toplevel (bool include_controller, GLib.Func function);
 		public unowned Gdl.DockObject get_controller ();
 		public string get_dock_name ();
-		public unowned Gdl.DockObject get_object (string nick_name);
+		public unowned Gdl.DockObject? get_object (string nick_name);
 		public void remove (Gdl.DockObject object);
 		public void set_controller (Gdl.DockObject new_controller);
 		[NoAccessorMethod]
@@ -192,10 +192,10 @@ namespace Gdl {
 		public unowned Gdl.DockObject get_controller ();
 		public unowned string get_long_name ();
 		public unowned GLib.Object get_master ();
-		public unowned Gdl.DockObject get_parent_object ();
+		public unowned Gdl.DockObject? get_parent_object ();
 		public unowned Gdk.Pixbuf get_pixbuf ();
 		public unowned string get_stock_id ();
-		public unowned Gdl.Dock get_toplevel ();
+		public unowned Gdl.Dock? get_toplevel ();
 		public bool is_automatic ();
 		public bool is_bound ();
 		public bool is_closed ();

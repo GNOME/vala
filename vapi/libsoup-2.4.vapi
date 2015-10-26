@@ -888,7 +888,7 @@ namespace Soup {
 		public unowned string get_user ();
 		public bool host_equal (Soup.URI v2);
 		public uint host_hash ();
-		public static string normalize (string part, string unescape_extra);
+		public static string normalize (string part, string? unescape_extra);
 		public void set_fragment (string? fragment);
 		public void set_host (string? host);
 		public void set_password (string? password);

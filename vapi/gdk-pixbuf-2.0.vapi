@@ -248,7 +248,8 @@ namespace Gdk {
 		BAD_OPTION,
 		UNKNOWN_TYPE,
 		UNSUPPORTED_OPERATION,
-		FAILED;
+		FAILED,
+		INCOMPLETE_ANIMATION;
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", instance_pos = 1.9)]

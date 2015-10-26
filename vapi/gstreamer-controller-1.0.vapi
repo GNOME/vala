@@ -17,11 +17,30 @@ namespace Gst {
 			[NoAccessorMethod]
 			public Gst.ControlSource control_source_r { owned get; set construct; }
 		}
+		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstControlPoint", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_control_point_", type_id = "gst_control_point_get_type ()")]
+		[Compact]
+		[GIR (name = "ControlPoint")]
+		public class ControlPoint {
+			[CCode (cname = "cache.cubic.h")]
+			public double cache_cubic_h;
+			[CCode (cname = "cache.cubic.z")]
+			public double cache_cubic_z;
+			public Gst.ClockTime timestamp;
+			public double value;
+		}
 		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstDirectControlBinding", lower_case_cprefix = "gst_direct_control_binding_", type_id = "gst_direct_control_binding_get_type ()")]
 		[GIR (name = "DirectControlBinding")]
 		public class DirectControlBinding : Gst.ControlBinding {
+			[CCode (array_length = false, array_null_terminated = true, cname = "ABI._gst_reserved")]
+			public weak void*[] ABI__gst_reserved;
+			[CCode (cname = "ABI.abi.want_absolute")]
+			public bool ABI_abi_want_absolute;
 			[CCode (has_construct_function = false, type = "GstControlBinding*")]
 			public DirectControlBinding (Gst.Object object, string property_name, Gst.ControlSource cs);
+			[CCode (cname = "gst_direct_control_binding_new_absolute", has_construct_function = false, type = "GstControlBinding*")]
+			public DirectControlBinding..new_with_absolute (Gst.Object object, string property_name, Gst.ControlSource cs);
+			[NoAccessorMethod]
+			public bool absolute { get; construct; }
 			[NoAccessorMethod]
 			public Gst.ControlSource control_source { owned get; set construct; }
 		}
@@ -65,6 +84,9 @@ namespace Gst {
 			public bool set_from_list (GLib.SList<Gst.TimedValue?> timedvalues);
 			public bool unset (Gst.ClockTime timestamp);
 			public void unset_all ();
+			public signal void value_added (Gst.Controller.ControlPoint timed_value);
+			public signal void value_changed (Gst.Controller.ControlPoint timed_value);
+			public signal void value_removed (Gst.Controller.ControlPoint timed_value);
 		}
 		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstTriggerControlSource", lower_case_cprefix = "gst_trigger_control_source_", type_id = "gst_trigger_control_source_get_type ()")]
 		[GIR (name = "TriggerControlSource")]
@@ -73,16 +95,6 @@ namespace Gst {
 			public TriggerControlSource ();
 			[NoAccessorMethod]
 			public int64 tolerance { get; set; }
-		}
-		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstControlPoint", has_type_id = false)]
-		[GIR (name = "ControlPoint")]
-		public struct ControlPoint {
-			public Gst.ClockTime timestamp;
-			public double value;
-			[CCode (cname = "cache.cubic.h")]
-			public double cache_cubic_h;
-			[CCode (cname = "cache.cubic.z")]
-			public double cache_cubic_z;
 		}
 		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstInterpolationMode", cprefix = "GST_INTERPOLATION_MODE_", type_id = "gst_interpolation_mode_get_type ()")]
 		[GIR (name = "InterpolationMode")]

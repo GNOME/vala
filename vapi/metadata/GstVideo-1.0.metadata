@@ -27,7 +27,3 @@ VideoInfo
 
 VideoChromaResample skip
 video_chroma_resample skip
-
-// Upstream backports from 1.5/1.6
-video_blend_scale_linear_RGBA.dest out
-video_blend_scale_linear_RGBA.dest_buffer out unowned=false

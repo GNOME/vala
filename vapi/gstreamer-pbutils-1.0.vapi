@@ -76,6 +76,7 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			protected DiscovererInfo ();
 			public Gst.PbUtils.DiscovererInfo copy ();
+			public static Gst.PbUtils.DiscovererInfo from_variant (GLib.Variant variant);
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_audio_streams ();
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_container_streams ();
 			public Gst.ClockTime get_duration ();
@@ -93,6 +94,7 @@ namespace Gst {
 			public unowned Gst.Toc get_toc ();
 			public unowned string get_uri ();
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_video_streams ();
+			public GLib.Variant to_variant (Gst.PbUtils.DiscovererSerializeFlags flags);
 		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererStreamInfo", lower_case_cprefix = "gst_discoverer_stream_info_", type_id = "gst_discoverer_stream_info_get_type ()")]
 		[GIR (name = "DiscovererStreamInfo")]
@@ -156,6 +158,7 @@ namespace Gst {
 			protected EncodingProfile ();
 			public static Gst.PbUtils.EncodingProfile find (string targetname, string profilename, string? category);
 			public static Gst.PbUtils.EncodingProfile from_discoverer (Gst.PbUtils.DiscovererInfo info);
+			public bool get_allow_dynamic_output ();
 			public unowned string get_description ();
 			public unowned string get_file_extension ();
 			public Gst.Caps get_format ();
@@ -166,8 +169,11 @@ namespace Gst {
 			public unowned string get_preset_name ();
 			public Gst.Caps get_restriction ();
 			public unowned string get_type_nick ();
+			public bool is_enabled ();
 			public bool is_equal (Gst.PbUtils.EncodingProfile b);
+			public void set_allow_dynamic_output (bool allow_dynamic_output);
 			public void set_description (string description);
+			public void set_enabled (bool enabled);
 			public void set_format (Gst.Caps format);
 			public void set_name (string name);
 			public void set_presence (uint presence);
@@ -210,6 +216,9 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			public InstallPluginsContext ();
 			public void free ();
+			public void set_confirm_search (bool confirm_search);
+			public void set_desktop_id (string desktop_id);
+			public void set_startup_notification_id (string startup_id);
 			public void set_xid (uint xid);
 		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererResult", cprefix = "GST_DISCOVERER_", type_id = "gst_discoverer_result_get_type ()")]
@@ -221,6 +230,16 @@ namespace Gst {
 			TIMEOUT,
 			BUSY,
 			MISSING_PLUGINS
+		}
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererSerializeFlags", cprefix = "GST_DISCOVERER_SERIALIZE_", type_id = "gst_discoverer_serialize_flags_get_type ()")]
+		[Flags]
+		[GIR (name = "DiscovererSerializeFlags")]
+		public enum DiscovererSerializeFlags {
+			BASIC,
+			CAPS,
+			TAGS,
+			MISC,
+			ALL
 		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstInstallPluginsReturn", cprefix = "GST_INSTALL_PLUGINS_", type_id = "gst_install_plugins_return_get_type ()")]
 		[GIR (name = "InstallPluginsReturn")]

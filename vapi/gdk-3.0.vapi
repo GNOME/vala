@@ -4615,7 +4615,7 @@ namespace Gdk {
 		public bool get_has_cursor ();
 		public bool get_history (Gdk.Window window, uint32 start, uint32 stop, [CCode (array_length_cname = "n_events", array_length_pos = 4.1)] out Gdk.TimeCoord[] events);
 		public bool get_key (uint index_, out uint keyval, out Gdk.ModifierType modifiers);
-		public unowned Gdk.Window get_last_event_window ();
+		public unowned Gdk.Window? get_last_event_window ();
 		public Gdk.InputMode get_mode ();
 		public int get_n_axes ();
 		public int get_n_keys ();
@@ -5118,6 +5118,7 @@ namespace Gdk {
 		public unowned Gdk.GLContext get_shared_context ();
 		public void get_version (out int major, out int minor);
 		public unowned Gdk.Window get_window ();
+		public bool is_legacy ();
 		public void make_current ();
 		public bool realize () throws GLib.Error;
 		public void set_debug_enabled (bool enabled);

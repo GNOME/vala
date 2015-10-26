@@ -14,6 +14,10 @@ namespace Gst {
 			public void copy ([CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] out unowned uint8[] dest, size_t offset);
 			public GLib.Bytes copy_bytes (size_t offset, size_t size);
 			public void flush (size_t flush);
+			public Gst.Buffer? get_buffer (size_t nbytes);
+			public Gst.Buffer? get_buffer_fast (size_t nbytes);
+			public Gst.BufferList? get_buffer_list (size_t nbytes);
+			public GLib.List<Gst.Buffer>? get_list (size_t nbytes);
 			[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
 			public unowned uint8[]? map ();
 			public ssize_t masked_scan_uint32 (uint32 mask, uint32 pattern, size_t offset, size_t size);
@@ -27,6 +31,7 @@ namespace Gst {
 			public uint8[]? take ();
 			public Gst.Buffer? take_buffer (size_t nbytes);
 			public Gst.Buffer? take_buffer_fast (size_t nbytes);
+			public Gst.BufferList? take_buffer_list (size_t nbytes);
 			public GLib.List<Gst.Buffer>? take_list (size_t nbytes);
 			public void unmap ();
 		}
@@ -148,6 +153,8 @@ namespace Gst {
 			public void init ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
 			[CCode (cname = "gst_byte_reader_masked_scan_uint32")]
 			public uint masked_scan_uint32 (uint32 mask, uint32 pattern, uint offset, uint size);
+			[CCode (cname = "gst_byte_reader_masked_scan_uint32_peek")]
+			public uint masked_scan_uint32_peek (uint32 mask, uint32 pattern, uint offset, uint size, uint32 value);
 			[CCode (cname = "gst_byte_reader_peek_data")]
 			public bool peek_data ([CCode (array_length_cname = "size", array_length_pos = 0.5, array_length_type = "guint")] out unowned uint8[] val);
 			[CCode (cname = "gst_byte_reader_peek_float32_be")]
@@ -313,7 +320,14 @@ namespace Gst {
 			public bool query_default (Gst.Base.CollectData data, Gst.Query query, bool discard);
 			public Gst.Buffer read_buffer (Gst.Base.CollectData data, uint size);
 			public bool remove_pad (Gst.Pad pad);
+			public void set_buffer_function (Gst.Base.CollectPadsBufferFunction func);
+			public void set_clip_function (Gst.Base.CollectPadsClipFunction clipfunc);
+			public void set_compare_function (Gst.Base.CollectPadsCompareFunction func);
+			public void set_event_function (Gst.Base.CollectPadsEventFunction func);
+			public void set_flush_function (Gst.Base.CollectPadsFlushFunction func);
 			public void set_flushing (bool flushing);
+			public void set_function (Gst.Base.CollectPadsFunction func);
+			public void set_query_function (Gst.Base.CollectPadsQueryFunction func);
 			public void set_waiting (Gst.Base.CollectData data, bool waiting);
 			public bool src_event_default (Gst.Pad pad, Gst.Event event);
 			public void start ();
@@ -343,9 +357,12 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			public FlowCombiner ();
 			public void add_pad (Gst.Pad pad);
+			public void clear ();
 			public void free ();
 			public void remove_pad (Gst.Pad pad);
+			public void reset ();
 			public Gst.FlowReturn update_flow (Gst.FlowReturn fret);
+			public Gst.FlowReturn update_pad_flow (Gst.Pad pad, Gst.FlowReturn fret);
 		}
 		[CCode (cheader_filename = "gst/base/base.h", type_id = "gst_base_parse_get_type ()")]
 		[GIR (name = "BaseParse")]
@@ -367,6 +384,7 @@ namespace Gst {
 			public virtual Gst.Caps get_sink_caps (Gst.Caps filter);
 			[NoWrapper]
 			public virtual Gst.FlowReturn handle_frame (Gst.Base.ParseFrame frame, int skipsize);
+			public void merge_tags (Gst.TagList? tags, Gst.TagMergeMode mode);
 			[NoWrapper]
 			public virtual Gst.FlowReturn pre_push_frame (Gst.Base.ParseFrame frame);
 			public Gst.FlowReturn push_frame (Gst.Base.ParseFrame frame);
@@ -602,6 +620,7 @@ namespace Gst {
 		[GIR (name = "BaseTransform")]
 		public abstract class Transform : Gst.Element {
 			public bool have_segment;
+			public weak Gst.Buffer queued_buf;
 			public weak Gst.Segment segment;
 			public weak Gst.Pad sinkpad;
 			public weak Gst.Pad srcpad;
@@ -619,6 +638,8 @@ namespace Gst {
 			public virtual bool filter_meta (Gst.Query query, GLib.Type api, Gst.Structure @params);
 			[NoWrapper]
 			public virtual Gst.Caps fixate_caps (Gst.PadDirection direction, Gst.Caps caps, Gst.Caps othercaps);
+			[NoWrapper]
+			public virtual Gst.FlowReturn generate_output (Gst.Buffer outbuf);
 			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
 			public Gst.BufferPool get_buffer_pool ();
 			[NoWrapper]
@@ -650,6 +671,8 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool stop ();
 			[NoWrapper]
+			public virtual Gst.FlowReturn submit_input_buffer (bool is_discont, Gst.Buffer input);
+			[NoWrapper]
 			public virtual Gst.FlowReturn transform (Gst.Buffer inbuf, Gst.Buffer outbuf);
 			[NoWrapper]
 			public virtual Gst.Caps transform_caps (Gst.PadDirection direction, Gst.Caps caps, Gst.Caps filter);
@@ -660,6 +683,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool transform_size (Gst.PadDirection direction, Gst.Caps caps, size_t size, Gst.Caps othercaps, size_t othersize);
 			public void update_qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
+			public bool update_src_caps (Gst.Caps updated_caps);
 			[NoAccessorMethod]
 			public bool qos { get; set; }
 		}
@@ -671,6 +695,8 @@ namespace Gst {
 			public weak Gst.Buffer buffer;
 			public uint pos;
 			public weak Gst.Segment segment;
+			[CCode (cname = "ABI.abi.dts")]
+			public int64 ABI_abi_dts;
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstCollectPadsStateFlags", cprefix = "GST_COLLECT_PADS_STATE_", has_type_id = false)]
 		[Flags]

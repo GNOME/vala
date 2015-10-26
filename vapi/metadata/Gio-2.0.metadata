@@ -141,6 +141,7 @@ InputStream
   .skip throws="GLib.IOError"
   .skip_finish throws="GLib.IOError"
 ListModel
+  .get_item#virtual_method skip
   .get_item#method skip=false abstract
 MemoryOutputStream
   .get_data type="unowned uint8[]"
@@ -197,8 +198,10 @@ SimpleAsyncResult
   .new_error skip
   .new_from_error skip
 Socket
-  .condition_wait throws="GLib.IOError"
-  .create_source skip=false type="GLib.SocketSource"
+  .condition_wait skip
+  .create_source skip
+  .receive_messages skip
+  .send_messages skip
 SocketControlMessage
   .serialize.data type="uint8[]"
 SocketListener
@@ -354,7 +357,6 @@ DataInputStream
   .read_line.length default=null
 
 // Forward upstream
-*_autoptr skip
 NativeSocketAddress skip
 content_type_from_mime_type nullable
 content_type_get_mime_type nullable

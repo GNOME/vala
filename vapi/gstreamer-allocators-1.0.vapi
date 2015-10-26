@@ -3,15 +3,36 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstAllocators", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace Allocators {
+		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GstFdAllocator", lower_case_cprefix = "gst_fd_allocator_", type_id = "gst_fd_allocator_get_type ()")]
+		[GIR (name = "FdAllocator")]
+		public class FdAllocator : Gst.Allocator {
+			[CCode (has_construct_function = false, type = "GstAllocator*")]
+			public FdAllocator ();
+			public static Gst.Memory alloc (Gst.Allocator allocator, int fd, size_t size, Gst.Allocators.FdMemoryFlags flags);
+		}
+		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GstFdMemoryFlags", cprefix = "GST_FD_MEMORY_FLAG_", has_type_id = false)]
+		[Flags]
+		[GIR (name = "FdMemoryFlags")]
+		public enum FdMemoryFlags {
+			NONE,
+			KEEP_MAPPED,
+			MAP_PRIVATE
+		}
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GST_ALLOCATOR_DMABUF")]
 		public const string ALLOCATOR_DMABUF;
+		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GST_ALLOCATOR_FD")]
+		public const string ALLOCATOR_FD;
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_dmabuf_allocator_alloc")]
-		public static Gst.Memory dmabuf_allocator_alloc (Gst.Allocator? allocator, int fd, size_t size);
+		public static Gst.Memory dmabuf_allocator_alloc (Gst.Allocator allocator, int fd, size_t size);
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_dmabuf_allocator_new")]
 		public static Gst.Allocator dmabuf_allocator_new ();
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_dmabuf_memory_get_fd")]
 		public static int dmabuf_memory_get_fd (Gst.Memory mem);
+		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_fd_memory_get_fd")]
+		public static int fd_memory_get_fd (Gst.Memory mem);
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_is_dmabuf_memory")]
 		public static bool is_dmabuf_memory (Gst.Memory mem);
+		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_is_fd_memory")]
+		public static bool is_fd_memory (Gst.Memory mem);
 	}
 }

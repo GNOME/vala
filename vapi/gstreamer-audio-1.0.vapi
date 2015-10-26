@@ -20,7 +20,9 @@ namespace Gst {
 			public Gst.Audio.BaseSinkSlaveMethod get_slave_method ();
 			[NoWrapper]
 			public virtual Gst.Buffer payload (Gst.Buffer buffer);
+			public void report_device_failure ();
 			public void set_alignment_threshold (Gst.ClockTime alignment_threshold);
+			public void set_custom_slaving_callback (owned Gst.Audio.BaseSinkCustomSlavingCallback callback);
 			public void set_discont_wait (Gst.ClockTime discont_wait);
 			public void set_drift_tolerance (int64 drift_tolerance);
 			public void set_provide_clock (bool provide);
@@ -123,8 +125,10 @@ namespace Gst {
 			public int get_plc_aware ();
 			public Gst.ClockTime get_tolerance ();
 			[NoWrapper]
+			public virtual Gst.Caps getcaps (Gst.Caps filter);
+			[NoWrapper]
 			public virtual Gst.FlowReturn handle_frame (Gst.Buffer buffer);
-			public void merge_tags (Gst.TagList tags, Gst.TagMergeMode mode);
+			public void merge_tags (Gst.TagList? tags, Gst.TagMergeMode mode);
 			public virtual bool negotiate ();
 			[NoWrapper]
 			public virtual bool open ();
@@ -134,6 +138,7 @@ namespace Gst {
 			public virtual Gst.FlowReturn pre_push (Gst.Buffer buffer);
 			[NoWrapper]
 			public virtual bool propose_allocation (Gst.Query query);
+			public Gst.Caps proxy_getcaps (Gst.Caps? caps, Gst.Caps? filter);
 			public void set_drainable (bool enabled);
 			public void set_estimate_rate (bool enabled);
 			[NoWrapper]
@@ -146,14 +151,21 @@ namespace Gst {
 			public void set_plc (bool enabled);
 			public void set_plc_aware (bool plc);
 			public void set_tolerance (Gst.ClockTime tolerance);
+			public void set_use_default_pad_acceptcaps (bool use);
 			[NoWrapper]
 			public virtual bool sink_event (Gst.Event event);
 			[NoWrapper]
+			public virtual bool sink_query (Gst.Query query);
+			[NoWrapper]
 			public virtual bool src_event (Gst.Event event);
+			[NoWrapper]
+			public virtual bool src_query (Gst.Query query);
 			[NoWrapper]
 			public virtual bool start ();
 			[NoWrapper]
 			public virtual bool stop ();
+			[NoWrapper]
+			public virtual bool transform_meta (Gst.Buffer outbuf, Gst.Meta meta, Gst.Buffer inbuf);
 			public int64 min_latency { get; set; }
 			public bool plc { get; set; }
 			public int64 tolerance { get; set; }
@@ -193,7 +205,7 @@ namespace Gst {
 			public virtual Gst.Caps getcaps (Gst.Caps filter);
 			[NoWrapper]
 			public virtual Gst.FlowReturn handle_frame (Gst.Buffer buffer);
-			public void merge_tags (Gst.TagList tags, Gst.TagMergeMode mode);
+			public void merge_tags (Gst.TagList? tags, Gst.TagMergeMode mode);
 			public virtual bool negotiate ();
 			[NoWrapper]
 			public virtual bool open ();
@@ -201,7 +213,7 @@ namespace Gst {
 			public virtual Gst.FlowReturn pre_push (Gst.Buffer buffer);
 			[NoWrapper]
 			public virtual bool propose_allocation (Gst.Query query);
-			public Gst.Caps proxy_getcaps (Gst.Caps caps, Gst.Caps filter);
+			public Gst.Caps proxy_getcaps (Gst.Caps? caps, Gst.Caps? filter);
 			public void set_drainable (bool enabled);
 			[NoWrapper]
 			public virtual bool set_format (Gst.Audio.Info info);
@@ -220,11 +232,17 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool sink_event (Gst.Event event);
 			[NoWrapper]
+			public virtual bool sink_query (Gst.Query query);
+			[NoWrapper]
 			public virtual bool src_event (Gst.Event event);
+			[NoWrapper]
+			public virtual bool src_query (Gst.Query query);
 			[NoWrapper]
 			public virtual bool start ();
 			[NoWrapper]
 			public virtual bool stop ();
+			[NoWrapper]
+			public virtual bool transform_meta (Gst.Buffer outbuf, Gst.Meta meta, Gst.Buffer inbuf);
 			public bool hard_resync { get; set; }
 			public bool mark_granule { get; }
 			public bool perfect_timestamp { get; set; }
@@ -413,12 +431,23 @@ namespace Gst {
 			public int segtotal;
 			public int seglatency;
 		}
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_BASE_SINK_DISCONT_REASON_", has_type_id = false)]
+		[GIR (name = "AudioBaseSinkDiscontReason")]
+		public enum BaseSinkDiscontReason {
+			NO_DISCONT,
+			NEW_CAPS,
+			FLUSH,
+			SYNC_LATENCY,
+			ALIGNMENT,
+			DEVICE_FAILURE
+		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_BASE_SINK_SLAVE_", type_id = "gst_audio_base_sink_slave_method_get_type ()")]
 		[GIR (name = "AudioBaseSinkSlaveMethod")]
 		public enum BaseSinkSlaveMethod {
 			RESAMPLE,
 			SKEW,
-			NONE
+			NONE,
+			CUSTOM
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_BASE_SRC_SLAVE_", type_id = "gst_audio_base_src_slave_method_get_type ()")]
 		[GIR (name = "AudioBaseSrcSlaveMethod")]
@@ -581,6 +610,8 @@ namespace Gst {
 			CUBIC,
 			DB
 		}
+		[CCode (cheader_filename = "gst/audio/audio.h", instance_pos = 5.9)]
+		public delegate void BaseSinkCustomSlavingCallback (Gst.Audio.BaseSink sink, Gst.ClockTime etime, Gst.ClockTime itime, Gst.ClockTimeDiff requested_skew, Gst.Audio.BaseSinkDiscontReason discont_reason);
 		[CCode (cheader_filename = "gst/audio/audio.h", instance_pos = 1.9)]
 		public delegate Gst.ClockTime ClockGetTimeFunc (Gst.Clock clock);
 		[CCode (cheader_filename = "gst/audio/audio.h", has_target = false)]
