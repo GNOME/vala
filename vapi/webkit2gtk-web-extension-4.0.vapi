@@ -2644,14 +2644,20 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		public ContextMenu ();
 		public void append (WebKit.ContextMenuItem item);
+		public unowned WebKit.ContextMenuItem first ();
+		public unowned WebKit.ContextMenuItem get_item_at_position (uint position);
+		public unowned GLib.List<WebKit.ContextMenuItem> get_items ();
 		public uint get_n_items ();
-		public GLib.Variant get_user_data ();
+		public unowned GLib.Variant get_user_data ();
 		public void insert (WebKit.ContextMenuItem item, int position);
+		public unowned WebKit.ContextMenuItem last ();
 		public void move_item (WebKit.ContextMenuItem item, int position);
 		public void prepend (WebKit.ContextMenuItem item);
 		public void remove (WebKit.ContextMenuItem item);
 		public void remove_all ();
 		public void set_user_data (GLib.Variant user_data);
+		[CCode (has_construct_function = false)]
+		public ContextMenu.with_items (GLib.List<WebKit.ContextMenuItem> items);
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_context_menu_item_get_type ()")]
 	public class ContextMenuItem : GLib.InitiallyUnowned {
@@ -2661,11 +2667,13 @@ namespace WebKit {
 		public ContextMenuItem.from_stock_action (WebKit.ContextMenuAction action);
 		[CCode (has_construct_function = false)]
 		public ContextMenuItem.from_stock_action_with_label (WebKit.ContextMenuAction action, string label);
+		public unowned Gtk.Action get_action ();
 		public WebKit.ContextMenuAction get_stock_action ();
+		public unowned WebKit.ContextMenu get_submenu ();
 		public bool is_separator ();
 		[CCode (has_construct_function = false)]
 		public ContextMenuItem.separator ();
-		public void set_submenu (WebKit.ContextMenu submenu);
+		public void set_submenu (WebKit.ContextMenu? submenu);
 		[CCode (has_construct_function = false)]
 		public ContextMenuItem.with_submenu (string label, WebKit.ContextMenu submenu);
 	}

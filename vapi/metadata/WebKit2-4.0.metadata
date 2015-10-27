@@ -4,3 +4,13 @@ JavascriptResult
   .get_value skip
 WebView
   .get_javascript_global_context skip
+
+//Forward upstream
+Download
+  .failed#signal.error type="WebKit.DownloadError"
+PrintOperation
+  .failed#signal.error type="WebKit.PrintError"
+WebResource
+  .failed#signal.error type="GLib.Error"
+WebView
+  .load_failed#signal.error type="GLib.Error"
