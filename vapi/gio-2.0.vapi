@@ -3002,7 +3002,7 @@ namespace GLib {
 		[CCode (cname = "activate")]
 		public GLib.SimpleActionActivateFunc activate_callback;
 		[CCode (cname = "change_state")]
-		public GLib.SimpleActionChangeStateCallback? change_state_callback;
+		public GLib.SimpleActionChangeStateFunc? change_state_callback;
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	public struct DBusErrorEntry {
