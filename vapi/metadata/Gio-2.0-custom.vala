@@ -18,7 +18,7 @@ namespace GLib {
 		[CCode (cname = "activate")]
 		public GLib.SimpleActionActivateFunc activate_callback;
 		[CCode (cname = "change_state")]
-		public GLib.SimpleActionChangeStateCallback? change_state_callback;
+		public GLib.SimpleActionChangeStateFunc? change_state_callback;
 	}
 
 	[Compact]
