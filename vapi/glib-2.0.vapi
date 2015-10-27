@@ -2741,6 +2741,14 @@ namespace GLib {
 		N_DIRECTORIES
 	}
 
+	namespace Hostname {
+		public static bool is_non_ascii (string hostname);
+		public static bool is_ascii_encoded (string hostname);
+		public static bool is_ip_address (string hostname);
+		public static string to_ascii (string hostname);
+		public static string to_unicode (string hostname);
+	}
+
 	namespace Path {
 		public static bool is_absolute (string file_name);
 		public static unowned string skip_root (string file_name);
