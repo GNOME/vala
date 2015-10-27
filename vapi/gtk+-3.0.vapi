@@ -2868,7 +2868,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Image.from_surface (Cairo.Surface surface);
 		public unowned Gdk.PixbufAnimation get_animation ();
-		public void get_gicon (out unowned GLib.Icon gicon, Gtk.IconSize size);
+		public void get_gicon (out unowned GLib.Icon gicon, out Gtk.IconSize size);
 		public void get_icon_name (out unowned string icon_name, out Gtk.IconSize size);
 		public void get_icon_set (out unowned Gtk.IconSet icon_set, out Gtk.IconSize size);
 		public unowned Gdk.Pixbuf get_pixbuf ();
