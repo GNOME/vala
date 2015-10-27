@@ -1960,6 +1960,8 @@ namespace GLib {
 		public bool remove_unlocked (G data);
 		public G? try_pop_unlocked ();
 		public G? timed_pop_unlocked (ref TimeVal end_time);
+		public G? timeout_pop (uint64 timeout);
+		public G? timeout_pop_unlocked (uint64 timeout);
 		public int length_unlocked ();
 		public void sort_unlocked (CompareDataFunc<G> func);
 	}
