@@ -204,6 +204,11 @@ public class Vala.Interface : ObjectTypeSymbol {
 			return;
 		}
 
+		if (prop.name == "type") {
+			Report.error (prop.source_reference, "Property 'type' not allowed");
+			return;
+		}
+
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
