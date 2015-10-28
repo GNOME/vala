@@ -6562,6 +6562,8 @@ namespace Gtk {
 		public void get_clip (out Gtk.Allocation clip);
 		public unowned Gtk.Clipboard get_clipboard (Gdk.Atom selection);
 		public string get_composite_name ();
+		[CCode (cname = "gtk_widget_class_get_css_name")]
+		public class unowned string get_css_name ();
 		public static Gtk.TextDirection get_default_direction ();
 		[Deprecated (replacement = "StyleContext, and CssProvider.get_default() to obtain a Gtk.StyleProvider with the default widget style information", since = "3.0")]
 		public static unowned Gtk.Style get_default_style ();
@@ -6728,6 +6730,8 @@ namespace Gtk {
 		public void set_composite_name (string name);
 		[CCode (cname = "gtk_widget_class_set_connect_func")]
 		public class void set_connect_func (Gtk.BuilderConnectFunc connect_func, void* connect_data, GLib.DestroyNotify connect_data_destroy);
+		[CCode (cname = "gtk_widget_class_set_css_name")]
+		public class void set_css_name (string name);
 		public static void set_default_direction (Gtk.TextDirection dir);
 		public void set_device_enabled (Gdk.Device device, bool enabled);
 		public void set_device_events (Gdk.Device device, Gdk.EventMask events);
@@ -6947,6 +6951,7 @@ namespace Gtk {
 		public void iter_clear_classes (int pos);
 		public void iter_clear_regions (int pos);
 		public unowned string iter_get_name (int pos);
+		public unowned string? iter_get_object_name (int pos);
 		public GLib.Type iter_get_object_type (int pos);
 		public uint iter_get_sibling_index (int pos);
 		public unowned Gtk.WidgetPath iter_get_siblings (int pos);
@@ -6962,6 +6967,7 @@ namespace Gtk {
 		public void iter_remove_class (int pos, string name);
 		public void iter_remove_region (int pos, string name);
 		public void iter_set_name (int pos, string name);
+		public void iter_set_object_name (int pos, string? name);
 		public void iter_set_object_type (int pos, GLib.Type type);
 		public void iter_set_state (int pos, Gtk.StateFlags state);
 		public int length ();

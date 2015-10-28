@@ -4452,6 +4452,13 @@
 					<parameter name="pos" type="gint"/>
 				</parameters>
 			</method>
+			<method name="iter_get_object_name" symbol="gtk_widget_path_iter_get_object_name">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="path" type="GtkWidgetPath*"/>
+					<parameter name="pos" type="gint"/>
+				</parameters>
+			</method>
 			<method name="iter_get_object_type" symbol="gtk_widget_path_iter_get_object_type">
 				<return-type type="GType"/>
 				<parameters>
@@ -4566,6 +4573,14 @@
 					<parameter name="path" type="GtkWidgetPath*"/>
 					<parameter name="pos" type="gint"/>
 					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="iter_set_object_name" symbol="gtk_widget_path_iter_set_object_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="path" type="GtkWidgetPath*"/>
+					<parameter name="pos" type="gint"/>
+					<parameter name="name" type="char*"/>
 				</parameters>
 			</method>
 			<method name="iter_set_object_type" symbol="gtk_widget_path_iter_set_object_type">
@@ -30068,6 +30083,12 @@
 					<parameter name="property_name" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="class_get_css_name" symbol="gtk_widget_class_get_css_name">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="widget_class" type="GtkWidgetClass*"/>
+				</parameters>
+			</method>
 			<method name="class_install_style_property" symbol="gtk_widget_class_install_style_property">
 				<return-type type="void"/>
 				<parameters>
@@ -30120,6 +30141,13 @@
 					<parameter name="connect_func" type="GtkBuilderConnectFunc"/>
 					<parameter name="connect_data" type="gpointer"/>
 					<parameter name="connect_data_destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="class_set_css_name" symbol="gtk_widget_class_set_css_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget_class" type="GtkWidgetClass*"/>
+					<parameter name="name" type="char*"/>
 				</parameters>
 			</method>
 			<method name="class_set_template" symbol="gtk_widget_class_set_template">
@@ -35882,14 +35910,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1900"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1901"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="0"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="1"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="19"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
