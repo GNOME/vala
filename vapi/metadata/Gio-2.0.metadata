@@ -143,6 +143,10 @@ InputStream
 ListModel
   .get_item#virtual_method skip
   .get_item#method skip=false abstract
+MemoryInputStream
+  .add_data.destroy default=GLib.g_free
+MemoryInputStream
+  .new_from_data.destroy default=GLib.g_free
 MemoryOutputStream
   .get_data type="unowned uint8[]"
   .steal_data type="uint8[]"

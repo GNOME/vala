@@ -1405,16 +1405,16 @@ namespace GLib {
 		[CCode (has_construct_function = false, type = "GInputStream*")]
 		public MemoryInputStream ();
 		public void add_bytes (GLib.Bytes bytes);
-		public void add_data ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gssize")] owned uint8[] data, GLib.DestroyNotify? destroy);
+		public void add_data ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gssize")] owned uint8[] data, GLib.DestroyNotify? destroy = GLib.g_free);
 		[CCode (has_construct_function = false, type = "GInputStream*")]
 		public MemoryInputStream.from_bytes (GLib.Bytes bytes);
 		[CCode (has_construct_function = false, type = "GInputStream*")]
-		public MemoryInputStream.from_data ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gssize")] owned uint8[] data, GLib.DestroyNotify? destroy);
+		public MemoryInputStream.from_data ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gssize")] owned uint8[] data, GLib.DestroyNotify? destroy = GLib.g_free);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryOutputStream : GLib.OutputStream, GLib.PollableOutputStream, GLib.Seekable {
 		[CCode (has_construct_function = false, type = "GOutputStream*")]
-		public MemoryOutputStream ([CCode (array_length_type = "gsize")] owned uint8[]? data, GLib.ReallocFunc? realloc_function, GLib.DestroyNotify? destroy_function);
+		public MemoryOutputStream ([CCode (array_length_type = "gsize")] owned uint8[]? data, GLib.ReallocFunc? realloc_function = GLib.g_realloc, GLib.DestroyNotify? destroy_function = GLib.g_free);
 		[CCode (array_length = false)]
 		public unowned uint8[] get_data ();
 		public size_t get_data_size ();
@@ -2418,7 +2418,7 @@ namespace GLib {
 		public void set_flags (GLib.TlsPasswordFlags flags);
 		public void set_value ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gssize", type = "const guchar*")] uint8[] value);
 		[CCode (vfunc_name = "set_value")]
-		public virtual void set_value_full ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gssize", type = "guchar*")] owned uint8[] value, GLib.DestroyNotify? notify = GLib.free);
+		public virtual void set_value_full ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gssize", type = "guchar*")] owned uint8[] value, GLib.DestroyNotify? notify = GLib.g_free);
 		public void set_warning (string warning);
 		public string description { get; set; }
 		public GLib.TlsPasswordFlags flags { get; set; }
@@ -3828,6 +3828,8 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Deprecated (replacement = "File.hash", since = "vala-0.16")]
 	public static GLib.HashFunc file_hash;
+	[CCode (cheader_filename = "glib.h", cname = "g_realloc")]
+	public static GLib.ReallocFunc g_realloc;
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Deprecated (replacement = "FileAttribute.ACCESS_CAN_DELETE", since = "vala-0.16")]
 	public const string FILE_ATTRIBUTE_ACCESS_CAN_DELETE;

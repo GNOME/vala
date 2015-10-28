@@ -1,4 +1,7 @@
 namespace GLib {
+	[CCode (cheader_filename = "glib.h", cname = "g_realloc")]
+	public static GLib.ReallocFunc g_realloc;
+
 	[CCode (cheader_filename = "gio/gio.h")]
 	namespace Bus {
 		public async GLib.DBusConnection get (GLib.BusType bus_type, GLib.Cancellable? cancellable = null) throws GLib.IOError;
@@ -100,7 +103,7 @@ namespace GLib {
 
 	public class MemoryOutputStream : GLib.OutputStream {
 		[CCode (has_construct_function = false, type = "GOutputStream*")]
-		public MemoryOutputStream ([CCode (array_length_type = "gsize")] owned uint8[]? data, GLib.ReallocFunc? realloc_function, GLib.DestroyNotify? destroy_function);
+		public MemoryOutputStream ([CCode (array_length_type = "gsize")] owned uint8[]? data, GLib.ReallocFunc? realloc_function = GLib.g_realloc, GLib.DestroyNotify? destroy_function = GLib.g_free);
 	}
 
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_native_socket_address_get_type ()")]
@@ -175,7 +178,7 @@ namespace GLib {
 
 	public class TlsPassword : GLib.Object {
 		[CCode (vfunc_name = "set_value")]
-		public virtual void set_value_full ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gssize", type = "guchar*")] owned uint8[] value, GLib.DestroyNotify? notify = GLib.free);
+		public virtual void set_value_full ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gssize", type = "guchar*")] owned uint8[] value, GLib.DestroyNotify? notify = GLib.g_free);
 	}
 
 	public class VolumeMonitor : GLib.Object {
