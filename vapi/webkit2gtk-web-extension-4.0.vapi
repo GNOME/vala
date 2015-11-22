@@ -222,6 +222,7 @@ namespace WebKit {
 			public unowned WebKit.DOM.DocumentFragment create_document_fragment ();
 			public unowned WebKit.DOM.Element create_element (string tagName) throws GLib.Error;
 			public unowned WebKit.DOM.Element create_element_ns (string? namespaceURI, string qualifiedName) throws GLib.Error;
+			[Deprecated (since = "2.12")]
 			public unowned WebKit.DOM.EntityReference create_entity_reference (string? name) throws GLib.Error;
 			public WebKit.DOM.Event create_event (string eventType) throws GLib.Error;
 			public WebKit.DOM.XPathExpression create_expression (string expression, WebKit.DOM.XPathNSResolver resolver) throws GLib.Error;
@@ -248,10 +249,16 @@ namespace WebKit {
 			public string get_document_uri ();
 			public string get_domain ();
 			public unowned WebKit.DOM.Element get_element_by_id (string elementId);
-			public WebKit.DOM.NodeList get_elements_by_class_name (string classNames);
+			[Deprecated (since = "2.12")]
+			public WebKit.DOM.NodeList get_elements_by_class_name (string class_name);
+			public WebKit.DOM.HTMLCollection get_elements_by_class_name_as_html_collection (string classNames);
 			public WebKit.DOM.NodeList get_elements_by_name (string elementName);
-			public WebKit.DOM.NodeList get_elements_by_tag_name (string tagname);
-			public WebKit.DOM.NodeList get_elements_by_tag_name_ns (string namespaceURI, string localName);
+			[Deprecated (since = "2.12")]
+			public WebKit.DOM.NodeList get_elements_by_tag_name (string tag_name);
+			public WebKit.DOM.HTMLCollection get_elements_by_tag_name_as_html_collection (string tagname);
+			[Deprecated (since = "2.12")]
+			public WebKit.DOM.NodeList get_elements_by_tag_name_ns (string namespace_uri, string tag_name);
+			public WebKit.DOM.HTMLCollection get_elements_by_tag_name_ns_as_html_collection (string namespaceURI, string localName);
 			public WebKit.DOM.HTMLCollection get_forms ();
 			public unowned WebKit.DOM.HTMLHeadElement get_head ();
 			public WebKit.DOM.HTMLCollection get_images ();
@@ -403,9 +410,15 @@ namespace WebKit {
 			public double get_client_left ();
 			public double get_client_top ();
 			public double get_client_width ();
-			public WebKit.DOM.NodeList get_elements_by_class_name (string name);
-			public WebKit.DOM.NodeList get_elements_by_tag_name (string name);
-			public WebKit.DOM.NodeList get_elements_by_tag_name_ns (string namespaceURI, string localName);
+			[Deprecated (since = "2.12")]
+			public WebKit.DOM.NodeList get_elements_by_class_name (string class_name);
+			public WebKit.DOM.HTMLCollection get_elements_by_class_name_as_html_collection (string name);
+			[Deprecated (since = "2.12")]
+			public WebKit.DOM.NodeList get_elements_by_tag_name (string tag_name);
+			public WebKit.DOM.HTMLCollection get_elements_by_tag_name_as_html_collection (string name);
+			[Deprecated (since = "2.12")]
+			public WebKit.DOM.NodeList get_elements_by_tag_name_ns (string namespace_uri, string tag_name);
+			public WebKit.DOM.HTMLCollection get_elements_by_tag_name_ns_as_html_collection (string namespaceURI, string localName);
 			public unowned WebKit.DOM.Element get_first_element_child ();
 			public string get_id ();
 			public string get_inner_html ();
@@ -706,15 +719,18 @@ namespace WebKit {
 		public class HTMLBaseFontElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLBaseFontElement ();
+			[Deprecated (since = "2.12")]
 			public string get_color ();
+			[Deprecated (since = "2.12")]
 			public string get_face ();
+			[Deprecated (since = "2.12")]
 			public long get_size ();
+			[Deprecated (since = "2.12")]
 			public void set_color (string value);
+			[Deprecated (since = "2.12")]
 			public void set_face (string value);
+			[Deprecated (since = "2.12")]
 			public void set_size (long value);
-			public string color { owned get; set; }
-			public string face { owned get; set; }
-			public long size { get; set; }
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_html_body_element_get_type ()")]
 		[GIR (name = "DOMHTMLBodyElement")]
@@ -2219,6 +2235,7 @@ namespace WebKit {
 			[CCode (has_construct_function = false)]
 			protected NodeIterator ();
 			public void detach ();
+			[Deprecated (since = "2.12")]
 			public bool get_expand_entity_references ();
 			public WebKit.DOM.NodeFilter get_filter ();
 			public bool get_pointer_before_reference_node ();
@@ -2227,7 +2244,6 @@ namespace WebKit {
 			public ulong get_what_to_show ();
 			public unowned WebKit.DOM.Node next_node () throws GLib.Error;
 			public unowned WebKit.DOM.Node previous_node () throws GLib.Error;
-			public bool expand_entity_references { get; }
 			public WebKit.DOM.NodeFilter filter { owned get; }
 			public bool pointer_before_reference_node { get; }
 			public WebKit.DOM.Node reference_node { get; }
@@ -2352,6 +2368,7 @@ namespace WebKit {
 			protected TreeWalker ();
 			public unowned WebKit.DOM.Node first_child ();
 			public unowned WebKit.DOM.Node get_current_node ();
+			[Deprecated (since = "2.12")]
 			public bool get_expand_entity_references ();
 			public WebKit.DOM.NodeFilter get_filter ();
 			public unowned WebKit.DOM.Node get_root ();
@@ -2364,7 +2381,6 @@ namespace WebKit {
 			public unowned WebKit.DOM.Node previous_sibling ();
 			public void set_current_node (WebKit.DOM.Node value) throws GLib.Error;
 			public WebKit.DOM.Node current_node { get; }
-			public bool expand_entity_references { get; }
 			public WebKit.DOM.NodeFilter filter { owned get; }
 			public WebKit.DOM.Node root { get; }
 			public ulong what_to_show { get; }

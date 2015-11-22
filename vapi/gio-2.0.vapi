@@ -2613,7 +2613,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_converter_get_type ()")]
 	public interface Converter : GLib.Object {
-		public abstract GLib.ConverterResult convert ([CCode (array_length_cname = "inbuf_size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[]? inbuf, [CCode (array_length_cname = "outbuf_size", array_length_pos = 2.5, array_length_type = "gsize", type = "void*")] uint8[] outbuf, GLib.ConverterFlags flags, out size_t bytes_read, out size_t bytes_written) throws GLib.Error;
+		public abstract GLib.ConverterResult convert ([CCode (array_length_cname = "inbuf_size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[]? inbuf, [CCode (array_length_cname = "outbuf_size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] outbuf, GLib.ConverterFlags flags, out size_t bytes_read, out size_t bytes_written) throws GLib.Error;
 		public abstract void reset ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_interface_get_type ()")]

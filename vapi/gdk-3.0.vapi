@@ -4686,6 +4686,7 @@ namespace Gdk {
 		public unowned string get_name ();
 		[Deprecated (since = "3.0")]
 		public void get_pointer (out unowned Gdk.Screen screen, out int x, out int y, out Gdk.ModifierType mask);
+		[Deprecated (since = "3.20")]
 		public unowned Gdk.Screen get_screen (int screen_num);
 		[Deprecated (since = "3.0")]
 		public unowned Gdk.Window? get_window_at_pointer (out int win_x, out int win_y);
