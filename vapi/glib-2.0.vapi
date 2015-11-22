@@ -5131,7 +5131,7 @@ namespace GLib {
 		}
 
 		[CCode (cheader_filename = "glib-unix.h")]
-		public static bool open_pipe (int fds, int flags) throws GLib.Error;
+		public static bool open_pipe ([CCode (array_length = false, array_null_terminated = false)] int[] fds, int flags) throws GLib.Error;
 		[CCode (cheader_filename = "glib-unix.h")]
 		public static bool set_fd_nonblocking (int fd, bool nonblock) throws GLib.Error;
 	}
