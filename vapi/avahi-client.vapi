@@ -204,7 +204,7 @@ namespace Avahi {
 	/* Entry group */
 
 	[Flags]
-	[CCode(cheader_filename="avahi-common/defs.h", cname="AvahiPublishFlags", cfrefix="AVAHI_PUBLISH_", has_type_id = false)]
+	[CCode(cheader_filename="avahi-common/defs.h", cname="AvahiPublishFlags", cprefix="AVAHI_PUBLISH_", has_type_id = false)]
 	public enum PublishFlags {
 		UNIQUE,
 		NO_PROBE,
