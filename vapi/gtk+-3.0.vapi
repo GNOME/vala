@@ -790,6 +790,7 @@ namespace Gtk {
 		public void connect_signals_full (Gtk.BuilderConnectFunc func);
 		public static GLib.Quark error_quark ();
 		public void expose_object (string name, GLib.Object object);
+		public uint extend_with_template (Gtk.Widget widget, GLib.Type template_type, string buffer, size_t length) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Builder.from_file (string filename);
 		[CCode (has_construct_function = false)]
@@ -840,7 +841,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Button.with_mnemonic (string label);
 		public bool always_show_image { get; set construct; }
-		public bool focus_on_click { get; set; }
 		public Gtk.Widget image { get; set; }
 		public Gtk.PositionType image_position { get; set; }
 		public string label { get; set construct; }
@@ -1571,7 +1571,6 @@ namespace Gtk {
 		public Gtk.CellArea cell_area { owned get; construct; }
 		public int column_span_column { get; set; }
 		public int entry_text_column { get; set; }
-		public bool focus_on_click { get; set; }
 		public bool has_entry { get; construct; }
 		[NoAccessorMethod]
 		public bool has_frame { get; set; }
@@ -2080,7 +2079,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FileChooserButton.with_dialog (Gtk.Dialog dialog);
 		public Gtk.FileChooser dialog { construct; }
-		public bool focus_on_click { get; set; }
 		public string title { get; set; }
 		public int width_chars { get; set; }
 		public virtual signal void file_set ();
@@ -2089,6 +2087,17 @@ namespace Gtk {
 	public class FileChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FileChooserDialog (string? title, Gtk.Window? parent, Gtk.FileChooserAction action, ...);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class FileChooserNative : Gtk.NativeDialog, Gtk.FileChooser {
+		[CCode (has_construct_function = false)]
+		public FileChooserNative (string? title, Gtk.Window? parent, Gtk.FileChooserAction action, string? accept_label, string? cancel_label);
+		public unowned string? get_accept_label ();
+		public unowned string? get_cancel_label ();
+		public void set_accept_label (string? accept_label);
+		public void set_cancel_label (string? cancel_label);
+		public string? accept_label { get; set; }
+		public string? cancel_label { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_chooser_widget_get_type ()")]
 	public class FileChooserWidget : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable, Gtk.FileChooser, Gtk.FileChooserEmbed {
@@ -2577,7 +2586,7 @@ namespace Gtk {
 		public void set_show_close_button (bool setting);
 		public void set_subtitle (string? subtitle);
 		public void set_title (string? title);
-		public Gtk.Widget custom_title { get; set construct; }
+		public Gtk.Widget custom_title { get; set; }
 		public string decoration_layout { get; set; }
 		[NoAccessorMethod]
 		public bool decoration_layout_set { get; set; }
@@ -3518,6 +3527,28 @@ namespace Gtk {
 		public bool is_showing { get; }
 		public Gtk.Window parent { get; set; }
 		public Gdk.Screen screen { get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class NativeDialog : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected NativeDialog ();
+		public void destroy ();
+		public bool get_modal ();
+		public unowned string get_title ();
+		public unowned Gtk.Window get_transient_for ();
+		public bool get_visible ();
+		public virtual void hide ();
+		public int run ();
+		public void set_modal (bool modal);
+		public void set_title (string title);
+		public void set_transient_for (Gtk.Window parent);
+		public virtual void show ();
+		public bool modal { get; set; }
+		public string? title { get; set; }
+		public Gtk.Window? transient_for { get; set construct; }
+		[NoAccessorMethod]
+		public bool visible { get; set; }
+		public virtual signal void response (int response_id);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_notebook_get_type ()")]
 	public class Notebook : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -4758,6 +4789,8 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string accelerator { owned get; set; }
 		[NoAccessorMethod]
+		public Gtk.TextDirection direction { get; set; }
+		[NoAccessorMethod]
 		public string title { owned get; set; }
 		[NoAccessorMethod]
 		public Gtk.SizeGroup title_size_group { set; }
@@ -4884,13 +4917,13 @@ namespace Gtk {
 		public void set_visible_child (Gtk.Widget child);
 		public void set_visible_child_full (string name, Gtk.StackTransitionType transition);
 		public void set_visible_child_name (string name);
-		public bool hhomogeneous { get; set construct; }
+		public bool hhomogeneous { get; set; }
 		public bool homogeneous { get; set; }
-		public bool interpolate_size { get; }
-		public uint transition_duration { get; set construct; }
+		public bool interpolate_size { get; set; }
+		public uint transition_duration { get; set; }
 		public bool transition_running { get; }
-		public Gtk.StackTransitionType transition_type { get; set construct; }
-		public bool vhomogeneous { get; set construct; }
+		public Gtk.StackTransitionType transition_type { get; set; }
+		public bool vhomogeneous { get; set; }
 		public Gtk.Widget visible_child { get; set; }
 		public string visible_child_name { get; set; }
 	}
@@ -4908,6 +4941,8 @@ namespace Gtk {
 		public StackSwitcher ();
 		public unowned Gtk.Stack get_stack ();
 		public void set_stack (Gtk.Stack stack);
+		[NoAccessorMethod]
+		public int icon_size { get; set; }
 		public Gtk.Stack stack { get; set construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_status_icon_get_type ()")]
@@ -5371,9 +5406,9 @@ namespace Gtk {
 		public bool get_has_selection ();
 		public unowned Gtk.TextMark get_insert ();
 		public void get_iter_at_child_anchor (out Gtk.TextIter iter, Gtk.TextChildAnchor anchor);
-		public bool get_iter_at_line (out Gtk.TextIter iter, int line_number);
-		public bool get_iter_at_line_index (out Gtk.TextIter iter, int line_number, int byte_index);
-		public bool get_iter_at_line_offset (out Gtk.TextIter iter, int line_number, int char_offset);
+		public void get_iter_at_line (out Gtk.TextIter iter, int line_number);
+		public void get_iter_at_line_index (out Gtk.TextIter iter, int line_number, int byte_index);
+		public void get_iter_at_line_offset (out Gtk.TextIter iter, int line_number, int char_offset);
 		public void get_iter_at_mark (out Gtk.TextIter iter, Gtk.TextMark mark);
 		public void get_iter_at_offset (out Gtk.TextIter iter, int char_offset);
 		public int get_line_count ();
@@ -6550,6 +6585,7 @@ namespace Gtk {
 		public unowned GLib.ActionGroup? get_action_group (string prefix);
 		public int get_allocated_baseline ();
 		public int get_allocated_height ();
+		public void get_allocated_size (out Gtk.Allocation allocation, out int baseline);
 		public int get_allocated_width ();
 		public void get_allocation (out Gtk.Allocation allocation);
 		public unowned Gtk.Widget get_ancestor (GLib.Type widget_type);
@@ -6573,6 +6609,7 @@ namespace Gtk {
 		public unowned Gdk.Display get_display ();
 		public bool get_double_buffered ();
 		public int get_events ();
+		public bool get_focus_on_click ();
 		public unowned Pango.FontMap get_font_map ();
 		public unowned Cairo.FontOptions get_font_options ();
 		public unowned Gdk.FrameClock get_frame_clock ();
@@ -6697,6 +6734,7 @@ namespace Gtk {
 		public void path (out uint path_length, out string path, out string path_reversed);
 		public static void pop_composite_child ();
 		public static void push_composite_child ();
+		public void queue_allocate ();
 		public void queue_compute_expand ();
 		public void queue_draw ();
 		public void queue_draw_area (int x, int y, int width, int height);
@@ -6738,6 +6776,7 @@ namespace Gtk {
 		public void set_direction (Gtk.TextDirection dir);
 		public void set_double_buffered (bool double_buffered);
 		public void set_events (int events);
+		public void set_focus_on_click (bool focus_on_click);
 		public void set_font_map (Pango.FontMap font_map);
 		public void set_font_options (Cairo.FontOptions? options);
 		public void set_halign (Gtk.Align align);
@@ -6805,6 +6844,7 @@ namespace Gtk {
 		public Gdk.EventMask events { get; set; }
 		[NoAccessorMethod]
 		public bool expand { get; set; }
+		public bool focus_on_click { get; set; }
 		public Gtk.Align halign { get; set; }
 		[NoAccessorMethod]
 		public bool has_default { get; set; }
@@ -7279,7 +7319,7 @@ namespace Gtk {
 		public signal void insert_text (string new_text, int new_text_length, ref int position);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public interface FileChooser : Gtk.Widget {
+	public interface FileChooser : GLib.Object {
 		public void add_filter (owned Gtk.FileFilter filter);
 		public bool add_shortcut_folder (string folder) throws GLib.Error;
 		public bool add_shortcut_folder_uri (string uri) throws GLib.Error;
@@ -8623,7 +8663,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TEXT_VIEW_LAYER_")]
 	public enum TextViewLayer {
 		BELOW,
-		ABOVE
+		ABOVE,
+		BELOW_TEXT,
+		ABOVE_TEXT
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TEXT_WINDOW_")]
 	public enum TextWindowType {

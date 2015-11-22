@@ -5248,6 +5248,8 @@
 		<enum name="GtkTextViewLayer" type-name="GtkTextViewLayer" get-type="gtk_text_view_layer_get_type">
 			<member name="GTK_TEXT_VIEW_LAYER_BELOW" value="0"/>
 			<member name="GTK_TEXT_VIEW_LAYER_ABOVE" value="1"/>
+			<member name="GTK_TEXT_VIEW_LAYER_BELOW_TEXT" value="2"/>
+			<member name="GTK_TEXT_VIEW_LAYER_ABOVE_TEXT" value="3"/>
 		</enum>
 		<enum name="GtkTextWindowType" type-name="GtkTextWindowType" get-type="gtk_text_window_type_get_type">
 			<member name="GTK_TEXT_WINDOW_PRIVATE" value="0"/>
@@ -7816,6 +7818,17 @@
 					<parameter name="object" type="GObject*"/>
 				</parameters>
 			</method>
+			<method name="extend_with_template" symbol="gtk_builder_extend_with_template">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="builder" type="GtkBuilder*"/>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="template_type" type="GType"/>
+					<parameter name="buffer" type="gchar*"/>
+					<parameter name="length" type="gsize"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="get_application" symbol="gtk_builder_get_application">
 				<return-type type="GtkApplication*"/>
 				<parameters>
@@ -8112,7 +8125,6 @@
 				</parameters>
 			</method>
 			<property name="always-show-image" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
-			<property name="focus-on-click" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="image" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="image-position" type="GtkPositionType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="label" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
@@ -10759,7 +10771,6 @@
 			<property name="cell-area" type="GtkCellArea*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="column-span-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="entry-text-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="focus-on-click" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-entry" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="has-frame" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="id-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -12832,7 +12843,6 @@
 				</parameters>
 			</method>
 			<property name="dialog" type="GtkFileChooser*" readable="0" writable="1" construct="0" construct-only="1"/>
-			<property name="focus-on-click" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="width-chars" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="file-set" when="FIRST">
@@ -12857,6 +12867,49 @@
 					<parameter name="first_button_text" type="gchar*"/>
 				</parameters>
 			</constructor>
+		</object>
+		<object name="GtkFileChooserNative" parent="GtkNativeDialog" type-name="GtkFileChooserNative" get-type="gtk_file_chooser_native_get_type">
+			<implements>
+				<interface name="GtkFileChooser"/>
+			</implements>
+			<method name="get_accept_label" symbol="gtk_file_chooser_native_get_accept_label">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="self" type="GtkFileChooserNative*"/>
+				</parameters>
+			</method>
+			<method name="get_cancel_label" symbol="gtk_file_chooser_native_get_cancel_label">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="self" type="GtkFileChooserNative*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_file_chooser_native_new">
+				<return-type type="GtkFileChooserNative*"/>
+				<parameters>
+					<parameter name="title" type="gchar*"/>
+					<parameter name="parent" type="GtkWindow*"/>
+					<parameter name="action" type="GtkFileChooserAction"/>
+					<parameter name="accept_label" type="gchar*"/>
+					<parameter name="cancel_label" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="set_accept_label" symbol="gtk_file_chooser_native_set_accept_label">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkFileChooserNative*"/>
+					<parameter name="accept_label" type="char*"/>
+				</parameters>
+			</method>
+			<method name="set_cancel_label" symbol="gtk_file_chooser_native_set_cancel_label">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkFileChooserNative*"/>
+					<parameter name="cancel_label" type="char*"/>
+				</parameters>
+			</method>
+			<property name="accept-label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="cancel-label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkFileChooserWidget" parent="GtkBox" type-name="GtkFileChooserWidget" get-type="gtk_file_chooser_widget_get_type">
 			<implements>
@@ -14770,7 +14823,7 @@
 					<parameter name="title" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="custom-title" type="GtkWidget*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="custom-title" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="decoration-layout" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="decoration-layout-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-subtitle" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -18651,6 +18704,100 @@
 			<property name="is-showing" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="parent" type="GtkWindow*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="screen" type="GdkScreen*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkNativeDialog" parent="GObject" type-name="GtkNativeDialog" get-type="gtk_native_dialog_get_type">
+			<method name="destroy" symbol="gtk_native_dialog_destroy">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+				</parameters>
+			</method>
+			<method name="get_modal" symbol="gtk_native_dialog_get_modal">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+				</parameters>
+			</method>
+			<method name="get_title" symbol="gtk_native_dialog_get_title">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+				</parameters>
+			</method>
+			<method name="get_transient_for" symbol="gtk_native_dialog_get_transient_for">
+				<return-type type="GtkWindow*"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+				</parameters>
+			</method>
+			<method name="get_visible" symbol="gtk_native_dialog_get_visible">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+				</parameters>
+			</method>
+			<method name="hide" symbol="gtk_native_dialog_hide">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+				</parameters>
+			</method>
+			<method name="run" symbol="gtk_native_dialog_run">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+				</parameters>
+			</method>
+			<method name="set_modal" symbol="gtk_native_dialog_set_modal">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+					<parameter name="modal" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_title" symbol="gtk_native_dialog_set_title">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+					<parameter name="title" type="char*"/>
+				</parameters>
+			</method>
+			<method name="set_transient_for" symbol="gtk_native_dialog_set_transient_for">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+					<parameter name="parent" type="GtkWindow*"/>
+				</parameters>
+			</method>
+			<method name="show" symbol="gtk_native_dialog_show">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+				</parameters>
+			</method>
+			<property name="modal" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="transient-for" type="GtkWindow*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="visible" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="response" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+					<parameter name="response_id" type="gint"/>
+				</parameters>
+			</signal>
+			<vfunc name="hide">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="show">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkNativeDialog*"/>
+				</parameters>
+			</vfunc>
 		</object>
 		<object name="GtkNotebook" parent="GtkContainer" type-name="GtkNotebook" get-type="gtk_notebook_get_type">
 			<implements>
@@ -22732,6 +22879,7 @@
 			</implements>
 			<property name="accel-size-group" type="GtkSizeGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
 			<property name="accelerator" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="direction" type="GtkTextDirection" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title-size-group" type="GtkSizeGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
 		</object>
@@ -23258,13 +23406,13 @@
 					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="hhomogeneous" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="hhomogeneous" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="homogeneous" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="interpolate-size" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="transition-duration" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="interpolate-size" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="transition-duration" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="transition-running" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="transition-type" type="GtkStackTransitionType" readable="1" writable="1" construct="1" construct-only="0"/>
-			<property name="vhomogeneous" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="transition-type" type="GtkStackTransitionType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vhomogeneous" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visible-child" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visible-child-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
@@ -23313,6 +23461,7 @@
 					<parameter name="stack" type="GtkStack*"/>
 				</parameters>
 			</method>
+			<property name="icon-size" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stack" type="GtkStack*" readable="1" writable="1" construct="1" construct-only="0"/>
 		</object>
 		<object name="GtkStatusIcon" parent="GObject" type-name="GtkStatusIcon" get-type="gtk_status_icon_get_type">
@@ -25086,7 +25235,7 @@
 				</parameters>
 			</method>
 			<method name="get_iter_at_line" symbol="gtk_text_buffer_get_iter_at_line">
-				<return-type type="gboolean"/>
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="buffer" type="GtkTextBuffer*"/>
 					<parameter name="iter" type="GtkTextIter*"/>
@@ -25094,7 +25243,7 @@
 				</parameters>
 			</method>
 			<method name="get_iter_at_line_index" symbol="gtk_text_buffer_get_iter_at_line_index">
-				<return-type type="gboolean"/>
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="buffer" type="GtkTextBuffer*"/>
 					<parameter name="iter" type="GtkTextIter*"/>
@@ -25103,7 +25252,7 @@
 				</parameters>
 			</method>
 			<method name="get_iter_at_line_offset" symbol="gtk_text_buffer_get_iter_at_line_offset">
-				<return-type type="gboolean"/>
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="buffer" type="GtkTextBuffer*"/>
 					<parameter name="iter" type="GtkTextIter*"/>
@@ -30261,6 +30410,14 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="get_allocated_size" symbol="gtk_widget_get_allocated_size">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="allocation" type="GtkAllocation*"/>
+					<parameter name="baseline" type="int*"/>
+				</parameters>
+			</method>
 			<method name="get_allocated_width" symbol="gtk_widget_get_allocated_width">
 				<return-type type="int"/>
 				<parameters>
@@ -30372,6 +30529,12 @@
 			</method>
 			<method name="get_events" symbol="gtk_widget_get_events">
 				<return-type type="gint"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="get_focus_on_click" symbol="gtk_widget_get_focus_on_click">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
@@ -31040,6 +31203,12 @@
 			<method name="push_composite_child" symbol="gtk_widget_push_composite_child">
 				<return-type type="void"/>
 			</method>
+			<method name="queue_allocate" symbol="gtk_widget_queue_allocate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
 			<method name="queue_compute_expand" symbol="gtk_widget_queue_compute_expand">
 				<return-type type="void"/>
 				<parameters>
@@ -31272,6 +31441,13 @@
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
 					<parameter name="events" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_focus_on_click" symbol="gtk_widget_set_focus_on_click">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="focus_on_click" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_font_map" symbol="gtk_widget_set_font_map">
@@ -31673,6 +31849,7 @@
 			<property name="double-buffered" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="events" type="GdkEventMask" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="expand" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="focus-on-click" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="halign" type="GtkAlign" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-default" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-focus" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -34149,7 +34326,7 @@
 		</interface>
 		<interface name="GtkFileChooser" type-name="GtkFileChooser" get-type="gtk_file_chooser_get_type">
 			<requires>
-				<interface name="GtkWidget"/>
+				<interface name="GObject"/>
 			</requires>
 			<method name="add_filter" symbol="gtk_file_chooser_add_filter">
 				<return-type type="void"/>
@@ -35910,14 +36087,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1901"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1902"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="1"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="2"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="19"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

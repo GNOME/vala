@@ -105,7 +105,7 @@ namespace Gtk {
 	public interface FileChooserEmbed : GLib.Object {
 	}
 
-	public interface FileChooser: Gtk.Widget {
+	public interface FileChooser: GLib.Object {
 		public GLib.SList<GLib.File> get_files ();
 	}
 
