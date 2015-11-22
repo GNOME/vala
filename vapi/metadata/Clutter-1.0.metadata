@@ -177,7 +177,17 @@ Stage
  	.event name="emit_event"
 
 // *Event should be compact classes derived from Clutter.Event
-Event.* skip=false
+Event.type skip=false
+AnyEvent struct=false base_type="Clutter.Event"
+ButtonEvent struct=false base_type="Clutter.Event"
+CrossingEvent struct=false base_type="Clutter.Event"
+KeyEvent struct=false base_type="Clutter.Event"
+MotionEvent struct=false base_type="Clutter.Event"
+ScrollEvent struct=false base_type="Clutter.Event"
+StageStateEvent struct=false base_type="Clutter.Event"
+TouchEvent struct=false base_type="Clutter.Event"
+TouchpadPinchEvent struct=false base_type="Clutter.Event"
+TouchpadSwipeEvent struct=false base_type="Clutter.Event"
 
 // Keysyms used to be CLUTTER_X instead of CLUTTER_KEY_X
 *#constant skip

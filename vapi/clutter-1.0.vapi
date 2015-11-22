@@ -5236,6 +5236,15 @@ namespace Clutter {
 		public bool get_value (GLib.Value value);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Compact]
+	public class AnyEvent : Clutter.Event {
+		public Clutter.EventFlags flags;
+		public weak Clutter.Actor source;
+		public weak Clutter.Stage stage;
+		public uint32 time;
+		public Clutter.EventType type;
+	}
+	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class Backend : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Backend ();
@@ -5572,6 +5581,22 @@ namespace Clutter {
 		[NoAccessorMethod]
 		public Clutter.Color contrast { get; set; }
 	}
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Compact]
+	public class ButtonEvent : Clutter.Event {
+		public double axes;
+		public uint32 button;
+		public uint click_count;
+		public weak Clutter.InputDevice device;
+		public Clutter.EventFlags flags;
+		public Clutter.ModifierType modifier_state;
+		public weak Clutter.Actor source;
+		public weak Clutter.Stage stage;
+		public uint32 time;
+		public Clutter.EventType type;
+		public float x;
+		public float y;
+	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_cairo_texture_get_type ()")]
 	[Deprecated (since = "1.12")]
 	public class CairoTexture : Clutter.Texture, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable {
@@ -5676,6 +5701,19 @@ namespace Clutter {
 		[NoWrapper]
 		public virtual void update_preferred_size (Clutter.Actor actor, Clutter.Orientation direction, float for_size, float minimum_size, float natural_size);
 	}
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Compact]
+	public class CrossingEvent : Clutter.Event {
+		public weak Clutter.InputDevice device;
+		public Clutter.EventFlags flags;
+		public weak Clutter.Actor related;
+		public weak Clutter.Actor source;
+		public weak Clutter.Stage stage;
+		public uint32 time;
+		public Clutter.EventType type;
+		public float x;
+		public float y;
+	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_deform_effect_get_type ()")]
 	public abstract class DeformEffect : Clutter.OffscreenEffect {
 		[CCode (has_construct_function = false)]
@@ -5778,16 +5816,6 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_event_get_type ()")]
 	[Compact]
 	public class Event {
-		public Clutter.AnyEvent any;
-		public Clutter.ButtonEvent button;
-		public Clutter.CrossingEvent crossing;
-		public Clutter.KeyEvent key;
-		public Clutter.MotionEvent motion;
-		public Clutter.ScrollEvent scroll;
-		public Clutter.StageStateEvent stage_state;
-		public Clutter.TouchEvent touch;
-		public Clutter.TouchpadPinchEvent touchpad_pinch;
-		public Clutter.TouchpadSwipeEvent touchpad_swipe;
 		public Clutter.EventType type;
 		[CCode (has_construct_function = false)]
 		public Event (Clutter.EventType type);
@@ -5847,6 +5875,16 @@ namespace Clutter {
 		public void set_stage (Clutter.Stage? stage);
 		public void set_state (Clutter.ModifierType state);
 		public void set_time (uint32 time_);
+		public Clutter.AnyEvent any {[CCode (cname = "(ClutterAnyEvent *)")]  get; }
+		public Clutter.ButtonEvent button {[CCode (cname = "(ClutterButtonEvent *)")]  get; }
+		public Clutter.CrossingEvent crossing {[CCode (cname = "(ClutterCrossingEvent *)")]  get; }
+		public Clutter.KeyEvent key {[CCode (cname = "(ClutterKeyEvent *)")]  get; }
+		public Clutter.MotionEvent motion {[CCode (cname = "(ClutterMotionEvent *)")]  get; }
+		public Clutter.ScrollEvent scroll {[CCode (cname = "(ClutterScrollEvent *)")]  get; }
+		public Clutter.StageStateEvent stage_state {[CCode (cname = "(ClutterStageStateEvent *)")]  get; }
+		public Clutter.TouchEvent touch {[CCode (cname = "(ClutterTouchEvent *)")]  get; }
+		public Clutter.TouchpadPinchEvent touchpad_pinch {[CCode (cname = "(ClutterTouchpadPinchEvent *)")]  get; }
+		public Clutter.TouchpadSwipeEvent touchpad_swipe {[CCode (cname = "(ClutterTouchpadSwipeEvent *)")]  get; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_event_sequence_get_type ()")]
 	[Compact]
@@ -6054,6 +6092,20 @@ namespace Clutter {
 		public GLib.Value initial { owned get; set; }
 		public GLib.Type value_type { get; construct; }
 	}
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Compact]
+	public class KeyEvent : Clutter.Event {
+		public weak Clutter.InputDevice device;
+		public Clutter.EventFlags flags;
+		public uint16 hardware_keycode;
+		public uint keyval;
+		public Clutter.ModifierType modifier_state;
+		public weak Clutter.Actor source;
+		public weak Clutter.Stage stage;
+		public uint32 time;
+		public Clutter.EventType type;
+		public unichar unicode_value;
+	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_keyframe_transition_get_type ()")]
 	public class KeyframeTransition : Clutter.PropertyTransition, Clutter.Scriptable {
 		[CCode (has_construct_function = false, type = "ClutterTransition*")]
@@ -6184,6 +6236,20 @@ namespace Clutter {
 		public Clutter.Model model { owned get; set; }
 		[NoAccessorMethod]
 		public uint row { get; set; }
+	}
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Compact]
+	public class MotionEvent : Clutter.Event {
+		public double axes;
+		public weak Clutter.InputDevice device;
+		public Clutter.EventFlags flags;
+		public Clutter.ModifierType modifier_state;
+		public weak Clutter.Actor source;
+		public weak Clutter.Stage stage;
+		public uint32 time;
+		public Clutter.EventType type;
+		public float x;
+		public float y;
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_offscreen_effect_get_type ()")]
 	public abstract class OffscreenEffect : Clutter.Effect {
@@ -6479,6 +6545,21 @@ namespace Clutter {
 		public void set_scroll_mode (Clutter.ScrollMode mode);
 		public Clutter.ScrollMode scroll_mode { get; set; }
 	}
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Compact]
+	public class ScrollEvent : Clutter.Event {
+		public double axes;
+		public weak Clutter.InputDevice device;
+		public Clutter.ScrollDirection direction;
+		public Clutter.EventFlags flags;
+		public Clutter.ModifierType modifier_state;
+		public weak Clutter.Actor source;
+		public weak Clutter.Stage stage;
+		public uint32 time;
+		public Clutter.EventType type;
+		public float x;
+		public float y;
+	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_settings_get_type ()")]
 	public class Settings : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -6694,6 +6775,17 @@ namespace Clutter {
 		public Clutter.Stage default_stage { get; }
 		public virtual signal void stage_added (Clutter.Stage stage);
 		public virtual signal void stage_removed (Clutter.Stage stage);
+	}
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Compact]
+	public class StageStateEvent : Clutter.Event {
+		public Clutter.StageState changed_mask;
+		public Clutter.EventFlags flags;
+		public Clutter.StageState new_state;
+		public weak Clutter.Actor source;
+		public weak Clutter.Stage stage;
+		public uint32 time;
+		public Clutter.EventType type;
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_state_get_type ()")]
 	public class State : GLib.Object, Clutter.Scriptable {
@@ -7129,6 +7221,52 @@ namespace Clutter {
 		public uint add (uint fps, owned GLib.SourceFunc func);
 		public void remove (uint id_);
 	}
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Compact]
+	public class TouchEvent : Clutter.Event {
+		public double axes;
+		public weak Clutter.InputDevice device;
+		public Clutter.EventFlags flags;
+		public Clutter.ModifierType modifier_state;
+		public weak Clutter.EventSequence sequence;
+		public weak Clutter.Actor source;
+		public weak Clutter.Stage stage;
+		public uint32 time;
+		public Clutter.EventType type;
+		public float x;
+		public float y;
+	}
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Compact]
+	public class TouchpadPinchEvent : Clutter.Event {
+		public float angle_delta;
+		public float dx;
+		public float dy;
+		public Clutter.EventFlags flags;
+		public Clutter.TouchpadGesturePhase phase;
+		public float scale;
+		public weak Clutter.Actor source;
+		public weak Clutter.Stage stage;
+		public uint32 time;
+		public Clutter.EventType type;
+		public float x;
+		public float y;
+	}
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Compact]
+	public class TouchpadSwipeEvent : Clutter.Event {
+		public float dx;
+		public float dy;
+		public Clutter.EventFlags flags;
+		public uint n_fingers;
+		public Clutter.TouchpadGesturePhase phase;
+		public weak Clutter.Actor source;
+		public weak Clutter.Stage stage;
+		public uint32 time;
+		public Clutter.EventType type;
+		public float x;
+		public float y;
+	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_transition_get_type ()")]
 	public abstract class Transition : Clutter.Timeline, Clutter.Scriptable {
 		[CCode (has_construct_function = false)]
@@ -7380,29 +7518,6 @@ namespace Clutter {
 		public bool prev (out unowned Clutter.Actor child);
 		public void remove ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
-	public struct AnyEvent {
-		public Clutter.EventType type;
-		public uint32 time;
-		public Clutter.EventFlags flags;
-		public weak Clutter.Stage stage;
-		public weak Clutter.Actor source;
-	}
-	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
-	public struct ButtonEvent {
-		public Clutter.EventType type;
-		public uint32 time;
-		public Clutter.EventFlags flags;
-		public weak Clutter.Stage stage;
-		public weak Clutter.Actor source;
-		public float x;
-		public float y;
-		public Clutter.ModifierType modifier_state;
-		public uint32 button;
-		public uint click_count;
-		public double axes;
-		public weak Clutter.InputDevice device;
-	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "CLUTTER_TYPE_COLOR")]
 	public struct Color {
 		public uint8 red;
@@ -7434,18 +7549,6 @@ namespace Clutter {
 		public uint32 to_pixel ();
 		public string to_string ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
-	public struct CrossingEvent {
-		public Clutter.EventType type;
-		public uint32 time;
-		public Clutter.EventFlags flags;
-		public weak Clutter.Stage stage;
-		public weak Clutter.Actor source;
-		public float x;
-		public float y;
-		public weak Clutter.InputDevice device;
-		public weak Clutter.Actor related;
-	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_fog_get_type ()")]
 	[Deprecated (since = "1.10")]
 	public struct Fog {
@@ -7461,19 +7564,6 @@ namespace Clutter {
 		public uint height;
 		public bool intersects (Clutter.Geometry geometry1);
 		public Clutter.Geometry union (Clutter.Geometry geometry_b);
-	}
-	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
-	public struct KeyEvent {
-		public Clutter.EventType type;
-		public uint32 time;
-		public Clutter.EventFlags flags;
-		public weak Clutter.Stage stage;
-		public weak Clutter.Actor source;
-		public Clutter.ModifierType modifier_state;
-		public uint keyval;
-		public uint16 hardware_keycode;
-		public unichar unicode_value;
-		public weak Clutter.InputDevice device;
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_knot_get_type ()")]
 	public struct Knot {
@@ -7492,19 +7582,6 @@ namespace Clutter {
 		public static unowned Clutter.Matrix? init_from_matrix (Clutter.Matrix a, Clutter.Matrix b);
 		public static unowned Clutter.Matrix? init_identity (Clutter.Matrix matrix);
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
-	public struct MotionEvent {
-		public Clutter.EventType type;
-		public uint32 time;
-		public Clutter.EventFlags flags;
-		public weak Clutter.Stage stage;
-		public weak Clutter.Actor source;
-		public float x;
-		public float y;
-		public Clutter.ModifierType modifier_state;
-		public double axes;
-		public weak Clutter.InputDevice device;
-	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_path_node_get_type ()")]
 	public struct PathNode {
 		public Clutter.PathNodeType type;
@@ -7520,73 +7597,6 @@ namespace Clutter {
 		public float aspect;
 		public float z_near;
 		public float z_far;
-	}
-	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
-	public struct ScrollEvent {
-		public Clutter.EventType type;
-		public uint32 time;
-		public Clutter.EventFlags flags;
-		public weak Clutter.Stage stage;
-		public weak Clutter.Actor source;
-		public float x;
-		public float y;
-		public Clutter.ScrollDirection direction;
-		public Clutter.ModifierType modifier_state;
-		public double axes;
-		public weak Clutter.InputDevice device;
-	}
-	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
-	public struct StageStateEvent {
-		public Clutter.EventType type;
-		public uint32 time;
-		public Clutter.EventFlags flags;
-		public weak Clutter.Stage stage;
-		public weak Clutter.Actor source;
-		public Clutter.StageState changed_mask;
-		public Clutter.StageState new_state;
-	}
-	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
-	public struct TouchEvent {
-		public Clutter.EventType type;
-		public uint32 time;
-		public Clutter.EventFlags flags;
-		public weak Clutter.Stage stage;
-		public weak Clutter.Actor source;
-		public float x;
-		public float y;
-		public weak Clutter.EventSequence sequence;
-		public Clutter.ModifierType modifier_state;
-		public double axes;
-		public weak Clutter.InputDevice device;
-	}
-	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
-	public struct TouchpadPinchEvent {
-		public Clutter.EventType type;
-		public uint32 time;
-		public Clutter.EventFlags flags;
-		public weak Clutter.Stage stage;
-		public weak Clutter.Actor source;
-		public Clutter.TouchpadGesturePhase phase;
-		public float x;
-		public float y;
-		public float dx;
-		public float dy;
-		public float angle_delta;
-		public float scale;
-	}
-	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
-	public struct TouchpadSwipeEvent {
-		public Clutter.EventType type;
-		public uint32 time;
-		public Clutter.EventFlags flags;
-		public weak Clutter.Stage stage;
-		public weak Clutter.Actor source;
-		public Clutter.TouchpadGesturePhase phase;
-		public uint n_fingers;
-		public float x;
-		public float y;
-		public float dx;
-		public float dy;
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "CLUTTER_TYPE_UNITS")]
 	public struct Units {

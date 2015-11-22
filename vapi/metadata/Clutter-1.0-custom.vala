@@ -56,6 +56,21 @@ namespace Clutter {
 		public class unowned GLib.ParamSpec[] list_child_properties ();
 	}
 
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_event_get_type ()")]
+	[Compact]
+	public class Event {
+		public Clutter.AnyEvent any { [CCode (cname = "(ClutterAnyEvent *)")] get; }
+		public Clutter.ButtonEvent button { [CCode (cname = "(ClutterButtonEvent *)")] get; }
+		public Clutter.CrossingEvent crossing { [CCode (cname = "(ClutterCrossingEvent *)")] get; }
+		public Clutter.KeyEvent key { [CCode (cname = "(ClutterKeyEvent *)")] get; }
+		public Clutter.MotionEvent motion { [CCode (cname = "(ClutterMotionEvent *)")] get; }
+		public Clutter.ScrollEvent scroll { [CCode (cname = "(ClutterScrollEvent *)")] get; }
+		public Clutter.StageStateEvent stage_state { [CCode (cname = "(ClutterStageStateEvent *)")] get; }
+		public Clutter.TouchEvent touch { [CCode (cname = "(ClutterTouchEvent *)")] get; }
+		public Clutter.TouchpadPinchEvent touchpad_pinch { [CCode (cname = "(ClutterTouchpadPinchEvent *)")] get; }
+		public Clutter.TouchpadSwipeEvent touchpad_swipe { [CCode (cname = "(ClutterTouchpadSwipeEvent *)")] get; }
+	}
+
 	[CCode (type_id = "clutter_stage_get_type ()", cheader_filename = "clutter/clutter.h")]
 	public class Stage : Clutter.Group, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable {
 		[CCode (cname = "clutter_redraw")]
