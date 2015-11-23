@@ -113,6 +113,8 @@ Buffer
 Iterator
   .filter skip
   .find_custom skip
+Memory
+  .new_wrapped skip
 
 // Rename *_full functions
 Bus
