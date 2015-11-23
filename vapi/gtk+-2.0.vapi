@@ -5635,8 +5635,8 @@ namespace Gtk {
 		public bool is_toplevel ();
 		public GLib.List<weak GLib.Closure> list_accel_closures ();
 		public GLib.List<weak Gtk.Widget> list_mnemonic_labels ();
-		[CCode (cname = "gtk_widget_class_list_style_properties")]
-		public class unowned GLib.ParamSpec list_style_properties (uint n_properties);
+		[CCode (array_length_type = "guint", cname = "gtk_widget_class_list_style_properties")]
+		public class (unowned GLib.ParamSpec)[] list_style_properties ();
 		public void modify_base (Gtk.StateType state, Gdk.Color? color);
 		public void modify_bg (Gtk.StateType state, Gdk.Color? color);
 		public void modify_cursor (Gdk.Color? primary, Gdk.Color? secondary);

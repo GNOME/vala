@@ -6707,10 +6707,10 @@ namespace Gtk {
 		public bool is_visible ();
 		public GLib.List<weak GLib.Closure> list_accel_closures ();
 		[CCode (array_length = false, array_null_terminated = true)]
-		public string*[] list_action_prefixes ();
+		public (unowned string)[] list_action_prefixes ();
 		public GLib.List<weak Gtk.Widget> list_mnemonic_labels ();
-		[CCode (cname = "gtk_widget_class_list_style_properties")]
-		public class unowned GLib.ParamSpec list_style_properties (uint n_properties);
+		[CCode (array_length_type = "guint", cname = "gtk_widget_class_list_style_properties")]
+		public class (unowned GLib.ParamSpec)[] list_style_properties ();
 		[Deprecated (replacement = "override_background_color", since = "3.0")]
 		public void modify_base (Gtk.StateType state, Gdk.Color? color);
 		[Deprecated (replacement = "override_background_color", since = "3.0")]
