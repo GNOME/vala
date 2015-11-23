@@ -617,7 +617,7 @@ namespace Gst {
 		public size_t memset (size_t offset, uint8 val, size_t size);
 		public uint n_memory ();
 		[CCode (has_construct_function = false, simple_generics = true)]
-		public static Gst.Buffer new_wrapped_full<T> (Gst.MemoryFlags flags, [CCode (array_length_cname = "size", array_length_pos = 4.5, array_length_type = "gsize")] uint8[] data, size_t maxsize, size_t offset, owned T user_data);
+		public static Gst.Buffer new_wrapped_full<T> (Gst.MemoryFlags flags, [CCode (array_length_cname = "maxsize", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, size_t offset, size_t size, owned T user_data);
 		public unowned Gst.Memory peek_memory (uint idx);
 		public void prepend_memory (owned Gst.Memory mem);
 		public void remove_all_memory ();
@@ -1274,11 +1274,11 @@ namespace Gst {
 		public bool is_type (string mem_type);
 		public Gst.Memory? make_mapped (out Gst.MapInfo info, Gst.MapFlags flags);
 		public bool map (out Gst.MapInfo info, Gst.MapFlags flags);
+		[CCode (has_construct_function = false, simple_generics = true)]
+		public static Gst.Memory new_wrapped<T> (Gst.MemoryFlags flags, [CCode (array_length_cname = "maxsize", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, size_t offset, size_t size, owned T user_data);
 		public void resize (ssize_t offset, size_t size);
 		public Gst.Memory share (ssize_t offset, ssize_t size);
 		public void unmap (Gst.MapInfo info);
-		[CCode (has_construct_function = false)]
-		public Memory.wrapped (Gst.MemoryFlags flags, [CCode (array_length_cname = "size", array_length_pos = 4.33333, array_length_type = "gsize")] uint8[] data, size_t maxsize, size_t offset, [CCode (delegate_target_pos = 4.66667)] GLib.DestroyNotify? notify);
 	}
 	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_message_ref", type_id = "gst_message_get_type ()", unref_function = "gst_message_unref")]
 	[Compact]

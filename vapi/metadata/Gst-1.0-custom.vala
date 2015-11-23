@@ -12,7 +12,7 @@ namespace Gst {
 	[Compact, CCode (ref_function = "gst_buffer_ref", type_id = "gst_buffer_get_type ()", unref_function = "gst_buffer_unref")]
 	public class Buffer {
 		[CCode (has_construct_function = false, simple_generics = true)]
-		public static Buffer new_wrapped_full<T> (Gst.MemoryFlags flags, [CCode (array_length_cname = "size", array_length_pos = 4.5, array_length_type = "gsize")] uint8[] data, size_t maxsize, size_t offset, owned T user_data);
+		public static Buffer new_wrapped_full<T> (Gst.MemoryFlags flags, [CCode (array_length_cname = "maxsize", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, size_t offset, size_t size, owned T user_data);
 		[CCode (instance_pos= 1.9)]
 		public bool copy_into (Gst.Buffer dst, Gst.BufferCopyFlags flags, size_t offset, size_t size);
 	}
@@ -70,6 +70,8 @@ namespace Gst {
 
 	[Compact, CCode (ref_function = "gst_memory_ref", type_id = "gst_memory_get_type ()", unref_function = "gst_memory_unref")]
 	public class Memory {
+		[CCode (has_construct_function = false, simple_generics = true)]
+		public static Memory new_wrapped<T> (Gst.MemoryFlags flags, [CCode (array_length_cname = "maxsize", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, size_t offset, size_t size, owned T user_data);
 	}
 
 	[Compact, CCode (ref_function = "gst_message_ref", type_id = "gst_message_get_type ()", unref_function = "gst_message_unref")]
