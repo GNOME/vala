@@ -2261,6 +2261,13 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return_type.value_owned = true;
 					}
+				} else if (nv[0] == "transfer_container") {
+					if (eval (nv[1]) == "1") {
+						return_type.value_owned = true;
+						if (return_type is ArrayType) {
+							((ArrayType) return_type).element_type.value_owned = false;
+						}
+					}
 				} else if (nv[0] == "destroys_instance") {
 					if (eval (nv[1]) == "1") {
 						m.set_attribute ("DestroysInstance", true, m.source_reference);
