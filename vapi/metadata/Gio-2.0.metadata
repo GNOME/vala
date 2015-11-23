@@ -377,6 +377,9 @@ FileAttributeInfoList
   .infos array array_length_field="n_infos" unowned=false
 LoadableIcon
   .load_finish.type out nullable unowned=false default=null
+Socket
+  .receive_message.messages out unowned=false
+  .receive_message.flags ref
 Task
   .get_source_object type="GLib.Object"
 TlsBackend
