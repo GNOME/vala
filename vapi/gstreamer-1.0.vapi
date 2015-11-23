@@ -591,7 +591,8 @@ namespace Gst {
 		public Gst.Buffer append (owned Gst.Buffer buf2);
 		public void append_memory (owned Gst.Memory mem);
 		public Gst.Buffer append_region (owned Gst.Buffer buf2, ssize_t offset, ssize_t size);
-		public bool copy_into (Gst.Buffer src, Gst.BufferCopyFlags flags, size_t offset, size_t size);
+		[CCode (instance_pos = 1.9)]
+		public bool copy_into (Gst.Buffer dst, Gst.BufferCopyFlags flags, size_t offset, size_t size);
 		public Gst.Buffer copy_region (Gst.BufferCopyFlags flags, size_t offset, size_t size);
 		public size_t extract (size_t offset, void* dest, size_t size);
 		public void extract_dup (size_t offset, size_t size, [CCode (array_length_cname = "dest_size", array_length_pos = 3.1, array_length_type = "gsize")] out uint8[] dest);
@@ -757,6 +758,8 @@ namespace Gst {
 		public void set_simple (string field, ...);
 		public void set_simple_valist (string field, va_list varargs);
 		public void set_value (string field, GLib.Value value);
+		[CCode (has_construct_function = false)]
+		public Caps.simple (string media_type, string fieldname, ...);
 		public Gst.Caps simplify ();
 		public Gst.Structure steal_structure (uint index);
 		public Gst.Caps subtract (Gst.Caps subtrahend);
@@ -2139,9 +2142,10 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", type_cname = "GstURIHandlerInterface", type_id = "gst_uri_handler_get_type ()")]
 	public interface URIHandler : GLib.Object {
 		[CCode (array_length = false, array_null_terminated = true)]
-		public unowned string[]? get_protocols ();
+		public abstract unowned string[]? get_protocols ();
 		public abstract string? get_uri ();
-		public Gst.URIType get_uri_type ();
+		[CCode (vfunc_name = "get_type")]
+		public abstract Gst.URIType get_uri_type ();
 		public abstract bool set_uri (string uri) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]

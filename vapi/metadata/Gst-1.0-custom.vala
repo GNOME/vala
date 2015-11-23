@@ -13,6 +13,8 @@ namespace Gst {
 	public class Buffer {
 		[CCode (has_construct_function = false, simple_generics = true)]
 		public static Buffer new_wrapped_full<T> (Gst.MemoryFlags flags, [CCode (array_length_cname = "size", array_length_pos = 4.5, array_length_type = "gsize")] uint8[] data, size_t maxsize, size_t offset, owned T user_data);
+		[CCode (instance_pos= 1.9)]
+		public bool copy_into (Gst.Buffer dst, Gst.BufferCopyFlags flags, size_t offset, size_t size);
 	}
 
 	[Compact, CCode (ref_function = "gst_buffer_list_ref", type_id = "gst_buffer_list_get_type ()", unref_function = "gst_buffer_list_unref")]
