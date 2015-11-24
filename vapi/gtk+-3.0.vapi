@@ -4791,6 +4791,16 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Gtk.TextDirection direction { get; set; }
 		[NoAccessorMethod]
+		public GLib.Icon icon { owned get; set; }
+		[NoAccessorMethod]
+		public bool icon_set { get; set; }
+		[NoAccessorMethod]
+		public Gtk.ShortcutType shortcut_type { get; set; }
+		[NoAccessorMethod]
+		public string subtitle { owned get; set; }
+		[NoAccessorMethod]
+		public bool subtitle_set { get; set; }
+		[NoAccessorMethod]
 		public string title { owned get; set; }
 		[NoAccessorMethod]
 		public Gtk.SizeGroup title_size_group { set; }
@@ -8537,6 +8547,17 @@ namespace Gtk {
 		OUT,
 		ETCHED_IN,
 		ETCHED_OUT
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_SHORTCUT_")]
+	public enum ShortcutType {
+		ACCELERATOR,
+		GESTURE_PINCH,
+		GESTURE_STRETCH,
+		GESTURE_ROTATE_CLOCKWISE,
+		GESTURE_ROTATE_COUNTERCLOCKWISE,
+		GESTURE_TWO_FINGER_SWIPE_LEFT,
+		GESTURE_TWO_FINGER_SWIPE_RIGHT,
+		GESTURE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_SIZE_GROUP_")]
 	public enum SizeGroupMode {

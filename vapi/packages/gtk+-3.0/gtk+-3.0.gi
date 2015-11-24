@@ -5172,6 +5172,16 @@
 			<member name="GTK_SHADOW_ETCHED_IN" value="3"/>
 			<member name="GTK_SHADOW_ETCHED_OUT" value="4"/>
 		</enum>
+		<enum name="GtkShortcutType" type-name="GtkShortcutType" get-type="gtk_shortcut_type_get_type">
+			<member name="GTK_SHORTCUT_ACCELERATOR" value="0"/>
+			<member name="GTK_SHORTCUT_GESTURE_PINCH" value="1"/>
+			<member name="GTK_SHORTCUT_GESTURE_STRETCH" value="2"/>
+			<member name="GTK_SHORTCUT_GESTURE_ROTATE_CLOCKWISE" value="3"/>
+			<member name="GTK_SHORTCUT_GESTURE_ROTATE_COUNTERCLOCKWISE" value="4"/>
+			<member name="GTK_SHORTCUT_GESTURE_TWO_FINGER_SWIPE_LEFT" value="5"/>
+			<member name="GTK_SHORTCUT_GESTURE_TWO_FINGER_SWIPE_RIGHT" value="6"/>
+			<member name="GTK_SHORTCUT_GESTURE" value="7"/>
+		</enum>
 		<enum name="GtkSizeGroupMode" type-name="GtkSizeGroupMode" get-type="gtk_size_group_mode_get_type">
 			<member name="GTK_SIZE_GROUP_NONE" value="0"/>
 			<member name="GTK_SIZE_GROUP_HORIZONTAL" value="1"/>
@@ -22880,6 +22890,11 @@
 			<property name="accel-size-group" type="GtkSizeGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
 			<property name="accelerator" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="direction" type="GtkTextDirection" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon" type="GIcon*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="shortcut-type" type="GtkShortcutType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="subtitle" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="subtitle-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title-size-group" type="GtkSizeGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
 		</object>
@@ -36087,14 +36102,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1902"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1903"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="2"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="19"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
