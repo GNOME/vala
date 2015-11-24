@@ -23,7 +23,7 @@ namespace Gdk {
 			[CCode (has_construct_function = false)]
 			protected DeviceCore ();
 			[CCode (cname = "gdk_x11_device_manager_lookup")]
-			public static unowned Gdk.X11.DeviceCore lookup_for_device_manager (Gdk.X11.DeviceManagerCore device_manager, int device_id);
+			public static unowned Gdk.X11.DeviceCore? lookup_for_device_manager (Gdk.X11.DeviceManagerCore device_manager, int device_id);
 		}
 		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_device_manager_core_get_type ()")]
 		[GIR (name = "X11DeviceManagerCore")]

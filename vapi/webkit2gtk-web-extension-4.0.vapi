@@ -1762,6 +1762,8 @@ namespace WebKit {
 			public void set_selected_index (long value);
 			public void set_size (long value);
 			public void set_value (string value);
+			[NoAccessorMethod]
+			public string autocomplete { owned get; set; }
 			public bool autofocus { get; set; }
 			public bool disabled { get; set; }
 			public WebKit.DOM.HTMLFormElement form { get; }
@@ -2022,6 +2024,8 @@ namespace WebKit {
 			public void set_value (string value);
 			[NoAccessorMethod]
 			public string autocapitalize { owned get; set; }
+			[NoAccessorMethod]
+			public string autocomplete { owned get; set; }
 			[NoAccessorMethod]
 			public bool autocorrect { get; set; }
 			public bool autofocus { get; set; }
