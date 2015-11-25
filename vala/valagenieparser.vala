@@ -1606,6 +1606,16 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 	}
 
+	Expression parse_expression_with_terminator () throws ParseError {
+		var expr = parse_expression ();
+		if (current_expr_is_lambda) {
+			current_expr_is_lambda = false;
+		} else {
+			expect_terminator ();
+		}
+		return expr;
+	}
+
 	Expression parse_expression () throws ParseError {
 		if (current () == TokenType.DEF) {
 			var lambda = parse_lambda_expression ();
@@ -1751,7 +1761,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					break;
 				case TokenType.VAR:
 					is_decl = true;
-					parse_local_variable_declarations (block);
+					parse_type_inference_declaration (block);
 					break;
 				case TokenType.YIELD:
 					stmt = parse_yield_statement ();
@@ -1904,76 +1914,66 @@ public class Vala.Genie.Parser : CodeVisitor {
 		return new EmptyStatement (get_src (begin));
 	}
 
-	void add_local_var_variable (Block block, string id)  throws ParseError {
-		DataType type_copy = null;
-		var local = parse_local_variable (type_copy, id);
-		block.add_statement (new DeclarationStatement (local, local.source_reference));
+	void parse_type_inference_declaration (Block block)  throws ParseError {
+		expect (TokenType.VAR);
+		bool block_var = false;
+		if (accept (TokenType.EOL) && accept (TokenType.INDENT)) { block_var = true; }
+		do {
+			var s = parse_identifier ();
+			var local = parse_local_variable (null, s, true);
+			block.add_statement (new DeclarationStatement (local, local.source_reference));
+		}
+		while ((block_var) && (current () != TokenType.DEDENT));
+		if ( block_var ) { expect (TokenType.DEDENT); }
 	}
 
 	void parse_local_variable_declarations (Block block) throws ParseError {
-		if (accept (TokenType.VAR)) {
-			/* support block vars */
-			if (accept (TokenType.EOL) && accept (TokenType.INDENT)) {
-				while (current () != TokenType.DEDENT) {
-					var s = parse_identifier ();
-					add_local_var_variable (block, s);
-					accept (TokenType.EOL);
-					accept (TokenType.SEMICOLON);
-				}
-			
-				expect (TokenType.DEDENT);
-			} else {
-				var s = parse_identifier ();
-				add_local_var_variable (block, s);
-				expect_terminator ();
-			}
-			
-			return;
+		var id_list = new ArrayList<string> ();
+		id_list.add (parse_identifier ());
+		// Allow multiple declarations
+		while (accept (TokenType.COMMA)) {
+			id_list.add (parse_identifier ());
 		}
 
-		var id_list = new ArrayList<string> ();
-		DataType variable_type = null;
-
-		do {
-			id_list.add (parse_identifier ());
-		} while (accept (TokenType.COMMA));
-
 		expect (TokenType.COLON);
-
-		variable_type = parse_type (true, true);
+		DataType variable_type = parse_type (true, true);
 		var type = parse_inline_array_type (variable_type);
 
-		foreach (string id in id_list) {
+		var iterator = id_list.iterator();
+		iterator.next();
+		bool expect_terminator = false;
+		while (!expect_terminator) {
+			string id = iterator.get();
 			DataType type_copy = null;
 			if (type != null) {
 				type_copy = type.copy ();
 			}
-			var local = parse_local_variable (type_copy, id);
+			if (!iterator.next()) {
+				expect_terminator = true;
+			}
+			var local = parse_local_variable (type_copy, id, expect_terminator);
 			block.add_statement (new DeclarationStatement (local, local.source_reference));
 		}
-
-		expect_terminator ();
 	}
 
-	LocalVariable parse_local_variable (DataType? variable_type, string id) throws ParseError {
+	LocalVariable parse_local_variable (DataType? variable_type, string id, bool expect_terminator = false) throws ParseError {
 		var begin = get_location ();
 		Expression initializer = null;
 		if (accept (TokenType.ASSIGN)) {
-			initializer = parse_expression ();
-		}
+			if (expect_terminator) {
+				initializer = parse_expression_with_terminator ();
+			} else {
+				initializer = parse_expression ();
+			}
+		} else if (expect_terminator) {
+			this.expect_terminator();
+			}
 		return new LocalVariable (variable_type, id, initializer, get_src (begin));
 	}
 
 	Statement parse_expression_statement () throws ParseError {
 		var begin = get_location ();
-		var expr = parse_statement_expression ();
-
-		if (current_expr_is_lambda) {
-			current_expr_is_lambda = false;
-		} else {
-			expect_terminator ();
-		}
-
+		var expr = parse_expression_with_terminator ();
 		return new ExpressionStatement (expr, get_src (begin));
 	}
 
@@ -2220,9 +2220,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		expect (TokenType.RETURN);
 		Expression expr = null;
 		if (current () != TokenType.SEMICOLON && current () != TokenType.EOL) {
-			expr = parse_expression ();
+			expr = parse_expression_with_terminator ();
+		} else {
+			expect_terminator ();
 		}
-		expect_terminator ();
 		return new ReturnStatement (expr, get_src (begin)); 
 	}
 
