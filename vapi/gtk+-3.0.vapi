@@ -3838,21 +3838,24 @@ namespace Gtk {
 		public void bind_model (GLib.MenuModel? model, string? action_namespace);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Popover.from_model (Gtk.Widget? relative_to, GLib.MenuModel model);
+		public Gtk.PopoverConstraint get_constrain_to ();
 		public unowned Gtk.Widget? get_default_widget ();
 		public bool get_modal ();
 		public bool get_pointing_to (out Gdk.Rectangle rect);
 		public Gtk.PositionType get_position ();
 		public unowned Gtk.Widget get_relative_to ();
 		public bool get_transitions_enabled ();
+		public void set_constrain_to (Gtk.PopoverConstraint constraint);
 		public void set_default_widget (Gtk.Widget? widget);
 		public void set_modal (bool modal);
 		public void set_pointing_to (Gdk.Rectangle rect);
 		public void set_position (Gtk.PositionType position);
 		public void set_relative_to (Gtk.Widget? relative_to);
 		public void set_transitions_enabled (bool transitions_enabled);
+		public Gtk.PopoverConstraint constrain_to { get; set; }
 		public bool modal { get; set; }
 		public Gdk.Rectangle pointing_to { get; set; }
-		public Gtk.PositionType position { get; set construct; }
+		public Gtk.PositionType position { get; set; }
 		public Gtk.Widget relative_to { get; set; }
 		public bool transitions_enabled { get; set; }
 		public virtual signal void closed ();
@@ -8320,6 +8323,11 @@ namespace Gtk {
 		NEVER,
 		EXTERNAL
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_POPOVER_CONSTRAINT_")]
+	public enum PopoverConstraint {
+		NONE,
+		WINDOW
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_POS_")]
 	public enum PositionType {
 		LEFT,
@@ -8637,7 +8645,8 @@ namespace Gtk {
 		DIR_RTL,
 		LINK,
 		VISITED,
-		CHECKED
+		CHECKED,
+		DND
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_STATE_")]
 	public enum StateType {

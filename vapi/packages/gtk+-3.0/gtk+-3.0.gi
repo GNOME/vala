@@ -4974,6 +4974,10 @@
 			<member name="GTK_POLICY_NEVER" value="2"/>
 			<member name="GTK_POLICY_EXTERNAL" value="3"/>
 		</enum>
+		<enum name="GtkPopoverConstraint" type-name="GtkPopoverConstraint" get-type="gtk_popover_constraint_get_type">
+			<member name="GTK_POPOVER_CONSTRAINT_NONE" value="0"/>
+			<member name="GTK_POPOVER_CONSTRAINT_WINDOW" value="1"/>
+		</enum>
 		<enum name="GtkPositionType" type-name="GtkPositionType" get-type="gtk_position_type_get_type">
 			<member name="GTK_POS_LEFT" value="0"/>
 			<member name="GTK_POS_RIGHT" value="1"/>
@@ -5470,6 +5474,7 @@
 			<member name="GTK_STATE_FLAG_LINK" value="512"/>
 			<member name="GTK_STATE_FLAG_VISITED" value="1024"/>
 			<member name="GTK_STATE_FLAG_CHECKED" value="2048"/>
+			<member name="GTK_STATE_FLAG_DND" value="4096"/>
 		</flags>
 		<flags name="GtkTargetFlags" type-name="GtkTargetFlags" get-type="gtk_target_flags_get_type">
 			<member name="GTK_TARGET_SAME_APP" value="1"/>
@@ -20037,6 +20042,12 @@
 					<parameter name="action_namespace" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="get_constrain_to" symbol="gtk_popover_get_constrain_to">
+				<return-type type="GtkPopoverConstraint"/>
+				<parameters>
+					<parameter name="popover" type="GtkPopover*"/>
+				</parameters>
+			</method>
 			<method name="get_default_widget" symbol="gtk_popover_get_default_widget">
 				<return-type type="GtkWidget*"/>
 				<parameters>
@@ -20087,6 +20098,13 @@
 					<parameter name="model" type="GMenuModel*"/>
 				</parameters>
 			</constructor>
+			<method name="set_constrain_to" symbol="gtk_popover_set_constrain_to">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="popover" type="GtkPopover*"/>
+					<parameter name="constraint" type="GtkPopoverConstraint"/>
+				</parameters>
+			</method>
 			<method name="set_default_widget" symbol="gtk_popover_set_default_widget">
 				<return-type type="void"/>
 				<parameters>
@@ -20129,9 +20147,10 @@
 					<parameter name="transitions_enabled" type="gboolean"/>
 				</parameters>
 			</method>
+			<property name="constrain-to" type="GtkPopoverConstraint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="modal" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pointing-to" type="GdkRectangle*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="position" type="GtkPositionType" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="position" type="GtkPositionType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="relative-to" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="transitions-enabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="closed" when="LAST">
@@ -36102,14 +36121,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1903"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1904"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="4"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="19"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
