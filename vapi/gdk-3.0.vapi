@@ -4743,6 +4743,7 @@ namespace Gdk {
 		public Gdk.DragAction get_actions ();
 		public unowned Gdk.Window get_dest_window ();
 		public unowned Gdk.Device get_device ();
+		public unowned Gdk.Window get_drag_window ();
 		public Gdk.DragProtocol get_protocol ();
 		public Gdk.DragAction get_selected_action ();
 		public unowned Gdk.Window get_source_window ();
