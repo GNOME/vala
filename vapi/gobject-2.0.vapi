@@ -294,11 +294,7 @@ namespace GLib {
 	public class ObjectClass : TypeClass {
 		public unowned ParamSpec? find_property (string property_name);
 		[CCode (array_length_type = "guint")]
-#if VALA_0_26
-		public (unowned ParamSpec)[] list_properties ();
-#else
 		public unowned ParamSpec[] list_properties ();
-#endif
 		public void install_property (uint property_id, ParamSpec pspec);
 	}
 
