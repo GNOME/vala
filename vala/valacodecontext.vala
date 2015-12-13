@@ -380,7 +380,7 @@ public class Vala.CodeContext {
 	 * Read the given filename and pull in packages.
 	 * The method is tolerant if the file does not exist.
 	 *
-	 * @param filename a filanem
+	 * @param filename a filename
 	 * @return false if an error occurs while reading the file or if a package could not be added
 	 */
 	public bool add_packages_from_file (string filename) {
