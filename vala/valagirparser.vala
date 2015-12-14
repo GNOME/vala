@@ -2575,12 +2575,16 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (type_name == "glong") {
 				if (ctype != null && ctype.has_prefix ("gssize")) {
 					type_name = "ssize_t";
+				} else if (ctype != null && ctype.has_prefix ("gintptr")) {
+					type_name = "intptr";
 				} else {
 					type_name = "long";
 				}
 			} else if (type_name == "gulong") {
 				if (ctype != null && ctype.has_prefix ("gsize")) {
 					type_name = "size_t";
+				} else if (ctype != null && ctype.has_prefix ("guintptr")) {
+					type_name = "uintptr";
 				} else {
 					type_name = "ulong";
 				}
@@ -2612,6 +2616,10 @@ public class Vala.GirParser : CodeVisitor {
 				type_name = "size_t";
 			} else if (type_name == "gssize") {
 				type_name = "ssize_t";
+			} else if (type_name == "guintptr") {
+				type_name = "uintptr";
+			} else if (type_name == "gintptr") {
+				type_name = "intptr";
 			} else if (type_name == "GType") {
 				type_name = "GLib.Type";
 			} else if (type_name == "GLib.String") {
