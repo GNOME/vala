@@ -4678,7 +4678,7 @@ namespace Clutter {
 		[NoWrapper]
 		public virtual void apply_transform (ref Clutter.Matrix matrix);
 		public Clutter.Vertex apply_transform_to_point (Clutter.Vertex point);
-		public void bind_model (GLib.ListModel model, owned Clutter.ActorCreateChildFunc create_child_func);
+		public void bind_model (GLib.ListModel? model, owned Clutter.ActorCreateChildFunc create_child_func);
 		public void clear_actions ();
 		public void clear_constraints ();
 		public void clear_effects ();

@@ -80,6 +80,8 @@ namespace Peas {
 		public string path { owned get; construct; }
 		[NoAccessorMethod]
 		public bool resident { get; construct; }
+		[NoAccessorMethod]
+		public string symbol { owned get; construct; }
 	}
 	[CCode (cheader_filename = "libpeas/peas.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "peas_plugin_info_get_type ()")]
 	[Compact]

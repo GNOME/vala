@@ -84,7 +84,7 @@ namespace ClutterGst {
 	public class CameraDevice : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected CameraDevice ();
-		public void get_capture_resolution (int width, int height);
+		public void get_capture_resolution (out int width, out int height);
 		public unowned string get_name ();
 		public unowned string get_node ();
 		public unowned GLib.GenericArray<ClutterGst.VideoResolution> get_supported_resolutions ();
