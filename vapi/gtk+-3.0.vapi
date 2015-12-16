@@ -4740,21 +4740,6 @@ namespace Gtk {
 		public string gtk_xft_rgba { owned get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class ShortcutsGesture : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
-		[CCode (has_construct_function = false)]
-		protected ShortcutsGesture ();
-		[NoAccessorMethod]
-		public GLib.Icon icon { owned get; set; }
-		[NoAccessorMethod]
-		public Gtk.SizeGroup icon_size_group { set; }
-		[NoAccessorMethod]
-		public string subtitle { owned get; set; }
-		[NoAccessorMethod]
-		public string title { owned get; set; }
-		[NoAccessorMethod]
-		public Gtk.SizeGroup title_size_group { set; }
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ShortcutsGroup : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (has_construct_function = false)]
 		protected ShortcutsGroup ();
@@ -7625,11 +7610,7 @@ namespace Gtk {
 		public GLib.Type arg_type;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public struct Border {
-		public int16 left;
-		public int16 right;
-		public int16 top;
-		public int16 bottom;
+	public struct Border : Gdk.Border {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtkimmodule.h")]
 	public struct IMContextInfo {
@@ -7816,6 +7797,7 @@ namespace Gtk {
 		public void set_visible_line_offset (int char_on_line);
 		public bool starts_line ();
 		public bool starts_sentence ();
+		public bool starts_tag (Gtk.TextTag tag);
 		public bool starts_word ();
 		public bool toggles_tag (Gtk.TextTag tag);
 	}

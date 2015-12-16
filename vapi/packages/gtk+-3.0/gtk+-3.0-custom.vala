@@ -43,6 +43,9 @@ namespace Gtk {
 		public static unowned BindingSet @new (string name);
 	}
 
+	public struct Border : Gdk.Border {
+	}
+
 	[CCode (type_id = "gtk_container_get_type ()")]
 	public abstract class Container {
 		[CCode (vfunc_name = "forall")]

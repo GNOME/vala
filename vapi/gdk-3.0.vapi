@@ -4623,17 +4623,20 @@ namespace Gdk {
 		public void get_position (out unowned Gdk.Screen screen, out int x, out int y);
 		public void get_position_double (out unowned Gdk.Screen screen, out double x, out double y);
 		public unowned string? get_product_id ();
+		public unowned Gdk.Seat get_seat ();
 		public Gdk.InputSource get_source ();
 		public void get_state (Gdk.Window window, [CCode (array_length = false)] double[]? axes, out Gdk.ModifierType mask);
 		public unowned string? get_vendor_id ();
 		public unowned Gdk.Window? get_window_at_position (out int win_x, out int win_y);
 		public unowned Gdk.Window? get_window_at_position_double (out double win_x, out double win_y);
+		[Deprecated (since = "3.20.")]
 		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor? cursor, uint32 time_);
 		public GLib.List<weak Gdk.Atom> list_axes ();
 		public GLib.List<weak Gdk.Device>? list_slave_devices ();
 		public void set_axis_use (uint index_, Gdk.AxisUse use);
 		public void set_key (uint index_, uint keyval, Gdk.ModifierType modifiers);
 		public bool set_mode (Gdk.InputMode mode);
+		[Deprecated (since = "3.20.")]
 		public void ungrab (uint32 time_);
 		public void warp (Gdk.Screen screen, int x, int y);
 		public Gdk.Device? associated_device { get; }
@@ -4649,6 +4652,8 @@ namespace Gdk {
 		public string? name { get; construct; }
 		public string product_id { get; construct; }
 		[NoAccessorMethod]
+		public Gdk.Seat seat { owned get; set; }
+		[NoAccessorMethod]
 		public Gdk.DeviceType type { get; construct; }
 		public string vendor_id { get; construct; }
 		public signal void changed ();
@@ -4657,8 +4662,10 @@ namespace Gdk {
 	public abstract class DeviceManager : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected DeviceManager ();
+		[Deprecated (since = "3.20.")]
 		public unowned Gdk.Device get_client_pointer ();
 		public unowned Gdk.Display? get_display ();
+		[Deprecated (since = "3.20")]
 		public GLib.List<weak Gdk.Device> list_devices (Gdk.DeviceType type);
 		public Gdk.Display display { get; construct; }
 		public signal void device_added (Gdk.Device device);
@@ -4678,6 +4685,8 @@ namespace Gdk {
 		public uint get_default_cursor_size ();
 		public unowned Gdk.Window get_default_group ();
 		public unowned Gdk.Screen get_default_screen ();
+		public unowned Gdk.Seat get_default_seat ();
+		[Deprecated (since = "3.20.")]
 		public unowned Gdk.DeviceManager? get_device_manager ();
 		public Gdk.Event? get_event ();
 		public void get_maximal_cursor_size (out uint width, out uint height);
@@ -4696,6 +4705,7 @@ namespace Gdk {
 		public void keyboard_ungrab (uint32 time_);
 		[Deprecated (since = "3.0")]
 		public unowned GLib.List<Gdk.Device> list_devices ();
+		public GLib.List<weak Gdk.Seat> list_seats ();
 		public void notify_startup_complete (string startup_id);
 		public static unowned Gdk.Display? open (string display_name);
 		[Deprecated (since = "3.16")]
@@ -4723,6 +4733,8 @@ namespace Gdk {
 		public void warp_pointer (Gdk.Screen screen, int x, int y);
 		public signal void closed (bool is_error);
 		public signal void opened ();
+		public signal void seat_added (Gdk.Seat seat);
+		public signal void seat_removed (Gdk.Seat seat);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_display_manager_get_type ()")]
 	public class DisplayManager : GLib.Object {
@@ -4750,6 +4762,7 @@ namespace Gdk {
 		public Gdk.DragAction get_suggested_action ();
 		public unowned GLib.List<Gdk.Atom> list_targets ();
 		public void set_device (Gdk.Device device);
+		public void set_hotspot (int hot_x, int hot_y);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
 	[Compact]
@@ -4773,6 +4786,7 @@ namespace Gdk {
 		public unowned Gdk.Screen get_screen ();
 		public bool get_scroll_deltas (out double delta_x, out double delta_y);
 		public bool get_scroll_direction (out Gdk.ScrollDirection direction);
+		public unowned Gdk.Seat get_seat ();
 		public unowned Gdk.Device? get_source_device ();
 		public bool get_state (out Gdk.ModifierType state);
 		public uint32 get_time ();
@@ -5198,6 +5212,21 @@ namespace Gdk {
 		public signal void monitors_changed ();
 		public signal void size_changed ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_seat_get_type ()")]
+	public abstract class Seat : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Seat ();
+		public Gdk.SeatCapabilities get_capabilities ();
+		public unowned Gdk.Display get_display ();
+		public unowned Gdk.Device? get_keyboard ();
+		public unowned Gdk.Device? get_pointer ();
+		public GLib.List<weak Gdk.Seat> get_slaves (Gdk.SeatCapabilities capabilities);
+		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.SeatCapabilities capabilities, bool owner_events, Gdk.Cursor? cursor, Gdk.Event? event);
+		public void ungrab ();
+		public Gdk.Display display { get; construct; }
+		public signal void device_added (Gdk.Device device);
+		public signal void device_removed (Gdk.Device device);
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_visual_get_type ()")]
 	public class Visual : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -5409,6 +5438,13 @@ namespace Gdk {
 		public static Gdk.Atom intern (string atom_name, bool only_if_exists);
 		public static Gdk.Atom intern_static_string (string atom_name);
 		public string name ();
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
+	public struct Border {
+		public int16 left;
+		public int16 right;
+		public int16 top;
+		public int16 bottom;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_color_get_type ()")]
 	[Deprecated (since = "3.14")]
@@ -5839,6 +5875,17 @@ namespace Gdk {
 		RIGHT,
 		SMOOTH
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SEAT_CAPABILITY_", type_id = "gdk_seat_capabilities_get_type ()")]
+	[Flags]
+	public enum SeatCapabilities {
+		NONE,
+		POINTER,
+		TOUCH,
+		TABLET_STYLUS,
+		KEYBOARD,
+		ALL_POINTING,
+		ALL
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SETTING_ACTION_", type_id = "gdk_setting_action_get_type ()")]
 	public enum SettingAction {
 		NEW,
@@ -5990,6 +6037,8 @@ namespace Gdk {
 	public delegate void EventFunc (Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 2.9)]
 	public delegate Gdk.FilterReturn FilterFunc (Gdk.XEvent xevent, Gdk.Event event);
+	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 2.9)]
+	public delegate void SeatGrabPrepareFunc (Gdk.Seat seat, Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 1.9)]
 	public delegate bool WindowChildFunc (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdk.h", has_target = false)]
@@ -6055,7 +6104,11 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.DragContext drag_begin_for_device (Gdk.Window window, Gdk.Device device, GLib.List<Gdk.Atom> targets);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static Gdk.DragContext drag_begin_from_point (Gdk.Window window, Gdk.Device device, GLib.List<Gdk.Atom> targets, int x_root, int y_root);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_drop (Gdk.DragContext context, uint32 time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static void drag_drop_done (Gdk.DragContext context, bool success);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool drag_drop_succeeded (Gdk.DragContext context);
 	[CCode (cheader_filename = "gdk/gdk.h")]

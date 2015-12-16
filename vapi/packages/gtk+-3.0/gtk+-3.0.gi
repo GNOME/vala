@@ -2201,6 +2201,23 @@
 			<field name="n_args" type="guint"/>
 			<field name="args" type="GtkBindingArg*"/>
 		</struct>
+		<struct name="GtkBorder">
+			<method name="copy" symbol="gtk_border_copy">
+				<return-type type="GtkBorder*"/>
+				<parameters>
+					<parameter name="border_" type="GtkBorder*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="gtk_border_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="border_" type="GtkBorder*"/>
+				</parameters>
+			</method>
+			<method name="new" symbol="gtk_border_new">
+				<return-type type="GtkBorder*"/>
+			</method>
+		</struct>
 		<struct name="GtkEventControllerClass">
 		</struct>
 		<struct name="GtkFileFilterInfo">
@@ -2333,8 +2350,6 @@
 			<field name="origin" type="gchar*"/>
 			<field name="value" type="GValue"/>
 		</struct>
-		<struct name="GtkShortcutsGestureClass">
-		</struct>
 		<struct name="GtkShortcutsGroupClass">
 		</struct>
 		<struct name="GtkShortcutsSectionClass">
@@ -2452,25 +2467,6 @@
 		<struct name="GtkWindowGeometryInfo">
 		</struct>
 		<boxed name="GtkBorder" type-name="GtkBorder" get-type="gtk_border_get_type">
-			<method name="copy" symbol="gtk_border_copy">
-				<return-type type="GtkBorder*"/>
-				<parameters>
-					<parameter name="border_" type="GtkBorder*"/>
-				</parameters>
-			</method>
-			<method name="free" symbol="gtk_border_free">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="border_" type="GtkBorder*"/>
-				</parameters>
-			</method>
-			<constructor name="new" symbol="gtk_border_new">
-				<return-type type="GtkBorder*"/>
-			</constructor>
-			<field name="left" type="gint16"/>
-			<field name="right" type="gint16"/>
-			<field name="top" type="gint16"/>
-			<field name="bottom" type="gint16"/>
 		</boxed>
 		<boxed name="GtkCssSection" type-name="GtkCssSection" get-type="gtk_css_section_get_type">
 			<method name="get_end_line" symbol="gtk_css_section_get_end_line">
@@ -4110,6 +4106,13 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="iter" type="GtkTextIter*"/>
+				</parameters>
+			</method>
+			<method name="starts_tag" symbol="gtk_text_iter_starts_tag">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="iter" type="GtkTextIter*"/>
+					<parameter name="tag" type="GtkTextTag*"/>
 				</parameters>
 			</method>
 			<method name="starts_word" symbol="gtk_text_iter_starts_word">
@@ -22858,18 +22861,6 @@
 			<property name="gtk-xft-hintstyle" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-xft-rgba" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
-		<object name="GtkShortcutsGesture" parent="GtkBox" type-name="GtkShortcutsGesture" get-type="gtk_shortcuts_gesture_get_type">
-			<implements>
-				<interface name="AtkImplementor"/>
-				<interface name="GtkBuildable"/>
-				<interface name="GtkOrientable"/>
-			</implements>
-			<property name="icon" type="GIcon*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="icon-size-group" type="GtkSizeGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
-			<property name="subtitle" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="title-size-group" type="GtkSizeGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
-		</object>
 		<object name="GtkShortcutsGroup" parent="GtkBox" type-name="GtkShortcutsGroup" get-type="gtk_shortcuts_group_get_type">
 			<implements>
 				<interface name="AtkImplementor"/>
@@ -36121,14 +36112,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1904"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1905"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="4"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="5"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="19"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
