@@ -74,6 +74,8 @@ dist_vapi_DATA = \
 	gio-2.0.vapi \
 	gio-unix-2.0.deps \
 	gio-unix-2.0.vapi \
+	gio-windows-2.0.deps \
+	gio-windows-2.0.vapi \
 	gmodule-2.0.vapi \
 	gnet-2.0.deps \
 	gnet-2.0.vapi \

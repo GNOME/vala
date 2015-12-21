@@ -4793,6 +4793,16 @@ namespace GLib {
 	}
 
 	namespace Win32 {
+		public enum OSType {
+			[CCode (cname = "G_WIN32_OS_ANY")]
+			ANY,
+			[CCode (cname = "G_WIN32_OS_WORKSTATION")]
+			WORKSTATION,
+			[CCode (cname = "G_WIN32_OS_SERVER")]
+			SERVER,
+		}
+		public bool check_windows_version (int major, int minor, int spver, GLib.Win32.OSType os_type);
+
 		public string error_message (int error);
 		public string getlocale ();
 		public string get_package_installation_directory_of_module (void* hmodule);
@@ -4802,6 +4812,7 @@ namespace GLib {
 		public bool have_widechar_api ();
 		[CCode (cname = "G_WIN32_IS_NT_BASED")]
 		public bool is_nt_based ();
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_command_line ();
 	}
 
