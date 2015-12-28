@@ -449,6 +449,21 @@ namespace Pk {
 	public class Progress : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Progress ();
+		public bool get_allow_cancel ();
+		public bool get_caller_active ();
+		public uint64 get_download_size_remaining ();
+		public uint get_elapsed_time ();
+		public unowned Pk.ItemProgress get_item_progress ();
+		public unowned Pk.Package get_package ();
+		public unowned string get_package_id ();
+		public int get_percentage ();
+		public uint get_remaining_time ();
+		public Pk.Role get_role ();
+		public uint get_speed ();
+		public Pk.Status get_status ();
+		public uint64 get_transaction_flags ();
+		public unowned string get_transaction_id ();
+		public uint get_uid ();
 		public bool set_allow_cancel (bool allow_cancel);
 		public bool set_caller_active (bool caller_active);
 		public bool set_download_size_remaining (uint64 download_size_remaining);
@@ -470,7 +485,7 @@ namespace Pk {
 		[NoAccessorMethod]
 		public bool caller_active { get; set; }
 		[NoAccessorMethod]
-		public uint download_size_remaining { get; set; }
+		public uint64 download_size_remaining { get; set; }
 		[NoAccessorMethod]
 		public uint elapsed_time { get; set; }
 		[NoAccessorMethod]
