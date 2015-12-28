@@ -7610,7 +7610,11 @@ namespace Gtk {
 		public GLib.Type arg_type;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public struct Border : Gdk.Border {
+	public struct Border {
+		public int16 left;
+		public int16 right;
+		public int16 top;
+		public int16 bottom;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtkimmodule.h")]
 	public struct IMContextInfo {
@@ -7987,7 +7991,8 @@ namespace Gtk {
 		NO_PIXEL_CACHE,
 		INTERACTIVE,
 		TOUCHSCREEN,
-		ACTIONS
+		ACTIONS,
+		RESIZE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DELETE_")]
 	public enum DeleteType {
@@ -8628,7 +8633,7 @@ namespace Gtk {
 		LINK,
 		VISITED,
 		CHECKED,
-		DND
+		DROP_ACTIVE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_STATE_")]
 	public enum StateType {

@@ -5221,7 +5221,7 @@ namespace Gdk {
 		public unowned Gdk.Device? get_keyboard ();
 		public unowned Gdk.Device? get_pointer ();
 		public GLib.List<weak Gdk.Seat> get_slaves (Gdk.SeatCapabilities capabilities);
-		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.SeatCapabilities capabilities, bool owner_events, Gdk.Cursor? cursor, Gdk.Event? event);
+		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.SeatCapabilities capabilities, bool owner_events, Gdk.Cursor? cursor, Gdk.Event? event, Gdk.SeatGrabPrepareFunc? prepare_func);
 		public void ungrab ();
 		public Gdk.Display display { get; construct; }
 		public signal void device_added (Gdk.Device device);
@@ -5441,10 +5441,10 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct Border {
-		public int16 left;
-		public int16 right;
-		public int16 top;
-		public int16 bottom;
+		public int left;
+		public int right;
+		public int top;
+		public int bottom;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_color_get_type ()")]
 	[Deprecated (since = "3.14")]

@@ -2201,23 +2201,6 @@
 			<field name="n_args" type="guint"/>
 			<field name="args" type="GtkBindingArg*"/>
 		</struct>
-		<struct name="GtkBorder">
-			<method name="copy" symbol="gtk_border_copy">
-				<return-type type="GtkBorder*"/>
-				<parameters>
-					<parameter name="border_" type="GtkBorder*"/>
-				</parameters>
-			</method>
-			<method name="free" symbol="gtk_border_free">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="border_" type="GtkBorder*"/>
-				</parameters>
-			</method>
-			<method name="new" symbol="gtk_border_new">
-				<return-type type="GtkBorder*"/>
-			</method>
-		</struct>
 		<struct name="GtkEventControllerClass">
 		</struct>
 		<struct name="GtkFileFilterInfo">
@@ -2467,6 +2450,25 @@
 		<struct name="GtkWindowGeometryInfo">
 		</struct>
 		<boxed name="GtkBorder" type-name="GtkBorder" get-type="gtk_border_get_type">
+			<method name="copy" symbol="gtk_border_copy">
+				<return-type type="GtkBorder*"/>
+				<parameters>
+					<parameter name="border_" type="GtkBorder*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="gtk_border_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="border_" type="GtkBorder*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_border_new">
+				<return-type type="GtkBorder*"/>
+			</constructor>
+			<field name="left" type="gint16"/>
+			<field name="right" type="gint16"/>
+			<field name="top" type="gint16"/>
+			<field name="bottom" type="gint16"/>
 		</boxed>
 		<boxed name="GtkCssSection" type-name="GtkCssSection" get-type="gtk_css_section_get_type">
 			<method name="get_end_line" symbol="gtk_css_section_get_end_line">
@@ -5384,6 +5386,7 @@
 			<member name="GTK_DEBUG_INTERACTIVE" value="131072"/>
 			<member name="GTK_DEBUG_TOUCHSCREEN" value="262144"/>
 			<member name="GTK_DEBUG_ACTIONS" value="524288"/>
+			<member name="GTK_DEBUG_RESIZE" value="1048576"/>
 		</flags>
 		<flags name="GtkDestDefaults" type-name="GtkDestDefaults" get-type="gtk_dest_defaults_get_type">
 			<member name="GTK_DEST_DEFAULT_MOTION" value="1"/>
@@ -5477,7 +5480,7 @@
 			<member name="GTK_STATE_FLAG_LINK" value="512"/>
 			<member name="GTK_STATE_FLAG_VISITED" value="1024"/>
 			<member name="GTK_STATE_FLAG_CHECKED" value="2048"/>
-			<member name="GTK_STATE_FLAG_DND" value="4096"/>
+			<member name="GTK_STATE_FLAG_DROP_ACTIVE" value="4096"/>
 		</flags>
 		<flags name="GtkTargetFlags" type-name="GtkTargetFlags" get-type="gtk_target_flags_get_type">
 			<member name="GTK_TARGET_SAME_APP" value="1"/>
