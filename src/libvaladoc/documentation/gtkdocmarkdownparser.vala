@@ -367,7 +367,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 					code.language = lang;
 
 					if (lang == null) {
-						parser.warning (token, "Unknown language `%s' in source code block |[<!-- language=\"\"".printf (lang.to_string ()));
+						parser.warning (token, "Unknown language `%s' in source code block |[<!-- language=\"\"".printf (lang_name));
 					}
 
 					source = source.offset (source.index_of_char ('>') + 1);
