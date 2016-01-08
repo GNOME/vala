@@ -199,7 +199,8 @@ namespace Geocode {
 		SCHOOL,
 		PLACE_OF_WORSHIP,
 		RESTAURANT,
-		BAR
+		BAR,
+		LIGHT_RAIL_STATION
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", cprefix = "GEOCODE_ERROR_")]
 	public errordomain Error {
