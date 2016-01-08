@@ -434,6 +434,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("div");
 	}
 
+	private bool has_brief_description (Api.Node element) {
+		return element.documentation != null;
+	}
+
 	private void write_brief_description (Api.Node element , Api.Node? pos) {
 		Content.Comment? doctree = element.documentation;
 		if (doctree == null) {
@@ -917,8 +921,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			if (child.name != null) {
 				writer.start_tag ("li", {"class", cssresolver.resolve (child)});
 				writer.link (get_link (child, parent), child.name);
-				writer.text (" - ");
-				this.write_brief_description (child, parent);
+				if (has_brief_description (child)) {
+					writer.text (" - ");
+					this.write_brief_description (child, parent);
+				}
 				writer.end_tag ("li");
 				if (with_childs == true) {
 					write_children (child, Api.NodeType.INTERFACE, "Interfaces", parent);
@@ -979,8 +985,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 					} else {
 						writer.link (get_link (child, container), child.name);
 					}
-					writer.text (" - ");
-					write_brief_description (child, container);
+					if (has_brief_description (child)) {
+						writer.text (" - ");
+						write_brief_description (child, container);
+					}
 				} else {
 					writer.start_tag ("span", {"class", css_leaf_code_definition});
 					if (child is Symbol && ((Symbol) child).is_deprecated) {
