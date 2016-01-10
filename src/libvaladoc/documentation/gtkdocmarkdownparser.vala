@@ -371,6 +371,10 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 					}
 
 					source = source.offset (source.index_of_char ('>') + 1);
+				} else {
+					code.language = (Highlighter.XmlScanner.is_xml (source))
+						? SourceCode.Language.XML
+						: SourceCode.Language.C;
 				}
 
 				code.code = source;

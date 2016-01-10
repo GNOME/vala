@@ -156,6 +156,20 @@ div.site_navigation {
 	color: #a52a2a;
 }
 
+.main_source .main_literal {
+	text-decoration: none;
+	color: #ff0000;
+}
+
+.main_comment {
+	text-decoration: none;
+	color: #888a85;
+}
+
+.main_preprocessor {
+	text-decoration: none;
+	color: #ad7fa8;
+}
 
 div.main_code_definition {
 	padding-right: 10px;

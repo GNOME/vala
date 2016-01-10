@@ -161,6 +161,11 @@ libvaladoc_la_VALASOURCES = \
 	taglets/tagletsee.vala \
 	taglets/tagletsince.vala \
 	taglets/tagletthrows.vala \
+	highlighter/scanner.vala \
+	highlighter/codescanner.vala \
+	highlighter/xmlscanner.vala \
+	highlighter/codetoken.vala \
+	highlighter/highlighter.vala \
 	html/basicdoclet.vala \
 	html/htmlchartfactory.vala \
 	html/linkhelper.vala \

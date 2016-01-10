@@ -35,6 +35,7 @@ public class Valadoc.Api.Tree {
 	private Package source_package = null;
 	private Settings settings;
 	private ErrorReporter reporter;
+	private Highlighter.Highlighter _highlighter;
 	private CTypeResolver _cresolver = null;
 	private Package _source_package;
 
@@ -57,6 +58,16 @@ public class Valadoc.Api.Tree {
 	public void* data {
 		set;
 		get;
+	}
+
+	public Highlighter.Highlighter highlighter {
+		get {
+			if (_highlighter == null) {
+				_highlighter = new Highlighter.Highlighter ();
+			}
+
+			return _highlighter;
+		}
 	}
 
 	/**

@@ -35,7 +35,17 @@ public class Valadoc.Content.Run : InlineContent, Inline {
 		LANG_KEYWORD,
 		LANG_LITERAL,
 		LANG_BASIC_TYPE,
-		LANG_TYPE;
+		LANG_TYPE,
+		LANG_PREPROCESSOR,
+		LANG_COMMENT,
+		LANG_ESCAPE,
+		
+		XML_ESCAPE,
+		XML_ELEMENT,
+		XML_ATTRIBUTE,
+		XML_ATTRIBUTE_VALUE,
+		XML_COMMENT,
+		XML_CDATA;
 
 		public static Style? from_string (string str) {
 			switch (str) {
@@ -57,6 +67,9 @@ public class Valadoc.Content.Run : InlineContent, Inline {
 			case "stroke":
 				return Style.STROKE;
 
+			case "lang-escape":
+				return Style.LANG_ESCAPE;
+
 			case "lang-keyword":
 				return Style.LANG_KEYWORD;
 
@@ -68,6 +81,30 @@ public class Valadoc.Content.Run : InlineContent, Inline {
 
 			case "lang-type":
 				return Style.LANG_TYPE;
+
+			case "lang-preprocessor":
+				return Style.LANG_PREPROCESSOR;
+
+			case "lang-comment":
+				return Style.LANG_COMMENT;
+
+			case "xml-escape":
+				return Style.XML_ESCAPE;
+
+			case "xml-element":
+				return Style.XML_ELEMENT;
+
+			case "xml-attribute":
+				return Style.XML_ATTRIBUTE;
+
+			case "xml-attribute-value":
+				return Style.XML_ATTRIBUTE_VALUE;
+
+			case "xml-comment":
+				return Style.XML_COMMENT;
+
+			case "xml-cdata":
+				return Style.XML_CDATA;
 			}
 
 			return null;
@@ -93,6 +130,9 @@ public class Valadoc.Content.Run : InlineContent, Inline {
 			case Style.STROKE:
 				return "stroke";
 
+			case Style.LANG_ESCAPE:
+				return "lang-escape";
+
 			case Style.LANG_KEYWORD:
 				return "lang-keyword";
 
@@ -104,6 +144,30 @@ public class Valadoc.Content.Run : InlineContent, Inline {
 
 			case Style.LANG_TYPE:
 				return "lang-type";
+
+			case Style.LANG_PREPROCESSOR:
+				return "lang-preprocessor";
+
+			case Style.LANG_COMMENT:
+				return "lang-comment";
+
+			case Style.XML_ESCAPE:
+				return "xml-escape";
+
+			case Style.XML_ELEMENT:
+				return "xml-element";
+
+			case Style.XML_ATTRIBUTE:
+				return "xml-attribute";
+
+			case Style.XML_ATTRIBUTE_VALUE:
+				return "xml-attribute-value";
+
+			case Style.XML_COMMENT:
+				return "xml-comment";
+
+			case Style.XML_CDATA:
+				return "xml-cdata";
 			}
 
 			assert (true);

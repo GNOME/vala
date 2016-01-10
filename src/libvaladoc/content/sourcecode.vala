@@ -27,6 +27,7 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 	public enum Language {
 		GENIE,
 		VALA,
+		XML,
 		C;
 
 		public static Language? from_path (string path) {
@@ -50,6 +51,9 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 			case "gs":
 				return Language.GENIE;
 
+			case "xml":
+				return Language.XML;
+
 			case "vala":
 				return Language.VALA;
 
@@ -69,6 +73,9 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 			case Language.VALA:
 				return "vala";
 
+			case Language.XML:
+				return "xml";
+
 			case Language.C:
 				return "c";
 			}
@@ -78,9 +85,15 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 		}
 	}
 
+
 	public string code {
 		get;
 		set;
+	}
+
+	public Run? highlighted_code {
+		get;
+		private set;
 	}
 
 	public Language? language {
@@ -161,6 +174,7 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 
 		return string.joinv ("\n", (string[]) _lines);
 	}
+
 	public override void check (Api.Tree api_root, Api.Node container, string file_path,
 								ErrorReporter reporter, Settings settings)
 	{
@@ -180,16 +194,33 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 				if (_language == null && name != "none") {
 					string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
 					reporter.simple_warning ("%s: %s{{{".printf (file_path, node_segment),
-											 "Unsupported programming language '%s'", name);
+						"Unsupported programming language '%s'", name);
 				}
 			}
 		}
 
 		code = strip_code (code);
+
+		if (_language == Language.VALA) {
+			highlighted_code = api_root.highlighter.highlight_vala (code);
+		} else if (_language == Language.XML) {
+			highlighted_code = api_root.highlighter.highlight_xml (code);
+		} else if (_language == Language.C) {
+			highlighted_code = api_root.highlighter.highlight_c (code);
+		} else {
+			highlighted_code = new Run (Run.Style.MONOSPACED);
+			highlighted_code.content.add (new Text (code));
+		}
 	}
 
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_source_code (this);
+	}
+
+	public override void accept_children (ContentVisitor visitor) {
+		if (highlighted_code != null) {
+			highlighted_code.accept (visitor);
+		}
 	}
 
 	public override bool is_empty () {

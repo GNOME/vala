@@ -481,9 +481,13 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 			tag = "span";
 			css_type = "main_keyword";
 			break;
+		case Run.Style.LANG_ESCAPE:
+			tag = "span";
+			css_type = "main_escape";
+			break;
 		case Run.Style.LANG_LITERAL:
 			tag = "span";
-			css_type = "main_optional_parameter";
+			css_type = "main_literal";
 			break;
 		case Run.Style.LANG_BASIC_TYPE:
 			tag = "span";
@@ -492,6 +496,44 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		case Run.Style.LANG_TYPE:
 			tag = "span";
 			css_type = "main_type";
+			break;
+		case Run.Style.LANG_COMMENT:
+			tag = "span";
+			css_type = "main_comment";
+			break;
+		case Run.Style.LANG_PREPROCESSOR:
+			tag = "span";
+			css_type = "main_preprocessor";
+			break;
+
+		case Run.Style.XML_ESCAPE:
+			tag = "span";
+			css_type = "xml_escape";
+			break;
+
+		case Run.Style.XML_ELEMENT:
+			tag = "span";
+			css_type = "xml_element";
+			break;
+
+		case Run.Style.XML_ATTRIBUTE:
+			tag = "span";
+			css_type = "xml_attribute";
+			break;
+
+		case Run.Style.XML_ATTRIBUTE_VALUE:
+			tag = "span";
+			css_type = "xml_attribute_value";
+			break;
+
+		case Run.Style.XML_COMMENT:
+			tag = "span";
+			css_type = "xml_comment";
+			break;
+
+		case Run.Style.XML_CDATA:
+			tag = "span";
+			css_type = "xml_cdata";
 			break;
 		}
 		if (tag != null) {
@@ -506,7 +548,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	public override void visit_source_code (SourceCode element) {
 		writer.set_wrap (false);
 		writer.start_tag ("pre", {"class", "main_source"});
-		write_string (element.code);
+		element.accept_children (this);
 		writer.end_tag ("pre");
 		writer.set_wrap (true);
 	}

@@ -117,20 +117,14 @@ public class Valadoc.WikiScanner : Object, Scanner {
 		_column++;
 		if (_skip == 0) {
 			if (_code_escape_mode) {
-				switch (c) {
-				case '}':
-					if (get_next_char (1) == c && get_next_char (2) == c) {
-						_code_escape_mode = false; // This is a temporary hack
-						emit_token (TokenType.TRIPLE_CLOSED_BRACE);
-						_skip = 2;
-					} else {
-						append_char (c);
-					}
-					return;
-				default:
+				if (c == '}' && get_next_char (1) == '}' && get_next_char (2) == '}') {
+					_code_escape_mode = false; // This is a temporary hack
+					emit_token (TokenType.TRIPLE_CLOSED_BRACE);
+					_skip = 2;
+				} else {
 					append_char (c);
-					return;
 				}
+				return;
 			} else if (_url_escape_mode) {
 				switch (c) {
 				// Reserved characters

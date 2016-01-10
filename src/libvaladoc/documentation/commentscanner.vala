@@ -53,7 +53,7 @@ public class Valadoc.CommentScanner : WikiScanner {
 					base.accept (c);
 					in_line_start = true;
 					start_column = 0;
-				} else if (c == ' ') {
+				} else {
 					in_line_start = false;
 				}
 			}

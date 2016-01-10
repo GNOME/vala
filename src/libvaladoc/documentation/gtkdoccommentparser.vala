@@ -48,6 +48,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 	private Regex? is_numeric_regex = null;
 	private Regex? normalize_regex = null;
+	private Regex regex_source_lang = null;
 
 	private Importer.InternalIdRegistrar id_registrar = null;
 	private GirMetaData? current_metadata = null;
@@ -79,6 +80,10 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	}
 
 	private void report_unexpected_token (Token got, string expected) {
+		report_warning (got, "Unexpected Token: %s (Expected: %s)".printf (got.to_string (), expected));
+	}
+
+	private void report_warning (Token got, string message) {
 		if (!this.show_warnings) {
 			return ;
 		}
@@ -95,9 +100,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 							   startpos + 1,
 							   endpos + 1,
 							   this.comment_lines[got.line],
-							   "Unexpected Token: %s (Expected: %s)",
-							   got.to_string (),
-							   expected);
+							   message);
 	}
 
 	public Parser (Settings settings, ErrorReporter reporter, Api.Tree tree, ModuleLoader modules) {
@@ -110,6 +113,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			is_numeric_regex = new Regex ("^[+-]?([0-9]*\\.?[0-9]+|[0-9]+\\.?[0-9]*)([eE][+-]?[0-9]+)?$",
 				RegexCompileFlags.OPTIMIZE);
 			normalize_regex = new Regex ("( |\n|\t)+", RegexCompileFlags.OPTIMIZE);
+			regex_source_lang = new Regex ("^<!--[ \t]+language=\"([A-Za-z]*)\"[ \t]+-->");
 		} catch (RegexError e) {
 			assert_not_reached ();
 		}
@@ -692,8 +696,8 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			return null;
 		}
 
-
 		StringBuilder builder = new StringBuilder ();
+		Token source_token = current;
 
 		for (next (); current.type != TokenType.EOF && current.type != TokenType.GTKDOC_SOURCE_CLOSE; next ()) {
 			if (current.type == TokenType.WORD) {
@@ -703,12 +707,29 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 			}
 		}
 
-		SourceCode src = factory.create_source_code ();
-		src.language = SourceCode.Language.C;
-		src.code = builder.str;
+		SourceCode code = factory.create_source_code ();
+		MatchInfo info;
+
+		unowned string source = builder.str;
+		if (regex_source_lang.match (source, 0, out info)) {
+			string lang_name = info.fetch (1).down ();
+			SourceCode.Language? lang = SourceCode.Language.from_string (lang_name);
+			code.language = lang;
+
+			if (lang == null) {
+				report_warning (source_token, "Unknown language `%s' in source code block |[<!-- language=\"\"".printf (lang_name));
+			}
+
+			source = source.offset (source.index_of_char ('>') + 1);
+		} else {
+			code.language = (Highlighter.XmlScanner.is_xml (source))
+				? SourceCode.Language.XML
+				: SourceCode.Language.C;
+		}
+		code.code = source;
 
 		Paragraph p = factory.create_paragraph ();
-		p.content.add (src);
+		p.content.add (code);
 
 		if (current.type != TokenType.GTKDOC_SOURCE_CLOSE) {
 			this.report_unexpected_token (current, "|]");
