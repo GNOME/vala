@@ -197,6 +197,7 @@ class Vala.VAPIGen : Object {
 	}
 	
 	static int main (string[] args) {
+		Intl.setlocale (LocaleCategory.ALL, "");
 		try {
 			var opt_context = new OptionContext ("- Vala API Generator");
 			opt_context.set_help_enabled (true);
