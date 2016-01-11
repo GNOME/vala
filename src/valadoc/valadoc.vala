@@ -305,6 +305,7 @@ public class ValaDoc : Object {
 	}
 
 	static int main (string[] args) {
+		Intl.setlocale (LocaleCategory.ALL, "");
 		ErrorReporter reporter = new ErrorReporter();
 
 		try {
