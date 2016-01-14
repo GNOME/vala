@@ -76,7 +76,7 @@ public class ValaDoc : Object {
 	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] packages;
 	[CCode (array_length = false, array_null_terminated = true)]
-	private static string[] alternative_ressource_dirs;
+	private static string[] alternative_resource_dirs;
 	static string target_glib;
 
 	private const GLib.OptionEntry[] options = {
@@ -98,7 +98,7 @@ public class ValaDoc : Object {
 
 		{ "importdir", 0, 0, OptionArg.FILENAME_ARRAY, ref import_directories, "Look for external documentation in DIRECTORY", "DIRECTORY..." },
 		{ "import", 0, 0, OptionArg.STRING_ARRAY, ref import_packages, "Include binding for PACKAGE", "PACKAGE..." },
-		{ "alternative-ressource-dir", 0, 0, OptionArg.STRING_ARRAY, ref alternative_ressource_dirs, "Alternative ressource directories", "DIRECTORY..." },
+		{ "alternative-resource-dir", 0, 0, OptionArg.STRING_ARRAY, ref alternative_resource_dirs, "Alternative resource directories", "DIRECTORY..." },
 
 		{ "wiki", 0, 0, OptionArg.FILENAME, ref wikidirectory, "Wiki directory", "DIRECTORY" },
 
@@ -242,7 +242,7 @@ public class ValaDoc : Object {
 		settings.profile = profile;
 		settings.defines = defines;
 
-		settings.alternative_ressource_dirs = alternative_ressource_dirs;
+		settings.alternative_resource_dirs = alternative_resource_dirs;
 
 
 		// load plugins:
@@ -362,9 +362,9 @@ public class ValaDoc : Object {
 			}
 		}
 
-		foreach (unowned string dir in alternative_ressource_dirs) {
+		foreach (unowned string dir in alternative_resource_dirs) {
 			if (!FileUtils.test(dir, FileTest.IS_DIR)) {
-				reporter.simple_error (null, "alternative ressource directory '%s' does not exist.".printf (dir));
+				reporter.simple_error (null, "alternative resource directory '%s' does not exist.".printf (dir));
 				return quit (reporter);
 			}
 		}

@@ -81,7 +81,7 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 		if (!FileUtils.test (url, FileTest.EXISTS | FileTest.IS_REGULAR)) {
 			string base_name = Path.get_basename (url);
 
-			foreach (unowned string dir in settings.alternative_ressource_dirs) {
+			foreach (unowned string dir in settings.alternative_resource_dirs) {
 				string alternative_path = Path.build_path (Path.DIR_SEPARATOR_S,
 														 dir,
 														 base_name);
