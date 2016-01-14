@@ -51,7 +51,7 @@ public class Vala.DelegateType : DataType {
 		// logic temporarily duplicated from DataType class
 
 		Symbol global_symbol = delegate_symbol;
-		while (global_symbol.parent_symbol.name != null) {
+		while (global_symbol.parent_symbol != null && global_symbol.parent_symbol.name != null) {
 			global_symbol = global_symbol.parent_symbol;
 		}
 
