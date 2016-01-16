@@ -333,12 +333,18 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	public override void visit_link (Link element) {
-		writer.start_tag ("a", {"href", element.url});
+		if (Uri.parse_scheme (element.url) != null) {
+			writer.start_tag ("a", {"href", element.url, "target", "_blank"});
+		} else {
+			writer.start_tag ("a", {"href", element.url});
+		}
+
 		if (element.content.size > 0) {
 			element.accept_children (this);
 		} else {
 			writer.text (element.url);
 		}
+
 		writer.end_tag ("a");
 	}
 
