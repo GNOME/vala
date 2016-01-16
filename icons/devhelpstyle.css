@@ -542,6 +542,9 @@ code {
 .box {
 }
 .box .headline {
+	background-image: url("coll_open.png");
+	background-position: calc(100% - 1px) center;
+	background-repeat: no-repeat;
 	background-color: #eeeeff;
 	border-color: #aaaaff;
 	border-style: solid;
@@ -549,14 +552,7 @@ code {
 	margin: auto;
 	width: 90%;
 	margin-top: 20px;
-}
-.box .text {
 	font-weight: bold;  
-	float: left;
-}
-.box .toggle {
-	text-align: right;
-	float: clear;
 }
 .box .content {
 	border-color: #aaaaff;

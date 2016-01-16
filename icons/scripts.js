@@ -35,12 +35,15 @@ function toggle_box (self, id) {
 		return ;
 	}
 
+	var style = self.currentStyle || window.getComputedStyle (self, false);
+	var orig_path = /url[ \t]*\(('(.*)'|"(.*)")\)/.exec (style.backgroundImage)[1].slice(1, -1);
+	var orig_dir = get_path (orig_path);
 	if (element.style.display == 'block') {
 		element.style.display = 'none';
-		self.src = get_path (self.src) + 'coll_open.png';
+		self.style.backgroundImage = "url('" + orig_dir + 'coll_open.png' + "')";
 	} else {
 		element.style.display = 'block';
-		self.src = get_path (self.src) + 'coll_close.png';
+		self.style.backgroundImage = "url('" + orig_dir + 'coll_close.png' + "')";
 	}
 }
 

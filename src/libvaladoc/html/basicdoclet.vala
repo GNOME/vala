@@ -627,19 +627,21 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.start_tag ("div", {"class", css_box});
 
 		// headline:
-		writer.start_tag ("div", {"class", css_box_headline});
-		writer.start_tag ("div", {"class", css_box_headline_text})
+		writer.start_tag ("div", {"class", css_box_headline, "onclick", "toggle_box (this, '%s')".printf (html_id)})
 			.text (headline)
 			.end_tag ("div");
-		writer.start_tag ("div", {"class", css_box_headline_toggle});
-		writer.start_tag ("img", {"onclick",
-								  "toggle_box  (this, '" + html_id + "')",
-								  "src",
-								  Path.build_filename (get_icon_directory (),
-								  "coll_open.png")});
-		writer.raw_text ("&nbsp;");
-		writer.end_tag ("div");
-		writer.end_tag ("div");
+		//writer.start_tag ("div", {"class", css_box_headline_text, "onclick", "toggle_box (this, '%s')".printf (html_id)})
+		//	.text (headline)
+		//	.end_tag ("div");
+		//writer.start_tag ("div", {"class", css_box_headline_toggle});
+		//writer.start_tag ("img", {"onclick",
+		//						  "toggle_box  (this, '" + html_id + "')",
+		//						  "src",
+		//						  Path.build_filename (get_icon_directory (),
+		//						  "coll_open.png")});
+		//writer.raw_text ("&nbsp;");
+		//writer.end_tag ("div");
+		//writer.end_tag ("div");
 
 
 		// content:
@@ -720,7 +722,6 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 									  "All known sub-structs:");
 		}
 
-
 		if (node.parent is Namespace) {
 			writer.simple_tag ("br");
 			write_namespace_note (node);
@@ -744,7 +745,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 					Api.NodeType.PROPERTY,
 					Api.NodeType.FIELD,
 					Api.NodeType.CONSTANT
-				})) {
+				}))
+			{
 				writer.start_tag ("h2", {"class", css_title}).text ("Content:").end_tag ("h2");
 				write_children (node, Api.NodeType.ERROR_CODE, "Error codes", node);
 				write_children (node, Api.NodeType.ENUM_VALUE, "Enum values", node);
