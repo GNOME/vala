@@ -5482,6 +5482,11 @@
 			<member name="GTK_STATE_FLAG_CHECKED" value="2048"/>
 			<member name="GTK_STATE_FLAG_DROP_ACTIVE" value="4096"/>
 		</flags>
+		<flags name="GtkStyleContextPrintFlags" type-name="GtkStyleContextPrintFlags" get-type="gtk_style_context_print_flags_get_type">
+			<member name="GTK_STYLE_CONTEXT_PRINT_NONE" value="0"/>
+			<member name="GTK_STYLE_CONTEXT_PRINT_RECURSE" value="1"/>
+			<member name="GTK_STYLE_CONTEXT_PRINT_SHOW_STYLE" value="2"/>
+		</flags>
 		<flags name="GtkTargetFlags" type-name="GtkTargetFlags" get-type="gtk_target_flags_get_type">
 			<member name="GTK_TARGET_SAME_APP" value="1"/>
 			<member name="GTK_TARGET_SAME_WIDGET" value="2"/>
@@ -24729,6 +24734,13 @@
 					<parameter name="progress" type="gdouble*"/>
 				</parameters>
 			</method>
+			<method name="to_string" symbol="gtk_style_context_to_string">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="context" type="GtkStyleContext*"/>
+					<parameter name="flags" type="GtkStyleContextPrintFlags"/>
+				</parameters>
+			</method>
 			<property name="direction" type="GtkTextDirection" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="paint-clock" type="GdkFrameClock*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="parent" type="GtkStyleContext*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -36115,14 +36127,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1905"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1906"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="5"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="6"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="19"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

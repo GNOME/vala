@@ -1157,6 +1157,7 @@ gtk_style_context_list_regions transfer_ownership="1" type_arguments="unowned st
 gtk_style_context_lookup_color.color is_out="1"
 gtk_style_context_set_parent.parent nullable="1"
 gtk_style_context_state_is_running.progress is_out="1"
+gtk_style_context_to_string transfer_ownership="1"
 gtk_style_lookup_color.color is_out="1"
 gtk_style_get_style_property.value is_out="1"
 gtk_style_properties_register_property.parse_func nullable="1"

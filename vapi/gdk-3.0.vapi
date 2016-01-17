@@ -4662,7 +4662,7 @@ namespace Gdk {
 	public abstract class DeviceManager : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected DeviceManager ();
-		[Deprecated (since = "3.20.")]
+		[Deprecated (since = "3.20")]
 		public unowned Gdk.Device get_client_pointer ();
 		public unowned Gdk.Display? get_display ();
 		[Deprecated (since = "3.20")]
@@ -5220,7 +5220,7 @@ namespace Gdk {
 		public unowned Gdk.Display get_display ();
 		public unowned Gdk.Device? get_keyboard ();
 		public unowned Gdk.Device? get_pointer ();
-		public GLib.List<weak Gdk.Seat> get_slaves (Gdk.SeatCapabilities capabilities);
+		public GLib.List<weak Gdk.Device> get_slaves (Gdk.SeatCapabilities capabilities);
 		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.SeatCapabilities capabilities, bool owner_events, Gdk.Cursor? cursor, Gdk.Event? event, Gdk.SeatGrabPrepareFunc? prepare_func);
 		public void ungrab ();
 		public Gdk.Display display { get; construct; }

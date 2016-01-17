@@ -5223,6 +5223,7 @@ namespace Gtk {
 		public void set_screen (Gdk.Screen screen);
 		public void set_state (Gtk.StateFlags flags);
 		public bool state_is_running (Gtk.StateType state, out double progress);
+		public string to_string (Gtk.StyleContextPrintFlags flags);
 		public Gtk.TextDirection direction { get; set; }
 		[NoAccessorMethod]
 		public Gdk.FrameClock paint_clock { owned get; set; }
@@ -8644,6 +8645,13 @@ namespace Gtk {
 		INSENSITIVE,
 		INCONSISTENT,
 		FOCUSED
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_STYLE_CONTEXT_PRINT_")]
+	[Flags]
+	public enum StyleContextPrintFlags {
+		NONE,
+		RECURSE,
+		SHOW_STYLE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TARGET_")]
 	[Flags]
