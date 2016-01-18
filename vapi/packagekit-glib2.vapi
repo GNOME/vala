@@ -705,6 +705,8 @@ namespace Pk {
 		[CCode (finish_name = "pk_task_generic_finish")]
 		public async Pk.Results update_packages_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public Pk.Results update_packages_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		public async void upgrade_system_async (string distro_id, Pk.UpgradeKind upgrade_kind, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback);
+		public Pk.Results upgrade_system_sync (string distro_id, Pk.UpgradeKind upgrade_kind, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		public bool user_accepted (uint request);
 		public bool user_declined (uint request);
 		[CCode (finish_name = "pk_task_generic_finish")]
@@ -1361,9 +1363,13 @@ namespace Pk {
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static bool offline_auth_set_prepared_ids (string package_ids) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
+	public static bool offline_auth_set_prepared_upgrade_version (string release_ver) throws GLib.Error;
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static bool offline_auth_set_results (Pk.Results results) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static bool offline_auth_trigger (Pk.OfflineAction action) throws GLib.Error;
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
+	public static bool offline_auth_trigger_upgrade (Pk.OfflineAction action) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static bool offline_cancel (GLib.Cancellable? cancellable = null) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
@@ -1378,6 +1384,10 @@ namespace Pk {
 	public static GLib.FileMonitor offline_get_prepared_monitor (GLib.Cancellable? cancellable = null) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static Pk.PackageSack offline_get_prepared_sack () throws GLib.Error;
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
+	public static GLib.FileMonitor offline_get_prepared_upgrade_monitor (GLib.Cancellable? cancellable = null) throws GLib.Error;
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
+	public static string offline_get_prepared_upgrade_version () throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static Pk.Results offline_get_results () throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]

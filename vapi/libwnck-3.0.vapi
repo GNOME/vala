@@ -215,6 +215,7 @@ namespace Wnck {
 		public virtual signal void name_changed ();
 		public virtual signal void role_changed ();
 		public virtual signal void state_changed (Wnck.WindowState changed_mask, Wnck.WindowState new_state);
+		public virtual signal void type_changed ();
 		public virtual signal void workspace_changed ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_workspace_get_type ()")]

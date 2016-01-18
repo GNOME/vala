@@ -4,9 +4,9 @@
 namespace Soup {
 	namespace Form {
 		[CCode (cheader_filename = "libsoup/soup.h")]
-		public static GLib.HashTable<string,string> decode (string encoded_form);
+		public static GLib.HashTable<weak string,weak string> decode (string encoded_form);
 		[CCode (cheader_filename = "libsoup/soup.h")]
-		public static GLib.HashTable<string,string>? decode_multipart (Soup.Message msg, string? file_control_name, out string filename, out string content_type, out Soup.Buffer file);
+		public static GLib.HashTable<weak string,weak string>? decode_multipart (Soup.Message msg, string? file_control_name, out string filename, out string content_type, out Soup.Buffer file);
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		public static string encode (...);
 		[CCode (cheader_filename = "libsoup/soup.h")]

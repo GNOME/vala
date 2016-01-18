@@ -5846,6 +5846,8 @@ namespace Clutter {
 		public unowned Clutter.Actor get_related ();
 		public void get_scroll_delta (out double dx, out double dy);
 		public Clutter.ScrollDirection get_scroll_direction ();
+		public Clutter.ScrollFinishFlags get_scroll_finish_flags ();
+		public Clutter.ScrollSource get_scroll_source ();
 		public unowned Clutter.Actor get_source ();
 		public unowned Clutter.InputDevice get_source_device ();
 		public unowned Clutter.Stage get_stage ();
@@ -6551,8 +6553,10 @@ namespace Clutter {
 		public double axes;
 		public weak Clutter.InputDevice device;
 		public Clutter.ScrollDirection direction;
+		public Clutter.ScrollFinishFlags finish_flags;
 		public Clutter.EventFlags flags;
 		public Clutter.ModifierType modifier_state;
+		public Clutter.ScrollSource scroll_source;
 		public weak Clutter.Actor source;
 		public weak Clutter.Stage stage;
 		public uint32 time;
@@ -8016,6 +8020,13 @@ namespace Clutter {
 		RIGHT,
 		SMOOTH
 	}
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SCROLL_FINISHED_", type_id = "clutter_scroll_finish_flags_get_type ()")]
+	[Flags]
+	public enum ScrollFinishFlags {
+		NONE,
+		HORIZONTAL,
+		VERTICAL
+	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SCROLL_", type_id = "clutter_scroll_mode_get_type ()")]
 	[Flags]
 	public enum ScrollMode {
@@ -8023,6 +8034,13 @@ namespace Clutter {
 		HORIZONTALLY,
 		VERTICALLY,
 		BOTH
+	}
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SCROLL_SOURCE_", type_id = "clutter_scroll_source_get_type ()")]
+	public enum ScrollSource {
+		UNKNOWN,
+		WHEEL,
+		FINGER,
+		CONTINUOUS
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_", type_id = "clutter_shader_type_get_type ()")]
 	public enum ShaderType {

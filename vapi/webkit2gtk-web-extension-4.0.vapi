@@ -2659,6 +2659,17 @@ namespace WebKit {
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_XPATH_RESULT_UNORDERED_NODE_SNAPSHOT_TYPE")]
 		public const int _XPATH_RESULT_UNORDERED_NODE_SNAPSHOT_TYPE;
 	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_console_message_get_type ()")]
+	[Compact]
+	public class ConsoleMessage {
+		public WebKit.ConsoleMessage copy ();
+		public void free ();
+		public WebKit.ConsoleMessageLevel get_level ();
+		public uint get_line ();
+		public WebKit.ConsoleMessageSource get_source ();
+		public unowned string get_source_id ();
+		public unowned string get_text ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_context_menu_get_type ()")]
 	public class ContextMenu : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -2741,6 +2752,7 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		public URIRequest (string uri);
 		public Soup.MessageHeaders get_http_headers ();
+		public unowned string get_http_method ();
 		public unowned string get_uri ();
 		public void set_uri (string uri);
 		public string uri { get; set construct; }
@@ -2793,9 +2805,26 @@ namespace WebKit {
 		public unowned WebKit.Frame get_main_frame ();
 		public unowned string get_uri ();
 		public string uri { get; }
+		public signal void console_message_sent (WebKit.ConsoleMessage console_message);
 		public signal bool context_menu (WebKit.ContextMenu context_menu, WebKit.WebHitTestResult hit_test_result);
 		public signal void document_loaded ();
 		public signal bool send_request (WebKit.URIRequest request, WebKit.URIResponse redirected_response);
+	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_CONSOLE_MESSAGE_LEVEL_", has_type_id = false)]
+	public enum ConsoleMessageLevel {
+		INFO,
+		LOG,
+		WARNING,
+		ERROR,
+		DEBUG
+	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_CONSOLE_MESSAGE_SOURCE_", has_type_id = false)]
+	public enum ConsoleMessageSource {
+		JAVASCRIPT,
+		NETWORK,
+		CONSOLE_API,
+		SECURITY,
+		OTHER
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_CONTEXT_MENU_ACTION_", has_type_id = false)]
 	public enum ContextMenuAction {

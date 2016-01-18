@@ -303,6 +303,8 @@ namespace WebKit {
 		public string body { get; }
 		public uint64 id { get; }
 		public string title { get; }
+		[HasEmitter]
+		public signal void clicked ();
 		public signal void closed ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_notification_permission_request_get_type ()")]
@@ -538,6 +540,7 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		public URIRequest (string uri);
 		public unowned Soup.MessageHeaders get_http_headers ();
+		public unowned string get_http_method ();
 		public unowned string get_uri ();
 		public void set_uri (string uri);
 		public string uri { get; set construct; }
@@ -711,6 +714,7 @@ namespace WebKit {
 		public unowned WebKit.WebInspector get_inspector ();
 		public unowned WebKit.WebResource get_main_resource ();
 		public uint64 get_page_id ();
+		public WebKit.WebViewSessionState get_session_state ();
 		public unowned WebKit.Settings get_settings ();
 		public async Cairo.Surface get_snapshot (WebKit.SnapshotRegion region, WebKit.SnapshotOptions options, GLib.Cancellable? cancellable) throws GLib.Error;
 		public unowned string get_title ();
@@ -732,6 +736,7 @@ namespace WebKit {
 		public Gtk.Widget new_with_related_view ();
 		public void reload ();
 		public void reload_bypass_cache ();
+		public void restore_session_state (WebKit.WebViewSessionState state);
 		public async WebKit.JavascriptResult run_javascript (string script, GLib.Cancellable? cancellable) throws GLib.Error;
 		public async WebKit.JavascriptResult run_javascript_from_gresource (string resource, GLib.Cancellable? cancellable) throws GLib.Error;
 		public async GLib.InputStream save (WebKit.SaveMode save_mode, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -742,6 +747,7 @@ namespace WebKit {
 		public void set_settings (WebKit.Settings settings);
 		public void set_zoom_level (double zoom_level);
 		public void stop_loading ();
+		public void try_close ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public WebView.with_context (WebKit.WebContext context);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -793,6 +799,15 @@ namespace WebKit {
 	public class WebViewBase : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		protected WebViewBase ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_web_view_session_state_ref", type_id = "webkit_web_view_session_state_get_type ()", unref_function = "webkit_web_view_session_state_unref")]
+	[Compact]
+	public class WebViewSessionState {
+		[CCode (has_construct_function = false)]
+		public WebViewSessionState (GLib.Bytes data);
+		public WebKit.WebViewSessionState @ref ();
+		public GLib.Bytes serialize ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_website_data_manager_get_type ()")]
 	public class WebsiteDataManager : GLib.Object {
@@ -997,7 +1012,8 @@ namespace WebKit {
 	public enum ScriptDialogType {
 		ALERT,
 		CONFIRM,
-		PROMPT
+		PROMPT,
+		BEFORE_UNLOAD_CONFIRM
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_SNAPSHOT_OPTIONS_", type_id = "webkit_snapshot_options_get_type ()")]
 	[Flags]
