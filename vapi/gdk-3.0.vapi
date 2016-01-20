@@ -4761,8 +4761,13 @@ namespace Gdk {
 		public unowned Gdk.Window get_source_window ();
 		public Gdk.DragAction get_suggested_action ();
 		public unowned GLib.List<Gdk.Atom> list_targets ();
+		public bool manage_dnd (Gdk.Window ipc_window, Gdk.DragAction actions);
 		public void set_device (Gdk.Device device);
 		public void set_hotspot (int hot_x, int hot_y);
+		public signal void action_changed (Gdk.DragAction object);
+		public signal void cancel ();
+		public signal void dnd_finished ();
+		public signal void drop_performed (int object);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
 	[Compact]
@@ -4792,6 +4797,7 @@ namespace Gdk {
 		public uint32 get_time ();
 		public unowned Gdk.Window get_window ();
 		public static void handler_set (owned Gdk.EventFunc func);
+		public bool is_scroll_stop_event ();
 		public static Gdk.Event? peek ();
 		public void put ();
 		public static void request_motions (Gdk.EventMotion event);
@@ -4982,6 +4988,7 @@ namespace Gdk {
 		public double delta_y;
 		public weak Gdk.Device device;
 		public Gdk.ScrollDirection direction;
+		public uint is_stop;
 		public int8 send_event;
 		public Gdk.ModifierType state;
 		public uint32 time;

@@ -5729,6 +5729,7 @@ namespace Gtk {
 		public bool move_mark_onscreen (Gtk.TextMark mark);
 		public bool move_visually (Gtk.TextIter iter, int count);
 		public bool place_cursor_onscreen ();
+		public void reset_cursor_blink ();
 		public void reset_im_context ();
 		public void scroll_mark_onscreen (Gtk.TextMark mark);
 		public bool scroll_to_iter (Gtk.TextIter iter, double within_margin, bool use_align, double xalign, double yalign);
