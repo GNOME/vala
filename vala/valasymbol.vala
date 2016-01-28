@@ -40,7 +40,7 @@ public abstract class Vala.Symbol : CodeNode {
 	}
 
 	/**
-	 * The scope this symbol opens.
+	 * The scope this symbol is a part of
 	 */
 	public weak Scope owner {
 		get {
@@ -180,6 +180,9 @@ public abstract class Vala.Symbol : CodeNode {
 		return false;
 	}
 
+	/**
+	 * The scope this symbol opens.
+	 */
 	public Scope scope {
 		get { return _scope; }
 	}
