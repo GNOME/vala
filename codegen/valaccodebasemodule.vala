@@ -3700,14 +3700,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
+		// TODO: don't duplicate the code in CCodeMethodModule, we do this right now because it needs to be before return
 		if (current_method != null && current_method.get_attribute ("Profile") != null) {
 			string prefix = "_vala_prof_%s".printf (get_ccode_real_name (current_method));
+
+			var level = new CCodeIdentifier (prefix + "_level");
+			ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, level)));
 
 			var timer = new CCodeIdentifier (prefix + "_timer");
 
 			var stop_call = new CCodeFunctionCall (new CCodeIdentifier ("g_timer_stop"));
 			stop_call.add_argument (timer);
 			ccode.add_expression (stop_call);
+
+			ccode.close ();
 		}
 
 		if (is_in_constructor ()) {
