@@ -4096,11 +4096,10 @@ namespace GLib {
 		public static bool quiet ();
 		[Version (since = "2.16")]
 		public static int run ();
+		[Version (since = "2.16")]
 #if GLIB_2_26
-		[Version (since = "2.26")]
 		public static void add_func (string testpath, TestFunc test_funcvoid);
 #else
-		[Version (since = "2.16")]
 		public static void add_func (string testpath, Callback test_funcvoid);
 #endif
 		[Version (since = "2.16")]
@@ -4166,12 +4165,11 @@ namespace GLib {
 	[Compact]
 	[CCode (cname = "GTestCase", ref_function = "", unref_function = "")]
 	public class TestCase {
+		[Version (since = "2.16")]
 		[CCode (cname = "g_test_create_case")]
 #if GLIB_2_26
-		[Version (since = "2.26")]
 		public TestCase (string test_name, [CCode (delegate_target_pos = 1.9)] TestFixtureFunc data_setup, [CCode (delegate_target_pos = 1.9)] TestFixtureFunc data_func, [CCode (delegate_target_pos = 1.9)] TestFixtureFunc data_teardown, [CCode (pos = 1.8)] size_t data_size = 0);
 #else
-		[Version (since = "2.16")]
 		public TestCase (string test_name, [CCode (delegate_target_pos = 1.9, type = "void (*) (void)")] TestFunc data_setup, [CCode (delegate_target_pos = 1.9, type = "void (*) (void)")] TestFunc data_func, [CCode (delegate_target_pos = 1.9, type = "void (*) (void)")] TestFunc data_teardown, [CCode (pos = 1.8)] size_t data_size = 0);
 #endif
 	}
