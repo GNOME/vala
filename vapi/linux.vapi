@@ -1025,13 +1025,13 @@ namespace Linux {
         DT_WHT
     }
 
-    [Deprecated (since = "vala-0.26", replacement = "Backtrace.get"), CCode (cheader_filename = "execinfo.h")]
+    [Version (deprecated_since = "vala-0.26", replacement = "Backtrace.get"), CCode (cheader_filename = "execinfo.h")]
     public int backtrace (void* buffer, int size);
 
-    [Deprecated (since = "vala-0.26", replacement = "Backtrace.symbols"), CCode (cheader_filename = "execinfo.h", array_length = false)]
+    [Version (deprecated_since = "vala-0.26", replacement = "Backtrace.symbols"), CCode (cheader_filename = "execinfo.h", array_length = false)]
     public (unowned string)[]? backtrace_symbols (void* buffer, int size);
 
-    [Deprecated (since = "vala-0.26", replacement = "Backtrace.symbols_fd"), CCode (cheader_filename = "execinfo.h")]
+    [Version (deprecated_since = "vala-0.26", replacement = "Backtrace.symbols_fd"), CCode (cheader_filename = "execinfo.h")]
     public void backtrace_symbols_fd (void* buffer, int size, int fd);
 
     namespace Backtrace {

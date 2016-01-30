@@ -16,7 +16,7 @@ namespace Atspi {
 		[CCode (has_construct_function = false)]
 		protected Accessible ();
 		public void clear_cache ();
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public Atspi.Action get_action ();
 		public Atspi.Action get_action_iface ();
 		public Atspi.Accessible get_application () throws GLib.Error;
@@ -25,25 +25,25 @@ namespace Atspi {
 		public GLib.Array<string> get_attributes_as_array () throws GLib.Error;
 		public Atspi.Accessible get_child_at_index (int child_index) throws GLib.Error;
 		public int get_child_count () throws GLib.Error;
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public Atspi.Collection get_collection ();
 		public Atspi.Collection get_collection_iface ();
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public Atspi.Component get_component ();
 		public Atspi.Component get_component_iface ();
 		public string get_description () throws GLib.Error;
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public Atspi.Document get_document ();
 		public Atspi.Document get_document_iface ();
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public Atspi.EditableText get_editable_text ();
 		public Atspi.EditableText get_editable_text_iface ();
 		public Atspi.Hyperlink get_hyperlink ();
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public Atspi.Hypertext get_hypertext ();
 		public Atspi.Hypertext get_hypertext_iface ();
 		public int get_id () throws GLib.Error;
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public Atspi.Image get_image ();
 		public Atspi.Image get_image_iface ();
 		public int get_index_in_parent () throws GLib.Error;
@@ -56,20 +56,20 @@ namespace Atspi {
 		public GLib.Array<Atspi.Relation> get_relation_set () throws GLib.Error;
 		public Atspi.Role get_role () throws GLib.Error;
 		public string get_role_name () throws GLib.Error;
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public Atspi.Selection get_selection ();
 		public Atspi.Selection get_selection_iface ();
 		public Atspi.StateSet get_state_set ();
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public Atspi.Table get_table ();
 		public Atspi.TableCell get_table_cell ();
 		public Atspi.Table get_table_iface ();
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public Atspi.Text get_text ();
 		public Atspi.Text get_text_iface ();
 		public string get_toolkit_name () throws GLib.Error;
 		public string get_toolkit_version () throws GLib.Error;
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public Atspi.Value get_value ();
 		public Atspi.Value get_value_iface ();
 		public void set_cache_mask (Atspi.Cache mask);
@@ -217,12 +217,12 @@ namespace Atspi {
 		public bool do_action (int i) throws GLib.Error;
 		public string get_action_description (int i) throws GLib.Error;
 		public string get_action_name (int i) throws GLib.Error;
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public string get_description (int i) throws GLib.Error;
 		public string get_key_binding (int i) throws GLib.Error;
 		public string get_localized_name (int i) throws GLib.Error;
 		public int get_n_actions () throws GLib.Error;
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public string get_name (int i) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_collection_get_type ()")]
@@ -250,9 +250,9 @@ namespace Atspi {
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_document_get_type ()")]
 	public interface Document : GLib.Object {
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public string get_attribute_value (string attribute) throws GLib.Error;
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public GLib.HashTable<string,string> get_attributes () throws GLib.Error;
 		public int get_current_page_number () throws GLib.Error;
 		public string get_document_attribute_value (string attribute) throws GLib.Error;
@@ -338,9 +338,9 @@ namespace Atspi {
 	public interface Text : GLib.Object {
 		public bool add_selection (int start_offset, int end_offset) throws GLib.Error;
 		public GLib.HashTable<string,string> get_attribute_run (int offset, bool include_defaults, out int start_offset, out int end_offset) throws GLib.Error;
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public string? get_attribute_value (int offset, string attribute_name) throws GLib.Error;
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public GLib.HashTable<string,string> get_attributes (int offset, out int start_offset, out int end_offset) throws GLib.Error;
 		public GLib.Array<Atspi.TextRange> get_bounded_ranges (int x, int y, int width, int height, Atspi.CoordType type, Atspi.TextClipType clipTypeX, Atspi.TextClipType clipTypeY) throws GLib.Error;
 		public int get_caret_offset () throws GLib.Error;
@@ -352,10 +352,11 @@ namespace Atspi {
 		public int get_offset_at_point (int x, int y, Atspi.CoordType type) throws GLib.Error;
 		public Atspi.Rect get_range_extents (int start_offset, int end_offset, Atspi.CoordType type) throws GLib.Error;
 		public Atspi.Range get_selection (int selection_num) throws GLib.Error;
+		[Version (since = "2.9.90")]
 		public Atspi.TextRange get_string_at_offset (int offset, Atspi.TextGranularity granularity) throws GLib.Error;
 		public string get_text (int start_offset, int end_offset) throws GLib.Error;
 		public Atspi.TextRange get_text_after_offset (int offset, Atspi.TextBoundaryType type) throws GLib.Error;
-		[Deprecated (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.10")]
 		public Atspi.TextRange get_text_at_offset (int offset, Atspi.TextBoundaryType type) throws GLib.Error;
 		public string? get_text_attribute_value (int offset, string attribute_name) throws GLib.Error;
 		public GLib.HashTable<string,string> get_text_attributes (int offset, out int start_offset, out int end_offset) throws GLib.Error;

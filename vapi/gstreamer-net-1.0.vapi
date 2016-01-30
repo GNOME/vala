@@ -27,12 +27,14 @@ namespace Gst {
 		[GIR (name = "NtpClock")]
 		public class NtpClock : Gst.Net.ClientClock {
 			[CCode (has_construct_function = false, type = "GstClock*")]
+			[Version (since = "1.6")]
 			public NtpClock (string name, string remote_address, int remote_port, Gst.ClockTime base_time);
 		}
 		[CCode (cheader_filename = "gst/net/net.h", cname = "GstPtpClock", lower_case_cprefix = "gst_ptp_clock_", type_id = "gst_ptp_clock_get_type ()")]
 		[GIR (name = "PtpClock")]
 		public class PtpClock : Gst.SystemClock {
 			[CCode (has_construct_function = false, type = "GstClock*")]
+			[Version (since = "1.6")]
 			public PtpClock (string name, uint domain);
 			[NoAccessorMethod]
 			public uint domain { get; construct; }
@@ -106,16 +108,22 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/net/net.h")]
 		public static unowned Gst.MetaInfo? control_message_meta_get_info ();
 		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_deinit")]
+		[Version (since = "1.6")]
 		public static void ptp_deinit ();
 		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_init")]
+		[Version (since = "1.6")]
 		public static bool ptp_init (uint64 clock_id, [CCode (array_length = false, array_null_terminated = true)] string[]? interfaces);
 		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_is_initialized")]
+		[Version (since = "1.6")]
 		public static bool ptp_is_initialized ();
 		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_is_supported")]
+		[Version (since = "1.6")]
 		public static bool ptp_is_supported ();
 		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_statistics_callback_add")]
+		[Version (since = "1.6")]
 		public static ulong ptp_statistics_callback_add (owned Gst.Net.PtpStatisticsCallback callback);
 		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_statistics_callback_remove")]
+		[Version (since = "1.6")]
 		public static void ptp_statistics_callback_remove (ulong id);
 	}
 }

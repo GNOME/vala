@@ -190,6 +190,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_ID3V2_HEADER_SIZE")]
 		public const int ID3V2_HEADER_SIZE;
 		[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_MUSICAL_KEY")]
+		[Version (since = "1.2")]
 		public const string MUSICAL_KEY;
 		[CCode (cheader_filename = "gst/tag/tag.h")]
 		public static bool check_language_code (string lang_code);

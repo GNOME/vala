@@ -4550,29 +4550,37 @@ namespace Gdk {
 		[CCode (cheader_filename = "gdk/gdk.h")]
 		public static unowned Gdk.Window? owner_get (Gdk.Atom selection);
 		[CCode (cheader_filename = "gdk/gdk.h")]
+		[Version (since = "2.2")]
 		public static unowned Gdk.Window? owner_get_for_display (Gdk.Display display, Gdk.Atom selection);
 		[CCode (cheader_filename = "gdk/gdk.h")]
 		public static bool owner_set (Gdk.Window? owner, Gdk.Atom selection, uint32 time_, bool send_event);
 		[CCode (cheader_filename = "gdk/gdk.h")]
+		[Version (since = "2.2")]
 		public static bool owner_set_for_display (Gdk.Display display, Gdk.Window? owner, Gdk.Atom selection, uint32 time_, bool send_event);
 		[CCode (cheader_filename = "gdk/gdk.h")]
 		public static int property_get (Gdk.Window requestor, [CCode (array_length = false, type = "guchar**")] uint8[] data, Gdk.Atom prop_type, int prop_format);
 		[CCode (cheader_filename = "gdk/gdk.h")]
 		public static void send_notify (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 		[CCode (cheader_filename = "gdk/gdk.h")]
+		[Version (since = "2.2")]
 		public static void send_notify_for_display (Gdk.Display display, Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_app_launch_context_get_type ()")]
 	public class AppLaunchContext : GLib.AppLaunchContext {
 		[CCode (has_construct_function = false)]
-		[Deprecated (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.0", since = "2.14")]
 		public AppLaunchContext ();
+		[Version (since = "2.14")]
 		public void set_desktop (int desktop);
-		[Deprecated (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.0", since = "2.14")]
 		public void set_display (Gdk.Display display);
+		[Version (since = "2.14")]
 		public void set_icon (GLib.Icon? icon);
+		[Version (since = "2.14")]
 		public void set_icon_name (string? icon_name);
+		[Version (since = "2.14")]
 		public void set_screen (Gdk.Screen screen);
+		[Version (since = "2.14")]
 		public void set_timestamp (uint32 timestamp);
 		[NoAccessorMethod]
 		public Gdk.Display display { owned get; construct; }
@@ -4580,23 +4588,31 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_cursor_get_type ()")]
 	public class Cursor : GLib.Object {
 		[CCode (has_construct_function = false)]
-		[Deprecated (since = "3.16")]
+		[Version (deprecated = true, deprecated_since = "3.16")]
 		public Cursor (Gdk.CursorType cursor_type);
 		[CCode (has_construct_function = false)]
+		[Version (since = "2.2")]
 		public Cursor.for_display (Gdk.Display display, Gdk.CursorType cursor_type);
 		[CCode (has_construct_function = false)]
+		[Version (since = "2.8")]
 		public Cursor.from_name (Gdk.Display display, string name);
 		[CCode (has_construct_function = false)]
+		[Version (since = "2.4")]
 		public Cursor.from_pixbuf (Gdk.Display display, Gdk.Pixbuf pixbuf, int x, int y);
 		[CCode (has_construct_function = false)]
+		[Version (since = "3.10")]
 		public Cursor.from_surface (Gdk.Display display, Cairo.Surface surface, double x, double y);
+		[Version (since = "2.22")]
 		public Gdk.CursorType get_cursor_type ();
+		[Version (since = "2.2")]
 		public unowned Gdk.Display get_display ();
+		[Version (since = "2.8")]
 		public Gdk.Pixbuf? get_image ();
+		[Version (since = "3.10")]
 		public Cairo.Surface? get_surface (out double x_hot, out double y_hot);
-		[Deprecated (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.0")]
 		public Gdk.Cursor @ref ();
-		[Deprecated (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.0")]
 		public void unref ();
 		public Gdk.CursorType cursor_type { get; construct; }
 		public Gdk.Display display { get; construct; }
@@ -4606,55 +4622,88 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected Device ();
 		public static void free_history ([CCode (array_length_cname = "n_events", array_length_pos = 1.1)] Gdk.TimeCoord[] events);
+		[Version (since = "3.0")]
 		public unowned Gdk.Device? get_associated_device ();
 		public bool get_axis ([CCode (array_length = false)] double[] axes, Gdk.AxisUse use, out double value);
+		[Version (since = "2.20")]
 		public Gdk.AxisUse get_axis_use (uint index_);
+		[Version (since = "3.0")]
 		public bool get_axis_value ([CCode (array_length = false)] double[] axes, Gdk.Atom axis_label, out double value);
+		[Version (since = "3.0")]
 		public Gdk.DeviceType get_device_type ();
+		[Version (since = "3.0")]
 		public unowned Gdk.Display get_display ();
+		[Version (since = "2.20")]
 		public bool get_has_cursor ();
 		public bool get_history (Gdk.Window window, uint32 start, uint32 stop, [CCode (array_length_cname = "n_events", array_length_pos = 4.1)] out Gdk.TimeCoord[] events);
+		[Version (since = "2.20")]
 		public bool get_key (uint index_, out uint keyval, out Gdk.ModifierType modifiers);
+		[Version (since = "3.12")]
 		public unowned Gdk.Window? get_last_event_window ();
+		[Version (since = "2.20")]
 		public Gdk.InputMode get_mode ();
+		[Version (since = "3.0")]
 		public int get_n_axes ();
+		[Version (since = "2.24")]
 		public int get_n_keys ();
+		[Version (since = "2.20")]
 		public unowned string get_name ();
+		[Version (since = "3.0")]
 		public void get_position (out unowned Gdk.Screen screen, out int x, out int y);
+		[Version (since = "3.10")]
 		public void get_position_double (out unowned Gdk.Screen screen, out double x, out double y);
+		[Version (since = "3.16")]
 		public unowned string? get_product_id ();
+		[Version (since = "3.20")]
 		public unowned Gdk.Seat get_seat ();
+		[Version (since = "2.20")]
 		public Gdk.InputSource get_source ();
 		public void get_state (Gdk.Window window, [CCode (array_length = false)] double[]? axes, out Gdk.ModifierType mask);
+		[Version (since = "3.16")]
 		public unowned string? get_vendor_id ();
+		[Version (since = "3.0")]
 		public unowned Gdk.Window? get_window_at_position (out int win_x, out int win_y);
+		[Version (since = "3.0")]
 		public unowned Gdk.Window? get_window_at_position_double (out double win_x, out double win_y);
-		[Deprecated (since = "3.20.")]
+		[Version (deprecated = true, deprecated_since = "3.20.", since = "3.0")]
 		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor? cursor, uint32 time_);
+		[Version (since = "3.0")]
 		public GLib.List<weak Gdk.Atom> list_axes ();
 		public GLib.List<weak Gdk.Device>? list_slave_devices ();
 		public void set_axis_use (uint index_, Gdk.AxisUse use);
 		public void set_key (uint index_, uint keyval, Gdk.ModifierType modifiers);
 		public bool set_mode (Gdk.InputMode mode);
-		[Deprecated (since = "3.20.")]
+		[Version (deprecated = true, deprecated_since = "3.20.", since = "3.0")]
 		public void ungrab (uint32 time_);
+		[Version (since = "3.0")]
 		public void warp (Gdk.Screen screen, int x, int y);
+		[Version (since = "3.0")]
 		public Gdk.Device? associated_device { get; }
 		[NoAccessorMethod]
+		[Version (since = "3.0")]
 		public Gdk.DeviceManager device_manager { owned get; construct; }
+		[Version (since = "3.0")]
 		public Gdk.Display display { get; construct; }
+		[Version (since = "3.0")]
 		public bool has_cursor { get; construct; }
 		[NoAccessorMethod]
 		public Gdk.InputMode input_mode { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "3.0")]
 		public Gdk.InputSource input_source { get; construct; }
+		[Version (since = "3.0")]
 		public uint n_axes { get; }
+		[Version (since = "3.0")]
 		public string? name { get; construct; }
+		[Version (since = "3.16")]
 		public string product_id { get; construct; }
 		[NoAccessorMethod]
+		[Version (since = "3.20")]
 		public Gdk.Seat seat { owned get; set; }
 		[NoAccessorMethod]
+		[Version (since = "3.0")]
 		public Gdk.DeviceType type { get; construct; }
+		[Version (since = "3.16")]
 		public string vendor_id { get; construct; }
 		public signal void changed ();
 	}
@@ -4662,10 +4711,11 @@ namespace Gdk {
 	public abstract class DeviceManager : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected DeviceManager ();
-		[Deprecated (since = "3.20")]
+		[Version (deprecated = true, deprecated_since = "3.20", since = "3.0")]
 		public unowned Gdk.Device get_client_pointer ();
+		[Version (since = "3.0")]
 		public unowned Gdk.Display? get_display ();
-		[Deprecated (since = "3.20")]
+		[Version (deprecated = true, deprecated_since = "3.20", since = "3.0")]
 		public GLib.List<weak Gdk.Device> list_devices (Gdk.DeviceType type);
 		public Gdk.Display display { get; construct; }
 		public signal void device_added (Gdk.Device device);
@@ -4676,97 +4726,149 @@ namespace Gdk {
 	public class Display : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Display ();
+		[Version (since = "2.2")]
 		public void beep ();
+		[Version (since = "2.2")]
 		public void close ();
 		public bool device_is_grabbed (Gdk.Device device);
+		[Version (since = "2.4")]
 		public void flush ();
+		[Version (since = "3.0")]
 		public Gdk.AppLaunchContext get_app_launch_context ();
+		[Version (since = "2.2")]
 		public static unowned Gdk.Display? get_default ();
+		[Version (since = "2.4")]
 		public uint get_default_cursor_size ();
+		[Version (since = "2.4")]
 		public unowned Gdk.Window get_default_group ();
+		[Version (since = "2.2")]
 		public unowned Gdk.Screen get_default_screen ();
+		[Version (since = "3.20")]
 		public unowned Gdk.Seat get_default_seat ();
-		[Deprecated (since = "3.20.")]
+		[Version (deprecated = true, deprecated_since = "3.20.", since = "3.0")]
 		public unowned Gdk.DeviceManager? get_device_manager ();
+		[Version (since = "2.2")]
 		public Gdk.Event? get_event ();
+		[Version (since = "2.4")]
 		public void get_maximal_cursor_size (out uint width, out uint height);
-		[Deprecated (since = "3.10")]
+		[Version (deprecated = true, deprecated_since = "3.10", since = "2.2")]
 		public int get_n_screens ();
+		[Version (since = "2.2")]
 		public unowned string get_name ();
-		[Deprecated (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.0", since = "2.2")]
 		public void get_pointer (out unowned Gdk.Screen screen, out int x, out int y, out Gdk.ModifierType mask);
-		[Deprecated (since = "3.20")]
+		[Version (deprecated = true, deprecated_since = "3.20", since = "2.2")]
 		public unowned Gdk.Screen get_screen (int screen_num);
-		[Deprecated (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.0", since = "2.2")]
 		public unowned Gdk.Window? get_window_at_pointer (out int win_x, out int win_y);
+		[Version (since = "3.0")]
 		public bool has_pending ();
+		[Version (since = "2.22")]
 		public bool is_closed ();
-		[Deprecated (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.0", since = "2.2")]
 		public void keyboard_ungrab (uint32 time_);
-		[Deprecated (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.0", since = "2.2")]
 		public unowned GLib.List<Gdk.Device> list_devices ();
+		[Version (since = "3.20")]
 		public GLib.List<weak Gdk.Seat> list_seats ();
+		[Version (since = "3.0")]
 		public void notify_startup_complete (string startup_id);
+		[Version (since = "2.2")]
 		public static unowned Gdk.Display? open (string display_name);
-		[Deprecated (since = "3.16")]
+		[Version (deprecated = true, deprecated_since = "3.16")]
 		public static unowned Gdk.Display? open_default_libgtk_only ();
+		[Version (since = "2.2")]
 		public Gdk.Event? peek_event ();
-		[Deprecated (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.0", since = "2.2")]
 		public bool pointer_is_grabbed ();
-		[Deprecated (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.0", since = "2.2")]
 		public void pointer_ungrab (uint32 time_);
+		[Version (since = "2.2")]
 		public void put_event (Gdk.Event event);
+		[Version (since = "2.6")]
 		public bool request_selection_notification (Gdk.Atom selection);
+		[Version (since = "2.4")]
 		public void set_double_click_distance (uint distance);
+		[Version (since = "2.2")]
 		public void set_double_click_time (uint msec);
+		[Version (since = "2.6")]
 		public void store_clipboard (Gdk.Window clipboard_window, uint32 time_, [CCode (array_length_cname = "n_targets", array_length_pos = 3.1)] Gdk.Atom[] targets);
+		[Version (since = "2.6")]
 		public bool supports_clipboard_persistence ();
-		[Deprecated (since = "3.16")]
+		[Version (deprecated = true, deprecated_since = "3.16", since = "2.12")]
 		public bool supports_composite ();
+		[Version (since = "2.4")]
 		public bool supports_cursor_alpha ();
+		[Version (since = "2.4")]
 		public bool supports_cursor_color ();
+		[Version (since = "2.10")]
 		public bool supports_input_shapes ();
+		[Version (since = "2.6")]
 		public bool supports_selection_notification ();
+		[Version (since = "2.10")]
 		public bool supports_shapes ();
+		[Version (since = "2.2")]
 		public void sync ();
-		[Deprecated (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.0", since = "2.8")]
 		public void warp_pointer (Gdk.Screen screen, int x, int y);
+		[Version (since = "2.2")]
 		public signal void closed (bool is_error);
 		public signal void opened ();
+		[Version (since = "3.20")]
 		public signal void seat_added (Gdk.Seat seat);
+		[Version (since = "3.20")]
 		public signal void seat_removed (Gdk.Seat seat);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_display_manager_get_type ()")]
 	public class DisplayManager : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected DisplayManager ();
+		[Version (since = "2.2")]
 		public static unowned Gdk.DisplayManager @get ();
+		[Version (since = "2.2")]
 		public unowned Gdk.Display? get_default_display ();
+		[Version (since = "2.2")]
 		public GLib.SList<weak Gdk.Display> list_displays ();
+		[Version (since = "3.0")]
 		public unowned Gdk.Display? open_display (string name);
+		[Version (since = "2.2")]
 		public void set_default_display (Gdk.Display display);
 		public Gdk.Display default_display { get; set; }
+		[Version (since = "2.2")]
 		public signal void display_opened (Gdk.Display display);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_drag_context_get_type ()")]
 	public class DragContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected DragContext ();
+		[Version (since = "2.22")]
 		public Gdk.DragAction get_actions ();
+		[Version (since = "3.0")]
 		public unowned Gdk.Window get_dest_window ();
 		public unowned Gdk.Device get_device ();
+		[Version (since = "3.20")]
 		public unowned Gdk.Window get_drag_window ();
+		[Version (since = "3.0")]
 		public Gdk.DragProtocol get_protocol ();
+		[Version (since = "2.22")]
 		public Gdk.DragAction get_selected_action ();
+		[Version (since = "2.22")]
 		public unowned Gdk.Window get_source_window ();
+		[Version (since = "2.22")]
 		public Gdk.DragAction get_suggested_action ();
+		[Version (since = "2.22")]
 		public unowned GLib.List<Gdk.Atom> list_targets ();
 		public bool manage_dnd (Gdk.Window ipc_window, Gdk.DragAction actions);
 		public void set_device (Gdk.Device device);
+		[Version (since = "3.20")]
 		public void set_hotspot (int hot_x, int hot_y);
+		[Version (since = "3.20")]
 		public signal void action_changed (Gdk.DragAction object);
+		[Version (since = "3.20")]
 		public signal void cancel ();
+		[Version (since = "3.20")]
 		public signal void dnd_finished ();
+		[Version (since = "3.20")]
 		public signal void drop_performed (int object);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
@@ -4774,36 +4876,56 @@ namespace Gdk {
 	public class Event {
 		public Gdk.EventType type;
 		[CCode (has_construct_function = false)]
+		[Version (since = "2.2")]
 		public Event (Gdk.EventType type);
 		public Gdk.Event copy ();
 		public void free ();
 		public static Gdk.Event? @get ();
 		public bool get_axis (Gdk.AxisUse axis_use, out double value);
+		[Version (since = "3.2")]
 		public bool get_button (out uint button);
+		[Version (since = "3.2")]
 		public bool get_click_count (out uint click_count);
 		public bool get_coords (out double x_win, out double y_win);
+		[Version (since = "3.0")]
 		public unowned Gdk.Device? get_device ();
+		[Version (since = "3.4")]
 		public unowned Gdk.EventSequence get_event_sequence ();
+		[Version (since = "3.10")]
 		public Gdk.EventType get_event_type ();
+		[Version (since = "3.2")]
 		public bool get_keycode (out uint16 keycode);
+		[Version (since = "3.2")]
 		public bool get_keyval (out uint keyval);
 		public bool get_root_coords (out double x_root, out double y_root);
+		[Version (since = "2.2")]
 		public unowned Gdk.Screen get_screen ();
+		[Version (since = "3.4")]
 		public bool get_scroll_deltas (out double delta_x, out double delta_y);
+		[Version (since = "3.2")]
 		public bool get_scroll_direction (out Gdk.ScrollDirection direction);
+		[Version (since = "3.20")]
 		public unowned Gdk.Seat get_seat ();
+		[Version (since = "3.0")]
 		public unowned Gdk.Device? get_source_device ();
 		public bool get_state (out Gdk.ModifierType state);
 		public uint32 get_time ();
+		[Version (since = "3.10")]
 		public unowned Gdk.Window get_window ();
 		public static void handler_set (owned Gdk.EventFunc func);
+		[Version (since = "3.20")]
 		public bool is_scroll_stop_event ();
 		public static Gdk.Event? peek ();
 		public void put ();
+		[Version (since = "2.12")]
 		public static void request_motions (Gdk.EventMotion event);
+		[Version (since = "3.0")]
 		public void set_device (Gdk.Device device);
+		[Version (since = "2.2")]
 		public void set_screen (Gdk.Screen screen);
+		[Version (since = "3.0")]
 		public void set_source_device (Gdk.Device device);
+		[Version (since = "3.4")]
 		public bool triggers_context_menu ();
 		public Gdk.EventAny any {[CCode (cname = "(GdkEventAny *)")]  get; }
 		public Gdk.EventButton button {[CCode (cname = "(GdkEventButton *)")]  get; }
@@ -4909,6 +5031,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
 	[Compact]
+	[Version (since = "2.8")]
 	public class EventGrabBroken : Gdk.Event {
 		public weak Gdk.Window grab_window;
 		public bool implicit;
@@ -4952,6 +5075,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
 	[Compact]
+	[Version (since = "2.6")]
 	public class EventOwnerChange : Gdk.Event {
 		public weak Gdk.Window owner;
 		public Gdk.OwnerChange reason;
@@ -5079,7 +5203,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
 	[Compact]
-	[Deprecated (since = "3.12")]
+	[Version (deprecated = true, deprecated_since = "3.12")]
 	public class EventVisibility : Gdk.Event {
 		public int8 send_event;
 		public Gdk.VisibilityState state;
@@ -5099,14 +5223,23 @@ namespace Gdk {
 	public abstract class FrameClock : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected FrameClock ();
+		[Version (since = "3.8")]
 		public void begin_updating ();
+		[Version (since = "3.8")]
 		public void end_updating ();
+		[Version (since = "3.8")]
 		public Gdk.FrameTimings? get_current_timings ();
+		[Version (since = "3.8")]
 		public int64 get_frame_counter ();
+		[Version (since = "3.8")]
 		public int64 get_frame_time ();
+		[Version (since = "3.8")]
 		public int64 get_history_start ();
+		[Version (since = "3.8")]
 		public void get_refresh_info (int64 base_time, int64 refresh_interval_return, int64 presentation_time_return);
+		[Version (since = "3.8")]
 		public Gdk.FrameTimings? get_timings (int64 frame_counter);
+		[Version (since = "3.8")]
 		public void request_phase (Gdk.FrameClockPhase phase);
 		public signal void after_paint ();
 		public signal void before_paint ();
@@ -5119,119 +5252,198 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", ref_function = "gdk_frame_timings_ref", type_id = "gdk_frame_timings_get_type ()", unref_function = "gdk_frame_timings_unref")]
 	[Compact]
 	public class FrameTimings {
+		[Version (since = "3.8")]
 		public bool get_complete ();
+		[Version (since = "3.8")]
 		public int64 get_frame_counter ();
 		public int64 get_frame_time ();
+		[Version (since = "3.8")]
 		public int64 get_predicted_presentation_time ();
+		[Version (since = "3.8")]
 		public int64 get_presentation_time ();
+		[Version (since = "3.8")]
 		public int64 get_refresh_interval ();
+		[Version (since = "3.8")]
 		public Gdk.FrameTimings @ref ();
+		[Version (since = "3.8")]
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_gl_context_get_type ()")]
 	public abstract class GLContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected GLContext ();
+		[Version (since = "3.16")]
 		public static void clear_current ();
+		[Version (since = "3.16")]
 		public static unowned Gdk.GLContext get_current ();
+		[Version (since = "3.16")]
 		public bool get_debug_enabled ();
+		[Version (since = "3.16")]
 		public unowned Gdk.Display get_display ();
+		[Version (since = "3.16")]
 		public bool get_forward_compatible ();
+		[Version (since = "3.16")]
 		public void get_required_version (out int? major, out int? minor);
+		[Version (since = "3.16")]
 		public unowned Gdk.GLContext get_shared_context ();
+		[Version (since = "3.16")]
 		public void get_version (out int major, out int minor);
+		[Version (since = "3.16")]
 		public unowned Gdk.Window get_window ();
+		[Version (since = "3.20")]
 		public bool is_legacy ();
+		[Version (since = "3.16")]
 		public void make_current ();
+		[Version (since = "3.16")]
 		public bool realize () throws GLib.Error;
+		[Version (since = "3.16")]
 		public void set_debug_enabled (bool enabled);
+		[Version (since = "3.16")]
 		public void set_forward_compatible (bool compatible);
+		[Version (since = "3.16")]
 		public void set_required_version (int major, int minor);
+		[Version (since = "3.16")]
 		public Gdk.Display display { get; construct; }
+		[Version (since = "3.16")]
 		public Gdk.GLContext shared_context { get; construct; }
+		[Version (since = "3.16")]
 		public Gdk.Window window { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_keymap_get_type ()")]
 	public class Keymap : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Keymap ();
+		[Version (since = "2.20")]
 		public void add_virtual_modifiers (ref Gdk.ModifierType state);
+		[Version (since = "2.16")]
 		public bool get_caps_lock_state ();
 		public static unowned Gdk.Keymap get_default ();
 		public Pango.Direction get_direction ();
 		public bool get_entries_for_keycode (uint hardware_keycode, [CCode (array_length_cname = "n_entries", array_length_pos = 3.1)] out Gdk.KeymapKey[] keys, [CCode (array_length_cname = "n_entries", array_length_pos = 3.1)] out uint[] keyvals);
 		public bool get_entries_for_keyval (uint keyval, [CCode (array_length_cname = "n_keys", array_length_pos = 2.1)] out Gdk.KeymapKey[] keys);
+		[Version (since = "2.2")]
 		public static unowned Gdk.Keymap get_for_display (Gdk.Display display);
+		[Version (since = "3.4")]
 		public Gdk.ModifierType get_modifier_mask (Gdk.ModifierIntent intent);
+		[Version (since = "3.4")]
 		public uint get_modifier_state ();
+		[Version (since = "3.0")]
 		public bool get_num_lock_state ();
+		[Version (since = "3.18")]
 		public bool get_scroll_lock_state ();
+		[Version (since = "2.12")]
 		public bool have_bidi_layouts ();
 		public uint lookup_key (Gdk.KeymapKey key);
+		[Version (since = "2.20")]
 		public bool map_virtual_modifiers (ref Gdk.ModifierType state);
 		public bool translate_keyboard_state (uint hardware_keycode, Gdk.ModifierType state, int group, out uint keyval, out int effective_group, out int level, out Gdk.ModifierType consumed_modifiers);
+		[Version (since = "2.0")]
 		public signal void direction_changed ();
+		[Version (since = "2.2")]
 		public signal void keys_changed ();
+		[Version (since = "2.16")]
 		public signal void state_changed ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Screen : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Screen ();
+		[Version (since = "2.10")]
 		public Gdk.Window? get_active_window ();
+		[Version (since = "2.2")]
 		public static unowned Gdk.Screen? get_default ();
+		[Version (since = "2.2")]
 		public unowned Gdk.Display get_display ();
+		[Version (since = "2.10")]
 		public unowned Cairo.FontOptions? get_font_options ();
+		[Version (since = "2.2")]
 		public int get_height ();
+		[Version (since = "2.2")]
 		public int get_height_mm ();
+		[Version (since = "2.2")]
 		public int get_monitor_at_point (int x, int y);
+		[Version (since = "2.2")]
 		public int get_monitor_at_window (Gdk.Window window);
 		public void get_monitor_geometry (int monitor_num, out Gdk.Rectangle dest);
+		[Version (since = "2.14")]
 		public int get_monitor_height_mm (int monitor_num);
+		[Version (since = "2.14")]
 		public string? get_monitor_plug_name (int monitor_num);
+		[Version (since = "3.10")]
 		public int get_monitor_scale_factor (int monitor_num);
+		[Version (since = "2.14")]
 		public int get_monitor_width_mm (int monitor_num);
+		[Version (since = "3.4")]
 		public Gdk.Rectangle get_monitor_workarea (int monitor_num);
+		[Version (since = "2.2")]
 		public int get_n_monitors ();
+		[Version (since = "2.2")]
 		public int get_number ();
+		[Version (since = "2.20")]
 		public int get_primary_monitor ();
+		[Version (since = "2.10")]
 		public double get_resolution ();
+		[Version (since = "2.8")]
 		public unowned Gdk.Visual? get_rgba_visual ();
+		[Version (since = "2.2")]
 		public unowned Gdk.Window get_root_window ();
+		[Version (since = "2.2")]
 		public bool get_setting (string name, GLib.Value value);
+		[Version (since = "2.2")]
 		public unowned Gdk.Visual get_system_visual ();
+		[Version (since = "2.2")]
 		public GLib.List<weak Gdk.Window> get_toplevel_windows ();
+		[Version (since = "2.2")]
 		public int get_width ();
+		[Version (since = "2.2")]
 		public int get_width_mm ();
+		[Version (since = "2.10")]
 		public GLib.List<Gdk.Window>? get_window_stack ();
 		public static int height ();
 		public static int height_mm ();
+		[Version (since = "2.10")]
 		public bool is_composited ();
+		[Version (since = "2.2")]
 		public GLib.List<weak Gdk.Visual> list_visuals ();
+		[Version (since = "2.2")]
 		public string make_display_name ();
+		[Version (since = "2.10")]
 		public void set_font_options (Cairo.FontOptions? options);
+		[Version (since = "2.10")]
 		public void set_resolution (double dpi);
 		public static int width ();
 		public static int width_mm ();
 		public void* font_options { get; set; }
 		public double resolution { get; set; }
+		[Version (since = "2.10")]
 		public signal void composited_changed ();
+		[Version (since = "2.14")]
 		public signal void monitors_changed ();
+		[Version (since = "2.2")]
 		public signal void size_changed ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_seat_get_type ()")]
 	public abstract class Seat : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Seat ();
+		[Version (since = "3.20")]
 		public Gdk.SeatCapabilities get_capabilities ();
 		public unowned Gdk.Display get_display ();
+		[Version (since = "3.20")]
 		public unowned Gdk.Device? get_keyboard ();
+		[Version (since = "3.20")]
 		public unowned Gdk.Device? get_pointer ();
+		[Version (since = "3.20")]
 		public GLib.List<weak Gdk.Device> get_slaves (Gdk.SeatCapabilities capabilities);
+		[Version (since = "3.20")]
 		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.SeatCapabilities capabilities, bool owner_events, Gdk.Cursor? cursor, Gdk.Event? event, Gdk.SeatGrabPrepareFunc? prepare_func);
+		[Version (since = "3.20")]
 		public void ungrab ();
+		[Version (since = "3.20")]
 		public Gdk.Display display { get; construct; }
+		[Version (since = "3.20")]
 		public signal void device_added (Gdk.Device device);
+		[Version (since = "3.20")]
 		public signal void device_removed (Gdk.Device device);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_visual_get_type ()")]
@@ -5244,15 +5456,24 @@ namespace Gdk {
 		public static unowned Gdk.Visual? get_best_with_both (int depth, Gdk.VisualType visual_type);
 		public static unowned Gdk.Visual get_best_with_depth (int depth);
 		public static unowned Gdk.Visual get_best_with_type (Gdk.VisualType visual_type);
+		[Version (since = "2.22")]
 		public int get_bits_per_rgb ();
+		[Version (since = "2.22")]
 		public void get_blue_pixel_details (out uint32 mask, out int shift, out int precision);
+		[Version (since = "2.22")]
 		public Gdk.ByteOrder get_byte_order ();
+		[Version (since = "2.22")]
 		public int get_colormap_size ();
+		[Version (since = "2.22")]
 		public int get_depth ();
+		[Version (since = "2.22")]
 		public void get_green_pixel_details (out uint32 mask, out int shift, out int precision);
+		[Version (since = "2.22")]
 		public void get_red_pixel_details (out uint32 mask, out int shift, out int precision);
+		[Version (since = "2.2")]
 		public unowned Gdk.Screen get_screen ();
 		public static unowned Gdk.Visual get_system ();
+		[Version (since = "2.22")]
 		public Gdk.VisualType get_visual_type ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -5260,105 +5481,151 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		public Window (Gdk.Window? parent, Gdk.WindowAttr attributes, Gdk.WindowAttributesType attributes_mask);
 		public void add_filter (Gdk.FilterFunc function);
-		[Deprecated (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.0")]
 		public static unowned Gdk.Window at_pointer (out int win_x, out int win_y);
+		[Version (since = "2.12")]
 		public void beep ();
 		public void begin_move_drag (int button, int root_x, int root_y, uint32 timestamp);
+		[Version (since = "3.4")]
 		public void begin_move_drag_for_device (Gdk.Device device, int button, int root_x, int root_y, uint32 timestamp);
 		public void begin_paint_rect (Gdk.Rectangle rectangle);
 		public void begin_paint_region (Cairo.Region region);
 		public void begin_resize_drag (Gdk.WindowEdge edge, int button, int root_x, int root_y, uint32 timestamp);
+		[Version (since = "3.4")]
 		public void begin_resize_drag_for_device (Gdk.WindowEdge edge, Gdk.Device device, int button, int root_x, int root_y, uint32 timestamp);
-		[Deprecated (since = "3.8")]
+		[Version (deprecated = true, deprecated_since = "3.8", since = "2.6")]
 		public void configure_finished ();
 		public static void constrain_size (Gdk.Geometry geometry, Gdk.WindowHints flags, int width, int height, out int new_width, out int new_height);
+		[Version (since = "2.22")]
 		public void coords_from_parent (double parent_x, double parent_y, out double x, out double y);
+		[Version (since = "2.22")]
 		public void coords_to_parent (double x, double y, out double parent_x, out double parent_y);
+		[Version (since = "3.16")]
 		public Gdk.GLContext create_gl_context () throws GLib.Error;
+		[Version (since = "3.10")]
 		public Cairo.Surface create_similar_image_surface (int format, int width, int height, int scale);
+		[Version (since = "2.22")]
 		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
 		public void deiconify ();
 		[DestroysInstance]
 		public void destroy ();
-		[Deprecated (since = "3.8")]
+		[Version (deprecated = true, deprecated_since = "3.8", since = "2.6")]
 		public void enable_synchronized_configure ();
 		public void end_paint ();
+		[Version (since = "2.18")]
 		public bool ensure_native ();
-		[Deprecated (since = "3.14")]
+		[Version (deprecated = true, deprecated_since = "3.14", since = "2.18")]
 		public void flush ();
 		public void focus (uint32 timestamp);
-		[Deprecated (since = "3.16")]
+		[Version (deprecated = true, deprecated_since = "3.16")]
 		public void freeze_toplevel_updates_libgtk_only ();
 		public void freeze_updates ();
+		[Version (since = "2.2")]
 		public void fullscreen ();
 		public void fullscreen_on_monitor (int monitor);
+		[Version (since = "2.18")]
 		public void geometry_changed ();
+		[Version (since = "2.22")]
 		public bool get_accept_focus ();
+		[Version (since = "2.22")]
 		public unowned Cairo.Pattern? get_background_pattern ();
 		public GLib.List<weak Gdk.Window> get_children ();
+		[Version (since = "3.10")]
 		public GLib.List<weak Gdk.Window> get_children_with_user_data (void* user_data);
 		public Cairo.Region get_clip_region ();
-		[Deprecated (since = "3.16")]
+		[Version (deprecated = true, deprecated_since = "3.16", since = "2.22")]
 		public bool get_composited ();
+		[Version (since = "2.18")]
 		public unowned Gdk.Cursor? get_cursor ();
 		public bool get_decorations (out Gdk.WMDecoration decorations);
+		[Version (since = "3.0")]
 		public unowned Gdk.Cursor? get_device_cursor (Gdk.Device device);
+		[Version (since = "3.0")]
 		public Gdk.EventMask get_device_events (Gdk.Device device);
+		[Version (since = "3.0")]
 		public unowned Gdk.Window? get_device_position (Gdk.Device device, out int x, out int y, out Gdk.ModifierType mask);
+		[Version (since = "3.10")]
 		public unowned Gdk.Window? get_device_position_double (Gdk.Device device, out double x, out double y, out Gdk.ModifierType mask);
+		[Version (since = "2.24")]
 		public unowned Gdk.Display get_display ();
+		[Version (since = "3.0")]
 		public Gdk.DragProtocol get_drag_protocol (out Gdk.Window target);
+		[Version (since = "2.22")]
 		public unowned Gdk.Window get_effective_parent ();
+		[Version (since = "2.22")]
 		public unowned Gdk.Window get_effective_toplevel ();
+		[Version (since = "3.12")]
 		public bool get_event_compression ();
 		public Gdk.EventMask get_events ();
+		[Version (since = "2.22")]
 		public bool get_focus_on_map ();
+		[Version (since = "3.8")]
 		public unowned Gdk.FrameClock get_frame_clock ();
 		public void get_frame_extents (out Gdk.Rectangle rect);
+		[Version (since = "3.8")]
 		public Gdk.FullscreenMode get_fullscreen_mode ();
 		public void get_geometry (out int x, out int y, out int width, out int height);
+		[Version (since = "2.4")]
 		public unowned Gdk.Window get_group ();
+		[Version (since = "2.24")]
 		public int get_height ();
+		[Version (since = "2.22")]
 		public bool get_modal_hint ();
 		public int get_origin (out int x, out int y);
 		public unowned Gdk.Window get_parent ();
+		[Version (since = "3.18")]
 		public bool get_pass_through ();
-		[Deprecated (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.0")]
 		public unowned Gdk.Window? get_pointer (out int x, out int y, out Gdk.ModifierType mask);
 		public void get_position (out int x, out int y);
+		[Version (since = "2.18")]
 		public void get_root_coords (int x, int y, out int root_x, out int root_y);
 		public void get_root_origin (out int x, out int y);
+		[Version (since = "3.10")]
 		public int get_scale_factor ();
+		[Version (since = "2.24")]
 		public unowned Gdk.Screen get_screen ();
 		public Gdk.EventMask get_source_events (Gdk.InputSource source);
 		public Gdk.WindowState get_state ();
+		[Version (since = "3.0")]
 		public bool get_support_multidevice ();
 		public unowned Gdk.Window get_toplevel ();
+		[Version (since = "2.10")]
 		public Gdk.WindowTypeHint get_type_hint ();
 		public Cairo.Region get_update_area ();
 		public void get_user_data (out void* data);
 		public Cairo.Region get_visible_region ();
+		[Version (since = "2.24")]
 		public unowned Gdk.Visual get_visual ();
+		[Version (since = "2.24")]
 		public int get_width ();
 		public Gdk.WindowType get_window_type ();
+		[Version (since = "2.22")]
 		public bool has_native ();
 		public void hide ();
 		public void iconify ();
+		[Version (since = "2.10")]
 		public void input_shape_combine_region (Cairo.Region shape_region, int offset_x, int offset_y);
 		public void invalidate_maybe_recurse (Cairo.Region region, Gdk.WindowChildFunc? child_func);
 		public void invalidate_rect (Gdk.Rectangle? rect, bool invalidate_children);
 		public void invalidate_region (Cairo.Region region, bool invalidate_children);
+		[Version (since = "2.18")]
 		public bool is_destroyed ();
+		[Version (since = "2.22")]
 		public bool is_input_only ();
+		[Version (since = "2.22")]
 		public bool is_shaped ();
 		public bool is_viewable ();
 		public bool is_visible ();
 		public void lower ();
+		[Version (since = "3.16")]
 		public void mark_paint_from_clip (Cairo.Context cr);
 		public void maximize ();
+		[Version (since = "2.10")]
 		public void merge_child_input_shapes ();
 		public void merge_child_shapes ();
 		public void move (int x, int y);
+		[Version (since = "2.8")]
 		public void move_region (Cairo.Region region, int dx, int dy);
 		public void move_resize (int x, int y, int width, int height);
 		public unowned GLib.List<Gdk.Window> peek_children ();
@@ -5369,68 +5636,95 @@ namespace Gdk {
 		public void remove_filter (Gdk.FilterFunc function);
 		public void reparent (Gdk.Window new_parent, int x, int y);
 		public void resize (int width, int height);
+		[Version (since = "2.18")]
 		public void restack (Gdk.Window? sibling, bool above);
 		public void scroll (int dx, int dy);
+		[Version (since = "2.4")]
 		public void set_accept_focus (bool accept_focus);
-		[Deprecated (since = "3.4")]
+		[Version (deprecated = true, deprecated_since = "3.4")]
 		public void set_background (Gdk.Color color);
 		public void set_background_pattern (Cairo.Pattern? pattern);
 		public void set_background_rgba (Gdk.RGBA rgba);
+		[Version (since = "2.10")]
 		public void set_child_input_shapes ();
 		public void set_child_shapes ();
-		[Deprecated (since = "3.16")]
+		[Version (deprecated = true, deprecated_since = "3.16", since = "2.12")]
 		public void set_composited (bool composited);
 		public void set_cursor (Gdk.Cursor? cursor);
 		public static void set_debug_updates (bool setting);
 		public void set_decorations (Gdk.WMDecoration decorations);
+		[Version (since = "3.0")]
 		public void set_device_cursor (Gdk.Device device, Gdk.Cursor cursor);
+		[Version (since = "3.0")]
 		public void set_device_events (Gdk.Device device, Gdk.EventMask event_mask);
+		[Version (since = "3.12")]
 		public void set_event_compression (bool event_compression);
 		public void set_events (Gdk.EventMask event_mask);
+		[Version (since = "2.6")]
 		public void set_focus_on_map (bool focus_on_map);
+		[Version (since = "3.8")]
 		public void set_fullscreen_mode (Gdk.FullscreenMode mode);
 		public void set_functions (Gdk.WMFunction functions);
 		public void set_geometry_hints (Gdk.Geometry geometry, Gdk.WindowHints geom_mask);
 		public void set_group (Gdk.Window? leader);
 		public void set_icon_list (GLib.List<Gdk.Pixbuf> pixbufs);
 		public void set_icon_name (string? name);
+		[Version (since = "2.4")]
 		public void set_keep_above (bool setting);
+		[Version (since = "2.4")]
 		public void set_keep_below (bool setting);
 		public void set_modal_hint (bool modal);
+		[Version (since = "2.12")]
 		public void set_opacity (double opacity);
+		[Version (since = "3.10")]
 		public void set_opaque_region (Cairo.Region? region);
 		public void set_override_redirect (bool override_redirect);
+		[Version (since = "3.18")]
 		public void set_pass_through (bool pass_through);
 		public void set_role (string role);
+		[Version (since = "3.12")]
 		public void set_shadow_width (int left, int right, int top, int bottom);
+		[Version (since = "2.2")]
 		public void set_skip_pager_hint (bool skips_pager);
+		[Version (since = "2.2")]
 		public void set_skip_taskbar_hint (bool skips_taskbar);
+		[Version (since = "3.0")]
 		public void set_source_events (Gdk.InputSource source, Gdk.EventMask event_mask);
+		[Version (since = "2.12")]
 		public void set_startup_id (string startup_id);
-		[Deprecated (since = "3.16")]
+		[Version (deprecated = true, deprecated_since = "3.16")]
 		public bool set_static_gravities (bool use_static);
+		[Version (since = "3.0")]
 		public void set_support_multidevice (bool support_multidevice);
 		public void set_title (string title);
 		public void set_transient_for (Gdk.Window parent);
 		public void set_type_hint (Gdk.WindowTypeHint hint);
+		[Version (since = "2.8")]
 		public void set_urgency_hint (bool urgent);
 		public void set_user_data (GLib.Object? user_data);
 		public void shape_combine_region (Cairo.Region? shape_region, int offset_x, int offset_y);
 		public void show ();
 		public void show_unraised ();
+		[Version (since = "3.14")]
 		public bool show_window_menu (Gdk.Event event);
 		public void stick ();
-		[Deprecated (since = "3.16")]
+		[Version (deprecated = true, deprecated_since = "3.16")]
 		public void thaw_toplevel_updates_libgtk_only ();
 		public void thaw_updates ();
+		[Version (since = "2.2")]
 		public void unfullscreen ();
 		public void unmaximize ();
 		public void unstick ();
 		public void withdraw ();
+		[Version (since = "2.18")]
 		public Gdk.Cursor cursor { get; set; }
+		[Version (since = "3.0")]
 		public virtual signal Cairo.Surface create_surface (int width, int height);
+		[Version (since = "2.18")]
 		public virtual signal void from_embedder (double embedder_x, double embedder_y, out double offscreen_x, out double offscreen_y);
+		[Version (since = "2.18")]
 		public signal unowned Gdk.Window? pick_embedded_child (double x, double y);
+		[Version (since = "2.18")]
 		public virtual signal void to_embedder (double offscreen_x, double offscreen_y, out double embedder_x, out double embedder_y);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", ref_function = "", unref_function = "")]
@@ -5443,6 +5737,7 @@ namespace Gdk {
 		[CCode (cname = "GDK_NONE")]
 		public static Gdk.Atom NONE;
 		public static Gdk.Atom intern (string atom_name, bool only_if_exists);
+		[Version (since = "2.10")]
 		public static Gdk.Atom intern_static_string (string atom_name);
 		public string name ();
 	}
@@ -5454,7 +5749,7 @@ namespace Gdk {
 		public int bottom;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_color_get_type ()")]
-	[Deprecated (since = "3.14")]
+	[Version (deprecated = true, deprecated_since = "3.14")]
 	public struct Color {
 		public uint32 pixel;
 		public uint16 red;
@@ -5465,6 +5760,7 @@ namespace Gdk {
 		public void free ();
 		public uint hash ();
 		public static bool parse (string spec, out Gdk.Color color);
+		[Version (since = "2.12")]
 		public string to_string ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
@@ -5498,11 +5794,17 @@ namespace Gdk {
 		public double green;
 		public double blue;
 		public double alpha;
+		[Version (since = "3.0")]
 		public Gdk.RGBA? copy ();
+		[Version (since = "3.0")]
 		public bool equal (Gdk.RGBA p2);
+		[Version (since = "3.0")]
 		public void free ();
+		[Version (since = "3.0")]
 		public uint hash ();
+		[Version (since = "3.0")]
 		public bool parse (string spec);
+		[Version (since = "3.0")]
 		public string to_string ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -5757,6 +6059,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FRAME_CLOCK_PHASE_", type_id = "gdk_frame_clock_phase_get_type ()")]
 	[Flags]
+	[Version (since = "3.8")]
 	public enum FrameClockPhase {
 		NONE,
 		FLUSH_EVENTS,
@@ -5768,6 +6071,7 @@ namespace Gdk {
 		AFTER_PAINT
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FULLSCREEN_ON_", type_id = "gdk_fullscreen_mode_get_type ()")]
+	[Version (since = "3.8")]
 	public enum FullscreenMode {
 		CURRENT_MONITOR,
 		ALL_MONITORS
@@ -5817,6 +6121,7 @@ namespace Gdk {
 		TOUCHPAD
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_MODIFIER_INTENT_", type_id = "gdk_modifier_intent_get_type ()")]
+	[Version (since = "3.4")]
 	public enum ModifierIntent {
 		PRIMARY_ACCELERATOR,
 		CONTEXT_MENU,
@@ -5884,6 +6189,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SEAT_CAPABILITY_", type_id = "gdk_seat_capabilities_get_type ()")]
 	[Flags]
+	[Version (since = "3.20")]
 	public enum SeatCapabilities {
 		NONE,
 		POINTER,
@@ -6034,6 +6340,7 @@ namespace Gdk {
 		INPUT_ONLY
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_GL_ERROR_")]
+	[Version (since = "3.16")]
 	public errordomain GLError {
 		NOT_AVAILABLE,
 		UNSUPPORTED_FORMAT,
@@ -6045,22 +6352,29 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 2.9)]
 	public delegate Gdk.FilterReturn FilterFunc (Gdk.XEvent xevent, Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 2.9)]
+	[Version (since = "3.20")]
 	public delegate void SeatGrabPrepareFunc (Gdk.Seat seat, Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 1.9)]
 	public delegate bool WindowChildFunc (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdk.h", has_target = false)]
+	[Version (since = "3.10")]
 	public delegate void WindowInvalidateHandlerFunc (Gdk.Window window, Cairo.Region region);
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_BUTTON_MIDDLE")]
+	[Version (since = "3.4")]
 	public const int BUTTON_MIDDLE;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_BUTTON_PRIMARY")]
+	[Version (since = "3.4")]
 	public const int BUTTON_PRIMARY;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_BUTTON_SECONDARY")]
+	[Version (since = "3.4")]
 	public const int BUTTON_SECONDARY;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_CURRENT_TIME")]
 	public const int CURRENT_TIME;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_EVENT_PROPAGATE")]
+	[Version (since = "3.4")]
 	public const bool EVENT_PROPAGATE;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_EVENT_STOP")]
+	[Version (since = "3.4")]
 	public const bool EVENT_STOP;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_MAX_TIMECOORD_AXES")]
 	public const int MAX_TIMECOORD_AXES;
@@ -6075,34 +6389,43 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const Gdk.Atom SELECTION_SECONDARY;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (since = "3.16")]
+	[Version (deprecated = true, deprecated_since = "3.16")]
 	public static void add_option_entries_libgtk_only (GLib.OptionGroup group);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void beep ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.8")]
 	public static Cairo.Context cairo_create (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "3.16")]
 	public static void cairo_draw_from_gl (Cairo.Context cr, Gdk.Window window, int source, int source_type, int buffer_scale, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool cairo_get_clip_rectangle (Cairo.Context cr, out Gdk.Rectangle rect);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.8")]
 	public static void cairo_rectangle (Cairo.Context cr, Gdk.Rectangle rectangle);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.8")]
 	public static void cairo_region (Cairo.Context cr, Cairo.Region region);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Cairo.Region cairo_region_create_from_surface (Cairo.Surface surface);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (since = "3.4")]
+	[Version (deprecated = true, deprecated_since = "3.4", since = "2.8")]
 	public static void cairo_set_source_color (Cairo.Context cr, Gdk.Color color);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.8")]
 	public static void cairo_set_source_pixbuf (Cairo.Context cr, Gdk.Pixbuf pixbuf, double pixbuf_x, double pixbuf_y);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "3.0")]
 	public static void cairo_set_source_rgba (Cairo.Context cr, Gdk.RGBA rgba);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.24")]
 	public static void cairo_set_source_window (Cairo.Context cr, Gdk.Window window, double x, double y);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "3.10")]
 	public static Cairo.Surface cairo_surface_create_from_pixbuf (Gdk.Pixbuf pixbuf, int scale, Gdk.Window? for_window);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "3.0")]
 	public static void disable_multidevice ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_abort (Gdk.DragContext context, uint32 time_);
@@ -6111,14 +6434,18 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.DragContext drag_begin_for_device (Gdk.Window window, Gdk.Device device, GLib.List<Gdk.Atom> targets);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "3.20")]
 	public static Gdk.DragContext drag_begin_from_point (Gdk.Window window, Gdk.Device device, GLib.List<Gdk.Atom> targets, int x_root, int y_root);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_drop (Gdk.DragContext context, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "3.20")]
 	public static void drag_drop_done (Gdk.DragContext context, bool success);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.6")]
 	public static bool drag_drop_succeeded (Gdk.DragContext context);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.2")]
 	public static void drag_find_window_for_screen (Gdk.DragContext context, Gdk.Window drag_window, Gdk.Screen screen, int x_root, int y_root, out Gdk.Window dest_window, out Gdk.DragProtocol protocol);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.Atom drag_get_selection (Gdk.DragContext context);
@@ -6133,14 +6460,18 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static int error_trap_pop ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "3.0")]
 	public static void error_trap_pop_ignored ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void error_trap_push ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "3.0")]
 	public static bool events_get_angle (Gdk.Event event1, Gdk.Event event2, out double angle);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "3.0")]
 	public static bool events_get_center (Gdk.Event event1, Gdk.Event event2, out double x, out double y);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "3.0")]
 	public static bool events_get_distance (Gdk.Event event1, Gdk.Event event2, out double distance);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool events_pending ();
@@ -6149,9 +6480,10 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static unowned Gdk.Window get_default_root_window ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (since = "3.8")]
+	[Version (deprecated = true, deprecated_since = "3.8")]
 	public static string get_display ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.2")]
 	public static unowned string? get_display_arg_name ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static unowned string get_program_class ();
@@ -6162,10 +6494,10 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool init_check ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[] argv);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (since = "3.0")]
+	[Version (deprecated = true, deprecated_since = "3.0")]
 	public static Gdk.GrabStatus keyboard_grab (Gdk.Window window, bool owner_events, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (since = "3.0")]
+	[Version (deprecated = true, deprecated_since = "3.0")]
 	public static void keyboard_ungrab (uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void keyval_convert_case (uint symbol, out uint lower, out uint upper);
@@ -6186,38 +6518,44 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static GLib.List<weak Gdk.Visual> list_visuals ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.2")]
 	public static void notify_startup_complete ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.12")]
 	public static void notify_startup_complete_with_id (string startup_id);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.18")]
 	public static unowned Gdk.Window? offscreen_window_get_embedder (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static unowned Cairo.Surface? offscreen_window_get_surface (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.18")]
 	public static void offscreen_window_set_embedder (Gdk.Window window, Gdk.Window embedder);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Pango.Context pango_context_get ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.2")]
 	public static Pango.Context pango_context_get_for_screen (Gdk.Screen screen);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Cairo.Region pango_layout_get_clip_region (Pango.Layout layout, int x_origin, int y_origin, int index_ranges, int n_ranges);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.2")]
 	public static void parse_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[] argv);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.Pixbuf? pixbuf_get_from_surface (Cairo.Surface surface, int src_x, int src_y, int width, int height);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.Pixbuf? pixbuf_get_from_window (Gdk.Window window, int src_x, int src_y, int width, int height);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (since = "3.0")]
+	[Version (deprecated = true, deprecated_since = "3.0")]
 	public static Gdk.GrabStatus pointer_grab (Gdk.Window window, bool owner_events, Gdk.EventMask event_mask, Gdk.Window? confine_to, Gdk.Cursor? cursor, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (since = "3.0")]
+	[Version (deprecated = true, deprecated_since = "3.0")]
 	public static bool pointer_is_grabbed ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (since = "3.0")]
+	[Version (deprecated = true, deprecated_since = "3.0")]
 	public static void pointer_ungrab (uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (since = "3.16")]
+	[Version (deprecated = true, deprecated_since = "3.16")]
 	public static void pre_parse_libgtk_only ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void property_change (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, int format, Gdk.PropMode mode, [CCode (array_length = false, type = "const guchar*")] uint8[] data, int nelements);
@@ -6230,30 +6568,31 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void query_visual_types ([CCode (array_length_cname = "count", array_length_pos = 1.1)] out unowned Gdk.VisualType[] visual_types);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (replacement = "Selection.convert", since = "vala-0.12")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.convert")]
 	public static void selection_convert (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (replacement = "Selection.owner_get", since = "vala-0.12")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.owner_get")]
 	public static unowned Gdk.Window selection_owner_get (Gdk.Atom selection);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (replacement = "Selection.owner_get_for_display", since = "vala-0.12")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.owner_get_for_display")]
 	public static unowned Gdk.Window selection_owner_get_for_display (Gdk.Display display, Gdk.Atom selection);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (replacement = "Selection.owner_set", since = "vala-0.12")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.owner_set")]
 	public static bool selection_owner_set (Gdk.Window owner, Gdk.Atom selection, uint32 time_, bool send_event);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (replacement = "Selection.owner_set_for_display", since = "vala-0.12")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.owner_set_for_display")]
 	public static bool selection_owner_set_for_display (Gdk.Display display, Gdk.Window owner, Gdk.Atom selection, uint32 time_, bool send_event);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (replacement = "Selection.property_get", since = "vala-0.12")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.property_get")]
 	public static int selection_property_get (Gdk.Window requestor, uchar[] data, out Gdk.Atom prop_type, int prop_format);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (replacement = "Selection.send_notify", since = "vala-0.12")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.send_notify")]
 	public static void selection_send_notify (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (replacement = "Selection.send_notify_for_display", since = "vala-0.12")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.send_notify_for_display")]
 	public static void selection_send_notify_for_display (Gdk.Display display, Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "3.10")]
 	public static void set_allowed_backends (string backends);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void set_double_click_time (uint msec);
@@ -6264,36 +6603,46 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool setting_get (string name, GLib.Value value);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.14")]
 	public static void test_render_sync (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.14")]
 	public static bool test_simulate_button (Gdk.Window window, int x, int y, uint button, Gdk.ModifierType modifiers, Gdk.EventType button_pressrelease);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.14")]
 	public static bool test_simulate_key (Gdk.Window window, int x, int y, uint keyval, Gdk.ModifierType modifiers, Gdk.EventType key_pressrelease);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.2")]
 	public static int text_property_to_utf8_list_for_display (Gdk.Display display, Gdk.Atom encoding, int format, [CCode (array_length_cname = "length", array_length_pos = 4.5)] uint8[] text, [CCode (array_length = false, array_null_terminated = true)] out string[] list);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.12")]
 	public static uint threads_add_idle (GLib.SourceFunc function);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.12")]
 	public static uint threads_add_idle_full (int priority, owned GLib.SourceFunc function);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.12")]
 	public static uint threads_add_timeout (uint interval, GLib.SourceFunc function);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.12")]
 	public static uint threads_add_timeout_full (int priority, uint interval, owned GLib.SourceFunc function);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.14")]
 	public static uint threads_add_timeout_seconds (uint interval, GLib.SourceFunc function);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "2.14")]
 	public static uint threads_add_timeout_seconds_full (int priority, uint interval, owned GLib.SourceFunc function);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (since = "3.6")]
+	[Version (deprecated = true, deprecated_since = "3.6")]
 	public static void threads_enter ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (since = "3.6")]
+	[Version (deprecated = true, deprecated_since = "3.6")]
 	public static void threads_init ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (since = "3.6")]
+	[Version (deprecated = true, deprecated_since = "3.6")]
 	public static void threads_leave ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Deprecated (since = "3.6")]
+	[Version (deprecated = true, deprecated_since = "3.6", since = "2.4")]
 	public static void threads_set_lock_functions (GLib.Callback enter_fn, GLib.Callback leave_fn);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint unicode_to_keyval (uint32 wc);

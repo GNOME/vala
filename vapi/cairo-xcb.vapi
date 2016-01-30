@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-[Deprecated (since = "vala-0.26", replacement = "bindings distributed with vala-extra-vapis")]
+[Version (deprecated_since = "vala-0.26", replacement = "bindings distributed with vala-extra-vapis")]
 namespace Cairo {
 	[Compact]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-xcb.h")]

@@ -23,7 +23,7 @@ namespace Atk {
 		public virtual int get_start_index ();
 		public virtual string get_uri (int i);
 		public bool is_inline ();
-		[Deprecated (since = "1.8")]
+		[Version (deprecated = true, deprecated_since = "1.8", since = "1.4")]
 		public virtual bool is_selected_link ();
 		public virtual bool is_valid ();
 		[NoWrapper]
@@ -31,8 +31,8 @@ namespace Atk {
 		public int end_index { get; }
 		[NoAccessorMethod]
 		public int number_of_anchors { get; }
-		[Deprecated (since = "1.8")]
 		[NoAccessorMethod]
+		[Version (deprecated = true, deprecated_since = "1.8")]
 		public bool selected_link { get; }
 		public int start_index { get; }
 		public virtual signal void link_activated ();
@@ -41,11 +41,11 @@ namespace Atk {
 	public class Misc : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Misc ();
-		[Deprecated]
+		[Version (deprecated = true, since = "1.13")]
 		public static unowned Atk.Misc get_instance ();
-		[Deprecated]
+		[Version (deprecated = true, since = "1.13")]
 		public virtual void threads_enter ();
-		[Deprecated]
+		[Version (deprecated = true, since = "1.13")]
 		public virtual void threads_leave ();
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_no_op_object_get_type ()")]
@@ -68,19 +68,21 @@ namespace Atk {
 		[CCode (has_construct_function = false)]
 		protected Object ();
 		public bool add_relationship (Atk.RelationType relationship, Atk.Object target);
-		[Deprecated]
+		[Version (deprecated = true)]
 		public virtual uint connect_property_change_handler (Atk.PropertyChangeHandler handler);
+		[Version (since = "1.12")]
 		public virtual Atk.AttributeSet get_attributes ();
 		public virtual unowned string get_description ();
 		public virtual int get_index_in_parent ();
-		[Deprecated]
+		[Version (deprecated = true)]
 		public virtual Atk.Layer get_layer ();
-		[Deprecated]
+		[Version (deprecated = true)]
 		public virtual int get_mdi_zorder ();
 		public int get_n_accessible_children ();
 		[NoWrapper]
 		public virtual int get_n_children ();
 		public virtual unowned string get_name ();
+		[Version (since = "2.8")]
 		public virtual unowned string get_object_locale ();
 		public virtual unowned Atk.Object get_parent ();
 		public virtual Atk.Role get_role ();
@@ -90,7 +92,7 @@ namespace Atk {
 		public Atk.Object ref_accessible_child (int i);
 		public virtual Atk.RelationSet ref_relation_set ();
 		public virtual Atk.StateSet ref_state_set ();
-		[Deprecated]
+		[Version (deprecated = true)]
 		public virtual void remove_property_change_handler (uint handler_id);
 		public bool remove_relationship (Atk.RelationType relationship, Atk.Object target);
 		public virtual void set_description (string description);
@@ -111,31 +113,31 @@ namespace Atk {
 		public Atk.Object accessible_parent { owned get; set; }
 		[NoAccessorMethod]
 		public int accessible_role { get; set; }
-		[Deprecated]
 		[NoAccessorMethod]
+		[Version (deprecated = true)]
 		public string accessible_table_caption { owned get; set; }
 		[NoAccessorMethod]
 		public Atk.Object accessible_table_caption_object { owned get; set; }
-		[Deprecated]
 		[NoAccessorMethod]
+		[Version (deprecated = true)]
 		public string accessible_table_column_description { owned get; set; }
-		[Deprecated]
 		[NoAccessorMethod]
+		[Version (deprecated = true)]
 		public Atk.Object accessible_table_column_header { owned get; set; }
-		[Deprecated]
 		[NoAccessorMethod]
+		[Version (deprecated = true)]
 		public string accessible_table_row_description { owned get; set; }
-		[Deprecated]
 		[NoAccessorMethod]
+		[Version (deprecated = true)]
 		public Atk.Object accessible_table_row_header { owned get; set; }
 		[NoAccessorMethod]
 		public Atk.Object accessible_table_summary { owned get; set; }
-		[Deprecated]
 		[NoAccessorMethod]
+		[Version (deprecated = true)]
 		public double accessible_value { get; set; }
 		public virtual signal void active_descendant_changed (void* child);
 		public virtual signal void children_changed (uint change_index, void* changed_child);
-		[Deprecated (since = "2.9.4")]
+		[Version (deprecated = true, deprecated_since = "2.9.4")]
 		public virtual signal void focus_event (bool focus_in);
 		public virtual signal void property_change (void* values);
 		public virtual signal void state_change (string name, bool state_set);
@@ -153,6 +155,7 @@ namespace Atk {
 	public class Plug : Atk.Object, Atk.Component {
 		[CCode (has_construct_function = false, type = "AtkObject*")]
 		public Plug ();
+		[Version (since = "1.30")]
 		public string get_id ();
 		[NoWrapper]
 		public virtual string get_object_id ();
@@ -161,18 +164,24 @@ namespace Atk {
 	[Compact]
 	public class Range {
 		[CCode (has_construct_function = false)]
+		[Version (since = "2.12")]
 		public Range (double lower_limit, double upper_limit, string description);
+		[Version (since = "2.12")]
 		public Atk.Range copy ();
+		[Version (since = "2.12")]
 		public void free ();
+		[Version (since = "2.12")]
 		public unowned string get_description ();
+		[Version (since = "2.12")]
 		public double get_lower_limit ();
+		[Version (since = "2.12")]
 		public double get_upper_limit ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Registry : GLib.Object {
-		[Deprecated]
+		[Version (deprecated = true)]
 		public weak GLib.HashTable<GLib.Type,Atk.ObjectFactory> factory_singleton_cache;
-		[Deprecated]
+		[Version (deprecated = true)]
 		public weak GLib.HashTable<GLib.Type,GLib.Type> factory_type_registry;
 		[CCode (has_construct_function = false)]
 		protected Registry ();
@@ -187,15 +196,16 @@ namespace Atk {
 		public Atk.RelationType relationship;
 		[CCode (has_construct_function = false)]
 		public Relation ([CCode (array_length_cname = "n_targets", array_length_pos = 1.5)] Atk.Object[] targets, Atk.RelationType relationship);
+		[Version (since = "1.9")]
 		public void add_target (Atk.Object target);
 		public Atk.RelationType get_relation_type ();
 		public unowned GLib.GenericArray<Atk.Object> get_target ();
 		public bool remove_target (Atk.Object target);
-		[Deprecated (replacement = "RelationType.for_name", since = "vala-0.16")]
+		[Version (deprecated_since = "vala-0.16", replacement = "RelationType.for_name")]
 		public static Atk.RelationType type_for_name (string name);
-		[Deprecated (replacement = "RelationType.get_name", since = "vala-0.16")]
+		[Version (deprecated_since = "vala-0.16", replacement = "RelationType.get_name")]
 		public static unowned string type_get_name (Atk.RelationType type);
-		[Deprecated (replacement = "RelationType.register", since = "vala-0.16")]
+		[Version (deprecated_since = "vala-0.16", replacement = "RelationType.register")]
 		public static Atk.RelationType type_register (string name);
 		[NoAccessorMethod]
 		public Atk.RelationType relation_type { get; set; }
@@ -204,11 +214,12 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_relation_set_get_type ()")]
 	public class RelationSet : GLib.Object {
-		[Deprecated]
+		[Version (deprecated = true)]
 		public weak GLib.GenericArray<Atk.Relation> relations;
 		[CCode (has_construct_function = false)]
 		public RelationSet ();
 		public void add (Atk.Relation relation);
+		[Version (since = "1.9")]
 		public void add_relation_by_type (Atk.RelationType relationship, Atk.Object target);
 		public bool contains (Atk.RelationType relationship);
 		public bool contains_target (Atk.RelationType relationship, Atk.Object target);
@@ -219,11 +230,13 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_socket_get_type ()")]
 	public class Socket : Atk.Object, Atk.Component {
-		[Deprecated]
+		[Version (deprecated = true)]
 		public weak string embedded_plug_id;
 		[CCode (has_construct_function = false, type = "AtkObject*")]
 		public Socket ();
+		[Version (since = "1.30")]
 		public virtual void embed (string plug_id);
+		[Version (since = "1.30")]
 		public bool is_occupied ();
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_state_set_get_type ()")]
@@ -254,19 +267,20 @@ namespace Atk {
 		[CCode (has_construct_function = false)]
 		protected Util ();
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_add_focus_tracker")]
-		[Deprecated (since = "2.9.4")]
+		[Version (deprecated = true, deprecated_since = "2.9.4")]
 		public static uint add_focus_tracker (Atk.EventListener focus_tracker);
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_add_global_event_listener")]
 		public static uint add_global_event_listener ([CCode (type = "GSignalEmissionHook")] Atk.SignalEmissionHook listener, string event_type);
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_add_key_event_listener")]
 		public static uint add_key_event_listener (Atk.KeySnoopFunc listener);
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_focus_tracker_init")]
-		[Deprecated (since = "2.9.4")]
+		[Version (deprecated = true, deprecated_since = "2.9.4")]
 		public static void focus_tracker_init (Atk.EventListenerInit init);
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_focus_tracker_notify")]
-		[Deprecated (since = "2.9.4")]
+		[Version (deprecated = true, deprecated_since = "2.9.4")]
 		public static void focus_tracker_notify (Atk.Object object);
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_get_focus_object")]
+		[Version (since = "1.6")]
 		public static unowned Atk.Object get_focus_object ();
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_get_root")]
 		public static unowned Atk.Object get_root ();
@@ -275,9 +289,10 @@ namespace Atk {
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_get_toolkit_version")]
 		public static unowned string get_toolkit_version ();
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_get_version")]
+		[Version (since = "1.20")]
 		public static unowned string get_version ();
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_remove_focus_tracker")]
-		[Deprecated (since = "2.9.4")]
+		[Version (deprecated = true, deprecated_since = "2.9.4")]
 		public static void remove_focus_tracker (uint tracker_id);
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_remove_global_event_listener")]
 		public static void remove_global_event_listener (uint listener_id);
@@ -296,20 +311,21 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_component_get_type ()")]
 	public interface Component : GLib.Object {
-		[Deprecated (since = "2.9.4")]
+		[Version (deprecated = true, deprecated_since = "2.9.4")]
 		public abstract uint add_focus_handler (Atk.FocusHandler handler);
 		public abstract bool contains (int x, int y, Atk.CoordType coord_type);
+		[Version (since = "1.12")]
 		public abstract double get_alpha ();
 		public abstract void get_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
 		public abstract Atk.Layer get_layer ();
 		public abstract int get_mdi_zorder ();
-		[Deprecated]
+		[Version (deprecated = true)]
 		public abstract void get_position (int x, int y, Atk.CoordType coord_type);
-		[Deprecated]
+		[Version (deprecated = true)]
 		public abstract void get_size (int width, int height);
 		public abstract bool grab_focus ();
 		public abstract Atk.Object? ref_accessible_at_point (int x, int y, Atk.CoordType coord_type);
-		[Deprecated (since = "2.9.4")]
+		[Version (deprecated = true, deprecated_since = "2.9.4")]
 		public abstract void remove_focus_handler (uint handler_id);
 		public abstract bool set_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
 		public abstract bool set_position (int x, int y, Atk.CoordType coord_type);
@@ -319,24 +335,30 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_document_get_type ()")]
 	public interface Document : GLib.Object {
 		[CCode (vfunc_name = "get_document_attribute_value")]
+		[Version (since = "1.12")]
 		public virtual unowned string? get_attribute_value (string attribute_name);
 		[CCode (vfunc_name = "get_document_attributes")]
+		[Version (since = "1.12")]
 		public virtual unowned Atk.AttributeSet get_attributes ();
+		[Version (since = "2.12")]
 		public virtual int get_current_page_number ();
-		[Deprecated]
+		[Version (deprecated = true)]
 		public virtual void* get_document ();
-		[Deprecated (replacement = "Document.get_locale", since = "vala-0.22")]
+		[Version (deprecated_since = "vala-0.22", replacement = "Document.get_locale")]
 		public virtual unowned string get_document_locale ();
-		[Deprecated]
+		[Version (deprecated = true)]
 		public virtual unowned string get_document_type ();
 		[CCode (vfunc_name = "get_document_locale")]
-		[Deprecated (since = "2.7.90")]
+		[Version (deprecated = true, deprecated_since = "2.7.90")]
 		public virtual unowned string get_locale ();
+		[Version (since = "2.12")]
 		public virtual int get_page_count ();
 		[CCode (vfunc_name = "set_document_attribute")]
+		[Version (since = "1.12")]
 		public virtual bool set_attribute_value (string attribute_name, string attribute_value);
 		public signal void load_complete ();
 		public signal void load_stopped ();
+		[Version (since = "2.12")]
 		public signal void page_changed (int page_number);
 		public signal void reload ();
 	}
@@ -352,6 +374,7 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_hyperlink_impl_get_type ()")]
 	public interface HyperlinkImpl : GLib.Object {
+		[Version (since = "1.12")]
 		public abstract Atk.Hyperlink get_hyperlink ();
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_hypertext_get_type ()")]
@@ -364,6 +387,7 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_image_get_type ()")]
 	public interface Image : GLib.Object {
 		public abstract unowned string get_image_description ();
+		[Version (since = "1.12")]
 		public abstract unowned string? get_image_locale ();
 		public abstract void get_image_position (int x, int y, Atk.CoordType coord_type);
 		public abstract void get_image_size (int width, int height);
@@ -389,6 +413,7 @@ namespace Atk {
 		public abstract unowned string get_mime_type (int i);
 		public abstract int get_n_mime_types ();
 		public abstract GLib.IOChannel get_stream (string mime_type);
+		[Version (since = "1.12")]
 		public abstract unowned string? get_uri (string mime_type);
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_table_get_type ()")]
@@ -396,16 +421,16 @@ namespace Atk {
 		public abstract bool add_column_selection (int column);
 		public abstract bool add_row_selection (int row);
 		public abstract unowned Atk.Object? get_caption ();
-		[Deprecated]
+		[Version (deprecated = true)]
 		public abstract int get_column_at_index (int index_);
 		public abstract unowned string get_column_description (int column);
 		public abstract int get_column_extent_at (int row, int column);
 		public abstract unowned Atk.Object? get_column_header (int column);
-		[Deprecated]
+		[Version (deprecated = true)]
 		public abstract int get_index_at (int row, int column);
 		public abstract int get_n_columns ();
 		public abstract int get_n_rows ();
-		[Deprecated]
+		[Version (deprecated = true)]
 		public abstract int get_row_at_index (int index_);
 		public abstract unowned string? get_row_description (int row);
 		public abstract int get_row_extent_at (int row, int column);
@@ -435,27 +460,36 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_table_cell_get_type ()")]
 	public interface TableCell : Atk.Object {
+		[Version (since = "2.12")]
 		public abstract GLib.GenericArray<Atk.Object> get_column_header_cells ();
+		[Version (since = "2.12")]
 		public abstract int get_column_span ();
+		[Version (since = "2.12")]
 		public abstract bool get_position (out int row, out int column);
+		[Version (since = "2.12")]
 		public abstract bool get_row_column_span (out int row, out int column, out int row_span, out int column_span);
+		[Version (since = "2.12")]
 		public abstract GLib.GenericArray<Atk.Object> get_row_header_cells ();
+		[Version (since = "2.12")]
 		public abstract int get_row_span ();
+		[Version (since = "2.12")]
 		public abstract Atk.Object get_table ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Text : GLib.Object {
 		public abstract bool add_selection (int start_offset, int end_offset);
-		[Deprecated (replacement = "TextAttribute.for_name", since = "vala-0.16")]
+		[Version (deprecated_since = "vala-0.16", replacement = "TextAttribute.for_name")]
 		public static Atk.TextAttribute attribute_for_name (string name);
-		[Deprecated (replacement = "TextAttribute.get_name", since = "vala-0.16")]
+		[Version (deprecated_since = "vala-0.16", replacement = "TextAttribute.get_name")]
 		public static unowned string attribute_get_name (Atk.TextAttribute attr);
-		[Deprecated (replacement = "TextAttribute.get_value", since = "vala-0.16")]
+		[Version (deprecated_since = "vala-0.16", replacement = "TextAttribute.get_value")]
 		public static unowned string attribute_get_value (Atk.TextAttribute attr, int index_);
-		[Deprecated (replacement = "TextAttribute.register", since = "vala-0.16")]
+		[Version (deprecated_since = "vala-0.16", replacement = "TextAttribute.register")]
 		public static Atk.TextAttribute attribute_register (string name);
+		[Version (since = "1.3")]
 		public static void free_ranges ([CCode (array_length = false)] Atk.TextRange[] ranges);
 		[CCode (array_length = false, array_null_terminated = true, cname = "atk_text_get_bounded_ranges")]
+		[Version (since = "1.3")]
 		public virtual Atk.TextRange[] get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
 		public abstract int get_caret_offset ();
 		public abstract unichar get_character_at_offset (int offset);
@@ -464,23 +498,25 @@ namespace Atk {
 		public abstract Atk.AttributeSet get_default_attributes ();
 		public abstract int get_n_selections ();
 		public abstract int get_offset_at_point (int x, int y, Atk.CoordType coords);
+		[Version (since = "1.3")]
 		public abstract void get_range_extents (int start_offset, int end_offset, Atk.CoordType coord_type, Atk.TextRectangle rect);
 		public abstract Atk.AttributeSet get_run_attributes (int offset, out int start_offset, out int end_offset);
 		public abstract string get_selection (int selection_num, out int start_offset, out int end_offset);
+		[Version (since = "2.10")]
 		public abstract string? get_string_at_offset (int offset, Atk.TextGranularity granularity, out int start_offset, out int end_offset);
 		public abstract string get_text (int start_offset, int end_offset);
-		[Deprecated (since = "2.9.3")]
+		[Version (deprecated = true, deprecated_since = "2.9.3")]
 		public abstract string get_text_after_offset (int offset, Atk.TextBoundary boundary_type, out int start_offset, out int end_offset);
-		[Deprecated]
+		[Version (deprecated = true)]
 		public abstract string get_text_at_offset (int offset, Atk.TextBoundary boundary_type, out int start_offset, out int end_offset);
-		[Deprecated (since = "2.9.3")]
+		[Version (deprecated = true, deprecated_since = "2.9.3")]
 		public abstract string get_text_before_offset (int offset, Atk.TextBoundary boundary_type, out int start_offset, out int end_offset);
 		public abstract bool remove_selection (int selection_num);
 		public abstract bool set_caret_offset (int offset);
 		public abstract bool set_selection (int selection_num, int start_offset, int end_offset);
 		public virtual signal void text_attributes_changed ();
 		public virtual signal void text_caret_moved (int location);
-		[Deprecated (since = "2.9.4")]
+		[Version (deprecated = true, deprecated_since = "2.9.4")]
 		public virtual signal void text_changed (int position, int length);
 		public signal void text_insert (int arg1, int arg2, string arg3);
 		public signal void text_remove (int arg1, int arg2, string arg3);
@@ -488,33 +524,48 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_value_get_type ()")]
 	public interface Value : GLib.Object {
-		[Deprecated]
+		[Version (deprecated = true)]
 		public abstract void get_current_value (GLib.Value value);
+		[Version (since = "2.12")]
 		public abstract double get_increment ();
-		[Deprecated]
+		[Version (deprecated = true)]
 		public abstract void get_maximum_value (GLib.Value value);
-		[Deprecated]
+		[Version (deprecated = true, since = "1.12")]
 		public abstract void get_minimum_increment (GLib.Value value);
-		[Deprecated]
+		[Version (deprecated = true)]
 		public abstract void get_minimum_value (GLib.Value value);
+		[Version (since = "2.12")]
 		public abstract Atk.Range? get_range ();
+		[Version (since = "2.12")]
 		public abstract GLib.SList<Atk.Range> get_sub_ranges ();
+		[Version (since = "2.12")]
 		public abstract void get_value_and_text (out double value, out string text);
-		[Deprecated]
+		[Version (deprecated = true)]
 		public abstract bool set_current_value (GLib.Value value);
+		[Version (since = "2.12")]
 		public abstract void set_value (double new_value);
+		[Version (since = "2.12")]
 		public signal void value_changed (double value, string text);
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_window_get_type ()")]
 	public interface Window : Atk.Object {
+		[Version (since = "2.2")]
 		public signal void activate ();
+		[Version (since = "2.2")]
 		public signal void create ();
+		[Version (since = "2.2")]
 		public signal void deactivate ();
+		[Version (since = "2.2")]
 		public signal void destroy ();
+		[Version (since = "2.2")]
 		public signal void maximize ();
+		[Version (since = "2.2")]
 		public signal void minimize ();
+		[Version (since = "2.2")]
 		public signal void move ();
+		[Version (since = "2.2")]
 		public signal void resize ();
+		[Version (since = "2.2")]
 		public signal void restore ();
 	}
 	[CCode (cheader_filename = "atk/atk.h", has_type_id = false)]
@@ -549,11 +600,11 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	[SimpleType]
 	public struct State : uint64 {
-		[Deprecated (replacement = "StateType.for_name", since = "vala-0.16")]
+		[Version (deprecated_since = "vala-0.16", replacement = "StateType.for_name")]
 		public static Atk.StateType type_for_name (string name);
-		[Deprecated (replacement = "StateType.get_name", since = "vala-0.16")]
+		[Version (deprecated_since = "vala-0.16", replacement = "StateType.get_name")]
 		public static unowned string type_get_name (Atk.StateType type);
-		[Deprecated (replacement = "StateType.register", since = "vala-0.16")]
+		[Version (deprecated_since = "vala-0.16", replacement = "StateType.register")]
 		public static Atk.StateType type_register (string name);
 	}
 	[CCode (cheader_filename = "atk/atk.h", has_type_id = false)]
@@ -619,7 +670,7 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_ROLE_", type_id = "atk_role_get_type ()")]
 	public enum Role {
-		[Deprecated (replacement = "Role.ACCELERATOR_LABEL", since = "vala-0.22")]
+		[Version (deprecated_since = "vala-0.22", replacement = "Role.ACCELERATOR_LABEL")]
 		ACCEL_LABEL,
 		INVALID,
 		[CCode (cname = "ATK_ROLE_ACCEL_LABEL")]
@@ -752,7 +803,7 @@ namespace Atk {
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static unowned string get_name (Atk.Role role);
 		[CCode (cheader_filename = "atk/atk.h")]
-		[Deprecated]
+		[Version (deprecated = true)]
 		public static Atk.Role register (string name);
 	}
 	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_STATE_", type_id = "atk_state_type_get_type ()")]
@@ -901,88 +952,99 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
 	public delegate void EventListenerInit ();
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
-	[Deprecated (since = "2.9.4")]
+	[Version (deprecated = true, deprecated_since = "2.9.4")]
 	public delegate void FocusHandler (Atk.Object object, bool focus_in);
 	[CCode (cheader_filename = "atk/atk.h", instance_pos = 0.9)]
 	public delegate bool Function ();
 	[CCode (cheader_filename = "atk/atk.h", instance_pos = 1.9)]
 	public delegate int KeySnoopFunc (Atk.KeyEventStruct event);
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
-	[Deprecated]
+	[Version (deprecated = true)]
 	public delegate void PropertyChangeHandler (Atk.Object obj, Atk.PropertyValues vals);
 	[CCode (cheader_filename = "atk/atk.h", cname = "GSignalEmissionHook", has_target = false)]
 	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] Atk.Value[] param_values, void* data);
 	[CCode (cheader_filename = "atk/atk.h", cname = "ATK_BINARY_AGE")]
+	[Version (since = "2.7.4")]
 	public const int BINARY_AGE;
 	[CCode (cheader_filename = "atk/atk.h", cname = "ATK_INTERFACE_AGE")]
+	[Version (since = "2.7.4")]
 	public const int INTERFACE_AGE;
 	[CCode (cheader_filename = "atk/atk.h", cname = "ATK_MAJOR_VERSION")]
+	[Version (since = "2.7.4")]
 	public const int MAJOR_VERSION;
 	[CCode (cheader_filename = "atk/atk.h", cname = "ATK_MICRO_VERSION")]
+	[Version (since = "2.7.4")]
 	public const int MICRO_VERSION;
 	[CCode (cheader_filename = "atk/atk.h", cname = "ATK_MINOR_VERSION")]
+	[Version (since = "2.7.4")]
 	public const int MINOR_VERSION;
 	[CCode (cheader_filename = "atk/atk.h", cname = "ATK_VERSION_MIN_REQUIRED")]
+	[Version (since = "2.14")]
 	public const int VERSION_MIN_REQUIRED;
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Util.add_focus_tracker", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Util.add_focus_tracker")]
 	public static uint add_focus_tracker (Atk.EventListener focus_tracker);
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Util.add_global_event_listener", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Util.add_global_event_listener")]
 	public static uint add_global_event_listener (GLib.SignalEmissionHook listener, string event_type);
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Util.focus_tracker_init", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Util.focus_tracker_init")]
 	public static void focus_tracker_init (Atk.EventListenerInit init);
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Util.focus_tracker_notify", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Util.focus_tracker_notify")]
 	public static void focus_tracker_notify (Atk.Object object);
 	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (since = "2.8")]
 	public static uint get_binary_age ();
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Registry.get_default.", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Registry.get_default.")]
 	public static unowned Atk.Registry get_default_registry ();
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Util.get_focus_object", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Util.get_focus_object")]
 	public static unowned Atk.Object get_focus_object ();
 	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (since = "2.8")]
 	public static uint get_interface_age ();
 	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (since = "2.8")]
 	public static uint get_major_version ();
 	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (since = "2.8")]
 	public static uint get_micro_version ();
 	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (since = "2.8")]
 	public static uint get_minor_version ();
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Util.get_root", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Util.get_root")]
 	public static unowned Atk.Object get_root ();
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Util.get_toolkit_name", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Util.get_toolkit_name")]
 	public static unowned string get_toolkit_name ();
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Util.get_toolkit_version", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Util.get_toolkit_version")]
 	public static unowned string get_toolkit_version ();
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Util.get_version", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Util.get_version")]
 	public static unowned string get_version ();
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Util.remove_focus_tracker", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Util.remove_focus_tracker")]
 	public static void remove_focus_tracker (uint tracker_id);
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Util.remove_global_event_listener", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Util.remove_global_event_listener")]
 	public static void remove_global_event_listener (uint listener_id);
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Util.remove_key_event_listener", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Util.remove_key_event_listener")]
 	public static void remove_key_event_listener (uint listener_id);
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Role.for_name", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Role.for_name")]
 	public static Atk.Role role_for_name (string name);
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Role.get_localized_name", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Role.get_localized_name")]
 	public static unowned string role_get_localized_name (Atk.Role role);
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Role.get_name", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Role.get_name")]
 	public static unowned string role_get_name (Atk.Role role);
 	[CCode (cheader_filename = "atk/atk.h")]
-	[Deprecated (replacement = "Atk.Role.register", since = "vala-0.16")]
+	[Version (deprecated_since = "vala-0.16", replacement = "Atk.Role.register")]
 	public static Atk.Role role_register (string name);
 }

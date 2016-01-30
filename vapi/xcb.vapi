@@ -22,7 +22,7 @@
  *  Sergio Costas <raster@rastersoft.com>
  */
 
-[Deprecated (since = "vala-0.26", replacement = "bindings distributed with vala-extra-vapis")]
+[Version (deprecated_since = "vala-0.26", replacement = "bindings distributed with vala-extra-vapis")]
 [CCode (lower_case_cprefix = "xcb_", cheader_filename = "xcb/xcb.h,xcb/xproto.h")]
 namespace Xcb {
 	[Compact]
@@ -1560,7 +1560,7 @@ namespace Xcb {
 			}
 		}
 		private uint8 roots_len;
-		[Deprecated (since = "vala-0.26", replacement = "Xcb.Setup.screens")]
+		[Version (deprecated_since = "vala-0.26", replacement = "Xcb.Setup.screens")]
 		public int roots_length ();
 		public ScreenIterator roots_iterator ();
 		public Screen[] screens {
@@ -2048,7 +2048,7 @@ namespace Xcb {
 				return res;
 			}
 		}
-		[Deprecated (since = "vala-0.26", replacement = "Xcb.Depth.visuals")]
+		[Version (deprecated_since = "vala-0.26", replacement = "Xcb.Depth.visuals")]
 		public VisualTypeIterator visuals_iterator ();
 	}
 
@@ -2071,7 +2071,7 @@ namespace Xcb {
 		public static void next (ref DepthIterator iter);
 	}
 
-	[Deprecated (since = "vala-0.26", replacement = "Xcb.Depth.visuals")]
+	[Version (deprecated_since = "vala-0.26", replacement = "Xcb.Depth.visuals")]
 	[SimpleType]
 	[CCode (cname = "xcb_visualtype_iterator_t", has_type_id = false)]
 	public struct VisualTypeIterator {

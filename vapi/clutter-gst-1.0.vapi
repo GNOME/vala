@@ -19,7 +19,7 @@ namespace ClutterGst {
 	[CCode (cheader_filename = "clutter-gst/clutter-gst.h", type_id = "clutter_gst_video_sink_get_type ()")]
 	public class VideoSink : Gst.BaseSink, Gst.ImplementsInterface, Gst.Navigation {
 		[CCode (has_construct_function = false, type = "GstElement*")]
-		[Deprecated (since = "1.6")]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public VideoSink (Clutter.Texture texture);
 		[NoAccessorMethod]
 		public Clutter.Texture texture { owned get; set; }
@@ -30,12 +30,14 @@ namespace ClutterGst {
 	public class VideoTexture : Clutter.Texture, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Media, Clutter.Scriptable, ClutterGst.Player {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public VideoTexture ();
+		[Version (since = "1.2")]
 		public unowned Cogl.Handle get_idle_material ();
 		public void set_idle_material (Cogl.Handle material);
 		[NoAccessorMethod]
 		public Gst.Fraction pixel_aspect_ratio { get; set; }
 	}
 	[CCode (cheader_filename = "clutter-gst/clutter-gst.h")]
+	[Version (since = "1.4")]
 	public interface Player : Clutter.Media, GLib.Object, Clutter.Media {
 		public static void class_init (GLib.ObjectClass object_class);
 		public void deinit ();
@@ -43,6 +45,7 @@ namespace ClutterGst {
 		public abstract unowned GLib.List<string> get_audio_streams ();
 		public abstract ClutterGst.BufferingMode get_buffering_mode ();
 		public abstract bool get_idle ();
+		[Version (since = "1.6")]
 		public abstract bool get_in_seek ();
 		public abstract unowned Gst.Element get_pipeline ();
 		public abstract ClutterGst.SeekFlags get_seek_flags ();
@@ -59,6 +62,7 @@ namespace ClutterGst {
 		public abstract void* audio_streams { get; }
 		public abstract bool idle { get; }
 		public abstract Cogl.Handle idle_material { get; set; }
+		[Version (since = "1.6")]
 		public abstract bool in_seek { get; }
 		public abstract ClutterGst.SeekFlags seek_flags { get; set; }
 		public abstract int subtitle_track { get; set; }
@@ -67,12 +71,14 @@ namespace ClutterGst {
 		public virtual signal void download_buffering (double start, double stop);
 	}
 	[CCode (cheader_filename = "clutter-gst/clutter-gst.h", cprefix = "CLUTTER_GST_BUFFERING_MODE_", type_id = "clutter_gst_buffering_mode_get_type ()")]
+	[Version (since = "1.4")]
 	public enum BufferingMode {
 		STREAM,
 		DOWNLOAD
 	}
 	[CCode (cheader_filename = "clutter-gst/clutter-gst.h", cprefix = "CLUTTER_GST_SEEK_FLAG_", type_id = "clutter_gst_seek_flags_get_type ()")]
 	[Flags]
+	[Version (since = "1.4")]
 	public enum SeekFlags {
 		NONE,
 		ACCURATE
@@ -80,7 +86,9 @@ namespace ClutterGst {
 	[CCode (cheader_filename = "clutter-gst/clutter-gst.h")]
 	public static Clutter.InitError init ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv);
 	[CCode (cheader_filename = "clutter-gst/clutter-gst.h")]
+	[Version (since = "1.0")]
 	public static Clutter.InitError init_with_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv, string parameter_string, GLib.OptionEntry entries, string translation_domain) throws GLib.Error;
 	[CCode (cheader_filename = "clutter-gst/clutter-gst.h")]
+	[Version (since = "1.4")]
 	public static void player_class_init (GLib.ObjectClass object_class);
 }

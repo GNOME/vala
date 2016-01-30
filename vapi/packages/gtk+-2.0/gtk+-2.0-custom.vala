@@ -514,6 +514,6 @@ namespace Gtk {
 	public static void stock_add_static (Gtk.StockItem[] items);
 	[Version (deprecated_since = "vala-0.12", replacement = "Gtk.Stock.list_ids")]
 	public static GLib.SList<string> stock_list_ids ();
-	[Deprecated (since = "vala-0.26", replacement = "Gtk.Stock.set_translate_func")]
+	[Version (deprecated_since = "vala-0.26", replacement = "Gtk.Stock.set_translate_func")]
 	public static void stock_set_translate_func (string domain, owned Gtk.TranslateFunc func);
 }

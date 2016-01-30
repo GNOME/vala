@@ -20,8 +20,10 @@ namespace Gst {
 			public Gst.Audio.BaseSinkSlaveMethod get_slave_method ();
 			[NoWrapper]
 			public virtual Gst.Buffer payload (Gst.Buffer buffer);
+			[Version (since = "1.6")]
 			public void report_device_failure ();
 			public void set_alignment_threshold (Gst.ClockTime alignment_threshold);
+			[Version (since = "1.6")]
 			public void set_custom_slaving_callback (owned Gst.Audio.BaseSinkCustomSlavingCallback callback);
 			public void set_discont_wait (Gst.ClockTime discont_wait);
 			public void set_drift_tolerance (int64 drift_tolerance);
@@ -138,6 +140,7 @@ namespace Gst {
 			public virtual Gst.FlowReturn pre_push (Gst.Buffer buffer);
 			[NoWrapper]
 			public virtual bool propose_allocation (Gst.Query query);
+			[Version (since = "1.6")]
 			public Gst.Caps proxy_getcaps (Gst.Caps? caps, Gst.Caps? filter);
 			public void set_drainable (bool enabled);
 			public void set_estimate_rate (bool enabled);
@@ -151,6 +154,7 @@ namespace Gst {
 			public void set_plc (bool enabled);
 			public void set_plc_aware (bool plc);
 			public void set_tolerance (Gst.ClockTime tolerance);
+			[Version (since = "1.6")]
 			public void set_use_default_pad_acceptcaps (bool use);
 			[NoWrapper]
 			public virtual bool sink_event (Gst.Event event);
@@ -276,6 +280,7 @@ namespace Gst {
 			public void free ();
 			public bool from_caps (Gst.Caps caps);
 			public void init ();
+			[Version (since = "1.2")]
 			public bool is_equal (Gst.Audio.Info other);
 			public void set_format (Gst.Audio.Format format, int rate, int channels, Gst.Audio.ChannelPosition position);
 			public Gst.Caps to_caps ();
@@ -433,6 +438,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_BASE_SINK_DISCONT_REASON_", has_type_id = false)]
 		[GIR (name = "AudioBaseSinkDiscontReason")]
+		[Version (since = "1.6")]
 		public enum BaseSinkDiscontReason {
 			NO_DISCONT,
 			NEW_CAPS,
@@ -611,6 +617,7 @@ namespace Gst {
 			DB
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", instance_pos = 5.9)]
+		[Version (since = "1.6")]
 		public delegate void BaseSinkCustomSlavingCallback (Gst.Audio.BaseSink sink, Gst.ClockTime etime, Gst.ClockTime itime, Gst.ClockTimeDiff requested_skew, Gst.Audio.BaseSinkDiscontReason discont_reason);
 		[CCode (cheader_filename = "gst/audio/audio.h", instance_pos = 1.9)]
 		public delegate Gst.ClockTime ClockGetTimeFunc (Gst.Clock clock);
@@ -641,8 +648,10 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_FORMATS_ALL")]
 		public const string FORMATS_ALL;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_META_TAG_AUDIO_CHANNELS_STR")]
+		[Version (since = "1.2")]
 		public const string META_TAG_AUDIO_CHANNELS_STR;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_META_TAG_AUDIO_STR")]
+		[Version (since = "1.2")]
 		public const string META_TAG_AUDIO_STR;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RATE_RANGE")]
 		public const string RATE_RANGE;

@@ -1913,7 +1913,7 @@ namespace Posix {
 	public void setusershell ();
 	[CCode (cheader_filename = "unistd.h")]
 	public int chroot (string path);
-	[Deprecated (since = "POSIX.2", replacement = "termios ECHO flag")]
+	[Version (deprecated_since = "POSIX.2", replacement = "termios ECHO flag")]
 	[CCode (cheader_filename = "unistd.h")]
 	public unowned string getpass (string promt);
 	/** To expose Posix crypt() GNU's libc and others require the feature test

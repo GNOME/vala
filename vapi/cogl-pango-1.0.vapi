@@ -10,23 +10,30 @@ namespace CoglPango {
 	}
 	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
 	public interface FontMap : Pango.CairoFontMap, GLib.Object {
+		[Version (since = "1.0")]
 		public static void clear_glyph_cache (CoglPango.FontMap font_map);
 		public static Pango.Context create_context (CoglPango.FontMap font_map);
+		[Version (since = "1.0")]
 		public static unowned Pango.Renderer get_renderer (CoglPango.FontMap font_map);
+		[Version (since = "1.0")]
 		public static Cogl.Bool get_use_mipmapping (CoglPango.FontMap font_map);
+		[Version (since = "1.14")]
 		public static Pango.FontMap @new ();
+		[Version (since = "1.14")]
 		public static void set_resolution (CoglPango.FontMap font_map, double dpi);
+		[Version (since = "1.0")]
 		public static void set_use_mipmapping (CoglPango.FontMap font_map, Cogl.Bool value);
 	}
 	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
+	[Version (since = "1.0")]
 	public static void ensure_glyph_cache_for_layout (Pango.Layout layout);
 	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
-	[Deprecated (since = "1.16")]
+	[Version (deprecated = true, deprecated_since = "1.16", since = "1.0")]
 	public static void render_layout (Pango.Layout layout, int x, int y, Cogl.Color color, int flags);
 	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
-	[Deprecated (since = "1.16")]
+	[Version (deprecated = true, deprecated_since = "1.16", since = "1.0")]
 	public static void render_layout_line (Pango.LayoutLine line, int x, int y, Cogl.Color color);
 	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
-	[Deprecated (since = "1.16")]
+	[Version (deprecated = true, deprecated_since = "1.16", since = "1.0")]
 	public static void render_layout_subpixel (Pango.Layout layout, int x, int y, Cogl.Color color, int flags);
 }

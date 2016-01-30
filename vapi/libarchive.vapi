@@ -72,7 +72,7 @@ namespace Archive {
 	}
 
 	[CCode (cname="int", has_type_id = false)]
-	[Deprecated (since="3.0", replacement="Filter")]
+	[Version (deprecated_since="3.0", replacement="Filter")]
 	public enum Compression {
 		NONE,
 		GZIP,
@@ -137,7 +137,7 @@ namespace Archive {
 		public int64 position_compressed ();
 		public int64 position_uncompressed ();
 
-		[Deprecated (since="3.0", replacement="Archive.filter_code (0)")]
+		[Version (deprecated_since="3.0", replacement="Archive.filter_code (0)")]
 		public Compression compression ();
 		public Format format ();
 		// Filter #0 is the one closest to the format, -1 is a synonym
@@ -165,19 +165,19 @@ namespace Archive {
 	public class Read : Archive {
 		public Read ();
 		// see https://github.com/libarchive/libarchive/wiki/Libarchive3#functions-that-are-being-renamed
-		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_all ()")]
+		[Version (deprecated_since="3.0", replacement="Archive.Read.support_filter_all ()")]
 		public Result support_compression_all ();
-		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_bzip2 ()")]
+		[Version (deprecated_since="3.0", replacement="Archive.Read.support_filter_bzip2 ()")]
 		public Result support_compression_bzip2 ();
-		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_compress ()")]
+		[Version (deprecated_since="3.0", replacement="Archive.Read.support_filter_compress ()")]
 		public Result support_compression_compress ();
-		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_gzip ()")]
+		[Version (deprecated_since="3.0", replacement="Archive.Read.support_filter_gzip ()")]
 		public Result support_compression_gzip ();
-		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_lzma ()")]
+		[Version (deprecated_since="3.0", replacement="Archive.Read.support_filter_lzma ()")]
 		public Result support_compression_lzma ();
-		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_none ()")]
+		[Version (deprecated_since="3.0", replacement="Archive.Read.support_filter_none ()")]
 		public Result support_compression_none ();
-		[Deprecated (since="3.0", replacement="Archive.Read.support_filter_program (string command)")]
+		[Version (deprecated_since="3.0", replacement="Archive.Read.support_filter_program (string command)")]
 		public Result support_compression_program (string command);
 		public Result support_filter_all ();
 		public Result support_filter_bzip2 ();
@@ -260,15 +260,15 @@ namespace Archive {
 	public class Write : Archive {
 		public Write ();
 		// see https://github.com/libarchive/libarchive/wiki/Libarchive3#functions-that-are-being-renamed
-		[Deprecated (since="3.0", replacement="Archive.Write.add_filter_bzip2 ()")]
+		[Version (deprecated_since="3.0", replacement="Archive.Write.add_filter_bzip2 ()")]
 		public Result set_compression_bzip2 ();
-		[Deprecated (since="3.0", replacement="Archive.Write.add_filter_compress ()")]
+		[Version (deprecated_since="3.0", replacement="Archive.Write.add_filter_compress ()")]
 		public Result set_compression_compress ();
-		[Deprecated (since="3.0", replacement="Archive.Write.add_filter_gzip ()")]
+		[Version (deprecated_since="3.0", replacement="Archive.Write.add_filter_gzip ()")]
 		public Result set_compression_gzip ();
-		[Deprecated (since="3.0", replacement="Archive.Write.add_filter_lzma ()")]
+		[Version (deprecated_since="3.0", replacement="Archive.Write.add_filter_lzma ()")]
 		public Result set_compression_lzma ();
-		[Deprecated (since="3.0", replacement="Archive.Write.add_filter_none ()")]
+		[Version (deprecated_since="3.0", replacement="Archive.Write.add_filter_none ()")]
 		public Result set_compression_none ();
 		public Result set_compression_program (string cmd);
 		public Result add_filter (Filter filter_code);

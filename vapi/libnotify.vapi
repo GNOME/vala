@@ -11,22 +11,24 @@ namespace Notify {
 		public void clear_hints ();
 		public bool close () throws GLib.Error;
 		public int get_closed_reason ();
+		[Version (since = "0.7.3")]
 		public void set_app_name (string app_name);
 		public void set_category (string category);
+		[Version (since = "0.6")]
 		public void set_hint (string key, GLib.Variant? value);
-		[Deprecated (since = "0.6.")]
+		[Version (deprecated = true, deprecated_since = "0.6.")]
 		public void set_hint_byte (string key, [CCode (type = "guchar")] uchar value);
-		[Deprecated (since = "0.6.")]
+		[Version (deprecated = true, deprecated_since = "0.6.")]
 		public void set_hint_byte_array (string key, [CCode (array_length_cname = "len", array_length_pos = 2.1, array_length_type = "gsize")] uchar[] value);
-		[Deprecated (since = "0.6.")]
+		[Version (deprecated = true, deprecated_since = "0.6.")]
 		public void set_hint_double (string key, double value);
-		[Deprecated (since = "0.6.")]
+		[Version (deprecated = true, deprecated_since = "0.6.")]
 		public void set_hint_int32 (string key, int value);
-		[Deprecated (since = "0.6.")]
+		[Version (deprecated = true, deprecated_since = "0.6.")]
 		public void set_hint_string (string key, string value);
-		[Deprecated (since = "0.6.")]
+		[Version (deprecated = true, deprecated_since = "0.6.")]
 		public void set_hint_uint32 (string key, uint value);
-		[Deprecated]
+		[Version (deprecated = true)]
 		public void set_icon_from_pixbuf (Gdk.Pixbuf icon);
 		public void set_image_from_pixbuf (Gdk.Pixbuf pixbuf);
 		public void set_timeout (int timeout);

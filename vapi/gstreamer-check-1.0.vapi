@@ -6,6 +6,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/check/check.h", cname = "GstHarnessThread")]
 		[Compact]
 		[GIR (name = "HarnessThread")]
+		[Version (since = "1.6")]
 		public class HarnessThread {
 		}
 		[CCode (cheader_filename = "gst/check/gstbufferstraw.h,gst/check/gstcheck.h,gst/check/gstconsistencychecker.h,gst/check/internal-check.h", cname = "GstStreamConsistency", lower_case_cprefix = "gst_consistency_checker_")]
@@ -19,21 +20,25 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/check/check.h", cname = "GstTestClock", lower_case_cprefix = "gst_test_clock_", type_id = "gst_test_clock_get_type ()")]
 		[GIR (name = "TestClock")]
+		[Version (since = "1.2")]
 		public class TestClock : Gst.Clock {
 			[CCode (has_construct_function = false, type = "GstClock*")]
 			public TestClock ();
 			public void advance_time (Gst.ClockTimeDiff delta);
 			public Gst.ClockTime get_next_entry_time ();
 			public bool has_id (Gst.ClockID id);
+			[Version (since = "1.4")]
 			public static Gst.ClockTime id_list_get_latest_time (GLib.List<Gst.ClockID?>? pending_list);
 			public uint peek_id_count ();
 			public bool peek_next_pending_id (out Gst.ClockID pending_id);
+			[Version (since = "1.4")]
 			public uint process_id_list (GLib.List<Gst.ClockID?>? pending_list);
 			public Gst.ClockID process_next_clock_id ();
 			public void set_time (Gst.ClockTime new_time);
+			[Version (since = "1.4")]
 			public void wait_for_multiple_pending_ids (uint count, out GLib.List<Gst.ClockID?> pending_list);
 			public void wait_for_next_pending_id (out Gst.ClockID pending_id);
-			[Deprecated]
+			[Version (deprecated = true, since = "1.2")]
 			public void wait_for_pending_id_count (uint count);
 			[CCode (has_construct_function = false, type = "GstClock*")]
 			public TestClock.with_start_time (Gst.ClockTime start_time);
@@ -49,6 +54,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/check/check.h", cname = "GstHarness", has_type_id = false)]
 		[GIR (name = "Harness")]
+		[Version (since = "1.6")]
 		public struct Harness {
 			public weak Gst.Element element;
 			public weak Gst.Pad srcpad;
@@ -167,6 +173,7 @@ namespace Gst {
 			public bool wait_for_clock_id_waits (uint waits, uint timeout);
 		}
 		[CCode (cheader_filename = "gst/check/check.h", cname = "GstHarnessPrepareBufferFunc", has_target = false)]
+		[Version (since = "1.6")]
 		public delegate Gst.Buffer HarnessPrepareBufferFunc (Gst.Check.Harness h, void* data);
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static void abi_list (Gst.Check.ABIStruct list, bool have_abi_sizes);
@@ -189,12 +196,14 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static void element_push_buffer_list (string element_name, owned GLib.List<Gst.Buffer> buffer_in, Gst.Caps caps_in, owned GLib.List<Gst.Buffer> buffer_out, Gst.Caps caps_out, Gst.FlowReturn last_flow_return);
 		[CCode (cheader_filename = "gst/check/check.h", cname = "gst_harness_stress_thread_stop")]
+		[Version (since = "1.6")]
 		public static uint harness_stress_thread_stop (Gst.Check.HarnessThread t);
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static void init (int argc, string argv);
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static void message_error (Gst.Message message, Gst.MessageType type, GLib.Quark domain, int code);
 		[CCode (cheader_filename = "gst/check/check.h")]
+		[Version (since = "1.6")]
 		public static void object_destroyed_on_unref (void* object_to_unref);
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static Gst.Element setup_element (string factory);
@@ -207,16 +216,20 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static Gst.Pad setup_sink_pad_by_name (Gst.Element element, Gst.StaticPadTemplate tmpl, string name);
 		[CCode (cheader_filename = "gst/check/check.h")]
+		[Version (since = "1.4")]
 		public static Gst.Pad setup_sink_pad_by_name_from_template (Gst.Element element, Gst.PadTemplate tmpl, string name);
 		[CCode (cheader_filename = "gst/check/check.h")]
+		[Version (since = "1.4")]
 		public static Gst.Pad setup_sink_pad_from_template (Gst.Element element, Gst.PadTemplate tmpl);
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static Gst.Pad setup_src_pad (Gst.Element element, Gst.StaticPadTemplate tmpl);
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static Gst.Pad setup_src_pad_by_name (Gst.Element element, Gst.StaticPadTemplate tmpl, string name);
 		[CCode (cheader_filename = "gst/check/check.h")]
+		[Version (since = "1.4")]
 		public static Gst.Pad setup_src_pad_by_name_from_template (Gst.Element element, Gst.PadTemplate tmpl, string name);
 		[CCode (cheader_filename = "gst/check/check.h")]
+		[Version (since = "1.4")]
 		public static Gst.Pad setup_src_pad_from_template (Gst.Element element, Gst.PadTemplate tmpl);
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static void teardown_element (Gst.Element element);

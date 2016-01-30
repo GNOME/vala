@@ -12,7 +12,7 @@ namespace GLib {
 
 	public struct ActionEntry {
 		public weak string name;
-		[Version (deprecated_since = "vala-0.26", replacement = "activate_callback")]
+		[Version (deprecated = true, deprecated_since = "vala-0.26", replacement = "activate_callback")]
 		public GLib.SimpleActionActivateCallback? activate;
 		public weak string parameter_type;
 		public weak string state;
@@ -77,7 +77,7 @@ namespace GLib {
 
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_file_monitor_get_type ()")]
 	public abstract class FileMonitor : GLib.Object {
-		[Deprecated (since = "2.46")]
+		[Version (deprecated_since = "2.46")]
 		public GLib.MainContext context { construct; }
 	}
 
