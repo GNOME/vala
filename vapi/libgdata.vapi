@@ -733,7 +733,7 @@ namespace GData {
 		public DocumentsDocument (string? id);
 		[Version (since = "0.8.0")]
 		public GData.DownloadStream download (GData.DocumentsService service, string export_format, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public string get_download_uri (string export_format);
+		public string? get_download_uri (string export_format);
 		[Version (since = "0.13.1")]
 		public unowned string? get_thumbnail_uri ();
 	}

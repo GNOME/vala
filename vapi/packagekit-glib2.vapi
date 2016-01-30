@@ -1933,6 +1933,9 @@ namespace Pk {
 	[Version (since = "0.9.6")]
 	public static bool offline_trigger (Pk.OfflineAction action, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
+	[Version (since = "1.0.12")]
+	public static bool offline_trigger_upgrade (Pk.OfflineAction action, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static void polkit_agent_close ();
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static int polkit_agent_open ();
