@@ -125,10 +125,10 @@ namespace Clutter {
 	}
 
 	[CCode (cheader_filename = "clutter/clutter.h")]
-	[Deprecated (since = "vala-0.14", replacement = "Threads.add_repaint_func")]
+	[Version (deprecated_since = "vala-0.14", replacement = "Threads.add_repaint_func")]
 	public static uint threads_add_repaint_func (GLib.SourceFunc func, void* data, GLib.DestroyNotify notify);
 	[CCode (cheader_filename = "clutter/clutter.h")]
-	[Deprecated (since = "vala-0.14", replacement = "Threads.remove_repaint_func")]
+	[Version (deprecated_since = "vala-0.14", replacement = "Threads.remove_repaint_func")]
 	public static void threads_remove_repaint_func (uint handle_id);
 
 	[CCode (cprefix = "CLUTTER_FEATURE_", cheader_filename = "clutter/clutter.h")]

@@ -18,11 +18,15 @@ namespace GtkClutter {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Embed ();
 		public unowned Clutter.Actor get_stage ();
+		[Version (since = "1.4")]
 		public bool get_use_layout_size ();
+		[Version (since = "1.4")]
 		public void set_use_layout_size (bool use_layout_size);
+		[Version (since = "1.4")]
 		public bool use_layout_size { get; set construct; }
 	}
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h", type_id = "gtk_clutter_texture_get_type ()")]
+	[Version (since = "1.0")]
 	public class Texture : Clutter.Texture, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Texture ();
@@ -38,9 +42,10 @@ namespace GtkClutter {
 		public unowned Clutter.Actor get_stage ();
 	}
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h", cprefix = "GTK_CLUTTER_TEXTURE_ERROR_INVALID_STOCK_")]
+	[Version (since = "1.0")]
 	public errordomain TextureError {
 		[CCode (cname = "GTK_CLUTTER_TEXTURE_ERROR_INVALID_STOCK_ID")]
-		[Deprecated (replacement = "INVALID_STOCK_ID", since = "vala-0.16")]
+		[Version (deprecated_since = "vala-0.16", replacement = "INVALID_STOCK_ID")]
 		ID,
 		[CCode (cname = "GTK_CLUTTER_TEXTURE_ERROR_INVALID_STOCK_ID")]
 		INVALID_STOCK_ID

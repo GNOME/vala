@@ -38,6 +38,7 @@ namespace Gst {
 			[CCode (has_construct_function = false, type = "GstControlBinding*")]
 			public DirectControlBinding (Gst.Object object, string property_name, Gst.ControlSource cs);
 			[CCode (cname = "gst_direct_control_binding_new_absolute", has_construct_function = false, type = "GstControlBinding*")]
+			[Version (since = "1.6")]
 			public DirectControlBinding..new_with_absolute (Gst.Object object, string property_name, Gst.ControlSource cs);
 			[NoAccessorMethod]
 			public bool absolute { get; construct; }
@@ -84,8 +85,11 @@ namespace Gst {
 			public bool set_from_list (GLib.SList<Gst.TimedValue?> timedvalues);
 			public bool unset (Gst.ClockTime timestamp);
 			public void unset_all ();
+			[Version (since = "1.6")]
 			public signal void value_added (Gst.Controller.ControlPoint timed_value);
+			[Version (since = "1.6")]
 			public signal void value_changed (Gst.Controller.ControlPoint timed_value);
+			[Version (since = "1.6")]
 			public signal void value_removed (Gst.Controller.ControlPoint timed_value);
 		}
 		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstTriggerControlSource", lower_case_cprefix = "gst_trigger_control_source_", type_id = "gst_trigger_control_source_get_type ()")]

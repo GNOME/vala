@@ -169,7 +169,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			function.modifiers |= CCodeModifiers.INTERNAL;
 		}
 
-		if (m.deprecated) {
+		if (m.version.deprecated) {
 			function.modifiers |= CCodeModifiers.DEPRECATED;
 		}
 

@@ -64,7 +64,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		}
 
 		var instance_struct = new CCodeStruct ("_%s".printf (get_ccode_name (st)));
-		instance_struct.deprecated = st.deprecated;
+		instance_struct.deprecated = st.version.deprecated;
 
 		foreach (Field f in st.get_fields ()) {
 			string field_ctype = get_ccode_name (f.variable_type);
@@ -77,7 +77,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 
 				var suffix = get_ccode_declarator_suffix (f.variable_type);
 				if (suffix != null) {
-					suffix.deprecated = f.deprecated;
+					suffix.deprecated = f.version.deprecated;
 				}
 
 				instance_struct.add_field (field_ctype, get_ccode_name (f), suffix);

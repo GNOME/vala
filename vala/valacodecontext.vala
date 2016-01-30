@@ -47,6 +47,11 @@ public class Vala.CodeContext {
 	public bool hide_internal { get; set; }
 
 	/**
+	 * Do not check whether used symbols exist in local packages.
+	 */
+	public bool since_check { get; set; }
+
+	/**
 	 * Do not warn when using experimental features.
 	 */
 	public bool experimental { get; set; }
@@ -483,6 +488,12 @@ public class Vala.CodeContext {
 		}
 
 		flow_analyzer.analyze (this);
+
+		if (report.get_errors () > 0) {
+			return;
+		}
+
+		used_attr.check_unused (this);
 	}
 
 	public void add_define (string define) {

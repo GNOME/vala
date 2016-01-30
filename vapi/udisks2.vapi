@@ -22,26 +22,32 @@ namespace UDisks {
 	public class Client : GLib.Object, GLib.AsyncInitable, GLib.Initable {
 		[CCode (cname = "udisks_client_new", has_construct_function = false)]
 		public async Client (GLib.Cancellable? cancellable) throws GLib.Error;
+		[Version (since = "2.1")]
 		public GLib.List<UDisks.Block> get_all_blocks_for_mdraid (UDisks.MDRaid raid);
 		public UDisks.Block get_block_for_dev (uint64 block_device_number);
 		public UDisks.Block get_block_for_drive (UDisks.Drive drive, bool get_physical);
 		public GLib.List<UDisks.Block> get_block_for_label (string label);
+		[Version (since = "2.1")]
 		public UDisks.Block get_block_for_mdraid (UDisks.MDRaid raid);
 		public GLib.List<UDisks.Block> get_block_for_uuid (string uuid);
 		public UDisks.Block get_cleartext_block (UDisks.Block block);
 		public UDisks.Drive get_drive_for_block (UDisks.Block block);
-		[Deprecated (since = "2.1")]
+		[Version (deprecated = true, deprecated_since = "2.1")]
 		public void get_drive_info (UDisks.Drive drive, out string out_name, out string out_description, out GLib.Icon out_drive_icon, out string out_media_description, out GLib.Icon out_media_icon);
+		[Version (since = "2.1")]
 		public GLib.List<UDisks.Drive> get_drive_siblings (UDisks.Drive drive);
 		public string get_id_for_display (string usage, string type, string version, bool long_string);
 		public string get_job_description (UDisks.Job job);
 		public GLib.List<UDisks.Job> get_jobs_for_object (UDisks.Object object);
 		public UDisks.Loop get_loop_for_block (UDisks.Block block);
 		public unowned UDisks.Manager get_manager ();
+		[Version (since = "2.1")]
 		public UDisks.MDRaid get_mdraid_for_block (UDisks.Block block);
 		public string get_media_compat_for_display (string media_compat);
+		[Version (since = "2.1")]
 		public GLib.List<UDisks.Block> get_members_for_mdraid (UDisks.MDRaid raid);
 		public UDisks.Object get_object (string object_path);
+		[Version (since = "2.1")]
 		public UDisks.ObjectInfo get_object_info (UDisks.Object object);
 		public unowned GLib.DBusObjectManager get_object_manager ();
 		public string get_partition_info (UDisks.Partition partition);
@@ -50,12 +56,14 @@ namespace UDisks {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_partition_table_subtypes (string partition_table_type);
 		public unowned string get_partition_table_type_for_display (string partition_table_type);
+		[Version (since = "2.1.1")]
 		public unowned string get_partition_type_and_subtype_for_display (string partition_table_type, string partition_table_subtype, string partition_type);
 		public unowned string get_partition_type_for_display (string partition_table_type, string partition_type);
 		public GLib.List<UDisks.PartitionTypeInfo> get_partition_type_infos (string partition_table_type, string? partition_table_subtype);
 		public GLib.List<UDisks.Partition> get_partitions (UDisks.PartitionTable table);
 		public string get_size_for_display (uint64 size, bool use_pow2, bool long_string);
 		public unowned UDisks.Object peek_object (string object_path);
+		[Version (since = "2.1")]
 		public void queue_changed ();
 		public void settle ();
 		[CCode (has_construct_function = false)]
@@ -161,6 +169,7 @@ namespace UDisks {
 		public LoopSkeleton ();
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", lower_case_csuffix = "mdraid_proxy", type_id = "udisks_mdraid_proxy_get_type ()")]
+	[Version (since = "2.1")]
 	public class MDRaidProxy : GLib.DBusProxy, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, UDisks.MDRaid {
 		[CCode (cname = "udisks_mdraid_proxy_new", has_construct_function = false)]
 		public async MDRaidProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -172,6 +181,7 @@ namespace UDisks {
 		public MDRaidProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", lower_case_csuffix = "mdraid_skeleton", type_id = "udisks_mdraid_skeleton_get_type ()")]
+	[Version (since = "2.1")]
 	public class MDRaidSkeleton : GLib.DBusInterfaceSkeleton, GLib.DBusInterface, UDisks.MDRaid {
 		[CCode (has_construct_function = false, type = "UDisksMDRaid*")]
 		public MDRaidSkeleton ();
@@ -193,6 +203,7 @@ namespace UDisks {
 		public ManagerSkeleton ();
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_object_info_get_type ()")]
+	[Version (since = "2.1")]
 	public class ObjectInfo : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected ObjectInfo ();
@@ -236,6 +247,7 @@ namespace UDisks {
 		public void set_job (UDisks.Job? interface_);
 		public void set_loop (UDisks.Loop? interface_);
 		public void set_manager (UDisks.Manager? interface_);
+		[Version (since = "2.1")]
 		public void set_mdraid (UDisks.MDRaid? interface_);
 		public void set_partition (UDisks.Partition? interface_);
 		public void set_partition_table (UDisks.PartitionTable? interface_);
@@ -350,10 +362,12 @@ namespace UDisks {
 		[NoAccessorMethod]
 		public abstract bool hint_partitionable { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "2.1")]
 		public abstract string hint_symbolic_icon_name { owned get; set; }
 		[NoAccessorMethod]
 		public abstract bool hint_system { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "2.1")]
 		public abstract string id { owned get; set; }
 		[NoAccessorMethod]
 		public abstract string id_label { owned get; set; }
@@ -366,8 +380,10 @@ namespace UDisks {
 		[NoAccessorMethod]
 		public abstract string id_version { owned get; set; }
 		[NoAccessorMethod]
+		[Version (since = "2.1")]
 		public abstract string mdraid { owned get; set; }
 		[NoAccessorMethod]
+		[Version (since = "2.1")]
 		public abstract string mdraid_member { owned get; set; }
 		[NoAccessorMethod]
 		public abstract string preferred_device { owned get; set; }
@@ -392,16 +408,20 @@ namespace UDisks {
 	public interface Drive : GLib.Object {
 		public async bool call_eject (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_eject_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.1")]
 		public async bool call_power_off (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		[Version (since = "2.1")]
 		public bool call_power_off_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_set_configuration (GLib.Variant arg_value, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_set_configuration_sync (GLib.Variant arg_value, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_eject (owned GLib.DBusMethodInvocation invocation);
+		[Version (since = "2.1")]
 		public void complete_power_off (owned GLib.DBusMethodInvocation invocation);
 		public void complete_set_configuration (owned GLib.DBusMethodInvocation invocation);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
+		[Version (since = "2.1")]
 		public abstract bool can_power_off { get; set; }
 		[NoAccessorMethod]
 		public abstract GLib.Variant configuration { owned get; set; }
@@ -447,6 +467,7 @@ namespace UDisks {
 		[NoAccessorMethod]
 		public abstract string serial { owned get; set; }
 		[NoAccessorMethod]
+		[Version (since = "2.1")]
 		public abstract string sibling_id { owned get; set; }
 		[NoAccessorMethod]
 		public abstract uint64 size { get; set; }
@@ -461,6 +482,7 @@ namespace UDisks {
 		[NoAccessorMethod]
 		public abstract string wwn { owned get; set; }
 		public virtual signal bool handle_eject (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
+		[Version (since = "2.1")]
 		public virtual signal bool handle_power_off (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_set_configuration (GLib.DBusMethodInvocation invocation, GLib.Variant arg_value, GLib.Variant arg_options);
 	}
@@ -480,7 +502,9 @@ namespace UDisks {
 		public bool call_smart_selftest_abort_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_smart_selftest_start (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_smart_selftest_start_sync (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.1")]
 		public async bool call_smart_set_enabled (bool arg_value, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
+		[Version (since = "2.1")]
 		public bool call_smart_set_enabled_sync (bool arg_value, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_smart_update (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_smart_update_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -491,6 +515,7 @@ namespace UDisks {
 		public void complete_smart_get_attributes (owned GLib.DBusMethodInvocation invocation, GLib.Variant attributes);
 		public void complete_smart_selftest_abort (owned GLib.DBusMethodInvocation invocation);
 		public void complete_smart_selftest_start (owned GLib.DBusMethodInvocation invocation);
+		[Version (since = "2.1")]
 		public void complete_smart_set_enabled (owned GLib.DBusMethodInvocation invocation);
 		public void complete_smart_update (owned GLib.DBusMethodInvocation invocation);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
@@ -538,8 +563,10 @@ namespace UDisks {
 		[NoAccessorMethod]
 		public abstract uint64 smart_updated { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "2.1")]
 		public abstract bool write_cache_enabled { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "2.1")]
 		public abstract bool write_cache_supported { get; set; }
 		public virtual signal bool handle_pm_get_state (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_pm_standby (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
@@ -548,6 +575,7 @@ namespace UDisks {
 		public virtual signal bool handle_smart_get_attributes (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_smart_selftest_abort (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_smart_selftest_start (GLib.DBusMethodInvocation invocation, string arg_type, GLib.Variant arg_options);
+		[Version (since = "2.1")]
 		public virtual signal bool handle_smart_set_enabled (GLib.DBusMethodInvocation invocation, bool arg_value, GLib.Variant arg_options);
 		public virtual signal bool handle_smart_update (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 	}
@@ -597,6 +625,7 @@ namespace UDisks {
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
+		[Version (since = "2.1")]
 		public abstract uint64 bytes { get; set; }
 		[NoAccessorMethod]
 		public abstract bool cancelable { get; set; }
@@ -612,6 +641,7 @@ namespace UDisks {
 		[NoAccessorMethod]
 		public abstract bool progress_valid { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "2.1")]
 		public abstract uint64 rate { get; set; }
 		[NoAccessorMethod]
 		public abstract uint64 start_time { get; set; }
@@ -640,6 +670,7 @@ namespace UDisks {
 		public virtual signal bool handle_set_autoclear (GLib.DBusMethodInvocation invocation, bool arg_value, GLib.Variant arg_options);
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", lower_case_csuffix = "mdraid", type_id = "udisks_mdraid_get_type ()")]
+	[Version (since = "2.1")]
 	public interface MDRaid : GLib.Object {
 		public async bool call_add_device (string arg_device, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_add_device_sync (string arg_device, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -698,15 +729,19 @@ namespace UDisks {
 	public interface Manager : GLib.Object {
 		public async bool call_loop_setup (GLib.Variant arg_fd, GLib.Variant arg_options, GLib.UnixFDList? fd_list, GLib.Cancellable? cancellable, out string out_resulting_device, out GLib.UnixFDList out_fd_list) throws GLib.Error;
 		public bool call_loop_setup_sync (GLib.Variant arg_fd, GLib.Variant arg_options, GLib.UnixFDList? fd_list, out string out_resulting_device, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.1")]
 		public async bool call_mdraid_create (string arg_blocks, string arg_level, string arg_name, uint64 arg_chunk, GLib.Variant arg_options, GLib.Cancellable? cancellable, out string out_resulting_array) throws GLib.Error;
+		[Version (since = "2.1")]
 		public bool call_mdraid_create_sync (string arg_blocks, string arg_level, string arg_name, uint64 arg_chunk, GLib.Variant arg_options, out string out_resulting_array, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_loop_setup (owned GLib.DBusMethodInvocation invocation, GLib.UnixFDList? fd_list, string resulting_device);
+		[Version (since = "2.1")]
 		public void complete_mdraid_create (owned GLib.DBusMethodInvocation invocation, string resulting_array);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
 		public abstract string version { owned get; set; }
 		public virtual signal bool handle_loop_setup (GLib.DBusMethodInvocation invocation, GLib.UnixFDList? fd_list, GLib.Variant arg_fd, GLib.Variant arg_options);
+		[Version (since = "2.1")]
 		public virtual signal bool handle_mdraid_create (GLib.DBusMethodInvocation invocation, [CCode (array_length = false, array_null_terminated = true)] string[] arg_blocks, string arg_level, string arg_name, uint64 arg_chunk, GLib.Variant arg_options);
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_object_get_type ()")]
@@ -719,6 +754,7 @@ namespace UDisks {
 		public UDisks.Job get_job ();
 		public UDisks.Loop get_loop ();
 		public UDisks.Manager get_manager ();
+		[Version (since = "2.1")]
 		public UDisks.MDRaid get_mdraid ();
 		public UDisks.Partition get_partition ();
 		public UDisks.PartitionTable get_partition_table ();
@@ -740,6 +776,7 @@ namespace UDisks {
 		[NoAccessorMethod]
 		public abstract UDisks.Manager manager { owned get; set; }
 		[NoAccessorMethod]
+		[Version (since = "2.1")]
 		public abstract UDisks.MDRaid mdraid { owned get; set; }
 		[NoAccessorMethod]
 		public abstract UDisks.Partition partition { owned get; set; }
@@ -885,8 +922,10 @@ namespace UDisks {
 	[CCode (cheader_filename = "udisks/udisks.h")]
 	public static uint manager_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (since = "2.1")]
 	public static unowned GLib.DBusInterfaceInfo mdraid_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (since = "2.1")]
 	public static uint mdraid_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "udisks/udisks.h")]
 	public static unowned GLib.DBusInterfaceInfo partition_interface_info ();

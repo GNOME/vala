@@ -16,14 +16,14 @@ namespace PeasGtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PluginManagerView (Peas.Engine? engine);
 		public unowned Peas.PluginInfo get_selected_plugin ();
-		[Deprecated (since = "1.2")]
+		[Version (deprecated = true, deprecated_since = "1.2")]
 		public bool get_show_builtin ();
 		public void set_selected_plugin (Peas.PluginInfo info);
-		[Deprecated (since = "1.2")]
+		[Version (deprecated = true, deprecated_since = "1.2")]
 		public void set_show_builtin (bool show_builtin);
 		[NoAccessorMethod]
 		public Peas.Engine engine { owned get; construct; }
-		[Deprecated (since = "1.2")]
+		[Version (deprecated = true, deprecated_since = "1.2")]
 		public bool show_builtin { get; set; }
 		public virtual signal void populate_popup (Gtk.Menu menu);
 	}

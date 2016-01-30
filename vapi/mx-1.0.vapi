@@ -16,46 +16,68 @@ namespace Mx {
 		public void set_icon (string name);
 		public void set_name (string name);
 		[CCode (has_construct_function = false)]
+		[Version (since = "1.4")]
 		public Action.stateful (string name, GLib.VariantType? parameter_type, GLib.Variant state);
 		[CCode (has_construct_function = false)]
+		[Version (since = "1.4")]
 		public Action.with_parameter (string name, GLib.VariantType? parameter_type);
-		[Deprecated (since = "1.4")]
+		[Version (deprecated = true, deprecated_since = "1.4")]
 		public bool active { get; set; }
 		public string display_name { get; set; }
 		public string icon { get; set; }
+		[Version (since = "1.4")]
 		public signal void activate (GLib.Variant? parameter);
-		[Deprecated (since = "1.4")]
+		[Version (deprecated = true, deprecated_since = "1.4")]
 		public virtual signal void activated ();
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_actor_manager_get_type ()")]
 	public class ActorManager : GLib.Object {
 		[CCode (has_construct_function = false)]
+		[Version (since = "1.2")]
 		public ActorManager (Clutter.Stage stage);
+		[Version (since = "1.2")]
 		public ulong add_actor (Clutter.Container container, Clutter.Actor actor);
+		[Version (since = "1.2")]
 		public void cancel_operation (ulong id);
+		[Version (since = "1.2")]
 		public void cancel_operations (Clutter.Actor actor);
+		[Version (since = "1.2")]
 		public static unowned Mx.ActorManager get_for_stage (Clutter.Stage stage);
+		[Version (since = "1.2")]
 		public uint get_n_operations ();
+		[Version (since = "1.2")]
 		public unowned Clutter.Stage get_stage ();
+		[Version (since = "1.2")]
 		public uint get_time_slice ();
+		[Version (since = "1.2")]
 		public ulong remove_actor (Clutter.Container container, Clutter.Actor actor);
+		[Version (since = "1.2")]
 		public void remove_container (Clutter.Container container);
+		[Version (since = "1.2")]
 		public void set_time_slice (uint msecs);
 		public uint n_operations { get; }
 		public Clutter.Stage stage { get; construct; }
 		public uint time_slice { get; set; }
+		[Version (since = "1.2")]
 		public virtual signal void actor_added (ulong id, Clutter.Actor container, Clutter.Actor actor);
+		[Version (since = "1.2")]
 		public virtual signal void actor_created (ulong id, Clutter.Actor actor);
+		[Version (since = "1.2")]
 		public virtual signal void actor_finished (Clutter.Actor actor);
+		[Version (since = "1.2")]
 		public virtual signal void actor_removed (ulong id, Clutter.Actor container, Clutter.Actor actor);
+		[Version (since = "1.2")]
 		public virtual signal void operation_cancelled (ulong id);
+		[Version (since = "1.2")]
 		public virtual signal void operation_completed (ulong id);
+		[Version (since = "1.2")]
 		public virtual signal void operation_failed (ulong id, GLib.Error error);
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_adjustment_get_type ()")]
 	public class Adjustment : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Adjustment ();
+		[Version (since = "1.2")]
 		public bool get_clamp_value ();
 		public bool get_elastic ();
 		public double get_lower ();
@@ -67,6 +89,7 @@ namespace Mx {
 		public void get_values (double value, double lower, double upper, double step_increment, double page_increment, double page_size);
 		public void interpolate (double value, uint duration, ulong mode);
 		public void interpolate_relative (double offset, uint duration, ulong mode);
+		[Version (since = "1.2")]
 		public void set_clamp_value (bool clamp);
 		public void set_elastic (bool elastic);
 		public void set_lower (double lower);
@@ -100,6 +123,7 @@ namespace Mx {
 		public Mx.ApplicationFlags get_flags ();
 		public unowned GLib.List<Mx.Window> get_windows ();
 		public void invoke_action (string name);
+		[Version (since = "1.4")]
 		public void invoke_action_with_parameter (string name, GLib.Variant variant);
 		public bool is_running ();
 		public void quit ();
@@ -163,10 +187,12 @@ namespace Mx {
 		public void child_set_y_fill (Clutter.Actor child, bool y_fill);
 		public bool get_enable_animations ();
 		public Mx.Orientation get_orientation ();
+		[Version (since = "1.2")]
 		public bool get_scroll_to_focused ();
 		public uint get_spacing ();
 		public void set_enable_animations (bool enable_animations);
 		public void set_orientation (Mx.Orientation orientation);
+		[Version (since = "1.2")]
 		public void set_scroll_to_focused (bool scroll_to_focused);
 		public void set_spacing (uint spacing);
 		public bool enable_animations { get; set; }
@@ -178,25 +204,25 @@ namespace Mx {
 	public class BoxLayoutChild : Clutter.ChildMeta {
 		[CCode (has_construct_function = false)]
 		protected BoxLayoutChild ();
-		[Deprecated (replacement = "BoxLayout.child_get_expand", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "BoxLayout.child_get_expand")]
 		public static bool get_expand (Mx.BoxLayout box_layout, Clutter.Actor child);
-		[Deprecated (replacement = "BoxLayout.child_get_x_align", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "BoxLayout.child_get_x_align")]
 		public static Mx.Align get_x_align (Mx.BoxLayout box_layout, Clutter.Actor child);
-		[Deprecated (replacement = "BoxLayout.child_get_x_fill", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "BoxLayout.child_get_x_fill")]
 		public static bool get_x_fill (Mx.BoxLayout box_layout, Clutter.Actor child);
-		[Deprecated (replacement = "BoxLayout.child_get_y_align", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "BoxLayout.child_get_y_align")]
 		public static Mx.Align get_y_align (Mx.BoxLayout box_layout, Clutter.Actor child);
-		[Deprecated (replacement = "BoxLayout.child_get_y_fill", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "BoxLayout.child_get_y_fill")]
 		public static bool get_y_fill (Mx.BoxLayout box_layout, Clutter.Actor child);
-		[Deprecated (replacement = "BoxLayout.child_set_expand", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "BoxLayout.child_set_expand")]
 		public static void set_expand (Mx.BoxLayout box_layout, Clutter.Actor child, bool expand);
-		[Deprecated (replacement = "BoxLayout.child_set_x_align", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "BoxLayout.child_set_x_align")]
 		public static void set_x_align (Mx.BoxLayout box_layout, Clutter.Actor child, Mx.Align x_align);
-		[Deprecated (replacement = "BoxLayout.child_set_x_fill", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "BoxLayout.child_set_x_fill")]
 		public static void set_x_fill (Mx.BoxLayout box_layout, Clutter.Actor child, bool x_fill);
-		[Deprecated (replacement = "BoxLayout.child_set_y_align", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "BoxLayout.child_set_y_align")]
 		public static void set_y_align (Mx.BoxLayout box_layout, Clutter.Actor child, Mx.Align y_align);
-		[Deprecated (replacement = "BoxLayout.child_set_y_fill", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "BoxLayout.child_set_y_fill")]
 		public static void set_y_fill (Mx.BoxLayout box_layout, Clutter.Actor child, bool y_fill);
 		[NoAccessorMethod]
 		public bool expand { get; set; }
@@ -213,22 +239,34 @@ namespace Mx {
 	public class Button : Mx.Bin, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Button ();
+		[Version (since = "1.2")]
 		public unowned Mx.Action get_action ();
+		[Version (since = "1.2")]
 		public unowned string get_icon_name ();
+		[Version (since = "1.2")]
 		public Mx.Position get_icon_position ();
+		[Version (since = "1.2")]
 		public uint get_icon_size ();
+		[Version (since = "1.2")]
 		public bool get_icon_visible ();
 		public bool get_is_toggle ();
 		public unowned string get_label ();
+		[Version (since = "1.2")]
 		public bool get_label_visible ();
 		public bool get_toggled ();
+		[Version (since = "1.2")]
 		public void set_action (Mx.Action action);
+		[Version (since = "1.2")]
 		public void set_icon_name (string? icon_name);
+		[Version (since = "1.2")]
 		public void set_icon_position (Mx.Position position);
+		[Version (since = "1.2")]
 		public void set_icon_size (uint icon_size);
+		[Version (since = "1.2")]
 		public void set_icon_visible (bool visible);
 		public void set_is_toggle (bool toggle);
 		public void set_label (string text);
+		[Version (since = "1.2")]
 		public void set_label_visible (bool visible);
 		public void set_toggled (bool toggled);
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
@@ -278,6 +316,7 @@ namespace Mx {
 		public void insert_text (int position, string text);
 		public void insert_text_with_icon (int position, string text, string icon);
 		public void prepend_text (string text);
+		[Version (since = "1.4")]
 		public void remove_all ();
 		public void remove_text (int position);
 		public void set_active_icon_name (string? icon_name);
@@ -352,10 +391,15 @@ namespace Mx {
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_dialog_get_type ()")]
 	public class Dialog : Mx.Bin, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
+		[Version (since = "1.2")]
 		public Dialog ();
+		[Version (since = "1.2")]
 		public void add_action (Mx.Action action);
+		[Version (since = "1.2")]
 		public GLib.List<weak Mx.Action> get_actions ();
+		[Version (since = "1.2")]
 		public void remove_action (Mx.Action action);
+		[Version (since = "1.2")]
 		public void set_transient_parent (Clutter.Actor actor);
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_entry_get_type ()")]
@@ -404,12 +448,19 @@ namespace Mx {
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_fade_effect_get_type ()")]
 	public class FadeEffect : Clutter.OffscreenEffect {
 		[CCode (has_construct_function = false, type = "ClutterEffect*")]
+		[Version (since = "1.2")]
 		public FadeEffect ();
+		[Version (since = "1.2")]
 		public void get_border (out uint top, out uint right, out uint bottom, out uint left);
+		[Version (since = "1.2")]
 		public void get_bounds (out int x, out int y, out uint width, out uint height);
+		[Version (since = "1.2")]
 		public Clutter.Color get_color ();
+		[Version (since = "1.2")]
 		public void set_border (uint top, uint right, uint bottom, uint left);
+		[Version (since = "1.2")]
 		public void set_bounds (int x, int y, uint width, uint height);
+		[Version (since = "1.2")]
 		public void set_color (Clutter.Color color);
 		[NoAccessorMethod]
 		public uint border_bottom { get; set; }
@@ -449,6 +500,7 @@ namespace Mx {
 		public unowned Clutter.Stage get_stage ();
 		public void move_focus (Mx.FocusDirection direction);
 		public void push_focus (Mx.Focusable focusable);
+		[Version (since = "1.2")]
 		public void push_focus_with_hint (Mx.Focusable focusable, Mx.FocusHint hint);
 		public Clutter.Actor focused { get; }
 		public Clutter.Stage stage { get; }
@@ -518,28 +570,51 @@ namespace Mx {
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_image_get_type ()")]
 	public class Image : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
+		[Version (since = "1.2")]
 		public Image ();
+		[Version (since = "1.2")]
 		public void animate_scale_mode (ulong mode, uint duration, Mx.ImageScaleMode scale_mode);
+		[Version (since = "1.2")]
 		public void clear ();
+		[Version (since = "1.2")]
 		public bool get_allow_upscale ();
+		[Version (since = "1.2")]
 		public float get_image_rotation ();
+		[Version (since = "1.2")]
 		public bool get_load_async ();
+		[Version (since = "1.2")]
 		public uint get_scale_height_threshold ();
+		[Version (since = "1.2")]
 		public Mx.ImageScaleMode get_scale_mode ();
+		[Version (since = "1.2")]
 		public uint get_scale_width_threshold ();
+		[Version (since = "1.2")]
 		public uint get_transition_duration ();
+		[Version (since = "1.2")]
 		public void set_allow_upscale (bool allow);
+		[Version (since = "1.2")]
 		public bool set_from_buffer ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize")] owned uint8[]? buffer, GLib.DestroyNotify? buffer_free_func) throws GLib.Error;
+		[Version (since = "1.2")]
 		public bool set_from_buffer_at_size ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize")] owned uint8[]? buffer, GLib.DestroyNotify? buffer_free_func, int width, int height) throws GLib.Error;
+		[Version (since = "1.2")]
 		public bool set_from_cogl_texture (Cogl.Handle texture);
+		[Version (since = "1.2")]
 		public bool set_from_data ([CCode (array_length = false)] uint8[]? data, Cogl.PixelFormat pixel_format, int width, int height, int rowstride) throws GLib.Error;
+		[Version (since = "1.2")]
 		public bool set_from_file (string filename) throws GLib.Error;
+		[Version (since = "1.2")]
 		public bool set_from_file_at_size (string filename, int width, int height) throws GLib.Error;
+		[Version (since = "1.2")]
 		public void set_image_rotation (float rotation);
+		[Version (since = "1.2")]
 		public void set_load_async (bool load_async);
+		[Version (since = "1.2")]
 		public void set_scale_height_threshold (uint pixels);
+		[Version (since = "1.2")]
 		public void set_scale_mode (Mx.ImageScaleMode mode);
+		[Version (since = "1.2")]
 		public void set_scale_width_threshold (uint pixels);
+		[Version (since = "1.2")]
 		public void set_transition_duration (uint duration);
 		public bool allow_upscale { get; set; }
 		public float image_rotation { get; set; }
@@ -548,7 +623,9 @@ namespace Mx {
 		public Mx.ImageScaleMode scale_mode { get; set; }
 		public uint scale_width_threshold { get; set; }
 		public uint transition_duration { get; set; }
+		[Version (since = "1.2")]
 		public virtual signal void image_load_error (GLib.Error error);
+		[Version (since = "1.2")]
 		public virtual signal void image_loaded ();
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_item_view_get_type ()")]
@@ -571,25 +648,43 @@ namespace Mx {
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_kinetic_scroll_view_get_type ()")]
 	public class KineticScrollView : Mx.Bin, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable, Mx.Scrollable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
+		[Version (since = "1.2")]
 		public KineticScrollView ();
+		[Version (since = "1.4")]
 		public double get_acceleration_factor ();
+		[Version (since = "1.4")]
 		public uint get_clamp_duration ();
+		[Version (since = "1.4")]
 		public ulong get_clamp_mode ();
+		[Version (since = "1.4")]
 		public bool get_clamp_to_center ();
+		[Version (since = "1.2")]
 		public double get_deceleration ();
+		[Version (since = "1.2")]
 		public uint32 get_mouse_button ();
+		[Version (since = "1.2")]
 		public double get_overshoot ();
 		public Mx.ScrollPolicy get_scroll_policy ();
+		[Version (since = "1.2")]
 		public bool get_use_captured ();
+		[Version (since = "1.4")]
 		public void set_acceleration_factor (double acceleration_factor);
+		[Version (since = "1.4")]
 		public void set_clamp_duration (uint clamp_duration);
+		[Version (since = "1.4")]
 		public void set_clamp_mode (ulong clamp_mode);
+		[Version (since = "1.4")]
 		public void set_clamp_to_center (bool clamp_to_center);
+		[Version (since = "1.2")]
 		public void set_deceleration (double rate);
+		[Version (since = "1.2")]
 		public void set_mouse_button (uint32 button);
+		[Version (since = "1.2")]
 		public void set_overshoot (double overshoot);
 		public void set_scroll_policy (Mx.ScrollPolicy policy);
+		[Version (since = "1.2")]
 		public void set_use_captured (bool use_captured);
+		[Version (since = "1.2")]
 		public void stop ();
 		public double acceleration_factor { get; set; }
 		public uint clamp_duration { get; set; }
@@ -608,15 +703,22 @@ namespace Mx {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Label ();
 		public unowned Clutter.Actor get_clutter_text ();
+		[Version (since = "1.2")]
 		public bool get_fade_out ();
+		[Version (since = "1.2")]
 		public bool get_line_wrap ();
+		[Version (since = "1.4")]
 		public bool get_show_tooltip ();
 		public unowned string get_text ();
+		[Version (since = "1.2")]
 		public bool get_use_markup ();
 		public Mx.Align get_x_align ();
 		public Mx.Align get_y_align ();
+		[Version (since = "1.2")]
 		public void set_fade_out (bool fade);
+		[Version (since = "1.2")]
 		public void set_line_wrap (bool line_wrap);
+		[Version (since = "1.4")]
 		public void set_show_tooltip (bool show_tooltip);
 		public void set_text (string text);
 		public void set_use_markup (bool use_markup);
@@ -626,7 +728,9 @@ namespace Mx {
 		public Label.with_text (string text);
 		public Clutter.Text clutter_text { get; }
 		public bool fade_out { get; set; }
+		[Version (since = "1.2")]
 		public bool line_wrap { get; set; }
+		[Version (since = "1.4")]
 		public bool show_tooltip { get; set; }
 		public string text { get; set; }
 		public bool use_markup { get; set; }
@@ -675,19 +779,25 @@ namespace Mx {
 	public class Offscreen : Clutter.Texture, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Offscreen ();
+		[Version (since = "1.2")]
 		public bool get_accumulation_enabled ();
+		[Version (since = "1.2")]
 		public unowned Cogl.Handle get_accumulation_material ();
 		public bool get_auto_update ();
+		[Version (since = "1.2")]
 		public unowned Cogl.Handle get_buffer ();
 		public unowned Clutter.Actor get_child ();
 		public bool get_pick_child ();
+		[Version (since = "1.2")]
 		public bool get_redirect_enabled ();
 		[NoWrapper]
 		public virtual void paint_child ();
+		[Version (since = "1.2")]
 		public void set_accumulation_enabled (bool enable);
 		public void set_auto_update (bool auto_update);
 		public void set_child (Clutter.Actor actor);
 		public void set_pick_child (bool pick);
+		[Version (since = "1.2")]
 		public void set_redirect_enabled (bool enabled);
 		public void update ();
 		public bool accumulation_enabled { get; set; }
@@ -782,8 +892,10 @@ namespace Mx {
 	public class Slider : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
 		public Slider ();
+		[Version (since = "1.2")]
 		public double get_buffer_value ();
 		public double get_value ();
+		[Version (since = "1.2")]
 		public void set_buffer_value (double value);
 		public void set_value (double value);
 		public double buffer_value { get; set; }
@@ -792,27 +904,44 @@ namespace Mx {
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_spinner_get_type ()")]
 	public class Spinner : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
+		[Version (since = "1.2")]
 		public Spinner ();
+		[Version (since = "1.2")]
 		public bool get_animating ();
+		[Version (since = "1.2")]
 		public void set_animating (bool animating);
 		public bool animating { get; set; }
+		[Version (since = "1.2")]
 		public virtual signal void looped ();
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_stack_get_type ()")]
 	public class Stack : Mx.Widget, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Focusable, Mx.Stylable {
 		[CCode (has_construct_function = false, type = "ClutterActor*")]
+		[Version (since = "1.2")]
 		public Stack ();
+		[Version (since = "1.4")]
 		public bool child_get_crop (Clutter.Actor child);
+		[Version (since = "1.2")]
 		public bool child_get_fit (Clutter.Actor child);
+		[Version (since = "1.2")]
 		public Mx.Align child_get_x_align (Clutter.Actor child);
+		[Version (since = "1.2")]
 		public bool child_get_x_fill (Clutter.Actor child);
+		[Version (since = "1.2")]
 		public Mx.Align child_get_y_align (Clutter.Actor child);
+		[Version (since = "1.2")]
 		public bool child_get_y_fill (Clutter.Actor child);
+		[Version (since = "1.4")]
 		public void child_set_crop (Clutter.Actor child, bool crop);
+		[Version (since = "1.2")]
 		public void child_set_fit (Clutter.Actor child, bool fit);
+		[Version (since = "1.2")]
 		public void child_set_x_align (Clutter.Actor child, Mx.Align x_align);
+		[Version (since = "1.2")]
 		public void child_set_x_fill (Clutter.Actor child, bool x_fill);
+		[Version (since = "1.2")]
 		public void child_set_y_align (Clutter.Actor child, Mx.Align y_align);
+		[Version (since = "1.2")]
 		public void child_set_y_fill (Clutter.Actor child, bool y_fill);
 	}
 	[CCode (cheader_filename = "mx/mx.h", type_id = "mx_stack_child_get_type ()")]
@@ -885,45 +1014,45 @@ namespace Mx {
 	public class TableChild : Clutter.ChildMeta {
 		[CCode (has_construct_function = false)]
 		protected TableChild ();
-		[Deprecated (replacement = "Table.child_get_column", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_get_column")]
 		public static int get_column (Mx.Table table, Clutter.Actor child);
-		[Deprecated (replacement = "Table.child_get_column_span", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_get_column_span")]
 		public static int get_column_span (Mx.Table table, Clutter.Actor child);
-		[Deprecated (replacement = "Table.child_get_row", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_get_row")]
 		public static int get_row (Mx.Table table, Clutter.Actor child);
-		[Deprecated (replacement = "Table.child_get_row_span", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_get_row_span")]
 		public static int get_row_span (Mx.Table table, Clutter.Actor child);
-		[Deprecated (replacement = "Table.child_get_x_align", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_get_x_align")]
 		public static Mx.Align get_x_align (Mx.Table table, Clutter.Actor child);
-		[Deprecated (replacement = "Table.child_get_x_expand", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_get_x_expand")]
 		public static bool get_x_expand (Mx.Table table, Clutter.Actor child);
-		[Deprecated (replacement = "Table.child_get_x_fill", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_get_x_fill")]
 		public static bool get_x_fill (Mx.Table table, Clutter.Actor child);
-		[Deprecated (replacement = "Table.child_get_y_align", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_get_y_align")]
 		public static Mx.Align get_y_align (Mx.Table table, Clutter.Actor child);
-		[Deprecated (replacement = "Table.child_get_y_expand", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_get_y_expand")]
 		public static bool get_y_expand (Mx.Table table, Clutter.Actor child);
-		[Deprecated (replacement = "Table.child_get_y_fill", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_get_y_fill")]
 		public static bool get_y_fill (Mx.Table table, Clutter.Actor child);
-		[Deprecated (replacement = "Table.child_set_column", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_set_column")]
 		public static void set_column (Mx.Table table, Clutter.Actor child, int col);
-		[Deprecated (replacement = "Table.child_set_column_span", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_set_column_span")]
 		public static void set_column_span (Mx.Table table, Clutter.Actor child, int span);
-		[Deprecated (replacement = "Table.child_set_row", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_set_row")]
 		public static void set_row (Mx.Table table, Clutter.Actor child, int row);
-		[Deprecated (replacement = "Table.child_set_row_span", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_set_row_span")]
 		public static void set_row_span (Mx.Table table, Clutter.Actor child, int span);
-		[Deprecated (replacement = "Table.child_set_x_align", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_set_x_align")]
 		public static void set_x_align (Mx.Table table, Clutter.Actor child, Mx.Align align);
-		[Deprecated (replacement = "Table.child_set_x_expand", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_set_x_expand")]
 		public static void set_x_expand (Mx.Table table, Clutter.Actor child, bool expand);
-		[Deprecated (replacement = "Table.child_set_x_fill", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_set_x_fill")]
 		public static void set_x_fill (Mx.Table table, Clutter.Actor child, bool fill);
-		[Deprecated (replacement = "Table.child_set_y_align", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_set_y_align")]
 		public static void set_y_align (Mx.Table table, Clutter.Actor child, Mx.Align align);
-		[Deprecated (replacement = "Table.child_set_y_expand", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_set_y_expand")]
 		public static void set_y_expand (Mx.Table table, Clutter.Actor child, bool expand);
-		[Deprecated (replacement = "Table.child_set_y_fill", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "Table.child_set_y_fill")]
 		public static void set_y_fill (Mx.Table table, Clutter.Actor child, bool fill);
 		[NoAccessorMethod]
 		public int column { get; set; }
@@ -950,18 +1079,24 @@ namespace Mx {
 	public class TextureCache : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected TextureCache ();
+		[Version (since = "1.2")]
 		public bool contains (string uri);
+		[Version (since = "1.2")]
 		public bool contains_meta (string uri, void* ident);
 		[NoWrapper]
 		public virtual void error_loading (GLib.Error error);
 		public unowned Clutter.Actor get_actor (string uri);
 		public unowned Cogl.Handle get_cogl_texture (string uri);
 		public static unowned Mx.TextureCache get_default ();
+		[Version (since = "1.2")]
 		public Cogl.Handle get_meta_cogl_texture (string uri, void* ident);
+		[Version (since = "1.2")]
 		public Clutter.Texture get_meta_texture (string uri, void* ident);
 		public int get_size ();
 		public unowned Clutter.Texture get_texture (string uri);
+		[Version (since = "1.2")]
 		public void insert (string uri, Cogl.Handle texture);
+		[Version (since = "1.2")]
 		public void insert_meta (string uri, void* ident, Cogl.Handle texture, GLib.DestroyNotify destroy_func);
 		public void load_cache (string filename);
 		[NoWrapper]
@@ -1009,6 +1144,7 @@ namespace Mx {
 		public unowned string get_text ();
 		public unowned Clutter.Geometry? get_tip_area ();
 		public void hide ();
+		[Version (since = "1.2")]
 		public static bool is_in_browse_mode ();
 		public void set_text (string text);
 		public void set_tip_area (Clutter.Geometry area);
@@ -1037,6 +1173,7 @@ namespace Mx {
 	public abstract class Widget : Clutter.Actor, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable, Mx.Stylable {
 		[CCode (has_construct_function = false)]
 		protected Widget ();
+		[Version (since = "1.2")]
 		public virtual void apply_style (Mx.Style style);
 		public void get_available_area (Clutter.ActorBox allocation, Clutter.ActorBox area);
 		public unowned Clutter.Actor get_background_image ();
@@ -1071,28 +1208,40 @@ namespace Mx {
 		public unowned Clutter.Actor get_child ();
 		public unowned Clutter.Stage get_clutter_stage ();
 		public static unowned Mx.Window get_for_stage (Clutter.Stage stage);
+		[Version (since = "1.2")]
 		public bool get_fullscreen ();
 		public bool get_has_toolbar ();
 		public unowned string get_icon_name ();
 		public bool get_small_screen ();
+		[Version (since = "1.2")]
 		public unowned string get_title ();
 		public unowned Mx.Toolbar get_toolbar ();
 		public void get_window_position (out int x, out int y);
+		[Version (since = "1.2")]
 		public Mx.WindowRotation get_window_rotation ();
+		[Version (since = "1.2")]
 		public void get_window_size (out int width, out int height);
+		[Version (since = "1.2")]
 		public void hide ();
+		[Version (since = "1.2")]
 		public void present ();
 		public void set_child (Clutter.Actor actor);
+		[Version (since = "1.2")]
 		public void set_fullscreen (bool fullscreen);
 		public void set_has_toolbar (bool toolbar);
 		public void set_icon_from_cogl_texture (Cogl.Handle texture);
 		public void set_icon_name (string? icon_name);
 		public void set_small_screen (bool small_screen);
+		[Version (since = "1.2")]
 		public void set_title (string title);
+		[Version (since = "1.2")]
 		public void set_toolbar (Mx.Toolbar toolbar);
 		public void set_window_position (int x, int y);
+		[Version (since = "1.2")]
 		public void set_window_rotation (Mx.WindowRotation rotation);
+		[Version (since = "1.2")]
 		public void set_window_size (int width, int height);
+		[Version (since = "1.2")]
 		public void show ();
 		[CCode (has_construct_function = false)]
 		public Window.with_clutter_stage (Clutter.Stage stage);
@@ -1182,8 +1331,11 @@ namespace Mx {
 		public abstract void set_style (Mx.Style style);
 		public abstract void set_style_class (string style_class);
 		public abstract void set_style_pseudo_class (string pseudo_class);
+		[Version (since = "1.2")]
 		public void style_pseudo_class_add (string new_class);
+		[Version (since = "1.2")]
 		public bool style_pseudo_class_contains (string pseudo_class);
+		[Version (since = "1.2")]
 		public void style_pseudo_class_remove (string remove_class);
 		public abstract Mx.Style style { get; set; }
 		public abstract string style_class { get; set; }
@@ -1245,6 +1397,7 @@ namespace Mx {
 		FROM_BELOW,
 		FROM_LEFT,
 		FROM_RIGHT;
+		[Version (since = "1.2")]
 		public static Mx.FocusHint from_direction (Mx.FocusDirection direction);
 	}
 	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_FONT_WEIGHT_", type_id = "mx_font_weight_get_type ()")]
@@ -1280,6 +1433,7 @@ namespace Mx {
 		VERTICAL
 	}
 	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_POSITION_", type_id = "mx_position_get_type ()")]
+	[Version (since = "1.2")]
 	public enum Position {
 		TOP,
 		RIGHT,
@@ -1302,17 +1456,19 @@ namespace Mx {
 	}
 	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_STYLE_ERROR_INVALID_")]
 	public enum StyleError {
-		[Deprecated (replacement = "StyleError.INVALID_FILE", since = "vala-0.14")]
+		[Version (deprecated_since = "vala-0.14", replacement = "StyleError.INVALID_FILE")]
 		FILE,
 		[CCode (cname = "MX_STYLE_ERROR_INVALID_FILE")]
 		INVALID_FILE
 	}
 	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_TOOLTIP_ANIMATION_", type_id = "mx_tooltip_animation_get_type ()")]
+	[Version (since = "1.2")]
 	public enum TooltipAnimation {
 		BOUNCE,
 		FADE
 	}
 	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_WINDOW_", type_id = "mx_window_rotation_get_type ()")]
+	[Version (since = "1.2")]
 	public enum WindowRotation {
 		[CCode (cname = "MX_WINDOW_ROTATION_0")]
 		@0,
@@ -1352,7 +1508,7 @@ namespace Mx {
 	[CCode (cheader_filename = "mx/mx.h")]
 	public static void allocate_align_fill (Clutter.Actor child, Clutter.ActorBox childbox, Mx.Align x_alignment, Mx.Align y_alignment, bool x_fill, bool y_fill);
 	[CCode (cheader_filename = "mx/mx.h")]
-	[Deprecated (replacement = "FontWeight.set_from_string", since = "vala-0.14")]
+	[Version (deprecated_since = "vala-0.14", replacement = "FontWeight.set_from_string")]
 	public static void font_weight_set_from_string (GLib.Value value, string str);
 	[CCode (cheader_filename = "mx/mx.h")]
 	public static void set_locale ();

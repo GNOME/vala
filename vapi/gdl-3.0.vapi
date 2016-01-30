@@ -10,16 +10,17 @@ namespace Gdl {
 		public void add_item (Gdl.DockItem item, Gdl.DockPlacement placement);
 		public unowned Gdl.DockItem get_item_by_name (string name);
 		public GLib.List<weak Gdl.DockObject> get_named_items ();
-		[Deprecated (since = "3.6")]
+		[Version (deprecated = true, deprecated_since = "3.6")]
 		public unowned Gdl.DockPlaceholder get_placeholder_by_name (string name);
 		public unowned Gdl.DockObject? get_root ();
 		public void hide_preview ();
 		public Gtk.Widget new_from (bool floating);
+		[Version (since = "3.6")]
 		public void set_skip_taskbar (bool skip);
 		public void show_preview (Gdk.Rectangle rect);
-		[Deprecated (since = "3.6")]
+		[Version (deprecated = true, deprecated_since = "3.6")]
 		public void xor_rect (Gdk.Rectangle rect);
-		[Deprecated (since = "3.6")]
+		[Version (deprecated = true, deprecated_since = "3.6")]
 		public void xor_rect_hide ();
 		[NoAccessorMethod]
 		public string default_title { owned get; set; }
@@ -32,6 +33,7 @@ namespace Gdl {
 		[NoAccessorMethod]
 		public int height { get; set construct; }
 		[NoAccessorMethod]
+		[Version (since = "3.6")]
 		public bool skip_taskbar { get; set construct; }
 		[NoAccessorMethod]
 		public int width { get; set construct; }
@@ -41,10 +43,10 @@ namespace Gdl {
 	public class DockBar : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DockBar (GLib.Object? master);
-		[Deprecated (since = "3.6")]
+		[Version (deprecated = true, deprecated_since = "3.6")]
 		public Gtk.Orientation get_orientation ();
 		public Gdl.DockBarStyle get_style ();
-		[Deprecated (since = "3.6")]
+		[Version (deprecated = true, deprecated_since = "3.6")]
 		public void set_orientation (Gtk.Orientation orientation);
 		public void set_style (Gdl.DockBarStyle style);
 		[NoAccessorMethod]
@@ -58,27 +60,38 @@ namespace Gdl {
 		public DockItem (string name, string long_name, Gdl.DockItemBehavior behavior);
 		public void bind (Gtk.Widget dock);
 		public void dock_to (Gdl.DockItem? target, Gdl.DockPlacement position, int docking_param);
+		[Version (since = "3.6")]
 		public Gdl.DockItemBehavior get_behavior_flags ();
+		[Version (since = "3.6")]
 		public unowned Gtk.Widget get_child ();
+		[Version (since = "3.6")]
 		public void get_drag_area (Gdk.Rectangle rect);
 		public unowned Gtk.Widget? get_grip ();
+		[Version (since = "3.6")]
 		public Gtk.Orientation get_orientation ();
 		public unowned Gtk.Widget get_tablabel ();
 		public void hide_grip ();
 		public void hide_item ();
 		public void iconify_item ();
+		[Version (since = "3.6")]
 		public bool is_closed ();
+		[Version (since = "3.6")]
 		public bool is_iconified ();
+		[Version (since = "3.6")]
 		public bool is_placeholder ();
 		public void @lock ();
 		public void notify_deselected ();
 		public void notify_selected ();
+		[Version (since = "3.3.2")]
 		public bool or_child_has_focus ();
 		public void preferred_size (Gtk.Requisition req);
+		[Version (since = "3.6")]
 		public void set_behavior_flags (Gdl.DockItemBehavior behavior, bool clear);
+		[Version (since = "3.6")]
 		public void set_child (Gtk.Widget? child);
 		public void set_default_position (Gdl.DockObject reference);
 		[CCode (cname = "gdl_dock_item_class_set_has_grip")]
+		[Version (since = "3.6")]
 		public class void set_has_grip (bool has_grip);
 		public virtual void set_orientation (Gtk.Orientation orientation);
 		public void set_tablabel (Gtk.Widget tablabel);
@@ -86,16 +99,20 @@ namespace Gdl {
 		public void show_item ();
 		public void unbind ();
 		public void unlock ();
+		[Version (since = "3.6")]
 		public void unset_behavior_flags (Gdl.DockItemBehavior behavior);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		[Version (since = "3.3.2")]
 		public DockItem.with_pixbuf_icon (string name, string long_name, Gdk.Pixbuf pixbuf_icon, Gdl.DockItemBehavior behavior);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DockItem.with_stock (string name, string long_name, string stock_id, Gdl.DockItemBehavior behavior);
 		[NoAccessorMethod]
 		public Gdl.DockItemBehavior behavior { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "3.6")]
 		public bool closed { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "3.6")]
 		public bool iconified { get; set; }
 		[NoAccessorMethod]
 		public bool locked { get; set; }
@@ -110,6 +127,7 @@ namespace Gdl {
 		public virtual signal void dock_drag_begin ();
 		public virtual signal void dock_drag_end (bool cancelled);
 		public virtual signal void dock_drag_motion (Gdk.Device device, int x, int y);
+		[Version (since = "3.3.2")]
 		public virtual signal void move_focus_child (Gtk.DirectionType direction);
 		public signal void selected ();
 	}
@@ -125,6 +143,7 @@ namespace Gdl {
 		public DockItemGrip (Gdl.DockItem item);
 		public bool has_event (Gdk.Event event);
 		public void hide_handle ();
+		[Version (since = "3.6")]
 		public void set_cursor (bool in_drag);
 		public void set_label (Gtk.Widget label);
 		public void show_handle ();
@@ -137,6 +156,7 @@ namespace Gdl {
 		public void attach (Gdl.DockMaster master);
 		public void delete_layout (string name);
 		public GLib.List<string> get_layouts (bool include_default);
+		[Version (since = "3.6")]
 		public unowned GLib.Object get_master ();
 		public bool is_dirty ();
 		public bool load_from_file (string filename);
@@ -156,6 +176,7 @@ namespace Gdl {
 		public void @foreach (GLib.Func function);
 		public void foreach_toplevel (bool include_controller, GLib.Func function);
 		public unowned Gdl.DockObject get_controller ();
+		[Version (since = "3.6")]
 		public string get_dock_name ();
 		public unowned Gdl.DockObject? get_object (string nick_name);
 		public void remove (Gdl.DockObject object);
@@ -189,26 +210,39 @@ namespace Gdl {
 		public virtual bool child_placement (Gdl.DockObject child, Gdl.DockPlacement? placement);
 		public virtual bool dock_request (int x, int y, Gdl.DockRequest request);
 		public void freeze ();
+		[Version (since = "3.6")]
 		public unowned Gdl.DockObject get_controller ();
+		[Version (since = "3.6")]
 		public unowned string get_long_name ();
+		[Version (since = "3.6")]
 		public unowned GLib.Object get_master ();
 		public unowned Gdl.DockObject? get_parent_object ();
+		[Version (since = "3.6")]
 		public unowned Gdk.Pixbuf get_pixbuf ();
+		[Version (since = "3.6")]
 		public unowned string get_stock_id ();
 		public unowned Gdl.Dock? get_toplevel ();
+		[Version (since = "3.6")]
 		public bool is_automatic ();
 		public bool is_bound ();
+		[Version (since = "3.6")]
 		public bool is_closed ();
 		public bool is_compound ();
+		[Version (since = "3.6")]
 		public bool is_frozen ();
+		[Version (since = "3.6")]
 		public void layout_changed_notify ();
 		public static unowned string nick_from_type (GLib.Type type);
 		public virtual void present (Gdl.DockObject? child);
 		public virtual void reduce ();
 		public virtual bool reorder (Gdl.DockObject child, Gdl.DockPlacement new_position, GLib.Value? other_data);
+		[Version (since = "3.6")]
 		public void set_long_name (string name);
+		[Version (since = "3.6")]
 		public void set_manual ();
+		[Version (since = "3.6")]
 		public void set_pixbuf (Gdk.Pixbuf? icon);
+		[Version (since = "3.6")]
 		public void set_stock_id (string stock_id);
 		public static GLib.Type set_type_for_nick (string nick, GLib.Type type);
 		public void thaw ();
@@ -219,6 +253,7 @@ namespace Gdl {
 		public Gdl.DockMaster master { owned get; set construct; }
 		public string name { get; construct; }
 		[NoAccessorMethod]
+		[Version (since = "3.3.2")]
 		public void* pixbuf_icon { get; set; }
 		public string stock_id { get; set construct; }
 		[HasEmitter]
@@ -241,9 +276,9 @@ namespace Gdl {
 	[CCode (cheader_filename = "gdl/gdl.h", type_id = "gdl_dock_placeholder_get_type ()")]
 	public class DockPlaceholder : Gdl.DockObject, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Deprecated (since = "3.6")]
+		[Version (deprecated = true, deprecated_since = "3.6")]
 		public DockPlaceholder (string name, Gdl.DockObject object, Gdl.DockPlacement position, bool sticky);
-		[Deprecated (since = "3.6")]
+		[Version (deprecated = true, deprecated_since = "3.6")]
 		public void attach (Gdl.DockObject object);
 		[NoAccessorMethod]
 		public bool floating { get; construct; }
@@ -270,11 +305,11 @@ namespace Gdl {
 		public weak Gdk.Window event_window;
 		public bool pre_drag;
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Deprecated (since = "3.6")]
+		[Version (deprecated = true, deprecated_since = "3.6")]
 		public DockTablabel (Gdl.DockItem item);
-		[Deprecated (since = "3.6")]
+		[Version (deprecated = true, deprecated_since = "3.6")]
 		public void activate ();
-		[Deprecated (since = "3.6")]
+		[Version (deprecated = true, deprecated_since = "3.6")]
 		public void deactivate ();
 		[NoAccessorMethod]
 		public Gdl.DockItem item { owned get; set; }
@@ -336,8 +371,8 @@ namespace Gdl {
 		ICONIFY
 	}
 	[CCode (cheader_filename = "gdl/gdl.h", cprefix = "GDL_DOCK_", type_id = "gdl_dock_item_flags_get_type ()")]
-	[Deprecated (since = "3.6")]
 	[Flags]
+	[Version (deprecated = true, deprecated_since = "3.6")]
 	public enum DockItemFlags {
 		IN_DRAG,
 		IN_PREDRAG,
@@ -382,7 +417,7 @@ namespace Gdl {
 	[CCode (cheader_filename = "gdl/gdl.h", cname = "GDL_DOCK_NAME_PROPERTY")]
 	public const string DOCK_NAME_PROPERTY;
 	[CCode (cheader_filename = "gdl/gdl.h", cname = "GDL_DOCK_OBJECT_FLAGS_SHIFT")]
-	[Deprecated (since = "3.6")]
+	[Version (deprecated = true, deprecated_since = "3.6")]
 	public const int DOCK_OBJECT_FLAGS_SHIFT;
 	[CCode (cheader_filename = "gdl/gdl.h")]
 	public static void marshal_VOID__OBJECT_ENUM_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);

@@ -79,20 +79,20 @@ namespace Gdk {
 		public static void send_notify_for_display (Gdk.Display display, Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 	}
 
-	[Deprecated (since = "vala-0.12", replacement = "Selection.convert")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.convert")]
 	public static void selection_convert (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, uint32 time_);
-	[Deprecated (since = "vala-0.12", replacement = "Selection.owner_get")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.owner_get")]
 	public static unowned Gdk.Window selection_owner_get (Gdk.Atom selection);
-	[Deprecated (since = "vala-0.12", replacement = "Selection.owner_get_for_display")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.owner_get_for_display")]
 	public static unowned Gdk.Window selection_owner_get_for_display (Gdk.Display display, Gdk.Atom selection);
-	[Deprecated (since = "vala-0.12", replacement = "Selection.owner_set")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.owner_set")]
 	public static bool selection_owner_set (Gdk.Window owner, Gdk.Atom selection, uint32 time_, bool send_event);
-	[Deprecated (since = "vala-0.12", replacement = "Selection.owner_set_for_display")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.owner_set_for_display")]
 	public static bool selection_owner_set_for_display (Gdk.Display display, Gdk.Window owner, Gdk.Atom selection, uint32 time_, bool send_event);
-	[Deprecated (since = "vala-0.12", replacement = "Selection.property_get")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.property_get")]
 	public static int selection_property_get (Gdk.Window requestor, uchar[] data, out Gdk.Atom prop_type, int prop_format);
-	[Deprecated (since = "vala-0.12", replacement = "Selection.send_notify")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.send_notify")]
 	public static void selection_send_notify (Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
-	[Deprecated (since = "vala-0.12", replacement = "Selection.send_notify_for_display")]
+	[Version (deprecated_since = "vala-0.12", replacement = "Selection.send_notify_for_display")]
 	public static void selection_send_notify_for_display (Gdk.Display display, Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 }

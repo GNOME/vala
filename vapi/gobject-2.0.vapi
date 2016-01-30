@@ -305,6 +305,7 @@ namespace GLib {
 	public struct ObjectConstructParam {
 	}
 
+	[Version (since = "2.26")]
 	[CCode (cprefix = "G_BINDING_")]
 	[Flags]
 	public enum BindingFlags {
@@ -314,8 +315,10 @@ namespace GLib {
 		INVERT_BOOLEAN
 	}
 
+	[Version (since = "2.26")]
 	public delegate bool BindingTransformFunc (GLib.Binding binding, GLib.Value source_value, ref GLib.Value target_value);
 
+	[Version (since = "2.26")]
 	public class Binding : GLib.Object {
 		public weak GLib.Object source { get; }
 		public string source_property { get; }
@@ -390,10 +393,12 @@ namespace GLib {
 		public void add_toggle_ref (ToggleNotify notify);
 		public void remove_toggle_ref (ToggleNotify notify);
 
+		[Version (since = "2.26")]
 		[CCode (cname = "g_object_bind_property_with_closures")]
 		public unowned GLib.Binding bind_property (string source_property, GLib.Object target, string target_property, GLib.BindingFlags flags = GLib.BindingFlags.DEFAULT, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_to = null, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_from = null);
 	}
 
+	[Version (since = "2.32")]
 	[CCode (destroy_function = "g_weak_ref_clear", lvalue_access = false)]
 	public struct WeakRef {
 		public WeakRef (GLib.Object? object);
@@ -489,7 +494,9 @@ namespace GLib {
 		public bool get_boolean ();
 		public void set_char (char v_char);
 		public char get_char ();
+		[Version (since = "2.32")]
 		public void set_schar (int8 v_char);
+		[Version (since = "2.32")]
 		public int8 get_schar ();
 		public void set_uchar (uchar v_uchar);
 		public uchar get_uchar ();
@@ -527,7 +534,9 @@ namespace GLib {
 		public void take_object (owned Object v_object);
 		public unowned Object get_object ();
 		public Object dup_object ();
+		[Version (since = "2.12")]
 		public void set_gtype (Type v_gtype);
+		[Version (since = "2.12")]
 		public Type get_gtype ();
 		public void set_param(ParamSpec param);
 		public ParamSpec get_param();

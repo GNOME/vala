@@ -28,6 +28,7 @@ namespace GUdev {
 		public GUdev.DeviceType get_device_type ();
 		public unowned string get_devtype ();
 		public unowned string? get_driver ();
+		[Version (since = "165")]
 		public bool get_is_initialized ();
 		public unowned string get_name ();
 		public unowned string get_number ();
@@ -55,12 +56,15 @@ namespace GUdev {
 		public unowned string[] get_sysfs_attr_keys ();
 		public unowned string get_sysfs_path ();
 		[CCode (array_length = false, array_null_terminated = true)]
+		[Version (since = "165")]
 		public unowned string[] get_tags ();
+		[Version (since = "165")]
 		public uint64 get_usec_since_initialized ();
 		public bool has_property (string key);
 		public bool has_sysfs_attr (string key);
 	}
 	[CCode (cheader_filename = "gudev/gudev.h", type_id = "g_udev_enumerator_get_type ()")]
+	[Version (since = "165")]
 	public class Enumerator : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Enumerator (GUdev.Client client);

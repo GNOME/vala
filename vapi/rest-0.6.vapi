@@ -10,10 +10,10 @@ namespace Rest {
 		[CCode (cname = "oauth_proxy_access_token_async")]
 		public bool access_token_async (string function, string verifier, [CCode (delegate_target_pos = 4.9)] Rest.OAuthProxyAuthCallback callback, GLib.Object? weak_object) throws GLib.Error;
 		[CCode (cname = "oauth_proxy_auth_step")]
-		[Deprecated]
+		[Version (deprecated = true)]
 		public bool auth_step (string function) throws GLib.Error;
 		[CCode (cname = "oauth_proxy_auth_step_async")]
-		[Deprecated]
+		[Version (deprecated = true)]
 		public bool auth_step_async (string function, [CCode (delegate_target_pos = 3.9)] Rest.OAuthProxyAuthCallback callback, GLib.Object? weak_object) throws GLib.Error;
 		[CCode (cname = "oauth_proxy_get_token")]
 		public unowned string get_token ();

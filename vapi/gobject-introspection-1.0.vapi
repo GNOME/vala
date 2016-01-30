@@ -15,6 +15,7 @@ namespace GI {
 		public static bool is_caller_allocates (GI.ArgInfo info);
 		public static bool is_optional (GI.ArgInfo info);
 		public static bool is_return_value (GI.ArgInfo info);
+		[Version (since = "1.29.0")]
 		public static bool is_skip (GI.ArgInfo info);
 		public static void load_type (GI.ArgInfo info, out unowned GI.TypeInfo type);
 		public static bool may_be_null (GI.ArgInfo info);
@@ -45,6 +46,7 @@ namespace GI {
 	public class CallableInfo : GI.BaseInfo {
 		[CCode (has_construct_function = false)]
 		protected CallableInfo ();
+		[Version (since = "1.34")]
 		public static bool can_throw_gerror (GI.CallableInfo info);
 		public static GI.ArgInfo get_arg (GI.CallableInfo info, int n);
 		public static GI.Transfer get_caller_owns (GI.CallableInfo info);
@@ -53,6 +55,7 @@ namespace GI {
 		public static unowned string get_return_attribute (GI.CallableInfo info, string name);
 		public static GI.TypeInfo get_return_type (GI.CallableInfo info);
 		public static bool invoke (GI.CallableInfo info, void* function, GI.Argument in_args, int n_in_args, GI.Argument out_args, int n_out_args, GI.Argument return_value, bool is_method, bool @throws) throws GLib.Error;
+		[Version (since = "1.34")]
 		public static bool is_method (GI.CallableInfo info);
 		public static bool iterate_return_attributes (GI.CallableInfo info, GI.AttributeIter iterator, out unowned string name, out unowned string value);
 		public static void load_arg (GI.CallableInfo info, int n, out unowned GI.ArgInfo arg);
@@ -75,8 +78,11 @@ namespace GI {
 	public class EnumInfo : GI.BaseInfo {
 		[CCode (has_construct_function = false)]
 		protected EnumInfo ();
+		[Version (since = "1.29.17")]
 		public static unowned string get_error_domain (GI.EnumInfo info);
+		[Version (since = "1.29.17")]
 		public static GI.FunctionInfo get_method (GI.EnumInfo info, int n);
+		[Version (since = "1.29.17")]
 		public static int get_n_methods (GI.EnumInfo info);
 		public static int get_n_values (GI.EnumInfo info);
 		public static GI.TypeTag get_storage_type (GI.EnumInfo info);
@@ -105,6 +111,7 @@ namespace GI {
 		[CCode (has_construct_function = false)]
 		protected InterfaceInfo ();
 		public static GI.FunctionInfo find_method (GI.InterfaceInfo info, string name);
+		[Version (since = "1.34")]
 		public static GI.SignalInfo find_signal (GI.InterfaceInfo info, string name);
 		public static GI.VFuncInfo find_vfunc (GI.InterfaceInfo info, string name);
 		public static GI.ConstantInfo get_constant (GI.InterfaceInfo info, int n);
@@ -178,6 +185,7 @@ namespace GI {
 		public static bool dump (string arg) throws GLib.Error;
 		public GLib.List<string> enumerate_versions (string namespace_);
 		public static GLib.Quark error_quark ();
+		[Version (since = "1.29.17")]
 		public GI.EnumInfo find_by_error_domain (GLib.Quark domain);
 		public GI.BaseInfo find_by_gtype (GLib.Type gtype);
 		public GI.BaseInfo find_by_name (string namespace_, string name);
@@ -186,6 +194,7 @@ namespace GI {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_dependencies (string namespace_);
 		[CCode (array_length = false, array_null_terminated = true)]
+		[Version (since = "1.44")]
 		public string[] get_immediate_dependencies (string namespace_);
 		public GI.BaseInfo get_info (string namespace_, int index);
 		[CCode (array_length = false, array_null_terminated = true)]

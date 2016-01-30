@@ -16,9 +16,13 @@ namespace Gst {
 			public unowned string get_ip ();
 			public unowned GLib.Socket get_read_socket ();
 			public bool get_remember_session_id ();
+			[Version (since = "1.2")]
 			public unowned GLib.TlsConnection get_tls () throws GLib.Error;
+			[Version (since = "1.4")]
 			public GLib.TlsDatabase get_tls_database ();
+			[Version (since = "1.6")]
 			public GLib.TlsInteraction get_tls_interaction ();
+			[Version (since = "1.2.1")]
 			public GLib.TlsCertificateFlags get_tls_validation_flags ();
 			public unowned string get_tunnelid ();
 			public Gst.RTSP.Url get_url ();
@@ -37,8 +41,11 @@ namespace Gst {
 			public Gst.RTSP.Result set_proxy (string host, uint port);
 			public Gst.RTSP.Result set_qos_dscp (uint qos_dscp);
 			public void set_remember_session_id (bool remember);
+			[Version (since = "1.4")]
 			public void set_tls_database (GLib.TlsDatabase database);
+			[Version (since = "1.6")]
 			public void set_tls_interaction (GLib.TlsInteraction interaction);
+			[Version (since = "1.2.1")]
 			public bool set_tls_validation_flags (GLib.TlsCertificateFlags flags);
 			public void set_tunneled (bool tunneled);
 			public Gst.RTSP.Result write (uint8 data, uint size, GLib.TimeVal timeout);
@@ -68,12 +75,16 @@ namespace Gst {
 		[GIR (name = "RTSPWatch")]
 		public class Watch {
 			public uint attach (GLib.MainContext context);
+			[Version (since = "1.2")]
 			public void get_send_backlog (out size_t bytes, out uint messages);
 			public void reset ();
 			public Gst.RTSP.Result send_message (Gst.RTSP.Message message, out uint id);
+			[Version (since = "1.4")]
 			public void set_flushing (bool flushing);
+			[Version (since = "1.2")]
 			public void set_send_backlog (size_t bytes, uint messages);
 			public void unref ();
+			[Version (since = "1.4")]
 			public Gst.RTSP.Result wait_backlog (GLib.TimeVal timeout);
 			public Gst.RTSP.Result write_data ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] owned uint8[] data, out uint id);
 		}
@@ -111,12 +122,14 @@ namespace Gst {
 			[CCode (cname = "type_data.data.channel")]
 			public uint8 type_data_data_channel;
 			public Gst.RTSP.Result add_header (Gst.RTSP.HeaderField field, string value);
+			[Version (since = "1.6")]
 			public Gst.RTSP.Result add_header_by_name (string header, string value);
 			public Gst.RTSP.Result append_headers (GLib.StringBuilder str);
 			public Gst.RTSP.Result dump ();
 			public Gst.RTSP.Result free ();
 			public Gst.RTSP.Result get_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] out unowned uint8[] data);
 			public Gst.RTSP.Result get_header (Gst.RTSP.HeaderField field, out unowned string value, int indx);
+			[Version (since = "1.6")]
 			public Gst.RTSP.Result get_header_by_name (string header, out unowned string value, int index);
 			public Gst.RTSP.MsgType get_type ();
 			public Gst.RTSP.Result init ();
@@ -127,11 +140,13 @@ namespace Gst {
 			public Gst.RTSP.Result parse_request (out Gst.RTSP.Method method, out string uri, out Gst.RTSP.Version version);
 			public Gst.RTSP.Result parse_response (out Gst.RTSP.StatusCode code, out string reason, out Gst.RTSP.Version version);
 			public Gst.RTSP.Result remove_header (Gst.RTSP.HeaderField field, int indx);
+			[Version (since = "1.6")]
 			public Gst.RTSP.Result remove_header_by_name (string header, int index);
 			public Gst.RTSP.Result set_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
 			public Gst.RTSP.Result steal_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] out uint8[] data);
 			public Gst.RTSP.Result take_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] owned uint8[] data);
 			public Gst.RTSP.Result take_header (Gst.RTSP.HeaderField field, owned string value);
+			[Version (since = "1.6")]
 			public Gst.RTSP.Result take_header_by_name (string header, owned string value);
 			public Gst.RTSP.Result unset ();
 		}
@@ -149,6 +164,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", has_type_id = false)]
 		[GIR (name = "RTSPTime2")]
+		[Version (since = "1.2")]
 		public struct Time2 {
 			public double frames;
 			public uint year;
@@ -184,6 +200,7 @@ namespace Gst {
 			public uint ssrc;
 			public string as_text ();
 			public Gst.RTSP.Result free ();
+			[Version (since = "1.4")]
 			public Gst.RTSP.Result get_media_type (out unowned string media_type);
 			public Gst.RTSP.Result init ();
 		}
@@ -490,12 +507,14 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static string options_as_text (Gst.RTSP.Method options);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
+		[Version (since = "1.2")]
 		public static Gst.RTSP.Method options_from_text (string options);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static bool range_convert_units (Gst.RTSP.TimeRange range, Gst.RTSP.RangeUnit unit);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static void range_free (Gst.RTSP.TimeRange range);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
+		[Version (since = "1.2")]
 		public static bool range_get_times (Gst.RTSP.TimeRange range, Gst.ClockTime min, Gst.ClockTime max);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static Gst.RTSP.Result range_parse (string rangestr, Gst.RTSP.TimeRange range);
@@ -508,7 +527,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static Gst.RTSP.Result transport_get_manager (Gst.RTSP.TransMode trans, string manager, uint option);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
-		[Deprecated]
+		[Version (deprecated = true)]
 		public static Gst.RTSP.Result transport_get_mime (Gst.RTSP.TransMode trans, string mime);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static Gst.RTSP.Result transport_new (Gst.RTSP.Transport transport);

@@ -26,30 +26,53 @@ namespace Gst {
 			public Gst.SDP.MIKEYType type;
 			public uint8 version;
 			[CCode (has_construct_function = false)]
+			[Version (since = "1.4")]
 			public MIKEYMessage ();
+			[Version (since = "1.4")]
 			public bool add_cs_srtp (uint8 policy, uint32 ssrc, uint32 roc);
+			[Version (since = "1.4")]
 			public bool add_payload (owned Gst.SDP.MIKEYPayload payload);
+			[Version (since = "1.4")]
 			public bool add_pke (Gst.SDP.MIKEYCacheType C, [CCode (array_length_cname = "data_len", array_length_pos = 1.5, array_length_type = "guint16")] uint8[] data);
+			[Version (since = "1.4")]
 			public bool add_rand ([CCode (array_length_cname = "len", array_length_pos = 0.5, array_length_type = "guint8")] uint8[] rand);
+			[Version (since = "1.4")]
 			public bool add_rand_len (uint8 len);
+			[Version (since = "1.4")]
 			public bool add_t (Gst.SDP.MIKEYTSType type, [CCode (array_length = false)] uint8[] ts_value);
+			[Version (since = "1.4")]
 			public bool add_t_now_ntp_utc ();
+			[Version (since = "1.4")]
 			public unowned Gst.SDP.MIKEYPayload find_payload (Gst.SDP.MIKEYPayloadType type, uint nth);
 			[CCode (has_construct_function = false)]
+			[Version (since = "1.4")]
 			public MIKEYMessage.from_bytes (GLib.Bytes bytes, Gst.SDP.MIKEYDecryptInfo info) throws GLib.Error;
 			[CCode (has_construct_function = false)]
+			[Version (since = "1.4")]
 			public MIKEYMessage.from_data ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] data, Gst.SDP.MIKEYDecryptInfo info) throws GLib.Error;
+			[Version (since = "1.4")]
 			public unowned Gst.SDP.MIKEYMapSRTP? get_cs_srtp (uint idx);
+			[Version (since = "1.4")]
 			public uint get_n_cs ();
+			[Version (since = "1.4")]
 			public uint get_n_payloads ();
+			[Version (since = "1.4")]
 			public unowned Gst.SDP.MIKEYPayload get_payload (uint idx);
+			[Version (since = "1.4")]
 			public bool insert_cs_srtp (int idx, Gst.SDP.MIKEYMapSRTP map);
+			[Version (since = "1.4")]
 			public bool insert_payload (uint idx, owned Gst.SDP.MIKEYPayload payload);
+			[Version (since = "1.4")]
 			public bool remove_cs_srtp (int idx);
+			[Version (since = "1.4")]
 			public bool remove_payload (uint idx);
+			[Version (since = "1.4")]
 			public bool replace_cs_srtp (int idx, Gst.SDP.MIKEYMapSRTP map);
+			[Version (since = "1.4")]
 			public bool replace_payload (uint idx, owned Gst.SDP.MIKEYPayload payload);
+			[Version (since = "1.4")]
 			public bool set_info (uint8 version, Gst.SDP.MIKEYType type, bool V, Gst.SDP.MIKEYPRFFunc prf_func, uint32 CSB_id, Gst.SDP.MIKEYMapType map_type);
+			[Version (since = "1.4")]
 			public GLib.Bytes to_bytes (Gst.SDP.MIKEYEncryptInfo info) throws GLib.Error;
 		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayload", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_mikey_payload_", type_id = "gst_mikey_payload_get_type ()")]
@@ -59,23 +82,41 @@ namespace Gst {
 			public uint len;
 			public Gst.SDP.MIKEYPayloadType type;
 			[CCode (has_construct_function = false)]
+			[Version (since = "1.4")]
 			public MIKEYPayload (Gst.SDP.MIKEYPayloadType type);
+			[Version (since = "1.4")]
 			public bool kemac_add_sub (owned Gst.SDP.MIKEYPayload newpay);
+			[Version (since = "1.4")]
 			public uint kemac_get_n_sub ();
+			[Version (since = "1.4")]
 			public unowned Gst.SDP.MIKEYPayload kemac_get_sub (uint idx);
+			[Version (since = "1.4")]
 			public bool kemac_remove_sub (uint idx);
+			[Version (since = "1.4")]
 			public bool kemac_set (Gst.SDP.MIKEYEncAlg enc_alg, Gst.SDP.MIKEYMacAlg mac_alg);
+			[Version (since = "1.4")]
 			public bool key_data_set_interval (uint8 vf_len, [CCode (array_length_cname = "vt_len", array_length_pos = 1.66667, array_length_type = "guint8")] uint8[] vt_data);
+			[Version (since = "1.4")]
 			public bool key_data_set_key (Gst.SDP.MIKEYKeyDataType key_type, [CCode (array_length_cname = "key_len", array_length_pos = 1.5, array_length_type = "guint16")] uint8[] key_data);
+			[Version (since = "1.4")]
 			public bool key_data_set_salt ([CCode (array_length_cname = "salt_len", array_length_pos = 0.5, array_length_type = "guint16")] uint8[]? salt_data);
+			[Version (since = "1.4")]
 			public bool key_data_set_spi ([CCode (array_length_cname = "spi_len", array_length_pos = 0.5, array_length_type = "guint8")] uint8[] spi_data);
+			[Version (since = "1.4")]
 			public bool pke_set (Gst.SDP.MIKEYCacheType C, [CCode (array_length_cname = "data_len", array_length_pos = 1.5, array_length_type = "guint16")] uint8[] data);
+			[Version (since = "1.4")]
 			public bool rand_set ([CCode (array_length_cname = "len", array_length_pos = 0.5, array_length_type = "guint8")] uint8[] rand);
+			[Version (since = "1.4")]
 			public bool sp_add_param (uint8 type, [CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "guint8")] uint8[] val);
+			[Version (since = "1.4")]
 			public uint sp_get_n_params ();
+			[Version (since = "1.4")]
 			public unowned Gst.SDP.MIKEYPayloadSPParam? sp_get_param (uint idx);
+			[Version (since = "1.4")]
 			public bool sp_remove_param (uint idx);
+			[Version (since = "1.4")]
 			public bool sp_set (uint policy, Gst.SDP.MIKEYSecProto proto);
+			[Version (since = "1.4")]
 			public bool t_set (Gst.SDP.MIKEYTSType type, [CCode (array_length = false)] uint8[] ts_value);
 		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadKEMAC")]
@@ -159,6 +200,7 @@ namespace Gst {
 			public string as_text ();
 			public uint attributes_len ();
 			public uint bandwidths_len ();
+			[Version (since = "1.2")]
 			public Gst.SDP.Result copy (out Gst.SDP.Message copy);
 			public Gst.SDP.Result dump ();
 			public uint emails_len ();
@@ -180,25 +222,43 @@ namespace Gst {
 			public unowned string get_version ();
 			public unowned Gst.SDP.Zone? get_zone (uint idx);
 			public Gst.SDP.Result init ();
+			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_attribute (int idx, Gst.SDP.Attribute attr);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_bandwidth (int idx, Gst.SDP.Bandwidth bw);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_email (int idx, string email);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_phone (int idx, string phone);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_time (int idx, Gst.SDP.Time t);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_zone (int idx, Gst.SDP.Zone zone);
 			public uint medias_len ();
 			public uint phones_len ();
+			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_attribute (uint idx);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_bandwidth (uint idx);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_email (uint idx);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_phone (uint idx);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_time (uint idx);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_zone (uint idx);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result replace_attribute (uint idx, Gst.SDP.Attribute attr);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result replace_bandwidth (uint idx, Gst.SDP.Bandwidth bw);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result replace_email (uint idx, string email);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result replace_phone (uint idx, string phone);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result replace_time (uint idx, Gst.SDP.Time t);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result replace_zone (uint idx, Gst.SDP.Zone zone);
 			public Gst.SDP.Result set_connection (string nettype, string addrtype, string address, uint ttl, uint addr_number);
 			public Gst.SDP.Result set_information (string information);
@@ -216,7 +276,9 @@ namespace Gst {
 		public struct Attribute {
 			public weak string key;
 			public weak string value;
+			[Version (since = "1.2")]
 			public Gst.SDP.Result clear ();
+			[Version (since = "1.2")]
 			public Gst.SDP.Result @set (string key, string value);
 		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", has_type_id = false)]
@@ -224,7 +286,9 @@ namespace Gst {
 		public struct Bandwidth {
 			public weak string bwtype;
 			public uint bandwidth;
+			[Version (since = "1.2")]
 			public Gst.SDP.Result clear ();
+			[Version (since = "1.2")]
 			public Gst.SDP.Result @set (string bwtype, uint bandwidth);
 		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", has_type_id = false)]
@@ -235,7 +299,9 @@ namespace Gst {
 			public weak string address;
 			public uint ttl;
 			public uint addr_number;
+			[Version (since = "1.2")]
 			public Gst.SDP.Result clear ();
+			[Version (since = "1.2")]
 			public Gst.SDP.Result @set (string nettype, string addrtype, string address, uint ttl, uint addr_number);
 		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", has_type_id = false)]
@@ -279,6 +345,7 @@ namespace Gst {
 			public uint attributes_len ();
 			public uint bandwidths_len ();
 			public uint connections_len ();
+			[Version (since = "1.2")]
 			public Gst.SDP.Result copy (out Gst.SDP.Media copy);
 			public uint formats_len ();
 			public Gst.SDP.Result free ();
@@ -295,17 +362,29 @@ namespace Gst {
 			public uint get_port ();
 			public unowned string get_proto ();
 			public Gst.SDP.Result init ();
+			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_attribute (int idx, Gst.SDP.Attribute attr);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_bandwidth (int idx, Gst.SDP.Bandwidth bw);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_connection (int idx, Gst.SDP.Connection conn);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_format (int idx, string format);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_attribute (uint idx);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_bandwidth (uint idx);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_connection (uint idx);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_format (uint idx);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result replace_attribute (uint idx, Gst.SDP.Attribute attr);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result replace_bandwidth (uint idx, Gst.SDP.Bandwidth bw);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result replace_connection (uint idx, Gst.SDP.Connection conn);
+			[Version (since = "1.2")]
 			public Gst.SDP.Result replace_format (uint idx, string format);
 			public Gst.SDP.Result set_information (string information);
 			public Gst.SDP.Result set_key (string type, string data);
@@ -330,7 +409,9 @@ namespace Gst {
 			public weak string start;
 			public weak string stop;
 			public weak GLib.Array<void*> repeat;
+			[Version (since = "1.2")]
 			public Gst.SDP.Result clear ();
+			[Version (since = "1.2")]
 			public Gst.SDP.Result @set (string start, string stop, [CCode (array_length = false, array_null_terminated = true)] string[] repeat);
 		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", has_type_id = false)]
@@ -338,7 +419,9 @@ namespace Gst {
 		public struct Zone {
 			public weak string time;
 			public weak string typed_time;
+			[Version (since = "1.2")]
 			public Gst.SDP.Result clear ();
+			[Version (since = "1.2")]
 			public Gst.SDP.Result @set (string adj_time, string typed_time);
 		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYCacheType", cprefix = "GST_MIKEY_CACHE_", has_type_id = false)]

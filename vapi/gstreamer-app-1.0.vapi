@@ -36,6 +36,7 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			protected Src ();
 			public Gst.Caps get_caps ();
+			[Version (since = "1.2")]
 			public uint64 get_current_level_bytes ();
 			public bool get_emit_signals ();
 			public void get_latency (uint64 min, uint64 max);
@@ -73,6 +74,7 @@ namespace Gst {
 			[HasEmitter]
 			public virtual signal Gst.FlowReturn push_buffer (Gst.Buffer buffer);
 			[HasEmitter]
+			[Version (since = "1.6")]
 			public virtual signal Gst.FlowReturn push_sample (Gst.Sample sample);
 			public virtual signal bool seek_data (uint64 offset);
 		}

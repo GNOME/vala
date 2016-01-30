@@ -68,62 +68,6 @@ public abstract class Vala.Symbol : CodeNode {
 	public bool active { get; set; default = true; }
 
 	/**
-	 * Specifies whether this symbol has been deprecated.
-	 */
-	public bool deprecated {
-		get {
-			if (_deprecated == null) {
-				_deprecated = get_attribute ("Deprecated") != null;
-			}
-			return _deprecated;
-		}
-		set {
-			_deprecated = value;
-			set_attribute ("Deprecated", _deprecated);
-		}
-	}
-
-	/**
-	 * Specifies what version this symbol has been deprecated since.
-	 */
-	public string? deprecated_since {
-		owned get {
-			return get_attribute_string ("Deprecated", "since");
-		}
-		set {
-			set_attribute_string ("Deprecated", "since", value);
-		}
-	}
-
-	/**
-	 * Specifies the replacement if this symbol has been deprecated.
-	 */
-	public string? replacement {
-		owned get {
-			return get_attribute_string ("Deprecated", "replacement");
-		}
-		set {
-			set_attribute_string ("Deprecated", "replacement", value);
-		}
-	}
-
-	/**
-	 * Specifies whether this symbol is experimental.
-	 */
-	public bool experimental {
-		get {
-			if (_experimental == null) {
-				_experimental = get_attribute ("Experimental") != null;
-			}
-			return _experimental;
-		}
-		set {
-			_experimental = value;
-			set_attribute ("Experimental", value);
-		}
-	}
-
-	/**
 	 * Specifies whether this symbol has been accessed.
 	 */
 	public bool used { get; set; }
@@ -137,6 +81,22 @@ public abstract class Vala.Symbol : CodeNode {
 	public SymbolAccessibility access { get; set; }
 
 	public Comment? comment { get; set; }
+
+
+	private VersionAttribute _version;
+
+	/**
+	 * The associated [Version] attribute
+	 */
+	public VersionAttribute version {
+		get {
+			if (_version == null) {
+				_version = new VersionAttribute (this);
+			}
+
+			return _version;
+		}
+	}
 
 	/**
 	 * Specifies whether this method explicitly hides a member of a base
@@ -231,8 +191,6 @@ public abstract class Vala.Symbol : CodeNode {
 
 	private weak Scope _owner;
 	private Scope _scope;
-	private bool? _deprecated;
-	private bool? _experimental;
 
 	public Symbol (string? name, SourceReference? source_reference, Comment? comment = null) {
 		this.name = name;
@@ -414,36 +372,6 @@ public abstract class Vala.Symbol : CodeNode {
 		}
 
 		return isclass;
-	}
-
-	/**
-	 * Check to see if the symbol has been deprecated, and emit a warning
-	 * if it has.
-	 */
-	public bool check_deprecated (SourceReference? source_ref = null) {
-		if (external_package && deprecated) {
-			if (!CodeContext.get ().deprecated) {
-				Report.deprecated (source_ref, "%s %s%s".printf (get_full_name (), (deprecated_since == null) ? "is deprecated" : "has been deprecated since %s".printf (deprecated_since), (replacement == null) ? "" : ". Use %s".printf (replacement)));
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Check to see if the symbol is experimental, and emit a warning
-	 * if it is.
-	 */
-	public bool check_experimental (SourceReference? source_ref = null) {
-		if (external_package && experimental) {
-			if (!CodeContext.get ().experimental) {
-				Report.experimental (source_ref, "%s is experimental".printf (get_full_name ()));
-			}
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	public Symbol? get_hidden_member () {

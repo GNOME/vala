@@ -57,6 +57,7 @@ public class Vala.UsedAttr : CodeVisitor {
 		"HasEmitter", "",
 		"ReturnsModifiedPointer", "",
 		"Deprecated", "since", "replacement", "",
+		"Version", "since", "replacement", "deprecated", "deprecated_since", "experimental", "",
 		"Signal", "detailed", "run", "no_recurse", "action", "no_hooks", "",
 		"Description", "nick", "blurb", "",
 		
@@ -72,7 +73,7 @@ public class Vala.UsedAttr : CodeVisitor {
 		"GtkCallback", "name", "",
 
 		"DBus", "name", "no_reply", "result", "use_string_marshalling", "value", "signature", "visible", "",
-		
+
 		"GIR", "name", ""
 
 	};
