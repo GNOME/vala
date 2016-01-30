@@ -2622,7 +2622,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				dup_function = get_ccode_ref_function ((ObjectTypeSymbol) type.data_type);
 				if (type.data_type is Interface && dup_function == null) {
 					Report.error (source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (type.data_type.get_full_name ()));
-					return null;
+					return new CCodeInvalidExpression();
 				}
 			} else if (cl != null && cl.is_immutable) {
 				// allow duplicates of immutable instances as for example strings
@@ -2646,7 +2646,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else {
 				// duplicating non-reference counted objects may cause side-effects (and performance issues)
 				Report.error (source_reference, "duplicating %s instance, use unowned variable or explicitly invoke copy method".printf (type.data_type.name));
-				return null;
+				return new CCodeInvalidExpression();
 			}
 
 			return new CCodeIdentifier (dup_function);
