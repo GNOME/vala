@@ -1110,6 +1110,17 @@
 				<parameter name="height" type="gdouble"/>
 			</parameters>
 		</function>
+		<function name="render_background_get_clip" symbol="gtk_render_background_get_clip">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="context" type="GtkStyleContext*"/>
+				<parameter name="x" type="gdouble"/>
+				<parameter name="y" type="gdouble"/>
+				<parameter name="width" type="gdouble"/>
+				<parameter name="height" type="gdouble"/>
+				<parameter name="out_clip" type="GdkRectangle*"/>
+			</parameters>
+		</function>
 		<function name="render_check" symbol="gtk_render_check">
 			<return-type type="void"/>
 			<parameters>
@@ -10310,6 +10321,7 @@
 			<property name="alpha" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="color" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="rgba" type="GdkRGBA*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-editor" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="use-alpha" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="color-set" when="FIRST">
@@ -36133,14 +36145,14 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1907"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1908"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="7"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="8"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="19"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

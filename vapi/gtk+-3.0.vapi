@@ -1451,6 +1451,8 @@ namespace Gtk {
 		[Version (deprecated_since = "3.4", replacement = "rgba")]
 		public Gdk.Color color { get; set; }
 		public Gdk.RGBA rgba { get; set; }
+		[NoAccessorMethod]
+		public bool show_editor { get; set; }
 		public string title { get; set; }
 		public bool use_alpha { get; set; }
 		public virtual signal void color_set ();
@@ -9925,6 +9927,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (deprecated_since = "vala-0.16", replacement = "StyleContext.render_background")]
 	public static void render_background (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static void render_background_get_clip (Gtk.StyleContext context, double x, double y, double width, double height, Gdk.Rectangle out_clip);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (deprecated_since = "vala-0.16", replacement = "StyleContext.render_check")]
 	public static void render_check (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height);

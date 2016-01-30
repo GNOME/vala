@@ -4863,13 +4863,13 @@ namespace Gdk {
 		[Version (since = "3.20")]
 		public void set_hotspot (int hot_x, int hot_y);
 		[Version (since = "3.20")]
-		public signal void action_changed (Gdk.DragAction object);
+		public signal void action_changed (Gdk.DragAction action);
 		[Version (since = "3.20")]
 		public signal void cancel ();
 		[Version (since = "3.20")]
 		public signal void dnd_finished ();
 		[Version (since = "3.20")]
-		public signal void drop_performed (int object);
+		public signal void drop_performed (int time);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
 	[Compact]

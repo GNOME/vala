@@ -46,6 +46,12 @@ namespace Gdk {
 		public string str;
 	}
 
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_rgba_get_type ()")]
+	public struct RGBA {
+		[Version (since = "3.0")]
+		public bool parse (string spec);
+	}
+
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Rectangle : Cairo.RectangleInt {
 		public bool intersect (Gdk.Rectangle src2, out Gdk.Rectangle dest);
