@@ -3318,7 +3318,33 @@ public class Vala.GirParser : CodeVisitor {
 
 	void parse_union () {
 		start_element ("union");
-		push_node (element_get_name (), true);
+
+		string? element_name = element_get_name ();
+		if (element_name == null) {
+			next ();
+
+			while (current_token == MarkupTokenType.START_ELEMENT) {
+				if (!push_metadata ()) {
+					skip_element ();
+					continue;
+				}
+
+				if (reader.name == "field") {
+					parse_field ();
+				} else {
+					// error
+					Report.error (get_current_src (), "unknown child element `%s' in `transparent union'".printf (reader.name));
+					skip_element ();
+				}
+
+				pop_metadata ();
+			}
+
+			end_element ("union");
+			return;
+		}
+
+		push_node (element_name, true);
 
 		Struct st;
 		if (current.new_symbol) {
