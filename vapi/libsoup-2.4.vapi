@@ -133,7 +133,7 @@ namespace Soup {
 		[Version (since = "2.26")]
 		public uint hash_by_name ();
 		public bool is_resolved ();
-		public void resolve_async (GLib.MainContext? async_context, GLib.Cancellable? cancellable, [CCode (scope = "async")] owned Soup.AddressCallback callback);
+		public void resolve_async (GLib.MainContext? async_context, GLib.Cancellable? cancellable, [CCode (scope = "async")] Soup.AddressCallback callback);
 		public uint resolve_sync (GLib.Cancellable? cancellable = null);
 		[NoAccessorMethod]
 		public Soup.AddressFamily family { get; construct; }
@@ -852,10 +852,10 @@ namespace Soup {
 		public virtual void kick ();
 		public void pause_message (Soup.Message msg);
 		[Version (since = "2.38")]
-		public void prefetch_dns (string hostname, GLib.Cancellable? cancellable, [CCode (scope = "async")] owned Soup.AddressCallback? callback);
+		public void prefetch_dns (string hostname, GLib.Cancellable? cancellable, [CCode (scope = "async")] Soup.AddressCallback? callback);
 		[Version (deprecated = true, deprecated_since = "2.38", since = "2.30")]
 		public void prepare_for_uri (Soup.URI uri);
-		public virtual void queue_message (owned Soup.Message msg, [CCode (scope = "async")] owned Soup.SessionCallback? callback);
+		public virtual void queue_message (owned Soup.Message msg, [CCode (scope = "async")] Soup.SessionCallback? callback);
 		[Version (since = "2.38")]
 		public bool redirect_message (Soup.Message msg);
 		[Version (since = "2.24")]
@@ -975,7 +975,7 @@ namespace Soup {
 	public class Socket : GLib.Object, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		public Socket (string optname1, ...);
-		public void connect_async (GLib.Cancellable? cancellable, [CCode (scope = "async")] owned Soup.SocketCallback callback);
+		public void connect_async (GLib.Cancellable? cancellable, [CCode (scope = "async")] Soup.SocketCallback callback);
 		public uint connect_sync (GLib.Cancellable? cancellable = null);
 		public void disconnect ();
 		public int get_fd ();
@@ -1118,7 +1118,7 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupPasswordManagerInterface", type_id = "soup_password_manager_get_type ()")]
 	public interface PasswordManager : Soup.SessionFeature, GLib.Object {
-		public abstract void get_passwords_async (Soup.Message msg, Soup.Auth auth, bool retrying, GLib.MainContext async_context, GLib.Cancellable? cancellable, [CCode (scope = "async")] owned Soup.PasswordManagerCallback callback);
+		public abstract void get_passwords_async (Soup.Message msg, Soup.Auth auth, bool retrying, GLib.MainContext async_context, GLib.Cancellable? cancellable, [CCode (scope = "async")] Soup.PasswordManagerCallback callback);
 		public abstract void get_passwords_sync (Soup.Message msg, Soup.Auth auth, GLib.Cancellable? cancellable = null);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupProxyResolverInterface", type_id = "soup_proxy_resolver_get_type ()")]
@@ -1130,7 +1130,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupProxyURIResolverInterface", type_id = "soup_proxy_uri_resolver_get_type ()")]
 	public interface ProxyURIResolver : Soup.SessionFeature, GLib.Object {
 		[Version (deprecated = true, since = "2.26.3")]
-		public abstract void get_proxy_uri_async (Soup.URI uri, GLib.MainContext? async_context, GLib.Cancellable? cancellable, [CCode (scope = "async")] owned Soup.ProxyURIResolverCallback callback);
+		public abstract void get_proxy_uri_async (Soup.URI uri, GLib.MainContext? async_context, GLib.Cancellable? cancellable, [CCode (scope = "async")] Soup.ProxyURIResolverCallback callback);
 		[Version (deprecated = true, since = "2.26.3")]
 		public abstract uint get_proxy_uri_sync (Soup.URI uri, GLib.Cancellable? cancellable, out Soup.URI proxy_uri);
 	}

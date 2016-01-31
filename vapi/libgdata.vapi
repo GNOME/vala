@@ -185,10 +185,10 @@ namespace GData {
 	public class BatchOperation : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected BatchOperation ();
-		public uint add_deletion (GData.Entry entry, [CCode (scope = "async")] owned GData.BatchOperationCallback callback);
-		public uint add_insertion (GData.Entry entry, [CCode (scope = "async")] owned GData.BatchOperationCallback callback);
-		public uint add_query (string id, GLib.Type entry_type, [CCode (scope = "async")] owned GData.BatchOperationCallback callback);
-		public uint add_update (GData.Entry entry, [CCode (scope = "async")] owned GData.BatchOperationCallback callback);
+		public uint add_deletion (GData.Entry entry, [CCode (scope = "async")] GData.BatchOperationCallback callback);
+		public uint add_insertion (GData.Entry entry, [CCode (scope = "async")] GData.BatchOperationCallback callback);
+		public uint add_query (string id, GLib.Type entry_type, [CCode (scope = "async")] GData.BatchOperationCallback callback);
+		public uint add_update (GData.Entry entry, [CCode (scope = "async")] GData.BatchOperationCallback callback);
 		[Version (since = "0.9.0")]
 		public unowned GData.AuthorizationDomain? get_authorization_domain ();
 		public unowned string get_feed_uri ();

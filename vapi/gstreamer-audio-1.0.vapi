@@ -328,7 +328,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool resume ();
 			public uint64 samples_done ();
-			public void set_callback ([CCode (scope = "async")] owned Gst.Audio.RingBufferCallback cb);
+			public void set_callback ([CCode (scope = "async")] Gst.Audio.RingBufferCallback cb);
 			public void set_channel_positions (Gst.Audio.ChannelPosition position);
 			public void set_flushing (bool flushing);
 			public void set_sample (uint64 sample);

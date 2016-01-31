@@ -29,16 +29,16 @@ namespace Rest {
 		[CCode (has_construct_function = false, type = "RestProxy*")]
 		public OAuthProxy (string consumer_key, string consumer_secret, string url_format, bool binding_required);
 		public bool access_token (string function, string verifier) throws GLib.Error;
-		public bool access_token_async (string function, string verifier, [CCode (delegate_target_pos = 4.1, scope = "async")] owned Rest.OAuthProxyAuthCallback callback, GLib.Object weak_object) throws GLib.Error;
+		public bool access_token_async (string function, string verifier, [CCode (delegate_target_pos = 4.1, scope = "async")] Rest.OAuthProxyAuthCallback callback, GLib.Object weak_object) throws GLib.Error;
 		public bool auth_step (string function) throws GLib.Error;
-		public bool auth_step_async (string function, [CCode (delegate_target_pos = 3.1, scope = "async")] owned Rest.OAuthProxyAuthCallback callback, GLib.Object weak_object) throws GLib.Error;
+		public bool auth_step_async (string function, [CCode (delegate_target_pos = 3.1, scope = "async")] Rest.OAuthProxyAuthCallback callback, GLib.Object weak_object) throws GLib.Error;
 		public unowned string get_signature_host ();
 		public unowned string get_token ();
 		public unowned string get_token_secret ();
 		public bool is_oauth10a ();
 		public Rest.Proxy new_echo_proxy (string service_url, string url_format, bool binding_required);
 		public bool request_token (string function, string callback_uri) throws GLib.Error;
-		public bool request_token_async (string function, string callback_uri, [CCode (delegate_target_pos = 4.1, scope = "async")] owned Rest.OAuthProxyAuthCallback callback, GLib.Object weak_object) throws GLib.Error;
+		public bool request_token_async (string function, string callback_uri, [CCode (delegate_target_pos = 4.1, scope = "async")] Rest.OAuthProxyAuthCallback callback, GLib.Object weak_object) throws GLib.Error;
 		public void set_signature_host (string signature_host);
 		public void set_token (string token);
 		public void set_token_secret (string token_secret);
@@ -167,7 +167,7 @@ namespace Rest {
 		public void set_function (string function);
 		public void set_method (string method);
 		public bool sync () throws GLib.Error;
-		public bool upload ([CCode (delegate_target_pos = 2.1, scope = "async")] owned Rest.ProxyCallUploadCallback callback, GLib.Object weak_object) throws GLib.Error;
+		public bool upload ([CCode (delegate_target_pos = 2.1, scope = "async")] Rest.ProxyCallUploadCallback callback, GLib.Object weak_object) throws GLib.Error;
 		[NoAccessorMethod]
 		public Rest.Proxy proxy { owned get; construct; }
 	}

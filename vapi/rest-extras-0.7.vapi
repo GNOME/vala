@@ -78,7 +78,7 @@ namespace Rest {
 		[CCode (cname = "youtube_proxy_set_user_auth")]
 		public void set_user_auth (string user_auth);
 		[CCode (cname = "youtube_proxy_upload_async")]
-		public bool upload_async (string filename, GLib.HashTable<void*,void*> fields, bool incomplete, [CCode (delegate_target_pos = 5.1, scope = "async")] owned Rest.YoutubeProxyUploadCallback callback, GLib.Object weak_object) throws GLib.Error;
+		public bool upload_async (string filename, GLib.HashTable<void*,void*> fields, bool incomplete, [CCode (delegate_target_pos = 5.1, scope = "async")] Rest.YoutubeProxyUploadCallback callback, GLib.Object weak_object) throws GLib.Error;
 		[CCode (cname = "youtube_proxy_new_with_auth", has_construct_function = false, type = "RestProxy*")]
 		public YoutubeProxy.with_auth (string developer_key, string user_auth);
 		[NoAccessorMethod]
