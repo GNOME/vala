@@ -447,7 +447,7 @@ namespace Gtk {
 		public void add_actions (Gtk.ActionEntry[] entries, void* user_data);
 		public void add_actions_full (Gtk.ActionEntry[] entries, void* user_data, GLib.DestroyNotify? destroy);
 		public void add_radio_actions (Gtk.RadioActionEntry[] entries, int value, [CCode (type = "GCallback")] Gtk.RadioActionCallback on_change);
-		public void add_radio_actions_full (Gtk.RadioActionEntry[] entries, int value, [CCode (type = "GCallback")] Gtk.RadioActionCallback on_change, GLib.DestroyNotify? destroy);
+		public void add_radio_actions_full (Gtk.RadioActionEntry[] entries, int value, [CCode (type = "GCallback")] owned Gtk.RadioActionCallback on_change);
 		public void add_toggle_actions (Gtk.ToggleActionEntry[] entries, void* user_data);
 		public void add_toggle_actions_full (Gtk.ToggleActionEntry[] entries, void* user_data, GLib.DestroyNotify? destroy);
 		public unowned Gtk.AccelGroup get_accel_group ();
@@ -984,7 +984,7 @@ namespace Gtk {
 		public virtual bool is_activatable ();
 		public bool is_focus_sibling (Gtk.CellRenderer renderer, Gtk.CellRenderer sibling);
 		[CCode (cname = "gtk_cell_area_class_list_cell_properties")]
-		public class unowned GLib.ParamSpec list_cell_properties (uint n_properties);
+		public class (unowned GLib.ParamSpec)[] list_cell_properties ();
 		public virtual void remove (Gtk.CellRenderer renderer);
 		public void remove_focus_sibling (Gtk.CellRenderer renderer, Gtk.CellRenderer sibling);
 		public virtual void render (Gtk.CellAreaContext context, Gtk.Widget widget, Cairo.Context cr, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags, bool paint_focus);
@@ -1628,8 +1628,8 @@ namespace Gtk {
 		public void child_set_property (Gtk.Widget child, string property_name, GLib.Value value);
 		public void child_set_valist (Gtk.Widget child, string first_property_name, va_list var_args);
 		public virtual GLib.Type child_type ();
-		public static unowned GLib.ParamSpec class_find_child_property (GLib.ObjectClass cclass, string property_name);
-		public static unowned GLib.ParamSpec class_list_child_properties (GLib.ObjectClass cclass, uint n_properties);
+		public class unowned GLib.ParamSpec class_find_child_property (string property_name);
+		public class (unowned GLib.ParamSpec)[] class_list_child_properties ();
 		[NoWrapper]
 		public virtual unowned string composite_name (Gtk.Widget child);
 		public void forall (Gtk.Callback callback);
@@ -2731,7 +2731,7 @@ namespace Gtk {
 		public void add_resource_path (string path);
 		public void append_search_path (string path);
 		public Gtk.IconInfo? choose_icon ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, Gtk.IconLookupFlags flags);
-		public Gtk.IconInfo? choose_icon_for_scale (string[] icon_names, int size, int scale, Gtk.IconLookupFlags flags);
+		public Gtk.IconInfo? choose_icon_for_scale ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, int scale, Gtk.IconLookupFlags flags);
 		public static GLib.Quark error_quark ();
 		public static unowned Gtk.IconTheme get_default ();
 		public string? get_example_icon_name ();
@@ -2769,8 +2769,8 @@ namespace Gtk {
 		public int get_column_spacing ();
 		public int get_columns ();
 		public bool get_cursor (out Gtk.TreePath path, out unowned Gtk.CellRenderer cell);
-		public bool get_dest_item_at_pos (int drag_x, int drag_y, out unowned Gtk.TreePath path, Gtk.IconViewDropPosition pos);
-		public void get_drag_dest_item (out unowned Gtk.TreePath path, Gtk.IconViewDropPosition pos);
+		public bool get_dest_item_at_pos (int drag_x, int drag_y, out unowned Gtk.TreePath path, out Gtk.IconViewDropPosition pos);
+		public void get_drag_dest_item (out unowned Gtk.TreePath path, out Gtk.IconViewDropPosition pos);
 		public bool get_item_at_pos (int x, int y, out unowned Gtk.TreePath path, out unowned Gtk.CellRenderer cell);
 		public int get_item_column (Gtk.TreePath path);
 		public Gtk.Orientation get_item_orientation ();
@@ -3237,7 +3237,7 @@ namespace Gtk {
 		public ListStore.newv ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
 		public void prepend (out Gtk.TreeIter iter);
 		public bool remove (Gtk.TreeIter iter);
-		public void reorder ([CCode (array_length = false, array_null_terminated = true)] int[] new_order);
+		public void reorder ([CCode (array_length = false)] int[] new_order);
 		[CCode (sentinel = "-1")]
 		public void @set (Gtk.TreeIter iter, ...);
 		public void set_column_types ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
@@ -3289,7 +3289,7 @@ namespace Gtk {
 		public unowned string get_title ();
 		public void popdown ();
 		public void popup (Gtk.Widget? parent_menu_shell, Gtk.Widget? parent_menu_item, [CCode (scope = "async")] Gtk.MenuPositionFunc? func, uint button, uint32 activate_time);
-		public void popup_for_device (Gdk.Device device, Gtk.Widget parent_menu_shell, Gtk.Widget parent_menu_item, Gtk.MenuPositionFunc func, void* data, GLib.DestroyNotify destroy, uint button, uint32 activate_time);
+		public void popup_for_device (Gdk.Device device, Gtk.Widget parent_menu_shell, Gtk.Widget parent_menu_item, owned Gtk.MenuPositionFunc func, uint button, uint32 activate_time);
 		public void reorder_child (Gtk.Widget child, int position);
 		public void reposition ();
 		public void set_accel_group (Gtk.AccelGroup? accel_group);
@@ -6222,13 +6222,13 @@ namespace Gtk {
 		public TreeStore.newv ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
 		public void prepend (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public bool remove (ref Gtk.TreeIter iter);
-		public void reorder (Gtk.TreeIter? parent, int new_order);
+		public void reorder (Gtk.TreeIter? parent, [CCode (array_length = false)] int[] new_order);
 		[CCode (sentinel = "-1")]
 		public void @set (Gtk.TreeIter iter, ...);
 		public void set_column_types ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
-		public void set_valist (Gtk.TreeIter iter, void* var_args);
+		public void set_valist (Gtk.TreeIter iter, va_list var_args);
 		public void set_value (Gtk.TreeIter iter, int column, GLib.Value value);
-		public void set_valuesv (Gtk.TreeIter iter, int columns, GLib.Value[] values);
+		public void set_valuesv (Gtk.TreeIter iter, [CCode (array_length_pos = 3.1)] int[] columns, [CCode (array_length_pos = 3.1)] GLib.Value[] values);
 		public void swap (Gtk.TreeIter a, Gtk.TreeIter b);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tree_view_get_type ()")]
@@ -6576,7 +6576,7 @@ namespace Gtk {
 		public void destroyed (out unowned Gtk.Widget widget_pointer);
 		public bool device_is_shadowed (Gdk.Device device);
 		[NoWrapper]
-		public virtual void dispatch_child_properties_changed ([CCode (array_length_pos = 0.5)] out GLib.ParamSpec[] pspecs);
+		public virtual void dispatch_child_properties_changed ([CCode (array_length_pos = 0.5)] GLib.ParamSpec[] pspecs);
 		[Version (deprecated_since = "3.0", replacement = "StyleContext")]
 		public void ensure_style ();
 		public void error_bell ();
@@ -7545,7 +7545,7 @@ namespace Gtk {
 		public abstract int get_n_columns ();
 		public abstract Gtk.TreePath? get_path (Gtk.TreeIter iter);
 		public string get_string_from_iter (Gtk.TreeIter iter);
-		public void get_valist (Gtk.TreeIter iter, void* var_args);
+		public void get_valist (Gtk.TreeIter iter, va_list var_args);
 		public abstract void get_value (Gtk.TreeIter iter, int column, out GLib.Value value);
 		public abstract bool iter_children (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public abstract bool iter_has_child (Gtk.TreeIter iter);
@@ -7566,7 +7566,7 @@ namespace Gtk {
 		[HasEmitter]
 		public signal void row_inserted (Gtk.TreePath path, Gtk.TreeIter iter);
 		[HasEmitter]
-		public signal void rows_reordered (Gtk.TreePath path, Gtk.TreeIter? iter, void* new_order);
+		public signal void rows_reordered (Gtk.TreePath path, Gtk.TreeIter? iter, [CCode (array_length = false)] int[] new_order);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeSortable : Gtk.TreeModel, GLib.Object {
