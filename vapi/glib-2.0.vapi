@@ -4685,7 +4685,7 @@ namespace GLib {
 			}
 		}
 
-		public static Bytes free_to_bytes (StringBuilder str);
+		public static Bytes free_to_bytes (owned StringBuilder str);
 	}
 
 	/* String Chunks */
