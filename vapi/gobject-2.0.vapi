@@ -24,253 +24,526 @@
  *	Mathias Hasselmann <mathias.hasselmann@gmx.de>
  */
 
-[CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h", gir_namespace = "GObject", gir_version = "2.0")]
+[CCode (cheader_filename = "glib.h", cprefix = "G", gir_namespace = "GObject", gir_version = "2.0", lower_case_cprefix = "g_")]
 namespace GLib {
-	[CCode (type_id = "G_TYPE_GTYPE", marshaller_type_name = "GTYPE", get_value_function = "g_value_get_gtype", set_value_function = "g_value_set_gtype")]
+	namespace Signal {
+		public static ulong add_emission_hook (uint signal_id, GLib.Quark detail, GLib.SignalEmissionHook hook_func, GLib.DestroyNotify? data_destroy);
+		public static void chain_from_overridden ([CCode (array_length = false)] GLib.Value[] instance_and_params, out GLib.Value return_value);
+		public static ulong connect (void* instance, string detailed_signal, GLib.Callback handler, void* data);
+		public static ulong connect_after (void* instance, string detailed_signal, GLib.Callback handler, void* data);
+		public static ulong connect_closure (void* instance, string detailed_signal, GLib.Closure closure, bool after);
+		public static ulong connect_closure_by_id (void* instance, uint signal_id, GLib.Quark detail, GLib.Closure closure, bool after);
+		public static ulong connect_data (void* instance, string detailed_signal, GLib.Callback handler, void* data, GLib.ClosureNotify destroy_data, GLib.ConnectFlags flags);
+		public static ulong connect_object (void* instance, string detailed_signal, GLib.Callback handler, GLib.Object gobject, GLib.ConnectFlags flags);
+		public static ulong connect_swapped (void* instance, string detailed_signal, GLib.Callback handler, void* data);
+		public static void emit (void* instance, uint signal_id, GLib.Quark detail, ...);
+		public static void emit_by_name (void* instance, string detailed_signal, ...);
+		public static unowned GLib.SignalInvocationHint? get_invocation_hint (void* instance);
+		public static bool has_handler_pending (void* instance, uint signal_id, GLib.Quark detail, bool may_be_blocked);
+		public static uint[] list_ids (GLib.Type itype);
+		public static uint lookup (string name, GLib.Type itype);
+		public static unowned string name (uint signal_id);
+		public static void override_class_closure (uint signal_id, GLib.Type instance_type, GLib.Closure class_closure);
+		public static bool parse_name (string detailed_signal, GLib.Type itype, out uint signal_id, out GLib.Quark detail, bool force_detail_quark);
+		public static void query (uint signal_id, out GLib.SignalQuery query);
+		public static void remove_emission_hook (uint signal_id, ulong hook_id);
+		public static void stop_emission (void* instance, uint signal_id, GLib.Quark detail);
+		public static void stop_emission_by_name (void* instance, string detailed_signal);
+	}
+	namespace SignalHandler {
+		public static void block (void* instance, ulong handler_id);
+		[CCode (cname = "g_signal_handlers_block_by_func")]
+		public static uint block_by_func (void* instance, void* func, void* data);
+		[CCode (cname = "g_signal_handlers_block_matched")]
+		public static uint block_matched (void* instance, GLib.SignalMatchType mask, uint signal_id, GLib.Quark detail, GLib.Closure? closure, void* func, void* data);
+		public static void disconnect (void* instance, ulong handler_id);
+		[CCode (cname = "g_signal_handlers_disconnect_by_func")]
+		public static uint disconnect_by_func (void* instance, void* func, void* data);
+		[CCode (cname = "g_signal_handlers_disconnect_matched")]
+		public static uint disconnect_matched (void* instance, GLib.SignalMatchType mask, uint signal_id, GLib.Quark detail, GLib.Closure? closure, void* func, void* data);
+		public static ulong find (void* instance, GLib.SignalMatchType mask, uint signal_id, GLib.Quark detail, GLib.Closure? closure, void* func, void* data);
+		public static bool is_connected (void* instance, ulong handler_id);
+		public static void unblock (void* instance, ulong handler_id);
+		[CCode (cname = "g_signal_handlers_unblock_by_func")]
+		public static uint unblock_by_func (void* instance, void* func, void* data);
+		[CCode (cname = "g_signal_handlers_unblock_matched")]
+		public static uint unblock_matched (void* instance, GLib.SignalMatchType mask, uint signal_id, GLib.Quark detail, GLib.Closure? closure, void* func, void* data);
+	}
+	[Version (since = "2.26")]
+	public class Binding : GLib.Object {
+		[DestroysInstance]
+		public void unbind ();
+		public GLib.BindingFlags flags { get; }
+		public GLib.Object source { get; }
+		public string source_property { get; }
+		public GLib.Object target { get; }
+		public string target_property { get; }
+	}
+	[CCode (ref_function = "g_closure_ref", type_id = "G_TYPE_CLOSURE", unref_function = "g_closure_unref")]
+	[Compact]
+	public class Closure {
+		[CCode (cname = "sizeof(GClosure)")]
+		public static size_t SIZE;
+		[CCode (cname = "g_closure_new_object")]
+		public Closure (ulong sizeof_closure, GLib.Object object);
+		public void add_finalize_notifier (void* notify_data, GLib.ClosureNotify notify_func);
+		public void add_invalidate_notifier (void* notify_data, GLib.ClosureNotify notify_func);
+		public void add_marshal_guards (void* pre_marshal_data, GLib.ClosureNotify pre_marshal_notify, void* post_marshal_data, GLib.ClosureNotify post_marshal_notify);
+		public void invalidate ();
+		public void invoke (out GLib.Value? return_value, [CCode (array_length_pos = 1.9)] GLib.Value[] param_values, void* invocation_hint);
+		public void remove_finalize_notifier (void* notify_data, GLib.ClosureNotify notify_func);
+		public void remove_invalidate_notifier (void* notify_data, GLib.ClosureNotify notify_func);
+		public void set_marshal (GLib.ClosureMarshal marshal);
+		public void set_meta_marshal (void* marshal_data, GLib.ClosureMarshal meta_marshal);
+		public void sink ();
+	}
+	[CCode (lower_case_csuffix = "enum")]
+	public class EnumClass : GLib.TypeClass {
+		public int maximum;
+		public int minimum;
+		public uint n_values;
+		[CCode (array_length_cname = "n_values")]
+		public weak GLib.EnumValue[] values;
+		public unowned GLib.EnumValue? get_value (int value);
+		public unowned GLib.EnumValue? get_value_by_name (string name);
+		public unowned GLib.EnumValue? get_value_by_nick (string name);
+	}
+	[CCode (lower_case_csuffix = "flags")]
+	public class FlagsClass : GLib.TypeClass {
+		public uint mask;
+		public uint n_values;
+		[CCode (array_length_cname = "n_values")]
+		public GLib.FlagsValue[] values;
+		public unowned GLib.FlagsValue? get_first_value (uint value);
+		public unowned GLib.FlagsValue? get_value_by_name (string name);
+		public unowned GLib.FlagsValue? get_value_by_nick (string name);
+	}
+	[Compact]
+	public class FlagsValue {
+		public int value;
+		public weak string value_name;
+		public weak string value_nick;
+	}
+	[CCode (ref_sink_function = "g_object_ref_sink")]
+	public class InitiallyUnowned : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected InitiallyUnowned ();
+	}
+	[CCode (cheader_filename = "glib-object.h", get_value_function = "g_value_get_object", marshaller_type_name = "OBJECT", param_spec_function = "g_param_spec_object", ref_function = "g_object_ref", set_value_function = "g_value_set_object", take_value_function = "g_value_take_object", unref_function = "g_object_unref")]
+	public class Object {
+		public uint ref_count;
+		[CCode (construct_function = "g_object_new", has_new_function = false)]
+		public Object (...);
+		public void add_toggle_ref (GLib.ToggleNotify notify);
+		public void add_weak_pointer (void** data);
+		[CCode (cname = "g_object_bind_property_with_closures")]
+		[Version (since = "2.26")]
+		public unowned GLib.Binding bind_property (string source_property, GLib.Object target, string target_property, GLib.BindingFlags flags = GLib.BindingFlags.DEFAULT, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_to = null, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_from = null);
+		public unowned GLib.Object connect (string signal_spec, ...);
+		public virtual void constructed ();
+		[CCode (cname = "g_signal_handler_disconnect")]
+		public void disconnect (ulong handler_id);
+		[CCode (cname = "g_object_run_dispose")]
+		public virtual void dispose ();
+		public void freeze_notify ();
+		public void @get (string first_property_name, ...);
+		[CCode (cname = "G_OBJECT_GET_CLASS")]
+		public unowned GLib.ObjectClass get_class ();
+		[CCode (simple_generics = true)]
+		public unowned T get_data<T> (string key);
+		public void get_property (string property_name, ref GLib.Value value);
+		[CCode (simple_generics = true)]
+		public unowned T get_qdata<T> (GLib.Quark quark);
+		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
+		public GLib.Type get_type ();
+		public static GLib.Object @new (GLib.Type type, ...);
+		public static GLib.Object new_valist (GLib.Type type, string? firstprop, va_list var_args);
+		public static GLib.Object newv (GLib.Type type, [CCode (array_length_pos = 1.9)] GLib.Parameter[] parameters);
+		[CCode (cname = "g_object_notify")]
+		public void notify_property (string property_name);
+		public unowned GLib.Object @ref ();
+		public GLib.Object ref_sink ();
+		public void remove_toggle_ref (GLib.ToggleNotify notify);
+		public void remove_weak_pointer (void** data);
+		public void @set (string first_property_name, ...);
+		[CCode (cname = "g_object_set_data_full", simple_generics = true)]
+		public void set_data<T> (string key, owned T data);
+		public void set_data_full (string key, void* data, GLib.DestroyNotify? destroy);
+		public void set_property (string property_name, GLib.Value value);
+		[CCode (cname = "g_object_set_qdata_full", simple_generics = true)]
+		public void set_qdata<T> (GLib.Quark quark, owned T data);
+		public void set_qdata_full (GLib.Quark quark, void* data, GLib.DestroyNotify? destroy);
+		[CCode (simple_generics = true)]
+		public T steal_data<T> (string key);
+		[CCode (simple_generics = true)]
+		public T steal_qdata<T> (GLib.Quark quark);
+		public void thaw_notify ();
+		public void unref ();
+		public void weak_ref (GLib.WeakNotify notify);
+		public void weak_unref (GLib.WeakNotify notify);
+		public signal void notify (GLib.ParamSpec pspec);
+	}
+	[CCode (lower_case_csuffix = "object_class")]
+	public class ObjectClass : GLib.TypeClass {
+		public unowned GLib.ParamSpec? find_property (string property_name);
+		public void install_property (uint property_id, GLib.ParamSpec pspec);
+		[CCode (array_length_type = "guint")]
+#if VALA_0_26
+		public (unowned GLib.ParamSpec)[] list_properties ();
+#else
+		public unowned GLib.ParamSpec[] list_properties ();
+#endif
+	}
+	[CCode (get_value_function = "g_value_get_param", param_spec_function = "g_param_spec_param", ref_function = "g_param_spec_ref", set_value_function = "g_value_set_param", take_value_function = "g_value_take_param", type_id = "G_TYPE_PARAM", unref_function = "g_param_spec_unref")]
+	public class ParamSpec {
+		public GLib.ParamFlags flags;
+		public string name;
+		public GLib.Type owner_type;
+		public GLib.Type value_type;
+		public unowned string get_blurb ();
+		public unowned string get_name ();
+		public GLib.Quark get_name_quark ();
+		public unowned string get_nick ();
+		public void* get_qdata (GLib.Quark quark);
+		public GLib.ParamSpec get_redirect_target ();
+		[CCode (cname = "g_param_spec_internal")]
+		public ParamSpec.@internal (GLib.Type param_type, string name, string nick, string blurb, GLib.ParamFlags flags);
+		public GLib.ParamSpec @ref ();
+		public GLib.ParamSpec ref_sink ();
+		public void set_qdata (GLib.Quark quark, void* data);
+		public void set_qdata_full (GLib.Quark quark, void* data, GLib.DestroyNotify destroy);
+		[CCode (cname = "g_param_value_set_default")]
+		public void set_value_default (GLib.Value value);
+		public void sink ();
+		public void* steal_qdata (GLib.Quark quark);
+		public void unref ();
+		[CCode (cname = "g_param_value_convert")]
+		public bool value_convert (GLib.Value src_value, GLib.Value dest_value, bool strict_validation);
+		[CCode (cname = "g_param_value_defaults")]
+		public bool value_defaults (GLib.Value value);
+		[CCode (cname = "g_param_value_validate")]
+		public bool value_validate (GLib.Value value);
+		[CCode (cname = "g_param_values_cmp")]
+		public int values_cmp (GLib.Value value1, GLib.Value value2);
+	}
+	public class ParamSpecBoolean : GLib.ParamSpec {
+		public bool default_value;
+		[CCode (cname = "g_param_spec_boolean")]
+		public ParamSpecBoolean (string name, string nick, string blurb, bool defaultvalue, GLib.ParamFlags flags);
+	}
+	public class ParamSpecChar : GLib.ParamSpec {
+		public int8 default_value;
+		public int8 maximum;
+		public int8 minimum;
+		[CCode (cname = "g_param_spec_char")]
+		public ParamSpecChar (string name, string nick, string blurb, int8 minimum, int8 maximum, int8 default_value, GLib.ParamFlags flags);
+	}
+	public class ParamSpecDouble : GLib.ParamSpec {
+		public double default_value;
+		public double maximum;
+		public double minimum;
+		[CCode (cname = "g_param_spec_double")]
+		public ParamSpecDouble (string name, string nick, string blurb, double minimum, double maximum, double default_value, GLib.ParamFlags flags);
+	}
+	public class ParamSpecEnum : GLib.ParamSpec {
+		public int default_value;
+		public weak GLib.EnumClass enum_class;
+		[CCode (cname = "g_param_spec_enum")]
+		public ParamSpecEnum (string name, string nick, string blurb, GLib.Type enum_type, int default_value, GLib.ParamFlags flags);
+	}
+	public class ParamSpecFlags : GLib.ParamSpec {
+		public uint default_value;
+		public weak GLib.FlagsClass flags_class;
+		[CCode (cname = "g_param_spec_flags")]
+		public ParamSpecFlags (string name, string nick, string blurb, GLib.Type flags_type, uint default_value, GLib.ParamFlags flags);
+	}
+	public class ParamSpecFloat : GLib.ParamSpec {
+		public float default_value;
+		public float maximum;
+		public float minimum;
+		[CCode (cname = "g_param_spec_float")]
+		public ParamSpecFloat (string name, string nick, string blurb, float minimum, float maximum, float default_value, GLib.ParamFlags flags);
+	}
+	public class ParamSpecInt : GLib.ParamSpec {
+		public int default_value;
+		public int maximum;
+		public int minimum;
+		[CCode (cname = "g_param_spec_int")]
+		public ParamSpecInt (string name, string nick, string blurb, int minimum, int maximum, int default_value, GLib.ParamFlags flags);
+	}
+	public class ParamSpecInt64 : GLib.ParamSpec {
+		public int64 default_value;
+		public int64 maximum;
+		public int64 minimum;
+		[CCode (cname = "g_param_spec_int64")]
+		public ParamSpecInt64 (string name, string nick, string blurb, int64 minimum, int64 maximum, int64 default_value, GLib.ParamFlags flags);
+	}
+	public class ParamSpecLong : GLib.ParamSpec {
+		public long default_value;
+		public long maximum;
+		public long minimum;
+		[CCode (cname = "g_param_spec_long")]
+		public ParamSpecLong (string name, string nick, string blurb, long minimum, long maximum, long default_value, GLib.ParamFlags flags);
+	}
+	public class ParamSpecParam : GLib.ParamSpec {
+		[CCode (cname = "g_param_spec_param")]
+		public ParamSpecParam (string name, string nick, string blurb, GLib.Type param_type, GLib.ParamFlags flags);
+	}
+	public class ParamSpecString : GLib.ParamSpec {
+		public string cset_first;
+		public string cset_nth;
+		public string default_value;
+		public uint ensure_non_null;
+		public uint null_fold_if_empty;
+		public char substitutor;
+		[CCode (cname = "g_param_spec_string")]
+		public ParamSpecString (string name, string nick, string blurb, string default_value, GLib.ParamFlags flags);
+	}
+	public class ParamSpecUChar : GLib.ParamSpec {
+		public uint8 default_value;
+		public uint8 maximum;
+		public uint8 minimum;
+		[CCode (cname = "g_param_spec_uchar")]
+		public ParamSpecUChar (string name, string nick, string blurb, uint8 minimum, uint8 maximum, uint8 default_value, GLib.ParamFlags flags);
+	}
+	public class ParamSpecUInt : GLib.ParamSpec {
+		public uint default_value;
+		public uint maximum;
+		public uint minimum;
+		[CCode (cname = "g_param_spec_uint")]
+		public ParamSpecUInt (string name, string nick, string blurb, uint minimum, uint maximum, uint default_value, GLib.ParamFlags flags);
+	}
+	public class ParamSpecUInt64 : GLib.ParamSpec {
+		public uint64 default_value;
+		public uint64 maximum;
+		public uint64 minimum;
+		[CCode (cname = "g_param_spec_uint64")]
+		public ParamSpecUInt64 (string name, string nick, string blurb, uint64 minimum, uint64 maximum, uint64 default_value, GLib.ParamFlags flags);
+	}
+	public class ParamSpecULong : GLib.ParamSpec {
+		public ulong default_value;
+		public ulong maximum;
+		public ulong minimum;
+		[CCode (cname = "g_param_spec_ulong")]
+		public ParamSpecULong (string name, string nick, string blurb, ulong minimum, ulong maximum, ulong default_value, GLib.ParamFlags flags);
+	}
+	[CCode (free_function = "g_type_class_unref")]
+	[Compact]
+	public class TypeClass {
+		[CCode (cname = "G_TYPE_FROM_CLASS")]
+		public GLib.Type get_type ();
+	}
+	[CCode (lower_case_csuffix = "type_module")]
+	public class TypeModule : GLib.Object, GLib.TypePlugin {
+		[CCode (has_construct_function = false)]
+		protected TypeModule ();
+		[NoWrapper]
+		public virtual bool load ();
+		public void set_name (string name);
+		[NoWrapper]
+		public virtual void unload ();
+		public void unuse ();
+		public bool use ();
+	}
+	[CCode (copy_function = "g_value_array_copy", free_function = "g_value_array_free", type_id = "G_TYPE_VALUE_ARRAY")]
+	[Compact]
+	public class ValueArray {
+		public uint n_values;
+		[CCode (array_length_cname = "n_values", array_length_type = "guint")]
+		public GLib.Value[] values;
+		public ValueArray (uint n_prealloced);
+		public void append (GLib.Value value);
+		public GLib.ValueArray copy ();
+		public unowned GLib.Value? get_nth (uint index_);
+		public void insert (uint index_, GLib.Value value);
+		public void prepend (GLib.Value value);
+		public void remove (uint index_);
+		public void sort (GLib.CompareFunc compare_func);
+		public void sort_with_data (GLib.CompareDataFunc compare_func);
+	}
+	public interface TypePlugin {
+	}
+	[CCode (has_type_id = false)]
+	public struct EnumValue {
+		public int value;
+		public weak string value_name;
+		public weak string value_nick;
+	}
+	public struct ObjectConstructParam {
+	}
+	[CCode (has_copy_function = false, has_destroy_function = false)]
+	public struct Parameter {
+		public weak string name;
+		public GLib.Value value;
+	}
+	public struct SignalInvocationHint {
+		public uint signal_id;
+		public GLib.Quark detail;
+		public GLib.SignalFlags run_type;
+	}
+	public struct SignalQuery {
+		public uint signal_id;
+		public weak string signal_name;
+		public GLib.Type itype;
+		public GLib.SignalFlags signal_flags;
+		public GLib.Type return_type;
+		public uint n_params;
+		[CCode (array_length = false)]
+		public weak GLib.Type[] param_types;
+	}
+	[CCode (get_value_function = "g_value_get_gtype", marshaller_type_name = "GTYPE", set_value_function = "g_value_set_gtype", type_id = "G_TYPE_GTYPE")]
 	public struct Type : ulong {
-		[CCode (cname = "G_TYPE_IS_OBJECT")]
-		public bool is_object ();
+		public const GLib.Type BOXED;
+		public const GLib.Type ENUM;
+		public const GLib.Type FLAGS;
+		public const GLib.Type INTERFACE;
+		public const GLib.Type INVALID;
+		public GLib.Type[] children ();
+		public unowned GLib.TypeClass class_peek ();
+		public GLib.TypeClass class_ref ();
+		public uint depth ();
+		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
+		public static GLib.Type from_instance (void* instance);
+		public static GLib.Type from_name (string name);
+		public int get_instance_count ();
+		public void* get_qdata (GLib.Quark quark);
+		[CCode (array_length_type = "guint")]
+		public GLib.Type[] interfaces ();
+		public bool is_a (GLib.Type is_a_type);
 		[CCode (cname = "G_TYPE_IS_ABSTRACT")]
 		public bool is_abstract ();
 		[CCode (cname = "G_TYPE_IS_CLASSED")]
 		public bool is_classed ();
-		[CCode (cname = "G_TYPE_IS_DERIVABLE")]
-		public bool is_derivable ();
 		[CCode (cname = "G_TYPE_IS_DEEP_DERIVABLE")]
 		public bool is_deep_derivable ();
+		[CCode (cname = "G_TYPE_IS_DERIVABLE")]
+		public bool is_derivable ();
 		[CCode (cname = "G_TYPE_IS_DERIVED")]
 		public bool is_derived ();
+		[CCode (cname = "G_TYPE_IS_ENUM")]
+		public bool is_enum ();
+		[CCode (cname = "G_TYPE_IS_FLAGS")]
+		public bool is_flags ();
 		[CCode (cname = "G_TYPE_IS_FUNDAMENTAL")]
 		public bool is_fundamental ();
 		[CCode (cname = "G_TYPE_IS_INSTANTIATABLE")]
 		public bool is_instantiatable ();
 		[CCode (cname = "G_TYPE_IS_INTERFACE")]
 		public bool is_interface ();
+		[CCode (cname = "G_TYPE_IS_OBJECT")]
+		public bool is_object ();
 		[CCode (cname = "G_TYPE_IS_VALUE_TYPE")]
 		public bool is_value_type ();
-		[CCode (cname = "G_TYPE_IS_ENUM")]
-		public bool is_enum ();
-		[CCode (cname = "G_TYPE_IS_FLAGS")]
-		public bool is_flags ();
-
-		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
-		public static Type from_instance (void* instance);
-
-		public Type[] children ();
-		public uint depth ();
-		public static Type from_name (string name);
-		[CCode (array_length_type = "guint")]
-		public Type[] interfaces ();
-		public bool is_a (Type is_a_type);
 		public unowned string name ();
-		public Quark qname ();
-		public Type parent ();
-
-		public void* get_qdata (Quark quark);
-		public void set_qdata (Quark quark, void* data);
-
-		public void query (out TypeQuery query);
-
-		public int get_instance_count ();
-
-		public TypeClass class_ref ();
-		public unowned TypeClass class_peek ();
-
-		public const Type INVALID;
-		public const Type INTERFACE;
-		public const Type ENUM;
-		public const Type FLAGS;
-		public const Type BOXED;
+		public GLib.Type parent ();
+		public GLib.Quark qname ();
+		public void query (out GLib.TypeQuery query);
+		public void set_qdata (GLib.Quark quark, void* data);
 	}
-
 	public struct TypeQuery {
-		public Type type;
-		public unowned string type_name;
+		public GLib.Type type;
+		public weak string type_name;
 		public uint class_size;
 		public uint instance_size;
 	}
-
-	[Compact]
-	[CCode (free_function = "g_type_class_unref")]
-	public class TypeClass {
-		[CCode (cname = "G_TYPE_FROM_CLASS")]
-		public Type get_type ();
+	[CCode (copy_function = "g_value_copy", destroy_function = "g_value_unset", get_value_function = "g_value_get_boxed", marshaller_type_name = "BOXED", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", type_id = "G_TYPE_VALUE", type_signature = "v")]
+	public struct Value {
+		public Value (GLib.Type g_type);
+		public void copy (ref GLib.Value dest_value);
+		public void* dup_boxed ();
+		public GLib.Object dup_object ();
+		public string dup_string ();
+		public bool fits_pointer ();
+		public bool get_boolean ();
+		public void* get_boxed ();
+		public char get_char ();
+		public double get_double ();
+		public int get_enum ();
+		public uint get_flags ();
+		public float get_float ();
+		[Version (since = "2.12")]
+		public GLib.Type get_gtype ();
+		public int get_int ();
+		public int64 get_int64 ();
+		public long get_long ();
+		public unowned GLib.Object get_object ();
+		public GLib.ParamSpec get_param ();
+		public void* get_pointer ();
+		[Version (since = "2.32")]
+		public int8 get_schar ();
+		public unowned string get_string ();
+		public uchar get_uchar ();
+		public uint get_uint ();
+		public uint64 get_uint64 ();
+		public ulong get_ulong ();
+		[CCode (cname = "G_VALUE_HOLDS")]
+		public bool holds (GLib.Type type);
+		public void init (GLib.Type g_type);
+		public void init_from_instance (void* instance);
+		public void param_take_ownership (out GLib.ParamSpec param);
+		public void* peek_pointer ();
+		public static void register_transform_func (GLib.Type src_type, GLib.Type dest_type, GLib.ValueTransform transform);
+		public unowned GLib.Value? reset ();
+		public void set_boolean (bool v_boolean);
+		public void set_boxed (void* v_boxed);
+		public void set_char (char v_char);
+		public void set_double (double v_double);
+		public void set_enum (int v_enum);
+		public void set_flags (uint v_flags);
+		public void set_float (float v_float);
+		[Version (since = "2.12")]
+		public void set_gtype (GLib.Type v_gtype);
+		public void set_instance (void* instance);
+		public void set_int (int v_int);
+		public void set_int64 (int64 v_int64);
+		public void set_long (long v_long);
+		public void set_object (GLib.Object v_object);
+		public void set_param (GLib.ParamSpec param);
+		public void set_pointer (void* v_pointer);
+		[Version (since = "2.32")]
+		public void set_schar (int8 v_char);
+		public void set_static_string (string v_string);
+		public void set_string (string v_string);
+		public void set_uchar (uchar v_uchar);
+		public void set_uint (uint v_uint);
+		public void set_uint64 (uint64 v_uint64);
+		public void set_ulong (ulong v_ulong);
+		[CCode (cname = "g_strdup_value_contents")]
+		public string strdup_contents ();
+		public void take_object (owned GLib.Object v_object);
+		public void take_param (out GLib.ParamSpec param);
+		public void take_string (owned string v_string);
+		public bool transform (ref GLib.Value dest_value);
+		[CCode (cname = "G_VALUE_TYPE")]
+		public GLib.Type type ();
+		public static bool type_compatible (GLib.Type src_type, GLib.Type dest_type);
+		[CCode (cname = "G_VALUE_TYPE_NAME")]
+		public unowned string type_name ();
+		public static bool type_transformable (GLib.Type src_type, GLib.Type dest_type);
+		public void unset ();
 	}
-
-	[CCode (cprefix = "G_TYPE_DEBUG_", has_type_id = false)]
+	[CCode (destroy_function = "g_weak_ref_clear", lvalue_access = false)]
+	[Version (since = "2.32")]
+	public struct WeakRef {
+		public WeakRef (GLib.Object? object);
+		public GLib.Object? @get ();
+		public void @set (GLib.Object? object);
+	}
+	[CCode (cprefix = "G_BINDING_")]
 	[Flags]
-	public enum TypeDebugFlags {
-		NONE,
-		OBJECTS,
-		SIGNALS,
-		MASK
+	[Version (since = "2.26")]
+	public enum BindingFlags {
+		DEFAULT,
+		BIDIRECTIONAL,
+		SYNC_CREATE,
+		INVERT_BOOLEAN
 	}
-
-	public interface TypePlugin {
+	[CCode (cprefix = "G_CONNECT_", has_type_id = false)]
+	[Flags]
+	public enum ConnectFlags {
+		AFTER,
+		SWAPPED
 	}
-
-	[CCode (lower_case_csuffix = "type_module")]
-	public class TypeModule : Object, TypePlugin {
-		[CCode (has_construct_function = false)]
-		protected TypeModule ();
-		public bool use ();
-		public void unuse ();
-		public void set_name (string name);
-		[NoWrapper]
-		public virtual bool load ();
-		[NoWrapper]
-		public virtual void unload ();
-	}
-
-	[CCode (type_id = "G_TYPE_PARAM", ref_function = "g_param_spec_ref", unref_function = "g_param_spec_unref", param_spec_function = "g_param_spec_param", get_value_function = "g_value_get_param", set_value_function = "g_value_set_param", take_value_function = "g_value_take_param")]
-	public class ParamSpec {
-		public string name;
-		public ParamFlags flags;
-		public Type value_type;
-		public Type owner_type;
-		[CCode (cname = "g_param_spec_internal")]
-		public ParamSpec.internal (GLib.Type param_type, string name, string nick, string blurb, GLib.ParamFlags flags);
-		public ParamSpec ref ();
-		public void unref ();
-		public void sink ();
-		public ParamSpec ref_sink ();
-		[CCode (cname = "g_param_value_set_default")]
-		public void set_value_default (Value value);
-		[CCode (cname = "g_param_value_defaults")]
-		public bool value_defaults (Value value);
-		[CCode (cname = "g_param_value_validate")]
-		public bool value_validate (Value value);
-		[CCode (cname = "g_param_value_convert")]
-		public bool value_convert (Value src_value, Value dest_value, bool strict_validation);
-		[CCode (cname = "g_param_values_cmp")]
-		public int values_cmp (Value value1, Value value2);
-		public unowned string get_blurb ();
-		public unowned string get_name ();
-		public Quark get_name_quark ();
-		public unowned string get_nick ();
-		public void* get_qdata (Quark quark);
-		public void set_qdata (Quark quark, void* data);
-		public void set_qdata_full (Quark quark, void* data, DestroyNotify destroy);
-		public void* steal_qdata (Quark quark);
-		public ParamSpec get_redirect_target ();
-	}
-
-	public class ParamSpecBoolean : ParamSpec {
-		[CCode (cname = "g_param_spec_boolean")]
-		public ParamSpecBoolean (string name, string nick, string blurb, bool defaultvalue, ParamFlags flags);
-		public bool default_value;
-	}
-
-	public class ParamSpecChar : ParamSpec {
-		[CCode (cname = "g_param_spec_char")]
-		public ParamSpecChar (string name, string nick, string blurb, int8 minimum, int8 maximum, int8 default_value, ParamFlags flags);
-		public int8 minimum;
-		public int8 maximum;
-		public int8 default_value;
-	}
-
-	public class ParamSpecUChar : ParamSpec {
-		[CCode (cname = "g_param_spec_uchar")]
-		public ParamSpecUChar (string name, string nick, string blurb, uint8 minimum, uint8 maximum, uint8 default_value, ParamFlags flags);
-		public uint8 minimum;
-		public uint8 maximum;
-		public uint8 default_value;
-	}
-
-	public class ParamSpecInt : ParamSpec {
-		[CCode (cname = "g_param_spec_int")]
-		public ParamSpecInt (string name, string nick, string blurb, int minimum, int maximum, int default_value, ParamFlags flags);
-		public int minimum;
-		public int maximum;
-		public int default_value;
-	}
-
-	public class ParamSpecUInt : ParamSpec {
-		[CCode (cname = "g_param_spec_uint")]
-		public ParamSpecUInt (string name, string nick, string blurb, uint minimum, uint maximum, uint default_value, ParamFlags flags);
-		public uint minimum;
-		public uint maximum;
-		public uint default_value;
-	}
-
-	public class ParamSpecLong : ParamSpec {
-		[CCode (cname = "g_param_spec_long")]
-		public ParamSpecLong (string name, string nick, string blurb, long minimum, long maximum, long default_value, ParamFlags flags);
-		public long minimum;
-		public long maximum;
-		public long default_value;
-	}
-
-	public class ParamSpecULong : ParamSpec {
-		[CCode (cname = "g_param_spec_ulong")]
-		public ParamSpecULong (string name, string nick, string blurb, ulong minimum, ulong maximum, ulong default_value, ParamFlags flags);
-		public ulong minimum;
-		public ulong maximum;
-		public ulong default_value;
-	}
-
-	public class ParamSpecInt64 : ParamSpec {
-		[CCode (cname = "g_param_spec_int64")]
-		public ParamSpecInt64 (string name, string nick, string blurb, int64 minimum, int64 maximum, int64 default_value, ParamFlags flags);
-		public int64 minimum;
-		public int64 maximum;
-		public int64 default_value;
-	}
-
-	public class ParamSpecUInt64 : ParamSpec {
-		[CCode (cname = "g_param_spec_uint64")]
-		public ParamSpecUInt64 (string name, string nick, string blurb, uint64 minimum, uint64 maximum, uint64 default_value, ParamFlags flags);
-		public uint64 minimum;
-		public uint64 maximum;
-		public uint64 default_value;
-	}
-
-	public class ParamSpecFloat : ParamSpec {
-		[CCode (cname = "g_param_spec_float")]
-		public ParamSpecFloat (string name, string nick, string blurb, float minimum, float maximum, float default_value, ParamFlags flags);
-		public float minimum;
-		public float maximum;
-		public float default_value;
-	}
-
-	public class ParamSpecDouble : ParamSpec {
-		[CCode (cname = "g_param_spec_double")]
-		public ParamSpecDouble (string name, string nick, string blurb, double minimum, double maximum, double default_value, ParamFlags flags);
-		public double minimum;
-		public double maximum;
-		public double default_value;
-	}
-
-	public class ParamSpecEnum : ParamSpec {
-		[CCode (cname = "g_param_spec_enum")]
-		public ParamSpecEnum (string name, string nick, string blurb, Type enum_type, int default_value, ParamFlags flags);
-		public unowned EnumClass enum_class;
-		public int default_value;
-	}
-
-	public class ParamSpecFlags : ParamSpec {
-		[CCode (cname = "g_param_spec_flags")]
-		public ParamSpecFlags (string name, string nick, string blurb, Type flags_type, uint default_value, ParamFlags flags);
-		public unowned FlagsClass flags_class;
-		public uint default_value;
-	}
-
-	public class ParamSpecString : ParamSpec {
-		[CCode (cname = "g_param_spec_string")]
-		public ParamSpecString (string name, string nick, string blurb, string default_value, ParamFlags flags);
-		public string default_value;
-		public string cset_first;
-		public string cset_nth;
-		public char substitutor;
-		public uint null_fold_if_empty;
-		public uint ensure_non_null;
-	}
-
-	public class ParamSpecParam : ParamSpec {
-		[CCode (cname = "g_param_spec_param")]
-		public ParamSpecParam (string name, string nick, string blurb, Type param_type, ParamFlags flags);
-	}
-
 	[CCode (cprefix = "G_PARAM_", has_type_id = false)]
 	[Flags]
 	public enum ParamFlags {
@@ -289,269 +562,6 @@ namespace GLib {
 		DEPRECATED,
 		MASK
 	}
-
-	[CCode (lower_case_csuffix = "object_class")]
-	public class ObjectClass : TypeClass {
-		public unowned ParamSpec? find_property (string property_name);
-		[CCode (array_length_type = "guint")]
-#if VALA_0_26
-		public (unowned ParamSpec)[] list_properties ();
-#else
-		public unowned ParamSpec[] list_properties ();
-#endif
-		public void install_property (uint property_id, ParamSpec pspec);
-	}
-
-	public struct ObjectConstructParam {
-	}
-
-	[Version (since = "2.26")]
-	[CCode (cprefix = "G_BINDING_")]
-	[Flags]
-	public enum BindingFlags {
-		DEFAULT,
-		BIDIRECTIONAL,
-		SYNC_CREATE,
-		INVERT_BOOLEAN
-	}
-
-	[Version (since = "2.26")]
-	public delegate bool BindingTransformFunc (GLib.Binding binding, GLib.Value source_value, ref GLib.Value target_value);
-
-	[Version (since = "2.26")]
-	public class Binding : GLib.Object {
-		public weak GLib.Object source { get; }
-		public string source_property { get; }
-		public weak GLib.Object target { get; }
-		public string target_property { get; }
-		public GLib.BindingFlags flags { get; }
-		[DestroysInstance]
-		public void unbind ();
-	}
-
-	[CCode (has_target = false)]
-	public delegate void ObjectGetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
-	[CCode (has_target = false)]
-	public delegate void ObjectSetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
-	[CCode (instance_pos = 0)]
-	public delegate void WeakNotify (Object object);
-
-	[CCode (ref_function = "g_object_ref", unref_function = "g_object_unref", marshaller_type_name = "OBJECT", get_value_function = "g_value_get_object", set_value_function = "g_value_set_object", take_value_function = "g_value_take_object", param_spec_function = "g_param_spec_object", cheader_filename = "glib-object.h")]
-	public class Object {
-		public uint ref_count;
-
-		[CCode (has_new_function = false, construct_function = "g_object_new")]
-		public Object (...);
-
-		public static Object @new (Type type, ...);
-		public static Object newv (Type type, [CCode (array_length_pos = 1.9)] Parameter[] parameters);
-		public static Object new_valist (Type type, string? firstprop, va_list var_args);
-
-		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
-		public Type get_type ();
-		[CCode (cname = "G_OBJECT_GET_CLASS")]
-		public unowned ObjectClass get_class ();
-		public unowned Object @ref ();
-		public void unref ();
-		public Object ref_sink ();
-		public void weak_ref (WeakNotify notify);
-		public void weak_unref (WeakNotify notify);
-		public void add_weak_pointer (void **data);
-		public void remove_weak_pointer (void **data);
-		public void get (string first_property_name, ...);
-		public void set (string first_property_name, ...);
-		public void get_property (string property_name, ref Value value);
-		public void set_property (string property_name, Value value);
-		[CCode (simple_generics = true)]
-		public unowned T get_data<T> (string key);
-		[CCode (cname = "g_object_set_data_full", simple_generics = true)]
-		public void set_data<T> (string key, owned T data);
-		public void set_data_full (string key, void* data, DestroyNotify? destroy);
-		[CCode (simple_generics = true)]
-		public T steal_data<T> (string key);
-		[CCode (simple_generics = true)]
-		public unowned T get_qdata<T> (Quark quark);
-		[CCode (cname = "g_object_set_qdata_full", simple_generics = true)]
-		public void set_qdata<T> (Quark quark, owned T data);
-		public void set_qdata_full (Quark quark, void* data, DestroyNotify? destroy);
-		[CCode (simple_generics = true)]
-		public T steal_qdata<T> (Quark quark);
-		public void freeze_notify ();
-		public void thaw_notify ();
-		[CCode (cname = "g_object_run_dispose")]
-		public virtual void dispose ();
-		public virtual void constructed ();
-
-		public signal void notify (ParamSpec pspec);
-		[CCode (cname = "g_object_notify")]
-		public void notify_property (string property_name);
-
-		public unowned Object connect (string signal_spec, ...);
-		[CCode (cname = "g_signal_handler_disconnect")]
-		public void disconnect (ulong handler_id);
-
-		public void add_toggle_ref (ToggleNotify notify);
-		public void remove_toggle_ref (ToggleNotify notify);
-
-		[Version (since = "2.26")]
-		[CCode (cname = "g_object_bind_property_with_closures")]
-		public unowned GLib.Binding bind_property (string source_property, GLib.Object target, string target_property, GLib.BindingFlags flags = GLib.BindingFlags.DEFAULT, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_to = null, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_from = null);
-	}
-
-	[Version (since = "2.32")]
-	[CCode (destroy_function = "g_weak_ref_clear", lvalue_access = false)]
-	public struct WeakRef {
-		public WeakRef (GLib.Object? object);
-		public GLib.Object? get ();
-		public void set (GLib.Object? object);
-	}
-
-	[CCode (instance_pos = 0)]
-	public delegate void ToggleNotify (GLib.Object object, bool is_last_ref);
-
-	[CCode (has_copy_function = false, has_destroy_function = false)]
-	public struct Parameter {
-		public unowned string name;
-		public Value value;
-	}
-
-	[CCode (ref_sink_function = "g_object_ref_sink")]
-	public class InitiallyUnowned : Object {
-		[CCode (has_construct_function = false)]
-		protected InitiallyUnowned ();
-	}
-
-	[CCode (lower_case_csuffix = "enum")]
-	public class EnumClass : TypeClass {
-		public unowned EnumValue? get_value (int value);
-		public unowned EnumValue? get_value_by_name (string name);
-		public unowned EnumValue? get_value_by_nick (string name);
-		public int minimum;
-		public int maximum;
-		public uint n_values;
-		[CCode (array_length_cname = "n_values")]
-		public unowned EnumValue[] values;
-	}
-
-	[CCode (has_type_id = false)]
-	public struct EnumValue {
-		public int value;
-		public unowned string value_name;
-		public unowned string value_nick;
-	}
-
-	[CCode (lower_case_csuffix = "flags")]
-	public class FlagsClass : TypeClass {
-		public unowned FlagsValue? get_first_value (uint value);
-		public unowned FlagsValue? get_value_by_name (string name);
-		public unowned FlagsValue? get_value_by_nick (string name);
-		public uint mask;
-		public uint n_values;
-		[CCode (array_length_cname = "n_values")]
-		public FlagsValue[] values;
-	}
-
-	[Compact]
-	public class FlagsValue {
-		public int value;
-		public unowned string value_name;
-		public unowned string value_nick;
-	}
-
-	[CCode (has_target = false)]
-	public delegate void ValueTransform (Value src_value, ref Value dest_value);
-
-	[CCode (has_target = false)]
-	public delegate void* BoxedCopyFunc (void* boxed);
-	[CCode (has_target = false)]
-	public delegate void* BoxedFreeFunc (void* boxed);
-
-	[CCode (copy_function = "g_value_copy", destroy_function = "g_value_unset", type_id = "G_TYPE_VALUE", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", type_signature = "v")]
-	public struct Value {
-		[CCode (cname = "G_VALUE_HOLDS")]
-		public bool holds (Type type);
-		[CCode (cname = "G_VALUE_TYPE")]
-		public Type type ();
-		[CCode (cname = "G_VALUE_TYPE_NAME")]
-		public unowned string type_name ();
-
-		public Value (Type g_type);
-		public void copy (ref Value dest_value);
-		public unowned Value? reset ();
-		public void init (Type g_type);
-		public void init_from_instance (void* instance);
-		public void unset ();
-		public void set_instance (void* instance);
-		public bool fits_pointer ();
-		public void* peek_pointer ();
-		public static bool type_compatible (Type src_type, Type dest_type);
-		public static bool type_transformable (Type src_type, Type dest_type);
-		public bool transform (ref Value dest_value);
-		[CCode (cname = "g_strdup_value_contents")]
-		public string strdup_contents ();
-		public static void register_transform_func (Type src_type, Type dest_type, ValueTransform transform);
-		public void set_boolean (bool v_boolean);
-		public bool get_boolean ();
-		public void set_char (char v_char);
-		public char get_char ();
-		[Version (since = "2.32")]
-		public void set_schar (int8 v_char);
-		[Version (since = "2.32")]
-		public int8 get_schar ();
-		public void set_uchar (uchar v_uchar);
-		public uchar get_uchar ();
-		public void set_int (int v_int);
-		public int get_int ();
-		public void set_uint (uint v_uint);
-		public uint get_uint ();
-		public void set_long (long v_long);
-		public long get_long ();
-		public void set_ulong (ulong v_ulong);
-		public ulong get_ulong ();
-		public void set_int64 (int64 v_int64);
-		public int64 get_int64 ();
-		public void set_uint64 (uint64 v_uint64);
-		public uint64 get_uint64 ();
-		public void set_float (float v_float);
-		public float get_float ();
-		public void set_double (double v_double);
-		public double get_double ();
-		public void set_enum (int v_enum);
-		public int get_enum ();
-		public void set_flags (uint v_flags);
-		public uint get_flags ();
-		public void set_string (string v_string);
-		public void set_static_string (string v_string);
-		public void take_string (owned string v_string);
-		public unowned string get_string ();
-		public string dup_string ();
-		public void set_pointer (void* v_pointer);
-		public void* get_pointer ();
-		public void set_boxed (void* v_boxed);
-		public void* get_boxed ();
-		public void* dup_boxed ();
-		public void set_object (Object v_object);
-		public void take_object (owned Object v_object);
-		public unowned Object get_object ();
-		public Object dup_object ();
-		[Version (since = "2.12")]
-		public void set_gtype (Type v_gtype);
-		[Version (since = "2.12")]
-		public Type get_gtype ();
-		public void set_param(ParamSpec param);
-		public ParamSpec get_param();
-		public void take_param(out ParamSpec param);
-		public void param_take_ownership(out ParamSpec param);
-	}
-
-	public struct SignalInvocationHint {
-		public uint signal_id;
-		public Quark detail;
-		public SignalFlags run_type;
-	}
-
-	public delegate bool SignalEmissionHook (SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] Value[] param_values);
-
 	[CCode (cprefix = "G_SIGNAL_", has_type_id = false)]
 	[Flags]
 	public enum SignalFlags {
@@ -565,116 +575,6 @@ namespace GLib {
 		MUST_COLLECT,
 		DEPRECATED
 	}
-
-	[CCode (cprefix = "G_CONNECT_", has_type_id = false)]
-	[Flags]
-	public enum ConnectFlags {
-		AFTER,
-		SWAPPED
-	}
-
-	[CCode (has_target = false)]
-	public delegate void Callback ();
-
-	[Compact]
-	[CCode (ref_function = "g_closure_ref", unref_function = "g_closure_unref", type_id = "G_TYPE_CLOSURE")]
-	public class Closure {
-		public void sink ();
-		public void invoke (out Value? return_value, [CCode (array_length_pos = 1.9)] Value[] param_values, void *invocation_hint);
-		public void invalidate ();
-		public void add_finalize_notifier (void *notify_data, ClosureNotify notify_func);
-		public void add_invalidate_notifier (void *notify_data, ClosureNotify notify_func);
-		public void remove_finalize_notifier (void *notify_data, ClosureNotify notify_func);
-		public void remove_invalidate_notifier (void *notify_data, ClosureNotify notify_func);
-		[CCode (cname = "g_closure_new_object")]
-		public Closure (ulong sizeof_closure, Object object);
-		public void set_marshal (ClosureMarshal marshal);
-		public void add_marshal_guards (void *pre_marshal_data, ClosureNotify pre_marshal_notify, void *post_marshal_data, ClosureNotify post_marshal_notify);
-		public void set_meta_marshal (void *marshal_data, ClosureMarshal meta_marshal);
-		[CCode (cname = "sizeof(GClosure)")]
-		public static size_t SIZE;
-	}
-
-	[CCode (has_target = false)]
-	public delegate void ClosureNotify (void* data, Closure closure);
-
-	[CCode (instance_pos = 0, has_target = false)]
-	public delegate void ClosureMarshal (Closure closure, out Value return_value, [CCode (array_length_pos = 2.9)] Value[] param_values, void *invocation_hint, void *marshal_data);
-
-	[Compact]
-	[CCode (type_id = "G_TYPE_VALUE_ARRAY", copy_function = "g_value_array_copy", free_function = "g_value_array_free")]
-	public class ValueArray {
-		public uint n_values;
-		[CCode (array_length_cname = "n_values", array_length_type = "guint")]
-		public Value[] values;
-		public ValueArray (uint n_prealloced);
-		public ValueArray copy ();
-		public unowned Value? get_nth (uint index_);
-		public void append (Value value);
-		public void prepend (Value value);
-		public void insert (uint index_, Value value);
-		public void remove (uint index_);
-		public void sort (CompareFunc compare_func);
-		public void sort_with_data (CompareDataFunc compare_func);
-	}
-
-	namespace Signal {
-		public static void query (uint signal_id, out SignalQuery query);
-		public static uint lookup (string name, Type itype);
-		public static unowned string name (uint signal_id);
-		public static uint[] list_ids (Type itype);
-		public static void emit (void* instance, uint signal_id, Quark detail, ...);
-		public static void emit_by_name (void* instance, string detailed_signal, ...);
-		public static ulong connect (void* instance, string detailed_signal, Callback handler, void* data);
-		public static ulong connect_after (void* instance, string detailed_signal, Callback handler, void* data);
-		public static ulong connect_swapped (void* instance, string detailed_signal, Callback handler, void* data);
-		public static ulong connect_object (void* instance, string detailed_signal, Callback handler, Object gobject, ConnectFlags flags);
-		public static ulong connect_data (void* instance, string detailed_signal, Callback handler, void* data, ClosureNotify destroy_data, ConnectFlags flags);
-		public static ulong connect_closure (void* instance, string detailed_signal, Closure closure, bool after);
-		public static ulong connect_closure_by_id (void* instance, uint signal_id, Quark detail, Closure closure, bool after);
-		public static bool has_handler_pending (void* instance, uint signal_id, Quark detail, bool may_be_blocked);
-		public static void stop_emission (void* instance, uint signal_id, Quark detail);
-		public static void stop_emission_by_name (void* instance, string detailed_signal);
-		public static void override_class_closure (uint signal_id, Type instance_type, Closure class_closure);
-		public static void chain_from_overridden ([CCode (array_length = false)] Value[] instance_and_params, out Value return_value);
-		public static ulong add_emission_hook (uint signal_id, Quark detail, SignalEmissionHook hook_func, DestroyNotify? data_destroy);
-		public static void remove_emission_hook (uint signal_id, ulong hook_id);
-		public static bool parse_name (string detailed_signal, Type itype, out uint signal_id, out Quark detail, bool force_detail_quark);
-		public static unowned SignalInvocationHint? get_invocation_hint (void* instance);
-	}
-
-	namespace SignalHandler {
-		public static void block (void* instance, ulong handler_id);
-		public static void unblock (void* instance, ulong handler_id);
-		public static void disconnect (void* instance, ulong handler_id);
-		public static ulong find (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure? closure, void* func, void* data);
-		public static bool is_connected (void* instance, ulong handler_id);
-
-		[CCode (cname = "g_signal_handlers_block_matched")]
-		public static uint block_matched (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure? closure, void* func, void* data);
-		[CCode (cname = "g_signal_handlers_unblock_matched")]
-		public static uint unblock_matched (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure? closure, void* func, void* data);
-		[CCode (cname = "g_signal_handlers_disconnect_matched")]
-		public static uint disconnect_matched (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure? closure, void* func, void* data);
-		[CCode (cname = "g_signal_handlers_block_by_func")]
-		public static uint block_by_func (void* instance, void* func, void* data);
-		[CCode (cname = "g_signal_handlers_unblock_by_func")]
-		public static uint unblock_by_func (void* instance, void* func, void* data);
-		[CCode (cname = "g_signal_handlers_disconnect_by_func")]
-		public static uint disconnect_by_func (void* instance, void* func, void* data);
-	}
-
-	public struct SignalQuery {
-		public uint signal_id;
-		public unowned string signal_name;
-		public Type itype;
-		public SignalFlags signal_flags;
-		public Type return_type;
-		public uint n_params;
-		[CCode (array_length = false)]
-		public unowned Type[] param_types;
-	}
-
 	[CCode (cprefix = "G_SIGNAL_MATCH_", has_type_id = false)]
 	public enum SignalMatchType {
 		ID,
@@ -684,4 +584,35 @@ namespace GLib {
 		DATA,
 		UNBLOCKED
 	}
+	[CCode (cprefix = "G_TYPE_DEBUG_", has_type_id = false)]
+	[Flags]
+	public enum TypeDebugFlags {
+		NONE,
+		OBJECTS,
+		SIGNALS,
+		MASK
+	}
+	[Version (since = "2.26")]
+	public delegate bool BindingTransformFunc (GLib.Binding binding, GLib.Value source_value, ref GLib.Value target_value);
+	[CCode (has_target = false)]
+	public delegate void* BoxedCopyFunc (void* boxed);
+	[CCode (has_target = false)]
+	public delegate void* BoxedFreeFunc (void* boxed);
+	[CCode (has_target = false)]
+	public delegate void Callback ();
+	[CCode (has_target = false, instance_pos = 0)]
+	public delegate void ClosureMarshal (GLib.Closure closure, out GLib.Value return_value, [CCode (array_length_pos = 2.9)] GLib.Value[] param_values, void* invocation_hint, void* marshal_data);
+	[CCode (has_target = false)]
+	public delegate void ClosureNotify (void* data, GLib.Closure closure);
+	[CCode (has_target = false)]
+	public delegate void ObjectGetPropertyFunc (GLib.Object object, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
+	[CCode (has_target = false)]
+	public delegate void ObjectSetPropertyFunc (GLib.Object object, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
+	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] GLib.Value[] param_values);
+	[CCode (instance_pos = 0)]
+	public delegate void ToggleNotify (GLib.Object object, bool is_last_ref);
+	[CCode (has_target = false)]
+	public delegate void ValueTransform (GLib.Value src_value, ref GLib.Value dest_value);
+	[CCode (instance_pos = 0)]
+	public delegate void WeakNotify (GLib.Object object);
 }
