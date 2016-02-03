@@ -144,6 +144,8 @@ namespace Gtk {
 		public void render_arrow (Cairo.Context cr, double angle, double x, double y, double size);
 		[CCode (cname = "gtk_render_background")]
 		public void render_background (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_background_get_clip")]
+		public Gdk.Rectangle render_background_get_clip (double x, double y, double width, double height);
 		[CCode (cname = "gtk_render_check")]
 		public void render_check (Cairo.Context cr, double x, double y, double width, double height);
 		[CCode (cname = "gtk_render_expander")]

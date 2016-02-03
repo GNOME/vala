@@ -5185,6 +5185,8 @@ namespace Gtk {
 		public void render_arrow (Cairo.Context cr, double angle, double x, double y, double size);
 		[CCode (cname = "gtk_render_background")]
 		public void render_background (Cairo.Context cr, double x, double y, double width, double height);
+		[CCode (cname = "gtk_render_background_get_clip")]
+		public Gdk.Rectangle render_background_get_clip (double x, double y, double width, double height);
 		[CCode (cname = "gtk_render_check")]
 		public void render_check (Cairo.Context cr, double x, double y, double width, double height);
 		[CCode (cname = "gtk_render_expander")]
@@ -9927,8 +9929,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (deprecated_since = "vala-0.16", replacement = "StyleContext.render_background")]
 	public static void render_background (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void render_background_get_clip (Gtk.StyleContext context, double x, double y, double width, double height, Gdk.Rectangle out_clip);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (deprecated_since = "vala-0.16", replacement = "StyleContext.render_check")]
 	public static void render_check (Gtk.StyleContext context, Cairo.Context cr, double x, double y, double width, double height);

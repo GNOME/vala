@@ -21,8 +21,6 @@ WindowRedirect skip
 EventKey struct=false
         .string skip
 RGBA struct
-// https://bugzilla.gnome.org/show_bug.cgi?id=754990
-rgba_parse skip
 ModifierType
         .modifier_reserved_*_mask skip
 pango_layout_get_clip_region skip=false
