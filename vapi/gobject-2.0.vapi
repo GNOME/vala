@@ -69,9 +69,16 @@ namespace GLib {
 		[CCode (cname = "g_signal_handlers_unblock_matched")]
 		public static uint unblock_matched (void* instance, GLib.SignalMatchType mask, uint signal_id, GLib.Quark detail, GLib.Closure? closure, void* func, void* data);
 	}
+	[CCode (type_id = "G_TYPE_BINDING")]
 	[Version (since = "2.26")]
 	public class Binding : GLib.Object {
+		public GLib.BindingFlags get_flags ();
+		public unowned GLib.Object get_source ();
+		public unowned string get_source_property ();
+		public unowned GLib.Object get_target ();
+		public unowned string get_target_property ();
 		[DestroysInstance]
+		[Version (since = "2.38")]
 		public void unbind ();
 		public GLib.BindingFlags flags { get; }
 		public GLib.Object source { get; }
@@ -124,7 +131,7 @@ namespace GLib {
 		public weak string value_name;
 		public weak string value_nick;
 	}
-	[CCode (ref_sink_function = "g_object_ref_sink")]
+	[CCode (ref_sink_function = "g_object_ref_sink", type_id = "G_TYPE_INITIALLY_UNOWNED")]
 	public class InitiallyUnowned : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected InitiallyUnowned ();
@@ -145,6 +152,12 @@ namespace GLib {
 		public void disconnect (ulong handler_id);
 		[CCode (cname = "g_object_run_dispose")]
 		public virtual void dispose ();
+		[CCode (simple_generics = true)]
+		[Version (since = "2.34")]
+		public T dup_data<T> (string key, GLib.DuplicateFunc<T> dup_func);
+		[CCode (simple_generics = true)]
+		[Version (since = "2.34")]
+		public T dup_qdata<T> (GLib.Quark quark, GLib.DuplicateFunc<T> dup_func);
 		public void freeze_notify ();
 		public void @get (string first_property_name, ...);
 		[CCode (cname = "G_OBJECT_GET_CLASS")]
@@ -163,6 +176,12 @@ namespace GLib {
 		public void notify_property (string property_name);
 		public unowned GLib.Object @ref ();
 		public GLib.Object ref_sink ();
+		[CCode (simple_generics = true)]
+		[Version (since = "2.34")]
+		public bool replace_data<G,T> (string key, G oldval, owned T newval, out GLib.DestroyNotify? old_destroy);
+		[CCode (simple_generics = true)]
+		[Version (since = "2.34")]
+		public bool replace_qdata<G,T> (GLib.Quark quark, G oldval, owned T newval, out GLib.DestroyNotify? old_destroy);
 		public void remove_toggle_ref (GLib.ToggleNotify notify);
 		public void remove_weak_pointer (void** data);
 		public void @set (string first_property_name, ...);
@@ -201,11 +220,14 @@ namespace GLib {
 		public GLib.Type owner_type;
 		public GLib.Type value_type;
 		public unowned string get_blurb ();
+		[Version (since = "2.38")]
+		public unowned GLib.Value get_default_value ();
 		public unowned string get_name ();
+		[Version (since = "2.46")]
 		public GLib.Quark get_name_quark ();
 		public unowned string get_nick ();
 		public void* get_qdata (GLib.Quark quark);
-		public GLib.ParamSpec get_redirect_target ();
+		public unowned GLib.ParamSpec get_redirect_target ();
 		[CCode (cname = "g_param_spec_internal")]
 		public ParamSpec.@internal (GLib.Type param_type, string name, string nick, string blurb, GLib.ParamFlags flags);
 		public GLib.ParamSpec @ref ();
@@ -230,6 +252,10 @@ namespace GLib {
 		public bool default_value;
 		[CCode (cname = "g_param_spec_boolean")]
 		public ParamSpecBoolean (string name, string nick, string blurb, bool defaultvalue, GLib.ParamFlags flags);
+	}
+	public class ParamSpecBoxed : GLib.ParamSpec {
+		[CCode (cname = "g_param_spec_boxed")]
+		protected ParamSpecBoxed (string name, string nick, string blurb, GLib.Type boxed_type, GLib.ParamFlags flags);
 	}
 	public class ParamSpecChar : GLib.ParamSpec {
 		public int8 default_value;
@@ -327,6 +353,11 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_ulong")]
 		public ParamSpecULong (string name, string nick, string blurb, ulong minimum, ulong maximum, ulong default_value, GLib.ParamFlags flags);
 	}
+	[Version (since = "2.26")]
+	public class ParamSpecVariant : GLib.ParamSpec {
+		[CCode (cname = "g_param_spec_variant")]
+		public ParamSpecVariant (string name, string nick, string blurb, GLib.VariantType type, GLib.Variant? default_value, GLib.ParamFlags flags);
+	}
 	[CCode (free_function = "g_type_class_unref")]
 	[Compact]
 	public class TypeClass {
@@ -402,11 +433,16 @@ namespace GLib {
 		public unowned GLib.TypeClass class_peek ();
 		public GLib.TypeClass class_ref ();
 		public uint depth ();
+		[Version (since = "2.34")]
+		public void ensure ();
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
 		public static GLib.Type from_instance (void* instance);
 		public static GLib.Type from_name (string name);
+		[Version (since = "2.44")]
 		public int get_instance_count ();
 		public void* get_qdata (GLib.Quark quark);
+		[Version (since = "2.36")]
+		public static uint get_type_registration_serial ();
 		[CCode (array_length_type = "guint")]
 		public GLib.Type[] interfaces ();
 		public bool is_a (GLib.Type is_a_type);
@@ -453,9 +489,12 @@ namespace GLib {
 		public void* dup_boxed ();
 		public GLib.Object dup_object ();
 		public string dup_string ();
+		[Version (since = "2.26")]
+		public GLib.Variant dup_variant ();
 		public bool fits_pointer ();
 		public bool get_boolean ();
 		public void* get_boxed ();
+		[Version (deprecated = true, deprecated_since = "2.32")]
 		public char get_char ();
 		public double get_double ();
 		public int get_enum ();
@@ -476,9 +515,12 @@ namespace GLib {
 		public uint get_uint ();
 		public uint64 get_uint64 ();
 		public ulong get_ulong ();
+		[Version (since = "2.26")]
+		public GLib.Variant get_variant ();
 		[CCode (cname = "G_VALUE_HOLDS")]
 		public bool holds (GLib.Type type);
-		public void init (GLib.Type g_type);
+		public unowned GLib.Value? init (GLib.Type g_type);
+		[Version (since = "2.42")]
 		public void init_from_instance (void* instance);
 		public void param_take_ownership (out GLib.ParamSpec param);
 		public void* peek_pointer ();
@@ -486,6 +528,7 @@ namespace GLib {
 		public unowned GLib.Value? reset ();
 		public void set_boolean (bool v_boolean);
 		public void set_boxed (void* v_boxed);
+		[Version (deprecated = true, deprecated_since = "2.32")]
 		public void set_char (char v_char);
 		public void set_double (double v_double);
 		public void set_enum (int v_enum);
@@ -511,8 +554,10 @@ namespace GLib {
 		[CCode (cname = "g_strdup_value_contents")]
 		public string strdup_contents ();
 		public void take_object (owned GLib.Object v_object);
-		public void take_param (out GLib.ParamSpec param);
+		public void take_param (owned GLib.ParamSpec param);
 		public void take_string (owned string v_string);
+		[Version (since = "2.26")]
+		public void take_variant (owned GLib.Variant? variant);
 		public bool transform (ref GLib.Value dest_value);
 		[CCode (cname = "G_VALUE_TYPE")]
 		public GLib.Type type ();
@@ -558,7 +603,9 @@ namespace GLib {
 		READWRITE,
 		STATIC_STRINGS,
 		USER_SHIFT,
+		[Version (since = "2.42")]
 		EXPLICIT_NOTIFY,
+		[Version (since = "2.26")]
 		DEPRECATED,
 		MASK
 	}
@@ -586,18 +633,34 @@ namespace GLib {
 	}
 	[CCode (cprefix = "G_TYPE_DEBUG_", has_type_id = false)]
 	[Flags]
+	[Version (deprecated = true, deprecated_since = "2.36")]
 	public enum TypeDebugFlags {
 		NONE,
 		OBJECTS,
 		SIGNALS,
+		INSTANCE_COUNT,
 		MASK
+	}
+	[CCode (cprefix = "G_TYPE_FLAG_", has_type_id = false)]
+	[Flags]
+	public enum TypeFlags {
+		ABSTRACT,
+		VALUE_ABSTRACT
+	}
+	[CCode (cprefix = "G_TYPE_FLAG_", has_type_id = false)]
+	[Flags]
+	public enum TypeFundamentalFlags {
+		CLASSED,
+		INSTANTIATABLE,
+		DERIVABLE,
+		DEEP_DERIVABLE
 	}
 	[Version (since = "2.26")]
 	public delegate bool BindingTransformFunc (GLib.Binding binding, GLib.Value source_value, ref GLib.Value target_value);
 	[CCode (has_target = false)]
 	public delegate void* BoxedCopyFunc (void* boxed);
 	[CCode (has_target = false)]
-	public delegate void* BoxedFreeFunc (void* boxed);
+	public delegate void BoxedFreeFunc (void* boxed);
 	[CCode (has_target = false)]
 	public delegate void Callback ();
 	[CCode (has_target = false, instance_pos = 0)]
