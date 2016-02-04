@@ -1601,12 +1601,8 @@ namespace GLib {
 	namespace AtomicInt {
 		public static int get ([CCode (type = "volatile gint *")] ref int atomic);
 		public static void set ([CCode (type = "volatile gint *")] ref int atomic, int newval);
-#if GLIB_2_30
 		[Version (since = "2.30")]
 		public static int add ([CCode (type = "volatile gint *")] ref int atomic, int val);
-#else
-		public static void add ([CCode (type = "volatile gint *")] ref int atomic, int val);
-#endif
 		[Version (deprecated_since = "2.30", replacement = "add")]
 		public static int exchange_and_add ([CCode (type = "volatile gint *")] ref int atomic, int val);
 		public static bool compare_and_exchange ([CCode (type = "volatile gint *")] ref int atomic, int oldval, int newval);
@@ -1787,14 +1783,12 @@ namespace GLib {
 		public static bool remove (uint id);
 		public static bool remove_by_funcs_user_data (void* user_data);
 		public static bool remove_by_user_data (void* user_data);
-#if GLIB_2_32
 		[Version (since = "2.32")]
 		[CCode (cname = "G_SOURCE_CONTINUE")]
 		public static const bool CONTINUE;
 		[Version (since = "2.32")]
 		[CCode (cname = "G_SOURCE_REMOVE")]
 		public static const bool REMOVE;
-#endif
 
 		protected abstract bool prepare (out int timeout_);
 		protected abstract bool check ();
@@ -1858,18 +1852,14 @@ namespace GLib {
 	}
 
 	[Compact]
-#if GLIB_2_32
 	[Version (since = "2.32")]
 	[CCode (ref_function = "g_thread_ref", unref_function = "g_thread_unref")]
-#endif
 	public class Thread<T> {
-#if GLIB_2_32
 		[Version (since = "2.32")]
 		public Thread (string? name, owned ThreadFunc<T> func);
 		[Version (since = "2.32")]
 		[CCode (cname = "g_thread_try_new")]
 		public Thread.try (string? name, owned ThreadFunc<T> func) throws GLib.Error;
-#endif
 		public static bool supported ();
 		[Version (deprecated_since = "2.32", replacement = "new Thread<T> ()")]
 		[CCode (simple_generics = true)]
@@ -1892,16 +1882,9 @@ namespace GLib {
 		public static void usleep (ulong microseconds);
 	}
 
-#if GLIB_2_32
 	[Version (since = "2.32")]
 	[CCode (destroy_function = "g_mutex_clear", lvalue_access = false)]
 	public struct Mutex {
-#else
-	[Compact]
-	[Version (deprecated_since = "glib-2.32", replacement = "Mutex (with --target-glib=2.32)")]
-	[CCode (free_function = "g_mutex_free")]
-	public class Mutex {
-#endif
 		public Mutex ();
 		public void @lock ();
 		public bool trylock ();
@@ -1978,16 +1961,9 @@ namespace GLib {
 		public void set (void* data, DestroyNotify? destroy_func);
 	}
 
-#if GLIB_2_32
 	[Version (since = "2.32")]
 	[CCode (destroy_function = "g_cond_clear", lvalue_access = false)]
 	public struct Cond {
-#else
-	[Compact]
-	[CCode (free_function = "g_cond_free")]
-	[Version (deprecated_since = "glib-2.32", replacement = "Cond (with --target-glib=2.32)")]
-	public class Cond {
-#endif
 		public Cond ();
 		public void @signal ();
 		public void broadcast ();
@@ -3778,13 +3754,8 @@ namespace GLib {
 	public delegate bool RegexEvalCallback (MatchInfo match_info, StringBuilder result);
 
 	[Compact]
-#if GLIB_2_30
 	[Version (since = "2.30")]
 	[CCode (ref_function = "g_match_info_ref", unref_function = "g_match_info_unref", type_id = "G_TYPE_MATCH_INFO")]
-#else
-	[Version (since = "2.14")]
-	[CCode (free_function = "g_match_info_free")]
-#endif
 	public class MatchInfo {
 		public unowned Regex get_regex ();
 		public unowned string get_string ();
@@ -3902,13 +3873,8 @@ namespace GLib {
 	}
 
 	[Compact]
-#if GLIB_2_32
 	[Version (since = "2.32")]
 	[CCode (ref_function = "g_key_file_ref", unref_function = "g_key_file_unref", type_id = "G_TYPE_KEY_FILE")]
-#else
-	[Version (since = "2.6")]
-	[CCode (free_function = "g_key_file_free")]
-#endif
 	public class KeyFile {
 		public KeyFile ();
 		public void set_list_separator (char separator);
@@ -4097,11 +4063,7 @@ namespace GLib {
 		[Version (since = "2.16")]
 		public static int run ();
 		[Version (since = "2.16")]
-#if GLIB_2_26
 		public static void add_func (string testpath, TestFunc test_funcvoid);
-#else
-		public static void add_func (string testpath, Callback test_funcvoid);
-#endif
 		[Version (since = "2.16")]
 		public static void add_data_func (string testpath, [CCode (delegate_target_pos = 1.9)] TestDataFunc test_funcvoid);
 		public static string build_filename (GLib.Test.FileType file_type, params string[] path_segments);
@@ -4167,11 +4129,7 @@ namespace GLib {
 	public class TestCase {
 		[Version (since = "2.16")]
 		[CCode (cname = "g_test_create_case")]
-#if GLIB_2_26
 		public TestCase (string test_name, [CCode (delegate_target_pos = 1.9)] TestFixtureFunc data_setup, [CCode (delegate_target_pos = 1.9)] TestFixtureFunc data_func, [CCode (delegate_target_pos = 1.9)] TestFixtureFunc data_teardown, [CCode (pos = 1.8)] size_t data_size = 0);
-#else
-		public TestCase (string test_name, [CCode (delegate_target_pos = 1.9, type = "void (*) (void)")] TestFunc data_setup, [CCode (delegate_target_pos = 1.9, type = "void (*) (void)")] TestFunc data_func, [CCode (delegate_target_pos = 1.9, type = "void (*) (void)")] TestFunc data_teardown, [CCode (pos = 1.8)] size_t data_size = 0);
-#endif
 	}
 
 	[Compact]
@@ -4191,7 +4149,6 @@ namespace GLib {
 		public void add_suite (TestSuite test_suite);
 	}
 
-#if GLIB_2_26
 	[Version (since = "2.26")]
 	[CCode (has_target = false)]
 	public delegate void TestFunc ();
@@ -4199,12 +4156,6 @@ namespace GLib {
 	public delegate void TestDataFunc ();
 	[Version (since = "2.26")]
 	public delegate void TestFixtureFunc (void* fixture);
-#else
-	[Version (deprecated_since = "2.26", replacement = "--target-glib 2.26")]
-	public delegate void TestFunc (void* fixture);
-	[Version (deprecated_since = "2.26", replacement = "--target-glib 2.26")]
-	public delegate void TestDataFunc ();
-#endif
 
 	[CCode (cprefix = "G_TEST_SUBPROCESS_INHERIT_", has_type_id = false)]
 	[Flags]
@@ -4738,15 +4689,9 @@ namespace GLib {
 	[CCode (cname = "GPtrArray", cprefix = "g_ptr_array_", ref_function = "g_ptr_array_ref", unref_function = "g_ptr_array_unref", type_id = "G_TYPE_PTR_ARRAY")]
 	[GIR (name = "PtrArray")]
 	public class GenericArray<G> {
-#if GLIB_2_30
 		[Version (since = "2.30")]
 		[CCode (cname = "g_ptr_array_new_full", simple_generics = true)]
 		public GenericArray (uint reserved_size = 0);
-#else
-		[Version (since = "2.22")]
-		[CCode (cname = "g_ptr_array_new_with_free_func", simple_generics = true)]
-		public GenericArray ();
-#endif
 		public void add (owned G data);
 		public void foreach (GLib.Func<G> func);
 		[CCode (cname = "g_ptr_array_index")]
@@ -5345,7 +5290,6 @@ namespace GLib {
 		[CCode (array_length_type = "size_t")]
 		public string[] dup_bytestring_array ();
 
-#if GLIB_2_30
 		[Version (since = "2.30")]
 		public Variant.objv (string[] value);
 		[Version (since = "2.30")]
@@ -5358,7 +5302,6 @@ namespace GLib {
 		[Version (since = "2.30")]
 		[CCode (array_length_type = "size_t")]
 		public string[] dup_objv ();
-#endif
 
 		public Variant (string format, ...);
 		// note: the function changes its behaviour when end_ptr is null, so 'out char *' is wrong

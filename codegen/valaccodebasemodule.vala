@@ -464,16 +464,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		gvariant_type = (Class) glib_ns.scope.lookup ("Variant");
 		gsource_type = (Class) glib_ns.scope.lookup ("Source");
 
-		if (context.require_glib_version (2, 32)) {
-			gmutex_type = (Struct) glib_ns.scope.lookup ("Mutex");
-			grecmutex_type = (Struct) glib_ns.scope.lookup ("RecMutex");
-			grwlock_type = (Struct) glib_ns.scope.lookup ("RWLock");
-			gcond_type = (Struct) glib_ns.scope.lookup ("Cond");
+		gmutex_type = (Struct) glib_ns.scope.lookup ("Mutex");
+		grecmutex_type = (Struct) glib_ns.scope.lookup ("RecMutex");
+		grwlock_type = (Struct) glib_ns.scope.lookup ("RWLock");
+		gcond_type = (Struct) glib_ns.scope.lookup ("Cond");
 
-			mutex_type = grecmutex_type;
-		} else {
-			mutex_type = (Struct) glib_ns.scope.lookup ("StaticRecMutex");
-		}
+		mutex_type = grecmutex_type;
 
 		type_module_type = (TypeSymbol) glib_ns.scope.lookup ("TypeModule");
 
@@ -885,15 +881,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			pop_context ();
 
 			if (finalize_context != null) {
-				string mutex_clear;
-				if (context.require_glib_version (2, 32)) {
-					mutex_clear = "g_rec_mutex_clear";
-				} else {
-					mutex_clear = "g_static_rec_mutex_free";
-				}
-
 				push_context (finalize_context);
-				var fc = new CCodeFunctionCall (new CCodeIdentifier (mutex_clear));
+				var fc = new CCodeFunctionCall (new CCodeIdentifier ("g_rec_mutex_clear"));
 				fc.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, l));
 				ccode.add_expression (fc);
 				pop_context ();
@@ -3314,8 +3303,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccomma.append_expression (new CCodeConstant ("NULL"));
 
 				return new CCodeConditionalExpression (cisvalid, ccomma, new CCodeConstant ("NULL"));
-			} else if (context.require_glib_version (2, 32) &&
-			           (type.data_type == gmutex_type ||
+			} else if ((type.data_type == gmutex_type ||
 			            type.data_type == grecmutex_type ||
 			            type.data_type == grwlock_type ||
 			            type.data_type == gcond_type)) {

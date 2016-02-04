@@ -837,7 +837,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 		if (sym != null) {
 			if (sym is Class && !((Class) sym).is_compact || sym is Interface) {
 				return CCodeBaseModule.get_ccode_upper_case_name (sym, "TYPE_");
-			} else if (sym is ErrorType && sym.source_reference != null && sym.source_reference.file.context.require_glib_version (2, 26)) {
+			} else if (sym is ErrorType) {
 				return "G_TYPE_ERROR";
 			} else if (sym is Struct) {
 				var st = (Struct) sym;
@@ -867,11 +867,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 		} else if (node is PointerType || node is DelegateType) {
 			return "G_TYPE_POINTER";
 		} else if (node is ErrorType) {
-			if (node.source_reference != null && node.source_reference.file.context.require_glib_version (2, 26)) {
-				return "G_TYPE_ERROR";
-			} else {
-				return "G_TYPE_POINTER";
-			}
+			return "G_TYPE_ERROR";
 		} else if (node is VoidType) {
 			return "G_TYPE_NONE";
 		} else {
