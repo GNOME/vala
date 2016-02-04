@@ -24,9 +24,6 @@
 
 
 public class Vala.CCodeArrayModule : CCodeMethodCallModule {
-	int next_array_dup_id = 0;
-	int next_array_add_id = 0;
-
 	void append_initializer_list (CCodeExpression name_cnode, InitializerList initializer_list, int rank, ref int i) {
 		foreach (Expression e in initializer_list.get_initializers ()) {
 			if (rank > 1) {
@@ -462,7 +459,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	string generate_array_dup_wrapper (ArrayType array_type) {
-		string dup_func = "_vala_array_dup%d".printf (++next_array_dup_id);
+		string dup_func = "_vala_%s_array_dup".printf (get_ccode_lower_case_name (array_type.element_type));
 
 		if (!add_wrapper (dup_func)) {
 			// wrapper already defined
@@ -535,7 +532,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	string generate_array_copy_wrapper (ArrayType array_type) {
-		string dup_func = "_vala_array_copy%d".printf (++next_array_dup_id);
+		string dup_func = "_vala_%s_array_copy".printf (get_ccode_lower_case_name (array_type.element_type));
 
 		if (!add_wrapper (dup_func)) {
 			// wrapper already defined
@@ -589,7 +586,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	string generate_array_add_wrapper (ArrayType array_type) {
-		string add_func = "_vala_array_add%d".printf (++next_array_add_id);
+		string add_func = "_vala_%s_array_add".printf (get_ccode_lower_case_name (array_type.element_type));
 
 		if (!add_wrapper (add_func)) {
 			// wrapper already defined
