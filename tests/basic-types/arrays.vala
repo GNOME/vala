@@ -183,6 +183,14 @@ void test_generics_array () {
 	assert (b.length == 3);
 }
 
+void test_void_array () {
+	void*[] a = {};
+	a += (void*) null;
+	a += (void*) null;
+	assert (a.length == 2);
+	assert ((void*) null in a);
+}
+
 void main () {
 	test_integer_array ();
 	test_string_array ();
@@ -193,4 +201,5 @@ void main () {
 	test_inline_array ();
 	test_delegate_array ();
 	test_generics_array ();
+	test_void_array ();
 }
