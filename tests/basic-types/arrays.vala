@@ -120,6 +120,22 @@ void test_inline_array () {
 	assert (1 in a);
 }
 
+[CCode (has_target = false)]
+delegate int SimpleFunc ();
+SimpleFunc[] simple_delegates;
+
+int simple_func () {
+	return 0;
+}
+
+void test_delegate_array () {
+	SimpleFunc[] a = {};
+	a = (owned) simple_delegates;
+	a += (SimpleFunc) simple_func;
+	assert (a.length == 1);
+	assert (simple_func in a);
+}
+
 void main () {
 	test_integer_array ();
 	test_string_array ();
@@ -128,4 +144,5 @@ void main () {
 	test_reference_transfer ();
 	test_length_assignment ();
 	test_inline_array ();
+	test_delegate_array ();
 }
