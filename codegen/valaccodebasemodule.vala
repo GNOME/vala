@@ -6069,6 +6069,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else if (node is DelegateType) {
 			var type = (DelegateType) node;
 			return get_ccode_lower_case_name (type.delegate_symbol, infix);
+		} else if (node is GenericType) {
+			return "valageneric";
 		} else {
 			var type = (DataType) node;
 			return get_ccode_lower_case_name (type.data_type, infix);
