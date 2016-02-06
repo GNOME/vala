@@ -4430,14 +4430,6 @@
 					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
-			<method name="iter_add_qclass" symbol="gtk_widget_path_iter_add_qclass">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="path" type="GtkWidgetPath*"/>
-					<parameter name="pos" type="gint"/>
-					<parameter name="qname" type="GQuark"/>
-				</parameters>
-			</method>
 			<method name="iter_add_region" symbol="gtk_widget_path_iter_add_region">
 				<return-type type="void"/>
 				<parameters>

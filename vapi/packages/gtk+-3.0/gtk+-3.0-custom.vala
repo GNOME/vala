@@ -48,7 +48,7 @@ namespace Gtk {
 		[CCode (vfunc_name = "forall")]
 		[NoWrapper]
 		public virtual void forall_internal(bool include_internal, Gtk.Callback callback);
-		public class unowned GLib.ParamSpec class_find_child_property (string property_name);
+		public class unowned GLib.ParamSpec? class_find_child_property (string property_name);
 		public class (unowned GLib.ParamSpec)[] class_list_child_properties ();
 	}
 
