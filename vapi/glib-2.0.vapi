@@ -1217,10 +1217,15 @@ public class string {
 	[CCode (cname = "g_str_hash")]
 	public uint hash ();
 
+	[Version (since = "2.40")]
 	[CCode (cname = "g_str_is_ascii")]
 	public bool is_ascii ();
+	[Version (since = "2.40")]
 	[CCode (instance_pos = "1.5", cname = "g_str_match_string")]
 	public bool match_string (string search_term, bool accept_alternates);
+	[Version (since = "2.40")]
+	[CCode (cname = "g_str_to_ascii")]
+	public string to_ascii (string? from_locale = null);
 	[Version (replacement = "int.parse")]
 	[CCode (cname = "atoi")]
 	public int to_int ();
@@ -1240,6 +1245,7 @@ public class string {
 	[CCode (cname = "g_ascii_strtoull")]
 	public uint64 to_uint64 (out unowned string endptr = null, int _base = 0);
 	[CCode (cname = "g_str_tokenize_and_fold", array_length = false, array_null_terminated = true)]
+	[Version (since = "2.40")]
 	public string[] tokenize_and_fold (string transit_locale, [CCode (array_length = false, array_null_terminated = true)] out string[] ascii_alternates);
 
 	[Version (replacement = "bool.parse")]
@@ -1764,9 +1770,13 @@ namespace GLib {
 		public unowned MainContext get_context ();
 		public void set_callback (owned SourceFunc func);
 		public void set_callback_indirect (void* callback_data, SourceCallbackFuncs callback_funcs);
+		[Version (since = "2.36")]
 		public void* add_unix_fd (int fd, IOCondition events);
+		[Version (since = "2.36")]
 		public void remove_unix_fd (void* tag);
+		[Version (since = "2.36")]
 		public void modify_unix_fd (void* tag, IOCondition new_events);
+		[Version (since = "2.36")]
 		public IOCondition query_unix_fd (void* tag);
 		public void add_poll (ref PollFD fd);
 		public void remove_poll (ref PollFD fd);
@@ -1778,6 +1788,7 @@ namespace GLib {
 		public int64 get_time ();
 		[Version (deprecated_since = "2.28", replacement = "get_time")]
 		public void get_current_time (out TimeVal timeval);
+		[Version (since = "2.36")]
 		public void set_ready_time (int64 ready_time);
 		public int64 get_ready_time ();
 		public static bool remove (uint id);
@@ -1889,6 +1900,13 @@ namespace GLib {
 		public void @lock ();
 		public bool trylock ();
 		public void unlock ();
+	}
+
+	[Version (since = "2.44")]
+	[CCode (destroy_function = "g_mutex_locker_free")]
+	public struct MutexLocker {
+		public MutexLocker (Mutex mutex);
+		public void free ();
 	}
 
 	[Version (since = "2.32")]
@@ -2015,6 +2033,7 @@ namespace GLib {
 		public void set_max_threads (int max_threads) throws ThreadError;
 		public int get_max_threads ();
 		public uint get_num_threads ();
+		[Version (since = "2.46")]
 		public bool move_to_front (T data);
 		public uint unprocessed ();
 		[CCode (cname = "g_thread_pool_free")]
@@ -2059,13 +2078,17 @@ namespace GLib {
 		public void unlock ();
 		public void ref_unlocked ();
 		public void unref_and_unlock ();
+		[Version (since = "2.46")]
 		public void push_front (owned G data);
+		[Version (since = "2.46")]
 		public void push_front_unlocked (owned G data);
 		public void push_unlocked (owned G data);
 		[Version (since = "2.10")]
 		public void push_sorted_unlocked (owned G data, CompareDataFunc<G> func);
 		public G pop_unlocked ();
+		[Version (since = "2.46")]
 		public bool remove (G data);
+		[Version (since = "2.46")]
 		public bool remove_unlocked (G data);
 		public G? try_pop_unlocked ();
 		public G? timed_pop_unlocked (ref TimeVal end_time);
@@ -2289,18 +2312,23 @@ namespace GLib {
 	[Assert]
 	public static void assert (bool expr);
 	[Assert]
+	[Version (since = "2.46")]
 	public static void assert_cmpmem (uint8[] m1, uint8[] m2);
 	[Assert]
 	public static void assert_error (Error? error, Quark error_domain, int error_code);
 	[Assert]
+	[Version (since = "2.38")]
 	public static void assert_false (bool expr);
 	[Assert]
+	[Version (since = "2.38")]
 	public static void assert_true (bool expr);
 	[Assert]
+	[Version (since = "2.38")]
 	public static void assert_null (void* expr);
 	[Assert]
 	public static void assert_no_error (Error? error);
 	[Assert]
+	[Version (since = "2.40")]
 	public static void assert_nonnull (void* expr);
 	[NoReturn]
 	public static void assert_not_reached ();
@@ -2354,12 +2382,14 @@ namespace GLib {
 	public void debug (string format, ...);
 	[Diagnostics]
 	[PrintfFormat]
+	[Version (since = "2.40")]
 	public void info (string format, ...);
 
 	public delegate void LogFunc (string? log_domain, LogLevelFlags log_levels, string message);
 
 	namespace Log {
 		public static uint set_handler (string? log_domain, LogLevelFlags log_levels, LogFunc log_func);
+		[Version (since = "2.46")]
 		public static void set_handler_full (string? log_domain, LogLevelFlags log_levels, owned LogFunc log_func);
 		[Version (since = "2.6")]
 		public static void set_default_handler (LogFunc log_func);
@@ -2384,9 +2414,14 @@ namespace GLib {
 
 	/* String Utility Functions */
 
+	public string strdup (string str);
+	[CCode (array_length = false, array_null_terminated = true)]
+	public string[] strdupv ([CCode (array_length = false, array_null_terminated = true)] string[] str_array);
+
 	public void strfreev (string** str_array);
 	[Version (since = "2.6")]
 	public uint strv_length ([CCode (array_length = false, array_null_terminated = true)] string[] str_array);
+	[Version (since = "2.44")]
 	public bool strv_contains ([CCode (array_length = false, array_null_terminated = true)] string[] str_array, string str);
 
 	[CCode (cname = "errno", cheader_filename = "errno.h")]
@@ -2465,6 +2500,7 @@ namespace GLib {
 		public static string compute_for_data (ChecksumType checksum_type, uchar[] data);
 		[CCode (cname = "g_compute_checksum_for_string")]
 		public static string compute_for_string (ChecksumType checksum_type, string str, size_t length = -1);
+		[Version (since = "2.34")]
 		[CCode (cname = "g_compute_checksum_for_bytes")]
 		public static string compute_for_bytes (ChecksumType checksum_type, Bytes data);
 	}
@@ -3415,6 +3451,7 @@ namespace GLib {
 		[CCode (cname = "symlink", cheader_filename = "unistd.h")]
 		public static int symlink (string oldpath, string newpath);
 
+		[Version (since = "2.36")]
 		[CCode (cname = "close", cheader_filename = "unistd.h")]
 		public static int close (int fd);
 	}
@@ -3462,6 +3499,7 @@ namespace GLib {
 		public MappedFile (string filename, bool writable) throws FileError;
 		public size_t get_length ();
 		public unowned char* get_contents ();
+		[Version (since = "2.34")]
 		public Bytes get_bytes ();
 	}
 
@@ -3536,6 +3574,7 @@ namespace GLib {
 		[Version (since = "2.12")]
 		public void set_translation_domain (string domain);
 		public bool parse ([CCode (array_length_pos = 0.9)] ref unowned string[] argv) throws OptionError;
+		[Version (since = "2.40")]
 		public bool parse_strv ([CCode (array_length = false, array_null_terminated = true)] ref string[] argv) throws OptionError;
 		public void set_help_enabled (bool help_enabled);
 		public bool get_help_enabled ();
@@ -3547,7 +3586,9 @@ namespace GLib {
 		public void add_group (owned OptionGroup group);
 		public void set_main_group (owned OptionGroup group);
 		public unowned OptionGroup get_main_group ();
+		[Version (since = "2.44")]
 		public void set_strict_posix (bool strict_posix);
+		[Version (since = "2.44")]
 		public bool get_strict_posix ();
 	}
 
@@ -3591,10 +3632,11 @@ namespace GLib {
 	}
 
 	[Compact]
-	[Version (since = "2.6")]
 #if GLIB_2_44
+	[Version (since = "2.44")]
 	[CCode (ref_function = "g_option_group_ref", unref_function = "g_option_group_unref", type_id = "G_TYPE_OPTION_GROUP")]
 #else
+	[Version (since = "2.6")]
 	[CCode (free_function = "g_option_group_free")]
 #endif
 	public class OptionGroup {
@@ -3726,9 +3768,12 @@ namespace GLib {
 		public unowned string get_pattern ();
 		[Version (since = "2.26")]
 		public RegexCompileFlags get_compile_flags ();
+		[Version (since = "2.34")]
+		public bool get_has_cr_or_lf ();
 		[Version (since = "2.26")]
 		public RegexMatchFlags get_match_flags ();
 		public int get_max_backref ();
+		[Version (since = "2.38")]
 		public int get_max_lookbehind ();
 		public int get_capture_count ();
 		public int get_string_number (string name);
@@ -3915,6 +3960,7 @@ namespace GLib {
 		[CCode (array_length_type = "gsize")]
 		public double[] get_double_list (string group_name, string key) throws KeyFileError;
 		public string get_comment (string? group_name, string? key) throws KeyFileError;
+		[Version (since = "2.40")]
 		public bool save_to_file (string filename) throws GLib.FileError;
 		public void set_value (string group_name, string key, string value);
 		public void set_string (string group_name, string key, string str);
@@ -4066,18 +4112,34 @@ namespace GLib {
 		public static void add_func (string testpath, TestFunc test_funcvoid);
 		[Version (since = "2.16")]
 		public static void add_data_func (string testpath, [CCode (delegate_target_pos = 1.9)] TestDataFunc test_funcvoid);
+		[Version (since = "2.34")]
+		public static void add_data_func_full (string testpath, [CCode (delegate_target_pos = 1.9)] owned TestDataFunc test_func);
+		[Version (since = "2.34")]
+		public static void assert_expected_messages ();
+		[Version (since = "2.38")]
 		public static string build_filename (GLib.Test.FileType file_type, params string[] path_segments);
+		[Version (since = "2.34")]
+		public static void expect_message (string? log_domain, LogLevelFlags log_level, string pattern);
 		[Version (since = "2.30")]
 		public static void fail ();
+		[Version (since = "2.38")]
 		public static bool failed ();
+		[Version (since = "2.38")]
 		public static unowned string get_dir (GLib.Test.FileType file_type);
+		[Version (since = "2.38")]
 		public static unowned string get_filename (GLib.Test.FileType file_type, params string[] path_segments);
+		[Version (since = "2.38")]
 		public static void incomplete (string msg);
+		[Version (since = "2.36")]
+		public static bool initialized ();
 		[PrintfFormat]
 		[Version (since = "2.16")]
 		public static void message (string format, ...);
+		[Version (since = "2.38")]
 		public static void set_nonfatal_assertions ();
+		[Version (since = "2.38")]
 		public static void skip (string msg);
+		[Version (since = "2.38")]
 		public static bool subprocess ();
 		[Version (since = "2.16")]
 		public static void bug_base (string uri_pattern);
@@ -4095,6 +4157,7 @@ namespace GLib {
 		public static bool trap_has_passed ();
 		[Version (since = "2.16")]
 		public static bool trap_reached_timeout ();
+		[Version (since = "2.38")]
 		public static void trap_subprocess (string test_path, uint64 usec_timeout, TestSubprocessFlags test_flags);
 		[Version (since = "2.16")]
 		public static void trap_assert_passed ();
@@ -4201,6 +4264,8 @@ namespace GLib {
 
 		public uint length ();
 		public List<unowned G> copy ();
+		[Version (since = "2.34")]
+		public List<G> copy_deep (CopyFunc<G> func);
 		[ReturnsModifiedPointer ()]
 		public void reverse ();
 		[ReturnsModifiedPointer ()]
@@ -4261,6 +4326,8 @@ namespace GLib {
 
 		public uint length ();
 		public SList<unowned G> copy ();
+		[Version (since = "2.34")]
+		public SList<G> copy_deep (CopyFunc<G> func);
 		[ReturnsModifiedPointer ()]
 		public void reverse ();
 		[Version (since = "2.10")]
@@ -4298,6 +4365,8 @@ namespace GLib {
 	[Version (since = "2.16")]
 	[CCode (cname = "g_strcmp0")]
 	public static GLib.CompareFunc<string> strcmp;
+
+	public delegate G CopyFunc<G> (G src);
 
 	[CCode (cname = "GCompareFunc", has_target = false)]
 	public delegate int SearchFunc<G,T> (G a, T b);
@@ -4377,6 +4446,8 @@ namespace GLib {
 		public SequenceIter<G> append (owned G data);
 		public SequenceIter<G> prepend (owned G data);
 		public SequenceIter<G> insert_sorted (owned G data, CompareDataFunc<G> cmp_func);
+		[Version (since = "2.48")]
+		public bool is_empty ();
 		public SequenceIter<G> insert_sorted_iter (owned G data, SequenceIterCompareFunc<G> iter_cmp);
 		public SequenceIter<G> search (G data, CompareDataFunc<G> cmp_func);
 		public SequenceIter<G> search_iter (G data, SequenceIterCompareFunc<G> iter_cmp);
@@ -4479,6 +4550,7 @@ namespace GLib {
 		[Version (since = "2.14")]
 		public List<unowned K> get_keys ();
 #if VALA_0_26
+		[Version (since = "2.40")]
 		public (unowned K)[] get_keys_as_array ();
 #endif
 		[Version (since = "2.14")]
@@ -4636,6 +4708,7 @@ namespace GLib {
 			}
 		}
 
+		[Version (since = "2.34")]
 		public static Bytes free_to_bytes (owned StringBuilder str);
 	}
 
@@ -4696,6 +4769,7 @@ namespace GLib {
 		public void foreach (GLib.Func<G> func);
 		[CCode (cname = "g_ptr_array_index")]
 		public unowned G get (uint index);
+		[Version (since = "2.40")]
 		public void insert (int index, owned G data);
 		public bool remove (G data);
 		public void remove_index (uint index);
@@ -4822,6 +4896,7 @@ namespace GLib {
 	public class Node<G> {
 		public Node(owned G? data = null);
 		public Node<unowned G> copy ();
+		public Node<G> copy_deep (CopyFunc<G> copy_func);
 		public unowned Node<G> insert (int position, owned Node<G> node);
 		public unowned Node<G> insert_before (Node<G> sibling, owned Node<G> node);
 		public unowned Node<G> insert_after (Node<G> sibling, owned Node<G> node);
@@ -5083,6 +5158,7 @@ namespace GLib {
 		public const uint @2_42;
 		public const uint @2_44;
 		public const uint @2_46;
+		public const uint @2_48;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;
@@ -5099,6 +5175,7 @@ namespace GLib {
 			[CCode (cname = "G_WIN32_OS_SERVER")]
 			SERVER,
 		}
+		[Version (since = "2.44")]
 		public bool check_windows_version (int major, int minor, int spver, GLib.Win32.OSType os_type);
 
 		public string error_message (int error);
@@ -5112,6 +5189,7 @@ namespace GLib {
 		public bool have_widechar_api ();
 		[CCode (cname = "G_WIN32_IS_NT_BASED")]
 		public bool is_nt_based ();
+		[Version (since = "2.40")]
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_command_line ();
 	}
@@ -5312,6 +5390,7 @@ namespace GLib {
 		public Variant.variant (Variant value);
 		public Variant.maybe (VariantType? child_type, Variant? child);
 		public Variant.array (VariantType? child_type, Variant[] children);
+		[Version (since = "2.32")]
 		[CCode (simple_generics = true)]
 		public static Variant new_fixed_array<T> (VariantType? element_type, [CCode (array_length_type = "gsize")] T[] elements, size_t element_size);
 		public Variant.tuple (Variant[] children);
@@ -5350,14 +5429,20 @@ namespace GLib {
 		public static Variant parse (VariantType? type, string text, char *limit = null, char **endptr = null) throws GLib.VariantParseError;
 		public Variant.parsed (string format_string, ...);
 
+		[Version (since = "2.34")]
 		public bool check_format_string (string format_string, bool copy_only);
 
+		[Version (since = "2.36")]
 		public Variant.from_bytes (VariantType type, Bytes bytes, bool trusted);
+		[Version (since = "2.36")]
 		public Bytes get_data_as_bytes ();
 
+		[Version (since = "2.38")]
 		public Variant.printf (string format_string, ...);
+		[Version (since = "2.38")]
 		public Variant.take_string (string str);
 
+		[Version (since = "2.40")]
 		public static void parse_error_print_context (GLib.VariantParseError error, string source_str);
 	}
 
@@ -5405,6 +5490,7 @@ namespace GLib {
 		public Variant end ();
 	}
 
+	[Version (since = "2.40")]
 	[Compact, CCode (ref_function = "g_variant_dict_ref", unref_function = "g_variant_dict_unref")]
 	public class VariantDict {
 		public VariantDict (GLib.Variant? from_asv = null);
