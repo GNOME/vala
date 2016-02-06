@@ -4963,7 +4963,7 @@ namespace GLib {
 	}
 
 	public delegate void DataForeachFunc<G> (Quark key_id, G data);
-	public delegate void DuplicateFunc<G> (G data);
+	public delegate G DuplicateFunc<G> (G data);
 
 	/* GArray */
 
