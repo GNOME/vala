@@ -246,7 +246,7 @@ namespace Gst {
 	public abstract class Clock : Gst.Object {
 		public weak Gst.ClockID clockid;
 		public weak GLib.List<Gst.ClockEntry> entries;
-		public weak GLib.Cond entries_changed;
+		public GLib.Cond entries_changed;
 		public Gst.ClockTime external_calibration;
 		public bool filling;
 		public Gst.ClockTime internal_calibration;
@@ -255,7 +255,7 @@ namespace Gst {
 		public Gst.ClockTime rate_denominator;
 		public Gst.ClockTime rate_numerator;
 		public Gst.ClockTime resolution;
-		public weak GLib.Mutex slave_lock;
+		public GLib.Mutex slave_lock;
 		public int time_index;
 		[CCode (array_length = false)]
 		public weak Gst.ClockTime[] times;
@@ -405,7 +405,7 @@ namespace Gst {
 		public Gst.State pending_state;
 		public weak GLib.List<Gst.Pad> sinkpads;
 		public weak GLib.List<Gst.Pad> srcpads;
-		public weak GLib.Cond state_cond;
+		public GLib.Cond state_cond;
 		public uint32 state_cookie;
 		public GLib.StaticRecMutex state_lock;
 		[CCode (cname = "abidata.ABI.target_state")]
@@ -697,7 +697,7 @@ namespace Gst {
 	[Compact]
 	public class Iterator<T> {
 		public uint32 cookie;
-		public weak GLib.Mutex @lock;
+		public GLib.Mutex @lock;
 		public void* master_cookie;
 		public weak Gst.Iterator pushed;
 		public GLib.Type type;
@@ -839,7 +839,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_object_ref", ref_sink_function = "gst_object_ref_sink", unref_function = "gst_object_unref")]
 	public abstract class Object : GLib.Object {
 		public Gst.ObjectFlags flags;
-		public weak GLib.Mutex @lock;
+		public GLib.Mutex @lock;
 		public weak string name_prefix;
 		public weak Gst.Object parent;
 		[CCode (has_construct_function = false)]
@@ -1409,7 +1409,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Task : Gst.Object {
 		public void* abidata;
-		public weak GLib.Cond cond;
+		public GLib.Cond cond;
 		public void* data;
 		public weak Gst.TaskFunction func;
 		public GLib.StaticRecMutex @lock;

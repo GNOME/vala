@@ -289,7 +289,7 @@ namespace Gst {
 		[GIR (name = "AudioRingBuffer")]
 		public abstract class RingBuffer : Gst.Object {
 			public bool acquired;
-			public weak GLib.Cond cond;
+			public GLib.Cond cond;
 			public uint8 empty_seg;
 			public uint8 memory;
 			public bool open;

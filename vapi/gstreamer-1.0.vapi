@@ -1386,7 +1386,7 @@ namespace Gst {
 	public class Iterator {
 		public uint32 cookie;
 		public weak Gst.IteratorItemFunction item;
-		public weak GLib.Mutex @lock;
+		public GLib.Mutex @lock;
 		public uint32 master_cookie;
 		public weak Gst.Iterator pushed;
 		public uint size;
@@ -1579,7 +1579,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_object_get_type ()")]
 	public abstract class Object : GLib.InitiallyUnowned {
 		public uint32 flags;
-		public weak GLib.Mutex @lock;
+		public GLib.Mutex @lock;
 		[CCode (has_construct_function = false)]
 		protected Object ();
 		public bool add_control_binding (owned Gst.ControlBinding binding);
@@ -2190,7 +2190,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_task_get_type ()")]
 	public class Task : Gst.Object {
-		public weak GLib.Cond cond;
+		public GLib.Cond cond;
 		public weak Gst.TaskFunction func;
 		public GLib.RecMutex @lock;
 		public weak GLib.DestroyNotify notify;

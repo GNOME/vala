@@ -468,7 +468,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
 	public class CollectPads : Gst.Object {
-		public weak GLib.Cond cond;
+		public GLib.Cond cond;
 		public uint32 cookie;
 		public weak GLib.SList<Gst.CollectData> data;
 		public uint eospads;
@@ -507,9 +507,9 @@ namespace Gst {
 		public weak Gst.DataQueueEmptyCallback emptycallback;
 		public bool flushing;
 		public weak Gst.DataQueueFullCallback fullcallback;
-		public weak GLib.Cond item_add;
-		public weak GLib.Cond item_del;
-		public weak GLib.Mutex qlock;
+		public GLib.Cond item_add;
+		public GLib.Cond item_del;
+		public GLib.Mutex qlock;
 		public weak GLib.Queue queue;
 		[CCode (has_construct_function = false)]
 		public DataQueue (Gst.DataQueueCheckFullFunction checkfull, void* checkdata);

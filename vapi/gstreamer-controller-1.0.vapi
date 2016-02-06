@@ -72,7 +72,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstTimedValueControlSource", lower_case_cprefix = "gst_timed_value_control_source_", type_id = "gst_timed_value_control_source_get_type ()")]
 		[GIR (name = "TimedValueControlSource")]
 		public abstract class TimedValueControlSource : Gst.ControlSource {
-			public weak GLib.Mutex @lock;
+			public GLib.Mutex @lock;
 			public int nvalues;
 			public bool valid_cache;
 			public GLib.Sequence<Gst.Controller.ControlPoint?> values;

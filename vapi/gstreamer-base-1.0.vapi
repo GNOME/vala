@@ -472,8 +472,8 @@ namespace Gst {
 			public uint64 offset;
 			public Gst.PadMode pad_mode;
 			public bool playing_async;
-			public weak GLib.Cond preroll_cond;
-			public weak GLib.Mutex preroll_lock;
+			public GLib.Cond preroll_cond;
+			public GLib.Mutex preroll_lock;
 			public weak Gst.Segment segment;
 			public weak Gst.Pad sinkpad;
 			[CCode (has_construct_function = false)]
@@ -564,8 +564,8 @@ namespace Gst {
 		public abstract class Src : Gst.Element {
 			public bool can_activate_push;
 			public Gst.ClockID clock_id;
-			public weak GLib.Cond live_cond;
-			public weak GLib.Mutex live_lock;
+			public GLib.Cond live_cond;
+			public GLib.Mutex live_lock;
 			public bool live_running;
 			public bool need_newsegment;
 			public int num_buffers_left;

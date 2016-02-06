@@ -123,7 +123,7 @@ namespace Gst {
 		public bool acquired;
 		public weak Gst.RingBufferCallback callback;
 		public void* cb_data;
-		public weak GLib.Cond cond;
+		public GLib.Cond cond;
 		public weak Gst.Buffer data;
 		public uchar empty_seg;
 		public bool open;

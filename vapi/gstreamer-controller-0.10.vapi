@@ -13,7 +13,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class Controller : GLib.Object {
-		public weak GLib.Mutex @lock;
+		public GLib.Mutex @lock;
 		public weak GLib.Object object;
 		public weak GLib.List<Gst.TimedValue> properties;
 		[CCode (has_construct_function = false)]
@@ -46,7 +46,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class InterpolationControlSource : Gst.ControlSource {
-		public weak GLib.Mutex @lock;
+		public GLib.Mutex @lock;
 		[CCode (has_construct_function = false)]
 		public InterpolationControlSource ();
 		public GLib.List<weak Gst.TimedValue> get_all ();
@@ -59,7 +59,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/controller/gstlfocontrolsource.h")]
 	public class LFOControlSource : Gst.ControlSource {
-		public weak GLib.Mutex @lock;
+		public GLib.Mutex @lock;
 		[CCode (has_construct_function = false)]
 		public LFOControlSource ();
 		[NoAccessorMethod]
