@@ -3451,9 +3451,12 @@ namespace GLib {
 		[CCode (cname = "symlink", cheader_filename = "unistd.h")]
 		public static int symlink (string oldpath, string newpath);
 
-		[Version (since = "2.36")]
 		[CCode (cname = "close", cheader_filename = "unistd.h")]
 		public static int close (int fd);
+
+		[Version (since = "2.36")]
+		[CCode (cname = "g_close")]
+		public static bool close_checked (int fd) throws FileError;
 	}
 
 	[CCode (cname = "struct stat", cheader_filename = "sys/stat.h,glib/gstdio.h")]
