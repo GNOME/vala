@@ -68,10 +68,10 @@ namespace GLib {
 		public static string address_escape_value (string string);
 		[CCode (cheader_filename = "gio/gio.h")]
 		[Version (since = "2.26")]
-		public static async GLib.IOStream address_get_stream (string address, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public static async GLib.IOStream address_get_stream (string address, GLib.Cancellable? cancellable = null, out string out_guid) throws GLib.Error;
 		[CCode (cheader_filename = "gio/gio.h")]
 		[Version (since = "2.26")]
-		public static GLib.IOStream address_get_stream_sync (string address, string out_guid, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public static GLib.IOStream address_get_stream_sync (string address, out string out_guid, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cheader_filename = "gio/gio.h")]
 		[Version (since = "2.26")]
 		public static unowned string annotation_info_lookup ([CCode (array_length = false, array_null_terminated = true)] GLib.DBusAnnotationInfo[]? annotations, string name);

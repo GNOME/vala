@@ -5741,13 +5741,6 @@ namespace Gdk {
 		public static Gdk.Atom intern_static_string (string atom_name);
 		public string name ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
-	public struct Border {
-		public int left;
-		public int right;
-		public int top;
-		public int bottom;
-	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_color_get_type ()")]
 	[Version (deprecated = true, deprecated_since = "3.14")]
 	public struct Color {

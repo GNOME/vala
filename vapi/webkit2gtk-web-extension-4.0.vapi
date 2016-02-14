@@ -2243,6 +2243,8 @@ namespace WebKit {
 			public string prefix { owned get; set; }
 			public WebKit.DOM.Node previous_sibling { get; }
 			public string text_content { owned get; set; }
+			[NoAccessorMethod]
+			public WebKit.DOM.Node tree_root { owned get; }
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_node_iterator_get_type ()")]
 		[GIR (name = "DOMNodeIterator")]
