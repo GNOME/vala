@@ -5708,8 +5708,8 @@ namespace Gtk {
 		public int get_indent ();
 		public Gtk.InputHints get_input_hints ();
 		public Gtk.InputPurpose get_input_purpose ();
-		public void get_iter_at_location (out Gtk.TextIter iter, int x, int y);
-		public void get_iter_at_position (out Gtk.TextIter iter, out int trailing, int x, int y);
+		public bool get_iter_at_location (out Gtk.TextIter iter, int x, int y);
+		public bool get_iter_at_position (out Gtk.TextIter iter, out int trailing, int x, int y);
 		public void get_iter_location (Gtk.TextIter iter, out Gdk.Rectangle location);
 		public Gtk.Justification get_justification ();
 		public int get_left_margin ();
@@ -8993,6 +8993,8 @@ namespace Gtk {
 	public const int INPUT_ERROR;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int INTERFACE_AGE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public const string LEVEL_BAR_OFFSET_FULL;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string LEVEL_BAR_OFFSET_HIGH;
 	[CCode (cheader_filename = "gtk/gtk.h")]
