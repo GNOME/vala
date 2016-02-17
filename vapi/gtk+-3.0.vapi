@@ -3812,12 +3812,14 @@ namespace Gtk {
 		public virtual signal int drag_action_ask (int p0);
 		public virtual signal int drag_action_requested (Gdk.DragContext p0, GLib.File p1, GLib.List<GLib.File> p2);
 		public virtual signal void drag_perform_drop (GLib.File p0, GLib.List<GLib.File> p1, int p2);
+		public virtual signal void mount (GLib.MountOperation p0);
 		public virtual signal void open_location (GLib.File p0, Gtk.PlacesOpenFlags p1);
 		public virtual signal void populate_popup (Gtk.Menu p0, GLib.File? p1, GLib.Volume? p2);
 		public virtual signal void show_error_message (string p0, string p1);
 		[CCode (cname = "show_other_locations")]
 		[Version (experimental = true)]
 		public virtual signal void show_other_locations_requested ();
+		public virtual signal void unmount (GLib.MountOperation p0);
 	}
 	[CCode (cheader_filename = "gtk/gtkx.h", type_id = "gtk_plug_get_type ()")]
 	public class Plug : Gtk.Window, Atk.Implementor, Gtk.Buildable {

@@ -4865,7 +4865,7 @@ namespace Gdk {
 		[Version (since = "3.20")]
 		public signal void action_changed (Gdk.DragAction action);
 		[Version (since = "3.20")]
-		public signal void cancel ();
+		public signal void cancel (Gdk.DragCancelReason object);
 		[Version (since = "3.20")]
 		public signal void dnd_finished ();
 		[Version (since = "3.20")]
@@ -5954,6 +5954,13 @@ namespace Gdk {
 		LINK,
 		PRIVATE,
 		ASK
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_DRAG_CANCEL_", type_id = "gdk_drag_cancel_reason_get_type ()")]
+	[Version (since = "3.20")]
+	public enum DragCancelReason {
+		NO_TARGET,
+		USER_CANCELLED,
+		ERROR
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_DRAG_PROTO_", type_id = "gdk_drag_protocol_get_type ()")]
 	public enum DragProtocol {
