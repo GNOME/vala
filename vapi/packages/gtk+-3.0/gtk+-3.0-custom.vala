@@ -128,6 +128,74 @@ namespace Gtk {
 		UNSORTED
 	}
 
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_BUILDER_ERROR_")]
+	public errordomain BuilderError {
+		INVALID_TYPE_FUNCTION,
+		UNHANDLED_TAG,
+		MISSING_ATTRIBUTE,
+		INVALID_ATTRIBUTE,
+		INVALID_TAG,
+		MISSING_PROPERTY_VALUE,
+		INVALID_VALUE,
+		VERSION_MISMATCH,
+		DUPLICATE_ID,
+		OBJECT_TYPE_REFUSED,
+		TEMPLATE_MISMATCH,
+		INVALID_PROPERTY,
+		INVALID_SIGNAL,
+		INVALID_ID;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_PROVIDER_ERROR_")]
+	public errordomain CssProviderError {
+		FAILED,
+		SYNTAX,
+		IMPORT,
+		NAME,
+		DEPRECATED,
+		UNKNOWN_VALUE;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FILE_CHOOSER_ERROR_")]
+	public errordomain FileChooserError {
+		NONEXISTENT,
+		BAD_FILENAME,
+		ALREADY_EXISTS,
+		INCOMPLETE_HOSTNAME;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_THEME_")]
+	public errordomain IconThemeError {
+		NOT_FOUND,
+		FAILED;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_ERROR_")]
+	public errordomain PrintError {
+		GENERAL,
+		INTERNAL_ERROR,
+		NOMEM,
+		INVALID_FILE;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_CHOOSER_ERROR_")]
+	public errordomain RecentChooserError {
+		NOT_FOUND,
+		INVALID_URI;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_MANAGER_ERROR_")]
+	public errordomain RecentManagerError {
+		NOT_FOUND,
+		INVALID_URI,
+		INVALID_ENCODING,
+		NOT_REGISTERED,
+		READ,
+		WRITE,
+		UNKNOWN;
+		public static GLib.Quark quark ();
+	}
+
 	[Version (deprecated_since = "3.0", replacement = "StyleContext")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Style {

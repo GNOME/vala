@@ -788,7 +788,6 @@ namespace Gtk {
 		public uint add_objects_from_string (string buffer, size_t length, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
 		public void connect_signals (void* user_data);
 		public void connect_signals_full (Gtk.BuilderConnectFunc func);
-		public static GLib.Quark error_quark ();
 		public void expose_object (string name, GLib.Object object);
 		public uint extend_with_template (Gtk.Widget widget, GLib.Type template_type, string buffer, size_t length) throws GLib.Error;
 		[CCode (has_construct_function = false)]
@@ -1698,7 +1697,6 @@ namespace Gtk {
 	public class CssProvider : GLib.Object, Gtk.StyleProvider {
 		[CCode (has_construct_function = false)]
 		public CssProvider ();
-		public static GLib.Quark error_quark ();
 		public static unowned Gtk.CssProvider get_default ();
 		public static unowned Gtk.CssProvider get_named (string name, string? variant);
 		[CCode (cname = "gtk_css_provider_load_from_data")]
@@ -2732,7 +2730,6 @@ namespace Gtk {
 		public void append_search_path (string path);
 		public Gtk.IconInfo? choose_icon ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, Gtk.IconLookupFlags flags);
 		public Gtk.IconInfo? choose_icon_for_scale ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, int scale, Gtk.IconLookupFlags flags);
-		public static GLib.Quark error_quark ();
 		public static unowned Gtk.IconTheme get_default ();
 		public string? get_example_icon_name ();
 		public static unowned Gtk.IconTheme get_for_screen (Gdk.Screen screen);
@@ -3153,7 +3150,7 @@ namespace Gtk {
 	public class ListBox : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ListBox ();
-		public void bind_model (GLib.ListModel? model, owned Gtk.ListBoxCreateWidgetFunc create_widget_func);
+		public void bind_model (GLib.ListModel? model, owned Gtk.ListBoxCreateWidgetFunc? create_widget_func);
 		public void drag_highlight_row (Gtk.ListBoxRow row);
 		public void drag_unhighlight_row ();
 		public bool get_activate_on_single_click ();
@@ -4343,7 +4340,6 @@ namespace Gtk {
 		public RecentManager ();
 		public bool add_full (string uri, Gtk.RecentData recent_data);
 		public bool add_item (string uri);
-		public static GLib.Quark error_quark ();
 		public static unowned Gtk.RecentManager get_default ();
 		public GLib.List<Gtk.RecentInfo> get_items ();
 		public bool has_item (string uri);
@@ -7328,7 +7324,6 @@ namespace Gtk {
 		public void add_filter (owned Gtk.FileFilter filter);
 		public bool add_shortcut_folder (string folder) throws GLib.Error;
 		public bool add_shortcut_folder_uri (string uri) throws GLib.Error;
-		public static GLib.Quark error_quark ();
 		public Gtk.FileChooserAction get_action ();
 		public bool get_create_folders ();
 		public string get_current_folder ();
@@ -7444,7 +7439,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface RecentChooser : GLib.Object {
 		public abstract void add_filter (Gtk.RecentFilter filter);
-		public static GLib.Quark error_quark ();
 		public Gtk.RecentInfo get_current_item ();
 		public abstract string get_current_uri ();
 		public unowned Gtk.RecentFilter get_filter ();
@@ -8814,7 +8808,8 @@ namespace Gtk {
 		TEMPLATE_MISMATCH,
 		INVALID_PROPERTY,
 		INVALID_SIGNAL,
-		INVALID_ID
+		INVALID_ID;
+		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_PROVIDER_ERROR_")]
 	public errordomain CssProviderError {
@@ -8823,31 +8818,36 @@ namespace Gtk {
 		IMPORT,
 		NAME,
 		DEPRECATED,
-		UNKNOWN_VALUE
+		UNKNOWN_VALUE;
+		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FILE_CHOOSER_ERROR_")]
 	public errordomain FileChooserError {
 		NONEXISTENT,
 		BAD_FILENAME,
 		ALREADY_EXISTS,
-		INCOMPLETE_HOSTNAME
+		INCOMPLETE_HOSTNAME;
+		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_THEME_")]
 	public errordomain IconThemeError {
 		NOT_FOUND,
-		FAILED
+		FAILED;
+		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_ERROR_")]
 	public errordomain PrintError {
 		GENERAL,
 		INTERNAL_ERROR,
 		NOMEM,
-		INVALID_FILE
+		INVALID_FILE;
+		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_CHOOSER_ERROR_")]
 	public errordomain RecentChooserError {
 		NOT_FOUND,
-		INVALID_URI
+		INVALID_URI;
+		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_MANAGER_ERROR_")]
 	public errordomain RecentManagerError {
@@ -8857,7 +8857,8 @@ namespace Gtk {
 		NOT_REGISTERED,
 		READ,
 		WRITE,
-		UNKNOWN
+		UNKNOWN;
+		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool AccelGroupActivate (Gtk.AccelGroup accel_group, GLib.Object acceleratable, uint keyval, Gdk.ModifierType modifier);
@@ -9873,8 +9874,6 @@ namespace Gtk {
 	public static void paint_vline (Gtk.Style style, Cairo.Context cr, Gtk.StateType state_type, Gtk.Widget? widget, string? detail, int y1_, int y2_, int x);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool parse_args ([CCode (array_length_pos = 0.5)] ref unowned string[] argv);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static GLib.Quark print_error_quark ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static Gtk.PageSetup print_run_page_setup_dialog (Gtk.Window parent, Gtk.PageSetup page_setup, Gtk.PrintSettings settings);
 	[CCode (cheader_filename = "gtk/gtk.h")]
