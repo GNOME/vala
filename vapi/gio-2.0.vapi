@@ -3789,7 +3789,8 @@ namespace GLib {
 		HANDLES_OPEN,
 		HANDLES_COMMAND_LINE,
 		SEND_ENVIRONMENT,
-		NON_UNIQUE
+		NON_UNIQUE,
+		CAN_OVERRIDE_APP_ID
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_ASK_PASSWORD_", type_id = "g_ask_password_flags_get_type ()")]
 	[Flags]

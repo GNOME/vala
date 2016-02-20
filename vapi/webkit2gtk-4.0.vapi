@@ -166,7 +166,7 @@ namespace WebKit {
 		public WebKit.URIResponse response { get; }
 		public signal void created_destination (string destination);
 		public virtual signal bool decide_destination (string suggested_filename);
-		public signal void failed ([CCode (type = "gpointer")] WebKit.DownloadError error);
+		public signal void failed (WebKit.DownloadError error);
 		public signal void finished ();
 		public signal void received_data (uint64 data_length);
 	}
@@ -394,7 +394,7 @@ namespace WebKit {
 		public Gtk.PrintSettings print_settings { get; set; }
 		[NoAccessorMethod]
 		public WebKit.WebView web_view { owned get; construct; }
-		public signal void failed ([CCode (type = "gpointer")] WebKit.PrintError error);
+		public signal void failed (WebKit.PrintError error);
 		public signal void finished ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_response_policy_decision_get_type ()")]
@@ -787,7 +787,7 @@ namespace WebKit {
 		public unowned string get_uri ();
 		public WebKit.URIResponse response { get; }
 		public string uri { get; }
-		public signal void failed ([CCode (type = "gpointer")] GLib.Error error);
+		public signal void failed (GLib.Error error);
 		[Version (since = "2.8")]
 		public signal void failed_with_tls_errors (GLib.TlsCertificate certificate, GLib.TlsCertificateFlags errors);
 		public signal void finished ();
@@ -901,7 +901,7 @@ namespace WebKit {
 		public virtual signal void insecure_content_detected (WebKit.InsecureContentEvent event);
 		public virtual signal bool leave_fullscreen ();
 		public virtual signal void load_changed (WebKit.LoadEvent load_event);
-		public virtual signal bool load_failed (WebKit.LoadEvent load_event, string failing_uri, [CCode (type = "gpointer")] GLib.Error error);
+		public virtual signal bool load_failed (WebKit.LoadEvent load_event, string failing_uri, GLib.Error error);
 		[Version (since = "2.6")]
 		public virtual signal bool load_failed_with_tls_errors (string failing_uri, GLib.TlsCertificate certificate, GLib.TlsCertificateFlags errors);
 		public virtual signal void mouse_target_changed (WebKit.HitTestResult hit_test_result, uint modifiers);

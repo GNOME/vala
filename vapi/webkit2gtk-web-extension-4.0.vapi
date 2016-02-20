@@ -532,6 +532,8 @@ namespace WebKit {
 			[NoAccessorMethod]
 			public bool default_prevented { get; }
 			public uint event_phase { get; }
+			[NoAccessorMethod]
+			public bool is_trusted { get; }
 			public bool return_value { get; set; }
 			public WebKit.DOM.EventTarget src_element { owned get; }
 			public WebKit.DOM.EventTarget target { owned get; }
