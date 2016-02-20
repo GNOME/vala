@@ -2018,7 +2018,7 @@ namespace Gst {
 		public virtual void cleanup ();
 		public virtual void join (void* id);
 		public virtual void prepare () throws GLib.Error;
-		public virtual void* push ([CCode (scope = "async")] owned Gst.TaskPoolFunction func) throws GLib.Error;
+		public virtual void* push ([CCode (scope = "async")] Gst.TaskPoolFunction func) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_toc_ref", type_id = "gst_toc_get_type ()", unref_function = "gst_toc_unref")]
 	[Compact]
@@ -2222,7 +2222,7 @@ namespace Gst {
 		public static bool api_type_has_tag (GLib.Type api, GLib.Quark tag);
 		public static GLib.Type api_type_register (string api, string tags);
 		public static unowned Gst.MetaInfo? get_info (string impl);
-		public static unowned Gst.MetaInfo? register (GLib.Type api, string impl, size_t size, [CCode (scope = "async")] owned Gst.MetaInitFunction init_func, [CCode (scope = "async")] owned Gst.MetaFreeFunction free_func, [CCode (scope = "async")] owned Gst.MetaTransformFunction transform_func);
+		public static unowned Gst.MetaInfo? register (GLib.Type api, string impl, size_t size, [CCode (scope = "async")] Gst.MetaInitFunction init_func, [CCode (scope = "async")] Gst.MetaFreeFunction free_func, [CCode (scope = "async")] Gst.MetaTransformFunction transform_func);
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
 	public struct MetaInfo {

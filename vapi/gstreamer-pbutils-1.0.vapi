@@ -286,7 +286,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static void init ();
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_install_plugins_async")]
-		public static Gst.PbUtils.InstallPluginsReturn install_plugins_async ([CCode (array_length = false, array_null_terminated = true)] string[] details, Gst.PbUtils.InstallPluginsContext? ctx, [CCode (scope = "async")] owned Gst.PbUtils.InstallPluginsResultFunc func);
+		public static Gst.PbUtils.InstallPluginsReturn install_plugins_async ([CCode (array_length = false, array_null_terminated = true)] string[] details, Gst.PbUtils.InstallPluginsContext? ctx, [CCode (scope = "async")] Gst.PbUtils.InstallPluginsResultFunc func);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_install_plugins_installation_in_progress")]
 		public static bool install_plugins_installation_in_progress ();
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_install_plugins_return_get_name")]

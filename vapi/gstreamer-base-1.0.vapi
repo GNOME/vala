@@ -303,7 +303,7 @@ namespace Gst {
 			public weak GLib.SList<Gst.Base.CollectData?> data;
 			[CCode (has_construct_function = false)]
 			public CollectPads ();
-			public unowned Gst.Base.CollectData? add_pad (Gst.Pad pad, uint size, [CCode (scope = "async")] owned Gst.Base.CollectDataDestroyNotify destroy_notify, bool @lock);
+			public unowned Gst.Base.CollectData? add_pad (Gst.Pad pad, uint size, [CCode (scope = "async")] Gst.Base.CollectDataDestroyNotify destroy_notify, bool @lock);
 			public uint available ();
 			public Gst.FlowReturn clip_running_time (Gst.Base.CollectData cdata, Gst.Buffer buf, Gst.Buffer? outbuf, void* user_data);
 			public bool event_default (Gst.Base.CollectData data, Gst.Event event, bool discard);
