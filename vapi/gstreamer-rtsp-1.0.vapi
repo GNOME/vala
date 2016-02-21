@@ -10,6 +10,7 @@ namespace Gst {
 			public void clear_auth_params ();
 			public Gst.RTSP.Result close ();
 			public Gst.RTSP.Result connect (GLib.TimeVal timeout);
+			public Gst.RTSP.Result connect_with_response (GLib.TimeVal timeout, Gst.RTSP.Message response);
 			public Gst.RTSP.Result do_tunnel (Gst.RTSP.Connection conn2);
 			public Gst.RTSP.Result flush (bool flush);
 			public Gst.RTSP.Result free ();

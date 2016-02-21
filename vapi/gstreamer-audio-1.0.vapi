@@ -85,6 +85,14 @@ namespace Gst {
 			[NoAccessorMethod]
 			public uint track { get; set; }
 		}
+		[CCode (cheader_filename = "gst/audio/audio.h")]
+		[Compact]
+		[GIR (name = "AudioChannelMixer")]
+		public class ChannelMixer {
+			public void free ();
+			public bool is_passthrough ();
+			public void samples (void* @in, void* @out, int samples);
+		}
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_clock_get_type ()")]
 		[GIR (name = "AudioClock")]
 		public class Clock : Gst.SystemClock {
@@ -94,6 +102,19 @@ namespace Gst {
 			public static Gst.ClockTime get_time (Gst.Clock clock);
 			public static void invalidate (Gst.Clock clock);
 			public void reset (Gst.ClockTime time);
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h")]
+		[Compact]
+		[GIR (name = "AudioConverter")]
+		public class Converter {
+			public void free ();
+			public unowned Gst.Structure get_config (int in_rate, int out_rate);
+			public size_t get_in_frames (size_t out_frames);
+			public size_t get_max_latency ();
+			public size_t get_out_frames (size_t in_frames);
+			public void reset ();
+			public bool samples (Gst.Audio.ConverterFlags flags, void* @in, size_t in_frames, void* @out, size_t out_frames);
+			public bool update_config (int in_rate, int out_rate, owned Gst.Structure? config);
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_decoder_get_type ()")]
 		[GIR (name = "AudioDecoder")]
@@ -285,6 +306,14 @@ namespace Gst {
 			public void set_format (Gst.Audio.Format format, int rate, int channels, Gst.Audio.ChannelPosition position);
 			public Gst.Caps to_caps ();
 		}
+		[CCode (cheader_filename = "gst/audio/audio.h")]
+		[Compact]
+		[GIR (name = "AudioQuantize")]
+		public class Quantize {
+			public void free ();
+			public void reset ();
+			public void samples (void* @in, void* @out, uint samples);
+		}
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_ring_buffer_get_type ()")]
 		[GIR (name = "AudioRingBuffer")]
 		public abstract class RingBuffer : Gst.Object {
@@ -399,6 +428,15 @@ namespace Gst {
 			public weak Gst.TagList tags;
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
+		[GIR (name = "AudioClippingMeta")]
+		[Version (since = "1.8")]
+		public struct ClippingMeta {
+			public Gst.Meta meta;
+			public Gst.Format format;
+			public uint64 start;
+			public uint64 end;
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[GIR (name = "AudioDownmixMeta")]
 		public struct DownmixMeta {
 			public Gst.Meta meta;
@@ -472,6 +510,15 @@ namespace Gst {
 			[CCode (cname = "Stream consists of the whole disc")]
 			CONTINUOUS
 		}
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_CHANNEL_MIXER_FLAGS_", type_id = "gst_audio_channel_mixer_flags_get_type ()")]
+		[Flags]
+		[GIR (name = "AudioChannelMixerFlags")]
+		public enum ChannelMixerFlags {
+			NONE,
+			NON_INTERLEAVED,
+			UNPOSITIONED_IN,
+			UNPOSITIONED_OUT
+		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_CHANNEL_POSITION_", type_id = "gst_audio_channel_position_get_type ()")]
 		[GIR (name = "AudioChannelPosition")]
 		public enum ChannelPosition {
@@ -506,6 +553,22 @@ namespace Gst {
 			WIDE_RIGHT,
 			SURROUND_LEFT,
 			SURROUND_RIGHT
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_CONVERTER_FLAG_", type_id = "gst_audio_converter_flags_get_type ()")]
+		[Flags]
+		[GIR (name = "AudioConverterFlags")]
+		public enum ConverterFlags {
+			NONE,
+			IN_WRITABLE,
+			VARIABLE_RATE
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_DITHER_", type_id = "gst_audio_dither_method_get_type ()")]
+		[GIR (name = "AudioDitherMethod")]
+		public enum DitherMethod {
+			NONE,
+			RPDF,
+			TPDF,
+			TPDF_HF
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_FLAG_", type_id = "gst_audio_flags_get_type ()")]
 		[Flags]
@@ -580,10 +643,28 @@ namespace Gst {
 			INTERLEAVED,
 			NON_INTERLEAVED
 		}
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_NOISE_SHAPING_", type_id = "gst_audio_noise_shaping_method_get_type ()")]
+		[GIR (name = "AudioNoiseShapingMethod")]
+		public enum NoiseShapingMethod {
+			NONE,
+			ERROR_FEEDBACK,
+			SIMPLE,
+			MEDIUM,
+			HIGH
+		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_PACK_FLAG_", type_id = "gst_audio_pack_flags_get_type ()")]
+		[Flags]
 		[GIR (name = "AudioPackFlags")]
 		public enum PackFlags {
-			NONE
+			NONE,
+			TRUNCATE_RANGE
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_QUANTIZE_FLAG_", type_id = "gst_audio_quantize_flags_get_type ()")]
+		[Flags]
+		[GIR (name = "AudioQuantizeFlags")]
+		public enum QuantizeFlags {
+			NONE,
+			NON_INTERLEAVED
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_RING_BUFFER_FORMAT_TYPE_", type_id = "gst_audio_ring_buffer_format_type_get_type ()")]
 		[GIR (name = "AudioRingBufferFormatType")]
@@ -629,6 +710,12 @@ namespace Gst {
 		public delegate void RingBufferCallback (Gst.Audio.RingBuffer rbuf, [CCode (array_length_cname = "len", array_length_pos = 2.1, array_length_type = "guint")] uint8[] data);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_CHANNELS_RANGE")]
 		public const string CHANNELS_RANGE;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_CONVERTER_OPT_DITHER_METHOD")]
+		public const string CONVERTER_OPT_DITHER_METHOD;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_CONVERTER_OPT_NOISE_SHAPING_METHOD")]
+		public const string CONVERTER_OPT_NOISE_SHAPING_METHOD;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_CONVERTER_OPT_QUANTIZATION")]
+		public const string CONVERTER_OPT_QUANTIZATION;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_DECODER_MAX_ERRORS")]
 		public const int DECODER_MAX_ERRORS;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_DECODER_SINK_NAME")]
@@ -650,6 +737,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_META_TAG_AUDIO_CHANNELS_STR")]
 		[Version (since = "1.2")]
 		public const string META_TAG_AUDIO_CHANNELS_STR;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_META_TAG_AUDIO_RATE_STR")]
+		[Version (since = "1.8")]
+		public const string META_TAG_AUDIO_RATE_STR;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_META_TAG_AUDIO_STR")]
 		[Version (since = "1.2")]
 		public const string META_TAG_AUDIO_STR;
@@ -659,6 +749,9 @@ namespace Gst {
 		public static Gst.Buffer audio_buffer_clip (owned Gst.Buffer buffer, Gst.Segment segment, int rate, int bpf);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_buffer_reorder_channels")]
 		public static bool audio_buffer_reorder_channels (Gst.Buffer buffer, Gst.Audio.Format format, int channels, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] from, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] to);
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_get_fallback_mask")]
+		[Version (since = "1.8")]
+		public static uint64 audio_channel_get_fallback_mask (int channels);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_from_mask")]
 		public static bool audio_channel_positions_from_mask (uint64 channel_mask, [CCode (array_length_cname = "channels", array_length_pos = 0.5)] Gst.Audio.ChannelPosition[] position);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_to_mask")]
@@ -667,6 +760,10 @@ namespace Gst {
 		public static bool audio_channel_positions_to_valid_order ([CCode (array_length_cname = "channels", array_length_pos = 1.1)] Gst.Audio.ChannelPosition[] position);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_check_valid_channel_positions")]
 		public static bool audio_check_valid_channel_positions ([CCode (array_length_cname = "channels", array_length_pos = 1.5)] Gst.Audio.ChannelPosition[] position, bool force_order);
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_clipping_meta_api_get_type")]
+		public static GLib.Type audio_clipping_meta_api_get_type ();
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_clipping_meta_get_info")]
+		public static unowned Gst.MetaInfo? audio_clipping_meta_get_info ();
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_downmix_meta_api_get_type")]
 		public static GLib.Type audio_downmix_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_downmix_meta_get_info")]
@@ -691,6 +788,9 @@ namespace Gst {
 		public static bool audio_iec61937_payload ([CCode (array_length_cname = "src_n", array_length_pos = 1.5, array_length_type = "guint")] uint8[] src, [CCode (array_length_cname = "dst_n", array_length_pos = 2.5, array_length_type = "guint")] uint8[] dst, Gst.Audio.RingBufferSpec spec, int endianness);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_reorder_channels")]
 		public static bool audio_reorder_channels ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] data, Gst.Audio.Format format, int channels, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] from, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] to);
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_buffer_add_audio_clipping_meta")]
+		[Version (since = "1.8")]
+		public static unowned Gst.Audio.ClippingMeta? buffer_add_audio_clipping_meta (Gst.Buffer buffer, Gst.Format format, uint64 start, uint64 end);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_buffer_add_audio_downmix_meta")]
 		public static unowned Gst.Audio.DownmixMeta? buffer_add_audio_downmix_meta (Gst.Buffer buffer, [CCode (array_length_cname = "from_channels", array_length_pos = 2.5)] Gst.Audio.ChannelPosition[] from_position, [CCode (array_length_cname = "to_channels", array_length_pos = 3.5)] Gst.Audio.ChannelPosition[] to_position, float matrix);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_buffer_get_audio_downmix_meta_for_channels")]

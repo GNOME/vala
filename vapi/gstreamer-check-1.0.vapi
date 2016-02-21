@@ -25,6 +25,8 @@ namespace Gst {
 			[CCode (has_construct_function = false, type = "GstClock*")]
 			public TestClock ();
 			public void advance_time (Gst.ClockTimeDiff delta);
+			[Version (since = "1.8")]
+			public bool crank ();
 			public Gst.ClockTime get_next_entry_time ();
 			public bool has_id (Gst.ClockID id);
 			[Version (since = "1.4")]
@@ -175,6 +177,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/check/check.h", cname = "GstHarnessPrepareBufferFunc", has_target = false)]
 		[Version (since = "1.6")]
 		public delegate Gst.Buffer HarnessPrepareBufferFunc (Gst.Check.Harness h, void* data);
+		[CCode (cheader_filename = "gst/check/check.h", cname = "GstHarnessPrepareEventFunc", has_target = false)]
+		[Version (since = "1.8")]
+		public delegate Gst.Event HarnessPrepareEventFunc (Gst.Check.Harness h, void* data);
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static void abi_list (Gst.Check.ABIStruct list, bool have_abi_sizes);
 		[CCode (cheader_filename = "gst/check/check.h")]

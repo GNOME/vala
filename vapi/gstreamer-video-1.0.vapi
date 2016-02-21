@@ -405,6 +405,15 @@ namespace Gst {
 			public bool try_set_render_rectangle (int x, int y, int width, int height);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
+		[GIR (name = "VideoAffineTransformationMeta")]
+		public struct AffineTransformationMeta {
+			public Gst.Meta meta;
+			[CCode (array_length = false, array_null_terminated = true)]
+			public weak float[] matrix;
+			[Version (since = "1.8")]
+			public void apply_matrix (float matrix);
+		}
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoAlignment")]
 		public struct Alignment {
 			public uint padding_top;
@@ -482,8 +491,6 @@ namespace Gst {
 			public Gst.Video.TileMode tile_mode;
 			public uint tile_ws;
 			public uint tile_hs;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak void*[] _gst_reserved;
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoFrame")]
@@ -668,7 +675,8 @@ namespace Gst {
 			SMPTE170M,
 			SMPTE240M,
 			FILM,
-			BT2020
+			BT2020,
+			ADOBERGB
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_COLOR_RANGE_", type_id = "gst_video_color_range_get_type ()")]
 		[GIR (name = "VideoColorRange")]
@@ -1013,8 +1021,11 @@ namespace Gst {
 			GAMMA28,
 			LOG100,
 			LOG316,
-			BT2020_12
+			BT2020_12,
+			ADOBERGB
 		}
+		[CCode (cheader_filename = "gst/video/video.h", has_target = false)]
+		public delegate bool AffineTransformationGetMatrix (Gst.Video.AffineTransformationMeta meta, float matrix);
 		[CCode (cheader_filename = "gst/video/video.h", instance_pos = 2.9)]
 		public delegate void ConvertSampleCallback (Gst.Sample sample, GLib.Error error);
 		[CCode (cheader_filename = "gst/video/video.h", has_target = false)]
@@ -1023,6 +1034,8 @@ namespace Gst {
 		public delegate void FormatUnpack (Gst.Video.FormatInfo info, Gst.Video.PackFlags flags, void* dest, void* data, int stride, int x, int y, int width);
 		[CCode (cheader_filename = "gst/video/video.h", has_target = false)]
 		public delegate bool GLTextureUpload (Gst.Video.GLTextureUploadMeta meta, uint texture_id);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_BUFFER_POOL_OPTION_VIDEO_AFFINE_TRANSFORMATION_META")]
+		public const string BUFFER_POOL_OPTION_VIDEO_AFFINE_TRANSFORMATION_META;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_BUFFER_POOL_OPTION_VIDEO_ALIGNMENT")]
 		public const string BUFFER_POOL_OPTION_VIDEO_ALIGNMENT;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_BUFFER_POOL_OPTION_VIDEO_GL_TEXTURE_UPLOAD_META")]
@@ -1030,6 +1043,8 @@ namespace Gst {
 		public const string BUFFER_POOL_OPTION_VIDEO_GL_TEXTURE_UPLOAD_META;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_BUFFER_POOL_OPTION_VIDEO_META")]
 		public const string BUFFER_POOL_OPTION_VIDEO_META;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_CAPS_FEATURE_META_GST_VIDEO_AFFINE_TRANSFORMATION_META")]
+		public const string CAPS_FEATURE_META_GST_VIDEO_AFFINE_TRANSFORMATION_META;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_CAPS_FEATURE_META_GST_VIDEO_GL_TEXTURE_UPLOAD_META")]
 		public const string CAPS_FEATURE_META_GST_VIDEO_GL_TEXTURE_UPLOAD_META;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_CAPS_FEATURE_META_GST_VIDEO_META")]
@@ -1164,9 +1179,16 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_TILE_Y_TILES_SHIFT")]
 		public const int TILE_Y_TILES_SHIFT;
 		[CCode (cheader_filename = "gst/video/video.h")]
+		public static GLib.Type affine_transformation_meta_api_get_type ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static unowned Gst.MetaInfo? affine_transformation_meta_get_info ();
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool blend (Gst.Video.Frame dest, Gst.Video.Frame src, int x, int y, float global_alpha);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static void blend_scale_linear_RGBA (Gst.Video.Info src, Gst.Buffer src_buffer, int dest_height, int dest_width, out unowned Gst.Video.Info dest, out Gst.Buffer dest_buffer);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_affine_transformation_meta")]
+		[Version (since = "1.8")]
+		public static unowned Gst.Video.AffineTransformationMeta? buffer_add_video_affine_transformation_meta (Gst.Buffer buffer);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_gl_texture_upload_meta")]
 		public static unowned Gst.Video.GLTextureUploadMeta? buffer_add_video_gl_texture_upload_meta (Gst.Buffer buffer, Gst.Video.GLTextureOrientation texture_orientation, uint n_textures, Gst.Video.GLTextureType texture_type, [CCode (delegate_target_pos = 5.5)] Gst.Video.GLTextureUpload upload, GLib.BoxedCopyFunc user_data_copy, GLib.BoxedFreeFunc user_data_free);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_meta")]

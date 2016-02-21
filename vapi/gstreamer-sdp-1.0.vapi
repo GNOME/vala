@@ -42,11 +42,16 @@ namespace Gst {
 			public bool add_t (Gst.SDP.MIKEYTSType type, [CCode (array_length = false)] uint8[] ts_value);
 			[Version (since = "1.4")]
 			public bool add_t_now_ntp_utc ();
+			[Version (since = "1.8")]
+			public string base64_encode ();
 			[Version (since = "1.4")]
 			public unowned Gst.SDP.MIKEYPayload find_payload (Gst.SDP.MIKEYPayloadType type, uint nth);
 			[CCode (has_construct_function = false)]
 			[Version (since = "1.4")]
 			public MIKEYMessage.from_bytes (GLib.Bytes bytes, Gst.SDP.MIKEYDecryptInfo info) throws GLib.Error;
+			[CCode (has_construct_function = false)]
+			[Version (since = "1.8")]
+			public MIKEYMessage.from_caps (Gst.Caps caps);
 			[CCode (has_construct_function = false)]
 			[Version (since = "1.4")]
 			public MIKEYMessage.from_data ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] data, Gst.SDP.MIKEYDecryptInfo info) throws GLib.Error;
@@ -199,6 +204,8 @@ namespace Gst {
 			public Gst.SDP.Result add_zone (string adj_time, string typed_time);
 			public string as_text ();
 			public uint attributes_len ();
+			[Version (since = "1.8")]
+			public Gst.SDP.Result attributes_to_caps (Gst.Caps caps);
 			public uint bandwidths_len ();
 			[Version (since = "1.2")]
 			public Gst.SDP.Result copy (out Gst.SDP.Message copy);
@@ -343,6 +350,8 @@ namespace Gst {
 			public Gst.SDP.Result add_format (string format);
 			public string as_text ();
 			public uint attributes_len ();
+			[Version (since = "1.8")]
+			public Gst.SDP.Result attributes_to_caps (Gst.Caps caps);
 			public uint bandwidths_len ();
 			public uint connections_len ();
 			[Version (since = "1.2")]
@@ -353,6 +362,8 @@ namespace Gst {
 			public unowned string get_attribute_val (string key);
 			public unowned string get_attribute_val_n (string key, uint nth);
 			public unowned Gst.SDP.Bandwidth? get_bandwidth (uint idx);
+			[Version (since = "1.8")]
+			public Gst.Caps get_caps_from_media (int pt);
 			public unowned Gst.SDP.Connection? get_connection (uint idx);
 			public unowned string get_format (uint idx);
 			public unowned string get_information ();
@@ -553,7 +564,13 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
 		public static bool address_is_multicast (string nettype, string addrtype, string addr);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
+		[Version (since = "1.8")]
+		public static string make_keymgmt (string uri, string base64);
+		[CCode (cheader_filename = "gst/sdp/sdp.h")]
 		public static Gst.SDP.Result media_new (out Gst.SDP.Media media);
+		[CCode (cheader_filename = "gst/sdp/sdp.h")]
+		[Version (since = "1.8")]
+		public static Gst.SDP.Result media_set_media_from_caps (Gst.Caps caps, Gst.SDP.Media media);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
 		public static string message_as_uri (string scheme, Gst.SDP.Message msg);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]

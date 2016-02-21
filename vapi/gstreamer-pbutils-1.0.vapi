@@ -35,6 +35,14 @@ namespace Gst {
 				public static unowned string get_profile (uint8 vis_obj_seq, uint len);
 			}
 		}
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", lower_case_cprefix = "gst_audio_visualizer_", lower_case_csuffix = "audio_visualizer", type_id = "gst_audio_visualizer_get_type ()")]
+		[GIR (name = "AudioVisualizer-BaseExtLibvisual")]
+		public abstract class AudioVisualizer-BaseExtLibvisual : Gst.Element {
+			[CCode (has_construct_function = false)]
+			protected AudioVisualizer-BaseExtLibvisual ();
+			[NoAccessorMethod]
+			public uint shade_amount { get; set; }
+		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscoverer", lower_case_cprefix = "gst_discoverer_", type_id = "gst_discoverer_get_type ()")]
 		[GIR (name = "Discoverer")]
 		public class Discoverer : GLib.Object {
@@ -227,6 +235,28 @@ namespace Gst {
 			public void set_startup_notification_id (string startup_id);
 			public void set_xid (uint xid);
 		}
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstAudioVisualizer", has_type_id = false)]
+		[GIR (name = "AudioVisualizer")]
+		public struct AudioVisualizer {
+			public weak Gst.Element parent;
+			public uint req_spf;
+			public weak Gst.Video.Info vinfo;
+			public weak Gst.Audio.Info ainfo;
+		}
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstAudioVisualizerShader", cprefix = "GST_AUDIO_VISUALIZER_SHADER_", type_id = "gst_audio_visualizer_shader_get_type ()")]
+		[GIR (name = "AudioVisualizerShader")]
+		public enum AudioVisualizerShader {
+			NONE,
+			FADE,
+			FADE_AND_MOVE_UP,
+			FADE_AND_MOVE_DOWN,
+			FADE_AND_MOVE_LEFT,
+			FADE_AND_MOVE_RIGHT,
+			FADE_AND_MOVE_HORIZ_OUT,
+			FADE_AND_MOVE_HORIZ_IN,
+			FADE_AND_MOVE_VERT_OUT,
+			FADE_AND_MOVE_VERT_IN
+		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererResult", cprefix = "GST_DISCOVERER_", type_id = "gst_discoverer_result_get_type ()")]
 		[GIR (name = "DiscovererResult")]
 		public enum DiscovererResult {
@@ -263,6 +293,8 @@ namespace Gst {
 			HELPER_MISSING,
 			INSTALL_IN_PROGRESS
 		}
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstAudioVisualizerShaderFunc", has_target = false)]
+		public delegate void AudioVisualizerShaderFunc (Gst.PbUtils.AudioVisualizer scope, Gst.Video.Frame s, Gst.Video.Frame d);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstInstallPluginsResultFunc", instance_pos = 1.9)]
 		public delegate void InstallPluginsResultFunc (Gst.PbUtils.InstallPluginsReturn result);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GST_ENCODING_CATEGORY_CAPTURE")]
@@ -293,6 +325,21 @@ namespace Gst {
 		public static unowned string codec_utils_h265_get_profile (uint8 profile_tier_level, uint len);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h265_get_tier")]
 		public static unowned string codec_utils_h265_get_tier (uint8 profile_tier_level, uint len);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_create_caps")]
+		[Version (since = "1.8")]
+		public static Gst.Caps codec_utils_opus_create_caps (uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, uint8? channel_mapping);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_create_caps_from_header")]
+		[Version (since = "1.8")]
+		public static Gst.Caps codec_utils_opus_create_caps_from_header (Gst.Buffer header, Gst.Buffer? comments);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_create_header")]
+		[Version (since = "1.8")]
+		public static Gst.Buffer codec_utils_opus_create_header (uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, uint8? channel_mapping, uint16 pre_skip, int16 output_gain);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_parse_caps")]
+		[Version (since = "1.8")]
+		public static bool codec_utils_opus_parse_caps (Gst.Caps caps, uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, uint8 channel_mapping);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_parse_header")]
+		[Version (since = "1.8")]
+		public static bool codec_utils_opus_parse_header (Gst.Buffer header, uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, uint8 channel_mapping, uint16 pre_skip, int16 output_gain);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_encoding_list_all_targets")]
 		public static GLib.List<Gst.PbUtils.EncodingTarget> encoding_list_all_targets (string? categoryname);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_encoding_list_available_categories")]

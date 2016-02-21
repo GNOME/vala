@@ -289,6 +289,9 @@ namespace Gst {
 		public const string PERFORMER;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_PREVIEW_IMAGE")]
 		public const string PREVIEW_IMAGE;
+		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_PRIVATE_DATA")]
+		[Version (since = "1.8")]
+		public const string PRIVATE_DATA;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_PUBLISHER")]
 		[Version (since = "1.2")]
 		public const string PUBLISHER;
@@ -921,6 +924,8 @@ namespace Gst {
 		public void set_timeout (Gst.ClockTime timeout);
 		public bool single_shot_id_reinit (Gst.ClockID id, Gst.ClockTime time);
 		public Gst.ClockTime unadjust_unlocked (Gst.ClockTime external);
+		[Version (since = "1.8")]
+		public Gst.ClockTime unadjust_with_calibration (Gst.ClockTime external_target, Gst.ClockTime cinternal, Gst.ClockTime cexternal, Gst.ClockTime cnum, Gst.ClockTime cdenom);
 		[NoWrapper]
 		public virtual void unschedule (Gst.ClockEntry entry);
 		[NoWrapper]
@@ -972,9 +977,13 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_control_source_get_type ()")]
 	public abstract class ControlSource : Gst.Object {
+		[CCode (cname = "get_value_array")]
+		public weak Gst.ControlSourceGetValueArray get_value_array_func;
+		[CCode (cname = "get_value")]
+		public weak Gst.ControlSourceGetValue get_value_func;
 		[CCode (has_construct_function = false)]
 		protected ControlSource ();
-		public bool get_value (Gst.ClockTime timestamp, double value);
+		public bool get_value (Gst.ClockTime timestamp, out double value);
 		public bool get_value_array (Gst.ClockTime timestamp, Gst.ClockTime interval, [CCode (array_length_cname = "n_values", array_length_pos = 2.5, array_length_type = "guint")] double[] values);
 	}
 	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_date_time_ref", type_id = "gst_date_time_get_type ()", unref_function = "gst_date_time_unref")]
@@ -1127,6 +1136,7 @@ namespace Gst {
 		public Gst.ClockTimeDiff base_time;
 		public Gst.Bus bus;
 		public Gst.Clock clock;
+		public weak GLib.List<void*> contexts;
 		public Gst.State current_state;
 		public Gst.StateChangeReturn last_return;
 		public Gst.State next_state;
@@ -1161,6 +1171,12 @@ namespace Gst {
 		public Gst.Clock get_clock ();
 		public Gst.Pad? get_compatible_pad (Gst.Pad pad, Gst.Caps? caps);
 		public unowned Gst.PadTemplate? get_compatible_pad_template (Gst.PadTemplate compattempl);
+		[Version (since = "1.8")]
+		public Gst.Context get_context (string context_type);
+		[Version (since = "1.8")]
+		public Gst.Context get_context_unlocked (string context_type);
+		[Version (since = "1.8")]
+		public GLib.List<Gst.Context> get_contexts ();
 		public unowned Gst.ElementFactory get_factory ();
 		[CCode (cname = "gst_element_class_get_metadata")]
 		public class unowned string get_metadata (string key);
@@ -1700,6 +1716,8 @@ namespace Gst {
 		[CCode (cname = "gst_pad_set_chain_list_function_full")]
 		public void set_chain_list_function (owned Gst.PadChainListFunction chainlist);
 		public void set_element_private (void* priv);
+		[Version (since = "1.8")]
+		public void set_event_full_function_full (owned Gst.PadEventFullFunction event);
 		[CCode (cname = "gst_pad_set_event_function_full")]
 		public void set_event_function (owned Gst.PadEventFunction event);
 		[CCode (cname = "gst_pad_set_getrange_function_full")]
@@ -2040,12 +2058,23 @@ namespace Gst {
 		public bool is_equal (Gst.Segment s1);
 		[Version (since = "1.2.3")]
 		public bool offset_running_time (Gst.Format format, int64 offset);
+		[Version (since = "1.8")]
+		public uint64 position_from_running_time (Gst.Format format, uint64 running_time);
+		[Version (since = "1.8")]
+		public int position_from_running_time_full (Gst.Format format, uint64 running_time, uint64 position);
+		[Version (since = "1.8")]
+		public uint64 position_from_stream_time (Gst.Format format, uint64 stream_time);
+		[Version (since = "1.8")]
+		public int position_from_stream_time_full (Gst.Format format, uint64 stream_time, uint64 position);
 		public bool set_running_time (Gst.Format format, uint64 running_time);
 		public uint64 to_position (Gst.Format format, uint64 running_time);
 		public uint64 to_running_time (Gst.Format format, uint64 position);
 		[Version (since = "1.6")]
 		public int to_running_time_full (Gst.Format format, uint64 position, uint64 running_time);
+		[Version (since = "1.8")]
 		public uint64 to_stream_time (Gst.Format format, uint64 position);
+		[Version (since = "1.8")]
+		public int to_stream_time_full (Gst.Format format, uint64 position, uint64 stream_time);
 	}
 	[CCode (cheader_filename = "gst/gst.h", copy_function = "gst_structure_copy", free_function = "gst_structure_free", type_id = "gst_structure_get_type ()")]
 	[Compact]
@@ -2257,6 +2286,25 @@ namespace Gst {
 		public void set_loop (Gst.TocLoopType loop_type, int repeat_count);
 		public void set_start_stop_times (int64 start, int64 stop);
 		public void set_tags (owned Gst.TagList? tags);
+	}
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_tracer_get_type ()")]
+	public abstract class Tracer : Gst.Object {
+		[CCode (has_construct_function = false)]
+		protected Tracer ();
+		[NoAccessorMethod]
+		public string @params { owned get; set construct; }
+	}
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_tracer_factory_get_type ()")]
+	[Version (since = "1.8")]
+	public class TracerFactory : Gst.PluginFeature {
+		[CCode (has_construct_function = false)]
+		protected TracerFactory ();
+		public static GLib.List<Gst.TracerFactory> get_list ();
+	}
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_tracer_record_get_type ()")]
+	public class TracerRecord : Gst.Object {
+		[CCode (has_construct_function = false)]
+		protected TracerRecord ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_type_find_factory_get_type ()")]
 	public class TypeFindFactory : Gst.PluginFeature {
@@ -3093,7 +3141,8 @@ namespace Gst {
 		NONE,
 		RECURSE,
 		PATHS_ARE_DEFAULT_ONLY,
-		FILE_NAME_IS_SUFFIX
+		FILE_NAME_IS_SUFFIX,
+		FILE_NAME_IS_PREFIX
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PLUGIN_FLAG_", type_id = "gst_plugin_flags_get_type ()")]
 	[Flags]
@@ -3302,6 +3351,21 @@ namespace Gst {
 		GLOBAL,
 		CURRENT
 	}
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_TRACER_VALUE_FLAGS_", type_id = "gst_tracer_value_flags_get_type ()")]
+	[Flags]
+	public enum TracerValueFlags {
+		NONE,
+		OPTIONAL,
+		AGGREGATED
+	}
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_TRACER_VALUE_SCOPE_", type_id = "gst_tracer_value_scope_get_type ()")]
+	[Version (since = "1.8")]
+	public enum TracerValueScope {
+		PROCESS,
+		THREAD,
+		ELEMENT,
+		PAD
+	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_TYPE_FIND_", type_id = "gst_type_find_probability_get_type ()")]
 	public enum TypeFindProbability {
 		NONE,
@@ -3355,7 +3419,8 @@ namespace Gst {
 		LINK,
 		COULD_NOT_SET_PROPERTY,
 		EMPTY_BIN,
-		EMPTY;
+		EMPTY,
+		DELAYED_LINK;
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PLUGIN_ERROR_")]
@@ -3485,6 +3550,9 @@ namespace Gst {
 	public delegate Gst.FlowReturn PadChainFunction (Gst.Pad pad, Gst.Object? parent, owned Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate Gst.FlowReturn PadChainListFunction (Gst.Pad pad, Gst.Object? parent, owned Gst.BufferList list);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	[Version (since = "1.8")]
+	public delegate Gst.FlowReturn PadEventFullFunction (Gst.Pad pad, Gst.Object? parent, owned Gst.Event event);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool PadEventFunction (Gst.Pad pad, Gst.Object? parent, owned Gst.Event event);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 1.9)]

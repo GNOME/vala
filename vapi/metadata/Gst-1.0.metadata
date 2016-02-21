@@ -217,6 +217,11 @@ ElementFactory.get_static_pad_templates type="GLib.List<weak Gst.StaticPadTempla
 // Custom
 Buffer
   .copy_into skip
+ControlSource
+  .get_value#field name="get_value_func"
+  .get_value_array#field name="get_value_array_func"
+  .control_source_get_value name="get_value"
+  .control_source_get_value_array name="get_value_array"
 
 // Backwards compatibility
 Structure.new_from_string skip

@@ -23,6 +23,12 @@ namespace Gst {
 		public class ControlPoint {
 			[CCode (cname = "cache.cubic.h")]
 			public double cache_cubic_h;
+			[CCode (cname = "cache.cubic_monotonic.c1s")]
+			public double cache_cubic_monotonic_c1s;
+			[CCode (cname = "cache.cubic_monotonic.c2s")]
+			public double cache_cubic_monotonic_c2s;
+			[CCode (cname = "cache.cubic_monotonic.c3s")]
+			public double cache_cubic_monotonic_c3s;
 			[CCode (cname = "cache.cubic.z")]
 			public double cache_cubic_z;
 			public Gst.ClockTime timestamp;
@@ -105,7 +111,8 @@ namespace Gst {
 		public enum InterpolationMode {
 			NONE,
 			LINEAR,
-			CUBIC
+			CUBIC,
+			CUBIC_MONOTONIC
 		}
 		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstLFOWaveform", cprefix = "GST_LFO_WAVEFORM_", type_id = "gst_lfo_waveform_get_type ()")]
 		[GIR (name = "LFOWaveform")]

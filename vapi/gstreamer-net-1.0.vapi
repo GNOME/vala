@@ -39,7 +39,11 @@ namespace Gst {
 			[NoAccessorMethod]
 			public uint domain { get; construct; }
 			[NoAccessorMethod]
+			public uint64 grandmaster_clock_id { get; }
+			[NoAccessorMethod]
 			public Gst.Clock internal_clock { owned get; }
+			[NoAccessorMethod]
+			public uint64 master_clock_id { get; }
 		}
 		[CCode (cheader_filename = "gst/net/net.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_net_time_packet_get_type ()")]
 		[Compact]
@@ -59,17 +63,17 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/net/net.h", type_id = "gst_net_time_provider_get_type ()")]
 		[GIR (name = "NetTimeProvider")]
-		public class TimeProvider : Gst.Object {
+		public class TimeProvider : Gst.Object, GLib.Initable {
 			[CCode (has_construct_function = false)]
 			public TimeProvider (Gst.Clock clock, string? address, int port);
 			[NoAccessorMethod]
 			public bool active { get; set; }
 			[NoAccessorMethod]
-			public string address { owned get; set; }
+			public string address { owned get; construct; }
 			[NoAccessorMethod]
-			public Gst.Clock clock { owned get; set; }
+			public Gst.Clock clock { owned get; construct; }
 			[NoAccessorMethod]
-			public int port { get; set; }
+			public int port { get; construct; }
 		}
 		[CCode (cheader_filename = "gst/net/net.h", has_type_id = false)]
 		[GIR (name = "NetAddressMeta")]
@@ -103,6 +107,8 @@ namespace Gst {
 		public static unowned Gst.Net.AddressMeta? buffer_add_net_address_meta (Gst.Buffer buffer, GLib.SocketAddress addr);
 		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_buffer_add_net_control_message_meta")]
 		public static unowned Gst.Net.ControlMessageMeta? buffer_add_net_control_message_meta (Gst.Buffer buffer, GLib.SocketControlMessage message);
+		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_buffer_get_net_address_meta")]
+		public static unowned Gst.Net.AddressMeta? buffer_get_net_address_meta (Gst.Buffer buffer);
 		[CCode (cheader_filename = "gst/net/net.h")]
 		public static GLib.Type control_message_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/net/net.h")]
