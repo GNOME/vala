@@ -5495,9 +5495,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var delegate_type = (DelegateType) lambda.target_type;
 		var d = delegate_type.delegate_symbol;
 
-		lambda.method.set_attribute_bool ("CCode", "array_length", d.get_attribute_bool ("CCode", "array_length"));
-		lambda.method.set_attribute_bool ("CCode", "array_null_terminated", d.get_attribute_bool ("CCode", "array_null_terminated"));
-		lambda.method.set_attribute_string ("CCode", "array_length_type", d.get_attribute_string ("CCode", "array_length_type"));
+		lambda.method.set_attribute_bool ("CCode", "array_length", get_ccode_array_length (d));
+		lambda.method.set_attribute_bool ("CCode", "array_null_terminated", get_ccode_array_null_terminated (d));
+		lambda.method.set_attribute_string ("CCode", "array_length_type", get_ccode_array_length_type (d));
 
 		lambda.accept_children (this);
 
