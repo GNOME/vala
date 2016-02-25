@@ -195,6 +195,9 @@ namespace Gst {
 		public const string COMPOSER;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_COMPOSER_SORTNAME")]
 		public const string COMPOSER_SORTNAME;
+		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_CONDUCTOR")]
+		[Version (since = "1.8")]
+		public const string CONDUCTOR;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_CONTACT")]
 		public const string CONTACT;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_CONTAINER_FORMAT")]

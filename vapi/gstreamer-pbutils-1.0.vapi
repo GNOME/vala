@@ -35,11 +35,20 @@ namespace Gst {
 				public static unowned string get_profile (uint8 vis_obj_seq, uint len);
 			}
 		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", lower_case_cprefix = "gst_audio_visualizer_", lower_case_csuffix = "audio_visualizer", type_id = "gst_audio_visualizer_get_type ()")]
-		[GIR (name = "AudioVisualizer-BaseExtLibvisual")]
-		public abstract class AudioVisualizer-BaseExtLibvisual : Gst.Element {
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstAudioVisualizer", lower_case_cprefix = "gst_audio_visualizer_", type_id = "gst_audio_visualizer_get_type ()")]
+		[GIR (name = "AudioVisualizer")]
+		public abstract class AudioVisualizer : Gst.Element {
+			public weak Gst.Audio.Info ainfo;
+			public uint req_spf;
+			public weak Gst.Video.Info vinfo;
 			[CCode (has_construct_function = false)]
-			protected AudioVisualizer-BaseExtLibvisual ();
+			protected AudioVisualizer ();
+			[NoWrapper]
+			public virtual bool decide_allocation (Gst.Query query);
+			[NoWrapper]
+			public virtual bool render (Gst.Buffer audio, Gst.Video.Frame video);
+			[NoWrapper]
+			public virtual bool setup ();
 			[NoAccessorMethod]
 			public uint shade_amount { get; set; }
 		}
@@ -234,14 +243,6 @@ namespace Gst {
 			[Version (since = "1.6")]
 			public void set_startup_notification_id (string startup_id);
 			public void set_xid (uint xid);
-		}
-		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstAudioVisualizer", has_type_id = false)]
-		[GIR (name = "AudioVisualizer")]
-		public struct AudioVisualizer {
-			public weak Gst.Element parent;
-			public uint req_spf;
-			public weak Gst.Video.Info vinfo;
-			public weak Gst.Audio.Info ainfo;
 		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstAudioVisualizerShader", cprefix = "GST_AUDIO_VISUALIZER_SHADER_", type_id = "gst_audio_visualizer_shader_get_type ()")]
 		[GIR (name = "AudioVisualizerShader")]
