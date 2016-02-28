@@ -123,9 +123,15 @@ public class Vala.GAsyncModule : GtkModule {
 		}
 
 		if (requires_destroy (m.return_type)) {
-			/* this is very evil. */
-			var v = new LocalVariable (m.return_type, ".result");
-			ccode.add_expression (destroy_local (v));
+			if (get_ccode_array_length (m) || !(m.return_type is ArrayType)) {
+				/* this is very evil. */
+				var v = new LocalVariable (m.return_type, ".result");
+				ccode.add_expression (destroy_local (v));
+			} else {
+				var v = new GLibValue (m.return_type, new CCodeIdentifier ("_data_->result"), true);
+				v.array_null_terminated = get_ccode_array_null_terminated (m);
+				ccode.add_expression (destroy_value (v));
+			}
 		}
 
 		if (m.binding == MemberBinding.INSTANCE) {
