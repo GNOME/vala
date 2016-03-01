@@ -1166,6 +1166,9 @@ namespace Gst {
 		public class void add_pad_template (owned Gst.PadTemplate templ);
 		[CCode (cname = "gst_element_class_add_static_metadata")]
 		public class void add_static_metadata (string key, string value);
+		[CCode (cname = "gst_element_class_add_static_pad_template")]
+		[Version (since = "1.8")]
+		public class void add_static_pad_template (Gst.StaticPadTemplate static_templ);
 		public virtual Gst.StateChangeReturn change_state (Gst.StateChange transition);
 		public Gst.StateChangeReturn continue_state (Gst.StateChangeReturn ret);
 		public void create_all_pads ();

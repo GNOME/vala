@@ -4695,6 +4695,9 @@ namespace Gdk {
 		public uint n_axes { get; }
 		[Version (since = "3.0")]
 		public string? name { get; construct; }
+		[NoAccessorMethod]
+		[Version (since = "3.20")]
+		public uint num_touches { get; construct; }
 		[Version (since = "3.16")]
 		public string product_id { get; construct; }
 		[NoAccessorMethod]

@@ -51,6 +51,8 @@ namespace Gst {
 			public virtual bool setup ();
 			[NoAccessorMethod]
 			public uint shade_amount { get; set; }
+			[NoAccessorMethod]
+			public Gst.PbUtils.AudioVisualizerShader shader { get; set; }
 		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscoverer", lower_case_cprefix = "gst_discoverer_", type_id = "gst_discoverer_get_type ()")]
 		[GIR (name = "Discoverer")]

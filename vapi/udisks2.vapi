@@ -535,6 +535,12 @@ namespace UDisks {
 		[NoAccessorMethod]
 		public abstract bool pm_supported { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "2.1.7")]
+		public abstract bool read_lookahead_enabled { get; set; }
+		[NoAccessorMethod]
+		[Version (since = "2.1.7")]
+		public abstract bool read_lookahead_supported { get; set; }
+		[NoAccessorMethod]
 		public abstract int security_enhanced_erase_unit_minutes { get; set; }
 		[NoAccessorMethod]
 		public abstract int security_erase_unit_minutes { get; set; }
