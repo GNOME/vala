@@ -515,7 +515,8 @@ namespace Gst {
 		[GIR (name = "AudioChannelMixerFlags")]
 		public enum ChannelMixerFlags {
 			NONE,
-			NON_INTERLEAVED,
+			NON_INTERLEAVED_IN,
+			NON_INTERLEAVED_OUT,
 			UNPOSITIONED_IN,
 			UNPOSITIONED_OUT
 		}
