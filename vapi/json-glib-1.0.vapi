@@ -24,6 +24,8 @@ namespace Json {
 		public void add_string_element (string value);
 		[Version (since = "0.6")]
 		public Json.Node dup_element (uint index_);
+		[Version (since = "1.2")]
+		public bool equal (Json.Array b);
 		[Version (since = "0.8")]
 		public void foreach_element (Json.ArrayForeach func);
 		[Version (since = "0.8")]
@@ -43,8 +45,14 @@ namespace Json {
 		public unowned Json.Object get_object_element (uint index_);
 		[Version (since = "0.8")]
 		public unowned string get_string_element (uint index_);
+		[Version (since = "1.2")]
+		public uint hash ();
+		[Version (since = "1.2")]
+		public bool is_immutable ();
 		public unowned Json.Array @ref ();
 		public void remove_element (uint index_);
+		[Version (since = "1.2")]
+		public void seal ();
 		[CCode (cname = "json_array_sized_new", has_construct_function = false)]
 		public Array.sized (uint n_elements);
 		public void unref ();
@@ -65,8 +73,14 @@ namespace Json {
 		public unowned Json.Builder end_array ();
 		public unowned Json.Builder end_object ();
 		public Json.Node? get_root ();
+		[CCode (cname = "json_builder_new_immutable", has_construct_function = false)]
+		[Version (since = "1.2")]
+		public Builder.immutable_new ();
 		public void reset ();
 		public unowned Json.Builder set_member_name (string member_name);
+		[NoAccessorMethod]
+		[Version (since = "1.2")]
+		public bool immutable { get; construct; }
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", type_id = "json_generator_get_type ()")]
 	public class Generator : GLib.Object {
@@ -98,7 +112,7 @@ namespace Json {
 		[Version (since = "0.4")]
 		public Json.Node root { get; set; }
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "json_node_get_type ()")]
+	[CCode (cheader_filename = "json-glib/json-glib.h", ref_function = "json_node_ref", type_id = "json_node_get_type ()", unref_function = "json_node_unref")]
 	[Compact]
 	public class Node {
 		[CCode (has_construct_function = false)]
@@ -110,6 +124,8 @@ namespace Json {
 		public Json.Array dup_array ();
 		public Json.Object dup_object ();
 		public string dup_string ();
+		[Version (since = "1.2")]
+		public bool equal (Json.Node b);
 		public void free ();
 		public unowned Json.Array get_array ();
 		public bool get_boolean ();
@@ -123,6 +139,8 @@ namespace Json {
 		public GLib.Value get_value ();
 		[Version (since = "0.4")]
 		public GLib.Type get_value_type ();
+		[Version (since = "1.2")]
+		public uint hash ();
 		[Version (since = "0.16")]
 		public unowned Json.Node init (Json.NodeType type);
 		[Version (since = "0.16")]
@@ -139,8 +157,14 @@ namespace Json {
 		public unowned Json.Node init_object (Json.Object? object);
 		[Version (since = "0.16")]
 		public unowned Json.Node init_string (string? value);
+		[Version (since = "1.2")]
+		public bool is_immutable ();
 		[Version (since = "0.8")]
 		public bool is_null ();
+		[Version (since = "1.2")]
+		public Json.Node @ref ();
+		[Version (since = "1.2")]
+		public void seal ();
 		public void set_array (Json.Array array);
 		public void set_boolean (bool value);
 		public void set_double (double value);
@@ -153,6 +177,8 @@ namespace Json {
 		public void take_array (owned Json.Array array);
 		public void take_object (owned Json.Object object);
 		public unowned string type_name ();
+		[Version (since = "1.2")]
+		public void unref ();
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", ref_function = "json_object_ref", type_id = "json_object_get_type ()", unref_function = "json_object_unref")]
 	[Compact]
@@ -163,6 +189,8 @@ namespace Json {
 		public void add_member (string member_name, owned Json.Node node);
 		[Version (since = "0.6")]
 		public Json.Node dup_member (string member_name);
+		[Version (since = "1.2")]
+		public bool equal (Json.Object b);
 		[Version (since = "0.8")]
 		public void foreach_member (Json.ObjectForeach func);
 		[Version (since = "0.8")]
@@ -184,8 +212,14 @@ namespace Json {
 		public unowned string get_string_member (string member_name);
 		public GLib.List<weak Json.Node> get_values ();
 		public bool has_member (string member_name);
+		[Version (since = "1.2")]
+		public uint hash ();
+		[Version (since = "1.2")]
+		public bool is_immutable ();
 		public unowned Json.Object @ref ();
 		public void remove_member (string member_name);
+		[Version (since = "1.2")]
+		public void seal ();
 		[Version (since = "0.8")]
 		public void set_array_member (string member_name, owned Json.Array value);
 		[Version (since = "0.8")]
@@ -213,12 +247,18 @@ namespace Json {
 		public unowned Json.Node? get_root ();
 		[Version (since = "0.4")]
 		public bool has_assignment (out unowned string variable_name);
+		[CCode (cname = "json_parser_new_immutable", has_construct_function = false)]
+		[Version (since = "1.2")]
+		public Parser.immutable_new ();
 		public bool load_from_data (string data, ssize_t length = -1) throws GLib.Error;
 		public bool load_from_file (string filename) throws GLib.Error;
 		[Version (since = "0.12")]
 		public bool load_from_stream (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "0.12")]
 		public async bool load_from_stream_async (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[NoAccessorMethod]
+		[Version (since = "1.2")]
+		public bool immutable { get; construct; }
 		public virtual signal void array_element (Json.Array array, int index_);
 		public virtual signal void array_end (Json.Array array);
 		public virtual signal void array_start ();
@@ -287,6 +327,7 @@ namespace Json {
 		public abstract void set_property (GLib.ParamSpec pspec, GLib.Value value);
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", has_type_id = false)]
+	[Version (since = "1.2")]
 	public struct ObjectIter {
 		public void init (Json.Object object);
 		public bool next (out unowned string member_name, out unowned Json.Node member_node);
@@ -401,6 +442,15 @@ namespace Json {
 	[CCode (cheader_filename = "json-glib/json-glib.h,json-glib/json-gobject.h")]
 	[Version (deprecated = true, deprecated_since = "0.10", replacement = "Json.gobject_to_data")]
 	public static string serialize_gobject (GLib.Object gobject, out size_t length);
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	[Version (since = "1.2")]
+	public static int string_compare (string a, string b);
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	[Version (since = "1.2")]
+	public static bool string_equal (string a, string b);
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	[Version (since = "1.2")]
+	public static uint string_hash (string key);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	[Version (since = "1.2")]
 	public static string to_string (Json.Node node, bool pretty);

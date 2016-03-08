@@ -4,6 +4,10 @@ Parser.load_from_data.length default=-1
 gobject_from_data.length default=-1
 Array.sized_new name="sized"
 *.get_root nullable
+Builder
+	.new_immutable name="immutable_new"
+Parser
+	.new_immutable name="immutable_new"
 
 // Forward Upstream
 Json cheader_filename="json-glib/json-glib.h"
