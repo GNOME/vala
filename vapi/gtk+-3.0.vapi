@@ -3816,6 +3816,7 @@ namespace Gtk {
 		[CCode (cname = "show_other_locations")]
 		[Version (experimental = true)]
 		public virtual signal void show_other_locations_requested ();
+		public virtual signal void show_other_locations_with_flags (Gtk.PlacesOpenFlags p0);
 		public virtual signal void unmount (GLib.MountOperation p0);
 	}
 	[CCode (cheader_filename = "gtk/gtkx.h", type_id = "gtk_plug_get_type ()")]
@@ -4653,6 +4654,8 @@ namespace Gtk {
 		public string gtk_key_theme_name { owned get; set; }
 		[NoAccessorMethod]
 		public bool gtk_keynav_cursor_only { get; set; }
+		[NoAccessorMethod]
+		public bool gtk_keynav_use_caret { get; set; }
 		[NoAccessorMethod]
 		public bool gtk_keynav_wrap_around { get; set; }
 		[NoAccessorMethod]
