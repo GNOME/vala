@@ -153,6 +153,34 @@ namespace Netlink {
         public void  mngt_unprovide();
     }
 
+    [CCode (cname = "int", cprefix = "NL_ACT_", has_type_id = false, cheader_filename = "netlink/cache.h")]
+    public enum CacheAction {
+        NEW,
+        DEL,
+        GET,
+        SET,
+        CHANGE,
+    }
+
+    [CCode (cname = "change_func_t", cheader_filename = "netlink/cache.h", instance_pos = -1)]
+    public delegate void ChangeCallbackFunc (Cache cache, Object obj, CacheAction act);
+
+    [Compact]
+    [CCode (cprefix = "nl_cache_mngr_", cname = "struct nl_cache_mngr", free_function = "nl_cache_mngr_free", cheader_filename = "netlink/cache.h")]
+    public class CacheManager {
+        public static int alloc (Socket? sk, int protocol, int flags, out CacheManager c);
+
+        public int add_cache(Cache cache, ChangeCallbackFunc cb);
+        public int add(string name, ChangeCallbackFunc cb, out unowned Cache cache);
+
+        public int get_fd();
+        public int poll(int timeout);
+
+        public int data_ready();
+        public void info(DumpParams params);
+    }
+
+
     [Compact]
     [CCode (cprefix = "nl_cb_", cname = "struct nl_cb", free_function = "", cheader_filename = "netlink/netlink.h")]
     public class Callback {
@@ -201,6 +229,10 @@ namespace Netlink {
         public int name2i (string name);
         [CCode (cname = "rtnl_link_i2name")]
         public unowned string i2name( int idx, char[] buffer );
+        [CCode (cname = "rtnl_link_get")]
+        public CachedLink? get(int idx);
+        [CCode (cname = "rtnl_link_get_by_name")]
+        public CachedLink? get_by_name(string idx);
     }
 
     [Compact]
@@ -358,6 +390,13 @@ namespace Netlink {
         public uint get_weight();
         public unowned string? get_qdisc();
     }
+
+    [Compact]
+    [CCode (cprefix = "rtnl_link_", cname = "struct rtnl_link", free_function = "rtnl_link_put", cheader_filename = "netlink/route/link.h")]
+    public class CachedLink : Link
+    {
+    }
+
 
     [Compact]
     [CCode (cprefix = "rtnl_route_", cname = "struct rtnl_route", cheader_filename = "netlink/route/route.h")]
