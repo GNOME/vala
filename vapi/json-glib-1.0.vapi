@@ -112,7 +112,7 @@ namespace Json {
 		[Version (since = "0.4")]
 		public Json.Node root { get; set; }
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h", ref_function = "json_node_ref", type_id = "json_node_get_type ()", unref_function = "json_node_unref")]
+	[CCode (cheader_filename = "json-glib/json-glib.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "json_node_get_type ()")]
 	[Compact]
 	public class Node {
 		[CCode (has_construct_function = false)]
@@ -162,8 +162,6 @@ namespace Json {
 		[Version (since = "0.8")]
 		public bool is_null ();
 		[Version (since = "1.2")]
-		public Json.Node @ref ();
-		[Version (since = "1.2")]
 		public void seal ();
 		public void set_array (Json.Array array);
 		public void set_boolean (bool value);
@@ -177,8 +175,6 @@ namespace Json {
 		public void take_array (owned Json.Array array);
 		public void take_object (owned Json.Object object);
 		public unowned string type_name ();
-		[Version (since = "1.2")]
-		public void unref ();
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", ref_function = "json_object_ref", type_id = "json_object_get_type ()", unref_function = "json_object_unref")]
 	[Compact]

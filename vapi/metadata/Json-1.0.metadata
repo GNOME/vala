@@ -8,6 +8,9 @@ Builder
 	.new_immutable name="immutable_new"
 Parser
 	.new_immutable name="immutable_new"
+Node
+	.ref skip
+	.unref skip
 
 // Forward Upstream
 Json cheader_filename="json-glib/json-glib.h"
