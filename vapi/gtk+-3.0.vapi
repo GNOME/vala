@@ -7996,7 +7996,8 @@ namespace Gtk {
 		INTERACTIVE,
 		TOUCHSCREEN,
 		ACTIONS,
-		RESIZE
+		RESIZE,
+		LAYOUT
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DELETE_")]
 	public enum DeleteType {
