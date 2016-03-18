@@ -150,6 +150,8 @@ namespace Soup {
 		[CCode (has_construct_function = false)]
 		public Auth (GLib.Type type, Soup.Message msg, string auth_header);
 		public virtual void authenticate (string username, string password);
+		[Version (since = "2.54")]
+		public virtual bool can_authenticate ();
 		public virtual string get_authorization (Soup.Message msg);
 		public unowned string get_host ();
 		public string get_info ();
@@ -244,6 +246,13 @@ namespace Soup {
 	public class AuthNTLM : Soup.Auth {
 		[CCode (has_construct_function = false)]
 		protected AuthNTLM ();
+	}
+	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_auth_negotiate_get_type ()")]
+	public class AuthNegotiate : Soup.Auth {
+		[CCode (has_construct_function = false)]
+		protected AuthNegotiate ();
+		[Version (since = "2.54")]
+		public static bool supported ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "soup_buffer_get_type ()")]
 	[Compact]
