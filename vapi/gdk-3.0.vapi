@@ -4861,6 +4861,7 @@ namespace Gdk {
 		public Gdk.DragAction get_suggested_action ();
 		[Version (since = "2.22")]
 		public unowned GLib.List<Gdk.Atom> list_targets ();
+		[Version (since = "3.20")]
 		public bool manage_dnd (Gdk.Window ipc_window, Gdk.DragAction actions);
 		public void set_device (Gdk.Device device);
 		[Version (since = "3.20")]

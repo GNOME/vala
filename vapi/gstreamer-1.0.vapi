@@ -1211,7 +1211,7 @@ namespace Gst {
 		public virtual bool post_message (owned Gst.Message message);
 		public virtual Gst.Clock? provide_clock ();
 		public virtual bool query (Gst.Query query);
-		public bool query_convert (ref Gst.Format src_format, int64 src_val, Gst.Format dest_format, out int64 dest_val);
+		public bool query_convert (Gst.Format src_format, int64 src_val, Gst.Format dest_format, out int64 dest_val);
 		public bool query_duration (Gst.Format format, out int64 duration);
 		public bool query_position (Gst.Format format, out int64 cur);
 		public static bool register (Gst.Plugin? plugin, string name, uint rank, GLib.Type type);
@@ -1663,7 +1663,7 @@ namespace Gst {
 		[CCode (has_construct_function = false, returns_floating_reference = true)]
 		public Pad.from_template (Gst.PadTemplate templ, string? name);
 		public Gst.Caps? get_allowed_caps ();
-		public Gst.Caps get_current_caps ();
+		public Gst.Caps? get_current_caps ();
 		public Gst.PadDirection get_direction ();
 		public void* get_element_private ();
 		[Version (since = "1.4")]
