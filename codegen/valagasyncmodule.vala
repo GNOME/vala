@@ -30,7 +30,12 @@ public class Vala.GAsyncModule : GtkModule {
 		data.add_field ("int", "_state_");
 		data.add_field ("GObject*", "_source_object_");
 		data.add_field ("GAsyncResult*", "_res_");
-		data.add_field ("GSimpleAsyncResult*", "_async_result");
+
+		if (context.require_glib_version (2, 36)) {
+			data.add_field ("GTask*", "_async_result");
+		} else {
+			data.add_field ("GSimpleAsyncResult*", "_async_result");
+		}
 
 		if (m is CreationMethod) {
 			data.add_field ("GType", "object_type");
@@ -207,7 +212,13 @@ public class Vala.GAsyncModule : GtkModule {
 		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("_data_"));
 		ccode.add_assignment (data_var, dataalloc);
 
-		var create_result = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
+		CCodeFunctionCall? create_result = null;
+
+		if (context.require_glib_version (2, 36)) {
+			create_result = new CCodeFunctionCall (new CCodeIdentifier ("g_task_new"));
+		} else {
+			create_result = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
+		}
 
 		var t = m.parent_symbol as TypeSymbol;
 		if (!(m is CreationMethod) && m.binding == MemberBinding.INSTANCE &&
@@ -220,17 +231,44 @@ public class Vala.GAsyncModule : GtkModule {
 			create_result.add_argument (new CCodeConstant ("NULL"));
 		}
 
+		if (context.require_glib_version (2, 36)) {
+			Parameter cancellable_param = null;
+
+			foreach (Parameter param in m.get_parameters ()) {
+				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+					cancellable_param = param;
+					break;
+				}
+			}
+
+			if (cancellable_param == null) {
+				create_result.add_argument (new CCodeConstant ("NULL"));
+			} else {
+				create_result.add_argument (new CCodeIdentifier (get_variable_cname (cancellable_param.name)));
+			}
+		}
+
 		create_result.add_argument (new CCodeIdentifier ("_callback_"));
 		create_result.add_argument (new CCodeIdentifier ("_user_data_"));
-		create_result.add_argument (new CCodeIdentifier (get_ccode_real_name (m)));
+
+		if (!context.require_glib_version (2, 36)) {
+			create_result.add_argument (new CCodeIdentifier (get_ccode_real_name (m)));
+		}
 
 		ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "_async_result"), create_result);
 
-		var set_op_res_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_set_op_res_gpointer"));
-		set_op_res_call.add_argument (new CCodeMemberAccess.pointer (data_var, "_async_result"));
-		set_op_res_call.add_argument (data_var);
-		set_op_res_call.add_argument (new CCodeIdentifier (get_ccode_real_name (m) + "_data_free"));
-		ccode.add_expression (set_op_res_call);
+		CCodeFunctionCall attach_data_call;
+
+		if (!context.require_glib_version (2, 36)) {
+			attach_data_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_set_op_res_gpointer"));
+		} else {
+			attach_data_call = new CCodeFunctionCall (new CCodeIdentifier ("g_task_set_task_data"));
+		}
+
+		attach_data_call.add_argument (new CCodeMemberAccess.pointer (data_var, "_async_result"));
+		attach_data_call.add_argument (data_var);
+		attach_data_call.add_argument (new CCodeIdentifier (get_ccode_real_name (m) + "_data_free"));
+		ccode.add_expression (attach_data_call);
 
 		if (m is CreationMethod) {
 			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "object_type"), new CCodeIdentifier ("object_type"));
@@ -523,23 +561,57 @@ public class Vala.GAsyncModule : GtkModule {
 
 		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("_data_"));
 
-		var simple_async_result_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_SIMPLE_ASYNC_RESULT"));
-		simple_async_result_cast.add_argument (new CCodeIdentifier ("_res_"));
+		if (context.require_glib_version (2, 36)) {
+			var async_result_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_TASK"));
+			async_result_cast.add_argument (new CCodeIdentifier ("_res_"));
 
-		if (m.get_error_types ().size > 0) {
-			// propagate error from async method
-			var propagate_error = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_propagate_error"));
-			propagate_error.add_argument (simple_async_result_cast);
-			propagate_error.add_argument (new CCodeIdentifier ("error"));
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_task_propagate_pointer"));
+			ccall.add_argument (async_result_cast);
 
-			ccode.open_if (propagate_error);
-			return_default_value (return_type);
-			ccode.close ();
+			if (m.get_error_types ().size > 0) {
+				ccall.add_argument (new CCodeIdentifier ("error"));
+			} else {
+				ccall.add_argument (new CCodeConstant ("NULL"));
+			}
+
+			ccode.add_assignment (data_var, ccall);
+
+			bool has_cancellable = false;
+
+			foreach (Parameter param in m.get_parameters ()) {
+				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+					has_cancellable = true;
+					break;
+				}
+			}
+
+			// If a task is cancelled, g_task_propagate_pointer returns NULL
+			if (m.get_error_types ().size > 0 || has_cancellable) {
+				var is_null = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeConstant ("NULL"), data_var);
+
+				ccode.open_if (is_null);
+				return_default_value (return_type);
+				ccode.close ();
+			}
+		} else {
+			var simple_async_result_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_SIMPLE_ASYNC_RESULT"));
+			simple_async_result_cast.add_argument (new CCodeIdentifier ("_res_"));
+
+			if (m.get_error_types ().size > 0) {
+				// propagate error from async method
+				var propagate_error = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_propagate_error"));
+				propagate_error.add_argument (simple_async_result_cast);
+				propagate_error.add_argument (new CCodeIdentifier ("error"));
+
+				ccode.open_if (propagate_error);
+				return_default_value (return_type);
+				ccode.close ();
+			}
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_get_op_res_gpointer"));
+			ccall.add_argument (simple_async_result_cast);
+			ccode.add_assignment (data_var, ccall);
 		}
-
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_get_op_res_gpointer"));
-		ccall.add_argument (simple_async_result_cast);
-		ccode.add_assignment (data_var, ccall);
 
 		emit_context.push_symbol (m);
 		foreach (Parameter param in m.get_parameters ()) {
@@ -707,18 +779,30 @@ public class Vala.GAsyncModule : GtkModule {
 			return;
 		}
 
-		var set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_set_from_error"));
-		set_error.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_async_result"));
+		var async_result_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_async_result");
+		CCodeFunctionCall set_error = null;
+
+		if (context.require_glib_version (2, 36)) {
+			set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_task_return_error"));
+		} else {
+			set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_take_error"));
+		}
+		set_error.add_argument (async_result_expr);
 		set_error.add_argument (error_expr);
 		ccode.add_expression (set_error);
 
-		var free_error = new CCodeFunctionCall (new CCodeIdentifier ("g_error_free"));
-		free_error.add_argument (error_expr);
-		ccode.add_expression (free_error);
-
 		append_local_free (current_symbol, false);
 
-		complete_async ();
+		if (context.require_glib_version (2, 36)) {
+			// We already returned the error above, we must not return anything else here.
+			var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+			unref.add_argument (async_result_expr);
+			ccode.add_expression (unref);
+
+			ccode.add_return (new CCodeConstant ("FALSE"));
+		} else {
+			complete_async ();
+		}
 	}
 
 	public override void visit_return_statement (ReturnStatement stmt) {
@@ -771,17 +855,26 @@ public class Vala.GAsyncModule : GtkModule {
 		var res_ref = new CCodeFunctionCall (new CCodeIdentifier ("g_object_ref"));
 		res_ref.add_argument (new CCodeIdentifier ("res"));
 
+		CCodeFunctionCall ccall = null;
+
 		// store reference to async result of inner async function in out async result
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_set_op_res_gpointer"));
+		if (context.require_glib_version (2, 36)) {
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_task_return_pointer"));
+		} else {
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_set_op_res_gpointer"));
+		}
+
 		ccall.add_argument (new CCodeIdentifier ("user_data"));
 		ccall.add_argument (res_ref);
 		ccall.add_argument (new CCodeIdentifier ("g_object_unref"));
 		ccode.add_expression (ccall);
 
-		// call user-provided callback
-		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
-		ccall.add_argument (new CCodeIdentifier ("user_data"));
-		ccode.add_expression (ccall);
+		if (!context.require_glib_version (2, 36)) {
+			// call user-provided callback
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
+			ccall.add_argument (new CCodeIdentifier ("user_data"));
+			ccode.add_expression (ccall);
+		}
 
 		// free async result
 		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));

@@ -124,24 +124,54 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public void complete_async () {
-		var state = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_");
-		var zero = new CCodeConstant ("0");
-		var state_is_zero = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, state, zero);
-		ccode.open_if (state_is_zero);
-
 		var async_result_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_async_result");
 
-		var idle_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete_in_idle"));
-		idle_call.add_argument (async_result_expr);
-		ccode.add_expression (idle_call);
+		if (context.require_glib_version (2, 36)) {
+			var finish_call = new CCodeFunctionCall (new CCodeIdentifier ("g_task_return_pointer"));
+			finish_call.add_argument (async_result_expr);
+			finish_call.add_argument (new CCodeIdentifier ("_data_"));
+			finish_call.add_argument (new CCodeConstant ("NULL"));
+			ccode.add_expression (finish_call);
 
-		ccode.add_else ();
+			// Preserve the "complete now" behavior if state != 0, do so by
+			//  iterating the GTask's main context till the task is complete.
+			var state = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_");
+			var zero = new CCodeConstant ("0");
+			var state_is_not_zero = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, state, zero);
+			ccode.open_if (state_is_not_zero);
 
-		var direct_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
-		direct_call.add_argument (async_result_expr);
-		ccode.add_expression (direct_call);
+			var task_complete = new CCodeFunctionCall (new CCodeIdentifier ("g_task_get_completed"));
+			task_complete.add_argument (async_result_expr);
+			var task_is_complete = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, task_complete, new CCodeConstant ("TRUE"));
 
-		ccode.close ();
+			ccode.open_while (task_is_complete);
+			var task_context = new CCodeFunctionCall (new CCodeIdentifier ("g_task_get_context"));
+			task_context.add_argument (async_result_expr);
+			var iterate_context = new CCodeFunctionCall (new CCodeIdentifier ("g_main_context_iteration"));
+			iterate_context.add_argument (task_context);
+			iterate_context.add_argument (new CCodeConstant ("TRUE"));
+			ccode.add_expression (iterate_context);
+			ccode.close();
+
+			ccode.close ();
+		} else {
+			var state = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_");
+			var zero = new CCodeConstant ("0");
+			var state_is_zero = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, state, zero);
+			ccode.open_if (state_is_zero);
+
+			var idle_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete_in_idle"));
+			idle_call.add_argument (async_result_expr);
+			ccode.add_expression (idle_call);
+
+			ccode.add_else ();
+
+			var direct_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
+			direct_call.add_argument (async_result_expr);
+			ccode.add_expression (direct_call);
+
+			ccode.close ();
+		}
 
 		var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
 		unref.add_argument (async_result_expr);

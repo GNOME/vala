@@ -696,13 +696,24 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccall.add_argument (new CCodeConstant ("NULL"));
 				ccall.add_argument (cancellable);
 
+				CCodeFunctionCall res_wrapper = null;
+
 				// use wrapper as source_object wouldn't be correct otherwise
-				ccall.add_argument (new CCodeIdentifier (generate_async_callback_wrapper ()));
-				var res_wrapper = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
-				res_wrapper.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GObject *"));
-				res_wrapper.add_argument (new CCodeIdentifier ("_callback_"));
-				res_wrapper.add_argument (new CCodeIdentifier ("_user_data_"));
-				res_wrapper.add_argument (new CCodeConstant ("NULL"));
+				if (context.require_glib_version (2, 36)) {
+					ccall.add_argument (new CCodeIdentifier (generate_async_callback_wrapper ()));
+					res_wrapper = new CCodeFunctionCall (new CCodeIdentifier ("g_task_new"));
+					res_wrapper.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GObject *"));
+					res_wrapper.add_argument (new CCodeConstant ("NULL"));
+					res_wrapper.add_argument (new CCodeIdentifier ("_callback_"));
+					res_wrapper.add_argument (new CCodeIdentifier ("_user_data_"));
+				} else {
+					ccall.add_argument (new CCodeIdentifier (generate_async_callback_wrapper ()));
+					res_wrapper = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
+					res_wrapper.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GObject *"));
+					res_wrapper.add_argument (new CCodeIdentifier ("_callback_"));
+					res_wrapper.add_argument (new CCodeIdentifier ("_user_data_"));
+					res_wrapper.add_argument (new CCodeConstant ("NULL"));
+				}
 				ccall.add_argument (res_wrapper);
 
 				ccode.add_expression (ccall);
@@ -718,12 +729,22 @@ public class Vala.GDBusClientModule : GDBusModule {
 			ccall.add_argument (connection);
 
 			// unwrap async result
-			var inner_res = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_get_op_res_gpointer"));
-			inner_res.add_argument (new CCodeCastExpression (new CCodeIdentifier ("_res_"), "GSimpleAsyncResult *"));
-			ccall.add_argument (inner_res);
+			if (context.require_glib_version (2, 36)) {
+				var inner_res = new CCodeFunctionCall (new CCodeIdentifier ("g_task_propagate_pointer"));
+				inner_res.add_argument (new CCodeCastExpression (new CCodeIdentifier ("_res_"), "GTask *"));
+				inner_res.add_argument (new CCodeConstant ("NULL"));
+				ccall.add_argument (inner_res);
 
-			ccall.add_argument (new CCodeConstant ("error"));
-			ccode.add_assignment (new CCodeIdentifier ("_reply_message"), ccall);
+				ccall.add_argument (new CCodeConstant ("error"));
+				ccode.add_assignment (new CCodeIdentifier ("_reply_message"), ccall);
+			} else {
+				var inner_res = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_get_op_res_gpointer"));
+				inner_res.add_argument (new CCodeCastExpression (new CCodeIdentifier ("_res_"), "GSimpleAsyncResult *"));
+				ccall.add_argument (inner_res);
+
+				ccall.add_argument (new CCodeConstant ("error"));
+				ccode.add_assignment (new CCodeIdentifier ("_reply_message"), ccall);
+			}
 		}
 
 		if (call_type == CallType.SYNC || call_type == CallType.FINISH) {
