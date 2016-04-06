@@ -3194,7 +3194,7 @@ namespace GLib {
 	public interface DatagramBased : GLib.Object {
 		public abstract GLib.IOCondition condition_check (GLib.IOCondition condition);
 		public abstract bool condition_wait (GLib.IOCondition condition, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract GLib.Source create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable = null);
+		public abstract GLib.SocketSource create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable = null);
 		public abstract int receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.InputMessage[] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract int send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.OutputMessage[] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
