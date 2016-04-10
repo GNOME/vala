@@ -798,6 +798,8 @@ public struct float {
 	public static float max (float a, float b);
 	[CCode (cname = "CLAMP")]
 	public float clamp (float low, float high);
+	[CCode (cname = "fabsf")]
+	public float abs ();
 }
 
 [SimpleType]
@@ -847,6 +849,8 @@ public struct double {
 	public static double max (double a, double b);
 	[CCode (cname = "CLAMP")]
 	public double clamp (double low, double high);
+	[CCode (cname = "fabs")]
+	public double abs ();
 
 	[CCode (cname = "G_ASCII_DTOSTR_BUF_SIZE")]
 	public const int DTOSTR_BUF_SIZE;
