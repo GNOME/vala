@@ -316,13 +316,13 @@ namespace Atk {
 		public abstract bool contains (int x, int y, Atk.CoordType coord_type);
 		[Version (since = "1.12")]
 		public abstract double get_alpha ();
-		public abstract void get_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
+		public abstract void get_extents (out int x, out int y, out int width, out int height, Atk.CoordType coord_type);
 		public abstract Atk.Layer get_layer ();
 		public abstract int get_mdi_zorder ();
 		[Version (deprecated = true)]
-		public abstract void get_position (int x, int y, Atk.CoordType coord_type);
+		public abstract void get_position (out int x, out int y, Atk.CoordType coord_type);
 		[Version (deprecated = true)]
-		public abstract void get_size (int width, int height);
+		public abstract void get_size (out int width, out int height);
 		public abstract bool grab_focus ();
 		public abstract Atk.Object? ref_accessible_at_point (int x, int y, Atk.CoordType coord_type);
 		[Version (deprecated = true, deprecated_since = "2.9.4")]
@@ -389,8 +389,8 @@ namespace Atk {
 		public abstract unowned string get_image_description ();
 		[Version (since = "1.12")]
 		public abstract unowned string? get_image_locale ();
-		public abstract void get_image_position (int x, int y, Atk.CoordType coord_type);
-		public abstract void get_image_size (int width, int height);
+		public abstract void get_image_position (out int x, out int y, Atk.CoordType coord_type);
+		public abstract void get_image_size (out int width, out int height);
 		public abstract bool set_image_description (string description);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
@@ -494,12 +494,12 @@ namespace Atk {
 		public abstract int get_caret_offset ();
 		public abstract unichar get_character_at_offset (int offset);
 		public abstract int get_character_count ();
-		public abstract void get_character_extents (int offset, int x, int y, int width, int height, Atk.CoordType coords);
+		public abstract void get_character_extents (int offset, out int x, out int y, out int width, out int height, Atk.CoordType coords);
 		public abstract Atk.AttributeSet get_default_attributes ();
 		public abstract int get_n_selections ();
 		public abstract int get_offset_at_point (int x, int y, Atk.CoordType coords);
 		[Version (since = "1.3")]
-		public abstract void get_range_extents (int start_offset, int end_offset, Atk.CoordType coord_type, Atk.TextRectangle rect);
+		public abstract Atk.TextRectangle get_range_extents (int start_offset, int end_offset, Atk.CoordType coord_type);
 		public abstract Atk.AttributeSet get_run_attributes (int offset, out int start_offset, out int end_offset);
 		public abstract string get_selection (int selection_num, out int start_offset, out int end_offset);
 		[Version (since = "2.10")]
@@ -525,15 +525,15 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_value_get_type ()")]
 	public interface Value : GLib.Object {
 		[Version (deprecated = true)]
-		public abstract void get_current_value (GLib.Value value);
+		public abstract GLib.Value get_current_value ();
 		[Version (since = "2.12")]
 		public abstract double get_increment ();
 		[Version (deprecated = true)]
-		public abstract void get_maximum_value (GLib.Value value);
+		public abstract GLib.Value get_maximum_value ();
 		[Version (deprecated = true, since = "1.12")]
-		public abstract void get_minimum_increment (GLib.Value value);
+		public abstract GLib.Value get_minimum_increment ();
 		[Version (deprecated = true)]
-		public abstract void get_minimum_value (GLib.Value value);
+		public abstract GLib.Value get_minimum_value ();
 		[Version (since = "2.12")]
 		public abstract Atk.Range? get_range ();
 		[Version (since = "2.12")]
