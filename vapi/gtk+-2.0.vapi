@@ -1538,7 +1538,7 @@ namespace Gtk {
 		public double get_progress_pulse_step ();
 		public unowned string get_text ();
 		[NoWrapper]
-		public virtual void get_text_area_size (int x, int y, int width, int height);
+		public virtual void get_text_area_size (out int x, out int y, out int width, out int height);
 		public uint16 get_text_length ();
 		public unowned Gdk.Window get_text_window ();
 		public bool get_visibility ();
