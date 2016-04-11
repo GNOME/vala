@@ -1763,7 +1763,7 @@ namespace Gtk {
 		public int get_current_icon_drag_source ();
 		public unowned Gtk.Adjustment? get_cursor_hadjustment ();
 		[NoWrapper]
-		public virtual void get_frame_size (int x, int y, int width, int height);
+		public virtual void get_frame_size (out int x, out int y, out int width, out int height);
 		public bool get_has_frame ();
 		public bool get_icon_activatable (Gtk.EntryIconPosition icon_pos);
 		public Gdk.Rectangle get_icon_area (Gtk.EntryIconPosition icon_pos);
