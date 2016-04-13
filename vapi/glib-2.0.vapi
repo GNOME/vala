@@ -3799,7 +3799,7 @@ namespace GLib {
 		public string replace (string str, ssize_t string_len, int start_position, string replacement, RegexMatchFlags match_options = 0) throws RegexError;
 		public string replace_literal (string str, ssize_t string_len, int start_position, string replacement, RegexMatchFlags match_options = 0) throws RegexError;
 		public string replace_eval (string str, ssize_t string_len, int start_position, RegexMatchFlags match_options, RegexEvalCallback eval) throws RegexError;
-		public static bool check_replacement (out bool has_references = null) throws RegexError;
+		public static bool check_replacement (string replacement, out bool has_references = null) throws RegexError;
 	}
 
 	[Version (since = "2.14")]
