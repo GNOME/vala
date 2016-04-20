@@ -2512,7 +2512,7 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				next ();
 				var element_type = parse_type ();
-				element_type.value_owned = true;
+				element_type.value_owned = transfer_elements;
 				end_element ("array");
 				return new ArrayType (element_type, 1, src);
 			}
@@ -2907,6 +2907,7 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("property");
 		push_node (element_get_name().replace ("-", "_"), false);
 		bool is_abstract = metadata.get_bool (ArgumentType.ABSTRACT, current.parent.symbol is Interface);
+		string transfer = reader.get_attribute ("transfer-ownership");
 
 		next ();
 
@@ -2914,7 +2915,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		bool no_array_length;
 		bool array_null_terminated;
-		var type = parse_type (null, null, false, out no_array_length, out array_null_terminated);
+		var type = parse_type (null, null, transfer != "container", out no_array_length, out array_null_terminated);
 		type = element_get_type (type, true, ref no_array_length, ref array_null_terminated);
 		var prop = new Property (current.name, type, null, null, current.source_reference);
 		prop.comment = comment;
