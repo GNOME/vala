@@ -79,6 +79,8 @@ namespace Gst {
 			public bool set_info (uint8 version, Gst.SDP.MIKEYType type, bool V, Gst.SDP.MIKEYPRFFunc prf_func, uint32 CSB_id, Gst.SDP.MIKEYMapType map_type);
 			[Version (since = "1.4")]
 			public GLib.Bytes to_bytes (Gst.SDP.MIKEYEncryptInfo info) throws GLib.Error;
+			[Version (since = "1.8.1")]
+			public bool to_caps (Gst.Caps caps);
 		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayload", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_mikey_payload_", type_id = "gst_mikey_payload_get_type ()")]
 		[Compact]
@@ -242,6 +244,8 @@ namespace Gst {
 			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_zone (int idx, Gst.SDP.Zone zone);
 			public uint medias_len ();
+			[Version (since = "1.8.1")]
+			public Gst.SDP.Result parse_keymgmt (out Gst.SDP.MIKEYMessage mikey);
 			public uint phones_len ();
 			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_attribute (uint idx);
@@ -381,6 +385,8 @@ namespace Gst {
 			public Gst.SDP.Result insert_connection (int idx, Gst.SDP.Connection conn);
 			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_format (int idx, string format);
+			[Version (since = "1.8.1")]
+			public Gst.SDP.Result parse_keymgmt (out Gst.SDP.MIKEYMessage mikey);
 			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_attribute (uint idx);
 			[Version (since = "1.2")]
