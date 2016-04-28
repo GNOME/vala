@@ -4,7 +4,7 @@ ControlPoint
 	.cache._gst_reserved skip
 
 DirectControlBinding
-	.new_absolute name=".new_with_absolute"
+	.new_absolute name="with_absolute"
 
 TimedValueControlSource
   .find_control_point_iter skip=false
