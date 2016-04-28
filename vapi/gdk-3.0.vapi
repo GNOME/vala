@@ -4624,6 +4624,8 @@ namespace Gdk {
 		public static void free_history ([CCode (array_length_cname = "n_events", array_length_pos = 1.1)] Gdk.TimeCoord[] events);
 		[Version (since = "3.0")]
 		public unowned Gdk.Device? get_associated_device ();
+		[Version (since = "3.22")]
+		public Gdk.AxisFlags get_axes ();
 		public bool get_axis ([CCode (array_length = false)] double[] axes, Gdk.AxisUse use, out double value);
 		[Version (since = "2.20")]
 		public Gdk.AxisUse get_axis_use (uint index_);
@@ -4679,6 +4681,8 @@ namespace Gdk {
 		public void warp (Gdk.Screen screen, int x, int y);
 		[Version (since = "3.0")]
 		public Gdk.Device? associated_device { get; }
+		[Version (since = "3.22")]
+		public Gdk.AxisFlags axes { get; }
 		[NoAccessorMethod]
 		[Version (since = "3.0")]
 		public Gdk.DeviceManager device_manager { owned get; construct; }
@@ -4704,11 +4708,15 @@ namespace Gdk {
 		[Version (since = "3.20")]
 		public Gdk.Seat seat { owned get; set; }
 		[NoAccessorMethod]
+		public Gdk.DeviceTool tool { owned get; }
+		[NoAccessorMethod]
 		[Version (since = "3.0")]
 		public Gdk.DeviceType type { get; construct; }
 		[Version (since = "3.16")]
 		public string vendor_id { get; construct; }
 		public signal void changed ();
+		[Version (since = "3.22")]
+		public signal void tool_changed (Gdk.DeviceTool tool);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_device_manager_get_type ()")]
 	public abstract class DeviceManager : GLib.Object {
@@ -4724,6 +4732,19 @@ namespace Gdk {
 		public signal void device_added (Gdk.Device device);
 		public signal void device_changed (Gdk.Device device);
 		public signal void device_removed (Gdk.Device device);
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_device_tool_get_type ()")]
+	public class DeviceTool : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected DeviceTool ();
+		[Version (since = "3.22")]
+		public uint get_serial ();
+		[Version (since = "3.22")]
+		public Gdk.DeviceToolType get_tool_type ();
+		[NoAccessorMethod]
+		public Gdk.AxisFlags axes { get; construct; }
+		public uint64 serial { get; construct; }
+		public Gdk.DeviceToolType tool_type { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_display_get_type ()")]
 	public class Display : GLib.Object {
@@ -4754,12 +4775,22 @@ namespace Gdk {
 		public Gdk.Event? get_event ();
 		[Version (since = "2.4")]
 		public void get_maximal_cursor_size (out uint width, out uint height);
+		[Version (since = "3.22")]
+		public unowned Gdk.Monitor get_monitor (int monitor_num);
+		[Version (since = "3.22")]
+		public unowned Gdk.Monitor get_monitor_at_point (int x, int y);
+		[Version (since = "3.22")]
+		public unowned Gdk.Monitor get_monitor_at_window (Gdk.Window window);
+		[Version (since = "3.22")]
+		public int get_n_monitors ();
 		[Version (deprecated = true, deprecated_since = "3.10", since = "2.2")]
 		public int get_n_screens ();
 		[Version (since = "2.2")]
 		public unowned string get_name ();
 		[Version (deprecated = true, deprecated_since = "3.0", since = "2.2")]
 		public void get_pointer (out unowned Gdk.Screen screen, out int x, out int y, out Gdk.ModifierType mask);
+		[Version (since = "3.22")]
+		public unowned Gdk.Monitor get_primary_monitor ();
 		[Version (deprecated = true, deprecated_since = "3.20", since = "2.2")]
 		public unowned Gdk.Screen get_screen (int screen_num);
 		[Version (deprecated = true, deprecated_since = "3.0", since = "2.2")]
@@ -4816,6 +4847,10 @@ namespace Gdk {
 		public void warp_pointer (Gdk.Screen screen, int x, int y);
 		[Version (since = "2.2")]
 		public signal void closed (bool is_error);
+		[Version (since = "3.22")]
+		public signal void monitor_added (Gdk.Monitor monitor);
+		[Version (since = "3.22")]
+		public signal void monitor_removed (Gdk.Monitor monitor);
 		public signal void opened ();
 		[Version (since = "3.20")]
 		public signal void seat_added (Gdk.Seat seat);
@@ -4869,7 +4904,7 @@ namespace Gdk {
 		[Version (since = "3.20")]
 		public signal void action_changed (Gdk.DragAction action);
 		[Version (since = "3.20")]
-		public signal void cancel (Gdk.DragCancelReason object);
+		public signal void cancel (Gdk.DragCancelReason reason);
 		[Version (since = "3.20")]
 		public signal void dnd_finished ();
 		[Version (since = "3.20")]
@@ -4893,6 +4928,8 @@ namespace Gdk {
 		public bool get_coords (out double x_win, out double y_win);
 		[Version (since = "3.0")]
 		public unowned Gdk.Device? get_device ();
+		[Version (since = "3.22")]
+		public unowned Gdk.DeviceTool get_device_tool ();
 		[Version (since = "3.4")]
 		public unowned Gdk.EventSequence get_event_sequence ();
 		[Version (since = "3.10")]
@@ -4902,6 +4939,8 @@ namespace Gdk {
 		[Version (since = "3.2")]
 		public bool get_keyval (out uint keyval);
 		public bool get_root_coords (out double x_root, out double y_root);
+		[Version (since = "3.22")]
+		public int get_scancode ();
 		[Version (since = "2.2")]
 		public unowned Gdk.Screen get_screen ();
 		[Version (since = "3.4")]
@@ -4925,6 +4964,8 @@ namespace Gdk {
 		public static void request_motions (Gdk.EventMotion event);
 		[Version (since = "3.0")]
 		public void set_device (Gdk.Device device);
+		[Version (since = "3.22")]
+		public void set_device_tool (Gdk.DeviceTool? tool);
 		[Version (since = "2.2")]
 		public void set_screen (Gdk.Screen screen);
 		[Version (since = "3.0")]
@@ -5290,6 +5331,8 @@ namespace Gdk {
 		public void get_required_version (out int? major, out int? minor);
 		[Version (since = "3.16")]
 		public unowned Gdk.GLContext get_shared_context ();
+		[Version (since = "3.22")]
+		public bool get_use_es ();
 		[Version (since = "3.16")]
 		public void get_version (out int major, out int minor);
 		[Version (since = "3.16")]
@@ -5306,6 +5349,8 @@ namespace Gdk {
 		public void set_forward_compatible (bool compatible);
 		[Version (since = "3.16")]
 		public void set_required_version (int major, int minor);
+		[Version (since = "3.22")]
+		public void set_use_es (bool use_es);
 		[Version (since = "3.16")]
 		public Gdk.Display display { get; construct; }
 		[Version (since = "3.16")]
@@ -5347,6 +5392,43 @@ namespace Gdk {
 		public signal void keys_changed ();
 		[Version (since = "2.16")]
 		public signal void state_changed ();
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_monitor_get_type ()")]
+	public class Monitor : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Monitor ();
+		[Version (since = "3.22")]
+		public unowned Gdk.Display get_display ();
+		[Version (since = "3.22")]
+		public Gdk.Rectangle get_geometry ();
+		[Version (since = "3.22")]
+		public int get_height_mm ();
+		public unowned string? get_manufacturer ();
+		public unowned string? get_model ();
+		[Version (since = "3.22")]
+		public int get_refresh_rate ();
+		[Version (since = "3.22")]
+		public int get_scale_factor ();
+		[Version (since = "3.22")]
+		public Gdk.SubpixelLayout get_subpixel_layout ();
+		[Version (since = "3.22")]
+		public int get_width_mm ();
+		[Version (since = "3.22")]
+		public void get_workarea (Gdk.Rectangle geometry);
+		[Version (since = "3.22")]
+		public bool is_primary ();
+		public Gdk.Display display { get; construct; }
+		public Gdk.Rectangle geometry { get; }
+		public int height_mm { get; }
+		public string manufacturer { get; }
+		public string model { get; }
+		public int refresh_rate { get; }
+		public int scale_factor { get; }
+		public Gdk.SubpixelLayout subpixel_layout { get; }
+		public int width_mm { get; }
+		[NoAccessorMethod]
+		public Gdk.Rectangle workarea { get; }
+		public signal void invalidate ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Screen : GLib.Object {
@@ -5449,6 +5531,10 @@ namespace Gdk {
 		public signal void device_added (Gdk.Device device);
 		[Version (since = "3.20")]
 		public signal void device_removed (Gdk.Device device);
+		[Version (since = "3.22")]
+		public signal void tool_added (Gdk.DeviceTool tool);
+		[Version (since = "3.22")]
+		public signal void tool_removed (Gdk.DeviceTool tool);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_visual_get_type ()")]
 	public class Visual : GLib.Object {
@@ -5460,13 +5546,13 @@ namespace Gdk {
 		public static unowned Gdk.Visual? get_best_with_both (int depth, Gdk.VisualType visual_type);
 		public static unowned Gdk.Visual get_best_with_depth (int depth);
 		public static unowned Gdk.Visual get_best_with_type (Gdk.VisualType visual_type);
-		[Version (since = "2.22")]
+		[Version (deprecated = true, deprecated_since = "3.22.", since = "2.22")]
 		public int get_bits_per_rgb ();
 		[Version (since = "2.22")]
 		public void get_blue_pixel_details (out uint32 mask, out int shift, out int precision);
-		[Version (since = "2.22")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.22")]
 		public Gdk.ByteOrder get_byte_order ();
-		[Version (since = "2.22")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.22")]
 		public int get_colormap_size ();
 		[Version (since = "2.22")]
 		public int get_depth ();
@@ -5832,6 +5918,20 @@ namespace Gdk {
 		public bool override_redirect;
 		public Gdk.WindowTypeHint type_hint;
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_AXIS_FLAG_", type_id = "gdk_axis_flags_get_type ()")]
+	[Flags]
+	[Version (since = "3.22")]
+	public enum AxisFlags {
+		X,
+		Y,
+		PRESSURE,
+		XTILT,
+		YTILT,
+		WHEEL,
+		DISTANCE,
+		ROTATION,
+		SLIDER
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_AXIS_", type_id = "gdk_axis_use_get_type ()")]
 	public enum AxisUse {
 		IGNORE,
@@ -5841,6 +5941,9 @@ namespace Gdk {
 		XTILT,
 		YTILT,
 		WHEEL,
+		DISTANCE,
+		ROTATION,
+		SLIDER,
 		LAST
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_", type_id = "gdk_byte_order_get_type ()")]
@@ -5942,6 +6045,18 @@ namespace Gdk {
 		LAST_CURSOR,
 		BLANK_CURSOR,
 		CURSOR_IS_PIXMAP
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_DEVICE_TOOL_TYPE_", type_id = "gdk_device_tool_type_get_type ()")]
+	[Version (since = "3.22")]
+	public enum DeviceToolType {
+		UNKNOWN,
+		PEN,
+		ERASER,
+		BRUSH,
+		PENCIL,
+		AIRBRUSH,
+		MOUSE,
+		LENS
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_DEVICE_TYPE_", type_id = "gdk_device_type_get_type ()")]
 	public enum DeviceType {
@@ -6216,6 +6331,16 @@ namespace Gdk {
 		ERROR_PARAM,
 		ERROR_FILE,
 		ERROR_MEM
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SUBPIXEL_LAYOUT_", type_id = "gdk_subpixel_layout_get_type ()")]
+	[Version (since = "3.22")]
+	public enum SubpixelLayout {
+		UNKNOWN,
+		NONE,
+		HORIZONTAL_RGB,
+		HORIZONTAL_BGR,
+		VERTICAL_RGB,
+		VERTICAL_BGR
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_TOUCHPAD_GESTURE_PHASE_", type_id = "gdk_touchpad_gesture_phase_get_type ()")]
 	public enum TouchpadGesturePhase {
@@ -6537,6 +6662,9 @@ namespace Gdk {
 	public static void offscreen_window_set_embedder (Gdk.Window window, Gdk.Window embedder);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Pango.Context pango_context_get ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "3.22")]
+	public static Pango.Context pango_context_get_for_display (Gdk.Display display);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "2.2")]
 	public static Pango.Context pango_context_get_for_screen (Gdk.Screen screen);
