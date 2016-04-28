@@ -1,0 +1,29 @@
+Box struct
+Euler struct
+Frustum struct
+Matrix struct
+Plane struct
+Point struct
+Point3D struct
+Quad struct
+Quaternion struct
+Ray struct
+Rect struct
+Size struct
+Sphere struct
+Triangle struct
+Vec2 struct
+Vec3 struct
+Vec4 struct
+
+// Not usefully applicateable
+*.alloc skip
+*.free skip
+
+Box.get_vertices.vertices ref unowned=false
+Frustum.get_planes.planes ref unowned=false
+Matrix.to_float.v ref unowned=false
+Rect.get_vertices.vertices ref unowned=false
+Vec2.to_float.dest ref unowned=false
+Vec3.to_float.dest ref unowned=false
+Vec4.to_float.dest ref unowned=false
