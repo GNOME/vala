@@ -1403,6 +1403,7 @@ namespace Gtk {
 		public unowned Gdk.Display get_display ();
 		public static unowned Gtk.Clipboard get_for_display (Gdk.Display display, Gdk.Atom selection);
 		public unowned GLib.Object? get_owner ();
+		public Gdk.Atom get_selection ();
 		public void request_contents (Gdk.Atom target, [CCode (scope = "async")] Gtk.ClipboardReceivedFunc callback);
 		public void request_image ([CCode (scope = "async")] Gtk.ClipboardImageReceivedFunc callback);
 		public void request_rich_text (Gtk.TextBuffer buffer, [CCode (scope = "async")] Gtk.ClipboardRichTextReceivedFunc callback);
@@ -2332,6 +2333,7 @@ namespace Gtk {
 		public bool get_has_depth_buffer ();
 		public bool get_has_stencil_buffer ();
 		public void get_required_version (out int major, out int minor);
+		public bool get_use_es ();
 		public void make_current ();
 		public void queue_render ();
 		public void set_auto_render (bool auto_render);
@@ -2340,11 +2342,13 @@ namespace Gtk {
 		public void set_has_depth_buffer (bool has_depth_buffer);
 		public void set_has_stencil_buffer (bool has_stencil_buffer);
 		public void set_required_version (int major, int minor);
+		public void set_use_es (bool use_es);
 		public bool auto_render { get; set; }
 		public Gdk.GLContext context { get; }
 		public bool has_alpha { get; set; }
 		public bool has_depth_buffer { get; set; }
 		public bool has_stencil_buffer { get; set; }
+		public bool use_es { get; set; }
 		public virtual signal Gdk.GLContext create_context ();
 		public virtual signal bool render (Gdk.GLContext context);
 		public virtual signal void resize (int width, int height);
@@ -3284,6 +3288,7 @@ namespace Gtk {
 		public bool get_reserve_toggle_size ();
 		public bool get_tearoff_state ();
 		public unowned string get_title ();
+		public void place_on_monitor (Gdk.Monitor monitor);
 		public void popdown ();
 		public void popup (Gtk.Widget? parent_menu_shell, Gtk.Widget? parent_menu_item, [CCode (scope = "async")] Gtk.MenuPositionFunc? func, uint button, uint32 activate_time);
 		public void popup_for_device (Gdk.Device? device, Gtk.Widget parent_menu_shell, Gtk.Widget parent_menu_item, owned Gtk.MenuPositionFunc? func, uint button, uint32 activate_time);
@@ -4779,6 +4784,8 @@ namespace Gtk {
 		public Gtk.SizeGroup accel_size_group { set; }
 		[NoAccessorMethod]
 		public string accelerator { owned get; set; }
+		[NoAccessorMethod]
+		public string action_name { owned get; set; }
 		[NoAccessorMethod]
 		public Gtk.TextDirection direction { get; set; }
 		[NoAccessorMethod]
@@ -8203,7 +8210,8 @@ namespace Gtk {
 		GPL_2_0_ONLY,
 		GPL_3_0_ONLY,
 		LGPL_2_1_ONLY,
-		LGPL_3_0_ONLY
+		LGPL_3_0_ONLY,
+		AGPL_3_0
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_MENU_DIR_")]
 	public enum MenuDirectionType {

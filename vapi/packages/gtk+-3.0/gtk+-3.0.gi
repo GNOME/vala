@@ -4892,6 +4892,7 @@
 			<member name="GTK_LICENSE_GPL_3_0_ONLY" value="10"/>
 			<member name="GTK_LICENSE_LGPL_2_1_ONLY" value="11"/>
 			<member name="GTK_LICENSE_LGPL_3_0_ONLY" value="12"/>
+			<member name="GTK_LICENSE_AGPL_3_0" value="13"/>
 		</enum>
 		<enum name="GtkMenuDirectionType" type-name="GtkMenuDirectionType" get-type="gtk_menu_direction_type_get_type">
 			<member name="GTK_MENU_DIR_PARENT" value="0"/>
@@ -10038,6 +10039,12 @@
 					<parameter name="clipboard" type="GtkClipboard*"/>
 				</parameters>
 			</method>
+			<method name="get_selection" symbol="gtk_clipboard_get_selection">
+				<return-type type="GdkAtom"/>
+				<parameters>
+					<parameter name="clipboard" type="GtkClipboard*"/>
+				</parameters>
+			</method>
 			<method name="request_contents" symbol="gtk_clipboard_request_contents">
 				<return-type type="void"/>
 				<parameters>
@@ -13844,6 +13851,12 @@
 					<parameter name="minor" type="gint*"/>
 				</parameters>
 			</method>
+			<method name="get_use_es" symbol="gtk_gl_area_get_use_es">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+				</parameters>
+			</method>
 			<method name="make_current" symbol="gtk_gl_area_make_current">
 				<return-type type="void"/>
 				<parameters>
@@ -13902,11 +13915,19 @@
 					<parameter name="minor" type="gint"/>
 				</parameters>
 			</method>
+			<method name="set_use_es" symbol="gtk_gl_area_set_use_es">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="GtkGLArea*"/>
+					<parameter name="use_es" type="gboolean"/>
+				</parameters>
+			</method>
 			<property name="auto-render" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="context" type="GdkGLContext*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="has-alpha" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-depth-buffer" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-stencil-buffer" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-es" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="create-context" when="LAST">
 				<return-type type="GdkGLContext*"/>
 				<parameters>
@@ -17862,6 +17883,13 @@
 					<parameter name="model" type="GMenuModel*"/>
 				</parameters>
 			</constructor>
+			<method name="place_on_monitor" symbol="gtk_menu_place_on_monitor">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GtkMenu*"/>
+					<parameter name="monitor" type="GdkMonitor*"/>
+				</parameters>
+			</method>
 			<method name="popdown" symbol="gtk_menu_popdown">
 				<return-type type="void"/>
 				<parameters>
@@ -22934,6 +22962,7 @@
 			</implements>
 			<property name="accel-size-group" type="GtkSizeGroup*" readable="0" writable="1" construct="0" construct-only="0"/>
 			<property name="accelerator" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="action-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="direction" type="GtkTextDirection" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="icon" type="GIcon*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="icon-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -36160,16 +36189,16 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="1912"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="2101"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="1"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_FULL" type="char*" value="full"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="12"/>
-		<constant name="GTK_MINOR_VERSION" type="int" value="19"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="1"/>
+		<constant name="GTK_MINOR_VERSION" type="int" value="21"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
 		<constant name="GTK_PAPER_NAME_A5" type="char*" value="iso_a5"/>
