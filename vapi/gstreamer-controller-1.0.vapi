@@ -45,7 +45,7 @@ namespace Gst {
 			public DirectControlBinding (Gst.Object object, string property_name, Gst.ControlSource cs);
 			[CCode (cname = "gst_direct_control_binding_new_absolute", has_construct_function = false, type = "GstControlBinding*")]
 			[Version (since = "1.6")]
-			public DirectControlBinding..new_with_absolute (Gst.Object object, string property_name, Gst.ControlSource cs);
+			public DirectControlBinding.with_absolute (Gst.Object object, string property_name, Gst.ControlSource cs);
 			[NoAccessorMethod]
 			public bool absolute { get; construct; }
 			[NoAccessorMethod]
