@@ -1,0 +1,644 @@
+// Issues which can't (currently) be fixed through annotations alone,
+// but may be some day.
+////////////////////////////////////////////////////////////////////
+
+// G-I doesn't support per-sybmol includes
+* cheader_filename="gtk/gtk.h"
+*Accessible cheader_filename="gtk/gtk.h,gtk/gtk-a11y.h"
+IMContext cheader_filename="gtk/gtk.h,gtk/gtkimmodule.h"
+
+// Causes vapigen issues, not sure why -- <union> without name
+
+// G-I doesn't support structs
+BindingSet struct=false
+BindingEntry struct=false
+BindingSignal struct=false
+Border struct
+FileFilterInfo struct=false
+FixedChild struct=false
+Requisition struct
+TargetEntry struct
+TextIter struct
+TreeIter struct
+
+// Bug #636812: no support for annotating the type of a closure
+AccelGroup
+  .connect*.closure type="owned Gtk.AccelGroupActivate"
+AccelLabel
+  .set_accel_closure.accel_closure type="owned Gtk.AccelGroupActivate"
+
+// Bug #: Virtual methods without invokers
+Entry
+  .get_frame_size.* out
+  .get_text_area_size.* out
+EntryBuffer
+  .get_text#virtual_method name="get_text_internal"
+  .get_text#virtual_method.n_bytes out default=null
+Range
+  .get_range_border.* out
+  .get_range_size_request.minimum out
+  .get_range_size_request.natural out
+RcStyle
+  .create_rc_style unowned=false skip=false
+  .create_style unowned=false skip=false
+TextView
+  .create_buffer unowned=false skip=false
+Widget
+  .adjust_size_allocation.*_size ref
+  .adjust_size_allocation.allocated_pos ref
+  .adjust_size_request.*_size ref
+  .compute_expand#virtual_method.* out
+  .dispatch_child_properties_changed.pspecs array array_length_idx=0
+RecentChooser
+  .get_recent_manager skip=false
+
+// Bug #657202: Floating references
+FileFilter
+  .to_gvariant floating
+PageSetup
+  .to_gvariant floating
+PaperSize
+  .to_gvariant floating
+PrintSettings
+  .to_gvariant floating
+
+// Arrays without length arguments
+TreeStore
+  .reorder skip=false
+
+// Better deprecation notices
+Accessible
+  .connect_widget_destroyed replacement="set_widget"
+Button
+  .enter replacement="Gtk.Widget.enter_notify_event"
+  .leave replacement="Gtk.Widget.leave_notify_event"
+  .pressed replacement="Gtk.Widget.button_press_event"
+  .released replacement="Gtk.Widget.button_release_event"
+CellRenderer
+  .get_size replacement="get_preferred_size"
+  .cell_background_gdk replacement="cell_background_rgba"
+CellRendererText
+  .background_gdk replacement="background_rgba"
+  .foreground_gdk replacement="foreground_rgba"
+CellView
+  .set_background_color replacement="set_background_rgba"
+  .background_gdk replacement="background_rgba"
+ColorButton
+  .color replacement="rgba"
+ColorSelection
+  .get_current_color replacement="get_current_rgba"
+  .get_previous_color replacement="get_previous_rgba"
+  .set_current_color replacement="set_current_rgba"
+  .set_previous_color replacement="set_previous_rgba"
+  .current_color replacement="current_rgba"
+MenuItem
+  .get_right_justified replacement="Widget.get_hexpand and Widget.get_halign"
+  .set_right_justified replacement="Widget.set_hexpand and Widget.set_halign"
+TextTag
+  .background_gdk replacement="background_rgba"
+  .foreground_gdk replacement="foreground_rgba"
+  .paragraph_background_gdk replacement="paragraph_background_rgba"
+Widget
+  .class_path replacement="get_path"
+  .modify_fg replacement="override_color"
+  .modify_bg replacement="override_background_color"
+  .modify_text replacement="override_color"
+  .modify_base replacement="override_background_color"
+  .modify_font replacement="override_font"
+  .modify_cursor replacement="override_cursor"
+  .path replacement="get_path"
+  .reset_rc_styles replacement="reset_style"
+draw_insertion_cursor replacement="render_insertion_cursor"
+paint_box replacement="render_background"
+paint_box_gap replacement="render_frame_gap"
+paint_expander replacement="render_expander"
+paint_extension replacement="render_extension"
+paint_shadow_gap replacement="render_frame"
+paint_spinner replacement="render_activity"
+paint_resize_grip replacement="render_handle"
+
+// G-I cannot deprecate whole types
+Action deprecated_since="3.10" replacement="GLib.Action"
+ActionGroup deprecated_since="3.10"
+Alignment deprecated_since="3.14"
+FontSelection deprecated_since="3.2" replacement="FontChooserWidget"
+FontSelectionDialog deprecated_since="3.2" replacement="FontChooserDialog"
+Gradient deprecated_since="3.8"
+HandleBox deprecated_since="3.4"
+HBox deprecated_since="3.2" replacement="Box"
+HButtonBox deprecated_since="3.2" replacement="ButtonBox"
+HPaned deprecated_since="3.2" replacement="Paned"
+HScale deprecated_since="3.2" replacement="Scale"
+HScrollbar deprecated_since="3.2" replacement="Scrollbar"
+HSeparator deprecated_since="3.2" replacement="Separator"
+IconFactory deprecated_since="3.10" replacement="IconTheme"
+IconSet deprecated_since="3.10" replacement="IconTheme"
+IconSource deprecated_since="3.10" replacement="IconTheme"
+ImageMenuItem deprecated_since="3.10"
+Misc deprecated_since="3.14"
+NumerableIcon deprecated_since="3.14"
+RadioAction deprecated_since="3.10"
+StatusIcon deprecated_since="3.14"
+Style deprecated_since="3.0" replacement="StyleContext"
+Table deprecated_since="3.4" replacement="Grid"
+TearoffMenuItem deprecated_since="3.4"
+ToggleAction deprecated_since="3.10"
+UIManager deprecated_since="3.10"
+VBox deprecated_since="3.2" replacement="Box"
+VButtonBox deprecated_since="3.2" replacement="ButtonBox"
+VPaned deprecated_since="3.2" replacement="Paned"
+VScale deprecated_since="3.2" replacement="Scale"
+VScrollbar deprecated_since="3.2" replacement="Scrollbar"
+VSeparator deprecated_since="3.2" replacement="Separator"
+Activatable deprecated_since="3.10"
+
+// G-I cannot handle returning non-boxed types
+binding_set_by_class skip=false
+ContainerClass
+  .find_child_property skip=false
+get_option_group skip=false
+
+// G-I cannot handle variadic functions
+*.*_valist skip=false
+*.*_valist.args type="va_list"
+*.*_valist.var_args type="va_list"
+Builder
+  .add_callback_symbols skip=false
+CellArea
+  .add_with_properties skip=false
+  .cell_get skip=false
+  .cell_set skip=false
+Container
+  .add_with_properties skip=false
+  .child_get* skip=false
+  .child_set* skip=false
+Dialog
+  .add_buttons skip=false
+  .set_alternative_button_order skip=false sentinel="-1"
+  .new_with_buttons skip=false
+FileChooserDialog
+  .new skip=false
+InfoBar
+  .add_buttons skip=false
+  .new_with_buttons skip=false
+ListStore
+  .new skip=false sentinel="-1"
+  .insert_with_values skip=false sentinel="-1"
+  .set skip=false sentinel="-1"
+MessageDialog
+  .new skip=false printf_format
+  .format_secondary_markup skip=false printf_format
+  .format_secondary_text skip=false printf_format
+  .new_with_markup skip=false printf_format
+RecentChooserDialog
+  .new skip=false
+  .new_for_manager skip=false
+Style
+  .get skip=false
+StyleContext
+  .get skip=false
+  .get_style skip=false
+StyleProperties
+  .set skip=false
+TextBuffer
+  .create_tag skip=false
+  .insert_with_tags skip=false
+  .insert_with_tags_by_name skip=false
+ThemingEngine
+  .get skip=false
+  .get_style skip=false
+  .get_style_property skip=false
+TreePath
+  .new_from_indices skip=false sentinel="-1"
+TreeStore
+  .new skip=false sentinel=""
+  .insert_with_values skip=false sentinel="-1"
+  .set skip=false sentinel="-1"
+TreeView
+  .insert_column_with_attributes skip=false
+TreeViewColumn
+  .set_attributes skip=false
+  .new_with_attributes skip=false
+Widget
+  .style_get skip=false
+Actionable
+  .set_action_target skip=false
+CellLayout
+  .set_attributes skip=false
+TreeModel
+  .get skip=false sentinel="-1"
+
+// Abstract vs. virtual
+CellRenderer
+  .get_size#virtual_method abstract
+  .render#virtual_method abstract
+TreeModel
+  .iter_previous#virtual_method virtual
+  .ref_node#virtual_method virtual
+  .unref_node#virtual_method virtual
+
+// G-I can't handle delegates w/o targets
+Clipboard
+  .set_with_data skip=false
+  .set_with_owner skip=false
+ColorSelection
+  .set_change_palette_with_screen_hook skip=false
+
+// Unregistered callback types
+Builder
+  .lookup_callback_symbol skip=false
+
+// Bug #: Default values
+Button
+  .new_from_icon_name.size default=Gtk.IconSize.BUTTON
+Box
+  .pack_*.expand default=true
+  .pack_*.fill default=true
+  .pack_*.padding default=0
+CellAreaBox
+  .pack_*.align default=false
+  .pack_*.fixed default=true
+  .pack_*.expand default=true
+Editable
+  .get_chars.start_pos default=0
+  .get_chars.end_pos default=-1
+EntryBuffer
+  .new.initial_chars default=null
+Gesture
+  .get_point.x nullable default=null
+  .get_point.y nullable default=null
+Grid
+  .attach*.width default=1
+  .attach*.height default=1
+IconInfo
+  .load_symbolic*.success_color default=null
+  .load_symbolic*.warning_color default=null
+  .load_symbolic*.error_color default=null
+  .load_symbolic*.was_symbolic default=null
+  .*.cancellable default=null
+Layout
+  .new.* default=null
+Menu
+  .popup_at_*.trigger_event default=null
+Notebook
+  .append_page.tab_label default=null
+  .prepend_page.tab_label default=null
+ScaleButton
+  .new.size type="Gtk.IconSize"
+  .new.min default=0.0
+  .new.max default=100.0
+  .new.step default=2.0
+  .new.icons default=null
+TextBuffer
+  .set_text.len default=-1
+TextTag
+  .new.name default=null
+TextMark
+  .new.left_gravity default=false
+Widget
+  .intersect.intersection default=null
+Window
+  .new.type default=Gtk.WindowType.TOPLEVEL
+
+// Ownership of out arguments
+CellRenderer
+  .get_preferred_size.minimum_size unowned=false
+  .get_preferred_size.natural_size unowned=false
+CellView
+  .get_size_of_row.requisition unowned=false
+ComboBox
+  .get_active_iter.iter unowned=false
+
+// Structs as generic type arguments
+binding_entry_add_signall.binding_args type="GLib.SList<Gtk.BindingArg?>"
+
+// Subclasses conflicting with virtual methods with different signatures
+CellAreaBox
+  .pack_end name="pack_end_full"
+  .pack_start name="pack_start_full"
+FileFilter
+  .get_name name="get_filter_name"
+  .set_name name="set_filter_name"
+RecentFilter
+  .get_name name="get_filter_name"
+  .set_name name="set_filter_name"
+
+// Field ownership
+RecentData
+  .* unowned=false
+TextAttributes
+  .font unowned=false
+  .union#union.font_features unowned=false
+  .language unowned=false
+  .tabs unowned=false
+TextAppearance
+  .union#union.rgba unowned=false
+
+// Bug #: Nullable properties & fields
+ComboBox.active_id nullable
+RecentData
+  .display_name nullable
+  .description nullable
+RecentFilterInfo
+  .uri nullable
+  .display_name nullable
+  .mime_type nullable
+  .applications nullable
+  .groups nullable
+
+// Bug #: element-type properties
+Settings.color_hash type="GLib.HashTable<string,Gdk.Color>"
+
+// Skipped for G-I, but usable from Vala
+FlowBox
+  .bind_model skip=false
+  .bind_model.create_widget_func nullable
+FlowBoxCreateWidgetFunc skip=false
+  .item type="GLib.Object"
+IMContextSimple
+  .add_table skip=false
+
+// Symbol name conflicts
+Container
+  .forall#virtual_method skip
+  .set_focus_child skip
+EntryCompletion
+  .insert_prefix#method name="request_prefix_insertion"
+Notebook
+  .insert_page#virtual_method name="insert_page_menu"
+  .insert_page#virtual_method.tab_label nullable
+  .insert_page#virtual_method.menu_label nullable
+  .insert_page_menu skip
+ToolShell
+  .get_icon_size#method skip
+TreeView
+  .row_expanded#method name="is_row_expanded"
+Widget
+  .compute_expand#virtual_method name="compute_expand_internal"
+  .draw#method name="draw_to_cairo_context"
+Window
+  .activate_default#method name="try_activate_default"
+  .activate_focus#method name="try_activate_focus"
+Editable
+  .delete_text#method skip
+  .insert_text#method skip
+
+// time_t
+RecentInfo
+  .get_added type="time_t"
+  .get_application_info.time_ type="time_t"
+  .get_modified type="time_t"
+  .get_visited type="time_t"
+
+Stock skip
+STOCK_* name="STOCK_(.+)" parent="Gtk.Stock"
+
+// Not sure what g-i was thinking
+NumerableIcon
+  .new symbol_type="constructor"
+  .new_with_style_context symbol_type="constructor"
+TreeModel
+  .filter_new parent="Gtk.TreeModelFilter" name="new" symbol_type="constructor"
+  .sort_new_with_model parent="Gtk.TreeModelSort" name="new_with_model" symbol_type="constructor"
+
+// These aren't actually used publicly anywhere.
+TableChild skip
+TableRowCol skip
+TargetPair skip
+RcProperty skip
+
+// Vala-specific, not really bugs
+/////////////////////////////////
+
+// Keep properties non-abstract as before
+*#interface.*#property abstract=false
+
+// Backwards compatibility
+AccelGroup
+  .find type="Gtk.AccelKey*"
+Action
+  .create_icon.icon_size type="Gtk.IconSize"
+ActionGroup
+  .add_actions* skip=false
+  .add_*_actions* skip=false
+  .add_radio_actions.on_change type="Gtk.RadioActionCallback"
+  .add_radio_actions_full.on_change type="owned Gtk.RadioActionCallback"
+Button
+  .new_from_icon_name.size type="Gtk.IconSize"
+Clipboard
+  .get_selection skip=false
+ClipboardRichTextReceivedFunc
+  .text type="uint8[]?" array_length_idx=3
+ColorButton
+  .get_color return_void
+ColorSelection
+  .get_current_color return_void
+  .get_previous_color return_void
+ColorSelectionDialog
+  .get_color_selection type="unowned Gtk.ColorSelection"
+CssProvider
+  .load_from_data name="load_from_buffer"
+Entry
+  .get_text_area return_void
+EntryBuffer
+  .new.initial_chars type="uint8[]?" array_length_idx=1
+  .emit_inserted_text.chars type="uint8[]" array_length_idx=2
+  .insert_text.chars type="uint8[]" array_length_idx=2
+  .set_text.chars type="uint8[]" array_length_idx=1
+IconInfo
+  .copy skip=false
+  .free skip=false destroys_instance
+IconSet
+  .get_sizes.sizes type="Gtk.IconSize[]"
+  .render_icon*.size type="Gtk.IconSize"
+IconSource
+  .get_size type="Gtk.IconSize"
+  .set_size.size type="Gtk.IconSize"
+Image
+  .*.size type="Gtk.IconSize"
+InfoBar
+  .get_content_area type="unowned Gtk.Container"
+ListStore
+  .append return_void
+  .move_after.iter ref
+  .move_before.iter ref
+  .prepend return_void
+  .remove.iter ref
+PaperSize
+  .free destroys_instance
+PlacesSidebar
+  .show_other_locations#signal name="show_other_locations_requested"
+SelectionData
+  .free destroys_instance
+  .get_data skip=false
+Style
+  .base unowned=false
+  .bg unowned=false
+  .dark unowned=false
+  .fg unowned=false
+  .light unowned=false
+  .mid unowned=false
+  .text unowned=false
+  .text_aa unowned=false
+  .copy skip
+  .get_style_property return_void
+render_* parent="Gtk.StyleContext"
+render_* symbol_type="method" instance_idx=0
+render_icon_pixbuf.size type="Gtk.IconSize"
+StyleProperties
+  .get skip=false
+  .lookup_property skip=false
+  .register_property skip=false
+  .register_property.parse_func nullable
+TextBuffer
+  .delete.start ref
+  .delete.end ref
+  .delete_interactive.start_iter ref
+  .delete_interactive.end_iter ref
+  .get_end_iter return_void
+  .get_start_iter return_void
+  .insert*.iter ref
+  .insert_text.pos ref
+  .insert_text#signal.location ref
+TextView
+  .get_iter_location return_void
+  .get_visible_rect return_void
+ThemingEngine
+  .register_property skip=false
+  .render_icon_pixbuf skip=false unowned=false
+ToolItem
+  .get_icon_size type="Gtk.IconSize"
+ToolPalette
+  .get_icon_size type="Gtk.IconSize"
+  .set_icon_size.icon_size type="Gtk.IconSize"
+TreePath
+  .free destroys_instance
+  .get_indices_with_depth name="get_indices"
+tree_row_reference_reordered skip=false name="reordered" parent="Gtk.TreeRowReference"
+TreeRowReference
+  .free destroys_instance
+TreeStore
+  .move_after.iter ref
+  .move_before.iter ref
+  .remove.iter ref
+TreeView
+  .get_background_area return_void
+  .get_cell_area return_void
+  .get_visible_rect return_void
+Widget
+  .delete_event.event type="Gdk.EventAny"
+  .destroy_event.event type="Gdk.EventAny"
+  .drag_*#method parent="Gtk" symbol_type="function"
+  .get_allocation return_void
+  .get_child_requisition return_void
+  .get_clip return_void
+  .get_parent type="unowned Gtk.Container?"
+  .grab_add parent="Gtk" symbol_type="function"
+  .grab_remove parent="Gtk" symbol_type="function"
+  .new skip
+  .render_icon*.size type="Gtk.IconSize"
+  .set_parent.parent type="Gtk.Container"
+  .style_get_property.value ref
+  .touch_event.event type="Gdk.EventTouch"
+  .window skip
+WidgetPath
+  .free destroys_instance
+WidgetClass
+  .install_style_property_parser skip=false
+TreeModel
+  .get_value return_void
+BindingArg
+  .d#union.* skip
+StockItem
+  .copy skip=false unowned=false
+TextIter
+  .get_attributes.values out=false
+icon_size_*#function skip
+key_snooper_install skip=false
+rc_property_parse_* skip
+rc_scanner_new skip=false
+show_about_dialog skip=false
+test_create_widget skip=false
+test_display_button_window skip=false
+test_init skip=false
+
+@false skip
+@true skip
+
+init*.argv unowned
+parse_args.argv unowned
+test_init.argvp unowned
+
+*.string name="str"
+*.*.string name="str"
+
+// Forward upstream
+///////////////////
+Widget
+  .drag_dest_set.targets array_length_idx=3
+  .drag_source_set.targets array_length_idx=3
+
+// Not completely sure
+Button
+  .get_label nullable
+  .label nullable
+  .set_label.label nullable
+ComboBox
+  .get_row_separator_func skip=false
+Entry
+  .populate_popup#signal.widget type="Gtk.Menu"
+FileChooser
+  .add_choice.options array_null_terminated
+  .add_choice.option_labels array_null_terminated
+FileChooserNative
+  .accept_label nullable
+  .cancel_label nullable
+Menu
+  .get_for_attach_widget type="unowned GLib.List<Gtk.Menu>"
+  .popped_up.*_rect type="Gdk.Rectangle"
+ModelButton
+  .icon nullable
+NativeDialog
+  .title nullable
+  .transient_for nullable
+  .get_title nullable
+  .get_transient_for nullable
+  .set_title.title nullable
+  .set_transient_for.parent nullable
+RadioToolButton
+  .get_group nullable
+Window
+  .list_toplevels type="GLib.List<unowned Gtk.Window>"
+  .set_focus#signal.object nullable
+TreeModel
+  .get_path nullable
+  .iter_next.iter ref
+  .iter_previous.iter ref
+TreeView
+  .insert_column_with_attributes.title nullable
+TreeViewColumn
+  .new_with_attributes.title nullable
+TextView
+  .populate_popup.popup type="Gtk.Menu"
+TreeView
+  .get_*_func skip=false
+Viewport
+  .get_*adjustment nullable
+VScale
+  .new.adjustment nullable
+Widget
+  .drag_begin.event nullable
+  .intersect.intersection nullable unowned=false
+
+// Sure
+binding_set_by_class.object_class type="GLib.ObjectClass"
+*.ref unowned
+
+// These delegate types don't have targets in the typedefs, but they
+// get called with a target.
+AccelGroupActivate skip
+
+// Possible TODO
+////////////////
+
+// TreeViewColumn.title nullable // (plus all title params in TreeView and TreeViewColumn)
