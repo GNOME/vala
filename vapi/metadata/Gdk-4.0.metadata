@@ -1,0 +1,82 @@
+KEY_* name="KEY_(.+)" parent="Gdk.Key"
+selection_* name="selection_(.+)" parent="Gdk.Selection"
+Atom struct
+Color struct
+Cursor	abstract=false
+Device
+        .free_history skip=false
+        .get_axis skip=false
+        .get_axis_value skip=false
+        .get_history skip=false
+        .get_state skip=false
+        .get_window_at_position skip=false
+Event
+        ._get_angle skip
+        ._get_center skip
+        ._get_distance skip
+Window abstract=false
+        .add_filter skip=false
+        .create_similar_image_surface type="Cairo.ImageSurface"
+        .remove_filter skip=false
+        .moved_to_rect.*_rect type="Gdk.Rectangle"
+WindowRedirect skip
+Rectangle struct
+        .x skip
+        .y skip
+        .width skip
+        .height skip
+RGBA struct
+ModifierType
+        .modifier_reserved_*_mask skip
+pango_layout_get_clip_region skip=false
+property_change skip=false
+Window
+        .destroy destroys_instance
+        .destroy_notify skip
+synthesize_window_state skip
+
+// g-i doesn't support nullable fields and properties (bug #730479)
+Device
+        .associated_device nullable
+        .name nullable
+
+// vapigen actually generates the correctly, but in away that breaks BC
+Rectangle.union return_void
+Window.get_frame_extents return_void
+
+EventAny struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventButton struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventConfigure struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventCrossing struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventDND struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventExpose struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventFocus struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventGrabBroken struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventKey struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+        .string name="str" unowned=false
+EventMotion struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+        .axes array
+EventOwnerChange struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventPadAxis struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventPadButton struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventPadGroupMode struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventProperty struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventProximity struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventScroll struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventSelection struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventSetting struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventTouch struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventTouchpadPinch struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventTouchpadSwipe struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventVisibility struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventWindowState struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+FilterFunc.data closure=2
+init*.argv unowned
+parse_args.argv unowned
+property_change.data array
+selection_property_get skip=false
+        .data array
+threads_add_idle skip=false
+threads_add_timeout skip=false
+threads_add_timeout_seconds skip=false
+XEvent skip

@@ -1,0 +1,417 @@
+// Issues which can't (currently) be fixed through annotations alone,
+// but may be some day.
+////////////////////////////////////////////////////////////////////
+
+// G-I doesn't support per-sybmol includes
+* cheader_filename="gtk/gtk.h"
+*Accessible cheader_filename="gtk/gtk.h,gtk/gtk-a11y.h"
+IMContext cheader_filename="gtk/gtk.h,gtk/gtkimmodule.h"
+
+// Causes vapigen issues, not sure why -- <union> without name
+
+// G-I doesn't support structs
+BindingSet struct=false
+BindingEntry struct=false
+BindingSignal struct=false
+Border struct
+FileFilterInfo struct=false
+FixedChild struct=false
+Requisition struct
+TargetEntry struct
+TextIter struct
+TreeIter struct
+
+// Bug #636812: no support for annotating the type of a closure
+AccelGroup
+  .connect*.closure type="owned Gtk.AccelGroupActivate"
+AccelLabel
+  .set_accel_closure.accel_closure type="owned Gtk.AccelGroupActivate"
+
+// Bug #: Virtual methods without invokers
+Entry
+  .get_frame_size.* out
+  .get_text_area_size.* out
+EntryBuffer
+  .get_text#virtual_method.n_bytes out default=null
+Range
+  .get_range_border.* out
+  .get_range_size_request.minimum out
+  .get_range_size_request.natural out
+TextView
+  .create_buffer unowned=false skip=false
+Widget
+  .adjust_size_allocation.*_size ref
+  .adjust_size_allocation.allocated_pos ref
+  .adjust_size_request.*_size ref
+  .compute_expand#virtual_method.* out
+  .dispatch_child_properties_changed.pspecs array array_length_idx=0
+RecentChooser
+  .get_recent_manager skip=false
+
+// Bug #657202: Floating references
+FileFilter
+  .to_gvariant floating
+PageSetup
+  .to_gvariant floating
+PaperSize
+  .to_gvariant floating
+PrintSettings
+  .to_gvariant floating
+
+// Arrays without length arguments
+TreeStore
+  .reorder skip=false
+
+// Better deprecation notices
+CellRenderer
+  .get_size replacement="get_preferred_size"
+
+// G-I cannot deprecate whole types
+Gradient deprecated_since="3.8"
+
+// G-I cannot handle returning non-boxed types
+binding_set_by_class skip=false
+ContainerClass
+  .find_child_property skip=false
+get_option_group skip=false
+
+// G-I cannot handle variadic functions
+*.*_valist skip=false
+*.*_valist.args type="va_list"
+*.*_valist.var_args type="va_list"
+Builder
+  .add_callback_symbols skip=false
+CellArea
+  .add_with_properties skip=false
+  .cell_get skip=false
+  .cell_set skip=false
+Container
+  .add_with_properties skip=false
+  .child_get* skip=false
+  .child_set* skip=false
+Dialog
+  .add_buttons skip=false
+  .new_with_buttons skip=false
+FileChooserDialog
+  .new skip=false
+InfoBar
+  .add_buttons skip=false
+  .new_with_buttons skip=false
+ListStore
+  .new skip=false sentinel="-1"
+  .insert_with_values skip=false sentinel="-1"
+  .set skip=false sentinel="-1"
+MessageDialog
+  .new skip=false printf_format
+  .format_secondary_markup skip=false printf_format
+  .format_secondary_text skip=false printf_format
+  .new_with_markup skip=false printf_format
+RecentChooserDialog
+  .new skip=false
+  .new_for_manager skip=false
+StyleContext
+  .get skip=false
+  .get_style skip=false
+TextBuffer
+  .create_tag skip=false
+  .insert_with_tags skip=false
+  .insert_with_tags_by_name skip=false
+TreePath
+  .new_from_indices skip=false sentinel="-1"
+TreeStore
+  .new skip=false sentinel=""
+  .insert_with_values skip=false sentinel="-1"
+  .set skip=false sentinel="-1"
+TreeView
+  .insert_column_with_attributes skip=false
+TreeViewColumn
+  .set_attributes skip=false
+  .new_with_attributes skip=false
+Widget abstract=false
+  .new skip=false
+  .style_get skip=false
+Actionable
+  .set_action_target skip=false
+CellLayout
+  .set_attributes skip=false
+TreeModel
+  .get skip=false sentinel="-1"
+
+// Abstract vs. virtual
+CellRenderer
+  .get_size#virtual_method abstract
+  .render#virtual_method abstract
+TreeModel
+  .iter_previous#virtual_method virtual
+  .ref_node#virtual_method virtual
+  .unref_node#virtual_method virtual
+
+// G-I can't handle delegates w/o targets
+Clipboard
+  .set_with_data skip=false
+  .set_with_owner skip=false
+
+// Unregistered callback types
+Builder
+  .lookup_callback_symbol skip=false
+
+// Bug #: Default values
+Button
+  .new_from_icon_name.size default=Gtk.IconSize.BUTTON
+Box
+  .pack_*.expand default=true
+  .pack_*.fill default=true
+CellAreaBox
+  .pack_*.align default=false
+  .pack_*.fixed default=true
+  .pack_*.expand default=true
+Editable
+  .get_chars.start_pos default=0
+  .get_chars.end_pos default=-1
+EntryBuffer
+  .new.initial_chars default=null
+Gesture
+  .get_point.x nullable default=null
+  .get_point.y nullable default=null
+Grid
+  .attach*.width default=1
+  .attach*.height default=1
+IconInfo
+  .load_symbolic*.success_color default=null
+  .load_symbolic*.warning_color default=null
+  .load_symbolic*.error_color default=null
+  .load_symbolic*.was_symbolic default=null
+  .*.cancellable default=null
+Layout
+  .new.* default=null
+Menu
+  .popup_at_*.trigger_event default=null
+Notebook
+  .append_page.tab_label default=null
+  .prepend_page.tab_label default=null
+ScaleButton
+  .new.size type="Gtk.IconSize"
+  .new.min default=0.0
+  .new.max default=100.0
+  .new.step default=2.0
+  .new.icons default=null
+TextBuffer
+  .set_text.len default=-1
+TextTag
+  .new.name default=null
+TextMark
+  .new.left_gravity default=false
+Window
+  .new.type default=Gtk.WindowType.TOPLEVEL
+
+// Ownership of out arguments
+CellRenderer
+  .get_preferred_size.minimum_size unowned=false
+  .get_preferred_size.natural_size unowned=false
+ComboBox
+  .get_active_iter.iter unowned=false
+
+// Structs as generic type arguments
+binding_entry_add_signall.binding_args type="GLib.SList<Gtk.BindingArg?>"
+
+// Subclasses conflicting with virtual methods with different signatures
+CellAreaBox
+  .pack_end name="pack_end_full"
+  .pack_start name="pack_start_full"
+FileFilter
+  .get_name name="get_filter_name"
+  .set_name name="set_filter_name"
+RecentFilter
+  .get_name name="get_filter_name"
+  .set_name name="set_filter_name"
+
+// Field ownership
+RecentData
+  .* unowned=false
+TextAttributes
+  .language unowned=false
+
+// Bug #: Nullable properties & fields
+ComboBox.active_id nullable
+RecentData
+  .display_name nullable
+  .description nullable
+RecentFilterInfo
+  .uri nullable
+  .display_name nullable
+  .mime_type nullable
+  .applications nullable
+  .groups nullable
+
+// Skipped for G-I, but usable from Vala
+FlowBox
+  .bind_model skip=false
+  .bind_model.create_widget_func nullable
+FlowBoxCreateWidgetFunc skip=false
+  .item type="GLib.Object"
+IMContextSimple
+  .add_table skip=false
+
+// Symbol name conflicts
+Container
+  .forall#virtual_method skip
+  .set_focus_child skip
+EntryBuffer
+  .get_text#method skip
+EntryCompletion
+  .insert_prefix#method name="request_prefix_insertion"
+Notebook
+  .insert_page#virtual_method name="insert_page_menu"
+  .insert_page#virtual_method.tab_label nullable
+  .insert_page#virtual_method.menu_label nullable
+  .insert_page_menu skip
+ToolShell
+  .get_icon_size#method skip
+TreeView
+  .row_expanded#method name="is_row_expanded"
+Widget
+  .compute_expand#virtual_method name="compute_expand_internal"
+  .draw#method name="draw_to_cairo_context"
+Window
+  .activate_default#method name="try_activate_default"
+  .activate_focus#method name="try_activate_focus"
+Editable
+  .delete_text#method skip
+  .insert_text#method skip
+
+// time_t
+RecentInfo
+  .get_added type="time_t"
+  .get_application_info.time_ type="time_t"
+  .get_modified type="time_t"
+  .get_visited type="time_t"
+
+// Not sure what g-i was thinking
+TreeModel
+  .filter_new parent="Gtk.TreeModelFilter" name="new" symbol_type="constructor"
+  .sort_new_with_model parent="Gtk.TreeModelSort" name="new_with_model" symbol_type="constructor"
+
+// These aren't actually used publicly anywhere.
+TargetPair skip
+
+// Vala-specific, not really bugs
+/////////////////////////////////
+
+// Backwards compatibility
+AccelGroup
+  .find type="Gtk.AccelKey*"
+Button
+  .new_from_icon_name.size type="Gtk.IconSize"
+ClipboardRichTextReceivedFunc
+  .text type="uint8[]?" array_length_idx=3
+CssProvider
+  .load_from_data name="load_from_buffer"
+Entry
+  .get_text_area return_void
+EntryBuffer
+  .new.initial_chars type="uint8[]?" array_length_idx=1
+  .emit_inserted_text.chars type="uint8[]" array_length_idx=2
+  .insert_text.chars type="uint8[]" array_length_idx=2
+  .set_text.chars type="uint8[]" array_length_idx=1
+Image
+  .*.size type="Gtk.IconSize"
+InfoBar
+  .get_content_area type="unowned Gtk.Container"
+ListStore
+  .append return_void
+  .move_after.iter ref
+  .move_before.iter ref
+  .prepend return_void
+SelectionData
+  .get_data skip=false
+render_* parent="Gtk.StyleContext"
+render_* symbol_type="method" instance_idx=0
+TextBuffer
+  .delete.start ref
+  .delete.end ref
+  .delete_interactive.start_iter ref
+  .delete_interactive.end_iter ref
+  .get_end_iter return_void
+  .get_start_iter return_void
+  .insert*.iter ref
+  .insert_text.pos ref
+  .insert_text#signal.location ref
+TextView
+  .get_iter_location return_void
+  .get_visible_rect return_void
+ToolItem
+  .get_icon_size type="Gtk.IconSize"
+ToolPalette
+  .get_icon_size type="Gtk.IconSize"
+  .set_icon_size.icon_size type="Gtk.IconSize"
+TreePath
+  .get_indices_with_depth name="get_indices"
+tree_row_reference_reordered skip=false name="reordered" parent="Gtk.TreeRowReference"
+TreeStore
+  .move_after.iter ref
+  .move_before.iter ref
+  .remove.iter ref
+TreeView
+  .get_background_area return_void
+  .get_cell_area return_void
+  .get_visible_rect return_void
+Widget
+  .delete_event.event type="Gdk.EventAny"
+  .destroy_event.event type="Gdk.EventAny"
+  .drag_*#method parent="Gtk" symbol_type="function"
+  .get_allocation return_void
+  .get_clip return_void
+  .get_parent type="unowned Gtk.Container?"
+  .grab_add parent="Gtk" symbol_type="function"
+  .grab_remove parent="Gtk" symbol_type="function"
+  .set_parent.parent type="Gtk.Container"
+  .style_get_property.value ref
+  .touch_event.event type="Gdk.EventTouch"
+TreeModel
+  .get_value return_void
+BindingArg
+  .d.* skip
+TextIter
+  .get_attributes.values out=false
+icon_size_*#function skip
+rc_property_parse_* skip
+show_about_dialog skip=false
+test_init skip=false
+
+init*.argv unowned
+parse_args.argv unowned
+test_init.argvp unowned
+
+// Forward upstream
+///////////////////
+Widget
+  .drag_dest_set.targets array_length_idx=3
+  .drag_source_set.targets array_length_idx=3
+
+// Not completely sure
+ComboBox
+  .get_row_separator_func skip=false
+Menu
+  .get_for_attach_widget type="unowned GLib.List<Gtk.Menu>"
+  .popped_up.*_rect type="Gdk.Rectangle"
+Window
+  .list_toplevels type="GLib.List<unowned Gtk.Window>"
+  .set_focus#signal.object nullable
+TreeModel
+  .get_path nullable
+  .iter_next.iter ref
+  .iter_previous.iter ref
+TreeView
+  .get_*_func skip=false
+
+// Sure
+binding_set_by_class.object_class type="GLib.ObjectClass"
+
+// These delegate types don't have targets in the typedefs, but they
+// get called with a target.
+AccelGroupActivate skip
+
+// Possible TODO
+////////////////
+
+// TreeViewColumn.title nullable // (plus all title params in TreeView and TreeViewColumn)

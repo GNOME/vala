@@ -1,0 +1,4 @@
+value_* skip
+
+RenderNodeIter
+	.free destroys_instance
