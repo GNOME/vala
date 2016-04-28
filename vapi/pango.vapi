@@ -144,7 +144,7 @@ namespace Pango {
 		public Pango.FontMetrics get_metrics (Pango.FontDescription? desc, Pango.Language? language);
 		[Version (since = "1.32.4")]
 		public uint get_serial ();
-		public void list_families ([CCode (array_length_cname = "n_families", array_length_pos = 1.1)] out Pango.FontFamily[] families);
+		public void list_families ([CCode (array_length_cname = "n_families", array_length_pos = 1.1)] out (unowned Pango.FontFamily)[] families);
 		public Pango.Font? load_font (Pango.FontDescription desc);
 		public Pango.Fontset? load_fontset (Pango.FontDescription desc, Pango.Language language);
 		public void set_base_dir (Pango.Direction direction);
@@ -270,7 +270,7 @@ namespace Pango {
 		public virtual unowned string get_name ();
 		[Version (since = "1.4")]
 		public virtual bool is_monospace ();
-		public virtual void list_faces ([CCode (array_length_cname = "n_faces", array_length_pos = 1.1)] out Pango.FontFace[] faces);
+		public virtual void list_faces ([CCode (array_length_cname = "n_faces", array_length_pos = 1.1)] out (unowned Pango.FontFace)[] faces);
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_font_map_get_type ()")]
 	public abstract class FontMap : GLib.Object {
@@ -284,7 +284,7 @@ namespace Pango {
 		public virtual uint get_serial ();
 		[Version (deprecated = true, deprecated_since = "1.38", since = "1.4")]
 		public unowned string get_shape_engine_type ();
-		public virtual void list_families ([CCode (array_length_cname = "n_families", array_length_pos = 1.1)] out Pango.FontFamily[] families);
+		public virtual void list_families ([CCode (array_length_cname = "n_families", array_length_pos = 1.1)] out (unowned Pango.FontFamily)[] families);
 		public virtual Pango.Font? load_font (Pango.Context context, Pango.FontDescription desc);
 		public virtual Pango.Fontset? load_fontset (Pango.Context context, Pango.FontDescription desc, Pango.Language language);
 	}

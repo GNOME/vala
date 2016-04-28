@@ -1327,7 +1327,7 @@ namespace Mx {
 		public abstract unowned string get_style_class ();
 		public abstract unowned string get_style_pseudo_class ();
 		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
-		public GLib.ParamSpec[] list_properties ();
+		public (unowned GLib.ParamSpec)[] list_properties ();
 		public abstract void set_style (Mx.Style style);
 		public abstract void set_style_class (string style_class);
 		public abstract void set_style_pseudo_class (string pseudo_class);

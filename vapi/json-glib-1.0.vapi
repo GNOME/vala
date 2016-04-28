@@ -317,7 +317,7 @@ namespace Json {
 		public abstract GLib.Value get_property (GLib.ParamSpec pspec);
 		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
 		[Version (since = "0.14")]
-		public GLib.ParamSpec[] list_properties ();
+		public (unowned GLib.ParamSpec)[] list_properties ();
 		public abstract Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
 		[Version (since = "0.14")]
 		public abstract void set_property (GLib.ParamSpec pspec, GLib.Value value);

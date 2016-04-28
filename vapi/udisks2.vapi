@@ -54,7 +54,7 @@ namespace UDisks {
 		public UDisks.PartitionTable get_partition_table (UDisks.Partition partition);
 		public unowned string get_partition_table_subtype_for_display (string partition_table_type, string partition_table_subtype);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public string[] get_partition_table_subtypes (string partition_table_type);
+		public (unowned string)[] get_partition_table_subtypes (string partition_table_type);
 		public unowned string get_partition_table_type_for_display (string partition_table_type);
 		[Version (since = "2.1.1")]
 		public unowned string get_partition_type_and_subtype_for_display (string partition_table_type, string partition_table_subtype, string partition_type);

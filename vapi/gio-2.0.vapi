@@ -3249,7 +3249,7 @@ namespace GLib {
 		public void set_server_identity (GLib.SocketConnectable identity);
 		public void set_validation_flags (GLib.TlsCertificateFlags flags);
 		[ConcreteAccessor]
-		public abstract GLib.List<weak void*> accepted_cas { owned get; }
+		public abstract GLib.List<void*> accepted_cas { owned get; }
 		[ConcreteAccessor]
 		public abstract GLib.SocketConnectable server_identity { get; set construct; }
 		[ConcreteAccessor]
