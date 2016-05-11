@@ -5414,7 +5414,7 @@ namespace Gdk {
 		[Version (since = "3.22")]
 		public int get_width_mm ();
 		[Version (since = "3.22")]
-		public void get_workarea (Gdk.Rectangle geometry);
+		public Gdk.Rectangle get_workarea ();
 		[Version (since = "3.22")]
 		public bool is_primary ();
 		public Gdk.Display display { get; construct; }
@@ -5426,7 +5426,6 @@ namespace Gdk {
 		public int scale_factor { get; }
 		public Gdk.SubpixelLayout subpixel_layout { get; }
 		public int width_mm { get; }
-		[NoAccessorMethod]
 		public Gdk.Rectangle workarea { get; }
 		public signal void invalidate ();
 	}
