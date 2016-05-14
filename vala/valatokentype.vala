@@ -192,7 +192,9 @@ public enum Vala.TokenType {
 		case DELETE: return "`delete'";
 		case DIV: return "`/'";
 		case DO: return "`do'";
+		case DOUBLE_COLON: return "`::'";
 		case DOT: return "`.'";
+		case DYNAMIC: return "`dynamic'";
 		case ELLIPSIS: return "`...'";
 		case ELSE: return "`else'";
 		case ENUM: return "`enum'";
