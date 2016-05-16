@@ -109,6 +109,12 @@ public class Vala.ObjectType : ReferenceType {
 			return false;
 		}
 
+		foreach (DataType type in get_type_arguments ()) {
+			if (!type.check (context)) {
+				return false;
+			}
+		}
+
 		return true;
 	}
 }
