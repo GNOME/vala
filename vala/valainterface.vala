@@ -356,6 +356,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 		for (int i = 0; i < prerequisites.size; i++) {
 			if (prerequisites[i] == old_type) {
 				prerequisites[i] = new_type;
+				new_type.parent_node = this;
 				return;
 			}
 		}

@@ -561,6 +561,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		for (int i = 0; i < base_types.size; i++) {
 			if (base_types[i] == old_type) {
 				base_types[i] = new_type;
+				new_type.parent_node = this;
 				return;
 			}
 		}
