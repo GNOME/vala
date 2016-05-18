@@ -28,6 +28,10 @@ if HAVE_LIBVALA_0_32_X
 DRIVER_0_32_X_DIR = 0.32.x
 endif
 
+if HAVE_LIBVALA_0_34_X
+DRIVER_0_34_X_DIR = 0.34.x
+endif
+
 
 SUBDIRS = \
 	$(DRIVER_0_20_X_DIR) \
@@ -37,5 +41,6 @@ SUBDIRS = \
 	$(DRIVER_0_28_X_DIR) \
 	$(DRIVER_0_30_X_DIR) \
 	$(DRIVER_0_32_X_DIR) \
+	$(DRIVER_0_34_X_DIR) \
 	$(NULL)
 

@@ -80,6 +80,9 @@ AM_CONDITIONAL(HAVE_CGRAPH, test "$have_cgraph" = "yes")
 ## Drivers:
 ##
 
+PKG_CHECK_MODULES(LIBVALA_0_34_X, libvala-0.34 > 0.26.0, have_libvala_0_34_x="yes", have_libvala_0_34_x="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_34_X, test "$have_libvala_0_34_x" = "yes")
+
 PKG_CHECK_MODULES(LIBVALA_0_32_X, libvala-0.32 > 0.26.0, have_libvala_0_32_x="yes", have_libvala_0_32_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_32_X, test "$have_libvala_0_32_x" = "yes")
 
@@ -118,6 +121,7 @@ src/driver/0.26.x/Makefile
 src/driver/0.28.x/Makefile
 src/driver/0.30.x/Makefile
 src/driver/0.32.x/Makefile
+src/driver/0.34.x/Makefile
 src/doclets/Makefile
 src/doclets/html/Makefile
 src/doclets/devhelp/Makefile
