@@ -4938,6 +4938,8 @@ namespace Gdk {
 		public bool get_keycode (out uint16 keycode);
 		[Version (since = "3.2")]
 		public bool get_keyval (out uint keyval);
+		[Version (since = "3.22")]
+		public bool get_pointer_emulated ();
 		public bool get_root_coords (out double x_root, out double y_root);
 		[Version (since = "3.22")]
 		public int get_scancode ();

@@ -2071,6 +2071,7 @@ namespace GLib {
 		public bool get_has_unapplied ();
 		[Version (since = "2.26")]
 		public int get_int (string key);
+		[Version (since = "2.50")]
 		public int64 get_int64 (string key);
 		public void* get_mapped (string key, GLib.SettingsGetMapping mapping);
 		[Version (deprecated = true, deprecated_since = "2.40", since = "2.28")]
@@ -2082,6 +2083,7 @@ namespace GLib {
 		public string[] get_strv (string key);
 		[Version (since = "2.30")]
 		public uint get_uint (string key);
+		[Version (since = "2.50")]
 		public uint64 get_uint64 (string key);
 		[Version (since = "2.40")]
 		public GLib.Variant? get_user_value (string key);
@@ -2114,6 +2116,7 @@ namespace GLib {
 		public bool set_flags (string key, uint value);
 		[Version (since = "2.26")]
 		public bool set_int (string key, int value);
+		[Version (since = "2.50")]
 		public bool set_int64 (string key, int64 value);
 		[Version (since = "2.26")]
 		public bool set_string (string key, string value);
@@ -2121,6 +2124,7 @@ namespace GLib {
 		public bool set_strv (string key, [CCode (array_length = false, array_null_terminated = true)] string[]? value);
 		[Version (since = "2.30")]
 		public bool set_uint (string key, uint value);
+		[Version (since = "2.50")]
 		public bool set_uint64 (string key, uint64 value);
 		[Version (since = "2.26")]
 		public bool set_value (string key, GLib.Variant value);
