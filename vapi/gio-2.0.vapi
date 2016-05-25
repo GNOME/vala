@@ -3236,6 +3236,8 @@ namespace GLib {
 		public abstract bool has_volumes ();
 		public abstract bool is_media_check_automatic ();
 		public abstract bool is_media_removable ();
+		[Version (since = "2.50")]
+		public abstract bool is_removable ();
 		public abstract async bool poll_for_media (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
 		public abstract async bool start (GLib.DriveStartFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;

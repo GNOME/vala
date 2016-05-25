@@ -571,6 +571,7 @@ namespace Poppler {
 		public int angle;
 		public Poppler.PageTransitionDirection direction;
 		public int duration;
+		public double duration_real;
 		public bool rectangular;
 		public double scale;
 		public Poppler.PageTransitionType type;
