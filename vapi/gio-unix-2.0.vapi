@@ -17,6 +17,7 @@ namespace GLib {
 		public unowned string get_generic_name ();
 		public static GLib.List<GLib.DesktopAppInfo> get_implementations (string @interface);
 		public bool get_is_hidden ();
+		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_keywords ();
 		public bool get_nodisplay ();
 		public bool get_show_in (string desktop_env);
