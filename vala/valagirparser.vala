@@ -2892,7 +2892,9 @@ public class Vala.GirParser : CodeVisitor {
 			if (no_array_length) {
 				field.set_attribute_bool ("CCode", "array_length", false);
 			}
-			field.set_attribute_bool ("CCode", "array_null_terminated", true);
+			if (array_null_terminated) {
+				field.set_attribute_bool ("CCode", "array_null_terminated", true);
+			}
 		}
 		if (nullable == "1" || allow_none == "1") {
 			type.nullable = true;
