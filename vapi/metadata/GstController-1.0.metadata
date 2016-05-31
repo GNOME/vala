@@ -1,5 +1,7 @@
 * parent="Gst.Controller"
 
+*.ABI._gst_reserved* skip
+
 ControlPoint
 	.cache._gst_reserved skip
 
