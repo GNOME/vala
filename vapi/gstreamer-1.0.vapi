@@ -2549,8 +2549,8 @@ namespace Gst {
 		public weak uint8[] data;
 		public size_t size;
 		public size_t maxsize;
-		[CCode (array_length = false, array_null_terminated = true)]
-		public weak void*[] user_data;
+		[CCode (array_length = false)]
+		public weak void* user_data[4];
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
 	public struct Meta {

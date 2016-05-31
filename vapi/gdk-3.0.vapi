@@ -5106,7 +5106,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
 	[Compact]
 	public class EventMotion : Gdk.Event {
-		[CCode (array_length = false, array_null_terminated = true)]
+		[CCode (array_length = false)]
 		public weak double[] axes;
 		public weak Gdk.Device device;
 		public int16 is_hint;
@@ -5899,8 +5899,8 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct TimeCoord {
 		public uint32 time;
-		[CCode (array_length = false, array_null_terminated = true)]
-		public weak double[] axes;
+		[CCode (array_length = false)]
+		public weak double axes[128];
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct WindowAttr {

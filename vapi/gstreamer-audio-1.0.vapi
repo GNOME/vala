@@ -291,8 +291,8 @@ namespace Gst {
 			public Gst.Audio.FormatInfo finfo;
 			public Gst.Audio.Flags flags;
 			public Gst.Audio.Layout layout;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak Gst.Audio.ChannelPosition[] position;
+			[CCode (array_length = false)]
+			public weak Gst.Audio.ChannelPosition position[64];
 			public int rate;
 			[CCode (has_construct_function = false)]
 			public Info ();
@@ -456,8 +456,8 @@ namespace Gst {
 			public int endianness;
 			public int width;
 			public int depth;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak uint8[] silence;
+			[CCode (array_length = false)]
+			public weak uint8 silence[8];
 			public Gst.Audio.Format unpack_format;
 			public weak Gst.Audio.FormatUnpack unpack_func;
 			public weak Gst.Audio.FormatPack pack_func;

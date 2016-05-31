@@ -141,10 +141,10 @@ namespace Gst {
 			public uint8 key_data;
 			public uint16 key_len;
 			public Gst.SDP.MIKEYKeyDataType key_type;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak uint8[] kv_data;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak uint8[] kv_len;
+			[CCode (array_length = false)]
+			public weak uint8 kv_data[2];
+			[CCode (array_length = false)]
+			public weak uint8 kv_len[2];
 			public Gst.SDP.MIKEYKVType kv_type;
 			public uint8 salt_data;
 			public uint16 salt_len;

@@ -143,8 +143,8 @@ namespace Atspi {
 		public weak GLib.Array<void*> interfaces;
 		public bool invert;
 		public Atspi.CollectionMatchType rolematchtype;
-		[CCode (array_length = false, array_null_terminated = true)]
-		public weak int[] roles;
+		[CCode (array_length = false)]
+		public weak int roles[4];
 		public Atspi.CollectionMatchType statematchtype;
 		public weak Atspi.StateSet states;
 		[CCode (has_construct_function = false)]

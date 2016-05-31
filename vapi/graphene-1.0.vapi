@@ -19,7 +19,7 @@ namespace Graphene {
 		public Graphene.Point3D get_max ();
 		public Graphene.Point3D get_min ();
 		public Graphene.Vec3 get_size ();
-		public void get_vertices ([CCode (array_length = false)] ref Graphene.Vec3[] vertices);
+		public void get_vertices ([CCode (array_length = false)] ref Graphene.Vec3 vertices[8]);
 		public float get_width ();
 		public static unowned Graphene.Box? infinite ();
 		public unowned Graphene.Box? init (Graphene.Point3D? min, Graphene.Point3D? max);
@@ -56,7 +56,7 @@ namespace Graphene {
 	[Version (since = "1.2")]
 	public struct Frustum {
 		public bool contains_point (Graphene.Point3D point);
-		public void get_planes ([CCode (array_length = false)] ref Graphene.Plane[] planes);
+		public void get_planes ([CCode (array_length = false)] ref Graphene.Plane planes[6]);
 		public unowned Graphene.Frustum? init (Graphene.Plane p0, Graphene.Plane p1, Graphene.Plane p2, Graphene.Plane p3, Graphene.Plane p4, Graphene.Plane p5);
 		public unowned Graphene.Frustum? init_from_frustum (Graphene.Frustum src);
 		public unowned Graphene.Frustum? init_from_matrix (Graphene.Matrix matrix);
@@ -80,7 +80,7 @@ namespace Graphene {
 		[Version (since = "1.0")]
 		public unowned Graphene.Matrix? init_from_2d (double xx, double yx, double xy, double yy, double x_0, double y_0);
 		[Version (since = "1.0")]
-		public unowned Graphene.Matrix? init_from_float ([CCode (array_length = false)] float[] v);
+		public unowned Graphene.Matrix? init_from_float ([CCode (array_length = false)] float v[16]);
 		[Version (since = "1.0")]
 		public unowned Graphene.Matrix? init_from_matrix (Graphene.Matrix src);
 		[Version (since = "1.0")]
@@ -152,7 +152,7 @@ namespace Graphene {
 		[Version (since = "1.0")]
 		public bool to_2d (out double xx, out double yx, out double xy, out double yy, out double x_0, out double y_0);
 		[Version (since = "1.0")]
-		public void to_float ([CCode (array_length = false)] ref float[] v);
+		public void to_float ([CCode (array_length = false)] ref float v[16]);
 		[Version (since = "1.0")]
 		public Graphene.Rect transform_bounds (Graphene.Rect r);
 		[Version (since = "1.2")]
@@ -246,7 +246,7 @@ namespace Graphene {
 		public unowned Graphene.Point? get_point (uint index_);
 		public unowned Graphene.Quad? init (Graphene.Point p1, Graphene.Point p2, Graphene.Point p3, Graphene.Point p4);
 		[Version (since = "1.2")]
-		public unowned Graphene.Quad? init_from_points ([CCode (array_length = false)] Graphene.Point[] points);
+		public unowned Graphene.Quad? init_from_points ([CCode (array_length = false)] Graphene.Point points[4]);
 		public unowned Graphene.Quad? init_from_rect (Graphene.Rect r);
 	}
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "graphene_quaternion_t", type_id = "graphene_quaternion_get_type ()")]
@@ -307,7 +307,7 @@ namespace Graphene {
 		public Graphene.Point get_top_left ();
 		public Graphene.Point get_top_right ();
 		[Version (since = "1.4")]
-		public void get_vertices ([CCode (array_length = false)] ref Graphene.Vec2[] vertices);
+		public void get_vertices ([CCode (array_length = false)] ref Graphene.Vec2 vertices[4]);
 		public float get_width ();
 		public float get_x ();
 		public float get_y ();
@@ -392,7 +392,7 @@ namespace Graphene {
 		[Version (since = "1.0")]
 		public unowned Graphene.Vec2? init (float x, float y);
 		[Version (since = "1.0")]
-		public unowned Graphene.Vec2? init_from_float ([CCode (array_length = false)] float[] src);
+		public unowned Graphene.Vec2? init_from_float ([CCode (array_length = false)] float src[2]);
 		[Version (since = "1.0")]
 		public unowned Graphene.Vec2? init_from_vec2 (Graphene.Vec2 src);
 		[Version (since = "1.0")]
@@ -416,7 +416,7 @@ namespace Graphene {
 		[Version (since = "1.0")]
 		public Graphene.Vec2 subtract (Graphene.Vec2 b);
 		[Version (since = "1.0")]
-		public void to_float ([CCode (array_length = false)] ref float[] dest);
+		public void to_float ([CCode (array_length = false)] ref float dest[2]);
 		[Version (since = "1.0")]
 		public static unowned Graphene.Vec2? x_axis ();
 		[Version (since = "1.0")]
@@ -455,7 +455,7 @@ namespace Graphene {
 		[Version (since = "1.0")]
 		public unowned Graphene.Vec3? init (float x, float y, float z);
 		[Version (since = "1.0")]
-		public unowned Graphene.Vec3? init_from_float ([CCode (array_length = false)] float[] src);
+		public unowned Graphene.Vec3? init_from_float ([CCode (array_length = false)] float src[3]);
 		[Version (since = "1.0")]
 		public unowned Graphene.Vec3? init_from_vec3 (Graphene.Vec3 src);
 		[Version (since = "1.0")]
@@ -479,7 +479,7 @@ namespace Graphene {
 		[Version (since = "1.0")]
 		public Graphene.Vec3 subtract (Graphene.Vec3 b);
 		[Version (since = "1.0")]
-		public void to_float ([CCode (array_length = false)] ref float[] dest);
+		public void to_float ([CCode (array_length = false)] ref float dest[3]);
 		[Version (since = "1.0")]
 		public static unowned Graphene.Vec3? x_axis ();
 		[Version (since = "1.0")]
@@ -514,7 +514,7 @@ namespace Graphene {
 		[Version (since = "1.0")]
 		public unowned Graphene.Vec4? init (float x, float y, float z, float w);
 		[Version (since = "1.0")]
-		public unowned Graphene.Vec4? init_from_float ([CCode (array_length = false)] float[] src);
+		public unowned Graphene.Vec4? init_from_float ([CCode (array_length = false)] float src[4]);
 		[Version (since = "1.0")]
 		public unowned Graphene.Vec4? init_from_vec2 (Graphene.Vec2 src, float z, float w);
 		[Version (since = "1.0")]
@@ -542,7 +542,7 @@ namespace Graphene {
 		[Version (since = "1.0")]
 		public Graphene.Vec4 subtract (Graphene.Vec4 b);
 		[Version (since = "1.0")]
-		public void to_float ([CCode (array_length = false)] ref float[] dest);
+		public void to_float ([CCode (array_length = false)] ref float dest[4]);
 		[Version (since = "1.0")]
 		public static unowned Graphene.Vec4? w_axis ();
 		[Version (since = "1.0")]

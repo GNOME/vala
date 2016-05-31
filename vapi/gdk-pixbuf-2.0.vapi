@@ -232,7 +232,7 @@ namespace Gdk {
 		public uint32 rowstride;
 		public uint32 width;
 		public uint32 height;
-		[CCode (array_length = false, array_null_terminated = true)]
+		[CCode (array_length = false)]
 		public weak uint8[] pixel_data;
 		[Version (deprecated = true, deprecated_since = "2.32")]
 		public bool deserialize ([CCode (array_length_cname = "stream_length", array_length_pos = 0.5, array_length_type = "guint")] uint8[] stream) throws GLib.Error;

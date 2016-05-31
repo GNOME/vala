@@ -624,11 +624,11 @@ namespace Poppler {
 		[Version (since = "0.26")]
 		public Poppler.StructureBlockAlign get_block_align ();
 		[Version (since = "0.26")]
-		public bool get_border_color ([CCode (array_length = false)] out unowned Poppler.Color[] colors);
+		public bool get_border_color ([CCode (array_length = false)] out unowned Poppler.Color colors[4]);
 		[Version (since = "0.26")]
-		public void get_border_style ([CCode (array_length = false)] out Poppler.StructureBorderStyle[] border_styles);
+		public void get_border_style ([CCode (array_length = false)] out Poppler.StructureBorderStyle border_styles[4]);
 		[Version (since = "0.26")]
-		public bool get_border_thickness ([CCode (array_length = false)] out double[] border_thicknesses);
+		public bool get_border_thickness ([CCode (array_length = false)] out double border_thicknesses[4]);
 		[Version (since = "0.26")]
 		public bool get_bounding_box (out Poppler.Rectangle bounding_box);
 		[Version (since = "0.26")]
@@ -666,7 +666,7 @@ namespace Poppler {
 		[Version (since = "0.26")]
 		public Poppler.StructureListNumbering get_list_numbering ();
 		[Version (since = "0.26")]
-		public void get_padding ([CCode (array_length = false)] out double[] paddings);
+		public void get_padding ([CCode (array_length = false)] out double paddings[4]);
 		[Version (since = "0.26")]
 		public int get_page ();
 		[Version (since = "0.26")]
@@ -682,14 +682,14 @@ namespace Poppler {
 		[Version (since = "0.26")]
 		public double get_start_indent ();
 		[Version (since = "0.26")]
-		public void get_table_border_style ([CCode (array_length = false)] out Poppler.StructureBorderStyle[] border_styles);
+		public void get_table_border_style ([CCode (array_length = false)] out Poppler.StructureBorderStyle border_styles[4]);
 		[Version (since = "0.26")]
 		public uint get_table_column_span ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "0.26")]
 		public string[] get_table_headers ();
 		[Version (since = "0.26")]
-		public void get_table_padding ([CCode (array_length = false)] out double[] paddings);
+		public void get_table_padding ([CCode (array_length = false)] out double paddings[4]);
 		[Version (since = "0.26")]
 		public uint get_table_row_span ();
 		[Version (since = "0.26")]

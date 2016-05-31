@@ -250,13 +250,13 @@ namespace Gst {
 			public int fps_n;
 			public int height;
 			public Gst.Video.InterlaceMode interlace_mode;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak size_t[] offset;
+			[CCode (array_length = false)]
+			public weak size_t offset[4];
 			public int par_d;
 			public int par_n;
 			public size_t size;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak int[] stride;
+			[CCode (array_length = false)]
+			public weak int stride[4];
 			public int views;
 			public int width;
 			[CCode (has_construct_function = false)]
@@ -408,8 +408,8 @@ namespace Gst {
 		[GIR (name = "VideoAffineTransformationMeta")]
 		public struct AffineTransformationMeta {
 			public Gst.Meta meta;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak float[] matrix;
+			[CCode (array_length = false)]
+			public weak float matrix[16];
 			[Version (since = "1.8")]
 			public void apply_matrix (float matrix);
 		}
@@ -420,8 +420,8 @@ namespace Gst {
 			public uint padding_bottom;
 			public uint padding_left;
 			public uint padding_right;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak uint[] stride_align;
+			[CCode (array_length = false)]
+			public weak uint stride_align[4];
 			public void reset ();
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
@@ -469,21 +469,21 @@ namespace Gst {
 			public Gst.Video.FormatFlags flags;
 			public uint bits;
 			public uint n_components;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak uint[] shift;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak uint[] depth;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak int[] pixel_stride;
+			[CCode (array_length = false)]
+			public weak uint shift[4];
+			[CCode (array_length = false)]
+			public weak uint depth[4];
+			[CCode (array_length = false)]
+			public weak int pixel_stride[4];
 			public uint n_planes;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak uint[] plane;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak uint[] poffset;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak uint[] w_sub;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak uint[] h_sub;
+			[CCode (array_length = false)]
+			public weak uint plane[4];
+			[CCode (array_length = false)]
+			public weak uint poffset[4];
+			[CCode (array_length = false)]
+			public weak uint w_sub[4];
+			[CCode (array_length = false)]
+			public weak uint h_sub[4];
 			public Gst.Video.Format unpack_format;
 			public weak Gst.Video.FormatUnpack unpack_func;
 			public int pack_lines;
@@ -500,8 +500,8 @@ namespace Gst {
 			public weak Gst.Buffer buffer;
 			public void* meta;
 			public int id;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak void*[] data;
+			[CCode (array_length = false)]
+			public weak void* data[4];
 			public bool copy (Gst.Video.Frame src);
 			public bool copy_plane (Gst.Video.Frame src, uint plane);
 			public bool map (Gst.Video.Info info, Gst.Buffer buffer, Gst.MapFlags flags);
@@ -514,8 +514,8 @@ namespace Gst {
 			public Gst.Meta meta;
 			public Gst.Video.GLTextureOrientation texture_orientation;
 			public uint n_textures;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak Gst.Video.GLTextureType[] texture_type;
+			[CCode (array_length = false)]
+			public weak Gst.Video.GLTextureType texture_type[4];
 			public bool upload (uint texture_id);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
@@ -529,10 +529,10 @@ namespace Gst {
 			public uint width;
 			public uint height;
 			public uint n_planes;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak size_t[] offset;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak int[] stride;
+			[CCode (array_length = false)]
+			public weak size_t offset[4];
+			[CCode (array_length = false)]
+			public weak int stride[4];
 			public bool map (uint plane, Gst.MapInfo info, void* data, int stride, Gst.MapFlags flags);
 			public bool unmap (uint plane, Gst.MapInfo info);
 		}

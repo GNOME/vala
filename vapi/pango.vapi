@@ -735,10 +735,10 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	public struct ScriptForLang {
-		[CCode (array_length = false, array_null_terminated = true)]
-		public weak char[] lang;
-		[CCode (array_length = false, array_null_terminated = true)]
-		public weak Pango.Script[] scripts;
+		[CCode (array_length = false)]
+		public weak char lang[7];
+		[CCode (array_length = false)]
+		public weak Pango.Script scripts[3];
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_ALIGN_", type_id = "pango_alignment_get_type ()")]
 	public enum Alignment {

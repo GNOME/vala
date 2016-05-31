@@ -98,12 +98,12 @@ namespace Gst {
 		[Compact]
 		[GIR (name = "RTPBuffer")]
 		public class Buffer : Gst.Buffer {
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak void*[] data;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public Gst.MapInfo[] map;
-			[CCode (array_length = false, array_null_terminated = true)]
-			public weak size_t[] size;
+			[CCode (array_length = false)]
+			public weak void* data[4];
+			[CCode (array_length = false)]
+			public Gst.MapInfo map[4];
+			[CCode (array_length = false)]
+			public weak size_t size[4];
 			public uint state;
 			public bool add_extension_onebyte_header (uint8 id, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "guint")] uint8[] data);
 			public bool add_extension_twobytes_header (uint8 appbits, uint8 id, [CCode (array_length_cname = "size", array_length_pos = 3.1, array_length_type = "guint")] uint8[] data);

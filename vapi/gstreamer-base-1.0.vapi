@@ -50,7 +50,7 @@ namespace Gst {
 		public class BitReader {
 			public uint bit;
 			public uint byte;
-			[CCode (array_length = false, array_null_terminated = true)]
+			[CCode (array_length = false)]
 			public weak uint8[] data;
 			public BitReader ([CCode (array_length_type = "guint")] uint8[] data);
 			[CCode (cname = "gst_bit_reader_free")]
@@ -91,7 +91,7 @@ namespace Gst {
 		[GIR (name = "ByteReader")]
 		public class ByteReader {
 			public uint byte;
-			[CCode (array_length = false, array_null_terminated = true)]
+			[CCode (array_length = false)]
 			public weak uint8[] data;
 			public ByteReader ([CCode (array_length_type = "guint")] uint8[] data);
 			[CCode (cname = "gst_byte_reader_dup_data")]

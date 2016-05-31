@@ -4740,7 +4740,7 @@ namespace Clutter {
 		[Version (since = "0.6")]
 		public bool emit_event (Clutter.Event event, bool capture);
 		[Version (since = "0.4")]
-		public void get_abs_allocation_vertices ([CCode (array_length = false)] Clutter.Vertex[] verts);
+		public void get_abs_allocation_vertices ([CCode (array_length = false)] Clutter.Vertex verts[4]);
 		public virtual unowned Atk.Object get_accessible ();
 		[Version (since = "1.4")]
 		public unowned Clutter.Action get_action (string name);
@@ -4751,7 +4751,7 @@ namespace Clutter {
 		[Version (deprecated = true, deprecated_since = "1.12", since = "0.8")]
 		public Clutter.Geometry get_allocation_geometry ();
 		[Version (since = "0.6")]
-		public void get_allocation_vertices (Clutter.Actor? ancestor, [CCode (array_length = false)] Clutter.Vertex[] verts);
+		public void get_allocation_vertices (Clutter.Actor? ancestor, [CCode (array_length = false)] Clutter.Vertex verts[4]);
 		[Version (deprecated = true, deprecated_since = "1.12", since = "0.6")]
 		public void get_anchor_point (out float anchor_x, out float anchor_y);
 		[Version (deprecated = true, deprecated_since = "1.12", since = "1.0")]
@@ -8320,7 +8320,7 @@ namespace Clutter {
 		public static void free (Clutter.Matrix? matrix);
 		public static GLib.Type get_type ();
 		[Version (since = "1.12")]
-		public static unowned Clutter.Matrix? init_from_array (Clutter.Matrix matrix, [CCode (array_length = false)] float[] values);
+		public static unowned Clutter.Matrix? init_from_array (Clutter.Matrix matrix, [CCode (array_length = false)] float values[16]);
 		[Version (since = "1.12")]
 		public static unowned Clutter.Matrix? init_from_matrix (Clutter.Matrix a, Clutter.Matrix b);
 		[Version (since = "1.12")]
@@ -8330,8 +8330,8 @@ namespace Clutter {
 	[Version (since = "1.0")]
 	public struct PathNode {
 		public Clutter.PathNodeType type;
-		[CCode (array_length = false, array_null_terminated = true)]
-		public weak Clutter.Knot[] points;
+		[CCode (array_length = false)]
+		public weak Clutter.Knot points[3];
 		public Clutter.PathNode? copy ();
 		public bool equal (Clutter.PathNode node_b);
 		public void free ();
