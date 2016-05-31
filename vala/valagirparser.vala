@@ -2484,6 +2484,7 @@ public class Vala.GirParser : CodeVisitor {
 		string type_name = reader.get_attribute ("name");
 		ctype = null;
 
+		var fixed_length = -1;
 		array_length_idx = -1;
 		no_array_length = true;
 		array_null_terminated = true;
@@ -2501,6 +2502,7 @@ public class Vala.GirParser : CodeVisitor {
 					array_null_terminated = false;
 				}
 				if (reader.get_attribute ("fixed-size") != null) {
+					fixed_length = int.parse (reader.get_attribute ("fixed-size"));
 					array_null_terminated = false;
 				}
 				if (reader.get_attribute ("c:type") == "GStrv") {
@@ -2514,7 +2516,13 @@ public class Vala.GirParser : CodeVisitor {
 				var element_type = parse_type ();
 				element_type.value_owned = transfer_elements;
 				end_element ("array");
-				return new ArrayType (element_type, 1, src);
+
+				var array_type = new ArrayType (element_type, 1, src);
+				if (fixed_length > 0) {
+					array_type.fixed_length = true;
+					array_type.length = new IntegerLiteral (fixed_length.to_string ());
+				}
+				return array_type;
 			}
 		} else if (reader.name == "callback"){
 			parse_callback ();
