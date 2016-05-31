@@ -37,8 +37,6 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstDirectControlBinding", lower_case_cprefix = "gst_direct_control_binding_", type_id = "gst_direct_control_binding_get_type ()")]
 		[GIR (name = "DirectControlBinding")]
 		public class DirectControlBinding : Gst.ControlBinding {
-			[CCode (array_length = false, array_null_terminated = true, cname = "ABI._gst_reserved")]
-			public weak void*[] ABI__gst_reserved;
 			[CCode (cname = "ABI.abi.want_absolute")]
 			public bool ABI_abi_want_absolute;
 			[CCode (has_construct_function = false, type = "GstControlBinding*")]

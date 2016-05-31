@@ -2586,8 +2586,6 @@ namespace Gst {
 		public void* data;
 		public uint64 offset;
 		public uint size;
-		[CCode (array_length = false, array_null_terminated = true, cname = "ABI._gst_reserved")]
-		public weak void*[] ABI__gst_reserved;
 		[CCode (cname = "ABI.abi.flow_ret")]
 		public Gst.FlowReturn ABI_abi_flow_ret;
 		public unowned Gst.Buffer get_buffer ();

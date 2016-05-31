@@ -1,5 +1,7 @@
 Gst experimental
 
+*.ABI._gst_reserved* skip
+
 // Return non-boxed types
 MiniObject
   .copy skip=false
