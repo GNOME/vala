@@ -2572,6 +2572,10 @@ public class Vala.Parser : CodeVisitor {
 		}
 		set_attributes (c, attrs);
 
+		if (ModifierFlags.STATIC in flags) {
+			Report.warning (c.source_reference, "the modifier `static' is not applicable to constants");
+		}
+
 		parent.add_constant (c);
 	}
 
