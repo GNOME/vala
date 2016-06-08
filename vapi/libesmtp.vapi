@@ -271,105 +271,105 @@ namespace Smtp {
 	}
 
 	[CCode (cname="SMTP_EV_CONNECT")]
-	public static const uint EV_CONNECT;
+	public const uint EV_CONNECT;
 	[CCode (cname="SMTP_EV_MAILSTATUS")]
-	public static const uint EV_MAILSTATUS;
+	public const uint EV_MAILSTATUS;
 	[CCode (cname="SMTP_EV_RCPTSTATUS")]
-	public static const uint EV_RCPTSTATUS;
+	public const uint EV_RCPTSTATUS;
 	[CCode (cname="SMTP_EV_MESSAGEDATA")]
-	public static const uint EV_MESSAGEDATA;
+	public const uint EV_MESSAGEDATA;
 	[CCode (cname="SMTP_EV_MESSAGESENT")]
-	public static const uint EV_MESSAGESENT;
+	public const uint EV_MESSAGESENT;
 	[CCode (cname="SMTP_EV_DISCONNECT")]
-	public static const uint EV_DISCONNECT;
+	public const uint EV_DISCONNECT;
 	[CCode (cname="SMTP_EV_ETRNSTATUS")]
-	public static const uint EV_ETRNSTATUS;
+	public const uint EV_ETRNSTATUS;
 	[CCode (cname="SMTP_EV_EXTNA_DSN")]
-	public static const uint EV_EXTNA_DSN;
+	public const uint EV_EXTNA_DSN;
 	[CCode (cname="SMTP_EV_EXTNA_8BITMIME")]
-	public static const uint EV_EXTNA_8BITMIME;
+	public const uint EV_EXTNA_8BITMIME;
 	[CCode (cname="SMTP_EV_EXTNA_STARTTLS")]
-	public static const uint EV_EXTNA_STARTTLS;
+	public const uint EV_EXTNA_STARTTLS;
 	[CCode (cname="SMTP_EV_EXTNA_ETRN")]
-	public static const uint EV_EXTNA_ETRN;
+	public const uint EV_EXTNA_ETRN;
 	[CCode (cname="SMTP_EV_EXTNA_CHUNKING")]
-	public static const uint EV_EXTNA_CHUNKING;
+	public const uint EV_EXTNA_CHUNKING;
 	[CCode (cname="SMTP_EV_EXTNA_BINARYMIME")]
-	public static const uint EV_EXTNA_BINARYMIME;
+	public const uint EV_EXTNA_BINARYMIME;
 	[CCode (cname="SMTP_EV_DELIVERBY_EXPIRED")]
-	public static const uint EV_DELIVERBY_EXPIRED;
+	public const uint EV_DELIVERBY_EXPIRED;
 	[CCode (cname="SMTP_EV_WEAK_CIPHER")]
-	public static const uint EV_WEAK_CIPHER;
+	public const uint EV_WEAK_CIPHER;
 	[CCode (cname="SMTP_EV_STARTTLS_OK")]
-	public static const uint EV_STARTTLS_OK;
+	public const uint EV_STARTTLS_OK;
 	[CCode (cname="SMTP_EV_INVALID_PEER_CERTIFICATE")]
-	public static const uint EV_INVALID_PEER_CERTIFICATE;
+	public const uint EV_INVALID_PEER_CERTIFICATE;
 	[CCode (cname="SMTP_EV_NO_PEER_CERTIFICATE")]
-	public static const uint EV_NO_PEER_CERTIFICATE;
+	public const uint EV_NO_PEER_CERTIFICATE;
 	[CCode (cname="SMTP_EV_WRONG_PEER_CERTIFICATE")]
-	public static const uint EV_WRONG_PEER_CERTIFICATE;
+	public const uint EV_WRONG_PEER_CERTIFICATE;
 	[CCode (cname="SMTP_EV_NO_CLIENT_CERTIFICATE")]
-	public static const uint EV_NO_CLIENT_CERTIFICATE;
+	public const uint EV_NO_CLIENT_CERTIFICATE;
 	[CCode (cname="SMTP_EV_UNUSABLE_CLIENT_CERTIFICATE")]
-	public static const uint EV_UNUSABLE_CLIENT_CERTIFICATE;
+	public const uint EV_UNUSABLE_CLIENT_CERTIFICATE;
 	[CCode (cname="SMTP_EV_UNUSABLE_CA_LIST")]
-	public static const uint EV_UNUSABLE_CA_LIST;
+	public const uint EV_UNUSABLE_CA_LIST;
 
 	[CCode (cname="Timeout_OVERRIDE_RFC2822_MINIMUM")]
-	public static const long TIMEOUT_OVERRIDE_RFC2822_MINIMUM;
+	public const long TIMEOUT_OVERRIDE_RFC2822_MINIMUM;
 
 	[CCode (cname="SMTP_ERR_NOTHING_TO_DO")]
-	public static const uint ERR_NOTHING_TO_DO;
+	public const uint ERR_NOTHING_TO_DO;
 	[CCode (cname="SMTP_ERR_DROPPED_CONNECTION")]
-	public static const uint ERR_DROPPED_CONNECTION;
+	public const uint ERR_DROPPED_CONNECTION;
 	[CCode (cname="SMTP_ERR_INVALID_RESPONSE_SYNTAX")]
-	public static const uint ERR_INVALID_RESPONSE_SYNTAX;
+	public const uint ERR_INVALID_RESPONSE_SYNTAX;
 	[CCode (cname="SMTP_ERR_STATUS_MISMATCH")]
-	public static const uint ERR_STATUS_MISMATCH;
+	public const uint ERR_STATUS_MISMATCH;
 	[CCode (cname="SMTP_ERR_INVALID_RESPONSE_STATUS")]
-	public static const uint ERR_INVALID_RESPONSE_STATUS;
+	public const uint ERR_INVALID_RESPONSE_STATUS;
 	[CCode (cname="SMTP_ERR_INVAL")]
-	public static const uint ERR_INVAL;
+	public const uint ERR_INVAL;
 	[CCode (cname="SMTP_ERR_EXTENSION_NOT_AVAILABLE")]
-	public static const uint ERR_EXTENSION_NOT_AVAILABLE;
+	public const uint ERR_EXTENSION_NOT_AVAILABLE;
 	[CCode (cname="SMTP_ERR_HOST_NOT_FOUND")]
-	public static const uint ERR_HOST_NOT_FOUND;
+	public const uint ERR_HOST_NOT_FOUND;
 	[CCode (cname="SMTP_ERR_NO_ADDRESS")]
-	public static const uint ERR_NO_ADDRESS;
+	public const uint ERR_NO_ADDRESS;
 	[CCode (cname="SMTP_ERR_NO_RECOVERY")]
-	public static const uint ERR_NO_RECOVERY;
+	public const uint ERR_NO_RECOVERY;
 	[CCode (cname="SMTP_ERR_TRY_AGAIN")]
-	public static const uint ERR_TRY_AGAIN;
+	public const uint ERR_TRY_AGAIN;
 	[CCode (cname="SMTP_ERR_EAI_AGAIN")]
-	public static const uint ERR_EAI_AGAIN;
+	public const uint ERR_EAI_AGAIN;
 	[CCode (cname="SMTP_ERR_EAI_FAIL")]
-	public static const uint ERR_EAI_FAIL;
+	public const uint ERR_EAI_FAIL;
 	[CCode (cname="SMTP_ERR_EAI_MEMORY")]
-	public static const uint ERR_EAI_MEMORY;
+	public const uint ERR_EAI_MEMORY;
 	[CCode (cname="SMTP_ERR_EAI_ADDRFAMILY")]
-	public static const uint ERR_EAI_ADDRFAMILY;
+	public const uint ERR_EAI_ADDRFAMILY;
 	[CCode (cname="SMTP_ERR_EAI_NODATA")]
-	public static const uint ERR_EAI_NODATA;
+	public const uint ERR_EAI_NODATA;
 	[CCode (cname="SMTP_ERR_EAI_FAMILY")]
-	public static const uint ERR_EAI_FAMILY;
+	public const uint ERR_EAI_FAMILY;
 	[CCode (cname="SMTP_ERR_EAI_BADFLAGS")]
-	public static const uint ERR_EAI_BADFLAGS;
+	public const uint ERR_EAI_BADFLAGS;
 	[CCode (cname="SMTP_ERR_EAI_NONAME")]
-	public static const uint ERR_EAI_NONAME;
+	public const uint ERR_EAI_NONAME;
 	[CCode (cname="SMTP_ERR_EAI_SERVICE")]
-	public static const uint ERR_EAI_SERVICE;
+	public const uint ERR_EAI_SERVICE;
 	[CCode (cname="SMTP_ERR_EAI_SOCKTYPE")]
-	public static const uint ERR_EAI_SOCKTYPE;
+	public const uint ERR_EAI_SOCKTYPE;
 	[CCode (cname="SMTP_ERR_UNTERMINATED_RESPONSE")]
-	public static const uint ERR_UNTERMINATED_RESPONSE;
+	public const uint ERR_UNTERMINATED_RESPONSE;
 	[CCode (cname="SMTP_ERR_CLIENT_ERROR")]
-	public static const uint ERR_CLIENT_ERROR;
+	public const uint ERR_CLIENT_ERROR;
 	[CCode (cname="SMTP_CB_READING")]
-	public static const uint CB_READING;
+	public const uint CB_READING;
 	[CCode (cname="SMTP_CB_WRITING")]
-	public static const uint CB_WRITING;
+	public const uint CB_WRITING;
 	[CCode (cname="SMTP_CB_HEADERS")]
-	public static const uint CB_HEADERS;
+	public const uint CB_HEADERS;
 
 	[CCode (cname="AUTH_USER", cheader_filename="auth-client.h")]
 	public static uint AUTH_USER;

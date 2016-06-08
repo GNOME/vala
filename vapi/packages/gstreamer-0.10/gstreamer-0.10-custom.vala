@@ -122,7 +122,7 @@ namespace Gst {
 		[CCode (cname = "GST_INDEX_FORMAT_KEY")]
 		public unowned string format_key ();
 		[CCode (cname = "GST_INDEX_ID_INVALID")]
-		static const int ID_INVALID;
+		public const int ID_INVALID;
 		[CCode (cname = "GST_INDEX_ID_DESCRIPTION")]
 		public unowned string id_description ();
 	}

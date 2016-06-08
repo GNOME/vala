@@ -665,6 +665,8 @@ namespace Gst {
 	[Compact]
 	public class IndexEntry {
 		public Gst.IndexEntryType type;
+		[CCode (cname = "GST_INDEX_ID_INVALID")]
+		public const int ID_INVALID;
 		[CCode (cname = "GST_INDEX_ASSOC_FLAGS")]
 		public Gst.AssocFlags assoc_flags ();
 		[CCode (cname = "GST_INDEX_ASSOC_FORMAT")]

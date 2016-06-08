@@ -27,7 +27,7 @@ namespace GNet {
 		   unref_function = "gnet_inetaddr_unref")]
 	public class InetAddr {
 		[CCode(cname = "GNET_INETADDR_MAX_LEN")]
-		public static const uint8 MAX_BYTES;
+		public const uint8 MAX_BYTES;
 
 		[CCode(cname = "gnet_inetaddr_new_list")]
 		public static GLib.List<InetAddr> new_list(string hostname, int port);
@@ -259,10 +259,10 @@ namespace GNet {
 	#if GNET_EXPERIMENTAL
 	public class Socks {
 		[CCode(cname = "GNET_SOCKS_PORT")]
-		public static const int SOCKS_PORT;
+		public const int SOCKS_PORT;
 
 		[CCode(cname = "GNET_SOCKS_VERSION")]
-		public static const int SOCKS_VERSION;
+		public const int SOCKS_VERSION;
 
 		[CCode(cname = "gnet_socks_get_enabled")]
 		public static bool get_enabled();
@@ -566,7 +566,7 @@ namespace GNet {
 		   unref_function = "g_object_unref")]
 	public class MD5 {
 		[CCode(cname = "GNET_MD5_HASH_LENGTH")]
-		public static const int HASH_LENGTH;
+		public const int HASH_LENGTH;
 
 		[CCode(cname = "gnet_md5_equal")]
 		public static bool equal(MD5 m1, MD5 m2);
@@ -603,7 +603,7 @@ namespace GNet {
 		   unref_function = "g_object_unref")]
 	public class SHA {
 		[CCode(cname = "GNET_SHA_HASH_LENGTH")]
-		public static const int HASH_LENGTH;
+		public const int HASH_LENGTH;
 
 		[CCode(cname = "gnet_sha_equal")]
 		public static bool equal(SHA s1, SHA s2);

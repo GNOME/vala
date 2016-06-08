@@ -1800,10 +1800,10 @@ namespace GLib {
 		public static bool remove_by_user_data (void* user_data);
 		[Version (since = "2.32")]
 		[CCode (cname = "G_SOURCE_CONTINUE")]
-		public static const bool CONTINUE;
+		public const bool CONTINUE;
 		[Version (since = "2.32")]
 		[CCode (cname = "G_SOURCE_REMOVE")]
-		public static const bool REMOVE;
+		public const bool REMOVE;
 
 		protected abstract bool prepare (out int timeout_);
 		protected abstract bool check ();
