@@ -1,5 +1,7 @@
-[CCode (cname_prefix = "enchant_", cheader_filename = "enchant.h")]
+[CCode (cheader_filename = "enchant.h")]
 namespace Enchant {
+	public unowned string get_version ();
+
 	public delegate void BrokerDescribeFn (string provider_name, string provider_desc, string provider_dll_file);
 	public delegate void DictDescribeFn (string lang_tag, string provider_name, string provider_desc, string provider_file);
 
@@ -22,6 +24,7 @@ namespace Enchant {
 	[Compact]
 	public class Dict {
 		public int check (string word, long len = -1);
+		[CCode (array_length_type = "size_t")]
 		public unowned string[] suggest (string word, long len = -1);
 		public void free_string_list ([CCode (array_length = false)] string[] string_list);
 		public void add_to_session (string word, long len = -1);
