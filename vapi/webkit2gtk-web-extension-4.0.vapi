@@ -534,7 +534,11 @@ namespace WebKit {
 			public uint event_phase { get; }
 			[NoAccessorMethod]
 			public bool is_trusted { get; }
+			[NoAccessorMethod]
+			public bool related_target_scoped { get; }
 			public bool return_value { get; set; }
+			[NoAccessorMethod]
+			public bool scoped { get; }
 			public WebKit.DOM.EventTarget src_element { owned get; }
 			public WebKit.DOM.EventTarget target { owned get; }
 			public uint time_stamp { get; }
@@ -547,6 +551,8 @@ namespace WebKit {
 			[CCode (has_construct_function = false)]
 			protected File ();
 			public string get_name ();
+			[NoAccessorMethod]
+			public int64 last_modified { get; }
 			public string name { owned get; }
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_file_list_get_type ()")]
@@ -610,6 +616,8 @@ namespace WebKit {
 			public string name { owned get; set; }
 			[NoAccessorMethod]
 			public string origin { owned get; }
+			[NoAccessorMethod]
+			public string password { owned get; set; }
 			public string pathname { owned get; set; }
 			[NoAccessorMethod]
 			public string ping { owned get; set; }
@@ -624,6 +632,8 @@ namespace WebKit {
 			public string text { owned get; set; }
 			[NoAccessorMethod]
 			public string type { owned get; set; }
+			[NoAccessorMethod]
+			public string username { owned get; set; }
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_html_applet_element_get_type ()")]
 		[GIR (name = "DOMHTMLAppletElement")]
@@ -690,21 +700,34 @@ namespace WebKit {
 			public void set_target (string value);
 			public string alt { owned get; set; }
 			public string coords { owned get; set; }
-			public string hash { owned get; }
-			public string host { owned get; }
-			public string hostname { owned get; }
+			[NoAccessorMethod]
+			public string hash { owned get; set; }
+			[NoAccessorMethod]
+			public string host { owned get; set; }
+			[NoAccessorMethod]
+			public string hostname { owned get; set; }
 			public string href { owned get; set; }
 			public bool no_href { get; set; }
-			public string pathname { owned get; }
+			[NoAccessorMethod]
+			public string origin { owned get; }
+			[NoAccessorMethod]
+			public string password { owned get; set; }
+			[NoAccessorMethod]
+			public string pathname { owned get; set; }
 			[NoAccessorMethod]
 			public string ping { owned get; set; }
-			public string port { owned get; }
-			public string protocol { owned get; }
+			[NoAccessorMethod]
+			public string port { owned get; set; }
+			[NoAccessorMethod]
+			public string protocol { owned get; set; }
 			[NoAccessorMethod]
 			public string rel { owned get; set; }
-			public string search { owned get; }
+			[NoAccessorMethod]
+			public string search { owned get; set; }
 			public string shape { owned get; set; }
 			public string target { owned get; set; }
+			[NoAccessorMethod]
+			public string username { owned get; set; }
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", lower_case_cprefix = "webkit_dom_html_br_element_", type_id = "webkit_dom_html_br_element_get_type ()")]
 		[GIR (name = "DOMHTMLBRElement")]
@@ -1439,7 +1462,11 @@ namespace WebKit {
 			public void set_rev (string value);
 			public void set_target (string value);
 			public void set_type_attr (string value);
+			[NoAccessorMethod]
+			public string @as { owned get; set; }
 			public string charset { owned get; set; }
+			[NoAccessorMethod]
+			public string cross_origin { owned get; set; }
 			public bool disabled { get; set; }
 			public string href { owned get; set; }
 			public string hreflang { owned get; set; }
@@ -1482,9 +1509,9 @@ namespace WebKit {
 			[NoAccessorMethod]
 			public long loop { get; set; }
 			[NoAccessorMethod]
-			public long scroll_amount { get; set; }
+			public ulong scroll_amount { get; set; }
 			[NoAccessorMethod]
-			public long scroll_delay { get; set; }
+			public ulong scroll_delay { get; set; }
 			[NoAccessorMethod]
 			public bool true_speed { get; set; }
 			[NoAccessorMethod]
@@ -1813,6 +1840,8 @@ namespace WebKit {
 			public void set_type_attr (string value);
 			public bool disabled { get; set; }
 			public string media { owned get; set; }
+			[NoAccessorMethod]
+			public string nonce { owned get; set; }
 			public WebKit.DOM.StyleSheet sheet { owned get; }
 			[NoAccessorMethod]
 			public string type { owned get; set; }
@@ -2196,7 +2225,10 @@ namespace WebKit {
 			[CCode (has_construct_function = false)]
 			protected Node ();
 			public unowned WebKit.DOM.Node append_child (WebKit.DOM.Node newChild) throws GLib.Error;
-			public unowned WebKit.DOM.Node clone_node (bool deep);
+			[Version (deprecated = true, deprecated_since = "2.14")]
+			public unowned WebKit.DOM.Node clone_node (bool deep) throws GLib.Error;
+			[Version (since = "2.14")]
+			public unowned WebKit.DOM.Node clone_node_with_error (bool deep) throws GLib.Error;
 			public ushort compare_document_position (WebKit.DOM.Node other);
 			public bool contains (WebKit.DOM.Node other);
 			public string get_base_uri ();
@@ -2245,8 +2277,6 @@ namespace WebKit {
 			public string prefix { owned get; set; }
 			public WebKit.DOM.Node previous_sibling { get; }
 			public string text_content { owned get; set; }
-			[NoAccessorMethod]
-			public WebKit.DOM.Node tree_root { owned get; }
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_node_iterator_get_type ()")]
 		[GIR (name = "DOMNodeIterator")]

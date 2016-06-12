@@ -2652,9 +2652,9 @@ namespace GLib {
 		public void set_cwd (string cwd);
 		public void set_environ (string env);
 		public void set_flags (GLib.SubprocessFlags flags);
-		public void set_stderr_file_path (string path);
+		public void set_stderr_file_path (string? path);
 		public void set_stdin_file_path (string path);
-		public void set_stdout_file_path (string path);
+		public void set_stdout_file_path (string? path);
 		public void setenv (string variable, string value, bool overwrite);
 		public GLib.Subprocess spawnv ([CCode (array_length = false, array_null_terminated = true)] string[] argv) throws GLib.Error;
 		public void take_fd (int source_fd, int target_fd);
@@ -3099,13 +3099,14 @@ namespace GLib {
 		public abstract bool equal (GLib.AppInfo appinfo2);
 		public static GLib.List<GLib.AppInfo> get_all ();
 		public static GLib.List<GLib.AppInfo> get_all_for_type (string content_type);
-		[Version (since = "2.20")]
+		[NoWrapper]
 		public abstract unowned string get_commandline ();
 		public static GLib.AppInfo get_default_for_type (string content_type, bool must_support_uris);
 		public static GLib.AppInfo get_default_for_uri_scheme (string uri_scheme);
 		public abstract unowned string get_description ();
 		[Version (since = "2.24")]
 		public abstract unowned string get_display_name ();
+		[NoWrapper]
 		public abstract unowned string get_executable ();
 		[Version (since = "2.28")]
 		public static GLib.List<GLib.AppInfo> get_fallback_for_type (string content_type);
@@ -3340,12 +3341,15 @@ namespace GLib {
 		public abstract bool equal (GLib.File file2);
 		public abstract GLib.Mount find_enclosing_mount (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async GLib.Mount find_enclosing_mount_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[NoWrapper]
 		public abstract string? get_basename ();
 		public GLib.File get_child (string name);
 		public abstract GLib.File get_child_for_display_name (string display_name) throws GLib.Error;
 		public abstract GLib.File? get_parent ();
 		public abstract string get_parse_name ();
+		[NoWrapper]
 		public abstract string? get_path ();
+		[NoWrapper]
 		public abstract string? get_relative_path (GLib.File descendant);
 		public abstract string get_uri ();
 		public abstract string get_uri_scheme ();

@@ -441,6 +441,8 @@ namespace WebKit {
 		[Version (since = "2.10")]
 		public bool get_allow_file_access_from_file_urls ();
 		public bool get_allow_modal_dialogs ();
+		[Version (since = "2.14")]
+		public bool get_allow_universal_access_from_file_urls ();
 		public bool get_auto_load_images ();
 		public unowned string get_cursive_font_family ();
 		public unowned string get_default_charset ();
@@ -496,6 +498,8 @@ namespace WebKit {
 		[Version (since = "2.10")]
 		public void set_allow_file_access_from_file_urls (bool allowed);
 		public void set_allow_modal_dialogs (bool allowed);
+		[Version (since = "2.14")]
+		public void set_allow_universal_access_from_file_urls (bool allowed);
 		public void set_auto_load_images (bool enabled);
 		public void set_cursive_font_family (string cursive_font_family);
 		public void set_default_charset (string default_charset);
@@ -552,6 +556,8 @@ namespace WebKit {
 		[Version (since = "2.10")]
 		public bool allow_file_access_from_file_urls { get; set construct; }
 		public bool allow_modal_dialogs { get; set construct; }
+		[Version (since = "2.14")]
+		public bool allow_universal_access_from_file_urls { get; set construct; }
 		public bool auto_load_images { get; set construct; }
 		public string cursive_font_family { get; set construct; }
 		public string default_charset { get; set construct; }

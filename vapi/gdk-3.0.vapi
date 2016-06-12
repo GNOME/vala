@@ -4910,6 +4910,23 @@ namespace Gdk {
 		[Version (since = "3.20")]
 		public signal void drop_performed (int time);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_drawing_context_get_type ()")]
+	public class DrawingContext : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected DrawingContext ();
+		[Version (since = "3.22")]
+		public unowned Cairo.Context get_cairo_context ();
+		[Version (since = "3.22")]
+		public Cairo.Region? get_clip ();
+		[Version (since = "3.22")]
+		public unowned Gdk.Window get_window ();
+		[Version (since = "3.22")]
+		public bool is_valid ();
+		[Version (since = "3.22")]
+		public Cairo.Region clip { owned get; construct; }
+		[Version (since = "3.22")]
+		public Gdk.Window window { get; construct; }
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
 	[Compact]
 	public class Event {
@@ -5576,10 +5593,14 @@ namespace Gdk {
 		public static unowned Gdk.Window at_pointer (out int win_x, out int win_y);
 		[Version (since = "2.12")]
 		public void beep ();
+		[Version (since = "3.22")]
+		public unowned Gdk.DrawingContext begin_draw_frame (Cairo.Region region);
 		public void begin_move_drag (int button, int root_x, int root_y, uint32 timestamp);
 		[Version (since = "3.4")]
 		public void begin_move_drag_for_device (Gdk.Device device, int button, int root_x, int root_y, uint32 timestamp);
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public void begin_paint_rect (Gdk.Rectangle rectangle);
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public void begin_paint_region (Cairo.Region region);
 		public void begin_resize_drag (Gdk.WindowEdge edge, int button, int root_x, int root_y, uint32 timestamp);
 		[Version (since = "3.4")]
@@ -5602,6 +5623,8 @@ namespace Gdk {
 		public void destroy ();
 		[Version (deprecated = true, deprecated_since = "3.8", since = "2.6")]
 		public void enable_synchronized_configure ();
+		[Version (since = "3.22")]
+		public void end_draw_frame (Gdk.DrawingContext context);
 		public void end_paint ();
 		[Version (since = "2.18")]
 		public bool ensure_native ();
@@ -6238,7 +6261,8 @@ namespace Gdk {
 		CURSOR,
 		KEYBOARD,
 		TOUCHSCREEN,
-		TOUCHPAD
+		TOUCHPAD,
+		TRACKPOINT
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_MODIFIER_INTENT_", type_id = "gdk_modifier_intent_get_type ()")]
 	[Version (since = "3.4")]
@@ -6524,13 +6548,16 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void beep ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Version (since = "2.8")]
+	[Version (deprecated = true, deprecated_since = "3.22", since = "2.8")]
 	public static Cairo.Context cairo_create (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "3.16")]
 	public static void cairo_draw_from_gl (Cairo.Context cr, Gdk.Window window, int source, int source_type, int buffer_scale, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool cairo_get_clip_rectangle (Cairo.Context cr, out Gdk.Rectangle rect);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (since = "3.22")]
+	public static unowned Gdk.DrawingContext? cairo_get_drawing_context (Cairo.Context cr);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "2.8")]
 	public static void cairo_rectangle (Cairo.Context cr, Gdk.Rectangle rectangle);
