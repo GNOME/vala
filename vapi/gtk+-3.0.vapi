@@ -4170,7 +4170,7 @@ namespace Gtk {
 		public Gtk.SensitivityType get_lower_stepper_sensitivity ();
 		public int get_min_slider_size ();
 		[NoWrapper]
-		public virtual void get_range_border (Gtk.Border border_);
+		public virtual Gtk.Border get_range_border ();
 		public Gdk.Rectangle get_range_rect ();
 		[NoWrapper]
 		public virtual void get_range_size_request (Gtk.Orientation orientation, out int minimum, out int natural);
