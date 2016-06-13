@@ -4172,6 +4172,8 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void get_range_border (Gtk.Border border_);
 		public Gdk.Rectangle get_range_rect ();
+		[NoWrapper]
+		public virtual void get_range_size_request (Gtk.Orientation orientation, out int minimum, out int natural);
 		public bool get_restrict_to_fill_level ();
 		public int get_round_digits ();
 		public bool get_show_fill_level ();
@@ -4453,6 +4455,8 @@ namespace Gtk {
 		public unowned Gtk.Adjustment get_hadjustment ();
 		public unowned Gtk.Widget get_hscrollbar ();
 		public bool get_kinetic_scrolling ();
+		public int get_max_content_height ();
+		public int get_max_content_width ();
 		public int get_min_content_height ();
 		public int get_min_content_width ();
 		public bool get_overlay_scrolling ();
@@ -4464,6 +4468,8 @@ namespace Gtk {
 		public void set_capture_button_press (bool capture_button_press);
 		public void set_hadjustment (Gtk.Adjustment hadjustment);
 		public void set_kinetic_scrolling (bool kinetic_scrolling);
+		public void set_max_content_height (int height);
+		public void set_max_content_width (int width);
 		public void set_min_content_height (int height);
 		public void set_min_content_width (int width);
 		public void set_overlay_scrolling (bool overlay_scrolling);
@@ -4476,6 +4482,8 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Gtk.PolicyType hscrollbar_policy { get; set; }
 		public bool kinetic_scrolling { get; set; }
+		public int max_content_height { get; set; }
+		public int max_content_width { get; set; }
 		public int min_content_height { get; set; }
 		public int min_content_width { get; set; }
 		public bool overlay_scrolling { get; set; }
@@ -4934,6 +4942,11 @@ namespace Gtk {
 		public bool vhomogeneous { get; set; }
 		public Gtk.Widget visible_child { get; set; }
 		public string visible_child_name { get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class StackAccessible : Gtk.ContainerAccessible, Atk.Component {
+		[CCode (has_construct_function = false)]
+		protected StackAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class StackSidebar : Gtk.Bin, Atk.Implementor, Gtk.Buildable {

@@ -21747,6 +21747,15 @@
 					<parameter name="border_" type="GtkBorder*"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="get_range_size_request">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="range" type="GtkRange*"/>
+					<parameter name="orientation" type="GtkOrientation"/>
+					<parameter name="minimum" type="gint*"/>
+					<parameter name="natural" type="gint*"/>
+				</parameters>
+			</vfunc>
 		</object>
 		<object name="GtkRangeAccessible" parent="GtkWidgetAccessible" type-name="GtkRangeAccessible" get-type="gtk_range_accessible_get_type">
 			<implements>
@@ -22450,6 +22459,18 @@
 					<parameter name="scrolled_window" type="GtkScrolledWindow*"/>
 				</parameters>
 			</method>
+			<method name="get_max_content_height" symbol="gtk_scrolled_window_get_max_content_height">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="scrolled_window" type="GtkScrolledWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_max_content_width" symbol="gtk_scrolled_window_get_max_content_width">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="scrolled_window" type="GtkScrolledWindow*"/>
+				</parameters>
+			</method>
 			<method name="get_min_content_height" symbol="gtk_scrolled_window_get_min_content_height">
 				<return-type type="gint"/>
 				<parameters>
@@ -22528,6 +22549,20 @@
 					<parameter name="kinetic_scrolling" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_max_content_height" symbol="gtk_scrolled_window_set_max_content_height">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="scrolled_window" type="GtkScrolledWindow*"/>
+					<parameter name="height" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_max_content_width" symbol="gtk_scrolled_window_set_max_content_width">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="scrolled_window" type="GtkScrolledWindow*"/>
+					<parameter name="width" type="gint"/>
+				</parameters>
+			</method>
 			<method name="set_min_content_height" symbol="gtk_scrolled_window_set_min_content_height">
 				<return-type type="void"/>
 				<parameters>
@@ -22587,6 +22622,8 @@
 			<property name="hadjustment" type="GtkAdjustment*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="hscrollbar-policy" type="GtkPolicyType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="kinetic-scrolling" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="max-content-height" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="max-content-width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="min-content-height" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="min-content-width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="overlay-scrolling" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -23504,6 +23541,11 @@
 			<property name="vhomogeneous" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visible-child" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visible-child-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkStackAccessible" parent="GtkContainerAccessible" type-name="GtkStackAccessible" get-type="gtk_stack_accessible_get_type">
+			<implements>
+				<interface name="AtkComponent"/>
+			</implements>
 		</object>
 		<object name="GtkStackSidebar" parent="GtkBin" type-name="GtkStackSidebar" get-type="gtk_stack_sidebar_get_type">
 			<implements>
@@ -36189,15 +36231,15 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="2101"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="2102"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="1"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="2"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_FULL" type="char*" value="full"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="1"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="2"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="21"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
