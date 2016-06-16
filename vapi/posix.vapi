@@ -1916,10 +1916,13 @@ namespace Posix {
 	[Version (deprecated_since = "POSIX.2", replacement = "termios ECHO flag")]
 	[CCode (cheader_filename = "unistd.h")]
 	public unowned string getpass (string promt);
-	/** To expose Posix crypt() GNU's libc and others require the feature test
-	 *  macro _XOPEN_SOURCE to be defined. See man 3 crypt
-	 *  A VAPI is unable to define and emit this macro before all include files
-	 *  Instead use valac -X -D_XOPEN_SOURCE
+	/**
+	 * Encodes a string
+	 *
+	 * To expose Posix crypt() GNU's libc and others require the feature test
+	 * macro _XOPEN_SOURCE to be defined. See man 3 crypt.
+	 * A VAPI is unable to define and emit this macro before all include files
+	 * Instead use valac -X -D_XOPEN_SOURCE
 	 */
 	[CCode (cheader_filename = "unistd.h")]
 	public unowned string crypt (string key, string salt);
