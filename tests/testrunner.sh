@@ -43,6 +43,13 @@ function testheader() {
 	if [ "$1" = "Packages:" ]; then
 		shift
 		PACKAGES="$PACKAGES $@"
+	elif [ "$*" = "Invalid Code" ]; then
+		INVALIDCODE=1
+		INHEADER=0
+		testpath=${testfile/.test/}
+		ns=${testpath//\//.}
+		ns=${ns//-/_}
+		SOURCEFILE=$ns.vala
 	elif [ "$1" = "D-Bus" ]; then
 		echo 'eval `dbus-launch --sh-syntax`' >> prepare
 		echo 'trap "kill $DBUS_SESSION_BUS_PID" INT TERM EXIT' >> prepare
@@ -91,7 +98,9 @@ EOF
 
 function sourceend() {
 	if [ -n "$testpath" ]; then
-		if [ $GIRTEST -eq 1 ]; then
+		if [ $INVALIDCODE -eq 1 ]; then
+			echo "! $VALAC --vapidir $vapidir -C $SOURCEFILE" > check
+		elif [ $GIRTEST -eq 1 ]; then
 			if [ $PART -eq 1 ]; then
 				echo "  </namespace>" >> $SOURCEFILE
 				echo "</repository>" >> $SOURCEFILE
@@ -145,6 +154,7 @@ for testfile in "$@"; do
 	*.test)
 		PART=0
 		INHEADER=1
+		INVALIDCODE=0
 		GIRTEST=0
 		testpath=
 		while IFS="" read -r line; do
