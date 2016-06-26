@@ -1885,8 +1885,8 @@ namespace Pk {
 	[Version (since = "0.9.6")]
 	public static bool offline_auth_set_prepared_ids (string package_ids) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	[Version (since = "1.0.12")]
-	public static bool offline_auth_set_prepared_upgrade_version (string release_ver) throws GLib.Error;
+	[Version (since = "1.1.2")]
+	public static bool offline_auth_set_prepared_upgrade (string name, string release_ver) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	[Version (since = "0.9.6")]
 	public static bool offline_auth_set_results (Pk.Results results) throws GLib.Error;
@@ -1918,8 +1918,14 @@ namespace Pk {
 	[Version (since = "0.9.6")]
 	public static Pk.PackageSack offline_get_prepared_sack () throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
+	[Version (since = "1.1.2")]
+	public static bool offline_get_prepared_upgrade (out string name, out string release_ver) throws GLib.Error;
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	[Version (since = "1.0.12")]
 	public static GLib.FileMonitor offline_get_prepared_upgrade_monitor (GLib.Cancellable? cancellable = null) throws GLib.Error;
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
+	[Version (since = "1.1.2")]
+	public static string offline_get_prepared_upgrade_name () throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	[Version (since = "1.0.12")]
 	public static string offline_get_prepared_upgrade_version () throws GLib.Error;

@@ -421,7 +421,7 @@ namespace GLib {
 		[Version (since = "2.28")]
 		public string[] get_arguments ();
 		[Version (since = "2.28")]
-		public unowned string get_cwd ();
+		public unowned string? get_cwd ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "2.28")]
 		public unowned string[] get_environ ();
@@ -2945,6 +2945,10 @@ namespace GLib {
 		[NoWrapper]
 		public virtual bool local_file_set_attributes (string filename, GLib.FileInfo info, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual GLib.File parse_name (string parse_name);
+		[Version (since = "2.50")]
+		public bool register_uri_scheme (string scheme, [CCode (delegate_target_pos = 2.33333, destroy_notify_pos = 2.66667)] owned GLib.VfsFileLookupFunc? uri_func, owned GLib.VfsFileLookupFunc? parse_name_func);
+		[Version (since = "2.50")]
+		public bool unregister_uri_scheme (string scheme);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class VolumeMonitor : GLib.Object {
@@ -4616,6 +4620,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	[Version (since = "2.36")]
 	public delegate void TaskThreadFunc (GLib.Task task, GLib.Object source_object, void* task_data, GLib.Cancellable? cancellable = null);
+	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
+	[Version (since = "2.50")]
+	public delegate GLib.File VfsFileLookupFunc (GLib.Vfs vfs, string identifier);
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (deprecated_since = "vala-0.16", replacement = "File.equal")]
 	public static GLib.EqualFunc file_equal;
