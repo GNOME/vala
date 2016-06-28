@@ -1742,10 +1742,10 @@ namespace Html {
 	public static int is_boolean_attr ([CCode (type = "xmlChar*")] string name);
 
 	[CCode (cname = "UTF8ToHtml", cheader_filename = "libxml/HTMLparser.h")]
-	public static int utf8_to_html ([CCode (array_length = false)] char[] outdata, out int outlen, [CCode (array_length = false)] char[] indata, out int inlen);
+	public static int utf8_to_html ([CCode (array_length = false)] char[] outdata, ref int outlen, [CCode (array_length = false)] char[] indata, ref int inlen);
 
 	[CCode (cname = "htmlEncodeEntities", cheader_filename = "libxml/HTMLparser.h")]
-	public static int encode_entities ([CCode (array_length = false)] char[] outdata, out int outlen, [CCode (array_length = false)] char[] indata, out int inlen, char quote_char = '\0');
+	public static int encode_entities ([CCode (array_length = false)] char[] outdata, ref int outlen, [CCode (array_length = false)] char[] indata, ref int inlen, char quote_char = '\0');
 
 	[CCode (cname = "htmlIsScriptAttribute", cheader_filename = "libxml/HTMLparser.h")]
 	public static bool is_script_attribute ([CCode (type = "xmlChar*")] string name);
