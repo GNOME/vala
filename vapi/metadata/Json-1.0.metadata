@@ -26,6 +26,8 @@ gvariant_deserialize_data unowned=false floating
 
 Object.add_member replacement="Json.Object.set_member"
 Serializable cheader_filename="json-glib/json-glib.h,json-glib/json-gobject.h"
-	     .deserialize_property.value out
+	.default_deserialize_property.value out
+	.deserialize_property.value out
+	.find_property nullable
 construct_gobject cheader_filename="json-glib/json-glib.h,json-glib/json-gobject.h" replacement="Json.gobject_from_data"
 serialize_gobject cheader_filename="json-glib/json-glib.h,json-glib/json-gobject.h" replacement="Json.gobject_to_data"
