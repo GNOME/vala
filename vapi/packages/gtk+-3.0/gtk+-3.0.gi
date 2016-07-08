@@ -1376,6 +1376,15 @@
 				<parameter name="error" type="GError**"/>
 			</parameters>
 		</function>
+		<function name="show_uri_on_window" symbol="gtk_show_uri_on_window">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="parent" type="GtkWindow*"/>
+				<parameter name="uri" type="char*"/>
+				<parameter name="timestamp" type="guint32"/>
+				<parameter name="error" type="GError**"/>
+			</parameters>
+		</function>
 		<function name="target_table_free" symbol="gtk_target_table_free">
 			<return-type type="void"/>
 			<parameters>
@@ -2925,6 +2934,12 @@
 					<parameter name="unit" type="GtkUnit"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_from_gvariant" symbol="gtk_paper_size_new_from_gvariant">
+				<return-type type="GtkPaperSize*"/>
+				<parameters>
+					<parameter name="variant" type="GVariant*"/>
+				</parameters>
+			</constructor>
 			<constructor name="new_from_ipp" symbol="gtk_paper_size_new_from_ipp">
 				<return-type type="GtkPaperSize*"/>
 				<parameters>
@@ -2957,6 +2972,12 @@
 					<parameter name="width" type="gdouble"/>
 					<parameter name="height" type="gdouble"/>
 					<parameter name="unit" type="GtkUnit"/>
+				</parameters>
+			</method>
+			<method name="to_gvariant" symbol="gtk_paper_size_to_gvariant">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="size" type="GtkPaperSize*"/>
 				</parameters>
 			</method>
 			<method name="to_key_file" symbol="gtk_paper_size_to_key_file">
@@ -13096,11 +13117,23 @@
 			<constructor name="new" symbol="gtk_file_filter_new">
 				<return-type type="GtkFileFilter*"/>
 			</constructor>
+			<constructor name="new_from_gvariant" symbol="gtk_file_filter_new_from_gvariant">
+				<return-type type="GtkFileFilter*"/>
+				<parameters>
+					<parameter name="variant" type="GVariant*"/>
+				</parameters>
+			</constructor>
 			<method name="set_name" symbol="gtk_file_filter_set_name">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="filter" type="GtkFileFilter*"/>
 					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="to_gvariant" symbol="gtk_file_filter_to_gvariant">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="filter" type="GtkFileFilter*"/>
 				</parameters>
 			</method>
 		</object>
@@ -19557,6 +19590,12 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_from_gvariant" symbol="gtk_page_setup_new_from_gvariant">
+				<return-type type="GtkPageSetup*"/>
+				<parameters>
+					<parameter name="variant" type="GVariant*"/>
+				</parameters>
+			</constructor>
 			<constructor name="new_from_key_file" symbol="gtk_page_setup_new_from_key_file">
 				<return-type type="GtkPageSetup*"/>
 				<parameters>
@@ -19624,6 +19663,12 @@
 					<parameter name="setup" type="GtkPageSetup*"/>
 					<parameter name="file_name" type="char*"/>
 					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="to_gvariant" symbol="gtk_page_setup_to_gvariant">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="setup" type="GtkPageSetup*"/>
 				</parameters>
 			</method>
 			<method name="to_key_file" symbol="gtk_page_setup_to_key_file">
@@ -20883,6 +20928,12 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_from_gvariant" symbol="gtk_print_settings_new_from_gvariant">
+				<return-type type="GtkPrintSettings*"/>
+				<parameters>
+					<parameter name="variant" type="GVariant*"/>
+				</parameters>
+			</constructor>
 			<constructor name="new_from_key_file" symbol="gtk_print_settings_new_from_key_file">
 				<return-type type="GtkPrintSettings*"/>
 				<parameters>
@@ -21117,6 +21168,12 @@
 					<parameter name="settings" type="GtkPrintSettings*"/>
 					<parameter name="file_name" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="to_gvariant" symbol="gtk_print_settings_to_gvariant">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="settings" type="GtkPrintSettings*"/>
 				</parameters>
 			</method>
 			<method name="to_key_file" symbol="gtk_print_settings_to_key_file">
@@ -34472,6 +34529,16 @@
 			<requires>
 				<interface name="GObject"/>
 			</requires>
+			<method name="add_choice" symbol="gtk_file_chooser_add_choice">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="chooser" type="GtkFileChooser*"/>
+					<parameter name="id" type="char*"/>
+					<parameter name="label" type="char*"/>
+					<parameter name="options" type="char**"/>
+					<parameter name="option_labels" type="char**"/>
+				</parameters>
+			</method>
 			<method name="add_filter" symbol="gtk_file_chooser_add_filter">
 				<return-type type="void"/>
 				<parameters>
@@ -34502,6 +34569,13 @@
 				<return-type type="GtkFileChooserAction"/>
 				<parameters>
 					<parameter name="chooser" type="GtkFileChooser*"/>
+				</parameters>
+			</method>
+			<method name="get_choice" symbol="gtk_file_chooser_get_choice">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="chooser" type="GtkFileChooser*"/>
+					<parameter name="id" type="char*"/>
 				</parameters>
 			</method>
 			<method name="get_create_folders" symbol="gtk_file_chooser_get_create_folders">
@@ -34660,6 +34734,13 @@
 					<parameter name="chooser" type="GtkFileChooser*"/>
 				</parameters>
 			</method>
+			<method name="remove_choice" symbol="gtk_file_chooser_remove_choice">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="chooser" type="GtkFileChooser*"/>
+					<parameter name="id" type="char*"/>
+				</parameters>
+			</method>
 			<method name="remove_filter" symbol="gtk_file_chooser_remove_filter">
 				<return-type type="void"/>
 				<parameters>
@@ -34716,6 +34797,14 @@
 				<parameters>
 					<parameter name="chooser" type="GtkFileChooser*"/>
 					<parameter name="action" type="GtkFileChooserAction"/>
+				</parameters>
+			</method>
+			<method name="set_choice" symbol="gtk_file_chooser_set_choice">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="chooser" type="GtkFileChooser*"/>
+					<parameter name="id" type="char*"/>
+					<parameter name="option" type="char*"/>
 				</parameters>
 			</method>
 			<method name="set_create_folders" symbol="gtk_file_chooser_set_create_folders">
@@ -36231,15 +36320,15 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="2102"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="2103"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="2"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_FULL" type="char*" value="full"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="2"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="21"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>

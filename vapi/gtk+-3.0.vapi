@@ -2130,11 +2130,15 @@ namespace Gtk {
 		public void add_pattern (string pattern);
 		public void add_pixbuf_formats ();
 		public bool filter (Gtk.FileFilterInfo filter_info);
+		[CCode (has_construct_function = false)]
+		public FileFilter.from_gvariant (GLib.Variant variant);
 		[CCode (cname = "gtk_file_filter_get_name")]
 		public unowned string? get_filter_name ();
 		public Gtk.FileFilterFlags get_needed ();
 		[CCode (cname = "gtk_file_filter_set_name")]
 		public void set_filter_name (string? name);
+		[CCode (returns_floating_reference = true)]
+		public GLib.Variant to_gvariant ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Compact]
@@ -3684,6 +3688,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public PageSetup.from_file (string file_name) throws GLib.Error;
 		[CCode (has_construct_function = false)]
+		public PageSetup.from_gvariant (GLib.Variant variant);
+		[CCode (has_construct_function = false)]
 		public PageSetup.from_key_file (GLib.KeyFile key_file, string? group_name) throws GLib.Error;
 		public double get_bottom_margin (Gtk.Unit unit);
 		public double get_left_margin (Gtk.Unit unit);
@@ -3705,6 +3711,8 @@ namespace Gtk {
 		public void set_right_margin (double margin, Gtk.Unit unit);
 		public void set_top_margin (double margin, Gtk.Unit unit);
 		public bool to_file (string file_name) throws GLib.Error;
+		[CCode (returns_floating_reference = true)]
+		public GLib.Variant to_gvariant ();
 		public void to_key_file (GLib.KeyFile key_file, string group_name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_paned_get_type ()")]
@@ -3751,6 +3759,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public PaperSize.custom (string name, string display_name, double width, double height, Gtk.Unit unit);
 		[CCode (has_construct_function = false)]
+		public PaperSize.from_gvariant (GLib.Variant variant);
+		[CCode (has_construct_function = false)]
 		public PaperSize.from_ipp (string ipp_name, double width, double height);
 		[CCode (has_construct_function = false)]
 		public PaperSize.from_key_file (GLib.KeyFile key_file, string group_name) throws GLib.Error;
@@ -3771,6 +3781,8 @@ namespace Gtk {
 		public bool is_equal (Gtk.PaperSize size2);
 		public bool is_ipp ();
 		public void set_size (double width, double height, Gtk.Unit unit);
+		[CCode (returns_floating_reference = true)]
+		public GLib.Variant to_gvariant ();
 		public void to_key_file (GLib.KeyFile key_file, string group_name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_places_sidebar_get_type ()")]
@@ -3978,6 +3990,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public PrintSettings.from_file (string file_name) throws GLib.Error;
 		[CCode (has_construct_function = false)]
+		public PrintSettings.from_gvariant (GLib.Variant variant);
+		[CCode (has_construct_function = false)]
 		public PrintSettings.from_key_file (GLib.KeyFile key_file, string? group_name) throws GLib.Error;
 		public unowned string @get (string key);
 		public bool get_bool (string key);
@@ -4046,6 +4060,8 @@ namespace Gtk {
 		public void set_scale (double scale);
 		public void set_use_color (bool use_color);
 		public bool to_file (string file_name) throws GLib.Error;
+		[CCode (returns_floating_reference = true)]
+		public GLib.Variant to_gvariant ();
 		public void to_key_file (GLib.KeyFile key_file, string group_name);
 		public void unset (string key);
 	}
@@ -7344,10 +7360,12 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface FileChooser : GLib.Object {
+		public void add_choice (string id, string label, string[]? options, string[]? option_labels);
 		public void add_filter (owned Gtk.FileFilter filter);
 		public bool add_shortcut_folder (string folder) throws GLib.Error;
 		public bool add_shortcut_folder_uri (string uri) throws GLib.Error;
 		public Gtk.FileChooserAction get_action ();
+		public unowned string get_choice (string id);
 		public bool get_create_folders ();
 		public string get_current_folder ();
 		public GLib.File get_current_folder_file ();
@@ -7374,6 +7392,7 @@ namespace Gtk {
 		public GLib.SList<weak Gtk.FileFilter> list_filters ();
 		public GLib.SList<string>? list_shortcut_folder_uris ();
 		public GLib.SList<string>? list_shortcut_folders ();
+		public void remove_choice (string id);
 		public void remove_filter (Gtk.FileFilter filter);
 		public bool remove_shortcut_folder (string folder) throws GLib.Error;
 		public bool remove_shortcut_folder_uri (string uri) throws GLib.Error;
@@ -7382,6 +7401,7 @@ namespace Gtk {
 		public bool select_filename (string filename);
 		public bool select_uri (string uri);
 		public void set_action (Gtk.FileChooserAction action);
+		public void set_choice (string id, string option);
 		public void set_create_folders (bool create_folders);
 		public bool set_current_folder (string filename);
 		public bool set_current_folder_file (GLib.File file) throws GLib.Error;
@@ -10021,6 +10041,8 @@ namespace Gtk {
 	public static void show_about_dialog (Gtk.Window? parent, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool show_uri (Gdk.Screen? screen, string uri, uint32 timestamp) throws GLib.Error;
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static bool show_uri_on_window (Gtk.Window? parent, string uri, uint32 timestamp) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (deprecated_since = "vala-0.12", replacement = "Gtk.Stock.add")]
 	public static void stock_add (Gtk.StockItem[] items);
