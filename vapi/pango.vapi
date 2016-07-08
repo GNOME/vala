@@ -1091,6 +1091,9 @@ namespace Pango {
 	public const int VERSION_MICRO;
 	[CCode (cheader_filename = "pango/pango.h")]
 	public const int VERSION_MINOR;
+	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_VERSION_MIN_REQUIRED")]
+	[Version (since = "1.42")]
+	public const int VERSION_MIN_REQUIRED;
 	[CCode (cheader_filename = "pango/pango.h")]
 	public const string VERSION_STRING;
 	[CCode (cheader_filename = "pango/pango.h")]

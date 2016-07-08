@@ -129,6 +129,8 @@ namespace GLib {
 		public const string FILESYSTEM_FREE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_FILESYSTEM_READONLY")]
 		public const string FILESYSTEM_READONLY;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_FILESYSTEM_REMOTE")]
+		public const string FILESYSTEM_REMOTE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_FILESYSTEM_SIZE")]
 		public const string FILESYSTEM_SIZE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_FILESYSTEM_TYPE")]
