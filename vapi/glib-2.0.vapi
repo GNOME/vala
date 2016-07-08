@@ -1727,6 +1727,9 @@ namespace GLib {
 	[CCode (type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0")]
 	[IntegerType (rank = 6)]
 	public struct Pid : int {
+		[CCode (cname = "G_PID_FORMAT")]
+		[Version (since = "2.50")]
+		public const string FORMAT;
 	}
 
 	public delegate void ChildWatchFunc (Pid pid, int status);
@@ -3930,6 +3933,8 @@ namespace GLib {
 	public class KeyFile {
 		public KeyFile ();
 		public void set_list_separator (char separator);
+		[Version (since = "2.50")]
+		public bool load_from_bytes (Bytes bytes, KeyFileFlags @flags) throws KeyFileError;
 		public bool load_from_file (string file, KeyFileFlags @flags) throws KeyFileError, FileError;
 		[Version (since = "2.14")]
 		public bool load_from_dirs (string file, [CCode (array_length = false, array_null_terminated = true)] string[] search_dirs, out string full_path, KeyFileFlags @flags) throws KeyFileError, FileError;
