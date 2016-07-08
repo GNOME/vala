@@ -149,6 +149,9 @@ public class Vala.GVariantModule : GAsyncModule {
 			// strcmp
 			cfile.add_include ("string.h");
 
+			// for G_DBUS_ERROR
+			cfile.add_include ("gio/gio.h");
+
 			cfile.add_function (generate_enum_from_string_function (en));
 			cfile.add_function (generate_enum_to_string_function (en));
 		}
