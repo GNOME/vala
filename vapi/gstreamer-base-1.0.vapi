@@ -14,6 +14,9 @@ namespace Gst {
 			public void copy ([CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] out unowned uint8[] dest, size_t offset);
 			[Version (since = "1.4")]
 			public GLib.Bytes copy_bytes (size_t offset, size_t size);
+			public uint64 distance_from_discont ();
+			[Version (since = "1.10")]
+			public Gst.ClockTime dts_at_discont ();
 			public void flush (size_t flush);
 			[Version (since = "1.6")]
 			public Gst.Buffer? get_buffer (size_t nbytes);
@@ -27,12 +30,18 @@ namespace Gst {
 			public unowned uint8[]? map ();
 			public ssize_t masked_scan_uint32 (uint32 mask, uint32 pattern, size_t offset, size_t size);
 			public ssize_t masked_scan_uint32_peek (uint32 mask, uint32 pattern, size_t offset, size_t size, out uint32 value);
+			[Version (since = "1.10")]
+			public uint64 offset_at_discont ();
 			public Gst.ClockTime prev_dts (out uint64 distance);
 			[Version (since = "1.2")]
 			public Gst.ClockTime prev_dts_at_offset (size_t offset, out uint64 distance);
+			[Version (since = "1.10")]
+			public uint64 prev_offset (out uint64 distance);
 			public Gst.ClockTime prev_pts (out uint64 distance);
 			[Version (since = "1.2")]
 			public Gst.ClockTime prev_pts_at_offset (size_t offset, out uint64 distance);
+			[Version (since = "1.10")]
+			public Gst.ClockTime pts_at_discont ();
 			public void push (owned Gst.Buffer buf);
 			[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
 			public uint8[]? take ();

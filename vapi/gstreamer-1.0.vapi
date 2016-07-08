@@ -608,6 +608,10 @@ namespace Gst {
 		public bool async_handling { get; set; }
 		[NoAccessorMethod]
 		public bool message_forward { get; set; }
+		[Version (since = "1.10")]
+		public virtual signal void deep_element_added (Gst.Bin sub_bin, Gst.Element child);
+		[Version (since = "1.10")]
+		public virtual signal void deep_element_removed (Gst.Bin sub_bin, Gst.Element child);
 		public virtual signal bool do_latency ();
 		public virtual signal void element_added (Gst.Element child);
 		public virtual signal void element_removed (Gst.Element child);
@@ -1164,11 +1168,17 @@ namespace Gst {
 		public bool add_pad (Gst.Pad pad);
 		[CCode (cname = "gst_element_class_add_pad_template")]
 		public class void add_pad_template (owned Gst.PadTemplate templ);
+		[Version (since = "1.10")]
+		public ulong add_property_deep_notify_watch (string? property_name, bool include_value);
+		[Version (since = "1.10")]
+		public ulong add_property_notify_watch (string? property_name, bool include_value);
 		[CCode (cname = "gst_element_class_add_static_metadata")]
 		public class void add_static_metadata (string key, string value);
 		[CCode (cname = "gst_element_class_add_static_pad_template")]
 		[Version (since = "1.8")]
 		public class void add_static_pad_template (Gst.StaticPadTemplate static_templ);
+		[Version (since = "1.10")]
+		public void call_async (owned Gst.ElementCallAsyncFunc func);
 		public virtual Gst.StateChangeReturn change_state (Gst.StateChange transition);
 		public Gst.StateChangeReturn continue_state (Gst.StateChangeReturn ret);
 		public void create_all_pads ();
@@ -1219,6 +1229,8 @@ namespace Gst {
 		public virtual void release_pad (Gst.Pad pad);
 		public void release_request_pad (Gst.Pad pad);
 		public bool remove_pad (owned Gst.Pad pad);
+		[Version (since = "1.10")]
+		public void remove_property_notify_watch (ulong watch_id);
 		[CCode (vfunc_name = "request_new_pad")]
 		public virtual Gst.Pad? request_pad (Gst.PadTemplate templ, string? name, Gst.Caps? caps);
 		public bool seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
@@ -1318,8 +1330,14 @@ namespace Gst {
 		public void parse_seek (out double rate, out Gst.Format format, out Gst.SeekFlags flags, out Gst.SeekType start_type, out int64 start, out Gst.SeekType stop_type, out int64 stop);
 		public void parse_segment (out unowned Gst.Segment segment);
 		public void parse_segment_done (out Gst.Format format, out int64 position);
+		[Version (since = "1.10")]
+		public void parse_select_streams (out GLib.List<char> streams);
 		public void parse_sink_message (out Gst.Message msg);
 		public void parse_step (out Gst.Format format, out uint64 amount, out double rate, out bool flush, out bool intermediate);
+		[Version (since = "1.10")]
+		public void parse_stream (out Gst.Stream stream);
+		[Version (since = "1.10")]
+		public void parse_stream_collection (out Gst.StreamCollection collection);
 		[Version (since = "1.2")]
 		public void parse_stream_flags (out Gst.StreamFlags flags);
 		public void parse_stream_start (out unowned string stream_id);
@@ -1339,17 +1357,25 @@ namespace Gst {
 		public Event.segment (Gst.Segment segment);
 		[CCode (has_construct_function = false)]
 		public Event.segment_done (Gst.Format format, int64 position);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.10")]
+		public Event.select_streams (GLib.List<char> streams);
 		[Version (since = "1.2")]
 		public void set_group_id (uint group_id);
 		[Version (since = "1.4")]
 		public void set_running_time_offset (int64 offset);
 		public void set_seqnum (uint32 seqnum);
+		[Version (since = "1.10")]
+		public void set_stream (Gst.Stream stream);
 		[Version (since = "1.2")]
 		public void set_stream_flags (Gst.StreamFlags flags);
 		[CCode (has_construct_function = false)]
 		public Event.sink_message (string name, Gst.Message msg);
 		[CCode (has_construct_function = false)]
 		public Event.step (Gst.Format format, uint64 amount, double rate, bool flush, bool intermediate);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.10")]
+		public Event.stream_collection (Gst.StreamCollection collection);
 		[CCode (has_construct_function = false)]
 		public Event.stream_start (string stream_id);
 		[CCode (has_construct_function = false)]
@@ -1518,6 +1544,8 @@ namespace Gst {
 		public void parse_info (out GLib.Error gerror, out string debug);
 		public void parse_new_clock (out unowned Gst.Clock clock);
 		public void parse_progress (out Gst.ProgressType type, out string code, out string text);
+		[Version (since = "1.10")]
+		public void parse_property_notify (out unowned Gst.Object object, out string property_name, out GLib.Value property_value);
 		public void parse_qos (out bool live, out uint64 running_time, out uint64 stream_time, out uint64 timestamp, out uint64 duration);
 		public void parse_qos_stats (out Gst.Format format, out uint64 processed, out uint64 dropped);
 		public void parse_qos_values (out int64 jitter, out double proportion, out int quality);
@@ -1528,13 +1556,20 @@ namespace Gst {
 		public void parse_state_changed (out Gst.State oldstate, out Gst.State newstate, out Gst.State pending);
 		public void parse_step_done (out Gst.Format format, out uint64 amount, out double rate, out bool flush, out bool intermediate, out uint64 duration, out bool eos);
 		public void parse_step_start (out bool active, out Gst.Format format, out uint64 amount, out double rate, out bool flush, out bool intermediate);
+		[Version (since = "1.10")]
+		public void parse_stream_collection (out unowned Gst.StreamCollection collection);
 		public void parse_stream_status (out Gst.StreamStatusType type, out unowned Gst.Element owner);
+		[Version (since = "1.10")]
+		public void parse_streams_selected (out unowned Gst.StreamCollection collection);
 		public void parse_structure_change (out Gst.StructureChangeType type, out unowned Gst.Element owner, out bool busy);
 		public void parse_tag (out Gst.TagList tag_list);
 		public void parse_toc (out Gst.Toc toc, out bool updated);
 		public void parse_warning (out GLib.Error gerror, out string debug);
 		[CCode (has_construct_function = false)]
 		public Message.progress (Gst.Object src, Gst.ProgressType type, string code, string text);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.10")]
+		public Message.property_notify (Gst.Object src, string property_name, owned GLib.Value? val);
 		[CCode (has_construct_function = false)]
 		public Message.qos (Gst.Object src, bool live, uint64 running_time, uint64 stream_time, uint64 timestamp, uint64 duration);
 		[CCode (has_construct_function = false)]
@@ -1561,9 +1596,21 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Message.step_start (Gst.Object src, bool active, Gst.Format format, uint64 amount, double rate, bool flush, bool intermediate);
 		[CCode (has_construct_function = false)]
+		[Version (since = "1.10")]
+		public Message.stream_collection (Gst.Object src, Gst.StreamCollection collection);
+		[CCode (has_construct_function = false)]
 		public Message.stream_start (Gst.Object? src);
 		[CCode (has_construct_function = false)]
 		public Message.stream_status (Gst.Object src, Gst.StreamStatusType type, Gst.Element owner);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.10")]
+		public Message.streams_selected (Gst.Object src, Gst.StreamCollection collection);
+		[Version (since = "1.10")]
+		public void streams_selected_add (Gst.Stream stream);
+		[Version (since = "1.10")]
+		public uint streams_selected_get_size ();
+		[Version (since = "1.10")]
+		public Gst.Stream streams_selected_get_stream (uint idx);
 		[CCode (has_construct_function = false)]
 		public Message.structure_change (Gst.Object? src, Gst.StructureChangeType type, Gst.Element owner, bool busy);
 		[CCode (has_construct_function = false)]
@@ -1675,6 +1722,8 @@ namespace Gst {
 		public Gst.Pad get_peer ();
 		public Gst.FlowReturn get_range (uint64 offset, uint size, out Gst.Buffer buffer);
 		public Gst.Event? get_sticky_event (Gst.EventType event_type, uint idx);
+		[Version (since = "1.10")]
+		public Gst.Stream? get_stream ();
 		[Version (since = "1.2")]
 		public string? get_stream_id ();
 		public bool has_current_caps ();
@@ -1688,6 +1737,10 @@ namespace Gst {
 		public Gst.PadLinkReturn link (Gst.Pad sinkpad, Gst.PadLinkCheck flags = Gst.PadLinkCheck.DEFAULT);
 		[Version (since = "1.4")]
 		public static unowned string link_get_name (Gst.PadLinkReturn ret);
+		[Version (since = "1.10")]
+		public bool link_maybe_ghosting (Gst.Pad sink);
+		[Version (since = "1.10")]
+		public bool link_maybe_ghosting_full (Gst.Pad sink, Gst.PadLinkCheck flags);
 		public void mark_reconfigure ();
 		public bool needs_reconfigure ();
 		public bool pause_task ();
@@ -2081,6 +2134,48 @@ namespace Gst {
 		public uint64 to_stream_time (Gst.Format format, uint64 position);
 		[Version (since = "1.8")]
 		public int to_stream_time_full (Gst.Format format, uint64 position, uint64 stream_time);
+	}
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_stream_get_type ()")]
+	public class Stream : Gst.Object {
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.10")]
+		public Stream (string? stream_id, Gst.Caps? caps, Gst.StreamType type, Gst.StreamFlags flags);
+		[Version (since = "1.10")]
+		public Gst.Caps? get_caps ();
+		[Version (since = "1.10")]
+		public Gst.StreamFlags get_stream_flags ();
+		[Version (since = "1.10")]
+		public unowned string? get_stream_id ();
+		[Version (since = "1.10")]
+		public Gst.StreamType get_stream_type ();
+		[Version (since = "1.10")]
+		public Gst.TagList? get_tags ();
+		[Version (since = "1.10")]
+		public void set_caps (Gst.Caps? caps);
+		[Version (since = "1.10")]
+		public void set_stream_flags (Gst.StreamFlags flags);
+		[Version (since = "1.10")]
+		public void set_stream_type (Gst.StreamType stream_type);
+		[Version (since = "1.10")]
+		public void set_tags (Gst.TagList? tags);
+		public Gst.Caps caps { owned get; set; }
+		public Gst.StreamFlags stream_flags { get; set construct; }
+		public string stream_id { get; construct; }
+		public Gst.StreamType stream_type { get; set construct; }
+		public Gst.TagList tags { owned get; set; }
+	}
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_stream_collection_get_type ()")]
+	[Version (since = "1.10")]
+	public class StreamCollection : Gst.Object {
+		[CCode (has_construct_function = false)]
+		public StreamCollection (string? upstream_id);
+		public bool add_stream (owned Gst.Stream stream);
+		public uint get_size ();
+		public unowned Gst.Stream get_stream (uint index);
+		public unowned string get_upstream_id ();
+		[NoAccessorMethod]
+		public string upstream_id { owned get; set construct; }
+		public virtual signal void stream_notify (Gst.Stream stream, GLib.ParamSpec pspec);
 	}
 	[CCode (cheader_filename = "gst/gst.h", copy_function = "gst_structure_copy", free_function = "gst_structure_free", type_id = "gst_structure_get_type ()")]
 	[Compact]
@@ -2860,6 +2955,7 @@ namespace Gst {
 		STREAM_START,
 		CAPS,
 		SEGMENT,
+		STREAM_COLLECTION,
 		TAG,
 		BUFFERSIZE,
 		SINK_MESSAGE,
@@ -2875,6 +2971,7 @@ namespace Gst {
 		STEP,
 		RECONFIGURE,
 		TOC_SELECT,
+		SELECT_STREAMS,
 		CUSTOM_UPSTREAM,
 		CUSTOM_DOWNSTREAM,
 		CUSTOM_DOWNSTREAM_OOB,
@@ -3006,6 +3103,9 @@ namespace Gst {
 		EXTENDED,
 		DEVICE_ADDED,
 		DEVICE_REMOVED,
+		PROPERTY_NOTIFY,
+		STREAM_COLLECTION,
+		STREAMS_SELECTED,
 		ANY;
 		public static unowned string get_name (Gst.MessageType type);
 		public static GLib.Quark to_quark (Gst.MessageType type);
@@ -3024,11 +3124,13 @@ namespace Gst {
 	public enum MiniObjectFlags {
 		LOCKABLE,
 		LOCK_READONLY,
+		MAY_BE_LEAKED,
 		LAST
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_OBJECT_FLAG_", type_id = "gst_object_flags_get_type ()")]
 	[Flags]
 	public enum ObjectFlags {
+		MAY_BE_LEAKED,
 		LAST
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PAD_", type_id = "gst_pad_direction_get_type ()")]
@@ -3131,7 +3233,8 @@ namespace Gst {
 	public enum ParseFlags {
 		NONE,
 		FATAL_ERRORS,
-		NO_SINGLE_ELEMENT_BINS
+		NO_SINGLE_ELEMENT_BINS,
+		PLACE_IN_BIN
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PIPELINE_FLAG_", type_id = "gst_pipeline_flags_get_type ()")]
 	[Flags]
@@ -3295,6 +3398,17 @@ namespace Gst {
 		START,
 		PAUSE,
 		STOP
+	}
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STREAM_TYPE_", type_id = "gst_stream_type_get_type ()")]
+	[Flags]
+	public enum StreamType {
+		UNKNOWN,
+		AUDIO,
+		VIDEO,
+		CONTAINER,
+		TEXT;
+		[Version (since = "1.10")]
+		public static unowned string get_name (Gst.StreamType stype);
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STRUCTURE_CHANGE_TYPE_PAD_", type_id = "gst_structure_change_type_get_type ()")]
 	public enum StructureChangeType {
@@ -3504,6 +3618,8 @@ namespace Gst {
 	public delegate bool ControlSourceGetValueArray (Gst.ControlSource self, Gst.ClockTime timestamp, Gst.ClockTime interval, uint n_values, double values);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void DebugFuncPtr ();
+	[CCode (cheader_filename = "gst/gst.h", instance_pos = 1.9)]
+	public delegate void ElementCallAsyncFunc (Gst.Element element);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void IteratorCopyFunction (Gst.Iterator it, Gst.Iterator copy);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 2.9)]

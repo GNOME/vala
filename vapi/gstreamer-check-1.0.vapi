@@ -45,6 +45,8 @@ namespace Gst {
 			[CCode (has_construct_function = false, type = "GstClock*")]
 			public TestClock.with_start_time (Gst.ClockTime start_time);
 			[NoAccessorMethod]
+			public Gst.ClockType clock_type { get; set; }
+			[NoAccessorMethod]
 			public uint64 start_time { get; construct; }
 		}
 		[CCode (cheader_filename = "gst/check/check.h", has_type_id = false)]

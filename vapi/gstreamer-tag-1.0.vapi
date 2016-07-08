@@ -38,6 +38,9 @@ namespace Gst {
 			public const string FLASH_MODE;
 			[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_CAPTURING_FOCAL_LENGTH")]
 			public const string FOCAL_LENGTH;
+			[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_CAPTURING_FOCAL_LENGTH_35_MM")]
+			[Version (since = "1.10")]
+			public const string FOCAL_LENGTH_35_MM;
 			[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_CAPTURING_FOCAL_RATIO")]
 			public const string FOCAL_RATIO;
 			[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_CAPTURING_GAIN_ADJUSTMENT")]

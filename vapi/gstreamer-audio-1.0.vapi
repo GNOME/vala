@@ -163,6 +163,8 @@ namespace Gst {
 			public virtual bool propose_allocation (Gst.Query query);
 			[Version (since = "1.6")]
 			public Gst.Caps proxy_getcaps (Gst.Caps? caps, Gst.Caps? filter);
+			[Version (since = "1.10")]
+			public void set_allocation_caps (Gst.Caps? allocation_caps);
 			public void set_drainable (bool enabled);
 			public void set_estimate_rate (bool enabled);
 			[NoWrapper]
@@ -239,6 +241,8 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool propose_allocation (Gst.Query query);
 			public Gst.Caps proxy_getcaps (Gst.Caps? caps, Gst.Caps? filter);
+			[Version (since = "1.10")]
+			public void set_allocation_caps (Gst.Caps? allocation_caps);
 			public void set_drainable (bool enabled);
 			[NoWrapper]
 			public virtual bool set_format (Gst.Audio.Info info);
@@ -313,6 +317,19 @@ namespace Gst {
 			public void free ();
 			public void reset ();
 			public void samples (void* @in, void* @out, uint samples);
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h")]
+		[Compact]
+		[GIR (name = "AudioResampler")]
+		public class Resampler {
+			[Version (since = "1.6")]
+			public void free ();
+			public size_t get_in_frames (size_t out_frames);
+			public size_t get_max_latency ();
+			public size_t get_out_frames (size_t in_frames);
+			public void resample (void* @in, size_t in_frames, void* @out, size_t out_frames);
+			public void reset ();
+			public bool update (int in_rate, int out_rate, Gst.Structure options);
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_ring_buffer_get_type ()")]
 		[GIR (name = "AudioRingBuffer")]
@@ -667,6 +684,39 @@ namespace Gst {
 			NONE,
 			NON_INTERLEAVED
 		}
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_RESAMPLER_FILTER_INTERPOLATION_", type_id = "gst_audio_resampler_filter_interpolation_get_type ()")]
+		[GIR (name = "AudioResamplerFilterInterpolation")]
+		public enum ResamplerFilterInterpolation {
+			NONE,
+			LINEAR,
+			CUBIC
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_RESAMPLER_FILTER_MODE_", type_id = "gst_audio_resampler_filter_mode_get_type ()")]
+		[GIR (name = "AudioResamplerFilterMode")]
+		public enum ResamplerFilterMode {
+			INTERPOLATED,
+			FULL,
+			AUTO
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_RESAMPLER_FLAG_", type_id = "gst_audio_resampler_flags_get_type ()")]
+		[Flags]
+		[GIR (name = "AudioResamplerFlags")]
+		public enum ResamplerFlags {
+			NONE,
+			NON_INTERLEAVED_IN,
+			NON_INTERLEAVED_OUT,
+			VARIABLE_RATE
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_RESAMPLER_METHOD_", type_id = "gst_audio_resampler_method_get_type ()")]
+		[GIR (name = "AudioResamplerMethod")]
+		[Version (since = "1.6")]
+		public enum ResamplerMethod {
+			NEAREST,
+			LINEAR,
+			CUBIC,
+			BLACKMAN_NUTTALL,
+			KAISER
+		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_RING_BUFFER_FORMAT_TYPE_", type_id = "gst_audio_ring_buffer_format_type_get_type ()")]
 		[GIR (name = "AudioRingBufferFormatType")]
 		public enum RingBufferFormatType {
@@ -717,6 +767,8 @@ namespace Gst {
 		public const string CONVERTER_OPT_NOISE_SHAPING_METHOD;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_CONVERTER_OPT_QUANTIZATION")]
 		public const string CONVERTER_OPT_QUANTIZATION;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_CONVERTER_OPT_RESAMPLER_METHOD")]
+		public const string CONVERTER_OPT_RESAMPLER_METHOD;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_DECODER_MAX_ERRORS")]
 		public const int DECODER_MAX_ERRORS;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_DECODER_SINK_NAME")]
@@ -746,6 +798,34 @@ namespace Gst {
 		public const string META_TAG_AUDIO_STR;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RATE_RANGE")]
 		public const string RATE_RANGE;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_OPT_CUBIC_B")]
+		public const string RESAMPLER_OPT_CUBIC_B;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_OPT_CUBIC_C")]
+		public const string RESAMPLER_OPT_CUBIC_C;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_OPT_CUTOFF")]
+		public const string RESAMPLER_OPT_CUTOFF;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_OPT_FILTER_INTERPOLATION")]
+		public const string RESAMPLER_OPT_FILTER_INTERPOLATION;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_OPT_FILTER_MODE")]
+		public const string RESAMPLER_OPT_FILTER_MODE;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_OPT_FILTER_MODE_THRESHOLD")]
+		public const string RESAMPLER_OPT_FILTER_MODE_THRESHOLD;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_OPT_FILTER_OVERSAMPLE")]
+		public const string RESAMPLER_OPT_FILTER_OVERSAMPLE;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_OPT_MAX_PHASE_ERROR")]
+		public const string RESAMPLER_OPT_MAX_PHASE_ERROR;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_OPT_N_TAPS")]
+		public const string RESAMPLER_OPT_N_TAPS;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_OPT_STOP_ATTENUATION")]
+		public const string RESAMPLER_OPT_STOP_ATTENUATION;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_OPT_TRANSITION_BANDWIDTH")]
+		public const string RESAMPLER_OPT_TRANSITION_BANDWIDTH;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_QUALITY_DEFAULT")]
+		public const int RESAMPLER_QUALITY_DEFAULT;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_QUALITY_MAX")]
+		public const int RESAMPLER_QUALITY_MAX;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_RESAMPLER_QUALITY_MIN")]
+		public const int RESAMPLER_QUALITY_MIN;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_buffer_clip")]
 		public static Gst.Buffer audio_buffer_clip (owned Gst.Buffer buffer, Gst.Segment segment, int rate, int bpf);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_buffer_reorder_channels")]
@@ -757,6 +837,8 @@ namespace Gst {
 		public static bool audio_channel_positions_from_mask (uint64 channel_mask, [CCode (array_length_cname = "channels", array_length_pos = 0.5)] Gst.Audio.ChannelPosition[] position);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_to_mask")]
 		public static bool audio_channel_positions_to_mask ([CCode (array_length_cname = "channels", array_length_pos = 1.5)] Gst.Audio.ChannelPosition[] position, bool force_order, [CCode (array_length = false)] uint64[] channel_mask);
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_to_string")]
+		public static string audio_channel_positions_to_string ([CCode (array_length_cname = "channels", array_length_pos = 1.1)] Gst.Audio.ChannelPosition[] position);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_to_valid_order")]
 		public static bool audio_channel_positions_to_valid_order ([CCode (array_length_cname = "channels", array_length_pos = 1.1)] Gst.Audio.ChannelPosition[] position);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_check_valid_channel_positions")]
@@ -789,6 +871,8 @@ namespace Gst {
 		public static bool audio_iec61937_payload ([CCode (array_length_cname = "src_n", array_length_pos = 1.5, array_length_type = "guint")] uint8[] src, [CCode (array_length_cname = "dst_n", array_length_pos = 2.5, array_length_type = "guint")] uint8[] dst, Gst.Audio.RingBufferSpec spec, int endianness);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_reorder_channels")]
 		public static bool audio_reorder_channels ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] data, Gst.Audio.Format format, int channels, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] from, [CCode (array_length = false)] Gst.Audio.ChannelPosition[] to);
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_resampler_options_set_quality")]
+		public static void audio_resampler_options_set_quality (Gst.Audio.ResamplerMethod method, uint quality, int in_rate, int out_rate, Gst.Structure options);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_buffer_add_audio_clipping_meta")]
 		[Version (since = "1.8")]
 		public static unowned Gst.Audio.ClippingMeta? buffer_add_audio_clipping_meta (Gst.Buffer buffer, Gst.Format format, uint64 start, uint64 end);

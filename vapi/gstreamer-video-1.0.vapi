@@ -44,6 +44,7 @@ namespace Gst {
 		[Compact]
 		[GIR (name = "VideoCodecState")]
 		public class CodecState {
+			public weak Gst.Caps allocation_caps;
 			public weak Gst.Caps caps;
 			public weak Gst.Buffer codec_data;
 			public weak Gst.Video.Info info;
@@ -781,7 +782,10 @@ namespace Gst {
 			A422_10LE,
 			A444_10BE,
 			A444_10LE,
-			NV61
+			NV61,
+			P010_10BE,
+			P010_10LE,
+			IYU2
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]
@@ -974,10 +978,12 @@ namespace Gst {
 			FAST
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_RESAMPLER_FLAG_", type_id = "gst_video_resampler_flags_get_type ()")]
+		[Flags]
 		[GIR (name = "VideoResamplerFlags")]
 		[Version (since = "1.6")]
 		public enum ResamplerFlags {
-			NONE
+			NONE,
+			HALF_TAPS
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_RESAMPLER_METHOD_", type_id = "gst_video_resampler_method_get_type ()")]
 		[GIR (name = "VideoResamplerMethod")]

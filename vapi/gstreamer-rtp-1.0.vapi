@@ -307,8 +307,37 @@ namespace Gst {
 		public struct Packet {
 			public weak Gst.RTPC.Buffer rtcp;
 			public uint offset;
+			[CCode (cname = "gst_rtcp_packet_add_profile_specific_ext")]
+			public bool add_profile_specific_ext (uint8 data, uint len);
 			[CCode (cname = "gst_rtcp_packet_add_rb")]
 			public bool add_rb (uint32 ssrc, uint8 fractionlost, int32 packetslost, uint32 exthighestseq, uint32 jitter, uint32 lsr, uint32 dlsr);
+			[CCode (cname = "gst_rtcp_packet_app_get_data")]
+			[Version (since = "1.10")]
+			public uint8 app_get_data ();
+			[CCode (cname = "gst_rtcp_packet_app_get_data_length")]
+			[Version (since = "1.10")]
+			public uint16 app_get_data_length ();
+			[CCode (cname = "gst_rtcp_packet_app_get_name")]
+			[Version (since = "1.10")]
+			public unowned string app_get_name ();
+			[CCode (cname = "gst_rtcp_packet_app_get_ssrc")]
+			[Version (since = "1.10")]
+			public uint32 app_get_ssrc ();
+			[CCode (cname = "gst_rtcp_packet_app_get_subtype")]
+			[Version (since = "1.10")]
+			public uint8 app_get_subtype ();
+			[CCode (cname = "gst_rtcp_packet_app_set_data_length")]
+			[Version (since = "1.10")]
+			public bool app_set_data_length (uint16 wordlen);
+			[CCode (cname = "gst_rtcp_packet_app_set_name")]
+			[Version (since = "1.10")]
+			public void app_set_name (string name);
+			[CCode (cname = "gst_rtcp_packet_app_set_ssrc")]
+			[Version (since = "1.10")]
+			public void app_set_ssrc (uint32 ssrc);
+			[CCode (cname = "gst_rtcp_packet_app_set_subtype")]
+			[Version (since = "1.10")]
+			public void app_set_subtype (uint8 subtype);
 			[CCode (cname = "gst_rtcp_packet_bye_add_ssrc")]
 			public bool bye_add_ssrc (uint32 ssrc);
 			[CCode (cname = "gst_rtcp_packet_bye_add_ssrcs")]
@@ -323,6 +352,8 @@ namespace Gst {
 			public uint bye_get_ssrc_count ();
 			[CCode (cname = "gst_rtcp_packet_bye_set_reason")]
 			public bool bye_set_reason (string reason);
+			[CCode (cname = "gst_rtcp_packet_copy_profile_specific_ext")]
+			public bool copy_profile_specific_ext ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] out uint8[] data);
 			[CCode (cname = "gst_rtcp_packet_fb_get_fci")]
 			public uint8 fb_get_fci ();
 			[CCode (cname = "gst_rtcp_packet_fb_get_fci_length")]
@@ -347,6 +378,10 @@ namespace Gst {
 			public uint16 get_length ();
 			[CCode (cname = "gst_rtcp_packet_get_padding")]
 			public bool get_padding ();
+			[CCode (cname = "gst_rtcp_packet_get_profile_specific_ext")]
+			public bool get_profile_specific_ext ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] out unowned uint8[] data);
+			[CCode (cname = "gst_rtcp_packet_get_profile_specific_ext_length")]
+			public uint16 get_profile_specific_ext_length ();
 			[CCode (cname = "gst_rtcp_packet_get_rb")]
 			public void get_rb (uint nth, uint32 ssrc, uint8 fractionlost, int32 packetslost, uint32 exthighestseq, uint32 jitter, uint32 lsr, uint32 dlsr);
 			[CCode (cname = "gst_rtcp_packet_get_rb_count")]

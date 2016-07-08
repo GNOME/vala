@@ -7,12 +7,16 @@ namespace Gst {
 			namespace AAC {
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_caps_set_level_and_profile")]
 				public static bool caps_set_level_and_profile (Gst.Caps caps, uint8 audio_config, uint len);
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_channels")]
+				public static uint get_channels (uint8 audio_config, uint len);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_index_from_sample_rate")]
 				public static int get_index_from_sample_rate (uint rate);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_level")]
 				public static unowned string get_level (uint8 audio_config, uint len);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_profile")]
 				public static unowned string get_profile (uint8 audio_config, uint len);
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_sample_rate")]
+				public static uint get_sample_rate (uint8 audio_config, uint len);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_sample_rate_from_index")]
 				public static uint get_sample_rate_from_index (uint sr_idx);
 			}

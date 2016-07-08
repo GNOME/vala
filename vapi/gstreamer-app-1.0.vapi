@@ -41,12 +41,16 @@ namespace Gst {
 			public Gst.Caps get_caps ();
 			[Version (since = "1.2")]
 			public uint64 get_current_level_bytes ();
+			[Version (since = "1.10")]
+			public Gst.ClockTime get_duration ();
 			public bool get_emit_signals ();
 			public void get_latency (uint64 min, uint64 max);
 			public uint64 get_max_bytes ();
 			public int64 get_size ();
 			public Gst.App.StreamType get_stream_type ();
 			public void set_caps (Gst.Caps caps);
+			[Version (since = "1.10")]
+			public void set_duration (Gst.ClockTime duration);
 			public void set_emit_signals (bool emit);
 			public void set_latency (uint64 min, uint64 max);
 			public void set_max_bytes (uint64 max);
@@ -56,6 +60,7 @@ namespace Gst {
 			public bool block { get; set; }
 			public Gst.Caps caps { owned get; set; }
 			public uint64 current_level_bytes { get; }
+			public uint64 duration { get; set; }
 			public bool emit_signals { get; set; }
 			[NoAccessorMethod]
 			public Gst.Format format { get; set; }
