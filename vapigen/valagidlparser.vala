@@ -2272,6 +2272,11 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						m.set_attribute ("DestroysInstance", true, m.source_reference);
 					}
+				} else if (nv[0] == "returns_floating_reference") {
+					if (eval (nv[1]) == "1") {
+						m.set_attribute_bool ("CCode", "returns_floating_reference", true);
+						m.return_type.value_owned = true;
+					}
 				} else if (nv[0] == "nullable") {
 					if (eval (nv[1]) == "1" && !(return_type is VoidType)) {
 						return_type.nullable = true;
