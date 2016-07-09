@@ -137,6 +137,8 @@ AM_CONDITIONAL(HAVE_WEASYPRINT, [test x$WEASYPRINT = xweasyprint])
 AC_CHECK_PROG([HELP2MAN], [help2man], [help2man])
 AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
 
+GLIB_TESTS
+
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 AC_CONFIG_FILES([Makefile
@@ -147,6 +149,7 @@ AC_CONFIG_FILES([Makefile
            codegen/Makefile
            compiler/Makefile
            vapi/Makefile
+           valadate/Makefile
            tests/Makefile
            doc/Makefile
            doc/manual/Makefile

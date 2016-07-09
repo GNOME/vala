@@ -9,3 +9,4 @@ class Foo : Object {
 
 void main () {
 }
+

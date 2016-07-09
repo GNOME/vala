@@ -15,5 +15,5 @@ async int foo () throws Error {
 	return 0;
 }
 
-void main() {
+void main () {
 }

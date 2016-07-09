@@ -57,7 +57,7 @@ void main () {
 
 	// server ready, spawn client
 	Pid client_pid;
-	Process.spawn_async (null, { "test", "/dbus/signals/client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
+	Process.spawn_async (null, { "signals.client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
 	ChildWatch.add (client_pid, client_exit);
 
 	main_loop = new MainLoop ();
