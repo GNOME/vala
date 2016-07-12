@@ -128,7 +128,7 @@ namespace Cairo {
 		public void show_glyphs (Cairo.Glyph[] glyphs);
 		public void show_page ();
 		public void show_text (string utf8);
-		public Cairo.Status show_text_glyphs (string utf8, int utf8_len, out Cairo.Glyph[] glyphs, out Cairo.TextCluster[] clusters, out Cairo.TextClusterFlags cluster_flags);
+		public Cairo.Status show_text_glyphs (string utf8, int utf8_len, Cairo.Glyph[] glyphs, Cairo.TextCluster[] clusters, out Cairo.TextClusterFlags cluster_flags);
 		public Cairo.Status status ();
 		public void stroke ();
 		public void stroke_extents (out double x1, out double y1, out double x2, out double y2);
