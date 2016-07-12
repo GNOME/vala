@@ -789,7 +789,10 @@ namespace Cairo {
 		DEVICE_ERROR,
 		INVALID_MESH_CONSTRUCTION,
 		DEVICE_FINISHED,
-		JBIG2_GLOBAL_MISSING;
+		JBIG2_GLOBAL_MISSING,
+		PNG_ERROR,
+		FREETYPE_ERROR,
+		WIN32_GDI_ERROR;
 		[CCode (cname = "cairo_status_to_string")]
 		public unowned string to_string ();
 	}
