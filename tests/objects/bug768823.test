@@ -1,0 +1,11 @@
+Invalid Code
+
+abstract class Foo<T> {
+	public abstract T t ();
+}
+
+class Bar<V, U> : Foo<U> {
+	public override V t () {
+		return null;
+	}
+}

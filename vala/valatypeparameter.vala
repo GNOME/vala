@@ -49,10 +49,6 @@ public class Vala.TypeParameter : Symbol {
 	 *              otherwise
 	 */
 	public bool equals (TypeParameter param2) {
-		// FIXME check whether the corresponding data type of one of the
-		//       parameters is a base type of the corresponding data
-		//       type of the other parameter and check along the path
-		//       whether one parameter maps to the other
-		return true;
+		return name == param2.name && parent_symbol == param2.parent_symbol;
 	}
 }
