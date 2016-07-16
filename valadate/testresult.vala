@@ -1,6 +1,6 @@
 /*
  * Valadate - Unit testing library for GObject-based libraries.
- * Copyright (C) 20016  Chris Daley <chebizarro@gmail.com>
+ * Copyright (C) 2016  Chris Daley <chebizarro@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,20 +19,18 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
-namespace Valadate {
+public interface Valadate.TestResult : Object {
 
-    public interface TestResult : Object {
+	public abstract int error_count {get;internal set;}
+	public abstract int failure_count {get;internal set;}
+	public abstract int run_count {get;internal set;}
 
-		public abstract int error_count {get;internal set;}
-		public abstract int failure_count {get;internal set;}
-		public abstract int run_count {get;internal set;}
+	public abstract void add_test(Test test);
 
-		public abstract void add_error(Test test);
+	public abstract void add_error(Test test);
 
-		public abstract void add_failure(Test test);
+	public abstract void add_failure(Test test);
 
-		public abstract void report();
-
-    }
+	public abstract void report();
 
 }

@@ -1,6 +1,6 @@
 /*
  * Valadate - Unit testing library for GObject-based libraries.
- * Copyright (C) 20016  Chris Daley <chebizarro@gmail.com>
+ * Copyright (C) 2016  Chris Daley <chebizarro@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,39 +20,42 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-namespace Valadate {
+public errordomain Valadate.ModuleError {
+	NOT_FOUND,
+	LOAD,
+	METHOD
+}
 
-	public class Module : Object {
-		
-		private string lib_path;
-		private GLib.Module module;
+/**
+ * Represents a loadable module containing {@link Valadate.Test}s
+ */
+public class Valadate.Module : Object {
+	
+	private string lib_path;
+	private GLib.Module module;
 
-		public Module (string libpath) {
-			lib_path = libpath;
-		} 
-		
-		public void load_module() throws Error
-			requires(lib_path != null)
-		{
-			//if (!File.new_for_path(lib_path).query_exists())
-				//throw new Error.MODULE("Module: %s does not exist", lib_path);
-			
-			module = GLib.Module.open (lib_path, ModuleFlags.BIND_LOCAL);
-			//if (module == null)
-				//throw new Error.MODULE(GLib.Module.error());
-			module.make_resident();
-		}
-		
-		internal void* get_method(string method_name) throws Error {
-			void* function;
-			if(module.symbol (method_name, out function))
-				if (function != null)
-					return function;
-			//throw new Error.METHOD(GLib.Module.error());
-			return null;
-		}
 
+	public Module (string libpath) {
+		lib_path = libpath;
+	} 
+	
+	public void load_module() throws ModuleError
+		requires(lib_path != null)
+	{
+		if (!File.new_for_path(lib_path).query_exists())
+			throw new ModuleError.NOT_FOUND("Module: %s does not exist", lib_path);
 		
+		module = GLib.Module.open (lib_path, ModuleFlags.BIND_LOCAL);
+		if (module == null)
+			throw new ModuleError.LOAD(GLib.Module.error());
+		module.make_resident();
 	}
-
+	
+	internal void* get_method(string method_name) throws ModuleError {
+		void* function;
+		if(module.symbol (method_name, out function))
+			if (function != null)
+				return function;
+		throw new ModuleError.METHOD(GLib.Module.error());
+	}
 }

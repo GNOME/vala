@@ -1,6 +1,6 @@
 /*
  * Valadate - Unit testing library for GObject-based libraries.
- * Copyright (C) 20016  Chris Daley <chebizarro@gmail.com>
+ * Copyright (C) 2016  Chris Daley <chebizarro@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,40 +20,49 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
  
-namespace Valadate {
+internal class Valadate.TestExplorer : Vala.CodeVisitor {
+		
+	private Vala.Class testcase;
+	private Vala.Class testsuite;
+
+
+	private Test[] tests;
+	private TestCase current_test;
+	private weak Module module;
+	private weak TestResult result;
+
+	internal delegate void* Constructor(); 
+	internal delegate void TestMethod(TestCase self);
 	
-	internal class TestExplorer : Vala.CodeVisitor {
+	public TestExplorer(Module module, TestResult result) {
+		this.module = module;
+		this.result = result;
+	}
+	
+	public Test[] get_tests() {
+		return tests;
+	}
+	
+	public override void visit_class(Vala.Class class) {
 		
-		private Vala.Class testcase;
-		private Test[] tests;
-		private TestCase current_test;
-		private weak Module module;
-
-		internal delegate void* Constructor(); 
-		internal delegate void TestMethod(TestCase self);
-		
-		public TestExplorer(Module module) {
-			this.module = module;
+		if (class.get_full_name() == "Valadate.TestCase") {
+			testcase = class;
+			return;
 		}
-		
-		public Test[] get_tests() {
-			return tests;
+
+		if (class.get_full_name() == "Valadate.TestSuite") {
+			testsuite = class;
+			return;
 		}
-		
-		public override void visit_class(Vala.Class class) {
-			
-			if (class.get_full_name() == "Valadate.TestCase") {
-				testcase = class;
-				return;
-			}
 
-			if (testcase != null &&
-				class.is_subtype_of(testcase) &&
-				class.is_abstract != true ) {
+		if (testcase != null &&
+			class.is_subtype_of(testcase) &&
+			class.is_abstract != true ) {
 
-				string cname = Vala.Symbol.camel_case_to_lower_case(
-					class.default_construction_method.get_full_name().replace(".","_"));
+			string cname = Vala.Symbol.camel_case_to_lower_case(
+				class.default_construction_method.get_full_name().replace(".","_"));
 
+			try {
 				unowned Constructor meth = (Constructor)module.get_method(cname);
 				current_test = meth() as TestCase;
 				current_test.name = class.get_full_name().replace("."," ");
@@ -77,19 +86,18 @@ namespace Valadate {
 						
 					}
 				}
-
 				tests += current_test;
 
 				class.accept_children(this);
-
+			} catch (ModuleError e) {
+				stderr.puts(e.message);
 			}
 		}
-
-		public override void visit_namespace(Vala.Namespace ns) {
-			ns.accept_children(this);
-		}
-		
-		
 	}
+
+	public override void visit_namespace(Vala.Namespace ns) {
+		ns.accept_children(this);
+	}
+	
 	
 }

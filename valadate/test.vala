@@ -1,6 +1,6 @@
 /*
  * Valadate - Unit testing library for GObject-based libraries.
- * Copyright (C) 20016  Chris Daley <chebizarro@gmail.com>
+ * Copyright (C) 2016  Chris Daley <chebizarro@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,23 +19,20 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
-namespace Valadate {
-	
+/**
+ * The Test interface is implemented by TestCase and TestSuite.
+ * It is the base interface for all runnable Tests.
+ */
+public interface Valadate.Test : Object {
 	/**
-	 * The Test interface is implemented by TestCase and TestSuite.
-	 * It is the base interface for all runnable Tests.
+	 * Runs the Tests and collects the results in a TestResult 
+	 *
+	 * @param result the TestResult object used to store the results of the Test
 	 */
-    public interface Test : Object {
-		/**
-		 * Runs the Tests and collects the results in a TestResult 
-		 *
-		 * @param result the TestResult object used to store the results of the Test
-		 */
-		public abstract TestResult run (TestResult? result = null);
+	public abstract TestResult? run (TestResult? result = null);
 
-		public delegate void TestMethod ();
+	public abstract string name {get;set;} 
 
-
-    }
+	public delegate void TestMethod ();
 
 }

@@ -15,15 +15,15 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
- *
+ * 
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
-
-public interface Valadate.TestFixture : Object {
-
-	public abstract void set_up ();
-
-	public abstract void tear_down ();
-
+ 
+public class Valadate.Tests.TestFixture : Valadate.TestCase {
+	
+	public void test_testcase() {
+		
+	}
+	
 }

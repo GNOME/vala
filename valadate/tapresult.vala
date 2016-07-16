@@ -15,15 +15,25 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
- *
+ * 
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-public interface Valadate.TestFixture : Object {
+public class Valadate.TAPResult : Object, TestResult {
 
-	public abstract void set_up ();
 
-	public abstract void tear_down ();
+	public int error_count {get;internal set;}
+	public int failure_count {get;internal set;}
+	public int run_count {get;internal set;}
+
+	public void add_test(Test test) {}
+
+	public void add_error(Test test) {}
+
+	public void add_failure(Test test) {}
+
+	public void report() {}
+
 
 }

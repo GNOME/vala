@@ -19,11 +19,41 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
+ 
+/**
+ * The TestResultFactory is a singleton Factory class
+ * for registered TestResult classes
+ */
+public class Valadate.TestResultFactory : Object {
 
-public interface Valadate.TestFixture : Object {
+	private static TestResultFactory instance;
 
-	public abstract void set_up ();
+	private HashTable<string, Type> result_types =
+		new HashTable<string, Type> (str_hash, str_equal);
 
-	public abstract void tear_down ();
+
+	private TestResultFactory() {
+		result_types.set("tap",typeof(TAPResult));
+	}
+	
+	public static TestResultFactory get_instance() {
+		if(instance == null)
+			instance = new TestResultFactory();
+		return instance;
+	}
+
+	public void add_result_type(string type, Type class)
+		requires(class.is_a(typeof(TestResult)))
+	{
+		result_types.set(type, class);
+	}
+
+	public TestResult? new_for_type(string type) {
+		if(result_types.contains(type)) {
+			Type t = result_types.get(type);
+			return Object.new(t) as TestResult;
+		}
+		return null;
+	}
 
 }

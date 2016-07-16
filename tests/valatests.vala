@@ -1,7 +1,7 @@
 namespace Vala.Tests {
 	
 	/**
-	 * Vala.TestFixture
+	 * Vala.Tests.Fixture
 	 * 
 	 * Searchs all of the sub directories in the current directory for
 	 * *.vala or *.test files, compiles and runs them.
@@ -30,17 +30,20 @@ namespace Vala.Tests {
 		private SubprocessLauncher launcher =
 			new SubprocessLauncher(GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_PIPE);
 		
-		private const string VALAFLAGS = """--pkg gio-2.0 --pkg valadate
-			 --main main --save-temps --disable-warnings 
-			  -X -pie -X -fPIE -X -g -X -O0 -X -pipe -X -lm 
+		private const string VALA_FLAGS =
+			"""--main main --save-temps --disable-warnings --pkg gio-2.0 
+			  -X -lm -X -g -X -O0 -X -pipe
 			  -X -Wno-discarded-qualifiers -X -Wno-incompatible-pointer-types
 			  -X -Wno-deprecated-declarations -X -Werror=return-type
 			  -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point
 			  -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith
 			  -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast""";
 		
-		private const string GIRHEADER ="""
-			<?xml version="1.0"?>
+		private const string TESTCASE_FLAGS =
+			"--pkg valadate -X -pie -X -fPIE";
+		
+		private const string GIRHEADER =
+			"""<?xml version="1.0"?>
 			<repository version="1.2"
 						xmlns="http://www.gtk.org/introspection/core/1.0"
 						xmlns:c="http://www.gtk.org/introspection/c/1.0"
@@ -54,8 +57,9 @@ namespace Vala.Tests {
 							 c:symbol-prefixes="test">
 					%s
 				</namespace>
-				</repository>
-		""";
+				</repository>""";
+
+		private const string BUGZILLA_URL = "http://bugzilla.gnome.org/";
 
 		private File testdir;
 		private File buildir;
@@ -66,7 +70,6 @@ namespace Vala.Tests {
 		private File tempdir;
 
 		private string vapidirs;
-
 
 		public Fixture() {
 			load_tests();
@@ -88,7 +91,7 @@ namespace Vala.Tests {
 				delete_tempdir();
 				tempdir.make_directory();
 
-				vapidirs = "--vapidir %s --vapidir %s".printf(vapidir.get_path(), valadatedir.get_path());
+				vapidirs = "--vapidir %s".printf(vapidir.get_path());
 
 				launcher.set_cwd(tempdir.get_path());
 
@@ -132,15 +135,23 @@ namespace Vala.Tests {
 				}
 
 				File testfile = directory.get_child(fname);
-				string testname = testfile.get_basename().substring(0,testfile.get_basename().last_index_of("."));
+				string testname = testfile.get_basename().substring(
+					0,testfile.get_basename().last_index_of("."));
 
-				if(fname.has_suffix(".vala")) {
-					string command = "%s %s %s %s".printf(valac.get_path(), vapidirs, VALAFLAGS, testfile.get_path());
-					string binary = testfile.get_basename().substring(0,testfile.get_basename().last_index_of("."));
+				if(fname.has_suffix(".vala") || fname.has_suffix(".gs")) {
+					string binary = testfile.get_basename().substring(
+						0,testfile.get_basename().last_index_of("."));
+					string command = "%s %s %s --library %s -o %s %s".printf(
+						valac.get_path(), vapidirs, VALA_FLAGS, binary,
+						binary, testfile.get_path());
 
 					add_test(testname,
 					 ()=> {
 						try {
+							if(binary.has_prefix("bug")) {
+								Test.bug_base (BUGZILLA_URL);						
+								Test.bug(binary.substring(3));
+							}
 							run_command(command);
 							if(tempdir.get_child(binary).query_exists())
 								run_command("./%s".printf(binary));
@@ -157,6 +168,10 @@ namespace Vala.Tests {
 					add_test(testname,
 					 ()=> {
 						try {
+							if(fname.has_prefix("bug")) {
+								Test.bug_base (BUGZILLA_URL);						
+								Test.bug(fname.substring(3,fname.length-8));
+							}
 							parse_test(testfile);
 						} catch (Error e) {
 							Test.fail();
@@ -168,8 +183,9 @@ namespace Vala.Tests {
 
 		private void default_callback(Subprocess process, size_t err, string buffer) {
 			if (err > 0) {
-				Test.fail();
+				//Test.skip(buffer);
 				stdout.printf ("%s", buffer);
+				Test.fail();
 				process.force_exit();
 			}
 		}
@@ -191,7 +207,8 @@ namespace Vala.Tests {
 		private void parse_test(File testfile) throws Error {
 			
 			var stream = new DataInputStream(testfile.read());
-			string testname = testfile.get_basename().substring(0,testfile.get_basename().last_index_of("."));
+			string testname = testfile.get_basename().substring(
+				0,testfile.get_basename().last_index_of("."));
 			
 			string line = stream.read_line(null);
 			
@@ -212,7 +229,7 @@ namespace Vala.Tests {
 					var server = serverfile.create(FileCreateFlags.NONE);
 					var server_stream = new DataOutputStream (server);
 					
-					while ((line = stream.read_line (null)) != "Program: client") { }
+					do {} while ((line = stream.read_line (null)) != "Program: client");
 					
 					while ((line = stream.read_line (null)) != "Program: server") {
 						client_stream.put_string(line + "\n");
@@ -222,15 +239,20 @@ namespace Vala.Tests {
 						server_stream.put_string(line + "\n");
 					}
 
-					string command = "%s %s %s %s %s".printf(valac.get_path(), vapidirs, packages, VALAFLAGS, clientfile.get_path());
+					string command = "%s %s %s %s %s".printf(
+						valac.get_path(), vapidirs, packages, VALA_FLAGS,
+						clientfile.get_path());
 					
 					run_command(command);
 
-					command = "%s %s %s %s %s".printf(valac.get_path(), vapidirs, packages, VALAFLAGS, serverfile.get_path());
+					command = "%s %s %s %s %s".printf(
+						valac.get_path(), vapidirs, packages, VALA_FLAGS,
+						serverfile.get_path());
 
 					run_command(command);
 
-					string binary = serverfile.get_basename().substring(0,serverfile.get_basename().last_index_of("."));
+					string binary = serverfile.get_basename().substring(
+						0,serverfile.get_basename().last_index_of("."));
 
 					command = "./" + binary;
 
@@ -270,7 +292,12 @@ namespace Vala.Tests {
 					var girstream = girfile.create(FileCreateFlags.NONE);
 					girstream.write(GIRHEADER.printf(gir).data);
 
-					string command = "%s %s %s --library %s %s".printf(vapigen.get_path(), vapidirs, girdirs, testname, girfile.get_path());
+					string command = "%s %s %s --library %s %s".printf(
+						vapigen.get_path(),
+						vapidirs,
+						girdirs,
+						testname,
+						girfile.get_path());
 				
 					run_command(command);
 
@@ -292,7 +319,11 @@ namespace Vala.Tests {
 						invalid_stream.put_string(line + "\n");
 					}
 
-					string command = "%s %s %s %s %s".printf(valac.get_path(), vapidirs, packages, VALAFLAGS, invalidfile.get_path());
+					string command = "%s %s %s %s %s".printf(
+						valac.get_path(),
+						vapidirs, packages,
+						VALA_FLAGS,
+						invalidfile.get_path());
 
 					run_command(command, (p,e,b) => {
 						if (e <= 0)
@@ -300,9 +331,42 @@ namespace Vala.Tests {
 					});
 					break;
 
+				case "TestCase":
+					
+					var testcasefile = tempdir.get_child(testname + ".vala");
+					var testcase = testcasefile.create(FileCreateFlags.NONE);
+					var testcase_stream = new DataOutputStream (testcase);
+
+					testcase_stream.put_string("namespace Vala.Tests {\n");
+
+					while ((line = stream.read_line (null)) != null) {
+						testcase_stream.put_string(line + "\n");
+					}
+
+					testcase_stream.put_string("\n}");
+
+					string command = "%s %s %s %s %s".printf(
+						valac.get_path(),
+						vapidirs,
+						packages,
+						VALA_FLAGS,
+						testcasefile.get_path());
+					
+					run_command(command);
+
+					string binary = testcasefile.get_basename().substring(
+						0,testcasefile.get_basename().last_index_of("."));
+
+					command = "./" + binary;
+
+					run_command(command);
+
+					break;
+
 				default :
 					break;
 			}
 		}
 	}
+	
 }

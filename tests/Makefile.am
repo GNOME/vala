@@ -1,22 +1,24 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/build-aux/glib-tap.mk
 
-test_programs = valactests-0
+test_programs = valadatetests valactests@PACKAGE_SUFFIX@
 
-valactests_0_VALAFLAGS = \
+# Valadate tests
+valadatetests_VALAFLAGS = \
 	--vapidir $(top_srcdir)/valadate \
 	--vapidir $(top_srcdir)/vapi \
 	--pkg valadate \
 	--pkg gio-2.0 \
 	--pkg config \
-	--library valactests-0 \
+	--library valadatetests \
 	-g \
 	$(NULL)
 
-valactests_0_SOURCES = \
-	valatests.vala
+valadatetests_SOURCES = \
+	valadatetests.vala \
+	$(NULL)
 
-valactests_0_LDADD = \
+valadatetests_LDADD = \
 	$(GLIB_LIBS) \
 	$(GMODULE_LIBS) \
 	-lgio-2.0 \
@@ -24,14 +26,51 @@ valactests_0_LDADD = \
 	$(top_srcdir)/valadate/libvaladate.la \
 	$(NULL)
 
-valactests_0_CPPFLAGS = \
+valadatetests_CPPFLAGS = \
 	-I$(top_srcdir)/valadate \
 	$(GLIB_CPPFLAGS) \
 	$(GMODULE_CPPFLAGS) \
 	-fPIE \
 	$(NULL)
 
-valactests_0_CFLAGS = \
+valadatetests_CFLAGS = \
+	-I$(top_srcdir)/valadate \
+	$(GLIB_CFLAGS) \
+	$(GMODULE_CFLAGS) \
+	-pie \
+	-g \
+	$(NULL)
+
+valactests@PACKAGE_SUFFIX@_VALAFLAGS = \
+	--vapidir $(top_srcdir)/valadate \
+	--vapidir $(top_srcdir)/vapi \
+	--pkg valadate \
+	--pkg gio-2.0 \
+	--pkg config \
+	--library valactests@PACKAGE_SUFFIX@ \
+	-g \
+	$(NULL)
+
+valactests@PACKAGE_SUFFIX@_SOURCES = \
+	valatests.vala \
+	$(NULL)
+
+valactests@PACKAGE_SUFFIX@_LDADD = \
+	$(GLIB_LIBS) \
+	$(GMODULE_LIBS) \
+	-lgio-2.0 \
+	-lm \
+	$(top_srcdir)/valadate/libvaladate.la \
+	$(NULL)
+
+valactests@PACKAGE_SUFFIX@_CPPFLAGS = \
+	-I$(top_srcdir)/valadate \
+	$(GLIB_CPPFLAGS) \
+	$(GMODULE_CPPFLAGS) \
+	-fPIE \
+	$(NULL)
+
+valactests@PACKAGE_SUFFIX@_CFLAGS = \
 	-I$(top_srcdir)/valadate \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \
@@ -42,7 +81,7 @@ valactests_0_CFLAGS = \
 CLEANFILES += \
 	*.gir \
 	*.stamp \
-	$(valactests_0_SOURCES:.vala=.c) \
+	$(valactests@PACKAGE_SUFFIX@_SOURCES:.vala=.c) \
 	*.vapi \
 	rm -R .tests \
 	$(NULL)

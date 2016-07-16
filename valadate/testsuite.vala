@@ -20,10 +20,11 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-public interface Valadate.TestFixture : Object {
+public abstract class Valadate.TestSuite : CompositeTest {
 
-	public abstract void set_up ();
+	public abstract void add_test (Test test);
 
-	public abstract void tear_down ();
+	public virtual Test[] tests {get;set;}
+
 
 }

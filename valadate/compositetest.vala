@@ -19,11 +19,21 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
+ 
+public abstract class Valadate.CompositeTest : Object, Test {
 
-public interface Valadate.TestFixture : Object {
+	public string name {get;set;} 
 
-	public abstract void set_up ();
+	public abstract int size {get;}
 
-	public abstract void tear_down ();
+	public virtual TestResult? run(TestResult? result = null) { }
+
+	public abstract Test get(string testname);
+	
+	public abstract void set(string testname, Test test);
+
+	public abstract bool contains(string testname);
+	
+	public virtual TestResult? run_test(string testname, TestResult? result = null) throws TestError {}
 
 }

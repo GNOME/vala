@@ -7,13 +7,19 @@ lib_LTLIBRARIES = \
 
 libvaladate_la_SOURCES = \
 	assembly.vala \
+	compositetest.vala \
 	module.vala \
+	tap.vala \
+	tapresult.vala \
 	test.vala \
 	testcase.vala \
+	testconfig.vala \
 	testexplorer.vala \
 	testfixture.vala \
 	testresult.vala \
+	testresultfactory.vala \
 	testrunner.vala \
+	testsuite.vala \
 	$(NULL)
 
 libvaladate_la_VALAFLAGS = \
@@ -24,6 +30,7 @@ libvaladate_la_VALAFLAGS = \
 	--pkg gmodule-2.0 \
 	--pkg vala \
 	--pkg gee \
+	--pkg config \
 	--library valadate \
 	--vapi valadate.vapi \
 	-H valadate.h \
