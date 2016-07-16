@@ -22,9 +22,5 @@
 
 public abstract class Valadate.TestSuite : CompositeTest {
 
-	public abstract void add_test (Test test);
-
-	public virtual Test[] tests {get;set;}
-
-
+	
 }

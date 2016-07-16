@@ -26,14 +26,14 @@ public abstract class Valadate.CompositeTest : Object, Test {
 
 	public abstract int size {get;}
 
-	public virtual TestResult? run(TestResult? result = null) { }
+	public virtual TestResult? run(TestResult? result = null) { return result; }
 
-	public abstract Test get(string testname);
+	public abstract new Test get(string testname);
 	
-	public abstract void set(string testname, Test test);
+	public abstract new void set(string testname, Test test);
 
 	public abstract bool contains(string testname);
 	
-	public virtual TestResult? run_test(string testname, TestResult? result = null) throws TestError {}
+	public abstract new TestResult? run_test(string testname, TestResult? result = null) throws TestError;
 
 }

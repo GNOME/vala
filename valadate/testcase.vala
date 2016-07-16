@@ -64,7 +64,7 @@ public abstract class Valadate.TestCase : CompositeTest, TestFixture {
 
 
 
-	public virtual TestResult? run_test(string testname, TestResult? result = null) throws TestError {
+	public override TestResult? run_test(string testname, TestResult? result = null) throws TestError {
 		if(!_tests.contains(testname))
 			throw new TestError.NOT_FOUND("The Test %s was not found", testname);
 		
