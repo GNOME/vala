@@ -2365,10 +2365,30 @@ namespace GLib {
 		LEVEL_MASK
 	}
 
+	[CCode (cprefix = "G_LOG_WRITER_", has_type_id = false)]
+	[Version (since = "2.50")]
+	public enum LogWriterOutput {
+		HANDLED,
+		UNHANDLED
+	}
+
+	[CCode (has_type_id = false, simple_generics = true)]
+	[Version (since = "2.50")]
+	public struct LogField<T> {
+		public unowned string key;
+		public unowned T @value;
+		public ssize_t length;
+	}
+
 	public void logv (string? log_domain, LogLevelFlags log_level, string format, va_list args);
 	[Diagnostics]
 	[PrintfFormat]
 	public void log (string? log_domain, LogLevelFlags log_level, string format, ...);
+
+	[Version (since = "2.50")]
+	public void log_structured (string? log_domain, LogLevelFlags log_levels, ...);
+	[Version (since = "2.50")]
+	public void log_structured_array (LogLevelFlags log_levels, LogField[] fields);
 
 	[Diagnostics]
 	[PrintfFormat]
@@ -2391,8 +2411,13 @@ namespace GLib {
 	[PrintfFormat]
 	[Version (since = "2.40")]
 	public void info (string format, ...);
+	[CCode (cname = "G_DEBUG_HERE")]
+	[Version (since = "2.50")]
+	public void debug_here ();
 
 	public delegate void LogFunc (string? log_domain, LogLevelFlags log_levels, string message);
+	[Version (since = "2.50")]
+	public delegate LogWriterOutput LogWriterFunc (LogLevelFlags log_level, LogField[] fields);
 
 	namespace Log {
 		public static uint set_handler (string? log_domain, LogLevelFlags log_levels, LogFunc log_func);
@@ -2409,6 +2434,21 @@ namespace GLib {
 		public const string FILE;
 		public const int LINE;
 		public const string METHOD;
+
+		[Version (since = "2.50")]
+		public static void set_writer_func (owned LogWriterFunc func);
+		[Version (since = "2.50")]
+		public static bool writer_supports_color (int output_fd);
+		[Version (since = "2.50")]
+		public static bool writer_is_journald (int output_fd);
+		[Version (since = "2.50")]
+		public static string writer_format_fields (LogLevelFlags log_levels, LogField[] fields, bool use_color);
+		[Version (since = "2.50")]
+		public static LogWriterOutput writer_journald (LogLevelFlags log_levels, LogField[] fields, void* user_data);
+		[Version (since = "2.50")]
+		public static LogWriterOutput writer_standard_streams (LogLevelFlags log_levels, LogField[] fields, void* user_data);
+		[Version (since = "2.50")]
+		public static LogWriterOutput writer_default (LogLevelFlags log_levels, LogField[] fields, void* user_data);
 	}
 
 	[CCode (has_type_id = false)]
@@ -2529,6 +2569,9 @@ namespace GLib {
 		[Version (since = "2.30")]
 		[CCode (cname = "g_compute_hmac_for_string")]
 		public static string compute_for_string (ChecksumType checksum_type, uint8[] key, string str, size_t length = -1);
+		[Version (since = "2.50")]
+		[CCode (cname = "g_compute_hmac_for_bytes")]
+		public static string compute_hmac_for_bytes (ChecksumType checksum_type, Bytes key, Bytes data);
 	}
 
 	/* Date and Time Functions */
