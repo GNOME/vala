@@ -1533,9 +1533,9 @@ namespace Gst {
 		[Version (since = "1.2")]
 		public bool parse_context_type (out string context_type);
 		[Version (since = "1.4")]
-		public void parse_device_added (out unowned Gst.Device device);
+		public void parse_device_added (out Gst.Device device);
 		[Version (since = "1.4")]
-		public void parse_device_removed (out unowned Gst.Device device);
+		public void parse_device_removed (out Gst.Device device);
 		public void parse_error (out GLib.Error gerror, out string debug);
 		[Version (since = "1.2")]
 		public bool parse_group_id (out uint group_id);
@@ -1557,10 +1557,10 @@ namespace Gst {
 		public void parse_step_done (out Gst.Format format, out uint64 amount, out double rate, out bool flush, out bool intermediate, out uint64 duration, out bool eos);
 		public void parse_step_start (out bool active, out Gst.Format format, out uint64 amount, out double rate, out bool flush, out bool intermediate);
 		[Version (since = "1.10")]
-		public void parse_stream_collection (out unowned Gst.StreamCollection collection);
+		public void parse_stream_collection (out Gst.StreamCollection collection);
 		public void parse_stream_status (out Gst.StreamStatusType type, out unowned Gst.Element owner);
 		[Version (since = "1.10")]
-		public void parse_streams_selected (out unowned Gst.StreamCollection collection);
+		public void parse_streams_selected (out Gst.StreamCollection collection);
 		public void parse_structure_change (out Gst.StructureChangeType type, out unowned Gst.Element owner, out bool busy);
 		public void parse_tag (out Gst.TagList tag_list);
 		public void parse_toc (out Gst.Toc toc, out bool updated);

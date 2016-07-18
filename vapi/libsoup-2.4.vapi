@@ -493,6 +493,12 @@ namespace Soup {
 		public void set_printer (owned Soup.LoggerPrinter printer);
 		public void set_request_filter (owned Soup.LoggerFilter request_filter);
 		public void set_response_filter (owned Soup.LoggerFilter response_filter);
+		[NoAccessorMethod]
+		[Version (since = "2.56")]
+		public Soup.LoggerLogLevel level { get; set; }
+		[NoAccessorMethod]
+		[Version (since = "2.56")]
+		public int max_body_size { get; set; }
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_message_get_type ()")]
 	public class Message : GLib.Object {
@@ -1662,6 +1668,12 @@ namespace Soup {
 	public const int HEADERS_H;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_LOGGER_H")]
 	public const int LOGGER_H;
+	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_LOGGER_LEVEL")]
+	[Version (since = "2.56")]
+	public const string LOGGER_LEVEL;
+	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_LOGGER_MAX_BODY_SIZE")]
+	[Version (since = "2.56")]
+	public const string LOGGER_MAX_BODY_SIZE;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_MESSAGE_BODY_H")]
 	public const int MESSAGE_BODY_H;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_MESSAGE_FIRST_PARTY")]
