@@ -1896,6 +1896,17 @@ public class Vala.GIdlParser : CodeVisitor {
 			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "HashTable");
 		} else if (type_node.tag == TypeTag.ERROR) {
 			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "Error");
+		} else if (type_node.unparsed.has_prefix ("cairo_")) {
+			if (type_node.unparsed.has_prefix ("cairo_device_t")) {
+				type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "Cairo"), "Device");
+			} else if (type_node.unparsed.has_prefix ("cairo_pattern_t")) {
+				type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "Cairo"), "Pattern");
+			} else if (type_node.unparsed.has_prefix ("cairo_surface_t")) {
+				type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "Cairo"), "Surface");
+			}
+			if (type_node.unparsed.has_suffix ("**")) {
+				direction = ParameterDirection.OUT;
+			}
 		} else if (type_node.is_interface) {
 			var n = type_node.@interface;
 			
