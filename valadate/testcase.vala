@@ -28,14 +28,45 @@ public errordomain Valadate.TestError {
 	NOT_FOUND
 }
 
-public abstract class Valadate.TestCase : CompositeTest, TestFixture {
+public abstract class Valadate.TestCase : Object, Test, TestFixture {
+
+	/**
+	 * The TestMethod delegate represents a {@link Valadate.Test} method
+	 * that can be added to a TestCase and run
+	 */
+	public delegate void TestMethod ();
+
+	/**
+	 * the name of the TestCase
+	 */
+	public string name { get; set; }
+
+	/**
+	 * The public constructor takes an optional string parameter for the
+	 * TestCase's name
+	 */
+	public TestCase(string? name = null) {
+		this.name = name;
+	}
+
+	/**
+	 * Returns the number of {@link Valadate.Test}s that will be run by this TestCase
+	 */
+	public int count {get;set;}
+
+	
+	public void run(TestResult result) {
+
+		result.run(this);
+		
+		return result;
+	}
+
+
 
 	private HashTable<string, TestAdaptor> _tests =
 		new HashTable<string, TestAdaptor> (str_hash, str_equal);
 
-	public virtual void set_up() {}
-
-	public virtual void tear_down() {}
 
 	private class TestAdaptor : Object, Test {
 
@@ -64,18 +95,11 @@ public abstract class Valadate.TestCase : CompositeTest, TestFixture {
 
 
 
-	public override TestResult? run_test(string testname, TestResult? result = null) throws TestError {
-		if(!_tests.contains(testname))
-			throw new TestError.NOT_FOUND("The Test %s was not found", testname);
-		
-		var test = _tests.get(testname);
-		
-		test.run(result);
-		
-		return result;
-	}
 
 
+	public virtual void set_up() {}
+
+	public virtual void tear_down() {}
 
 
 

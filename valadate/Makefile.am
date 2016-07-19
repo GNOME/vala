@@ -7,7 +7,6 @@ lib_LTLIBRARIES = \
 
 libvaladate_la_SOURCES = \
 	assembly.vala \
-	compositetest.vala \
 	module.vala \
 	tap.vala \
 	tapresult.vala \

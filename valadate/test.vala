@@ -24,15 +24,17 @@
  * It is the base interface for all runnable Tests.
  */
 public interface Valadate.Test : Object {
+		
 	/**
 	 * Runs the Tests and collects the results in a TestResult 
 	 *
 	 * @param result the TestResult object used to store the results of the Test
 	 */
-	public abstract TestResult? run (TestResult? result = null);
+	public abstract void run (TestResult? result = null);
 
-	public abstract string name {get;set;} 
-
-	public delegate void TestMethod ();
+	/**
+	 * Returns the number of tests that will be run by this test
+	 */
+	public abstract int count {get;}
 
 }

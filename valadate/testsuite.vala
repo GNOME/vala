@@ -20,7 +20,50 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-public abstract class Valadate.TestSuite : CompositeTest {
+public class Valadate.TestSuite : Object, Test {
+
+	private HashTable<string, Test> tests =
+		new HashTable<string, Test> (str_hash, str_equal);
+	
+	/**
+	 * the name of the TestSuite
+	 */
+	public string name { get; set; }
+
+	/**
+	 * Returns the number of {@link Valadate.Test}s that will be run by 
+	 * this TestSuite
+	 */
+	public int count {
+		get {
+			return (int)tests.size();
+		}
+	}
+
+	/**
+	 * The public constructor takes an optional string parameter for the
+	 * TestSuite's name
+	 */
+	public TestSuite(string? name = null) {
+		this.name = name;
+	}
+
+	/**
+	* Adds a test to the suite.
+	*/
+	public void add_test(string name, Test test) {
+		tests.set(name, test);
+	}
+
+
+	public void run(TestResult result) {
+		tests.foreach((k,t) => { run_test(t, result); });
+	}
+
+	public void run_test(Test test, TestResult result) {
+		result.run(test);
+	}
+
 
 	
 }
