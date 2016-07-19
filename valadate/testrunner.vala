@@ -24,6 +24,10 @@ public class Valadate.TestRunner : Object {
 
 	private TestConfig config;
 
+	private SubprocessLauncher launcher =
+		new SubprocessLauncher(GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_PIPE);
+
+
 	private string path;
 	private Test[] _tests;
 	
@@ -45,6 +49,22 @@ public class Valadate.TestRunner : Object {
 		
 		return result;
 	}
+
+
+	private void run_test() {
+		string command = "";
+
+		string[] args;
+		Shell.parse_argv(command, out args);
+
+		var process = launcher.spawnv(args);
+		var stderr_pipe = process.get_stderr_pipe();
+
+		uint8 buffer[1028];
+		var err = stderr_pipe.read(buffer);
+		
+	}
+
 
 
 	public static int main (string[] args) {

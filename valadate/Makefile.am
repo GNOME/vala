@@ -16,6 +16,7 @@ libvaladate_la_SOURCES = \
 	testexplorer.vala \
 	testfixture.vala \
 	testresult.vala \
+	testfailure.vala \
 	testresultfactory.vala \
 	testrunner.vala \
 	testsuite.vala \

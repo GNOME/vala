@@ -19,18 +19,62 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
-public interface Valadate.TestResult : Object {
+public class Valadate.TestResult : Object {
 
-	public abstract int error_count {get;internal set;}
-	public abstract int failure_count {get;internal set;}
-	public abstract int run_count {get;internal set;}
+	public signal void test_error(Test test, string error);
+	public signal void test_failure(Test test, string error);
+	public signal void test_complete(Test test);
+	public signal void test_start(Test test);
+	
+	internal List<TestFailure> errors = new List<TestFailure>();
+	internal List<TestFailure> failures = new List<TestFailure>();
 
-	public abstract void add_test(Test test);
+	public bool should_stop {get;set;default=false;}
+	
+	public int error_count {
+		get {
+			return (int)errors.length();
+		}
+	}
 
-	public abstract void add_error(Test test);
+	public int failure_count {
+		get {
+			return (int)failures.length();
+		}
+	}
 
-	public abstract void add_failure(Test test);
+	public int run_count {get;private set;default=0;}
+	
+	public bool success {
+		get {
+			return (failure_count == 0 && error_count == 0);
+		}
+	}
+	
+	public void add_error(Test test, string error) {
+		errors.append(new TestFailure(test, error);
+		test_error(test, error);
+	}
 
-	public abstract void report();
+	public void add_failure(Test test, string failure) {
+		failures.append(new TestFailure(test, failure);
+		test_failure(test, failure);
+	}
 
+	public void start_test(Test test) {
+		run_count += test.count;
+		test_start(test);
+	}
+	
+	/**
+	 * Runs a {@link Valadate.Test}
+	 */
+	public void run(Test test) {
+
+		test_start(test);
+
+		test.run();
+
+		test_complete(test);
+	}
 }

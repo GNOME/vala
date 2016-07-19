@@ -19,22 +19,15 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
-/**
- * The Test interface is implemented by TestCase and TestSuite.
- * It is the base interface for all runnable Tests.
- */
-public interface Valadate.Test : Object {
-		
-	/**
-	 * Runs the Tests and collects the results in a TestResult 
-	 *
-	 * @param result the TestResult object used to store the results of the Test
-	 */
-	public abstract void run (TestResult result);
+public class Valadate.TestFailure : Object {
 
-	/**
-	 * Returns the number of tests that will be run by this test
-	 */
-	public abstract int count {get;}
-
+	public unowned Test failed_test {get;private set;}
+	public string message {get;private set;}
+	
+	
+	public TestFailure(Test test, string message) {
+		this.test = test;
+		this.message = message;
+	}
+	
 }

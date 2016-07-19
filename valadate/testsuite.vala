@@ -22,7 +22,14 @@
 
 public class Valadate.TestSuite : Object, Test {
 
-	private HashTable<string, Test> tests =
+	/**
+	 * The TestMethod delegate represents a {@link Valadate.Test} method
+	 * that can be added to a TestCase and run
+	 */
+	public delegate void TestMethod ();
+
+
+	private HashTable<string, Test> _tests =
 		new HashTable<string, Test> (str_hash, str_equal);
 	
 	/**
@@ -36,7 +43,17 @@ public class Valadate.TestSuite : Object, Test {
 	 */
 	public int count {
 		get {
-			return (int)tests.size();
+			return (int)_tests.size();
+		}
+	}
+
+	/**
+	 * Returns a {@link GLib.List} of {@link Valadate.Test}s that will be
+	 * run by this TestSuite
+	 */
+	public List<weak Test> tests {
+		get {
+			return _tests.get_values();
 		}
 	}
 
@@ -49,21 +66,26 @@ public class Valadate.TestSuite : Object, Test {
 	}
 
 	/**
-	* Adds a test to the suite.
-	*/
+	 * Adds a test to the suite.
+	 */
 	public void add_test(string name, Test test) {
-		tests.set(name, test);
+		_tests.set(name, test);
 	}
 
-
 	public void run(TestResult result) {
-		tests.foreach((k,t) => { run_test(t, result); });
+		_tests.foreach((k,t) => { run_test(t, result); });
 	}
 
 	public void run_test(Test test, TestResult result) {
 		result.run(test);
 	}
+	
+	public new unowned Test? get(string name) {
+		return _tests.lookup(name);
+	}
 
-
+	public void set(string name, Test test) {
+		_tests.set(name, test);
+	}
 	
 }

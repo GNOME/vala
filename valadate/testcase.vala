@@ -31,12 +31,6 @@ public errordomain Valadate.TestError {
 public abstract class Valadate.TestCase : Object, Test, TestFixture {
 
 	/**
-	 * The TestMethod delegate represents a {@link Valadate.Test} method
-	 * that can be added to a TestCase and run
-	 */
-	public delegate void TestMethod ();
-
-	/**
 	 * the name of the TestCase
 	 */
 	public string name { get; set; }
@@ -61,6 +55,17 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 		
 		return result;
 	}
+
+
+	public virtual void set_up() {}
+
+	public virtual void tear_down() {}
+
+
+
+
+
+
 
 
 
@@ -97,9 +102,6 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 
 
 
-	public virtual void set_up() {}
-
-	public virtual void tear_down() {}
 
 
 
