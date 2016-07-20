@@ -126,7 +126,7 @@ public class Valadate.TestConfig : Object {
 				GLib.Random.next_int(),
 				GLib.Random.next_int());
 		
-		result = TestResultFactory.get_instance().new_for_type(format);
+		result = new TestResult();
 		
 		try {
 			load();

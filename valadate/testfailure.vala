@@ -21,7 +21,7 @@
  */
 public class Valadate.TestFailure : Object {
 
-	public unowned Test failed_test {get;private set;}
+	public unowned Test test {get;private set;}
 	public string message {get;private set;}
 	
 	

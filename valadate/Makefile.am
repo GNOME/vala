@@ -9,7 +9,6 @@ libvaladate_la_SOURCES = \
 	assembly.vala \
 	module.vala \
 	tap.vala \
-	tapresult.vala \
 	test.vala \
 	testcase.vala \
 	testconfig.vala \
@@ -17,7 +16,6 @@ libvaladate_la_SOURCES = \
 	testfixture.vala \
 	testresult.vala \
 	testfailure.vala \
-	testresultfactory.vala \
 	testrunner.vala \
 	testsuite.vala \
 	$(NULL)

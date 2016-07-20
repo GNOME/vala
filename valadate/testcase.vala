@@ -53,7 +53,6 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 
 		result.run(this);
 		
-		return result;
 	}
 
 
@@ -69,34 +68,6 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 
 
 
-	private HashTable<string, TestAdaptor> _tests =
-		new HashTable<string, TestAdaptor> (str_hash, str_equal);
-
-
-	private class TestAdaptor : Object, Test {
-
-		public string name { get; set; }
-
-		private Test.TestMethod test;
-		
-		public TestAdaptor(string name, owned Test.TestMethod test) {
-			this.name = name;
-			this.test = (owned)test;
-		}
-
-		public TestResult? run(TestResult? result = null) {
-			this.test();
-			return result;
-		}
-
-	}
-
-	public void add_test (string name, owned Test.TestMethod test)
-		requires (name.contains("/") != true)
-	{
-		var adaptor = new TestAdaptor (name, (owned)test);
-		_tests.insert(name, adaptor);
-	}
 
 
 
@@ -138,7 +109,7 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 		name = this.get_type().name();
 	}
 
-	public void add_testb (string name, owned Test.TestMethod test)
+	public void add_testb (string name, owned TestSuite.TestMethod test)
 		requires (name.contains("/") != true)
 	{
 		var adaptor = new Adaptor (name, (owned)test, this);
@@ -186,7 +157,7 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 		public string name { get; private set; }
 		public int async_timeout { get; set; }
 
-		private Test.TestMethod test;
+		private TestSuite.TestMethod test;
 		private TestCase test_case;
 
 		public bool is_async = false;
@@ -194,7 +165,7 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 		public AsyncFinish async_finish;
 
 		public Adaptor (string name,
-						owned Test.TestMethod test,
+						owned TestSuite.TestMethod test,
 						TestCase test_case) {
 			this.name = name;
 			this.test = (owned)test;

@@ -96,7 +96,10 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 	}
 
 	public override void visit_namespace(Vala.Namespace ns) {
-		ns.accept_children(this);
+		
+		if (ns.name != "GLib")
+			ns.accept_children(this);
+		
 	}
 	
 	

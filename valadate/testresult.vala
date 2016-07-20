@@ -52,12 +52,12 @@ public class Valadate.TestResult : Object {
 	}
 	
 	public void add_error(Test test, string error) {
-		errors.append(new TestFailure(test, error);
+		errors.append(new TestFailure(test, error));
 		test_error(test, error);
 	}
 
 	public void add_failure(Test test, string failure) {
-		failures.append(new TestFailure(test, failure);
+		failures.append(new TestFailure(test, failure));
 		test_failure(test, failure);
 	}
 
@@ -73,7 +73,7 @@ public class Valadate.TestResult : Object {
 
 		test_start(test);
 
-		test.run();
+		test.run(this);
 
 		test_complete(test);
 	}

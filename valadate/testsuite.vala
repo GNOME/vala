@@ -32,6 +32,8 @@ public class Valadate.TestSuite : Object, Test {
 	private HashTable<string, Test> _tests =
 		new HashTable<string, Test> (str_hash, str_equal);
 	
+	private List<weak Test> _values;
+	
 	/**
 	 * the name of the TestSuite
 	 */
@@ -53,7 +55,8 @@ public class Valadate.TestSuite : Object, Test {
 	 */
 	public List<weak Test> tests {
 		get {
-			return _tests.get_values();
+			_values = _tests.get_values();
+			return _values;
 		}
 	}
 
@@ -72,6 +75,12 @@ public class Valadate.TestSuite : Object, Test {
 		_tests.set(name, test);
 	}
 
+	public void add_test_method(string name, owned TestMethod test) {
+		var adaptor = new TestAdaptor ((owned)test);
+		_tests.set(name, adaptor);
+	}
+
+
 	public void run(TestResult result) {
 		_tests.foreach((k,t) => { run_test(t, result); });
 	}
@@ -84,8 +93,29 @@ public class Valadate.TestSuite : Object, Test {
 		return _tests.lookup(name);
 	}
 
-	public void set(string name, Test test) {
+	public new void set(string name, Test test) {
 		_tests.set(name, test);
 	}
+	
+	private class TestAdaptor : Object, Test {
+
+		private TestSuite.TestMethod test;
+
+		public int count {
+			get {
+				return 1;
+			}
+		}
+		
+		public TestAdaptor(owned TestSuite.TestMethod test) {
+			this.test = (owned)test;
+		}
+
+		public void run(TestResult test) {
+			this.test();
+		}
+
+	}
+	
 	
 }
