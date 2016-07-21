@@ -221,7 +221,7 @@ namespace GLib {
 		public GLib.Type value_type;
 		public unowned string get_blurb ();
 		[Version (since = "2.38")]
-		public unowned GLib.Value get_default_value ();
+		public unowned GLib.Value? get_default_value ();
 		public unowned string get_name ();
 		[Version (since = "2.46")]
 		public GLib.Quark get_name_quark ();
