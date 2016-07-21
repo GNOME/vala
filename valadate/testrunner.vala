@@ -24,47 +24,52 @@ public class Valadate.TestRunner : Object {
 
 	private TestConfig config;
 
+	private TestResult result;
+
 	private SubprocessLauncher launcher =
 		new SubprocessLauncher(GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_PIPE);
-
-
-	private string path;
-	private Test[] _tests;
 	
-	private TestResult result;
 	
-	public Test[] tests {
-		get {
-			return _tests;
-		}
-	}
-
 	public TestRunner(TestConfig config) {
 		this.config = config;
-		this.path = config.binary;
 	}
 
-	public TestResult? run(TestResult? result = null) throws ConfigError {
+	public void run(TestResult result) {
 		
+		this.result = result;
 		
-		return result;
-	}
-
-
-	private void run_test() {
-		string command = "";
-
-		string[] args;
-		Shell.parse_argv(command, out args);
-
-		var process = launcher.spawnv(args);
-		var stderr_pipe = process.get_stderr_pipe();
-
-		uint8 buffer[1028];
-		var err = stderr_pipe.read(buffer);
+		if (TestConfig.runtest != null && config.root.count == 1) {
+			config.root.run(result);
+			return;
+		}
+		
+		run_test(config.root);
 		
 	}
 
+
+	private void run_test(Test test) {
+		
+		message(test.count.to_string());
+		
+		if (test.count > 1) {
+			foreach(var subtest in test) {
+				run_test(subtest);
+			}
+		} else {
+			string command = "%s -r ".printf(config.binary);
+
+			string[] args;
+			Shell.parse_argv(command, out args);
+
+			var process = launcher.spawnv(args);
+			var stderr_pipe = process.get_stderr_pipe();
+
+			uint8 buffer[1028];
+			var err = stderr_pipe.read(buffer);
+
+		}
+	}
 
 
 	public static int main (string[] args) {
@@ -76,14 +81,14 @@ public class Valadate.TestRunner : Object {
 			return result;
 
 		var runner = new TestRunner(config);
+		var testresult = new TestResult();
 		
 		try {
-			runner.run();
+			runner.run(testresult);
 		} catch (ConfigError err) {
 			stderr.puts(err.message);
 			return 1;
 		}
-		
 
 		return 0;
 	}

@@ -33,8 +33,50 @@ public interface Valadate.Test : Object {
 	public abstract void run (TestResult result);
 
 	/**
+	 * The name of the test
+	 */
+	public abstract string name { get; set; }
+
+	/**
 	 * Returns the number of tests that will be run by this test
 	 */
 	public abstract int count {get;}
+
+	public abstract Test get_test(int index);
+
+	public virtual TestIterator iterator() {
+		return new TestIterator(this);
+	}
+	
+	public class TestIterator {
+		
+		private Test test;
+		private Test current;
+		private int index = 0;
+		
+		public TestIterator(Test test) {
+			this.test = test;
+		}
+		
+		public Test get() {
+			current = this.test.get_test(index);
+			index++;
+			return current;
+		}
+
+		public bool next() {
+			if (index >= this.test.count)
+				return false;
+			return true;
+		}
+
+		
+		public int size {
+			get {
+				return this.test.count;
+			}
+		}
+		
+	}
 
 }

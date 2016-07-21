@@ -22,11 +22,9 @@
 
 public class Valadate.TestConfig : Object {
 
-	public virtual signal void set_up() {}
-	public virtual signal void tear_up() {}
-
 	public static string seed;
 	public static string testplan;
+	public static string runtest;
 	public static string format = "tap";
 	public static bool fatal_warnings;
 	public static bool list;
@@ -43,14 +41,15 @@ public class Valadate.TestConfig : Object {
 	[CCode (array_length = false, array_null_terminated = true)]
 	public static string[] testplans;
 
+
 	public string binary {get;set;}
 
-	public TestResult result {get;set;}
+	public TestSuite root {get;set;}
 
 	public OptionContext opt_context;
 
 	private Vala.CodeContext context;
-	private Module module;
+	internal Module module;
 
 
 	public const OptionEntry[] options = {
@@ -60,8 +59,9 @@ public class Valadate.TestConfig : Object {
 		{ "list", 'l', 0, OptionArg.NONE, ref list, "List test cases available in a test executable", null },
 		{ "skip", 's', 0, OptionArg.STRING_ARRAY, ref skip, "Skip all tests matching", "TESTPATH..." },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet, "Run tests quietly", null },
-		{ "timed", 't', 0, OptionArg.NONE, ref timed, "Run timed tests", null },
+		{ "timed", 0, 0, OptionArg.NONE, ref timed, "Run timed tests", null },
 		{ "testplan", 0, 0, OptionArg.STRING, ref testplan, "Run the specified TestPlan", "FILE" },
+		{ "", 'r', 0, OptionArg.STRING, ref runtest, null, null },
 		{ "verbose", 0, 0, OptionArg.NONE, ref verbose, "Run tests verbosely", null },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 		{ "vala-version", 0, 0, OptionArg.NONE, ref vala_version, "Display Vala version number", null },
@@ -74,6 +74,7 @@ public class Valadate.TestConfig : Object {
 		opt_context = new OptionContext ("- Valadate Testing Framework");
 		opt_context.set_help_enabled (true);
 		opt_context.add_main_entries (options, null);
+		root = new TestSuite("/");
 		setup_context();
 	}
 
@@ -102,6 +103,7 @@ public class Valadate.TestConfig : Object {
 	public int parse(string[] args) {
 		binary = args[0];
 		GLib.Environment.set_prgname(binary);
+		root.name = binary;
 
 		try {
 			opt_context.parse (ref args);
@@ -126,19 +128,11 @@ public class Valadate.TestConfig : Object {
 				GLib.Random.next_int(),
 				GLib.Random.next_int());
 		
-		result = new TestResult();
-		
 		try {
 			load();
 		} catch (ConfigError e) {
 			stdout.printf ("%s\n", e.message);
 			return 1;
-		}
-
-		// We are just listing the tests in the binary
-		if(paths == null && TestConfig.list) {
-			result.report();
-			return 0;
 		}
 		
 		return -1;
@@ -178,9 +172,8 @@ public class Valadate.TestConfig : Object {
 		if (context.report.get_errors () > 0)
 			throw new ConfigError.TESTPLAN("Error parsing testplan %s", path);
 	
-		var testexplorer = new TestExplorer(module, result);
+		var testexplorer = new TestExplorer(this);
 		context.accept(testexplorer);
-		//_tests = testexplorer.get_tests();
 	}
 
 }

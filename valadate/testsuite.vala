@@ -22,17 +22,7 @@
 
 public class Valadate.TestSuite : Object, Test {
 
-	/**
-	 * The TestMethod delegate represents a {@link Valadate.Test} method
-	 * that can be added to a TestCase and run
-	 */
-	public delegate void TestMethod ();
-
-
-	private HashTable<string, Test> _tests =
-		new HashTable<string, Test> (str_hash, str_equal);
-	
-	private List<weak Test> _values;
+	private List<Test> _tests = new List<Test>();
 	
 	/**
 	 * the name of the TestSuite
@@ -45,7 +35,11 @@ public class Valadate.TestSuite : Object, Test {
 	 */
 	public int count {
 		get {
-			return (int)_tests.size();
+			int testcount = 0;
+			_tests.foreach((t) => {
+				testcount += t.count;
+			});
+			return testcount;
 		}
 	}
 
@@ -53,10 +47,9 @@ public class Valadate.TestSuite : Object, Test {
 	 * Returns a {@link GLib.List} of {@link Valadate.Test}s that will be
 	 * run by this TestSuite
 	 */
-	public List<weak Test> tests {
+	public List<Test> tests {
 		get {
-			_values = _tests.get_values();
-			return _values;
+			return _tests;
 		}
 	}
 
@@ -65,57 +58,41 @@ public class Valadate.TestSuite : Object, Test {
 	 * TestSuite's name
 	 */
 	public TestSuite(string? name = null) {
-		this.name = name;
+		this.name = name ?? this.get_type().name();
 	}
 
 	/**
 	 * Adds a test to the suite.
 	 */
-	public void add_test(string name, Test test) {
-		_tests.set(name, test);
-	}
-
-	public void add_test_method(string name, owned TestMethod test) {
-		var adaptor = new TestAdaptor ((owned)test);
-		_tests.set(name, adaptor);
+	public void add_test(Test test) {
+		_tests.append(test);
 	}
 
 
 	public void run(TestResult result) {
-		_tests.foreach((k,t) => { run_test(t, result); });
+		_tests.foreach((t) => { t.run(result); });
 	}
 
-	public void run_test(Test test, TestResult result) {
-		result.run(test);
-	}
-	
-	public new unowned Test? get(string name) {
-		return _tests.lookup(name);
-	}
+	public Test get_test(int index) {
+		int testcount = 0;
+		Test test = null;
 
-	public new void set(string name, Test test) {
-		_tests.set(name, test);
-	}
-	
-	private class TestAdaptor : Object, Test {
-
-		private TestSuite.TestMethod test;
-
-		public int count {
-			get {
-				return 1;
+		_tests.foreach((t) => {
+			
+			if (t.count + testcount >= index) {
+			
+				int offset = index - testcount;
+				
+				test = t.get_test(offset);
+			
+			
+			} else {
+				testcount += t.count;
 			}
-		}
-		
-		public TestAdaptor(owned TestSuite.TestMethod test) {
-			this.test = (owned)test;
-		}
+		});
 
-		public void run(TestResult test) {
-			this.test();
-		}
-
+		return test;
 	}
-	
+
 	
 }

@@ -31,6 +31,12 @@ public errordomain Valadate.TestError {
 public abstract class Valadate.TestCase : Object, Test, TestFixture {
 
 	/**
+	 * The TestMethod delegate represents a {@link Valadate.Test} method
+	 * that can be added to a TestCase and run
+	 */
+	public delegate void TestMethod ();
+
+	/**
 	 * the name of the TestCase
 	 */
 	public string name { get; set; }
@@ -40,13 +46,28 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 	 * TestCase's name
 	 */
 	public TestCase(string? name = null) {
-		this.name = name;
+		this.name = name ?? this.get_type().name();
 	}
 
 	/**
 	 * Returns the number of {@link Valadate.Test}s that will be run by this TestCase
 	 */
-	public int count {get;set;}
+	public int count {
+		get {
+			int testcount = 0;
+			_tests.foreach((t) => {
+				testcount += t.count;
+			});
+			return testcount;
+		}
+	}
+
+	private List<Test> _tests = new List<Test>();
+
+	public void add_test(string testname, owned TestMethod test) {
+		var adaptor = new TestAdaptor (this.name + testname, (owned)test, this);
+		_tests.append(adaptor);
+	}
 
 	
 	public void run(TestResult result) {
@@ -55,11 +76,48 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 		
 	}
 
+	public Test get_test(int index) {
+
+		return _tests.nth_data(index);
+
+	}
+
 
 	public virtual void set_up() {}
 
 	public virtual void tear_down() {}
 
+
+	private class TestAdaptor : Object, Test {
+
+		private TestMethod test;
+		private unowned TestCase testcase;
+
+		public string name {get;set;}
+
+		public int count {
+			get {
+				return 1;
+			}
+		}
+		
+		public Test get_test(int index) {
+			return this;
+		}
+		
+		public TestAdaptor(string name, owned TestMethod test, TestCase testcase) {
+			this.test = (owned)test;
+			this.name = name;
+			this.testcase = testcase;
+		}
+
+		public void run(TestResult test) {
+			this.testcase.set_up();
+			this.test();
+			this.testcase.tear_down();
+		}
+
+	}
 
 
 
@@ -106,10 +164,10 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 
 	
 	construct {
-		name = this.get_type().name();
+		//name = this.get_type().name();
 	}
 
-	public void add_testb (string name, owned TestSuite.TestMethod test)
+	public void add_testb (string name, owned TestMethod test)
 		requires (name.contains("/") != true)
 	{
 		var adaptor = new Adaptor (name, (owned)test, this);
@@ -157,7 +215,7 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 		public string name { get; private set; }
 		public int async_timeout { get; set; }
 
-		private TestSuite.TestMethod test;
+		private TestMethod test;
 		private TestCase test_case;
 
 		public bool is_async = false;
@@ -165,7 +223,7 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 		public AsyncFinish async_finish;
 
 		public Adaptor (string name,
-						owned TestSuite.TestMethod test,
+						owned TestMethod test,
 						TestCase test_case) {
 			this.name = name;
 			this.test = (owned)test;
