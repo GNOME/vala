@@ -25,5 +25,9 @@ public class Valadate.Tests.TestFixture : Valadate.TestCase {
 	public void test_testcase() {
 		
 	}
+
+	public void test_testcase_two() {
+		
+	}
 	
 }

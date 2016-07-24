@@ -35,11 +35,7 @@ public class Valadate.TestSuite : Object, Test {
 	 */
 	public int count {
 		get {
-			int testcount = 0;
-			_tests.foreach((t) => {
-				testcount += t.count;
-			});
-			return testcount;
+			return (int)_tests.length();
 		}
 	}
 
@@ -74,24 +70,7 @@ public class Valadate.TestSuite : Object, Test {
 	}
 
 	public Test get_test(int index) {
-		int testcount = 0;
-		Test test = null;
-
-		_tests.foreach((t) => {
-			
-			if (t.count + testcount >= index) {
-			
-				int offset = index - testcount;
-				
-				test = t.get_test(offset);
-			
-			
-			} else {
-				testcount += t.count;
-			}
-		});
-
-		return test;
+		return _tests.nth_data((uint)index);
 	}
 
 	

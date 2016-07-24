@@ -26,8 +26,7 @@ libvaladate_la_VALAFLAGS = \
 	--vapidir $(top_srcdir)/vala \
 	--pkg gio-2.0 \
 	--pkg gmodule-2.0 \
-	--pkg vala \
-	--pkg gee \
+	--pkg libvala@PACKAGE_SUFFIX@ \
 	--pkg config \
 	--library valadate \
 	--vapi valadate.vapi \
@@ -39,14 +38,15 @@ libvaladate_la_VALAFLAGS = \
 libvaladate_la_CFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \
-	-I$(top_srcdir)/vala \
 	$(NULL)
 
 libvaladate_la_CPPFLAGS = \
 	$(GLIB_CPPFLAGS) \
 	$(GMODULE_CPPFLAGS) \
+	-I$(top_srcdir)/codegen \
 	-I$(top_srcdir)/vala \
 	-I$(top_srcdir)/gee \
+	-I$(top_srcdir)/ccode \
 	$(NULL)
 
 
@@ -56,10 +56,11 @@ libvaladate_la_LDFLAGS = \
 	$(NULL)
 
 libvaladate_la_LIBADD = \
-	$(top_builddir)/vala/libvalacore.la \
+	$(top_builddir)/codegen/libvala@PACKAGE_SUFFIX@.la \
 	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
 	$(GMODULE_LIBS) \
+	-lgio-2.0 \
 	$(NULL)
 
 libvaladateincludedir = $(includedir)/vala@PACKAGE_SUFFIX@

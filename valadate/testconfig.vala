@@ -22,29 +22,35 @@
 
 public class Valadate.TestConfig : Object {
 
-	public static string seed;
-	public static string testplan;
-	public static string runtest;
-	public static string format = "tap";
-	public static bool fatal_warnings;
-	public static bool list;
-	public static bool quiet;
-	public static bool timed;
-	public static bool verbose;
-	public static bool version;
-	public static bool vala_version;
+	private static string _seed;
+	private static string testplan;
+	private static string runtest;
+	private static string format = "tap";
+	private static bool fatal_warnings;
+	private static bool list;
+	private static bool quiet;
+	private static bool timed;
+	private static bool verbose;
+	private static bool version;
+	private static bool vala_version;
 
 	[CCode (array_length = false, array_null_terminated = true)]
-	public static string[] paths;
+	private static string[] paths;
 	[CCode (array_length = false, array_null_terminated = true)]
-	public static string[] skip;
-	[CCode (array_length = false, array_null_terminated = true)]
-	public static string[] testplans;
+	private static string[] skip;
 
+
+	public string seed {
+		get {
+			return _seed;
+		}
+	}
 
 	public string binary {get;set;}
 
 	public TestSuite root {get;set;}
+
+	public int test_count {get;set;default=0;}
 
 	public OptionContext opt_context;
 
@@ -53,7 +59,7 @@ public class Valadate.TestConfig : Object {
 
 
 	public const OptionEntry[] options = {
-		{ "seed", 0, 0, OptionArg.STRING, ref seed, "Start tests with random seed", "SEEDSTRING" },
+		{ "seed", 0, 0, OptionArg.STRING, ref _seed, "Start tests with random seed", "SEEDSTRING" },
 		{ "format", 'f', 0, OptionArg.STRING, ref format, "Output test results using format", "FORMAT" },
 		{ "g-fatal-warnings", 0, 0, OptionArg.NONE, ref fatal_warnings, "Make all warnings fatal", null },
 		{ "list", 'l', 0, OptionArg.NONE, ref list, "List test cases available in a test executable", null },
@@ -79,31 +85,17 @@ public class Valadate.TestConfig : Object {
 	}
 
 	private void setup_context() {
-		File currdir = File.new_for_path(GLib.Environment.get_current_dir());
-		File valadatedir = currdir.get_parent().get_child("valadate");
-		File vapidir = currdir.get_parent().get_child("vapi");
-
-
 		context = new Vala.CodeContext ();
 		Vala.CodeContext.push (context);
 		context.report.enable_warnings = false;
 		context.report.set_verbose_errors (false);
 		context.verbose_mode = false;
-		
-		context.vapi_directories = {valadatedir.get_path(), vapidir.get_path()};
-		
-		context.add_external_package ("glib-2.0");
-		context.add_external_package ("gobject-2.0");
-		context.add_external_package ("gio-2.0");
-		context.add_external_package ("gmodule-2.0");
-		context.add_external_package ("valadate");
-		
 	}
 
 	public int parse(string[] args) {
 		binary = args[0];
 		GLib.Environment.set_prgname(binary);
-		root.name = binary;
+		//root.name = binary;
 
 		try {
 			opt_context.parse (ref args);
@@ -121,8 +113,8 @@ public class Valadate.TestConfig : Object {
 			return 0;
 		}
 		
-		if(seed == null)
-			seed = "R02S%08x%08x%08x%08x".printf(
+		if(_seed == null)
+			_seed = "R02S%08x%08x%08x%08x".printf(
 				GLib.Random.next_int(),
 				GLib.Random.next_int(),
 				GLib.Random.next_int(),
@@ -166,12 +158,7 @@ public class Valadate.TestConfig : Object {
 		
 		var parser = new Vala.Parser ();
 		parser.parse (context);
-		
-		context.check ();
-		
-		if (context.report.get_errors () > 0)
-			throw new ConfigError.TESTPLAN("Error parsing testplan %s", path);
-	
+			
 		var testexplorer = new TestExplorer(this);
 		context.accept(testexplorer);
 	}

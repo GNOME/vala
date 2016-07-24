@@ -65,7 +65,7 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 	private List<Test> _tests = new List<Test>();
 
 	public void add_test(string testname, owned TestMethod test) {
-		var adaptor = new TestAdaptor (this.name + testname, (owned)test, this);
+		var adaptor = new TestAdaptor (testname, (owned)test, this);
 		_tests.append(adaptor);
 	}
 
