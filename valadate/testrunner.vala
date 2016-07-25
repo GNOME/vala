@@ -22,72 +22,27 @@
 
 public class Valadate.TestRunner : Object {
 
-	private TestConfig config;
-
 	private TestResult result;
 
 	private SubprocessLauncher launcher =
 		new SubprocessLauncher(GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_PIPE);
 	
 	
-	public TestRunner(TestConfig config) {
-		this.config = config;
-	}
-
-	public void run(TestResult result) {
-		
-		this.result = result;
+	public void run(Test test, TestResult result) {
 		
 		/*
-		if (TestConfig.runtest != null && config.root.count == 1) {
-			config.root.run(result);
-			return;
-		}*/
-		
-		stdout.printf("# random seed: %s\n", config.seed);
-		stdout.printf("%d..%d\n", (config.test_count > 0) ? 1 : 0, config.test_count);
-		
-		run_test(config.root, "");
-		
-	}
+		string command = "%s -r ".printf(config.binary);
 
-	private static int testno = 0;
+		string[] args;
+		Shell.parse_argv(command, out args);
 
-	private void run_test(Test test, string path) {
-		
-		
-		
-		
-		//if (test.count > 1) {
-			//message(test.name);
+		var process = launcher.spawnv(args);
+		var stderr_pipe = process.get_stderr_pipe();
 
-			foreach(var subtest in test) {
-				if(subtest is TestCase || subtest is TestSuite) {
-					if(subtest is TestCase)
-						stdout.printf("# Start of %s/%s tests\n", path, subtest.name);
-					run_test(subtest, "%s/%s".printf(path, subtest.name));
-					if(subtest is TestCase)
-						stdout.printf("# End of %s/%s tests\n", path, subtest.name);
-				} else {
-					testno++;
-					stdout.printf("ok %d %s/%s\n", testno, path, subtest.name);
-				}
-			}
-		//} else {
-		//	message(test.name);
-		//	string command = "%s -r ".printf(config.binary);
+		uint8 buffer[1028];
+		var err = stderr_pipe.read(buffer);
+		*/
 
-		//	string[] args;
-		//	Shell.parse_argv(command, out args);
-
-			/*
-			var process = launcher.spawnv(args);
-			var stderr_pipe = process.get_stderr_pipe();
-
-			uint8 buffer[1028];
-			var err = stderr_pipe.read(buffer);
-			*/
-		//}
 	}
 
 
@@ -99,10 +54,10 @@ public class Valadate.TestRunner : Object {
 		if(result >= 0)
 			return result;
 
-		var runner = new TestRunner(config);
-		var testresult = new TestResult();
+		var runner = new TestRunner();
+		var testresult = new TestResult(config);
 		
-		runner.run(testresult);
+		testresult.run(runner);
 
 		return 0;
 	}

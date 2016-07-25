@@ -51,6 +51,16 @@ public class Valadate.TestResult : Object {
 		}
 	}
 	
+	private TestConfig config;
+	private TestRunner runner;
+	
+	public TestResult(TestConfig config) {
+		this.config = config;
+		
+		
+		
+	}
+	
 	public void add_error(Test test, string error) {
 		errors.append(new TestFailure(test, error));
 		test_error(test, error);
@@ -69,12 +79,33 @@ public class Valadate.TestResult : Object {
 	/**
 	 * Runs a {@link Valadate.Test}
 	 */
-	public void run(Test test) {
-
-		test_start(test);
-
-		test.run(this);
-
-		test_complete(test);
+	public void run(TestRunner runner) {
+		this.runner = runner;
+		stdout.printf("# random seed: %s\n", config.seed);
+		stdout.printf("%d..%d\n", (config.test_count > 0) ? 1 : 0, config.test_count);
+		run_test(config.root, "");
 	}
+
+	private static int testno = 0;
+
+	private void run_test(Test test, string path) {
+		foreach(var subtest in test) {
+			if(subtest is TestCase) {
+				stdout.printf("# Start of %s/%s tests\n", path, subtest.name);
+				
+				run_test(subtest, "%s/%s".printf(path, subtest.name));
+				
+				stdout.printf("# End of %s/%s tests\n", path, subtest.name);
+			} else if (subtest is TestSuite) {
+				run_test(subtest, "%s/%s".printf(path, subtest.name));
+			} else {
+				testno++;
+				runner.run(subtest, this);
+				stdout.printf("ok %d %s/%s\n", testno, path, subtest.name);
+
+			}
+		}
+	}
+
+
 }

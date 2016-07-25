@@ -72,7 +72,7 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 	
 	public void run(TestResult result) {
 
-		result.run(this);
+		//result.run(this);
 		
 	}
 
