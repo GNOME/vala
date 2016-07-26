@@ -28,10 +28,15 @@ public class Valadate.TestRunner : Object {
 		new SubprocessLauncher(GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_PIPE);
 	
 	
-	public void run(Test test, TestResult result) {
+	public void run_test(Test test, string testpath, TestResult result) {
+
+		test.run(result);
+
+	}
+
+	public void run(Test test, string testpath, TestResult result) {
 		
-		/*
-		string command = "%s -r ".printf(config.binary);
+		string command = "%s -r %s".printf(result.config.binary, testpath);
 
 		string[] args;
 		Shell.parse_argv(command, out args);
@@ -41,7 +46,10 @@ public class Valadate.TestRunner : Object {
 
 		uint8 buffer[1028];
 		var err = stderr_pipe.read(buffer);
-		*/
+		
+		if (err > 0) {
+			result.add_failure(test, (string)buffer);
+		}		
 
 	}
 

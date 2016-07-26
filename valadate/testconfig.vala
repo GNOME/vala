@@ -24,7 +24,7 @@ public class Valadate.TestConfig : Object {
 
 	private static string _seed;
 	private static string testplan;
-	private static string runtest;
+	private static string _runtest;
 	private static string format = "tap";
 	private static bool fatal_warnings;
 	private static bool list;
@@ -43,6 +43,18 @@ public class Valadate.TestConfig : Object {
 	public string seed {
 		get {
 			return _seed;
+		}
+	}
+
+	public string runtest {
+		get {
+			return _runtest;
+		}
+	}
+
+	public bool list_only {
+		get {
+			return list;
 		}
 	}
 
@@ -67,7 +79,7 @@ public class Valadate.TestConfig : Object {
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet, "Run tests quietly", null },
 		{ "timed", 0, 0, OptionArg.NONE, ref timed, "Run timed tests", null },
 		{ "testplan", 0, 0, OptionArg.STRING, ref testplan, "Run the specified TestPlan", "FILE" },
-		{ "", 'r', 0, OptionArg.STRING, ref runtest, null, null },
+		{ "", 'r', 0, OptionArg.STRING, ref _runtest, null, null },
 		{ "verbose", 0, 0, OptionArg.NONE, ref verbose, "Run tests verbosely", null },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 		{ "vala-version", 0, 0, OptionArg.NONE, ref vala_version, "Display Vala version number", null },
@@ -80,8 +92,6 @@ public class Valadate.TestConfig : Object {
 		opt_context = new OptionContext ("- Valadate Testing Framework");
 		opt_context.set_help_enabled (true);
 		opt_context.add_main_entries (options, null);
-		root = new TestSuite("/");
-		setup_context();
 	}
 
 	private void setup_context() {
@@ -95,7 +105,6 @@ public class Valadate.TestConfig : Object {
 	public int parse(string[] args) {
 		binary = args[0];
 		GLib.Environment.set_prgname(binary);
-		//root.name = binary;
 
 		try {
 			opt_context.parse (ref args);
@@ -119,6 +128,8 @@ public class Valadate.TestConfig : Object {
 				GLib.Random.next_int(),
 				GLib.Random.next_int(),
 				GLib.Random.next_int());
+		
+		root = new TestSuite("/");
 		
 		try {
 			load();
@@ -153,7 +164,8 @@ public class Valadate.TestConfig : Object {
 
 
 	internal void load_test_plan(string path) throws ConfigError {
-		
+		setup_context();
+
 		context.add_source_file (new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, path));
 		
 		var parser = new Vala.Parser ();

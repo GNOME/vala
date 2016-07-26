@@ -51,7 +51,7 @@ public class Valadate.TestResult : Object {
 		}
 	}
 	
-	private TestConfig config;
+	internal TestConfig config;
 	private TestRunner runner;
 	
 	public TestResult(TestConfig config) {
@@ -90,19 +90,40 @@ public class Valadate.TestResult : Object {
 
 	private void run_test(Test test, string path) {
 		foreach(var subtest in test) {
+			string testpath = "%s/%s".printf(path, subtest.name);
 			if(subtest is TestCase) {
-				stdout.printf("# Start of %s/%s tests\n", path, subtest.name);
-				
-				run_test(subtest, "%s/%s".printf(path, subtest.name));
-				
-				stdout.printf("# End of %s/%s tests\n", path, subtest.name);
-			} else if (subtest is TestSuite) {
-				run_test(subtest, "%s/%s".printf(path, subtest.name));
-			} else {
-				testno++;
-				runner.run(subtest, this);
-				stdout.printf("ok %d %s/%s\n", testno, path, subtest.name);
 
+				stdout.printf("# Start of %s tests\n", testpath);
+				
+				run_test(subtest, testpath);
+				
+				stdout.printf("# End of %s tests\n", testpath);
+
+			} else if (subtest is TestSuite) {
+
+				run_test(subtest, testpath);
+
+			} else {
+
+				testno++;
+
+				if (config.list_only) {
+
+					stdout.printf("%s\n", testpath);
+
+				} else if (config.runtest != null && config.runtest == testpath) {
+
+					runner.run(subtest, testpath, this);
+
+					stdout.printf("ok %d %s/%s\n", testno, path, subtest.name);
+
+				} else {
+
+					runner.run_test(subtest, testpath, this);
+
+					stdout.printf("ok %d %s/%s\n", testno, path, subtest.name);
+
+				}
 			}
 		}
 	}
