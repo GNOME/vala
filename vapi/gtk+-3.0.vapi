@@ -3295,6 +3295,9 @@ namespace Gtk {
 		public void place_on_monitor (Gdk.Monitor monitor);
 		public void popdown ();
 		public void popup (Gtk.Widget? parent_menu_shell, Gtk.Widget? parent_menu_item, [CCode (scope = "async")] Gtk.MenuPositionFunc? func, uint button, uint32 activate_time);
+		public void popup_at_pointer (Gdk.Event? trigger_event = null);
+		public void popup_at_rect (Gdk.Window rect_window, Gdk.Rectangle rect, Gdk.Gravity rect_anchor, Gdk.Gravity menu_anchor, Gdk.Event? trigger_event = null);
+		public void popup_at_widget (Gtk.Widget widget, Gdk.Gravity widget_anchor, Gdk.Gravity menu_anchor, Gdk.Event? trigger_event = null);
 		public void popup_for_device (Gdk.Device? device, Gtk.Widget parent_menu_shell, Gtk.Widget parent_menu_item, owned Gtk.MenuPositionFunc? func, uint button, uint32 activate_time);
 		public void reorder_child (Gtk.Widget child, int position);
 		public void reposition ();
@@ -3310,13 +3313,22 @@ namespace Gtk {
 		public string accel_path { get; set; }
 		public int active { get; set; }
 		[NoAccessorMethod]
+		public Gdk.AnchorHints anchor_hints { get; set construct; }
+		[NoAccessorMethod]
 		public Gtk.Widget attach_widget { owned get; set; }
+		[NoAccessorMethod]
+		public Gdk.WindowTypeHint menu_type_hint { get; set construct; }
 		public int monitor { get; set; }
+		[NoAccessorMethod]
+		public int rect_anchor_dx { get; set construct; }
+		[NoAccessorMethod]
+		public int rect_anchor_dy { get; set construct; }
 		public bool reserve_toggle_size { get; set; }
 		public bool tearoff_state { get; set; }
 		[NoAccessorMethod]
 		public string tearoff_title { owned get; set; }
 		public virtual signal void move_scroll (Gtk.ScrollType p0);
+		public virtual signal void popped_up (Gdk.Rectangle p0, Gdk.Rectangle p1, bool p2, bool p3);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_menu_accessible_get_type ()")]
 	public class MenuAccessible : Gtk.MenuShellAccessible, Atk.Component, Atk.Selection {

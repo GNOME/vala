@@ -2977,7 +2977,7 @@
 			<method name="to_gvariant" symbol="gtk_paper_size_to_gvariant">
 				<return-type type="GVariant*"/>
 				<parameters>
-					<parameter name="size" type="GtkPaperSize*"/>
+					<parameter name="paper_size" type="GtkPaperSize*"/>
 				</parameters>
 			</method>
 			<method name="to_key_file" symbol="gtk_paper_size_to_key_file">
@@ -17941,6 +17941,34 @@
 					<parameter name="activate_time" type="guint32"/>
 				</parameters>
 			</method>
+			<method name="popup_at_pointer" symbol="gtk_menu_popup_at_pointer">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GtkMenu*"/>
+					<parameter name="trigger_event" type="GdkEvent*"/>
+				</parameters>
+			</method>
+			<method name="popup_at_rect" symbol="gtk_menu_popup_at_rect">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GtkMenu*"/>
+					<parameter name="rect_window" type="GdkWindow*"/>
+					<parameter name="rect" type="GdkRectangle*"/>
+					<parameter name="rect_anchor" type="GdkGravity"/>
+					<parameter name="menu_anchor" type="GdkGravity"/>
+					<parameter name="trigger_event" type="GdkEvent*"/>
+				</parameters>
+			</method>
+			<method name="popup_at_widget" symbol="gtk_menu_popup_at_widget">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="GtkMenu*"/>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="widget_anchor" type="GdkGravity"/>
+					<parameter name="menu_anchor" type="GdkGravity"/>
+					<parameter name="trigger_event" type="GdkEvent*"/>
+				</parameters>
+			</method>
 			<method name="popup_for_device" symbol="gtk_menu_popup_for_device">
 				<return-type type="void"/>
 				<parameters>
@@ -18028,8 +18056,12 @@
 			<property name="accel-group" type="GtkAccelGroup*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="accel-path" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="active" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="anchor-hints" type="GdkAnchorHints" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="attach-widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="menu-type-hint" type="GdkWindowTypeHint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="monitor" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="rect-anchor-dx" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="rect-anchor-dy" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="reserve-toggle-size" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="tearoff-state" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="tearoff-title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -18038,6 +18070,16 @@
 				<parameters>
 					<parameter name="object" type="GtkMenu*"/>
 					<parameter name="p0" type="GtkScrollType"/>
+				</parameters>
+			</signal>
+			<signal name="popped-up" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkMenu*"/>
+					<parameter name="p0" type="gpointer"/>
+					<parameter name="p1" type="gpointer"/>
+					<parameter name="p2" type="gboolean"/>
+					<parameter name="p3" type="gboolean"/>
 				</parameters>
 			</signal>
 		</object>
@@ -36320,7 +36362,7 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="2103"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="2104"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_FULL" type="char*" value="full"/>
@@ -36328,7 +36370,7 @@
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="4"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="21"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
