@@ -21,15 +21,23 @@
  */
 public class Valadate.TestResult : Object {
 
+	private enum TestStatus {
+		NOT_RUN,
+		RUNNING,
+		PASSED,
+		FAILED
+	}
+
 	public signal void test_error(Test test, string error);
 	public signal void test_failure(Test test, string error);
 	public signal void test_complete(Test test);
 	public signal void test_start(Test test);
 	
-	internal List<TestFailure> errors = new List<TestFailure>();
+	/*internal List<TestFailure> errors = new List<TestFailure>();
 	internal List<TestFailure> failures = new List<TestFailure>();
 
 	public bool should_stop {get;set;default=false;}
+	
 	
 	public int error_count {
 		get {
@@ -50,80 +58,95 @@ public class Valadate.TestResult : Object {
 			return (failure_count == 0 && error_count == 0);
 		}
 	}
+	*/
 	
-	internal TestConfig config;
+	public string binary {
+		get {
+			return config.binary;
+		}
+	}
+	
+	private TestConfig config;
 	private TestRunner runner;
+
+	/*
+	private HashTable<Test, TestRecord> _tests = new HashTable<Test, TestRecord>(direct_hash, direct_equal);
+
+	private class TestRecord : Object {
+		
+		public string path {get;set;}
+		public int index {get;set;}
+		public TestStatus status {get;set;}
+		
+		public TestRecord(string path, int index, TestStatus status) {
+			this.path = path;
+			this.index = index;
+			this.status = status;
+		}
+		
+	}*/
+	
 	
 	public TestResult(TestConfig config) {
 		this.config = config;
-		
-		
-		
 	}
 	
 	public void add_error(Test test, string error) {
-		errors.append(new TestFailure(test, error));
-		test_error(test, error);
+		stdout.printf("%s\n", error);
+		stdout.printf("not ok %d %s\n", testno, test.name);
+		//errors.append(new TestFailure(test, error));
+		//test_error(test, error);
 	}
 
 	public void add_failure(Test test, string failure) {
-		failures.append(new TestFailure(test, failure));
-		test_failure(test, failure);
+		stdout.printf("%s\n", failure);
+		stdout.printf("not ok %d %s\n", testno, test.name);
+		//failures.append(new TestFailure(test, failure));
+		//test_failure(test, failure);
 	}
 
-	public void start_test(Test test) {
-		run_count += test.count;
-		test_start(test);
+	public void add_success(Test test, string message) {
+		stdout.printf("%s\n", message);
+		stdout.printf("ok %d %s\n", testno, test.name);
+		//failures.append(new TestFailure(test, failure));
+		//test_failure(test, failure);
 	}
+
 	
 	/**
 	 * Runs a {@link Valadate.Test}
 	 */
 	public void run(TestRunner runner) {
 		this.runner = runner;
-		stdout.printf("# random seed: %s\n", config.seed);
-		stdout.printf("%d..%d\n", (config.test_count > 0) ? 1 : 0, config.test_count);
+		if (!config.list_only && config.runtest == null) {
+			stdout.printf("# random seed: %s\n", config.seed);
+			stdout.printf("1..%d\n", config.test_count);
+		}
 		run_test(config.root, "");
 	}
 
-	private static int testno = 0;
+	private int testno = 0;
 
 	private void run_test(Test test, string path) {
 		foreach(var subtest in test) {
 			string testpath = "%s/%s".printf(path, subtest.name);
 			if(subtest is TestCase) {
-
-				stdout.printf("# Start of %s tests\n", testpath);
-				
+				if(config.runtest == null)
+					stdout.printf("# Start of %s tests\n", testpath);
 				run_test(subtest, testpath);
-				
-				stdout.printf("# End of %s tests\n", testpath);
-
+				if(config.runtest == null)
+					stdout.printf("# End of %s tests\n", testpath);
 			} else if (subtest is TestSuite) {
-
 				run_test(subtest, testpath);
-
+			} else if (config.list_only) {
+				stdout.printf("%s\n", testpath);
+			} else if (config.runtest != null) {
+				if(config.runtest == testpath)
+					runner.run_test(subtest, this);
 			} else {
-
 				testno++;
-
-				if (config.list_only) {
-
-					stdout.printf("%s\n", testpath);
-
-				} else if (config.runtest != null && config.runtest == testpath) {
-
-					runner.run(subtest, testpath, this);
-
-					stdout.printf("ok %d %s/%s\n", testno, path, subtest.name);
-
-				} else {
-
-					runner.run_test(subtest, testpath, this);
-
-					stdout.printf("ok %d %s/%s\n", testno, path, subtest.name);
-
-				}
+				subtest.name = testpath;
+				runner.run(subtest, this);
 			}
 		}
 	}

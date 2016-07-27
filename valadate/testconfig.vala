@@ -26,8 +26,8 @@ public class Valadate.TestConfig : Object {
 	private static string testplan;
 	private static string _runtest;
 	private static string format = "tap";
-	private static bool fatal_warnings;
 	private static bool list;
+	private static bool _keepgoing;
 	private static bool quiet;
 	private static bool timed;
 	private static bool verbose;
@@ -58,6 +58,12 @@ public class Valadate.TestConfig : Object {
 		}
 	}
 
+	public bool keep_going {
+		get {
+			return _keepgoing;
+		}
+	}
+
 	public string binary {get;set;}
 
 	public TestSuite root {get;set;}
@@ -73,8 +79,8 @@ public class Valadate.TestConfig : Object {
 	public const OptionEntry[] options = {
 		{ "seed", 0, 0, OptionArg.STRING, ref _seed, "Start tests with random seed", "SEEDSTRING" },
 		{ "format", 'f', 0, OptionArg.STRING, ref format, "Output test results using format", "FORMAT" },
-		{ "g-fatal-warnings", 0, 0, OptionArg.NONE, ref fatal_warnings, "Make all warnings fatal", null },
 		{ "list", 'l', 0, OptionArg.NONE, ref list, "List test cases available in a test executable", null },
+		{ "", 'k', 0, OptionArg.NONE, ref _keepgoing, "Skip failed tests and continue running", null },
 		{ "skip", 's', 0, OptionArg.STRING_ARRAY, ref skip, "Skip all tests matching", "TESTPATH..." },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet, "Run tests quietly", null },
 		{ "timed", 0, 0, OptionArg.NONE, ref timed, "Run timed tests", null },
@@ -92,14 +98,6 @@ public class Valadate.TestConfig : Object {
 		opt_context = new OptionContext ("- Valadate Testing Framework");
 		opt_context.set_help_enabled (true);
 		opt_context.add_main_entries (options, null);
-	}
-
-	private void setup_context() {
-		context = new Vala.CodeContext ();
-		Vala.CodeContext.push (context);
-		context.report.enable_warnings = false;
-		context.report.set_verbose_errors (false);
-		context.verbose_mode = false;
 	}
 
 	public int parse(string[] args) {
@@ -162,7 +160,6 @@ public class Valadate.TestConfig : Object {
 		}
 	}
 
-
 	internal void load_test_plan(string path) throws ConfigError {
 		setup_context();
 
@@ -174,6 +171,15 @@ public class Valadate.TestConfig : Object {
 		var testexplorer = new TestExplorer(this);
 		context.accept(testexplorer);
 	}
+	
+	private void setup_context() {
+		context = new Vala.CodeContext ();
+		Vala.CodeContext.push (context);
+		context.report.enable_warnings = false;
+		context.report.set_verbose_errors (false);
+		context.verbose_mode = false;
+	}
+
 
 }
 

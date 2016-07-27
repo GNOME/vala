@@ -24,10 +24,27 @@ public class Valadate.Tests.TestFixture : Valadate.TestCase {
 	
 	public void test_testcase() {
 		
+		bug_base = "http://bugzilla.gnome.org/";
+		
+		bug("555666");
+		
+		stdout.puts("This is a test of the system");
 	}
 
-	public void test_testcase_two() {
+	public void test_testcase_1() {
+		message("This is a test of the system");
+	}
+
+	public void test_testcase_2() {
+		debug("This is a second test of the system");
+		skip("No reason");
+	}
+
+	public void test_testcase_3() {
 		
+		//stdout.puts("Before");
+		//assert(false);
+		fail("after");
 	}
 	
 }

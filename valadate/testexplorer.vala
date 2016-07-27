@@ -76,12 +76,18 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 				method.has_result != true &&
 				method.get_parameters().size == 0
 			) {
+
+				if (config.runtest != null &&
+					config.runtest != "/" + method.get_full_name().replace(".","/"))
+					continue;
+
+
 				unowned TestMethod testmethod = null;
 				var attr = new Vala.CCodeAttribute(method);
 				testmethod = (TestMethod)config.module.get_method(attr.name);
 
 				if (testmethod != null) {
-					current_test.add_test(method.name.substring(5), ()=> {
+					current_test.add_test(method.name, ()=> {
 						testmethod(current_test);
 					});
 				}

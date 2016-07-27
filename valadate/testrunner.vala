@@ -22,34 +22,43 @@
 
 public class Valadate.TestRunner : Object {
 
-	private TestResult result;
-
 	private SubprocessLauncher launcher =
-		new SubprocessLauncher(GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_PIPE);
+		new SubprocessLauncher(GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_MERGE);
 	
+	private string binary;
 	
-	public void run_test(Test test, string testpath, TestResult result) {
-
+	public TestRunner(string binary) {
+		this.binary = binary;
+		this.launcher.setenv("G_MESSAGES_DEBUG","all", true);
+		this.launcher.setenv("G_DEBUG","fatal-criticals fatal-warnings gc-friendly", true);
+		this.launcher.setenv("G_SLICE","always-malloc debug-blocks", true);
+	}
+	
+	public void run_test(Test test, TestResult result) {
 		test.run(result);
-
 	}
 
-	public void run(Test test, string testpath, TestResult result) {
+	public void run(Test test, TestResult result) {
 		
-		string command = "%s -r %s".printf(result.config.binary, testpath);
+		string command = "%s -r %s".printf(binary, test.name);
 
 		string[] args;
-		Shell.parse_argv(command, out args);
 
-		var process = launcher.spawnv(args);
-		var stderr_pipe = process.get_stderr_pipe();
-
-		uint8 buffer[1028];
-		var err = stderr_pipe.read(buffer);
+		string buffer = null;
 		
-		if (err > 0) {
-			result.add_failure(test, (string)buffer);
-		}		
+		try {
+			Shell.parse_argv(command, out args);
+
+			var process = launcher.spawnv(args);
+			process.communicate_utf8(null, null, out buffer, null);
+			
+			if(process.wait_check()) {
+				result.add_success(test, buffer);
+			}
+		} catch (Error e) {
+			result.add_error(test, buffer);
+		}
+		
 
 	}
 
@@ -62,7 +71,7 @@ public class Valadate.TestRunner : Object {
 		if(result >= 0)
 			return result;
 
-		var runner = new TestRunner();
+		var runner = new TestRunner(config.binary);
 		var testresult = new TestResult(config);
 		
 		testresult.run(runner);
