@@ -6,9 +6,14 @@ namespace Gst {
 	public class Player : Gst.Object {
 		[CCode (has_construct_function = false)]
 		public Player (owned Gst.PlayerVideoRenderer? video_renderer, owned Gst.PlayerSignalDispatcher? signal_dispatcher);
+		public static uint config_get_position_update_interval (Gst.Structure config);
+		public static string config_get_user_agent (Gst.Structure config);
+		public static void config_set_position_update_interval (Gst.Structure config, uint interval);
+		public static void config_set_user_agent (Gst.Structure config, string agent);
 		public static unowned GLib.List<Gst.PlayerAudioInfo> get_audio_streams (Gst.PlayerMediaInfo info);
 		public int64 get_audio_video_offset ();
 		public double get_color_balance (Gst.PlayerColorBalanceType type);
+		public Gst.Structure get_config ();
 		public Gst.PlayerAudioInfo get_current_audio_track ();
 		public unowned Gst.PlayerSubtitleInfo get_current_subtitle_track ();
 		public Gst.PlayerVideoInfo get_current_video_track ();
@@ -37,6 +42,7 @@ namespace Gst {
 		public void set_audio_track_enabled (bool enabled);
 		public void set_audio_video_offset (int64 offset);
 		public void set_color_balance (Gst.PlayerColorBalanceType type, double value);
+		public bool set_config (owned Gst.Structure config);
 		[Version (since = "1.10")]
 		public void set_multiview_flags (Gst.Video.MultiviewFlags flags);
 		[Version (since = "1.10")]
@@ -66,7 +72,6 @@ namespace Gst {
 		public bool mute { get; set; }
 		public Gst.Element pipeline { owned get; }
 		public uint64 position { get; }
-		public uint position_update_interval { get; set; }
 		public double rate { get; set; }
 		public Gst.PlayerSignalDispatcher signal_dispatcher { construct; }
 		[NoAccessorMethod]

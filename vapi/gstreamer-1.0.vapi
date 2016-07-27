@@ -1218,6 +1218,8 @@ namespace Gst {
 		[CCode (returns_floating_reference = true)]
 		public static Gst.Element make_from_uri (Gst.URIType type, string uri, string? elementname) throws GLib.Error;
 		public void message_full (Gst.MessageType type, GLib.Quark domain, int code, owned string? text, owned string? debug, string file, string function, int line);
+		[Version (since = "1.10")]
+		public void message_full_with_details (Gst.MessageType type, GLib.Quark domain, int code, owned string? text, owned string? debug, string file, string function, int line, owned Gst.Structure structure);
 		public virtual bool post_message (owned Gst.Message message);
 		public virtual Gst.Clock? provide_clock ();
 		public virtual bool query (Gst.Query query);
@@ -1340,6 +1342,8 @@ namespace Gst {
 		public void parse_stream_collection (out Gst.StreamCollection collection);
 		[Version (since = "1.2")]
 		public void parse_stream_flags (out Gst.StreamFlags flags);
+		[Version (since = "1.10")]
+		public void parse_stream_group_done (out uint group_id);
 		public void parse_stream_start (out unowned string stream_id);
 		public void parse_tag (out unowned Gst.TagList taglist);
 		public void parse_toc (out Gst.Toc toc, out bool updated);
@@ -1376,6 +1380,9 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.10")]
 		public Event.stream_collection (Gst.StreamCollection collection);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.10")]
+		public Event.stream_group_done (uint group_id);
 		[CCode (has_construct_function = false)]
 		public Event.stream_start (string stream_id);
 		[CCode (has_construct_function = false)]
@@ -1481,6 +1488,8 @@ namespace Gst {
 		public weak Gst.Object src;
 		public uint64 timestamp;
 		public Gst.MessageType type;
+		[Version (since = "1.10")]
+		public void add_redirect_entry (string location, owned Gst.TagList? tag_list, owned Gst.Structure? entry_struct);
 		[CCode (has_construct_function = false)]
 		public Message.application (Gst.Object? src, owned Gst.Structure structure);
 		[CCode (has_construct_function = false)]
@@ -1509,6 +1518,11 @@ namespace Gst {
 		public Message.eos (Gst.Object? src);
 		[CCode (has_construct_function = false)]
 		public Message.error (Gst.Object? src, GLib.Error error, string debug);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.10")]
+		public Message.error_with_details (Gst.Object? src, GLib.Error error, string debug, owned Gst.Structure details);
+		[Version (since = "1.10")]
+		public size_t get_num_redirect_entries ();
 		public uint32 get_seqnum ();
 		public unowned GLib.Value? get_stream_status_object ();
 		public unowned Gst.Structure get_structure ();
@@ -1518,6 +1532,9 @@ namespace Gst {
 		public Message.have_context (Gst.Object? src, owned Gst.Context context);
 		[CCode (has_construct_function = false)]
 		public Message.info (Gst.Object? src, GLib.Error error, string debug);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.10")]
+		public Message.info_with_details (Gst.Object? src, GLib.Error error, string debug, owned Gst.Structure details);
 		[CCode (has_construct_function = false)]
 		public Message.latency (Gst.Object? src);
 		[CCode (has_construct_function = false)]
@@ -1537,11 +1554,15 @@ namespace Gst {
 		[Version (since = "1.4")]
 		public void parse_device_removed (out Gst.Device device);
 		public void parse_error (out GLib.Error gerror, out string debug);
+		[Version (since = "1.10")]
+		public void parse_error_details (out Gst.Structure structure);
 		[Version (since = "1.2")]
 		public bool parse_group_id (out uint group_id);
 		[Version (since = "1.2")]
 		public void parse_have_context (out Gst.Context context);
 		public void parse_info (out GLib.Error gerror, out string debug);
+		[Version (since = "1.10")]
+		public void parse_info_details (out Gst.Structure structure);
 		public void parse_new_clock (out unowned Gst.Clock clock);
 		public void parse_progress (out Gst.ProgressType type, out string code, out string text);
 		[Version (since = "1.10")]
@@ -1549,6 +1570,8 @@ namespace Gst {
 		public void parse_qos (out bool live, out uint64 running_time, out uint64 stream_time, out uint64 timestamp, out uint64 duration);
 		public void parse_qos_stats (out Gst.Format format, out uint64 processed, out uint64 dropped);
 		public void parse_qos_values (out int64 jitter, out double proportion, out int quality);
+		[Version (since = "1.10")]
+		public void parse_redirect_entry (size_t entry_index, out unowned string location, out unowned Gst.TagList tag_list, out unowned Gst.Structure entry_struct);
 		public void parse_request_state (out Gst.State state);
 		public void parse_reset_time (out Gst.ClockTime running_time);
 		public void parse_segment_done (out Gst.Format format, out int64 position);
@@ -1565,6 +1588,8 @@ namespace Gst {
 		public void parse_tag (out Gst.TagList tag_list);
 		public void parse_toc (out Gst.Toc toc, out bool updated);
 		public void parse_warning (out GLib.Error gerror, out string debug);
+		[Version (since = "1.10")]
+		public void parse_warning_details (out Gst.Structure structure);
 		[CCode (has_construct_function = false)]
 		public Message.progress (Gst.Object src, Gst.ProgressType type, string code, string text);
 		[CCode (has_construct_function = false)]
@@ -1572,6 +1597,9 @@ namespace Gst {
 		public Message.property_notify (Gst.Object src, string property_name, owned GLib.Value? val);
 		[CCode (has_construct_function = false)]
 		public Message.qos (Gst.Object src, bool live, uint64 running_time, uint64 stream_time, uint64 timestamp, uint64 duration);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.10")]
+		public Message.redirect (Gst.Object src, string location, owned Gst.TagList? tag_list, owned Gst.Structure? entry_struct);
 		[CCode (has_construct_function = false)]
 		public Message.request_state (Gst.Object? src, Gst.State state);
 		[CCode (has_construct_function = false)]
@@ -1619,6 +1647,9 @@ namespace Gst {
 		public Message.toc (Gst.Object src, Gst.Toc toc, bool updated);
 		[CCode (has_construct_function = false)]
 		public Message.warning (Gst.Object? src, GLib.Error error, string debug);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.10")]
+		public Message.warning_with_details (Gst.Object? src, GLib.Error error, string debug, owned Gst.Structure details);
 	}
 	[CCode (cheader_filename = "gst/gst.h", get_value_function = "g_value_get_boxed", ref_function = "gst_mini_object_ref", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", unref_function = "gst_mini_object_unref")]
 	[Compact]
@@ -2959,6 +2990,7 @@ namespace Gst {
 		TAG,
 		BUFFERSIZE,
 		SINK_MESSAGE,
+		STREAM_GROUP_DONE,
 		EOS,
 		TOC,
 		PROTECTION,
@@ -3106,6 +3138,7 @@ namespace Gst {
 		PROPERTY_NOTIFY,
 		STREAM_COLLECTION,
 		STREAMS_SELECTED,
+		REDIRECT,
 		ANY;
 		public static unowned string get_name (Gst.MessageType type);
 		public static GLib.Quark to_quark (Gst.MessageType type);

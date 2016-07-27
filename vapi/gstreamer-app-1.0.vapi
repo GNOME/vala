@@ -32,6 +32,12 @@ namespace Gst {
 			public virtual signal Gst.Sample pull_preroll ();
 			[HasEmitter]
 			public virtual signal Gst.Sample pull_sample ();
+			[HasEmitter]
+			[Version (since = "1.10")]
+			public virtual signal Gst.Sample try_pull_preroll (uint64 timeout);
+			[HasEmitter]
+			[Version (since = "1.10")]
+			public virtual signal Gst.Sample try_pull_sample (uint64 timeout);
 		}
 		[CCode (cheader_filename = "gst/app/app.h", type_id = "gst_app_src_get_type ()")]
 		[GIR (name = "AppSrc")]

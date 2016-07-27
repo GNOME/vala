@@ -5836,6 +5836,8 @@ namespace Gdk {
 		public virtual signal Cairo.Surface create_surface (int width, int height);
 		[Version (since = "2.18")]
 		public virtual signal void from_embedder (double embedder_x, double embedder_y, out double offscreen_x, out double offscreen_y);
+		[Version (since = "3.22")]
+		public signal void moved_to_rect ([CCode (type = "gpointer")] Gdk.Rectangle flipped_rect, [CCode (type = "gpointer")] Gdk.Rectangle final_rect, bool flipped_x, bool flipped_y);
 		[Version (since = "2.18")]
 		public signal unowned Gdk.Window? pick_embedded_child (double x, double y);
 		[Version (since = "2.18")]
@@ -5941,6 +5943,20 @@ namespace Gdk {
 		public weak string wmclass_class;
 		public bool override_redirect;
 		public Gdk.WindowTypeHint type_hint;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_ANCHOR_", type_id = "gdk_anchor_hints_get_type ()")]
+	[Flags]
+	[Version (since = "3.22")]
+	public enum AnchorHints {
+		FLIP_X,
+		FLIP_Y,
+		SLIDE_X,
+		SLIDE_Y,
+		RESIZE_X,
+		RESIZE_Y,
+		FLIP,
+		SLIDE,
+		RESIZE
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_AXIS_FLAG_", type_id = "gdk_axis_flags_get_type ()")]
 	[Flags]

@@ -3126,6 +3126,8 @@ namespace GLib {
 		public abstract unowned string[] get_supported_types ();
 		public abstract bool launch (GLib.List<GLib.File>? files, GLib.AppLaunchContext? launch_context) throws GLib.Error;
 		public static bool launch_default_for_uri (string uri, GLib.AppLaunchContext? launch_context) throws GLib.Error;
+		[Version (since = "2.50")]
+		public static async bool launch_default_for_uri_async (string uri, GLib.AppLaunchContext launch_context, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract bool launch_uris (GLib.List<string>? uris, GLib.AppLaunchContext? launch_context) throws GLib.Error;
 		public abstract bool remove_supports_type (string content_type) throws GLib.Error;
 		[Version (since = "2.20")]

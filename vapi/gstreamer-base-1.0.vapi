@@ -334,10 +334,10 @@ namespace Gst {
 			public Gst.FlowReturn clip_running_time (Gst.Base.CollectData cdata, Gst.Buffer buf, Gst.Buffer? outbuf, void* user_data);
 			public bool event_default (Gst.Base.CollectData data, Gst.Event event, bool discard);
 			public uint flush (Gst.Base.CollectData data, uint size);
-			public Gst.Buffer peek (Gst.Base.CollectData data);
-			public Gst.Buffer pop (Gst.Base.CollectData data);
+			public Gst.Buffer? peek (Gst.Base.CollectData data);
+			public Gst.Buffer? pop (Gst.Base.CollectData data);
 			public bool query_default (Gst.Base.CollectData data, Gst.Query query, bool discard);
-			public Gst.Buffer read_buffer (Gst.Base.CollectData data, uint size);
+			public Gst.Buffer? read_buffer (Gst.Base.CollectData data, uint size);
 			public bool remove_pad (Gst.Pad pad);
 			public void set_buffer_function (Gst.Base.CollectPadsBufferFunction func);
 			public void set_clip_function (Gst.Base.CollectPadsClipFunction clipfunc);
@@ -353,7 +353,7 @@ namespace Gst {
 			public bool src_event_default (Gst.Pad pad, Gst.Event event);
 			public void start ();
 			public void stop ();
-			public Gst.Buffer take_buffer (Gst.Base.CollectData data, uint size);
+			public Gst.Buffer? take_buffer (Gst.Base.CollectData data, uint size);
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstDataQueue", lower_case_cprefix = "gst_data_queue_", type_id = "gst_data_queue_get_type ()")]
 		[GIR (name = "DataQueue")]

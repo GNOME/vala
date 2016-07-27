@@ -294,7 +294,10 @@ namespace WebKit {
 			public void set_cookie (string value) throws GLib.Error;
 			public void set_document_uri (string value);
 			public void set_selected_stylesheet_set (string value);
-			public void set_title (string value);
+			[Version (deprecated = true, deprecated_since = "2.14")]
+			public void set_title (string title);
+			[Version (since = "2.14")]
+			public void set_title_with_error (string value) throws GLib.Error;
 			public void set_xml_standalone (bool value) throws GLib.Error;
 			public void set_xml_version (string value) throws GLib.Error;
 			public WebKit.DOM.Element active_element { get; }
@@ -528,17 +531,15 @@ namespace WebKit {
 			public bool bubbles { get; }
 			public bool cancel_bubble { get; set; }
 			public bool cancelable { get; }
+			[NoAccessorMethod]
+			public bool composed { get; }
 			public WebKit.DOM.EventTarget current_target { owned get; }
 			[NoAccessorMethod]
 			public bool default_prevented { get; }
 			public uint event_phase { get; }
 			[NoAccessorMethod]
 			public bool is_trusted { get; }
-			[NoAccessorMethod]
-			public bool related_target_scoped { get; }
 			public bool return_value { get; set; }
-			[NoAccessorMethod]
-			public bool scoped { get; }
 			public WebKit.DOM.EventTarget src_element { owned get; }
 			public WebKit.DOM.EventTarget target { owned get; }
 			public uint time_stamp { get; }
@@ -2109,7 +2110,10 @@ namespace WebKit {
 			[CCode (has_construct_function = false)]
 			protected HTMLTitleElement ();
 			public string get_text ();
-			public void set_text (string value);
+			[Version (deprecated = true, deprecated_since = "2.14")]
+			public void set_text (string text);
+			[Version (since = "2.14")]
+			public void set_text_with_error (string value) throws GLib.Error;
 			public string text { owned get; set; }
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", lower_case_cprefix = "webkit_dom_html_u_list_element_", type_id = "webkit_dom_html_u_list_element_get_type ()")]
@@ -2264,6 +2268,8 @@ namespace WebKit {
 			public string base_uri { owned get; }
 			public WebKit.DOM.NodeList child_nodes { owned get; }
 			public WebKit.DOM.Node first_child { get; }
+			[NoAccessorMethod]
+			public bool is_connected { get; }
 			public WebKit.DOM.Node last_child { get; }
 			public string local_name { owned get; }
 			public string namespace_uri { owned get; }

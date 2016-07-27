@@ -17,6 +17,7 @@ Event
 Window
         .add_filter skip=false
         .remove_filter skip=false
+        .moved_to_rect.*_rect type="Gdk.Rectangle"
 WindowRedirect skip
 EventKey struct=false
         .string skip
