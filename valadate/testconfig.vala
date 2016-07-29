@@ -19,15 +19,20 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
+namespace Valadate {
+	public static string? get_current_test_path() {
+		return TestConfig._runtest;
+	}
+}
 
 public class Valadate.TestConfig : Object {
 
 	private static string _seed;
 	private static string testplan;
-	private static string _runtest;
+	internal static string _runtest;
 	private static string format = "tap";
 	private static bool list;
-	private static bool _keepgoing;
+	private static bool _keepgoing = true;
 	private static bool quiet;
 	private static bool timed;
 	private static bool verbose;

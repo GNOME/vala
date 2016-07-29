@@ -25,40 +25,33 @@ public class Valadate.TestResult : Object {
 		NOT_RUN,
 		RUNNING,
 		PASSED,
+		SKIPPED,
+		ERROR,
 		FAILED
 	}
+	
+	private class TestReport {
 
-	public signal void test_error(Test test, string error);
-	public signal void test_failure(Test test, string error);
-	public signal void test_complete(Test test);
-	public signal void test_start(Test test);
-	
-	/*internal List<TestFailure> errors = new List<TestFailure>();
-	internal List<TestFailure> failures = new List<TestFailure>();
-
-	public bool should_stop {get;set;default=false;}
-	
-	
-	public int error_count {
-		get {
-			return (int)errors.length();
+		public signal void report(TestStatus status);
+		
+		public Test test {get;set;}
+		
+		public TestStatus status {get;set;}
+		
+		public int index {get;set;}
+		
+		public string message {get;set;}
+		
+		public TestReport(Test test, TestStatus status, int index, string? message = null) {
+			this.test = test;
+			this.status = status;
+			this.index = index;
+			this.message = message;
 		}
 	}
 
-	public int failure_count {
-		get {
-			return (int)failures.length();
-		}
-	}
-
-	public int run_count {get;private set;default=0;}
-	
-	public bool success {
-		get {
-			return (failure_count == 0 && error_count == 0);
-		}
-	}
-	*/
+	private Queue<TestReport> reports = new Queue<TestReport>();
+	private HashTable<Test, TestReport> tests = new HashTable<Test, TestReport>(direct_hash, direct_equal);
 	
 	public string binary {
 		get {
@@ -68,61 +61,81 @@ public class Valadate.TestResult : Object {
 	
 	private TestConfig config;
 	private TestRunner runner;
+	private MainLoop loop;
 
-	/*
-	private HashTable<Test, TestRecord> _tests = new HashTable<Test, TestRecord>(direct_hash, direct_equal);
-
-	private class TestRecord : Object {
-		
-		public string path {get;set;}
-		public int index {get;set;}
-		public TestStatus status {get;set;}
-		
-		public TestRecord(string path, int index, TestStatus status) {
-			this.path = path;
-			this.index = index;
-			this.status = status;
-		}
-		
-	}*/
-	
-	
 	public TestResult(TestConfig config) {
 		this.config = config;
 	}
 	
+	public void report() {
+		if (reports.is_empty()) {
+			loop.quit();
+			return;
+		}
+		var rpt = reports.peek_head();
+
+		if (rpt.status == TestStatus.PASSED ||
+			rpt.status == TestStatus.SKIPPED ||
+			rpt.status == TestStatus.FAILED ||
+			rpt.status == TestStatus.ERROR) {
+			if (rpt.message != null)
+				stdout.puts(rpt.message);
+			stdout.flush();
+			rpt.report(rpt.status);
+			reports.pop_head();
+			report();
+		}
+	}
+	
 	public void add_error(Test test, string error) {
-		stdout.printf("%s\n", error);
-		stdout.printf("not ok %d %s\n", testno, test.name);
-		//errors.append(new TestFailure(test, error));
-		//test_error(test, error);
+		update_test(test, TestStatus.ERROR,"# %s\nnot ok %s %s\n".printf(error, "%d", test.name));
 	}
 
 	public void add_failure(Test test, string failure) {
-		stdout.printf("%s\n", failure);
-		stdout.printf("not ok %d %s\n", testno, test.name);
-		//failures.append(new TestFailure(test, failure));
-		//test_failure(test, failure);
+		update_test(test, TestStatus.FAILED,"# %s\nnot ok %s %s\n".printf(failure, "%d", test.name));
 	}
 
 	public void add_success(Test test, string message) {
-		stdout.printf("%s\n", message);
-		stdout.printf("ok %d %s\n", testno, test.name);
-		//failures.append(new TestFailure(test, failure));
-		//test_failure(test, failure);
+		update_test(test, TestStatus.PASSED,"# %s\nok %s %s\n".printf(message, "%d", test.name));
+	}
+	
+	public void add_skip(Test test, string reason, string message) {
+		update_test(test, TestStatus.SKIPPED,"# %s\nok %s %s # %s\n".printf(message, "%d", test.name, reason));
 	}
 
+	private void update_test(Test test, TestStatus status, string message) {
+		var rept = tests.get(test);
+		rept.status = status;
+		rept.message = message.printf(rept.index);
+	}
 	
 	/**
-	 * Runs a {@link Valadate.Test}
+	 * Runs a the {@link Valadate.Test}s using the supplied
+	 * {@link Valadate.TestRunner}.
+	 * 
+	 * @param runner
 	 */
 	public void run(TestRunner runner) {
+
 		this.runner = runner;
+
 		if (!config.list_only && config.runtest == null) {
 			stdout.printf("# random seed: %s\n", config.seed);
 			stdout.printf("1..%d\n", config.test_count);
 		}
+
 		run_test(config.root, "");
+
+		if (config.runtest == null) {
+			loop = new MainLoop();
+			var time = new TimeoutSource (5);
+			time.set_callback (() => {
+				report();
+				return true;
+			});
+			time.attach (loop.get_context ());
+			loop.run();
+		}
 	}
 
 	private int testno = 0;
@@ -131,13 +144,20 @@ public class Valadate.TestResult : Object {
 		foreach(var subtest in test) {
 			string testpath = "%s/%s".printf(path, subtest.name);
 			if(subtest is TestCase) {
-				if(config.runtest == null)
-					stdout.printf("# Start of %s tests\n", testpath);
-				run_test(subtest, testpath);
-				if(config.runtest == null)
-					stdout.printf("# End of %s tests\n", testpath);
+				if(config.runtest == null) {
+					reports.push_tail(new TestReport(subtest, TestStatus.PASSED,-1,"# Start of %s tests\n".printf(testpath)));
+					run_test(subtest, testpath);
+					reports.push_tail(new TestReport(subtest, TestStatus.PASSED,-1,"# End of %s tests\n".printf(testpath)));
+				} else {
+					run_test(subtest, testpath);
+				}
 			} else if (subtest is TestSuite) {
 				run_test(subtest, testpath);
+				if(config.runtest == null) {
+					var rpt = new TestReport(subtest, TestStatus.PASSED,-1);
+					rpt.report.connect((s)=> ((TestSuite)subtest).tear_down());
+					reports.push_tail(rpt);
+				}
 			} else if (config.list_only) {
 				stdout.printf("%s\n", testpath);
 			} else if (config.runtest != null) {
@@ -146,7 +166,10 @@ public class Valadate.TestResult : Object {
 			} else {
 				testno++;
 				subtest.name = testpath;
-				runner.run(subtest, this);
+				var rept = new TestReport(subtest, TestStatus.RUNNING, testno);
+				reports.push_tail(rept);
+				tests.insert(subtest, rept);
+				runner.run.begin(subtest, this);
 			}
 		}
 	}

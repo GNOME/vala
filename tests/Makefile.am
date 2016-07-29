@@ -1,7 +1,7 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/build-aux/glib-tap.mk
 
-test_programs = valadatetests #valactests@PACKAGE_SUFFIX@
+test_programs = valadatetests valactests@PACKAGE_SUFFIX@
 
 # Valadate tests
 valadatetests_VALAFLAGS = \

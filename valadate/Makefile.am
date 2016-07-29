@@ -8,14 +8,12 @@ lib_LTLIBRARIES = \
 libvaladate_la_SOURCES = \
 	assembly.vala \
 	module.vala \
-	tap.vala \
 	test.vala \
 	testcase.vala \
 	testconfig.vala \
 	testexplorer.vala \
 	testfixture.vala \
 	testresult.vala \
-	testfailure.vala \
 	testrunner.vala \
 	testsuite.vala \
 	$(NULL)

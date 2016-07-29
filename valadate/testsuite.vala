@@ -73,5 +73,7 @@ public class Valadate.TestSuite : Object, Test {
 		return _tests.nth_data((uint)index);
 	}
 
+	public virtual void set_up() {}
+	public virtual void tear_down() {}
 	
 }

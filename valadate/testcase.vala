@@ -84,16 +84,17 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 	public void bug(string reference)
 		requires(bug_base != null)
 	{
-		stdout.printf("MSG: Bug Reference: %s%s\n",bug_base, reference);
-		
+		stdout.printf("MSG: Bug Reference: %s%s",bug_base, reference);
+		stdout.flush();
 	}
 
 	public void skip(string message) {
-		stdout.printf("SKIP Skipping Test %s\n", message);
+		stderr.printf("SKIP %s", message);
+		stdout.flush();
 	}
 
-	public void fail(string message) {
-		error("FAIL Test %s\n", message);
+	public void fail(string? message = null) {
+		error("FAIL %s", message ?? "");
 	}
 
 	public virtual void set_up() {}

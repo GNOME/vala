@@ -33,10 +33,13 @@ public class Valadate.Tests.TestFixture : Valadate.TestCase {
 
 	public void test_testcase_1() {
 		message("This is a test of the system");
+		//skip("Because it broke");
+		//fail("No particular reason");
 	}
 
 	public void test_testcase_2() {
 		debug("This is a second test of the system");
+		message(Valadate.get_current_test_path());
 		skip("No reason");
 	}
 
@@ -44,7 +47,27 @@ public class Valadate.Tests.TestFixture : Valadate.TestCase {
 		
 		//stdout.puts("Before");
 		//assert(false);
-		fail("after");
+		//fail("after");
+		
+		void* nullisland = null;
+		
+		Object nullobj = nullisland as Object;
+		
+		//nullobj.get_type().name();
+		
 	}
 	
+}
+
+public class Valadate.Tests.TestFixtureTwo : Valadate.TestCase {
+
+	public void test_testcase() {
+		
+		bug_base = "http://bugzilla.gnome.org/";
+		
+		bug("555999");
+		
+		stdout.puts("This is a test of the system");
+	}
+
 }

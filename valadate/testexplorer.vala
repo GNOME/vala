@@ -25,7 +25,7 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 	private TestConfig config;
 	private TestSuite current;
 
-	internal delegate void* Constructor(string? name = null); 
+	internal delegate void* Constructor(); 
 	internal delegate void TestMethod(TestCase self);
 	
 	public TestExplorer(TestConfig config) {
@@ -48,9 +48,7 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 		} catch (ModuleError e) {
 			error(e.message);
 		}
-
 		class.accept_children(this);
-
 	}
 
 	private bool is_subtype_of(Vala.Class class, string typename) {
@@ -81,7 +79,6 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 					config.runtest != "/" + method.get_full_name().replace(".","/"))
 					continue;
 
-
 				unowned TestMethod testmethod = null;
 				var attr = new Vala.CCodeAttribute(method);
 				testmethod = (TestMethod)config.module.get_method(attr.name);
@@ -99,8 +96,10 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 
 	public TestSuite visit_testsuite(Vala.Class testclass) throws ModuleError {
 		unowned Constructor meth = get_constructor(testclass); 
-		var current_test = meth(testclass.name) as TestSuite;
-		current_test.name = testclass.get_full_name();
+		var current_test = meth() as TestSuite;
+		current_test.name = testclass.name;
+		foreach(var test in current_test)
+			config.test_count += test.count;
 		return current_test;
 	}
 

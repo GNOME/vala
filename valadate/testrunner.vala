@@ -22,9 +22,19 @@
 
 public class Valadate.TestRunner : Object {
 
+	private uint _n_ongoing_tests = 0;
+	private Queue<DelegateWrapper> _pending_tests = new Queue<DelegateWrapper> ();
+
+	/* Change this to change the cap on the number of concurrent operations. */
+	private const uint _max_n_ongoing_tests = 15;
+
+	private class DelegateWrapper {
+		public SourceFunc cb;
+	}
+
 	private SubprocessLauncher launcher =
 		new SubprocessLauncher(GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_MERGE);
-	
+
 	private string binary;
 	
 	public TestRunner(string binary) {
@@ -32,39 +42,93 @@ public class Valadate.TestRunner : Object {
 		this.launcher.setenv("G_MESSAGES_DEBUG","all", true);
 		this.launcher.setenv("G_DEBUG","fatal-criticals fatal-warnings gc-friendly", true);
 		this.launcher.setenv("G_SLICE","always-malloc debug-blocks", true);
+		GLib.set_printerr_handler (printerr_func_stack_trace);
+		Log.set_default_handler (log_func_stack_trace);
 	}
+
+	private static void printerr_func_stack_trace (string? text) {
+		if (text == null || str_equal (text, ""))
+			return;
+
+		stderr.printf (text);
+
+		/* Print a stack trace since we've hit some major issue */
+		GLib.on_error_stack_trace ("libtool --mode=execute gdb");
+	}
+
+	private void log_func_stack_trace (
+		string? log_domain,
+		LogLevelFlags log_levels,
+		string message)	{
+		Log.default_handler (log_domain, log_levels, message);
+
+		/* Print a stack trace for any message at the warning level or above */
+		if ((log_levels & (
+			LogLevelFlags.LEVEL_WARNING |
+			LogLevelFlags.LEVEL_ERROR |
+			LogLevelFlags.LEVEL_CRITICAL)) != 0) {
+			GLib.on_error_stack_trace ("libtool --mode=execute gdb");
+		}
+	}
+
 	
 	public void run_test(Test test, TestResult result) {
 		test.run(result);
 	}
 
-	public void run(Test test, TestResult result) {
+	public async void run(Test test, TestResult result) {
 		
 		string command = "%s -r %s".printf(binary, test.name);
-
 		string[] args;
-
 		string buffer = null;
-		
-		try {
-			Shell.parse_argv(command, out args);
 
-			var process = launcher.spawnv(args);
-			process.communicate_utf8(null, null, out buffer, null);
-			
-			if(process.wait_check()) {
-				result.add_success(test, buffer);
-			}
-		} catch (Error e) {
-			result.add_error(test, buffer);
+		if (_n_ongoing_tests > _max_n_ongoing_tests) {
+			var wrapper = new DelegateWrapper();
+			wrapper.cb = run.callback;
+			_pending_tests.push_tail((owned)wrapper);
+			yield;
 		}
-		
+	
+		try {
+			_n_ongoing_tests++;
+			
+			Shell.parse_argv(command, out args);
+			var process = launcher.spawnv(args);
+			yield process.communicate_utf8_async(null, null, out buffer, null);
+			
+			if(process.wait_check())
+				process_buffer(test, result, buffer);
 
+		} catch (Error e) {
+			process_buffer(test, result, buffer, true);
+		} finally {
+			_n_ongoing_tests--;
+			var wrapper = _pending_tests.pop_head ();
+			if(wrapper != null)
+				wrapper.cb();
+		}
 	}
 
+	public void process_buffer(Test test, TestResult result, string buffer, bool failed = false) {
+		string skip = null;
+		string[] message = {};
+		
+		foreach(string line in buffer.split("\n"))
+			if (line.has_prefix("SKIP "))
+				skip = line;
+			else
+				message += line;
+		
+		if (skip != null)
+			result.add_skip(test, skip, string.joinv("\n",message));
+		else
+			if(failed)
+				result.add_failure(test, string.joinv("\n",message));
+			else
+				result.add_success(test, string.joinv("\n",message));
+	}
 
 	public static int main (string[] args) {
-
 		var config = new TestConfig();
 		
 		int result = config.parse(args);
