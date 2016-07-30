@@ -128,7 +128,7 @@ public class Valadate.TestResult : Object {
 
 		if (config.runtest == null) {
 			loop = new MainLoop();
-			var time = new TimeoutSource (5);
+			var time = new TimeoutSource (30);
 			time.set_callback (() => {
 				report();
 				return true;

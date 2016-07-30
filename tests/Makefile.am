@@ -53,6 +53,7 @@ valactests@PACKAGE_SUFFIX@_VALAFLAGS = \
 
 valactests@PACKAGE_SUFFIX@_SOURCES = \
 	valatests.vala \
+	valatestsfactory.vala \
 	$(NULL)
 
 valactests@PACKAGE_SUFFIX@_LDADD = \

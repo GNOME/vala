@@ -72,8 +72,7 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 		foreach(var method in testclass.get_methods()) {
 			if( method.name.has_prefix("test_") &&
 				method.has_result != true &&
-				method.get_parameters().size == 0
-			) {
+				method.get_parameters().size == 0) {
 
 				if (config.runtest != null &&
 					config.runtest != "/" + method.get_full_name().replace(".","/"))
@@ -112,6 +111,4 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 		}
 		ns.accept_children(this);
 	}
-	
-	
 }
