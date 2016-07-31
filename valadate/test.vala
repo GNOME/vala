@@ -70,13 +70,10 @@ public interface Valadate.Test : Object {
 			return true;
 		}
 
-		
 		public int size {
 			get {
 				return this.test.count;
 			}
 		}
-		
 	}
-
 }

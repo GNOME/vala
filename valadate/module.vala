@@ -39,9 +39,7 @@ public class Valadate.Module : Object {
 		lib_path = libpath;
 	} 
 	
-	public void load_module() throws ModuleError
-		requires(lib_path != null)
-	{
+	public void load_module() throws ModuleError {
 		if (!File.new_for_path(lib_path).query_exists())
 			throw new ModuleError.NOT_FOUND("Module: %s does not exist", lib_path);
 		

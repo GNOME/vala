@@ -49,7 +49,6 @@ public class Valadate.TestRunner : Object {
 	private static void printerr_func_stack_trace (string? text) {
 		if (text == null || str_equal (text, ""))
 			return;
-
 		stderr.printf (text);
 
 		/* Print a stack trace since we've hit some major issue */
@@ -71,7 +70,6 @@ public class Valadate.TestRunner : Object {
 		}
 	}
 
-	
 	public void run_test(Test test, TestResult result) {
 		test.run(result);
 	}
@@ -129,19 +127,18 @@ public class Valadate.TestRunner : Object {
 	}
 
 	public static int main (string[] args) {
-		var config = new TestConfig();
 		
+		var bin = args[0];
+		var config = new TestConfig();
 		int result = config.parse(args);
+
 		if(result >= 0)
 			return result;
 
-		var runner = new TestRunner(config.binary);
+		var runner = new TestRunner(bin);
 		var testresult = new TestResult(config);
-		
 		testresult.run(runner);
 
 		return 0;
 	}
-
-
 }

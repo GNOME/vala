@@ -26,12 +26,25 @@ internal class Vala.TestsFactory : Object {
 	internal static File testdir;
 	internal static File buildir;
 	internal static File valac;
+	internal static File vapidir;
 
 	class construct {
 		currdir = File.new_for_path(GLib.Environment.get_current_dir());
 		testdir = currdir.get_child(".tests");
 		buildir = currdir.get_parent();
-		valac = buildir.get_child("compiler").get_child("valac");
+
+		var usevalac = Environment.get_variable("VALAC");
+		if (usevalac != null && File.new_for_path(usevalac).query_exists())
+			valac = File.new_for_path(usevalac);
+		else
+			valac = buildir.get_child("compiler").get_child("valac");
+
+		var usevapidir = Environment.get_variable("VAPIDIR");
+		if (usevapidir != null && File.new_for_path(usevapidir).query_exists())
+			vapidir = File.new_for_path(usevapidir);
+		else
+			vapidir = buildir.get_child("vapi");
+		
 	}
 
 	private static TestsFactory instance;
@@ -50,7 +63,7 @@ internal class Vala.TestsFactory : Object {
 		compiler = new ValaCompiler(valac);
 	}
 
-	public void cleanup() {
+	public void cleanup() throws Error {
 		foreach (var file in tempfiles)
 			if(file.query_exists())
 				file.delete();
@@ -67,9 +80,7 @@ internal class Vala.TestsFactory : Object {
 		
 		if(testfile.get_basename().has_suffix(".vala") || testfile.get_basename().has_suffix(".gs")) {
 			program = compiler.compile(testdir.get_child(testname), testfile, "--main main");
-		}
-		
-		if(testfile.get_basename().has_suffix(".test")) {
+		} else if(testfile.get_basename().has_suffix(".test")) {
 			var stream = new DataInputStream(testfile.read());
 			
 			string line = stream.read_line(null);
@@ -99,12 +110,10 @@ internal class Vala.TestsFactory : Object {
 					program = new TestProgram(testdir.get_child(testname));
 					break;
 			}
-
 		}
 		programs += program;
 		return program;
 	}
-	
 
 	public abstract class Program : Object {
 
@@ -155,7 +164,7 @@ internal class Vala.TestsFactory : Object {
 			}
 		}
 		
-		public virtual void cleanup() {
+		public virtual void cleanup() throws Error {
 			foreach(File file in files)
 				if(file.query_exists())
 					file.delete();
@@ -202,12 +211,13 @@ internal class Vala.TestsFactory : Object {
 		
 		public DBusTest(string testname, string packages, DataInputStream stream) throws Error {
 			base(testdir.get_child(testname + ".server"));
+			var factory = TestsFactory.get_instance();
 			var clientfile = testdir.get_child(testname + ".client.vala");
 			var serverfile = testdir.get_child(testname + ".server.vala");
 			add_file_from_stream(clientfile, stream, "Program: client", "Program: server");
 			add_file_from_stream(serverfile, stream, null, null);
-			client = TestsFactory.get_instance().compiler.compile(testdir.get_child(testname + ".client"), clientfile, packages);
-			server = TestsFactory.get_instance().compiler.compile(testdir.get_child(testname + ".server"), serverfile, packages);
+			client = factory.compiler.compile(testdir.get_child(testname + ".client"), clientfile, packages);
+			server = factory.compiler.compile(testdir.get_child(testname + ".server"), serverfile, packages);
 		}
 		
 		public override void run(string? command = null) throws Error {
@@ -221,7 +231,7 @@ internal class Vala.TestsFactory : Object {
 				});
 		}
 		
-		public override void cleanup() {
+		public override void cleanup() throws Error {
 			server.cleanup();
 			client.cleanup();
 			base.cleanup();
@@ -254,11 +264,10 @@ internal class Vala.TestsFactory : Object {
 			testprogam = compiler.compile(program, source, packages);
 		}
 		
-		public override void cleanup() {
+		public override void cleanup() throws Error {
 			testprogam.cleanup();
 			base.cleanup();
 		}
-		
 	}
 	
 	public class GIRTestProgram : TestProgram {
@@ -302,7 +311,6 @@ internal class Vala.TestsFactory : Object {
 			var diff = new Diff();
 			diff.run("-Bw %s %s".printf(vapi.get_path(), vapifile.get_path()));
 		}
-		
 	}
 	
 	public class Diff : Program {
@@ -310,26 +318,17 @@ internal class Vala.TestsFactory : Object {
 		public Diff() {
 			base(File.new_for_path(Environment.find_program_in_path ("diff")));
 		}
-		
 	}
 	
 	public class VapiGen : Program {
 
-		private string girdirs = "";
-		private static File vapidir;
-		
 		public VapiGen() {
 			base(buildir.get_child("vapigen").get_child("vapigen"));
-			foreach(string dir in Environment.get_system_data_dirs())
-				if(File.new_for_path(dir).get_child("gir-1.0").query_exists())
-					girdirs += "--girdir=%s/gir-1.0".printf(File.new_for_path(dir).get_child("gir-1.0").get_path());
-			vapidir = buildir.get_child("vapi");
 		}
 		
 		public File compile(string testname, File girfile) throws Error {
-			string command = "--vapidir %s %s --library %s %s".printf(
+			string command = "--vapidir %s --library %s %s".printf(
 				vapidir.get_path(),
-				girdirs,
 				testname,
 				girfile.get_path());
 			run(command);
@@ -346,15 +345,10 @@ internal class Vala.TestsFactory : Object {
 			  -X -Wno-deprecated-declarations -X -Werror=return-type
 			  -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point
 			  -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith
-			  -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast""";
+			  -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast
+			  -X -Wformat -X -Werror=format-security -X -Werror=format-nonliteral
+			  -X -Werror=redundant-decls""";
 
-		internal static File vapidir;
-
-		class construct {
-			vapidir = buildir.get_child("vapi");
-		}
-
-		
 		public ValaCompiler(File compiler) {
 			base(compiler);
 		}
@@ -366,7 +360,6 @@ internal class Vala.TestsFactory : Object {
 			var prog = new TestProgram(binary);
 			prog.add_file(binary.get_parent().get_child(binary.get_basename() + ".c"));
 			return prog;
-		}
-		
+		}	
 	}
 }

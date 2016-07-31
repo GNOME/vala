@@ -8,10 +8,6 @@
  * point), it will compile and run it. The test is deemed succesful if
  * it compiles and runs without error.
  * 
- * If the test is a collection of {@ref Valadate.TestCase}s then it
- * compiles the test and runs it. The test results will be appeneded to
- * the TestFixture's. Not yet implemented.
- * 
  * If the test is a .test file it will be parsed, the components
  * assembled, compiled and run.  The test is deemed succesful if
  * it compiles and runs without error.
@@ -99,13 +95,10 @@ public class Vala.Tests : Valadate.TestSuite {
 						bug(testname.substring(3));
 					var prog = factory.get_test_program(testfile);
 					prog.run();
+					factory.cleanup();
 				} catch (Error e) {
 					fail(e.message);
 				}});
-		}
-
-		public override void tear_down() {
-			factory.cleanup();
 		}
 	}
 }

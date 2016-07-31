@@ -22,18 +22,58 @@
  
 internal class Valadate.TestExplorer : Vala.CodeVisitor {
 
-	private TestConfig config;
-	private TestSuite current;
-
 	internal delegate void* Constructor(); 
 	internal delegate void TestMethod(TestCase self);
-	
-	public TestExplorer(TestConfig config) {
 
-		this.config = config;
-		this.current = config.root;
+	private TestSuite current;
+	private Vala.CodeContext context;
+	private Module module;
+	private string binary;
+	private string? running;
+	
+	public TestExplorer(string binary, TestSuite root) {
+		this.binary = binary;
+		this.current = root;
+		this.running = Valadate.get_current_test_path();
+	}
+
+	public void load() throws ConfigError {
+		string testdir = Path.get_dirname(binary).replace(".libs", "");
+		
+		string testplan = Path.get_basename(binary);
+		if(testplan.has_prefix("lt-"))
+			testplan = testplan.substring(3);
+		
+		string testplanfile = testdir + GLib.Path.DIR_SEPARATOR_S + testplan + ".vapi";
+		
+		if (!FileUtils.test (testplanfile, FileTest.EXISTS))
+			throw new ConfigError.TESTPLAN("Test Plan %s Not Found!", testplanfile);
+		
+		try {
+			module = new Module(binary);
+			module.load_module();
+			load_test_plan(testplanfile);
+		} catch (ModuleError e) {
+			throw new ConfigError.MODULE(e.message);
+		}
+	}
+
+	internal void load_test_plan(string path) throws ConfigError {
+		setup_context();
+		context.add_source_file (new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, path));
+		var parser = new Vala.Parser ();
+		parser.parse (context);
+		context.accept(this);
 	}
 	
+	private void setup_context() {
+		context = new Vala.CodeContext ();
+		Vala.CodeContext.push (context);
+		context.report.enable_warnings = false;
+		context.report.set_verbose_errors (false);
+		context.verbose_mode = false;
+	}
+
 	public override void visit_class(Vala.Class class) {
 		
 		try {
@@ -60,7 +100,7 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 
 	private unowned Constructor get_constructor(Vala.Class class) throws ModuleError {
 		var attr = new Vala.CCodeAttribute (class.default_construction_method);
-		return (Constructor)config.module.get_method(attr.name);
+		return (Constructor)module.get_method(attr.name);
 	}
 
 	public TestCase visit_testcase(Vala.Class testclass) throws ModuleError {
@@ -74,13 +114,13 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 				method.has_result != true &&
 				method.get_parameters().size == 0) {
 
-				if (config.runtest != null &&
-					config.runtest != "/" + method.get_full_name().replace(".","/"))
+				if (running != null &&
+					running != "/" + method.get_full_name().replace(".","/"))
 					continue;
 
 				unowned TestMethod testmethod = null;
 				var attr = new Vala.CCodeAttribute(method);
-				testmethod = (TestMethod)config.module.get_method(attr.name);
+				testmethod = (TestMethod)module.get_method(attr.name);
 
 				if (testmethod != null) {
 					current_test.add_test(method.name, ()=> {
@@ -89,7 +129,6 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 				}
 			}
 		}
-		config.test_count += current_test.count;
 		return current_test;
 	}
 
@@ -97,8 +136,6 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 		unowned Constructor meth = get_constructor(testclass); 
 		var current_test = meth() as TestSuite;
 		current_test.name = testclass.name;
-		foreach(var test in current_test)
-			config.test_count += test.count;
 		return current_test;
 	}
 

@@ -64,7 +64,6 @@ public class Valadate.TestSuite : Object, Test {
 		_tests.append(test);
 	}
 
-
 	public void run(TestResult result) {
 		_tests.foreach((t) => { t.run(result); });
 	}

@@ -32,15 +32,20 @@ public class Valadate.Tests.TestFixture : Valadate.TestCase {
 	}
 
 	public void test_testcase_1() {
-		message("This is a test of the system");
-		//skip("Because it broke");
-		//fail("No particular reason");
+
+		string key = "XDG_DATA_DIRS";
+		var val = Environment.get_variable(key);
+		message("%s = %s",key, val);
+		
+		foreach(var item in Environment.get_system_data_dirs())
+			message("%s",item);
+
 	}
 
 	public void test_testcase_2() {
-		debug("This is a second test of the system");
 		message(Valadate.get_current_test_path());
 		skip("No reason");
+		debug("This is a second test of the system");
 	}
 
 	public void test_testcase_3() {

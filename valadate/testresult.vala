@@ -53,25 +53,23 @@ public class Valadate.TestResult : Object {
 	private Queue<TestReport> reports = new Queue<TestReport>();
 	private HashTable<Test, TestReport> tests = new HashTable<Test, TestReport>(direct_hash, direct_equal);
 	
-	public string binary {
-		get {
-			return config.binary;
-		}
-	}
-	
 	private TestConfig config;
 	private TestRunner runner;
 	private MainLoop loop;
+
+	public int testcount {get;private set;default=0;}
 
 	public TestResult(TestConfig config) {
 		this.config = config;
 	}
 	
 	public void report() {
+
 		if (reports.is_empty()) {
 			loop.quit();
 			return;
 		}
+		
 		var rpt = reports.peek_head();
 
 		if (rpt.status == TestStatus.PASSED ||
@@ -119,16 +117,18 @@ public class Valadate.TestResult : Object {
 
 		this.runner = runner;
 
+		count_tests(config.root);
+
 		if (!config.list_only && config.runtest == null) {
 			stdout.printf("# random seed: %s\n", config.seed);
-			stdout.printf("1..%d\n", config.test_count);
+			stdout.printf("1..%d\n", testcount);
 		}
 
 		run_test(config.root, "");
 
 		if (config.runtest == null) {
 			loop = new MainLoop();
-			var time = new TimeoutSource (30);
+			var time = new TimeoutSource (15);
 			time.set_callback (() => {
 				report();
 				return true;
@@ -138,13 +138,21 @@ public class Valadate.TestResult : Object {
 		}
 	}
 
+	private void count_tests(Test test) {
+		if(test is TestSuite)
+			foreach(var subtest in test)
+				count_tests(subtest);
+		else
+			testcount += test.count;
+	}
+
 	private int testno = 0;
 
 	private void run_test(Test test, string path) {
 		foreach(var subtest in test) {
 			string testpath = "%s/%s".printf(path, subtest.name);
 			if(subtest is TestCase) {
-				if(config.runtest == null) {
+				if(config.runtest == null && !config.list_only) {
 					reports.push_tail(new TestReport(subtest, TestStatus.PASSED,-1,"# Start of %s tests\n".printf(testpath)));
 					run_test(subtest, testpath);
 					reports.push_tail(new TestReport(subtest, TestStatus.PASSED,-1,"# End of %s tests\n".printf(testpath)));
@@ -173,6 +181,4 @@ public class Valadate.TestResult : Object {
 			}
 		}
 	}
-
-
 }

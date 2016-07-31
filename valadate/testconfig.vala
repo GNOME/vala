@@ -69,17 +69,9 @@ public class Valadate.TestConfig : Object {
 		}
 	}
 
-	public string binary {get;set;}
-
 	public TestSuite root {get;set;}
 
-	public int test_count {get;set;default=0;}
-
 	public OptionContext opt_context;
-
-	private Vala.CodeContext context;
-	internal Module module;
-
 
 	public const OptionEntry[] options = {
 		{ "seed", 0, 0, OptionArg.STRING, ref _seed, "Start tests with random seed", "SEEDSTRING" },
@@ -106,7 +98,7 @@ public class Valadate.TestConfig : Object {
 	}
 
 	public int parse(string[] args) {
-		binary = args[0];
+		var binary = args[0];
 		GLib.Environment.set_prgname(binary);
 
 		try {
@@ -135,7 +127,7 @@ public class Valadate.TestConfig : Object {
 		root = new TestSuite("/");
 		
 		try {
-			load();
+			load(binary);
 		} catch (ConfigError e) {
 			stdout.printf ("%s\n", e.message);
 			return 1;
@@ -144,47 +136,10 @@ public class Valadate.TestConfig : Object {
 		return -1;
 	}
 
-	private void load() throws ConfigError {
-		string testdir = Path.get_dirname(binary).replace(".libs", "");
-		
-		string testplan = Path.get_basename(binary);
-		if(testplan.has_prefix("lt-"))
-			testplan = testplan.substring(3);
-		
-		string testplanfile = testdir + GLib.Path.DIR_SEPARATOR_S + testplan + ".vapi";
-		
-		if (!FileUtils.test (testplanfile, FileTest.EXISTS))
-			throw new ConfigError.TESTPLAN("Test Plan %s Not Found!", testplanfile);
-		
-		try {
-			module = new Module(binary);
-			module.load_module();
-			load_test_plan(testplanfile);
-		} catch (ModuleError e) {
-			throw new ConfigError.MODULE(e.message);
-		}
+	private void load(string binary) throws ConfigError {
+		var testexplorer = new TestExplorer(binary, root);
+		testexplorer.load();
 	}
-
-	internal void load_test_plan(string path) throws ConfigError {
-		setup_context();
-
-		context.add_source_file (new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, path));
-		
-		var parser = new Vala.Parser ();
-		parser.parse (context);
-			
-		var testexplorer = new TestExplorer(this);
-		context.accept(testexplorer);
-	}
-	
-	private void setup_context() {
-		context = new Vala.CodeContext ();
-		Vala.CodeContext.push (context);
-		context.report.enable_warnings = false;
-		context.report.set_verbose_errors (false);
-		context.verbose_mode = false;
-	}
-
 
 }
 
