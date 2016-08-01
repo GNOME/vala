@@ -319,6 +319,8 @@ namespace WebKit {
 			public WebKit.DOM.HTMLScriptElement current_script { owned get; }
 			public string default_charset { owned get; }
 			public WebKit.DOM.DOMWindow default_view { owned get; }
+			[NoAccessorMethod]
+			public string dir { owned get; set; }
 			public WebKit.DOM.DocumentType doctype { get; }
 			public WebKit.DOM.Element document_element { get; }
 			public string document_uri { owned get; set; }
