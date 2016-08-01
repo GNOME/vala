@@ -4784,6 +4784,17 @@ namespace Gtk {
 		public string gtk_xft_rgba { owned get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class ShortcutLabel : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public ShortcutLabel (string accelerator);
+		public unowned string get_accelerator ();
+		public unowned string get_disabled_text ();
+		public void set_accelerator (string accelerator);
+		public void set_disabled_text (string unset_text);
+		public string accelerator { get; set; }
+		public string disabled_text { get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ShortcutsGroup : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (has_construct_function = false)]
 		protected ShortcutsGroup ();

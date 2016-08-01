@@ -2353,6 +2353,8 @@
 			<field name="origin" type="gchar*"/>
 			<field name="value" type="GValue"/>
 		</struct>
+		<struct name="GtkShortcutLabelClass">
+		</struct>
 		<struct name="GtkShortcutsGroupClass">
 		</struct>
 		<struct name="GtkShortcutsSectionClass">
@@ -23059,6 +23061,47 @@
 			<property name="gtk-xft-hinting" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-xft-hintstyle" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-xft-rgba" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkShortcutLabel" parent="GtkBox" type-name="GtkShortcutLabel" get-type="gtk_shortcut_label_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GtkOrientable"/>
+			</implements>
+			<method name="get_accelerator" symbol="gtk_shortcut_label_get_accelerator">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GtkShortcutLabel*"/>
+				</parameters>
+			</method>
+			<method name="get_disabled_text" symbol="gtk_shortcut_label_get_disabled_text">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="GtkShortcutLabel*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_shortcut_label_new">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="accelerator" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="set_accelerator" symbol="gtk_shortcut_label_set_accelerator">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkShortcutLabel*"/>
+					<parameter name="accelerator" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_disabled_text" symbol="gtk_shortcut_label_set_disabled_text">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="GtkShortcutLabel*"/>
+					<parameter name="unset_text" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="accelerator" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="disabled-text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkShortcutsGroup" parent="GtkBox" type-name="GtkShortcutsGroup" get-type="gtk_shortcuts_group_get_type">
 			<implements>
