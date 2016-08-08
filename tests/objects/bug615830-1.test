@@ -1,0 +1,11 @@
+Invalid Code
+
+class Foo<T> {
+}
+
+class Bar<T> : Foo<T> {
+}
+
+void main (string[] args) {
+	Foo<int> f = new Bar<string> ();
+}

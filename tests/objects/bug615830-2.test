@@ -1,0 +1,12 @@
+Invalid Code
+
+struct Foo<T> {
+	int x;
+}
+
+struct Bar<T> : Foo<T> {
+}
+
+void main (string[] args) {
+	Foo<int> f = Bar<string> ();
+}

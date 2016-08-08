@@ -303,20 +303,19 @@ public abstract class Vala.DataType : CodeNode {
 			return true;
 		}
 
-		if (data_type == target_type.data_type) {
+		if (data_type != null && target_type.data_type != null && data_type.is_subtype_of (target_type.data_type)) {
+			var base_type = SemanticAnalyzer.get_instance_base_type_for_member(this, target_type.data_type, this);
 			// check compatibility of generic type arguments
-			if (type_argument_list != null
-			    && type_argument_list.size > 0
-			    && type_argument_list.size == target_type.get_type_arguments ().size) {
-				for (int i = 0; i < type_argument_list.size; i++) {
-					var type_arg = type_argument_list[i];
-					var target_type_arg = target_type.get_type_arguments ()[i];
+			var base_type_args = base_type.get_type_arguments();
+			var target_type_args = target_type.get_type_arguments();
+			if (base_type_args.size == target_type_args.size) {
+				for (int i = 0; i < base_type_args.size; i++) {
 					// mutable generic types require type argument equality,
 					// not just one way compatibility
 					// as we do not currently have immutable generic container types,
 					// the additional check would be very inconvenient, so we
 					// skip the additional check for now
-					if (!type_arg.compatible (target_type_arg)) {
+					if (!base_type_args[i].compatible (target_type_args[i])) {
 						return false;
 					}
 				}
@@ -339,10 +338,6 @@ public abstract class Vala.DataType : CodeNode {
 					return true;
 				}
 			}
-		}
-
-		if (data_type != null && target_type.data_type != null && data_type.is_subtype_of (target_type.data_type)) {
-			return true;
 		}
 
 		return false;

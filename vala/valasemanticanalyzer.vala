@@ -721,11 +721,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	private static DataType? get_instance_base_type (DataType instance_type, DataType base_type, CodeNode node_reference) {
 		// construct a new type reference for the base type with correctly linked type arguments
-		ReferenceType instance_base_type;
-		if (base_type.data_type is Class) {
-			instance_base_type = new ObjectType ((Class) base_type.data_type);
+		DataType instance_base_type;
+		if (base_type.data_type is ObjectTypeSymbol) {
+			instance_base_type = new ObjectType ((ObjectTypeSymbol) base_type.data_type);
+		} else if (base_type.data_type is Struct) {
+			instance_base_type = new StructValueType ((Struct) base_type.data_type);
 		} else {
-			instance_base_type = new ObjectType ((Interface) base_type.data_type);
+			assert_not_reached ();
 		}
 		foreach (DataType type_arg in base_type.get_type_arguments ()) {
 			// resolve type argument specified in base type (possibly recursively for nested generic types)
@@ -735,7 +737,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return instance_base_type;
 	}
 
-	static DataType? get_instance_base_type_for_member (DataType derived_instance_type, TypeSymbol type_symbol, CodeNode node_reference) {
+	internal static DataType? get_instance_base_type_for_member (DataType derived_instance_type, TypeSymbol type_symbol, CodeNode node_reference) {
 		DataType instance_type = derived_instance_type;
 
 		while (instance_type is PointerType) {
