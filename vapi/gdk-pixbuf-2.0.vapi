@@ -14,6 +14,8 @@ namespace Gdk {
 		public Gdk.Pixbuf composite_color_simple (int dest_width, int dest_height, Gdk.InterpType interp_type, int overall_alpha, int check_size, uint32 color1, uint32 color2);
 		public Gdk.Pixbuf copy ();
 		public void copy_area (int src_x, int src_y, int width, int height, Gdk.Pixbuf dest_pixbuf, int dest_x, int dest_y);
+		[Version (since = "2.36")]
+		public bool copy_options (Gdk.Pixbuf dest_pixbuf);
 		public void fill (uint32 pixel);
 		[Version (since = "2.6")]
 		public Gdk.Pixbuf? flip (bool horizontal);
@@ -88,6 +90,8 @@ namespace Gdk {
 		public GLib.Bytes read_pixel_bytes ();
 		[Version (since = "2.32")]
 		public uint8 read_pixels ();
+		[Version (since = "2.36")]
+		public bool remove_option (string key);
 		[Version (since = "2.6")]
 		public Gdk.Pixbuf? rotate_simple (Gdk.PixbufRotation angle);
 		public void saturate_and_pixelate (Gdk.Pixbuf dest, float saturation, bool pixelate);
@@ -108,6 +112,8 @@ namespace Gdk {
 		public bool savev (string filename, string type, [CCode (array_length = false, array_null_terminated = true)] string[] option_keys, [CCode (array_length = false, array_null_terminated = true)] string[] option_values) throws GLib.Error;
 		public void scale (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type);
 		public Gdk.Pixbuf scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);
+		[Version (since = "2.2")]
+		public bool set_option (string key, string value);
 		[CCode (has_construct_function = false)]
 		public Pixbuf.subpixbuf (Gdk.Pixbuf src_pixbuf, int src_x, int src_y, int width, int height);
 		[CCode (cname = "gdk_pixbuf_new_from_data", has_construct_function = false)]
@@ -174,6 +180,8 @@ namespace Gdk {
 		public string get_name ();
 		[Version (since = "2.6")]
 		public bool is_disabled ();
+		[Version (since = "2.36")]
+		public bool is_save_option_supported (string option_key);
 		[Version (since = "2.6")]
 		public bool is_scalable ();
 		[Version (since = "2.2")]

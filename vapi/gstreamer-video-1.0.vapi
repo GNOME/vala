@@ -339,6 +339,34 @@ namespace Gst {
 			[NoAccessorMethod]
 			public bool show_preroll_frame { get; set construct; }
 		}
+		[CCode (cheader_filename = "gst/video/video.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_time_code_get_type ()")]
+		[Compact]
+		[GIR (name = "VideoTimeCode")]
+		[Version (since = "1.10")]
+		public class TimeCode {
+			public Gst.Video.TimeCodeConfig config;
+			public uint field_count;
+			public uint frames;
+			public uint hours;
+			public uint minutes;
+			public uint seconds;
+			[CCode (has_construct_function = false)]
+			public TimeCode (uint fps_n, uint fps_d, GLib.DateTime latest_daily_jam, Gst.Video.TimeCodeFlags flags, uint hours, uint minutes, uint seconds, uint frames, uint field_count);
+			public void add_frames (int64 frames);
+			public void clear ();
+			public int compare (Gst.Video.TimeCode tc2);
+			public Gst.Video.TimeCode copy ();
+			[CCode (has_construct_function = false)]
+			public TimeCode.empty ();
+			public uint64 frames_since_daily_jam ();
+			public void free ();
+			public void increment_frame ();
+			public void init (uint fps_n, uint fps_d, GLib.DateTime latest_daily_jam, Gst.Video.TimeCodeFlags flags, uint hours, uint minutes, uint seconds, uint frames, uint field_count);
+			public bool is_valid ();
+			public uint64 nsec_since_daily_jam ();
+			public GLib.DateTime to_date_time ();
+			public string to_string ();
+		}
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GstColorBalance", lower_case_cprefix = "gst_color_balance_", type_cname = "GstColorBalanceInterface", type_id = "gst_color_balance_get_type ()")]
 		[GIR (name = "ColorBalance")]
 		public interface ColorBalance : GLib.Object {
@@ -583,6 +611,22 @@ namespace Gst {
 			public double taps;
 			public void clear ();
 			public bool init (Gst.Video.ResamplerMethod method, Gst.Video.ResamplerFlags flags, uint n_phases, uint n_taps, double shift, uint in_size, uint out_size, Gst.Structure options);
+		}
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
+		[GIR (name = "VideoTimeCodeConfig")]
+		[Version (since = "1.10")]
+		public struct TimeCodeConfig {
+			public uint fps_n;
+			public uint fps_d;
+			public Gst.Video.TimeCodeFlags flags;
+			public weak GLib.DateTime latest_daily_jam;
+		}
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
+		[GIR (name = "VideoTimeCodeMeta")]
+		[Version (since = "1.10")]
+		public struct TimeCodeMeta {
+			public Gst.Meta meta;
+			public weak Gst.Video.TimeCode tc;
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_ALPHA_MODE_", type_id = "gst_video_alpha_mode_get_type ()")]
 		[GIR (name = "VideoAlphaMode")]
@@ -1013,6 +1057,15 @@ namespace Gst {
 		public enum TileType {
 			INDEXED
 		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_TIME_CODE_FLAGS_", has_type_id = false)]
+		[Flags]
+		[GIR (name = "VideoTimeCodeFlags")]
+		[Version (since = "1.10")]
+		public enum TimeCodeFlags {
+			NONE,
+			DROP_FRAME,
+			INTERLACED
+		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_TRANSFER_", type_id = "gst_video_transfer_function_get_type ()")]
 		[GIR (name = "VideoTransferFunction")]
 		public enum TransferFunction {
@@ -1207,6 +1260,12 @@ namespace Gst {
 		public static unowned Gst.Video.RegionOfInterestMeta? buffer_add_video_region_of_interest_meta (Gst.Buffer buffer, string roi_type, uint x, uint y, uint w, uint h);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_region_of_interest_meta_id")]
 		public static unowned Gst.Video.RegionOfInterestMeta? buffer_add_video_region_of_interest_meta_id (Gst.Buffer buffer, GLib.Quark roi_type, uint x, uint y, uint w, uint h);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_time_code_meta")]
+		[Version (since = "1.10")]
+		public static unowned Gst.Video.TimeCodeMeta? buffer_add_video_time_code_meta (Gst.Buffer buffer, Gst.Video.TimeCode tc);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_time_code_meta_full")]
+		[Version (since = "1.10")]
+		public static unowned Gst.Video.TimeCodeMeta? buffer_add_video_time_code_meta_full (Gst.Buffer buffer, uint fps_n, uint fps_d, GLib.DateTime latest_daily_jam, Gst.Video.TimeCodeFlags flags, uint hours, uint minutes, uint seconds, uint frames, uint field_count);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_get_video_meta")]
 		public static unowned Gst.Video.Meta? buffer_get_video_meta (Gst.Buffer buffer);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_get_video_meta_id")]
@@ -1377,5 +1436,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.4")]
 		public static uint tile_get_index (Gst.Video.TileMode mode, int x, int y, int x_tiles, int y_tiles);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static GLib.Type time_code_meta_api_get_type ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static unowned Gst.MetaInfo? time_code_meta_get_info ();
 	}
 }
