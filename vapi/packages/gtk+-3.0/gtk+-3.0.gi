@@ -23097,7 +23097,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="GtkShortcutLabel*"/>
-					<parameter name="unset_text" type="gchar*"/>
+					<parameter name="disabled_text" type="gchar*"/>
 				</parameters>
 			</method>
 			<property name="accelerator" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>

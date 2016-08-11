@@ -4790,7 +4790,7 @@ namespace Gtk {
 		public unowned string get_accelerator ();
 		public unowned string get_disabled_text ();
 		public void set_accelerator (string accelerator);
-		public void set_disabled_text (string unset_text);
+		public void set_disabled_text (string disabled_text);
 		public string accelerator { get; set; }
 		public string disabled_text { get; set; }
 	}
