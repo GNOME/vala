@@ -18,7 +18,8 @@ namespace Gst {
 		public enum FdMemoryFlags {
 			NONE,
 			KEEP_MAPPED,
-			MAP_PRIVATE
+			MAP_PRIVATE,
+			DONT_CLOSE
 		}
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GST_ALLOCATOR_DMABUF")]
 		public const string ALLOCATOR_DMABUF;
