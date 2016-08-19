@@ -20252,6 +20252,18 @@
 					<parameter name="model" type="GMenuModel*"/>
 				</parameters>
 			</constructor>
+			<method name="popdown" symbol="gtk_popover_popdown">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="popover" type="GtkPopover*"/>
+				</parameters>
+			</method>
+			<method name="popup" symbol="gtk_popover_popup">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="popover" type="GtkPopover*"/>
+				</parameters>
+			</method>
 			<method name="set_constrain_to" symbol="gtk_popover_set_constrain_to">
 				<return-type type="void"/>
 				<parameters>

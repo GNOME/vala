@@ -3876,6 +3876,8 @@ namespace Gtk {
 		public Gtk.PositionType get_position ();
 		public unowned Gtk.Widget get_relative_to ();
 		public bool get_transitions_enabled ();
+		public void popdown ();
+		public void popup ();
 		public void set_constrain_to (Gtk.PopoverConstraint constraint);
 		public void set_default_widget (Gtk.Widget? widget);
 		public void set_modal (bool modal);
