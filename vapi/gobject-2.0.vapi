@@ -125,12 +125,6 @@ namespace GLib {
 		public unowned GLib.FlagsValue? get_value_by_name (string name);
 		public unowned GLib.FlagsValue? get_value_by_nick (string name);
 	}
-	[Compact]
-	public class FlagsValue {
-		public int value;
-		public weak string value_name;
-		public weak string value_nick;
-	}
 	[CCode (ref_sink_function = "g_object_ref_sink", type_id = "G_TYPE_INITIALLY_UNOWNED")]
 	public class InitiallyUnowned : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -397,6 +391,12 @@ namespace GLib {
 	[CCode (has_type_id = false)]
 	public struct EnumValue {
 		public int value;
+		public weak string value_name;
+		public weak string value_nick;
+	}
+	[CCode (has_type_id = false)]
+	public struct FlagsValue {
+		public uint value;
 		public weak string value_name;
 		public weak string value_nick;
 	}
