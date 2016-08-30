@@ -45,7 +45,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void print_stack_trace ();
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static uint remove_log_function (Gst.LogFunction func);
+		public static uint remove_log_function (Gst.LogFunction? func);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static uint remove_log_function_by_data (void* data);
 		[CCode (cheader_filename = "gst/gst.h")]
@@ -654,6 +654,8 @@ namespace Gst {
 		public bool find_memory (size_t offset, size_t size, out uint idx, out uint length, out size_t skip);
 		public bool foreach_meta (Gst.BufferForeachMetaFunc func);
 		public Gst.Memory get_all_memory ();
+		[Version (since = "1.10")]
+		public Gst.BufferFlags get_flags ();
 		[Version (since = "1.2")]
 		public static uint get_max_memory ();
 		public Gst.Memory get_memory (uint idx);
@@ -662,6 +664,7 @@ namespace Gst {
 		public size_t get_size ();
 		public size_t get_sizes (out size_t offset, out size_t maxsize);
 		public size_t get_sizes_range (uint idx, int length, out size_t offset, out size_t maxsize);
+		public bool has_flags (Gst.BufferFlags flags);
 		public void insert_memory (int idx, owned Gst.Memory mem);
 		[Version (since = "1.4")]
 		public bool is_all_memory_writable ();
@@ -686,8 +689,12 @@ namespace Gst {
 		public void replace_memory_range (uint idx, int length, owned Gst.Memory mem);
 		public void resize (ssize_t offset, ssize_t size);
 		public bool resize_range (uint idx, int length, ssize_t offset, ssize_t size);
+		[Version (since = "1.10")]
+		public bool set_flags (Gst.BufferFlags flags);
 		public void set_size (ssize_t size);
 		public void unmap (Gst.MapInfo info);
+		[Version (since = "1.10")]
+		public bool unset_flags (Gst.BufferFlags flags);
 		[CCode (has_construct_function = false)]
 		public Buffer.wrapped ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
 	}

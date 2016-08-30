@@ -377,6 +377,13 @@ namespace Gst {
 			[HasEmitter]
 			public virtual signal void value_changed (Gst.Video.ColorBalanceChannel channel, int value);
 		}
+		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_direction_get_type ()")]
+		[GIR (name = "VideoDirection")]
+		[Version (since = "1.10")]
+		public interface Direction : GLib.Object {
+			[NoAccessorMethod]
+			public abstract Gst.Video.OrientationMethod video_direction { get; set construct; }
+		}
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigation", lower_case_cprefix = "gst_navigation_", type_cname = "GstNavigationInterface", type_id = "gst_navigation_get_type ()")]
 		[GIR (name = "Navigation")]
 		public interface Navigation : GLib.Object {
@@ -997,6 +1004,21 @@ namespace Gst {
 			INVALID,
 			COMMANDS,
 			ANGLES
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_ORIENTATION_", type_id = "gst_video_orientation_method_get_type ()")]
+		[GIR (name = "VideoOrientationMethod")]
+		[Version (since = "1.10")]
+		public enum OrientationMethod {
+			IDENTITY,
+			@90R,
+			@180,
+			@90L,
+			HORIZ,
+			VERT,
+			UL_LR,
+			UR_LL,
+			AUTO,
+			CUSTOM
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_OVERLAY_FORMAT_FLAG_", has_type_id = false)]
 		[GIR (name = "VideoOverlayFormatFlags")]

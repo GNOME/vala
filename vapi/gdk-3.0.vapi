@@ -4738,11 +4738,14 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected DeviceTool ();
 		[Version (since = "3.22")]
-		public uint get_serial ();
+		public uint64 get_hardware_id ();
+		[Version (since = "3.22")]
+		public uint64 get_serial ();
 		[Version (since = "3.22")]
 		public Gdk.DeviceToolType get_tool_type ();
 		[NoAccessorMethod]
 		public Gdk.AxisFlags axes { get; construct; }
+		public uint64 hardware_id { get; construct; }
 		public uint64 serial { get; construct; }
 		public Gdk.DeviceToolType tool_type { get; construct; }
 	}
@@ -5002,6 +5005,9 @@ namespace Gdk {
 		public Gdk.EventKey key {[CCode (cname = "(GdkEventKey *)")]  get; }
 		public Gdk.EventMotion motion {[CCode (cname = "(GdkEventMotion *)")]  get; }
 		public Gdk.EventOwnerChange owner_change {[CCode (cname = "(GdkEventOwnerChange *)")]  get; }
+		public Gdk.EventPadAxis pad_axis {[CCode (cname = "(GdkEventPadAxis *)")]  get; }
+		public Gdk.EventPadButton pad_button {[CCode (cname = "(GdkEventPadButton *)")]  get; }
+		public Gdk.EventPadGroupMode pad_group_mode {[CCode (cname = "(GdkEventPadGroupMode *)")]  get; }
 		public Gdk.EventProperty property {[CCode (cname = "(GdkEventProperty *)")]  get; }
 		public Gdk.EventProximity proximity {[CCode (cname = "(GdkEventProximity *)")]  get; }
 		public Gdk.EventScroll scroll {[CCode (cname = "(GdkEventScroll *)")]  get; }
@@ -5145,6 +5151,42 @@ namespace Gdk {
 		public Gdk.OwnerChange reason;
 		public Gdk.Atom selection;
 		public uint32 selection_time;
+		public int8 send_event;
+		public uint32 time;
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
+	[Compact]
+	[Version (since = "3.22")]
+	public class EventPadAxis : Gdk.Event {
+		public uint group;
+		public uint index;
+		public uint mode;
+		public int8 send_event;
+		public uint32 time;
+		public Gdk.EventType type;
+		public double value;
+		public weak Gdk.Window window;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
+	[Compact]
+	[Version (since = "3.22")]
+	public class EventPadButton : Gdk.Event {
+		public uint button;
+		public uint group;
+		public uint mode;
+		public int8 send_event;
+		public uint32 time;
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
+	[Compact]
+	[Version (since = "3.22")]
+	public class EventPadGroupMode : Gdk.Event {
+		public uint group;
+		public uint mode;
 		public int8 send_event;
 		public uint32 time;
 		public Gdk.EventType type;
@@ -5847,6 +5889,17 @@ namespace Gdk {
 	[Compact]
 	public class XEvent {
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_cname = "GdkDevicePadInterface", type_id = "gdk_device_pad_get_type ()")]
+	public interface DevicePad : Gdk.Device {
+		[Version (since = "3.22")]
+		public int get_feature_group (Gdk.DevicePadFeature feature, int feature_idx);
+		[Version (since = "3.22")]
+		public int get_group_n_modes (int group_idx);
+		[Version (since = "3.22")]
+		public int get_n_features (Gdk.DevicePadFeature feature);
+		[Version (since = "3.22")]
+		public int get_n_groups ();
+	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[SimpleType]
 	public struct Atom : uint {
@@ -6086,6 +6139,12 @@ namespace Gdk {
 		BLANK_CURSOR,
 		CURSOR_IS_PIXMAP
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_DEVICE_PAD_FEATURE_", type_id = "gdk_device_pad_feature_get_type ()")]
+	public enum DevicePadFeature {
+		BUTTON,
+		RING,
+		STRIP
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_DEVICE_TOOL_TYPE_", type_id = "gdk_device_tool_type_get_type ()")]
 	[Version (since = "3.22")]
 	public enum DeviceToolType {
@@ -6159,6 +6218,7 @@ namespace Gdk {
 		TOUCH_MASK,
 		SMOOTH_SCROLL_MASK,
 		TOUCHPAD_GESTURE_MASK,
+		TABLET_PAD_MASK,
 		ALL_EVENTS_MASK
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_", type_id = "gdk_event_type_get_type ()")]
@@ -6208,6 +6268,11 @@ namespace Gdk {
 		TOUCH_CANCEL,
 		TOUCHPAD_SWIPE,
 		TOUCHPAD_PINCH,
+		PAD_BUTTON_PRESS,
+		PAD_BUTTON_RELEASE,
+		PAD_RING,
+		PAD_STRIP,
+		PAD_GROUP_MODE,
 		EVENT_LAST
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FILTER_", type_id = "gdk_filter_return_get_type ()")]
@@ -6278,7 +6343,8 @@ namespace Gdk {
 		KEYBOARD,
 		TOUCHSCREEN,
 		TOUCHPAD,
-		TRACKPOINT
+		TRACKPOINT,
+		TABLET_PAD
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_MODIFIER_INTENT_", type_id = "gdk_modifier_intent_get_type ()")]
 	[Version (since = "3.4")]

@@ -58,6 +58,9 @@ EventGrabBroken struct=false base_type="Gdk.Event" type_id="gdk_event_get_type (
 EventMotion struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
         .axes array
 EventOwnerChange struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventPadAxis struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventPadButton struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventPadGroupMode struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventProperty struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventProximity struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventScroll struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"

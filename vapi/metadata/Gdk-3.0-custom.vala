@@ -27,6 +27,9 @@ namespace Gdk {
 		public Gdk.EventKey key { [CCode (cname = "(GdkEventKey *)")] get; }
 		public Gdk.EventMotion motion { [CCode (cname = "(GdkEventMotion *)")] get; }
 		public Gdk.EventOwnerChange owner_change { [CCode (cname = "(GdkEventOwnerChange *)")] get; }
+		public Gdk.EventPadAxis pad_axis { [CCode (cname = "(GdkEventPadAxis *)")] get; }
+		public Gdk.EventPadButton pad_button { [CCode (cname = "(GdkEventPadButton *)")] get; }
+		public Gdk.EventPadGroupMode pad_group_mode { [CCode (cname = "(GdkEventPadGroupMode *)")] get; }
 		public Gdk.EventProperty property { [CCode (cname = "(GdkEventProperty *)")] get; }
 		public Gdk.EventProximity proximity { [CCode (cname = "(GdkEventProximity *)")] get; }
 		public Gdk.EventScroll scroll { [CCode (cname = "(GdkEventScroll *)")] get; }
