@@ -3692,6 +3692,17 @@ namespace Gtk {
 		public void set_overlay_pass_through (Gtk.Widget widget, bool pass_through);
 		public virtual signal bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class PadController : Gtk.EventController {
+		[CCode (has_construct_function = false)]
+		public PadController (Gtk.Window window, GLib.ActionGroup group, Gdk.Device pad);
+		public void set_action (Gtk.PadActionType type, int index, int mode, string label, string action_name);
+		public void set_action_entries (Gtk.PadActionEntry[] entries);
+		[NoAccessorMethod]
+		public GLib.ActionGroup action_group { owned get; construct; }
+		[NoAccessorMethod]
+		public Gdk.Device pad { owned get; construct; }
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_page_setup_get_type ()")]
 	public class PageSetup : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -7694,6 +7705,14 @@ namespace Gtk {
 		public weak string default_locales;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct PadActionEntry {
+		public Gtk.PadActionType type;
+		public int index;
+		public int mode;
+		public weak string label;
+		public weak string action_name;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct PageRange {
 		public int start;
 		public int end;
@@ -8331,6 +8350,12 @@ namespace Gtk {
 	public enum PackType {
 		START,
 		END
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PAD_ACTION_")]
+	public enum PadActionType {
+		BUTTON,
+		RING,
+		STRIP
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PAGE_ORIENTATION_")]
 	public enum PageOrientation {
