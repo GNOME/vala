@@ -3523,7 +3523,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool centered { get; set; }
 		[NoAccessorMethod]
-		public GLib.Icon icon { owned get; set; }
+		public GLib.Icon? icon { owned get; set; }
 		[NoAccessorMethod]
 		public bool iconic { get; set; }
 		[NoAccessorMethod]
