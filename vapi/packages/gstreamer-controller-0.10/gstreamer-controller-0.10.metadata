@@ -1,4 +1,4 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/controller/gstcontroller.h" gir_namespace="GstController" gir_version="0.10"
+Gst deprecated="1" replacement="gstreamer-1.0" cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/controller/gstcontroller.h" gir_namespace="GstController" gir_version="0.10"
 GstLFOControlSource cheader_filename="gst/controller/gstlfocontrolsource.h"
 GstLFOControlSource:amplitude type_name="Gst.Value"
 GstLFOControlSource:offset type_name="Gst.Value"

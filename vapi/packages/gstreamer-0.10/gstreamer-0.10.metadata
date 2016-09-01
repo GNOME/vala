@@ -1,4 +1,4 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h" gir_namespace="Gst" gir_version="1.0"
+Gst deprecated="1" replacement="gstreamer-1.0" cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h" gir_namespace="Gst" gir_version="1.0"
 GstAllocTrace.mem_live type_arguments="unowned void*"
 gst_alloc_trace_list type_arguments="AllocTrace"
 GstBin.priv hidden="1"

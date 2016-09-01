@@ -1,2 +1,2 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/dataprotocol/dataprotocol.h"
+Gst deprecated="1" replacement="gstreamer-1.0" cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/dataprotocol/dataprotocol.h"
 GstDPVersion hidden="1"

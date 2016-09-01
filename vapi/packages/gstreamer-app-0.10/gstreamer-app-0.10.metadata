@@ -1,4 +1,4 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h" gir_namespace="GstApp" gir_version="0.10"
+Gst deprecated="1" replacement="gstreamer-1.0" cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h" gir_namespace="GstApp" gir_version="0.10"
 GstAppSink* cheader_filename="gst/app/gstappsink.h"
 GstAppSink:eos hidden="1"
 GstAppSink::pull_buffer hidden="1"

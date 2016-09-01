@@ -1,4 +1,4 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/tag/tag.h" gir_namespace="GstTag" gir_version="0.10"
+Gst deprecated="1" replacement="gstreamer-1.0" cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/tag/tag.h" gir_namespace="GstTag" gir_version="0.10"
 GstTagDemuxResult cheader_filename="gst/tag/gsttagdemux.h"
 GstTagDemux cheader_filename="gst/tag/gsttagdemux.h"
 gst_tag_list_new_from_id3v1 transfer_ownership="1"

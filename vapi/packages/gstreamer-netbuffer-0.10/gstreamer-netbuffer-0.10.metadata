@@ -1,4 +1,4 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/netbuffer/gstnetbuffer.h" gir_namespace="GstNetbuffer" gir_version="0.10"
+Gst deprecated="1" replacement="gstreamer-1.0" cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/netbuffer/gstnetbuffer.h" gir_namespace="GstNetbuffer" gir_version="0.10"
 GstNetAddress is_value_type="1"
 gst_netaddress_get_ip4_address.address is_out="1"
 gst_netaddress_get_ip4_address.port is_out="1"

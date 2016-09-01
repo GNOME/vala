@@ -1,4 +1,4 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/fft/gstfft.h" gir_namespace="GstFft" gir_version="0.10"
+Gst deprecated="1" replacement="gstreamer-1.0" cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/fft/gstfft.h" gir_namespace="GstFft" gir_version="0.10"
 GstFFTF32 cheader_filename="gst/fft/gstfftf32.h"
 GstFFTF32Complex cheader_filename="gst/fft/gstfftf32.h"
 GstFFTF64 cheader_filename="gst/fft/gstfftf64.h"

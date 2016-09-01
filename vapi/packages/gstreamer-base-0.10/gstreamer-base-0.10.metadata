@@ -1,4 +1,4 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h" gir_namespace="GstBase" gir_version="0.10"
+Gst deprecated="1" replacement="gstreamer-1.0" cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h" gir_namespace="GstBase" gir_version="0.10"
 GstAdapter cheader_filename="gst/base/gstadapter.h"
 GstAdapter.buflist hidden="1"
 GstAdapter.size hidden="1"

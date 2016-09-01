@@ -1,4 +1,4 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/sdp/gstsdpmessage.h" gir_namespace="GstSdp" gir_version="0.10"
+Gst deprecated="1" replacement="gstreamer-1.0" cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/sdp/gstsdpmessage.h" gir_namespace="GstSdp" gir_version="0.10"
 GstSDPResult cheader_filename="gst/sdp/gstsdp.h"
 GstSDPMedia.attributes type_arguments="SDPAttribute"
 GstSDPMedia.bandwidths type_arguments="SDPBandwidth"
