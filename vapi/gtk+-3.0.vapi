@@ -4503,6 +4503,8 @@ namespace Gtk {
 		public bool get_overlay_scrolling ();
 		public Gtk.CornerType get_placement ();
 		public void get_policy (out Gtk.PolicyType hscrollbar_policy, out Gtk.PolicyType vscrollbar_policy);
+		public bool get_propagate_natural_height ();
+		public bool get_propagate_natural_width ();
 		public Gtk.ShadowType get_shadow_type ();
 		public unowned Gtk.Adjustment get_vadjustment ();
 		public unowned Gtk.Widget get_vscrollbar ();
@@ -4516,6 +4518,8 @@ namespace Gtk {
 		public void set_overlay_scrolling (bool overlay_scrolling);
 		public void set_placement (Gtk.CornerType window_placement);
 		public void set_policy (Gtk.PolicyType hscrollbar_policy, Gtk.PolicyType vscrollbar_policy);
+		public void set_propagate_natural_height (bool propagate);
+		public void set_propagate_natural_width (bool propagate);
 		public void set_shadow_type (Gtk.ShadowType type);
 		public void set_vadjustment (Gtk.Adjustment vadjustment);
 		public void unset_placement ();
@@ -4528,6 +4532,8 @@ namespace Gtk {
 		public int min_content_height { get; set; }
 		public int min_content_width { get; set; }
 		public bool overlay_scrolling { get; set; }
+		public bool propagate_natural_height { get; set; }
+		public bool propagate_natural_width { get; set; }
 		public Gtk.ShadowType shadow_type { get; set; }
 		public Gtk.Adjustment vadjustment { get; set construct; }
 		[NoAccessorMethod]

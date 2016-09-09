@@ -22661,6 +22661,18 @@
 					<parameter name="vscrollbar_policy" type="GtkPolicyType*"/>
 				</parameters>
 			</method>
+			<method name="get_propagate_natural_height" symbol="gtk_scrolled_window_get_propagate_natural_height">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="scrolled_window" type="GtkScrolledWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_propagate_natural_width" symbol="gtk_scrolled_window_get_propagate_natural_width">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="scrolled_window" type="GtkScrolledWindow*"/>
+				</parameters>
+			</method>
 			<method name="get_shadow_type" symbol="gtk_scrolled_window_get_shadow_type">
 				<return-type type="GtkShadowType"/>
 				<parameters>
@@ -22757,6 +22769,20 @@
 					<parameter name="vscrollbar_policy" type="GtkPolicyType"/>
 				</parameters>
 			</method>
+			<method name="set_propagate_natural_height" symbol="gtk_scrolled_window_set_propagate_natural_height">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="scrolled_window" type="GtkScrolledWindow*"/>
+					<parameter name="propagate" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_propagate_natural_width" symbol="gtk_scrolled_window_set_propagate_natural_width">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="scrolled_window" type="GtkScrolledWindow*"/>
+					<parameter name="propagate" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_shadow_type" symbol="gtk_scrolled_window_set_shadow_type">
 				<return-type type="void"/>
 				<parameters>
@@ -22785,6 +22811,8 @@
 			<property name="min-content-height" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="min-content-width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="overlay-scrolling" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="propagate-natural-height" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="propagate-natural-width" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="shadow-type" type="GtkShadowType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="vadjustment" type="GtkAdjustment*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="vscrollbar-policy" type="GtkPolicyType" readable="1" writable="1" construct="0" construct-only="0"/>
