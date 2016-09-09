@@ -3621,7 +3621,7 @@ namespace GLib {
 		[Version (since = "2.12")]
 		public void set_description (string description);
 		[Version (since = "2.12")]
-		public void get_description ();
+		public unowned string get_description ();
 		[Version (since = "2.12")]
 		public void set_translate_func (TranslateFunc func, DestroyNotify? destroy_notify);
 		[Version (since = "2.12")]
