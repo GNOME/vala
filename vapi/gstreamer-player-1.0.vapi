@@ -27,7 +27,6 @@ namespace Gst {
 		public bool get_mute ();
 		public Gst.Element get_pipeline ();
 		public Gst.ClockTime get_position ();
-		public uint get_position_update_interval ();
 		public double get_rate ();
 		public static unowned GLib.List<Gst.PlayerSubtitleInfo> get_subtitle_streams (Gst.PlayerMediaInfo info);
 		public string get_subtitle_uri ();
@@ -48,7 +47,6 @@ namespace Gst {
 		[Version (since = "1.10")]
 		public void set_multiview_mode (Gst.Video.MultiviewMode mode);
 		public void set_mute (bool val);
-		public void set_position_update_interval (uint interval);
 		public void set_rate (double rate);
 		public bool set_subtitle_track (int stream_index);
 		public void set_subtitle_track_enabled (bool enabled);

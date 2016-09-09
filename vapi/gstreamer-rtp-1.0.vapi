@@ -155,6 +155,14 @@ namespace Gst {
 			public weak string encoding_parameters;
 			public uint bitrate;
 		}
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cprefix = "GST_RTP_BUFFER_FLAG_", type_id = "gst_rtp_buffer_flags_get_type ()")]
+		[Flags]
+		[GIR (name = "RTPBufferFlags")]
+		[Version (since = "1.10")]
+		public enum BufferFlags {
+			RETRANSMISSION,
+			LAST
+		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cprefix = "GST_RTP_BUFFER_MAP_FLAG_", type_id = "gst_rtp_buffer_map_flags_get_type ()")]
 		[Flags]
 		[GIR (name = "RTPBufferMapFlags")]

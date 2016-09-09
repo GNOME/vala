@@ -1387,6 +1387,7 @@ namespace Pk {
 		CANCELLED_PRIORITY,
 		UNFINISHED_TRANSACTION,
 		LOCK_REQUIRED,
+		REPO_ALREADY_SET,
 		LAST;
 		[Version (since = "0.5.0")]
 		public static Pk.ErrorEnum from_string (string code);
