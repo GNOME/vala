@@ -588,6 +588,8 @@ namespace Gst {
 		public Gst.Element get_by_interface (GLib.Type iface);
 		public Gst.Element? get_by_name (string name);
 		public Gst.Element? get_by_name_recurse_up (string name);
+		[Version (since = "1.10")]
+		public Gst.ElementFlags get_suppressed_flags ();
 		[NoWrapper]
 		public virtual void handle_message (Gst.Message message);
 		public Gst.Iterator? iterate_all_by_interface (GLib.Type iface);
@@ -601,6 +603,8 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool remove_element (Gst.Element element);
 		public void remove_many (params Gst.Element[] elements);
+		[Version (since = "1.10")]
+		public void set_suppressed_flags (Gst.ElementFlags flags);
 		[Version (since = "1.6")]
 		public bool sync_children_states ();
 		[NoAccessorMethod]

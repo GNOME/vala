@@ -2652,7 +2652,7 @@ namespace GLib {
 		public unowned string getenv (string variable);
 		public void set_child_setup (owned GLib.SpawnChildSetupFunc child_setup);
 		public void set_cwd (string cwd);
-		public void set_environ (string env);
+		public void set_environ ([CCode (array_length = false, array_null_terminated = true)] string[] env);
 		public void set_flags (GLib.SubprocessFlags flags);
 		public void set_stderr_file_path (string? path);
 		public void set_stdin_file_path (string path);
