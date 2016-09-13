@@ -2390,6 +2390,9 @@ namespace GLib {
 	[Version (since = "2.50")]
 	public void log_structured_array (LogLevelFlags log_levels, LogField[] fields);
 
+	[Version (since = "2.50")]
+	public void log_variant (string? log_domain, LogLevelFlags log_levels, GLib.Variant fields);
+
 	[Diagnostics]
 	[PrintfFormat]
 	public void message (string format, ...);
@@ -5214,6 +5217,7 @@ namespace GLib {
 		public const uint @2_44;
 		public const uint @2_46;
 		public const uint @2_48;
+		public const uint @2_50;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;
