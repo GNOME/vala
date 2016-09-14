@@ -107,9 +107,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/player/player.h", lower_case_csuffix = "player_g_main_context_signal_dispatcher", type_id = "gst_player_g_main_context_signal_dispatcher_get_type ()")]
 	public class PlayerGMainContextSignalDispatcher : GLib.Object, Gst.PlayerSignalDispatcher {
-		[CCode (has_construct_function = false)]
-		protected PlayerGMainContextSignalDispatcher ();
-		public static Gst.PlayerSignalDispatcher @new (GLib.MainContext? application_context);
+		[CCode (has_construct_function = false, type = "GstPlayerSignalDispatcher*")]
+		public PlayerGMainContextSignalDispatcher (GLib.MainContext? application_context);
 		[NoAccessorMethod]
 		public GLib.MainContext application_context { owned get; construct; }
 	}
@@ -156,12 +155,11 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/player/player.h", type_id = "gst_player_video_overlay_video_renderer_get_type ()")]
 	public class PlayerVideoOverlayVideoRenderer : GLib.Object, Gst.PlayerVideoRenderer {
-		[CCode (has_construct_function = false)]
-		protected PlayerVideoOverlayVideoRenderer ();
+		[CCode (has_construct_function = false, type = "GstPlayerVideoRenderer*")]
+		public PlayerVideoOverlayVideoRenderer (void* window_handle);
 		public void expose ();
 		public void get_render_rectangle (out int x, out int y, out int width, out int height);
 		public void* get_window_handle ();
-		public static Gst.PlayerVideoRenderer @new (void* window_handle);
 		public void set_render_rectangle (int x, int y, int width, int height);
 		public void set_window_handle (void* window_handle);
 		public void* window_handle { get; set construct; }
@@ -181,6 +179,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/player/player.h", type_cname = "GstPlayerVideoRendererInterface", type_id = "gst_player_video_renderer_get_type ()")]
 	public interface PlayerVideoRenderer : GLib.Object {
+		[NoWrapper]
+		public abstract unowned Gst.Element create_video_sink (Gst.Player player);
 	}
 	[CCode (cheader_filename = "gst/player/player.h", cprefix = "GST_PLAYER_COLOR_BALANCE_", type_id = "gst_player_color_balance_type_get_type ()")]
 	public enum PlayerColorBalanceType {
