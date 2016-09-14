@@ -16,6 +16,7 @@ Event
         ._get_distance skip
 Window
         .add_filter skip=false
+        .create_similar_image_surface type="Cairo.ImageSurface"
         .remove_filter skip=false
         .moved_to_rect.*_rect type="Gdk.Rectangle"
 WindowRedirect skip
