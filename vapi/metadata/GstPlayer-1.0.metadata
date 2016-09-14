@@ -1,0 +1,6 @@
+PlayerGMainContextSignalDispatcher
+  .new symbol_type="constructor"
+PlayerVideoOverlayVideoRenderer
+  .new symbol_type="constructor"
+PlayerVideoRenderer
+  .* skip=false
