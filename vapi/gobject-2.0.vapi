@@ -120,7 +120,7 @@ namespace GLib {
 		public uint mask;
 		public uint n_values;
 		[CCode (array_length_cname = "n_values")]
-		public GLib.FlagsValue[] values;
+		public weak GLib.FlagsValue[] values;
 		public unowned GLib.FlagsValue? get_first_value (uint value);
 		public unowned GLib.FlagsValue? get_value_by_name (string name);
 		public unowned GLib.FlagsValue? get_value_by_nick (string name);
