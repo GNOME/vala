@@ -1,3 +1,4 @@
+AC_PREREQ([2.65])
 AC_INIT([vala], m4_esyscmd([build-aux/git-version-gen .tarball-version]), [j@bitron.ch], [vala])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -22,9 +23,12 @@ AC_SUBST(pkgdatadir, [${datadir}/vala${PACKAGE_SUFFIX}])
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O
-AC_DISABLE_STATIC
-AC_PROG_LIBTOOL
 AC_PROG_LN_S
+AC_PROG_INSTALL
+
+LT_PREREQ([2.2.6])
+LT_INIT([disable-static])
+PKG_PROG_PKG_CONFIG([0.21])
 
 AC_PROG_LEX
 if test "$LEX" = :; then
