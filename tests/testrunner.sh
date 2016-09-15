@@ -25,6 +25,7 @@ topbuilddir=$builddir/..
 srcdir=$PWD/`dirname $0`
 topsrcdir=$srcdir/..
 vapidir=$topsrcdir/vapi
+run_prefix=""
 
 export G_DEBUG=fatal_warnings
 
@@ -51,8 +52,7 @@ function testheader() {
 		ns=${ns//-/_}
 		SOURCEFILE=$ns.vala
 	elif [ "$1" = "D-Bus" ]; then
-		echo 'eval `dbus-launch --sh-syntax`' >> prepare
-		echo 'trap "kill $DBUS_SESSION_BUS_PID" INT TERM EXIT' >> prepare
+		run_prefix="dbus-run-session -- $run_prefix"
 	elif [ "$1" = "GIR" ]; then
 		GIRTEST=1
 	fi
@@ -192,7 +192,7 @@ for testfile in "$@"; do
 	cat << EOF >> checkall
 echo -n -e "  /$testpath: \033[72G"
 ((all++))
-if bash $ns.check &>log; then
+if $run_prefix bash $ns.check &>log; then
 	echo -e "\033[0;32mOK\033[m"
 else
 	((fail++))
