@@ -79,6 +79,12 @@ Cancellable
   .source_new skip=false type="GLib.CancellableSource"
 Credentials
   .get_native skip=false
+DatagramBased
+  .condition_check#virtual_method virtual name="datagram_condition_check"
+  .condition_wait#virtual_method virtual name="datagram_condition_wait"
+  .create_source#virtual_method virtual name="datagram_create_source"
+  .receive_messages#virtual_method virtual name="datagram_receive_messages"
+  .send_messages#virtual_method virtual name="datagram_send_messages"
 DataInputStream
   .read_* throws="GLib.IOError"
   .read_line* nullable
@@ -202,10 +208,8 @@ SimpleAsyncResult
   .new_error skip
   .new_from_error skip
 Socket
-  .condition_wait skip
-  .create_source skip
-  .receive_messages skip
-  .send_messages skip
+  .condition_wait throws="GLib.IOError"
+  .create_source skip=false type="GLib.SocketSource"
 SocketControlMessage
   .serialize.data type="uint8[]"
 SocketListener
