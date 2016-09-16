@@ -239,8 +239,6 @@ public class Vala.ArrayCreationExpression : Expression {
 			return false;
 		}
 
-		element_type.value_owned = true;
-
 		value_type = new ArrayType (element_type, rank, source_reference);
 		value_type.value_owned = true;
 
