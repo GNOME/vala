@@ -2185,13 +2185,15 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 		// to_string() on a gtype enum
 
+		bool is_flags = ((Enum) ((EnumValueType) ma.inner.value_type).type_symbol).is_flags;
+
 		push_line (expr.source_reference);
-		var temp_var = get_temp_variable (new CType ("GEnumValue*"), false, expr, false);
+		var temp_var = get_temp_variable (new CType (is_flags ? "GFlagsValue*" : "GEnumValue*"), false, expr, false);
 		emit_temp_var (temp_var);
 
 		var class_ref = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_ref"));
 		class_ref.add_argument (new CCodeIdentifier (get_ccode_type_id (ma.inner.value_type)));
-		var get_value = new CCodeFunctionCall (new CCodeIdentifier ("g_enum_get_value"));
+		var get_value = new CCodeFunctionCall (new CCodeIdentifier (is_flags ? "g_flags_get_first_value" : "g_enum_get_value"));
 		get_value.add_argument (class_ref);
 		get_value.add_argument ((CCodeExpression) get_ccodenode (((MemberAccess) expr.call).inner));
 
