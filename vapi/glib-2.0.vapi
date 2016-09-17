@@ -5728,7 +5728,45 @@ namespace GLib {
 		MIAO,                   /* Plrd */
 		SHARADA,                /* Shrd */
 		SORA_SOMPENG,           /* Sora */
-		TAKRI                   /* Takr */
+		TAKRI,                  /* Takr */
+
+		/* Unicode 7.0 additions */
+		BASSA_VAH,              /* Bass */
+		CAUCASIAN_ALBANIAN,     /* Aghb */
+		DUPLOYAN,               /* Dupl */
+		ELBASAN,                /* Elba */
+		GRANTHA,                /* Gran */
+		KHOJKI,                 /* Khoj */
+		KHUDAWADI,              /* Sind */
+		LINEAR_A,               /* Lina */
+		MAHAJANI,               /* Mahj */
+		MANICHAEAN,             /* Manu */
+		MENDE_KIKAKUI,          /* Mend */
+		MODI,                   /* Modi */
+		MRO,                    /* Mroo */
+		NABATAEAN,              /* Nbat */
+		OLD_NORTH_ARABIAN,      /* Narb */
+		OLD_PERMIC,             /* Perm */
+		PAHAWH_HMONG,           /* Hmng */
+		PALMYRENE,              /* Palm */
+		PAU_CIN_HAU,            /* Pauc */
+		PSALTER_PAHLAVI,        /* Phlp */
+		SIDDHAM,                /* Sidd */
+		TIRHUTA,                /* Tirh */
+		WARANG_CITI,            /* Wara */
+
+		/* Unicode 8.0 additions */
+		AHOM,                   /* Ahom */
+		ANATOLIAN_HIEROGLYPHS,  /* Hluw */
+		HATRAN,                 /* Hatr */
+		MULTANI,                /* Mult */
+		OLD_HUNGARIAN,          /* Hung */
+		SIGNWRITING;            /* Sgnw */
+
+		[CCode (cname = "g_unicode_script_to_iso15924")]
+		public uint32 to_iso15924 ();
+		[CCode (cname = "g_unicode_script_from_iso15924")]
+		public static GLib.UnicodeScript from_iso15924 (uint32 iso15924);
 	}
 
 	[CCode (cname = "GUnicodeType", cprefix = "G_UNICODE_", has_type_id = false)]
