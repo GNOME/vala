@@ -76,6 +76,7 @@ TESTS = \
 	control-flow/expressions-conditional.vala \
 	control-flow/for.vala \
 	control-flow/foreach.vala \
+	control-flow/nested-conditional.vala \
 	control-flow/switch.vala \
 	control-flow/sideeffects.vala \
 	control-flow/bug639482.vala \
