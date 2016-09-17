@@ -55,7 +55,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		push_function (func);
 
 		if (dynamic_method.dynamic_type.data_type == dbus_proxy_type) {
-			generate_marshalling (method, CallType.SYNC, null, method.name);
+			generate_marshalling (method, CallType.SYNC, null, method.name, -1);
 		} else {
 			Report.error (method.source_reference, "dynamic methods are not supported for `%s'".printf (dynamic_method.dynamic_type.to_string ()));
 		}
@@ -554,7 +554,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		cfile.add_function (cfunc);
 	}
 
-	void generate_marshalling (Method m, CallType call_type, string? iface_name, string? method_name) {
+	void generate_marshalling (Method m, CallType call_type, string? iface_name, string? method_name, int method_timeout) {
 		var gdbusproxy = new CCodeCastExpression (new CCodeIdentifier ("self"), "GDBusProxy *");
 
 		var connection = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_connection"));
@@ -575,8 +575,13 @@ public class Vala.GDBusClientModule : GDBusModule {
 			var object_path = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_object_path"));
 			object_path.add_argument (gdbusproxy);
 
-			var timeout = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_default_timeout"));
-			timeout.add_argument (gdbusproxy);
+			CCodeExpression timeout;
+			if (method_timeout <= 0) {
+				timeout = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_default_timeout"));
+				((CCodeFunctionCall) timeout).add_argument (gdbusproxy);
+			} else {
+				timeout = new CCodeConstant ("%d".printf (method_timeout));
+			}
 
 			// register errors
 			foreach (var error_type in m.get_error_types ()) {
@@ -862,7 +867,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		push_function (function);
 
-		generate_marshalling (m, no_reply ? CallType.NO_REPLY : CallType.SYNC, dbus_iface_name, get_dbus_name_for_member (m));
+		generate_marshalling (m, no_reply ? CallType.NO_REPLY : CallType.SYNC, dbus_iface_name, get_dbus_name_for_member (m), get_dbus_timeout_for_member (m));
 
 		pop_function ();
 
@@ -889,7 +894,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		push_function (function);
 
-		generate_marshalling (m, CallType.ASYNC, dbus_iface_name, get_dbus_name_for_member (m));
+		generate_marshalling (m, CallType.ASYNC, dbus_iface_name, get_dbus_name_for_member (m), get_dbus_timeout_for_member (m));
 
 		pop_function ();
 
@@ -913,7 +918,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		push_function (function);
 
-		generate_marshalling (m, CallType.FINISH, null, null);
+		generate_marshalling (m, CallType.FINISH, null, null, -1);
 
 		pop_function ();
 

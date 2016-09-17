@@ -34,6 +34,10 @@ public class Vala.GDBusModule : GVariantModule {
 		return Symbol.lower_case_to_camel_case (symbol.name);
 	}
 
+	public static int get_dbus_timeout_for_member (Symbol symbol) {
+		return symbol.get_attribute_integer ("DBus", "timeout", -1);
+	}
+
 	public static bool is_dbus_visible (CodeNode node) {
 		var dbus_attribute = node.get_attribute ("DBus");
 		if (dbus_attribute != null

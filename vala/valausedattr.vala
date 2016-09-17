@@ -72,7 +72,7 @@ public class Vala.UsedAttr : CodeVisitor {
 		"GtkTemplate", "ui", "",
 		"GtkCallback", "name", "",
 
-		"DBus", "name", "no_reply", "result", "use_string_marshalling", "value", "signature", "visible", "",
+		"DBus", "name", "no_reply", "result", "use_string_marshalling", "value", "signature", "visible", "timeout", "",
 
 		"GIR", "name", ""
 
