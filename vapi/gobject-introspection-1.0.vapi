@@ -40,7 +40,7 @@ namespace GI {
 		[CCode (cname = "g_base_info_is_deprecated")]
 		public bool is_deprecated ();
 		[CCode (cname = "g_base_info_iterate_attributes")]
-		public bool iterate_attributes (GI.AttributeIter iterator, out unowned string name, out unowned string value);
+		public bool iterate_attributes (ref GI.AttributeIter iterator, out unowned string name, out unowned string value);
 	}
 	[CCode (cheader_filename = "girepository.h")]
 	public class CallableInfo : GI.BaseInfo {
@@ -57,7 +57,7 @@ namespace GI {
 		public static bool invoke (GI.CallableInfo info, void* function, GI.Argument in_args, int n_in_args, GI.Argument out_args, int n_out_args, GI.Argument return_value, bool is_method, bool @throws) throws GLib.Error;
 		[Version (since = "1.34")]
 		public static bool is_method (GI.CallableInfo info);
-		public static bool iterate_return_attributes (GI.CallableInfo info, GI.AttributeIter iterator, out unowned string name, out unowned string value);
+		public static bool iterate_return_attributes (GI.CallableInfo info, ref GI.AttributeIter iterator, out unowned string name, out unowned string value);
 		public static void load_arg (GI.CallableInfo info, int n, out unowned GI.ArgInfo arg);
 		public static void load_return_type (GI.CallableInfo info, out unowned GI.TypeInfo type);
 		public static bool may_return_null (GI.CallableInfo info);
