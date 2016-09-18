@@ -134,13 +134,6 @@ namespace GLib {
 		public void set_callback ([CCode (type = "GSourceFunc")] owned PollableSourceFunc func);
 	}
 
-	public class Resolver : GLib.Object {
-		[CCode (finish_function = "g_resolver_lookup_service_finish")]
-		public async GLib.List<GLib.SrvTarget> lookup_service_async (string service, string protocol, string domain, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[NoWrapper, CCode (vfunc_name = "lookup_service_async", finish_function = "g_resolver_lookup_service_finish")]
-		public virtual async GLib.List<GLib.SrvTarget> lookup_service_fn_async (string rrname, GLib.Cancellable? cancellable = null);
-	}
-
 	public class Settings : GLib.Object {
 		[NoAccessorMethod]
 		public GLib.SettingsBackend backend { owned get; construct; }

@@ -1984,7 +1984,7 @@ namespace GLib {
 		[NoAccessorMethod]
 		public string uri { owned get; construct; }
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_resolver_get_type ()")]
 	public class Resolver : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Resolver ();
@@ -2003,15 +2003,9 @@ namespace GLib {
 		[Version (since = "2.34")]
 		public virtual async GLib.List<GLib.Variant> lookup_records_async (string rrname, GLib.ResolverRecordType record_type, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
-		public GLib.List<GLib.SrvTarget> lookup_service (string service, string protocol, string domain, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (finish_function = "g_resolver_lookup_service_finish")]
-		public async GLib.List<GLib.SrvTarget> lookup_service_async (string service, string protocol, string domain, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (vfunc_name = "lookup_service")]
-		[NoWrapper]
-		public virtual GLib.List<GLib.SrvTarget> lookup_service_fn (string rrname, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (finish_function = "g_resolver_lookup_service_finish", vfunc_name = "lookup_service_async")]
-		[NoWrapper]
-		public virtual async GLib.List<GLib.SrvTarget> lookup_service_fn_async (string rrname, GLib.Cancellable? cancellable = null);
+		public virtual GLib.List<GLib.SrvTarget> lookup_service (string service, string protocol, string domain, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (finish_vfunc_name = "lookup_service_finish", vfunc_name = "lookup_service_async")]
+		public virtual async GLib.List<GLib.SrvTarget> lookup_service_async (string rrname, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
 		public void set_default ();
 		public virtual signal void reload ();

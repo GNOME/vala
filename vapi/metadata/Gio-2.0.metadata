@@ -177,9 +177,8 @@ PropertyAction
   .parameter_type skip
   .state_type skip
 Resolver
-  .lookup_service_async skip
-  .lookup_service#virtual_method skip=false name="lookup_service_fn" type="GLib.List<GLib.SrvTarget>"
-  .lookup_service_finish skip
+  .lookup_service#method virtual
+  .lookup_service_async#virtual_method vfunc_name="lookup_service_async" finish_vfunc_name="lookup_service_finish"
 Settings
   .change_event skip
   .get skip=false sentinel=""
