@@ -1,0 +1,7 @@
+Invalid Code
+
+const int FOO = 0;
+
+void main () {
+	FOO = 1;
+}
