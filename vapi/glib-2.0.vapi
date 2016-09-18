@@ -959,6 +959,22 @@ public struct unichar {
 
 	[CCode (cname = "G_UNICHAR_MAX_DECOMPOSITION_LENGTH")]
 	public const int MAX_DECOMPOSITION_LENGTH;
+
+	[CCode (cname = "G_GUINT32_FORMAT")]
+	public const string FORMAT;
+	[CCode (cname = "G_GINT32_MODIFIER")]
+	public const string FORMAT_MODIFIER;
+}
+
+[SimpleType]
+[GIR (name = "guint16")]
+[CCode (cname = "gunichar2", cheader_filename = "glib.h", default_value = "0U", type_signature = "q", has_type_id = false)]
+[IntegerType (rank = 5)]
+public struct unichar2 {
+	[CCode (cname = "G_GUINT16_FORMAT")]
+	public const string FORMAT;
+	[CCode (cname = "G_GINT16_MODIFIER")]
+	public const string FORMAT_MODIFIER;
 }
 
 [Compact]
@@ -1411,6 +1427,52 @@ public class string {
 
 	public unowned string to_string () {
 		return this;
+	}
+
+	[CCode (cname = "g_utf8_to_utf16")]
+	public string16 to_utf16 (long len = -1, out long? items_read = null, out long? items_written = null) throws GLib.ConvertError;
+	[CCode (cname = "g_utf8_to_ucs4")]
+	public string32 to_utf32 (long len = -1, out long? items_read = null, out long? items_written = null) throws GLib.ConvertError;
+	[CCode (cname = "g_utf8_to_ucs4_fast")]
+	public string32 to_utf32_fast (long len = -1, out long? items_written = null);
+
+}
+
+[Compact]
+[Immutable]
+[GIR (name = "gunichar")]
+[CCode (cname = "gunichar", const_cname = "const gunichar", free_function = "g_free", cheader_filename = "glib.h")]
+public class string32 {
+	[CCode (cname = "g_ucs4_to_utf16")]
+	public string16 to_utf16 (long len = -1, out long? items_read = null, out long? items_written = null) throws GLib.ConvertError;
+	[CCode (cname = "g_ucs4_to_utf8")]
+	public string to_utf8 (long len = -1, out long? items_read = null, out long? items_written = null) throws GLib.ConvertError;
+
+	public string? to_string () {
+		try {
+			return this.to_utf8 ();
+		} catch (GLib.ConvertError e) {
+			return null;
+		}
+	}
+}
+
+[Compact]
+[Immutable]
+[GIR (name = "guint16")]
+[CCode (cname = "gunichar2", const_cname = "const gunichar2", free_function = "g_free", cheader_filename = "glib.h")]
+public class string16 {
+	[CCode (cname = "g_utf16_to_ucs4")]
+	public string32 to_utf32 (long len = -1, out long? items_read = null, out long? items_written = null) throws GLib.ConvertError;
+	[CCode (cname = "g_utf16_to_utf8")]
+	public string to_utf8 (long len = -1, out long? items_read = null, out long? items_written = null) throws GLib.ConvertError;
+
+	public string? to_string () {
+		try {
+			return this.to_utf8 ();
+		} catch (GLib.ConvertError e) {
+			return null;
+		}
 	}
 }
 
