@@ -3702,7 +3702,7 @@ namespace GLib {
 		[Version (since = "2.34")]
 		public abstract GLib.Icon get_symbolic_icon ();
 		public abstract string get_uuid ();
-		[CCode (vfunc_name = "mount_fn")]
+		[CCode (finish_vfunc_name = "mount_finish", vfunc_name = "mount_fn")]
 		public abstract async bool mount (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract bool should_automount ();
 		public virtual signal void changed ();

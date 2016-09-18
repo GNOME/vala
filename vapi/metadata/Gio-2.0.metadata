@@ -234,6 +234,7 @@ Vfs
 Volume
   .get_activation_root nullable
   .get_sort_key#virtual_method virtual
+  .mount_fn finish_vfunc_name="mount_finish"
 ZlibCompressor
   .new.level default=-1
 Converter
