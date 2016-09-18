@@ -5761,7 +5761,15 @@ namespace GLib {
 		HATRAN,                 /* Hatr */
 		MULTANI,                /* Mult */
 		OLD_HUNGARIAN,          /* Hung */
-		SIGNWRITING;            /* Sgnw */
+		SIGNWRITING,            /* Sgnw */
+
+		/* Unicode 9.0 additions */
+		ADLAM,                  /* Adlm */
+		BHAIKSUKI,              /* Bhks */
+		MARCHEN,                /* Marc */
+		NEWA,                   /* Newa */
+		OSAGE,                  /* Osge */
+		TANGUT;                 /* Tang */
 
 		[CCode (cname = "g_unicode_script_to_iso15924")]
 		public uint32 to_iso15924 ();
@@ -5844,7 +5852,10 @@ namespace GLib {
 		CLOSE_PARANTHESIS,
 		CONDITIONAL_JAPANESE_STARTER,
 		HEBREW_LETTER,
-		REGIONAL_INDICATOR
+		REGIONAL_INDICATOR,
+		EMOJI_BASE,
+		EMOJI_MODIFIER,
+		ZERO_WIDTH_JOINER
 	}
 
 	[CCode (cname = "GNormalizeMode", cprefix = "G_NORMALIZE_", has_type_id = false)]
