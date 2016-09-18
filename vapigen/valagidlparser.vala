@@ -2349,6 +2349,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "vfunc_name") {
 					m.set_attribute_string ("CCode", "vfunc_name", eval (nv[1]));
+				} else if (nv[0] == "finish_vfunc_name") {
+					m.set_attribute_string ("CCode", "finish_vfunc_name", eval (nv[1]));
 				} else if (nv[0] == "finish_name") {
 					m.set_attribute_string ("CCode", "finish_name", eval (nv[1]));
 				} else if (nv[0] == "async") {

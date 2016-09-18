@@ -439,7 +439,12 @@ public class Vala.CCodeAttribute : AttributeCache {
 	public string finish_vfunc_name {
 		get {
 			if (_finish_vfunc_name == null) {
-				_finish_vfunc_name = get_finish_name_for_basename (vfunc_name);
+				if (ccode != null) {
+					_finish_vfunc_name = ccode.get_string ("finish_vfunc_name");
+				}
+				if (_finish_vfunc_name == null) {
+					_finish_vfunc_name = get_finish_name_for_basename (vfunc_name);
+				}
 			}
 			return _finish_vfunc_name;
 		}

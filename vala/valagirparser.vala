@@ -81,7 +81,8 @@ public class Vala.GirParser : CodeVisitor {
 		FLOATING,
 		TYPE_ID,
 		RETURN_VOID,
-		DELEGATE_TARGET_CNAME;
+		DELEGATE_TARGET_CNAME,
+		FINISH_VFUNC_NAME;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -3079,6 +3080,10 @@ public class Vala.GirParser : CodeVisitor {
 			}
 			if (metadata.has_argument (ArgumentType.VFUNC_NAME)) {
 				method.set_attribute_string ("CCode", "vfunc_name", metadata.get_string (ArgumentType.VFUNC_NAME));
+				method.is_virtual = true;
+			}
+			if (metadata.has_argument (ArgumentType.FINISH_VFUNC_NAME)) {
+				method.set_attribute_string ("CCode", "finish_vfunc_name", metadata.get_string (ArgumentType.FINISH_VFUNC_NAME));
 				method.is_virtual = true;
 			}
 		}
