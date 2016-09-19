@@ -255,6 +255,10 @@ dist_vapi_DATA = \
 	pangocairo.deps \
 	pangocairo.vapi \
 	pixman-1.vapi \
+	polkit-agent-1.deps \
+	polkit-agent-1.vapi \
+	polkit-gobject-1.deps \
+	polkit-gobject-1.vapi \
 	poppler-glib.deps \
 	poppler-glib.vapi \
 	posix.vapi \
@@ -432,6 +436,8 @@ GIR_BINDINGS = \
 	packagekit-glib2 \
 	pango \
 	pangocairo \
+	polkit-agent-1 \
+	polkit-gobject-1 \
 	poppler-glib \
 	rest-0.7 \
 	rest-extras-0.7 \
@@ -770,6 +776,12 @@ pango:
 
 pangocairo:
 	$(GENVAPI) --library $(srcdir)/pangocairo --metadatadir $(METADATADIR) $(GIRDIR)/PangoCairo-1.0.gir
+
+polkit-agent-1:
+	$(GENVAPI) --library $(srcdir)/polkit-agent-1 --pkg gio-2.0 --pkg polkit-gobject-1 --metadatadir $(METADATADIR) $(GIRDIR)/PolkitAgent-1.0.gir
+
+polkit-gobject-1:
+	$(GENVAPI) --library $(srcdir)/polkit-gobject-1 --pkg gio-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/Polkit-1.0.gir
 
 poppler-glib:
 	$(GENVAPI) --library $(srcdir)/poppler-glib --pkg cairo --pkg gio-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/Poppler-0.18.gir
