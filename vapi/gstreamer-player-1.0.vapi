@@ -50,7 +50,7 @@ namespace Gst {
 		public void set_rate (double rate);
 		public bool set_subtitle_track (int stream_index);
 		public void set_subtitle_track_enabled (bool enabled);
-		public bool set_subtitle_uri (string uri);
+		public void set_subtitle_uri (string uri);
 		public void set_uri (string uri);
 		public bool set_video_track (int stream_index);
 		public void set_video_track_enabled (bool enabled);
