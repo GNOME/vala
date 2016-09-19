@@ -195,6 +195,7 @@ public class Vala.Scanner {
 						case 'n':
 						case 'r':
 						case 't':
+						case 'v':
 						case 'a':
 						case 'A':
 						case 'p':
@@ -707,6 +708,7 @@ public class Vala.Scanner {
 						case 'n':
 						case 'r':
 						case 't':
+						case 'v':
 							current++;
 							token_length_in_chars++;
 							break;
@@ -1140,6 +1142,7 @@ public class Vala.Scanner {
 						case 'n':
 						case 'r':
 						case 't':
+						case 'v':
 						case '$':
 							current++;
 							token_length_in_chars++;
