@@ -33,4 +33,23 @@ public interface Vala.MultiSet<G> : Collection<G> {
 	 * @return     the number of occurences of the item in this multiset.
 	 */
 	public abstract int count (G item);
+
+	/**
+	 * The read-only view of this set.
+	 */
+	public virtual new MultiSet<G> read_only_view {
+		owned get {
+			return new ReadOnlyMultiSet<G> (this);
+		}
+	}
+
+	/**
+	 * Returns an immutable empty set.
+	 *
+	 * @return an immutable empty set
+	 */
+	public static Set<G> empty<G> () {
+		return new HashSet<G> ().read_only_view;
+	}
 }
+

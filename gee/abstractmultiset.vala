@@ -92,6 +92,22 @@ public abstract class Vala.AbstractMultiSet<G> : AbstractCollection<G>, MultiSet
 		_nitems = 0;
 	}
 
+	private WeakRef _read_only_view;
+	construct {
+		_read_only_view = WeakRef(null);
+	}
+
+	public virtual new MultiSet<G> read_only_view {
+		owned get {
+			MultiSet<G>? instance = (MultiSet<G>?)_read_only_view.get ();
+			if (instance == null) {
+				instance = new ReadOnlyMultiSet<G> (this);
+				_read_only_view.set (instance);
+			}
+			return instance;
+		}
+	}
+
 	private class Iterator<G> : Object, Traversable<G>, Vala.Iterator<G> {
 		private AbstractMultiSet<G> _set;
 

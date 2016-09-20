@@ -78,18 +78,20 @@ public abstract class Vala.AbstractSortedSet<G> : Vala.AbstractSet<G>, SortedSet
 	 */
 	public abstract SortedSet<G> sub_set (G from, G to);
 
-	private weak SortedSet<G> _read_only_view;
+	private WeakRef _read_only_view;
+	construct {
+		_read_only_view = WeakRef(null);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public virtual new SortedSet<G> read_only_view {
 		owned get {
-			SortedSet<G> instance = _read_only_view;
-			if (_read_only_view == null) {
+			SortedSet<G>? instance = (SortedSet<G>?)_read_only_view.get ();
+			if (instance == null) {
 				instance = new ReadOnlySortedSet<G> (this);
-				_read_only_view = instance;
-				instance.add_weak_pointer ((void**) (&_read_only_view));
+				_read_only_view.set (instance);
 			}
 			return instance;
 		}

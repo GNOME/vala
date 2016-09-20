@@ -1,7 +1,7 @@
 /* priorityqueue.vala
  *
  * Copyright (C) 2009  Didier Villevalois
- * Copyright (C) 2012  Maciej Piechotka
+ * Copyright (C) 2012-2014  Maciej Piechotka
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,7 +46,12 @@ public class Vala.PriorityQueue<G> : Vala.AbstractQueue<G> {
 	 * The elements' comparator function.
 	 */
 	[CCode (notify = false)]
-	public CompareDataFunc<G> compare_func { private set; get; }
+	public CompareDataFunc<G> compare_func {
+		private set {}
+		get {
+			return _compare_func;
+		}
+	}
 
 	private int _size = 0;
 	private int _stamp = 0;
@@ -55,14 +60,15 @@ public class Vala.PriorityQueue<G> : Vala.AbstractQueue<G> {
 	private Type2Node<G>? _lm_head = null;
 	private Type2Node<G>? _lm_tail = null;
 	private Type1Node<G>? _p = null;
-	private Type1Node<G>?[] _a = new Type1Node<G>?[0];
+	private Type1Node<G>?[] _a;
 	private NodePair<G>? _lp_head = null;
-	private NodePair<G>? _lp_tail = null;
+	private unowned NodePair<G>? _lp_tail = null;
 	private bool[] _b = new bool[0];
 	private Type1Node<G>? _ll_head = null;
 	private Type1Node<G>? _ll_tail = null;
 	private unowned Node<G> _iter_head = null;
 	private unowned Node<G> _iter_tail = null;
+	private CompareDataFunc<G> _compare_func;
 
 	/**
 	 * Constructs a new, empty priority queue.
@@ -76,7 +82,8 @@ public class Vala.PriorityQueue<G> : Vala.AbstractQueue<G> {
 		if (compare_func == null) {
 			compare_func = Functions.get_compare_func_for (typeof (G));
 		}
-		this.compare_func = compare_func;
+		_compare_func = (owned)compare_func;
+		_a = new Type1Node<G>?[0];
 	}
 
 	/**
@@ -343,7 +350,11 @@ public class Vala.PriorityQueue<G> : Vala.AbstractQueue<G> {
 		_lm_head = null;
 		_lm_tail = null;
 		_p = null;
+#if VALA_0_16
 		_a = new Type1Node<G>?[0];
+#else
+		_a = new Type1Node<G>[0];
+#endif
 		_lp_head = null;
 		_lp_tail = null;
 		_b = new bool[0];
@@ -358,6 +369,18 @@ public class Vala.PriorityQueue<G> : Vala.AbstractQueue<G> {
 	 */
 	public override Vala.Iterator<G> iterator () {
 		return new Iterator<G> (this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public override bool foreach (ForallFunc<G> f) {
+		for (unowned Node<G>? current = _iter_head; current != null; current = current.iter_next) {
+			if (!f (current.data)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private inline int _compare (Node<G> node1, Node<G> node2) {
@@ -434,7 +457,7 @@ public class Vala.PriorityQueue<G> : Vala.AbstractQueue<G> {
 
 		#if DEBUG
 			_dump ("After swap: %p(%s) %p(%s)".printf(node1, (string)node1.data, node2, (string)node2.data));
-		#endif
+		#endif	
 	}
 
 	private inline void _move_data (Node<G> target, Node<G> source) {
@@ -525,7 +548,7 @@ public class Vala.PriorityQueue<G> : Vala.AbstractQueue<G> {
 		#endif
 
 		if (_lp_head != null) {
-			NodePair<G> pair = _lp_head;
+			unowned NodePair<G> pair = _lp_head;
 			_link (pair.node1, pair.node2);
 			return true;
 		}
@@ -697,12 +720,12 @@ public class Vala.PriorityQueue<G> : Vala.AbstractQueue<G> {
 				node.brothers_next.pair = pair;
 				node.pair = pair;
 				if (_lp_head == null) {
-					_lp_head = pair;
 					_lp_tail = pair;
+					_lp_head = (owned)pair;
 				} else {
 					pair.lp_prev = _lp_tail;
-					_lp_tail.lp_next = pair;
-					_lp_tail = pair;
+					_lp_tail.lp_next = (owned)pair;
+					_lp_tail = _lp_tail.lp_next;
 				}
 				// There is now an even number of child of such degree
 				_b[degree] = false;
@@ -820,19 +843,19 @@ public class Vala.PriorityQueue<G> : Vala.AbstractQueue<G> {
 
 		// Maintain LP
 		if (node.pair != null) {
-			NodePair<G> pair = node.pair;
+			unowned NodePair<G> pair = node.pair;
 			Type1Node<G> other = (pair.node1 == node ? pair.node2 : pair.node1);
 			node.pair = null;
 			other.pair = null;
-			if (pair.lp_prev != null) {
-				pair.lp_prev.lp_next = pair.lp_next;
-			} else {
-				_lp_head = pair.lp_next;
-			}
 			if (pair.lp_next != null) {
 				pair.lp_next.lp_prev = pair.lp_prev;
 			} else {
 				_lp_tail = pair.lp_prev;
+			}
+			if (pair.lp_prev != null) {
+				pair.lp_prev.lp_next = (owned)pair.lp_next;
+			} else {
+				_lp_head = (owned)pair.lp_next;
 			}
 		}
 	}
@@ -1101,11 +1124,12 @@ public class Vala.PriorityQueue<G> : Vala.AbstractQueue<G> {
 		#endif
 	}
 
+	[Compact]
 	private class NodePair<G> {
-		public weak NodePair<G>? lp_prev = null;
+		public unowned NodePair<G>? lp_prev = null;
 		public NodePair<G>? lp_next = null;
-		public Type1Node<G> node1 = null;
-		public Type1Node<G> node2 = null;
+		public unowned Type1Node<G> node1 = null;
+		public unowned Type1Node<G> node2 = null;
 
 		public NodePair (Type1Node<G> node1, Type1Node<G> node2) {
 			this.node1 = node1;
@@ -1114,16 +1138,18 @@ public class Vala.PriorityQueue<G> : Vala.AbstractQueue<G> {
 	}
 
 	private class Iterator<G> : Object, Traversable<G>, Vala.Iterator<G> {
-		private PriorityQueue<G> queue;
-		private unowned Node<G>? position;
-		private unowned Node<G>? previous;
-		private int stamp;
-
 		public Iterator (PriorityQueue<G> queue) {
 			this.queue = queue;
 			this.position = null;
 			this.previous = null;
 			this.stamp = queue._stamp;
+		}
+
+		public Iterator.from_iterator (Iterator<G> iter) {
+			queue = iter.queue;
+			position = iter.position;
+			previous = iter.previous;
+			stamp = iter.stamp;
 		}
 
 		public bool next () {
@@ -1203,5 +1229,24 @@ public class Vala.PriorityQueue<G> : Vala.AbstractQueue<G> {
 			}
 			return true;
 		}
+
+
+		public Vala.Iterator<G>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Vala.Iterator<G>[0];
+			} else {
+				Vala.Iterator<G>[] result = new Vala.Iterator<G>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new Iterator<G>.from_iterator (this);
+				}
+				return result;
+			}
+		}
+
+		protected PriorityQueue<G> queue;
+		protected unowned Node<G>? position;
+		protected unowned Node<G>? previous;
+		protected int stamp;
 	}
 }

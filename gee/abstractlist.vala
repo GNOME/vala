@@ -66,18 +66,20 @@ public abstract class Vala.AbstractList<G> : Vala.AbstractCollection<G>, List<G>
 	 */
 	public abstract List<G>? slice (int start, int stop);
 
-	private weak List<G> _read_only_view;
+	private WeakRef _read_only_view;
+	construct {
+		_read_only_view = WeakRef(null);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public virtual new List<G> read_only_view {
 		owned get {
-			List<G> instance = _read_only_view;
-			if (_read_only_view == null) {
+			List<G>? instance = (List<G>?)_read_only_view.get ();
+			if (instance == null) {
 				instance = new ReadOnlyList<G> (this);
-				_read_only_view = instance;
-				instance.add_weak_pointer ((void**) (&_read_only_view));
+				_read_only_view.set (instance);
 			}
 			return instance;
 		}

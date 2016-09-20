@@ -24,6 +24,18 @@
  * This interface defines a total ordering among instances of each class
  * implementing it.
  *
+ * In other words:
+ *
+ *   * It's irreflexive: For all `a` it holds that `a.compare_to(a) == 0`
+ *   * It's transitive: For all `a`, `b` and `c` if `a.compare_to(b) < 0` and
+ *     `b.compare_to(c) < 0` then `a.compare_to(c) < 0`.
+ *   * It's trichotomous: For all `a` and `b` it holds that
+ *     `a.compare_to(b) = -b.compare_to(a)`.
+ *
+ * Note: The relationship must be immutable. In other words if at one point of
+ *   program `a.compare_to(b)` had certain value then call `a.compare_to(b)`
+ *   //must always// return the original value until end of `a` and `b` lifetime.
+ *
  * @see Hashable
  */
 public interface Vala.Comparable<G> : Object {

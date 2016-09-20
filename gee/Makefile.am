@@ -5,6 +5,7 @@ NULL =
 AM_CPPFLAGS = \
 	$(COVERAGE_CFLAGS) \
 	$(GLIB_CFLAGS) \
+	-I$(srcdir)/utils \
 	$(NULL)
 
 BUILT_SOURCES = gee.vala.stamp
@@ -37,8 +38,10 @@ libgee_la_VALASOURCES = \
 	collection.vala \
 	comparable.vala \
 	concurrentlist.vala \
+	concurrentset.vala \
 	deque.vala \
 	functions.vala \
+	future.vala \
 	hashable.vala \
 	hashmap.vala \
 	hashmultimap.vala \
@@ -48,6 +51,7 @@ libgee_la_VALASOURCES = \
 	iterable.vala \
 	iterator.vala \
 	lazy.vala \
+	lightmapfuture.vala \
 	linkedlist.vala \
 	listiterator.vala \
 	list.vala \
@@ -56,6 +60,7 @@ libgee_la_VALASOURCES = \
 	multimap.vala \
 	multiset.vala \
 	priorityqueue.vala \
+	promise.vala \
 	queue.vala \
 	readonlybidirlist.vala \
 	readonlybidirsortedmap.vala \
@@ -63,12 +68,17 @@ libgee_la_VALASOURCES = \
 	readonlycollection.vala \
 	readonlylist.vala \
 	readonlymap.vala \
+	readonlymultimap.vala \
+	readonlymultiset.vala \
 	readonlyset.vala \
 	readonlysortedmap.vala \
 	readonlysortedset.vala \
 	set.vala \
 	sortedmap.vala \
 	sortedset.vala \
+	streamiterator.vala \
+	task.vala \
+	teeiterator.vala \
 	timsort.vala \
 	traversable.vala \
 	treemap.vala \
@@ -76,6 +86,7 @@ libgee_la_VALASOURCES = \
 	treemultiset.vala \
 	treeset.vala \
 	unfolditerator.vala \
+	unrolledlinkedlist.vala \
 	$(NULL)
 
 libgee_la_SOURCES = \
@@ -94,7 +105,8 @@ gee.vapi gee.vala.stamp: $(libgee_la_VALASOURCES)
 		$(COVERAGE_VALAFLAGS) \
 		$(VALAFLAGS) \
 		-C \
-		--vapidir $(top_srcdir)/vapi --pkg gobject-2.0 \
+		--vapidir $(srcdir)/utils --pkg utils \
+		--vapidir $(top_srcdir)/vapi --pkg gobject-2.0 --pkg gio-2.0 \
 		--use-header \
 		-H valagee.h \
 		--library gee \
@@ -106,7 +118,17 @@ libgee_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(NULL)
 
-EXTRA_DIST = $(libgee_la_VALASOURCES) gee.vapi gee.vala.stamp valagee.h
+EXTRA_DIST = \
+	$(libgee_la_VALASOURCES) \
+	gee.vapi \
+	gee.vala.stamp \
+	valagee.h \
+	utils/assume.h \
+	utils/async.h \
+	utils/free.h \
+	utils/utils.vapi \
+	utils/misc.h \
+	$(NULL)
 
 MAINTAINERCLEANFILES = \
 	gee.vapi \

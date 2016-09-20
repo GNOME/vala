@@ -31,18 +31,20 @@
  */
 public abstract class Vala.AbstractSet<G> : Vala.AbstractCollection<G>, Set<G> {
 
-	private weak Set<G> _read_only_view;
+	private WeakRef _read_only_view;
+	construct {
+		_read_only_view = WeakRef(null);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public virtual new Set<G> read_only_view {
 		owned get {
-			Set<G> instance = _read_only_view;
-			if (_read_only_view == null) {
+			Set<G>? instance = (Set<G>?)_read_only_view.get ();
+			if (instance == null) {
 				instance = new ReadOnlySet<G> (this);
-				_read_only_view = instance;
-				instance.add_weak_pointer ((void**) (&_read_only_view));
+				_read_only_view.set (instance);
 			}
 			return instance;
 		}

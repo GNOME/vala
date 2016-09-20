@@ -32,8 +32,13 @@
  * item has been removed, until the next call to {@link next}.
  *
  * Please note that when the iterator is out of track, neither {@link get} nor
- * {@link remove} are defined and both will fail. After the next call to
+ * {@link remove} are defined and both might fail. After the next call to
  * {@link next}, they will be defined again.
+ *
+ * Please also note that, unless specified otherwise, iterators before iteration
+ * started should behave as if after deletion of the first element. Whenever
+ * documentation states about the iterator 'out of track', 'invalid' or
+ * 'in-between elements' this refers to the same concept.
  */
 public interface Vala.Iterator<G> : Object, Traversable<G> {
 	/**

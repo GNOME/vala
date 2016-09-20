@@ -1,6 +1,6 @@
 /* treeset.vala
  *
- * Copyright (C) 2009-2011  Maciej Piechotka
+ * Copyright (C) 2009-2014  Maciej Piechotka
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,7 +39,7 @@ public class Vala.TreeSet<G> : AbstractBidirSortedSet<G> {
 	public override int size {
 		get {return _size;}
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -51,7 +51,12 @@ public class Vala.TreeSet<G> : AbstractBidirSortedSet<G> {
 	 * The elements' comparator function.
 	 */
 	[CCode (notify = false)]
-	public CompareDataFunc<G> compare_func { private set; get; }
+	public CompareDataFunc<G> compare_func {
+		private set {}
+		get {
+			return _compare_func.func;
+		}
+	}
 
 	private int _size = 0;
 
@@ -68,7 +73,11 @@ public class Vala.TreeSet<G> : AbstractBidirSortedSet<G> {
 		if (compare_func == null) {
 			compare_func = Functions.get_compare_func_for (typeof (G));
 		}
-		this.compare_func = compare_func;
+		_compare_func = new Functions.CompareDataFuncClosure<G> ((owned)compare_func);
+	}
+
+	internal TreeSet.with_closures (owned Functions.CompareDataFuncClosure<G> compare_func) {
+		_compare_func = (owned)compare_func;
 	}
 
 	~TreeSet () {
@@ -345,6 +354,18 @@ public class Vala.TreeSet<G> : AbstractBidirSortedSet<G> {
 	/**
 	 * {@inheritDoc}
 	 */
+	public override bool foreach (ForallFunc<G> f) {
+		for (unowned Node<G> node = _first; node != null; node = node.next) {
+			if (!f (node.key)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public override Vala.Iterator<G> iterator () {
 		return new Iterator<G> (this);
 	}
@@ -578,11 +599,6 @@ public class Vala.TreeSet<G> : AbstractBidirSortedSet<G> {
 	}
 
 	private class Iterator<G> : Object, Traversable<G>, Vala.Iterator<G>, BidirIterator<G> {
-		private TreeSet<G> _set;
-
-		// concurrent modification protection
-		private int stamp;
-
 		public Iterator (TreeSet<G> set) {
 			_set = set;
 			stamp = _set.stamp;
@@ -593,6 +609,15 @@ public class Vala.TreeSet<G> : AbstractBidirSortedSet<G> {
 			this._current = current;
 			this.stamp = set.stamp;
 			this.started = true;
+		}
+
+		public Iterator.from_iterator (Iterator<G> iter) {
+			_set = iter._set;
+			stamp = iter.stamp;
+			_current = iter._current;
+			_next = iter._next;
+			_prev = iter._prev;
+			started = iter.started;
 		}
 
 		public bool next () {
@@ -752,10 +777,25 @@ public class Vala.TreeSet<G> : AbstractBidirSortedSet<G> {
 			return true;
 		}
 
-		private weak Node<G>? _current = null;
-		private weak Node<G>? _next = null;
-		private weak Node<G>? _prev = null;
-		private bool started = false;
+		public Vala.Iterator<G>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Vala.Iterator<G>[0];
+			} else {
+				Vala.Iterator<G>[] result = new Vala.Iterator<G>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new Iterator<G>.from_iterator (this);
+				}
+				return result;
+			}
+		}
+
+		protected TreeSet<G> _set;
+		protected int stamp;
+		protected weak Node<G>? _current = null;
+		protected weak Node<G>? _next = null;
+		protected weak Node<G>? _prev = null;
+		protected bool started = false;
 	}
 
 	private inline G min (G a, G b) {
@@ -1040,8 +1080,8 @@ public class Vala.TreeSet<G> : AbstractBidirSortedSet<G> {
 			return h != null && range.in_range (h) ? h : null;
 		}
 
-		private new TreeSet<G> set;
-		private Range<G> range;
+		protected new TreeSet<G> set;
+		protected Range<G> range;
 	}
 
 	private class SubIterator<G> : Object, Traversable<G>, Vala.Iterator<G>, BidirIterator<G> {
@@ -1054,6 +1094,12 @@ public class Vala.TreeSet<G> : AbstractBidirSortedSet<G> {
 			this.set = set;
 			this.range = range;
 			this.iterator = new Iterator<G>.pointing (set, node);
+		}
+
+		public SubIterator.from_iterator (SubIterator<G> iter) {
+			set = iter.set;
+			range = iter.range;
+			iterator = new Iterator<G>.from_iterator (iter.iterator);
 		}
 
 		public bool next () {
@@ -1150,13 +1196,27 @@ public class Vala.TreeSet<G> : AbstractBidirSortedSet<G> {
 			return true;
 		}
 
-		private new TreeSet<G> set;
-		private Range<G> range;
-		private Iterator<G>? iterator = null;
+		public Vala.Iterator<G>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Vala.Iterator<G>[0];
+			} else {
+				Vala.Iterator<G>[] result = new Vala.Iterator<G>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new SubIterator<G>.from_iterator (this);
+				}
+				return result;
+			}
+		}
+
+		protected new TreeSet<G> set;
+		protected Range<G> range;
+		protected Iterator<G>? iterator = null;
 	}
 
 	private Node<G>? root = null;
 	private weak Node<G>? _first = null;
 	private weak Node<G>? _last = null;
 	private int stamp = 0;
+	private Functions.CompareDataFuncClosure<G> _compare_func;
 }

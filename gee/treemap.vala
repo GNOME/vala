@@ -1,6 +1,6 @@
 /* treemap.vala
  *
- * Copyright (C) 2009-2011  Maciej Piechotka
+ * Copyright (C) 2009-2014  Maciej Piechotka
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -38,7 +38,7 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 	public override int size {
 		get { return _size; }
 	}
-
+	
 	public override bool read_only {
 		get { return false; }
 	}
@@ -92,19 +92,31 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 	 * The keys' comparator function.
 	 */
 	[CCode (notify = false)]
-	public CompareDataFunc<K> key_compare_func { private set; get; }
+	public CompareDataFunc<K> key_compare_func {
+		private set {}
+		get {
+			return _key_compare_func.func;
+		}
+	}
 
 	/**
 	 * The values' equality testing function.
 	 */
 	[CCode (notify = false)]
-	public EqualDataFunc<V> value_equal_func { private set; get; }
+	public EqualDataFunc<V> value_equal_func {
+		private set {}
+		get {
+			return _value_equal_func.func;
+		}
+	}
 
 	private int _size = 0;
 
 	private weak SortedSet<K> _keys;
 	private weak Collection<V> _values;
 	private weak SortedSet<Map.Entry<K,V>> _entries;
+	private Functions.CompareDataFuncClosure<K> _key_compare_func;
+	private Functions.EqualDataFuncClosure<V> _value_equal_func;
 
 	/**
 	 * Constructs a new, empty tree map sorted according to the specified
@@ -123,8 +135,13 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 		if (value_equal_func == null) {
 			value_equal_func = Functions.get_equal_func_for (typeof (V));
 		}
-		this.key_compare_func = key_compare_func;
-		this.value_equal_func = value_equal_func;
+		_key_compare_func = new Functions.CompareDataFuncClosure<K> ((owned)key_compare_func);
+		_value_equal_func = new Functions.EqualDataFuncClosure<V> ((owned)value_equal_func);
+	}
+
+	internal TreeMap.with_closures (owned Functions.CompareDataFuncClosure<K> key_compare_func, owned Functions.EqualDataFuncClosure<V> value_equal_func) {
+		_key_compare_func = key_compare_func;
+		_value_equal_func = value_equal_func;
 	}
 
 	~TreeMap () {
@@ -442,19 +459,23 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			return entries;
 		}
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	public override Vala.MapIterator<K,V> map_iterator () {
 		return new MapIterator<K,V> (this);
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	public override Vala.BidirMapIterator<K,V> bidir_map_iterator () {
 		return new MapIterator<K,V> (this);
+	}
+
+	internal Functions.CompareDataFuncClosure<K> get_key_compare_func_closure () {
+		return _key_compare_func;
 	}
 
 	[Compact]
@@ -483,6 +504,12 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			}
 			if (next != null) {
 				next.prev = this;
+			}
+		}
+
+		~Node () {
+			if (entry != null) {
+				entry.remove_weak_pointer ((void**) (&entry));
 			}
 		}
 
@@ -788,8 +815,8 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			}
 		}
 
-		private weak SortedSet<Entry<K,V>>? _entries;
-		public override Set<Entry<K,V>> entries {
+		private weak SortedSet<Map.Entry<K,V>>? _entries;
+		public override Set<Map.Entry<K,V>> entries {
 			owned get {
 				var entries = _entries;
 				if (_entries == null) {
@@ -833,11 +860,11 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			for (var iterator = map_iterator (); iterator.next ();)
 				iterator.unset ();
 		}
-
+		
 		public override Vala.MapIterator<K,V> map_iterator () {
 			return new SubMapIterator<K,V> (map, range);
 		}
-
+		
 		public override BidirMapIterator<K,V> bidir_map_iterator () {
 			return new SubMapIterator<K,V> (map, range);
 		}
@@ -866,7 +893,7 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			}
 		}
 
-		public override SortedSet<K> ascending_entries {
+		public override SortedSet<Map.Entry<K, V>> ascending_entries {
 			owned get {
 				var entries = _entries;
 				if (_entries == null) {
@@ -1241,7 +1268,7 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			return new SubEntrySet<K,V> (_map, new Range<K,V>.tail (_map, after.key));
 		}
 
-		public override SortedSet<K> sub_set (Map.Entry<K, V> after, Map.Entry<K, V> before) {
+		public override SortedSet<Map.Entry<K, V>> sub_set (Map.Entry<K, V> after, Map.Entry<K, V> before) {
 			return new SubEntrySet<K,V> (_map, new Range<K,V> (_map, after.key, before.key));
 		}
 
@@ -1322,7 +1349,7 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			return range.in_range(entry.key) && map.has (entry.key, entry.value);
 		}
 
-		public override BidirIterator<K> bidir_iterator () {
+		public override BidirIterator<Map.Entry<K, V>> bidir_iterator () {
 			return new SubEntryIterator<K,V> (map, range);
 		}
 
@@ -1338,15 +1365,15 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			return Entry.entry_for<K,V> (_last);
 		}
 
-		public override SortedSet<K> head_set (Map.Entry<K,V> before) {
+		public override SortedSet<Map.Entry<K, V>> head_set (Map.Entry<K,V> before) {
 			return new SubEntrySet<K,V> (map, range.cut_tail (before.key));
 		}
 
-		public override SortedSet<K> tail_set (Map.Entry<K,V> after) {
+		public override SortedSet<Map.Entry<K, V>> tail_set (Map.Entry<K,V> after) {
 			return new SubEntrySet<K,V> (map, range.cut_head (after.key));
 		}
 
-		public override SortedSet<K> sub_set (Map.Entry<K,V> after, Map.Entry<K,V> before) {
+		public override SortedSet<Map.Entry<K, V>> sub_set (Map.Entry<K,V> after, Map.Entry<K,V> before) {
 			return new SubEntrySet<K,V> (map, range.cut (after.key, before.key));
 		}
 
@@ -1413,6 +1440,15 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			_map = map;
 			stamp = _map.stamp;
 			this.current = current;
+		}
+
+		public NodeIterator.from_iterator (NodeIterator<K, V> iter) {
+			_map = iter._map;
+			stamp = iter.stamp;
+			started = iter.started;
+			current = iter.current;
+			_next = iter._next;
+			_prev = iter._prev;
 		}
 
 		public bool next () {
@@ -1539,6 +1575,12 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			this.iterator = new NodeIterator<K,V>.pointing (_map, node);
 		}
 
+		public SubNodeIterator.from_iterator (SubNodeIterator<K,V> iter) {
+			_map = iter._map;
+			range = iter.range;
+			iterator = new NodeIterator<K,V>.from_iterator (iter.iterator);
+		}
+
 		public bool next () {
 			if (iterator != null) {
 				weak Node<K,V>? node= iterator.safe_next_get ();
@@ -1637,6 +1679,10 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			base.pointing (map, current);
 		}
 
+		public KeyIterator.from_iterator (KeyIterator<K, V> iterator) {
+			base.from_iterator (iterator);
+		}
+
 		public new K get () {
 			assert (stamp == _map.stamp);
 			assert (current != null);
@@ -1666,6 +1712,19 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			}
 			return true;
 		}
+
+		public Vala.Iterator<K>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Iterator<K>[0];
+			} else {
+				Vala.Iterator<K>[] result = new Vala.Iterator<K>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new KeyIterator<K,V>.from_iterator (this);
+				}
+				return result;
+			}
+		}
 	}
 
 	private class SubKeyIterator<K,V> : SubNodeIterator<K,V>, Traversable<K>, Vala.Iterator<K>, BidirIterator<K> {
@@ -1675,6 +1734,10 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 
 		public SubKeyIterator.pointing (TreeMap<K,V> map, Range<K,V> range, Node<K,V> node) {
 			base.pointing (map, range, node);
+		}
+
+		public SubKeyIterator.from_iterator (SubKeyIterator<K, V> iterator) {
+			base.from_iterator (iterator);
 		}
 
 		public new K get () {
@@ -1695,6 +1758,19 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			}
 			return true;
 		}
+
+		public Vala.Iterator<K>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Iterator<K>[0];
+			} else {
+				Vala.Iterator<K>[] result = new Vala.Iterator<K>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new SubKeyIterator<K,V>.from_iterator(this);
+				}
+				return result;
+			}
+		}
 	}
 
 	private class ValueIterator<K,V> : NodeIterator<K,V>, Traversable<V>, Vala.Iterator<V>, Vala.BidirIterator<V> {
@@ -1704,6 +1780,10 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 
 		public ValueIterator.pointing (TreeMap<K,V> map, Node<K,V> current) {
 			base.pointing (map, current);
+		}
+
+		public ValueIterator.from_iterator (ValueIterator<K,V> iterator) {
+			base.from_iterator (iterator);
 		}
 
 		public new V get () {
@@ -1735,6 +1815,19 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			}
 			return true;
 		}
+
+		public Vala.Iterator<V>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Iterator<V>[0];
+			} else {
+				Vala.Iterator<V>[] result = new Vala.Iterator<V>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new ValueIterator<K,V>.from_iterator (this);
+				}
+				return result;
+			}
+		}
 	}
 
 	private class SubValueIterator<K,V> : SubNodeIterator<K,V>, Traversable<V>, Vala.Iterator<V>, BidirIterator<V> {
@@ -1744,6 +1837,10 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 
 		public SubValueIterator.pointing (TreeMap<K,V> map, Range<K,V> range, Node<K,V> node) {
 			base.pointing (map, range, node);
+		}
+
+		public SubValueIterator.from_iterator (SubValueIterator<K,V> iterator) {
+			base.from_iterator (iterator);
 		}
 
 		public new V get () {
@@ -1764,6 +1861,19 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			}
 			return true;
 		}
+
+		public Vala.Iterator<V>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Iterator<V>[0];
+			} else {
+				Vala.Iterator<V>[] result = new Vala.Iterator<V>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new SubValueIterator<K,V>.from_iterator (this);
+				}
+				return result;
+			}
+		}
 	}
 
 	private class EntryIterator<K,V> : NodeIterator<K,V>, Traversable<Map.Entry<K, V>>, Vala.Iterator<Map.Entry<K,V>>, Vala.BidirIterator<Map.Entry<K,V>> {
@@ -1773,6 +1883,10 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 
 		public EntryIterator.pointing (TreeMap<K,V> map, Node<K,V> node) {
 			base.pointing (map, node);
+		}
+
+		public EntryIterator.from_iterator (EntryIterator<K,V> iterator) {
+			base.from_iterator (iterator);
 		}
 
 		public new Map.Entry<K,V> get () {
@@ -1808,6 +1922,19 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			}
 			return true;
 		}
+
+		public Vala.Iterator<Map.Entry<K,V>>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Iterator<Map.Entry<K,V>>[0];
+			} else {
+				Vala.Iterator<Map.Entry<K,V>>[] result = new Vala.Iterator<Map.Entry<K,V>>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new EntryIterator<K,V>.from_iterator (this);
+				}
+				return result;
+			}
+		}
 	}
 
 	private class SubEntryIterator<K,V> : SubNodeIterator<K,V>, Traversable<Map.Entry<K, V>>, Vala.Iterator<Map.Entry<K,V>>, Vala.BidirIterator<Map.Entry<K,V>> {
@@ -1817,6 +1944,10 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 
 		public SubEntryIterator.pointing (TreeMap<K,V> map, Range<K,V> range, Node<K,V> node) {
 			base.pointing (map, range, node);
+		}
+
+		public SubEntryIterator.from_iterator (SubEntryIterator<K,V> iterator) {
+			base.from_iterator (iterator);
 		}
 
 		public new Map.Entry<K,V> get () {
@@ -1840,6 +1971,19 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 				}
 			}
 			return true;
+		}
+
+		public Vala.Iterator<Map.Entry<K,V>>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Iterator<Map.Entry<K,V>>[0];
+			} else {
+				Vala.Iterator<Map.Entry<K,V>>[] result = new Vala.Iterator<Map.Entry<K,V>>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new SubEntryIterator<K,V>.from_iterator (this);
+				}
+				return result;
+			}
 		}
 	}
 
@@ -1865,13 +2009,13 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			assert (valid);
 			current.value = value;
 		}
-
+		
 		public override bool read_only {
 			get {
 				return false;
 			}
 		}
-
+		
 		public bool mutable {
 			get {
 				return true;
@@ -1898,13 +2042,13 @@ public class Vala.TreeMap<K,V> : Vala.AbstractBidirSortedMap<K,V> {
 			assert (valid);
 			iterator.current.value = value;
 		}
-
+		
 		public override bool read_only {
 			get {
 				return false;
 			}
 		}
-
+		
 		public bool mutable {
 			get {
 				return true;

@@ -162,7 +162,7 @@ public abstract class Vala.AbstractMultiMap<K,V> : Object, MultiMap<K,V> {
 			_multi_map = multi_map;
 		}
 
-		public override Vala.Iterator<K> iterator () {
+		public override Vala.Iterator<V> iterator () {
 			return new ValueIterator<K, V> (_multi_map._storage_map.map_iterator ());
 		}
 
@@ -179,11 +179,11 @@ public abstract class Vala.AbstractMultiMap<K,V> : Object, MultiMap<K,V> {
 			return false;
 		}
 
-		public override bool add (V key) {
+		public override bool add (V value) {
 			assert_not_reached ();
 		}
 
-		public override  bool remove (V item) {
+		public override  bool remove (V value) {
 			assert_not_reached ();
 		}
 
@@ -307,5 +307,21 @@ public abstract class Vala.AbstractMultiMap<K,V> : Object, MultiMap<K,V> {
 		}
 
 		public bool mutable { get { return false; } }
+	}
+
+	private WeakRef _read_only_view;
+	construct {
+		_read_only_view = WeakRef(null);
+	}
+
+	public virtual new MultiMap<K, V> read_only_view {
+		owned get {
+			MultiMap<K, V>? instance = (MultiMap<K, V>?)_read_only_view.get ();
+			if (instance == null) {
+				instance = new ReadOnlyMultiMap<K, V> (this);
+				_read_only_view.set (instance);
+			}
+			return instance;
+		}
 	}
 }

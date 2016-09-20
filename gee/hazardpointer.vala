@@ -165,8 +165,10 @@ public class Vala.HazardPointer<G> { // FIXME: Make it a struct
 	public static void set_pointer<G> (G **aptr, owned G? new_ptr, size_t mask = 0, size_t new_mask = 0) {
 		HazardPointer<G>? ptr = exchange_hazard_pointer<G> (aptr, new_ptr, mask, new_mask, null);
 		if (ptr != null) {
-			DestroyNotify<G> notify = get_destroy_notify<G> ();
-			ptr.release ((owned)notify);
+			DestroyNotify? notify = Utils.Free.get_destroy_notify<G> ();
+			if (notify != null) {
+				ptr.release ((owned)notify);
+			}
 		}
 	}
 
@@ -202,8 +204,8 @@ public class Vala.HazardPointer<G> { // FIXME: Make it a struct
 		void *old_rptr = (void *)((size_t)(old_ptr) | (mask & old_mask));
 		bool success = AtomicPointer.compare_and_exchange((void **)aptr, old_rptr, new_rptr);
 		if (success) {
-			DestroyNotify<G> notify = get_destroy_notify<G> ();
-			if (old_ptr != null) {
+			DestroyNotify? notify = Utils.Free.get_destroy_notify<G> ();
+			if (old_ptr != null && notify != null) {
 				Context.get_current_context ()->release_ptr (old_ptr, (owned)notify);
 			}
 		} else if (new_ptr != null) {
@@ -400,37 +402,36 @@ public class Vala.HazardPointer<G> { // FIXME: Make it a struct
 		 * @param to_free List containing elements to free.
 		 * @return Non-empty list of not freed elements or ``null`` if all elements have been disposed.
 		 */
-		internal ArrayList<FreeNode *>? perform (owned ArrayList<FreeNode *> to_free) {
+		internal bool perform (ref ArrayList<FreeNode *> to_free) {
 			switch (this.to_concrete ()) {
 			case TRY_FREE:
-				return try_free (to_free) ? (owned) to_free : null;
+				return try_free (to_free);
 			case FREE:
 				while (try_free (to_free)) {
 					Thread.yield ();
 				}
-				return null;
+				break;
 			case TRY_RELEASE:
 				ReleasePolicy.ensure_start ();
 				if (_queue_mutex.trylock ()) {
 					_queue.offer ((owned) to_free);
 					_queue_mutex.unlock ();
-					return null;
+					return true;
 				} else {
-					return (owned) to_free;
+					return false;
 				}
 			case RELEASE:
 				ReleasePolicy.ensure_start ();
 				_queue_mutex.lock ();
 				_queue.offer ((owned) to_free);
 				_queue_mutex.unlock ();
-				return null;
+				return true;
 			default:
 				assert_not_reached ();
 			}
+			return false;
 		}
 	}
-
-	public delegate void DestroyNotify (void *ptr);
 
 	/**
 	 * Release policy determines what happens with object freed by Policy.TRY_RELEASE
@@ -451,26 +452,38 @@ public class Vala.HazardPointer<G> { // FIXME: Make it a struct
 		private static void start (ReleasePolicy self) { // FIXME: Make it non-static [bug 659778]
 			switch (self) {
 			case HELPER_THREAD:
-				try {
-					new Thread<bool> ("<<libgee hazard pointer>>", () => {
-						while (true) {
-							Thread.yield ();
-							attempt_free ();
+				new Thread<bool> ("<<libgee hazard pointer>>", () => {
+					Context ctx = new Context (Policy.TRY_FREE);
+					while (true) {
+						Thread.yield ();
+						pull_from_queue (ctx._to_free, ctx._to_free.is_empty);
+						ctx.try_free ();
+						if (ctx._to_free.is_empty) {
+							GLib.Thread.usleep (100000);
 						}
-					});
-				} catch (ThreadError error) {
-					assert_not_reached ();
-				}
+					}
+				});
 				break;
 			case MAIN_LOOP:
+				_global_to_free = new ArrayList<FreeNode *> ();
 				Idle.add (() => {
-					attempt_free ();
+					Context ctx = new Context (Policy.TRY_FREE);
+					swap (ref _global_to_free, ref ctx._to_free);
+					pull_from_queue (ctx._to_free, false);
+					ctx.try_free ();
+					swap (ref _global_to_free, ref ctx._to_free);
 					return true;
 				}, Priority.LOW);
 				break;
 			default:
 				assert_not_reached ();
 			}
+		}
+
+		private static void swap<T>(ref T a, ref T b) {
+			T tmp = (owned)a;
+			a = (owned)b;
+			b = (owned)tmp;
 		}
 
 		/**
@@ -485,21 +498,26 @@ public class Vala.HazardPointer<G> { // FIXME: Make it a struct
 				if ((policy & (1 << (sizeof(int) * 8 - 1))) == 0) {
 					_queue = new LinkedList<ArrayList<FreeNode *>> ();
 					// Hack to not lie about successfull setting policy
-					policy = AtomicInt.exchange_and_add (ref release_policy, (int)(1 << (sizeof(int) * 8 - 1)));
+					policy = AtomicInt.add (ref release_policy, (int)(1 << (sizeof(int) * 8 - 1)));
 					start ((ReleasePolicy) policy);
 				}
 				_queue_mutex.unlock ();
 			}
 		}
 
-		private static inline void attempt_free () {
-			if (_queue_mutex.trylock ()) {
+		private static inline void pull_from_queue (Collection<FreeNode *> to_free, bool do_lock) {
+			bool locked = do_lock;
+			if (do_lock) {
+				_queue_mutex.lock ();
+			} else {
+				locked = _queue_mutex.trylock ();
+			}
+			if (locked) {
 				Collection<ArrayList<FreeNode *>> temp = new ArrayList<ArrayList<FreeNode *>> ();
 				_queue.drain (temp);
 				_queue_mutex.unlock ();
-				temp.foreach ((x) => {_global_to_free.add_all (x); return true;});
+				temp.foreach ((x) => {to_free.add_all (x); return true;});
 			}
-			try_free (_global_to_free);
 		}
 	}
 
@@ -547,15 +565,12 @@ public class Vala.HazardPointer<G> { // FIXME: Make it a struct
 			int size = _to_free.size;
 			bool clean_parent = false;
 			if (size > 0) {
-				ArrayList<FreeNode *>? remaining;
-				if (_parent == null || size >= THRESHOLD)
-					remaining = _policy.perform ((owned) _to_free);
-				else
-					remaining = (owned) _to_free;
-				if (remaining != null) {
-					assert (_parent != null);
-					_parent->_to_free.add_all (remaining);
-					clean_parent = true;
+				if (_parent == null || size >= THRESHOLD) {
+					if (!_policy.perform (ref _to_free)) {
+						assert (_parent != null && _to_free != null);
+						_parent->_to_free.add_all (_to_free);
+						clean_parent = true;
+					}
 				}
 			}
 #if DEBUG
@@ -619,10 +634,6 @@ public class Vala.HazardPointer<G> { // FIXME: Make it a struct
 		 */
 		internal inline static Context *get_current_context () {
 			return _current_context.get ();
-		}
-
-		private inline bool _should_free () {
-			return (_parent == null && _to_free.size > 0) || _to_free.size >= THRESHOLD;
 		}
 
 		internal Context *_parent;
@@ -706,14 +717,6 @@ public class Vala.HazardPointer<G> { // FIXME: Make it a struct
 
 	internal static ArrayList<FreeNode *> _global_to_free;
 
-	internal static DestroyNotify get_destroy_notify<G> () {
-		return (ptr) => {
-			G *gptr = ptr;
-			G obj = (owned)gptr;
-			obj = null;
-		};
-	}
-
 	[Compact]
 	internal class FreeNode {
 		public void *pointer;
@@ -729,7 +732,7 @@ public class Vala.HazardPointer<G> { // FIXME: Make it a struct
 			AtomicPointer.set (&_hazard, null);
 			AtomicInt.set (ref _active, 1);
 		}
-
+		
 		inline ~Node () {
 			delete _next;
 		}

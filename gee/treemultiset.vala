@@ -38,6 +38,10 @@ public class Vala.TreeMultiSet<G> : AbstractMultiSet<G> {
 	 * @param compare_func an optional element comparator function
 	 */
 	public TreeMultiSet (owned CompareDataFunc<G>? compare_func = null) {
-		base (new TreeMap<G, int> (compare_func));
+		base (new TreeMap<G, int> ((owned)compare_func));
+	}
+
+	internal TreeMultiSet.with_closures (owned Functions.CompareDataFuncClosure<G> compare_func) {
+		base (new TreeMap<G, int>.with_closures ((owned)compare_func, new Functions.EqualDataFuncClosure<int> (Functions.get_equal_func_for (typeof (int)))));
 	}
 }

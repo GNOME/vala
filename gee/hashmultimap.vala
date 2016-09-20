@@ -33,10 +33,20 @@ public class Vala.HashMultiMap<K,V> : AbstractMultiMap<K,V> {
 	}
 
 	[CCode (notify = false)]
-	public HashDataFunc<V> value_hash_func { private set; get; }
+	public HashDataFunc<V> value_hash_func {
+		private set {}
+		get {
+			return _value_hash_func.func;
+		}
+	}
 
 	[CCode (notify = false)]
-	public EqualDataFunc<V> value_equal_func { private set; get; }
+	public EqualDataFunc<V> value_equal_func {
+		private set {}
+		get {
+			return _value_equal_func.func;
+		}
+	}
 
 	/**
 	 * Constructs a new, empty hash multimap.
@@ -51,26 +61,29 @@ public class Vala.HashMultiMap<K,V> : AbstractMultiMap<K,V> {
 	 */
 	public HashMultiMap (owned HashDataFunc<K>? key_hash_func = null, owned EqualDataFunc<K>? key_equal_func = null,
 	                     owned HashDataFunc<V>? value_hash_func = null, owned EqualDataFunc<V>? value_equal_func = null) {
-		base (new HashMap<K, Set<V>> (key_hash_func, key_equal_func, Functions.get_equal_func_for (typeof (Set))));
+		base (new HashMap<K, Set<V>> ((owned)key_hash_func, (owned)key_equal_func, Functions.get_equal_func_for (typeof (Set))));
 		if (value_hash_func == null) {
 			value_hash_func = Functions.get_hash_func_for (typeof (V));
 		}
 		if (value_equal_func == null) {
 			value_equal_func = Functions.get_equal_func_for (typeof (V));
 		}
-		this.value_hash_func = value_hash_func;
-		this.value_equal_func = value_equal_func;
+		_value_hash_func = new Functions.HashDataFuncClosure<V> ((owned)value_hash_func);
+		_value_equal_func = new Functions.EqualDataFuncClosure<V> ((owned)value_equal_func);
 	}
 
 	protected override Collection<V> create_value_storage () {
-		return new HashSet<V> (_value_hash_func, _value_equal_func);
+		return new HashSet<V>.with_closures (_value_hash_func, _value_equal_func);
 	}
 
 	protected override MultiSet<K> create_multi_key_set () {
-		return new HashMultiSet<K> (key_hash_func, key_equal_func);
+		return new HashMultiSet<K>.with_closures (((HashMap<K, Set<V>>) _storage_map).get_key_hash_func_closure (), ((HashMap<K, Set<V>>) _storage_map).get_key_equal_func_closure ());
 	}
 
-	protected override EqualDataFunc get_value_equal_func () {
-		return _value_equal_func;
+	protected override EqualDataFunc<V> get_value_equal_func () {
+		return _value_equal_func.clone_func ();
 	}
+
+	private Functions.HashDataFuncClosure<V> _value_hash_func;
+	private Functions.EqualDataFuncClosure<V> _value_equal_func;
 }

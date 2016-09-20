@@ -31,7 +31,10 @@ public interface Vala.ListIterator<G> : Vala.Iterator<G> {
 
 	/**
 	 * Adds the specified item after the current item in the iteration. The
-	 * cursor is moved to point to the new added item.
+	 * iterator is moved to the point of the new added item.
+	 *
+	 * Please note that if iterator points in-between elements the element
+	 * is added after the current element and iterator point on it.
 	 */
 	public abstract void add (G item);
 

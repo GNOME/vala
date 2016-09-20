@@ -30,7 +30,12 @@ public class Vala.TreeMultiMap<K,V> : AbstractMultiMap<K,V> {
 	}
 
 	[CCode (notify = false)]
-	public CompareDataFunc<V> value_compare_func { private set; get; }
+	public CompareDataFunc<V> value_compare_func {
+		private set {}
+		get {
+			return _value_compare_func.func;
+		}
+	}
 
 	/**
 	 * Constructs a new, empty tree multimap.
@@ -42,22 +47,24 @@ public class Vala.TreeMultiMap<K,V> : AbstractMultiMap<K,V> {
 	 * @param value_compare_func an optional value comparator function
 	 */
 	public TreeMultiMap (owned CompareDataFunc<K>? key_compare_func = null, owned CompareDataFunc<V>? value_compare_func = null) {
-		base (new TreeMap<K, Set<V>> (key_compare_func, Functions.get_equal_func_for (typeof (Set))));
+		base (new TreeMap<K, Set<V>> ((owned)key_compare_func, Functions.get_equal_func_for (typeof (Set))));
 		if (value_compare_func == null) {
 			value_compare_func = Functions.get_compare_func_for (typeof (V));
 		}
-		this.value_compare_func = value_compare_func;
+		_value_compare_func = new Functions.CompareDataFuncClosure<V> ((owned)value_compare_func);
 	}
 
 	protected override Collection<V> create_value_storage () {
-		return new TreeSet<V> (_value_compare_func);
+		return new TreeSet<V>.with_closures (_value_compare_func);
 	}
 
 	protected override MultiSet<K> create_multi_key_set () {
-		return new TreeMultiSet<K> (key_compare_func);
+		return new TreeMultiSet<K>.with_closures (((TreeMap<K, Set<V>>) _storage_map).get_key_compare_func_closure ());
 	}
 
 	protected override EqualDataFunc<V> get_value_equal_func () {
 		return Functions.get_equal_func_for (typeof (V));
 	}
+
+	private Functions.CompareDataFuncClosure<V> _value_compare_func;
 }

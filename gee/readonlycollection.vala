@@ -1,6 +1,7 @@
 /* readonlycollection.vala
  *
  * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2010-2014  Maciej Piechotka
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,7 +47,7 @@ internal class Vala.ReadOnlyCollection<G> : Object, Traversable<G>, Iterable<G>,
 	public bool is_empty {
 		get { return _collection.is_empty; }
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -76,7 +77,7 @@ internal class Vala.ReadOnlyCollection<G> : Object, Traversable<G>, Iterable<G>,
 	/**
 	 * {@inheritDoc}
 	 */
-	public Vala.Iterator<A> stream<A> (owned StreamFunc<A> f) {
+	public Vala.Iterator<A> stream<A> (owned StreamFunc<G, A> f) {
 		return _collection.stream<A> ((owned)f);
 	}
 
@@ -214,7 +215,7 @@ internal class Vala.ReadOnlyCollection<G> : Object, Traversable<G>, Iterable<G>,
 			return _iter.foreach (f);
 		}
 
-		public Vala.Iterator<A> stream<A> (owned StreamFunc<A, G> f) {
+		public Vala.Iterator<A> stream<A> (owned StreamFunc<G, A> f) {
 			return _iter.stream<A> ((owned)f);
 		}
 
@@ -224,6 +225,24 @@ internal class Vala.ReadOnlyCollection<G> : Object, Traversable<G>, Iterable<G>,
 
 		public Vala.Iterator<G> chop (int offset, int length = -1) {
 			return _iter.chop ( offset, length);
+		}
+
+		public Vala.Iterator<G>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Vala.Iterator<G>[0];
+			} else {
+				Vala.Iterator<G>[] iters = _iter.tee (forks);
+				Vala.Iterator<G>[] result = new Vala.Iterator<G>[forks];
+				if (iters[0] == _iter) {
+					result[0] = this;
+				} else {
+					result[0] = new Iterator<G> (iters[0]);
+				}
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new Iterator<G> (iters[i]);
+				}
+				return result;
+			}
 		}
 	}
 

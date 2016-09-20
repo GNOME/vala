@@ -91,18 +91,20 @@ public abstract class Vala.AbstractMap<K,V> : Object, Traversable<Map.Entry<K,V>
 	 */
 	public abstract void clear ();
 
-	private weak Map<K,V> _read_only_view;
+	private WeakRef _read_only_view;
+	construct {
+		_read_only_view = WeakRef(null);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public virtual Map<K,V> read_only_view {
 		owned get {
-			Map<K,V> instance = _read_only_view;
-			if (_read_only_view == null) {
+			Map<K,V>? instance = (Map<K,V>?)_read_only_view.get ();
+			if (instance == null) {
 				instance = new ReadOnlyMap<K,V> (this);
-				_read_only_view = instance;
-				instance.add_weak_pointer ((void**) (&_read_only_view));
+				_read_only_view.set (instance);
 			}
 			return instance;
 		}

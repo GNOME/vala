@@ -26,18 +26,20 @@ public abstract class Vala.AbstractBidirList<G> : AbstractList<G>, BidirList<G> 
 	 */
 	public abstract BidirListIterator<G> bidir_list_iterator ();
 
-	private weak BidirList<G> _read_only_view;
+	private WeakRef _read_only_view;
+	construct {
+		_read_only_view = WeakRef(null);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public virtual new BidirList<G> read_only_view {
 		owned get {
-			BidirList<G> instance = _read_only_view;
-			if (_read_only_view == null) {
+			BidirList<G>? instance = (BidirList<G>?)_read_only_view.get();
+			if (instance == null) {
 				instance = new ReadOnlyBidirList<G> (this);
-				_read_only_view = instance;
-				instance.add_weak_pointer ((void**) (&_read_only_view));
+				_read_only_view.set (instance);
 			}
 			return instance;
 		}

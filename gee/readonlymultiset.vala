@@ -1,6 +1,6 @@
-/* abstractbidirsortedset.vala
+/* readonlymultiset.vala
  *
- * Copyright (C) 2012  Maciej Piechotka
+ * Copyright (C) 2013  Maciej Piechotka
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,36 +20,38 @@
  * 	Maciej Piechotka <uzytkownik2@gmail.com>
  */
 
+using GLib;
+
 /**
- * Skeletal implementation of the {@link BidirSortedSet} interface.
+ * Read-only view for {@link MultiSet} collections.
  *
- * Contains common code shared by all set implementations.
+ * This class decorates any class which implements the {@link Collection}
+ * interface by making it read only. Any method which normally modify data will
+ * throw an error.
  *
- * @see TreeSet
+ * @see MultiSet
  */
-public abstract class Vala.AbstractBidirSortedSet<G> : Vala.AbstractSortedSet<G>, BidirSortedSet<G> {
+internal class Vala.ReadOnlyMultiSet<G> : Vala.ReadOnlyCollection<G>, MultiSet<G> {
 	/**
-	 * {@inheritDoc}
+	 * Constructs a read-only multi-set that mirrors the content of the specified
+	 * list.
+	 *
+	 * @param multiset the multi-set to decorate.
 	 */
-	public abstract BidirIterator<G> bidir_iterator ();
-
-	private WeakRef _read_only_view;
-	construct {
-		_read_only_view = WeakRef(null);
+	public ReadOnlyMultiSet (MultiSet<G> multiset) {
+		base (multiset);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public virtual new BidirSortedSet<G> read_only_view {
-		owned get {
-			BidirSortedSet<G>? instance = (BidirSortedSet<G>?)_read_only_view.get ();
-			if (instance == null) {
-				instance = new ReadOnlyBidirSortedSet<G> (this);
-				_read_only_view.set (instance);
-			}
-			return instance;
-		}
+	public int count (G item) {
+		return ((Vala.MultiSet<G>) _collection).count (item);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public virtual new MultiSet<G> read_only_view { owned get { return this; } }
 }
 

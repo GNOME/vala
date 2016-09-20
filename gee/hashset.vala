@@ -3,6 +3,7 @@
  * Copyright (C) 1995-1997  Peter Mattis, Spencer Kimball and Josh MacDonald
  * Copyright (C) 1997-2000  GLib Team and others
  * Copyright (C) 2007-2009  Jürg Billeter
+ * Copyright (C) 2009-2014  Maciej Piechotka
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +26,41 @@
 using GLib;
 
 namespace Vala {
+	/**
+	 * A function producing a hash for an object. Two hashes of equal
+	 * objects (as specified by corresponding {@link EqualDataFunc}) have to
+	 * be equal.
+	 *
+	 * Note: Hash for a given object //must not// change during the lifetime
+	 *   of delegate.
+	 *
+	 * @param v Hashed value
+	 * @return Hash for given value
+	 *
+	 * @see Hashable
+	 */
 	public delegate uint HashDataFunc<T> (T v);
+	/**
+	 * A function comparing two object defining equivalence relationship.
+	 *
+	 * In other words if `equal_to` is `EqualDataFunc` then:
+	 *
+	 *  * It must be reflexive: for all objects `a` it holds that
+	 *    `equal_to(a, a)`.
+	 *  * It must be symmetric: for all objects `a` and `b` if
+	 *    `equal_to(a, b)` then `equal_to(b, a)`.
+	 *  * It must be transitive: if `equal_to(a, b)` and `equal_to(b, c)`
+	 *    then `equal_to(a, c)`
+	 *
+	 * Note: The relationship //must not// change during lifetime of the
+	 *   delegate.
+	 *
+	 * @param a First value
+	 * @param b Second value
+	 * @return Whether values are equal
+	 *
+	 * @see Hashable
+	 */
 	public delegate bool EqualDataFunc<T> (T a, T b);
 }
 
@@ -57,17 +92,29 @@ public class Vala.HashSet<G> : AbstractSet<G> {
 	 * The elements' hash function.
 	 */
 	[CCode (notify = false)]
-	public HashDataFunc<G> hash_func { private set; get; }
+	public HashDataFunc<G> hash_func {
+		private set {}
+		get {
+			return _hash_func.func;
+		}
+	}
 
 	/**
 	 * The elements' equality testing function.
 	 */
 	[CCode (notify = false)]
-	public EqualDataFunc<G> equal_func { private set; get; }
+	public EqualDataFunc<G> equal_func {
+		private set {}
+		get {
+			return _equal_func.func;
+		}
+	}
 
 	private int _array_size;
 	private int _nnodes;
 	private Node<G>[] _nodes;
+	private Functions.HashDataFuncClosure<G> _hash_func;
+	private Functions.EqualDataFuncClosure<G> _equal_func;
 
 	// concurrent modification protection
 	private int _stamp = 0;
@@ -91,8 +138,15 @@ public class Vala.HashSet<G> : AbstractSet<G> {
 		if (equal_func == null) {
 			equal_func = Functions.get_equal_func_for (typeof (G));
 		}
-		this.hash_func = hash_func;
-		this.equal_func = equal_func;
+		_hash_func = new Functions.HashDataFuncClosure<G> ((owned)hash_func);
+		_equal_func = new Functions.EqualDataFuncClosure<G> ((owned)equal_func);
+		_array_size = MIN_SIZE;
+		_nodes = new Node<G>[_array_size];
+	}
+
+	internal HashSet.with_closures (owned Functions.HashDataFuncClosure<G> hash_func, owned Functions.EqualDataFuncClosure<G> equal_func) {
+		_hash_func = hash_func;
+		_equal_func = equal_func;
 		_array_size = MIN_SIZE;
 		_nodes = new Node<G>[_array_size];
 	}
@@ -165,6 +219,20 @@ public class Vala.HashSet<G> : AbstractSet<G> {
 		resize ();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public override bool foreach (ForallFunc<G> f) {
+		for (int i = 0; i < _array_size; i++) {
+			for (unowned Node<G>? current = _nodes[i]; current != null; current = current.next) {
+				if (!f (current.key)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	private inline bool remove_helper (G key) {
 		Node<G>** node = lookup_node (key);
 		if (*node != null) {
@@ -223,17 +291,16 @@ public class Vala.HashSet<G> : AbstractSet<G> {
 	}
 
 	private class Iterator<G> : Object, Traversable<G>, Vala.Iterator<G> {
-		private HashSet<G> _set;
-		private int _index = -1;
-		private weak Node<G> _node;
-		private weak Node<G> _next;
-
-		// concurrent modification protection
-		private int _stamp = 0;
-
-		public Iterator (HashSet set) {
+		public Iterator (HashSet<G> set) {
 			_set = set;
 			_stamp = _set._stamp;
+		}
+
+		public Iterator.from_iterator (Iterator<G> iter) {
+			_set = iter._set;
+			_index = iter._index;
+			_node = iter._node;
+			_next = iter._next;
 		}
 
 		public bool next () {
@@ -326,6 +393,25 @@ public class Vala.HashSet<G> : AbstractSet<G> {
 			_next = null;
 			return true;
 		}
+
+		public Vala.Iterator<G>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Vala.Iterator<G>[0];
+			} else {
+				Vala.Iterator<G>[] result = new Vala.Iterator<G>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[0] = new Iterator<G>.from_iterator (this);
+				}
+				return result;
+			}
+		}
+
+		protected HashSet<G> _set;
+		protected int _index = -1;
+		protected weak Node<G> _node;
+		protected weak Node<G> _next;
+		protected int _stamp = 0;
 	}
 }
 

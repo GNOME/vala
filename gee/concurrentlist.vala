@@ -1,6 +1,6 @@
 /* concurrentlist.vala
  *
- * Copyright (C) 2011  Maciej Piechotka
+ * Copyright (C) 2011-2014  Maciej Piechotka
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@
  * [[http://www.cse.yorku.ca/~ruppert/papers/lfll.pdf|Mikhail Fomitchev and  Eric Ruppert paper ]].
  *
  * Many threads are allowed to operate on the same structure as well as modification
- * of structure during iteration is allowed. However the change may not be immidiatly
+ * of structure during iteration is allowed. However the change may not be immediately
  * visible to other threads.
  */
 public class Vala.ConcurrentList<G> : AbstractList<G> {
@@ -33,7 +33,12 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 	 * The elements' equality testing function.
 	 */
 	[CCode (notify = false)]
-	public Vala.EqualDataFunc<G> equal_func { private set; get; }
+	public Vala.EqualDataFunc<G> equal_func {
+		private set {}
+		get {
+			return _equal_func.func;
+		}
+	}
 
 	/**
 	 * Construct new, empty single linked list
@@ -44,15 +49,23 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 	 * @param equal_func an optional element equality testing function
 	 */
 	public ConcurrentList (owned Vala.EqualDataFunc<G>? equal_func = null) {
-		if (equal_func == null)
+		if (equal_func == null) {
 			equal_func = Vala.Functions.get_equal_func_for (typeof (G));
-		this.equal_func = (owned)equal_func;
+		}
+		_equal_func = new Functions.EqualDataFuncClosure<G>((owned)equal_func);
+		_head = new Node<G>.head ();
+		HazardPointer.set_pointer<Node<G>> (&_tail, _head);
+	}
+
+	internal ConcurrentList.with_closure (owned Functions.EqualDataFuncClosure<G> equal_func) {
+		_equal_func = (owned)equal_func;
 		_head = new Node<G>.head ();
 		HazardPointer.set_pointer<Node<G>> (&_tail, _head);
 	}
 
 	~ConcurrentList () {
 		HazardPointer.Context ctx = new HazardPointer.Context ();
+		Utils.Misc.unused (ctx);
 		_head = null;
 		HazardPointer.set_pointer<Node<G>?> (&_tail, null);
 	}
@@ -72,6 +85,7 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 	public override int size {
 		get {
 			HazardPointer.Context ctx = new HazardPointer.Context ();
+			Utils.Misc.unused (ctx);
 			int result = 0;
 			for (var iter = iterator (); iter.next ();)
 				result++;
@@ -93,6 +107,7 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 	 */
 	public override bool contains (G item) {
 		HazardPointer.Context ctx = new HazardPointer.Context ();
+		Utils.Misc.unused (ctx);
 		for (var iter = iterator (); iter.next ();)
 			if (equal_func (item, iter.get ()))
 				return true;
@@ -104,6 +119,7 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 	 */
 	public override bool add (G item) {
 		HazardPointer.Context ctx = new HazardPointer.Context ();
+		Utils.Misc.unused (ctx);
 		Node<G> node = new Node<G> (item);
 		node.insert (get_tail (), null);
 		return true;
@@ -114,6 +130,7 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 	 */
 	public override bool remove (G item) {
 		HazardPointer.Context ctx = new HazardPointer.Context ();
+		Utils.Misc.unused (ctx);
 		Vala.Iterator<G> iter = iterator ();
 		while (iter.next ()) {
 			if (equal_func (item, iter.get ())) {
@@ -129,6 +146,7 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 	 */
 	public override void clear () {
 		HazardPointer.Context ctx = new HazardPointer.Context ();
+		Utils.Misc.unused (ctx);
 		var iter = iterator ();
 		while (iter.next ())
 			iter.remove ();
@@ -154,6 +172,7 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 	 */
 	public override G? get (int index) {
 		HazardPointer.Context ctx = new HazardPointer.Context ();
+		Utils.Misc.unused (ctx);
 		assert (index >= 0);
 		for (var iterator = iterator (); iterator.next ();)
 			if (index-- == 0)
@@ -166,6 +185,7 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 	 */
 	public override void set (int index, G item) {
 		HazardPointer.Context ctx = new HazardPointer.Context ();
+		Utils.Misc.unused (ctx);
 		assert (index >= 0);
 		for (var iterator = list_iterator (); iterator.next ();) {
 			if (index-- == 0) {
@@ -181,6 +201,7 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 	 */
 	public override int index_of (G item) {
 		HazardPointer.Context ctx = new HazardPointer.Context ();
+		Utils.Misc.unused (ctx);
 		int index = 0;
 		for (var iterator = list_iterator (); iterator.next (); index++)
 			if (equal_func (item, iterator.get ()))
@@ -193,6 +214,7 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 	 */
 	public override void insert (int index, G item) {
 		HazardPointer.Context ctx = new HazardPointer.Context ();
+		Utils.Misc.unused (ctx);
 		assert (index >= 0);
 		if (index == 0) {
 			var prev = _head;
@@ -215,6 +237,7 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 	 */
 	public override G remove_at (int index) {
 		HazardPointer.Context ctx = new HazardPointer.Context ();
+		Utils.Misc.unused (ctx);
 		for (var iterator = list_iterator (); iterator.next ();) {
 			if (index-- == 0) {
 				G data = iterator.get ();
@@ -230,9 +253,10 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 	 */
 	public override List<G>? slice (int start, int end) {
 		HazardPointer.Context ctx = new HazardPointer.Context ();
+		Utils.Misc.unused (ctx);
 		assert (0 <= start);
 		assert (start <= end);
-		var list = new ConcurrentList<G> (equal_func);
+		var list = new ConcurrentList<G>.with_closure (_equal_func);
 		var iterator = iterator ();
 		int idx = 0;
 		for (; iterator.next (); idx++)
@@ -258,25 +282,32 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 
 	private Node<G> _head;
 	private Node<G> *_tail;
+	private Functions.EqualDataFuncClosure<G> _equal_func;
 
 	private class Iterator<G> : Object, Vala.Traversable<G>, Vala.Iterator<G>, ListIterator<G> {
 		public Iterator (Node<G> head) {
-			_started = false;
 			_removed = false;
 			_index = -1;
 			_prev = null;
 			_curr = head;
 		}
 
+		public Iterator.from_iterator (Iterator<G> iter) {
+			_removed = iter._removed;
+			_index = iter._index;
+			_prev = iter._prev;
+			_curr = iter._curr;
+		}
+
 		public bool next () {
 			HazardPointer.Context ctx = new HazardPointer.Context ();
+			Utils.Misc.unused (ctx);
 			Node<G>? _old_prev = _removed ? _prev : null;
 			bool success = Node.proceed<G> (ref _prev, ref _curr);
 			if (success) {
 				if (_removed)
-					_prev = _old_prev;
+					_prev = (owned)_old_prev;
 				_removed = false;
-				_started = true;
 				_index++;
 			}
 			return success;
@@ -284,19 +315,22 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 
 		public bool has_next () {
 			HazardPointer.Context ctx = new HazardPointer.Context ();
+			Utils.Misc.unused (ctx);
 			Node<G>? prev = _prev;
-			Node<G>? curr = _curr;
+			Node<G> curr = _curr;
 			return Node.proceed<G> (ref prev, ref curr);
 		}
 
 		public new G get () {
 			HazardPointer.Context ctx = new HazardPointer.Context ();
+			Utils.Misc.unused (ctx);
 			assert (valid);
 			return HazardPointer.get_pointer<G> (&_curr._data);
 		}
 
 		public new void set (G item) {
 			HazardPointer.Context ctx = new HazardPointer.Context ();
+			Utils.Misc.unused (ctx);
 			assert (valid);
 #if DEBUG
 			G item_copy = item;
@@ -309,6 +343,7 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 
 		public void remove () {
 			HazardPointer.Context ctx = new HazardPointer.Context ();
+			Utils.Misc.unused (ctx);
 			assert (valid);
 			_curr.remove (_prev);
 			_removed = true;
@@ -316,7 +351,10 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 		}
 
 		public bool valid {
-			get { return _started && !_removed && _curr != null; }
+			get {
+				assert (_curr != null);
+				return _prev != null && !_removed;
+			}
 		}
 
 		public bool read_only { get { return false; } }
@@ -328,6 +366,7 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 
 		public void add (G item) {
 			HazardPointer.Context ctx = new HazardPointer.Context ();
+			Utils.Misc.unused (ctx);
 			assert (valid);
 			if (!Node.proceed<G> (ref _prev, ref _curr)) {
 				_prev = (owned)_curr;
@@ -337,11 +376,13 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 			new_node.insert (_prev, _curr);
 			_curr = (owned)new_node;
 			_index++;
+			_removed = false;
 		}
 
 		public new bool foreach (ForallFunc<G> f) {
 			HazardPointer.Context ctx = new HazardPointer.Context ();
-			if (_started && !_removed) {
+			Utils.Misc.unused (ctx);
+			if (_prev != null && !_removed) {
 				if (!f (HazardPointer.get_pointer<G> (&_curr._data))) {
 					return false;
 				}
@@ -349,9 +390,8 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 			Node<G>? _old_prev = _removed ? _prev : null;
 			while (Node.proceed<G> (ref _prev, ref _curr)) {
 				if (_removed)
-					_prev = _old_prev;
+					_prev = (owned)_old_prev;
 				_removed = false;
-				_started = true;
 				_index++;
 				if (!f (HazardPointer.get_pointer<G> (&_curr._data))) {
 					return false;
@@ -360,11 +400,23 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 			return true;
 		}
 
-		private bool _started;
-		private bool _removed;
-		private int _index;
-		private Node<G> _prev;
-		private Node<G>? _curr;
+		public Vala.Iterator<G>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Vala.Iterator<G>[0];
+			} else {
+				Vala.Iterator<G>[] result = new Vala.Iterator<G>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new Iterator<G>.from_iterator (this);
+				}
+				return result;
+			}
+		}
+
+		protected bool _removed;
+		protected int _index;
+		protected Node<G>? _prev;
+		protected Node<G> _curr;
 	}
 
 	private class Node<G> {
@@ -463,7 +515,7 @@ public class Vala.ConcurrentList<G> : AbstractList<G> {
 				}
 				search_for<G> (next, ref prev);
 			}
-
+			
 		}
 
 		public inline void help_flagged (Node<G> prev) {

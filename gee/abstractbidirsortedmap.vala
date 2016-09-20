@@ -33,18 +33,20 @@ public abstract class Vala.AbstractBidirSortedMap<K,V> : Vala.AbstractSortedMap<
 	 */
 	public abstract BidirMapIterator<K,V> bidir_map_iterator ();
 
-	private weak BidirSortedMap<K,V> _read_only_view;
+	private WeakRef _read_only_view;
+	construct {
+		_read_only_view = WeakRef(null);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public virtual new BidirSortedMap<K,V> read_only_view {
 		owned get {
-			BidirSortedMap<K,V> instance = _read_only_view;
-			if (_read_only_view == null) {
+			BidirSortedMap<K,V>? instance = (BidirSortedMap<K,V>?)_read_only_view.get ();
+			if (instance == null) {
 				instance = new ReadOnlyBidirSortedMap<K,V> (this);
-				_read_only_view = instance;
-				instance.add_weak_pointer ((void**) (&_read_only_view));
+				_read_only_view.set (instance);
 			}
 			return instance;
 		}

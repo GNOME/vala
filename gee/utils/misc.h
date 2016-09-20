@@ -1,6 +1,6 @@
-/* bidirlistiterator.vala
+/* async.h
  *
- * Copyright (C) 2011  Maciej Piechotka
+ * Copyright (C) 2013  Maciej Piechotka
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,16 +19,12 @@
  * Author:
  * 	Maciej Piechotka <uzytkownik2@gmail.com>
  */
-[GenericAccessors]
-public interface Vala.BidirListIterator<G> : Vala.BidirIterator<G>, Vala.ListIterator<G> {
-	/**
-	 * Inserts the specified item before the current item in the iteration. The
-	 * iterator points to the same element as before.
-	 *
-	 * Please note that if iterator points in-between elements the element
-	 * is added between neighbouring elements and the iterator point between
-	 * added element and the next one.
-	 */
-	public abstract void insert (G item);
-}
+#ifndef VALA_UTILS_MISC
+#define VALA_UTILS_MISC
+
+#include <glib.h>
+
+#define vala_utils_misc_unused(par) (void)par
+
+#endif
 

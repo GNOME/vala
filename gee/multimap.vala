@@ -29,7 +29,7 @@ public interface Vala.MultiMap<K,V> : Object {
 	 * The number of key/value pairs in this map.
 	 */
 	public abstract int size { get; }
-
+	
 	/**
 	 * Specifies whether this collection can change - i.e. wheather {@link set},
 	 * {@link remove} etc. are legal operations.
@@ -124,4 +124,10 @@ public interface Vala.MultiMap<K,V> : Object {
 	 * The type of the values in this multimap.
 	 */
 	public Type value_type { get { return typeof (V); } }
+
+	public virtual MultiMap<K, V> read_only_view {
+		owned get {
+			return new ReadOnlyMultiMap<K, V> (this);
+		}
+	}
 }

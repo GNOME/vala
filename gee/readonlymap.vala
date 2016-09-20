@@ -244,7 +244,7 @@ internal class Vala.ReadOnlyMap<K,V> : Object, Traversable<Map.Entry<K,V>>, Iter
 		return _map.chop (offset, length);
 	}
 
-	protected class MapIterator<K,V> : Object, Vala.MapIterator<K,V> {
+	internal class MapIterator<K,V> : Object, Vala.MapIterator<K,V> {
 		protected Vala.MapIterator<K,V> _iter;
 
 		public MapIterator (Vala.MapIterator<K,V> iterator) {
@@ -274,19 +274,19 @@ internal class Vala.ReadOnlyMap<K,V> : Object, Traversable<Map.Entry<K,V>>, Iter
 		public void unset () {
 			assert_not_reached ();
 		}
-
+		
 		public bool read_only {
 			get {
 				return true;
 			}
 		}
-
+		
 		public bool mutable {
 			get {
 				return false;
 			}
 		}
-
+		
 		public bool valid {
 			get {
 				return _iter.valid;

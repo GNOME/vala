@@ -66,7 +66,7 @@ namespace Vala {
 						return ((Hashable<Hashable>) a).equal_to ((Hashable) b);
 				};
 			} else if (t.is_a (typeof (Comparable))) {
-				return (a, b) => {
+				return (a, b) => {					
 					if (a == b)
 						return true;
 					else if (a == null || b == null)
@@ -146,6 +146,39 @@ namespace Vala {
 						return -1;
 					}
 				};
+			}
+		}
+
+		[CCode (simple_generics = true)]
+		internal class EqualDataFuncClosure<G> {
+			public EqualDataFuncClosure(owned EqualDataFunc<G> func) {
+				this.func = (owned)func;
+			}
+			public EqualDataFunc<G> func;
+			public EqualDataFunc<G> clone_func () {
+				return (a, b) => {return func (a, b);};
+			}
+		}
+
+		[CCode (simple_generics = true)]
+		internal class HashDataFuncClosure<G> {
+			public HashDataFuncClosure(owned HashDataFunc<G> func) {
+				this.func = (owned)func;
+			}
+			public HashDataFunc<G> func;
+			public HashDataFunc<G> clone_func () {
+				return (a) => {return func (a);};
+			}
+		}
+
+		[CCode (simple_generics = true)]
+		internal class CompareDataFuncClosure<G> {
+			public CompareDataFuncClosure(owned CompareDataFunc<G> func) {
+				this.func = (owned)func;
+			}
+			public CompareDataFunc<G> func;
+			public CompareDataFunc<G> clone_func () {
+				return (a, b) => {return func (a, b);};
 			}
 		}
 	}

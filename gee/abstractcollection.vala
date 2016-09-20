@@ -70,18 +70,20 @@ public abstract class Vala.AbstractCollection<G> : Object, Traversable<G>, Itera
 		return iterator ().foreach (f);
 	}
 
-	private weak Collection<G> _read_only_view;
+	private WeakRef _read_only_view;
+	construct {
+		_read_only_view = WeakRef(null);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public virtual Collection<G> read_only_view {
 		owned get {
-			Collection<G> instance = _read_only_view;
-			if (_read_only_view == null) {
+			Collection<G>? instance = (Collection<G>?)_read_only_view.get ();
+			if (instance == null) {
 				instance = new ReadOnlyCollection<G> (this);
-				_read_only_view = instance;
-				instance.add_weak_pointer ((void**) (&_read_only_view));
+				_read_only_view.set (instance);
 			}
 			return instance;
 		}

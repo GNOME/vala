@@ -47,7 +47,6 @@ namespace Vala {
  *     var x = iterable.iterator ().function(args);
  * }}}
  *
- * @since 0.7.0
  */
 [GenericAccessors]
 public interface Vala.Traversable<G> : Object {
@@ -59,9 +58,12 @@ public interface Vala.Traversable<G> : Object {
 	 * to last element in iteration or the first element that returned ''false''.
 	 * If iterator points at some element it will be included in iteration.
 	 *
+	 * @param f function applied to every element of the collection
+	 *
 	 * @return ''false'' if the argument returned ''false'' at last invocation and
 	 *         ''true'' otherwise.
 	 */
+	[CCode (ordering = 0)]
 	public new abstract bool foreach (ForallFunc<G> f);
 
 	/**
@@ -84,13 +86,17 @@ public interface Vala.Traversable<G> : Object {
 	 *   1. {@link Stream.CONTINUE}. It means that the function needs to be
 	 *      called with next element or with {@link Stream.END} if it is
 	 *      end of stream). If the state element was Stream.END during the
-	 *      current iteration function ''must not'' return {@link Stream.CONTINUE}
-	 *   1. Stream.END. It means that the last argument was yielded.
+	 *      current iteration function ''must not'' return {@link Stream.CONTINUE}.
+	 *   1. {@link Stream.WAIT}. Simply denotes that iterator should skip an element.
+	 *      Usually the function is called once again with {@link Stream.WAIT} as
+	 *      state however it do affect the initial validity of iterator.
+	 *   1. {@link Stream.END}. It means that the last argument was yielded.
 	 *
 	 * If the function yields the value immediately then the returning iterator
 	 * is {@link Iterator.valid} and points to this value as well as in case when the
 	 * parent iterator is {@link Iterator.valid} and function yields
-	 * after consuming 1 input. In other case returned iterator is invalid.
+	 * after consuming 1 input. In other case returned iterator is invalid including
+	 * when the first value returned is {@link Stream.WAIT}.
 	 *
 	 * Note: In {@link Iterator} implementation: if iterator is
 	 *    {@link Iterator.valid} the current value should be fed
@@ -102,64 +108,13 @@ public interface Vala.Traversable<G> : Object {
 	 * @param f function generating stream
 	 * @return iterator containing values yielded by stream
 	 */
+	[CCode (ordering = 1)]
 	public virtual Iterator<A> stream<A> (owned StreamFunc<G, A> f) {
-		Iterator<G>? self;
-		Iterable<G>? iself;
+		unowned Iterator<G>? self;
+		unowned Iterable<G>? iself;
 		// Yes - I've heard of polimorphism ;) but I don't want users to need to implement the method.
 		if ((self = this as Iterator<G>) != null) {
-			Traversable.Stream str;
-			Lazy<A>? initial = null;
-			bool need_next = true;
-			str = f (Stream.YIELD, null, out initial);
-			switch (str) {
-			case Stream.CONTINUE:
-				if (self.valid) {
-					str = f (Stream.CONTINUE, new Lazy<G> (() => {return self.get ();}), out initial);
-					switch (str) {
-					case Stream.YIELD:
-					case Stream.CONTINUE:
-						break;
-					case Stream.END:
-						return Iterator.unfold<A> (() => {return null;});
-					default:
-						assert_not_reached ();
-					}
-				}
-				break;
-			case Stream.YIELD:
-				if (self.valid)
-					need_next = false;
-				break;
-			case Stream.END:
-				return Iterator.unfold<A> (() => {return null;});
-			default:
-				assert_not_reached ();
-			}
-			return Iterator.unfold<A> (() => {
-				Lazy<A>? val = null;
-				if (str != Stream.CONTINUE)
-					str = f (Traversable.Stream.YIELD, null, out val);
-				while (str == Stream.CONTINUE) {
-					if (need_next) {
-						if (!self.next ()) {
-							str = f (Traversable.Stream.END, null, out val);
-							assert (str != Traversable.Stream.CONTINUE);
-							break;
-						}
-					} else {
-						need_next = true;
-					}
-					str = f (Stream.CONTINUE, new Lazy<G> (() => {return self.get ();}), out val);
-				}
-				switch (str) {
-				case Stream.YIELD:
-					return val;
-				case Stream.END:
-					return null;
-				default:
-					assert_not_reached ();
-				}
-			}, initial);
+			return new StreamIterator<A, G> (self, (owned)f);
 		} else if ((iself = this as Iterable<G>) != null) {
 			return iself.iterator().stream<A> ((owned) f);
 		} else {
@@ -181,6 +136,7 @@ public interface Vala.Traversable<G> : Object {
 	 *    as well.
 	 *
 	 */
+	[CCode (ordering = 2)]
 	public virtual A fold<A> (FoldFunc<A, G> f, owned A seed)
 	{
 		this.foreach ((item) => {seed = f ((owned) item, (owned) seed); return true; });
@@ -205,6 +161,7 @@ public interface Vala.Traversable<G> : Object {
 	 * @param f Mapping function
 	 * @return Iterator listing mapped value
 	 */
+	[CCode (ordering = 3)]
 	public virtual Iterator<A> map<A> (MapFunc<A, G> f) {
 		return stream<A>((state, item, out val) => {
 			switch (state) {
@@ -245,6 +202,7 @@ public interface Vala.Traversable<G> : Object {
 	 * @param seed original seed value
 	 * @return Iterator containing values of subsequent values of seed
 	 */
+	[CCode (ordering = 4)]
 	public virtual Iterator<A> scan<A> (FoldFunc<A, G> f, owned A seed) {
 		bool seed_emitted = false;
 		return stream<A>((state, item, out val) => {
@@ -286,9 +244,10 @@ public interface Vala.Traversable<G> : Object {
 	 *    iterator is {@link Iterator.valid} and value it is pointing on
 	 *    fullfills the predicate.
 	 *
-	 * @param f Folding function
+	 * @param pred predicate to check should the value be retained
 	 * @return Iterator containing values of subsequent values of seed
 	 */
+	[CCode (ordering = 5)]
 	public virtual Iterator<G> filter (owned Predicate<G> pred) {
 		return stream<G> ((state, item, out val) => {
 			switch (state) {
@@ -329,6 +288,7 @@ public interface Vala.Traversable<G> : Object {
 	 * @param length maximum number of elements iterator may return. Negative
 	 *        value means that the number is unbounded
 	 */
+	[CCode (ordering = 6)]
 	public virtual Iterator<G> chop (int offset, int length = -1) {
 		assert (offset >= 0);
 		return stream<G> ((state, item, out val) => {
@@ -363,17 +323,136 @@ public interface Vala.Traversable<G> : Object {
 		});
 	}
 
-
 	/**
 	 * The type of the elements in this collection.
 	 */
+	[CCode (ordering = 7)]
 	public virtual Type element_type { get { return typeof (G); } }
+
+	/**
+	 * A fused concatinate and map. The function is applied to each element
+	 * of iteration and the resulting values are concatinated.
+	 *
+	 * The iterator is lazy evaluated but value is force-evaluated when
+	 * iterator is moved to next value.
+	 *
+	 * Note: Default implementation uses {@link stream}.
+	 *
+	 * Note: In {@link Iterator} implementation if the parent iterator is
+	 *    {@link Iterator.valid} and function returns a valid iterator the
+	 *    resulting iterator is also valid. Using the parent iterator is not
+	 *    allowed before the inner iterator {@link Iterator.next}
+	 *    return false and then it points on its last element.
+	 *
+	 * @param f mapping function
+	 * @return Iterator over returned values
+	 */
+	[CCode (ordering = 8)]
+	public virtual Iterator<A> flat_map<A>(owned FlatMapFunc<A, G> f) {
+		Iterator<A>? current = null;
+		return stream<A> ((state, item, out val) => {
+			switch (state) {
+			case Stream.YIELD:
+				if (current == null || !current.next ()) {
+					val = null;
+					return Stream.CONTINUE;
+				} else {
+					val = new Lazy<A> (() => {return current.get ();});
+					return Stream.YIELD;
+				}
+			case Stream.CONTINUE:
+				current = f (item.get ());
+				if (current.valid) {
+					val = new Lazy<A> (() => {return current.get ();});
+					return Stream.YIELD;
+				} else {
+					val = null;
+					return Stream.WAIT;
+				}
+			case Stream.WAIT:
+				if (current.next()) {
+					val = new Lazy<A> (() => {return current.get ();});
+					return Stream.YIELD;
+				} else {
+					val = null;
+					return Stream.CONTINUE;
+				}
+			case Stream.END:
+				val = null;
+				return Stream.END;
+			default:
+				assert_not_reached ();
+			}
+		});
+	}
+
+	/**
+	 * Splits the traversable into multiple ones, caching the result if needed.
+	 *
+	 * Note: In {@link Iterator} implementation using the parent iterator is
+	 *   not allowed. However if any of the forked iterators {@link next}
+	 *   return false then it is treated as if the parent iterator
+	 *   {@link next} returned false.
+	 *
+	 * Note: The returned arrey might contain parent iterator if it is allowed
+	 *   by implementation. For example the iteration over collection does
+	 *   not need to generate and cache the results.
+	 *   In such case it is recommended to return the value as the first element
+	 *   of the array. This allows the consumer to check just the first element
+	 *   if it can perform optimizations for such case. However it //must// not
+	 *   depend on the order (that's for optimization only).
+	 *
+	 * Note: The resulting iterators does not need to be thread safe.
+	 *
+	 * @param forks Number of iterators in array
+	 * @return An array with created iterators
+	 */
+	[CCode (ordering = 9)]
+	public virtual Iterator<G>[] tee (uint forks) {
+		unowned Iterator<G>? self;
+		unowned Iterable<G>? iself;
+		// Yes - I've heard of polimorphism ;) but I don't want users to need to implement the method.
+		if ((self = this as Iterator<G>) != null) {
+			if (forks == 0) {
+				return new Iterator<G>[0];
+			} else if (forks == 1) {
+				return new Iterator<G>[1]{self};
+			} else {
+				Iterator<G>[] result = new Iterator<G>[forks];
+				Lazy<G>? data;
+				bool is_valid = self.valid;
+				if (is_valid) {
+					data = new Lazy<G>(() => {return self.get ();});
+				} else {
+					data = new Lazy<G>.from_value (null);
+				}
+				var head = new TeeIterator.Node<G> (data, TeeIterator.create_nodes<G> (self, data));
+				for (uint i = 0; i < forks; i++) {
+					result[i] = new TeeIterator<G> (head, is_valid);
+				}
+				return result;
+			}
+		} else if ((iself = this as Iterable<G>) != null) {
+			var result = new Iterator<G>[forks];
+			for (uint i = 0; i < forks; i++) {
+				result[i] = iself.iterator ();
+			}
+			return result;
+		} else {
+			assert_not_reached ();
+		}
+	}
 
 	public enum Stream {
 		YIELD,
 		CONTINUE,
-		END
+		END,
+		WAIT
 	}
+}
 
+namespace Vala {
+	// Placed here to workaround bug #703710
+	public delegate Iterator<A> FlatMapFunc<A, G>(owned G g);
 }
 

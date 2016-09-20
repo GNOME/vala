@@ -41,7 +41,11 @@ public class Vala.HashMultiSet<G> : AbstractMultiSet<G> {
 	 * @param hash_func an optional element hash function
 	 * @param equal_func an optional element equality testing function
 	 */
-	public HashMultiSet (HashDataFunc<G>? hash_func = null, EqualDataFunc<G>? equal_func = null) {
-		base (new HashMap<G, int> (hash_func, equal_func));
+	public HashMultiSet (owned HashDataFunc<G>? hash_func = null, owned EqualDataFunc<G>? equal_func = null) {
+		base (new HashMap<G, int> ((owned)hash_func, (owned)equal_func));
+	}
+
+	internal HashMultiSet.with_closures (owned Functions.HashDataFuncClosure<G> hash_func, owned Functions.EqualDataFuncClosure<G> equal_func) {
+		base (new HashMap<G, int>.with_closures ((owned)hash_func, (owned)equal_func, new Functions.EqualDataFuncClosure<int> (Functions.get_equal_func_for (typeof (int)))));
 	}
 }

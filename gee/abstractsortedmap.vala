@@ -46,17 +46,20 @@ public abstract class Vala.AbstractSortedMap<K, V> : AbstractMap<K,V>, SortedMap
 	 */
 	public abstract SortedSet<Map.Entry<K,V>> ascending_entries { owned get; }
 
-	private weak SortedMap<K,V> _read_only_view;
+	private WeakRef _read_only_view;
+	construct {
+		_read_only_view = WeakRef(null);
+	}
+
 	/**
 	 * The read-only view this map.
 	 */
 	public new SortedMap<K,V> read_only_view {
 		owned get {
-			SortedMap<K,V> instance = _read_only_view;
-			if (_read_only_view == null) {
+			SortedMap<K,V>? instance = (SortedMap<K,V>?)_read_only_view.get ();
+			if (instance == null) {
 				instance = new ReadOnlySortedMap<K,V> (this);
-				_read_only_view = instance;
-				instance.add_weak_pointer ((void**) (&_read_only_view));
+				_read_only_view.set (instance);
 			}
 			return instance;
 		}

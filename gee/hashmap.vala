@@ -3,6 +3,7 @@
  * Copyright (C) 1995-1997  Peter Mattis, Spencer Kimball and Josh MacDonald
  * Copyright (C) 1997-2000  GLib Team and others
  * Copyright (C) 2007-2009  Jürg Billeter
+ * Copyright (C) 2009-2014  Maciej Piechotka
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -97,23 +98,42 @@ public class Vala.HashMap<K,V> : Vala.AbstractMap<K,V> {
 	 * The keys' hash function.
 	 */
 	[CCode (notify = false)]
-	public HashDataFunc<K> key_hash_func { private set; get; }
+	public HashDataFunc<K> key_hash_func {
+		private set {}
+		get {
+			return _key_hash_func.func;
+		}
+	}
 
 	/**
 	 * The keys' equality testing function.
 	 */
 	[CCode (notify = false)]
-	public EqualDataFunc<K> key_equal_func { private set; get; }
+	public EqualDataFunc<K> key_equal_func {
+		private set {}
+		get {
+			return _key_equal_func.func;
+		}
+	}
 
 	/**
 	 * The values' equality testing function.
 	 */
 	[CCode (notify = false)]
-	public EqualDataFunc<V> value_equal_func { private set; get; }
+	public EqualDataFunc<V> value_equal_func {
+		private set {}
+		get {
+			return _value_equal_func.func;
+		}
+	}
 
 	private int _array_size;
 	private int _nnodes;
 	private Node<K,V>[] _nodes;
+	private Functions.HashDataFuncClosure<K> _key_hash_func;
+	private Functions.EqualDataFuncClosure<K> _key_equal_func;
+	private Functions.EqualDataFuncClosure<V> _value_equal_func;
+
 
 	private weak Set<K> _keys;
 	private weak Collection<V> _values;
@@ -145,9 +165,18 @@ public class Vala.HashMap<K,V> : Vala.AbstractMap<K,V> {
 		if (value_equal_func == null) {
 			value_equal_func = Functions.get_equal_func_for (typeof (V));
 		}
-		this.key_hash_func = key_hash_func;
-		this.key_equal_func = key_equal_func;
-		this.value_equal_func = value_equal_func;
+		_key_hash_func = new Functions.HashDataFuncClosure<K> ((owned)key_hash_func);
+		_key_equal_func = new Functions.EqualDataFuncClosure<K> ((owned)key_equal_func);
+		_value_equal_func = new Functions.EqualDataFuncClosure<V> ((owned)value_equal_func);
+
+		_array_size = MIN_SIZE;
+		_nodes = new Node<K,V>[_array_size];
+	}
+
+	internal HashMap.with_closures (owned Functions.HashDataFuncClosure<K> key_hash_func, owned Functions.EqualDataFuncClosure<K> key_equal_func, owned Functions.EqualDataFuncClosure<V> value_equal_func) {
+		_key_hash_func = key_hash_func;
+		_key_equal_func = key_equal_func;
+		_value_equal_func = value_equal_func;
 
 		_array_size = MIN_SIZE;
 		_nodes = new Node<K,V>[_array_size];
@@ -241,6 +270,14 @@ public class Vala.HashMap<K,V> : Vala.AbstractMap<K,V> {
 		return new MapIterator<K,V> (this);
 	}
 
+	internal Functions.HashDataFuncClosure<K> get_key_hash_func_closure () {
+		return _key_hash_func;
+	}
+
+	internal Functions.EqualDataFuncClosure<K> get_key_equal_func_closure () {
+		return _key_equal_func;
+	}
+
 	private inline bool unset_helper (K key, out V? value = null) {
 		Node<K,V>** node = lookup_node (key);
 		if (*node != null) {
@@ -303,6 +340,12 @@ public class Vala.HashMap<K,V> : Vala.AbstractMap<K,V> {
 			value = (owned) v;
 			key_hash = hash;
 			 entry = null;
+		}
+
+		~Node () {
+			if (entry != null) {
+				entry.remove_weak_pointer ((void**) (&entry));
+			}
 		}
 	}
 
@@ -367,19 +410,6 @@ public class Vala.HashMap<K,V> : Vala.AbstractMap<K,V> {
 		public override bool contains (K key) {
 			return _map.has_key (key);
 		}
-
-		public bool add_all (Collection<K> collection) {
-			assert_not_reached ();
-		}
-
-		public bool remove_all (Collection<K> collection) {
-			assert_not_reached ();
-		}
-
-		public bool retain_all (Collection<K> collection) {
-			assert_not_reached ();
-		}
-
 	}
 
 	private class ValueCollection<K,V> : AbstractCollection<V> {
@@ -422,18 +452,6 @@ public class Vala.HashMap<K,V> : Vala.AbstractMap<K,V> {
 			}
 			return false;
 		}
-
-		public bool add_all (Collection<V> collection) {
-			assert_not_reached ();
-		}
-
-		public bool remove_all (Collection<V> collection) {
-			assert_not_reached ();
-		}
-
-		public bool retain_all (Collection<V> collection) {
-			assert_not_reached ();
-		}
 	}
 
 	private class EntrySet<K,V> : AbstractSet<Map.Entry<K, V>> {
@@ -470,32 +488,20 @@ public class Vala.HashMap<K,V> : Vala.AbstractMap<K,V> {
 		public override bool contains (Map.Entry<K, V> entry) {
 			return _map.has (entry.key, entry.value);
 		}
-
-		public bool add_all (Collection<Map.Entry<K, V>> entries) {
-			assert_not_reached ();
-		}
-
-		public bool remove_all (Collection<Map.Entry<K, V>> entries) {
-			assert_not_reached ();
-		}
-
-		public bool retain_all (Collection<Map.Entry<K, V>> entries) {
-			assert_not_reached ();
-		}
 	}
 
 	private abstract class NodeIterator<K,V> : Object {
-		protected HashMap<K,V> _map;
-		protected int _index = -1;
-		protected weak Node<K,V> _node;
-		protected weak Node<K,V> _next;
-
-		// concurrent modification protection
-		protected int _stamp;
-
 		public NodeIterator (HashMap map) {
 			_map = map;
 			_stamp = _map._stamp;
+		}
+
+		public NodeIterator.from_iterator (NodeIterator<K,V> iter) {
+			_map = iter._map;
+			_index = iter._index;
+			_node = iter._node;
+			_next = iter._next;
+			_stamp = iter._stamp;
 		}
 
 		public bool next () {
@@ -522,23 +528,33 @@ public class Vala.HashMap<K,V> : Vala.AbstractMap<K,V> {
 			}
 			return (_next != null);
 		}
-
+		
 		public virtual bool read_only {
 			get {
 				return true;
 			}
 		}
-
+		
 		public bool valid {
 			get {
 				return _node != null;
 			}
 		}
+
+		protected HashMap<K,V> _map;
+		protected int _index = -1;
+		protected weak Node<K,V> _node;
+		protected weak Node<K,V> _next;
+		protected int _stamp;
 	}
 
 	private class KeyIterator<K,V> : NodeIterator<K,V>, Traversable<K>, Iterator<K> {
 		public KeyIterator (HashMap map) {
 			base (map);
+		}
+
+		public KeyIterator.from_iterator (KeyIterator<K,V> iter) {
+			base.from_iterator (iter);
 		}
 
 		public new K get () {
@@ -575,6 +591,19 @@ public class Vala.HashMap<K,V> : Vala.AbstractMap<K,V> {
 				}
 			} while(true);
 		}
+
+		public Vala.Iterator<K>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Vala.Iterator<K>[0];
+			} else {
+				Vala.Iterator<K>[] result = new Vala.Iterator<K>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new KeyIterator<K,V>.from_iterator (this);
+				}
+				return result;
+			}
+		}
 	}
 
 	private class MapIterator<K,V> : NodeIterator<K,V>, Vala.MapIterator<K,V> {
@@ -609,13 +638,13 @@ public class Vala.HashMap<K,V> : Vala.AbstractMap<K,V> {
 			_map.set (_node.key, value);
 			_stamp = _map._stamp;
 		}
-
+		
 		public bool mutable {
 			get {
 				return true;
 			}
 		}
-
+		
 		public override bool read_only {
 			get {
 				return false;
@@ -624,8 +653,12 @@ public class Vala.HashMap<K,V> : Vala.AbstractMap<K,V> {
 	}
 
 	private class ValueIterator<K,V> : NodeIterator<K,V>, Traversable<V>, Iterator<V> {
-		public ValueIterator (HashMap map) {
+		public ValueIterator (HashMap<K,V> map) {
 			base (map);
+		}
+
+		public ValueIterator.from_iterator (ValueIterator<K,V> iter) {
+			base.from_iterator (iter);
 		}
 
 		public new V get () {
@@ -662,11 +695,28 @@ public class Vala.HashMap<K,V> : Vala.AbstractMap<K,V> {
 				}
 			} while(true);
 		}
+
+		public Vala.Iterator<K>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Vala.Iterator<K>[0];
+			} else {
+				Vala.Iterator<K>[] result = new Vala.Iterator<K>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new ValueIterator<K,V>.from_iterator (this);
+				}
+				return result;
+			}
+		}
 	}
 
 	private class EntryIterator<K,V> : NodeIterator<K,V>, Traversable<Map.Entry<K,V>>, Iterator<Map.Entry<K,V>> {
-		public EntryIterator (HashMap map) {
+		public EntryIterator (HashMap<K,V> map) {
 			base (map);
+		}
+
+		public EntryIterator.from_iterator (EntryIterator<K,V> iter) {
+			base.from_iterator (iter);
 		}
 
 		public new Map.Entry<K,V> get () {
@@ -702,6 +752,19 @@ public class Vala.HashMap<K,V> : Vala.AbstractMap<K,V> {
 					return true;
 				}
 			} while(true);
+		}
+
+		public Iterator<Map.Entry<K,V>>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Iterator<Map.Entry<K,V>>[0];
+			} else {
+				Iterator<Map.Entry<K,V>>[] result = new Iterator<Map.Entry<K,V>>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new EntryIterator<K,V>.from_iterator (this);
+				}
+				return result;
+			}
 		}
 	}
 }

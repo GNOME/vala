@@ -52,12 +52,12 @@ public interface Vala.Queue<G> : Collection<G> {
 	public const int UNBOUNDED_CAPACITY = -1;
 
 	/**
-	 * The capacity of this queue (or ``null`` if capacity is not bound).
+	 * The capacity of this queue (or ``UNBOUNDED_CAPACITY`` if capacity is not bound).
 	 */
 	public abstract int capacity { get; }
 
 	/**
-	 * The remaining capacity of this queue (or ``null`` if capacity is not
+	 * The remaining capacity of this queue (or ``UNBOUNDED_CAPACITY`` if capacity is not
 	 * bound).
 	 */
 	public abstract int remaining_capacity { get; }

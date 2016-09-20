@@ -1,6 +1,6 @@
 /* arrayqueue.vala
  *
- * Copyright (C) 2012  Maciej Piechotka
+ * Copyright (C) 2012-2014  Maciej Piechotka
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -44,12 +44,17 @@ public class Vala.ArrayQueue<G> : Vala.AbstractQueue<G>, Deque<G> {
 		if (equal_func == null) {
 			equal_func = Functions.get_equal_func_for (typeof (G));
 		}
-		this.equal_func = equal_func;
+		_equal_func = (owned)equal_func;
 		this._items = new G[10];
 	}
 
 	[CCode (notify = false)]
-	public EqualDataFunc<G> equal_func { private set; get; }
+	public EqualDataFunc<G> equal_func {
+		private set {}
+		get { return _equal_func; }
+	}
+
+	private EqualDataFunc<G> _equal_func;
 
 	/**
 	 * {@inheritDoc}
@@ -122,6 +127,18 @@ public class Vala.ArrayQueue<G> : Vala.AbstractQueue<G>, Deque<G> {
 			_items[(_start + i) % _items.length] = null;
 		}
 		_start = _length = 0;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public override bool foreach (ForallFunc<G> f) {
+		for (int i = 0; i < _length; i++) {
+			if (!f (_items[(_start + i) % _items.length])) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -277,6 +294,12 @@ public class Vala.ArrayQueue<G> : Vala.AbstractQueue<G>, Deque<G> {
 			_queue = queue;
 			_stamp = _queue._stamp;
 		}
+		public Iterator.from_iterator (Iterator<G> iter) {
+			_queue = iter._queue;
+			_stamp = iter._stamp;
+			_offset = iter._offset;
+			_removed = iter._removed;
+		}
 
 		public bool next () {
 			assert (_queue._stamp == _stamp);
@@ -328,10 +351,23 @@ public class Vala.ArrayQueue<G> : Vala.AbstractQueue<G>, Deque<G> {
 			return true;
 		}
 
-		private ArrayQueue _queue;
-		private int _stamp;
-		private int _offset = -1;
-		private bool _removed = false;
+		public Vala.Iterator<G>[] tee (uint forks) {
+			if (forks == 0) {
+				return new Vala.Iterator<G>[0];
+			} else {
+				Vala.Iterator<G>[] result = new Vala.Iterator<G>[forks];
+				result[0] = this;
+				for (uint i = 1; i < forks; i++) {
+					result[i] = new Iterator<G>.from_iterator (this);
+				}
+				return result;
+			}
+		}
+
+		protected ArrayQueue _queue;
+		protected int _stamp;
+		protected int _offset = -1;
+		protected bool _removed = false;
 	}
 
 	private G[] _items;
