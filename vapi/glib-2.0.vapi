@@ -1039,7 +1039,7 @@ public class string {
 	[CCode (cname = "g_strconcat")]
 	public string concat (string string2, ...);
 	[CCode (cname = "g_strescape")]
-	public string escape (string exceptions);
+	public string escape (string? exceptions = null);
 	[CCode (cname = "g_strcompress")]
 	public string compress ();
 	[CCode (cname = "g_strsplit", array_length = false, array_null_terminated = true)]
