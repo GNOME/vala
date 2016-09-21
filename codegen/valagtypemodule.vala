@@ -201,12 +201,13 @@ public class Vala.GTypeModule : GErrorModule {
 			// base class declaration
 			generate_class_struct_declaration (cl.base_class, decl_space);
 		}
-		foreach (DataType base_type in cl.get_base_types ()) {
+		cl.get_base_types ().foreach ((base_type) => {
 			var iface = base_type.data_type as Interface;
 			if (iface != null) {
 				generate_interface_declaration (iface, decl_space);
 			}
-		}
+			return true;
+		});
 
 		generate_class_declaration (cl, decl_space);
 
@@ -245,19 +246,21 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		foreach (Method m in cl.get_methods ()) {
+		cl.get_methods ().foreach ((m) => {
 			generate_virtual_method_declaration (m, decl_space, type_struct);
-		}
+			return true;
+		});
 
-		foreach (Signal sig in cl.get_signals ()) {
+		cl.get_signals ().foreach ((sig) => {
 			if (sig.default_handler != null) {
 				generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
 			}
-		}
+			return true;
+		});
 
-		foreach (Property prop in cl.get_properties ()) {
+		cl.get_properties ().foreach ((prop) => {
 			if (!prop.is_abstract && !prop.is_virtual) {
-				continue;
+				return true;
 			}
 			generate_type_declaration (prop.property_type, decl_space);
 
@@ -316,9 +319,10 @@ public class Vala.GTypeModule : GErrorModule {
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
 			}
-		}
+			return true;
+		});
 
-		foreach (Field f in cl.get_fields ()) {
+		cl.get_fields ().foreach ((f) => {
 			if (f.access != SymbolAccessibility.PRIVATE) {
 				CCodeModifiers modifiers = (f.is_volatile ? CCodeModifiers.VOLATILE : 0) | (f.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 				if (f.binding == MemberBinding.INSTANCE) {
@@ -360,7 +364,8 @@ public class Vala.GTypeModule : GErrorModule {
 					type_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers);
 				}
 			}
-		}
+			return true;
+		});
 
 		if (!cl.is_compact || cl.base_class == null || is_gsource) {
 			// derived compact classes do not have a struct
@@ -417,7 +422,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		if (is_gtypeinstance) {
 			/* create type, dup_func, and destroy_func fields for generic types */
-			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+			cl.get_type_parameters ().foreach ((type_param) => {
 				string func_name;
 
 				func_name = "%s_type".printf (type_param.name.down ());
@@ -428,11 +433,13 @@ public class Vala.GTypeModule : GErrorModule {
 
 				func_name = "%s_destroy_func".printf (type_param.name.down ());
 				instance_priv_struct.add_field ("GDestroyNotify", func_name);
-			}
+				return true;
+			});
 		}
 
-		foreach (Field f in cl.get_fields ()) {
+		cl.get_fields ().foreach ((f) => {
 			CCodeModifiers modifiers = (f.is_volatile ? CCodeModifiers.VOLATILE : 0) | (f.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
+
 			if (f.binding == MemberBinding.INSTANCE) {
 				if (f.access == SymbolAccessibility.PRIVATE)  {
 					generate_type_declaration (f.variable_type, decl_space);
@@ -486,9 +493,10 @@ public class Vala.GTypeModule : GErrorModule {
 					type_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (get_ccode_name (f)));
 				}
 			}
-		}
+			return true;
+		});
 
-		foreach (Property prop in cl.get_properties ()) {
+		cl.get_properties ().foreach ((prop) => {
 			if (prop.binding == MemberBinding.INSTANCE) {
 				if (prop.get_lock_used ()) {
 					cl.has_private_fields = true;
@@ -502,7 +510,8 @@ public class Vala.GTypeModule : GErrorModule {
 					type_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (prop.name));
 				}
 			}
-		}
+			return true;
+		});
 
 		if (is_gtypeinstance) {
 			if (cl.has_class_private_fields || has_class_locks) {
@@ -654,11 +663,12 @@ public class Vala.GTypeModule : GErrorModule {
 				add_class_finalize_function (cl);
 			}
 
-			foreach (DataType base_type in cl.get_base_types ()) {
+			cl.get_base_types ().foreach ((base_type) => {
 				if (base_type.data_type is Interface) {
 					add_interface_init_function (cl, (Interface) base_type.data_type);
 				}
-			}
+				return true;
+			});
 			
 			add_instance_init_function (cl);
 
@@ -1214,9 +1224,9 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		/* connect overridden methods */
-		foreach (Method m in cl.get_methods ()) {
+		cl.get_methods ().foreach ((m) => {
 			if (m.base_method == null) {
-				continue;
+				return true;
 			}
 			var base_type = (ObjectTypeSymbol) m.base_method.parent_symbol;
 
@@ -1233,21 +1243,23 @@ public class Vala.GTypeModule : GErrorModule {
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_finish_vfunc_name (m.base_method)), cfunc);
 				}
 			}
-		}
+			return true;
+		});
 
 		/* connect default signal handlers */
-		foreach (Signal sig in cl.get_signals ()) {
+		cl.get_signals ().foreach ((sig) => {
 			if (sig.default_handler == null) {
-				continue;
+				return true;
 			}
 			var ccast = new CCodeCastExpression (new CCodeIdentifier ("klass"), "%sClass *".printf (get_ccode_name (cl)));
 			ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_vfunc_name (sig.default_handler)), new CCodeIdentifier (get_ccode_real_name (sig.default_handler)));
-		}
+			return true;
+		});
 
 		/* connect overridden properties */
-		foreach (Property prop in cl.get_properties ()) {
+		cl.get_properties ().foreach ((prop) => {
 			if (prop.base_property == null) {
-				continue;
+				return true;
 			}
 			var base_type = prop.base_property.parent_symbol;
 			
@@ -1264,18 +1276,20 @@ public class Vala.GTypeModule : GErrorModule {
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), new CCodeIdentifier (cname));
 				}
 			}
-		}
+			return true;
+		});
 
 		generate_class_init (cl);
 
 		if (!cl.is_compact) {
 			/* create signals */
-			foreach (Signal sig in cl.get_signals ()) {
+			cl.get_signals ().foreach ((sig) => {
 				if (sig.comment != null) {
 					ccode.add_statement (new CCodeComment (sig.comment.content));
 				}
 				ccode.add_expression (get_signal_creation (sig, cl));
-			}
+				return true;
+			});
 		}
 
 		pop_context ();
@@ -1327,14 +1341,14 @@ public class Vala.GTypeModule : GErrorModule {
 		ccall.add_argument (new CCodeIdentifier ("iface"));
 		ccode.add_assignment (new CCodeIdentifier (parent_iface_var), ccall);
 
-		foreach (Method m in cl.get_methods ()) {
+		cl.get_methods ().foreach ((m) => {
 			if (m.base_interface_method == null) {
-				continue;
+				return true;
 			}
 
 			var base_type = m.base_interface_method.parent_symbol;
 			if (base_type != iface) {
-				continue;
+				return true;
 			}
 			
 			var ciface = new CCodeIdentifier ("iface");
@@ -1356,10 +1370,11 @@ public class Vala.GTypeModule : GErrorModule {
 				cfunc = cast_method_pointer (m.base_interface_method, cfunc, iface, 2);
 				ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, get_ccode_finish_vfunc_name (m.base_interface_method)), cfunc);
 			}
-		}
+			return true;
+		});
 
 		if (iface.get_attribute ("GenericAccessors") != null) {
-			foreach (TypeParameter p in iface.get_type_parameters ()) {
+			iface.get_type_parameters ().foreach ((p) => {
 				GenericType p_type = new GenericType (p);
 				DataType p_data_type = p_type.get_actual_type (get_data_type_for_symbol (cl), null, cl);
 
@@ -1377,11 +1392,12 @@ public class Vala.GTypeModule : GErrorModule {
 				                               "GDestroyNotify",
 				                               get_destroy_func_expression (p_data_type),
 				                               p, cl, iface);
-			}
+				return true;
+			});
 		}
 
 		// connect inherited implementations
-		foreach (Method m in iface.get_methods ()) {
+		iface.get_methods ().foreach ((m) => {
 			if (m.is_abstract) {
 				Method cl_method = null;
 				var base_class = cl;
@@ -1407,16 +1423,17 @@ public class Vala.GTypeModule : GErrorModule {
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, get_ccode_vfunc_name (m)), cfunc);
 				}
 			}
-		}
+			return true;
+		});
 
-		foreach (Property prop in cl.get_properties ()) {
+		cl.get_properties ().foreach ((prop) => {
 			if (prop.base_interface_property == null) {
-				continue;
+				return true;
 			}
 
 			var base_type = (ObjectTypeSymbol) prop.base_interface_property.parent_symbol;
 			if (base_type != iface) {
-				continue;
+				return true;
 			}
 			
 			var ciface = new CCodeIdentifier ("iface");
@@ -1447,11 +1464,12 @@ public class Vala.GTypeModule : GErrorModule {
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), cfunc);
 				}
 			}
-		}
+			return true;
+		});
 
-		foreach (Property prop in iface.get_properties ()) {
+		iface.get_properties ().foreach ((prop) => {
 			if (!prop.is_abstract) {
-				continue;
+				return true;
 			}
 
 			Property cl_prop = null;
@@ -1489,7 +1507,8 @@ public class Vala.GTypeModule : GErrorModule {
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), cfunc);
 				}
 			}
-		}
+			return true;
+		});
 
 		pop_function ();
 		cfile.add_function (iface_init);
@@ -1930,7 +1949,7 @@ public class Vala.GTypeModule : GErrorModule {
 			return;
 		}
 
-		foreach (DataType prerequisite in iface.get_prerequisites ()) {
+		iface.get_prerequisites ().foreach ((prerequisite) => {
 			var prereq_cl = prerequisite.data_type as Class;
 			var prereq_iface = prerequisite.data_type as Interface;
 			if (prereq_cl != null) {
@@ -1938,7 +1957,8 @@ public class Vala.GTypeModule : GErrorModule {
 			} else if (prereq_iface != null) {
 				generate_interface_declaration (prereq_iface, decl_space);
 			}
-		}
+			return true;
+		});
 
 		var type_struct = new CCodeStruct ("_%s".printf (get_ccode_type_name (iface)));
 		
@@ -1962,7 +1982,7 @@ public class Vala.GTypeModule : GErrorModule {
 		type_struct.add_field ("GTypeInterface", "parent_iface");
 
 		if (iface.get_attribute ("GenericAccessors") != null) {
-			foreach (TypeParameter p in iface.get_type_parameters ()) {
+			iface.get_type_parameters ().foreach ((p) => {
 				string method_name = "get_%s_type".printf (p.name.down ());
 				var vdeclarator = new CCodeFunctionDeclarator (method_name);
 				var this_type = get_data_type_for_symbol (iface);
@@ -1989,10 +2009,11 @@ public class Vala.GTypeModule : GErrorModule {
 				vdecl = new CCodeDeclaration ("GDestroyNotify");
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
-			}
+				return true;
+			});
 		}
 
-		foreach (Symbol sym in iface.get_virtuals ()) {
+		iface.get_virtuals ().foreach ((sym) => {
 			Method m;
 			Signal sig;
 			Property prop;
@@ -2060,7 +2081,8 @@ public class Vala.GTypeModule : GErrorModule {
 			} else {
 				assert_not_reached ();
 			}
-		}
+			return true;
+		});
 
 		decl_space.add_type_definition (type_struct);
 
@@ -2139,10 +2161,10 @@ public class Vala.GTypeModule : GErrorModule {
 		if (iface.is_subtype_of (gobject_type)) {
 			/* create properties */
 			var props = iface.get_properties ();
-			foreach (Property prop in props) {
+			props.foreach ((prop) => {
 				if (prop.is_abstract) {
 					if (!is_gobject_property (prop)) {
-						continue;
+						return true;
 					}
 
 					if (prop.comment != null) {
@@ -2155,30 +2177,33 @@ public class Vala.GTypeModule : GErrorModule {
 
 					ccode.add_expression (cinst);
 				}
-			}
+				return true;
+			});
 		}
 
 		var ciface = new CCodeIdentifier ("iface");
 
 		/* connect default signal handlers */
-		foreach (Signal sig in iface.get_signals ()) {
+		iface.get_signals ().foreach ((sig) => {
 			if (sig.default_handler == null) {
-				continue;
+				return true;
 			}
 			var cname = get_ccode_real_name (sig.default_handler);
 			ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, get_ccode_vfunc_name (sig.default_handler)), new CCodeIdentifier (cname));
-		}
+			return true;
+		});
 
 		/* create signals */
-		foreach (Signal sig in iface.get_signals ()) {
+		iface.get_signals ().foreach ((sig) => {
 			if (sig.comment != null) {
 				ccode.add_statement (new CCodeComment (sig.comment.content));
 			}
 			ccode.add_expression (get_signal_creation (sig, iface));
-		}
+			return true;
+		});
 
 		// connect default implementations
-		foreach (Method m in iface.get_methods ()) {
+		iface.get_methods ().foreach ((m) => {
 			if (m.is_virtual) {
 				var cname = get_ccode_real_name (m);
 				ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, get_ccode_vfunc_name (m)), new CCodeIdentifier (cname));
@@ -2186,9 +2211,10 @@ public class Vala.GTypeModule : GErrorModule {
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, get_ccode_finish_vfunc_name (m)), new CCodeIdentifier (get_ccode_finish_real_name (m)));
 				}
 			}
-		}
+			return true;
+		});
 
-		foreach (Property prop in iface.get_properties ()) {
+		iface.get_properties ().foreach ((prop) => {
 			if (prop.is_virtual) {
 				if (prop.get_accessor != null) {
 					string cname = CCodeBaseModule.get_ccode_real_name (prop.get_accessor);
@@ -2199,7 +2225,8 @@ public class Vala.GTypeModule : GErrorModule {
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), new CCodeIdentifier (cname));
 				}
 			}
-		}
+			return true;
+		});
 
 		ccode.close ();
 

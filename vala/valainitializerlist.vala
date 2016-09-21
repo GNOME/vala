@@ -67,9 +67,10 @@ public class Vala.InitializerList : Expression {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (Expression expr in initializers) {
+		initializers.foreach ((expr) => {
 			expr.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override void accept (CodeVisitor visitor) {
@@ -79,21 +80,15 @@ public class Vala.InitializerList : Expression {
 	}
 
 	public override bool is_constant () {
-		foreach (Expression initializer in initializers) {
-			if (!initializer.is_constant ()) {
-				return false;
-			}
-		}
-		return true;
+		return initializers.foreach ((initializer) => {
+			return initializer.is_constant ();
+		});
 	}
 
 	public override bool is_pure () {
-		foreach (Expression initializer in initializers) {
-			if (!initializer.is_pure ()) {
-				return false;
-			}
-		}
-		return true;
+		return initializers.foreach ((initializer) => {
+			return initializer.is_pure ();
+		});
 	}
 
 	public override bool is_accessible (Symbol sym) {
@@ -157,9 +152,10 @@ public class Vala.InitializerList : Expression {
 				inner_target_type = array_type.element_type.copy ();
 			}
 
-			foreach (Expression e in get_initializers ()) {
+			get_initializers ().foreach ((e) => {
 				e.target_type = inner_target_type;
-			}
+				return true;
+			});
 		} else if (target_type.data_type is Struct) {
 			/* initializer is used as struct initializer */
 			var st = (Struct) target_type.data_type;
@@ -194,16 +190,17 @@ public class Vala.InitializerList : Expression {
 			return false;
 		}
 
-		foreach (Expression expr in initializers) {
+		initializers.foreach ((expr) => {
 			expr.check (context);
-		}
+			return true;
+		});
 
 		bool error = false;
-		foreach (Expression e in get_initializers ()) {
+		get_initializers ().foreach ((e) => {
 			if (e.value_type == null) {
 				error = true;
 				Report.error (e.source_reference, "expression type not allowed as initializer");
-				continue;
+				return false;
 			}
 
 			var unary = e as UnaryExpression;
@@ -214,7 +211,8 @@ public class Vala.InitializerList : Expression {
 				e.error = true;
 				Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (e.target_type.to_string (), e.value_type.to_string ()));
 			}
-		}
+			return true;
+		});
 
 		if (!error) {
 			/* everything seems to be correct */
@@ -226,9 +224,10 @@ public class Vala.InitializerList : Expression {
 	}
 
 	public override void emit (CodeGenerator codegen) {
-		foreach (Expression expr in initializers) {
+		initializers.foreach ((expr) => {
 			expr.emit (codegen);
-		}
+			return true;
+		});
 
 		codegen.visit_initializer_list (this);
 

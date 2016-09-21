@@ -94,13 +94,15 @@ public class Vala.ErrorDomain : TypeSymbol {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (ErrorCode ecode in codes) {
+		codes.foreach ((ecode) => {
 			ecode.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Method m in methods) {
+		methods.foreach ((m) => {
 			m.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override bool is_reference_type () {
@@ -114,13 +116,15 @@ public class Vala.ErrorDomain : TypeSymbol {
 
 		checked = true;
 
-		foreach (ErrorCode ecode in codes) {
+		codes.foreach ((ecode) => {
 			ecode.check (context);
-		}
+			return true;
+		});
 
-		foreach (Method m in methods) {
+		methods.foreach ((m) => {
 			m.check (context);
-		}
+			return true;
+		});
 
 		return !error;
 	}

@@ -74,7 +74,7 @@ public class Vala.GObjectModule : GTypeModule {
 		}
 
 		/* create type, dup_func, and destroy_func properties for generic types */
-		foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+		cl.get_type_parameters ().foreach ((type_param) => {
 			string func_name, enum_value;
 			CCodeConstant func_name_constant;
 			CCodeFunctionCall cinst, cspec;
@@ -129,13 +129,14 @@ public class Vala.GObjectModule : GTypeModule {
 			cinst.add_argument (cspec);
 			ccode.add_expression (cinst);
 			prop_enum.add_value (new CCodeEnumValue (enum_value));
-		}
+			return true;
+		});
 
 		/* create properties */
 		var props = cl.get_properties ();
-		foreach (Property prop in props) {
+		props.foreach ((prop) => {
 			if (!is_gobject_property (prop)) {
-				continue;
+				return true;
 			}
 
 			if (prop.comment != null) {
@@ -148,25 +149,20 @@ public class Vala.GObjectModule : GTypeModule {
 			cinst.add_argument (get_param_spec (prop));
 
 			ccode.add_expression (cinst);
-		}
+			return true;
+		});
 	}
 
 	private bool class_has_readable_properties (Class cl) {
-		foreach (Property prop in cl.get_properties ()) {
-			if (prop.get_accessor != null) {
-				return true;
-			}
-		}
-		return false;
+		return !cl.get_properties ().foreach ((prop) => {
+			return (prop.get_accessor == null);
+		});
 	}
 
 	private bool class_has_writable_properties (Class cl) {
-		foreach (Property prop in cl.get_properties ()) {
-			if (prop.set_accessor != null) {
-				return true;
-			}
-		}
-		return false;
+		return !cl.get_properties ().foreach ((prop) => {
+			return (prop.set_accessor == null);
+		});
 	}
 
 	private void add_guarded_expression (Symbol sym, CCodeExpression expression) {
@@ -195,13 +191,13 @@ public class Vala.GObjectModule : GTypeModule {
 
 		ccode.open_switch (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
-		foreach (Property prop in props) {
+		props.foreach ((prop) => {
 			if (prop.get_accessor == null || prop.is_abstract) {
-				continue;
+				return true;
 			}
 			if (!is_gobject_property (prop)) {
 				// don't register private properties
-				continue;
+				return true;
 			}
 
 			Property base_prop = prop;
@@ -275,7 +271,8 @@ public class Vala.GObjectModule : GTypeModule {
 				}
 			}
 			ccode.add_break ();
-		}
+			return true;
+		});
 		ccode.add_default ();
 		emit_invalid_property_id_warn ();
 		ccode.add_break ();
@@ -303,12 +300,12 @@ public class Vala.GObjectModule : GTypeModule {
 
 		ccode.open_switch (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
-		foreach (Property prop in props) {
+		props.foreach ((prop) => {
 			if (prop.set_accessor == null || prop.is_abstract) {
-				continue;
+				return true;
 			}
 			if (!is_gobject_property (prop)) {
-				continue;
+				return true;
 			}
 
 			Property base_prop = prop;
@@ -367,10 +364,11 @@ public class Vala.GObjectModule : GTypeModule {
 				add_guarded_expression (prop, ccall);
 			}
 			ccode.add_break ();
-		}
+			return true;
+		});
 
 		/* type, dup func, and destroy func properties for generic types */
-		foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+		cl.get_type_parameters ().foreach ((type_param) => {
 			string func_name, enum_value;
 			CCodeMemberAccess cfield;
 			CCodeFunctionCall cgetcall;
@@ -401,7 +399,8 @@ public class Vala.GObjectModule : GTypeModule {
 			cgetcall.add_argument (new CCodeIdentifier ("value"));
 			ccode.add_assignment (cfield, cgetcall);
 			ccode.add_break ();
-		}
+			return true;
+		});
 		ccode.add_default ();
 		emit_invalid_property_id_warn ();
 		ccode.add_break ();
@@ -783,26 +782,27 @@ public class Vala.GObjectModule : GTypeModule {
 			} else if (ma.symbol_reference == gobject_type) {
 				// Object (...) chain up
 				// check it's only used with valid properties
-				foreach (var arg in expr.get_argument_list ()) {
+				expr.get_argument_list ().foreach ((arg) => {
 					var named_argument = arg as NamedArgument;
 					if (named_argument == null) {
 						Report.error (arg.source_reference, "Named argument expected");
-						break;
+						return false;
 					}
 					var prop = SemanticAnalyzer.symbol_lookup_inherited (current_class, named_argument.name) as Property;
 					if (prop == null) {
 						Report.error (arg.source_reference, "Property `%s' not found in `%s'".printf (named_argument.name, current_class.get_full_name ()));
-						break;
+						return false;
 					}
 					if (!is_gobject_property (prop)) {
 						Report.error (arg.source_reference, "Property `%s' not supported in Object (property: value) constructor chain up".printf (named_argument.name));
-						break;
+						return false;
 					}
 					if (!arg.value_type.compatible (prop.property_type)) {
 						Report.error (arg.source_reference, "Cannot convert from `%s' to `%s'".printf (arg.value_type.to_string (), prop.property_type.to_string ()));
-						break;
+						return false;
 					}
-				}
+					return true;
+				});
 			}
 
 			pop_line ();

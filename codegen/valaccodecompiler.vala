@@ -61,12 +61,13 @@ public class Vala.CCodeCompiler {
 		}
 		use_pkgconfig = true;
 		pc += " gobject-2.0";
-		foreach (string pkg in context.get_packages ()) {
+		context.get_packages ().foreach ((pkg) => {
 			if (package_exists (pkg, pkg_config_command)) {
 				use_pkgconfig = true;
 				pc += " " + pkg;
 			}
-		}
+			return true;
+		});
 		string pkgflags = "";
 		if (use_pkgconfig) {
 			try {
@@ -103,20 +104,22 @@ public class Vala.CCodeCompiler {
 
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
-		foreach (SourceFile file in source_files) {
+		source_files.foreach ((file) => {
 			if (file.file_type == SourceFileType.SOURCE) {
 				cmdline += " " + Shell.quote (file.get_csource_filename ());
 			}
-		}
+			return true;
+		});
 		var c_source_files = context.get_c_source_files ();
-		foreach (string file in c_source_files) {
+		c_source_files.foreach ((file) => {
 			cmdline += " " + Shell.quote (file);
-		}
+			return true;
+		});
 
 		// add libraries after source files to fix linking
 		// with --as-needed and on Windows
 		cmdline += " " + pkgflags.strip ();
-		foreach (string cc_option in cc_options) {
+		foreach (unowned string cc_option in cc_options) {
 			cmdline += " " + Shell.quote (cc_option);
 		}
 
@@ -135,12 +138,13 @@ public class Vala.CCodeCompiler {
 		}
 
 		/* remove generated C source and header files */
-		foreach (SourceFile file in source_files) {
+		source_files.foreach ((file) => {
 			if (file.file_type == SourceFileType.SOURCE) {
 				if (!context.save_csources) {
 					FileUtils.unlink (file.get_csource_filename ());
 				}
 			}
-		}
+			return true;
+		});
 	}
 }

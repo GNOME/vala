@@ -352,9 +352,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 
 		type.is_dynamic = unresolved_type.is_dynamic;
-		foreach (DataType type_arg in unresolved_type.get_type_arguments ()) {
+		unresolved_type.get_type_arguments ().foreach ((type_arg) => {
 			type.add_type_argument (type_arg);
-		}
+			return true;
+		});
 
 		return type;
 	}

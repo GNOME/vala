@@ -73,13 +73,14 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 
 		var local = declaration as LocalVariable;
 		if (local != null && local.initializer != null) {
-			foreach (DataType error_type in local.initializer.get_error_types ()) {
+			local.initializer.get_error_types ().foreach ((error_type) => {
 				// ensure we can trace back which expression may throw errors of this type
 				var initializer_error_type = error_type.copy ();
 				initializer_error_type.source_reference = local.initializer.source_reference;
 
 				add_error_type (initializer_error_type);
-			}
+				return true;
+			});
 		}
 
 		return !error;

@@ -33,9 +33,10 @@ public class Vala.Template : Expression {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (var expr in expression_list) {
+		expression_list.foreach ((expr) => {
 			expr.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public void add_expression (Expression expr) {

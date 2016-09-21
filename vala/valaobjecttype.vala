@@ -44,9 +44,10 @@ public class Vala.ObjectType : ReferenceType {
 		result.is_dynamic = is_dynamic;
 		result.floating_reference = floating_reference;
 		
-		foreach (DataType arg in get_type_arguments ()) {
+		get_type_arguments ().foreach ((arg) => {
 			result.add_type_argument (arg.copy ());
-		}
+			return true;
+		});
 		
 		return result;
 	}

@@ -106,12 +106,12 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		this.context = context;
 
 		/* we're only interested in non-pkg source files */
-		var source_files = context.get_source_files ();
-		foreach (SourceFile file in source_files) {
+		context.get_source_files ().foreach ((file) => {
 			if (file.file_type == SourceFileType.SOURCE) {
 				file.accept (this);
 			}
-		}
+			return true;
+		});
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
@@ -195,13 +195,14 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		if (m is Method) {
 			// ensure out parameters are defined at end of method
-			foreach (var param in ((Method) m).get_parameters ()) {
+			((Method) m).get_parameters ().foreach ((param) => {
 				if (param.direction == ParameterDirection.OUT) {
 					var param_ma = new MemberAccess.simple (param.name, param.source_reference);
 					param_ma.symbol_reference = param;
 					m.return_block.add_node (param_ma);
 				}
-			}
+				return true;
+			});
 		}
 
 		current_block = new BasicBlock ();
@@ -250,9 +251,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			return;
 		}
 		current.postorder_visited = true;
-		foreach (BasicBlock succ in current.get_successors ()) {
+		current.get_successors ().foreach ((succ) => {
 			depth_first_traverse (succ, list);
-		}
+			return true;
+		});
 		current.postorder_number = list.size;
 		list.insert (0, current);
 	}
@@ -265,15 +267,15 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		bool changed = true;
 		while (changed) {
 			changed = false;
-			foreach (BasicBlock block in block_list) {
+			block_list.foreach ((block) => {
 				if (block == entry_block) {
-					continue;
+					return true;
 				}
 
 				// new immediate dominator
 				BasicBlock new_idom = null;
 				bool first = true;
-				foreach (BasicBlock pred in block.get_predecessors ()) {
+				block.get_predecessors ().foreach ((pred) => {
 					if (idoms[pred.postorder_number] != null) {
 						if (first) {
 							new_idom = pred;
@@ -282,22 +284,23 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 							new_idom = intersect (idoms, pred, new_idom);
 						}
 					}
-				}
+					return true;
+				});
 				if (idoms[block.postorder_number] != new_idom) {
 					idoms[block.postorder_number] = new_idom;
 					changed = true;
 				}
-			}
+				return true;
+			});
 		}
 
 		// build tree
-		foreach (BasicBlock block in block_list) {
-			if (block == entry_block) {
-				continue;
+		block_list.foreach ((block) => {
+			if (block != entry_block) {
+				idoms[block.postorder_number].add_child (block);
 			}
-
-			idoms[block.postorder_number].add_child (block);
-		}
+			return true;
+		});
 	}
 
 	BasicBlock intersect (BasicBlock[] idoms, BasicBlock b1, BasicBlock b2) {
@@ -316,41 +319,47 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		for (int i = block_list.size - 1; i >= 0; i--) {
 			var block = block_list[i];
 
-			foreach (BasicBlock succ in block.get_successors ()) {
+			block.get_successors ().foreach ((succ) => {
 				// if idom(succ) != block
 				if (succ.parent != block) {
 					block.add_dominator_frontier (succ);
 				}
-			}
+				return true;
+			});
 
-			foreach (BasicBlock child in block.get_children ()) {
-				foreach (BasicBlock child_frontier in child.get_dominator_frontier ()) {
+			block.get_children ().foreach ((child) => {
+				child.get_dominator_frontier ().foreach ((child_frontier) => {
 					// if idom(child_frontier) != block
 					if (child_frontier.parent != block) {
 						block.add_dominator_frontier (child_frontier);
 					}
-				}
-			}
+					return true;
+				});
+				return true;
+			});
 		}
 	}
 
 	Map<Variable, Set<BasicBlock>> get_assignment_map (List<BasicBlock> block_list, BasicBlock entry_block) {
 		var map = new HashMap<Variable, Set<BasicBlock>> ();
-		foreach (BasicBlock block in block_list) {
+		block_list.foreach ((block) => {
 			var defined_variables = new ArrayList<Variable> ();
-			foreach (CodeNode node in block.get_nodes ()) {
+			block.get_nodes ().foreach ((node) => {
 				node.get_defined_variables (defined_variables);
-			}
+				return true;
+			});
 
-			foreach (Variable variable in defined_variables) {
+			defined_variables.foreach ((variable) => {
 				var block_set = map.get (variable);
 				if (block_set == null) {
 					block_set = new HashSet<BasicBlock> ();
 					map.set (variable, block_set);
 				}
 				block_set.add (block);
-			}
-		}
+				return true;
+			});
+			return true;
+		});
 		return map;
 	}
 
@@ -362,21 +371,23 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		var added = new HashMap<BasicBlock, int> ();
 		var phi = new HashMap<BasicBlock, int> ();
-		foreach (BasicBlock block in block_list) {
+		block_list.foreach ((block) => {
 			added.set (block, 0);
 			phi.set (block, 0);
-		}
+			return true;
+		});
 
-		foreach (Variable variable in assign.keys) {
+		assign.keys.foreach ((variable) => {
 			counter++;
-			foreach (BasicBlock block in assign.get (variable)) {
+			assign.get (variable).foreach ((block) => {
 				work_list.add (block);
 				added.set (block, counter);
-			}
+				return true;
+			});
 			while (work_list.size > 0) {
 				BasicBlock block = work_list.get (0);
 				work_list.remove_at (0);
-				foreach (BasicBlock frontier in block.get_dominator_frontier ()) {
+				block.get_dominator_frontier ().foreach ((frontier) => {
 					int blockPhi = phi.get (frontier);
 					if (blockPhi < counter) {
 						frontier.add_phi_function (new PhiFunction (variable, frontier.get_predecessors ().size));
@@ -387,9 +398,11 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 							work_list.add (frontier);
 						}
 					}
-				}
+					return true;
+				});
 			}
-		}
+			return true;
+		});
 	}
 
 	void check_variables (BasicBlock entry_block) {
@@ -401,16 +414,17 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		// check for variables used before initialization
 		var used_vars_queue = new ArrayList<Variable> ();
-		foreach (Variable variable in used_vars) {
+		used_vars.foreach ((variable) => {
 			used_vars_queue.add (variable);
-		}
+			return true;
+		});
 		while (used_vars_queue.size > 0) {
 			Variable used_var = used_vars_queue[0];
 			used_vars_queue.remove_at (0);
 
 			PhiFunction phi = phi_functions.get (used_var);
 			if (phi != null) {
-				foreach (Variable variable in phi.operands) {
+				phi.operands.foreach ((variable) => {
 					if (variable == null) {
 						if (used_var is LocalVariable) {
 							Report.error (used_var.source_reference, "use of possibly unassigned local variable `%s'".printf (used_var.name));
@@ -418,30 +432,32 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 							// parameter
 							Report.warning (used_var.source_reference, "use of possibly unassigned parameter `%s'".printf (used_var.name));
 						}
-						continue;
+						return true;
 					}
 					if (!(variable in used_vars)) {
 						variable.source_reference = used_var.source_reference;
 						used_vars.add (variable);
 						used_vars_queue.add (variable);
 					}
-				}
+					return true;
+				});
 			}
 		}
 	}
 
 	void check_block_variables (BasicBlock block) {
-		foreach (PhiFunction phi in block.get_phi_functions ()) {
+		block.get_phi_functions ().foreach ((phi) => {
 			Variable versioned_var = process_assignment (var_map, phi.original_variable);
 
 			phi_functions.set (versioned_var, phi);
-		}
+			return true;
+		});
 
-		foreach (CodeNode node in block.get_nodes ()) {
+		block.get_nodes ().foreach ((node) => {
 			var used_variables = new ArrayList<Variable> ();
 			node.get_used_variables (used_variables);
 			
-			foreach (Variable var_symbol in used_variables) {
+			used_variables.foreach ((var_symbol) => {
 				var variable_stack = var_map.get (var_symbol);
 				if (variable_stack == null || variable_stack.size == 0) {
 					if (var_symbol is LocalVariable) {
@@ -450,57 +466,67 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 						// parameter
 						Report.warning (node.source_reference, "use of possibly unassigned parameter `%s'".printf (var_symbol.name));
 					}
-					continue;
+					return true;
 				}
 				var versioned_variable = variable_stack.get (variable_stack.size - 1);
 				if (!(versioned_variable in used_vars)) {
 					versioned_variable.source_reference = node.source_reference;
 				}
 				used_vars.add (versioned_variable);
-			}
+				return true;
+			});
 
 			var defined_variables = new ArrayList<Variable> ();
 			node.get_defined_variables (defined_variables);
 
-			foreach (Variable variable in defined_variables) {
+			defined_variables.foreach ((variable) => {
 				process_assignment (var_map, variable);
-			}
-		}
+				return true;
+			});
+			return true;
+		});
 
-		foreach (BasicBlock succ in block.get_successors ()) {
+		block.get_successors ().foreach ((succ) => {
 			int j = 0;
-			foreach (BasicBlock pred in succ.get_predecessors ()) {
+			succ.get_predecessors ().foreach ((pred) => {
 				if (pred == block) {
-					break;
+					return false;
 				}
 				j++;
-			}
+				return true;
+			});
 
-			foreach (PhiFunction phi in succ.get_phi_functions ()) {
+			succ.get_phi_functions ().foreach ((phi) => {
 				var variable_stack = var_map.get (phi.original_variable);
 				if (variable_stack != null && variable_stack.size > 0) {
 					phi.operands.set (j, variable_stack.get (variable_stack.size - 1));
 				}
-			}
-		}
+				return true;
+			});
+			return true;
+		});
 
-		foreach (BasicBlock child in block.get_children ()) {
+		block.get_children ().foreach ((child) => {
 			check_block_variables (child);
-		}
+			return true;
+		});
 
-		foreach (PhiFunction phi in block.get_phi_functions ()) {
+		block.get_phi_functions ().foreach ((phi) => {
 			var variable_stack = var_map.get (phi.original_variable);
 			variable_stack.remove_at (variable_stack.size - 1);
-		}
-		foreach (CodeNode node in block.get_nodes ()) {
+			return true;
+		});
+		block.get_nodes ().foreach ((node) => {
 			var defined_variables = new ArrayList<Variable> ();
 			node.get_defined_variables (defined_variables);
 
-			foreach (Variable variable in defined_variables) {
+			defined_variables.foreach ((variable) => {
 				var variable_stack = var_map.get (variable);
 				variable_stack.remove_at (variable_stack.size - 1);
-			}
-		}
+				return true;
+			});
+			return true;
+		});
 	}
 
 	Variable process_assignment (Map<Symbol, List<Variable>> var_map, Variable var_symbol) {
@@ -658,12 +684,13 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		bool has_default_label = false;
 
-		foreach (SwitchSection section in stmt.get_sections ()) {
+		stmt.get_sections ().foreach ((section) => {
 			current_block = new BasicBlock ();
 			condition_block.connect (current_block);
-			foreach (Statement section_stmt in section.get_statements ()) {
+			section.get_statements ().foreach ((section_stmt) => {
 				section_stmt.accept (this);
-			}
+				return true;
+			});
 
 			if (section.has_default_label ()) {
 				has_default_label = true;
@@ -678,7 +705,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 				current_block.connect (after_switch_block);
 			}
-		}
+			return true;
+	    });
 
 		if (!has_default_label) {
 			condition_block.connect (after_switch_block);
@@ -845,7 +873,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			var last_block = current_block;
 
 			// exceptional control flow
-			foreach (DataType error_data_type in node.get_error_types()) {
+			node.get_error_types().foreach ((error_data_type) => {
 				var error_type = error_data_type as ErrorType;
 				current_block = last_block;
 				unreachable_reported = true;
@@ -880,7 +908,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 						current_block = jump_target.last_block;
 					}
 				}
-			}
+				return true;
+			});
 
 			// normal control flow
 			if (!always_fail) {

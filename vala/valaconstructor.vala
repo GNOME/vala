@@ -77,11 +77,12 @@ public class Vala.Constructor : Subroutine {
 			body.check (context);
 		}
 
-		foreach (DataType body_error_type in body.get_error_types ()) {
+		body.get_error_types ().foreach ((body_error_type) => {
 			if (!((ErrorType) body_error_type).dynamic_error) {
 				Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
 			}
-		}
+			return true;
+	    });
 
 		context.analyzer.current_symbol = context.analyzer.current_symbol.parent_symbol;
 

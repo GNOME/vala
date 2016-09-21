@@ -139,27 +139,29 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if (!current_class.is_compact) {
 				if (current_class != m.parent_symbol) {
 					// chain up to base class
-					foreach (DataType base_type in current_class.get_base_types ()) {
+					current_class.get_base_types ().foreach ((base_type) => {
 						if (base_type.data_type is Class) {
-							List<TypeParameter> type_parameters = null;
+							List<TypeParameter>? type_parameters = null;
 							if (get_ccode_real_name (m) == "g_object_new") {
 								// gobject-style chainup
 								type_parameters = ((Class) base_type.data_type).get_type_parameters ();
 							}
 							add_generic_type_arguments (in_arg_map, base_type.get_type_arguments (), expr, true, type_parameters);
-							break;
+							return false;
 						}
-					}
+						return true;
+					});
 				} else {
 					// chain up to other constructor in same class
 					int type_param_index = 0;
 					var cl = (Class) m.parent_symbol;
-					foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+					cl.get_type_parameters ().foreach ((type_param) => {
 						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeIdentifier ("%s_type".printf (type_param.name.down ())));
 						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ())));
 						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ())));
 						type_param_index++;
-					}
+						return true;
+					});
 				}
 			} else if (current_class.base_class == gsource_type) {
 				// g_source_new
@@ -267,17 +269,19 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if (m.get_type_parameters ().size > 0) {
 				// generic method
 				int type_param_index = 0;
-				foreach (var type_arg in ma.get_type_arguments ()) {
+				ma.get_type_arguments ().foreach ((type_arg) => {
 					in_arg_map.set (get_param_pos (get_ccode_generic_type_pos (m) + 0.01 * type_param_index), new CCodeIdentifier (get_ccode_name (type_arg)));
 					type_param_index++;
-				}
+					return true;
+				});
 			} else {
 				// method in generic type
 				int type_param_index = 0;
-				foreach (var type_arg in ma.inner.value_type.get_type_arguments ()) {
+				ma.inner.value_type.get_type_arguments ().foreach ((type_arg) => {
 					in_arg_map.set (get_param_pos (get_ccode_generic_type_pos (m) + 0.01 * type_param_index), new CCodeIdentifier (get_ccode_name (type_arg)));
 					type_param_index++;
-				}
+					return true;
+				});
 			}
 		}
 
@@ -289,7 +293,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		} else if (m is DynamicMethod) {
 			m.clear_parameters ();
 			int param_nr = 1;
-			foreach (Expression arg in expr.get_argument_list ()) {
+			expr.get_argument_list ().foreach ((arg) => {
 				var unary = arg as UnaryExpression;
 				if (unary != null && unary.operator == UnaryOperator.OUT) {
 					// out argument
@@ -306,10 +310,12 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					m.add_parameter (new Parameter ("param%d".printf (param_nr), arg.value_type));
 				}
 				param_nr++;
-			}
-			foreach (Parameter param in m.get_parameters ()) {
+				return true;
+			});
+			m.get_parameters ().foreach ((param) => {
 				param.accept (this);
-			}
+				return true;
+			});
 			generate_dynamic_method_wrapper ((DynamicMethod) m);
 		} else if (m is CreationMethod && m.parent_symbol is Class) {
 			ccode.add_assignment (get_this_cexpression (), new CCodeCastExpression (ccall, CCodeBaseModule.get_ccode_name (current_class) + "*"));
@@ -325,14 +331,15 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if (!current_class.is_compact && current_class.get_type_parameters ().size > 0) {
 				/* type, dup func, and destroy func fields for generic types */
 				var suffices = new string[] {"type", "dup_func", "destroy_func"};
-				foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
+				current_class.get_type_parameters ().foreach ((type_param) => {
 					var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
 
 					foreach (string suffix in suffices) {
 						var param_name = new CCodeIdentifier ("%s_%s".printf (type_param.name.down (), suffix));
 						ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
 					}
-				}
+					return true;
+				});
 			}
 			// object chainup can't be used as expression
 			ccall_expr = null;
@@ -341,9 +348,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		bool ellipsis = false;
 		
 		int i = 1;
-		int arg_pos;
+		int arg_pos = 0;
 		Iterator<Parameter> params_it = params.iterator ();
-		foreach (Expression arg in expr.get_argument_list ()) {
+		expr.get_argument_list ().foreach ((arg) => {
 			CCodeExpression cexpr = get_cvalue (arg);
 
 			var carg_map = in_arg_map;
@@ -473,7 +480,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 
 			i++;
-		}
+			return true;
+		});
 		if (params_it.next ()) {
 			var param = params_it.get ();
 
@@ -817,20 +825,20 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		params_it = params.iterator ();
-		foreach (Expression arg in expr.get_argument_list ()) {
+		expr.get_argument_list ().foreach ((arg) => {
 			Parameter param = null;
 			
 			if (params_it.next ()) {
 				param = params_it.get ();
 				if (param.params_array || param.ellipsis) {
 					// ignore ellipsis arguments as we currently don't use temporary variables for them
-					break;
+					return false;
 				}
 			}
 
 			var unary = arg as UnaryExpression;
 			if (unary == null || unary.operator != UnaryOperator.OUT) {
-				continue;
+				return true;
 			}
 
 			if (requires_destroy (unary.inner.value_type)) {
@@ -849,7 +857,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				
 				ccode.add_assignment (get_array_length_cvalue (unary.inner.target_value, 1), len_call);
 			}
-		}
+			return true;
+		});
 
 		if (m is CreationMethod && m.parent_symbol is Class && current_class.base_class == gsource_type) {
 			var cinitcall = new CCodeFunctionCall (new CCodeIdentifier ("%s_instance_init".printf (get_ccode_lower_case_name (current_class, null))));
@@ -877,10 +886,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		push_function (function);
 
 		ccode.open_switch (new CCodeConstant ("value"));
-		foreach (var enum_value in en.get_values ()) {
+		en.get_values ().foreach ((enum_value) => {
 			ccode.add_case (new CCodeIdentifier (get_ccode_name (enum_value)));
 			ccode.add_return (new CCodeConstant ("\""+get_ccode_name (enum_value)+"\""));
-		}
+			return true;
+		});
 		ccode.close ();
 		ccode.add_return (new CCodeConstant ("NULL"));
 

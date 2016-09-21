@@ -41,9 +41,10 @@ public class Vala.CCodeExpressionStatement : CCodeStatement {
 			// to improve code readability
 			var ccomma = expression as CCodeCommaExpression;
 
-			foreach (CCodeExpression expr in ccomma.get_inner ()) {
+			ccomma.get_inner ().foreach ((expr) => {
 				write_expression (writer, expr);
-			}
+				return true;
+			});
 		} else if (expression is CCodeParenthesizedExpression) {
 			var cpar = expression as CCodeParenthesizedExpression;
 

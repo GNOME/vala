@@ -111,9 +111,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (m.get_error_types ().size > 0 || (m.base_method != null && m.base_method.get_error_types ().size > 0) || (m.base_interface_method != null && m.base_interface_method.get_error_types ().size > 0)) {
-			foreach (DataType error_type in m.get_error_types ()) {
+			m.get_error_types ().foreach ((error_type) => {
 				generate_type_declaration (error_type, decl_space);
-			}
+				return true;
+			});
 
 			var cparam = new CCodeParameter ("error", "GError**");
 			cparam_map.set (get_param_pos (-1), cparam);
@@ -261,25 +262,30 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		var cl = sym as Class;
 		var iface = sym as Interface;
 		if (ns != null) {
-			foreach (var ns_ns in ns.get_namespaces ()) {
+			ns.get_namespaces ().foreach ((ns_ns) => {
 				register_plugin_types (ns_ns, registered_types);
-			}
-			foreach (var ns_cl in ns.get_classes ()) {
+				return true;
+			});
+			ns.get_classes ().foreach ((ns_cl) => {
 				register_plugin_types (ns_cl, registered_types);
-			}
-			foreach (var ns_iface in ns.get_interfaces ()) {
+				return true;
+			});
+			ns.get_interfaces ().foreach ((ns_iface) => {
 				register_plugin_types (ns_iface, registered_types);
-			}
+				return true;
+			});
 		} else if (cl != null) {
 			register_plugin_type (cl, registered_types);
-			foreach (var cl_cl in cl.get_classes ()) {
+			cl.get_classes ().foreach ((cl_cl) => {
 				register_plugin_types (cl_cl, registered_types);
-			}
+				return true;
+			});
 		} else if (iface != null) {
 			register_plugin_type (iface, registered_types);
-			foreach (var iface_cl in iface.get_classes ()) {
+			iface.get_classes ().foreach ((iface_cl) => {
 				register_plugin_types (iface_cl, registered_types);
-			}
+				return true;
+			});
 		}
 	}
 
@@ -300,9 +306,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 
 			// register base types first
-			foreach (var base_type in cl.get_base_types ()) {
+			cl.get_base_types ().foreach ((base_type) => {
 				register_plugin_type ((ObjectTypeSymbol) base_type.data_type, registered_types);
-			}
+				return true;
+			});
 		}
 
 		// Add function prototypes for required register-type-calls which are likely external
@@ -371,9 +378,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			creturn_type = new VoidType ();
 		}
 
-		foreach (Parameter param in m.get_parameters ()) {
+		m.get_parameters ().foreach ((param) => {
 			param.accept (this);
-		}
+			return true;
+		});
 
 		// do not declare overriding methods and interface implementations
 		if ((m.is_abstract || m.is_virtual
@@ -545,7 +553,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					}
 
 					// allow capturing generic type parameters
-					foreach (var type_param in m.get_type_parameters ()) {
+					m.get_type_parameters ().foreach ((type_param) => {
 						string func_name;
 
 						func_name = "%s_type".printf (type_param.name.down ());
@@ -559,7 +567,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						func_name = "%s_destroy_func".printf (type_param.name.down ());
 						ccode.add_declaration ("GDestroyNotify", new CCodeVariableDeclarator (func_name));
 						ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name));
-					}
+						return true;
+					});
 				} else if (m.parent_symbol is Class && !m.coroutine) {
 					var cl = (Class) m.parent_symbol;
 					if (m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
@@ -584,9 +593,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					}
 				}
 
-				foreach (Parameter param in m.get_parameters ()) {
+				m.get_parameters ().foreach ((param) => {
 					if (param.ellipsis) {
-						break;
+						return false;
 					}
 
 					if (param.direction != ParameterDirection.OUT) {
@@ -628,7 +637,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							}
 						}
 					}
-				}
+					return true;
+				});
 
 				if (!(m.return_type is VoidType) && !m.return_type.is_real_non_null_struct_type () && !m.coroutine) {
 					var vardecl = new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
@@ -651,7 +661,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							ccode.add_assignment (get_this_cexpression (), new CCodeCastExpression (ccall, get_ccode_name (cl) + "*"));
 
 							/* type, dup func, and destroy func fields for generic types */
-							foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
+							current_class.get_type_parameters ().foreach ((type_param) => {
 								CCodeIdentifier param_name;
 								CCodeAssignment assign;
 
@@ -668,7 +678,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 								param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
 								assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
 								ccode.add_expression (assign);
-							}
+								return true;
+							});
 						}
 					} else if (current_type_symbol is Class) {
 						var cl = (Class) m.parent_symbol;
@@ -707,9 +718,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					register_plugin_types (context.root, new HashSet<Symbol> ());
 				}
 
-				foreach (Expression precondition in m.get_preconditions ()) {
+				m.get_preconditions ().foreach ((precondition) => {
 					create_precondition_statement (m, creturn_type, precondition);
-				}
+					return true;
+				});
 			}
 		}
 
@@ -997,7 +1009,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			// memory management for generic types
 			int type_param_index = 0;
 			var cl = (Class) m.parent_symbol;
-			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+			cl.get_type_parameters ().foreach ((type_param) => {
 				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeParameter ("%s_type".printf (type_param.name.down ()), "GType"));
 				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeParameter ("%s_dup_func".printf (type_param.name.down ()), "GBoxedCopyFunc"));
 				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeParameter ("%s_destroy_func".printf (type_param.name.down ()), "GDestroyNotify"));
@@ -1007,10 +1019,11 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					carg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ())));
 				}
 				type_param_index++;
-			}
+				return true;
+			});
 		} else if (!m.closure && (direction & 1) == 1) {
 			int type_param_index = 0;
-			foreach (var type_param in m.get_type_parameters ()) {
+			m.get_type_parameters ().foreach ((type_param) => {
 				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeParameter ("%s_type".printf (type_param.name.down ()), "GType"));
 				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeParameter ("%s_dup_func".printf (type_param.name.down ()), "GBoxedCopyFunc"));
 				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeParameter ("%s_destroy_func".printf (type_param.name.down ()), "GDestroyNotify"));
@@ -1020,24 +1033,26 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					carg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ())));
 				}
 				type_param_index++;
-			}
+				return true;
+			});
 		}
 
-		foreach (Parameter param in m.get_parameters ()) {
+		m.get_parameters ().foreach ((param) => {
 			if (param.direction != ParameterDirection.OUT) {
 				if ((direction & 1) == 0) {
 					// no in parameters
-					continue;
+					return true;
 				}
 			} else {
 				if ((direction & 2) == 0) {
 					// no out parameters
-					continue;
+					return true;
 				}
 			}
 
 			generate_parameter (param, decl_space, cparam_map, carg_map);
-		}
+			return true;
+		});
 
 		if ((direction & 2) != 0) {
 			generate_method_result_declaration (m, decl_space, func, cparam_map, carg_map);
@@ -1122,9 +1137,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		// add a typecheck statement for "self"
 		create_method_type_check_statement (m, return_type, (TypeSymbol) m.parent_symbol, true, "self");
 
-		foreach (Expression precondition in m.get_preconditions ()) {
+		m.get_preconditions ().foreach ((precondition) => {
 			create_precondition_statement (m, return_type, precondition);
-		}
+			return true;
+		});
 
 		if (return_type is VoidType || return_type.is_real_non_null_struct_type ()) {
 			ccode.add_expression (vcall);
@@ -1138,9 +1154,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (m.get_postconditions ().size > 0) {
-			foreach (Expression postcondition in m.get_postconditions ()) {
+			m.get_postconditions ().foreach ((postcondition) => {
 				create_postcondition_statement (postcondition);
-			}
+				return true;
+			});
 
 			if (!(return_type is VoidType)) {
 				ccode.add_return (new CCodeIdentifier ("result"));
@@ -1267,14 +1284,15 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		if (m.is_variadic ()) {
 			int last_pos = -1;
 			int second_last_pos = -1;
-			foreach (int pos in cparam_map.keys) {
+			cparam_map.keys.foreach ((pos) => {
 				if (pos > last_pos) {
 					second_last_pos = last_pos;
 					last_pos = pos;
 				} else if (pos > second_last_pos) {
 					second_last_pos = pos;
 				}
-			}
+				return true;
+			});
 
 			var va_start = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
 			va_start.add_argument (new CCodeIdentifier ("_vala_va_list_obj"));

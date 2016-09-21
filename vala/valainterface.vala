@@ -288,50 +288,61 @@ public class Vala.Interface : ObjectTypeSymbol {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (DataType type in prerequisites) {
+		prerequisites.foreach ((type) => {
 			type.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (TypeParameter p in get_type_parameters ()) {
+		get_type_parameters ().foreach ((p) => {
 			p.accept (visitor);
-		}
+			return true;
+		});
 
 		/* process enums first to avoid order problems in C code */
-		foreach (Enum en in enums) {
+		enums.foreach ((en) => {
 			en.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Method m in methods) {
+	    methods.foreach ((m) => {
 			m.accept (visitor);
-		}
+			return true;
+		});
 		
-		foreach (Field f in fields) {
+		fields.foreach ((f) => {
 			f.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Constant c in constants) {
+		constants.foreach ((c) => {
 			c.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Property prop in properties) {
+		properties.foreach ((prop) => {
 			prop.accept (visitor);
-		}
+			return true;
+		});
 		
-		foreach (Signal sig in signals) {
+		signals.foreach ((sig) => {
 			sig.accept (visitor);
-		}
+			return true;
+		});
 		
-		foreach (Class cl in classes) {
+		classes.foreach ((cl) => {
 			cl.accept (visitor);
-		}
+			return true;
+		});
 		
-		foreach (Struct st in structs) {
+		structs.foreach ((st) => {
 			st.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Delegate d in delegates) {
+		delegates.foreach ((d) => {
 			d.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override bool is_reference_type () {
@@ -343,13 +354,9 @@ public class Vala.Interface : ObjectTypeSymbol {
 			return true;
 		}
 
-		foreach (DataType prerequisite in prerequisites) {
-			if (prerequisite.data_type != null && prerequisite.data_type.is_subtype_of (t)) {
-				return true;
-			}
-		}
-		
-		return false;
+		return !prerequisites.foreach ((prerequisite) => {
+			return !(prerequisite.data_type != null && prerequisite.data_type.is_subtype_of (t));
+		});
 	}
 	
 	public override void replace_type (DataType old_type, DataType new_type) {
@@ -414,63 +421,74 @@ public class Vala.Interface : ObjectTypeSymbol {
 			}
 		}
 
-		foreach (DataType type in prerequisites) {
+		prerequisites.foreach ((type) => {
 			type.check (context);
-		}
+			return true;
+		});
 
-		foreach (TypeParameter p in get_type_parameters ()) {
+		get_type_parameters ().foreach ((p) => {
 			p.check (context);
-		}
+			return true;
+		});
 
-		foreach (Enum en in enums) {
+		enums.foreach ((en) => {
 			en.check (context);
-		}
+			return true;
+		});
 
-		foreach (Method m in methods) {
+		methods.foreach ((m) => {
 			m.check (context);
 			if (m.is_virtual || m.is_abstract) {
 				virtuals.add (m);
 			}
-		}
+			return true;
+		});
 
-		foreach (Field f in fields) {
+		fields.foreach ((f) => {
 			f.check (context);
-		}
+			return true;
+		});
 
-		foreach (Constant c in constants) {
+		constants.foreach ((c) => {
 			c.check (context);
-		}
+			return true;
+		});
 
-		foreach (Signal sig in signals) {
+		signals.foreach ((sig) => {
 			sig.check (context);
 			if (sig.is_virtual) {
 				virtuals.add (sig);
 			}
-		}
+			return true;
+		});
 
-		foreach (Property prop in properties) {
+		properties.foreach ((prop) => {
 			prop.check (context);
 			if (prop.is_virtual || prop.is_abstract) {
 				virtuals.add (prop);
 			}
-		}
-
-		foreach (Class cl in classes) {
+			return true;
+		});
+		
+		classes.foreach ((cl) => {
 			cl.check (context);
-		}
+			return true;
+		});
 
-		foreach (Struct st in structs) {
+		structs.foreach ((st) => {
 			st.check (context);
-		}
+			return true;
+		});
 
-		foreach (Delegate d in delegates) {
+		delegates.foreach ((d) => {
 			d.check (context);
-		}
+			return true;
+		});
 
 		Map<int, Symbol>? positions = new HashMap<int, Symbol> ();
 		bool ordered_seen = false;
 		bool unordered_seen = false;
-		foreach (Symbol sym in virtuals) {
+		virtuals.foreach ((sym) => {
 			int ordering = sym.get_attribute_integer ("CCode", "ordering", -1);
 			if (ordering < -1) {
 				Report.error (sym.source_reference, "%s: Invalid ordering".printf (sym.get_full_name ()));
@@ -478,7 +496,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 				error = true;
 				ordered_seen = true;
 				unordered_seen = true;
-				continue;
+				return true;
 			}
 			bool ordered = ordering != -1;
 			if (ordered && unordered_seen && !ordered_seen) {
@@ -501,7 +519,8 @@ public class Vala.Interface : ObjectTypeSymbol {
 					positions[ordering] = sym;
 				}
 			}
-		}
+			return true;
+		});
 		if (ordered_seen) {
 			for (int i = 0; i < virtuals.size; i++) {
 				Symbol? sym = positions[i];

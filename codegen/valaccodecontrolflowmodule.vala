@@ -61,22 +61,22 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 		int label_count = 0;
 
-		foreach (SwitchSection section in stmt.get_sections ()) {
-			if (section.has_default_label ()) {
-				continue;
+		stmt.get_sections ().foreach ((section) => {
+			if (!section.has_default_label ()) {
+				section.get_labels ().foreach ((label) => {
+					label.expression.emit (this);
+					var cexpr = get_cvalue (label.expression);
+
+					if (is_constant_ccode_expression (cexpr)) {
+						var cname = "_tmp%d_label%d".printf (label_temp_id, label_count++);
+
+						ccode.add_declaration (get_ccode_name (gquark_type), new CCodeVariableDeclarator (cname, czero), CCodeModifiers.STATIC);
+					}
+					return true;
+				});
 			}
-
-			foreach (SwitchLabel label in section.get_labels ()) {
-				label.expression.emit (this);
-				var cexpr = get_cvalue (label.expression);
-
-				if (is_constant_ccode_expression (cexpr)) {
-					var cname = "_tmp%d_label%d".printf (label_temp_id, label_count++);
-
-					ccode.add_declaration (get_ccode_name (gquark_type), new CCodeVariableDeclarator (cname, czero), CCodeModifiers.STATIC);
-				}
-			}
-		}
+			return true;
+		});
 
 		ccode.add_expression (cinit);
 
@@ -95,14 +95,14 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 		int n = 0;
 
-		foreach (SwitchSection section in stmt.get_sections ()) {
+		stmt.get_sections ().foreach ((section) => {
 			if (section.has_default_label ()) {
 				default_section = section;
-				continue;
+				return true;
 			}
 
 			CCodeBinaryExpression cor = null;
-			foreach (SwitchLabel label in section.get_labels ()) {
+			section.get_labels ().foreach ((label) => {
 				label.expression.emit (this);
 				var cexpr = get_cvalue (label.expression);
 
@@ -128,7 +128,8 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				} else {
 					cor = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cor, ccmp);
 				}
-			}
+				return true;
+			});
 
 			if (n > 0) {
 				ccode.else_if (cor);
@@ -144,7 +145,8 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			ccode.close ();
 
 			n++;
-		}
+			return true;
+		});
 	
 		if (default_section != null) {
 			if (n > 0) {
@@ -174,13 +176,14 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 		bool has_default = false;
 
-		foreach (SwitchSection section in stmt.get_sections ()) {
+		stmt.get_sections ().foreach ((section) => {
 			if (section.has_default_label ()) {
 				ccode.add_default ();
 				has_default = true;
 			}
 			section.emit (this);
-		}
+			return true;
+		});
 
 		if (!has_default) {
 			// silence C compiler
@@ -335,11 +338,12 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			ccode.close ();
 		}
 
-		foreach (LocalVariable local in stmt.get_local_variables ()) {
+		stmt.get_local_variables ().foreach ((local) => {
 			if (requires_destroy (local.variable_type)) {
 				ccode.add_expression (destroy_local (local));
 			}
-		}
+			return true;
+		});
 
 		ccode.close ();
 	}

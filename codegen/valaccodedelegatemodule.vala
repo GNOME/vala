@@ -47,7 +47,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		}
 
 		var cfundecl = new CCodeFunctionDeclarator (get_ccode_name (d));
-		foreach (Parameter param in d.get_parameters ()) {
+		d.get_parameters ().foreach ((param) => {
 			var cparam = generate_parameter (param, decl_space, new HashMap<int,CCodeParameter> (), null);
 
 			cfundecl.add_parameter (cparam);
@@ -79,7 +79,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					}
 				}
 			}
-		}
+			return true;
+		});
 		if (get_ccode_array_length (d) && d.return_type is ArrayType) {
 			// return array length if appropriate
 			var array_type = (ArrayType) d.return_type;
@@ -220,7 +221,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		}
 
 		var d_params = d.get_parameters ();
-		foreach (Parameter param in d_params) {
+		d_params.foreach ((param) => {
 			if (dynamic_sig != null
 			    && param.variable_type is ArrayType
 			    && ((ArrayType) param.variable_type).element_type.data_type == string_type.data_type) {
@@ -230,7 +231,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			}
 
 			generate_parameter (param, cfile, cparam_map, null);
-		}
+			return true;
+		});
 		if (get_ccode_array_length (d) && d.return_type is ArrayType) {
 			// return array length if appropriate
 			var array_type = (ArrayType) d.return_type;
@@ -308,13 +310,13 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		bool first = true;
 
-		foreach (Parameter param in m.get_parameters ()) {
+		m.get_parameters ().foreach ((param) => {
 			if (first && d.sender_type != null && m.get_parameters ().size == d.get_parameters ().size + 1) {
 				// sender parameter
 				carg_map.set (get_param_pos (get_ccode_pos (param)), new CCodeIdentifier ("_sender"));
 
 				first = false;
-				continue;
+				return true;
 			}
 
 			CCodeExpression arg;
@@ -355,7 +357,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			}
 
 			i++;
-		}
+			return true;
+		});
 		if (get_ccode_array_length (m) && m.return_type is ArrayType) {
 			var array_type = (ArrayType) m.return_type;
 			for (int dim = 1; dim <= array_type.rank; dim++) {

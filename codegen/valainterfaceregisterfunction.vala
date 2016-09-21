@@ -80,7 +80,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 
 	public override void get_type_interface_init_statements (CCodeBlock block, bool plugin) {
 		/* register all prerequisites */
-		foreach (DataType prereq_ref in interface_reference.get_prerequisites ()) {
+		interface_reference.get_prerequisites ().foreach ((prereq_ref) => {
 			var prereq = prereq_ref.data_type;
 			
 			var func = new CCodeFunctionCall (new CCodeIdentifier ("g_type_interface_add_prerequisite"));
@@ -88,7 +88,8 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 			func.add_argument (new CCodeIdentifier (CCodeBaseModule.get_ccode_type_id (prereq)));
 			
 			block.add_statement (new CCodeExpressionStatement (func));
-		}
+			return true;
+		});
 
 		((CCodeBaseModule) context.codegen).register_dbus_info (block, interface_reference);
 	}

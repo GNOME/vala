@@ -78,12 +78,13 @@ public class Vala.BaseAccess : Expression {
 			Report.error (source_reference, "Base access invalid without base class");
 			return false;
 		} else {
-			foreach (var base_type in context.analyzer.current_class.get_base_types ()) {
+			context.analyzer.current_class.get_base_types ().foreach ((base_type) => {
 				if (base_type.data_type is Class) {
 					value_type = base_type.copy ();
 					value_type.value_owned = false;
 				}
-			}
+				return true;
+			});
 		}
 
 		symbol_reference = value_type.data_type;

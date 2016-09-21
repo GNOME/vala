@@ -555,9 +555,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 			type = new UnresolvedType.from_symbol (sym, get_src (begin));
 			if (type_arg_list != null) {
-				foreach (DataType type_arg in type_arg_list) {
+				type_arg_list.foreach ((type_arg) => {
 					type.add_type_argument (type_arg);
-				}
+					return true;
+				});
 			}
 		}
 		
@@ -770,9 +771,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		List<DataType> type_arg_list = parse_type_argument_list (true);
 		var expr = new MemberAccess (null, id, get_src (begin));
 		if (type_arg_list != null) {
-			foreach (DataType type_arg in type_arg_list) {
+			type_arg_list.foreach ((type_arg) => {
 				expr.add_type_argument (type_arg);
-			}
+				return true;
+			});
 		}
 		return expr;
 	}
@@ -803,9 +805,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		expect (TokenType.CLOSE_PARENS);
 		if (expr_list.size != 1) {
 			var tuple = new Tuple ();
-			foreach (Expression expr in expr_list) {
+			expr_list.foreach ((expr) => {
 				tuple.add_expression (expr);
-			}
+				return true;
+			});
 			return tuple;
 		}
 		return expr_list.get (0);
@@ -817,9 +820,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		List<DataType> type_arg_list = parse_type_argument_list (true);
 		var expr = new MemberAccess (inner, id, get_src (begin));
 		if (type_arg_list != null) {
-			foreach (DataType type_arg in type_arg_list) {
+			type_arg_list.foreach ((type_arg) => {
 				expr.add_type_argument (type_arg);
-			}
+				return true;
+			});
 		}
 		return expr;
 	}
@@ -830,9 +834,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		List<DataType> type_arg_list = parse_type_argument_list (true);
 		var expr = new MemberAccess.pointer (inner, id, get_src (begin));
 		if (type_arg_list != null) {
-			foreach (DataType type_arg in type_arg_list) {
+			type_arg_list.foreach ((type_arg) => {
 				expr.add_type_argument (type_arg);
-			}
+				return true;
+			});
 		}
 		return expr;
 	}
@@ -893,9 +898,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		var print_expr = new MethodCall (expr, get_src (begin));
 		
-		foreach (Expression arg in arg_list) {
+		arg_list.foreach ((arg) => {
 			print_expr.add_argument (arg);
-		}
+			return true;
+		});
 		
 		return print_expr;
 		
@@ -917,9 +923,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		var assert_expr = new MethodCall (expr, get_src (begin));
 		
-		foreach (Expression arg in arg_list) {
+		arg_list.foreach ((arg) => {
 			assert_expr.add_argument (arg);
-		}
+			return true;
+		});
 		
 		return assert_expr;
 		
@@ -939,18 +946,21 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 			var expr = new ObjectCreationExpression (member, get_src (begin));
 			expr.struct_creation = true;
-			foreach (Expression arg in arg_list) {
+			arg_list.foreach ((arg) => {
 				expr.add_argument (arg);
-			}
-			foreach (MemberInitializer initializer in init_list) {
+				return true;
+			});
+			init_list.foreach ((initializer) => {
 				expr.add_member_initializer (initializer);
-			}
+				return true;
+			});
 			return expr;
 		} else {
 			var expr = new MethodCall (inner, get_src (begin));
-			foreach (Expression arg in arg_list) {
+			arg_list.foreach ((arg) => {
 				expr.add_argument (arg);
-			}
+				return true;
+			});
 			return expr;
 		}
 	}
@@ -967,9 +977,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		if (stop == null) {
 			var expr = new ElementAccess (inner, get_src (begin));
-			foreach (Expression index in index_list) {
+			index_list.foreach ((index) => {
 				expr.append_index (index);
-			}
+				return true;
+			});
 			return expr;
 		} else {
 			return new SliceExpression (inner, index_list[0], stop, get_src (begin));
@@ -1053,12 +1064,14 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var init_list = parse_object_initializer ();
 
 		var expr = new ObjectCreationExpression (member, get_src (begin));
-		foreach (Expression arg in arg_list) {
+		arg_list.foreach ((arg) => {
 			expr.add_argument (arg);
-		}
-		foreach (MemberInitializer initializer in init_list) {
+			return true;
+		});
+		init_list.foreach ((initializer) => {
 			expr.add_member_initializer (initializer);
-		}
+			return true;
+		});
 		return expr;
 	}
 
@@ -1105,9 +1118,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		
 		var expr = new ArrayCreationExpression (etype, size_specifier_list.size, initializer, get_src (begin));
 		if (size_specified) {
-			foreach (Expression size in size_specifier_list) {
+			size_specifier_list.foreach ((size) => {
 				expr.append_size (size);
-			}
+				return true;
+			});
 		}
 		return expr;
 	}
@@ -1604,9 +1618,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 
 
-		foreach (var param in params) {
+		params.foreach ((param) => {
 			lambda.add_parameter (param);
-		}
+			return true;
+		});
 		return lambda;
 	}
 
@@ -2287,9 +2302,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 			finally_clause = parse_finally_clause ();
 		}
 		var stmt = new TryStatement (try_block, finally_clause, get_src (begin));
-		foreach (CatchClause clause in catch_clauses) {
+		catch_clauses.foreach ((clause) => {
 			stmt.add_catch_clause (clause);
-		}
+			return true;
+		});
 		return stmt;
 	}
 
@@ -2391,12 +2407,13 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	void set_attributes (CodeNode node, List<Attribute>? attributes) {
 		if (attributes != null) {
-			foreach (Attribute attr in (List<Attribute>) attributes) {
+			attributes.foreach ((attr) => {
 				if (node.get_attribute (attr.name) != null) {
 					Report.error (attr.source_reference, "duplicate attribute `%s`".printf (attr.name));
 				}
 				node.attributes.append (attr);
-			}
+				return true;
+			});
 		}
 	}
 
@@ -2678,12 +2695,14 @@ public class Vala.Genie.Parser : CodeVisitor {
 			cl.is_abstract = true;
 		}
 		set_attributes (cl, attrs);
-		foreach (TypeParameter type_param in type_param_list) {
+		type_param_list.foreach ((type_param) => {
 			cl.add_type_parameter (type_param);
-		}
-		foreach (DataType base_type in base_types) {
+			return true;
+		});
+		base_types.foreach ((base_type) => {
 			cl.add_base_type (base_type);
-		}
+			return true;
+		});
 
 		class_name = cl.name;
 
@@ -2957,14 +2976,16 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		set_attributes (method, attrs);
 
-		foreach (TypeParameter type_param in type_param_list) {
+		type_param_list.foreach ((type_param) => {
 			method.add_type_parameter (type_param);
-		}
+			return true;
+		});
 		
 
-		foreach (Parameter param in params) {
+		params.foreach ((param) => {
 			method.add_parameter (param);
-		}
+			return true;
+		});
 
 		if (accept (TokenType.RAISES)) {
 			do {
@@ -3260,9 +3281,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		set_attributes (sig, attrs);
 
-		foreach (Parameter formal_param in params) {
+		params.foreach ((formal_param) => {
 			sig.add_parameter (formal_param);
-		}
+			return true;
+		});
 
 		if (!accept_terminator ()) {
 			sig.body = parse_block ();
@@ -3316,9 +3338,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 			st.access = get_access (sym.name);
 		}
 		set_attributes (st, attrs);
-		foreach (TypeParameter type_param in type_param_list) {
+		type_param_list.foreach ((type_param) => {
 			st.add_type_parameter (type_param);
-		}
+			return true;
+		});
 		if (base_type != null) {
 			st.base_type = base_type;
 		}
@@ -3381,12 +3404,14 @@ public class Vala.Genie.Parser : CodeVisitor {
 			iface.external = true;
 		}
 		set_attributes (iface, attrs);
-		foreach (TypeParameter type_param in type_param_list) {
+		type_param_list.foreach ((type_param) => {
 			iface.add_type_parameter (type_param);
-		}
-		foreach (DataType base_type in base_types) {
+			return true;
+		});
+		base_types.foreach ((base_type) => {
 			iface.add_prerequisite (base_type);
-		}
+			return true;
+		});
 
 
 		expect (TokenType.EOL);
@@ -3781,13 +3806,15 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		set_attributes (d, attrs);
 
-		foreach (TypeParameter type_param in type_param_list) {
+		type_param_list.foreach ((type_param) => {
 			d.add_type_parameter (type_param);
-		}
+			return true;
+		});
 
-		foreach (Parameter formal_param in params) {
+		params.foreach ((formal_param) => {
 			d.add_parameter (formal_param);
-		}
+			return true;
+		});
 
 
 
@@ -3886,9 +3913,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 			List<DataType> type_arg_list = parse_type_argument_list (false);
 			expr = new MemberAccess (expr != null ? expr : base_expr, id, get_src (begin));
 			if (type_arg_list != null) {
-				foreach (DataType type_arg in type_arg_list) {
+				type_arg_list.foreach ((type_arg) => {
 					expr.add_type_argument (type_arg);
-				}
+					return true;
+				});
 			}
 		} while (accept (TokenType.DOT));
 		return expr;

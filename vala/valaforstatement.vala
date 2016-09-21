@@ -117,10 +117,11 @@ public class Vala.ForStatement : CodeNode, Statement {
 	}
 	
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (Expression init_expr in initializer) {
+		initializer.foreach ((init_expr) => {
 			init_expr.accept (visitor);
 			visitor.visit_end_full_expression (init_expr);
-		}
+			return true;
+		});
 
 		if (condition != null) {
 			condition.accept (visitor);
@@ -128,10 +129,11 @@ public class Vala.ForStatement : CodeNode, Statement {
 			visitor.visit_end_full_expression (condition);
 		}
 
-		foreach (Expression it_expr in iterator) {
+		iterator.foreach ((it_expr) => {
 			it_expr.accept (visitor);
 			visitor.visit_end_full_expression (it_expr);
-		}
+			return true;
+		});
 		
 		body.accept (visitor);
 	}
@@ -152,9 +154,10 @@ public class Vala.ForStatement : CodeNode, Statement {
 		var block = new Block (source_reference);
 
 		// initializer
-		foreach (var init_expr in initializer) {
+		initializer.foreach ((init_expr) => {
 			block.add_statement (new ExpressionStatement (init_expr, init_expr.source_reference));
-		}
+			return true;
+		});
 
 		// do not generate if block if condition is always true
 		if (condition == null || always_true (condition)) {
@@ -175,9 +178,10 @@ public class Vala.ForStatement : CodeNode, Statement {
 		block.add_statement (new DeclarationStatement (first_local, source_reference));
 
 		var iterator_block = new Block (source_reference);
-		foreach (var it_expr in iterator) {
+		iterator.foreach ((it_expr) => {
 			iterator_block.add_statement (new ExpressionStatement (it_expr, it_expr.source_reference));
-		}
+			return true;
+		});
 
 		var first_if = new IfStatement (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, new MemberAccess.simple (first_local.name, source_reference), source_reference), iterator_block, null, source_reference);
 		body.insert_statement (0, first_if);

@@ -179,10 +179,10 @@ public class Vala.LambdaExpression : Expression {
 			method.add_parameter (lambda_param);
 		}
 
-		foreach (Parameter cb_param in cb.get_parameters ()) {
+		cb.get_parameters ().foreach ((cb_param) => {
 			if (!lambda_param_it.next ()) {
 				/* lambda expressions are allowed to have less parameters */
-				break;
+				return false;
 			}
 
 			Parameter lambda_param = lambda_param_it.get ();
@@ -194,7 +194,8 @@ public class Vala.LambdaExpression : Expression {
 
 			lambda_param.variable_type = cb_param.variable_type.get_actual_type (target_type, null, this);
 			method.add_parameter (lambda_param);
-		}
+			return true;
+		});
 
 		if (lambda_param_it.next ()) {
 			/* lambda expressions may not expect more parameters */
@@ -203,9 +204,10 @@ public class Vala.LambdaExpression : Expression {
 			return false;
 		}
 
-		foreach (var error_type in cb.get_error_types ()) {
+		cb.get_error_types ().foreach ((error_type) => {
 			method.add_error_type (error_type.copy ());
-		}
+			return true;
+		});
 
 		if (expression_body != null) {
 			var block = new Block (source_reference);
@@ -226,12 +228,13 @@ public class Vala.LambdaExpression : Expression {
 		// support use of generics in closures
 		var m = context.analyzer.find_parent_method (context.analyzer.current_symbol);
 		if (m != null) {
-			foreach (var type_param in m.get_type_parameters ()) {
+			m.get_type_parameters ().foreach ((type_param) => {
 				method.add_type_parameter (new TypeParameter (type_param.name, type_param.source_reference));
 
 				method.closure = true;
 				m.body.captured = true;
-			}
+				return true;
+			});
 		}
 
 		/* lambda expressions should be usable like MemberAccess of a method */

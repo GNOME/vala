@@ -102,9 +102,10 @@ public abstract class Vala.CodeNode {
 	 * or a child node 
 	 */
 	public void add_error_types (List<DataType> error_types) {
-		foreach (DataType error_type in error_types) {
+		error_types.foreach ((error_type) => {
 			add_error_type (error_type);
-		}
+			return true;
+		});
 	}
 
 	/**

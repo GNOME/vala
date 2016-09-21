@@ -95,9 +95,10 @@ public class Vala.TryStatement : CodeNode, Statement {
 	public override void accept_children (CodeVisitor visitor) {
 		body.accept (visitor);
 
-		foreach (CatchClause clause in catch_clauses) {
+		catch_clauses.foreach ((clause) => {
 			clause.accept (visitor);
-		}
+			return true;
+		});
 
 		if (finally_body != null) {
 			finally_body.accept (visitor);
@@ -114,33 +115,39 @@ public class Vala.TryStatement : CodeNode, Statement {
 		body.check (context);
 
 		var error_types = new ArrayList<DataType> ();
-		foreach (DataType body_error_type in body.get_error_types ()) {
+		body.get_error_types ().foreach ((body_error_type) => {
 			error_types.add (body_error_type);
-		}
+			return true;
+		});
 
 		var handled_error_types = new ArrayList<DataType> ();
-		foreach (CatchClause clause in catch_clauses) {
-			foreach (DataType body_error_type in error_types) {
+		catch_clauses.foreach ((clause) => {
+			error_types.foreach ((body_error_type) => {
 				if (clause.error_type == null || body_error_type.compatible (clause.error_type)) {
 					handled_error_types.add (body_error_type);
 				}
-			}
-			foreach (DataType handled_error_type in handled_error_types) {
+				return true;
+			});
+			handled_error_types.foreach ((handled_error_type) => {
 				error_types.remove (handled_error_type);
-			}
+				return true;
+			});
 			handled_error_types.clear ();
 
 			clause.check (context);
-			foreach (DataType body_error_type in clause.body.get_error_types ()) {
+			clause.body.get_error_types ().foreach ((body_error_type) => {
 				error_types.add (body_error_type);
-			}
-		}
+				return true;
+			});
+			return true;
+		});
 
 		if (finally_body != null) {
 			finally_body.check (context);
-			foreach (DataType body_error_type in finally_body.get_error_types ()) {
+			finally_body.get_error_types ().foreach ((body_error_type) => {
 				error_types.add (body_error_type);
-			}
+				return true;
+			});
 		}
 
 		add_error_types (error_types);

@@ -110,10 +110,11 @@ public abstract class Vala.DataType : CodeNode {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		if (type_argument_list != null && type_argument_list.size > 0) {
-			foreach (DataType type_arg in type_argument_list) {
+		if (type_argument_list != null) {
+			type_argument_list.foreach ((type_arg) => {
 				type_arg.accept (visitor);
-			}
+				return true;
+			});
 		}
 	}
 
@@ -152,7 +153,7 @@ public abstract class Vala.DataType : CodeNode {
 		if (type_args.size > 0) {
 			s += "<";
 			bool first = true;
-			foreach (DataType type_arg in type_args) {
+			type_args.foreach ((type_arg) => {
 				if (!first) {
 					s += ",";
 				} else {
@@ -162,7 +163,8 @@ public abstract class Vala.DataType : CodeNode {
 					s += "weak ";
 				}
 				s += type_arg.to_qualified_string (scope);
-			}
+				return true;
+			});
 			s += ">";
 		}
 		if (nullable) {

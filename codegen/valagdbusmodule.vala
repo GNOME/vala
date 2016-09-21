@@ -81,7 +81,7 @@ public class Vala.GDBusModule : GVariantModule {
 		}
 
 		var error_entries = new CCodeInitializerList ();
-		foreach (ErrorCode ecode in edomain.get_codes ()) {
+		edomain.get_codes ().foreach ((ecode) => {
 			var ecode_dbus_name = get_dbus_name (ecode);
 			if (ecode_dbus_name == null) {
 				ecode_dbus_name = Symbol.lower_case_to_camel_case (ecode.name.down ());
@@ -91,7 +91,8 @@ public class Vala.GDBusModule : GVariantModule {
 			error_entry.append (new CCodeIdentifier (get_ccode_name (ecode)));
 			error_entry.append (new CCodeConstant ("\"%s.%s\"".printf (edomain_dbus_name, ecode_dbus_name)));
 			error_entries.append (error_entry);
-		}
+			return true;
+		});
 
 		var cdecl = new CCodeDeclaration ("const GDBusErrorEntry");
 		cdecl.add_declarator (new CCodeVariableDeclarator (get_ccode_lower_case_name (edomain) + "_entries[]", error_entries));
@@ -263,24 +264,24 @@ public class Vala.GDBusModule : GVariantModule {
 	CCodeExpression get_method_info (ObjectTypeSymbol sym) {
 		var infos = new CCodeInitializerList ();
 
-		foreach (Method m in sym.get_methods ()) {
+		sym.get_methods ().foreach ((m) => {
 			if (m is CreationMethod || m.binding != MemberBinding.INSTANCE
 			    || m.overrides || m.access != SymbolAccessibility.PUBLIC) {
-				continue;
+				return true;
 			}
 			if (!is_dbus_visible (m)) {
-				continue;
+				return true;
 			}
 
 			var in_args_info = new CCodeInitializerList ();
 			var out_args_info = new CCodeInitializerList ();
 
-			foreach (Parameter param in m.get_parameters ()) {
+			m.get_parameters ().foreach ((param) => {
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
-					continue;
+					return true;
 				}
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
-					continue;
+					return true;
 				}
 
 				var info = new CCodeInitializerList ();
@@ -298,7 +299,8 @@ public class Vala.GDBusModule : GVariantModule {
 				} else {
 					out_args_info.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + m.name + "_" + param.name)));
 				}
-			}
+				return true;
+			});
 
 			if (!(m.return_type is VoidType)) {
 				var info = new CCodeInitializerList ();
@@ -339,7 +341,8 @@ public class Vala.GDBusModule : GVariantModule {
 			cfile.add_constant_declaration (cdecl);
 
 			infos.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_method_info_" + m.name)));
-		}
+			return true;
+		});
 
 		infos.append (new CCodeConstant ("NULL"));
 
@@ -354,17 +357,17 @@ public class Vala.GDBusModule : GVariantModule {
 	CCodeExpression get_signal_info (ObjectTypeSymbol sym) {
 		var infos = new CCodeInitializerList ();
 
-		foreach (Signal sig in sym.get_signals ()) {
+		sym.get_signals ().foreach ((sig) => {
 			if (sig.access != SymbolAccessibility.PUBLIC) {
-				continue;
+				return true;
 			}
 			if (!is_dbus_visible (sig)) {
-				continue;
+				return true;
 			}
 
 			var args_info = new CCodeInitializerList ();
 
-			foreach (Parameter param in sig.get_parameters ()) {
+			sig.get_parameters ().foreach ((param) => {
 				var info = new CCodeInitializerList ();
 				info.append (new CCodeConstant ("-1"));
 				info.append (new CCodeConstant ("\"%s\"".printf (param.name)));
@@ -376,7 +379,8 @@ public class Vala.GDBusModule : GVariantModule {
 				cfile.add_constant_declaration (cdecl);
 
 				args_info.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_arg_info_" + get_ccode_name (sig) + "_" + param.name)));
-			}
+				return true;
+			});
 
 			args_info.append (new CCodeConstant ("NULL"));
 
@@ -396,7 +400,8 @@ public class Vala.GDBusModule : GVariantModule {
 			cfile.add_constant_declaration (cdecl);
 
 			infos.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_signal_info_" + get_ccode_name (sig))));
-		}
+			return true;
+		});
 
 		infos.append (new CCodeConstant ("NULL"));
 
@@ -411,13 +416,13 @@ public class Vala.GDBusModule : GVariantModule {
 	CCodeExpression get_property_info (ObjectTypeSymbol sym) {
 		var infos = new CCodeInitializerList ();
 
-		foreach (Property prop in sym.get_properties ()) {
+		sym.get_properties ().foreach ((prop) => {
 			if (prop.binding != MemberBinding.INSTANCE
 			    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC) {
-				continue;
+				return true;
 			}
 			if (!is_dbus_visible (prop)) {
-				continue;
+				return true;
 			}
 
 			var info = new CCodeInitializerList ();
@@ -440,7 +445,8 @@ public class Vala.GDBusModule : GVariantModule {
 			cfile.add_constant_declaration (cdecl);
 
 			infos.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_property_info_" + prop.name)));
-		}
+			return true;
+		});
 
 		infos.append (new CCodeConstant ("NULL"));
 

@@ -41,7 +41,7 @@ public class Vala.CCodeInitializerList : CCodeExpression {
 		writer.write_string ("{");
 
 		bool first = true;
-		foreach (CCodeExpression expr in initializers) {
+		initializers.foreach ((expr) => {
 			if (!first) {
 				writer.write_string (", ");
 			} else {
@@ -51,7 +51,8 @@ public class Vala.CCodeInitializerList : CCodeExpression {
 			if (expr != null) {
 				expr.write (writer);
 			}
-		}
+			return true;
+		});
 
 		writer.write_string ("}");
 	}

@@ -90,7 +90,7 @@ public class Vala.CCodeFile {
 	}
 
 	void get_symbols_from_fragment (List<string> symbols, CCodeFragment fragment) {
-		foreach (CCodeNode node in fragment.get_children ()) {
+		fragment.get_children ().foreach ((node) => {
 			if (node is CCodeFragment) {
 				get_symbols_from_fragment (symbols, (CCodeFragment) node);
 			} else {
@@ -99,7 +99,8 @@ public class Vala.CCodeFile {
 					symbols.add (func.name);
 				}
 			}
-		}
+			return true;
+		});
 	}
 
 	static string get_define_for_filename (string filename) {

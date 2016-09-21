@@ -273,25 +273,30 @@ public class Vala.Struct : TypeSymbol {
 			base_type.accept (visitor);
 		}
 
-		foreach (TypeParameter p in type_parameters) {
+		type_parameters.foreach ((p) => {
 			p.accept (visitor);
-		}
+			return true;
+		});
 		
-		foreach (Field f in fields) {
+		fields.foreach ((f) => {
 			f.accept (visitor);
-		}
+			return true;
+		});
 		
-		foreach (Constant c in constants) {
+		constants.foreach ((c) => {
 			c.accept (visitor);
-		}
+			return true;
+		});
 		
-		foreach (Method m in methods) {
+		methods.foreach ((m) => {
 			m.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Property prop in properties) {
+		properties.foreach ((prop) => {
 			prop.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	/**
@@ -448,14 +453,10 @@ public class Vala.Struct : TypeSymbol {
 			return true;
 		}
 
-		foreach (Field f in fields) {
-			if (f.binding == MemberBinding.INSTANCE
-			    && f.variable_type.is_disposable ()) {
-				return true;
-			}
-		}
-
-		return false;
+		return !fields.foreach ((f) => {
+			return !(f.binding == MemberBinding.INSTANCE
+					 && f.variable_type.is_disposable ());
+		});
 	}
 
 	bool is_recursive_value_type (DataType type) {
@@ -465,11 +466,9 @@ public class Vala.Struct : TypeSymbol {
 			if (st == this) {
 				return true;
 			}
-			foreach (Field f in st.fields) {
-				if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (f.variable_type)) {
-					return true;
-				}
-			}
+			return !st.fields.foreach ((f) => {
+				return !(f.binding == MemberBinding.INSTANCE && is_recursive_value_type (f.variable_type));
+			});
 		}
 		return false;
 	}
@@ -499,9 +498,10 @@ public class Vala.Struct : TypeSymbol {
 			}
 		}
 
-		foreach (TypeParameter p in type_parameters) {
+		type_parameters.foreach ((p) => {
 			p.check (context);
-		}
+			return true;
+		});
 
 		foreach (Field f in fields) {
 			f.check (context);
@@ -519,30 +519,34 @@ public class Vala.Struct : TypeSymbol {
 			}
 		}
 
-		foreach (Constant c in constants) {
+		constants.foreach ((c) => {
 			c.check (context);
-		}
+			return true;
+		});
 
-		foreach (Method m in methods) {
+		methods.foreach ((m) => {
 			m.check (context);
-		}
+			return true;
+		});
 
-		foreach (Property prop in properties) {
+		properties.foreach ((prop) => {
 			prop.check (context);
-		}
+			return true;
+		});
 
 		if (!external && !external_package) {
 			if (base_type == null && get_fields ().size == 0 && !is_boolean_type () && !is_integer_type () && !is_floating_type ()) {
 				error = true;
 				Report.error (source_reference, "structs cannot be empty: %s".printf(name));
 			} else if (base_type != null) {
-				foreach (Field f in fields) {
+				fields.foreach ((f) => {
 					if (f.binding == MemberBinding.INSTANCE) {
 						error = true;
 						Report.error (source_reference, "derived structs may not have instance fields");
-						break;
+						return false;
 					}
-				}
+					return true;
+				});
 			}
 		}
 

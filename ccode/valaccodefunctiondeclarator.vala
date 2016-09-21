@@ -59,7 +59,7 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 		int i = 0;
 		int format_arg_index = -1;
 		int args_index = -1;
-		foreach (CCodeParameter param in parameters) {
+		parameters.foreach ((param) => {
 			if (i > 0) {
 				writer.write_string (", ");
 			}
@@ -73,7 +73,8 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 				format_arg_index = i - 1;
 			}
 			i++;
-		}
+			return true;
+		});
 		
 		writer.write_string (")");
 

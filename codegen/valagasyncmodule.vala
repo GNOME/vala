@@ -53,7 +53,7 @@ public class Vala.GAsyncModule : GtkModule {
 			}
 		}
 
-		foreach (Parameter param in m.get_parameters ()) {
+		m.get_parameters ().foreach ((param) => {
 			bool is_unowned_delegate = param.variable_type is DelegateType && !param.variable_type.value_owned;
 
 			var param_type = param.variable_type.copy ();
@@ -76,13 +76,15 @@ public class Vala.GAsyncModule : GtkModule {
 					}
 				}
 			}
-		}
+			return true;
+		});
 
-		foreach (var type_param in m.get_type_parameters ()) {
+		m.get_type_parameters ().foreach ((type_param) => {
 			data.add_field ("GType", "%s_type".printf (type_param.name.down ()));
 			data.add_field ("GBoxedCopyFunc", "%s_dup_func".printf (type_param.name.down ()));
 			data.add_field ("GDestroyNotify", "%s_destroy_func".printf (type_param.name.down ()));
-		}
+			return true;
+		});
 
 		if (!(m.return_type is VoidType)) {
 			data.add_field (get_ccode_name (m.return_type), "result");
@@ -117,7 +119,7 @@ public class Vala.GAsyncModule : GtkModule {
 
 		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("_data_", new CCodeIdentifier ("_data")));
 
-		foreach (Parameter param in m.get_parameters ()) {
+		m.get_parameters ().foreach ((param) => {
 			if (!param.captured && param.direction != ParameterDirection.OUT) {
 				var param_type = param.variable_type.copy ();
 				if (!param_type.value_owned) {
@@ -128,7 +130,8 @@ public class Vala.GAsyncModule : GtkModule {
 					ccode.add_expression (destroy_parameter (param));
 				}
 			}
-		}
+			return true;
+		});
 
 		if (requires_destroy (m.return_type)) {
 			if (get_ccode_array_length (m) || !(m.return_type is ArrayType)) {
@@ -302,7 +305,7 @@ public class Vala.GAsyncModule : GtkModule {
 		}
 
 		emit_context.push_symbol (m);
-		foreach (Parameter param in m.get_parameters ()) {
+		m.get_parameters ().foreach ((param) => {
 			if (param.direction != ParameterDirection.OUT) {
 				// create copy if necessary as variables in async methods may need to be kept alive
 				var old_captured = param.captured;
@@ -324,17 +327,19 @@ public class Vala.GAsyncModule : GtkModule {
 
 				param.captured = old_captured;
 			}
-		}
+			return true;
+		});
 		emit_context.pop_symbol ();
 
-		foreach (var type_param in m.get_type_parameters ()) {
+		m.get_type_parameters ().foreach ((type_param) => {
 			var type = "%s_type".printf (type_param.name.down ());
 			var dup_func = "%s_dup_func".printf (type_param.name.down ());
 			var destroy_func = "%s_destroy_func".printf (type_param.name.down ());
 			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, type), new CCodeIdentifier (type));
 			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, dup_func), new CCodeIdentifier (dup_func));
 			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, destroy_func), new CCodeIdentifier (destroy_func));
-		}
+			return true;
+		});
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (m) + "_co"));
 		ccall.add_argument (data_var);
@@ -632,14 +637,15 @@ public class Vala.GAsyncModule : GtkModule {
 		}
 
 		emit_context.push_symbol (m);
-		foreach (Parameter param in m.get_parameters ()) {
+		m.get_parameters ().foreach ((param) => {
 			if (param.direction != ParameterDirection.IN) {
 				return_out_parameter (param);
 				if (!(param.variable_type is ValueType) || param.variable_type.nullable) {
 					ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), new CCodeConstant ("NULL"));
 				}
 			}
-		}
+			return true;
+		});
 		emit_context.pop_symbol ();
 
 		if (m is CreationMethod) {
@@ -789,9 +795,10 @@ public class Vala.GAsyncModule : GtkModule {
 
 		/* free temporary objects */
 
-		foreach (var value in temp_ref_values) {
+		temp_ref_values.foreach ((value) => {
 			ccode.add_expression (destroy_value (value));
-		}
+			return true;
+		});
 
 		temp_ref_values.clear ();
 	}

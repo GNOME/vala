@@ -153,18 +153,21 @@ public class Vala.Block : Symbol, Statement {
 			statement_list[i].check (context);
 		}
 
-		foreach (LocalVariable local in get_local_variables ()) {
+		get_local_variables ().foreach ((local) => {
 			local.active = false;
-		}
+			return true;
+		});
 
-		foreach (Constant constant in local_constants) {
+		local_constants.foreach ((constant) => {
 			constant.active = false;
-		}
+			return true;
+		});
 
 		// use get_statements () instead of statement_list to not miss errors within StatementList objects
-		foreach (Statement stmt in get_statements ()) {
+		get_statements ().foreach ((stmt) => {
 			add_error_types (stmt.get_error_types ());
-		}
+			return true;
+		});
 
 		context.analyzer.current_symbol = old_symbol;
 		context.analyzer.insert_block = old_insert_block;

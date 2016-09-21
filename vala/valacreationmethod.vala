@@ -56,21 +56,25 @@ public class Vala.CreationMethod : Method {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (Parameter param in get_parameters()) {
+		get_parameters ().foreach ((param) => {
 			param.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (DataType error_type in get_error_types ()) {
+		get_error_types ().foreach ((error_type) => {
 			error_type.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Expression precondition in get_preconditions ()) {
+		get_preconditions ().foreach ((precondition) => {
 			precondition.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Expression postcondition in get_postconditions ()) {
+		get_postconditions ().foreach ((postcondition) => {
 			postcondition.accept (visitor);
-		}
+			return true;
+		});
 
 		if (body != null) {
 			body.accept (visitor);
@@ -99,21 +103,25 @@ public class Vala.CreationMethod : Method {
 		}
 		context.analyzer.current_symbol = this;
 
-		foreach (Parameter param in get_parameters()) {
+		get_parameters().foreach ((param) => {
 			param.check (context);
-		}
+			return true;
+		});
 
-		foreach (DataType error_type in get_error_types ()) {
+		get_error_types ().foreach ((error_type) => {
 			error_type.check (context);
-		}
+			return true;
+		});
 
-		foreach (Expression precondition in get_preconditions ()) {
+		get_preconditions ().foreach ((precondition) => {
 			precondition.check (context);
-		}
+			return true;
+		});
 
-		foreach (Expression postcondition in get_postconditions ()) {
+		get_postconditions ().foreach ((postcondition) => {
 			postcondition.check (context);
-		}
+			return true;
+		});
 
 		if (body != null) {
 			body.check (context);
@@ -165,17 +173,19 @@ public class Vala.CreationMethod : Method {
 
 		// check that all errors that can be thrown in the method body are declared
 		if (body != null) {
-			foreach (DataType body_error_type in body.get_error_types ()) {
+			body.get_error_types ().foreach ((body_error_type) => {
 				bool can_propagate_error = false;
-				foreach (DataType method_error_type in get_error_types ()) {
+				get_error_types ().foreach ((method_error_type) => {
 					if (body_error_type.compatible (method_error_type)) {
 						can_propagate_error = true;
 					}
-				}
+					return true;
+				});
 				if (!can_propagate_error && !((ErrorType) body_error_type).dynamic_error) {
 					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
 				}
-			}
+				return true;
+			});
 		}
 
 		return !error;

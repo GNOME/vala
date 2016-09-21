@@ -53,7 +53,7 @@ public class Vala.CCodeEnum : CCodeNode {
 		writer.write_string ("enum ");
 		writer.write_begin_block ();
 		bool first = true;
-		foreach (CCodeEnumValue value in values) {
+		values.foreach ((value) => {
 			if (!first) {
 				writer.write_string (",");
 				writer.write_newline ();
@@ -61,7 +61,8 @@ public class Vala.CCodeEnum : CCodeNode {
 			writer.write_indent ();
 			value.write (writer);
 			first = false;
-		}
+			return true;
+		});
 		if (!first) {
 			writer.write_newline ();
 		}

@@ -70,9 +70,10 @@ public class Vala.ElementAccess : Expression {
 
 	public override void accept_children (CodeVisitor visitor) {
 		container.accept (visitor);
-		foreach (Expression e in indices) {
+		indices.foreach ((e) => {
 			e.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {
@@ -88,12 +89,10 @@ public class Vala.ElementAccess : Expression {
 	}
 
 	public override bool is_pure () {
-		foreach (Expression index in indices) {
-			if (!index.is_pure ()) {
-				return false;
-			}
-		}
-		return container.is_pure ();
+		bool indices_pure = indices.foreach ((index) => {
+			return index.is_pure ();
+		});
+		return indices_pure && container.is_pure ();
 	}
 
 	public override bool is_accessible (Symbol sym) {
@@ -135,9 +134,10 @@ public class Vala.ElementAccess : Expression {
 			get_indices ().get (0).target_type = context.analyzer.string_type.copy ();
 		}
 
-		foreach (Expression index in get_indices ()) {
+		get_indices ().foreach ((index) => {
 			index.check (context);
-		}
+			return true;
+		});
 
 		bool index_int_type_check = true;
 
@@ -187,9 +187,10 @@ public class Vala.ElementAccess : Expression {
 				var get_method = container.value_type.get_member ("get") as Method;
 				if (get_method != null) {
 					var get_call = new MethodCall (new MemberAccess (container, "get", source_reference), source_reference);
-					foreach (Expression e in get_indices ()) {
+					get_indices ().foreach ((e) => {
 						get_call.add_argument (e);
-					}
+						return true;
+					});
 					get_call.formal_target_type = this.formal_target_type;
 					get_call.target_type = this.target_type;
 					parent_node.replace_expression (this, get_call);
@@ -222,9 +223,10 @@ public class Vala.ElementAccess : Expression {
 
 	public override void emit (CodeGenerator codegen) {
 		container.emit (codegen);
-		foreach (Expression e in indices) {
+		indices.foreach ((e) => {
 			e.emit (codegen);
-		}
+			return true;
+		});
 
 		codegen.visit_element_access (this);
 
@@ -233,15 +235,17 @@ public class Vala.ElementAccess : Expression {
 
 	public override void get_defined_variables (Collection<Variable> collection) {
 		container.get_defined_variables (collection);
-		foreach (Expression index in indices) {
+		indices.foreach ((index) => {
 			index.get_defined_variables (collection);
-		}
+			return true;
+		});
 	}
 
 	public override void get_used_variables (Collection<Variable> collection) {
 		container.get_used_variables (collection);
-		foreach (Expression index in indices) {
+		indices.foreach ((index) => {
 			index.get_used_variables (collection);
-		}
+			return true;
+		});
 	}
 }

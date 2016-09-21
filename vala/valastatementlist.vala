@@ -49,14 +49,16 @@ public class Vala.StatementList : CodeNode, Statement {
 	}
 
 	public override void accept (CodeVisitor visitor) {
-		foreach (Statement stmt in list) {
+		list.foreach ((stmt) => {
 			stmt.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override void emit (CodeGenerator codegen) {
-		foreach (Statement stmt in list) {
+		list.foreach ((stmt) => {
 			stmt.emit (codegen);
-		}
+			return true;
+		});
 	}
 }

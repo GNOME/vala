@@ -43,9 +43,10 @@ public class Vala.CCodeOnceSection : CCodeFragment {
 		writer.write_string ("#define ");
 		writer.write_string (define);
 		writer.write_newline ();
-		foreach (CCodeNode node in get_children ()) {
+		get_children ().foreach ((node) => {
 			node.write_combined (writer);
-		}
+			return true;
+		});
 		writer.write_indent ();
 		writer.write_string ("#endif");
 		writer.write_newline ();

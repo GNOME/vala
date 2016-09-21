@@ -74,7 +74,7 @@ public class Vala.DelegateType : DataType {
 		if (type_args.size > 0) {
 			s += "<";
 			bool first = true;
-			foreach (DataType type_arg in type_args) {
+			type_args.foreach ((type_arg) => {
 				if (!first) {
 					s += ",";
 				} else {
@@ -84,7 +84,8 @@ public class Vala.DelegateType : DataType {
 					s += "weak ";
 				}
 				s += type_arg.to_qualified_string (scope);
-			}
+				return true;
+			});
 			s += ">";
 		}
 		if (nullable) {
@@ -99,9 +100,10 @@ public class Vala.DelegateType : DataType {
 		result.value_owned = value_owned;
 		result.nullable = nullable;
 
-		foreach (DataType arg in get_type_arguments ()) {
+		get_type_arguments ().foreach ((arg) => {
 			result.add_type_argument (arg.copy ());
-		}
+			return true;
+		});
 
 		result.is_called_once = is_called_once;
 

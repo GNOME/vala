@@ -101,11 +101,12 @@ public class Vala.GVariantModule : GAsyncModule {
 			if (sig == null && st != null) {
 				var str = new StringBuilder ();
 				str.append_c ('(');
-				foreach (Field f in st.get_fields ()) {
+				st.get_fields ().foreach ((f) => {
 					if (f.binding == MemberBinding.INSTANCE) {
 						str.append (get_type_signature (f.variable_type, f));
 					}
-				}
+					return true;
+				});
 				str.append_c (')');
 				sig = str.str;
 			} else if (sig == null && en != null) {
@@ -119,12 +120,13 @@ public class Vala.GVariantModule : GAsyncModule {
 			var type_args = datatype.get_type_arguments ();
 			if (sig != null && "%s" in sig && type_args.size > 0) {
 				string element_sig = "";
-				foreach (DataType type_arg in type_args) {
+				type_args.foreach ((type_arg) => {
 					var s = get_type_signature (type_arg);
 					if (s != null) {
 						element_sig += s;
 					}
-				}
+					return true;
+				});
 
 				sig = sig.replace ("%s", element_sig);
 			}
@@ -220,7 +222,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		ccode.add_declaration (get_ccode_name (en), new CCodeVariableDeclarator.zero ("value", new CCodeConstant ("0")));
 
 		bool firstif = true;
-		foreach (EnumValue enum_value in en.get_values ()) {
+		en.get_values ().foreach ((enum_value) => {
 			string dbus_value = get_dbus_value (enum_value, enum_value.name);
 			var string_comparison = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
 			string_comparison.add_argument (new CCodeIdentifier ("str"));
@@ -233,7 +235,8 @@ public class Vala.GVariantModule : GAsyncModule {
 				ccode.else_if (cond);
 			}
 			ccode.add_assignment (new CCodeIdentifier ("value"), new CCodeIdentifier (get_ccode_name (enum_value)));
-		}
+			return true;
+		});
 
 		ccode.add_else ();
 		var set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
@@ -360,15 +363,16 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		bool field_found = false;;
 
-		foreach (Field f in st.get_fields ()) {
+		st.get_fields ().foreach ((f) => {
 			if (f.binding != MemberBinding.INSTANCE) {
-				continue;
+				return true;
 			}
 
 			field_found = true;
 
 			read_expression (f.variable_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (new CCodeIdentifier (temp_name), get_ccode_name (f)), f);
-		}
+			return true;
+		});
 
 		if (!field_found) {
 			return null;
@@ -555,12 +559,13 @@ public class Vala.GVariantModule : GAsyncModule {
 		ccode.add_declaration ("const char *", new CCodeVariableDeclarator ("str"));
 
 		ccode.open_switch (new CCodeIdentifier ("value"));
-		foreach (EnumValue enum_value in en.get_values ()) {
+		en.get_values ().foreach ((enum_value) => {
 			string dbus_value = get_dbus_value (enum_value, enum_value.name);
 			ccode.add_case (new CCodeIdentifier (get_ccode_name (enum_value)));
 			ccode.add_assignment (new CCodeIdentifier ("str"), new CCodeConstant ("\"%s\"".printf (dbus_value)));
 			ccode.add_break ();
-		}
+			return true;
+		});
 
 		ccode.close();
 
@@ -642,15 +647,16 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		bool field_found = false;;
 
-		foreach (Field f in st.get_fields ()) {
+		st.get_fields ().foreach ((f) => {
 			if (f.binding != MemberBinding.INSTANCE) {
-				continue;
+				return true;
 			}
 
 			field_found = true;
 
 			write_expression (f.variable_type, new CCodeIdentifier (builder_name), new CCodeMemberAccess (struct_expr, get_ccode_name (f)), f);
-		}
+			return true;
+		});
 
 		if (!field_found) {
 			return null;

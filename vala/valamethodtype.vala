@@ -77,14 +77,14 @@ public class Vala.MethodType : DataType {
 		var proto = "%s %s (".printf (get_return_type ().to_string (), this.to_string ());
 
 		int i = 1;
-		foreach (Parameter param in get_parameters ()) {
+		get_parameters ().foreach ((param) => {
 			if (i > 1) {
 				proto += ", ";
 			}
 
 			if (param.ellipsis) {
 				proto += "...";
-				continue;
+				return true;
 			}
 
 			if (param.direction == ParameterDirection.IN) {
@@ -109,7 +109,8 @@ public class Vala.MethodType : DataType {
 			}
 
 			i++;
-		}
+			return true;
+		});
 
 		return proto + ")";
 	}

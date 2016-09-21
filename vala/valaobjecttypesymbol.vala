@@ -71,11 +71,12 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 
 	public ObjectType get_this_type () {
 		var result = new ObjectType (this);
-		foreach (var type_parameter in get_type_parameters ()) {
+		get_type_parameters ().foreach ((type_parameter) => {
 			var type_arg = new GenericType (type_parameter);
 			type_arg.value_owned = true;
 			result.add_type_argument (type_arg);
-		}
+			return true;
+		});
 		return result;
 	}
 

@@ -186,19 +186,11 @@ public class Vala.Delegate : TypeSymbol, Callable {
 		}
 
 		// method may throw less but not more errors than the delegate
-		foreach (DataType method_error_type in m.get_error_types ()) {
-			bool match = false;
-			foreach (DataType delegate_error_type in get_error_types ()) {
-				if (method_error_type.compatible (delegate_error_type)) {
-					match = true;
-					break;
-				}
-			}
-
-			if (!match) {
-				return false;
-			}
-		}
+		m.get_error_types ().foreach ((method_error_type) => {
+			return get_error_types ().foreach ((delegate_error_type) => {
+				return !(method_error_type.compatible (delegate_error_type));
+			});
+		});
 
 		return true;
 	}
@@ -208,19 +200,22 @@ public class Vala.Delegate : TypeSymbol, Callable {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (TypeParameter p in type_parameters) {
+		type_parameters.foreach ((p) => {
 			p.accept (visitor);
-		}
+			return true;
+		});
 		
 		return_type.accept (visitor);
 		
-		foreach (Parameter param in parameters) {
+		parameters.foreach ((param) => {
 			param.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (DataType error_type in get_error_types ()) {
+		get_error_types ().foreach ((error_type) => {
 			error_type.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override bool is_reference_type () {
@@ -259,7 +254,7 @@ public class Vala.Delegate : TypeSymbol, Callable {
 		string str = "(";
 
 		int i = 1;
-		foreach (Parameter param in parameters) {
+		parameters.foreach ((param) => {
 			if (i > 1) {
 				str += ", ";
 			}
@@ -282,7 +277,8 @@ public class Vala.Delegate : TypeSymbol, Callable {
 			str += param.variable_type.to_string ();
 
 			i++;
-		}
+			return true;
+		});
 
 		str += ")";
 
@@ -302,19 +298,22 @@ public class Vala.Delegate : TypeSymbol, Callable {
 			context.analyzer.current_source_file = source_reference.file;
 		}
 
-		foreach (TypeParameter p in type_parameters) {
+		type_parameters.foreach ((p) => {
 			p.check (context);
-		}
+			return true;
+		});
 		
 		return_type.check (context);
 		
-		foreach (Parameter param in parameters) {
+		parameters.foreach ((param) => {
 			param.check (context);
-		}
+			return true;
+		});
 
-		foreach (DataType error_type in get_error_types ()) {
+		get_error_types ().foreach ((error_type) => {
 			error_type.check (context);
-		}
+			return true;
+		});
 
 		context.analyzer.current_source_file = old_source_file;
 

@@ -97,19 +97,19 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				ccode.add_declaration ("gint", new CCodeVariableDeclarator ("_fd"));
 			}
 
-			foreach (Parameter param in m.get_parameters ()) {
+			m.get_parameters ().foreach ((param) => {
 				string param_name = get_variable_cname (param.name);
 				if (param.direction != ParameterDirection.IN) {
-					continue;
+					return true;
 				}
 
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
-					continue;
+					return true;
 				}
 
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
 					// ignore BusName sender parameters
-					continue;
+					return true;
 				}
 
 				var owned_type = param.variable_type.copy ();
@@ -154,15 +154,16 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 					ccode.close ();
 				}
-			}
+				return true;
+			});
 		}
 
-		foreach (Parameter param in m.get_parameters ()) {
+		m.get_parameters ().foreach ((param) => {
 			string param_name = get_variable_cname (param.name);
 			if (param.direction == ParameterDirection.IN && !ready) {
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
 					ccall.add_argument (new CCodeConstant ("NULL"));
-					continue;
+					return true;
 				}
 
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
@@ -170,7 +171,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					var sender = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_get_sender"));
 					sender.add_argument (new CCodeIdentifier ("invocation"));
 					ccall.add_argument (sender);
-					continue;
+					return true;
 				}
 
 				var st = param.variable_type.data_type as Struct;
@@ -195,7 +196,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					}
 				}
 			}
-		}
+			return true;
+		});
 
 		if (!m.coroutine || ready) {
 			if (!(m.return_type is VoidType)) {
@@ -270,9 +272,9 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				ccode.add_assignment (new CCodeIdentifier ("_fd_list"), new CCodeFunctionCall (new CCodeIdentifier ("g_unix_fd_list_new")));
 			}
 
-			foreach (Parameter param in m.get_parameters ()) {
+			m.get_parameters ().foreach ((param) => {
 				if (param.direction != ParameterDirection.OUT) {
-					continue;
+					return true;
 				}
 
 				string param_name = get_variable_cname (param.name);
@@ -291,7 +293,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				}
 
 				send_dbus_value (param.variable_type, new CCodeIdentifier ("_reply_builder"), new CCodeIdentifier (param_name), param);
-			}
+				return true;
+			});
 
 			if (!(m.return_type is VoidType)) {
 				if (m.return_type.is_real_non_null_struct_type ()) {
@@ -372,16 +375,16 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccode.add_label ("_error");
 		}
 
-		foreach (Parameter param in m.get_parameters ()) {
+		m.get_parameters ().foreach ((param) => {
 			if ((param.direction == ParameterDirection.IN && !ready) ||
 			    (param.direction == ParameterDirection.OUT && !no_reply && (!m.coroutine || ready))) {
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
-					continue;
+					return true;
 				}
 
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
 					// ignore BusName sender parameters
-					continue;
+					return true;
 				}
 
 				var owned_type = param.variable_type.copy ();
@@ -393,7 +396,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					ccode.add_expression (destroy_local (local));
 				}
 			}
-		}
+			return true;
+		});
 
 		pop_function ();
 
@@ -416,7 +420,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		function.add_parameter (new CCodeParameter ("_sender", "GObject*"));
 
-		foreach (var param in sig.get_parameters ()) {
+		sig.get_parameters ().foreach ((param) => {
 			// ensure ccodenode of parameter is set
 			var cparam = generate_parameter (param, cfile, new HashMap<int,CCodeParameter> (), null);
 
@@ -427,7 +431,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					function.add_parameter (new CCodeParameter (get_parameter_array_length_cname (param, dim), "int"));
 				}
 			}
-		}
+			return true;
+		});
 
 		function.add_parameter (new CCodeParameter ("_data", "gpointer*"));
 
@@ -443,14 +448,15 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		builder_init.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_TUPLE"));
 		ccode.add_expression (builder_init);
 
-		foreach (Parameter param in sig.get_parameters ()) {
+		sig.get_parameters ().foreach ((param) => {
 			string param_name = get_variable_cname (param.name);
 			CCodeExpression expr = new CCodeIdentifier (param_name);
 			if (param.variable_type.is_real_struct_type ()) {
 				expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
 			}
 			write_expression (param.variable_type, new CCodeIdentifier ("_arguments_builder"), expr, param);
-		}
+			return true;
+		});
 
 		var builder_end = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_end"));
 		builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_arguments_builder")));
@@ -597,12 +603,12 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			return;
 		}
 
-		foreach (Signal sig in sym.get_signals ()) {
+		sym.get_signals ().foreach ((sig) => {
 			if (sig.access != SymbolAccessibility.PUBLIC) {
-				continue;
+				return true;
 			}
 			if (!is_dbus_visible (sig)) {
-				continue;
+				return true;
 			}
 
 			if (connect) {
@@ -620,7 +626,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				disconnect_call.add_argument (new CCodeIdentifier ("data"));
 				ccode.add_expression (disconnect_call);
 			}
-		}
+			return true;
+		});
 	}
 
 	void generate_interface_method_call_function (ObjectTypeSymbol sym) {
@@ -643,13 +650,13 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		bool first = true;
 
-		foreach (Method m in sym.get_methods ()) {
+		sym.get_methods ().foreach ((m) => {
 			if (m is CreationMethod || m.binding != MemberBinding.INSTANCE
 			    || m.overrides || m.access != SymbolAccessibility.PUBLIC) {
-				continue;
+				return true;
 			}
 			if (!is_dbus_visible (m)) {
-				continue;
+				return true;
 			}
 
 			cfile.add_include ("string.h");
@@ -670,7 +677,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccall.add_argument (new CCodeIdentifier ("parameters"));
 			ccall.add_argument (new CCodeIdentifier ("invocation"));
 			ccode.add_expression (ccall);
-		}
+			return true;
+		});
 
 		if (!first) {
 			ccode.add_else ();
@@ -712,16 +720,16 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		bool firstif = true;
 
-		foreach (Property prop in sym.get_properties ()) {
+		sym.get_properties ().foreach ((prop) => {
 			if (prop.binding != MemberBinding.INSTANCE
 			    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC) {
-				continue;
+				return true;
 			}
 			if (!is_dbus_visible (prop)) {
-				continue;
+				return true;
 			}
 			if (prop.get_accessor == null) {
-				continue;
+				return true;
 			}
 
 			cfile.add_include ("string.h");
@@ -742,7 +750,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccall.add_argument (new CCodeIdentifier ("object"));
 
 			ccode.add_return (ccall);
-		}
+			return true;
+		});
 		if (!firstif) {
 			ccode.close ();
 		}
@@ -776,16 +785,16 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		bool firstif = true;
 
-		foreach (Property prop in sym.get_properties ()) {
+		sym.get_properties ().foreach ((prop) => {
 			if (prop.binding != MemberBinding.INSTANCE
 			    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC) {
-				continue;
+				return true;
 			}
 			if (!is_dbus_visible (prop)) {
-				continue;
+				return true;
 			}
 			if (prop.set_accessor == null) {
-				continue;
+				return true;
 			}
 
 			cfile.add_include ("string.h");
@@ -808,7 +817,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 			ccode.add_expression (ccall);
 			ccode.add_return (new CCodeConstant ("TRUE"));
-		}
+			return true;
+		});
 		if (!firstif) {
 			ccode.close ();
 		}

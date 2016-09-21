@@ -35,14 +35,15 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 		var cenum = new CCodeEnum (get_ccode_name (edomain));
 
-		foreach (ErrorCode ecode in edomain.get_codes ()) {
+		edomain.get_codes ().foreach ((ecode) => {
 			if (ecode.value == null) {
 				cenum.add_value (new CCodeEnumValue (get_ccode_name (ecode)));
 			} else {
 				ecode.value.emit (this);
 				cenum.add_value (new CCodeEnumValue (get_ccode_name (ecode), get_cvalue (ecode.value)));
 			}
-		}
+			return true;
+		});
 
 		decl_space.add_type_definition (cenum);
 
@@ -191,31 +192,34 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			}
 
 			var error_types = new ArrayList<DataType> ();
-			foreach (DataType node_error_type in node.get_error_types ()) {
+			node.get_error_types ().foreach ((node_error_type) => {
 				error_types.add (node_error_type);
-			}
+				return true;
+			});
 
 			bool has_general_catch_clause = false;
 
 			if (!is_in_catch) {
 				var handled_error_types = new ArrayList<DataType> ();
-				foreach (CatchClause clause in current_try.get_catch_clauses ()) {
+				current_try.get_catch_clauses ().foreach ((clause) => {
 					// keep track of unhandled error types
-					foreach (DataType node_error_type in error_types) {
+					error_types.foreach ((node_error_type) => {
 						if (clause.error_type == null || node_error_type.compatible (clause.error_type)) {
 							handled_error_types.add (node_error_type);
 						}
-					}
-					foreach (DataType handled_error_type in handled_error_types) {
+						return true;
+					});
+					handled_error_types.foreach ((handled_error_type) => {
 						error_types.remove (handled_error_type);
-					}
+						return true;
+					});
 					handled_error_types.clear ();
 
 					if (clause.error_type.equals (gerror_type)) {
 						// general catch clause, this should be the last one
 						has_general_catch_clause = true;
 						ccode.add_goto (clause.clabel_name);
-						break;
+						return false;
 					} else {
 						var catch_type = clause.error_type as ErrorType;
 
@@ -240,7 +244,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 						ccode.add_goto (clause.clabel_name);
 						ccode.close ();
 					}
-				}
+					return true;
+				});
 			}
 
 			if (has_general_catch_clause) {
@@ -262,11 +267,11 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			// current method can fail, propagate error
 			CCodeBinaryExpression ccond = null;
 
-			foreach (DataType error_type in current_method.get_error_types ()) {
+			current_method.get_error_types ().foreach ((error_type) => {
 				// If GLib.Error is allowed we propagate everything
 				if (error_type.equals (gerror_type)) {
 					ccond = null;
-					break;
+					return false;
 				}
 
 				// Check the allowed error domains to propagate
@@ -277,7 +282,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 				} else {
 					ccond = new CCodeBinaryExpression (CCodeBinaryOperator.OR, ccond, domain_check);
 				}
-			}
+				return true;
+			});
 
 			if (ccond != null) {
 				ccode.open_if (ccond);
@@ -309,19 +315,21 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		current_try_id = this_try_id;
 		is_in_catch = true;
 
-		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
+		stmt.get_catch_clauses ().foreach ((clause) => {
 			clause.clabel_name = "__catch%d_%s".printf (this_try_id, get_ccode_lower_case_name (clause.error_type));
-		}
+			return true;
+		});
 
 		is_in_catch = false;
 		stmt.body.emit (this);
 		is_in_catch = true;
 
-		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
+		stmt.get_catch_clauses ().foreach ((clause) => {
 			current_catch = clause;
 			ccode.add_goto ("__finally%d".printf (this_try_id));
 			clause.emit (this);
-		}
+			return true;
+		});
 
 		current_try = old_try;
 		current_try_id = old_try_id;

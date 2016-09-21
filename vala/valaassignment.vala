@@ -118,7 +118,7 @@ public class Vala.Assignment : Expression {
 
 			int i = 0;
 			ExpressionStatement stmt = null;
-			foreach (var expr in tuple.get_expressions ()) {
+			tuple.get_expressions ().foreach ((expr) => {
 				if (stmt != null) {
 					stmt.check (context);
 					insert_statement (context.analyzer.insert_block, stmt);
@@ -131,7 +131,8 @@ public class Vala.Assignment : Expression {
 				stmt = new ExpressionStatement (assign, expr.source_reference);
 
 				i++;
-			}
+				return true;
+			});
 
 			context.analyzer.replaced_nodes.add (this);
 			parent_node.replace_expression (this, stmt.expression);
@@ -203,9 +204,10 @@ public class Vala.Assignment : Expression {
 				right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type, this));
 			} else if (ea.container.value_type.get_member ("set") is Method) {
 				var set_call = new MethodCall (new MemberAccess (ea.container, "set", source_reference), source_reference);
-				foreach (Expression e in ea.get_indices ()) {
+				ea.get_indices ().foreach ((e) => {
 					set_call.add_argument (e);
-				}
+					return true;
+				});
 				set_call.add_argument (right);
 				parent_node.replace_expression (this, set_call);
 				return set_call.check (context);
@@ -285,14 +287,15 @@ public class Vala.Assignment : Expression {
 			var right_ma = right as MemberAccess;
 			if (dynamic_sig != null) {
 				bool first = true;
-				foreach (Parameter param in dynamic_sig.handler.value_type.get_parameters ()) {
+				dynamic_sig.handler.value_type.get_parameters ().foreach ((param) => {
 					if (first) {
 						// skip sender parameter
 						first = false;
 					} else {
 						dynamic_sig.add_parameter (param.copy ());
 					}
-				}
+					return true;
+				});
 				right.target_type = new DelegateType (sig.get_delegate (new ObjectType ((ObjectTypeSymbol) sig.parent_symbol), this));
 			} else if (!right.value_type.compatible (right.target_type)) {
 				var delegate_type = (DelegateType) right.target_type;

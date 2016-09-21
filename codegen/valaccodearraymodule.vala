@@ -63,7 +63,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		CCodeExpression cexpr = null;
 
 		// iterate over each dimension
-		foreach (Expression size in expr.get_sizes ()) {
+		expr.get_sizes ().foreach ((size) => {
 			CCodeExpression csize = get_cvalue (size);
 			append_array_length (expr, csize);
 
@@ -73,7 +73,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			} else {
 				cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cexpr, csize);
 			}
-		}
+			return true;
+		});
 		
 		// add extra item to have array NULL-terminated for all reference types
 		if (expr.element_type.data_type != null && expr.element_type.data_type.is_reference_type ()) {

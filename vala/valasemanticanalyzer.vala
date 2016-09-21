@@ -369,11 +369,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (type_parameters != null) {
-			foreach (var type_param in type_parameters) {
+			type_parameters.foreach ((type_param) => {
 				var type_arg = new GenericType (type_param);
 				type_arg.value_owned = true;
 				type.add_type_argument (type_arg);
-			}
+				return true;
+			});
 		}
 
 		return type;
@@ -732,11 +733,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else {
 			assert_not_reached ();
 		}
-		foreach (DataType type_arg in base_type.get_type_arguments ()) {
+		base_type.get_type_arguments ().foreach ((type_arg) => {
 			// resolve type argument specified in base type (possibly recursively for nested generic types)
 			type_arg = type_arg.get_actual_type (instance_type, null, node_reference);
 			instance_base_type.add_type_argument (type_arg);
-		}
+			return true;
+		});
 		return instance_base_type;
 	}
 

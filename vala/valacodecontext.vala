@@ -581,11 +581,12 @@ public class Vala.CodeContext {
 		}
 
 		stream.printf ("%s:", filename);
-		foreach (var src in source_files) {
+		source_files.foreach ((src) => {
 			if (src.file_type == SourceFileType.FAST && src.used) {
 				stream.printf (" %s", src.filename);
 			}
-		}
+			return true;
+		});
 		stream.printf ("\n\n");
 	}
 

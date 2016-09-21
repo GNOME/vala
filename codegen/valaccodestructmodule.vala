@@ -66,7 +66,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		var instance_struct = new CCodeStruct ("_%s".printf (get_ccode_name (st)));
 		instance_struct.modifiers |= (st.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 
-		foreach (Field f in st.get_fields ()) {
+		st.get_fields ().foreach ((f) => {
 			if (f.binding == MemberBinding.INSTANCE)  {
 				generate_type_declaration (f.variable_type, decl_space);
 				CCodeModifiers modifiers = (f.is_volatile ? CCodeModifiers.VOLATILE : 0) | (f.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
@@ -103,7 +103,8 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 					}
 				}
 			}
-		}
+			return true;
+		});
 
 		if (st.base_struct == null) {
 			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (get_ccode_name (st)), new CCodeVariableDeclarator (get_ccode_name (st))));
@@ -276,19 +277,20 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		push_function (function);
 
 		var dest_struct = new GLibValue (get_data_type_for_symbol (st), new CCodeIdentifier ("(*dest)"), true);
-		foreach (var f in st.get_fields ()) {
+		st.get_fields ().foreach ((f) => {
 			if (f.binding == MemberBinding.INSTANCE) {
 				var value = load_field (f, load_this_parameter ((TypeSymbol) st));
 				if (requires_copy (f.variable_type))  {
 					value = copy_value (value, f);
 					if (value == null) {
 						// error case, continue to avoid critical
-						continue;
+						return true;
 					}
 				}
 				store_field (f, dest_struct, value);
 			}
-		}
+			return true;
+		});
 
 		pop_function ();
 

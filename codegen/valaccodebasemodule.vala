@@ -489,13 +489,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
 
 		if (context.module_init_method != null) {
-			foreach (Parameter parameter in context.module_init_method.get_parameters ()) {
+			in_plugin = !context.module_init_method.get_parameters ().foreach ((parameter) => {
 				if (parameter.variable_type.data_type == type_module_type) {
-					in_plugin = true;
 					module_init_param_name = parameter.name;
-					break;
+					return false;
 				}
-			}
+				return true;;
+			});
 			if (!in_plugin) {
 				Report.error (context.module_init_method.source_reference, "[ModuleInit] requires a parameter of type `GLib.TypeModule'");
 			}
@@ -515,12 +515,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
-		foreach (SourceFile file in source_files) {
+		source_files.foreach ((file) => {
 			if (file.file_type == SourceFileType.SOURCE ||
 			    (context.header_filename != null && file.file_type == SourceFileType.FAST)) {
 				file.accept (this);
 			}
-		}
+			return true;
+		});
 
 		// generate symbols file for public API
 		if (context.symbols_filename != null) {
@@ -530,10 +531,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				return;
 			}
 
-			foreach (string symbol in header_file.get_symbols ()) {
+			header_file.get_symbols ().foreach ((symbol) => {
 				stream.puts (symbol);
 				stream.putc ('\n');
-			}
+				return true;
+			});
 
 			stream = null;
 		}
@@ -777,10 +779,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var comments = source_file.get_comments();
 		if (comments != null) {
-			foreach (Comment comment in comments) {
+			comments.foreach ((comment) => {
 				var ccomment = new CCodeComment (comment.content);
 				cfile.add_comment (ccomment);
-			}
+				return true;
+			});
 		}
 
 		if (!cfile.store (source_file.get_csource_filename (), source_file.filename, context.version_header, context.debug)) {
@@ -800,7 +803,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		cenum.modifiers |= (en.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 
 		int flag_shift = 0;
-		foreach (EnumValue ev in en.get_values ()) {
+		en.get_values ().foreach ((ev) => {
 			CCodeEnumValue c_ev;
 			if (ev.value == null) {
 				c_ev = new CCodeEnumValue (get_ccode_name (ev));
@@ -814,7 +817,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 			c_ev.modifiers |= (ev.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 			cenum.add_value (c_ev);
-		}
+			return true;
+		});
 
 		decl_space.add_type_definition (cenum);
 		decl_space.add_type_definition (new CCodeNewline ());
@@ -1143,9 +1147,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 				}
 
-				foreach (var value in temp_ref_values) {
+				temp_ref_values.foreach ((value) => {
 					ccode.add_expression (destroy_value (value));
-				}
+					return true;
+				});
 
 				temp_ref_values.clear ();
 
@@ -1181,9 +1186,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				ccode.add_assignment (lhs, rhs);
 
-				foreach (var value in temp_ref_values) {
+				temp_ref_values.foreach ((value) => {
 					ccode.add_expression (destroy_value (value));
-				}
+					return true;
+				});
 
 				temp_ref_values.clear ();
 
@@ -1459,9 +1465,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			generate_type_declaration (pointer_type.base_type, decl_space);
 		}
 
-		foreach (DataType type_arg in type.get_type_arguments ()) {
+		type.get_type_arguments ().foreach ((type_arg) => {
 			generate_type_declaration (type_arg, decl_space);
-		}
+			return true;
+		});
 	}
 
 	public virtual void generate_class_struct_declaration (Class cl, CCodeFile decl_space) {
@@ -1932,7 +1939,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				if (current_method != null) {
 					// allow capturing generic type parameters
-					foreach (var type_param in current_method.get_type_parameters ()) {
+					current_method.get_type_parameters ().foreach ((type_param) => {
 						string func_name;
 
 						func_name = "%s_type".printf (type_param.name.down ());
@@ -1943,10 +1950,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 						func_name = "%s_destroy_func".printf (type_param.name.down ());
 						data.add_field ("GDestroyNotify", func_name);
-					}
+						return true;
+					});
 				}
 			}
-			foreach (var local in local_vars) {
+			local_vars.foreach ((local) => {
 				if (local.captured) {
 					generate_type_declaration (local.variable_type, cfile);
 
@@ -1965,7 +1973,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						}
 					}
 				}
-			}
+				return true;
+			});
 
 			var data_alloc = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 			data_alloc.add_argument (new CCodeIdentifier (struct_name));
@@ -2005,12 +2014,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (current_method != null) {
 					// allow capturing generic type parameters
 					var suffices = new string[] {"type", "dup_func", "destroy_func"};
-					foreach (var type_param in current_method.get_type_parameters ()) {
+					current_method.get_type_parameters ().foreach ((type_param) => {
 						foreach (string suffix in suffices) {
 							string func_name = "%s_%s".printf (type_param.name.down (), suffix);
 							ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), get_variable_cexpression (func_name));
 						}
-					}
+						return true;
+					});
 				}
 			}
 
@@ -2018,11 +2028,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var m = (Method) b.parent_symbol;
 
 				// parameters are captured with the top-level block of the method
-				foreach (var param in m.get_parameters ()) {
+				m.get_parameters ().foreach ((param) => {
 					if (param.captured) {
 						capture_parameter (param, data, block_id);
 					}
-				}
+					return true;
+				});
 
 				if (m.coroutine) {
 					// capture async data to allow invoking callback from inside closure
@@ -2096,7 +2107,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (current_method != null) {
 				// assign captured generic type parameters
-				foreach (var type_param in current_method.get_type_parameters ()) {
+				current_method.get_type_parameters ().foreach ((type_param) => {
 					string func_name;
 
 					func_name = "%s_type".printf (type_param.name.down ());
@@ -2110,7 +2121,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					func_name = "%s_destroy_func".printf (type_param.name.down ());
 					ccode.add_declaration ("GDestroyNotify", new CCodeVariableDeclarator (func_name));
 					ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (outer_block, func_name));
-				}
+					return true;
+				});
 			}
 
 			// free in reverse order
@@ -2137,7 +2149,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var m = (Method) b.parent_symbol;
 
 				// parameters are captured with the top-level block of the method
-				foreach (var param in m.get_parameters ()) {
+				m.get_parameters ().foreach ((param) => {
 					if (param.captured) {
 						var param_type = param.variable_type.copy ();
 						if (!param_type.value_owned) {
@@ -2158,7 +2170,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							}
 						}
 					}
-				}
+					return true;
+				});
 			} else if (b.parent_symbol is PropertyAccessor) {
 				var acc = (PropertyAccessor) b.parent_symbol;
 
@@ -2209,11 +2222,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cfile.add_function (unref_fun);
 		}
 
-		foreach (Statement stmt in b.get_statements ()) {
+		b.get_statements ().foreach ((stmt) => {
 			push_line (stmt.source_reference);
 			stmt.emit (this);
 			pop_line ();
-		}
+			return true;
+		});
 
 		// free in reverse order
 		for (int i = local_vars.size - 1; i >= 0; i--) {
@@ -2226,17 +2240,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (b.parent_symbol is Method) {
 			var m = (Method) b.parent_symbol;
-			foreach (Parameter param in m.get_parameters ()) {
+			m.get_parameters ().foreach ((param) => {
 				if (!param.captured && !param.ellipsis && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
 					ccode.add_expression (destroy_parameter (param));
 				} else if (param.direction == ParameterDirection.OUT && !m.coroutine) {
 					return_out_parameter (param);
 				}
-			}
+				return true;
+			});
 			// check postconditions
-			foreach (var postcondition in m.get_postconditions ()) {
+			m.get_postconditions ().foreach ((postcondition) => {
 				create_postcondition_statement (postcondition);
-			}
+				return true;
+			});
 		} else if (b.parent_symbol is PropertyAccessor) {
 			var acc = (PropertyAccessor) b.parent_symbol;
 			if (acc.value_parameter != null && !acc.value_parameter.captured && requires_destroy (acc.value_parameter.variable_type)) {
@@ -2520,7 +2536,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var clist = new CCodeInitializerList ();
 
 				var field_it = st.get_fields ().iterator ();
-				foreach (Expression expr in list.get_initializers ()) {
+				list.get_initializers ().foreach ((expr) => {
 					Field field = null;
 					while (field == null) {
 						field_it.next ();
@@ -2546,7 +2562,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							clist.append (get_array_length_cvalue (expr.target_value, dim));
 						}
 					}
-				}
+					return true;
+				});
 
 				set_cvalue (list, clist);
 			} else {
@@ -2554,7 +2571,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var instance = create_temp_value (list.value_type, true, list);
 
 				var field_it = st.get_fields ().iterator ();
-				foreach (Expression expr in list.get_initializers ()) {
+				list.get_initializers ().foreach ((expr) => {
 					Field field = null;
 					while (field == null) {
 						field_it.next ();
@@ -2566,15 +2583,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 
 					store_field (field, instance, expr.target_value);
-				}
+					return true;
+				});
 
 				list.target_value = instance;
 			}
 		} else {
 			var clist = new CCodeInitializerList ();
-			foreach (Expression expr in list.get_initializers ()) {
+			list.get_initializers ().foreach ((expr) => {
 				clist.append (get_cvalue (expr));
-			}
+				return true;
+			});
 			set_cvalue (list, clist);
 		}
 	}
@@ -2807,10 +2826,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		bool has_instance_fields = false;
-		foreach (Field f in st.get_fields ()) {
+		st.get_fields ().foreach ((f) => {
 			if (f.binding != MemberBinding.INSTANCE) {
 				// we only compare instance fields
-				continue;
+				return true;
 			}
 
 			has_instance_fields = true;
@@ -2840,7 +2859,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.open_if (cexp);
 			ccode.add_return (new CCodeConstant ("FALSE"));
 			ccode.close ();
-		}
+			return true;
+		});
 
 		if (!has_instance_fields) {
 			// either opaque structure or simple type
@@ -3116,12 +3136,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			bool elements_require_free = false;
 			CCodeExpression element_destroy_func_expression = null;
 
-			foreach (DataType type_arg in type.get_type_arguments ()) {
+			type.get_type_arguments ().foreach ((type_arg) => {
 				elements_require_free = requires_destroy (type_arg);
 				if (elements_require_free) {
 					element_destroy_func_expression = get_destroy0_func_expression (type_arg);
 				}
-			}
+				return true;
+			});
 			
 			if (elements_require_free && element_destroy_func_expression is CCodeIdentifier) {
 				return new CCodeIdentifier (generate_collection_free_wrapper (type, (CCodeIdentifier) element_destroy_func_expression));
@@ -3472,9 +3493,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			expr.target_value = store_temp_value (expr.target_value, expr);
 		}
 
-		foreach (var value in temp_ref_values) {
+		temp_ref_values.foreach ((value) => {
 			ccode.add_expression (destroy_value (value));
-		}
+			return true;
+		});
 
 		temp_ref_values.clear ();
 	}
@@ -3518,9 +3540,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		/* free temporary objects and handle errors */
 
-		foreach (var value in temp_ref_values) {
+		temp_ref_values.foreach ((value) => {
 			ccode.add_expression (destroy_value (value));
-		}
+			return true;
+		});
 
 		if (stmt.tree_can_fail && stmt.expression.tree_can_fail) {
 			// simple case, no node breakdown necessary
@@ -3582,11 +3605,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	private void append_param_free (Method m) {
-		foreach (Parameter param in m.get_parameters ()) {
+		m.get_parameters ().foreach ((param) => {
 			if (!param.captured && !param.ellipsis && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
 				ccode.add_expression (destroy_parameter (param));
 			}
-		}
+			return true;
+		});
 	}
 
 	public bool variable_accessible_in_finally (LocalVariable local) {
@@ -3718,21 +3742,21 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (current_method != null) {
 			// check postconditions
-			foreach (Expression postcondition in current_method.get_postconditions ()) {
+			current_method.get_postconditions ().foreach ((postcondition) => {
 				create_postcondition_statement (postcondition);
-			}
+				return true;
+			});
 		}
 
 		if (current_method != null && !current_method.coroutine) {
 			// assign values to output parameters if they are not NULL
 			// otherwise, free the value if necessary
-			foreach (var param in current_method.get_parameters ()) {
-				if (param.direction != ParameterDirection.OUT) {
-					continue;
+			current_method.get_parameters ().foreach ((param) => {
+				if (param.direction == ParameterDirection.OUT) {
+					return_out_parameter (param);
 				}
-
-				return_out_parameter (param);
-			}
+				return true;
+			});
 		}
 
 		// TODO: don't duplicate the code in CCodeMethodModule, we do this right now because it needs to be before return
@@ -4426,10 +4450,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 		}
-		foreach (var type_arg in type.get_type_arguments ()) {
+		type.get_type_arguments ().foreach ((type_arg) => {
 			check_type (type_arg);
 			check_type_argument (type_arg);
-		}
+			return true;
+		});
 	}
 
 	public void check_type_arguments (MemberAccess access) {
@@ -4591,12 +4616,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					} else {
 						Parameter last_param = null;
 						// FIXME: this doesn't take into account exception handling parameters
-						foreach (var param in current_method.get_parameters ()) {
+						current_method.get_parameters ().foreach ((param) => {
 							if (param.ellipsis) {
-								break;
+								return false;
 							}
 							last_param = param;
-						}
+							return true;
+						});
 						int nParams = ccode.get_parameter_count ();
 						if (nParams == 0 || !ccode.get_parameter (nParams - 1).ellipsis) {
 							Report.error (expr.source_reference, "`va_list' used in method with fixed args");
@@ -4632,22 +4658,23 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				add_generic_type_arguments (in_arg_map, expr.type_reference.get_type_arguments (), expr);
 			} else if (cl != null && get_ccode_simple_generics (m)) {
 				int type_param_index = 0;
-				foreach (var type_arg in expr.type_reference.get_type_arguments ()) {
+				expr.type_reference.get_type_arguments ().foreach ((type_arg) => {
 					if (requires_copy (type_arg)) {
 						in_arg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), get_destroy0_func_expression (type_arg));
 					} else {
 						in_arg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), new CCodeConstant ("NULL"));
 					}
 					type_param_index++;
-				}
+					return true;
+				});
 			}
 
 			bool ellipsis = false;
 
 			int i = 1;
-			int arg_pos;
+			int arg_pos = 0;
 			Iterator<Parameter> params_it = params.iterator ();
-			foreach (Expression arg in expr.get_argument_list ()) {
+			expr.get_argument_list ().foreach ((arg) => {
 				CCodeExpression cexpr = get_cvalue (arg);
 
 				var carg_map = in_arg_map;
@@ -4705,7 +4732,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				carg_map.set (arg_pos, cexpr);
 
 				i++;
-			}
+				return true;
+			});
 			if (params_it.next ()) {
 				var param = params_it.get ();
 				
@@ -4827,9 +4855,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			creation_call.add_argument (new CCodeIdentifier (get_ccode_upper_case_name (edomain)));
 			creation_call.add_argument (new CCodeIdentifier (get_ccode_name (ecode)));
 
-			foreach (Expression arg in expr.get_argument_list ()) {
+			expr.get_argument_list ().foreach ((arg) => {
 				creation_call.add_argument (get_cvalue (arg));
-			}
+				return true;
+			});
 
 			creation_expr = creation_call;
 		} else {
@@ -4848,7 +4877,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_assignment (instance, creation_expr);
 			}
 
-			foreach (MemberInitializer init in expr.get_object_initializer ()) {
+			expr.get_object_initializer ().foreach ((init) => {
 				if (init.symbol_reference is Field) {
 					var f = (Field) init.symbol_reference;
 					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
@@ -4869,7 +4898,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						ccode.add_expression (destroy_value (init.initializer.target_value));
 					}
 				}
-			}
+				return true;
+			});
 
 			set_cvalue (expr, instance);
 		} else if (creation_expr != null) {
@@ -6539,13 +6569,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		push_function (function);
 
 		var this_value = load_this_parameter (st);
-		foreach (Field f in st.get_fields ()) {
+		st.get_fields ().foreach ((f) => {
 			if (f.binding == MemberBinding.INSTANCE) {
 				if (requires_destroy (f.variable_type)) {
 					ccode.add_expression (destroy_field (f, this_value));
 				}
 			}
-		}
+			return true;
+		});
 
 		pop_function ();
 		pop_context ();
@@ -6569,19 +6600,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		push_function (function);
 
 		var dest_struct = new GLibValue (get_data_type_for_symbol (st), new CCodeIdentifier ("(*dest)"), true);
-		foreach (Field f in st.get_fields ()) {
+		st.get_fields ().foreach ((f) => {
 			if (f.binding == MemberBinding.INSTANCE) {
 				var value = load_field (f, load_this_parameter ((TypeSymbol) st));
 				if (requires_copy (f.variable_type))  {
 					value = copy_value (value, f);
 					if (value == null) {
 						// error case, continue to avoid critical
-						continue;
+						return true;
 					}
 				}
 				store_field (f, dest_struct, value);
 			}
-		}
+			return true;
+		});
 
 		pop_function ();
 		pop_context ();
@@ -6822,9 +6854,10 @@ internal class Vala.GLibValue : TargetValue {
 		result.ctype = ctype;
 
 		if (array_length_cvalues != null) {
-			foreach (var cexpr in array_length_cvalues) {
+			array_length_cvalues.foreach ((cexpr) => {
 				result.append_array_length_cvalue (cexpr);
-			}
+				return true;
+			});
 		}
 		result.array_size_cvalue = array_size_cvalue;
 		result.array_null_terminated = array_null_terminated;

@@ -126,12 +126,13 @@ public class Vala.GIRWriter : CodeVisitor {
 	private ArrayList<GIRNamespace?> externals = new ArrayList<GIRNamespace?> ((a, b) => { return a.equal (b); });
 
 	public void write_includes() {
-		foreach (var i in externals) {
+		externals.foreach ((i) => {
 			if (i.ns != this.gir_namespace) {
 				write_indent_stream ();
 				stream.printf ("<include name=\"%s\" version=\"%s\"/>\n", i.ns, i.version);
 			}
-		}
+			return true;
+		});
 	}
 
 
@@ -183,15 +184,17 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.puts (buffer.str);
 		stream = null;
 
-		foreach (var ns in unannotated_namespaces) {
+		unannotated_namespaces.foreach ((ns) => {
 			if (!our_namespaces.contains(ns)) {
 				Report.warning (ns.source_reference, "Namespace %s does not have a GIR namespace and version annotation".printf (ns.name));
 			}
-		}
-		foreach (var ns in our_namespaces) {
+			return true;
+		});
+		our_namespaces.foreach ((ns) => {
 			ns.source_reference.file.gir_namespace = gir_namespace;
 			ns.source_reference.file.gir_version = gir_version;
-		}
+			return true;
+		});
 
 		if (our_namespaces.size == 0) {
 			Report.error (null, "No suitable namespace found to export for GIR");
@@ -325,13 +328,14 @@ public class Vala.GIRWriter : CodeVisitor {
 			write_doc (get_class_comment (cl));
 
 			// write implemented interfaces
-			foreach (DataType base_type in cl.get_base_types ()) {
+			cl.get_base_types ().foreach ((base_type) => {
 				var object_type = (ObjectType) base_type;
 				if (object_type.type_symbol is Interface) {
 					write_indent ();
 					buffer.append_printf ("<implements name=\"%s\"/>\n", gi_type_name (object_type.type_symbol));
 				}
-			}
+				return true;
+			});
 
 			write_annotations (cl);
 
@@ -377,7 +381,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			write_indent ();
 			buffer.append_printf ("</field>\n");
 
-			foreach (Method m in cl.get_methods ()) {
+			cl.get_methods ().foreach ((m) => {
 				if (m.is_abstract || m.is_virtual) {
 					write_indent ();
 					if (m.coroutine) {
@@ -412,9 +416,10 @@ public class Vala.GIRWriter : CodeVisitor {
 						buffer.append_printf ("</field>\n");
 					}
 				}
-			}
+				return true;
+			});
 
-			foreach (Signal sig in cl.get_signals ()) {
+			cl.get_signals ().foreach ((sig) => {
 				if (sig.default_handler != null) {
 					write_indent ();
 					buffer.append_printf ("<field name=\"%s\">\n", sig.name);
@@ -424,7 +429,8 @@ public class Vala.GIRWriter : CodeVisitor {
 					write_indent ();
 					buffer.append_printf ("</field>\n");
 				}
-			}
+				return true;
+			});
 
 			indent--;
 			write_indent ();
@@ -518,10 +524,11 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		// write prerequisites
 		if (iface.get_prerequisites ().size > 0) {
-			foreach (DataType base_type in iface.get_prerequisites ()) {
+			iface.get_prerequisites ().foreach ((base_type) => {
 				write_indent ();
 				buffer.append_printf ("<prerequisite name=\"%s\"/>\n", gi_type_name (((ObjectType) base_type).type_symbol));
-			}
+				return true;
+			});
 		}
 
 		write_annotations (iface);
@@ -550,7 +557,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_indent ();
 		buffer.append_printf ("</field>\n");
 
-		foreach (Method m in iface.get_methods ()) {
+		iface.get_methods ().foreach ((m) => {
 			if (m.is_abstract || m.is_virtual) {
 				if (m.coroutine) {
 					string finish_name = m.name;
@@ -584,9 +591,10 @@ public class Vala.GIRWriter : CodeVisitor {
 					buffer.append_printf ("</field>\n");
 				}
 			}
-		}
+			return true;
+		});
 
-		foreach (var prop in iface.get_properties ()) {
+		iface.get_properties ().foreach ((prop) => {
 			if (prop.is_abstract || prop.is_virtual) {
 				if (prop.get_accessor != null) {
 					var m = prop.get_accessor.get_method ();
@@ -610,7 +618,8 @@ public class Vala.GIRWriter : CodeVisitor {
 					buffer.append_printf ("</field>\n");
 				}
 			}
-		}
+			return true;
+		});
 
 		indent--;
 		write_indent ();
@@ -623,9 +632,10 @@ public class Vala.GIRWriter : CodeVisitor {
 		var nodes = this.deferred;
 		this.deferred = new ArrayList<Vala.CodeNode>();
 
-		foreach (var node in nodes) {
+		nodes.foreach ((node) => {
 			node.accept (this);
-		}
+			return true;
+		});
 	}
 
 	private string? get_gir_name (Symbol symbol) {
@@ -873,11 +883,12 @@ public class Vala.GIRWriter : CodeVisitor {
 				index++;
 			}
 
-			foreach (Parameter param in params) {
+			params.foreach ((param) => {
 				index++;
 
 				skip_implicit_params (param.variable_type, ref index, CCodeBaseModule.get_ccode_array_length (param));
-			}
+				return true;
+			});
 
 			if (ret_is_struct) {
 				index++;
@@ -904,11 +915,12 @@ public class Vala.GIRWriter : CodeVisitor {
 				write_param_or_return (instance_type, true, ref index, false, "self");
 			}
 
-			foreach (Parameter param in params) {
+			params.foreach ((param) => {
 				write_param_or_return (param.variable_type, true, ref index, CCodeBaseModule.get_ccode_array_length (param), param.name, get_parameter_comment (param), param.direction);
 
 				write_implicit_params (param.variable_type, ref index, CCodeBaseModule.get_ccode_array_length (param), param.name, param.direction);
-			}
+				return true;
+			});
 
 			if (ret_is_struct) {
 				// struct returns are converted to parameters
@@ -1238,9 +1250,10 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		if ((type.value_owned && delegate_type == null) || (constructor && !type.data_type.is_subtype_of (ginitiallyunowned_type))) {
 			var any_owned = false;
-			foreach (var generic_arg in type.get_type_arguments ()) {
+			type.get_type_arguments ().foreach ((generic_arg) => {
 				any_owned |= generic_arg.value_owned;
-			}
+				return true;
+			});
 			if (type.has_type_arguments () && !any_owned) {
 				buffer.append_printf (" transfer-ownership=\"container\"");
 			} else {
@@ -1340,9 +1353,10 @@ public class Vala.GIRWriter : CodeVisitor {
 				buffer.append_printf (">\n");
 				indent++;
 
-				foreach (DataType type_argument in type_arguments) {
+				type_arguments.foreach ((type_argument) => {
 					write_type (type_argument);
-				}
+					return true;
+				});
 
 				indent--;
 				write_indent ();
@@ -1365,7 +1379,7 @@ public class Vala.GIRWriter : CodeVisitor {
 	private void write_annotations (CodeNode node) {
 		foreach (Attribute attr in node.attributes) {
 			string name = camel_case_to_canonical (attr.name);
-			foreach (string arg_name in attr.args.keys) {
+			attr.args.keys.foreach ((arg_name) => {
 				string value = attr.args.get (arg_name);
 				if (value.has_prefix ("\"")) {
 					// eval string
@@ -1375,7 +1389,8 @@ public class Vala.GIRWriter : CodeVisitor {
 				write_indent ();
 				buffer.append_printf ("<attribute name=\"%s.%s\" value=\"%s\"/>\n",
 					name, camel_case_to_canonical (arg_name), value);
-			}
+				return true;
+			});
 		}
 	}
 

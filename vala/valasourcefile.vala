@@ -199,9 +199,10 @@ public class Vala.SourceFile {
 		// for correct symbol resolving
 		var old_using_directives = current_using_directives;
 		current_using_directives = new ArrayList<UsingDirective> ();
-		foreach (var using_directive in old_using_directives) {
+		old_using_directives.foreach ((using_directive) => {
 			current_using_directives.add (using_directive);
-		}
+			return true;
+		});
 		current_using_directives.add (ns);
 	}
 
@@ -232,9 +233,10 @@ public class Vala.SourceFile {
 	}
 
 	public void accept_children (CodeVisitor visitor) {
-		foreach (CodeNode node in nodes) {
+		nodes.foreach ((node) => {
 			node.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	private string get_subdir () {
@@ -382,9 +384,10 @@ public class Vala.SourceFile {
 	}
 
 	public bool check (CodeContext context) {
-		foreach (CodeNode node in nodes) {
+		nodes.foreach ((node) => {
 			node.check (context);
-		}
+			return true;
+		});
 		return true;
 	}
 }

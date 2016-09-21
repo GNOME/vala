@@ -161,13 +161,14 @@ public abstract class Vala.TypeRegisterFunction {
 			var clist = new CCodeInitializerList (); /* or during visit time? */
 
 			CCodeInitializerList clist_ev = null;
-			foreach (EnumValue ev in en.get_values ()) {
+			en.get_values ().foreach ((ev) => {
 				clist_ev = new CCodeInitializerList ();
 				clist_ev.append (new CCodeConstant (CCodeBaseModule.get_ccode_name (ev)));
 				clist_ev.append (new CCodeIdentifier ("\"%s\"".printf (CCodeBaseModule.get_ccode_name (ev))));
 				clist_ev.append (CCodeBaseModule.get_enum_value_canonical_cconstant (ev));
 				clist.append (clist_ev);
-			}
+				return true;
+			});
 
 			clist_ev = new CCodeInitializerList ();
 			clist_ev.append (new CCodeConstant ("0"));

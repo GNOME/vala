@@ -94,9 +94,10 @@ public class Vala.ArrayCreationExpression : Expression {
 			element_type.accept (visitor);
 		}
 
-		foreach (Expression e in sizes) {
+		sizes.foreach ((e) => {
 			e.accept (visitor);
-		}
+			return true;
+		});
 
 		if (initializer_list != null) {
 			initializer_list.accept (visitor);
@@ -196,9 +197,10 @@ public class Vala.ArrayCreationExpression : Expression {
 			element_type.check (context);
 		}
 
-		foreach (Expression e in sizes) {
+		sizes.foreach ((e) => {
 			e.check (context);
-		}
+			return true;
+		});
 
 		var calc_sizes = new ArrayList<Literal> ();
 		if (initlist != null) {
@@ -231,9 +233,10 @@ public class Vala.ArrayCreationExpression : Expression {
 				/* this is an internal error because it is already handeld by the parser */
 				Report.error (source_reference, "internal error: initializer list expected");
 			} else {
-				foreach (Expression size in calc_sizes) {
+				calc_sizes.foreach ((size) => {
 					append_size (size);
-				}
+					return true;
+				});
 			}
 		}
 
@@ -260,9 +263,10 @@ public class Vala.ArrayCreationExpression : Expression {
 	}
 
 	public override void emit (CodeGenerator codegen) {
-		foreach (Expression e in sizes) {
+		sizes.foreach ((e) => {
 			e.emit (codegen);
-		}
+			return true;
+		});
 
 		if (initializer_list != null) {
 			initializer_list.emit (codegen);

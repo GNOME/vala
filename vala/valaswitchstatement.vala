@@ -82,9 +82,10 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 
 		visitor.visit_end_full_expression (expression);
 		
-		foreach (SwitchSection section in sections) {
+		sections.foreach ((section) => {
 			section.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {
@@ -119,11 +120,11 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		expression.target_type.nullable = false;
 
 		var labelset = new HashSet<string> ();
-		foreach (SwitchSection section in sections) {
+		sections.foreach ((section) => {
 			section.check (context);
 
 			// check for duplicate literal case labels
-			foreach (SwitchLabel label in section.get_labels ()) {
+			section.get_labels ().foreach ((label) => {
 				if (label.expression != null) {
 					string? value = null;
 					if (label.expression is StringLiteral) {
@@ -139,9 +140,11 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 						Report.error (label.expression.source_reference, "Switch statement already contains this label");
 					}
 				}
-			}
+				return true;
+			});
 			add_error_types (section.get_error_types ());
-		}
+			return true;
+		});
 
 		return !error;
 	}

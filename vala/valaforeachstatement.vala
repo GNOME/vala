@@ -369,9 +369,10 @@ public class Vala.ForeachStatement : Block {
 
 		body.check (context);
 
-		foreach (LocalVariable local in get_local_variables ()) {
+		get_local_variables ().foreach ((local) => {
 			local.active = false;
-		}
+			return true;
+		});
 
 		context.analyzer.current_symbol = context.analyzer.current_symbol.parent_symbol;
 

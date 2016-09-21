@@ -119,7 +119,7 @@ public class Vala.Signal : Symbol, Lockable, Callable {
 
 		bool is_generic = false;
 
-		foreach (Parameter param in parameters) {
+		parameters.foreach ((param) => {
 			var actual_param = param.copy ();
 			actual_param.variable_type = actual_param.variable_type.get_actual_type (sender_type, null, node_reference);
 			generated_delegate.add_parameter (actual_param);
@@ -127,13 +127,15 @@ public class Vala.Signal : Symbol, Lockable, Callable {
 			if (actual_param.variable_type is GenericType) {
 				is_generic = true;
 			}
-		}
+			return true;
+		});
 
 		if (is_generic) {
 			var cl = (ObjectTypeSymbol) parent_symbol;
-			foreach (var type_param in cl.get_type_parameters ()) {
+			cl.get_type_parameters ().foreach ((type_param) => {
 				generated_delegate.add_type_parameter (new TypeParameter (type_param.name, type_param.source_reference));
-			}
+				return true;
+			});
 
 			// parameter types must refer to the delegate type parameters
 			// instead of to the class type parameters
@@ -156,9 +158,10 @@ public class Vala.Signal : Symbol, Lockable, Callable {
 	public override void accept_children (CodeVisitor visitor) {
 		return_type.accept (visitor);
 		
-		foreach (Parameter param in parameters) {
+		parameters.foreach ((param) => {
 			param.accept (visitor);
-		}
+			return true;
+		});
 		if (default_handler == null && body != null) {
 			body.accept (visitor);
 		} else if (default_handler != null) {
@@ -218,9 +221,10 @@ public class Vala.Signal : Symbol, Lockable, Callable {
 			default_handler.body = body;
 
 
-			foreach (Parameter param in parameters) {
+			parameters.foreach ((param) => {
 				default_handler.add_parameter (param);
-			}
+				return true;
+			});
 
 			var cl = parent_symbol as ObjectTypeSymbol;
 

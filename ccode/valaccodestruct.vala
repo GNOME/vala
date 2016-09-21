@@ -65,9 +65,10 @@ public class Vala.CCodeStruct : CCodeNode {
 		writer.write_string ("struct ");
 		writer.write_string (name);
 		writer.write_begin_block ();
-		foreach (CCodeDeclaration decl in declarations) {
+		declarations.foreach ((decl) => {
 			decl.write_declaration (writer);
-		}
+			return true;
+		});
 
 		writer.write_end_block ();
 		if (CCodeModifiers.DEPRECATED in modifiers) {

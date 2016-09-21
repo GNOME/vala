@@ -67,11 +67,12 @@ public class Vala.SignalType : DataType {
 		result.value_owned = true;
 
 		if (result.delegate_symbol.get_type_parameters ().size > 0) {
-			foreach (var type_param in type_sym.get_type_parameters ()) {
+			type_sym.get_type_parameters ().foreach ((type_param) => {
 				var type_arg = new GenericType (type_param);
 				type_arg.value_owned = true;
 				result.add_type_argument (type_arg);
-			}
+				return true;
+			});
 		}
 
 		return result;

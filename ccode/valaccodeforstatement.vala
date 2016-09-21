@@ -69,7 +69,7 @@ public class Vala.CCodeForStatement : CCodeStatement {
 		writer.write_string ("for (");
 		
 		first = true;
-		foreach (CCodeExpression init_expr in initializer) {
+		initializer.foreach ((init_expr) => {
 			if (!first) {
 				writer.write_string (", ");
 			} else {
@@ -78,7 +78,8 @@ public class Vala.CCodeForStatement : CCodeStatement {
 			if (init_expr != null) {
 				init_expr.write (writer);
 			}
-		}
+			return true;
+		});
 
 		writer.write_string ("; ");
 		if (condition != null) {
@@ -87,7 +88,7 @@ public class Vala.CCodeForStatement : CCodeStatement {
 		writer.write_string ("; ");
 		
 		first = true;
-		foreach (CCodeExpression it_expr in iterator) {
+		iterator.foreach ((it_expr) => {
 			if (!first) {
 				writer.write_string (", ");
 			} else {
@@ -96,7 +97,8 @@ public class Vala.CCodeForStatement : CCodeStatement {
 			if (it_expr != null) {
 				it_expr.write (writer);
 			}
-		}
+			return true;
+		});
 
 		writer.write_string (")");
 		body.write (writer);

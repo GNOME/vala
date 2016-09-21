@@ -63,9 +63,10 @@ public class Vala.StructValueType : ValueType {
 		result.value_owned = value_owned;
 		result.nullable = nullable;
 
-		foreach (DataType arg in get_type_arguments ()) {
+		get_type_arguments ().foreach ((arg) => {
 			result.add_type_argument (arg.copy ());
-		}
+			return true;
+		});
 
 		return result;
 	}

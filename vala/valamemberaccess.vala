@@ -126,9 +126,10 @@ public class Vala.MemberAccess : Expression {
 			inner.accept (visitor);
 		}
 		
-		foreach (DataType type_arg in type_argument_list) {
+		type_argument_list.foreach ((type_arg) => {
 			type_arg.accept (visitor);
-		}
+			return true;
+	    });
 	}
 
 	public override string to_string () {
@@ -204,9 +205,10 @@ public class Vala.MemberAccess : Expression {
 			inner.check (context);
 		}
 		
-		foreach (DataType type_arg in type_argument_list) {
+		type_argument_list.foreach ((type_arg) => {
 			type_arg.check (context);
-		}
+			return true;
+		});
 
 		Symbol base_symbol = null;
 		Parameter this_parameter = null;
@@ -631,13 +633,14 @@ public class Vala.MemberAccess : Expression {
 
 			// do not allow access to methods using generic type parameters
 			// if instance type does not specify type arguments
-			foreach (var param in m.get_parameters ()) {
+			m.get_parameters ().foreach ((param) => {
 				var generic_type = param.variable_type as GenericType;
 				if (generic_type != null && generic_type.type_parameter.parent_symbol is TypeSymbol) {
 					generics = true;
-					break;
+					return false;
 				}
-			}
+				return true;
+			});
 			var generic_type = m.return_type as GenericType;
 			if (generic_type != null && generic_type.type_parameter.parent_symbol is TypeSymbol) {
 				generics = true;
@@ -810,9 +813,10 @@ public class Vala.MemberAccess : Expression {
 				// support static methods in generic classes
 				inner.value_type = new ObjectType ((ObjectTypeSymbol) m.parent_symbol);
 
-				foreach (var type_argument in inner_ma.type_argument_list) {
+				inner_ma.type_argument_list.foreach ((type_argument) => {
 					inner.value_type.add_type_argument (type_argument);
-				}
+					return true;
+				});
 			}
 
 			formal_value_type = context.analyzer.get_value_type_for_symbol (symbol_reference, lvalue);

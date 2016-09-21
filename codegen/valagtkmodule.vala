@@ -44,14 +44,16 @@ public class Vala.GtkModule : GSignalModule {
 	}
 
 	private void recurse_cclass_to_vala_map (Namespace ns) {
-		foreach (var cl in ns.get_classes()) {
+		ns.get_classes().foreach ((cl) => {
 			if (!cl.is_compact) {
 				cclass_to_vala_map.set (get_ccode_name (cl), cl);
 			}
-		}
-		foreach (var inner in ns.get_namespaces()) {
+			return true;
+		});
+		ns.get_namespaces().foreach ((inner) => {
 			recurse_cclass_to_vala_map (inner);
-		}
+			return true;
+		});
 	}
 
 	private void ensure_gresource_to_file_map () {

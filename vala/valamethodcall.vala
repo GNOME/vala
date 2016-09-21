@@ -92,9 +92,10 @@ public class Vala.MethodCall : Expression {
 	public override void accept_children (CodeVisitor visitor) {
 		call.accept (visitor);
 
-		foreach (Expression expr in argument_list) {
+		argument_list.foreach ((expr) => {
 			expr.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {
@@ -291,9 +292,10 @@ public class Vala.MethodCall : Expression {
 
 			var struct_creation_expression = new ObjectCreationExpression ((MemberAccess) call, source_reference);
 			struct_creation_expression.struct_creation = true;
-			foreach (Expression arg in get_argument_list ()) {
+			get_argument_list ().foreach ((arg) => {
 				struct_creation_expression.add_argument (arg);
-			}
+				return true;
+			});
 			struct_creation_expression.target_type = target_type;
 			context.analyzer.replaced_nodes.add (this);
 			parent_node.replace_expression (this, struct_creation_expression);
@@ -370,9 +372,9 @@ public class Vala.MethodCall : Expression {
 
 		var args = get_argument_list ();
 		Iterator<Expression> arg_it = args.iterator ();
-		foreach (Parameter param in params) {
+		params.foreach ((param) => {
 			if (param.ellipsis) {
-				break;
+				return false;
 			}
 
 			if (param.params_array) {
@@ -384,7 +386,7 @@ public class Vala.MethodCall : Expression {
 					arg.target_type = array_type.element_type;
 					arg.target_type.value_owned = array_type.value_owned;
 				}
-				break;
+				return false;
 			}
 
 			if (arg_it.next ()) {
@@ -396,15 +398,17 @@ public class Vala.MethodCall : Expression {
 
 				last_arg = arg;
 			}
-		}
+			return true;
+		});
 
 		// concatenate stringified arguments for methods with attribute [Print]
 		if (mtype is MethodType && ((MethodType) mtype).method_symbol.get_attribute ("Print") != null) {
 			var template = new Template (source_reference);
-			foreach (Expression arg in argument_list) {
+			argument_list.foreach ((arg) => {
 				arg.parent_node = null;
 				template.add_expression (arg);
-			}
+				return true;
+			});
 			argument_list.clear ();
 			add_argument (template);
 		}
@@ -423,12 +427,13 @@ public class Vala.MethodCall : Expression {
 
 					// recreate iterator and skip to right position
 					arg_it = argument_list.iterator ();
-					foreach (Parameter param in params) {
+					params.foreach ((param) => {
 						if (param.ellipsis) {
-							break;
+							return false;
 						}
 						arg_it.next ();
-					}
+						return true;
+					});
 				}
 			} else {
 				// use instance as format string for string.printf (...)
@@ -445,9 +450,10 @@ public class Vala.MethodCall : Expression {
 			}
 		}
 
-		foreach (Expression arg in get_argument_list ()) {
+		get_argument_list ().foreach ((arg) => {
 			arg.check (context);
-		}
+			return true;
+		});
 
 		if (ret_type is VoidType) {
 			// void return type
@@ -483,7 +489,7 @@ public class Vala.MethodCall : Expression {
 			if (m != null && m.coroutine && !is_yield_expression && ((MemberAccess) call).member_name != "end") {
 				// .begin call of async method, no error can happen here
 			} else {
-				foreach (DataType error_type in m.get_error_types ()) {
+				m.get_error_types ().foreach ((error_type) => {
 					may_throw = true;
 
 					// ensure we can trace back which expression may throw errors of this type
@@ -491,7 +497,8 @@ public class Vala.MethodCall : Expression {
 					call_error_type.source_reference = source_reference;
 
 					add_error_type (call_error_type);
-				}
+					return true;
+				});
 			}
 			if (m.returns_floating_reference) {
 				value_type.floating_reference = true;
@@ -504,14 +511,15 @@ public class Vala.MethodCall : Expression {
 			if (dynamic_sig != null && dynamic_sig.handler != null) {
 				dynamic_sig.return_type = dynamic_sig.handler.value_type.get_return_type ().copy ();
 				bool first = true;
-				foreach (Parameter param in dynamic_sig.handler.value_type.get_parameters ()) {
+				dynamic_sig.handler.value_type.get_parameters ().foreach ((param) => {
 					if (first) {
 						// skip sender parameter
 						first = false;
 					} else {
 						dynamic_sig.add_parameter (param.copy ());
 					}
-				}
+					return true;
+				});
 				dynamic_sig.handler.target_type = new DelegateType (dynamic_sig.get_delegate (new ObjectType ((ObjectTypeSymbol) dynamic_sig.parent_symbol), this));
 			}
 
@@ -524,9 +532,9 @@ public class Vala.MethodCall : Expression {
 
 						// infer type arguments from arguments
 						arg_it = args.iterator ();
-						foreach (Parameter param in params) {
+						params.foreach ((param) => {
 							if (param.ellipsis || param.params_array) {
-								break;
+								return false;
 							}
 
 							if (arg_it.next ()) {
@@ -534,12 +542,13 @@ public class Vala.MethodCall : Expression {
 
 								type_arg = param.variable_type.infer_type_argument (type_param, arg.value_type);
 								if (type_arg != null) {
-									break;
+									return false;
 								}
 
 								arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, method_type_args, this);
 							}
-						}
+							return true;
+						});
 
 						// infer type arguments from expected return type
 						if (type_arg == null && target_type != null) {
@@ -557,9 +566,9 @@ public class Vala.MethodCall : Expression {
 
 					// recalculate argument target types with new information
 					arg_it = args.iterator ();
-					foreach (Parameter param in params) {
+					params.foreach ((param) => {
 						if (param.ellipsis || param.params_array) {
-							break;
+							return false;
 						}
 
 						if (arg_it.next ()) {
@@ -567,7 +576,8 @@ public class Vala.MethodCall : Expression {
 
 							arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, method_type_args, this);
 						}
-					}
+						return true;
+					});
 
 					// recalculate return value type with new information
 					value_type = formal_value_type.get_actual_type (target_object_type, method_type_args, this);
@@ -584,7 +594,7 @@ public class Vala.MethodCall : Expression {
 			// constructor
 			var cl = (Class) ((ObjectType) mtype).type_symbol;
 			var m = cl.default_construction_method;
-			foreach (DataType error_type in m.get_error_types ()) {
+			m.get_error_types ().foreach ((error_type) => {
 				may_throw = true;
 
 				// ensure we can trace back which expression may throw errors of this type
@@ -592,10 +602,11 @@ public class Vala.MethodCall : Expression {
 				call_error_type.source_reference = source_reference;
 
 				add_error_type (call_error_type);
-			}
+				return true;
+			});
 		} else if (mtype is DelegateType) {
 			var d = ((DelegateType) mtype).delegate_symbol;
-			foreach (DataType error_type in d.get_error_types ()) {
+			d.get_error_types ().foreach ((error_type) => {
 				may_throw = true;
 
 				// ensure we can trace back which expression may throw errors of this type
@@ -603,7 +614,8 @@ public class Vala.MethodCall : Expression {
 				call_error_type.source_reference = source_reference;
 
 				add_error_type (call_error_type);
-			}
+				return true;
+			});
 		}
 
 		if (!context.analyzer.check_arguments (this, mtype, params, get_argument_list ())) {
@@ -666,9 +678,10 @@ public class Vala.MethodCall : Expression {
 			call.emit (codegen);
 		}
 
-		foreach (Expression expr in argument_list) {
+		argument_list.foreach ((expr) => {
 			expr.emit (codegen);
-		}
+			return true;
+		});
 
 		codegen.visit_method_call (this);
 
@@ -678,17 +691,19 @@ public class Vala.MethodCall : Expression {
 	public override void get_defined_variables (Collection<Variable> collection) {
 		call.get_defined_variables (collection);
 
-		foreach (Expression arg in argument_list) {
+		argument_list.foreach ((arg) => {
 			arg.get_defined_variables (collection);
-		}
+			return true;
+		});
 	}
 
 	public override void get_used_variables (Collection<Variable> collection) {
 		call.get_used_variables (collection);
 
-		foreach (Expression arg in argument_list) {
+		argument_list.foreach ((arg) => {
 			arg.get_used_variables (collection);
-		}
+			return true;
+		});
 	}
 
 	public StringLiteral? get_format_literal () {

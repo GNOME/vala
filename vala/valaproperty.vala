@@ -354,7 +354,7 @@ public class Vala.Property : Symbol, Lockable {
 
 	private void find_base_interface_property (Class cl) {
 		// FIXME report error if multiple possible base properties are found
-		foreach (DataType type in cl.get_base_types ()) {
+		cl.get_base_types ().foreach ((type) => {
 			if (type.data_type is Interface) {
 				var sym = type.data_type.scope.lookup (name);
 				if (sym is Property) {
@@ -364,15 +364,16 @@ public class Vala.Property : Symbol, Lockable {
 						if (!compatible (base_property, out invalid_match)) {
 							error = true;
 							Report.error (source_reference, "Type and/or accessors of overriding property `%s' do not match overridden property `%s': %s.".printf (get_full_name (), base_property.get_full_name (), invalid_match));
-							return;
+							return false;
 						}
 
 						_base_interface_property = base_property;
-						return;
+						return false;
 					}
 				}
 			}
-		}
+			return true;
+		});
 	}
 
 	public override bool check (CodeContext context) {

@@ -61,9 +61,10 @@ public class Vala.UnresolvedType : DataType {
 			type_ref.value_owned = true;
 
 			var ma = (MemberAccess) expr;
-			foreach (DataType arg in ma.get_type_arguments ()) {
+			ma.get_type_arguments ().foreach ((arg) => {
 				type_ref.add_type_argument (arg);
-			}
+				return true;
+			});
 
 			return type_ref;
 		}
@@ -79,9 +80,10 @@ public class Vala.UnresolvedType : DataType {
 		result.is_dynamic = is_dynamic;
 		result.unresolved_symbol = unresolved_symbol.copy ();
 		
-		foreach (DataType arg in get_type_arguments ()) {
+		get_type_arguments ().foreach ((arg) => {
 			result.add_type_argument (arg.copy ());
-		}
+			return true;
+		});
 		
 		return result;
 	}
@@ -93,7 +95,7 @@ public class Vala.UnresolvedType : DataType {
 		if (type_args.size > 0) {
 			s += "<";
 			bool first = true;
-			foreach (DataType type_arg in type_args) {
+			type_args.foreach ((type_arg) => {
 				if (!first) {
 					s += ",";
 				} else {
@@ -103,7 +105,8 @@ public class Vala.UnresolvedType : DataType {
 					s += "weak ";
 				}
 				s += type_arg.to_qualified_string (scope);
-			}
+				return true;
+			});
 			s += ">";
 		}
 		if (nullable) {

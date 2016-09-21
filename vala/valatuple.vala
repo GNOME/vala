@@ -33,9 +33,10 @@ public class Vala.Tuple : Expression {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (Expression expr in expression_list) {
+		expression_list.foreach ((expr) => {
 			expr.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override void accept (CodeVisitor visitor) {
@@ -77,9 +78,10 @@ public class Vala.Tuple : Expression {
 	}
 
 	public override void emit (CodeGenerator codegen) {
-		foreach (Expression expr in expression_list) {
+		expression_list.foreach ((expr) => {
 			expr.emit (codegen);
-		}
+			return true;
+		});
 
 		codegen.visit_tuple (this);
 

@@ -93,42 +93,54 @@ public class Vala.Namespace : Symbol {
 				old_ns.source_reference = ns.source_reference;
 			}
 
-			foreach (var using_directive in ns.using_directives) {
+			ns.using_directives.foreach ((using_directive) => {
 				old_ns.add_using_directive (using_directive);
-			}
-			foreach (Namespace sub_ns in ns.get_namespaces ()) {
+				return true;
+			});
+			ns.get_namespaces ().foreach ((sub_ns) => {
 				old_ns.add_namespace (sub_ns);
-			}
-			foreach (Class cl in ns.get_classes ()) {
+				return true;
+			});
+			ns.get_classes ().foreach ((cl) => {
 				old_ns.add_class (cl);
-			}
-			foreach (Struct st in ns.get_structs ()) {
+				return true;
+			});
+			ns.get_structs ().foreach ((st) => {
 				old_ns.add_struct (st);
-			}
-			foreach (Interface iface in ns.get_interfaces ()) {
+				return true;
+			});
+			ns.get_interfaces ().foreach ((iface) => {
 				old_ns.add_interface (iface);
-			}
-			foreach (Delegate d in ns.get_delegates ()) {
+				return true;
+			});
+			ns.get_delegates ().foreach ((d) => {
 				old_ns.add_delegate (d);
-			}
-			foreach (Enum en in ns.get_enums ()) {
+				return true;
+			});
+			ns.get_enums ().foreach ((en) => {
 				old_ns.add_enum (en);
-			}
-			foreach (ErrorDomain ed in ns.get_error_domains ()) {
+				return true;
+			});
+			ns.get_error_domains ().foreach ((ed) => {
 				old_ns.add_error_domain (ed);
-			}
-			foreach (Constant c in ns.get_constants ()) {
+				return true;
+			});
+			ns.get_constants ().foreach ((c) => {
 				old_ns.add_constant (c);
-			}
-			foreach (Field f in ns.get_fields ()) {
+				return true;
+			});
+			ns.get_fields ().foreach ((f) => {
 				old_ns.add_field (f);
-			}
-			foreach (Method m in ns.get_methods ()) {
+				return true;
+			});
+			ns.get_methods ().foreach ((m) => {
 				old_ns.add_method (m);
-			}
-			foreach (Comment c in ns.get_comments ()) {
+				return true;
+			});
+			ns.get_comments ().foreach ((c) => {
 				old_ns.add_comment (c);
-			}
+				return true;
+			});
 			foreach (Attribute a in ns.attributes) {
 				if (old_ns.get_attribute (a.name) == null) {
 					old_ns.attributes.append(a);
@@ -456,50 +468,61 @@ public class Vala.Namespace : Symbol {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (UsingDirective ns_ref in using_directives) {
+		using_directives.foreach ((ns_ref) => {
 			ns_ref.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Namespace ns in namespaces) {
+		namespaces.foreach ((ns) => {
 			ns.accept (visitor);
-		}
+			return true;
+		});
 
 		/* process enums first to avoid order problems in C code */
-		foreach (Enum en in enums) {
+		enums.foreach ((en) => {
 			en.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (ErrorDomain edomain in error_domains) {
+		error_domains.foreach ((edomain) => {
 			edomain.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Class cl in classes) {
+		classes.foreach ((cl) => {
 			cl.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Interface iface in interfaces) {
+		interfaces.foreach ((iface) => {
 			iface.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Struct st in structs) {
+		structs.foreach ((st) => {
 			st.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Delegate d in delegates) {
+		delegates.foreach ((d) => {
 			d.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Constant c in constants) {
+		constants.foreach ((c) => {
 			c.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Field f in fields) {
+		fields.foreach ((f) => {
 			f.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Method m in methods) {
+		methods.foreach ((m) => {
 			m.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override bool check (CodeContext context) {

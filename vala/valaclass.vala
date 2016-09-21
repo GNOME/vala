@@ -462,38 +462,46 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (DataType type in base_types) {
+		base_types.foreach ((type) => {
 			type.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (TypeParameter p in get_type_parameters ()) {
+		get_type_parameters ().foreach ((p) => {
 			p.accept (visitor);
-		}
+			return true;
+		});
 
 		/* process enums first to avoid order problems in C code */
-		foreach (Enum en in enums) {
+		enums.foreach ((en) => {
 			en.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Field f in fields) {
+		fields.foreach ((f) => {
 			f.accept (visitor);
-		}
+			return true;
+		});
 		
-		foreach (Constant c in constants) {
+		constants.foreach ((c) => {
 			c.accept (visitor);
-		}
+			return true;
+		});
 		
-		foreach (Method m in methods) {
+		methods.foreach ((m) => {
 			m.accept (visitor);
-		}
+			return true;
+		});
 		
-		foreach (Property prop in properties) {
+		properties.foreach ((prop) => {
 			prop.accept (visitor);
-		}
+			return true;
+		});
 		
-		foreach (Signal sig in signals) {
+		signals.foreach ((sig) => {
 			sig.accept (visitor);
-		}
+			return true;
+		});
 		
 		if (constructor != null) {
 			constructor.accept (visitor);
@@ -519,17 +527,20 @@ public class Vala.Class : ObjectTypeSymbol {
 			class_destructor.accept (visitor);
 		}
 		
-		foreach (Class cl in classes) {
+		classes.foreach ((cl) => {
 			cl.accept (visitor);
-		}
+			return true;
+		});
 		
-		foreach (Struct st in structs) {
+		structs.foreach ((st) => {
 			st.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Delegate d in delegates) {
+		delegates.foreach ((d) => {
 			d.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override bool is_reference_type () {
@@ -548,13 +559,12 @@ public class Vala.Class : ObjectTypeSymbol {
 			return true;
 		}
 
-		foreach (DataType base_type in base_types) {
+		return !base_types.foreach ((base_type) => {
 			if (base_type.data_type != null && base_type.data_type.is_subtype_of (t)) {
-				return true;
+				return false;
 			}
-		}
-		
-		return false;
+			return true;
+		});
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
@@ -568,19 +578,19 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 
 	private void get_all_prerequisites (Interface iface, List<TypeSymbol> list) {
-		foreach (DataType prereq in iface.get_prerequisites ()) {
+		iface.get_prerequisites ().foreach ((prereq) => {
 			TypeSymbol type = prereq.data_type;
 			/* skip on previous errors */
 			if (type == null) {
-				continue;
+				return true;
 			}
 
 			list.add (type);
 			if (type is Interface) {
 				get_all_prerequisites ((Interface) type, list);
-
 			}
-		}
+			return true;
+		});
 	}
 
 	private bool class_is_a (Class cl, TypeSymbol t) {
@@ -588,17 +598,16 @@ public class Vala.Class : ObjectTypeSymbol {
 			return true;
 		}
 
-		foreach (DataType base_type in cl.get_base_types ()) {
+		return !cl.get_base_types ().foreach ((base_type) => {
 			if (base_type.data_type is Class) {
 				if (class_is_a ((Class) base_type.data_type, t)) {
-					return true;
+					return false;
 				}
 			} else if (base_type.data_type == t) {
-				return true;
+				return false;
 			}
-		}
-
-		return false;
+			return true;
+		});
 	}
 
 	public override bool check (CodeContext context) {
@@ -648,38 +657,46 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 		}
 
-		foreach (DataType type in base_types) {
+		base_types.foreach ((type) => {
 			type.check (context);
-		}
+			return true;
+		});
 
-		foreach (TypeParameter p in get_type_parameters ()) {
+		get_type_parameters ().foreach ((p) => {
 			p.check (context);
-		}
+			return true;
+		});
 
 		/* process enums first to avoid order problems in C code */
-		foreach (Enum en in enums) {
+		enums.foreach ((en) => {
 			en.check (context);
-		}
+			return true;
+		});
 
-		foreach (Field f in fields) {
+		fields.foreach ((f) => {
 			f.check (context);
-		}
+			return true;
+		});
 		
-		foreach (Constant c in constants) {
+		constants.foreach ((c) => {
 			c.check (context);
-		}
+			return true;
+		});
 		
-		foreach (Method m in methods) {
+		methods.foreach ((m) => {
 			m.check (context);
-		}
+			return true;
+		});
 		
-		foreach (Property prop in properties) {
+		properties.foreach ((prop) => {
 			prop.check (context);
-		}
+			return true;
+		});
 		
-		foreach (Signal sig in signals) {
+		signals.foreach ((sig) => {
 			sig.check (context);
-		}
+			return true;
+		});
 		
 		if (constructor != null) {
 			constructor.check (context);
@@ -705,66 +722,74 @@ public class Vala.Class : ObjectTypeSymbol {
 			class_destructor.check (context);
 		}
 		
-		foreach (Class cl in classes) {
+		classes.foreach ((cl) => {
 			cl.check (context);
-		}
+			return true;
+		});
 		
-		foreach (Struct st in structs) {
+		structs.foreach ((st) => {
 			st.check (context);
-		}
+			return true;
+		});
 
-		foreach (Delegate d in delegates) {
+		delegates.foreach ((d) => {
 			d.check (context);
-		}
+			return true;
+		});
 
 		/* compact classes cannot implement interfaces */
 		if (is_compact) {
-			foreach (DataType base_type in get_base_types ()) {
+			get_base_types ().foreach ((base_type) => {
 				if (base_type.data_type is Interface) {
 					error = true;
 					Report.error (source_reference, "compact classes `%s` may not implement interfaces".printf (get_full_name ()));
 				}
-			}
+				return true;
+			});
 
 			if (!external && !external_package && base_class != null && base_class != context.analyzer.gsource_type) {
-				foreach (Field f in fields) {
+				fields.foreach ((f) => {
 					if (f.binding == MemberBinding.INSTANCE) {
 						error = true;
 						Report.error (source_reference, "derived compact classes may not have instance fields");
-						break;
+						return false;
 					}
-				}
+					return true;
+				});
 			}
 		}
 
 		/* gather all prerequisites */
 		List<TypeSymbol> prerequisites = new ArrayList<TypeSymbol> ();
-		foreach (DataType base_type in get_base_types ()) {
+		get_base_types ().foreach ((base_type) => {
 			if (base_type.data_type is Interface) {
 				get_all_prerequisites ((Interface) base_type.data_type, prerequisites);
 			}
-		}
+			return true;
+		});
 		/* check whether all prerequisites are met */
 		List<string> missing_prereqs = new ArrayList<string> ();
-		foreach (TypeSymbol prereq in prerequisites) {
+		prerequisites.foreach ((prereq) => {
 			if (!class_is_a (this, prereq)) {
 				missing_prereqs.insert (0, prereq.get_full_name ());
 			}
-		}
+			return true;
+		});
 		/* report any missing prerequisites */
 		if (missing_prereqs.size > 0) {
 			error = true;
 
 			string error_string = "%s: some prerequisites (".printf (get_full_name ());
 			bool first = true;
-			foreach (string s in missing_prereqs) {
+			missing_prereqs.foreach ((s) => {
 				if (first) {
 					error_string = "%s`%s'".printf (error_string, s);
 					first = false;
 				} else {
 					error_string = "%s, `%s'".printf (error_string, s);
 				}
-			}
+				return true;
+			});
 			error_string += ") are not met";
 			Report.error (source_reference, error_string);
 		}
@@ -772,13 +797,13 @@ public class Vala.Class : ObjectTypeSymbol {
 		/* VAPI classes don't have to specify overridden methods */
 		if (source_type == SourceFileType.SOURCE) {
 			/* all abstract symbols defined in base types have to be at least defined (or implemented) also in this type */
-			foreach (DataType base_type in get_base_types ()) {
+			get_base_types ().foreach ((base_type) => {
 				if (base_type.data_type is Interface) {
 					Interface iface = (Interface) base_type.data_type;
 
 					if (base_class != null && base_class.is_subtype_of (iface)) {
 						// reimplementation of interface, class is not required to reimplement all methods
-						break;
+						return false;
 					}
 
 					/* We do not need to do expensive equality checking here since this is done
@@ -786,7 +811,7 @@ public class Vala.Class : ObjectTypeSymbol {
 					 */
 
 					/* check methods */
-					foreach (Method m in iface.get_methods ()) {
+					iface.get_methods ().foreach ((m) => {
 						if (m.is_abstract) {
 							var implemented = false;
 							var base_class = this;
@@ -807,10 +832,11 @@ public class Vala.Class : ObjectTypeSymbol {
 								Report.error (source_reference, "`%s' does not implement interface method `%s'".printf (get_full_name (), m.get_full_name ()));
 							}
 						}
-					}
+						return true;
+					});
 
 					/* check properties */
-					foreach (Property prop in iface.get_properties ()) {
+					iface.get_properties ().foreach ((prop) => {
 						if (prop.is_abstract) {
 							Symbol sym = null;
 							var base_class = this;
@@ -834,15 +860,17 @@ public class Vala.Class : ObjectTypeSymbol {
 								Report.error (source_reference, "`%s' does not implement interface property `%s'".printf (get_full_name (), prop.get_full_name ()));
 							}
 						}
-					}
+						return true;
+					});
 				}
-			}
+				return true;
+			});
 
 			/* all abstract symbols defined in base classes have to be implemented in non-abstract classes */
 			if (!is_abstract) {
 				var base_class = base_class;
 				while (base_class != null && base_class.is_abstract) {
-					foreach (Method base_method in base_class.get_methods ()) {
+					base_class.get_methods ().foreach ((base_method) => {
 						if (base_method.is_abstract) {
 							var override_method = SemanticAnalyzer.symbol_lookup_inherited (this, base_method.name) as Method;
 							if (override_method == null || !override_method.overrides) {
@@ -850,8 +878,9 @@ public class Vala.Class : ObjectTypeSymbol {
 								Report.error (source_reference, "`%s' does not implement abstract method `%s'".printf (get_full_name (), base_method.get_full_name ()));
 							}
 						}
-					}
-					foreach (Property base_property in base_class.get_properties ()) {
+						return true;
+					});
+					base_class.get_properties ().foreach ((base_property) => {
 						if (base_property.is_abstract) {
 							var override_property = SemanticAnalyzer.symbol_lookup_inherited (this, base_property.name) as Property;
 							if (override_property == null || !override_property.overrides) {
@@ -859,7 +888,8 @@ public class Vala.Class : ObjectTypeSymbol {
 								Report.error (source_reference, "`%s' does not implement abstract property `%s'".printf (get_full_name (), base_property.get_full_name ()));
 							}
 						}
-					}
+						return true;
+					});
 					base_class = base_class.base_class;
 				}
 			}

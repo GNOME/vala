@@ -49,14 +49,15 @@ public class Vala.CCodeCommaExpression : CCodeExpression {
 		bool first = true;
 	
 		writer.write_string ("(");
-		foreach (CCodeExpression expr in inner) {
+		inner.foreach ((expr) => {
 			if (!first) {
 				writer.write_string (", ");
 			} else {
 				first = false;
 			}
 			expr.write (writer);
-		}
+			return true;
+		});
 		writer.write_string (")");
 	}
 }

@@ -118,13 +118,15 @@ public class Vala.ObjectCreationExpression : Expression {
 			member_name.accept (visitor);
 		}
 		
-		foreach (Expression arg in argument_list) {
+		argument_list.foreach ((arg) => {
 			arg.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (MemberInitializer init in object_initializer) {
+		object_initializer.foreach ((init) => {
 			init.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {
@@ -236,9 +238,10 @@ public class Vala.ObjectCreationExpression : Expression {
 				return false;
 			}
 
-			foreach (DataType type_arg in type_args) {
+			type_args.foreach ((type_arg) => {
 				type_reference.add_type_argument (type_arg);
-			}
+				return true;
+			});
 		} else {
 			type = type_reference.data_type;
 		}
@@ -367,9 +370,9 @@ public class Vala.ObjectCreationExpression : Expression {
 
 			var args = get_argument_list ();
 			Iterator<Expression> arg_it = args.iterator ();
-			foreach (Parameter param in m.get_parameters ()) {
+			m.get_parameters ().foreach ((param) => {
 				if (param.ellipsis) {
-					break;
+					return false;
 				}
 
 				if (arg_it.next ()) {
@@ -381,7 +384,8 @@ public class Vala.ObjectCreationExpression : Expression {
 
 					last_arg = arg;
 				}
-			}
+				return true;
+			});
 
 			// printf arguments
 			if (m.printf_format) {
@@ -413,13 +417,14 @@ public class Vala.ObjectCreationExpression : Expression {
 				}
 			}
 
-			foreach (Expression arg in args) {
+			args.foreach ((arg) => {
 				arg.check (context);
-			}
+				return true;
+			});
 
 			context.analyzer.check_arguments (this, new MethodType (m), m.get_parameters (), args);
 
-			foreach (DataType error_type in m.get_error_types ()) {
+			m.get_error_types ().foreach ((error_type) => {
 				may_throw = true;
 
 				// ensure we can trace back which expression may throw errors of this type
@@ -427,7 +432,8 @@ public class Vala.ObjectCreationExpression : Expression {
 				call_error_type.source_reference = source_reference;
 
 				add_error_type (call_error_type);
-			}
+				return true;
+			});
 		} else if (type_reference is ErrorType) {
 			if (type_reference != null) {
 				type_reference.check (context);
@@ -437,13 +443,15 @@ public class Vala.ObjectCreationExpression : Expression {
 				member_name.check (context);
 			}
 		
-			foreach (Expression arg in argument_list) {
+			argument_list.foreach ((arg) => {
 				arg.check (context);
-			}
+				return true;
+			});
 
-			foreach (MemberInitializer init in object_initializer) {
+			object_initializer.foreach ((init) => {
 				init.check (context);
-			}
+				return true;
+			});
 
 			if (get_argument_list ().size == 0) {
 				error = true;
@@ -475,9 +483,10 @@ public class Vala.ObjectCreationExpression : Expression {
 			}
 		}
 
-		foreach (MemberInitializer init in get_object_initializer ()) {
+		get_object_initializer ().foreach ((init) => {
 			context.analyzer.visit_member_initializer (init, type_reference);
-		}
+			return true;
+		});
 
 		if (may_throw) {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
@@ -516,13 +525,15 @@ public class Vala.ObjectCreationExpression : Expression {
 	}
 
 	public override void emit (CodeGenerator codegen) {
-		foreach (Expression arg in argument_list) {
+		argument_list.foreach ((arg) => {
 			arg.emit (codegen);
-		}
+			return true;
+		});
 
-		foreach (MemberInitializer init in object_initializer) {
+		object_initializer.foreach ((init) => {
 			init.emit (codegen);
-		}
+			return true;
+		});
 
 		codegen.visit_object_creation_expression (this);
 
@@ -530,18 +541,21 @@ public class Vala.ObjectCreationExpression : Expression {
 	}
 
 	public override void get_defined_variables (Collection<Variable> collection) {
-		foreach (Expression arg in argument_list) {
+		argument_list.foreach ((arg) => {
 			arg.get_defined_variables (collection);
-		}
+			return true;
+		});
 	}
 
 	public override void get_used_variables (Collection<Variable> collection) {
-		foreach (Expression arg in argument_list) {
+		argument_list.foreach ((arg) => {
 			arg.get_used_variables (collection);
-		}
+			return true;
+		});
 
-		foreach (MemberInitializer init in object_initializer) {
+		object_initializer.foreach ((init) => {
 			init.get_used_variables (collection);
-		}
+			return true;
+		});
 	}
 }

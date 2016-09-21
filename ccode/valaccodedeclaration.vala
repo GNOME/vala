@@ -48,20 +48,18 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	
 	public override void write (CCodeWriter writer) {
 		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.INTERNAL | CCodeModifiers.EXTERN)) == 0) {
-			foreach (CCodeDeclarator decl in declarators) {
+			declarators.foreach ((decl) => {
 				decl.write_initialization (writer);
-			}
+				return true;
+			});
 		}
 	}
 
 	private bool has_initializer () {
-		foreach (CCodeDeclarator decl in declarators) {
-			var var_decl = decl as CCodeVariableDeclarator;
-			if (var_decl != null && var_decl.initializer == null) {
-				return false;
-			}
-		}
-		return true;
+		return declarators.foreach ((decl) => {
+			unowned CCodeVariableDeclarator var_decl = decl as CCodeVariableDeclarator;
+			return !(var_decl != null && var_decl.initializer == null);
+		});
 	}
 
 	public override void write_declaration (CCodeWriter writer) {
@@ -87,14 +85,15 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 			writer.write_string (" ");
 
 			bool first = true;
-			foreach (CCodeDeclarator decl in declarators) {
+			declarators.foreach ((decl) => {
 				if (!first) {
 					writer.write_string (", ");
 				} else {
 					first = false;
 				}
 				decl.write (writer);
-			}
+				return true;
+			});
 
 			writer.write_string (";");
 			writer.write_newline ();
@@ -112,14 +111,15 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 		writer.write_string (" ");
 	
 		bool first = true;
-		foreach (CCodeDeclarator decl in declarators) {
+		declarators.foreach ((decl) => {
 			if (!first) {
 				writer.write_string (", ");
 			} else {
 				first = false;
 			}
 			decl.write_declaration (writer);
-		}
+			return true;
+		});
 
 		if (CCodeModifiers.DEPRECATED in modifiers) {
 			writer.write_string (" G_GNUC_DEPRECATED");

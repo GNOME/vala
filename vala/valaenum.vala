@@ -139,17 +139,20 @@ public class Vala.Enum : TypeSymbol {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (EnumValue value in values) {
+		values.foreach ((value) => {
 			value.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Method m in methods) {
+		methods.foreach ((m) => {
 			m.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Constant c in constants) {
+		constants.foreach ((c) => {
 			c.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override bool is_reference_type () {
@@ -177,17 +180,20 @@ public class Vala.Enum : TypeSymbol {
 			return false;
 		}
 
-		foreach (EnumValue value in values) {
+		values.foreach ((value) => {
 			value.check (context);
-		}
+			return true;
+		});
 
-		foreach (Method m in methods) {
+		methods.foreach ((m) => {
 			m.check (context);
-		}
+			return true;
+		});
 
-		foreach (Constant c in constants) {
+		constants.foreach ((c) => {
 			c.check (context);
-		}
+			return true;
+		});
 
 		context.analyzer.current_source_file = old_source_file;
 		context.analyzer.current_symbol = old_symbol;

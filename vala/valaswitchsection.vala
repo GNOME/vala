@@ -62,13 +62,9 @@ public class Vala.SwitchSection : Block {
 	}
 	
 	public bool has_default_label () {
-		foreach (SwitchLabel label in labels) {
-			if (label.expression == null) {
-				return true;
-			}
-		}
-		
-		return false;
+		return !labels.foreach ((label) => {
+			return label.expression != null;
+		});
 	}
 	
 	public override void accept (CodeVisitor visitor) {
@@ -76,13 +72,15 @@ public class Vala.SwitchSection : Block {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (SwitchLabel label in labels) {
+		labels.foreach ((label) => {
 			label.accept (visitor);
-		}
+			return true;
+		});
 
-		foreach (Statement st in get_statements ()) {
+		get_statements ().foreach ((st) => {
 			st.accept (visitor);
-		}
+			return true;
+		});
 	}
 
 	public override bool check (CodeContext context) {
@@ -92,9 +90,10 @@ public class Vala.SwitchSection : Block {
 
 		checked = true;
 
-		foreach (SwitchLabel label in get_labels ()) {
+		get_labels ().foreach ((label) => {
 			label.check (context);
-		}
+			return true;
+		});
 
 		owner = context.analyzer.current_symbol.scope;
 
@@ -103,18 +102,21 @@ public class Vala.SwitchSection : Block {
 		context.analyzer.current_symbol = this;
 		context.analyzer.insert_block = this;
 
-		foreach (Statement st in get_statements ()) {
+		get_statements ().foreach ((st) => {
 			st.check (context);
-		}
+			return true;
+		});
 
-		foreach (LocalVariable local in get_local_variables ()) {
+		get_local_variables ().foreach ((local) => {
 			local.active = false;
-		}
+			return true;
+		});
 
 		// use get_statements () instead of statement_list to not miss errors within StatementList objects
-		foreach (Statement stmt in get_statements ()) {
+		get_statements ().foreach ((stmt) => {
 			add_error_types (stmt.get_error_types ());
-		}
+			return true;
+		});
 
 		context.analyzer.current_symbol = old_symbol;
 		context.analyzer.insert_block = old_insert_block;
@@ -123,9 +125,10 @@ public class Vala.SwitchSection : Block {
 	}
 
 	public override void emit (CodeGenerator codegen) {
-		foreach (SwitchLabel label in labels) {
+		labels.foreach ((label) => {
 			label.emit (codegen);
-		}
+			return true;
+		});
 
 		base.emit (codegen);
 	}

@@ -68,11 +68,12 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 	void generate_proxy_interface_init (Interface main_iface, Interface iface) {
 		// also generate proxy for prerequisites
-		foreach (var prereq in iface.get_prerequisites ()) {
+		iface.get_prerequisites ().foreach ((prereq) => {
 			if (prereq.data_type is Interface) {
 				generate_proxy_interface_init (main_iface, (Interface) prereq.data_type);
 			}
-		}
+			return true;
+		});
 
 		string lower_cname = get_ccode_lower_case_prefix (main_iface) + "proxy";
 
@@ -81,9 +82,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		push_function (proxy_iface_init);
 
-		foreach (Method m in iface.get_methods ()) {
+		iface.get_methods ().foreach ((m) => {
 			if (!m.is_abstract) {
-				continue;
+				return true;
 			}
 
 			var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), get_ccode_vfunc_name (m));
@@ -94,11 +95,12 @@ public class Vala.GDBusClientModule : GDBusModule {
 				vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), get_ccode_finish_vfunc_name (m));
 				ccode.add_assignment (vfunc_entry, new CCodeIdentifier (generate_finish_dbus_proxy_method (main_iface, iface, m)));
 			}
-		}
+			return true;
+		});
 
-		foreach (Property prop in iface.get_properties ()) {
+		iface.get_properties ().foreach ((prop) => {
 			if (!prop.is_abstract) {
-				continue;
+				return true;
 			}
 
 			if (prop.get_accessor != null) {
@@ -109,7 +111,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "set_" + prop.name);
 				ccode.add_assignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_set (main_iface, iface, prop)));
 			}
-		}
+			return true;
+		});
 
 		proxy_iface_init.modifiers = CCodeModifiers.STATIC;
 		pop_function ();
@@ -121,11 +124,12 @@ public class Vala.GDBusClientModule : GDBusModule {
 		string result = "";
 
 		// also implement prerequisites
-		foreach (var prereq in iface.get_prerequisites ()) {
+		iface.get_prerequisites ().foreach ((prereq) => {
 			if (prereq.data_type is Interface) {
 				result += implement_interface (define_type, main_iface, (Interface) prereq.data_type);
 			}
-		}
+			return true;
+		});
 
 		string interface_macro;
 
@@ -456,7 +460,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		ccall.add_argument (new CCodeIdentifier ("self"));
 		ccall.add_argument (get_signal_canonical_constant (sig));
 
-		foreach (Parameter param in sig.get_parameters ()) {
+		sig.get_parameters ().foreach ((param) => {
 			var param_name = get_variable_cname (param.name);
 			var owned_type = param.variable_type.copy ();
 			owned_type.value_owned = true;
@@ -482,11 +486,12 @@ public class Vala.GDBusClientModule : GDBusModule {
 			}
 
 			read_expression (param.variable_type, new CCodeIdentifier ("_arguments_iter"), new CCodeIdentifier (param_name), param);
-		}
+			return true;
+		});
 
 		ccode.add_expression (ccall);
 
-		foreach (Parameter param in sig.get_parameters ()) {
+		sig.get_parameters ().foreach ((param) => {
 			var owned_type = param.variable_type.copy ();
 			owned_type.value_owned = true;
 
@@ -495,7 +500,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 				var local = new LocalVariable (owned_type, param.name);
 				ccode.add_expression (destroy_local (local));
 			}
-		}
+			return true;
+		});
 
 		pop_function ();
 
@@ -520,9 +526,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		bool firstif = true;
 
-		foreach (Signal sig in sym.get_signals ()) {
+		sym.get_signals ().foreach ((sig) => {
 			if (sig.access != SymbolAccessibility.PUBLIC) {
-				continue;
+				return true;
 			}
 
 			cfile.add_include ("string.h");
@@ -544,7 +550,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 			ccall.add_argument (new CCodeIdentifier ("parameters"));
 
 			ccode.add_expression (ccall);
-		}
+			return true;
+		});
 		if (!firstif) {
 			ccode.close ();
 		}
@@ -592,12 +599,13 @@ public class Vala.GDBusClientModule : GDBusModule {
 			}
 
 			// register errors
-			foreach (var error_type in m.get_error_types ()) {
+			m.get_error_types ().foreach ((error_type) => {
 				var errtype = (ErrorType) error_type;
 				if (errtype.error_domain != null) {
 					ccode.add_expression (new CCodeIdentifier (get_ccode_upper_case_name (errtype.error_domain)));
 				}
-			}
+				return true;
+			});
 
 			// build D-Bus message
 
@@ -628,7 +636,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 			CCodeExpression cancellable = new CCodeConstant ("NULL");
 
-			foreach (Parameter param in m.get_parameters ()) {
+			m.get_parameters ().foreach ((param) => {
 				if (param.direction == ParameterDirection.IN) {
 					CCodeExpression expr = new CCodeIdentifier (get_variable_cname (param.name));
 					if (param.variable_type.is_real_struct_type ()) {
@@ -637,17 +645,18 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 					if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
 						cancellable = expr;
-						continue;
+						return true;
 					}
 
 					if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
 						// ignore BusName sender parameters
-						continue;
+						return true;
 					}
 
 					send_dbus_value (param.variable_type, new CCodeIdentifier ("_arguments_builder"), expr, param);
 				}
-			}
+				return true;
+			});
 
 			var builder_end = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_end"));
 			builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_arguments_builder")));
@@ -791,11 +800,12 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccode.add_declaration ("gint", new CCodeVariableDeclarator ("_fd"));
 			}
 
-			foreach (Parameter param in m.get_parameters ()) {
+			m.get_parameters ().foreach ((param) => {
 				if (param.direction == ParameterDirection.OUT) {
 					has_result = true;
 				}
-			}
+				return true;
+			});
 
 			if (has_result) {
 				ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_reply"));
@@ -810,7 +820,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				iter_init.add_argument (new CCodeIdentifier ("_reply"));
 				ccode.add_expression (iter_init);
 
-				foreach (Parameter param in m.get_parameters ()) {
+				m.get_parameters ().foreach ((param) => {
 					if (param.direction == ParameterDirection.OUT) {
 						ccode.add_declaration (get_ccode_name (param.variable_type), new CCodeVariableDeclarator.zero ("_vala_%s".printf (param.name), default_value_for_type (param.variable_type, true)));
 
@@ -845,7 +855,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 							ccode.close ();
 						}
 					}
-				}
+					return true;
+				});
 
 				if (!(m.return_type is VoidType)) {
 					if (m.return_type.is_real_non_null_struct_type ()) {
