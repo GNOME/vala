@@ -674,7 +674,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		if (array_type != null) {
 			if (array_type.fixed_length) {
 				result.array_length_cvalues = null;
-				result.append_array_length_cvalue (new CCodeConstant (array_type.length.to_string ()));
+				result.append_array_length_cvalue (get_ccodenode (array_type.length));
 				result.lvalue = false;
 			} else if (get_ccode_array_null_terminated (variable)) {
 				requires_array_length = true;
