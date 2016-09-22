@@ -3959,7 +3959,7 @@ namespace GLib {
 		public static string vprintf_escaped (string format, va_list args);
 		[Version (since = "2.16")]
 		[CCode (sentinel = "G_MARKUP_COLLECT_INVALID")]
-		public static bool collect_attributes (string element_name, string[] attribute_names, string[] attribute_values, ...) throws MarkupError;
+		public static bool collect_attributes (string element_name, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_names, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_values, ...) throws MarkupError;
 	}
 
 	/* Key-value file parser */
