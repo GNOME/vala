@@ -3486,7 +3486,7 @@ namespace GLib {
 		[NoWrapper]
 		public virtual bool to_tokens (GLib.GenericArray<string> tokens, out int out_version);
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_initable_get_type ()")]
 	[Version (since = "2.22")]
 	public interface Initable : GLib.Object {
 		public abstract bool init (GLib.Cancellable? cancellable = null) throws GLib.Error;

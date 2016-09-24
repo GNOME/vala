@@ -189,10 +189,6 @@ namespace GLib {
 		public virtual GLib.Icon? from_tokens (string[] tokens, int version) throws GLib.Error;
 	}
 
-	public interface Initable : GLib.Object {
-		public static GLib.Object @new (GLib.Type object_type, GLib.Cancellable? cancellable = null, ...) throws GLib.Error;
-	}
-
 	[Flags]
 	public enum ConverterFlags {
 		[Version (deprecated_since = "vala-0.16", replacement = "ConverterFlags.NONE")]
