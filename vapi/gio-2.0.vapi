@@ -613,11 +613,11 @@ namespace GLib {
 		public signal bool allow_mechanism (string mechanism);
 		public virtual signal bool authorize_authenticated_peer (GLib.IOStream stream, GLib.Credentials? credentials);
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_connection_get_type ()")]
 	[Version (since = "2.26")]
 	public class DBusConnection : GLib.Object, GLib.AsyncInitable, GLib.Initable, GLib.AsyncInitable, GLib.Initable {
-		[CCode (has_construct_function = false)]
-		protected DBusConnection ();
+		[CCode (cname = "g_dbus_connection_new", has_construct_function = false)]
+		public async DBusConnection (GLib.IOStream stream, string? guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public uint add_filter (owned GLib.DBusMessageFilterFunction filter_function);
 		public async GLib.Variant call (string? bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.Variant call_sync (string? bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -634,6 +634,8 @@ namespace GLib {
 		public uint export_menu_model (string object_path, GLib.MenuModel menu) throws GLib.Error;
 		public async bool flush (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool flush_sync (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (cname = "g_dbus_connection_new_for_address", has_construct_function = false)]
+		public async DBusConnection.for_address (string address, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public DBusConnection.for_address_sync (string address, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.DBusCapabilityFlags get_capabilities ();
@@ -647,10 +649,6 @@ namespace GLib {
 		public unowned GLib.IOStream get_stream ();
 		public unowned string get_unique_name ();
 		public bool is_closed ();
-		[CCode (cname = "g_dbus_connection_new", finish_function = "g_dbus_connection_new_finish")]
-		public static async GLib.DBusConnection @new (GLib.IOStream stream, string guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (cname = "g_dbus_connection_new_for_address", finish_function = "g_dbus_connection_new_for_address_finish")]
-		public static async GLib.DBusConnection new_for_address (string address, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public uint register_object<T> (string object_path, T object) throws GLib.IOError;
 		[Version (since = "2.46")]
 		public uint register_object_with_closures (string object_path, GLib.DBusInterfaceInfo interface_info, GLib.Closure? method_call_closure, GLib.Closure? get_property_closure, GLib.Closure? set_property_closure) throws GLib.Error;
@@ -867,19 +865,17 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_object_manager_client_get_type ()")]
 	[Version (since = "2.30")]
-	public class DBusObjectManagerClient : GLib.Object, GLib.AsyncInitable, GLib.DBusObjectManager, GLib.Initable, GLib.AsyncInitable, GLib.DBusObjectManager, GLib.Initable {
-		[CCode (has_construct_function = false)]
-		protected DBusObjectManagerClient ();
+	public class DBusObjectManagerClient : GLib.Object, GLib.AsyncInitable, GLib.DBusObjectManager, GLib.Initable {
+		[CCode (cname = "g_dbus_object_manager_client_new", has_construct_function = false)]
+		public async DBusObjectManagerClient (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc? get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (cname = "g_dbus_object_manager_client_new_for_bus", has_construct_function = false)]
+		public async DBusObjectManagerClient.for_bus (GLib.BusType bus_type, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc? get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "GDBusObjectManager*")]
 		public DBusObjectManagerClient.for_bus_sync (GLib.BusType bus_type, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc? get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public unowned GLib.DBusConnection get_connection ();
 		public GLib.DBusObjectManagerClientFlags get_flags ();
 		public unowned string get_name ();
 		public string? get_name_owner ();
-		[CCode (cname = "g_dbus_object_manager_client_new", finish_function = "g_dbus_object_manager_client_new_finish")]
-		public static async GLib.DBusObjectManagerClient @new (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (cname = "g_dbus_object_manager_client_new_for_bus", finish_function = "g_dbus_object_manager_client_new_for_bus_finish")]
-		public static async GLib.DBusObjectManagerClient new_for_bus (GLib.BusType bus_type, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "GDBusObjectManager*")]
 		public DBusObjectManagerClient.sync (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string? name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc? get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.BusType bus_type { construct; }
@@ -952,19 +948,19 @@ namespace GLib {
 		public GLib.DBusPropertyInfo @ref ();
 		public void unref ();
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_proxy_get_type ()")]
 	[Version (since = "2.26")]
-	public class DBusProxy : GLib.Object, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable {
-		[CCode (has_construct_function = false)]
-		protected DBusProxy ();
+	public class DBusProxy : GLib.Object, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable {
+		[CCode (cname = "g_dbus_proxy_new", has_construct_function = false)]
+		public async DBusProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string? name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GLib.Variant call (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.Variant call_sync (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.30")]
 		public async GLib.Variant call_with_unix_fd_list (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.UnixFDList? fd_list = null, GLib.Cancellable? cancellable = null, out GLib.UnixFDList? out_fd_list = null) throws GLib.Error;
 		[Version (since = "2.30")]
 		public GLib.Variant call_with_unix_fd_list_sync (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.UnixFDList? fd_list = null, out GLib.UnixFDList? out_fd_list = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (cname = "g_dbus_proxy_new_for_bus", finish_function = "g_dbus_proxy_new_for_bus_finish")]
-		public static async GLib.DBusProxy create_for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		[CCode (cname = "g_dbus_proxy_new_for_bus", has_construct_function = false)]
+		public async DBusProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public DBusProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.Variant get_cached_property (string property_name);
@@ -978,8 +974,6 @@ namespace GLib {
 		public unowned string get_name ();
 		public string get_name_owner ();
 		public unowned string get_object_path ();
-		[CCode (cname = "g_dbus_proxy_new", finish_function = "g_dbus_proxy_new_finish")]
-		public static async GLib.DBusProxy @new (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string? name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public void set_cached_property (string property_name, GLib.Variant? value);
 		public void set_default_timeout (int timeout_msec);
 		public void set_interface_info (GLib.DBusInterfaceInfo? info);

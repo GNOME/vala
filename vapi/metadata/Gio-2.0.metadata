@@ -290,22 +290,6 @@ proxy_resolver_get_default skip
 simple_async_report_gerror_in_idle parent="GLib.SimpleAsyncResult" name="report_gerror_in_idle"
 tls_* skip
 
-// Bug #659886: Async constuctors don't work
-DBusConnection
-  .new skip
-  .new_finish skip
-  .new_for_address skip
-  .new_for_address_finish skip
-DBusObjectManagerClient
-  .new skip
-  .new_finish skip
-  .new_for_bus skip
-  .new_for_bus_finish skip
-DBusProxy
-  .new skip
-  .new_finish skip
-  .new_for_bus skip
-  .new_for_bus_finish skip
 AsyncInitable
   .new* skip
   .init_async#virtual_method virtual

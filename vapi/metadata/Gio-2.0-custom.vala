@@ -31,11 +31,8 @@ namespace GLib {
 		public void set_callback ([CCode (type = "GSourceFunc")] owned CancellableSourceFunc func);
 	}
 
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_connection_get_type ()")]
 	public class DBusConnection : GLib.Object, GLib.AsyncInitable, GLib.Initable {
-		[CCode (cname = "g_dbus_connection_new", finish_function = "g_dbus_connection_new_finish")]
-		public static async GLib.DBusConnection @new (GLib.IOStream stream, string guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (cname = "g_dbus_connection_new_for_address", finish_function = "g_dbus_connection_new_for_address_finish")]
-		public static async GLib.DBusConnection @new_for_address (string address, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async T get_proxy<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError; 
 		public T get_proxy_sync<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public uint register_object<T> (string object_path, T object) throws GLib.IOError;
@@ -53,21 +50,6 @@ namespace GLib {
 		public DBusMessage.method_error_valist (GLib.DBusMessage method_call_message, string error_name, string error_message_format, va_list var_args); 
 		[CCode (has_construct_function = false)]
 		public DBusMessage.method_reply (GLib.DBusMessage method_call_message);
-	}
-
-	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_object_manager_client_get_type ()")]
-	public class DBusObjectManagerClient : GLib.Object, GLib.AsyncInitable, GLib.DBusObjectManager, GLib.Initable {
-		[CCode (cname = "g_dbus_object_manager_client_new", finish_function = "g_dbus_object_manager_client_new_finish")]
-		public static async GLib.DBusObjectManagerClient @new (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (cname = "g_dbus_object_manager_client_new_for_bus", finish_function = "g_dbus_object_manager_client_new_for_bus_finish")]
-		public static async GLib.DBusObjectManagerClient @new_for_bus (GLib.BusType bus_type, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
-	}
-
-	public class DBusProxy : GLib.Object, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable {
-		[CCode (cname = "g_dbus_proxy_new", finish_function = "g_dbus_proxy_new_finish")]
-		public static async GLib.DBusProxy @new (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string? name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		[CCode (cname = "g_dbus_proxy_new_for_bus", finish_function = "g_dbus_proxy_new_for_bus_finish")]
-		public static async GLib.DBusProxy create_for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
 	public class DataInputStream : GLib.BufferedInputStream {
