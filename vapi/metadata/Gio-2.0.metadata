@@ -99,6 +99,8 @@ DBusConnection
 DBusInterfaceSkeleton
   .get_vtable skip=false nullable unowned=false
 DBusMessage
+  .new_* skip=false symbol_type="constructor"
+  .new_method_error printf_format
   .get_header_fields type="uchar[]"
   .print.indent default=0
 DBus*Info
@@ -313,10 +315,6 @@ AsyncInitable
 // Bug #666797: No support for generic methods in GIR parser
 DBusConnection
   .register_object skip
-
-// Bug #: Construct methods not detected as such
-DBusMessage
-  .new_method_* skip
 
 // Bug #: Reparenting instance method breaks arguments
 Socket

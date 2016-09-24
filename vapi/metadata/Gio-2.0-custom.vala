@@ -42,19 +42,6 @@ namespace GLib {
 		public async GLib.DBusMessage send_message_with_reply (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, uint32 *out_serial = null, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
-	public class DBusMessage : GLib.Object {
-		[CCode (has_construct_function = false)]
-		public DBusMessage.method_call (string name, string path, string interface_, string method);
-		[PrintfFormat, CCode (has_construct_function = false)]
-		public DBusMessage.method_error (GLib.DBusMessage method_call_message, string error_name, string error_message_format, ...);
-		[CCode (has_construct_function = false)]
-		public DBusMessage.method_error_literal (GLib.DBusMessage method_call_message, string error_name, string error_message);
-		[CCode (has_construct_function = false)]
-		public DBusMessage.method_error_valist (GLib.DBusMessage method_call_message, string error_name, string error_message_format, va_list var_args); 
-		[CCode (has_construct_function = false)]
-		public DBusMessage.method_reply (GLib.DBusMessage method_call_message);
-	}
-
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_object_manager_client_get_type ()")]
 	public class DBusObjectManagerClient : GLib.Object, GLib.AsyncInitable, GLib.DBusObjectManager, GLib.Initable {
 		[CCode (cname = "g_dbus_object_manager_client_new", finish_function = "g_dbus_object_manager_client_new_finish")]
