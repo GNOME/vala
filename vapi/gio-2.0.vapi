@@ -737,7 +737,7 @@ namespace GLib {
 		[Version (since = "2.32")]
 		public static GLib.DBusMenuModel @get (GLib.DBusConnection connection, string bus_name, string object_path);
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_message_get_type ()")]
 	[Version (since = "2.26")]
 	public class DBusMessage : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -768,7 +768,7 @@ namespace GLib {
 		public unowned GLib.UnixFDList get_unix_fd_list ();
 		public void @lock ();
 		[CCode (has_construct_function = false)]
-		public DBusMessage.method_call (string name, string path, string interface_, string method);
+		public DBusMessage.method_call (string? name, string path, string? interface_, string method);
 		[CCode (has_construct_function = false)]
 		[PrintfFormat]
 		public DBusMessage.method_error (GLib.DBusMessage method_call_message, string error_name, string error_message_format, ...);

@@ -39,19 +39,6 @@ namespace GLib {
 		public async GLib.DBusMessage send_message_with_reply (GLib.DBusMessage message, GLib.DBusSendMessageFlags flags, int timeout_msec, uint32 *out_serial = null, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
-	public class DBusMessage : GLib.Object {
-		[CCode (has_construct_function = false)]
-		public DBusMessage.method_call (string name, string path, string interface_, string method);
-		[PrintfFormat, CCode (has_construct_function = false)]
-		public DBusMessage.method_error (GLib.DBusMessage method_call_message, string error_name, string error_message_format, ...);
-		[CCode (has_construct_function = false)]
-		public DBusMessage.method_error_literal (GLib.DBusMessage method_call_message, string error_name, string error_message);
-		[CCode (has_construct_function = false)]
-		public DBusMessage.method_error_valist (GLib.DBusMessage method_call_message, string error_name, string error_message_format, va_list var_args); 
-		[CCode (has_construct_function = false)]
-		public DBusMessage.method_reply (GLib.DBusMessage method_call_message);
-	}
-
 	public class DataInputStream : GLib.BufferedInputStream {
 		[CCode (cname = "g_data_input_stream_read_line_async", finish_function = "g_data_input_stream_read_line_finish_utf8")]
 		public async string? read_line_utf8_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t length) throws GLib.IOError, GLib.IOError;
