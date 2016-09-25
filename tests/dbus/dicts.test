@@ -32,6 +32,19 @@ class Test : Object {
 	}
 }
 
+namespace TestInterface {
+	[DBus (name = "org.vala.Test.Bar")]
+	public interface Bar : GLib.Object {
+		public abstract HashTable<string, Variant> foo () throws IOError;
+	}
+
+	public class Foo : GLib.DBusProxy, Bar {
+		public HashTable<string, Variant> foo () throws IOError {
+			return new HashTable<string, Variant> (str_hash, str_equal);
+		}
+	}
+}
+
 MainLoop main_loop;
 
 void client_exit (Pid pid, int status) {

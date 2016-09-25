@@ -25,6 +25,16 @@ struct StructWithNamedCreationMethod {
 	public int field;
 }
 
+
+delegate void Func ();
+
+struct StructWithFunc {
+	int foo;
+
+	public StructWithFunc (Func f) {
+	}
+}
+
 void test_in_parameter (SimpleStruct st) {
 	stdout.printf ("test_in_parameter: st.field = %d\n", st.field);
 }
@@ -42,6 +52,12 @@ void test_ref_parameter (ref SimpleStruct st) {
 void test_out_parameter (out SimpleStruct st) {
 	st = SimpleStruct ();
 	st.field = 3;
+}
+
+void test_struct_with_func () {
+	var foes = new StructWithFunc[] {
+		StructWithFunc (() => {})
+	};
 }
 
 void main () {

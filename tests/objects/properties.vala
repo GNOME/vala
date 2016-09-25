@@ -92,6 +92,14 @@ abstract class Maman.Foo : Object {
 	public abstract int abstract_base_property { get; set; }
 }
 
+enum FooEnum {
+	FOO
+}
+
+abstract class Maman.EnumDefault {
+	public abstract FooEnum bar { get; default = FooEnum.FOO; }
+}
+
 class Maman.Bar : Foo {
 	public int public_property { get; set; default = 3; }
 	public override int abstract_base_property { get; set; }

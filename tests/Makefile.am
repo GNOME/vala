@@ -80,6 +80,7 @@ TESTS = \
 	control-flow/nested-conditional.vala \
 	control-flow/switch.vala \
 	control-flow/sideeffects.vala \
+	control-flow/bug628336.vala \
 	control-flow/bug639482.vala \
 	control-flow/bug652549.vala \
 	control-flow/bug661985.vala \
@@ -203,6 +204,7 @@ TESTS = \
 	asynchronous/bug661961.vala \
 	asynchronous/bug742621.vala \
 	asynchronous/closures.vala \
+	asynchronous/yield.vala \
 	dbus/basic-types.test \
 	dbus/arrays.test \
 	dbus/structs.test \

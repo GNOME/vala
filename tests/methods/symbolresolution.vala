@@ -9,6 +9,14 @@ public class Class {
 		Foo func = () => { foo (); };
 		func ();
 	}
+
+
+	void active_scope () {
+		foreach (var bar in new string[] {}) {
+		}
+
+		var bar = "bar";
+	}
 }
 
 void main () {
