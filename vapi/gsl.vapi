@@ -2478,7 +2478,7 @@ namespace Gsl
 	}
 
 	[Compact]
-	[CCode (cname="gsl_integration_qaws_table", cheader_filaname="gsl/gsl_integration.h")]
+	[CCode (cname="gsl_integration_qaws_table", cheader_filename="gsl/gsl_integration.h")]
 	public class IntegrationQAWSTable
 	{
 		public double alpha;
@@ -2496,7 +2496,7 @@ namespace Gsl
 	}
 
 	[Compact]
-	[CCode (cname="gsl_integration_qawo_table", unref="gsl_integration_qawo_table_free", cheader_filename="gsl/gsl_integration.h")]
+	[CCode (cname="gsl_integration_qawo_table", free_function="gsl_integration_qawo_table_free", cheader_filename="gsl/gsl_integration.h")]
 	public class IntegrationQAWOTable
 	{
 		public size_t n;
@@ -3268,7 +3268,7 @@ namespace Gsl
 	public delegate double MonteFunc ([CCode (array_length = false)] double[] x_array, size_t dim, void* params);
 
 	[SimpleType]
-	[CCode (cname="gsl_monte_function", cheader_filanema="gsl/gsl_monte.h", has_type_id = false)]
+	[CCode (cname="gsl_monte_function", cheader_filename="gsl/gsl_monte.h", has_type_id = false)]
 	public struct MonteFunction
 	{
 		public MonteFunc f;
@@ -3568,7 +3568,7 @@ namespace Gsl
 	public delegate void InterpFree (void* t);
 
 	[Compact]
-	[CCode (cname="gsl_interp_accel", cheader_filname="gsl/gsl_interp.h")]
+	[CCode (cname="gsl_interp_accel", cheader_filename="gsl/gsl_interp.h")]
 	public class InterpAccel
 	{
 		public size_t cache;
