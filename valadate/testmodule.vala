@@ -20,7 +20,7 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-public errordomain Valadate.ModuleError {
+public errordomain Valadate.TestModuleError {
 	NOT_FOUND,
 	LOAD,
 	METHOD
@@ -29,30 +29,30 @@ public errordomain Valadate.ModuleError {
 /**
  * Represents a loadable module containing {@link Valadate.Test}s
  */
-public class Valadate.Module : Object {
+public class Valadate.TestModule : Object {
 
 	private string lib_path;
 	private GLib.Module module;
 
-	public Module (string libpath) {
+	public TestModule (string libpath) {
 		lib_path = libpath;
 	}
 
-	public void load_module () throws ModuleError {
+	public void load_module () throws TestModuleError {
 		if (!File.new_for_path (lib_path).query_exists ())
-			throw new ModuleError.NOT_FOUND ("Module: %s does not exist", lib_path);
+			throw new TestModuleError.NOT_FOUND ("Module: %s does not exist", lib_path);
 		
 		module = GLib.Module.open (lib_path, ModuleFlags.BIND_LOCAL);
 		if (module == null)
-			throw new ModuleError.LOAD (GLib.Module.error ());
+			throw new TestModuleError.LOAD (GLib.Module.error ());
 		module.make_resident ();
 	}
 
-	internal void* get_method (string method_name) throws ModuleError {
+	internal void* get_method (string method_name) throws TestModuleError {
 		void* function;
 		if (module.symbol (method_name, out function))
 			if (function != null)
 				return function;
-		throw new ModuleError.METHOD (GLib.Module.error ());
+		throw new TestModuleError.METHOD (GLib.Module.error ());
 	}
 }

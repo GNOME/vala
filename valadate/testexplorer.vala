@@ -27,7 +27,7 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 
 	private TestSuite current;
 	private Vala.CodeContext context;
-	private Module module;
+	private TestModule module;
 	private string binary;
 	private string? running;
 
@@ -50,10 +50,10 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 			throw new ConfigError.TESTPLAN ("Test Plan %s Not Found!", testplanfile);
 
 		try {
-			module = new Module (binary);
+			module = new TestModule (binary);
 			module.load_module ();
 			load_test_plan (testplanfile);
-		} catch (ModuleError e) {
+		} catch (TestModuleError e) {
 			throw new ConfigError.MODULE (e.message);
 		}
 	}
@@ -83,7 +83,7 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 				class.is_abstract != true)
 				current.add_test (visit_testsuite (class));
 
-		} catch (ModuleError e) {
+		} catch (TestModuleError e) {
 			error (e.message);
 		}
 		class.accept_children (this);
@@ -96,12 +96,12 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 		return false;
 	}
 
-	private unowned Constructor get_constructor (Vala.Class class) throws ModuleError {
+	private unowned Constructor get_constructor (Vala.Class class) throws TestModuleError {
 		var attr = new Vala.CCodeAttribute (class.default_construction_method);
 		return (Constructor)module.get_method (attr.name);
 	}
 
-	public TestCase visit_testcase (Vala.Class testclass) throws ModuleError {
+	public TestCase visit_testcase (Vala.Class testclass) throws TestModuleError {
 		unowned Constructor meth = get_constructor(testclass);
 		var current_test = meth () as TestCase;
 		current_test.name = testclass.name;
@@ -129,7 +129,7 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 		return current_test;
 	}
 
-	public TestSuite visit_testsuite (Vala.Class testclass) throws ModuleError {
+	public TestSuite visit_testsuite (Vala.Class testclass) throws TestModuleError {
 		unowned Constructor meth = get_constructor (testclass);
 		var current_test = meth () as TestSuite;
 		current_test.name = testclass.name;
