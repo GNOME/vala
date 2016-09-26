@@ -810,7 +810,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return null;
 	}
 
-	public static DataType? get_actual_type (DataType? derived_instance_type, MemberAccess? method_access, GenericType generic_type, CodeNode node_reference) {
+	public static DataType? get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, GenericType generic_type, CodeNode node_reference) {
 		DataType actual_type = null;
 		if (generic_type.type_parameter.parent_symbol is TypeSymbol) {
 			if (derived_instance_type != null) {
@@ -839,10 +839,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			// generic method
 			var m = (Method) generic_type.type_parameter.parent_symbol;
 
-			if (method_access == null) {
-				return generic_type;
-			}
-
 			int param_index = m.get_type_parameter_index (generic_type.type_parameter.name);
 			if (param_index == -1) {
 				Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (generic_type.type_parameter.name));
@@ -850,8 +846,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return null;
 			}
 
-			if (param_index < method_access.get_type_arguments ().size) {
-				actual_type = (DataType) method_access.get_type_arguments ().get (param_index);
+			if (method_type_arguments != null) {
+				if (param_index < method_type_arguments.size) {
+					actual_type = (DataType) method_type_arguments.get (param_index);
+				}
 			}
 		}
 
@@ -931,7 +929,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		init.initializer.formal_target_type = member_type;
-		init.initializer.target_type = init.initializer.formal_target_type.get_actual_type (type, null, init);;
+		init.initializer.target_type = init.initializer.formal_target_type.get_actual_type (type, null, init);
 
 		init.check (context);
 

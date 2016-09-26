@@ -441,21 +441,21 @@ public abstract class Vala.DataType : CodeNode {
 		return false;
 	}
 
-	public virtual DataType get_actual_type (DataType? derived_instance_type, MemberAccess? method_access, CodeNode node_reference) {
+	public virtual DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, CodeNode node_reference) {
 		DataType result = this.copy ();
 
-		if (derived_instance_type == null && method_access == null) {
+		if (derived_instance_type == null && method_type_arguments == null) {
 			return result;
 		}
 
 		if (result is GenericType) {
-			result = SemanticAnalyzer.get_actual_type (derived_instance_type, method_access, (GenericType) result, node_reference);
+			result = SemanticAnalyzer.get_actual_type (derived_instance_type, method_type_arguments, (GenericType) result, node_reference);
 			// don't try to resolve type arguments of returned actual type
 			// they can never be resolved and are not related to the instance type
 		} else if (result.type_argument_list != null) {
 			// recursely get actual types for type arguments
 			for (int i = 0; i < result.type_argument_list.size; i++) {
-				result.type_argument_list[i] = result.type_argument_list[i].get_actual_type (derived_instance_type, method_access, node_reference);
+				result.type_argument_list[i] = result.type_argument_list[i].get_actual_type (derived_instance_type, method_type_arguments, node_reference);
 			}
 		}
 

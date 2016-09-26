@@ -322,7 +322,25 @@ public class Vala.Method : Subroutine {
 			}
 		}
 
-		var actual_base_type = base_method.return_type.get_actual_type (object_type, null, this);
+		if (this.get_type_parameters ().size < base_method.get_type_parameters ().size) {
+			invalid_match = "too few type parameters";
+			return false;
+		} else if (this.get_type_parameters ().size > base_method.get_type_parameters ().size) {
+			invalid_match = "too many type parameters";
+			return false;
+		}
+
+		List<DataType> method_type_args = null;
+		if (this.get_type_parameters ().size > 0) {
+			method_type_args = new ArrayList<DataType> ();
+			foreach (TypeParameter type_parameter in this.get_type_parameters ()) {
+				var type_arg = new GenericType (type_parameter);
+				type_arg.value_owned = true;
+				method_type_args.add (type_arg);
+			}
+		}
+
+		var actual_base_type = base_method.return_type.get_actual_type (object_type, method_type_args, this);
 		if (!return_type.equals (actual_base_type)) {
 			invalid_match = "incompatible return type";
 			return false;
@@ -348,7 +366,7 @@ public class Vala.Method : Subroutine {
 					return false;
 				}
 
-				actual_base_type = base_param.variable_type.get_actual_type (object_type, null, this);
+				actual_base_type = base_param.variable_type.get_actual_type (object_type, method_type_args, this);
 				if (!actual_base_type.equals (param.variable_type)) {
 					invalid_match = "incompatible type of parameter %d".printf (param_index);
 					return false;
