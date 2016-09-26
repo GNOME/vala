@@ -25,5 +25,4 @@ public interface Valadate.TestFixture : Object {
 	public abstract void set_up ();
 
 	public abstract void tear_down ();
-
 }

@@ -42,95 +42,96 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 	public string name { get; set; }
 
 	/**
-	 * The public constructor takes an optional string parameter for the
-	 * TestCase's name
-	 */
-	public TestCase(string? name = null) {
-		this.name = name ?? this.get_type().name();
-	}
-
-	/**
 	 * Returns the number of {@link Valadate.Test}s that will be run by this TestCase
 	 */
 	public int count {
 		get {
 			int testcount = 0;
-			_tests.foreach((t) => {
+			tests.foreach ((t) => {
 				testcount += t.count;
 			});
 			return testcount;
 		}
 	}
 
-	public string bug_base {get;set;}
-	
+	public string bug_base { get; set; }
 
-	private List<Test> _tests = new List<Test>();
+	private List<Test> tests = new List<Test>();
 
-	public void add_test(string testname, owned TestMethod test) {
-		var adaptor = new TestAdaptor (testname, (owned)test, this);
-		_tests.append(adaptor);
+	/**
+	 * The public constructor takes an optional string parameter for the
+	 * TestCase's name
+	 */
+	public TestCase (string? name = null) {
+		Object (name : name);
 	}
 
-	
-	public virtual void run(TestResult result) { }
-
-	public Test get_test(int index) {
-
-		return _tests.nth_data(index);
-
+	construct {
+		if (name == null)
+			name = get_type ().name ();
 	}
 
-	public void bug(string reference)
-		requires(bug_base != null)
+	public void add_test (string testname, owned TestMethod test) {
+		var adaptor = new TestAdaptor (testname, (owned) test, this);
+		tests.append (adaptor);
+	}
+
+	public Test get_test (int index) {
+		return tests.nth_data (index);
+	}
+
+	public void bug (string reference)
+		requires (bug_base != null)
 	{
-		stdout.printf("MSG: Bug Reference: %s%s",bug_base, reference);
-		stdout.flush();
+		stdout.printf ("MSG Bug Reference: %s%s", bug_base, reference);
+		stdout.flush ();
 	}
 
-	public void skip(string message) {
-		stderr.printf("SKIP %s", message);
-		stdout.flush();
+	public void skip (string message) {
+		stderr.printf ("SKIP %s", message);
+		stdout.flush ();
 	}
 
-	public void fail(string? message = null) {
-		error("FAIL %s", message ?? "");
+	public void fail (string? message = null) {
+		error ("FAIL %s", message ?? "");
 	}
 
-	public virtual void set_up() {}
-
-	public virtual void tear_down() {}
-
-
-	private class TestAdaptor : Object, Test {
-
-		private TestMethod test;
-		private unowned TestCase testcase;
-
-		public string name {get;set;}
-
-		public int count {
-			get {
-				return 1;
-			}
-		}
-		
-		public Test get_test(int index) {
-			return this;
-		}
-		
-		public TestAdaptor(string name, owned TestMethod test, TestCase testcase) {
-			this.test = (owned)test;
-			this.name = name;
-			this.testcase = testcase;
-		}
-
-		public void run(TestResult result) {
-			this.testcase.set_up();
-			this.test();
-			this.testcase.tear_down();
-		}
-
+	public virtual void run (TestResult result) {
 	}
 
+	public virtual void set_up() {
+	}
+
+	public virtual void tear_down() {
+	}
+}
+
+private class Valadate.TestAdaptor : Object, Test {
+
+	public string name { get; set; }
+
+	public int count {
+		get {
+			return 1;
+		}
+	}
+
+	private TestMethod test;
+	private unowned TestCase testcase;
+
+	public TestAdaptor (string name, owned TestMethod test, TestCase testcase) {
+		this.test = (owned) test;
+		this.name = name;
+		this.testcase = testcase;
+	}
+
+	public Test get_test (int index) {
+		return this;
+	}
+
+	public void run (TestResult result) {
+		this.testcase.set_up ();
+		this.test ();
+		this.testcase.tear_down ();
+	}
 }

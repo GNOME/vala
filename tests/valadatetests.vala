@@ -15,64 +15,50 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
- * 
+ *
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
- 
+
 public class Valadate.Tests.TestFixture : Valadate.TestCase {
-	
-	public void test_testcase() {
-		
+
+	public void test_testcase () {
 		bug_base = "http://bugzilla.gnome.org/";
-		
-		bug("555666");
-		
-		stdout.puts("This is a test of the system");
+		bug ("555666");
+		stdout.puts ("This is a test of the system");
 	}
 
-	public void test_testcase_1() {
-
+	public void test_testcase_1 () {
 		string key = "XDG_DATA_DIRS";
-		var val = Environment.get_variable(key);
-		message("%s = %s",key, val);
-		
-		foreach(var item in Environment.get_system_data_dirs())
-			message("%s",item);
-
+		var val = Environment.get_variable (key);
+		message ("%s = %s",key, val);
+		foreach (var item in Environment.get_system_data_dirs ())
+			message ("%s",item);
 	}
 
-	public void test_testcase_2() {
-		message(Valadate.get_current_test_path());
-		skip("No reason");
-		debug("This is a second test of the system");
+	public void test_testcase_2 () {
+		message (Valadate.get_current_test_path ());
+		skip ("No reason");
+		debug ("This is a second test of the system");
 	}
 
-	public void test_testcase_3() {
-		
-		//stdout.puts("Before");
-		//assert(false);
-		//fail("after");
-		
+	public void test_testcase_3 () {
+		//stdout.puts ("Before");
+		//assert (false);
+		//fail ("after");
+
 		void* nullisland = null;
-		
 		Object nullobj = nullisland as Object;
-		
-		//nullobj.get_type().name();
-		
+
+		//nullobj.get_type ().name ();
 	}
-	
 }
 
 public class Valadate.Tests.TestFixtureTwo : Valadate.TestCase {
 
-	public void test_testcase() {
-		
+	public void test_testcase () {
 		bug_base = "http://bugzilla.gnome.org/";
-		
-		bug("555999");
-		
-		stdout.puts("This is a test of the system");
+		bug ("555999");
+		stdout.puts ("This is a test of the system");
 	}
-
 }

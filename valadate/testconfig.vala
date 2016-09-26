@@ -19,10 +19,16 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
+
 namespace Valadate {
-	public static string? get_current_test_path() {
+	public static string? get_current_test_path () {
 		return TestConfig._runtest;
 	}
+}
+
+public errordomain Valadate.ConfigError {
+	MODULE,
+	TESTPLAN
 }
 
 public class Valadate.TestConfig : Object {
@@ -140,10 +146,4 @@ public class Valadate.TestConfig : Object {
 		var testexplorer = new TestExplorer(binary, root);
 		testexplorer.load();
 	}
-
-}
-
-public errordomain Valadate.ConfigError {
-	MODULE,
-	TESTPLAN
 }

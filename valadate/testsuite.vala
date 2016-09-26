@@ -22,8 +22,6 @@
 
 public class Valadate.TestSuite : Object, Test {
 
-	private List<Test> _tests = new List<Test>();
-	
 	/**
 	 * the name of the TestSuite
 	 */
@@ -35,7 +33,7 @@ public class Valadate.TestSuite : Object, Test {
 	 */
 	public int count {
 		get {
-			return (int)_tests.length();
+			return (int) _tests.length ();
 		}
 	}
 
@@ -43,36 +41,45 @@ public class Valadate.TestSuite : Object, Test {
 	 * Returns a {@link GLib.List} of {@link Valadate.Test}s that will be
 	 * run by this TestSuite
 	 */
-	public List<Test> tests {
+	public GLib.List<Test> tests {
 		get {
 			return _tests;
 		}
 	}
 
+	private GLib.List<Test> _tests = new GLib.List<Test> ();
+
 	/**
 	 * The public constructor takes an optional string parameter for the
 	 * TestSuite's name
 	 */
-	public TestSuite(string? name = null) {
-		this.name = name ?? this.get_type().name();
+	public TestSuite (string? name = null) {
+		Object (name : name);
+	}
+
+	construct {
+		if (name == null)
+			name = get_type ().name ();
 	}
 
 	/**
 	 * Adds a test to the suite.
 	 */
-	public void add_test(Test test) {
-		_tests.append(test);
+	public void add_test (Test test) {
+		_tests.append (test);
 	}
 
-	public void run(TestResult result) {
-		_tests.foreach((t) => { t.run(result); });
+	public void run (TestResult result) {
+		_tests.foreach ((t) => { t.run (result); });
 	}
 
-	public Test get_test(int index) {
+	public Test get_test (int index) {
 		return _tests.nth_data((uint)index);
 	}
 
-	public virtual void set_up() {}
-	public virtual void tear_down() {}
-	
+	public virtual void set_up () {
+	}
+
+	public virtual void tear_down () {
+	}
 }

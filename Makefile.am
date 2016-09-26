@@ -92,6 +92,7 @@ EXTRA_DIST = \
 	build-aux/gitlog-to-changelog \
 	build-aux/glib-tap.mk \
 	build-aux/tap-driver.sh \
+	build-aux/tap-test \
 	$(NULL)
 
 DISTCLEANFILES = version.h

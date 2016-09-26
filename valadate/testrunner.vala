@@ -26,18 +26,18 @@ public class Valadate.TestRunner : Object {
 	private Queue<DelegateWrapper> _pending_tests = new Queue<DelegateWrapper> ();
 
 	/* Change this to change the cap on the number of concurrent operations. */
-	private const uint _max_n_ongoing_tests = 15;
+	private static uint _max_n_ongoing_tests = GLib.get_num_processors ();
 
 	private class DelegateWrapper {
 		public SourceFunc cb;
 	}
 
 	private SubprocessLauncher launcher =
-		new SubprocessLauncher(GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_MERGE);
+		new SubprocessLauncher (GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_MERGE);
 
 	private string binary;
 	
-	public TestRunner(string binary) {
+	public TestRunner (string binary) {
 		this.binary = binary;
 		this.launcher.setenv("G_MESSAGES_DEBUG","all", true);
 		this.launcher.setenv("G_DEBUG","fatal-criticals fatal-warnings gc-friendly", true);
@@ -70,11 +70,11 @@ public class Valadate.TestRunner : Object {
 		}
 	}
 
-	public void run_test(Test test, TestResult result) {
-		test.run(result);
+	public void run_test (Test test, TestResult result) {
+		test.run (result);
 	}
 
-	public async void run(Test test, TestResult result) {
+	public async void run (Test test, TestResult result) {
 		
 		string command = "%s -r %s".printf(binary, test.name);
 		string[] args;
@@ -107,7 +107,7 @@ public class Valadate.TestRunner : Object {
 		}
 	}
 
-	public void process_buffer(Test test, TestResult result, string buffer, bool failed = false) {
+	public void process_buffer (Test test, TestResult result, string buffer, bool failed = false) {
 		string skip = null;
 		string[] message = {};
 		
@@ -127,7 +127,6 @@ public class Valadate.TestRunner : Object {
 	}
 
 	public static int main (string[] args) {
-		
 		var bin = args[0];
 		var config = new TestConfig();
 		int result = config.parse(args);

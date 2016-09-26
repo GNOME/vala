@@ -20,94 +20,92 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-internal class Vala.TestsFactory : Object {
+public class Vala.TestsFactory : Object {
 
-	internal static File currdir;
-	internal static File testdir;
-	internal static File buildir;
-	internal static File valac;
-	internal static File vapidir;
+	static File currdir;
+	static File testdir;
+	static File buildir;
+	static File valac;
+	static File vapidir;
 
 	class construct {
-		currdir = File.new_for_path(GLib.Environment.get_current_dir());
-		testdir = currdir.get_child(".tests");
-		buildir = currdir.get_parent();
+		currdir = File.new_for_path (GLib.Environment.get_current_dir());
+		testdir = currdir.get_child (".tests");
+		buildir = currdir.get_parent ();
 
-		var usevalac = Environment.get_variable("VALAC");
+		var usevalac = Environment.get_variable ("VALAC");
 		if (usevalac != null && File.new_for_path(usevalac).query_exists())
 			valac = File.new_for_path(usevalac);
 		else
 			valac = buildir.get_child("compiler").get_child("valac");
 
-		var usevapidir = Environment.get_variable("VAPIDIR");
-		if (usevapidir != null && File.new_for_path(usevapidir).query_exists())
-			vapidir = File.new_for_path(usevapidir);
+		var usevapidir = Environment.get_variable ("VAPIDIR");
+		if (usevapidir != null && File.new_for_path (usevapidir).query_exists())
+			vapidir = File.new_for_path (usevapidir);
 		else
-			vapidir = buildir.get_child("vapi");
+			vapidir = buildir.get_child ("vapi");
 		
 	}
 
 	private static TestsFactory instance;
+
+	public static unowned TestsFactory get_instance() {
+		if (instance == null)
+			instance = new TestsFactory ();
+		return instance;
+	}
+
 	public ValaCompiler compiler;
 
 	private Program[] programs = {};
 	private File[] tempfiles = {};
-	
-	public static TestsFactory get_instance() {
-		if (instance == null)
-			instance = new TestsFactory();
-		return instance;
+
+	private TestsFactory () {
+		compiler = new ValaCompiler (valac);
 	}
 
-	private TestsFactory() {
-		compiler = new ValaCompiler(valac);
+	public void cleanup () throws Error {
+		foreach (unowned File file in tempfiles)
+			if (file.query_exists ())
+				file.delete ();
+		tempfiles = {};
+
+		foreach (unowned Program prog in programs)
+			prog.cleanup ();
+		programs = {};
 	}
 
-	public void cleanup() throws Error {
-		foreach (var file in tempfiles)
-			if(file.query_exists())
-				file.delete();
-
-		foreach (var prog in programs)
-			prog.cleanup();
-	}
-
-	public Program get_test_program(File testfile) throws Error {
-		string testname = testfile.get_basename().substring(
-			0,testfile.get_basename().last_index_of("."));
+	public Program get_test_program (File testfile) throws Error {
+		string basename = testfile.get_basename ();
+		string testname = basename.substring (0, basename.last_index_of ("."));
 		
 		Program program = null;
 		
-		if(testfile.get_basename().has_suffix(".vala") || testfile.get_basename().has_suffix(".gs")) {
-			program = compiler.compile(testdir.get_child(testname), testfile, "--main main");
-		} else if(testfile.get_basename().has_suffix(".test")) {
-			var stream = new DataInputStream(testfile.read());
-			
-			string line = stream.read_line(null);
-			
+		if (basename.has_suffix (".vala") || basename.has_suffix (".gs")) {
+			program = compiler.compile (testdir.get_child (testname), testfile, "--main main");
+		} else if (basename.has_suffix (".test")) {
+			var stream = new DataInputStream (testfile.read ());
+			string line = stream.read_line (null);
 			string packages = "";
-			
-			if (line.has_prefix("Packages:")) {
-				packages = line.split(":")[1];
-				packages = string.joinv(" --pkg ", packages.split(" "));
-				line = stream.read_line(null);
+
+			if (line.has_prefix ("Packages:")) {
+				packages = line.split (":")[1];
+				packages = string.joinv (" --pkg ", packages.split (" "));
+				line = stream.read_line (null);
 			}
-			
+
 			switch (line) {
 				case "D-Bus":
-					program = new DBusTest(testname, packages, stream);
+					program = new DBusTest (testname, packages, stream);
 					break;
-
 				case "Invalid Code":
-					program = new InvalidCode(testname, packages, stream);
+					program = new InvalidCode (testname, packages, stream);
 					break;
-
 				case "GIR":
-					program = new GIRTestProgram(testname, packages, stream);
+					program = new GIRTestProgram (testname, packages, stream);
 					break;
-				
 				default:
-					program = new TestProgram(testdir.get_child(testname));
+					program = new TestProgram (testdir.get_child (testname));
 					break;
 			}
 		}
@@ -117,159 +115,156 @@ internal class Vala.TestsFactory : Object {
 
 	public abstract class Program : Object {
 
-		public delegate void CommandCallback(bool err, string buffer);
+		[CCode (has_target = false)]
+		public delegate void CommandCallback (bool err, string buffer);
 
-		public static SubprocessLauncher launcher;
+		static SubprocessLauncher launcher;
 
 		class construct {
-			launcher = new SubprocessLauncher(GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_MERGE);
-			launcher.set_cwd(testdir.get_path());
+			launcher = new SubprocessLauncher (GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_MERGE);
+			launcher.set_cwd (testdir.get_path ());
 		}
-		
-		public File program {get; private set;}
-		
-		public CommandCallback callback {get;set;}
-		
-		private File[] files = {};
-		
-		public Program(File program) {
-			this.program = program;
-			files += program;
-			callback = default_callback;
+
+		public File program { get; construct; }
+
+		public CommandCallback callback { get; set; default = default_callback; }
+
+		private File[] files;
+
+		public Program (File program) {
+			Object (program : program);
 		}
-	
-		public void add_file(File file) {
+
+		construct {
+			files = {};
+		}
+
+		public void add_file (File file) {
 			files += file;
 		}
-	
-		private void default_callback(bool err, string buffer) {
+
+		private static void default_callback (bool err, string buffer) {
 			if (err)
-				error(buffer);
+				error (buffer);
 			else
 				stdout.printf ("%s", buffer);
 		}
-		
-		public virtual void run(string? command = null) throws Error {
+
+		public virtual void run (string? command = null) throws Error {
 			string[] args;
-			Shell.parse_argv("%s %s".printf(program.get_path(), command ?? ""), out args);
+			Shell.parse_argv ("%s %s".printf (program.get_path (), command ?? ""), out args);
 			string buffer = null;
-			var process = launcher.spawnv(args);
-			process.communicate_utf8(null, null, out buffer, null);
+			var process = launcher.spawnv (args);
+			process.communicate_utf8 (null, null, out buffer, null);
 
 			try {
-				if(process.wait_check())
-					callback(false, buffer);
+				if (process.wait_check ())
+					callback (false, buffer);
 			} catch (Error e) {
-				callback(true, buffer);
+				callback (true, buffer);
 			}
 		}
-		
+
 		public virtual void cleanup() throws Error {
-			foreach(File file in files)
-				if(file.query_exists())
-					file.delete();
+			foreach (unowned File file in files)
+				if (file.query_exists ())
+					file.delete ();
 		}
 	}
-	
+
 	public class TestProgram : Program {
-		public TestProgram(File program) {
-			base(program);
+		public TestProgram (File program) {
+			Object (program : program);
 		}
 
-		public void add_file_from_stream(
-			File file,
-			DataInputStream stream,
-			string? start,
-			string? end,
-			string? header = null,
-			string? footer = null) throws Error {
-			
-				var newfile = file.create(FileCreateFlags.NONE);
-				var outstream = new DataOutputStream (newfile);
-				string line;
-				
-				if(header != null)
-					outstream.put_string(header + "\n");
-				
-				if(start != null)
-					do {} while ((line = stream.read_line (null)) != start);
+		construct {
+			add_file (program);
+		}
 
-				while ((line = stream.read_line (null)) != end)
-					outstream.put_string(line + "\n");
+		public void add_file_from_stream (File file, DataInputStream stream, string? start, string? end,
+			string? header = null, string? footer = null) throws Error {
+			var newfile = file.create (FileCreateFlags.NONE);
+			var outstream = new DataOutputStream (newfile);
+			string line;
 
-				if(footer != null)
-					outstream.put_string(footer);
-			
-				add_file(file);
+			if (header != null)
+				outstream.put_string (header + "\n");
+
+			if (start != null)
+				do {} while ((line = stream.read_line (null)) != start);
+
+			while ((line = stream.read_line (null)) != end)
+				outstream.put_string (line + "\n");
+
+			if (footer != null)
+				outstream.put_string (footer);
+
+			add_file (file);
 		}
 	}
 
 	public class DBusTest : TestProgram {
-		
 		private Program server;
 		private Program client;
-		
-		public DBusTest(string testname, string packages, DataInputStream stream) throws Error {
-			base(testdir.get_child(testname + ".server"));
+
+		public DBusTest (string testname, string packages, DataInputStream stream) throws Error {
+			Object (program : testdir.get_child (testname + ".server"));
+
 			var factory = TestsFactory.get_instance();
-			var clientfile = testdir.get_child(testname + ".client.vala");
-			var serverfile = testdir.get_child(testname + ".server.vala");
-			add_file_from_stream(clientfile, stream, "Program: client", "Program: server");
-			add_file_from_stream(serverfile, stream, null, null);
-			client = factory.compiler.compile(testdir.get_child(testname + ".client"), clientfile, packages);
-			server = factory.compiler.compile(testdir.get_child(testname + ".server"), serverfile, packages);
+			var clientfile = testdir.get_child (testname + ".client.vala");
+			var serverfile = testdir.get_child (testname + ".server.vala");
+			add_file_from_stream (clientfile, stream, "Program: client", "Program: server");
+			add_file_from_stream (serverfile, stream, null, null);
+			client = factory.compiler.compile (testdir.get_child (testname + ".client"), clientfile, packages);
+			server = factory.compiler.compile (testdir.get_child (testname + ".server"), serverfile, packages);
 		}
-		
-		public override void run(string? command = null) throws Error {
-			Bus.watch_name(
-				BusType.SESSION,
-				"org.example.Test",
-				GLib.BusNameWatcherFlags.NONE,
-				null,
-				(c,n) => {
-					this.server.run(command);
-				});
+
+		public override void run (string? command = null) throws Error {
+			//FIXME run client
+			Bus.watch_name (BusType.SESSION, "org.example.Test", GLib.BusNameWatcherFlags.NONE, null, (c,n) => {
+				this.server.run (command);
+			});
 		}
-		
-		public override void cleanup() throws Error {
-			server.cleanup();
-			client.cleanup();
-			base.cleanup();
+
+		public override void cleanup () throws Error {
+			server.cleanup ();
+			client.cleanup ();
+			base.cleanup ();
 		}
 	}
-	
+
 	public class InvalidCode : TestProgram {
-		
 		private File source;
-		private ValaCompiler compiler = new ValaCompiler(valac);
+		private ValaCompiler compiler;
 		private string packages;
 		private Program testprogam;
-		
-		public InvalidCode(string testname, string packages, DataInputStream stream) throws Error {
-			base(testdir.get_child(testname));
+
+		public InvalidCode (string testname, string packages, DataInputStream stream) throws Error {
+			Object (program : testdir.get_child (testname));
 			this.packages = packages;
 			source = testdir.get_child(testname + ".vala");
-			add_file_from_stream(source, stream, null, null);
+			add_file_from_stream (source, stream, null, null);
+			compiler = new ValaCompiler (valac);
 			compiler.callback = new_callback;
 		}
-		
-		private void new_callback(bool err, string buffer) {
+
+		private static void new_callback (bool err, string buffer) {
 			if (!err)
-				error(buffer);
+				error (buffer);
 			else
 				stdout.printf ("%s", buffer);
 		}
-		
-		public override void run(string? command = null) throws Error {
-			testprogam = compiler.compile(program, source, packages);
+
+		public override void run (string? command = null) throws Error {
+			testprogam = compiler.compile (program, source, packages);
 		}
-		
+
 		public override void cleanup() throws Error {
 			testprogam.cleanup();
 			base.cleanup();
 		}
 	}
-	
+
 	public class GIRTestProgram : TestProgram {
 		private const string GIRHEADER =
 		"""<?xml version="1.0"?>
@@ -293,51 +288,45 @@ internal class Vala.TestsFactory : Object {
 		namespace Test {""";
 
 		private string testname;
-		
 		private File vapifile;
-		
-		public GIRTestProgram(string testname, string packages, DataInputStream stream) throws Error {
-			base(testdir.get_child(testname + ".gir"));
+
+		public GIRTestProgram (string testname, string packages, DataInputStream stream) throws Error {
+			Object (program : testdir.get_child(testname + ".gir"));
 			this.testname = testname;
-			add_file_from_stream(program, stream, "Input:", "Output:", GIRHEADER, GIRFOOTER);
-			vapifile = testdir.get_child(testname + ".vapi.ref");
-			add_file_from_stream(vapifile, stream, null, null, VAPIHEADER.printf(testname), "\n}\n");
+			add_file_from_stream (program, stream, "Input:", "Output:", GIRHEADER, GIRFOOTER);
+			vapifile = testdir.get_child (testname + ".vapi.ref");
+			add_file_from_stream (vapifile, stream, null, null, VAPIHEADER.printf(testname), "\n}\n");
 		}
-		
-		public override void run(string? command = null) throws Error {
-			var vgen = new VapiGen();
-			var vapi = vgen.compile(testname, program);
-			add_file(vapi);
-			var diff = new Diff();
-			diff.run("-Bw %s %s".printf(vapi.get_path(), vapifile.get_path()));
+
+		public override void run (string? command = null) throws Error {
+			var vgen = new VapiGen ();
+			var vapi = vgen.compile (testname, program);
+			add_file (vapi);
+			var diff = new Diff ();
+			diff.run ("-Bw %s %s".printf (vapi.get_path (), vapifile.get_path ()));
 		}
 	}
-	
+
 	public class Diff : Program {
-
 		public Diff() {
-			base(File.new_for_path(Environment.find_program_in_path ("diff")));
+			Object (program : File.new_for_path(Environment.find_program_in_path ("diff")));
 		}
 	}
-	
-	public class VapiGen : Program {
 
-		public VapiGen() {
-			base(buildir.get_child("vapigen").get_child("vapigen"));
+	public class VapiGen : Program {
+		public VapiGen () {
+			Object (program : buildir.get_child ("vapigen").get_child ("vapigen"));
 		}
-		
-		public File compile(string testname, File girfile) throws Error {
-			string command = "--vapidir %s --library %s %s".printf(
-				vapidir.get_path(),
-				testname,
-				girfile.get_path());
-			run(command);
-			return testdir.get_child(testname + ".vapi");
+
+		public File compile (string testname, File girfile) throws Error {
+			string command = "--vapidir %s --library %s %s".printf (
+				vapidir.get_path (), testname, girfile.get_path ());
+			run (command);
+			return testdir.get_child (testname + ".vapi");
 		}
 	}
-	
+
 	public class ValaCompiler : Program {
-		
 		private const string VALA_FLAGS =
 			"""--save-temps --disable-warnings --pkg gio-2.0 
 			  -X -lm -X -g -X -O0 -X -pipe
@@ -349,17 +338,20 @@ internal class Vala.TestsFactory : Object {
 			  -X -Wformat -X -Werror=format-security -X -Werror=format-nonliteral
 			  -X -Werror=redundant-decls""";
 
-		public ValaCompiler(File compiler) {
-			base(compiler);
+		public ValaCompiler (File compiler) {
+			Object (program : compiler);
 		}
-		
-		public Program compile(File binary, File sourcefile, string? parameters = null) throws Error {
-			string command = "--vapidir %s %s %s -o %s %s".printf(
-				vapidir.get_path(), VALA_FLAGS, parameters ?? "", binary.get_path(), sourcefile.get_path());
-			run(command);
-			var prog = new TestProgram(binary);
-			prog.add_file(binary.get_parent().get_child(binary.get_basename() + ".c"));
+
+		public Program compile (File binary, File sourcefile, string? parameters = null) throws Error {
+			if (binary.query_exists ())
+				throw new IOError.EXISTS ("binary `%s' already exists", binary.get_path ());
+
+			string command = "--vapidir %s %s %s -o %s %s".printf (
+				vapidir.get_path (), VALA_FLAGS, parameters ?? "", binary.get_path (), sourcefile.get_path ());
+			run (command);
+			var prog = new TestProgram (binary);
+			prog.add_file (binary.get_parent().get_child (binary.get_basename () + ".c"));
 			return prog;
-		}	
+		}
 	}
 }
