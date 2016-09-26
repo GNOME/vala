@@ -86,6 +86,7 @@ valactests@PACKAGE_SUFFIX@_CFLAGS = \
 CLEANFILES += \
 	*.gir \
 	*.stamp \
+	$(valadatetests_SOURCES:.vala=.c) \
 	$(valactests@PACKAGE_SUFFIX@_SOURCES:.vala=.c) \
 	*.vapi \
 	rm -R .tests \
