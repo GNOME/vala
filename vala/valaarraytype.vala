@@ -258,15 +258,15 @@ public class Vala.ArrayType : ReferenceType {
 		return element_type.check (context);
 	}
 
-	public override DataType get_actual_type (DataType? derived_instance_type, MemberAccess? method_access, CodeNode node_reference) {
+	public override DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, CodeNode node_reference) {
 		ArrayType result = (ArrayType) this.copy ();
 
-		if (derived_instance_type == null && method_access == null) {
+		if (derived_instance_type == null && method_type_arguments == null) {
 			return result;
 		}
 
 		if (element_type is GenericType || element_type.has_type_arguments ()) {
-			result.element_type = result.element_type.get_actual_type (derived_instance_type, method_access, node_reference);
+			result.element_type = result.element_type.get_actual_type (derived_instance_type, method_type_arguments, node_reference);
 		}
 
 		return result;

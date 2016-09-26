@@ -72,6 +72,7 @@ TESTS = \
 	methods/bug736235.vala \
 	methods/bug737222.vala \
 	methods/bug743877.vala \
+	methods/bug771964.vala \
 	methods/generics.vala \
 	control-flow/break.vala \
 	control-flow/expressions-conditional.vala \

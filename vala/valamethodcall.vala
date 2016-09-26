@@ -168,6 +168,8 @@ public class Vala.MethodCall : Expression {
 		// type of target object
 		DataType target_object_type = null;
 
+		List<DataType> method_type_args = null;
+
 		if (call.value_type is DelegateType) {
 			// delegate invocation, resolve generic types relative to delegate
 			target_object_type = call.value_type;
@@ -178,6 +180,8 @@ public class Vala.MethodCall : Expression {
 				Report.error (source_reference, "Access to instance member `%s' denied".printf (call.symbol_reference.get_full_name ()));
 				return false;
 			}
+
+			method_type_args = ma.get_type_arguments ();
 
 			if (ma.inner != null) {
 				target_object_type = ma.inner.value_type;
@@ -396,7 +400,7 @@ public class Vala.MethodCall : Expression {
 
 				/* store expected type for callback parameters */
 				arg.formal_target_type = param.variable_type;
-				arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, call as MemberAccess, this);
+				arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, method_type_args, this);
 
 				last_arg = arg;
 			}
@@ -467,7 +471,7 @@ public class Vala.MethodCall : Expression {
 		}
 
 		formal_value_type = ret_type.copy ();
-		value_type = formal_value_type.get_actual_type (target_object_type, call as MemberAccess, this);
+		value_type = formal_value_type.get_actual_type (target_object_type, method_type_args, this);
 
 		bool may_throw = false;
 
@@ -541,7 +545,7 @@ public class Vala.MethodCall : Expression {
 									break;
 								}
 
-								arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, call as MemberAccess, this);
+								arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, method_type_args, this);
 							}
 						}
 
@@ -569,12 +573,12 @@ public class Vala.MethodCall : Expression {
 						if (arg_it.next ()) {
 							Expression arg = arg_it.get ();
 
-							arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, call as MemberAccess, this);
+							arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, method_type_args, this);
 						}
 					}
 
 					// recalculate return value type with new information
-					value_type = formal_value_type.get_actual_type (target_object_type, call as MemberAccess, this);
+					value_type = formal_value_type.get_actual_type (target_object_type, method_type_args, this);
 				}
 			}
 		} else if (mtype is ObjectType) {
