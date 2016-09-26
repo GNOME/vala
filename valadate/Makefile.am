@@ -21,13 +21,13 @@ lib_LTLIBRARIES = \
 	$(NULL)
 
 libvaladate_la_VALASOURCES = \
-	assembly.vala \
 	module.vala \
 	test.vala \
 	testcase.vala \
 	testconfig.vala \
 	testexplorer.vala \
 	testfixture.vala \
+	testiterator.vala \
 	testresult.vala \
 	testrunner.vala \
 	testsuite.vala \

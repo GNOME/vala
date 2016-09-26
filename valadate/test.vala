@@ -47,33 +47,4 @@ public interface Valadate.Test : Object {
 	public virtual TestIterator iterator() {
 		return new TestIterator(this);
 	}
-	
-	public class TestIterator {
-		
-		private Test test;
-		private Test current;
-		private int index = 0;
-		
-		public TestIterator(Test test) {
-			this.test = test;
-		}
-		
-		public Test get() {
-			current = this.test.get_test(index);
-			index++;
-			return current;
-		}
-
-		public bool next() {
-			if (index >= this.test.count)
-				return false;
-			return true;
-		}
-
-		public int size {
-			get {
-				return this.test.count;
-			}
-		}
-	}
 }

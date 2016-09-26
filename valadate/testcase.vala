@@ -28,13 +28,13 @@ public errordomain Valadate.TestError {
 	NOT_FOUND
 }
 
-public abstract class Valadate.TestCase : Object, Test, TestFixture {
+/**
+ * The TestMethod delegate represents a {@link Valadate.Test} method
+ * that can be added to a TestCase and run
+ */
+public delegate void Valadate.TestMethod ();
 
-	/**
-	 * The TestMethod delegate represents a {@link Valadate.Test} method
-	 * that can be added to a TestCase and run
-	 */
-	public delegate void TestMethod ();
+public abstract class Valadate.TestCase : Object, Test, TestFixture {
 
 	/**
 	 * the name of the TestCase

@@ -15,10 +15,36 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
- * 
+ *
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
+/**
+ * The Test iterator
+ */
+public class Valadate.TestIterator {
 
-[CCode (gir_namespace = "Valadate", gir_version = "1.0")]
-namespace Valadate { }
+	public int size {
+		get {
+			return this.test.count;
+		}
+	}
+
+	private Test test;
+	private Test current;
+	private int index = 0;
+
+	public TestIterator (Test test) {
+		this.test = test;
+	}
+
+	public Test get () {
+		current = this.test.get_test (index);
+		index++;
+		return current;
+	}
+
+	public bool next () {
+		return (index < this.test.count);
+	}
+}
