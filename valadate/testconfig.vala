@@ -26,7 +26,7 @@ namespace Valadate {
 	}
 }
 
-public errordomain Valadate.ConfigError {
+public errordomain Valadate.TestConfigError {
 	MODULE,
 	TESTPLAN
 }
@@ -134,7 +134,7 @@ public class Valadate.TestConfig : Object {
 		
 		try {
 			load(binary);
-		} catch (ConfigError e) {
+		} catch (TestConfigError e) {
 			stdout.printf ("%s\n", e.message);
 			return 1;
 		}
@@ -142,7 +142,7 @@ public class Valadate.TestConfig : Object {
 		return -1;
 	}
 
-	private void load(string binary) throws ConfigError {
+	private void load(string binary) throws TestConfigError {
 		var testexplorer = new TestExplorer(binary, root);
 		testexplorer.load();
 	}

@@ -37,7 +37,7 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 		this.running = Valadate.get_current_test_path ();
 	}
 
-	public void load () throws ConfigError {
+	public void load () throws TestConfigError {
 		string testdir = Path.get_dirname (binary).replace (".libs", "");
 
 		string testplan = Path.get_basename (binary);
@@ -47,18 +47,18 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 		string testplanfile = testdir + GLib.Path.DIR_SEPARATOR_S + testplan + ".vapi";
 		
 		if (!FileUtils.test (testplanfile, FileTest.EXISTS))
-			throw new ConfigError.TESTPLAN ("Test Plan %s Not Found!", testplanfile);
+			throw new TestConfigError.TESTPLAN ("Test Plan %s Not Found!", testplanfile);
 
 		try {
 			module = new TestModule (binary);
 			module.load_module ();
 			load_test_plan (testplanfile);
 		} catch (TestModuleError e) {
-			throw new ConfigError.MODULE (e.message);
+			throw new TestConfigError.MODULE (e.message);
 		}
 	}
 
-	internal void load_test_plan (string path) throws ConfigError {
+	internal void load_test_plan (string path) throws TestConfigError {
 		setup_context ();
 		context.add_source_file (new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, path));
 		var parser = new Vala.Parser ();
