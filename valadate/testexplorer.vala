@@ -74,39 +74,39 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 		context.verbose_mode = false;
 	}
 
-	public override void visit_class (Vala.Class class) {
+	public override void visit_class (Vala.Class cl) {
 		try {
-			if (is_subtype_of (class, "Valadate.TestCase") &&
-				class.is_abstract != true)
-				current.add_test (visit_testcase (class));
-			else if (is_subtype_of (class, "Valadate.TestSuite") &&
-				class.is_abstract != true)
-				current.add_test (visit_testsuite (class));
+			if (is_subtype_of (cl, "Valadate.TestCase") &&
+				cl.is_abstract != true)
+				current.add_test (visit_testcase (cl));
+			else if (is_subtype_of (cl, "Valadate.TestSuite") &&
+				cl.is_abstract != true)
+				current.add_test (visit_testsuite (cl));
 
 		} catch (TestModuleError e) {
 			error (e.message);
 		}
-		class.accept_children (this);
+		cl.accept_children (this);
 	}
 
-	private bool is_subtype_of (Vala.Class class, string typename) {
-		foreach (var basetype in class.get_base_types ())
+	private bool is_subtype_of (Vala.Class cl, string typename) {
+		foreach (var basetype in cl.get_base_types ())
 			if (((Vala.UnresolvedType)basetype).to_qualified_string () == typename)
 				return true;
 		return false;
 	}
 
-	private unowned Constructor get_constructor (Vala.Class class) throws TestModuleError {
-		var attr = new Vala.CCodeAttribute (class.default_construction_method);
+	private unowned Constructor get_constructor (Vala.Class cl) throws TestModuleError {
+		var attr = new Vala.CCodeAttribute (cl.default_construction_method);
 		return (Constructor)module.get_method (attr.name);
 	}
 
-	public TestCase visit_testcase (Vala.Class testclass) throws TestModuleError {
-		unowned Constructor meth = get_constructor(testclass);
+	public TestCase visit_testcase (Vala.Class cl) throws TestModuleError {
+		unowned Constructor meth = get_constructor (cl);
 		var current_test = meth () as TestCase;
-		current_test.name = testclass.name;
+		current_test.name = cl.name;
 		
-		foreach (var method in testclass.get_methods ()) {
+		foreach (var method in cl.get_methods ()) {
 			if (method.name.has_prefix ("test_") &&
 				method.has_result != true &&
 				method.get_parameters ().size == 0) {
@@ -120,7 +120,7 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 				testmethod = (TestMethod)module.get_method (attr.name);
 
 				if (testmethod != null) {
-					current_test.add_test (method.name, ()=> {
+					current_test.add_test (method.name, () => {
 						testmethod (current_test);
 					});
 				}
@@ -129,10 +129,10 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 		return current_test;
 	}
 
-	public TestSuite visit_testsuite (Vala.Class testclass) throws TestModuleError {
-		unowned Constructor meth = get_constructor (testclass);
+	public TestSuite visit_testsuite (Vala.Class cl) throws TestModuleError {
+		unowned Constructor meth = get_constructor (cl);
 		var current_test = meth () as TestSuite;
-		current_test.name = testclass.name;
+		current_test.name = cl.name;
 		return current_test;
 	}
 
