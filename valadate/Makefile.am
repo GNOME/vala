@@ -32,9 +32,9 @@ libvaladate_la_VALAFLAGS = \
 	-g \
 	$(NULL)
 
-
 libvaladate_la_CFLAGS = \
 	$(GLIB_CFLAGS) \
+	$(GIO_CFLAGS) \
 	$(GMODULE_CFLAGS) \
 	$(NULL)
 
@@ -47,7 +47,6 @@ libvaladate_la_CPPFLAGS = \
 	-I$(top_srcdir)/ccode \
 	$(NULL)
 
-
 libvaladate_la_LDFLAGS = \
 	-export-dynamic \
 	-shared \
@@ -57,8 +56,8 @@ libvaladate_la_LIBADD = \
 	$(top_builddir)/codegen/libvala@PACKAGE_SUFFIX@.la \
 	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
+	$(GIO_LIBS) \
 	$(GMODULE_LIBS) \
-	-lgio-2.0 \
 	$(NULL)
 
 libvaladateincludedir = $(includedir)/vala@PACKAGE_SUFFIX@
@@ -75,7 +74,6 @@ CLEANFILES = \
 	valadate.h \
 	$(NULL)
 	
-
 MAINTAINERCLEANFILES = \
 	valadate.vapi \
 	valadate.h \
