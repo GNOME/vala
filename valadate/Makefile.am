@@ -26,7 +26,6 @@ libvaladate_la_VALASOURCES = \
 	testcase.vala \
 	testconfig.vala \
 	testexplorer.vala \
-	testfixture.vala \
 	testiterator.vala \
 	testresult.vala \
 	testrunner.vala \

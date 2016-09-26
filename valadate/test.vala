@@ -48,4 +48,10 @@ public interface Valadate.Test : Object {
 	public virtual TestIterator iterator() {
 		return new TestIterator (this);
 	}
+
+	public virtual void set_up () {
+	}
+
+	public virtual void tear_down () {
+	}
 }

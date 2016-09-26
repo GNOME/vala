@@ -34,7 +34,7 @@ public errordomain Valadate.TestError {
  */
 public delegate void Valadate.TestMethod ();
 
-public abstract class Valadate.TestCase : Object, Test, TestFixture {
+public abstract class Valadate.TestCase : Object, Test {
 
 	/**
 	 * the name of the TestCase
@@ -97,12 +97,6 @@ public abstract class Valadate.TestCase : Object, Test, TestFixture {
 	}
 
 	public virtual void run (TestResult result) {
-	}
-
-	public virtual void set_up() {
-	}
-
-	public virtual void tear_down() {
 	}
 }
 
