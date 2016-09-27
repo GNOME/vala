@@ -205,7 +205,7 @@ namespace Polkit {
 		ADMINISTRATOR_AUTHENTICATION_REQUIRED_RETAINED,
 		AUTHORIZED;
 		public static bool from_string (string string, Polkit.ImplicitAuthorization out_implicit_authorization);
-		public static unowned string to_string (Polkit.ImplicitAuthorization implicit_authorization);
+		public unowned string to_string ();
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", cprefix = "POLKIT_ERROR_")]
 	public errordomain Error {

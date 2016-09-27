@@ -8314,14 +8314,14 @@ namespace Clutter {
 		[Version (since = "1.12")]
 		public static Clutter.Matrix? alloc ();
 		[Version (since = "1.12")]
-		public static void free (Clutter.Matrix? matrix);
+		public void free ();
 		public static GLib.Type get_type ();
 		[Version (since = "1.12")]
-		public static unowned Clutter.Matrix? init_from_array (Clutter.Matrix matrix, [CCode (array_length = false)] float values[16]);
+		public unowned Clutter.Matrix? init_from_array ([CCode (array_length = false)] float values[16]);
 		[Version (since = "1.12")]
-		public static unowned Clutter.Matrix? init_from_matrix (Clutter.Matrix a, Clutter.Matrix b);
+		public unowned Clutter.Matrix? init_from_matrix (Clutter.Matrix b);
 		[Version (since = "1.12")]
-		public static unowned Clutter.Matrix? init_identity (Clutter.Matrix matrix);
+		public unowned Clutter.Matrix? init_identity ();
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_path_node_get_type ()")]
 	[Version (since = "1.0")]

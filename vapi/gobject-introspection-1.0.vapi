@@ -355,7 +355,7 @@ namespace GI {
 		ARG,
 		TYPE,
 		UNRESOLVED;
-		public static unowned string to_string (GI.InfoType type);
+		public unowned string to_string ();
 	}
 	[CCode (cheader_filename = "girepository.h", cprefix = "G_IREPOSITORY_LOAD_FLAG_", has_type_id = false)]
 	[Flags]
@@ -400,7 +400,7 @@ namespace GI {
 		GHASH,
 		ERROR,
 		UNICHAR;
-		public static unowned string to_string (GI.TypeTag type);
+		public unowned string to_string ();
 	}
 	[CCode (cheader_filename = "girepository.h", cprefix = "GI_VFUNC_", has_type_id = false)]
 	[Flags]

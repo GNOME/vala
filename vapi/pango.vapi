@@ -773,7 +773,7 @@ namespace Pango {
 		FOREGROUND_ALPHA,
 		BACKGROUND_ALPHA;
 		[Version (since = "1.22")]
-		public static unowned string? get_name (Pango.AttrType type);
+		public unowned string? get_name ();
 		public static Pango.AttrType register (string name);
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_BIDI_TYPE_", type_id = "pango_bidi_type_get_type ()")]
@@ -848,7 +848,7 @@ namespace Pango {
 		public static Pango.Gravity get_for_script (Pango.Script script, Pango.Gravity base_gravity, Pango.GravityHint hint);
 		[Version (since = "1.26")]
 		public static Pango.Gravity get_for_script_and_width (Pango.Script script, bool wide, Pango.Gravity base_gravity, Pango.GravityHint hint);
-		public static double to_rotation (Pango.Gravity gravity);
+		public double to_rotation ();
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_GRAVITY_HINT_", type_id = "pango_gravity_hint_get_type ()")]
 	[Version (since = "1.16")]
@@ -988,7 +988,7 @@ namespace Pango {
 		[Version (since = "1.4")]
 		public static Pango.Script for_unichar (unichar ch);
 		[Version (since = "1.4")]
-		public static Pango.Language? get_sample_language (Pango.Script script);
+		public Pango.Language? get_sample_language ();
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_STRETCH_", type_id = "pango_stretch_get_type ()")]
 	public enum Stretch {

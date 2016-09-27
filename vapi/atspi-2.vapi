@@ -703,7 +703,7 @@ namespace Atspi {
 		DESCRIPTION_VALUE,
 		FOOTNOTE,
 		LAST_DEFINED;
-		public static string get_name (Atspi.Role role);
+		public string get_name ();
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", cprefix = "ATSPI_STATE_", type_id = "atspi_state_type_get_type ()")]
 	public enum StateType {

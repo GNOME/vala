@@ -206,7 +206,7 @@ namespace Gst {
 		BRIGHTNESS,
 		SATURATION,
 		CONTRAST;
-		public static unowned string get_name (Gst.PlayerColorBalanceType type);
+		public unowned string get_name ();
 	}
 	[CCode (cheader_filename = "gst/player/player.h", cprefix = "GST_PLAYER_THUMBNAIL_", has_type_id = false)]
 	public enum PlayerSnapshotFormat {
@@ -224,12 +224,12 @@ namespace Gst {
 		BUFFERING,
 		PAUSED,
 		PLAYING;
-		public static unowned string get_name (Gst.PlayerState state);
+		public unowned string get_name ();
 	}
 	[CCode (cheader_filename = "gst/player/player.h", cprefix = "GST_PLAYER_ERROR_")]
 	public errordomain PlayerError {
 		FAILED;
-		public static unowned string get_name (Gst.PlayerError error);
+		public unowned string get_name ();
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gst/player/player.h", has_target = false)]
