@@ -1,0 +1,7 @@
+Invalid Code
+
+delegate void Foo<T,V> ();
+
+void main () {
+	Foo<int> f = null;
+}

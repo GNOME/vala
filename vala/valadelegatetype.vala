@@ -116,7 +116,28 @@ public class Vala.DelegateType : DataType {
 		if (is_called_once && !value_owned) {
 			Report.warning (source_reference, "delegates with scope=\"async\" must be owned");
 		}
-		return delegate_symbol.check (context);
+
+		if (!delegate_symbol.check (context)) {
+			return false;
+		}
+
+		var n_type_params = delegate_symbol.get_type_parameters ().size;
+		var n_type_args = get_type_arguments ().size;
+		if (n_type_args > 0 && n_type_args < n_type_params) {
+			Report.error (source_reference, "too few type arguments");
+			return false;
+		} else if (n_type_args > 0 && n_type_args > n_type_params) {
+			Report.error (source_reference, "too many type arguments");
+			return false;
+		}
+
+		foreach (DataType type in get_type_arguments ()) {
+			if (!type.check (context)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public override bool is_disposable () {
