@@ -35,7 +35,7 @@ namespace Gtkdoc.Config {
 	public static string deprecated_guards;
 	public static string ignore_decorators;
 
-	private static const GLib.OptionEntry[] options = {
+	private const GLib.OptionEntry[] options = {
 			{ "library", 'l', 0, OptionArg.FILENAME_ARRAY, ref library_filenames, "Shared library path", "FILENAME" },
 			{ "ignore-headers", 'x', 0, OptionArg.FILENAME_ARRAY, ref ignore_headers, "A list of header files to not scan", "FILES" },
 			{ "deprecated-guards", 'd', 0, OptionArg.STRING, ref deprecated_guards, "A |-separated list of symbols used as deprecation guards", "GUARDS" },
