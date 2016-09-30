@@ -188,13 +188,13 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 		comment.content.remove ((Paragraph) separator);
 	}
 
-	private Run content_copy (Gee.List<Inline>? content) {
+	private Run content_copy (Gee.List<ContentElement>? content) {
 		Run run = new Run (Run.Style.NONE);
 		run.parent = this;
 
 		if (content != null) {
-			foreach (Inline item in content) {
-				run.content.add ((Inline) item.copy (this));
+			foreach (ContentElement item in content) {
+				run.content.add (item.copy (this) as Inline);
 			}
 		}
 

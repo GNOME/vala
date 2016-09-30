@@ -27,7 +27,7 @@ public interface Valadoc.Content.Taglet : ContentElement {
 
 	public abstract Rule? get_parser_rule (Rule run_rule);
 
-	public virtual Gee.List<Inline>? get_inheritable_documentation () {
+	public virtual Gee.List<ContentElement>? get_inheritable_documentation () {
 		return null;
 	}
 
