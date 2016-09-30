@@ -31,6 +31,7 @@ TESTS = \
 	drivers/driver-0-30.vala \
 	drivers/driver-0-32.vala \
 	drivers/driver-0-34.vala \
+	drivers/driver-0-36.vala \
 	$(NULL)
 
 check-TESTS: $(TESTS)
