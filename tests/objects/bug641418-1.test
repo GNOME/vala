@@ -1,0 +1,11 @@
+Invalid Code
+
+interface Foo {
+	public abstract GenericArray<string> baz ();
+}
+
+class Bar : Object, Foo {
+	public GenericArray<int> baz () {
+		return null;
+	}
+}

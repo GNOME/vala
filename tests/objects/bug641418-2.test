@@ -1,0 +1,16 @@
+Invalid Code
+
+class Foo<K,V> {
+}
+
+class Bar {
+	public virtual Foo<K,V> f<K,V> () {
+		return null;
+	}
+}
+
+class Baz : Bar {
+	public override Foo<A,B> f<B,A> () {
+		return null;
+	}
+}

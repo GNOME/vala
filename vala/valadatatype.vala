@@ -208,6 +208,17 @@ public abstract class Vala.DataType : CodeNode {
 		if (type2.floating_reference != floating_reference) {
 			return false;
 		}
+
+		var type_args = get_type_arguments ();
+		var type2_args = type2.get_type_arguments ();
+		if (type2_args.size != type_args.size) {
+			return false;
+		}
+
+		for (int i = 0; i < type_args.size; i++) {
+			if (!type2_args[i].equals (type_args[i]))
+				return false;
+		}
 	
 		return true;
 	}
