@@ -9,3 +9,7 @@ init_with_args
   .argv unowned
   .entries array nullable default=null
   .translation_domain nullable default=null
+
+Playback
+  .audio_streams type="GLib.List<string>"
+  .subtitle_tracks type="GLib.List<string>"
