@@ -225,7 +225,7 @@ namespace ClutterGst {
 		[Version (since = "1.4")]
 		public int audio_stream { get; set; }
 		[Version (since = "1.4")]
-		public void* audio_streams { get; }
+		public GLib.List<string> audio_streams { get; }
 		public double buffer_fill { get; }
 		[NoAccessorMethod]
 		public bool can_seek { get; }
@@ -239,7 +239,7 @@ namespace ClutterGst {
 		[Version (since = "1.4")]
 		public int subtitle_track { get; set; }
 		[Version (since = "1.4")]
-		public void* subtitle_tracks { get; }
+		public GLib.List<string> subtitle_tracks { get; }
 		public string subtitle_uri { owned get; set; }
 		public string uri { owned get; set; }
 		[Version (since = "1.4")]
