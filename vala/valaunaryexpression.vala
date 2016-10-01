@@ -120,6 +120,10 @@ public class Vala.UnaryExpression : Expression {
 		return inner.is_pure ();
 	}
 
+	public override bool is_accessible (Symbol sym) {
+		return inner.is_accessible (sym);
+	}
+
 	bool is_numeric_type (DataType type) {
 		if (!(type.data_type is Struct)) {
 			return false;

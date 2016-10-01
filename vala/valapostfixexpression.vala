@@ -72,6 +72,10 @@ public class Vala.PostfixExpression : Expression {
 		return false;
 	}
 
+	public override bool is_accessible (Symbol sym) {
+		return inner.is_accessible (sym);
+	}
+
 	public override void get_defined_variables (Collection<Variable> collection) {
 		inner.get_defined_variables (collection);
 		var local = inner.symbol_reference as LocalVariable;

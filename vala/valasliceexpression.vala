@@ -98,6 +98,10 @@ public class Vala.SliceExpression : Expression {
 		return false;
 	}
 
+	public override bool is_accessible (Symbol sym) {
+		return container.is_accessible (sym) && start.is_accessible (sym) && stop.is_accessible (sym);
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;

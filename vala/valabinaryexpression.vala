@@ -141,6 +141,10 @@ public class Vala.BinaryExpression : Expression {
 		return left.is_non_null () && right.is_non_null ();
 	}
 
+	public override bool is_accessible (Symbol sym) {
+		return left.is_accessible (sym) && right.is_accessible (sym);
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;

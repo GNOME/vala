@@ -156,6 +156,10 @@ public class Vala.MemberAccess : Expression {
 		return (inner == null || inner.is_pure ()) && !(symbol_reference is Property);
 	}
 
+	public override bool is_accessible (Symbol sym) {
+		return (inner == null || inner.is_accessible (sym)) && symbol_reference.is_accessible (sym);
+	}
+
 	public override void replace_type (DataType old_type, DataType new_type) {
 		for (int i = 0; i < type_argument_list.size; i++) {
 			if (type_argument_list[i] == old_type) {

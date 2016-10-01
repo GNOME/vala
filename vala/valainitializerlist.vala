@@ -96,6 +96,16 @@ public class Vala.InitializerList : Expression {
 		return true;
 	}
 
+	public override bool is_accessible (Symbol sym) {
+		foreach (Expression initializer in initializers) {
+			if (!initializer.is_accessible (sym)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		for (int i = 0; i < initializers.size; i++) {
 			if (initializers[i] == old_node) {

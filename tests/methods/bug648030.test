@@ -1,0 +1,10 @@
+Invalid Code
+
+const int FOO = 1;
+
+public void foo (int bar = FOO) {
+}
+
+void main () {
+	foo ();
+}

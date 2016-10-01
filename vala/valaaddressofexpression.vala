@@ -72,6 +72,10 @@ public class Vala.AddressofExpression : Expression {
 		return inner.is_pure ();
 	}
 
+	public override bool is_accessible (Symbol sym) {
+		return inner.is_accessible (sym);
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;

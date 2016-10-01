@@ -97,6 +97,10 @@ public class Vala.Assignment : Expression {
 		return false;
 	}
 
+	public override bool is_accessible (Symbol sym) {
+		return left.is_accessible (sym) && right.is_accessible (sym);
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;

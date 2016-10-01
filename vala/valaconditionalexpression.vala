@@ -100,6 +100,10 @@ public class Vala.ConditionalExpression : Expression {
 		return condition.is_pure () && true_expression.is_pure () && false_expression.is_pure ();
 	}
 
+	public override bool is_accessible (Symbol sym) {
+		return condition.is_accessible (sym) && true_expression.is_accessible (sym) && false_expression.is_accessible (sym);
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;

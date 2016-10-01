@@ -139,6 +139,26 @@ public class Vala.ObjectCreationExpression : Expression {
 		return false;
 	}
 
+	public override bool is_accessible (Symbol sym) {
+		if (member_name != null && !member_name.is_accessible (sym)) {
+			return false;
+		}
+
+		foreach (var arg in argument_list) {
+			if (!arg.is_accessible (sym)) {
+				return false;
+			}
+		}
+
+		foreach (var init in object_initializer) {
+			if (!init.initializer.is_accessible (sym)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;

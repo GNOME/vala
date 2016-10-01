@@ -174,6 +174,8 @@ public class Vala.Parameter : Variable {
 				Report.error (initializer.source_reference, "Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), variable_type.to_string ()));
 			} else if (direction == ParameterDirection.REF) {
 				Report.error (source_reference, "default value not allowed for ref parameter");
+			} else if (!initializer.is_accessible (this)) {
+				Report.error (initializer.source_reference, "default value is less accessible than method `%s'".printf (parent_symbol.get_full_name ()));
 			}
 		}
 

@@ -78,6 +78,14 @@ public abstract class Vala.Expression : CodeNode {
 		return false;
 	}
 
+	/**
+	 * Check whether symbol_references in this expression are at least
+	 * as accessible as the specified symbol.
+	 */
+	public virtual bool is_accessible (Symbol sym) {
+		return true;
+	}
+
 	public Statement? parent_statement {
 		get {
 			var expr = parent_node as Expression;

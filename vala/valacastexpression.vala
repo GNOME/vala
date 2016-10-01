@@ -103,6 +103,10 @@ public class Vala.CastExpression : Expression {
 		return inner.is_pure ();
 	}
 
+	public override bool is_accessible (Symbol sym) {
+		return inner.is_accessible (sym);
+	}
+
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;

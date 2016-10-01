@@ -96,6 +96,16 @@ public class Vala.ElementAccess : Expression {
 		return container.is_pure ();
 	}
 
+	public override bool is_accessible (Symbol sym) {
+		foreach (Expression index in indices) {
+			if (!index.is_accessible (sym)) {
+				return false;
+			}
+		}
+
+		return container.is_accessible (sym);
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;

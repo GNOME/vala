@@ -130,6 +130,16 @@ public class Vala.MethodCall : Expression {
 		return false;
 	}
 
+	public override bool is_accessible (Symbol sym) {
+		foreach (var arg in argument_list) {
+			if (!arg.is_accessible (sym)) {
+				return false;
+			}
+		}
+
+		return call.is_accessible (sym);
+	}
+
 	bool is_chainup () {
 		if (!(call.symbol_reference is CreationMethod)) {
 			return false;
