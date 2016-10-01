@@ -82,11 +82,11 @@ namespace Rest {
 	[CCode (cheader_filename = "rest/rest-params.h")]
 	[Compact]
 	public class Params {
-		public void add (Rest.Param param);
+		public void add (owned Rest.Param param);
 		public bool are_strings ();
-		public GLib.HashTable<string,string> as_string_hash_table ();
+		public GLib.HashTable<weak string,weak string> as_string_hash_table ();
 		public void free ();
-		public Rest.Param @get (string name);
+		public unowned Rest.Param? @get (string name);
 		public void remove (string name);
 	}
 	[CCode (cheader_filename = "rest/rest-params.h")]
@@ -139,7 +139,7 @@ namespace Rest {
 		public void add_header (string header, string value);
 		public void add_headers (...);
 		public void add_param (string name, string value);
-		public void add_param_full (Rest.Param param);
+		public void add_param_full (owned Rest.Param param);
 		public void add_params (...);
 		public bool cancel ();
 		public bool continuous ([CCode (delegate_target_pos = 2.1)] Rest.ProxyCallContinuousCallback callback, GLib.Object weak_object) throws GLib.Error;
@@ -149,7 +149,7 @@ namespace Rest {
 		public unowned Rest.Params get_params ();
 		public unowned string get_payload ();
 		public int64 get_payload_length ();
-		public GLib.HashTable<weak void*,weak void*> get_response_headers ();
+		public GLib.HashTable<weak string,weak string> get_response_headers ();
 		public uint get_status_code ();
 		public unowned string get_status_message ();
 		public async bool invoke_async (GLib.Cancellable? cancellable) throws GLib.Error;

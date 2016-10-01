@@ -9,8 +9,9 @@ Proxy cheader_filename="rest/rest-proxy.h"
 ProxyCall cheader_filename="rest/rest-proxy-call.h"
 	.run.loop out=true default=null
 	.get_params skip=false
-	.get_response_headers skip=false
+	.get_response_headers skip=false type_arguments="unowned string,unowned string"
 	.add_headers skip=false
+	.add_param_full.param owned
 	.add_params skip=false
 	.continuous skip=false
 	.upload skip=false
@@ -22,7 +23,9 @@ ProxyError cheader_filename="rest/rest-proxy.h"
 ProxyCallError cheader_filename="rest/rest-proxy-call.h"
 Param cheader_filename="rest/rest-param.h"
 Params cheader_filename="rest/rest-params.h"
-	.as_string_hash_table skip=false type_arguments="string,string"
+	.add.param owned
+	.as_string_hash_table type_arguments="unowned string,unowned string"
+	.get unowned nullable
 ParamsIter cheader_filename="rest/rest-params.h"
 XmlNode cheader_filename="rest/rest-xml-node.h"
   .ref skip=false
