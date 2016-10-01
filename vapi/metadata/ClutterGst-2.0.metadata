@@ -9,3 +9,7 @@ init_with_args
   .argv unowned
   .entries array nullable default=null
   .translation_domain nullable default=null
+
+VideoTexture
+  .get_audio_streams skip
+  .get_subtitle_tracks skip

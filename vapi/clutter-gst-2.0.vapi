@@ -39,7 +39,7 @@ namespace ClutterGst {
 	}
 	[CCode (cheader_filename = "clutter-gst/clutter-gst.h")]
 	[Version (since = "1.4")]
-	public interface Player : Clutter.Media, GLib.Object, Clutter.Media {
+	public interface Player : Clutter.Media, GLib.Object {
 		public static void class_init (GLib.ObjectClass object_class);
 		public void deinit ();
 		public abstract int get_audio_stream ();
