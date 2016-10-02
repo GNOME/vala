@@ -208,6 +208,7 @@ TESTS = \
 	asynchronous/bug661961.vala \
 	asynchronous/bug742621.vala \
 	asynchronous/closures.vala \
+	asynchronous/generator.vala \
 	asynchronous/yield.vala \
 	dbus/basic-types.test \
 	dbus/arrays.test \
