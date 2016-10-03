@@ -50,6 +50,8 @@ dbus_* parent="GLib.DBus" name="dbus_(.*)"
 dbus_error_* parent="GLib.DBusError" name="dbus_error_(.*)"
 dbus_address_get_for_bus_sync parent="GLib.BusType" name="get_address_sync"
 
+*_settings_backend_new parent="GLib.SettingsBackend"
+
 Action
   .parameter_type nullable
   .state nullable
@@ -186,7 +188,6 @@ Resolver
   .lookup_service#method virtual
   .lookup_service_async#virtual_method vfunc_name="lookup_service_async" finish_vfunc_name="lookup_service_finish"
 Settings
-  .change_event skip
   .get skip=false sentinel=""
   .set skip=false sentinel=""
 SettingsSchemaSource
