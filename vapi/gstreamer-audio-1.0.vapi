@@ -322,6 +322,8 @@ namespace Gst {
 		[Compact]
 		[GIR (name = "AudioResampler")]
 		public class Resampler {
+			[CCode (has_construct_function = false)]
+			public Resampler (Gst.Audio.ResamplerMethod method, Gst.Audio.ResamplerFlags flags, Gst.Audio.Format format, int channels, int in_rate, int out_rate, Gst.Structure options);
 			[Version (since = "1.6")]
 			public void free ();
 			public size_t get_in_frames (size_t out_frames);

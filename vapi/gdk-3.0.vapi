@@ -4779,7 +4779,7 @@ namespace Gdk {
 		[Version (since = "2.4")]
 		public void get_maximal_cursor_size (out uint width, out uint height);
 		[Version (since = "3.22")]
-		public unowned Gdk.Monitor get_monitor (int monitor_num);
+		public unowned Gdk.Monitor? get_monitor (int monitor_num);
 		[Version (since = "3.22")]
 		public unowned Gdk.Monitor get_monitor_at_point (int x, int y);
 		[Version (since = "3.22")]
@@ -4793,7 +4793,7 @@ namespace Gdk {
 		[Version (deprecated = true, deprecated_since = "3.0", since = "2.2")]
 		public void get_pointer (out unowned Gdk.Screen screen, out int x, out int y, out Gdk.ModifierType mask);
 		[Version (since = "3.22")]
-		public unowned Gdk.Monitor get_primary_monitor ();
+		public unowned Gdk.Monitor? get_primary_monitor ();
 		[Version (deprecated = true, deprecated_since = "3.20", since = "2.2")]
 		public unowned Gdk.Screen get_screen (int screen_num);
 		[Version (deprecated = true, deprecated_since = "3.0", since = "2.2")]
@@ -4829,7 +4829,7 @@ namespace Gdk {
 		[Version (since = "2.2")]
 		public void set_double_click_time (uint msec);
 		[Version (since = "2.6")]
-		public void store_clipboard (Gdk.Window clipboard_window, uint32 time_, [CCode (array_length_cname = "n_targets", array_length_pos = 3.1)] Gdk.Atom[] targets);
+		public void store_clipboard (Gdk.Window clipboard_window, uint32 time_, [CCode (array_length_cname = "n_targets", array_length_pos = 3.1)] Gdk.Atom[]? targets);
 		[Version (since = "2.6")]
 		public bool supports_clipboard_persistence ();
 		[Version (deprecated = true, deprecated_since = "3.16", since = "2.12")]
@@ -4888,7 +4888,7 @@ namespace Gdk {
 		public unowned Gdk.Window get_dest_window ();
 		public unowned Gdk.Device get_device ();
 		[Version (since = "3.20")]
-		public unowned Gdk.Window get_drag_window ();
+		public unowned Gdk.Window? get_drag_window ();
 		[Version (since = "3.0")]
 		public Gdk.DragProtocol get_protocol ();
 		[Version (since = "2.22")]
@@ -5381,23 +5381,23 @@ namespace Gdk {
 		[Version (since = "3.16")]
 		public static void clear_current ();
 		[Version (since = "3.16")]
-		public static unowned Gdk.GLContext get_current ();
+		public static unowned Gdk.GLContext? get_current ();
 		[Version (since = "3.16")]
 		public bool get_debug_enabled ();
 		[Version (since = "3.16")]
-		public unowned Gdk.Display get_display ();
+		public unowned Gdk.Display? get_display ();
 		[Version (since = "3.16")]
 		public bool get_forward_compatible ();
 		[Version (since = "3.16")]
 		public void get_required_version (out int? major, out int? minor);
 		[Version (since = "3.16")]
-		public unowned Gdk.GLContext get_shared_context ();
+		public unowned Gdk.GLContext? get_shared_context ();
 		[Version (since = "3.22")]
 		public bool get_use_es ();
 		[Version (since = "3.16")]
 		public void get_version (out int major, out int minor);
 		[Version (since = "3.16")]
-		public unowned Gdk.Window get_window ();
+		public unowned Gdk.Window? get_window ();
 		[Version (since = "3.20")]
 		public bool is_legacy ();
 		[Version (since = "3.16")]
