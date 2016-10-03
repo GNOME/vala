@@ -14,6 +14,10 @@ namespace Gst {
 			public uint get_max_buffers ();
 			public bool get_wait_on_eos ();
 			public bool is_eos ();
+			[NoWrapper]
+			public virtual Gst.FlowReturn new_preroll ();
+			[NoWrapper]
+			public virtual Gst.FlowReturn new_sample ();
 			public void set_caps (Gst.Caps caps);
 			public void set_drop (bool drop);
 			public void set_emit_signals (bool emit);
@@ -26,8 +30,6 @@ namespace Gst {
 			public virtual bool eos { get; }
 			public uint max_buffers { get; set; }
 			public bool wait_on_eos { get; set; }
-			public virtual signal Gst.FlowReturn new_preroll ();
-			public virtual signal Gst.FlowReturn new_sample ();
 			[HasEmitter]
 			public virtual signal Gst.Sample pull_preroll ();
 			[HasEmitter]
@@ -44,6 +46,7 @@ namespace Gst {
 		public class Src : Gst.Base.Src, Gst.URIHandler {
 			[CCode (has_construct_function = false)]
 			protected Src ();
+			public virtual Gst.FlowReturn end_of_stream ();
 			public Gst.Caps get_caps ();
 			[Version (since = "1.2")]
 			public uint64 get_current_level_bytes ();
@@ -54,6 +57,9 @@ namespace Gst {
 			public uint64 get_max_bytes ();
 			public int64 get_size ();
 			public Gst.App.StreamType get_stream_type ();
+			public virtual Gst.FlowReturn push_buffer (owned Gst.Buffer buffer);
+			[Version (since = "1.6")]
+			public virtual Gst.FlowReturn push_sample (Gst.Sample sample);
 			public void set_caps (Gst.Caps caps);
 			[Version (since = "1.10")]
 			public void set_duration (Gst.ClockTime duration);
@@ -69,8 +75,6 @@ namespace Gst {
 			public uint64 duration { get; set; }
 			public bool emit_signals { get; set; }
 			[NoAccessorMethod]
-			public Gst.Format format { get; set; }
-			[NoAccessorMethod]
 			public bool is_live { get; set; }
 			public uint64 max_bytes { get; set; }
 			[NoAccessorMethod]
@@ -81,15 +85,8 @@ namespace Gst {
 			public uint min_percent { get; set; }
 			public int64 size { get; set; }
 			public Gst.App.StreamType stream_type { get; set; }
-			[HasEmitter]
-			public virtual signal Gst.FlowReturn end_of_stream ();
 			public virtual signal void enough_data ();
 			public virtual signal void need_data (uint length);
-			[HasEmitter]
-			public virtual signal Gst.FlowReturn push_buffer (Gst.Buffer buffer);
-			[HasEmitter]
-			[Version (since = "1.6")]
-			public virtual signal Gst.FlowReturn push_sample (Gst.Sample sample);
 			public virtual signal bool seek_data (uint64 offset);
 		}
 		[CCode (cheader_filename = "gst/app/app.h", cprefix = "GST_APP_STREAM_TYPE_", type_id = "gst_app_stream_type_get_type ()")]

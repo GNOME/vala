@@ -2,6 +2,8 @@
 Audio* name="Audio(.+)"
 AUDIO_* name="AUDIO_(.+)"
 
+audio_resampler_new symbol_type="constructor" parent="Gst.Audio.Resampler" name="new"
+
 // Field ownership
 AudioBaseSink.provided_clock unowned=false
 AudioClock.*#field skip
