@@ -82,14 +82,9 @@ namespace GLib {
 		public void set_callback ([CCode (type = "GSourceFunc")] owned PollableSourceFunc func);
 	}
 
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_settings_get_type ()")]
 	public class Settings : GLib.Object {
-		[NoAccessorMethod]
-		public GLib.SettingsBackend backend { owned get; construct; }
-		public virtual signal bool change_event (GLib.Quark[]? keys);
 		public void bind_with_mapping (string key, GLib.Object object, string property, GLib.SettingsBindFlags flags, GLib.SettingsBindGetMappingShared get_mapping, GLib.SettingsBindSetMappingShared set_mapping, void* user_data, GLib.DestroyNotify? notify);
-	}
-
-	public class SettingsBackend : GLib.Object {
 	}
 
 	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult {

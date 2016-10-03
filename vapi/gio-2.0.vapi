@@ -1369,6 +1369,8 @@ namespace GLib {
 		public const string PROXY;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_PROXY_RESOLVER_EXTENSION_POINT_NAME")]
 		public const string PROXY_RESOLVER;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_SETTINGS_BACKEND_EXTENSION_POINT_NAME")]
+		public const string SETTINGS_BACKEND;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_TLS_BACKEND_EXTENSION_POINT_NAME")]
 		public const string TLS_BACKEND;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_VFS_EXTENSION_POINT_NAME")]
@@ -2026,7 +2028,7 @@ namespace GLib {
 		public GLib.Resource @ref ();
 		public void unref ();
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_settings_get_type ()")]
 	public class Settings : GLib.Object {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.26")]
@@ -2147,15 +2149,57 @@ namespace GLib {
 		public string schema_id { owned get; construct; }
 		[NoAccessorMethod]
 		public GLib.SettingsSchema settings_schema { owned get; construct; }
-		public virtual signal bool change_event (GLib.Quark[]? keys);
+		public virtual signal bool change_event ([CCode (array_length_cname = "n_keys", array_length_pos = 1.1)] GLib.Quark[]? keys);
 		public virtual signal void changed (string key);
 		public virtual signal bool writable_change_event (uint key);
 		public virtual signal void writable_changed (string key);
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
-	public class SettingsBackend : GLib.Object {
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_settings_backend_get_type ()")]
+	public abstract class SettingsBackend : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected SettingsBackend ();
+		[Version (since = "2.26")]
+		public void changed (string key, void* origin_tag);
+		[Version (since = "2.26")]
+		public void changed_tree (GLib.Tree tree, void* origin_tag);
+		[Version (since = "2.26")]
+		public static void flatten_tree (GLib.Tree tree, out string path, [CCode (array_length = false, array_null_terminated = true)] out (unowned string)[] keys, [CCode (array_length = false, array_null_terminated = true)] out (unowned GLib.Variant)[] values);
+		[Version (since = "2.28")]
+		public static GLib.SettingsBackend get_default ();
+		[NoWrapper]
+		public virtual bool get_writable (string key);
+		[CCode (cheader_filename = "gio/gio.h", cname = "g_keyfile_settings_backend_new")]
+		public static GLib.SettingsBackend keyfile_settings_backend_new (string filename, string root_path, string? root_group);
+		[Version (since = "2.26")]
+		public void keys_changed (string path, [CCode (array_length = false, array_null_terminated = true)] string[] items, void* origin_tag);
+		[CCode (cheader_filename = "gio/gio.h", cname = "g_memory_settings_backend_new")]
+		[Version (since = "2.28")]
+		public static GLib.SettingsBackend memory_settings_backend_new ();
+		[CCode (cheader_filename = "gio/gio.h", cname = "g_null_settings_backend_new")]
+		[Version (since = "2.28")]
+		public static GLib.SettingsBackend null_settings_backend_new ();
+		[Version (since = "2.26")]
+		public void path_changed (string path, void* origin_tag);
+		[Version (since = "2.26")]
+		public void path_writable_changed (string path);
+		[NoWrapper]
+		public virtual GLib.Variant read (string key, GLib.VariantType expected_type, bool default_value);
+		[NoWrapper]
+		public virtual GLib.Variant read_user_value (string key, GLib.VariantType expected_type);
+		[NoWrapper]
+		public virtual void reset (string key, void* origin_tag);
+		[NoWrapper]
+		public virtual void subscribe (string name);
+		[NoWrapper]
+		public virtual void sync ();
+		[NoWrapper]
+		public virtual void unsubscribe (string name);
+		[Version (since = "2.26")]
+		public void writable_changed (string key);
+		[NoWrapper]
+		public virtual bool write (string key, GLib.Variant value, void* origin_tag);
+		[NoWrapper]
+		public virtual bool write_tree (GLib.Tree tree, void* origin_tag);
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_settings_schema_ref", type_id = "g_settings_schema_get_type ()", unref_function = "g_settings_schema_unref")]
 	[Compact]
