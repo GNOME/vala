@@ -130,21 +130,20 @@ FileInfo
 FileEnumerator
   .next_file nullable
 IOStream
-  .close* skip
+  .close virtual vfunc_name="close_fn" throws="GLib.IOError"
+  .close_finish throws="GLib.IOError"
   .input_stream abstract
   .output_stream abstract
   .closed skip=false
 InetAddress
   .to_bytes type="unowned uint8[]" skip=false
 InputStream
-  .close skip
+  .close abstract vfunc_name="close_fn" throws="GLib.IOError"
   .close_finish throws="GLib.IOError"
-  .close_fn skip
-  .read skip
+  .read abstract vfunc_name="read_fn" throws="GLib.IOError"
   .read_all throws="GLib.IOError"
   .read_all_async.io_priority default=()
   .read_all_async.cancellable default=()
-  .read_fn skip
   .read_finish throws="GLib.IOError"
   .skip throws="GLib.IOError"
   .skip_finish throws="GLib.IOError"
@@ -169,14 +168,13 @@ MenuModel
 Mount
   .get_sort_key#virtual_method virtual
 OutputStream
-  .close skip
+  .close abstract vfunc_name="close_fn" throws="GLib.IOError"
   .close_finish throws="GLib.IOError"
-  .close_fn skip
   .splice throws="GLib.IOError"
   .splice_finish throws="GLib.IOError"
-  .write skip
-  .write_finish throws="GLib.IOError"
+  .write abstract vfunc_name="write_fn" throws="GLib.IOError"
   .write_fn skip
+  .write_finish throws="GLib.IOError"
   .write_all throws="GLib.IOError"
   .write_all_async.io_priority default=()
   .write_all_async.cancellable default=()

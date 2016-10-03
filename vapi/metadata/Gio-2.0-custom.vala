@@ -74,20 +74,6 @@ namespace GLib {
 		public IOModuleScope (GLib.IOModuleScopeFlags flags);
 	}
 
-	public abstract class IOStream : GLib.Object {
-		[CCode (vfunc_name = "close_fn")]
-		public virtual bool close (GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public virtual async bool close_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-
-	}
-
-	public abstract class InputStream : GLib.Object {
-		[CCode (vfunc_name = "close_fn")]
-		public abstract bool close (GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		[CCode (vfunc_name = "read_fn")]
-		public abstract ssize_t read ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-	}
-
 	public class MemoryOutputStream : GLib.OutputStream {
 		[CCode (has_construct_function = false, type = "GOutputStream*")]
 		public MemoryOutputStream ([CCode (array_length_type = "gsize")] owned uint8[]? data, GLib.ReallocFunc? realloc_function = GLib.g_realloc, GLib.DestroyNotify? destroy_function = GLib.g_free);
@@ -101,13 +87,6 @@ namespace GLib {
 	public abstract class NativeVolumeMonitor : GLib.VolumeMonitor {
 		[NoWrapper]
 		public abstract GLib.Mount get_mount_for_mount_path (string mount_path, GLib.Cancellable? cancellable = null);
-	}
-
-	public abstract class OutputStream : GLib.Object {
-		[CCode (vfunc_name = "close_fn")]
-		public abstract bool close (GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		[CCode (vfunc_name = "write_fn")]
-		public abstract ssize_t write ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
 	[Compact]

@@ -1436,14 +1436,16 @@ namespace GLib {
 		[Version (deprecated = true)]
 		public void send_to_mainloop_async (owned GLib.SourceFunc func);
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_io_stream_get_type ()")]
 	public abstract class IOStream : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected IOStream ();
 		[Version (since = "2.22")]
 		public void clear_pending ();
 		[CCode (vfunc_name = "close_fn")]
+		[Version (since = "2.22")]
 		public virtual bool close (GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		[Version (since = "2.22")]
 		public virtual async bool close_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[Version (since = "2.22")]
 		public virtual unowned GLib.InputStream get_input_stream ();
@@ -1578,7 +1580,7 @@ namespace GLib {
 		public uint port { get; construct; }
 		public uint scope_id { get; construct; }
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_input_stream_get_type ()")]
 	public abstract class InputStream : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected InputStream ();
@@ -1589,7 +1591,7 @@ namespace GLib {
 		public bool has_pending ();
 		public bool is_closed ();
 		[CCode (vfunc_name = "read_fn")]
-		public abstract ssize_t read ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public abstract ssize_t read ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public bool read_all ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, out size_t bytes_read, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[Version (since = "2.44")]
 		public async bool read_all_async ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, int io_priority, GLib.Cancellable? cancellable, out size_t bytes_read) throws GLib.Error;
@@ -1874,7 +1876,7 @@ namespace GLib {
 		public void set_title (string title);
 		public void set_urgent (bool urgent);
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_output_stream_get_type ()")]
 	public abstract class OutputStream : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected OutputStream ();
@@ -1892,7 +1894,7 @@ namespace GLib {
 		public virtual ssize_t splice (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public virtual async ssize_t splice_async (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (vfunc_name = "write_fn")]
-		public abstract ssize_t write ([CCode (array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public abstract ssize_t write ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public bool write_all ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[Version (since = "2.44")]
 		public async bool write_all_async ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, int io_priority, GLib.Cancellable? cancellable, out size_t bytes_written) throws GLib.Error;
