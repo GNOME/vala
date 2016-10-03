@@ -80,11 +80,11 @@ namespace GLib {
 		[DestroysInstance]
 		[Version (since = "2.38")]
 		public void unbind ();
-		public GLib.BindingFlags flags { get; }
-		public GLib.Object source { get; }
-		public string source_property { get; }
-		public GLib.Object target { get; }
-		public string target_property { get; }
+		public GLib.BindingFlags flags { get; construct; }
+		public GLib.Object source { get; construct; }
+		public string source_property { get; construct; }
+		public GLib.Object target { get; construct; }
+		public string target_property { get; construct; }
 	}
 	[CCode (ref_function = "g_closure_ref", type_id = "G_TYPE_CLOSURE", unref_function = "g_closure_unref")]
 	[Compact]
@@ -102,6 +102,8 @@ namespace GLib {
 		public void remove_invalidate_notifier (void* notify_data, GLib.ClosureNotify notify_func);
 		public void set_marshal (GLib.ClosureMarshal marshal);
 		public void set_meta_marshal (void* marshal_data, GLib.ClosureMarshal meta_marshal);
+		[CCode (has_construct_function = false)]
+		public Closure.simple (uint sizeof_closure, void* data);
 		public void sink ();
 	}
 	[CCode (lower_case_csuffix = "enum")]
@@ -192,6 +194,7 @@ namespace GLib {
 		public T steal_qdata<T> (GLib.Quark quark);
 		public void thaw_notify ();
 		public void unref ();
+		public void watch_closure (GLib.Closure closure);
 		public void weak_ref (GLib.WeakNotify notify);
 		public void weak_unref (GLib.WeakNotify notify);
 		public signal void notify (GLib.ParamSpec pspec);
@@ -199,6 +202,11 @@ namespace GLib {
 	[CCode (lower_case_csuffix = "object_class")]
 	public class ObjectClass : GLib.TypeClass {
 		public unowned GLib.ParamSpec? find_property (string property_name);
+		[CCode (cname = "G_OBJECT_CLASS_NAME")]
+		public unowned string get_name ();
+		[CCode (cname = "G_OBJECT_CLASS_TYPE")]
+		public GLib.Type get_type ();
+		public void install_properties ([CCode (array_length_pos = 0.9, array_length_type = "guint")] GLib.ParamSpec[] pspecs);
 		public void install_property (uint property_id, GLib.ParamSpec pspec);
 		[CCode (array_length_type = "guint")]
 #if VALA_0_26
@@ -206,6 +214,7 @@ namespace GLib {
 #else
 		public unowned GLib.ParamSpec[] list_properties ();
 #endif
+		public void override_property (uint property_id, string name);
 	}
 	[CCode (get_value_function = "g_value_get_param", param_spec_function = "g_param_spec_param", ref_function = "g_param_spec_ref", set_value_function = "g_value_set_param", take_value_function = "g_value_take_param", type_id = "G_TYPE_PARAM", unref_function = "g_param_spec_unref")]
 	public class ParamSpec {
@@ -305,9 +314,23 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_long")]
 		public ParamSpecLong (string name, string nick, string blurb, long minimum, long maximum, long default_value, GLib.ParamFlags flags);
 	}
+	public class ParamSpecObject : GLib.ParamSpec {
+		[CCode (cname = "g_param_spec_object")]
+		public ParamSpecObject (string name, string nick, string blurb, GLib.Type object_type, GLib.ParamFlags flags);
+	}
 	public class ParamSpecParam : GLib.ParamSpec {
 		[CCode (cname = "g_param_spec_param")]
 		public ParamSpecParam (string name, string nick, string blurb, GLib.Type param_type, GLib.ParamFlags flags);
+	}
+	[Compact]
+	public class ParamSpecPool {
+		public ParamSpecPool (bool type_prefixing = false);
+		public void insert (GLib.ParamSpec pspec, GLib.Type owner_type);
+		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
+		public (unowned GLib.ParamSpec)[] list (GLib.Type owner_type);
+		public GLib.List<weak GLib.ParamSpec> list_owned (GLib.Type owner_type);
+		public unowned GLib.ParamSpec lookup (string param_name, GLib.Type owner_type, bool walk_ancestors);
+		public void remove (GLib.ParamSpec pspec);
 	}
 	public class ParamSpecString : GLib.ParamSpec {
 		public string cset_first;
@@ -347,23 +370,52 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_ulong")]
 		public ParamSpecULong (string name, string nick, string blurb, ulong minimum, ulong maximum, ulong default_value, GLib.ParamFlags flags);
 	}
+	public class ParamSpecUnichar : GLib.ParamSpec {
+		public unichar default_value;
+		[CCode (cname = "g_param_spec_unichar")]
+		public ParamSpecUnichar (string name, string nick, string blurb, unichar default_value, GLib.ParamFlags flags);
+	}
 	[Version (since = "2.26")]
 	public class ParamSpecVariant : GLib.ParamSpec {
+		public GLib.Variant? default_value;
+		public GLib.VariantType type;
 		[CCode (cname = "g_param_spec_variant")]
 		public ParamSpecVariant (string name, string nick, string blurb, GLib.VariantType type, GLib.Variant? default_value, GLib.ParamFlags flags);
 	}
 	[CCode (free_function = "g_type_class_unref")]
 	[Compact]
 	public class TypeClass {
+		public void add_private (size_t private_size);
 		[CCode (cname = "G_TYPE_FROM_CLASS")]
 		public GLib.Type get_type ();
+		[CCode (cname = "g_type_interface_peek")]
+		public unowned GLib.TypeInterface? peek (GLib.Type iface_type);
+		public unowned GLib.TypeClass? peek_parent ();
 	}
-	[CCode (lower_case_csuffix = "type_module")]
-	public class TypeModule : GLib.Object, GLib.TypePlugin {
+	[Compact]
+	public class TypeInstance {
+	}
+	[CCode (free_function = "g_type_default_interface_unref")]
+	[Compact]
+	public class TypeInterface {
+		public void add_prerequisite ();
+		public unowned GLib.TypePlugin get_plugin (GLib.Type interface_type);
+		[CCode (cname = "G_TYPE_FROM_INTERFACE")]
+		public GLib.Type get_type ();
+		public unowned GLib.TypeInterface? peek_parent ();
+	}
+	[CCode (cheader_filename = "gobject.h", type_id = "g_type_module_get_type ()")]
+	public abstract class TypeModule : GLib.Object, GLib.TypePlugin {
 		[CCode (has_construct_function = false)]
 		protected TypeModule ();
+		public void add_interface (GLib.Type instance_type, GLib.Type interface_type, GLib.InterfaceInfo interface_info);
 		[NoWrapper]
 		public virtual bool load ();
+		[Version (since = "2.6")]
+		public GLib.Type register_enum (string name, GLib.EnumValue const_static_values);
+		[Version (since = "2.6")]
+		public GLib.Type register_flags (string name, GLib.FlagsValue const_static_values);
+		public GLib.Type register_type (GLib.Type parent_type, string type_name, GLib.TypeInfo type_info, GLib.TypeFlags flags);
 		public void set_name (string name);
 		[NoWrapper]
 		public virtual void unload ();
@@ -372,6 +424,7 @@ namespace GLib {
 	}
 	[CCode (copy_function = "g_value_array_copy", free_function = "g_value_array_free", type_id = "G_TYPE_VALUE_ARRAY")]
 	[Compact]
+	[Version (deprecated = true, deprecated_since = "2.32")]
 	public class ValueArray {
 		public uint n_values;
 		[CCode (array_length_cname = "n_values", array_length_type = "guint")]
@@ -386,7 +439,12 @@ namespace GLib {
 		public void sort (GLib.CompareFunc<GLib.Value> compare_func);
 		public void sort_with_data (GLib.CompareDataFunc<GLib.Value> compare_func);
 	}
+	[CCode (cheader_filename = "gobject.h", type_id = "g_type_plugin_get_type ()")]
 	public interface TypePlugin {
+		public void complete_interface_info (GLib.Type instance_type, GLib.Type interface_type, GLib.InterfaceInfo info);
+		public void complete_type_info (GLib.Type g_type, GLib.TypeInfo info, GLib.TypeValueTable value_table);
+		public void unuse ();
+		public void use ();
 	}
 	[CCode (has_type_id = false)]
 	public struct EnumValue {
@@ -400,7 +458,16 @@ namespace GLib {
 		public weak string value_name;
 		public weak string value_nick;
 	}
+	[CCode (has_type_id = false)]
+	public struct InterfaceInfo {
+		public GLib.InterfaceInitFunc interface_init;
+		public GLib.InterfaceFinalizeFunc interface_finalize;
+		public void* interface_data;
+	}
+	[CCode (has_copy_function = false, has_destroy_function = false)]
 	public struct ObjectConstructParam {
+		public ParamSpec pspec;
+		public GLib.Value value;
 	}
 	[CCode (has_copy_function = false, has_destroy_function = false)]
 	public struct Parameter {
@@ -430,8 +497,14 @@ namespace GLib {
 		public const GLib.Type FLAGS;
 		public const GLib.Type INTERFACE;
 		public const GLib.Type INVALID;
+		public void add_class_private (size_t private_size);
+		[CCode (array_length_type = "guint")]
 		public GLib.Type[] children ();
-		public unowned GLib.TypeClass class_peek ();
+		public unowned GLib.TypeClass? class_peek ();
+		public unowned GLib.TypeClass? class_peek_parent ();
+		public unowned GLib.TypeClass? class_peek_static ();
+		public unowned GLib.TypeClass? default_interface_peek ();
+		public GLib.TypeInterface default_interface_ref ();
 		public GLib.TypeClass class_ref ();
 		public uint depth ();
 		[Version (since = "2.34")]
@@ -445,7 +518,10 @@ namespace GLib {
 		[Version (since = "2.36")]
 		public static uint get_type_registration_serial ();
 		[CCode (array_length_type = "guint")]
+		public GLib.Type[] interface_prerequisites ();
+		[CCode (array_length_type = "guint")]
 		public GLib.Type[] interfaces ();
+		public GLib.Type next_base (GLib.Type root_type);
 		public bool is_a (GLib.Type is_a_type);
 		[CCode (cname = "G_TYPE_IS_ABSTRACT")]
 		public bool is_abstract ();
@@ -477,11 +553,27 @@ namespace GLib {
 		public void query (out GLib.TypeQuery query);
 		public void set_qdata (GLib.Quark quark, void* data);
 	}
+	[CCode (has_type_id = false)]
+	public struct TypeInfo {
+		public uint16 class_size;
+		public GLib.BaseInitFunc base_init;
+		public GLib.BaseFinalizeFunc base_finalize;
+		public GLib.ClassInitFunc class_init;
+		public GLib.ClassFinalizeFunc class_finalize;
+		public void* class_data;
+		public uint16 instance_size;
+		public uint16 n_preallocs;
+		public GLib.InstanceInitFunc instance_init;
+		unowned GLib.TypeValueTable value_table;
+	}
 	public struct TypeQuery {
 		public GLib.Type type;
 		public weak string type_name;
 		public uint class_size;
 		public uint instance_size;
+	}
+	[CCode (has_type_id = false)]
+	public struct TypeValueTable {
 	}
 	[CCode (copy_function = "g_value_copy", destroy_function = "g_value_unset", get_value_function = "g_value_get_boxed", marshaller_type_name = "BOXED", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", type_id = "G_TYPE_VALUE", type_signature = "v")]
 	public struct Value {
@@ -656,6 +748,10 @@ namespace GLib {
 		DERIVABLE,
 		DEEP_DERIVABLE
 	}
+	[CCode (has_target = false)]
+	public delegate void BaseInitFunc (GLib.TypeClass g_class);
+	[CCode (has_target = false)]
+	public delegate void BaseFinalizeFunc (GLib.TypeClass g_class);
 	[Version (since = "2.26")]
 	public delegate bool BindingTransformFunc (GLib.Binding binding, GLib.Value source_value, ref GLib.Value target_value);
 	[CCode (has_target = false)]
@@ -664,17 +760,33 @@ namespace GLib {
 	public delegate void BoxedFreeFunc (void* boxed);
 	[CCode (has_target = false)]
 	public delegate void Callback ();
+	[CCode (has_target = false)]
+	public delegate void ClassInitFunc (GLib.TypeClass g_class, void* class_data);
+	[CCode (has_target = false)]
+	public delegate void ClassFinalizeFunc (GLib.TypeClass g_class, void* class_data);
 	[CCode (has_target = false, instance_pos = 0)]
 	public delegate void ClosureMarshal (GLib.Closure closure, out GLib.Value return_value, [CCode (array_length_pos = 2.9)] GLib.Value[] param_values, void* invocation_hint, void* marshal_data);
 	[CCode (has_target = false)]
 	public delegate void ClosureNotify (void* data, GLib.Closure closure);
 	[CCode (has_target = false)]
-	public delegate void ObjectGetPropertyFunc (GLib.Object object, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
+	public delegate void InstanceInitFunc (GLib.TypeInstance instance, GLib.TypeClass g_class);
+	[CCode (has_target = false)]
+	public delegate void InterfaceInitFunc (GLib.TypeInterface g_iface, void* iface_data);
+	[CCode (has_target = false)]
+	public delegate void InterfaceFinalizeFunc (GLib.TypeInterface g_iface, void* iface_data);
+	[CCode (cname = "GCallback", has_target = false)]
+	public delegate GLib.Object ObjectConstructorFunc (GLib.Type type, [CCode (array_length_pos = 1.9, array_length_type = "guint")] GLib.ObjectConstructParam[] construct_properties);
+	[CCode (has_target = false)]
+	public delegate void ObjectGetPropertyFunc (GLib.Object object, uint property_id, ref GLib.Value value, GLib.ParamSpec pspec);
+	[CCode (has_target = false)]
+	public delegate void ObjectFinalizeFunc (GLib.Object object);
 	[CCode (has_target = false)]
 	public delegate void ObjectSetPropertyFunc (GLib.Object object, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
 	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] GLib.Value[] param_values);
 	[CCode (instance_pos = 0)]
 	public delegate void ToggleNotify (GLib.Object object, bool is_last_ref);
+	[CCode (has_target = false)]
+	public delegate void TypeClassCacheFunc (void* cache_data, GLib.TypeClass g_class);
 	[CCode (has_target = false)]
 	public delegate void ValueTransform (GLib.Value src_value, ref GLib.Value dest_value);
 	[CCode (instance_pos = 0)]
