@@ -1182,6 +1182,10 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (!check_accessibility (sig)) {
 			return;
 		}
+
+		if (sig.emitter != null) {
+			sig.emitter.accept (this);
+		}
 		
 		write_indent ();
 		buffer.append_printf ("<glib:signal name=\"%s\"", CCodeBaseModule.get_ccode_name (sig));

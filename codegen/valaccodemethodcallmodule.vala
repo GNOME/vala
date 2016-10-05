@@ -628,7 +628,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			if (ma != null && ma.inner is BaseAccess && sig.is_virtual) {
 				// normal return value for base access
-			} else if (!get_signal_has_emitter (sig)) {
+			} else if (!get_signal_has_emitter (sig) || ma.source_reference.file == sig.source_reference.file) {
 				return_result_via_out_param = true;
 			}
 		}
