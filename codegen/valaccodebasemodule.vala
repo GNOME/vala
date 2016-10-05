@@ -239,6 +239,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public CCodeStruct param_spec_struct;
 	public CCodeStruct closure_struct;
 	public CCodeEnum prop_enum;
+	public CCodeEnum signal_enum;
 
 	public CCodeFunction ccode { get { return emit_context.ccode; } }
 
@@ -6568,7 +6569,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return new CCodeFunctionCall (new CCodeIdentifier (""));
 	}
 
-	public virtual CCodeFunctionCall get_signal_creation (Signal sig, TypeSymbol type) {
+	public virtual CCodeExpression get_signal_creation (Signal sig, TypeSymbol type) {
 		return new CCodeFunctionCall (new CCodeIdentifier (""));
 	}
 

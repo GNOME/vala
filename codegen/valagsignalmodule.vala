@@ -132,6 +132,33 @@ public class Vala.GSignalModule : GObjectModule {
 		return get_cvalue_ (detail_value);
 	}
 
+	private CCodeExpression get_signal_id_cexpression (Signal sig) {
+		var cl = (TypeSymbol) sig.parent_symbol;
+		var signal_array = new CCodeIdentifier ("%s_signals".printf (get_ccode_lower_case_name (cl)));
+		var signal_enum_value = new CCodeIdentifier ("%s_%s_SIGNAL".printf (get_ccode_upper_case_name (cl), sig.name.ascii_up ()));
+
+		return new CCodeElementAccess (signal_array, signal_enum_value);
+	}
+
+	private CCodeExpression? get_detail_cexpression (Expression detail_expr, CodeNode node) {
+		if (detail_expr.value_type is NullType || !detail_expr.value_type.compatible (string_type)) {
+			node.error = true;
+			Report.error (detail_expr.source_reference, "only string details are supported");
+			return null;
+		}
+
+		var detail_cexpr = get_cvalue (detail_expr);
+		CCodeFunctionCall detail_ccall;
+		if (is_constant_ccode_expression (detail_cexpr)) {
+			detail_ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+		} else {
+			detail_ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
+		}
+		detail_ccall.add_argument (detail_cexpr);
+
+		return detail_ccall;
+	}
+
 	public override void visit_signal (Signal sig) {
 		// parent_symbol may be null for dynamic signals
 
@@ -151,6 +178,8 @@ public class Vala.GSignalModule : GObjectModule {
 				}
 			}
 		}
+
+		signal_enum.add_value (new CCodeEnumValue ("%s_%s_SIGNAL".printf (get_ccode_upper_case_name ((TypeSymbol)sig.parent_symbol), sig.name.ascii_up ())));
 
 		sig.accept_children (this);
 
@@ -304,7 +333,7 @@ public class Vala.GSignalModule : GObjectModule {
 		user_marshal_set.add (signature);
 	}
 
-	public override CCodeFunctionCall get_signal_creation (Signal sig, TypeSymbol type) {	
+	public override CCodeExpression get_signal_creation (Signal sig, TypeSymbol type) {
 		var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
 		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (get_ccode_name (sig))));
 		csignew.add_argument (new CCodeIdentifier (get_ccode_type_id (type)));
@@ -399,7 +428,7 @@ public class Vala.GSignalModule : GObjectModule {
 
 		marshal_arg.name = marshaller;
 
-		return csignew;
+		return new CCodeAssignment (get_signal_id_cexpression (sig), csignew);
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
@@ -410,13 +439,27 @@ public class Vala.GSignalModule : GObjectModule {
 				var ma = (MemberAccess) expr.container;
 
 				var detail_expr = expr.get_indices ().get (0);
-				var signal_name_cexpr = get_signal_name_cexpression (sig, detail_expr, expr);
-			
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
-				ccall.add_argument (get_cvalue (ma.inner));
-				if (signal_name_cexpr != null) {
-					ccall.add_argument (signal_name_cexpr);
+
+				CCodeFunctionCall ccall;
+				if (!sig.external_package && expr.source_reference.file == sig.source_reference.file) {
+					var detail_cexpr = get_detail_cexpression (detail_expr, expr);
+
+					ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit"));
+					ccall.add_argument (get_cvalue (ma.inner));
+					ccall.add_argument (get_signal_id_cexpression (sig));
+					if (detail_cexpr != null) {
+						ccall.add_argument (detail_cexpr);
+					}
+				} else {
+					var signal_name_cexpr = get_signal_name_cexpression (sig, detail_expr, expr);
+
+					ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
+					ccall.add_argument (get_cvalue (ma.inner));
+					if (signal_name_cexpr != null) {
+						ccall.add_argument (signal_name_cexpr);
+					}
 				}
+
 				set_cvalue (expr, ccall);
 			} else {
 				// signal connect or disconnect
@@ -487,7 +530,14 @@ public class Vala.GSignalModule : GObjectModule {
 				return;
 			}
 
-			if (get_signal_has_emitter (sig)) {
+			if (!sig.external_package && expr.source_reference.file == sig.source_reference.file) {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit"));
+				ccall.add_argument (pub_inst);
+				ccall.add_argument (get_signal_id_cexpression (sig));
+				ccall.add_argument (new CCodeConstant ("0"));
+
+				set_cvalue (expr, ccall);
+			} else if (get_signal_has_emitter (sig)) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_%s".printf (get_ccode_lower_case_name (cl), sig.name)));
 
 				ccall.add_argument (pub_inst);

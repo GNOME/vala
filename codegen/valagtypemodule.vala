@@ -537,6 +537,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		var old_param_spec_struct = param_spec_struct;
 		var old_prop_enum = prop_enum;
+		var old_signal_enum = signal_enum;
 		var old_class_init_context = class_init_context;
 		var old_base_init_context = base_init_context;
 		var old_class_finalize_context = class_finalize_context;
@@ -555,6 +556,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		prop_enum = new CCodeEnum ();
 		prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (get_ccode_upper_case_name (cl, null))));
+		signal_enum = new CCodeEnum ();
 		class_init_context = new EmitContext (cl);
 		base_init_context = new EmitContext (cl);
 		class_finalize_context = new EmitContext (cl);
@@ -616,6 +618,17 @@ public class Vala.GTypeModule : GErrorModule {
 				push_context (instance_init_context);
 				ccode.add_expression (ref_count);
 				pop_context ();
+			}
+
+			if (cl.get_signals ().size > 0) {
+				var last_signal = "%s_LAST_SIGNAL".printf (get_ccode_upper_case_name (cl));
+				signal_enum.add_value (new CCodeEnumValue (last_signal));
+				cfile.add_type_declaration (signal_enum);
+
+				var signal_array_decl = new CCodeDeclaration ("guint");
+				signal_array_decl.modifiers |= CCodeModifiers.STATIC;
+				signal_array_decl.add_declarator (new CCodeVariableDeclarator ("%s_signals".printf (get_ccode_lower_case_name (cl)), new CCodeConstant ("{0}"), new CCodeDeclaratorSuffix.with_array (new CCodeIdentifier (last_signal))));
+				cfile.add_type_declaration (signal_array_decl);
 			}
 
 
@@ -719,6 +732,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		param_spec_struct = old_param_spec_struct;
 		prop_enum = old_prop_enum;
+		signal_enum = old_signal_enum;
 		class_init_context = old_class_init_context;
 		base_init_context = old_base_init_context;
 		class_finalize_context = old_class_finalize_context;
@@ -2032,11 +2046,15 @@ public class Vala.GTypeModule : GErrorModule {
 		push_context (new EmitContext (iface));
 		push_line (iface.source_reference);
 
+		var old_signal_enum = signal_enum;
+
 		if (get_ccode_name (iface).length < 3) {
 			iface.error = true;
 			Report.error (iface.source_reference, "Interface name `%s' is too short".printf (get_ccode_name (iface)));
 			return;
 		}
+
+		signal_enum = new CCodeEnum ();
 
 		generate_interface_declaration (iface, cfile);
 		if (!iface.is_internal_symbol ()) {
@@ -2048,6 +2066,17 @@ public class Vala.GTypeModule : GErrorModule {
 
 		iface.accept_children (this);
 
+		if (iface.get_signals ().size > 0) {
+			var last_signal = "%s_LAST_SIGNAL".printf (get_ccode_upper_case_name (iface));
+			signal_enum.add_value (new CCodeEnumValue (last_signal));
+			cfile.add_type_declaration (signal_enum);
+
+			var signal_array_decl = new CCodeDeclaration ("guint");
+			signal_array_decl.modifiers |= CCodeModifiers.STATIC;
+			signal_array_decl.add_declarator (new CCodeVariableDeclarator ("%s_signals".printf (get_ccode_lower_case_name (iface)), new CCodeConstant ("{0}"), new CCodeDeclaratorSuffix.with_array (new CCodeIdentifier (last_signal))));
+			cfile.add_type_declaration (signal_array_decl);
+		}
+
 		add_interface_base_init_function (iface);
 
 		if (iface.comment != null) {
@@ -2058,6 +2087,8 @@ public class Vala.GTypeModule : GErrorModule {
 		type_fun.init_from_type (in_plugin, false);
 		cfile.add_type_member_declaration (type_fun.get_source_declaration ());
 		cfile.add_type_member_definition (type_fun.get_definition ());
+
+		signal_enum = old_signal_enum;
 
 		pop_line ();
 		pop_context ();
