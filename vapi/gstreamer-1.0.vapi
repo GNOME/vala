@@ -1046,7 +1046,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public DateTime.ymd (int year, int month, int day);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
 	[Compact]
 	public class DebugMessage {
 		public unowned string @get ();
@@ -1661,7 +1661,7 @@ namespace Gst {
 		[Version (since = "1.10")]
 		public Message.warning_with_details (Gst.Object? src, GLib.Error error, string debug, owned Gst.Structure details);
 	}
-	[CCode (cheader_filename = "gst/gst.h", get_value_function = "g_value_get_boxed", ref_function = "gst_mini_object_ref", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", unref_function = "gst_mini_object_unref")]
+	[CCode (cheader_filename = "gst/gst.h", get_value_function = "g_value_get_boxed", has_type_id = false, ref_function = "gst_mini_object_ref", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", unref_function = "gst_mini_object_unref")]
 	[Compact]
 	public abstract class MiniObject {
 		public weak Gst.MiniObjectDisposeFunction dispose;
@@ -1944,7 +1944,7 @@ namespace Gst {
 		public static int rank_compare_func (void* p1, void* p2);
 		public void set_rank (uint rank);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
 	[Compact]
 	public class Poll {
 		[CCode (has_construct_function = false)]

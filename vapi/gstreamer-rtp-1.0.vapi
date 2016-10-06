@@ -94,7 +94,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public uint timestamp_offset { get; set; }
 		}
-		[CCode (cheader_filename = "gst/rtp/rtp.h")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "RTPBuffer")]
 		public class Buffer : Gst.Buffer {
@@ -296,7 +296,7 @@ namespace Gst {
 		public static unowned Gst.RTP.PayloadInfo? payload_info_for_pt (uint8 payload_type);
 	}
 	namespace RTPC {
-		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GstRTCPBuffer")]
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GstRTCPBuffer", has_type_id = false)]
 		[Compact]
 		[GIR (name = "RTCPBuffer")]
 		public class Buffer : Gst.Buffer {

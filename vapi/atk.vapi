@@ -177,7 +177,7 @@ namespace Atk {
 		[Version (since = "2.12")]
 		public double get_upper_limit ();
 	}
-	[CCode (cheader_filename = "atk/atk.h")]
+	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_registry_get_type ()")]
 	public class Registry : GLib.Object {
 		[Version (deprecated = true)]
 		public weak GLib.HashTable<GLib.Type,Atk.ObjectFactory> factory_singleton_cache;
@@ -191,7 +191,7 @@ namespace Atk {
 		public GLib.Type get_factory_type (GLib.Type type);
 		public void set_factory_type (GLib.Type type, GLib.Type factory_type);
 	}
-	[CCode (cheader_filename = "atk/atk.h")]
+	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_relation_get_type ()")]
 	public class Relation : GLib.Object {
 		public Atk.RelationType relationship;
 		[CCode (has_construct_function = false)]
@@ -475,7 +475,7 @@ namespace Atk {
 		[Version (since = "2.12")]
 		public abstract Atk.Object get_table ();
 	}
-	[CCode (cheader_filename = "atk/atk.h")]
+	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_text_get_type ()")]
 	public interface Text : GLib.Object {
 		public abstract bool add_selection (int start_offset, int end_offset);
 		[Version (deprecated_since = "vala-0.16", replacement = "TextAttribute.for_name")]

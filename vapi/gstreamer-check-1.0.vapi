@@ -3,13 +3,13 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstCheck", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace Check {
-		[CCode (cheader_filename = "gst/check/check.h", cname = "GstHarnessThread")]
+		[CCode (cheader_filename = "gst/check/check.h", cname = "GstHarnessThread", has_type_id = false)]
 		[Compact]
 		[GIR (name = "HarnessThread")]
 		[Version (since = "1.6")]
 		public class HarnessThread {
 		}
-		[CCode (cheader_filename = "gst/check/gstbufferstraw.h,gst/check/gstcheck.h,gst/check/gstconsistencychecker.h,gst/check/internal-check.h", cname = "GstStreamConsistency", lower_case_cprefix = "gst_consistency_checker_")]
+		[CCode (cheader_filename = "gst/check/gstbufferstraw.h,gst/check/gstcheck.h,gst/check/gstconsistencychecker.h,gst/check/internal-check.h", cname = "GstStreamConsistency", has_type_id = false, lower_case_cprefix = "gst_consistency_checker_")]
 		[Compact]
 		[GIR (name = "StreamConsistency")]
 		public class StreamConsistency {

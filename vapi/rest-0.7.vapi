@@ -79,7 +79,7 @@ namespace Rest {
 		[CCode (has_construct_function = false)]
 		public Param.with_owner (global::string name, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, global::string content_type, global::string? filename, owned void* owner, GLib.DestroyNotify? owner_dnotify);
 	}
-	[CCode (cheader_filename = "rest/rest-params.h")]
+	[CCode (cheader_filename = "rest/rest-params.h", has_type_id = false)]
 	[Compact]
 	public class Params {
 		public void add (owned Rest.Param param);
@@ -89,7 +89,7 @@ namespace Rest {
 		public unowned Rest.Param? @get (string name);
 		public void remove (string name);
 	}
-	[CCode (cheader_filename = "rest/rest-params.h")]
+	[CCode (cheader_filename = "rest/rest-params.h", has_type_id = false)]
 	[Compact]
 	public class ParamsIter {
 		public void init (Rest.Params @params);

@@ -325,7 +325,7 @@ namespace Soup {
 		[Version (since = "2.50")]
 		public GLib.IOStream steal_connection ();
 	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
 	[Compact]
 	public class Connection {
 	}
@@ -674,11 +674,11 @@ namespace Soup {
 		[Version (since = "2.26")]
 		public void set_ranges (Soup.Range ranges, int length);
 	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
 	[Compact]
 	public class MessageQueue {
 	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
 	[Compact]
 	public class MessageQueueItem {
 	}
@@ -1130,7 +1130,7 @@ namespace Soup {
 		public virtual signal void error (GLib.Error error);
 		public virtual signal void message (int type, GLib.Bytes message);
 	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
 	[Compact]
 	[Version (since = "2.52")]
 	public class XMLRPCParams {

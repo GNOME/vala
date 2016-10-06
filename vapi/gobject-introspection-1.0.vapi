@@ -247,7 +247,7 @@ namespace GI {
 		public static bool is_pointer (GI.TypeInfo info);
 		public static bool is_zero_terminated (GI.TypeInfo info);
 	}
-	[CCode (cheader_filename = "girepository.h")]
+	[CCode (cheader_filename = "girepository.h", has_type_id = false)]
 	[Compact]
 	public class Typelib {
 		public void free ();
@@ -270,7 +270,7 @@ namespace GI {
 		public static size_t get_size (GI.UnionInfo info);
 		public static bool is_discriminated (GI.UnionInfo info);
 	}
-	[CCode (cheader_filename = "girepository.h")]
+	[CCode (cheader_filename = "girepository.h", has_type_id = false)]
 	[Compact]
 	public class UnresolvedInfo {
 	}

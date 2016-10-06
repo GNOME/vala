@@ -3,12 +3,12 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstSdp", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace SDP {
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYDecryptInfo")]
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYDecryptInfo", has_type_id = false)]
 		[Compact]
 		[GIR (name = "MIKEYDecryptInfo")]
 		public class MIKEYDecryptInfo {
 		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYEncryptInfo")]
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYEncryptInfo", has_type_id = false)]
 		[Compact]
 		[GIR (name = "MIKEYEncryptInfo")]
 		public class MIKEYEncryptInfo {
@@ -126,7 +126,7 @@ namespace Gst {
 			[Version (since = "1.4")]
 			public bool t_set (Gst.SDP.MIKEYTSType type, [CCode (array_length = false)] uint8[] ts_value);
 		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadKEMAC")]
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadKEMAC", has_type_id = false)]
 		[Compact]
 		[GIR (name = "MIKEYPayloadKEMAC")]
 		public class MIKEYPayloadKEMAC : Gst.SDP.MIKEYPayload {
@@ -134,7 +134,7 @@ namespace Gst {
 			public Gst.SDP.MIKEYMacAlg mac_alg;
 			public weak GLib.Array<void*> subpayloads;
 		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadKeyData")]
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadKeyData", has_type_id = false)]
 		[Compact]
 		[GIR (name = "MIKEYPayloadKeyData")]
 		public class MIKEYPayloadKeyData : Gst.SDP.MIKEYPayload {
@@ -149,7 +149,7 @@ namespace Gst {
 			public uint8 salt_data;
 			public uint16 salt_len;
 		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadPKE")]
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadPKE", has_type_id = false)]
 		[Compact]
 		[GIR (name = "MIKEYPayloadPKE")]
 		public class MIKEYPayloadPKE : Gst.SDP.MIKEYPayload {
@@ -157,14 +157,14 @@ namespace Gst {
 			public uint8 data;
 			public uint16 data_len;
 		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadRAND")]
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadRAND", has_type_id = false)]
 		[Compact]
 		[GIR (name = "MIKEYPayloadRAND")]
 		public class MIKEYPayloadRAND : Gst.SDP.MIKEYPayload {
 			public uint8 len;
 			public uint8 rand;
 		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadSP")]
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadSP", has_type_id = false)]
 		[Compact]
 		[GIR (name = "MIKEYPayloadSP")]
 		public class MIKEYPayloadSP : Gst.SDP.MIKEYPayload {
@@ -172,7 +172,7 @@ namespace Gst {
 			public uint policy;
 			public Gst.SDP.MIKEYSecProto proto;
 		}
-		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadT")]
+		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYPayloadT", has_type_id = false)]
 		[Compact]
 		[GIR (name = "MIKEYPayloadT")]
 		public class MIKEYPayloadT : Gst.SDP.MIKEYPayload {

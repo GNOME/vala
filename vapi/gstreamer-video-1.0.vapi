@@ -61,7 +61,7 @@ namespace Gst {
 			protected ColorBalanceChannel ();
 			public virtual signal void value_changed (int value);
 		}
-		[CCode (cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "VideoConverter")]
 		public class Converter {
@@ -155,7 +155,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool transform_meta (Gst.Video.CodecFrame frame, Gst.Meta meta);
 		}
-		[CCode (cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "VideoDither")]
 		public class Dither {
@@ -315,7 +315,7 @@ namespace Gst {
 			public void set_global_alpha (float global_alpha);
 			public void set_render_rectangle (int render_x, int render_y, uint render_width, uint render_height);
 		}
-		[CCode (cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "VideoScaler")]
 		public class Scaler {

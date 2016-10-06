@@ -85,7 +85,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public uint track { get; set; }
 		}
-		[CCode (cheader_filename = "gst/audio/audio.h")]
+		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "AudioChannelMixer")]
 		public class ChannelMixer {
@@ -103,7 +103,7 @@ namespace Gst {
 			public static void invalidate (Gst.Clock clock);
 			public void reset (Gst.ClockTime time);
 		}
-		[CCode (cheader_filename = "gst/audio/audio.h")]
+		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "AudioConverter")]
 		public class Converter {
@@ -310,7 +310,7 @@ namespace Gst {
 			public void set_format (Gst.Audio.Format format, int rate, int channels, Gst.Audio.ChannelPosition position);
 			public Gst.Caps to_caps ();
 		}
-		[CCode (cheader_filename = "gst/audio/audio.h")]
+		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "AudioQuantize")]
 		public class Quantize {
@@ -318,7 +318,7 @@ namespace Gst {
 			public void reset ();
 			public void samples (void* @in, void* @out, uint samples);
 		}
-		[CCode (cheader_filename = "gst/audio/audio.h")]
+		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "AudioResampler")]
 		public class Resampler {

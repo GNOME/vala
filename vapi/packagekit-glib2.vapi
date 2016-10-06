@@ -691,7 +691,7 @@ namespace Pk {
 		[Version (since = "0.8.6")]
 		public bool to_file (GLib.File file) throws GLib.Error;
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", has_type_id = false)]
 	[Compact]
 	public class PackageSackResults {
 	}
