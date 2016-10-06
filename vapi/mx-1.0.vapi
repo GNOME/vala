@@ -884,7 +884,7 @@ namespace Mx {
 		[NoAccessorMethod]
 		public bool small_screen { get; set; }
 	}
-	[CCode (cheader_filename = "mx/mx.h")]
+	[CCode (cheader_filename = "mx/mx.h", has_type_id = false)]
 	[Compact]
 	public class SettingsProvider {
 	}
@@ -1454,7 +1454,7 @@ namespace Mx {
 		FORCE,
 		INVALIDATE_CACHE
 	}
-	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_STYLE_ERROR_INVALID_")]
+	[CCode (cheader_filename = "mx/mx.h", cprefix = "MX_STYLE_ERROR_INVALID_", type_id = "mx_style_error_get_type ()")]
 	public enum StyleError {
 		[Version (deprecated_since = "vala-0.14", replacement = "StyleError.INVALID_FILE")]
 		FILE,

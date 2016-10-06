@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gdk", gir_namespace = "GdkPixbuf", gir_version = "2.0", lower_case_cprefix = "gdk_")]
 namespace Gdk {
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", type_id = "gdk_pixbuf_get_type ()")]
 	public class Pixbuf : GLib.Object, GLib.Icon, GLib.LoadableIcon {
 		[CCode (has_construct_function = false)]
 		public Pixbuf (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);

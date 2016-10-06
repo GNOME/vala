@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstFft", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace FFT {
-		[CCode (cheader_filename = "gst/fft/fft.h")]
+		[CCode (cheader_filename = "gst/fft/fft.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "FFTF32")]
 		public class F32 {
@@ -13,7 +13,7 @@ namespace Gst {
 			public void inverse_fft (Gst.FFT.F32Complex freqdata, float timedata);
 			public void window (float timedata, Gst.FFT.Window window);
 		}
-		[CCode (cheader_filename = "gst/fft/fft.h")]
+		[CCode (cheader_filename = "gst/fft/fft.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "FFTF64")]
 		public class F64 {
@@ -23,7 +23,7 @@ namespace Gst {
 			public void inverse_fft (Gst.FFT.F64Complex freqdata, double timedata);
 			public void window (double timedata, Gst.FFT.Window window);
 		}
-		[CCode (cheader_filename = "gst/fft/fft.h")]
+		[CCode (cheader_filename = "gst/fft/fft.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "FFTS16")]
 		public class S16 {
@@ -33,7 +33,7 @@ namespace Gst {
 			public void inverse_fft (Gst.FFT.S16Complex freqdata, int16 timedata);
 			public void window (int16 timedata, Gst.FFT.Window window);
 		}
-		[CCode (cheader_filename = "gst/fft/fft.h")]
+		[CCode (cheader_filename = "gst/fft/fft.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "FFTS32")]
 		public class S32 {

@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstRtsp", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace RTSP {
-		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "RTSPConnection")]
 		public class Connection {
@@ -71,7 +71,7 @@ namespace Gst {
 			public string get_request_uri ();
 			public Gst.RTSP.Result set_port (uint16 port);
 		}
-		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "RTSPWatch")]
 		public class Watch {

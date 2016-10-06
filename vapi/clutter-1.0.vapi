@@ -5520,7 +5520,7 @@ namespace Clutter {
 		public GLib.Type get_property_type ();
 		public bool get_value (GLib.Value value);
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	[Compact]
 	[Version (since = "0.2")]
 	public class AnyEvent : Clutter.Event {
@@ -5530,7 +5530,7 @@ namespace Clutter {
 		public uint32 time;
 		public Clutter.EventType type;
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_backend_get_type ()")]
 	[Version (since = "0.4")]
 	public class Backend : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -5909,7 +5909,7 @@ namespace Clutter {
 		[NoAccessorMethod]
 		public Clutter.Color contrast { get; set; }
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	[Compact]
 	[Version (since = "0.2")]
 	public class ButtonEvent : Clutter.Event {
@@ -6053,7 +6053,7 @@ namespace Clutter {
 		[NoWrapper]
 		public virtual void update_preferred_size (Clutter.Actor actor, Clutter.Orientation direction, float for_size, float minimum_size, float natural_size);
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	[Compact]
 	[Version (since = "0.2")]
 	public class CrossingEvent : Clutter.Event {
@@ -6583,7 +6583,7 @@ namespace Clutter {
 		public GLib.Value initial { owned get; set; }
 		public GLib.Type value_type { get; construct; }
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	[Compact]
 	[Version (since = "0.2")]
 	public class KeyEvent : Clutter.Event {
@@ -6737,7 +6737,7 @@ namespace Clutter {
 		[NoAccessorMethod]
 		public uint row { get; set; }
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	[Compact]
 	[Version (since = "0.2")]
 	public class MotionEvent : Clutter.Event {
@@ -7087,7 +7087,7 @@ namespace Clutter {
 		public void set_scroll_mode (Clutter.ScrollMode mode);
 		public Clutter.ScrollMode scroll_mode { get; set; }
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	[Compact]
 	[Version (since = "0.2")]
 	public class ScrollEvent : Clutter.Event {
@@ -7383,7 +7383,7 @@ namespace Clutter {
 		[Version (since = "0.8")]
 		public virtual signal void stage_removed (Clutter.Stage stage);
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	[Compact]
 	[Version (since = "0.2")]
 	public class StageStateEvent : Clutter.Event {
@@ -7886,7 +7886,7 @@ namespace Clutter {
 		[Version (since = "1.12")]
 		public virtual signal void stopped (bool is_finished);
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	[Compact]
 	[Version (deprecated = true, deprecated_since = "1.6", since = "0.6")]
 	public class TimeoutPool {
@@ -7897,7 +7897,7 @@ namespace Clutter {
 		[Version (since = "0.4")]
 		public void remove (uint id_);
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	[Compact]
 	[Version (since = "1.10")]
 	public class TouchEvent : Clutter.Event {
@@ -7913,7 +7913,7 @@ namespace Clutter {
 		public float x;
 		public float y;
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	[Compact]
 	[Version (since = "1.24")]
 	public class TouchpadPinchEvent : Clutter.Event {
@@ -7930,7 +7930,7 @@ namespace Clutter {
 		public float x;
 		public float y;
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	[Compact]
 	[Version (since = "1.24")]
 	public class TouchpadSwipeEvent : Clutter.Event {
@@ -8559,7 +8559,7 @@ namespace Clutter {
 		TOUCHPAD_SWIPE,
 		EVENT_LAST
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_FEATURE_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_FEATURE_", type_id = "clutter_feature_flags_get_type ()")]
 	[Flags]
 	[Version (since = "0.4")]
 	public enum FeatureFlags {

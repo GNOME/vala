@@ -18,7 +18,7 @@ namespace Pango {
 		[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_SCALE_X_SMALL")]
 		public const double X_SMALL;
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	[Compact]
 	public class AttrClass {
 		public GLib.Callback copy;
@@ -26,29 +26,29 @@ namespace Pango {
 		public GLib.Callback equal;
 		public Pango.AttrType type;
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	[Compact]
 	public class AttrColor : Pango.Attribute {
 		public Pango.Color color;
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	[Compact]
 	public class AttrFloat : Pango.Attribute {
 		public double value;
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	[Compact]
 	public class AttrFontDesc : Pango.Attribute {
 		public weak Pango.FontDescription desc;
 		[CCode (has_construct_function = false, type = "PangoAttribute*")]
 		public AttrFontDesc (Pango.FontDescription desc);
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	[Compact]
 	public class AttrInt : Pango.Attribute {
 		public int value;
 	}
-	[CCode (cheader_filename = "pango/pango.h", free_function = "pango_attr_iterator_destroy")]
+	[CCode (cheader_filename = "pango/pango.h", free_function = "pango_attr_iterator_destroy", has_type_id = false)]
 	[Compact]
 	public class AttrIterator {
 		public Pango.AttrIterator copy ();
@@ -60,7 +60,7 @@ namespace Pango {
 		public bool next ();
 		public void range (out int start, out int end);
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	[Compact]
 	public class AttrLanguage : Pango.Attribute {
 		public weak Pango.Language value;
@@ -84,7 +84,7 @@ namespace Pango {
 		public void splice (Pango.AttrList other, int pos, int len);
 		public void unref ();
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	[Compact]
 	public class AttrShape<T> : Pango.Attribute {
 		public weak Pango.AttrDataCopyFunc<T> copy_func;
@@ -97,7 +97,7 @@ namespace Pango {
 		[CCode (has_construct_function = false, simple_generics = true, type = "PangoAttribute*")]
 		public AttrShape.with_data (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect, owned T data, Pango.AttrDataCopyFunc<T> copy_func);
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	[Compact]
 	public class AttrSize : Pango.Attribute {
 		public uint absolute;
@@ -105,12 +105,12 @@ namespace Pango {
 		[CCode (has_construct_function = false, type = "PangoAttribute*")]
 		public AttrSize (int size);
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	[Compact]
 	public class AttrString : Pango.Attribute {
 		public weak string value;
 	}
-	[CCode (cheader_filename = "pango/pango.h", free_function = "pango_attribute_destroy")]
+	[CCode (cheader_filename = "pango/pango.h", free_function = "pango_attribute_destroy", has_type_id = false)]
 	[Compact]
 	public class Attribute {
 		public uint end_index;
@@ -158,7 +158,7 @@ namespace Pango {
 		[Version (since = "1.6")]
 		public void set_matrix (Pango.Matrix? matrix);
 	}
-	[CCode (cheader_filename = "pango/pango.h", ref_function = "pango_coverage_ref", unref_function = "pango_coverage_unref")]
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false, ref_function = "pango_coverage_ref", unref_function = "pango_coverage_unref")]
 	[Compact]
 	public class Coverage {
 		[CCode (has_construct_function = false)]
@@ -522,11 +522,11 @@ namespace Pango {
 		[CCode (has_construct_function = false)]
 		protected LayoutRun ();
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	[Compact]
 	public class Map {
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	[Compact]
 	public class MapEntry {
 	}
@@ -569,7 +569,7 @@ namespace Pango {
 		public void set_color (Pango.RenderPart part, Pango.Color? color);
 		public void set_matrix (Pango.Matrix? matrix);
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	[Compact]
 	public class ScriptIter {
 		[CCode (has_construct_function = false)]

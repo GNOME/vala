@@ -37,7 +37,7 @@ namespace ClutterGst {
 		[NoAccessorMethod]
 		public Gst.Fraction pixel_aspect_ratio { owned get; set; }
 	}
-	[CCode (cheader_filename = "clutter-gst/clutter-gst.h")]
+	[CCode (cheader_filename = "clutter-gst/clutter-gst.h", type_id = "clutter_gst_player_get_type ()")]
 	[Version (since = "1.4")]
 	public interface Player : Clutter.Media, GLib.Object {
 		public static void class_init (GLib.ObjectClass object_class);

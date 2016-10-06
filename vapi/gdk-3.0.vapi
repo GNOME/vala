@@ -5901,7 +5901,7 @@ namespace Gdk {
 		[Version (since = "3.22")]
 		public int get_n_groups ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	[SimpleType]
 	public struct Atom : uint {
 		[CCode (cname = "GDK_NONE")]
@@ -5970,7 +5970,7 @@ namespace Gdk {
 		[Version (since = "3.0")]
 		public string to_string ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_rectangle_get_type ()")]
 	public struct Rectangle : Cairo.RectangleInt {
 		[Version (since = "3.20")]
 		public bool equal (Gdk.Rectangle rect2);
