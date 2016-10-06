@@ -1852,6 +1852,19 @@ public class Vala.GirParser : CodeVisitor {
 		}
 	}
 
+	void set_type_id_ccode (Symbol sym) {
+		if (sym.has_attribute_argument ("CCode", "has_type_id")
+		    || sym.has_attribute_argument ("CCode", "type_id"))
+		    return;
+
+		var type_id = element_get_type_id ();
+		if (type_id == null) {
+			sym.set_attribute_bool ("CCode", "has_type_id", false);
+		} else {
+			sym.set_attribute_string ("CCode", "type_id", type_id);
+		}
+	}
+
 	void parse_repository () {
 		start_element ("repository");
 		if (reader.get_attribute ("version") != GIR_VERSION) {
@@ -2262,18 +2275,15 @@ public class Vala.GirParser : CodeVisitor {
 					en.set_attribute ("Flags", true);
 				}
 				sym = en;
-
-				var type_id = element_get_type_id ();
-				if (type_id == null) {
-					en.set_attribute_bool ("CCode", "has_type_id", false);
-				} else {
-					en.set_attribute_string ("CCode", "type_id", type_id);
-				}
 			}
 			current.symbol = sym;
 		} else {
 			sym = current.symbol;
 		}
+
+		if (!error_domain)
+			set_type_id_ccode (sym);
+
 		sym.external = true;
 		sym.access = SymbolAccessibility.PUBLIC;
 
@@ -2678,15 +2688,12 @@ public class Vala.GirParser : CodeVisitor {
 		if (current.new_symbol) {
 			st = new Struct (element_get_name (), current.source_reference);
 			current.symbol = st;
-			var type_id = element_get_type_id ();
-			if (type_id == null) {
-				st.set_attribute_bool ("CCode", "has_type_id", false);
-			} else {
-				st.set_attribute_string ("CCode", "type_id", type_id);
-			}
 		} else {
 			st = (Struct) current.symbol;
 		}
+
+		set_type_id_ccode (st);
+
 		st.external = true;
 		st.access = SymbolAccessibility.PUBLIC;
 
@@ -2746,7 +2753,6 @@ public class Vala.GirParser : CodeVisitor {
 		var parent = reader.get_attribute ("parent");
 		if (current.new_symbol) {
 			cl = new Class (current.name, current.source_reference);
-			cl.set_attribute_string ("CCode", "type_id", element_get_type_id ());
 			cl.is_abstract = metadata.get_bool (ArgumentType.ABSTRACT, reader.get_attribute ("abstract") == "1");
 
 			if (parent != null) {
@@ -2756,6 +2762,9 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			cl = (Class) current.symbol;
 		}
+
+		set_type_id_ccode (cl);
+
 		cl.access = SymbolAccessibility.PUBLIC;
 		cl.external = true;
 
@@ -2826,15 +2835,12 @@ public class Vala.GirParser : CodeVisitor {
 		Interface iface;
 		if (current.new_symbol) {
 			iface = new Interface (current.name, current.source_reference);
-			var typeid = element_get_type_id ();
-			if (typeid != null) {
-				iface.set_attribute_string ("CCode", "type_id", typeid);
-			}
-
 			current.symbol = iface;
 		} else {
 			iface = (Interface) current.symbol;
 		}
+
+		set_type_id_ccode (iface);
 
 		iface.access = SymbolAccessibility.PUBLIC;
 		iface.external = true;
@@ -3245,16 +3251,14 @@ public class Vala.GirParser : CodeVisitor {
 		if (current.new_symbol) {
 			cl = new Class (current.name, current.source_reference);
 			cl.is_compact = true;
-			var typeid = element_get_type_id ();
-			if (typeid != null) {
-				require_copy_free = true;
-				cl.set_attribute_string ("CCode", "type_id", typeid);
-			}
-
 			current.symbol = cl;
 		} else {
 			cl = (Class) current.symbol;
 		}
+
+		set_type_id_ccode (cl);
+		require_copy_free = cl.has_attribute_argument ("CCode", "type_id");
+
 		cl.access = SymbolAccessibility.PUBLIC;
 		cl.external = true;
 
@@ -3302,7 +3306,10 @@ public class Vala.GirParser : CodeVisitor {
 
 		// Add ccode-attributes for ref/unref methodes if available
 		// otherwise fallback to default g_boxed_copy/free
-		if (ref_method != null && unref_method != null) {
+		if (cl.has_attribute_argument ("CCode", "ref_function") || cl.has_attribute_argument ("CCode", "unref_function")
+		    || cl.has_attribute_argument ("CCode", "copy_function") || cl.has_attribute_argument ("CCode", "free_function")) {
+			//do nothing
+		} else if (ref_method != null && unref_method != null) {
 			cl.set_attribute_string ("CCode", "ref_function", ref_method.get_cname ());
 			cl.set_attribute_string ("CCode", "unref_function", unref_method.get_cname ());
 		} else if (require_copy_free) {
