@@ -3,4 +3,5 @@ GdlDockObject::detach name="detached"
 GdlDockObject::dock name="docked"
 gdl_dock_object_dock.other_data nullable="1"
 gdl_dock_item_dock_to.target nullable="1"
-
+gdl_dock_master_foreach.function type_arguments="DockObject"
+gdl_dock_master_foreach_toplevel.function type_arguments="DockObject"

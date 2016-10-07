@@ -60,7 +60,7 @@ parse_launchv_full floating
 parse_launch_full floating
 parse_bin_from_description_full floating
 
-// Variaidc functions
+// Variadic functions
 *_valist skip=false
 *.*_valist skip=false
 *.*_valist_* skip=false
@@ -235,4 +235,6 @@ Pipeline
 URIHandler
   .get_protocols abstract
   .get_uri_type abstract vfunc_name="get_type"
+
+util_array_binary_search.search_func type_arguments="void*"
 

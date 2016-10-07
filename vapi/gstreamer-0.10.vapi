@@ -643,7 +643,7 @@ namespace Gst {
 		public unowned Gst.IndexEntry? add_object (int id, string key, GLib.Type type, void* object);
 		public virtual void commit (int id);
 		public virtual unowned Gst.IndexEntry? get_assoc_entry (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value);
-		public unowned Gst.IndexEntry? get_assoc_entry_full (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value, GLib.CompareDataFunc func);
+		public unowned Gst.IndexEntry? get_assoc_entry_full (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value, GLib.CompareDataFunc<void*> func);
 		public Gst.IndexCertainty get_certainty ();
 		public int get_group ();
 		public virtual bool get_writer_id (Gst.Object writer, out int id);
@@ -706,9 +706,9 @@ namespace Gst {
 		public GLib.Type type;
 		[CCode (has_construct_function = false)]
 		public Iterator (uint size, GLib.Type type, GLib.Mutex @lock, ref uint32 master_cookie, Gst.IteratorNextFunction<T> next, Gst.IteratorItemFunction<T> item, Gst.IteratorResyncFunction resync, Gst.IteratorFreeFunction free);
-		public T find_custom (GLib.CompareFunc func, T user_data);
+		public T find_custom (GLib.CompareFunc<T> func, T user_data);
 		public Gst.IteratorResult fold ([CCode (delegate_target_pos = 2.1)] Gst.IteratorFoldFunction<T> func, out Gst.Value ret);
-		public Gst.IteratorResult @foreach (GLib.Func func);
+		public Gst.IteratorResult @foreach (GLib.Func<T> func);
 		[CCode (has_construct_function = false)]
 		public Iterator.list (GLib.Type type, GLib.Mutex @lock, ref uint32 master_cookie, GLib.List<T> list, void* owner, Gst.IteratorItemFunction<T> item, Gst.IteratorDisposeFunction free);
 		public Gst.IteratorResult next (out T elem);
@@ -3032,7 +3032,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool uri_protocol_is_valid (string protocol);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void* util_array_binary_search (void* array, uint num_elements, size_t element_size, GLib.CompareDataFunc search_func, Gst.SearchMode mode, void* search_data);
+	public static void* util_array_binary_search (void* array, uint num_elements, size_t element_size, GLib.CompareDataFunc<void*> search_func, Gst.SearchMode mode, void* search_data);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void util_double_to_fraction (double src, int dest_n, int dest_d);
 	[CCode (cheader_filename = "gst/gst.h")]

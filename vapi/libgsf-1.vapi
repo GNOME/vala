@@ -21,7 +21,7 @@ namespace Gsf {
 	public class DocMetaData : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public DocMetaData ();
-		public void @foreach (GLib.HFunc func);
+		public void @foreach (GLib.HFunc<string,Gsf.DocProp> func);
 		public void insert (string name, GLib.Value value);
 		public unowned Gsf.DocProp? lookup (string name);
 		public void remove (string name);

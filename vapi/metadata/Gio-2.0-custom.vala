@@ -164,9 +164,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 7.9)]
 	public delegate bool DBusInterfaceSetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name, GLib.Variant value) throws GLib.Error;
 	[Version (deprecated_since = "vala-0.16", replacement = "File.equal")]
-	public static GLib.EqualFunc file_equal;
+	public static GLib.EqualFunc<GLib.File> file_equal;
 	[Version (deprecated_since = "vala-0.16", replacement = "File.hash")]
-	public static GLib.HashFunc file_hash;
+	public static GLib.HashFunc<GLib.File> file_hash;
 	[Version (deprecated_since = "vala-0.12", replacement = "GLib.ContentType.can_be_executable")]
 	[CCode (cname = "g_content_type_can_be_executable", cheader_filename = "gio/gio.h")]
 	public static bool g_content_type_can_be_executable (string type);

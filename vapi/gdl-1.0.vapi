@@ -126,8 +126,8 @@ namespace Gdl {
 		[CCode (has_construct_function = false)]
 		protected DockMaster ();
 		public void add (Gdl.DockObject object);
-		public void @foreach (GLib.Func function);
-		public void foreach_toplevel (bool include_controller, GLib.Func function);
+		public void @foreach (GLib.Func<Gdl.DockObject> function);
+		public void foreach_toplevel (bool include_controller, GLib.Func<Gdl.DockObject> function);
 		public unowned Gdl.DockObject get_controller ();
 		public unowned Gdl.DockObject get_object (string nick_name);
 		public void remove (Gdl.DockObject object);

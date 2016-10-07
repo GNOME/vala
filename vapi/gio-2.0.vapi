@@ -1610,13 +1610,13 @@ namespace GLib {
 		[Version (since = "2.44")]
 		public void insert (uint position, GLib.Object item);
 		[Version (since = "2.44")]
-		public uint insert_sorted (GLib.Object item, GLib.CompareDataFunc compare_func);
+		public uint insert_sorted (GLib.Object item, GLib.CompareDataFunc<GLib.Object> compare_func);
 		[Version (since = "2.44")]
 		public void remove (uint position);
 		[Version (since = "2.44")]
 		public void remove_all ();
 		[Version (since = "2.46")]
-		public void sort (GLib.CompareDataFunc compare_func);
+		public void sort (GLib.CompareDataFunc<GLib.Object> compare_func);
 		[Version (since = "2.44")]
 		public void splice (uint position, uint n_removals, [CCode (array_length_cname = "n_additions", array_length_pos = 3.1, array_length_type = "guint")] GLib.Object[] additions);
 		[NoAccessorMethod]
@@ -4678,10 +4678,10 @@ namespace GLib {
 	public delegate GLib.File VfsFileLookupFunc (GLib.Vfs vfs, string identifier);
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (deprecated_since = "vala-0.16", replacement = "File.equal")]
-	public static GLib.EqualFunc file_equal;
+	public static GLib.EqualFunc<GLib.File> file_equal;
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (deprecated_since = "vala-0.16", replacement = "File.hash")]
-	public static GLib.HashFunc file_hash;
+	public static GLib.HashFunc<GLib.File> file_hash;
 	[CCode (cheader_filename = "glib.h", cname = "g_realloc")]
 	public static GLib.ReallocFunc g_realloc;
 	[CCode (cheader_filename = "gio/gio.h")]

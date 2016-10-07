@@ -722,7 +722,7 @@ namespace Gda {
 		public void clear ();
 		public unowned Gda.QuarkList copy ();
 		public unowned string find (string name);
-		public void @foreach (GLib.HFunc func);
+		public void @foreach (GLib.HFunc<string,string> func);
 		[CCode (has_construct_function = false)]
 		public QuarkList.from_string (string str);
 		public void remove (string name);

@@ -152,6 +152,9 @@ InputStream
 ListModel
   .get_item#virtual_method skip
   .get_item#method skip=false abstract
+ListStore
+  .insert_sorted.compare_func type_arguments="GLib.Object"
+  .sort.compare_func type_arguments="GLib.Object"
 MemoryInputStream
   .add_data.destroy default=GLib.g_free
 MemoryInputStream

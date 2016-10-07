@@ -378,7 +378,7 @@ namespace Gst {
 	}
 	namespace Util {
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void* array_binary_search (void* array, uint num_elements, size_t element_size, [CCode (delegate_target_pos = 6.1)] GLib.CompareDataFunc search_func, Gst.SearchMode mode, void* search_data);
+		public static void* array_binary_search (void* array, uint num_elements, size_t element_size, [CCode (delegate_target_pos = 6.1)] GLib.CompareDataFunc<void*> search_func, Gst.SearchMode mode, void* search_data);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void double_to_fraction (double src, out int dest_n, out int dest_d);
 		[CCode (cheader_filename = "gst/gst.h")]
