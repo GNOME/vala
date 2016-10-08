@@ -14,6 +14,7 @@ Aspectratio
   .new symbol_type="constructor"
 Content
   .new symbol_type="constructor"
+  .new_with_sink symbol_type="constructor"
 Playback
   .audio_streams type="GLib.List<string>"
   .subtitle_tracks type="GLib.List<string>"
