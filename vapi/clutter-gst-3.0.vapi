@@ -122,13 +122,14 @@ namespace ClutterGst {
 		[NoWrapper]
 		public virtual bool has_painting_content ();
 		[Version (since = "3.0")]
-		public static Clutter.Content new_with_sink (ClutterGst.VideoSink sink);
-		[Version (since = "3.0")]
 		public void set_frame (ClutterGst.Frame frame);
 		[Version (since = "3.0")]
 		public void set_player (ClutterGst.Player player);
 		[Version (since = "3.0")]
 		public void set_sink (ClutterGst.VideoSink sink);
+		[CCode (has_construct_function = false, type = "ClutterContent*")]
+		[Version (since = "3.0")]
+		public Content.with_sink (ClutterGst.VideoSink sink);
 		public ClutterGst.Frame frame { get; set; }
 		[NoAccessorMethod]
 		public bool paint_frame { get; set; }
