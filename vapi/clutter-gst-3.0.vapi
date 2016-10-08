@@ -18,9 +18,8 @@ namespace ClutterGst {
 	}
 	[CCode (cheader_filename = "clutter-gst/clutter-gst.h", type_id = "clutter_gst_aspectratio_get_type ()")]
 	public class Aspectratio : ClutterGst.Content, Clutter.Content {
-		[CCode (has_construct_function = false)]
-		protected Aspectratio ();
-		public static Clutter.Content @new ();
+		[CCode (has_construct_function = false, type = "ClutterContent*")]
+		public Aspectratio ();
 		[NoAccessorMethod]
 		[Version (since = "3.0")]
 		public bool fill_allocation { get; set; }
@@ -110,8 +109,8 @@ namespace ClutterGst {
 	[CCode (cheader_filename = "clutter-gst/clutter-gst.h", type_id = "clutter_gst_content_get_type ()")]
 	[Version (since = "0.0")]
 	public class Content : GLib.Object, Clutter.Content {
-		[CCode (has_construct_function = false)]
-		protected Content ();
+		[CCode (has_construct_function = false, type = "ClutterContent*")]
+		public Content ();
 		[Version (since = "3.0")]
 		public unowned ClutterGst.Frame get_frame ();
 		[Version (since = "3.0")]
@@ -122,7 +121,6 @@ namespace ClutterGst {
 		public unowned ClutterGst.VideoSink get_sink ();
 		[NoWrapper]
 		public virtual bool has_painting_content ();
-		public static Clutter.Content @new ();
 		[Version (since = "3.0")]
 		public static Clutter.Content new_with_sink (ClutterGst.VideoSink sink);
 		[Version (since = "3.0")]
