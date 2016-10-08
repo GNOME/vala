@@ -383,8 +383,8 @@ namespace GLib {
 		public void insert (uint index_, GLib.Value value);
 		public void prepend (GLib.Value value);
 		public void remove (uint index_);
-		public void sort (GLib.CompareFunc compare_func);
-		public void sort_with_data (GLib.CompareDataFunc compare_func);
+		public void sort (GLib.CompareFunc<GLib.Value> compare_func);
+		public void sort_with_data (GLib.CompareDataFunc<GLib.Value> compare_func);
 	}
 	public interface TypePlugin {
 	}

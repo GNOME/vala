@@ -123,7 +123,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 	}
 
-	private ArrayList<GIRNamespace?> externals = new ArrayList<GIRNamespace?> ((EqualFunc) GIRNamespace.equal);
+	private ArrayList<GIRNamespace?> externals = new ArrayList<GIRNamespace?> ((EqualFunc<GIRNamespace>) GIRNamespace.equal);
 
 	public void write_includes() {
 		foreach (var i in externals) {

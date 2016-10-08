@@ -3140,7 +3140,7 @@ namespace GLib {
 		public TokenValue cur_value ();
 		public uint set_scope (uint scope_id);
 		public void scope_add_symbol (uint scope_id, string symbol, void* value);
-		public void scope_foreach_symbol (uint scope_id, HFunc func);
+		public void scope_foreach_symbol (uint scope_id, HFunc<string, void*> func);
 		public void* scope_lookup_symbol (uint scope_id, string symbol);
 		public void scope_remove_symbol (uint scope_id, string symbol);
 		public void* lookup_symbol (string symbol);
@@ -5086,7 +5086,7 @@ namespace GLib {
 		public Datalist ();
 		public void clear ();
 		[Version (since = "2.34")]
-		public G id_dup_data (Quark key_id, DuplicateFunc dup_func);
+		public G id_dup_data (Quark key_id, DuplicateFunc<G> dup_func);
 		public unowned G id_get_data (Quark key_id);
 		public void id_set_data (Quark key_id, owned G data);
 		public void id_set_data_full (Quark key_id, owned G data, DestroyNotify? destroy_func);
@@ -5094,7 +5094,7 @@ namespace GLib {
 		public G id_remove_no_notify (Quark key_id);
 		[Version (since = "2.34")]
 		public bool id_replace_data (Quark key_id, G oldval, owned G newval, GLib.DestroyNotify? destroy, out GLib.DestroyNotify? old_destroy);
-		public void @foreach (DataForeachFunc func);
+		public void @foreach (DataForeachFunc<G> func);
 		public unowned G get_data (string key);
 		public void set_data_full (string key, owned G data, DestroyNotify? destry_func);
 		public G remove_no_notify (string key);

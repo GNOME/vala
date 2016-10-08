@@ -1651,10 +1651,10 @@ public class Vala.CodeWriter : CodeVisitor {
 				if (key == "cheader_filename" && sym is Namespace) {
 					continue;
 				}
-				keys.insert_sorted (key, (CompareDataFunc) strcmp);
+				keys.insert_sorted (key, (CompareDataFunc<string>) strcmp);
 			}
 			if (need_cheaders && attr.name == "CCode" && !attr.has_argument ("cheader_filename")) {
-				keys.insert_sorted ("cheader_filename", (CompareDataFunc) strcmp);
+				keys.insert_sorted ("cheader_filename", (CompareDataFunc<string>) strcmp);
 			}
 
 			if (attr.name == "CCode" && keys.get_length () == 0) {

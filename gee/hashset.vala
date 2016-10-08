@@ -32,11 +32,11 @@ public class Vala.HashSet<G> : Set<G> {
 		get { return _nnodes; }
 	}
 
-	public HashFunc hash_func {
+	public HashFunc<G> hash_func {
 		set { _hash_func = value; }
 	}
 
-	public EqualFunc equal_func {
+	public EqualFunc<G> equal_func {
 		set { _equal_func = value; }
 	}
 
@@ -47,13 +47,13 @@ public class Vala.HashSet<G> : Set<G> {
 	// concurrent modification protection
 	private int _stamp = 0;
 
-	private HashFunc _hash_func;
-	private EqualFunc _equal_func;
+	private HashFunc<G> _hash_func;
+	private EqualFunc<G> _equal_func;
 
 	private const int MIN_SIZE = 11;
 	private const int MAX_SIZE = 13845163;
 
-	public HashSet (HashFunc hash_func = GLib.direct_hash, EqualFunc equal_func = GLib.direct_equal) {
+	public HashSet (HashFunc<G> hash_func = GLib.direct_hash, EqualFunc<G> equal_func = GLib.direct_equal) {
 		this.hash_func = hash_func;
 		this.equal_func = equal_func;
 		_array_size = MIN_SIZE;

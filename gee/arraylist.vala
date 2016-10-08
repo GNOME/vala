@@ -32,18 +32,18 @@ public class Vala.ArrayList<G> : List<G> {
 		get { return _size; }
 	}
 
-	public EqualFunc equal_func {
+	public EqualFunc<G> equal_func {
 		set { _equal_func = value; }
 	}
 
 	private G[] _items = new G[4];
 	private int _size;
-	private EqualFunc _equal_func;
+	private EqualFunc<G> _equal_func;
 
 	// concurrent modification protection
 	private int _stamp = 0;
 
-	public ArrayList (EqualFunc equal_func = GLib.direct_equal) {
+	public ArrayList (EqualFunc<G> equal_func = GLib.direct_equal) {
 		this.equal_func = equal_func;
 	}
 

@@ -32,15 +32,15 @@ public class Vala.HashMap<K,V> : Map<K,V> {
 		get { return _nnodes; }
 	}
 
-	public HashFunc key_hash_func {
+	public HashFunc<K> key_hash_func {
 		set { _key_hash_func = value; }
 	}
 
-	public EqualFunc key_equal_func {
+	public EqualFunc<K> key_equal_func {
 		set { _key_equal_func = value; }
 	}
 
-	public EqualFunc value_equal_func {
+	public EqualFunc<V> value_equal_func {
 		set { _value_equal_func = value; }
 	}
 
@@ -51,14 +51,14 @@ public class Vala.HashMap<K,V> : Map<K,V> {
 	// concurrent modification protection
 	private int _stamp = 0;
 
-	private HashFunc _key_hash_func;
-	private EqualFunc _key_equal_func;
-	private EqualFunc _value_equal_func;
+	private HashFunc<K> _key_hash_func;
+	private EqualFunc<K> _key_equal_func;
+	private EqualFunc<V> _value_equal_func;
 
 	private const int MIN_SIZE = 11;
 	private const int MAX_SIZE = 13845163;
 
-	public HashMap (HashFunc key_hash_func = GLib.direct_hash, EqualFunc key_equal_func = GLib.direct_equal, EqualFunc value_equal_func = GLib.direct_equal) {
+	public HashMap (HashFunc<K> key_hash_func = GLib.direct_hash, EqualFunc<K> key_equal_func = GLib.direct_equal, EqualFunc<V> value_equal_func = GLib.direct_equal) {
 		this.key_hash_func = key_hash_func;
 		this.key_equal_func = key_equal_func;
 		this.value_equal_func = value_equal_func;

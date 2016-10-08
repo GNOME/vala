@@ -3949,8 +3949,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	/* Hash and equal functions */
 
-	static uint unresolved_symbol_hash (void *ptr) {
-		var sym = (UnresolvedSymbol) ptr;
+	static uint unresolved_symbol_hash (UnresolvedSymbol? sym) {
 		var builder = new StringBuilder ();
 		while (sym != null) {
 			builder.append (sym.name);
@@ -3959,9 +3958,7 @@ public class Vala.GirParser : CodeVisitor {
 		return builder.str.hash ();
 	}
 
-	static bool unresolved_symbol_equal (void *ptr1, void *ptr2) {
-		var sym1 = (UnresolvedSymbol) ptr1;
-		var sym2 = (UnresolvedSymbol) ptr2;
+	static bool unresolved_symbol_equal (UnresolvedSymbol? sym1, UnresolvedSymbol? sym2) {
 		while (sym1 != sym2) {
 			if (sym1 == null || sym2 == null) {
 				return false;

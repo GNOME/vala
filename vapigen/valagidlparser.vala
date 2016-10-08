@@ -105,7 +105,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		current_source_file = source_file;
 
 		codenode_attributes_map = new HashMap<string,string> (str_hash, str_equal);
-		codenode_attributes_patterns = new HashMap<PatternSpec*,string> (direct_hash, (EqualFunc) PatternSpec.equal);
+		codenode_attributes_patterns = new HashMap<PatternSpec*,string> (direct_hash, (EqualFunc<PatternSpec>) PatternSpec.equal);
 
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			try {
