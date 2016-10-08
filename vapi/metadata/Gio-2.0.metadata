@@ -206,6 +206,8 @@ SimpleAsyncResult
   .new skip
   .new_error skip
   .new_from_error skip
+SimpleProxyResolver
+  .new symbol_type="constructor"
 Socket
   .condition_wait throws="GLib.IOError"
   .create_source skip=false type="GLib.SocketSource"
