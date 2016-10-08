@@ -14,14 +14,17 @@ Event
         ._get_angle skip
         ._get_center skip
         ._get_distance skip
-Window
+Window abstract=false
         .add_filter skip=false
         .create_similar_image_surface type="Cairo.ImageSurface"
         .remove_filter skip=false
         .moved_to_rect.*_rect type="Gdk.Rectangle"
 WindowRedirect skip
-EventKey struct=false
-        .string skip
+Rectangle struct
+	.x skip
+	.y skip
+	.width skip
+	.height skip
 RGBA struct
 ModifierType
         .modifier_reserved_*_mask skip
@@ -41,12 +44,10 @@ Device
         .associated_device nullable
         .name nullable
 
-// https://bugzilla.gnome.org/show_bug.cgi?id=748833
-Rectangle skip
-
 // vapigen actually generates the correctly, but in away that breaks BC
-Screen.get_monitor_geometry skip
-Window.get_frame_extents skip
+Rectangle.union return_void
+Screen.get_monitor_geometry return_void
+Window.get_frame_extents return_void
 
 EventAny struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventButton struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
@@ -56,6 +57,8 @@ EventDND struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventExpose struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventFocus struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventGrabBroken struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+EventKey struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
+	.string name="str" unowned=false
 EventMotion struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
         .axes array
 EventOwnerChange struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
