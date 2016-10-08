@@ -5960,11 +5960,10 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_canvas_get_type ()")]
 	[Version (since = "1.10")]
 	public class Canvas : GLib.Object, Clutter.Content {
-		[CCode (has_construct_function = false)]
-		protected Canvas ();
+		[CCode (has_construct_function = false, type = "ClutterContent*")]
+		public Canvas ();
 		[Version (since = "1.18")]
 		public int get_scale_factor ();
-		public static Clutter.Content @new ();
 		[Version (since = "1.18")]
 		public void set_scale_factor (int scale);
 		public bool set_size (int width, int height);
@@ -6448,9 +6447,8 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_image_get_type ()")]
 	[Version (since = "1.10")]
 	public class Image : GLib.Object, Clutter.Content {
-		[CCode (has_construct_function = false)]
-		protected Image ();
-		public static Clutter.Content @new ();
+		[CCode (has_construct_function = false, type = "ClutterContent*")]
+		public Image ();
 		public bool set_area ([CCode (array_length = false)] uint8[] data, Cogl.PixelFormat pixel_format, Cairo.RectangleInt rect, uint row_stride) throws GLib.Error;
 		[Version (since = "1.12")]
 		public bool set_bytes (GLib.Bytes data, Cogl.PixelFormat pixel_format, uint width, uint height, uint row_stride) throws GLib.Error;

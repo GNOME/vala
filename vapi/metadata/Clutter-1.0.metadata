@@ -16,7 +16,11 @@ Actor
 	.apply_transform.matrix ref
 	.get_abs_allocation_vertices.verts out=false
 	.get_allocation_vertices.verts out=false
+Canvas
+	.new symbol_type="constructor"
 Event.type#method name="get_type"
+Image
+	.new symbol_type="constructor"
 
 // ???
 Actor.has_pointer#method name="get_has_pointer"
