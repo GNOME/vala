@@ -161,6 +161,7 @@ TESTS = \
 	delegates/bug772204.test \
 	objects/chainup.vala \
 	objects/classes.vala \
+	objects/constructors.vala \
 	objects/generics.vala \
 	objects/fields.vala \
 	objects/interfaces.vala \
