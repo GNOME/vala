@@ -136,6 +136,7 @@ TESTS = \
 	delegates/bug703804.vala \
 	objects/chainup.vala \
 	objects/classes.vala \
+	objects/constructors.vala \
 	objects/fields.vala \
 	objects/interfaces.vala \
 	objects/methods.vala \
