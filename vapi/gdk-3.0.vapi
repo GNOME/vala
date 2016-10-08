@@ -5490,7 +5490,7 @@ namespace Gdk {
 		public Gdk.Rectangle workarea { get; }
 		public signal void invalidate ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_screen_get_type ()")]
 	public class Screen : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Screen ();
@@ -5510,6 +5510,7 @@ namespace Gdk {
 		public int get_monitor_at_point (int x, int y);
 		[Version (since = "2.2")]
 		public int get_monitor_at_window (Gdk.Window window);
+		[Version (since = "2.2")]
 		public void get_monitor_geometry (int monitor_num, out Gdk.Rectangle dest);
 		[Version (since = "2.14")]
 		public int get_monitor_height_mm (int monitor_num);
@@ -5626,7 +5627,7 @@ namespace Gdk {
 		[Version (since = "2.22")]
 		public Gdk.VisualType get_visual_type ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_window_get_type ()")]
 	public class Window : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Window (Gdk.Window? parent, Gdk.WindowAttr attributes, Gdk.WindowAttributesType attributes_mask);
@@ -5971,6 +5972,8 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Rectangle : Cairo.RectangleInt {
+		[Version (since = "3.20")]
+		public bool equal (Gdk.Rectangle rect2);
 		public bool intersect (Gdk.Rectangle src2, out Gdk.Rectangle dest);
 		public void union (Gdk.Rectangle src2, out Gdk.Rectangle dest);
 	}
