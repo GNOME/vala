@@ -1,3 +1,5 @@
+delegate void Func ();
+
 public class Foo {
 	public async void do_foo () {
 		Func f = () => {};

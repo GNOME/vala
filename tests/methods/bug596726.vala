@@ -1,3 +1,5 @@
+delegate void Func ();
+
 void do_bar (Func f) {
 }
 
