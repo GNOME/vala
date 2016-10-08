@@ -173,7 +173,10 @@ public class Vala.ObjectCreationExpression : Expression {
 		checked = true;
 
 		if (member_name != null) {
-			member_name.check (context);
+			if (!member_name.check (context)) {
+				error = true;
+				return false;
+			}
 		}
 
 		TypeSymbol type = null;
@@ -280,7 +283,8 @@ public class Vala.ObjectCreationExpression : Expression {
 				symbol_reference.version.check (source_reference);
 			}
 
-			if (symbol_reference != null && symbol_reference.access == SymbolAccessibility.PRIVATE) {
+			if (symbol_reference != null
+			    && (symbol_reference.access == SymbolAccessibility.PRIVATE || symbol_reference.access == SymbolAccessibility.PROTECTED)) {
 				bool in_target_type = false;
 				for (Symbol this_symbol = context.analyzer.current_symbol; this_symbol != null; this_symbol = this_symbol.parent_symbol) {
 					if (this_symbol == cl) {
@@ -291,7 +295,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 				if (!in_target_type) {
 					error = true;
-					Report.error (source_reference, "Access to private member `%s' denied".printf (symbol_reference.get_full_name ()));
+					Report.error (source_reference, "Access to non-public constructor `%s' denied".printf (symbol_reference.get_full_name ()));
 					return false;
 				}
 			}
