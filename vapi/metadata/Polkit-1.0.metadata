@@ -1,1 +1,14 @@
 *.*.cancellable#parameter nullable default=null
+
+SystemBusName
+  .new symbol_type="constructor"
+UnixGroup
+  .new symbol_type="constructor"
+UnixNetgroup
+  .new symbol_type="constructor"
+UnixProcess
+  .new symbol_type="constructor"
+UnixSession
+  .new symbol_type="constructor"
+UnixUser
+  .new symbol_type="constructor"

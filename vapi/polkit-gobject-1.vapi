@@ -88,12 +88,11 @@ namespace Polkit {
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_system_bus_name_get_type ()")]
 	public class SystemBusName : GLib.Object, Polkit.Subject {
-		[CCode (has_construct_function = false)]
-		protected SystemBusName ();
+		[CCode (has_construct_function = false, type = "PolkitSubject*")]
+		public SystemBusName (string name);
 		public unowned string get_name ();
 		public Polkit.Subject? get_process_sync (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public Polkit.UnixUser? get_user_sync (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public static Polkit.Subject @new (string name);
 		public void set_name (string name);
 		public string name { get; set construct; }
 	}
@@ -109,32 +108,29 @@ namespace Polkit {
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_unix_group_get_type ()")]
 	public class UnixGroup : GLib.Object, Polkit.Identity {
-		[CCode (has_construct_function = false)]
-		protected UnixGroup ();
+		[CCode (has_construct_function = false, type = "PolkitIdentity*")]
+		public UnixGroup (int gid);
 		public int get_gid ();
-		public static Polkit.Identity @new (int gid);
 		public static Polkit.Identity new_for_name (string name) throws GLib.Error;
 		public void set_gid (int gid);
 		public int gid { get; set construct; }
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_unix_netgroup_get_type ()")]
 	public class UnixNetgroup : GLib.Object, Polkit.Identity {
-		[CCode (has_construct_function = false)]
-		protected UnixNetgroup ();
+		[CCode (has_construct_function = false, type = "PolkitIdentity*")]
+		public UnixNetgroup (string name);
 		public unowned string get_name ();
-		public static Polkit.Identity @new (string name);
 		public void set_name (string name);
 		public string name { get; set construct; }
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_unix_process_get_type ()")]
 	public class UnixProcess : GLib.Object, Polkit.Subject {
-		[CCode (has_construct_function = false)]
-		protected UnixProcess ();
+		[CCode (has_construct_function = false, type = "PolkitSubject*")]
+		public UnixProcess (int pid);
 		public int get_owner () throws GLib.Error;
 		public int get_pid ();
 		public uint64 get_start_time ();
 		public int get_uid ();
-		public static Polkit.Subject @new (int pid);
 		public static Polkit.Subject new_for_owner (int pid, uint64 start_time, int uid);
 		public static Polkit.Subject new_full (int pid, uint64 start_time);
 		public void set_pid (int pid);
@@ -146,10 +142,9 @@ namespace Polkit {
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_unix_session_get_type ()")]
 	public class UnixSession : GLib.Object, GLib.AsyncInitable, GLib.Initable, Polkit.Subject {
-		[CCode (has_construct_function = false)]
-		protected UnixSession ();
+		[CCode (has_construct_function = false, type = "PolkitSubject*")]
+		public UnixSession (string session_id);
 		public unowned string get_session_id ();
-		public static Polkit.Subject @new (string session_id);
 		public static async Polkit.Subject? new_for_process (int pid, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public static Polkit.Subject? new_for_process_sync (int pid, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_session_id (string session_id);
@@ -158,11 +153,10 @@ namespace Polkit {
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_unix_user_get_type ()")]
 	public class UnixUser : GLib.Object, Polkit.Identity {
-		[CCode (has_construct_function = false)]
-		protected UnixUser ();
+		[CCode (has_construct_function = false, type = "PolkitIdentity*")]
+		public UnixUser (int uid);
 		public unowned string? get_name ();
 		public int get_uid ();
-		public static Polkit.Identity @new (int uid);
 		public static Polkit.Identity? new_for_name (string name) throws GLib.Error;
 		public void set_uid (int uid);
 		public int uid { get; set construct; }
