@@ -2357,10 +2357,9 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_simple_proxy_resolver_get_type ()")]
 	public class SimpleProxyResolver : GLib.Object, GLib.ProxyResolver {
-		[CCode (has_construct_function = false)]
-		protected SimpleProxyResolver ();
+		[CCode (has_construct_function = false, type = "GProxyResolver*")]
 		[Version (since = "2.36")]
-		public static GLib.ProxyResolver @new (string? default_proxy, string? ignore_hosts);
+		public SimpleProxyResolver (string? default_proxy, string? ignore_hosts);
 		[Version (since = "2.36")]
 		public void set_default_proxy (string default_proxy);
 		[Version (since = "2.36")]
