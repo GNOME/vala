@@ -4,11 +4,17 @@ SystemBusName
   .new symbol_type="constructor"
 UnixGroup
   .new symbol_type="constructor"
+  .new_for_name symbol_type="constructor"
 UnixNetgroup
   .new symbol_type="constructor"
 UnixProcess
   .new symbol_type="constructor"
+  .new_for_owner symbol_type="constructor"
+  .new_full symbol_type="constructor"
 UnixSession
   .new symbol_type="constructor"
+  .new_for_process symbol_type="constructor"
+  .new_for_process_sync symbol_type="constructor"
 UnixUser
   .new symbol_type="constructor"
+  .new_for_name symbol_type="constructor"
