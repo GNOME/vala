@@ -125,7 +125,7 @@ public class Valadoc.Content.Run : InlineContent, Inline {
 				return "underlined";
 
 			case Style.MONOSPACED:
-				return "monopace";
+				return "monospaced";
 
 			case Style.STROKE:
 				return "stroke";
