@@ -110,8 +110,9 @@ namespace Polkit {
 	public class UnixGroup : GLib.Object, Polkit.Identity {
 		[CCode (has_construct_function = false, type = "PolkitIdentity*")]
 		public UnixGroup (int gid);
+		[CCode (has_construct_function = false, type = "PolkitIdentity*")]
+		public UnixGroup.for_name (string name) throws GLib.Error;
 		public int get_gid ();
-		public static Polkit.Identity new_for_name (string name) throws GLib.Error;
 		public void set_gid (int gid);
 		public int gid { get; set construct; }
 	}
@@ -127,12 +128,14 @@ namespace Polkit {
 	public class UnixProcess : GLib.Object, Polkit.Subject {
 		[CCode (has_construct_function = false, type = "PolkitSubject*")]
 		public UnixProcess (int pid);
+		[CCode (has_construct_function = false, type = "PolkitSubject*")]
+		public UnixProcess.for_owner (int pid, uint64 start_time, int uid);
+		[CCode (has_construct_function = false, type = "PolkitSubject*")]
+		public UnixProcess.full (int pid, uint64 start_time);
 		public int get_owner () throws GLib.Error;
 		public int get_pid ();
 		public uint64 get_start_time ();
 		public int get_uid ();
-		public static Polkit.Subject new_for_owner (int pid, uint64 start_time, int uid);
-		public static Polkit.Subject new_full (int pid, uint64 start_time);
 		public void set_pid (int pid);
 		public void set_start_time (uint64 start_time);
 		public void set_uid (int uid);
@@ -144,9 +147,11 @@ namespace Polkit {
 	public class UnixSession : GLib.Object, GLib.AsyncInitable, GLib.Initable, Polkit.Subject {
 		[CCode (has_construct_function = false, type = "PolkitSubject*")]
 		public UnixSession (string session_id);
+		[CCode (has_construct_function = false, type = "void")]
+		public async UnixSession.for_process (int pid, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (has_construct_function = false, type = "PolkitSubject*")]
+		public UnixSession.for_process_sync (int pid, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public unowned string get_session_id ();
-		public static async Polkit.Subject? new_for_process (int pid, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public static Polkit.Subject? new_for_process_sync (int pid, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_session_id (string session_id);
 		public int pid { construct; }
 		public string session_id { get; set construct; }
@@ -155,9 +160,10 @@ namespace Polkit {
 	public class UnixUser : GLib.Object, Polkit.Identity {
 		[CCode (has_construct_function = false, type = "PolkitIdentity*")]
 		public UnixUser (int uid);
+		[CCode (has_construct_function = false, type = "PolkitIdentity*")]
+		public UnixUser.for_name (string name) throws GLib.Error;
 		public unowned string? get_name ();
 		public int get_uid ();
-		public static Polkit.Identity? new_for_name (string name) throws GLib.Error;
 		public void set_uid (int uid);
 		public int uid { get; set construct; }
 	}
