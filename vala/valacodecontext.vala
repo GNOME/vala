@@ -139,11 +139,6 @@ public class Vala.CodeContext {
 	public int optlevel { get; set; }
 
 	/**
-	 * Enable multithreading support.
-	 */
-	public bool thread { get; set; }
-
-	/**
 	 * Enable memory profiler.
 	 */
 	public bool mem_profiler { get; set; }

@@ -20,7 +20,6 @@ while test -n "$*"; do
     --directory=*) VALAFLAGS="${VALAFLAGS} $1";;
     --basedir=*) VALAFLAGS="${VALAFLAGS} $1";;
     --enable-checking) VALAFLAGS="${VALAFLAGS} $1";;
-    --thread) VALAFLAGS="${VALAFLAGS} $1";;
     --pkg=*) VALAFLAGS="${VALAFLAGS} $1";;
     --vapidir=*) VALAFLAGS="${VALAFLAGS} $1";;
     -X) shift; VALAFLAGS="${VALAFLAGS} -X $1";;

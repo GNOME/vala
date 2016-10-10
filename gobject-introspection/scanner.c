@@ -1783,11 +1783,6 @@ main (int argc, char **argv)
 
   g_type_init ();
 
-  /* initialize threading as this may be required by libraries that we'll use
-   * libsoup-2.2 is an example of that.
-   */
-  g_thread_init (NULL);
-
   if (include_idls)
     {
       for (i = 0; i < g_strv_length (include_idls); i++)

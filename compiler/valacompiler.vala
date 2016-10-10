@@ -124,7 +124,7 @@ class Vala.Compiler {
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
 		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
-		{ "thread", 0, 0, OptionArg.NONE, ref thread, "Enable multithreading support", null },
+		{ "thread", 0, 0, OptionArg.NONE, ref thread, "Enable multithreading support (DEPRECATED AND IGNORED)", null },
 		{ "enable-mem-profiler", 0, 0, OptionArg.NONE, ref mem_profiler, "Enable GLib memory profiler", null },
 		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
 		{ "main", 0, 0, OptionArg.STRING, ref entry_point, "Use SYMBOL as entry point", "SYMBOL..." },
@@ -242,7 +242,6 @@ class Vala.Compiler {
 		context.gir_directories = gir_directories;
 		context.metadata_directories = metadata_directories;
 		context.debug = debug;
-		context.thread = thread;
 		context.mem_profiler = mem_profiler;
 		context.save_temps = save_temps;
 		if (ccode_only && save_temps) {

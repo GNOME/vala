@@ -61,9 +61,6 @@ public class Vala.CCodeCompiler {
 		}
 		use_pkgconfig = true;
 		pc += " gobject-2.0";
-		if (context.thread) {
-			pc += " gthread-2.0";
-		}
 		foreach (string pkg in context.get_packages ()) {
 			if (package_exists (pkg, pkg_config_command)) {
 				use_pkgconfig = true;

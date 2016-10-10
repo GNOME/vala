@@ -44,7 +44,6 @@ gen_introspect_SOURCES = \
 gen_introspect_LDADD = \
 	$(GLIB_LIBS) \
 	$(GMODULE_LIBS) \
-	$(GTHREAD_LIBS) \
 	libgidl.la \
 	$(NULL)
 
