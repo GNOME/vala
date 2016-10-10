@@ -1515,12 +1515,7 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	void assume_parameter_names (Signal sig, Symbol sym, bool skip_first) {
-		Iterator<Parameter> iter;
-		if (sym is Method) {
-			iter = ((Method) sym).get_parameters ().iterator ();
-		} else {
-			iter = ((Delegate) sym).get_parameters ().iterator ();
-		}
+		var iter = ((Callable) sym).get_parameters ().iterator ();
 		bool first = true;
 		foreach (var param in sig.get_parameters ()) {
 			if (!iter.next ()) {
@@ -3574,12 +3569,8 @@ public class Vala.GirParser : CodeVisitor {
 		List<ParameterInfo> parameters = node.parameters;
 
 		DataType return_type = null;
-		if (s is Method) {
-			return_type = ((Method) s).return_type;
-		} else if (s is Delegate) {
-			return_type = ((Delegate) s).return_type;
-		} else if (s is Signal) {
-			return_type = ((Signal) s).return_type;
+		if (s is Callable) {
+			return_type = ((Callable) s).return_type;
 		}
 
 		if (return_type is ArrayType && node.return_array_length_idx >= 0) {
@@ -3691,12 +3682,8 @@ public class Vala.GirParser : CodeVisitor {
 
 			/* add_parameter sets carray_length_parameter_position and cdelegate_target_parameter_position
 			   so do it first*/
-			if (s is Method) {
-				((Method) s).add_parameter (info.param);
-			} else if (s is Delegate) {
-				((Delegate) s).add_parameter (info.param);
-			} else if (s is Signal) {
-				((Signal) s).add_parameter (info.param);
+			if (s is Callable) {
+				((Callable) s).add_parameter (info.param);
 			}
 
 			if (info.array_length_idx != -1) {
@@ -3754,12 +3741,8 @@ public class Vala.GirParser : CodeVisitor {
 			set_array_ccode (s, parameters[node.return_array_length_idx]);
 		}
 
-		if (s is Method) {
-			((Method) s).return_type = return_type;
-		} else if (s is Delegate) {
-			((Delegate) s).return_type = return_type;
-		} else if (s is Signal) {
-			((Signal) s).return_type = return_type;
+		if (s is Callable) {
+			((Callable) s).return_type = return_type;
 		}
 	}
 

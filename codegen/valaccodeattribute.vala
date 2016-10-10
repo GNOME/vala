@@ -376,12 +376,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 				} else {
 					var param = (Parameter) node;
 					var sym = param.parent_symbol;
-					if (sym is Method) {
-						_pos = ((Method) sym).get_parameters().index_of (param) + 1.0;
-					} else if (sym is Delegate) {
-						_pos = ((Delegate) sym).get_parameters().index_of (param) + 1.0;
-					} else if (sym is Signal) {
-						_pos = ((Signal) sym).get_parameters().index_of (param) + 1.0;
+					if (sym is Callable) {
+						_pos = ((Callable) sym).get_parameters ().index_of (param) + 1.0;
 					} else {
 						_pos = 0.0;
 					}
