@@ -708,14 +708,18 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 
 		string ctypename = get_ccode_name (param.variable_type);
+		string name = get_variable_cname (param.name);
+		var array_type = (ArrayType) param.variable_type;
+
+		if (array_type.fixed_length) {
+			ctypename += "*";
+		}
 
 		if (param.direction != ParameterDirection.IN) {
 			ctypename += "*";
 		}
 
-		var main_cparam = new CCodeParameter (get_variable_cname (param.name), ctypename);
-
-		var array_type = (ArrayType) param.variable_type;
+		var main_cparam = new CCodeParameter (name, ctypename);
 
 		generate_type_declaration (array_type.element_type, decl_space);
 
@@ -724,7 +728,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			carg_map.set (get_param_pos (get_ccode_pos (param)), get_variable_cexpression (param.name));
 		}
 
-		if (get_ccode_array_length (param)) {
+		if (!array_type.fixed_length && get_ccode_array_length (param)) {
 			string length_ctype = "int";
 			if (get_ccode_array_length_type (param) != null) {
 				length_ctype = get_ccode_array_length_type (param);

@@ -254,6 +254,37 @@ void test_struct_array () {
 	assert (FOO_ARRAY_CONST[0].bar == 42);
 }
 
+void give_fixed_array (out int i[3]) {
+	i = { 3, 4, 5 };
+}
+
+void take_fixed_array (int i[3]) {
+	assert (i.length == 3);
+	assert (i[1] == 2);
+}
+
+void change_fixed_array (ref int i[3]) {
+	assert (i.length == 3);
+	//FIXME assert (i[1] == 7);
+	//FIXME i[1] = 9;
+}
+
+void test_fixed_array () {
+	int i[3] = { 1, 2, 3 };
+	assert (i.length == 3);
+	take_fixed_array (i);
+
+	int k[3] = { 6, 7, 8 };
+	change_fixed_array (ref k);
+	assert (k.length == 3);
+	//FIXME assert (k[1] == 9);
+
+	int j[3];
+	give_fixed_array (out j);
+	assert (j.length == 3);
+	//FIXME assert (j[1] == 4);
+}
+
 void main () {
 	test_integer_array ();
 	test_string_array ();
@@ -270,4 +301,5 @@ void main () {
 	test_array_move ();
 	test_array_resize ();
 	test_struct_array ();
+	test_fixed_array ();
 }

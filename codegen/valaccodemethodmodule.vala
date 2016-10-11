@@ -589,7 +589,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						}
 					} else if (!m.coroutine) {
 						// declare local variable for out parameter to allow assignment even when caller passes NULL
-						var vardecl = new CCodeVariableDeclarator.zero (get_variable_cname ("_vala_%s".printf (param.name)), default_value_for_type (param.variable_type, true));
+						var vardecl = new CCodeVariableDeclarator.zero (get_variable_cname ("_vala_%s".printf (param.name)), default_value_for_type (param.variable_type, true), get_ccode_declarator_suffix (param.variable_type));
 						ccode.add_declaration (get_ccode_name (param.variable_type), vardecl);
 
 						if (param.variable_type is ArrayType) {
