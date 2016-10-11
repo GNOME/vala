@@ -306,10 +306,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		bool profile = m.get_attribute ("Profile") != null;
 
-		if (m.get_attribute ("NoArrayLength") != null) {
-			Report.deprecated (m.source_reference, "NoArrayLength attribute is deprecated, use [CCode (array_length = false)] instead.");
-		}
-
 		if (m is CreationMethod) {
 			var cl = current_type_symbol as Class;
 			if (cl != null && !cl.is_compact) {

@@ -48,6 +48,7 @@ public class Vala.UsedAttr : CodeVisitor {
 		"Flags", "",
 		"Experimental", "",
 		"NoReturn", "",
+		"NoArrayLength", "", // deprecated
 		"Assert", "",
 		"ErrorBase", "",
 		"GenericAccessors", "",
