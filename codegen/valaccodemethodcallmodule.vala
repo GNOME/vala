@@ -364,7 +364,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 					var unary = arg as UnaryExpression;
 					if (unary == null || unary.operator != UnaryOperator.OUT) {
-						if (get_ccode_array_length (param) && param.variable_type is ArrayType) {
+						if (get_ccode_array_length (param) && param.variable_type is ArrayType && !((ArrayType) param.variable_type).fixed_length) {
 							var array_type = (ArrayType) param.variable_type;
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								CCodeExpression? array_length_expr = null;
@@ -430,7 +430,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (arg));
 
-						if (get_ccode_array_length (param) && param.variable_type is ArrayType) {
+						if (get_ccode_array_length (param) && param.variable_type is ArrayType && !((ArrayType) param.variable_type).fixed_length) {
 							var array_type = (ArrayType) param.variable_type;
 							var array_length_type = int_type;
 							if (get_ccode_array_length_type (param) != null) {
