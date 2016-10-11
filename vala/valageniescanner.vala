@@ -777,7 +777,11 @@ public class Vala.Genie.Scanner {
 
 
 	public TokenType read_token (out SourceLocation token_begin, out SourceLocation token_end) {
-		
+		if (current == null) {
+			token_begin = SourceLocation (current, line, column);
+			token_end = SourceLocation (current, line, column);
+			return TokenType.EOF;
+		}
 
 		if (in_template ()) {
 			return read_template_token (out token_begin, out token_end);
