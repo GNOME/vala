@@ -2824,6 +2824,7 @@ namespace Gst {
 	[Flags]
 	public enum BinFlags {
 		NO_RESYNC,
+		STREAMS_AWARE,
 		LAST
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_BUFFER_COPY_", type_id = "gst_buffer_copy_flags_get_type ()")]
