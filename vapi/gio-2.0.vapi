@@ -1983,7 +1983,7 @@ namespace GLib {
 		public string uri { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_resolver_get_type ()")]
-	public class Resolver : GLib.Object {
+	public abstract class Resolver : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Resolver ();
 		[Version (since = "2.22")]
