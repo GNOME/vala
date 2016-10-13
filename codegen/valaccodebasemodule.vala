@@ -1526,6 +1526,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
+		if (prop.version.deprecated) {
+			function.modifiers |= CCodeModifiers.DEPRECATED;
+		}
+
 		if (prop.is_private_symbol () || (!acc.readable && !acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
 			function.modifiers |= CCodeModifiers.STATIC;
 		} else if (context.hide_internal && (prop.is_internal_symbol () || acc.access == SymbolAccessibility.INTERNAL)) {

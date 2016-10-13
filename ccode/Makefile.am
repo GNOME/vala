@@ -40,6 +40,7 @@ libvalaccode_la_VALASOURCES = \
 	valaccodefunction.vala \
 	valaccodefunctioncall.vala \
 	valaccodefunctiondeclarator.vala \
+	valaccodeggnucsection.vala \
 	valaccodegotostatement.vala \
 	valaccodeidentifier.vala \
 	valaccodeifstatement.vala \

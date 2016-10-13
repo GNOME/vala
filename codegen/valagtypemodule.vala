@@ -1893,6 +1893,9 @@ public class Vala.GTypeModule : GErrorModule {
 				}
 			}
 		}
+		if (prop.version.deprecated) {
+			pflags = "%s%s".printf (pflags, " | G_PARAM_DEPRECATED");
+		}
 		cspec.add_argument (new CCodeConstant (pflags));
 
 		return cspec;
