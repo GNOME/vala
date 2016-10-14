@@ -2598,7 +2598,7 @@ namespace GLib {
 
 	public delegate void LogFunc (string? log_domain, LogLevelFlags log_levels, string message);
 	[Version (since = "2.50")]
-	public delegate LogWriterOutput LogWriterFunc (LogLevelFlags log_level, LogField[] fields);
+	public delegate LogWriterOutput LogWriterFunc (LogLevelFlags log_level, [CCode (array_length_type = "gsize")] LogField[] fields);
 
 	namespace Log {
 		public static uint set_handler (string? log_domain, LogLevelFlags log_levels, LogFunc log_func);
@@ -2623,13 +2623,13 @@ namespace GLib {
 		[Version (since = "2.50")]
 		public static bool writer_is_journald (int output_fd);
 		[Version (since = "2.50")]
-		public static string writer_format_fields (LogLevelFlags log_levels, LogField[] fields, bool use_color);
+		public static string writer_format_fields (LogLevelFlags log_levels, [CCode (array_length_type = "gsize")] LogField[] fields, bool use_color);
 		[Version (since = "2.50")]
-		public static LogWriterOutput writer_journald (LogLevelFlags log_levels, LogField[] fields, void* user_data);
+		public static LogWriterFunc writer_journald;
 		[Version (since = "2.50")]
-		public static LogWriterOutput writer_standard_streams (LogLevelFlags log_levels, LogField[] fields, void* user_data);
+		public static LogWriterFunc writer_standard_streams;
 		[Version (since = "2.50")]
-		public static LogWriterOutput writer_default (LogLevelFlags log_levels, LogField[] fields, void* user_data);
+		public static LogWriterFunc writer_default;
 	}
 
 	[CCode (has_type_id = false)]
