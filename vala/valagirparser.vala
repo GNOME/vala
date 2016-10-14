@@ -526,6 +526,8 @@ public class Vala.GirParser : CodeVisitor {
 		public UnresolvedSymbol gtype_struct_for;
 		// alias-specific
 		public DataType base_type;
+		// struct-specific
+		public int array_length_idx = -1;
 
 		public bool deprecated = false;
 		public uint64 deprecated_version = 0;
@@ -1082,10 +1084,15 @@ public class Vala.GirParser : CodeVisitor {
 						Node array_length;
 						if (metadata.has_argument (ArgumentType.ARRAY_LENGTH_FIELD)) {
 							array_length = parent.lookup (metadata.get_string (ArgumentType.ARRAY_LENGTH_FIELD));
+						} else if (array_length_idx > -1 && parent.members.size > array_length_idx) {
+							array_length = parent.members[array_length_idx];
 						} else {
 							array_length = parent.lookup ("n_%s".printf (field.name));
 							if (array_length == null) {
-								array_length = parent.lookup ("%s_length".printf (field.name));
+								array_length = parent.lookup ("num_%s".printf (field.name));
+								if (array_length == null) {
+									array_length = parent.lookup ("%s_length".printf (field.name));
+								}
 							}
 						}
 						if (array_length != null && array_length.symbol is Field) {
@@ -2883,9 +2890,10 @@ public class Vala.GirParser : CodeVisitor {
 
 		var comment = parse_symbol_doc ();
 
-		var type = parse_type ();
-		bool no_array_length = true;
-		bool array_null_terminated = false;
+		bool no_array_length;
+		bool array_null_terminated;
+		int array_length_idx;
+		var type = parse_type (null, out array_length_idx, true, out no_array_length, out array_null_terminated);
 		type = element_get_type (type, true, ref no_array_length, ref array_null_terminated);
 
 		string name = current.name;
@@ -2898,6 +2906,9 @@ public class Vala.GirParser : CodeVisitor {
 			field.set_attribute_string ("CCode", "cname", cname);
 		}
 		if (type is ArrayType) {
+			if (!no_array_length && !array_null_terminated && array_length_idx > -1) {
+				current.array_length_idx = array_length_idx;
+			}
 			if (no_array_length) {
 				field.set_attribute_bool ("CCode", "array_length", false);
 			}
