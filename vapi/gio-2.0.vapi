@@ -583,7 +583,7 @@ namespace GLib {
 	[Compact]
 	[Version (since = "2.26")]
 	public class DBusAnnotationInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusAnnotationInfo[] annotations;
 		public string key;
 		public int ref_count;
@@ -595,7 +595,7 @@ namespace GLib {
 	[Compact]
 	[Version (since = "2.26")]
 	public class DBusArgInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusAnnotationInfo[] annotations;
 		public string name;
 		public int ref_count;
@@ -686,15 +686,15 @@ namespace GLib {
 	[Compact]
 	[Version (since = "2.26")]
 	public class DBusInterfaceInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusAnnotationInfo[] annotations;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusMethodInfo[] methods;
 		public string name;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusPropertyInfo[] properties;
 		public int ref_count;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusSignalInfo[] signals;
 		[Version (since = "2.30")]
 		public void cache_build ();
@@ -808,12 +808,12 @@ namespace GLib {
 	[Compact]
 	[Version (since = "2.26")]
 	public class DBusMethodInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusAnnotationInfo[] annotations;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusArgInfo[] in_args;
 		public string name;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusArgInfo[] out_args;
 		public int ref_count;
 		public GLib.DBusMethodInfo @ref ();
@@ -850,11 +850,11 @@ namespace GLib {
 	[Compact]
 	[Version (since = "2.26")]
 	public class DBusNodeInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusAnnotationInfo[] annotations;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusInterfaceInfo[] interfaces;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusNodeInfo[] nodes;
 		public string path;
 		public int ref_count;
@@ -943,7 +943,7 @@ namespace GLib {
 	[Compact]
 	[Version (since = "2.26")]
 	public class DBusPropertyInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusAnnotationInfo[] annotations;
 		public GLib.DBusPropertyInfoFlags flags;
 		public string name;
@@ -1033,9 +1033,9 @@ namespace GLib {
 	[Compact]
 	[Version (since = "2.26")]
 	public class DBusSignalInfo {
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusAnnotationInfo[] annotations;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusArgInfo[] args;
 		public string name;
 		public int ref_count;
@@ -3764,14 +3764,13 @@ namespace GLib {
 	[Version (since = "2.48")]
 	public struct InputMessage {
 		public weak GLib.SocketAddress address;
-		[CCode (array_length = false)]
+		[CCode (array_length_cname = "num_vectors", array_length_type = "guint")]
 		public weak GLib.InputVector[] vectors;
 		public uint num_vectors;
 		public size_t bytes_received;
 		public int flags;
-		[CCode (array_length = false)]
-		public weak GLib.SocketControlMessage[] control_messages;
-		public uint num_control_messages;
+		public GLib.SocketControlMessage*** control_messages;
+		public uint* num_control_messages;
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	[Version (since = "2.22")]
@@ -3783,12 +3782,12 @@ namespace GLib {
 	[Version (since = "2.44")]
 	public struct OutputMessage {
 		public weak GLib.SocketAddress address;
-		public GLib.OutputVector vectors;
+		[CCode (array_length_cname = "num_vectors", array_length_type = "guint")]
+		public weak GLib.OutputVector[] vectors;
 		public uint num_vectors;
 		public uint bytes_sent;
-		[CCode (array_length = false)]
-		public weak GLib.SocketControlMessage[] control_messages;
-		public uint num_control_messages;
+		public GLib.SocketControlMessage*** control_messages;
+		public uint* num_control_messages;
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	[Version (since = "2.22")]
