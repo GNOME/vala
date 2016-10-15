@@ -7,10 +7,6 @@ PushSrc
   .alloc.buf out unowned=false
 
 // Fields
-BitReader
-  .size skip
-ByteReader
-  .size skip
 ByteWriter struct=false
   .new* skip=false
 
