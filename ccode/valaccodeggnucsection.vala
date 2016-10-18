@@ -38,6 +38,7 @@ public class Vala.CCodeGGnucSection : CCodeFragment {
 	public override void write (CCodeWriter writer) {
 		writer.write_string ("G_GNUC_BEGIN_");
 		writer.write_string (section_type.to_string ());
+		writer.write_newline ();
 		foreach (CCodeNode node in get_children ()) {
 			node.write_combined (writer);
 		}
