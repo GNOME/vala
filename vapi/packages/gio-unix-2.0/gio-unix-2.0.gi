@@ -21,6 +21,13 @@
 				<parameter name="mount2" type="GUnixMountEntry*"/>
 			</parameters>
 		</function>
+		<function name="g_unix_mount_for" symbol="g_unix_mount_for">
+			<return-type type="GUnixMountEntry*"/>
+			<parameters>
+				<parameter name="file_path" type="char*"/>
+				<parameter name="time_read" type="guint64*"/>
+			</parameters>
+		</function>
 		<function name="g_unix_mount_free" symbol="g_unix_mount_free">
 			<return-type type="void"/>
 			<parameters>

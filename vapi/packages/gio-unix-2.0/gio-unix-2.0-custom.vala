@@ -39,6 +39,9 @@ namespace GLib {
 		public bool is_readonly ();
 		public bool is_system_internal ();
 
+		[CCode (cname = "g_unix_mounts_for")]
+		[Version (since = "2.52")]
+		public static GLib.List<UnixMountEntry> @for (string file_path, out uint64 time_read = null);
 		[CCode (cname = "g_unix_mounts_get")]
 		public static GLib.List<UnixMountEntry> @get (out uint64 time_read = null);
 	}
