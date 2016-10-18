@@ -78,9 +78,9 @@ namespace GLib {
 	[Compact]
 	public class UnixMountEntry {
 		[CCode (cname = "g_unix_mount_at")]
-		public UnixMountEntry (string mount_path, uint64 time_read);
+		public UnixMountEntry (string mount_path, out uint64 time_read = null);
 		public int compare (GLib.UnixMountEntry mount);
-		[CCode (cheader_filename = "gio/gunixmounts.h", cname = "g_unix_mounts_get")]
+		[CCode (cname = "g_unix_mounts_get")]
 		public static GLib.List<GLib.UnixMountEntry> @get (out uint64 time_read = null);
 		public unowned string get_device_path ();
 		public unowned string get_fs_type ();
@@ -89,6 +89,7 @@ namespace GLib {
 		public GLib.Icon guess_icon ();
 		public string guess_name ();
 		public bool guess_should_display ();
+		[Version (since = "2.34")]
 		public GLib.Icon guess_symbolic_icon ();
 		public bool is_readonly ();
 		public bool is_system_internal ();
