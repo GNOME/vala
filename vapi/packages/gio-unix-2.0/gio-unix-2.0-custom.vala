@@ -25,7 +25,7 @@ namespace GLib {
 	[CCode (cname = "GUnixMountEntry", cheader_filename = "gio/gunixmounts.h", lower_case_cprefix = "g_unix_mount_", free_function = "g_unix_mount_free")]
 	public class UnixMountEntry {
 		[CCode (cname = "g_unix_mount_at")]
-		public UnixMountEntry (string mount_path, uint64 time_read);
+		public UnixMountEntry (string mount_path, out uint64 time_read = null);
 		public int compare (GLib.UnixMountEntry mount);
 		public unowned string get_device_path ();
 		public unowned string get_fs_type ();
@@ -34,11 +34,12 @@ namespace GLib {
 		public GLib.Icon guess_icon ();
 		public string guess_name ();
 		public bool guess_should_display ();
+		[Version (since = "2.34")]
 		public GLib.Icon guess_symbolic_icon ();
 		public bool is_readonly ();
 		public bool is_system_internal ();
 
-		[CCode (cname = "g_unix_mounts_get", cheader_filename = "gio/gunixmounts.h")]
+		[CCode (cname = "g_unix_mounts_get")]
 		public static GLib.List<UnixMountEntry> @get (out uint64 time_read = null);
 	}
 }
