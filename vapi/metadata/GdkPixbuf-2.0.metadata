@@ -1,7 +1,21 @@
+*.*.cancellable#parameter nullable default=null
+
 Pixbuf
         .new_from_xpm_data.data type="string[]"
-        .new_from_stream_at_scale_async skip
-        .new_subpixbuf skip
+        .new_from_stream_at_scale_async symbol_type="constructor" throws="GLib.Error" finish_name="gdk_pixbuf_save_to_stream_finish"
+        .new_from_data.data owned
+        .new_subpixbuf symbol_type="constructor"
+        .get_file_info_async.cancellable default=()
+        .save* skip=false
+        .save throws throws="GLib.Error"
+        .save.error skip
+        .save_to_buffer throws throws="GLib.Error"
+        .save_to_buffer.error skip
+        .save_to_callback throws throws="GLib.Error"
+        .save_to_callback.error skip
+        .save_to_stream throws throws="GLib.Error"
+        .save_to_stream.error skip
+        .save_to_stream_async finish_name="gdk_pixbuf_save_to_stream_finish" throws="GLib.Error"
         .save_to_stream_finish skip
 
 // gdk-pixdata.h isn't included by gdk-pixbuf.h
@@ -11,7 +25,7 @@ Pixbuf
 
 // default values other than null
 Pixbuf
-        .new_from_data skip
+        .new_from_data.destroy_fn default=GLib.free
 
 // Bug #558620: default values
 Pixbuf
