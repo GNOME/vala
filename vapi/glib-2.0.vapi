@@ -4187,7 +4187,7 @@ namespace GLib {
 		[Version (since = "2.38")]
 		public static unowned string get_filename (GLib.Test.FileType file_type, params string[] path_segments);
 		[Version (since = "2.38")]
-		public static void incomplete (string msg);
+		public static void incomplete (string? msg = null);
 		[Version (since = "2.36")]
 		public static bool initialized ();
 		[PrintfFormat]
@@ -4196,7 +4196,7 @@ namespace GLib {
 		[Version (since = "2.38")]
 		public static void set_nonfatal_assertions ();
 		[Version (since = "2.38")]
-		public static void skip (string msg);
+		public static void skip (string? msg = null);
 		[Version (since = "2.38")]
 		public static bool subprocess ();
 		[Version (since = "2.16")]
@@ -4216,7 +4216,7 @@ namespace GLib {
 		[Version (since = "2.16")]
 		public static bool trap_reached_timeout ();
 		[Version (since = "2.38")]
-		public static void trap_subprocess (string test_path, uint64 usec_timeout, TestSubprocessFlags test_flags);
+		public static void trap_subprocess (string? test_path, uint64 usec_timeout, TestSubprocessFlags test_flags);
 		[Version (since = "2.16")]
 		public static void trap_assert_passed ();
 		[Version (since = "2.16")]
