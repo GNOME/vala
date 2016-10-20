@@ -2730,12 +2730,10 @@ public class Vala.GIdlParser : CodeVisitor {
 			prop.get_accessor = new PropertyAccessor (true, false, false, prop.property_type.copy (), null, null);
 		}
 		if (prop_node.writable) {
-			prop.set_accessor = new PropertyAccessor (false, false, false, prop.property_type.copy (), null, null);
 			if (prop_node.construct_only) {
-				prop.set_accessor.construction = true;
+				prop.set_accessor = new PropertyAccessor (false, false, true, prop.property_type.copy (), null, null);
 			} else {
-				prop.set_accessor.writable = true;
-				prop.set_accessor.construction = prop_node.@construct;
+				prop.set_accessor = new PropertyAccessor (false, true, prop_node.@construct, prop.property_type.copy (), null, null);
 			}
 		}
 
