@@ -5353,7 +5353,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			make_comparable_cexpression (ref left_type, ref cleft, ref right_type, ref cright);
 
 			if (left_type is StructValueType && right_type is StructValueType) {
-				var equalfunc = generate_struct_equal_function ((Struct) left_type.data_type as Struct);
+				var equalfunc = generate_struct_equal_function ((Struct) left_type.data_type);
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
 				ccall.add_argument (cleft);
 				ccall.add_argument (cright);
@@ -5489,7 +5489,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccall.add_argument (cneedle);
 			cif_condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccall, new CCodeConstant ("0"));
 		} else if (array_type.element_type is StructValueType) {
-			var equalfunc = generate_struct_equal_function ((Struct) array_type.element_type.data_type as Struct);
+			var equalfunc = generate_struct_equal_function ((Struct) array_type.element_type.data_type);
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, celement));
 			ccall.add_argument (cneedle);
