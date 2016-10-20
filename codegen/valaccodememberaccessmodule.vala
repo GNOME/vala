@@ -461,7 +461,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				var type_as_struct = result.value_type.data_type as Struct;
 
 				if (param.direction == ParameterDirection.OUT) {
-					name = "_vala_" + name;
+					name = "_vala_%s".printf (name);
 				}
 
 				if (param.direction == ParameterDirection.REF ||
@@ -484,7 +484,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 					var target_cname = get_ccode_delegate_target_name (param);
 					if (param.direction == ParameterDirection.OUT) {
-						target_cname = "_vala_" + target_cname;
+						target_cname = "_vala_%s".printf (target_cname);
 					}
 					CCodeExpression target_expr = new CCodeIdentifier (target_cname);
 					CCodeExpression delegate_target_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (name)));

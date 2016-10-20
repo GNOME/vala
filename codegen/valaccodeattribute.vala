@@ -199,7 +199,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					_copy_function = ccode.get_string ("copy_function");
 				}
 				if (_copy_function == null && sym is Struct) {
-					_copy_function = lower_case_prefix + "copy";
+					_copy_function = "%scopy".printf (lower_case_prefix);
 				}
 				copy_function_set = true;
 			}
@@ -214,7 +214,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					_destroy_function = ccode.get_string ("destroy_function");
 				}
 				if (_destroy_function == null && sym is Struct) {
-					_destroy_function = lower_case_prefix + "destroy";
+					_destroy_function = "%sdestroy".printf (lower_case_prefix);
 				}
 				destroy_function_set = true;
 			}
@@ -771,7 +771,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 		if (sym is Class) {
 			var cl = (Class) sym;
 			if (cl.is_fundamental ()) {
-				return lower_case_prefix + "ref";
+				return "%sref".printf (lower_case_prefix);
 			} else if (cl.base_class != null) {
 				return CCodeBaseModule.get_ccode_ref_function (cl.base_class);
 			}
@@ -790,7 +790,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 		if (sym is Class) {
 			var cl = (Class) sym;
 			if (cl.is_fundamental ()) {
-				return lower_case_prefix + "unref";
+				return "%sunref".printf (lower_case_prefix);
 			} else if (cl.base_class != null) {
 				return CCodeBaseModule.get_ccode_unref_function (cl.base_class);
 			}
@@ -825,10 +825,10 @@ public class Vala.CCodeAttribute : AttributeCache {
 			if (cl.base_class != null) {
 				return CCodeBaseModule.get_ccode_free_function (cl.base_class);
 			}
-			return lower_case_prefix + "free";
+			return "%sfree".printf (lower_case_prefix);
 		} else if (sym is Struct) {
 			if (!sym.external_package) {
-				return lower_case_prefix + "free";
+				return "%sfree".printf (lower_case_prefix);
 			}
 		}
 		return null;
@@ -1229,7 +1229,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 		if (result.has_suffix ("_async")) {
 			result = result.substring (0, result.length - "_async".length);
 		}
-		return result + "_finish";
+		return "%s_finish".printf (result);
 	}
 
 	private string get_default_real_name () {

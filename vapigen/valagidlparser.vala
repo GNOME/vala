@@ -210,7 +210,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (name == null || name == ".new") {
 					name = "new";
 				} else {
-					name = "new_"+name;
+					name = "new_%s".printf (name);
 				}
 			}
 			if (container != null) {

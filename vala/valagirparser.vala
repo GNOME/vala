@@ -672,7 +672,7 @@ public class Vala.GirParser : CodeVisitor {
 						}
 
 						if (p != null) {
-							prefix = p+"_"+prefix;
+							prefix = "%s_%s".printf (p, prefix ?? "");
 						}
 					}
 
@@ -772,7 +772,7 @@ public class Vala.GirParser : CodeVisitor {
 				if (finish_cname.has_suffix ("_async")) {
 					finish_cname = finish_cname.substring (0, finish_cname.length - "_async".length);
 				}
-				finish_cname += "_finish";
+				finish_cname = "%s_finish".printf (finish_cname);
 			}
 			return finish_cname;
 		}
@@ -966,7 +966,7 @@ public class Vala.GirParser : CodeVisitor {
 					var getters = parent.lookup_all ("get_%s".printf (name));
 					if (getters != null) {
 						foreach (var g in getters) {
-							if ((getter == null || !g.merged) && g.get_cname () == parent.get_lower_case_cprefix() + "get_" + name) {
+							if ((getter == null || !g.merged) && g.get_cname () == "%sget_%s".printf (parent.get_lower_case_cprefix (), name)) {
 								getter = g;
 							}
 						}
@@ -976,7 +976,7 @@ public class Vala.GirParser : CodeVisitor {
 					var setters = parent.lookup_all ("set_%s".printf (name));
 					if (setters != null) {
 						foreach (var s in setters) {
-							if ((setter == null || !s.merged) && s.get_cname () == parent.get_lower_case_cprefix() + "set_" + name) {
+							if ((setter == null || !s.merged) && s.get_cname () == "%sset_%s".printf (parent.get_lower_case_cprefix (), name)) {
 								setter = s;
 							}
 						}
@@ -1121,9 +1121,9 @@ public class Vala.GirParser : CodeVisitor {
 							var f = fn.symbol as Field;
 							if (f != null) {
 								if (f.binding == MemberBinding.INSTANCE) {
-									f.set_attribute_string ("CCode", "cname", name + "." + fn.get_cname ());
+									f.set_attribute_string ("CCode", "cname", "%s.%s".printf (name, fn.get_cname ()));
 								}
-								f.name = symbol.name + "_" + f.name;
+								f.name = "%s_%s".printf (symbol.name, f.name);
 								fn.name = f.name;
 								parent.add_member (fn);
 							}

@@ -121,9 +121,9 @@ public class Vala.PropertyAccessor : Subroutine {
 	public Method? get_method () {
 		Method? m = null;
 		if (readable) {
-			m = new Method ("get_"+prop.name, value_type, source_reference, comment);
+			m = new Method ("get_%s".printf (prop.name), value_type, source_reference, comment);
 		} else if (writable) {
-			m = new Method ("set_"+prop.name, new VoidType(), source_reference, comment);
+			m = new Method ("set_%s".printf (prop.name), new VoidType(), source_reference, comment);
 			m.add_parameter (value_parameter.copy ());
 		}
 

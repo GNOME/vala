@@ -211,7 +211,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		var fun = new CCodeFunction (cname, "void");
 		fun.modifiers = CCodeModifiers.STATIC;
-		fun.add_parameter (new CCodeParameter ("array", "%s*".printf (get_ccode_name (st))));
+		fun.add_parameter (new CCodeParameter ("array", "%s *".printf (get_ccode_name (st))));
 		fun.add_parameter (new CCodeParameter ("array_length", "gint"));
 
 		push_function (fun);
@@ -547,8 +547,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var function = new CCodeFunction (dup_func, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeParameter ("self", get_ccode_name (array_type) + "*"));
-		function.add_parameter (new CCodeParameter ("dest", get_ccode_name (array_type) + "*"));
+		function.add_parameter (new CCodeParameter ("self", "%s *".printf (get_ccode_name (array_type))));
+		function.add_parameter (new CCodeParameter ("dest", "%s *".printf (get_ccode_name (array_type))));
 
 		// definition
 
@@ -599,7 +599,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var function = new CCodeFunction (add_func, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeParameter ("array", get_ccode_name (array_type) + "*"));
+		function.add_parameter (new CCodeParameter ("array", "%s *".printf (get_ccode_name (array_type))));
 		function.add_parameter (new CCodeParameter ("length", "int*"));
 		function.add_parameter (new CCodeParameter ("size", "int*"));
 

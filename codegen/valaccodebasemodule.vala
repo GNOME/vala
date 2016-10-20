@@ -1477,9 +1477,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		CCodeParameter cvalueparam;
 		if (returns_real_struct) {
-			cvalueparam = new CCodeParameter ("result", get_ccode_name (acc.value_type) + "*");
+			cvalueparam = new CCodeParameter ("result", "%s *".printf (get_ccode_name (acc.value_type)));
 		} else if (!acc.readable && prop.property_type.is_real_non_null_struct_type ()) {
-			cvalueparam = new CCodeParameter ("value", get_ccode_name (acc.value_type) + "*");
+			cvalueparam = new CCodeParameter ("value", "%s *".printf (get_ccode_name (acc.value_type)));
 		} else {
 			cvalueparam = new CCodeParameter ("value", get_ccode_name (acc.value_type));
 		}
@@ -1596,9 +1596,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 		CCodeParameter cvalueparam;
 		if (returns_real_struct) {
-			cvalueparam = new CCodeParameter ("result", get_ccode_name (acc.value_type) + "*");
+			cvalueparam = new CCodeParameter ("result", "%s *".printf (get_ccode_name (acc.value_type)));
 		} else if (!acc.readable && prop.property_type.is_real_non_null_struct_type ()) {
-			cvalueparam = new CCodeParameter ("value", get_ccode_name (acc.value_type) + "*");
+			cvalueparam = new CCodeParameter ("value", "%s *".printf (get_ccode_name (acc.value_type)));
 		} else {
 			cvalueparam = new CCodeParameter ("value", get_ccode_name (acc.value_type));
 		}
@@ -2792,8 +2792,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var function = new CCodeFunction (equal_func, "gboolean");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeParameter ("s1", "const " + get_ccode_name (st) + "*"));
-		function.add_parameter (new CCodeParameter ("s2", "const " + get_ccode_name (st) + "*"));
+		function.add_parameter (new CCodeParameter ("s1", "const %s *".printf (get_ccode_name (st))));
+		function.add_parameter (new CCodeParameter ("s2", "const %s *".printf (get_ccode_name (st))));
 
 		push_function (function);
 
@@ -2884,8 +2884,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var function = new CCodeFunction (equal_func, "gboolean");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeParameter ("s1", "const " + get_ccode_name (sym) + "*"));
-		function.add_parameter (new CCodeParameter ("s2", "const " + get_ccode_name (sym) + "*"));
+		function.add_parameter (new CCodeParameter ("s1", "const %s *".printf (get_ccode_name (sym))));
+		function.add_parameter (new CCodeParameter ("s2", "const %s *".printf (get_ccode_name (sym))));
 
 		push_function (function);
 
@@ -5061,7 +5061,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (to.is_real_non_null_struct_type ()) {
 			// structs are returned via out parameter
-			cfunc.add_parameter (new CCodeParameter ("result", get_ccode_name (to) + "*"));
+			cfunc.add_parameter (new CCodeParameter ("result", "%s *".printf (get_ccode_name (to))));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (result)));
 		} else if (to is ArrayType) {
 			// return array length if appropriate
@@ -5463,10 +5463,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var function = new CCodeFunction (array_contains_func, "gboolean");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		function.add_parameter (new CCodeParameter ("stack", "%s*".printf (get_ccode_name (array_type.element_type))));
+		function.add_parameter (new CCodeParameter ("stack", "%s *".printf (get_ccode_name (array_type.element_type))));
 		function.add_parameter (new CCodeParameter ("stack_length", "int"));
 		if (array_type.element_type is StructValueType) {
-			function.add_parameter (new CCodeParameter ("needle", get_ccode_name (array_type.element_type) + "*"));
+			function.add_parameter (new CCodeParameter ("needle", "%s *".printf (get_ccode_name (array_type.element_type))));
 		} else {
 			function.add_parameter (new CCodeParameter ("needle", get_ccode_name (array_type.element_type)));
 		}
@@ -6540,7 +6540,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var function = new CCodeFunction (get_ccode_destroy_function (st), "void");
 		function.modifiers = CCodeModifiers.STATIC;
-		function.add_parameter (new CCodeParameter ("self", get_ccode_name (st) + "*"));
+		function.add_parameter (new CCodeParameter ("self", "%s *".printf (get_ccode_name (st))));
 
 		push_context (new EmitContext ());
 		push_function (function);
@@ -6569,8 +6569,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var function = new CCodeFunction (get_ccode_copy_function (st), "void");
 		function.modifiers = CCodeModifiers.STATIC;
-		function.add_parameter (new CCodeParameter ("self", "const " + get_ccode_name (st) + "*"));
-		function.add_parameter (new CCodeParameter ("dest", get_ccode_name (st) + "*"));
+		function.add_parameter (new CCodeParameter ("self", "const %s *".printf (get_ccode_name (st))));
+		function.add_parameter (new CCodeParameter ("dest", "%s *".printf (get_ccode_name (st))));
 
 		push_context (new EmitContext ());
 		push_function (function);
