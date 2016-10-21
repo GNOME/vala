@@ -1510,14 +1510,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (acc.value_type is ArrayType) {
 			var array_type = (ArrayType) acc.value_type;
-
-			var length_ctype = "int";
-			if (acc.readable) {
-				length_ctype = "int*";
-			}
-
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
+				function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? "int*" : "int"));
 			}
 		} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 			function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
@@ -1617,14 +1611,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (acc.value_type is ArrayType) {
 				var array_type = (ArrayType) acc.value_type;
-
-				var length_ctype = "int";
-				if (acc.readable) {
-					length_ctype = "int*";
-				}
-
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
+					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? "int*" : "int"));
 				}
 			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 				function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
@@ -1741,14 +1729,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (acc.value_type is ArrayType) {
 				var array_type = (ArrayType) acc.value_type;
-
-				var length_ctype = "int";
-				if (acc.readable) {
-					length_ctype = "int*";
-				}
-
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
+					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? "int*" : "int"));
 				}
 			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 				function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
