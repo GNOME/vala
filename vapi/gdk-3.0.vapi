@@ -5411,7 +5411,7 @@ namespace Gdk {
 		[Version (since = "3.16")]
 		public void set_required_version (int major, int minor);
 		[Version (since = "3.22")]
-		public void set_use_es (bool use_es);
+		public void set_use_es (int use_es);
 		[Version (since = "3.16")]
 		public Gdk.Display display { get; construct; }
 		[Version (since = "3.16")]
@@ -5494,7 +5494,7 @@ namespace Gdk {
 	public class Screen : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Screen ();
-		[Version (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.10")]
 		public Gdk.Window? get_active_window ();
 		[Version (since = "2.2")]
 		public static unowned Gdk.Screen? get_default ();
@@ -5502,31 +5502,31 @@ namespace Gdk {
 		public unowned Gdk.Display get_display ();
 		[Version (since = "2.10")]
 		public unowned Cairo.FontOptions? get_font_options ();
-		[Version (since = "2.2")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.2")]
 		public int get_height ();
-		[Version (since = "2.2")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.2")]
 		public int get_height_mm ();
-		[Version (since = "2.2")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.2")]
 		public int get_monitor_at_point (int x, int y);
-		[Version (since = "2.2")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.2")]
 		public int get_monitor_at_window (Gdk.Window window);
-		[Version (since = "2.2")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.2")]
 		public void get_monitor_geometry (int monitor_num, out Gdk.Rectangle dest);
-		[Version (since = "2.14")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.14")]
 		public int get_monitor_height_mm (int monitor_num);
-		[Version (since = "2.14")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.14")]
 		public string? get_monitor_plug_name (int monitor_num);
-		[Version (since = "3.10")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "3.10")]
 		public int get_monitor_scale_factor (int monitor_num);
-		[Version (since = "2.14")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.14")]
 		public int get_monitor_width_mm (int monitor_num);
-		[Version (since = "3.4")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "3.4")]
 		public Gdk.Rectangle get_monitor_workarea (int monitor_num);
-		[Version (since = "2.2")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.2")]
 		public int get_n_monitors ();
-		[Version (since = "2.2")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.2")]
 		public int get_number ();
-		[Version (since = "2.20")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.20")]
 		public int get_primary_monitor ();
 		[Version (since = "2.10")]
 		public double get_resolution ();
@@ -5540,25 +5540,29 @@ namespace Gdk {
 		public unowned Gdk.Visual get_system_visual ();
 		[Version (since = "2.2")]
 		public GLib.List<weak Gdk.Window> get_toplevel_windows ();
-		[Version (since = "2.2")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.2")]
 		public int get_width ();
-		[Version (since = "2.2")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.2")]
 		public int get_width_mm ();
 		[Version (since = "2.10")]
 		public GLib.List<Gdk.Window>? get_window_stack ();
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static int height ();
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static int height_mm ();
 		[Version (since = "2.10")]
 		public bool is_composited ();
 		[Version (since = "2.2")]
 		public GLib.List<weak Gdk.Visual> list_visuals ();
-		[Version (since = "2.2")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.2")]
 		public string make_display_name ();
 		[Version (since = "2.10")]
 		public void set_font_options (Cairo.FontOptions? options);
 		[Version (since = "2.10")]
 		public void set_resolution (double dpi);
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static int width ();
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static int width_mm ();
 		public void* font_options { get; set; }
 		public double resolution { get; set; }
@@ -5684,7 +5688,7 @@ namespace Gdk {
 		public void geometry_changed ();
 		[Version (since = "2.22")]
 		public bool get_accept_focus ();
-		[Version (since = "2.22")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.22")]
 		public unowned Cairo.Pattern? get_background_pattern ();
 		public GLib.List<weak Gdk.Window> get_children ();
 		[Version (since = "3.10")]
@@ -5800,7 +5804,9 @@ namespace Gdk {
 		public void set_accept_focus (bool accept_focus);
 		[Version (deprecated = true, deprecated_since = "3.4")]
 		public void set_background (Gdk.Color color);
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public void set_background_pattern (Cairo.Pattern? pattern);
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public void set_background_rgba (Gdk.RGBA rgba);
 		[Version (since = "2.10")]
 		public void set_child_input_shapes ();
@@ -5808,6 +5814,7 @@ namespace Gdk {
 		[Version (deprecated = true, deprecated_since = "3.16", since = "2.12")]
 		public void set_composited (bool composited);
 		public void set_cursor (Gdk.Cursor? cursor);
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static void set_debug_updates (bool setting);
 		public void set_decorations (Gdk.WMDecoration decorations);
 		[Version (since = "3.0")]
