@@ -1001,7 +1001,6 @@ namespace Pk {
 		public async Pk.Results get_files_async ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[Version (since = "0.6.5")]
 		public Pk.Results get_files_sync ([CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
-		public bool get_interactive ();
 		[Version (since = "0.8.1")]
 		public bool get_only_download ();
 		[Version (since = "0.9.5")]
@@ -1098,7 +1097,6 @@ namespace Pk {
 		public void set_allow_downgrade (bool allow_downgrade);
 		[Version (since = "1.0.2")]
 		public void set_allow_reinstall (bool allow_reinstall);
-		public void set_interactive (bool interactive);
 		[Version (since = "0.8.1")]
 		public void set_only_download (bool only_download);
 		[Version (since = "0.9.5")]
