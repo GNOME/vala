@@ -50,46 +50,27 @@ public class Vala.CCodeBinaryExpression : CCodeExpression {
 	public override void write (CCodeWriter writer) {
 		left.write_inner (writer);
 
-		writer.write_string (" ");
-		if (operator == CCodeBinaryOperator.PLUS) {
-			writer.write_string ("+");
-		} else if (operator == CCodeBinaryOperator.MINUS) {
-			writer.write_string ("-");
-		} else if (operator == CCodeBinaryOperator.MUL) {
-			writer.write_string ("*");
-		} else if (operator == CCodeBinaryOperator.DIV) {
-			writer.write_string ("/");
-		} else if (operator == CCodeBinaryOperator.MOD) {
-			writer.write_string ("%");
-		} else if (operator == CCodeBinaryOperator.SHIFT_LEFT) {
-			writer.write_string ("<<");
-		} else if (operator == CCodeBinaryOperator.SHIFT_RIGHT) {
-			writer.write_string (">>");
-		} else if (operator == CCodeBinaryOperator.LESS_THAN) {
-			writer.write_string ("<");
-		} else if (operator == CCodeBinaryOperator.GREATER_THAN) {
-			writer.write_string (">");
-		} else if (operator == CCodeBinaryOperator.LESS_THAN_OR_EQUAL) {
-			writer.write_string ("<=");
-		} else if (operator == CCodeBinaryOperator.GREATER_THAN_OR_EQUAL) {
-			writer.write_string (">=");
-		} else if (operator == CCodeBinaryOperator.EQUALITY) {
-			writer.write_string ("==");
-		} else if (operator == CCodeBinaryOperator.INEQUALITY) {
-			writer.write_string ("!=");
-		} else if (operator == CCodeBinaryOperator.BITWISE_AND) {
-			writer.write_string ("&");
-		} else if (operator == CCodeBinaryOperator.BITWISE_OR) {
-			writer.write_string ("|");
-		} else if (operator == CCodeBinaryOperator.BITWISE_XOR) {
-			writer.write_string ("^");
-		} else if (operator == CCodeBinaryOperator.AND) {
-			writer.write_string ("&&");
-		} else if (operator == CCodeBinaryOperator.OR) {
-			writer.write_string ("||");
+		switch (operator) {
+		case CCodeBinaryOperator.PLUS: writer.write_string (" + "); break;
+		case CCodeBinaryOperator.MINUS: writer.write_string (" - "); break;
+		case CCodeBinaryOperator.MUL: writer.write_string (" * "); break;
+		case CCodeBinaryOperator.DIV: writer.write_string (" / "); break;
+		case CCodeBinaryOperator.MOD: writer.write_string (" % "); break;
+		case CCodeBinaryOperator.SHIFT_LEFT: writer.write_string (" << "); break;
+		case CCodeBinaryOperator.SHIFT_RIGHT: writer.write_string (" >> "); break;
+		case CCodeBinaryOperator.LESS_THAN: writer.write_string (" < "); break;
+		case CCodeBinaryOperator.GREATER_THAN: writer.write_string (" > "); break;
+		case CCodeBinaryOperator.LESS_THAN_OR_EQUAL: writer.write_string (" <= "); break;
+		case CCodeBinaryOperator.GREATER_THAN_OR_EQUAL: writer.write_string (" >= "); break;
+		case CCodeBinaryOperator.EQUALITY: writer.write_string (" == "); break;
+		case CCodeBinaryOperator.INEQUALITY: writer.write_string (" != "); break;
+		case CCodeBinaryOperator.BITWISE_AND: writer.write_string (" & "); break;
+		case CCodeBinaryOperator.BITWISE_OR: writer.write_string (" | "); break;
+		case CCodeBinaryOperator.BITWISE_XOR: writer.write_string (" ^ "); break;
+		case CCodeBinaryOperator.AND: writer.write_string (" && "); break;
+		case CCodeBinaryOperator.OR: writer.write_string (" || "); break;
+		default: assert_not_reached ();
 		}
-
-		writer.write_string (" ");
 
 		right.write_inner (writer);
 	}

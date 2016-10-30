@@ -42,15 +42,12 @@ public class Vala.CCodeUnaryExpression : CCodeExpression {
 	}
 	
 	public override void write (CCodeWriter writer) {
-		if (operator == CCodeUnaryOperator.PLUS) {
-			writer.write_string ("+");
-		} else if (operator == CCodeUnaryOperator.MINUS) {
-			writer.write_string ("-");
-		} else if (operator == CCodeUnaryOperator.LOGICAL_NEGATION) {
-			writer.write_string ("!");
-		} else if (operator == CCodeUnaryOperator.BITWISE_COMPLEMENT) {
-			writer.write_string ("~");
-		} else if (operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
+		switch (operator) {
+		case CCodeUnaryOperator.PLUS: writer.write_string ("+"); inner.write_inner (writer); break;
+		case CCodeUnaryOperator.MINUS: writer.write_string ("-"); inner.write_inner (writer); break;
+		case CCodeUnaryOperator.LOGICAL_NEGATION: writer.write_string ("!"); inner.write_inner (writer); break;
+		case CCodeUnaryOperator.BITWISE_COMPLEMENT: writer.write_string ("~"); inner.write_inner (writer); break;
+		case CCodeUnaryOperator.POINTER_INDIRECTION:
 			var inner_unary = inner as CCodeUnaryExpression;
 			if (inner_unary != null && inner_unary.operator == CCodeUnaryOperator.ADDRESS_OF) {
 				// simplify expression
@@ -58,7 +55,9 @@ public class Vala.CCodeUnaryExpression : CCodeExpression {
 				return;
 			}
 			writer.write_string ("*");
-		} else if (operator == CCodeUnaryOperator.ADDRESS_OF) {
+			inner.write_inner (writer);
+			break;
+		case CCodeUnaryOperator.ADDRESS_OF:
 			var inner_unary = inner as CCodeUnaryExpression;
 			if (inner_unary != null && inner_unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
 				// simplify expression
@@ -66,18 +65,13 @@ public class Vala.CCodeUnaryExpression : CCodeExpression {
 				return;
 			}
 			writer.write_string ("&");
-		} else if (operator == CCodeUnaryOperator.PREFIX_INCREMENT) {
-			writer.write_string ("++");
-		} else if (operator == CCodeUnaryOperator.PREFIX_DECREMENT) {
-			writer.write_string ("--");
-		}
-
-		inner.write_inner (writer);
-
-		if (operator == CCodeUnaryOperator.POSTFIX_INCREMENT) {
-			writer.write_string ("++");
-		} else if (operator == CCodeUnaryOperator.POSTFIX_DECREMENT) {
-			writer.write_string ("--");
+			inner.write_inner (writer);
+			break;
+		case CCodeUnaryOperator.PREFIX_INCREMENT: writer.write_string ("++"); break;
+		case CCodeUnaryOperator.PREFIX_DECREMENT: writer.write_string ("--"); break;
+		case CCodeUnaryOperator.POSTFIX_INCREMENT: inner.write_inner (writer); writer.write_string ("++"); break;
+		case CCodeUnaryOperator.POSTFIX_DECREMENT: inner.write_inner (writer); writer.write_string ("--"); break;
+		default: assert_not_reached ();
 		}
 	}
 
