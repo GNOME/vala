@@ -5605,11 +5605,17 @@ namespace Gdk {
 	public class Visual : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Visual ();
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static unowned Gdk.Visual get_best ();
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static int get_best_depth ();
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static Gdk.VisualType get_best_type ();
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static unowned Gdk.Visual? get_best_with_both (int depth, Gdk.VisualType visual_type);
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static unowned Gdk.Visual get_best_with_depth (int depth);
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static unowned Gdk.Visual get_best_with_type (Gdk.VisualType visual_type);
 		[Version (deprecated = true, deprecated_since = "3.22.", since = "2.22")]
 		public int get_bits_per_rgb ();
@@ -5627,6 +5633,7 @@ namespace Gdk {
 		public void get_red_pixel_details (out uint32 mask, out int shift, out int precision);
 		[Version (since = "2.2")]
 		public unowned Gdk.Screen get_screen ();
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static unowned Gdk.Visual get_system ();
 		[Version (since = "2.22")]
 		public Gdk.VisualType get_visual_type ();
@@ -6765,6 +6772,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint keyval_to_upper (uint keyval);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (deprecated = true, deprecated_since = "3.22")]
 	public static GLib.List<weak Gdk.Visual> list_visuals ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "2.2")]
@@ -6816,8 +6824,10 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool property_get (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, ulong offset, ulong length, int pdelete, out Gdk.Atom actual_property_type, out int actual_format, [CCode (array_length_cname = "actual_length", array_length_pos = 8.5)] out uint8[] data);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (deprecated = true, deprecated_since = "3.22")]
 	public static void query_depths ([CCode (array_length_cname = "count", array_length_pos = 1.1)] out unowned int[] depths);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (deprecated = true, deprecated_since = "3.22")]
 	public static void query_visual_types ([CCode (array_length_cname = "count", array_length_pos = 1.1)] out unowned Gdk.VisualType[] visual_types);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (deprecated_since = "vala-0.12", replacement = "Selection.convert")]
