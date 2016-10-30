@@ -77,7 +77,7 @@ public class Vala.UnaryExpression : Expression {
 		}
 	}
 
-	private string get_operator_string () {
+	private unowned string get_operator_string () {
 		switch (_operator) {
 		case UnaryOperator.PLUS: return "+";
 		case UnaryOperator.MINUS: return "-";
