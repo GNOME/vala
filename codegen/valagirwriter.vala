@@ -215,11 +215,11 @@ public class Vala.GIRWriter : CodeVisitor {
 	private void write_c_includes (Namespace ns) {
 		// Collect C header filenames
 		Set<string> header_filenames = new HashSet<string> (str_hash, str_equal);
-		foreach (string c_header_filename in CCodeBaseModule.get_ccode_header_filenames (ns).split (",")) {
+		foreach (unowned string c_header_filename in CCodeBaseModule.get_ccode_header_filenames (ns).split (",")) {
 			header_filenames.add (c_header_filename);
 		}
 		foreach (Symbol symbol in ns.scope.get_symbol_table ().get_values ()) {
-			foreach (string c_header_filename in CCodeBaseModule.get_ccode_header_filenames (symbol).split (",")) {
+			foreach (unowned string c_header_filename in CCodeBaseModule.get_ccode_header_filenames (symbol).split (",")) {
 				header_filenames.add (c_header_filename);
 			}
 		}

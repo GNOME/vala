@@ -616,7 +616,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())) {
 			// add appropriate include file
-			foreach (string header_filename in get_ccode_header_filenames (sym).split (",")) {
+			foreach (unowned string header_filename in get_ccode_header_filenames (sym).split (",")) {
 				decl_space.add_include (header_filename, !sym.external_package ||
 				                                         (sym.external_package &&
 				                                          sym.from_commandline));

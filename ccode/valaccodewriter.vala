@@ -225,10 +225,7 @@ public class Vala.CCodeWriter {
 			// discard tabs at beginning of line
 			var regex = new GLib.Regex ("^\t+");
 
-			/* separate declaration due to missing memory management in foreach statements */
-			var lines = text.split ("\n");
-		
-			foreach (string line in lines) {
+			foreach (unowned string line in text.split ("\n")) {
 				if (!first) {
 					write_indent ();
 				} else {
