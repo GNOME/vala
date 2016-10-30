@@ -182,6 +182,7 @@ public enum Vala.TokenType {
 		case CLOSE_BRACKET: return "`]'";
 		case CLOSE_PARENS: return "`)'";
 		case CLOSE_REGEX_LITERAL: return "`/'";
+		case CLOSE_TEMPLATE: return "close template";
 		case COLON: return "`:'";
 		case COMMA: return "`,'";
 		case CONST: return "`const'";
@@ -201,6 +202,7 @@ public enum Vala.TokenType {
 		case ENSURES: return "`ensures'";
 		case ERRORDOMAIN: return "`errordomain'";
 		case EOF: return "end of file";
+		case EXTERN: return "`extern'";
 		case FALSE: return "`false'";
 		case FINALLY: return "`finally'";
 		case FOR: return "`for'";
@@ -224,6 +226,7 @@ public enum Vala.TokenType {
 		case NULL: return "`null'";
 		case OUT: return "`out'";
 		case OP_AND: return "`&&'";
+		case OP_COALESCING: return "`??'";
 		case OP_DEC: return "`--'";
 		case OP_EQ: return "`=='";
 		case OP_GE: return "`>='";
@@ -240,6 +243,7 @@ public enum Vala.TokenType {
 		case OPEN_BRACKET: return "`['";
 		case OPEN_PARENS: return "`('";
 		case OPEN_REGEX_LITERAL: return "`/'";
+		case OPEN_TEMPLATE: return "open template";
 		case OVERRIDE: return "`override'";
 		case OWNED: return "`owned'";
 		case PARAMS: return "`params'";
@@ -263,6 +267,7 @@ public enum Vala.TokenType {
 		case STRING_LITERAL: return "string literal";
 		case STRUCT: return "`struct'";
 		case SWITCH: return "`switch'";
+		case TEMPLATE_STRING_LITERAL: return "template string literal";
 		case THIS: return "`this'";
 		case THROW: return "`throw'";
 		case THROWS: return "`throws'";
@@ -273,6 +278,7 @@ public enum Vala.TokenType {
 		case UNOWNED: return "`unowned'";
 		case USING: return "`using'";
 		case VAR: return "`var'";
+		case VERBATIM_STRING_LITERAL: return "verbatim string literal";
 		case VIRTUAL: return "`virtual'";
 		case VOID: return "`void'";
 		case VOLATILE: return "`volatile'";

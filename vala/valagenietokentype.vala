@@ -200,6 +200,7 @@ public enum Vala.Genie.TokenType {
 		case CLOSE_BRACKET: return "`]'";
 		case CLOSE_PARENS: return "`)'";
 		case CLOSE_REGEX_LITERAL: return "`/'";
+		case CLOSE_TEMPLATE: return "close template";
 		case COLON: return "`:'";
 		case COMMA: return "`,'";
 		case CONST: return "`const'";
@@ -271,6 +272,7 @@ public enum Vala.Genie.TokenType {
 		case OPEN_BRACKET: return "`['";
 		case OPEN_PARENS: return "`('";
 		case OPEN_REGEX_LITERAL: return "`/'";
+		case OPEN_TEMPLATE: return "open template";
 		case OVERRIDE: return "`override'";
 		case OWNED: return "`owned'";
 		case PARAMS: return "`params'";
@@ -299,6 +301,7 @@ public enum Vala.Genie.TokenType {
 		case STRING_LITERAL: return "string literal";
 		case STRUCT: return "`struct'";
 		case SUPER: return "`super'";
+		case TEMPLATE_STRING_LITERAL: return "template string literal";
 		case THIS: return "`self'";
 		case TILDE: return "`~'";
 		case TO: return "`to'";
@@ -308,6 +311,7 @@ public enum Vala.Genie.TokenType {
 		case UNOWNED: return "`unowned'";
 		case USES: return "`uses'";
 		case VAR: return "`var'";
+		case VERBATIM_STRING_LITERAL: return "verbatim string literal";
 		case VIRTUAL: return "`virtual'";
 		case VOID: return "`void'";
 		case VOLATILE: return "`volatile'";
