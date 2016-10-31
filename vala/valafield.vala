@@ -85,14 +85,6 @@ public class Vala.Field : Variable, Lockable {
 		}
 	}
 
-	public string? get_ctype () {
-		return get_attribute_string ("CCode", "type");
-	}
-
-	public void set_ctype (string ctype) {
-		set_attribute_string ("CCode", "type", ctype);
-	}
-
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
