@@ -53,7 +53,10 @@ public class Vala.GenericType : DataType {
 	}
 
 	public override string to_qualified_string (Scope? scope = null) {
-		return type_parameter.name;
+		if (nullable)
+			return type_parameter.name + "?";
+		else
+			return type_parameter.name;
 	}
 
 	public override Symbol? get_member (string member_name) {
