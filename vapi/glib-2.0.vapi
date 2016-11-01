@@ -5182,36 +5182,36 @@ namespace GLib {
 
 	[Version (since = "2.4")]
 	[CCode (cname = "_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
-	public static unowned string _ (string str);
+	public static unowned string _ ([FormatArg] string str);
 	[Version (since = "2.4")]
 	[CCode (cname = "Q_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
-	public static unowned string Q_ (string str);
+	public static unowned string Q_ ([FormatArg] string str);
 	[Version (since = "2.4")]
 	[CCode (cname = "N_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
-	public static unowned string N_ (string str);
+	public static unowned string N_ ([FormatArg] string str);
 	[Version (since = "2.16")]
 	[CCode (cname = "C_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
-	public static unowned string C_ (string context, string str);
+	public static unowned string C_ (string context, [FormatArg] string str);
 	[Version (since = "2.18")]
 	[CCode (cname = "NC_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
-	public static unowned string NC_ (string context, string str);
+	public static unowned string NC_ (string context, [FormatArg] string str);
 	[CCode (cname = "ngettext", cheader_filename = "glib.h,glib/gi18n-lib.h")]
-	public static unowned string ngettext (string msgid, string msgid_plural, ulong n);
+	public static unowned string ngettext (string msgid, [FormatArg] string msgid_plural, ulong n);
 	[Version (since = "2.18")]
 	[CCode (cname = "g_dgettext", cheader_filename = "glib/gi18n-lib.h")]
-	public static unowned string dgettext (string? domain, string msgid);
+	public static unowned string dgettext (string? domain, [FormatArg] string msgid);
 	[Version (since = "2.26")]
 	[CCode (cname = "g_dcgettext", cheader_filename = "glib/gi18n-lib.h")]
-	public static unowned string dcgettext (string? domain, string msgid, int category);
+	public static unowned string dcgettext (string? domain, [FormatArg] string msgid, int category);
 	[Version (since = "2.18")]
 	[CCode (cname = "g_dngettext", cheader_filename = "glib/gi18n-lib.h")]
-	public static unowned string dngettext (string? domain, string msgid, string msgid_plural, ulong n);
+	public static unowned string dngettext (string? domain, string msgid, [FormatArg] string msgid_plural, ulong n);
 	[Version (since = "2.16")]
 	[CCode (cname = "g_dpgettext", cheader_filename = "glib/gi18n-lib.h")]
-	public static unowned string dpgettext (string? domain, string msgctxid, size_t msgidoffset);
+	public static unowned string dpgettext (string? domain, [FormatArg] string msgctxid, size_t msgidoffset);
 	[Version (since = "2.18")]
 	[CCode (cname = "g_dpgettext2", cheader_filename = "glib/gi18n-lib.h")]
-	public static unowned string dpgettext2 (string? domain, string context, string msgid);
+	public static unowned string dpgettext2 (string? domain, string context, [FormatArg] string msgid);
 
 	[CCode (cname = "int", cprefix = "LC_", cheader_filename = "locale.h", has_type_id = false)]
 	public enum LocaleCategory {
