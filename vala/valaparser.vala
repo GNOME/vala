@@ -126,7 +126,7 @@ public class Vala.Parser : CodeVisitor {
 			return true;
 		}
 
-		throw new ParseError.SYNTAX (get_error ("expected %s".printf (type.to_string ())));
+		throw new ParseError.SYNTAX (get_error ("expected %s"), type.to_string ());
 	}
 
 	inline SourceLocation get_location () {
@@ -2698,7 +2698,7 @@ public class Vala.Parser : CodeVisitor {
 			if (ModifierFlags.ABSTRACT in flags
 			    || ModifierFlags.VIRTUAL in flags
 			    || ModifierFlags.OVERRIDE in flags) {
-				throw new ParseError.SYNTAX (get_error ("the modifiers `abstract', `virtual', and `override' are not valid for %s methods".printf ((ModifierFlags.CLASS in flags) ? "class" : "static")));
+				throw new ParseError.SYNTAX (get_error ("the modifiers `abstract', `virtual', and `override' are not valid for %s methods"), (ModifierFlags.CLASS in flags) ? "class" : "static");
 			}
 		}
 

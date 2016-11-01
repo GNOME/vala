@@ -126,7 +126,7 @@ public class Vala.GVariantModule : GAsyncModule {
 					}
 				}
 
-				sig = sig.printf (element_sig);
+				sig = sig.replace ("%s", element_sig);
 			}
 
 			if (sig == null &&

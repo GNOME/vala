@@ -163,7 +163,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		TokenType cur = current ();
 		TokenType pre =  tokens[index - 1].type;
 
-		throw new ParseError.SYNTAX (get_error ("expected %s but got %s with previous %s".printf (type.to_string (), cur.to_string (), pre.to_string())));
+		throw new ParseError.SYNTAX (get_error ("expected %s but got %s with previous %s"), type.to_string (), cur.to_string (), pre.to_string());
 	}
 
 	inline bool expect_terminator () throws ParseError {
@@ -173,7 +173,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		TokenType cur = current ();
 
-		throw new ParseError.SYNTAX (get_error ("expected line end or semicolon but got %s".printf (cur.to_string())));
+		throw new ParseError.SYNTAX (get_error ("expected line end or semicolon but got %s"), cur.to_string());
 	}
 
 	inline SourceLocation get_location () {
@@ -2436,7 +2436,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		TokenType cur = current ();
 		TokenType pre =  tokens[index-1].type;
 
-		throw new ParseError.SYNTAX (get_error ("expected declaration  but got %s with previous %s".printf (cur.to_string (), pre.to_string())));
+		throw new ParseError.SYNTAX (get_error ("expected declaration  but got %s with previous %s"), cur.to_string (), pre.to_string());
 	}
 
 	void parse_declarations (Symbol parent, bool root = false) throws ParseError {
