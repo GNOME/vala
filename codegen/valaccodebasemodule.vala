@@ -6764,7 +6764,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 }
 
-public class Vala.GLibValue : TargetValue {
+internal class Vala.GLibValue : TargetValue {
 	public CCodeExpression cvalue;
 	public bool lvalue;
 	public bool non_null;
