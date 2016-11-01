@@ -77,6 +77,9 @@ TESTS = \
 	methods/bug743877.vala \
 	methods/bug771964.vala \
 	methods/generics.vala \
+	methods/printf-invalid.test \
+	methods/printf-constructor.vala \
+	methods/printf-constructor-invalid.test \
 	control-flow/break.vala \
 	control-flow/expressions-conditional.vala \
 	control-flow/for.vala \

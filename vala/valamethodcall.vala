@@ -384,6 +384,8 @@ public class Vala.MethodCall : Expression {
 			}
 		}
 
+		// FIXME partial code duplication in ObjectCreationExpression.check
+
 		Expression last_arg = null;
 
 		var args = get_argument_list ();

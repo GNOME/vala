@@ -361,6 +361,10 @@ public class Vala.ObjectCreationExpression : Expression {
 				context.analyzer.current_method.yield_count++;
 			}
 
+			// FIXME partial code duplication of MethodCall.check
+
+			Expression last_arg = null;
+
 			var args = get_argument_list ();
 			Iterator<Expression> arg_it = args.iterator ();
 			foreach (Parameter param in m.get_parameters ()) {
@@ -374,6 +378,38 @@ public class Vala.ObjectCreationExpression : Expression {
 					/* store expected type for callback parameters */
 					arg.formal_target_type = param.variable_type;
 					arg.target_type = arg.formal_target_type.get_actual_type (value_type, null, this);
+
+					last_arg = arg;
+				}
+			}
+
+			// printf arguments
+			if (m.printf_format) {
+				StringLiteral format_literal = null;
+				if (last_arg != null) {
+					// use last argument as format string
+					format_literal = last_arg as StringLiteral;
+					if (format_literal == null && args.size == m.get_parameters ().size - 1) {
+						// insert "%s" to avoid issues with embedded %
+						format_literal = new StringLiteral ("\"%s\"");
+						format_literal.target_type = context.analyzer.string_type.copy ();
+						argument_list.insert (args.size - 1, format_literal);
+
+						// recreate iterator and skip to right position
+						arg_it = argument_list.iterator ();
+						foreach (Parameter param in m.get_parameters ()) {
+							if (param.ellipsis) {
+								break;
+							}
+							arg_it.next ();
+						}
+					}
+				}
+				if (format_literal != null) {
+					string format = format_literal.eval ();
+					if (!context.analyzer.check_print_format (format, arg_it, source_reference)) {
+						return false;
+					}
 				}
 			}
 
