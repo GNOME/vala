@@ -156,7 +156,7 @@ public class Vala.CCodeWriter {
 			}
 		}
 
-		if (!bol) {
+		if (!_bol) {
 			write_newline ();
 		}
 		
@@ -187,7 +187,7 @@ public class Vala.CCodeWriter {
 	 * Opens a new block, increasing the indent level.
 	 */
 	public void write_begin_block () {
-		if (!bol) {
+		if (!_bol) {
 			stream.putc (' ');
 		} else {
 			write_indent ();
