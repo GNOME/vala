@@ -46,6 +46,7 @@ public abstract class Vala.Subroutine : Symbol {
 			_body = value;
 			if (_body != null) {
 				_body.owner = scope;
+				_body.parent_node = this;
 			}
 		}
 	}
