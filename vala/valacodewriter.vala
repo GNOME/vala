@@ -28,6 +28,8 @@
  * Code visitor generating Vala API file for the public interface.
  */
 public class Vala.CodeWriter : CodeVisitor {
+	static GLib.Regex fix_indent_regex;
+
 	private CodeContext context;
 	
 	FileStream stream;
@@ -1502,9 +1504,9 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	private void write_comment (Comment comment) {
-		Regex fix_indent_regex;
 		try {
-			fix_indent_regex = new Regex ("\\n[\\t ]*");
+			if (fix_indent_regex == null)
+				fix_indent_regex = new Regex ("\\n[\\t ]*");
 		} catch (Error e) {
 			assert_not_reached ();
 		}

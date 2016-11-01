@@ -48,6 +48,8 @@ public class Vala.CCodeWriter {
 		get { return _bol; }
 	}
 
+	static GLib.Regex fix_indent_regex;
+
 	private string temp_filename;
 	private bool file_exists;
 
@@ -220,7 +222,8 @@ public class Vala.CCodeWriter {
 			bool first = true;
 
 			// discard tabs at beginning of line
-			var regex = new GLib.Regex ("^\t+");
+			if (fix_indent_regex == null)
+				fix_indent_regex = new GLib.Regex ("^\t+");;
 
 			foreach (unowned string line in text.split ("\n")) {
 				if (!first) {
@@ -229,7 +232,7 @@ public class Vala.CCodeWriter {
 					first = false;
 				}
 
-				var lineparts = regex.replace_literal (line, -1, 0, "").split ("*/");
+				var lineparts = fix_indent_regex.replace_literal (line, -1, 0, "").split ("*/");
 
 				for (int i = 0; lineparts[i] != null; i++) {
 					stream.puts (lineparts[i]);

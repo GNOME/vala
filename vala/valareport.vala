@@ -100,6 +100,7 @@ public class Vala.Report : Object {
 
 	public bool enable_warnings { get; set; default = true; }
 
+	static GLib.Regex val_regex;
 
 	/**
 	 * Set all colors by string
@@ -109,9 +110,9 @@ public class Vala.Report : Object {
 	 * }}}
 	 */
 	public bool set_colors (string str) {
-		Regex val_regex;
 		try {
-			val_regex = new Regex ("^\\s*[0-9]+(;[0-9]*)*\\s*$");
+			if (val_regex == null)
+				val_regex = new Regex ("^\\s*[0-9]+(;[0-9]*)*\\s*$");
 		} catch (RegexError e) {
 			assert_not_reached ();
 		}
