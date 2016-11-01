@@ -434,7 +434,7 @@ public class Vala.MethodCall : Expression {
 			StringLiteral format_literal = null;
 			if (last_arg != null) {
 				// use last argument as format string
-				format_literal = last_arg as StringLiteral;
+				format_literal = StringLiteral.get_format_literal (last_arg);
 				if (format_literal == null && args.size == params.size - 1) {
 					// insert "%s" to avoid issues with embedded %
 					format_literal = new StringLiteral ("\"%s\"");
@@ -454,7 +454,7 @@ public class Vala.MethodCall : Expression {
 				// use instance as format string for string.printf (...)
 				var ma = call as MemberAccess;
 				if (ma != null) {
-					format_literal = ma.inner as StringLiteral;
+					format_literal = StringLiteral.get_format_literal (ma.inner);
 				}
 			}
 			if (format_literal != null) {
@@ -721,5 +721,17 @@ public class Vala.MethodCall : Expression {
 		foreach (Expression arg in argument_list) {
 			arg.get_used_variables (collection);
 		}
+	}
+
+	public StringLiteral? get_format_literal () {
+		var mtype = this.call.value_type as MethodType;
+		if (mtype != null) {
+			int format_arg = mtype.method_symbol.get_format_arg_index ();
+			if (format_arg >= 0 && format_arg < argument_list.size) {
+				return StringLiteral.get_format_literal (argument_list[format_arg]);
+			}
+		}
+
+		return null;
 	}
 }

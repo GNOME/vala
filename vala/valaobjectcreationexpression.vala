@@ -388,7 +388,7 @@ public class Vala.ObjectCreationExpression : Expression {
 				StringLiteral format_literal = null;
 				if (last_arg != null) {
 					// use last argument as format string
-					format_literal = last_arg as StringLiteral;
+					format_literal = StringLiteral.get_format_literal (last_arg);
 					if (format_literal == null && args.size == m.get_parameters ().size - 1) {
 						// insert "%s" to avoid issues with embedded %
 						format_literal = new StringLiteral ("\"%s\"");
@@ -457,7 +457,7 @@ public class Vala.ObjectCreationExpression : Expression {
 					Report.error (source_reference, "Invalid type for argument 1");
 				}
 
-				var format_literal = ex as StringLiteral;
+				var format_literal = StringLiteral.get_format_literal (ex);
 				if (format_literal != null) {
 					var format = format_literal.eval ();
 					if (!context.analyzer.check_print_format (format, arg_it, source_reference)) {

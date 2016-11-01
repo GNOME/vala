@@ -44,6 +44,12 @@ public class Vala.Parameter : Variable {
 	
 	public bool captured { get; set; }
 
+	public bool format_arg {
+		get {
+			return get_attribute ("FormatArg") != null;
+		}
+	}
+
 	/**
 	 * The base parameter of this parameter relative to the base method.
 	 */

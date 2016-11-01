@@ -1047,6 +1047,15 @@ public class Vala.Method : Subroutine, Callable {
 			get_captured_variables ((Collection<LocalVariable>) collection);
 		}
 	}
+
+	public int get_format_arg_index () {
+		for (int i = 0; i < parameters.size; i++) {
+			if (parameters[i].format_arg) {
+				return i;
+			}
+		}
+		return -1;
+	}
 }
 
 // vim:sw=8 noet
