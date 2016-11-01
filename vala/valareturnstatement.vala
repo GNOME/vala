@@ -138,6 +138,11 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 			Report.warning (source_reference, "`null' incompatible with return type `%s`".printf (context.analyzer.current_return_type.to_string ()));
 		}
 
+		if (return_expression.value_type.nullable &&
+		    context.analyzer.current_method != null) {
+			context.analyzer.current_method.has_nullable_return_statement = true;
+		}
+
 		add_error_types (return_expression.get_error_types ());
 
 		return !error;

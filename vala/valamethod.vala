@@ -185,6 +185,8 @@ public class Vala.Method : Subroutine, Callable {
 
 	public int yield_count { get; set; }
 
+	public bool has_nullable_return_statement { get; set; default = false;}
+
 	private List<Parameter> parameters = new ArrayList<Parameter> ();
 	private List<Expression> preconditions;
 	private List<Expression> postconditions;
@@ -759,6 +761,12 @@ public class Vala.Method : Subroutine, Callable {
 
 		if (body != null) {
 			body.check (context);
+			if (!this.overrides && this.base_interface_method == null &&
+			    this.return_type.nullable && !this.has_nullable_return_statement) {
+				// The return type of the method is marked nullable but none
+				// of the return statements return a nullable type
+				Report.warning (this.source_reference, "Return type of %s is marked nullable but none of its return statements return a nullable value".printf (this.get_full_name ()));
+			}
 		}
 
 		if (context.analyzer.current_struct != null) {
