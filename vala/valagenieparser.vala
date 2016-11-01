@@ -100,9 +100,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		if (size <= 0) {
 			SourceLocation begin, end;
 			TokenType type = scanner.read_token (out begin, out end);
-			tokens[index].type = type;
-			tokens[index].begin = begin;
-			tokens[index].end = end;
+			tokens[index] = { type, begin, end };
 			size = 1;
 		}
 		return (tokens[index].type != TokenType.EOF);
@@ -183,12 +181,14 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 	
 	string get_current_string () {
-		return ((string) tokens[index].begin.pos).substring (0, (int) (tokens[index].end.pos - tokens[index].begin.pos));
+		var token = tokens[index];
+		return ((string) token.begin.pos).substring (0, (int) (token.end.pos - token.begin.pos));
 	}
 
 	string get_last_string () {
 		int last_index = (index + BUFFER_SIZE - 1) % BUFFER_SIZE;
-		return ((string) tokens[last_index].begin.pos).substring (0, (int) (tokens[last_index].end.pos - tokens[last_index].begin.pos));
+		var token = tokens[last_index];
+		return ((string) token.begin.pos).substring (0, (int) (token.end.pos - token.begin.pos));
 	}
 
 	SourceReference get_src (SourceLocation begin) {
@@ -198,7 +198,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 
 	SourceReference get_current_src () {
-		return new SourceReference (scanner.source_file, tokens[index].begin, tokens[index].end);
+		var token = tokens[index];
+		return new SourceReference (scanner.source_file, token.begin, token.end);
 	}
 
 	void rollback (SourceLocation location) {
