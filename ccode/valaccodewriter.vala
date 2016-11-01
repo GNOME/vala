@@ -160,10 +160,7 @@ public class Vala.CCodeWriter {
 			write_newline ();
 		}
 		
-		for (int i = 0; i < indent; i++) {
-			stream.putc ('\t');
-		}
-		
+		stream.puts (string.nfill (indent, '\t'));
 		_bol = false;
 	}
 	

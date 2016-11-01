@@ -67,7 +67,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	 */
 	public void write_file (CodeContext context, string filename) {
 		var file_exists = FileUtils.test (filename, FileTest.EXISTS);
-		var temp_filename = filename + ".valatmp";
+		var temp_filename = "%s.valatmp".printf (filename);
 		this.context = context;
 
 		if (file_exists) {
@@ -1493,16 +1493,11 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	private void write_indent () {
-		int i;
-		
 		if (!bol) {
 			stream.putc ('\n');
 		}
-		
-		for (i = 0; i < indent; i++) {
-			stream.putc ('\t');
-		}
-		
+
+		stream.puts (string.nfill (indent, '\t'));
 		bol = false;
 	}
 
@@ -1514,7 +1509,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			assert_not_reached ();
 		}
 
-		string replacement = "\n" + string.nfill (indent, '\t') + " ";
+		string replacement = "\n%s ".printf (string.nfill (indent, '\t'));
 		string fixed_content;
 		try {
 			fixed_content = fix_indent_regex.replace (comment.content, comment.content.length, 0, replacement);
@@ -1560,7 +1555,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	private void write_string (string s) {
-		stream.printf ("%s", s);
+		stream.puts (s);
 		bol = false;
 	}
 	
@@ -1592,7 +1587,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	private void write_end_block () {
 		indent--;
 		write_indent ();
-		stream.printf ("}");
+		stream.putc ('}');
 	}
 
 	private bool check_accessibility (Symbol sym) {
@@ -1675,9 +1670,9 @@ public class Vala.CodeWriter : CodeVisitor {
 
 			stream.printf ("[%s", attr.name);
 			if (keys.get_length () > 0) {
-				stream.printf (" (");
+				stream.puts (" (");
 
-				string separator = "";
+				unowned string separator = "";
 				var arg_iter = keys.get_begin_iter ();
 				while (!arg_iter.is_end ()) {
 					unowned string arg_name = arg_iter.get ();
@@ -1690,9 +1685,9 @@ public class Vala.CodeWriter : CodeVisitor {
 					separator = ", ";
 				}
 
-				stream.printf (")");
+				stream.puts (")");
 			}
-			stream.printf ("]");
+			stream.puts ("]");
 			if (node is Parameter || node is PropertyAccessor) {
 				write_string (" ");
 			} else {
