@@ -6419,29 +6419,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeConstant get_signal_canonical_constant (Signal sig, string? detail = null) {
-		var str = new StringBuilder ("\"");
-
-		string i = get_ccode_name (sig);
-
-		while (i.length > 0) {
-			unichar c = i.get_char ();
-			if (c == '_') {
-				str.append_c ('-');
-			} else {
-				str.append_unichar (c);
-			}
-
-			i = i.next_char ();
-		}
-
-		if (detail != null) {
-			str.append ("::");
-			str.append (detail);
-		}
-
-		str.append_c ('"');
-
-		return new CCodeConstant (str.str);
+		return new CCodeConstant ("\"%s%s\"".printf (get_ccode_name (sig).replace ("_", "-"), (detail != null ? "::%s".printf (detail) : "")));
 	}
 
 	public static CCodeConstant get_enum_value_canonical_cconstant (EnumValue ev) {
