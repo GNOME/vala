@@ -6423,24 +6423,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public static CCodeConstant get_enum_value_canonical_cconstant (EnumValue ev) {
-		var str = new StringBuilder ("\"");
-
-		string i = ev.name;
-
-		while (i.length > 0) {
-			unichar c = i.get_char ();
-			if (c == '_') {
-				str.append_c ('-');
-			} else {
-				str.append_unichar (c.tolower ());
-			}
-
-			i = i.next_char ();
-		}
-
-		str.append_c ('"');
-
-		return new CCodeConstant (str.str);
+		return new CCodeConstant ("\"%s\"".printf (ev.name.down ().replace ("_", "-")));
 	}
 
 	public bool get_signal_has_emitter (Signal sig) {
