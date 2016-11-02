@@ -1,7 +1,6 @@
 KEY_* name="KEY_(.+)" parent="Gdk.Key"
 selection_* name="selection_(.+)" parent="Gdk.Selection"
 Atom struct
-Color struct
 Cursor	abstract=false
 Device
         .free_history skip=false

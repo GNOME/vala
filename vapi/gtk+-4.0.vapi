@@ -6004,21 +6004,6 @@ namespace Gdk {
 		public static Gdk.Atom intern_static_string (string atom_name);
 		public string name ();
 	}
-	[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_color_get_type ()")]
-	[Version (deprecated = true, deprecated_since = "3.14")]
-	public struct Color {
-		public uint32 pixel;
-		public uint16 red;
-		public uint16 green;
-		public uint16 blue;
-		public Gdk.Color? copy ();
-		public bool equal (Gdk.Color colorb);
-		public void free ();
-		public uint hash ();
-		public static bool parse (string spec, out Gdk.Color color);
-		[Version (since = "2.12")]
-		public string to_string ();
-	}
 	[CCode (cheader_filename = "gdk/gdkx.h", has_type_id = false)]
 	public struct Geometry {
 		public int min_width;
@@ -6919,7 +6904,7 @@ namespace Gsk {
 		protected RenderNode ();
 		public unowned Gsk.RenderNode append_child (Gsk.RenderNode child);
 		public bool contains (Gsk.RenderNode descendant);
-		public Cairo.Context get_draw_context ();
+		public Cairo.Context get_draw_context (Gsk.Renderer? renderer);
 		public unowned Gsk.RenderNode get_first_child ();
 		public unowned Gsk.RenderNode get_last_child ();
 		public uint get_n_children ();
@@ -13036,36 +13021,6 @@ namespace Gtk {
 		public void remove (Gdk.Atom target);
 		public void unref ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_text_attributes_ref", type_id = "gtk_text_attributes_get_type ()", unref_function = "gtk_text_attributes_unref")]
-	[Compact]
-	public class TextAttributes {
-		public Gtk.TextAppearance appearance;
-		public uint bg_full_height;
-		public Gtk.TextDirection direction;
-		public uint editable;
-		public weak Pango.FontDescription font;
-		public weak string font_features;
-		public double font_scale;
-		public int indent;
-		public uint invisible;
-		public Gtk.Justification justification;
-		public Pango.Language language;
-		public int left_margin;
-		public int letter_spacing;
-		public uint no_fallback;
-		public int pixels_above_lines;
-		public int pixels_below_lines;
-		public int pixels_inside_wrap;
-		public int right_margin;
-		public weak Pango.TabArray tabs;
-		public Gtk.WrapMode wrap_mode;
-		[CCode (has_construct_function = false)]
-		public TextAttributes ();
-		public Gtk.TextAttributes copy ();
-		public void copy_values (Gtk.TextAttributes dest);
-		public Gtk.TextAttributes @ref ();
-		public void unref ();
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
 	[Compact]
 	public class TextBTree {
@@ -13426,7 +13381,6 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public void get_cursor_locations (Gtk.TextIter? iter, out Gdk.Rectangle strong, out Gdk.Rectangle @weak);
 		public bool get_cursor_visible ();
-		public Gtk.TextAttributes get_default_attributes ();
 		public bool get_editable ();
 		public int get_indent ();
 		[Version (since = "3.6")]
@@ -14625,8 +14579,6 @@ namespace Gtk {
 		public void show_now ();
 		[Version (since = "3.10")]
 		public void size_allocate_with_baseline (Gtk.Allocation allocation, int baseline);
-		[NoWrapper]
-		public virtual void state_changed (Gtk.StateType previous_state);
 		public void style_get (...);
 		public void style_get_property (string property_name, ref GLib.Value value);
 		public void style_get_valist (string first_property_name, [CCode (type = "va_list")] va_list var_args);
@@ -14639,8 +14591,6 @@ namespace Gtk {
 		public void unregister_window (Gdk.Window window);
 		[Version (since = "3.0")]
 		public void unset_state_flags (Gtk.StateFlags flags);
-		[NoWrapper]
-		public virtual bool visibility_notify_event (Gdk.EventVisibility event);
 		public bool can_default { get; set; }
 		public bool can_focus { get; set; }
 		public Gdk.EventMask events { get; set; }
@@ -15784,19 +15734,6 @@ namespace Gtk {
 		public Gtk.TargetEntry? copy ();
 		public void free ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
-	public struct TextAppearance {
-		public Gdk.Color bg_color;
-		public Gdk.Color fg_color;
-		public int rise;
-		public uint underline;
-		public uint strikethrough;
-		public uint draw_bg;
-		public uint inside_selection;
-		public uint is_text;
-		[CCode (array_length = false)]
-		public weak Gdk.RGBA rgba[2];
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_text_iter_get_type ()")]
 	public struct TextIter {
 		[Version (since = "3.2")]
@@ -15863,7 +15800,6 @@ namespace Gtk {
 		public bool forward_word_end ();
 		public bool forward_word_ends (int count);
 		public void free ();
-		public bool get_attributes (Gtk.TextAttributes values);
 		public unowned Gtk.TextBuffer get_buffer ();
 		public int get_bytes_in_line ();
 		public unichar get_char ();
@@ -16638,17 +16574,6 @@ namespace Gtk {
 		VISITED,
 		CHECKED,
 		DROP_ACTIVE
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_STATE_", type_id = "gtk_state_type_get_type ()")]
-	[Version (deprecated = true, deprecated_since = "3.14")]
-	public enum StateType {
-		NORMAL,
-		ACTIVE,
-		PRELIGHT,
-		SELECTED,
-		INSENSITIVE,
-		INCONSISTENT,
-		FOCUSED
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_STYLE_CONTEXT_PRINT_", type_id = "gtk_style_context_print_flags_get_type ()")]
 	[Flags]

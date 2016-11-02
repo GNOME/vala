@@ -228,8 +228,6 @@ RecentFilter
 // Field ownership
 RecentData
   .* unowned=false
-TextAttributes
-  .language unowned=false
 
 // Bug #: Nullable properties & fields
 ComboBox.active_id nullable
@@ -371,8 +369,6 @@ TreeModel
   .get_value return_void
 BindingArg
   .d.* skip
-TextIter
-  .get_attributes.values out=false
 icon_size_*#function skip
 rc_property_parse_* skip
 show_about_dialog skip=false
