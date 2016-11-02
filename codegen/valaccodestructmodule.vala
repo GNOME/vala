@@ -67,20 +67,10 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		instance_struct.deprecated = st.version.deprecated;
 
 		foreach (Field f in st.get_fields ()) {
-			string field_ctype = get_ccode_name (f.variable_type);
-			if (f.is_volatile) {
-				field_ctype = "volatile " + field_ctype;
-			}
-
 			if (f.binding == MemberBinding.INSTANCE)  {
 				generate_type_declaration (f.variable_type, decl_space);
-
-				var suffix = get_ccode_declarator_suffix (f.variable_type);
-				if (suffix != null) {
-					suffix.deprecated = f.version.deprecated;
-				}
-
-				instance_struct.add_field (field_ctype, get_ccode_name (f), suffix);
+				CCodeModifiers modifiers = (f.is_volatile ? CCodeModifiers.VOLATILE : 0) | (f.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
+				instance_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers, get_ccode_declarator_suffix (f.variable_type));
 				if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
 					// create fields to store array dimensions
 					var array_type = (ArrayType) f.variable_type;

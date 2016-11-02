@@ -114,6 +114,9 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 		if ((modifiers & CCodeModifiers.REGISTER) == CCodeModifiers.REGISTER) {
 			writer.write_string ("register ");
 		}
+		if ((modifiers & CCodeModifiers.VOLATILE) != 0) {
+			writer.write_string ("volatile ");
+		}
 		writer.write_string (type_name);
 		writer.write_string (" ");
 	
@@ -125,6 +128,10 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 				first = false;
 			}
 			decl.write_declaration (writer);
+		}
+
+		if (CCodeModifiers.DEPRECATED in modifiers) {
+			writer.write_string (" G_GNUC_DEPRECATED");
 		}
 
 		writer.write_string (";");

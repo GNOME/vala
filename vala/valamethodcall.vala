@@ -46,7 +46,7 @@ public class Vala.MethodCall : Expression {
 	 */
 	public bool is_constructv_chainup { get; private set; }
 
-	public Expression _call;
+	private Expression _call;
 	
 	private List<Expression> argument_list = new ArrayList<Expression> ();
 

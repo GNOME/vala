@@ -101,9 +101,8 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 }
 
 public class Vala.CCodeDeclaratorSuffix {
-	public bool array;
-	public CCodeExpression? array_length;
-	public bool deprecated;
+	bool array;
+	CCodeExpression? array_length;
 
 	public CCodeDeclaratorSuffix.with_array (CCodeExpression? array_length = null) {
 		this.array_length = array_length;
@@ -117,10 +116,6 @@ public class Vala.CCodeDeclaratorSuffix {
 				array_length.write (writer);
 			}
 			writer.write_string ("]");
-		}
-
-		if (deprecated) {
-			writer.write_string (" G_GNUC_DEPRECATED");
 		}
 	}
 }

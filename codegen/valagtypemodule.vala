@@ -322,16 +322,12 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		foreach (Field f in cl.get_fields ()) {
-			string field_ctype = get_ccode_name (f.variable_type);
-			if (f.is_volatile) {
-				field_ctype = "volatile %s".printf (field_ctype);
-			}
-
 			if (f.access != SymbolAccessibility.PRIVATE) {
+				CCodeModifiers modifiers = (f.is_volatile ? CCodeModifiers.VOLATILE : 0) | (f.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 				if (f.binding == MemberBinding.INSTANCE) {
 					generate_type_declaration (f.variable_type, decl_space);
 
-					instance_struct.add_field (field_ctype, get_ccode_name (f), get_ccode_declarator_suffix (f.variable_type));
+					instance_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers, get_ccode_declarator_suffix (f.variable_type));
 					if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
 						// create fields to store array dimensions
 						var array_type = (ArrayType) f.variable_type;
@@ -364,7 +360,7 @@ public class Vala.GTypeModule : GErrorModule {
 						}
 					}
 				} else if (f.binding == MemberBinding.CLASS) {
-					type_struct.add_field (field_ctype, get_ccode_name (f));
+					type_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers);
 				}
 			}
 		}
@@ -429,16 +425,12 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		foreach (Field f in cl.get_fields ()) {
-			string field_ctype = get_ccode_name (f.variable_type);
-			if (f.is_volatile) {
-				field_ctype = "volatile %s".printf (field_ctype);
-			}
-
+			CCodeModifiers modifiers = (f.is_volatile ? CCodeModifiers.VOLATILE : 0) | (f.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 			if (f.binding == MemberBinding.INSTANCE) {
 				if (f.access == SymbolAccessibility.PRIVATE)  {
 					generate_type_declaration (f.variable_type, decl_space);
 
-					instance_priv_struct.add_field (field_ctype, get_ccode_name (f), get_ccode_declarator_suffix (f.variable_type));
+					instance_priv_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers, get_ccode_declarator_suffix (f.variable_type));
 					if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
 						// create fields to store array dimensions
 						var array_type = (ArrayType) f.variable_type;
@@ -478,7 +470,7 @@ public class Vala.GTypeModule : GErrorModule {
 				}
 			} else if (f.binding == MemberBinding.CLASS) {
 				if (f.access == SymbolAccessibility.PRIVATE) {
-					type_priv_struct.add_field (field_ctype, get_ccode_name (f));
+					type_priv_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers);
 				}
 
 				if (f.get_lock_used ()) {

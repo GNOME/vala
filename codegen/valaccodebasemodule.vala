@@ -990,12 +990,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		generate_type_declaration (f.variable_type, decl_space);
 
-		string field_ctype = get_ccode_name (f.variable_type);
-		if (f.is_volatile) {
-			field_ctype = "volatile " + field_ctype;
-		}
-
-		var cdecl = new CCodeDeclaration (field_ctype);
+		var cdecl = new CCodeDeclaration (get_ccode_name (f.variable_type));
 		cdecl.add_declarator (new CCodeVariableDeclarator (get_ccode_name (f), null, get_ccode_declarator_suffix (f.variable_type)));
 		if (f.is_private_symbol ()) {
 			cdecl.modifiers = CCodeModifiers.STATIC;
@@ -1004,6 +999,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 		if (f.version.deprecated) {
 			cdecl.modifiers |= CCodeModifiers.DEPRECATED;
+		}
+		if (f.is_volatile) {
+			cdecl.modifiers |= CCodeModifiers.VOLATILE;
 		}
 		decl_space.add_type_member_declaration (cdecl);
 
@@ -1084,11 +1082,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		bool is_gtypeinstance = (cl != null && !cl.is_compact);
 
 		CCodeExpression lhs = null;
-
-		string field_ctype = get_ccode_name (f.variable_type);
-		if (f.is_volatile) {
-			field_ctype = "volatile " + field_ctype;
-		}
 
 		if (f.binding == MemberBinding.INSTANCE)  {
 			if (is_gtypeinstance && f.access == SymbolAccessibility.PRIVATE) {
@@ -1215,12 +1208,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 				}
 
-				var var_def = new CCodeDeclaration (field_ctype);
+				var var_def = new CCodeDeclaration (get_ccode_name (f.variable_type));
 				var_def.add_declarator (var_decl);
 				if (!f.is_private_symbol ()) {
 					var_def.modifiers = CCodeModifiers.EXTERN;
 				} else {
 					var_def.modifiers = CCodeModifiers.STATIC;
+				}
+				if (f.version.deprecated) {
+					var_def.modifiers |= CCodeModifiers.DEPRECATED;
+				}
+				if (f.is_volatile) {
+					var_def.modifiers |= CCodeModifiers.VOLATILE;
 				}
 				cfile.add_type_member_declaration (var_def);
 
@@ -1937,7 +1936,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (local.captured) {
 					generate_type_declaration (local.variable_type, cfile);
 
-					data.add_field (get_ccode_name (local.variable_type), get_local_cname (local), get_ccode_declarator_suffix (local.variable_type));
+					data.add_field (get_ccode_name (local.variable_type), get_local_cname (local), 0, get_ccode_declarator_suffix (local.variable_type));
 
 					if (local.variable_type is ArrayType) {
 						var array_type = (ArrayType) local.variable_type;
@@ -2354,7 +2353,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 				emit_context.closure_variable_count_map.set (local.name, count + 1);
 
-				closure_struct.add_field (get_ccode_name (local.variable_type), get_local_cname (local), get_ccode_declarator_suffix (local.variable_type));
+				closure_struct.add_field (get_ccode_name (local.variable_type), get_local_cname (local), 0, get_ccode_declarator_suffix (local.variable_type));
 			} else {
 				var cvar = new CCodeVariableDeclarator (get_local_cname (local), null, get_ccode_declarator_suffix (local.variable_type));
 

@@ -238,6 +238,7 @@ TESTS = \
 	gir/bug651773.test \
 	gir/bug667751.test \
 	gir/bug742012.test \
+	annotations/deprecated.vala \
 	$(NULL)
 
 check-TESTS: $(TESTS)
