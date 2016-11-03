@@ -499,6 +499,8 @@ namespace Gst {
 			public uint get_blocksize ();
 			[NoWrapper]
 			public virtual Gst.Caps get_caps (Gst.Caps filter);
+			[Version (since = "1.12")]
+			public bool get_drop_out_of_segment ();
 			public Gst.Sample? get_last_sample ();
 			public Gst.ClockTime get_latency ();
 			[Version (since = "1.2")]
@@ -532,6 +534,8 @@ namespace Gst {
 			public void set_blocksize (uint blocksize);
 			[NoWrapper]
 			public virtual bool set_caps (Gst.Caps caps);
+			[Version (since = "1.12")]
+			public void set_drop_out_of_segment (bool drop_out_of_segment);
 			public void set_last_sample_enabled (bool enabled);
 			[Version (since = "1.2")]
 			public void set_max_bitrate (uint64 max_bitrate);

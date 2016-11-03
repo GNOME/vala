@@ -7,8 +7,11 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Player (owned Gst.PlayerVideoRenderer? video_renderer, owned Gst.PlayerSignalDispatcher? signal_dispatcher);
 		public static uint config_get_position_update_interval (Gst.Structure config);
+		public static bool config_get_seek_accurate (Gst.Structure config);
 		public static string config_get_user_agent (Gst.Structure config);
 		public static void config_set_position_update_interval (Gst.Structure config, uint interval);
+		[Version (since = "1.12")]
+		public void config_set_seek_accurate (bool accurate);
 		public static void config_set_user_agent (Gst.Structure config, string agent);
 		public static unowned GLib.List<Gst.PlayerAudioInfo> get_audio_streams (Gst.PlayerMediaInfo info);
 		public int64 get_audio_video_offset ();

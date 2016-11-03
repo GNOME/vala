@@ -39,6 +39,7 @@ namespace Geocode {
 		public Forward.for_string (string str);
 		public uint get_answer_count ();
 		public bool get_bounded ();
+		public unowned Geocode.BoundingBox? get_search_area ();
 		public GLib.List<weak Geocode.Place> search () throws GLib.Error;
 		public async GLib.List<weak Geocode.Place> search_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_answer_count (uint count);
@@ -46,8 +47,7 @@ namespace Geocode {
 		public void set_search_area (Geocode.BoundingBox box);
 		public uint answer_count { get; set; }
 		public bool bounded { get; set; }
-		[NoAccessorMethod]
-		public Geocode.BoundingBox search_area { owned get; set; }
+		public Geocode.BoundingBox search_area { get; set; }
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_id = "geocode_location_get_type ()")]
 	public class Location : GLib.Object {

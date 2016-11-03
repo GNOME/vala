@@ -239,6 +239,8 @@ namespace Gst {
 		[Compact]
 		[GIR (name = "VideoInfo")]
 		public class Info {
+			[CCode (cname = "ABI.abi.field_order")]
+			public Gst.Video.FieldOrder ABI_abi_field_order;
 			[CCode (cname = "ABI.abi.multiview_flags")]
 			public Gst.Video.MultiviewFlags ABI_abi_multiview_flags;
 			[CCode (cname = "ABI.abi.multiview_mode")]
@@ -754,6 +756,14 @@ namespace Gst {
 			SIERRA_LITE,
 			BAYER
 		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FIELD_ORDER_", type_id = "gst_video_field_order_get_type ()")]
+		[GIR (name = "VideoFieldOrder")]
+		[Version (since = "1.12")]
+		public enum FieldOrder {
+			UNKNOWN,
+			TOP_FIELD_FIRST,
+			BOTTOM_FIELD_FIRST
+		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FLAG_", type_id = "gst_video_flags_get_type ()")]
 		[Flags]
 		[GIR (name = "VideoFlags")]
@@ -836,7 +846,8 @@ namespace Gst {
 			NV61,
 			P010_10BE,
 			P010_10LE,
-			IYU2
+			IYU2,
+			VYUY
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]
@@ -1340,6 +1351,12 @@ namespace Gst {
 		public static bool event_parse_still_frame (Gst.Event event, bool in_still);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool event_parse_upstream_force_key_unit (Gst.Event event, out Gst.ClockTime running_time, out bool all_headers, out uint count);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.12")]
+		public static Gst.Video.FieldOrder field_order_from_string (string order);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.12")]
+		public static unowned string field_order_to_string (Gst.Video.FieldOrder order);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Video.Format format_from_fourcc (uint32 fourcc);
 		[CCode (cheader_filename = "gst/video/video.h")]

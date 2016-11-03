@@ -1148,6 +1148,12 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected DoubleRange ();
 	}
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_dynamic_type_factory_get_type ()")]
+	public class DynamicTypeFactory : Gst.PluginFeature {
+		[CCode (has_construct_function = false)]
+		protected DynamicTypeFactory ();
+		public static GLib.Type load (string factoryname);
+	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_element_get_type ()")]
 	public abstract class Element : Gst.Object {
 		public Gst.ClockTimeDiff base_time;
@@ -3208,6 +3214,7 @@ namespace Gst {
 		HIERARCHY,
 		TEMPLATE_CAPS,
 		CAPS,
+		NO_RECONFIGURE,
 		DEFAULT
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PAD_LINK_", type_id = "gst_pad_link_return_get_type ()")]
@@ -3873,6 +3880,8 @@ namespace Gst {
 	public const int VERSION_NANO;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void deinit ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static bool dynamic_type_register (Gst.Plugin plugin, GLib.Type type);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static string error_get_message (GLib.Quark domain, int code);
 	[CCode (cheader_filename = "gst/gst.h")]

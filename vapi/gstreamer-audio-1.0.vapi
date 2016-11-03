@@ -98,9 +98,9 @@ namespace Gst {
 		public class Clock : Gst.SystemClock {
 			[CCode (has_construct_function = false, type = "GstClock*")]
 			public Clock (string name, owned Gst.Audio.ClockGetTimeFunc func);
-			public static Gst.ClockTime adjust (Gst.Clock clock, Gst.ClockTime time);
-			public static Gst.ClockTime get_time (Gst.Clock clock);
-			public static void invalidate (Gst.Clock clock);
+			public Gst.ClockTime adjust (Gst.ClockTime time);
+			public Gst.ClockTime get_time ();
+			public void invalidate ();
 			public void reset (Gst.ClockTime time);
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
