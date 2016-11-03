@@ -1397,6 +1397,9 @@ public class string {
 	}
 
 	public string replace (string old, string replacement) {
+		if (*((char*) this) == '\0' || *((char*) old) == '\0' || old == replacement)
+			return this;
+
 		try {
 			var regex = new GLib.Regex (GLib.Regex.escape_string (old));
 			return regex.replace_literal (this, -1, 0, replacement);
