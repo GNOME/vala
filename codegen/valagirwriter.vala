@@ -1373,7 +1373,7 @@ public class Vala.GIRWriter : CodeVisitor {
 				}
 
 				write_indent ();
-				buffer.append_printf ("<annotation key=\"%s.%s\" value=\"%s\"/>\n",
+				buffer.append_printf ("<attribute name=\"%s.%s\" value=\"%s\"/>\n",
 					name, camel_case_to_canonical (arg_name), value);
 			}
 		}
