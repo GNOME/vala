@@ -44,6 +44,16 @@ TESTS = \
 	basic-types/bug761307.vala \
 	basic-types/bug771626.test \
 	basic-types/bug777697.test \
+	chainup/class-base.vala \
+	chainup/class-base-foo.vala \
+	chainup/class-object.vala \
+	chainup/class-this.vala \
+	chainup/class-this-foo.vala \
+	chainup/no-chainup.vala \
+	chainup/struct-base.vala \
+	chainup/struct-base-foo.vala \
+	chainup/struct-this.vala \
+	chainup/struct-this-foo.vala \
 	pointers/bug590641.vala \
 	namespaces.vala \
 	methods/lambda.vala \
