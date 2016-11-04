@@ -1,0 +1,13 @@
+Invalid Code
+
+public struct Foo {
+	int i;
+	public Foo () {}
+	public Foo.foo () {
+		i = 1;
+		this ();
+	}
+}
+
+void main () {
+}

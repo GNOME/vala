@@ -1,0 +1,12 @@
+Invalid Code
+
+public class Foo : Object {
+	int i;
+	public Foo () {
+		i = 1;
+		Object ();
+	}
+}
+
+void main () {
+}

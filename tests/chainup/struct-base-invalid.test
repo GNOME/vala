@@ -1,0 +1,17 @@
+Invalid Code
+
+public struct Foo {
+	int i;
+
+	public Foo () {}
+}
+
+public struct Bar : Foo {
+	public Bar () {
+		i = 1;
+		base ();
+	}
+}
+
+void main () {
+}

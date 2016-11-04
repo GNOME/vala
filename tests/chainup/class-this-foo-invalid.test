@@ -1,0 +1,13 @@
+Invalid Code
+
+public class Foo {
+	int i;
+	public Foo () {
+		i = 1;
+		this.foo ();
+	}
+	public Foo.foo () {}
+}
+
+void main () {
+}

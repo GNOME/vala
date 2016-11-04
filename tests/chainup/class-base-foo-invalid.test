@@ -1,0 +1,16 @@
+Invalid Code
+
+public class Foo {
+	public Foo.foo () {}
+}
+
+public class Bar : Foo {
+	int i;
+	public Bar () {
+		i = 1;
+		base.foo ();
+	}
+}
+
+void main () {
+}

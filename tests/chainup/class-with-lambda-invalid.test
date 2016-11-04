@@ -1,0 +1,14 @@
+Invalid Code
+
+public class Foo : Object {
+	int i;
+
+	public Foo.with_foo () {
+		SourceFunc f = () => i==1;
+		f();
+		this ();
+	}
+}
+
+void main () {
+}
