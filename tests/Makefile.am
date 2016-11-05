@@ -235,6 +235,8 @@ TESTS = \
 	gir/bug651773.test \
 	gir/bug667751.test \
 	gir/bug742012.test \
+	nullability/local-reference.vala \
+	nullability/assignment-to-non-nullable-ok.vala \
 	$(NULL)
 
 check-TESTS: $(TESTS)
