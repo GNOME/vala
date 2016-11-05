@@ -24,6 +24,22 @@ public class Vala.NullabilityChecker : CodeVisitor {
 		this.visit_basic_block (root_block);
 	}
 
+	private void get_nullability_state (Symbol symbol, out bool is_null, out bool is_non_null) {
+		is_null = false;
+		is_non_null = false;
+		BasicBlock? b = current_block;
+		while (b != null) {
+			if (b.null_vars.contains (symbol)) {
+				is_null = true;
+				break;
+			} else if (b.non_null_vars.contains (symbol)) {
+				is_non_null = true;
+				break;
+			}
+			b = b.parent;
+		}
+	}
+
 	private void visit_basic_block (BasicBlock block) {
 		if (debug) {
 			message ("Checking Basic Block %s (%d nulls, %d non-nulls)",
@@ -34,41 +50,28 @@ public class Vala.NullabilityChecker : CodeVisitor {
 		this.current_block = block;
 
 		foreach (var node in block.nodes) {
-			//message ("Accept() ing %s", node.type_name);
 			node.accept (this);
 		}
 
 		foreach (var child in block.children) {
 			visit_basic_block (child);
 		}
-
-
 		// TODO: reset current_block ???
 	}
 
 	public override void visit_member_access (MemberAccess access) {
 		if (debug)
 			message ("Checking Member Access %s", access.to_string ());
-		if (access.inner != null) {
+		if (access.inner != null && access.inner.symbol_reference != null) {
 			if (debug)
 				message ("Inner: %s", access.inner.to_string ());
 			bool is_null = false;
 			bool is_non_null = false;
-			BasicBlock? b = current_block;
-			while (b != null) {
-				if (b.null_vars.contains (access.inner.symbol_reference)) {
-					is_null = true;
-					break;
-				} else if (b.non_null_vars.contains (access.inner.symbol_reference)) {
-					is_non_null = true;
-					break;
-				}
-				b = b.parent;
-			}
+			this.get_nullability_state (access.inner.symbol_reference, out is_null, out is_non_null);
 
 			if (is_null) {
 				Report.error (access.source_reference, "`%s' is null here".printf (access.to_string ()));
-			} else if (access.inner.symbol_reference != null) {
+			} else {
 				DataType? symbol_type = context.analyzer.get_value_type_for_symbol (access.inner.symbol_reference, false);
 				if (symbol_type != null) {
 					// If the referenced type is nullable, and the code didn't make sure the reference
@@ -87,30 +90,6 @@ public class Vala.NullabilityChecker : CodeVisitor {
 		decl.accept_children (this);
 	}
 
-	public override void visit_source_file (SourceFile source_file) {
-		source_file.accept_children (this);
-	}
-
-	public override void visit_class (Class cl) {
-		cl.accept_children (this);
-	}
-
-	public override void visit_struct (Struct st) {
-		st.accept_children (this);
-	}
-
-	public override void visit_interface (Interface iface) {
-		iface.accept_children (this);
-	}
-
-	public override void visit_enum (Enum en) {
-		en.accept_children (this);
-	}
-
-	public override void visit_error_domain (ErrorDomain ed) {
-		ed.accept_children (this);
-	}
-
 	public override void visit_method (Method m) {
 		m.accept_children (this);
 	}
@@ -119,5 +98,28 @@ public class Vala.NullabilityChecker : CodeVisitor {
 		if (local.initializer != null) {
 			local.initializer.accept (this);
 		}
+	}
+
+	public override void visit_assignment (Assignment assign) {
+		if (assign.left != null && assign.right != null &&
+		    assign.left.symbol_reference != null && assign.right.symbol_reference != null) {
+			DataType? left_type = context.analyzer.get_value_type_for_symbol (assign.left.symbol_reference, false);
+			if (left_type != null && !left_type.nullable) {
+				DataType? right_type = context.analyzer.get_value_type_for_symbol (assign.right.symbol_reference, false);
+				if (right_type != null && right_type.nullable) {
+					bool is_null = false;
+					bool is_non_null = false;
+					this.get_nullability_state (assign.right.symbol_reference, out is_null, out is_non_null);
+					if (!is_non_null) {
+						Report.error (assign.source_reference, "Cannot assign from nullable `%s' to non-nullable `%s'".printf (right_type.to_string (), left_type.to_string ()));
+					}
+				}
+			}
+			// Assignments from non-nullable to nullable are always fine
+		}
+	}
+
+	public override void visit_expression_statement (ExpressionStatement stmt) {
+		stmt.expression.accept (this);
 	}
 }
