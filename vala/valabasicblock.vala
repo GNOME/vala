@@ -43,7 +43,30 @@ public class Vala.BasicBlock {
 	public bool postorder_visited { get; set; }
 	public int postorder_number { get; set; }
 
-	public BasicBlock () {
+
+
+	public string name;
+
+	private void print_level (int level) {
+		for (int i  =0; i < level * 4; i ++)
+		  stdout.printf(" ");
+	}
+
+	public void print (int level = 0) {
+		print_level (level);
+		stdout.printf ("BasicBlock (" + name + ", nulls: %d, non-nulls: %d)\n", null_vars.size,
+					   non_null_vars.size);
+		foreach (var node in nodes) {
+			print_level (level);
+			stdout.printf ("- ");
+			stdout.printf (node.type_name + "\n");
+		}
+		foreach (var b in children)
+			b.print(level + 1);
+	}
+
+	public BasicBlock (string name) {
+		this.name = name;
 	}
 
 	public BasicBlock.entry () {

@@ -188,7 +188,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		m.entry_block = new BasicBlock.entry ();
-		m.return_block = new BasicBlock ();
+		m.return_block = new BasicBlock ("return");
 		m.exit_block = new BasicBlock.exit ();
 
 		m.return_block.connect (m.exit_block);
@@ -204,7 +204,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			}
 		}
 
-		current_block = new BasicBlock ();
+		current_block = new BasicBlock ("Function");
 		m.entry_block.connect (current_block);
 		current_block.add_node (m);
 
@@ -611,7 +611,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (always_false (stmt.condition)) {
 			mark_unreachable ();
 		} else {
-			current_block = new BasicBlock ();
+			current_block = new BasicBlock ("if");
 			last_block.connect (current_block);
 		}
 		stmt.true_statement.accept (this);
@@ -621,7 +621,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (always_true (stmt.condition)) {
 			mark_unreachable ();
 		} else {
-			current_block = new BasicBlock ();
+			current_block = new BasicBlock ("else");
 			last_block.connect (current_block);
 		}
 		if (stmt.false_statement != null) {
@@ -632,7 +632,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		var last_false_block = current_block;
 		// reachable?
 		if (last_true_block != null || last_false_block != null) {
-			current_block = new BasicBlock ();
+			current_block = new BasicBlock ("after if/else");
 			if (last_true_block != null) {
 				last_true_block.connect (current_block);
 			}
@@ -647,7 +647,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			return;
 		}
 
-		var after_switch_block = new BasicBlock ();
+		var after_switch_block = new BasicBlock ("after switch");
 		jump_stack.add (new JumpTarget.break_target (after_switch_block));
 
 		// condition
@@ -659,7 +659,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		bool has_default_label = false;
 
 		foreach (SwitchSection section in stmt.get_sections ()) {
-			current_block = new BasicBlock ();
+			current_block = new BasicBlock ("switch section");
 			condition_block.connect (current_block);
 			foreach (Statement section_stmt in section.get_statements ()) {
 				section_stmt.accept (this);
@@ -700,9 +700,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			return;
 		}
 
-		var loop_block = new BasicBlock ();
+		var loop_block = new BasicBlock ("loop");
 		jump_stack.add (new JumpTarget.continue_target (loop_block));
-		var after_loop_block = new BasicBlock ();
+		var after_loop_block = new BasicBlock ("after loop");
 		jump_stack.add (new JumpTarget.break_target (after_loop_block));
 
 		// loop block
@@ -739,9 +739,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		current_block.add_node (stmt.collection);
 		handle_errors (stmt.collection);
 
-		var loop_block = new BasicBlock ();
+		var loop_block = new BasicBlock ("loop");
 		jump_stack.add (new JumpTarget.continue_target (loop_block));
-		var after_loop_block = new BasicBlock ();
+		var after_loop_block = new BasicBlock ("after loop");
 		jump_stack.add (new JumpTarget.break_target (after_loop_block));
 
 		// loop block
@@ -884,7 +884,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 			// normal control flow
 			if (!always_fail) {
-				current_block = new BasicBlock ();
+				current_block = new BasicBlock ("after errors");
 				last_block.connect (current_block);
 			}
 		}
@@ -913,15 +913,15 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		var before_try_block = current_block;
-		var after_try_block = new BasicBlock ();
+		var after_try_block = new BasicBlock ("after try");
 
 		BasicBlock finally_block = null;
 		if (stmt.finally_body != null) {
-			finally_block = new BasicBlock ();
+			finally_block = new BasicBlock ("finally");
 			current_block = finally_block;
 
 			// trap all forbidden jumps
-			var invalid_block = new BasicBlock ();
+			var invalid_block = new BasicBlock ("invalid");
 			jump_stack.add (new JumpTarget.any_target (invalid_block));
 
 			stmt.finally_body.accept (this);
@@ -944,9 +944,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			var catch_clause = catch_clauses[i];
 			if (catch_clause.error_type != null) {
 				var error_type = (ErrorType) catch_clause.error_type;
-				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, catch_clause.error_type.data_type as ErrorDomain, error_type.error_code, null));
+				jump_stack.add (new JumpTarget.error_target (new BasicBlock ("catch"), catch_clause, catch_clause.error_type.data_type as ErrorDomain, error_type.error_code, null));
 			} else {
-				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, null, null, null));
+				jump_stack.add (new JumpTarget.error_target (new BasicBlock ("catch"), catch_clause, null, null, null));
 			}
 		}
 
