@@ -104,12 +104,19 @@ public class Vala.AstPrinter : CodeVisitor {
 		DataType? symbol_type = context.analyzer.get_value_type_for_symbol (stmt.declaration, false);
 
 		string type = symbol_type != null ? symbol_type.to_qualified_string () : "??";
-		print ("Variable Declaration: %s %s".printf (type, stmt.declaration.name));
+		print ("Declaration: %s %s".printf (type, stmt.declaration.name));
+		level ++;
+		stmt.accept_children (this);
+		level --;
 	}
 
 
 	public override void visit_local_variable (LocalVariable local) {
 		print ("Local Var %s %s".printf (local.variable_type.to_string (), local.name));
+		print ("Initializer: %s".printf (local.initializer.type_name));
+		level ++;
+		local.initializer.accept (this);
+		level --;
 	}
 
 	public override void visit_initializer_list (InitializerList list) {
@@ -316,6 +323,18 @@ public class Vala.AstPrinter : CodeVisitor {
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {
+		print ("Binary Expr (op: %s, non_null: %s, constant: %s)".printf (expr.get_operator_string (), expr.is_non_null ().to_string (), expr.is_constant ().to_string ()));
+
+		print ("Left: %s (%s)".printf (expr.left.to_string (), expr.left.type_name));
+		level ++;
+		expr.left.accept (this);
+		level --;
+
+
+		print ("Right: %s (%s)".printf (expr.right.to_string (), expr.right.type_name));
+		level ++;
+		expr.right.accept (this);
+		level --;
 	}
 
 	public override void visit_type_check (TypeCheck expr) {
