@@ -113,10 +113,13 @@ public class Vala.AstPrinter : CodeVisitor {
 
 	public override void visit_local_variable (LocalVariable local) {
 		print ("Local Var %s %s".printf (local.variable_type.to_string (), local.name));
-		print ("Initializer: %s".printf (local.initializer.type_name));
-		level ++;
-		local.initializer.accept (this);
-		level --;
+
+		if (local.initializer != null) {
+			print ("Initializer: %s".printf (local.initializer.type_name));
+			level ++;
+			local.initializer.accept (this);
+			level --;
+		}
 	}
 
 	public override void visit_initializer_list (InitializerList list) {
