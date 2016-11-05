@@ -89,6 +89,7 @@ class Vala.Compiler {
 	static bool disable_version_header;
 	static bool fatal_warnings;
 	static bool disable_diagnostic_colors;
+	static bool print_ast;
 	static string dependencies;
 
 	static string entry_point;
@@ -152,6 +153,7 @@ class Vala.Compiler {
 		{ "gresources", 0, 0, OptionArg.STRING_ARRAY, ref gresources, "XML of gresources", "FILE..." },
 		{ "enable-version-header", 0, 0, OptionArg.NONE, ref enable_version_header, "Write vala build version in generated files", null },
 		{ "disable-version-header", 0, 0, OptionArg.NONE, ref disable_version_header, "Do not write vala build version in generated files", null },
+		{ "print-ast", 0, 0, OptionArg.NONE, ref print_ast, "Print AST", null },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
 		{ null }
 	};
@@ -340,6 +342,11 @@ class Vala.Compiler {
 
 		var parser = new Parser ();
 		parser.parse (context);
+
+		if (print_ast) {
+			var printer = new AstPrinter ();
+			printer.print_ast (context);
+		}
 
 		var genie_parser = new Genie.Parser ();
 		genie_parser.parse (context);

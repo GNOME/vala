@@ -25,6 +25,7 @@ libvalacore_la_VALASOURCES = \
 	valaarrayresizemethod.vala \
 	valaarraytype.vala \
 	valaassignment.vala \
+	valaastprinter.vala \
 	valaattribute.vala \
 	valabaseaccess.vala \
 	valabasicblock.vala \
