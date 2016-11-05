@@ -138,6 +138,10 @@ public class Vala.BinaryExpression : Expression {
 	}
 
 	public override bool is_non_null () {
+		if (operator == BinaryOperator.COALESCE) {
+			// The coalesce operator makes sure that `right` is taken if left is null
+			return right.is_non_null ();
+		}
 		return left.is_non_null () && right.is_non_null ();
 	}
 
