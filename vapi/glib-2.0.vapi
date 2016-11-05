@@ -945,7 +945,7 @@ public struct unichar {
 
 	public int to_utf8 (string? outbuf);
 
-	public string? to_string () {
+	public string to_string () {
 		string str = (string) new char[7];
 		this.to_utf8 (str);
 		return str;
