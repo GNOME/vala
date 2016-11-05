@@ -377,18 +377,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 	public override void visit_local_variable (LocalVariable local) {
 		local.accept_children (this);
-		if (!context.experimental_non_null) {
-			// local reference variables are considered nullable
-			// except when using experimental non-null enhancements
-			if (local.variable_type is ReferenceType) {
-				var array_type = local.variable_type as ArrayType;
-				if (array_type != null && array_type.fixed_length) {
-					// local fixed length arrays are not nullable
-				} else {
-					local.variable_type.nullable = true;
-				}
-			}
-		}
 	}
 
 	public override void visit_initializer_list (InitializerList list) {
