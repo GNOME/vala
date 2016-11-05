@@ -27,7 +27,7 @@ using GLib;
  * jumps or jump targets.
  */
 public class Vala.BasicBlock {
-	private List<CodeNode> nodes = new ArrayList<CodeNode> ();
+	public List<CodeNode> nodes = new ArrayList<CodeNode> ();
 
 	// control flow graph
 	private List<weak BasicBlock> predecessors = new ArrayList<weak BasicBlock> ();
@@ -35,7 +35,7 @@ public class Vala.BasicBlock {
 
 	// dominator tree
 	public BasicBlock parent { get; private set; }
-	List<BasicBlock> children = new ArrayList<BasicBlock> ();
+	public List<BasicBlock> children = new ArrayList<BasicBlock> ();
 	Set<BasicBlock> df = new HashSet<BasicBlock> ();
 
 	Set<PhiFunction> phi_functions = new HashSet<PhiFunction> ();

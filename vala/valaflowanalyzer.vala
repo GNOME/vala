@@ -227,6 +227,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		analyze_body (m.entry_block);
+
+		// Now that we built up the CFG, we can actually use it
+		var nullability_checker = new NullabilityChecker (context);
+		nullability_checker.check (m.entry_block);
 	}
 
 	void analyze_body (BasicBlock entry_block) {
