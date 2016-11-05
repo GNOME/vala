@@ -342,7 +342,7 @@ public class Vala.Method : Subroutine {
 
 		var actual_base_type = base_method.return_type.get_actual_type (object_type, method_type_args, this);
 		if (!return_type.equals (actual_base_type)) {
-			invalid_match = "incompatible return type";
+			invalid_match = "Base method expected return type `%s', but `%s' was provided".printf (actual_base_type.to_qualified_string (), return_type.to_qualified_string ());
 			return false;
 		}
 		
