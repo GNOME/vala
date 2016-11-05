@@ -797,12 +797,6 @@ public class Vala.MemberAccess : Expression {
 				}
 			}
 
-			if (context.experimental_non_null && instance && inner.value_type.nullable &&
-			    !(inner.value_type is PointerType) && !(inner.value_type is GenericType) &&
-				!(inner.value_type is ArrayType)) {
-				Report.error (source_reference, "Access to instance member `%s' from nullable reference denied".printf (symbol_reference.get_full_name ()));
-			}
-
 			var m = symbol_reference as Method;
 			var inner_ma = inner as MemberAccess;
 			if (m != null && m.binding == MemberBinding.STATIC && m.parent_symbol is ObjectTypeSymbol &&
