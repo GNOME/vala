@@ -596,6 +596,35 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		return (literal != null && !literal.value);
 	}
 
+	// TODO: We should merge this into BinaryExpression just like def/use so
+	//       we can support nested expressions instead of just the very simple case
+	private Symbol? get_nullable_symbol (BinaryExpression expr, out bool? is_null) {
+		if (expr.operator == BinaryOperator.EQUALITY) {
+			if (expr.left is NullLiteral && expr.right is MemberAccess) {
+				// foo == NULL
+				is_null = true;
+				return ((MemberAccess)expr.right).symbol_reference;
+			} else if (expr.left is MemberAccess && expr.right is NullLiteral) {
+				// NULL == foo
+				is_null = true;
+				return ((MemberAccess)expr.left).symbol_reference;
+			}
+		} else if (expr.operator == BinaryOperator.INEQUALITY) {
+			if (expr.left is NullLiteral && expr.right is MemberAccess) {
+				// NULL != foo
+				is_null = false;
+				return ((MemberAccess)expr.right).symbol_reference;
+			} else if (expr.left is MemberAccess && expr.right is NullLiteral) {
+				// foo != NULL
+				is_null = false;
+				return ((MemberAccess)expr.left).symbol_reference;
+			}
+		}
+
+		is_null = false;
+		return null;
+	}
+
 	public override void visit_if_statement (IfStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
@@ -613,6 +642,20 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		} else {
 			current_block = new BasicBlock ("if");
 			last_block.connect (current_block);
+
+			if (stmt.condition is BinaryExpression) {
+				var bin_expr = stmt.condition as BinaryExpression;
+				bool is_null;
+				Symbol? nullable_symbol = get_nullable_symbol (bin_expr, out is_null);
+
+				if (nullable_symbol != null) {
+					if (is_null) {
+					  current_block.null_vars.add (nullable_symbol);
+					} else {
+					  current_block.non_null_vars.add (nullable_symbol);
+					}
+				}
+			}
 		}
 		stmt.true_statement.accept (this);
 

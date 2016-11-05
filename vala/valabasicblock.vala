@@ -43,6 +43,8 @@ public class Vala.BasicBlock {
 	public bool postorder_visited { get; set; }
 	public int postorder_number { get; set; }
 
+	public ArrayList<weak Symbol> null_vars = new ArrayList<weak Symbol> ();
+	public ArrayList<weak Symbol> non_null_vars = new ArrayList<weak Symbol> ();
 
 
 	public string name;
