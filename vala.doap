@@ -8,10 +8,11 @@
   <name xml:lang="en">vala</name>
   <shortdesc xml:lang="en">Compiler for the GObject type system</shortdesc>
 
-  <homepage rdf:resource="http://live.gnome.org/Vala" />
+  <homepage rdf:resource="https://wiki.gnome.org/Projects/Vala" />
   <mailing-list rdf:resource="http://mail.gnome.org/mailman/listinfo/vala-list" />
-  <download-page rdf:resource="http://live.gnome.org/Vala/Release" />
-  <bug-database rdf:resource="http://bugzilla.gnome.org/browse.cgi?product=vala" />
+  <download-page rdf:resource="https://wiki.gnome.org/Projects/Vala/Release" />
+  <bug-database rdf:resource="https://bugzilla.gnome.org/browse.cgi?product=vala" />
+
   <category rdf:resource="http://api.gnome.org/doap-extensions#core" />
   <programming-language>Vala</programming-language>
 
