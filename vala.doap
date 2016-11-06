@@ -30,6 +30,13 @@
       <gnome:userid></gnome:userid>
     </foaf:Person>
   </maintainer>
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Rico Tzschichholz</foaf:name>
+      <foaf:mbox rdf:resource="mailto:ricotz@ubuntu.com" />
+      <gnome:userid>ricotz</gnome:userid>
+    </foaf:Person>
+  </maintainer>
 
 </Project>
 
