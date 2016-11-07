@@ -33,4 +33,8 @@ public abstract class Vala.Literal : Expression {
 	public override bool is_pure () {
 		return true;
 	}
+
+	public override NullabilityState get_null_state () {
+		return NullabilityState.NON_NULL;
+	}
 }

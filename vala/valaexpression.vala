@@ -22,6 +22,13 @@
 
 using GLib;
 
+
+public enum Vala.NullabilityState {
+	NULL,
+	NON_NULL,
+	NULLABLE
+}
+
 /**
  * Base class for all code nodes that might be used as an expression.
  */
@@ -70,6 +77,10 @@ public abstract class Vala.Expression : CodeNode {
 	 * is free of side-effects.
 	 */
 	public abstract bool is_pure ();
+
+	public virtual NullabilityState get_null_state () {
+		return NullabilityState.NULLABLE;
+	}
 
 	/**
 	 * Returns whether this expression is guaranteed to be non-null.

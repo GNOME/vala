@@ -50,6 +50,10 @@ public class Vala.NullLiteral : Literal {
 		return true;
 	}
 
+	public override NullabilityState get_null_state () {
+		return NullabilityState.NULL;
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
