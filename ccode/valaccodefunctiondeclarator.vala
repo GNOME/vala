@@ -55,16 +55,23 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 		writer.write_string (name);
 		writer.write_string (") (");
 		
-		bool first = true;
+		int i = 0;
+		int format_arg_index = -1;
 		foreach (CCodeParameter param in parameters) {
-			if (!first) {
+			if (i > 0) {
 				writer.write_string (", ");
-			} else {
-				first = false;
 			}
 			param.write (writer);
+			if (param.format_arg) {
+				format_arg_index = i;
+			}
+			i++;
 		}
 		
 		writer.write_string (")");
+
+		if (format_arg_index >= 0) {
+			writer.write_string (" G_GNUC_FORMAT(%d)".printf (format_arg_index + 1));
+		}
 	}
 }
