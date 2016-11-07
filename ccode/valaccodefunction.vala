@@ -126,16 +126,19 @@ public class Vala.CCodeFunction : CCodeNode {
 		writer.write_string (name);
 		writer.write_string (" (");
 		
-		bool first = true;
+		int i = 0;
+		int format_arg_index = -1;
 		foreach (CCodeParameter param in parameters) {
-			if (!first) {
+			if (i > 0) {
 				writer.write_string (", ");
-			} else {
-				first = false;
 			}
 			param.write (writer);
+			if (param.format_arg) {
+				format_arg_index = i;
+			}
+			i++;
 		}
-		if (first) {
+		if (i == 0) {
 			writer.write_string ("void");
 		}
 		
@@ -146,6 +149,10 @@ public class Vala.CCodeFunction : CCodeNode {
 		}
 
 		if (is_declaration) {
+			if (format_arg_index >= 0) {
+				writer.write_string (" G_GNUC_FORMAT(%d)".printf (format_arg_index + 1));
+			}
+
 			if (attributes != null) {
 				writer.write_string (" ");
 				writer.write_string (attributes);

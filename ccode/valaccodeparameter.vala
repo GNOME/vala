@@ -42,6 +42,8 @@ public class Vala.CCodeParameter : CCodeNode {
 	 */
 	public bool ellipsis { get; set; }
 
+	public bool format_arg { get; set; }
+
 	public CCodeParameter (string n, string type) {
 		name = n;
 		type_name = type;

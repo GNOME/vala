@@ -38,6 +38,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		var cparam = new CCodeParameter (get_variable_cname (param.name), ctypename);
+		cparam.format_arg = param.format_arg;
 
 		cparam_map.set (get_param_pos (get_ccode_pos (param)), cparam);
 		if (carg_map != null) {

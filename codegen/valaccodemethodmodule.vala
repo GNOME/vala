@@ -881,6 +881,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 
 			cparam = new CCodeParameter (get_variable_cname (param.name), ctypename);
+			cparam.format_arg = param.format_arg;
 		} else if (ellipses_to_valist) {
 			cparam = new CCodeParameter ("_vala_va_list", "va_list");
 		} else {
