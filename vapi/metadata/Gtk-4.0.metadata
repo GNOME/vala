@@ -28,9 +28,6 @@ AccelLabel
   .set_accel_closure.accel_closure type="owned Gtk.AccelGroupActivate"
 
 // Bug #: Virtual methods without invokers
-Entry
-  .get_frame_size.* out
-  .get_text_area_size.* out
 EntryBuffer
   .get_text#virtual_method.n_bytes out default=null
 Range
@@ -67,7 +64,6 @@ CellRenderer
   .get_size replacement="get_preferred_size"
 
 // G-I cannot deprecate whole types
-Gradient deprecated_since="3.8"
 
 // G-I cannot handle returning non-boxed types
 binding_set_by_class skip=false
@@ -304,8 +300,6 @@ ClipboardRichTextReceivedFunc
   .text type="uint8[]?" array_length_idx=3
 CssProvider
   .load_from_data name="load_from_buffer"
-Entry
-  .get_text_area return_void
 EntryBuffer
   .new.initial_chars type="uint8[]?" array_length_idx=1
   .emit_inserted_text.chars type="uint8[]" array_length_idx=2

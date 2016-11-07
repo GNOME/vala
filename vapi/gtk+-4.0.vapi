@@ -5757,7 +5757,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_window_get_type ()")]
 	public class Window : GLib.Object {
 		[CCode (has_construct_function = false)]
-		public Window (Gdk.Window? parent, Gdk.WindowAttr attributes, Gdk.WindowAttributesType attributes_mask);
+		protected Window ();
 		public void add_filter (Gdk.FilterFunc function);
 		[Version (since = "2.12")]
 		public void beep ();
@@ -5890,6 +5890,9 @@ namespace Gdk {
 		public void move_region (Cairo.Region region, int dx, int dy);
 		public void move_resize (int x, int y, int width, int height);
 		public unowned GLib.List<Gdk.Window> peek_children ();
+		[CCode (has_construct_function = false)]
+		[Version (since = "3.90")]
+		public Window.popup (Gdk.Display display, int event_mask, Gdk.Rectangle position);
 		public static void process_all_updates ();
 		public void process_updates (bool update_children);
 		public void raise ();
@@ -5959,7 +5962,13 @@ namespace Gdk {
 		[Version (since = "3.14")]
 		public bool show_window_menu (Gdk.Event event);
 		public void stick ();
+		[CCode (has_construct_function = false)]
+		[Version (since = "3.90")]
+		public Window.temp (Gdk.Display display);
 		public void thaw_updates ();
+		[CCode (has_construct_function = false)]
+		[Version (since = "3.90")]
+		public Window.toplevel (Gdk.Display display, int event_mask, int width, int height);
 		[Version (since = "2.2")]
 		public void unfullscreen ();
 		public void unmaximize ();
@@ -6053,17 +6062,6 @@ namespace Gdk {
 		public uint32 time;
 		[CCode (array_length = false)]
 		public weak double axes[128];
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
-	public struct WindowAttr {
-		public int event_mask;
-		public int x;
-		public int y;
-		public int width;
-		public int height;
-		public Gdk.WindowWindowClass wclass;
-		public Gdk.WindowType window_type;
-		public Gdk.WindowTypeHint type_hint;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_ANCHOR_", type_id = "gdk_anchor_hints_get_type ()")]
 	[Flags]
@@ -6559,13 +6557,6 @@ namespace Gdk {
 		MINIMIZE,
 		MAXIMIZE,
 		CLOSE
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_WA_", type_id = "gdk_window_attributes_type_get_type ()")]
-	[Flags]
-	public enum WindowAttributesType {
-		X,
-		Y,
-		TYPE_HINT
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_WINDOW_EDGE_", type_id = "gdk_window_edge_get_type ()")]
 	public enum WindowEdge {
@@ -7641,8 +7632,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "3.10")]
 		public Button.from_icon_name (string icon_name, [CCode (type = "GtkIconSize")] Gtk.IconSize size = Gtk.IconSize.BUTTON);
-		[Version (since = "2.22")]
-		public unowned Gdk.Window get_event_window ();
 		[Version (since = "3.90")]
 		public unowned string? get_icon_name ();
 		public unowned string? get_label ();
@@ -8736,8 +8725,6 @@ namespace Gtk {
 		public int get_current_icon_drag_source ();
 		[Version (since = "2.12")]
 		public unowned Gtk.Adjustment? get_cursor_hadjustment ();
-		[NoWrapper]
-		public virtual void get_frame_size (out int x, out int y, out int width, out int height);
 		public bool get_has_frame ();
 		[Version (since = "2.16")]
 		public bool get_icon_activatable (Gtk.EntryIconPosition icon_pos);
@@ -8780,10 +8767,6 @@ namespace Gtk {
 		[Version (since = "3.10")]
 		public unowned Pango.TabArray? get_tabs ();
 		public unowned string get_text ();
-		[Version (since = "3.0")]
-		public void get_text_area (out Gdk.Rectangle text_area);
-		[NoWrapper]
-		public virtual void get_text_area_size (out int x, out int y, out int width, out int height);
 		[Version (since = "2.14")]
 		public uint16 get_text_length ();
 		public bool get_visibility ();
@@ -9706,24 +9689,6 @@ namespace Gtk {
 		public double get_scale_delta ();
 		[Version (since = "3.14")]
 		public signal void scale_changed (double scale);
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_gradient_ref", type_id = "gtk_gradient_get_type ()", unref_function = "gtk_gradient_unref")]
-	[Compact]
-	[Version (deprecated = true, deprecated_since = "3.8")]
-	public class Gradient {
-		[Version (since = "3.0")]
-		public void add_color_stop (double offset, Gtk.SymbolicColor color);
-		[CCode (has_construct_function = false)]
-		[Version (since = "3.0")]
-		public Gradient.linear (double x0, double y0, double x1, double y1);
-		[CCode (has_construct_function = false)]
-		[Version (since = "3.0")]
-		public Gradient.radial (double x0, double y0, double radius0, double x1, double y1, double radius1);
-		[Version (since = "3.0")]
-		public Gtk.Gradient @ref ();
-		public string to_string ();
-		[Version (since = "3.0")]
-		public void unref ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_grid_get_type ()")]
 	public class Grid : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
@@ -12960,36 +12925,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected SwitchAccessible ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_symbolic_color_ref", type_id = "gtk_symbolic_color_get_type ()", unref_function = "gtk_symbolic_color_unref")]
-	[Compact]
-	public class SymbolicColor {
-		[CCode (has_construct_function = false)]
-		[Version (deprecated = true, deprecated_since = "3.8", since = "3.0")]
-		public SymbolicColor.alpha (Gtk.SymbolicColor color, double factor);
-		[CCode (has_construct_function = false)]
-		[Version (deprecated = true, deprecated_since = "3.8", since = "3.0")]
-		public SymbolicColor.literal (Gdk.RGBA color);
-		[CCode (has_construct_function = false)]
-		[Version (deprecated = true, deprecated_since = "3.8", since = "3.0")]
-		public SymbolicColor.mix (Gtk.SymbolicColor color1, Gtk.SymbolicColor color2, double factor);
-		[CCode (has_construct_function = false)]
-		[Version (deprecated = true, deprecated_since = "3.8", since = "3.0")]
-		public SymbolicColor.name (string name);
-		[Version (deprecated = true, deprecated_since = "3.8", since = "3.0")]
-		public Gtk.SymbolicColor @ref ();
-		[Version (deprecated = true, deprecated_since = "3.8", since = "3.0")]
-		public bool resolve (out Gdk.RGBA resolved_color);
-		[CCode (has_construct_function = false)]
-		[Version (deprecated = true, deprecated_since = "3.8", since = "3.0")]
-		public SymbolicColor.shade (Gtk.SymbolicColor color, double factor);
-		[Version (deprecated = true, deprecated_since = "3.8")]
-		public string to_string ();
-		[Version (deprecated = true, deprecated_since = "3.8", since = "3.0")]
-		public void unref ();
-		[CCode (has_construct_function = false)]
-		[Version (deprecated = true, deprecated_since = "3.8", since = "3.4")]
-		public SymbolicColor.win32 (string theme_class, int id);
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_target_list_ref", type_id = "gtk_target_list_get_type ()", unref_function = "gtk_target_list_unref")]
 	[Compact]
 	public class TargetList {
@@ -14516,8 +14451,6 @@ namespace Gtk {
 		public void set_has_window (bool has_window);
 		public void set_hexpand (bool expand);
 		public void set_hexpand_set (bool @set);
-		[Version (since = "2.20")]
-		public void set_mapped (bool mapped);
 		[Version (since = "3.0")]
 		public void set_margin_bottom (int margin);
 		[Version (since = "3.12")]
