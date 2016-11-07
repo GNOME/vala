@@ -148,7 +148,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		return false;
 	}
 
-	string get_error ([FormatArg] string msg) {
+	unowned string get_error ([FormatArg] string msg) {
 		var begin = get_location ();
 		next ();
 		Report.error (get_src (begin), "syntax error, " + msg);
