@@ -1022,6 +1022,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 			last_pos = min_pos;
 		}
+
+		if (m.printf_format) {
+			func.modifiers |= CCodeModifiers.PRINTF;
+		} else if (m.scanf_format) {
+			func.modifiers |= CCodeModifiers.SCANF;
+		}
 	}
 
 	public void generate_vfunc (Method m, DataType return_type, Map<int,CCodeParameter> cparam_map, Map<int,CCodeExpression> carg_map, string suffix = "", int direction = 3) {
@@ -1089,6 +1095,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			if (!(return_type is VoidType)) {
 				ccode.add_return (new CCodeIdentifier ("result"));
 			}
+		}
+
+		if (m.printf_format) {
+			vfunc.modifiers |= CCodeModifiers.PRINTF;
+		} else if (m.scanf_format) {
+			vfunc.modifiers |= CCodeModifiers.SCANF;
 		}
 
 		cfile.add_function (vfunc);

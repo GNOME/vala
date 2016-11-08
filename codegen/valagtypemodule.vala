@@ -387,6 +387,12 @@ public class Vala.GTypeModule : GErrorModule {
 		var vdeclarator = new CCodeFunctionDeclarator (get_ccode_vfunc_name (m));
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
+		if (m.printf_format) {
+			vdeclarator.modifiers |= CCodeModifiers.PRINTF;
+		} else if (m.scanf_format) {
+			vdeclarator.modifiers |= CCodeModifiers.SCANF;
+		}
+
 		generate_cparameters (m, decl_space, cparam_map, new CCodeFunction ("fake"), vdeclarator);
 
 		var vdecl = new CCodeDeclaration (get_ccode_name (creturn_type));

@@ -39,5 +39,7 @@ public enum Vala.CCodeModifiers {
 	UNUSED = 1 << 9,
 	CONSTRUCTOR = 1 << 10,
 	DESTRUCTOR = 1 << 11,
-	FORMAT_ARG = 1 << 12
+	FORMAT_ARG = 1 << 12,
+	PRINTF = 1 << 13,
+	SCANF = 1 << 14
 }

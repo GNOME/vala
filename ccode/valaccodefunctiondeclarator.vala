@@ -55,8 +55,10 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 		writer.write_string (name);
 		writer.write_string (") (");
 		
+		bool has_args = (CCodeModifiers.PRINTF in modifiers || CCodeModifiers.SCANF in modifiers);
 		int i = 0;
 		int format_arg_index = -1;
+		int args_index = -1;
 		foreach (CCodeParameter param in parameters) {
 			if (i > 0) {
 				writer.write_string (", ");
@@ -65,12 +67,23 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 			if (CCodeModifiers.FORMAT_ARG in param.modifiers) {
 				format_arg_index = i;
 			}
+			if (has_args && param.ellipsis) {
+				args_index = i;
+			} else if (has_args && param.type_name == "va_list" && format_arg_index < 0) {
+				format_arg_index = i - 1;
+			}
 			i++;
 		}
 		
 		writer.write_string (")");
 
-		if (format_arg_index >= 0) {
+		if (CCodeModifiers.PRINTF in modifiers) {
+			format_arg_index = (format_arg_index >= 0 ? format_arg_index + 1 : args_index);
+			writer.write_string (" G_GNUC_PRINTF(%d,%d)".printf (format_arg_index, args_index + 1));
+		} else if (CCodeModifiers.SCANF in modifiers) {
+			format_arg_index = (format_arg_index >= 0 ? format_arg_index + 1 : args_index);
+			writer.write_string (" G_GNUC_SCANF(%d,%d)".printf (format_arg_index, args_index + 1));
+		} else if (format_arg_index >= 0) {
 			writer.write_string (" G_GNUC_FORMAT(%d)".printf (format_arg_index + 1));
 		}
 	}
