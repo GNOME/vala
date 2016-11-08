@@ -19,7 +19,7 @@ void main () {
 
 	test = c in d;
 	test = b > d;
-	test = test || test;
+	//test = test || test;
 	test = b > c > d < a;
 
 	test = a == c;

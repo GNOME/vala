@@ -204,7 +204,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			}
 		}
 
-		current_block = new BasicBlock ("Function");
+		current_block = new BasicBlock ("Function " + m.name);
 		m.entry_block.connect (current_block);
 		current_block.add_node (m);
 
@@ -229,8 +229,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		analyze_body (m.entry_block);
 
 		// Now that we built up the CFG, we can actually use it
-		var nullability_checker = new NullabilityChecker (context);
-		nullability_checker.check (m.entry_block);
+		//var nullability_checker = new NullabilityChecker (context);
+		//nullability_checker.check (m.entry_block);
 	}
 
 	void analyze_body (BasicBlock entry_block) {
@@ -238,7 +238,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		build_dominator_tree (block_list, entry_block);
 		build_dominator_frontier (block_list, entry_block);
+		//message ("block_list for %s: %d", entry_block.name, block_list.size);
 		insert_phi_functions (block_list, entry_block);
+
+		//message ("##### Checking variables for BasicBlock %s...", entry_block.name);
 		check_variables (entry_block);
 	}
 
@@ -371,12 +374,17 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			phi.set (block, 0);
 		}
 
+		//message ("added: %d", added.size);
+		//message ("phi: %d", phi.size);
+		//message ("assigns: %d", assign.get_keys ().size);
 		foreach (Variable variable in assign.get_keys ()) {
+			//message ("Assignment: %s", variable.name);
 			counter++;
 			foreach (BasicBlock block in assign.get (variable)) {
 				work_list.add (block);
 				added.set (block, counter);
 			}
+			//message ("work_list: %d", work_list.size);
 			while (work_list.size > 0) {
 				BasicBlock block = work_list.get (0);
 				work_list.remove_at (0);
@@ -436,15 +444,24 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 	void check_block_variables (BasicBlock block) {
 		foreach (PhiFunction phi in block.get_phi_functions ()) {
+		  //message ("1");
 			Variable versioned_var = process_assignment (var_map, phi.original_variable);
 
 			phi_functions.set (versioned_var, phi);
 		}
 
+		//message ("Block Nodes: ");
+		//foreach (CodeNode node in block.get_nodes ()) {
+			//message ("%s %s", node.type_name, node.to_string ());
+		//}
+
+
 		foreach (CodeNode node in block.get_nodes ()) {
+			//message ("%s %s", node.type_name, node.to_string ());
 			var used_variables = new ArrayList<Variable> ();
 			node.get_used_variables (used_variables);
-			
+			//message ("Used vars: %d", used_variables.size);
+
 			foreach (Variable var_symbol in used_variables) {
 				var variable_stack = var_map.get (var_symbol);
 				if (variable_stack == null || variable_stack.size == 0) {
@@ -465,10 +482,19 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 			var defined_variables = new ArrayList<Variable> ();
 			node.get_defined_variables (defined_variables);
+			//message ("Defined vars: %d", defined_variables.size);
 
 			foreach (Variable variable in defined_variables) {
-				process_assignment (var_map, variable);
+			  //message ("2");
+			  //message ("defined: %s", variable.to_string ());
+			  //message ("Init: %p", variable.initializer);
+			  var v = process_assignment (var_map, variable);
+			  //message ("Init now: %p", v.initializer);
 			}
+
+			//var nullchecker = new NullabilityChecker (this.context, this);
+			//nullchecker.set_current_block (block);
+			//node.accept (nullchecker);
 		}
 
 		foreach (BasicBlock succ in block.get_successors ()) {
@@ -505,6 +531,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				variable_stack.remove_at (variable_stack.size - 1);
 			}
 		}
+		//message ("##############################################################");
 	}
 
 	Variable process_assignment (Map<Symbol, List<Variable>> var_map, Variable var_symbol) {
@@ -1102,9 +1129,34 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 	public Variable get_visible_variable (Variable variable) {
 		var variable_stack = var_map.get (variable);
-		if (variable_stack == null || variable_stack.size == 0)
+		if (variable_stack == null || variable_stack.size == 0) {
+			//message ("Early out: var");
 			return variable;
+		}
 
-		return variable_stack.get (variable_stack.size - 1);
+		var v = variable_stack.get (variable_stack.size - 1);
+		//message ("v: %s", v.to_string ());
+		//message ("var stack size: %d", variable_stack.size);
+		//message ("v: %p", v);
+		//message ("Passed: %p", variable);
+
+		var p = phi_functions.get (v);
+		if (p != null) {
+			//message ("p operands: %d", p.operands.size);
+			//message ("p original: %s", p.original_variable.to_string ());
+			foreach (var k in p.operands) {
+				if (k != null) {
+					//message ("operand; %s", k.to_string ());
+					//message ("Operand: %s", k.type_name);
+					//message ("Operand type: %s", k.variable_type.to_string ());
+					//if (k.initializer != null)
+						//message ("Operand initializer: %s", k.initializer.type_name);
+				} else {
+					//message ("NULL operand");
+				}
+			}
+		}
+
+		return v;
 	}
 }
