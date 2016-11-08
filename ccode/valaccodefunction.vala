@@ -125,7 +125,7 @@ public class Vala.CCodeFunction : CCodeNode {
 				writer.write_string (", ");
 			}
 			param.write (writer);
-			if (param.format_arg) {
+			if (CCodeModifiers.FORMAT_ARG in param.modifiers) {
 				format_arg_index = i;
 			}
 			i++;
