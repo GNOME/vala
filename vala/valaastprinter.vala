@@ -322,6 +322,7 @@ public class Vala.AstPrinter : CodeVisitor {
 
 	public override void visit_binary_expression (BinaryExpression expr) {
 		print ("Binary Expr (op: %s, non_null: %s, constant: %s)".printf (expr.get_operator_string (), expr.is_non_null ().to_string (), expr.is_constant ().to_string ()));
+		print ("Nullability: %s".printf (expr.get_null_state ().to_string ()));
 
 		print ("Left: %s (%s)".printf (expr.left.to_string (), expr.left.type_name));
 		level ++;
