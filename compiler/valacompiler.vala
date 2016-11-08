@@ -343,10 +343,7 @@ class Vala.Compiler {
 		var parser = new Parser ();
 		parser.parse (context);
 
-		if (print_ast) {
-			var printer = new AstPrinter ();
-			printer.print_ast (context);
-		}
+
 
 		var genie_parser = new Genie.Parser ();
 		genie_parser.parse (context);
@@ -365,6 +362,11 @@ class Vala.Compiler {
 		}
 
 		context.check ();
+
+		if (print_ast) {
+			var printer = new AstPrinter ();
+			printer.print_ast (context);
+		}
 
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
