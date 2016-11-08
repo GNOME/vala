@@ -261,7 +261,8 @@ public class Vala.AstPrinter : CodeVisitor {
 
 
 	public override void visit_member_access (MemberAccess expr) {
-		print ("MemberAccess (%s)".printf (expr.member_name));
+		print ("MemberAccess (%s), Inner: %s".printf (expr.member_name,
+		                                              expr.inner != null ? expr.inner.type_name : "null"));
 		level ++;
 		expr.accept_children (this);
 		level --;
@@ -341,14 +342,14 @@ public class Vala.AstPrinter : CodeVisitor {
 
 	public override void visit_assignment (Assignment a) {
 		print ("Assignment");
-		print ("From");
-		level ++;
-		a.left.accept (this);
-		level --;
-
-		print ("To %s".printf (a.right.type_name));
+		print ("From %s".printf (a.right.type_name));
 		level ++;
 		a.right.accept (this);
+		level --;
+
+		  print ("To %s".printf (a.left.type_name));
+		level ++;
+		a.left.accept (this);
 		level --;
 		//print ("Assignment from %s to %s".printf (a.left.type_name, a.right.type_name));
 	}
