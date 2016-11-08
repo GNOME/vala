@@ -216,17 +216,11 @@ public class Vala.AstPrinter : CodeVisitor {
 	public override void visit_delete_statement (DeleteStatement stmt) {
 	}
 
-
-	private string type_str (DataType? t) {
-		if (t == null) return "??";
-		else return t.to_string ();
-	}
 	public override void visit_expression (Expression expr) {
 		//print ("Expression %s (value_type: %s, target_type: %s, constant: %s, non_null: %s)"
 			   //.printf (expr.type_name, type_str (expr.value_type), type_str (expr.target_type),
 						//expr.is_constant ().to_string (), expr.is_non_null ().to_string ()));
 	}
-
 
 	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
 	}
