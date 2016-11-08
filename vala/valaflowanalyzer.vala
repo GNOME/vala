@@ -1099,4 +1099,12 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		current_block = null;
 		unreachable_reported = false;
 	}
+
+	public Variable get_visible_variable (Variable variable) {
+		var variable_stack = var_map.get (variable);
+		if (variable_stack == null || variable_stack.size == 0)
+			return variable;
+
+		return variable_stack.get (variable_stack.size - 1);
+	}
 }
