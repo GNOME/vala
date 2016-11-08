@@ -314,11 +314,6 @@ public class Vala.AstPrinter : CodeVisitor {
 	public override void visit_named_argument (NamedArgument expr) {
 	}
 
-
-	public override void visit_pointer_indirection (PointerIndirection expr) {
-	}
-
-
 	public override void visit_addressof_expression (AddressofExpression expr) {
 	}
 
@@ -350,12 +345,13 @@ public class Vala.AstPrinter : CodeVisitor {
 	}
 
 	public override void visit_assignment (Assignment a) {
+		print ("Assignment");
 		print ("From");
 		level ++;
 		a.left.accept (this);
 		level --;
 
-		print ("To");
+		print ("To %s".printf (a.right.type_name));
 		level ++;
 		a.right.accept (this);
 		level --;
