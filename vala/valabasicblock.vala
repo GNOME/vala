@@ -56,8 +56,8 @@ public class Vala.BasicBlock {
 
 	public void print (int level = 0) {
 		print_level (level);
-		stdout.printf ("BasicBlock (" + name + ", nulls: %d, non-nulls: %d)\n", null_vars.size,
-					   non_null_vars.size);
+		stdout.printf ("BasicBlock (" + name + ", nulls: %d, non-nulls: %d, phis: %d)\n", null_vars.size,
+					   non_null_vars.size, phi_functions.size);
 		foreach (var node in nodes) {
 			print_level (level);
 			stdout.printf ("- ");
@@ -72,9 +72,11 @@ public class Vala.BasicBlock {
 	}
 
 	public BasicBlock.entry () {
+		this.name = "entry";
 	}
 
 	public BasicBlock.exit () {
+		this.name = "exit";
 	}
 
 	public void add_node (CodeNode node) {
