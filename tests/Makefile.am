@@ -237,6 +237,9 @@ TESTS = \
 	gir/bug742012.test \
 	nullability/local-reference.vala \
 	nullability/assignment-to-non-nullable-ok.vala \
+	nullability/assignment-to-non-nullable-fail.test \
+	nullability/coalesce-operator.vala \
+	nullability/non-null-assign.vala
 	$(NULL)
 
 check-TESTS: $(TESTS)

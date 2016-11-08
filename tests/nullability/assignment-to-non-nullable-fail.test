@@ -1,0 +1,9 @@
+Invalid Code
+
+void main () {
+	string? s = null;
+
+	string s2;
+	
+	s2 = s; // can't convert string? to string.
+}
