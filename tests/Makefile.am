@@ -239,7 +239,8 @@ TESTS = \
 	nullability/assignment-to-non-nullable-ok.vala \
 	nullability/assignment-to-non-nullable-fail.test \
 	nullability/coalesce-operator.vala \
-	nullability/non-null-assign.vala
+	nullability/non-null-assign.vala \
+	nullability/null-assign-fail.test \
 	$(NULL)
 
 check-TESTS: $(TESTS)

@@ -1,0 +1,14 @@
+Invalid Code
+
+void main () {
+  string f = "guaranteed not null";
+
+  // OK
+  int k = f.length;
+
+  f = null;
+
+  // Not OK
+  k = f.length;
+
+}
