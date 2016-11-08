@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo : Object {
+	public int bar {}
+}
+
+void main () {
+	new Foo ();
+}
+

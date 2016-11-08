@@ -395,6 +395,12 @@ public class Vala.Property : Symbol, Lockable {
 
 		property_type.check (context);
 
+		if (get_accessor == null && set_accessor == null) {
+			error = true;
+			Report.error (source_reference, "Property `%s' must have a `get' accessor and/or a `set' mutator".printf (get_full_name ()));
+			return false;
+		}
+
 		if (get_accessor != null) {
 			get_accessor.check (context);
 		}
