@@ -369,8 +369,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			cfile.add_type_member_declaration (timer_decl);
 
 			var constructor = new CCodeFunction (prefix + "_init");
-			constructor.modifiers = CCodeModifiers.STATIC;
-			constructor.attributes = "__attribute__((constructor))";
+			constructor.modifiers = CCodeModifiers.STATIC | CCodeModifiers.CONSTRUCTOR;
 			cfile.add_function_declaration (constructor);
 			push_function (constructor);
 
@@ -385,8 +384,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 
 			var destructor = new CCodeFunction (prefix + "_exit");
-			destructor.modifiers = CCodeModifiers.STATIC;
-			destructor.attributes = "__attribute__((destructor))";
+			destructor.modifiers = CCodeModifiers.STATIC | CCodeModifiers.DESTRUCTOR;
 			cfile.add_function_declaration (destructor);
 			push_function (destructor);
 

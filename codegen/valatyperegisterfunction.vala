@@ -68,24 +68,22 @@ public abstract class Vala.TypeRegisterFunction {
 		CCodeFunction fun;
 		if (!plugin) {
 			fun = new CCodeFunction ("%s_get_type".printf (CCodeBaseModule.get_ccode_lower_case_name (get_type_declaration ())), "GType");
-			fun.attributes = "G_GNUC_CONST";
+			fun.modifiers = CCodeModifiers.CONST;
 
 			/* Function will not be prototyped anyway */
 			if (get_accessibility () == SymbolAccessibility.PRIVATE) {
-				fun.modifiers = CCodeModifiers.STATIC;
 				// avoid C warning as this function is not always used
-				fun.attributes += " G_GNUC_UNUSED";
+				fun.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.UNUSED;
 			} else if (context.hide_internal && get_accessibility () == SymbolAccessibility.INTERNAL) {
-				fun.modifiers = CCodeModifiers.INTERNAL;
 				// avoid C warning as this function is not always used
-				fun.attributes += " G_GNUC_UNUSED";
+				fun.modifiers |= CCodeModifiers.INTERNAL | CCodeModifiers.UNUSED;
 			}
 		} else {
 			fun = new CCodeFunction ("%s_register_type".printf (CCodeBaseModule.get_ccode_lower_case_name (get_type_declaration ())), "GType");
 			fun.add_parameter (new CCodeParameter ("module", "GTypeModule *"));
 
 			var get_fun = new CCodeFunction ("%s_get_type".printf (CCodeBaseModule.get_ccode_lower_case_name (get_type_declaration ())), "GType");
-			get_fun.attributes = "G_GNUC_CONST";
+			get_fun.modifiers = CCodeModifiers.CONST;
 
 			get_fun.is_declaration = true;
 			declaration_fragment.append (get_fun.copy ());

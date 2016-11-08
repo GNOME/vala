@@ -827,14 +827,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var fun_name = "%s_get_type".printf (get_ccode_lower_case_name (en, null));
 		var regfun = new CCodeFunction (fun_name, "GType");
-		regfun.attributes = "G_GNUC_CONST";
+		regfun.modifiers = CCodeModifiers.CONST;
 
 		if (en.is_private_symbol ()) {
-			regfun.modifiers = CCodeModifiers.STATIC;
 			// avoid C warning as this function is not always used
-			regfun.attributes += " G_GNUC_UNUSED";
+			regfun.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.UNUSED;
 		} else if (context.hide_internal && en.is_internal_symbol ()) {
-			regfun.modifiers = CCodeModifiers.INTERNAL;
+			regfun.modifiers |= CCodeModifiers.INTERNAL;
 		}
 
 		decl_space.add_function_declaration (regfun);

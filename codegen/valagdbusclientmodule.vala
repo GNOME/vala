@@ -163,7 +163,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		// declare proxy_get_type function
 		var proxy_get_type = new CCodeFunction (get_type_name, "GType");
-		proxy_get_type.attributes = "G_GNUC_CONST";
+		proxy_get_type.modifiers = CCodeModifiers.CONST;
 		decl_space.add_function_declaration (proxy_get_type);
 
 		if (in_plugin) {

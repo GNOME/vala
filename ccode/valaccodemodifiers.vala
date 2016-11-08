@@ -34,5 +34,9 @@ public enum Vala.CCodeModifiers {
 	VOLATILE = 1 << 4,
 	DEPRECATED = 1 << 5,
 	THREAD_LOCAL = 1 << 6,
-	INTERNAL = 1 << 7
+	INTERNAL = 1 << 7,
+	CONST = 1 << 8,
+	UNUSED = 1 << 9,
+	CONSTRUCTOR = 1 << 10,
+	DESTRUCTOR = 1 << 11
 }

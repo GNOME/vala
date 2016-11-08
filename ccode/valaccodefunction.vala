@@ -32,16 +32,9 @@ public class Vala.CCodeFunction : CCodeNode {
 	public string name { get; set; }
 	
 	/**
-	 * The function modifiers.
-	 */
-	public CCodeModifiers modifiers { get; set; }
-	
-	/**
 	 * The function return type.
 	 */
 	public string return_type { get; set; }
-
-	public string attributes { get; set; }
 
 	public bool is_declaration { get; set; }
 
@@ -96,7 +89,6 @@ public class Vala.CCodeFunction : CCodeNode {
 	public CCodeFunction copy () {
 		var func = new CCodeFunction (name, return_type);
 		func.modifiers = modifiers;
-		func.attributes = attributes;
 
 		/* no deep copy for lists available yet
 		 * func.parameters = parameters.copy ();
@@ -153,9 +145,17 @@ public class Vala.CCodeFunction : CCodeNode {
 				writer.write_string (" G_GNUC_FORMAT(%d)".printf (format_arg_index + 1));
 			}
 
-			if (attributes != null) {
-				writer.write_string (" ");
-				writer.write_string (attributes);
+			if (CCodeModifiers.CONST in modifiers) {
+				writer.write_string (" G_GNUC_CONST");
+			}
+			if (CCodeModifiers.UNUSED in modifiers) {
+				writer.write_string (" G_GNUC_UNUSED");
+			}
+
+			if (CCodeModifiers.CONSTRUCTOR in modifiers) {
+				writer.write_string (" __attribute__((constructor))");
+			} else if (CCodeModifiers.DESTRUCTOR in modifiers) {
+				writer.write_string (" __attribute__((destructor))");
 			}
 
 			writer.write_string (";");

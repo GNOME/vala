@@ -119,9 +119,8 @@ public class Vala.GTypeModule : GErrorModule {
 			function.add_parameter (new CCodeParameter ("flags", "GParamFlags"));
 
 			if (cl.is_private_symbol ()) {
-				function.modifiers = CCodeModifiers.STATIC;
 				// avoid C warning as this function is not always used
-				function.attributes = "G_GNUC_UNUSED";
+				function.modifiers = CCodeModifiers.STATIC | CCodeModifiers.UNUSED;
 			} else if (context.hide_internal && cl.is_internal_symbol ()) {
 				function.modifiers = CCodeModifiers.INTERNAL;
 			}
@@ -133,13 +132,11 @@ public class Vala.GTypeModule : GErrorModule {
 			function.add_parameter (new CCodeParameter ("v_object", "gpointer"));
 
 			if (cl.is_private_symbol ()) {
-				function.modifiers = CCodeModifiers.STATIC;
 				// avoid C warning as this function is not always used
-				function.attributes = "G_GNUC_UNUSED";
+				function.modifiers = CCodeModifiers.STATIC | CCodeModifiers.UNUSED;
 			} else if (context.hide_internal && cl.is_internal_symbol ()) {
-				function.modifiers = CCodeModifiers.INTERNAL;
 				// avoid C warning as this function is not always used
-				function.attributes = "G_GNUC_UNUSED";
+				function.modifiers = CCodeModifiers.INTERNAL | CCodeModifiers.UNUSED;
 			}
 
 			decl_space.add_function_declaration (function);
@@ -149,9 +146,8 @@ public class Vala.GTypeModule : GErrorModule {
 			function.add_parameter (new CCodeParameter ("v_object", "gpointer"));
 
 			if (cl.is_private_symbol ()) {
-				function.modifiers = CCodeModifiers.STATIC;
 				// avoid C warning as this function is not always used
-				function.attributes = "G_GNUC_UNUSED";
+				function.modifiers = CCodeModifiers.STATIC | CCodeModifiers.UNUSED;
 			} else if (context.hide_internal && cl.is_internal_symbol ()) {
 				function.modifiers = CCodeModifiers.INTERNAL;
 			}
@@ -162,13 +158,11 @@ public class Vala.GTypeModule : GErrorModule {
 			function.add_parameter (new CCodeParameter ("value", "const GValue*"));
 
 			if (cl.is_private_symbol ()) {
-				function.modifiers = CCodeModifiers.STATIC;
 				// avoid C warning as this function is not always used
-				function.attributes = "G_GNUC_UNUSED";
+				function.modifiers = CCodeModifiers.STATIC | CCodeModifiers.UNUSED;
 			} else if (context.hide_internal && cl.is_internal_symbol ()) {
-				function.modifiers = CCodeModifiers.INTERNAL;
 				// avoid C warning as this function is not always used
-				function.attributes = "G_GNUC_UNUSED";
+				function.modifiers = CCodeModifiers.INTERNAL | CCodeModifiers.UNUSED;
 			}
 
 			decl_space.add_function_declaration (function);

@@ -33,6 +33,12 @@ public abstract class Vala.CCodeNode {
 	public CCodeLineDirective line { get; set; }
 
 	/**
+	 * The modifiers for this code node which will be handled as needed
+	 * in every subclass.
+	 */
+	public CCodeModifiers modifiers { get; set; }
+
+	/**
 	 * Writes this code node and all children with the specified C code
 	 * writer.
 	 *

@@ -31,11 +31,6 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	 */
 	public string type_name { get; set; }
 
-	/**
-	 * The declaration modifier.
-	 */
-	public CCodeModifiers modifiers { get; set; }
-	
 	private List<CCodeDeclarator> declarators = new ArrayList<CCodeDeclarator> ();
 	
 	public CCodeDeclaration (string type_name) {
