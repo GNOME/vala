@@ -37,7 +37,7 @@ public class Vala.Block : Symbol, Statement {
 	private List<Statement> statement_list = new ArrayList<Statement> ();
 	private List<LocalVariable> local_variables = new ArrayList<LocalVariable> ();
 	private List<Constant> local_constants = new ArrayList<Constant> ();
-	
+
 	/**
 	 * Creates a new block.
 	 *
@@ -46,7 +46,7 @@ public class Vala.Block : Symbol, Statement {
 	public Block (SourceReference? source_reference) {
 		base (null, source_reference);
 	}
-	
+
 	/**
 	 * Append a statement to this block.
 	 *
@@ -81,7 +81,7 @@ public class Vala.Block : Symbol, Statement {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * Add a local variable to this block.
 	 *
@@ -191,6 +191,28 @@ public class Vala.Block : Symbol, Statement {
 				stmt_list = new StatementList (source_reference);
 				stmt_list.add (new_stmt);
 				stmt_list.add (stmt);
+				statement_list[i] = stmt_list;
+				new_stmt.parent_node = this;
+			}
+		}
+	}
+
+
+	public void insert_after (Statement stmt, Statement new_stmt) {
+		for (int i = 0; i < statement_list.size; i++) {
+			var stmt_list = statement_list[i] as StatementList;
+			if (stmt_list != null) {
+				for (int j = 0; j < stmt_list.length; j++) {
+					if (stmt_list.get (j) == stmt) {
+						stmt_list.insert (j + 1, new_stmt);
+						new_stmt.parent_node = this;
+						break;
+					}
+				}
+			} else if (statement_list[i] == stmt) {
+				stmt_list = new StatementList (source_reference);
+				stmt_list.add (stmt);
+				stmt_list.add (new_stmt);
 				statement_list[i] = stmt_list;
 				new_stmt.parent_node = this;
 			}

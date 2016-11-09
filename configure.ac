@@ -49,7 +49,7 @@ AS_IF([test "$VALAC" != valac], [FOUND_VALAC_VERION=`$VALAC --version | sed 's/V
 	AS_VERSION_COMPARE(["$VALAC_BOOTSTRAP_REQUIRED"], ["$FOUND_VALAC_VERION"],
 		[enable_boostrap=yes], [enable_boostrap=yes], [enable_boostrap=no])])
 
-VALAFLAGS="$VALAFLAGS --disable-version-header"
+VALAFLAGS="$VALAFLAGS --disable-version-header -g"
 if test x$enable_boostrap = xyes; then
 	VALAFLAGS="$VALAFLAGS --hide-internal"
 fi

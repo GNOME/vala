@@ -69,9 +69,68 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 
 		checked = true;
 
-		declaration.check (context);
 
 		var local = declaration as LocalVariable;
+		if (local != null && local.initializer != null) {
+			var block = this.parent_node as Block;
+			//var block = context.analyzer.current_symbol as Block;
+			if (block != null) {
+				// For var declarations, we need to resolve the type now,
+				// since removing the initializer will make it impossible later.
+				if (local.variable_type != null) {
+					local.variable_type.check (context);
+				}
+				local.initializer.target_type = local.variable_type;
+				local.initializer.check (context);
+
+				message ("Before: %p", local.variable_type);
+				if (local.variable_type == null) {
+					// var decl
+					local.variable_type = local.initializer.value_type.copy ();
+					//local.variable_type = context.analyzer.get_value_type_for_symbol
+					  //(local.initializer.value_type.data_type, true);
+					assert (local.variable_type != null);
+					local.variable_type.value_owned = true;
+					local.variable_type.floating_reference = false;
+					local.initializer.target_type = local.variable_type;
+					// TODO: This is code copied from LocalVariable's check()
+					//       but if we *always* remove the initializer here,
+					//       we could also remove it from there...
+				}
+				var init = local.initializer;
+				message ("Method: %s", context.analyzer.find_current_method ().to_string ());
+				message ("Init: %s, %s", init.type_name, init.to_string ());
+				message ("var type: %s", local.variable_type.type_name);
+				message ("var type: %s", local.variable_type.to_string ());
+
+				if (local.variable_type is NullType) {
+					var printer = new AstPrinter ();
+					printer.print_subtree (block, context);
+
+					message ("Start type: %s", local.initializer.value_type.to_qualified_string ());
+				
+				}
+				local.initializer = null;
+				var left = new MemberAccess.simple (local.name, local.source_reference);
+				//left.pointer_member_access = (local.variable_type is PointerType);
+				var assign = new Assignment (left, init, AssignmentOperator.SIMPLE, local.source_reference);
+				var stmt = new ExpressionStatement (assign);
+				//block.add_statement (stmt);
+				//block.insert_statement (0, stmt);
+				block.insert_after (this, stmt);
+				declaration.check (context);
+				if (!stmt.check (context)) {
+					error = true;
+					return false;
+				}
+			} else {
+				message ("Parent type: %s", this.parent_node.type_name);
+			}
+		} else {
+			declaration.check (context);
+		}
+
+
 		if (local != null && local.initializer != null) {
 			foreach (DataType error_type in local.initializer.get_error_types ()) {
 				// ensure we can trace back which expression may throw errors of this type

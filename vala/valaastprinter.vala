@@ -18,6 +18,10 @@ public class Vala.AstPrinter : CodeVisitor {
 		context.accept (this);
 	}
 
+	public void print_subtree (CodeNode node, CodeContext context) {
+		this.context = context;
+		node.accept (this);
+	}
 
 	public override void visit_namespace (Namespace ns) {
 		print ("Namespace %s".printf (ns.name));
