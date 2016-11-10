@@ -2564,12 +2564,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public override LocalVariable create_local (DataType type) {
-		var result = get_temp_variable (type, type.value_owned);
-		emit_temp_var (result);
-		return result;
-	}
-
 	public LocalVariable get_temp_variable (DataType type, bool value_owned = true, CodeNode? node_reference = null, bool init = false) {
 		var var_type = type.copy ();
 		var_type.value_owned = value_owned;

@@ -32,8 +32,6 @@ public abstract class Vala.CodeGenerator : CodeVisitor {
 	public virtual void emit (CodeContext context) {
 	}
 
-	public abstract LocalVariable create_local (DataType type);
-
 	public abstract TargetValue load_local (LocalVariable local);
 
 	public abstract void store_local (LocalVariable local, TargetValue value, bool initializer);
