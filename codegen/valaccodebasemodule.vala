@@ -3471,27 +3471,32 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 	
 	public void emit_temp_var (LocalVariable local) {
+		var init = !(local.name.has_prefix ("*") || local.no_init);
 		if (is_in_coroutine ()) {
 			closure_struct.add_field (get_ccode_name (local.variable_type), local.name);
 
 			// even though closure struct is zerod, we need to initialize temporary variables
 			// as they might be used multiple times when declared in a loop
 
-			var initializer = default_value_for_type (local.variable_type, false);
-			if (initializer == null) {
-				cfile.add_include ("string.h");
-				var memset_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
-				memset_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (local.name)));
-				memset_call.add_argument (new CCodeConstant ("0"));
-				memset_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (get_ccode_name (local.variable_type))));
-				ccode.add_expression (memset_call);
-			} else {
-				ccode.add_assignment (get_variable_cexpression (local.name), initializer);
+			if (init) {
+				var initializer = default_value_for_type (local.variable_type, false);
+				if (initializer == null) {
+					cfile.add_include ("string.h");
+					var memset_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+					memset_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (local.name)));
+					memset_call.add_argument (new CCodeConstant ("0"));
+					memset_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (get_ccode_name (local.variable_type))));
+					ccode.add_expression (memset_call);
+				} else {
+					ccode.add_assignment (get_variable_cexpression (local.name), initializer);
+				}
 			}
 		} else {
 			var cvar = new CCodeVariableDeclarator (local.name, null, get_ccode_declarator_suffix (local.variable_type));
-			cvar.initializer = default_value_for_type (local.variable_type, true);
-			cvar.init0 = true;
+			if (init) {
+				cvar.initializer = default_value_for_type (local.variable_type, true);
+				cvar.init0 = true;
+			}
 			ccode.add_declaration (get_ccode_name (local.variable_type), cvar);
 		}
 	}
