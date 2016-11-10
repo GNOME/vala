@@ -224,13 +224,14 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					ccall.add_argument (pub_inst);
 				}
 
-				var temp_value = (GLibValue) create_temp_value (prop.get_accessor.value_type, false, expr);
+				bool prop_is_real_non_null_struct_type = prop.property_type.is_real_non_null_struct_type ();
+				var temp_value = (GLibValue) create_temp_value (prop.get_accessor.value_type, prop_is_real_non_null_struct_type, expr);
 				expr.target_value = load_temp_value (temp_value);
 				var ctemp = get_cvalue_ (temp_value);
 
 				// Property access to real struct types is handled differently
 				// The value is returned by out parameter
-				if (prop.property_type.is_real_non_null_struct_type ()) {
+				if (prop_is_real_non_null_struct_type) {
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 					ccode.add_expression (ccall);
 				} else {

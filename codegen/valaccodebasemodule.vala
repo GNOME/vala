@@ -2570,7 +2570,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return result;
 	}
 
-	public LocalVariable get_temp_variable (DataType type, bool value_owned = true, CodeNode? node_reference = null, bool init = true) {
+	public LocalVariable get_temp_variable (DataType type, bool value_owned = true, CodeNode? node_reference = null, bool init = false) {
 		var var_type = type.copy ();
 		var_type.value_owned = value_owned;
 		var local = new LocalVariable (var_type, "_tmp%d_".printf (next_temp_var_id));
