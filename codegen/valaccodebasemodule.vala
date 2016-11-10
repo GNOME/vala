@@ -2388,13 +2388,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (!array_type.fixed_length) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var len_var = new LocalVariable (int_type.copy (), get_array_length_cname (get_local_cname (local), dim));
-						len_var.no_init = local.initializer != null;
+						len_var.init = local.initializer == null;
 						emit_temp_var (len_var);
 					}
 
 					if (array_type.rank == 1) {
 						var size_var = new LocalVariable (int_type.copy (), get_array_size_cname (get_local_cname (local)));
-						size_var.no_init = local.initializer != null;
+						size_var.init = local.initializer == null;
 						emit_temp_var (size_var);
 					}
 				}
@@ -2404,11 +2404,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (d.has_target) {
 					// create variable to store delegate target
 					var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (get_local_cname (local)));
-					target_var.no_init = local.initializer != null;
+					target_var.init = local.initializer == null;
 					emit_temp_var (target_var);
 					if (deleg_type.value_owned) {
 						var target_destroy_notify_var = new LocalVariable (gdestroynotify_type, get_delegate_target_destroy_notify_cname (get_local_cname (local)));
-						target_destroy_notify_var.no_init = local.initializer != null;
+						target_destroy_notify_var.init = local.initializer == null;
 						emit_temp_var (target_destroy_notify_var);
 					}
 				}
@@ -2435,7 +2435,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	 */
 	public TargetValue create_temp_value (DataType type, bool init, CodeNode node_reference, bool? value_owned = null) {
 		var local = new LocalVariable (type.copy (), "_tmp%d_".printf (next_temp_var_id++), null, node_reference.source_reference);
-		local.no_init = !init;
+		local.init = init;
 		if (value_owned != null) {
 			local.variable_type.value_owned = value_owned;
 		}
@@ -2447,16 +2447,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (array_type != null) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				var len_var = new LocalVariable (int_type.copy (), get_array_length_cname (local.name, dim), null, node_reference.source_reference);
-				len_var.no_init = !init;
+				len_var.init = init;
 				emit_temp_var (len_var);
 			}
 		} else if (deleg_type != null && deleg_type.delegate_symbol.has_target) {
 			var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (local.name), null, node_reference.source_reference);
-			target_var.no_init = !init;
+			target_var.init = init;
 			emit_temp_var (target_var);
 			if (deleg_type.value_owned) {
 				var target_destroy_notify_var = new LocalVariable (gdestroynotify_type.copy (), get_delegate_target_destroy_notify_cname (local.name), null, node_reference.source_reference);
-				target_destroy_notify_var.no_init = !init;
+				target_destroy_notify_var.init = init;
 				emit_temp_var (target_destroy_notify_var);
 			}
 		}
@@ -2568,7 +2568,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var var_type = type.copy ();
 		var_type.value_owned = value_owned;
 		var local = new LocalVariable (var_type, "_tmp%d_".printf (next_temp_var_id));
-		local.no_init = !init;
+		local.init = init;
 
 		if (node_reference != null) {
 			local.source_reference = node_reference.source_reference;
@@ -3465,7 +3465,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 	
 	public void emit_temp_var (LocalVariable local) {
-		var init = !(local.name.has_prefix ("*") || local.no_init);
+		var init = (!local.name.has_prefix ("*") && local.init);
 		if (is_in_coroutine ()) {
 			closure_struct.add_field (get_ccode_name (local.variable_type), local.name);
 

@@ -30,7 +30,7 @@ public class Vala.LocalVariable : Variable {
 
 	public bool captured { get; set; }
 
-	public bool no_init { get; set; }
+	public bool init { get; set; }
 
 	/**
 	 * Creates a new local variable.
