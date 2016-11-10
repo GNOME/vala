@@ -9,3 +9,6 @@ class Bar : Object, Foo {
 		return null;
 	}
 }
+
+void main () {
+}

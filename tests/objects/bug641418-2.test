@@ -14,3 +14,6 @@ class Baz : Bar {
 		return null;
 	}
 }
+
+void main () {
+}
