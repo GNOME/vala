@@ -3074,7 +3074,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var freeid = (CCodeIdentifier) element_destroy_func_expression;
 			string free0_func = "_%s0_".printf (freeid.name);
 
-			if (add_wrapper (free0_func)) {
+			// g_free is already NULL-safe
+			if (freeid.name == "g_free") {
+				free0_func = freeid.name;
+			} else if (add_wrapper (free0_func)) {
 				var function = new CCodeFunction (free0_func, "void");
 				function.modifiers = CCodeModifiers.STATIC;
 
@@ -3352,7 +3355,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var freeid = (CCodeIdentifier) ccall.call;
 			string free0_func = "_%s0".printf (freeid.name);
 
-			if (add_wrapper (free0_func)) {
+			// g_free is already NULL-safe
+			if (freeid.name == "g_free") {
+				free0_func = freeid.name;
+			} else if (add_wrapper (free0_func)) {
 				var macro = destroy_value (new GLibValue (type, new CCodeIdentifier ("var"), true), true);
 				cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("%s(var)".printf (free0_func), macro));
 			}
