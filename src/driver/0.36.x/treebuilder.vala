@@ -334,10 +334,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return Vala.CCodeBaseModule.get_ccode_free_function (sym);
 	}
 
-	private string? get_nick (Vala.Property prop) {
-		return Vala.CCodeBaseModule.get_ccode_nick (prop);
-	}
-
 	private string? get_cname (Vala.Symbol symbol) {
 		return Vala.CCodeBaseModule.get_ccode_name (symbol);
 	}
@@ -1178,7 +1174,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 									  element.name,
 									  get_access_modifier (element),
 									  comment,
-									  get_nick (element),
+									  element.nick,
 									  Vala.GDBusModule.get_dbus_name_for_member (element),
 									  Vala.GDBusModule.is_dbus_visible (element),
 									  get_property_binding_type (element),
