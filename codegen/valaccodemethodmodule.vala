@@ -188,7 +188,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			decl_space.add_function_declaration (function);
 		}
 
-		if (m is CreationMethod && cl != null) {
+		if (is_gtypeinstance_creation_method (m)) {
 			// _construct function
 			function = new CCodeFunction (get_ccode_real_name (m));
 
