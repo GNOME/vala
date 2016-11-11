@@ -794,7 +794,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var cenum = new CCodeEnum (get_ccode_name (en));
 
-		cenum.deprecated = en.version.deprecated;
+		cenum.modifiers |= (en.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 
 		int flag_shift = 0;
 		foreach (EnumValue ev in en.get_values ()) {
@@ -809,7 +809,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ev.value.emit (this);
 				c_ev = new CCodeEnumValue (get_ccode_name (ev), get_cvalue (ev.value));
 			}
-			c_ev.deprecated = ev.version.deprecated;
+			c_ev.modifiers |= (ev.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 			cenum.add_value (c_ev);
 		}
 

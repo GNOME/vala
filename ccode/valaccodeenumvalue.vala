@@ -32,11 +32,6 @@ public class Vala.CCodeEnumValue : CCodeNode {
 	public string name { get; set; }
 
 	/**
-	 * Whether this enum value is deprecated.
-	 */
-	public bool deprecated { get; set; default = false; }
-
-	/**
 	 * The numerical representation of this enum value.
 	 */
 	public CCodeExpression? value { get; set; }
@@ -51,6 +46,9 @@ public class Vala.CCodeEnumValue : CCodeNode {
 		if (value != null) {
 			writer.write_string (" = ");
 			value.write (writer);
+		}
+		if (CCodeModifiers.DEPRECATED in modifiers) {
+			writer.write_string (" G_GNUC_DEPRECATED");
 		}
 	}
 }

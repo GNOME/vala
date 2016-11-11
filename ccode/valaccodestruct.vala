@@ -31,11 +31,6 @@ public class Vala.CCodeStruct : CCodeNode {
 	 */
 	public string name { get; set; }
 
-	/**
-	 * Whether the struct is deprecated.
-	 */
-	public bool deprecated { get; set; default = false; }
-
 	public bool is_empty { get { return declarations.size == 0; } }
 
 	private List<CCodeDeclaration> declarations = new ArrayList<CCodeDeclaration> ();
@@ -75,7 +70,7 @@ public class Vala.CCodeStruct : CCodeNode {
 		}
 
 		writer.write_end_block ();
-		if (deprecated) {
+		if (CCodeModifiers.DEPRECATED in modifiers) {
 			writer.write_string (" G_GNUC_DEPRECATED");
 		}
 		writer.write_string (";");

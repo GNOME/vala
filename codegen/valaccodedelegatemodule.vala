@@ -116,7 +116,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		}
 
 		var ctypedef = new CCodeTypeDefinition (return_type_cname, cfundecl);
-		ctypedef.deprecated = d.version.deprecated;
+		ctypedef.modifiers |= (d.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 
 		decl_space.add_type_definition (ctypedef);
 	}
