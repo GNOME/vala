@@ -249,7 +249,7 @@ namespace GLib {
 		public string[] errors;
 	}
 
-	[CCode (cname = "GITypeTag", cprefix = "TYPE_TAG_", cheader_filename = "gmetadata.h")]
+	[CCode (cname = "TypeTag", cprefix = "TYPE_TAG_", cheader_filename = "gmetadata.h")]
 	public enum TypeTag
 	{
 		VOID,
