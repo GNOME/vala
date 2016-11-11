@@ -32,7 +32,9 @@ void test_class_property () {
 [Version (deprecated = true)]
 enum FooEnum {
 	[Version (deprecated = true)]
-	BAR,
+	BAR = 0,
+	[Version (deprecated = true)]
+	FOO,
 	BAZ;
 }
 
