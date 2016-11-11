@@ -1713,10 +1713,8 @@ public class Vala.GTypeModule : GErrorModule {
 	public override CCodeFunctionCall get_param_spec (Property prop) {
 		var cspec = new CCodeFunctionCall ();
 		cspec.add_argument (get_property_canonical_cconstant (prop));
-		var nick = get_ccode_nick (prop);
-		var blurb = get_ccode_blurb (prop);
-		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (nick)));
-		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (blurb)));
+		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.nick)));
+		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.blurb)));
 
 
 		if (prop.property_type.data_type is Class || prop.property_type.data_type is Interface) {

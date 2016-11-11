@@ -108,6 +108,48 @@ public class Vala.Property : Symbol, Lockable {
 	public MemberBinding binding { get; set; default = MemberBinding.INSTANCE; }
 
 	/**
+	 * The nick of this property
+	 */
+	public string nick {
+		get {
+			if (_nick == null) {
+				_nick = get_attribute_string ("Description", "nick");
+				if (_nick == null) {
+					_nick = name.replace ("_", "-");
+				}
+			}
+			return _nick;
+		}
+	}
+
+	/**
+	 * The blurb of this property
+	 */
+	public string blurb {
+		get {
+			if (_blurb == null) {
+				_blurb = get_attribute_string ("Description", "blurb");
+				if (_blurb == null) {
+					_blurb = name.replace ("_", "-");
+				}
+			}
+			return _blurb;
+		}
+	}
+
+	/**
+	 * Specifies whether this a property triggers a notify.
+	 */
+	public bool notify {
+		get {
+			if (_notify == null) {
+				_notify = get_attribute_bool ("CCode", "notify", true);
+			}
+			return _notify;
+		}
+	}
+
+	/**
 	 * Specifies the virtual or abstract property this property overrides.
 	 * Reference must be weak as virtual properties set base_property to
 	 * themselves.
@@ -153,6 +195,9 @@ public class Vala.Property : Symbol, Lockable {
 	private bool base_properties_valid;
 	PropertyAccessor? _get_accessor;
 	PropertyAccessor? _set_accessor;
+	private string? _nick;
+	private string? _blurb;
+	private bool? _notify;
 
 	/**
 	 * Creates a new property.

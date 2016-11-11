@@ -1770,7 +1770,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			// notify on property changes
 			if (is_gobject_property (prop) &&
-			    get_ccode_notify (prop) &&
+			    prop.notify &&
 			    (acc.writable || acc.construction)) {
 				var notify_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_notify"));
 				notify_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GObject *"));
@@ -6391,26 +6391,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public static string get_ccode_sentinel (Method m) {
 		return get_ccode_attribute(m).sentinel;
-	}
-
-	public static bool get_ccode_notify (Property prop) {
-		return prop.get_attribute_bool ("CCode", "notify", true);
-	}
-
-	public static string get_ccode_nick (Property prop) {
-		var nick = prop.get_attribute_string ("Description", "nick");
-		if (nick == null) {
-			nick = prop.name.replace ("_", "-");
-		}
-		return nick;
-	}
-
-	public static string get_ccode_blurb (Property prop) {
-		var blurb = prop.get_attribute_string ("Description", "blurb");
-		if (blurb == null) {
-			blurb = prop.name.replace ("_", "-");
-		}
-		return blurb;
 	}
 
 	public CCodeDeclaratorSuffix? get_ccode_declarator_suffix (DataType type) {
