@@ -44,7 +44,8 @@ char linebuf[2000];
 
 extern int yylex (GIGenerator *igenerator);
 #define YY_DECL int yylex (GIGenerator *igenerator)
-static int yywrap (void);
+#define yywrap() (1)
+#define YY_SKIP_YYWRAP
 static void parse_comment (GIGenerator *igenerator);
 static void process_linemarks (GIGenerator *igenerator, gboolean has_line);
 static int check_identifier (GIGenerator *igenerator, const char *);
@@ -224,12 +225,6 @@ stringtext				([^\\\"])|(\\.)
 .					{ print_error(igenerator); }
 
 %%
-
-static int
-yywrap (void)
-{
-  return 1;
-}
 
 static void parse_gtkdoc (GIGenerator *igenerator, int *c1, int *c2)
 {
