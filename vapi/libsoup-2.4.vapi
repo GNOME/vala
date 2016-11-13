@@ -1107,6 +1107,8 @@ namespace Soup {
 		public unowned string get_close_data ();
 		public Soup.WebsocketConnectionType get_connection_type ();
 		public unowned GLib.IOStream get_io_stream ();
+		[Version (since = "2.58")]
+		public uint get_keepalive_interval ();
 		[Version (since = "2.56")]
 		public uint64 get_max_incoming_payload_size ();
 		public unowned string? get_origin ();
@@ -1115,10 +1117,14 @@ namespace Soup {
 		public unowned Soup.URI get_uri ();
 		public void send_binary ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] data);
 		public void send_text (string text);
+		[Version (since = "2.58")]
+		public void set_keepalive_interval (uint interval);
 		[Version (since = "2.56")]
 		public void set_max_incoming_payload_size (uint64 max_incoming_payload_size);
 		public Soup.WebsocketConnectionType connection_type { get; construct; }
 		public GLib.IOStream io_stream { get; construct; }
+		[Version (since = "2.58")]
+		public uint keepalive_interval { get; set construct; }
 		[Version (since = "2.56")]
 		public uint64 max_incoming_payload_size { get; set construct; }
 		public string origin { get; construct; }

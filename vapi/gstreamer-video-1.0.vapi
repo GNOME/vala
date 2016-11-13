@@ -81,6 +81,8 @@ namespace Gst {
 			public void add_to_frame (int n_bytes);
 			public Gst.Buffer allocate_output_buffer ();
 			public Gst.FlowReturn allocate_output_frame (Gst.Video.CodecFrame frame);
+			[Version (since = "1.12")]
+			public Gst.FlowReturn allocate_output_frame_with_params (Gst.Video.CodecFrame frame, Gst.BufferPoolAcquireParams @params);
 			[NoWrapper]
 			public virtual bool close ();
 			[NoWrapper]

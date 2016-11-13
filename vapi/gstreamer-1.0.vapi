@@ -29,6 +29,8 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static Gst.DebugLevel get_default_threshold ();
 		[CCode (cheader_filename = "gst/gst.h")]
+		public static string get_stack_trace ();
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool is_active ();
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool is_colored ();

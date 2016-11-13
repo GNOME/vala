@@ -406,6 +406,8 @@ namespace Gst {
 			public bool convert_default (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
 			[NoWrapper]
 			public virtual Gst.FlowReturn detect (Gst.Buffer buffer);
+			[Version (since = "1.12")]
+			public void drain ();
 			public Gst.FlowReturn finish_frame (Gst.Base.ParseFrame frame, int size);
 			[NoWrapper]
 			public virtual Gst.Caps get_sink_caps (Gst.Caps filter);

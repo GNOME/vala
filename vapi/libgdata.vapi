@@ -752,6 +752,7 @@ namespace GData {
 		public unowned string get_document_id ();
 		[Version (deprecated = true, deprecated_since = "0.17.0", since = "0.4.0")]
 		public int64 get_edited ();
+		public int64 get_file_size ();
 		public unowned GData.Author get_last_modified_by ();
 		public int64 get_last_viewed ();
 		public string get_path ();
@@ -764,6 +765,7 @@ namespace GData {
 		public string document_id { get; }
 		[Version (deprecated = true, deprecated_since = "0.17.0", since = "0.4.0")]
 		public int64 edited { get; }
+		public int64 file_size { get; }
 		[NoAccessorMethod]
 		[Version (since = "0.5.0")]
 		public bool is_deleted { get; set; }
