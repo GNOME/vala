@@ -6910,7 +6910,7 @@ namespace Gsk {
 		public void set_opacity (double opacity);
 		public void set_opaque (bool opaque);
 		public void set_scaling_filter (Gsk.ScalingFilter min_filter, Gsk.ScalingFilter mag_filter);
-		public void set_texture (int texture_id);
+		public void set_texture (Gsk.Texture texture);
 		public void set_transform (Graphene.Matrix? transform);
 		public void unref ();
 	}
@@ -6974,6 +6974,20 @@ namespace Gsk {
 		[Version (since = "3.90")]
 		public Graphene.Rect viewport { get; set; }
 		public Gdk.Window window { get; construct; }
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", ref_function = "gsk_texture_ref", type_id = "gsk_texture_get_type ()", unref_function = "gsk_texture_unref")]
+	[Compact]
+	[Version (since = "3.90")]
+	public class Texture {
+		[CCode (has_construct_function = false)]
+		public Texture.for_data (Gsk.Renderer renderer, uint8 data, int width, int height, int stride);
+		[CCode (has_construct_function = false)]
+		public Texture.for_pixbuf (Gsk.Renderer renderer, Gdk.Pixbuf pixbuf);
+		public int get_height ();
+		public unowned Gsk.Renderer get_renderer ();
+		public int get_width ();
+		public unowned Gsk.Texture @ref ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_BLEND_MODE_", has_type_id = false)]
 	[Version (since = "3.90")]
