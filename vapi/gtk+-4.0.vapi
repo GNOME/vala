@@ -6980,11 +6980,10 @@ namespace Gsk {
 	[Version (since = "3.90")]
 	public class Texture {
 		[CCode (has_construct_function = false)]
-		public Texture.for_data (Gsk.Renderer renderer, uint8 data, int width, int height, int stride);
+		public Texture.for_data ([CCode (array_length = false, type = "const guchar*")] uint8[] data, int width, int height, int stride);
 		[CCode (has_construct_function = false)]
-		public Texture.for_pixbuf (Gsk.Renderer renderer, Gdk.Pixbuf pixbuf);
+		public Texture.for_pixbuf (Gdk.Pixbuf pixbuf);
 		public int get_height ();
-		public unowned Gsk.Renderer get_renderer ();
 		public int get_width ();
 		public unowned Gsk.Texture @ref ();
 		public void unref ();
@@ -12597,6 +12596,24 @@ namespace Gtk {
 		public void set_mode (Gtk.SizeGroupMode mode);
 		public Gtk.SizeGroupMode mode { get; set; }
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
+	[Compact]
+	public class Snapshot {
+		public void append_node (Gsk.RenderNode node);
+		public bool clips_rect (Graphene.Rect bounds);
+		public void pop ();
+		public void push_node (Gsk.RenderNode node);
+		public void render_background (Gtk.StyleContext context, double x, double y, double width, double height);
+		public void render_focus (Gtk.StyleContext context, double x, double y, double width, double height);
+		public void render_frame (Gtk.StyleContext context, double x, double y, double width, double height);
+		public void render_icon (Gtk.StyleContext context, Gdk.Pixbuf pixbuf, double x, double y);
+		[Version (since = "3.90")]
+		public void render_insertion_cursor (Gtk.StyleContext context, double x, double y, Pango.Layout layout, int index, Pango.Direction direction);
+		public void render_layout (Gtk.StyleContext context, double x, double y, Pango.Layout layout);
+		public void set_transform (Graphene.Matrix transform);
+		public void transform (Graphene.Matrix matrix);
+		public void translate_2d (int x, int y);
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_spin_button_get_type ()")]
 	public class SpinButton : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.CellEditable, Gtk.Editable, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -14515,6 +14532,8 @@ namespace Gtk {
 		public void show_now ();
 		[Version (since = "3.10")]
 		public void size_allocate_with_baseline (Gtk.Allocation allocation, int baseline);
+		[NoWrapper]
+		public virtual void snapshot (Gtk.Snapshot snapshot);
 		public void style_get (...);
 		public void style_get_property (string property_name, ref GLib.Value value);
 		public void style_get_valist (string first_property_name, [CCode (type = "va_list")] va_list var_args);

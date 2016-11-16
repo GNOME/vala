@@ -2,3 +2,6 @@ value_* skip
 
 RenderNodeIter
 	.free destroys_instance
+
+Texture
+	.new_for_data.data array
