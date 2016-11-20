@@ -8,17 +8,23 @@ namespace Gst {
 		public class Sink : Gst.Base.Sink, Gst.URIHandler {
 			[CCode (has_construct_function = false)]
 			protected Sink ();
+			[Version (since = "1.12")]
+			public bool get_buffer_list_support ();
 			public Gst.Caps get_caps ();
 			public bool get_drop ();
 			public bool get_emit_signals ();
 			public uint get_max_buffers ();
 			public bool get_wait_on_eos ();
 			public bool is_eos ();
+			[Version (since = "1.12")]
+			public void set_buffer_list_support (bool enable_lists);
 			public void set_caps (Gst.Caps caps);
 			public void set_drop (bool drop);
 			public void set_emit_signals (bool emit);
 			public void set_max_buffers (uint max);
 			public void set_wait_on_eos (bool wait);
+			[NoAccessorMethod]
+			public bool buffer_list { get; set; }
 			public Gst.Caps caps { owned get; set; }
 			public bool drop { get; set; }
 			public bool emit_signals { get; set; }

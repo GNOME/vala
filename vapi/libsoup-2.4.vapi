@@ -238,6 +238,8 @@ namespace Soup {
 	public class AuthManager : GLib.Object, Soup.SessionFeature {
 		[CCode (has_construct_function = false)]
 		protected AuthManager ();
+		[Version (since = "2.58")]
+		public void clear_cached_credentials ();
 		[Version (since = "2.42")]
 		public void use_auth (Soup.URI uri, Soup.Auth auth);
 		public virtual signal void authenticate (Soup.Message msg, Soup.Auth auth, bool retrying);

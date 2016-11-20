@@ -1161,7 +1161,7 @@ namespace Gst {
 		public Gst.ClockTimeDiff base_time;
 		public Gst.Bus bus;
 		public Gst.Clock clock;
-		public weak GLib.List<void*> contexts;
+		public weak GLib.List<Gst.Context> contexts;
 		public Gst.State current_state;
 		public Gst.StateChangeReturn last_return;
 		public Gst.State next_state;

@@ -6701,9 +6701,6 @@ namespace Gdk {
 	[Version (since = "3.0")]
 	public static void cairo_set_source_rgba (Cairo.Context cr, Gdk.RGBA rgba);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Version (since = "2.24")]
-	public static void cairo_set_source_window (Cairo.Context cr, Gdk.Window window, double x, double y);
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "3.10")]
 	public static Cairo.Surface cairo_surface_create_from_pixbuf (Gdk.Pixbuf pixbuf, int scale, Gdk.Window? for_window);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6812,8 +6809,6 @@ namespace Gdk {
 	public static void parse_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[] argv);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.Pixbuf? pixbuf_get_from_surface (Cairo.Surface surface, int src_x, int src_y, int width, int height);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Gdk.Pixbuf? pixbuf_get_from_window (Gdk.Window window, int src_x, int src_y, int width, int height);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void property_change (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, int format, Gdk.PropMode mode, [CCode (array_length = false, type = "const guchar*")] uint8[] data, int nelements);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -8694,8 +8689,6 @@ namespace Gtk {
 		public void add_action_widget (Gtk.Widget child, int response_id);
 		public unowned Gtk.Widget add_button (string button_text, int response_id);
 		public void add_buttons (...);
-		[Version (deprecated = true, deprecated_since = "3.12", since = "2.14")]
-		public unowned Gtk.Widget get_action_area ();
 		[Version (since = "2.14")]
 		public unowned Gtk.Box get_content_area ();
 		[Version (since = "3.12")]
@@ -8720,6 +8713,20 @@ namespace Gtk {
 	public class DrawingArea : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DrawingArea ();
+		[Version (since = "3.90")]
+		public int get_content_height ();
+		[Version (since = "3.90")]
+		public int get_content_width ();
+		[Version (since = "3.90")]
+		public void set_content_height (int height);
+		[Version (since = "3.90")]
+		public void set_content_width (int width);
+		[Version (since = "3.90")]
+		public void set_draw_func (owned Gtk.DrawingAreaDrawFunc? draw_func);
+		[Version (since = "3.90")]
+		public int content_height { get; set; }
+		[Version (since = "3.90")]
+		public int content_width { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_entry_get_type ()")]
 	public class Entry : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.CellEditable, Gtk.Editable {
@@ -10646,6 +10653,7 @@ namespace Gtk {
 		public int get_monitor ();
 		[Version (since = "2.18")]
 		public bool get_reserve_toggle_size ();
+		[Version (since = "3.22")]
 		public void place_on_monitor (Gdk.Monitor monitor);
 		public void popdown ();
 		public void popup (Gtk.Widget? parent_menu_shell, Gtk.Widget? parent_menu_item, [CCode (delegate_target_pos = 3.5, scope = "async")] Gtk.MenuPositionFunc? func, uint button, uint32 activate_time);
@@ -12600,18 +12608,29 @@ namespace Gtk {
 	[Compact]
 	public class Snapshot {
 		public void append_node (Gsk.RenderNode node);
+		[Version (since = "3.90")]
 		public bool clips_rect (Graphene.Rect bounds);
+		[Version (since = "3.90")]
 		public void pop ();
+		[Version (since = "3.90")]
 		public void push_node (Gsk.RenderNode node);
+		[Version (since = "3.90")]
 		public void render_background (Gtk.StyleContext context, double x, double y, double width, double height);
+		[Version (since = "3.90")]
 		public void render_focus (Gtk.StyleContext context, double x, double y, double width, double height);
+		[Version (since = "3.90")]
 		public void render_frame (Gtk.StyleContext context, double x, double y, double width, double height);
+		[Version (since = "3.90")]
 		public void render_icon (Gtk.StyleContext context, Gdk.Pixbuf pixbuf, double x, double y);
 		[Version (since = "3.90")]
 		public void render_insertion_cursor (Gtk.StyleContext context, double x, double y, Pango.Layout layout, int index, Pango.Direction direction);
+		[Version (since = "3.90")]
 		public void render_layout (Gtk.StyleContext context, double x, double y, Pango.Layout layout);
+		[Version (since = "3.90")]
 		public void set_transform (Graphene.Matrix transform);
-		public void transform (Graphene.Matrix matrix);
+		[Version (since = "3.90")]
+		public void transform (Graphene.Matrix transform);
+		[Version (since = "3.90")]
 		public void translate_2d (int x, int y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_spin_button_get_type ()")]
@@ -12865,9 +12884,6 @@ namespace Gtk {
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_expander", instance_pos = 0.5)]
 		[Version (since = "3.0")]
 		public void render_expander (Cairo.Context cr, double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_extension", instance_pos = 0.5)]
-		[Version (since = "3.0")]
-		public void render_extension (Cairo.Context cr, double x, double y, double width, double height, Gtk.PositionType gap_side);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_focus", instance_pos = 0.5)]
 		[Version (since = "3.0")]
 		public void render_focus (Cairo.Context cr, double x, double y, double width, double height);
@@ -16774,6 +16790,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
 	[Version (since = "2.14")]
 	public delegate void ClipboardURIReceivedFunc (Gtk.Clipboard clipboard, [CCode (array_length = false, array_null_terminated = true)] string[] uris);
+	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 4.9)]
+	[Version (since = "3.90")]
+	public delegate void DrawingAreaDrawFunc (Gtk.DrawingArea drawing_area, Cairo.Context cr, int width, int height);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 3.9)]
 	public delegate bool EntryCompletionMatchFunc (Gtk.EntryCompletion completion, string key, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
@@ -17015,8 +17034,6 @@ namespace Gtk {
 	public const string STYLE_CLASS_FLAT;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_FRAME")]
 	public const string STYLE_CLASS_FRAME;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_GRIP")]
-	public const string STYLE_CLASS_GRIP;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_HEADER")]
 	public const string STYLE_CLASS_HEADER;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_HIGHLIGHT")]
