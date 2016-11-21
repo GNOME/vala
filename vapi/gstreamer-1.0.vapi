@@ -1296,7 +1296,7 @@ namespace Gst {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[]? get_metadata_keys ();
 		public uint get_num_pad_templates ();
-		public GLib.List<Gst.StaticPadTemplate?> get_static_pad_templates ();
+		public unowned GLib.List<Gst.StaticPadTemplate?> get_static_pad_templates ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_uri_protocols ();
 		public Gst.URIType get_uri_type ();

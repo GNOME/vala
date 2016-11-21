@@ -212,7 +212,7 @@ flow_get_name parent="Gst.FlowReturn" name="get_name" symbol_type="method" insta
 formats_contains parent="Gst.Format" name="contains"
 
 // Structs as generic type arguments
-ElementFactory.get_static_pad_templates type="GLib.List<weak Gst.StaticPadTemplate?>"
+ElementFactory.get_static_pad_templates type_arguments="Gst.StaticPadTemplate?"
 
 // Custom
 Buffer
