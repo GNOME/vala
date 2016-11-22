@@ -1,3 +1,14 @@
+Vala 0.35.1
+===========
+
+ * Add support for the \v escape character.
+ * Ignore --thread command-line option which is obsolete.
+ * Fix type checking when using generics.
+ * Use g_signal_emit where possible.
+ * Introduce [FormatArg] attribute for parameters.
+ * Use GTask API for async implementations with target-gLib >= 2.36.
+ * Bug fixes and binding updates.
+
 Vala 0.34.0
 ===========
 
