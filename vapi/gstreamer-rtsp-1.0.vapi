@@ -105,6 +105,19 @@ namespace Gst {
 			public virtual signal Gst.RTSP.Result send (void* req, void* resp);
 		}
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", has_type_id = false)]
+		[GIR (name = "RTSPAuthCredential")]
+		public struct AuthCredential {
+			public Gst.RTSP.AuthMethod scheme;
+			public Gst.RTSP.AuthParam @params;
+			public weak string authorization;
+		}
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h", has_type_id = false)]
+		[GIR (name = "RTSPAuthParam")]
+		public struct AuthParam {
+			public weak string name;
+			public weak string value;
+		}
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h", has_type_id = false)]
 		[GIR (name = "RTSPMessage")]
 		public struct Message {
 			public Gst.RTSP.MsgType type;
@@ -482,6 +495,8 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cname = "GST_RTSP_DEFAULT_PORT")]
 		public const int _DEFAULT_PORT;
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
+		public static void auth_credentials_free (Gst.RTSP.AuthCredential credentials);
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static Gst.RTSP.Result connection_accept (GLib.Socket socket, out Gst.RTSP.Connection conn, GLib.Cancellable? cancellable = null);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static Gst.RTSP.Result connection_create (Gst.RTSP.Url url, out Gst.RTSP.Connection conn);
@@ -491,6 +506,9 @@ namespace Gst {
 		public static Gst.RTSP.HeaderField find_header_field (string header);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static Gst.RTSP.Method find_method (string method);
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
+		[Version (since = "1.12")]
+		public static string generate_digest_auth_response (string? algorithm, string method, string realm, string username, string password, string uri, string nonce);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static bool header_allow_multiple (Gst.RTSP.HeaderField field);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]

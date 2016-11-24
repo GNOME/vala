@@ -5893,8 +5893,6 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		[Version (since = "3.90")]
 		public Window.popup (Gdk.Display display, int event_mask, Gdk.Rectangle position);
-		public static void process_all_updates ();
-		public void process_updates (bool update_children);
 		public void raise ();
 		public void register_dnd ();
 		public void remove_filter (Gdk.FilterFunc function);
@@ -17238,9 +17236,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.4")]
 	public static bool bindings_activate_event (GLib.Object object, Gdk.EventKey event);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "3.0")]
-	public static bool cairo_should_draw_window (Cairo.Context cr, Gdk.Window window);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.0")]
 	public static void cairo_transform_to_window (Cairo.Context cr, Gtk.Widget widget, Gdk.Window window);

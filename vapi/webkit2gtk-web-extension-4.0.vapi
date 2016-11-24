@@ -2979,6 +2979,8 @@ namespace WebKit {
 		[Version (since = "2.8")]
 		public signal bool context_menu (WebKit.ContextMenu context_menu, WebKit.WebHitTestResult hit_test_result);
 		public signal void document_loaded ();
+		[Version (since = "2.16")]
+		public signal void form_controls_associated (GLib.GenericArray<WebKit.DOM.Element> elements);
 		public signal bool send_request (WebKit.URIRequest request, WebKit.URIResponse redirected_response);
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_CONSOLE_MESSAGE_LEVEL_", has_type_id = false)]
