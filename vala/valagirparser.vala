@@ -2382,6 +2382,14 @@ public class Vala.GirParser : CodeVisitor {
 			type.nullable = true;
 		}
 		type = element_get_type (type, true, ref no_array_length, ref array_null_terminated);
+
+		// FIXME No support for fixed-size array as return-value
+		var array_type = type as ArrayType;
+		if (array_type != null && array_type.fixed_length) {
+			array_type.fixed_length = false;
+			array_type.length = null;
+		}
+
 		end_element ("return-value");
 		return type;
 	}
