@@ -114,6 +114,7 @@ namespace Gst {
 			public size_t get_out_frames (size_t in_frames);
 			public void reset ();
 			public bool samples (Gst.Audio.ConverterFlags flags, void* @in, size_t in_frames, void* @out, size_t out_frames);
+			public bool supports_inplace ();
 			public bool update_config (int in_rate, int out_rate, owned Gst.Structure? config);
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_decoder_get_type ()")]

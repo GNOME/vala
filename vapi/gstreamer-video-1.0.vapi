@@ -267,7 +267,7 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			[Version (since = "1.6")]
 			public Info ();
-			public void align (Gst.Video.Alignment align);
+			public bool align (Gst.Video.Alignment align);
 			public bool convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
 			[Version (since = "1.6")]
 			public Gst.Video.Info copy ();
@@ -276,7 +276,7 @@ namespace Gst {
 			public bool from_caps (Gst.Caps caps);
 			public void init ();
 			public bool is_equal (Gst.Video.Info other);
-			public void set_format (Gst.Video.Format format, uint width, uint height);
+			public bool set_format (Gst.Video.Format format, uint width, uint height);
 			public Gst.Caps to_caps ();
 		}
 		[CCode (cheader_filename = "gst/video/video.h", lower_case_cprefix = "gst_video_multiview_flagset_", type_id = "gst_video_multiview_flagset_get_type ()")]
