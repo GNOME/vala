@@ -6935,10 +6935,11 @@ namespace Gsk {
 		public Gsk.Renderer create_fallback (Graphene.Rect viewport, Cairo.Context cr);
 		[Version (since = "3.90")]
 		public Gsk.RenderNode create_render_node ();
+		[CCode (has_construct_function = false)]
+		[Version (since = "3.90")]
+		public Renderer.for_window (Gdk.Window window);
 		[Version (since = "3.90")]
 		public unowned Gdk.Display get_display ();
-		[Version (since = "3.90")]
-		public static Gsk.Renderer? get_for_display (Gdk.Display display);
 		[Version (since = "3.90")]
 		public int get_scale_factor ();
 		[Version (since = "3.90")]
@@ -6946,14 +6947,13 @@ namespace Gsk {
 		[Version (since = "3.90")]
 		public unowned Gdk.Window? get_window ();
 		[Version (since = "3.90")]
-		public bool realize ();
+		public bool realize (Gdk.Window window) throws GLib.Error;
 		[Version (since = "3.90")]
 		public void render (Gsk.RenderNode root, Gdk.DrawingContext context);
 		[Version (since = "3.90")]
 		public void set_scale_factor (int scale_factor);
 		[Version (since = "3.90")]
 		public void set_viewport (Graphene.Rect? viewport);
-		[Version (since = "3.90")]
 		public void set_window (Gdk.Window window);
 		[Version (since = "3.90")]
 		public void unrealize ();
@@ -8349,6 +8349,8 @@ namespace Gtk {
 		[Version (since = "2.2")]
 		public static unowned Gtk.Clipboard get_for_display (Gdk.Display display, Gdk.Atom selection);
 		public unowned GLib.Object? get_owner ();
+		[Version (since = "3.22")]
+		public Gdk.Atom get_selection ();
 		public void request_contents (Gdk.Atom target, [CCode (scope = "async")] Gtk.ClipboardReceivedFunc callback);
 		[Version (since = "2.6")]
 		public void request_image ([CCode (scope = "async")] Gtk.ClipboardImageReceivedFunc callback);
@@ -9532,7 +9534,7 @@ namespace Gtk {
 		public bool has_stencil_buffer { get; set; }
 		[Version (since = "3.22")]
 		public bool use_es { get; set; }
-		public signal Gdk.GLContext create_context ();
+		public virtual signal Gdk.GLContext create_context ();
 		public virtual signal bool render (Gdk.GLContext context);
 		public virtual signal void resize (int width, int height);
 	}
@@ -11078,7 +11080,7 @@ namespace Gtk {
 		public Gtk.PositionType tab_pos { get; set; }
 		public virtual signal bool change_current_page (int offset);
 		[Version (since = "2.12")]
-		public signal unowned Gtk.Notebook create_window (Gtk.Widget page, int x, int y);
+		public virtual signal unowned Gtk.Notebook create_window (Gtk.Widget page, int x, int y);
 		public virtual signal bool focus_tab (Gtk.NotebookTab type);
 		public virtual signal void move_focus_out (Gtk.DirectionType direction);
 		[Version (since = "2.10")]
@@ -11584,7 +11586,7 @@ namespace Gtk {
 		[Version (since = "2.10")]
 		public virtual signal void begin_print (Gtk.PrintContext context);
 		[Version (since = "2.10")]
-		public signal unowned GLib.Object create_custom_widget ();
+		public virtual signal unowned GLib.Object create_custom_widget ();
 		[Version (since = "2.10")]
 		public virtual signal void custom_widget_apply (Gtk.Widget widget);
 		[Version (since = "2.10")]
@@ -12605,11 +12607,21 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
 	[Compact]
 	public class Snapshot {
+		[Version (since = "3.90")]
+		public unowned Gsk.RenderNode append (Graphene.Rect bounds, string name, ...);
+		[Version (since = "3.90")]
+		public Cairo.Context append_cairo_node (Graphene.Rect bounds, string name, ...);
 		public void append_node (Gsk.RenderNode node);
 		[Version (since = "3.90")]
 		public bool clips_rect (Graphene.Rect bounds);
 		[Version (since = "3.90")]
+		public unowned Gsk.Renderer get_renderer ();
+		[Version (since = "3.90")]
 		public void pop ();
+		[Version (since = "3.90")]
+		public void push (Graphene.Rect bounds, string name, ...);
+		[Version (since = "3.90")]
+		public Cairo.Context push_cairo_node (Graphene.Rect bounds, string name, ...);
 		[Version (since = "3.90")]
 		public void push_node (Gsk.RenderNode node);
 		[Version (since = "3.90")]
@@ -13879,10 +13891,13 @@ namespace Gtk {
 		[Version (since = "2.2")]
 		public int count_selected_rows ();
 		public Gtk.SelectionMode get_mode ();
+		[Version (since = "2.14")]
+		public unowned Gtk.TreeSelectionFunc get_select_function ();
 		public bool get_selected (out unowned Gtk.TreeModel model, out Gtk.TreeIter iter);
 		[Version (since = "2.2")]
 		public GLib.List<Gtk.TreePath> get_selected_rows (out unowned Gtk.TreeModel model);
 		public unowned Gtk.TreeView get_tree_view ();
+		public void* get_user_data ();
 		public bool iter_is_selected (Gtk.TreeIter iter);
 		public bool path_is_selected (Gtk.TreePath path);
 		public void select_all ();

@@ -105,6 +105,9 @@ MessageDialog
 RecentChooserDialog
   .new skip=false
   .new_for_manager skip=false
+Snapshot
+  .append* skip=false
+  .push* skip=false
 StyleContext
   .get skip=false
   .get_style skip=false
@@ -238,6 +241,8 @@ RecentFilterInfo
   .groups nullable
 
 // Skipped for G-I, but usable from Vala
+Clipboard
+  .get_selection skip=false
 FlowBox
   .bind_model skip=false
   .bind_model.create_widget_func nullable
@@ -245,6 +250,11 @@ FlowBoxCreateWidgetFunc skip=false
   .item type="GLib.Object"
 IMContextSimple
   .add_table skip=false
+Snapshot
+  .get_renderer skip=false
+TreeSelection
+  .get_select_function skip=false
+  .get_user_data skip=false
 
 // Symbol name conflicts
 Container
@@ -337,6 +347,7 @@ ToolPalette
   .get_icon_size type="Gtk.IconSize"
   .set_icon_size.icon_size type="Gtk.IconSize"
 TreePath
+  .get_indices skip
   .get_indices_with_depth name="get_indices"
 tree_row_reference_reordered skip=false name="reordered" parent="Gtk.TreeRowReference"
 TreeStore
@@ -361,6 +372,7 @@ Widget
   .touch_event.event type="Gdk.EventTouch"
 TreeModel
   .get_value return_void
+  .rows_reordered skip
 BindingArg
   .d.* skip
 icon_size_*#function skip
@@ -374,6 +386,12 @@ test_init.argvp unowned
 
 // Forward upstream
 ///////////////////
+GLArea
+  .create_context skip=false
+Notebook
+  .create_window skip=false
+PrintOperation
+  .create_custom_widget skip=false
 Widget
   .drag_dest_set.targets array_length_idx=3
   .drag_source_set.targets array_length_idx=3
