@@ -78,6 +78,10 @@ public abstract class Vala.TypeRegisterFunction {
 				// avoid C warning as this function is not always used
 				fun.modifiers |= CCodeModifiers.INTERNAL | CCodeModifiers.UNUSED;
 			}
+
+			fun.is_declaration = true;
+			declaration_fragment.append (fun.copy ());
+			fun.is_declaration = false;
 		} else {
 			fun = new CCodeFunction ("%s_register_type".printf (CCodeBaseModule.get_ccode_lower_case_name (get_type_declaration ())), "GType");
 			fun.add_parameter (new CCodeParameter ("module", "GTypeModule *"));
@@ -249,10 +253,6 @@ public abstract class Vala.TypeRegisterFunction {
 		} else {
 			type_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier (type_id_name)));
 		}
-
-		fun.is_declaration = true;
-		declaration_fragment.append (fun.copy ());
-		fun.is_declaration = false;
 
 		fun.block = type_block;
 
