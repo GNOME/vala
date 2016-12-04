@@ -423,6 +423,7 @@ namespace GLib {
 		public weak GLib.Type[] param_types;
 	}
 	[CCode (get_value_function = "g_value_get_gtype", marshaller_type_name = "GTYPE", set_value_function = "g_value_set_gtype", type_id = "G_TYPE_GTYPE")]
+	[GIR (fullname = "GType")]
 	public struct Type : ulong {
 		public const GLib.Type BOXED;
 		public const GLib.Type ENUM;

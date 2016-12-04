@@ -1380,6 +1380,11 @@ public class Vala.GIRWriter : CodeVisitor {
 	}
 
 	private string? get_full_gir_name (Symbol sym) {
+		string? gir_fullname = sym.get_attribute_string ("GIR", "fullname");
+		if (gir_fullname != null) {
+			return gir_fullname;
+		}
+
 		string? gir_name = sym.get_attribute_string ("GIR", "name");
 
 		if (gir_name == null && sym is Namespace) {
@@ -1420,6 +1425,10 @@ public class Vala.GIRWriter : CodeVisitor {
 					GIRNamespace external = GIRNamespace (type_symbol.source_reference.file.gir_namespace, type_symbol.source_reference.file.gir_version);
 					if (!externals.contains (external)) {
 						externals.add (external);
+					}
+					string? gir_fullname = type_symbol.get_attribute_string ("GIR", "fullname");
+					if (gir_fullname != null) {
+						return gir_fullname;
 					}
 					var type_name = type_symbol.get_attribute_string ("GIR", "name") ?? type_symbol.name;
 					return "%s.%s".printf (type_symbol.source_reference.file.gir_namespace, type_name);
