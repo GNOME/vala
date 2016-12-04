@@ -74,7 +74,7 @@ public class Vala.UsedAttr : CodeVisitor {
 
 		"DBus", "name", "no_reply", "result", "use_string_marshalling", "value", "signature", "visible", "timeout", "",
 
-		"GIR", "name", ""
+		"GIR", "fullname", "name", ""
 
 	};
 	
