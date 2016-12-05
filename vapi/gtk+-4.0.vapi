@@ -14363,8 +14363,6 @@ namespace Gtk {
 		public unowned Gtk.WidgetPath get_path ();
 		[Version (since = "3.0")]
 		public void get_preferred_height (out int minimum_height, out int natural_height);
-		[Version (since = "3.10")]
-		public void get_preferred_height_and_baseline_for_width (int width, out int minimum_height, out int natural_height, out int minimum_baseline, out int natural_baseline);
 		[Version (since = "3.0")]
 		public void get_preferred_height_for_width (int width, out int minimum_height, out int natural_height);
 		[Version (since = "3.0")]

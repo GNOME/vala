@@ -643,7 +643,7 @@ namespace Soup {
 		public bool get_content_disposition (out string disposition, out GLib.HashTable<string,string> @params);
 		public int64 get_content_length ();
 		[Version (since = "2.26")]
-		public bool get_content_range (int64 start, int64 end, int64 total_length);
+		public bool get_content_range (out int64 start, out int64 end, out int64 total_length);
 		[Version (since = "2.26")]
 		public unowned string? get_content_type (out GLib.HashTable<string,string> @params);
 		public Soup.Encoding get_encoding ();
@@ -1355,7 +1355,8 @@ namespace Soup {
 		CERTIFICATE_TRUSTED,
 		NEW_CONNECTION,
 		IDEMPOTENT,
-		IGNORE_CONNECTION_LIMITS
+		IGNORE_CONNECTION_LIMITS,
+		DO_NOT_USE_AUTH_CACHE
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_MESSAGE_HEADERS_", type_id = "soup_message_headers_type_get_type ()")]
 	public enum MessageHeadersType {
