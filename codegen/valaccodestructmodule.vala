@@ -93,13 +93,13 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 							if (get_ccode_array_length_name (f) != null) {
 								length_cname = get_ccode_array_length_name (f);
 							} else {
-								length_cname = get_array_length_cname (f.name, dim);
+								length_cname = get_array_length_cname (get_ccode_name (f), dim);
 							}
 							instance_struct.add_field (get_ccode_name (len_type), length_cname);
 						}
 
 						if (array_type.rank == 1 && f.is_internal_symbol ()) {
-							instance_struct.add_field (get_ccode_name (len_type), get_array_size_cname (f.name));
+							instance_struct.add_field (get_ccode_name (len_type), get_array_size_cname (get_ccode_name (f)));
 						}
 					}
 				} else if (f.variable_type is DelegateType) {
@@ -108,7 +108,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 						// create field to store delegate target
 						instance_struct.add_field ("gpointer", get_ccode_delegate_target_name (f));
 						if (delegate_type.is_disposable ()) {
-							instance_struct.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (f.name));
+							instance_struct.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_ccode_name (f)));
 						}
 					}
 				}

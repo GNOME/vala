@@ -344,13 +344,13 @@ public class Vala.GTypeModule : GErrorModule {
 								if (get_ccode_array_length_name (f) != null) {
 									length_cname = get_ccode_array_length_name (f);
 								} else {
-									length_cname = get_array_length_cname (f.name, dim);
+									length_cname = get_array_length_cname (get_ccode_name (f), dim);
 								}
 								instance_struct.add_field (get_ccode_name (len_type), length_cname);
 							}
 
 							if (array_type.rank == 1 && f.is_internal_symbol ()) {
-								instance_struct.add_field (get_ccode_name (len_type), get_array_size_cname (f.name));
+								instance_struct.add_field (get_ccode_name (len_type), get_array_size_cname (get_ccode_name (f)));
 							}
 						}
 					} else if (f.variable_type is DelegateType) {
@@ -359,7 +359,7 @@ public class Vala.GTypeModule : GErrorModule {
 							// create field to store delegate target
 							instance_struct.add_field ("gpointer", get_ccode_delegate_target_name (f));
 							if (delegate_type.is_disposable ()) {
-								instance_struct.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (f.name));
+								instance_struct.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_ccode_name (f)));
 							}
 						}
 					}
@@ -450,13 +450,13 @@ public class Vala.GTypeModule : GErrorModule {
 								if (get_ccode_array_length_name (f) != null) {
 									length_cname = get_ccode_array_length_name (f);
 								} else {
-									length_cname = get_array_length_cname (f.name, dim);
+									length_cname = get_array_length_cname (get_ccode_name (f), dim);
 								}
 								instance_priv_struct.add_field (get_ccode_name (len_type), length_cname);
 							}
 
 							if (array_type.rank == 1 && f.is_internal_symbol ()) {
-								instance_priv_struct.add_field (get_ccode_name (len_type), get_array_size_cname (f.name));
+								instance_priv_struct.add_field (get_ccode_name (len_type), get_array_size_cname (get_ccode_name (f)));
 							}
 						}
 					} else if (f.variable_type is DelegateType) {
@@ -465,7 +465,7 @@ public class Vala.GTypeModule : GErrorModule {
 							// create field to store delegate target
 							instance_priv_struct.add_field ("gpointer", get_ccode_delegate_target_name (f));
 							if (delegate_type.is_disposable ()) {
-								instance_priv_struct.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (f.name));
+								instance_priv_struct.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_ccode_name (f)));
 							}
 						}
 					}
@@ -474,7 +474,7 @@ public class Vala.GTypeModule : GErrorModule {
 				if (f.get_lock_used ()) {
 					cl.has_private_fields = true;
 					// add field for mutex
-					instance_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (f.name));
+					instance_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (get_ccode_name (f)));
 				}
 			} else if (f.binding == MemberBinding.CLASS) {
 				if (f.access == SymbolAccessibility.PRIVATE) {
