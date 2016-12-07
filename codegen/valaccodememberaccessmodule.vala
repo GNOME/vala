@@ -571,7 +571,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					if (get_ccode_array_length_name (field) != null) {
 						length_cname = get_ccode_array_length_name (field);
 					} else {
-						length_cname = get_array_length_cname (field.name, dim);
+						length_cname = get_array_length_cname (get_ccode_name (field), dim);
 					}
 
 					if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
@@ -583,7 +583,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					result.append_array_length_cvalue (length_expr);
 				}
 				if (array_type.rank == 1 && field.is_internal_symbol ()) {
-					string size_cname = get_array_size_cname (field.name);
+					string size_cname = get_array_size_cname (get_ccode_name (field));
 
 					if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
 						set_array_size_cvalue (result, new CCodeMemberAccess.pointer (inst, size_cname));

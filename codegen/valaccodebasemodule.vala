@@ -2803,8 +2803,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			has_instance_fields = true;
 
 			CCodeExpression cexp; // if (cexp) return FALSE;
-			var s1 = (CCodeExpression) new CCodeMemberAccess.pointer (new CCodeIdentifier ("s1"), f.name); // s1->f
-			var s2 = (CCodeExpression) new CCodeMemberAccess.pointer (new CCodeIdentifier ("s2"), f.name); // s2->f
+			var s1 = (CCodeExpression) new CCodeMemberAccess.pointer (new CCodeIdentifier ("s1"), get_ccode_name (f)); // s1->f
+			var s2 = (CCodeExpression) new CCodeMemberAccess.pointer (new CCodeIdentifier ("s2"), get_ccode_name (f)); // s2->f
 
 			var variable_type = f.variable_type.copy ();
 			make_comparable_cexpression (ref variable_type, ref s1, ref variable_type, ref s2);
