@@ -44,6 +44,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (itype is MethodType) {
 			assert (ma != null);
 			m = ((MethodType) itype).method_symbol;
+
+			if (!get_ccode_simple_generics (m)) {
+				check_type_arguments (ma);
+			}
+
 			if (ma.inner != null && ma.inner.value_type is EnumValueType && ((EnumValueType) ma.inner.value_type).get_to_string_method() == m) {
 				// Enum.VALUE.to_string()
 				var en = (Enum) ma.inner.value_type.data_type;

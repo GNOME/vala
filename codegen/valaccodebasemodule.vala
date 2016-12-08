@@ -4427,6 +4427,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	public void check_type_arguments (MemberAccess access) {
+		foreach (var type_arg in access.get_type_arguments ()) {
+			check_type (type_arg);
+			check_type_argument (type_arg);
+		}
+	}
+
 	void check_type_argument (DataType type_arg) {
 		if (type_arg is GenericType
 		    || type_arg is PointerType

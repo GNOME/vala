@@ -79,6 +79,7 @@ TESTS = \
 	methods/bug743877.vala \
 	methods/bug771964.vala \
 	methods/bug774060.vala \
+	methods/bug775466.test \
 	methods/generics.vala \
 	methods/printf-invalid.test \
 	methods/printf-constructor.vala \

@@ -1,0 +1,9 @@
+Invalid Code
+
+void foo<T> (T a) {
+}
+
+void main () {
+	Value v = Value (typeof (int));
+	foo (v);
+}
