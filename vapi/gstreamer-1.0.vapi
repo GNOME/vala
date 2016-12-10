@@ -3059,7 +3059,7 @@ namespace Gst {
 		CUSTOM_ERROR,
 		CUSTOM_ERROR_1,
 		CUSTOM_ERROR_2;
-		[CCode (cname = "gst_flow_get_name", instance_pos = 0.5)]
+		[CCode (cname = "gst_flow_get_name")]
 		public unowned string get_name ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_FORMAT_", type_id = "gst_format_get_type ()")]

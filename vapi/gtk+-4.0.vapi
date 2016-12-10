@@ -6913,11 +6913,11 @@ namespace Gsk {
 		public RenderNode.border (Gsk.RoundedRect outline, float border_width, Gdk.RGBA border_color);
 		[CCode (cname = "gsk_cairo_node_new", has_construct_function = false)]
 		public RenderNode.cairo (Graphene.Rect bounds);
-		[CCode (cname = "gsk_cairo_node_get_draw_context", instance_pos = 0.5)]
+		[CCode (cname = "gsk_cairo_node_get_draw_context")]
 		public Cairo.Context cairo_node_get_draw_context (Gsk.Renderer? renderer);
 		[CCode (cname = "gsk_clip_node_new", has_construct_function = false)]
 		public RenderNode.clip (Gsk.RenderNode child, Graphene.Rect clip);
-		[CCode (cname = "gsk_clip_node_get_child", instance_pos = 0.5)]
+		[CCode (cname = "gsk_clip_node_get_child")]
 		public unowned Gsk.RenderNode clip_node_get_child ();
 		[CCode (cname = "gsk_color_node_new", has_construct_function = false)]
 		public RenderNode.color (Gdk.RGBA rgba, Graphene.Rect bounds);
@@ -6925,9 +6925,9 @@ namespace Gsk {
 		public RenderNode.color_matrix (Gsk.RenderNode child, Graphene.Matrix color_matrix, Graphene.Vec4 color_offset);
 		[CCode (cname = "gsk_container_node_new", has_construct_function = false)]
 		public RenderNode.container ([CCode (array_length_cname = "n_children", array_length_pos = 1.1, array_length_type = "guint")] Gsk.RenderNode[] children);
-		[CCode (cname = "gsk_container_node_get_child", instance_pos = 0.5)]
+		[CCode (cname = "gsk_container_node_get_child")]
 		public Gsk.RenderNode container_node_get_child (uint idx);
-		[CCode (cname = "gsk_container_node_get_n_children", instance_pos = 0.5)]
+		[CCode (cname = "gsk_container_node_get_n_children")]
 		public uint container_node_get_n_children ();
 		[CCode (cname = "gsk_cross_fade_node_new", has_construct_function = false)]
 		public RenderNode.cross_fade (Gsk.RenderNode start, Gsk.RenderNode end, double progress);
@@ -6942,7 +6942,7 @@ namespace Gsk {
 		public RenderNode.linear_gradient (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize", type = "const GskColorStop*")] Gsk.ColorStop[] color_stops);
 		[CCode (cname = "gsk_opacity_node_new", has_construct_function = false)]
 		public RenderNode.opacity (Gsk.RenderNode child, double opacity);
-		[CCode (cname = "gsk_opacity_node_get_child", instance_pos = 0.5)]
+		[CCode (cname = "gsk_opacity_node_get_child")]
 		public unowned Gsk.RenderNode opacity_node_get_child ();
 		[CCode (cname = "gsk_outset_shadow_node_new", has_construct_function = false)]
 		public RenderNode.outset_shadow (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
@@ -6953,7 +6953,7 @@ namespace Gsk {
 		public RenderNode.repeating_linear_gradient (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize", type = "const GskColorStop*")] Gsk.ColorStop[] color_stops);
 		[CCode (cname = "gsk_rounded_clip_node_new", has_construct_function = false)]
 		public RenderNode.rounded_clip (Gsk.RenderNode child, Gsk.RoundedRect clip);
-		[CCode (cname = "gsk_rounded_clip_node_get_child", instance_pos = 0.5)]
+		[CCode (cname = "gsk_rounded_clip_node_get_child")]
 		public unowned Gsk.RenderNode rounded_clip_node_get_child ();
 		public GLib.Bytes serialize ();
 		public void set_name (string? name);
@@ -6962,7 +6962,7 @@ namespace Gsk {
 		public RenderNode.shadow (Gsk.RenderNode child, [CCode (array_length_cname = "n_shadows", array_length_pos = 2.1, array_length_type = "gsize")] Gsk.Shadow[] shadows);
 		[CCode (cname = "gsk_transform_node_new", has_construct_function = false)]
 		public RenderNode.transform (Gsk.RenderNode child, Graphene.Matrix transform);
-		[CCode (cname = "gsk_transform_node_get_child", instance_pos = 0.5)]
+		[CCode (cname = "gsk_transform_node_get_child")]
 		public unowned Gsk.RenderNode transform_node_get_child ();
 		public void unref ();
 		public bool write_to_file (string filename) throws GLib.Error;
@@ -12980,55 +12980,55 @@ namespace Gtk {
 		public void remove_provider (Gtk.StyleProvider provider);
 		[Version (since = "3.0")]
 		public static void remove_provider_for_screen (Gdk.Screen screen, Gtk.StyleProvider provider);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_activity", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_activity")]
 		[Version (since = "3.0")]
 		public void render_activity (Cairo.Context cr, double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_arrow", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_arrow")]
 		[Version (since = "3.0")]
 		public void render_arrow (Cairo.Context cr, double angle, double x, double y, double size);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_background", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_background")]
 		[Version (since = "3.0.")]
 		public void render_background (Cairo.Context cr, double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_background_get_clip", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_background_get_clip")]
 		[Version (since = "3.20")]
 		public Gdk.Rectangle render_background_get_clip (double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_check", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_check")]
 		[Version (since = "3.0")]
 		public void render_check (Cairo.Context cr, double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_expander", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_expander")]
 		[Version (since = "3.0")]
 		public void render_expander (Cairo.Context cr, double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_focus", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_focus")]
 		[Version (since = "3.0")]
 		public void render_focus (Cairo.Context cr, double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_frame", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_frame")]
 		[Version (since = "3.0")]
 		public void render_frame (Cairo.Context cr, double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_frame_gap", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_frame_gap")]
 		[Version (since = "3.0")]
 		public void render_frame_gap (Cairo.Context cr, double x, double y, double width, double height, Gtk.PositionType gap_side, double xy0_gap, double xy1_gap);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_handle", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_handle")]
 		[Version (since = "3.0")]
 		public void render_handle (Cairo.Context cr, double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_icon", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_icon")]
 		[Version (since = "3.2")]
 		public void render_icon (Cairo.Context cr, Gdk.Pixbuf pixbuf, double x, double y);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_icon_surface", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_icon_surface")]
 		[Version (since = "3.10")]
 		public void render_icon_surface (Cairo.Context cr, Cairo.Surface surface, double x, double y);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_insertion_cursor", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_insertion_cursor")]
 		[Version (since = "3.4")]
 		public void render_insertion_cursor (Cairo.Context cr, double x, double y, Pango.Layout layout, int index, Pango.Direction direction);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_layout", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_layout")]
 		[Version (since = "3.0")]
 		public void render_layout (Cairo.Context cr, double x, double y, Pango.Layout layout);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_line", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_line")]
 		[Version (since = "3.0")]
 		public void render_line (Cairo.Context cr, double x0, double y0, double x1, double y1);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_option", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_option")]
 		[Version (since = "3.0")]
 		public void render_option (Cairo.Context cr, double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_slider", instance_pos = 0.5)]
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_slider")]
 		[Version (since = "3.0")]
 		public void render_slider (Cairo.Context cr, double x, double y, double width, double height, Gtk.Orientation orientation);
 		[Version (since = "3.0")]
