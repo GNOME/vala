@@ -1,0 +1,21 @@
+* skip=false
+info_new skip
+
+CallbackInfo base_type="GI.CallableInfo"
+FunctionInfo base_type="GI.CallableInfo"
+SignalInfo base_type="GI.CallableInfo"
+VFuncInfo base_type="GI.CallableInfo"
+
+nvokeError errordomain name="InvokeError"
+RepositoryError errordomain
+
+Repository
+  .error_quark parent="GI.RepositoryError" name="quark"
+  .dump throws="GI.RepositoryError"
+  .load_typelib throws="GI.RepositoryError"
+  .require throws="GI.RepositoryError"
+Typelib
+  .symbol.symbol out
+
+*_info_* symbol_type="method" instance_idx=0
+*_info_invoke throws="GI.InvokeError"
