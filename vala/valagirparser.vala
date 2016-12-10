@@ -3145,6 +3145,18 @@ public class Vala.GirParser : CodeVisitor {
 			s.set_attribute_string ("CCode", "finish_name", metadata.get_string (ArgumentType.FINISH_NAME));
 		}
 
+		int instance_idx = -2;
+		if (element_name == "function" && symbol_type == "method") {
+			if (metadata.has_argument (ArgumentType.INSTANCE_IDX)) {
+				instance_idx = metadata.get_integer (ArgumentType.INSTANCE_IDX);
+				if (instance_idx != 0) {
+					s.set_attribute_double ("CCode", "instance_pos", instance_idx + 0.5);
+				}
+			} else {
+				Report.error (get_current_src (), "instance_idx required when converting function to method");
+			}
+		}
+
 		var parameters = new ArrayList<ParameterInfo> ();
 		current.array_length_parameters = new ArrayList<int> ();
 		current.closure_parameters = new ArrayList<int> ();
@@ -3153,9 +3165,17 @@ public class Vala.GirParser : CodeVisitor {
 			start_element ("parameters");
 			next ();
 
+			var current_parameter_idx = -1;
 			while (current_token == MarkupTokenType.START_ELEMENT) {
+				current_parameter_idx++;
+
 				if (reader.name == "instance-parameter" &&
 				    !(symbol_type == "function" || symbol_type == "constructor")) {
+					skip_element ();
+					continue;
+				}
+
+				if (instance_idx > -2 && instance_idx == current_parameter_idx) {
 					skip_element ();
 					continue;
 				}
@@ -3172,12 +3192,21 @@ public class Vala.GirParser : CodeVisitor {
 				default_param_name = "arg%d".printf (parameters.size);
 				var param = parse_parameter (out array_length_idx, out closure_idx, out destroy_idx, out scope, out param_comment, default_param_name);
 				if (array_length_idx != -1) {
+					if (instance_idx > -2 && instance_idx < array_length_idx) {
+						array_length_idx--;
+					}
 					current.array_length_parameters.add (array_length_idx);
 				}
 				if (closure_idx != -1) {
+					if (instance_idx > -2 && instance_idx < closure_idx) {
+						closure_idx--;
+					}
 					current.closure_parameters.add (closure_idx);
 				}
 				if (destroy_idx != -1) {
+					if (instance_idx > -2 && instance_idx < destroy_idx) {
+						destroy_idx--;
+					}
 					current.destroy_parameters.add (destroy_idx);
 				}
 				if (param_comment != null) {
@@ -3216,16 +3245,6 @@ public class Vala.GirParser : CodeVisitor {
 				} else {
 					break;
 				}
-			}
-		}
-
-		if (element_name == "function" && symbol_type == "method") {
-			if (metadata.has_argument (ArgumentType.INSTANCE_IDX)) {
-				int instance_pos = metadata.get_integer (ArgumentType.INSTANCE_IDX);
-				s.set_attribute_double ("CCode", "instance_pos", instance_pos + 0.5);
-				parameters.remove_at (instance_pos);
-			} else {
-				Report.error (get_current_src (), "instance_idx required when converting function to method");
 			}
 		}
 
