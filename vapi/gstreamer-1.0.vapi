@@ -2485,6 +2485,8 @@ namespace Gst {
 		public unowned string get_fragment ();
 		[Version (since = "1.6")]
 		public unowned string get_host ();
+		[Version (since = "1.12")]
+		public GLib.HashTable<string,string> get_media_fragment_table ();
 		[Version (since = "1.6")]
 		public string get_path ();
 		[Version (since = "1.6")]

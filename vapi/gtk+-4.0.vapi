@@ -5110,6 +5110,19 @@ namespace Gdk {
 		[Version (since = "3.20")]
 		public signal void drop_performed (int time);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_draw_context_get_type ()")]
+	public abstract class DrawContext : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected DrawContext ();
+		[Version (since = "3.90")]
+		public unowned Gdk.Display? get_display ();
+		[Version (since = "3.90")]
+		public unowned Gdk.Window? get_window ();
+		[Version (since = "3.90")]
+		public Gdk.Display display { get; }
+		[Version (since = "3.90")]
+		public Gdk.Window window { get; construct; }
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_drawing_context_get_type ()")]
 	public class DrawingContext : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -5118,12 +5131,16 @@ namespace Gdk {
 		public unowned Cairo.Context get_cairo_context ();
 		[Version (since = "3.22")]
 		public Cairo.Region? get_clip ();
+		[Version (since = "3.90")]
+		public unowned Gdk.DrawContext get_paint_context ();
 		[Version (since = "3.22")]
 		public unowned Gdk.Window get_window ();
 		[Version (since = "3.22")]
 		public bool is_valid ();
 		[Version (since = "3.22")]
 		public Cairo.Region clip { owned get; construct; }
+		[Version (since = "3.90")]
+		public Gdk.DrawContext paint_context { get; construct; }
 		[Version (since = "3.22")]
 		public Gdk.Window window { get; construct; }
 	}
@@ -5572,13 +5589,14 @@ namespace Gdk {
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_gl_context_get_type ()")]
-	public abstract class GLContext : GLib.Object {
+	public abstract class GLContext : Gdk.DrawContext {
 		[CCode (has_construct_function = false)]
 		protected GLContext ();
 		[Version (since = "3.16")]
 		public static void clear_current ();
 		[Version (since = "3.16")]
 		public static unowned Gdk.GLContext? get_current ();
+		public Cairo.Region get_damage ();
 		[Version (since = "3.16")]
 		public bool get_debug_enabled ();
 		[Version (since = "3.16")]
@@ -5610,11 +5628,7 @@ namespace Gdk {
 		[Version (since = "3.22")]
 		public void set_use_es (int use_es);
 		[Version (since = "3.16")]
-		public Gdk.Display display { get; construct; }
-		[Version (since = "3.16")]
 		public Gdk.GLContext shared_context { get; construct; }
-		[Version (since = "3.16")]
-		public Gdk.Window window { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_keymap_get_type ()")]
 	public class Keymap : GLib.Object {
@@ -5754,6 +5768,15 @@ namespace Gdk {
 		[Version (since = "2.22")]
 		public Gdk.VisualType get_visual_type ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_vulkan_context_get_type ()")]
+	public abstract class VulkanContext : Gdk.DrawContext, GLib.Initable {
+		[CCode (has_construct_function = false)]
+		protected VulkanContext ();
+		public uint32 get_draw_index ();
+		public uint32 get_n_images ();
+		public uint32 get_queue_family_index ();
+		public signal void images_updated ();
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_window_get_type ()")]
 	public class Window : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -5762,7 +5785,7 @@ namespace Gdk {
 		[Version (since = "2.12")]
 		public void beep ();
 		[Version (since = "3.22")]
-		public unowned Gdk.DrawingContext begin_draw_frame (Cairo.Region region);
+		public unowned Gdk.DrawingContext begin_draw_frame (Gdk.DrawContext? context, Cairo.Region region);
 		public void begin_move_drag (int button, int root_x, int root_y, uint32 timestamp);
 		[Version (since = "3.4")]
 		public void begin_move_drag_for_device (Gdk.Device device, int button, int root_x, int root_y, uint32 timestamp);
@@ -5783,6 +5806,8 @@ namespace Gdk {
 		public Cairo.ImageSurface create_similar_image_surface (int format, int width, int height, int scale);
 		[Version (since = "2.22")]
 		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
+		[Version (since = "3.90")]
+		public Gdk.VulkanContext create_vulkan_context () throws GLib.Error;
 		public void deiconify ();
 		[DestroysInstance]
 		public void destroy ();
@@ -5879,7 +5904,6 @@ namespace Gdk {
 		public bool is_viewable ();
 		public bool is_visible ();
 		public void lower ();
-		[Version (since = "3.16")]
 		public void mark_paint_from_clip (Cairo.Context cr);
 		public void maximize ();
 		[Version (since = "2.10")]
@@ -6636,6 +6660,13 @@ namespace Gdk {
 		LINK_FAILED;
 		public static GLib.Quark quark ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_VULKAN_ERROR_")]
+	[Version (since = "3.90")]
+	public errordomain VulkanError {
+		UNSUPPORTED,
+		NOT_AVAILABLE;
+		public static GLib.Quark quark ();
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 1.9)]
 	public delegate void EventFunc (Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 2.9)]
@@ -6935,6 +6966,7 @@ namespace Gsk {
 		public Gsk.Renderer create_fallback (Graphene.Rect viewport, Cairo.Context cr);
 		[Version (since = "3.90")]
 		public Gsk.RenderNode create_render_node ();
+		public void end_draw_frame (Gdk.DrawingContext context);
 		[CCode (has_construct_function = false)]
 		[Version (since = "3.90")]
 		public Renderer.for_window (Gdk.Window window);
@@ -12608,7 +12640,7 @@ namespace Gtk {
 	[Compact]
 	public class Snapshot {
 		[Version (since = "3.90")]
-		public unowned Gsk.RenderNode append (Graphene.Rect bounds, string name, ...);
+		public Gsk.RenderNode append (Graphene.Rect bounds, string name, ...);
 		[Version (since = "3.90")]
 		public Cairo.Context append_cairo_node (Graphene.Rect bounds, string name, ...);
 		public void append_node (Gsk.RenderNode node);
@@ -14258,14 +14290,6 @@ namespace Gtk {
 		public void add_mnemonic_label (Gtk.Widget label);
 		[Version (since = "3.8")]
 		public uint add_tick_callback (owned Gtk.TickCallback callback);
-		[NoWrapper]
-		public virtual void adjust_baseline_allocation (int baseline);
-		[NoWrapper]
-		public virtual void adjust_baseline_request (int minimum_baseline, int natural_baseline);
-		[NoWrapper]
-		public virtual void adjust_size_allocation (Gtk.Orientation orientation, ref int minimum_size, ref int natural_size, ref int allocated_pos, ref int allocated_size);
-		[NoWrapper]
-		public virtual void adjust_size_request (Gtk.Orientation orientation, ref int minimum_size, ref int natural_size);
 		[CCode (cname = "gtk_widget_class_bind_template_callback_full")]
 		[Version (since = "3.10")]
 		public class void bind_template_callback_full (string callback_name, [CCode (scope = "async")] GLib.Callback callback_symbol);

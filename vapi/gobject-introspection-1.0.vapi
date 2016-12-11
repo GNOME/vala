@@ -54,7 +54,7 @@ namespace GI {
 		public static int get_n_args (GI.CallableInfo info);
 		public static unowned string get_return_attribute (GI.CallableInfo info, string name);
 		public static GI.TypeInfo get_return_type (GI.CallableInfo info);
-		public static bool invoke (GI.CallableInfo info, void* function, GI.Argument in_args, int n_in_args, GI.Argument out_args, int n_out_args, GI.Argument return_value, bool is_method, bool @throws) throws GLib.Error;
+		public static bool invoke (GI.CallableInfo info, void* function, [CCode (array_length_cname = "n_in_args", array_length_pos = 3.5)] GI.Argument[] in_args, [CCode (array_length_cname = "n_out_args", array_length_pos = 4.5)] GI.Argument[] out_args, GI.Argument return_value, bool is_method, bool @throws) throws GLib.Error;
 		[Version (since = "1.34")]
 		public static bool is_method (GI.CallableInfo info);
 		public static bool iterate_return_attributes (GI.CallableInfo info, ref GI.AttributeIter iterator, out unowned string name, out unowned string value);

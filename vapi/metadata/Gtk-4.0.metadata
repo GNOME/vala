@@ -37,9 +37,6 @@ Range
 TextView
   .create_buffer unowned=false skip=false
 Widget
-  .adjust_size_allocation.*_size ref
-  .adjust_size_allocation.allocated_pos ref
-  .adjust_size_request.*_size ref
   .compute_expand#virtual_method.* out
   .dispatch_child_properties_changed.pspecs array array_length_idx=0
 RecentChooser
