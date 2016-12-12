@@ -6967,9 +6967,9 @@ namespace Gsk {
 		[Version (since = "3.90")]
 		public Gsk.RenderNode create_render_node ();
 		public void end_draw_frame (Gdk.DrawingContext context);
-		[CCode (has_construct_function = false)]
+		[CCode (cname = "gsk_renderer_new_for_window")]
 		[Version (since = "3.90")]
-		public Renderer.for_window (Gdk.Window window);
+		public static Gsk.Renderer? for_window (Gdk.Window window);
 		[Version (since = "3.90")]
 		public unowned Gdk.Display get_display ();
 		[Version (since = "3.90")]

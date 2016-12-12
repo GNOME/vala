@@ -1,5 +1,9 @@
 value_* skip
 
+Renderer
+	// Factory method
+	.new_for_window symbol_type="function" name="for_window"
+
 RenderNodeIter
 	.free destroys_instance
 
