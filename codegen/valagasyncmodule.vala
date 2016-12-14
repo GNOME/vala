@@ -33,6 +33,9 @@ public class Vala.GAsyncModule : GtkModule {
 
 		if (context.require_glib_version (2, 36)) {
 			data.add_field ("GTask*", "_async_result");
+			if (!context.require_glib_version (2, 44)) {
+				data.add_field ("gboolean", "_task_complete_");
+			}
 		} else {
 			data.add_field ("GSimpleAsyncResult*", "_async_result");
 		}
@@ -262,6 +265,16 @@ public class Vala.GAsyncModule : GtkModule {
 		if (!context.require_glib_version (2, 36)) {
 			attach_data_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_set_op_res_gpointer"));
 		} else {
+			if (!context.require_glib_version (2, 44)) {
+				var task_completed_var = new CCodeMemberAccess.pointer (data_var, "_task_complete_");
+				var callback = new CCodeIdentifier ("_callback_");
+				var callback_is_null = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, callback, new CCodeConstant ("NULL"));
+
+				ccode.open_if (callback_is_null);
+				ccode.add_assignment (task_completed_var, new CCodeConstant ("TRUE"));
+				ccode.close ();
+			}
+
 			attach_data_call = new CCodeFunctionCall (new CCodeIdentifier ("g_task_set_task_data"));
 		}
 
@@ -593,6 +606,11 @@ public class Vala.GAsyncModule : GtkModule {
 				return_default_value (return_type);
 				ccode.close ();
 			}
+
+			if (!context.require_glib_version (2, 44)) {
+				var task_completed_var = new CCodeMemberAccess.pointer (data_var, "_task_complete_");
+				ccode.add_assignment (task_completed_var, new CCodeConstant ("TRUE"));
+			}
 		} else {
 			var simple_async_result_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_SIMPLE_ASYNC_RESULT"));
 			simple_async_result_cast.add_argument (new CCodeIdentifier ("_res_"));
@@ -682,6 +700,10 @@ public class Vala.GAsyncModule : GtkModule {
 		ccode.add_assignment (new CCodeIdentifier ("_data_"), new CCodeIdentifier ("_user_data_"));
 		ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_source_object_"), new CCodeIdentifier ("source_object"));
 		ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"), new CCodeIdentifier ("_res_"));
+
+		if (context.require_glib_version (2, 36) && !context.require_glib_version (2, 44)) {
+			ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_task_complete_"), new CCodeConstant ("TRUE"));
+		}
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (m) + "_co"));
 		ccall.add_argument (new CCodeIdentifier ("_data_"));
