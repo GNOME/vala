@@ -124,18 +124,19 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public void complete_async () {
-		var async_result_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_async_result");
+		var data_var = new CCodeIdentifier ("_data_");
+		var async_result_expr = new CCodeMemberAccess.pointer (data_var, "_async_result");
 
 		if (context.require_glib_version (2, 36)) {
 			var finish_call = new CCodeFunctionCall (new CCodeIdentifier ("g_task_return_pointer"));
 			finish_call.add_argument (async_result_expr);
-			finish_call.add_argument (new CCodeIdentifier ("_data_"));
+			finish_call.add_argument (data_var);
 			finish_call.add_argument (new CCodeConstant ("NULL"));
 			ccode.add_expression (finish_call);
 
 			// Preserve the "complete now" behavior if state != 0, do so by
 			//  iterating the GTask's main context till the task is complete.
-			var state = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_");
+			var state = new CCodeMemberAccess.pointer (data_var, "_state_");
 			var zero = new CCodeConstant ("0");
 			var state_is_not_zero = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, state, zero);
 			ccode.open_if (state_is_not_zero);
@@ -147,7 +148,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				task_complete.add_argument (async_result_expr);
 				task_is_complete = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, task_complete, new CCodeConstant ("TRUE"));
 			} else {
-				var task_complete = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_task_complete_");
+				var task_complete = new CCodeMemberAccess.pointer (data_var, "_task_complete_");
 				task_is_complete = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, task_complete, new CCodeConstant ("TRUE"));
 			}
 
@@ -162,7 +163,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 			ccode.close ();
 		} else {
-			var state = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_");
+			var state = new CCodeMemberAccess.pointer (data_var, "_state_");
 			var zero = new CCodeConstant ("0");
 			var state_is_zero = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, state, zero);
 			ccode.open_if (state_is_zero);

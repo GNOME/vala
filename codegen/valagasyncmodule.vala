@@ -696,17 +696,19 @@ public class Vala.GAsyncModule : GtkModule {
 
 		push_function (readyfunc);
 
+		var data_var = new CCodeIdentifier ("_data_");
+
 		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("_data_"));
-		ccode.add_assignment (new CCodeIdentifier ("_data_"), new CCodeIdentifier ("_user_data_"));
-		ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_source_object_"), new CCodeIdentifier ("source_object"));
-		ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"), new CCodeIdentifier ("_res_"));
+		ccode.add_assignment (data_var, new CCodeIdentifier ("_user_data_"));
+		ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "_source_object_"), new CCodeIdentifier ("source_object"));
+		ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "_res_"), new CCodeIdentifier ("_res_"));
 
 		if (context.require_glib_version (2, 36) && !context.require_glib_version (2, 44)) {
-			ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_task_complete_"), new CCodeConstant ("TRUE"));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "_task_complete_"), new CCodeConstant ("TRUE"));
 		}
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (m) + "_co"));
-		ccall.add_argument (new CCodeIdentifier ("_data_"));
+		ccall.add_argument (data_var);
 		ccode.add_expression (ccall);
 
 		readyfunc.modifiers |= CCodeModifiers.STATIC;
