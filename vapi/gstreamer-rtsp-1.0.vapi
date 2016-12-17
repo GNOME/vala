@@ -3,6 +3,21 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstRtsp", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace RTSP {
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_rtsp_auth_credential_get_type ()")]
+		[Compact]
+		[GIR (name = "RTSPAuthCredential")]
+		public class AuthCredential {
+			public weak string authorization;
+			public weak Gst.RTSP.AuthParam @params;
+			public Gst.RTSP.AuthMethod scheme;
+		}
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_rtsp_auth_param_get_type ()")]
+		[Compact]
+		[GIR (name = "RTSPAuthParam")]
+		public class AuthParam {
+			public weak string name;
+			public weak string value;
+		}
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "RTSPConnection")]
@@ -105,19 +120,6 @@ namespace Gst {
 			public virtual signal Gst.RTSP.Result send (void* req, void* resp);
 		}
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", has_type_id = false)]
-		[GIR (name = "RTSPAuthCredential")]
-		public struct AuthCredential {
-			public Gst.RTSP.AuthMethod scheme;
-			public Gst.RTSP.AuthParam @params;
-			public weak string authorization;
-		}
-		[CCode (cheader_filename = "gst/rtsp/rtsp.h", has_type_id = false)]
-		[GIR (name = "RTSPAuthParam")]
-		public struct AuthParam {
-			public weak string name;
-			public weak string value;
-		}
-		[CCode (cheader_filename = "gst/rtsp/rtsp.h", has_type_id = false)]
 		[GIR (name = "RTSPMessage")]
 		public struct Message {
 			public Gst.RTSP.MsgType type;
@@ -150,6 +152,8 @@ namespace Gst {
 			public Gst.RTSP.Result init_data (uint8 channel);
 			public Gst.RTSP.Result init_request (Gst.RTSP.Method method, string uri);
 			public Gst.RTSP.Result init_response (Gst.RTSP.StatusCode code, string? reason, Gst.RTSP.Message? request);
+			[Version (since = "1.12")]
+			public Gst.RTSP.AuthCredential parse_auth_credentials (Gst.RTSP.HeaderField field);
 			public Gst.RTSP.Result parse_data (out uint8 channel);
 			public Gst.RTSP.Result parse_request (out Gst.RTSP.Method method, out string uri, out Gst.RTSP.Version version);
 			public Gst.RTSP.Result parse_response (out Gst.RTSP.StatusCode code, out string reason, out Gst.RTSP.Version version);
@@ -495,6 +499,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cname = "GST_RTSP_DEFAULT_PORT")]
 		public const int _DEFAULT_PORT;
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
+		[Version (since = "1.12")]
 		public static void auth_credentials_free (Gst.RTSP.AuthCredential credentials);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static Gst.RTSP.Result connection_accept (GLib.Socket socket, out Gst.RTSP.Connection conn, GLib.Cancellable? cancellable = null);

@@ -29,7 +29,8 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static Gst.DebugLevel get_default_threshold ();
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static string get_stack_trace ();
+		[Version (since = "1.12")]
+		public static string get_stack_trace (Gst.StackTraceFlags flags);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool is_active ();
 		[CCode (cheader_filename = "gst/gst.h")]
@@ -675,7 +676,6 @@ namespace Gst {
 		public bool is_all_memory_writable ();
 		[Version (since = "1.4")]
 		public bool is_memory_range_writable (uint idx, int length);
-		public unowned Gst.Meta? iterate_meta (void* state);
 		public bool map (out Gst.MapInfo info, Gst.MapFlags flags);
 		public bool map_range (uint idx, int length, out Gst.MapInfo info, Gst.MapFlags flags);
 		public int memcmp (size_t offset, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] mem);
@@ -1351,7 +1351,7 @@ namespace Gst {
 		public void parse_segment (out unowned Gst.Segment segment);
 		public void parse_segment_done (out Gst.Format format, out int64 position);
 		[Version (since = "1.10")]
-		public void parse_select_streams (out GLib.List<char> streams);
+		public void parse_select_streams (out GLib.List<string> streams);
 		public void parse_sink_message (out Gst.Message msg);
 		public void parse_step (out Gst.Format format, out uint64 amount, out double rate, out bool flush, out bool intermediate);
 		[Version (since = "1.10")]
@@ -1381,7 +1381,7 @@ namespace Gst {
 		public Event.segment_done (Gst.Format format, int64 position);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.10")]
-		public Event.select_streams (GLib.List<char> streams);
+		public Event.select_streams (GLib.List<string> streams);
 		[Version (since = "1.2")]
 		public void set_group_id (uint group_id);
 		[Version (since = "1.4")]
@@ -3410,6 +3410,11 @@ namespace Gst {
 		SEGMENT,
 		TRICKMODE_KEY_UNITS,
 		TRICKMODE_NO_AUDIO
+	}
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STACK_TRACE_SHOW_", type_id = "gst_stack_trace_flags_get_type ()")]
+	[Flags]
+	public enum StackTraceFlags {
+		FULL
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STATE_", type_id = "gst_state_get_type ()")]
 	public enum State {

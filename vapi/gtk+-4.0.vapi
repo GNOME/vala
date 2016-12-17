@@ -5813,8 +5813,6 @@ namespace Gdk {
 		public void destroy ();
 		[Version (since = "3.22")]
 		public void end_draw_frame (Gdk.DrawingContext context);
-		[Version (since = "2.18")]
-		public bool ensure_native ();
 		public void focus (uint32 timestamp);
 		public void freeze_updates ();
 		[Version (since = "2.2")]
@@ -5920,7 +5918,6 @@ namespace Gdk {
 		public void raise ();
 		public void register_dnd ();
 		public void remove_filter (Gdk.FilterFunc function);
-		public void reparent (Gdk.Window new_parent, int x, int y);
 		public void resize (int width, int height);
 		[Version (since = "2.18")]
 		public void restack (Gdk.Window? sibling, bool above);

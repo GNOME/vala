@@ -839,7 +839,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_from_mask")]
 		public static bool audio_channel_positions_from_mask (uint64 channel_mask, [CCode (array_length_cname = "channels", array_length_pos = 0.5)] Gst.Audio.ChannelPosition[] position);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_to_mask")]
-		public static bool audio_channel_positions_to_mask ([CCode (array_length_cname = "channels", array_length_pos = 1.5)] Gst.Audio.ChannelPosition[] position, bool force_order, [CCode (array_length = false)] uint64[] channel_mask);
+		public static bool audio_channel_positions_to_mask ([CCode (array_length_cname = "channels", array_length_pos = 1.5)] Gst.Audio.ChannelPosition[] position, bool force_order, out uint64 channel_mask);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_to_string")]
 		public static string audio_channel_positions_to_string ([CCode (array_length_cname = "channels", array_length_pos = 1.1)] Gst.Audio.ChannelPosition[] position);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_to_valid_order")]
