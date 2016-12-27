@@ -1,0 +1,136 @@
+Packages: gio-2.0
+D-Bus
+
+Program: client
+
+[DBus (name = "org.example.Test")]
+public interface Test : Object {
+	public abstract string test_property { owned get; set; }
+
+	public signal void test_signal (int i);
+
+	public abstract int test_method (int j, int k) throws IOError;
+}
+
+[DBus (name = "org.example.Test")]
+public interface TestRaw : Object {
+	[DBus (signature = "s")]
+	public abstract Variant test_property { owned get; set; }
+
+	public signal void test_signal ([DBus (signature = "i")] Variant i);
+
+	[DBus (signature = "i")]
+	public abstract Variant test_method ([DBus (signature = "i")] Variant j, [DBus (signature = "i")] Variant k) throws IOError;
+}
+
+void test_raw (TestRaw test) {
+	var main_loop = new MainLoop ();
+
+	var id = test.test_signal.connect ((var_i) => {
+		var i = (int) var_i;
+		assert (i == 46);
+		main_loop.quit ();
+	});
+
+	int j = (int) test.test_method (23, 11);
+	assert (j == 42);
+
+	main_loop.run ();
+	test.disconnect (id);
+
+	test.test_property = "hello";
+	var s = (string) test.test_property;
+	assert (s == "hello");
+}
+
+void test (Test test) {
+	var main_loop = new MainLoop ();
+
+	var id = test.test_signal.connect ((i) => {
+		assert (i == 46);
+		main_loop.quit ();
+	});
+
+	int j = test.test_method (23, 11);
+	assert (j == 42);
+
+	main_loop.run ();
+	test.disconnect (id);
+
+	test.test_property = "hello";
+	var s = test.test_property;
+	assert (s == "hello");
+}
+
+void main () {
+	// raw variant server, standard client
+	Test test1 = Bus.get_proxy_sync (BusType.SESSION, "org.example.Test", "/org/example/testraw", DBusProxyFlags.DO_NOT_LOAD_PROPERTIES);
+	test (test1);
+
+	// standard server, raw variant client
+	TestRaw test2 = Bus.get_proxy_sync (BusType.SESSION, "org.example.Test", "/org/example/test", DBusProxyFlags.DO_NOT_LOAD_PROPERTIES);
+	test_raw (test2);
+
+	// raw variant server, raw variant client
+	TestRaw test3 = Bus.get_proxy_sync (BusType.SESSION, "org.example.Test", "/org/example/testraw", DBusProxyFlags.DO_NOT_LOAD_PROPERTIES);
+	test_raw (test3);
+}
+
+Program: server
+
+[DBus (name = "org.example.Test")]
+public class Test : Object {
+	public string test_property { owned get; set; }
+
+	public signal void test_signal (int i);
+
+	public int test_method (int j, int k) {
+		assert (j == 23);
+		assert (k == 11);
+		test_signal (46);
+		return 42;
+	}
+}
+
+[DBus (name = "org.example.Test")]
+public class TestRaw : Object {
+	[DBus (signature = "s")]
+	public Variant test_property { owned get; set; }
+
+	public signal void test_signal ([DBus (signature = "i")] Variant i);
+
+	[DBus (signature = "i")]
+	public Variant test_method ([DBus (signature = "i")] Variant j, [DBus (signature = "i")] Variant k) {
+		assert ((int) j == 23);
+		assert ((int) k == 11);
+		test_signal (46);
+		return 42;
+	}
+}
+
+MainLoop main_loop;
+
+void client_exit (Pid pid, int status) {
+	// client finished, terminate server
+	assert (status == 0);
+	main_loop.quit ();
+}
+
+void main () {
+	var conn = Bus.get_sync (BusType.SESSION);
+	conn.register_object ("/org/example/test", new Test ());
+	conn.register_object ("/org/example/testraw", new TestRaw ());
+
+	// try to register service in session bus
+	var request_result = conn.call_sync ("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "RequestName",
+	                                      new Variant ("(su)", "org.example.Test", 0x4), null, 0, -1);
+	assert ((uint) request_result.get_child_value (0) == 1);
+
+	// server ready, spawn client
+	Pid client_pid;
+	Process.spawn_async (null, { "test", "/dbus/rawvariants/client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
+	ChildWatch.add (client_pid, client_exit);
+
+	main_loop = new MainLoop ();
+	main_loop.run ();
+}

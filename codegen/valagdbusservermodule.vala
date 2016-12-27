@@ -491,15 +491,21 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			}
 		}
 
-		var reply_expr = serialize_expression (prop.get_accessor.value_type, new CCodeIdentifier ("result"));
-
 		ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator ("_reply"));
-		ccode.add_assignment (new CCodeIdentifier ("_reply"), reply_expr);
 
-		if (requires_destroy (prop.get_accessor.value_type)) {
-			// keep local alive (symbol_reference is weak)
-			var local = new LocalVariable (prop.get_accessor.value_type, ".result");
-			ccode.add_expression (destroy_local (local));
+		if (get_dbus_signature (prop) != null) {
+			// raw GVariant
+			ccode.add_assignment (new CCodeIdentifier ("_reply"), new CCodeIdentifier("result"));
+		} else {
+			var reply_expr = serialize_expression (prop.get_accessor.value_type, new CCodeIdentifier ("result"));
+
+			ccode.add_assignment (new CCodeIdentifier ("_reply"), reply_expr);
+
+			if (requires_destroy (prop.get_accessor.value_type)) {
+				// keep local alive (symbol_reference is weak)
+				var local = new LocalVariable (prop.get_accessor.value_type, ".result");
+				ccode.add_expression (destroy_local (local));
+			}
 		}
 
 		ccode.add_return (new CCodeIdentifier ("_reply"));
@@ -546,15 +552,20 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		}
 
 		var target = new CCodeIdentifier ("value");
-		var expr = deserialize_expression (prop.property_type, new CCodeIdentifier ("_value"), target);
-		ccode.add_assignment (target, expr);
 
-		ccode.add_expression (ccall);
+		if (get_dbus_signature (prop) != null) {
+			ccode.add_assignment (target, new CCodeIdentifier("_value"));
+			ccode.add_expression (ccall);
+		} else {
+			var expr = deserialize_expression (prop.property_type, new CCodeIdentifier ("_value"), target);
+			ccode.add_assignment (target, expr);
+			ccode.add_expression (ccall);
 
-		if (requires_destroy (owned_type)) {
-			// keep local alive (symbol_reference is weak)
-			var local = new LocalVariable (owned_type, "value");
-			ccode.add_expression (destroy_local (local));
+			if (requires_destroy (owned_type)) {
+				// keep local alive (symbol_reference is weak)
+				var local = new LocalVariable (owned_type, "value");
+				ccode.add_expression (destroy_local (local));
+			}
 		}
 
 		pop_function ();

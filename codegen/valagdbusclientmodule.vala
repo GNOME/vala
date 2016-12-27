@@ -1045,26 +1045,33 @@ public class Vala.GDBusClientModule : GDBusModule {
 		} else {
 			ccode.add_declaration (get_ccode_name (prop.get_accessor.value_type), new CCodeVariableDeclarator ("_result"));
 
-			if (array_type != null) {
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					ccode.add_declaration ("int", new CCodeVariableDeclarator ("_result_length%d".printf (dim), new CCodeConstant ("0")));
+			if (get_dbus_signature (prop) != null) {
+				// raw GVariant
+				ccode.add_assignment (new CCodeIdentifier ("_result"), new CCodeIdentifier("_inner_reply"));
+			} else {
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						ccode.add_declaration ("int", new CCodeVariableDeclarator ("_result_length%d".printf (dim), new CCodeConstant ("0")));
+					}
 				}
-			}
 
-			var result = deserialize_expression (prop.get_accessor.value_type, new CCodeIdentifier ("_inner_reply"), new CCodeIdentifier ("_result"));
-			ccode.add_assignment (new CCodeIdentifier ("_result"), result);
+				var result = deserialize_expression (prop.get_accessor.value_type, new CCodeIdentifier ("_inner_reply"), new CCodeIdentifier ("_result"));
+				ccode.add_assignment (new CCodeIdentifier ("_result"), result);
 
-			if (array_type != null) {
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					// TODO check that parameter is not NULL (out parameters are optional)
-					ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length%d".printf (dim))), new CCodeIdentifier ("_result_length%d".printf (dim)));
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						// TODO check that parameter is not NULL (out parameters are optional)
+						ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length%d".printf (dim))), new CCodeIdentifier ("_result_length%d".printf (dim)));
+					}
 				}
 			}
 		}
 
-		unref_reply = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_unref"));
-		unref_reply.add_argument (new CCodeIdentifier ("_inner_reply"));
-		ccode.add_expression (unref_reply);
+		if (prop.property_type.is_real_non_null_struct_type () || get_dbus_signature (prop) == null) {
+			unref_reply = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_unref"));
+			unref_reply.add_argument (new CCodeIdentifier ("_inner_reply"));
+			ccode.add_expression (unref_reply);
+		}
 
 		if (prop.property_type.is_real_non_null_struct_type ()) {
 			ccode.add_return ();
