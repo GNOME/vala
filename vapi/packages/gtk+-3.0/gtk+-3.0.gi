@@ -13209,6 +13209,14 @@
 					<parameter name="idx" type="gint"/>
 				</parameters>
 			</method>
+			<method name="get_child_at_pos" symbol="gtk_flow_box_get_child_at_pos">
+				<return-type type="GtkFlowBoxChild*"/>
+				<parameters>
+					<parameter name="box" type="GtkFlowBox*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+				</parameters>
+			</method>
 			<method name="get_column_spacing" symbol="gtk_flow_box_get_column_spacing">
 				<return-type type="guint"/>
 				<parameters>
@@ -36490,16 +36498,16 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="2105"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="2206"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="5"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_FULL" type="char*" value="full"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="5"/>
-		<constant name="GTK_MINOR_VERSION" type="int" value="21"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="6"/>
+		<constant name="GTK_MINOR_VERSION" type="int" value="22"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
 		<constant name="GTK_PAPER_NAME_A5" type="char*" value="iso_a5"/>
