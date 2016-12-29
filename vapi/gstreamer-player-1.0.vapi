@@ -13,7 +13,6 @@ namespace Gst {
 		[Version (since = "1.12")]
 		public void config_set_seek_accurate (bool accurate);
 		public static void config_set_user_agent (Gst.Structure config, string agent);
-		public static unowned GLib.List<Gst.PlayerAudioInfo> get_audio_streams (Gst.PlayerMediaInfo info);
 		public int64 get_audio_video_offset ();
 		public double get_color_balance (Gst.PlayerColorBalanceType type);
 		public Gst.Structure get_config ();
@@ -31,10 +30,8 @@ namespace Gst {
 		public Gst.Element get_pipeline ();
 		public Gst.ClockTime get_position ();
 		public double get_rate ();
-		public static unowned GLib.List<Gst.PlayerSubtitleInfo> get_subtitle_streams (Gst.PlayerMediaInfo info);
 		public string get_subtitle_uri ();
 		public string get_uri ();
-		public static unowned GLib.List<Gst.PlayerVideoInfo> get_video_streams (Gst.PlayerMediaInfo info);
 		public double get_volume ();
 		public bool has_color_balance ();
 		public void pause ();
@@ -119,13 +116,24 @@ namespace Gst {
 	public class PlayerMediaInfo : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected PlayerMediaInfo ();
+		public unowned GLib.List<Gst.PlayerAudioInfo> get_audio_streams ();
 		public unowned string get_container_format ();
 		public Gst.ClockTime get_duration ();
 		public unowned Gst.Sample get_image_sample ();
+		[Version (since = "1.12")]
+		public uint get_number_of_audio_streams ();
+		[Version (since = "1.12")]
+		public uint get_number_of_streams ();
+		[Version (since = "1.12")]
+		public uint get_number_of_subtitle_streams ();
+		[Version (since = "1.12")]
+		public uint get_number_of_video_streams ();
 		public unowned GLib.List<Gst.PlayerStreamInfo> get_stream_list ();
+		public unowned GLib.List<Gst.PlayerSubtitleInfo> get_subtitle_streams ();
 		public unowned Gst.TagList get_tags ();
 		public unowned string get_title ();
 		public unowned string get_uri ();
+		public unowned GLib.List<Gst.PlayerVideoInfo> get_video_streams ();
 		public bool is_live ();
 		public bool is_seekable ();
 	}

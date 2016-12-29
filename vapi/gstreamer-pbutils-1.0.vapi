@@ -308,6 +308,8 @@ namespace Gst {
 		public const string ENCODING_CATEGORY_CAPTURE;
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GST_ENCODING_CATEGORY_DEVICE")]
 		public const string ENCODING_CATEGORY_DEVICE;
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GST_ENCODING_CATEGORY_FILE_EXTENSION")]
+		public const string ENCODING_CATEGORY_FILE_EXTENSION;
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GST_ENCODING_CATEGORY_ONLINE_SERVICE")]
 		public const string ENCODING_CATEGORY_ONLINE_SERVICE;
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GST_ENCODING_CATEGORY_STORAGE_EDITING")]
