@@ -136,7 +136,6 @@ TreeModel
 // Abstract vs. virtual
 CellRenderer
   .get_size#virtual_method abstract
-  .render#virtual_method abstract
 TreeModel
   .iter_previous#virtual_method virtual
   .ref_node#virtual_method virtual
@@ -247,8 +246,6 @@ FlowBoxCreateWidgetFunc skip=false
   .item type="GLib.Object"
 IMContextSimple
   .add_table skip=false
-Snapshot
-  .get_renderer skip=false
 TreeSelection
   .get_select_function skip=false
   .get_user_data skip=false

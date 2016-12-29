@@ -6064,6 +6064,10 @@ namespace Gdk {
 		public void free ();
 		[Version (since = "3.0")]
 		public uint hash ();
+		[Version (since = "3.90")]
+		public bool is_clear ();
+		[Version (since = "3.90")]
+		public bool is_opaque ();
 		[Version (since = "3.0")]
 		public bool parse (string spec);
 		[Version (since = "3.0")]
@@ -6903,66 +6907,70 @@ namespace Gsk {
 	public class RenderNode {
 		[CCode (has_construct_function = false)]
 		protected RenderNode ();
-		public unowned Gsk.RenderNode append_child (Gsk.RenderNode child);
-		public bool contains (Gsk.RenderNode descendant);
-		public Cairo.Context get_draw_context (Gsk.Renderer? renderer);
-		public unowned Gsk.RenderNode get_first_child ();
-		public unowned Gsk.RenderNode get_last_child ();
-		public uint get_n_children ();
+		[CCode (cname = "gsk_blend_node_new", has_construct_function = false)]
+		public RenderNode.blend (Gsk.RenderNode bottom, Gsk.RenderNode top, Gsk.BlendMode blend_mode);
+		[CCode (cname = "gsk_border_node_new", has_construct_function = false)]
+		public RenderNode.border (Gsk.RoundedRect outline, float border_width, Gdk.RGBA border_color);
+		[CCode (cname = "gsk_cairo_node_new", has_construct_function = false)]
+		public RenderNode.cairo (Graphene.Rect bounds);
+		[CCode (cname = "gsk_cairo_node_get_draw_context", instance_pos = 0.5)]
+		public Cairo.Context cairo_node_get_draw_context (Gsk.Renderer? renderer);
+		[CCode (cname = "gsk_clip_node_new", has_construct_function = false)]
+		public RenderNode.clip (Gsk.RenderNode child, Graphene.Rect clip);
+		[CCode (cname = "gsk_clip_node_get_child", instance_pos = 0.5)]
+		public unowned Gsk.RenderNode clip_node_get_child ();
+		[CCode (cname = "gsk_color_node_new", has_construct_function = false)]
+		public RenderNode.color (Gdk.RGBA rgba, Graphene.Rect bounds);
+		[CCode (cname = "gsk_color_matrix_node_new", has_construct_function = false)]
+		public RenderNode.color_matrix (Gsk.RenderNode child, Graphene.Matrix color_matrix, Graphene.Vec4 color_offset);
+		[CCode (cname = "gsk_container_node_new", has_construct_function = false)]
+		public RenderNode.container ([CCode (array_length_cname = "n_children", array_length_pos = 1.1, array_length_type = "guint")] Gsk.RenderNode[] children);
+		[CCode (cname = "gsk_container_node_get_child", instance_pos = 0.5)]
+		public Gsk.RenderNode container_node_get_child (uint idx);
+		[CCode (cname = "gsk_container_node_get_n_children", instance_pos = 0.5)]
+		public uint container_node_get_n_children ();
+		[CCode (cname = "gsk_cross_fade_node_new", has_construct_function = false)]
+		public RenderNode.cross_fade (Gsk.RenderNode start, Gsk.RenderNode end, double progress);
+		public static Gsk.RenderNode? deserialize (GLib.Bytes bytes) throws GLib.Error;
+		public void draw (Cairo.Context cr);
+		public Graphene.Rect get_bounds ();
 		public unowned string? get_name ();
-		public unowned Gsk.RenderNode get_next_sibling ();
-		public unowned Gsk.RenderNode get_parent ();
-		public unowned Gsk.RenderNode get_previous_sibling ();
-		public unowned Gsk.RenderNode insert_child_after (Gsk.RenderNode child, Gsk.RenderNode? sibling);
-		public unowned Gsk.RenderNode insert_child_at_pos (Gsk.RenderNode child, int index_);
-		public unowned Gsk.RenderNode insert_child_before (Gsk.RenderNode child, Gsk.RenderNode? sibling);
-		public bool is_hidden ();
-		public bool is_opaque ();
-		public unowned Gsk.RenderNode prepend_child (Gsk.RenderNode child);
+		public Gsk.RenderNodeType get_node_type ();
+		[CCode (cname = "gsk_inset_shadow_node_new", has_construct_function = false)]
+		public RenderNode.inset_shadow (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
+		[CCode (cname = "gsk_linear_gradient_node_new", has_construct_function = false)]
+		public RenderNode.linear_gradient (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize", type = "const GskColorStop*")] Gsk.ColorStop[] color_stops);
+		[CCode (cname = "gsk_opacity_node_new", has_construct_function = false)]
+		public RenderNode.opacity (Gsk.RenderNode child, double opacity);
+		[CCode (cname = "gsk_opacity_node_get_child", instance_pos = 0.5)]
+		public unowned Gsk.RenderNode opacity_node_get_child ();
+		[CCode (cname = "gsk_outset_shadow_node_new", has_construct_function = false)]
+		public RenderNode.outset_shadow (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
 		public unowned Gsk.RenderNode @ref ();
-		public unowned Gsk.RenderNode remove_all_children ();
-		public unowned Gsk.RenderNode remove_child (Gsk.RenderNode child);
-		public unowned Gsk.RenderNode replace_child (Gsk.RenderNode new_child, Gsk.RenderNode old_child);
-		public void set_anchor_point (Graphene.Point3D offset);
-		public void set_blend_mode (Gsk.BlendMode blend_mode);
-		public void set_bounds (Graphene.Rect? bounds);
-		public void set_hidden (bool hidden);
+		[CCode (cname = "gsk_repeat_node_new", has_construct_function = false)]
+		public RenderNode.repeat (Graphene.Rect bounds, Gsk.RenderNode child, Graphene.Rect child_bounds);
+		[CCode (cname = "gsk_repeating_linear_gradient_node_new", has_construct_function = false)]
+		public RenderNode.repeating_linear_gradient (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize", type = "const GskColorStop*")] Gsk.ColorStop[] color_stops);
+		[CCode (cname = "gsk_rounded_clip_node_new", has_construct_function = false)]
+		public RenderNode.rounded_clip (Gsk.RenderNode child, Gsk.RoundedRect clip);
+		[CCode (cname = "gsk_rounded_clip_node_get_child", instance_pos = 0.5)]
+		public unowned Gsk.RenderNode rounded_clip_node_get_child ();
+		public GLib.Bytes serialize ();
 		public void set_name (string? name);
-		public void set_opacity (double opacity);
-		public void set_opaque (bool opaque);
 		public void set_scaling_filter (Gsk.ScalingFilter min_filter, Gsk.ScalingFilter mag_filter);
-		public void set_texture (Gsk.Texture texture);
-		public void set_transform (Graphene.Matrix? transform);
+		[CCode (cname = "gsk_shadow_node_new", has_construct_function = false)]
+		public RenderNode.shadow (Gsk.RenderNode child, [CCode (array_length_cname = "n_shadows", array_length_pos = 2.1, array_length_type = "gsize")] Gsk.Shadow[] shadows);
+		[CCode (cname = "gsk_transform_node_new", has_construct_function = false)]
+		public RenderNode.transform (Gsk.RenderNode child, Graphene.Matrix transform);
+		[CCode (cname = "gsk_transform_node_get_child", instance_pos = 0.5)]
+		public unowned Gsk.RenderNode transform_node_get_child ();
 		public void unref ();
-	}
-	[CCode (cheader_filename = "gsk/gsk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gsk_render_node_iter_get_type ()")]
-	[Compact]
-	public class RenderNodeIter {
-		[CCode (has_construct_function = false)]
-		[Version (since = "3.90")]
-		public RenderNodeIter ();
-		[DestroysInstance]
-		[Version (since = "3.90")]
-		public void free ();
-		[Version (since = "3.90")]
-		public void init (Gsk.RenderNode node);
-		[Version (since = "3.90")]
-		public bool is_valid ();
-		[Version (since = "3.90")]
-		public bool next (out unowned Gsk.RenderNode child);
-		[Version (since = "3.90")]
-		public bool prev (out unowned Gsk.RenderNode child);
-		[Version (since = "3.90")]
-		public void remove ();
+		public bool write_to_file (string filename) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_renderer_get_type ()")]
 	public abstract class Renderer : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Renderer ();
-		[Version (since = "3.90")]
-		public Gsk.Renderer create_fallback (Graphene.Rect viewport, Cairo.Context cr);
-		[Version (since = "3.90")]
-		public Gsk.RenderNode create_render_node ();
 		public void end_draw_frame (Gdk.DrawingContext context);
 		[CCode (cname = "gsk_renderer_new_for_window")]
 		[Version (since = "3.90")]
@@ -6980,10 +6988,11 @@ namespace Gsk {
 		[Version (since = "3.90")]
 		public void render (Gsk.RenderNode root, Gdk.DrawingContext context);
 		[Version (since = "3.90")]
+		public Gsk.Texture render_texture (Gsk.RenderNode root, Graphene.Rect? viewport);
+		[Version (since = "3.90")]
 		public void set_scale_factor (int scale_factor);
 		[Version (since = "3.90")]
 		public void set_viewport (Graphene.Rect? viewport);
-		public void set_window (Gdk.Window window);
 		[Version (since = "3.90")]
 		public void unrealize ();
 		[Version (since = "3.90")]
@@ -6997,18 +7006,50 @@ namespace Gsk {
 		public Graphene.Rect viewport { get; set; }
 		public Gdk.Window window { get; construct; }
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", ref_function = "gsk_texture_ref", type_id = "gsk_texture_get_type ()", unref_function = "gsk_texture_unref")]
-	[Compact]
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_texture_get_type ()")]
 	[Version (since = "3.90")]
-	public class Texture {
+	public abstract class Texture : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Texture ();
+		public void download (uint8 data, size_t stride);
 		[CCode (has_construct_function = false)]
 		public Texture.for_data ([CCode (array_length = false, type = "const guchar*")] uint8[] data, int width, int height, int stride);
 		[CCode (has_construct_function = false)]
 		public Texture.for_pixbuf (Gdk.Pixbuf pixbuf);
 		public int get_height ();
 		public int get_width ();
-		public unowned Gsk.Texture @ref ();
-		public void unref ();
+		public Gsk.RenderNode node_new (Graphene.Rect bounds);
+		public int height { get; construct; }
+		public int width { get; construct; }
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", has_type_id = false)]
+	public struct ColorStop {
+		public double offset;
+		public Gdk.RGBA color;
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", has_type_id = false)]
+	[Version (since = "3.90")]
+	public struct RoundedRect {
+		public Graphene.Rect bounds;
+		[CCode (array_length = false)]
+		public weak Graphene.Size corner[4];
+		public bool contains_point (Graphene.Point point);
+		public bool contains_rect (Graphene.Rect rect);
+		public unowned Gsk.RoundedRect? init (Graphene.Rect bounds, Graphene.Size top_left, Graphene.Size top_right, Graphene.Size bottom_right, Graphene.Size bottom_left);
+		public unowned Gsk.RoundedRect? init_copy (Gsk.RoundedRect src);
+		public unowned Gsk.RoundedRect? init_from_rect (Graphene.Rect bounds, float radius);
+		public bool intersects_rect (Graphene.Rect rect);
+		public bool is_rectilinear ();
+		public unowned Gsk.RoundedRect? normalize ();
+		public unowned Gsk.RoundedRect? offset (float dx, float dy);
+		public unowned Gsk.RoundedRect? shrink (float top, float right, float bottom, float left);
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", has_type_id = false)]
+	public struct Shadow {
+		public Gdk.RGBA color;
+		public float dx;
+		public float dy;
+		public float radius;
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_BLEND_MODE_", has_type_id = false)]
 	[Version (since = "3.90")]
@@ -7024,7 +7065,41 @@ namespace Gsk {
 		HARD_LIGHT,
 		SOFT_LIGHT,
 		DIFFERENCE,
-		EXCLUSION
+		EXCLUSION,
+		COLOR,
+		HUE,
+		SATURATION,
+		LUMINOSITY
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_CORNER_", has_type_id = false)]
+	public enum Corner {
+		TOP_LEFT,
+		TOP_RIGHT,
+		BOTTOM_RIGHT,
+		BOTTOM_LEFT
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_", has_type_id = false)]
+	[Version (since = "3.90")]
+	public enum RenderNodeType {
+		NOT_A_RENDER_NODE,
+		CONTAINER_NODE,
+		CAIRO_NODE,
+		COLOR_NODE,
+		LINEAR_GRADIENT_NODE,
+		REPEATING_LINEAR_GRADIENT_NODE,
+		BORDER_NODE,
+		TEXTURE_NODE,
+		INSET_SHADOW_NODE,
+		OUTSET_SHADOW_NODE,
+		TRANSFORM_NODE,
+		OPACITY_NODE,
+		COLOR_MATRIX_NODE,
+		REPEAT_NODE,
+		CLIP_NODE,
+		ROUNDED_CLIP_NODE,
+		SHADOW_NODE,
+		BLEND_NODE,
+		CROSS_FADE_NODE
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SCALING_FILTER_", has_type_id = false)]
 	[Version (since = "3.90")]
@@ -7032,6 +7107,13 @@ namespace Gsk {
 		LINEAR,
 		NEAREST,
 		TRILINEAR
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SERIALIZATION_")]
+	public errordomain SerializationError {
+		UNSUPPORTED_FORMAT,
+		UNSUPPORTED_VERSION,
+		INVALID_DATA;
+		public static GLib.Quark quark ();
 	}
 }
 [CCode (cprefix = "Gtk", gir_namespace = "Gtk", gir_version = "4.0", lower_case_cprefix = "gtk_")]
@@ -7871,13 +7953,13 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public void remove_focus_sibling (Gtk.CellRenderer renderer, Gtk.CellRenderer sibling);
 		[Version (since = "3.0")]
-		public virtual void render (Gtk.CellAreaContext context, Gtk.Widget widget, Cairo.Context cr, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags, bool paint_focus);
-		[Version (since = "3.0")]
 		public void request_renderer (Gtk.CellRenderer renderer, Gtk.Orientation orientation, Gtk.Widget widget, int for_size, out int minimum_size, out int natural_size);
 		[NoWrapper]
 		public virtual void set_cell_property (Gtk.CellRenderer renderer, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
 		[Version (since = "3.0")]
 		public void set_focus_cell (Gtk.CellRenderer renderer);
+		[Version (since = "3.90")]
+		public virtual void snapshot (Gtk.CellAreaContext context, Gtk.Widget widget, Gtk.Snapshot snapshot, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags, bool paint_focus);
 		[Version (since = "3.0")]
 		public void stop_editing (bool canceled);
 		[Version (since = "3.0")]
@@ -7985,7 +8067,6 @@ namespace Gtk {
 		public bool get_visible ();
 		[Version (since = "3.0")]
 		public bool is_activatable ();
-		public abstract void render (Cairo.Context cr, Gtk.Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
 		[CCode (cname = "gtk_cell_renderer_class_set_accessible_type")]
 		public class void set_accessible_type (GLib.Type type);
 		[Version (since = "2.18")]
@@ -7997,6 +8078,8 @@ namespace Gtk {
 		public void set_sensitive (bool sensitive);
 		[Version (since = "2.18")]
 		public void set_visible (bool visible);
+		[Version (since = "3.90")]
+		public virtual void snapshot (Gtk.Snapshot snapshot, Gtk.Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
 		public virtual unowned Gtk.CellEditable? start_editing (Gdk.Event? event, Gtk.Widget widget, string path, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
 		[Version (since = "2.6")]
 		public void stop_editing (bool canceled);
@@ -8288,8 +8371,6 @@ namespace Gtk {
 		public bool get_fit_model ();
 		[Version (since = "2.16")]
 		public unowned Gtk.TreeModel? get_model ();
-		[Version (since = "3.0")]
-		public void set_background_rgba (Gdk.RGBA rgba);
 		[Version (since = "2.6")]
 		public void set_displayed_row (Gtk.TreePath? path);
 		[Version (since = "3.0")]
@@ -8310,13 +8391,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.6")]
 		public CellView.with_text (string text);
-		[NoAccessorMethod]
-		public string background { set; }
-		[NoAccessorMethod]
-		[Version (since = "3.0")]
-		public Gdk.RGBA background_rgba { get; set; }
-		[NoAccessorMethod]
-		public bool background_set { get; set; }
 		[NoAccessorMethod]
 		public Gtk.CellArea cell_area { owned get; construct; }
 		[NoAccessorMethod]
@@ -8340,8 +8414,6 @@ namespace Gtk {
 	public class CheckMenuItem : Gtk.MenuItem, Atk.Implementor, Gtk.Actionable, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CheckMenuItem ();
-		[NoWrapper]
-		public virtual void draw_indicator (Cairo.Context cr);
 		public bool get_active ();
 		[Version (since = "2.4")]
 		public bool get_draw_as_radio ();
@@ -8350,6 +8422,8 @@ namespace Gtk {
 		[Version (since = "2.4")]
 		public void set_draw_as_radio (bool draw_as_radio);
 		public void set_inconsistent (bool setting);
+		[NoWrapper]
+		public virtual void snapshot_indicator (Gtk.Snapshot snapshot);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CheckMenuItem.with_label (string label);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -8654,6 +8728,7 @@ namespace Gtk {
 		public void set_focus_chain (GLib.List<Gtk.Widget> focusable_widgets);
 		public void set_focus_hadjustment (Gtk.Adjustment adjustment);
 		public void set_focus_vadjustment (Gtk.Adjustment adjustment);
+		public void snapshot_child (Gtk.Widget child, Gtk.Snapshot snapshot);
 		public void unset_focus_chain ();
 		[HasEmitter]
 		public virtual signal void add (Gtk.Widget widget);
@@ -9356,6 +9431,8 @@ namespace Gtk {
 		public bool get_activate_on_single_click ();
 		[Version (since = "3.12")]
 		public unowned Gtk.FlowBoxChild? get_child_at_index (int idx);
+		[Version (since = "3.22.6")]
+		public unowned Gtk.FlowBoxChild? get_child_at_pos (int x, int y);
 		[Version (since = "3.12")]
 		public uint get_column_spacing ();
 		[Version (since = "3.12")]
@@ -12637,22 +12714,26 @@ namespace Gtk {
 	[Compact]
 	public class Snapshot {
 		[Version (since = "3.90")]
-		public Gsk.RenderNode append (Graphene.Rect bounds, string name, ...);
-		[Version (since = "3.90")]
 		public Cairo.Context append_cairo_node (Graphene.Rect bounds, string name, ...);
+		public void append_color_node (Gdk.RGBA color, Graphene.Rect bounds, string name, ...);
 		public void append_node (Gsk.RenderNode node);
+		public void append_texture_node (Gsk.Texture texture, Graphene.Rect bounds, string name, ...);
 		[Version (since = "3.90")]
 		public bool clips_rect (Graphene.Rect bounds);
+		public void get_offset (out double x, out double y);
 		[Version (since = "3.90")]
-		public unowned Gsk.Renderer get_renderer ();
+		public Gsk.RenderNode? pop ();
 		[Version (since = "3.90")]
-		public void pop ();
+		public void pop_and_append ();
 		[Version (since = "3.90")]
-		public void push (Graphene.Rect bounds, string name, ...);
-		[Version (since = "3.90")]
-		public Cairo.Context push_cairo_node (Graphene.Rect bounds, string name, ...);
-		[Version (since = "3.90")]
-		public void push_node (Gsk.RenderNode node);
+		public void push (bool keep_coordinates, string name, ...);
+		public void push_clip (Graphene.Rect bounds, string name, ...);
+		public void push_color_matrix (Graphene.Matrix color_matrix, Graphene.Vec4 color_offset, string name, ...);
+		public void push_opacity (double opacity, string name, ...);
+		public void push_repeat (Graphene.Rect bounds, Graphene.Rect child_bounds, string name, ...);
+		public void push_rounded_clip (Gsk.RoundedRect bounds, string name, ...);
+		public void push_shadow (Gsk.Shadow shadow, size_t n_shadows, string name, ...);
+		public void push_transform (Graphene.Matrix transform, string name, ...);
 		[Version (since = "3.90")]
 		public void render_background (Gtk.StyleContext context, double x, double y, double width, double height);
 		[Version (since = "3.90")]
@@ -12665,10 +12746,6 @@ namespace Gtk {
 		public void render_insertion_cursor (Gtk.StyleContext context, double x, double y, Pango.Layout layout, int index, Pango.Direction direction);
 		[Version (since = "3.90")]
 		public void render_layout (Gtk.StyleContext context, double x, double y, Pango.Layout layout);
-		[Version (since = "3.90")]
-		public void set_transform (Graphene.Matrix transform);
-		[Version (since = "3.90")]
-		public void transform (Graphene.Matrix transform);
 		[Version (since = "3.90")]
 		public void translate_2d (int x, int y);
 	}
@@ -12870,8 +12947,6 @@ namespace Gtk {
 		[Version (since = "3.8")]
 		public unowned Gdk.FrameClock? get_frame_clock ();
 		[Version (since = "3.0")]
-		public Gtk.JunctionSides get_junction_sides ();
-		[Version (since = "3.0")]
 		public Gtk.Border get_margin ();
 		[Version (since = "3.0")]
 		public Gtk.Border get_padding ();
@@ -12964,8 +13039,6 @@ namespace Gtk {
 		public void save ();
 		[Version (since = "3.8")]
 		public void set_frame_clock (Gdk.FrameClock frame_clock);
-		[Version (since = "3.0")]
-		public void set_junction_sides (Gtk.JunctionSides sides);
 		[Version (since = "3.4")]
 		public void set_parent (Gtk.StyleContext? parent);
 		[Version (since = "3.0")]
@@ -16012,13 +16085,12 @@ namespace Gtk {
 		SIZE_REQUEST,
 		NO_CSS_CACHE,
 		BASELINES,
-		PIXEL_CACHE,
-		NO_PIXEL_CACHE,
 		INTERACTIVE,
 		TOUCHSCREEN,
 		ACTIONS,
 		RESIZE,
-		LAYOUT
+		LAYOUT,
+		SNAPSHOT
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DELETE_", type_id = "gtk_delete_type_get_type ()")]
 	public enum DeleteType {
@@ -16168,19 +16240,6 @@ namespace Gtk {
 		NAME,
 		PASSWORD,
 		PIN
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_JUNCTION_", type_id = "gtk_junction_sides_get_type ()")]
-	[Flags]
-	public enum JunctionSides {
-		NONE,
-		CORNER_TOPLEFT,
-		CORNER_TOPRIGHT,
-		CORNER_BOTTOMLEFT,
-		CORNER_BOTTOMRIGHT,
-		TOP,
-		BOTTOM,
-		LEFT,
-		RIGHT
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_JUSTIFY_", type_id = "gtk_justification_get_type ()")]
 	public enum Justification {
