@@ -2170,6 +2170,7 @@ namespace Gtk {
 		public void bind_model (GLib.ListModel? model, owned Gtk.FlowBoxCreateWidgetFunc? create_widget_func);
 		public bool get_activate_on_single_click ();
 		public unowned Gtk.FlowBoxChild? get_child_at_index (int idx);
+		public unowned Gtk.FlowBoxChild? get_child_at_pos (int x, int y);
 		public uint get_column_spacing ();
 		public bool get_homogeneous ();
 		public uint get_max_children_per_line ();
