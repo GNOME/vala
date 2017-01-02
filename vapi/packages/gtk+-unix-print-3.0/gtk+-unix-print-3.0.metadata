@@ -1,0 +1,18 @@
+Gtk cheader_filename="gtk/gtkunixprint.h" gir_namespace="Gtk" gir_version="3.0" cprefix="Gtk" lower_case_cprefix="gtk_"
+
+gtk_print_job_send.callback transfer_ownership="1"
+gtk_print_job_send.dnotify hidden="1"
+gtk_print_unix_dialog_get_settings transfer_ownership="1"
+gtk_printer_accepts_pdf name="get_accepts_pdf"
+gtk_printer_accepts_ps name="get_accepts_ps"
+gtk_printer_get_default_page_size transfer_ownership="1"
+gtk_printer_is_virtual name="get_is_virtual"
+gtk_printer_list_papers transfer_ownership="1" type_name="GLib.List<Gtk.PageSetup>"
+GtkPrintJobCompleteFunc hidden="1"
+gtk_enumerate_printers.func transfer_ownership="1"
+gtk_enumerate_printers.data hidden="1"
+gtk_enumerate_printers.destroy hidden="1"
+
+*.dummy* hidden="1"
+*_reserved* hidden="1"
+*_gtk_recent* hidden="1"
