@@ -96,10 +96,6 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 				decl.write (writer);
 			}
 
-			if (CCodeModifiers.DEPRECATED in modifiers) {
-				writer.write_string (" G_GNUC_DEPRECATED");
-			}
-
 			writer.write_string (";");
 			writer.write_newline ();
 			return;

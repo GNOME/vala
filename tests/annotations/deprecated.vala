@@ -1,4 +1,11 @@
 [Version (deprecated = true)]
+int bar = 42;
+
+[Version (deprecated = true)]
+void baz () {
+}
+
+[Version (deprecated = true)]
 delegate void FooDelegate ();
 
 [Version (deprecated = true)]
@@ -17,9 +24,39 @@ void test_struct_field () {
 [Version (deprecated = true)]
 class FooClass : Object {
 	[Version (deprecated = true)]
+	public static int manam = 42;
+	[Version (deprecated = true)]
 	public int bar { get; set; default = 42; }
 	[Version (deprecated = true)]
 	public int baz;
+	[Version (deprecated = true)]
+	public int foo () {
+		return 42;
+	}
+	[Version (deprecated = true)]
+	public virtual int foov () {
+		return 42;
+	}
+}
+
+[Version (deprecated = true)]
+abstract class AFoo : Object {
+	[Version (deprecated = true)]
+	public int foo () {
+		return 42;
+	}
+	[Version (deprecated = true)]
+	public abstract int fooa ();
+}
+
+[Version (deprecated = true)]
+interface IFoo : Object {
+	[Version (deprecated = true)]
+	public int foo () {
+		return 42;
+	}
+	[Version (deprecated = true)]
+	public abstract void fooa ();
 }
 
 void test_class_property () {

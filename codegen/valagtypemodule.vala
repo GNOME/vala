@@ -393,6 +393,10 @@ public class Vala.GTypeModule : GErrorModule {
 			vdeclarator.modifiers |= CCodeModifiers.SCANF;
 		}
 
+		if (m.version.deprecated) {
+			vdeclarator.modifiers |= CCodeModifiers.DEPRECATED;
+		}
+
 		generate_cparameters (m, decl_space, cparam_map, new CCodeFunction ("fake"), vdeclarator);
 
 		var vdecl = new CCodeDeclaration (get_ccode_name (creturn_type));

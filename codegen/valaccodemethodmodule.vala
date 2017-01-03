@@ -1072,6 +1072,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		} else if (m.scanf_format) {
 			func.modifiers |= CCodeModifiers.SCANF;
 		}
+
+		if (m.version.deprecated) {
+			func.modifiers |= CCodeModifiers.DEPRECATED;
+		}
 	}
 
 	public void generate_vfunc (Method m, DataType return_type, Map<int,CCodeParameter> cparam_map, Map<int,CCodeExpression> carg_map, string suffix = "", int direction = 3) {
@@ -1145,6 +1149,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			vfunc.modifiers |= CCodeModifiers.PRINTF;
 		} else if (m.scanf_format) {
 			vfunc.modifiers |= CCodeModifiers.SCANF;
+		}
+
+		if (m.version.deprecated) {
+			vfunc.modifiers |= CCodeModifiers.DEPRECATED;
 		}
 
 		cfile.add_function (vfunc);
