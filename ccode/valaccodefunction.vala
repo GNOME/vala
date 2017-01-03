@@ -143,11 +143,11 @@ public class Vala.CCodeFunction : CCodeNode {
 		
 		writer.write_string (")");
 
-		if (CCodeModifiers.DEPRECATED in modifiers) {
-			writer.write_string (" G_GNUC_DEPRECATED");
-		}
-
 		if (is_declaration) {
+			if (CCodeModifiers.DEPRECATED in modifiers) {
+				writer.write_string (" G_GNUC_DEPRECATED");
+			}
+
 			if (CCodeModifiers.PRINTF in modifiers) {
 				format_arg_index = (format_arg_index >= 0 ? format_arg_index + 1 : args_index);
 				writer.write_string (" G_GNUC_PRINTF(%d,%d)".printf (format_arg_index, args_index + 1));
