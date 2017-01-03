@@ -174,6 +174,8 @@ dist_vapi_DATA = \
 	gtk+-unix-print-2.0.vapi \
 	gtk+-unix-print-3.0.deps \
 	gtk+-unix-print-3.0.vapi \
+	gtk+-unix-print-4.0.deps \
+	gtk+-unix-print-4.0.vapi \
 	gtkmozembed.deps \
 	gtkmozembed.vapi \
 	gtksourceview-2.0.deps \
@@ -366,6 +368,7 @@ GIDL_BINDINGS = \
 	gtk+-3.0 \
 	gtk+-unix-print-2.0 \
 	gtk+-unix-print-3.0 \
+	gtk+-unix-print-4.0 \
 	gtksourceview-2.0 \
 	hildon-1 \
 	hildon-fm-2 \
@@ -706,6 +709,9 @@ gtk+-unix-print-2.0:
 
 gtk+-unix-print-3.0:
 	$(GENVAPI) --library $(srcdir)/gtk+-unix-print-3.0 $(PACKAGESDIR)/gtk+-unix-print-3.0/gtk+-unix-print-3.0-custom.vala $(PACKAGESDIR)/gtk+-unix-print-3.0/gtk+-unix-print-3.0.gi
+
+gtk+-unix-print-4.0:
+	$(GENVAPI) --library $(srcdir)/gtk+-unix-print-4.0 $(PACKAGESDIR)/gtk+-unix-print-4.0/gtk+-unix-print-4.0-custom.vala $(PACKAGESDIR)/gtk+-unix-print-4.0/gtk+-unix-print-4.0.gi
 
 gtksourceview-2.0:
 	$(GENVAPI) --library $(srcdir)/gtksourceview-2.0 $(PACKAGESDIR)/gtksourceview-2.0/gtksourceview-2.0.gi
