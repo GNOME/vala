@@ -2179,6 +2179,10 @@ public class Vala.GirParser : CodeVisitor {
 		bool array_null_terminated = false;
 		current.base_type = element_get_type (parse_type (null, null, true), true, ref no_array_length, ref array_null_terminated);
 
+		if (metadata.has_argument (ArgumentType.BASE_TYPE)) {
+			current.base_type = parse_type_from_string (metadata.get_string (ArgumentType.BASE_TYPE), true, metadata.get_source_reference (ArgumentType.BASE_TYPE));
+		}
+
 		pop_node ();
 		end_element ("alias");
 	}
