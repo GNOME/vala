@@ -15710,7 +15710,7 @@ namespace Gtk {
 		public Gdk.ModifierType accel_mods;
 		public uint accel_flags;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gdk_rectangle_get_type ()")]
 	public struct Allocation : Gdk.Rectangle {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]

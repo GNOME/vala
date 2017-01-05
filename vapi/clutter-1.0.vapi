@@ -8310,7 +8310,7 @@ namespace Clutter {
 		public bool equal (Clutter.Knot knot_b);
 		public void free ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h")]
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "COGL_TYPE_MATRIX")]
 	public struct Matrix : Cogl.Matrix {
 		[Version (since = "1.12")]
 		public static Clutter.Matrix? alloc ();

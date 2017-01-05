@@ -517,10 +517,9 @@ namespace Pango {
 		public void unref ();
 		public bool x_to_index (int x_pos, out int index_, out int trailing);
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_glyph_item_get_type ()")]
+	[Compact]
 	public class LayoutRun : Pango.GlyphItem {
-		[CCode (has_construct_function = false)]
-		protected LayoutRun ();
 	}
 	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	[Compact]
