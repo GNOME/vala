@@ -3594,6 +3594,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 			cl.comment = alias.comment;
 			cl.external = true;
+			cl.is_compact = ((Class) type_sym).is_compact;
 			alias.symbol = cl;
 		} else if (type_sym is Interface) {
 			// this is not a correct alias, but what can we do otherwise?
@@ -3631,6 +3632,15 @@ public class Vala.GirParser : CodeVisitor {
 			deleg.external = true;
 			
 			alias.symbol = deleg;
+		}
+
+		// inherit atributes, like type_id
+		if (type_sym is Class || (type_sym is Struct && !simple_type)) {
+			if (type_sym.has_attribute_argument ("CCode", "has_type_id")) {
+				alias.symbol.set_attribute_bool ("CCode", "has_type_id", type_sym.get_attribute_bool ("CCode", "has_type_id"));
+			} else if (type_sym.has_attribute_argument ("CCode", "type_id")) {
+				alias.symbol.set_attribute_string ("CCode", "type_id", type_sym.get_attribute_string ("CCode", "type_id"));
+			}
 		}
 	}
 
