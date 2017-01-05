@@ -124,6 +124,14 @@ public class Vala.Genie.Parser : CodeVisitor {
 		return false;
 	}
 
+	inline bool accept_separator () {
+		if (current () == TokenType.COMMA || current () == TokenType.EOL) {
+			next ();
+			return true;
+		}
+		return false;
+	}
+
 	inline bool accept_terminator () {
 		if (current () == TokenType.SEMICOLON || current () == TokenType.EOL) {
 			next ();
@@ -163,6 +171,16 @@ public class Vala.Genie.Parser : CodeVisitor {
 		TokenType pre =  tokens[index - 1].type;
 
 		throw new ParseError.SYNTAX ("expected %s but got %s with previous %s", type.to_string (), cur.to_string (), pre.to_string());
+	}
+
+	inline bool expect_separator () throws ParseError {
+		if (accept_separator ()) {
+			return true;
+		}
+
+		TokenType cur = current ();
+
+		throw new ParseError.SYNTAX ("expected line end or comma but got %s", cur.to_string());
 	}
 
 	inline bool expect_terminator () throws ParseError {
@@ -318,8 +336,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 			}
 			break;
 		default:
-			throw new ParseError.SYNTAX ("expected identifier");
-		}	
+			break;
+		}
+
+		throw new ParseError.SYNTAX ("expected identifier");
 	}
 
 	string parse_identifier () throws ParseError {
@@ -3452,7 +3472,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 			set_attributes (ev, value_attrs);
 
 			en.add_value (ev);
-			expect (TokenType.EOL);
+			if (expect_separator ()) {
+				accept (TokenType.EOL);
+			}
 		} while (true);
 		
 		expect (TokenType.DEDENT);
