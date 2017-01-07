@@ -182,6 +182,7 @@ namespace Gst {
 		public class EncodingProfile : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected EncodingProfile ();
+			public Gst.PbUtils.EncodingProfile copy ();
 			public static Gst.PbUtils.EncodingProfile find (string targetname, string profilename, string? category);
 			public static Gst.PbUtils.EncodingProfile from_discoverer (Gst.PbUtils.DiscovererInfo info);
 			public bool get_allow_dynamic_output ();
