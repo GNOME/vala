@@ -8728,7 +8728,6 @@ namespace Gtk {
 		public void set_focus_chain (GLib.List<Gtk.Widget> focusable_widgets);
 		public void set_focus_hadjustment (Gtk.Adjustment adjustment);
 		public void set_focus_vadjustment (Gtk.Adjustment adjustment);
-		public void snapshot_child (Gtk.Widget child, Gtk.Snapshot snapshot);
 		public void unset_focus_chain ();
 		[HasEmitter]
 		public virtual signal void add (Gtk.Widget widget);
@@ -14452,7 +14451,7 @@ namespace Gtk {
 		[Version (since = "3.8")]
 		public double get_opacity ();
 		public unowned Pango.Context get_pango_context ();
-		public unowned Gtk.Container? get_parent ();
+		public unowned Gtk.Widget? get_parent ();
 		public unowned Gdk.Window get_parent_window ();
 		public unowned Gtk.WidgetPath get_path ();
 		[Version (since = "3.0")]
@@ -14590,6 +14589,7 @@ namespace Gtk {
 		public void set_device_events (Gdk.Device device, Gdk.EventMask events);
 		public void set_direction (Gtk.TextDirection dir);
 		public void set_events (int events);
+		public void set_focus_child (Gtk.Widget child);
 		[Version (since = "3.20")]
 		public void set_focus_on_click (bool focus_on_click);
 		[Version (since = "3.18")]
@@ -14615,7 +14615,7 @@ namespace Gtk {
 		public void set_no_show_all (bool no_show_all);
 		[Version (since = "3.8")]
 		public void set_opacity (double opacity);
-		public void set_parent ([CCode (type = "GtkWidget*")] Gtk.Container parent);
+		public void set_parent (Gtk.Widget parent);
 		public void set_parent_window (Gdk.Window parent_window);
 		[Version (since = "2.20")]
 		public void set_realized (bool realized);
@@ -14655,8 +14655,8 @@ namespace Gtk {
 		public void size_allocate_with_baseline (Gtk.Allocation allocation, int baseline);
 		[NoWrapper]
 		public virtual void snapshot (Gtk.Snapshot snapshot);
+		public void snapshot_child (Gtk.Widget child, Gtk.Snapshot snapshot);
 		public void style_get (...);
-		public void style_get_property (string property_name, ref GLib.Value value);
 		public void style_get_valist (string first_property_name, [CCode (type = "va_list")] va_list var_args);
 		public void thaw_child_notify ();
 		public bool translate_coordinates (Gtk.Widget dest_widget, int src_x, int src_y, out int dest_x, out int dest_y);
@@ -14706,7 +14706,7 @@ namespace Gtk {
 		public bool no_show_all { get; set; }
 		[Version (since = "3.8")]
 		public double opacity { get; set; }
-		public Gtk.Container parent { get; set; }
+		public Gtk.Widget parent { get; set; }
 		public bool receives_default { get; set; }
 		[Version (since = "3.10")]
 		public int scale_factor { get; }

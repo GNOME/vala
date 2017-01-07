@@ -358,11 +358,8 @@ Widget
   .drag_*#method parent="Gtk" symbol_type="function"
   .get_allocation return_void
   .get_clip return_void
-  .get_parent type="unowned Gtk.Container?"
   .grab_add parent="Gtk" symbol_type="function"
   .grab_remove parent="Gtk" symbol_type="function"
-  .set_parent.parent type="Gtk.Container"
-  .style_get_property.value ref
   .touch_event.event type="Gdk.EventTouch"
 TreeModel
   .get_value return_void
