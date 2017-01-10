@@ -1,3 +1,9 @@
+Vala 0.35.3
+===========
+
+ * Bug fixes and binding updates.
+ * Add gtk+-unix-print-{2,3,4}.0 bindings.
+
 Vala 0.35.2
 ===========
 
