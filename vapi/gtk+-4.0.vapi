@@ -6857,15 +6857,6 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool setting_get (string name, GLib.Value value);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Version (since = "2.14")]
-	public static void test_render_sync (Gdk.Window window);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Version (since = "2.14")]
-	public static bool test_simulate_button (Gdk.Window window, int x, int y, uint button, Gdk.ModifierType modifiers, Gdk.EventType button_pressrelease);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Version (since = "2.14")]
-	public static bool test_simulate_key (Gdk.Window window, int x, int y, uint keyval, Gdk.ModifierType modifiers, Gdk.EventType key_pressrelease);
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "2.2")]
 	public static int text_property_to_utf8_list_for_display (Gdk.Display display, Gdk.Atom encoding, int format, [CCode (array_length_cname = "length", array_length_pos = 4.5)] uint8[] text, [CCode (array_length = false, array_null_terminated = true)] out string[] list);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -7304,18 +7295,22 @@ namespace Gtk {
 		public Gtk.Widget widget { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_action_bar_get_type ()")]
-	public class ActionBar : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
+	public class ActionBar : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "3.12")]
 		public ActionBar ();
 		[Version (since = "3.12")]
 		public unowned Gtk.Widget? get_center_widget ();
+		[Version (since = "3.90")]
+		public bool get_revealed ();
 		[Version (since = "3.12")]
 		public void pack_end (Gtk.Widget child);
 		[Version (since = "3.12")]
 		public void pack_start (Gtk.Widget child);
 		[Version (since = "3.12")]
 		public void set_center_widget (Gtk.Widget? center_widget);
+		[Version (since = "3.90")]
+		public void set_revealed (bool revealed);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_adjustment_get_type ()")]
 	public class Adjustment : GLib.InitiallyUnowned {
@@ -14085,7 +14080,6 @@ namespace Gtk {
 		[Version (since = "3.8")]
 		public bool get_activate_on_single_click ();
 		public void get_background_area (Gtk.TreePath? path, Gtk.TreeViewColumn? column, out Gdk.Rectangle rect);
-		public unowned Gdk.Window? get_bin_window ();
 		public void get_cell_area (Gtk.TreePath? path, Gtk.TreeViewColumn? column, out Gdk.Rectangle rect);
 		public unowned Gtk.TreeViewColumn? get_column (int n);
 		public GLib.List<weak Gtk.TreeViewColumn> get_columns ();
@@ -14329,11 +14323,7 @@ namespace Gtk {
 	public class Viewport : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.Scrollable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Viewport (Gtk.Adjustment? hadjustment, Gtk.Adjustment? vadjustment);
-		[Version (since = "2.20")]
-		public unowned Gdk.Window get_bin_window ();
 		public Gtk.ShadowType get_shadow_type ();
-		[Version (since = "2.22")]
-		public unowned Gdk.Window get_view_window ();
 		public void set_shadow_type (Gtk.ShadowType type);
 		public Gtk.ShadowType shadow_type { get; set; }
 	}
@@ -14419,6 +14409,8 @@ namespace Gtk {
 		[Version (since = "2.2")]
 		public unowned Gdk.Display get_display ();
 		public int get_events ();
+		[Version (since = "3.90")]
+		public unowned Gtk.Widget? get_first_child ();
 		[Version (since = "3.20")]
 		public bool get_focus_on_click ();
 		[Version (since = "3.18")]
@@ -14434,6 +14426,8 @@ namespace Gtk {
 		public bool get_has_window ();
 		public bool get_hexpand ();
 		public bool get_hexpand_set ();
+		[Version (since = "3.90")]
+		public unowned Gtk.Widget? get_last_child ();
 		[Version (since = "2.20")]
 		public bool get_mapped ();
 		[Version (since = "3.0")]
@@ -14446,6 +14440,8 @@ namespace Gtk {
 		public int get_margin_top ();
 		[Version (since = "3.4")]
 		public Gdk.ModifierType get_modifier_mask (Gdk.ModifierIntent intent);
+		[Version (since = "3.90")]
+		public unowned Gtk.Widget? get_next_sibling ();
 		[Version (since = "2.4")]
 		public bool get_no_show_all ();
 		[Version (since = "3.8")]
@@ -14464,6 +14460,8 @@ namespace Gtk {
 		public void get_preferred_width (out int minimum_width, out int natural_width);
 		[Version (since = "3.0")]
 		public void get_preferred_width_for_height (int height, out int minimum_width, out int natural_width);
+		[Version (since = "3.90")]
+		public unowned Gtk.Widget? get_prev_sibling ();
 		[Version (since = "2.20")]
 		public bool get_realized ();
 		[Version (since = "2.18")]
@@ -14669,6 +14667,9 @@ namespace Gtk {
 		public void unset_state_flags (Gtk.StateFlags flags);
 		public bool can_default { get; set; }
 		public bool can_focus { get; set; }
+		[NoAccessorMethod]
+		[Version (since = "3.90")]
+		public string css_name { owned get; construct; }
 		public Gdk.EventMask events { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "3.0")]
@@ -17554,15 +17555,6 @@ namespace Gtk {
 	public static bool targets_include_uri ([CCode (array_length_cname = "n_targets", array_length_pos = 1.1)] Gdk.Atom[] targets);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.14")]
-	public static unowned Gtk.Widget test_find_label (Gtk.Widget widget, string label_pattern);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "2.14")]
-	public static unowned Gtk.Widget test_find_sibling (Gtk.Widget base_widget, GLib.Type widget_type);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "2.14")]
-	public static unowned Gtk.Widget? test_find_widget (Gtk.Widget widget, string label_pattern, GLib.Type widget_type);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "2.14")]
 	public static void test_init ([CCode (array_length_cname = "argcp", array_length_pos = 0.5)] ref unowned string[] argvp, ...);
 	[CCode (array_length_pos = 0.1, array_length_type = "guint", array_null_terminated = true, cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.14")]
@@ -17570,9 +17562,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.14")]
 	public static void test_register_all_types ();
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "2.14")]
-	public static bool test_widget_send_key (Gtk.Widget widget, uint keyval, Gdk.ModifierType modifiers);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.10")]
 	public static void test_widget_wait_for_draw (Gtk.Widget widget);
