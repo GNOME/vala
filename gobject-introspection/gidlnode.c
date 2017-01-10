@@ -787,6 +787,8 @@ g_idl_node_can_have_member (GIdlNode    *node)
     case G_IDL_NODE_STRUCT:
     case G_IDL_NODE_UNION:
       return TRUE;
+    default:
+      break;
     };
   return FALSE;
 }
