@@ -5171,10 +5171,29 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 				}
 			} else if (array_type != null) {
-				// cast from non-array to array, set invalid length
-				// required by string.data, e.g.
+				CCodeExpression array_length_expr;
+
+				var sizeof_to = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				sizeof_to.add_argument (new CCodeConstant (get_ccode_name (array_type.element_type)));
+				var sizeof_from = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+
+				var value_type = expr.inner.value_type;
+				if (value_type is ValueType) {
+					var data_type = ((ValueType) value_type).data_type;
+					sizeof_from.add_argument (new CCodeConstant (get_ccode_name (data_type)));
+					array_length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.DIV, sizeof_from, sizeof_to);
+				} else if (value_type is PointerType && ((PointerType) value_type).base_type is ValueType) {
+					var data_type = ((ValueType) (((PointerType) value_type).base_type)).data_type;
+					sizeof_from.add_argument (new CCodeConstant (get_ccode_name (data_type)));
+					array_length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.DIV, sizeof_from, sizeof_to);
+				} else {
+					// cast from unsupported non-array to array, set invalid length
+					// required by string.data, e.g.
+					array_length_expr = new CCodeConstant ("-1");
+				}
+
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					append_array_length (expr, new CCodeConstant ("-1"));
+					append_array_length (expr, array_length_expr);
 				}
 			}
 
@@ -5183,6 +5202,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				expr.inner.value_type is ValueType && expr.inner.value_type.nullable) {
 				// nullable integer or float or boolean or struct or enum cast to non-nullable
 				innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, innercexpr);
+			} else if (expr.type_reference is ArrayType
+			    && expr.inner.value_type is ValueType && !expr.inner.value_type.nullable) {
+				// integer or float or boolean or struct or enum to array cast
+				innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, innercexpr);
 			}
 			set_cvalue (expr, new CCodeCastExpression (innercexpr, get_ccode_name (expr.type_reference)));
 
