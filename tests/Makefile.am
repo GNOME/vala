@@ -231,6 +231,7 @@ TESTS = \
 	asynchronous/bug661961.vala \
 	asynchronous/bug742621.vala \
 	asynchronous/bug762819.vala \
+	asynchronous/bug777242.vala \
 	asynchronous/closures.vala \
 	asynchronous/generator.vala \
 	asynchronous/yield.vala \
