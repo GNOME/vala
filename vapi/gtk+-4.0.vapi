@@ -7139,6 +7139,7 @@ namespace Gtk {
 		public unowned string get_logo_icon_name ();
 		[Version (since = "2.12")]
 		public unowned string get_program_name ();
+		public unowned string get_system_information ();
 		[Version (since = "2.6")]
 		public unowned string get_translator_credits ();
 		[Version (since = "2.6")]
@@ -7169,6 +7170,7 @@ namespace Gtk {
 		public void set_logo_icon_name (string? icon_name);
 		[Version (since = "2.12")]
 		public void set_program_name (string name);
+		public void set_system_information (string system_information);
 		[Version (since = "2.6")]
 		public void set_translator_credits (string? translator_credits);
 		[Version (since = "2.6")]
@@ -7202,6 +7204,8 @@ namespace Gtk {
 		public string logo_icon_name { get; set; }
 		[Version (since = "2.12")]
 		public string program_name { get; set; }
+		[Version (since = "3.90")]
+		public string system_information { get; set; }
 		[Version (since = "2.6")]
 		public string translator_credits { get; set; }
 		[Version (since = "2.6")]
@@ -10300,6 +10304,8 @@ namespace Gtk {
 		public unowned Gtk.Container get_content_area ();
 		[Version (since = "2.18")]
 		public Gtk.MessageType get_message_type ();
+		[Version (since = "3.90")]
+		public bool get_revealed ();
 		[Version (since = "3.10")]
 		public bool get_show_close_button ();
 		[Version (since = "2.18")]
@@ -10308,12 +10314,15 @@ namespace Gtk {
 		public void set_message_type (Gtk.MessageType message_type);
 		[Version (since = "2.18")]
 		public void set_response_sensitive (int response_id, bool setting);
+		[Version (since = "3.90")]
+		public void set_revealed (bool revealed);
 		[Version (since = "3.10")]
 		public void set_show_close_button (bool setting);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public InfoBar.with_buttons (...);
 		[Version (since = "2.18")]
 		public Gtk.MessageType message_type { get; set construct; }
+		public bool revealed { get; set; }
 		[Version (since = "3.10")]
 		public bool show_close_button { get; set construct; }
 		[Version (since = "2.18")]
@@ -12708,21 +12717,23 @@ namespace Gtk {
 	[Compact]
 	public class Snapshot {
 		[Version (since = "3.90")]
-		public Cairo.Context append_cairo_node (Graphene.Rect bounds, string name, ...);
-		public void append_color_node (Gdk.RGBA color, Graphene.Rect bounds, string name, ...);
+		public Cairo.Context append_cairo (Graphene.Rect bounds, string name, ...);
+		public void append_color (Gdk.RGBA color, Graphene.Rect bounds, string name, ...);
 		public void append_node (Gsk.RenderNode node);
-		public void append_texture_node (Gsk.Texture texture, Graphene.Rect bounds, string name, ...);
+		public void append_texture (Gsk.Texture texture, Graphene.Rect bounds, string name, ...);
 		[Version (since = "3.90")]
-		public bool clips_rect (Graphene.Rect bounds);
-		public void get_offset (out double x, out double y);
+		public bool clips_rect (Cairo.RectangleInt bounds);
+		public void get_offset (out int x, out int y);
 		[Version (since = "3.90")]
-		public Gsk.RenderNode? pop ();
+		public void offset (int x, int y);
 		[Version (since = "3.90")]
-		public void pop_and_append ();
+		public void pop ();
 		[Version (since = "3.90")]
 		public void push (bool keep_coordinates, string name, ...);
+		public void push_blend (Gsk.BlendMode blend_mode, string name, ...);
 		public void push_clip (Graphene.Rect bounds, string name, ...);
 		public void push_color_matrix (Graphene.Matrix color_matrix, Graphene.Vec4 color_offset, string name, ...);
+		public void push_cross_fade (double progress, string name, ...);
 		public void push_opacity (double opacity, string name, ...);
 		public void push_repeat (Graphene.Rect bounds, Graphene.Rect child_bounds, string name, ...);
 		public void push_rounded_clip (Gsk.RoundedRect bounds, string name, ...);
@@ -12740,8 +12751,6 @@ namespace Gtk {
 		public void render_insertion_cursor (Gtk.StyleContext context, double x, double y, Pango.Layout layout, int index, Pango.Direction direction);
 		[Version (since = "3.90")]
 		public void render_layout (Gtk.StyleContext context, double x, double y, Pango.Layout layout);
-		[Version (since = "3.90")]
-		public void translate_2d (int x, int y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_spin_button_get_type ()")]
 	public class SpinButton : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.CellEditable, Gtk.Editable, Gtk.Orientable {
