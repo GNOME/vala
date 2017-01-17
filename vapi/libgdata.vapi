@@ -1095,7 +1095,7 @@ namespace GData {
 		public uint64 get_property_hits (string property);
 		public unowned GData.FreebaseTopicValue? get_property_value (string property, int64 item);
 		public GLib.GenericArray<weak string> list_properties ();
-		public GData.FreebaseTopicObject @ref ();
+		public unowned GData.FreebaseTopicObject @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_topic_query_get_type ()")]
@@ -1135,7 +1135,7 @@ namespace GData {
 		public int64 get_timestamp ();
 		public GLib.Type get_value_type ();
 		public bool is_image ();
-		public GData.FreebaseTopicValue @ref ();
+		public unowned GData.FreebaseTopicValue @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_gcontact_calendar_get_type ()")]

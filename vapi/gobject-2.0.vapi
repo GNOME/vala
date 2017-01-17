@@ -224,8 +224,8 @@ namespace GLib {
 		public unowned GLib.ParamSpec get_redirect_target ();
 		[CCode (cname = "g_param_spec_internal")]
 		public ParamSpec.@internal (GLib.Type param_type, string name, string nick, string blurb, GLib.ParamFlags flags);
-		public GLib.ParamSpec @ref ();
-		public GLib.ParamSpec ref_sink ();
+		public unowned GLib.ParamSpec @ref ();
+		public unowned GLib.ParamSpec ref_sink ();
 		public void set_qdata (GLib.Quark quark, void* data);
 		public void set_qdata_full (GLib.Quark quark, void* data, GLib.DestroyNotify destroy);
 		[CCode (cname = "g_param_value_set_default")]

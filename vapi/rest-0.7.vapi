@@ -72,7 +72,7 @@ namespace Rest {
 		public unowned global::string get_file_name ();
 		public unowned global::string get_name ();
 		public bool is_string ();
-		public Rest.Param @ref ();
+		public unowned Rest.Param @ref ();
 		[CCode (has_construct_function = false)]
 		public Param.string (global::string name, Rest.MemoryUse use, global::string string);
 		public void unref ();
@@ -185,7 +185,7 @@ namespace Rest {
 		public void free ();
 		public unowned string get_attr (string attr_name);
 		public string print ();
-		public Rest.XmlNode @ref ();
+		public unowned Rest.XmlNode @ref ();
 		public void set_content (string value);
 		public void unref ();
 	}

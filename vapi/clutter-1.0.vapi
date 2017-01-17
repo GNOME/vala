@@ -6790,7 +6790,7 @@ namespace Clutter {
 		public void add_child (Clutter.PaintNode child);
 		public void add_rectangle (Clutter.ActorBox rect);
 		public void add_texture_rectangle (Clutter.ActorBox rect, float x_1, float y_1, float x_2, float y_2);
-		public Clutter.PaintNode @ref ();
+		public unowned Clutter.PaintNode @ref ();
 		public void set_name (string name);
 		public void unref ();
 	}

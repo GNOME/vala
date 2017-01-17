@@ -4611,7 +4611,7 @@ namespace Gdk {
 		[Version (since = "3.10")]
 		public Cairo.Surface? get_surface (out double x_hot, out double y_hot);
 		[Version (deprecated = true, deprecated_since = "3.0")]
-		public Gdk.Cursor @ref ();
+		public unowned Gdk.Cursor @ref ();
 		[Version (deprecated = true, deprecated_since = "3.0")]
 		public void unref ();
 		public Gdk.CursorType cursor_type { get; construct; }
@@ -5370,7 +5370,7 @@ namespace Gdk {
 		[Version (since = "3.8")]
 		public int64 get_refresh_interval ();
 		[Version (since = "3.8")]
-		public Gdk.FrameTimings @ref ();
+		public unowned Gdk.FrameTimings @ref ();
 		[Version (since = "3.8")]
 		public void unref ();
 	}

@@ -1,5 +1,8 @@
 KEY_* name="KEY_(.+)" parent="Gdk.Key"
 selection_* name="selection_(.+)" parent="Gdk.Selection"
+
+*.ref unowned
+
 Atom struct
 Color struct
 Cursor	abstract=false

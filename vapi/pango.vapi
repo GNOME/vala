@@ -80,7 +80,7 @@ namespace Pango {
 		public void insert (owned Pango.Attribute attr);
 		public void insert_before (owned Pango.Attribute attr);
 		[Version (since = "1.10")]
-		public Pango.AttrList @ref ();
+		public unowned Pango.AttrList @ref ();
 		public void splice (Pango.AttrList other, int pos, int len);
 		public void unref ();
 	}
@@ -305,7 +305,7 @@ namespace Pango {
 		public int get_underline_position ();
 		[Version (since = "1.6")]
 		public int get_underline_thickness ();
-		public Pango.FontMetrics? @ref ();
+		public unowned Pango.FontMetrics? @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_fontset_get_type ()")]
@@ -513,7 +513,7 @@ namespace Pango {
 		public void get_x_ranges (int start_index, int end_index, [CCode (array_length_cname = "n_ranges", array_length_pos = 3.1)] out int[] ranges);
 		public void index_to_x (int index_, bool trailing, out int x_pos);
 		[Version (since = "1.10")]
-		public Pango.LayoutLine @ref ();
+		public unowned Pango.LayoutLine @ref ();
 		public void unref ();
 		public bool x_to_index (int x_pos, out int index_, out int trailing);
 	}
