@@ -204,7 +204,7 @@ namespace Gst {
 			public void set_format (Gst.Caps format);
 			public void set_name (string name);
 			public void set_presence (uint presence);
-			public void set_preset (string preset);
+			public void set_preset (string? preset);
 			public void set_preset_name (string preset_name);
 			public void set_restriction (owned Gst.Caps restriction);
 			[NoAccessorMethod]

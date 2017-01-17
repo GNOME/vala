@@ -357,6 +357,8 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			public TimeCode (uint fps_n, uint fps_d, GLib.DateTime latest_daily_jam, Gst.Video.TimeCodeFlags flags, uint hours, uint minutes, uint seconds, uint frames, uint field_count);
 			public void add_frames (int64 frames);
+			[Version (since = "1.12")]
+			public Gst.Video.TimeCode add_interval (Gst.Video.TimeCodeInterval tc_inter);
 			public void clear ();
 			public int compare (Gst.Video.TimeCode tc2);
 			public Gst.Video.TimeCode copy ();
@@ -364,12 +366,33 @@ namespace Gst {
 			public TimeCode.empty ();
 			public uint64 frames_since_daily_jam ();
 			public void free ();
+			[CCode (has_construct_function = false)]
+			[Version (since = "1.12")]
+			public TimeCode.from_string (string tc_str);
 			public void increment_frame ();
 			public void init (uint fps_n, uint fps_d, GLib.DateTime latest_daily_jam, Gst.Video.TimeCodeFlags flags, uint hours, uint minutes, uint seconds, uint frames, uint field_count);
 			public bool is_valid ();
 			public uint64 nsec_since_daily_jam ();
 			public GLib.DateTime to_date_time ();
 			public string to_string ();
+		}
+		[CCode (cheader_filename = "gst/video/video.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_time_code_interval_get_type ()")]
+		[Compact]
+		[GIR (name = "VideoTimeCodeInterval")]
+		[Version (since = "1.12")]
+		public class TimeCodeInterval {
+			public uint frames;
+			public uint hours;
+			public uint minutes;
+			public uint seconds;
+			[CCode (has_construct_function = false)]
+			public TimeCodeInterval (uint hours, uint minutes, uint seconds, uint frames);
+			public void clear ();
+			public Gst.Video.TimeCodeInterval copy ();
+			public void free ();
+			[CCode (has_construct_function = false)]
+			public TimeCodeInterval.from_string (string tc_inter_str);
+			public void init (uint hours, uint minutes, uint seconds, uint frames);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GstColorBalance", lower_case_cprefix = "gst_color_balance_", type_cname = "GstColorBalanceInterface", type_id = "gst_color_balance_get_type ()")]
 		[GIR (name = "ColorBalance")]

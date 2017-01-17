@@ -40,9 +40,11 @@ namespace Geocode {
 		public uint get_answer_count ();
 		public bool get_bounded ();
 		public unowned Geocode.BoundingBox? get_search_area ();
-		public GLib.List<weak Geocode.Place> search () throws GLib.Error;
-		public async GLib.List<weak Geocode.Place> search_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GLib.List<Geocode.Place> search () throws GLib.Error;
+		public async GLib.List<Geocode.Place> search_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_answer_count (uint count);
+		[Version (since = "3.23.1")]
+		public void set_backend (Geocode.Backend? backend);
 		public void set_bounded (bool bounded);
 		public void set_search_area (Geocode.BoundingBox box);
 		public uint answer_count { get; set; }
@@ -77,6 +79,21 @@ namespace Geocode {
 		[NoAccessorMethod]
 		public double longitude { get; set; }
 		public uint64 timestamp { get; construct; }
+	}
+	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_id = "geocode_nominatim_get_type ()")]
+	[Version (since = "3.23.1")]
+	public class Nominatim : GLib.Object, Geocode.Backend {
+		[CCode (has_construct_function = false)]
+		public Nominatim (string base_url, string maintainer_email_address);
+		public static Geocode.Nominatim get_gnome ();
+		[NoWrapper]
+		public virtual string query (string uri, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[NoWrapper]
+		public virtual async string query_async (string uri, GLib.Cancellable? cancellable) throws GLib.Error;
+		[NoAccessorMethod]
+		public string base_url { owned get; construct; }
+		[NoAccessorMethod]
+		public string maintainer_email_address { owned get; construct; }
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_id = "geocode_place_get_type ()")]
 	public class Place : GLib.Object {
@@ -148,6 +165,16 @@ namespace Geocode {
 		public Reverse.for_location (Geocode.Location location);
 		public Geocode.Place resolve () throws GLib.Error;
 		public async Geocode.Place resolve_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "3.23.1")]
+		public void set_backend (Geocode.Backend? backend);
+	}
+	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_cname = "GeocodeBackendInterface", type_id = "geocode_backend_get_type ()")]
+	[Version (since = "3.23.1")]
+	public interface Backend : GLib.Object {
+		public abstract GLib.List<Geocode.Place> forward_search (GLib.HashTable<string,GLib.Value?> @params, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async GLib.List<Geocode.Place> forward_search_async (GLib.HashTable<string,GLib.Value?> @params, GLib.Cancellable? cancellable) throws GLib.Error;
+		public abstract GLib.List<Geocode.Place> reverse_resolve (GLib.HashTable<string,GLib.Value?> @params, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract async GLib.List<Geocode.Place> reverse_resolve_async (GLib.HashTable<string,GLib.Value?> @params, GLib.Cancellable? cancellable) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", cprefix = "GEOCODE_LOCATION_CRS_", type_id = "geocode_location_crs_get_type ()")]
 	public enum LocationCRS {

@@ -933,8 +933,8 @@ namespace GData {
 		[Version (since = "0.7.0")]
 		public unowned string get_content_uri ();
 		[Version (since = "0.2.0")]
-		public unowned string get_etag ();
-		public unowned string get_id ();
+		public unowned string? get_etag ();
+		public unowned string? get_id ();
 		public int64 get_published ();
 		[Version (since = "0.5.0")]
 		public unowned string get_rights ();
@@ -1651,9 +1651,9 @@ namespace GData {
 		[CCode (has_construct_function = false)]
 		protected Generator ();
 		[Version (since = "0.4.0")]
-		public unowned string get_name ();
+		public unowned string? get_name ();
 		[Version (since = "0.4.0")]
-		public unowned string get_uri ();
+		public unowned string? get_uri ();
 		[Version (since = "0.4.0")]
 		public unowned string get_version ();
 		[Version (since = "0.4.0")]
@@ -1676,13 +1676,13 @@ namespace GData {
 		[CCode (has_construct_function = false)]
 		public Link (string uri, string? relation_type);
 		[Version (since = "0.4.0")]
-		public unowned string get_content_type ();
+		public unowned string? get_content_type ();
 		[Version (since = "0.4.0")]
-		public unowned string get_language ();
+		public unowned string? get_language ();
 		[Version (since = "0.4.0")]
 		public int get_length ();
 		[Version (since = "0.4.0")]
-		public unowned string get_relation_type ();
+		public unowned string? get_relation_type ();
 		[Version (since = "0.4.0")]
 		public unowned string get_title ();
 		[Version (since = "0.4.0")]
