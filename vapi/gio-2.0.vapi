@@ -588,7 +588,7 @@ namespace GLib {
 		public string key;
 		public int ref_count;
 		public string value;
-		public GLib.DBusAnnotationInfo @ref ();
+		public unowned GLib.DBusAnnotationInfo @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_arg_info_ref", type_id = "g_dbus_arg_info_get_type ()", unref_function = "g_dbus_arg_info_unref")]
@@ -600,7 +600,7 @@ namespace GLib {
 		public string name;
 		public int ref_count;
 		public string signature;
-		public GLib.DBusArgInfo @ref ();
+		public unowned GLib.DBusArgInfo @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_auth_observer_get_type ()")]
@@ -702,7 +702,7 @@ namespace GLib {
 		public unowned GLib.DBusMethodInfo lookup_method (string name);
 		public unowned GLib.DBusPropertyInfo lookup_property (string name);
 		public unowned GLib.DBusSignalInfo lookup_signal (string name);
-		public GLib.DBusInterfaceInfo @ref ();
+		public unowned GLib.DBusInterfaceInfo @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_interface_skeleton_get_type ()")]
@@ -814,7 +814,7 @@ namespace GLib {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public GLib.DBusArgInfo[] out_args;
 		public int ref_count;
-		public GLib.DBusMethodInfo @ref ();
+		public unowned GLib.DBusMethodInfo @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_method_invocation_get_type ()")]
@@ -860,7 +860,7 @@ namespace GLib {
 		public DBusNodeInfo.for_xml (string xml_data) throws GLib.Error;
 		public void generate_xml (uint indent, GLib.StringBuilder string_builder);
 		public unowned GLib.DBusInterfaceInfo lookup_interface (string name);
-		public GLib.DBusNodeInfo @ref ();
+		public unowned GLib.DBusNodeInfo @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_object_manager_client_get_type ()")]
@@ -945,7 +945,7 @@ namespace GLib {
 		public string name;
 		public int ref_count;
 		public string signature;
-		public GLib.DBusPropertyInfo @ref ();
+		public unowned GLib.DBusPropertyInfo @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_proxy_get_type ()")]
@@ -1033,7 +1033,7 @@ namespace GLib {
 		public GLib.DBusArgInfo[] args;
 		public string name;
 		public int ref_count;
-		public GLib.DBusSignalInfo @ref ();
+		public unowned GLib.DBusSignalInfo @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_data_input_stream_get_type ()")]
@@ -1128,7 +1128,7 @@ namespace GLib {
 		public void add (string name, GLib.FileAttributeType type, GLib.FileAttributeInfoFlags flags);
 		public GLib.FileAttributeInfoList dup ();
 		public unowned GLib.FileAttributeInfo? lookup (string name);
-		public GLib.FileAttributeInfoList @ref ();
+		public unowned GLib.FileAttributeInfoList @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_file_attribute_matcher_ref", type_id = "g_file_attribute_matcher_get_type ()", unref_function = "g_file_attribute_matcher_unref")]
@@ -1140,7 +1140,7 @@ namespace GLib {
 		public unowned string enumerate_next ();
 		public bool matches (string attribute);
 		public bool matches_only (string attribute);
-		public GLib.FileAttributeMatcher @ref ();
+		public unowned GLib.FileAttributeMatcher @ref ();
 		public GLib.FileAttributeMatcher subtract (GLib.FileAttributeMatcher subtract);
 		[Version (since = "2.32")]
 		public string to_string ();
@@ -2025,7 +2025,7 @@ namespace GLib {
 		public static GLib.Resource load (string filename) throws GLib.Error;
 		public GLib.Bytes lookup_data (string path, GLib.ResourceLookupFlags lookup_flags) throws GLib.Error;
 		public GLib.InputStream open_stream (string path, GLib.ResourceLookupFlags lookup_flags) throws GLib.Error;
-		public GLib.Resource @ref ();
+		public unowned GLib.Resource @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_settings_get_type ()")]
@@ -2217,7 +2217,7 @@ namespace GLib {
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "2.46")]
 		public string[] list_keys ();
-		public GLib.SettingsSchema @ref ();
+		public unowned GLib.SettingsSchema @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_settings_schema_key_ref", type_id = "g_settings_schema_key_get_type ()", unref_function = "g_settings_schema_key_unref")]
@@ -2238,7 +2238,7 @@ namespace GLib {
 		[Version (since = "2.40")]
 		public bool range_check (GLib.Variant value);
 		[Version (since = "2.40")]
-		public GLib.SettingsSchemaKey @ref ();
+		public unowned GLib.SettingsSchemaKey @ref ();
 		[Version (since = "2.40")]
 		public void unref ();
 	}
@@ -2253,7 +2253,7 @@ namespace GLib {
 		[Version (since = "2.40")]
 		public void list_schemas (bool recursive, [CCode (array_length = false, array_null_terminated = true)] out string[] non_relocatable, [CCode (array_length = false, array_null_terminated = true)] out string[] relocatable);
 		public GLib.SettingsSchema? lookup (string schema_id, bool recursive);
-		public GLib.SettingsSchemaSource @ref ();
+		public unowned GLib.SettingsSchemaSource @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_simple_action_get_type ()")]

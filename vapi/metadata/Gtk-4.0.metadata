@@ -405,6 +405,7 @@ TreeView
 
 // Sure
 binding_set_by_class.object_class type="GLib.ObjectClass"
+*.ref unowned
 
 // These delegate types don't have targets in the typedefs, but they
 // get called with a target.

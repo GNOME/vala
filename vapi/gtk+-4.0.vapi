@@ -5584,7 +5584,7 @@ namespace Gdk {
 		[Version (since = "3.8")]
 		public int64 get_refresh_interval ();
 		[Version (since = "3.8")]
-		public Gdk.FrameTimings @ref ();
+		public unowned Gdk.FrameTimings @ref ();
 		[Version (since = "3.8")]
 		public void unref ();
 	}
@@ -8781,7 +8781,7 @@ namespace Gtk {
 		public Gtk.CssSectionType get_section_type ();
 		public uint get_start_line ();
 		public uint get_start_position ();
-		public Gtk.CssSection @ref ();
+		public unowned Gtk.CssSection @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_dialog_get_type ()")]
@@ -12151,7 +12151,7 @@ namespace Gtk {
 		public bool is_local ();
 		public string last_application ();
 		public bool match (Gtk.RecentInfo info_b);
-		public Gtk.RecentInfo @ref ();
+		public unowned Gtk.RecentInfo @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_recent_manager_get_type ()")]
@@ -13103,7 +13103,7 @@ namespace Gtk {
 		[Version (since = "2.6")]
 		public void add_uri_targets (uint info);
 		public bool find (Gdk.Atom target, out uint info);
-		public Gtk.TargetList @ref ();
+		public unowned Gtk.TargetList @ref ();
 		public void remove (Gdk.Atom target);
 		public void unref ();
 	}
@@ -14888,7 +14888,7 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public void prepend_type (GLib.Type type);
 		[Version (since = "3.2")]
-		public Gtk.WidgetPath @ref ();
+		public unowned Gtk.WidgetPath @ref ();
 		[Version (since = "3.2")]
 		public string to_string ();
 		[Version (since = "3.2")]

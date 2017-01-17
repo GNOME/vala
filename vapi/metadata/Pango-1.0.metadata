@@ -75,3 +75,5 @@ AttrClass
 Color struct
 GlyphItemIter struct
 Matrix struct
+
+*.ref unowned

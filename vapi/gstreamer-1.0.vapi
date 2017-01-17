@@ -1037,7 +1037,7 @@ namespace Gst {
 		public DateTime.now_local_time ();
 		[CCode (has_construct_function = false)]
 		public DateTime.now_utc ();
-		public Gst.DateTime @ref ();
+		public unowned Gst.DateTime @ref ();
 		public GLib.DateTime? to_g_date_time ();
 		public string? to_iso8601_string ();
 		public void unref ();
@@ -1683,7 +1683,7 @@ namespace Gst {
 		public bool is_writable ();
 		public bool @lock (Gst.LockFlags flags);
 		public Gst.MiniObject make_writable ();
-		public Gst.MiniObject @ref ();
+		public unowned Gst.MiniObject @ref ();
 		public static bool replace (ref Gst.MiniObject? olddata, Gst.MiniObject? newdata);
 		[CCode (simple_generics = true)]
 		public void set_qdata<T> (GLib.Quark quark, owned T data);
@@ -1718,7 +1718,7 @@ namespace Gst {
 		public bool has_as_ancestor (Gst.Object ancestor);
 		[Version (since = "1.6")]
 		public bool has_as_parent (Gst.Object parent);
-		public Gst.Object @ref ();
+		public unowned Gst.Object @ref ();
 		public bool remove_control_binding (Gst.ControlBinding binding);
 		public static bool replace (ref Gst.Object? oldobj, Gst.Object? newobj);
 		public void set_control_binding_disabled (string property_name, bool disabled);

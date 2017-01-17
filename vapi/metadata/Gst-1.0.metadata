@@ -1,5 +1,7 @@
 *.ABI._gst_reserved* skip
 
+*.ref unowned
+
 // Return non-boxed types
 MiniObject
   .copy skip=false

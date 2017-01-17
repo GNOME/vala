@@ -3,6 +3,8 @@ Video* name="Video(.+)"
 VIDEO_* name="VIDEO_(.+)"
 video_* name="video_(.+)"
 
+*.ref unowned
+
 VideoOverlay
   .set_render_rectangle#virtual_method virtual
   .set_render_rectangle#method name="try_set_render_rectangle"

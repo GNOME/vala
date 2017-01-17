@@ -50,3 +50,5 @@ ProxyCallUploadCallback cheader_filename="rest/rest-proxy-call.h"
 	.userdata closure=5
 
 hmac_sha1 skip=true
+
+*.ref unowned

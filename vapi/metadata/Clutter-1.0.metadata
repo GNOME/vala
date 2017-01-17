@@ -9,6 +9,8 @@ Perspective struct
 Units struct
 Vertex struct
 
+*.ref unowned
+
 init.argv unowned
 init_with_args
 	.argv unowned

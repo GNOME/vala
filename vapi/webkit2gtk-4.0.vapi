@@ -276,7 +276,7 @@ namespace WebKit {
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_javascript_result_ref", type_id = "webkit_javascript_result_get_type ()", unref_function = "webkit_javascript_result_unref")]
 	[Compact]
 	public class JavascriptResult {
-		public WebKit.JavascriptResult @ref ();
+		public unowned WebKit.JavascriptResult @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_mime_info_ref", type_id = "webkit_mime_info_get_type ()", unref_function = "webkit_mime_info_unref")]
@@ -286,7 +286,7 @@ namespace WebKit {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_extensions ();
 		public unowned string get_mime_type ();
-		public WebKit.MimeInfo @ref ();
+		public unowned WebKit.MimeInfo @ref ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_navigation_action_get_type ()")]
@@ -689,7 +689,7 @@ namespace WebKit {
 		[Version (since = "2.6")]
 		public UserScript (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserScriptInjectionTime injection_time, [CCode (array_length = false, array_null_terminated = true)] string[]? whitelist, [CCode (array_length = false, array_null_terminated = true)] string[]? blacklist);
 		[Version (since = "2.6")]
-		public WebKit.UserScript @ref ();
+		public unowned WebKit.UserScript @ref ();
 		[Version (since = "2.6")]
 		public void unref ();
 	}
@@ -700,7 +700,7 @@ namespace WebKit {
 		[Version (since = "2.6")]
 		public UserStyleSheet (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserStyleLevel level, [CCode (array_length = false, array_null_terminated = true)] string[]? whitelist, [CCode (array_length = false, array_null_terminated = true)] string[]? blacklist);
 		[Version (since = "2.6")]
-		public WebKit.UserStyleSheet @ref ();
+		public unowned WebKit.UserStyleSheet @ref ();
 		[Version (since = "2.6")]
 		public void unref ();
 	}
@@ -937,7 +937,7 @@ namespace WebKit {
 		[Version (since = "2.12")]
 		public WebViewSessionState (GLib.Bytes data);
 		[Version (since = "2.12")]
-		public WebKit.WebViewSessionState @ref ();
+		public unowned WebKit.WebViewSessionState @ref ();
 		[Version (since = "2.12")]
 		public GLib.Bytes serialize ();
 		[Version (since = "2.12")]

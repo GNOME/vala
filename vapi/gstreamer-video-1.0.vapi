@@ -35,7 +35,7 @@ namespace Gst {
 			public uint32 system_frame_number;
 			[CCode (simple_generics = true)]
 			public T get_user_data<T> ();
-			public Gst.Video.CodecFrame @ref ();
+			public unowned Gst.Video.CodecFrame @ref ();
 			[CCode (simple_generics = true)]
 			public void set_user_data<T> (owned T user_data);
 			public void unref ();
@@ -48,7 +48,7 @@ namespace Gst {
 			public weak Gst.Caps caps;
 			public weak Gst.Buffer codec_data;
 			public weak Gst.Video.Info info;
-			public Gst.Video.CodecState @ref ();
+			public unowned Gst.Video.CodecState @ref ();
 			public void unref ();
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GstColorBalanceChannel", lower_case_cprefix = "gst_color_balance_channel_", type_id = "gst_color_balance_channel_get_type ()")]
