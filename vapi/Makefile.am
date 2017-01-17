@@ -33,7 +33,6 @@ dist_vapi_DATA = \
 	clutter-gtk-0.10.vapi \
 	clutter-gtk-1.0.deps \
 	clutter-gtk-1.0.vapi \
-	clutter-json-1.0.vapi \
 	clutter-x11-1.0.deps \
 	clutter-x11-1.0.vapi \
 	cogl-1.0.vapi \
