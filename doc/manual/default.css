@@ -1,12 +1,21 @@
 body {
 	background-color: white;
-	font-family: sans-serif;
+	font-family: cantarell, sans-serif;
+	text-align: justify;
 	margin-top: 2.8em;
+	max-width: 35em;
 }
 
 h1, h2, h3, h4 {
 	color: #005a9c;
+	margin: 1.5em 0 0 0;
 }
+
+h3 { border-top: solid 0.5em #eee; }
+
+h4 { border-top: solid 0.2em #eee; }
+
+p { margin: 0 0 1em 0; }
 
 a:link, a:visited, a:hover, a:active {
 	color: #005a9c;
@@ -15,7 +24,9 @@ a:link, a:visited, a:hover, a:active {
 
 .toc {
 	font-weight: bold;
-	font-size: larger;
+	font-size: 120%;
+	line-height: 1.8;
+	max-width: 19em;
 }
 
 .toc li {
@@ -23,13 +34,22 @@ a:link, a:visited, a:hover, a:active {
 }
 
 .toc li li {
-	font-size: smaller;
+	font-size: 80%;
 }
 
-h3 a {
+.toc a {
+	display:block;
+	border-radius: 0.4em;
+	padding-left: 0.4em;
+}
+
+.toc a:hover, .toc a:focus {
+	background-color: #ddd;
+}
+
+h3 {
 	/* ensure anchors don't vanish below the fixed header */
-	position: relative;
-	top: -2.8em;
+	padding-top: 1.4em;
 }
 
 .header {
@@ -60,17 +80,49 @@ div.note p, div.note h4 {
 pre {
 	background-color: #eee;
 	border: 1px solid black;
+	border-radius: 4px;
 	padding: .5em 1em;
-	margin: 0 2em 1em 2em;
+	margin: 0 0 1em 0;
 }
 
-blockquote {
+.o-box { padding: 1.2em;
+	margin: 0 0 1em 0;
+	line-height: 1.5;
+}
+.c-program { background-color: #f5f5f5;
+	border: 2px solid #ca8;
+	border-radius: 4px;
+	font-family: monospace;
+	white-space: pre-wrap;
+}
+.c-program-type { color: #533; }
+.c-program-token { color: #000;
+	font-weight: bold;
+}
+.c-program-methodname { color: #520;
 	font-style: italic;
-	white-space: pre;
+}
+.c-program-phrase { color: #161; }
+
+.c-informaltable { border: solid 2px #ccc;
+	border-radius: 4px;
+}
+.c-informaltable td { border-bottom: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+}
+.c-informaltable td:last-child { border-right: none; }
+.c-informaltable tr:last-child td { border-bottom: none; }
+.c-informaltable tr:nth-child(even) { background-color: #f5f5f5; }
+
+.c-rules { border: solid 2px #729fcf;
+	border-radius: 4px;
+	background-color: #f5f5f5;
+	white-space: pre-wrap;
 }
 
 blockquote span.literal {
 	font-family: monospace;
-	font-style: normal;
 	font-weight: bold;
+	font-size: 110%;
+	padding-right: 0.5em;
 }
