@@ -1,69 +1,66 @@
 NULL =
 
-book_name=vala@PACKAGE_SUFFIX@
+BOOK_NAME = vala@PACKAGE_SUFFIX@
 
-bookdir=$(datadir)/devhelp/books/$(book_name)
-
-chapter_data = \
-	overview.html \
-	types.html \
-	expressions.html \
-	statements.html \
-	namespaces.html \
-	methods.html \
-	classes.html \
-	structs.html \
-	interfaces.html \
-	enums.html \
-	delegates.html \
-	exceptions.html \
-	attributes.html \
-	$(NULL)
-
-built_data = \
-	index.html \
-	$(chapter_data) \
-	$(book_name).devhelp2 \
-	$(NULL)
+bookdir = $(datadir)/devhelp/books/$(BOOK_NAME)
 
 if HAVE_XSLTPROC
-book_DATA = \
-	$(built_data) \
-	default.css \
+nobase_book_DATA = \
+	devhelp/* \
 	$(NULL)
 endif
 
-index.html: $(book_sources) xhtml.xsl
-	$(AM_V_GEN)$(XSLTPROC) --xinclude $(srcdir)/xhtml.xsl $(srcdir)/index.xml > index.html
+$(builddir)/devhelp/*: devhelp
+devhelp: manual.xml devhelp.xsl xhtml.xsl
+	@$(MKDIR_P) $@
+	$(AM_V_GEN)$(XSLTPROC) \
+		--xinclude $(srcdir)/devhelp.xsl \
+		$(srcdir)/manual.xml \
+		> $(builddir)/devhelp/$(BOOK_NAME).devhelp2
+	@$(XSLTPROC) \
+		--xinclude \
+		--stringparam outdir $@ \
+		--output $@/index.html \
+		$(srcdir)/xhtml.xsl \
+		$(srcdir)/manual.xml
+	@cp $(srcdir)/default.css $@
 
-$(chapter_data): index.html
+html: manual.xml xhtml.xsl
+	@$(MKDIR_P) $@
+	$(AM_V_GEN)$(XSLTPROC) \
+		--xinclude \
+		--stringparam outdir $@ \
+		--output $@/index.html \
+		$(srcdir)/xhtml.xsl \
+		$(srcdir)/manual.xml
+	@cp $(srcdir)/default.css $@
 
-$(book_name).devhelp2: $(book_sources) devhelp.xsl
-	$(AM_V_GEN)$(XSLTPROC) --xinclude $(srcdir)/devhelp.xsl $(srcdir)/index.xml > $(book_name).devhelp2
-
-book_sources = \
-	index.xml \
-	overview.xml \
-	types.xml \
-	expressions.xml \
-	statements.xml \
-	namespaces.xml \
-	methods.xml \
-	classes.xml \
-	structs.xml \
-	interfaces.xml \
-	enums.xml \
-	delegates.xml \
-	exceptions.xml \
-	attributes.xml \
-	$(NULL)
-
-MOSTLYCLEANFILES = $(built_data)
+mostlyclean-local:
+	rm -rf devhelp
+	rm -rf html
 
 EXTRA_DIST = \
-	$(book_sources) \
+	common.xsl \
 	default.css \
-	xhtml.xsl \
 	devhelp.xsl \
+	manual.xml \
+	xhtml.xsl \
 	$(NULL)
+
+MANUAL_DOCBOOK_URL=https://wiki.gnome.org/Projects/Vala/Manual/Export?action=format\&mimetype=text/docbook
+
+$(srcdir)/manual.xml:
+	@echo "Generating $@ from $(MANUAL_DOCBOOK_URL)"
+	@curl --silent $(MANUAL_DOCBOOK_URL) | \
+		sed -e 's/<articleinfo>.*<\/articleinfo>//g' | \
+		sed -e 's/<section>/\n\n<section>/g' | \
+		sed -e 's/<\/section>/\n<\/section>/g' | \
+		sed -e 's/<title>/\n<title>/g' | \
+		sed -e 's/<para>/\n<para>/g' \
+		> $@
+
+update-manual-from-wiki:
+	@rm $(srcdir)/manual.xml
+	$(MAKE) $(AM_MAKEFLAGS) manual.xml
+	$(MAKE) $(AM_MAKEFLAGS)
 
