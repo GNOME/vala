@@ -173,6 +173,7 @@ TESTS = \
 	objects/bug751338.vala \
 	objects/bug767092.test \
 	objects/bug768823.test \
+	objects/bug766739.vala \
 	errors/errors.vala \
 	errors/bug567181.vala \
 	errors/bug579101.vala \
