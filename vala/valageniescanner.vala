@@ -404,7 +404,7 @@ public class Vala.Genie.Scanner {
 				break;
 			case 's':
 				if (matches (begin, "self")) return TokenType.THIS;
-				break;	
+				break;
 			case 't':
 				if (matches (begin, "true")) return TokenType.TRUE;
 				break;
@@ -435,7 +435,7 @@ public class Vala.Genie.Scanner {
 					break;
 				case 's':
 					if (matches (begin, "async")) return TokenType.ASYNC;
-					break;	
+					break;
 				}
 				break;
 			case 'b':
@@ -466,7 +466,7 @@ public class Vala.Genie.Scanner {
 				break;
 			case 'o':
 				if (matches (begin, "owned")) return TokenType.OWNED;
-				break;	
+				break;
 			case 'p':
 				if (matches (begin, "print")) return TokenType.PRINT;
 				break;
@@ -652,7 +652,7 @@ public class Vala.Genie.Scanner {
 			switch (begin[0]) {
 			case 'i':
 				if (matches (begin, "implements")) return TokenType.IMPLEMENTS;
-				break;	
+				break;
 			}
 			break;
 		}
@@ -813,7 +813,7 @@ public class Vala.Genie.Scanner {
 		}
 
 		if ((_indent_spaces == 0 ) || (last_token != TokenType.EOL)) {
-			/* scrub whitespace (excluding newlines) and comments */		
+			/* scrub whitespace (excluding newlines) and comments */
 			space ();
 		}
 		
@@ -841,7 +841,7 @@ public class Vala.Genie.Scanner {
 			last_token = TokenType.EOL;
 
 			return TokenType.EOL;
-		} 
+		}
 
 
 		while (skip_newlines ()) {
@@ -852,7 +852,7 @@ public class Vala.Genie.Scanner {
 			/* if its an empty new line then ignore */
 			if (current_indent_level == -1)  {
 				continue;
-			} 
+			}
 
 			if (current_indent_level > indent_level) {
 				indent_level = current_indent_level;
