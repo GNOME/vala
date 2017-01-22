@@ -87,7 +87,7 @@ namespace Wnck {
 		public unowned Wnck.Window get_active_window ();
 		public unowned Wnck.Workspace get_active_workspace ();
 		public ulong get_background_pixmap ();
-		public static unowned Wnck.Screen get_default ();
+		public static unowned Wnck.Screen? get_default ();
 		public static unowned Wnck.Screen get_for_root (ulong root_window_id);
 		public int get_height ();
 		[Version (since = "2.20")]

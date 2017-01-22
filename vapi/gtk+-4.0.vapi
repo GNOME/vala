@@ -5772,9 +5772,6 @@ namespace Gdk {
 	public abstract class VulkanContext : Gdk.DrawContext, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		protected VulkanContext ();
-		public uint32 get_draw_index ();
-		public uint32 get_n_images ();
-		public uint32 get_queue_family_index ();
 		public signal void images_updated ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_window_get_type ()")]
@@ -6799,10 +6796,6 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool get_show_events ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void init ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[] argv);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool init_check ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[] argv);
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void keyval_convert_case (uint symbol, out uint lower, out uint upper);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint keyval_from_name (string keyval_name);
@@ -6834,9 +6827,6 @@ namespace Gdk {
 	public static Pango.Context pango_context_get_for_screen (Gdk.Screen screen);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Cairo.Region pango_layout_get_clip_region (Pango.Layout layout, int x_origin, int y_origin, int index_ranges, int n_ranges);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Version (since = "2.2")]
-	public static void parse_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[] argv);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.Pixbuf? pixbuf_get_from_surface (Cairo.Surface surface, int src_x, int src_y, int width, int height);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -8593,10 +8583,6 @@ namespace Gtk {
 		[Version (since = "2.4")]
 		public void set_wrap_width (int width);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public ComboBox.with_area (Gtk.CellArea area);
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public ComboBox.with_area_and_entry (Gtk.CellArea area);
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.24")]
 		public ComboBox.with_entry ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -8612,9 +8598,6 @@ namespace Gtk {
 		public string? active_id { owned get; set; }
 		[Version (since = "2.14")]
 		public Gtk.SensitivityType button_sensitivity { get; set; }
-		[NoAccessorMethod]
-		[Version (since = "3.0")]
-		public Gtk.CellArea cell_area { owned get; construct; }
 		[Version (since = "2.4")]
 		public int column_span_column { get; set; }
 		[Version (since = "2.24")]
@@ -9297,7 +9280,7 @@ namespace Gtk {
 		protected ExpanderAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_chooser_button_get_type ()")]
-	public class FileChooserButton : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser, Gtk.Orientable {
+	public class FileChooserButton : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.6")]
 		public FileChooserButton (string title, Gtk.FileChooserAction action);
@@ -9520,7 +9503,7 @@ namespace Gtk {
 		protected FlowBoxChildAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_font_button_get_type ()")]
-	public class FontButton : Gtk.Button, Atk.Implementor, Gtk.Actionable, Gtk.Buildable, Gtk.FontChooser {
+	public class FontButton : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.FontChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.4")]
 		public FontButton ();
@@ -12663,7 +12646,7 @@ namespace Gtk {
 		public signal bool change_current_page (int object);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_shortcuts_shortcut_get_type ()")]
-	public class ShortcutsShortcut : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+	public class ShortcutsShortcut : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		protected ShortcutsShortcut ();
 		[NoAccessorMethod]
@@ -14451,8 +14434,6 @@ namespace Gtk {
 		public Gdk.ModifierType get_modifier_mask (Gdk.ModifierIntent intent);
 		[Version (since = "3.90")]
 		public unowned Gtk.Widget? get_next_sibling ();
-		[Version (since = "2.4")]
-		public bool get_no_show_all ();
 		[Version (since = "3.8")]
 		public double get_opacity ();
 		public unowned Pango.Context get_pango_context ();
@@ -14618,8 +14599,6 @@ namespace Gtk {
 		public void set_margin_start (int margin);
 		[Version (since = "3.0")]
 		public void set_margin_top (int margin);
-		[Version (since = "2.4")]
-		public void set_no_show_all (bool no_show_all);
 		[Version (since = "3.8")]
 		public void set_opacity (double opacity);
 		public void set_parent (Gtk.Widget parent);
@@ -14656,7 +14635,6 @@ namespace Gtk {
 		public void set_window (owned Gdk.Window window);
 		[Version (since = "3.0")]
 		public void shape_combine_region (Cairo.Region? region);
-		public virtual void show_all ();
 		public void show_now ();
 		[Version (since = "3.10")]
 		public void size_allocate_with_baseline (Gtk.Allocation allocation, int baseline);
@@ -14713,7 +14691,6 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public int margin_top { get; set; }
 		public string name { get; set; }
-		public bool no_show_all { get; set; }
 		[Version (since = "3.8")]
 		public double opacity { get; set; }
 		public Gtk.Widget parent { get; set; }
@@ -17475,9 +17452,6 @@ namespace Gtk {
 	[Version (since = "3.0")]
 	public static uint get_minor_version ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "2.6")]
-	public static GLib.OptionGroup get_option_group (bool open_default_display);
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void grab_add (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Widget? grab_get_current ();
@@ -17487,12 +17461,9 @@ namespace Gtk {
 	[Version (since = "2.14")]
 	public static void hsv_to_rgb (double h, double s, double v, out double r, out double g, out double b);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void init ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv);
+	public static void init ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool init_check ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "2.6")]
-	public static bool init_with_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv, string? parameter_string, [CCode (array_length = false, array_null_terminated = true)] GLib.OptionEntry[] entries, string? translation_domain) throws GLib.Error;
+	public static bool init_check ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void main ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -17505,8 +17476,6 @@ namespace Gtk {
 	public static uint main_level ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void main_quit ();
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool parse_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[] argv);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.10")]
 	public static Gtk.PageSetup print_run_page_setup_dialog (Gtk.Window? parent, Gtk.PageSetup? page_setup, Gtk.PrintSettings settings);

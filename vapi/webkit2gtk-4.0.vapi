@@ -334,6 +334,19 @@ namespace WebKit {
 		[Version (deprecated = true, deprecated_since = "2.6")]
 		public WebKit.URIRequest request { get; }
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_network_proxy_settings_get_type ()")]
+	[Compact]
+	public class NetworkProxySettings {
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.16")]
+		public NetworkProxySettings (string? default_proxy_uri, string? ignore_hosts);
+		[Version (since = "2.16")]
+		public void add_proxy_for_scheme (string scheme, string proxy_uri);
+		[Version (since = "2.16")]
+		public WebKit.NetworkProxySettings copy ();
+		[Version (since = "2.16")]
+		public void free ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_notification_get_type ()")]
 	public class Notification : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -344,12 +357,16 @@ namespace WebKit {
 		public unowned string get_body ();
 		[Version (since = "2.8")]
 		public uint64 get_id ();
+		[Version (since = "2.16")]
+		public unowned string? get_tag ();
 		[Version (since = "2.8")]
 		public unowned string get_title ();
 		[Version (since = "2.8")]
 		public string body { get; }
 		[Version (since = "2.8")]
 		public uint64 id { get; }
+		[Version (since = "2.16")]
+		public string tag { get; }
 		[Version (since = "2.8")]
 		public string title { get; }
 		[HasEmitter]
@@ -433,6 +450,30 @@ namespace WebKit {
 		public bool uri_scheme_is_local (string scheme);
 		public bool uri_scheme_is_no_access (string scheme);
 		public bool uri_scheme_is_secure (string scheme);
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_security_origin_ref", type_id = "webkit_security_origin_get_type ()", unref_function = "webkit_security_origin_unref")]
+	[Compact]
+	public class SecurityOrigin {
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.16")]
+		public SecurityOrigin (string protocol, string host, uint16 port);
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.16")]
+		public SecurityOrigin.for_uri (string uri);
+		[Version (since = "2.16")]
+		public unowned string? get_host ();
+		[Version (since = "2.16")]
+		public uint16 get_port ();
+		[Version (since = "2.16")]
+		public unowned string get_protocol ();
+		[Version (since = "2.16")]
+		public bool is_opaque ();
+		[Version (since = "2.16")]
+		public unowned WebKit.SecurityOrigin @ref ();
+		[Version (since = "2.16")]
+		public string? to_string ();
+		[Version (since = "2.16")]
+		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_settings_get_type ()")]
 	public class Settings : GLib.Object {
@@ -737,6 +778,8 @@ namespace WebKit {
 		[Version (deprecated = true, deprecated_since = "2.10.")]
 		public void set_disk_cache_directory (string directory);
 		public void set_favicon_database_directory (string? path);
+		[Version (since = "2.16")]
+		public void set_network_proxy_settings (WebKit.NetworkProxyMode proxy_mode, WebKit.NetworkProxySettings? proxy_settings);
 		public void set_preferred_languages ([CCode (array_length = false, array_null_terminated = true)] string[]? languages);
 		[Version (since = "2.4")]
 		public void set_process_model (WebKit.ProcessModel process_model);
@@ -757,6 +800,9 @@ namespace WebKit {
 		[Version (since = "2.10")]
 		public WebKit.WebsiteDataManager website_data_manager { get; construct; }
 		public virtual signal void download_started (WebKit.Download download);
+		[HasEmitter]
+		[Version (since = "2.16")]
+		public virtual signal void initialize_notification_permissions ();
 		[Version (since = "2.4")]
 		public virtual signal void initialize_web_extensions ();
 	}
@@ -1138,6 +1184,13 @@ namespace WebKit {
 		RELOAD,
 		FORM_RESUBMITTED,
 		OTHER
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_NETWORK_PROXY_MODE_", type_id = "webkit_network_proxy_mode_get_type ()")]
+	[Version (since = "2.16")]
+	public enum NetworkProxyMode {
+		DEFAULT,
+		NO_PROXY,
+		CUSTOM
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_POLICY_DECISION_TYPE_", type_id = "webkit_policy_decision_type_get_type ()")]
 	public enum PolicyDecisionType {

@@ -13,6 +13,7 @@ namespace Gst {
 		[Version (since = "1.12")]
 		public void config_set_seek_accurate (bool accurate);
 		public static void config_set_user_agent (Gst.Structure config, string agent);
+		public static unowned GLib.List<Gst.PlayerAudioInfo> get_audio_streams (Gst.PlayerMediaInfo info);
 		public int64 get_audio_video_offset ();
 		public double get_color_balance (Gst.PlayerColorBalanceType type);
 		public Gst.Structure get_config ();
@@ -30,8 +31,11 @@ namespace Gst {
 		public Gst.Element get_pipeline ();
 		public Gst.ClockTime get_position ();
 		public double get_rate ();
+		public static unowned GLib.List<Gst.PlayerSubtitleInfo> get_subtitle_streams (Gst.PlayerMediaInfo info);
 		public string get_subtitle_uri ();
 		public string get_uri ();
+		public Gst.Sample get_video_snapshot (Gst.PlayerSnapshotFormat format, Gst.Structure? config);
+		public static unowned GLib.List<Gst.PlayerVideoInfo> get_video_streams (Gst.PlayerMediaInfo info);
 		public double get_volume ();
 		public bool has_color_balance ();
 		public void pause ();
@@ -171,8 +175,11 @@ namespace Gst {
 		public void expose ();
 		public void get_render_rectangle (out int x, out int y, out int width, out int height);
 		public void* get_window_handle ();
+		public static Gst.PlayerVideoRenderer new_with_sink (void* window_handle, Gst.Element video_sink);
 		public void set_render_rectangle (int x, int y, int width, int height);
 		public void set_window_handle (void* window_handle);
+		[NoAccessorMethod]
+		public Gst.Element video_sink { owned get; set; }
 		public void* window_handle { get; set construct; }
 	}
 	[CCode (cheader_filename = "gst/player/player.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_player_visualization_get_type ()")]
@@ -200,6 +207,16 @@ namespace Gst {
 		SATURATION,
 		CONTRAST;
 		public static unowned string get_name (Gst.PlayerColorBalanceType type);
+	}
+	[CCode (cheader_filename = "gst/player/player.h", cprefix = "GST_PLAYER_THUMBNAIL_", has_type_id = false)]
+	public enum PlayerSnapshotFormat {
+		RAW_NATIVE,
+		[CCode (cname = "GST_PLAYER_THUMBNAIL_RAW_xRGB")]
+		RAW_XRGB,
+		[CCode (cname = "GST_PLAYER_THUMBNAIL_RAW_BGRx")]
+		RAW_BGRX,
+		JPG,
+		PNG
 	}
 	[CCode (cheader_filename = "gst/player/player.h", cprefix = "GST_PLAYER_STATE_", type_id = "gst_player_state_get_type ()")]
 	public enum PlayerState {

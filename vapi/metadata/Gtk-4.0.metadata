@@ -66,7 +66,6 @@ CellRenderer
 binding_set_by_class skip=false
 ContainerClass
   .find_child_property skip=false
-get_option_group skip=false
 
 // G-I cannot handle variadic functions
 *.*_valist skip=false
@@ -371,8 +370,6 @@ rc_property_parse_* skip
 show_about_dialog skip=false
 test_init skip=false
 
-init*.argv unowned
-parse_args.argv unowned
 test_init.argvp unowned
 
 // Forward upstream

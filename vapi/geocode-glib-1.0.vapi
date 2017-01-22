@@ -20,6 +20,7 @@ namespace Geocode {
 	public class BoundingBox : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public BoundingBox (double top, double bottom, double left, double right);
+		public bool equal (Geocode.BoundingBox b);
 		public double get_bottom ();
 		public double get_left ();
 		public double get_right ();
@@ -55,6 +56,7 @@ namespace Geocode {
 	public class Location : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Location (double latitude, double longitude, double accuracy = LocationAccuracy.UNKNOWN);
+		public bool equal (Geocode.Location b);
 		public double get_accuracy ();
 		public double get_altitude ();
 		public Geocode.LocationCRS get_crs ();
@@ -80,6 +82,15 @@ namespace Geocode {
 		public double longitude { get; set; }
 		public uint64 timestamp { get; construct; }
 	}
+	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_id = "geocode_mock_backend_get_type ()")]
+	public class MockBackend : GLib.Object, Geocode.Backend {
+		[CCode (has_construct_function = false)]
+		public MockBackend ();
+		public void add_forward_result (GLib.HashTable<string,GLib.Value?> @params, GLib.List<Geocode.Place>? results, GLib.Error? error);
+		public void add_reverse_result (GLib.HashTable<string,GLib.Value?> @params, GLib.List<Geocode.Place>? results, GLib.Error? error);
+		public void clear ();
+		public unowned GLib.GenericArray<Geocode.MockBackendQuery> get_query_log ();
+	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_id = "geocode_nominatim_get_type ()")]
 	[Version (since = "3.23.1")]
 	public class Nominatim : GLib.Object, Geocode.Backend {
@@ -94,11 +105,14 @@ namespace Geocode {
 		public string base_url { owned get; construct; }
 		[NoAccessorMethod]
 		public string maintainer_email_address { owned get; construct; }
+		[NoAccessorMethod]
+		public string user_agent { owned get; set; }
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_id = "geocode_place_get_type ()")]
 	public class Place : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Place (string name, Geocode.PlaceType place_type);
+		public bool equal (Geocode.Place b);
 		public unowned string get_administrative_area ();
 		public unowned string get_area ();
 		public unowned Geocode.BoundingBox get_bounding_box ();
@@ -175,6 +189,13 @@ namespace Geocode {
 		public abstract async GLib.List<Geocode.Place> forward_search_async (GLib.HashTable<string,GLib.Value?> @params, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract GLib.List<Geocode.Place> reverse_resolve (GLib.HashTable<string,GLib.Value?> @params, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async GLib.List<Geocode.Place> reverse_resolve_async (GLib.HashTable<string,GLib.Value?> @params, GLib.Cancellable? cancellable) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", has_type_id = false)]
+	public struct MockBackendQuery {
+		public weak GLib.HashTable<void*,void*> @params;
+		public bool is_forward;
+		public weak GLib.List<Geocode.Place> results;
+		public weak GLib.Error error;
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", cprefix = "GEOCODE_LOCATION_CRS_", type_id = "geocode_location_crs_get_type ()")]
 	public enum LocationCRS {
