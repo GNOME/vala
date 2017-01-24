@@ -1,0 +1,8 @@
+Invalid Code
+
+namespace Foo {
+	string bar = "bar";
+}
+
+void main () {
+}

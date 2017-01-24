@@ -42,6 +42,7 @@ TESTS = \
 	basic-types/bug731017.vala \
 	basic-types/bug761307.vala \
 	basic-types/bug771626.test \
+	basic-types/bug777697.test \
 	namespaces.vala \
 	methods/lambda.vala \
 	methods/closures.vala \
