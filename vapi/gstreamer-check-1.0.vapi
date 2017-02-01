@@ -9,6 +9,11 @@ namespace Gst {
 		[Version (since = "1.6")]
 		public class HarnessThread {
 		}
+		[CCode (cheader_filename = "gst/check/check.h", has_type_id = false)]
+		[Compact]
+		[GIR (name = "CheckLogFilter")]
+		public class LogFilter {
+		}
 		[CCode (cheader_filename = "gst/check/gstbufferstraw.h,gst/check/gstcheck.h,gst/check/gstconsistencychecker.h,gst/check/internal-check.h", cname = "GstStreamConsistency", has_type_id = false, lower_case_cprefix = "gst_consistency_checker_")]
 		[Compact]
 		[GIR (name = "StreamConsistency")]
@@ -182,6 +187,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/check/check.h", cname = "GstHarnessPrepareEventFunc", has_target = false)]
 		[Version (since = "1.8")]
 		public delegate Gst.Event HarnessPrepareEventFunc (Gst.Check.Harness h, void* data);
+		[CCode (cheader_filename = "gst/check/check.h", instance_pos = 3.9)]
+		[Version (since = "1.12")]
+		public delegate bool LogFilterFunc (string log_domain, GLib.LogLevelFlags log_level, string message);
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static void abi_list (Gst.Check.ABIStruct list, bool have_abi_sizes);
 		[CCode (cheader_filename = "gst/check/check.h")]
@@ -196,6 +204,9 @@ namespace Gst {
 		public static void caps_equal (Gst.Caps caps1, Gst.Caps caps2);
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static Gst.FlowReturn chain_func (Gst.Pad pad, Gst.Object parent, Gst.Buffer buffer);
+		[CCode (cheader_filename = "gst/check/check.h")]
+		[Version (since = "1.12")]
+		public static void clear_log_filter ();
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static void drop_buffers ();
 		[CCode (cheader_filename = "gst/check/check.h")]
@@ -212,6 +223,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/check/check.h")]
 		[Version (since = "1.6")]
 		public static void object_destroyed_on_unref (void* object_to_unref);
+		[CCode (cheader_filename = "gst/check/check.h")]
+		[Version (since = "1.12")]
+		public static void remove_log_filter (Gst.Check.LogFilter filter);
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static Gst.Element setup_element (string factory);
 		[CCode (cheader_filename = "gst/check/check.h")]

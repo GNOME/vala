@@ -1893,6 +1893,7 @@ namespace GData {
 		[CCode (has_construct_function = false)]
 		[Version (since = "0.4.0")]
 		public Parsable.from_xml (GLib.Type parsable_type, string xml, int length) throws GLib.Error;
+		public unowned string get_content_type ();
 		[NoWrapper]
 		public virtual void get_json (Json.Builder builder);
 		[CCode (cname = "gdata_parsable_get_json")]

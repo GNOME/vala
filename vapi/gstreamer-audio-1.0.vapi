@@ -735,7 +735,10 @@ namespace Gst {
 			EAC3,
 			DTS,
 			MPEG2_AAC,
-			MPEG4_AAC
+			MPEG4_AAC,
+			MPEG2_AAC_RAW,
+			MPEG4_AAC_RAW,
+			FLAC
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_RING_BUFFER_STATE_", type_id = "gst_audio_ring_buffer_state_get_type ()")]
 		[GIR (name = "AudioRingBufferState")]
