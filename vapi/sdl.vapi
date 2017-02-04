@@ -101,7 +101,7 @@ namespace SDL {
 	[Compact]
 	public class Surface {
 		public uint32 flags;
-		public PixelFormat format;
+		public PixelFormat? format;
 		public int w;
 		public int h;
 		public uint16 pitch;
@@ -179,10 +179,9 @@ namespace SDL {
 		public static int check_video_mode(int width, int height, int bpp, uint32 flags);
 	}// Screen
 
-	[CCode (cname="SDL_PixelFormat")]
-	[Compact]
-	public class PixelFormat {
-		public Palette palette;
+	[CCode (cname="SDL_PixelFormat", has_copy_function = false, has_destroy_function = false, has_type_id = false)]
+	public struct PixelFormat {
+		public Palette? palette;
 		public uchar BitsPerPixel;
 		public uchar BytesPerPixel;
 		public uchar Rloss;
@@ -193,10 +192,10 @@ namespace SDL {
 		public uchar Gshift;
 		public uchar Bshift;
 		public uchar Ashift;
-		public uchar Rmask;
-		public uchar Gmask;
-		public uchar Bmask;
-		public uchar Amask;
+		public uint32 Rmask;
+		public uint32 Gmask;
+		public uint32 Bmask;
+		public uint32 Amask;
 
 		public uint32 colorkey;
 		public uchar alpha;
@@ -236,8 +235,8 @@ namespace SDL {
 		LOGPAL, PHYSPAL
 	}// PaletteFlags
 
-	[CCode (cname="SDL_Palette")]
-	public class Palette {
+	[CCode (cname="SDL_Palette", has_copy_function = false, has_destroy_function = false, has_type_id = false)]
+	public struct Palette {
 		[CCode (array_length_cname="ncolors")]
 		public Color[] colors;
 	}// Palette
@@ -259,7 +258,7 @@ namespace SDL {
 		public uint32 UnusedBits3	;
 
 		public uint32 video_mem;
-		public PixelFormat vfmt;
+		public PixelFormat? vfmt;
 		public int	current_w;
 		public int	current_h;
 
@@ -506,7 +505,7 @@ namespace SDL {
 		public weak SysWMmsg msg;
 	}// WMEvent
 
-	[CCode (cname="SDL_SysWMmsg", cheader="SDL_syswm.h")]
+	[CCode (cname="SDL_SysWMmsg", cheader_filename="SDL_syswm.h")]
 	public class SysWMmsg {
 	}// SysWMmsg
 
