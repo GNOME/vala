@@ -206,6 +206,7 @@ TESTS = \
 	errors/bug623049.vala \
 	errors/bug639589.vala \
 	errors/bug651145.vala \
+	errors/bug778224.vala \
 	asynchronous/bug595735.vala \
 	asynchronous/bug595755.vala \
 	asynchronous/bug596177.vala \

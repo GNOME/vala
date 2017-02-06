@@ -6529,7 +6529,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public void return_default_value (DataType return_type) {
-		ccode.add_return (default_value_for_type (return_type, false));
+		var st = return_type.data_type as Struct;
+		if (st != null && st.is_simple_type () && !return_type.nullable) {
+			// 0-initialize struct with struct initializer { 0 }
+			// only allowed as initializer expression in C
+			var ret_temp_var = get_temp_variable (return_type, true, null, true);
+			emit_temp_var (ret_temp_var);
+			ccode.add_return (new CCodeIdentifier (ret_temp_var.name));
+		} else {
+			ccode.add_return (default_value_for_type (return_type, false));
+		}
 	}
 
 	public virtual void generate_dynamic_method_wrapper (DynamicMethod method) {
