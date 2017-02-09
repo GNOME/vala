@@ -2956,6 +2956,13 @@ namespace GLib {
 		public static double double_range (double begin, double end);
 	}
 
+	namespace Uuid {
+		[Version (since = "2.52")]
+		public static bool string_is_valid (string str);
+		[Version (since = "2.52")]
+		public static string string_random ();
+	}
+
 	/* Miscellaneous Utility Functions */
 
 	namespace Environment {
