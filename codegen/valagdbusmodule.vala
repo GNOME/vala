@@ -220,21 +220,42 @@ public class Vala.GDBusModule : GVariantModule {
 		var fd_list = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_get_unix_fd_list"));
 		fd_list.add_argument (message_expr);
 
-		var fd = new CCodeFunctionCall (new CCodeIdentifier ("g_unix_fd_list_get"));
-		fd.add_argument (fd_list);
-		fd.add_argument (new CCodeIdentifier ("_fd_index"));
-		fd.add_argument (new CCodeConstant ("NULL"));
+		var fd_var = new CCodeIdentifier ("_fd");
 
-		var stream = create_from_file_descriptor (type, fd);
+		var stream = create_from_file_descriptor (type, fd_var);
 		if (stream != null) {
+			var fd_list_var = new CCodeIdentifier ("_fd_list");
+
+			var fd = new CCodeFunctionCall (new CCodeIdentifier ("g_unix_fd_list_get"));
+			fd.add_argument (fd_list_var);
+			fd.add_argument (new CCodeIdentifier ("_fd_index"));
+			fd.add_argument (error_expr);
+
+			ccode.add_assignment (fd_list_var, fd_list);
+			ccode.open_if (fd_list_var);
+
 			var get_fd = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_next"));
 			get_fd.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
 			get_fd.add_argument (new CCodeConstant ("\"h\""));
 			get_fd.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_fd_index")));
 			ccode.add_expression (get_fd);
 
+			ccode.add_assignment (fd_var, fd);
+			ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN_OR_EQUAL, fd_var, new CCodeConstant ("0")));
+
 			ccode.add_assignment (target_expr, stream);
-			may_fail = false;
+			may_fail = true;
+
+			ccode.close ();
+
+			ccode.add_else ();
+			var set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error_literal"));
+			set_error.add_argument (error_expr);
+			set_error.add_argument (new CCodeIdentifier ("G_IO_ERROR"));
+			set_error.add_argument (new CCodeIdentifier ("G_IO_ERROR_FAILED"));
+			set_error.add_argument (new CCodeConstant ("\"FD List is NULL\""));
+			ccode.add_expression (set_error);
+			ccode.close ();
 		} else {
 			read_expression (type, iter_expr, target_expr, sym, error_expr, out may_fail);
 		}
