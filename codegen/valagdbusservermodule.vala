@@ -23,6 +23,7 @@
 public class Vala.GDBusServerModule : GDBusClientModule {
 	string generate_dbus_wrapper (Method m, ObjectTypeSymbol sym, bool ready = false) {
 		string wrapper_name = "_dbus_%s".printf (get_ccode_name (m));
+		bool need_goto_label = false;
 
 		if (m.base_method != null) {
 			m = m.base_method;
@@ -142,7 +143,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					return_error.add_argument (new CCodeIdentifier ("error"));
 					ccode.add_expression (return_error);
 
-					ccode.add_return ();
+					ccode.add_goto ("_error");
+					need_goto_label = true;
 
 					ccode.close ();
 				}
@@ -336,6 +338,10 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			}
 		} else {
 			ccode.add_expression (ccall);
+		}
+
+		if (need_goto_label) {
+			ccode.add_label ("_error");
 		}
 
 		foreach (Parameter param in m.get_parameters ()) {
