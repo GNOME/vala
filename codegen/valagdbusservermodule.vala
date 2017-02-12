@@ -237,7 +237,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				ccode.close ();
 			}
 
-			ccode.add_declaration ("GDBusMessage*", new CCodeVariableDeclarator ("_reply_message"));
+			ccode.add_declaration ("GDBusMessage*", new CCodeVariableDeclarator.zero ("_reply_message", new CCodeConstant ("NULL")));
 
 			var message_expr = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_get_message"));
 			message_expr.add_argument (new CCodeIdentifier ("invocation"));

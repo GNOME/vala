@@ -774,7 +774,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 				foreach (Parameter param in m.get_parameters ()) {
 					if (param.direction == ParameterDirection.OUT) {
-						ccode.add_declaration (get_ccode_name (param.variable_type), new CCodeVariableDeclarator ("_vala_" + param.name));
+						ccode.add_declaration (get_ccode_name (param.variable_type), new CCodeVariableDeclarator.zero ("_vala_%s".printf (param.name), default_value_for_type (param.variable_type, true)));
 
 						var array_type = param.variable_type as ArrayType;
 
@@ -813,7 +813,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 						var target = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
 						receive_dbus_value (m.return_type, new CCodeIdentifier ("_reply_message"), new CCodeIdentifier ("_reply_iter"), target, m);
 					} else {
-						ccode.add_declaration (get_ccode_name (m.return_type), new CCodeVariableDeclarator ("_result"));
+						ccode.add_declaration (get_ccode_name (m.return_type), new CCodeVariableDeclarator.zero ("_result", default_value_for_type (m.return_type, true)));
 
 						var array_type = m.return_type as ArrayType;
 
