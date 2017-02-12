@@ -151,8 +151,8 @@ public class Vala.Field : Variable, Lockable {
 				return false;
 			}
 
-			if (parent_symbol is Namespace && initializer.is_constant ()) {
-				if ((variable_type.nullable || nitializer.is_non_null ()) && (variable_type.value_owned || variable_type.is_disposable ())) {
+			if (parent_symbol is Namespace && initializer.is_constant () && initializer.is_non_null ()) {
+				if (variable_type.is_disposable () && variable_type.value_owned) {
 					error = true;
 					Report.error (source_reference, "Owned namespace fields can only be initialized in a function or method");
 					return false;
