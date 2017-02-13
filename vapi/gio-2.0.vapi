@@ -186,6 +186,9 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_PREVIEW_ICON")]
 		[Version (since = "2.20")]
 		public const string PREVIEW_ICON;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_RECENT_MODIFIED")]
+		[Version (since = "2.52")]
+		public const string RECENT_MODIFIED;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_SELINUX_CONTEXT")]
 		public const string SELINUX_CONTEXT;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_STANDARD_ALLOCATED_SIZE")]

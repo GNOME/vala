@@ -8392,12 +8392,16 @@ namespace Gtk {
 	public class CheckButton : Gtk.ToggleButton, Atk.Implementor, Gtk.Actionable, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CheckButton ();
-		[NoWrapper]
-		public virtual void draw_indicator (Cairo.Context cr);
+		public bool get_draw_indicator ();
+		public bool get_inconsistent ();
+		public void set_draw_indicator (bool draw_indicator);
+		public void set_inconsistent (bool inconsistent);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CheckButton.with_label (string label);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CheckButton.with_mnemonic (string label);
+		public bool draw_indicator { get; set; }
+		public bool inconsistent { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_check_menu_item_get_type ()")]
 	public class CheckMenuItem : Gtk.MenuItem, Atk.Implementor, Gtk.Actionable, Gtk.Buildable {
@@ -13580,19 +13584,12 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ToggleButton ();
 		public bool get_active ();
-		public bool get_inconsistent ();
-		public bool get_mode ();
 		public void set_active (bool is_active);
-		public void set_inconsistent (bool setting);
-		public void set_mode (bool draw_indicator);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ToggleButton.with_label (string label);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ToggleButton.with_mnemonic (string label);
 		public bool active { get; set; }
-		[NoAccessorMethod]
-		public bool draw_indicator { get; set; }
-		public bool inconsistent { get; set; }
 		[HasEmitter]
 		public virtual signal void toggled ();
 	}
@@ -14520,9 +14517,6 @@ namespace Gtk {
 		public (unowned string)[] list_action_prefixes ();
 		[Version (since = "2.4")]
 		public GLib.List<weak Gtk.Widget> list_mnemonic_labels ();
-		[CCode (array_length_pos = 0.1, array_length_type = "guint", cname = "gtk_widget_class_list_style_properties")]
-		[Version (since = "2.2")]
-		public class (unowned GLib.ParamSpec)[] list_style_properties ();
 		[Version (since = "3.90")]
 		public virtual void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline);
 		[Version (since = "3.20")]
