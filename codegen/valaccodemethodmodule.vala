@@ -769,7 +769,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					}
 				}
 
-				if (m.coroutine) {
+				// For non-void return-types GAsyncModule.visit_return_statement () will take care of this
+				if (m.return_type is VoidType && m.coroutine) {
 					// epilogue
 					complete_async ();
 				}
