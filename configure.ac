@@ -1,6 +1,9 @@
 dnl configure.in
 AC_PREREQ([2.65])
-AC_INIT([valadoc],[0.35.0],[flo.brosch@gmail.com])
+AC_INIT([valadoc],[0.35.0],
+	[https://bugzilla.gnome.org/browse.cgi?product=valadoc],
+	[valadoc],
+	[https://wiki.gnome.org/Projects/Valadoc])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
