@@ -7,11 +7,13 @@
 
   <name xml:lang="en">valadoc</name>
   <shortdesc xml:lang="en">A documentation tool for vala</shortdesc>
-  <description>-</description>
+  <description>Valadoc is a documentation generator for generating API documentation
+from Vala source code based on libvala.</description>
 
-  <homepage rdf:resource="http://live.gnome.org/Valadoc" />
-  <download-page rdf:resource="http://live.gnome.org/Valadoc" />
-  <bug-database rdf:resource="http://bugzilla.gnome.org/browse.cgi?product=valadoc" />
+  <homepage rdf:resource="https://wiki.gnome.org/Projects/Valadoc" />
+  <download-page rdf:resource="https://wiki.gnome.org/Projects/Valadoc" />
+  <bug-database rdf:resource="https://bugzilla.gnome.org/browse.cgi?product=valadoc" />
+
   <category rdf:resource="http://api.gnome.org/doap-extensions#core" />
   <programming-language>Vala</programming-language>
 
@@ -20,6 +22,13 @@
       <foaf:name>Florian Brosch</foaf:name>
       <foaf:mbox rdf:resource="mailto:flo.brosch@gmail.com" />
       <gnome:userid>flobrosch</gnome:userid>
+    </foaf:Person>
+  </maintainer>
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Rico Tzschichholz</foaf:name>
+      <foaf:mbox rdf:resource="mailto:ricotz@ubuntu.com" />
+      <gnome:userid>ricotz</gnome:userid>
     </foaf:Person>
   </maintainer>
 
