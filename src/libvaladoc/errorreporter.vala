@@ -249,6 +249,7 @@ public class Valadoc.ErrorReporter : Object {
 		return func (fd) == 1;
 	}
 
+	[PrintfFormat]
 	private inline void msg (string type, string type_color_start, string type_color_end, string file, long line, long startpos, long endpos,
 							 string errline, string msg_format, va_list args)
 	{
@@ -306,6 +307,7 @@ public class Valadoc.ErrorReporter : Object {
 		this.stream.puts (message.offset (start));
 	}
 
+	[PrintfFormat]
 	public void simple_warning (string? location, string msg_format, ...) {
 		var args = va_list();
 
@@ -325,6 +327,7 @@ public class Valadoc.ErrorReporter : Object {
 		this._warnings++;
 	}
 
+	[PrintfFormat]
 	public void simple_error (string? location, string msg_format, ...) {
 		var args = va_list();
 
@@ -345,6 +348,7 @@ public class Valadoc.ErrorReporter : Object {
 		this._errors++;
 	}
 
+	[PrintfFormat]
 	public void simple_note (string? location, string msg_format, ...) {
 		if (_settings == null || _settings.verbose) {
 			var args = va_list();
@@ -367,6 +371,7 @@ public class Valadoc.ErrorReporter : Object {
 		}
 	}
 
+	[PrintfFormat]
 	public void error (string file, long line, long startpos, long endpos, string errline,
 					   string msg_format, ...)
 	{
@@ -375,6 +380,7 @@ public class Valadoc.ErrorReporter : Object {
 		this._errors++;
 	}
 
+	[PrintfFormat]
 	public void warning (string file, long line, long startpos, long endpos, string errline,
 						 string msg_format, ...)
 	{
