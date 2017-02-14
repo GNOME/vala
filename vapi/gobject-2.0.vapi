@@ -404,7 +404,7 @@ namespace GLib {
 		public GLib.Type get_type ();
 		public unowned GLib.TypeInterface? peek_parent ();
 	}
-	[CCode (cheader_filename = "gobject.h", type_id = "g_type_module_get_type ()")]
+	[CCode (cheader_filename = "glib-object.h", type_id = "g_type_module_get_type ()")]
 	public abstract class TypeModule : GLib.Object, GLib.TypePlugin {
 		[CCode (has_construct_function = false)]
 		protected TypeModule ();
@@ -439,7 +439,7 @@ namespace GLib {
 		public void sort (GLib.CompareFunc<GLib.Value> compare_func);
 		public void sort_with_data (GLib.CompareDataFunc<GLib.Value> compare_func);
 	}
-	[CCode (cheader_filename = "gobject.h", type_id = "g_type_plugin_get_type ()")]
+	[CCode (cheader_filename = "glib-object.h", type_id = "g_type_plugin_get_type ()")]
 	public interface TypePlugin {
 		public void complete_interface_info (GLib.Type instance_type, GLib.Type interface_type, GLib.InterfaceInfo info);
 		public void complete_type_info (GLib.Type g_type, GLib.TypeInfo info, GLib.TypeValueTable value_table);
