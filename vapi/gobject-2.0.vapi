@@ -404,7 +404,7 @@ namespace GLib {
 		public GLib.Type get_type ();
 		public unowned GLib.TypeInterface? peek_parent ();
 	}
-	[CCode (cheader_filename = "glib-object.h", type_id = "g_type_module_get_type ()")]
+	[CCode (cheader_filename = "glib-object.h", lower_case_csuffix = "type_module", type_id = "g_type_module_get_type ()")]
 	public abstract class TypeModule : GLib.Object, GLib.TypePlugin {
 		[CCode (has_construct_function = false)]
 		protected TypeModule ();
