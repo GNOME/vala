@@ -951,7 +951,11 @@ public class Vala.CCodeAttribute : AttributeCache {
 			if (((ArrayType) node).element_type.data_type.get_full_name () == "string") {
 				return "BOXED,INT";
 			} else {
-				return "POINTER,INT";
+				var ret = "POINTER";
+				for (var i = 0; i < ((ArrayType) node).rank; i++) {
+					ret = "%s,INT".printf (ret);
+				}
+				return ret;
 			}
 		} else if (node is VoidType) {
 			return "VOID";

@@ -220,8 +220,10 @@ public class Vala.GSignalModule : GObjectModule {
 			callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), get_value_type_name_from_parameter (p)));
 			n_params++;
 			if (p.variable_type.is_array ()) {
-				callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), "gint"));
-				n_params++;
+				for (var j = 0; j < ((ArrayType) p.variable_type).rank; j++) {
+					callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), "gint"));
+					n_params++;
+				}
 			}
 		}
 		callback_decl.add_parameter (new CCodeParameter ("data2", "gpointer"));
@@ -289,10 +291,12 @@ public class Vala.GSignalModule : GObjectModule {
 			fc.add_argument (inner_fc);
 			i++;
 			if (is_array) {
-				inner_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_int"));
-				inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
-				fc.add_argument (inner_fc);
-				i++;
+				for (var j = 0; j < ((ArrayType) p.variable_type).rank; j++) {
+					inner_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_int"));
+					inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
+					fc.add_argument (inner_fc);
+					i++;
+				}
 			}
 		}
 		fc.add_argument (new CCodeIdentifier ("data2"));
@@ -404,7 +408,7 @@ public class Vala.GSignalModule : GObjectModule {
 		foreach (Parameter param in params) {
 			params_len++;
 			if (param.variable_type.is_array ()) {
-				params_len++;
+				params_len += ((ArrayType) param.variable_type).rank;
 			}
 		}
 
@@ -416,7 +420,9 @@ public class Vala.GSignalModule : GObjectModule {
 				} else {
 					csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 				}
-				csignew.add_argument (new CCodeConstant ("G_TYPE_INT"));
+				for (var i = 0; i < ((ArrayType) param.variable_type).rank; i++) {
+					csignew.add_argument (new CCodeConstant ("G_TYPE_INT"));
+				}
 			} else if (param.variable_type is PointerType || param.variable_type.type_parameter != null || param.direction != ParameterDirection.IN) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 			} else if (param.variable_type is ErrorType) {
