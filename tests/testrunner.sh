@@ -30,7 +30,7 @@ export PKG_CONFIG_PATH=$topbuilddir/src/libvaladoc
 export LD_LIBRARY_PATH=$topbuilddir/src/libvaladoc/.libs
 
 VALAC=valac
-VALAFLAGS="-X -D -X TOP_SRC_DIR=\"$topsrcdir\" --vapidir $topbuilddir/src/libvaladoc --pkg valadoc-1.0 --pkg gee-0.8 --disable-warnings --main main --save-temps -X -g -X -O0 -X -pipe -X -lm -X -Werror=return-type -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast -X -L$topbuilddir/src/libvaladoc/.libs -X -I$topbuilddir/src/libvaladoc $topsrcdir/tests/libvaladoc/parser/generic-scanner.vala $topsrcdir/tests/drivers/generic-api-test.vala"
+VALAFLAGS="-X -D -X TOP_SRC_DIR=\"$topsrcdir\" --vapidir $topbuilddir/src/libvaladoc --pkg valadoc-1.0 --pkg gee-0.8 --disable-warnings --main main --save-temps -X -g -X -O0 -X -pipe -X -lm -X -Werror=return-type -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast -X -Wformat -X -Werror=format-security -X -Werror=format-nonliteral -X -L$topbuilddir/src/libvaladoc/.libs -X -I$topbuilddir/src/libvaladoc $topsrcdir/tests/libvaladoc/parser/generic-scanner.vala $topsrcdir/tests/drivers/generic-api-test.vala"
 
 testdir=_test
 rm -rf $testdir
