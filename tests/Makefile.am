@@ -23,16 +23,43 @@ TESTS = \
 	libvaladoc/parser/sequencerule.vala \
 	libvaladoc/parser/optionalrule.vala \
 	libvaladoc/parser/stubrule.vala \
-	drivers/driver-0-20.vala \
-	drivers/driver-0-22.vala \
-	drivers/driver-0-24.vala \
-	drivers/driver-0-26.vala \
-	drivers/driver-0-28.vala \
-	drivers/driver-0-30.vala \
-	drivers/driver-0-32.vala \
-	drivers/driver-0-34.vala \
-	drivers/driver-0-36.vala \
 	$(NULL)
+
+if HAVE_LIBVALA_0_20_X
+TESTS += drivers/driver-0-20.vala
+endif
+
+if HAVE_LIBVALA_0_22_X
+TESTS += drivers/driver-0-22.vala
+endif
+
+if HAVE_LIBVALA_0_24_X
+TESTS += drivers/driver-0-24.vala
+endif
+
+if HAVE_LIBVALA_0_26_X
+TESTS += drivers/driver-0-26.vala
+endif
+
+if HAVE_LIBVALA_0_28_X
+TESTS += drivers/driver-0-28.vala
+endif
+
+if HAVE_LIBVALA_0_30_X
+TESTS += drivers/driver-0-30.vala
+endif
+
+if HAVE_LIBVALA_0_32_X
+TESTS += drivers/driver-0-32.vala
+endif
+
+if HAVE_LIBVALA_0_34_X
+TESTS += drivers/driver-0-34.vala
+endif
+
+if HAVE_LIBVALA_0_36_X
+TESTS += drivers/driver-0-36.vala
+endif
 
 check-TESTS: $(TESTS)
 	@EXEEXT=$(EXEEXT) TOPBUILDDIR=$(abs_top_builddir) TOPSRCDIR=$(abs_top_srcdir) $(srcdir)/testrunner.sh $(TESTS)

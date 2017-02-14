@@ -29,21 +29,21 @@ void main () {
 	assert (reporter.errors == 0);
 
 	// simple errors:
-	reporter.simple_error ("error 1 %d %s", 1, "foo");
+	reporter.simple_error ("test", "error 1 %d %s", 1, "foo");
 	assert (reporter.warnings == 0);
 	assert (reporter.errors == 1);
 
-	reporter.simple_error ("error 2");
+	reporter.simple_error (null, "error 2");
 	assert (reporter.warnings == 0);
 	assert (reporter.errors == 2);
 
 
 	// simple warnings:
-	reporter.simple_warning ("warning 1 %d %s", 1, "foo");
+	reporter.simple_warning ("test", "warning 1 %d %s", 1, "foo");
 	assert (reporter.warnings == 1);
 	assert (reporter.errors == 2);
 
-	reporter.simple_warning ("warning 2");
+	reporter.simple_warning (null, "warning 2");
 	assert (reporter.warnings == 2);
 	assert (reporter.errors == 2);
 
