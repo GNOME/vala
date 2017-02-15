@@ -2109,11 +2109,12 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.data_type != null);
 			assert (param.parameter_type.data_type is Api.Array);
 			//assert (((Api.Array) param.parameter_type.data_type).dimension == 1);
-			assert (((Api.Array) param.parameter_type.data_type).data_type is Api.Array);
+			assert (((Api.Array) param.parameter_type.data_type).data_type is Api.TypeReference);
 			//assert (((Api.Array) ((Api.Array) param.parameter_type.data_type).data_type).dimension == 1);
-			assert (((Api.Array) ((Api.Array) param.parameter_type.data_type).data_type).data_type is Api.TypeReference);
-			assert (((Api.TypeReference) ((Api.Array) ((Api.Array) param.parameter_type.data_type).data_type).data_type).data_type is Api.Struct);
-			assert (((Api.Struct) ((Api.TypeReference) ((Api.Array) ((Api.Array) param.parameter_type.data_type).data_type).data_type).data_type).get_full_name () == "int");
+			assert (((Api.TypeReference) ((Api.Array) param.parameter_type.data_type).data_type).data_type is Api.Array);
+			assert (((Api.Array) ((Api.TypeReference) ((Api.Array) param.parameter_type.data_type).data_type).data_type).data_type is Api.TypeReference);
+			assert (((Api.TypeReference) ((Api.Array) ((Api.TypeReference) ((Api.Array) param.parameter_type.data_type).data_type).data_type).data_type).data_type is Api.Struct);
+			assert (((Api.Struct) ((Api.TypeReference) ((Api.Array) ((Api.TypeReference) ((Api.Array) param.parameter_type.data_type).data_type).data_type).data_type).data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
 			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
@@ -2344,11 +2345,12 @@ public static void return_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_9":
 			assert (ret.data_type is Api.Array);
 			//assert (((Api.Array) ret.data_type).dimension == 1);
-			assert (((Api.Array) ret.data_type).data_type is Api.Array);
+			assert (((Api.Array) ret.data_type).data_type is Api.TypeReference);
 			//assert (((Api.Array) ((Api.Array) ret.data_type).data_type).dimension == 1);
-			assert (((Api.Array) ((Api.Array) ret.data_type).data_type).data_type is Api.TypeReference);
-			assert (((Api.TypeReference) ((Api.Array) ((Api.Array) ret.data_type).data_type).data_type).data_type is Api.Struct);
-			assert (((Api.Struct) ((Api.TypeReference) ((Api.Array) ((Api.Array) ret.data_type).data_type).data_type).data_type).get_full_name () == "int");
+			assert (((Api.TypeReference) ((Api.Array) ret.data_type).data_type).data_type is Api.Array);
+			assert (((Api.Array) ((Api.TypeReference) ((Api.Array) ret.data_type).data_type).data_type).data_type is Api.TypeReference);
+			assert (((Api.TypeReference) ((Api.Array) ((Api.TypeReference) ((Api.Array) ret.data_type).data_type).data_type).data_type).data_type is Api.Struct);
+			assert (((Api.Struct) ((Api.TypeReference) ((Api.Array) ((Api.TypeReference) ((Api.Array) ret.data_type).data_type).data_type).data_type).data_type).get_full_name () == "int");
 			assert (ret.get_type_arguments ().size == 0);
 			assert (ret.pass_ownership == false);
 			assert (ret.is_owned == false);
