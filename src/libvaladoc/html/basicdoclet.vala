@@ -459,10 +459,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	private void write_documentation (Api.Node element , Api.Node? pos) {
 		Content.Comment? doctree = element.documentation;
-		Attribute? deprecated = (element is Symbol)? ((Symbol) element).get_attribute ("Deprecated") : null;
+		bool is_deprecated = (element is Symbol && ((Symbol) element).is_deprecated);
 
 		// avoid empty divs
-		if (doctree == null && deprecated == null) {
+		if (doctree == null && !is_deprecated) {
 			return;
 		}
 
@@ -471,9 +471,21 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		_renderer.set_owner (element);
 
 		// deprecation warning:
-		if (deprecated != null) {
-			AttributeArgument? replacement = deprecated.get_argument ("replacement");
-			AttributeArgument? version = deprecated.get_argument ("version");
+		if (is_deprecated) {
+			Symbol symbol = (Symbol) element;
+			Attribute? version;
+			Attribute? deprecated;
+			AttributeArgument? replacement;
+			AttributeArgument? since;
+			if ((version = symbol.get_attribute ("Version")) != null) {
+				replacement = version.get_argument ("replacement");
+				since = version.get_argument ("deprecated_since");
+			} else if ((deprecated = symbol.get_attribute ("Deprecated")) != null) {
+				replacement = deprecated.get_argument ("replacement");
+				since = deprecated.get_argument ("version");
+			} else {
+				assert_not_reached ();
+			}
 
 			writer.start_tag ("p");
 			writer.start_tag ("b");
@@ -481,8 +493,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.end_tag ("b");
 			writer.text (" %s is deprecated".printf (element.name));
 
-			if (version != null) {
-				writer.text (" since %s".printf (version.get_value_as_string ()));
+			if (since != null) {
+				writer.text (" since %s".printf (since.get_value_as_string ()));
 			}
 
 			writer.text (".");

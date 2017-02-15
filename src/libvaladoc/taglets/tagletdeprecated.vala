@@ -35,7 +35,7 @@ public class Valadoc.Taglets.Deprecated : BlockContent, Taglet, Block {
 	{
 		base.check (api_root, container, file_path, reporter, settings);
 		reporter.simple_warning ("%s: %s: @deprecated".printf (file_path, container.get_full_name ()),
-								 "@deprecated is deprecated. Use [Deprecated]");
+								 "@deprecated is deprecated. Use [Version (deprecated = true)]");
 	}
 
 	public override void accept (ContentVisitor visitor) {

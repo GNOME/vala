@@ -1336,13 +1336,24 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 
 	private void process_attributes (Symbol sym, GComment gcomment) {
 		// Handle the ‘Deprecated’ attribute.
-		var deprecated_attribute = sym.get_attribute ("Deprecated");
+		if (sym.is_deprecated) {
+			Attribute? version;
+			Attribute? deprecated;
+			AttributeArgument? deprecated_since;
+			AttributeArgument? replacement;
+			if ((version = sym.get_attribute ("Version")) != null) {
+				deprecated_since = version.get_argument ("deprecated_since");
+				replacement = version.get_argument ("replacement");
+			} else if ((deprecated = sym.get_attribute ("Deprecated")) != null) {
+				deprecated_since = deprecated.get_argument ("since");
+				replacement = deprecated.get_argument ("replacement");
+			} else {
+				assert_not_reached ();
+			}
 
-		if (deprecated_attribute != null) {
-			var _since = deprecated_attribute.get_argument ("since");
 			string? since = null;
-			if (_since != null) {
-				since = _since.value;
+			if (deprecated_since != null) {
+				since = deprecated_since.value;
 
 				// Strip surrounding quotation marks.
 				if (since.has_prefix ("\"")) {
@@ -1353,7 +1364,6 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 				}
 			}
 
-			var replacement = deprecated_attribute.get_argument ("replacement");
 			string? replacement_symbol_name = null;
 			Api.Node? replacement_symbol = null;
 
