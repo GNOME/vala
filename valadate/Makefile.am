@@ -17,7 +17,7 @@ AM_CPPFLAGS = \
 BUILT_SOURCES = valadate.vala.stamp
 
 lib_LTLIBRARIES = \
-	libvaladate.la
+	libvaladate.la \
 	$(NULL)
 
 libvaladate_la_VALASOURCES = \
