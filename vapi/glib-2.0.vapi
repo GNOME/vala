@@ -895,7 +895,7 @@ public struct va_list {
 	public va_list ();
 	[CCode (cname = "va_copy")]
 	public va_list.copy (va_list src);
-	[CCode (generic_type_pos = 1.1)]
+	[CCode (generic_type_pos = 1.1, simple_generics = true)]
 	public unowned G arg<G> ();
 }
 
