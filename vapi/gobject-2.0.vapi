@@ -327,7 +327,11 @@ namespace GLib {
 		public ParamSpecPool (bool type_prefixing = false);
 		public void insert (GLib.ParamSpec pspec, GLib.Type owner_type);
 		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
+#if VALA_0_26
 		public (unowned GLib.ParamSpec)[] list (GLib.Type owner_type);
+#else
+		public unowned GLib.ParamSpec[] list (GLib.Type owner_type);
+#endif
 		public GLib.List<weak GLib.ParamSpec> list_owned (GLib.Type owner_type);
 		public unowned GLib.ParamSpec lookup (string param_name, GLib.Type owner_type, bool walk_ancestors);
 		public void remove (GLib.ParamSpec pspec);
