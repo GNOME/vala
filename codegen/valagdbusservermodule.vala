@@ -341,6 +341,25 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			ccode.add_expression (ccall);
 		}
 
+		if (!no_reply && (!m.coroutine || ready)) {
+			var return_value = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_send_message"));
+			return_value.add_argument (connection);
+			return_value.add_argument (new CCodeIdentifier ("_reply_message"));
+			return_value.add_argument (new CCodeConstant ("G_DBUS_SEND_MESSAGE_FLAGS_NONE"));
+			return_value.add_argument (new CCodeConstant ("NULL"));
+			return_value.add_argument (new CCodeConstant ("NULL"));
+			ccode.add_expression (return_value);
+
+			// free invocation like g_dbus_method_invocation_return_*
+			var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+			unref_call.add_argument (new CCodeIdentifier ("invocation"));
+			ccode.add_expression (unref_call);
+
+			unref_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+			unref_call.add_argument (new CCodeIdentifier ("_reply_message"));
+			ccode.add_expression (unref_call);
+		}
+
 		if (need_goto_label) {
 			ccode.add_label ("_error");
 		}
@@ -366,25 +385,6 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					ccode.add_expression (destroy_local (local));
 				}
 			}
-		}
-
-		if (!no_reply && (!m.coroutine || ready)) {
-			var return_value = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_send_message"));
-			return_value.add_argument (connection);
-			return_value.add_argument (new CCodeIdentifier ("_reply_message"));
-			return_value.add_argument (new CCodeConstant ("G_DBUS_SEND_MESSAGE_FLAGS_NONE"));
-			return_value.add_argument (new CCodeConstant ("NULL"));
-			return_value.add_argument (new CCodeConstant ("NULL"));
-			ccode.add_expression (return_value);
-
-			// free invocation like g_dbus_method_invocation_return_*
-			var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
-			unref_call.add_argument (new CCodeIdentifier ("invocation"));
-			ccode.add_expression (unref_call);
-
-			unref_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
-			unref_call.add_argument (new CCodeIdentifier ("_reply_message"));
-			ccode.add_expression (unref_call);
 		}
 
 		pop_function ();
