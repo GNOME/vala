@@ -832,6 +832,16 @@ namespace Linux {
         }
     }
 
+    // Non-Posix file control constants, -D _GNU_SOURCE
+    [CCode (cheader_filename = "fcntl.h")]
+    public const int O_DIRECT;
+    [CCode (cheader_filename = "fcntl.h")]
+    public const int O_NOATIME;
+    [CCode (cheader_filename = "fcntl.h")]
+    public const int O_PATH;
+    [CCode (cheader_filename = "fcntl.h")]
+    public const int O_TMPFILE;
+
     /*
      * Gsm
      */
