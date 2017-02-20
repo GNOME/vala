@@ -7737,7 +7737,7 @@ namespace Gtk {
 		public Button ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "3.10")]
-		public Button.from_icon_name (string icon_name, [CCode (type = "GtkIconSize")] Gtk.IconSize size = Gtk.IconSize.BUTTON);
+		public Button.from_icon_name (string? icon_name, [CCode (type = "GtkIconSize")] Gtk.IconSize size = Gtk.IconSize.BUTTON);
 		[Version (since = "3.90")]
 		public unowned string? get_icon_name ();
 		public unowned string? get_label ();
@@ -8491,7 +8491,7 @@ namespace Gtk {
 		public signal void owner_change (Gdk.EventOwnerChange event);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_color_button_get_type ()")]
-	public class ColorButton : Gtk.Button, Atk.Implementor, Gtk.Actionable, Gtk.Buildable, Gtk.ColorChooser {
+	public class ColorButton : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ColorChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.4")]
 		public ColorButton ();
@@ -9655,7 +9655,7 @@ namespace Gtk {
 		[Version (since = "3.14")]
 		public void group (Gtk.Gesture gesture);
 		[Version (since = "3.14")]
-		public bool handles_sequence (Gdk.EventSequence sequence);
+		public bool handles_sequence (Gdk.EventSequence? sequence);
 		[Version (since = "3.14")]
 		public bool is_active ();
 		[Version (since = "3.14")]
@@ -10208,7 +10208,7 @@ namespace Gtk {
 		public Image.from_gicon (GLib.Icon icon, [CCode (type = "GtkIconSize")] Gtk.IconSize size);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.6")]
-		public Image.from_icon_name (string icon_name, [CCode (type = "GtkIconSize")] Gtk.IconSize size);
+		public Image.from_icon_name (string? icon_name, [CCode (type = "GtkIconSize")] Gtk.IconSize size);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Image.from_pixbuf (Gdk.Pixbuf? pixbuf);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -10231,11 +10231,11 @@ namespace Gtk {
 		[Version (since = "2.14")]
 		public void set_from_gicon (GLib.Icon icon, [CCode (type = "GtkIconSize")] Gtk.IconSize size);
 		[Version (since = "2.6")]
-		public void set_from_icon_name (string icon_name, [CCode (type = "GtkIconSize")] Gtk.IconSize size);
+		public void set_from_icon_name (string? icon_name, [CCode (type = "GtkIconSize")] Gtk.IconSize size);
 		public void set_from_pixbuf (Gdk.Pixbuf? pixbuf);
 		public void set_from_resource (string? resource_path);
 		[Version (since = "3.10")]
-		public void set_from_surface (Cairo.Surface surface);
+		public void set_from_surface (Cairo.Surface? surface);
 		[Version (since = "2.6")]
 		public void set_pixel_size (int pixel_size);
 		[NoAccessorMethod]
