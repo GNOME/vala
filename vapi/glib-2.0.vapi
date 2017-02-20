@@ -2600,6 +2600,9 @@ namespace GLib {
 		MD5,
 		SHA1,
 		SHA256,
+		[Version (since = "2.52")]
+		SHA384,
+		[Version (since = "2.36")]
 		SHA512;
 
 		public ssize_t get_length ();
