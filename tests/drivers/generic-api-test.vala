@@ -2379,6 +2379,141 @@ public static void return_test (Api.Namespace ns, Api.Package pkg) {
 }
 
 
+public static void version_test (Api.Namespace ns, Api.Package pkg) {
+	Gee.List<Api.Node> methods = ns.get_children_by_type (Api.NodeType.METHOD, false);
+
+	bool func1 = false;
+	bool func2 = false;
+	bool func3 = false;
+#if VALA_0_32
+	bool func4 = false;
+	bool func5 = false;
+	bool func6 = false;
+	bool func7 = false;
+	bool func8 = false;
+	bool func9 = false;
+#endif
+
+	foreach (Api.Node node in methods) {
+		Api.Method m = node as Api.Method;
+		assert (m != null);
+
+		Api.NodeType[] forbidden = {
+				Api.NodeType.CLASS,
+				Api.NodeType.CONSTANT,
+				Api.NodeType.CREATION_METHOD,
+				Api.NodeType.DELEGATE,
+				Api.NodeType.ENUM,
+				Api.NodeType.ENUM_VALUE,
+				Api.NodeType.ERROR_CODE,
+				Api.NodeType.ERROR_DOMAIN,
+				Api.NodeType.FIELD,
+				Api.NodeType.INTERFACE,
+				Api.NodeType.METHOD,
+				Api.NodeType.NAMESPACE,
+				Api.NodeType.PACKAGE,
+				Api.NodeType.PROPERTY,
+				Api.NodeType.PROPERTY_ACCESSOR,
+				Api.NodeType.SIGNAL,
+				Api.NodeType.STATIC_METHOD,
+				Api.NodeType.STRUCT,
+				Api.NodeType.FORMAL_PARAMETER,
+				Api.NodeType.TYPE_PARAMETER
+			};
+
+		Gee.List<Api.Node> nodes = m.get_children_by_types (forbidden, false);
+		assert (nodes.size == 0);
+
+		Api.TypeReference? ret = m.return_type;
+		assert (ret != null);
+
+		switch (m.name) {
+		case "test_function_1":
+			assert (m.get_attribute ("Deprecated") != null);
+			assert (m.is_deprecated == true);
+
+			func1 = true;
+			break;
+
+		case "test_function_2":
+			assert (m.get_attribute ("Deprecated").get_argument ("since").get_value_as_string () == "\"1.0\"");
+			assert (m.get_attribute ("Deprecated").get_argument ("replacement").get_value_as_string () == "\"test_function_4\"");
+			assert (m.is_deprecated == true);
+
+			func2 = true;
+			break;
+
+		case "test_function_3":
+			//assert (m.get_attribute ("Experimental") != null);
+
+			func3 = true;
+			break;
+
+#if VALA_0_32
+		case "test_function_4":
+			assert (m.get_attribute ("Version").get_argument ("since").get_value_as_string () == "\"2.0\"");
+			assert (m.is_deprecated == false);
+
+			func4 = true;
+			break;
+
+		case "test_function_5":
+			assert (m.get_attribute ("Version").get_argument ("deprecated").get_value_as_boolean () == true);
+			assert (m.is_deprecated == true);
+
+			func5 = true;
+			break;
+
+		case "test_function_6":
+			assert (m.get_attribute ("Version").get_argument ("deprecated").get_value_as_boolean () == true);
+			assert (m.get_attribute ("Version").get_argument ("deprecated_since").get_value_as_string () == "\"2.0\"");
+			assert (m.get_attribute ("Version").get_argument ("replacement").get_value_as_string () == "\"test_function_4\"");
+			assert (m.get_attribute ("Version").get_argument ("since").get_value_as_string () == "\"1.0\"");
+			assert (m.is_deprecated == true);
+
+			func6 = true;
+			break;
+
+		case "test_function_7":
+			assert (m.get_attribute ("Version").get_argument ("deprecated_since").get_value_as_string () == "\"2.0\"");
+			assert (m.is_deprecated == true);
+
+			func7 = true;
+			break;
+
+		case "test_function_8":
+			assert (m.get_attribute ("Version").get_argument ("deprecated").get_value_as_boolean () == false);
+			assert (m.is_deprecated == false);
+
+			func8 = true;
+			break;
+
+		case "test_function_9":
+			//assert (m.get_attribute ("Version").get_argument ("experimental").get_value_as_boolean () == true);
+
+			func9 = true;
+			break;
+#endif
+
+		default:
+			assert_not_reached ();
+		}
+	}
+
+	assert (func1 == true);
+	assert (func2 == true);
+	assert (func3 == true);
+#if VALA_0_32
+	assert (func4 == true);
+	assert (func5 == true);
+	assert (func6 == true);
+	assert (func7 == true);
+	assert (func8 == true);
+	assert (func9 == true);
+#endif
+}
+
+
 public static void test_global_ns (Api.Namespace global_ns, Api.Package pkg) {
 	Gee.List<Api.Node> methods = global_ns.get_children_by_type (Api.NodeType.METHOD, false);
 	assert (methods.size == 1);
@@ -2517,6 +2652,7 @@ public static void test_global_ns (Api.Namespace global_ns, Api.Package pkg) {
 
 	bool returntest = false;
 	bool paramtest = false;
+	bool versiontest = false;
 
 	foreach (Api.Node node in namespaces) {
 		Api.Namespace ns = node as Api.Namespace;
@@ -2533,6 +2669,11 @@ public static void test_global_ns (Api.Namespace global_ns, Api.Package pkg) {
 			returntest = true;
 			break;
 
+		case "VersionTest":
+			version_test (ns, pkg);
+			versiontest = true;
+			break;
+
 		default:
 			assert_not_reached ();
 		}
@@ -2540,6 +2681,7 @@ public static void test_global_ns (Api.Namespace global_ns, Api.Package pkg) {
 
 	assert (returntest == true);
 	assert (paramtest == true);
+	assert (versiontest == true);
 
 }
 

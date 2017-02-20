@@ -123,5 +123,29 @@ namespace ReturnTest {
 }
 
 
+namespace VersionTest {
+	[Deprecated]
+	public void test_function_1 ();
+	[Deprecated (since = "1.0", replacement = "test_function_4")]
+	public void test_function_2 ();
+
+	[Experimental]
+	public void test_function_3 ();
+
+#if VALA_0_32
+	[Version (since = "2.0")]
+	public void test_function_4 ();
+	[Version (deprecated = true)]
+	public void test_function_5 ();
+	[Version (deprecated = true, deprecated_since = "2.0", replacement = "test_function_4", since = "1.0")]
+	public void test_function_6 ();
+	[Version (deprecated_since = "2.0")]
+	public void test_function_7 ();
+	[Version (deprecated = false)]
+	public void test_function_8 ();
+	[Version (experimental = true)]
+	public void test_function_9 ();
+#endif
+}
 
 
