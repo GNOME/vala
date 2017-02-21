@@ -729,13 +729,21 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 			// unwrap async result
 			if (context.require_glib_version (2, 36)) {
+				ccode.add_declaration ("GAsyncResult", new CCodeVariableDeclarator ("*_inner_res"));
+
 				var inner_res = new CCodeFunctionCall (new CCodeIdentifier ("g_task_propagate_pointer"));
 				inner_res.add_argument (new CCodeCastExpression (new CCodeIdentifier ("_res_"), "GTask *"));
 				inner_res.add_argument (new CCodeConstant ("NULL"));
-				ccall.add_argument (inner_res);
+				ccode.add_assignment (new CCodeIdentifier ("_inner_res"), inner_res);
 
+				ccall.add_argument (new CCodeIdentifier ("_inner_res"));
 				ccall.add_argument (new CCodeConstant ("error"));
 				ccode.add_assignment (new CCodeIdentifier ("_reply_message"), ccall);
+
+				// _inner_res is guaranteed to be non-NULL, so just unref it
+				var unref_inner_res = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+				unref_inner_res.add_argument (new CCodeIdentifier ("_inner_res"));
+				ccode.add_expression (unref_inner_res);
 			} else {
 				var inner_res = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_get_op_res_gpointer"));
 				inner_res.add_argument (new CCodeCastExpression (new CCodeIdentifier ("_res_"), "GSimpleAsyncResult *"));
