@@ -120,6 +120,35 @@ void test_inline_array () {
 	assert (1 in a);
 }
 
+int[,,] nd_array_pass (int[,,] a, out int[,,] b) {
+	assert (a.length[0] == 2);
+	assert (a.length[1] == 2);
+	assert (a.length[2] == 2);
+	assert (a[1,1,0] == 7);
+
+	b = a;
+	return a;
+}
+
+void test_nd_array () {
+	int[2,2,2] a = {{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}};
+	assert (a[1,0,1] == 6);
+
+	int[,,] b, c;
+	c = nd_array_pass (a, out b);
+	assert (b.length[0] == 2);
+	assert (b.length[1] == 2);
+	assert (b.length[2] == 2);
+	assert (b[0,1,0] == 3);
+	assert (c.length[0] == 2);
+	assert (c.length[1] == 2);
+	assert (c.length[2] == 2);
+	assert (c[0,1,1] == 4);
+
+	string[1,2,3] s = {{{"a", "b", "c"}, {"d", "e", "f"}}};
+	assert (s[0,0,2] == "c");
+}
+
 [CCode (has_target = false)]
 delegate int SimpleFunc ();
 SimpleFunc[] simple_delegates;
@@ -206,6 +235,7 @@ void main () {
 	test_reference_transfer ();
 	test_length_assignment ();
 	test_inline_array ();
+	test_nd_array ();
 	test_delegate_array ();
 	test_generics_array ();
 	test_void_array ();
