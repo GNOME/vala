@@ -76,6 +76,8 @@ namespace Cairo {
 		public unowned Cairo.Pattern get_source ();
 		public unowned Cairo.Surface get_target ();
 		public double get_tolerance ();
+		[CCode (simple_generics = true)]
+		public unowned G? get_user_data<G> (Cairo.UserDataKey? key);
 		public void glyph_extents (Cairo.Glyph[] glyphs, out Cairo.TextExtents extents);
 		public void glyph_path (Cairo.Glyph[] glyphs);
 		public bool has_current_point ();
@@ -125,6 +127,8 @@ namespace Cairo {
 		public void set_source_rgba (double red, double green, double blue, double alpha);
 		public void set_source_surface (Cairo.Surface surface, double x, double y);
 		public void set_tolerance (double tolerance);
+		[CCode (simple_generics = true)]
+		public Cairo.Status set_user_data<G> (Cairo.UserDataKey? key, owned G? data);
 		public void show_glyphs (Cairo.Glyph[] glyphs);
 		public void show_page ();
 		public void show_text (string utf8);
@@ -148,7 +152,11 @@ namespace Cairo {
 		public void flush ();
 		public uint get_reference_count ();
 		public Cairo.DeviceType get_type ();
+		[CCode (simple_generics = true)]
+		public unowned G? get_user_data<G> (Cairo.UserDataKey? key);
 		public void release ();
+		[CCode (simple_generics = true)]
+		public Cairo.Status set_user_data<G> (Cairo.UserDataKey? key, owned G? data);
 		public Cairo.Status status ();
 	}
 	[CCode (cname = "cairo_device_t", ref_function = "cairo_device_reference", unref_function = "cairo_device_destroy")]
@@ -168,6 +176,10 @@ namespace Cairo {
 	public class FontFace {
 		public uint get_reference_count ();
 		public Cairo.FontType get_type ();
+		[CCode (simple_generics = true)]
+		public unowned G? get_user_data<G> (Cairo.UserDataKey? key);
+		[CCode (simple_generics = true)]
+		public Cairo.Status set_user_data<G> (Cairo.UserDataKey? key, owned G? data);
 		public Cairo.Status status ();
 	}
 	[CCode (cname = "cairo_font_options_t", copy_function = "cairo_font_options_copy", free_function = "cairo_font_options_destroy")]
@@ -247,6 +259,8 @@ namespace Cairo {
 		public void get_matrix (out Cairo.Matrix matrix);
 		public Cairo.Status get_surface (out unowned Cairo.Surface surface);
 		public Cairo.PatternType get_type ();
+		[CCode (simple_generics = true)]
+		public unowned G? get_user_data<G> (Cairo.UserDataKey? key);
 		[CCode (cname = "cairo_pattern_create_linear")]
 		public Pattern.linear (double x0, double y0, double x1, double y1);
 		[CCode (cname = "cairo_pattern_create_radial")]
@@ -258,6 +272,8 @@ namespace Cairo {
 		public void set_extend (Cairo.Extend extend);
 		public void set_filter (Cairo.Filter filter);
 		public void set_matrix (Cairo.Matrix matrix);
+		[CCode (simple_generics = true)]
+		public Cairo.Status set_user_data<G> (Cairo.UserDataKey? key, owned G? data);
 		public Cairo.Status status ();
 	}
 	[CCode (cheader_filename = "cairo-pdf.h", cname = "cairo_surface_t")]
@@ -358,7 +374,11 @@ namespace Cairo {
 		public uint get_reference_count ();
 		public void get_scale_matrix (out Cairo.Matrix scale_matrix);
 		public Cairo.FontType get_type ();
+		[CCode (simple_generics = true)]
+		public unowned G? get_user_data<G> (Cairo.UserDataKey? key);
 		public void glyph_extents (Cairo.Glyph[] glyphs, out Cairo.TextExtents extents);
+		[CCode (simple_generics = true)]
+		public Cairo.Status set_user_data<G> (Cairo.UserDataKey? key, owned G? data);
 		public Cairo.Status status ();
 		public void text_extents (string utf8, out Cairo.TextExtents extents);
 		public Cairo.Status text_to_glyphs (double x, double y, string utf8, int utf8_len, out Cairo.Glyph[] glyphs, out Cairo.TextCluster[] clusters, out Cairo.TextClusterFlags cluster_flags);
@@ -404,6 +424,8 @@ namespace Cairo {
 		public void get_font_options (out Cairo.FontOptions options);
 		public uint get_reference_count ();
 		public Cairo.SurfaceType get_type ();
+		[CCode (simple_generics = true)]
+		public unowned G? get_user_data<G> (Cairo.UserDataKey? key);
 		public bool has_show_text_glyphs ();
 		public Cairo.Surface map_to_image (Cairo.RectangleInt extents);
 		public void mark_dirty ();
@@ -411,6 +433,8 @@ namespace Cairo {
 		public void set_device_offset (double x_offset, double y_offset);
 		public void set_device_scale (double x_scale, double y_scale);
 		public void set_fallback_resolution (double x_pixels_per_inch, double y_pixels_per_inch);
+		[CCode (simple_generics = true)]
+		public Cairo.Status set_user_data<G> (Cairo.UserDataKey? key, owned G? data);
 		public void show_page ();
 		[CCode (cname = "cairo_surface_create_similar")]
 		public Surface.similar (Cairo.Surface other, Cairo.Content content, int width, int height);
@@ -568,6 +592,9 @@ namespace Cairo {
 		public double height;
 		public double x_advance;
 		public double y_advance;
+	}
+	[CCode (cname = "cairo_user_data_key_t", has_copy_function = false, has_destroy_function = false, has_type_id = false, lvalue_access = false)]
+	public struct UserDataKey {
 	}
 	[CCode (cname = "cairo_antialias_t", has_type_id = false)]
 	public enum Antialias {
