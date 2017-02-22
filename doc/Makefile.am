@@ -1,7 +1,7 @@
 NULL =
 
 SUBDIRS = \
-	vala \
+	manual \
 	$(NULL)
 
 dist_man_MANS = \
