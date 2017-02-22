@@ -107,7 +107,7 @@ AC_CONFIG_FILES([Makefile
            vapi/Makefile
            tests/Makefile
            doc/Makefile
-           doc/vala/Makefile
+           doc/manual/Makefile
            gobject-introspection/Makefile
            vapigen/vapigen.pc
            vapigen/Makefile
