@@ -1522,7 +1522,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			function.modifiers |= CCodeModifiers.DEPRECATED;
 		}
 
-		if (prop.is_private_symbol () || (!acc.readable && !acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
+		if (!prop.is_abstract
+		    && (prop.is_private_symbol () || (!acc.readable && !acc.writable) || acc.access == SymbolAccessibility.PRIVATE)) {
 			function.modifiers |= CCodeModifiers.STATIC;
 		} else if (context.hide_internal && (prop.is_internal_symbol () || acc.access == SymbolAccessibility.INTERNAL)) {
 			function.modifiers |= CCodeModifiers.INTERNAL;
@@ -1619,7 +1620,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 
-			if (prop.is_private_symbol () || !(acc.readable || acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
+			if (!prop.is_abstract
+			    && (prop.is_private_symbol () || !(acc.readable || acc.writable) || acc.access == SymbolAccessibility.PRIVATE)) {
 				// accessor function should be private if the property is an internal symbol or it's a construct-only setter
 				function.modifiers |= CCodeModifiers.STATIC;
 			} else if (context.hide_internal && (prop.is_internal_symbol () || acc.access == SymbolAccessibility.INTERNAL)) {
