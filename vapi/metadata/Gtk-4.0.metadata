@@ -317,6 +317,7 @@ ListStore
   .move_after.iter ref
   .move_before.iter ref
   .prepend return_void
+  .remove.iter ref
 SelectionData
   .get_data skip=false
 render_* parent="Gtk.StyleContext"

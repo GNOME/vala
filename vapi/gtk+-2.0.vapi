@@ -2606,7 +2606,7 @@ namespace Gtk {
 		[CCode (cname = "gtk_list_store_newv", has_construct_function = false)]
 		public ListStore.newv ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
 		public void prepend (out Gtk.TreeIter iter);
-		public bool remove (Gtk.TreeIter iter);
+		public bool remove (ref Gtk.TreeIter iter);
 		public void reorder ([CCode (array_length = false, array_null_terminated = true)] int[] new_order);
 		[CCode (sentinel = "-1")]
 		public void @set (Gtk.TreeIter iter, ...);
