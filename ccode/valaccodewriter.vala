@@ -138,6 +138,14 @@ public class Vala.CCodeWriter {
 				FileUtils.rename (temp_filename, filename);
 			} else {
 				FileUtils.unlink (temp_filename);
+				if (source_filename != null) {
+					var stats = Stat (source_filename);
+					var target_stats = Stat (filename);
+					if (stats.st_mtime >= target_stats.st_mtime) {
+						UTimBuf timebuf = { stats.st_atime + 1, stats.st_mtime + 1 };
+						FileUtils.utime (filename, timebuf);
+					}
+				}
 			}
 		}
 	}

@@ -3618,6 +3618,9 @@ namespace GLib {
 
 	[CCode (cname = "struct stat", cheader_filename = "sys/stat.h,glib/gstdio.h")]
 	public struct Stat {
+		public time_t st_atime;
+		public time_t st_mtime;
+		public time_t st_ctime;
 		[CCode (cname = "g_stat", instance_pos = -1)]
 		public Stat (string filename);
 		[Version (since = "2.6")]
