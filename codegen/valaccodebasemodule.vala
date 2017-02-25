@@ -1782,7 +1782,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (get_accessor != null) {
 					var property_type = prop.property_type;
 					var get_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (get_accessor)));
-					get_call.add_argument (new CCodeIdentifier ("self"));
+					get_call.add_argument (new CCodeIdentifier (is_virtual ? "base" : "self"));
 
 					if (property_type is ArrayType) {
 						ccode.add_declaration ("int", new CCodeVariableDeclarator ("old_value_length"));
