@@ -1208,12 +1208,14 @@ public class Vala.GTypeModule : GErrorModule {
 			if (m.base_method == null) {
 				continue;
 			}
-			var base_type = m.base_method.parent_symbol;
+			var base_type = (ObjectTypeSymbol) m.base_method.parent_symbol;
 
 			// there is currently no default handler for abstract async methods
 			if (!m.is_abstract || !m.coroutine) {
+				CCodeExpression cfunc = new CCodeIdentifier (get_ccode_real_name (m));
+				cfunc = cast_method_pointer (m.base_method, cfunc, base_type);
 				var ccast = new CCodeCastExpression (new CCodeIdentifier ("klass"), "%sClass *".printf (get_ccode_name (base_type)));
-				ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_vfunc_name (m.base_method)), new CCodeIdentifier (get_ccode_real_name (m)));
+				ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_vfunc_name (m.base_method)), cfunc);
 
 				if (m.coroutine) {
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_finish_vfunc_name (m.base_method)), new CCodeIdentifier (get_ccode_finish_real_name (m)));
