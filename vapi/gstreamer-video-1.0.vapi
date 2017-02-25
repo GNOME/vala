@@ -368,9 +368,14 @@ namespace Gst {
 			public void free ();
 			[CCode (has_construct_function = false)]
 			[Version (since = "1.12")]
+			public TimeCode.from_date_time (uint fps_n, uint fps_d, GLib.DateTime dt, Gst.Video.TimeCodeFlags flags, uint field_count);
+			[CCode (has_construct_function = false)]
+			[Version (since = "1.12")]
 			public TimeCode.from_string (string tc_str);
 			public void increment_frame ();
 			public void init (uint fps_n, uint fps_d, GLib.DateTime latest_daily_jam, Gst.Video.TimeCodeFlags flags, uint hours, uint minutes, uint seconds, uint frames, uint field_count);
+			[Version (since = "1.12")]
+			public void init_from_date_time (uint fps_n, uint fps_d, GLib.DateTime dt, Gst.Video.TimeCodeFlags flags, uint field_count);
 			public bool is_valid ();
 			public uint64 nsec_since_daily_jam ();
 			public GLib.DateTime to_date_time ();
@@ -1238,6 +1243,8 @@ namespace Gst {
 		public const string CONVERTER_OPT_SRC_X;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_CONVERTER_OPT_SRC_Y")]
 		public const string CONVERTER_OPT_SRC_Y;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_CONVERTER_OPT_THREADS")]
+		public const string CONVERTER_OPT_THREADS;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_DECODER_MAX_ERRORS")]
 		public const int DECODER_MAX_ERRORS;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_DECODER_SINK_NAME")]

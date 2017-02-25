@@ -114,10 +114,13 @@ namespace WebKit {
 	public class CookieManager : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected CookieManager ();
+		[Version (deprecated = true, deprecated_since = "2.16")]
 		public void delete_all_cookies ();
+		[Version (deprecated = true, deprecated_since = "2.16")]
 		public void delete_cookies_for_domain (string domain);
 		public async WebKit.CookieAcceptPolicy get_accept_policy (GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (array_length = false, array_null_terminated = true)]
+		[Version (deprecated = true, deprecated_since = "2.16")]
 		public async string[] get_domains_with_cookies (GLib.Cancellable? cancellable) throws GLib.Error;
 		public void set_accept_policy (WebKit.CookieAcceptPolicy policy);
 		public void set_persistent_storage (string filename, WebKit.CookiePersistentStorage storage);
@@ -397,6 +400,24 @@ namespace WebKit {
 		public void ignore ();
 		public void use ();
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_print_custom_widget_get_type ()")]
+	public class PrintCustomWidget : GLib.Object {
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.16")]
+		public PrintCustomWidget (Gtk.Widget widget, string title);
+		[Version (since = "2.16")]
+		public unowned string get_title ();
+		[Version (since = "2.16")]
+		public unowned Gtk.Widget get_widget ();
+		[Version (since = "2.16")]
+		public string title { get; construct; }
+		[Version (since = "2.16")]
+		public Gtk.Widget widget { get; construct; }
+		[Version (since = "2.16")]
+		public virtual signal void apply ();
+		[Version (since = "2.16")]
+		public virtual signal void update (Gtk.PageSetup widget, Gtk.PrintSettings page_setup);
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_print_operation_get_type ()")]
 	public class PrintOperation : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -411,6 +432,8 @@ namespace WebKit {
 		public Gtk.PrintSettings print_settings { get; set; }
 		[NoAccessorMethod]
 		public WebKit.WebView web_view { owned get; construct; }
+		[Version (since = "2.16")]
+		public signal WebKit.PrintCustomWidget create_custom_widget ();
 		public signal void failed (WebKit.PrintError error);
 		public signal void finished ();
 	}
@@ -465,7 +488,7 @@ namespace WebKit {
 		[Version (since = "2.16")]
 		public uint16 get_port ();
 		[Version (since = "2.16")]
-		public unowned string get_protocol ();
+		public unowned string? get_protocol ();
 		[Version (since = "2.16")]
 		public bool is_opaque ();
 		[Version (since = "2.16")]
@@ -636,7 +659,7 @@ namespace WebKit {
 		public bool enable_resizable_text_areas { get; set construct; }
 		public bool enable_site_specific_quirks { get; set construct; }
 		public bool enable_smooth_scrolling { get; set construct; }
-		[Version (since = "2.3")]
+		[Version (since = "2.4")]
 		public bool enable_spatial_navigation { get; set construct; }
 		public bool enable_tabs_to_links { get; set construct; }
 		public bool enable_webaudio { get; set construct; }
@@ -894,6 +917,8 @@ namespace WebKit {
 		public unowned string get_uri ();
 		[Version (since = "2.6")]
 		public unowned WebKit.UserContentManager get_user_content_manager ();
+		[Version (since = "2.16")]
+		public unowned WebKit.WebsiteDataManager get_website_data_manager ();
 		public unowned WebKit.WindowProperties get_window_properties ();
 		public double get_zoom_level ();
 		public void go_back ();
@@ -1035,6 +1060,8 @@ namespace WebKit {
 		public unowned string? get_base_cache_directory ();
 		[Version (since = "2.10")]
 		public unowned string? get_base_data_directory ();
+		[Version (since = "2.16")]
+		public unowned WebKit.CookieManager get_cookie_manager ();
 		[Version (since = "2.10")]
 		public unowned string? get_disk_cache_directory ();
 		[Version (since = "2.10")]
@@ -1317,6 +1344,7 @@ namespace WebKit {
 		WEBSQL_DATABASES,
 		INDEXEDDB_DATABASES,
 		PLUGIN_DATA,
+		COOKIES,
 		ALL
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_DOWNLOAD_ERROR_")]

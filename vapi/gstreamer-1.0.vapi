@@ -1775,6 +1775,8 @@ namespace Gst {
 		public Gst.Stream? get_stream ();
 		[Version (since = "1.2")]
 		public string? get_stream_id ();
+		[Version (since = "1.12")]
+		public Gst.TaskState get_task_state ();
 		public bool has_current_caps ();
 		public bool is_active ();
 		public bool is_blocked ();
@@ -1870,6 +1872,11 @@ namespace Gst {
 		public Gst.PadPresence presence { get; construct; }
 		[HasEmitter]
 		public virtual signal void pad_created (Gst.Pad pad);
+	}
+	[CCode (cheader_filename = "gst/gst.h", lower_case_csuffix = "param_spec_array", type_id = "gst_param_spec_array_get_type ()")]
+	public class ParamArray : GLib.ParamSpec {
+		[CCode (has_construct_function = false)]
+		protected ParamArray ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", lower_case_csuffix = "param_spec_fraction", type_id = "gst_param_spec_fraction_get_type ()")]
 	public class ParamFraction : GLib.ParamSpec {
@@ -2738,6 +2745,11 @@ namespace Gst {
 		public unowned Gst.BufferList get_buffer_list ();
 		public unowned Gst.Event get_event ();
 		public unowned Gst.Query get_query ();
+	}
+	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
+	public struct ParamSpecArray {
+		public weak GLib.ParamSpec parent_instance;
+		public weak GLib.ParamSpec element_spec;
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
 	public struct ParamSpecFraction {
@@ -3910,6 +3922,8 @@ namespace Gst {
 	public static bool is_caps_features (void* obj);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool is_initialized ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static GLib.ParamSpec param_spec_array (string name, string nick, string blurb, GLib.ParamSpec element_spec, GLib.ParamFlags flags);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.ParamSpec param_spec_fraction (string name, string nick, string blurb, int min_num, int min_denom, int max_num, int max_denom, int default_num, int default_denom, GLib.ParamFlags flags);
 	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_bin_from_description_full", returns_floating_reference = true)]

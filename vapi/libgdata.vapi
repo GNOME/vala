@@ -988,6 +988,7 @@ namespace GData {
 		public uint get_items_per_page ();
 		public unowned GLib.List<GData.Link> get_links ();
 		public unowned string get_logo ();
+		public unowned string? get_next_page_token ();
 		[Version (since = "0.7.0")]
 		public unowned string get_rights ();
 		public uint get_start_index ();
@@ -1007,6 +1008,7 @@ namespace GData {
 		public string id { get; }
 		public uint items_per_page { get; }
 		public string logo { get; }
+		public string next_page_token { get; }
 		[Version (since = "0.7.0")]
 		public string rights { get; }
 		public uint start_index { get; }
