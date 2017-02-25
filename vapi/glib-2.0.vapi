@@ -4186,9 +4186,9 @@ namespace GLib {
 		[Version (since = "2.16")]
 		public static int run ();
 		[Version (since = "2.16")]
-		public static void add_func (string testpath, TestFunc test_funcvoid);
+		public static void add_func (string testpath, [CCode (scope = "async")] owned TestFunc test_funcvoid);
 		[Version (since = "2.16")]
-		public static void add_data_func (string testpath, [CCode (delegate_target_pos = 1.9)] TestDataFunc test_funcvoid);
+		public static void add_data_func (string testpath, [CCode (delegate_target_pos = 1.9, scope = "async")] owned TestDataFunc test_funcvoid);
 		[Version (since = "2.34")]
 		public static void add_data_func_full (string testpath, [CCode (delegate_target_pos = 1.9)] owned TestDataFunc test_func);
 		[Version (since = "2.34")]
