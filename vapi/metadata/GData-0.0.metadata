@@ -1,6 +1,8 @@
 Color struct
 *.*_async skip=false
 *.*_finish skip=false
+Authorizer.refresh_authorization_async#virtual_method virtual
+Authorizer.refresh_authorization#virtual_method virtual
 ContactsContact.get_photo type="uint8[]" array_length_idx=1
 ContactsContact.get_photo_async type="uint8[]" array_length_idx=1
 Parsable.get_xml#method skip
