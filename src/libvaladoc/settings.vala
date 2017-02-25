@@ -159,6 +159,11 @@ public class Valadoc.Settings : Object {
 	public string gir_namespace;
 
 	public string gir_version;
+
+	/**
+	 * Use SVG as chart images
+	 */
+	public bool use_svg_images = false;
 }
 
 

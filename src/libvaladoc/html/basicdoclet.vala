@@ -1026,8 +1026,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected void write_image_block (Api.Node element) {
 		if (element is Class || element is Interface || element is Struct) {
+			unowned string format = (settings.use_svg_images ? "svg" : "png");
 			var chart = new Charts.Hierarchy (image_factory, element);
-			chart.save (this.get_img_path (element, "png"), "png");
+			chart.save (this.get_img_path (element, format), format);
 
 			writer.start_tag ("h2", {"class", css_title})
 				.text ("Object Hierarchy:")
@@ -1040,7 +1041,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 									   "alt",
 									   "Object hierarchy for %s".printf (element.name),
 									   "src",
-									   this.get_img_path_html (element, "png")});
+									   this.get_img_path_html (element, format)});
 			writer.add_usemap (chart);
 		}
 	}

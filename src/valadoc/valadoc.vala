@@ -50,6 +50,7 @@ public class ValaDoc : Object {
 	private static bool with_deps = false;
 	private static bool _private = false;
 	private static bool version = false;
+	private static bool use_svg_images = false;
 
 	private static bool disable_diagnostic_colors = false;
 	private static bool verbose = false;
@@ -110,6 +111,7 @@ public class ValaDoc : Object {
 		{ "no-protected", 0, OptionFlags.REVERSE, OptionArg.NONE, ref _protected, "Removes protected elements from documentation", null },
 		{ "internal", 0, 0, OptionArg.NONE, ref _internal, "Adds internal elements to documentation", null },
 		{ "private", 0, 0, OptionArg.NONE, ref _private, "Adds private elements to documentation", null },
+		{ "use-svg-images", 0, 0, OptionArg.NONE, ref use_svg_images, "Generate SVG image charts instead of PNG", null },
 
 		{ "package-name", 0, 0, OptionArg.STRING, ref pkg_name, "package name", "NAME" },
 		{ "package-version", 0, 0, OptionArg.STRING, ref pkg_version, "package version", "VERSION" },
@@ -235,6 +237,7 @@ public class ValaDoc : Object {
 		settings.metadata_directories = metadata_directories;
 		settings.gir_directories = gir_directories;
 		settings.target_glib = target_glib;
+		settings.use_svg_images = use_svg_images;
 
 		settings.source_files = tsources;
 		settings.packages = packages;
