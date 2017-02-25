@@ -2636,8 +2636,8 @@ namespace GData {
 	public interface Authorizer : GLib.Object {
 		public abstract bool is_authorized_for_domain (GData.AuthorizationDomain domain);
 		public abstract void process_request (GData.AuthorizationDomain? domain, Soup.Message message);
-		public abstract bool refresh_authorization (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract async bool refresh_authorization_async (GLib.Cancellable? cancellable) throws GLib.Error;
+		public virtual bool refresh_authorization (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async bool refresh_authorization_async (GLib.Cancellable? cancellable) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_batchable_get_type ()")]
 	[Version (since = "0.7.0")]
