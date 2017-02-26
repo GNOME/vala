@@ -2352,8 +2352,21 @@ namespace GLib {
 	public class Error {
 		[PrintfFormat]
 		public Error (Quark domain, int code, string format, ...);
+		public Error.literal (Quark domain, int code, string message);
+		[PrintfFormat]
+		public Error.valist (Quark domain, int code, string format, va_list args);
 		public Error copy ();
 		public bool matches (Quark domain, int code);
+		[CCode (cname = "g_prefix_error")]
+		public static void prefix (out Error? dest, string format, ...);
+		[CCode (cname = "g_propagate_error")]
+		public static void propagate (out Error? dest, owned Error src);
+		[CCode (cname = "g_propagate_prefixed_error")]
+		public static void propagate_prefixed (out Error? dest, owned Error src, string format, ...);
+		[CCode (cname = "g_set_error")]
+		public static void @set (out Error? dest, Quark domain, int code, string format, ...);
+		[CCode (cname = "g_set_error_literal")]
+		public static void set_literal (out Error? dest, Quark domain, int code, string message);
 
 		public Quark domain;
 		public int code;
