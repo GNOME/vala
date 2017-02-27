@@ -4482,7 +4482,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					return;
 				}
 				arg_map.set (get_param_pos (0.1 * type_param_index + 0.04), new CCodeCastExpression (dup_func, "GBoxedCopyFunc"));
-				arg_map.set (get_param_pos (0.1 * type_param_index + 0.06), get_destroy_func_expression (type_arg, is_chainup));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.06), new CCodeCastExpression (get_destroy_func_expression (type_arg, is_chainup), "GDestroyNotify"));
 			} else {
 				arg_map.set (get_param_pos (0.1 * type_param_index + 0.04), new CCodeConstant ("NULL"));
 				arg_map.set (get_param_pos (0.1 * type_param_index + 0.06), new CCodeConstant ("NULL"));
