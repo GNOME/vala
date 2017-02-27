@@ -97,7 +97,7 @@ namespace GLib {
 		public void add_invalidate_notifier (void* notify_data, GLib.ClosureNotify notify_func);
 		public void add_marshal_guards (void* pre_marshal_data, GLib.ClosureNotify pre_marshal_notify, void* post_marshal_data, GLib.ClosureNotify post_marshal_notify);
 		public void invalidate ();
-		public void invoke (out GLib.Value? return_value, [CCode (array_length_pos = 1.9)] GLib.Value[] param_values, void* invocation_hint);
+		public void invoke (out GLib.Value return_value, [CCode (array_length_pos = 1.9, array_length_type = "guint")] GLib.Value[] param_values, void* invocation_hint);
 		public void remove_finalize_notifier (void* notify_data, GLib.ClosureNotify notify_func);
 		public void remove_invalidate_notifier (void* notify_data, GLib.ClosureNotify notify_func);
 		public void set_marshal (GLib.ClosureMarshal marshal);
@@ -167,7 +167,7 @@ namespace GLib {
 		public GLib.Type get_type ();
 		public static GLib.Object @new (GLib.Type type, ...);
 		public static GLib.Object new_valist (GLib.Type type, string? firstprop, va_list var_args);
-		public static GLib.Object newv (GLib.Type type, [CCode (array_length_pos = 1.9)] GLib.Parameter[] parameters);
+		public static GLib.Object newv (GLib.Type type, [CCode (array_length_pos = 1.9, array_length_type = "guint")] GLib.Parameter[] parameters);
 		[CCode (cname = "g_object_notify")]
 		public void notify_property (string property_name);
 		public unowned GLib.Object @ref ();
@@ -769,7 +769,7 @@ namespace GLib {
 	[CCode (has_target = false)]
 	public delegate void ClassFinalizeFunc (GLib.TypeClass g_class, void* class_data);
 	[CCode (has_target = false, instance_pos = 0)]
-	public delegate void ClosureMarshal (GLib.Closure closure, out GLib.Value return_value, [CCode (array_length_pos = 2.9)] GLib.Value[] param_values, void* invocation_hint, void* marshal_data);
+	public delegate void ClosureMarshal (GLib.Closure closure, out GLib.Value return_value, [CCode (array_length_pos = 2.9, array_length_type = "guint")] GLib.Value[] param_values, void* invocation_hint, void* marshal_data);
 	[CCode (has_target = false)]
 	public delegate void ClosureNotify (void* data, GLib.Closure closure);
 	[CCode (has_target = false)]
@@ -786,7 +786,7 @@ namespace GLib {
 	public delegate void ObjectFinalizeFunc (GLib.Object object);
 	[CCode (has_target = false)]
 	public delegate void ObjectSetPropertyFunc (GLib.Object object, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
-	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] GLib.Value[] param_values);
+	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9, array_length_type = "guint")] GLib.Value[] param_values);
 	[CCode (instance_pos = 0)]
 	public delegate void ToggleNotify (GLib.Object object, bool is_last_ref);
 	[CCode (has_target = false)]
