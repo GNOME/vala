@@ -819,37 +819,18 @@ public class Vala.MemberAccess : Expression {
 			}
 
 			if (symbol_reference is Method) {
+				var method = (Method) symbol_reference;
 				if (target_type != null) {
 					value_type.value_owned = target_type.value_owned;
 				}
-
-				Method base_method;
-				if (m.base_method != null) {
-					base_method = m.base_method;
-				} else if (m.base_interface_method != null) {
-					base_method = m.base_interface_method;
-				} else {
-					base_method = m;
-				}
-
-				if (instance && base_method.parent_symbol is TypeSymbol) {
-					inner.target_type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) base_method.parent_symbol);
-					inner.target_type.value_owned = base_method.this_parameter.variable_type.value_owned;
+				if (instance && method.parent_symbol is TypeSymbol) {
+					inner.target_type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) method.parent_symbol);
+					inner.target_type.value_owned = method.this_parameter.variable_type.value_owned;
 				}
 			} else if (symbol_reference is Property) {
 				var prop = (Property) symbol_reference;
-
-				Property base_property;
-				if (prop.base_property != null) {
-					base_property = prop.base_property;
-				} else if (prop.base_interface_property != null) {
-					base_property = prop.base_interface_property;
-				} else {
-					base_property = prop;
-				}
-
-				if (instance && base_property.parent_symbol != null) {
-					inner.target_type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) base_property.parent_symbol);
+				if (instance && prop.parent_symbol != null) {
+					inner.target_type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) prop.parent_symbol);
 				}
 			} else if ((symbol_reference is Field
 			            || symbol_reference is Signal)
