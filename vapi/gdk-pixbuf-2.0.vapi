@@ -47,13 +47,13 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.14")]
 		public Pixbuf.from_stream (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (cname = "gdk_pixbuf_new_from_stream_async", has_construct_function = false)]
+		[CCode (finish_name = "gdk_pixbuf_new_from_stream_finish", has_construct_function = false, type = "void")]
 		[Version (since = "2.24")]
 		public async Pixbuf.from_stream_async (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.14")]
 		public Pixbuf.from_stream_at_scale (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (finish_name = "gdk_pixbuf_save_to_stream_finish", has_construct_function = false, type = "void")]
+		[CCode (finish_name = "gdk_pixbuf_new_from_stream_finish", has_construct_function = false, type = "void")]
 		[Version (since = "2.24")]
 		public async Pixbuf.from_stream_at_scale_async (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false)]

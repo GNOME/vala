@@ -2,7 +2,9 @@
 
 Pixbuf
         .new_from_xpm_data.data type="string[]"
-        .new_from_stream_at_scale_async symbol_type="constructor" throws="GLib.Error" finish_name="gdk_pixbuf_save_to_stream_finish"
+        .new_from_stream_async symbol_type="constructor" finish_name="gdk_pixbuf_new_from_stream_finish" throws="GLib.Error"
+        .new_from_stream_at_scale_async symbol_type="constructor" finish_name="gdk_pixbuf_new_from_stream_finish" throws="GLib.Error"
+        .new_from_stream_finish skip
         .new_from_data.data owned
         .new_subpixbuf symbol_type="constructor"
         .get_file_info_async.cancellable default=()
