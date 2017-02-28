@@ -1502,7 +1502,7 @@ public class Vala.GTypeModule : GErrorModule {
 	CCodeExpression cast_method_pointer (Method m, CCodeExpression cfunc, ObjectTypeSymbol base_type, int direction = 3) {
 		// Cast the function pointer to match the interface
 		string cast;
-		if (m.return_type.is_real_non_null_struct_type ()) {
+		if (direction == 1 || m.return_type.is_real_non_null_struct_type ()) {
 			cast = "void (*)";
 		} else {
 			cast = "%s (*)".printf (get_ccode_name (m.return_type));
