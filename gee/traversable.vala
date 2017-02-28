@@ -443,6 +443,112 @@ public interface Vala.Traversable<G> : Object {
 		}
 	}
 
+	/**
+	 * Returns the first element that matches a given condition
+	 *
+	 * @param pred Predicate to be called to check for matches
+	 * @return The first element that matches or null
+	 */
+	[CCode (ordering = 10)]
+	public virtual G? first_match (owned Predicate<G> pred) {
+		G? result = null;
+		this.foreach ((item) => {
+			if (pred (item)) {
+				result = item;
+				return false;
+			}
+			return true;
+		});
+		return (owned) result;
+	}
+
+	/**
+	 * Returns whether any element matches the given predicate.
+	 *
+	 * This is similar to @first_match, with the difference that it
+	 * just returns whether there is a match or not, not the value
+	 * of the match.
+	 *
+	 * @param pred Predicate to be called to check for matches
+	 * @return Whether there was a match or not
+	 */
+	[CCode (ordering = 11)]
+	public virtual bool any_match (owned Predicate<G> pred) {
+		return this.first_match (pred) != null;
+	}
+
+	/**
+	 * Checks whether all elements match the given predicate.
+	 *
+	 * @param pred Predicate to be called to check for matches
+	 * @return Whether all elements match or not
+	 */
+	[CCode (ordering = 12)]
+	public virtual bool all_match (owned Predicate<G> pred) {
+		bool result = true;
+		this.foreach ((item) => {
+			if (!pred (item)) {
+				result = false;
+				return false;
+			}
+			return true;
+		});
+		return result;
+	}
+
+	/**
+	 * Returns the item in the sequence that contains the max value
+	 * based on the given compare function.
+	 *
+	 * @param compare Function to be called for comparisons
+	 * @return The item containing the max value.
+	 */
+	[CCode (ordering = 13)]
+	public virtual G max (owned CompareDataFunc<G> compare) {
+		G max_value = null;
+		this.foreach ((item) => {
+			if (max_value == null || compare (max_value, item) > 0) {
+				max_value = item;
+			}
+			return true;
+		});
+		return max_value;
+	}
+
+	/**
+	 * Returns the item in the sequence that contains the min value
+	 * based on the given compare function.
+	 *
+	 * @param compare Function to be called for comparisons
+	 * @return The item containing the min value.
+	 */
+	[CCode (ordering = 14)]
+	public virtual G min (owned CompareDataFunc<G> compare) {
+		G min_value = null;
+		this.foreach ((item) => {
+			if (min_value == null || compare (min_value, item) < 0) {
+				min_value = item;
+			}
+			return true;
+		});
+		return min_value;
+	}
+
+	/**
+	 * Returns a new iterator containing the elements in the source
+	 * ordered as specified by the comparison function.
+	 *
+	 * @param compare Comparison function
+	 * @return A new iterator with the source elements sorted.
+	 */
+	[CCode (ordering = 15)]
+	public virtual Iterator<G> order_by (owned CompareDataFunc<G>? compare = null) {
+		ArrayList<G> result = new ArrayList<G> ();
+		this.foreach ((item) => result.add (item));
+		result.sort (compare);
+		return result.iterator ();
+	}
+
 	public enum Stream {
 		YIELD,
 		CONTINUE,

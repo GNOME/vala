@@ -179,6 +179,8 @@ public interface Vala.Collection<G> : Iterable<G> {
 			return (G[]) to_float_array ((Collection<float>) this);
 		} else if (t == typeof (double)) {
 			return (G[]) to_double_array ((Collection<double>) this);
+		} else if (t.is_enum () || t.is_flags ()) {
+			return (G[]) to_int_array ((Collection<int>) this);
 		} else {
 			G[] array = new G[size];
 			int index = 0;
@@ -222,6 +224,8 @@ public interface Vala.Collection<G> : Iterable<G> {
 			return add_all_float_array ((Collection<float>) this, (float? [])array);
 		} else if (t == typeof (double)) {
 			return add_all_double_array ((Collection<double>) this, (double? [])array);
+		} else if (t.is_enum () || t.is_flags ()) {
+			return add_all_int_array ((Collection<int>) this, (int [])array);
 		} else {
 			bool changed = false;
 			foreach (unowned G item in array) {
@@ -265,6 +269,8 @@ public interface Vala.Collection<G> : Iterable<G> {
 			return contains_all_float_array ((Collection<float>) this, (float? [])array);
 		} else if (t == typeof (double)) {
 			return contains_all_double_array ((Collection<double>) this, (double? [])array);
+		} else if (t.is_enum () || t.is_flags ()) {
+			return contains_all_int_array ((Collection<int>) this, (int [])array);
 		} else {
 			foreach (unowned G item in array) {
 				if (!contains (item)) {
@@ -311,6 +317,8 @@ public interface Vala.Collection<G> : Iterable<G> {
 			return remove_all_float_array ((Collection<float>) this, (float? [])array);
 		} else if (t == typeof (double)) {
 			return remove_all_double_array ((Collection<double>) this, (double? [])array);
+		} else if (t.is_enum () || t.is_flags ()) {
+			return remove_all_int_array ((Collection<int>) this, (int [])array);
 		} else {
 			bool changed = false;
 			foreach (unowned G item in array) {

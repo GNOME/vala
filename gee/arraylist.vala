@@ -525,6 +525,8 @@ public class Vala.ArrayList<G> : AbstractBidirList<G> {
 			return wrap_float<G> ((float?[])data);
 		} else if (t == typeof (double)) {
 			return wrap_double<G> ((double?[])data);
+		} else if (t.is_enum () || t.is_flags ()) {
+			return wrap_int<G> ((int[])data);
 		} else {
 			return (owned)data;
 		}
