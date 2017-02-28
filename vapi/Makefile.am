@@ -212,6 +212,8 @@ dist_vapi_DATA = \
 	libgnome-menu-3.0.vapi \
 	libgnomeui-2.0.deps \
 	libgnomeui-2.0.vapi \
+	libgrss.deps \
+	libgrss.vapi \
 	libgsf-1.deps \
 	libgsf-1.vapi \
 	libgvc.vapi \
@@ -438,6 +440,7 @@ GIR_BINDINGS = \
 	json-glib-1.0 \
 	libgdata \
 	libgnome-menu-3.0 \
+	libgrss \
 	libnotify \
 	libpeas-1.0 \
 	libpeas-gtk-1.0 \
@@ -756,6 +759,9 @@ libgnome-menu-3.0:
 
 libgnomeui-2.0:
 	$(GENVAPI) --library $(srcdir)/libgnomeui-2.0 $(PACKAGESDIR)/libgnomeui-2.0/libgnomeui-2.0-custom.vala $(PACKAGESDIR)/libgnomeui-2.0/libgnomeui-2.0.gi
+
+libgrss:
+	$(GENVAPI) --library $(srcdir)/libgrss --metadatadir $(METADATADIR) --pkg gio-2.0 --pkg libsoup-2.4 --pkg libxml-2.0 $(GIRDIR)/Grss-0.7.gir
 
 libgsf-1:
 	$(GENVAPI) --library $(srcdir)/libgsf-1 $(PACKAGESDIR)/libgsf-1/libgsf-1-custom.vala $(PACKAGESDIR)/libgsf-1/libgsf-1.gi

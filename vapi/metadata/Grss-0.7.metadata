@@ -1,0 +1,9 @@
+* cheader_filename="libgrss/libgrss.h"
+
+*.ref unowned
+
+FeedChannel
+	.new_from_xml.doc type="Xml.Doc*"
+FeedParser
+	.parse.doc type="Xml.Doc*"
+	.parse_channel.doc type="Xml.Doc*"
