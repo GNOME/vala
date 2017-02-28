@@ -1200,12 +1200,14 @@ public class Vala.GTypeModule : GErrorModule {
 			// there is currently no default handler for abstract async methods
 			if (!m.is_abstract || !m.coroutine) {
 				CCodeExpression cfunc = new CCodeIdentifier (get_ccode_real_name (m));
-				cfunc = cast_method_pointer (m.base_method, cfunc, base_type);
+				cfunc = cast_method_pointer (m.base_method, cfunc, base_type, (m.coroutine ? 1 : 3));
 				var ccast = new CCodeCastExpression (new CCodeIdentifier ("klass"), "%sClass *".printf (get_ccode_name (base_type)));
 				ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_vfunc_name (m.base_method)), cfunc);
 
 				if (m.coroutine) {
-					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_finish_vfunc_name (m.base_method)), new CCodeIdentifier (get_ccode_finish_real_name (m)));
+					cfunc = new CCodeIdentifier (get_ccode_finish_real_name (m));
+					cfunc = cast_method_pointer (m.base_method, cfunc, base_type, 2);
+					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_finish_vfunc_name (m.base_method)), cfunc);
 				}
 			}
 		}
@@ -1319,7 +1321,7 @@ public class Vala.GTypeModule : GErrorModule {
 			} else {
 				cfunc = new CCodeIdentifier (get_ccode_real_name (m));
 			}
-			cfunc = cast_method_pointer (m.base_interface_method, cfunc, iface);
+			cfunc = cast_method_pointer (m.base_interface_method, cfunc, iface, (m.coroutine ? 1 : 3));
 			ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, get_ccode_vfunc_name (m.base_interface_method)), cfunc);
 
 			if (m.coroutine) {
@@ -1328,6 +1330,7 @@ public class Vala.GTypeModule : GErrorModule {
 				} else {
 					cfunc = new CCodeIdentifier (get_ccode_finish_real_name (m));
 				}
+				cfunc = cast_method_pointer (m.base_interface_method, cfunc, iface, 2);
 				ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, get_ccode_finish_vfunc_name (m.base_interface_method)), cfunc);
 			}
 		}
@@ -1483,7 +1486,7 @@ public class Vala.GTypeModule : GErrorModule {
 		return new CCodeCastExpression (cfunc, cast);
 	}
 
-	CCodeExpression cast_method_pointer (Method m, CCodeExpression cfunc, ObjectTypeSymbol base_type) {
+	CCodeExpression cast_method_pointer (Method m, CCodeExpression cfunc, ObjectTypeSymbol base_type, int direction = 3) {
 		// Cast the function pointer to match the interface
 		string cast;
 		if (m.return_type.is_real_non_null_struct_type ()) {
@@ -1496,7 +1499,7 @@ public class Vala.GTypeModule : GErrorModule {
 		var vdeclarator = new CCodeFunctionDeclarator (get_ccode_vfunc_name (m));
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
-		generate_cparameters (m, cfile, cparam_map, new CCodeFunction ("fake"), vdeclarator);
+		generate_cparameters (m, cfile, cparam_map, new CCodeFunction ("fake"), vdeclarator, null, null, direction);
 
 		// append C arguments in the right order
 		int last_pos = -1;
