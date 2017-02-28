@@ -366,7 +366,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 									var closure_new = new CCodeFunctionCall (new CCodeIdentifier ("g_cclosure_new"));
 									closure_new.add_argument (new CCodeCastExpression (cexpr, "GCallback"));
 									closure_new.add_argument (delegate_target);
-									closure_new.add_argument (delegate_target_destroy_notify);
+									closure_new.add_argument (new CCodeCastExpression (delegate_target_destroy_notify, "GClosureNotify"));
 									cexpr = new CCodeConditionalExpression (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cexpr, new CCodeIdentifier ("NULL")), new CCodeIdentifier ("NULL"), closure_new);
 								} else {
 									carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), delegate_target);
