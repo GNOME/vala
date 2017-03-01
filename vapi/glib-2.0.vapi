@@ -4182,11 +4182,11 @@ namespace GLib {
 	[CCode (free_function = "g_bookmark_file_free")]
 	public class BookmarkFile {
 		public BookmarkFile ();
-		public bool load_from_file (string file) throws BookmarkFileError;
+		public bool load_from_file (string file) throws BookmarkFileError, FileError;
 		public bool load_from_data (string data, size_t length) throws BookmarkFileError;
-		public bool load_from_data_dirs (string file, out string full_path) throws BookmarkFileError;
+		public bool load_from_data_dirs (string file, out string full_path) throws BookmarkFileError, FileError;
 		public string to_data (out size_t length) throws BookmarkFileError;
-		public bool to_file (string filename) throws BookmarkFileError;
+		public bool to_file (string filename) throws BookmarkFileError, FileError;
 		public bool has_item (string uri);
 		public bool has_group (string uri, string group) throws BookmarkFileError;
 		public bool has_application (string uri, string name) throws BookmarkFileError;
