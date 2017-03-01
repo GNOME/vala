@@ -652,6 +652,12 @@ namespace GLib {
 		public unowned GLib.IOStream get_stream ();
 		public unowned string get_unique_name ();
 		public bool is_closed ();
+		[CCode (cname = "g_dbus_connection_new", finish_function = "g_dbus_connection_new_finish")]
+		[Version (deprecated_since = "vala-0.36", replacement = "DBusConnection")]
+		public static async GLib.DBusConnection @new (GLib.IOStream stream, string? guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (cname = "g_dbus_connection_new_for_address", finish_function = "g_dbus_connection_new_for_address_finish")]
+		[Version (deprecated_since = "vala-0.36", replacement = "DBusConnection.for_address")]
+		public static async GLib.DBusConnection new_for_address (string address, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public uint register_object<T> (string object_path, T object) throws GLib.IOError;
 		[Version (since = "2.46")]
 		public uint register_object_with_closures (string object_path, GLib.DBusInterfaceInfo interface_info, GLib.Closure? method_call_closure, GLib.Closure? get_property_closure, GLib.Closure? set_property_closure) throws GLib.Error;
@@ -879,6 +885,12 @@ namespace GLib {
 		public GLib.DBusObjectManagerClientFlags get_flags ();
 		public unowned string get_name ();
 		public string? get_name_owner ();
+		[CCode (cname = "g_dbus_object_manager_client_new", finish_function = "g_dbus_object_manager_client_new_finish")]
+		[Version (deprecated_since = "vala-0.36", replacement = "DBusObjectManagerClient")]
+		public static async GLib.DBusObjectManagerClient @new (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc? get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (cname = "g_dbus_object_manager_client_new_for_bus", finish_function = "g_dbus_object_manager_client_new_for_bus_finish")]
+		[Version (deprecated_since = "vala-0.36", replacement = "DBusObjectManagerClient.for_bus")]
+		public static async GLib.DBusObjectManagerClient new_for_bus (GLib.BusType bus_type, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc? get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "GDBusObjectManager*")]
 		public DBusObjectManagerClient.sync (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string? name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc? get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.BusType bus_type { construct; }
@@ -962,6 +974,9 @@ namespace GLib {
 		public async GLib.Variant call_with_unix_fd_list (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.UnixFDList? fd_list = null, GLib.Cancellable? cancellable = null, out GLib.UnixFDList? out_fd_list = null) throws GLib.Error;
 		[Version (since = "2.30")]
 		public GLib.Variant call_with_unix_fd_list_sync (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.UnixFDList? fd_list = null, out GLib.UnixFDList? out_fd_list = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (cname = "g_dbus_proxy_new_for_bus", finish_function = "g_dbus_proxy_new_for_bus_finish")]
+		[Version (deprecated_since = "vala-0.36", replacement = "DBusProxy.for_bus")]
+		public static async GLib.DBusProxy create_for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[CCode (cname = "g_dbus_proxy_new_for_bus", has_construct_function = false)]
 		public async DBusProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false)]
@@ -977,6 +992,9 @@ namespace GLib {
 		public unowned string get_name ();
 		public string get_name_owner ();
 		public unowned string get_object_path ();
+		[CCode (cname = "g_dbus_proxy_new", finish_function = "g_dbus_proxy_new_finish")]
+		[Version (deprecated_since = "vala-0.36", replacement = "DBusProxy")]
+		public static async GLib.DBusProxy @new (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string? name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public void set_cached_property (string property_name, GLib.Variant? value);
 		public void set_default_timeout (int timeout_msec);
 		public void set_interface_info (GLib.DBusInterfaceInfo? info);
