@@ -812,7 +812,7 @@ namespace Xml {
 		public Attr* set_ns_prop (Ns* ns, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string value);
 
 		[CCode (cname = "xmlSetProp")]
-		public Attr* set_prop ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string value);
+		public Attr* set_prop ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? value);
 
 		[CCode (cname = "xmlSetTreeDoc")]
 		public void set_tree_doc (Doc* doc);
@@ -1103,7 +1103,7 @@ namespace Xml {
 		public int start_element ([CCode (type = "xmlChar*")] string name);
 
 		[CCode (cname = "xmlTextWriterStartElementNS")]
-		public int start_element_ns ([CCode (type = "xmlChar*")] string prefix, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string namespaceURI);
+		public int start_element_ns ([CCode (type = "xmlChar*")] string prefix, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? namespaceURI);
 
 		[CCode (cname = "xmlTextWriterStartAttribute")]
 		public int start_attribute ([CCode (type = "xmlChar*")] string name);
