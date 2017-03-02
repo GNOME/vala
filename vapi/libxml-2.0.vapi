@@ -261,6 +261,33 @@ namespace Xml {
 
 		[CCode (cname = "xmlSetCompressMode")]
 		public static void set_compress_mode (int mode);
+
+		[CCode (cname = "xmlValidateName")]
+		public static int validate_name ([CCode (type = "const xmlChar*")] string name, bool trim_spaces = false);
+
+		[CCode (cname = "xmlValidateQName")]
+		public static int validate_q_name ([CCode (type = "const xmlChar*")] string value, bool trim_spaces = false);
+
+		[CCode (cname = "xmlValidateNCName")]
+		public static int validate_nc_name ([CCode (type = "const xmlChar*")] string value, bool trim_spaces = false);
+
+		[CCode (cname = "xmlValidateNamesValue")]
+		public static int validate_names_value ([CCode (type = "const xmlChar*")] string value);
+
+		[CCode (cname = "xmlValidateNameValue")]
+		public static int validate_name_value ([CCode (type = "const xmlChar*")] string value);
+
+		[CCode (cname = "xmlValidateAttributeValue")]
+		public static int validate_attribute_value (AttributeType type, [CCode (type = "const xmlChar*")] string value);
+
+		[CCode (cname = "xmlValidateNMToken")]
+		public static int validate_nm_token ([CCode (type = "const xmlChar*")] string value, bool trim_spaces = false);
+
+		[CCode (cname = "xmlValidateNmtokensValue")]
+		public static int validate_nm_tokens_value ([CCode (type = "const xmlChar*")] string value);
+
+		[CCode (cname = "xmlValidateNmtokenValue")]
+		public static int validate_nm_token_value ([CCode (type = "const xmlChar*")] string value);
 	}
 
 	[Compact]
@@ -442,6 +469,9 @@ namespace Xml {
 		[CCode (cname = "xmlNewReference")]
 		public Node* new_reference ([CCode (type = "xmlChar*")] string name);
 
+		[CCode (cname = "xmlGetNsList")]
+		public Ns* get_ns_list (Node* node);
+
 		[CCode (cname = "xmlNodeListGetRawString", type = "xmlChar*")]
 		public string node_list_get_raw_string (Node* list, bool in_line);
 
@@ -488,6 +518,7 @@ namespace Xml {
 		public Node* next;
 		public Node* prev;
 		public Doc* doc;
+		public Xml.HashTable* entities;
 
 		[CCode (cname = "ExternalID", type = "xmlChar*")]
 		public weak string external_id;
@@ -695,7 +726,13 @@ namespace Xml {
 		public Node* copy (int extended);
 
 		[CCode (cname = "xmlCopyNodeList")]
-		public Node copy_list();
+		public Node copy_list ();
+
+		[CCode (cname = "xmlCopyProp")]
+		public Attr* copy_prop (Attr* prop);
+
+		[CCode (cname = "xmlCopyPropList")]
+		public Attr* copy_prop_list (Attr* props);
 
 		[CCode (cname = "xmlDocCopyNode")]
 		public Node* doc_copy (Doc* doc, int extended);
@@ -725,7 +762,7 @@ namespace Xml {
 		public string? get_prop ([CCode (type = "xmlChar*")] string name);
 
 		[CCode (cname = "xmlHasNsProp")]
-		public Attr* has_ns_prop ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string name_space);
+		public Attr* has_ns_prop ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? name_space);
 
 		[CCode (cname = "xmlHasProp")]
 		public Attr* has_prop ([CCode (type = "xmlChar*")] string name);
@@ -809,7 +846,7 @@ namespace Xml {
 		public void set_ns (Ns* ns);
 
 		[CCode (cname = "xmlSetNsProp")]
-		public Attr* set_ns_prop (Ns* ns, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string value);
+		public Attr* set_ns_prop (Ns* ns, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? value);
 
 		[CCode (cname = "xmlSetProp")]
 		public Attr* set_prop ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? value);
@@ -910,6 +947,12 @@ namespace Xml {
 
 		[CCode (cname = "xmlCtxtReadIO")]
 		public Doc* read_io (Xml.InputReadCallback ioread, Xml.InputCloseCallback ioclose, void* ioctx, string url, string? encoding = null, int options = 0);
+
+		[CCode (cname = "xmlCtxtGetLastError")]
+		public Error* get_last_error ();
+
+		[CCode (cname = "xmlCtxtResetLastError")]
+		public Error* reset_last_error ();
 	}
 
 
@@ -1063,6 +1106,18 @@ namespace Xml {
 		[CCode (cname = "xmlNewTextWriterFilename")]
 		public TextWriter.filename (string uri, bool compression = false);
 
+		[CCode (cname = "xmlNewTextWriterDoc")]
+		public TextWriter.doc (out Doc doc, bool compression = false);
+
+		[CCode (cname = "xmlNewTextWriterMemory")]
+		public TextWriter.memory (Buffer buffer, bool compression = false);
+
+		[CCode (cname = "xmlNewTextWriterPushParser")]
+		public TextWriter.parser (ParserCtxt ctxt, bool compression = false);
+
+		[CCode (cname = "xmlNewTextWriterTree")]
+		public TextWriter.tree (Doc doc, Node node, bool compression = false);
+
 		[CCode (cname = "xmlTextWriterFlush")]
 		public int flush ();
 
@@ -1109,7 +1164,7 @@ namespace Xml {
 		public int start_attribute ([CCode (type = "xmlChar*")] string name);
 
 		[CCode (cname = "xmlTextWriterStartAttributeNS")]
-		public int start_attribute_ns ([CCode (type = "xmlChar*")] string prefix, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string namespaceURI);
+		public int start_attribute_ns ([CCode (type = "xmlChar*")] string? prefix, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? namespaceURI);
 
 		/* write */
 
@@ -1117,7 +1172,7 @@ namespace Xml {
 		public int write_attribute ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string content);
 
 		[CCode (cname = "xmlTextWriterWriteAttributeNS")]
-		public int write_attribute_ns ([CCode (type = "xmlChar*")] string prefix, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string namespaceURI, [CCode (type = "xmlChar*")] string content);
+		public int write_attribute_ns ([CCode (type = "xmlChar*")] string? prefix, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? namespaceURI, [CCode (type = "xmlChar*")] string content);
 
 		[CCode (cname = "xmlTextWriterWriteElement")]
 		public int write_element ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string content);
@@ -1130,6 +1185,12 @@ namespace Xml {
 
 		[CCode (cname = "xmlTextWriterWriteComment")]
 		public int write_comment ([CCode (type = "xmlChar*")] string content);
+
+		[CCode (cname = "xmlTextWriterWriteCDATA")]
+		public int write_cdata ([CCode (type = "xmlChar*")] string content);
+
+		[CCode (cname = "xmlTextWriterWritePI")]
+		public int write_pi ([CCode (type = "xmlChar*")] string target, [CCode (type = "xmlChar*")] string content);
 
 		[CCode (cname = "xmlTextWriterWriteString")]
 		public int write_string ([CCode (type = "xmlChar*")] string content);
@@ -1735,6 +1796,11 @@ namespace Xml {
 		FATAL = 3
 	}
 
+	[CCode (cname = "xmlGetLastError", cheader_filename = "libxml/xmlerror.h")]
+	public static Error* get_last_error ();
+
+	[CCode (cname = "xmlResetLastError", cheader_filename = "libxml/xmlerror.h")]
+	public static void reset_last_error ();
 }
 
 namespace Html {
