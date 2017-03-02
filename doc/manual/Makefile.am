@@ -5,7 +5,7 @@ BOOK_NAME = vala@PACKAGE_SUFFIX@
 bookdir = $(datadir)/devhelp/books/$(BOOK_NAME)
 
 if HAVE_XSLTPROC
-nobase_book_DATA = \
+book_DATA = \
 	devhelp/* \
 	$(NULL)
 endif
