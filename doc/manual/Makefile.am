@@ -11,26 +11,25 @@ book_DATA = \
 endif
 
 $(builddir)/devhelp/*: devhelp
-devhelp: manual.xml devhelp.xsl xhtml.xsl
+devhelp: manual.xml version.xml devhelp.xsl xhtml.xsl
 	@$(MKDIR_P) $@
 	$(AM_V_GEN)$(XSLTPROC) \
-		--xinclude $(srcdir)/devhelp.xsl \
-		$(srcdir)/manual.xml \
-		> $(builddir)/devhelp/$(BOOK_NAME).devhelp2
+		--xinclude \
+		--output $@/$(BOOK_NAME).devhelp2 \
+		$(srcdir)/devhelp.xsl \
+		$(srcdir)/manual.xml
 	@$(XSLTPROC) \
 		--xinclude \
-		--stringparam outdir $@ \
 		--output $@/index.html \
 		$(srcdir)/xhtml.xsl \
 		$(srcdir)/manual.xml
 	@cp $(srcdir)/default.css $@
 	@touch $@
 
-html: manual.xml xhtml.xsl
+html: manual.xml version.xml xhtml.xsl
 	@$(MKDIR_P) $@
 	$(AM_V_GEN)$(XSLTPROC) \
 		--xinclude \
-		--stringparam outdir $@ \
 		--output $@/index.html \
 		$(srcdir)/xhtml.xsl \
 		$(srcdir)/manual.xml
@@ -40,6 +39,10 @@ html: manual.xml xhtml.xsl
 mostlyclean-local:
 	rm -rf devhelp
 	rm -rf html
+
+CLEANFILES = \
+	version.xml \
+	$(NULL)
 
 EXTRA_DIST = \
 	common.xsl \

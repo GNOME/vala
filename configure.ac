@@ -113,6 +113,7 @@ AC_CONFIG_FILES([Makefile
            tests/Makefile
            doc/Makefile
            doc/manual/Makefile
+           doc/manual/version.xml
            gobject-introspection/Makefile
            vapigen/vapigen.pc
            vapigen/Makefile

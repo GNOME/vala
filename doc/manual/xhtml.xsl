@@ -4,8 +4,9 @@
   version="1.0"
   xmlns:str="http://exslt.org/strings"
   xmlns:exsl="http://exslt.org/common"
+  xmlns:date="http://exslt.org/dates-and-times"
   extension-element-prefixes="exsl"
-  exclude-result-prefixes="str"
+  exclude-result-prefixes="str date"
 >
 
   <xsl:import href="common.xsl"/>
@@ -104,6 +105,7 @@
 
   <xsl:template match="article/section" mode="toc">
       <xsl:apply-templates select="title"/>
+      <xsl:apply-templates select="document('version.xml')/articleinfo" mode="toc"/>
       <ul class="toc">
         <xsl:for-each select="section">
           <li>
@@ -129,6 +131,24 @@
         </xsl:for-each>
       </ul>
       <xsl:apply-templates select="section"/>
+  </xsl:template>
+
+  <xsl:template match="articleinfo" mode="toc">
+    <xsl:apply-templates select="abstract"/>
+    <table class="c-document_version">
+    <tr><td>Vala version:</td><td><xsl:apply-templates select="str:replace(edition, '-', '')"/></td></tr>
+    <tr><td>Release:</td><td><xsl:apply-templates select="releaseinfo/text()"/></td></tr>
+    <tr><td>Status:</td><td><xsl:apply-templates select="releaseinfo/remark"/></td></tr>
+    <tr><td>Copyright:</td>
+    <td>
+    <xsl:text>&#169;&#32;</xsl:text>
+    <xsl:apply-templates select="copyright/holder"/>
+    <xsl:text>&#32;</xsl:text>
+    <xsl:value-of select="date:year()"/>
+    </td>
+    </tr>
+    <tr><td>License:</td><td><xsl:apply-templates select="legalnotice"/></td></tr>
+    </table>
   </xsl:template>
 
   <xsl:template match="article/section/section/title">

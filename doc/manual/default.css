@@ -120,6 +120,14 @@ pre {
 	white-space: pre-wrap;
 }
 
+.c-document_version { border: solid 2px #ccc;
+	border-radius: 4px;
+	width: 100%;
+	font-sizde: 95%;
+}
+.c-document_version tr td:first-child { text-align: right; }
+.c-document_version tr:nth-child(odd) { background-color: #f0f0f0; }
+
 blockquote span.literal {
 	font-family: monospace;
 	font-weight: bold;
