@@ -131,6 +131,8 @@ public struct int {
 
 	[CCode (cname = "GINT_TO_POINTER")]
 	public void* to_pointer ();
+	[CCode (cname = "GPOINTER_TO_INT")]
+	public static int from_pointer (void* p);
 
 	[CCode (cname = "abs", cheader_filename = "stdlib.h")]
 	public int abs ();
@@ -171,6 +173,8 @@ public struct uint {
 
 	[CCode (cname = "GUINT_TO_POINTER")]
 	public void* to_pointer ();
+	[CCode (cname = "GPOINTER_TO_UINT")]
+	public static uint from_pointer (void* p);
 
 	[CCode (cname = "GUINT_TO_BE")]
 	public uint to_big_endian ();
@@ -317,6 +321,8 @@ public struct size_t {
 
 	[CCode (cname = "GSIZE_TO_POINTER")]
 	public void* to_pointer ();
+	[CCode (cname = "GPOINTER_TO_SIZE")]
+	public static size_t from_pointer (void* p);
 
 	[CCode (cname = "MIN")]
 	public static size_t min (size_t a, size_t b);
@@ -375,6 +381,8 @@ public struct uintptr {
 
 	[CCode (cname = "GSIZE_TO_POINTER")]
 	public void* to_pointer ();
+	[CCode (cname = "GPOINTER_TO_SIZE")]
+	public static uintptr from_pointer (void* p);
 
 	[CCode (cname = "MIN")]
 	public static uintptr min (uintptr a, uintptr b);
