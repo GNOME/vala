@@ -135,6 +135,8 @@ dist_vapi_DATA = \
 	gstreamer-app-1.0.deps \
 	gstreamer-audio-1.0.vapi \
 	gstreamer-audio-1.0.deps \
+	gstreamer-bad-allocators-1.0.deps \
+	gstreamer-bad-allocators-1.0.vapi \
 	gstreamer-base-1.0.vapi \
 	gstreamer-base-1.0.deps \
 	gstreamer-check-1.0.vapi \
@@ -398,6 +400,7 @@ GIDL_BINDINGS = \
 
 GSTREAMER_1_0_BINDINGS = \
 	gstreamer-1.0 \
+	gstreamer-bad-allocators-1.0 \
 	gstreamer-base-1.0 \
 	gstreamer-check-1.0 \
 	gstreamer-controller-1.0 \
@@ -649,6 +652,9 @@ gstreamer-app-1.0:
 
 gstreamer-audio-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-audio-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstAudio-1.0.gir
+
+gstreamer-bad-allocators-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-bad-allocators-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstBadAllocators-1.0.gir
 
 gstreamer-base-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-base-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GstBase-1.0-custom.vala $(GIRDIR)/GstBase-1.0.gir

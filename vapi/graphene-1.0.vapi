@@ -56,6 +56,8 @@ namespace Graphene {
 	[Version (since = "1.2")]
 	public struct Frustum {
 		public bool contains_point (Graphene.Point3D point);
+		[Version (since = "1.6")]
+		public bool equal (Graphene.Frustum b);
 		public void get_planes ([CCode (array_length = false)] ref Graphene.Plane planes[6]);
 		public unowned Graphene.Frustum? init (Graphene.Plane p0, Graphene.Plane p1, Graphene.Plane p2, Graphene.Plane p3, Graphene.Plane p4, Graphene.Plane p5);
 		public unowned Graphene.Frustum? init_from_frustum (Graphene.Frustum src);
@@ -186,7 +188,7 @@ namespace Graphene {
 	[Version (since = "1.2")]
 	public struct Plane {
 		public float distance (Graphene.Point3D point);
-		public bool equal (Graphene.Plane p2);
+		public bool equal (Graphene.Plane b);
 		public float get_constant ();
 		public Graphene.Vec3 get_normal ();
 		public unowned Graphene.Plane? init (Graphene.Vec3? normal, float constant);

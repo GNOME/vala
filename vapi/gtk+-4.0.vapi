@@ -14476,8 +14476,6 @@ namespace Gtk {
 		public unowned Gtk.Window get_tooltip_window ();
 		public unowned Gtk.Widget get_toplevel ();
 		public Gtk.Align get_valign ();
-		[Version (since = "3.10")]
-		public Gtk.Align get_valign_with_baseline ();
 		public bool get_vexpand ();
 		public bool get_vexpand_set ();
 		[Version (since = "2.18")]

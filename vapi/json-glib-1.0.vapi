@@ -121,21 +121,21 @@ namespace Json {
 		[Version (since = "0.16")]
 		public Node.alloc ();
 		public Json.Node copy ();
-		public Json.Array dup_array ();
-		public Json.Object dup_object ();
-		public string dup_string ();
+		public Json.Array? dup_array ();
+		public Json.Object? dup_object ();
+		public string? dup_string ();
 		[Version (since = "1.2")]
 		public bool equal (Json.Node b);
 		public void free ();
-		public unowned Json.Array get_array ();
+		public unowned Json.Array? get_array ();
 		public bool get_boolean ();
 		public double get_double ();
 		public int64 get_int ();
 		[Version (since = "0.8")]
 		public Json.NodeType get_node_type ();
-		public unowned Json.Object get_object ();
-		public unowned Json.Node get_parent ();
-		public unowned string get_string ();
+		public unowned Json.Object? get_object ();
+		public unowned Json.Node? get_parent ();
+		public unowned string? get_string ();
 		public GLib.Value get_value ();
 		[Version (since = "0.4")]
 		public GLib.Type get_value_type ();
