@@ -1,0 +1,31 @@
+[NAME]
+valac \- compiler that translates Vala source code into C source and header files
+
+[SYNOPSIS]
+.B valac
+[\fIOPTION\fR]... [\fIFILE\fR]...
+
+[DESCRIPTION]
+Vala  is  a  programming  language  that  aims  to  bring  modern
+programming language features to GNOME developers without imposing any
+additional  runtime requirements  and  without using  a different  ABI
+compared to applications and libraries written in C.
+.TP
+valac, the Vala compiler, is a self-hosting compiler that translates
+Vala source code into C source and header files. It uses the GObject
+type system to create classes and interfaces declared in the Vala
+source code.
+
+[BUGS]
+https://bugzilla.gnome.org/page.cgi?id=browse.html&product=vala
+
+[HOMEPAGE or CONTACT]
+https://wiki.gnome.org/Projects/Vala
+
+[FEATURES]
+Interfaces, properties, signals, foreach, lambda expressions, type
+inference for local variables, generics, non-null types, assisted memory
+management, exception handling
+
+[AUTHORS]
+Jürg Billeter, Raffaele Sandrini.
