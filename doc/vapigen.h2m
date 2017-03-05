@@ -1,0 +1,30 @@
+[NAME]
+vapigen \- generate a Vala API
+
+[SYNOPSIS]
+.B vapigen \fISOURCE\fP \fIPKGBASE\fP
+[\fIOPTION\fR]... [\fIFILE\fR]...
+
+[DESCRIPTION]
+.B vapigen
+is a utility which generates Vala API (VAPI) files from GI files,
+which may be generated using the vala-gen-introspect(1) utility.
+
+[EXAMPLES]
+After compilation, the following command generates a GI for pango:
+.B vala-gen-introspect pango packages/pango
+.TP
+This can then be converted to a Vala API as follows:
+.B vapigen --pkg cairo --vapidir . --library pango packages/pango/pango.gi
+
+[BUGS]
+https://bugzilla.gnome.org/page.cgi?id=browse.html&product=vala
+
+[HOMEPAGE or CONTACT]
+https://wiki.gnome.org/Projects/Vala
+
+[SEE ALSO]
+vala-gen-introspect (1)
+
+[AUTHORS]
+Jürg Billeter, Raffaele Sandrini.

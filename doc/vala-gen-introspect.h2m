@@ -1,0 +1,32 @@
+[NAME]
+vala-gen-introspect \- generate a GI file for GObject and glib based packages
+
+[SYNOPSIS]
+.B vala-gen-introspect \fIPKGNAME\fP \fIPKGBASE\fP
+
+[DESCRIPTION]
+.B vala-gen-introspect
+is a utility which generates GI files from GObject and glib
+based packages. It can be used in combination with vapigen(1) to
+generate an API for Vala, and allow it's usage in Vala for compiling
+to native code. \fIPKGNAME\fP is the pkg-config name of the library
+and \fIPKGBASE\fP specifies the base directory for that package.
+
+[EXAMPLES]
+After compilation, the following command generates a GI for pango:
+.B vala-gen-introspect pango packages/pango
+.TP
+This can then be converted to a Vala API as follows:
+.B vapigen --pkg cairo --vapidir . --library pango packages/pango/pango.gi
+
+[BUGS]
+https://bugzilla.gnome.org/page.cgi?id=browse.html&product=vala
+
+[HOMEPAGE or CONTACT]
+https://wiki.gnome.org/Projects/Vala
+
+[SEE ALSO]
+vapigen (1)
+
+[AUTHORS]
+Jürg Billeter <j@bitron.ch>, Raffaele Sandrini <rasa@gmx.ch>
