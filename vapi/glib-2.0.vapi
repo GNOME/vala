@@ -1192,7 +1192,7 @@ public class string {
 	public bool validate (ssize_t max_len = -1, out char* end = null);
 	[Version (since = "2.52")]
 	[CCode (cname = "g_utf8_make_valid")]
-	public string make_valid ();
+	public string make_valid (ssize_t len = -1);
 	[CCode (cname = "g_utf8_normalize")]
 	public string normalize (ssize_t len = -1, GLib.NormalizeMode mode = GLib.NormalizeMode.DEFAULT);
 
