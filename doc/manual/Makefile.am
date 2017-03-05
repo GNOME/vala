@@ -11,7 +11,7 @@ book_DATA = \
 endif
 
 $(builddir)/devhelp/*: devhelp
-devhelp: manual.xml version.xml devhelp.xsl xhtml.xsl
+devhelp: manual.xml version.xml devhelp.xsl xhtml.xsl default.css
 	@$(MKDIR_P) $@
 	$(AM_V_GEN)$(XSLTPROC) \
 		--xinclude \
@@ -26,7 +26,7 @@ devhelp: manual.xml version.xml devhelp.xsl xhtml.xsl
 	@cp $(srcdir)/default.css $@
 	@touch $@
 
-html: manual.xml version.xml xhtml.xsl
+html: manual.xml version.xml xhtml.xsl default.css
 	@$(MKDIR_P) $@
 	$(AM_V_GEN)$(XSLTPROC) \
 		--xinclude \

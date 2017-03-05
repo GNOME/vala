@@ -26,6 +26,7 @@
     <xsl:apply-templates select="article/section/title[1]" mode="html-head"/>
     </head><xsl:call-template name="whitespace-newline"/>
     <body><xsl:call-template name="whitespace-newline"/>
+    <xsl:apply-templates select="/article/section/title" mode="navigation-bar"/>
     <xsl:apply-templates select="article" mode="toc"/>
     </body><xsl:call-template name="whitespace-newline"/>
     </html>
@@ -49,18 +50,21 @@
         <xsl:apply-templates select="title" mode="html-head"/>
         </head>
         <body>
-          <div class="header">
-            <a href="index.html"><xsl:value-of select="/article/section/title"/></a>
-          </div>
-          <xsl:apply-templates select="title"/>
+          <xsl:apply-templates
+            select="/article/section/title"
+            mode="navigation-bar"
+          />
+          <xsl:apply-templates select="title" mode="heading"/>
           <xsl:if test="count(section) > 0">
             <ul class="page_toc">
               <xsl:for-each select="section">
                 <li>
                   <xsl:call-template name="linkto">
+                    <xsl:with-param name="title">
+                      <xsl:apply-templates select="title" mode="numbered-level-two"/>
+                    </xsl:with-param>
                     <xsl:with-param name="page" select="../title"/>
                     <xsl:with-param name="subpage" select="title"/>
-                    <xsl:with-param name="title" select="title"/>
                   </xsl:call-template>
                 </li>
               </xsl:for-each>
@@ -96,22 +100,23 @@
     <xsl:apply-templates select="articleinfo|section"/>
   </xsl:template>
 
-  <xsl:template match="article/section/title">
+  <xsl:template match="article/section/title" mode="navigation-bar">
     <div class="header">
       <a href="index.html"><xsl:value-of select="."/></a>
     </div>
-    <h1><xsl:value-of select="."/></h1>
   </xsl:template>
 
   <xsl:template match="article/section" mode="toc">
-      <xsl:apply-templates select="title"/>
+      <h1><xsl:apply-templates select="title"/></h1>
       <xsl:apply-templates select="document('version.xml')/articleinfo" mode="toc"/>
       <ul class="toc">
         <xsl:for-each select="section">
           <li>
             <xsl:call-template name="linkto">
+              <xsl:with-param name="title">
+                <xsl:apply-templates select="title" mode="numbered-level-one"/>
+              </xsl:with-param>
               <xsl:with-param name="page" select="title"/>
-              <xsl:with-param name="title" select="title"/>
             </xsl:call-template>
             <xsl:if test="count(section) > 0">
               <xsl:call-template name="whitespace-newline"/>
@@ -119,9 +124,11 @@
                 <xsl:for-each select="section">
                   <li>
                     <xsl:call-template name="linkto">
+                      <xsl:with-param name="title">
+                        <xsl:apply-templates select="title" mode="numbered-level-two"/>
+                      </xsl:with-param>
                       <xsl:with-param name="page" select="../title"/>
                       <xsl:with-param name="subpage" select="title"/>
-                      <xsl:with-param name="title" select="title"/>
                     </xsl:call-template>
                   </li>
                 </xsl:for-each>
@@ -151,12 +158,8 @@
     </table>
   </xsl:template>
 
-  <xsl:template match="article/section/section/title">
-    <h2><xsl:value-of select="."/></h2>
-  </xsl:template>
-
-  <xsl:template match="article/section/section/section">
-    <xsl:apply-templates select="para|section|programlisting|screen|itemizedlist|title|informaltable"/>
+  <xsl:template match="article/section/section/title" mode="heading">
+    <h2><xsl:apply-templates select="." mode="numbered-level-one"/></h2>
   </xsl:template>
 
   <xsl:template match="article/section/section/section/title">
@@ -167,7 +170,30 @@
     </xsl:variable>
     <xsl:call-template name="whitespace-newline"/>
     <xsl:call-template name="whitespace-newline"/>
-    <h3 id="{$id}"><xsl:value-of select="."/></h3>
+    <h3 id="{$id}"><xsl:apply-templates select="." mode="numbered-level-two"/></h3>
+  </xsl:template>
+
+  <xsl:template match="title" mode="numbered-level-one">
+    <xsl:number
+      count="/article/section/section[ancestor::*]"
+      from="/article/section"
+      level="multiple"
+      format="1. "
+    />
+    <xsl:value-of select="text()"/>
+  </xsl:template>
+
+  <xsl:template match="title" mode="numbered-level-two">
+    <xsl:number
+      count="article/section/section|article/section/section/section"
+      level="multiple"
+      format="1 "
+    />
+    <xsl:value-of select="text()"/>
+  </xsl:template>
+
+  <xsl:template match="article/section/section/section">
+    <xsl:apply-templates select="para|section|programlisting|screen|itemizedlist|title|informaltable"/>
   </xsl:template>
 
   <xsl:template match="article/section/section/section/section">

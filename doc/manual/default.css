@@ -47,6 +47,21 @@ a:link, a:visited, a:hover, a:active {
 	background-color: #ddd;
 }
 
+.page_toc {
+	list-style: none;
+}
+
+.page_toc a {
+	width: 18em;
+	display: block;
+	border-radius: 0.4em;
+	padding-left: 0.4em;
+}
+
+.page_toc a:hover, .page_toc a:focus {
+	background: #ddd;
+}
+
 h3 {
 	/* ensure anchors don't vanish below the fixed header */
 	padding-top: 1.4em;
