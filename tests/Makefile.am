@@ -216,6 +216,7 @@ TESTS = \
 	dbus/errors.test \
 	dbus/async.test \
 	dbus/async-errors.test \
+	dbus/enum-string-marshalling.vala \
 	dbus/signals.test \
 	dbus/filedescriptor.test \
 	dbus/filedescriptor-errors.test \
