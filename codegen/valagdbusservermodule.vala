@@ -240,7 +240,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				return_error.add_argument (new CCodeIdentifier ("error"));
 				ccode.add_expression (return_error);
 
-				ccode.add_return ();
+				if (need_goto_label) {
+					ccode.add_goto ("_error");
+				} else {
+					ccode.add_return ();
+				}
 
 				ccode.close ();
 			}
