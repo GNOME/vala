@@ -565,6 +565,14 @@ public class Vala.GDBusClientModule : GDBusModule {
 			cfile.add_include ("gio/gunixfdlist.h");
 		}
 
+		bool has_error_argument = (m.get_error_types ().size > 0);
+		CCodeExpression error_argument;
+		if (has_error_argument) {
+			error_argument = new CCodeIdentifier ("error");
+		} else {
+			error_argument = new CCodeConstant ("NULL");
+		}
+
 		if (call_type != CallType.FINISH) {
 			var destination = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_name"));
 			destination.add_argument (gdbusproxy);
@@ -671,7 +679,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccall.add_argument (timeout);
 				ccall.add_argument (new CCodeConstant ("NULL"));
 				ccall.add_argument (cancellable);
-				ccall.add_argument (new CCodeIdentifier ("error"));
+				ccall.add_argument (error_argument);
 				ccode.add_assignment (new CCodeIdentifier ("_reply_message"), ccall);
 			} else if (call_type == CallType.NO_REPLY) {
 				var set_flags = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_set_flags"));
@@ -684,7 +692,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccall.add_argument (new CCodeIdentifier ("_message"));
 				ccall.add_argument (new CCodeConstant ("G_DBUS_SEND_MESSAGE_FLAGS_NONE"));
 				ccall.add_argument (new CCodeConstant ("NULL"));
-				ccall.add_argument (new CCodeIdentifier ("error"));
+				ccall.add_argument (error_argument);
 				ccode.add_expression (ccall);
 			} else if (call_type == CallType.ASYNC) {
 				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_send_message_with_reply"));
@@ -737,7 +745,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccode.add_assignment (new CCodeIdentifier ("_inner_res"), inner_res);
 
 				ccall.add_argument (new CCodeIdentifier ("_inner_res"));
-				ccall.add_argument (new CCodeConstant ("error"));
+				ccall.add_argument (error_argument);
 				ccode.add_assignment (new CCodeIdentifier ("_reply_message"), ccall);
 
 				// _inner_res is guaranteed to be non-NULL, so just unref it
@@ -749,7 +757,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				inner_res.add_argument (new CCodeCastExpression (new CCodeIdentifier ("_res_"), "GSimpleAsyncResult *"));
 				ccall.add_argument (inner_res);
 
-				ccall.add_argument (new CCodeConstant ("error"));
+				ccall.add_argument (error_argument);
 				ccode.add_assignment (new CCodeIdentifier ("_reply_message"), ccall);
 			}
 		}
@@ -769,7 +777,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 			// return on remote error
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_to_gerror"));
 			ccall.add_argument (new CCodeIdentifier ("_reply_message"));
-			ccall.add_argument (new CCodeIdentifier ("error"));
+			ccall.add_argument (error_argument);
 			ccode.open_if (ccall);
 			ccode.add_expression (unref_reply);
 			return_default_value (m.return_type);
@@ -816,7 +824,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 						var target = new CCodeIdentifier ("_vala_%s".printf (param.name));
 						bool may_fail;
-						receive_dbus_value (param.variable_type, new CCodeIdentifier ("_reply_message"), new CCodeIdentifier ("_reply_iter"), target, param, new CCodeIdentifier ("error"), out may_fail);
+
+						receive_dbus_value (param.variable_type, new CCodeIdentifier ("_reply_message"), new CCodeIdentifier ("_reply_iter"), target, param, error_argument, out may_fail);
 
 						// TODO check that parameter is not NULL (out parameters are optional)
 						// free value if parameter is NULL
@@ -829,7 +838,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 							}
 						}
 
-						if (may_fail) {
+						if (may_fail && has_error_argument) {
 							ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeIdentifier ("error"), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("error"))));
 							ccode.add_expression (unref_reply);
 							return_default_value (m.return_type);
