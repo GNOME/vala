@@ -1,52 +1,169 @@
-Vala 0.35.90
-============
-
- * Bug fixes and binding updates.
-
-Vala 0.35.7
+Vala 0.36.0
 ===========
 
- * Bug fixes and binding updates.
- * Add libgrss binding.
- * Introduce [CCode (finish_instance = ...)] attribute.
- * Update manpages.
+ * Highlights
+  - Update manual using DocBook from wiki.gnome.org as source [#779090]
+  - Add support for array-parameters with rank > 1 in signals [#778632]
+  - Use GTask instead of GSimpleAsyncResult with GLib 2.36/2.44 target [#763345]
+  - Deny access to protected constructors [#760031]
+  - Support [DBus (signature = ...)] for properties [#744595]
+  - Add [CCode ("finish_instance = ...")] attribute [#710103]
+  - Support [HasEmitter] for vala sources [#681356]
+  - Add support for the \v escape charactor [#664689]
+  - Add explicit copy method for arrays [#650663]
+  - Allow underscores in type parameter names [#644938]
+  - Support [FormatArg] attribute for parameters
+  - Ignore --thread commandline option and drop gthread-2.0 references
+  - Check inferred generic-types of MemberAccess [#775466]
+  - Check generic-types count of DelegateType [#772204]
+  - Fix type checking when using generics in combination with subtype [#615830]
+  - Fix type parameter check for overriding generic methods
+  - Use g_signal_emit where possible [#641828]
+  - Only emit notify of properties if value actually changed [#631267] [#779955]
+  - Mark chained relational expressions as stable [#677022]
+  - Perform more thorough compatibility check of inherited properties [#779038]
+  - Handle nullable ValueTypes in signals delegates properly [#758816]
 
-Vala 0.35.6
-===========
+ * New bindings:
+  - gtk+-4.0, gtk+-unix-print-{2,3,4}.0, libgrss
 
- * Bug fixes and binding updates.
+ * Removed bindings:
+  - clutter-json-1.0
 
-Vala 0.35.5
-===========
+ * Updated bindings. Some fixes may need to be wrapped in your Vala code
+   with the preparser directive #if VALA_0_36
+  - cairo: Add bindings for cairo_*_user_data()
+  - clutter-1.0: Fix constructors which weren't detected as such
+  - clutter-gst-2.0: Skip VideoTexture.get_audio_streams/get_subtitle_tracks
+  - clutter-gst-3.0: Three commits
+  - gdk-2.0: Include gdk/gdkkeysyms.h for Gdk.Key
+  - gdk-3.0: Three commits
+  - gdk-pixbuf-2.0: Three commits
+  - gobject-introspection-1.0: Prettify and fix the whole thing
+  - gsl.vapi: Fix attribute typos
+  - gstreamer-1.0: Make ElementFactory.get_static_pad_templates fully "unowned",
+      Mark *.make_writable with "ReturnsModifiedPointer",
+      Fix Gst.Base.Adapter.map/take bindings
+  - gtk+-3.0: Various updates
+  - gtk+-X.0: Mark "iter" param of ListStore.remove() as ref
+  - libarchive: Add ReadDisk
+  - libxml-2.0: Adding missing API and nullable parameters
+  - linux: add non-posix fcntl constants
+  - polkit-gobject-1: Fix constructors which weren't detected as such
+  - poppler-glib: Update to 0.52.0
+  - rest-0.7: Fix some ownership problems
+  - sdl: Make Palette and PixelFormat a struct
+  - webkit2gtk-4.0: Update to 2.16
+  - webkit2gtk: URI*.get_http_headers returns unowned Soup.MessageHeaders
 
- * Fix regression.
+ * Updated GLib core bindings:
+  - gio-2.0:
+    + Fix async constructors of DBusConnection,DBusObjectManagerClient...
+    + Fix binding of Resolver.lookup_service*()
+    + Keep GLib.Socket API compatible with gio < 2.48
+    + Update SettingsBackend related bindings
+    + Add/"Unlock" missing GTask symbols
+  - gio-unix-2.0:
+    + Add "g_unix_mounts_for" and fix "g_unix_mount_at"
+  - glib-2.0:
+    + Add GPOINTER_TO_* as from_pointer()
+    + Add G_CHECKSUM_SHA384
+    + Add "g_utf8_make_valid"
+    + Add more Error bindings
+    + Add simple fast-path to string.replace()
+    + Add UCS-4 and UTF-16 related bindings
+    + Add uuid_string_*
+    + Fix g_bookmark_file_load_from_*/to_file bindings
+    + Mark delegates in Test.add_data_func/add_func() as scope=async
+    + Mark va_list.arg() with simple-generics to allow int64 or double
+    + Update Unicode symbols
+  - gobject-2.0:
+    + Add a bunch of missing symbols
+    + Add some missing "array_length_type" annotations
 
-Vala 0.35.4
-===========
+ * GIR parser and writer:
+  - Add [GIR ("fullname = ...")] attribute, set fullname of GType [#775591]
+  - More complete parsing of field information [#772902]
+  - Use the correct tag- and element-name for an annotation [#769597]
+  - Use type_id information from gir if not already overridden
+  - No support for fixed-size array as return-value
+  - Let alias inherit more information from base_type
+  - Improve function to method conversion
+  - Avoid fatal handling of nameless unions
+  - Allow to specify the base_type of an alias
+  - Add metadata-support for "returns_modified_pointer" [#759255]
 
- * Bug fixes and binding updates.
+ * D-Bus code generation:
+  - Check there is a return error location before using it [#779652]
+  - Fix memory-leak using g_task_propagate_pointer [#778993]
+  - Initialize intermediate variables [#778540]
+  - Handle errors when extracting FDs from dbus messages [#778540]
+  - Ensure extracted data from the GVariant is freed on error [#778540]
 
-Vala 0.35.3
-===========
+ * C code hardening and reproducibility:
+  - Fix build with -Werror=enum-compare -Werror=switch
+  - Build testsuite with -Werror=format-nonliteral -Werror=format-security
+      -Werror=int-conversion -Werror=redundant-decls
+  - Add G_GNUC_FORMAT attribute for FormatArg functions [#774060]
+  - Add G_GNUC_PRINTF/SCANF attribute for Printf/ScanfFormat functions [#710862]
+  - gtkmodule: Order required-gtype-classes for reproducibility [debian#802528]
 
- * Bug fixes and binding updates.
- * Add gtk+-unix-print-{2,3,4}.0 bindings.
+ * Reduce incompatible-pointer-type C code warnings:
+  - Cast vfunc pointer assigns of abstract overrides [#777958]
+  - Fix vfunc cast for async method implementation/override
+  - Default to void-return for vfunc cast of *_async methods
+  - Cast *_destroy_func of generic-types calls to GDestroyNotify
+  - Cast destroy_data for g_cclosure_new to GClosureNotify
+  - Pass pointer of matching type to property-getter
+  - memberaccess: Don't resolve base_method/property twice
 
-Vala 0.35.2
-===========
+ * Genie:
+  - Allow comma-separated identifiers in definition of enums [#776833]
+  - Add empty file check to read_token() [#633083]
 
- * Bug fixes and binding updates.
+ * Various bug fixes:
+  - codegen: Don't create duplicated complete-async code [#778302]
+  - codegen: Don't return void for non-nullable simple-type structs [#778224]
+  - vala: Non-null initializers not allowed for owned namespace fields [#777697]
+  - codegen: Support casting arbitary value-types to arrays [#777194]
+  - codegen: Reference struct fields with their actual cname [#775761]
+  - codegen: Add function-prototypes for all register-type calls [#775446]
+  - vala: check a property has an accessor and/or a mutator [#773956]
+  - codegen: Don't declare CreationMethod for compact-classes twice [#772661]
+  - method: Print encountered type if return types mismatch [#769501]
+  - codegen: Fix memory-leak with object initializer for properties [#766739]
+  - codegen: Fix array length of array returned by lambda [#761360]
+  - codegen: Fix emission of constant array length [#756376]
+  - codegen: Support deprecating properties and their accessors [#732449]
+  - codegen: Don't add static modifier to abstract property setters [#673389]
+  - codegen: Fix instance parameter property setter in SimpleType structs
+    [#657346]
+  - codegen: Fix base-access from within overriding struct-property-accessor
+    [#764481]
+  - vala: Check accessibility of default arguments [#648030]
+  - vala: Disallow private accessors in overridable properties [#603491]
+  - methodcall: Don't try to remove N_/NC_ while properly handled in C [#642350]
+  - vala: Check type arguments in DataType.equals [#641418]
+  - parser: Allow cast pointer expressions without enclosing parens [#590641]
+  - Don't initialize local variable if not requested
+  - codegen: Don't implicitly initialize local variables with initializer
+  - Check printf arguments of object creation expressions
+  - ccodefunction: Only add G_GNUC_DEPRECATED to declarations
+  - codegen: Avoid criticals while unconditionaly trying to chain-up to
+    non-existing property-accessors
+  - signalmodule: Add signal-emitter declaration if needed [#779609]
+  - signalmodule: Fix deprecation of signals
+  - codegen: Properly null-out source on ownership-transfer of delegates
+  - vala: Fix MemberAccess.is_non_null() for EnumValue constants [#780050]
 
-Vala 0.35.1
-===========
-
- * Add support for the \v escape character.
- * Ignore --thread command-line option which is obsolete.
- * Fix type checking when using generics.
- * Use g_signal_emit where possible.
- * Introduce [FormatArg] attribute for parameters.
- * Use GTask API for async implementations with target-gLib >= 2.36.
- * Bug fixes and binding updates.
+ * Contributors:
+    Abderrahim Kitouni, Alistair Thomas, Andrea Del Signore, Carlos Garnacho,
+    Daniel Espinosa, Daniel Pfeifer, Dr. Michael Lauer, Evan Nemerson,
+    Florian Brosch, Francisco Serna, George Barrett, Jens Georg, Jordan Yelloz,
+    Jürg Billeter, Luca Bruno, Marvin W, Matthias Berndt, Michael James Gratton,
+    mrmacete, Nikolay Orlyuk, Niko Tyni, Ole André Vadla Ravnås,
+    Philip Withnall, Richard Wiedenhöft, Rico Tzschichholz, Sam Thursfield,
+    Severin Heiniger, Simon Werbeck, Timm Bäder, Vladislav, Yu Feng
 
 Vala 0.34.0
 ===========
