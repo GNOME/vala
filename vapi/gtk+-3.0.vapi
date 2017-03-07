@@ -6809,10 +6809,15 @@ namespace Gtk {
 		public void modify_style (Gtk.RcStyle style);
 		[Version (deprecated_since = "3.0", replacement = "override_color")]
 		public void modify_text (Gtk.StateType state, Gdk.Color? color);
+		[Version (deprecated_since = "3.16")]
 		public void override_background_color (Gtk.StateFlags state, Gdk.RGBA? color);
+		[Version (deprecated_since = "3.16")]
 		public void override_color (Gtk.StateFlags state, Gdk.RGBA? color);
+		[Version (deprecated_since = "3.16")]
 		public void override_cursor (Gdk.RGBA? cursor, Gdk.RGBA? secondary_cursor);
+		[Version (deprecated_since = "3.16")]
 		public void override_font (Pango.FontDescription? font_desc);
+		[Version (deprecated_since = "3.16")]
 		public void override_symbolic_color (string name, Gdk.RGBA? color);
 		[Version (deprecated_since = "3.0", replacement = "get_path")]
 		public void path (out uint path_length, out string path, out string path_reversed);
