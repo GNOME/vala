@@ -24,6 +24,7 @@ devhelp: manual.xml devhelp.xsl xhtml.xsl
 		$(srcdir)/xhtml.xsl \
 		$(srcdir)/manual.xml
 	@cp $(srcdir)/default.css $@
+	@touch $@
 
 html: manual.xml xhtml.xsl
 	@$(MKDIR_P) $@
@@ -34,6 +35,7 @@ html: manual.xml xhtml.xsl
 		$(srcdir)/xhtml.xsl \
 		$(srcdir)/manual.xml
 	@cp $(srcdir)/default.css $@
+	@touch $@
 
 mostlyclean-local:
 	rm -rf devhelp
