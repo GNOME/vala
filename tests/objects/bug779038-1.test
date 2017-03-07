@@ -1,0 +1,19 @@
+Invalid Code
+
+public interface Foo : Object {
+	public abstract string foo { get; set; }
+}
+
+public interface Bar : Object {
+	public abstract string foo { set; }
+}
+
+public class Baz : Object, Foo {
+	public string foo { get; set; }
+}
+
+public class Manam : Baz, Bar {
+}
+
+void main () {
+}

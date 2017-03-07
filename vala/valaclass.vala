@@ -819,6 +819,13 @@ public class Vala.Class : ObjectTypeSymbol {
 								base_class = base_class.base_class;
 							}
 							if (sym is Property) {
+								var base_prop = (Property) sym;
+								string? invalid_match = null;
+								// No check at all for "new" classified properties, really?
+								if (!base_prop.hides && !base_prop.compatible (prop, out invalid_match)) {
+									error = true;
+									Report.error (source_reference, "Type and/or accessors of inherited properties `%s' and `%s' do not match: %s.".printf (prop.get_full_name (), base_prop.get_full_name (), invalid_match));
+								}
 								// property is used as interface implementation, so it is not unused
 								sym.version.check (source_reference);
 								sym.used = true;
