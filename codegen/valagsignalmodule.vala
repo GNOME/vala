@@ -544,7 +544,16 @@ public class Vala.GSignalModule : GObjectModule {
 
 				set_cvalue (expr, ccall);
 			} else if (get_signal_has_emitter (sig)) {
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_%s".printf (get_ccode_lower_case_name (cl), sig.name)));
+				string emitter_func;
+				if (sig.emitter != null) {
+					if (!sig.external_package && expr.source_reference.file != sig.source_reference.file) {
+						generate_method_declaration (sig.emitter, cfile);
+					}
+					emitter_func = get_ccode_lower_case_name (sig.emitter);
+				} else {
+					emitter_func = "%s_%s".printf (get_ccode_lower_case_name (cl), sig.name);
+				}
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier (emitter_func));
 
 				ccall.add_argument (pub_inst);
 				set_cvalue (expr, ccall);
