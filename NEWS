@@ -1,3 +1,11 @@
+Vala 0.35.7
+===========
+
+ * Bug fixes and binding updates.
+ * Add libgrss binding.
+ * Introduce [CCode (finish_instance = ...)] attribute.
+ * Update manpages.
+
 Vala 0.35.6
 ===========
 
