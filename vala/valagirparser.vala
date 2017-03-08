@@ -82,6 +82,7 @@ public class Vala.GirParser : CodeVisitor {
 		FLOATING,
 		TYPE_ID,
 		RETURN_VOID,
+		RETURNS_MODIFIED_POINTER,
 		DELEGATE_TARGET_CNAME,
 		FINISH_VFUNC_NAME;
 
@@ -921,6 +922,9 @@ public class Vala.GirParser : CodeVisitor {
 					if (!(m is CreationMethod)) {
 						if (metadata.has_argument (ArgumentType.DESTROYS_INSTANCE)) {
 							m.set_attribute ("DestroysInstance", metadata.get_bool (ArgumentType.DESTROYS_INSTANCE));
+						}
+						if (metadata.has_argument (ArgumentType.RETURNS_MODIFIED_POINTER)) {
+							m.set_attribute ("ReturnsModifiedPointer", metadata.get_bool (ArgumentType.RETURNS_MODIFIED_POINTER));
 						}
 						// merge custom vfunc
 						if (metadata.has_argument (ArgumentType.VFUNC_NAME)) {
