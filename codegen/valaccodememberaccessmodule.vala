@@ -182,14 +182,30 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
 					ccall.add_argument (get_cvalue (expr.inner));
-					set_cvalue (expr, ccall);
+					if (prop.property_type.is_real_non_null_struct_type ()) {
+						var temp_value = (GLibValue) create_temp_value (prop.get_accessor.value_type, false, expr);
+						expr.target_value = load_temp_value (temp_value);
+						var ctemp = get_cvalue_ (temp_value);
+						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
+						ccode.add_expression (ccall);
+					} else {
+						set_cvalue (expr, ccall);
+					}
 				} else if (base_prop.parent_symbol is Interface) {
 					var base_iface = (Interface) base_prop.parent_symbol;
 					string parent_iface_var = "%s_%s_parent_iface".printf (get_ccode_lower_case_name (current_class), get_ccode_lower_case_name (base_iface));
 
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), "get_%s".printf (prop.name)));
 					ccall.add_argument (get_cvalue (expr.inner));
-					set_cvalue (expr, ccall);
+					if (prop.property_type.is_real_non_null_struct_type ()) {
+						var temp_value = (GLibValue) create_temp_value (prop.get_accessor.value_type, false, expr);
+						expr.target_value = load_temp_value (temp_value);
+						var ctemp = get_cvalue_ (temp_value);
+						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
+						ccode.add_expression (ccall);
+					} else {
+						set_cvalue (expr, ccall);
+					}
 				}
 			} else if (prop.binding == MemberBinding.INSTANCE &&
 			    prop.get_accessor.automatic_body &&
