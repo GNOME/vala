@@ -292,6 +292,7 @@ namespace Gst {
 			public Gst.Video.OverlayComposition copy ();
 			public unowned Gst.Video.OverlayRectangle get_rectangle (uint n);
 			public uint get_seqnum ();
+			[ReturnsModifiedPointer]
 			public Gst.Video.OverlayComposition make_writable ();
 			public uint n_rectangles ();
 		}

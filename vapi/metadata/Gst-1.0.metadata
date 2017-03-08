@@ -199,6 +199,7 @@ TagList base_type="Gst.MiniObject"
   .mini_object skip
 Toc base_type="Gst.MiniObject"
 TocEntry base_type="Gst.MiniObject"
+*.make_writable returns_modified_pointer
 
 // Reparenting
 TAG_* parent="Gst.Tags" name="TAG_(.+)"

@@ -1674,6 +1674,7 @@ namespace Gst {
 		public T get_qdata<T> (GLib.Quark quark);
 		public bool is_writable ();
 		public bool @lock (Gst.LockFlags flags);
+		[ReturnsModifiedPointer]
 		public Gst.MiniObject make_writable ();
 		public unowned Gst.MiniObject @ref ();
 		public static bool replace (ref Gst.MiniObject? olddata, Gst.MiniObject? newdata);
@@ -2502,6 +2503,7 @@ namespace Gst {
 		public bool is_writable ();
 		[Version (since = "1.6")]
 		public Gst.Uri join (Gst.Uri? ref_uri);
+		[ReturnsModifiedPointer]
 		[Version (since = "1.6")]
 		public Gst.Uri make_writable ();
 		[Version (since = "1.6")]
