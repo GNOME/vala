@@ -26,8 +26,8 @@ namespace Gst {
 			public Gst.BufferList? get_buffer_list (size_t nbytes);
 			[Version (since = "1.6")]
 			public GLib.List<Gst.Buffer>? get_list (size_t nbytes);
-			[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
-			public unowned uint8[]? map ();
+			[CCode (array_length = false)]
+			public unowned uint8[]? map (size_t size);
 			public ssize_t masked_scan_uint32 (uint32 mask, uint32 pattern, size_t offset, size_t size);
 			public ssize_t masked_scan_uint32_peek (uint32 mask, uint32 pattern, size_t offset, size_t size, out uint32 value);
 			[Version (since = "1.10")]
@@ -43,8 +43,8 @@ namespace Gst {
 			[Version (since = "1.10")]
 			public Gst.ClockTime pts_at_discont ();
 			public void push (owned Gst.Buffer buf);
-			[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
-			public uint8[]? take ();
+			[CCode (array_length = false)]
+			public uint8[]? take (size_t nbytes);
 			public Gst.Buffer? take_buffer (size_t nbytes);
 			[Version (since = "1.2")]
 			public Gst.Buffer? take_buffer_fast (size_t nbytes);
