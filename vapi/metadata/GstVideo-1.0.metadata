@@ -19,6 +19,7 @@ VideoCodecFrame
 // Gst.MiniObject inheritance
 VideoOverlayComposition base_type="Gst.MiniObject"
 VideoOverlayRectangle base_type="Gst.MiniObject"
+*.make_writable returns_modified_pointer
 
 // Bug #685833
 VideoCodecFrame
