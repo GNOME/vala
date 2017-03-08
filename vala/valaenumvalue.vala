@@ -27,6 +27,23 @@ using GLib;
  */
 public class Vala.EnumValue : Constant {
 	/**
+	 * The nick of this enum-value
+	 */
+	public string nick {
+		get {
+			if (_nick == null) {
+				_nick = get_attribute_string ("Description", "nick");
+				if (_nick == null) {
+					_nick = name.down ().replace ("_", "-");
+				}
+			}
+			return _nick;
+		}
+	}
+
+	private string? _nick = null;
+
+	/**
 	 * Creates a new enum value with the specified numerical representation.
 	 *
 	 * @param name  enum value name

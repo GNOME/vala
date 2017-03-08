@@ -163,8 +163,8 @@ public abstract class Vala.TypeRegisterFunction {
 			foreach (EnumValue ev in en.get_values ()) {
 				clist_ev = new CCodeInitializerList ();
 				clist_ev.append (new CCodeConstant (get_ccode_name (ev)));
-				clist_ev.append (new CCodeIdentifier ("\"%s\"".printf (get_ccode_name (ev))));
-				clist_ev.append (CCodeBaseModule.get_enum_value_canonical_cconstant (ev));
+				clist_ev.append (new CCodeConstant ("\"%s\"".printf (get_ccode_name (ev))));
+				clist_ev.append (new CCodeConstant ("\"%s\"".printf (ev.nick)));
 				clist.append (clist_ev);
 			}
 

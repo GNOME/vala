@@ -3,6 +3,11 @@ class Foo : Object {
 	public int foo { get; set; }
 }
 
+enum Bar {
+	[Description (nick = "foo's nick")]
+	FOO
+}
+
 void main () {
 	var foo = new Foo ();
 	(unowned ParamSpec)[] properties = foo.get_class ().list_properties ();
@@ -11,4 +16,6 @@ void main () {
 		assert (p.get_nick () == "foo's nick");
 		assert (p.get_blurb () == "foo's blurb");
 	}
+
+	assert (((EnumClass) typeof (Bar).class_ref ()).get_value_by_name (Bar.FOO.to_string ()).value_nick == "foo's nick");
 }

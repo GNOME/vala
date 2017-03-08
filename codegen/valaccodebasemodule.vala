@@ -6311,10 +6311,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return new CCodeConstant ("\"%s%s\"".printf (get_ccode_name (sig), (detail != null ? "::%s".printf (detail) : "")));
 	}
 
-	public static CCodeConstant get_enum_value_canonical_cconstant (EnumValue ev) {
-		return new CCodeConstant ("\"%s\"".printf (ev.name.down ().replace ("_", "-")));
-	}
-
 	public bool get_signal_has_emitter (Signal sig) {
 		return sig.get_attribute ("HasEmitter") != null;
 	}
