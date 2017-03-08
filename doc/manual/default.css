@@ -67,19 +67,41 @@ h3 {
 	padding-top: 1.4em;
 }
 
-.header {
-	background-color: #005a9c;
-	font-weight: bold;
-	padding: .35em;
+.o-fixedtop {
 	position: fixed;
 	left: 0;
 	top: 0;
 	width: 100%;
-	height: 1.4em;
+	overflow: hidden;
 }
 
-.header a {
+.o-inlinewidth-4 {
+	display: inline-block;
+	width: 4em;
+}
+
+.o-navbar {
+	padding: .35em;
+	height: 1.4em;
+	max-width: 35em;
+}
+
+.c-navbar {
+	background-color: #005a9c;
 	color: white;
+	font-weight: bold;
+	text-align: center;
+}
+
+.c-pageturner a {
+	color: white;
+	border-radius: 0.4em;
+	padding: 0 0.5em;
+}
+
+.c-pageturner a:hover {
+	color: #005a9c;
+	background-color: white;
 }
 
 div.note {
@@ -148,4 +170,13 @@ blockquote span.literal {
 	font-weight: bold;
 	font-size: 110%;
 	padding-right: 0.5em;
+}
+
+.u-float-left {
+	float: left;
+	overflow: hidden;
+}
+.u-float-right {
+	float: right;
+	overflow: hidden;
 }

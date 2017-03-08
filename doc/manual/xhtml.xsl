@@ -51,7 +51,7 @@
         </head>
         <body>
           <xsl:apply-templates
-            select="/article/section/title"
+            select="title"
             mode="navigation-bar"
           />
           <xsl:apply-templates select="title" mode="heading"/>
@@ -100,10 +100,45 @@
     <xsl:apply-templates select="articleinfo|section"/>
   </xsl:template>
 
-  <xsl:template match="article/section/title" mode="navigation-bar">
-    <div class="header">
-      <a href="index.html"><xsl:value-of select="."/></a>
+  <xsl:template match="title" mode="navigation-bar">
+    <div class="o-fixedtop c-navbar">
+      <div class="o-navbar">
+      <span class="c-pageturner u-float-left"><a href="index.html">Contents</a></span>
+      <span><xsl:value-of select="/article/section/title"/></span>
+      <div class="u-float-right">
+      <span class="c-pageturner o-inlinewidth-4"><xsl:call-template name="navigation-bar-prev"/></span>
+      <span class="c-pageturner o-inlinewidth-4"><xsl:call-template name="navigation-bar-next"/></span>
+      </div>
+      </div>
     </div>
+  </xsl:template>
+
+  <xsl:template name="navigation-bar-prev">
+    <xsl:choose>
+      <xsl:when test="parent::section/preceding::section[1]/title">
+        <xsl:call-template name="linkto">
+          <xsl:with-param name="title">Prev</xsl:with-param>
+          <xsl:with-param name="page" select="parent::section/preceding-sibling::section[1]/title"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="parent::section[1]/parent::section/title">
+        <a href="index.html">Prev</a>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="navigation-bar-next">
+    <xsl:choose>
+      <xsl:when test="parent::section/parent::article/section/section[1]/title|parent::section/following::section[1]/title">
+        <xsl:call-template name="linkto">
+          <xsl:with-param name="title">Next</xsl:with-param>
+          <xsl:with-param name="page" select="parent::section/parent::article/section/section[1]/title|parent::section/following::section[1]/title"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <span></span>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="article/section" mode="toc">
