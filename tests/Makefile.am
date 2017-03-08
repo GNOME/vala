@@ -206,6 +206,7 @@ TESTS = \
 	objects/bug702846.vala \
 	objects/bug751338.vala \
 	objects/bug760031.test \
+	objects/bug764481.vala \
 	objects/bug767092.test \
 	objects/bug768823.test \
 	objects/bug773956-1.test \
