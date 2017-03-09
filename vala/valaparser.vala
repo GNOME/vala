@@ -1260,9 +1260,6 @@ public class Vala.Parser : CodeVisitor {
 				if (!first) {
 					var be = (BinaryExpression) left;
 					be.chained = true;
-					if (!context.experimental) {
-						Report.warning (left.source_reference, "chained relational expressions are experimental");
-					}
 				}
 				first = false;
 				break;
@@ -1275,9 +1272,6 @@ public class Vala.Parser : CodeVisitor {
 					if (!first) {
 						var be = (BinaryExpression) left;
 						be.chained = true;
-						if (!context.experimental) {
-							Report.warning (left.source_reference, "chained relational expressions are experimental");
-						}
 					}
 					first = false;
 				} else {
