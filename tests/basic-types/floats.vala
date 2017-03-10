@@ -45,6 +45,11 @@ void test_double () {
 	string s = d.to_string ();
 	assert (s == "42");
 
+	unowned string unparsed;
+	double.try_parse ("3.45mm", out d, out unparsed);
+	assert (d == 3.45);
+	assert (unparsed == "mm");
+
 	// ensure that MIN and MAX are valid values
 	d = double.MIN;
 	assert (d == double.MIN);

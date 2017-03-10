@@ -689,12 +689,14 @@ public struct int64 {
 	}
 
 	[Version (since = "2.12")]
-	public static bool try_parse (string str, out int64 result = null) {
+	public static bool try_parse (string str, out int64 result = null, out unowned string unparsed = null) {
 		char* endptr;
 		result = ascii_strtoll (str, out endptr, 0);
 		if (endptr == (char*) str + str.length) {
+			unparsed = "";
 			return true;
 		} else {
+			unparsed = (string) endptr;
 			return false;
 		}
 	}
@@ -745,12 +747,14 @@ public struct uint64 {
 	public static uint64 parse (string str) {
 		return ascii_strtoull (str, null, 0);
 	}
-	public static bool try_parse (string str, out uint64 result = null) {
+	public static bool try_parse (string str, out uint64 result = null, out unowned string unparsed = null) {
 		char* endptr;
 		result = ascii_strtoull (str, out endptr, 0);
 		if (endptr == (char*) str + str.length) {
+			unparsed = "";
 			return true;
 		} else {
+			unparsed = (string) endptr;
 			return false;
 		}
 	}
@@ -885,12 +889,14 @@ public struct double {
 	public static double parse (string str) {
 		return ascii_strtod (str, null);
 	}
-	public static bool try_parse (string str, out double result = null) {
+	public static bool try_parse (string str, out double result = null, out unowned string unparsed = null) {
 		char* endptr;
 		result = ascii_strtod (str, out endptr);
 		if (endptr == (char*) str + str.length) {
+			unparsed = "";
 			return true;
 		} else {
+			unparsed = (string) endptr;
 			return false;
 		}
 	}
