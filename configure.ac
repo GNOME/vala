@@ -97,6 +97,9 @@ AC_SUBST(GMODULE_LIBS)
 AC_PATH_PROG([XSLTPROC], [xsltproc], :)
 AM_CONDITIONAL(HAVE_XSLTPROC, test "$XSLTPROC" != :)
 
+AC_CHECK_PROG([WEASYPRINT], [weasyprint], [weasyprint])
+AM_CONDITIONAL(HAVE_WEASYPRINT, [test x$WEASYPRINT = xweasyprint])
+
 AC_CHECK_PROG([HELP2MAN], [help2man], [help2man])
 AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
 

@@ -48,12 +48,25 @@ manual.html: manual.xml version.xml common.xsl print.xsl default.css
 		$(srcdir)/print.xsl \
 		$(srcdir)/manual.xml
 
+if HAVE_WEASYPRINT
+pdf: manual.pdf
+manual.pdf: manual.html default.css
+	@echo Generating PDF version of manual, this may take some time...
+	$(AM_V_GEN)$(WEASYPRINT) \
+		manual.html \
+		$@
+else
+pdf:
+	@echo Install weasyprint and re-run ./configure to generate a PDF of the Vala manual
+endif
+
 mostlyclean-local:
 	rm -rf devhelp
 	rm -rf html
 
 CLEANFILES = \
 	manual.html \
+	manual.pdf \
 	version.xml \
 	$(NULL)
 
