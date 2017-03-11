@@ -77,6 +77,7 @@ EXTRA_DIST = \
 	manual.xml \
 	print.xsl \
 	xhtml.xsl \
+	README \
 	$(NULL)
 
 MANUAL_DOCBOOK_URL=https://wiki.gnome.org/Projects/Vala/Manual/Export?action=format\&mimetype=text/docbook
