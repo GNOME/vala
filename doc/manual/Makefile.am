@@ -11,36 +11,49 @@ book_DATA = \
 endif
 
 $(builddir)/devhelp/*: devhelp
-devhelp: manual.xml version.xml devhelp.xsl xhtml.xsl default.css
+devhelp: manual.xml version.xml common.xsl devhelp.xsl xhtml.xsl default.css
 	@$(MKDIR_P) $@
 	$(AM_V_GEN)$(XSLTPROC) \
 		--xinclude \
+		--path $(srcdir) \
 		--output $@/$(BOOK_NAME).devhelp2 \
 		$(srcdir)/devhelp.xsl \
 		$(srcdir)/manual.xml
 	@$(XSLTPROC) \
 		--xinclude \
+		--path $(srcdir) \
 		--output $@/index.html \
 		$(srcdir)/xhtml.xsl \
 		$(srcdir)/manual.xml
 	@cp $(srcdir)/default.css $@
 	@touch $@
 
-html: manual.xml version.xml xhtml.xsl default.css
+html: manual.xml version.xml common.xsl xhtml.xsl default.css
 	@$(MKDIR_P) $@
 	$(AM_V_GEN)$(XSLTPROC) \
 		--xinclude \
+		--stringparam body-class u-center \
 		--output $@/index.html \
 		$(srcdir)/xhtml.xsl \
 		$(srcdir)/manual.xml
 	@cp $(srcdir)/default.css $@
 	@touch $@
+
+print: manual.html
+manual.html: manual.xml version.xml common.xsl print.xsl default.css
+	$(AM_V_GEN)$(XSLTPROC) \
+		--xinclude \
+		--path $(srcdir) \
+		--output $@ \
+		$(srcdir)/print.xsl \
+		$(srcdir)/manual.xml
 
 mostlyclean-local:
 	rm -rf devhelp
 	rm -rf html
 
 CLEANFILES = \
+	manual.html \
 	version.xml \
 	$(NULL)
 
@@ -49,6 +62,7 @@ EXTRA_DIST = \
 	default.css \
 	devhelp.xsl \
 	manual.xml \
+	print.xsl \
 	xhtml.xsl \
 	$(NULL)
 

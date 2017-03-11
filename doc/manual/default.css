@@ -3,7 +3,6 @@ body {
 	font-family: cantarell, sans-serif;
 	text-align: justify;
 	margin-top: 2.8em;
-	max-width: 35em;
 }
 
 h1, h2, h3, h4 {
@@ -160,7 +159,6 @@ pre {
 .c-document_version { border: solid 2px #ccc;
 	border-radius: 4px;
 	width: 100%;
-	font-sizde: 95%;
 }
 .c-document_version tr td:first-child { text-align: right; }
 .c-document_version tr:nth-child(odd) { background-color: #f0f0f0; }
@@ -179,4 +177,39 @@ blockquote span.literal {
 .u-float-right {
 	float: right;
 	overflow: hidden;
+}
+.u-center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@media screen {
+	body { max-width: 35em; }
+}
+
+@media print {
+	* { background: none !important; }
+	h1 {
+		text-align: center;
+		padding: 2em 0 4em 0;
+	}
+	h1+p, h1+p+p, h1+p+p+p { max-width: 28em;
+	margin: 0 auto 1em;
+	}
+	.c-document_version { position: absolute; bottom: 0; }
+	h2, .toc { page-break-before: always; }
+	h1, h2, h3, h4 { page-break-after: avoid; }
+	h2, h3, h4 {
+		border: none;
+		padding: 0;
+		}
+}
+
+@page {
+	counter-increment: page;
+	@top-center { content: "Vala Reference Manual"; }
+	@bottom-center {
+		content: counter(page);
+	}
+	font-family: cantarell, sans-serif;
 }
