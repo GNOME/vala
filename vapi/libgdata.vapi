@@ -324,9 +324,12 @@ namespace GData {
 		[Version (since = "0.9.1")]
 		public uint get_max_attendees ();
 		public unowned string get_order_by ();
+		[Version (deprecated = true, deprecated_since = "0.17.7")]
 		public int64 get_recurrence_expansion_end ();
+		[Version (deprecated = true, deprecated_since = "0.17.7")]
 		public int64 get_recurrence_expansion_start ();
 		public bool get_single_events ();
+		[Version (deprecated = true, deprecated_since = "0.17.7")]
 		public unowned string get_sort_order ();
 		public int64 get_start_max ();
 		public int64 get_start_min ();
@@ -336,11 +339,14 @@ namespace GData {
 		[Version (since = "0.9.1")]
 		public void set_max_attendees (uint max_attendees);
 		public void set_order_by (string? order_by);
+		[Version (deprecated = true, deprecated_since = "0.17.7")]
 		public void set_recurrence_expansion_end (int64 end);
+		[Version (deprecated = true, deprecated_since = "0.17.7")]
 		public void set_recurrence_expansion_start (int64 start);
 		[Version (since = "0.9.1")]
 		public void set_show_deleted (bool show_deleted);
 		public void set_single_events (bool single_events);
+		[Version (deprecated = true, deprecated_since = "0.17.7")]
 		public void set_sort_order (string? sort_order);
 		public void set_start_max (int64 start_max);
 		public void set_start_min (int64 start_min);
@@ -352,12 +358,15 @@ namespace GData {
 		[Version (since = "0.9.1")]
 		public uint max_attendees { get; set; }
 		public string order_by { get; set; }
+		[Version (deprecated = true, deprecated_since = "0.17.7")]
 		public int64 recurrence_expansion_end { get; set; }
+		[Version (deprecated = true, deprecated_since = "0.17.7")]
 		public int64 recurrence_expansion_start { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "0.9.1")]
 		public bool show_deleted { get; set; }
 		public bool single_events { get; set; }
+		[Version (deprecated = true, deprecated_since = "0.17.7")]
 		public string sort_order { get; set; }
 		public int64 start_max { get; set; }
 		public int64 start_min { get; set; }
@@ -752,6 +761,7 @@ namespace GData {
 		public unowned string get_document_id ();
 		[Version (deprecated = true, deprecated_since = "0.17.0", since = "0.4.0")]
 		public int64 get_edited ();
+		[Version (since = "0.17.7")]
 		public int64 get_file_size ();
 		public unowned GData.Author get_last_modified_by ();
 		public int64 get_last_viewed ();
@@ -765,6 +775,7 @@ namespace GData {
 		public string document_id { get; }
 		[Version (deprecated = true, deprecated_since = "0.17.0", since = "0.4.0")]
 		public int64 edited { get; }
+		[Version (since = "0.17.7")]
 		public int64 file_size { get; }
 		[NoAccessorMethod]
 		[Version (since = "0.5.0")]
@@ -988,6 +999,7 @@ namespace GData {
 		public uint get_items_per_page ();
 		public unowned GLib.List<GData.Link> get_links ();
 		public unowned string get_logo ();
+		[Version (since = "0.17.7")]
 		public unowned string? get_next_page_token ();
 		[Version (since = "0.7.0")]
 		public unowned string get_rights ();
@@ -1008,6 +1020,7 @@ namespace GData {
 		public string id { get; }
 		public uint items_per_page { get; }
 		public string logo { get; }
+		[Version (since = "0.17.7")]
 		public string next_page_token { get; }
 		[Version (since = "0.7.0")]
 		public string rights { get; }
@@ -1021,125 +1034,192 @@ namespace GData {
 	[Version (since = "0.15.1")]
 	public class FreebaseQuery : GData.Query {
 		[CCode (has_construct_function = false)]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public FreebaseQuery (string mql);
 		[CCode (has_construct_function = false)]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public FreebaseQuery.from_variant (GLib.Variant variant);
 		[NoAccessorMethod]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public GLib.Variant variant { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_result_get_type ()")]
 	[Version (since = "0.15.1")]
 	public class FreebaseResult : GData.Entry {
 		[CCode (has_construct_function = false)]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public FreebaseResult ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public GLib.Variant? dup_variant ();
 		[NoAccessorMethod]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public GLib.Variant variant { owned get; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_search_query_get_type ()")]
 	[Version (since = "0.15.1")]
 	public class FreebaseSearchQuery : GData.Query {
 		[CCode (has_construct_function = false)]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public FreebaseSearchQuery (string search_terms);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public void add_filter (string property, string value);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public void add_location (uint64 radius, double lat, double lon);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public void close_filter ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string? get_language ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public bool get_stemmed ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public void open_filter (GData.FreebaseSearchFilterType filter_type);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public void set_language (string? lang);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public void set_stemmed (bool stemmed);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public string language { get; set; }
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public bool stemmed { get; set; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_search_result_get_type ()")]
 	[Version (since = "0.15.1")]
 	public class FreebaseSearchResult : GData.FreebaseResult {
 		[CCode (has_construct_function = false)]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public FreebaseSearchResult ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned GData.FreebaseSearchResultItem? get_item (uint i);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public uint get_num_items ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public uint get_total_hits ();
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdata_freebase_search_result_item_get_type ()")]
 	[Compact]
 	[Version (since = "0.15.1")]
 	public class FreebaseSearchResultItem {
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string get_id ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string get_language ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string get_mid ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string get_name ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string? get_notable_id ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string? get_notable_name ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public double get_score ();
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_service_get_type ()")]
 	[Version (since = "0.15.1")]
 	public class FreebaseService : GData.Service {
 		[CCode (has_construct_function = false)]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public FreebaseService (string? developer_key, GData.Authorizer? authorizer);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public GLib.InputStream get_image (GData.FreebaseTopicValue value, GLib.Cancellable? cancellable, uint max_width, uint max_height) throws GLib.Error;
-		[Version (since = "0.9.0")]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public static unowned GData.AuthorizationDomain get_primary_authorization_domain ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public GData.FreebaseTopicResult get_topic (GData.FreebaseTopicQuery query, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public async void get_topic_async (GData.FreebaseTopicQuery query, GLib.Cancellable? cancellable);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public GData.FreebaseResult query (GData.FreebaseQuery query, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public async void query_async (GData.FreebaseQuery query, GLib.Cancellable? cancellable);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public GData.FreebaseSearchResult search (GData.FreebaseSearchQuery query, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public async void search_async (GData.FreebaseSearchQuery query, GLib.Cancellable? cancellable);
 		[NoAccessorMethod]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public string developer_key { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", ref_function = "gdata_freebase_topic_object_ref", type_id = "gdata_freebase_topic_object_get_type ()", unref_function = "gdata_freebase_topic_object_unref")]
 	[Compact]
 	[Version (since = "0.15.1")]
 	public class FreebaseTopicObject {
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string get_id ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public uint64 get_property_count (string property);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public uint64 get_property_hits (string property);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned GData.FreebaseTopicValue? get_property_value (string property, int64 item);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public GLib.GenericArray<weak string> list_properties ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned GData.FreebaseTopicObject @ref ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_topic_query_get_type ()")]
 	[Version (since = "0.15.1")]
 	public class FreebaseTopicQuery : GData.Query {
 		[CCode (has_construct_function = false)]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public FreebaseTopicQuery (string id);
 		[CCode (array_length = false, array_null_terminated = true)]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string[]? get_filter ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string? get_language ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public void set_filter ([CCode (array_length = false, array_null_terminated = true)] string[]? filter);
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public void set_language (string? lang);
 		[CCode (array_length = false, array_null_terminated = true)]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public string[] filter { get; set; }
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public string language { get; set; }
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_freebase_topic_result_get_type ()")]
 	[Version (since = "0.15.1")]
 	public class FreebaseTopicResult : GData.FreebaseResult {
 		[CCode (has_construct_function = false)]
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public FreebaseTopicResult ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public GData.FreebaseTopicObject dup_object ();
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", ref_function = "gdata_freebase_topic_value_ref", type_id = "gdata_freebase_topic_value_get_type ()", unref_function = "gdata_freebase_topic_value_unref")]
 	[Compact]
 	[Version (since = "0.15.1")]
 	public class FreebaseTopicValue {
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public GLib.Value copy_value ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string get_creator ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public double get_double ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public int64 get_int ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string get_language ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned GData.FreebaseTopicObject get_object ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string get_property ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string get_string ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned string get_text ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public int64 get_timestamp ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public GLib.Type get_value_type ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public bool is_image ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public unowned GData.FreebaseTopicValue @ref ();
+		[Version (deprecated = true, deprecated_since = "0.17.7", since = "0.15.1")]
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_gcontact_calendar_get_type ()")]
@@ -1895,6 +1975,7 @@ namespace GData {
 		[CCode (has_construct_function = false)]
 		[Version (since = "0.4.0")]
 		public Parsable.from_xml (GLib.Type parsable_type, string xml, int length) throws GLib.Error;
+		[Version (since = "0.17.7")]
 		public unowned string get_content_type ();
 		[NoWrapper]
 		public virtual void get_json (Json.Builder builder);

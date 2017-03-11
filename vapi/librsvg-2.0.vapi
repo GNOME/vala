@@ -15,7 +15,7 @@ namespace Rsvg {
 		[CCode (cheader_filename = "librsvg/rsvg.h", cname = "LIBRSVG_CHECK_VERSION")]
 		public static bool check (int major, int minor, int micro);
 	}
-	[CCode (cheader_filename = "librsvg/rsvg.h")]
+	[CCode (cheader_filename = "librsvg/rsvg.h", type_id = "rsvg_handle_get_type ()")]
 	public class Handle : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Handle ();
@@ -53,6 +53,7 @@ namespace Rsvg {
 		public unowned string get_title ();
 		[Version (since = "2.22")]
 		public bool has_sub (string id);
+		public void internal_set_testing (bool testing);
 		[Version (since = "2.32")]
 		public bool read_stream_sync (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.14")]

@@ -58,6 +58,9 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static bool is_a (string type, string supertype);
 		[CCode (cheader_filename = "gio/gio.h")]
+		[Version (since = "2.52")]
+		public static bool is_mime_type (string type, string mime_type);
+		[CCode (cheader_filename = "gio/gio.h")]
 		public static bool is_unknown (string type);
 		[CCode (cheader_filename = "gio/gio.h", cname = "g_content_types_get_registered")]
 		public static GLib.List<string> list_registered ();
