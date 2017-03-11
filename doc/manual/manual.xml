@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE article  PUBLIC '-//OASIS//DTD DocBook XML V4.4//EN'  'http://www.docbook.org/xml/4.4/docbookx.dtd'><article>
 
 <section>
-<title>Vala Reference Manual [Draft]</title>
+<title>Vala Reference Manual</title>
+<para>This is a draft version of the Vala Reference Manual, and so is not guaranteed to be correct.  </para>
 <para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
@@ -153,7 +154,7 @@
 <para>Named scopes can be created directly with declarations like namespaces.  These are always in existence when the program is running, and can be referred to by their name. </para></listitem><listitem>
 <para>Transient scopes are created automatically as the program executes.  Every time a new code block is entered, a new scope is created.  For example, a new scope is created when a method is invoked.  There is no way to refer to this type of scope from outside. </para></listitem><listitem>
 <para>Instance scopes are created when a data type is instantiated, for example when a new instance of a classed type is created.  These scopes can be accessed via identifiers defined in other scopes, e.g. a variable to which the new instance is assigned. </para></listitem></itemizedlist>
-<para>To refer to an identifier in another scope, you must generally qualify the name.  For named scopes, the scope name is used; for instance scopes, any identifier to which the instance is assigned can be used.  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Member_access_expressions">Expressions/Member access expressions</ulink> for the syntax of accessing other scopes. </para>
+<para>To refer to an identifier in another scope, you must generally qualify the name.  For named scopes, the scope name is used; for instance scopes, any identifier to which the instance is assigned can be used.  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Member_access">Expressions/Member access</ulink> for the syntax of accessing other scopes. </para>
 <para>Scopes have parent scopes.  If an identifier is not recognised in the current scope, the parent scope is searched.  This continues up to the the global scope.  The parent scope of any scope is inferred from its position in the program - the parent scope can easily be identified as it is the scope the current declaration is in. </para>
 <para>For example, a namespace method creates a transient scope when it is invoked - the parent of this scope if the namespace which contains the definition of the method.  There are slightly different rules applied when instances are involved, as are described at <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Class_scope">Classes/Class scope</ulink>. </para>
 <para>The ultimate parent of all other scopes is the global scope.  The scope contains the fundamental data types, e.g. int, float, string.  If a program has a declaration outside of any other, it is placed in this scope. </para>
