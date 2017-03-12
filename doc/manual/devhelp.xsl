@@ -13,7 +13,7 @@
   />
 
   <xsl:template match="/">
-    <book title="{/article/section/title/text()}" link="index.html" author="" name="vala" version="2">
+    <book title="{/article/section/title/text()}" link="index.html" author="" name="vala" language="vala" version="2">
       <chapters>
         <xsl:apply-templates select="/article/section/section"/>
       </chapters>
