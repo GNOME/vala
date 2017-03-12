@@ -305,27 +305,43 @@ namespace Poppler {
 		public bool is_linearized ();
 		public bool save (string uri) throws GLib.Error;
 		public bool save_a_copy (string uri) throws GLib.Error;
-		public string author { owned get; }
-		public int creation_date { get; }
-		public string creator { owned get; }
+		[Version (since = "0.46")]
+		public void set_author (string author);
+		[Version (since = "0.46")]
+		public void set_creation_date (long creation_date);
+		[Version (since = "0.46")]
+		public void set_creator (string creator);
+		[Version (since = "0.46")]
+		public void set_keywords (string keywords);
+		[Version (since = "0.46")]
+		public void set_modification_date (long modification_date);
+		[Version (since = "0.46")]
+		public void set_producer (string producer);
+		[Version (since = "0.46")]
+		public void set_subject (string subject);
+		[Version (since = "0.46")]
+		public void set_title (string title);
+		public string author { owned get; set; }
+		public int creation_date { get; set; }
+		public string creator { owned get; set; }
 		[NoAccessorMethod]
 		public string format { owned get; }
 		[NoAccessorMethod]
 		public uint format_major { get; }
 		[NoAccessorMethod]
 		public uint format_minor { get; }
-		public string keywords { owned get; }
+		public string keywords { owned get; set; }
 		[NoAccessorMethod]
 		public bool linearized { get; }
 		public string metadata { owned get; }
 		[NoAccessorMethod]
-		public int mod_date { get; }
+		public int mod_date { get; set; }
 		public Poppler.PageLayout page_layout { get; }
 		public Poppler.PageMode page_mode { get; }
 		public Poppler.Permissions permissions { get; }
-		public string producer { owned get; }
-		public string subject { owned get; }
-		public string title { owned get; }
+		public string producer { owned get; set; }
+		public string subject { owned get; set; }
+		public string title { owned get; set; }
 		[NoAccessorMethod]
 		public Poppler.ViewerPreferences viewer_preferences { get; }
 	}
@@ -1024,13 +1040,6 @@ namespace Poppler {
 		NORMAL,
 		MULTILINE,
 		FILE_SELECT
-	}
-	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_ORIENTATION_", type_id = "poppler_orientation_get_type ()")]
-	public enum Orientation {
-		PORTRAIT,
-		LANDSCAPE,
-		UPSIDEDOWN,
-		SEASCAPE
 	}
 	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_PAGE_LAYOUT_", type_id = "poppler_page_layout_get_type ()")]
 	public enum PageLayout {
