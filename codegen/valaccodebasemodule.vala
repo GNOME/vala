@@ -1779,7 +1779,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				notify_call.add_argument (get_property_canonical_cconstant (prop));
 
 				var get_accessor = prop.get_accessor;
-				if (get_accessor != null) {
+				if (get_accessor != null && get_accessor.automatic_body) {
 					var property_type = prop.property_type;
 					var get_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (get_accessor)));
 					get_call.add_argument (new CCodeIdentifier (is_virtual ? "base" : "self"));
