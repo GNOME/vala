@@ -36,7 +36,11 @@ public class Vala.GSignalModule : GObjectModule {
 			}
 		}
 		
-		ret = "%s_%s_".printf (prefix, get_ccode_marshaller_type_name (return_type));
+		if (return_type is ValueType && return_type.nullable) {
+			ret = "%s_POINTER_".printf (prefix);
+		} else {
+			ret = "%s_%s_".printf (prefix, get_ccode_marshaller_type_name (return_type));
+		}
 		
 		if (params == null || params.size == 0) {
 			ret = ret + "_VOID";
@@ -57,6 +61,8 @@ public class Vala.GSignalModule : GObjectModule {
 		} else if (get_ccode_type_id (t) == get_ccode_type_id (string_type)) {
 			return "const char*";
 		} else if (t.data_type is Class || t.data_type is Interface) {
+			return "gpointer";
+		} else if (t is ValueType && t.nullable) {
 			return "gpointer";
 		} else if (t.data_type is Struct) {
 			var st = (Struct) t.data_type;
@@ -87,7 +93,11 @@ public class Vala.GSignalModule : GObjectModule {
 	private string get_marshaller_signature (List<Parameter> params, DataType return_type) {
 		string signature;
 		
-		signature = "%s:".printf (get_ccode_marshaller_type_name (return_type));
+		if (return_type is ValueType && return_type.nullable) {
+			signature = "POINTER:";
+		} else {
+			signature = "%s:".printf (get_ccode_marshaller_type_name (return_type));
+		}
 		if (params == null || params.size == 0) {
 			signature = signature + "VOID";
 		} else {
@@ -252,6 +262,8 @@ public class Vala.GSignalModule : GObjectModule {
 				get_value_function = "g_value_get_pointer";
 			} else if (p.variable_type is ErrorType) {
 				get_value_function = "g_value_get_pointer";
+			} else if (p.variable_type is ValueType && p.variable_type.nullable) {
+				get_value_function = "g_value_get_pointer";
 			} else {
 				get_value_function = get_ccode_get_value_function (p.variable_type.data_type);
 			}
@@ -286,6 +298,8 @@ public class Vala.GSignalModule : GObjectModule {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_string"));
 			} else if (return_type.data_type is Class || return_type.data_type is Interface) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_object"));
+			} else if (return_type is ValueType && return_type.nullable) {
+				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
 			} else {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_set_value_function (return_type.data_type)));
 			}
@@ -365,6 +379,8 @@ public class Vala.GSignalModule : GObjectModule {
 			csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 		} else if (sig.return_type is ErrorType) {
 			csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
+		} else if (sig.return_type is ValueType && sig.return_type.nullable) {
+			csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 		} else if (sig.return_type.data_type == null) {
 			csignew.add_argument (new CCodeConstant ("G_TYPE_NONE"));
 		} else {
@@ -391,6 +407,8 @@ public class Vala.GSignalModule : GObjectModule {
 			} else if (param.variable_type is PointerType || param.variable_type.type_parameter != null || param.direction != ParameterDirection.IN) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 			} else if (param.variable_type is ErrorType) {
+				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
+			} else if (param.variable_type is ValueType && param.variable_type.nullable) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 			} else {
 				csignew.add_argument (new CCodeConstant (get_ccode_type_id (param.variable_type.data_type)));
