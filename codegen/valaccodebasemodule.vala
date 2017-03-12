@@ -361,6 +361,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		predefined_marshal_set.add ("STRING:OBJECT,POINTER");
 		predefined_marshal_set.add ("VOID:UINT,POINTER");
 		predefined_marshal_set.add ("BOOLEAN:FLAGS");
+		predefined_marshal_set.add ("VOID:BOXED");
+		predefined_marshal_set.add ("VOID:VARIANT");
+		predefined_marshal_set.add ("BOOLEAN:BOXED,BOXED");
 
 		reserved_identifiers = new HashSet<string> (str_hash, str_equal);
 
