@@ -8,7 +8,6 @@ if HAVE_XSLTPROC
 book_DATA = \
 	devhelp/* \
 	$(NULL)
-endif
 
 $(builddir)/devhelp/*: devhelp
 devhelp: manual.xml version.xml common.xsl devhelp.xsl xhtml.xsl default.css
@@ -58,6 +57,8 @@ manual.pdf: manual.html default.css
 else
 pdf:
 	@echo Install weasyprint and re-run ./configure to generate a PDF of the Vala manual
+endif
+
 endif
 
 mostlyclean-local:
