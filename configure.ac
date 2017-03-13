@@ -10,12 +10,14 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([1.11 dist-xz no-dist-gzip])
 AM_MAINTAINER_MODE([enable])
 
-PACKAGE_SUFFIX=-0.36
+API_VERSION=0.36
+PACKAGE_SUFFIX="-$API_VERSION"
 
 dnl http://people.gnome.org/~walters/docs/build-api.txt
 dnl We don't support separate builddir when building from git
 echo \#buildapi-variable-no-builddir >/dev/null
 
+AC_SUBST(API_VERSION)
 AC_SUBST(PACKAGE_SUFFIX)
 AC_DEFINE_UNQUOTED(PACKAGE_SUFFIX, "$PACKAGE_SUFFIX", [Define to the suffix of this package])
 

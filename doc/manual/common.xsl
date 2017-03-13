@@ -109,7 +109,7 @@
   <xsl:template match="articleinfo" mode="toc">
     <xsl:apply-templates select="abstract"/>
     <table class="c-document_version">
-    <tr><td>Vala version:</td><td><xsl:apply-templates select="str:replace(edition, '-', '')"/></td></tr>
+    <tr><td>Vala version:</td><td><xsl:apply-templates select="edition"/></td></tr>
     <tr><td>Release:</td><td><xsl:apply-templates select="releaseinfo/text()"/></td></tr>
     <tr><td>Status:</td><td><xsl:apply-templates select="releaseinfo/remark"/></td></tr>
     <tr><td>Copyright:</td>
