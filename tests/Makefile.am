@@ -91,6 +91,7 @@ TESTS = \
 	enums/flags.vala \
 	enums/bug673879.vala \
 	enums/bug763831.vala \
+	enums/bug780050.vala \
 	structs/structs.vala \
 	structs/gvalue.vala \
 	structs/bug530605.vala \
