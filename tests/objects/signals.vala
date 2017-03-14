@@ -46,31 +46,6 @@ class Maman.Bar : Object {
 
 		stdout.printf (" 9");
 	}
-
-	public static int main () {
-		stdout.printf ("Signal Test: 1");
-		
-		var bar = new Bar ();
-		bar.run ();
-	
-		stdout.printf (" 10\n");
-
-		stdout.printf ("User Signal Test: 1");
-
-		var user_bar = new UserBar ();
-		user_bar.run ();
-
-		stdout.printf (" 6\n");
-
-		stdout.printf ("Signal Return Test: 1");
-
-		var return_bar = new ReturnBar ();
-		return_bar.run ();
-
-		stdout.printf (" 8\n");
-
-		return 0;
-	}
 }
 
 class Maman.UserFoo : Object {
@@ -129,6 +104,25 @@ class Maman.ReturnBar : Object {
 }
 
 void main () {
-	Maman.Bar.main ();
+	stdout.printf ("Signal Test: 1");
+
+	var bar = new Maman.Bar ();
+	bar.run ();
+
+	stdout.printf (" 10\n");
+
+	stdout.printf ("User Signal Test: 1");
+
+	var user_bar = new Maman.UserBar ();
+	user_bar.run ();
+
+	stdout.printf (" 6\n");
+
+	stdout.printf ("Signal Return Test: 1");
+
+	var return_bar = new Maman.ReturnBar ();
+	return_bar.run ();
+
+	stdout.printf (" 8\n");
 }
 
