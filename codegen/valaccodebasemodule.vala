@@ -5262,6 +5262,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			creation_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (get_ccode_name (expr.inner.value_type))));
 			ccode.add_expression (creation_call);
 		} else if (expr.value_type is DelegateType) {
+			ccode.add_assignment (get_cvalue (expr.inner), new CCodeConstant ("NULL"));
+			var target = get_delegate_target_cvalue (expr.inner.target_value);
+			if (target != null) {
+				ccode.add_assignment (target, new CCodeConstant ("NULL"));
+			}
 			var target_destroy_notify = get_delegate_target_destroy_notify_cvalue (expr.inner.target_value);
 			if (target_destroy_notify != null) {
 				ccode.add_assignment (target_destroy_notify, new CCodeConstant ("NULL"));
