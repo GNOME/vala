@@ -184,6 +184,8 @@ namespace GLib {
 	public delegate void SimpleActionActivateCallback (SimpleAction action, Variant? parameter);
 	[Version (deprecated_since = "vala-0.26", replacement = "SimplActionChangeStateFunc")]
 	public delegate void SimpleActionChangeStateCallback (SimpleAction action, Variant value);
+	[CCode (has_target = false, cname = "GSourceFunc")]
+	public delegate bool TaskSourceFunc (Task task);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 6.9)]
 	public delegate GLib.Variant DBusInterfaceGetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 7.9)]

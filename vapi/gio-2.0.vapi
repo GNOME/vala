@@ -2737,6 +2737,8 @@ namespace GLib {
 		[Version (since = "2.36")]
 		public async Task (GLib.Object? source_object, GLib.Cancellable? cancellable = null);
 		[Version (since = "2.36")]
+		public void attach_source (GLib.Source source, [CCode (type = "GSourceFunc")] GLib.TaskSourceFunc callback);
+		[Version (since = "2.36")]
 		public unowned GLib.Cancellable get_cancellable ();
 		[Version (since = "2.36")]
 		public bool get_check_cancellable ();
@@ -2764,6 +2766,9 @@ namespace GLib {
 		public void* propagate_pointer () throws GLib.Error;
 		[Version (since = "2.36")]
 		public static async void report_error (GLib.Object? source_object, void* source_tag, owned GLib.Error error);
+		[PrintfFormat]
+		[Version (since = "2.36")]
+		public static async void report_new_error (GLib.Object? source_object, void* source_tag, GLib.Quark domain, int code, string format, ...);
 		[Version (since = "2.36")]
 		public void return_boolean (bool result);
 		[Version (since = "2.36")]
@@ -2772,8 +2777,15 @@ namespace GLib {
 		public bool return_error_if_cancelled ();
 		[Version (since = "2.36")]
 		public void return_int (ssize_t result);
+		[PrintfFormat]
+		[Version (since = "2.36")]
+		public void return_new_error (GLib.Quark domain, int code, string format, ...);
 		[Version (since = "2.36")]
 		public void return_pointer (owned void* result, GLib.DestroyNotify? result_destroy);
+		[Version (since = "2.36")]
+		public void run_in_thread (GLib.TaskThreadFunc task_func);
+		[Version (since = "2.36")]
+		public void run_in_thread_sync (GLib.TaskThreadFunc task_func);
 		[Version (since = "2.36")]
 		public void set_check_cancellable (bool check_cancellable);
 		[Version (since = "2.36")]
@@ -4695,6 +4707,8 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	[Version (since = "2.22")]
 	public delegate bool SocketSourceFunc (GLib.Socket socket, GLib.IOCondition condition);
+	[CCode (cheader_filename = "gio/gio.h", cname = "GSourceFunc", has_target = false)]
+	public delegate bool TaskSourceFunc (GLib.Task task);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	[Version (since = "2.36")]
 	public delegate void TaskThreadFunc (GLib.Task task, GLib.Object source_object, void* task_data, GLib.Cancellable? cancellable = null);
