@@ -878,7 +878,20 @@ namespace Gst {
 			P010_10BE,
 			P010_10LE,
 			IYU2,
-			VYUY
+			VYUY,
+			GBRA,
+			GBRA_10BE,
+			GBRA_10LE,
+			GBR_12BE,
+			GBR_12LE,
+			GBRA_12BE,
+			GBRA_12LE,
+			I420_12BE,
+			I420_12LE,
+			I422_12BE,
+			I422_12LE,
+			Y444_12BE,
+			Y444_12LE
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]

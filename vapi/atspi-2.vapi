@@ -328,9 +328,9 @@ namespace Atspi {
 		public GLib.GenericArray<Atspi.Accessible> get_column_header_cells () throws GLib.Error;
 		public int get_column_index () throws GLib.Error;
 		public int get_column_span () throws GLib.Error;
+		public int get_position (out int row, out int column) throws GLib.Error;
 		public void get_row_column_span (out int row, out int column, out int row_span, out int column_span) throws GLib.Error;
 		public GLib.GenericArray<Atspi.Accessible> get_row_header_cells () throws GLib.Error;
-		public int get_row_index () throws GLib.Error;
 		public int get_row_span () throws GLib.Error;
 		public Atspi.Accessible get_table () throws GLib.Error;
 	}
@@ -427,10 +427,6 @@ namespace Atspi {
 		public ushort keycodes;
 		public weak string keystrings;
 		public short len;
-	}
-	[CCode (cheader_filename = "atspi/atspi.h")]
-	[SimpleType]
-	public struct KeystrokeListener {
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", has_type_id = false)]
 	public struct Reference {
