@@ -52,6 +52,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 				fd_index = b.add_temp_declaration (null, expression ("0"));
 				statements (@"$fd_list = $message.get_unix_fd_list ();");
 			}
+			statements (@"if ($fd_list == null) { throw new GLib.IOError.FAILED (\"FD List is NULL\"); }");
 			statements (@"$iter.next (\"h\", out $fd_index);");
 			if (type_name == "GLib.UnixInputStream") {
 				return expression (@"new GLib.UnixInputStream ($fd_list.get ($fd_index), true)");

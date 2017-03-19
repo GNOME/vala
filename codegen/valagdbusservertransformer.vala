@@ -64,6 +64,8 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 			call = finish_call = (MethodCall) expression (@"object.$(m.name) ()");
 		}
 
+		b.open_try ();
+
 		var out_args = new string[0];
 		var out_types = new DataType[0];
 		string fd_list = null;
@@ -101,6 +103,10 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 				}
 			}
 		}
+
+		b.add_catch_all ("_invocation_gerror_");
+		statements ("invocation.return_gerror (_invocation_gerror_); return;");
+		b.close ();
 
 		if (m.coroutine) {
 			call.add_argument (expression (@"(s, r) => $(ready.name) (s, r, invocation)"));
