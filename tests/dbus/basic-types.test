@@ -6,6 +6,7 @@ Program: client
 [DBus (name = "org.example.Test")]
 interface Test : Object {
 	public abstract string test_property { owned get; set; }
+	public abstract int test_int_property { get; set; }
 
 	public abstract void test_void () throws IOError;
 	public abstract int test_int (int i, out int j) throws IOError;
@@ -31,6 +32,10 @@ void main () {
 	test.test_property = "hello";
 	t = test.test_property;
 	assert (t == "hello");
+
+	test.test_int_property = 42;
+	j = test.test_int_property;
+	assert (j == 42);
 }
 
 Program: server
@@ -38,6 +43,7 @@ Program: server
 [DBus (name = "org.example.Test")]
 class Test : Object {
 	public string test_property { owned get; set; }
+	public int test_int_property { get; set; }
 
 	public void test_void () {
 	}
