@@ -307,6 +307,12 @@ public class Vala.Method : Subroutine {
 	 * @return true if the specified method is compatible to this method
 	 */
 	public bool compatible (Method base_method, out string? invalid_match) {
+		// method is always compatible to itself
+		if (this == base_method) {
+			invalid_match = null;
+			return true;
+		}
+
 		if (binding != base_method.binding) {
 			invalid_match = "incompatible binding";
 			return false;
