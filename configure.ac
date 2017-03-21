@@ -21,6 +21,9 @@ AC_PROG_INSTALL
 LT_INIT([disable-static])
 PKG_PROG_PKG_CONFIG([0.21])
 
+AC_CHECK_PROG([HELP2MAN], [help2man], [help2man])
+AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
+
 ##
 ## Settings:
 ##

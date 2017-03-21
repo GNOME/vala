@@ -1,0 +1,19 @@
+[NAME]
+valadoc \- Vala Documentation Tool
+
+[SYNOPSIS]
+.B valadoc
+[\fIOPTION\fR]... \fIFILE\fR...
+
+[DESCRIPTION]
+Valadoc is a documentation generator for generating API documentation
+from Vala source code based on libvala.
+
+[BUGS]
+https://bugzilla.gnome.org/page.cgi?id=browse.html&product=valadoc
+
+[HOMEPAGE or CONTACT]
+https://wiki.gnome.org/Projects/Valadoc
+
+[AUTHORS]
+Florian Brosch
