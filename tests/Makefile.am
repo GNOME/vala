@@ -733,6 +733,7 @@ GENIE_TESTS = \
 	genie/function-with-return-value.gs \
 	genie/indentation-with-spaces.gs \
 	genie/init.gs \
+	genie/init-int.gs \
 	genie/literal-boolean-assignment.gs \
 	genie/literal-boolean.gs \
 	genie/literal-character.gs \

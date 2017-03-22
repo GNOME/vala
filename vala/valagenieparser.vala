@@ -2852,17 +2852,24 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 
 	Method parse_main_method_declaration (List<Attribute>? attrs) throws ParseError {
-		var id = "main";
 		var begin = get_location ();
-		DataType type = new VoidType ();
+		DataType type;
+
 		expect (TokenType.INIT);
 
-		var method = new Method (id, type, get_src (begin), comment);
+		if (accept (TokenType.COLON)) {
+			type = parse_type (true, false);
+			if (type.to_string () != "int") {
+				throw new ParseError.SYNTAX ("main `init' must return void or `int', but got `%s'".printf (type.to_string ()));
+			}
+		} else {
+			type = new VoidType ();
+		}
+
+		var method = new Method ("main", type, get_src (begin), comment);
 		method.access = SymbolAccessibility.PUBLIC;
-
-		set_attributes (method, attrs);
-
 		method.binding = MemberBinding.STATIC;
+		set_attributes (method, attrs);
 
 		var sym = new UnresolvedSymbol (null, "string", get_src (begin));
 		type = new UnresolvedType.from_symbol (sym, get_src (begin));
