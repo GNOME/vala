@@ -1137,6 +1137,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							var rhs_array_len = get_array_length_cvalue (field_value, 1);
 							ccode.add_assignment (lhs_array_size, rhs_array_len);
 						}
+					} else if (f.variable_type is DelegateType) {
+						var delegate_type = (DelegateType) f.variable_type;
+						if (delegate_type.delegate_symbol.has_target) {
+							var field_value = get_field_cvalue (f, load_this_parameter ((TypeSymbol) f.parent_symbol));
+
+							ccode.add_assignment (get_delegate_target_cvalue (field_value), new CCodeIdentifier ("self"));
+							if (delegate_type.is_disposable ()) {
+								ccode.add_assignment (get_delegate_target_destroy_notify_cvalue (field_value), new CCodeIdentifier ("NULL"));
+							}
+						}
 					}
 				}
 
