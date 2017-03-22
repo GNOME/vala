@@ -153,6 +153,7 @@ TESTS = \
 	delegates/bug638415.vala \
 	delegates/bug639751.vala \
 	delegates/bug659778.vala \
+	delegates/bug683925.vala \
 	delegates/bug703804.vala \
 	delegates/bug761360.vala \
 	delegates/bug772204.test \
