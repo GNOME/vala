@@ -196,6 +196,7 @@ public class Vala.Method : Subroutine, Callable {
 	private bool base_methods_valid;
 
 	Method? callback_method;
+	Method? end_method;
 
 	// only valid for closures
 	List<LocalVariable> captured_variables;
@@ -955,6 +956,24 @@ public class Vala.Method : Subroutine, Callable {
 			n++;
 		}
 		return n;
+	}
+
+	public Method get_end_method () {
+		assert (this.coroutine);
+
+		if (end_method == null) {
+			end_method = new Method ("end", return_type, source_reference);
+			end_method.access = SymbolAccessibility.PUBLIC;
+			end_method.external = true;
+			end_method.owner = scope;
+			foreach (var param in get_async_end_parameters ()) {
+				end_method.add_parameter (param.copy ());
+			}
+			foreach (var param in get_type_parameters ()) {
+				end_method.add_type_parameter (param);
+			}
+		}
+		return end_method;
 	}
 
 	public Method get_callback_method () {

@@ -573,6 +573,13 @@ public class Vala.MethodCall : Expression {
 					value_type = formal_value_type.get_actual_type (target_object_type, method_type_args, this);
 				}
 			}
+			// replace method-type if needed for proper argument-check in semantic-analyser
+			if (m != null && m.coroutine) {
+				var ma = (MemberAccess) call;
+				if (ma.member_name == "end") {
+					mtype = new MethodType (m.get_end_method ());
+				}
+			}
 		} else if (mtype is ObjectType) {
 			// constructor
 			var cl = (Class) ((ObjectType) mtype).type_symbol;
