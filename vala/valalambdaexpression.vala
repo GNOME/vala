@@ -128,7 +128,11 @@ public class Vala.LambdaExpression : Expression {
 
 		if (!(target_type is DelegateType)) {
 			error = true;
-			Report.error (source_reference, "lambda expression not allowed in this context");
+			if (target_type != null) {
+				Report.error (source_reference, "Cannot convert lambda expression to `%s'".printf (target_type.to_string ()));
+			} else {
+				Report.error (source_reference, "lambda expression not allowed in this context");
+			}
 			return false;
 		}
 
