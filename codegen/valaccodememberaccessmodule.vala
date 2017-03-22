@@ -100,9 +100,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					var ref_call = new CCodeFunctionCall (get_dup_func_expression (expr.inner.value_type, expr.source_reference));
 					ref_call.add_argument (delegate_target);
 					delegate_target = ref_call;
-					if (delegate_type != null && delegate_type.is_disposable ()) {
-						set_delegate_target_destroy_notify (expr, get_destroy_func_expression (expr.inner.value_type));
-					}
+					set_delegate_target_destroy_notify (expr, get_destroy_func_expression (expr.inner.value_type));
 				}
 				set_delegate_target (expr, delegate_target);
 			}

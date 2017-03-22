@@ -145,6 +145,7 @@ TESTS = \
 	structs/bug749952.vala \
 	structs/bug775761.vala \
 	structs/bug777194.vala \
+	delegates/casting.vala \
 	delegates/delegates.vala \
 	delegates/reference_transfer.vala \
 	delegates/bug539166.vala \
