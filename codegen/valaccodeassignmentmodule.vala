@@ -147,8 +147,15 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 		var delegate_type = lvalue.value_type as DelegateType;
 		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-			if (get_delegate_target_cvalue (lvalue) != null) {
-				ccode.add_assignment (get_delegate_target_cvalue (lvalue), get_delegate_target_cvalue (value));
+			var lvalue_target = get_delegate_target_cvalue (lvalue);
+			var rvalue_target = get_delegate_target_cvalue (value);
+			if (lvalue_target != null) {
+				if (rvalue_target != null) {
+					ccode.add_assignment (lvalue_target, rvalue_target);
+				} else {
+					Report.error (source_reference, "Assigning delegate without required target in scope");
+					ccode.add_assignment (lvalue_target, new CCodeInvalidExpression ());
+				}
 				var lvalue_destroy_notify = get_delegate_target_destroy_notify_cvalue (lvalue);
 				var rvalue_destroy_notify = get_delegate_target_destroy_notify_cvalue (value);
 				if (lvalue_destroy_notify != null) {

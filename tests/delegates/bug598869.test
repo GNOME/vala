@@ -1,0 +1,17 @@
+Invalid Code
+
+delegate void FooFunc (int i);
+
+class Foo {
+	public FooFunc func;
+}
+
+class Bar {
+	public void baz (int i) {
+	}
+}
+
+void main () {
+	var foo = new Foo ();
+	foo.func = Bar.baz;
+}
