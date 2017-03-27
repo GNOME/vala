@@ -132,16 +132,28 @@ Element
 Pad
   .link skip
   .link_full name="link"
+  .set_activate_function_full.activate closure=-1 destroy=-1 owned=false
   .set_activate_function_full name="set_activate_function"
+  .set_activatemode_function_full.activatemode closure=-1 destroy=-1 owned=false
   .set_activatemode_function_full name="set_activatemode_function"
+  .set_chain_function_full.chain closure=-1 destroy=-1 owned=false
   .set_chain_function_full name="set_chain_function"
+  .set_chain_list_function_full.chainlist closure=-1 destroy=-1 owned=false
   .set_chain_list_function_full name="set_chain_list_function"
+  .set_event_function_full.event closure=-1 destroy=-1 owned=false
   .set_event_function_full name="set_event_function"
+  .set_getrange_function_full.get closure=-1 destroy=-1 owned=false
   .set_getrange_function_full name="set_getrange_function"
+  .set_iterate_internal_links_function_full.iterintlink closure=-1 destroy=-1 owned=false
   .set_iterate_internal_links_function_full name="set_iterate_internal_links_function"
+  .set_link_function_full.link closure=-1 destroy=-1 owned=false
   .set_link_function_full name="set_link_function"
+  .set_query_function_full.query closure=-1 destroy=-1 owned=false
   .set_query_function_full name="set_query_function"
+  .set_unlink_function_full.unlink closure=-1 destroy=-1 owned=false
   .set_unlink_function_full name="set_unlink_function"
+  .set_*.user_data nullable default=null
+  .set_*.notify nullable default=null
 parse_bin_from_description skip
 parse_bin_from_description_full name="parse_bin_from_description"
 parse_launch skip
