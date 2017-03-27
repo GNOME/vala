@@ -69,6 +69,7 @@ public class Vala.GirParser : CodeVisitor {
 		ARRAY_LENGTH_FIELD,
 		SENTINEL,
 		CLOSURE,
+		DESTROY,
 		CPREFIX,
 		LOWER_CASE_CPREFIX,
 		ERRORDOMAIN,
@@ -2447,6 +2448,9 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		if (metadata.has_argument (ArgumentType.CLOSURE)) {
 			closure_idx = metadata.get_integer (ArgumentType.CLOSURE);
+		}
+		if (metadata.has_argument (ArgumentType.DESTROY)) {
+			destroy_idx = metadata.get_integer (ArgumentType.DESTROY);
 		}
 
 		next ();
