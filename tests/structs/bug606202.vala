@@ -6,7 +6,7 @@ struct Foo {
 	}
 }
 
-class Bar : Object {
+class Bar {
 	public Foo? foo { get; set; }
 }
 
