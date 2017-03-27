@@ -1808,30 +1808,30 @@ namespace Gst {
 		public void remove_probe (ulong id);
 		public bool send_event (owned Gst.Event event);
 		[CCode (cname = "gst_pad_set_activate_function_full")]
-		public void set_activate_function (owned Gst.PadActivateFunction activate);
+		public void set_activate_function (Gst.PadActivateFunction activate, void* user_data = null, GLib.DestroyNotify? notify = null);
 		[CCode (cname = "gst_pad_set_activatemode_function_full")]
-		public void set_activatemode_function (owned Gst.PadActivateModeFunction activatemode);
+		public void set_activatemode_function (Gst.PadActivateModeFunction activatemode, void* user_data = null, GLib.DestroyNotify? notify = null);
 		public bool set_active (bool active);
 		[CCode (cname = "gst_pad_set_chain_function_full")]
-		public void set_chain_function (owned Gst.PadChainFunction chain);
+		public void set_chain_function (Gst.PadChainFunction chain, void* user_data = null, GLib.DestroyNotify? notify = null);
 		[CCode (cname = "gst_pad_set_chain_list_function_full")]
-		public void set_chain_list_function (owned Gst.PadChainListFunction chainlist);
+		public void set_chain_list_function (Gst.PadChainListFunction chainlist, void* user_data = null, GLib.DestroyNotify? notify = null);
 		public void set_element_private (void* priv);
 		[Version (since = "1.8")]
 		public void set_event_full_function_full (owned Gst.PadEventFullFunction event);
 		[CCode (cname = "gst_pad_set_event_function_full")]
-		public void set_event_function (owned Gst.PadEventFunction event);
+		public void set_event_function (Gst.PadEventFunction event, void* user_data = null, GLib.DestroyNotify? notify = null);
 		[CCode (cname = "gst_pad_set_getrange_function_full")]
-		public void set_getrange_function (owned Gst.PadGetRangeFunction @get);
+		public void set_getrange_function (Gst.PadGetRangeFunction @get, void* user_data = null, GLib.DestroyNotify? notify = null);
 		[CCode (cname = "gst_pad_set_iterate_internal_links_function_full")]
-		public void set_iterate_internal_links_function (owned Gst.PadIterIntLinkFunction iterintlink);
+		public void set_iterate_internal_links_function (Gst.PadIterIntLinkFunction iterintlink, void* user_data = null, GLib.DestroyNotify? notify = null);
 		[CCode (cname = "gst_pad_set_link_function_full")]
-		public void set_link_function (owned Gst.PadLinkFunction link);
+		public void set_link_function (Gst.PadLinkFunction link, void* user_data = null, GLib.DestroyNotify? notify = null);
 		public void set_offset (int64 offset);
 		[CCode (cname = "gst_pad_set_query_function_full")]
-		public void set_query_function (owned Gst.PadQueryFunction query);
+		public void set_query_function (Gst.PadQueryFunction query, void* user_data = null, GLib.DestroyNotify? notify = null);
 		[CCode (cname = "gst_pad_set_unlink_function_full")]
-		public void set_unlink_function (owned Gst.PadUnlinkFunction unlink);
+		public void set_unlink_function (Gst.PadUnlinkFunction unlink, void* user_data = null, GLib.DestroyNotify? notify = null);
 		public bool start_task (owned Gst.TaskFunction func);
 		public void sticky_events_foreach (Gst.PadStickyEventsForeachFunction foreach_func);
 		public bool stop_task ();
