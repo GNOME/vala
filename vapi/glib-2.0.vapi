@@ -5304,6 +5304,14 @@ namespace GLib {
 		[CCode (cname = "GLIB_CHECK_VERSION")]
 		public static bool CHECK (uint required_major, uint required_minor = 0, uint required_micro = 0);
 
+		[CCode (cname = "G_ENCODE_VERSION")]
+		public static uint encode (uint major, uint minor);
+
+		public const uint CUR_STABLE;
+		public const uint PREV_STABLE;
+		public const uint MIN_REQUIRED;
+		public const uint MAX_ALLOWED;
+
 		public const uint @2_26;
 		public const uint @2_28;
 		public const uint @2_30;
@@ -5317,6 +5325,7 @@ namespace GLib {
 		public const uint @2_46;
 		public const uint @2_48;
 		public const uint @2_50;
+		public const uint @2_52;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;
