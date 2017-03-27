@@ -397,6 +397,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static uint64 gdouble_to_guint64 (double value);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (since = "1.12")]
+		public static bool get_object_array (GLib.Object object, string name, out GLib.ValueArray array);
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static Gst.ClockTime get_timestamp ();
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static int greatest_common_divisor (int a, int b);
@@ -412,6 +415,9 @@ namespace Gst {
 		public static uint32 seqnum_next ();
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void set_object_arg (GLib.Object object, string name, string value);
+		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (since = "1.12")]
+		public static bool set_object_array (GLib.Object object, string name, GLib.ValueArray array);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void set_value_from_string (out GLib.Value value, string value_str);
 		[CCode (cheader_filename = "gst/gst.h")]
@@ -2257,6 +2263,7 @@ namespace Gst {
 		public void free ();
 		public static Gst.Structure? from_string (string string, out unowned string end);
 		public bool @get (...);
+		public bool get_array (string fieldname, out GLib.ValueArray array);
 		public bool get_boolean (string fieldname, out bool value);
 		public bool get_clock_time (string fieldname, out Gst.ClockTime value);
 		public bool get_date (string fieldname, out GLib.Date value);
@@ -2270,6 +2277,7 @@ namespace Gst {
 		public bool get_int (string fieldname, out int value);
 		[Version (since = "1.4")]
 		public bool get_int64 (string fieldname, out int64 value);
+		public bool get_list (string fieldname, out GLib.ValueArray array);
 		public unowned string get_name ();
 		public GLib.Quark get_name_id ();
 		public unowned string? get_string (string fieldname);
@@ -2303,6 +2311,8 @@ namespace Gst {
 		public void remove_fields (params string[] field_names);
 		public void remove_fields_valist (string fieldname, va_list varargs);
 		public void @set (string fieldname, ...);
+		public void set_array (string fieldname, GLib.ValueArray array);
+		public void set_list (string fieldname, GLib.ValueArray array);
 		public void set_name (string name);
 		public bool set_parent_refcount (int refcount);
 		public void set_valist (string fieldname, va_list varargs);

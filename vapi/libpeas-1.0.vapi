@@ -74,8 +74,8 @@ namespace Peas {
 	public class ObjectModule : GLib.TypeModule, GLib.TypePlugin {
 		[CCode (has_construct_function = false)]
 		protected ObjectModule ();
-		public void register_extension_factory (GLib.Type iface_type, owned Peas.FactoryFunc factory_func);
-		public void register_extension_type (GLib.Type iface_type, GLib.Type extension_type);
+		public void register_extension_factory (GLib.Type exten_type, owned Peas.FactoryFunc factory_func);
+		public void register_extension_type (GLib.Type exten_type, GLib.Type impl_type);
 		[NoAccessorMethod]
 		public bool local_linkage { get; construct; }
 		[NoAccessorMethod]
