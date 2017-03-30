@@ -5613,7 +5613,7 @@ namespace Gtk {
 		public class void install_style_property (GLib.ParamSpec pspec);
 		[CCode (cname = "gtk_widget_class_install_style_property_parser")]
 		public class void install_style_property_parser (GLib.ParamSpec pspec, Gtk.RcPropertyParser parser);
-		public bool intersect (Gdk.Rectangle area, Gdk.Rectangle? intersection);
+		public bool intersect (Gdk.Rectangle area, out Gdk.Rectangle? intersection = null);
 		public bool is_ancestor (Gtk.Widget ancestor);
 		public bool is_composited ();
 		[CCode (cname = "GTK_WIDGET_DOUBLE_BUFFERED")]
