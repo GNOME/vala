@@ -6929,7 +6929,7 @@ namespace Gsk {
 		public RenderNode.outset_shadow (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
 		public unowned Gsk.RenderNode @ref ();
 		[CCode (cname = "gsk_repeat_node_new", has_construct_function = false)]
-		public RenderNode.repeat (Graphene.Rect bounds, Gsk.RenderNode child, Graphene.Rect child_bounds);
+		public RenderNode.repeat (Graphene.Rect bounds, Gsk.RenderNode child, Graphene.Rect? child_bounds);
 		[CCode (cname = "gsk_repeating_linear_gradient_node_new", has_construct_function = false)]
 		public RenderNode.repeating_linear_gradient (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize", type = "const GskColorStop*")] Gsk.ColorStop[] color_stops);
 		[CCode (cname = "gsk_rounded_clip_node_new", has_construct_function = false)]
@@ -6952,6 +6952,8 @@ namespace Gsk {
 	public abstract class Renderer : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Renderer ();
+		[Version (since = "3.90")]
+		public unowned Gdk.DrawingContext begin_draw_frame (Cairo.Region region);
 		public void end_draw_frame (Gdk.DrawingContext context);
 		[CCode (cname = "gsk_renderer_new_for_window")]
 		[Version (since = "3.90")]
@@ -14499,7 +14501,7 @@ namespace Gtk {
 		public void insert_action_group (string name, GLib.ActionGroup? group);
 		[CCode (cname = "gtk_widget_class_install_style_property")]
 		public class void install_style_property (GLib.ParamSpec pspec);
-		public bool intersect (Gdk.Rectangle area, Gdk.Rectangle? intersection);
+		public bool intersect (Gdk.Rectangle area, out Gdk.Rectangle? intersection = null);
 		public bool is_ancestor (Gtk.Widget ancestor);
 		[Version (since = "2.18")]
 		public bool is_drawable ();

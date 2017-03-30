@@ -360,6 +360,7 @@ Widget
   .get_clip return_void
   .grab_add parent="Gtk" symbol_type="function"
   .grab_remove parent="Gtk" symbol_type="function"
+  .intersect.intersection unowned=false nullable default=null
   .touch_event.event type="Gdk.EventTouch"
 TreeModel
   .get_value return_void
