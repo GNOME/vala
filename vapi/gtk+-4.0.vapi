@@ -7398,7 +7398,7 @@ namespace Gtk {
 		public string heading { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_app_chooser_widget_get_type ()")]
-	public class AppChooserWidget : Gtk.Box, Atk.Implementor, Gtk.AppChooser, Gtk.Buildable, Gtk.Orientable {
+	public class AppChooserWidget : Gtk.Widget, Atk.Implementor, Gtk.AppChooser, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "3.0")]
 		public AppChooserWidget (string content_type);
@@ -8698,8 +8698,6 @@ namespace Gtk {
 		public virtual void get_child_property (Gtk.Widget child, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
 		public GLib.List<weak Gtk.Widget> get_children ();
 		public bool get_focus_chain (out GLib.List<weak Gtk.Widget> focusable_widgets);
-		[Version (since = "2.14")]
-		public unowned Gtk.Widget? get_focus_child ();
 		public unowned Gtk.Adjustment? get_focus_hadjustment ();
 		public unowned Gtk.Adjustment? get_focus_vadjustment ();
 		public virtual Gtk.WidgetPath get_path_for_child (Gtk.Widget child);
@@ -9333,7 +9331,7 @@ namespace Gtk {
 		public string cancel_label { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_chooser_widget_get_type ()")]
-	public class FileChooserWidget : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser, Gtk.Orientable {
+	public class FileChooserWidget : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.4")]
 		public FileChooserWidget (Gtk.FileChooserAction action);
@@ -9563,7 +9561,7 @@ namespace Gtk {
 		public FontChooserDialog (string? title, Gtk.Window? parent);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_font_chooser_widget_get_type ()")]
-	public class FontChooserWidget : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.FontChooser, Gtk.Orientable {
+	public class FontChooserWidget : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.FontChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "3.2")]
 		public FontChooserWidget ();
@@ -12072,7 +12070,7 @@ namespace Gtk {
 		public bool show_numbers { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_recent_chooser_widget_get_type ()")]
-	public class RecentChooserWidget : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable, Gtk.RecentChooser {
+	public class RecentChooserWidget : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.RecentChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.10")]
 		public RecentChooserWidget ();
@@ -15043,8 +15041,6 @@ namespace Gtk {
 		public bool focus_visible { get; set; }
 		[Version (since = "2.4")]
 		public Gdk.Gravity gravity { get; set; }
-		[NoAccessorMethod]
-		public bool has_toplevel_focus { get; }
 		[Version (since = "3.4")]
 		public bool hide_titlebar_when_maximized { get; set; }
 		public Gdk.Pixbuf icon { get; set; }
