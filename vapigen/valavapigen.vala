@@ -38,12 +38,15 @@ class Vala.VAPIGen : Object {
 	static string library;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] packages;
+	static bool nostdpkg;
+
 	CodeContext context;
 
 	const OptionEntry[] options = {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
 		{ "girdir", 0, 0, OptionArg.FILENAME_ARRAY, ref gir_directories, "Look for GIR bindings in DIRECTORY", "DIRECTORY..." },
 		{ "metadatadir", 0, 0, OptionArg.FILENAME_ARRAY, ref metadata_directories, "Look for GIR .metadata files in DIRECTORY", "DIRECTORY..." },
+		{ "nostdpkg", 0, 0, OptionArg.NONE, ref nostdpkg, "Do not include standard packages", null },
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "library", 0, 0, OptionArg.STRING, ref library, "Library name", "NAME" },
 		{ "directory", 'd', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
@@ -77,10 +80,13 @@ class Vala.VAPIGen : Object {
 		context.report.enable_warnings = !disable_warnings;
 		context.report.set_verbose_errors (!quiet_mode);
 		CodeContext.push (context);
-		
-		/* default package */
-		context.add_external_package ("glib-2.0");
-		context.add_external_package ("gobject-2.0");
+		context.nostdpkg = nostdpkg;
+
+		if (!nostdpkg) {
+			/* default package */
+			context.add_external_package ("glib-2.0");
+			context.add_external_package ("gobject-2.0");
+		}
 
 		if (context.report.get_errors () > 0) {
 			return quit ();
