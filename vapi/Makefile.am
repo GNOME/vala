@@ -538,6 +538,9 @@ gnome-rr-4:
 gnome-vfs-2.0:
 	$(GENVAPI) --library $(srcdir)/gnome-vfs-2.0 $(PACKAGESDIR)/gnome-vfs-2.0/gnome-vfs-2.0-custom.vala $(PACKAGESDIR)/gnome-vfs-2.0/gnome-vfs-2.0.gi
 
+gobject-2.0:
+	$(GENVAPI) --library $(srcdir)/gobject-2.0 --nostdpkg --pkg glib-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/GObject-2.0-custom.vala $(GIRDIR)/GObject-2.0.gir
+
 gobject-introspection-1.0:
 	$(GENVAPI) --library $(srcdir)/gobject-introspection-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GIRepository-2.0-custom.vala $(GIRDIR)/GIRepository-2.0.gir
 

@@ -1,0 +1,100 @@
+GObject name="GLib"
+
+//* skip
+* skip=false
+*.* skip=false
+
+cclosure_* skip
+signal_type_cclosure_new skip
+VaClosureMarshal skip=false
+
+Object.get_property#virtual_method skip
+Object.set_property#virtual_method skip
+Object.dispatch_properties_changed skip
+Object.finalize skip
+Object.dispose skip
+Object.run_dispose name="dispose"
+
+signal_* name="signal_(.+)" parent="GLib.Signal"
+signal_handlers_* name="signal_handlers_(.+)" parent="GLib.SignalHandler"
+signal_handler_* name="signal_handler_(.+)" parent="GLib.SignalHandler"
+
+EnumClass lower_case_csuffix="enum"
+	.values array array_length_field="n_values"
+enum_get_value* name="enum_(.+)" parent="GLib.EnumClass" symbol_type="method" instance_idx=0
+enum_complete_type_info.const_values array
+enum_register_static.const_static_values array
+FlagsClass lower_case_csuffix="flags"
+	.values array array_length_field="n_values"
+flags_complete_type_info.const_values array
+flags_get_first_value name="flags_(.+)" parent="GLib.FlagsClass" symbol_type="method" instance_idx=0
+flags_get_value* name="flags_(.+)" parent="GLib.FlagsClass" symbol_type="method" instance_idx=0
+flags_register_static.const_static_values array
+
+type_* name="type_(.+)" parent="GLib.Type"
+
+Binding.unbind destroys_instance
+
+param_values_* name="values_(.+)" parent="GLib.ParamSpec" symbol_type="method" instance_idx=0
+param_value_* name="value_(.+)" parent="GLib.ParamSpec" symbol_type="method" instance_idx=0
+
+ParamSpecBoolean type_id="G_TYPE_PARAM_BOOLEAN"
+ParamSpecBoxed type_id="G_TYPE_PARAM_BOXED"
+ParamSpecChar type_id="G_TYPE_PARAM_CHAR"
+ParamSpecDouble type_id="G_TYPE_PARAM_DOUBLE"
+//ParamSpecEnum type_id="G_TYPE_PARAM_ENUM"
+ParamSpecFlags type_id="G_TYPE_PARAM_FLAGS"
+ParamSpecFloat type_id="G_TYPE_PARAM_FLOAT"
+ParamSpecGType type_id="G_TYPE_PARAM_GTYPE"
+ParamSpecInt type_id="G_TYPE_PARAM_INT"
+ParamSpecInt64 type_id="G_TYPE_PARAM_INT64"
+ParamSpecLong type_id="G_TYPE_PARAM_LONG"
+ParamSpecObject type_id="G_TYPE_PARAM_OBJECT"
+ParamSpecOverride type_id="G_TYPE_PARAM_OVERRIDE"
+ParamSpecParam type_id="G_TYPE_PARAM_PARAM"
+ParamSpecPointer type_id="G_TYPE_PARAM_POINTER"
+ParamSpecString type_id="G_TYPE_PARAM_STRING"
+ParamSpecUChar type_id="G_TYPE_PARAM_UCHAR"
+ParamSpecUInt type_id="G_TYPE_PARAM_UINT"
+ParamSpecUInt64 type_id="G_TYPE_PARAM_UINT64"
+ParamSpecULong type_id="G_TYPE_PARAM_ULONG"
+ParamSpecUnichar type_id="G_TYPE_PARAM_UNICHAR"
+ParamSpecValueArray type_id="G_TYPE_PARAM_VALUE_ARRAY"
+ParamSpecVariant type_id="G_TYPE_PARAM_VARIANT"
+
+param_spec_boolean parent="GLib.ParamSpecBoolean" symbol_type="constructor" name="new"
+param_spec_boxed parent="GLib.ParamSpecBoxed" symbol_type="constructor" name="new"
+param_spec_char parent="GLib.ParamSpecChar" symbol_type="constructor" name="new"
+param_spec_double parent="GLib.ParamSpecDouble" symbol_type="constructor" name="new"
+param_spec_enum parent="GLib.ParamSpecEnum" symbol_type="constructor" name="new"
+param_spec_flags parent="GLib.ParamSpecFlags" symbol_type="constructor" name="new"
+param_spec_float parent="GLib.ParamSpecFloat" symbol_type="constructor" name="new"
+param_spec_gtype parent="GLib.ParamSpecGType" symbol_type="constructor" name="new"
+param_spec_int parent="GLib.ParamSpecInt" symbol_type="constructor" name="new"
+param_spec_int64 parent="GLib.ParamSpecInt64" symbol_type="constructor" name="new"
+param_spec_long parent="GLib.ParamSpecLong" symbol_type="constructor" name="new"
+param_spec_object parent="GLib.ParamSpecObject" symbol_type="constructor" name="new"
+param_spec_override parent="GLib.ParamSpecOverride" symbol_type="constructor" name="new"
+param_spec_param parent="GLib.ParamSpecParam" symbol_type="constructor" name="new"
+param_spec_pointer parent="GLib.ParamSpecPointer" symbol_type="constructor" name="new"
+param_spec_string parent="GLib.ParamSpecString" symbol_type="constructor" name="new"
+param_spec_uchar parent="GLib.ParamSpecUChar" symbol_type="constructor" name="new"
+param_spec_uint parent="GLib.ParamSpecUInt" symbol_type="constructor" name="new"
+param_spec_uint64 parent="GLib.ParamSpecUInt64" symbol_type="constructor" name="new"
+param_spec_ulong parent="GLib.ParamSpecULong" symbol_type="constructor" name="new"
+param_spec_unichar parent="GLib.ParamSpecUnichar" symbol_type="constructor" name="new"
+param_spec_value_array parent="GLib.ParamSpecValueArray" symbol_type="constructor" name="new"
+param_spec_variant parent="GLib.ParamSpecVariant" symbol_type="constructor" name="new"
+
+TypeModule skip
+TypeModuleClass skip
+
+TypeClass struct=false
+EnumClass struct=false base_type="GLib.TypeClass"
+FlagsClass struct=false base_type="GLib.TypeClass"
+
+// GValue
+Value struct
+BindingTransformFunc.to_value ref
+
+//Forward
