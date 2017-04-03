@@ -1,3 +1,23 @@
+Vala 0.36.1
+===========
+ * Various bug fixes:
+  - Always consider a method compatible with itself [#773135]
+  - Perform arguments-check against actual .end() method-signature [#684208]
+  - Slightly improve lamdba-expression error on target-type mismatch
+  - Fix delegate initializer for instance fields [#683925]
+  - Don't leak target-reference when casting/assigning owned delegates [#780426]
+
+ * GIR parser and writer:
+  - girparser: Add destroy argument for metadata [#750838]
+  - vapigen: Add --nostdpkg option like in valac
+
+ * Bindings:
+  - gstreamer-1.0: Fix Pad.set_*_function() bindings [#750838]
+  - glib-2.0: Add missing version macro and constants,
+      unichar.to_string doesn't return null
+  - gtk+-2.0,gtk+-3.0: Mark "intersection" param of Widget.intersect() as out
+  - gtk+-4.0: Update to 3.90.0
+
 Vala 0.36.0
 ===========
 
