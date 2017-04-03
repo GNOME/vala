@@ -3225,6 +3225,7 @@ namespace GLib {
 		[CCode (finish_function = "g_async_initable_new_finish")]
 		public static async GLib.Object new_valist_async (GLib.Type object_type, string first_property_name, va_list var_args, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
 		[CCode (finish_function = "g_async_initable_new_finish")]
+		[Version (deprecated = true, deprecated_since = "2.54", since = "2.22")]
 		public static async GLib.Object newv_async (GLib.Type object_type, [CCode (array_length_pos = 1.1)] GLib.Parameter[] parameters, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_async_result_get_type ()")]
@@ -3568,6 +3569,7 @@ namespace GLib {
 		public abstract bool init (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public static GLib.Object @new (GLib.Type object_type, GLib.Cancellable? cancellable = null, ...) throws GLib.Error;
 		public static GLib.Object new_valist (GLib.Type object_type, string first_property_name, va_list var_args, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (deprecated = true, deprecated_since = "2.54", since = "2.22")]
 		public static GLib.Object newv (GLib.Type object_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 1.5, array_length_type = "guint")] GLib.Parameter[] parameters, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GListModelInterface", type_id = "g_list_model_get_type ()")]

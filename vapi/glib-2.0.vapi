@@ -5326,6 +5326,7 @@ namespace GLib {
 		public const uint @2_48;
 		public const uint @2_50;
 		public const uint @2_52;
+		public const uint @2_54;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;

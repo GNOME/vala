@@ -165,9 +165,15 @@ namespace GLib {
 		public unowned T get_qdata<T> (GLib.Quark quark);
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
 		public GLib.Type get_type ();
+		[Version (since = "2.54")]
+		public void getv ([CCode (array_length_cname = "n_properties", array_length_pos = 0.5, array_length_type = "guint")] string[] names, [CCode (array_length_cname = "n_properties", array_length_pos = 0.5, array_length_type = "guint")] GLib.Value[] values);
 		public static GLib.Object @new (GLib.Type type, ...);
 		public static GLib.Object new_valist (GLib.Type type, string? firstprop, va_list var_args);
+		[Version (deprecated = true, deprecated_since = "2.54")]
 		public static GLib.Object newv (GLib.Type type, [CCode (array_length_pos = 1.9, array_length_type = "guint")] GLib.Parameter[] parameters);
+		[Version (since = "2.54")]
+		public static GLib.Object new_with_properties (GLib.Type object_type, [CCode (array_length_cname = "n_properties", array_length_pos = 1.5, array_length_type = "guint")] string[] names, [CCode (array_length_cname = "n_properties", array_length_pos = 1.5, array_length_type = "guint")] GLib.Value[] values);
+
 		[CCode (cname = "g_object_notify")]
 		public void notify_property (string property_name);
 		public unowned GLib.Object @ref ();
@@ -188,6 +194,8 @@ namespace GLib {
 		[CCode (cname = "g_object_set_qdata_full", simple_generics = true)]
 		public void set_qdata<T> (GLib.Quark quark, owned T data);
 		public void set_qdata_full (GLib.Quark quark, void* data, GLib.DestroyNotify? destroy);
+		[Version (since = "2.54")]
+		public void setv ([CCode (array_length_cname = "n_properties", array_length_pos = 0.5, array_length_type = "guint")] string[] names, [CCode (array_length_cname = "n_properties", array_length_pos = 0.5, array_length_type = "guint")] GLib.Value[] values);
 		[CCode (simple_generics = true)]
 		public T steal_data<T> (string key);
 		[CCode (simple_generics = true)]
@@ -474,6 +482,7 @@ namespace GLib {
 		public GLib.Value value;
 	}
 	[CCode (has_copy_function = false, has_destroy_function = false)]
+	[Version (deprecated = true, deprecated_since = "2.54")]
 	public struct Parameter {
 		public weak string name;
 		public GLib.Value value;
@@ -513,6 +522,12 @@ namespace GLib {
 		public uint depth ();
 		[Version (since = "2.34")]
 		public void ensure ();
+		[CCode (cname = "g_enum_to_string")]
+		[Version (since = "2.54")]
+		public string enum_to_string (int @value);
+		[CCode (cname = "g_flags_to_string")]
+		[Version (since = "2.54")]
+		public string flags_to_string (uint @value);
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
 		public static GLib.Type from_instance (void* instance);
 		public static GLib.Type from_name (string name);

@@ -153,6 +153,7 @@ namespace GLib {
 		[CCode (finish_function = "g_async_initable_new_finish")]
 		public static async GLib.Object new_valist_async (GLib.Type object_type, string first_property_name, va_list var_args, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
 		[CCode (finish_function = "g_async_initable_new_finish")]
+		[Version (deprecated = true, deprecated_since = "2.54", since = "2.22")]
 		public static async GLib.Object newv_async (GLib.Type object_type, [CCode (array_length_pos = 1.1)] GLib.Parameter[] parameters, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
 	}
 
