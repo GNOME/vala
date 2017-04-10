@@ -495,7 +495,7 @@ namespace Gst {
 			public int segtotal;
 			public int seglatency;
 		}
-		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_BASE_SINK_DISCONT_REASON_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_BASE_SINK_DISCONT_REASON_", type_id = "gst_audio_base_sink_discont_reason_get_type ()")]
 		[GIR (name = "AudioBaseSinkDiscontReason")]
 		[Version (since = "1.6")]
 		public enum BaseSinkDiscontReason {
@@ -518,17 +518,14 @@ namespace Gst {
 		[GIR (name = "AudioBaseSrcSlaveMethod")]
 		public enum BaseSrcSlaveMethod {
 			RESAMPLE,
-			[CCode (cname = "GST_AUDIO_BASE_SRC_SLAVE_RETIMESTAMP")]
 			RE_TIMESTAMP,
 			SKEW,
 			NONE
 		}
-		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "", type_id = "gst_audio_cd_src_mode_get_type ()")]
+		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_CD_SRC_MODE_", type_id = "gst_audio_cd_src_mode_get_type ()")]
 		[GIR (name = "AudioCdSrcMode")]
 		public enum CdSrcMode {
-			[CCode (cname = "Stream consists of a single track")]
 			NORMAL,
-			[CCode (cname = "Stream consists of the whole disc")]
 			CONTINUOUS
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_CHANNEL_MIXER_FLAGS_", type_id = "gst_audio_channel_mixer_flags_get_type ()")]

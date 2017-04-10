@@ -108,53 +108,53 @@ namespace Gst {
 	}
 	namespace ElementFactoryType {
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_ANY")]
-		public const int ANY;
+		public const Gst.ElementFactoryListType ANY;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_AUDIOVIDEO_SINKS")]
-		public const int AUDIOVIDEO_SINKS;
+		public const Gst.ElementFactoryListType AUDIOVIDEO_SINKS;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_AUDIO_ENCODER")]
-		public const int AUDIO_ENCODER;
+		public const Gst.ElementFactoryListType AUDIO_ENCODER;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_DECODABLE")]
-		public const int DECODABLE;
+		public const Gst.ElementFactoryListType DECODABLE;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_DECODER")]
-		public const int DECODER;
+		public const Gst.ElementFactoryListType DECODER;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_DECRYPTOR")]
-		public const int DECRYPTOR;
+		public const Gst.ElementFactoryListType DECRYPTOR;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_DEMUXER")]
-		public const int DEMUXER;
+		public const Gst.ElementFactoryListType DEMUXER;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_DEPAYLOADER")]
-		public const int DEPAYLOADER;
+		public const Gst.ElementFactoryListType DEPAYLOADER;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_ENCODER")]
-		public const int ENCODER;
+		public const Gst.ElementFactoryListType ENCODER;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_ENCRYPTOR")]
-		public const int ENCRYPTOR;
+		public const Gst.ElementFactoryListType ENCRYPTOR;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_FORMATTER")]
-		public const int FORMATTER;
+		public const Gst.ElementFactoryListType FORMATTER;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_MAX_ELEMENTS")]
-		public const int MAX_ELEMENTS;
+		public const Gst.ElementFactoryListType MAX_ELEMENTS;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_MEDIA_ANY")]
-		public const int MEDIA_ANY;
+		public const Gst.ElementFactoryListType MEDIA_ANY;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_MEDIA_AUDIO")]
-		public const int MEDIA_AUDIO;
+		public const Gst.ElementFactoryListType MEDIA_AUDIO;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_MEDIA_IMAGE")]
-		public const int MEDIA_IMAGE;
+		public const Gst.ElementFactoryListType MEDIA_IMAGE;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_MEDIA_METADATA")]
-		public const int MEDIA_METADATA;
+		public const Gst.ElementFactoryListType MEDIA_METADATA;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_MEDIA_SUBTITLE")]
-		public const int MEDIA_SUBTITLE;
+		public const Gst.ElementFactoryListType MEDIA_SUBTITLE;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_MEDIA_VIDEO")]
-		public const int MEDIA_VIDEO;
+		public const Gst.ElementFactoryListType MEDIA_VIDEO;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_MUXER")]
-		public const int MUXER;
+		public const Gst.ElementFactoryListType MUXER;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_PARSER")]
-		public const int PARSER;
+		public const Gst.ElementFactoryListType PARSER;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_PAYLOADER")]
-		public const int PAYLOADER;
+		public const Gst.ElementFactoryListType PAYLOADER;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_SINK")]
-		public const int SINK;
+		public const Gst.ElementFactoryListType SINK;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_SRC")]
-		public const int SRC;
+		public const Gst.ElementFactoryListType SRC;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_VIDEO_ENCODER")]
-		public const int VIDEO_ENCODER;
+		public const Gst.ElementFactoryListType VIDEO_ENCODER;
 	}
 	namespace Tags {
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_TAG_ALBUM")]
@@ -3812,7 +3812,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_BUFFER_COPY_ALL")]
 	public const Gst.BufferCopyFlags BUFFER_COPY_ALL;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_BUFFER_COPY_METADATA")]
-	public const int BUFFER_COPY_METADATA;
+	public const Gst.BufferCopyFlags BUFFER_COPY_METADATA;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_BUFFER_OFFSET_NONE")]
 	public const uint64 BUFFER_OFFSET_NONE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_CAN_INLINE")]
@@ -3838,8 +3838,9 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_EVENT_NUM_SHIFT")]
 	public const int EVENT_NUM_SHIFT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_EVENT_TYPE_BOTH")]
-	public const int EVENT_TYPE_BOTH;
+	public const Gst.EventTypeFlags EVENT_TYPE_BOTH;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_FLAG_SET_MASK_EXACT")]
+	[Version (since = "1.6")]
 	public const uint FLAG_SET_MASK_EXACT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_FORMAT_PERCENT_MAX")]
 	public const int64 FORMAT_PERCENT_MAX;
@@ -3850,16 +3851,16 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_LICENSE_UNKNOWN")]
 	public const string LICENSE_UNKNOWN;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_LOCK_FLAG_READWRITE")]
-	public const int LOCK_FLAG_READWRITE;
+	public const Gst.LockFlags LOCK_FLAG_READWRITE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_MAP_READWRITE")]
-	public const int MAP_READWRITE;
+	public const Gst.MapFlags MAP_READWRITE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_META_TAG_MEMORY_STR")]
 	[Version (since = "1.2")]
 	public const string META_TAG_MEMORY_STR;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_MSECOND")]
-	public const int MSECOND;
+	public const Gst.ClockTimeDiff MSECOND;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_NSECOND")]
-	public const int NSECOND;
+	public const Gst.ClockTimeDiff NSECOND;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_CONTROLLABLE")]
 	public const int PARAM_CONTROLLABLE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_MUTABLE_PAUSED")]
@@ -3878,9 +3879,9 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_QUERY_NUM_SHIFT")]
 	public const int QUERY_NUM_SHIFT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_QUERY_TYPE_BOTH")]
-	public const int QUERY_TYPE_BOTH;
+	public const Gst.QueryTypeFlags QUERY_TYPE_BOTH;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SECOND")]
-	public const int SECOND;
+	public const Gst.ClockTimeDiff SECOND;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEGMENT_FORMAT")]
 	public const string SEGMENT_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_STIME_FORMAT")]
@@ -3894,7 +3895,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_URI_NO_PORT")]
 	public const int URI_NO_PORT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_USECOND")]
-	public const int USECOND;
+	public const Gst.ClockTimeDiff USECOND;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_VALUE_EQUAL")]
 	public const int VALUE_EQUAL;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_VALUE_GREATER_THAN")]

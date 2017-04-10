@@ -166,8 +166,7 @@ namespace Gst {
 			VIDEO_CAPTURE,
 			FISH,
 			ILLUSTRATION,
-			[CCode (cname = "GST_TAG_IMAGE_TYPE_BAND_ARTIST_LOGO")]
-			ARTIST_LOGO,
+			BAND_ARTIST_LOGO,
 			PUBLISHER_STUDIO_LOGO
 		}
 		[CCode (cheader_filename = "gst/tag/tag.h", cprefix = "GST_TAG_LICENSE_", type_id = "gst_tag_license_flags_get_type ()")]
@@ -179,8 +178,7 @@ namespace Gst {
 			PERMITS_DERIVATIVE_WORKS,
 			PERMITS_SHARING,
 			REQUIRES_NOTICE,
-			[CCode (cname = "GST_TAG_LICENSE_REQUIRES_ATTRIBUTION")]
-			REQUIRES_ATTRIBUTIONS,
+			REQUIRES_ATTRIBUTION,
 			REQUIRES_SHARE_ALIKE,
 			REQUIRES_SOURCE_CODE,
 			REQUIRES_COPYLEFT,
