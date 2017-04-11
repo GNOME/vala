@@ -210,11 +210,30 @@ public class Vala.BinaryExpression : Expression {
 			}
 
 			DataType local_type = null;
-			if (left.value_type != null) {
+			bool cast_non_null = false;
+			if (left.value_type is NullType && right.value_type != null) {
+				Report.warning (left.source_reference, "left operand is always null");
+				local_type = right.value_type.copy ();
+				local_type.nullable = true;
+				if (!right.value_type.nullable) {
+					cast_non_null = true;
+				}
+			} else if (left.value_type != null) {
 				local_type = left.value_type.copy ();
 				if (right.value_type != null && right.value_type.value_owned) {
 					// value owned if either left or right is owned
 					local_type.value_owned = true;
+				}
+				if (context.experimental_non_null) {
+					if (!local_type.nullable) {
+						Report.warning (left.source_reference, "left operand is never null");
+						if (right.value_type != null && right.value_type.nullable) {
+							local_type.nullable = true;
+							cast_non_null = true;
+						}
+					} else if (right.value_type != null && !right.value_type.nullable) {
+						cast_non_null = true;
+					}
 				}
 			} else if (right.value_type != null) {
 				local_type = right.value_type.copy ();
@@ -246,10 +265,16 @@ public class Vala.BinaryExpression : Expression {
 				return false;
 			}
 
-			var temp_access = SemanticAnalyzer.create_temp_access (local, target_type);
-			temp_access.check (context);
+			var replace_expr = SemanticAnalyzer.create_temp_access (local, target_type);
+			if (cast_non_null && replace_expr.target_type != null) {
+				var cast = new CastExpression.non_null (replace_expr, source_reference);
+				cast.target_type = replace_expr.target_type.copy ();
+				cast.target_type.nullable = false;
+				replace_expr = cast;
+			}
+			replace_expr.check (context);
 
-			parent_node.replace_expression (this, temp_access);
+			parent_node.replace_expression (this, replace_expr);
 
 			return true;
 		}
