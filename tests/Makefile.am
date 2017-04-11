@@ -286,11 +286,17 @@ TESTS = \
 	annotations/description.vala \
 	$(NULL)
 
-check-TESTS: $(TESTS)
+NON_NULL_TESTS = \
+	nullability/bug611223.vala \
+	$(NULL)
+
+check-TESTS: $(TESTS) $(NON_NULL_TESTS)
 	@EXEEXT=$(EXEEXT) EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' $(srcdir)/testrunner.sh $(TESTS)
+	@EXEEXT=$(EXEEXT) EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' VALAFLAGS="--enable-experimental-non-null" $(srcdir)/testrunner.sh $(NON_NULL_TESTS)
 
 EXTRA_DIST = \
 	testrunner.sh \
 	$(TESTS) \
+	$(NON_NULL_TESTS) \
 	$(NULL)
 
