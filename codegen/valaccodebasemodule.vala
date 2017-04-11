@@ -1787,9 +1787,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (is_gobject_property (prop) &&
 			    prop.notify &&
 			    (acc.writable || acc.construction)) {
-				var notify_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_notify"));
+				var notify_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_notify_by_pspec"));
 				notify_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GObject *"));
-				notify_call.add_argument (get_property_canonical_cconstant (prop));
+				notify_call.add_argument (get_param_spec_cexpression (prop));
 
 				var get_accessor = prop.get_accessor;
 				if (get_accessor != null && get_accessor.automatic_body) {
@@ -6614,7 +6614,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return false;
 	}
 
-	public virtual CCodeFunctionCall get_param_spec (Property prop) {
+	public virtual CCodeExpression get_param_spec_cexpression (Property prop) {
+		return new CCodeFunctionCall (new CCodeIdentifier (""));
+	}
+
+	public virtual CCodeExpression get_param_spec (Property prop) {
 		return new CCodeFunctionCall (new CCodeIdentifier (""));
 	}
 

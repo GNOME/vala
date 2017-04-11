@@ -522,7 +522,6 @@ public class Vala.GTypeModule : GErrorModule {
 				string macro = "(G_TYPE_CLASS_GET_PRIVATE (klass, %s, %sClassPrivate))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
 				decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_CLASS_PRIVATE(klass)".printf (get_ccode_upper_case_name (cl, null)), macro));
 			}
-			decl_space.add_type_member_declaration (prop_enum);
 		} else {
 			if (cl.has_private_fields) {
 				Report.error (cl.source_reference, "Private fields not supported in compact classes");
@@ -563,9 +562,18 @@ public class Vala.GTypeModule : GErrorModule {
 		instance_init_context = new EmitContext (cl);
 		instance_finalize_context = new EmitContext (cl);
 
-
 		generate_class_struct_declaration (cl, cfile);
 		generate_class_private_declaration (cl, cfile);
+
+		var last_prop = "%s_LAST_PROPERTY".printf (get_ccode_upper_case_name (cl));
+		if (is_gtypeinstance) {
+			cfile.add_type_declaration (prop_enum);
+
+			var prop_array_decl = new CCodeDeclaration ("GParamSpec*");
+			prop_array_decl.modifiers |= CCodeModifiers.STATIC;
+			prop_array_decl.add_declarator (new CCodeVariableDeclarator ("%s_properties".printf (get_ccode_lower_case_name (cl)), null, new CCodeDeclaratorSuffix.with_array (new CCodeIdentifier (last_prop))));
+			cfile.add_type_declaration (prop_array_decl);
+		}
 
 		if (!cl.is_internal_symbol ()) {
 			generate_class_struct_declaration (cl, header_file);
@@ -618,6 +626,8 @@ public class Vala.GTypeModule : GErrorModule {
 				ccode.add_expression (ref_count);
 				pop_context ();
 			}
+
+			prop_enum.add_value (new CCodeEnumValue (last_prop));
 
 			if (cl.get_signals ().size > 0) {
 				var last_signal = "%s_LAST_SIGNAL".printf (get_ccode_upper_case_name (cl));
@@ -1719,7 +1729,15 @@ public class Vala.GTypeModule : GErrorModule {
 		cfile.add_function (instance_finalize_context.ccode);
 	}
 
-	public override CCodeFunctionCall get_param_spec (Property prop) {
+	public override CCodeExpression get_param_spec_cexpression (Property prop) {
+		var cl = (TypeSymbol) prop.parent_symbol;
+		var prop_array = new CCodeIdentifier ("%s_properties".printf (get_ccode_lower_case_name (cl)));
+		var prop_enum_value = new CCodeIdentifier (get_ccode_upper_case_name (prop));
+
+		return new CCodeElementAccess (prop_array, prop_enum_value);
+	}
+
+	public override CCodeExpression get_param_spec (Property prop) {
 		var cspec = new CCodeFunctionCall ();
 		cspec.add_argument (get_property_canonical_cconstant (prop));
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.nick)));
@@ -1900,7 +1918,11 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 		cspec.add_argument (new CCodeConstant (pflags));
 
-		return cspec;
+		if (prop.parent_symbol is Interface) {
+			return cspec;
+		} else {
+			return new CCodeAssignment (get_param_spec_cexpression (prop), cspec);
+		}
 	}
 
 	public override void generate_interface_declaration (Interface iface, CCodeFile decl_space) {
