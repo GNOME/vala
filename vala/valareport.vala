@@ -27,6 +27,12 @@ using GLib;
  * Namespace to centralize reporting warnings and errors.
  */
 public class Vala.Report : Object {
+	public enum Colored {
+		AUTO,
+		NEVER,
+		ALWAYS
+	}
+
 	/**
 	 * SGR end tag
 	 */
@@ -109,7 +115,7 @@ public class Vala.Report : Object {
 	 *   "error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01"
 	 * }}}
 	 */
-	public bool set_colors (string str) {
+	public bool set_colors (string str, Report.Colored colored_output = Report.Colored.AUTO) {
 		try {
 			if (val_regex == null)
 				val_regex = new Regex ("^\\s*[0-9]+(;[0-9]*)*\\s*$");
@@ -167,7 +173,7 @@ public class Vala.Report : Object {
 			}
 		}
 
-		if (is_atty (stderr.fileno ())) {
+		if (colored_output == Report.Colored.ALWAYS || (colored_output == Report.Colored.AUTO && is_atty (stderr.fileno ()))) {
 			if (error_color != null) {
 				this.error_color_start = "\x1b[0" + error_color + "m";
 				this.error_color_end = ANSI_COLOR_END;

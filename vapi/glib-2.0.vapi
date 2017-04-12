@@ -3814,6 +3814,8 @@ namespace GLib {
 	public delegate bool OptionParseFunc (OptionContext context, OptionGroup group, void* data) throws OptionError;
 	[CCode (has_target = false)]
 	public delegate void OptionErrorFunc (OptionContext context, OptionGroup group, void* data, ref Error error);
+	[CCode (has_target = false)]
+	public delegate bool OptionArgFunc (string option_name, string val, void* data) throws OptionError;
 
 	/* Perl-compatible regular expressions */
 

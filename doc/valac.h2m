@@ -16,6 +16,13 @@ Vala source code into C source and header files. It uses the GObject
 type system to create classes and interfaces declared in the Vala
 source code.
 
+/Enable color output/
+.RS
+When no value is given \fIalways\fR is implied. When neither \fB--color\fR
+or \fB--no-color\fR are declared then \fB--color\fR=\fIauto\fR is used where
+output is colored when stderr is a terminal.
+.RE
+
 [BUGS]
 https://bugzilla.gnome.org/page.cgi?id=browse.html&product=vala
 

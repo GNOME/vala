@@ -88,7 +88,8 @@ class Vala.Compiler {
 	static bool enable_version_header;
 	static bool disable_version_header;
 	static bool fatal_warnings;
-	static bool disable_diagnostic_colors;
+	static bool disable_colored_output;
+	static Report.Colored colored_output = Report.Colored.AUTO;
 	static string dependencies;
 
 	static string entry_point;
@@ -147,7 +148,8 @@ class Vala.Compiler {
 		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
 		{ "verbose", 'v', 0, OptionArg.NONE, ref verbose_mode, "Print additional messages to the console", null },
-		{ "no-color", 0, 0, OptionArg.NONE, ref disable_diagnostic_colors, "Disable colored output", null },
+		{ "no-color", 0, 0, OptionArg.NONE, ref disable_colored_output, "Disable colored output, alias for --color=never", null },
+		{ "color", 0, OptionFlags.OPTIONAL_ARG, OptionArg.CALLBACK, (void*) option_parse_color, "Enable color output, options are 'always', 'never', or 'auto'", "WHEN" },
 		{ "target-glib", 0, 0, OptionArg.STRING, ref target_glib, "Target version of glib for code generation", "MAJOR.MINOR" },
 		{ "gresources", 0, 0, OptionArg.STRING_ARRAY, ref gresources, "XML of gresources", "FILE..." },
 		{ "enable-version-header", 0, 0, OptionArg.NONE, ref enable_version_header, "Write vala build version in generated files", null },
@@ -155,6 +157,17 @@ class Vala.Compiler {
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
 		{ null }
 	};
+
+	static bool option_parse_color (string option_name, string? val, void* data) throws OptionError {
+		switch (val) {
+			case "auto": colored_output = Report.Colored.AUTO; break;
+			case "never": colored_output = Report.Colored.NEVER; break;
+			case null:
+			case "always": colored_output = Report.Colored.ALWAYS; break;
+			default: throw new OptionError.FAILED ("Invalid --color argument '%s'", val);
+		}
+		return true;
+	}
 
 	private int quit () {
 		if (context.report.get_errors () == 0 && context.report.get_warnings () == 0) {
@@ -177,12 +190,16 @@ class Vala.Compiler {
 		context = new CodeContext ();
 		CodeContext.push (context);
 
-		if (disable_diagnostic_colors == false) {
+		if (disable_colored_output) {
+			colored_output = Report.Colored.NEVER;
+		}
+
+		if (colored_output != Report.Colored.NEVER) {
 			unowned string env_colors = Environment.get_variable ("VALA_COLORS");
 			if (env_colors != null) {
-				context.report.set_colors (env_colors);
+				context.report.set_colors (env_colors, colored_output);
 			} else {
-				context.report.set_colors (DEFAULT_COLORS);
+				context.report.set_colors (DEFAULT_COLORS, colored_output);
 			}
 		}
 
