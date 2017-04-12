@@ -1925,7 +1925,8 @@ namespace GLib {
 	public delegate bool SourceFunc ();
 
 	public errordomain ThreadError {
-		AGAIN
+		AGAIN;
+		public static GLib.Quark quark ();
 	}
 
 	/* Thread support */
@@ -2322,7 +2323,8 @@ namespace GLib {
 		NXIO,
 		OVERFLOW,
 		PIPE,
-		FAILED
+		FAILED;
+		public static GLib.Quark quark ();
 	}
 
 	[Flags]
@@ -2598,7 +2600,8 @@ namespace GLib {
 		FAILED,
 		PARTIAL_INPUT,
 		BAD_URI,
-		NOT_ABSOLUTE_PATH
+		NOT_ABSOLUTE_PATH;
+		public static GLib.Quark quark ();
 	}
 
 	/* Base64 Encoding */
@@ -3355,7 +3358,8 @@ namespace GLib {
 		INVAL,
 		ISDIR,
 		LIBBAD,
-		FAILED
+		FAILED;
+		public static GLib.Quark quark ();
 	}
 
 	[CCode (cprefix = "G_SPAWN_", has_type_id = false)]
@@ -3473,7 +3477,8 @@ namespace GLib {
 		IO,
 		PERM,
 		NOSYS,
-		FAILED
+		FAILED;
+		public static GLib.Quark quark ();
 	}
 
 	[CCode (has_type_id = false)]
@@ -3694,7 +3699,8 @@ namespace GLib {
 	public errordomain ShellError {
 		BAD_QUOTING,
 		EMPTY_STRING,
-		FAILED
+		FAILED;
+		public static GLib.Quark quark ();
 	}
 
 	namespace Shell {
@@ -3708,7 +3714,8 @@ namespace GLib {
 	public errordomain OptionError {
 		UNKNOWN_OPTION,
 		BAD_VALUE,
-		FAILED
+		FAILED;
+		public static GLib.Quark quark ();
 	}
 
 	[Compact]
@@ -3868,7 +3875,8 @@ namespace GLib {
 		NOT_SUPPORTED_IN_CLASS,
 		TOO_MANY_FORWARD_REFERENCES,
 		NAME_TOO_LONG,
-		CHARACTER_VALUE_TOO_LARGE
+		CHARACTER_VALUE_TOO_LARGE;
+		public static GLib.Quark quark ();
 	}
 
 	[Version (since = "2.14")]
@@ -3982,7 +3990,8 @@ namespace GLib {
 		UNKNOWN_ELEMENT,
 		UNKNOWN_ATTRIBUTE,
 		INVALID_CONTENT,
-		MISSING_ATTRIBUTE
+		MISSING_ATTRIBUTE;
+		public static GLib.Quark quark ();
 	}
 
 	[CCode (cprefix = "G_MARKUP_", has_type_id = false)]
@@ -4069,7 +4078,8 @@ namespace GLib {
 		NOT_FOUND,
 		KEY_NOT_FOUND,
 		GROUP_NOT_FOUND,
-		INVALID_VALUE
+		INVALID_VALUE;
+		public static GLib.Quark quark ();
 	}
 
 	[Compact]
@@ -4237,7 +4247,8 @@ namespace GLib {
 		READ,
 		UNKNOWN_ENCODING,
 		WRITE,
-		FILE_NOT_FOUND
+		FILE_NOT_FOUND;
+		public static GLib.Quark quark ();
 	}
 
 	/* Testing */
@@ -5632,7 +5643,8 @@ namespace GLib {
 		UNEXPECTED_TOKEN,
 		UNKNOWN_KEYWORD,
 		UNTERMINATED_STRING_CONSTANT,
-		VALUE_EXPECTED
+		VALUE_EXPECTED;
+		public static GLib.Quark quark ();
 	}
 
 	[Compact]
