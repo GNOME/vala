@@ -10,7 +10,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([1.11 dist-xz no-dist-gzip])
 AM_MAINTAINER_MODE([enable])
 
-API_VERSION=0.36
+API_VERSION=0.38
 PACKAGE_SUFFIX="-$API_VERSION"
 
 dnl http://people.gnome.org/~walters/docs/build-api.txt
