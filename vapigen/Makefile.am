@@ -46,7 +46,6 @@ vapigen.vala.stamp: $(vapigen_VALASOURCES)
 		-C \
 		--vapidir $(top_srcdir)/vapi \
 		--vapidir $(top_srcdir)/gee --pkg gee \
-		--vapidir $(top_srcdir)/ccode --pkg ccode \
 		--vapidir $(top_srcdir)/vala --pkg vala \
 		--vapidir $(top_srcdir)/gobject-introspection --pkg gidl \
 		--pkg config \
@@ -59,7 +58,6 @@ vapicheck.vala.stamp: $(vapicheck_VALASOURCES)
 		-C \
 		--vapidir $(top_srcdir)/vapi \
 		--vapidir $(top_srcdir)/gee --pkg gee \
-		--vapidir $(top_srcdir)/ccode --pkg ccode \
 		--vapidir $(top_srcdir)/vala --pkg vala \
 		--vapidir $(top_srcdir)/gobject-introspection --pkg gidl \
 		--pkg config \
