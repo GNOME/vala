@@ -10,7 +10,7 @@ AM_CPPFLAGS = \
 BUILT_SOURCES = gee.vala.stamp
 
 noinst_LTLIBRARIES = \
-	libgee.la
+	libgee.la \
 	$(NULL)
 
 libgee_la_VALASOURCES = \
