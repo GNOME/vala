@@ -66,13 +66,13 @@ vapicheck.vala.stamp: $(vapicheck_VALASOURCES)
 
 vapigen_LDADD = \
 	$(GLIB_LIBS) \
-	$(top_builddir)/codegen/libvala@PACKAGE_SUFFIX@.la \
+	$(top_builddir)/vala/libvala@PACKAGE_SUFFIX@.la \
 	$(top_builddir)/gobject-introspection/libgidl.la \
 	$(NULL)
 
 vapicheck_LDADD = \
 	$(GLIB_LIBS) \
-	$(top_builddir)/codegen/libvala@PACKAGE_SUFFIX@.la \
+	$(top_builddir)/vala/libvala@PACKAGE_SUFFIX@.la \
 	$(top_builddir)/gobject-introspection/libgidl.la \
 	$(NULL)
 

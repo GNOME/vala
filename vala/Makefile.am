@@ -12,11 +12,11 @@ AM_CPPFLAGS = \
 
 BUILT_SOURCES = vala.vala.stamp
 
-noinst_LTLIBRARIES = \
-	libvalacore.la \
+lib_LTLIBRARIES = \
+	libvala@PACKAGE_SUFFIX@.la \
 	$(NULL)
 
-libvalacore_la_VALASOURCES = \
+libvala_la_VALASOURCES = \
 	valaaddressofexpression.vala \
 	valaarraycopymethod.vala \
 	valaarraycreationexpression.vala \
@@ -168,9 +168,9 @@ libvalacore_la_VALASOURCES = \
 	valayieldstatement.vala \
 	$(NULL)
 
-libvalacore_la_SOURCES = \
+libvala@PACKAGE_SUFFIX@_la_SOURCES = \
 	vala.vala.stamp \
-	$(libvalacore_la_VALASOURCES:.vala=.c) \
+	$(libvala_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
 valaincludedir = $(includedir)/vala@PACKAGE_SUFFIX@
@@ -179,7 +179,7 @@ valainclude_HEADERS = \
 	vala.h \
 	$(NULL)
 
-vala.vapi vala.vala.stamp: $(libvalacore_la_VALASOURCES)
+vala.vapi vala.vala.stamp: $(libvala_la_VALASOURCES)
 	$(VALA_V)$(VALAC) \
 		$(COVERAGE_VALAFLAGS) \
 		$(VALAFLAGS) \
@@ -192,17 +192,21 @@ vala.vapi vala.vala.stamp: $(libvalacore_la_VALASOURCES)
 		$^
 	@touch $@
 
-libvalacore_la_LIBADD = \
+libvala@PACKAGE_SUFFIX@_la_LDFLAGS = \
+	-no-undefined \
+	$(NULL)
+
+libvala@PACKAGE_SUFFIX@_la_LIBADD = \
 	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
 	$(GMODULE_LIBS) \
 	$(top_builddir)/gee/libgee.la \
 	$(NULL)
 
-EXTRA_DIST = $(libvalacore_la_VALASOURCES) vala.vapi vala.vala.stamp
+EXTRA_DIST = $(libvala_la_VALASOURCES) vala.vapi vala.vala.stamp
 
 MAINTAINERCLEANFILES = \
 	vala.vapi \
 	vala.h \
-	$(libvalacore_la_VALASOURCES:.vala=.c) \
+	$(libvala_la_VALASOURCES:.vala=.c) \
 	$(NULL)

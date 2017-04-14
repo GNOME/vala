@@ -4,8 +4,8 @@ NULL =
 
 SUBDIRS = \
 	gee \
-	ccode \
 	vala \
+	ccode \
 	codegen \
 	compiler \
 	vapi \

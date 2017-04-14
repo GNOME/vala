@@ -2,7 +2,7 @@ NULL =
 
 vapidir = $(pkgdatadir)/vapi
 
-libvala@PACKAGE_SUFFIX@.vapi: $(top_srcdir)/gee/gee.vapi $(top_srcdir)/ccode/ccode.vapi $(top_srcdir)/vala/vala.vapi $(top_srcdir)/codegen/codegen.vapi
+libvala@PACKAGE_SUFFIX@.vapi: $(top_srcdir)/gee/gee.vapi $(top_srcdir)/vala/vala.vapi
 	cat $^ > $@
 
 dist_vapi_DATA = \

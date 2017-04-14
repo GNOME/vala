@@ -44,7 +44,9 @@ valac.vala.stamp: $(valac_VALASOURCES)
 valac_LDADD = \
 	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
-	$(top_builddir)/codegen/libvala@PACKAGE_SUFFIX@.la \
+	$(top_builddir)/vala/libvala@PACKAGE_SUFFIX@.la \
+	$(top_builddir)/ccode/libvalaccode.la \
+	$(top_builddir)/codegen/libvalaccodegen.la \
 	$(NULL)
 
 EXTRA_DIST = $(valac_VALASOURCES) valac.vala.stamp
