@@ -228,7 +228,8 @@ Task
   .attach_source.callback type="TaskSourceFunc"
   .new skip
   .run_in_thread* skip=false
-  .report_new_error skip=false printf_format
+  .report_error skip
+  .report_new_error skip
   .return_new_error skip=false printf_format
 TlsDatabase
   .create_certificate_handle nullable

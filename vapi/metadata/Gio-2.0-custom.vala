@@ -134,6 +134,11 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.36")]
 		public Task (GLib.Object? source_object, GLib.Cancellable? cancellable, [CCode (scope = "async")] GLib.TaskReadyCallback callback);
+		[Version (since = "2.36")]
+		public static void report_error (GLib.Object? source_object, [CCode (scope = "async")] GLib.AsyncReadyCallback callback, void* source_tag, owned GLib.Error error);
+		[PrintfFormat]
+		[Version (since = "2.36")]
+		public static void report_new_error (GLib.Object? source_object, [CCode (scope = "async")] GLib.AsyncReadyCallback callback, void* source_tag, GLib.Quark domain, int code, string format, ...);
 	}
 
 	public class TlsPassword : GLib.Object {
