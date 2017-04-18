@@ -2765,10 +2765,10 @@ namespace GLib {
 		[Version (since = "2.36")]
 		public void* propagate_pointer () throws GLib.Error;
 		[Version (since = "2.36")]
-		public static async void report_error (GLib.Object? source_object, void* source_tag, owned GLib.Error error);
+		public static void report_error (GLib.Object? source_object, [CCode (scope = "async")] GLib.AsyncReadyCallback callback, void* source_tag, owned GLib.Error error);
 		[PrintfFormat]
 		[Version (since = "2.36")]
-		public static async void report_new_error (GLib.Object? source_object, void* source_tag, GLib.Quark domain, int code, string format, ...);
+		public static void report_new_error (GLib.Object? source_object, [CCode (scope = "async")] GLib.AsyncReadyCallback callback, void* source_tag, GLib.Quark domain, int code, string format, ...);
 		[Version (since = "2.36")]
 		public void return_boolean (bool result);
 		[Version (since = "2.36")]
