@@ -229,6 +229,7 @@ Subprocess
 Task
   .attach_source skip=false
   .attach_source.callback type="TaskSourceFunc"
+  .new skip
   .run_in_thread* skip=false
   .report_new_error skip=false printf_format
   .return_new_error skip=false printf_format

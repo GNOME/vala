@@ -2735,7 +2735,7 @@ namespace GLib {
 	public class Task : GLib.Object, GLib.AsyncResult {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.36")]
-		public async Task (GLib.Object? source_object, GLib.Cancellable? cancellable = null);
+		public Task (GLib.Object? source_object, GLib.Cancellable? cancellable, [CCode (scope = "async")] GLib.TaskReadyCallback callback);
 		[Version (since = "2.36")]
 		public void attach_source (GLib.Source source, [CCode (type = "GSourceFunc")] GLib.TaskSourceFunc callback);
 		[Version (since = "2.36")]
@@ -4707,6 +4707,8 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	[Version (since = "2.22")]
 	public delegate bool SocketSourceFunc (GLib.Socket socket, GLib.IOCondition condition);
+	[CCode (cheader_filename = "gio/gio.h", cname = "GAsyncReadyCallback", instance_pos = 2.9)]
+	public delegate void TaskReadyCallback (GLib.Object? source_object, GLib.Task task);
 	[CCode (cheader_filename = "gio/gio.h", cname = "GSourceFunc", has_target = false)]
 	public delegate bool TaskSourceFunc (GLib.Task task);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]

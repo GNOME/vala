@@ -137,6 +137,12 @@ namespace GLib {
 		public static GLib.SocketConnection factory_create_connection (GLib.Socket socket);
 	}
 
+	public class Task : GLib.Object {
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.36")]
+		public Task (GLib.Object? source_object, GLib.Cancellable? cancellable, [CCode (scope = "async")] GLib.TaskReadyCallback callback);
+	}
+
 	public class TlsPassword : GLib.Object {
 		[CCode (vfunc_name = "set_value")]
 		public virtual void set_value_full ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gssize", type = "guchar*")] owned uint8[] value, GLib.DestroyNotify? notify = GLib.g_free);
@@ -184,6 +190,8 @@ namespace GLib {
 	public delegate void SimpleActionActivateCallback (SimpleAction action, Variant? parameter);
 	[Version (deprecated_since = "vala-0.26", replacement = "SimplActionChangeStateFunc")]
 	public delegate void SimpleActionChangeStateCallback (SimpleAction action, Variant value);
+	[CCode (cheader_filename = "gio/gio.h", cname = "GAsyncReadyCallback", instance_pos = 2.9)]
+	public delegate void TaskReadyCallback (GLib.Object? source_object, GLib.Task task);
 	[CCode (has_target = false, cname = "GSourceFunc")]
 	public delegate bool TaskSourceFunc (Task task);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 6.9)]
