@@ -615,7 +615,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (since = "2.26")]
-	public class DBusConnection : GLib.Object, GLib.AsyncInitable, GLib.Initable, GLib.AsyncInitable, GLib.Initable {
+	public class DBusConnection : GLib.Object, GLib.AsyncInitable, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		protected DBusConnection ();
 		public uint add_filter (owned GLib.DBusMessageFilterFunction filter_function);
@@ -2296,7 +2296,7 @@ namespace GLib {
 		public void remove (string action_name);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_simple_async_result_get_type ()")]
-	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult, GLib.AsyncResult {
+	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult {
 		[CCode (has_construct_function = false)]
 		public SimpleAsyncResult (GLib.Object? source_object, void* source_tag);
 		[Version (deprecated = true, deprecated_since = "2.46")]
