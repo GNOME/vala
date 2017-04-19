@@ -621,7 +621,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_connection_get_type ()")]
 	[Version (since = "2.26")]
-	public class DBusConnection : GLib.Object, GLib.AsyncInitable, GLib.Initable, GLib.AsyncInitable, GLib.Initable {
+	public class DBusConnection : GLib.Object, GLib.AsyncInitable, GLib.Initable {
 		[CCode (cname = "g_dbus_connection_new", has_construct_function = false)]
 		public async DBusConnection (GLib.IOStream stream, string? guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public uint add_filter (owned GLib.DBusMessageFilterFunction filter_function);
@@ -2315,7 +2315,7 @@ namespace GLib {
 		public void remove (string action_name);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_simple_async_result_get_type ()")]
-	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult, GLib.AsyncResult {
+	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult {
 		[CCode (has_construct_function = false)]
 		public SimpleAsyncResult (GLib.Object? source_object, void* source_tag);
 		[Version (deprecated = true, deprecated_since = "2.46")]
