@@ -32,7 +32,7 @@ namespace GLib {
 	}
 
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_connection_get_type ()")]
-	public class DBusConnection : GLib.Object, GLib.AsyncInitable, GLib.Initable {
+	public class DBusConnection : GLib.Object {
 		[CCode (cname = "g_dbus_connection_new", finish_function = "g_dbus_connection_new_finish")]
 		[Version (deprecated_since = "vala-0.36", replacement = "DBusConnection")]
 		public static async GLib.DBusConnection @new (GLib.IOStream stream, string? guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -112,7 +112,7 @@ namespace GLib {
 		public void bind_with_mapping (string key, GLib.Object object, string property, GLib.SettingsBindFlags flags, GLib.SettingsBindGetMappingShared get_mapping, GLib.SettingsBindSetMappingShared set_mapping, void* user_data, GLib.DestroyNotify? notify);
 	}
 
-	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult {
+	public class SimpleAsyncResult : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public SimpleAsyncResult (GLib.Object? source_object, void* source_tag);
 		[CCode (has_construct_function = false)]
