@@ -171,6 +171,12 @@ public class Vala.Enum : TypeSymbol {
 		}
 		context.analyzer.current_symbol = this;
 
+		if (values.size <= 0) {
+			Report.error (source_reference, "Enum `%s' requires at least one value".printf (get_full_name ()));
+			error = true;
+			return false;
+		}
+
 		foreach (EnumValue value in values) {
 			value.check (context);
 		}

@@ -2293,6 +2293,7 @@ public class Vala.GirParser : CodeVisitor {
 		sym.access = SymbolAccessibility.PUBLIC;
 
 		string common_prefix = null;
+		bool has_member = false;
 
 		next ();
 
@@ -2305,6 +2306,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			if (reader.name == "member") {
+				has_member = true;
 				if (error_domain) {
 					parse_error_member ();
 					calculate_common_prefix (ref common_prefix, old_current.get_cname ());
@@ -2321,6 +2323,10 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			pop_metadata ();
+		}
+
+		if (!has_member) {
+			Report.error (get_current_src (), "%s `%s' has no members".printf (element_name, current.name));
 		}
 
 		if (common_prefix != null) {
