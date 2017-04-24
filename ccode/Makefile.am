@@ -83,6 +83,7 @@ ccode.vapi ccode.vala.stamp: $(libvalaccode_la_VALASOURCES)
 		--vapidir $(top_srcdir)/vapi --pkg gobject-2.0 \
 		--vapidir $(top_srcdir)/gee --pkg gee \
 		--pkg config \
+		--use-header \
 		-H valaccode.h \
 		--library ccode \
 		$^

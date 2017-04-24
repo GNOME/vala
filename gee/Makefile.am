@@ -43,6 +43,7 @@ gee.vapi gee.vala.stamp: $(libgee_la_VALASOURCES)
 		$(VALAFLAGS) \
 		-C \
 		--vapidir $(top_srcdir)/vapi --pkg gobject-2.0 \
+		--use-header \
 		-H valagee.h \
 		--library gee \
 		$^
