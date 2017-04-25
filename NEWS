@@ -1,3 +1,14 @@
+Vala 0.36.2
+===========
+ * Various bug fixes:
+  - Enums require at least one value otherwise report an error
+
+ * Bindings:
+  - gstreamer-1.0: Update to 1.11.90+
+  - gio-2.0: Fix GLib.Task constructor and report_error/report_new_error()
+  - glib-2.0: Add quark() functions to errordomains,
+      Add missing version macro and constants,
+
 Vala 0.36.1
 ===========
  * Various bug fixes:
