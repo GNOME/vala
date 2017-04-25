@@ -850,13 +850,20 @@
 <para> loop-embedded-statement-list:</para><itemizedlist><listitem override="none">
 <para>loop-embedded-statement [ loop-embedded-statement-list ]</para></listitem></itemizedlist></listitem></itemizedlist>
 <para>Both break and continue statement are types of jump statement, described in <link linkend="Jump_statements">Statements/Jump statements</link>. </para>
-<para>The while statement conditionally executes an embedded statement zero or more times.  When the while statement is reached, the boolean expression is executed.  If the boolean value is true, the embedded statement is executed and execution returns to the while statement.  If the boolean value is false, execution continues after the while statement. </para><itemizedlist><listitem override="none">
+
+<section>
+<title>The While Statement</title>
+<para>The <code>while</code> statement conditionally executes an embedded statement zero or more times.  When the while statement is reached, the boolean expression is executed.  If the boolean value is true, the embedded statement is executed and execution returns to the <code>while</code> statement.  If the boolean value is false, execution continues after the <code>while</code> statement. </para><itemizedlist><listitem override="none">
 <para>while-statement:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">while</emphasis> <emphasis role="strong">(</emphasis> boolean-expression <emphasis role="strong">)</emphasis> loop-embedded-statement</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>The do statement conditionally executes an embedded statement one or more times.  First the embedded statement is executed, and then the boolean expression is evaluated.  If the boolean value is true, execution returns to the do statement.  If the boolean value is false, execution continues after the do statement. </para><itemizedlist><listitem override="none">
+<para>The <code>do</code> statement conditionally executes an embedded statement one or more times.  First the embedded statement is executed, and then the boolean expression is evaluated.  If the boolean value is true, execution returns to the <code>do</code> statement.  If the boolean value is false, execution continues after the <code>do</code> statement. </para><itemizedlist><listitem override="none">
 <para>do-statement:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">do</emphasis> loop-embedded-statement <emphasis role="strong">while</emphasis> <emphasis role="strong">(</emphasis> boolean-expression <emphasis role="strong">)</emphasis> <emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
-<para>The for statement first evaluates a sequence of initialization expressions, then repeatedly executes an embedded statement.  At the start of each iteration a boolean expression is evaluated, with a true value leading the execution of the embedded statement, a false value leading to execution passing to the first statement following the do statement.  After each iteration a sequence of iteration expressions are evaluated.  Executing this type of statement creates a new transient scope, in which any variables declared in the initializer are created. </para><itemizedlist><listitem override="none">
+</section>
+
+<section>
+<title>The For Statement</title>
+<para>The <code>for</code> statement first evaluates a sequence of initialization expressions and then repeatedly executes an embedded statement.  At the start of each iteration a boolean expression is evaluated, with a true value leading to the execution of the embedded statement, a false value leading to execution passing to the first statement following the <code>for</code> statement.  After each iteration a sequence of iteration expressions are evaluated.  Executing this type of statement creates a new transient scope, in which any variables declared in the initializer are created. </para><itemizedlist><listitem override="none">
 <para>for-statement:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">for</emphasis> <emphasis role="strong">(</emphasis> [ for-initializer ] <emphasis role="strong">;</emphasis> [ for-condition ] <emphasis role="strong">;</emphasis> [ for-iterator ] <emphasis role="strong">)</emphasis> loop-embedded-statement</para></listitem></itemizedlist>
 <para> for-initializer:</para><itemizedlist><listitem override="none">
@@ -865,22 +872,27 @@
 <para>boolean-expression</para></listitem></itemizedlist>
 <para> for-iterator:</para><itemizedlist><listitem override="none">
 <para>expression-list</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>The foreach statement enumerates the elements of a collection, executing an embedded statement for each element of the collection.  Each element in turn is assigned to a variable with the given identifier and the embedded statement is executed.  Executing this type of statement creates a new transient scope in which the variable representing the collection element exists. </para><itemizedlist><listitem override="none">
-<para>foreach-statement:</para><itemizedlist><listitem override="none">
-<para><emphasis role="strong">foreach</emphasis> <emphasis role="strong">(</emphasis> type identifier <emphasis role="strong">in</emphasis> expression <emphasis role="strong">)</emphasis> loop-embedded-statement</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>Foreach Statements are able to iterate over arrays and any class that implements the Gee.Iterable interface.  This may change in future if an Iterable interface is incorporated into GLib. </para>
 </section>
 
 <section>
-<title>Jump statements</title>
+<title>The Foreach Statement</title>
+<para>The <code>foreach</code> statement enumerates the elements of a collection, executing an embedded statement for each element of the collection.  Each element in turn is assigned to a variable with the given identifier and the embedded statement is executed.  Executing this type of statement creates a new transient scope in which the variable representing the collection element exists. </para><itemizedlist><listitem override="none">
+<para>foreach-statement:</para><itemizedlist><listitem override="none">
+<para><emphasis role="strong">foreach</emphasis> <emphasis role="strong">(</emphasis> type identifier <emphasis role="strong">in</emphasis> expression <emphasis role="strong">)</emphasis> loop-embedded-statement</para></listitem></itemizedlist></listitem></itemizedlist>
+<para>Foreach Statements are able to iterate over arrays and any class that implements the <code>Gee.Iterable</code> interface.  This may change in future if an Iterable interface is incorporated into GLib. </para>
+</section>
+</section>
+
+<section>
+<title>Jump Statements</title>
 <para>Jump statements move execution to an arbitary point, dependent on the type of statement and its location.  In any of these cases any transient scopes are ended appropriately: <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink> and <link linkend="Simple_statements">Statements/Simple statements</link>. </para>
-<para>A break statement moves execution to the first statement after the nearest enclosing while, do, for, or foreach statement. </para><itemizedlist><listitem override="none">
+<para>A <code>break</code> statement moves execution to the first statement after the nearest enclosing <code>while</code>, <code>do</code>, <code>for</code>, or <code>foreach</code> statement. </para><itemizedlist><listitem override="none">
 <para>break-statement:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">break</emphasis> <emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
-<para>A continue statement immediately moves execution the nearest enclosing while, do, for, or foreach statement. </para><itemizedlist><listitem override="none">
+<para>A <code>continue</code> statement immediately moves execution the nearest enclosing <code>while</code>, <code>do</code>, <code>for</code>, or <code>foreach</code> statement. </para><itemizedlist><listitem override="none">
 <para>continue-statement:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">continue</emphasis> <emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
-<para>The return statement ends the execution of a method, and therefore completes the invocation of the method.  The invocation expression has then been fully evaluated, and takes on the value of the expression in the return statement if there is one. </para><itemizedlist><listitem override="none">
+<para>The <code>return</code> statement ends the execution of a method, and therefore completes the invocation of the method.  The invocation expression has then been fully evaluated, and takes on the value of the expression in the <code>return</code> statement if there is one. </para><itemizedlist><listitem override="none">
 <para>return-statement:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">return</emphasis> [ expression ] <emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
 <para>The throw statement throws an exception. </para><itemizedlist><listitem override="none">
@@ -889,14 +901,14 @@
 </section>
 
 <section>
-<title>Try statement</title>
-<para>The try statement provides a mechanism for catching exceptions that occur during execution of a block. Furthermore, the try statement provides the ability to specify a block of code that is always executed when control leaves the try statement. </para>
+<title>Try Statement</title>
+<para>The <code>try</code> statement provides a mechanism for catching exceptions that occur during execution of a block. Furthermore, the <code>try</code> statement provides the ability to specify a block of code that is always executed when control leaves the <code>try</code> statement. </para>
 <para>For the syntax of the try statement, See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Errors#Error_catching">Errors/Error catching</ulink>. </para>
 </section>
 
 <section>
-<title>Lock statement</title>
-<para>Locks Statements are the main part of Vala's resource control mechanism. </para>
+<title>Lock Statement</title>
+<para>Lock statements are the main part of Vala's resource control mechanism. </para>
 <para>FIXME: Haven't actually written anything here about resource control. </para><itemizedlist><listitem override="none">
 <para>lock-statement:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">lock</emphasis> <emphasis role="strong">(</emphasis> identifier <emphasis role="strong">)</emphasis> embedded-statement</para></listitem></itemizedlist></listitem></itemizedlist>
