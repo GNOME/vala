@@ -95,7 +95,7 @@ libvalaccode_la_LIBADD = \
 	$(top_builddir)/vala/libvala@PACKAGE_SUFFIX@.la \
 	$(NULL)
 
-EXTRA_DIST = $(libvalaccode_la_VALASOURCES) ccode.vapi ccode.vala.stamp
+EXTRA_DIST = $(libvalaccode_la_VALASOURCES) ccode.vapi ccode.vala.stamp valaccode.h
 
 MAINTAINERCLEANFILES = \
 	ccode.vapi \

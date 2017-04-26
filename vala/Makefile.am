@@ -204,7 +204,7 @@ libvala@PACKAGE_SUFFIX@_la_LIBADD = \
 	$(top_builddir)/gee/libgee.la \
 	$(NULL)
 
-EXTRA_DIST = $(libvala_la_VALASOURCES) vala.vapi vala.vala.stamp
+EXTRA_DIST = $(libvala_la_VALASOURCES) vala.vapi vala.vala.stamp vala.h
 
 MAINTAINERCLEANFILES = \
 	vala.vapi \

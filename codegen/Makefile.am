@@ -74,7 +74,7 @@ libvalaccodegen_la_LIBADD = \
 	$(top_builddir)/ccode/libvalaccode.la \
 	$(NULL)
 
-EXTRA_DIST = $(libvalaccodegen_la_VALASOURCES) codegen.vapi codegen.vala.stamp
+EXTRA_DIST = $(libvalaccodegen_la_VALASOURCES) codegen.vapi codegen.vala.stamp valacodegen.h
 
 MAINTAINERCLEANFILES = \
 	codegen.vapi \
