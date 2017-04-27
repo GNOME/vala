@@ -24,7 +24,7 @@ public class Vala.Tests : Valadate.TestSuite {
 	construct {
 		try {
 			var testdir = File.new_for_path (GLib.Environment.get_current_dir ());
-			var testpath = Valadate.get_current_test_path ();
+			var testpath = Valadate.TestOptions.get_current_test_path ();
 			
 			if (testpath != null) {
 				var testpaths = testpath.split ("/");
@@ -56,9 +56,10 @@ public class Vala.Tests : Valadate.TestSuite {
 		
 		public ValaTest (File directory) throws Error {
 			this.name = directory.get_basename ();
+			this.label = directory.get_path ();
 			this.bug_base = BUGZILLA_URL;
 
-			string current_test = Valadate.get_current_test_path ();
+			string current_test = Valadate.TestOptions.get_current_test_path();
 
 			if (current_test != null) {
 				var basename = Path.get_basename (current_test);
@@ -82,7 +83,13 @@ public class Vala.Tests : Valadate.TestSuite {
 		private void load_test (File testfile) throws Error {
 			string basename = testfile.get_basename ();
 			string testname = basename.substring (0, basename.last_index_of ("."));
-			add_test (testname, () => {
+
+			var adapter = new Valadate.TestAdapter(testname, 1000);
+			adapter.label = "/Vala/Tests/%s/%s".printf(
+				Path.get_basename(testfile.get_parent().get_path()),
+				testname);
+				
+			adapter.add_test_method(() => {
 				try {
 					if (testname.has_prefix ("bug"))
 						bug (testname.substring(3));
@@ -93,6 +100,8 @@ public class Vala.Tests : Valadate.TestSuite {
 					fail (e.message);
 				}
 			});
+
+			add_test(adapter);
 		}
 	}
 }

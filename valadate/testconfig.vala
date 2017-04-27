@@ -27,9 +27,9 @@ public errordomain Valadate.TestConfigError {
 	TEST_PRINTER
 }
 
-public class Valadate.TestConfig : Object {
+public class Valadate.TestConfig {
 
-	public TestOptions options {get;construct set;}
+	public TestOptions options {get;set;}
 
 	public virtual string format {
 		get {
@@ -86,6 +86,6 @@ public class Valadate.TestConfig : Object {
 	}
 
 	public TestConfig(TestOptions options) {
-		Object(options : options);
+		this.options = options;
 	}
 }

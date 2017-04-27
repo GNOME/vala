@@ -1,7 +1,7 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/build-aux/glib-tap.mk
 
-test_programs = valadatetests #valactests@PACKAGE_SUFFIX@
+test_programs = valadatetests valactests@PACKAGE_SUFFIX@
 
 # Valadate tests
 valadatetests_VALAFLAGS = \
@@ -49,8 +49,8 @@ valadatetests_CFLAGS = \
 valactests@PACKAGE_SUFFIX@_VALAFLAGS = \
 	--vapidir $(top_srcdir)/valadate \
 	--vapidir $(top_srcdir)/vapi \
+	--vapidir $(top_srcdir)/gee \
 	--pkg valadate \
-	--pkg gio-2.0 \
 	--pkg config \
 	--library valactests@PACKAGE_SUFFIX@ \
 	-g \
@@ -72,6 +72,7 @@ valactests@PACKAGE_SUFFIX@_LDADD = \
 valactests@PACKAGE_SUFFIX@_CPPFLAGS = \
 	-I$(top_srcdir)/valadate \
 	-I$(top_srcdir)/vala \
+	-I$(top_srcdir)/gee \
 	$(GLIB_CPPFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GMODULE_CPPFLAGS) \
@@ -90,6 +91,8 @@ valactests@PACKAGE_SUFFIX@_CFLAGS = \
 CLEANFILES += \
 	*.gir \
 	*.stamp \
+	*.log \
+	*.trs \
 	$(valadatetests_SOURCES:.vala=.c) \
 	$(valactests@PACKAGE_SUFFIX@_SOURCES:.vala=.c) \
 	*.vapi \

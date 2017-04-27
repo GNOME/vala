@@ -15,7 +15,7 @@ AM_CPPFLAGS = \
 	-g \
 	$(NULL)
 
-BUILT_SOURCES = valadate.vala.stamp
+BUILT_SOURCES = valadate.vala.stamp valadate.deps
 
 lib_LTLIBRARIES = \
 	libvaladate.la \
@@ -67,6 +67,9 @@ valadate.vapi valadate.vala.stamp: $(libvaladate_la_VALASOURCES)
 		$^
 	@touch $@
 
+valadate.deps : valadate.deps.in
+	$(SED) -e 's,[@]PACKAGE_SUFFIX[@],$(PACKAGE_SUFFIX),g' < valadate.deps.in > valadate.deps
+
 libvaladate_la_LDFLAGS = -no-undefined
 
 libvaladate_la_LIBADD = \
@@ -78,10 +81,15 @@ libvaladate_la_LIBADD = \
 	$(LIBXML_LIBS) \
 	$(NULL)
 
-EXTRA_DIST = $(libvaladate_la_VALASOURCES) valadate.vapi valadate.vala.stamp
+EXTRA_DIST = \
+	$(libvaladate_la_VALASOURCES) \
+	valadate.vapi \
+	valadate.deps.in \
+	valadate.vala.stamp
 
 MAINTAINERCLEANFILES = \
 	valadate.vapi \
+	valadate.deps \
 	valadate.h \
 	$(libvaladate_la_SOURCES:.vala=.c) \
 	$(NULL)

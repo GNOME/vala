@@ -38,7 +38,7 @@ public class Valadate.TestGatherer : Vala.CodeVisitor {
 	public override void visit_class(Vala.Class cls) {
 		try {
 			var classtype = find_type(cls);
-			if (classtype.is_a(typeof(TestCase)))
+			if (classtype.is_a(typeof(TestCase)) || classtype.is_a(typeof(TestSuite)))
 				classes.insert(classtype, cls);
 		} catch (Error e) {
 			warning(e.message);

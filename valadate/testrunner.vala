@@ -20,7 +20,8 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-public class Valadate.TestRunner : Object {
+public class Valadate.TestRunner {
+
 	private class DelegateWrapper {
 		public SourceFunc cb;
 	}

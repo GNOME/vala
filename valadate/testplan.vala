@@ -274,10 +274,11 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 		return istest;
 	}
 
-	public TestSuite visit_testsuite(Vala.Class testclass) throws Error {
+	public void visit_testsuite(Vala.Class testclass) throws Error {
 		unowned Constructor meth = get_constructor(testclass); 
-		var testcase_test = meth() as TestSuite;
-		testcase_test.name = testclass.name;
-		return testcase_test;
+		var tsuite = meth() as TestSuite;
+		tsuite.name = testclass.name;
+		testsuite.add_test(tsuite);
+		testsuite = tsuite;
 	}	
 }

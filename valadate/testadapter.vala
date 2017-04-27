@@ -20,7 +20,7 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-private class Valadate.TestAdapter : Object, Test {
+public class Valadate.TestAdapter : Object, Test {
 
 	public string name {get;set;}
 	public string label {get;set;}
