@@ -1,6 +1,6 @@
 /*
  * Valadate - Unit testing library for GObject-based libraries.
- * Copyright (C) 2016  Chris Daley <chebizarro@gmail.com>
+ * Copyright (C) 2017  Chris Daley <chebizarro@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,33 +25,41 @@
  * It is the base interface for all runnable Tests.
  */
 public interface Valadate.Test : Object {
-
 	/**
-	 * The name of the test
-	 */
-	public abstract string name { get; set; }
-
-	/**
-	 * Returns the number of tests that will be run by this test
-	 */
-	public abstract int count { get; }
-
-	/**
-	 * Runs the Tests and collects the results in a TestResult
+	 * Runs the Tests and collects the results in a TestResult 
 	 *
 	 * @param result the TestResult object used to store the results of the Test
 	 */
 	public abstract void run (TestResult result);
+	/**
+	 * The name of the test
+	 */
+	public abstract string name { get; set; }
+	/**
+	 * The label of the test
+	 */
+	public abstract string label { get; set; }
+	/**
+	 * Returns the number of tests that will be run by this test
+	 * TestSuites should return the total number of tests that will
+	 * be run.
+	 */
+	public abstract int count {get;}
+	/**
+	 * This is used for the iterator and does not return the number of
+	 * tests that will be run
+	 */
+	public abstract int size {get;}
+	/**
+	 * The #TestStatus of the test
+	 */
+	public abstract TestStatus status {get;set;default=TestStatus.NOT_RUN;}
 
-	public abstract Test get_test (int index);
+	public abstract double time {get;set;}
 
-	public virtual TestIterator iterator() {
-		return new TestIterator (this);
-	}
+	public abstract Test? parent {get;set;}
 
-	public virtual void set_up () {
-	}
+	public abstract Test get(int index);
 
-	public virtual void tear_down () {
-	}
+	public abstract void set(int index, Test test);
 }

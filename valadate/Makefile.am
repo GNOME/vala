@@ -11,6 +11,7 @@ AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GMODULE_CFLAGS) \
+	$(LIBXML_CFLAGS) \
 	-g \
 	$(NULL)
 
@@ -21,15 +22,27 @@ lib_LTLIBRARIES = \
 	$(NULL)
 
 libvaladate_la_VALASOURCES = \
+	assembly.vala \
+	assemblyerror.vala \
+	gnutestreportprinter.vala \
+	taptestreportprinter.vala \
+	testreportprinter.vala \
 	test.vala \
+	testadapter.vala \
+	testassembly.vala \
 	testcase.vala \
 	testconfig.vala \
-	testexplorer.vala \
-	testiterator.vala \
 	testmodule.vala \
+	testoptions.vala \
+	testgatherer.vala \
+	testplan.vala \
 	testresult.vala \
+	testreport.vala \
 	testrunner.vala \
+	teststatus.vala \
 	testsuite.vala \
+	xmlfile.vala \
+	xmltestreportprinter.vala \
 	$(NULL)
 
 libvaladate_la_SOURCES = \
@@ -46,6 +59,7 @@ valadate.vapi valadate.vala.stamp: $(libvaladate_la_VALASOURCES)
 		--vapidir $(top_srcdir)/vapi --pkg gobject-2.0 \
 		--pkg gio-2.0 \
 		--pkg gmodule-2.0 \
+		--pkg libxml-2.0 \
 		--pkg config \
 		--pkg libvala@PACKAGE_SUFFIX@ \
 		-H valadate.h \
@@ -61,6 +75,7 @@ libvaladate_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(GIO_LIBS) \
 	$(GMODULE_LIBS) \
+	$(LIBXML_LIBS) \
 	$(NULL)
 
 EXTRA_DIST = $(libvaladate_la_VALASOURCES) valadate.vapi valadate.vala.stamp

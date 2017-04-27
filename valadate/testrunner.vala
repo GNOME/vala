@@ -21,123 +21,145 @@
  */
 
 public class Valadate.TestRunner : Object {
-
-	private uint _n_ongoing_tests = 0;
-	private Queue<DelegateWrapper> _pending_tests = new Queue<DelegateWrapper> ();
-
-	/* Change this to change the cap on the number of concurrent operations. */
-	private static uint _max_n_ongoing_tests = GLib.get_num_processors ();
-
 	private class DelegateWrapper {
 		public SourceFunc cb;
 	}
 
-	private SubprocessLauncher launcher =
-		new SubprocessLauncher (GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_MERGE);
-
-	private string binary;
+	private uint _n_ongoing_tests = 0;
+	private Queue<DelegateWrapper> _pending_tests = new Queue<DelegateWrapper> ();
+	private static uint _max_n_ongoing_tests = GLib.get_num_processors();
+	private MainLoop loop;
+	private TestPlan plan;
 	
-	public TestRunner (string binary) {
-		this.binary = binary;
-		this.launcher.setenv("G_MESSAGES_DEBUG","all", true);
-		this.launcher.setenv("G_DEBUG","fatal-criticals fatal-warnings gc-friendly", true);
-		this.launcher.setenv("G_SLICE","always-malloc debug-blocks", true);
-		GLib.set_printerr_handler (printerr_func_stack_trace);
-		Log.set_default_handler (log_func_stack_trace);
+	public void run(Test test, TestResult result) {
+		result.add_test(test);
+		test.run(result);
+		result.report();
 	}
 
-	private static void printerr_func_stack_trace (string? text) {
-		if (text == null || str_equal (text, ""))
-			return;
-		stderr.printf (text);
-
-		/* Print a stack trace since we've hit some major issue */
-		GLib.on_error_stack_trace ("libtool --mode=execute gdb");
+	public int run_all(TestPlan plan) throws Error {
+		this.plan = plan;
+	
+		if (plan.config.list_only) {
+			list_tests(plan.root, "");
+			return 0;
+		} else if (plan.root.count == 0) {
+			return 0;
+		} else if (!plan.config.in_subprocess) {
+			loop = new MainLoop();
+			Timeout.add(
+				10,
+				() => {
+					bool res = plan.result.report();
+					if(!res)
+						loop.quit();
+					return res;
+					
+				},
+				Priority.HIGH_IDLE);
+			run_test_internal(plan.root, plan.result, "");
+			loop.run();
+		} else {
+			run_test_internal(plan.root, plan.result, "");
+		}
+		return 0;
 	}
-
-	private void log_func_stack_trace (
-		string? log_domain,
-		LogLevelFlags log_levels,
-		string message)	{
-		Log.default_handler (log_domain, log_levels, message);
-
-		/* Print a stack trace for any message at the warning level or above */
-		if ((log_levels & (
-			LogLevelFlags.LEVEL_WARNING |
-			LogLevelFlags.LEVEL_ERROR |
-			LogLevelFlags.LEVEL_CRITICAL)) != 0) {
-			GLib.on_error_stack_trace ("libtool --mode=execute gdb");
+	
+	private void list_tests(Test test, string path) {
+		foreach(var subtest in test) {
+			string testpath = "%s/%s".printf(path, subtest.name);
+			if(subtest is TestAdapter)
+				stdout.printf("%s\n", testpath);
+			else
+				list_tests(subtest, testpath);
 		}
 	}
 
-	public void run_test (Test test, TestResult result) {
-		test.run (result);
+	public void run_test(Test test, TestResult result) {
+		test.run(result);
 	}
 
-	public async void run (Test test, TestResult result) {
-		
-		string command = "%s -r %s".printf(binary, test.name);
-		string[] args;
-		string buffer = null;
+	private void run_test_internal(Test test, TestResult result, string path) throws Error {
 
+		foreach(var subtest in test) {
+
+			var testpath = "%s/%s".printf(path, subtest.name);
+
+			if(subtest is TestCase) {
+				if(!plan.config.in_subprocess)
+					result.add_test(subtest);
+				run_test_internal(subtest, result, testpath);
+			} else if (subtest is TestSuite) {
+				result.add_test(subtest);
+				run_test_internal(subtest, result, testpath);
+			} else if (plan.config.in_subprocess) {
+				if(plan.config.running_test == testpath)
+					test.run(result);
+			} else if (subtest is TestAdapter) {
+				subtest.name = testpath;
+				result.add_test(subtest);
+				run_async.begin(subtest, result);
+			}
+		}
+	}
+
+	private async void run_async(Test test, TestResult result) throws Error
+		requires(plan.config.in_subprocess != true) {
+		var timeout = plan.config.timeout;
+		var testprog = plan.assembly.clone();
 		if (_n_ongoing_tests > _max_n_ongoing_tests) {
 			var wrapper = new DelegateWrapper();
-			wrapper.cb = run.callback;
+			wrapper.cb = run_async.callback;
 			_pending_tests.push_tail((owned)wrapper);
 			yield;
 		}
 	
 		try {
 			_n_ongoing_tests++;
+			var cancellable = new Cancellable ();
+			var tcase = test as TestAdapter;
+			if(timeout != tcase.timeout)
+				timeout = tcase.timeout;
+				
+			var time = new TimeoutSource (timeout);
 			
-			Shell.parse_argv(command, out args);
-			var process = launcher.spawnv(args);
-			yield process.communicate_utf8_async(null, null, out buffer, null);
-			
-			if(process.wait_check())
-				process_buffer(test, result, buffer);
+			cancellable.cancelled.connect (() => {
+				testprog.quit();
+			});
 
+			time.set_callback (() => {
+				if (tcase.status == TestStatus.RUNNING)
+					cancellable.cancel();
+				return false;
+			});
+			time.attach (loop.get_context());
+
+			testprog.run("-r %s".printf(test.name), cancellable);
+			result.add_success(test);
+			result.process_buffers(test, testprog);
+		} catch (IOError e) {
+			result.add_error(test, "The test timed out after %d milliseconds".printf(timeout));
+			result.process_buffers(test, testprog);
 		} catch (Error e) {
-			process_buffer(test, result, buffer, true);
+			result.add_error(test, e.message);
+			result.process_buffers(test, testprog);
 		} finally {
+			result.report();
 			_n_ongoing_tests--;
 			var wrapper = _pending_tests.pop_head ();
 			if(wrapper != null)
 				wrapper.cb();
 		}
 	}
-
-	public void process_buffer (Test test, TestResult result, string buffer, bool failed = false) {
-		string skip = null;
-		string[] message = {};
-		
-		foreach(string line in buffer.split("\n"))
-			if (line.has_prefix("SKIP "))
-				skip = line;
-			else
-				message += line;
-		
-		if (skip != null)
-			result.add_skip(test, skip, string.joinv("\n",message));
-		else
-			if(failed)
-				result.add_failure(test, string.joinv("\n",message));
-			else
-				result.add_success(test, string.joinv("\n",message));
-	}
-
+	
 	public static int main (string[] args) {
-		var bin = args[0];
-		var config = new TestConfig();
-		int result = config.parse(args);
-
-		if(result >= 0)
-			return result;
-
-		var runner = new TestRunner(bin);
-		var testresult = new TestResult(config);
-		testresult.run(runner);
-
-		return 0;
+		try {
+			var assembly = new TestAssembly(args);
+			var testplan = new TestPlan(assembly);
+			return testplan.run();
+		} catch (Error e) {
+			error(e.message);
+		}
 	}
+	
 }

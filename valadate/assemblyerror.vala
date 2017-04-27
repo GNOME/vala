@@ -15,41 +15,13 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
- *
+ * 
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-/**
- * Represents a loadable module containing {@link Valadate.Test}s
- */
-public class Valadate.TestModule : Assembly {
-		
-	private GLib.Module module;
-	
-	public TestModule(File binary) throws Error {
-		base(binary);
-	}
-
-	private void load_module() throws AssemblyError {
-		module = GLib.Module.open (binary.get_path(), ModuleFlags.BIND_LAZY);
-		if (module == null)
-			throw new AssemblyError.LOAD(GLib.Module.error());
-		module.make_resident();
-	}
-	
-	public virtual void* get_method(string method_name) throws AssemblyError {
-		if(module == null)
-			load_module();
-		void* function;
-		if(module.symbol (method_name, out function))
-			if (function != null)
-				return function;
-		throw new AssemblyError.METHOD(GLib.Module.error());
-	}
-
-	public override Assembly clone() throws Error {
-		return new TestModule(binary);
-	}
-
+public errordomain Valadate.AssemblyError {
+	NOT_FOUND,
+	LOAD,
+	METHOD
 }

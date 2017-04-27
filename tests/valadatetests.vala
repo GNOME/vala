@@ -37,7 +37,7 @@ public class Valadate.Tests.TestFixture : Valadate.TestCase {
 	}
 
 	public void test_testcase_2 () {
-		message (Valadate.get_current_test_path ());
+		message (TestOptions.get_current_test_path ());
 		skip ("No reason");
 		debug ("This is a second test of the system");
 	}

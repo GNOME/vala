@@ -24,108 +24,106 @@
  * 	Julien Peeters <contact@julienpeeters.fr>
  */
 
-public errordomain Valadate.TestError {
-	NOT_FOUND
-}
-
-/**
- * The TestMethod delegate represents a {@link Valadate.Test} method
- * that can be added to a TestCase and run
- */
-public delegate void Valadate.TestMethod ();
-
 public abstract class Valadate.TestCase : Object, Test {
-
+	/**
+	 * The TestMethod delegate represents a {@link Valadate.Test} method
+	 * that can be added to a TestCase and run
+	 */
+	public delegate void TestMethod () throws Error;
 	/**
 	 * the name of the TestCase
 	 */
 	public string name { get; set; }
-
+	/**
+	 * the label of the TestCase
+	 */
+	public string label { get; set; }
 	/**
 	 * Returns the number of {@link Valadate.Test}s that will be run by this TestCase
 	 */
 	public int count {
 		get {
 			int testcount = 0;
-			tests.foreach ((t) => {
+			_tests.foreach((t) => {
 				testcount += t.count;
 			});
 			return testcount;
 		}
 	}
 
-	public string bug_base { get; set; }
-
-	private List<Test> tests = new List<Test>();
-
-	/**
-	 * The public constructor takes an optional string parameter for the
-	 * TestCase's name
-	 */
-	public TestCase (string? name = null) {
-		Object (name : name);
-	}
-
-	construct {
-		if (name == null)
-			name = get_type ().name ();
-	}
-
-	public void add_test (string testname, owned TestMethod test) {
-		var adaptor = new TestAdaptor (testname, (owned) test, this);
-		tests.append (adaptor);
-	}
-
-	public Test get_test (int index) {
-		return tests.nth_data (index);
-	}
-
-	public void bug (string reference)
-		requires (bug_base != null)
-	{
-		stdout.printf ("MSG Bug Reference: %s%s", bug_base, reference);
-		stdout.flush ();
-	}
-
-	public void skip (string message) {
-		stderr.printf ("SKIP %s", message);
-		stdout.flush ();
-	}
-
-	public void fail (string? message = null) {
-		error ("FAIL %s", message ?? "");
-	}
-
-	public virtual void run (TestResult result) {
-	}
-}
-
-private class Valadate.TestAdaptor : Object, Test {
-
-	public string name { get; set; }
-
-	public int count {
+	public int size {
 		get {
-			return 1;
+			int testcount = 0;
+			_tests.foreach((t) => {
+				testcount += t.count;
+			});
+			return testcount;
 		}
 	}
 
-	private TestMethod test;
-	private unowned TestCase testcase;
+	public Test? parent {get;set;}
 
-	public TestAdaptor (string name, owned TestMethod test, TestCase testcase) {
-		this.test = (owned) test;
-		this.name = name;
-		this.testcase = testcase;
+	public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
+	public string status_message {get;set;}
+	public double time {get;set;}
+
+	public string bug_base {get;set;}
+	
+	private List<Test> _tests = new List<Test>();
+
+	private Test current_test;
+	private TestResult current_result;
+
+	public new Test get(int index) {
+		return _tests.nth_data((uint)index);
 	}
 
-	public Test get_test (int index) {
-		return this;
+	public new void set(int index, Test test) {
+		test.parent = this;
+		_tests.insert_before(_tests.nth(index), test);
+		var t = _tests.nth_data((uint)index++);
+		_tests.remove(t);
 	}
 
-	public void run (TestResult result) {
-		this.testcase.set_up ();
-		this.test ();
-		this.testcase.tear_down ();
+	public void add_test(Test test) {
+		test.parent = this;
+		_tests.append(test);
 	}
+
+	public void add_test_method(string testname, owned TestMethod test, int timeout, string? label = null) {
+		var adapter = new TestAdapter (testname, timeout);
+		adapter.add_test_method((owned)test);
+		adapter.label = label;
+		adapter.parent = this;
+		_tests.append(adapter);
+	}
+	
+	public virtual void run(TestResult result) {
+		if(status != TestStatus.NOT_RUN)
+			return;
+		current_result = result;
+		_tests.foreach((t) => {
+			current_test = t;
+			t.run(result);
+		});
+	}
+
+	public void bug(string reference)
+		requires(bug_base != null)
+	{
+		info("Bug Reference: %s%s",bug_base, reference);
+	}
+
+	public void skip(string message) {
+		current_result.add_skip(current_test, message);
+
+	}
+
+	public void fail(string? message = null) {
+		current_result.add_failure(current_test, message);
+	}
+
+	public virtual void set_up() {}
+
+	public virtual void tear_down() {}
 }

@@ -19,37 +19,39 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
-
-/**
- * Represents a loadable module containing {@link Valadate.Test}s
- */
-public class Valadate.TestModule : Assembly {
+ 
+public class Valadate.TestGatherer : Vala.CodeVisitor {
 		
-	private GLib.Module module;
+	public HashTable<Type, Vala.Class> classes = 
+		new HashTable<Type, Vala.Class>(direct_hash, direct_equal);
 	
-	public TestModule(File binary) throws Error {
-		base(binary);
+	private TestAssembly assembly;
+
+	public TestGatherer(TestAssembly assembly) {
+		this.assembly = assembly;
 	}
 
-	private void load_module() throws AssemblyError {
-		module = GLib.Module.open (binary.get_path(), ModuleFlags.BIND_LAZY);
-		if (module == null)
-			throw new AssemblyError.LOAD(GLib.Module.error());
-		module.make_resident();
+	public override void visit_namespace(Vala.Namespace ns) {
+		ns.accept_children(this);
 	}
 	
-	public virtual void* get_method(string method_name) throws AssemblyError {
-		if(module == null)
-			load_module();
-		void* function;
-		if(module.symbol (method_name, out function))
-			if (function != null)
-				return function;
-		throw new AssemblyError.METHOD(GLib.Module.error());
+	public override void visit_class(Vala.Class cls) {
+		try {
+			var classtype = find_type(cls);
+			if (classtype.is_a(typeof(TestCase)))
+				classes.insert(classtype, cls);
+		} catch (Error e) {
+			warning(e.message);
+		}
+		cls.accept_children(this);
 	}
-
-	public override Assembly clone() throws Error {
-		return new TestModule(binary);
+	
+	private Type find_type(Vala.Class cls) throws Error {
+		var attr = new Vala.CCodeAttribute (cls);
+		unowned TestPlan.GetType node_get_type =
+			(TestPlan.GetType)assembly.get_method(
+				"%sget_type".printf(attr.lower_case_prefix));
+		var ctype = node_get_type();
+		return ctype;
 	}
-
 }

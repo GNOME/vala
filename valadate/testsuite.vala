@@ -22,58 +22,90 @@
 
 public class Valadate.TestSuite : Object, Test {
 
+	private List<Test> _tests = new List<Test>();
 	/**
 	 * the name of the TestSuite
 	 */
 	public string name { get; set; }
-
+	/**
+	 * the label of the TestSuite
+	 */
+	public string label { get; set; }
+	/**
+	 * Iterator (not the actual number of Tests that will be run)
+	 */
+	public int size {
+		get {
+			return (int)_tests.length();
+		}
+	}
 	/**
 	 * Returns the number of {@link Valadate.Test}s that will be run by 
 	 * this TestSuite
 	 */
 	public int count {
 		get {
-			return (int) _tests.length ();
+			int testcount = 0;
+			_tests.foreach((t) => {
+				testcount += t.count;
+			});
+			return testcount;
 		}
 	}
-
+	public Test? parent {get;set;}
 	/**
 	 * Returns a {@link GLib.List} of {@link Valadate.Test}s that will be
 	 * run by this TestSuite
 	 */
-	public GLib.List<Test> tests {
+	public List<Test> tests {
 		get {
 			return _tests;
 		}
 	}
-
-	private GLib.List<Test> _tests = new GLib.List<Test> ();
-
+	public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
+	public double time {get;set;}
+	public int skipped {get;set;}
+	public int errors {get;set;}
+	public int failures {get;set;}
 	/**
 	 * The public constructor takes an optional string parameter for the
 	 * TestSuite's name
 	 */
-	public TestSuite (string? name = null) {
-		Object (name : name);
+	public TestSuite(string? name = null) {
+		this.name = name ?? this.get_type().name();
+		this.label = name;
 	}
-
-	construct {
-		if (name == null)
-			name = get_type ().name ();
-	}
-
 	/**
 	 * Adds a test to the suite.
 	 */
-	public void add_test (Test test) {
-		_tests.append (test);
+	public void add_test(Test test) {
+		test.parent = this;
+		_tests.append(test);
 	}
-
+	/**
+	 * Runs all of the tests in the Suite
+	 */
 	public void run (TestResult result) {
-		_tests.foreach ((t) => { t.run (result); });
+
+		if(status != TestStatus.NOT_RUN)
+			return;
+
+		_tests.foreach((t) => {
+			t.run(result);
+		});
 	}
 
-	public Test get_test (int index) {
+	public new Test get(int index) {
 		return _tests.nth_data((uint)index);
 	}
+
+	public new void set(int index, Test test) {
+		test.parent = this;
+		_tests.insert_before(_tests.nth(index), test);
+		var t = _tests.nth_data((uint)index++);
+		_tests.remove(t);
+	}
+
+	public virtual void set_up() {}
+	public virtual void tear_down() {}
 }

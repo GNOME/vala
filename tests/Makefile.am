@@ -1,9 +1,7 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/build-aux/glib-tap.mk
 
-noinst_PROGRAMS = valadatetests valactests@PACKAGE_SUFFIX@
-
-test_programs = $(noinst_PROGRAMS)
+test_programs = valadatetests #valactests@PACKAGE_SUFFIX@
 
 # Valadate tests
 valadatetests_VALAFLAGS = \
@@ -33,11 +31,14 @@ valadatetests_CPPFLAGS = \
 	$(GLIB_CPPFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GMODULE_CPPFLAGS) \
+	$(XML_CFLAGS) \
 	-fPIE \
 	$(NULL)
 
 valadatetests_CFLAGS = \
 	-I$(top_srcdir)/valadate \
+	-I$(top_srcdir)/vala \
+	-I$(top_srcdir)/gee \
 	$(GLIB_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GMODULE_CFLAGS) \
@@ -70,6 +71,7 @@ valactests@PACKAGE_SUFFIX@_LDADD = \
 
 valactests@PACKAGE_SUFFIX@_CPPFLAGS = \
 	-I$(top_srcdir)/valadate \
+	-I$(top_srcdir)/vala \
 	$(GLIB_CPPFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GMODULE_CPPFLAGS) \
