@@ -44,20 +44,20 @@ public interface Valadate.Test : Object {
 	 * TestSuites should return the total number of tests that will
 	 * be run.
 	 */
-	public abstract int count {get;}
+	public abstract int count { get; }
 	/**
 	 * This is used for the iterator and does not return the number of
 	 * tests that will be run
 	 */
-	public abstract int size {get;}
+	public abstract int size { get; }
 	/**
 	 * The #TestStatus of the test
 	 */
-	public abstract TestStatus status {get;set;default=TestStatus.NOT_RUN;}
+	public abstract TestStatus status { get; set; default = TestStatus.NOT_RUN; }
 
-	public abstract double time {get;set;}
+	public abstract double time { get; set; }
 
-	public abstract Test? parent {get;set;}
+	public abstract Test? parent { get; set; }
 
 	public abstract Test get (int index);
 

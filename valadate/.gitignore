@@ -16,3 +16,4 @@ Makefile
 coverage
 lcov.info
 *~
+*.deps

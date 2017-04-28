@@ -1,0 +1,6 @@
+.tests
+*.vapi
+*.log
+*.trs
+valadatetests
+valactests-*
