@@ -17,7 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
- * 
+ * Authors:
+ * 	Chris Daley <chebizarro@gmail.com>
  */
 
 public class Valadate.XmlTestReportPrinter : TestReportPrinter {

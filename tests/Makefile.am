@@ -1,6 +1,19 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/build-aux/glib-tap.mk
 
+AM_CPPFLAGS = \
+	$(GLIB_CFLAGS) \
+	$(NULL)
+AM_LDFLAGS = \
+	$(GLIB_LIBS) \
+	$(NULL)
+
+TESTS_ENVIRONMENT += \
+	EXEEXT=$(EXEEXT) \
+	CFLAGS='$(CFLAGS)' \
+	CPPFLAGS='$(CPPFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
+
 test_programs = valadatetests valactests@PACKAGE_SUFFIX@
 
 # Valadate tests

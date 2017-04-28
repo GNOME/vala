@@ -328,31 +328,57 @@ public class Vala.TestsFactory : Object {
 
 	public class ValaCompiler : Program {
 		private const string VALA_FLAGS =
-			"""--save-temps --disable-warnings --pkg gio-unix-2.0 --pkg config
-			  -X -lm -X -g -X -O0 -X -pipe
+			"""--save-temps --disable-warnings --pkg gio-2.0 --pkg gio-unix-2.0
+			  -X -lm -X -g -X -O0 -X -pipe -X -DGETTEXT_PACKAGE=valac
 			  -X -Wno-discarded-qualifiers -X -Wno-incompatible-pointer-types
 			  -X -Wno-deprecated-declarations -X -Werror=return-type
 			  -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point
 			  -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith
 			  -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast
 			  -X -Wformat -X -Werror=format-security -X -Werror=format-nonliteral
-			  -X -Werror=redundant-decls
-			  -X -DGETTEXT_PACKAGE="VALAC"""";
+			  -X -Werror=redundant-decls -X -Werror=int-conversion""";
 
 		public ValaCompiler (File compiler) {
 			Object (program : compiler);
 		}
 
 		public Program compile (File binary, File sourcefile, string? parameters = null) throws Error {
+
+
 			if (binary.query_exists ())
 				throw new IOError.EXISTS ("binary `%s' already exists", binary.get_path ());
 
-			string command = "--vapidir %s %s %s -o %s %s".printf (
-				vapidir.get_path (), VALA_FLAGS, parameters ?? "", binary.get_path (), sourcefile.get_path ());
+			string command = "--vapidir %s %s %s %s -o %s %s".printf (
+				vapidir.get_path (),
+				VALA_FLAGS,
+				get_flags(),
+				parameters ?? "", binary.get_path (),
+				sourcefile.get_path ());
 			run (command);
 			var prog = new TestProgram (binary);
 			prog.add_file (binary.get_parent().get_child (binary.get_basename () + ".c"));
 			return prog;
 		}
+		
+		private string get_flags() throws Error {
+			
+			string result = "";
+			string[] flags = {"CFLAGS", "CPPFLAGS", "LDFLAGS"};
+			
+			foreach(string key in flags) {
+				var val = Environment.get_variable (key);
+				if(val == null || val.length == 0)
+					continue;
+
+				string[] args;
+				Shell.parse_argv(val, out args);
+
+				foreach (var item in args)
+					result += "-X %s ".printf(item);
+			}
+			
+			return result;
+		}
+		
 	}
 }

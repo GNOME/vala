@@ -28,12 +28,8 @@ public class Valadate.Tests.TestFixture : Valadate.TestCase {
 		stdout.puts ("This is a test of the system");
 	}
 
-	public void test_testcase_1 () {
-		string key = "XDG_DATA_DIRS";
-		var val = Environment.get_variable (key);
-		message ("%s = %s",key, val);
-		foreach (var item in Environment.get_system_data_dirs ())
-			message ("%s",item);
+	public void test_testcase_1 () throws Error {
+
 	}
 
 	public void test_testcase_2 () {
