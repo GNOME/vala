@@ -60,7 +60,7 @@ public class Valadate.TestOptions {
 
 	public OptionContext opt_context;
 
-	public static string? get_current_test_path() {
+	public static string? get_current_test_path () {
 		return _runtest;
 	}
 
@@ -118,7 +118,7 @@ public class Valadate.TestOptions {
 		}
 	}
 
-	public TestOptions(string[] args) throws OptionError {
+	public TestOptions (string[] args) throws OptionError {
 		_runtest = null;
 
 		opt_context = new OptionContext ("- Valadate Testing Framework");
@@ -126,12 +126,12 @@ public class Valadate.TestOptions {
 		opt_context.add_main_entries (options, null);
 		opt_context.parse (ref args);
 
-		if(_seed == null)
-			_seed = "R02S%08x%08x%08x%08x".printf(
-				GLib.Random.next_int(),
-				GLib.Random.next_int(),
-				GLib.Random.next_int(),
-				GLib.Random.next_int());
+		if (_seed == null)
+			_seed = "R02S%08x%08x%08x%08x".printf (
+				GLib.Random.next_int (),
+				GLib.Random.next_int (),
+				GLib.Random.next_int (),
+				GLib.Random.next_int ());
 
 	}
 

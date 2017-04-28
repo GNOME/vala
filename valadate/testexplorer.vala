@@ -45,7 +45,7 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 			testplan = testplan.substring (3);
 
 		string testplanfile = testdir + GLib.Path.DIR_SEPARATOR_S + testplan + ".vapi";
-		
+
 		if (!FileUtils.test (testplanfile, FileTest.EXISTS))
 			throw new TestConfigError.TESTPLAN ("Test Plan %s Not Found!", testplanfile);
 
@@ -65,7 +65,7 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 		parser.parse (context);
 		context.accept (this);
 	}
-	
+
 	private void setup_context () {
 		context = new Vala.CodeContext ();
 		Vala.CodeContext.push (context);
@@ -105,7 +105,7 @@ internal class Valadate.TestExplorer : Vala.CodeVisitor {
 		unowned Constructor meth = get_constructor (cl);
 		var current_test = meth () as TestCase;
 		current_test.name = cl.name;
-		
+
 		foreach (var method in cl.get_methods ()) {
 			if (method.name.has_prefix ("test_") &&
 				method.has_result != true &&

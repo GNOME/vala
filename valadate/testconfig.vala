@@ -91,7 +91,7 @@ public class Valadate.TestConfig {
 		}
 	}
 
-	public TestConfig(TestOptions options) {
+	public TestConfig (TestOptions options) {
 		this.options = options;
 	}
 }

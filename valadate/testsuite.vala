@@ -22,7 +22,7 @@
 
 public class Valadate.TestSuite : Object, Test {
 
-	private List<Test> _tests = new List<Test>();
+	private List<Test> _tests = new List<Test> ();
 	/**
 	 * the name of the TestSuite
 	 */
@@ -36,17 +36,17 @@ public class Valadate.TestSuite : Object, Test {
 	 */
 	public int size {
 		get {
-			return (int)_tests.length();
+			return (int)_tests.length ();
 		}
 	}
 	/**
-	 * Returns the number of {@link Valadate.Test}s that will be run by 
+	 * Returns the number of {@link Valadate.Test}s that will be run by
 	 * this TestSuite
 	 */
 	public int count {
 		get {
 			int testcount = 0;
-			_tests.foreach((t) => {
+			_tests.foreach ((t) => {
 				testcount += t.count;
 			});
 			return testcount;
@@ -71,41 +71,41 @@ public class Valadate.TestSuite : Object, Test {
 	 * The public constructor takes an optional string parameter for the
 	 * TestSuite's name
 	 */
-	public TestSuite(string? name = null) {
-		this.name = name ?? this.get_type().name();
+	public TestSuite (string? name = null) {
+		this.name = name ?? this.get_type ().name ();
 		this.label = name;
 	}
 	/**
 	 * Adds a test to the suite.
 	 */
-	public void add_test(Test test) {
+	public void add_test (Test test) {
 		test.parent = this;
-		_tests.append(test);
+		_tests.append (test);
 	}
 	/**
 	 * Runs all of the tests in the Suite
 	 */
 	public void run (TestResult result) {
 
-		if(status != TestStatus.NOT_RUN)
+		if (status != TestStatus.NOT_RUN)
 			return;
 
-		_tests.foreach((t) => {
-			t.run(result);
+		_tests.foreach ((t) => {
+			t.run (result);
 		});
 	}
 
-	public new Test get(int index) {
-		return _tests.nth_data((uint)index);
+	public new Test get (int index) {
+		return _tests.nth_data ((uint)index);
 	}
 
-	public new void set(int index, Test test) {
+	public new void set (int index, Test test) {
 		test.parent = this;
-		_tests.insert_before(_tests.nth(index), test);
-		var t = _tests.nth_data((uint)index++);
-		_tests.remove(t);
+		_tests.insert_before (_tests.nth (index), test);
+		var t = _tests.nth_data ((uint)index++);
+		_tests.remove (t);
 	}
 
-	public virtual void set_up() {}
-	public virtual void tear_down() {}
+	public virtual void set_up () {}
+	public virtual void tear_down () {}
 }

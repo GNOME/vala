@@ -24,32 +24,32 @@
  * Represents a loadable module containing {@link Valadate.Test}s
  */
 public class Valadate.TestModule : Assembly {
-		
+
 	private GLib.Module module;
-	
-	public TestModule(File binary) throws Error {
-		base(binary);
+
+	public TestModule (File binary) throws Error {
+		base (binary);
 	}
 
-	private void load_module() throws AssemblyError {
-		module = GLib.Module.open (binary.get_path(), ModuleFlags.BIND_LAZY);
+	private void load_module () throws AssemblyError {
+		module = GLib.Module.open (binary.get_path (), ModuleFlags.BIND_LAZY);
 		if (module == null)
-			throw new AssemblyError.LOAD(GLib.Module.error());
-		module.make_resident();
+			throw new AssemblyError.LOAD (GLib.Module.error ());
+		module.make_resident ();
 	}
-	
-	public virtual void* get_method(string method_name) throws AssemblyError {
-		if(module == null)
-			load_module();
+
+	public virtual void* get_method (string method_name) throws AssemblyError {
+		if (module == null)
+			load_module ();
 		void* function;
-		if(module.symbol (method_name, out function))
+		if (module.symbol (method_name, out function))
 			if (function != null)
 				return function;
-		throw new AssemblyError.METHOD(GLib.Module.error());
+		throw new AssemblyError.METHOD (GLib.Module.error ());
 	}
 
-	public override Assembly clone() throws Error {
-		return new TestModule(binary);
+	public override Assembly clone () throws Error {
+		return new TestModule (binary);
 	}
 
 }

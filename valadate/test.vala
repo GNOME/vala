@@ -26,7 +26,7 @@
  */
 public interface Valadate.Test : Object {
 	/**
-	 * Runs the Tests and collects the results in a TestResult 
+	 * Runs the Tests and collects the results in a TestResult
 	 *
 	 * @param result the TestResult object used to store the results of the Test
 	 */
@@ -59,7 +59,7 @@ public interface Valadate.Test : Object {
 
 	public abstract Test? parent {get;set;}
 
-	public abstract Test get(int index);
+	public abstract Test get (int index);
 
-	public abstract void set(int index, Test test);
+	public abstract void set (int index, Test test);
 }

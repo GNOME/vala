@@ -1,4 +1,4 @@
-/* 
+/*
  * Valadate - Unit testing library for GObject-based libraries.
  *
  * testcase.vala
@@ -44,7 +44,7 @@ public abstract class Valadate.TestCase : Object, Test {
 	public int count {
 		get {
 			int testcount = 0;
-			_tests.foreach((t) => {
+			_tests.foreach ((t) => {
 				testcount += t.count;
 			});
 			return testcount;
@@ -54,7 +54,7 @@ public abstract class Valadate.TestCase : Object, Test {
 	public int size {
 		get {
 			int testcount = 0;
-			_tests.foreach((t) => {
+			_tests.foreach ((t) => {
 				testcount += t.count;
 			});
 			return testcount;
@@ -68,61 +68,61 @@ public abstract class Valadate.TestCase : Object, Test {
 	public double time {get;set;}
 
 	public string bug_base {get;set;}
-	
-	private List<Test> _tests = new List<Test>();
+
+	private List<Test> _tests = new List<Test> ();
 
 	private Test current_test;
 	private TestResult current_result;
 
-	public new Test get(int index) {
-		return _tests.nth_data((uint)index);
+	public new Test get (int index) {
+		return _tests.nth_data ((uint)index);
 	}
 
-	public new void set(int index, Test test) {
+	public new void set (int index, Test test) {
 		test.parent = this;
-		_tests.insert_before(_tests.nth(index), test);
-		var t = _tests.nth_data((uint)index++);
-		_tests.remove(t);
+		_tests.insert_before (_tests.nth (index), test);
+		var t = _tests.nth_data ((uint)index++);
+		_tests.remove (t);
 	}
 
-	public void add_test(Test test) {
+	public void add_test (Test test) {
 		test.parent = this;
-		_tests.append(test);
+		_tests.append (test);
 	}
 
-	public void add_test_method(string testname, owned TestMethod test, int timeout, string? label = null) {
+	public void add_test_method (string testname, owned TestMethod test, int timeout, string? label = null) {
 		var adapter = new TestAdapter (testname, timeout);
-		adapter.add_test_method((owned)test);
+		adapter.add_test_method ((owned)test);
 		adapter.label = label;
 		adapter.parent = this;
-		_tests.append(adapter);
+		_tests.append (adapter);
 	}
-	
-	public virtual void run(TestResult result) {
-		if(status != TestStatus.NOT_RUN)
+
+	public virtual void run (TestResult result) {
+		if (status != TestStatus.NOT_RUN)
 			return;
 		current_result = result;
-		_tests.foreach((t) => {
+		_tests.foreach ((t) => {
 			current_test = t;
-			t.run(result);
+			t.run (result);
 		});
 	}
 
-	public void bug(string reference)
-		requires(bug_base != null)
+	public void bug (string reference)
+		requires (bug_base != null)
 	{
-		info("Bug Reference: %s%s",bug_base, reference);
+		info ("Bug Reference: %s%s",bug_base, reference);
 	}
 
-	public void skip(string message) {
-		current_result.add_skip(current_test, message);
+	public void skip (string message) {
+		current_result.add_skip (current_test, message);
 	}
 
-	public void fail(string? message = null) {
-		current_result.add_failure(current_test, message);
+	public void fail (string? message = null) {
+		current_result.add_failure (current_test, message);
 	}
 
-	public virtual void set_up() {}
+	public virtual void set_up () {}
 
-	public virtual void tear_down() {}
+	public virtual void tear_down () {}
 }

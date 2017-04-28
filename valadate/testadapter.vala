@@ -25,7 +25,7 @@ public class Valadate.TestAdapter : Object, Test {
 	public string name {get;set;}
 	public string label {get;set;}
 	public double time {get;set;}
-	
+
 	public int timeout {get;set;}
 
 	public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
@@ -46,18 +46,18 @@ public class Valadate.TestAdapter : Object, Test {
 	private TestCase.TestMethod test;
 	public Test? parent {get;set;}
 
-	public new Test get(int index) {
+	public new Test get (int index) {
 		return this;
 	}
 
-	public TestAdapter(string name, int timeout) {
+	public TestAdapter (string name, int timeout) {
 		this.name = name;
 		this.timeout = timeout;
 	}
 
-	public void add_test(owned TestPlan.TestMethod testmethod) {
+	public void add_test (owned TestPlan.TestMethod testmethod) {
 		this.test = () => {
-			testmethod(parent as TestCase);
+			testmethod (parent as TestCase);
 		};
 	}
 
@@ -68,40 +68,40 @@ public class Valadate.TestAdapter : Object, Test {
 		var p = parent as TestCase;
 		this.test = () => {
 			AsyncResult? result = null;
-			var loop = new MainLoop();
-			var thread = new Thread<void*>.try(name, () => {
-				async_begin(p, (o, r) => { result = r; loop.quit();});
+			var loop = new MainLoop ();
+			var thread = new Thread<void*>.try (name, () => {
+				async_begin (p, (o, r) => { result = r; loop.quit ();});
 				return null;
 			});
-			Timeout.add(timeout, () => {
-				loop.quit();
+			Timeout.add (timeout, () => {
+				loop.quit ();
 				return false;
 			},
 			Priority.HIGH);
-			loop.run();
-			if(result == null)
-				throw new IOError.TIMED_OUT(
+			loop.run ();
+			if (result == null)
+				throw new IOError.TIMED_OUT (
 					"The test timed out after %d milliseconds",timeout);
-			async_finish(p, result);
+			async_finish (p, result);
 		};
 	}
 
-	public void add_test_method(owned TestCase.TestMethod testmethod) {
+	public void add_test_method (owned TestCase.TestMethod testmethod) {
 		this.test = (owned)testmethod;
 	}
 
-	public void run(TestResult result) {
-		if(status == TestStatus.SKIPPED)
+	public void run (TestResult result) {
+		if (status == TestStatus.SKIPPED)
 			return;
 		var p = parent as TestCase;
-		result.add_test(this);
-		p.set_up();
+		result.add_test (this);
+		p.set_up ();
 		try {
-			test();
+			test ();
 		} catch (Error e) {
-			result.add_failure(this, e.message);
+			result.add_failure (this, e.message);
 		}
-		p.tear_down();
-		result.add_success(this);
+		p.tear_down ();
+		result.add_success (this);
 	}
 }

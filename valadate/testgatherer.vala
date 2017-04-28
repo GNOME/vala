@@ -19,39 +19,39 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
- 
+
 public class Valadate.TestGatherer : Vala.CodeVisitor {
-		
-	public HashTable<Type, Vala.Class> classes = 
-		new HashTable<Type, Vala.Class>(direct_hash, direct_equal);
-	
+
+	public HashTable<Type, Vala.Class> classes =
+		new HashTable<Type, Vala.Class> (direct_hash, direct_equal);
+
 	private TestAssembly assembly;
 
-	public TestGatherer(TestAssembly assembly) {
+	public TestGatherer (TestAssembly assembly) {
 		this.assembly = assembly;
 	}
 
-	public override void visit_namespace(Vala.Namespace ns) {
-		ns.accept_children(this);
+	public override void visit_namespace (Vala.Namespace ns) {
+		ns.accept_children (this);
 	}
-	
-	public override void visit_class(Vala.Class cls) {
+
+	public override void visit_class (Vala.Class cls) {
 		try {
-			var classtype = find_type(cls);
-			if (classtype.is_a(typeof(TestCase)) || classtype.is_a(typeof(TestSuite)))
-				classes.insert(classtype, cls);
+			var classtype = find_type (cls);
+			if (classtype.is_a (typeof (TestCase)) || classtype.is_a (typeof (TestSuite)))
+				classes.insert (classtype, cls);
 		} catch (Error e) {
-			warning(e.message);
+			warning (e.message);
 		}
-		cls.accept_children(this);
+		cls.accept_children (this);
 	}
-	
-	private Type find_type(Vala.Class cls) throws Error {
+
+	private Type find_type (Vala.Class cls) throws Error {
 		var attr = new Vala.CCodeAttribute (cls);
 		unowned TestPlan.GetType node_get_type =
-			(TestPlan.GetType)assembly.get_method(
-				"%sget_type".printf(attr.lower_case_prefix));
-		var ctype = node_get_type();
+			 (TestPlan.GetType)assembly.get_method (
+				"%sget_type".printf (attr.lower_case_prefix));
+		var ctype = node_get_type ();
 		return ctype;
 	}
 }
