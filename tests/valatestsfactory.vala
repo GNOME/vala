@@ -29,7 +29,7 @@ public class Vala.TestsFactory : Object {
 	static File vapidir;
 
 	class construct {
-		currdir = File.new_for_path (GLib.Environment.get_current_dir());
+		currdir = File.new_for_path (GLib.Environment.get_variable("G_TEST_BUILDDIR"));
 		testdir = currdir.get_child (".tests");
 		buildir = currdir.get_parent ();
 
@@ -328,7 +328,7 @@ public class Vala.TestsFactory : Object {
 
 	public class ValaCompiler : Program {
 		private const string VALA_FLAGS =
-			"""--save-temps --disable-warnings --pkg gio-2.0 
+			"""--save-temps --disable-warnings --pkg gio-unix-2.0 --pkg config
 			  -X -lm -X -g -X -O0 -X -pipe
 			  -X -Wno-discarded-qualifiers -X -Wno-incompatible-pointer-types
 			  -X -Wno-deprecated-declarations -X -Werror=return-type
@@ -336,7 +336,8 @@ public class Vala.TestsFactory : Object {
 			  -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith
 			  -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast
 			  -X -Wformat -X -Werror=format-security -X -Werror=format-nonliteral
-			  -X -Werror=redundant-decls""";
+			  -X -Werror=redundant-decls
+			  -X -DGETTEXT_PACKAGE="VALAC"""";
 
 		public ValaCompiler (File compiler) {
 			Object (program : compiler);

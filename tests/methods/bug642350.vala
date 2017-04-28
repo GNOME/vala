@@ -1,3 +1,5 @@
+[CCode(cname="GETTEXT_PACKAGE")]
+extern const string GETTEXT_PACKAGE;
 const string[] FOO = { N_ ("foo"), NC_ ("valac", "bar") };
 const string BAZ = N_ ("bar");
 

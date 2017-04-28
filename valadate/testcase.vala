@@ -2,7 +2,7 @@
  * Valadate - Unit testing library for GObject-based libraries.
  *
  * testcase.vala
- * Copyright (C) 2016 Chris Daley
+ * Copyright (C) 2016-2017 Chris Daley
  * Copyright (C) 2009-2012 Julien Peeters
  *
  * This library is free software; you can redistribute it and/or
@@ -116,7 +116,6 @@ public abstract class Valadate.TestCase : Object, Test {
 
 	public void skip(string message) {
 		current_result.add_skip(current_test, message);
-
 	}
 
 	public void fail(string? message = null) {

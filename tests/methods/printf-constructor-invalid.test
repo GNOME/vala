@@ -1,4 +1,4 @@
-SKIP Invalid Code
+Invalid Code
 
 void main () {
 	var err = new Error (Quark.from_string ("g-io-error-quark"), 0, "%s", 4);

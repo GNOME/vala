@@ -84,18 +84,6 @@ public class Valadate.TestReport {
 		root->set_prop("tests", test.count.to_string());
 		root->set_prop("name",test.label);
 		xml = new XmlFile.from_doc(doc);
-		
-		if(test.parent != null && test.parent.name != "/")
-			return;
-		
-		var props = root->children;
-		
-		foreach(var key in Environment.list_variables()) {
-			Xml.Node* node = new Xml.Node(null, "property");
-			node->set_prop("name", key);
-			node->set_prop("value", Markup.escape_text(Environment.get_variable(key)));
-			props->add_child(node);
-		}
 	}
 
 	private void new_testcase() throws Error {

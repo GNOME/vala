@@ -112,6 +112,12 @@ public class Valadate.TestOptions {
 		}
 	}
 
+	public string[] testpaths {
+		get {
+			return _paths;
+		}
+	}
+
 	public TestOptions(string[] args) throws OptionError {
 		_runtest = null;
 

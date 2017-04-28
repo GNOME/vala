@@ -23,7 +23,7 @@ public class Vala.Tests : Valadate.TestSuite {
 
 	construct {
 		try {
-			var testdir = File.new_for_path (GLib.Environment.get_current_dir ());
+			var testdir = File.new_for_path (GLib.Environment.get_variable("G_TEST_BUILDDIR"));
 			var testpath = Valadate.TestOptions.get_current_test_path ();
 			
 			if (testpath != null) {
@@ -35,8 +35,19 @@ public class Vala.Tests : Valadate.TestSuite {
 					add_test (new ValaTest (runtest));
 			} else {
 				var tempdir = testdir.get_child (".tests");
-				if (!tempdir.query_exists())
+				if (tempdir.query_exists()) {
+					var enumerator = tempdir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+					FileInfo file_info;
+					while ((file_info = enumerator.next_file ()) != null) {
+						var filename = file_info.get_name();
+						if(filename == "." || filename == "..")
+							continue;
+						var tfile = tempdir.get_child(file_info.get_name());
+						tfile.delete();
+					}
+				} else {
 					tempdir.make_directory();
+				}
 
 				var enumerator = testdir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
 				FileInfo file_info;

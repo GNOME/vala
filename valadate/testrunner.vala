@@ -28,7 +28,7 @@ public class Valadate.TestRunner {
 
 	private uint _n_ongoing_tests = 0;
 	private Queue<DelegateWrapper> _pending_tests = new Queue<DelegateWrapper> ();
-	private static uint _max_n_ongoing_tests = GLib.get_num_processors();
+	private static uint _max_n_ongoing_tests = GLib.get_num_processors() * 2;
 	private MainLoop loop;
 	private TestPlan plan;
 	

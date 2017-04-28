@@ -43,6 +43,12 @@ public class Valadate.TestConfig {
 		}
 	}
 
+	public string[] testpaths {
+		get {
+			return options.testpaths;
+		}
+	}
+
 	public string? running_test {
 		get {
 			return options.running_test;
