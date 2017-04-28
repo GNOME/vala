@@ -28,7 +28,7 @@ public class Valadate.XmlTestReportPrinter : TestReportPrinter {
 		"""<testsuites disabled="" errors="" failures="" name="" """ +
 		"""tests="" time=""></testsuites>""";
 
-	public XmlFile xml {get;set;}
+	public XmlFile xml { get; set; }
 
 	private Xml.Node* testsuite;
 	private Xml.Node* oldtestsuite;

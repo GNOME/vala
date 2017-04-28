@@ -30,19 +30,19 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 
 	public delegate Type GetType ();
 
-	public File plan {get;set;}
+	public File plan { get; set; }
 
-	public TestAssembly assembly {get;set;}
+	public TestAssembly assembly { get; set; }
 
-	public TestOptions options {get;set;}
+	public TestOptions options { get; set; }
 
-	public TestConfig config {get;set;}
+	public TestConfig config { get; set; }
 
-	public TestResult result {get;set;}
+	public TestResult result { get; set; }
 
-	public TestRunner runner {get;set;}
+	public TestRunner runner { get; set; }
 
-	public TestSuite root {get;protected set;}
+	public TestSuite root { get; set; }
 
 	private Vala.CodeContext context;
 	private TestGatherer gatherer;
@@ -62,10 +62,8 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 		plan = assembly.srcdir.get_child (plan_name + ".vapi");
 		if (!plan.query_exists ()) {
 			plan = assembly.builddir.get_child (plan_name + ".vapi");
-			if (!plan.query_exists ()) {
-				throw new TestConfigError.TESTPLAN (
-					"Test Plan %s Not Found in %s or %s", plan_name, assembly.srcdir.get_path (), assembly.builddir.get_path ());
-			}
+			if (!plan.query_exists ())
+				throw new TestConfigError.TESTPLAN ("Test Plan %s Not Found in %s or %s", plan_name, assembly.srcdir.get_path (), assembly.builddir.get_path ());
 		}
 		config = new TestConfig (options);
 		runner = new TestRunner ();
@@ -182,10 +180,8 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 
 				if (method.coroutine) {
 					try {
-						unowned TestPlan.AsyncTestMethod beginmethod =
-							 (TestPlan.AsyncTestMethod)assembly.get_method (attr.name);
-						unowned TestPlan.AsyncTestMethodResult testmethod =
-							 (TestPlan.AsyncTestMethodResult)assembly.get_method (attr.finish_real_name);
+						unowned TestPlan.AsyncTestMethod beginmethod = (TestPlan.AsyncTestMethod)assembly.get_method (attr.name);
+						unowned TestPlan.AsyncTestMethodResult testmethod = (TestPlan.AsyncTestMethodResult)assembly.get_method (attr.finish_real_name);
 						adapter.add_async_test (beginmethod, testmethod);
 					} catch (Error e) {
 						var message = e.message;
@@ -193,22 +189,15 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 					}
 				} else {
 					try {
-						TestPlan.TestMethod testmethod =
-							 (TestPlan.TestMethod)assembly.get_method (attr.name);
+						TestPlan.TestMethod testmethod = (TestPlan.TestMethod)assembly.get_method (attr.name);
 						adapter.add_test ((owned)testmethod);
 					} catch (Error e) {
 						var message = e.message;
 						adapter.add_test_method (()=> {debug (message);});
 					}
 				}
-			} else {
-				adapter.add_test_method (()=> {assert_not_reached ();});
 			}
-
-			adapter.label = "%s/%s".printf (
-				testcase.label,
-				adapter.label);
-
+			adapter.label = "%s/%s".printf (testcase.label,adapter.label);
 			testcase.add_test (adapter);
 		}
 

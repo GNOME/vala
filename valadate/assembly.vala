@@ -22,7 +22,7 @@
 
 public abstract class Valadate.Assembly {
 
-	protected static SubprocessLauncher launcher;
+	private static SubprocessLauncher launcher;
 
 	private static void init_launcher () {
 		if (launcher == null) {
@@ -36,12 +36,12 @@ public abstract class Valadate.Assembly {
 		}
 	}
 
-	public File binary {get;set;}
-	public InputStream stderr {get;set;}
-	public OutputStream stdin {get;set;}
-	public InputStream stdout {get;set;}
+	public File binary { get; set; }
+	public InputStream stderr { get; set; }
+	public OutputStream stdin { get; set; }
+	public InputStream stdout { get; set; }
 
-	protected Subprocess process;
+	private Subprocess process;
 
 	public Assembly (File binary) throws Error {
 		init_launcher ();

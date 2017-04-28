@@ -52,7 +52,7 @@ public class Valadate.TestSuite : Object, Test {
 			return testcount;
 		}
 	}
-	public Test? parent {get;set;}
+	public Test? parent { get; set; }
 	/**
 	 * Returns a {@link GLib.List} of {@link Valadate.Test}s that will be
 	 * run by this TestSuite
@@ -62,11 +62,12 @@ public class Valadate.TestSuite : Object, Test {
 			return _tests;
 		}
 	}
-	public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
-	public double time {get;set;}
-	public int skipped {get;set;}
-	public int errors {get;set;}
-	public int failures {get;set;}
+
+	public TestStatus status { get; set; default=TestStatus.NOT_RUN;}
+	public double time { get; set; }
+	public int skipped { get; set; }
+	public int errors { get; set; }
+	public int failures { get; set; }
 	/**
 	 * The public constructor takes an optional string parameter for the
 	 * TestSuite's name

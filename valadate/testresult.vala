@@ -22,8 +22,8 @@
 
 public class Valadate.TestResult {
 
-	public TestConfig config {get;set;}
-	public TestReportPrinter printer {get;set;}
+	public TestConfig config { get; set; }
+	public TestReportPrinter printer { get; set; }
 
 	private Queue<TestReport> reports = new Queue<TestReport> ();
 	private HashTable<Test, TestReport> tests = new HashTable<Test, TestReport> (direct_hash, direct_equal);

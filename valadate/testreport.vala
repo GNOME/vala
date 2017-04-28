@@ -43,10 +43,10 @@ public class Valadate.TestReport {
 	private const string SYSTEM_OUT_TAG = "system-out";
 	private const string SYSTEM_ERR_TAG = "system-err";
 
-	public Test test {get;set;}
-	public bool subprocess {get;set;}
+	public Test test { get; set; }
+	public bool subprocess { get; set; }
 
-	public XmlFile xml {get;set;}
+	public XmlFile xml { get; set; }
 
 	private static int64 start_time;
 	private static int64 end_time;
@@ -226,8 +226,8 @@ public class Valadate.TestReport {
 		string? message)	{
 
 		if (((log_levels & LogLevelFlags.LEVEL_INFO) != 0) ||
-			 ((log_levels & LogLevelFlags.LEVEL_MESSAGE) != 0) ||
-			 ((log_levels & LogLevelFlags.LEVEL_DEBUG) != 0)) {
+			((log_levels & LogLevelFlags.LEVEL_MESSAGE) != 0) ||
+			((log_levels & LogLevelFlags.LEVEL_DEBUG) != 0)) {
 			add_message (INFO_TAG, message);
 		} else {
 			add_error (message);

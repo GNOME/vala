@@ -22,14 +22,14 @@
 
 public class Valadate.TestAdapter : Object, Test {
 
-	public string name {get;set;}
-	public string label {get;set;}
-	public double time {get;set;}
+	public string name { get; set; }
+	public string label { get; set; }
+	public double time { get; set; }
 
-	public int timeout {get;set;}
+	public int timeout { get; set; }
 
-	public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
-	public string status_message {get;set;}
+	public TestStatus status { get; set; default = TestStatus.NOT_RUN; }
+	public string status_message { get; set; }
 
 	public int count {
 		get {
@@ -44,7 +44,7 @@ public class Valadate.TestAdapter : Object, Test {
 	}
 
 	private TestCase.TestMethod test;
-	public Test? parent {get;set;}
+	public Test? parent { get; set; }
 
 	public new Test get (int index) {
 		return this;
@@ -80,8 +80,7 @@ public class Valadate.TestAdapter : Object, Test {
 			Priority.HIGH);
 			loop.run ();
 			if (result == null)
-				throw new IOError.TIMED_OUT (
-					"The test timed out after %d milliseconds",timeout);
+				throw new IOError.TIMED_OUT ("The test timed out after %d milliseconds",timeout);
 			async_finish (p, result);
 		};
 	}
