@@ -19,7 +19,8 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
-public class Valadate.GnuTestReportPrinter : TestReportPrinter {
+
+internal class Valadate.GnuTestReportPrinter : TestReportPrinter {
 
 	private const string TAP_VERSION = "13";
 

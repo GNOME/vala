@@ -20,7 +20,7 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-public class Valadate.TapTestReportPrinter : TestReportPrinter {
+internal class Valadate.TapTestReportPrinter : TestReportPrinter {
 
 	private const string TAP_VERSION = "13";
 

@@ -23,7 +23,7 @@
 
 public abstract class Valadate.TestReportPrinter {
 
-	public static TestReportPrinter @new (TestConfig config) throws Error {
+	public static TestReportPrinter from_config (TestConfig config) throws Error {
 		switch (config.format) {
 			case "tap" :
 				return new TapTestReportPrinter (config);
@@ -38,7 +38,7 @@ public abstract class Valadate.TestReportPrinter {
 
 	public TestConfig config {get; set;}
 
-	public TestReportPrinter (TestConfig config) throws Error {
+	internal TestReportPrinter (TestConfig config) throws Error {
 		this.config = config;
 	}
 

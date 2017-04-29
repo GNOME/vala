@@ -21,7 +21,7 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-public class Valadate.XmlTestReportPrinter : TestReportPrinter {
+internal class Valadate.XmlTestReportPrinter : TestReportPrinter {
 
 	private const string XML_DECL ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 	private const string TESTSUITES_XML =

@@ -31,7 +31,7 @@ public class Valadate.TestResult {
 	public TestResult (TestConfig config) throws Error {
 		this.config = config;
 		if (!config.in_subprocess)
-			printer = TestReportPrinter.new (config);
+			printer = TestReportPrinter.from_config (config);
 	}
 
 	public bool report () {
