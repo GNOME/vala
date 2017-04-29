@@ -22,7 +22,6 @@
 public class Valadate.TestOptions {
 
 	private static bool _async = true;
-	private static bool _tap;
 	private static string _format = "tap";
 	private static bool _keepgoing = false;
 	private static bool _list;
@@ -49,8 +48,7 @@ public class Valadate.TestOptions {
 		{ "skip", 's', 0, OptionArg.STRING_ARRAY, ref _skip, "Skip all tests matching", "TESTPATH..." },
 		{ "timeout", 't', 0, OptionArg.INT, ref _timeout, "Default timeout for tests", "MILLISECONDS" },
 		{ "seed", 0, 0, OptionArg.STRING, ref _seed, "Start tests with random seed", "SEEDSTRING" },
-		{ "timed", 0, 0, OptionArg.NONE, ref _timed, "Run timed tests", null },			{ "tap", 0, 0, OptionArg.NONE, ref _tap, "Output test results using TAP format" },
-		{ "tap", 0, 0, OptionArg.NONE, ref _tap, "Output test results using TAP format" },
+		{ "timed", 0, 0, OptionArg.NONE, ref _timed, "Run timed tests", null },
 		{ "testplan", 0, 0, OptionArg.STRING, ref _testplan, "Run the specified TestPlan", "FILE" },
 		{ "verbose", 0, 0, OptionArg.NONE, ref _verbose, "Run tests verbosely", null },
 		{ "version", 0, 0, OptionArg.NONE, ref _version, "Display version number", null },

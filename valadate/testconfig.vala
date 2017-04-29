@@ -27,6 +27,12 @@ public errordomain Valadate.TestConfigError {
 	TEST_PRINTER
 }
 
+public enum Valadate.TestFormat {
+	GNU,
+	TAP,
+	XML
+}
+
 public class Valadate.TestConfig {
 
 	public TestOptions options {get;set;}
