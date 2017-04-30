@@ -1683,26 +1683,33 @@ public class Vala.Genie.Parser : CodeVisitor {
 		return expr;
 	}
 
-
-	Statement get_for_statement_type () throws ParseError {
+	Statement parse_for_statement () throws ParseError {
 	
 		var begin = get_location ();
-		bool is_foreach = false;
+		bool to_downto_met = false;
+		bool in_met = false;
 										
 		while (current () != TokenType.EOL && current () != TokenType.DO) {
 			next ();
+
 			if (accept (TokenType.IN)) {
-				is_foreach = true;
-				break;
+				in_met = true;
+			}
+			if (accept (TokenType.TO) || accept (TokenType.DOWNTO) || accept (TokenType.ELLIPSIS)) {
+				to_downto_met = true;
 			}
 		}
-					
+
 		rollback (begin);
-					
-		if (is_foreach) {
-			return parse_foreach_statement ();
-		} else {
-			return parse_for_statement ();
+
+		if (to_downto_met && in_met) {
+			return parse_for_statement_with_in_operator_and_range ();
+		}
+		else if (in_met) {
+			return parse_for_statement_with_in_operator_and_iterator ();
+		}
+		else {
+			return parse_for_statement_with_var_operator_and_range ();
 		}
 
 	}
@@ -1765,7 +1772,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					stmt = parse_do_statement ();
 					break;
 				case TokenType.FOR:
-					stmt = get_for_statement_type ();
+					stmt = parse_for_statement ();
 					break;
 				case TokenType.BREAK:
 					stmt = parse_break_statement ();
@@ -1888,7 +1895,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.CASE:	  return parse_switch_statement ();
 		case TokenType.WHILE:	 return parse_while_statement ();
 		case TokenType.DO:		return parse_do_statement ();
-		case TokenType.FOR:	   return get_for_statement_type ();
+		case TokenType.FOR:	   return parse_for_statement ();
 		case TokenType.BREAK:	 return parse_break_statement ();
 		case TokenType.CONTINUE:  return parse_continue_statement ();
 		case TokenType.RETURN:	return parse_return_statement ();
@@ -2110,15 +2117,21 @@ public class Vala.Genie.Parser : CodeVisitor {
 		return new DoStatement (body, condition, get_src (begin));
 	}
 
-
-	Statement parse_for_statement () throws ParseError {
+	/** Parses "for" statement of such view:  "for var i = 1 to 10"
+	 *    (or: "for i: int = 1 to 10", "for i = 1 to 10")
+	 */
+	Statement parse_for_statement_with_var_operator_and_range () throws ParseError {
 		var begin = get_location ();
 		Block block = null;
 		Expression initializer = null;
 		Expression condition = null;
 		Expression iterator = null;
+		Expression int_start_expr = null;    // for dynamic analysis
 		bool is_expr;
 		string id;
+		int int_amount = 0;    // for static analysis
+		int int_start = 0;
+		int int_end = 0;
 
 		expect (TokenType.FOR);
 
@@ -2154,12 +2167,18 @@ public class Vala.Genie.Parser : CodeVisitor {
 			if (variable_type != null) {
 				type_copy = variable_type.copy ();
 			}
-			var local = parse_local_variable (type_copy, id);
 
+			var local = parse_local_variable (type_copy, id);
 			block.add_statement (new DeclarationStatement (local, local.source_reference));
 		}
 		
-		
+		prev ();
+		if (accept (TokenType.INTEGER_LITERAL)) {    // for static analysis
+			int_start = int.parse (get_last_string());
+			int_amount += 1;
+			prev ();
+		}
+		next ();
 		
 		if (accept (TokenType.TO)) {
 			/* create expression for condition and incrementing iterator */		
@@ -2169,10 +2188,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 			var right = parse_primary_expression ();
 
 			condition = new BinaryExpression (BinaryOperator.LESS_THAN_OR_EQUAL, left, right, to_src);
-			
 			iterator = new PostfixExpression (left, true, to_src);
-		} else {
-			expect (TokenType.DOWNTO);
+		} else if (accept (TokenType.DOWNTO)) {
 			var downto_begin = get_location ();
 			var downto_src = get_src (downto_begin);
 			/* create expression for condition and decrementing iterator */
@@ -2180,8 +2197,42 @@ public class Vala.Genie.Parser : CodeVisitor {
 			var right = parse_primary_expression ();
 
 			condition = new BinaryExpression (BinaryOperator.GREATER_THAN_OR_EQUAL, left, right, downto_src);
-
 			iterator = new PostfixExpression (left, false, downto_src);
+		} else {
+			expect (TokenType.ELLIPSIS);
+			var ellipsis_begin = get_location ();
+			var ellipsis_src_ref = get_src (ellipsis_begin);
+			/* create expression for condition and decrementing iterator */
+			var left = new MemberAccess (null, id, ellipsis_src_ref);
+			Expression right = null;
+			if (accept (TokenType.INTEGER_LITERAL)) {    // for static analysis
+				prev ();
+				right = parse_primary_expression ();
+				int_end = int.parse (get_last_string());
+				int_amount += 1;
+			} else {
+				right = parse_primary_expression ();
+			}
+
+			if (int_amount >= 2) {    // static analysis attempt
+				if (int_start <= int_end) {
+					condition = new BinaryExpression (BinaryOperator.LESS_THAN_OR_EQUAL, left, right, ellipsis_src_ref);
+					iterator = new PostfixExpression (left, true, ellipsis_src_ref);
+				} else {
+					condition = new BinaryExpression (BinaryOperator.GREATER_THAN_OR_EQUAL, left, right, ellipsis_src_ref);
+					iterator = new PostfixExpression (left, false, ellipsis_src_ref);
+				}
+			} else {    // dynamic analysis
+				var first_lesser_second = new BinaryExpression (BinaryOperator.LESS_THAN_OR_EQUAL, int_start_expr, right, ellipsis_src_ref);
+
+				var condition_if_increasing = new BinaryExpression (BinaryOperator.LESS_THAN_OR_EQUAL, left, right, ellipsis_src_ref);
+				var condition_if_decreasing = new BinaryExpression (BinaryOperator.GREATER_THAN_OR_EQUAL, left, right, ellipsis_src_ref);
+				condition = new ConditionalExpression (first_lesser_second, condition_if_increasing, condition_if_decreasing, ellipsis_src_ref);
+
+				var iterator_if_increasing = new PostfixExpression (left, true, ellipsis_src_ref);
+				var iterator_if_decreasing = new PostfixExpression (left, false, ellipsis_src_ref);
+				iterator = new ConditionalExpression (first_lesser_second, iterator_if_increasing, iterator_if_decreasing, ellipsis_src_ref);
+			}
 		}
 
 		if (!accept (TokenType.EOL)) {
@@ -2205,7 +2256,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 	}
 
-	Statement parse_foreach_statement () throws ParseError {
+	/** Parses "for" statement of such view: "for i in array_4"
+	 *     (or "for var i in array_4", or "for i: int in array_4")
+	 */
+	Statement parse_for_statement_with_in_operator_and_iterator () throws ParseError {
 		var begin = get_location ();
 		DataType type = null;
 		string id = null;
@@ -2229,6 +2283,124 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var src = get_src (begin);
 		var body = parse_embedded_statement ();
 		return new ForeachStatement (type, id, collection, body, src);
+	}
+
+	/** Parses "for" statement of such view: "for i in 1 to 10"
+	 *  (or "for var i in 1 to 10", or "for i: int in 1 to 10")
+	 */
+	Statement parse_for_statement_with_in_operator_and_range() throws ParseError {
+		var begin = get_location ();
+		expect (TokenType.FOR);
+
+		Expression initializer = null;
+		Expression condition = null;
+		Expression iterator = null;
+		Expression variable = null;
+		SourceReference variable_src = null;
+		DataType variable_type = null;
+		string variable_id = null;
+		int int_amount = 0;    // for static analysis
+		int to_downto_dots = 1;    // to -> 1; downto -> -1; three dots -> 0
+		int int_start = 0;    // for static check
+		int int_end = 0;    // just declaration, it'll change later
+		Expression int_start_expr = null;
+		Expression int_end_expr = null;
+		var block = new Block (get_src (begin));
+
+		var int_type_symbol = new UnresolvedSymbol (null, "int", get_src (begin));
+		variable_type = new UnresolvedType.from_symbol (int_type_symbol, get_src (begin));  // default value
+
+		if (accept (TokenType.VAR)) {
+			variable_src = get_src ( get_location () );
+			variable = parse_primary_expression ();    // uses  parse_simple_name (); for simple names, returns MemberAccess
+			variable_id = get_last_string ();
+		} else {
+			variable_src = get_src ( get_location () );    // needed to build initializer
+			variable = parse_primary_expression ();
+			variable_id = get_last_string ();
+			if (accept (TokenType.COLON)) {
+				variable_type = parse_type (true, true);
+			}
+		}
+
+		expect (TokenType.IN);
+
+		var before_int = get_location ();    // int_start
+		if ( accept (TokenType.INTEGER_LITERAL) ) {
+			rollback (before_int);
+			int_start_expr = parse_primary_expression ();
+			int_start = int.parse (get_last_string());
+			int_amount += 1;
+		}
+		else {
+			int_start_expr = parse_primary_expression ();
+		}
+
+		var to_begins = get_location ();
+		var to_src = get_src (to_begins);
+		if (accept (TokenType.TO)) {
+			to_downto_dots = 1;
+		} else if (accept (TokenType.DOWNTO)) {
+			to_downto_dots = -1;
+		} else {
+			expect (TokenType.ELLIPSIS);
+			to_downto_dots = 0;
+		}
+
+		before_int = get_location ();    // int_end
+		if ( accept (TokenType.INTEGER_LITERAL) ) {
+			rollback (before_int);
+			int_end_expr = parse_primary_expression ();
+			int_end = int.parse (get_last_string());
+			int_amount += 1;
+		} else {
+			int_end_expr = parse_primary_expression ();
+		}
+
+		if (to_downto_dots == 1) {
+			condition = new BinaryExpression (BinaryOperator.LESS_THAN_OR_EQUAL, variable, int_end_expr, to_src);
+			iterator = new PostfixExpression (variable, true, to_src);
+		} else if (to_downto_dots == -1) {
+			condition = new BinaryExpression (BinaryOperator.GREATER_THAN_OR_EQUAL, variable, int_end_expr, to_src);
+			iterator = new PostfixExpression (variable, false, to_src);
+		} else {    // to_downto_dots == 0
+			if (int_amount >= 2) {    // static analysis attempt
+				if (int_start <= int_end) {
+					condition = new BinaryExpression (BinaryOperator.LESS_THAN_OR_EQUAL, variable, int_end_expr, to_src);
+					iterator = new PostfixExpression (variable, true, to_src);
+				} else {
+					condition = new BinaryExpression (BinaryOperator.GREATER_THAN_OR_EQUAL, variable, int_end_expr, to_src);
+					iterator = new PostfixExpression (variable, false, to_src);
+				}
+			} else {    // dynamic analysis
+				var first_lesser_second = new BinaryExpression (BinaryOperator.LESS_THAN_OR_EQUAL, int_start_expr, int_end_expr, to_src);
+
+				var condition_if_increasing = new BinaryExpression (BinaryOperator.LESS_THAN_OR_EQUAL, variable, int_end_expr, to_src);
+				var condition_if_decreasing = new BinaryExpression (BinaryOperator.GREATER_THAN_OR_EQUAL, variable, int_end_expr, to_src);
+				condition = new ConditionalExpression (first_lesser_second, condition_if_increasing, condition_if_decreasing, to_src);
+
+				var iterator_if_increasing = new PostfixExpression (variable, true, to_src);
+				var iterator_if_decreasing = new PostfixExpression (variable, false, to_src);
+				iterator = new ConditionalExpression (first_lesser_second, iterator_if_increasing, iterator_if_decreasing, to_src);
+			}
+		}
+
+		initializer = new Assignment (variable, int_start_expr, AssignmentOperator.SIMPLE, variable_src);
+		var initializer_2 = new MemberInitializer(variable_id, initializer);    // hack: this instead of "initializer" corrected error
+		var variable_class = new LocalVariable (variable_type.copy(), variable_id, initializer_2 as Expression, get_src (begin) ); 
+		block.add_statement (new DeclarationStatement (variable_class, variable_class.source_reference));
+
+		if (!accept (TokenType.EOL)) {
+			expect (TokenType.DO);
+		}
+
+		var src = get_src (begin);
+		var body = parse_embedded_statement ();
+		var statement = new ForStatement (condition, body, src);
+		statement.add_initializer (initializer);
+		statement.add_iterator (iterator);
+		block.add_statement (statement);
+		return block;
 	}
 
 	Statement parse_break_statement () throws ParseError {
