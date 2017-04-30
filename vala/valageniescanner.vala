@@ -1454,14 +1454,6 @@ public class Vala.Genie.Scanner {
 				current++;
 			}
 
-			/* do not ignore EOL if comment does not exclusively occupy the line */
-			if (current[0] == '\n' && last_token == TokenType.EOL) {
-				current++;
-				line++;
-				column = 1;
-				current_indent_level = 0;
-			}
-			
 			if (source_reference != null) {
 				push_comment (((string) begin).substring (0, (long) (current - begin)), source_reference, file_comment);
 			}
