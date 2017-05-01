@@ -104,8 +104,8 @@ public class Valadate.TestRunner {
 		}
 	}
 
-	private async void run_async (Test test, TestResult result) throws Error
-		requires (plan.config.in_subprocess != true) {
+	private async void run_async (Test test, TestResult result) throws Error {
+
 		var timeout = plan.config.timeout;
 		var testprog = plan.assembly.clone ();
 		if (_n_ongoing_tests > _max_n_ongoing_tests) {

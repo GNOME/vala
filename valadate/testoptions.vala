@@ -21,38 +21,25 @@
  */
 public class Valadate.TestOptions {
 
-	private static bool _async = true;
 	private static string _format = "tap";
 	private static bool _keepgoing = false;
 	private static bool _list;
-	private static bool _quiet;
 	private static string _runtest = null;
-	[CCode (array_length = false, array_null_terminated = true)]
-	private static string[] _skip;
 	private static int _timeout = 60000;
 	private static string _seed;
 	private static bool _timed = true;
-	private static string _testplan;
-	private static bool _verbose;
 	private static bool _version;
-	[CCode (array_length = false, array_null_terminated = true)]
-	private static string[] _paths;
+	private static string _path = null;
 
 	public const OptionEntry[] options = {
-		{ "async", 'a', 0, OptionArg.NONE, ref _async, "Run tests asynchronously in a separate subprocess [Experimental]", null },
 		{ "format", 'f', 0, OptionArg.STRING, ref _format, "Output test results using format", "FORMAT" },
 		{ "", 'k', 0, OptionArg.NONE, ref _keepgoing, "Skip failed tests and continue running", null },
 		{ "list", 'l', 0, OptionArg.NONE, ref _list, "List test cases available in a test executable", null },
-		{ "quiet", 'q', 0, OptionArg.NONE, ref _quiet, "Run tests quietly", null },
 		{ "", 'r', 0, OptionArg.STRING, ref _runtest, null, null },
-		{ "skip", 's', 0, OptionArg.STRING_ARRAY, ref _skip, "Skip all tests matching", "TESTPATH..." },
 		{ "timeout", 't', 0, OptionArg.INT, ref _timeout, "Default timeout for tests", "MILLISECONDS" },
 		{ "seed", 0, 0, OptionArg.STRING, ref _seed, "Start tests with random seed", "SEEDSTRING" },
-		{ "timed", 0, 0, OptionArg.NONE, ref _timed, "Run timed tests", null },
-		{ "testplan", 0, 0, OptionArg.STRING, ref _testplan, "Run the specified TestPlan", "FILE" },
-		{ "verbose", 0, 0, OptionArg.NONE, ref _verbose, "Run tests verbosely", null },
 		{ "version", 0, 0, OptionArg.NONE, ref _version, "Display version number", null },
-		{ "", 0, 0, OptionArg.STRING_ARRAY, ref _paths, "Only start test cases matching", "TESTPATH..." },
+		{ "path", 'p', 0, OptionArg.STRING, ref _path, "Only start test cases matching", "TESTPATH..." },
 		{ null }
 	};
 
@@ -80,12 +67,6 @@ public class Valadate.TestOptions {
 		}
 	}
 
-	public bool run_async {
-		get {
-			return _async;
-		}
-	}
-
 	public bool list {
 		get {
 			return _list;
@@ -110,27 +91,32 @@ public class Valadate.TestOptions {
 		}
 	}
 
-	public string[] testpaths {
+	public string? testpath {
 		get {
-			return _paths;
+			return _path;
 		}
 	}
 
-	public TestOptions (string[] args) throws OptionError {
+	public TestOptions (string[] args) {
 		_runtest = null;
 
-		opt_context = new OptionContext ("- Valadate Testing Framework");
-		opt_context.set_help_enabled (true);
-		opt_context.add_main_entries (options, null);
-		opt_context.parse (ref args);
+		try {
+			opt_context = new OptionContext ("- Valadate Testing Framework");
+			opt_context.set_help_enabled (true);
+			opt_context.add_main_entries (options, null);
+			opt_context.parse (ref args);
 
-		if (_seed == null)
-			_seed = "R02S%08x%08x%08x%08x".printf (
-				GLib.Random.next_int (),
-				GLib.Random.next_int (),
-				GLib.Random.next_int (),
-				GLib.Random.next_int ());
+			if (_seed == null)
+				_seed = "R02S%08x%08x%08x%08x".printf (
+					GLib.Random.next_int (),
+					GLib.Random.next_int (),
+					GLib.Random.next_int (),
+					GLib.Random.next_int ());
 
+		} catch (OptionError e) {
+			stdout.printf ("%s\n", e.message);
+			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
+		}
 	}
 
 }

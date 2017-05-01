@@ -43,7 +43,8 @@ public class Valadate.TestAdapter : Object, Test {
 		}
 	}
 
-	private TestCase.TestMethod test;
+	public TestCase.TestMethod test;
+
 	public Test? parent { get; set; }
 
 	public new Test get (int index) {

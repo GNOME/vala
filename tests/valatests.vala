@@ -24,10 +24,10 @@ public class Vala.Tests : Valadate.TestSuite {
 	construct {
 		try {
 			var testdir = File.new_for_path (GLib.Environment.get_variable ("G_TEST_BUILDDIR"));
-			var testpath = Valadate.TestOptions.get_current_test_path ();
+			var running_test = Environment.get_variable ("V_RUNNING_TEST");
 
-			if (testpath != null) {
-				var testpaths = testpath.split ("/");
+			if (running_test != null) {
+				var testpaths = running_test.split ("/");
 				if (testpaths.length < 4)
 					return;
 				var runtest = testdir.get_child (testpaths[3]);
@@ -54,11 +54,31 @@ public class Vala.Tests : Valadate.TestSuite {
 				while ((file_info = enumerator.next_file ()) != null)
 					if (file_info.get_file_type () == GLib.FileType.DIRECTORY &&
 						!file_info.get_name ().has_prefix ("."))
-						add_test (new ValaTest (testdir.get_child (file_info.get_name ())));
+						if(in_testpath("/Vala/Tests/%s".printf(file_info.get_name ())))
+							add_test (new ValaTest (testdir.get_child (file_info.get_name ())));
 			}
 		} catch (Error e) {
 			stderr.printf ("Error: %s\n", e.message);
 		}
+	}
+
+	private static bool in_testpath (string path) {
+		var testpath = Environment.get_variable ("V_TESTPATH");
+		if (testpath == null)
+			return true;
+
+		var paths = path.split ("/");
+		var testpaths = testpath.split ("/");
+
+		for (int i=1; i<int.max (testpaths.length, paths.length); i++) {
+			if (testpaths[i] == null ||	paths[i] == null)
+				break;
+			if (testpaths[i] == "" || paths[i] == "")
+				break;
+			if (testpaths[i] != paths[i])
+				return false;
+		}
+		return true;
 	}
 
 	private class ValaTest : Valadate.TestCase {
@@ -70,7 +90,7 @@ public class Vala.Tests : Valadate.TestSuite {
 			this.label = directory.get_path ();
 			this.bug_base = BUGZILLA_URL;
 
-			string current_test = Valadate.TestOptions.get_current_test_path ();
+			string current_test = Environment.get_variable ("V_RUNNING_TEST");
 
 			if (current_test != null) {
 				var basename = Path.get_basename (current_test);
@@ -94,11 +114,15 @@ public class Vala.Tests : Valadate.TestSuite {
 		private void load_test (File testfile) throws Error {
 			string basename = testfile.get_basename ();
 			string testname = basename.substring (0, basename.last_index_of ("."));
-
-			var adapter = new Valadate.TestAdapter (testname, 1000);
-			adapter.label = "/Vala/Tests/%s/%s".printf (
+			string label = "/Vala/Tests/%s/%s".printf (
 				Path.get_basename (testfile.get_parent ().get_path ()),
 				testname);
+
+			if(!in_testpath(label))
+				return;
+
+			var adapter = new Valadate.TestAdapter (testname, 1000);
+			adapter.label = label;
 
 			adapter.add_test_method (() => {
 				try {

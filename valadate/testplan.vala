@@ -114,12 +114,17 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 
 	public override void visit_class (Vala.Class cls) {
 
+		var label = "/%s".printf (cls.get_full_name ().replace (".","/"));
+
+		if(!in_testpath (label))
+			return;
+
 		try {
 			if (is_subtype_of (cls, typeof (TestCase)) && !cls.is_abstract) {
 				unowned Constructor ctor = get_constructor (cls);
 				testcase = ctor ();
 				testcase.name = cls.name;
-				testcase.label = "/%s".printf (cls.get_full_name ().replace (".","/"));
+				testcase.label = label;
 				testsuite.add_test (testcase);
 				visit_testcase (cls);
 
@@ -130,6 +135,24 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 			error (e.message);
 		}
 		cls.accept_children (this);
+	}
+
+	private bool in_testpath (string path) {
+		if (config.testpath == null)
+			return true;
+
+		var paths = path.split ("/");
+		var testpaths = config.testpath.split ("/");
+
+		for (int i = 1; i < int.max (testpaths.length, paths.length); i++) {
+			if (testpaths[i] == null || paths[i] == null)
+				break;
+			if (testpaths[i] == "" || paths[i] == "")
+				break;
+			if (testpaths[i] != paths[i])
+				return false;
+		}
+		return true;
 	}
 
 	private bool is_subtype_of (Vala.Class cls, Type type) {
@@ -156,9 +179,10 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 
 		foreach (var method in cls.get_methods ()) {
 
+			var currpath = "%s/%s".printf (testcase.label, method.name);
+
 			if (config.in_subprocess)
-				if (options.running_test != "%s/%s".printf (
-					testcase.label, method.name))
+				if (options.running_test != currpath)
 					continue;
 
 			if (!is_test (method))
@@ -267,6 +291,7 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 		unowned Constructor meth = get_constructor (testclass);
 		var tsuite = meth () as TestSuite;
 		tsuite.name = testclass.name;
+		tsuite.label = "/%s".printf (testclass.get_full_name ().replace (".","/"));;
 		testsuite.add_test (tsuite);
 		testsuite = tsuite;
 	}

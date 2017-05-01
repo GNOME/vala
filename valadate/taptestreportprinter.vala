@@ -31,6 +31,10 @@ internal class Valadate.TapTestReportPrinter : TestReportPrinter {
 		if (!config.list_only) {
 			stdout.printf ("TAP version %s\n", TAP_VERSION);
 			stdout.printf ("# random seed: %s\n", config.seed);
+			
+			if (config.testpath != null)
+				stdout.printf ("# running tests in %s\n", config.testpath);
+			
 		}
 	}
 

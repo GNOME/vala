@@ -14,6 +14,8 @@ TESTS_ENVIRONMENT += \
 	CPPFLAGS='$(CPPFLAGS)' \
 	LDFLAGS='$(LDFLAGS)'
 
+bin_PROGRAMS = valactests@PACKAGE_SUFFIX@
+
 test_programs = valadatetests valactests@PACKAGE_SUFFIX@
 
 # Valadate tests
