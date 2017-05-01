@@ -169,13 +169,6 @@ public class Vala.GtkModule : GSignalModule {
 				}
 				return false;
 			}
-			if (!context.require_glib_version (2, 38)) {
-				if (!cl.error) {
-					Report.error (attr.source_reference, "glib 2.38 is required for using Gtk templates (with --target-glib=2.38)");
-					cl.error = true;
-				}
-				return false;
-			}
 			return true;
 		}
 		return false;

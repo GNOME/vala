@@ -127,59 +127,40 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		var data_var = new CCodeIdentifier ("_data_");
 		var async_result_expr = new CCodeMemberAccess.pointer (data_var, "_async_result");
 
-		if (context.require_glib_version (2, 36)) {
-			var finish_call = new CCodeFunctionCall (new CCodeIdentifier ("g_task_return_pointer"));
-			finish_call.add_argument (async_result_expr);
-			finish_call.add_argument (data_var);
-			finish_call.add_argument (new CCodeConstant ("NULL"));
-			ccode.add_expression (finish_call);
+		var finish_call = new CCodeFunctionCall (new CCodeIdentifier ("g_task_return_pointer"));
+		finish_call.add_argument (async_result_expr);
+		finish_call.add_argument (data_var);
+		finish_call.add_argument (new CCodeConstant ("NULL"));
+		ccode.add_expression (finish_call);
 
-			// Preserve the "complete now" behavior if state != 0, do so by
-			//  iterating the GTask's main context till the task is complete.
-			var state = new CCodeMemberAccess.pointer (data_var, "_state_");
-			var zero = new CCodeConstant ("0");
-			var state_is_not_zero = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, state, zero);
-			ccode.open_if (state_is_not_zero);
+		// Preserve the "complete now" behavior if state != 0, do so by
+		//  iterating the GTask's main context till the task is complete.
+		var state = new CCodeMemberAccess.pointer (data_var, "_state_");
+		var zero = new CCodeConstant ("0");
+		var state_is_not_zero = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, state, zero);
+		ccode.open_if (state_is_not_zero);
 
-			CCodeBinaryExpression task_is_complete;
+		CCodeBinaryExpression task_is_complete;
 
-			if (context.require_glib_version (2, 44)) {
-				var task_complete = new CCodeFunctionCall (new CCodeIdentifier ("g_task_get_completed"));
-				task_complete.add_argument (async_result_expr);
-				task_is_complete = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, task_complete, new CCodeConstant ("TRUE"));
-			} else {
-				var task_complete = new CCodeMemberAccess.pointer (data_var, "_task_complete_");
-				task_is_complete = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, task_complete, new CCodeConstant ("TRUE"));
-			}
-
-			ccode.open_while (task_is_complete);
-			var task_context = new CCodeFunctionCall (new CCodeIdentifier ("g_task_get_context"));
-			task_context.add_argument (async_result_expr);
-			var iterate_context = new CCodeFunctionCall (new CCodeIdentifier ("g_main_context_iteration"));
-			iterate_context.add_argument (task_context);
-			iterate_context.add_argument (new CCodeConstant ("TRUE"));
-			ccode.add_expression (iterate_context);
-			ccode.close();
-
-			ccode.close ();
+		if (context.require_glib_version (2, 44)) {
+			var task_complete = new CCodeFunctionCall (new CCodeIdentifier ("g_task_get_completed"));
+			task_complete.add_argument (async_result_expr);
+			task_is_complete = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, task_complete, new CCodeConstant ("TRUE"));
 		} else {
-			var state = new CCodeMemberAccess.pointer (data_var, "_state_");
-			var zero = new CCodeConstant ("0");
-			var state_is_zero = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, state, zero);
-			ccode.open_if (state_is_zero);
-
-			var idle_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete_in_idle"));
-			idle_call.add_argument (async_result_expr);
-			ccode.add_expression (idle_call);
-
-			ccode.add_else ();
-
-			var direct_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
-			direct_call.add_argument (async_result_expr);
-			ccode.add_expression (direct_call);
-
-			ccode.close ();
+			var task_complete = new CCodeMemberAccess.pointer (data_var, "_task_complete_");
+			task_is_complete = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, task_complete, new CCodeConstant ("TRUE"));
 		}
+
+		ccode.open_while (task_is_complete);
+		var task_context = new CCodeFunctionCall (new CCodeIdentifier ("g_task_get_context"));
+		task_context.add_argument (async_result_expr);
+		var iterate_context = new CCodeFunctionCall (new CCodeIdentifier ("g_main_context_iteration"));
+		iterate_context.add_argument (task_context);
+		iterate_context.add_argument (new CCodeConstant ("TRUE"));
+		ccode.add_expression (iterate_context);
+		ccode.close ();
+
+		ccode.close ();
 
 		var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
 		unref.add_argument (async_result_expr);
@@ -882,10 +863,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				mem_profiler_init_call.add_argument (new CCodeConstant ("glib_mem_profiler_table"));
 				ccode.add_expression (mem_profiler_init_call);
 			}
-
-			var cond = new CCodeIfSection ("!GLIB_CHECK_VERSION (2,35,0)");
-			ccode.add_statement (cond);
-			cond.append (new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init"))));
 
 			var main_call = new CCodeFunctionCall (new CCodeIdentifier (function.name));
 			if (m.get_parameters ().size == 1) {

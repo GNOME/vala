@@ -289,7 +289,7 @@ class Vala.Compiler {
 		}
 
 		int glib_major = 2;
-		int glib_minor = 32;
+		int glib_minor = 40;
 		if (target_glib != null && target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2) {
 			Report.error (null, "Invalid format for --target-glib");
 		}

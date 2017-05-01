@@ -4007,12 +4007,8 @@ namespace GLib {
 	}
 
 	[Compact]
-#if GLIB_2_36
 	[Version (since = "2.36")]
 	[CCode (ref_function = "g_markup_parse_context_ref", unref_function = "g_markup_parse_context_unref", type_id = "G_TYPE_MARKUP_PARSE_CONTEXT")]
-#else
-	[CCode (free_function = "g_markup_parse_context_free")]
-#endif
 	public class MarkupParseContext {
 		public MarkupParseContext (MarkupParser parser, MarkupParseFlags _flags, void* user_data, DestroyNotify? user_data_dnotify);
 		public bool parse (string text, ssize_t text_len) throws MarkupError;
