@@ -22,10 +22,10 @@
 
 public class Valadate.TestAssembly : TestModule {
 
-	public File srcdir {get;set;}
-	public File builddir {get;set;}
+	public File srcdir { get; private set; }
+	public File builddir { get; private set; }
 
-	public TestOptions options {get;set;}
+	public TestOptions options { get; private set; }
 
 	public TestAssembly (string[] args) throws Error {
 		base (File.new_for_path (args[0]));

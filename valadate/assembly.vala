@@ -26,20 +26,17 @@ public abstract class Valadate.Assembly {
 
 	private static void init_launcher () {
 		if (launcher == null) {
-			launcher = new SubprocessLauncher (
-				GLib.SubprocessFlags.STDIN_PIPE |
-				GLib.SubprocessFlags.STDOUT_PIPE |
-				GLib.SubprocessFlags.STDERR_PIPE);
-			launcher.setenv ("G_MESSAGES_DEBUG","all",true);
-			launcher.setenv ("G_DEBUG","fatal-criticals fatal-warnings gc-friendly",true);
-			launcher.setenv ("G_SLICE","always-malloc debug-blocks",true);
+			launcher = new SubprocessLauncher (SubprocessFlags.STDIN_PIPE | SubprocessFlags.STDOUT_PIPE | SubprocessFlags.STDERR_PIPE);
+			launcher.setenv ("G_MESSAGES_DEBUG", "all", true);
+			launcher.setenv ("G_DEBUG", "fatal-criticals fatal-warnings gc-friendly", true);
+			launcher.setenv ("G_SLICE", "always-malloc debug-blocks", true);
 		}
 	}
 
-	public File binary { get; set; }
-	public InputStream stderr { get; set; }
-	public OutputStream stdin { get; set; }
-	public InputStream stdout { get; set; }
+	public File binary { get; private set; }
+	public InputStream stderr { get; private set; }
+	public OutputStream stdin { get; private set; }
+	public InputStream stdout { get; private set; }
 
 	private Subprocess process;
 
@@ -54,7 +51,7 @@ public abstract class Valadate.Assembly {
 
 	public abstract Assembly clone () throws Error;
 
-	public virtual Assembly run (string? command = null, Cancellable? cancellable = null) throws Error {
+	public virtual unowned Assembly run (string? command = null, Cancellable? cancellable = null) throws Error {
 		string[] args;
 		Shell.parse_argv ("%s %s".printf (binary.get_path (), command ?? ""), out args);
 		process = launcher.spawnv (args);
