@@ -62,3 +62,15 @@ public class Valadate.Tests.TestFixtureTwo : Valadate.TestCase {
 		assert(true);
 	}
 }
+
+public abstract class Valadate.Tests.AbstractTests : Valadate.TestCase {
+
+	public virtual void test_virtual () {
+		stdout.printf ("This is an abstract test %s", Type.from_instance(this).name());
+	}
+	
+}
+
+public class Valadate.Tests.ConcreteTests : AbstractTests {
+
+}

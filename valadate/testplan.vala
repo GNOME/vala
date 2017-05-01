@@ -24,11 +24,10 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 
 	[CCode (has_target = false)]
 	public delegate void TestMethod (TestCase self) throws Error;
-
 	public delegate void AsyncTestMethod (TestCase self, AsyncReadyCallback cb);
 	public delegate void AsyncTestMethodResult (TestCase self, AsyncResult res) throws Error;
-
 	public delegate Type GetType ();
+	public delegate TestCase Constructor ();
 
 	public File plan { get; set; }
 
@@ -43,10 +42,11 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 	public TestSuite root { get; set; }
 
 	private Vala.CodeContext context;
-	private TestGatherer gatherer;
-	private delegate TestCase Constructor ();
 	private TestSuite testsuite;
 	private TestCase testcase;
+
+	private HashTable<Type, Vala.Class> classes =
+		new HashTable<Type, Vala.Class> (direct_hash, direct_equal);
 
 	public TestPlan (TestAssembly assembly) throws Error {
 
@@ -87,8 +87,6 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 			context, Vala.SourceFileType.PACKAGE, plan.get_path ()));
 		var parser = new Vala.Parser ();
 		parser.parse (context);
-		gatherer = new TestGatherer (assembly);
-		context.accept (gatherer);
 		context.accept (this);
 	}
 
@@ -110,7 +108,6 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 	}
 
 	public override void visit_class (Vala.Class cls) {
-
 		var label = "/%s".printf (cls.get_full_name ().replace (".","/"));
 
 		if(!in_testpath (label))
@@ -153,10 +150,19 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 	}
 
 	private bool is_subtype_of (Vala.Class cls, Type type) {
-		var t = Type.from_name (cls.get_full_name ().replace (".",""));
+		var t = find_type (cls);
 		if (t.is_a (type))
 			return true;
 		return false;
+	}
+
+	private Type find_type (Vala.Class cls) throws Error {
+		unowned TestPlan.GetType node_get_type = (TestPlan.GetType)assembly.get_method ("%sget_type".printf (get_ccode_lower_case_prefix (cls)));
+		var classtype = node_get_type ();
+		if (classtype.is_a (typeof (TestCase)) || classtype.is_a (typeof (TestSuite)))
+			classes.insert (classtype, cls);
+
+		return classtype;
 	}
 
 	private unowned Constructor get_constructor (Vala.Class cls) throws Error {
@@ -168,7 +174,7 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 		var t = Type.from_name (cls.get_full_name ().replace (".",""));
 		var p = t.parent ();
 		if (p != typeof (TestCase)) {
-			var basecls = gatherer.classes.get (p);
+			var basecls = classes.get (p);
 			if (basecls != null)
 				visit_testcase (basecls);
 		}
@@ -341,39 +347,39 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 
 	private string get_ccode_lower_case_prefix (Vala.Symbol sym) {
 		var ccode = sym.get_attribute ("CCode");
-		string _lower_case_prefix = null;
+		string lower_case_prefix = null;
 
 		if (ccode != null) {
-			_lower_case_prefix = ccode.get_string ("lower_case_cprefix");
-			if (_lower_case_prefix == null && (sym is Vala.ObjectTypeSymbol)) {
-				_lower_case_prefix = ccode.get_string ("cprefix");
+			lower_case_prefix = ccode.get_string ("lower_case_cprefix");
+			if (lower_case_prefix == null && (sym is Vala.ObjectTypeSymbol)) {
+				lower_case_prefix = ccode.get_string ("cprefix");
 			}
 		}
-		if (_lower_case_prefix == null) {
+		if (lower_case_prefix == null) {
 			if (sym is Vala.Namespace) {
 				if (sym.name == null) {
-					_lower_case_prefix = "";
+					lower_case_prefix = "";
 				} else {
-					_lower_case_prefix = "%s%s_".printf (get_ccode_lower_case_prefix (sym.parent_symbol), Vala.Symbol.camel_case_to_lower_case (sym.name));
+					lower_case_prefix = "%s%s_".printf (get_ccode_lower_case_prefix (sym.parent_symbol), Vala.Symbol.camel_case_to_lower_case (sym.name));
 				}
 			} else if (sym is Vala.Method) {
 				// for lambda expressions
-				_lower_case_prefix = "";
+				lower_case_prefix = "";
 			} else {
-				_lower_case_prefix = "%s%s_".printf (get_ccode_lower_case_prefix (sym.parent_symbol), get_ccode_lower_case_suffix (sym));
+				lower_case_prefix = "%s%s_".printf (get_ccode_lower_case_prefix (sym.parent_symbol), get_ccode_lower_case_suffix (sym));
 			}
 		}
-		return _lower_case_prefix;
+		return lower_case_prefix;
 	}
 
 	private string get_ccode_lower_case_suffix (Vala.Symbol sym) {
 		var ccode = sym.get_attribute ("CCode");
-		string _lower_case_suffix = null;
+		string lower_case_suffix = null;
 
 		if (ccode != null) {
-			_lower_case_suffix = ccode.get_string ("lower_case_csuffix");
+			lower_case_suffix = ccode.get_string ("lower_case_csuffix");
 		}
-		if (_lower_case_suffix == null) {
+		if (lower_case_suffix == null) {
 			if (sym is Vala.ObjectTypeSymbol) {
 				var csuffix = Vala.Symbol.camel_case_to_lower_case (sym.name);
 				// remove underscores in some cases to avoid conflicts of type macros
@@ -385,11 +391,11 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 				if (csuffix.has_suffix ("_class")) {
 					csuffix = csuffix.substring (0, csuffix.length - "_class".length) + "class";
 				}
-				_lower_case_suffix = csuffix;
+				lower_case_suffix = csuffix;
 			} else if (sym.name != null) {
-				_lower_case_suffix = Vala.Symbol.camel_case_to_lower_case (sym.name);
+				lower_case_suffix = Vala.Symbol.camel_case_to_lower_case (sym.name);
 			}
 		}
-		return _lower_case_suffix;
+		return lower_case_suffix;
 	}
 }
