@@ -57,4 +57,9 @@ public class Valadate.Tests.TestFixtureTwo : Valadate.TestCase {
 		bug ("555999");
 		stdout.puts ("This is a test of the system");
 	}
+	
+	
+	public async void test_async() {
+		assert(true);
+	}
 }

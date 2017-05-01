@@ -163,8 +163,7 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 	}
 
 	private unowned Constructor get_constructor (Vala.Class cls) throws Error {
-		var attr = new Vala.CCodeAttribute (cls.default_construction_method);
-		return (Constructor)assembly.get_method (attr.name);
+		return (Constructor)assembly.get_method (get_symbol_name (cls.default_construction_method));
 	}
 
 	public void visit_testcase (Vala.Class cls)  {
@@ -200,12 +199,10 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 			annotate (adapter, method);
 
 			if (config.in_subprocess && adapter.status != TestStatus.SKIPPED) {
-				var attr = new Vala.CCodeAttribute (method);
-
 				if (method.coroutine) {
 					try {
-						unowned TestPlan.AsyncTestMethod beginmethod = (TestPlan.AsyncTestMethod)assembly.get_method (attr.name);
-						unowned TestPlan.AsyncTestMethodResult testmethod = (TestPlan.AsyncTestMethodResult)assembly.get_method (attr.finish_real_name);
+						unowned TestPlan.AsyncTestMethod beginmethod = (TestPlan.AsyncTestMethod)assembly.get_method (get_symbol_name (method));
+						unowned TestPlan.AsyncTestMethodResult testmethod = (TestPlan.AsyncTestMethodResult)assembly.get_method (get_finish_name (method));
 						adapter.add_async_test (beginmethod, testmethod);
 					} catch (Error e) {
 						var message = e.message;
@@ -213,7 +210,7 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 					}
 				} else {
 					try {
-						TestPlan.TestMethod testmethod = (TestPlan.TestMethod)assembly.get_method (attr.name);
+						TestPlan.TestMethod testmethod = (TestPlan.TestMethod)assembly.get_method (get_symbol_name (method));
 						adapter.add_test ((owned)testmethod);
 					} catch (Error e) {
 						var message = e.message;
@@ -224,7 +221,6 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 			adapter.label = "%s/%s".printf (testcase.label,adapter.label);
 			testcase.add_test (adapter);
 		}
-
 	}
 
 	private void annotate_label (Test test) {
@@ -294,5 +290,109 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 		tsuite.label = "/%s".printf (testclass.get_full_name ().replace (".","/"));;
 		testsuite.add_test (tsuite);
 		testsuite = tsuite;
+	}
+
+	private string get_finish_name (Vala.Symbol sym) {
+		var ccode = sym.get_attribute ("CCode");
+		string finish_name = null;
+		
+		if (ccode != null) {
+			finish_name = ccode.get_string ("cnfinish_nameame");
+			if (finish_name == null) {
+				finish_name = ccode.get_string ("finish_function");
+			}
+		}
+		return finish_name ?? get_finish_name_for_basename (get_default_name (sym));
+	}
+
+	private string get_finish_name_for_basename (string basename) {
+		string result = basename;
+		if (result.has_suffix ("_async")) {
+			result = result.substring (0, result.length - "_async".length);
+		}
+		return "%s_finish".printf (result);
+	}
+
+	private string get_symbol_name (Vala.Symbol sym) {
+		var ccode = sym.get_attribute ("CCode");
+		string name = null;
+		
+		if (ccode != null)
+			name = ccode.get_string ("cname");
+		return name ?? get_default_name (sym);
+	}
+
+	private string get_default_name (Vala.Symbol sym) {
+		if (sym is Vala.CreationMethod) {
+			var m = (Vala.CreationMethod) sym;
+			string infix = "new";
+			if (m.name == ".new") {
+				return "%s%s".printf (get_ccode_lower_case_prefix (m.parent_symbol), infix);
+			} else {
+				return "%s%s_%s".printf (get_ccode_lower_case_prefix (m.parent_symbol), infix, m.name);
+			}
+		} else if (sym is Vala.Method) {
+			var m = (Vala.Method) sym;
+			if (sym.name.has_prefix ("_")) {
+				return "_%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name.substring (1));
+			} else {
+				return "%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name);
+			}
+		}
+		return sym.name;
+	}
+
+	private string get_ccode_lower_case_prefix (Vala.Symbol sym) {
+		var ccode = sym.get_attribute ("CCode");
+		string _lower_case_prefix = null;
+
+		if (ccode != null) {
+			_lower_case_prefix = ccode.get_string ("lower_case_cprefix");
+			if (_lower_case_prefix == null && (sym is Vala.ObjectTypeSymbol)) {
+				_lower_case_prefix = ccode.get_string ("cprefix");
+			}
+		}
+		if (_lower_case_prefix == null) {
+			if (sym is Vala.Namespace) {
+				if (sym.name == null) {
+					_lower_case_prefix = "";
+				} else {
+					_lower_case_prefix = "%s%s_".printf (get_ccode_lower_case_prefix (sym.parent_symbol), Vala.Symbol.camel_case_to_lower_case (sym.name));
+				}
+			} else if (sym is Vala.Method) {
+				// for lambda expressions
+				_lower_case_prefix = "";
+			} else {
+				_lower_case_prefix = "%s%s_".printf (get_ccode_lower_case_prefix (sym.parent_symbol), get_ccode_lower_case_suffix (sym));
+			}
+		}
+		return _lower_case_prefix;
+	}
+
+	private string get_ccode_lower_case_suffix (Vala.Symbol sym) {
+		var ccode = sym.get_attribute ("CCode");
+		string _lower_case_suffix = null;
+
+		if (ccode != null) {
+			_lower_case_suffix = ccode.get_string ("lower_case_csuffix");
+		}
+		if (_lower_case_suffix == null) {
+			if (sym is Vala.ObjectTypeSymbol) {
+				var csuffix = Vala.Symbol.camel_case_to_lower_case (sym.name);
+				// remove underscores in some cases to avoid conflicts of type macros
+				if (csuffix.has_prefix ("type_")) {
+					csuffix = "type" + csuffix.substring ("type_".length);
+				} else if (csuffix.has_prefix ("is_")) {
+					csuffix = "is" + csuffix.substring ("is_".length);
+				}
+				if (csuffix.has_suffix ("_class")) {
+					csuffix = csuffix.substring (0, csuffix.length - "_class".length) + "class";
+				}
+				_lower_case_suffix = csuffix;
+			} else if (sym.name != null) {
+				_lower_case_suffix = Vala.Symbol.camel_case_to_lower_case (sym.name);
+			}
+		}
+		return _lower_case_suffix;
 	}
 }
