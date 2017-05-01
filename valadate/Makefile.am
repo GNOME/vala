@@ -73,7 +73,7 @@ valadate.deps : valadate.deps.in
 libvaladate_la_LDFLAGS = -no-undefined
 
 libvaladate_la_LIBADD = \
-	$(top_builddir)/codegen/libvala@PACKAGE_SUFFIX@.la \
+	$(top_builddir)/vala/libvala@PACKAGE_SUFFIX@.la \
 	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
 	$(GIO_LIBS) \
