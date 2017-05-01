@@ -47,7 +47,7 @@ public class Valadate.TestGatherer : Vala.CodeVisitor {
 	}
 
 	private Type find_type (Vala.Class cls) throws Error {
-		unowned TestPlan.GetType node_get_type = (TestPlan.GetType)assembly.get_method ("%sget_type".printf (get_ccode_lower_case_prefix(cls)));
+		unowned TestPlan.GetType node_get_type = (TestPlan.GetType)assembly.get_method ("%sget_type".printf (get_ccode_lower_case_prefix (cls)));
 		var ctype = node_get_type ();
 		return ctype;
 	}
