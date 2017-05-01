@@ -37,7 +37,6 @@ internal class Valadate.XmlTestReportPrinter : TestReportPrinter {
 
 	public XmlTestReportPrinter (TestConfig config) throws Error {
 		base (config);
-		this.config = config;
 		xml = new XmlFile.from_string (XML_DECL + TESTSUITES_XML);
 	}
 

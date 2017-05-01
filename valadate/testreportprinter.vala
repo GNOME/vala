@@ -36,7 +36,7 @@ public abstract class Valadate.TestReportPrinter {
 		}
 	}
 
-	public TestConfig config {get; set;}
+	public TestConfig config { get; private set; }
 
 	internal TestReportPrinter (TestConfig config) throws Error {
 		this.config = config;

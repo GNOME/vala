@@ -45,7 +45,7 @@ public class Valadate.TestConfig {
 	private static bool _version;
 	private static string _path = null;
 
-	public const OptionEntry[] options = {
+	private const OptionEntry[] options = {
 		{ "format", 'f', 0, OptionArg.STRING, ref _format, "Output test results using format", "FORMAT" },
 		{ "", 'k', 0, OptionArg.NONE, ref _keepgoing, "Skip failed tests and continue running", null },
 		{ "list", 'l', 0, OptionArg.NONE, ref _list, "List test cases available in a test executable", null },
@@ -57,15 +57,13 @@ public class Valadate.TestConfig {
 		{ null }
 	};
 
-	public OptionContext opt_context;
-
-	public virtual string format {
+	public string format {
 		get {
 			return _format;
 		}
 	}
 
-	public virtual string seed {
+	public string seed {
 		get {
 			return _seed;
 		}
@@ -89,29 +87,31 @@ public class Valadate.TestConfig {
 		}
 	}
 
-	public virtual bool list_only {
+	public bool list_only {
 		get {
 			return _list;
 		}
 	}
 
-	public virtual bool keep_going {
+	public bool keep_going {
 		get {
 			return _keepgoing;
 		}
 	}
 
-	public virtual int timeout {
+	public int timeout {
 		get {
 			return _timeout;
 		}
 	}
 
-	public virtual bool timed {
+	public bool timed {
 		get {
 			return _timed;
 		}
 	}
+
+	private OptionContext opt_context;
 
 	public TestConfig (string[] args) {
 		_running_test = null;
