@@ -24,7 +24,7 @@
  * The Test interface is implemented by TestCase and TestSuite.
  * It is the base interface for all runnable Tests.
  */
-public interface Valadate.Test : Object {
+public abstract class Valadate.Test {
 	/**
 	 * Runs the Tests and collects the results in a TestResult
 	 *
@@ -34,11 +34,11 @@ public interface Valadate.Test : Object {
 	/**
 	 * The name of the test
 	 */
-	public abstract string name { get; set; }
+	public string name { get; set; }
 	/**
 	 * The label of the test
 	 */
-	public abstract string label { get; set; }
+	public string label { get; set; }
 	/**
 	 * Returns the number of tests that will be run by this test
 	 * TestSuites should return the total number of tests that will
@@ -53,11 +53,11 @@ public interface Valadate.Test : Object {
 	/**
 	 * The #TestStatus of the test
 	 */
-	public abstract TestStatus status { get; set; default = TestStatus.NOT_RUN; }
+	public TestStatus status { get; set; default = TestStatus.NOT_RUN; }
 
-	public abstract double time { get; set; }
+	public double time { get; set; }
 
-	public abstract Test? parent { get; set; }
+	public Test? parent { get; set; }
 
 	public abstract Test get (int index);
 

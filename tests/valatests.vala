@@ -21,7 +21,7 @@ public class Vala.Tests : Valadate.TestSuite {
 
 	private const string BUGZILLA_URL = "http://bugzilla.gnome.org/";
 
-	construct {
+	public Tests () {
 		try {
 			var testdir = File.new_for_path (GLib.Environment.get_variable ("G_TEST_BUILDDIR"));
 			var running_test = Environment.get_variable ("V_RUNNING_TEST");

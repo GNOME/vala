@@ -24,24 +24,17 @@
  * 	Julien Peeters <contact@julienpeeters.fr>
  */
 
-public abstract class Valadate.TestCase : Object, Test {
+public abstract class Valadate.TestCase : Test {
 	/**
 	 * The TestMethod delegate represents a {@link Valadate.Test} method
 	 * that can be added to a TestCase and run
 	 */
 	public delegate void TestMethod () throws Error;
-	/**
-	 * the name of the TestCase
-	 */
-	public string name { get; set; }
-	/**
-	 * the label of the TestCase
-	 */
-	public string label { get; set; }
+
 	/**
 	 * Returns the number of {@link Valadate.Test}s that will be run by this TestCase
 	 */
-	public int count {
+	public override int count {
 		get {
 			int testcount = 0;
 			_tests.foreach ((t) => {
@@ -51,7 +44,7 @@ public abstract class Valadate.TestCase : Object, Test {
 		}
 	}
 
-	public int size {
+	public override int size {
 		get {
 			int testcount = 0;
 			_tests.foreach ((t) => {
@@ -60,12 +53,6 @@ public abstract class Valadate.TestCase : Object, Test {
 			return testcount;
 		}
 	}
-
-	public Test? parent {get;set;}
-
-	public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
-	public string status_message {get;set;}
-	public double time {get;set;}
 
 	public string bug_base {get;set;}
 
@@ -74,11 +61,11 @@ public abstract class Valadate.TestCase : Object, Test {
 	private Test current_test;
 	private TestResult current_result;
 
-	public new Test get (int index) {
+	public override Test get (int index) {
 		return _tests.nth_data ((uint)index);
 	}
 
-	public new void set (int index, Test test) {
+	public override void set (int index, Test test) {
 		test.parent = this;
 		_tests.insert_before (_tests.nth (index), test);
 		var t = _tests.nth_data ((uint)index++);
@@ -98,7 +85,7 @@ public abstract class Valadate.TestCase : Object, Test {
 		_tests.append (adapter);
 	}
 
-	public virtual void run (TestResult result) {
+	public override void run (TestResult result) {
 		if (status != TestStatus.NOT_RUN)
 			return;
 		current_result = result;

@@ -89,7 +89,7 @@ public class Valadate.TestReport {
 	private void new_testcase () throws Error {
 		if (subprocess) {
 			stderr.printf ("%s<%s>",XML_DECL,ROOT_TAG);
-			stderr.printf (TESTCASE_START,test.parent.get_type ().name (), test.label);
+			stderr.printf (TESTCASE_START, Type.from_instance (test.parent).name (), test.label);
 			start_time = get_monotonic_time ();
 		} else {
 			var decl = "%s<%s>%s</%s>".printf (XML_DECL, ROOT_TAG, TESTCASE_XML, ROOT_TAG);

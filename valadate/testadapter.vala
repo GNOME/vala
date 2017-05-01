@@ -20,24 +20,19 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-public class Valadate.TestAdapter : Object, Test {
-
-	public string name { get; set; }
-	public string label { get; set; }
-	public double time { get; set; }
+public class Valadate.TestAdapter : Test {
 
 	public int timeout { get; set; }
 
-	public TestStatus status { get; set; default = TestStatus.NOT_RUN; }
 	public string status_message { get; set; }
 
-	public int count {
+	public override int count {
 		get {
 			return 1;
 		}
 	}
 
-	public int size {
+	public override int size {
 		get {
 			return count;
 		}
@@ -45,10 +40,12 @@ public class Valadate.TestAdapter : Object, Test {
 
 	public TestCase.TestMethod test;
 
-	public Test? parent { get; set; }
-
-	public new Test get (int index) {
+	public override Test get (int index) {
 		return this;
+	}
+
+	public override void set (int index, Test test) {
+		
 	}
 
 	public TestAdapter (string name, int timeout) {
@@ -90,7 +87,7 @@ public class Valadate.TestAdapter : Object, Test {
 		this.test = (owned)testmethod;
 	}
 
-	public void run (TestResult result) {
+	public override void run (TestResult result) {
 		if (status == TestStatus.SKIPPED)
 			return;
 		var p = parent as TestCase;

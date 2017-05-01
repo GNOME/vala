@@ -20,21 +20,13 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-public class Valadate.TestSuite : Object, Test {
+public class Valadate.TestSuite : Test {
 
 	private List<Test> _tests = new List<Test> ();
 	/**
-	 * the name of the TestSuite
-	 */
-	public string name { get; set; }
-	/**
-	 * the label of the TestSuite
-	 */
-	public string label { get; set; }
-	/**
 	 * Iterator (not the actual number of Tests that will be run)
 	 */
-	public int size {
+	public override int size {
 		get {
 			return (int)_tests.length ();
 		}
@@ -43,7 +35,7 @@ public class Valadate.TestSuite : Object, Test {
 	 * Returns the number of {@link Valadate.Test}s that will be run by
 	 * this TestSuite
 	 */
-	public int count {
+	public override int count {
 		get {
 			int testcount = 0;
 			_tests.foreach ((t) => {
@@ -52,7 +44,6 @@ public class Valadate.TestSuite : Object, Test {
 			return testcount;
 		}
 	}
-	public Test? parent { get; set; }
 	/**
 	 * Returns a {@link GLib.List} of {@link Valadate.Test}s that will be
 	 * run by this TestSuite
@@ -63,8 +54,6 @@ public class Valadate.TestSuite : Object, Test {
 		}
 	}
 
-	public TestStatus status { get; set; default=TestStatus.NOT_RUN;}
-	public double time { get; set; }
 	public int skipped { get; set; }
 	public int errors { get; set; }
 	public int failures { get; set; }
@@ -73,7 +62,7 @@ public class Valadate.TestSuite : Object, Test {
 	 * TestSuite's name
 	 */
 	public TestSuite (string? name = null) {
-		this.name = name ?? this.get_type ().name ();
+		this.name = name ?? Type.from_instance (this).name ();
 		this.label = name;
 	}
 	/**
@@ -86,7 +75,7 @@ public class Valadate.TestSuite : Object, Test {
 	/**
 	 * Runs all of the tests in the Suite
 	 */
-	public void run (TestResult result) {
+	public override void run (TestResult result) {
 
 		if (status != TestStatus.NOT_RUN)
 			return;
@@ -96,11 +85,11 @@ public class Valadate.TestSuite : Object, Test {
 		});
 	}
 
-	public new Test get (int index) {
+	public override Test get (int index) {
 		return _tests.nth_data ((uint)index);
 	}
 
-	public new void set (int index, Test test) {
+	public override void set (int index, Test test) {
 		test.parent = this;
 		_tests.insert_before (_tests.nth (index), test);
 		var t = _tests.nth_data ((uint)index++);
