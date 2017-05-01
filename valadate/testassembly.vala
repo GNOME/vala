@@ -25,23 +25,23 @@ public class Valadate.TestAssembly : TestModule {
 	public File srcdir { get; private set; }
 	public File builddir { get; private set; }
 
-	public TestOptions options { get; private set; }
+	public TestConfig config { get; private set; }
 
 	public TestAssembly (string[] args) throws Error {
 		base (File.new_for_path (args[0]));
-		options = new TestOptions (args);
+		config = new TestConfig (args);
 		
-		if (options.testpath != null)
-			Environment.set_variable ("V_TESTPATH", options.testpath, true);
-		if (options.running_test != null)
-			Environment.set_variable ("V_RUNNING_TEST", options.running_test, true);
+		if (config.testpath != null)
+			Environment.set_variable ("V_TESTPATH", config.testpath, true);
+		if (config.running_test != null)
+			Environment.set_variable ("V_RUNNING_TEST", config.running_test, true);
 	
 		setup_dirs ();
 	}
 
 	private TestAssembly.copy (TestAssembly other) throws Error {
 		base (other.binary);
-		options = other.options;
+		config = other.config;
 	}
 
 	private void setup_dirs () throws Error {

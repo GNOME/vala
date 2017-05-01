@@ -33,7 +33,6 @@ libvaladate_la_VALASOURCES = \
 	testcase.vala \
 	testconfig.vala \
 	testmodule.vala \
-	testoptions.vala \
 	testgatherer.vala \
 	testplan.vala \
 	testresult.vala \

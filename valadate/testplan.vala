@@ -34,8 +34,6 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 
 	public TestAssembly assembly { get; set; }
 
-	public TestOptions options { get; set; }
-
 	public TestConfig config { get; set; }
 
 	public TestResult result { get; set; }
@@ -53,7 +51,7 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 	public TestPlan (TestAssembly assembly) throws Error {
 
 		this.assembly = assembly;
-		options = assembly.options;
+		config = assembly.config;
 
 		var plan_name = Path.get_basename (assembly.binary.get_path ());
 		if (plan_name.has_prefix ("lt-"))
@@ -65,7 +63,6 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 			if (!plan.query_exists ())
 				throw new TestConfigError.TESTPLAN ("Test Plan %s Not Found in %s or %s", plan_name, assembly.srcdir.get_path (), assembly.builddir.get_path ());
 		}
-		config = new TestConfig (options);
 		runner = new TestRunner ();
 		result = new TestResult (config);
 		testsuite = root = new TestSuite ("/");
@@ -99,7 +96,7 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 		if (ns.name != null) {
 			var currpath = "/" + ns.get_full_name ().replace (".","/");
 			if (config.in_subprocess)
-				if (!options.running_test.has_prefix (currpath))
+				if (!config.running_test.has_prefix (currpath))
 					return;
 
 			if (currpath.last_index_of ("/") == 0)
@@ -181,7 +178,7 @@ public class Valadate.TestPlan : Vala.CodeVisitor {
 			var currpath = "%s/%s".printf (testcase.label, method.name);
 
 			if (config.in_subprocess)
-				if (options.running_test != currpath)
+				if (config.running_test != currpath)
 					continue;
 
 			if (!is_test (method))
