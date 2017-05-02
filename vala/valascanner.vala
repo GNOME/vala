@@ -1565,6 +1565,7 @@ public class Vala.Scanner {
 			}
 
 			current += 2;
+			column += 2;
 
 			char* begin = current;
 			while (current < end - 1
