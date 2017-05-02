@@ -1,3 +1,11 @@
+Vala 0.36.3
+===========
+ * Various bug fixes:
+  - scanner: Fix calculation of column value for tokens after multiline comment
+    [#652899]
+  - codegen: Unref GLib.AsyncResult on uncaught errors in coroutines [#641171]
+  - Keep initializing result-variable for struct constructors [#782056]
+
 Vala 0.36.2
 ===========
  * Various bug fixes:
