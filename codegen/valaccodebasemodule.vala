@@ -2373,9 +2373,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				// try to initialize uninitialized variables
 				// initialization not necessary for variables stored in closure
-				if (local.initializer == null) {
-					cvar.initializer = default_value_for_type (local.variable_type, true);
-				}
+				cvar.initializer = default_value_for_type (local.variable_type, true);
 				cvar.init0 = true;
 
 				ccode.add_declaration (get_ccode_name (local.variable_type), cvar);
@@ -3505,9 +3503,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else {
 			var cvar = new CCodeVariableDeclarator (local.name, null, get_ccode_declarator_suffix (local.variable_type));
 			if (init) {
-				if (local.initializer == null) {
-					cvar.initializer = default_value_for_type (local.variable_type, true);
-				}
+				cvar.initializer = default_value_for_type (local.variable_type, true);
 				cvar.init0 = true;
 			}
 			ccode.add_declaration (get_ccode_name (local.variable_type), cvar);
