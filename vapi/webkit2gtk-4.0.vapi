@@ -29,6 +29,17 @@ namespace WebKit {
 		[Version (since = "2.2")]
 		public signal void cancelled ();
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_automation_session_get_type ()")]
+	public class AutomationSession : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected AutomationSession ();
+		[Version (since = "2.18")]
+		public unowned string get_id ();
+		[Version (since = "2.18")]
+		public string id { get; construct; }
+		[Version (since = "2.18")]
+		public signal unowned WebKit.WebView create_web_view ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_back_forward_list_get_type ()")]
 	public class BackForwardList : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -806,11 +817,15 @@ namespace WebKit {
 		public uint get_web_process_count_limit ();
 		[Version (since = "2.10")]
 		public unowned WebKit.WebsiteDataManager get_website_data_manager ();
+		[Version (since = "2.18")]
+		public bool is_automation_allowed ();
 		[Version (since = "2.16")]
 		public bool is_ephemeral ();
 		public void prefetch_dns (string hostname);
 		public void register_uri_scheme (string scheme, owned WebKit.URISchemeRequestCallback callback);
 		public void set_additional_plugins_directory (string directory);
+		[Version (since = "2.18")]
+		public void set_automation_allowed (bool allowed);
 		public void set_cache_model (WebKit.CacheModel cache_model);
 		[Version (deprecated = true, deprecated_since = "2.10.")]
 		public void set_disk_cache_directory (string directory);
@@ -836,6 +851,8 @@ namespace WebKit {
 		public string local_storage_directory { owned get; construct; }
 		[Version (since = "2.10")]
 		public WebKit.WebsiteDataManager website_data_manager { get; construct; }
+		[Version (since = "2.18")]
+		public virtual signal void automation_started (WebKit.AutomationSession session);
 		public virtual signal void download_started (WebKit.Download download);
 		[HasEmitter]
 		[Version (since = "2.16")]
@@ -965,6 +982,9 @@ namespace WebKit {
 		public bool editable { get; set; }
 		public double estimated_load_progress { get; }
 		public void* favicon { get; }
+		[NoAccessorMethod]
+		[Version (since = "2.18")]
+		public bool is_controlled_by_automation { get; construct; }
 		[NoAccessorMethod]
 		[Version (since = "2.16")]
 		public bool is_ephemeral { get; construct; }

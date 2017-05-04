@@ -152,9 +152,6 @@ Builder
 // Bug #: Default values
 Button
   .new_from_icon_name.size default=Gtk.IconSize.BUTTON
-Box
-  .pack_*.expand default=true
-  .pack_*.fill default=true
 CellAreaBox
   .pack_*.align default=false
   .pack_*.fixed default=true

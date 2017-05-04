@@ -4654,12 +4654,6 @@ namespace Gdk {
 			[Version (since = "2.24")]
 			public bool utf8_to_compound_text (string str, out Gdk.Atom encoding, out int format, [CCode (array_length_cname = "length", array_length_pos = 4.1)] out uint8[] ctext);
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_display_manager_get_type ()")]
-		[GIR (name = "X11DisplayManager")]
-		public class DisplayManager : Gdk.DisplayManager {
-			[CCode (has_construct_function = false)]
-			protected DisplayManager ();
-		}
 		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_drag_context_get_type ()")]
 		[GIR (name = "X11DragContext")]
 		public class DragContext : Gdk.DragContext {
@@ -4727,8 +4721,6 @@ namespace Gdk {
 			public void set_frame_extents (int left, int right, int top, int bottom);
 			[Version (since = "3.8")]
 			public void set_frame_sync_enabled (bool frame_sync_enabled);
-			[Version (since = "3.4")]
-			public void set_hide_titlebar_when_maximized (bool hide_titlebar_when_maximized);
 			[Version (since = "3.2")]
 			public void set_theme_variant (string variant);
 			[Version (since = "2.6")]
@@ -6890,6 +6882,8 @@ namespace Gsk {
 		protected RenderNode ();
 		[CCode (cname = "gsk_blend_node_new", has_construct_function = false)]
 		public RenderNode.blend (Gsk.RenderNode bottom, Gsk.RenderNode top, Gsk.BlendMode blend_mode);
+		[CCode (cname = "gsk_blend_node_get_blend_mode")]
+		public Gsk.BlendMode blend_node_get_blend_mode ();
 		[CCode (cname = "gsk_border_node_new", has_construct_function = false)]
 		public RenderNode.border (Gsk.RoundedRect outline, float border_width, Gdk.RGBA border_color);
 		[CCode (cname = "gsk_cairo_node_new", has_construct_function = false)]
@@ -6938,7 +6932,7 @@ namespace Gsk {
 		public unowned Gsk.RenderNode rounded_clip_node_get_child ();
 		public GLib.Bytes serialize ();
 		public void set_name (string? name);
-		public void set_scaling_filter (Gsk.ScalingFilter min_filter, Gsk.ScalingFilter mag_filter);
+		public void set_scaling_filters (Gsk.ScalingFilter min_filter, Gsk.ScalingFilter mag_filter);
 		[CCode (cname = "gsk_shadow_node_new", has_construct_function = false)]
 		public RenderNode.shadow (Gsk.RenderNode child, [CCode (array_length_cname = "n_shadows", array_length_pos = 2.1, array_length_type = "gsize")] Gsk.Shadow[] shadows);
 		[CCode (cname = "gsk_transform_node_new", has_construct_function = false)]
@@ -7654,19 +7648,15 @@ namespace Gtk {
 		public Box (Gtk.Orientation orientation, int spacing);
 		[Version (since = "3.10")]
 		public Gtk.BaselinePosition get_baseline_position ();
-		[Version (since = "3.12")]
-		public unowned Gtk.Widget? get_center_widget ();
 		public bool get_homogeneous ();
 		public int get_spacing ();
-		public void pack_end (Gtk.Widget child, bool expand = true, bool fill = true);
-		public void pack_start (Gtk.Widget child, bool expand = true, bool fill = true);
-		public void query_child_packing (Gtk.Widget child, out bool expand, out bool fill, out Gtk.PackType pack_type);
+		public void pack_end (Gtk.Widget child);
+		public void pack_start (Gtk.Widget child);
+		public void query_child_packing (Gtk.Widget child, out Gtk.PackType pack_type);
 		public void reorder_child (Gtk.Widget child, int position);
 		[Version (since = "3.10")]
 		public void set_baseline_position (Gtk.BaselinePosition position);
-		[Version (since = "3.12")]
-		public void set_center_widget (Gtk.Widget? widget);
-		public void set_child_packing (Gtk.Widget child, bool expand, bool fill, Gtk.PackType pack_type);
+		public void set_child_packing (Gtk.Widget child, Gtk.PackType pack_type);
 		public void set_homogeneous (bool homogeneous);
 		public void set_spacing (int spacing);
 		public Gtk.BaselinePosition baseline_position { get; set; }
@@ -10335,8 +10325,6 @@ namespace Gtk {
 	public class Label : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Label (string? str);
-		[Version (since = "2.6")]
-		public double get_angle ();
 		public unowned Pango.AttrList? get_attributes ();
 		[Version (since = "2.18")]
 		public unowned string get_current_uri ();
@@ -10371,8 +10359,6 @@ namespace Gtk {
 		[Version (since = "3.16")]
 		public float get_yalign ();
 		public void select_region (int start_offset, int end_offset);
-		[Version (since = "2.6")]
-		public void set_angle (double angle);
 		public void set_attributes (Pango.AttrList? attrs);
 		[Version (since = "2.6")]
 		public void set_ellipsize (Pango.EllipsizeMode mode);
@@ -10406,8 +10392,6 @@ namespace Gtk {
 		public void set_yalign (float yalign);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Label.with_mnemonic (string? str);
-		[Version (since = "2.6")]
-		public double angle { get; set; }
 		public Pango.AttrList attributes { get; set; }
 		[NoAccessorMethod]
 		public int cursor_position { get; }
@@ -14497,6 +14481,8 @@ namespace Gtk {
 		public void input_shape_combine_region (Cairo.Region? region);
 		[Version (since = "3.6")]
 		public void insert_action_group (string name, GLib.ActionGroup? group);
+		public void insert_after (Gtk.Widget parent, Gtk.Widget previous_sibling);
+		public void insert_before (Gtk.Widget parent, Gtk.Widget next_sibling);
 		[CCode (cname = "gtk_widget_class_install_style_property")]
 		public class void install_style_property (GLib.ParamSpec pspec);
 		public bool intersect (Gdk.Rectangle area, out Gdk.Rectangle? intersection = null);
@@ -14904,8 +14890,6 @@ namespace Gtk {
 		public Gdk.Gravity get_gravity ();
 		[Version (since = "2.10")]
 		public unowned Gtk.WindowGroup get_group ();
-		[Version (since = "3.4")]
-		public bool get_hide_titlebar_when_maximized ();
 		public unowned Gdk.Pixbuf get_icon ();
 		public GLib.List<weak Gdk.Pixbuf> get_icon_list ();
 		[Version (since = "2.6")]
@@ -14975,8 +14959,6 @@ namespace Gtk {
 		public void set_gravity (Gdk.Gravity gravity);
 		[Version (since = "3.0")]
 		public void set_has_user_ref_count (bool setting);
-		[Version (since = "3.4")]
-		public void set_hide_titlebar_when_maximized (bool setting);
 		public void set_icon (Gdk.Pixbuf? icon);
 		[Version (since = "2.2")]
 		public bool set_icon_from_file (string filename) throws GLib.Error;
@@ -15041,8 +15023,6 @@ namespace Gtk {
 		public bool focus_visible { get; set; }
 		[Version (since = "2.4")]
 		public Gdk.Gravity gravity { get; set; }
-		[Version (since = "3.4")]
-		public bool hide_titlebar_when_maximized { get; set; }
 		public Gdk.Pixbuf icon { get; set; }
 		[Version (since = "2.6")]
 		public string icon_name { get; set; }

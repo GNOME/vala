@@ -129,6 +129,41 @@ namespace WebKit {
 			public string data { owned get; set; }
 			public ulong length { get; }
 		}
+		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_client_rect_get_type ()")]
+		[GIR (name = "DOMClientRect")]
+		public class ClientRect : WebKit.DOM.Object {
+			[CCode (has_construct_function = false)]
+			protected ClientRect ();
+			[Version (since = "2.18")]
+			public float get_bottom ();
+			[Version (since = "2.18")]
+			public float get_height ();
+			[Version (since = "2.18")]
+			public float get_left ();
+			[Version (since = "2.18")]
+			public float get_right ();
+			[Version (since = "2.18")]
+			public float get_top ();
+			[Version (since = "2.18")]
+			public float get_width ();
+			public float bottom { get; }
+			public float height { get; }
+			public float left { get; }
+			public float right { get; }
+			public float top { get; }
+			public float width { get; }
+		}
+		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_client_rect_list_get_type ()")]
+		[GIR (name = "DOMClientRectList")]
+		public class ClientRectList : WebKit.DOM.Object {
+			[CCode (has_construct_function = false)]
+			protected ClientRectList ();
+			[Version (since = "2.18")]
+			public ulong get_length ();
+			[Version (since = "2.18")]
+			public unowned WebKit.DOM.ClientRect item (ulong index);
+			public ulong length { get; }
+		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_comment_get_type ()")]
 		[GIR (name = "DOMComment")]
 		public class Comment : WebKit.DOM.CharacterData, WebKit.DOM.EventTarget {
@@ -628,6 +663,8 @@ namespace WebKit {
 			public unowned WebKit.DOM.Attr get_attribute_node_ns (string namespaceURI, string localName);
 			public string get_attribute_ns (string namespaceURI, string localName);
 			public WebKit.DOM.NamedNodeMap get_attributes ();
+			[Version (since = "2.18")]
+			public WebKit.DOM.ClientRect get_bounding_client_rect ();
 			public ulong get_child_element_count ();
 			[Version (since = "2.10")]
 			public WebKit.DOM.HTMLCollection get_children ();
@@ -636,6 +673,8 @@ namespace WebKit {
 			public string get_class_name ();
 			public double get_client_height ();
 			public double get_client_left ();
+			[Version (since = "2.18")]
+			public WebKit.DOM.ClientRectList get_client_rects ();
 			public double get_client_top ();
 			public double get_client_width ();
 			[Version (deprecated = true, deprecated_since = "2.12")]
