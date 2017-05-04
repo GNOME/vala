@@ -4939,6 +4939,10 @@ namespace GLib {
 		[CCode (cname = "g_ptr_array_new_full", simple_generics = true)]
 		public GenericArray (uint reserved_size = 0);
 		public void add (owned G data);
+		[Version (since = "2.54")]
+		public bool find (G needle, out uint index = null);
+		[Version (since = "2.54")]
+		public bool find_with_equal_func (G needle, GLib.EqualFunc<G>? equal_func, out uint index = null);
 		public void foreach (GLib.Func<G> func);
 		[CCode (cname = "g_ptr_array_index")]
 		public unowned G get (uint index);
