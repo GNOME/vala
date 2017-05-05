@@ -150,7 +150,9 @@ public class Vala.VersionAttribute {
 
 		// deprecation:
 		if (symbol.external_package && deprecated) {
-			if (!CodeContext.get ().deprecated) {
+			string? package_version = symbol.source_reference.file.installed_version;
+
+			if (!CodeContext.get ().deprecated && (package_version == null || deprecated_since == null || VersionAttribute.cmp_versions (package_version, deprecated_since) >= 0)) {
 				Report.deprecated (source_ref, "%s %s%s".printf (symbol.get_full_name (), (deprecated_since == null) ? "is deprecated" : "has been deprecated since %s".printf (deprecated_since), (replacement == null) ? "" : ". Use %s".printf (replacement)));
 			}
 			result = true;
