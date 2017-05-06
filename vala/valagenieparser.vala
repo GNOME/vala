@@ -3634,27 +3634,34 @@ public class Vala.Genie.Parser : CodeVisitor {
 		expect (TokenType.EOL);
 		expect (TokenType.INDENT);
 		do {
-			if (current () == TokenType.DEDENT && en.get_values ().size > 0) {
+			TokenType cur = current ();
+			if (cur == TokenType.DEDENT && en.get_values ().size > 0) {
 				// allow trailing comma
 				break;
 			}
-			var value_attrs = parse_attributes (false);
-			var value_begin = get_location (); 
-			string id = parse_identifier ();
-			comment = scanner.pop_comment ();
+			if (cur == TokenType.DEF) {
+				var en_method = parse_declaration ();
+				assert (en_method is Method);
+				en.add_method ((Method) en_method);
+			} else {
+				var value_attrs = parse_attributes (false);
+				var value_begin = get_location ();
+				string id = parse_identifier ();
+				comment = scanner.pop_comment ();
 
-			Expression value = null;
-			if (accept (TokenType.ASSIGN)) {
-				value = parse_expression ();
-			}
+				Expression value = null;
+				if (accept (TokenType.ASSIGN)) {
+					value = parse_expression ();
+				}
 
-			var ev = new EnumValue (id, value, get_src (value_begin), comment);
-			ev.access = SymbolAccessibility.PUBLIC;
-			set_attributes (ev, value_attrs);
+				var ev = new EnumValue (id, value, get_src (value_begin), comment);
+				ev.access = SymbolAccessibility.PUBLIC;
+				set_attributes (ev, value_attrs);
 
-			en.add_value (ev);
-			if (expect_separator ()) {
-				accept (TokenType.EOL);
+				en.add_value (ev);
+				if (expect_separator ()) {
+					accept (TokenType.EOL);
+				}
 			}
 		} while (true);
 		
