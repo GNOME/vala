@@ -8679,10 +8679,7 @@ namespace Gtk {
 		public virtual GLib.Type child_type ();
 		[CCode (cname = "gtk_container_class_find_child_property")]
 		public class unowned GLib.ParamSpec? find_child_property (string property_name);
-		public void forall (Gtk.Callback callback);
-		[CCode (vfunc_name = "forall")]
-		[NoWrapper]
-		public virtual void forall_internal (bool include_internal, Gtk.Callback callback);
+		public virtual void forall (Gtk.Callback callback);
 		public void @foreach (Gtk.Callback callback);
 		[NoWrapper]
 		public virtual void get_child_property (Gtk.Widget child, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
@@ -8711,8 +8708,7 @@ namespace Gtk {
 		public virtual signal void check_resize ();
 		[HasEmitter]
 		public virtual signal void remove (Gtk.Widget widget);
-		[HasEmitter]
-		public virtual signal void set_focus_child (Gtk.Widget? child);
+		public virtual signal void set_focus_child (Gtk.Widget child);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_container_accessible_get_type ()")]
 	public class ContainerAccessible : Gtk.WidgetAccessible, Atk.Component {

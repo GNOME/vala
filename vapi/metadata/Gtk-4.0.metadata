@@ -247,9 +247,6 @@ TreeSelection
   .get_user_data skip=false
 
 // Symbol name conflicts
-Container
-  .forall#virtual_method skip
-  .set_focus_child skip
 EntryBuffer
   .get_text#method skip
 EntryCompletion
