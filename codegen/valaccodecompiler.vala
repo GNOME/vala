@@ -36,15 +36,23 @@ public class Vala.CCodeCompiler {
 	 * @param context a code context
 	 */
 	public void compile (CodeContext context, string? cc_command, string[] cc_options) {
-		string pc = " gobject-2.0";
+		string pc = "";
+		if (context.profile == Profile.GOBJECT) {
+			pc += " gobject-2.0";
+		}
 		foreach (string pkg in context.get_packages ()) {
 			if (context.pkg_config_exists (pkg)) {
 				pc += " " + pkg;
 			}
 		}
-		string? pkgflags = context.pkg_config_compile_flags (pc);
-		if (pkgflags == null) {
-			return;
+		string? pkgflags;
+		if (pc.length > 0) {
+			pkgflags = context.pkg_config_compile_flags (pc);
+			if (pkgflags == null) {
+				return;
+			}
+		} else {
+			pkgflags = "";
 		}
 
 		// TODO compile the C code files in parallel

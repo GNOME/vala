@@ -151,7 +151,7 @@ public class Vala.ElementAccess : Expression {
 				value_type.value_owned = false;
 			} else {
 				var ma = container as MemberAccess;
-				if (ma != null && ma.symbol_reference is ArrayLengthField) {
+				if (context.profile == Profile.GOBJECT && ma != null && ma.symbol_reference is ArrayLengthField) {
 					// propagate lvalue for gobject length access
 					ma.inner.lvalue = true;
 					((MemberAccess) ma.inner).check_lvalue_access ();

@@ -211,7 +211,7 @@ public class Vala.MethodCall : Expression {
 		}
 
 		var mtype = call.value_type;
-		var gobject_chainup = call.symbol_reference == context.analyzer.object_type;
+		var gobject_chainup = (context.profile == Profile.GOBJECT && call.symbol_reference == context.analyzer.object_type);
 		is_chainup = gobject_chainup;
 
 		if (!gobject_chainup) {

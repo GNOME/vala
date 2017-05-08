@@ -858,11 +858,13 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			cmain.add_parameter (new CCodeParameter ("argv", "char **"));
 			push_function (cmain);
 
-			if (context.mem_profiler) {
-				var mem_profiler_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_mem_set_vtable"));
-				mem_profiler_init_call.line = cmain.line;
-				mem_profiler_init_call.add_argument (new CCodeConstant ("glib_mem_profiler_table"));
-				ccode.add_expression (mem_profiler_init_call);
+			if (context.profile == Profile.GOBJECT) {
+				if (context.mem_profiler) {
+					var mem_profiler_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_mem_set_vtable"));
+					mem_profiler_init_call.line = cmain.line;
+					mem_profiler_init_call.add_argument (new CCodeConstant ("glib_mem_profiler_table"));
+					ccode.add_expression (mem_profiler_init_call);
+				}
 			}
 
 			var main_call = new CCodeFunctionCall (new CCodeIdentifier (function.name));

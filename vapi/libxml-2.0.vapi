@@ -407,7 +407,11 @@ namespace Xml {
 		public Dtd* create_int_subset ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string external_id, [CCode (type = "xmlChar*")] string system_id);
 
 		[CCode (cname = "xmlDocDump", instance_pos = -1)]
+#if POSIX
+		public int dump (Posix.FILE f);
+#else
 		public int dump (GLib.FileStream f);
+#endif
 
 		[CCode (cname = "xmlDocDumpFormatMemory")]
 		public void dump_memory_format ([CCode (type = "xmlChar*")] out string mem, out int len = null, bool format = true);
@@ -422,7 +426,11 @@ namespace Xml {
 		public void dump_memory_enc ([CCode (type = "xmlChar**")] out string mem, out int len = null, string enc = "UTF-8");
 
 		[CCode (cname = "xmlDocFormatDump", instance_pos = 1.1)]
+#if POSIX
+		public int dump_format (Posix.FILE f, bool format = true);
+#else
 		public int dump_format (GLib.FileStream f, bool format = true);
+#endif
 
 		[CCode (cname = "xmlDocGetRootElement")]
 		public Node* get_root_element();
@@ -431,7 +439,11 @@ namespace Xml {
 		public Node* set_root_element(Node* root);
 
 		[CCode (cname = "xmlElemDump", instance_pos = 1.1)]
+#if POSIX
+		public void elem_dump (Posix.FILE f, Node* cur);
+#else
 		public void elem_dump (GLib.FileStream f, Node* cur);
+#endif
 
 		[CCode (cname = "xmlGetDocCompressMode")]
 		public int get_compress_mode ();
@@ -1001,7 +1013,11 @@ namespace Xml {
 		public static string path_to_uri ([CCode (type = "xmlChar*")] string path);
 
 		[CCode (cname = "xmlPrintURI", instance_pos = -1)]
+#if POSIX
+		public void print (Posix.FILE stream);
+#else
 		public void print (GLib.FileStream stream);
+#endif
 
 		[CCode (cname = "xmlSaveUri", type = "xmlChar*")]
 		public string save ();
@@ -1952,16 +1968,28 @@ namespace Html {
 		public void dump_memory_format ([CCode (type = "xmlChar**")] out string mem, out int len = null, bool format = true);
 
 		[CCode (cname = "htmlDocDump", instance_pos = -1)]
+#if POSIX
+		public int dump (Posix.FILE f);
+#else
 		public int dump (GLib.FileStream f);
+#endif
 
 		[CCode (cname = "htmlSaveFile", instance_pos = -1)]
 		public int save_file (string filename);
 
 		[CCode (cname = "htmlNodeDumpFile", instance_pos = 1.1)]
+#if POSIX
+		public int node_dump_file (Posix.FILE file, Xml.Node* node);
+#else
 		public int node_dump_file (GLib.FileStream file, Xml.Node* node);
+#endif
 
 		[CCode (cname = "htmlNodeDumpFileFormat", instance_pos = 1.1)]
+#if POSIX
+		public int node_dump_file_format (Posix.FILE file, string enc = "UTF-8", bool format = true);
+#else
 		public int node_dump_file_format (GLib.FileStream file, string enc = "UTF-8", bool format = true);
+#endif
 
 		[CCode (cname = "htmlSaveFileEnc", instance_pos = 1.1)]
 		public int save_file_enc (string filename, string enc = "UTF-8");

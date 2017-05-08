@@ -83,7 +83,7 @@ public class Vala.PointerType : DataType {
 			return base_type.compatible (target_type);
 		}
 
-		if (target_type.data_type != null && target_type.data_type.is_subtype_of (CodeContext.get ().analyzer.gvalue_type.data_type)) {
+		if (CodeContext.get ().profile == Profile.GOBJECT && target_type.data_type != null && target_type.data_type.is_subtype_of (CodeContext.get ().analyzer.gvalue_type.data_type)) {
 			// allow implicit conversion to GValue
 			return true;
 		}

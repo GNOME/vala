@@ -79,6 +79,12 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 
 		checked = true;
 
+		if (context.profile == Profile.POSIX) {
+			Report.error (source_reference, "`throws' is not supported in POSIX profile");
+			error = true;
+			return false;
+		}
+
 		error_expression.target_type = new ErrorType (null, null, source_reference);
 		error_expression.target_type.value_owned = true;
 
@@ -94,7 +100,7 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 				return false;
 			}
 
-			if (!(error_expression.value_type is ErrorType)) {
+			if (context.profile == Profile.GOBJECT && !(error_expression.value_type is ErrorType)) {
 				Report.error (error_expression.source_reference, "`%s' is not an error type".printf (error_expression.value_type.to_string ()));
 				error = true;
 				return false;

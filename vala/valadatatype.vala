@@ -268,7 +268,7 @@ public abstract class Vala.DataType : CodeNode {
 			return false;
 		}
 
-		if (target_type.data_type != null) {
+		if (CodeContext.get ().profile == Profile.GOBJECT && target_type.data_type != null) {
 			if (target_type.data_type.is_subtype_of (CodeContext.get ().analyzer.gvalue_type.data_type)) {
 				// allow implicit conversion to GValue
 				return true;

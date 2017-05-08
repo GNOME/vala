@@ -128,7 +128,8 @@ public class Vala.CreationMethod : Method {
 
 			// ensure we chain up to base constructor
 			if (!chain_up && cl != null && cl.base_class != null) {
-				if (cl.base_class.default_construction_method != null
+				if (context.profile == Profile.GOBJECT
+				    && cl.base_class.default_construction_method != null
 				    && !cl.base_class.default_construction_method.has_construct_function) {
 					// directly chain up to Object
 					var old_insert_block = context.analyzer.insert_block;

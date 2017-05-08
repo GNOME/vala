@@ -111,6 +111,12 @@ public class Vala.TryStatement : CodeNode, Statement {
 
 		checked = true;
 
+		if (context.profile == Profile.POSIX) {
+			Report.error (source_reference, "`try' is not supported in POSIX profile");
+			error = true;
+			return false;
+		}
+
 		body.check (context);
 
 		var error_types = new ArrayList<DataType> ();

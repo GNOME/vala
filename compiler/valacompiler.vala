@@ -272,7 +272,10 @@ class Vala.Compiler {
 		if (ccode_only && save_temps) {
 			Report.warning (null, "--save-temps has no effect when -C or --ccode is set");
 		}
-		if (profile == "gobject-2.0" || profile == "gobject" || profile == null) {
+		if (profile == "posix") {
+			context.profile = Profile.POSIX;
+			context.add_define ("POSIX");
+		} else if (profile == "gobject-2.0" || profile == "gobject" || profile == null) {
 			// default profile
 			context.profile = Profile.GOBJECT;
 			context.add_define ("GOBJECT");
@@ -301,26 +304,33 @@ class Vala.Compiler {
 			context.add_define ("VALA_0_%d".printf (i));
 		}
 
-		int glib_major = 2;
-		int glib_minor = 40;
-		if (target_glib != null && target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2) {
-			Report.error (null, "Invalid format for --target-glib");
-		}
+		if (context.profile == Profile.POSIX) {
+			if (!nostdpkg) {
+				/* default package */
+				context.add_external_package ("posix");
+			}
+		} else if (context.profile == Profile.GOBJECT) {
+			int glib_major = 2;
+			int glib_minor = 40;
+			if (target_glib != null && target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2) {
+				Report.error (null, "Invalid format for --target-glib");
+			}
 
-		context.target_glib_major = glib_major;
-		context.target_glib_minor = glib_minor;
-		if (context.target_glib_major != 2) {
-			Report.error (null, "This version of valac only supports GLib 2");
-		}
+			context.target_glib_major = glib_major;
+			context.target_glib_minor = glib_minor;
+			if (context.target_glib_major != 2) {
+				Report.error (null, "This version of valac only supports GLib 2");
+			}
 
-		for (int i = 16; i <= glib_minor; i += 2) {
-			context.add_define ("GLIB_2_%d".printf (i));
-		}
+			for (int i = 16; i <= glib_minor; i += 2) {
+				context.add_define ("GLIB_2_%d".printf (i));
+			}
 
-		if (!nostdpkg) {
-			/* default packages */
-			context.add_external_package ("glib-2.0");
-			context.add_external_package ("gobject-2.0");
+			if (!nostdpkg) {
+				/* default packages */
+				context.add_external_package ("glib-2.0");
+				context.add_external_package ("gobject-2.0");
+			}
 		}
 
 		if (packages != null) {
@@ -346,7 +356,11 @@ class Vala.Compiler {
 			return quit ();
 		}
 
-		context.codegen = new GDBusServerModule ();
+		if (context.profile == Profile.GOBJECT) {
+			context.codegen = new GDBusServerModule ();
+		} else {
+			context.codegen = new CCodeDelegateModule ();
+		}
 
 		bool has_c_files = false;
 		bool has_h_files = false;
@@ -423,28 +437,30 @@ class Vala.Compiler {
 
 		if (library != null) {
 			if (gir != null) {
-				string gir_base = Path.get_basename(gir);
-				long gir_len = gir_base.length;
-				int last_hyphen = gir_base.last_index_of_char ('-');
+				if (context.profile == Profile.GOBJECT) {
+					string gir_base = Path.get_basename (gir);
+					long gir_len = gir_base.length;
+					int last_hyphen = gir_base.last_index_of_char ('-');
 
-				if (last_hyphen == -1 || !gir_base.has_suffix (".gir")) {
-					Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir".printf (gir));
-				} else {
-					string gir_namespace = gir_base.substring (0, last_hyphen);
-					string gir_version = gir_base.substring (last_hyphen + 1, gir_len - last_hyphen - 5);
-					gir_version.canon ("0123456789.", '?');
-					if (gir_namespace == "" || gir_version == "" || !gir_version[0].isdigit () || gir_version.contains ("?")) {
+					if (last_hyphen == -1 || !gir_base.has_suffix (".gir")) {
 						Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir".printf (gir));
 					} else {
-						var gir_writer = new GIRWriter ();
+						string gir_namespace = gir_base.substring (0, last_hyphen);
+						string gir_version = gir_base.substring (last_hyphen + 1, gir_len - last_hyphen - 5);
+						gir_version.canon ("0123456789.", '?');
+						if (gir_namespace == "" || gir_version == "" || !gir_version[0].isdigit () || gir_version.contains ("?")) {
+							Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir".printf (gir));
+						} else {
+							var gir_writer = new GIRWriter ();
 
-						// put .gir file in current directory unless -d has been explicitly specified
-						string gir_directory = ".";
-						if (directory != null) {
-							gir_directory = context.directory;
+							// put .gir file in current directory unless -d has been explicitly specified
+							string gir_directory = ".";
+							if (directory != null) {
+								gir_directory = context.directory;
+							}
+
+							gir_writer.write_file (context, gir_directory, gir, gir_namespace, gir_version, library, shared_library);
 						}
-
-						gir_writer.write_file (context, gir_directory, gir, gir_namespace, gir_version, library, shared_library);
 					}
 				}
 

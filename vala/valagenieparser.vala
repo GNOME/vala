@@ -2425,8 +2425,11 @@ public class Vala.Genie.Parser : CodeVisitor {
 			if (is_root) {
 				return parse_main_method_declaration (attrs);
 			}
-			rollback (begin);
-			return parse_constructor_declaration (attrs);
+			if (context.profile == Profile.GOBJECT) {
+				rollback (begin);
+				return parse_constructor_declaration (attrs);
+			}
+			break;
 		case TokenType.DELEGATE:
 			return parse_delegate_declaration (attrs);
 		case TokenType.DEF:
@@ -3160,8 +3163,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 						if (readonly) {
 							throw new ParseError.SYNTAX ("set block not allowed for a read only property");
 						}
-						_construct = accept (TokenType.CONSTRUCT);
-					} else if (accept (TokenType.CONSTRUCT)) {
+						_construct = (context.profile == Profile.GOBJECT) && accept (TokenType.CONSTRUCT);
+					} else if (context.profile == Profile.GOBJECT && accept (TokenType.CONSTRUCT)) {
 						_construct = true;
 					} else if (!accept (TokenType.EOL)) {
 						throw new ParseError.SYNTAX ("expected get, set, or construct");

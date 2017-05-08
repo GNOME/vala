@@ -53,15 +53,17 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			return;
 		}
 
-		if (get_ccode_has_type_id (st)) {
-			decl_space.add_include ("glib-object.h");
-			decl_space.add_type_declaration (new CCodeNewline ());
-			var macro = "(%s_get_type ())".printf (get_ccode_lower_case_name (st, null));
-			decl_space.add_type_declaration (new CCodeMacroReplacement (get_ccode_type_id (st), macro));
+		if (context.profile == Profile.GOBJECT) {
+			if (get_ccode_has_type_id (st)) {
+				decl_space.add_include ("glib-object.h");
+				decl_space.add_type_declaration (new CCodeNewline ());
+				var macro = "(%s_get_type ())".printf (get_ccode_lower_case_name (st, null));
+				decl_space.add_type_declaration (new CCodeMacroReplacement (get_ccode_type_id (st), macro));
 
-			var type_fun = new StructRegisterFunction (st);
-			type_fun.init_from_type (context, false, true);
-			decl_space.add_type_member_declaration (type_fun.get_declaration ());
+				var type_fun = new StructRegisterFunction (st);
+				type_fun.init_from_type (context, false, true);
+				decl_space.add_type_member_declaration (type_fun.get_declaration ());
+			}
 		}
 
 		var instance_struct = new CCodeStruct ("_%s".printf (get_ccode_name (st)));
@@ -212,10 +214,17 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 
 		ccode.add_declaration (get_ccode_name (st) + "*", new CCodeVariableDeclarator ("dup"));
 
-		var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-		creation_call.add_argument (new CCodeConstant (get_ccode_name (st)));
-		creation_call.add_argument (new CCodeConstant ("1"));
-		ccode.add_assignment (new CCodeIdentifier ("dup"), creation_call);
+		if (context.profile == Profile.GOBJECT) {
+			var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+			creation_call.add_argument (new CCodeConstant (get_ccode_name (st)));
+			creation_call.add_argument (new CCodeConstant ("1"));
+			ccode.add_assignment (new CCodeIdentifier ("dup"), creation_call);
+		} else if (context.profile == Profile.POSIX) {
+			var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("calloc"));
+			creation_call.add_argument (new CCodeConstant ("1"));
+			creation_call.add_argument (new CCodeIdentifier ("sizeof (%s*)".printf (get_ccode_name (st))));
+			ccode.add_assignment (new CCodeIdentifier ("dup"), creation_call);
+		}
 
 		if (st.is_disposable ()) {
 			var copy_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_copy_function (st)));
@@ -260,9 +269,15 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			ccode.add_expression (destroy_call);
 		}
 
-		var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
-		free_call.add_argument (new CCodeIdentifier ("self"));
-		ccode.add_expression (free_call);
+		if (context.profile == Profile.GOBJECT) {
+			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+			free_call.add_argument (new CCodeIdentifier ("self"));
+			ccode.add_expression (free_call);
+		} else if (context.profile == Profile.POSIX) {
+			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("free"));
+			free_call.add_argument (new CCodeIdentifier ("self"));
+			ccode.add_expression (free_call);
+		}
 
 		pop_function ();
 

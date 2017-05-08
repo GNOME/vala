@@ -200,22 +200,24 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			unichar_type = new IntegerType (unichar_struct);
 		}
 
-		var glib_ns = root_symbol.scope.lookup ("GLib");
+		if (context.profile == Profile.GOBJECT) {
+			var glib_ns = root_symbol.scope.lookup ("GLib");
 
-		object_type = (Class) glib_ns.scope.lookup ("Object");
-		type_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Type"));
-		gvalue_type = new StructValueType ((Struct) glib_ns.scope.lookup ("Value"));
-		gvariant_type = new ObjectType ((Class) glib_ns.scope.lookup ("Variant"));
+			object_type = (Class) glib_ns.scope.lookup ("Object");
+			type_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Type"));
+			gvalue_type = new StructValueType ((Struct) glib_ns.scope.lookup ("Value"));
+			gvariant_type = new ObjectType ((Class) glib_ns.scope.lookup ("Variant"));
 
-		glist_type = new ObjectType ((Class) glib_ns.scope.lookup ("List"));
-		gslist_type = new ObjectType ((Class) glib_ns.scope.lookup ("SList"));
-		garray_type = new ObjectType ((Class) glib_ns.scope.lookup ("Array"));
-		gvaluearray_type = new ObjectType ((Class) glib_ns.scope.lookup ("ValueArray"));
+			glist_type = new ObjectType ((Class) glib_ns.scope.lookup ("List"));
+			gslist_type = new ObjectType ((Class) glib_ns.scope.lookup ("SList"));
+			garray_type = new ObjectType ((Class) glib_ns.scope.lookup ("Array"));
+			gvaluearray_type = new ObjectType ((Class) glib_ns.scope.lookup ("ValueArray"));
 
-		gerror_type = (Class) glib_ns.scope.lookup ("Error");
-		regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
+			gerror_type = (Class) glib_ns.scope.lookup ("Error");
+			regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
 
-		gsource_type = (Class) glib_ns.scope.lookup ("Source");
+			gsource_type = (Class) glib_ns.scope.lookup ("Source");
+		}
 
 		current_symbol = root_symbol;
 		context.root.check (context);

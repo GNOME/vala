@@ -194,7 +194,7 @@ public class Vala.ArrayType : ReferenceType {
 	}
 
 	public override bool compatible (DataType target_type) {
-		if (target_type.data_type != null) {
+		if (CodeContext.get ().profile == Profile.GOBJECT && target_type.data_type != null) {
 			if (target_type.data_type.is_subtype_of (CodeContext.get ().analyzer.gvalue_type.data_type) && element_type.data_type == CodeContext.get ().root.scope.lookup ("string")) {
 				// allow implicit conversion from string[] to GValue
 				return true;
