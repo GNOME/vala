@@ -14418,15 +14418,7 @@ namespace Gtk {
 		public unowned Gdk.Window get_parent_window ();
 		public unowned Gtk.WidgetPath get_path ();
 		[Version (since = "3.0")]
-		public void get_preferred_height (out int minimum_height, out int natural_height);
-		[Version (since = "3.0")]
-		public void get_preferred_height_for_width (int width, out int minimum_height, out int natural_height);
-		[Version (since = "3.0")]
 		public void get_preferred_size (out Gtk.Requisition minimum_size, out Gtk.Requisition natural_size);
-		[Version (since = "3.0")]
-		public void get_preferred_width (out int minimum_width, out int natural_width);
-		[Version (since = "3.0")]
-		public void get_preferred_width_for_height (int height, out int minimum_width, out int natural_width);
 		[Version (since = "3.90")]
 		public unowned Gtk.Widget? get_prev_sibling ();
 		[Version (since = "2.20")]

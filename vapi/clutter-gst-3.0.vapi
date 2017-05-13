@@ -309,6 +309,8 @@ namespace ClutterGst {
 		NONE,
 		ACCURATE
 	}
+	[CCode (cheader_filename = "clutter-gst/clutter-gst.h", cname = "CLUTTER_GST_VERSION")]
+	public const double VERSION;
 	[CCode (cheader_filename = "clutter-gst/clutter-gst.h")]
 	[Version (since = "3.0")]
 	public static Gst.Element create_video_sink ();

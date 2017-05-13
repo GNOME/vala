@@ -649,6 +649,8 @@ namespace Gst {
 		public unowned Gst.ParentBufferMeta? add_parent_buffer_meta (Gst.Buffer @ref);
 		[Version (since = "1.6")]
 		public unowned Gst.ProtectionMeta? add_protection_meta (owned Gst.Structure info);
+		[Version (since = "1.14")]
+		public unowned Gst.ReferenceTimestampMeta? add_reference_timestamp_meta (Gst.Caps reference, Gst.ClockTime timestamp, Gst.ClockTime duration);
 		[CCode (has_construct_function = false)]
 		public Buffer.allocate (Gst.Allocator? allocator, size_t size, Gst.AllocationParams? @params);
 		public Gst.Buffer append (owned Gst.Buffer buf2);
@@ -673,6 +675,8 @@ namespace Gst {
 		public Gst.Memory get_memory (uint idx);
 		public Gst.Memory get_memory_range (uint idx, int length);
 		public unowned Gst.Meta? get_meta (GLib.Type api);
+		[Version (since = "1.14")]
+		public unowned Gst.ReferenceTimestampMeta? get_reference_timestamp_meta (Gst.Caps? reference);
 		public size_t get_size ();
 		public size_t get_sizes (out size_t offset, out size_t maxsize);
 		public size_t get_sizes_range (uint idx, int length, out size_t offset, out size_t maxsize);
@@ -777,6 +781,8 @@ namespace Gst {
 		public GLib.Source create_watch ();
 		public void disable_sync_message_emission ();
 		public void enable_sync_message_emission ();
+		[Version (since = "1.14")]
+		public void get_pollfd (GLib.PollFD fd);
 		public bool have_pending ();
 		public Gst.Message? peek ();
 		public Gst.Message? poll (Gst.MessageType events, Gst.ClockTime timeout);
@@ -2805,6 +2811,16 @@ namespace Gst {
 	public struct ProtectionMeta {
 		public Gst.Meta meta;
 		public weak Gst.Structure info;
+		public static GLib.Type api_get_type ();
+		public static unowned Gst.MetaInfo? get_info ();
+	}
+	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
+	[Version (since = "1.14")]
+	public struct ReferenceTimestampMeta {
+		public Gst.Meta parent;
+		public weak Gst.Caps reference;
+		public Gst.ClockTime timestamp;
+		public Gst.ClockTime duration;
 		public static GLib.Type api_get_type ();
 		public static unowned Gst.MetaInfo? get_info ();
 	}
