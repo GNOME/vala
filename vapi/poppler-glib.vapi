@@ -508,6 +508,8 @@ namespace Poppler {
 		protected Movie ();
 		[Version (since = "0.14")]
 		public unowned string get_filename ();
+		[Version (since = "0.54")]
+		public Poppler.MoviePlayMode get_play_mode ();
 		[Version (since = "0.14")]
 		public bool need_poster ();
 		[Version (since = "0.14")]
@@ -1040,6 +1042,14 @@ namespace Poppler {
 		NORMAL,
 		MULTILINE,
 		FILE_SELECT
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_MOVIE_PLAY_MODE_", type_id = "poppler_movie_play_mode_get_type ()")]
+	[Version (since = "0.54")]
+	public enum MoviePlayMode {
+		ONCE,
+		OPEN,
+		REPEAT,
+		PALINDROME
 	}
 	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_PAGE_LAYOUT_", type_id = "poppler_page_layout_get_type ()")]
 	public enum PageLayout {
