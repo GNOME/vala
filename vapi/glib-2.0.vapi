@@ -1946,7 +1946,7 @@ namespace GLib {
 		public void reader_unlock ();
 	}
 
-	[Version (deprecated_since = "glib-2.32", replacement = "Mutex")]
+	[Version (deprecated_since = "2.32", replacement = "Mutex")]
 	[CCode (destroy_function = "g_static_mutex_free", default_value = "G_STATIC_MUTEX_INIT")]
 	public struct StaticMutex {
 		public StaticMutex ();
@@ -1956,7 +1956,7 @@ namespace GLib {
 		public void lock_full ();
 	}
 
-	[Version (deprecated_since = "glib-2.32", replacement = "RecMutex")]
+	[Version (deprecated_since = "2.32", replacement = "RecMutex")]
 	[CCode (destroy_function = "g_static_rec_mutex_free", default_value = "G_STATIC_REC_MUTEX_INIT")]
 	public struct StaticRecMutex {
 		public StaticRecMutex ();
@@ -1966,7 +1966,7 @@ namespace GLib {
 		public void lock_full ();
 	}
 
-	[Version (deprecated_since = "glib-2.32", replacement = "RWLock")]
+	[Version (deprecated_since = "2.32", replacement = "RWLock")]
 	[CCode (destroy_function = "g_static_rw_lock_free", default_value = "G_STATIC_RW_LOCK_INIT")]
 	public struct StaticRWLock {
 		public StaticRWLock ();
@@ -1988,7 +1988,7 @@ namespace GLib {
 	}
 
 	[CCode (destroy_function = "g_static_private_free", default_value = "G_STATIC_PRIVATE_INIT")]
-	[Version (deprecated_since = "glib-2.32")]
+	[Version (deprecated_since = "2.32")]
 	public struct StaticPrivate {
 		public StaticPrivate ();
 		public void* get ();
