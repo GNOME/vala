@@ -52,6 +52,10 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			}
 			return;
 		}
+		
+		if (st.base_struct != null) {
+			generate_struct_declaration (st.base_struct, decl_space);
+		}
 
 		if (get_ccode_has_type_id (st)) {
 			decl_space.add_type_declaration (new CCodeNewline ());
