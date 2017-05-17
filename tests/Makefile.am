@@ -289,6 +289,7 @@ TESTS = \
 	gir/array-fixed-length.test \
 	annotations/deprecated.vala \
 	annotations/description.vala \
+	annotations/noaccessormethod.test \
 	$(NULL)
 
 NON_NULL_TESTS = \

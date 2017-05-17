@@ -674,6 +674,11 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 		
 		foreach (Property prop in properties) {
+			if (prop.get_attribute ("NoAccessorMethod") != null && !is_subtype_of (context.analyzer.object_type)) {
+				error = true;
+				Report.error (prop.source_reference, "NoAccessorMethod is only allowed for properties in classes derived from GLib.Object");
+				return false;
+			}
 			prop.check (context);
 		}
 		
