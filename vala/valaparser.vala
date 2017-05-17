@@ -39,7 +39,7 @@ public class Vala.Parser : CodeVisitor {
 
 	Comment comment;
 
-	const int BUFFER_SIZE = 32;
+	const int BUFFER_SIZE = 1024;
 
 	static List<TypeParameter> _empty_type_parameter_list;
 
