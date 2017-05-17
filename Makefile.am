@@ -26,6 +26,12 @@ pkgconfig_DATA = libvala@PACKAGE_SUFFIX@.pc
 libvala@PACKAGE_SUFFIX@.pc: libvala.pc
 	cp $< $@
 
+vapidir = $(datadir)/vala/vapi
+dist_vapi_DATA = libvala@PACKAGE_SUFFIX@.vapi
+
+libvala@PACKAGE_SUFFIX@.vapi: $(top_srcdir)/gee/gee.vapi $(top_srcdir)/vala/vala.vapi
+	cat $^ > $@
+
 .PHONY: bootstrap
 bootstrap: all
 	find $(top_srcdir) -name "*.vala.stamp" | xargs rm -f

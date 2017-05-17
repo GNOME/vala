@@ -9,6 +9,7 @@ Makefile
 *.gir
 .deps
 .libs
+libvala-*.vapi
 
 config.*
 aclocal.m4

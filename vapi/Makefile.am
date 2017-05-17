@@ -2,9 +2,6 @@ NULL =
 
 vapidir = $(pkgdatadir)/vapi
 
-libvala@PACKAGE_SUFFIX@.vapi: $(top_srcdir)/gee/gee.vapi $(top_srcdir)/vala/vala.vapi
-	cat $^ > $@
-
 dist_vapi_DATA = \
 	alsa.vapi \
 	alsa.deps \
@@ -310,7 +307,6 @@ dist_vapi_DATA = \
 	unique-1.0.deps \
 	unique-1.0.vapi \
 	v4l2.vapi \
-	libvala@PACKAGE_SUFFIX@.vapi \
 	vte.deps \
 	vte.vapi \
 	vte-2.90.deps \
