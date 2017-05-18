@@ -1,3 +1,66 @@
+Vala 0.37.1
+===========
+ * Highlights
+  - Don't warn about deprecated symbols if installed_version is older
+  - Add --gresourcesdir option [#783133]
+  - Install libvala-0.xx.vapi to "global" vapi directory
+  - Require and target GLib >= 2.40
+  - build: Make ccode and codegen private API
+  - build: Use --use-header for vala's libraries
+  - compiler: Add --color=WHEN option
+  - codegen: Use g_object_notify_by_pspec() to notify property-changes
+  - codegen: Use *_free_full to free GLib.List, GLib.SList and GLib.Queue
+  - codegen: Support renamed signals [#731547]
+  - Optimize (de)serialization of arrays with type-signature "ay" [#772426]
+  - Merge valadoc - Consider valadoc a part of vala's toolchain and
+    therefore let it live in the main repository (adds graphviz to the
+    build-requirements)
+
+ * Various bug fixes:
+  - Fix finally blocks with async yields [#741929]
+  - Handle non-null in coalescing expression [#611223]
+  - Make the task_complete flag for < 2.44 more similar to >= 2.44 [#783543]
+  - Nullable ValueType requires POINTER as marshaller signature [#783897]
+  - NoAccessorMethod attribute is allowed for gobject-properties only
+  - girparser: Fix parsing of delegate-alias without target
+  - compiler: Use API_VERSION instead of stripping PACKAGE_SUFFIX
+  - girwriter: Write length-parameters of arrays with rank > 1 [#758019]
+  - gdbus: Don't leak nested HashTable on deserialization [#782719]
+  - codewriter: Update timestamps of generated c-files if needed [#683286]
+  - tests: Use dbus-run-session instead of dbus-launch [#771455]
+  - codegenerator: Add source_reference parameter to CodeGenerator.store_*()
+  - Don't allow assigning delegate if no target/closure is available [#598869]
+  - gee: Add some useful symbols from gee-0.8
+
+ * Bindings:
+  - gio-2.0: Add DBusConnection 'closed' signal as 'on_closed' [#684358]
+  - gio-2.0: Use default 'length = null' for DataInputStream.read_line_utf8*
+    [#783351]
+  - glib-2.0,gobject-2.0: Updates from 2.53.x
+  - poppler-glib: Update to 0.54.0
+  - webkit2gtk-4.0: Update to 2.17.4
+  - gstreamer-1.0: Update to 1.13.0+
+  - libgvc: Add WITH_CGRAPH conditionals
+
+Vala 0.36.3
+===========
+ * Various bug fixes:
+  - scanner: Fix calculation of column value for tokens after multiline comment
+    [#652899]
+  - codegen: Unref GLib.AsyncResult on uncaught errors in coroutines [#641171]
+  - Keep initializing result-variable for struct constructors [#782056]
+
+Vala 0.36.2
+===========
+ * Various bug fixes:
+  - Enums require at least one value otherwise report an error
+
+ * Bindings:
+  - gstreamer-1.0: Update to 1.11.90+
+  - gio-2.0: Fix GLib.Task constructor and report_error/report_new_error()
+  - glib-2.0: Add quark() functions to errordomains,
+      Add missing version macro and constants,
+
 Vala 0.36.1
 ===========
  * Various bug fixes:
