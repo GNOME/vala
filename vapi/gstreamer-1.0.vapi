@@ -1117,7 +1117,7 @@ namespace Gst {
 		[CCode (cname = "gst_device_provider_class_add_static_metadata")]
 		public class void add_static_metadata (string key, owned string value);
 		public bool can_monitor ();
-		public void device_add (owned Gst.Device device);
+		public void device_add (Gst.Device device);
 		public void device_remove (Gst.Device device);
 		public Gst.Bus get_bus ();
 		public GLib.List<Gst.Device> get_devices ();
@@ -1197,7 +1197,7 @@ namespace Gst {
 		public class void add_metadata (string key, string value);
 		public bool add_pad (Gst.Pad pad);
 		[CCode (cname = "gst_element_class_add_pad_template")]
-		public class void add_pad_template (owned Gst.PadTemplate templ);
+		public class void add_pad_template (Gst.PadTemplate templ);
 		[Version (since = "1.10")]
 		public ulong add_property_deep_notify_watch (string? property_name, bool include_value);
 		[Version (since = "1.10")]
@@ -1713,7 +1713,7 @@ namespace Gst {
 		public GLib.Mutex @lock;
 		[CCode (has_construct_function = false)]
 		protected Object ();
-		public bool add_control_binding (owned Gst.ControlBinding binding);
+		public bool add_control_binding (Gst.ControlBinding binding);
 		public static bool check_uniqueness (GLib.List<Gst.Object> list, string name);
 		public static void default_deep_notify (GLib.Object object, Gst.Object orig, GLib.ParamSpec pspec, [CCode (array_length = false, array_null_terminated = true)] string[]? excluded_props);
 		public void default_error (GLib.Error error, string? debug);
@@ -2124,8 +2124,8 @@ namespace Gst {
 	public class Registry : Gst.Object {
 		[CCode (has_construct_function = false)]
 		protected Registry ();
-		public bool add_feature (owned Gst.PluginFeature feature);
-		public bool add_plugin (owned Gst.Plugin plugin);
+		public bool add_feature (Gst.PluginFeature feature);
+		public bool add_plugin (Gst.Plugin plugin);
 		public bool check_feature_version (string feature_name, uint min_major, uint min_minor, uint min_micro);
 		public GLib.List<Gst.PluginFeature> feature_filter ([CCode (delegate_target_pos = 2.1)] Gst.PluginFeatureFilter filter, bool first);
 		public Gst.PluginFeature? find_feature (string name, GLib.Type type);
@@ -2838,7 +2838,7 @@ namespace Gst {
 		public Gst.PadDirection direction;
 		public Gst.PadPresence presence;
 		public Gst.StaticCaps static_caps;
-		public Gst.PadTemplate @get ();
+		public unowned Gst.PadTemplate @get ();
 		public Gst.Caps get_caps ();
 		public static GLib.Type get_type ();
 	}
