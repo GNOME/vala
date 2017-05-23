@@ -693,6 +693,10 @@ namespace Atspi {
 		MATH_ROOT,
 		SUBSCRIPT,
 		SUPERSCRIPT,
+		DESCRIPTION_LIST,
+		DESCRIPTION_TERM,
+		DESCRIPTION_VALUE,
+		FOOTNOTE,
 		LAST_DEFINED;
 		public static string get_name (Atspi.Role role);
 	}

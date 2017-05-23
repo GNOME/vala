@@ -1719,12 +1719,11 @@ namespace Gst {
 		public void default_error (GLib.Error error, string? debug);
 		public Gst.ControlBinding? get_control_binding (string property_name);
 		public Gst.ClockTime get_control_rate ();
-		public bool get_g_value_array (string property_name, Gst.ClockTime timestamp, Gst.ClockTime interval, uint n_values, GLib.Value values);
+		public bool get_g_value_array (string property_name, Gst.ClockTime timestamp, Gst.ClockTime interval, [CCode (array_length_cname = "n_values", array_length_pos = 3.5, array_length_type = "guint")] GLib.Value[] values);
 		public string? get_name ();
 		public Gst.Object? get_parent ();
 		public string get_path_string ();
 		public GLib.Value? get_value (string property_name, Gst.ClockTime timestamp);
-		public bool get_value_array (string property_name, Gst.ClockTime timestamp, Gst.ClockTime interval, uint n_values, void* values);
 		public bool has_active_control_bindings ();
 		[Version (deprecated = true)]
 		public bool has_ancestor (Gst.Object ancestor);
@@ -1901,6 +1900,7 @@ namespace Gst {
 	public class ParseContext {
 		[CCode (has_construct_function = false)]
 		public ParseContext ();
+		public Gst.ParseContext copy ();
 		public void free ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_missing_elements ();
@@ -3967,7 +3967,7 @@ namespace Gst {
 	public static bool preset_set_app_dir (string app_dir);
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (since = "1.6")]
-	public static unowned string protection_select_system (string system_identifiers);
+	public static unowned string protection_select_system ([CCode (array_length = false, array_null_terminated = true)] string[] system_identifiers);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool segtrap_is_enabled ();
 	[CCode (cheader_filename = "gst/gst.h")]

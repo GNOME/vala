@@ -2889,12 +2889,19 @@ namespace WebKit {
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_context_menu_item_get_type ()")]
 	public class ContextMenuItem : GLib.InitiallyUnowned {
 		[CCode (has_construct_function = false)]
+		[Version (deprecated = true, deprecated_since = "2.18")]
 		public ContextMenuItem (Gtk.Action action);
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.18")]
+		public ContextMenuItem.from_gaction (GLib.Action action, string label, GLib.Variant? target);
 		[CCode (has_construct_function = false)]
 		public ContextMenuItem.from_stock_action (WebKit.ContextMenuAction action);
 		[CCode (has_construct_function = false)]
 		public ContextMenuItem.from_stock_action_with_label (WebKit.ContextMenuAction action, string label);
+		[Version (deprecated = true, deprecated_since = "2.18")]
 		public unowned Gtk.Action get_action ();
+		[Version (since = "2.18")]
+		public unowned GLib.Action get_gaction ();
 		public WebKit.ContextMenuAction get_stock_action ();
 		public unowned WebKit.ContextMenu get_submenu ();
 		public bool is_separator ();
