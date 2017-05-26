@@ -200,6 +200,8 @@ public class Vala.CodeContext {
 
 	public string[] gresources;
 
+	public string[] gresources_directories;
+
 	private List<SourceFile> source_files = new ArrayList<SourceFile> ();
 	private List<string> c_source_files = new ArrayList<string> ();
 	private Namespace _root = new Namespace (null);
@@ -515,6 +517,14 @@ public class Vala.CodeContext {
 
 	public string? get_gir_path (string gir) {
 		return get_file_path (gir + ".gir", "gir-1.0", null, gir_directories);
+	}
+
+	public string? get_gresource_path (string gresource, string resource) {
+		var filename = get_file_path (resource, null, null, { Path.get_dirname (gresource) });
+		if (filename == null) {
+			filename = get_file_path (resource, null, null, gresources_directories);
+		}
+		return filename;
 	}
 
 	/*
