@@ -5190,6 +5190,7 @@ namespace Gdk {
 		public void put ();
 		[Version (since = "2.12")]
 		public static void request_motions (Gdk.EventMotion event);
+		public void set_coords (double x, double y);
 		[Version (since = "3.0")]
 		public void set_device (Gdk.Device device);
 		[Version (since = "3.22")]
@@ -5198,6 +5199,7 @@ namespace Gdk {
 		public void set_screen (Gdk.Screen screen);
 		[Version (since = "3.0")]
 		public void set_source_device (Gdk.Device device);
+		public void set_user_data (GLib.Object user_data);
 		[Version (since = "3.4")]
 		public bool triggers_context_menu ();
 		public Gdk.EventAny any {[CCode (cname = "(GdkEventAny *)")]  get; }
@@ -6064,6 +6066,8 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_rectangle_get_type ()")]
 	public struct Rectangle : Cairo.RectangleInt {
+		[Version (since = "3.92")]
+		public bool contains_point (int x, int y);
 		[Version (since = "3.20")]
 		public bool equal (Gdk.Rectangle rect2);
 		public bool intersect (Gdk.Rectangle src2, out Gdk.Rectangle dest);
@@ -9637,8 +9641,6 @@ namespace Gtk {
 		[Version (since = "3.14")]
 		public GLib.List<weak Gdk.EventSequence> get_sequences ();
 		[Version (since = "3.14")]
-		public unowned Gdk.Window? get_window ();
-		[Version (since = "3.14")]
 		public void group (Gtk.Gesture gesture);
 		[Version (since = "3.14")]
 		public bool handles_sequence (Gdk.EventSequence? sequence);
@@ -9653,14 +9655,10 @@ namespace Gtk {
 		[Version (since = "3.14")]
 		public bool set_state (Gtk.EventSequenceState state);
 		[Version (since = "3.14")]
-		public void set_window (Gdk.Window? window);
-		[Version (since = "3.14")]
 		public void ungroup ();
 		[NoAccessorMethod]
 		[Version (since = "3.14")]
 		public uint n_points { get; construct; }
-		[Version (since = "3.14")]
-		public Gdk.Window window { get; set; }
 		[Version (since = "3.14")]
 		public signal void begin (Gdk.EventSequence sequence);
 		[Version (since = "3.14")]
@@ -9884,7 +9882,7 @@ namespace Gtk {
 		public virtual void get_preedit_string (out string str, out Pango.AttrList attrs, out int cursor_pos);
 		public virtual bool get_surrounding (out string text, out int cursor_index);
 		public virtual void reset ();
-		public virtual void set_client_window (Gdk.Window? window);
+		public virtual void set_client_widget (Gtk.Widget? widget);
 		public virtual void set_cursor_location (Gdk.Rectangle area);
 		public virtual void set_surrounding (string text, int len, int cursor_index);
 		public virtual void set_use_preedit (bool use_preedit);
@@ -13652,8 +13650,6 @@ namespace Gtk {
 		[Version (since = "2.4")]
 		public Gtk.ToolbarStyle get_toolbar_style ();
 		[Version (since = "2.4")]
-		public bool get_use_drag_window ();
-		[Version (since = "2.4")]
 		public bool get_visible_horizontal ();
 		[Version (since = "2.4")]
 		public bool get_visible_vertical ();
@@ -13673,8 +13669,6 @@ namespace Gtk {
 		public void set_tooltip_markup (string markup);
 		[Version (since = "2.12")]
 		public void set_tooltip_text (string text);
-		[Version (since = "2.4")]
-		public void set_use_drag_window (bool use_drag_window);
 		[Version (since = "2.4")]
 		public void set_visible_horizontal (bool visible_horizontal);
 		[Version (since = "2.4")]
@@ -14311,9 +14305,6 @@ namespace Gtk {
 		public Widget (GLib.Type type, ...);
 		public bool activate ();
 		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
-		[Version (since = "3.0")]
-		public void add_device_events (Gdk.Device device, Gdk.EventMask events);
-		public void add_events (int events);
 		[Version (since = "2.4")]
 		public void add_mnemonic_label (Gtk.Widget label);
 		[Version (since = "3.8")]
@@ -14372,12 +14363,9 @@ namespace Gtk {
 		public static Gtk.TextDirection get_default_direction ();
 		[Version (since = "3.0")]
 		public bool get_device_enabled (Gdk.Device device);
-		[Version (since = "3.0")]
-		public Gdk.EventMask get_device_events (Gdk.Device device);
 		public Gtk.TextDirection get_direction ();
 		[Version (since = "2.2")]
 		public unowned Gdk.Display get_display ();
-		public int get_events ();
 		[Version (since = "3.90")]
 		public unowned Gtk.Widget? get_first_child ();
 		[Version (since = "3.20")]
@@ -14539,10 +14527,7 @@ namespace Gtk {
 		public static void set_default_direction (Gtk.TextDirection dir);
 		[Version (since = "3.0")]
 		public void set_device_enabled (Gdk.Device device, bool enabled);
-		[Version (since = "3.0")]
-		public void set_device_events (Gdk.Device device, Gdk.EventMask events);
 		public void set_direction (Gtk.TextDirection dir);
-		public void set_events (int events);
 		public void set_focus_child (Gtk.Widget child);
 		[Version (since = "3.20")]
 		public void set_focus_on_click (bool focus_on_click);
@@ -14623,7 +14608,6 @@ namespace Gtk {
 		[NoAccessorMethod]
 		[Version (since = "3.90")]
 		public string css_name { owned get; construct; }
-		public Gdk.EventMask events { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "3.0")]
 		public bool expand { get; set; }
@@ -17391,6 +17375,12 @@ namespace Gtk {
 	public static uint get_debug_flags ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Pango.Language get_default_language ();
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (since = "3.92")]
+	public static unowned Gtk.Widget? get_event_target (Gdk.Event event);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (since = "3.92")]
+	public static unowned Gtk.Widget? get_event_target_with_type (Gdk.Event event, GLib.Type type);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Widget? get_event_widget (Gdk.Event event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
