@@ -33,10 +33,30 @@ public abstract class Vala.Iterator<G> {
 	public abstract bool next ();
 
 	/**
+	 * Checks whether there is a next element in the iteration.
+	 *
+	 * @return ``true`` if the iterator has a next element
+	 */
+	public abstract bool has_next ();
+
+	/**
 	 * Returns the current element in the iteration.
 	 *
 	 * @return the current element in the iteration
 	 */
 	public abstract G? get ();
+
+	/**
+	 * Removes the current element in the iteration. The cursor is set in an
+	 * in-between state. Both {@link get} and {@link remove} will fail until
+	 * the next move of the cursor (calling {@link next}).
+	 */
+	public abstract void remove ();
+
+	/**
+	 * Determines wheather the call to {@link get} is legal. It is false at the
+	 * beginning and after {@link remove} call and true otherwise.
+	 */
+	public abstract bool valid { get; }
 }
 

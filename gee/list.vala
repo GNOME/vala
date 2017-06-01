@@ -61,7 +61,51 @@ public abstract class Vala.List<G> : Collection<G> {
 	 * Removes the item at the specified index of this list.
 	 *
 	 * @param index zero-based index of the item to be removed
+	 *
+	 * @return      the removed element
 	 */
-	public abstract void remove_at (int index);
+	public abstract G remove_at (int index);
+
+	/**
+	 * Returns the first item of the list. Fails if the list is empty.
+	 *
+	 * @return      first item in the list
+	 */
+	public virtual G first () {
+		return @get (0);
+	}
+
+	/**
+	 * Returns the last item of the list. Fails if the list is empty.
+	 *
+	 * @return      last item in the list
+	 */
+	public virtual G last () {
+		return @get (size - 1);
+	}
+
+	/**
+	 * Inserts items into this list for the input collection at the
+	 * specified position.
+	 *
+	 * @param index zero-based index of the items to be inserted
+	 * @param collection collection of items to be inserted
+	 */
+	public virtual void insert_all (int index, Collection<G> collection) {
+		for (Iterator<G> iter = collection.iterator (); iter.next ();) {
+			G item = iter.get ();
+			insert (index, item);
+			index++;
+		}
+	}
+
+	/**
+	 * Sorts items by comparing with the specified compare function.
+	 *
+	 * @param compare_func compare function to use to compare items
+	 */
+	public virtual void sort (owned CompareDataFunc<G> compare_func) {
+		TimSort.sort<G> (this, compare_func);
+	}
 }
 

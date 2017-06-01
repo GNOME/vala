@@ -24,6 +24,7 @@ libgee_la_VALASOURCES = \
 	list.vala \
 	map.vala \
 	set.vala \
+	timsort.vala \
 	$(NULL)
 
 libgee_la_SOURCES = \

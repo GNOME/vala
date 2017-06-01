@@ -374,8 +374,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				added.set (block, counter);
 			}
 			while (work_list.size > 0) {
-				BasicBlock block = work_list.get (0);
-				work_list.remove_at (0);
+				BasicBlock block = work_list.remove_at (0);
 				foreach (BasicBlock frontier in block.get_dominator_frontier ()) {
 					int blockPhi = phi.get (frontier);
 					if (blockPhi < counter) {
@@ -405,8 +404,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			used_vars_queue.add (variable);
 		}
 		while (used_vars_queue.size > 0) {
-			Variable used_var = used_vars_queue[0];
-			used_vars_queue.remove_at (0);
+			Variable used_var = used_vars_queue.remove_at (0);
 
 			PhiFunction phi = phi_functions.get (used_var);
 			if (phi != null) {
@@ -965,9 +963,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		// remove catch clauses from jump stack
 		List<JumpTarget> catch_stack = new ArrayList<JumpTarget> ();
 		for (int i = jump_stack.size - 1; i >= finally_jump_stack_size; i--) {
-			var jump_target = jump_stack[i];
+			var jump_target = jump_stack.remove_at (i);
 			catch_stack.add (jump_target);
-			jump_stack.remove_at (i);
 		}
 
 		foreach (JumpTarget jump_target in catch_stack) {

@@ -220,10 +220,8 @@ public class Vala.CCodeFunction : CCodeNode {
 	}
 
 	public void else_if (CCodeExpression condition) {
-		var parent_if = (CCodeIfStatement) statement_stack[statement_stack.size - 1];
+		var parent_if = (CCodeIfStatement) statement_stack.remove_at (statement_stack.size - 1);
 		assert (parent_if.false_statement == null);
-
-		statement_stack.remove_at (statement_stack.size - 1);
 
 		current_block = new CCodeBlock ();
 
@@ -318,8 +316,7 @@ public class Vala.CCodeFunction : CCodeNode {
 
 	public void close () {
 		do {
-			var top = statement_stack[statement_stack.size - 1];
-			statement_stack.remove_at (statement_stack.size - 1);
+			var top = statement_stack.remove_at (statement_stack.size - 1);
 			current_block = top as CCodeBlock;
 		} while (current_block == null);
 	}

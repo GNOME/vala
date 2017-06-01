@@ -127,6 +127,24 @@ public class Vala.HashSet<G> : Set<G> {
 		resize ();
 	}
 
+	private inline bool remove_helper (G key) {
+		Node<G>** node = lookup_node (key);
+		if (*node != null) {
+			assert (*node != null);
+			Node<G> next = (owned) (*node)->next;
+
+			(*node)->key = null;
+			delete *node;
+
+			*node = (owned) next;
+
+			_nnodes--;
+			_stamp++;
+			return true;
+		}
+		return false;
+	}
+
 	private void resize () {
 		if ((_array_size >= 3 * _nnodes && _array_size >= MIN_SIZE) ||
 		    (3 * _array_size <= _nnodes && _array_size < MAX_SIZE)) {
@@ -177,6 +195,7 @@ public class Vala.HashSet<G> : Set<G> {
 		private HashSet<G> _set;
 		private int _index = -1;
 		private weak Node<G> _node;
+		private weak Node<G> _next;
 
 		// concurrent modification protection
 		private int _stamp = 0;
@@ -186,20 +205,49 @@ public class Vala.HashSet<G> : Set<G> {
 		}
 
 		public override bool next () {
-			if (_node != null) {
-				_node = _node.next;
+			assert (_stamp == _set._stamp);
+			if (!has_next ()) {
+				return false;
 			}
-			while (_node == null && _index + 1 < _set._array_size) {
-				_index++;
-				_node = _set._nodes[_index];
-			}
+			_node = _next;
+			_next = null;
 			return (_node != null);
+		}
+
+		public override bool has_next () {
+			assert (_stamp == _set._stamp);
+			if (_next == null) {
+				_next = _node;
+				if (_next != null) {
+					_next = _next.next;
+				}
+				while (_next == null && _index + 1 < _set._array_size) {
+					_index++;
+					_next = _set._nodes[_index];
+				}
+			}
+			return (_next != null);
 		}
 
 		public override G? get () {
 			assert (_stamp == _set._stamp);
 			assert (_node != null);
 			return _node.key;
+		}
+
+		public override void remove () {
+			assert (_stamp == _set._stamp);
+			assert (_node != null);
+			has_next ();
+			_set.remove_helper (_node.key);
+			_node = null;
+			_stamp = _set._stamp;
+		}
+
+		public override bool valid {
+			get {
+				return _node != null;
+			}
 		}
 	}
 }

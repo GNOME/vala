@@ -53,8 +53,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		public void pop_symbol () {
-			current_symbol = symbol_stack[symbol_stack.size - 1];
-			symbol_stack.remove_at (symbol_stack.size - 1);
+			current_symbol = symbol_stack.remove_at (symbol_stack.size - 1);
 		}
 	}
 
@@ -568,8 +567,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public void pop_context () {
 		if (emit_context_stack.size > 0) {
-			this.emit_context = emit_context_stack[emit_context_stack.size - 1];
-			emit_context_stack.remove_at (emit_context_stack.size - 1);
+			this.emit_context = emit_context_stack.remove_at (emit_context_stack.size - 1);
 			if (ccode != null) {
 				ccode.current_line = current_line;
 			}
@@ -589,8 +587,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public void pop_line () {
-		current_line = line_directive_stack[line_directive_stack.size - 1];
-		line_directive_stack.remove_at (line_directive_stack.size - 1);
+		current_line = line_directive_stack.remove_at (line_directive_stack.size - 1);
 		if (ccode != null) {
 			ccode.current_line = current_line;
 		}
@@ -603,8 +600,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public void pop_function () {
-		emit_context.ccode = emit_context.ccode_stack[emit_context.ccode_stack.size - 1];
-		emit_context.ccode_stack.remove_at (emit_context.ccode_stack.size - 1);
+		emit_context.ccode = emit_context.ccode_stack.remove_at (emit_context.ccode_stack.size - 1);
 		if (ccode != null) {
 			ccode.current_line = current_line;
 		}

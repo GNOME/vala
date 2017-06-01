@@ -1612,8 +1612,7 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	void pop_metadata () {
-		metadata = metadata_stack[metadata_stack.size - 1];
-		metadata_stack.remove_at (metadata_stack.size - 1);
+		metadata = metadata_stack.remove_at (metadata_stack.size - 1);
 	}
 
 	bool parse_type_arguments_from_string (DataType parent_type, string type_arguments, SourceReference? source_reference = null) {
@@ -2001,8 +2000,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	void pop_node () {
 		old_current = current;
-		current = tree_stack[tree_stack.size - 1];
-		tree_stack.remove_at (tree_stack.size - 1);
+		current = tree_stack.remove_at (tree_stack.size - 1);
 	}
 
 	void parse_namespace () {
