@@ -28,8 +28,23 @@ namespace Gvc {
 	public void initlib ( size_t graphinfo, size_t nodeinfo, size_t  edgeinfo);
 
 	[CCode (cname = "aginit")]
+#if WITH_CGRAPH
+	public void init (Graph g, int kind, string rec_name, bool move_to_front);
+#else
 	public void init ();
+#endif
 
+#if WITH_CGRAPH
+	[SimpleType]
+	[CCode (cname = "Agdesc_t")]
+	public struct Desc {
+	}
+
+	public Desc Agdirected; // Desc.DIRECTED | Desc.MAINGRAPH;
+	public Desc Agstrictdirected; //  Desc.DIRECTED | Desc.STRICT | Desc.MAINGRAPH;
+	public Desc Agundirected; // Desc.MAINGRAPH;
+	public Desc Agstrictundirected; // Desc.STRICT | Desc.MAINGRAPH;
+#else
 	[CCode (cprefix = "", has_type_id = false)]
 	public enum GraphKind {
 		AGRAPH,
@@ -38,6 +53,7 @@ namespace Gvc {
 		AGDIGRAPHSTRICT,
 		AGMETAGRAPH,
 	}
+#endif
 
 	[CCode (cname = "agerrlevel_t", cheader_filename = "gvc.h", cprefix = "", has_type_id = false)]
 	public enum ErrorLevel {
@@ -111,7 +127,11 @@ namespace Gvc {
 	[CCode (cname = "Agraph_t", free_function = "agclose")]
 	public class Graph {
 		[CCode (cname = "agopen")]
+#if WITH_CGRAPH
+		public Graph ([CCode (type = "char*")] string graph_name, Desc desc, int disc = 0);
+#else
 		public Graph ([CCode (type = "char*")] string graph_name, GraphKind kind);
+#endif
 
 		[CCode (cname = "agread")]
 		public static Graph read (GLib.FileStream file);
@@ -120,10 +140,18 @@ namespace Gvc {
 		public static Graph read_string (string str);
 
 		[CCode (cname = "agnode")]
+#if WITH_CGRAPH
+		public Node create_node ([CCode (type = "char*")] string node_name, int createflag = 1);
+#else
 		public Node create_node ([CCode (type = "char*")] string node_name);
+#endif
 
 		[CCode (cname = "agedge")]
+#if WITH_CGRAPH
+		public Edge create_edge (Node from, Node to, string? name = null, int createflag = 1);
+#else
 		public Edge create_edge (Node from, Node to);
+#endif
 
 		[CCode (cname = "agsubg")]
 		public unowned Graph create_subgraph ([CCode (type = "char*")] string? name);
@@ -184,6 +212,7 @@ namespace Gvc {
 		public static ErrorLevel errno;
 
 		[CCode (cname = "agerr")]
+		[PrintfFormat]
 		public static int error (ErrorLevel level, string fmt, ...);
 
 		[CCode (cname = "agerrors")]
@@ -196,9 +225,11 @@ namespace Gvc {
 		public static string? last_error ();
 
 		[CCode (cname = "agerrorf")]
+		[PrintfFormat]
 		public static void errorf (string format, ...);
 
 		[CCode (cname = "agwarningf")]
+		[PrintfFormat]
 		void warningf (string fmt, ...);
 	}
 
