@@ -26,7 +26,7 @@ using GLib;
 /**
  * Namespace to centralize reporting warnings and errors.
  */
-public class Vala.Report : Object {
+public class Vala.Report {
 	public enum Colored {
 		AUTO,
 		NEVER,

@@ -22,7 +22,7 @@
 
 using GLib;
 
-class Vala.VAPIGen : Object {
+class Vala.VAPIGen {
 	static string directory;
 	static bool version;
 	static bool quiet_mode;
