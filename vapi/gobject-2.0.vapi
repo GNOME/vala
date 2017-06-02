@@ -330,6 +330,10 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_param")]
 		public ParamSpecParam (string name, string nick, string blurb, GLib.Type param_type, GLib.ParamFlags flags);
 	}
+	public class ParamSpecPointer : GLib.ParamSpec {
+		[CCode (cname = "g_param_spec_pointer")]
+		public ParamSpecPointer (string name, string nick, string blurb, GLib.ParamFlags flags);
+	}
 	[Compact]
 	public class ParamSpecPool {
 		public ParamSpecPool (bool type_prefixing = false);
