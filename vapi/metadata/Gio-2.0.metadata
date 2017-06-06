@@ -317,6 +317,10 @@ AsyncInitable
   .new* skip
   .init_async#virtual_method virtual
 
+// Bug #684358: GDBusConnection `closed` signal conficts with property
+DBusConnection
+  .closed#signal name="on_closed"
+
 // Bug #666797: No support for generic methods in GIR parser
 DBusConnection
   .register_object skip

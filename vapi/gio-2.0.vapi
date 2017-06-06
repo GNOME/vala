@@ -691,6 +691,8 @@ namespace GLib {
 		public string guid { get; construct; }
 		public GLib.IOStream stream { get; construct; }
 		public string unique_name { get; }
+		[CCode (cname = "closed")]
+		public signal void on_closed (bool remote_peer_vanished, GLib.Error? error);
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_interface_info_ref", type_id = "g_dbus_interface_info_get_type ()", unref_function = "g_dbus_interface_info_unref")]
 	[Compact]
