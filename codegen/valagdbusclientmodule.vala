@@ -436,7 +436,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 	}
 
 	string generate_dbus_signal_handler (Signal sig, ObjectTypeSymbol sym) {
-		string wrapper_name = "_dbus_handle_%s_%s".printf (get_ccode_lower_case_name (sym), get_ccode_name (sig));
+		string wrapper_name = "_dbus_handle_%s_%s".printf (get_ccode_lower_case_name (sym), get_ccode_lower_case_name (sig));
 
 		var function = new CCodeFunction (wrapper_name);
 		function.modifiers = CCodeModifiers.STATIC;

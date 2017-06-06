@@ -409,7 +409,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 	}
 
 	string generate_dbus_signal_wrapper (Signal sig, ObjectTypeSymbol sym, string dbus_iface_name) {
-		string wrapper_name = "_dbus_%s_%s".printf (get_ccode_lower_case_name (sym), get_ccode_name (sig));
+		string wrapper_name = "_dbus_%s_%s".printf (get_ccode_lower_case_name (sym), get_ccode_lower_case_name (sig));
 
 		var function = new CCodeFunction (wrapper_name, "void");
 		function.modifiers = CCodeModifiers.STATIC;
@@ -616,7 +616,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				// disconnect the signals
 				var disconnect_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_handlers_disconnect_by_func"));
 				disconnect_call.add_argument (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0")));
-				disconnect_call.add_argument (new CCodeIdentifier ("_dbus_%s_%s".printf (get_ccode_lower_case_name (sym), get_ccode_name (sig))));
+				disconnect_call.add_argument (new CCodeIdentifier ("_dbus_%s_%s".printf (get_ccode_lower_case_name (sym), get_ccode_lower_case_name (sig))));
 				disconnect_call.add_argument (new CCodeIdentifier ("data"));
 				ccode.add_expression (disconnect_call);
 			}

@@ -408,7 +408,12 @@ public class Vala.CCodeAttribute : AttributeCache {
 					_vfunc_name = ccode.get_string ("vfunc_name");
 				}
 				if (_vfunc_name == null) {
-					_vfunc_name = sym.name;
+					Method m = node as Method;
+					if (m != null && m.signal_reference != null) {
+						_vfunc_name = CCodeBaseModule.get_ccode_lower_case_name (m.signal_reference);
+					} else {
+						_vfunc_name = sym.name;
+					}
 				}
 			}
 			return _vfunc_name;
@@ -621,6 +626,9 @@ public class Vala.CCodeAttribute : AttributeCache {
 				if (m.is_async_callback) {
 					return "%s_co".printf (CCodeBaseModule.get_ccode_real_name ((Method) m.parent_symbol));
 				}
+				if (m.signal_reference != null) {
+					return "%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (m.parent_symbol), CCodeBaseModule.get_ccode_lower_case_name (m.signal_reference));
+				}
 				if (sym.name == "main" && sym.parent_symbol.name == null) {
 					// avoid conflict with generated main function
 					return "_vala_main";
@@ -639,7 +647,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					return "%sset_%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (t), acc.prop.name);
 				}
 			} else if (sym is Signal) {
-				return Symbol.camel_case_to_lower_case (sym.name);
+				return Symbol.camel_case_to_lower_case (sym.name).replace ("_", "-");;
 			} else if (sym is LocalVariable || sym is Parameter) {
 				return sym.name;
 			} else {
@@ -777,6 +785,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 				csuffix = csuffix.substring (0, csuffix.length - "_class".length) + "class";
 			}
 			return csuffix;
+		} else if (sym is Signal) {
+			return CCodeBaseModule.get_ccode_attribute (sym).name.replace ("-", "_");
 		} else if (sym.name != null) {
 			return Symbol.camel_case_to_lower_case (sym.name);
 		}
@@ -1271,12 +1281,18 @@ public class Vala.CCodeAttribute : AttributeCache {
 		} else if (sym is Method) {
 			var m = (Method) sym;
 			if (m.base_method != null || m.base_interface_method != null) {
+				string m_name;
+				if (m.signal_reference != null) {
+					m_name = CCodeBaseModule.get_ccode_lower_case_name (m.signal_reference);
+				} else {
+					m_name = m.name;
+				}
 				if (m.base_interface_type != null) {
 					return "%sreal_%s%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (m.parent_symbol),
 												 CCodeBaseModule.get_ccode_lower_case_prefix (m.base_interface_type.data_type),
-												 m.name);
+												 m_name);
 				} else {
-					return "%sreal_%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (m.parent_symbol), m.name);
+					return "%sreal_%s".printf (CCodeBaseModule.get_ccode_lower_case_prefix (m.parent_symbol), m_name);
 				}
 			} else {
 				return name;

@@ -3086,6 +3086,12 @@ public class Vala.GirParser : CodeVisitor {
 		s.comment = comment;
 		s.external = true;
 
+		if (s is Signal) {
+			if (current.girdata["name"] != name.replace ("_", "-")) {
+				s.set_attribute_string ("CCode", "cname", current.girdata["name"]);
+			}
+		}
+
 		if (s is Method) {
 			var m = (Method) s;
 			if (symbol_type == "virtual-method" || symbol_type == "callback") {

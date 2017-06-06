@@ -145,7 +145,7 @@ public class Vala.GSignalModule : GObjectModule {
 	private CCodeExpression get_signal_id_cexpression (Signal sig) {
 		var cl = (TypeSymbol) sig.parent_symbol;
 		var signal_array = new CCodeIdentifier ("%s_signals".printf (get_ccode_lower_case_name (cl)));
-		var signal_enum_value = new CCodeIdentifier ("%s_%s_SIGNAL".printf (get_ccode_upper_case_name (cl), sig.name.ascii_up ()));
+		var signal_enum_value = new CCodeIdentifier ("%s_%s_SIGNAL".printf (get_ccode_upper_case_name (cl), get_ccode_upper_case_name (sig)));
 
 		return new CCodeElementAccess (signal_array, signal_enum_value);
 	}
@@ -189,7 +189,7 @@ public class Vala.GSignalModule : GObjectModule {
 			}
 		}
 
-		signal_enum.add_value (new CCodeEnumValue ("%s_%s_SIGNAL".printf (get_ccode_upper_case_name ((TypeSymbol)sig.parent_symbol), sig.name.ascii_up ())));
+		signal_enum.add_value (new CCodeEnumValue ("%s_%s_SIGNAL".printf (get_ccode_upper_case_name ((TypeSymbol)sig.parent_symbol), get_ccode_upper_case_name (sig))));
 
 		sig.accept_children (this);
 
@@ -569,7 +569,7 @@ public class Vala.GSignalModule : GObjectModule {
 					}
 					emitter_func = get_ccode_lower_case_name (sig.emitter);
 				} else {
-					emitter_func = "%s_%s".printf (get_ccode_lower_case_name (cl), sig.name);
+					emitter_func = "%s_%s".printf (get_ccode_lower_case_name (cl), get_ccode_lower_case_name (sig));
 				}
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (emitter_func));
 
@@ -670,7 +670,7 @@ public class Vala.GSignalModule : GObjectModule {
 			// dynamic_signal_connect or dynamic_signal_disconnect
 
 			// second argument: signal name
-			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
+			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (get_ccode_name (sig))));
 		} else if (!disconnect) {
 			// g_signal_connect_object or g_signal_connect
 
