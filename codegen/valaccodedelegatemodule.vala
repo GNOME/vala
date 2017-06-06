@@ -181,7 +181,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		if (dynamic_sig != null) {
 			delegate_name = get_dynamic_signal_cname (dynamic_sig);
 		} else if (sig != null) {
-			delegate_name = get_ccode_lower_case_prefix (sig.parent_symbol) + get_ccode_name (sig);
+			delegate_name = get_ccode_lower_case_prefix (sig.parent_symbol) + get_ccode_lower_case_name (sig);
 		} else {
 			delegate_name = Symbol.camel_case_to_lower_case (get_ccode_name (d));
 		}

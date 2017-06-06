@@ -6140,6 +6140,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 			if (sym is Delegate) {
 				return "%s%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), infix, Symbol.camel_case_to_lower_case (sym.name));
+			} else if (sym is Signal) {
+				return get_ccode_attribute (sym).name.replace ("-", "_");
 			} else if (sym is ErrorCode) {
 				return get_ccode_name (sym).down ();
 			} else {
@@ -6472,7 +6474,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeConstant get_signal_canonical_constant (Signal sig, string? detail = null) {
-		return new CCodeConstant ("\"%s%s\"".printf (get_ccode_name (sig).replace ("_", "-"), (detail != null ? "::%s".printf (detail) : "")));
+		return new CCodeConstant ("\"%s%s\"".printf (get_ccode_name (sig), (detail != null ? "::%s".printf (detail) : "")));
 	}
 
 	public static CCodeConstant get_enum_value_canonical_cconstant (EnumValue ev) {

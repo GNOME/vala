@@ -417,7 +417,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			foreach (Signal sig in cl.get_signals ()) {
 				if (sig.default_handler != null) {
 					write_indent ();
-					buffer.append_printf ("<field name=\"%s\">\n", sig.name);
+					buffer.append_printf ("<field name=\"%s\">\n", CCodeBaseModule.get_ccode_lower_case_name (sig));
 					indent++;
 					write_signature (sig.default_handler, "callback", false, true);
 					indent--;
