@@ -62,22 +62,22 @@ namespace Json {
 	public class Builder : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Builder ();
-		public unowned Json.Builder add_boolean_value (bool value);
-		public unowned Json.Builder add_double_value (double value);
-		public unowned Json.Builder add_int_value (int64 value);
-		public unowned Json.Builder add_null_value ();
-		public unowned Json.Builder add_string_value (string value);
-		public unowned Json.Builder add_value (owned Json.Node node);
-		public unowned Json.Builder begin_array ();
-		public unowned Json.Builder begin_object ();
-		public unowned Json.Builder end_array ();
-		public unowned Json.Builder end_object ();
+		public unowned Json.Builder? add_boolean_value (bool value);
+		public unowned Json.Builder? add_double_value (double value);
+		public unowned Json.Builder? add_int_value (int64 value);
+		public unowned Json.Builder? add_null_value ();
+		public unowned Json.Builder? add_string_value (string value);
+		public unowned Json.Builder? add_value (owned Json.Node node);
+		public unowned Json.Builder? begin_array ();
+		public unowned Json.Builder? begin_object ();
+		public unowned Json.Builder? end_array ();
+		public unowned Json.Builder? end_object ();
 		public Json.Node? get_root ();
 		[CCode (cname = "json_builder_new_immutable", has_construct_function = false)]
 		[Version (since = "1.2")]
 		public Builder.immutable_new ();
 		public void reset ();
-		public unowned Json.Builder set_member_name (string member_name);
+		public unowned Json.Builder? set_member_name (string member_name);
 		[NoAccessorMethod]
 		[Version (since = "1.2")]
 		public bool immutable { get; construct; }
@@ -184,7 +184,7 @@ namespace Json {
 		[Version (deprecated = true, deprecated_since = "0.8", replacement = "Json.Object.set_member")]
 		public void add_member (string member_name, owned Json.Node node);
 		[Version (since = "0.6")]
-		public Json.Node dup_member (string member_name);
+		public Json.Node? dup_member (string member_name);
 		[Version (since = "1.2")]
 		public bool equal (Json.Object b);
 		[Version (since = "0.8")]
@@ -197,8 +197,8 @@ namespace Json {
 		public double get_double_member (string member_name);
 		[Version (since = "0.8")]
 		public int64 get_int_member (string member_name);
-		public unowned Json.Node get_member (string member_name);
-		public GLib.List<weak string> get_members ();
+		public unowned Json.Node? get_member (string member_name);
+		public GLib.List<weak string>? get_members ();
 		[Version (since = "0.8")]
 		public bool get_null_member (string member_name);
 		[Version (since = "0.8")]
@@ -206,7 +206,7 @@ namespace Json {
 		public uint get_size ();
 		[Version (since = "0.8")]
 		public unowned string get_string_member (string member_name);
-		public GLib.List<weak Json.Node> get_values ();
+		public GLib.List<weak Json.Node>? get_values ();
 		public bool has_member (string member_name);
 		[Version (since = "1.2")]
 		public uint hash ();
@@ -252,6 +252,8 @@ namespace Json {
 		public bool load_from_stream (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "0.12")]
 		public async bool load_from_stream_async (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "1.4")]
+		public Json.Node steal_root ();
 		[NoAccessorMethod]
 		[Version (since = "1.2")]
 		public bool immutable { get; construct; }
@@ -285,13 +287,13 @@ namespace Json {
 		public void end_member ();
 		public bool get_boolean_value ();
 		public double get_double_value ();
-		public unowned GLib.Error get_error ();
+		public unowned GLib.Error? get_error ();
 		public int64 get_int_value ();
 		[Version (since = "0.14")]
-		public unowned string get_member_name ();
+		public unowned string? get_member_name ();
 		public bool get_null_value ();
 		public unowned string get_string_value ();
-		public unowned Json.Node get_value ();
+		public unowned Json.Node? get_value ();
 		public bool is_array ();
 		public bool is_object ();
 		public bool is_value ();
@@ -404,7 +406,7 @@ namespace Json {
 	public static void boxed_register_serialize_func (GLib.Type gboxed_type, Json.NodeType node_type, Json.BoxedSerializeFunc serialize_func);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	[Version (since = "0.10")]
-	public static Json.Node boxed_serialize (GLib.Type gboxed_type, void* boxed);
+	public static Json.Node? boxed_serialize (GLib.Type gboxed_type, void* boxed);
 	[CCode (cheader_filename = "json-glib/json-glib.h,json-glib/json-gobject.h")]
 	[Version (deprecated = true, deprecated_since = "0.10", replacement = "Json.gobject_from_data", since = "0.4")]
 	public static GLib.Object construct_gobject (GLib.Type gtype, string data, size_t length) throws GLib.Error;

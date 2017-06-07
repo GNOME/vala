@@ -568,6 +568,10 @@ namespace Atspi {
 		PARENT_WINDOW_OF,
 		DESCRIPTION_FOR,
 		DESCRIBED_BY,
+		DETAILS,
+		DETAILS_FOR,
+		ERROR_MESSAGE,
+		ERROR_FOR,
 		LAST_DEFINED
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", cprefix = "ATSPI_ROLE_", type_id = "atspi_role_get_type ()")]

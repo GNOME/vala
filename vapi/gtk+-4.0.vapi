@@ -8384,6 +8384,18 @@ namespace Gtk {
 		public bool fit_model { get; set; }
 		public Gtk.TreeModel model { get; set; }
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_center_box_get_type ()")]
+	public class CenterBox : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		[Version (since = "3.92")]
+		public CenterBox ();
+		[Version (since = "3.92")]
+		public void set_center_widget (Gtk.Widget child);
+		[Version (since = "3.92")]
+		public void set_end_widget (Gtk.Widget child);
+		[Version (since = "3.92")]
+		public void set_start_widget (Gtk.Widget child);
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_check_button_get_type ()")]
 	public class CheckButton : Gtk.ToggleButton, Atk.Implementor, Gtk.Actionable, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -14457,8 +14469,10 @@ namespace Gtk {
 		public void input_shape_combine_region (Cairo.Region? region);
 		[Version (since = "3.6")]
 		public void insert_action_group (string name, GLib.ActionGroup? group);
-		public void insert_after (Gtk.Widget parent, Gtk.Widget previous_sibling);
-		public void insert_before (Gtk.Widget parent, Gtk.Widget next_sibling);
+		[Version (since = "3.92")]
+		public void insert_after (Gtk.Widget parent, Gtk.Widget? previous_sibling);
+		[Version (since = "3.92")]
+		public void insert_before (Gtk.Widget parent, Gtk.Widget? next_sibling);
 		[CCode (cname = "gtk_widget_class_install_style_property")]
 		public class void install_style_property (GLib.ParamSpec pspec);
 		public bool intersect (Gdk.Rectangle area, out Gdk.Rectangle? intersection = null);

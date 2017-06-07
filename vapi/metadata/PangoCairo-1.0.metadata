@@ -9,4 +9,3 @@ ShapeRendererFunc.data closure=3
 context_get_shape_renderer.context closure=1
 create_* unowned=false
 Font.get_scaled_font unowned
-FcFontMap skip

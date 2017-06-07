@@ -1720,6 +1720,7 @@ namespace Pk {
 		CHECK_EXECUTABLE_FILES,
 		CHECK_LIBRARIES,
 		COPY_FILES,
+		RUN_HOOK,
 		LAST;
 		[Version (since = "0.5.0")]
 		public static Pk.Status enum_from_string (string status);
