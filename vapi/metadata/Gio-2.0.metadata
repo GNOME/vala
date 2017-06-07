@@ -91,6 +91,7 @@ DataInputStream
   .read_* throws="GLib.IOError"
   .read_line* nullable
   .read_line_finish_utf8 skip
+  .read_line_utf8.length default=null
 DataOutputStream
   .put_* throws="GLib.IOError"
 DBusAuthObserver.authorize_authenticated_peer virtual
