@@ -1043,7 +1043,7 @@ public class string {
 	[CCode (cname = "g_strdup_vprintf")]
 	public string vprintf (va_list args);
 	[CCode (cname = "sscanf", cheader_filename = "stdio.h"), ScanfFormat]
-	public int scanf (...);
+	public int scanf (string format, ...);
 	[CCode (cname = "g_strconcat")]
 	public string concat (string string2, ...);
 	[CCode (cname = "g_strescape")]
