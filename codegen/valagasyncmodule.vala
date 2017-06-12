@@ -33,6 +33,7 @@ public class Vala.GAsyncModule : GtkModule {
 
 		data.add_field ("GTask*", "_async_result");
 		if (!context.require_glib_version (2, 44)) {
+			data.add_field ("GAsyncReadyCallback", "_callback_");
 			data.add_field ("gboolean", "_task_complete_");
 		}
 
@@ -160,8 +161,57 @@ public class Vala.GAsyncModule : GtkModule {
 		return freefunc;
 	}
 
+	void generate_async_ready_callback_wrapper (Method m, string function_name) {
+		var function = new CCodeFunction (function_name, "void");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeParameter ("*source_object", "GObject"));
+		function.add_parameter (new CCodeParameter ("*res", "GAsyncResult"));
+		function.add_parameter (new CCodeParameter ("*user_data", "void"));
+
+		push_function (function);
+
+		// Set _task_complete_ to false after calling back to the real func
+		var async_result_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_TASK"));
+		async_result_cast.add_argument (new CCodeIdentifier ("res"));
+
+		var dataname = Symbol.lower_case_to_camel_case (get_ccode_name (m)) + "Data";
+		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("_task_data_"));
+
+		var get_data_call = new CCodeFunctionCall (new CCodeIdentifier ("g_task_get_task_data"));
+		get_data_call.add_argument (async_result_cast);
+
+		var data_var = new CCodeIdentifier ("_task_data_");
+		ccode.add_assignment (data_var, get_data_call);
+
+		var task_inner_callback = new CCodeMemberAccess.pointer (data_var, "_callback_");
+		var callback_is_nonnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, task_inner_callback, new CCodeConstant ("NULL"));
+
+		ccode.open_if (callback_is_nonnull);
+		var nested_callback = new CCodeFunctionCall (task_inner_callback);
+		nested_callback.add_argument (new CCodeIdentifier ("source_object"));
+		nested_callback.add_argument (new CCodeIdentifier ("res"));
+		nested_callback.add_argument (new CCodeIdentifier ("user_data"));
+		ccode.add_expression (nested_callback);
+		ccode.close ();
+
+		ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "_task_complete_"), new CCodeConstant ("TRUE"));
+
+		pop_function ();
+
+		cfile.add_function_declaration (function);
+		cfile.add_function (function);
+	}
+
 	void generate_async_function (Method m) {
 		push_context (new EmitContext ());
+
+		string? callback_wrapper = null;
+
+		if (!context.require_glib_version (2, 44)) {
+			callback_wrapper = get_ccode_real_name (m) + "_async_ready_wrapper";
+			generate_async_ready_callback_wrapper (m, callback_wrapper);
+		}
 
 		var dataname = Symbol.lower_case_to_camel_case (get_ccode_name (m)) + "Data";
 		var asyncfunc = new CCodeFunction (get_ccode_real_name (m), "void");
@@ -211,6 +261,10 @@ public class Vala.GAsyncModule : GtkModule {
 		ccode.add_declaration (dataname + "*", new CCodeVariableDeclarator ("_data_"));
 		ccode.add_assignment (data_var, dataalloc);
 
+		if (!context.require_glib_version (2, 44)) {
+			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "_callback_"), new CCodeConstant ("_callback_"));
+		}
+
 		var create_result = new CCodeFunctionCall (new CCodeIdentifier ("g_task_new"));
 
 		var t = m.parent_symbol as TypeSymbol;
@@ -239,7 +293,11 @@ public class Vala.GAsyncModule : GtkModule {
 			create_result.add_argument (new CCodeIdentifier (get_variable_cname (cancellable_param.name)));
 		}
 
-		create_result.add_argument (new CCodeIdentifier ("_callback_"));
+		if (context.require_glib_version (2, 44)) {
+			create_result.add_argument (new CCodeIdentifier ("_callback_"));
+		} else {
+			create_result.add_argument (new CCodeIdentifier (callback_wrapper));
+		}
 		create_result.add_argument (new CCodeIdentifier ("_user_data_"));
 
 		ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "_async_result"), create_result);
@@ -582,11 +640,6 @@ public class Vala.GAsyncModule : GtkModule {
 			ccode.open_if (is_null);
 			return_default_value (return_type);
 			ccode.close ();
-		}
-
-		if (!context.require_glib_version (2, 44)) {
-			var task_completed_var = new CCodeMemberAccess.pointer (data_var, "_task_complete_");
-			ccode.add_assignment (task_completed_var, new CCodeConstant ("TRUE"));
 		}
 
 		emit_context.push_symbol (m);
