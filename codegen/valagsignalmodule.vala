@@ -36,11 +36,7 @@ public class Vala.GSignalModule : GObjectModule {
 			}
 		}
 		
-		if (return_type is ValueType && return_type.nullable) {
-			ret = "%s_POINTER_".printf (prefix);
-		} else {
-			ret = "%s_%s_".printf (prefix, get_ccode_marshaller_type_name (return_type));
-		}
+		ret = "%s_%s_".printf (prefix, get_ccode_marshaller_type_name (return_type));
 		
 		if (params == null || params.size == 0) {
 			ret = ret + "_VOID";
@@ -93,11 +89,7 @@ public class Vala.GSignalModule : GObjectModule {
 	private string get_marshaller_signature (List<Parameter> params, DataType return_type) {
 		string signature;
 		
-		if (return_type is ValueType && return_type.nullable) {
-			signature = "POINTER:";
-		} else {
-			signature = "%s:".printf (get_ccode_marshaller_type_name (return_type));
-		}
+		signature = "%s:".printf (get_ccode_marshaller_type_name (return_type));
 		if (params == null || params.size == 0) {
 			signature = signature + "VOID";
 		} else {
