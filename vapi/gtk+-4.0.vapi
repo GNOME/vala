@@ -8390,11 +8390,16 @@ namespace Gtk {
 		[Version (since = "3.92")]
 		public CenterBox ();
 		[Version (since = "3.92")]
+		public Gtk.BaselinePosition get_baseline_position ();
+		[Version (since = "3.92")]
+		public void set_baseline_position (Gtk.BaselinePosition position);
+		[Version (since = "3.92")]
 		public void set_center_widget (Gtk.Widget child);
 		[Version (since = "3.92")]
 		public void set_end_widget (Gtk.Widget child);
 		[Version (since = "3.92")]
 		public void set_start_widget (Gtk.Widget child);
+		public Gtk.BaselinePosition baseline_position { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_check_button_get_type ()")]
 	public class CheckButton : Gtk.ToggleButton, Atk.Implementor, Gtk.Actionable, Gtk.Buildable {

@@ -258,7 +258,9 @@ ZlibCompressor
 Converter
   .convert.outbuf type="uint8[]" array_length_idx=3
 File
-  .copy_async skip=false
+  // FIXME: gir-parser gets confused by async *and* notified callbacks at the same time
+  .copy_async skip
+  .copy_finish skip
   .copy*.progress_callback default=null
   .get_basename nullable
   .get_parent nullable

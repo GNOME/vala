@@ -173,6 +173,7 @@ namespace GLib {
 		public abstract bool prefix_matches (GLib.File file);
 		[NoWrapper, Version (deprecated_since = "vala-0.16", replacement = "read")]
 		public abstract unowned GLib.FileInputStream read_fn (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual async bool copy_async (GLib.File destination, GLib.FileCopyFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, GLib.FileProgressCallback? progress_callback = null) throws GLib.Error;
 	}
 
 	public interface Icon : GLib.Object {
