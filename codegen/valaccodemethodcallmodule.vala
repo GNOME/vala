@@ -839,7 +839,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 
 			// assign new value
-			store_value (unary.inner.target_value, transform_value (unary.target_value, unary.inner.value_type, arg));
+			store_value (unary.inner.target_value, transform_value (unary.target_value, unary.inner.value_type, arg), expr.source_reference);
 
 			// handle out null terminated arrays
 			if (param != null && get_ccode_array_null_terminated (param)) {

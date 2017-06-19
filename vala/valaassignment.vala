@@ -495,11 +495,11 @@ public class Vala.Assignment : Expression {
 				var new_value = right.target_value;
 
 				if (local != null) {
-					codegen.store_local (local, new_value, false);
+					codegen.store_local (local, new_value, false, source_reference);
 				} else if (param != null) {
-					codegen.store_parameter (param, new_value);
+					codegen.store_parameter (param, new_value, false, source_reference);
 				} else if (field != null) {
-					codegen.store_field (field, instance && ma.inner != null ? ma.inner.target_value : null, new_value);
+					codegen.store_field (field, instance && ma.inner != null ? ma.inner.target_value : null, new_value, source_reference);
 				}
 
 				if (!(parent_node is ExpressionStatement)) {

@@ -2504,7 +2504,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	 */
 	public TargetValue store_temp_value (TargetValue initializer, CodeNode node_reference, bool? value_owned = null) {
 		var lvalue = create_temp_value (initializer.value_type, false, node_reference, value_owned);
-		store_value (lvalue, initializer);
+		store_value (lvalue, initializer, node_reference.source_reference);
 		return load_temp_value (lvalue);
 	}
 
@@ -4023,7 +4023,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public abstract TargetValue load_this_parameter (TypeSymbol sym);
 
-	public abstract void store_value (TargetValue lvalue, TargetValue value);
+	public abstract void store_value (TargetValue lvalue, TargetValue value, SourceReference? source_reference = null);
 
 	public virtual string get_delegate_target_cname (string delegate_cname) {
 		assert_not_reached ();
@@ -4223,7 +4223,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_else ();
 
 				// g_value_init/copy must not be called for uninitialized values
-				store_value (temp_value, value);
+				store_value (temp_value, value, node.source_reference);
 				ccode.close ();
 			} else {
 				ccode.add_expression (copy_call);
@@ -5707,7 +5707,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				} else {
 					var temp_value = create_temp_value (type, false, node);
 					temp_ref_values.insert (0, ((GLibValue) temp_value).copy ());
-					store_value (temp_value, result);
+					store_value (temp_value, result, node.source_reference);
 					result.cvalue = get_cvalue_ (temp_value);
 				}
 			}
