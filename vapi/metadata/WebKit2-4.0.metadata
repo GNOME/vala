@@ -14,5 +14,6 @@ WebResource
   .failed#signal.error type="GLib.Error"
 WebView
   .load_failed#signal.error type="GLib.Error"
+  .show_option_menu#signal name="on_show_option_menu"
 
 *.ref unowned

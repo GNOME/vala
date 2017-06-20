@@ -401,6 +401,42 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected NotificationPermissionRequest ();
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_option_menu_get_type ()")]
+	public class OptionMenu : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected OptionMenu ();
+		[Version (since = "2.18")]
+		public void activate_item (uint index);
+		[Version (since = "2.18")]
+		public unowned WebKit.OptionMenuItem get_item (uint index);
+		[Version (since = "2.18")]
+		public uint get_n_items ();
+		[Version (since = "2.18")]
+		public void select_item (uint index);
+		[HasEmitter]
+		[Version (since = "2.18")]
+		public signal void close ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_option_menu_item_get_type ()")]
+	[Compact]
+	public class OptionMenuItem {
+		[Version (since = "2.18")]
+		public WebKit.OptionMenuItem copy ();
+		[Version (since = "2.18")]
+		public void free ();
+		[Version (since = "2.18")]
+		public unowned string get_label ();
+		[Version (since = "2.18")]
+		public unowned string get_tooltip ();
+		[Version (since = "2.18")]
+		public bool is_enabled ();
+		[Version (since = "2.18")]
+		public bool is_group_child ();
+		[Version (since = "2.18")]
+		public bool is_group_label ();
+		[Version (since = "2.18")]
+		public bool is_selected ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_plugin_get_type ()")]
 	public class Plugin : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -973,6 +1009,8 @@ namespace WebKit {
 		public void set_editable (bool editable);
 		public void set_settings (WebKit.Settings settings);
 		public void set_zoom_level (double zoom_level);
+		[NoWrapper]
+		public virtual bool show_option_menu (Gdk.Rectangle rectangle, WebKit.OptionMenu menu);
 		public void stop_loading ();
 		[Version (since = "2.12")]
 		public void try_close ();
@@ -1026,6 +1064,9 @@ namespace WebKit {
 		[Version (since = "2.6")]
 		public virtual signal bool load_failed_with_tls_errors (string failing_uri, GLib.TlsCertificate certificate, GLib.TlsCertificateFlags errors);
 		public virtual signal void mouse_target_changed (WebKit.HitTestResult hit_test_result, uint modifiers);
+		[CCode (cname = "show-option-menu")]
+		[Version (since = "2.18.")]
+		public signal bool on_show_option_menu (WebKit.OptionMenu menu, Gdk.Event event, Gdk.Rectangle rectangle);
 		public virtual signal bool permission_request (WebKit.PermissionRequest permission_request);
 		public virtual signal bool print (WebKit.PrintOperation print_operation);
 		public virtual signal void ready_to_show ();
