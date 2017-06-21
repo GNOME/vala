@@ -698,6 +698,10 @@ public struct int64 {
 			return false;
 		}
 	}
+
+	[CCode (cname = "g_ascii_string_to_signed")]
+	[Version (since = "2.54")]
+	public static bool from_string (string str, [CCode (pos = 5.1)] out int64 out_num = null, uint @base = 10U, int64 min = int64.MIN, int64 max = int64.MAX) throws GLib.NumberParserError;
 }
 
 [SimpleType]
@@ -750,6 +754,10 @@ public struct uint64 {
 			return false;
 		}
 	}
+
+	[CCode (cname = "g_ascii_string_to_unsigned")]
+	[Version (since = "2.54")]
+	public static bool from_string (string str, [CCode (pos = 5.1)] out uint64 out_num = null, uint @base = 10U, uint64 min = uint64.MIN, uint64 max = uint64.MAX) throws GLib.NumberParserError;
 }
 
 [SimpleType]
@@ -5718,6 +5726,13 @@ namespace GLib {
 		_qsort_with_data<T*> (elems, size, (a, b) => {
 				return compare_func (*a, *b);
 			});
+	}
+
+	[Version (since = "2.54")]
+	public errordomain NumberParserError {
+		INVALID,
+		OUT_OF_BOUNDS;
+		public static GLib.Quark quark ();
 	}
 
 	/* Unix-specific functions. All of these have to include glib-unix.h. */
