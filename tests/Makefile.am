@@ -287,6 +287,7 @@ TESTS = \
 	gir/bug667751.test \
 	gir/bug742012.test \
 	gir/array-fixed-length.test \
+	gir/delegate-alias-without-target.test \
 	annotations/deprecated.vala \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
