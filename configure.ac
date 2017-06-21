@@ -18,6 +18,7 @@ dnl We don't support separate builddir when building from git
 echo \#buildapi-variable-no-builddir >/dev/null
 
 AC_SUBST(API_VERSION)
+AC_DEFINE_UNQUOTED(API_VERSION, "$API_VERSION", [Define to the api-version of this package])
 AC_SUBST(PACKAGE_SUFFIX)
 AC_DEFINE_UNQUOTED(PACKAGE_SUFFIX, "$PACKAGE_SUFFIX", [Define to the suffix of this package])
 
