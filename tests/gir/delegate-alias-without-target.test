@@ -1,0 +1,20 @@
+GIR
+
+Input:
+
+<alias name="Foo" c:type="TestFoo">
+  <type name="Bar" c:type="TestBar"/>
+</alias>
+
+<callback name="Bar" c:type="TestBar">
+  <return-value transfer-ownership="none">
+    <type name="none" c:type="void"/>
+  </return-value>
+</callback>
+
+Output:
+
+[CCode (cheader_filename = "test.h", has_target = false)]
+public delegate void Bar ();
+[CCode (cheader_filename = "test.h", has_target = false)]
+public delegate void Foo ();

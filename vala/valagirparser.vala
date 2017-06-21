@@ -3639,7 +3639,6 @@ public class Vala.GirParser : CodeVisitor {
 			
 			var deleg = new Delegate (alias.name, orig.return_type.copy (), alias.source_reference);
 			deleg.access = orig.access;
-			deleg.has_target = orig.has_target;
 			
 			foreach (var param in orig.get_parameters ()) {
 				deleg.add_parameter (param.copy ());
