@@ -22,6 +22,7 @@
 
 [CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "config.h")]
 namespace Config {
+	public const string API_VERSION;
 	[CCode (cheader_filename = "version.h")]
 	public const string BUILD_VERSION;
 	public const string PACKAGE_DATADIR;

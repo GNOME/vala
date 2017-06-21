@@ -514,7 +514,7 @@ class Vala.Compiler {
 			stdout.printf ("Vala %s\n", Config.BUILD_VERSION);
 			return 0;
 		} else if (api_version) {
-			stdout.printf ("%s\n", Config.PACKAGE_SUFFIX.substring (1));
+			stdout.printf ("%s\n", Config.API_VERSION);
 			return 0;
 		}
 		
@@ -597,7 +597,7 @@ class Vala.Compiler {
 			stdout.printf ("Vala %s\n", Config.BUILD_VERSION);
 			return 0;
 		} else if (api_version) {
-			stdout.printf ("%s\n", Config.PACKAGE_SUFFIX.substring (1));
+			stdout.printf ("%s\n", Config.API_VERSION);
 			return 0;
 		}
 		
