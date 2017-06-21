@@ -1,0 +1,4 @@
+* cheader_filename="JavaScriptCore/JavaScript.h"
+
+GlobalContext struct=false
+Value struct=false

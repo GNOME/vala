@@ -4,8 +4,6 @@ DOMEventTarget.add_event_listener skip
 _ContextMenu skip
 _ContextMenuItem skip
 
-Frame.get_javascript_* type="void*"
-
 DOMEventTarget.add_event_listener_with_closure.handler type="owned WebKit.DOM.EventTargetFunc"
 
 URIRequest.get_http_headers unowned

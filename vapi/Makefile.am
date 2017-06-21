@@ -188,6 +188,7 @@ dist_vapi_DATA = \
 	hildon-1.vapi \
 	hildon-fm-2.deps \
 	hildon-fm-2.vapi \
+	javascriptcoregtk-4.0.vapi \
 	json-glib-1.0.deps \
 	json-glib-1.0.vapi \
 	libarchive.deps \
@@ -436,6 +437,7 @@ GIR_BINDINGS = \
 	graphene-1.0 \
 	gtk+-4.0 \
 	gudev-1.0 \
+	javascriptcoregtk-4.0 \
 	json-glib-1.0 \
 	libgdata \
 	libgnome-menu-3.0 \
@@ -731,6 +733,9 @@ hildon-1:
 
 hildon-fm-2:
 	$(GENVAPI) --library $(srcdir)/hildon-fm-2 $(PACKAGESDIR)/hildon-fm-2/hildon-fm-2.gi
+
+javascriptcoregtk-4.0:
+	$(GENVAPI) --library $(srcdir)/javascriptcoregtk-4.0 --metadatadir $(METADATADIR) $(METADATADIR)/JavaScriptCore-4.0-custom.vala $(GIRDIR)/JavaScriptCore-4.0.gir
 
 json-glib-1.0:
 	$(GENVAPI) --library $(srcdir)/json-glib-1.0 --metadatadir $(METADATADIR) --pkg gio-2.0 $(METADATADIR)/Json-1.0-custom.vala $(GIRDIR)/Json-1.0.gir

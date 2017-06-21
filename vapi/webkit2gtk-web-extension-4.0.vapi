@@ -2916,9 +2916,9 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected Frame ();
 		[Version (since = "2.2")]
-		public void* get_javascript_context_for_script_world (WebKit.ScriptWorld world);
+		public unowned JS.GlobalContext get_javascript_context_for_script_world (WebKit.ScriptWorld world);
 		[Version (since = "2.2")]
-		public void* get_javascript_global_context ();
+		public unowned JS.GlobalContext get_javascript_global_context ();
 		[Version (since = "2.2")]
 		public unowned string get_uri ();
 		[Version (since = "2.2")]

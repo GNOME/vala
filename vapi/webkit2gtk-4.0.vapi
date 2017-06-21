@@ -320,6 +320,8 @@ namespace WebKit {
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_javascript_result_ref", type_id = "webkit_javascript_result_get_type ()", unref_function = "webkit_javascript_result_unref")]
 	[Compact]
 	public class JavascriptResult {
+		public unowned JS.GlobalContext get_global_context ();
+		public unowned JS.Value get_value ();
 		public unowned WebKit.JavascriptResult @ref ();
 		public void unref ();
 	}
@@ -989,6 +991,7 @@ namespace WebKit {
 		public unowned Cairo.Surface get_favicon ();
 		public unowned WebKit.FindController get_find_controller ();
 		public unowned WebKit.WebInspector get_inspector ();
+		public unowned JS.GlobalContext get_javascript_global_context ();
 		public unowned WebKit.WebResource get_main_resource ();
 		public uint64 get_page_id ();
 		[Version (since = "2.12")]
