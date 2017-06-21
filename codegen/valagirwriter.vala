@@ -836,7 +836,9 @@ public class Vala.GIRWriter : CodeVisitor {
 	private void write_implicit_params (DataType type, ref int index, bool has_array_length, string name, ParameterDirection direction) {
 		if (type is ArrayType && has_array_length) {
 			var int_type = new IntegerType (CodeContext.get ().root.scope.lookup ("int") as Struct);
-			write_param_or_return (int_type, true, ref index, has_array_length, "%s_length1".printf (name), null, direction);
+			for (var i = 0; i < ((ArrayType) type).rank; i++) {
+				write_param_or_return (int_type, true, ref index, has_array_length, "%s_length%i".printf (name, i + 1), null, direction);
+			}
 		} else if (type is DelegateType) {
 			var deleg_type = (DelegateType) type;
 			if (deleg_type.delegate_symbol.has_target) {
@@ -852,7 +854,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	void skip_implicit_params (DataType type, ref int index, bool has_array_length) {
 		if (type is ArrayType && has_array_length) {
-			index++;
+			index += ((ArrayType) type).rank;
 		} else if (type is DelegateType) {
 			index++;
 			var deleg_type = (DelegateType) type;
@@ -883,6 +885,9 @@ public class Vala.GIRWriter : CodeVisitor {
 				index++;
 			} else {
 				skip_implicit_params (return_type, ref index, return_array_length);
+				if (return_type is ArrayType && return_array_length) {
+					index -= ((ArrayType) return_type).rank - 1;
+				}
 			}
 
 			last_index = index - 1;
