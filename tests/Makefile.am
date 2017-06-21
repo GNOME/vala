@@ -237,6 +237,7 @@ TESTS = \
 	gir/bug651773.test \
 	gir/bug667751.test \
 	gir/bug742012.test \
+	gir/delegate-alias-without-target.test \
 	$(NULL)
 
 NON_NULL_TESTS = \
