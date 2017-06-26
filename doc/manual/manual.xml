@@ -849,7 +849,7 @@
 <para><emphasis role="strong">{</emphasis> [ loop-embedded-statement-list ] <emphasis role="strong">}</emphasis></para></listitem></itemizedlist>
 <para> loop-embedded-statement-list:</para><itemizedlist><listitem override="none">
 <para>loop-embedded-statement [ loop-embedded-statement-list ]</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>Both break and continue statement are types of jump statement, described in <link linkend="Jump_statements">Statements/Jump statements</link>. </para>
+<para>Both break and continue statement are types of jump statement, described in <link linkend="Jump_Statements">Statements/Jump Statements</link>. </para>
 
 <section>
 <title>The While Statement</title>
@@ -885,7 +885,7 @@
 
 <section>
 <title>Jump Statements</title>
-<para>Jump statements move execution to an arbitary point, dependent on the type of statement and its location.  In any of these cases any transient scopes are ended appropriately: <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink> and <link linkend="Simple_statements">Statements/Simple statements</link>. </para>
+<para>Jump statements move execution to an arbitary point, dependent on the type of statement and its location.  In any of these cases any transient scopes are ended appropriately: <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink> and <link linkend="Simple_Statements">Statements/Simple statements</link>. </para>
 <para>A <code>break</code> statement moves execution to the first statement after the nearest enclosing <code>while</code>, <code>do</code>, <code>for</code>, or <code>foreach</code> statement. </para><itemizedlist><listitem override="none">
 <para>break-statement:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">break</emphasis> <emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
@@ -1384,7 +1384,7 @@
 <![CDATA[        }]]>
 <![CDATA[}]]>
 </programlisting>
-<para>This example allows the <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/ClassName#">ClassName</ulink> class to be instantiated either setting no properties, or setting the  property.  The convention is to name constructors as &quot;with_&quot; and then a description of what the extra properties will be used for, though following this is optional. </para><itemizedlist><listitem override="none">
+<para>This example allows the <code>ClassName</code> class to be instantiated either setting no properties, or setting the  property.  The convention is to name constructors as &quot;with_&quot; and then a description of what the extra properties will be used for, though following this is optional. </para><itemizedlist><listitem override="none">
 <para>class-creation-method-declaration:</para><itemizedlist><listitem override="none">
 <para>[ class-member-visibility-modifier ] class-name [ <emphasis role="strong">.</emphasis> creation-method-name ] <emphasis role="strong">(</emphasis> param-list <emphasis role="strong">)</emphasis> <emphasis role="strong">{</emphasis> construction-assignments <emphasis role="strong">}</emphasis></para></listitem></itemizedlist>
 <para> class-name:</para><itemizedlist><listitem override="none">
@@ -2207,8 +2207,24 @@
 <section>
 <title>Flag types</title>
 <para>An enumerated type declaration can be converted into a flag type declaration by annotating the declaration with &quot;Flags&quot;.  A flag type represents a set of flags, any number of which can be combined in one instance of the flag type, in the same fashion as a bitfield in C.  For an explanation of the operations that can be performed on flag types, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Flag_operations">Expressions/Flag operations</ulink>.  For how to use attributes, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Attributes#">Attributes</ulink>. </para>
-<para>Flag example follows: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[// ...]]></lineannotation>
-<lineannotation/>
+<para>For example, say we want to draw the borders of a table cell: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><![CDATA[[]]><methodname><![CDATA[Flags]]></methodname><![CDATA[]]]>
+<token><![CDATA[enum]]></token><![CDATA[ ]]><methodname><![CDATA[Borders]]></methodname><![CDATA[ {]]>
+<![CDATA[    ]]><methodname><![CDATA[LEFT]]></methodname><![CDATA[,]]>
+<![CDATA[    ]]><methodname><![CDATA[RIGHT]]></methodname><![CDATA[,]]>
+<![CDATA[    ]]><methodname><![CDATA[TOP]]></methodname><![CDATA[,]]>
+<![CDATA[    ]]><methodname><![CDATA[BOTTOM]]></methodname>
+<![CDATA[}]]>
+
+<token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[draw_borders]]></methodname><![CDATA[ (]]><methodname><![CDATA[Borders]]></methodname><![CDATA[ ]]><methodname><![CDATA[selected_borders]]></methodname><![CDATA[) {]]>
+<![CDATA[    ]]><lineannotation><![CDATA[// equivalent to: if ((Borders.LEFT & selected_borders) > 0)]]></lineannotation>
+<lineannotation/><![CDATA[    ]]><token><![CDATA[if]]></token><![CDATA[ (]]><methodname><![CDATA[Borders]]></methodname><![CDATA[.]]><methodname><![CDATA[LEFT]]></methodname><![CDATA[ ]]><token><![CDATA[in]]></token><![CDATA[ ]]><methodname><![CDATA[selected_borders]]></methodname><![CDATA[) {]]>
+<![CDATA[        ]]><lineannotation><![CDATA[// draw left border]]></lineannotation>
+<lineannotation/><![CDATA[    }]]>
+<![CDATA[    ]]><token><![CDATA[if]]></token><![CDATA[ (]]><methodname><![CDATA[Borders]]></methodname><![CDATA[.]]><methodname><![CDATA[RIGHT]]></methodname><![CDATA[ ]]><token><![CDATA[in]]></token><![CDATA[ ]]><methodname><![CDATA[selected_borders]]></methodname><![CDATA[) {]]>
+<![CDATA[        ]]><lineannotation><![CDATA[// draw right border]]></lineannotation>
+<lineannotation/><![CDATA[    }]]>
+<![CDATA[    ...]]>
+<![CDATA[}]]>
 </programlisting>
 </section>
 
