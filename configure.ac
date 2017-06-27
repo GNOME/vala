@@ -7,7 +7,7 @@ AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE([1.11 dist-xz no-dist-gzip])
+AM_INIT_AUTOMAKE([1.11 dist-xz no-dist-gzip subdir-objects])
 AM_MAINTAINER_MODE([enable])
 
 API_VERSION=0.38
@@ -86,6 +86,7 @@ AC_SUBST(COVERAGE_CFLAGS)
 AC_SUBST(COVERAGE_LIBS)
 
 GLIB_REQUIRED=2.40.0
+LIBGVC_REQUIRED=2.16
 
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
 
@@ -96,6 +97,36 @@ PKG_CHECK_MODULES(GMODULE, gmodule-2.0 >= $GLIB_REQUIRED)
 
 AC_SUBST(GMODULE_CFLAGS)
 AC_SUBST(GMODULE_LIBS)
+
+PKG_CHECK_MODULES(LIBGVC, libgvc >= $LIBGVC_REQUIRED)
+AC_MSG_CHECKING([for CGRAPH])
+cgraph_tmp_LIBADD="$LIBADD"
+cgraph_tmp_CFLAGS="$CFLAGS"
+LIBADD="$LIBADD $LIBGVC_LIBS"
+CFLAGS="$CFLAGS $LIBGVC_CFLAGS"
+AC_RUN_IFELSE(
+	[AC_LANG_SOURCE([
+		#include <gvc.h>
+
+		int main(void) {
+			#ifdef WITH_CGRAPH
+				return 0;
+			#else
+				return -1;
+			#endif
+		}
+	])], [
+		AC_MSG_RESULT([yes])
+		VALAFLAGS="$VALAFLAGS -D WITH_CGRAPH"
+		have_cgraph=yes
+	], [
+		AC_MSG_RESULT([no])
+		have_cgraph=no
+	]
+)
+LIBADD="$cgraph_tmp_LIBADD"
+CFLAGS="$cgraph_tmp_CFLAGS"
+AM_CONDITIONAL(HAVE_CGRAPH, test "$have_cgraph" = "yes")
 
 AC_PATH_PROG([XSLTPROC], [xsltproc], :)
 AM_CONDITIONAL(HAVE_XSLTPROC, test "$XSLTPROC" != :)
@@ -124,6 +155,17 @@ AC_CONFIG_FILES([Makefile
            vapigen/vapigen.pc
            vapigen/Makefile
            vapigen/vala-gen-introspect/Makefile
-           vapigen/vala-gen-introspect/vala-gen-introspect])
+           vapigen/vala-gen-introspect/vala-gen-introspect
+           libvaladoc/valadoc.pc
+           libvaladoc/valadoc.deps
+           libvaladoc/Makefile
+           valadoc/Makefile
+           valadoc/doclets/Makefile
+           valadoc/doclets/html/Makefile
+           valadoc/doclets/devhelp/Makefile
+           valadoc/doclets/gtkdoc/Makefile
+           valadoc/icons/Makefile
+           valadoc/tests/Makefile
+])
 
 AC_OUTPUT

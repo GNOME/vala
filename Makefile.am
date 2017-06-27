@@ -13,6 +13,8 @@ SUBDIRS = \
 	doc \
 	gobject-introspection \
 	vapigen \
+	libvaladoc \
+	valadoc \
 	$(NULL)
 
 if ENABLE_UNVERSIONED

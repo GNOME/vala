@@ -8,6 +8,7 @@ Makefile
 *.stamp
 *.gir
 .deps
+.dirstamp
 .libs
 libvala-*.vapi
 

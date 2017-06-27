@@ -1,0 +1,14 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+datarootdir=@datarootdir@
+datadir=@datadir@
+vapidir=@datadir@/vala/vapi
+
+Name: Valadoc
+Description: The Vala documentation compiler library
+Version: @VERSION@
+Requires: gmodule-2.0 libgvc libvala@PACKAGE_SUFFIX@
+Libs: -L${libdir} -lvaladoc@PACKAGE_SUFFIX@
+Cflags: -I${includedir}/valadoc@PACKAGE_SUFFIX@
