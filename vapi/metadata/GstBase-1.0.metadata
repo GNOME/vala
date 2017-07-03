@@ -2,6 +2,8 @@
 Base* name="Base(.+)"
 BASE_* name="BASE_(.+)"
 
+*.ref unowned
+
 PushSrc
   .create.buf out unowned=false
   .alloc.buf out unowned=false

@@ -384,9 +384,11 @@ namespace Gst {
 			[Version (since = "1.6")]
 			public void clear ();
 			public void free ();
+			public unowned Gst.Base.FlowCombiner @ref ();
 			public void remove_pad (Gst.Pad pad);
 			[Version (since = "1.6")]
 			public void reset ();
+			public void unref ();
 			public Gst.FlowReturn update_flow (Gst.FlowReturn fret);
 			[Version (since = "1.6")]
 			public Gst.FlowReturn update_pad_flow (Gst.Pad pad, Gst.FlowReturn fret);
@@ -458,6 +460,7 @@ namespace Gst {
 			public int overhead;
 			[CCode (has_construct_function = false)]
 			public ParseFrame (Gst.Buffer buffer, Gst.Base.ParseFrameFlags flags, int overhead);
+			public Gst.Base.ParseFrame copy ();
 			public void free ();
 			public void init ();
 		}

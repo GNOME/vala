@@ -23,5 +23,11 @@ namespace Gst {
 public ByteWriter.with_size (uint size, bool fixed);
 public ByteWriter.with_data ([CCode (array_length_type = "guint")] uint8[] data, uint size, bool initialized);
 		}
+
+		// Keep backwards compat with < 1.13/1.14
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstFlowCombiner", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "gst_flow_combiner_", type_id = "gst_flow_combiner_get_type ()")]
+		[Compact]
+		public class FlowCombiner {
+		}
 	}
 }

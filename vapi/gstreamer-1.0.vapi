@@ -3471,7 +3471,13 @@ namespace Gst {
 		PAUSED_TO_PLAYING,
 		PLAYING_TO_PAUSED,
 		PAUSED_TO_READY,
-		READY_TO_NULL
+		READY_TO_NULL,
+		NULL_TO_NULL,
+		READY_TO_READY,
+		PAUSED_TO_PAUSED,
+		PLAYING_TO_PLAYING;
+		[Version (since = "1.14")]
+		public static unowned string get_name (Gst.StateChange transition);
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STATE_CHANGE_", type_id = "gst_state_change_return_get_type ()")]
 	public enum StateChangeReturn {
@@ -3965,6 +3971,9 @@ namespace Gst {
 	public static unowned string? preset_get_app_dir ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool preset_set_app_dir (string app_dir);
+	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gst/gst.h")]
+	[Version (since = "1.14")]
+	public static string[] protection_filter_systems_by_available_decryptors (string system_identifiers);
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (since = "1.6")]
 	public static unowned string protection_select_system ([CCode (array_length = false, array_null_terminated = true)] string[] system_identifiers);

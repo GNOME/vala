@@ -33,6 +33,8 @@ namespace Gst {
 			public double cache_cubic_z;
 			public Gst.ClockTime timestamp;
 			public double value;
+			public Gst.Controller.ControlPoint copy ();
+			public void free ();
 		}
 		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstDirectControlBinding", lower_case_cprefix = "gst_direct_control_binding_", type_id = "gst_direct_control_binding_get_type ()")]
 		[GIR (name = "DirectControlBinding")]

@@ -242,6 +242,7 @@ namespace Gst {
 		public class InstallPluginsContext {
 			[CCode (has_construct_function = false)]
 			public InstallPluginsContext ();
+			public Gst.PbUtils.InstallPluginsContext copy ();
 			public void free ();
 			[Version (since = "1.6")]
 			public void set_confirm_search (bool confirm_search);

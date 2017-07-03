@@ -17,6 +17,8 @@ namespace Gst {
 		public class AuthParam {
 			public weak string name;
 			public weak string value;
+			public Gst.RTSP.AuthParam copy ();
+			public void free ();
 		}
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", has_type_id = false)]
 		[Compact]
