@@ -177,6 +177,7 @@ libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
 		--basedir $(srcdir) \
 		--directory $(builddir) \
 		-C \
+		--use-header \
 		-H valadoc.h \
 		--library valadoc \
 		--vapi valadoc@PACKAGE_SUFFIX@.vapi \
