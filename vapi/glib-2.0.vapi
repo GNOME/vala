@@ -5910,7 +5910,13 @@ namespace GLib {
 		MARCHEN,                /* Marc */
 		NEWA,                   /* Newa */
 		OSAGE,                  /* Osge */
-		TANGUT;                 /* Tang */
+		TANGUT,                 /* Tang */
+
+		/* Unicode 10.0 additions */
+		MASARAM_GONDI,          /* Gonm */
+		NUSHU,                  /* Nshu */
+		SOYOMBO,                /* Soyo */
+		ZANABAZAR_SQUARE;       /* Zanb */
 
 		[CCode (cname = "g_unicode_script_to_iso15924")]
 		public uint32 to_iso15924 ();
