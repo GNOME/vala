@@ -179,7 +179,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 					Valadoc.TokenType.MARKDOWN_LINK.action (preserve_token)
 				}),
 				Rule.option ({
-					Valadoc.TokenType.MARKDOWN_GREATER_THAN,
+					Valadoc.TokenType.MARKDOWN_GREATER_THAN
 				})
 				.set_reduce (() => {
 					Link url = _factory.create_link ();
@@ -305,7 +305,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 							Valadoc.TokenType.MARKDOWN_MAIL.action (preserve_token)
 						}),
 						Rule.option ({
-							Valadoc.TokenType.MARKDOWN_CLOSE_BRACKET,
+							Valadoc.TokenType.MARKDOWN_CLOSE_BRACKET
 						})
 						.set_reduce (() => {
 							Run label = (Run) peek ();
