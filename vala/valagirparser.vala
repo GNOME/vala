@@ -2411,13 +2411,6 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		type = element_get_type (type, true, ref no_array_length, ref array_null_terminated);
 
-		// FIXME No support for fixed-size array as return-value
-		var array_type = type as ArrayType;
-		if (array_type != null && array_type.fixed_length) {
-			array_type.fixed_length = false;
-			array_type.length = null;
-		}
-
 		end_element ("return-value");
 		return type;
 	}
@@ -3097,6 +3090,14 @@ public class Vala.GirParser : CodeVisitor {
 		s.access = SymbolAccessibility.PUBLIC;
 		s.comment = comment;
 		s.external = true;
+
+		// Transform fixed-array properties of return-type into ccode-attribute
+		var array_type = return_type as ArrayType;
+		if (array_type != null && array_type.fixed_length) {
+			s.set_attribute_string ("CCode", "array_length_cexpr", ((IntegerLiteral) array_type.length).value);
+			array_type.fixed_length = false;
+			array_type.length = null;
+		}
 
 		if (s is Signal) {
 			if (current.girdata["name"] != name.replace ("_", "-")) {

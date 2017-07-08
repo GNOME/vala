@@ -518,6 +518,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					out_arg_map.set (get_param_pos (get_ccode_array_length_pos (m) + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
 					append_array_length (expr, temp_ref);
+				} else if (get_ccode_array_length_expr (m) != null) {
+					append_array_length (expr, new CCodeConstant (get_ccode_array_length_expr (m)));
 				} else {
 					append_array_length (expr, new CCodeConstant ("-1"));
 				}
