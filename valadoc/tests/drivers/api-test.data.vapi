@@ -132,7 +132,6 @@ namespace VersionTest {
 	[Experimental]
 	public void test_function_3 ();
 
-#if VALA_0_32
 	[Version (since = "2.0")]
 	public void test_function_4 ();
 	[Version (deprecated = true)]
@@ -145,7 +144,6 @@ namespace VersionTest {
 	public void test_function_8 ();
 	[Version (experimental = true)]
 	public void test_function_9 ();
-#endif
 }
 
 

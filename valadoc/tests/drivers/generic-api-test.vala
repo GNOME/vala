@@ -2384,14 +2384,12 @@ public static void version_test (Api.Namespace ns, Api.Package pkg) {
 	bool func1 = false;
 	bool func2 = false;
 	bool func3 = false;
-#if VALA_0_32
 	bool func4 = false;
 	bool func5 = false;
 	bool func6 = false;
 	bool func7 = false;
 	bool func8 = false;
 	bool func9 = false;
-#endif
 
 	foreach (Api.Node node in methods) {
 		Api.Method m = node as Api.Method;
@@ -2448,7 +2446,6 @@ public static void version_test (Api.Namespace ns, Api.Package pkg) {
 			func3 = true;
 			break;
 
-#if VALA_0_32
 		case "test_function_4":
 			assert (m.get_attribute ("Version").get_argument ("since").get_value_as_string () == "\"2.0\"");
 			assert (m.is_deprecated == false);
@@ -2492,7 +2489,6 @@ public static void version_test (Api.Namespace ns, Api.Package pkg) {
 
 			func9 = true;
 			break;
-#endif
 
 		default:
 			assert_not_reached ();
@@ -2502,14 +2498,12 @@ public static void version_test (Api.Namespace ns, Api.Package pkg) {
 	assert (func1 == true);
 	assert (func2 == true);
 	assert (func3 == true);
-#if VALA_0_32
 	assert (func4 == true);
 	assert (func5 == true);
 	assert (func6 == true);
 	assert (func7 == true);
 	assert (func8 == true);
 	assert (func9 == true);
-#endif
 }
 
 
