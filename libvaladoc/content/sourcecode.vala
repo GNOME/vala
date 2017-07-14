@@ -24,63 +24,56 @@
 
 public class Valadoc.Content.SourceCode : ContentElement, Inline {
 	public enum Language {
+		UNKNOWN,
 		GENIE,
 		VALA,
 		XML,
 		C;
 
-		public static Language? from_path (string path) {
+		public static Language from_path (string path) {
 			int pos = path.last_index_of (".");
 			if (pos < 0) {
-				return null;
+				return Language.UNKNOWN;
 			}
 
 			string ext = path.substring (pos + 1);
 			return from_string (ext, true);
 		}
 
-		public static Language? from_string (string str, bool is_extension = false) {
+		public static Language from_string (string str, bool is_extension = false) {
 			switch (str) {
 			case "genie":
 				if (is_extension) {
-					return null;
+					return Language.UNKNOWN;
 				}
 				return Language.GENIE;
-
 			case "gs":
 				return Language.GENIE;
-
 			case "xml":
 				return Language.XML;
-
 			case "vala":
 				return Language.VALA;
-
 			case "c":
 			case "h":
 				return Language.C;
 			}
 
-			return null;
+			return Language.UNKNOWN;
 		}
 
 		public unowned string to_string () {
 			switch (this) {
 			case Language.GENIE:
 				return "genie";
-
 			case Language.VALA:
 				return "vala";
-
 			case Language.XML:
 				return "xml";
-
 			case Language.C:
 				return "c";
 			}
 
-			assert (true);
-			return "";
+			assert_not_reached ();
 		}
 	}
 
@@ -95,7 +88,7 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 		private set;
 	}
 
-	public Language? language {
+	public Language language {
 		get;
 		set;
 	}
@@ -190,7 +183,7 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 				string name = start._strip ().down ();
 				_language = Language.from_string (name);
 				code = splitted[1] ?? "";
-				if (_language == null && name != "none") {
+				if (_language == Language.UNKNOWN && name != "none") {
 					string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
 					reporter.simple_warning ("%s: %s{{{".printf (file_path, node_segment),
 						"Unsupported programming language '%s'", name);

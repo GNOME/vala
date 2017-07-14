@@ -22,86 +22,82 @@
 
 
 public enum Valadoc.Content.HorizontalAlign {
+	NONE,
 	LEFT,
 	RIGHT,
 	CENTER;
 
-	public static HorizontalAlign? from_string (string str) {
+	public static HorizontalAlign from_string (string str) {
 		switch (str) {
+		case "none":
+			return HorizontalAlign.NONE;
 		case "left":
 			return HorizontalAlign.LEFT;
-
 		case "right":
 			return HorizontalAlign.RIGHT;
-
 		case "center":
 			return HorizontalAlign.CENTER;
 		}
-
-		return null;
+		assert_not_reached ();
 	}
 
 	public unowned string to_string () {
 		switch (this) {
+		case HorizontalAlign.NONE:
+			return "none";
 		case HorizontalAlign.LEFT:
 			return "left";
-
 		case HorizontalAlign.RIGHT:
 			return "right";
-
 		case HorizontalAlign.CENTER:
 			return "center";
 		}
-
-		assert (true);
-		return "";
+		assert_not_reached ();
 	}
 }
 
 public enum Valadoc.Content.VerticalAlign {
+	NONE,
 	TOP,
 	MIDDLE,
 	BOTTOM;
 
-	public static VerticalAlign? from_string (string str) {
+	public static VerticalAlign from_string (string str) {
 		switch (str) {
+		case "none":
+			return VerticalAlign.NONE;
 		case "top":
 			return VerticalAlign.TOP;
-
 		case "middle":
 			return VerticalAlign.MIDDLE;
-
 		case "bottom":
 			return VerticalAlign.BOTTOM;
 		}
-
-		return null;
+		assert_not_reached ();
 	}
 
 	public unowned string to_string () {
 		switch (this) {
+		case VerticalAlign.NONE:
+			return "none";
 		case VerticalAlign.TOP:
 			return "top";
-
 		case VerticalAlign.MIDDLE:
 			return "middle";
-
 		case VerticalAlign.BOTTOM:
 			return "bottom";
 		}
-
-		assert (true);
-		return "";
+		assert_not_reached ();
 	}
 }
 
 public interface Valadoc.Content.StyleAttributes : ContentElement {
-	public abstract HorizontalAlign? horizontal_align {
+	public abstract HorizontalAlign horizontal_align {
 		get;
 		set;
 	}
 
-	public abstract VerticalAlign? vertical_align {
+	public abstract VerticalAlign vertical_align {
 		get;
 		set;
 	}

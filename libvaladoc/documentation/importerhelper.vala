@@ -145,8 +145,8 @@ namespace Valadoc.ImporterHelper {
 
 
 		// avoid fancy stuff in short descriptions:
-		first_paragraph.horizontal_align = null;
-		first_paragraph.vertical_align = null;
+		first_paragraph.horizontal_align = HorizontalAlign.NONE;
+		first_paragraph.vertical_align = VerticalAlign.NONE;
 		first_paragraph.style = null;
 
 

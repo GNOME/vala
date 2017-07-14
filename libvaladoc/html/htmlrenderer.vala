@@ -422,23 +422,16 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	public override void visit_paragraph (Paragraph element) {
 		//FIXME: the extra-field is just a workarround for the current codegen ...
-		if (element.horizontal_align == null) {
+		switch (element.horizontal_align) {
+		case HorizontalAlign.CENTER:
+			writer.start_tag ("p", {"style", "text-align: center;"});
+			break;
+		case HorizontalAlign.RIGHT:
+			writer.start_tag ("p", {"style", "text-align: right;"});
+			break;
+		default:
 			writer.start_tag ("p");
-		} else {
-			HorizontalAlign tmp = element.horizontal_align;
-			switch (tmp) {
-			case HorizontalAlign.CENTER:
-				writer.start_tag ("p", {"style", "text-align: center;"});
-				break;
-
-			case HorizontalAlign.RIGHT:
-				writer.start_tag ("p", {"style", "text-align: right;"});
-				break;
-
-			default:
-				writer.start_tag ("p");
-				break;
-			}
+			break;
 		}
 		element.accept_children (this);
 		writer.end_tag ("p");
@@ -568,11 +561,11 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	public override void visit_table_cell (TableCell element) {
 		string style = "";
 
-		if (element.horizontal_align != null) {
+		if (element.horizontal_align != HorizontalAlign.NONE) {
 			style += "text-align: "+element.horizontal_align.to_string ()+"; ";
 		}
 
-		if (element.vertical_align != null) {
+		if (element.vertical_align != VerticalAlign.NONE) {
 			style += "vertical-align: "+element.vertical_align.to_string ()+"; ";
 		}
 

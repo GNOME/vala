@@ -23,12 +23,12 @@
 
 
 public class Valadoc.Content.TableCell : InlineContent, StyleAttributes {
-	public HorizontalAlign? horizontal_align {
+	public HorizontalAlign horizontal_align {
 		get;
 		set;
 	}
 
-	public VerticalAlign? vertical_align {
+	public VerticalAlign vertical_align {
 		get;
 		set;
 	}

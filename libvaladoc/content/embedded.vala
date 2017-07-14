@@ -33,12 +33,12 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 		set;
 	}
 
-	public HorizontalAlign? horizontal_align {
+	public HorizontalAlign horizontal_align {
 		get;
 		set;
 	}
 
-	public VerticalAlign? vertical_align {
+	public VerticalAlign vertical_align {
 		get;
 		set;
 	}

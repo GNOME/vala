@@ -23,12 +23,12 @@
 
 
 public class Valadoc.Content.Paragraph : InlineContent, Block, StyleAttributes {
-	public HorizontalAlign? horizontal_align {
+	public HorizontalAlign horizontal_align {
 		get;
 		set;
 	}
 
-	public VerticalAlign? vertical_align {
+	public VerticalAlign vertical_align {
 		get;
 		set;
 	}
