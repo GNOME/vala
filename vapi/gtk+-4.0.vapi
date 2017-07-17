@@ -16634,6 +16634,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TEXT_WINDOW_", type_id = "gtk_text_window_type_get_type ()")]
 	public enum TextWindowType {
+		PRIVATE,
 		WIDGET,
 		TEXT,
 		LEFT,

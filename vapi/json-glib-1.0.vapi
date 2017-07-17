@@ -103,6 +103,8 @@ namespace Json {
 		public void set_root (Json.Node node);
 		public string to_data (out size_t length);
 		public bool to_file (string filename) throws GLib.Error;
+		[Version (since = "1.4")]
+		public unowned GLib.StringBuilder to_gstring (GLib.StringBuilder string);
 		[Version (since = "0.12")]
 		public bool to_stream (GLib.OutputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public uint indent { get; set; }

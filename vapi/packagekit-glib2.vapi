@@ -1573,7 +1573,8 @@ namespace Pk {
 		UNKNOWN,
 		REBOOT,
 		POWER_OFF,
-		UNSET;
+		UNSET,
+		LAST;
 		[Version (since = "0.9.6")]
 		public static Pk.OfflineAction from_string (string action);
 		[Version (since = "0.9.6")]
@@ -1801,7 +1802,8 @@ namespace Pk {
 	public errordomain OfflineError {
 		FAILED,
 		INVALID_VALUE,
-		NO_DATA;
+		NO_DATA,
+		LAST;
 		[Version (since = "0.9.6")]
 		public static GLib.Quark quark ();
 	}
