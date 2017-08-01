@@ -12,6 +12,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void add_log_function (owned Gst.LogFunction func);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (since = "1.14")]
+		public static void add_ring_buffer_logger (uint max_size_per_thread, uint thread_timeout);
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static string bin_to_dot_data (Gst.Bin bin, Gst.DebugGraphDetails details);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void bin_to_dot_file (Gst.Bin bin, Gst.DebugGraphDetails details, string file_name);
@@ -50,6 +53,12 @@ namespace Gst {
 		public static uint remove_log_function (Gst.LogFunction? func);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static uint remove_log_function_by_data (void* data);
+		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (since = "1.14")]
+		public static void remove_ring_buffer_logger ();
+		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gst/gst.h")]
+		[Version (since = "1.14")]
+		public static string[] ring_buffer_logger_get_logs ();
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void set_active (bool active);
 		[CCode (cheader_filename = "gst/gst.h")]
@@ -2179,7 +2188,7 @@ namespace Gst {
 		public bool clip (Gst.Format format, uint64 start, uint64 stop, out uint64 clip_start, out uint64 clip_stop);
 		public Gst.Segment copy ();
 		public void copy_into (Gst.Segment dest);
-		public bool do_seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, uint64 start, Gst.SeekType stop_type, uint64 stop, bool update);
+		public bool do_seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, uint64 start, Gst.SeekType stop_type, uint64 stop, out bool update);
 		public void free ();
 		public void init (Gst.Format format);
 		[Version (since = "1.6")]
@@ -2189,20 +2198,20 @@ namespace Gst {
 		[Version (since = "1.8")]
 		public uint64 position_from_running_time (Gst.Format format, uint64 running_time);
 		[Version (since = "1.8")]
-		public int position_from_running_time_full (Gst.Format format, uint64 running_time, uint64 position);
+		public int position_from_running_time_full (Gst.Format format, uint64 running_time, out uint64 position);
 		[Version (since = "1.8")]
 		public uint64 position_from_stream_time (Gst.Format format, uint64 stream_time);
 		[Version (since = "1.8")]
-		public int position_from_stream_time_full (Gst.Format format, uint64 stream_time, uint64 position);
+		public int position_from_stream_time_full (Gst.Format format, uint64 stream_time, out uint64 position);
 		public bool set_running_time (Gst.Format format, uint64 running_time);
 		public uint64 to_position (Gst.Format format, uint64 running_time);
 		public uint64 to_running_time (Gst.Format format, uint64 position);
 		[Version (since = "1.6")]
-		public int to_running_time_full (Gst.Format format, uint64 position, uint64 running_time);
+		public int to_running_time_full (Gst.Format format, uint64 position, out uint64 running_time);
 		[Version (since = "1.8")]
 		public uint64 to_stream_time (Gst.Format format, uint64 position);
 		[Version (since = "1.8")]
-		public int to_stream_time_full (Gst.Format format, uint64 position, uint64 stream_time);
+		public int to_stream_time_full (Gst.Format format, uint64 position, out uint64 stream_time);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_stream_get_type ()")]
 	public class Stream : Gst.Object {
@@ -3465,6 +3474,7 @@ namespace Gst {
 		PLAYING
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STATE_CHANGE_", type_id = "gst_state_change_get_type ()")]
+	[Flags]
 	public enum StateChange {
 		NULL_TO_READY,
 		READY_TO_PAUSED,

@@ -992,8 +992,6 @@ namespace WebKit {
 		public void load_plain_text (string plain_text);
 		public void load_request (WebKit.URIRequest request);
 		public void load_uri (string uri);
-		[Version (since = "2.4")]
-		public Gtk.Widget new_with_related_view ();
 		public void reload ();
 		public void reload_bypass_cache ();
 		[Version (since = "2.12")]
@@ -1016,6 +1014,9 @@ namespace WebKit {
 		public void try_close ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public WebView.with_context (WebKit.WebContext context);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		[Version (since = "2.4")]
+		public WebView.with_related_view (WebKit.WebView web_view);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.6")]
 		public WebView.with_settings (WebKit.Settings settings);

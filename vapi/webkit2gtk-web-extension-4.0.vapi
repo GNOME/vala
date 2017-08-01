@@ -2933,6 +2933,7 @@ namespace WebKit {
 		public bool context_is_link ();
 		public bool context_is_media ();
 		public bool context_is_scrollbar ();
+		[Version (since = "2.8")]
 		public bool context_is_selection ();
 		public uint get_context ();
 		public unowned string get_image_uri ();
@@ -2962,6 +2963,7 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		public URIRequest (string uri);
 		public unowned Soup.MessageHeaders get_http_headers ();
+		[Version (since = "2.12")]
 		public unowned string get_http_method ();
 		public unowned string get_uri ();
 		public void set_uri (string uri);
@@ -2972,12 +2974,14 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected URIResponse ();
 		public uint64 get_content_length ();
+		[Version (since = "2.6")]
 		public unowned Soup.MessageHeaders get_http_headers ();
 		public unowned string get_mime_type ();
 		public uint get_status_code ();
 		public unowned string get_suggested_filename ();
 		public unowned string get_uri ();
 		public uint64 content_length { get; }
+		[Version (since = "2.6")]
 		public Soup.MessageHeaders http_headers { get; }
 		public string mime_type { get; }
 		public uint status_code { get; }
