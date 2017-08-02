@@ -210,6 +210,12 @@ namespace Xml {
 		NOCDATA,
 		NOXINCNODE,
 		COMPACT,
+		OLD10,
+		NOBASEFIX,
+		HUGE,
+		OLDSAX,
+		IGNORE_ENC,
+		BIG_LINES,
 	}
 
 	[CCode (cname = "xmlCharEncoding", cprefix = "XML_CHAR_ENCODING_", cheader_filename = "libxml/encoding.h", has_type_id = false)]
