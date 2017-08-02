@@ -106,7 +106,6 @@ Snapshot
   .push* skip=false
 StyleContext
   .get skip=false
-  .get_style skip=false
 TextBuffer
   .create_tag skip=false
   .insert_with_tags skip=false
@@ -124,7 +123,6 @@ TreeViewColumn
   .new_with_attributes skip=false
 Widget abstract=false
   .new skip=false
-  .style_get skip=false
 Actionable
   .set_action_target skip=false
 CellLayout
@@ -356,6 +354,7 @@ Widget
   .grab_remove parent="Gtk" symbol_type="function"
   .intersect.intersection unowned=false nullable default=null
   .touch_event.event type="Gdk.EventTouch"
+  .size_allocate return_void
 TreeModel
   .get_value return_void
   .rows_reordered skip

@@ -14740,7 +14740,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void show ();
 		[HasEmitter]
-		public virtual signal void size_allocate (Gtk.Allocation allocation, int baseline, Gtk.Allocation out_clip);
+		public virtual signal void size_allocate (Gtk.Allocation allocation, int baseline, out Gtk.Allocation out_clip);
 		[Version (since = "3.0")]
 		public virtual signal void state_flags_changed (Gtk.StateFlags previous_state_flags);
 		[Version (since = "3.0")]
