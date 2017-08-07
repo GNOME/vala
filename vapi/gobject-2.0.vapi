@@ -251,15 +251,18 @@ namespace GLib {
 		[CCode (cname = "g_param_values_cmp")]
 		public int values_cmp (GLib.Value value1, GLib.Value value2);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_BOOLEAN")]
 	public class ParamSpecBoolean : GLib.ParamSpec {
 		public bool default_value;
 		[CCode (cname = "g_param_spec_boolean")]
 		public ParamSpecBoolean (string name, string nick, string blurb, bool defaultvalue, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_BOXED")]
 	public class ParamSpecBoxed : GLib.ParamSpec {
 		[CCode (cname = "g_param_spec_boxed")]
 		protected ParamSpecBoxed (string name, string nick, string blurb, GLib.Type boxed_type, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_CHAR")]
 	public class ParamSpecChar : GLib.ParamSpec {
 		public int8 default_value;
 		public int8 maximum;
@@ -267,6 +270,7 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_char")]
 		public ParamSpecChar (string name, string nick, string blurb, int8 minimum, int8 maximum, int8 default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_DOUBLE")]
 	public class ParamSpecDouble : GLib.ParamSpec {
 		public double default_value;
 		public double maximum;
@@ -274,18 +278,21 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_double")]
 		public ParamSpecDouble (string name, string nick, string blurb, double minimum, double maximum, double default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_ENUM")]
 	public class ParamSpecEnum : GLib.ParamSpec {
 		public int default_value;
 		public weak GLib.EnumClass enum_class;
 		[CCode (cname = "g_param_spec_enum")]
 		public ParamSpecEnum (string name, string nick, string blurb, GLib.Type enum_type, int default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_FLAGS")]
 	public class ParamSpecFlags : GLib.ParamSpec {
 		public uint default_value;
 		public weak GLib.FlagsClass flags_class;
 		[CCode (cname = "g_param_spec_flags")]
 		public ParamSpecFlags (string name, string nick, string blurb, GLib.Type flags_type, uint default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_FLOAT")]
 	public class ParamSpecFloat : GLib.ParamSpec {
 		public float default_value;
 		public float maximum;
@@ -293,6 +300,7 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_float")]
 		public ParamSpecFloat (string name, string nick, string blurb, float minimum, float maximum, float default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_INT")]
 	public class ParamSpecInt : GLib.ParamSpec {
 		public int default_value;
 		public int maximum;
@@ -300,6 +308,7 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_int")]
 		public ParamSpecInt (string name, string nick, string blurb, int minimum, int maximum, int default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_INT64")]
 	public class ParamSpecInt64 : GLib.ParamSpec {
 		public int64 default_value;
 		public int64 maximum;
@@ -307,6 +316,7 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_int64")]
 		public ParamSpecInt64 (string name, string nick, string blurb, int64 minimum, int64 maximum, int64 default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_LONG")]
 	public class ParamSpecLong : GLib.ParamSpec {
 		public long default_value;
 		public long maximum;
@@ -314,14 +324,17 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_long")]
 		public ParamSpecLong (string name, string nick, string blurb, long minimum, long maximum, long default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_OBJECT")]
 	public class ParamSpecObject : GLib.ParamSpec {
 		[CCode (cname = "g_param_spec_object")]
 		public ParamSpecObject (string name, string nick, string blurb, GLib.Type object_type, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_PARAM")]
 	public class ParamSpecParam : GLib.ParamSpec {
 		[CCode (cname = "g_param_spec_param")]
 		public ParamSpecParam (string name, string nick, string blurb, GLib.Type param_type, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_POINTER")]
 	public class ParamSpecPointer : GLib.ParamSpec {
 		[CCode (cname = "g_param_spec_pointer")]
 		public ParamSpecPointer (string name, string nick, string blurb, GLib.ParamFlags flags);
@@ -340,6 +353,7 @@ namespace GLib {
 		public unowned GLib.ParamSpec lookup (string param_name, GLib.Type owner_type, bool walk_ancestors);
 		public void remove (GLib.ParamSpec pspec);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_STRING")]
 	public class ParamSpecString : GLib.ParamSpec {
 		public string cset_first;
 		public string cset_nth;
@@ -350,6 +364,7 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_string")]
 		public ParamSpecString (string name, string nick, string blurb, string default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_UCHAR")]
 	public class ParamSpecUChar : GLib.ParamSpec {
 		public uint8 default_value;
 		public uint8 maximum;
@@ -357,6 +372,7 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_uchar")]
 		public ParamSpecUChar (string name, string nick, string blurb, uint8 minimum, uint8 maximum, uint8 default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_UINT")]
 	public class ParamSpecUInt : GLib.ParamSpec {
 		public uint default_value;
 		public uint maximum;
@@ -364,6 +380,7 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_uint")]
 		public ParamSpecUInt (string name, string nick, string blurb, uint minimum, uint maximum, uint default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_UINT64")]
 	public class ParamSpecUInt64 : GLib.ParamSpec {
 		public uint64 default_value;
 		public uint64 maximum;
@@ -371,6 +388,7 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_uint64")]
 		public ParamSpecUInt64 (string name, string nick, string blurb, uint64 minimum, uint64 maximum, uint64 default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_ULONG")]
 	public class ParamSpecULong : GLib.ParamSpec {
 		public ulong default_value;
 		public ulong maximum;
@@ -378,12 +396,14 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_ulong")]
 		public ParamSpecULong (string name, string nick, string blurb, ulong minimum, ulong maximum, ulong default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_UNICHAR")]
 	public class ParamSpecUnichar : GLib.ParamSpec {
 		public unichar default_value;
 		[CCode (cname = "g_param_spec_unichar")]
 		public ParamSpecUnichar (string name, string nick, string blurb, unichar default_value, GLib.ParamFlags flags);
 	}
 	[Version (since = "2.26")]
+	[CCode (type_id = "G_TYPE_PARAM_VARIANT")]
 	public class ParamSpecVariant : GLib.ParamSpec {
 		public GLib.Variant? default_value;
 		public GLib.VariantType type;
