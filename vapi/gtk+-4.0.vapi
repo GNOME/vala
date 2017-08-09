@@ -7240,7 +7240,7 @@ namespace Gtk {
 		[Version (since = "3.6")]
 		public void set_accel (uint accelerator_key, Gdk.ModifierType accelerator_mods);
 		public void set_accel_closure ([CCode (type = "GClosure*")] owned Gtk.AccelGroupActivate accel_closure);
-		public void set_accel_widget (Gtk.Widget accel_widget);
+		public void set_accel_widget (Gtk.Widget? accel_widget);
 		public void set_label (string text);
 		public void set_use_underline (bool setting);
 		[NoAccessorMethod]
@@ -7587,7 +7587,7 @@ namespace Gtk {
 	public abstract class Bin : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		protected Bin ();
-		public unowned Gtk.Widget get_child ();
+		public unowned Gtk.Widget? get_child ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
 	[Compact]
@@ -8392,19 +8392,19 @@ namespace Gtk {
 		[Version (since = "3.92")]
 		public Gtk.BaselinePosition get_baseline_position ();
 		[Version (since = "3.92")]
-		public unowned Gtk.Widget get_center_widget ();
+		public unowned Gtk.Widget? get_center_widget ();
 		[Version (since = "3.92")]
-		public unowned Gtk.Widget get_end_widget ();
+		public unowned Gtk.Widget? get_end_widget ();
 		[Version (since = "3.92")]
-		public unowned Gtk.Widget get_start_widget ();
+		public unowned Gtk.Widget? get_start_widget ();
 		[Version (since = "3.92")]
 		public void set_baseline_position (Gtk.BaselinePosition position);
 		[Version (since = "3.92")]
-		public void set_center_widget (Gtk.Widget child);
+		public void set_center_widget (Gtk.Widget? child);
 		[Version (since = "3.92")]
-		public void set_end_widget (Gtk.Widget child);
+		public void set_end_widget (Gtk.Widget? child);
 		[Version (since = "3.92")]
-		public void set_start_widget (Gtk.Widget child);
+		public void set_start_widget (Gtk.Widget? child);
 		public Gtk.BaselinePosition baseline_position { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_check_button_get_type ()")]
@@ -9208,16 +9208,6 @@ namespace Gtk {
 	public class EntryIconAccessible : Atk.Object, Atk.Action, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected EntryIconAccessible ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_box_get_type ()")]
-	public class EventBox : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public EventBox ();
-		[Version (since = "2.4")]
-		public bool get_above_child ();
-		[Version (since = "2.4")]
-		public void set_above_child (bool above_child);
-		public bool above_child { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_get_type ()")]
 	public abstract class EventController : GLib.Object {
@@ -14418,7 +14408,7 @@ namespace Gtk {
 		public double get_opacity ();
 		public unowned Pango.Context get_pango_context ();
 		public unowned Gtk.Widget? get_parent ();
-		public unowned Gdk.Window get_parent_window ();
+		public unowned Gdk.Window? get_parent_window ();
 		public unowned Gtk.WidgetPath get_path ();
 		[Version (since = "3.0")]
 		public void get_preferred_size (out Gtk.Requisition minimum_size, out Gtk.Requisition natural_size);
