@@ -1137,6 +1137,8 @@ namespace Soup {
 		public virtual signal void closing ();
 		public virtual signal void error (GLib.Error error);
 		public virtual signal void message (int type, GLib.Bytes message);
+		[Version (since = "2.60")]
+		public virtual signal void pong (GLib.Bytes message);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
 	[Compact]

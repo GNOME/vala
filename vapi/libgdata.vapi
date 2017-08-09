@@ -801,6 +801,16 @@ namespace GData {
 		[CCode (has_construct_function = false)]
 		public DocumentsFolder (string? id);
 	}
+	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_documents_metadata_get_type ()")]
+	[Version (since = "0.17.9")]
+	public class DocumentsMetadata : GData.Parsable {
+		[CCode (has_construct_function = false)]
+		protected DocumentsMetadata ();
+		public int64 get_quota_total ();
+		public int64 get_quota_used ();
+		public int64 quota_total { get; }
+		public int64 quota_used { get; }
+	}
 	[CCode (cheader_filename = "gdata/gdata.h", type_id = "gdata_documents_pdf_get_type ()")]
 	[Version (since = "0.13.3")]
 	public class DocumentsPdf : GData.DocumentsDocument, GData.AccessHandler {
@@ -857,6 +867,10 @@ namespace GData {
 		public async GData.DocumentsDocument copy_document_async (GData.DocumentsDocument document, GLib.Cancellable? cancellable) throws GLib.Error;
 		[Version (since = "0.8.0")]
 		public GData.DocumentsDocument finish_upload (GData.UploadStream upload_stream) throws GLib.Error;
+		[Version (since = "0.17.9")]
+		public GData.DocumentsMetadata get_metadata (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "0.17.9")]
+		public async GData.DocumentsMetadata get_metadata_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		[Version (since = "0.9.0")]
 		public static unowned GData.AuthorizationDomain get_primary_authorization_domain ();
 		[Version (since = "0.9.0")]

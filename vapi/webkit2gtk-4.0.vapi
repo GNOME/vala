@@ -2,6 +2,25 @@
 
 [CCode (cprefix = "WebKit", gir_namespace = "WebKit2", gir_version = "4.0", lower_case_cprefix = "webkit_")]
 namespace WebKit {
+	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_application_info_ref", type_id = "webkit_application_info_get_type ()", unref_function = "webkit_application_info_unref")]
+	[Compact]
+	public class ApplicationInfo {
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.18")]
+		public ApplicationInfo ();
+		[Version (since = "2.18")]
+		public unowned string get_name ();
+		[Version (since = "2.18")]
+		public void get_version (out uint64 major, out uint64 minor, out uint64 micro);
+		[Version (since = "2.18")]
+		public unowned WebKit.ApplicationInfo @ref ();
+		[Version (since = "2.18")]
+		public void set_name (string name);
+		[Version (since = "2.18")]
+		public void set_version (uint64 major, uint64 minor, uint64 micro);
+		[Version (since = "2.18")]
+		public void unref ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_authentication_request_get_type ()")]
 	public class AuthenticationRequest : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -34,7 +53,11 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected AutomationSession ();
 		[Version (since = "2.18")]
+		public unowned WebKit.ApplicationInfo get_application_info ();
+		[Version (since = "2.18")]
 		public unowned string get_id ();
+		[Version (since = "2.18")]
+		public void set_application_info (WebKit.ApplicationInfo info);
 		[Version (since = "2.18")]
 		public string id { get; construct; }
 		[Version (since = "2.18")]

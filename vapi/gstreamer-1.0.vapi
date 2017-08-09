@@ -3945,9 +3945,6 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_VERSION_NANO")]
 	public const int VERSION_NANO;
 	[CCode (cheader_filename = "gst/gst.h")]
-	[Version (since = "1.12")]
-	public static bool calculate_linear_regression (Gst.ClockTime xy, Gst.ClockTime temp, uint n, out Gst.ClockTime m_num, out Gst.ClockTime m_denom, out Gst.ClockTime b, out Gst.ClockTime xbase, out double r_squared);
-	[CCode (cheader_filename = "gst/gst.h")]
 	public static void deinit ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool dynamic_type_register (Gst.Plugin plugin, GLib.Type type);

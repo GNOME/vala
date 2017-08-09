@@ -3919,7 +3919,8 @@ namespace GLib {
 	public enum BusNameOwnerFlags {
 		NONE,
 		ALLOW_REPLACEMENT,
-		REPLACE
+		REPLACE,
+		DO_NOT_QUEUE
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_BUS_NAME_WATCHER_FLAGS_", type_id = "g_bus_name_watcher_flags_get_type ()")]
 	[Flags]
