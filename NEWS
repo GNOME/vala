@@ -1,3 +1,17 @@
+Vala 0.37.2
+===========
+ * Various bug fixes:
+  - libvaladoc: Keep bootstrap-support with valac >= 0.16.1
+  - valadoc: Fix tests while bootstapping with valac < 0.31/32
+
+ * Bindings:
+  - glib-2.0: Update Unicode symbols
+  - gobject-2.0: Add required type_id attributes to all ParamSpec subclasses
+  - libgdata: Make Authorizer.reauth_* methods virtual [#779229]
+  - libxml-2.0: Update Xml.ParserOption [#785585]
+  - gtk+-4.0: Update to 3.91.2
+  - webkit2gtk-4.0: Update to 2.17.90
+
 Vala 0.37.1
 ===========
  * Highlights
