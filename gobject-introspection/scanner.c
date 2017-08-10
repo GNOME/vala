@@ -1781,8 +1781,6 @@ main (int argc, char **argv)
   cpp_options = g_list_reverse (cpp_options);
   libraries = g_list_reverse (libraries);
 
-  g_type_init ();
-
   if (include_idls)
     {
       for (i = 0; i < g_strv_length (include_idls); i++)

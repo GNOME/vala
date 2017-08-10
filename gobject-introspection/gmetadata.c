@@ -1845,7 +1845,7 @@ void
 g_metadata_free (GMetadata *metadata)
 {
   if (metadata->mfile)
-    g_mapped_file_free (metadata->mfile);
+    g_mapped_file_unref (metadata->mfile);
   else
     if (metadata->owns_memory)
       g_free (metadata->data);
