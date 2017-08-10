@@ -11,4 +11,7 @@ repeating_linear_gradient_node_new
 *_node_get_* parent="Gsk.RenderNode" symbol_type="method" instance_idx=0
 
 Texture
+	// Factory method
+	.new_for_data symbol_type="function" name="for_data"
 	.new_for_data.data array
+	.new_for_pixbuf symbol_type="function" name="for_pixbuf"

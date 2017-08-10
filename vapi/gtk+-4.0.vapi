@@ -6995,10 +6995,10 @@ namespace Gsk {
 		[CCode (has_construct_function = false)]
 		protected Texture ();
 		public void download (uint8 data, size_t stride);
-		[CCode (has_construct_function = false)]
-		public Texture.for_data ([CCode (array_length = false, type = "const guchar*")] uint8[] data, int width, int height, int stride);
-		[CCode (has_construct_function = false)]
-		public Texture.for_pixbuf (Gdk.Pixbuf pixbuf);
+		[CCode (cname = "gsk_texture_new_for_data")]
+		public static Gsk.Texture for_data ([CCode (array_length = false, type = "const guchar*")] uint8[] data, int width, int height, int stride);
+		[CCode (cname = "gsk_texture_new_for_pixbuf")]
+		public static Gsk.Texture for_pixbuf (Gdk.Pixbuf pixbuf);
 		public int get_height ();
 		public int get_width ();
 		public Gsk.RenderNode node_new (Graphene.Rect bounds);
