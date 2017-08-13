@@ -106,7 +106,6 @@ Snapshot
   .push* skip=false
 StyleContext
   .get skip=false
-  .get_style skip=false
 TextBuffer
   .create_tag skip=false
   .insert_with_tags skip=false
@@ -124,7 +123,6 @@ TreeViewColumn
   .new_with_attributes skip=false
 Widget abstract=false
   .new skip=false
-  .style_get skip=false
 Actionable
   .set_action_target skip=false
 CellLayout
@@ -152,9 +150,6 @@ Builder
 // Bug #: Default values
 Button
   .new_from_icon_name.size default=Gtk.IconSize.BUTTON
-Box
-  .pack_*.expand default=true
-  .pack_*.fill default=true
 CellAreaBox
   .pack_*.align default=false
   .pack_*.fixed default=true
@@ -250,9 +245,6 @@ TreeSelection
   .get_user_data skip=false
 
 // Symbol name conflicts
-Container
-  .forall#virtual_method skip
-  .set_focus_child skip
 EntryBuffer
   .get_text#method skip
 EntryCompletion
@@ -362,6 +354,7 @@ Widget
   .grab_remove parent="Gtk" symbol_type="function"
   .intersect.intersection unowned=false nullable default=null
   .touch_event.event type="Gdk.EventTouch"
+  .size_allocate return_void
 TreeModel
   .get_value return_void
   .rows_reordered skip

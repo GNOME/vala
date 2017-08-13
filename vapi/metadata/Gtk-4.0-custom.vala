@@ -13,15 +13,6 @@ namespace Gtk {
 		public static unowned BindingSet @new (string name);
 	}
 
-	[CCode (type_id = "gtk_container_get_type ()")]
-	public abstract class Container : Gtk.Widget {
-		[CCode (vfunc_name = "forall")]
-		[NoWrapper]
-		public virtual void forall_internal (bool include_internal, Gtk.Callback callback);
-		[HasEmitter]
-		public virtual signal void set_focus_child (Gtk.Widget? child);
-	}
-
 	[CCode (type_id = "gtk_container_accessible_get_type ()")]
 	public class ContainerAccessible : Gtk.WidgetAccessible {
 		[NoWrapper]
