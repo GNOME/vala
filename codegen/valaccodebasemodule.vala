@@ -824,6 +824,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return true;
 		}
 
+		decl_space.add_include ("glib-object.h");
 		decl_space.add_type_declaration (new CCodeNewline ());
 
 		var macro = "(%s_get_type ())".printf (get_ccode_lower_case_name (en, null));
