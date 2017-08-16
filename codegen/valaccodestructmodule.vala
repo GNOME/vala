@@ -54,6 +54,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		}
 
 		if (get_ccode_has_type_id (st)) {
+			decl_space.add_include ("glib-object.h");
 			decl_space.add_type_declaration (new CCodeNewline ());
 			var macro = "(%s_get_type ())".printf (get_ccode_lower_case_name (st, null));
 			decl_space.add_type_declaration (new CCodeMacroReplacement (get_ccode_type_id (st), macro));
