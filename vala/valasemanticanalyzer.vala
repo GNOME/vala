@@ -895,7 +895,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public static Expression create_temp_access (LocalVariable local, DataType? target_type) {
 		Expression temp_access = new MemberAccess.simple (local.name, local.source_reference);
 
-		var target_owned = target_type == null || target_type.value_owned;
+		var target_owned = target_type != null && target_type.value_owned;
 		if (target_owned && local.variable_type.is_disposable ()) {
 			temp_access = new ReferenceTransferExpression (temp_access, local.source_reference);
 			temp_access.target_type = target_type != null ? target_type.copy () : local.variable_type.copy ();
