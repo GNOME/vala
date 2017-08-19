@@ -2720,6 +2720,7 @@ public static void test_driver () {
 	settings.with_deps = false;
 	settings.verbose = false;
 	settings.wiki_directory = null;
+	settings.vapi_directories = { Path.build_filename (TOP_SRC_DIR, "vapi") };
 	settings.pkg_name = "out";
 	settings.path = "out";
 
