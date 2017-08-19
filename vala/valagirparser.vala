@@ -1882,7 +1882,10 @@ public class Vala.GirParser : CodeVisitor {
 				this.current_source_file.package_name = pkg;
 				if (context.has_package (pkg)) {
 					// package already provided elsewhere, stop parsing this GIR
-					return;
+					// if it was not passed explicitly
+					if (!this.current_source_file.explicit) {
+						return;
+					}
 				} else {
 					context.add_package (pkg);
 				}
