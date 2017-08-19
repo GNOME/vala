@@ -125,7 +125,9 @@ class Vala.VAPIGen : Object {
 
 		foreach (string source in sources) {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
-				context.add_source_file (new SourceFile (context, SourceFileType.PACKAGE, source));
+				var source_file = new SourceFile (context, SourceFileType.PACKAGE, source);
+				source_file.explicit = true;
+				context.add_source_file (source_file);
 			} else {
 				Report.error (null, "%s not found".printf (source));
 			}

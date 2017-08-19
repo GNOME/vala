@@ -142,6 +142,11 @@ public class Vala.SourceFile {
 	 */
 	public bool used { get; set; }
 
+	/**
+	 * Whether this source-file was explicitly passed on the commandline.
+	 */
+	public bool explicit { get; set; }
+
 	private ArrayList<Comment> comments = new ArrayList<Comment> ();
 
 	public List<UsingDirective> current_using_directives { get; set; default = new ArrayList<UsingDirective> (); }
