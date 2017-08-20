@@ -27,10 +27,10 @@ vapidir=$topsrcdir/vapi
 
 export G_DEBUG=fatal_warnings
 export PKG_CONFIG_PATH=$topbuilddir/libvaladoc
-export LD_LIBRARY_PATH=$topbuilddir/gee/.libs:$topbuilddir/libvaladoc/.libs
+export LD_LIBRARY_PATH=$topbuilddir/vala/.libs:$topbuilddir/libvaladoc/.libs
 
 VALAC=$topbuilddir/compiler/valac$EXEEXT
-VALAFLAGS="-X -D -X TOP_SRC_DIR=\"$topsrcdir\" --vapidir $vapidir --pkg libgvc --vapidir $topsrcdir/vala --pkg libvala$PACKAGE_SUFFIX --vapidir $topsrcdir/libvaladoc --pkg valadoc$PACKAGE_SUFFIX --disable-warnings --main main --save-temps -X -g -X -O0 -X -pipe -X -lm -X -Werror=return-type -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast -X -Wformat -X -Werror=format-security -X -Werror=format-nonliteral -X -Werror=redundant-decls -X -Werror=int-conversion -X -L$topbuilddir/gee/.libs -X -lgee -X -L$topbuilddir/libvaladoc/.libs -X -lvaladoc$PACKAGE_SUFFIX -X -I$topsrcdir/gee -X -I$topsrcdir/libvaladoc $topsrcdir/valadoc/tests/libvaladoc/parser/generic-scanner.vala"
+VALAFLAGS="-X -D -X TOP_SRC_DIR=\"$topsrcdir\" --vapidir $vapidir --pkg libgvc --vapidir $topsrcdir/vala --pkg libvala$PACKAGE_SUFFIX --vapidir $topsrcdir/libvaladoc --pkg valadoc$PACKAGE_SUFFIX --disable-warnings --main main --save-temps -X -g -X -O0 -X -pipe -X -lm -X -Werror=return-type -X -Werror=init-self -X -Werror=implicit -X -Werror=sequence-point -X -Werror=return-type -X -Werror=uninitialized -X -Werror=pointer-arith -X -Werror=int-to-pointer-cast -X -Werror=pointer-to-int-cast -X -Wformat -X -Werror=format-security -X -Werror=format-nonliteral -X -Werror=redundant-decls -X -Werror=int-conversion -X -L$topbuilddir/vala/.libs -X -lvala$PACKAGE_SUFFIX -X -L$topbuilddir/libvaladoc/.libs -X -lvaladoc$PACKAGE_SUFFIX -X -I$topsrcdir/gee -X -I$topsrcdir/vala -X -I$topsrcdir/libvaladoc $topsrcdir/valadoc/tests/libvaladoc/parser/generic-scanner.vala"
 
 
 # Incorporate the user's CFLAGS. Matters if the user decided to insert
