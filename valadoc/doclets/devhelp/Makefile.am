@@ -31,7 +31,7 @@ libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES)
 	$(VALA_V)$(VALAC) \
 		$(VALAFLAGS) \
 		-C \
-		--vapidir $(top_srcdir)/vala \
+		--vapidir $(top_srcdir)/vala --pkg libvala@PACKAGE_SUFFIX@ \
 		--vapidir $(top_srcdir)/vapi \
 		--vapidir $(top_srcdir)/libvaladoc --pkg valadoc@PACKAGE_SUFFIX@ \
 		$(filter %.vala %.c,$^)
@@ -39,6 +39,7 @@ libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES)
 
 libdoclet_la_LIBADD = \
 	$(top_builddir)/libvaladoc/libvaladoc@PACKAGE_SUFFIX@.la \
+	$(top_builddir)/vala/libvala@PACKAGE_SUFFIX@.la \
 	$(GLIB_LIBS) \
 	$(NULL)
 
