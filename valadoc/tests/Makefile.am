@@ -1,3 +1,5 @@
+include $(top_srcdir)/Makefile.common
+
 NULL =
 
 TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) PACKAGE_SUFFIX=$(PACKAGE_SUFFIX) TOPBUILDDIR=$(abs_top_builddir) TOPSRCDIR=$(abs_top_srcdir) $(srcdir)/testrunner.sh
