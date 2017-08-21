@@ -237,6 +237,12 @@ ControlSource
   .get_value_array#field name="get_value_array_func"
   .control_source_get_value name="get_value"
   .control_source_get_value_array name="get_value_array"
+DeviceProviderClass
+  .get_metadata#method name="class_get_metadata"
+ElementClass
+  .get_metadata#method name="class_get_metadata"
+  .get_pad_template#method name="class_get_pad_template"
+  .get_pad_template_list#method name="class_get_pad_template_list"
 
 // Backwards compatibility
 Structure.new_from_string skip

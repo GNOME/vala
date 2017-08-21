@@ -1126,6 +1126,7 @@ namespace Gst {
 		[CCode (cname = "gst_device_provider_class_add_static_metadata")]
 		public class void add_static_metadata (string key, owned string value);
 		public bool can_monitor ();
+		public class unowned string class_get_metadata (string key);
 		public void device_add (Gst.Device device);
 		public void device_remove (Gst.Device device);
 		public Gst.Bus get_bus ();
@@ -1134,8 +1135,8 @@ namespace Gst {
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "1.6")]
 		public string[] get_hidden_providers ();
-		[CCode (cname = "gst_device_provider_class_get_metadata")]
-		public class unowned string get_metadata (string key);
+		[Version (since = "1.14")]
+		public unowned string get_metadata (string key);
 		[Version (since = "1.6")]
 		public void hide_provider (string name);
 		public static bool register (Gst.Plugin? plugin, string name, uint rank, GLib.Type type);
@@ -1219,6 +1220,9 @@ namespace Gst {
 		[Version (since = "1.10")]
 		public void call_async (owned Gst.ElementCallAsyncFunc func);
 		public virtual Gst.StateChangeReturn change_state (Gst.StateChange transition);
+		public class unowned string class_get_metadata (string key);
+		public class unowned Gst.PadTemplate? class_get_pad_template (string name);
+		public class unowned GLib.List<Gst.PadTemplate> class_get_pad_template_list ();
 		public Gst.StateChangeReturn continue_state (Gst.StateChangeReturn ret);
 		public void create_all_pads ();
 		public Gst.ClockTime get_base_time ();
@@ -1233,12 +1237,12 @@ namespace Gst {
 		[Version (since = "1.8")]
 		public GLib.List<Gst.Context> get_contexts ();
 		public unowned Gst.ElementFactory get_factory ();
-		[CCode (cname = "gst_element_class_get_metadata")]
-		public class unowned string get_metadata (string key);
-		[CCode (cname = "gst_element_class_get_pad_template")]
-		public class unowned Gst.PadTemplate? get_pad_template (string name);
-		[CCode (cname = "gst_element_class_get_pad_template_list")]
-		public class unowned GLib.List<Gst.PadTemplate> get_pad_template_list ();
+		[Version (since = "1.14")]
+		public unowned string get_metadata (string key);
+		[Version (since = "1.14")]
+		public unowned Gst.PadTemplate? get_pad_template (string name);
+		[Version (since = "1.14")]
+		public unowned GLib.List<Gst.PadTemplate> get_pad_template_list ();
 		public Gst.Pad? get_request_pad (string name);
 		public Gst.ClockTime get_start_time ();
 		public virtual Gst.StateChangeReturn get_state (out Gst.State state, out Gst.State pending, Gst.ClockTime timeout);
@@ -3474,7 +3478,6 @@ namespace Gst {
 		PLAYING
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STATE_CHANGE_", type_id = "gst_state_change_get_type ()")]
-	[Flags]
 	public enum StateChange {
 		NULL_TO_READY,
 		READY_TO_PAUSED,

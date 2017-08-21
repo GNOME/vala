@@ -4628,6 +4628,8 @@ namespace Gdk {
 			public void error_trap_pop_ignored ();
 			[Version (since = "3.0")]
 			public void error_trap_push ();
+			[Version (since = "3.16")]
+			public static bool get_glx_version (Gdk.Display display, out int major, out int minor);
 			[Version (since = "2.12")]
 			public unowned string get_startup_notification_id ();
 			[Version (since = "2.8")]
@@ -4660,6 +4662,12 @@ namespace Gdk {
 			[CCode (has_construct_function = false)]
 			protected DragContext ();
 		}
+		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_gl_context_get_type ()")]
+		[GIR (name = "X11GLContext")]
+		public class GLContext : Gdk.GLContext {
+			[CCode (has_construct_function = false)]
+			protected GLContext ();
+		}
 		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_keymap_get_type ()")]
 		[GIR (name = "X11Keymap")]
 		public class Keymap : Gdk.Keymap {
@@ -4669,6 +4677,13 @@ namespace Gdk {
 			public int get_group_for_state (uint state);
 			[Version (since = "3.6")]
 			public bool key_is_modifier (uint keycode);
+		}
+		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_monitor_get_type ()")]
+		[GIR (name = "X11Monitor")]
+		public class Monitor : Gdk.Monitor {
+			[CCode (has_construct_function = false)]
+			protected Monitor ();
+			public static X.ID get_output (Gdk.Monitor monitor);
 		}
 		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_screen_get_type ()")]
 		[GIR (name = "X11Screen")]
@@ -5706,8 +5721,6 @@ namespace Gdk {
 		[Version (since = "2.10")]
 		public double get_resolution ();
 		[Version (since = "2.2")]
-		public unowned Gdk.Window get_root_window ();
-		[Version (since = "2.2")]
 		public bool get_setting (string name, GLib.Value value);
 		[Version (since = "2.2")]
 		public GLib.List<weak Gdk.Window> get_toplevel_windows ();
@@ -5876,9 +5889,6 @@ namespace Gdk {
 		public bool has_native ();
 		public void hide ();
 		public void iconify ();
-		[CCode (has_construct_function = false)]
-		[Version (since = "3.90")]
-		public Window.input (Gdk.Window parent, int event_mask, Gdk.Rectangle position);
 		[Version (since = "2.10")]
 		public void input_shape_combine_region (Cairo.Region shape_region, int offset_x, int offset_y);
 		public void invalidate_maybe_recurse (Cairo.Region region, Gdk.WindowChildFunc? child_func);
@@ -6776,8 +6786,6 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void flush ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static unowned Gdk.Window get_default_root_window ();
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "2.2")]
 	public static unowned string? get_display_arg_name ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -7025,7 +7033,7 @@ namespace Gsk {
 		public float dy;
 		public float radius;
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_BLEND_MODE_", has_type_id = false)]
+	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_BLEND_MODE_", type_id = "gsk_blend_mode_get_type ()")]
 	[Version (since = "3.90")]
 	public enum BlendMode {
 		DEFAULT,
@@ -7045,14 +7053,14 @@ namespace Gsk {
 		SATURATION,
 		LUMINOSITY
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_CORNER_", has_type_id = false)]
+	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_CORNER_", type_id = "gsk_corner_get_type ()")]
 	public enum Corner {
 		TOP_LEFT,
 		TOP_RIGHT,
 		BOTTOM_RIGHT,
 		BOTTOM_LEFT
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_", has_type_id = false)]
+	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_", type_id = "gsk_render_node_type_get_type ()")]
 	[Version (since = "3.90")]
 	public enum RenderNodeType {
 		NOT_A_RENDER_NODE,
@@ -7075,7 +7083,7 @@ namespace Gsk {
 		BLEND_NODE,
 		CROSS_FADE_NODE
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SCALING_FILTER_", has_type_id = false)]
+	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SCALING_FILTER_", type_id = "gsk_scaling_filter_get_type ()")]
 	[Version (since = "3.90")]
 	public enum ScalingFilter {
 		LINEAR,
@@ -9046,6 +9054,8 @@ namespace Gtk {
 		public string secondary_icon_tooltip_text { owned get; set; }
 		[NoAccessorMethod]
 		public int selection_bound { get; }
+		[NoAccessorMethod]
+		public bool show_emoji_icon { get; set; }
 		public Pango.TabArray tabs { get; set; }
 		public string text { get; set; }
 		[Version (since = "2.14")]
@@ -14557,7 +14567,6 @@ namespace Gtk {
 		public void set_realized (bool realized);
 		[Version (since = "2.18")]
 		public void set_receives_default (bool receives_default);
-		public void set_redraw_on_allocate (bool redraw_on_allocate);
 		public void set_sensitive (bool sensitive);
 		public void set_size_request (int width, int height);
 		[Version (since = "3.0")]
@@ -17416,12 +17425,6 @@ namespace Gtk {
 	public static uint main_level ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void main_quit ();
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "2.10")]
-	public static Gtk.PageSetup print_run_page_setup_dialog (Gtk.Window? parent, Gtk.PageSetup? page_setup, Gtk.PrintSettings settings);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "2.10")]
-	public static void print_run_page_setup_dialog_async (Gtk.Window? parent, Gtk.PageSetup? page_setup, Gtk.PrintSettings settings, [CCode (scope = "async")] Gtk.PageSetupDoneFunc done_cb);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void propagate_event (Gtk.Widget widget, Gdk.Event event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
