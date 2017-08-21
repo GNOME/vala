@@ -1,3 +1,16 @@
+Vala 0.37.90
+============
+ * Various bug fixes:
+  - Fix some build-system problem
+    + valadoc/tests: Add the source vapi directory to driver-test [#786505],
+      Add ./vala/.libs rather than ./gee/.libs to LD_LIBRARY_PATH
+    + Explicitly link doclets against libvala-*.la [#786534]
+    + Add missing include of Makefile.common
+  - vapigen: Mark given source-files as such and force girparser to handle them
+  - codegen: Include glib-object.h for Enums/Structs with type_id
+ * Bindings:
+  - gtk+-4.0: Make Gsk.Texturer.for_*() static factory methods
+
 Vala 0.37.2
 ===========
  * Various bug fixes:
