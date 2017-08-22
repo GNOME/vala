@@ -6240,11 +6240,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public static string? get_ccode_dup_function (TypeSymbol sym) {
 		if (sym is Struct) {
-			if (sym.external_package) {
-				return null;
-			} else {
-				return get_ccode_lower_case_prefix (sym) + "dup";
-			}
+			return get_ccode_attribute (sym).dup_function;
 		}
 		return get_ccode_copy_function (sym);
 	}
