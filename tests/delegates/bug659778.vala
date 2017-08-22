@@ -2,10 +2,10 @@ delegate G DoSomething<G>(G g);
 
 void do_something<G> (DoSomething<G> f) {}
 
-enum TE {
+enum TestEnum {
 	T;
 	public void f() {
-		do_something<TE> ((x) => {
+		do_something<TestEnum> ((x) => {
 			switch (this) {
 			case T:
 				return T;
@@ -15,7 +15,7 @@ enum TE {
         });
 	}
 	public void g(int i) {
-		do_something<TE> ((x) => {
+		do_something<TestEnum> ((x) => {
 			switch (this) {
 			case T:
 				i++;
@@ -29,11 +29,11 @@ enum TE {
 
 class Test {
 	public void f() {
-		do_something<TE> (g);
+		do_something<TestEnum> (g);
 		do_something<int> (h);
 	}
 	[CCode (instance_pos = -1)]
-	private TE g(TE i) {
+	private TestEnum g(TestEnum i) {
 		return i;
 	}
 	[CCode (instance_pos = -1)]
@@ -43,7 +43,7 @@ class Test {
 }
 
 int main() {
-	TE t = TE.T;
+	TestEnum t = TestEnum.T;
 	t.f ();
 	t.g (0);
 	Test t2 = new Test ();
