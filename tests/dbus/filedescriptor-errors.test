@@ -8,7 +8,7 @@ interface Test : Object {
 	public abstract string test (UnixOutputStream output_stream) throws IOError;
 }
 
-void pipe (out UnixInputStream input, out UnixOutputStream output) throws IOError {
+void create_streams (out UnixInputStream input, out UnixOutputStream output) throws IOError {
 	int pipefd[2];
 	if (Posix.pipe (pipefd) < 0) {
 		throw new IOError.FAILED ("Pipe creation failed");
@@ -23,7 +23,7 @@ void main () {
 
 	UnixInputStream i;
 	UnixOutputStream o;
-	pipe (out i, out o);
+	create_streams (out i, out o);
 
 	try {
 		test.test (o);
