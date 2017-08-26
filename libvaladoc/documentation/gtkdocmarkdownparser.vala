@@ -683,11 +683,11 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 	}
 
 
-	private void add_text (Valadoc.Token token) {
+	private void add_text (Valadoc.Token token) throws ParserError {
 		add_content_string (token.to_string ());
 	}
 
-	private void add_value (Valadoc.Token token) {
+	private void add_value (Valadoc.Token token) throws ParserError {
 		assert (token.value != null);
 
 		add_content_string (token.value);
@@ -713,7 +713,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 		push (run);
 	}
 
-	private void preserve_token (Valadoc.Token token) {
+	private void preserve_token (Valadoc.Token token) throws ParserError {
 		assert (preserved_token == null);
 		preserved_token = token;
 	}
