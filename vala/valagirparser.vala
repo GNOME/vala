@@ -715,7 +715,12 @@ public class Vala.GirParser : CodeVisitor {
 			if (name == null) {
 				return "";
 			}
-			var prefix = symbol.get_attribute_string ("CCode", "cprefix");
+			string prefix;
+			if (metadata.has_argument (ArgumentType.CPREFIX)) {
+				prefix = metadata.get_string (ArgumentType.CPREFIX);
+			} else {
+				prefix = symbol.get_attribute_string ("CCode", "cprefix");
+			}
 			if (prefix == null && girdata != null && girdata["c:identifier-prefixes"] != null) {
 				prefix = girdata["c:identifier-prefixes"];
 				int idx = prefix.index_of (",");
