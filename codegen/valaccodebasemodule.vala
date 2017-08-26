@@ -3234,7 +3234,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_return (new CCodeConstant ("FALSE"));
 
 			pop_function ();
-			cfile.add_function_declaration (function);
+			cfile.add_function_declaration (wrapper);
 			cfile.add_function (wrapper);
 
 			/* Now the code to call g_traverse with the above */
