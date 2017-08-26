@@ -26,4 +26,77 @@ using GLib;
  * A callable type, i.e. a delegate, method, or signal type.
  */
 public abstract class Vala.CallableType : DataType {
+	public override string to_prototype_string (string? override_name = null) {
+		StringBuilder builder = new StringBuilder ();
+
+		// Append return-type
+		var return_type = get_return_type ();
+		if (return_type.is_weak ()) {
+			builder.append ("unowned ");
+		}
+		builder.append (return_type.to_qualified_string ());
+
+		// Append name
+		builder.append_c (' ');
+		builder.append (override_name ?? this.to_string ());
+		builder.append_c (' ');
+
+		// Append parameter-list
+		builder.append_c ('(');
+		int i = 1;
+		foreach (Parameter param in get_parameters ()) {
+			if (i > 1) {
+				builder.append (", ");
+			}
+
+			if (param.ellipsis) {
+				builder.append ("...");
+				continue;
+			}
+
+			if (param.direction == ParameterDirection.IN) {
+				if (param.variable_type.value_owned) {
+					builder.append ("owned ");
+				}
+			} else {
+				if (param.direction == ParameterDirection.REF) {
+					builder.append ("ref ");
+				} else if (param.direction == ParameterDirection.OUT) {
+					builder.append ("out ");
+				}
+				if (!param.variable_type.value_owned && param.variable_type is ReferenceType) {
+					builder.append ("weak ");
+				}
+			}
+
+			builder.append (param.variable_type.to_qualified_string ());
+
+			if (param.initializer != null) {
+				builder.append (" = ");
+				builder.append (param.initializer.to_string ());
+			}
+
+			i++;
+		}
+		builder.append_c (')');
+
+		// Append error-types
+		var error_types = get_error_types ();
+		if (error_types.size > 0) {
+			builder.append (" throws ");
+
+			bool first = true;
+			foreach (DataType type in error_types) {
+				if (!first) {
+					builder.append (", ");
+				} else {
+					first = false;
+				}
+
+				builder.append (type.to_string ());
+			}
+		}
+
+		return builder.str;
+	}
 }

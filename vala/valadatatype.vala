@@ -486,6 +486,16 @@ public abstract class Vala.DataType : CodeNode {
 		return null;
 	}
 
+	/**
+	 * Returns a stringified representation used for detailed error output
+	 *
+	 * @param override_name used as name if given
+	 * @return stringified representation
+	 */
+	public virtual string to_prototype_string (string? override_name = null) {
+		return "%s%s".printf (is_weak () ? "unowned " : "", to_qualified_string ());
+	}
+
 	public bool is_weak () {
 		if (this.value_owned) {
 			return false;

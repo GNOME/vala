@@ -298,7 +298,7 @@ public class Vala.Assignment : Expression {
 				var delegate_type = (DelegateType) right.target_type;
 
 				error = true;
-				Report.error (right.source_reference, "method `%s' is incompatible with signal `%s', expected `%s'".printf (right.value_type.to_string (), right.target_type.to_string (), delegate_type.delegate_symbol.get_prototype_string (m.name)));
+				Report.error (right.source_reference, "method `%s' is incompatible with signal `%s', expected `%s'".printf (right.value_type.to_string (), right.target_type.to_string (), delegate_type.to_prototype_string (m.name)));
 				return false;
 			} else if (right_ma != null && right_ma.prototype_access) {
 				error = true;

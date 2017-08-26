@@ -552,12 +552,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (arg.target_type != null) {
 			if ((direction == ParameterDirection.IN || direction == ParameterDirection.REF)
 			    && !arg.value_type.compatible (arg.target_type)) {
-				Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_string (), arg.target_type.to_string ()));
+				Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_prototype_string (), arg.target_type.to_prototype_string ()));
 				return false;
 			} else if ((direction == ParameterDirection.REF || direction == ParameterDirection.OUT)
 		                && !arg.target_type.compatible (arg.value_type)
 		                && !(arg is NullLiteral)) {
-				Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.target_type.to_string (), arg.value_type.to_string ()));
+				Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.target_type.to_prototype_string (), arg.value_type.to_prototype_string ()));
 				return false;
 			}
 		}

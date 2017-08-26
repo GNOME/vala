@@ -360,7 +360,7 @@ public class Vala.GtkModule : GSignalModule {
 			var signal_type = new SignalType (sig);
 			var delegate_type = signal_type.get_handler_type ();
 			if (!method_type.compatible (delegate_type)) {
-				Report.error (m.source_reference, "method `%s' is incompatible with signal `%s', expected `%s'".printf (method_type.to_string (), delegate_type.to_string (), delegate_type.delegate_symbol.get_prototype_string (m.name)));
+				Report.error (m.source_reference, "method `%s' is incompatible with signal `%s', expected `%s'".printf (method_type.to_string (), delegate_type.to_string (), delegate_type.to_prototype_string (m.name)));
 			} else {
 				var wrapper = generate_delegate_wrapper (m, signal_type.get_handler_type (), m);
 
