@@ -85,7 +85,8 @@ public class Vala.GirParser : CodeVisitor {
 		RETURN_VOID,
 		RETURNS_MODIFIED_POINTER,
 		DELEGATE_TARGET_CNAME,
-		FINISH_VFUNC_NAME;
+		FINISH_VFUNC_NAME,
+		CNAME;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -736,7 +737,12 @@ public class Vala.GirParser : CodeVisitor {
 			if (name == null) {
 				return "";
 			}
-			var cname = symbol.get_attribute_string ("CCode", "cname");
+			string cname;
+			if (metadata.has_argument (ArgumentType.CNAME)) {
+				cname = metadata.get_string (ArgumentType.CNAME);
+			} else {
+				cname = symbol.get_attribute_string ("CCode", "cname");
+			}
 			if (girdata != null) {
 				if (cname == null) {
 					cname = girdata["c:identifier"];
