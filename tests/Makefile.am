@@ -160,6 +160,7 @@ TESTS = \
 	structs/bug777194.vala \
 	delegates/casting.vala \
 	delegates/delegates.vala \
+	delegates/delegates-error.test \
 	delegates/reference_transfer.vala \
 	delegates/bug539166.vala \
 	delegates/bug595610.vala \

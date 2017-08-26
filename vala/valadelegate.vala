@@ -185,10 +185,18 @@ public class Vala.Delegate : TypeSymbol, Callable {
 			return false;
 		}
 
+		var error_types = get_error_types ();
+		var method_error_types = m.get_error_types ();
+
+		// method must throw error if the delegate does
+		if (error_types.size > 0 && method_error_types.size == 0) {
+			return false;
+		}
+
 		// method may throw less but not more errors than the delegate
-		foreach (DataType method_error_type in m.get_error_types ()) {
+		foreach (DataType method_error_type in method_error_types) {
 			bool match = false;
-			foreach (DataType delegate_error_type in get_error_types ()) {
+			foreach (DataType delegate_error_type in error_types) {
 				if (method_error_type.compatible (delegate_error_type)) {
 					match = true;
 					break;

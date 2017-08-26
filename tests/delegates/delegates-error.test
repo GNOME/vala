@@ -1,0 +1,17 @@
+Invalid Code
+
+delegate void FooFunc () throws Error;
+
+void foo (FooFunc func) {
+	try {
+		func ();
+	} catch (Error e) {
+	}
+}
+
+void bar_func () {
+}
+
+void main () {
+	foo (bar_func);
+}
