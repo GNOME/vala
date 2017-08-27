@@ -1008,6 +1008,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
+		var needs_format_arg = m.get_format_arg_index () < 0 && (m.printf_format || m.scanf_format);
+
+		CCodeParameter? prev_cparam = null;
 		foreach (Parameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
 				if ((direction & 1) == 0) {
@@ -1021,7 +1024,17 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 			}
 
-			generate_parameter (param, decl_space, cparam_map, carg_map);
+			var cparam = generate_parameter (param, decl_space, cparam_map, carg_map);
+
+			// if there is no explicit FormatArg annotation while this method throws an error
+			// it is required to mark the parameter located right before ellipsis as format-arg
+			// to account for the parameter shifting caused by the inserted GError parameter
+			if (needs_format_arg) {
+				if (prev_cparam != null && cparam.ellipsis) {
+					prev_cparam.modifiers |= CCodeModifiers.FORMAT_ARG;
+				}
+				prev_cparam = cparam;
+			}
 		}
 
 		if ((direction & 2) != 0) {
