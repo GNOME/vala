@@ -119,35 +119,38 @@ PKG_CHECK_MODULES(GMODULE, gmodule-2.0 >= $GLIB_REQUIRED)
 AC_SUBST(GMODULE_CFLAGS)
 AC_SUBST(GMODULE_LIBS)
 
-PKG_CHECK_MODULES(LIBGVC, libgvc >= $LIBGVC_REQUIRED)
-AC_MSG_CHECKING([for CGRAPH])
-cgraph_tmp_LIBADD="$LIBADD"
-cgraph_tmp_CFLAGS="$CFLAGS"
-LIBADD="$LIBADD $LIBGVC_LIBS"
-CFLAGS="$CFLAGS $LIBGVC_CFLAGS"
-AC_RUN_IFELSE(
-	[AC_LANG_SOURCE([
-		#include <gvc.h>
-
-		int main(void) {
-			#ifdef WITH_CGRAPH
-				return 0;
-			#else
-				return -1;
-			#endif
-		}
-	])], [
-		AC_MSG_RESULT([yes])
-		VALAFLAGS="$VALAFLAGS -D WITH_CGRAPH"
-		have_cgraph=yes
-	], [
-		AC_MSG_RESULT([no])
-		have_cgraph=no
-	]
-)
-LIBADD="$cgraph_tmp_LIBADD"
-CFLAGS="$cgraph_tmp_CFLAGS"
+AC_ARG_ENABLE(valadoc, AS_HELP_STRING([--disable-valadoc], [Disable valadoc]), enable_valadoc=$enableval, enable_valadoc=yes)
+if test x$enable_valadoc = xyes; then
+	PKG_CHECK_MODULES(LIBGVC, libgvc >= $LIBGVC_REQUIRED)
+	AC_MSG_CHECKING([for CGRAPH])
+	cgraph_tmp_LIBADD="$LIBADD"
+	cgraph_tmp_CFLAGS="$CFLAGS"
+	LIBADD="$LIBADD $LIBGVC_LIBS"
+	CFLAGS="$CFLAGS $LIBGVC_CFLAGS"
+	AC_RUN_IFELSE(
+		[AC_LANG_SOURCE([
+			#include <gvc.h>
+			int main(void) {
+				#ifdef WITH_CGRAPH
+					return 0;
+				#else
+					return -1;
+				#endif
+			}
+		])], [
+			AC_MSG_RESULT([yes])
+			VALAFLAGS="$VALAFLAGS -D WITH_CGRAPH"
+			have_cgraph=yes
+		], [
+			AC_MSG_RESULT([no])
+			have_cgraph=no
+		]
+	)
+	LIBADD="$cgraph_tmp_LIBADD"
+	CFLAGS="$cgraph_tmp_CFLAGS"
+fi
 AM_CONDITIONAL(HAVE_CGRAPH, test "$have_cgraph" = "yes")
+AM_CONDITIONAL(ENABLE_VALADOC, test x$enable_valadoc = xyes)
 
 AC_PATH_PROG([XSLTPROC], [xsltproc], :)
 AM_CONDITIONAL(HAVE_XSLTPROC, test "$XSLTPROC" != :)

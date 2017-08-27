@@ -13,8 +13,18 @@ SUBDIRS = \
 	doc \
 	gobject-introspection \
 	vapigen \
+	$(NULL)
+
+if ENABLE_VALADOC
+SUBDIRS += \
 	libvaladoc \
 	valadoc \
+	$(NULL)
+endif
+
+DISTCHECK_CONFIGURE_FLAGS = \
+	--enable-valadoc \
+	--enable-unversioned \
 	$(NULL)
 
 if ENABLE_UNVERSIONED

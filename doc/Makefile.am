@@ -6,10 +6,15 @@ SUBDIRS = \
 
 dist_man_MANS = \
 	valac.1 \
-	valadoc.1 \
 	vala-gen-introspect.1 \
 	vapigen.1 \
 	$(NULL)
+
+if ENABLE_VALADOC
+dist_man_MANS += \
+	valadoc.1 \
+	$(NULL)
+endif
 
 EXTRA_DIST = \
 	valac.h2m \
@@ -19,7 +24,11 @@ EXTRA_DIST = \
 	$(NULL)
 
 if HAVE_HELP2MAN
+if ENABLE_VALADOC
 manpages: valac.1 valadoc.1 vala-gen-introspect.1 vapigen.1
+else
+manpages: valac.1 vala-gen-introspect.1 vapigen.1
+endif
 	@rm $^
 	$(MAKE) $(AM_MAKEFLAGS) $^
 
@@ -28,11 +37,13 @@ valac.1:
 		--include $(srcdir)/valac.h2m \
 		--libtool --no-info \
 		--output=$@
+if ENABLE_VALADOC
 valadoc.1:
 	$(HELP2MAN) $(top_builddir)/valadoc/valadoc \
 		--include $(srcdir)/valadoc.h2m \
 		--libtool --no-info \
 		--output=$@
+endif
 vala-gen-introspect.1:
 	$(HELP2MAN) $(top_builddir)/gobject-introspection/gen-introspect \
 		--include $(srcdir)/vala-gen-introspect.h2m \
@@ -49,12 +60,15 @@ endif
 if ENABLE_UNVERSIONED
 install-data-hook:
 	cd $(DESTDIR)$(man1dir) && $(LN_S) -f valac@PACKAGE_SUFFIX@.1 valac.1
+if ENABLE_VALADOC
 	cd $(DESTDIR)$(man1dir) && $(LN_S) -f valadoc@PACKAGE_SUFFIX@.1 valadoc.1
+endif
 	cd $(DESTDIR)$(man1dir) && $(LN_S) -f vala-gen-introspect@PACKAGE_SUFFIX@.1 vala-gen-introspect.1
 	cd $(DESTDIR)$(man1dir) && $(LN_S) -f vapigen@PACKAGE_SUFFIX@.1 vapigen.1
 endif
 
 
+if ENABLE_VALADOC
 COMMON_VALADOCFLAGS = \
 	--force \
 	--verbose \
@@ -130,6 +144,7 @@ internal-apis/valadoc: $(valadoc_VALASOURCES) internal-apis/codegen
 	@touch $@
 
 internal-api-docs: internal-apis/gee internal-apis/vala internal-apis/ccode internal-apis/codegen internal-apis/valadoc
+endif
 
 clean-local:
 	rm -rf $(builddir)/internal-apis
