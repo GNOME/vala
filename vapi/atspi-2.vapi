@@ -110,6 +110,7 @@ namespace Atspi {
 		public static bool deregister_no_data (Atspi.EventListenerSimpleCB callback, string event_type) throws GLib.Error;
 		public bool register (string event_type) throws GLib.Error;
 		public static bool register_from_callback ([CCode (delegate_target_pos = 1.33333, destroy_notify_pos = 1.66667)] owned Atspi.EventListenerCB callback, string event_type) throws GLib.Error;
+		public static bool register_from_callback_full ([CCode (delegate_target_pos = 1.33333, destroy_notify_pos = 1.66667)] owned Atspi.EventListenerCB? callback, string event_type, GLib.Array<string> properties) throws GLib.Error;
 		public bool register_full (string event_type, GLib.Array<string>? properties) throws GLib.Error;
 		public static bool register_no_data ([CCode (destroy_notify_pos = 1.5)] owned Atspi.EventListenerSimpleCB callback, string event_type) throws GLib.Error;
 		[CCode (has_construct_function = false)]

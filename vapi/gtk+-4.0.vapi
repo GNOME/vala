@@ -8728,7 +8728,6 @@ namespace Gtk {
 		public class void install_child_property (uint property_id, GLib.ParamSpec pspec);
 		[CCode (array_length_pos = 0.1, array_length_type = "guint", cname = "gtk_container_class_list_child_properties")]
 		public class (unowned GLib.ParamSpec)[] list_child_properties ();
-		public void propagate_draw (Gtk.Widget child, Cairo.Context cr);
 		[NoWrapper]
 		public virtual void set_child_property (Gtk.Widget child, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
 		public void set_focus_chain (GLib.List<Gtk.Widget> focusable_widgets);
