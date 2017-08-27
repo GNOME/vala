@@ -1907,6 +1907,8 @@ namespace Gtk {
 		public int selection_bound { get; }
 		[NoAccessorMethod]
 		public Gtk.ShadowType shadow_type { get; set; }
+		[NoAccessorMethod]
+		public bool show_emoji_icon { get; set; }
 		public Pango.TabArray tabs { get; set; }
 		public string text { get; set; }
 		public uint text_length { get; }
