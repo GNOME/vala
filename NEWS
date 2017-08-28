@@ -1,3 +1,24 @@
+Vala 0.37.91
+============
+ * Various bug fixes:
+  - codegen:
+    + Actually write declaration for GNodeTraverseFunc wrapper [#786845]
+    + Don't transfer ownership of variable if target-type is unknown [#736774]
+    + Adjust format-index for printf/scanf-methods which throw errors [#781061]
+    + Use given dup_function for structs
+  - libvaladoc: Fix some -Wincompatible-pointer-types warnings
+  - tests: Fix some syntax issues [#786652]
+  - Add .editorconfig file [#786620]
+
+ * GIR parser:
+  - Better support of "cprefix" argument in metadata
+  - Support "cname" argument in metadata
+
+ * Bindings:
+  - Add javascriptcoregtk-4.0 and avoid skips in webkit2gtk*-4.0
+  - Update GIR-based bindings
+  - gtk+-3.0: Update to 3.22.19
+
 Vala 0.37.90
 ============
  * Various bug fixes:
