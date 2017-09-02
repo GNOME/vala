@@ -45,6 +45,7 @@ TESTS = \
 	basic-types/bug761736.vala \
 	basic-types/bug771626.test \
 	basic-types/bug777697.test \
+	basic-types/bug787152.vala \
 	chainup/class-base.vala \
 	chainup/class-base-foo.vala \
 	chainup/class-object.vala \
