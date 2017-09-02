@@ -44,6 +44,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			// no heap allocation for fixed-length arrays
 
 			var temp_var = get_temp_variable (array_type, true, expr);
+			temp_var.init = true;
 			var name_cnode = get_variable_cexpression (temp_var.name);
 			int i = 0;
 
