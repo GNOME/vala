@@ -25,7 +25,7 @@ using GLib;
 /**
  * The type of a signal referencea.
  */
-public class Vala.SignalType : DataType {
+public class Vala.SignalType : CallableType {
 	public Signal signal_symbol { get; set; }
 
 	Method? connect_method;

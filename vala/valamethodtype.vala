@@ -25,7 +25,7 @@ using GLib;
 /**
  * The type of a method referencea.
  */
-public class Vala.MethodType : DataType {
+public class Vala.MethodType : CallableType {
 	public Method method_symbol { get; set; }
 
 	public MethodType (Method method_symbol) {

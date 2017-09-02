@@ -25,7 +25,7 @@ using GLib;
 /**
  * The type of an instance of a delegate.
  */
-public class Vala.DelegateType : DataType {
+public class Vala.DelegateType : CallableType {
 	public Delegate delegate_symbol { get; set; }
 
 	public bool is_called_once { get; set; }
