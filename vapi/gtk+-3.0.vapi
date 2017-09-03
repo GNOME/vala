@@ -8247,7 +8247,9 @@ namespace Gtk {
 		UPPERCASE_WORDS,
 		UPPERCASE_SENTENCES,
 		INHIBIT_OSK,
-		VERTICAL_WRITING
+		VERTICAL_WRITING,
+		EMOJI,
+		NO_EMOJI
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_INPUT_PURPOSE_")]
 	public enum InputPurpose {
