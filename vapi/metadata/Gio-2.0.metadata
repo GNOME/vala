@@ -383,6 +383,8 @@ ActionGroup
   .get_action* nullable
   .get_action_enabled nullable=false
   .get_action_state_type unowned
+Application
+  .set_default symbol_type="function"
 AsyncReadyCallback.source_object nullable
 Converter
   .convert.inbuf nullable=false

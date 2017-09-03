@@ -389,7 +389,7 @@ namespace GLib {
 		public void set_action_group (GLib.ActionGroup? action_group);
 		public void set_application_id (string? application_id);
 		[Version (since = "2.32")]
-		public void set_default ();
+		public static void set_default (GLib.Application? application);
 		public void set_flags (GLib.ApplicationFlags flags);
 		public void set_inactivity_timeout (uint inactivity_timeout);
 		[Version (since = "2.42")]
