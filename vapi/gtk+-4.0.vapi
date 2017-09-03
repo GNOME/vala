@@ -6940,6 +6940,8 @@ namespace Gsk {
 		public void set_scaling_filters (Gsk.ScalingFilter min_filter, Gsk.ScalingFilter mag_filter);
 		[CCode (cname = "gsk_shadow_node_new", has_construct_function = false)]
 		public RenderNode.shadow (Gsk.RenderNode child, [CCode (array_length_cname = "n_shadows", array_length_pos = 2.1, array_length_type = "gsize")] Gsk.Shadow[] shadows);
+		[CCode (cname = "gsk_text_node_new", has_construct_function = false)]
+		public RenderNode.text (Pango.Font font, Pango.GlyphString glyphs, Gdk.RGBA color, int x_offset, int y_offset, double base_x, double base_y);
 		[CCode (cname = "gsk_transform_node_new", has_construct_function = false)]
 		public RenderNode.transform (Gsk.RenderNode child, Graphene.Matrix transform);
 		[CCode (cname = "gsk_transform_node_get_child")]
@@ -7081,7 +7083,8 @@ namespace Gsk {
 		ROUNDED_CLIP_NODE,
 		SHADOW_NODE,
 		BLEND_NODE,
-		CROSS_FADE_NODE
+		CROSS_FADE_NODE,
+		TEXT_NODE
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SCALING_FILTER_", type_id = "gsk_scaling_filter_get_type ()")]
 	[Version (since = "3.90")]
@@ -13657,7 +13660,7 @@ namespace Gtk {
 		[Version (since = "2.4")]
 		public Gtk.Orientation get_orientation ();
 		[Version (since = "2.4")]
-		public unowned Gtk.Widget get_proxy_menu_item (string menu_item_id);
+		public unowned Gtk.Widget? get_proxy_menu_item (string menu_item_id);
 		[Version (since = "2.20")]
 		public float get_text_alignment ();
 		[Version (since = "2.20")]
@@ -16155,7 +16158,9 @@ namespace Gtk {
 		UPPERCASE_WORDS,
 		UPPERCASE_SENTENCES,
 		INHIBIT_OSK,
-		VERTICAL_WRITING
+		VERTICAL_WRITING,
+		EMOJI,
+		NO_EMOJI
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_INPUT_PURPOSE_", type_id = "gtk_input_purpose_get_type ()")]
 	[Version (since = "3.6")]
@@ -17449,9 +17454,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.6")]
 	public static void show_about_dialog (Gtk.Window? parent, ...);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "2.14")]
-	public static bool show_uri (Gdk.Screen? screen, string uri, uint32 timestamp) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.22")]
 	public static bool show_uri_on_window (Gtk.Window? parent, string uri, uint32 timestamp) throws GLib.Error;
