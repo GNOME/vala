@@ -145,7 +145,11 @@ stringtext				([^\\\"])|(\\.)
 "__inline__"                            { return INLINE; }
 "__inline"				{ return INLINE; }
 "__nonnull" 			        { if (!parse_ignored_macro()) REJECT; }
+"_Nonnull"				{ /* Ignore */ }
+"_Nullable"				{ /* Ignore */ }
+"_Null_unspecified"			{ /* Ignore */ }
 "_Noreturn" 			        { /* Ignore */ }
+"__signed"				{ return SIGNED; }
 "__signed__"				{ return SIGNED; }
 "__restrict"				{ return RESTRICT; }
 "__restrict__"				{ return RESTRICT; }
@@ -160,6 +164,7 @@ stringtext				([^\\\"])|(\\.)
 "__stdcall" 			        { /* ignore */ }
 "__w64"					{ /* ignore */ }
 "__int64"				{ return INT; }
+"_Float128"				{ return FLOAT; }
 
 
 [a-zA-Z_][a-zA-Z_0-9]*			{ if (igenerator->macro_scan) return check_identifier(igenerator, yytext); else REJECT; }
