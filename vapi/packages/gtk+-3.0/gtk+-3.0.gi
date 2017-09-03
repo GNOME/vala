@@ -5469,6 +5469,8 @@
 			<member name="GTK_INPUT_HINT_UPPERCASE_SENTENCES" value="64"/>
 			<member name="GTK_INPUT_HINT_INHIBIT_OSK" value="128"/>
 			<member name="GTK_INPUT_HINT_VERTICAL_WRITING" value="256"/>
+			<member name="GTK_INPUT_HINT_EMOJI" value="512"/>
+			<member name="GTK_INPUT_HINT_NO_EMOJI" value="1024"/>
 		</flags>
 		<flags name="GtkJunctionSides" type-name="GtkJunctionSides" get-type="gtk_junction_sides_get_type">
 			<member name="GTK_JUNCTION_NONE" value="0"/>
