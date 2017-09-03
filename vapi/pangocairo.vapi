@@ -22,7 +22,7 @@ namespace Pango {
 		[Version (since = "1.18")]
 		public static Pango.FontMap? new_for_font_type (Cairo.FontType fonttype);
 		[Version (since = "1.22")]
-		public void set_default ();
+		public static void set_default (Pango.CairoFontMap? fontmap);
 		public void set_resolution (double dpi);
 	}
 	[CCode (cheader_filename = "pango/pangocairo.h", instance_pos = 3.9)]
