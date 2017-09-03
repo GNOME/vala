@@ -878,8 +878,14 @@ namespace Xml {
 		[CCode (cname = "xmlNextElementSibling")]
 		public Node* next_element_sibling ();
 
+		[CCode (cname = "xmlPreviousElementSibling")]
+		public Node* previous_element_sibling ();
+
 		[CCode (cname = "xmlFirstElementChild")]
 		public Node* first_element_child ();
+
+		[CCode (cname = "xmlLastElementChild")]
+		public Node* last_element_child ();
 
 		[CCode (cname = "xmlChildElementCount")]
 		public ulong child_element_count ();
