@@ -5876,6 +5876,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				return result;
 			}
 			result = copy;
+
+			// implicit array copying is deprecated, but allow it for internal codegen usage
+			var prop_acc = node as PropertyAccessor;
+			if ((prop_acc != null && !prop_acc.automatic_body)
+			    && result.value_type is ArrayType) {
+				Report.deprecated (node.source_reference, "implicit copy of array is deprecated, explicitly invoke the copy method instead");
+			}
 		}
 
 		return result;
