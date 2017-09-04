@@ -1,3 +1,18 @@
+Vala 0.38.0
+===========
+ * Various bug fixes:
+  - Improve error output for incompatible method signatures
+    (Add CallableType as base for DelegateType, MethodType, SignalType)
+  - codegen:
+    + Initialize temp-variable for fixed-size arrays to zero first [#787152]
+    + Add support for "type-func" in ui-files [#787033]
+
+ * Bindings:
+  - gtk+-3.0,gtk+-4.0: Update
+  - libxml-2.0: Bind xmlLastElementChild and xmlPreviousElementSibling
+  - pangocairo: CairoFontMap.set_default() is not an instance method
+  - gio-2.0: Application.set_default() is not an instance method
+
 Vala 0.37.91
 ============
  * Various bug fixes:
