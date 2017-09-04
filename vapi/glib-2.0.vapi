@@ -3653,7 +3653,7 @@ namespace GLib {
 		public bool get_ignore_unknown_options ();
 		[Version (since = "2.14")]
 		public string get_help (bool main_help, OptionGroup? group);
-		public void add_main_entries ([CCode (array_length = false)] OptionEntry[] entries, string? translation_domain);
+		public void add_main_entries ([CCode (array_length = false, array_null_terminated = true)] OptionEntry[] entries, string? translation_domain);
 		public void add_group (owned OptionGroup group);
 		public void set_main_group (owned OptionGroup group);
 		public unowned OptionGroup get_main_group ();
@@ -3712,7 +3712,7 @@ namespace GLib {
 #endif
 	public class OptionGroup {
 		public OptionGroup (string name, string description, string help_description, void* user_data = null, DestroyNotify? destroy = null);
-		public void add_entries ([CCode (array_length = false)] OptionEntry[] entries);
+		public void add_entries ([CCode (array_length = false, array_null_terminated = true)] OptionEntry[] entries);
 		public void set_parse_hooks (OptionParseFunc? pre_parse_func, OptionParseFunc? post_parse_hook);
 		public void set_error_hook (OptionErrorFunc? error_func);
 		public void set_translate_func (owned TranslateFunc? func);
