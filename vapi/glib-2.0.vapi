@@ -1749,8 +1749,7 @@ namespace GLib {
 		public bool wait (Cond cond, Mutex mutex);
 		public bool prepare (out int priority);
 		public int query (int max_priority, out int timeout_, PollFD[] fds);
-		[CCode (array_length = false)]
-		public int check (int max_priority, PollFD[] fds, int n_fds);
+		public bool check (int max_priority, PollFD[] fds);
 		public void dispatch ();
 		public void set_poll_func (PollFunc func);
 		public PollFunc get_poll_func ();
