@@ -283,21 +283,21 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		pc_libs += "--libs";
 
 		try {
-			string stderr;
+			string stderr_buf;
 			int status;
 
 			string cflags;
-			Process.spawn_sync (null, pc_cflags, null, SpawnFlags.SEARCH_PATH, null, out cflags, out stderr, out status);
+			Process.spawn_sync (null, pc_cflags, null, SpawnFlags.SEARCH_PATH, null, out cflags, out stderr_buf, out status);
 			if (status != 0) {
-				reporter.simple_error ("GtkDoc", "pkg-config cflags error: %s", stderr);
+				reporter.simple_error ("GtkDoc", "pkg-config cflags error: %s", stderr_buf);
 				return false;
 			}
 			cflags = cflags.strip ();
 
 			string libs;
-			Process.spawn_sync (null, pc_libs, null, SpawnFlags.SEARCH_PATH, null, out libs, out stderr, out status);
+			Process.spawn_sync (null, pc_libs, null, SpawnFlags.SEARCH_PATH, null, out libs, out stderr_buf, out status);
 			if (status != 0) {
-				reporter.simple_error ("GtkDoc", "pkg-config libs error: %s", stderr);
+				reporter.simple_error ("GtkDoc", "pkg-config libs error: %s", stderr_buf);
 				return false;
 			}
 
