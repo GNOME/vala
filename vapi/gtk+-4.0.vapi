@@ -6889,6 +6889,8 @@ namespace Gsk {
 		public RenderNode.blend (Gsk.RenderNode bottom, Gsk.RenderNode top, Gsk.BlendMode blend_mode);
 		[CCode (cname = "gsk_blend_node_get_blend_mode")]
 		public Gsk.BlendMode blend_node_get_blend_mode ();
+		[CCode (cname = "gsk_blur_node_new", has_construct_function = false)]
+		public RenderNode.blur (Gsk.RenderNode child, double radius);
 		[CCode (cname = "gsk_border_node_new", has_construct_function = false)]
 		public RenderNode.border (Gsk.RoundedRect outline, float border_width, Gdk.RGBA border_color);
 		[CCode (cname = "gsk_cairo_node_new", has_construct_function = false)]
@@ -7084,7 +7086,8 @@ namespace Gsk {
 		SHADOW_NODE,
 		BLEND_NODE,
 		CROSS_FADE_NODE,
-		TEXT_NODE
+		TEXT_NODE,
+		BLUR_NODE
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SCALING_FILTER_", type_id = "gsk_scaling_filter_get_type ()")]
 	[Version (since = "3.90")]
@@ -12706,6 +12709,7 @@ namespace Gtk {
 		[Version (since = "3.90")]
 		public void push (bool keep_coordinates, string name, ...);
 		public void push_blend (Gsk.BlendMode blend_mode, string name, ...);
+		public void push_blur (double radius, string name, ...);
 		public void push_clip (Graphene.Rect bounds, string name, ...);
 		public void push_color_matrix (Graphene.Matrix color_matrix, Graphene.Vec4 color_offset, string name, ...);
 		public void push_cross_fade (double progress, string name, ...);
