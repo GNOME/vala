@@ -31,10 +31,10 @@
  *
  * This implementation was adapted from Tim Peters's list sort for Python,
  * which is described in detail here:
- *   [[http://svn.python.org/projects/python/trunk/Objects/listsort.txt]]
+ * [[http://svn.python.org/projects/python/trunk/Objects/listsort.txt]]
  *
  * Tim's C code may be found here:
- *   [[http://svn.python.org/projects/python/trunk/Objects/listobject.c]]
+ * [[http://svn.python.org/projects/python/trunk/Objects/listobject.c]]
  *
  * The underlying techniques are described in this paper (and may have even
  * earlier origins):

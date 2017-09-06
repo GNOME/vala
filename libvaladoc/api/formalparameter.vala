@@ -95,8 +95,6 @@ public class Valadoc.Api.FormalParameter : Symbol {
 
 	/**
 	 * The parameter type.
-	 *
-	 * @return The parameter type or null for void
 	 */
 	public TypeReference? parameter_type {
 		set;
