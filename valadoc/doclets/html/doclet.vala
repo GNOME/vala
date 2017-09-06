@@ -78,7 +78,12 @@ public class Valadoc.Html.Doclet : Valadoc.Html.BasicDoclet {
 		write_wiki_pages (tree, css_path_wiki, js_path_wiki, Path.build_filename(settings.path, settings.pkg_name));
 
 		var tmp = _renderer;
-		_renderer = new HtmlRenderer (settings, new IndexLinkHelper (), this.cssresolver);
+		var link_helper = new IndexLinkHelper ();
+		if (settings.pluginargs != null && ("--no-browsable-check" in settings.pluginargs)) {
+			link_helper.enable_browsable_check = false;
+		}
+		_renderer = new HtmlRenderer (settings, link_helper, this.cssresolver);
+
 		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename (settings.path, "index.html"), "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
