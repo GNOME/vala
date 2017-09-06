@@ -415,8 +415,6 @@ public abstract class Vala.TypeRegisterFunction {
 
 	/**
 	 * Returns additional C initialization statements to setup interfaces.
-	 *
-	 * @return C statements
 	 */
 	public virtual void get_type_interface_init_statements (CCodeBlock block, bool plugin) {
 	}
