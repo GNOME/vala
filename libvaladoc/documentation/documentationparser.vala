@@ -292,7 +292,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		text.content += str;
 	}
 
-	private void add_content_space () {
+	private void add_content_space (Token token) throws ParserError {
 		// avoid double spaces
 		var head = peek ();
 		Text text_node = null;
@@ -313,17 +313,17 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		}
 	}
 
+	private void add_text (Token token) throws ParserError {
+		add_content_string (token.to_string ());
+	}
+
 	private void init_valadoc_rules () {
 		// Inline rules
 
 		StubRule run = new StubRule ();
 		run.set_name ("Run");
 
-		TokenType.Action add_text = (token) => {
-			add_content_string (token.to_string ());
-		};
-
-		TokenType space = TokenType.SPACE.action ((token) => { add_content_space (); });
+		TokenType space = TokenType.SPACE.action (add_content_space);
 		TokenType word = TokenType.any_word ().action (add_text);
 
 		Rule optional_invisible_spaces =
@@ -334,7 +334,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		Rule optional_spaces = 
 			Rule.option ({
 				Rule.many ({
-					TokenType.SPACE.action ((token) => { add_content_space (); })
+					TokenType.SPACE.action (add_content_space)
 				})
 			});
 
@@ -378,7 +378,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 		multiline_run = Rule.many ({
 				run_with_spaces,
-				TokenType.EOL.action (() => { add_content_space (); })
+				TokenType.EOL.action (add_content_space)
 			})
 			.set_name ("MultiLineRun");
 
@@ -550,7 +550,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				}),
 				Rule.many ({
 					run,
-					TokenType.EOL.action (() => { add_content_space (); })
+					TokenType.EOL.action (add_content_space)
 				})
 			})
 			.set_name ("Paragraph")
@@ -571,7 +571,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				optional_invisible_spaces,
 				Rule.many ({
 					Rule.seq({optional_invisible_spaces, run}),
-					TokenType.EOL.action (() => { add_content_space (); })
+					TokenType.EOL.action (add_content_space)
 				})
 			})
 			.set_name ("Warning")
@@ -593,7 +593,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				optional_invisible_spaces,
 				Rule.many ({
 					Rule.seq({optional_invisible_spaces, run}),
-					TokenType.EOL.action (() => { add_content_space (); })
+					TokenType.EOL.action (add_content_space)
 				})
 			})
 			.set_name ("Note")

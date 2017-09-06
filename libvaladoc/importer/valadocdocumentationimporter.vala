@@ -82,11 +82,11 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 				TokenType.VALADOC_COMMENT_START.action ((token) => { _comment_location = token.end; }),
 				Rule.many ({
 					Rule.one_of ({
-						TokenType.ANY_WORD.action ((token) => { _comment.append (token.to_string ()); }),
-						TokenType.VALADOC_COMMENT_START.action ((token) => { _comment.append (token.to_string ()); }),
-						TokenType.VALADOC_SPACE.action ((token) => { _comment.append (token.to_string ()); }),
-						TokenType.VALADOC_TAB.action ((token) => { _comment.append (token.to_string ()); }),
-						TokenType.VALADOC_EOL.action ((token) => { _comment.append (token.to_string ()); })
+						TokenType.ANY_WORD.action (add_comment),
+						TokenType.VALADOC_COMMENT_START.action (add_comment),
+						TokenType.VALADOC_SPACE.action (add_comment),
+						TokenType.VALADOC_TAB.action (add_comment),
+						TokenType.VALADOC_EOL.action (add_comment)
 					})
 				}),
 				TokenType.VALADOC_COMMENT_END,
@@ -114,6 +114,10 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		.set_name ("ValadocFile");
 
 		_parser.set_root_rule (file);
+	}
+
+	private void add_comment (Token token) throws ParserError {
+		_comment.append (token.to_string ());
 	}
 
 	private enum InsertionMode {
