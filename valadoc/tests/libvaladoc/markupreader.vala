@@ -36,12 +36,12 @@ public static void positive_1 () {
 </root-element>""";
 
 
-	var reader = new MarkupReader.from_string ("testfile", content, reporter);
+	var reader = new Vala.MarkupReader.from_string ("testfile", content);
 	assert (reader.filename == "testfile");
 
-	MarkupSourceLocation begin;
-	MarkupSourceLocation end;
-	MarkupTokenType token;
+	Vala.SourceLocation begin;
+	Vala.SourceLocation end;
+	Vala.MarkupTokenType token;
 
 
 	token = reader.read_token (out begin, out end);
@@ -49,7 +49,7 @@ public static void positive_1 () {
 
 
 	token = reader.read_token (out begin, out end);
-	assert (token == MarkupTokenType.START_ELEMENT);
+	assert (token == Vala.MarkupTokenType.START_ELEMENT);
 	assert (reader.name == "root-element");
 	assert (reader.content == null);
 	assert (reader.get_attributes ().size == 0);
@@ -59,7 +59,7 @@ public static void positive_1 () {
 	assert (end.line == 2);
 
 	token = reader.read_token (out begin, out end);
-	assert (token == MarkupTokenType.START_ELEMENT);
+	assert (token == Vala.MarkupTokenType.START_ELEMENT);
 	assert (reader.name == "subelement");
 	assert (reader.content == null);
 	assert (reader.get_attributes ().size == 2);
@@ -71,7 +71,7 @@ public static void positive_1 () {
 	assert (end.line == 3);
 
 	token = reader.read_token (out begin, out end);
-	assert (token == MarkupTokenType.TEXT);
+	assert (token == Vala.MarkupTokenType.TEXT);
 	assert (reader.name == null);
 	assert (reader.content == "my text");
 	assert (reader.get_attributes ().size == 0);
@@ -81,7 +81,7 @@ public static void positive_1 () {
 	assert (end.line == 3);
 
 	token = reader.read_token (out begin, out end);
-	assert (token == MarkupTokenType.END_ELEMENT);
+	assert (token == Vala.MarkupTokenType.END_ELEMENT);
 	assert (reader.name == "subelement");
 	assert (reader.content == null);
 	assert (reader.get_attributes ().size == 0);
@@ -91,7 +91,7 @@ public static void positive_1 () {
 	assert (end.line == 3);
 
 	token = reader.read_token (out begin, out end);
-	assert (token == MarkupTokenType.START_ELEMENT);
+	assert (token == Vala.MarkupTokenType.START_ELEMENT);
 	assert (reader.name == "simpletag1");
 	assert (reader.content == null);
 	assert (reader.get_attributes ().size == 2);
@@ -103,7 +103,7 @@ public static void positive_1 () {
 	assert (end.line == 4);
 
 	token = reader.read_token (out begin, out end);
-	assert (token == MarkupTokenType.END_ELEMENT);
+	assert (token == Vala.MarkupTokenType.END_ELEMENT);
 	assert (reader.name == "simpletag1");
 	assert (reader.content == null);
 	assert (reader.get_attributes ().size == 0);
@@ -113,7 +113,7 @@ public static void positive_1 () {
 	assert (end.line == 4);
 
 	token = reader.read_token (out begin, out end);
-	assert (token == MarkupTokenType.START_ELEMENT);
+	assert (token == Vala.MarkupTokenType.START_ELEMENT);
 	assert (reader.name == "simpletag2");
 	assert (reader.content == null);
 	assert (reader.get_attributes ().size == 1);
@@ -124,7 +124,7 @@ public static void positive_1 () {
 	assert (end.line == 5);
 
 	token = reader.read_token (out begin, out end);
-	assert (token == MarkupTokenType.END_ELEMENT);
+	assert (token == Vala.MarkupTokenType.END_ELEMENT);
 	assert (reader.name == "simpletag2");
 	assert (reader.content == null);
 	assert (reader.get_attributes ().size == 0);
@@ -134,7 +134,7 @@ public static void positive_1 () {
 	assert (end.line == 5);
 
 	token = reader.read_token (out begin, out end);
-	assert (token == MarkupTokenType.START_ELEMENT);
+	assert (token == Vala.MarkupTokenType.START_ELEMENT);
 	assert (reader.name == "simpletag3");
 	assert (reader.content == null);
 	assert (reader.get_attributes ().size == 0);
@@ -144,7 +144,7 @@ public static void positive_1 () {
 	assert (end.line == 6);
 
 	token = reader.read_token (out begin, out end);
-	assert (token == MarkupTokenType.END_ELEMENT);
+	assert (token == Vala.MarkupTokenType.END_ELEMENT);
 	assert (reader.name == "simpletag3");
 	assert (reader.content == null);
 	assert (reader.get_attributes ().size == 0);
@@ -154,7 +154,7 @@ public static void positive_1 () {
 	assert (end.line == 6);
 
 	token = reader.read_token (out begin, out end);
-	assert (token == MarkupTokenType.END_ELEMENT);
+	assert (token == Vala.MarkupTokenType.END_ELEMENT);
 	assert (reader.name == "root-element");
 	assert (reader.content == null);
 	assert (reader.get_attributes ().size == 0);
@@ -164,7 +164,7 @@ public static void positive_1 () {
 	assert (end.line == 7);
 
 	token = reader.read_token (out begin, out end);
-	assert (token == MarkupTokenType.EOF);
+	assert (token == Vala.MarkupTokenType.EOF);
 	assert (reader.name == null);
 	assert (reader.content == null);
 	assert (reader.get_attributes ().size == 0);
@@ -180,15 +180,15 @@ public static void positive_2 () {
 
 	string content = "AA BB &amp; &quot;&apos; &lt; &gt; &percnt;";
 
-	var reader = new MarkupReader.from_string ("testfile", content, reporter);
+	var reader = new Vala.MarkupReader.from_string ("testfile", content);
 	assert (reader.filename == "testfile");
 
-	MarkupSourceLocation begin;
-	MarkupSourceLocation end;
-	MarkupTokenType token;
+	Vala.SourceLocation begin;
+	Vala.SourceLocation end;
+	Vala.MarkupTokenType token;
 
 	token = reader.read_token (out begin, out end);
-	assert (token == MarkupTokenType.TEXT);
+	assert (token == Vala.MarkupTokenType.TEXT);
 	assert (reader.content == "AA BB & \"' < > %");
 	assert (reader.name == null);
 	assert (reader.get_attributes ().size == 0);

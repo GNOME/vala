@@ -48,37 +48,41 @@ public class Valadoc.Importer.InternalIdRegistrar {
 
 
 	public void read_index_sgml_file (string filename, string? index_sgml_online, ErrorReporter reporter) {
-		MarkupSourceLocation begin;
-		MarkupSourceLocation end;
-		MarkupTokenType token;
+		Vala.SourceLocation begin;
+		Vala.SourceLocation end;
+		Vala.MarkupTokenType token;
 
 		string base_path = index_sgml_online ?? realpath (filename);
-		var reader = new MarkupReader (filename, reporter);
+		var reader = new Vala.MarkupReader (filename);
 
-		while ((token = reader.read_token (out begin, out end)) != MarkupTokenType.EOF) {
-			if (token == MarkupTokenType.START_ELEMENT && reader.name == "ONLINE") {
+		while ((token = reader.read_token (out begin, out end)) != Vala.MarkupTokenType.EOF) {
+			if (token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "ONLINE") {
 				if (index_sgml_online == null) {
 					base_path = reader.get_attribute ("href");
 					if (base_path == null) {
-						reporter.error (filename, begin.line, begin.column, end.column, reader.get_line_content (begin.line), "missing attribute `href' in <ONLINE>");
+						//reporter.error (filename, begin.line, begin.column, end.column, reader.get_line_content (begin.line), "missing attribute `href' in <ONLINE>");
+						Vala.Report.error (null, "missing attribute `href' in <ONLINE>");
 					}
 				}
-			} else if (token == MarkupTokenType.START_ELEMENT && reader.name == "ANCHOR") {
+			} else if (token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "ANCHOR") {
 				string id = reader.get_attribute ("id");
 				if (id == null) {
-					reporter.error (filename, begin.line, begin.column, end.column, reader.get_line_content (begin.line), "missing attribute `id' in <ANCHOR>");
+					//reporter.error (filename, begin.line, begin.column, end.column, reader.get_line_content (begin.line), "missing attribute `id' in <ANCHOR>");
+					Vala.Report.error (null, "missing attribute `id' in <ANCHOR>");
 				}
 
 				string href = reader.get_attribute ("href");
 				if (href == null) {
-					reporter.error (filename, begin.line, begin.column, end.column, reader.get_line_content (begin.line), "missing attribute `href' in <ANCHOR>");
+					//reporter.error (filename, begin.line, begin.column, end.column, reader.get_line_content (begin.line), "missing attribute `href' in <ANCHOR>");
+					Vala.Report.error (null, "missing attribute `href' in <ANCHOR>");
 				} else if (index_sgml_online != null) {
 					href = Path.get_basename (href);
 				}
 
 				map.set (id, Path.build_path ("/", base_path, href));
 			} else {
-				reporter.error (filename, begin.line, begin.column, end.column, reader.get_line_content (begin.line), "expected element of <ONLINE> or <ANCHOR>");
+				//reporter.error (filename, begin.line, begin.column, end.column, reader.get_line_content (begin.line), "expected element of <ONLINE> or <ANCHOR>");
+				Vala.Report.error (null, "expected element of <ONLINE> or <ANCHOR>");
 			}
 		}
 	}

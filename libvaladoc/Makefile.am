@@ -11,6 +11,7 @@ AM_CFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \
 	-I$(top_srcdir)/gee \
+	-I$(top_srcdir)/vala \
 	$(NULL)
 
 AM_VALAFLAGS = \
@@ -33,9 +34,6 @@ libvaladoc_la_VALASOURCES = \
 	gtkdocmarkupwriter.vala \
 	devhelp-markupwriter.vala \
 	ctyperesolver.vala \
-	markupsourcelocation.vala \
-	markuptokentype.vala \
-	markupreader.vala \
 	gtkdocrenderer.vala \
 	documentation/commentscanner.vala \
 	documentation/documentation.vala \
@@ -186,6 +184,7 @@ libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
 		--vapidir $(top_srcdir)/vapi --pkg gmodule-2.0 \
 		--vapidir $(top_srcdir)/vapi --pkg libgvc \
 		--vapidir $(top_srcdir)/gee --pkg gee \
+		--vapidir $(top_srcdir)/vala --pkg vala \
 		--pkg config \
 		$(filter %.vala %.c,$^)
 	touch $@
