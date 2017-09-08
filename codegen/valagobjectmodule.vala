@@ -141,7 +141,7 @@ public class Vala.GObjectModule : GTypeModule {
 
 			var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 			cinst.add_argument (ccall);
-			cinst.add_argument (new CCodeConstant (get_ccode_upper_case_name (prop)));
+			cinst.add_argument (new CCodeConstant ("%s_PROPERTY".printf (get_ccode_upper_case_name (prop))));
 			cinst.add_argument (get_param_spec (prop));
 
 			ccode.add_expression (cinst);
@@ -214,7 +214,7 @@ public class Vala.GObjectModule : GTypeModule {
 				cfunc = new CCodeIdentifier (get_ccode_real_name (prop.get_accessor));
 			}
 
-			ccode.add_case (new CCodeIdentifier (get_ccode_upper_case_name (prop)));
+			ccode.add_case (new CCodeIdentifier ("%s_PROPERTY".printf (get_ccode_upper_case_name (prop))));
 			if (prop.property_type.is_real_struct_type ()) {
 				var st = prop.property_type.data_type as Struct;
 
@@ -321,7 +321,7 @@ public class Vala.GObjectModule : GTypeModule {
 				cfunc = new CCodeIdentifier (get_ccode_real_name (prop.set_accessor));
 			}
 
-			ccode.add_case (new CCodeIdentifier (get_ccode_upper_case_name (prop)));
+			ccode.add_case (new CCodeIdentifier ("%s_PROPERTY".printf (get_ccode_upper_case_name (prop))));
 			ccall = new CCodeFunctionCall (cfunc);
 			ccall.add_argument (cself);
 			if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.data_type == string_type.data_type) {
@@ -670,7 +670,7 @@ public class Vala.GObjectModule : GTypeModule {
 		base.visit_property (prop);
 
 		if (is_gobject_property (prop) && prop.parent_symbol is Class) {
-			prop_enum.add_value (new CCodeEnumValue (get_ccode_upper_case_name (prop)));
+			prop_enum.add_value (new CCodeEnumValue ("%s_PROPERTY".printf (get_ccode_upper_case_name (prop))));
 
 			if (prop.initializer != null && prop.set_accessor != null && !prop.set_accessor.automatic_body) {
 				// generate a custom initializer if it couldn't be done at class_init time
