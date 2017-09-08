@@ -121,7 +121,7 @@ internal-apis/valadoc: $(valadoc_VALASOURCES) internal-apis/codegen
 		$(COMMON_VALADOCFLAGS) \
 		--package-name valadoc \
 		--package-version $(PACKAGE_VERSION) \
-		--pkg libgvc \
+		--vapidir=$(top_srcdir)/vapi --pkg libgvc \
 		--vapidir=$(top_builddir)/gee --pkg gee \
 		--vapidir=$(top_builddir)/vala --pkg vala \
 		--vapidir=$(top_builddir)/ccode --pkg ccode \

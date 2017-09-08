@@ -182,7 +182,7 @@ libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
 		--library valadoc \
 		--vapi valadoc@PACKAGE_SUFFIX@.vapi \
 		--vapidir $(top_srcdir)/vapi --pkg gmodule-2.0 \
-		--vapidir $(top_srcdir)/valadoc/vapi --pkg libgvc \
+		--vapidir $(top_srcdir)/vapi --pkg libgvc \
 		--vapidir $(top_srcdir)/gee --pkg gee \
 		--pkg config \
 		$(filter %.vala %.c,$^)
