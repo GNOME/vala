@@ -1732,7 +1732,7 @@ public class Vala.GTypeModule : GErrorModule {
 	public override CCodeExpression get_param_spec_cexpression (Property prop) {
 		var cl = (TypeSymbol) prop.parent_symbol;
 		var prop_array = new CCodeIdentifier ("%s_properties".printf (get_ccode_lower_case_name (cl)));
-		var prop_enum_value = new CCodeIdentifier (get_ccode_upper_case_name (prop));
+		var prop_enum_value = new CCodeIdentifier ("%s_PROPERTY".printf (get_ccode_upper_case_name (prop)));
 
 		return new CCodeElementAccess (prop_array, prop_enum_value);
 	}
