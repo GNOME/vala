@@ -31,7 +31,7 @@ public class Vala.UsedAttr : CodeVisitor {
 
 	const string[] valac_default_attrs = {
 		"CCode", "type_signature", "default_value", "set_value_function", "type_id", "cprefix", "cheader_filename",
-		"marshaller_type_name", "get_value_function", "cname", "cheader_filename", "destroy_function", "lvalue_access",
+		"marshaller_type_name", "get_value_function", "cname", "destroy_function", "lvalue_access",
 		"has_type_id", "instance_pos", "const_cname", "take_value_function", "copy_function", "free_function",
 		"param_spec_function", "has_target", "type_cname", "ref_function", "ref_function_void", "unref_function", "type",
 		"has_construct_function", "returns_floating_reference", "gir_namespace", "gir_version", "construct_function",
@@ -44,9 +44,10 @@ public class Vala.UsedAttr : CodeVisitor {
 		"Immutable", "",
 		"Compact", "",
 		"NoWrapper", "",
+		"NoThrow", "",
 		"DestroysInstance", "",
 		"Flags", "",
-		"Experimental", "",
+		"Experimental", "", // deprecated
 		"NoReturn", "",
 		"NoArrayLength", "", // deprecated
 		"Assert", "",
@@ -57,15 +58,18 @@ public class Vala.UsedAttr : CodeVisitor {
 		"ConcreteAccessor", "",
 		"HasEmitter", "",
 		"ReturnsModifiedPointer", "",
-		"Deprecated", "since", "replacement", "",
-		"Version", "since", "replacement", "deprecated", "deprecated_since", "experimental", "",
+		"Deprecated", "since", "replacement", "", // deprecated
+		"Version", "since", "replacement", "deprecated", "deprecated_since", "experimental", "experimental_until", "",
 		"Signal", "detailed", "run", "no_recurse", "action", "no_hooks", "",
 		"Description", "nick", "blurb", "",
 		
-		"IntegerType", "rank", "min", "max", "",
-		"FloatingType", "rank", "",
+		"IntegerType", "rank", "min", "max", "signed", "width", "",
+		"FloatingType", "rank", "decimal", "width", "",
 		"BooleanType", "",
 		"SimpleType", "",
+		"PointerType", "",
+
+		"Print", "",
 		"PrintfFormat", "",
 		"ScanfFormat", "",
 		"FormatArg", "",
@@ -73,6 +77,8 @@ public class Vala.UsedAttr : CodeVisitor {
 		"GtkChild", "name", "internal", "",
 		"GtkTemplate", "ui", "",
 		"GtkCallback", "name", "",
+
+		"ModuleInit", "",
 
 		"DBus", "name", "no_reply", "result", "use_string_marshalling", "value", "signature", "visible", "timeout", "",
 
