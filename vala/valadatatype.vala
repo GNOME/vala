@@ -285,10 +285,6 @@ public abstract class Vala.DataType : CodeNode {
 			}
 		}
 
-		if (target_type is DelegateType && this is DelegateType) {
-			return ((DelegateType) target_type).delegate_symbol == ((DelegateType) this).delegate_symbol;
-		}
-
 		if (target_type is PointerType) {
 			/* any reference or array type or pointer type can be cast to a generic pointer */
 			if (type_parameter != null ||

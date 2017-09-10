@@ -603,7 +603,15 @@ public class Vala.GSignalModule : GObjectModule {
 	CCodeExpression? connect_signal (Signal sig, Expression signal_access, Expression handler, bool disconnect, bool after, CodeNode expr) {
 		string connect_func;
 
-		var m = (Method) handler.symbol_reference;
+		DelegateType? dt = null;
+		var p = handler.symbol_reference as Parameter;
+		if (p != null) {
+			dt = p.variable_type as DelegateType;
+			if (dt != null && !context.experimental) {
+				Report.warning (dt.source_reference, "Connecting delegates to signals is experimental");
+			}
+		}
+		var m = handler.symbol_reference as Method;
 
 		if (!disconnect) {
 			// connect
@@ -613,9 +621,9 @@ public class Vala.GSignalModule : GObjectModule {
 				else
 					connect_func = get_dynamic_signal_connect_after_wrapper_name ((DynamicSignal) sig);
 			} else {
-				if (m.closure) {
+				if ((m != null && m.closure) || (dt != null && dt.value_owned)) {
 					connect_func = "g_signal_connect_data";
-				} else if (in_gobject_instance (m)) {
+				} else if (m != null && in_gobject_instance (m)) {
 					connect_func = "g_signal_connect_object";
 				} else if (!after) {
 					connect_func = "g_signal_connect";
@@ -714,7 +722,7 @@ public class Vala.GSignalModule : GObjectModule {
 		// third resp. sixth argument: handler
 		ccall.add_argument (new CCodeCastExpression (get_cvalue (handler), "GCallback"));
 
-		if (m.closure) {
+		if (m != null && m.closure) {
 			// g_signal_connect_data
 
 			// fourth argument: user_data
@@ -729,7 +737,7 @@ public class Vala.GSignalModule : GObjectModule {
 				ccall.add_argument (new CCodeConstant ("0"));
 			else
 				ccall.add_argument (new CCodeConstant ("G_CONNECT_AFTER"));
-		} else if (m.binding == MemberBinding.INSTANCE) {
+		} else if (m != null && m.binding == MemberBinding.INSTANCE) {
 			// g_signal_connect_object or g_signal_handlers_disconnect_matched
 			// or dynamic_signal_connect or dynamic_signal_disconnect
 
@@ -749,6 +757,20 @@ public class Vala.GSignalModule : GObjectModule {
 				// g_signal_connect_object
 
 				// fifth argument: connect_flags
+				if (!after)
+					ccall.add_argument (new CCodeConstant ("0"));
+				else
+					ccall.add_argument (new CCodeConstant ("G_CONNECT_AFTER"));
+			}
+		} else if (dt != null && dt.delegate_symbol.has_target) {
+			// fourth argument: user_data
+			CCodeExpression handler_destroy_notify;
+			ccall.add_argument (get_delegate_target_cexpression (handler, out handler_destroy_notify));
+			if (!disconnect && dt.value_owned) {
+				// fifth argument: destroy_notify
+				//FIXME handler_destroy_notify is NULL
+				ccall.add_argument (new CCodeCastExpression (handler_destroy_notify, "GClosureNotify"));
+				// sixth argument: connect_flags
 				if (!after)
 					ccall.add_argument (new CCodeConstant ("0"));
 				else

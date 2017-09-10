@@ -140,6 +140,72 @@ public class Vala.DelegateType : CallableType {
 		return true;
 	}
 
+	public override bool compatible (DataType target_type) {
+		var dt_target = target_type as DelegateType;
+		if (dt_target == null) {
+			return false;
+		}
+
+		// trivial case
+		if (delegate_symbol == dt_target.delegate_symbol) {
+			return true;
+		}
+
+		// target-delegate is allowed to ensure stricter return type (stronger postcondition)
+		if (!get_return_type ().stricter (dt_target.get_return_type ().get_actual_type (dt_target, null, this))) {
+			return false;
+		}
+
+		var parameters = get_parameters ();
+		Iterator<Parameter> params_it = parameters.iterator ();
+
+		if (dt_target.delegate_symbol.parent_symbol is Signal && dt_target.delegate_symbol.sender_type != null && parameters.size == dt_target.get_parameters ().size + 1) {
+			// target-delegate has sender parameter
+			params_it.next ();
+
+			// target-delegate is allowed to accept arguments of looser types (weaker precondition)
+			var p = params_it.get ();
+			if (!dt_target.delegate_symbol.sender_type.stricter (p.variable_type)) {
+				return false;
+			}
+		}
+
+		foreach (Parameter param in dt_target.get_parameters ()) {
+			/* target-delegate is allowed to accept less arguments */
+			if (!params_it.next ()) {
+				break;
+			}
+
+			// target-delegate is allowed to accept arguments of looser types (weaker precondition)
+			var p = params_it.get ();
+			if (!param.variable_type.get_actual_type (this, null, this).stricter (p.variable_type)) {
+				return false;
+			}
+		}
+
+		/* target-delegate may not expect more arguments */
+		if (params_it.next ()) {
+			return false;
+		}
+
+		// target-delegate may throw less but not more errors than the delegate
+		foreach (DataType error_type in get_error_types ()) {
+			bool match = false;
+			foreach (DataType delegate_error_type in dt_target.get_error_types ()) {
+				if (error_type.compatible (delegate_error_type)) {
+					match = true;
+					break;
+				}
+			}
+
+			if (!match) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public override bool is_disposable () {
 		return delegate_symbol.has_target && value_owned && !is_called_once;
 	}
