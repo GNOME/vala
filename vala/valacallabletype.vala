@@ -44,6 +44,15 @@ public abstract class Vala.CallableType : DataType {
 		// Append parameter-list
 		builder.append_c ('(');
 		int i = 1;
+		// add sender parameter for internal signal-delegates
+		var delegate_type = this as DelegateType;
+		if (delegate_type != null) {
+			var delegate_symbol = delegate_type.delegate_symbol;
+			if (delegate_symbol.parent_symbol is Signal && delegate_symbol.sender_type != null) {
+				builder.append (delegate_symbol.sender_type.to_qualified_string ());
+				i++;
+			}
+		}
 		foreach (Parameter param in get_parameters ()) {
 			if (i > 1) {
 				builder.append (", ");
