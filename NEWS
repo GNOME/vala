@@ -1,3 +1,16 @@
+Vala 0.38.1
+===========
+ * Various bug fixes:
+  - valadoc: Don't use 'stderr' as variable name [#787305]
+  - codegen: Try to use a more unique internal define for properties [#787436]
+  - vala: Update list of used attributes
+  - method: Use prototype-string for error-reports of return-type mismatches
+
+ * Bindings:
+  - glib-2.0: Fix MainContext.check(),
+      OptionEntry[] params are null-terminated,
+      Bind g_convert_with_fallback() and g_convert_with_iconv()
+
 Vala 0.38.0
 ===========
  * Various bug fixes:
