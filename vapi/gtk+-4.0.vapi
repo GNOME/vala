@@ -6943,7 +6943,7 @@ namespace Gsk {
 		[CCode (cname = "gsk_shadow_node_new", has_construct_function = false)]
 		public RenderNode.shadow (Gsk.RenderNode child, [CCode (array_length_cname = "n_shadows", array_length_pos = 2.1, array_length_type = "gsize")] Gsk.Shadow[] shadows);
 		[CCode (cname = "gsk_text_node_new", has_construct_function = false)]
-		public RenderNode.text (Pango.Font font, Pango.GlyphString glyphs, Gdk.RGBA color, int x_offset, int y_offset, double base_x, double base_y);
+		public RenderNode.text (Pango.Font font, Pango.GlyphString glyphs, Gdk.RGBA color, double x, double y);
 		[CCode (cname = "gsk_transform_node_new", has_construct_function = false)]
 		public RenderNode.transform (Gsk.RenderNode child, Graphene.Matrix transform);
 		[CCode (cname = "gsk_transform_node_get_child")]
