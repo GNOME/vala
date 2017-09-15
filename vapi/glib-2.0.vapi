@@ -2893,6 +2893,8 @@ namespace GLib {
 		public DateTime.now (TimeZone tz);
 		public DateTime.now_local ();
 		public DateTime.now_utc ();
+		[Version (since = "2.56")]
+		public DateTime.from_iso8601 (string text, TimeZone default_tz);
 		public DateTime.from_unix_local (int64 t);
 		public DateTime.from_unix_utc (int64 t);
 		public DateTime.from_timeval_local (TimeVal tv);
