@@ -116,17 +116,17 @@ public class Vala.CodeContext {
 	/**
 	 * List of directories where to find .vapi files.
 	 */
-	public string[] vapi_directories;
+	public string[] vapi_directories = {};
 
 	/**
 	 * List of directories where to find .gir files.
 	 */
-	public string[] gir_directories;
+	public string[] gir_directories = {};
 
 	/**
 	 * List of directories where to find .metadata files for .gir files.
 	 */
-	public string[] metadata_directories;
+	public string[] metadata_directories = {};
 
 	/**
 	 * Produce debug information.
@@ -198,9 +198,9 @@ public class Vala.CodeContext {
 
 	public bool run_output { get; set; }
 
-	public string[] gresources;
+	public string[] gresources = {};
 
-	public string[] gresources_directories;
+	public string[] gresources_directories = {};
 
 	private List<SourceFile> source_files = new ArrayList<SourceFile> ();
 	private List<string> c_source_files = new ArrayList<string> ();
