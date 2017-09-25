@@ -218,7 +218,6 @@ namespace Pk {
 		public void set_interactive (bool interactive);
 		[Version (since = "0.6.10")]
 		public void set_locale (string locale);
-		public static void test (void* user_data);
 		[Version (since = "0.8.1")]
 		public Pk.Results update_packages (Pk.Bitfield transaction_flags, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (finish_name = "pk_client_generic_finish")]
@@ -293,7 +292,6 @@ namespace Pk {
 		public bool suggest_daemon_quit (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "0.6.2")]
 		public async bool suggest_daemon_quit_async (GLib.Cancellable? cancellable) throws GLib.Error;
-		public static void test (void* user_data);
 		[NoAccessorMethod]
 		[Version (since = "0.5.2")]
 		public string backend_author { owned get; set; }
@@ -358,7 +356,6 @@ namespace Pk {
 		public GLib.GenericArray<weak string> get_shown_for_package (string package) throws GLib.Error;
 		[Version (since = "0.5.3")]
 		public bool open_database () throws GLib.Error;
-		public static void test (void* user_data);
 	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", type_id = "pk_details_get_type ()")]
 	public class Details : Pk.Source {
@@ -443,6 +440,14 @@ namespace Pk {
 		[CCode (has_construct_function = false)]
 		[Version (since = "0.5.4")]
 		public EulaRequired ();
+		[Version (since = "1.1.8")]
+		public unowned string get_eula_id ();
+		[Version (since = "1.1.8")]
+		public unowned string get_license_agreement ();
+		[Version (since = "1.1.8")]
+		public unowned string get_package_id ();
+		[Version (since = "1.1.8")]
+		public unowned string get_vendor_name ();
 		[NoAccessorMethod]
 		[Version (since = "0.5.4")]
 		public string eula_id { owned get; set; }
@@ -539,7 +544,6 @@ namespace Pk {
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "0.5.3")]
 		public static string[] id_split (string package_id);
-		public static void id_test (void* user_data);
 		[Version (since = "0.5.2")]
 		public static string id_to_printable (string package_id);
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -561,7 +565,6 @@ namespace Pk {
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "0.5.2")]
 		public static string[] ids_remove_id (string package_ids, string package_id);
-		public static void ids_test (void* user_data);
 		[Version (since = "0.5.2")]
 		public static string ids_to_string (string package_ids);
 		[Version (since = "0.8.11")]
@@ -574,7 +577,6 @@ namespace Pk {
 		public void set_info (Pk.Info info);
 		[Version (since = "0.8.14")]
 		public void set_summary (string summary);
-		public static void test (void* user_data);
 		[NoAccessorMethod]
 		[Version (since = "0.5.4")]
 		public string description { owned get; set; }
@@ -686,8 +688,8 @@ namespace Pk {
 		[CCode (finish_name = "pk_package_sack_merge_generic_finish")]
 		[Version (since = "0.5.2")]
 		public async bool resolve_async (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		[Version (since = "0.6.1")]
 		public void sort (Pk.PackageSackSortType type);
-		public static void test (void* user_data);
 		[Version (since = "0.8.6")]
 		public bool to_file (GLib.File file) throws GLib.Error;
 	}
@@ -757,10 +759,9 @@ namespace Pk {
 		[Version (since = "0.8.8")]
 		public bool set_transaction_flags (uint64 transaction_flags);
 		[Version (since = "0.5.3")]
-		public bool set_transaction_id (string package_id);
+		public bool set_transaction_id (string transaction_id);
 		[Version (since = "0.5.2")]
 		public bool set_uid (uint uid);
-		public static void test (void* user_data);
 		[NoAccessorMethod]
 		[Version (since = "0.5.2")]
 		public bool allow_cancel { get; set; }
@@ -939,7 +940,6 @@ namespace Pk {
 		public bool set_error_code (Pk.Error item);
 		[Version (since = "0.5.2")]
 		public bool set_exit_code (Pk.Exit exit_enum);
-		public static void test (void* user_data);
 		[NoAccessorMethod]
 		[Version (since = "0.5.3")]
 		public uint inputs { get; set; }
@@ -1105,7 +1105,6 @@ namespace Pk {
 		public void set_simulate (bool simulate);
 		[NoWrapper]
 		public virtual void simulate_question (uint request, Pk.Results results);
-		public static void test (void* user_data);
 		[NoWrapper]
 		public virtual void untrusted_question (uint request, Pk.Results results);
 		[CCode (finish_name = "pk_task_generic_finish")]
@@ -1145,7 +1144,6 @@ namespace Pk {
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "0.5.3")]
 		public string[] get_ids ();
-		public static void test (void* user_data);
 		public virtual signal void added (string tid);
 		public virtual signal void removed (string tid);
 	}
@@ -1284,7 +1282,6 @@ namespace Pk {
 		[CCode (sentinel = "-1")]
 		[Version (since = "0.5.2")]
 		public static Pk.Bitfield from_enums (int value, ...);
-		public static void test (void* user_data);
 	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", has_type_id = false)]
 	public struct EnumMatch {
@@ -1495,6 +1492,7 @@ namespace Pk {
 		LAST;
 		[Version (since = "0.5.2")]
 		public static Pk.Bitfield bitfield_from_string (string groups);
+		[Version (since = "0.5.2")]
 		public static string bitfield_to_string (Pk.Bitfield groups);
 		[Version (since = "0.5.0")]
 		public static Pk.Group enum_from_string (string group);
@@ -1848,8 +1846,6 @@ namespace Pk {
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PK_SYSTEM_PACKAGE_LIST_FILENAME")]
 	public const string SYSTEM_PACKAGE_LIST_FILENAME;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void common_test (void* user_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static void debug_add_log_domain (string log_domain);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static bool debug_is_verbose ();
@@ -1860,8 +1856,6 @@ namespace Pk {
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static uint enum_find_value (Pk.EnumMatch table, string string);
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	public static void enum_test (void* user_data);
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static string get_distro_id ();
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	[Version (since = "0.5.2")]
@@ -1870,31 +1864,22 @@ namespace Pk {
 	[Version (since = "0.5.2")]
 	public static string iso8601_present ();
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	[Version (since = "0.9.6")]
 	public static bool offline_auth_cancel () throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	[Version (since = "0.9.6")]
 	public static bool offline_auth_clear_results () throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	[Version (since = "0.9.6")]
 	public static bool offline_auth_invalidate () throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	[Version (since = "0.9.6")]
 	public static bool offline_auth_set_action (Pk.OfflineAction action) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	[Version (since = "0.9.6")]
 	public static bool offline_auth_set_prepared_ids (string package_ids) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	[Version (since = "1.1.2")]
 	public static bool offline_auth_set_prepared_upgrade (string name, string release_ver) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	[Version (since = "0.9.6")]
 	public static bool offline_auth_set_results (Pk.Results results) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	[Version (since = "0.9.6")]
 	public static bool offline_auth_trigger (Pk.OfflineAction action) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	[Version (since = "1.0.12")]
 	public static bool offline_auth_trigger_upgrade (Pk.OfflineAction action) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	[Version (since = "0.9.6")]
@@ -1917,9 +1902,6 @@ namespace Pk {
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	[Version (since = "0.9.6")]
 	public static Pk.PackageSack offline_get_prepared_sack () throws GLib.Error;
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
-	[Version (since = "1.1.2")]
-	public static bool offline_get_prepared_upgrade (out string name, out string release_ver) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	[Version (since = "1.0.12")]
 	public static GLib.FileMonitor offline_get_prepared_upgrade_monitor (GLib.Cancellable? cancellable = null) throws GLib.Error;

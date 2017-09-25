@@ -63,3 +63,5 @@ Task
         .search_names_async finish_name="pk_task_generic_finish"
         .update_packages_async finish_name="pk_task_generic_finish"
         .what_provides_async finish_name="pk_task_generic_finish"
+
+offline_get_prepared_upgrade skip
