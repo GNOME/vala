@@ -152,7 +152,7 @@ InputStream
   .skip_finish throws="GLib.IOError"
 ListModel
   .get_item#virtual_method skip
-  .get_item#method skip=false abstract
+  .get_item#method skip=false abstract type="GLib.Object?"
 ListStore
   .insert_sorted.compare_func type_arguments="GLib.Object"
   .sort.compare_func type_arguments="GLib.Object"
@@ -227,6 +227,8 @@ Subprocess
   .new.error skip
   .new.argv0 skip
   .communicate*.cancellable#parameter default=()
+SubprocessLauncher
+  .set_child_setup skip=false
 Task
   .attach_source skip=false
   .attach_source.callback type="TaskSourceFunc"

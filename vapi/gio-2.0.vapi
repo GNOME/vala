@@ -2975,7 +2975,7 @@ namespace GLib {
 		public unowned string get_warning ();
 		public void set_description (string description);
 		public void set_flags (GLib.TlsPasswordFlags flags);
-		public void set_value ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gssize", type = "const guchar*")] uint8[] value);
+		public void set_value ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gssize")] uint8[] value);
 		[CCode (vfunc_name = "set_value")]
 		public virtual void set_value_full ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gssize", type = "guchar*")] owned uint8[] value, GLib.DestroyNotify? notify = GLib.g_free);
 		public void set_warning (string warning);
@@ -4535,7 +4535,7 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static bool register_error (GLib.Quark error_domain, int error_code, string dbus_error_name);
 		[CCode (cheader_filename = "gio/gio.h")]
-		public static void register_error_domain (string error_domain_quark_name, size_t quark_volatile, GLib.DBusErrorEntry entries, uint num_entries);
+		public static void register_error_domain (string error_domain_quark_name, size_t quark_volatile, [CCode (array_length_cname = "num_entries", array_length_pos = 3.1, array_length_type = "guint")] GLib.DBusErrorEntry[] entries);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static bool strip_remote_error (GLib.Error error);
 		[CCode (cheader_filename = "gio/gio.h")]
