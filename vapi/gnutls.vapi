@@ -908,7 +908,7 @@ namespace GnuTLS
 		}
 
 		[Compact]
-		[CCode (cname = "struct gnutls_x509_crt_int", cprefix = "gnutls_x509_crt_", free_function = "gnutls_x509_crt_deinit ")]
+		[CCode (cname = "struct gnutls_x509_crt_int", cprefix = "gnutls_x509_crt_", free_function = "gnutls_x509_crt_deinit")]
 		public class Certificate
 		{
 			private static int init (out Certificate cert);
