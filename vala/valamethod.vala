@@ -350,7 +350,7 @@ public class Vala.Method : Subroutine, Callable {
 
 		var actual_base_type = base_method.return_type.get_actual_type (object_type, method_type_args, this);
 		if (!return_type.equals (actual_base_type)) {
-			invalid_match = "Base method expected return type `%s', but `%s' was provided".printf (actual_base_type.to_qualified_string (), return_type.to_qualified_string ());
+			invalid_match = "Base method expected return type `%s', but `%s' was provided".printf (type_to_prototype_string (actual_base_type), type_to_prototype_string (return_type));
 			return false;
 		}
 		
@@ -1081,6 +1081,10 @@ public class Vala.Method : Subroutine, Callable {
 			}
 		}
 		return -1;
+	}
+
+	private static string type_to_prototype_string (DataType type) {
+		return "%s%s".printf (type.is_weak () ? "unowned " : "", type.to_qualified_string ());
 	}
 }
 
