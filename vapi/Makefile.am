@@ -670,10 +670,10 @@ gstreamer-net-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-net-1.0 --pkg gstreamer-1.0 --pkg gio-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstNet-1.0.gir
 
 gstreamer-pbutils-1.0:
-	$(GENVAPI) --library $(srcdir)/gstreamer-pbutils-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstPbutils-1.0.gir
+	$(GENVAPI) --library $(srcdir)/gstreamer-pbutils-1.0 --pkg gstreamer-base-1.0 --pkg gstreamer-audio-1.0 --pkg gstreamer-video-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstPbutils-1.0.gir
 
 gstreamer-player-1.0:
-	$(GENVAPI) --library $(srcdir)/gstreamer-player-1.0 --pkg gstreamer-1.0 --pkg gstreamer-video-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstPlayer-1.0.gir
+	$(GENVAPI) --library $(srcdir)/gstreamer-player-1.0 --pkg gstreamer-1.0 --pkg gstreamer-pbutils-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstPlayer-1.0.gir
 
 gstreamer-riff-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-riff-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstRiff-1.0.gir
