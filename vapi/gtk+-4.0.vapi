@@ -6684,8 +6684,6 @@ namespace Gsk {
 		protected RenderNode ();
 		[CCode (cname = "gsk_blend_node_new", has_construct_function = false)]
 		public RenderNode.blend (Gsk.RenderNode bottom, Gsk.RenderNode top, Gsk.BlendMode blend_mode);
-		[CCode (cname = "gsk_blend_node_get_blend_mode")]
-		public Gsk.BlendMode blend_node_get_blend_mode ();
 		[CCode (cname = "gsk_blur_node_new", has_construct_function = false)]
 		[Version (since = "3.92")]
 		public RenderNode.blur (Gsk.RenderNode child, double radius);

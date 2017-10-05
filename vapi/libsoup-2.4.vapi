@@ -288,7 +288,7 @@ namespace Soup {
 	public class Cache : GLib.Object, Soup.SessionFeature {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.34")]
-		public Cache (string cache_dir, Soup.CacheType cache_type);
+		public Cache (string? cache_dir, Soup.CacheType cache_type);
 		[Version (since = "2.34")]
 		public void clear ();
 		[Version (since = "2.34.")]
