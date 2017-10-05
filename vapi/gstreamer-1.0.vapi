@@ -727,10 +727,14 @@ namespace Gst {
 	public class BufferList : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
 		public BufferList ();
+		[Version (since = "1.14")]
+		public size_t calculate_size ();
 		[Version (since = "1.6")]
 		public Gst.BufferList copy_deep ();
 		public bool @foreach (Gst.BufferListFunc func);
 		public unowned Gst.Buffer? @get (uint idx);
+		[Version (since = "1.14")]
+		public unowned Gst.Buffer? get_writable (uint idx);
 		public void insert (int idx, owned Gst.Buffer buffer);
 		public uint length ();
 		public void remove (uint idx, uint length);
@@ -2991,6 +2995,7 @@ namespace Gst {
 		OTHER
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_DEBUG_", type_id = "gst_debug_color_flags_get_type ()")]
+	[Flags]
 	public enum DebugColorFlags {
 		FG_BLACK,
 		FG_RED,
@@ -3357,7 +3362,8 @@ namespace Gst {
 		RECURSE,
 		PATHS_ARE_DEFAULT_ONLY,
 		FILE_NAME_IS_SUFFIX,
-		FILE_NAME_IS_PREFIX
+		FILE_NAME_IS_PREFIX,
+		PATHS_ARE_RELATIVE_TO_EXE
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PLUGIN_FLAG_", type_id = "gst_plugin_flags_get_type ()")]
 	[Flags]
@@ -3466,6 +3472,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STACK_TRACE_SHOW_", type_id = "gst_stack_trace_flags_get_type ()")]
 	[Flags]
+	[Version (since = "1.12")]
 	public enum StackTraceFlags {
 		FULL
 	}
@@ -3957,6 +3964,9 @@ namespace Gst {
 	public static string filename_to_uri (string filename) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.Quark flow_to_quark (Gst.FlowReturn ret);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (since = "1.14")]
+	public static unowned string get_main_executable_path ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void init ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv);
 	[CCode (cheader_filename = "gst/gst.h")]
