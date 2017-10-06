@@ -1092,7 +1092,7 @@ namespace WebKit {
 		public virtual signal bool load_failed_with_tls_errors (string failing_uri, GLib.TlsCertificate certificate, GLib.TlsCertificateFlags errors);
 		public virtual signal void mouse_target_changed (WebKit.HitTestResult hit_test_result, uint modifiers);
 		[CCode (cname = "show-option-menu")]
-		[Version (since = "2.18.")]
+		[Version (since = "2.18")]
 		public signal bool on_show_option_menu (WebKit.OptionMenu menu, Gdk.Event event, Gdk.Rectangle rectangle);
 		public virtual signal bool permission_request (WebKit.PermissionRequest permission_request);
 		public virtual signal bool print (WebKit.PrintOperation print_operation);
