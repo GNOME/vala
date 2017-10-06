@@ -56,7 +56,7 @@ namespace Gst {
 			[Version (since = "1.10")]
 			public Gst.ClockTime get_duration ();
 			public bool get_emit_signals ();
-			public void get_latency (uint64 min, uint64 max);
+			public void get_latency (out uint64 min, out uint64 max);
 			public uint64 get_max_bytes ();
 			public int64 get_size ();
 			public Gst.App.StreamType get_stream_type ();
