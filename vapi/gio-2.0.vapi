@@ -613,7 +613,7 @@ namespace GLib {
 		public signal bool allow_mechanism (string mechanism);
 		public virtual signal bool authorize_authenticated_peer (GLib.IOStream stream, GLib.Credentials? credentials);
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_connection_get_type ()")]
 	[Version (since = "2.26")]
 	public class DBusConnection : GLib.Object, GLib.AsyncInitable, GLib.Initable {
 		[CCode (has_construct_function = false)]
@@ -648,7 +648,7 @@ namespace GLib {
 		public unowned string get_unique_name ();
 		public bool is_closed ();
 		[CCode (cname = "g_dbus_connection_new", finish_function = "g_dbus_connection_new_finish")]
-		public static async GLib.DBusConnection @new (GLib.IOStream stream, string guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public static async GLib.DBusConnection @new (GLib.IOStream stream, string? guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cname = "g_dbus_connection_new_for_address", finish_function = "g_dbus_connection_new_for_address_finish")]
 		public static async GLib.DBusConnection new_for_address (string address, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public uint register_object<T> (string object_path, T object) throws GLib.IOError;
@@ -867,7 +867,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_object_manager_client_get_type ()")]
 	[Version (since = "2.30")]
-	public class DBusObjectManagerClient : GLib.Object, GLib.AsyncInitable, GLib.DBusObjectManager, GLib.Initable, GLib.AsyncInitable, GLib.DBusObjectManager, GLib.Initable {
+	public class DBusObjectManagerClient : GLib.Object, GLib.AsyncInitable, GLib.DBusObjectManager, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		protected DBusObjectManagerClient ();
 		[CCode (has_construct_function = false, type = "GDBusObjectManager*")]
@@ -952,9 +952,9 @@ namespace GLib {
 		public unowned GLib.DBusPropertyInfo @ref ();
 		public void unref ();
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_proxy_get_type ()")]
 	[Version (since = "2.26")]
-	public class DBusProxy : GLib.Object, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable {
+	public class DBusProxy : GLib.Object, GLib.AsyncInitable, GLib.DBusInterface, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		protected DBusProxy ();
 		public async GLib.Variant call (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -1989,7 +1989,7 @@ namespace GLib {
 		public string uri { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_resolver_get_type ()")]
-	public class Resolver : GLib.Object {
+	public abstract class Resolver : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Resolver ();
 		[Version (since = "2.22")]

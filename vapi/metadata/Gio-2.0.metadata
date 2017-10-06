@@ -185,7 +185,7 @@ PropertyAction
   .name skip
   .parameter_type skip
   .state_type skip
-Resolver
+Resolver abstract
   .lookup_service#method virtual
   .lookup_service_async#virtual_method vfunc_name="lookup_service_async" finish_vfunc_name="lookup_service_finish"
 Settings
