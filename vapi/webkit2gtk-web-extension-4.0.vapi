@@ -129,6 +129,41 @@ namespace WebKit {
 			public string data { owned get; set; }
 			public ulong length { get; }
 		}
+		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_client_rect_get_type ()")]
+		[GIR (name = "DOMClientRect")]
+		public class ClientRect : WebKit.DOM.Object {
+			[CCode (has_construct_function = false)]
+			protected ClientRect ();
+			[Version (since = "2.18")]
+			public float get_bottom ();
+			[Version (since = "2.18")]
+			public float get_height ();
+			[Version (since = "2.18")]
+			public float get_left ();
+			[Version (since = "2.18")]
+			public float get_right ();
+			[Version (since = "2.18")]
+			public float get_top ();
+			[Version (since = "2.18")]
+			public float get_width ();
+			public float bottom { get; }
+			public float height { get; }
+			public float left { get; }
+			public float right { get; }
+			public float top { get; }
+			public float width { get; }
+		}
+		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_client_rect_list_get_type ()")]
+		[GIR (name = "DOMClientRectList")]
+		public class ClientRectList : WebKit.DOM.Object {
+			[CCode (has_construct_function = false)]
+			protected ClientRectList ();
+			[Version (since = "2.18")]
+			public ulong get_length ();
+			[Version (since = "2.18")]
+			public unowned WebKit.DOM.ClientRect item (ulong index);
+			public ulong length { get; }
+		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_comment_get_type ()")]
 		[GIR (name = "DOMComment")]
 		public class Comment : WebKit.DOM.CharacterData, WebKit.DOM.EventTarget {
@@ -628,6 +663,8 @@ namespace WebKit {
 			public unowned WebKit.DOM.Attr get_attribute_node_ns (string namespaceURI, string localName);
 			public string get_attribute_ns (string namespaceURI, string localName);
 			public WebKit.DOM.NamedNodeMap get_attributes ();
+			[Version (since = "2.18")]
+			public WebKit.DOM.ClientRect get_bounding_client_rect ();
 			public ulong get_child_element_count ();
 			[Version (since = "2.10")]
 			public WebKit.DOM.HTMLCollection get_children ();
@@ -636,6 +673,8 @@ namespace WebKit {
 			public string get_class_name ();
 			public double get_client_height ();
 			public double get_client_left ();
+			[Version (since = "2.18")]
+			public WebKit.DOM.ClientRectList get_client_rects ();
 			public double get_client_top ();
 			public double get_client_width ();
 			[Version (deprecated = true, deprecated_since = "2.12")]
@@ -2850,12 +2889,19 @@ namespace WebKit {
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_context_menu_item_get_type ()")]
 	public class ContextMenuItem : GLib.InitiallyUnowned {
 		[CCode (has_construct_function = false)]
+		[Version (deprecated = true, deprecated_since = "2.18")]
 		public ContextMenuItem (Gtk.Action action);
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.18")]
+		public ContextMenuItem.from_gaction (GLib.Action action, string label, GLib.Variant? target);
 		[CCode (has_construct_function = false)]
 		public ContextMenuItem.from_stock_action (WebKit.ContextMenuAction action);
 		[CCode (has_construct_function = false)]
 		public ContextMenuItem.from_stock_action_with_label (WebKit.ContextMenuAction action, string label);
+		[Version (deprecated = true, deprecated_since = "2.18")]
 		public unowned Gtk.Action get_action ();
+		[Version (since = "2.18")]
+		public unowned GLib.Action get_gaction ();
 		public WebKit.ContextMenuAction get_stock_action ();
 		public unowned WebKit.ContextMenu get_submenu ();
 		public bool is_separator ();
@@ -2887,6 +2933,7 @@ namespace WebKit {
 		public bool context_is_link ();
 		public bool context_is_media ();
 		public bool context_is_scrollbar ();
+		[Version (since = "2.8")]
 		public bool context_is_selection ();
 		public uint get_context ();
 		public unowned string get_image_uri ();
@@ -2916,6 +2963,7 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		public URIRequest (string uri);
 		public unowned Soup.MessageHeaders get_http_headers ();
+		[Version (since = "2.12")]
 		public unowned string get_http_method ();
 		public unowned string get_uri ();
 		public void set_uri (string uri);
@@ -2926,12 +2974,14 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected URIResponse ();
 		public uint64 get_content_length ();
+		[Version (since = "2.6")]
 		public unowned Soup.MessageHeaders get_http_headers ();
 		public unowned string get_mime_type ();
 		public uint get_status_code ();
 		public unowned string get_suggested_filename ();
 		public unowned string get_uri ();
 		public uint64 content_length { get; }
+		[Version (since = "2.6")]
 		public Soup.MessageHeaders http_headers { get; }
 		public string mime_type { get; }
 		public uint status_code { get; }
