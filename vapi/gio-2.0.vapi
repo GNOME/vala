@@ -2450,7 +2450,7 @@ namespace GLib {
 		public bool listen () throws GLib.Error;
 		public ssize_t receive ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t receive_from (out GLib.SocketAddress address, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public ssize_t receive_message (out GLib.SocketAddress address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.InputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] out GLib.SocketControlMessage[] messages, ref int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t receive_message (out GLib.SocketAddress address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.InputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] out GLib.SocketControlMessage[]? messages, ref int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.48")]
 		public int receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.InputMessage[] messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.26")]
@@ -2621,10 +2621,10 @@ namespace GLib {
 	public class SocketListener : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public SocketListener ();
-		public GLib.SocketConnection accept (out unowned GLib.Object source_object = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public async GLib.SocketConnection accept_async (GLib.Cancellable? cancellable = null, out unowned GLib.Object source_object = null) throws GLib.Error;
-		public GLib.Socket accept_socket (out unowned GLib.Object source_object = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public async GLib.Socket accept_socket_async (GLib.Cancellable? cancellable = null, out unowned GLib.Object source_object = null) throws GLib.Error;
+		public GLib.SocketConnection accept (out unowned GLib.Object? source_object = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async GLib.SocketConnection accept_async (GLib.Cancellable? cancellable = null, out unowned GLib.Object? source_object = null) throws GLib.Error;
+		public GLib.Socket accept_socket (out unowned GLib.Object? source_object = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async GLib.Socket accept_socket_async (GLib.Cancellable? cancellable = null, out unowned GLib.Object? source_object = null) throws GLib.Error;
 		public bool add_address (GLib.SocketAddress address, GLib.SocketType type, GLib.SocketProtocol protocol, GLib.Object? source_object, out GLib.SocketAddress effective_address) throws GLib.Error;
 		[Version (since = "2.24")]
 		public uint16 add_any_inet_port (GLib.Object? source_object) throws GLib.Error;
@@ -4532,7 +4532,7 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static bool register_error (GLib.Quark error_domain, int error_code, string dbus_error_name);
 		[CCode (cheader_filename = "gio/gio.h")]
-		public static void register_error_domain (string error_domain_quark_name, size_t quark_volatile, GLib.DBusErrorEntry entries, uint num_entries);
+		public static void register_error_domain (string error_domain_quark_name, size_t quark_volatile, [CCode (array_length_cname = "num_entries", array_length_pos = 3.1, array_length_type = "guint")] GLib.DBusErrorEntry[] entries);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static bool strip_remote_error (GLib.Error error);
 		[CCode (cheader_filename = "gio/gio.h")]
