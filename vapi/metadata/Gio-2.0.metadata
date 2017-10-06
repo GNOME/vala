@@ -399,6 +399,7 @@ FileAttributeInfoList
 LoadableIcon
   .load_finish.type out nullable unowned=false default=null
 Socket
+  .receive_message.address nullable
   .receive_message.messages out unowned=false
   .receive_message.flags ref
 Task
