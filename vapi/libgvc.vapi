@@ -184,6 +184,7 @@ namespace Gvc {
 		public static ErrorLevel errno;
 
 		[CCode (cname = "agerr")]
+		[PrintfFormat]
 		public static int error (ErrorLevel level, string fmt, ...);
 
 		[CCode (cname = "agerrors")]
@@ -196,9 +197,11 @@ namespace Gvc {
 		public static string? last_error ();
 
 		[CCode (cname = "agerrorf")]
+		[PrintfFormat]
 		public static void errorf (string format, ...);
 
 		[CCode (cname = "agwarningf")]
+		[PrintfFormat]
 		void warningf (string fmt, ...);
 	}
 
