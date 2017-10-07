@@ -1554,7 +1554,7 @@ namespace Xml {
 			[CCode (cname = "xmlXPathEvalExpression", instance_pos = -1)]
 			public Object* eval_expression ([CCode (type = "xmlChar*")] string str);
 
-			[CCode (cname = "xmlXPathRegisterNs")]
+			[CCode (cname = "xmlXPathRegisterNs", cheader_filename = "libxml/xpathInternals.h")]
 			public int register_ns ([CCode (type = "xmlChar*")] string prefix, [CCode (type = "xmlChar*")] string ns_uri);
 
 			[CCode (cname = "xmlXPathNewContext")]
