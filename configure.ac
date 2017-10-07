@@ -160,6 +160,7 @@ AC_CONFIG_FILES([Makefile
            compiler/Makefile
            vapi/Makefile
            valadate/Makefile
+           valadate/valadate.deps
            tests/Makefile
            doc/Makefile
            doc/manual/Makefile

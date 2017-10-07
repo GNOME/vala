@@ -5,17 +5,14 @@ NULL =
 AM_CPPFLAGS = \
 	$(COVERAGE_CFLAGS) \
 	-I$(top_srcdir)/gee \
-	-I$(top_srcdir)/ccode \
 	-I$(top_srcdir)/vala \
-	-I$(top_srcdir)/codegen \
 	$(GLIB_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GMODULE_CFLAGS) \
 	$(LIBXML_CFLAGS) \
-	-g \
 	$(NULL)
 
-BUILT_SOURCES = valadate.vala.stamp valadate.deps
+BUILT_SOURCES = valadate.vala.stamp
 
 lib_LTLIBRARIES = \
 	libvaladate.la \
@@ -48,25 +45,24 @@ libvaladate_la_SOURCES = \
 	$(libvaladate_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-valadate.vapi valadate.vala.stamp: $(libvaladate_la_VALASOURCES)
+valadate.vapi valadate.h: valadate.vala.stamp
+valadate.vala.stamp: $(libvaladate_la_VALASOURCES)
 	$(VALA_V)$(VALAC) \
 		$(COVERAGE_VALAFLAGS) \
 		$(VALAFLAGS) \
 		-C \
-		-g \
+		--use-header \
+		-H valadate.h \
+		--library valadate \
+		--vapidir $(top_srcdir)/gee --pkg gee \
+		--vapidir $(top_srcdir)/vala --pkg vala \
 		--vapidir $(top_srcdir)/vapi --pkg gobject-2.0 \
 		--pkg gio-2.0 \
 		--pkg gmodule-2.0 \
 		--pkg libxml-2.0 \
 		--pkg config \
-		--pkg libvala@PACKAGE_SUFFIX@ \
-		-H valadate.h \
-		--library valadate \
 		$^
 	@touch $@
-
-valadate.deps : valadate.deps.in
-	$(SED) -e 's,[@]PACKAGE_SUFFIX[@],$(PACKAGE_SUFFIX),g' < valadate.deps.in > valadate.deps
 
 libvaladate_la_LDFLAGS = -no-undefined
 

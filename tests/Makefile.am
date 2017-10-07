@@ -21,6 +21,7 @@ test_programs = valadatetests valactests@PACKAGE_SUFFIX@
 # Valadate tests
 valadatetests_VALAFLAGS = \
 	--vapidir $(top_srcdir)/valadate \
+	--vapidir $(top_srcdir)/vala \
 	--vapidir $(top_srcdir)/vapi \
 	--pkg valadate \
 	--pkg gio-2.0 \
@@ -63,8 +64,8 @@ valadatetests_CFLAGS = \
 
 valactests@PACKAGE_SUFFIX@_VALAFLAGS = \
 	--vapidir $(top_srcdir)/valadate \
+	--vapidir $(top_srcdir)/vala \
 	--vapidir $(top_srcdir)/vapi \
-	--vapidir $(top_srcdir)/gee \
 	--pkg valadate \
 	--pkg config \
 	--library valactests@PACKAGE_SUFFIX@ \
