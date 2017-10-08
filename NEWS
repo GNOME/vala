@@ -1,3 +1,9 @@
+Vala 0.38.2
+===========
+ * Various bindings updates:
+  - gstreamer-1.0,gtk+-3.0,gtk+-4.0: Update from git master
+  - gnutls: Fix free_function ccode-attribute of Certificate [#788181]
+
 Vala 0.38.1
 ===========
  * Various bug fixes:
