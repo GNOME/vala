@@ -1,3 +1,20 @@
+Vala 0.36.6
+===========
+ * Various bug fixes:
+  - codegen: Support renamed signals [#731547]
+  - Optimize (de)serialization of arrays with type-signature "ay" [#772426]
+  - codegen: Try to use a more unique internal define for properties [#787436]
+  - vala: Update list of used attributes
+  - method: Include ownership transfer classifier for return-type mismatch
+
+ * Bindings:
+  - glib-2.0: Bind g_convert_with_fallback() and g_convert_with_iconv()
+  - gio-2.0: Add DBusConnection 'closed' signal as 'on_closed' [#684358]
+  - gstreamer-1.0, gio-2.0: Various fixes
+  - gnutls: Fix free_function ccode-attribute of Certificate [#788181]
+  - gtk+-3.0: Update to 3.22.24
+  - webkit2gtk-4.0: Update to 2.18
+
 Vala 0.36.5
 ===========
  * Various bug fixes:
