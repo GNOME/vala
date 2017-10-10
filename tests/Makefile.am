@@ -45,6 +45,7 @@ TESTS = \
 	basic-types/bug771626.test \
 	basic-types/bug772426.vala \
 	basic-types/bug777697.test \
+	basic-types/bug788775.vala \
 	namespaces.vala \
 	methods/lambda.vala \
 	methods/closures.vala \
@@ -244,6 +245,7 @@ TESTS = \
 	gir/bug651773.test \
 	gir/bug667751.test \
 	gir/bug742012.test \
+	gir/bug788775.test \
 	gir/delegate-alias-without-target.test \
 	$(NULL)
 
