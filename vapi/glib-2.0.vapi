@@ -4125,7 +4125,7 @@ namespace GLib {
 		public uint64 get_uint64 (string group_name, string key) throws KeyFileError;
 		[Version (since = "2.12")]
 		public double get_double (string group_name, string key) throws KeyFileError;
-		[CCode (array_length_type = "gsize")]
+		[CCode (array_length = true, array_length_type = "gsize", array_null_terminated = true)]
 		public string[] get_string_list (string group_name, string key) throws KeyFileError;
 		[CCode (array_length_type = "gsize")]
 		public string[] get_locale_string_list (string group_name, string key, string? locale = null) throws KeyFileError;

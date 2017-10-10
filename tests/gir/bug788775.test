@@ -1,0 +1,29 @@
+GIR
+
+Input:
+
+      <function name="get_string_list" c:identifier="test_get_string_list">
+        <return-value transfer-ownership="full">
+          <array length="1" zero-terminated="1" c:type="gchar**">
+            <type name="utf8"/>
+          </array>
+        </return-value>
+        <parameters>
+          <parameter name="key" transfer-ownership="none">
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="length"
+                     direction="out"
+                     caller-allocates="0"
+                     transfer-ownership="full"
+                     optional="1"
+                     allow-none="1">
+            <type name="gsize" c:type="gsize*"/>
+          </parameter>
+        </parameters>
+      </function>
+
+Output:
+
+[CCode (array_length = true, array_length_pos = 1.1, array_length_type = "gsize", array_null_terminated = true, cheader_filename = "test.h")]
+public static string[] get_string_list (string key);
