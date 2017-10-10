@@ -48,6 +48,7 @@ TESTS = \
 	basic-types/bug772426.vala \
 	basic-types/bug777697.test \
 	basic-types/bug787152.vala \
+	basic-types/bug788775.vala \
 	chainup/class-base.vala \
 	chainup/class-base-foo.vala \
 	chainup/class-object.vala \
@@ -298,6 +299,7 @@ TESTS = \
 	gir/bug651773.test \
 	gir/bug667751.test \
 	gir/bug742012.test \
+	gir/bug788775.test \
 	gir/array-fixed-length.test \
 	gir/delegate-alias-without-target.test \
 	annotations/deprecated.vala \

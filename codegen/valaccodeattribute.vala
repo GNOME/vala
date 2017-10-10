@@ -523,7 +523,10 @@ public class Vala.CCodeAttribute : AttributeCache {
 	public bool array_null_terminated {
 		get {
 			if (_array_null_terminated == null) {
-				if (ccode != null && ccode.has_argument ("array_null_terminated")) {
+				// If arrays claim to have an array-length and also are null-terminated then rely on the given length
+				if (ccode != null && ccode.has_argument ("array_length") && ccode.get_bool ("array_length")) {
+					_array_null_terminated = false;
+				} else if (ccode != null && ccode.has_argument ("array_null_terminated")) {
 					_array_null_terminated = ccode.get_bool ("array_null_terminated");
 				} else {
 					_array_null_terminated = get_default_array_null_terminated ();
