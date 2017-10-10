@@ -7833,7 +7833,7 @@ namespace Clutter {
 		[Version (since = "0.8")]
 		public bool has_marker (string marker_name);
 		public bool is_playing ();
-		[CCode (array_length_pos = 1.1, array_length_type = "gsize", array_null_terminated = true)]
+		[CCode (array_length = true, array_length_pos = 1.1, array_length_type = "gsize", array_null_terminated = true)]
 		[Version (since = "0.8")]
 		public string[] list_markers (int msecs);
 		public void pause ();
