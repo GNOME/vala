@@ -11914,13 +11914,13 @@ namespace Gtk {
 		public time_t get_added ();
 		public int get_age ();
 		public bool get_application_info (string app_name, out unowned string app_exec, out uint count, [CCode (type = "time_t*")] out time_t time_);
-		[CCode (array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
+		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
 		public string[] get_applications ();
 		public unowned string get_description ();
 		public unowned string get_display_name ();
 		[Version (since = "2.22")]
 		public GLib.Icon? get_gicon ();
-		[CCode (array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
+		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
 		public string[] get_groups ();
 		public Gdk.Pixbuf? get_icon (int size);
 		public unowned string get_mime_type ();
@@ -15260,7 +15260,7 @@ namespace Gtk {
 		public bool get_show_tips ();
 		[Version (since = "2.10")]
 		public Gtk.RecentSortType get_sort_type ();
-		[CCode (array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
+		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
 		[Version (since = "2.10")]
 		public string[] get_uris ();
 		[Version (since = "2.10")]
@@ -17302,7 +17302,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.14")]
 	public static void test_init ([CCode (array_length_cname = "argcp", array_length_pos = 0.5)] ref unowned string[] argvp, ...);
-	[CCode (array_length_pos = 0.1, array_length_type = "guint", array_null_terminated = true, cheader_filename = "gtk/gtk.h")]
+	[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "guint", array_null_terminated = true, cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.14")]
 	public static unowned GLib.Type[] test_list_all_types ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
