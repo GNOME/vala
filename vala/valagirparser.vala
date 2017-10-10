@@ -2503,8 +2503,8 @@ public class Vala.GirParser : CodeVisitor {
 				if (metadata.has_argument (ArgumentType.ARRAY_LENGTH_IDX)) {
 					array_length_idx = metadata.get_integer (ArgumentType.ARRAY_LENGTH_IDX);
 				} else {
-					if (no_array_length) {
-						param.set_attribute_bool ("CCode", "array_length", false);
+					if (no_array_length || array_null_terminated) {
+						param.set_attribute_bool ("CCode", "array_length", !no_array_length);
 					}
 					if (array_null_terminated) {
 						param.set_attribute_bool ("CCode", "array_null_terminated", array_null_terminated);
@@ -2937,11 +2937,11 @@ public class Vala.GirParser : CodeVisitor {
 			field.set_attribute_string ("CCode", "cname", cname);
 		}
 		if (type is ArrayType) {
-			if (!no_array_length && !array_null_terminated && array_length_idx > -1) {
+			if (!no_array_length && array_length_idx > -1) {
 				current.array_length_idx = array_length_idx;
 			}
-			if (no_array_length) {
-				field.set_attribute_bool ("CCode", "array_length", false);
+			if (no_array_length || array_null_terminated) {
+				field.set_attribute_bool ("CCode", "array_length", !no_array_length);
 			}
 			if (array_null_terminated) {
 				field.set_attribute_bool ("CCode", "array_null_terminated", true);
@@ -2975,8 +2975,8 @@ public class Vala.GirParser : CodeVisitor {
 		prop.access = SymbolAccessibility.PUBLIC;
 		prop.external = true;
 		prop.is_abstract = is_abstract;
-		if (no_array_length) {
-			prop.set_attribute_bool ("CCode", "array_length", false);
+		if (no_array_length || array_null_terminated) {
+			prop.set_attribute_bool ("CCode", "array_length", !no_array_length);
 		}
 		if (array_null_terminated) {
 			prop.set_attribute_bool ("CCode", "array_null_terminated", true);
@@ -3158,8 +3158,8 @@ public class Vala.GirParser : CodeVisitor {
 		if (return_type is ArrayType && metadata.has_argument (ArgumentType.ARRAY_LENGTH_IDX)) {
 			return_array_length_idx = metadata.get_integer (ArgumentType.ARRAY_LENGTH_IDX);
 		} else {
-			if (return_no_array_length) {
-				s.set_attribute_bool ("CCode", "array_length", false);
+			if (return_no_array_length || return_array_null_terminated) {
+				s.set_attribute_bool ("CCode", "array_length", !return_no_array_length);
 			}
 			if (return_array_null_terminated) {
 				s.set_attribute_bool ("CCode", "array_null_terminated", true);
