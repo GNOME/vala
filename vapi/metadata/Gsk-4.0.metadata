@@ -2,16 +2,10 @@ Renderer
 	// Factory method
 	.new_for_window symbol_type="function" name="for_window"
 
-linear_gradient_node_new
-	.color_stops array array_length_idx=4
-repeating_linear_gradient_node_new
-	.color_stops array array_length_idx=4
-
-*_node_new parent="Gsk.RenderNode" symbol_type="constructor" name="(.+)_node_new"
+*_node_new* parent="Gsk.RenderNode" symbol_type="constructor" name="(.+)_node_new"
 *_node_get_* parent="Gsk.RenderNode" symbol_type="method" instance_idx=0
 
 Texture
 	// Factory method
 	.new_for_data symbol_type="function" name="for_data"
-	.new_for_data.data array
 	.new_for_pixbuf symbol_type="function" name="for_pixbuf"
