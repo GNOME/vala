@@ -268,7 +268,8 @@ File
   .get_parent nullable
   .get_path nullable
   .get_relative_path nullable
-  .load_partial_contents_async skip=false
+  .load_partial_contents_async skip
+  .load_partial_contents_finish skip
   .move.progress_callback default=null
 Icon
   .new_for_string nullable
