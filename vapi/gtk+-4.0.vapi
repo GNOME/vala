@@ -6691,6 +6691,8 @@ namespace Gsk {
 		public RenderNode.border (Gsk.RoundedRect outline, float border_width, Gdk.RGBA border_color);
 		[CCode (cname = "gsk_cairo_node_new", has_construct_function = false)]
 		public RenderNode.cairo (Graphene.Rect bounds);
+		[CCode (cname = "gsk_cairo_node_new_for_surface", has_construct_function = false)]
+		public RenderNode.cairo_for_surface (Graphene.Rect bounds, Cairo.Surface surface);
 		[CCode (cname = "gsk_cairo_node_get_draw_context")]
 		public Cairo.Context cairo_node_get_draw_context (Gsk.Renderer? renderer);
 		[CCode (cname = "gsk_clip_node_new", has_construct_function = false)]
@@ -6788,7 +6790,7 @@ namespace Gsk {
 		public int scale_factor { get; set; }
 		[Version (since = "3.90")]
 		public Graphene.Rect viewport { get; set; }
-		public Gdk.Window window { get; construct; }
+		public Gdk.Window window { get; }
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_texture_get_type ()")]
 	[Version (since = "3.90")]
@@ -12727,7 +12729,7 @@ namespace Gtk {
 		public virtual signal void text_pushed (uint context_id, string text);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_statusbar_accessible_get_type ()")]
-	public class StatusbarAccessible : Gtk.ContainerAccessible, Atk.Component {
+	public class StatusbarAccessible : Gtk.WidgetAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected StatusbarAccessible ();
 	}
