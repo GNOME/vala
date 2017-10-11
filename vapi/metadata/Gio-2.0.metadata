@@ -411,7 +411,7 @@ Socket
   .receive_message.messages out unowned=false
   .receive_message.flags ref
 Task
-  .get_source_object type="GLib.Object"
+  .get_source_object name="get_unowned_source_object" nullable
 TlsBackend
   .get_certificate_type abstract
   .get_client_connection_type abstract

@@ -2256,7 +2256,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public SettingsSchemaSource.from_directory (string directory, GLib.SettingsSchemaSource? parent, bool trusted) throws GLib.Error;
 		[CCode (cheader_filename = "gio/gio.h")]
-		public static unowned GLib.SettingsSchemaSource get_default ();
+		public static unowned GLib.SettingsSchemaSource? get_default ();
 		[Version (since = "2.40")]
 		public void list_schemas (bool recursive, [CCode (array_length = false, array_null_terminated = true)] out string[] non_relocatable, [CCode (array_length = false, array_null_terminated = true)] out string[] relocatable);
 		public GLib.SettingsSchema? lookup (string schema_id, bool recursive);
@@ -2736,6 +2736,9 @@ namespace GLib {
 		public void* get_source_tag ();
 		[Version (since = "2.36")]
 		public void* get_task_data ();
+		[CCode (cname = "g_task_get_source_object")]
+		[Version (since = "2.36")]
+		public unowned GLib.Object? get_unowned_source_object ();
 		[Version (since = "2.36")]
 		public bool had_error ();
 		[Version (since = "2.36")]
@@ -3211,7 +3214,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_async_result_get_type ()")]
 	public interface AsyncResult : GLib.Object {
-		public abstract GLib.Object get_source_object ();
+		public abstract GLib.Object? get_source_object ();
 		public abstract void* get_user_data ();
 		[Version (since = "2.34")]
 		public abstract bool is_tagged (void* source_tag);
