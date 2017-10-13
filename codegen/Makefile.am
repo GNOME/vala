@@ -23,6 +23,7 @@ libvalaccodegen_la_LDFLAGS = \
 	$(NULL)
 
 libvalaccodegen_la_VALASOURCES = \
+	valaccode.vala \
 	valaccodearraymodule.vala \
 	valaccodeassignmentmodule.vala \
 	valaccodeattribute.vala \
