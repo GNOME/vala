@@ -281,19 +281,19 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	}
 
 	private string? get_ccode_type_id (Vala.CodeNode node) {
-		return Vala.CCodeBaseModule.get_ccode_type_id (node);
+		return Vala.get_ccode_type_id (node);
 	}
 
 	private bool is_reference_counting (Vala.TypeSymbol sym) {
-		return Vala.CCodeBaseModule.is_reference_counting (sym);
+		return Vala.is_reference_counting (sym);
 	}
 
 	private string? get_ref_function (Vala.Class sym) {
-		return Vala.CCodeBaseModule.get_ccode_ref_function (sym);
+		return Vala.get_ccode_ref_function (sym);
 	}
 
 	private string? get_unref_function (Vala.Class sym) {
-		return Vala.CCodeBaseModule.get_ccode_unref_function (sym);
+		return Vala.get_ccode_unref_function (sym);
 	}
 
 	private string? get_finalize_function_name (Vala.Class element) {
@@ -301,7 +301,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return null;
 		}
 
-		return "%s_finalize".printf (Vala.CCodeBaseModule.get_ccode_lower_case_name (element, null));
+		return "%s_finalize".printf (Vala.get_ccode_lower_case_name (element, null));
 	}
 
 	private string? get_free_function_name (Vala.Class element) {
@@ -309,48 +309,48 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return null;
 		}
 
-		return Vala.CCodeBaseModule.get_ccode_free_function (element);
+		return Vala.get_ccode_free_function (element);
 	}
 
 	private string? get_finish_name (Vala.Method m) {
-		return Vala.CCodeBaseModule.get_ccode_finish_name (m);
+		return Vala.get_ccode_finish_name (m);
 	}
 
 	private string? get_take_value_function (Vala.Class sym) {
-		return Vala.CCodeBaseModule.get_ccode_take_value_function (sym);
+		return Vala.get_ccode_take_value_function (sym);
 	}
 
 	private string? get_get_value_function (Vala.Class sym) {
-		return Vala.CCodeBaseModule.get_ccode_get_value_function (sym);
+		return Vala.get_ccode_get_value_function (sym);
 	}
 
 	private string? get_set_value_function (Vala.Class sym) {
-		return Vala.CCodeBaseModule.get_ccode_set_value_function (sym);
+		return Vala.get_ccode_set_value_function (sym);
 	}
 
 
 	private string? get_param_spec_function (Vala.CodeNode sym) {
-		return Vala.CCodeBaseModule.get_ccode_param_spec_function (sym);
+		return Vala.get_ccode_param_spec_function (sym);
 	}
 
 	private string? get_dup_function (Vala.TypeSymbol sym) {
-		return Vala.CCodeBaseModule.get_ccode_dup_function (sym);
+		return Vala.get_ccode_dup_function (sym);
 	}
 
 	private string? get_copy_function (Vala.TypeSymbol sym) {
-		return Vala.CCodeBaseModule.get_ccode_copy_function (sym);
+		return Vala.get_ccode_copy_function (sym);
 	}
 
 	private string? get_destroy_function (Vala.TypeSymbol sym) {
-		return Vala.CCodeBaseModule.get_ccode_destroy_function (sym);
+		return Vala.get_ccode_destroy_function (sym);
 	}
 
 	private string? get_free_function (Vala.TypeSymbol sym) {
-		return Vala.CCodeBaseModule.get_ccode_free_function (sym);
+		return Vala.get_ccode_free_function (sym);
 	}
 
 	private string? get_cname (Vala.Symbol symbol) {
-		return Vala.CCodeBaseModule.get_ccode_name (symbol);
+		return Vala.get_ccode_name (symbol);
 	}
 
 	private SourceComment? create_comment (Vala.Comment? comment) {
@@ -413,7 +413,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	}
 
 	private string? get_quark_macro_name (Vala.ErrorDomain element) {
-		return Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null);
+		return Vala.get_ccode_upper_case_name (element, null);
 	}
 
 	private string? get_private_cname (Vala.Class element) {
@@ -430,7 +430,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return null;
 		}
 
-		return "%s_GET_CLASS".printf (Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null));
+		return "%s_GET_CLASS".printf (Vala.get_ccode_upper_case_name (element, null));
 	}
 
 	private string? get_class_type_macro_name (Vala.Class element) {
@@ -438,11 +438,11 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return null;
 		}
 
-		return "%s_CLASS".printf (Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null));
+		return "%s_CLASS".printf (Vala.get_ccode_upper_case_name (element, null));
 	}
 
 	private string? get_is_type_macro_name (Vala.TypeSymbol element) {
-		string? name = Vala.CCodeBaseModule.get_ccode_type_check_function (element);
+		string? name = Vala.get_ccode_type_check_function (element);
 		return (name != null && name != "")? name : null;
 	}
 
@@ -460,7 +460,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return null;
 		}
 
-		return "%s_get_type".printf (Vala.CCodeBaseModule.get_ccode_lower_case_name (element, null));
+		return "%s_get_type".printf (Vala.get_ccode_lower_case_name (element, null));
 	}
 
 	private string? get_type_macro_name (Vala.TypeSymbol element) {
@@ -472,7 +472,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return null;
 		}
 
-		return Vala.CCodeBaseModule.get_ccode_type_id (element);
+		return Vala.get_ccode_type_id (element);
 	}
 
 	private string? get_type_cast_macro_name (Vala.TypeSymbol element) {
@@ -480,18 +480,18 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			&& !((Vala.Class) element).is_compact)
 			|| element is Vala.Interface)
 		{
-			return Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null);
+			return Vala.get_ccode_upper_case_name (element, null);
 		} else {
 			return null;
 		}
 	}
 
 	private string? get_interface_macro_name (Vala.Interface element) {
-		return "%s_GET_INTERFACE".printf (Vala.CCodeBaseModule.get_ccode_upper_case_name (element, null));
+		return "%s_GET_INTERFACE".printf (Vala.get_ccode_upper_case_name (element, null));
 	}
 
 	private string get_quark_function_name (Vala.ErrorDomain element) {
-		return Vala.CCodeBaseModule.get_ccode_lower_case_prefix (element) + "quark";
+		return Vala.get_ccode_lower_case_prefix (element) + "quark";
 	}
 
 	private PackageMetaData? get_package_meta_data (Package pkg) {

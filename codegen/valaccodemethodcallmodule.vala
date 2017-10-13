@@ -164,7 +164,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			} else if (current_class.base_class == gsource_type) {
 				// g_source_new
 
-				string class_prefix = CCodeBaseModule.get_ccode_lower_case_name (current_class);
+				string class_prefix = get_ccode_lower_case_name (current_class);
 
 				var funcs = new CCodeDeclaration ("const GSourceFuncs");
 				funcs.modifiers = CCodeModifiers.STATIC;
@@ -312,7 +312,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 			generate_dynamic_method_wrapper ((DynamicMethod) m);
 		} else if (m is CreationMethod && m.parent_symbol is Class) {
-			ccode.add_assignment (get_this_cexpression (), new CCodeCastExpression (ccall, CCodeBaseModule.get_ccode_name (current_class) + "*"));
+			ccode.add_assignment (get_this_cexpression (), new CCodeCastExpression (ccall, get_ccode_name (current_class) + "*"));
 
 			if (current_method.body.captured) {
 				// capture self after setting it
