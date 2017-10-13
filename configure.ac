@@ -25,6 +25,7 @@ AC_DEFINE_UNQUOTED(PACKAGE_SUFFIX, "$PACKAGE_SUFFIX", [Define to the suffix of t
 program_transform_name="s,\$\$,${PACKAGE_SUFFIX},"
 
 AC_SUBST(pkgdatadir, [${datadir}/vala${PACKAGE_SUFFIX}])
+AC_SUBST(pkglibdir, [${libdir}/vala${PACKAGE_SUFFIX}])
 
 # Checks for programs.
 AC_PROG_CC

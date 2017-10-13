@@ -12,8 +12,14 @@ AM_CPPFLAGS = \
 
 BUILT_SOURCES = codegen.vala.stamp
 
-noinst_LTLIBRARIES = \
+libvalaccodegen_la_LTLIBRARIES = \
 	libvalaccodegen.la \
+	$(NULL)
+
+libvalaccodegen_ladir = $(pkglibdir)
+
+libvalaccodegen_la_LDFLAGS = \
+	-avoid-version \
 	$(NULL)
 
 libvalaccodegen_la_VALASOURCES = \
