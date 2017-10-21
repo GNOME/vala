@@ -12799,7 +12799,7 @@ namespace Gtk {
 		public virtual signal void text_pushed (uint context_id, string text);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_statusbar_accessible_get_type ()")]
-	public class StatusbarAccessible : Gtk.ContainerAccessible, Atk.Component {
+	public class StatusbarAccessible : Gtk.WidgetAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected StatusbarAccessible ();
 	}
