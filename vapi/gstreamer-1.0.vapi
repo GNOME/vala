@@ -3926,6 +3926,8 @@ namespace Gst {
 	public const Gst.ClockTimeDiff SECOND;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEGMENT_FORMAT")]
 	public const string SEGMENT_FORMAT;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEQNUM_INVALID")]
+	public const int SEQNUM_INVALID;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_STIME_FORMAT")]
 	[Version (since = "1.6")]
 	public const string STIME_FORMAT;

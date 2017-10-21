@@ -384,10 +384,12 @@ namespace Gst {
 			[Version (since = "1.6")]
 			public void clear ();
 			public void free ();
+			[Version (since = "1.12.1")]
 			public unowned Gst.Base.FlowCombiner @ref ();
 			public void remove_pad (Gst.Pad pad);
 			[Version (since = "1.6")]
 			public void reset ();
+			[Version (since = "1.12.1")]
 			public void unref ();
 			public Gst.FlowReturn update_flow (Gst.FlowReturn fret);
 			[Version (since = "1.6")]

@@ -184,6 +184,8 @@ namespace Gst {
 			public Gst.Video.CodecFrame get_frame (int frame_number);
 			public GLib.List<Gst.Video.CodecFrame> get_frames ();
 			public void get_latency (out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
+			[Version (since = "1.14")]
+			public Gst.ClockTimeDiff get_max_encode_time (Gst.Video.CodecFrame frame);
 			public Gst.Video.CodecFrame get_oldest_frame ();
 			public Gst.Video.CodecState get_output_state ();
 			[NoWrapper]

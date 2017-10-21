@@ -21,6 +21,8 @@ namespace Gst {
 			[NoAccessorMethod]
 			public int port { get; set construct; }
 			[NoAccessorMethod]
+			public int qos_dscp { get; set; }
+			[NoAccessorMethod]
 			public uint64 round_trip_limit { get; set; }
 		}
 		[CCode (cheader_filename = "gst/net/net.h", cname = "GstNtpClock", lower_case_cprefix = "gst_ntp_clock_", type_id = "gst_ntp_clock_get_type ()")]
@@ -74,6 +76,8 @@ namespace Gst {
 			public Gst.Clock clock { owned get; construct; }
 			[NoAccessorMethod]
 			public int port { get; construct; }
+			[NoAccessorMethod]
+			public int qos_dscp { get; set; }
 		}
 		[CCode (cheader_filename = "gst/net/net.h", has_type_id = false)]
 		[GIR (name = "NetAddressMeta")]

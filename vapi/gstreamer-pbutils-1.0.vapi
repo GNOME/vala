@@ -80,6 +80,8 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			protected DiscovererAudioInfo ();
 			public uint get_bitrate ();
+			[Version (since = "1.14")]
+			public uint64 get_channel_mask ();
 			public uint get_channels ();
 			public uint get_depth ();
 			public unowned string get_language ();
@@ -104,6 +106,8 @@ namespace Gst {
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_audio_streams ();
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_container_streams ();
 			public Gst.ClockTime get_duration ();
+			[Version (since = "1.14")]
+			public bool get_live ();
 			[Version (deprecated = true)]
 			public unowned Gst.Structure get_misc ();
 			[CCode (array_length = false, array_null_terminated = true)]

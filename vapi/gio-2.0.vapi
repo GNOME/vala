@@ -2445,8 +2445,10 @@ namespace GLib {
 		public bool is_connected ();
 		[Version (since = "2.32")]
 		public bool join_multicast_group (GLib.InetAddress group, bool source_specific, string? iface) throws GLib.Error;
+		public bool join_multicast_group_ssm (GLib.InetAddress group, GLib.InetAddress source_specific, string iface) throws GLib.Error;
 		[Version (since = "2.32")]
 		public bool leave_multicast_group (GLib.InetAddress group, bool source_specific, string? iface) throws GLib.Error;
+		public bool leave_multicast_group_ssm (GLib.InetAddress group, GLib.InetAddress source_specific, string iface) throws GLib.Error;
 		public bool listen () throws GLib.Error;
 		public ssize_t receive ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t receive_from (out GLib.SocketAddress address, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
