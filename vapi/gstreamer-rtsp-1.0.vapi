@@ -331,6 +331,10 @@ namespace Gst {
 			X_SESSIONCOOKIE,
 			RTCP_INTERVAL,
 			KEYMGMT,
+			PIPELINED_REQUESTS,
+			MEDIA_PROPERTIES,
+			SEEK_STYLE,
+			ACCEPT_RANGES,
 			LAST
 		}
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cprefix = "GST_RTSP_LOWER_TRANS_", type_id = "gst_rtsp_lower_trans_get_type ()")]
@@ -496,7 +500,8 @@ namespace Gst {
 		public enum Version {
 			INVALID,
 			@1_0,
-			@1_1
+			@1_1,
+			@2_0
 		}
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cname = "GST_RTSP_DEFAULT_PORT")]
 		public const int _DEFAULT_PORT;
