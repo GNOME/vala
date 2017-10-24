@@ -191,6 +191,7 @@ namespace GI {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_loaded_namespaces ();
 		public int get_n_infos (string namespace_);
+		public static GLib.OptionGroup get_option_group ();
 		public static unowned GLib.SList<string> get_search_path ();
 		public unowned string get_shared_library (string namespace_);
 		public unowned string get_typelib_path (string namespace_);
