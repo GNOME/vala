@@ -5739,7 +5739,7 @@ namespace Gdk {
 		public void set_functions (Gdk.WMFunction functions);
 		public void set_geometry_hints (Gdk.Geometry geometry, Gdk.WindowHints geom_mask);
 		public void set_group (Gdk.Window? leader);
-		public void set_icon_list (GLib.List<Gdk.Pixbuf> pixbufs);
+		public void set_icon_list (GLib.List<Cairo.Surface> surfaces);
 		public void set_icon_name (string? name);
 		[Version (since = "2.4")]
 		public void set_keep_above (bool setting);
@@ -7046,7 +7046,7 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public Gtk.License get_license_type ();
 		[Version (since = "2.6")]
-		public unowned Gdk.Pixbuf get_logo ();
+		public unowned Cairo.Surface get_logo ();
 		[Version (since = "2.6")]
 		public unowned string get_logo_icon_name ();
 		[Version (since = "2.12")]
@@ -7077,7 +7077,7 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public void set_license_type (Gtk.License license_type);
 		[Version (since = "2.6")]
-		public void set_logo (Gdk.Pixbuf? logo);
+		public void set_logo (Cairo.Surface? logo);
 		[Version (since = "2.6")]
 		public void set_logo_icon_name (string? icon_name);
 		[Version (since = "2.12")]
@@ -7111,7 +7111,7 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public Gtk.License license_type { get; set; }
 		[Version (since = "2.6")]
-		public Gdk.Pixbuf logo { get; set; }
+		public Cairo.Surface logo { get; set; }
 		[Version (since = "2.6")]
 		public string logo_icon_name { get; set; }
 		[Version (since = "2.12")]
@@ -8407,6 +8407,8 @@ namespace Gtk {
 		public void set_can_store ([CCode (array_length_cname = "n_targets", array_length_pos = 1.1)] Gtk.TargetEntry[]? targets);
 		[Version (since = "2.6")]
 		public void set_image (Gdk.Pixbuf pixbuf);
+		[Version (since = "3.94")]
+		public void set_surface (Cairo.Surface surface);
 		public void set_text (string text, int len);
 		public bool set_with_data ([CCode (array_length_cname = "n_targets", array_length_pos = 1.5, array_length_type = "guint")] Gtk.TargetEntry[] targets, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func);
 		public bool set_with_owner ([CCode (array_length_cname = "n_targets", array_length_pos = 1.5, array_length_type = "guint")] Gtk.TargetEntry[] targets, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func, GLib.Object owner);
@@ -8418,6 +8420,8 @@ namespace Gtk {
 		[CCode (array_length_pos = 2.1, array_length_type = "gsize")]
 		[Version (since = "2.10")]
 		public uint8[]? wait_for_rich_text (Gtk.TextBuffer buffer, out Gdk.Atom format);
+		[Version (since = "2.6")]
+		public Cairo.Surface? wait_for_surface ();
 		[Version (since = "2.4")]
 		public bool wait_for_targets ([CCode (array_length_cname = "n_targets", array_length_pos = 1.1)] out Gdk.Atom[] targets);
 		public string? wait_for_text ();
@@ -8785,11 +8789,11 @@ namespace Gtk {
 		[Version (since = "2.16")]
 		public unowned string? get_icon_name (Gtk.EntryIconPosition icon_pos);
 		[Version (since = "2.16")]
-		public unowned Gdk.Pixbuf? get_icon_pixbuf (Gtk.EntryIconPosition icon_pos);
-		[Version (since = "2.16")]
 		public bool get_icon_sensitive (Gtk.EntryIconPosition icon_pos);
 		[Version (since = "2.16")]
 		public Gtk.ImageType get_icon_storage_type (Gtk.EntryIconPosition icon_pos);
+		[Version (since = "3.94")]
+		public unowned Cairo.Surface? get_icon_surface (Gtk.EntryIconPosition icon_pos);
 		[Version (since = "2.16")]
 		public string? get_icon_tooltip_markup (Gtk.EntryIconPosition icon_pos);
 		[Version (since = "2.16")]
@@ -8848,8 +8852,8 @@ namespace Gtk {
 		public void set_icon_from_gicon (Gtk.EntryIconPosition icon_pos, GLib.Icon? icon);
 		[Version (since = "2.16")]
 		public void set_icon_from_icon_name (Gtk.EntryIconPosition icon_pos, string? icon_name);
-		[Version (since = "2.16")]
-		public void set_icon_from_pixbuf (Gtk.EntryIconPosition icon_pos, Gdk.Pixbuf? pixbuf);
+		[Version (since = "3.94")]
+		public void set_icon_from_surface (Gtk.EntryIconPosition icon_pos, Cairo.Surface? surface);
 		[Version (since = "2.16")]
 		public void set_icon_sensitive (Gtk.EntryIconPosition icon_pos, bool sensitive);
 		[Version (since = "2.16")]
@@ -8929,13 +8933,13 @@ namespace Gtk {
 		public string primary_icon_name { owned get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.16")]
-		public Gdk.Pixbuf primary_icon_pixbuf { owned get; set; }
-		[NoAccessorMethod]
-		[Version (since = "2.16")]
 		public bool primary_icon_sensitive { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.16")]
 		public Gtk.ImageType primary_icon_storage_type { get; }
+		[NoAccessorMethod]
+		[Version (since = "2.16")]
+		public Cairo.Surface primary_icon_surface { owned get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.16")]
 		public string primary_icon_tooltip_markup { owned get; set; }
@@ -8959,13 +8963,13 @@ namespace Gtk {
 		public string secondary_icon_name { owned get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.16")]
-		public Gdk.Pixbuf secondary_icon_pixbuf { owned get; set; }
-		[NoAccessorMethod]
-		[Version (since = "2.16")]
 		public bool secondary_icon_sensitive { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.16")]
 		public Gtk.ImageType secondary_icon_storage_type { get; }
+		[NoAccessorMethod]
+		[Version (since = "2.16")]
+		public Cairo.Surface secondary_icon_surface { owned get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.16")]
 		public string secondary_icon_tooltip_markup { owned get; set; }
@@ -9891,6 +9895,8 @@ namespace Gtk {
 		public Gdk.Pixbuf load_symbolic_for_context (Gtk.StyleContext context, out bool was_symbolic = null) throws GLib.Error;
 		[Version (since = "3.8")]
 		public async Gdk.Pixbuf load_symbolic_for_context_async (Gtk.StyleContext context, GLib.Cancellable? cancellable = null, out bool was_symbolic = null) throws GLib.Error;
+		[Version (since = "3.94")]
+		public Gsk.Texture load_texture ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_icon_theme_get_type ()")]
 	public class IconTheme : GLib.Object {
@@ -10130,8 +10136,6 @@ namespace Gtk {
 		[Version (since = "2.8")]
 		public void clear ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public Image.from_animation (Gdk.PixbufAnimation animation);
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Image.from_file (string filename);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.14")]
@@ -10147,16 +10151,15 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "3.10")]
 		public Image.from_surface (Cairo.Surface? surface);
-		public unowned Gdk.PixbufAnimation? get_animation ();
 		[Version (since = "2.14")]
 		public void get_gicon (out unowned GLib.Icon gicon, [CCode (type = "GtkIconSize*")] out Gtk.IconSize size);
 		[Version (since = "2.6")]
 		public void get_icon_name (out unowned string icon_name, [CCode (type = "GtkIconSize*")] out Gtk.IconSize size);
-		public unowned Gdk.Pixbuf? get_pixbuf ();
 		[Version (since = "2.6")]
 		public int get_pixel_size ();
 		public Gtk.ImageType get_storage_type ();
-		public void set_from_animation (Gdk.PixbufAnimation animation);
+		[Version (since = "3.94.0")]
+		public unowned Cairo.Surface? get_surface ();
 		public void set_from_file (string? filename);
 		[Version (since = "2.14")]
 		public void set_from_gicon (GLib.Icon icon, [CCode (type = "GtkIconSize")] Gtk.IconSize size);
@@ -10178,10 +10181,6 @@ namespace Gtk {
 		public string icon_name { owned get; set; }
 		[NoAccessorMethod]
 		public int icon_size { get; set; }
-		[NoAccessorMethod]
-		public Gdk.Pixbuf pixbuf { owned get; set; }
-		[NoAccessorMethod]
-		public Gdk.PixbufAnimation pixbuf_animation { owned get; set; }
 		[Version (since = "2.6")]
 		public int pixel_size { get; set; }
 		[NoAccessorMethod]
@@ -12039,7 +12038,6 @@ namespace Gtk {
 		public GLib.Icon? get_gicon ();
 		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
 		public string[] get_groups ();
-		public Gdk.Pixbuf? get_icon (int size);
 		public unowned string get_mime_type ();
 		public time_t get_modified ();
 		public bool get_private_hint ();
@@ -12347,6 +12345,8 @@ namespace Gtk {
 		public Gdk.Pixbuf? get_pixbuf ();
 		[Version (since = "2.16")]
 		public Gdk.Atom get_selection ();
+		[Version (since = "3.94")]
+		public Cairo.Surface? get_surface ();
 		[Version (since = "2.14")]
 		public Gdk.Atom get_target ();
 		public bool get_targets ([CCode (array_length_cname = "n_atoms", array_length_pos = 1.1)] out Gdk.Atom[] targets);
@@ -12357,6 +12357,8 @@ namespace Gtk {
 		public void @set (Gdk.Atom type, int format, [CCode (array_length_cname = "length", array_length_pos = 3.1)] uint8[] data);
 		[Version (since = "2.6")]
 		public bool set_pixbuf (Gdk.Pixbuf pixbuf);
+		[Version (since = "3.94")]
+		public bool set_surface (Cairo.Surface surface);
 		public bool set_text (string str, int len);
 		[Version (since = "2.6")]
 		public bool set_uris ([CCode (array_length = false, array_null_terminated = true)] string[] uris);
@@ -14782,7 +14784,7 @@ namespace Gtk {
 		[Version (since = "3.4")]
 		public unowned Gtk.Widget? get_attached_to ();
 		public bool get_decorated ();
-		public static GLib.List<weak Gdk.Pixbuf> get_default_icon_list ();
+		public static GLib.List<weak Cairo.Surface> get_default_icon_list ();
 		[Version (since = "2.16")]
 		public static unowned string get_default_icon_name ();
 		public void get_default_size (out int width, out int height);
@@ -14799,8 +14801,8 @@ namespace Gtk {
 		public Gdk.Gravity get_gravity ();
 		[Version (since = "2.10")]
 		public unowned Gtk.WindowGroup get_group ();
-		public unowned Gdk.Pixbuf get_icon ();
-		public GLib.List<weak Gdk.Pixbuf> get_icon_list ();
+		public unowned Cairo.Surface get_icon ();
+		public GLib.List<weak Cairo.Surface> get_icon_list ();
 		[Version (since = "2.6")]
 		public unowned string? get_icon_name ();
 		public Gdk.ModifierType get_mnemonic_modifier ();
@@ -14851,10 +14853,10 @@ namespace Gtk {
 		public void set_decorated (bool setting);
 		public void set_default (Gtk.Widget? default_widget);
 		[Version (since = "2.4")]
-		public static void set_default_icon (Gdk.Pixbuf icon);
+		public static void set_default_icon (Cairo.Surface icon);
 		[Version (since = "2.2")]
 		public static bool set_default_icon_from_file (string filename) throws GLib.Error;
-		public static void set_default_icon_list (owned GLib.List<weak Gdk.Pixbuf> list);
+		public static void set_default_icon_list (owned GLib.List<weak Cairo.Surface> list);
 		[Version (since = "2.6")]
 		public static void set_default_icon_name (string name);
 		public void set_default_size (int width, int height);
@@ -14868,10 +14870,10 @@ namespace Gtk {
 		public void set_gravity (Gdk.Gravity gravity);
 		[Version (since = "3.0")]
 		public void set_has_user_ref_count (bool setting);
-		public void set_icon (Gdk.Pixbuf? icon);
+		public void set_icon (Cairo.Surface? icon);
 		[Version (since = "2.2")]
 		public bool set_icon_from_file (string filename) throws GLib.Error;
-		public void set_icon_list (GLib.List<Gdk.Pixbuf> list);
+		public void set_icon_list (GLib.List<Cairo.Surface> list);
 		[Version (since = "2.6")]
 		public void set_icon_name (string? name);
 		[Version (since = "3.14")]
@@ -14932,7 +14934,7 @@ namespace Gtk {
 		public bool focus_visible { get; set; }
 		[Version (since = "2.4")]
 		public Gdk.Gravity gravity { get; set; }
-		public Gdk.Pixbuf icon { get; set; }
+		public Cairo.Surface icon { get; set; }
 		[Version (since = "2.6")]
 		public string icon_name { get; set; }
 		[NoAccessorMethod]
@@ -16080,8 +16082,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_IMAGE_", type_id = "gtk_image_type_get_type ()")]
 	public enum ImageType {
 		EMPTY,
-		PIXBUF,
-		ANIMATION,
 		ICON_NAME,
 		GICON,
 		SURFACE
@@ -17269,8 +17269,6 @@ namespace Gtk {
 	[Version (since = "2.8")]
 	public static void drag_set_icon_name (Gdk.DragContext context, string icon_name, int hot_x, int hot_y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_set_icon_pixbuf (Gdk.DragContext context, Gdk.Pixbuf pixbuf, int hot_x, int hot_y);
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_set_icon_surface (Gdk.DragContext context, Cairo.Surface surface);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_set_icon_widget (Gdk.DragContext context, Gtk.Widget widget, int hot_x, int hot_y);
@@ -17296,6 +17294,9 @@ namespace Gtk {
 	public static void drag_source_set_icon_name (Gtk.Widget widget, string icon_name);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_source_set_icon_pixbuf (Gtk.Widget widget, Gdk.Pixbuf pixbuf);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (since = "3.94")]
+	public static void drag_source_set_icon_surface (Gtk.Widget widget, Cairo.Surface surface);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.4")]
 	public static void drag_source_set_target_list (Gtk.Widget widget, Gtk.TargetList? target_list);
