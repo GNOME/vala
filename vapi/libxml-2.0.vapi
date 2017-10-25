@@ -1155,6 +1155,18 @@ namespace Xml {
 		[CCode (cname = "xmlTextWriterEndAttribute")]
 		public int end_attribute ();
 
+		[CCode (cname = "xmlTextWriterEndDTD")]
+		public int end_dtd ();
+
+		[CCode (cname = "xmlTextWriterEndDTDAttlist")]
+		public int end_dtd_attlist ();
+
+		[CCode (cname = "xmlTextWriterEndDTDElement")]
+		public int end_dtd_element ();
+
+		[CCode (cname = "xmlTextWriterEndDTDEntity")]
+		public int end_dtd_entity ();
+
 		/* Start */
 
 		[CCode (cname = "xmlTextWriterStartCDATA")]
@@ -1177,6 +1189,18 @@ namespace Xml {
 
 		[CCode (cname = "xmlTextWriterStartAttributeNS")]
 		public int start_attribute_ns ([CCode (type = "xmlChar*")] string? prefix, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? namespaceURI);
+
+		[CCode (cname = "xmlTextWriterStartDTD")]
+		public int start_dtd ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? pubid, [CCode (type = "xmlChar*")] string? sysid);
+
+		[CCode (cname = "xmlTextWriterStartDTDAttlist")]
+		public int start_dtd_attlist ([CCode (type = "xmlChar*")] string name);
+
+		[CCode (cname = "xmlTextWriterStartDTDElement")]
+		public int start_dtd_element ([CCode (type = "xmlChar*")] string name);
+
+		[CCode (cname = "xmlTextWriterStartDTDEntity")]
+		public int start_dtd_entity (bool pe, [CCode (type = "xmlChar*")] string name);
 
 		/* write */
 
@@ -1206,6 +1230,33 @@ namespace Xml {
 
 		[CCode (cname = "xmlTextWriterWriteString")]
 		public int write_string ([CCode (type = "xmlChar*")] string content);
+
+		[CCode (cname = "xmlTextWriterWriteDocType")]
+		public int write_document_type ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? pubid, [CCode (type = "xmlChar*")] string? sysid, [CCode (type = "xmlChar*")] string? subset);
+
+		[CCode (cname = "xmlTextWriterWriteDTD")]
+		public int write_dtd ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? pubid, [CCode (type = "xmlChar*")] string? sysid, [CCode (type = "xmlChar*")] string? subset);
+
+		[CCode (cname = "xmlTextWriterWriteDTDAttlist")]
+		public int write_dtd_attlist ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string content);
+
+		[CCode (cname = "xmlTextWriterWriteDTDElement")]
+		public int write_dtd_element ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string content);
+
+		[CCode (cname = "xmlTextWriterWriteDTDEntity")]
+		public int write_dtd_entity ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? pubid, [CCode (type = "xmlChar*")] string? sysid, [CCode (type = "xmlChar*")] string ndataid, [CCode (type = "xmlChar*")] string content);
+
+		[CCode (cname = "xmlTextWriterWriteDTDExternalEntity")]
+		public int write_dtd_external_entity (bool pe, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? pubid, [CCode (type = "xmlChar*")] string? sysid, [CCode (type = "xmlChar*")] string ndataid);
+
+		[CCode (cname = "xmlTextWriterWriteDTDExternalEntityContents")]
+		public int write_dtd_external_entity_contents ([CCode (type = "xmlChar*")] string? pubid, [CCode (type = "xmlChar*")] string? sysid, [CCode (type = "xmlChar*")] string ndataid);
+
+		[CCode (cname = "xmlTextWriterWriteDTDInternalEntity")]
+		public int write_dtd_internal_entity (bool pe, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string content);
+
+		[CCode (cname = "xmlTextWriterWriteDTDNotation")]
+		public int write_dtd_notation ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? pubid, [CCode (type = "xmlChar*")] string? sysid);
 
 		/* formatted */
 
