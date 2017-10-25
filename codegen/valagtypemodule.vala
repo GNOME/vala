@@ -554,7 +554,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		prop_enum = new CCodeEnum ();
-		prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (get_ccode_upper_case_name (cl, null))));
+		prop_enum.add_value (new CCodeEnumValue ("%s_0_PROPERTY".printf (get_ccode_upper_case_name (cl, null))));
 		signal_enum = new CCodeEnum ();
 		class_init_context = new EmitContext (cl);
 		base_init_context = new EmitContext (cl);
@@ -620,7 +620,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			if (cl.get_signals ().size > 0) {
-				var last_signal = "%s_LAST_SIGNAL".printf (get_ccode_upper_case_name (cl));
+				var last_signal = "%s_NUM_SIGNALS".printf (get_ccode_upper_case_name (cl));
 				signal_enum.add_value (new CCodeEnumValue (last_signal));
 				cfile.add_type_declaration (signal_enum);
 
@@ -2072,7 +2072,7 @@ public class Vala.GTypeModule : GErrorModule {
 		iface.accept_children (this);
 
 		if (iface.get_signals ().size > 0) {
-			var last_signal = "%s_LAST_SIGNAL".printf (get_ccode_upper_case_name (iface));
+			var last_signal = "%s_NUM_SIGNALS".printf (get_ccode_upper_case_name (iface));
 			signal_enum.add_value (new CCodeEnumValue (last_signal));
 			cfile.add_type_declaration (signal_enum);
 
