@@ -554,7 +554,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		prop_enum = new CCodeEnum ();
-		prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (get_ccode_upper_case_name (cl, null))));
+		prop_enum.add_value (new CCodeEnumValue ("%s_0_PROPERTY".printf (get_ccode_upper_case_name (cl, null))));
 		class_init_context = new EmitContext (cl);
 		base_init_context = new EmitContext (cl);
 		class_finalize_context = new EmitContext (cl);
