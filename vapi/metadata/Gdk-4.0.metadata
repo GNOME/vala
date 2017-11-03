@@ -31,6 +31,10 @@ ModifierType
         .modifier_reserved_*_mask skip
 pango_layout_get_clip_region skip=false
 property_change skip=false
+Screen skip
+Texture
+        // Factory method
+        .new_* symbol_type="function" name="new_(.+)"
 Window
         .destroy destroys_instance
         .destroy_notify skip
@@ -67,7 +71,6 @@ EventSetting struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventTouch struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventTouchpadPinch struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventTouchpadSwipe struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
-EventVisibility struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 EventWindowState struct=false base_type="Gdk.Event" type_id="gdk_event_get_type ()"
 FilterFunc.data closure=2
 property_change.data array
