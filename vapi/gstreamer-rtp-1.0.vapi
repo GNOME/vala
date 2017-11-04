@@ -472,7 +472,8 @@ namespace Gst {
 			BYE,
 			APP,
 			RTPFB,
-			PSFB
+			PSFB,
+			XR
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTCP_MAX_BYE_SSRC_COUNT")]
 		public const int MAX_BYE_SSRC_COUNT;

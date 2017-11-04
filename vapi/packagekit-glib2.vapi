@@ -940,6 +940,8 @@ namespace Pk {
 		public bool set_error_code (Pk.Error item);
 		[Version (since = "0.5.2")]
 		public bool set_exit_code (Pk.Exit exit_enum);
+		[Version (since = "1.1.8")]
+		public bool set_role (Pk.Role role);
 		[NoAccessorMethod]
 		[Version (since = "0.5.3")]
 		public uint inputs { get; set; }
