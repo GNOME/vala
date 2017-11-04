@@ -715,7 +715,7 @@ namespace WebKit {
 			public long get_scroll_width ();
 			public WebKit.DOM.CSSStyleDeclaration get_style ();
 			public string get_tag_name ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.20")]
 			public string get_webkit_region_overset ();
 			public bool has_attribute (string name);
 			public bool has_attribute_ns (string namespaceURI, string localName);
