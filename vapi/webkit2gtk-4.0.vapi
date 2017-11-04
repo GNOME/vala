@@ -155,11 +155,17 @@ namespace WebKit {
 	public class CookieManager : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected CookieManager ();
+		[Version (since = "2.20")]
+		public async bool add_cookie (Soup.Cookie cookie, GLib.Cancellable? cancellable) throws GLib.Error;
 		[Version (deprecated = true, deprecated_since = "2.16")]
 		public void delete_all_cookies ();
+		[Version (since = "2.20")]
+		public async bool delete_cookie (Soup.Cookie cookie, GLib.Cancellable? cancellable) throws GLib.Error;
 		[Version (deprecated = true, deprecated_since = "2.16")]
 		public void delete_cookies_for_domain (string domain);
 		public async WebKit.CookieAcceptPolicy get_accept_policy (GLib.Cancellable? cancellable) throws GLib.Error;
+		[Version (since = "2.20")]
+		public async GLib.List<Soup.Cookie> get_cookies (string uri, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (deprecated = true, deprecated_since = "2.16")]
 		public async string[] get_domains_with_cookies (GLib.Cancellable? cancellable) throws GLib.Error;
@@ -220,6 +226,16 @@ namespace WebKit {
 		protected EditorState ();
 		[Version (since = "2.10")]
 		public uint get_typing_attributes ();
+		[Version (since = "2.20")]
+		public bool is_copy_available ();
+		[Version (since = "2.20")]
+		public bool is_cut_available ();
+		[Version (since = "2.20")]
+		public bool is_paste_available ();
+		[Version (since = "2.20")]
+		public bool is_redo_available ();
+		[Version (since = "2.20")]
+		public bool is_undo_available ();
 		[Version (since = "2.10")]
 		public uint typing_attributes { get; }
 	}
@@ -351,6 +367,8 @@ namespace WebKit {
 		public WebKit.NavigationType get_navigation_type ();
 		[Version (since = "2.6")]
 		public unowned WebKit.URIRequest get_request ();
+		[Version (since = "2.20")]
+		public bool is_redirect ();
 		[Version (since = "2.6")]
 		public bool is_user_gesture ();
 	}
@@ -582,6 +600,10 @@ namespace WebKit {
 	public class Settings : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Settings ();
+		[Version (since = "2.20")]
+		public static uint32 font_size_to_pixels (uint32 points);
+		[Version (since = "2.20")]
+		public static uint32 font_size_to_points (uint32 pixels);
 		[Version (since = "2.10")]
 		public bool get_allow_file_access_from_file_urls ();
 		public bool get_allow_modal_dialogs ();
