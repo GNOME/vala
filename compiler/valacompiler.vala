@@ -97,6 +97,7 @@ class Vala.Compiler {
 	static string entry_point;
 
 	static bool run_output;
+	static string run_args;
 
 	private CodeContext context;
 
@@ -157,6 +158,7 @@ class Vala.Compiler {
 		{ "gresourcesdir", 0, 0, OptionArg.FILENAME_ARRAY, ref gresources_directories, "Look for resources in DIRECTORY", "DIRECTORY..." },
 		{ "enable-version-header", 0, 0, OptionArg.NONE, ref enable_version_header, "Write vala build version in generated files", null },
 		{ "disable-version-header", 0, 0, OptionArg.NONE, ref disable_version_header, "Do not write vala build version in generated files", null },
+		{ "run-args", 0, 0, OptionArg.STRING, ref run_args, "Arguments passed to directly compiled executeable", null },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
 		{ null }
 	};
@@ -504,27 +506,15 @@ class Vala.Compiler {
 	}
 
 	static int run_source (string[] args) {
-		int i = 1;
-		if (args[i] != null && args[i].has_prefix ("-")) {
-			try {
-				string[] compile_args;
-				Shell.parse_argv ("valac " + args[1], out compile_args);
-
-				var opt_context = new OptionContext ("- Vala");
-				opt_context.set_help_enabled (true);
-				opt_context.add_main_entries (options, null);
-				unowned string[] temp_args = compile_args;
-				opt_context.parse (ref temp_args);
-			} catch (ShellError e) {
-				stdout.printf ("%s\n", e.message);
-				return 1;
-			} catch (OptionError e) {
-				stdout.printf ("%s\n", e.message);
-				stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
-				return 1;
-			}
-
-			i++;
+		try {
+			var opt_context = new OptionContext ("- Vala Interpreter");
+			opt_context.set_help_enabled (true);
+			opt_context.add_main_entries (options, null);
+			opt_context.parse (ref args);
+		} catch (OptionError e) {
+			stdout.printf ("%s\n", e.message);
+			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
+			return 1;
 		}
 
 		if (version) {
@@ -534,22 +524,25 @@ class Vala.Compiler {
 			stdout.printf ("%s\n", Config.API_VERSION);
 			return 0;
 		}
-		
-		if (args[i] == null) {
+
+		if (sources == null) {
 			stderr.printf ("No source file specified.\n");
 			return 1;
 		}
 
-		sources = { args[i] };
-		output = "%s/%s.XXXXXX".printf (Environment.get_tmp_dir (), Path.get_basename (args[i]));
+		output = "%s/%s.XXXXXX".printf (Environment.get_tmp_dir (), Path.get_basename (sources[0]));
 		int outputfd = FileUtils.mkstemp (output);
 		if (outputfd < 0) {
 			return 1;
 		}
 
+		ccode_only = false;
+		compile_only = false;
 		run_output = true;
 		disable_warnings = true;
 		quiet_mode = true;
+		library = null;
+		shared_library = null;
 
 		var compiler = new Compiler ();
 		int ret = compiler.run ();
@@ -564,9 +557,9 @@ class Vala.Compiler {
 		}
 
 		string[] target_args = { output };
-		while (i < args.length) {
-			target_args += args[i];
-			i++;
+		string[] target_run_args = run_args.split (" ");
+		foreach (string arg in target_run_args) {
+			target_args += arg;
 		}
 
 		try {
@@ -574,7 +567,7 @@ class Vala.Compiler {
 			var loop = new MainLoop ();
 			int child_status = 0;
 
-			Process.spawn_async (null, target_args, null, SpawnFlags.CHILD_INHERITS_STDIN | SpawnFlags.DO_NOT_REAP_CHILD | SpawnFlags.FILE_AND_ARGV_ZERO, null, out pid);
+			Process.spawn_async (null, target_args, null, SpawnFlags.CHILD_INHERITS_STDIN | SpawnFlags.DO_NOT_REAP_CHILD, null, out pid);
 
 			FileUtils.unlink (output);
 			ChildWatch.add (pid, (pid, status) => {
