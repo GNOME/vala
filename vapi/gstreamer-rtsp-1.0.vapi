@@ -52,6 +52,8 @@ namespace Gst {
 			public Gst.RTSP.Result receive (Gst.RTSP.Message message, GLib.TimeVal timeout);
 			public Gst.RTSP.Result reset_timeout ();
 			public Gst.RTSP.Result send (Gst.RTSP.Message message, GLib.TimeVal timeout);
+			[Version (since = "1.14")]
+			public void set_accept_certificate_func (owned Gst.RTSP.ConnectionAcceptCertificateFunc func);
 			public Gst.RTSP.Result set_auth (Gst.RTSP.AuthMethod method, string user, string pass);
 			public void set_auth_param (string param, string value);
 			public void set_http_mode (bool enable);
@@ -503,6 +505,8 @@ namespace Gst {
 			@1_1,
 			@2_0
 		}
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h", instance_pos = 3.9)]
+		public delegate bool ConnectionAcceptCertificateFunc (GLib.TlsConnection conn, GLib.TlsCertificate peer_cert, GLib.TlsCertificateFlags errors);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cname = "GST_RTSP_DEFAULT_PORT")]
 		public const int _DEFAULT_PORT;
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]

@@ -197,7 +197,7 @@ namespace Gst {
 			public weak string uri;
 			public weak string version;
 			public weak GLib.Array<void*> zones;
-			public Gst.SDP.Result add_attribute (string key, string value);
+			public Gst.SDP.Result add_attribute (string key, string? value);
 			public Gst.SDP.Result add_bandwidth (string bwtype, uint bandwidth);
 			public Gst.SDP.Result add_email (string email);
 			public Gst.SDP.Result add_media (Gst.SDP.Media media);
@@ -290,7 +290,7 @@ namespace Gst {
 			[Version (since = "1.2")]
 			public Gst.SDP.Result clear ();
 			[Version (since = "1.2")]
-			public Gst.SDP.Result @set (string key, string value);
+			public Gst.SDP.Result @set (string key, string? value);
 		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", has_type_id = false)]
 		[GIR (name = "SDPBandwidth")]
@@ -348,7 +348,7 @@ namespace Gst {
 			public weak GLib.Array<void*> bandwidths;
 			public Gst.SDP.Key key;
 			public weak GLib.Array<void*> attributes;
-			public Gst.SDP.Result add_attribute (string key, string value);
+			public Gst.SDP.Result add_attribute (string key, string? value);
 			public Gst.SDP.Result add_bandwidth (string bwtype, uint bandwidth);
 			public Gst.SDP.Result add_connection (string nettype, string addrtype, string address, uint ttl, uint addr_number);
 			public Gst.SDP.Result add_format (string format);

@@ -1229,6 +1229,12 @@ namespace Gst {
 		public class unowned GLib.List<Gst.PadTemplate> class_get_pad_template_list ();
 		public Gst.StateChangeReturn continue_state (Gst.StateChangeReturn ret);
 		public void create_all_pads ();
+		[Version (since = "1.14")]
+		public bool foreach_pad (Gst.ElementForeachPadFunc func);
+		[Version (since = "1.14")]
+		public bool foreach_sink_pad (Gst.ElementForeachPadFunc func);
+		[Version (since = "1.14")]
+		public bool foreach_src_pad (Gst.ElementForeachPadFunc func);
 		public Gst.ClockTime get_base_time ();
 		public Gst.Bus get_bus ();
 		public Gst.Clock get_clock ();
@@ -3746,6 +3752,9 @@ namespace Gst {
 	public delegate void DebugFuncPtr ();
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 1.9)]
 	public delegate void ElementCallAsyncFunc (Gst.Element element);
+	[CCode (cheader_filename = "gst/gst.h", instance_pos = 2.9)]
+	[Version (since = "1.14")]
+	public delegate bool ElementForeachPadFunc (Gst.Element element, Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void IteratorCopyFunction (Gst.Iterator it, Gst.Iterator copy);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 2.9)]
