@@ -451,6 +451,17 @@ public class Vala.CodeContext {
 	}
 
 	/**
+     	 * OSS:Enh:Add custom attributes
+	 * Adds the specified attribute to list.
+	 *
+	 * @param attr_name an attribute type name
+	 * @param parm_name an attribute argument name
+	 */
+	public void add_custom_attribute (string attr_name, string parm_name) {
+		used_attr.mark (attr_name, parm_name);
+	}
+
+	/**
 	 * Visits the complete code tree file by file.
 	 * It is possible to add new source files while visiting the tree.
 	 *

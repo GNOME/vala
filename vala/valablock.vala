@@ -111,6 +111,16 @@ public class Vala.Block : Symbol, Statement {
 	public List<LocalVariable> get_local_variables () {
 		return local_variables;
 	}
+	
+	//OSS:Enh:Expose constants to LanguageServer via Visitor.visit_block
+	/**
+	 * Returns a copy of the list of local constants.
+	 *
+	 * @return constant declarator list
+	 */
+	public List<Constant> get_local_constants () {
+		return local_constants;
+	}
 
 	public void add_local_constant (Constant constant) {
 		var parent_block = parent_symbol;
