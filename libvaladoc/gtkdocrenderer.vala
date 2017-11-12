@@ -188,10 +188,10 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 			writer.text ("\"");
 			element.accept_children (this);
 			writer.text ("\" (");
-			visit_symbol_link (element);
+			write_symbol_link (element);
 			writer.text (")");
 		} else {
-			visit_symbol_link (element);
+			write_symbol_link (element);
 		}
 	}
 
