@@ -3,7 +3,6 @@ selection_* name="selection_(.+)" parent="Gdk.Selection"
 
 *.ref unowned
 
-Atom struct
 Cursor	abstract=false
 Device
         .free_history skip=false
@@ -26,6 +25,8 @@ Rectangle struct
         .y skip
         .width skip
         .height skip
+selection_add_targets.targets array array_length_idx=-1
+selection_add_targets.n_targets skip
 RGBA struct
 ModifierType
         .modifier_reserved_*_mask skip
@@ -37,8 +38,6 @@ Texture
         .new_* symbol_type="function" name="new_(.+)"
 Window
         .destroy destroys_instance
-        .destroy_notify skip
-synthesize_window_state skip
 
 // g-i doesn't support nullable fields and properties (bug #730479)
 Device

@@ -6,8 +6,6 @@ X11* name="X11(.+)" parent="Gdk.X11"
 X11Display
 	.broadcast_startup_message skip=false
 
-VisualType skip
-
 X11Window
 	.foreign_new_for_display name="foreign_for_display"
 
