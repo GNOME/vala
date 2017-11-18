@@ -195,7 +195,7 @@ public class Vala.Constant : Symbol, Lockable {
 		} else if (type is ArrayType) {
 			var array_type = type as ArrayType;
 			return check_const_type (array_type.element_type, context);
-		} else if (type.data_type == context.analyzer.string_type.data_type) {
+		} else if (type.data_type.is_subtype_of (context.analyzer.string_type.data_type)) {
 			return true;
 		} else {
 			return false;
