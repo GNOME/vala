@@ -3065,7 +3065,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);
 				if (nv[0] == "name") {
-					sig.set_attribute_string ("CCode", "cname", sig.name);
+					sig.set_attribute_string ("CCode", "cname", sig.name.replace ("_", "-"));
 					sig.name = eval (nv[1]);
 				} else if (nv[0] == "has_emitter" && eval (nv[1]) == "1") {
 					sig.set_attribute ("HasEmitter", true);
