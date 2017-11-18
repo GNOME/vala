@@ -6008,10 +6008,10 @@ namespace Gtk {
 		public bool urgency_hint { get; set; }
 		[NoAccessorMethod]
 		public Gtk.WindowPosition window_position { get; set; }
-		[CCode (cname = "activate_default")]
+		[CCode (cname = "activate-default")]
 		[Version (experimental = true)]
 		public virtual signal void default_activated ();
-		[CCode (cname = "activate_focus")]
+		[CCode (cname = "activate-focus")]
 		[Version (experimental = true)]
 		public virtual signal void focus_activated ();
 		public virtual signal bool frame_event (Gdk.Event event);
