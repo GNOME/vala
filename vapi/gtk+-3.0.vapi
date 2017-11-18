@@ -3856,7 +3856,7 @@ namespace Gtk {
 		public virtual signal void open_location (GLib.File p0, Gtk.PlacesOpenFlags p1);
 		public virtual signal void populate_popup (Gtk.Menu p0, GLib.File? p1, GLib.Volume? p2);
 		public virtual signal void show_error_message (string p0, string p1);
-		[CCode (cname = "show_other_locations")]
+		[CCode (cname = "show-other-locations")]
 		[Version (experimental = true)]
 		public virtual signal void show_other_locations_requested ();
 		public virtual signal void show_other_locations_with_flags (Gtk.PlacesOpenFlags p0);
@@ -7263,11 +7263,11 @@ namespace Gtk {
 		public bool urgency_hint { get; set; }
 		[NoAccessorMethod]
 		public Gtk.WindowPosition window_position { get; set; }
-		[CCode (cname = "activate_default")]
+		[CCode (cname = "activate-default")]
 		[Version (experimental = true)]
 		public virtual signal void default_activated ();
 		public virtual signal bool enable_debugging (bool toggle);
-		[CCode (cname = "activate_focus")]
+		[CCode (cname = "activate-focus")]
 		[Version (experimental = true)]
 		public virtual signal void focus_activated ();
 		public virtual signal void keys_changed ();
