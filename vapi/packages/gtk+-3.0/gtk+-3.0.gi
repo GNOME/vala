@@ -19986,6 +19986,12 @@
 					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
 				</parameters>
 			</method>
+			<method name="get_show_starred_location" symbol="gtk_places_sidebar_get_show_starred_location">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
+				</parameters>
+			</method>
 			<method name="get_show_trash" symbol="gtk_places_sidebar_get_show_trash">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -20072,6 +20078,13 @@
 					<parameter name="show_recent" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_show_starred_location" symbol="gtk_places_sidebar_set_show_starred_location">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="sidebar" type="GtkPlacesSidebar*"/>
+					<parameter name="show_starred_location" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_show_trash" symbol="gtk_places_sidebar_set_show_trash">
 				<return-type type="void"/>
 				<parameters>
@@ -20088,6 +20101,7 @@
 			<property name="show-enter-location" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-other-locations" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-recent" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-starred-location" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-trash" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="drag-action-ask" when="LAST">
 				<return-type type="gint"/>
@@ -20165,6 +20179,13 @@
 				</parameters>
 			</signal>
 			<signal name="show-other-locations-with-flags" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkPlacesSidebar*"/>
+					<parameter name="p0" type="GtkPlacesOpenFlags"/>
+				</parameters>
+			</signal>
+			<signal name="show-starred-location" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="object" type="GtkPlacesSidebar*"/>
@@ -36501,15 +36522,15 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="2219"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="2226"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="19"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="26"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_FULL" type="char*" value="full"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="19"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="26"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="22"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
