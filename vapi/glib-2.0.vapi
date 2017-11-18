@@ -2774,6 +2774,8 @@ namespace GLib {
 	[CCode (type_id = "G_TYPE_DATE")]
 	public struct Date {
 		public void clear (uint n_dates = 1);
+		[Version (since = "2.56")]
+		public Date copy ();
 		public void set_day (DateDay day);
 		public void set_month (DateMonth month);
 		public void set_year (DateYear year);
@@ -3113,6 +3115,9 @@ namespace GLib {
 		public static string get_dirname (string file_name);
 		[CCode (cname = "g_build_filename")]
 		public static string build_filename (string first_element, ...);
+		[Version (since = "2.56")]
+		[CCode (cname = "g_build_filename_valist")]
+		public static string build_filename_valist (string first_element, va_list args);
 		[CCode (cname = "g_build_path")]
 		public static string build_path (string separator, string first_element, ...);
 
@@ -5354,6 +5359,7 @@ namespace GLib {
 		public const uint @2_50;
 		public const uint @2_52;
 		public const uint @2_54;
+		public const uint @2_56;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;

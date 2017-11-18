@@ -583,7 +583,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		protected DBusActionGroup ();
 		[Version (since = "2.32")]
-		public static GLib.DBusActionGroup @get (GLib.DBusConnection connection, string bus_name, string object_path);
+		public static GLib.DBusActionGroup @get (GLib.DBusConnection connection, string? bus_name, string object_path);
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_annotation_info_ref", type_id = "g_dbus_annotation_info_get_type ()", unref_function = "g_dbus_annotation_info_unref")]
 	[Compact]
@@ -749,7 +749,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		protected DBusMenuModel ();
 		[Version (since = "2.32")]
-		public static GLib.DBusMenuModel @get (GLib.DBusConnection connection, string bus_name, string object_path);
+		public static GLib.DBusMenuModel @get (GLib.DBusConnection connection, string? bus_name, string object_path);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_message_get_type ()")]
 	[Version (since = "2.26")]
@@ -3210,11 +3210,11 @@ namespace GLib {
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "2.34")]
 		public abstract unowned string[] get_supported_types ();
-		public abstract bool launch (GLib.List<GLib.File>? files, GLib.AppLaunchContext? launch_context) throws GLib.Error;
-		public static bool launch_default_for_uri (string uri, GLib.AppLaunchContext? launch_context) throws GLib.Error;
+		public abstract bool launch (GLib.List<GLib.File>? files, GLib.AppLaunchContext? context) throws GLib.Error;
+		public static bool launch_default_for_uri (string uri, GLib.AppLaunchContext? context) throws GLib.Error;
 		[Version (since = "2.50")]
-		public static async bool launch_default_for_uri_async (string uri, GLib.AppLaunchContext launch_context, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract bool launch_uris (GLib.List<string>? uris, GLib.AppLaunchContext? launch_context) throws GLib.Error;
+		public static async bool launch_default_for_uri_async (string uri, GLib.AppLaunchContext? context, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public abstract bool launch_uris (GLib.List<string>? uris, GLib.AppLaunchContext? context) throws GLib.Error;
 		public abstract bool remove_supports_type (string content_type) throws GLib.Error;
 		[Version (since = "2.20")]
 		public static void reset_type_associations (string content_type);
@@ -3465,6 +3465,10 @@ namespace GLib {
 		public abstract bool has_uri_scheme (string uri_scheme);
 		public abstract uint hash ();
 		public abstract bool is_native ();
+		[Version (since = "2.56")]
+		public GLib.Bytes load_bytes (GLib.Cancellable? cancellable = null, out string? etag_out = null) throws GLib.Error;
+		[Version (since = "2.56")]
+		public async GLib.Bytes load_bytes_async (GLib.Cancellable? cancellable = null, out string? etag_out) throws GLib.Error;
 		public bool load_contents (GLib.Cancellable? cancellable, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
 		public async bool load_contents_async (GLib.Cancellable? cancellable = null, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
 		public async bool load_partial_contents_async (GLib.Cancellable? cancellable = null, [CCode (delegate_target_pos = -0.9)] GLib.FileReadMoreCallback read_more_callback, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
