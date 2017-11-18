@@ -3989,6 +3989,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool is_initialized ();
 	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (since = "1.14")]
 	public static GLib.ParamSpec param_spec_array (string name, string nick, string blurb, GLib.ParamSpec element_spec, GLib.ParamFlags flags);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.ParamSpec param_spec_fraction (string name, string nick, string blurb, int min_num, int min_denom, int max_num, int max_denom, int default_num, int default_denom, GLib.ParamFlags flags);
