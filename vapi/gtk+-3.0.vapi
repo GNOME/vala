@@ -3825,6 +3825,7 @@ namespace Gtk {
 		public bool get_show_enter_location ();
 		public bool get_show_other_locations ();
 		public bool get_show_recent ();
+		public bool get_show_starred_location ();
 		public bool get_show_trash ();
 		public GLib.SList<GLib.File> list_shortcuts ();
 		public void remove_shortcut (GLib.File location);
@@ -3837,6 +3838,7 @@ namespace Gtk {
 		public void set_show_enter_location (bool show_enter_location);
 		public void set_show_other_locations (bool show_other_locations);
 		public void set_show_recent (bool show_recent);
+		public void set_show_starred_location (bool show_starred_location);
 		public void set_show_trash (bool show_trash);
 		public bool local_only { get; set; }
 		public GLib.File location { owned get; set; }
@@ -3848,11 +3850,14 @@ namespace Gtk {
 		public bool show_enter_location { get; set; }
 		public bool show_other_locations { get; set; }
 		public bool show_recent { get; set; }
+		public bool show_starred_location { get; set; }
 		public bool show_trash { get; set; }
 		public virtual signal int drag_action_ask (int p0);
 		public virtual signal int drag_action_requested (Gdk.DragContext p0, GLib.File p1, GLib.List<GLib.File> p2);
 		public virtual signal void drag_perform_drop (GLib.File p0, GLib.List<GLib.File> p1, int p2);
 		public virtual signal void mount (GLib.MountOperation p0);
+		[CCode (cname = "show-starred-location")]
+		public virtual signal void on_show_starred_location (Gtk.PlacesOpenFlags p0);
 		public virtual signal void open_location (GLib.File p0, Gtk.PlacesOpenFlags p1);
 		public virtual signal void populate_popup (Gtk.Menu p0, GLib.File? p1, GLib.Volume? p2);
 		public virtual signal void show_error_message (string p0, string p1);
