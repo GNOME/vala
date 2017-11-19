@@ -2002,7 +2002,7 @@ public class Vala.GTypeModule : GErrorModule {
 			cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
 		}
 		
-		var pflags = "G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB";
+		var pflags = "G_PARAM_STATIC_STRINGS";
 		if (prop.get_accessor != null && prop.get_accessor.access != SymbolAccessibility.PRIVATE) {
 			pflags = "%s%s".printf (pflags, " | G_PARAM_READABLE");
 		}
