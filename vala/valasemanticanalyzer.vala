@@ -822,7 +822,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				// trace type arguments back to the datatype where the method has been declared
 				var instance_type = get_instance_base_type_for_member (derived_instance_type, (TypeSymbol) generic_type.type_parameter.parent_symbol, node_reference);
 
-				assert (instance_type != null);
+				if (instance_type == null) {
+					Report.error (node_reference.source_reference, "The type-parameter `%s' must be defined on enclosing type".printf (generic_type.to_string ()));
+					node_reference.error = true;
+					return null;
+				}
 
 				int param_index;
 				if (instance_type is DelegateType) {
