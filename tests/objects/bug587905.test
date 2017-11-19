@@ -1,0 +1,10 @@
+Invalid Code
+
+class Generic<T> {
+	class Nested {
+		public T member;
+	}
+}
+
+void main () {
+}
