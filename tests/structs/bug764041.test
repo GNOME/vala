@@ -1,0 +1,10 @@
+Invalid Code
+
+struct N {
+	public int i;
+}
+
+void main() {
+	N n = { 42 };
+	Value v = n;
+}
