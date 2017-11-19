@@ -69,9 +69,23 @@ public class Vala.SwitchLabel : CodeNode {
 	
 	public override bool check (CodeContext context) {
 		if (expression != null) {
+			var switch_statement = (SwitchStatement) section.parent_node;
+
+			// enum-type inference
+			var condition_target_type = switch_statement.expression.target_type;
+			if (expression.symbol_reference == null && condition_target_type != null && condition_target_type.data_type is Enum) {
+				var enum_type = (Enum) condition_target_type.data_type;
+				foreach (var val in enum_type.get_values ()) {
+					if (expression.to_string () == val.name) {
+						expression.target_type = condition_target_type.copy ();
+						expression.symbol_reference = val;
+						break;
+					}
+				}
+			}
+
 			expression.check (context);
 
-			var switch_statement = (SwitchStatement) section.parent_node;
 			if (!expression.is_constant ()) {
 				error = true;
 				Report.error (expression.source_reference, "Expression must be constant");

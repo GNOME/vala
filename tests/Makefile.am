@@ -120,6 +120,7 @@ TESTS = \
 	enums/enum_only.vala \
 	enums/enums.vala \
 	enums/flags.vala \
+	enums/bug666035.vala \
 	enums/bug673879.vala \
 	enums/bug763831.vala \
 	enums/bug780050.vala \

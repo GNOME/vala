@@ -279,6 +279,24 @@ public class Vala.BinaryExpression : Expression {
 			return true;
 		}
 
+		// enum-type inference
+		if (target_type != null && target_type.data_type is Enum
+		    && (operator == BinaryOperator.BITWISE_AND || operator == BinaryOperator.BITWISE_OR)) {
+			left.target_type = target_type.copy ();
+			right.target_type = target_type.copy ();
+		}
+		left.check (context);
+		if (left.value_type != null && left.value_type.data_type is Enum
+		    && (operator == BinaryOperator.EQUALITY || operator == BinaryOperator.INEQUALITY)) {
+			right.target_type = left.value_type.copy ();
+		}
+		right.check (context);
+		if (right.value_type != null && right.value_type.data_type is Enum
+		    && (operator == BinaryOperator.EQUALITY || operator == BinaryOperator.INEQUALITY)) {
+			left.target_type = right.value_type.copy ();
+			//TODO bug 666035 -- re-check left how?
+		}
+
 		if (!left.check (context) || !right.check (context)) {
 			/* if there were any errors in inner expressions, skip type check */
 			error = true;

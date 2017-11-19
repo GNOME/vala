@@ -452,6 +452,17 @@ public class Vala.MemberAccess : Expression {
 			}
 		}
 
+		// enum-type inference
+		if (symbol_reference == null && target_type != null && target_type.data_type is Enum) {
+			var enum_type = (Enum) target_type.data_type;
+			foreach (var val in enum_type.get_values ()) {
+				if (member_name == val.name) {
+					symbol_reference = val;
+					break;
+				}
+			}
+		}
+
 		if (symbol_reference == null) {
 			error = true;
 
