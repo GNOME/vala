@@ -3969,6 +3969,10 @@ namespace Gst {
 	public const int VERSION_MINOR;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_VERSION_NANO")]
 	public const int VERSION_NANO;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_STIME_ARGS", use_inplace = true)]
+	public static uint STIME_ARGS (Gst.ClockTimeDiff t);
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_TIME_ARGS", use_inplace = true)]
+	public static uint TIME_ARGS (Gst.ClockTime t);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void deinit ();
 	[CCode (cheader_filename = "gst/gst.h")]

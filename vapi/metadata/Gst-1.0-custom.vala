@@ -126,4 +126,9 @@ namespace Gst {
 		public T pop ();
 		public void push (owned T data);
 	}
+
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_TIME_ARGS", use_inplace = true)]
+	public static uint TIME_ARGS (Gst.ClockTime t);
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_STIME_ARGS", use_inplace = true)]
+	public static uint STIME_ARGS (Gst.ClockTimeDiff t);
 }
