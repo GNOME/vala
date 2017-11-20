@@ -9,6 +9,10 @@ namespace Gst {
 		public const int FG_MASK;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_DEBUG_FORMAT_MASK")]
 		public const int FORMAT_MASK;
+		[CCode (cheader_filename = "gst/gst.h", cname = "GST_DEBUG_BIN_TO_DOT_FILE")]
+		public static void BIN_TO_DOT_FILE (Gst.Bin bin, Gst.DebugGraphDetails details, string file_name);
+		[CCode (cheader_filename = "gst/gst.h", cname = "GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS")]
+		public static void BIN_TO_DOT_FILE_WITH_TS (Gst.Bin bin, Gst.DebugGraphDetails details, string file_name);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void add_log_function (owned Gst.LogFunction func);
 		[CCode (cheader_filename = "gst/gst.h")]
