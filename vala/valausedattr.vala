@@ -39,7 +39,8 @@ public class Vala.UsedAttr : CodeVisitor {
 		"has_copy_function", "lower_case_csuffix", "ref_sink_function", "dup_function", "finish_function", "generic_type_pos",
 		"array_length_type", "array_length", "array_length_cname", "array_length_cexpr", "array_null_terminated",
 		"vfunc_name", "finish_vfunc_name", "finish_name", "free_function_address_of", "pos", "delegate_target", "delegate_target_cname",
-		"array_length_pos", "delegate_target_pos", "destroy_notify_pos", "ctype", "has_new_function", "notify", "finish_instance", "",
+		"array_length_pos", "delegate_target_pos", "destroy_notify_pos", "ctype", "has_new_function", "notify", "finish_instance",
+		"use_inplace", "",
 
 		"Immutable", "",
 		"Compact", "",

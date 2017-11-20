@@ -803,6 +803,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			if (m != null && m.get_format_arg_index () >= 0) {
 				set_cvalue (expr, ccall_expr);
+			} else if (m != null && m.get_attribute_bool ("CCode", "use_inplace", false)) {
+				set_cvalue (expr, ccall_expr);
 			} else if (!return_result_via_out_param) {
 				var temp_var = get_temp_variable (result_type, result_type.value_owned, null, false);
 				var temp_ref = get_variable_cexpression (temp_var.name);
