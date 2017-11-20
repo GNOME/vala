@@ -278,6 +278,8 @@ AC_CONFIG_FILES([Makefile
            doc/manual/Makefile
            doc/manual/version.xml
            gobject-introspection/Makefile
+           dbusgen/valadbusgen.pc
+           dbusgen/Makefile
            vapigen/vapigen.pc
            vapigen/Makefile
            vapigen/vala-gen-introspect/Makefile
