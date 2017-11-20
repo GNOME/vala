@@ -1,4 +1,11 @@
 namespace Gst {
+	namespace Debug {
+		[CCode (cheader_filename = "gst/gst.h", cname = "GST_DEBUG_BIN_TO_DOT_FILE")]
+		public static void BIN_TO_DOT_FILE (Gst.Bin bin, Gst.DebugGraphDetails details, string file_name);
+		[CCode (cheader_filename = "gst/gst.h", cname = "GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS")]
+		public static void BIN_TO_DOT_FILE_WITH_TS (Gst.Bin bin, Gst.DebugGraphDetails details, string file_name);
+	}
+
 	[Compact, CCode (copy_function = "gst_allocation_params_copy", free_function = "gst_allocation_params_free", type_id = "gst_allocation_params_get_type ()")]
 	public class AllocationParams {
 	}
