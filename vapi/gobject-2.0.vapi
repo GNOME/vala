@@ -741,7 +741,9 @@ namespace GLib {
 		ACTION,
 		NO_HOOKS,
 		MUST_COLLECT,
-		DEPRECATED
+		DEPRECATED,
+		[CCode (cname = "G_SIGNAL_FLAGS_MASK")]
+		MASK
 	}
 	[CCode (cprefix = "G_SIGNAL_MATCH_", has_type_id = false)]
 	public enum SignalMatchType {
@@ -750,7 +752,8 @@ namespace GLib {
 		CLOSURE,
 		FUNC,
 		DATA,
-		UNBLOCKED
+		UNBLOCKED,
+		MASK
 	}
 	[CCode (cprefix = "G_TYPE_DEBUG_", has_type_id = false)]
 	[Flags]
@@ -819,4 +822,6 @@ namespace GLib {
 	public delegate void ValueTransform (GLib.Value src_value, ref GLib.Value dest_value);
 	[CCode (instance_pos = 0)]
 	public delegate void WeakNotify (GLib.Object object);
+	public static void source_set_closure (GLib.Source source, GLib.Closure closure);
+	public static void source_set_dummy_callback (GLib.Source source);
 }
