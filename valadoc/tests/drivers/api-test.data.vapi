@@ -85,6 +85,9 @@ public struct TestStructGlobal {
 	public void method ();
 	public static void static_method ();
 	public const int constant;
+	public int property1 { get; set; }
+	public int property2 { get; }
+	public int property3 { owned get; set; }
 }
 
 

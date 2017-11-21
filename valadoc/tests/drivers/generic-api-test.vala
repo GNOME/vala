@@ -1386,6 +1386,164 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 	assert (field2 == true);
 
 
+	Vala.List<Api.Node> properties = stru.get_children_by_type (Api.NodeType.PROPERTY, false);
+	bool prop1 = false;
+	bool prop2 = false;
+	bool prop3 = false;
+
+	foreach (Api.Node node in properties) {
+		Api.Property property = node as Api.Property;
+		assert (property != null);
+
+		switch (property.name) {
+		case "property1":
+			assert (property.get_cname () == "property1");
+			assert (property.property_type != null);
+			assert (property.is_virtual == false);
+			assert (property.is_abstract == false);
+			assert (property.is_override == false);
+			assert (property.is_dbus_visible == true);
+			assert (property.setter != null);
+			assert (property.getter != null);
+			assert (property.base_property == null);
+			// (.Symbol check)
+			assert (property.is_deprecated == false);
+			assert (property.accessibility == Api.SymbolAccessibility.PUBLIC);
+			// (.Node)
+			assert (property.get_full_name () == "TestStructGlobal.property1");
+			assert (property.get_filename () == "api-test.data.vapi");
+			assert (property.nspace == global_ns);
+			assert (property.package == pkg);
+
+
+			assert (property.getter.get_cname () == "test_struct_global_get_property1");
+			assert (property.getter.is_construct == false);
+			assert (property.getter.is_set == false);
+			assert (property.getter.is_get == true);
+			assert (property.getter.is_owned == false);
+			// (.Symbol check)
+			assert (property.getter.is_deprecated == false);
+			assert (property.getter.accessibility == Api.SymbolAccessibility.PUBLIC);
+			// (.Node)
+			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property2");
+			assert (property.getter.get_filename () == "api-test.data.vapi");
+			assert (property.getter.nspace == global_ns);
+			assert (property.getter.package == pkg);
+
+
+			assert (property.setter.get_cname () == "test_struct_global_set_property1");
+			assert (property.setter.is_construct == false);
+			assert (property.setter.is_get == false);
+			assert (property.setter.is_set == true);
+			assert (property.setter.is_owned == false);
+			// (.Symbol check)
+			assert (property.setter.is_deprecated == false);
+			assert (property.setter.accessibility == Api.SymbolAccessibility.PUBLIC);
+			// (.Node)
+			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property2");
+			assert (property.setter.get_filename () == "api-test.data.vapi");
+			assert (property.setter.nspace == global_ns);
+			assert (property.setter.package == pkg);
+
+			prop1 = true;
+			break;
+
+		case "property2":
+			assert (property.get_cname () == "property2");
+			assert (property.property_type != null);
+			assert (property.is_virtual == false);
+			assert (property.is_abstract == false);
+			assert (property.is_override == false);
+			assert (property.is_dbus_visible == true);
+			assert (property.setter == null);
+			assert (property.getter != null);
+			assert (property.base_property == null);
+			// (.Symbol check)
+			assert (property.is_deprecated == false);
+			assert (property.accessibility == Api.SymbolAccessibility.PUBLIC);
+			// (.Node)
+			assert (property.get_full_name () == "TestStructGlobal.property2");
+			assert (property.get_filename () == "api-test.data.vapi");
+			assert (property.nspace == global_ns);
+			assert (property.package == pkg);
+
+			assert (property.getter.get_cname () == "test_struct_global_get_property2");
+			assert (property.getter.is_construct == false);
+			assert (property.getter.is_set == false);
+			assert (property.getter.is_get == true);
+			assert (property.getter.is_owned == false);
+			// (.Symbol check)
+			assert (property.getter.is_deprecated == false);
+			assert (property.getter.accessibility == Api.SymbolAccessibility.PUBLIC);
+			// (.Node)
+			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property2");
+			assert (property.getter.get_filename () == "api-test.data.vapi");
+			assert (property.getter.nspace == global_ns);
+			assert (property.getter.package == pkg);
+
+			prop2 = true;
+			break;
+
+		case "property3":
+			assert (property.get_cname () == "property3");
+			assert (property.property_type != null);
+			assert (property.is_virtual == false);
+			assert (property.is_abstract == false);
+			assert (property.is_override == false);
+			assert (property.is_dbus_visible == true);
+			assert (property.setter != null);
+			assert (property.getter != null);
+			assert (property.base_property == null);
+			// (.Symbol check)
+			assert (property.is_deprecated == false);
+			assert (property.accessibility == Api.SymbolAccessibility.PUBLIC);
+			// (.Node)
+			assert (property.get_full_name () == "TestStructGlobal.property3");
+			assert (property.get_filename () == "api-test.data.vapi");
+			assert (property.nspace == global_ns);
+			assert (property.package == pkg);
+
+			assert (property.getter.get_cname () == "test_struct_global_get_property3");
+			assert (property.getter.is_construct == false);
+			assert (property.getter.is_set == false);
+			assert (property.getter.is_get == true);
+			assert (property.getter.is_owned == true);
+			// (.Symbol check)
+			assert (property.getter.is_deprecated == false);
+			assert (property.getter.accessibility == Api.SymbolAccessibility.PUBLIC);
+			// (.Node)
+			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property3");
+			assert (property.getter.get_filename () == "api-test.data.vapi");
+			assert (property.getter.nspace == global_ns);
+			assert (property.getter.package == pkg);
+
+
+			assert (property.setter.get_cname () == "test_struct_global_set_property3");
+			assert (property.setter.is_construct == false);
+			assert (property.setter.is_get == false);
+			assert (property.setter.is_set == true);
+			assert (property.setter.is_owned == false);
+			// (.Symbol check)
+			assert (property.setter.is_deprecated == false);
+			assert (property.setter.accessibility == Api.SymbolAccessibility.PUBLIC);
+			// (.Node)
+			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property3");
+			assert (property.setter.get_filename () == "api-test.data.vapi");
+			assert (property.setter.nspace == global_ns);
+			assert (property.setter.package == pkg);
+
+
+			prop3 = true;
+			break;
+
+		default:
+			assert_not_reached ();
+		}
+	}
+	assert (prop1);
+	assert (prop2);
+	assert (prop3);
+
 
 	Api.NodeType[] forbidden = {
 			Api.NodeType.CLASS,
@@ -1398,7 +1556,6 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 			Api.NodeType.INTERFACE,
 			Api.NodeType.NAMESPACE,
 			Api.NodeType.PACKAGE,
-			Api.NodeType.PROPERTY,
 			Api.NodeType.PROPERTY_ACCESSOR,
 			Api.NodeType.SIGNAL,
 			Api.NodeType.STRUCT,
