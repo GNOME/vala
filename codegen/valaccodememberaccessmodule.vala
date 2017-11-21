@@ -734,7 +734,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			// special handling for types such as va_list
 			use_temp = false;
 		}
-		if (variable is Parameter && variable.name == "this") {
+		if (variable is Parameter && (variable.name == "this" || ((Parameter) variable).direction != ParameterDirection.OUT)) {
 			use_temp = false;
 		}
 		if (variable.single_assignment && !result.value_type.is_real_non_null_struct_type ()) {
