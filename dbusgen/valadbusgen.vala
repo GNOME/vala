@@ -185,7 +185,7 @@ public class Vala.DBusGen {
 			return 1;
 		}
 
-		var DBusGen = new DBusGen ();
-		return DBusGen.run ();
+		var dbusgen = new DBusGen ();
+		return dbusgen.run ();
 	}
 }
