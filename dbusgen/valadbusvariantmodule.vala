@@ -58,7 +58,7 @@ public class Vala.DBusVariantModule {
 	public Class gqueue_type;
 	public Class gvaluearray_type;
 	public TypeSymbol gstringbuilder_type;
-	public TypeSymbol ghashtable;
+	public TypeSymbol ghashtable_type;
 	public TypeSymbol garray_type;
 	public TypeSymbol gbytearray_type;
 	public TypeSymbol gptrarray_type;
@@ -75,6 +75,8 @@ public class Vala.DBusVariantModule {
 	public Class gsource_type;
 	public TypeSymbol type_module_type;
 	public TypeSymbol dbus_proxy_type;
+	public DataType vardict_type;
+	public DataType string_array_type;
 
 	public DBusVariantModule (CodeContext context) {
 
@@ -108,7 +110,7 @@ public class Vala.DBusVariantModule {
 		}
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 
-		ghashtable = (TypeSymbol) glib_ns.scope.lookup ("HashTable");
+		ghashtable_type = (TypeSymbol) glib_ns.scope.lookup ("HashTable");
 		gtype_type = (TypeSymbol) glib_ns.scope.lookup ("Type");
 		gobject_type = (TypeSymbol) glib_ns.scope.lookup ("Object");
 		gerror_type = new ErrorType (null, null);
@@ -129,6 +131,17 @@ public class Vala.DBusVariantModule {
 		gvariant_type = (Class) glib_ns.scope.lookup ("Variant");
 		gsource_type = (Class) glib_ns.scope.lookup ("Source");
 
+		var string_type_owned = string_type.copy ();
+		string_type_owned.value_owned = true;
+
+		vardict_type = new ObjectType ((ObjectTypeSymbol) ghashtable_type);
+		vardict_type.add_type_argument (string_type_owned.copy ());
+		var vardict_type_variant = new ObjectType (gvariant_type);
+		vardict_type_variant.value_owned = true;
+		vardict_type.add_type_argument (vardict_type_variant);
+
+		string_array_type = new ArrayType (string_type_owned.copy (), 1, null);
+
 		gmutex_type = (Struct) glib_ns.scope.lookup ("Mutex");
 		grecmutex_type = (Struct) glib_ns.scope.lookup ("RecMutex");
 		grwlock_type = (Struct) glib_ns.scope.lookup ("RWLock");
@@ -139,9 +152,8 @@ public class Vala.DBusVariantModule {
 
 	public DataType? get_dbus_type (string type) {
 		if (VariantType.string_is_valid (type)) {
-			VariantType vrnt = new VariantType (type);
-			return get_variant_type (vrnt);
-
+			var variant = new VariantType (type);
+			return get_variant_type (variant);
 		} else {
 			string emessage = "The Variant Type string: %s is invalid".printf (type);
 			Report.error (null, emessage);
@@ -155,6 +167,10 @@ public class Vala.DBusVariantModule {
 			return bool_type.copy ();
 		} else if (type.equal (VariantType.BYTE)) {
 			return char_type.copy ();
+		} else if (type.equal (VariantType.BYTESTRING)) {
+			return string_type.copy (); // uchar[]
+		} else if (type.equal (VariantType.BYTESTRING_ARRAY)) {
+			return string_array_type.copy (); // uchar[][]
 		} else if (type.equal (VariantType.INT16)) {
 			return int16_type.copy ();
 		} else if (type.equal (VariantType.UINT16)) {
@@ -171,33 +187,35 @@ public class Vala.DBusVariantModule {
 			return double_type.copy ();
 		} else if (type.equal (VariantType.STRING)) {
 			return string_type.copy ();
+		} else if (type.equal (VariantType.STRING_ARRAY)) {
+			return string_array_type.copy ();
 		} else if (type.equal (VariantType.OBJECT_PATH)) {
 			return string_type.copy ();
+		} else if (type.equal (VariantType.OBJECT_PATH_ARRAY)) {
+			return string_array_type.copy ();
 		} else if (type.equal (VariantType.SIGNATURE)) {
 			return string_type.copy ();
+		} else if (type.equal (VariantType.UNIT)) {
+			return void_type.copy ();
+		} else if (type.equal (VariantType.VARDICT)) {
+			return vardict_type.copy ();
 		} else if (type.equal (VariantType.VARIANT) || type.equal (VariantType.ANY) || type.equal (VariantType.BASIC) || type.equal (VariantType.MAYBE) || type.equal (VariantType.TUPLE)) {
 			return new ObjectType ((ObjectTypeSymbol) gvariant_type);
 		}
 
+		Report.warning (null, "Unresolved type: %s".printf ((string) type.peek_string ()));
+
 		return new ObjectType ((ObjectTypeSymbol) gvariant_type);
 
-		if (type.equal (VariantType.UNIT)) {
+		if (type.equal (VariantType.MAYBE)) {
 			return string_type.copy ();
-		} else if (type.equal (VariantType.MAYBE)) {
-			return string_type.copy ();
-		} else if (type.equal (VariantType.OBJECT_PATH_ARRAY) || type.equal (VariantType.ARRAY) || type.equal (VariantType.STRING_ARRAY) || type.equal (VariantType.BYTESTRING_ARRAY)) {
-
+		} else if (type.equal (VariantType.ARRAY)) {
 			var element = new ObjectType ((ObjectTypeSymbol) gvariant_type); //get_variant_type (type.element ());
-			return new ArrayType (element, 0, null);
-
+			return new ArrayType (element, 1, null);
 		} else if (type.equal (VariantType.DICT_ENTRY)) {
 			return string_type.copy ();
 		} else if (type.equal (VariantType.DICTIONARY)) {
-			return new ObjectType ((ObjectTypeSymbol) ghashtable);
-		} else if (type.equal (VariantType.BYTESTRING)) {
-			return string_type.copy ();
-		} else if (type.equal (VariantType.VARDICT)) {
-			return string_type.copy ();
+			return new ObjectType ((ObjectTypeSymbol) ghashtable_type);
 		} else if (type.equal (VariantType.HANDLE)) {
 			return string_type.copy ();
 		}
