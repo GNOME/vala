@@ -256,31 +256,32 @@ public class Vala.DBusParser : CodeVisitor {
 
 		start_element ("property");
 
-		Map<string,string> attribs = reader.get_attributes ();
-
-		if (attribs["name"] == null) {
+		string? name = reader.get_attribute ("name");
+		if (name == null) {
 			Report.error (get_current_src (), "Interface property declarations require a name attribute");
 			return;
 		}
 
-		if (attribs["type"] == null) {
+		string? type = reader.get_attribute ("type");
+		if (type == null) {
 			Report.error (get_current_src (), "Interface property declarations require a type attribute");
 			return;
 		}
 
-		DataType type = dbus_module.get_dbus_type (attribs["type"]);
+		DataType date_type = dbus_module.get_dbus_type (type);
 
 		PropertyAccessor get_access = null;
 		PropertyAccessor set_access = null;
 
-		if (attribs["access"] == "read" || attribs["access"] == "readwrite") {
-			get_access = new PropertyAccessor (true, false, false, type, null, get_current_src ());
+		string? access = reader.get_attribute ("access");
+		if (access == "read" || access == "readwrite") {
+			get_access = new PropertyAccessor (true, false, false, date_type, null, get_current_src ());
 		}
-		if (attribs["access"] == "write" || attribs["access"] == "readwrite") {
-			set_access = new PropertyAccessor (false, true, false, type, null, get_current_src ());
+		if (access == "write" || access == "readwrite") {
+			set_access = new PropertyAccessor (false, true, false, date_type, null, get_current_src ());
 		}
 
-		current_node = current_property = new Property (attribs["name"], type, get_access, set_access, get_current_src ());
+		current_node = current_property = new Property (name, date_type, get_access, set_access, get_current_src ());
 		current_property.is_abstract = true;
 		current_property.access = SymbolAccessibility.PUBLIC;
 		current_iface.add_property (current_property);
