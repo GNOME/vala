@@ -240,6 +240,7 @@ public class Vala.DBusParser : CodeVisitor {
 
 		DataType return_type = new VoidType ();
 
+		name = Vala.Symbol.camel_case_to_lower_case (name);
 		current_node = current_method = new Method (name, return_type, src);
 		current_iface.add_method ((Method)current_method);
 		((Method)current_method).is_abstract = true;
@@ -281,6 +282,7 @@ public class Vala.DBusParser : CodeVisitor {
 			set_access = new PropertyAccessor (false, true, false, date_type, null, get_current_src ());
 		}
 
+		name = Vala.Symbol.camel_case_to_lower_case (name);
 		current_node = current_property = new Property (name, date_type, get_access, set_access, get_current_src ());
 		current_property.is_abstract = true;
 		current_property.access = SymbolAccessibility.PUBLIC;
@@ -384,6 +386,7 @@ public class Vala.DBusParser : CodeVisitor {
 			return;
 		}
 
+		name = Vala.Symbol.camel_case_to_lower_case (name);
 		current_node = current_method = new Signal (name, new VoidType ());
 		current_iface.add_signal ((Signal)current_node);
 		((Signal)current_node).access = SymbolAccessibility.PUBLIC;
