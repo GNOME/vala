@@ -79,15 +79,14 @@ public class Vala.DBusParser : CodeVisitor {
 
 		current_source_file.add_node (context.root);
 
-		next ();
-		next ();
-		next ();
+		while (current_token != MarkupTokenType.START_ELEMENT && reader.name != "node") {
+			next ();
+		}
 
 		parse_node ();
 		this.current_source_file = null;
 
 		this.reader = null;
-
 	}
 
 	private void parse_node () {
@@ -101,6 +100,9 @@ public class Vala.DBusParser : CodeVisitor {
 				case "interface":
 					parse_namespace ();
 					parse_interface ();
+					break;
+				case "doc:doc":
+					parse_doc ();
 					break;
 				//case "node":
 				//	parse_node ();
@@ -176,6 +178,9 @@ public class Vala.DBusParser : CodeVisitor {
 					break;
 				case "property":
 					parse_property ();
+					break;
+				case "doc:doc":
+					parse_doc ();
 					break;
 				default:
 					parse_extension ();
@@ -277,6 +282,7 @@ public class Vala.DBusParser : CodeVisitor {
 
 		current_node = current_property = new Property (attribs["name"], type, get_access, set_access, get_current_src ());
 		current_property.is_abstract = true;
+		current_property.access = SymbolAccessibility.PUBLIC;
 		current_iface.add_property (current_property);
 
 		next ();
@@ -284,6 +290,8 @@ public class Vala.DBusParser : CodeVisitor {
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.name == "annotation") {
 				parse_annotation ();
+			} else if (reader.name == "doc:doc") {
+				parse_doc ();
 			}
 		}
 
@@ -301,6 +309,9 @@ public class Vala.DBusParser : CodeVisitor {
 					break;
 				case "arg":
 					parse_arg ();
+					break;
+				case "doc:doc":
+					parse_doc ();
 					break;
 				default:
 					parse_extension ();
@@ -334,11 +345,32 @@ public class Vala.DBusParser : CodeVisitor {
 		}
 
 		next ();
+
+		while (current_token == MarkupTokenType.START_ELEMENT) {
+			if (reader.name == "annotation") {
+				parse_annotation ();
+			} else if (reader.name == "doc:doc") {
+				parse_doc ();
+			}
+		}
+
 		end_element ("arg");
 	}
 
 	private void parse_extension () {
 		next ();
+	}
+
+	private void parse_doc () {
+		start_element ("doc:doc");
+
+		while (true) {
+			next ();
+			if (current_token == MarkupTokenType.END_ELEMENT && reader.name == "doc:doc") {
+				break;
+			}
+		}
+		end_element ("doc:doc");
 	}
 
 	private void parse_signal () {
@@ -402,5 +434,4 @@ public class Vala.DBusParser : CodeVisitor {
 			next ();
 		}
 	}
-
 }
