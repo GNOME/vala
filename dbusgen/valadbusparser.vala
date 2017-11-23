@@ -38,6 +38,7 @@ public class Vala.DBusParser : CodeVisitor {
 	private Interface current_iface;
 	private Callable current_method;
 	private Parameter current_param;
+	private uint current_param_index;
 	private Property current_property;
 
 	private MarkupReader reader;
@@ -239,6 +240,8 @@ public class Vala.DBusParser : CodeVisitor {
 	}
 
 	private void parse_method_body () {
+		current_param_index = 0U;
+
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			switch (reader.name) {
 				case "annotation":
@@ -309,8 +312,7 @@ public class Vala.DBusParser : CodeVisitor {
 
 		string? name = reader.get_attribute ("name");
 		if (name == null) {
-			Report.error (get_current_src () , "Formal Parameters require a name attribute");
-			return;
+			name = "arg%u".printf (current_param_index++);
 		}
 
 		string? type = reader.get_attribute ("type");
