@@ -438,9 +438,18 @@ public class Vala.Parser : CodeVisitor {
 						Report.warning (get_last_src (), "deprecated syntax, use `unowned` modifier");
 					}
 					value_owned = false;
+				} else if (accept (TokenType.OWNED)) {
+					Report.warning (get_last_src (), "`owned' is default in this context");
 				}
 			} else {
-				value_owned = accept (TokenType.OWNED);
+				if (accept (TokenType.OWNED)) {
+					value_owned = true;
+				} else {
+					value_owned = false;
+					if (accept (TokenType.UNOWNED)) {
+						Report.warning (get_last_src (), "`unowned' is default in this context");
+					}
+				}
 			}
 		}
 
@@ -2807,7 +2816,14 @@ public class Vala.Parser : CodeVisitor {
 				var accessor_access = parse_access_modifier (SymbolAccessibility.PUBLIC);
 
 				var value_type = type.copy ();
-				value_type.value_owned = accept (TokenType.OWNED);
+				if (accept (TokenType.OWNED)) {
+					value_type.value_owned = true;
+				} else {
+					value_type.value_owned = false;
+					if (accept (TokenType.UNOWNED)) {
+						Report.warning (get_last_src (), "property getters are `unowned' by default");
+					}
+				}
 
 				if (accept (TokenType.GET)) {
 					if (prop.get_accessor != null) {
