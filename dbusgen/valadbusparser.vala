@@ -355,10 +355,28 @@ public class Vala.DBusParser : CodeVisitor {
 	private void parse_doc () {
 		start_element ("doc:doc");
 
+		string comment = "";
+		SourceReference start_loc = get_current_src ();
+
 		while (true) {
 			next ();
+
+			if (current_token == MarkupTokenType.TEXT) {
+				SourceReference source = get_current_src ();
+				comment += source.file.get_source_line (source.begin.line).strip ();
+			}
+
 			if (current_token == MarkupTokenType.END_ELEMENT && reader.name == "doc:doc") {
 				break;
+			}
+		}
+
+		if (comment.length > 0) {
+			comment = "*\n * %s\n*".printf (comment);
+			Comment doc = new Comment (comment, start_loc);
+			Symbol node = current_node as Symbol;
+			if (node != null) {
+				node.comment = doc;
 			}
 		}
 
