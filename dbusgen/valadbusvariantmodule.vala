@@ -151,6 +151,8 @@ public class Vala.DBusVariantModule {
 			return vardict_type.copy ();
 		} else if (type.equal (VariantType.VARIANT) || type.equal (VariantType.ANY) || type.equal (VariantType.BASIC) || type.equal (VariantType.MAYBE) || type.equal (VariantType.TUPLE)) {
 			return new ObjectType ((ObjectTypeSymbol) gvariant_type);
+		} else if (type.equal (VariantType.HANDLE)) {
+			return int32_type.copy ();
 		}
 
 		Report.warning (null, "Unresolved type: %s".printf ((string) type.peek_string ()));
@@ -166,8 +168,6 @@ public class Vala.DBusVariantModule {
 			return string_type.copy ();
 		} else if (type.equal (VariantType.DICTIONARY)) {
 			return new ObjectType ((ObjectTypeSymbol) ghashtable_type);
-		} else if (type.equal (VariantType.HANDLE)) {
-			return string_type.copy ();
 		}
 
 	}
