@@ -98,6 +98,7 @@ public class Vala.DBusGen {
 		CodeContext.push (context);
 
 		context.set_target_profile (Profile.GOBJECT);
+		context.vapi_comments = true;
 
 		if (packages != null) {
 			foreach (string package in packages) {
