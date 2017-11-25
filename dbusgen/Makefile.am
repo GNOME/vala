@@ -19,6 +19,7 @@ valadbusgen_VALASOURCES = \
 	valadbusparser.vala \
 	valadbusvariantmodule.vala \
 	valadbusnamespacestrategy.vala \
+	valadbusgenextension.vala \
 	$(NULL)
 
 valadbusgen_SOURCES = \
