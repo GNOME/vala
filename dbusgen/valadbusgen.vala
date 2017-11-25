@@ -100,6 +100,8 @@ public class Vala.DBusGen {
 		context.set_target_profile (Profile.GOBJECT);
 		context.vapi_comments = true;
 
+		context.add_external_package ("gio-2.0");
+
 		if (packages != null) {
 			foreach (string package in packages) {
 				context.add_external_package (package);
@@ -119,10 +121,26 @@ public class Vala.DBusGen {
 		}
 
 		foreach (string source in sources) {
-			if (FileUtils.test (source, FileTest.EXISTS) && source.has_suffix (".xml")) {
-				var source_file = new SourceFile (context, SourceFileType.SOURCE, source);
-				source_file.explicit = true;
-				context.add_source_file (source_file);
+			if (FileUtils.test (source, FileTest.EXISTS)) {
+				if (source.has_suffix (".xml")) {
+					var source_file = new SourceFile (context, SourceFileType.SOURCE, source);
+					source_file.from_commandline = true;
+					context.add_source_file (source_file);
+				} else if (FileUtils.test (source, FileTest.IS_DIR)) {
+					try {
+						GLib.Dir dir = GLib.Dir.open(source);
+						string name;
+						while ((name = dir.read_name()) != null) {
+							if (name.has_suffix(".xml")) {
+								var source_file = new SourceFile (context, SourceFileType.SOURCE, Path.build_filename(source, name));
+								source_file.from_commandline = true;
+								context.add_source_file (source_file);
+							}
+						}
+					} catch (FileError e) {
+						Report.error (null, e.message);
+					}
+				}
 			} else {
 				Report.error (null, "%s not found".printf (source));
 			}
