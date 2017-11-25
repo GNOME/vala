@@ -378,7 +378,7 @@ public class Vala.DBusParser : CodeVisitor {
 
 			if (current_token == MarkupTokenType.TEXT) {
 				foreach (string line in reader.content.split ("\n")) {
-					comment += " * %s \n".printf (line.strip ());
+					comment += " * %s\n".printf (line.strip ());
 				}
 			}
 
@@ -388,7 +388,7 @@ public class Vala.DBusParser : CodeVisitor {
 		}
 
 		if (comment.length > 0) {
-			comment = "*\n%s*".printf (comment);
+			comment = "*\n%s".printf (comment);
 			Comment doc = new Comment (comment, start_loc);
 			Symbol node = current_node as Symbol;
 			if (node != null) {
