@@ -48,9 +48,9 @@ public class Vala.DBusVariantModule {
 	public TypeSymbol gtype_type;
 	public TypeSymbol gobject_type;
 	public ErrorType gerror_type;
-	public TypeSymbol ghashtable_type;
+	public ObjectType dictionary_type;
+	public ObjectType gvariant_type;
 	public Struct gvalue_type;
-	public Class gvariant_type;
 	public DataType vardict_type;
 	public DataType string_array_type;
 
@@ -78,27 +78,27 @@ public class Vala.DBusVariantModule {
 		float_type = new FloatingType ((Struct) root_symbol.scope.lookup ("float"));
 		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
+		string_type.value_owned = true;
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 
-		ghashtable_type = (TypeSymbol) glib_ns.scope.lookup ("HashTable");
+		var ghashtable_type = (TypeSymbol) glib_ns.scope.lookup ("HashTable");
 		gtype_type = (TypeSymbol) glib_ns.scope.lookup ("Type");
 		gobject_type = (TypeSymbol) glib_ns.scope.lookup ("Object");
 		gerror_type = new ErrorType (null, null);
 
 		gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
-		gvariant_type = (Class) glib_ns.scope.lookup ("Variant");
+		gvariant_type = new ObjectType ((Class) glib_ns.scope.lookup ("Variant"));
+		gvariant_type.value_owned = true;
 
-		var string_type_owned = string_type.copy ();
-		string_type_owned.value_owned = true;
+		dictionary_type = new ObjectType ((ObjectTypeSymbol) ghashtable_type);
+		dictionary_type.value_owned = true;
 
-		vardict_type = new ObjectType ((ObjectTypeSymbol) ghashtable_type);
-		vardict_type.add_type_argument (string_type_owned.copy ());
-		var vardict_type_variant = new ObjectType (gvariant_type);
-		vardict_type_variant.value_owned = true;
-		vardict_type.add_type_argument (vardict_type_variant);
+		vardict_type = dictionary_type.copy ();
+		vardict_type.add_type_argument (string_type.copy ());
+		vardict_type.add_type_argument (gvariant_type.copy ());
 
-		string_array_type = new ArrayType (string_type_owned.copy (), 1, null);
+		string_array_type = new ArrayType (string_type.copy (), 1, null);
 	}
 
 	public DataType? get_dbus_type (string type) {
@@ -113,8 +113,7 @@ public class Vala.DBusVariantModule {
 	}
 
 	private DataType get_variant_type (VariantType type) {
-		
-		if (type.is_basic ()) {			
+		if (type.is_basic ()) {
 			if (type.equal (VariantType.BOOLEAN)) {
 				return bool_type.copy ();
 			} else if (type.equal (VariantType.BYTE)) {
@@ -143,35 +142,25 @@ public class Vala.DBusVariantModule {
 				return int32_type.copy ();
 			}
 		} else if (type.is_variant ()) {
-			return new ObjectType ((ObjectTypeSymbol) gvariant_type);
+			return gvariant_type.copy ();
 		}
-		
 		return get_complex_type (type);
-
 	}
-	
-	private DataType get_complex_type (VariantType type) {
 
+	private DataType get_complex_type (VariantType type) {
 		if (type.is_array ()) {
-			
 			var element = type.element ();
-			
-			if (element.equal (VariantType.DICTIONARY)  || element.is_dict_entry ()) {
-				var res = new ObjectType ((ObjectTypeSymbol) ghashtable_type);
-				
+			if (element.equal (VariantType.DICTIONARY) || element.is_dict_entry ()) {
+				var res = dictionary_type.copy ();
 				res.add_type_argument (get_variant_type (element.key ()));
 				res.add_type_argument (get_variant_type (element.value ()));
-				
 				return res;
 			}
-			
-			var idx = get_variant_type (element);
-			return new ArrayType (idx, 1, null);
-
+			return new ArrayType (get_variant_type (element), 1, null);
 		} else if (type.equal (VariantType.BYTESTRING)) {
-			return new ArrayType (uchar_type.copy (), 1, null);
+			return string_type.copy (); //new ArrayType (uchar_type.copy (), 1, null);
 		} else if (type.equal (VariantType.BYTESTRING_ARRAY)) {
-			return new ArrayType (uchar_type.copy (), 2, null);
+			return string_array_type.copy (); //new ArrayType (uchar_type.copy (), 2, null);
 		}  else if (type.equal (VariantType.STRING_ARRAY)) {
 			return string_array_type.copy ();
 		} else if (type.equal (VariantType.OBJECT_PATH_ARRAY)) {
@@ -180,33 +169,26 @@ public class Vala.DBusVariantModule {
 
 		Report.warning (null, "Unresolved type: %s".printf ((string) type.peek_string ()));
 
-		return new ObjectType ((ObjectTypeSymbol) gvariant_type);
+		return gvariant_type.copy ();
 
-		
-		
 		if (type.equal (VariantType.DICT_ENTRY) || type.is_dict_entry ()) {
-			return new ObjectType ((ObjectTypeSymbol) ghashtable_type);
+			return dictionary_type.copy ();
 		}  else if (type.equal (VariantType.UNIT)) {
 			return void_type.copy ();
 		} else if (type.equal (VariantType.VARDICT)) {
 			return vardict_type.copy ();
 		} else if (type.equal (VariantType.VARIANT) || type.equal (VariantType.ANY) ||  type.equal (VariantType.MAYBE) || type.equal (VariantType.TUPLE)) {
-			return new ObjectType ((ObjectTypeSymbol) gvariant_type);
-		} 
+			return gvariant_type.copy ();
+		}
 
-				
 		if (type.equal (VariantType.MAYBE)) {
 			return string_type.copy ();
 		} else if (type.equal (VariantType.ARRAY)) {
-			var element = new ObjectType ((ObjectTypeSymbol) gvariant_type); //get_variant_type (type.element ());
-			return new ArrayType (element, 1, null);
+			return new ArrayType (gvariant_type.copy (), 1, null);
 		} else if (type.equal (VariantType.DICT_ENTRY)) {
 			return string_type.copy ();
 		} else if (type.equal (VariantType.DICTIONARY)) {
-			return new ObjectType ((ObjectTypeSymbol) ghashtable_type);
+			return dictionary_type.copy ();
 		}
-
-
 	}
-
 }
