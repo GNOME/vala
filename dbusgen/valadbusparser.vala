@@ -47,6 +47,8 @@ public class Vala.DBusParser : CodeVisitor {
 	private SourceLocation begin;
 	private SourceLocation end;
 
+	private HashMap<string, DBusExtension> extensions = new HashMap<string, DBusExtension> ();
+
 	public int dbus_timeout { get; set; }
 
 	public NamespaceStrategy namespace_strategy { get; set; }
@@ -200,7 +202,7 @@ public class Vala.DBusParser : CodeVisitor {
 				break;
 			case "org.freedesktop.DBus.GLib.Async":
 				if (current_node is Method) {
-					((Method) current_method).is_async_callback = true;
+					((Method) current_method).coroutine = true;
 				}
 				break;
 			case "org.freedesktop.DBus.GLib.NoReply":
@@ -342,6 +344,8 @@ public class Vala.DBusParser : CodeVisitor {
 				parse_annotation ();
 			} else if (reader.name == "doc:doc") {
 				parse_doc ();
+			} else {
+				parse_extension ();
 			}
 		}
 
@@ -349,7 +353,18 @@ public class Vala.DBusParser : CodeVisitor {
 	}
 
 	private void parse_extension () {
-		next ();
+		string prefix = reader.name.split (":")[0];
+		DBusExtension? ext = extensions.get (prefix);
+
+		if (ext != null) {
+			ext.parse_node (reader.name, current_node, get_current_src ());
+			next ();
+		} else {
+			Report.warning (get_current_src (), "Element %s is unrecognized".printf (reader.name));
+			skip_element ();
+		}
+
+		return;
 	}
 
 	private void parse_doc () {
@@ -362,8 +377,9 @@ public class Vala.DBusParser : CodeVisitor {
 			next ();
 
 			if (current_token == MarkupTokenType.TEXT) {
-				SourceReference source = get_current_src ();
-				comment += source.file.get_source_line (source.begin.line).strip ();
+				foreach (string line in reader.content.split ("\n")) {
+					comment += " * %s \n".printf (line.strip ());
+				}
 			}
 
 			if (current_token == MarkupTokenType.END_ELEMENT && reader.name == "doc:doc") {
@@ -372,7 +388,7 @@ public class Vala.DBusParser : CodeVisitor {
 		}
 
 		if (comment.length > 0) {
-			comment = "*\n * %s\n*".printf (comment);
+			comment = "*\n%s*".printf (comment);
 			Comment doc = new Comment (comment, start_loc);
 			Symbol node = current_node as Symbol;
 			if (node != null) {
