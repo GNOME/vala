@@ -332,7 +332,7 @@ public class Valadoc.Api.Tree {
 					continue;
 				}
 
-				path = realpath (path);
+				path = Vala.CodeContext.realpath (path);
 				imported = true;
 
 				if (!processed.contains (path)) {

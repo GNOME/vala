@@ -92,7 +92,7 @@ public class Valadoc.ModuleLoader : Object {
 	}
 
 	public Doclet? create_doclet (string _path) {
-		string path = realpath (_path);
+		string path = Vala.CodeContext.realpath (_path);
 
 		ModuleData? data = doclets.get (path);
 		if (data == null) {

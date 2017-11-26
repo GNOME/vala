@@ -603,7 +603,13 @@ public class Vala.CodeContext {
 		return Path.is_dir_separator (s.get_char (s.length - 1));
 	}
 
-	/* ported from glibc */
+	/**
+	 * Returns canonicalized absolute pathname
+	 * ported from glibc
+	 *
+	 * @param name the path being checked
+	 * @return a canonicalized absolute pathname
+	 */
 	public static string realpath (string name) {
 		string rpath;
 

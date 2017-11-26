@@ -64,7 +64,7 @@ namespace Gtkdoc.Config {
 
 		// real path to ignored headers
 		for (int i=0; i < ignore_headers.length; i++) {
-			var realheader = realpath (ignore_headers[i]);
+			var realheader = Vala.CodeContext.realpath (ignore_headers[i]);
 			if (realheader != null) {
 				ignore_headers[i] = realheader;
 			}
@@ -179,7 +179,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		string[] prepared = new string[]{};
 
 		foreach (string relative_filename in files) {
-			var filename = realpath (relative_filename);
+			var filename = Vala.CodeContext.realpath (relative_filename);
 
 			if (filename in prepared) {
 				continue;
@@ -253,7 +253,7 @@ public class Gtkdoc.Director : Valadoc.Doclet, Object {
 		StringBuilder library_paths = new StringBuilder ();
 		StringBuilder library_dirs = new StringBuilder ();
 		foreach (string library in Config.library_filenames) {
-			string so_path = realpath (library);
+			string so_path = Vala.CodeContext.realpath (library);
 			string name = Path.get_dirname (so_path);
 			library_dirs.append (name);
 			library_paths.append (so_path);

@@ -209,7 +209,7 @@ public class ValaDoc : Object {
 		settings._internal = ValaDoc._internal;
 		settings.with_deps = ValaDoc.with_deps;
 		settings._private = ValaDoc._private;
-		settings.path = realpath (ValaDoc.directory);
+		settings.path = Vala.CodeContext.realpath (ValaDoc.directory);
 		settings.verbose = ValaDoc.verbose;
 		settings.wiki_directory = ValaDoc.wikidirectory;
 		settings.pluginargs = ValaDoc.pluginargs;

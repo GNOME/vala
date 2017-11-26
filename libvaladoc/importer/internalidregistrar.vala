@@ -52,7 +52,7 @@ public class Valadoc.Importer.InternalIdRegistrar {
 		Vala.SourceLocation end;
 		Vala.MarkupTokenType token;
 
-		string base_path = index_sgml_online ?? realpath (filename);
+		string base_path = index_sgml_online ?? Vala.CodeContext.realpath (filename);
 		var reader = new Vala.MarkupReader (filename);
 
 		while ((token = reader.read_token (out begin, out end)) != Vala.MarkupTokenType.EOF) {

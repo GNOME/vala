@@ -819,7 +819,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		foreach (string source in sources) {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
-				var rpath = realpath (source);
+				var rpath = Vala.CodeContext.realpath (source);
 				if (source.has_suffix (".vala") || source.has_suffix (".gs")) {
 					var source_file = new Vala.SourceFile (context, Vala.SourceFileType.SOURCE, rpath);
 
@@ -877,13 +877,13 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		context.gir_directories = settings.gir_directories;
 
 		if (settings.basedir == null) {
-			context.basedir = realpath (".");
+			context.basedir = Vala.CodeContext.realpath (".");
 		} else {
-			context.basedir = realpath (settings.basedir);
+			context.basedir = Vala.CodeContext.realpath (settings.basedir);
 		}
 
 		if (settings.directory != null) {
-			context.directory = realpath (settings.directory);
+			context.directory = Vala.CodeContext.realpath (settings.directory);
 		} else {
 			context.directory = context.basedir;
 		}
