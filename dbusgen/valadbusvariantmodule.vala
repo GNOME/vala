@@ -43,6 +43,7 @@ public class Vala.DBusVariantModule {
 	public DataType int64_type;
 	public DataType uint64_type;
 	public DataType string_type;
+	public DataType object_path_type;
 	public DataType float_type;
 	public DataType double_type;
 	public TypeSymbol gtype_type;
@@ -82,7 +83,10 @@ public class Vala.DBusVariantModule {
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 
-		var ghashtable_type = (TypeSymbol) glib_ns.scope.lookup ("HashTable");
+		object_path_type = new ObjectType ((Class) glib_ns.scope.lookup ("ObjectPath"));
+		object_path_type.value_owned = true;
+
+		TypeSymbol ghashtable_type = (TypeSymbol) glib_ns.scope.lookup ("HashTable");
 		gtype_type = (TypeSymbol) glib_ns.scope.lookup ("Type");
 		gobject_type = (TypeSymbol) glib_ns.scope.lookup ("Object");
 		gerror_type = new ErrorType (null, null);
@@ -135,7 +139,7 @@ public class Vala.DBusVariantModule {
 			} else if (type.equal (VariantType.STRING)) {
 				return string_type.copy ();
 			} else if (type.equal (VariantType.OBJECT_PATH)) {
-				return string_type.copy ();
+				return object_path_type.copy ();
 			} else if (type.equal (VariantType.SIGNATURE)) {
 				return string_type.copy ();
 			} else if (type.equal (VariantType.HANDLE)) {
