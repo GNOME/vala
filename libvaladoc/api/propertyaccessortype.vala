@@ -26,7 +26,7 @@ public enum Valadoc.Api.PropertyAccessorType {
 	SET = 1 << 1,
 	GET = 1 << 2;
 
-	public string to_string () {
+	public unowned string to_string () {
 		if ((this & PropertyAccessorType.CONSTRUCT) != 0) {
 			if ((this & PropertyAccessorType.SET) != 0) {
 				return "construct set";

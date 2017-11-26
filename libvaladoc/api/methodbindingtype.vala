@@ -29,7 +29,7 @@ public enum Valadoc.MethodBindingType {
 	INLINE,
 	STATIC;
 
-	public string to_string () {
+	public unowned string to_string () {
 		switch (this) {
 		case OVERRIDE:
 			return "override";

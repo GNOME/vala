@@ -27,7 +27,7 @@ public enum Valadoc.Api.PropertyBindingType {
 	ABSTRACT,
 	VIRTUAL;
 
-	public string to_string () {
+	public unowned string to_string () {
 		switch (this) {
 		case OVERRIDE:
 			return "override";

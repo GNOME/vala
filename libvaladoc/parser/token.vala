@@ -94,11 +94,11 @@ public class Valadoc.Token : Object {
 		}
 	}
 
-	public string to_string () {
+	public unowned string to_string () {
 		return _word == null ? _type.to_string () : _word;
 	}
 
-	public string to_pretty_string () {
+	public unowned string to_pretty_string () {
 		return _word == null ? _type.to_pretty_string () : _word;
 	}
 

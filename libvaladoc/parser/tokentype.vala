@@ -257,11 +257,11 @@ public class Valadoc.TokenType : Object {
 		return false;
 	}
 
-	public string to_string () {
+	public unowned string to_string () {
 		return _string_value;
 	}
 
-	public string to_pretty_string () {
+	public unowned string to_pretty_string () {
 		if (_pretty_string != null) {
 			return _pretty_string;
 		}

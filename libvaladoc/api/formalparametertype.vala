@@ -25,7 +25,7 @@ public enum Valadoc.Api.FormalParameterType {
 	OUT,
 	REF;
 
-	public string to_string () {
+	public unowned string to_string () {
 		switch (this) {
 		case FormalParameterType.OUT:
 			return "out";

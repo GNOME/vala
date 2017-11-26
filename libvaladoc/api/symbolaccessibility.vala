@@ -30,7 +30,7 @@ public enum Valadoc.Api.SymbolAccessibility {
 	PRIVATE,
 	PUBLIC;
 
-	public string to_string () {
+	public unowned string to_string () {
 		switch (this) {
 		case SymbolAccessibility.PROTECTED:
 			return "protected";

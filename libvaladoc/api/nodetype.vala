@@ -47,7 +47,7 @@ public enum Valadoc.Api.NodeType {
 	STRUCT,
 	TYPE_PARAMETER;
 
-	public string to_string () {
+	public unowned string to_string () {
 		switch (this) {
 		case CLASS:
 			return "CLASS";

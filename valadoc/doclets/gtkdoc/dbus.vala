@@ -31,7 +31,7 @@ namespace Gtkdoc.DBus {
 			IN,
 			OUT;
 
-			public string to_string () {
+			public unowned string to_string () {
 				switch (this) {
 				case NONE:
 					return "";
