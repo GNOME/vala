@@ -61,6 +61,18 @@ public class Vala.MarkupReader {
 		}
 	}
 
+	public MarkupReader.from_string (string filename, string content) {
+		this.filename = filename;
+
+		begin = content;
+		end = begin + content.length;
+
+		current = begin;
+
+		line = 1;
+		column = 1;
+	}
+
 	public string? get_attribute (string attr) {
 		return attributes[attr];
 	}
@@ -107,6 +119,9 @@ public class Vala.MarkupReader {
 			token_end = SourceLocation (begin, line, column);
 			return MarkupTokenType.END_ELEMENT;
 		}
+
+		content = null;
+		name = null;
 
 		space ();
 
@@ -242,6 +257,11 @@ public class Vala.MarkupReader {
 					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 					content.append_c ('>');
 					current += 4;
+					text_begin = current;
+				} else if (((string) next_pos).has_prefix ("percnt;")) {
+					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
+					content.append_c ('%');
+					current += 8;
 					text_begin = current;
 				} else {
 					current += u.to_utf8 (null);
