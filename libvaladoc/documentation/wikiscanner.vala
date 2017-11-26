@@ -295,12 +295,12 @@ public class Valadoc.WikiScanner : Object, Scanner {
 		return 0;
 	}
 
-	private SourceLocation get_begin () {
-		return SourceLocation (_last_line, get_line_start_column () + _last_column);
+	private Vala.SourceLocation get_begin () {
+		return Vala.SourceLocation (_index, _last_line, get_line_start_column () + _last_column);
 	}
 
-	private SourceLocation get_end (int offset = 0) {
-		return SourceLocation (_line, get_line_start_column () + _column + offset);
+	private Vala.SourceLocation get_end (int offset = 0) {
+		return Vala.SourceLocation (_index, _line, get_line_start_column () + _column + offset);
 	}
 
 	private void emit_current_word () throws ParserError {

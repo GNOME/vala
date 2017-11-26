@@ -35,7 +35,7 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 	private string _filename;
 	private string _cname;
 	private StringBuilder _comment;
-	private SourceLocation _comment_location;
+	private Vala.SourceLocation _comment_location;
 	protected Content.ContentFactory factory;
 
 
@@ -127,7 +127,7 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 	}
 
 	private void add_documentation (string _symbol_name, StringBuilder? comment, string filename,
-									SourceLocation src_ref)
+									Vala.SourceLocation src_ref)
 	{
 		Api.Node? symbol = null;
 

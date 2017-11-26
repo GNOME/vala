@@ -138,7 +138,6 @@ libvaladoc_la_VALASOURCES = \
 	parser/rule.vala \
 	parser/scanner.vala \
 	parser/sequencerule.vala \
-	parser/sourcelocation.vala \
 	parser/stubrule.vala \
 	parser/token.vala \
 	parser/tokentype.vala \

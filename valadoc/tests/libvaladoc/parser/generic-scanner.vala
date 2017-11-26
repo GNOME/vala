@@ -35,7 +35,7 @@ public class TestScanner : Object, Valadoc.Scanner {
 	}
 
 	private void emit_token (Valadoc.TokenType type) throws Valadoc.ParserError {
-		Valadoc.SourceLocation loc = SourceLocation (pos, pos);
+		Vala.SourceLocation loc = Vala.SourceLocation (null, pos, pos);
 		parser.accept_token (new Token.from_type (type, loc, loc));
 	}
 
