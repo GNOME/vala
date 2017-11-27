@@ -571,6 +571,14 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 				inst = pub_inst;
 			}
+
+			if (inst == null) {
+				// FIXME Report this with proper source-reference on the vala side!
+				Report.error (field.source_reference, "Invalid access to instance member `%s'".printf (field.get_full_name ()));
+				result.cvalue = new CCodeInvalidExpression ();
+				return result;
+			}
+
 			if (instance_target_type.data_type.is_reference_type () || (instance != null && instance.value_type is PointerType)) {
 				result.cvalue = new CCodeMemberAccess.pointer (inst, get_ccode_name (field));
 			} else {
