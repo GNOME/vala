@@ -116,6 +116,7 @@ TESTS = \
 	control-flow/bug691514.vala	\
 	control-flow/bug736774-1.vala \
 	control-flow/bug736774-2.vala \
+	control-flow/bug790903.test \
 	enums/enum_only.vala \
 	enums/enums.vala \
 	enums/flags.vala \

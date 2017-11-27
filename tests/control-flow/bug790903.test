@@ -1,0 +1,9 @@
+Invalid Code
+
+class Foo {
+	public string field;
+}
+
+void main () {
+	var foo = (string) Foo.field;
+}
