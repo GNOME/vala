@@ -563,7 +563,8 @@ public class Vala.Method : Subroutine {
 				string invalid_match;
 				if (!compatible (base_method, out invalid_match)) {
 					error = true;
-					Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method.get_full_name (), invalid_match));
+					var base_method_type = new MethodType (base_method);
+					Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), type_to_prototype_string (base_method_type), invalid_match));
 					return;
 				}
 
@@ -609,7 +610,8 @@ public class Vala.Method : Subroutine {
 						string invalid_match = null;
 						if (!compatible (base_method, out invalid_match)) {
 							error = true;
-							Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method.get_full_name (), invalid_match));
+							var base_method_type = new MethodType (base_method);
+							Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), type_to_prototype_string (base_method_type), invalid_match));
 							return;
 						}
 						
@@ -621,7 +623,7 @@ public class Vala.Method : Subroutine {
 		}
 
 		if (base_interface_type != null) {
-			Report.error (source_reference, "%s: no suitable interface method found to implement".printf (get_full_name ()));
+			Report.error (source_reference, "`%s': no suitable interface method found to implement".printf (get_full_name ()));
 		}
 	}
 
@@ -776,7 +778,7 @@ public class Vala.Method : Subroutine {
 				return false;
 			}
 		} else if (overrides && base_method == null) {
-			Report.error (source_reference, "%s: no suitable method found to override".printf (get_full_name ()));
+			Report.error (source_reference, "`%s': no suitable method found to override".printf (get_full_name ()));
 		} else if ((is_abstract || is_virtual || overrides) && access == SymbolAccessibility.PRIVATE) {
 			error = true;
 			Report.error (source_reference, "Private member `%s' cannot be marked as override, virtual, or abstract".printf (get_full_name ()));
