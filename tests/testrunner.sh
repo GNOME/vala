@@ -27,8 +27,6 @@ topsrcdir=$srcdir/..
 vapidir=$topsrcdir/vapi
 run_prefix=""
 
-export G_DEBUG=fatal_warnings
-
 VALAC=$topbuilddir/compiler/valac$EXEEXT
 VALAFLAGS="$VALAFLAGS \
 	--vapidir $vapidir \
@@ -172,7 +170,7 @@ for testfile in "$@"; do
 		cat "$srcdir/$testfile" >> $SOURCEFILE
 		echo "}" >> $SOURCEFILE
 
-		echo "./test$EXEEXT /$testpath" > check
+		echo "G_DEBUG=fatal-warnings ./test$EXEEXT /$testpath" > check
 		;;
 	*.test)
 		PART=0
