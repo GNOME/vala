@@ -398,6 +398,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void double_to_fraction (double src, out int dest_n, out int dest_d);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (since = "1.14")]
+		public static void dump_buffer (Gst.Buffer buf);
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static void dump_mem (uint8 mem, uint size);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool fraction_add (int a_n, int a_d, int b_n, int b_d, out int res_n, out int res_d);
@@ -1225,6 +1228,9 @@ namespace Gst {
 		[CCode (cname = "gst_element_class_add_static_pad_template")]
 		[Version (since = "1.8")]
 		public class void add_static_pad_template (Gst.StaticPadTemplate static_templ);
+		[CCode (cname = "gst_element_class_add_static_pad_template_with_gtype")]
+		[Version (since = "1.14")]
+		public class void add_static_pad_template_with_gtype (Gst.StaticPadTemplate static_templ, GLib.Type pad_type);
 		[Version (since = "1.10")]
 		public void call_async (owned Gst.ElementCallAsyncFunc func);
 		public virtual Gst.StateChangeReturn change_state (Gst.StateChange transition);
@@ -1901,10 +1907,15 @@ namespace Gst {
 	public class PadTemplate : Gst.Object {
 		[CCode (has_construct_function = false, returns_floating_reference = true)]
 		public PadTemplate (string name_template, Gst.PadDirection direction, Gst.PadPresence presence, Gst.Caps caps);
+		[CCode (has_construct_function = false)]
+		public PadTemplate.from_static_pad_template_with_gtype (Gst.StaticPadTemplate pad_template, GLib.Type pad_type);
 		public Gst.Caps get_caps ();
 		public Gst.Caps caps { owned get; construct; }
 		[NoAccessorMethod]
 		public Gst.PadDirection direction { get; construct; }
+		[NoAccessorMethod]
+		[Version (since = "1.14")]
+		public GLib.Type gtype { get; construct; }
 		[NoAccessorMethod]
 		public string name_template { owned get; construct; }
 		[NoAccessorMethod]
@@ -2023,6 +2034,20 @@ namespace Gst {
 		public Poll.timer ();
 		public int wait (Gst.ClockTime timeout);
 		public bool write_control ();
+	}
+	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_promise_get_type ()")]
+	[Compact]
+	public class Promise {
+		public weak Gst.MiniObject parent;
+		[CCode (has_construct_function = false)]
+		public Promise ();
+		public void expire ();
+		public unowned Gst.Structure get_reply ();
+		public void interrupt ();
+		public void reply (owned Gst.Structure s);
+		public Gst.PromiseResult wait ();
+		[CCode (has_construct_function = false)]
+		public Promise.with_change_func (owned Gst.PromiseChangeFunc func);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_proxy_pad_get_type ()")]
 	public class ProxyPad : Gst.Pad {
@@ -2784,8 +2809,6 @@ namespace Gst {
 		public void* data;
 		public uint64 offset;
 		public uint size;
-		[CCode (cname = "ABI.abi.flow_ret")]
-		public Gst.FlowReturn ABI_abi_flow_ret;
 		public unowned Gst.Buffer get_buffer ();
 		public unowned Gst.BufferList get_buffer_list ();
 		public unowned Gst.Event get_event ();
@@ -3389,6 +3412,13 @@ namespace Gst {
 		CANCELED,
 		ERROR
 	}
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PROMISE_RESULT_", type_id = "gst_promise_result_get_type ()")]
+	public enum PromiseResult {
+		PENDING,
+		INTERRUPTED,
+		REPLIED,
+		EXPIRED
+	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_QOS_TYPE_", type_id = "gst_qos_type_get_type ()")]
 	public enum QOSType {
 		OVERFLOW,
@@ -3838,6 +3868,8 @@ namespace Gst {
 	public delegate bool PluginInitFullFunc (Gst.Plugin plugin);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool PluginInitFunc (Gst.Plugin plugin);
+	[CCode (cheader_filename = "gst/gst.h", instance_pos = 1.9)]
+	public delegate void PromiseChangeFunc (Gst.Promise promise);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 2.9)]
 	public delegate bool StructureFilterMapFunc (GLib.Quark field_id, GLib.Value value);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 2.9)]
