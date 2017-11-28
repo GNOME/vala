@@ -1,4 +1,5 @@
 *.ABI._gst_reserved* skip
+*.ABI.abi.* skip
 
 *.ref unowned
 
