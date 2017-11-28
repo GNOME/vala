@@ -4587,9 +4587,11 @@ namespace Gdk {
 		}
 		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_device_manager_core_get_type ()")]
 		[GIR (name = "X11DeviceManagerCore")]
-		public class DeviceManagerCore : Gdk.DeviceManager {
+		public class DeviceManagerCore : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected DeviceManagerCore ();
+			[NoAccessorMethod]
+			public Gdk.Display display { owned get; construct; }
 		}
 		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_device_manager_xi2_get_type ()")]
 		[GIR (name = "X11DeviceManagerXI2")]
@@ -4799,6 +4801,31 @@ namespace Gdk {
 		public static unowned Gdk.Atom intern_static_string (string atom_name);
 		public static string name (Gdk.Atom atom);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", ref_function = "gdk_content_formats_ref", type_id = "gdk_content_formats_get_type ()", unref_function = "gdk_content_formats_unref")]
+	[Compact]
+	public class ContentFormats {
+		[CCode (has_construct_function = false)]
+		public ContentFormats ([CCode (array_length_cname = "n_mime_types", array_length_pos = 1.1, array_length_type = "guint")] string[]? mime_types);
+		public bool contain_gtype (GLib.Type type);
+		public bool contain_mime_type (string mime_type);
+		public unowned GLib.Type? get_gtypes (out size_t n_gtypes);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public unowned string[]? get_mime_types (out size_t n_mime_types);
+		public bool match (Gdk.ContentFormats second, out GLib.Type out_gtype, out unowned string out_mime_type);
+		public void print (GLib.StringBuilder string);
+		public unowned Gdk.ContentFormats @ref ();
+		public string to_string ();
+		public Gdk.ContentFormats union (Gdk.ContentFormats second);
+		public void unref ();
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
+	[Compact]
+	public class ContentFormatsBuilder {
+		public void add_formats (Gdk.ContentFormats formats);
+		public void add_gtype (GLib.Type type);
+		public void add_mime_type (string mime_type);
+		public Gdk.ContentFormats free ();
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_cursor_get_type ()")]
 	public class Cursor : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -4894,9 +4921,6 @@ namespace Gdk {
 		public Gdk.Device? associated_device { get; }
 		[Version (since = "3.22")]
 		public Gdk.AxisFlags axes { get; }
-		[NoAccessorMethod]
-		[Version (since = "3.0")]
-		public Gdk.DeviceManager device_manager { owned get; construct; }
 		[Version (since = "3.0")]
 		public Gdk.Display display { get; construct; }
 		[Version (since = "3.0")]
@@ -4928,19 +4952,6 @@ namespace Gdk {
 		public signal void changed ();
 		[Version (since = "3.22")]
 		public signal void tool_changed (Gdk.DeviceTool tool);
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_device_manager_get_type ()")]
-	public abstract class DeviceManager : GLib.Object {
-		[CCode (has_construct_function = false)]
-		protected DeviceManager ();
-		[Version (since = "3.0")]
-		public unowned Gdk.Display? get_display ();
-		[Version (deprecated = true, deprecated_since = "3.20", since = "3.0")]
-		public GLib.List<weak Gdk.Device> list_devices (Gdk.DeviceType type);
-		public Gdk.Display display { get; construct; }
-		public signal void device_added (Gdk.Device device);
-		public signal void device_changed (Gdk.Device device);
-		public signal void device_removed (Gdk.Device device);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_device_tool_get_type ()")]
 	public class DeviceTool : GLib.Object {
@@ -4979,8 +4990,6 @@ namespace Gdk {
 		public unowned Gdk.Window get_default_group ();
 		[Version (since = "3.20")]
 		public unowned Gdk.Seat get_default_seat ();
-		[Version (deprecated = true, deprecated_since = "3.20.", since = "3.0")]
-		public unowned Gdk.DeviceManager? get_device_manager ();
 		[Version (since = "2.2")]
 		public Gdk.Event? get_event ();
 		[Version (since = "2.4")]
@@ -5082,6 +5091,8 @@ namespace Gdk {
 		public unowned Gdk.Device get_device ();
 		[Version (since = "3.20")]
 		public unowned Gdk.Window? get_drag_window ();
+		[Version (since = "3.94")]
+		public unowned Gdk.ContentFormats get_formats ();
 		[Version (since = "3.0")]
 		public Gdk.DragProtocol get_protocol ();
 		[Version (since = "2.22")]
@@ -5090,8 +5101,6 @@ namespace Gdk {
 		public unowned Gdk.Window get_source_window ();
 		[Version (since = "2.22")]
 		public Gdk.DragAction get_suggested_action ();
-		[Version (since = "2.22")]
-		public unowned GLib.List<Gdk.Atom> list_targets ();
 		[Version (since = "3.20")]
 		public bool manage_dnd (Gdk.Window ipc_window, Gdk.DragAction actions);
 		public void set_device (Gdk.Device device);
@@ -5632,7 +5641,6 @@ namespace Gdk {
 		public void get_root_origin (out int x, out int y);
 		[Version (since = "3.10")]
 		public int get_scale_factor ();
-		public Gdk.EventMask get_source_events (Gdk.InputSource source);
 		public Gdk.WindowState get_state ();
 		[Version (since = "3.0")]
 		public bool get_support_multidevice ();
@@ -5724,8 +5732,6 @@ namespace Gdk {
 		public void set_skip_pager_hint (bool skips_pager);
 		[Version (since = "2.2")]
 		public void set_skip_taskbar_hint (bool skips_taskbar);
-		[Version (since = "3.0")]
-		public void set_source_events (Gdk.InputSource source, Gdk.EventMask event_mask);
 		[Version (since = "2.12")]
 		public void set_startup_id (string startup_id);
 		[Version (since = "3.0")]
@@ -6404,18 +6410,18 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "3.90")]
 	public static void cairo_surface_upload_to_gl (Cairo.Surface surface, int target, int width, int height, Gdk.GLContext? context);
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdkx.h")]
 	[Version (since = "3.0")]
 	public static void disable_multidevice ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_abort (Gdk.DragContext context, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Gdk.DragContext drag_begin (Gdk.Window window, GLib.List<Gdk.Atom> targets);
+	public static Gdk.DragContext drag_begin (Gdk.Window window, Gdk.ContentFormats formats);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Gdk.DragContext drag_begin_for_device (Gdk.Window window, Gdk.Device device, GLib.List<Gdk.Atom> targets);
+	public static Gdk.DragContext drag_begin_for_device (Gdk.Window window, Gdk.Device device, Gdk.ContentFormats formats);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "3.20")]
-	public static Gdk.DragContext drag_begin_from_point (Gdk.Window window, Gdk.Device device, GLib.List<Gdk.Atom> targets, int x_root, int y_root);
+	public static Gdk.DragContext drag_begin_from_point (Gdk.Window window, Gdk.Device device, Gdk.ContentFormats formats, int x_root, int y_root);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_drop (Gdk.DragContext context, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -7913,6 +7919,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Gdk.Pixbuf pixbuf_expander_open { owned get; set; }
 		[NoAccessorMethod]
+		[Version (since = "2.2")]
 		public uint stock_size { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "3.10")]
@@ -8225,20 +8232,18 @@ namespace Gtk {
 		public void request_image ([CCode (scope = "async")] Gtk.ClipboardImageReceivedFunc callback);
 		[Version (since = "2.10")]
 		public void request_rich_text (Gtk.TextBuffer buffer, [CCode (scope = "async")] Gtk.ClipboardRichTextReceivedFunc callback);
-		[Version (since = "2.4")]
-		public void request_targets ([CCode (scope = "async")] Gtk.ClipboardTargetsReceivedFunc callback);
 		public void request_text ([CCode (scope = "async")] Gtk.ClipboardTextReceivedFunc callback);
 		[Version (since = "2.14")]
 		public void request_uris ([CCode (scope = "async")] Gtk.ClipboardURIReceivedFunc callback);
 		[Version (since = "2.6")]
-		public void set_can_store (Gtk.TargetList? targets);
+		public void set_can_store (Gdk.ContentFormats? formats);
 		[Version (since = "2.6")]
 		public void set_image (Gdk.Pixbuf pixbuf);
 		[Version (since = "3.94")]
 		public void set_surface (Cairo.Surface surface);
 		public void set_text (string text, int len);
-		public bool set_with_data (Gtk.TargetList targets, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func);
-		public bool set_with_owner (Gtk.TargetList targets, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func, GLib.Object owner);
+		public bool set_with_data (Gdk.ContentFormats formats, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func);
+		public bool set_with_owner (Gdk.ContentFormats formats, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func, GLib.Object owner);
 		[Version (since = "2.6")]
 		public void store ();
 		public Gtk.SelectionData? wait_for_contents (Gdk.Atom target);
@@ -8250,7 +8255,7 @@ namespace Gtk {
 		[Version (since = "2.6")]
 		public Cairo.Surface? wait_for_surface ();
 		[Version (since = "2.4")]
-		public bool wait_for_targets ([CCode (array_length_cname = "n_targets", array_length_pos = 1.1)] out (unowned Gdk.Atom)[] targets);
+		public bool wait_for_targets ([CCode (array_length_cname = "n_formats", array_length_pos = 1.1)] out (unowned Gdk.Atom)[] formats);
 		public string? wait_for_text ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "2.14")]
@@ -8674,7 +8679,7 @@ namespace Gtk {
 		[Version (since = "2.16")]
 		public void set_icon_activatable (Gtk.EntryIconPosition icon_pos, bool activatable);
 		[Version (since = "2.16")]
-		public void set_icon_drag_source (Gtk.EntryIconPosition icon_pos, Gtk.TargetList target_list, Gdk.DragAction actions);
+		public void set_icon_drag_source (Gtk.EntryIconPosition icon_pos, Gdk.ContentFormats formats, Gdk.DragAction actions);
 		[Version (since = "2.16")]
 		public void set_icon_from_gicon (Gtk.EntryIconPosition icon_pos, GLib.Icon? icon);
 		[Version (since = "2.16")]
@@ -8829,6 +8834,8 @@ namespace Gtk {
 		[Version (since = "2.16")]
 		public signal void icon_release (Gtk.EntryIconPosition icon_pos, Gdk.EventButton event);
 		public virtual signal void insert_at_cursor (string str);
+		[Version (since = "3.22.27")]
+		public virtual signal void insert_emoji ();
 		public virtual signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
 		public virtual signal void paste_clipboard ();
 		public virtual signal void populate_popup (Gtk.Widget popup);
@@ -9492,6 +9499,8 @@ namespace Gtk {
 		public signal void released (int n_press, double x, double y);
 		[Version (since = "3.14")]
 		public signal void stopped ();
+		[Version (since = "3.93.")]
+		public signal void unpaired_release (double x, double y, uint button, Gdk.EventSequence sequence);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_pan_get_type ()")]
 	public class GesturePan : Gtk.GestureDrag {
@@ -9789,9 +9798,9 @@ namespace Gtk {
 		[Version (since = "2.8")]
 		public Cairo.Surface create_drag_icon (Gtk.TreePath path);
 		[Version (since = "2.8")]
-		public void enable_model_drag_dest (Gtk.TargetList targets, Gdk.DragAction actions);
+		public void enable_model_drag_dest (Gdk.ContentFormats formats, Gdk.DragAction actions);
 		[Version (since = "2.8")]
-		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gtk.TargetList targets, Gdk.DragAction actions);
+		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gdk.ContentFormats formats, Gdk.DragAction actions);
 		[Version (since = "3.8")]
 		public bool get_activate_on_single_click ();
 		[Version (since = "3.6")]
@@ -10003,7 +10012,7 @@ namespace Gtk {
 		[Version (since = "3.10")]
 		public void set_from_surface (Cairo.Surface? surface);
 		[Version (since = "3.94")]
-		public void set_from_texture (Gdk.Texture texture);
+		public void set_from_texture (Gdk.Texture? texture);
 		[Version (since = "3.94")]
 		public void set_icon_size (Gtk.IconSize icon_size);
 		[Version (since = "2.6")]
@@ -12850,27 +12859,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected SwitchAccessible ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_target_list_ref", type_id = "gtk_target_list_get_type ()", unref_function = "gtk_target_list_unref")]
-	[Compact]
-	public class TargetList {
-		[CCode (has_construct_function = false)]
-		public TargetList ([CCode (array_length_cname = "ntargets", array_length_pos = 1.1, array_length_type = "guint")] Gtk.TargetEntry[]? targets);
-		public void add (Gdk.Atom target, uint flags);
-		[Version (since = "2.6")]
-		public void add_image_targets (bool writable);
-		[Version (since = "2.10")]
-		public void add_rich_text_targets (bool deserializable, Gtk.TextBuffer buffer);
-		public void add_table ([CCode (array_length_cname = "ntargets", array_length_pos = 1.1, array_length_type = "guint")] Gtk.TargetEntry[] targets);
-		[Version (since = "2.6")]
-		public void add_text_targets ();
-		[Version (since = "2.6")]
-		public void add_uri_targets ();
-		public bool find (Gdk.Atom target);
-		public void merge (Gtk.TargetList source);
-		public unowned Gtk.TargetList @ref ();
-		public void remove (Gdk.Atom target);
-		public void unref ();
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
 	[Compact]
 	public class TextBTree {
@@ -12904,7 +12892,7 @@ namespace Gtk {
 		public void get_bounds (out Gtk.TextIter start, out Gtk.TextIter end);
 		public int get_char_count ();
 		[Version (since = "2.10")]
-		public unowned Gtk.TargetList get_copy_target_list ();
+		public unowned Gdk.ContentFormats get_copy_target_list ();
 		[CCode (array_length_pos = 0.1)]
 		[Version (since = "2.10")]
 		public (unowned Gdk.Atom)[] get_deserialize_formats ();
@@ -12922,7 +12910,7 @@ namespace Gtk {
 		public unowned Gtk.TextMark? get_mark (string name);
 		public bool get_modified ();
 		[Version (since = "2.10")]
-		public unowned Gtk.TargetList get_paste_target_list ();
+		public unowned Gdk.ContentFormats get_paste_target_list ();
 		public unowned Gtk.TextMark get_selection_bound ();
 		public bool get_selection_bounds (out Gtk.TextIter start, out Gtk.TextIter end);
 		[CCode (array_length_pos = 0.1)]
@@ -12969,14 +12957,14 @@ namespace Gtk {
 		[Version (since = "2.10")]
 		public void unregister_serialize_format (Gdk.Atom format);
 		[Version (since = "2.10")]
-		public Gtk.TargetList copy_target_list { get; }
+		public Gdk.ContentFormats copy_target_list { get; }
 		[NoAccessorMethod]
 		[Version (since = "2.10")]
 		public int cursor_position { get; }
 		[Version (since = "2.10")]
 		public bool has_selection { get; }
 		[Version (since = "2.10")]
-		public Gtk.TargetList paste_target_list { get; }
+		public Gdk.ContentFormats paste_target_list { get; }
 		public Gtk.TextTagTable tag_table { get; construct; }
 		[NoAccessorMethod]
 		[Version (since = "2.8")]
@@ -13336,6 +13324,8 @@ namespace Gtk {
 		[Version (since = "3.16")]
 		public virtual signal bool extend_selection (Gtk.TextExtendSelection granularity, Gtk.TextIter location, Gtk.TextIter start, Gtk.TextIter end);
 		public virtual signal void insert_at_cursor (string str);
+		[Version (since = "3.22.27")]
+		public virtual signal void insert_emoji ();
 		public virtual signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
 		public signal void move_viewport (Gtk.ScrollStep step, int count);
 		public virtual signal void paste_clipboard ();
@@ -13526,9 +13516,9 @@ namespace Gtk {
 		[Version (since = "2.20")]
 		public unowned Gtk.Widget get_drag_item (Gtk.SelectionData selection);
 		[Version (since = "2.20")]
-		public static unowned Gtk.TargetEntry? get_drag_target_group ();
+		public static unowned string get_drag_target_group ();
 		[Version (since = "2.20")]
-		public static unowned Gtk.TargetEntry? get_drag_target_item ();
+		public static unowned string get_drag_target_item ();
 		[Version (since = "2.20")]
 		public unowned Gtk.ToolItemGroup? get_drop_group (int x, int y);
 		[Version (since = "2.20")]
@@ -13809,8 +13799,8 @@ namespace Gtk {
 		[Version (since = "2.12")]
 		public void convert_widget_to_tree_coords (int wx, int wy, out int tx, out int ty);
 		public Cairo.Surface create_row_drag_icon (Gtk.TreePath path);
-		public void enable_model_drag_dest (Gtk.TargetList targets, Gdk.DragAction actions);
-		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gtk.TargetList targets, Gdk.DragAction actions);
+		public void enable_model_drag_dest (Gdk.ContentFormats formats, Gdk.DragAction actions);
+		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gdk.ContentFormats formats, Gdk.DragAction actions);
 		public void expand_all ();
 		public bool expand_row (Gtk.TreePath path, bool open_all);
 		[Version (since = "2.2")]
@@ -15492,11 +15482,6 @@ namespace Gtk {
 		public weak string origin;
 		public GLib.Value value;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
-	public struct TargetEntry {
-		public weak string target;
-		public uint flags;
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_text_iter_get_type ()")]
 	public struct TextIter {
 		[Version (since = "3.2")]
@@ -16339,14 +16324,6 @@ namespace Gtk {
 		RECURSE,
 		SHOW_STYLE
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TARGET_", type_id = "gtk_target_flags_get_type ()")]
-	[Flags]
-	public enum TargetFlags {
-		SAME_APP,
-		SAME_WIDGET,
-		OTHER_APP,
-		OTHER_WIDGET
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TEXT_BUFFER_TARGET_INFO_", type_id = "gtk_text_buffer_target_info_get_type ()")]
 	public enum TextBufferTargetInfo {
 		BUFFER_CONTENTS,
@@ -17027,6 +17004,18 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned string? check_version (uint required_major, uint required_minor, uint required_micro);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (since = "2.6")]
+	public static Gdk.ContentFormats content_formats_add_image_targets (Gdk.ContentFormats list, bool writable);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (since = "2.10")]
+	public static Gdk.ContentFormats content_formats_add_rich_text_targets (Gdk.ContentFormats list, bool deserializable, Gtk.TextBuffer buffer);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (since = "2.6")]
+	public static Gdk.ContentFormats content_formats_add_text_targets (Gdk.ContentFormats list);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (since = "2.6")]
+	public static Gdk.ContentFormats content_formats_add_uri_targets (Gdk.ContentFormats list);
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.0")]
 	public static void device_grab_add (Gtk.Widget widget, Gdk.Device device, bool block_others);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -17038,7 +17027,7 @@ namespace Gtk {
 	public static int distribute_natural_allocation (int extra_space, uint n_requested_sizes, Gtk.RequestedSize sizes);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.10")]
-	public static unowned Gdk.DragContext drag_begin_with_coordinates (Gtk.Widget widget, Gtk.TargetList targets, Gdk.DragAction actions, int button, Gdk.Event? event, int x, int y);
+	public static unowned Gdk.DragContext drag_begin_with_coordinates (Gtk.Widget widget, Gdk.ContentFormats targets, Gdk.DragAction actions, int button, Gdk.Event? event, int x, int y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.16")]
 	public static void drag_cancel (Gdk.DragContext context);
@@ -17054,16 +17043,16 @@ namespace Gtk {
 	[Version (since = "2.6")]
 	public static void drag_dest_add_uri_targets (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gdk.Atom? drag_dest_find_target (Gtk.Widget widget, Gdk.DragContext context, Gtk.TargetList? target_list);
+	public static unowned Gdk.Atom? drag_dest_find_target (Gtk.Widget widget, Gdk.DragContext context, Gdk.ContentFormats? target_list);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gtk.TargetList? drag_dest_get_target_list (Gtk.Widget widget);
+	public static unowned Gdk.ContentFormats? drag_dest_get_target_list (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.10")]
 	public static bool drag_dest_get_track_motion (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_dest_set (Gtk.Widget widget, Gtk.DestDefaults flags, Gtk.TargetList? targets, Gdk.DragAction actions);
+	public static void drag_dest_set (Gtk.Widget widget, Gtk.DestDefaults flags, Gdk.ContentFormats? targets, Gdk.DragAction actions);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_dest_set_target_list (Gtk.Widget widget, Gtk.TargetList? target_list);
+	public static void drag_dest_set_target_list (Gtk.Widget widget, Gdk.ContentFormats? target_list);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.10")]
 	public static void drag_dest_set_track_motion (Gtk.Widget widget, bool track_motion);
@@ -17100,9 +17089,9 @@ namespace Gtk {
 	public static void drag_source_add_uri_targets (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.4")]
-	public static unowned Gtk.TargetList? drag_source_get_target_list (Gtk.Widget widget);
+	public static unowned Gdk.ContentFormats? drag_source_get_target_list (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_source_set (Gtk.Widget widget, Gdk.ModifierType start_button_mask, Gtk.TargetList? targets, Gdk.DragAction actions);
+	public static void drag_source_set (Gtk.Widget widget, Gdk.ModifierType start_button_mask, Gdk.ContentFormats? targets, Gdk.DragAction actions);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.2")]
 	public static void drag_source_set_icon_gicon (Gtk.Widget widget, GLib.Icon icon);
@@ -17116,7 +17105,7 @@ namespace Gtk {
 	public static void drag_source_set_icon_surface (Gtk.Widget widget, Cairo.Surface surface);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.4")]
-	public static void drag_source_set_target_list (Gtk.Widget widget, Gtk.TargetList? target_list);
+	public static void drag_source_set_target_list (Gtk.Widget widget, Gdk.ContentFormats? target_list);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_source_unset (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -17196,7 +17185,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void selection_add_target (Gtk.Widget widget, Gdk.Atom selection, Gdk.Atom target);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void selection_add_targets (Gtk.Widget widget, Gdk.Atom selection, Gtk.TargetList targets);
+	public static void selection_add_targets (Gtk.Widget widget, Gdk.Atom selection, Gdk.ContentFormats targets);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void selection_clear_targets (Gtk.Widget widget, Gdk.Atom selection);
 	[CCode (cheader_filename = "gtk/gtk.h")]

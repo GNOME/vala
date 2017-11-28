@@ -17,7 +17,6 @@ Border struct
 FileFilterInfo struct=false
 FixedChild struct=false
 Requisition struct
-TargetEntry struct
 TextIter struct
 TreeIter struct
 
@@ -276,9 +275,6 @@ RecentInfo
 TreeModel
   .filter_new parent="Gtk.TreeModelFilter" name="new" symbol_type="constructor"
   .sort_new_with_model parent="Gtk.TreeModelSort" name="new_with_model" symbol_type="constructor"
-
-// These aren't actually used publicly anywhere.
-TargetPair skip
 
 // Vala-specific, not really bugs
 /////////////////////////////////

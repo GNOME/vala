@@ -32,7 +32,6 @@ ModifierType
         .modifier_reserved_*_mask skip
 pango_layout_get_clip_region skip=false
 property_change skip=false
-Screen skip
 Texture
         // Factory method
         .new_* symbol_type="function" name="new_(.+)"
