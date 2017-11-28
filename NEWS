@@ -1,3 +1,42 @@
+Vala 0.39.1
+===========
+ * Highlights
+  - Report warning if property-type is not compatible with GLib.Object [#693932]
+  - Allow to pass compatible delegates to signal.connect() [#787521]
+  - Allow unscoped enum values where possible
+  - Avoid use of temp-var for some callables returning ValueType
+    and to access in/ref parameters [#789071]
+  - Reformat generated source declarations and definitions for better
+    readability [#688447]
+
+ * Various bug fixes:
+  - Use array_length_cexpr to support fixed-arrays for return-values [#784691]
+  - Properly parse arguments for vala interpeter-mode [#663070]
+  - Enforce name-length >= 3 for structs using GType [#764041]
+  - Report error for missing type-parameter on enclosing type [#587905]
+  - Add boolean "use_inplace" ccode-attribute for methods [#750840]
+  - Improve handling of unowned/owned keyword occurrences
+  - Methods need to throw compatible error if target delegate throws one
+  - Discover invalid member access to instance field [#790903]
+  - Improve error output of mismatching overriding methods
+
+ * Valadoc
+  - Acknowledge possible properties in structs [#784705]
+  - Fix fatal typo in GtkdocRenderer.visit_symbol_link() [#790266]
+
+ * Bindings:
+  - glib-2.0: Use type-id/marshaller-type for (u)int16/(u)short from (u)int32
+    [#693932]
+  - glib-2.0: Add optional 'unparsed' parameter to *.try_parse () [#774124]
+  - gobject-2.0: Add some missing symbols
+  - gstreamer-1.0: Bind GST_TIME_ARGS, GST_STIME_ARGS macros [#750840]
+  - gstreamer-1.0: Bind GST_DEBUG_BIN_TO_DOT_FILE/*_WITH_TS [#785215]
+  - gstreamer-1.0: Update from 1.13+ git master
+  - gtk+-3.0: Update to 3.22.26+9ce824d3
+  - gtk+-4.0: Split Gsk.RenderNode into several classes
+  - gtk+-4.0: Update to 3.93.0+2d797dd8
+  - webkit2gtk-4.0: Update to 2.19.2
+
 Vala 0.38.3
 ===========
  * Various bug fixes:
