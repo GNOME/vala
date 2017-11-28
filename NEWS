@@ -1,3 +1,23 @@
+Vala 0.38.3
+===========
+ * Various bug fixes:
+  - codegen: Prioritize "array_length=true" over "array_null_terminated=true"
+    [#788775]
+  - codegen: Avoid possible conflicts with internal property/signal defines
+    [#788964]
+
+ * Bindings:
+  - gio-2.0: Expose g_task_get_source_object as Task.get_unowned_source_object
+  - gstreamer-1.0: Update from 1.13+ git master
+  - gtk+-4.0: Update to 3.92.1
+  - libxml-2.0: Add DTD methods [#789442]
+
+Vala 0.38.2
+===========
+ * Various bindings updates:
+  - gstreamer-1.0,gtk+-3.0,gtk+-4.0: Update from git master
+  - gnutls: Fix free_function ccode-attribute of Certificate [#788181]
+
 Vala 0.38.1
 ===========
  * Various bug fixes:
