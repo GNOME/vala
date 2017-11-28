@@ -12217,6 +12217,12 @@
 					<parameter name="str" type="char*"/>
 				</parameters>
 			</signal>
+			<signal name="insert-emoji" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="entry" type="GtkEntry*"/>
+				</parameters>
+			</signal>
 			<signal name="move-cursor" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -26951,6 +26957,12 @@
 				<parameters>
 					<parameter name="text_view" type="GtkTextView*"/>
 					<parameter name="str" type="char*"/>
+				</parameters>
+			</signal>
+			<signal name="insert-emoji" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="text_view" type="GtkTextView*"/>
 				</parameters>
 			</signal>
 			<signal name="move-cursor" when="LAST">
