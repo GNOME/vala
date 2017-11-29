@@ -285,7 +285,7 @@ public class Valadoc.MarkupReader : Object {
 					text_begin = current;
 				} else if (((string) next_pos).has_prefix ("percnt;")) {
 					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
-					content.append_c ('>');
+					content.append_c ('%');
 					current += 8;
 					text_begin = current;
 				} else {

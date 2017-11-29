@@ -189,7 +189,7 @@ public static void positive_2 () {
 
 	token = reader.read_token (out begin, out end);
 	assert (token == MarkupTokenType.TEXT);
-	assert (reader.content == "AA BB & \"' < > >");
+	assert (reader.content == "AA BB & \"' < > %");
 	assert (reader.name == null);
 	assert (reader.get_attributes ().size == 0);
 	assert (reporter.warnings == 0);
