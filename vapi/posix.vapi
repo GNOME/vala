@@ -825,66 +825,252 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/resource.h")]
 	public const int PRIO_USER;
 
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.ABRT")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGABRT;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.ALRM")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGALRM;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.BUS")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGBUS;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.CHLD")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGCHLD;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.CONT")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGCONT;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.FPE")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGFPE;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.HUP")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGHUP;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.ILL")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGILL;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.INT")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGINT;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.KILL")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGKILL;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.PIPE")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGPIPE;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.QUIT")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGQUIT;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.SEGV")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGSEGV;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.STOP")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGSTOP;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.TERM")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGTERM;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.TSTP")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGTSTP;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.TTIN")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGTTIN;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.TTOU")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGTTOU;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.USR1")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGUSR1;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.USR2")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGUSR2;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.POLL")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGPOLL;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.PROF")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGPROF;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.SYS")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGSYS;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.TRAP")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGTRAP;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.URG")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGURG;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.VTALRM")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGVTALRM;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.XCPU")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGXCPU;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.XFSZ")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGXFSZ;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.IOT")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGIOT;
+	[Version (deprecated = true, deprecated_since = "vala-0.40", replacement = "Posix.Signal.STKFLT")]
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGSTKFLT;
+
+	/**
+	 * Signal constants
+	 */
+	[CCode (cheader_filename = "signal.h", cprefix = "SIG", has_type_id = false)]
+	public enum Signal {
+		/**
+		 * Abort signal (ANSI)
+		 */
+		ABRT,
+		/**
+		 * Alarm clock signal (POSIX)
+		 */
+		ALRM,
+		/**
+		 * Access to an undefined portion of memory signal (4.2 BSD)
+		 */
+		BUS,
+		/**
+		 * Child process terminated, stopped or continued signal (POSIX)
+		 */
+		CHLD,
+		/**
+		 * Old System V name for CHLD
+		 */
+		[Version (replacement = "Posix.Signal.CHLD")]
+		CLD,
+		/**
+		 * Continue executing, if stopped, signal (POSIX)
+		 */
+		CONT,
+		/**
+		 * Emulator trap
+		 */
+		EMT,
+		/**
+		 * Floating-point exception signal (ANSI)
+		 */
+		FPE,
+		/**
+		 * Hangup signal (POSIX)
+		 */
+		HUP,
+		/**
+		 * Illegal instruction signal (ANSI)
+		 */
+		ILL,
+		/**
+		 * Information request
+		 */
+		INFO,
+		/**
+		 * Terminal interrupt signal (ANSI)
+		 */
+		INT,
+		/**
+		 * I/O now possible (4.2 BSD)
+		 */
+		IO,
+		/**
+		 * IOT trap signal (4.2 BSD)
+		 */
+		IOT,
+		/**
+		 * Kill signal (cannot be caught or ignored) (POSIX)
+		 */
+		KILL,
+		/**
+		 * File lock lost
+		 */
+		LOST,
+		/**
+		 * Broken pipe signal (POSIX)
+		 */
+		PIPE,
+		/**
+		 * Pollable event occurred signal (System V)
+		 */
+		POLL,
+		/**
+		 * Profiling timer expired signal (4.2 BSD)
+		 */
+		PROF,
+		/**
+		 * Power failure restart (System V)
+		 */
+		PWR,
+		/**
+		 * Terminal quit signal (POSIX)
+		 */
+		QUIT,
+		/**
+		 * Memory reference segmentation violation signal (ANSI)
+		 */
+		SEGV,
+		/**
+		 * Stack fault signal
+		 */
+		STKFLT,
+		/**
+		 * Stop executing signal (cannot be caught or ignored) (POSIX)
+		 */
+		STOP,
+		/**
+		 * Bad system call signal
+		 */
+		SYS,
+		/**
+		 * Termination signal (ANSI)
+		 */
+		TERM,
+		/**
+		 * Trace/breakpoint trap signal (POSIX)
+		 */
+		TRAP,
+		/**
+		 * Terminal stop signal (POSIX)
+		 */
+		TSTP,
+		/**
+		 * Background read from tty signal (POSIX)
+		 */
+		TTIN,
+		/**
+		 * Background write to tty signal (POSIX)
+		 */
+		TTOU,
+		/**
+		 * Urgent condition on socket signal (4.2 BSD)
+		 */
+		URG,
+		/**
+		 * User-defined signal 1 (POSIX)
+		 */
+		USR1,
+		/**
+		 * User-defined signal 2 (POSIX)
+		 */
+		USR2,
+		/**
+		 * Virtual timer expired signal (4.2 BSD)
+		 */
+		VTALRM,
+		/**
+		 * Window size changed signal (4.3 BSD, Sun)
+		 */
+		WINCH,
+		/**
+		 * CPU time limit exceeded signal (4.2 BSD)
+		 */
+		XCPU,
+		/**
+		 * File size limit exceeded signal (4.2 BSD)
+		 */
+		XFSZ,
+	}
 
 	[CCode (cheader_filename = "signal.h")]
 	public const int SA_NOCLDSTOP;
