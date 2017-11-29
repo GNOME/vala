@@ -583,7 +583,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		protected DBusActionGroup ();
 		[Version (since = "2.32")]
-		public static GLib.DBusActionGroup @get (GLib.DBusConnection connection, string bus_name, string object_path);
+		public static GLib.DBusActionGroup @get (GLib.DBusConnection connection, string? bus_name, string object_path);
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_dbus_annotation_info_ref", type_id = "g_dbus_annotation_info_get_type ()", unref_function = "g_dbus_annotation_info_unref")]
 	[Compact]
@@ -749,7 +749,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		protected DBusMenuModel ();
 		[Version (since = "2.32")]
-		public static GLib.DBusMenuModel @get (GLib.DBusConnection connection, string bus_name, string object_path);
+		public static GLib.DBusMenuModel @get (GLib.DBusConnection connection, string? bus_name, string object_path);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_message_get_type ()")]
 	[Version (since = "2.26")]

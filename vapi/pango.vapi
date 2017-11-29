@@ -205,8 +205,8 @@ namespace Pango {
 		[Version (since = "1.14")]
 		public Pango.FontDescription describe_with_absolute_size ();
 		public static void descriptions_free ([CCode (array_length_cname = "n_descs", array_length_pos = 1.1)] owned Pango.FontDescription[]? descs);
-		public virtual unowned Pango.EngineShape find_shaper (Pango.Language lang, uint32 ch);
-		public virtual Pango.Coverage get_coverage (Pango.Language lang);
+		public virtual unowned Pango.EngineShape find_shaper (Pango.Language language, uint32 ch);
+		public virtual Pango.Coverage get_coverage (Pango.Language language);
 		[Version (since = "1.10")]
 		public virtual unowned Pango.FontMap? get_font_map ();
 		public virtual void get_glyph_extents (Pango.Glyph glyph, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
