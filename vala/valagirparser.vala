@@ -2426,7 +2426,10 @@ public class Vala.GirParser : CodeVisitor {
 			Report.error (get_current_src (), "expected start element of `parameter' or `instance-parameter'");
 		}
 		start_element (element_type);
-		string name = reader.get_attribute ("name");
+		var name = metadata.get_string (ArgumentType.NAME);
+		if (name == null) {
+			name = reader.get_attribute ("name");
+		}
 		if (name == null) {
 			name = default_name;
 		}
