@@ -1078,7 +1078,7 @@ public class string {
 		if (separator == null) {
 			separator = "";
 		}
-		if (str_array != null || str_array.length > 0 || (str_array.length == -1 && str_array[0] != null)) {
+		if (str_array != null && (str_array.length > 0 || (str_array.length == -1 && str_array[0] != null))) {
 			int i;
 			size_t len = 1;
 			for (i = 0 ; (str_array.length != -1 && i < str_array.length) || (str_array.length == -1 && str_array[i] != null) ; i++) {
