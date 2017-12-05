@@ -50,31 +50,20 @@ public class Vala.CCodeAssignment : CCodeExpression {
 	public override void write (CCodeWriter writer) {
 		left.write (writer);
 
-		writer.write_string (" ");
-		
-		if (operator == CCodeAssignmentOperator.BITWISE_OR) {
-			writer.write_string ("|");
-		} else if (operator == CCodeAssignmentOperator.BITWISE_AND) {
-			writer.write_string ("&");
-		} else if (operator == CCodeAssignmentOperator.BITWISE_XOR) {
-			writer.write_string ("^");
-		} else if (operator == CCodeAssignmentOperator.ADD) {
-			writer.write_string ("+");
-		} else if (operator == CCodeAssignmentOperator.SUB) {
-			writer.write_string ("-");
-		} else if (operator == CCodeAssignmentOperator.MUL) {
-			writer.write_string ("*");
-		} else if (operator == CCodeAssignmentOperator.DIV) {
-			writer.write_string ("/");
-		} else if (operator == CCodeAssignmentOperator.PERCENT) {
-			writer.write_string ("%");
-		} else if (operator == CCodeAssignmentOperator.SHIFT_LEFT) {
-			writer.write_string ("<<");
-		} else if (operator == CCodeAssignmentOperator.SHIFT_RIGHT) {
-			writer.write_string (">>");
+		switch (operator) {
+		case CCodeAssignmentOperator.SIMPLE: writer.write_string (" = "); break;
+		case CCodeAssignmentOperator.BITWISE_OR: writer.write_string (" |= "); break;
+		case CCodeAssignmentOperator.BITWISE_AND: writer.write_string (" &= "); break;
+		case CCodeAssignmentOperator.BITWISE_XOR: writer.write_string (" ^= "); break;
+		case CCodeAssignmentOperator.ADD: writer.write_string (" += "); break;
+		case CCodeAssignmentOperator.SUB: writer.write_string (" -= "); break;
+		case CCodeAssignmentOperator.MUL: writer.write_string (" *= "); break;
+		case CCodeAssignmentOperator.DIV: writer.write_string (" /= "); break;
+		case CCodeAssignmentOperator.PERCENT: writer.write_string (" %= "); break;
+		case CCodeAssignmentOperator.SHIFT_LEFT: writer.write_string (" <<= "); break;
+		case CCodeAssignmentOperator.SHIFT_RIGHT: writer.write_string (" >>= "); break;
+		default: assert_not_reached ();
 		}
-		
-		writer.write_string ("= ");
 
 		right.write (writer);
 	}
