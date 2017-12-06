@@ -50,7 +50,7 @@ public class Vala.GSignalModule : GObjectModule {
 	}
 	
 	private string? get_value_type_name_from_type_reference (DataType t) {
-		if (t is PointerType || t.type_parameter != null) {
+		if (t is PointerType || t is GenericType) {
 			return "gpointer";
 		} else if (t is VoidType) {
 			return "void";
@@ -281,7 +281,7 @@ public class Vala.GSignalModule : GObjectModule {
 				} else {
 					get_value_function = "g_value_get_pointer";
 				}
-			} else if (p.variable_type is PointerType || p.variable_type.type_parameter != null) {
+			} else if (p.variable_type is PointerType || p.variable_type is GenericType) {
 				get_value_function = "g_value_get_pointer";
 			} else if (p.variable_type is ErrorType) {
 				get_value_function = "g_value_get_pointer";
@@ -315,7 +315,7 @@ public class Vala.GSignalModule : GObjectModule {
 				} else {
 					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
 				}
-			} else if (return_type.type_parameter != null) {
+			} else if (return_type is GenericType) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
 			} else if (return_type is ErrorType) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
@@ -400,7 +400,7 @@ public class Vala.GSignalModule : GObjectModule {
 		csignew.add_argument (marshal_arg);
 
 		var params = sig.get_parameters ();
-		if (sig.return_type is PointerType || sig.return_type.type_parameter != null) {
+		if (sig.return_type is PointerType || sig.return_type is GenericType) {
 			csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 		} else if (sig.return_type is ErrorType) {
 			csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
@@ -431,7 +431,7 @@ public class Vala.GSignalModule : GObjectModule {
 				for (var i = 0; i < ((ArrayType) param.variable_type).rank; i++) {
 					csignew.add_argument (new CCodeConstant ("G_TYPE_INT"));
 				}
-			} else if (param.variable_type is PointerType || param.variable_type.type_parameter != null || param.direction != ParameterDirection.IN) {
+			} else if (param.variable_type is PointerType || param.variable_type is GenericType || param.direction != ParameterDirection.IN) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 			} else if (param.variable_type is ErrorType) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));

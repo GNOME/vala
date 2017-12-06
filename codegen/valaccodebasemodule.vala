@@ -2678,7 +2678,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			return new CCodeIdentifier (dup_function);
-		} else if (type.type_parameter != null) {
+		} else if (type is GenericType) {
 			string func_name = "%s_dup_func".printf (type.type_parameter.name.down ());
 
 			if (type.type_parameter.parent_symbol is Interface) {
@@ -3176,7 +3176,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				return new CCodeConstant ("NULL");
 			}
 			return new CCodeIdentifier (unref_function);
-		} else if (type.type_parameter != null) {
+		} else if (type is GenericType) {
 			string func_name = "%s_destroy_func".printf (type.type_parameter.name.down ());
 
 			if (type.type_parameter.parent_symbol is Interface) {
@@ -3382,7 +3382,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		 */
 
 		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cvar, new CCodeConstant ("NULL"));
-		if (type.type_parameter != null) {
+		if (type is GenericType) {
 			var parent = type.type_parameter.parent_symbol;
 			var cl = parent as Class;
 			if ((!(parent is Method) && !(parent is ObjectTypeSymbol)) || (cl != null && cl.is_compact)) {
@@ -4118,7 +4118,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return false;
 		}
 
-		if (type.type_parameter != null) {
+		if (type is GenericType) {
 			if (is_limited_generic_type (type)) {
 				return false;
 			}
@@ -4144,7 +4144,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return false;
 		}
 
-		if (type.type_parameter != null) {
+		if (type is GenericType) {
 			if (is_limited_generic_type (type)) {
 				return false;
 			}
@@ -4287,13 +4287,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return store_temp_value (new GLibValue (type, ccall), node);
 		} else {
 			var cnotnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, cexpr, new CCodeConstant ("NULL"));
-			if (type.type_parameter != null) {
+			if (type is GenericType) {
 				// dup functions are optional for type parameters
 				var cdupnotnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_dup_func_expression (type, node.source_reference), new CCodeConstant ("NULL"));
 				cnotnull = new CCodeBinaryExpression (CCodeBinaryOperator.AND, cnotnull, cdupnotnull);
 			}
 
-			if (type.type_parameter != null) {
+			if (type is GenericType) {
 				// cast from gconstpointer to gpointer as GBoxedCopyFunc expects gpointer
 				ccall.add_argument (new CCodeCastExpression (cexpr, "gpointer"));
 			} else {
@@ -6054,7 +6054,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		           || type is PointerType || type is DelegateType
 		           || (array_type != null && !array_type.fixed_length)) {
 			return new CCodeConstant ("NULL");
-		} else if (type.type_parameter != null) {
+		} else if (type is GenericType) {
 			return new CCodeConstant ("NULL");
 		} else if (type is ErrorType) {
 			return new CCodeConstant ("NULL");

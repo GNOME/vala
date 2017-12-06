@@ -74,7 +74,7 @@ public class Vala.PointerType : DataType {
 		}
 
 		/* temporarily ignore type parameters */
-		if (target_type.type_parameter != null) {
+		if (target_type is GenericType) {
 			return true;
 		}
 

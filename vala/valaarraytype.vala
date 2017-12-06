@@ -212,7 +212,7 @@ public class Vala.ArrayType : ReferenceType {
 		}
 
 		/* temporarily ignore type parameters */
-		if (target_type.type_parameter != null) {
+		if (target_type is GenericType) {
 			return true;
 		}
 

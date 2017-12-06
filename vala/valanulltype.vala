@@ -36,12 +36,12 @@ public class Vala.NullType : ReferenceType {
 			return target_type.nullable;
 		}
 
-		if (!(target_type is PointerType) && (target_type is NullType || (target_type.data_type == null && target_type.type_parameter == null))) {
+		if (!(target_type is PointerType) && (target_type is NullType || (target_type.data_type == null && !(target_type is GenericType)))) {
 			return true;
 		}
 
 		/* null can be cast to any reference or array type or pointer type */
-		if (target_type.type_parameter != null ||
+		if (target_type is GenericType ||
 		    target_type is PointerType ||
 		    target_type.nullable ||
 		    target_type.data_type.get_attribute ("PointerType") != null) {

@@ -48,7 +48,7 @@ public class Vala.ErrorType : ReferenceType {
 
 	public override bool compatible (DataType target_type) {
 		/* temporarily ignore type parameters */
-		if (target_type.type_parameter != null) {
+		if (target_type is GenericType) {
 			return true;
 		}
 

@@ -991,7 +991,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 			}
 		} else if (node is ValueType && ((ValueType) node).nullable) {
 			return "POINTER";
-		} else if (node is PointerType || ((DataType) node).type_parameter != null) {
+		} else if (node is PointerType || node is GenericType) {
 			return "POINTER";
 		} else if (node is ErrorType) {
 			return "POINTER";
