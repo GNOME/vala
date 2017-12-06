@@ -385,7 +385,9 @@ public class Vala.ObjectCreationExpression : Expression {
 			// printf arguments
 			if (m.printf_format) {
 				StringLiteral format_literal = null;
-				if (last_arg != null) {
+				if (last_arg is NullLiteral) {
+					// do not replace explicit null
+				} else if (last_arg != null) {
 					// use last argument as format string
 					format_literal = StringLiteral.get_format_literal (last_arg);
 					if (format_literal == null && args.size == m.get_parameters ().size - 1) {
