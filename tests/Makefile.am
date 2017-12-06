@@ -190,6 +190,7 @@ TESTS = \
 	objects/bug587905.test \
 	objects/bug588203.vala \
 	objects/bug589928.vala \
+	objects/bug593137.vala \
 	objects/bug593260.vala \
 	objects/bug596621.vala \
 	objects/bug597155.vala \
