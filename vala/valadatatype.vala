@@ -197,11 +197,11 @@ public abstract class Vala.DataType : CodeNode {
 		if (type2.data_type != data_type) {
 			return false;
 		}
-		if (type2.type_parameter != null || type_parameter != null) {
-			if (type2.type_parameter == null || type_parameter == null) {
+		if (type2 is GenericType || this is GenericType) {
+			if (!(type2 is GenericType) || !(this is GenericType)) {
 				return false;
 			}
-			if (!type2.type_parameter.equals (type_parameter)) {
+			if (!((GenericType) type2).type_parameter.equals (((GenericType) this).type_parameter)) {
 				return false;
 			}
 		}
@@ -240,7 +240,7 @@ public abstract class Vala.DataType : CodeNode {
 		}
 
 		/* temporarily ignore type parameters */
-		if (type_parameter != null || type2.type_parameter != null) {
+		if (this is GenericType || type2 is GenericType) {
 			return true;
 		}
 
@@ -287,7 +287,7 @@ public abstract class Vala.DataType : CodeNode {
 
 		if (target_type is PointerType) {
 			/* any reference or array type or pointer type can be cast to a generic pointer */
-			if (type_parameter != null ||
+			if (this is GenericType ||
 				(data_type != null && (
 					data_type.is_reference_type () ||
 					this is DelegateType))) {
@@ -298,7 +298,7 @@ public abstract class Vala.DataType : CodeNode {
 		}
 
 		/* temporarily ignore type parameters */
-		if (target_type.type_parameter != null) {
+		if (target_type is GenericType) {
 			return true;
 		}
 
@@ -380,7 +380,7 @@ public abstract class Vala.DataType : CodeNode {
 	public virtual bool is_reference_type_or_type_parameter () {
 		return (data_type != null &&
 		        data_type.is_reference_type ()) ||
-		       type_parameter != null;
+		       this is GenericType;
 	}
 
 	public virtual bool is_array () {

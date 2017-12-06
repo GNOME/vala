@@ -138,8 +138,9 @@ public class Vala.Signal : Symbol, Lockable, Callable {
 			// parameter types must refer to the delegate type parameters
 			// instead of to the class type parameters
 			foreach (var param in generated_delegate.get_parameters ()) {
-				if (param.variable_type is GenericType) {
-					param.variable_type.type_parameter = generated_delegate.get_type_parameters ().get (generated_delegate.get_type_parameter_index (param.variable_type.type_parameter.name));
+				var generic_type = param.variable_type as GenericType;
+				if (generic_type != null) {
+					generic_type.type_parameter = generated_delegate.get_type_parameters ().get (generated_delegate.get_type_parameter_index (generic_type.type_parameter.name));
 				}
 			}
 		}
