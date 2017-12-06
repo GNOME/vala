@@ -791,8 +791,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			var result_type = itype.get_return_type ();
 
 			if (expr.formal_value_type is GenericType && !(expr.value_type is GenericType)) {
-				var st = expr.formal_value_type.type_parameter.parent_symbol.parent_symbol as Struct;
-				if (expr.formal_value_type.type_parameter.parent_symbol == garray_type ||
+				var type_parameter = ((GenericType) expr.formal_value_type).type_parameter;
+				var st = type_parameter.parent_symbol.parent_symbol as Struct;
+				if (type_parameter.parent_symbol == garray_type ||
 				    (st != null && get_ccode_name (st) == "va_list")) {
 					// GArray and va_list don't use pointer-based generics
 					// above logic copied from visit_expression ()

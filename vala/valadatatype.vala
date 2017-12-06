@@ -45,11 +45,6 @@ public abstract class Vala.DataType : CodeNode {
 	public weak TypeSymbol data_type { get; set; }
 	
 	/**
-	 * The referred generic type parameter.
-	 */
-	public TypeParameter type_parameter { get; set; }
-	
-	/**
 	 * Specifies that the expression transfers a floating reference.
 	 */
 	public bool floating_reference { get; set; }

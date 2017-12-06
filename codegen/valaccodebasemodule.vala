@@ -2591,7 +2591,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return local;
 	}
 
-	bool is_in_generic_type (DataType type) {
+	bool is_in_generic_type (GenericType type) {
 		if (current_symbol != null && type.type_parameter.parent_symbol is TypeSymbol
 		    && (current_method == null || current_method.binding == MemberBinding.INSTANCE)) {
 			return true;
@@ -2610,13 +2610,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public CCodeExpression get_type_id_expression (DataType type, bool is_chainup = false) {
 		if (type is GenericType) {
-			string var_name = "%s_type".printf (type.type_parameter.name.down ());
+			var type_parameter = ((GenericType) type).type_parameter;
+			string var_name = "%s_type".printf (type_parameter.name.down ());
 
-			if (type.type_parameter.parent_symbol is Interface) {
-				var iface = (Interface) type.type_parameter.parent_symbol;
+			if (type_parameter.parent_symbol is Interface) {
+				var iface = (Interface) type_parameter.parent_symbol;
 				require_generic_accessors (iface);
 
-				string method_name = "get_%s_type".printf (type.type_parameter.name.down ());
+				string method_name = "get_%s_type".printf (type_parameter.name.down ());
 				var cast_self = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface))));
 				cast_self.add_argument (new CCodeIdentifier ("self"));
 				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
@@ -2624,7 +2625,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				return function_call;
 			}
 
-			if (is_in_generic_type (type) && !is_chainup && !in_creation_method) {
+			if (is_in_generic_type ((GenericType) type) && !is_chainup && !in_creation_method) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_result_cexpression ("self"), "priv"), var_name);
 			} else {
 				return get_variable_cexpression (var_name);
@@ -2679,13 +2680,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			return new CCodeIdentifier (dup_function);
 		} else if (type is GenericType) {
-			string func_name = "%s_dup_func".printf (type.type_parameter.name.down ());
+			var type_parameter = ((GenericType) type).type_parameter;
+			string func_name = "%s_dup_func".printf (type_parameter.name.down ());
 
-			if (type.type_parameter.parent_symbol is Interface) {
-				var iface = (Interface) type.type_parameter.parent_symbol;
+			if (type_parameter.parent_symbol is Interface) {
+				var iface = (Interface) type_parameter.parent_symbol;
 				require_generic_accessors (iface);
 
-				string method_name = "get_%s_dup_func".printf (type.type_parameter.name.down ());
+				string method_name = "get_%s_dup_func".printf (type_parameter.name.down ());
 				var cast_self = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface))));
 				cast_self.add_argument (new CCodeIdentifier ("self"));
 				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
@@ -2693,7 +2695,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				return function_call;
 			}
 
-			if (is_in_generic_type (type) && !is_chainup && !in_creation_method) {
+			if (is_in_generic_type ((GenericType) type) && !is_chainup && !in_creation_method) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_result_cexpression ("self"), "priv"), func_name);
 			} else {
 				return get_variable_cexpression (func_name);
@@ -3177,13 +3179,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 			return new CCodeIdentifier (unref_function);
 		} else if (type is GenericType) {
-			string func_name = "%s_destroy_func".printf (type.type_parameter.name.down ());
+			var type_parameter = ((GenericType) type).type_parameter;
+			string func_name = "%s_destroy_func".printf (type_parameter.name.down ());
 
-			if (type.type_parameter.parent_symbol is Interface) {
-				var iface = (Interface) type.type_parameter.parent_symbol;
+			if (type_parameter.parent_symbol is Interface) {
+				var iface = (Interface) type_parameter.parent_symbol;
 				require_generic_accessors (iface);
 
-				string method_name = "get_%s_destroy_func".printf (type.type_parameter.name.down ());
+				string method_name = "get_%s_destroy_func".printf (type_parameter.name.down ());
 				var cast_self = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface))));
 				cast_self.add_argument (new CCodeIdentifier ("self"));
 				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
@@ -3191,7 +3194,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				return function_call;
 			}
 
-			if (is_in_generic_type (type) && !is_chainup && !in_creation_method) {
+			if (is_in_generic_type ((GenericType) type) && !is_chainup && !in_creation_method) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_result_cexpression ("self"), "priv"), func_name);
 			} else {
 				return get_variable_cexpression (func_name);
@@ -3383,7 +3386,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cvar, new CCodeConstant ("NULL"));
 		if (type is GenericType) {
-			var parent = type.type_parameter.parent_symbol;
+			var parent = ((GenericType) type).type_parameter.parent_symbol;
 			var cl = parent as Class;
 			if ((!(parent is Method) && !(parent is ObjectTypeSymbol)) || (cl != null && cl.is_compact)) {
 				return new CCodeConstant ("NULL");
@@ -3848,8 +3851,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public override void visit_expression (Expression expr) {
 		if (get_cvalue (expr) != null && !expr.lvalue) {
 			if (expr.formal_value_type is GenericType && !(expr.value_type is GenericType)) {
-				var st = expr.formal_value_type.type_parameter.parent_symbol.parent_symbol as Struct;
-				if (expr.formal_value_type.type_parameter.parent_symbol != garray_type &&
+				var type_parameter = ((GenericType) expr.formal_value_type).type_parameter;
+				var st = type_parameter.parent_symbol.parent_symbol as Struct;
+				if (type_parameter.parent_symbol != garray_type &&
 				    (st == null || get_ccode_name (st) != "va_list")) {
 					// GArray and va_list don't use pointer-based generics
 					set_cvalue (expr, convert_from_generic_pointer (get_cvalue (expr), expr.value_type));
@@ -3869,7 +3873,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			if (expr.formal_target_type is GenericType && !(expr.target_type is GenericType)) {
-				if (expr.formal_target_type.type_parameter.parent_symbol != garray_type) {
+				if (((GenericType) expr.formal_target_type).type_parameter.parent_symbol != garray_type) {
 					// GArray doesn't use pointer-based generics
 					set_cvalue (expr, convert_to_generic_pointer (get_cvalue (expr), expr.target_type));
 					((GLibValue) expr.target_value).lvalue = false;
@@ -4095,7 +4099,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return null;
 	}
 
-	bool is_limited_generic_type (DataType type) {
+	bool is_limited_generic_type (GenericType type) {
 		var cl = type.type_parameter.parent_symbol as Class;
 		var st = type.type_parameter.parent_symbol as Struct;
 		if ((cl != null && cl.is_compact) || st != null) {
@@ -4119,7 +4123,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		if (type is GenericType) {
-			if (is_limited_generic_type (type)) {
+			if (is_limited_generic_type ((GenericType) type)) {
 				return false;
 			}
 		}
@@ -4145,7 +4149,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		if (type is GenericType) {
-			if (is_limited_generic_type (type)) {
+			if (is_limited_generic_type ((GenericType) type)) {
 				return false;
 			}
 		}
