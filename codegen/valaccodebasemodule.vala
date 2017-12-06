@@ -3080,7 +3080,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public CCodeExpression? get_destroy0_func_expression (DataType type, bool is_chainup = false) {
 		var element_destroy_func_expression = get_destroy_func_expression (type, is_chainup);
 
-		if (element_destroy_func_expression is CCodeIdentifier) {
+		if (!(type is GenericType) && element_destroy_func_expression is CCodeIdentifier) {
 			var freeid = (CCodeIdentifier) element_destroy_func_expression;
 			string free0_func = "_%s0_".printf (freeid.name);
 
