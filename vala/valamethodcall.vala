@@ -420,7 +420,9 @@ public class Vala.MethodCall : Expression {
 		// printf arguments
 		if (mtype is MethodType && ((MethodType) mtype).method_symbol.printf_format) {
 			StringLiteral format_literal = null;
-			if (last_arg != null) {
+			if (last_arg is NullLiteral) {
+				// do not replace explicit null
+			} else if (last_arg != null) {
 				// use last argument as format string
 				format_literal = last_arg as StringLiteral;
 				if (format_literal == null && args.size == params.size - 1) {
