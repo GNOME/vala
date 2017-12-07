@@ -24,6 +24,9 @@ using GLib;
 
 /**
  * Code visitor parsing all DBus Interface files.
+ *
+ * https://dbus.freedesktop.org/doc/dbus-specification.html#introspection-format
+ * https://dbus.freedesktop.org/doc/dbus-api-design.html#annotations
  */
 public class Vala.DBusParser : CodeVisitor {
 
@@ -192,13 +195,41 @@ public class Vala.DBusParser : CodeVisitor {
 			return;
 		}
 
+		string? val = reader.get_attribute ("value");
+		if (val == null) {
+			Report.warning (get_current_src (), "Annotations require a value attribute");
+			return;
+		}
+
 		switch (name) {
 			case "org.freedesktop.DBus.Deprecated":
+				// Can be used on any <interface>, <method>, <signal> and <property> element to specify that the element is deprecated
+				// if its value is true. Note that this annotation is defined in the D-Bus specification[1] and can only assume the
+				// values true and false. In particular, you cannot specify the version that the element was deprecated in nor any
+				// helpful deprecation message. Such information should be added to the element documentation instead.
+				if (val != "true") {
+					break;
+				}
 				current_node.set_attribute_bool ("Version", "deprecated", true);
 				string? replaced_by = reader.get_attribute ("replaced-by");
 				if (replaced_by != null) {
 					current_node.set_attribute_string ("Version", "replacement", replaced_by);
 				}
+				break;
+			case "org.freedesktop.DBus.Property.EmitsChangedSignal":
+				// val in {true,invalidates,const,false}
+				// If set to false, the org.freedesktop.DBus.Properties.PropertiesChanged signal, see the section called
+				// “org.freedesktop.DBus.Properties” is not guaranteed to be emitted if the property changes.
+				// If set to const the property never changes value during the lifetime of the object it belongs to, and hence the
+				// signal is never emitted for it.
+				// If set to invalidates the signal is emitted but the value is not included in the signal.
+				// If set to true the signal is emitted with the value included.
+				// The value for the annotation defaults to true if the enclosing interface element does not specify the annotation.
+				// Otherwise it defaults to the value specified in the enclosing interface element.
+				// This annotation is intended to be used by code generators to implement client-side caching of property values.
+				// For all properties for which the annotation is set to const, invalidates or true the client may unconditionally
+				// cache the values as the properties don't change or notifications are generated for them if they do.
+				//TODO
 				break;
 			case "org.freedesktop.DBus.GLib.Async":
 				if (current_node is Method) {
@@ -206,9 +237,43 @@ public class Vala.DBusParser : CodeVisitor {
 				}
 				break;
 			case "org.freedesktop.DBus.GLib.NoReply":
+				if (val != "true") {
+					break;
+				}
 				if (current_node is Method) {
 					current_node.set_attribute_bool ("DBus", "no_reply", true);
 				}
+				break;
+			case "org.freedesktop.DBus.GLib.CSymbol":
+			case "org.gtk.GDBus.C.Name":
+				// Can be used on any <interface>, <method>, <signal> and <property> element to specify the name to use when generating
+				// C code. The value is expected to be in CamelCase[4] or Ugly_Case (see above).
+				if (val != null) {
+					current_node.set_attribute_string ("CCode", "cname", val);
+				}
+				break;
+			case "org.gtk.GDBus.C.ForceGVariant":
+				// If set to a non-empty string, a #GVariant instance will be used instead of the natural C type. This annotation can be
+				// used on any <arg> and <property> element.
+				//TODO
+				break;
+			case "org.gtk.GDBus.C.UnixFD":
+				// If set to a non-empty string, the generated code will include parameters to exchange file descriptors using the
+				// #GUnixFDList type. This annotation can be used on <method> elements.
+				//TODO
+				break;
+			case "org.gtk.GDBus.Since":
+				// Can be used on any <interface>, <method>, <signal> and <property> element to specify the version (any free-form
+				// string but compared using a version-aware sort function) the element appeared in.
+				//TODO
+				break;
+			case "org.gtk.GDBus.DocString":
+				// A string with Docbook content for documentation. This annotation can be used on <interface>, <method>, <signal>,
+				// <property> and <arg> elements.
+			case "org.gtk.GDBus.DocString.Short":
+				// A string with Docbook content for short/brief documentation. This annotation can only be used on <interface>
+				// elements.
+				//TODO
 				break;
 			default:
 				break;
