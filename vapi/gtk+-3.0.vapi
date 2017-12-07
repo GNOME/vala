@@ -7418,7 +7418,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface FileChooser : GLib.Object {
-		public void add_choice (string id, string label, string[]? options, string[]? option_labels);
+		public void add_choice (string id, string label, [CCode (array_length = false, array_null_terminated = true)] string[]? options, [CCode (array_length = false, array_null_terminated = true)] string[]? option_labels);
 		public void add_filter (owned Gtk.FileFilter filter);
 		public bool add_shortcut_folder (string folder) throws GLib.Error;
 		public bool add_shortcut_folder_uri (string uri) throws GLib.Error;
