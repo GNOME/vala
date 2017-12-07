@@ -1581,6 +1581,10 @@ public class Vala.GirParser : CodeVisitor {
 		if (child_name == null) {
 			child_name = reader.get_attribute ("glib:name");
 		}
+		// Give a transparent union the generic name "union"
+		if (selector == "union" && child_name == null) {
+			child_name = "union";
+		}
 		if (child_name == null) {
 			return Metadata.empty;
 		}
