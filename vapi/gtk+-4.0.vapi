@@ -8379,9 +8379,8 @@ namespace Gtk {
 		public ComboBox.with_model_and_entry (Gtk.TreeModel model);
 		[Version (since = "2.4")]
 		public int active { get; set; }
-		[NoAccessorMethod]
 		[Version (since = "3.0")]
-		public string? active_id { owned get; set; }
+		public string? active_id { get; set; }
 		[Version (since = "2.14")]
 		public Gtk.SensitivityType button_sensitivity { get; set; }
 		[Version (since = "2.4")]
@@ -9314,9 +9313,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.4")]
 		public FontButton.with_font (string fontname);
-		[NoAccessorMethod]
 		[Version (since = "2.4")]
-		public string font_name { owned get; set; }
+		public string font_name { get; set; }
 		[Version (since = "2.4")]
 		public bool show_size { get; set; }
 		[Version (since = "2.4")]
