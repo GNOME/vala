@@ -1021,7 +1021,7 @@ public class Vala.GirParser : CodeVisitor {
 						// ensure setter vfunc if the property is abstract
 						if (m != null) {
 							setter.process (parser);
-							if (!(m.return_type is VoidType) || m.get_parameters().size != 1) {
+							if (!(m.return_type is VoidType || m.return_type is BooleanType) || m.get_parameters().size != 1) {
 								prop.set_attribute ("NoAccessorMethod", true);
 								prop.set_attribute ("ConcreteAccessor", false);
 							} else {
@@ -2613,7 +2613,7 @@ public class Vala.GirParser : CodeVisitor {
 		no_array_length = false;
 		array_null_terminated = false;
 
-		DataType type;
+		DataType? type = null;
 		if (type_name == "none") {
 			type = new VoidType (get_current_src ());
 		} else if (type_name == "gpointer") {
@@ -2629,7 +2629,7 @@ public class Vala.GirParser : CodeVisitor {
 			if (type_name == "utf8") {
 				type_name = "string";
 			} else if (type_name == "gboolean") {
-				type_name = "bool";
+				type = new BooleanType ((Struct) context.root.scope.lookup ("bool"));
 			} else if (type_name == "gchar") {
 				type_name = "char";
 			} else if (type_name == "gshort") {
@@ -2703,10 +2703,13 @@ public class Vala.GirParser : CodeVisitor {
 			} else {
 				known_type = false;
 			}
-			var sym = parse_symbol_from_string (type_name, get_current_src ());
-			type = new UnresolvedType.from_symbol (sym, get_current_src ());
-			if (!known_type) {
-				unresolved_gir_symbols.add (sym);
+
+			if (type == null) {
+				var sym = parse_symbol_from_string (type_name, get_current_src ());
+				type = new UnresolvedType.from_symbol (sym, get_current_src ());
+				if (!known_type) {
+					unresolved_gir_symbols.add (sym);
+				}
 			}
 		}
 
