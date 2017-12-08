@@ -29,6 +29,7 @@ AccelLabel
 
 // Bug #: Virtual methods without invokers
 EntryBuffer
+  .get_text#virtual_method name="get_text_internal"
   .get_text#virtual_method.n_bytes out default=null
 Range
   .get_range_border.* out
@@ -245,8 +246,6 @@ TreeSelection
   .get_user_data skip=false
 
 // Symbol name conflicts
-EntryBuffer
-  .get_text#method skip
 EntryCompletion
   .insert_prefix#method name="request_prefix_insertion"
 Notebook
@@ -310,7 +309,10 @@ ListStore
   .move_before.iter ref
   .prepend return_void
   .remove.iter ref
+PaperSize
+  .free destroys_instance
 SelectionData
+  .free destroys_instance
   .get_data skip=false
 render_* parent="Gtk.StyleContext"
 render_* symbol_type="method" instance_idx=0
@@ -333,9 +335,12 @@ ToolPalette
   .get_icon_size type="Gtk.IconSize"
   .set_icon_size.icon_size type="Gtk.IconSize"
 TreePath
+  .free destroys_instance
   .get_indices skip
   .get_indices_with_depth name="get_indices"
 tree_row_reference_reordered skip=false name="reordered" parent="Gtk.TreeRowReference"
+TreeRowReference
+  .free destroys_instance
 TreeStore
   .move_after.iter ref
   .move_before.iter ref
@@ -355,6 +360,8 @@ Widget
   .intersect.intersection unowned=false nullable default=null
   .touch_event.event type="Gdk.EventTouch"
   .size_allocate return_void
+WidgetPath
+  .free destroys_instance
 TreeModel
   .get_value return_void
   .rows_reordered skip
@@ -366,6 +373,11 @@ show_about_dialog skip=false
 test_init skip=false
 
 test_init.argvp unowned
+
+@false skip
+@true skip
+
+*.*.string name="str"
 
 // Forward upstream
 ///////////////////
@@ -380,11 +392,30 @@ Widget
   .drag_source_set.targets array_length_idx=3
 
 // Not completely sure
+Button
+  .get_label nullable
+  .label nullable
+  .set_label.label nullable
 ComboBox
   .get_row_separator_func skip=false
+Entry
+  .populate_popup#signal.widget type="Gtk.Menu"
+FileChooser
+  .add_choice.options array nullable array_null_terminated
+  .add_choice.option_labels array nullable array_null_terminated
+FileChooserNative
+  .accept_label nullable
+  .cancel_label nullable
 Menu
   .get_for_attach_widget type="unowned GLib.List<Gtk.Menu>"
   .popped_up.*_rect type="Gdk.Rectangle"
+NativeDialog
+  .title nullable
+  .transient_for nullable
+  .get_title nullable
+  .get_transient_for nullable
+  .set_title.title nullable
+  .set_transient_for.parent nullable
 Window
   .list_toplevels type="GLib.List<unowned Gtk.Window>"
   .set_focus#signal.object nullable
@@ -392,6 +423,12 @@ TreeModel
   .get_path nullable
   .iter_next.iter ref
   .iter_previous.iter ref
+TreeView
+  .insert_column_with_attributes.title nullable
+TreeViewColumn
+  .new_with_attributes.title nullable
+TextView
+  .populate_popup.popup type="Gtk.Menu"
 TreeView
   .get_*_func skip=false
 
