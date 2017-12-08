@@ -761,49 +761,34 @@ namespace Pk {
 		[Version (since = "0.5.2")]
 		public bool set_uid (uint uid);
 		public static void test (void* user_data);
-		[NoAccessorMethod]
 		[Version (since = "0.5.2")]
 		public bool allow_cancel { get; set; }
-		[NoAccessorMethod]
 		[Version (since = "0.5.2")]
 		public bool caller_active { get; set; }
-		[NoAccessorMethod]
 		[Version (since = "0.8.0")]
 		public uint64 download_size_remaining { get; set; }
-		[NoAccessorMethod]
 		[Version (since = "0.5.2")]
 		public uint elapsed_time { get; set; }
-		[NoAccessorMethod]
 		[Version (since = "0.8.1")]
-		public Pk.ItemProgress item_progress { owned get; set; }
-		[NoAccessorMethod]
+		public Pk.ItemProgress item_progress { get; set; }
 		[Version (since = "0.5.3")]
-		public Pk.Package package { owned get; set; }
-		[NoAccessorMethod]
+		public Pk.Package package { get; set; }
 		[Version (since = "0.5.2")]
-		public string package_id { owned get; set; }
-		[NoAccessorMethod]
+		public string package_id { get; set; }
 		[Version (since = "0.5.2")]
 		public int percentage { get; set; }
-		[NoAccessorMethod]
 		[Version (since = "0.5.2")]
 		public uint remaining_time { get; set; }
-		[NoAccessorMethod]
 		[Version (since = "0.5.2")]
 		public uint role { get; set; }
-		[NoAccessorMethod]
 		[Version (since = "0.5.2")]
 		public uint speed { get; set; }
-		[NoAccessorMethod]
 		[Version (since = "0.5.2")]
 		public uint status { get; set; }
-		[NoAccessorMethod]
 		[Version (since = "0.8.8")]
 		public uint64 transaction_flags { get; set; }
-		[NoAccessorMethod]
 		[Version (since = "0.5.2")]
-		public string transaction_id { owned get; set; }
-		[NoAccessorMethod]
+		public string transaction_id { get; set; }
 		[Version (since = "0.5.2")]
 		public uint uid { get; set; }
 	}
@@ -946,7 +931,6 @@ namespace Pk {
 		[NoAccessorMethod]
 		[Version (since = "0.5.3")]
 		public Pk.Progress progress { owned get; set; }
-		[NoAccessorMethod]
 		[Version (since = "0.5.2")]
 		public Pk.Role role { get; set; }
 		[NoAccessorMethod]
