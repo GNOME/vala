@@ -264,7 +264,7 @@ public class Vala.Property : Symbol, Lockable {
 			return false;
 		}
 
-		var object_type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) parent_symbol);
+		var object_type = SemanticAnalyzer.get_data_type_for_symbol (parent_symbol);
 
 		if (get_accessor != null) {
 			// check accessor value_type instead of property_type

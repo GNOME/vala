@@ -338,7 +338,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return null;
 	}
 
-	public static DataType get_data_type_for_symbol (TypeSymbol sym) {
+	public static DataType get_data_type_for_symbol (Symbol sym) {
 		DataType type = null;
 
 		List<TypeParameter> type_parameters = null;
