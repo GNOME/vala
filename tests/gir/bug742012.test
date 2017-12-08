@@ -91,5 +91,5 @@ public interface Renderer : GLib.Object {
 	[CCode (cname = "gcr_renderer_set_attributes")]
 	public void set_attributes (GLib.List? attrs);
 	[NoAccessorMethod]
-	public abstract GLib.List attributes { owned get; set; }
+	public virtual GLib.List attributes { owned get; set; }
 }

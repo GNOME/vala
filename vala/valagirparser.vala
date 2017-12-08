@@ -2971,7 +2971,11 @@ public class Vala.GirParser : CodeVisitor {
 	Property parse_property () {
 		start_element ("property");
 		push_node (element_get_name().replace ("-", "_"), false);
-		bool is_abstract = metadata.get_bool (ArgumentType.ABSTRACT, current.parent.symbol is Interface);
+		bool is_abstract = metadata.get_bool (ArgumentType.ABSTRACT);
+		bool is_virtual = false;
+		if (!is_abstract) {
+			is_virtual = metadata.get_bool (ArgumentType.VIRTUAL, current.parent.symbol is Interface);
+		}
 		string transfer = reader.get_attribute ("transfer-ownership");
 
 		next ();
@@ -2987,6 +2991,7 @@ public class Vala.GirParser : CodeVisitor {
 		prop.access = SymbolAccessibility.PUBLIC;
 		prop.external = true;
 		prop.is_abstract = is_abstract;
+		prop.is_virtual = is_virtual;
 		if (no_array_length || array_null_terminated) {
 			prop.set_attribute_bool ("CCode", "array_length", !no_array_length);
 		}
