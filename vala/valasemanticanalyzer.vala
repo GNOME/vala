@@ -379,6 +379,28 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return type;
 	}
 
+	public static Symbol? get_symbol_for_data_type (DataType type) {
+		Symbol? sym = null;
+
+		if (type is ObjectType) {
+			sym = ((ObjectType) type).type_symbol;
+		} else if (type is ClassType) {
+			sym = ((ClassType) type).class_symbol;
+		} else if (type is InterfaceType) {
+			sym = ((InterfaceType) type).interface_symbol;
+		} else if (type is MethodType) {
+			sym = ((MethodType) type).method_symbol;
+		} else if (type is SignalType) {
+			sym = ((SignalType) type).signal_symbol;
+		} else if (type is DelegateType) {
+			sym = ((DelegateType) type).delegate_symbol;
+		} else if (type is ValueType) {
+			sym = ((ValueType) type).type_symbol;
+		}
+
+		return sym;
+	}
+
 	public bool check_arguments (Expression expr, DataType mtype, List<Parameter> params, List<Expression> args) {
 		Expression prev_arg = null;
 		Iterator<Expression> arg_it = args.iterator ();
@@ -818,7 +840,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				var instance_type = get_instance_base_type_for_member (derived_instance_type, (TypeSymbol) generic_type.type_parameter.parent_symbol, node_reference);
 
 				if (instance_type == null) {
-					Report.error (node_reference.source_reference, "The type-parameter `%s' must be defined on enclosing type".printf (generic_type.to_string ()));
+					CodeNode? reference = get_symbol_for_data_type (derived_instance_type);
+					Report.error ((reference ?? node_reference).source_reference, "The type-parameter `%s' is missing".printf (generic_type.to_string ()));
 					node_reference.error = true;
 					return new InvalidType ();
 				}
