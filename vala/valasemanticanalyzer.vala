@@ -810,7 +810,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return null;
 	}
 
-	public static DataType? get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, GenericType generic_type, CodeNode node_reference) {
+	public static DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, GenericType generic_type, CodeNode node_reference) {
 		DataType actual_type = null;
 		if (generic_type.type_parameter.parent_symbol is TypeSymbol) {
 			if (derived_instance_type != null) {
@@ -820,7 +820,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (instance_type == null) {
 					Report.error (node_reference.source_reference, "The type-parameter `%s' must be defined on enclosing type".printf (generic_type.to_string ()));
 					node_reference.error = true;
-					return null;
+					return new InvalidType ();
 				}
 
 				int param_index;
@@ -832,7 +832,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (param_index == -1) {
 					Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (generic_type.type_parameter.name));
 					node_reference.error = true;
-					return null;
+					return new InvalidType ();
 				}
 
 				if (param_index < instance_type.get_type_arguments ().size) {
@@ -847,7 +847,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (param_index == -1) {
 				Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (generic_type.type_parameter.name));
 				node_reference.error = true;
-				return null;
+				return new InvalidType ();
 			}
 
 			if (method_type_arguments != null) {
