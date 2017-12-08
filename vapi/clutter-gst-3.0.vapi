@@ -279,9 +279,9 @@ namespace ClutterGst {
 		public abstract void set_audio_volume (double volume);
 		[Version (since = "3.0")]
 		public abstract void set_playing (bool playing);
-		public abstract double audio_volume { get; set; }
-		public abstract bool idle { get; }
-		public abstract bool playing { get; set; }
+		public virtual double audio_volume { get; set; }
+		public virtual bool idle { get; }
+		public virtual bool playing { get; set; }
 		public virtual signal void eos ();
 		public virtual signal void error (GLib.Error error);
 		public virtual signal void new_frame (ClutterGst.Frame frame);

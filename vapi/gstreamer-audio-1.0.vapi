@@ -460,10 +460,9 @@ namespace Gst {
 			public double get_volume (Gst.Audio.StreamVolumeFormat format);
 			public void set_mute (bool mute);
 			public void set_volume (Gst.Audio.StreamVolumeFormat format, double val);
-			[ConcreteAccessor]
-			public abstract bool mute { get; set; }
+			public virtual bool mute { get; set; }
 			[NoAccessorMethod]
-			public abstract double volume { get; set; }
+			public virtual double volume { get; set; }
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[GIR (name = "AudioCdSrcTrack")]

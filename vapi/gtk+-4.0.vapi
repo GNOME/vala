@@ -14825,9 +14825,9 @@ namespace Gtk {
 		public abstract void set_action_target_value (GLib.Variant target_value);
 		[Version (since = "3.4")]
 		public void set_detailed_action_name (string detailed_action_name);
-		public abstract string action_name { get; set; }
+		public virtual string action_name { get; set; }
 		[NoAccessorMethod]
-		public abstract GLib.Variant action_target { owned get; set; }
+		public virtual GLib.Variant action_target { owned get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_app_chooser_get_type ()")]
 	public interface AppChooser : Gtk.Widget {
@@ -14837,8 +14837,7 @@ namespace Gtk {
 		public string get_content_type ();
 		[Version (since = "3.0")]
 		public void refresh ();
-		[ConcreteAccessor]
-		public abstract string content_type { owned get; construct; }
+		public virtual string content_type { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_buildable_get_type ()")]
 	public interface Buildable : GLib.Object {
@@ -14880,7 +14879,7 @@ namespace Gtk {
 		public abstract void start_editing (Gdk.Event? event);
 		[NoAccessorMethod]
 		[Version (since = "2.20")]
-		public abstract bool editing_canceled { get; set; }
+		public virtual bool editing_canceled { get; set; }
 		[HasEmitter]
 		public virtual signal void editing_done ();
 		[HasEmitter]
@@ -14921,12 +14920,10 @@ namespace Gtk {
 		public abstract void set_rgba (Gdk.RGBA color);
 		[Version (since = "3.4")]
 		public void set_use_alpha (bool use_alpha);
-		[ConcreteAccessor]
 		[Version (since = "3.4")]
-		public abstract Gdk.RGBA rgba { get; set; }
-		[ConcreteAccessor]
+		public virtual Gdk.RGBA rgba { get; set; }
 		[Version (since = "3.4")]
-		public abstract bool use_alpha { get; set; }
+		public virtual bool use_alpha { get; set; }
 		[Version (since = "3.4")]
 		public virtual signal void color_activated (Gdk.RGBA color);
 	}
@@ -15079,30 +15076,19 @@ namespace Gtk {
 		public void unselect_filename (string filename);
 		[Version (since = "2.4")]
 		public void unselect_uri (string uri);
-		[ConcreteAccessor]
-		public abstract Gtk.FileChooserAction action { get; set; }
-		[ConcreteAccessor]
+		public virtual Gtk.FileChooserAction action { get; set; }
 		[Version (since = "2.18")]
-		public abstract bool create_folders { get; set; }
-		[ConcreteAccessor]
+		public virtual bool create_folders { get; set; }
 		[Version (since = "2.8")]
-		public abstract bool do_overwrite_confirmation { get; set; }
-		[ConcreteAccessor]
-		public abstract Gtk.Widget extra_widget { get; set; }
-		[ConcreteAccessor]
-		public abstract Gtk.FileFilter filter { get; set; }
-		[ConcreteAccessor]
-		public abstract bool local_only { get; set; }
-		[ConcreteAccessor]
-		public abstract Gtk.Widget preview_widget { get; set; }
-		[ConcreteAccessor]
-		public abstract bool preview_widget_active { get; set; }
-		[ConcreteAccessor]
-		public abstract bool select_multiple { get; set; }
-		[ConcreteAccessor]
-		public abstract bool show_hidden { get; set; }
-		[ConcreteAccessor]
-		public abstract bool use_preview_label { get; set; }
+		public virtual bool do_overwrite_confirmation { get; set; }
+		public virtual Gtk.Widget extra_widget { get; set; }
+		public virtual Gtk.FileFilter filter { get; set; }
+		public virtual bool local_only { get; set; }
+		public virtual Gtk.Widget preview_widget { get; set; }
+		public virtual bool preview_widget_active { get; set; }
+		public virtual bool select_multiple { get; set; }
+		public virtual bool show_hidden { get; set; }
+		public virtual bool use_preview_label { get; set; }
 		[Version (since = "2.8")]
 		public signal Gtk.FileChooserConfirmation confirm_overwrite ();
 		public signal void current_folder_changed ();
@@ -15140,14 +15126,10 @@ namespace Gtk {
 		public void set_preview_text (string text);
 		[Version (since = "3.2")]
 		public void set_show_preview_entry (bool show_preview_entry);
-		[ConcreteAccessor]
-		public abstract string font { owned get; set; }
-		[ConcreteAccessor]
-		public abstract Pango.FontDescription font_desc { owned get; set; }
-		[ConcreteAccessor]
-		public abstract string preview_text { owned get; set; }
-		[ConcreteAccessor]
-		public abstract bool show_preview_entry { get; set; }
+		public virtual string font { owned get; set; }
+		public virtual Pango.FontDescription font_desc { owned get; set; }
+		public virtual string preview_text { owned get; set; }
+		public virtual bool show_preview_entry { get; set; }
 		public virtual signal void font_activated (string fontname);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_orientable_get_type ()")]
@@ -15156,9 +15138,8 @@ namespace Gtk {
 		public Gtk.Orientation get_orientation ();
 		[Version (since = "2.16")]
 		public void set_orientation (Gtk.Orientation orientation);
-		[ConcreteAccessor]
 		[Version (since = "2.16")]
-		public abstract Gtk.Orientation orientation { get; set; }
+		public virtual Gtk.Orientation orientation { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_print_operation_preview_get_type ()")]
 	public interface PrintOperationPreview : GLib.Object {
@@ -15238,34 +15219,25 @@ namespace Gtk {
 		public abstract void unselect_all ();
 		[Version (since = "2.10")]
 		public abstract void unselect_uri (string uri);
-		[ConcreteAccessor]
 		[Version (since = "2.10")]
-		public abstract Gtk.RecentFilter filter { get; set; }
-		[ConcreteAccessor]
+		public virtual Gtk.RecentFilter filter { get; set; }
 		[Version (since = "2.10")]
-		public abstract int limit { get; set; }
-		[ConcreteAccessor]
+		public virtual int limit { get; set; }
 		[Version (since = "2.10")]
-		public abstract bool local_only { get; set; }
+		public virtual bool local_only { get; set; }
 		[Version (since = "2.10")]
-		public abstract Gtk.RecentManager recent_manager { construct; }
-		[ConcreteAccessor]
+		public virtual Gtk.RecentManager recent_manager { construct; }
 		[Version (since = "2.10")]
-		public abstract bool select_multiple { get; set; }
-		[ConcreteAccessor]
+		public virtual bool select_multiple { get; set; }
 		[Version (since = "2.10")]
-		public abstract bool show_icons { get; set; }
-		[ConcreteAccessor]
+		public virtual bool show_icons { get; set; }
 		[Version (since = "2.10")]
-		public abstract bool show_not_found { get; set; }
-		[ConcreteAccessor]
-		public abstract bool show_private { get; set; }
-		[ConcreteAccessor]
+		public virtual bool show_not_found { get; set; }
+		public virtual bool show_private { get; set; }
 		[Version (since = "2.10")]
-		public abstract bool show_tips { get; set; }
-		[ConcreteAccessor]
+		public virtual bool show_tips { get; set; }
 		[Version (since = "2.10")]
-		public abstract Gtk.RecentSortType sort_type { get; set; }
+		public virtual Gtk.RecentSortType sort_type { get; set; }
 		[Version (since = "2.10")]
 		public virtual signal void item_activated ();
 		[Version (since = "2.10")]
@@ -15291,18 +15263,14 @@ namespace Gtk {
 		public void set_vadjustment (Gtk.Adjustment? vadjustment);
 		[Version (since = "3.0")]
 		public void set_vscroll_policy (Gtk.ScrollablePolicy policy);
-		[ConcreteAccessor]
 		[Version (since = "3.0")]
-		public abstract Gtk.Adjustment hadjustment { get; set construct; }
-		[ConcreteAccessor]
+		public virtual Gtk.Adjustment hadjustment { get; set construct; }
 		[Version (since = "3.0")]
-		public abstract Gtk.ScrollablePolicy hscroll_policy { get; set; }
-		[ConcreteAccessor]
+		public virtual Gtk.ScrollablePolicy hscroll_policy { get; set; }
 		[Version (since = "3.0")]
-		public abstract Gtk.Adjustment vadjustment { get; set construct; }
-		[ConcreteAccessor]
+		public virtual Gtk.Adjustment vadjustment { get; set construct; }
 		[Version (since = "3.0")]
-		public abstract Gtk.ScrollablePolicy vscroll_policy { get; set; }
+		public virtual Gtk.ScrollablePolicy vscroll_policy { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_style_provider_get_type ()")]
 	public interface StyleProvider : GLib.Object {

@@ -342,58 +342,58 @@ namespace UDisks {
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
-		public abstract GLib.Variant configuration { owned get; set; }
+		public virtual GLib.Variant configuration { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string crypto_backing_device { owned get; set; }
+		public virtual string crypto_backing_device { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string device { owned get; set; }
+		public virtual string device { owned get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 device_number { get; set; }
+		public virtual uint64 device_number { get; set; }
 		[NoAccessorMethod]
-		public abstract string drive { owned get; set; }
+		public virtual string drive { owned get; set; }
 		[NoAccessorMethod]
-		public abstract bool hint_auto { get; set; }
+		public virtual bool hint_auto { get; set; }
 		[NoAccessorMethod]
-		public abstract string hint_icon_name { owned get; set; }
+		public virtual string hint_icon_name { owned get; set; }
 		[NoAccessorMethod]
-		public abstract bool hint_ignore { get; set; }
+		public virtual bool hint_ignore { get; set; }
 		[NoAccessorMethod]
-		public abstract string hint_name { owned get; set; }
+		public virtual string hint_name { owned get; set; }
 		[NoAccessorMethod]
-		public abstract bool hint_partitionable { get; set; }
-		[NoAccessorMethod]
-		[Version (since = "2.0.0")]
-		public abstract string hint_symbolic_icon_name { owned get; set; }
-		[NoAccessorMethod]
-		public abstract bool hint_system { get; set; }
+		public virtual bool hint_partitionable { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.0.0")]
-		public abstract string id { owned get; set; }
+		public virtual string hint_symbolic_icon_name { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string id_label { owned get; set; }
-		[NoAccessorMethod]
-		public abstract string id_type { owned get; set; }
-		[NoAccessorMethod]
-		public abstract string id_usage { owned get; set; }
-		[NoAccessorMethod]
-		public abstract string id_uuid { owned get; set; }
-		[NoAccessorMethod]
-		public abstract string id_version { owned get; set; }
+		public virtual bool hint_system { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.0.0")]
-		public abstract string mdraid { owned get; set; }
+		public virtual string id { owned get; set; }
+		[NoAccessorMethod]
+		public virtual string id_label { owned get; set; }
+		[NoAccessorMethod]
+		public virtual string id_type { owned get; set; }
+		[NoAccessorMethod]
+		public virtual string id_usage { owned get; set; }
+		[NoAccessorMethod]
+		public virtual string id_uuid { owned get; set; }
+		[NoAccessorMethod]
+		public virtual string id_version { owned get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.0.0")]
-		public abstract string mdraid_member { owned get; set; }
+		public virtual string mdraid { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string preferred_device { owned get; set; }
+		[Version (since = "2.0.0")]
+		public virtual string mdraid_member { owned get; set; }
 		[NoAccessorMethod]
-		public abstract bool read_only { get; set; }
+		public virtual string preferred_device { owned get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 size { get; set; }
+		public virtual bool read_only { get; set; }
+		[NoAccessorMethod]
+		public virtual uint64 size { get; set; }
 		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public abstract string[] symlinks { owned get; set; }
+		public virtual string[] symlinks { owned get; set; }
 		public virtual signal bool handle_add_configuration_item (GLib.DBusMethodInvocation invocation, GLib.Variant arg_item, GLib.Variant arg_options);
 		public virtual signal bool handle_format (GLib.DBusMethodInvocation invocation, string arg_type, GLib.Variant arg_options);
 		public virtual signal bool handle_get_secret_configuration (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
@@ -422,65 +422,65 @@ namespace UDisks {
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
 		[Version (since = "2.0.0")]
-		public abstract bool can_power_off { get; set; }
+		public virtual bool can_power_off { get; set; }
 		[NoAccessorMethod]
-		public abstract GLib.Variant configuration { owned get; set; }
+		public virtual GLib.Variant configuration { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string connection_bus { owned get; set; }
+		public virtual string connection_bus { owned get; set; }
 		[NoAccessorMethod]
-		public abstract bool ejectable { get; set; }
+		public virtual bool ejectable { get; set; }
 		[NoAccessorMethod]
-		public abstract string id { owned get; set; }
+		public virtual string id { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string media { owned get; set; }
+		public virtual string media { owned get; set; }
 		[NoAccessorMethod]
-		public abstract bool media_available { get; set; }
+		public virtual bool media_available { get; set; }
 		[NoAccessorMethod]
-		public abstract bool media_change_detected { get; set; }
+		public virtual bool media_change_detected { get; set; }
 		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public abstract string[] media_compatibility { owned get; set; }
+		public virtual string[] media_compatibility { owned get; set; }
 		[NoAccessorMethod]
-		public abstract bool media_removable { get; set; }
+		public virtual bool media_removable { get; set; }
 		[NoAccessorMethod]
-		public abstract string model { owned get; set; }
+		public virtual string model { owned get; set; }
 		[NoAccessorMethod]
-		public abstract bool optical { get; set; }
+		public virtual bool optical { get; set; }
 		[NoAccessorMethod]
-		public abstract bool optical_blank { get; set; }
+		public virtual bool optical_blank { get; set; }
 		[NoAccessorMethod]
-		public abstract uint optical_num_audio_tracks { get; set; }
+		public virtual uint optical_num_audio_tracks { get; set; }
 		[NoAccessorMethod]
-		public abstract uint optical_num_data_tracks { get; set; }
+		public virtual uint optical_num_data_tracks { get; set; }
 		[NoAccessorMethod]
-		public abstract uint optical_num_sessions { get; set; }
+		public virtual uint optical_num_sessions { get; set; }
 		[NoAccessorMethod]
-		public abstract uint optical_num_tracks { get; set; }
+		public virtual uint optical_num_tracks { get; set; }
 		[NoAccessorMethod]
-		public abstract bool removable { get; set; }
+		public virtual bool removable { get; set; }
 		[NoAccessorMethod]
-		public abstract string revision { owned get; set; }
+		public virtual string revision { owned get; set; }
 		[NoAccessorMethod]
-		public abstract int rotation_rate { get; set; }
+		public virtual int rotation_rate { get; set; }
 		[NoAccessorMethod]
-		public abstract string seat { owned get; set; }
+		public virtual string seat { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string serial { owned get; set; }
+		public virtual string serial { owned get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.0.0")]
-		public abstract string sibling_id { owned get; set; }
+		public virtual string sibling_id { owned get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 size { get; set; }
+		public virtual uint64 size { get; set; }
 		[NoAccessorMethod]
-		public abstract string sort_key { owned get; set; }
+		public virtual string sort_key { owned get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 time_detected { get; set; }
+		public virtual uint64 time_detected { get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 time_media_detected { get; set; }
+		public virtual uint64 time_media_detected { get; set; }
 		[NoAccessorMethod]
-		public abstract string vendor { owned get; set; }
+		public virtual string vendor { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string wwn { owned get; set; }
+		public virtual string wwn { owned get; set; }
 		public virtual signal bool handle_eject (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		[Version (since = "2.0.0")]
 		public virtual signal bool handle_power_off (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
@@ -521,59 +521,59 @@ namespace UDisks {
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
-		public abstract bool aam_enabled { get; set; }
+		public virtual bool aam_enabled { get; set; }
 		[NoAccessorMethod]
-		public abstract bool aam_supported { get; set; }
+		public virtual bool aam_supported { get; set; }
 		[NoAccessorMethod]
-		public abstract int aam_vendor_recommended_value { get; set; }
+		public virtual int aam_vendor_recommended_value { get; set; }
 		[NoAccessorMethod]
-		public abstract bool apm_enabled { get; set; }
+		public virtual bool apm_enabled { get; set; }
 		[NoAccessorMethod]
-		public abstract bool apm_supported { get; set; }
+		public virtual bool apm_supported { get; set; }
 		[NoAccessorMethod]
-		public abstract bool pm_enabled { get; set; }
+		public virtual bool pm_enabled { get; set; }
 		[NoAccessorMethod]
-		public abstract bool pm_supported { get; set; }
-		[NoAccessorMethod]
-		[Version (since = "2.1.7")]
-		public abstract bool read_lookahead_enabled { get; set; }
+		public virtual bool pm_supported { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.1.7")]
-		public abstract bool read_lookahead_supported { get; set; }
+		public virtual bool read_lookahead_enabled { get; set; }
 		[NoAccessorMethod]
-		public abstract int security_enhanced_erase_unit_minutes { get; set; }
+		[Version (since = "2.1.7")]
+		public virtual bool read_lookahead_supported { get; set; }
 		[NoAccessorMethod]
-		public abstract int security_erase_unit_minutes { get; set; }
+		public virtual int security_enhanced_erase_unit_minutes { get; set; }
 		[NoAccessorMethod]
-		public abstract bool security_frozen { get; set; }
+		public virtual int security_erase_unit_minutes { get; set; }
 		[NoAccessorMethod]
-		public abstract bool smart_enabled { get; set; }
+		public virtual bool security_frozen { get; set; }
 		[NoAccessorMethod]
-		public abstract bool smart_failing { get; set; }
+		public virtual bool smart_enabled { get; set; }
 		[NoAccessorMethod]
-		public abstract int smart_num_attributes_failed_in_the_past { get; set; }
+		public virtual bool smart_failing { get; set; }
 		[NoAccessorMethod]
-		public abstract int smart_num_attributes_failing { get; set; }
+		public virtual int smart_num_attributes_failed_in_the_past { get; set; }
 		[NoAccessorMethod]
-		public abstract int64 smart_num_bad_sectors { get; set; }
+		public virtual int smart_num_attributes_failing { get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 smart_power_on_seconds { get; set; }
+		public virtual int64 smart_num_bad_sectors { get; set; }
 		[NoAccessorMethod]
-		public abstract int smart_selftest_percent_remaining { get; set; }
+		public virtual uint64 smart_power_on_seconds { get; set; }
 		[NoAccessorMethod]
-		public abstract string smart_selftest_status { owned get; set; }
+		public virtual int smart_selftest_percent_remaining { get; set; }
 		[NoAccessorMethod]
-		public abstract bool smart_supported { get; set; }
+		public virtual string smart_selftest_status { owned get; set; }
 		[NoAccessorMethod]
-		public abstract double smart_temperature { get; set; }
+		public virtual bool smart_supported { get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 smart_updated { get; set; }
+		public virtual double smart_temperature { get; set; }
+		[NoAccessorMethod]
+		public virtual uint64 smart_updated { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.0.0")]
-		public abstract bool write_cache_enabled { get; set; }
+		public virtual bool write_cache_enabled { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.0.0")]
-		public abstract bool write_cache_supported { get; set; }
+		public virtual bool write_cache_supported { get; set; }
 		public virtual signal bool handle_pm_get_state (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_pm_standby (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_pm_wakeup (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
@@ -599,7 +599,7 @@ namespace UDisks {
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
-		public abstract GLib.Variant child_configuration { owned get; set; }
+		public virtual GLib.Variant child_configuration { owned get; set; }
 		public virtual signal bool handle_change_passphrase (GLib.DBusMethodInvocation invocation, string arg_passphrase, string arg_new_passphrase, GLib.Variant arg_options);
 		public virtual signal bool handle_lock (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_unlock (GLib.DBusMethodInvocation invocation, string arg_passphrase, GLib.Variant arg_options);
@@ -619,7 +619,7 @@ namespace UDisks {
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public abstract string[] mount_points { owned get; set; }
+		public virtual string[] mount_points { owned get; set; }
 		public virtual signal bool handle_mount (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_set_label (GLib.DBusMethodInvocation invocation, string arg_label, GLib.Variant arg_options);
 		public virtual signal bool handle_unmount (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
@@ -634,27 +634,27 @@ namespace UDisks {
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
 		[Version (since = "2.0.0")]
-		public abstract uint64 bytes { get; set; }
+		public virtual uint64 bytes { get; set; }
 		[NoAccessorMethod]
-		public abstract bool cancelable { get; set; }
+		public virtual bool cancelable { get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 expected_end_time { get; set; }
+		public virtual uint64 expected_end_time { get; set; }
 		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public abstract string[] objects { owned get; set; }
+		public virtual string[] objects { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string operation { owned get; set; }
+		public virtual string operation { owned get; set; }
 		[NoAccessorMethod]
-		public abstract double progress { get; set; }
+		public virtual double progress { get; set; }
 		[NoAccessorMethod]
-		public abstract bool progress_valid { get; set; }
+		public virtual bool progress_valid { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.0.0")]
-		public abstract uint64 rate { get; set; }
+		public virtual uint64 rate { get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 start_time { get; set; }
+		public virtual uint64 start_time { get; set; }
 		[NoAccessorMethod]
-		public abstract uint started_by_uid { get; set; }
+		public virtual uint started_by_uid { get; set; }
 		public virtual signal void completed (bool arg_success, string arg_message);
 		public virtual signal bool handle_cancel (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 	}
@@ -669,11 +669,11 @@ namespace UDisks {
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
-		public abstract bool autoclear { get; set; }
+		public virtual bool autoclear { get; set; }
 		[NoAccessorMethod]
-		public abstract string backing_file { owned get; set; }
+		public virtual string backing_file { owned get; set; }
 		[NoAccessorMethod]
-		public abstract uint setup_by_uid { get; set; }
+		public virtual uint setup_by_uid { get; set; }
 		public virtual signal bool handle_delete (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_set_autoclear (GLib.DBusMethodInvocation invocation, bool arg_value, GLib.Variant arg_options);
 	}
@@ -704,35 +704,35 @@ namespace UDisks {
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
-		public abstract GLib.Variant active_devices { owned get; set; }
+		public virtual GLib.Variant active_devices { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string bitmap_location { owned get; set; }
+		public virtual string bitmap_location { owned get; set; }
 		[NoAccessorMethod]
-		public abstract GLib.Variant child_configuration { owned get; set; }
+		public virtual GLib.Variant child_configuration { owned get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 chunk_size { get; set; }
+		public virtual uint64 chunk_size { get; set; }
 		[NoAccessorMethod]
-		public abstract uint degraded { get; set; }
+		public virtual uint degraded { get; set; }
 		[NoAccessorMethod]
-		public abstract string level { owned get; set; }
+		public virtual string level { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string name { owned get; set; }
+		public virtual string name { owned get; set; }
 		[NoAccessorMethod]
-		public abstract uint num_devices { get; set; }
+		public virtual uint num_devices { get; set; }
 		[NoAccessorMethod]
-		public abstract bool running { get; set; }
+		public virtual bool running { get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 size { get; set; }
+		public virtual uint64 size { get; set; }
 		[NoAccessorMethod]
-		public abstract string sync_action { owned get; set; }
+		public virtual string sync_action { owned get; set; }
 		[NoAccessorMethod]
-		public abstract double sync_completed { get; set; }
+		public virtual double sync_completed { get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 sync_rate { get; set; }
+		public virtual uint64 sync_rate { get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 sync_remaining_time { get; set; }
+		public virtual uint64 sync_remaining_time { get; set; }
 		[NoAccessorMethod]
-		public abstract string uuid { owned get; set; }
+		public virtual string uuid { owned get; set; }
 		public virtual signal bool handle_add_device (GLib.DBusMethodInvocation invocation, string arg_device, GLib.Variant arg_options);
 		public virtual signal bool handle_delete (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_remove_device (GLib.DBusMethodInvocation invocation, string arg_device, GLib.Variant arg_options);
@@ -759,9 +759,9 @@ namespace UDisks {
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[CCode (array_length = false, array_null_terminated = true)]
 		[NoAccessorMethod]
-		public abstract string[] supported_filesystems { owned get; set; }
+		public virtual string[] supported_filesystems { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string version { owned get; set; }
+		public virtual string version { owned get; set; }
 		public virtual signal bool handle_enable_modules (GLib.DBusMethodInvocation invocation, bool arg_enable);
 		public virtual signal bool handle_loop_setup (GLib.DBusMethodInvocation invocation, GLib.UnixFDList? fd_list, GLib.Variant arg_fd, GLib.Variant arg_options);
 		[Version (since = "2.0.0")]
@@ -783,30 +783,30 @@ namespace UDisks {
 		public UDisks.PartitionTable get_partition_table ();
 		public UDisks.Swapspace get_swapspace ();
 		[NoAccessorMethod]
-		public abstract UDisks.Block block { owned get; set; }
+		public virtual UDisks.Block block { owned get; set; }
 		[NoAccessorMethod]
-		public abstract UDisks.Drive drive { owned get; set; }
+		public virtual UDisks.Drive drive { owned get; set; }
 		[NoAccessorMethod]
-		public abstract UDisks.DriveAta drive_ata { owned get; set; }
+		public virtual UDisks.DriveAta drive_ata { owned get; set; }
 		[NoAccessorMethod]
-		public abstract UDisks.Encrypted encrypted { owned get; set; }
+		public virtual UDisks.Encrypted encrypted { owned get; set; }
 		[NoAccessorMethod]
-		public abstract UDisks.Filesystem filesystem { owned get; set; }
+		public virtual UDisks.Filesystem filesystem { owned get; set; }
 		[NoAccessorMethod]
-		public abstract UDisks.Job job { owned get; set; }
+		public virtual UDisks.Job job { owned get; set; }
 		[NoAccessorMethod]
-		public abstract UDisks.Loop loop { owned get; set; }
+		public virtual UDisks.Loop loop { owned get; set; }
 		[NoAccessorMethod]
-		public abstract UDisks.Manager manager { owned get; set; }
+		public virtual UDisks.Manager manager { owned get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.0.0")]
-		public abstract UDisks.MDRaid mdraid { owned get; set; }
+		public virtual UDisks.MDRaid mdraid { owned get; set; }
 		[NoAccessorMethod]
-		public abstract UDisks.Partition partition { owned get; set; }
+		public virtual UDisks.Partition partition { owned get; set; }
 		[NoAccessorMethod]
-		public abstract UDisks.PartitionTable partition_table { owned get; set; }
+		public virtual UDisks.PartitionTable partition_table { owned get; set; }
 		[NoAccessorMethod]
-		public abstract UDisks.Swapspace swapspace { owned get; set; }
+		public virtual UDisks.Swapspace swapspace { owned get; set; }
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_partition_get_type ()")]
 	public interface Partition : GLib.Object {
@@ -825,25 +825,25 @@ namespace UDisks {
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
-		public abstract uint64 flags { get; set; }
+		public virtual uint64 flags { get; set; }
 		[NoAccessorMethod]
-		public abstract bool is_contained { get; set; }
+		public virtual bool is_contained { get; set; }
 		[NoAccessorMethod]
-		public abstract bool is_container { get; set; }
+		public virtual bool is_container { get; set; }
 		[NoAccessorMethod]
-		public abstract string name { owned get; set; }
+		public virtual string name { owned get; set; }
 		[NoAccessorMethod]
-		public abstract uint number { get; set; }
+		public virtual uint number { get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 offset { get; set; }
+		public virtual uint64 offset { get; set; }
 		[NoAccessorMethod]
-		public abstract uint64 size { get; set; }
+		public virtual uint64 size { get; set; }
 		[NoAccessorMethod]
-		public abstract string table { owned get; set; }
+		public virtual string table { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string type { owned get; set; }
+		public virtual string type { owned get; set; }
 		[NoAccessorMethod]
-		public abstract string uuid { owned get; set; }
+		public virtual string uuid { owned get; set; }
 		public virtual signal bool handle_delete (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_set_flags (GLib.DBusMethodInvocation invocation, uint64 arg_flags, GLib.Variant arg_options);
 		public virtual signal bool handle_set_name (GLib.DBusMethodInvocation invocation, string arg_name, GLib.Variant arg_options);
@@ -860,7 +860,7 @@ namespace UDisks {
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
-		public abstract string type { owned get; set; }
+		public virtual string type { owned get; set; }
 		public virtual signal bool handle_create_partition (GLib.DBusMethodInvocation invocation, uint64 arg_offset, uint64 arg_size, string arg_type, string arg_name, GLib.Variant arg_options);
 		public virtual signal bool handle_create_partition_and_format (GLib.DBusMethodInvocation invocation, uint64 arg_offset, uint64 arg_size, string arg_type, string arg_name, GLib.Variant arg_options, string arg_format_type, GLib.Variant arg_format_options);
 	}
@@ -875,7 +875,7 @@ namespace UDisks {
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
-		public abstract bool active { get; set; }
+		public virtual bool active { get; set; }
 		public virtual signal bool handle_start (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 		public virtual signal bool handle_stop (GLib.DBusMethodInvocation invocation, GLib.Variant arg_options);
 	}

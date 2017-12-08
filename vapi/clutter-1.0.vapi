@@ -8111,33 +8111,24 @@ namespace Clutter {
 		public void set_subtitle_uri (string uri);
 		[Version (deprecated = true, deprecated_since = "1.12", since = "0.2")]
 		public void set_uri (string uri);
-		[ConcreteAccessor]
 		[Version (deprecated = true, deprecated_since = "1.12", since = "1.0")]
-		public abstract double audio_volume { get; set; }
-		[ConcreteAccessor]
+		public virtual double audio_volume { get; set; }
 		[Version (deprecated = true, deprecated_since = "1.12", since = "1.0")]
-		public abstract double buffer_fill { get; }
-		[ConcreteAccessor]
+		public virtual double buffer_fill { get; }
 		[Version (deprecated = true, deprecated_since = "1.12", since = "0.2")]
-		public abstract bool can_seek { get; }
-		[ConcreteAccessor]
+		public virtual bool can_seek { get; }
 		[Version (deprecated = true, deprecated_since = "1.12", since = "0.2")]
-		public abstract double duration { get; }
-		[ConcreteAccessor]
+		public virtual double duration { get; }
 		[Version (deprecated = true, deprecated_since = "1.12", since = "0.2")]
-		public abstract bool playing { get; set; }
-		[ConcreteAccessor]
+		public virtual bool playing { get; set; }
 		[Version (deprecated = true, deprecated_since = "1.12", since = "1.0")]
-		public abstract double progress { get; set; }
-		[ConcreteAccessor]
+		public virtual double progress { get; set; }
 		[Version (deprecated = true, deprecated_since = "1.12", since = "1.2")]
-		public abstract string subtitle_font_name { owned get; set; }
-		[ConcreteAccessor]
+		public virtual string subtitle_font_name { owned get; set; }
 		[Version (deprecated = true, deprecated_since = "1.12", since = "1.2")]
-		public abstract string subtitle_uri { owned get; set; }
-		[ConcreteAccessor]
+		public virtual string subtitle_uri { owned get; set; }
 		[Version (deprecated = true, deprecated_since = "1.12", since = "0.2")]
-		public abstract string uri { owned get; set; }
+		public virtual string uri { owned get; set; }
 		[Version (deprecated = true, deprecated_since = "1.12", since = "0.2")]
 		public virtual signal void eos ();
 		[Version (deprecated = true, deprecated_since = "1.12", since = "0.2")]

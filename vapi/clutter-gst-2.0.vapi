@@ -59,16 +59,16 @@ namespace ClutterGst {
 		public abstract void set_seek_flags (ClutterGst.SeekFlags flags);
 		public abstract void set_subtitle_track (int index_);
 		public abstract void set_user_agent (string user_agent);
-		public abstract int audio_stream { get; set; }
-		public abstract void* audio_streams { get; }
-		public abstract bool idle { get; }
+		public virtual int audio_stream { get; set; }
+		public virtual void* audio_streams { get; }
+		public virtual bool idle { get; }
 		public abstract Cogl.Handle idle_material { get; set; }
 		[Version (since = "1.6")]
-		public abstract bool in_seek { get; }
-		public abstract ClutterGst.SeekFlags seek_flags { get; set; }
-		public abstract int subtitle_track { get; set; }
-		public abstract void* subtitle_tracks { get; }
-		public abstract string user_agent { owned get; set; }
+		public virtual bool in_seek { get; }
+		public virtual ClutterGst.SeekFlags seek_flags { get; set; }
+		public virtual int subtitle_track { get; set; }
+		public virtual void* subtitle_tracks { get; }
+		public virtual string user_agent { owned get; set; }
 		public virtual signal void download_buffering (double start, double stop);
 	}
 	[CCode (cheader_filename = "clutter-gst/clutter-gst.h", cprefix = "CLUTTER_GST_BUFFERING_MODE_", type_id = "clutter_gst_buffering_mode_get_type ()")]

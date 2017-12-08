@@ -423,7 +423,7 @@ namespace Gst {
 		[Version (since = "1.10")]
 		public interface Direction : GLib.Object {
 			[NoAccessorMethod]
-			public abstract Gst.Video.OrientationMethod video_direction { get; set construct; }
+			public virtual Gst.Video.OrientationMethod video_direction { get; set construct; }
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigation", lower_case_cprefix = "gst_navigation_", type_cname = "GstNavigationInterface", type_id = "gst_navigation_get_type ()")]
 		[GIR (name = "Navigation")]

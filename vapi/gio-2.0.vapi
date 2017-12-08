@@ -3120,15 +3120,15 @@ namespace GLib {
 		[Version (since = "2.38")]
 		public static string print_detailed_name (string action_name, GLib.Variant? target_value);
 		[Version (since = "2.28")]
-		public abstract bool enabled { get; }
+		public virtual bool enabled { get; }
 		[Version (since = "2.28")]
-		public abstract string name { get; }
+		public virtual string name { get; }
 		[Version (since = "2.28")]
-		public abstract GLib.VariantType? parameter_type { get; }
+		public virtual GLib.VariantType? parameter_type { get; }
 		[Version (since = "2.28")]
-		public abstract GLib.Variant? state { owned get; }
+		public virtual GLib.Variant? state { owned get; }
 		[Version (since = "2.28")]
-		public abstract GLib.VariantType? state_type { get; }
+		public virtual GLib.VariantType? state_type { get; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GActionGroupInterface", type_id = "g_action_group_get_type ()")]
 	public interface ActionGroup : GLib.Object {
@@ -3364,12 +3364,9 @@ namespace GLib {
 		public static GLib.DtlsClientConnection @new (GLib.DatagramBased base_socket, GLib.SocketConnectable? server_identity) throws GLib.Error;
 		public void set_server_identity (GLib.SocketConnectable identity);
 		public void set_validation_flags (GLib.TlsCertificateFlags flags);
-		[ConcreteAccessor]
-		public abstract GLib.List<void*> accepted_cas { owned get; }
-		[ConcreteAccessor]
-		public abstract GLib.SocketConnectable server_identity { get; set construct; }
-		[ConcreteAccessor]
-		public abstract GLib.TlsCertificateFlags validation_flags { get; set construct; }
+		public virtual GLib.List<void*> accepted_cas { owned get; }
+		public virtual GLib.SocketConnectable server_identity { get; set construct; }
+		public virtual GLib.TlsCertificateFlags validation_flags { get; set construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GDtlsConnectionInterface", type_id = "g_dtls_connection_get_type ()")]
 	[Version (since = "2.48")]
@@ -3394,21 +3391,14 @@ namespace GLib {
 		public abstract bool shutdown (bool shutdown_read, bool shutdown_write, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async bool shutdown_async (bool shutdown_read, bool shutdown_write, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoAccessorMethod]
-		public abstract GLib.DatagramBased base_socket { owned get; construct; }
-		[ConcreteAccessor]
-		public abstract GLib.TlsCertificate certificate { get; set; }
-		[ConcreteAccessor]
-		public abstract GLib.TlsDatabase database { get; set; }
-		[ConcreteAccessor]
-		public abstract GLib.TlsInteraction interaction { get; set; }
-		[ConcreteAccessor]
-		public abstract GLib.TlsCertificate peer_certificate { get; }
-		[ConcreteAccessor]
-		public abstract GLib.TlsCertificateFlags peer_certificate_errors { get; }
-		[ConcreteAccessor]
-		public abstract GLib.TlsRehandshakeMode rehandshake_mode { get; set construct; }
-		[ConcreteAccessor]
-		public abstract bool require_close_notify { get; set construct; }
+		public virtual GLib.DatagramBased base_socket { owned get; construct; }
+		public virtual GLib.TlsCertificate certificate { get; set; }
+		public virtual GLib.TlsDatabase database { get; set; }
+		public virtual GLib.TlsInteraction interaction { get; set; }
+		public virtual GLib.TlsCertificate peer_certificate { get; }
+		public virtual GLib.TlsCertificateFlags peer_certificate_errors { get; }
+		public virtual GLib.TlsRehandshakeMode rehandshake_mode { get; set construct; }
+		public virtual bool require_close_notify { get; set construct; }
 		public virtual signal bool accept_certificate (GLib.TlsCertificate peer_cert, GLib.TlsCertificateFlags errors);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GDtlsServerConnectionInterface", type_id = "g_dtls_server_connection_get_type ()")]
@@ -3416,7 +3406,7 @@ namespace GLib {
 	public interface DtlsServerConnection : GLib.DatagramBased, GLib.DtlsConnection, GLib.Object {
 		public static GLib.DtlsServerConnection @new (GLib.DatagramBased base_socket, GLib.TlsCertificate? certificate) throws GLib.Error;
 		[NoAccessorMethod]
-		public abstract GLib.TlsAuthenticationMode authentication_mode { get; set; }
+		public virtual GLib.TlsAuthenticationMode authentication_mode { get; set; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_file_get_type ()")]
 	public interface File : GLib.Object {
@@ -3656,14 +3646,11 @@ namespace GLib {
 		public bool get_network_available ();
 		[Version (since = "2.46")]
 		public bool get_network_metered ();
-		[ConcreteAccessor]
 		[Version (since = "2.44")]
-		public abstract GLib.NetworkConnectivity connectivity { get; }
-		[ConcreteAccessor]
-		public abstract bool network_available { get; }
-		[ConcreteAccessor]
+		public virtual GLib.NetworkConnectivity connectivity { get; }
+		public virtual bool network_available { get; }
 		[Version (since = "2.46")]
-		public abstract bool network_metered { get; }
+		public virtual bool network_metered { get; }
 		public virtual signal void network_changed (bool available);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GPollableInputStreamInterface", type_id = "g_pollable_input_stream_get_type ()")]
@@ -3759,28 +3746,24 @@ namespace GLib {
 		public void set_server_identity (GLib.SocketConnectable identity);
 		public void set_use_ssl3 (bool use_ssl3);
 		public void set_validation_flags (GLib.TlsCertificateFlags flags);
-		[ConcreteAccessor]
-		public abstract GLib.List<GLib.ByteArray> accepted_cas { owned get; }
-		[ConcreteAccessor]
-		public abstract GLib.SocketConnectable server_identity { get; set construct; }
-		[ConcreteAccessor]
-		public abstract bool use_ssl3 { get; set construct; }
-		[ConcreteAccessor]
-		public abstract GLib.TlsCertificateFlags validation_flags { get; set construct; }
+		public virtual GLib.List<GLib.ByteArray> accepted_cas { owned get; }
+		public virtual GLib.SocketConnectable server_identity { get; set construct; }
+		public virtual bool use_ssl3 { get; set construct; }
+		public virtual GLib.TlsCertificateFlags validation_flags { get; set construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GTlsFileDatabaseInterface", type_id = "g_tls_file_database_get_type ()")]
 	[Version (since = "2.30")]
 	public interface TlsFileDatabase : GLib.TlsDatabase {
 		public static GLib.TlsFileDatabase? @new (string anchors) throws GLib.Error;
 		[NoAccessorMethod]
-		public abstract string anchors { owned get; set construct; }
+		public virtual string anchors { owned get; set construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GTlsServerConnectionInterface", type_id = "g_tls_server_connection_get_type ()")]
 	[Version (since = "2.28")]
 	public interface TlsServerConnection : GLib.TlsConnection {
 		public static GLib.TlsServerConnection? @new (GLib.IOStream base_io_stream, GLib.TlsCertificate? certificate) throws GLib.Error;
 		[NoAccessorMethod]
-		public abstract GLib.TlsAuthenticationMode authentication_mode { get; set; }
+		public virtual GLib.TlsAuthenticationMode authentication_mode { get; set; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_volume_get_type ()")]
 	public interface Volume : GLib.Object {
