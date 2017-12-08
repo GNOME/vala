@@ -6888,7 +6888,6 @@ namespace Clutter {
 		public void to_cairo_path (Cairo.Context cr);
 		[CCode (has_construct_function = false)]
 		public Path.with_description (string desc);
-		[NoAccessorMethod]
 		public string description { owned get; set; }
 		public uint length { get; }
 	}

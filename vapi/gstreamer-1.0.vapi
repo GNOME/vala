@@ -1727,9 +1727,7 @@ namespace Gst {
 		public bool sync_values (Gst.ClockTime timestamp);
 		public void unparent ();
 		public void unref ();
-		[NoAccessorMethod]
 		public string name { owned get; set construct; }
-		[NoAccessorMethod]
 		public Gst.Object parent { owned get; set; }
 		public virtual signal void deep_notify (Gst.Object orig, GLib.ParamSpec pspec);
 	}
