@@ -6989,7 +6989,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_accel_label_get_type ()")]
 	public class AccelLabel : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public AccelLabel (string string);
+		public AccelLabel (string str);
 		[Version (since = "3.12")]
 		public void get_accel (out uint accelerator_key, out Gdk.ModifierType accelerator_mods);
 		public unowned Gtk.Widget? get_accel_widget ();
@@ -7463,7 +7463,7 @@ namespace Gtk {
 		public Builder.from_resource (string resource_path);
 		[CCode (has_construct_function = false)]
 		[Version (since = "3.10")]
-		public Builder.from_string (string string, ssize_t length);
+		public Builder.from_string (string str, ssize_t length);
 		[Version (since = "3.10")]
 		public unowned Gtk.Application? get_application ();
 		[Version (since = "2.12")]
@@ -7481,9 +7481,9 @@ namespace Gtk {
 		[Version (since = "2.12")]
 		public void set_translation_domain (string? domain);
 		[Version (since = "2.12")]
-		public bool value_from_string (GLib.ParamSpec pspec, string string, out GLib.Value value) throws GLib.Error;
+		public bool value_from_string (GLib.ParamSpec pspec, string str, out GLib.Value value) throws GLib.Error;
 		[Version (since = "2.12")]
-		public bool value_from_string_type (GLib.Type type, string string, out GLib.Value value) throws GLib.Error;
+		public bool value_from_string_type (GLib.Type type, string str, out GLib.Value value) throws GLib.Error;
 		[Version (since = "2.12")]
 		public string translation_domain { get; set; }
 	}
@@ -7501,7 +7501,7 @@ namespace Gtk {
 		public bool get_use_underline ();
 		[Version (since = "3.90")]
 		public void set_icon_name (string icon_name);
-		public void set_label (string label);
+		public void set_label (string? label);
 		public void set_relief (Gtk.ReliefStyle relief);
 		public void set_use_underline (bool use_underline);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -7509,7 +7509,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Button.with_mnemonic (string label);
 		public string icon_name { get; set; }
-		public string label { get; set; }
+		public string? label { get; set; }
 		public Gtk.ReliefStyle relief { get; set; }
 		public bool use_underline { get; set; }
 		public virtual signal void activate ();
@@ -8837,7 +8837,7 @@ namespace Gtk {
 		public virtual signal void insert_emoji ();
 		public virtual signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
 		public virtual signal void paste_clipboard ();
-		public virtual signal void populate_popup (Gtk.Widget popup);
+		public virtual signal void populate_popup (Gtk.Menu popup);
 		[Version (since = "2.20")]
 		public signal void preedit_changed (string preedit);
 		public virtual signal void toggle_overwrite ();
@@ -8864,8 +8864,11 @@ namespace Gtk {
 		public virtual uint get_length ();
 		[Version (since = "2.18")]
 		public int get_max_length ();
+		[Version (since = "2.18")]
+		public unowned string get_text ();
+		[CCode (vfunc_name = "get_text")]
 		[NoWrapper]
-		public virtual unowned string get_text (out size_t n_bytes = null);
+		public virtual unowned string get_text_internal (out size_t n_bytes = null);
 		[Version (since = "2.18")]
 		public virtual uint insert_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, array_length_type = "guint", type = "const gchar*")] uint8[] chars);
 		[Version (since = "2.18")]
@@ -8876,9 +8879,8 @@ namespace Gtk {
 		public uint length { get; }
 		[Version (since = "2.18")]
 		public int max_length { get; set; }
-		[NoAccessorMethod]
 		[Version (since = "2.18")]
-		public string text { owned get; set; }
+		public string text { get; set; }
 		[Version (since = "2.18")]
 		public virtual signal void deleted_text (uint position, uint n_chars);
 		[Version (since = "2.18")]
@@ -9102,8 +9104,8 @@ namespace Gtk {
 		public void set_accept_label (string? accept_label);
 		[Version (since = "3.20")]
 		public void set_cancel_label (string? cancel_label);
-		public string accept_label { get; set; }
-		public string cancel_label { get; set; }
+		public string? accept_label { get; set; }
+		public string? cancel_label { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_chooser_widget_get_type ()")]
 	public class FileChooserWidget : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser {
@@ -10855,7 +10857,7 @@ namespace Gtk {
 		[Version (since = "3.20")]
 		public void set_modal (bool modal);
 		[Version (since = "3.20")]
-		public void set_title (string title);
+		public void set_title (string? title);
 		[Version (since = "3.20")]
 		public void set_transient_for (Gtk.Window? parent);
 		[Version (since = "3.20")]
@@ -10863,9 +10865,9 @@ namespace Gtk {
 		[Version (since = "3.20")]
 		public bool modal { get; set; }
 		[Version (since = "3.20")]
-		public string title { get; set; }
+		public string? title { get; set; }
 		[Version (since = "3.20")]
-		public Gtk.Window transient_for { get; set construct; }
+		public Gtk.Window? transient_for { get; set construct; }
 		[NoAccessorMethod]
 		[Version (since = "3.20")]
 		public bool visible { get; set; }
@@ -11116,6 +11118,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.10")]
 		public PaperSize.custom (string name, string display_name, double width, double height, Gtk.Unit unit);
+		[DestroysInstance]
 		[Version (since = "2.10")]
 		public void free ();
 		[CCode (has_construct_function = false)]
@@ -12177,6 +12180,7 @@ namespace Gtk {
 	[Compact]
 	public class SelectionData {
 		public Gtk.SelectionData copy ();
+		[DestroysInstance]
 		public void free ();
 		[CCode (array_length = false)]
 		[Version (since = "2.14")]
@@ -13327,7 +13331,7 @@ namespace Gtk {
 		public virtual signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
 		public signal void move_viewport (Gtk.ScrollStep step, int count);
 		public virtual signal void paste_clipboard ();
-		public virtual signal void populate_popup (Gtk.Widget popup);
+		public virtual signal void populate_popup (Gtk.Menu popup);
 		[Version (since = "2.20")]
 		public signal void preedit_changed (string preedit);
 		public signal void select_all (bool select);
@@ -13664,6 +13668,7 @@ namespace Gtk {
 		public void down ();
 		[CCode (has_construct_function = false)]
 		public TreePath.first ();
+		[DestroysInstance]
 		public void free ();
 		[CCode (has_construct_function = false, sentinel = "-1")]
 		[Version (since = "2.2")]
@@ -13694,6 +13699,7 @@ namespace Gtk {
 		public Gtk.TreeRowReference copy ();
 		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static void deleted (GLib.Object proxy, Gtk.TreePath path);
+		[DestroysInstance]
 		public void free ();
 		[Version (since = "2.8")]
 		public unowned Gtk.TreeModel get_model ();
@@ -13855,7 +13861,7 @@ namespace Gtk {
 		public bool get_visible_range (out Gtk.TreePath start_path, out Gtk.TreePath end_path);
 		public void get_visible_rect (out Gdk.Rectangle visible_rect);
 		public int insert_column (Gtk.TreeViewColumn column, int position);
-		public int insert_column_with_attributes (int position, string title, Gtk.CellRenderer cell, ...);
+		public int insert_column_with_attributes (int position, string? title, Gtk.CellRenderer cell, ...);
 		public int insert_column_with_data_func (int position, string title, Gtk.CellRenderer cell, owned Gtk.TreeCellDataFunc func);
 		[Version (since = "3.0")]
 		public bool is_blank_at_pos (int x, int y, out Gtk.TreePath path, out Gtk.TreeViewColumn column, out int cell_x, out int cell_y);
@@ -14019,7 +14025,7 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public TreeViewColumn.with_area (Gtk.CellArea area);
 		[CCode (has_construct_function = false)]
-		public TreeViewColumn.with_attributes (string title, Gtk.CellRenderer cell, ...);
+		public TreeViewColumn.with_attributes (string? title, Gtk.CellRenderer cell, ...);
 		public float alignment { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "3.0")]
@@ -14525,6 +14531,7 @@ namespace Gtk {
 		public int append_with_siblings (Gtk.WidgetPath siblings, uint sibling_index);
 		[Version (since = "3.0")]
 		public Gtk.WidgetPath copy ();
+		[DestroysInstance]
 		[Version (since = "3.0")]
 		public void free ();
 		[Version (since = "3.0")]
@@ -14948,7 +14955,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_chooser_get_type ()")]
 	public interface FileChooser : GLib.Object {
 		[Version (since = "3.22")]
-		public void add_choice (string id, string label, string options, string option_labels);
+		public void add_choice (string id, string label, [CCode (array_length = false, array_null_terminated = true, type = "const char**")] string[]? options, [CCode (array_length = false, array_null_terminated = true, type = "const char**")] string[]? option_labels);
 		[Version (since = "2.4")]
 		public void add_filter (owned Gtk.FileFilter filter);
 		[Version (since = "2.4")]
@@ -17111,8 +17118,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool events_pending ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool @false ();
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.0")]
 	public static uint get_binary_age ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -17231,6 +17236,4 @@ namespace Gtk {
 	public static bool tree_get_row_drag_data (Gtk.SelectionData selection_data, out unowned Gtk.TreeModel? tree_model, out Gtk.TreePath? path);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool tree_set_row_drag_data (Gtk.SelectionData selection_data, Gtk.TreeModel tree_model, Gtk.TreePath path);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool @true ();
 }
