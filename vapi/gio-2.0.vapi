@@ -1827,7 +1827,7 @@ namespace GLib {
 		[HasEmitter]
 		public virtual signal void reply (GLib.MountOperationResult result);
 		[Version (since = "2.22")]
-		public signal void show_processes (string message, GLib.Array<GLib.Pid> processes, [CCode (array_length = false, array_null_terminated = true)] string[] choices);
+		public virtual signal void show_processes (string message, GLib.Array<GLib.Pid> processes, [CCode (array_length = false, array_null_terminated = true)] string[] choices);
 		[Version (since = "2.34")]
 		public virtual signal void show_unmount_progress (string message, int64 time_left, int64 bytes_left);
 	}

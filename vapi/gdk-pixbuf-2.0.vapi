@@ -118,7 +118,7 @@ namespace Gdk {
 		public async void save_to_streamv_async (GLib.OutputStream stream, string type, [CCode (array_length = false, array_null_terminated = true)] string[] option_keys, [CCode (array_length = false, array_null_terminated = true)] string[] option_values, GLib.Cancellable? cancellable = null);
 		public bool savev (string filename, string type, [CCode (array_length = false, array_null_terminated = true)] string[] option_keys, [CCode (array_length = false, array_null_terminated = true)] string[] option_values) throws GLib.Error;
 		public void scale (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type);
-		public Gdk.Pixbuf scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);
+		public Gdk.Pixbuf? scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);
 		[Version (since = "2.2")]
 		public bool set_option (string key, string value);
 		[CCode (has_construct_function = false)]
