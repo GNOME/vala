@@ -498,7 +498,7 @@ namespace Gst {
 			public weak Gst.RTSPServer.Server server;
 			public weak Gst.RTSP.Connection conn;
 			public weak Gst.RTSPServer.Client client;
-			public Gst.RTSP.Message request;
+			public weak Gst.RTSP.Message request;
 			public weak Gst.RTSP.Url uri;
 			public Gst.RTSP.Method method;
 			public weak Gst.RTSPServer.Auth auth;
@@ -508,7 +508,7 @@ namespace Gst {
 			public weak Gst.RTSPServer.MediaFactory factory;
 			public weak Gst.RTSPServer.Media media;
 			public weak Gst.RTSPServer.Stream stream;
-			public Gst.RTSP.Message response;
+			public weak Gst.RTSP.Message response;
 			[CCode (cname = "gst_rtsp_context_pop_current")]
 			public void pop_current ();
 			[CCode (cname = "gst_rtsp_context_push_current")]

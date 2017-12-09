@@ -162,6 +162,12 @@ namespace Gst {
 			public Gst.FlowReturn src_crank_and_push_many (int cranks, int pushes);
 			[CCode (cname = "gst_harness_src_push_event")]
 			public bool src_push_event ();
+			[CCode (cname = "gst_harness_take_all_data_as_buffer")]
+			[Version (since = "1.14")]
+			public Gst.Buffer take_all_data_as_buffer ();
+			[CCode (cname = "gst_harness_take_all_data_as_bytes")]
+			[Version (since = "1.14")]
+			public GLib.Bytes take_all_data_as_bytes ();
 			[CCode (cname = "gst_harness_teardown")]
 			public void teardown ();
 			[CCode (cname = "gst_harness_try_pull")]
