@@ -6,37 +6,37 @@ namespace Gst {
 		namespace Codec {
 			namespace AAC {
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_caps_set_level_and_profile")]
-				public static bool caps_set_level_and_profile (Gst.Caps caps, uint8 audio_config, uint len);
+				public static bool caps_set_level_and_profile (Gst.Caps caps, [CCode (array_length_cname = "len", array_length_pos = 2.1, array_length_type = "guint")] uint8[] audio_config);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_channels")]
-				public static uint get_channels (uint8 audio_config, uint len);
+				public static uint get_channels ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] audio_config);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_index_from_sample_rate")]
 				public static int get_index_from_sample_rate (uint rate);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_level")]
-				public static unowned string get_level (uint8 audio_config, uint len);
+				public static unowned string get_level ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] audio_config);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_profile")]
-				public static unowned string get_profile (uint8 audio_config, uint len);
+				public static unowned string get_profile ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] audio_config);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_sample_rate")]
-				public static uint get_sample_rate (uint8 audio_config, uint len);
+				public static uint get_sample_rate ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] audio_config);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_aac_get_sample_rate_from_index")]
 				public static uint get_sample_rate_from_index (uint sr_idx);
 			}
 			namespace H264 {
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_caps_set_level_and_profile")]
-				public static bool caps_set_level_and_profile (Gst.Caps caps, uint8 sps, uint len);
+				public static bool caps_set_level_and_profile (Gst.Caps caps, [CCode (array_length_cname = "len", array_length_pos = 2.1, array_length_type = "guint")] uint8[] sps);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_get_level")]
-				public static unowned string get_level (uint8 sps, uint len);
+				public static unowned string get_level ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] sps);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_get_level_idc")]
 				public static uint8 get_level_idc (string level);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_get_profile")]
-				public static unowned string get_profile (uint8 sps, uint len);
+				public static unowned string get_profile ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] sps);
 			}
 			namespace MPEG4Video {
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_mpeg4video_caps_set_level_and_profile")]
-				public static bool caps_set_level_and_profile (Gst.Caps caps, uint8 vis_obj_seq, uint len);
+				public static bool caps_set_level_and_profile (Gst.Caps caps, [CCode (array_length_cname = "len", array_length_pos = 2.1, array_length_type = "guint")] uint8[] vis_obj_seq);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_mpeg4video_get_level")]
-				public static unowned string get_level (uint8 vis_obj_seq, uint len);
+				public static unowned string get_level ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] vis_obj_seq);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_mpeg4video_get_profile")]
-				public static unowned string get_profile (uint8 vis_obj_seq, uint len);
+				public static unowned string get_profile ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] vis_obj_seq);
 			}
 		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstAudioVisualizer", lower_case_cprefix = "gst_audio_visualizer_", type_id = "gst_audio_visualizer_get_type ()")]
@@ -331,30 +331,30 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static bool add_codec_description_to_tag_list (Gst.TagList taglist, string? codec_tag, Gst.Caps caps);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h265_caps_set_level_tier_and_profile")]
-		public static bool codec_utils_h265_caps_set_level_tier_and_profile (Gst.Caps caps, uint8 profile_tier_level, uint len);
+		public static bool codec_utils_h265_caps_set_level_tier_and_profile (Gst.Caps caps, [CCode (array_length_cname = "len", array_length_pos = 2.1, array_length_type = "guint")] uint8[] profile_tier_level);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h265_get_level")]
-		public static unowned string codec_utils_h265_get_level (uint8 profile_tier_level, uint len);
+		public static unowned string codec_utils_h265_get_level ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] profile_tier_level);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h265_get_level_idc")]
 		public static uint8 codec_utils_h265_get_level_idc (string level);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h265_get_profile")]
-		public static unowned string codec_utils_h265_get_profile (uint8 profile_tier_level, uint len);
+		public static unowned string codec_utils_h265_get_profile ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] profile_tier_level);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h265_get_tier")]
-		public static unowned string codec_utils_h265_get_tier (uint8 profile_tier_level, uint len);
+		public static unowned string codec_utils_h265_get_tier ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] profile_tier_level);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_create_caps")]
 		[Version (since = "1.8")]
-		public static Gst.Caps codec_utils_opus_create_caps (uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, uint8? channel_mapping);
+		public static Gst.Caps codec_utils_opus_create_caps (uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, [CCode (array_length = false)] uint8[]? channel_mapping);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_create_caps_from_header")]
 		[Version (since = "1.8")]
 		public static Gst.Caps codec_utils_opus_create_caps_from_header (Gst.Buffer header, Gst.Buffer? comments);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_create_header")]
 		[Version (since = "1.8")]
-		public static Gst.Buffer codec_utils_opus_create_header (uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, uint8? channel_mapping, uint16 pre_skip, int16 output_gain);
+		public static Gst.Buffer codec_utils_opus_create_header (uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, [CCode (array_length = false)] uint8[]? channel_mapping, uint16 pre_skip, int16 output_gain);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_parse_caps")]
 		[Version (since = "1.8")]
-		public static bool codec_utils_opus_parse_caps (Gst.Caps caps, uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, uint8 channel_mapping);
+		public static bool codec_utils_opus_parse_caps (Gst.Caps caps, out uint32 rate, out uint8 channels, out uint8 channel_mapping_family, out uint8 stream_count, out uint8 coupled_count, [CCode (array_length = false)] out uint8[] channel_mapping);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_parse_header")]
 		[Version (since = "1.8")]
-		public static bool codec_utils_opus_parse_header (Gst.Buffer header, uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, uint8 channel_mapping, uint16 pre_skip, int16 output_gain);
+		public static bool codec_utils_opus_parse_header (Gst.Buffer header, out uint32 rate, out uint8 channels, out uint8 channel_mapping_family, out uint8 stream_count, out uint8 coupled_count, [CCode (array_length = false)] out uint8[] channel_mapping, out uint16 pre_skip, out int16 output_gain);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_encoding_list_all_targets")]
 		public static GLib.List<Gst.PbUtils.EncodingTarget> encoding_list_all_targets (string? categoryname);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_encoding_list_available_categories")]

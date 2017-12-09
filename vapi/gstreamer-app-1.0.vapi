@@ -94,6 +94,9 @@ namespace Gst {
 			[HasEmitter]
 			public virtual signal Gst.FlowReturn push_buffer (Gst.Buffer buffer);
 			[HasEmitter]
+			[Version (since = "1.14")]
+			public virtual signal Gst.FlowReturn push_buffer_list (Gst.BufferList buffer_list);
+			[HasEmitter]
 			[Version (since = "1.6")]
 			public virtual signal Gst.FlowReturn push_sample (Gst.Sample sample);
 			public virtual signal bool seek_data (uint64 offset);

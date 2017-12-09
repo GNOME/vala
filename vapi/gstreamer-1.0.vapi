@@ -1293,7 +1293,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual void release_pad (Gst.Pad pad);
 		public void release_request_pad (Gst.Pad pad);
-		public bool remove_pad (owned Gst.Pad pad);
+		public bool remove_pad (Gst.Pad pad);
 		[Version (since = "1.10")]
 		public void remove_property_notify_watch (ulong watch_id);
 		[CCode (vfunc_name = "request_new_pad")]
@@ -1376,7 +1376,7 @@ namespace Gst {
 		[Version (since = "1.4")]
 		public int64 get_running_time_offset ();
 		public uint32 get_seqnum ();
-		public unowned Gst.Structure get_structure ();
+		public unowned Gst.Structure? get_structure ();
 		public bool has_name (string name);
 		[CCode (has_construct_function = false)]
 		public Event.latency (Gst.ClockTime latency);
@@ -1588,7 +1588,7 @@ namespace Gst {
 		public size_t get_num_redirect_entries ();
 		public uint32 get_seqnum ();
 		public unowned GLib.Value? get_stream_status_object ();
-		public unowned Gst.Structure get_structure ();
+		public unowned Gst.Structure? get_structure ();
 		public bool has_name (string name);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.2")]
@@ -2093,7 +2093,7 @@ namespace Gst {
 		public uint get_n_allocation_pools ();
 		public uint get_n_buffering_ranges ();
 		public uint get_n_scheduling_modes ();
-		public unowned Gst.Structure get_structure ();
+		public unowned Gst.Structure? get_structure ();
 		public bool has_scheduling_mode (Gst.PadMode mode);
 		public bool has_scheduling_mode_with_flags (Gst.PadMode mode, Gst.SchedulingFlags flags);
 		[CCode (has_construct_function = false)]
@@ -3933,6 +3933,9 @@ namespace Gst {
 	public const int64 FORMAT_PERCENT_SCALE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_FOURCC_FORMAT")]
 	public const string FOURCC_FORMAT;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_GROUP_ID_INVALID")]
+	[Version (since = "1.14")]
+	public const int GROUP_ID_INVALID;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_LICENSE_UNKNOWN")]
 	public const string LICENSE_UNKNOWN;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_LOCK_FLAG_READWRITE")]
@@ -3970,6 +3973,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEGMENT_FORMAT")]
 	public const string SEGMENT_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEQNUM_INVALID")]
+	[Version (since = "1.14")]
 	public const int SEQNUM_INVALID;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_STIME_FORMAT")]
 	[Version (since = "1.6")]
