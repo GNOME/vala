@@ -4801,6 +4801,45 @@ namespace Gdk {
 		public static unowned Gdk.Atom intern_static_string (string atom_name);
 		public static string name (Gdk.Atom atom);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_clipboard_get_type ()")]
+	public class Clipboard : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Clipboard ();
+		public unowned Gdk.ContentProvider? get_content ();
+		public unowned Gdk.Display get_display ();
+		public unowned Gdk.ContentFormats get_formats ();
+		public bool is_local ();
+		public async GLib.InputStream read_async (string mime_types, int io_priority, GLib.Cancellable? cancellable, out unowned string out_mime_type) throws GLib.Error;
+		public async string? read_text_async (GLib.Cancellable? cancellable) throws GLib.Error;
+		public async Gdk.Texture? read_texture_async (GLib.Cancellable? cancellable) throws GLib.Error;
+		public async unowned GLib.Value? read_value_async (GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool set_content (Gdk.ContentProvider? provider);
+		public void set_value (GLib.Value value);
+		public async bool store_async (int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
+		[Version (since = "3.94")]
+		public Gdk.ContentProvider content { get; }
+		[Version (since = "3.94")]
+		public Gdk.Display display { get; construct; }
+		[Version (since = "3.94")]
+		public Gdk.ContentFormats formats { get; }
+		[NoAccessorMethod]
+		[Version (since = "3.94")]
+		public bool local { get; }
+		public signal void changed ();
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_content_deserializer_get_type ()")]
+	public class ContentDeserializer : GLib.Object, GLib.AsyncResult {
+		[CCode (has_construct_function = false)]
+		protected ContentDeserializer ();
+		public GLib.Type get_gtype ();
+		public unowned string get_mime_type ();
+		public int get_priority ();
+		public void* get_task_data ();
+		public GLib.Value? get_value ();
+		public void return_error (GLib.Error error);
+		public void return_success ();
+		public void set_task_data (void* data, GLib.DestroyNotify notify);
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", ref_function = "gdk_content_formats_ref", type_id = "gdk_content_formats_get_type ()", unref_function = "gdk_content_formats_unref")]
 	[Compact]
 	public class ContentFormats {
@@ -4808,14 +4847,22 @@ namespace Gdk {
 		public ContentFormats ([CCode (array_length_cname = "n_mime_types", array_length_pos = 1.1, array_length_type = "guint")] string[]? mime_types);
 		public bool contain_gtype (GLib.Type type);
 		public bool contain_mime_type (string mime_type);
+		[CCode (has_construct_function = false)]
+		public ContentFormats.for_gtype (GLib.Type type);
 		public unowned GLib.Type? get_gtypes (out size_t n_gtypes);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[]? get_mime_types (out size_t n_mime_types);
-		public bool match (Gdk.ContentFormats second, out GLib.Type out_gtype, out unowned string out_mime_type);
+		public bool match (Gdk.ContentFormats second);
+		public GLib.Type match_gtype (Gdk.ContentFormats second);
+		public unowned string match_mime_type (Gdk.ContentFormats second);
 		public void print (GLib.StringBuilder string);
 		public unowned Gdk.ContentFormats @ref ();
 		public string to_string ();
 		public Gdk.ContentFormats union (Gdk.ContentFormats second);
+		public Gdk.ContentFormats union_deserialize_gtypes ();
+		public Gdk.ContentFormats union_deserialize_mime_types ();
+		public Gdk.ContentFormats union_serialize_gtypes ();
+		public Gdk.ContentFormats union_serialize_mime_types ();
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
@@ -4826,6 +4873,44 @@ namespace Gdk {
 		public void add_mime_type (string mime_type);
 		public Gdk.ContentFormats free ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_content_provider_get_type ()")]
+	public class ContentProvider : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected ContentProvider ();
+		[NoWrapper]
+		public virtual void attach_clipboard (Gdk.Clipboard clipboard);
+		[NoWrapper]
+		public virtual void detach_clipboard (Gdk.Clipboard clipboard);
+		[CCode (has_construct_function = false)]
+		public ContentProvider.for_bytes (string mime_type, GLib.Bytes bytes);
+		[CCode (has_construct_function = false)]
+		public ContentProvider.for_value (GLib.Value value);
+		public virtual bool get_value (GLib.Value value) throws GLib.Error;
+		public virtual Gdk.ContentFormats ref_formats ();
+		public virtual Gdk.ContentFormats ref_storable_formats ();
+		public virtual async bool write_mime_type_async (string mime_type, GLib.OutputStream stream, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
+		[NoAccessorMethod]
+		[Version (since = "3.94")]
+		public Gdk.ContentFormats formats { owned get; }
+		[NoAccessorMethod]
+		[Version (since = "3.94")]
+		public Gdk.ContentFormats storable_formats { owned get; }
+		[HasEmitter]
+		public virtual signal void content_changed ();
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_content_serializer_get_type ()")]
+	public class ContentSerializer : GLib.Object, GLib.AsyncResult {
+		[CCode (has_construct_function = false)]
+		protected ContentSerializer ();
+		public GLib.Type get_gtype ();
+		public unowned string get_mime_type ();
+		public int get_priority ();
+		public void* get_task_data ();
+		public unowned GLib.Value? get_value ();
+		public void return_error (GLib.Error error);
+		public void return_success ();
+		public void set_task_data (void* data, GLib.DestroyNotify notify);
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_cursor_get_type ()")]
 	public class Cursor : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -4833,9 +4918,6 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.8")]
 		public Cursor.from_name (string name, Gdk.Cursor? fallback);
-		[CCode (has_construct_function = false)]
-		[Version (since = "2.4")]
-		public Cursor.from_pixbuf (Gdk.Pixbuf pixbuf, int x, int y, Gdk.Cursor? fallback);
 		[CCode (has_construct_function = false)]
 		[Version (since = "3.94")]
 		public Cursor.from_texture (Gdk.Texture texture, int hotspot_x, int hotspot_y, Gdk.Cursor? fallback);
@@ -5093,8 +5175,6 @@ namespace Gdk {
 		public unowned Gdk.Window? get_drag_window ();
 		[Version (since = "3.94")]
 		public unowned Gdk.ContentFormats get_formats ();
-		[Version (since = "3.0")]
-		public Gdk.DragProtocol get_protocol ();
 		[Version (since = "2.22")]
 		public Gdk.DragAction get_selected_action ();
 		[Version (since = "2.22")]
@@ -5184,7 +5264,6 @@ namespace Gdk {
 		public bool get_keycode (out uint16 keycode);
 		[Version (since = "3.2")]
 		public bool get_keyval (out uint keyval);
-		public bool get_owner_change_reason (out Gdk.OwnerChange reason);
 		public bool get_pad_axis_value (out uint index, out double value);
 		public bool get_pad_button (out uint button);
 		public bool get_pad_group_mode (out uint group, out uint mode);
@@ -5332,6 +5411,10 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
 	[Compact]
 	public class EventWindowState : Gdk.Event {
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_file_list_get_type ()")]
+	[Compact]
+	public class FileList {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_frame_clock_get_type ()")]
 	public abstract class FrameClock : GLib.Object {
@@ -5508,6 +5591,8 @@ namespace Gdk {
 		public unowned Gdk.Display get_display ();
 		[Version (since = "3.20")]
 		public unowned Gdk.Device? get_keyboard ();
+		[Version (since = "3.93.")]
+		public GLib.List<weak Gdk.Device> get_master_pointers (Gdk.SeatCapabilities capabilities);
 		[Version (since = "3.20")]
 		public unowned Gdk.Device? get_pointer ();
 		[Version (since = "3.20")]
@@ -5612,8 +5697,6 @@ namespace Gdk {
 		public unowned Gdk.Window? get_device_position_double (Gdk.Device device, out double x, out double y, out Gdk.ModifierType mask);
 		[Version (since = "2.24")]
 		public unowned Gdk.Display get_display ();
-		[Version (since = "3.0")]
-		public Gdk.DragProtocol get_drag_protocol (out Gdk.Window target);
 		[Version (since = "3.12")]
 		public bool get_event_compression ();
 		public Gdk.EventMask get_events ();
@@ -5945,17 +6028,6 @@ namespace Gdk {
 		USER_CANCELLED,
 		ERROR
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_DRAG_PROTO_", type_id = "gdk_drag_protocol_get_type ()")]
-	public enum DragProtocol {
-		NONE,
-		MOTIF,
-		XDND,
-		ROOTWIN,
-		WIN32_DROPFILES,
-		OLE2,
-		LOCAL,
-		WAYLAND
-	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_", type_id = "gdk_event_mask_get_type ()")]
 	[Flags]
 	public enum EventMask {
@@ -6016,7 +6088,6 @@ namespace Gdk {
 		CLIENT_EVENT,
 		SCROLL,
 		WINDOW_STATE,
-		OWNER_CHANGE,
 		GRAB_BROKEN,
 		DAMAGE,
 		TOUCH_BEGIN,
@@ -6145,12 +6216,6 @@ namespace Gdk {
 		NONLINEAR_VIRTUAL,
 		UNKNOWN
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_OWNER_CHANGE_", type_id = "gdk_owner_change_get_type ()")]
-	public enum OwnerChange {
-		NEW_OWNER,
-		DESTROY,
-		CLOSE
-	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_PROP_MODE_", type_id = "gdk_prop_mode_get_type ()")]
 	public enum PropMode {
 		REPLACE,
@@ -6179,6 +6244,7 @@ namespace Gdk {
 		TOUCH,
 		TABLET_STYLUS,
 		KEYBOARD,
+		TABLET_PAD,
 		ALL_POINTING,
 		ALL
 	}
@@ -6316,6 +6382,10 @@ namespace Gdk {
 		NOT_AVAILABLE;
 		public static GLib.Quark quark ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", has_target = false)]
+	public delegate void ContentDeserializeFunc (Gdk.ContentDeserializer deserializer);
+	[CCode (cheader_filename = "gdk/gdk.h", has_target = false)]
+	public delegate void ContentSerializeFunc (Gdk.ContentSerializer serializer);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 1.9)]
 	public delegate void EventFunc (Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 2.9)]
@@ -6410,11 +6480,17 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "3.90")]
 	public static void cairo_surface_upload_to_gl (Cairo.Surface surface, int target, int width, int height, Gdk.GLContext? context);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static async bool content_deserialize_async (GLib.InputStream stream, string mime_type, GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static void content_register_deserializer (string mime_type, GLib.Type type, owned Gdk.ContentDeserializeFunc deserialize);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static void content_register_serializer (GLib.Type type, string mime_type, owned Gdk.ContentSerializeFunc serialize);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static async bool content_serialize_async (GLib.OutputStream stream, string mime_type, GLib.Value value, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	[Version (since = "3.0")]
 	public static void disable_multidevice ();
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void drag_abort (Gdk.DragContext context, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.DragContext drag_begin (Gdk.Window window, Gdk.ContentFormats formats);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6423,20 +6499,13 @@ namespace Gdk {
 	[Version (since = "3.20")]
 	public static Gdk.DragContext drag_begin_from_point (Gdk.Window window, Gdk.Device device, Gdk.ContentFormats formats, int x_root, int y_root);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void drag_drop (Gdk.DragContext context, uint32 time_);
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "3.20")]
 	public static void drag_drop_done (Gdk.DragContext context, bool success);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "2.6")]
 	public static bool drag_drop_succeeded (Gdk.DragContext context);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[Version (since = "2.2")]
-	public static void drag_find_window (Gdk.DragContext context, Gdk.Window drag_window, int x_root, int y_root, out Gdk.Window dest_window, out Gdk.DragProtocol protocol);
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static unowned Gdk.Atom drag_get_selection (Gdk.DragContext context);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool drag_motion (Gdk.DragContext context, Gdk.Window dest_window, Gdk.DragProtocol protocol, int x_root, int y_root, Gdk.DragAction suggested_action, Gdk.DragAction possible_actions, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_status (Gdk.DragContext context, Gdk.DragAction action, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6456,6 +6525,8 @@ namespace Gdk {
 	public static bool events_pending ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool get_show_events ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static unowned string intern_mime_type (string string);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void keyval_convert_case (uint symbol, out uint lower, out uint upper);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6657,7 +6728,6 @@ namespace Gsk {
 		public unowned Gsk.RenderNode @ref ();
 		public GLib.Bytes serialize ();
 		public void set_name (string? name);
-		public void set_scaling_filters (Gsk.ScalingFilter min_filter, Gsk.ScalingFilter mag_filter);
 		public void unref ();
 		public bool write_to_file (string filename) throws GLib.Error;
 	}
@@ -6913,7 +6983,7 @@ namespace Gtk {
 		public void set_logo_icon_name (string? icon_name);
 		[Version (since = "2.12")]
 		public void set_program_name (string name);
-		public void set_system_information (string system_information);
+		public void set_system_information (string? system_information);
 		[Version (since = "2.6")]
 		public void set_translator_credits (string? translator_credits);
 		[Version (since = "2.6")]
@@ -7220,8 +7290,6 @@ namespace Gtk {
 		public unowned GLib.List<Gtk.Window> get_windows ();
 		[Version (since = "3.4")]
 		public uint inhibit (Gtk.Window? window, Gtk.ApplicationInhibitFlags flags, string? reason);
-		[Version (since = "3.4")]
-		public bool is_inhibited (Gtk.ApplicationInhibitFlags flags);
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "3.12")]
 		public string[] list_action_descriptions ();
@@ -7913,14 +7981,14 @@ namespace Gtk {
 		[Version (since = "2.8")]
 		public string icon_name { owned get; set; }
 		[NoAccessorMethod]
+		[Version (since = "3.94")]
+		public Gtk.IconSize icon_size { get; set; }
+		[NoAccessorMethod]
 		public Gdk.Pixbuf pixbuf { owned get; set; }
 		[NoAccessorMethod]
 		public Gdk.Pixbuf pixbuf_expander_closed { owned get; set; }
 		[NoAccessorMethod]
 		public Gdk.Pixbuf pixbuf_expander_open { owned get; set; }
-		[NoAccessorMethod]
-		[Version (since = "2.2")]
-		public uint stock_size { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "3.10")]
 		public Cairo.Surface surface { owned get; set; }
@@ -8135,10 +8203,10 @@ namespace Gtk {
 		public CellView.with_markup (string markup);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.6")]
-		public CellView.with_pixbuf (Gdk.Pixbuf pixbuf);
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Version (since = "2.6")]
 		public CellView.with_text (string text);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		[Version (since = "3.94")]
+		public CellView.with_texture (Gdk.Texture texture);
 		[NoAccessorMethod]
 		public Gtk.CellArea cell_area { owned get; construct; }
 		[NoAccessorMethod]
@@ -8212,65 +8280,9 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected CheckMenuItemAccessible ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_clipboard_get_type ()")]
-	public class Clipboard : GLib.Object {
-		[CCode (has_construct_function = false)]
-		protected Clipboard ();
-		public void clear ();
-		public static unowned Gtk.Clipboard @get (Gdk.Atom selection);
-		[Version (since = "3.16")]
-		public static unowned Gtk.Clipboard get_default (Gdk.Display display);
-		[Version (since = "2.2")]
-		public unowned Gdk.Display get_display ();
-		[Version (since = "2.2")]
-		public static unowned Gtk.Clipboard get_for_display (Gdk.Display display, Gdk.Atom selection);
-		public unowned GLib.Object? get_owner ();
-		[Version (since = "3.22")]
-		public Gdk.Atom get_selection ();
-		public void request_contents (Gdk.Atom target, [CCode (scope = "async")] Gtk.ClipboardReceivedFunc callback);
-		[Version (since = "2.6")]
-		public void request_image ([CCode (scope = "async")] Gtk.ClipboardImageReceivedFunc callback);
-		[Version (since = "2.10")]
-		public void request_rich_text (Gtk.TextBuffer buffer, [CCode (scope = "async")] Gtk.ClipboardRichTextReceivedFunc callback);
-		public void request_text ([CCode (scope = "async")] Gtk.ClipboardTextReceivedFunc callback);
-		[Version (since = "2.14")]
-		public void request_uris ([CCode (scope = "async")] Gtk.ClipboardURIReceivedFunc callback);
-		[Version (since = "2.6")]
-		public void set_can_store (Gdk.ContentFormats? formats);
-		[Version (since = "2.6")]
-		public void set_image (Gdk.Pixbuf pixbuf);
-		[Version (since = "3.94")]
-		public void set_surface (Cairo.Surface surface);
-		public void set_text (string text, int len);
-		public bool set_with_data (Gdk.ContentFormats formats, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func);
-		public bool set_with_owner (Gdk.ContentFormats formats, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func, GLib.Object owner);
-		[Version (since = "2.6")]
-		public void store ();
-		public Gtk.SelectionData? wait_for_contents (Gdk.Atom target);
-		[Version (since = "2.6")]
-		public Gdk.Pixbuf? wait_for_image ();
-		[CCode (array_length_pos = 2.1, array_length_type = "gsize")]
-		[Version (since = "2.10")]
-		public uint8[]? wait_for_rich_text (Gtk.TextBuffer buffer, out Gdk.Atom format);
-		[Version (since = "2.6")]
-		public Cairo.Surface? wait_for_surface ();
-		[Version (since = "2.4")]
-		public bool wait_for_targets ([CCode (array_length_cname = "n_formats", array_length_pos = 1.1)] out (unowned Gdk.Atom)[] formats);
-		public string? wait_for_text ();
-		[CCode (array_length = false, array_null_terminated = true)]
-		[Version (since = "2.14")]
-		public string[]? wait_for_uris ();
-		[Version (since = "2.6")]
-		public bool wait_is_image_available ();
-		[Version (since = "2.10")]
-		public bool wait_is_rich_text_available (Gtk.TextBuffer buffer);
-		[Version (since = "2.6")]
-		public bool wait_is_target_available (Gdk.Atom target);
-		public bool wait_is_text_available ();
-		[Version (since = "2.14")]
-		public bool wait_is_uris_available ();
-		[Version (since = "2.6")]
-		public signal void owner_change (Gdk.EventOwnerChange event);
+	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
+	[Compact]
+	public class Clipboard {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_color_button_get_type ()")]
 	public class ColorButton : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ColorChooser {
@@ -9000,12 +9012,16 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_scroll_get_type ()")]
 	public class EventControllerScroll : Gtk.EventController {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
+		[Version (since = "3.93")]
 		public EventControllerScroll (Gtk.Widget widget, Gtk.EventControllerScrollFlags flags);
+		[Version (since = "3.93")]
 		public Gtk.EventControllerScrollFlags get_flags ();
+		[Version (since = "3.93")]
 		public void set_flags (Gtk.EventControllerScrollFlags flags);
+		[Version (since = "3.93")]
 		public Gtk.EventControllerScrollFlags flags { get; construct; }
-		public signal void decelerate (double object, double p0);
-		public signal void scroll (double object, double p0);
+		public signal void decelerate (double vel_x, double vel_y);
+		public signal void scroll (double dx, double dy);
 		public signal void scroll_begin ();
 		public signal void scroll_end ();
 	}
@@ -9624,8 +9640,8 @@ namespace Gtk {
 		public unowned string get_decoration_layout ();
 		[Version (since = "3.12")]
 		public bool get_has_subtitle ();
-		[Version (since = "3.10")]
-		public bool get_show_close_button ();
+		[Version (since = "3.94")]
+		public bool get_show_title_buttons ();
 		[Version (since = "3.10")]
 		public unowned string? get_subtitle ();
 		[Version (since = "3.10")]
@@ -9640,8 +9656,8 @@ namespace Gtk {
 		public void set_decoration_layout (string? layout);
 		[Version (since = "3.12")]
 		public void set_has_subtitle (bool setting);
-		[Version (since = "3.10")]
-		public void set_show_close_button (bool setting);
+		[Version (since = "3.94")]
+		public void set_show_title_buttons (bool setting);
 		[Version (since = "3.10")]
 		public void set_subtitle (string? subtitle);
 		[Version (since = "3.10")]
@@ -9654,7 +9670,7 @@ namespace Gtk {
 		public bool decoration_layout_set { get; set; }
 		[Version (since = "3.12")]
 		public bool has_subtitle { get; set; }
-		public bool show_close_button { get; set; }
+		public bool show_title_buttons { get; set; }
 		[NoAccessorMethod]
 		public int spacing { get; set; }
 		public string subtitle { get; set; }
@@ -9988,7 +10004,7 @@ namespace Gtk {
 		[Version (since = "3.10")]
 		public Image.from_surface (Cairo.Surface? surface);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public Image.from_texture (Gdk.Texture texture);
+		public Image.from_texture (Gdk.Texture? texture);
 		[Version (since = "2.14")]
 		public unowned GLib.Icon? get_gicon ();
 		[Version (since = "2.6")]
@@ -12206,6 +12222,8 @@ namespace Gtk {
 		public unowned Gdk.Atom get_target ();
 		public bool get_targets ([CCode (array_length_cname = "n_atoms", array_length_pos = 1.1)] out (unowned Gdk.Atom)[] targets);
 		public string? get_text ();
+		[Version (since = "3.94")]
+		public Gdk.Texture? get_texture ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "2.6")]
 		public string[] get_uris ();
@@ -12215,12 +12233,12 @@ namespace Gtk {
 		[Version (since = "3.94")]
 		public bool set_surface (Cairo.Surface surface);
 		public bool set_text (string str, int len);
+		[Version (since = "3.94")]
+		public bool set_texture (Gdk.Texture texture);
 		[Version (since = "2.6")]
 		public bool set_uris ([CCode (array_length = false, array_null_terminated = true)] string[] uris);
 		[Version (since = "2.6")]
 		public bool targets_include_image (bool writable);
-		[Version (since = "2.10")]
-		public bool targets_include_rich_text (Gtk.TextBuffer buffer);
 		public bool targets_include_text ();
 		[Version (since = "2.10")]
 		public bool targets_include_uri ();
@@ -12509,8 +12527,6 @@ namespace Gtk {
 		[Version (since = "3.90")]
 		public void render_frame (Gtk.StyleContext context, double x, double y, double width, double height);
 		[Version (since = "3.90")]
-		public void render_icon (Gtk.StyleContext context, Gdk.Pixbuf pixbuf, double x, double y);
-		[Version (since = "3.90")]
 		public void render_insertion_cursor (Gtk.StyleContext context, double x, double y, Pango.Layout layout, int index, Pango.Direction direction);
 		[Version (since = "3.90")]
 		public void render_layout (Gtk.StyleContext context, double x, double y, Pango.Layout layout);
@@ -12789,7 +12805,7 @@ namespace Gtk {
 		public void render_handle (Cairo.Context cr, double x, double y, double width, double height);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_icon")]
 		[Version (since = "3.2")]
-		public void render_icon (Cairo.Context cr, Gdk.Pixbuf pixbuf, double x, double y);
+		public void render_icon (Cairo.Context cr, Gdk.Texture texture, double x, double y);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_icon_surface")]
 		[Version (since = "3.10")]
 		public void render_icon_surface (Cairo.Context cr, Cairo.Surface surface, double x, double y);
@@ -12871,33 +12887,22 @@ namespace Gtk {
 		public TextBuffer (Gtk.TextTagTable? table);
 		[Version (since = "2.12")]
 		public void add_mark (Gtk.TextMark mark, Gtk.TextIter where);
-		public void add_selection_clipboard (Gtk.Clipboard clipboard);
+		public void add_selection_clipboard (Gdk.Clipboard clipboard);
 		public void apply_tag_by_name (string name, Gtk.TextIter start, Gtk.TextIter end);
 		[Version (since = "2.6")]
 		public bool backspace (Gtk.TextIter iter, bool interactive, bool default_editable);
-		public void copy_clipboard (Gtk.Clipboard clipboard);
+		public void copy_clipboard (Gdk.Clipboard clipboard);
 		public unowned Gtk.TextChildAnchor create_child_anchor (Gtk.TextIter iter);
 		public unowned Gtk.TextMark create_mark (string? mark_name, Gtk.TextIter where, bool left_gravity);
 		public unowned Gtk.TextTag create_tag (string? tag_name, ...);
-		public void cut_clipboard (Gtk.Clipboard clipboard, bool default_editable);
+		public void cut_clipboard (Gdk.Clipboard clipboard, bool default_editable);
 		public void @delete (ref Gtk.TextIter start, ref Gtk.TextIter end);
 		public bool delete_interactive (ref Gtk.TextIter start_iter, ref Gtk.TextIter end_iter, bool default_editable);
 		public void delete_mark (Gtk.TextMark mark);
 		public void delete_mark_by_name (string name);
 		public bool delete_selection (bool interactive, bool default_editable);
-		[Version (since = "2.10")]
-		public bool deserialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter iter, [CCode (array_length_cname = "length", array_length_pos = 4.1, array_length_type = "gsize")] uint8[] data) throws GLib.Error;
-		[Version (since = "2.10")]
-		public bool deserialize_get_can_create_tags (Gdk.Atom format);
-		[Version (since = "2.10")]
-		public void deserialize_set_can_create_tags (Gdk.Atom format, bool can_create_tags);
 		public void get_bounds (out Gtk.TextIter start, out Gtk.TextIter end);
 		public int get_char_count ();
-		[Version (since = "2.10")]
-		public unowned Gdk.ContentFormats get_copy_target_list ();
-		[CCode (array_length_pos = 0.1)]
-		[Version (since = "2.10")]
-		public (unowned Gdk.Atom)[] get_deserialize_formats ();
 		public void get_end_iter (out Gtk.TextIter iter);
 		[Version (since = "2.10")]
 		public bool get_has_selection ();
@@ -12911,13 +12916,8 @@ namespace Gtk {
 		public int get_line_count ();
 		public unowned Gtk.TextMark? get_mark (string name);
 		public bool get_modified ();
-		[Version (since = "2.10")]
-		public unowned Gdk.ContentFormats get_paste_target_list ();
 		public unowned Gtk.TextMark get_selection_bound ();
 		public bool get_selection_bounds (out Gtk.TextIter start, out Gtk.TextIter end);
-		[CCode (array_length_pos = 0.1)]
-		[Version (since = "2.10")]
-		public (unowned Gdk.Atom)[] get_serialize_formats ();
 		public string get_slice (Gtk.TextIter start, Gtk.TextIter end, bool include_hidden_chars);
 		public void get_start_iter (out Gtk.TextIter iter);
 		public unowned Gtk.TextTagTable get_tag_table ();
@@ -12934,39 +12934,26 @@ namespace Gtk {
 		public void insert_with_tags_by_name (ref Gtk.TextIter iter, string text, int len, ...);
 		public void move_mark (Gtk.TextMark mark, Gtk.TextIter where);
 		public void move_mark_by_name (string name, Gtk.TextIter where);
-		public void paste_clipboard (Gtk.Clipboard clipboard, Gtk.TextIter? override_location, bool default_editable);
+		public void paste_clipboard (Gdk.Clipboard clipboard, Gtk.TextIter? override_location, bool default_editable);
 		public void place_cursor (Gtk.TextIter where);
-		[Version (since = "2.10")]
-		public unowned Gdk.Atom register_deserialize_format (string mime_type, owned Gtk.TextBufferDeserializeFunc function);
-		[Version (since = "2.10")]
-		public unowned Gdk.Atom register_deserialize_tagset (string? tagset_name);
-		[Version (since = "2.10")]
-		public unowned Gdk.Atom register_serialize_format (string mime_type, owned Gtk.TextBufferSerializeFunc function);
-		[Version (since = "2.10")]
-		public unowned Gdk.Atom register_serialize_tagset (string? tagset_name);
 		public void remove_all_tags (Gtk.TextIter start, Gtk.TextIter end);
-		public void remove_selection_clipboard (Gtk.Clipboard clipboard);
+		public void remove_selection_clipboard (Gdk.Clipboard clipboard);
 		public void remove_tag_by_name (string name, Gtk.TextIter start, Gtk.TextIter end);
 		[Version (since = "2.4")]
 		public void select_range (Gtk.TextIter ins, Gtk.TextIter bound);
-		[CCode (array_length_pos = 4.1, array_length_type = "gsize")]
-		[Version (since = "2.10")]
-		public uint8[] serialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter start, Gtk.TextIter end);
 		public void set_modified (bool setting);
 		public void set_text (string text, int len = -1);
+		[NoAccessorMethod]
 		[Version (since = "2.10")]
-		public void unregister_deserialize_format (Gdk.Atom format);
-		[Version (since = "2.10")]
-		public void unregister_serialize_format (Gdk.Atom format);
-		[Version (since = "2.10")]
-		public Gdk.ContentFormats copy_target_list { get; }
+		public Gdk.ContentFormats copy_target_list { owned get; }
 		[NoAccessorMethod]
 		[Version (since = "2.10")]
 		public int cursor_position { get; }
 		[Version (since = "2.10")]
 		public bool has_selection { get; }
+		[NoAccessorMethod]
 		[Version (since = "2.10")]
-		public Gdk.ContentFormats paste_target_list { get; }
+		public Gdk.ContentFormats paste_target_list { owned get; }
 		public Gtk.TextTagTable tag_table { get; construct; }
 		[NoAccessorMethod]
 		[Version (since = "2.8")]
@@ -12981,14 +12968,14 @@ namespace Gtk {
 		public virtual signal void end_user_action ();
 		[HasEmitter]
 		public virtual signal void insert_child_anchor (Gtk.TextIter iter, Gtk.TextChildAnchor anchor);
-		[HasEmitter]
-		public virtual signal void insert_pixbuf (Gtk.TextIter iter, Gdk.Pixbuf pixbuf);
 		public virtual signal void insert_text (ref Gtk.TextIter pos, string new_text, int new_text_length);
+		[HasEmitter]
+		public virtual signal void insert_texture (Gtk.TextIter iter, Gdk.Texture texture);
 		public virtual signal void mark_deleted (Gtk.TextMark mark);
 		public virtual signal void mark_set (Gtk.TextIter location, Gtk.TextMark mark);
 		public virtual signal void modified_changed ();
 		[Version (since = "2.16")]
-		public virtual signal void paste_done (Gtk.Clipboard clipboard);
+		public virtual signal void paste_done (Gdk.Clipboard clipboard);
 		[HasEmitter]
 		public virtual signal void remove_tag (Gtk.TextTag tag, Gtk.TextIter start, Gtk.TextIter end);
 	}
@@ -13340,7 +13327,7 @@ namespace Gtk {
 		public virtual signal void toggle_overwrite ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_text_view_accessible_get_type ()")]
-	public class TextViewAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.EditableText, Atk.StreamableContent, Atk.Text {
+	public class TextViewAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.EditableText, Atk.Text {
 		[CCode (has_construct_function = false)]
 		protected TextViewAccessible ();
 	}
@@ -13585,8 +13572,8 @@ namespace Gtk {
 		protected Tooltip ();
 		[Version (since = "2.12")]
 		public void set_custom (Gtk.Widget? custom_widget);
-		[Version (since = "2.12")]
-		public void set_icon (Gdk.Pixbuf? pixbuf);
+		[Version (since = "3.94")]
+		public void set_icon (Gdk.Texture? texture);
 		[Version (since = "2.20")]
 		public void set_icon_from_gicon (GLib.Icon? gicon);
 		[Version (since = "2.14")]
@@ -14123,8 +14110,8 @@ namespace Gtk {
 		public bool get_child_visible ();
 		[Version (since = "3.14")]
 		public void get_clip (out Gtk.Allocation clip);
-		[Version (since = "2.2")]
-		public unowned Gtk.Clipboard get_clipboard (Gdk.Atom selection);
+		[Version (since = "3.94")]
+		public unowned Gdk.Clipboard get_clipboard ();
 		[CCode (cname = "gtk_widget_class_get_css_name")]
 		[Version (since = "3.20")]
 		public class unowned string get_css_name ();
@@ -14179,6 +14166,8 @@ namespace Gtk {
 		public void get_preferred_size (out Gtk.Requisition minimum_size, out Gtk.Requisition natural_size);
 		[Version (since = "3.90")]
 		public unowned Gtk.Widget? get_prev_sibling ();
+		[Version (since = "3.94")]
+		public unowned Gdk.Clipboard get_primary_clipboard ();
 		[Version (since = "2.20")]
 		public bool get_realized ();
 		[Version (since = "2.18")]
@@ -14443,7 +14432,7 @@ namespace Gtk {
 		public virtual signal void drag_begin (Gdk.DragContext context);
 		public virtual signal void drag_data_delete (Gdk.DragContext context);
 		public virtual signal void drag_data_get (Gdk.DragContext context, Gtk.SelectionData selection_data, uint time_);
-		public virtual signal void drag_data_received (Gdk.DragContext context, int x, int y, Gtk.SelectionData selection_data, uint time_);
+		public virtual signal void drag_data_received (Gdk.DragContext context, Gtk.SelectionData selection_data, uint time_);
 		public virtual signal bool drag_drop (Gdk.DragContext context, int x, int y, uint time_);
 		public virtual signal void drag_end (Gdk.DragContext context);
 		[Version (since = "2.12")]
@@ -15564,10 +15553,10 @@ namespace Gtk {
 		public int get_line_offset ();
 		public GLib.SList<weak Gtk.TextMark> get_marks ();
 		public int get_offset ();
-		public unowned Gdk.Pixbuf get_pixbuf ();
 		public string get_slice (Gtk.TextIter end);
 		public GLib.SList<weak Gtk.TextTag> get_tags ();
 		public string get_text (Gtk.TextIter end);
+		public unowned Gdk.Texture get_texture ();
 		public GLib.SList<weak Gtk.TextTag> get_toggled_tags (bool toggled_on);
 		public int get_visible_line_index ();
 		public int get_visible_line_offset ();
@@ -15821,6 +15810,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_EVENT_CONTROLLER_SCROLL_", type_id = "gtk_event_controller_scroll_flags_get_type ()")]
 	[Flags]
+	[Version (since = "3.93")]
 	public enum EventControllerScrollFlags {
 		NONE,
 		VERTICAL,
@@ -16538,26 +16528,6 @@ namespace Gtk {
 	public delegate bool CellCallback (Gtk.CellRenderer renderer);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 4.9)]
 	public delegate void CellLayoutDataFunc (Gtk.CellLayout cell_layout, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter);
-	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate void ClipboardClearFunc (Gtk.Clipboard clipboard, void* user_data_or_owner);
-	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate void ClipboardGetFunc (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data, void* user_data_or_owner);
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
-	[Version (since = "2.6")]
-	public delegate void ClipboardImageReceivedFunc (Gtk.Clipboard clipboard, Gdk.Pixbuf pixbuf);
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
-	public delegate void ClipboardReceivedFunc (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data);
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 3.9)]
-	[Version (since = "2.10")]
-	public delegate void ClipboardRichTextReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom format, [CCode (array_length_cname = "length", array_length_pos = 3.1, array_length_type = "gsize", type = "guint8*")] uint8[]? text);
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
-	[Version (since = "2.4")]
-	public delegate void ClipboardTargetsReceivedFunc (Gtk.Clipboard clipboard, [CCode (array_length_cname = "n_atoms", array_length_pos = 2.1)] Gdk.Atom[]? atoms);
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
-	public delegate void ClipboardTextReceivedFunc (Gtk.Clipboard clipboard, string? text);
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
-	[Version (since = "2.14")]
-	public delegate void ClipboardURIReceivedFunc (Gtk.Clipboard clipboard, [CCode (array_length = false, array_null_terminated = true)] string[] uris);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 4.9)]
 	[Version (since = "3.90")]
 	public delegate void DrawingAreaDrawFunc (Gtk.DrawingArea drawing_area, Cairo.Context cr, int width, int height);
@@ -16615,10 +16585,6 @@ namespace Gtk {
 	public delegate bool RecentFilterFunc (Gtk.RecentFilterInfo filter_info);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
 	public delegate int RecentSortFunc (Gtk.RecentInfo a, Gtk.RecentInfo b);
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 5.9)]
-	public delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, [CCode (array_length_cname = "length", array_length_pos = 4.5, array_length_type = "gsize")] uint8[] data, bool create_tags) throws GLib.Error;
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 5.9)]
-	public delegate unowned uint8? TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end, size_t length);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
 	public delegate bool TextCharPredicate (unichar ch);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
@@ -17012,9 +16978,6 @@ namespace Gtk {
 	[Version (since = "2.6")]
 	public static Gdk.ContentFormats content_formats_add_image_targets (Gdk.ContentFormats list, bool writable);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "2.10")]
-	public static Gdk.ContentFormats content_formats_add_rich_text_targets (Gdk.ContentFormats list, bool deserializable, Gtk.TextBuffer buffer);
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.6")]
 	public static Gdk.ContentFormats content_formats_add_text_targets (Gdk.ContentFormats list);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -17048,7 +17011,7 @@ namespace Gtk {
 	[Version (since = "2.6")]
 	public static void drag_dest_add_uri_targets (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gdk.Atom? drag_dest_find_target (Gtk.Widget widget, Gdk.DragContext context, Gdk.ContentFormats? target_list);
+	public static unowned string? drag_dest_find_target (Gtk.Widget widget, Gdk.DragContext context, Gdk.ContentFormats? target_list);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gdk.ContentFormats? drag_dest_get_target_list (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -17082,6 +17045,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_set_icon_surface (Gdk.DragContext context, Cairo.Surface surface);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static void drag_set_icon_texture (Gdk.DragContext context, Gdk.Texture texture, int hot_x, int hot_y);
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_set_icon_widget (Gdk.DragContext context, Gtk.Widget widget, int hot_x, int hot_y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.6")]
@@ -17103,8 +17068,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.8")]
 	public static void drag_source_set_icon_name (Gtk.Widget widget, string icon_name);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_source_set_icon_pixbuf (Gtk.Widget widget, Gdk.Pixbuf pixbuf);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.94")]
 	public static void drag_source_set_icon_surface (Gtk.Widget widget, Cairo.Surface surface);
@@ -17211,9 +17174,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.10")]
 	public static bool targets_include_image ([CCode (array_length_cname = "n_targets", array_length_pos = 1.5)] Gdk.Atom[] targets, bool writable);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "2.10")]
-	public static bool targets_include_rich_text ([CCode (array_length_cname = "n_targets", array_length_pos = 1.5)] Gdk.Atom[] targets, Gtk.TextBuffer buffer);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.10")]
 	public static bool targets_include_text ([CCode (array_length_cname = "n_targets", array_length_pos = 1.1)] Gdk.Atom[] targets);

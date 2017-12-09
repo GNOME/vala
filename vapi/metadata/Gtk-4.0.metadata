@@ -138,11 +138,6 @@ TreeModel
   .ref_node#virtual_method virtual
   .unref_node#virtual_method virtual
 
-// G-I can't handle delegates w/o targets
-Clipboard
-  .set_with_data skip=false
-  .set_with_owner skip=false
-
 // Unregistered callback types
 Builder
   .lookup_callback_symbol skip=false
@@ -228,8 +223,6 @@ RecentFilterInfo
   .groups nullable
 
 // Skipped for G-I, but usable from Vala
-Clipboard
-  .get_selection skip=false
 FlowBox
   .bind_model skip=false
   .bind_model.create_widget_func nullable
@@ -281,8 +274,6 @@ TreeModel
 // Backwards compatibility
 AccelGroup
   .find type="Gtk.AccelKey*"
-ClipboardRichTextReceivedFunc
-  .text type="uint8[]?" array_length_idx=3
 CssProvider
   .load_from_data name="load_from_buffer"
 EntryBuffer
