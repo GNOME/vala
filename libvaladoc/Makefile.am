@@ -169,6 +169,7 @@ libvaladoc_la_VALASOURCES = \
 libvaladoc@PACKAGE_SUFFIX@_la_SOURCES = \
 	libvaladoc.vala.stamp \
 	$(libvaladoc_la_VALASOURCES:.vala=.c) \
+	gvc-compat.c \
 	$(NULL)
 
 valadoc@PACKAGE_SUFFIX@.vapi valadoc.h: libvaladoc.vala.stamp
