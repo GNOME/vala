@@ -9298,7 +9298,7 @@ namespace Gtk {
 		public bool use_symbolic { get; set construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_widget_get_type ()")]
-	public class Widget : GLib.Object, Atk.Implementor, Gtk.Buildable {
+	public class Widget : GLib.InitiallyUnowned, Atk.Implementor, Gtk.Buildable {
 		[CCode (construct_function = "gtk_widget_new", has_new_function = false)]
 		public Widget (...);
 		public bool activate ();

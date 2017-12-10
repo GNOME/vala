@@ -94,7 +94,7 @@ namespace Gtk {
 	}
 
 	[CCode (type_id = "gtk_widget_get_type ()")]
-	public class Widget : GLib.Object {
+	public class Widget : GLib.InitiallyUnowned {
 		[CCode (construct_function = "gtk_widget_new", has_new_function = false)]
 		public Widget (...);
 		[NoWrapper, Version (deprecated = true), CCode (vfunc_name = "get_preferred_height_for_width")]
