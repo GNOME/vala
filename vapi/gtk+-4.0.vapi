@@ -5171,6 +5171,7 @@ namespace Gdk {
 		[Version (since = "3.0")]
 		public unowned Gdk.Window get_dest_window ();
 		public unowned Gdk.Device get_device ();
+		public unowned Gdk.Display get_display ();
 		[Version (since = "3.20")]
 		public unowned Gdk.Window? get_drag_window ();
 		[Version (since = "3.94")]
@@ -5186,6 +5187,8 @@ namespace Gdk {
 		public void set_device (Gdk.Device device);
 		[Version (since = "3.20")]
 		public void set_hotspot (int hot_x, int hot_y);
+		[Version (since = "3.94")]
+		public Gdk.Display display { get; construct; }
 		[Version (since = "3.20")]
 		public signal void action_changed (Gdk.DragAction action);
 		[Version (since = "3.20")]
@@ -6510,6 +6513,8 @@ namespace Gdk {
 	public static void drag_status (Gdk.DragContext context, Gdk.DragAction action, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drop_finish (Gdk.DragContext context, bool success, uint32 time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static async void drop_read_async (Gdk.DragContext context, string mime_types, int io_priority, GLib.Cancellable? cancellable);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drop_reply (Gdk.DragContext context, bool accepted, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -17027,7 +17032,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_dest_unset (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_finish (Gdk.DragContext context, bool success, bool del, uint32 time_);
+	public static void drag_finish (Gdk.DragContext context, bool success, uint32 time_);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_get_data (Gtk.Widget widget, Gdk.DragContext context, Gdk.Atom target, uint32 time_);
 	[CCode (cheader_filename = "gtk/gtk.h")]
