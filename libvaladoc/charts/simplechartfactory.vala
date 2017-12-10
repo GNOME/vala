@@ -20,7 +20,8 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
-
+[CCode (cname = "valadoc_compat_gvc_graph_new")]
+extern Gvc.Graph valadoc_gvc_graph_new (string name);
 
 public class Valadoc.Charts.SimpleFactory : Charts.Factory {
 	protected virtual Gvc.Node configure_type (Gvc.Node node, Api.Node item) {
@@ -31,12 +32,7 @@ public class Valadoc.Charts.SimpleFactory : Charts.Factory {
 	}
 
 	public override Gvc.Graph create_graph (Api.Node item) {
-#if WITH_CGRAPH
-		var graph = new Gvc.Graph (item.get_full_name (), Gvc.Agdirected, 0);
-#else
-		var graph = new Gvc.Graph (item.get_full_name (), Gvc.GraphKind.AGDIGRAPH);
-#endif
-		return graph;
+		return valadoc_gvc_graph_new (item.get_full_name ());
 	}
 
 	public override Gvc.Context create_context (Gvc.Graph graph) {

@@ -20,6 +20,8 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
+[CCode (cname = "valadoc_compat_gvc_init")]
+extern void valadoc_gvc_init ();
 
 public class Valadoc.Charts.Chart : Api.Visitor {
 	protected Gvc.Context context;
@@ -27,9 +29,7 @@ public class Valadoc.Charts.Chart : Api.Visitor {
 	protected Factory factory;
 
 	static construct {
-		#if !WITH_CGRAPH
-		Gvc.init ();
-		#endif
+		valadoc_gvc_init ();
 	}
 
 	public Chart (Factory factory, Api.Node node) {
