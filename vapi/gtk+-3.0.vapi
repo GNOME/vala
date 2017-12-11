@@ -2371,7 +2371,7 @@ namespace Gtk {
 		public GLib.List<weak Gtk.Gesture> get_group ();
 		public unowned Gdk.Event? get_last_event (Gdk.EventSequence sequence);
 		public unowned Gdk.EventSequence? get_last_updated_sequence ();
-		public bool get_point (Gdk.EventSequence? sequence, out double? x = null, out double? y = null);
+		public bool get_point (Gdk.EventSequence? sequence, out double x = null, out double y = null);
 		public Gtk.EventSequenceState get_sequence_state (Gdk.EventSequence sequence);
 		public GLib.List<weak Gdk.EventSequence> get_sequences ();
 		public unowned Gdk.Window? get_window ();
@@ -2397,8 +2397,8 @@ namespace Gtk {
 	public class GestureDrag : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		public GestureDrag (Gtk.Widget widget);
-		public bool get_offset (out double? x, out double? y);
-		public bool get_start_point (out double? x, out double? y);
+		public bool get_offset (out double x, out double y);
+		public bool get_start_point (out double x, out double y);
 		public virtual signal void drag_begin (double p0, double p1);
 		public virtual signal void drag_end (double p0, double p1);
 		public virtual signal void drag_update (double p0, double p1);
