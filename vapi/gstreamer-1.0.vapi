@@ -1244,7 +1244,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual void release_pad (Gst.Pad pad);
 		public void release_request_pad (Gst.Pad pad);
-		public bool remove_pad (owned Gst.Pad pad);
+		public bool remove_pad (Gst.Pad pad);
 		[Version (since = "1.10")]
 		public void remove_property_notify_watch (ulong watch_id);
 		[CCode (vfunc_name = "request_new_pad")]
@@ -1327,7 +1327,7 @@ namespace Gst {
 		[Version (since = "1.4")]
 		public int64 get_running_time_offset ();
 		public uint32 get_seqnum ();
-		public unowned Gst.Structure get_structure ();
+		public unowned Gst.Structure? get_structure ();
 		public bool has_name (string name);
 		[CCode (has_construct_function = false)]
 		public Event.latency (Gst.ClockTime latency);
@@ -1539,7 +1539,7 @@ namespace Gst {
 		public size_t get_num_redirect_entries ();
 		public uint32 get_seqnum ();
 		public unowned GLib.Value? get_stream_status_object ();
-		public unowned Gst.Structure get_structure ();
+		public unowned Gst.Structure? get_structure ();
 		public bool has_name (string name);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.2")]
@@ -2018,7 +2018,7 @@ namespace Gst {
 		public uint get_n_allocation_pools ();
 		public uint get_n_buffering_ranges ();
 		public uint get_n_scheduling_modes ();
-		public unowned Gst.Structure get_structure ();
+		public unowned Gst.Structure? get_structure ();
 		public bool has_scheduling_mode (Gst.PadMode mode);
 		public bool has_scheduling_mode_with_flags (Gst.PadMode mode, Gst.SchedulingFlags flags);
 		[CCode (has_construct_function = false)]
