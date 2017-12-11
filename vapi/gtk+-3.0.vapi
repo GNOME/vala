@@ -3393,7 +3393,7 @@ namespace Gtk {
 		[Version (since = "3.14")]
 		public unowned Gdk.EventSequence? get_last_updated_sequence ();
 		[Version (since = "3.14")]
-		public bool get_point (Gdk.EventSequence? sequence, out double? x = null, out double? y = null);
+		public bool get_point (Gdk.EventSequence? sequence, out double x = null, out double y = null);
 		[Version (since = "3.14")]
 		public Gtk.EventSequenceState get_sequence_state (Gdk.EventSequence sequence);
 		[Version (since = "3.14")]
@@ -3440,9 +3440,9 @@ namespace Gtk {
 		[Version (since = "3.14")]
 		public GestureDrag (Gtk.Widget widget);
 		[Version (since = "3.14")]
-		public bool get_offset (out double? x, out double? y);
+		public bool get_offset (out double x, out double y);
 		[Version (since = "3.14")]
-		public bool get_start_point (out double? x, out double? y);
+		public bool get_start_point (out double x, out double y);
 		[Version (since = "3.14")]
 		public signal void drag_begin (double start_x, double start_y);
 		[Version (since = "3.14")]
@@ -10048,7 +10048,7 @@ namespace Gtk {
 		public unowned string? get_role ();
 		[Version (since = "2.2")]
 		public unowned Gdk.Screen get_screen ();
-		public void get_size (out int? width, out int? height);
+		public void get_size (out int width, out int height);
 		[Version (since = "2.2")]
 		public bool get_skip_pager_hint ();
 		[Version (since = "2.2")]
