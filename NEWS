@@ -1,3 +1,34 @@
+Vala 0.38.4
+===========
+ * Various bug fixes:
+  - Enforce name-length >= 3 for structs using GType [#764041]
+  - Report error for missing type-parameter on enclosing type [#587905]
+  - Discover invalid member access to instance field [#790903]
+  - Improve error output of mismatching overriding methods
+  - vala: Don't transform an explicit "null" into valid format-string [#791215]
+  - codegen: Don't create null-safe destroy-wrapper for GenericType [#791283]
+  - Improve error message for missing type-parameter on enclosing type [#587905]
+
+ * GIR parser:
+  - Allow change of parameter names
+  - Handle metadata for fields inside a transparent union
+  - Accept setters with boolean return-type as valid property-accessor
+  - Don't mark simple-type out-parameters with '?' as nullable
+
+ * Valadoc
+  - Acknowledge possible properties in structs [#784705]
+  - Fix fatal typo in GtkdocRenderer.visit_symbol_link() [#790266]
+  - libvaladoc: Actually resolve "percnt;" to '%'
+
+ * Bindings:
+  - gobject-2.0: Add some missing symbols
+  - gstreamer-1.0: Bind GST_DEBUG_BIN_TO_DOT_FILE/*_WITH_TS [#785215]
+  - gstreamer-1.0: Update from 1.13+ git master
+  - gtk+-3.0: Update to 3.22.26+9ce824d3
+  - webkit2gtk-4.0: Update to 2.19.2
+  - glib-2.0: Fix potential null pointer dereference in string.joinv() [#791257]
+  - gobject-2.0: Add missing GType constants for fundamentals [#791023]
+
 Vala 0.38.3
 ===========
  * Various bug fixes:
