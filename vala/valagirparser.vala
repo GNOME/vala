@@ -3694,6 +3694,24 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			}
 		}
+
+		// Do not mark out-parameters as nullable if they are simple-types,
+		// since it would result in a boxed-type in vala
+		foreach (ParameterInfo info in parameters) {
+			var type = info.param.variable_type;
+			if (info.param.direction == ParameterDirection.OUT && type.nullable) {
+				Struct? st = null;
+				if (type is UnresolvedType) {
+					st = resolve_symbol (node.parent, ((UnresolvedType) type).unresolved_symbol) as Struct;
+				} else if (type is ValueType) {
+					st = type.data_type as Struct;
+				}
+				if (st != null && st.is_simple_type ()) {
+					type.nullable = false;
+				}
+			}
+		}
+
 		if (parameters.size > 1) {
 			ParameterInfo last_param = parameters[parameters.size-1];
 			if (last_param.param.ellipsis) {
