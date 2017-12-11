@@ -5407,7 +5407,7 @@ namespace Gdk {
 		[Version (since = "3.16")]
 		public bool get_forward_compatible ();
 		[Version (since = "3.16")]
-		public void get_required_version (out int? major, out int? minor);
+		public void get_required_version (out int major, out int minor);
 		[Version (since = "3.16")]
 		public unowned Gdk.GLContext? get_shared_context ();
 		[Version (since = "3.22")]
@@ -9468,7 +9468,7 @@ namespace Gtk {
 		[Version (since = "3.14")]
 		public unowned Gdk.EventSequence? get_last_updated_sequence ();
 		[Version (since = "3.14")]
-		public bool get_point (Gdk.EventSequence? sequence, out double? x = null, out double? y = null);
+		public bool get_point (Gdk.EventSequence? sequence, out double x = null, out double y = null);
 		[Version (since = "3.14")]
 		public Gtk.EventSequenceState get_sequence_state (Gdk.EventSequence sequence);
 		[Version (since = "3.14")]
@@ -9509,9 +9509,9 @@ namespace Gtk {
 		[Version (since = "3.14")]
 		public GestureDrag (Gtk.Widget widget);
 		[Version (since = "3.14")]
-		public bool get_offset (out double? x, out double? y);
+		public bool get_offset (out double x, out double y);
 		[Version (since = "3.14")]
-		public bool get_start_point (out double? x, out double? y);
+		public bool get_start_point (out double x, out double y);
 		[Version (since = "3.14")]
 		public signal void drag_begin (double start_x, double start_y);
 		[Version (since = "3.14")]

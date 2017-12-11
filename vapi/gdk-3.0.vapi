@@ -5389,7 +5389,7 @@ namespace Gdk {
 		[Version (since = "3.16")]
 		public bool get_forward_compatible ();
 		[Version (since = "3.16")]
-		public void get_required_version (out int? major, out int? minor);
+		public void get_required_version (out int major, out int minor);
 		[Version (since = "3.16")]
 		public unowned Gdk.GLContext? get_shared_context ();
 		[Version (since = "3.22")]
