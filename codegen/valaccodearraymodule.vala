@@ -744,10 +744,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 
 		if (!array_type.fixed_length && get_ccode_array_length (param)) {
-			string length_ctype = "int";
-			if (get_ccode_array_length_type (param) != null) {
-				length_ctype = get_ccode_array_length_type (param);
-			}
+			var length_ctype = get_ccode_array_length_type (array_type);
 			if (param.direction != ParameterDirection.IN) {
 				length_ctype = "%s*".printf (length_ctype);
 			}

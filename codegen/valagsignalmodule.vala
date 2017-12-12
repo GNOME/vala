@@ -193,8 +193,12 @@ public class Vala.GSignalModule : GObjectModule {
 			callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), get_value_type_name_from_parameter (p)));
 			n_params++;
 			if (p.variable_type is ArrayType) {
-				for (var j = 0; j < ((ArrayType) p.variable_type).rank; j++) {
-					callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), "gint"));
+				var array_type = (ArrayType) p.variable_type;
+				//FIXME Only int length-type
+				//var length_ctype = get_ccode_array_length_type (array_type);
+				var length_ctype = get_ccode_name (int_type);
+				for (var j = 0; j < array_type.rank; j++) {
+					callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), length_ctype));
 					n_params++;
 				}
 			}
@@ -265,7 +269,9 @@ public class Vala.GSignalModule : GObjectModule {
 			fc.add_argument (inner_fc);
 			i++;
 			if (p.variable_type is ArrayType) {
-				for (var j = 0; j < ((ArrayType) p.variable_type).rank; j++) {
+				var array_type = (ArrayType) p.variable_type;
+				for (var j = 0; j < array_type.rank; j++) {
+					//FIXME Only int length-type
 					inner_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_int"));
 					inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
 					fc.add_argument (inner_fc);

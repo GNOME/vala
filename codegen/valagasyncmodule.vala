@@ -58,8 +58,9 @@ public class Vala.GAsyncModule : GtkModule {
 			if (param.variable_type is ArrayType) {
 				var array_type = (ArrayType) param.variable_type;
 				if (get_ccode_array_length (param)) {
+					var length_ctype = get_ccode_array_length_type (array_type);
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						data.add_field ("gint", get_parameter_array_length_cname (param, dim));
+						data.add_field (length_ctype, get_parameter_array_length_cname (param, dim));
 					}
 				}
 			} else if (param.variable_type is DelegateType) {
@@ -84,8 +85,9 @@ public class Vala.GAsyncModule : GtkModule {
 			if (m.return_type is ArrayType) {
 				var array_type = (ArrayType) m.return_type;
 				if (get_ccode_array_length (m)) {
+					var length_ctype = get_ccode_array_length_type (array_type);
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						data.add_field ("gint", get_array_length_cname ("result", dim));
+						data.add_field (length_ctype, get_array_length_cname ("result", dim));
 					}
 				}
 			} else if (m.return_type is DelegateType) {

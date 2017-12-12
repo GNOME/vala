@@ -247,7 +247,11 @@ namespace Vala {
 	}
 
 	public static string? get_ccode_array_length_type (CodeNode node) {
-		return get_ccode_attribute(node).array_length_type;
+		if (node is ArrayType) {
+			return get_ccode_name (((ArrayType) node).length_type);
+		} else {
+			return get_ccode_attribute(node).array_length_type;
+		}
 	}
 
 	public static bool get_ccode_array_null_terminated (CodeNode node) {

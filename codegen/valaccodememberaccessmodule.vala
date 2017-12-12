@@ -727,10 +727,10 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					result.append_array_length_cvalue (new CCodeConstant ("-1"));
 				}
 				result.lvalue = false;
-			} else if (get_ccode_array_length_type (variable) != null) {
+			} else if (get_ccode_array_length_type (variable.variable_type) != get_ccode_array_length_type (array_type)) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					// cast if variable does not use int for array length
-					result.array_length_cvalues[dim - 1] = new CCodeCastExpression (result.array_length_cvalues[dim - 1], "gint");
+					result.array_length_cvalues[dim - 1] = new CCodeCastExpression (result.array_length_cvalues[dim - 1], get_ccode_array_length_type (array_type));
 				}
 				result.lvalue = false;
 			}
