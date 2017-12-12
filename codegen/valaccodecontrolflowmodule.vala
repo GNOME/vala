@@ -247,7 +247,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			// store array length for use by _vala_array_free
 			ccode.add_assignment (get_variable_cexpression (get_array_length_cname (get_local_cname (collection_backup), 1)), array_len);
 
-			var iterator_variable = new LocalVariable (int_type.copy (), stmt.variable_name + "_it");
+			var iterator_variable = new LocalVariable (array_type.length_type.copy (), stmt.variable_name + "_it");
 			visit_local_variable (iterator_variable);
 			var it_name = get_local_cname (iterator_variable);
 
