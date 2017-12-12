@@ -80,11 +80,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		} else if (get_ccode_array_length (m) && m.return_type is ArrayType) {
 			// return array length if appropriate
 			var array_type = (ArrayType) m.return_type;
-			var array_length_type = get_ccode_array_length_type (m) != null ? get_ccode_array_length_type (m) : "int";
-			array_length_type += "*";
+			var length_ctype = get_ccode_array_length_type (array_type) + "*";
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), array_length_type);
+				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), length_ctype);
 				cparam_map.set (get_param_pos (get_ccode_array_length_pos (m) + 0.01 * dim), cparam);
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (get_ccode_array_length_pos (m) + 0.01 * dim), get_variable_cexpression (cparam.name));
@@ -580,9 +579,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							var array_type = (ArrayType) param.variable_type;
 
 							if (!array_type.fixed_length) {
+								var length_ctype = get_ccode_array_length_type (array_type);
 								for (int dim = 1; dim <= array_type.rank; dim++) {
 									vardecl = new CCodeVariableDeclarator.zero (get_array_length_cname (get_variable_cname ("_vala_%s".printf (param.name)), dim), new CCodeConstant ("0"));
-									ccode.add_declaration ("int", vardecl);
+									ccode.add_declaration (length_ctype, vardecl);
 								}
 							}
 						} else if (param.variable_type is DelegateType) {

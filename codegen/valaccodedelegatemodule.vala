@@ -61,9 +61,9 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			if (get_ccode_array_length (param) && param.variable_type is ArrayType) {
 				var array_type = (ArrayType) param.variable_type;
 
-				var length_ctype = "int";
+				var length_ctype = get_ccode_array_length_type (array_type);
 				if (param.direction != ParameterDirection.IN) {
-					length_ctype = "int*";
+					length_ctype += "*";
 				}
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -88,11 +88,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		if (get_ccode_array_length (d) && d.return_type is ArrayType) {
 			// return array length if appropriate
 			var array_type = (ArrayType) d.return_type;
-			var array_length_type = get_ccode_array_length_type (d) != null ? get_ccode_array_length_type (d) : "int";
-			array_length_type += "*";
+			var length_ctype = get_ccode_array_length_type (array_type) + "*";
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), array_length_type);
+				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), length_ctype);
 				cfundecl.add_parameter (cparam);
 			}
 		} else if (d.return_type is DelegateType) {
@@ -239,11 +238,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		if (get_ccode_array_length (d) && d.return_type is ArrayType) {
 			// return array length if appropriate
 			var array_type = (ArrayType) d.return_type;
-			var array_length_type = get_ccode_array_length_type (d) != null ? get_ccode_array_length_type (d) : "int";
-			array_length_type += "*";
+			var length_ctype = get_ccode_array_length_type (array_type) + "*";
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), array_length_type);
+				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), length_ctype);
 				cparam_map.set (get_param_pos (get_ccode_array_length_pos (d) + 0.01 * dim), cparam);
 			}
 		} else if (d.return_type is DelegateType) {
