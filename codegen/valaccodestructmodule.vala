@@ -79,7 +79,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 					var array_type = (ArrayType) f.variable_type;
 
 					if (!array_type.fixed_length) {
-						var len_type = int_type.copy ();
+						var length_ctype = get_ccode_array_length_type (array_type);
 
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							string length_cname;
@@ -88,11 +88,11 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 							} else {
 								length_cname = get_array_length_cname (get_ccode_name (f), dim);
 							}
-							instance_struct.add_field (get_ccode_name (len_type), length_cname);
+							instance_struct.add_field (length_ctype, length_cname);
 						}
 
 						if (array_type.rank == 1 && f.is_internal_symbol ()) {
-							instance_struct.add_field (get_ccode_name (len_type), get_array_size_cname (get_ccode_name (f)));
+							instance_struct.add_field (length_ctype, get_array_size_cname (get_ccode_name (f)));
 						}
 					}
 				} else if (f.variable_type is DelegateType && get_ccode_delegate_target (f)) {

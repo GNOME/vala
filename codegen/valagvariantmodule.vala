@@ -280,9 +280,10 @@ public class Vala.GVariantModule : GAsyncModule {
 		// add one extra element for NULL-termination
 		new_call.add_argument (new CCodeConstant ("5"));
 
+		var length_ctype = get_ccode_array_length_type (array_type);
 		ccode.add_declaration (get_ccode_name (array_type), new CCodeVariableDeclarator (temp_name, new_call));
-		ccode.add_declaration ("int", new CCodeVariableDeclarator (temp_name + "_length", new CCodeConstant ("0")));
-		ccode.add_declaration ("int", new CCodeVariableDeclarator (temp_name + "_size", new CCodeConstant ("4")));
+		ccode.add_declaration (length_ctype, new CCodeVariableDeclarator (temp_name + "_length", new CCodeConstant ("0")));
+		ccode.add_declaration (length_ctype, new CCodeVariableDeclarator (temp_name + "_size", new CCodeConstant ("4")));
 
 		deserialize_array_dim (array_type, 1, temp_name, variant_expr, expr);
 
@@ -300,7 +301,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
 		string element_name = "_tmp%d_".printf (next_temp_var_id++);
 
-		ccode.add_declaration ("int", new CCodeVariableDeclarator ("%s_length%d".printf (temp_name, dim), new CCodeConstant ("0")));
+		ccode.add_declaration (get_ccode_array_length_type (array_type), new CCodeVariableDeclarator ("%s_length%d".printf (temp_name, dim), new CCodeConstant ("0")));
 		ccode.add_declaration ("GVariantIter", new CCodeVariableDeclarator (subiter_name));
 		ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator (element_name));
 
@@ -627,7 +628,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		string index_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator (builder_name));
-		ccode.add_declaration ("int", new CCodeVariableDeclarator (index_name));
+		ccode.add_declaration (get_ccode_array_length_type (array_type), new CCodeVariableDeclarator (index_name));
 
 		var gvariant_type = new CCodeFunctionCall (new CCodeIdentifier ("G_VARIANT_TYPE"));
 		ArrayType array_type_copy = (ArrayType) array_type.copy ();

@@ -1069,10 +1069,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var array_type = (ArrayType) f.variable_type;
 
 			if (!array_type.fixed_length) {
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var len_type = int_type.copy ();
+				var length_ctype = get_ccode_array_length_type (array_type);
 
-					cdecl = new CCodeDeclaration (get_ccode_name (len_type));
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					cdecl = new CCodeDeclaration (length_ctype);
 					cdecl.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (get_ccode_name (f), dim)));
 					if (f.is_private_symbol ()) {
 						cdecl.modifiers = CCodeModifiers.STATIC;
@@ -1282,10 +1282,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var array_type = (ArrayType) f.variable_type;
 
 					if (!array_type.fixed_length) {
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							var len_type = int_type.copy ();
+						var length_ctype = get_ccode_array_length_type (array_type);
 
-							var len_def = new CCodeDeclaration (get_ccode_name (len_type));
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							var len_def = new CCodeDeclaration (length_ctype);
 							len_def.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (get_ccode_name (f), dim), new CCodeConstant ("0")));
 							if (!f.is_private_symbol ()) {
 								len_def.modifiers = CCodeModifiers.EXTERN;
@@ -1296,9 +1296,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						}
 
 						if (array_type.rank == 1 && f.is_internal_symbol ()) {
-							var len_type = int_type.copy ();
-
-							var cdecl = new CCodeDeclaration (get_ccode_name (len_type));
+							var cdecl = new CCodeDeclaration (length_ctype);
 							cdecl.add_declarator (new CCodeVariableDeclarator (get_array_size_cname (get_ccode_name (f)), new CCodeConstant ("0")));
 							cdecl.modifiers = CCodeModifiers.STATIC;
 							cfile.add_type_member_declaration (cdecl);
@@ -1563,8 +1561,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (acc.value_type is ArrayType) {
 			var array_type = (ArrayType) acc.value_type;
+			var length_ctype = get_ccode_array_length_type (array_type);
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? "int*" : "int"));
+				function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? length_ctype + "*" : length_ctype));
 			}
 		} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 			function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
@@ -1665,8 +1664,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (acc.value_type is ArrayType) {
 				var array_type = (ArrayType) acc.value_type;
+				var length_ctype = get_ccode_array_length_type (array_type);
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? "int*" : "int"));
+					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? length_ctype + "*": length_ctype));
 				}
 			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 				function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
@@ -1788,8 +1788,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (acc.value_type is ArrayType) {
 				var array_type = (ArrayType) acc.value_type;
+				var length_ctype = get_ccode_array_length_type (array_type);
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? "int*" : "int"));
+					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? length_ctype + "*" : length_ctype));
 				}
 			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 				function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
@@ -1844,7 +1845,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					get_call.add_argument (new CCodeIdentifier (is_virtual ? "base" : "self"));
 
 					if (property_type is ArrayType) {
-						ccode.add_declaration ("int", new CCodeVariableDeclarator ("old_value_length"));
+						ccode.add_declaration (get_ccode_array_length_type (property_type), new CCodeVariableDeclarator ("old_value_length"));
 						get_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("old_value_length")));
 						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_call, new CCodeIdentifier ("value")));
 					} else if (property_type.compatible (string_type)) {
@@ -1933,8 +1934,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var deleg_type = param.variable_type as DelegateType;
 
 		if (array_type != null && get_ccode_array_length (param)) {
+			var length_ctype = get_ccode_array_length_type (array_type);
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				data.add_field ("gint", get_parameter_array_length_cname (param, dim));
+				data.add_field (length_ctype, get_parameter_array_length_cname (param, dim));
 			}
 		} else if (deleg_type != null && deleg_type.delegate_symbol.has_target) {
 			data.add_field ("gpointer", get_ccode_delegate_target_name (param));
@@ -2000,10 +2002,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 					if (local.variable_type is ArrayType && !((ArrayType) local.variable_type).fixed_length) {
 						var array_type = (ArrayType) local.variable_type;
+						var length_ctype = get_ccode_array_length_type (array_type);
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							data.add_field ("gint", get_array_length_cname (get_local_cname (local), dim));
+							data.add_field (length_ctype, get_array_length_cname (get_local_cname (local), dim));
 						}
-						data.add_field ("gint", get_array_size_cname (get_local_cname (local)));
+						data.add_field (length_ctype, get_array_size_cname (get_local_cname (local)));
 					} else if (local.variable_type is DelegateType && ((DelegateType) local.variable_type).delegate_symbol.has_target) {
 						data.add_field ("gpointer", get_delegate_target_cname (get_local_cname (local)));
 						if (local.variable_type.is_disposable ()) {
@@ -2448,13 +2451,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				if (!array_type.fixed_length) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var len_var = new LocalVariable (int_type.copy (), get_array_length_cname (get_local_cname (local), dim));
+						var len_var = new LocalVariable (array_type.length_type.copy (), get_array_length_cname (get_local_cname (local), dim));
 						len_var.init = local.initializer == null;
 						emit_temp_var (len_var);
 					}
 
 					if (array_type.rank == 1) {
-						var size_var = new LocalVariable (int_type.copy (), get_array_size_cname (get_local_cname (local)));
+						var size_var = new LocalVariable (array_type.length_type.copy (), get_array_size_cname (get_local_cname (local)));
 						size_var.init = local.initializer == null;
 						emit_temp_var (size_var);
 					}
@@ -2506,7 +2509,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		emit_temp_var (local);
 		if (array_type != null) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var len_var = new LocalVariable (int_type.copy (), get_array_length_cname (local.name, dim), null, node_reference.source_reference);
+				var len_var = new LocalVariable (array_type.length_type.copy (), get_array_length_cname (local.name, dim), null, node_reference.source_reference);
 				len_var.init = init;
 				emit_temp_var (len_var);
 			}
@@ -5206,10 +5209,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// return array length if appropriate
 			// tmp = _variant_get (variant, &tmp_length);
 			var array_type = (ArrayType) to;
-
+			var length_ctype = get_ccode_array_length_type (array_type);
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cvalue (result, dim)));
-				cfunc.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), "int*"));
+				cfunc.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), length_ctype + "*"));
 			}
 		}
 
@@ -5978,10 +5981,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (type is ArrayType) {
 				// return array length if appropriate
 				var array_type = (ArrayType) type;
-
+				var length_ctype = get_ccode_array_length_type (array_type);
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					ccall.add_argument (get_array_length_cvalue (value, dim));
-					cfunc.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), "gint"));
+					cfunc.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), length_ctype));
 				}
 			}
 
