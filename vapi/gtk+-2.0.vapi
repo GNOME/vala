@@ -2791,7 +2791,7 @@ namespace Gtk {
 		public weak Gtk.Widget label;
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[PrintfFormat]
-		public MessageDialog (Gtk.Window? parent, Gtk.DialogFlags flags, Gtk.MessageType type, Gtk.ButtonsType buttons, string message_format, ...);
+		public MessageDialog (Gtk.Window? parent, Gtk.DialogFlags flags, Gtk.MessageType type, Gtk.ButtonsType buttons, string? message_format, ...);
 		[PrintfFormat]
 		public void format_secondary_markup (string message_format, ...);
 		[PrintfFormat]
