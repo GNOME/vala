@@ -3781,6 +3781,8 @@ namespace GLib {
 
 	public delegate unowned string TranslateFunc (string str);
 
+	public const string OPTION_REMAINING;
+
 	[CCode (has_type_id = false)]
 	public enum OptionArg {
 		NONE,
@@ -3797,6 +3799,8 @@ namespace GLib {
 	[Flags]
 	[CCode (cprefix = "G_OPTION_FLAG_", has_type_id = false)]
 	public enum OptionFlags {
+		[Version (since = "2.42")]
+		NONE,
 		HIDDEN,
 		IN_MAIN,
 		REVERSE,
