@@ -159,6 +159,7 @@ TESTS = \
 	control-flow/unassigned-local-block-variable.test \
 	control-flow/unassigned-local-variable.test \
 	control-flow/while-false.vala \
+	control-flow/bug574352.vala \
 	control-flow/bug628336.vala \
 	control-flow/bug639482.vala \
 	control-flow/bug652549.vala \
