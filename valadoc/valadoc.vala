@@ -117,7 +117,7 @@ public class ValaDoc : Object {
 		{ "verbose", 0, 0, OptionArg.NONE, ref verbose, "Show all warnings", null },
 		{ "no-color", 0, 0, OptionArg.NONE, ref disable_diagnostic_colors, "Disable colored output", null },
 		{ "target-glib", 0, 0, OptionArg.STRING, ref target_glib, "Target version of glib for code generation", "MAJOR.MINOR" },
-		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref tsources, null, "FILE..." },
+		{ OPTION_REMAINING, 0, 0, OptionArg.FILENAME_ARRAY, ref tsources, null, "FILE..." },
 
 		{ null }
 	};
