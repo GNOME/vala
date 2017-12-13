@@ -198,8 +198,6 @@ dist_vapi_DATA = \
 	libgda-report-4.0.vapi \
 	libgda-4.0.deps \
 	libgda-4.0.vapi \
-	libgdata.deps \
-	libgdata.vapi \
 	libglade-2.0.deps \
 	libglade-2.0.vapi \
 	libgnome-2.0.vapi \
@@ -433,7 +431,6 @@ GIR_BINDINGS = \
 	gudev-1.0 \
 	javascriptcoregtk-4.0 \
 	json-glib-1.0 \
-	libgdata \
 	libgnome-menu-3.0 \
 	libgrss \
 	libnotify \
@@ -732,9 +729,6 @@ libgda-4.0:
 
 libgda-report-4.0:
 	$(GENVAPI) --library $(srcdir)/libgda-report-4.0 $(PACKAGESDIR)/libgda-report-4.0/libgda-report-4.0.gi
-
-libgdata:
-	$(GENVAPI) --library $(srcdir)/libgdata --metadatadir $(METADATADIR) $(GIRDIR)/GData-0.0.gir
 
 libglade-2.0:
 	$(GENVAPI) --library $(srcdir)/libglade-2.0 $(PACKAGESDIR)/libglade-2.0/libglade-2.0.gi
