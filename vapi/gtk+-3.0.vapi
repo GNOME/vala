@@ -3474,7 +3474,7 @@ namespace Gtk {
 	public class MessageDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[PrintfFormat]
-		public MessageDialog (Gtk.Window? parent, Gtk.DialogFlags flags, Gtk.MessageType type, Gtk.ButtonsType buttons, string message_format, ...);
+		public MessageDialog (Gtk.Window? parent, Gtk.DialogFlags flags, Gtk.MessageType type, Gtk.ButtonsType buttons, string? message_format, ...);
 		[PrintfFormat]
 		public void format_secondary_markup (string message_format, ...);
 		[PrintfFormat]
