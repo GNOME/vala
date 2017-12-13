@@ -1,4 +1,0 @@
-Rsvg deprecated_since="2.36.2" replacement="bindings distributed with librsvg-2.0"
-
-*_VERSION parent="Rsvg.Version" name="(.+)_VERSION"
-VERSION parent="Rsvg.Version" name="STRING"
