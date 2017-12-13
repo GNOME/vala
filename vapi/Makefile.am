@@ -65,8 +65,6 @@ dist_vapi_DATA = \
 	gdu-gtk.vapi \
 	gedit-2.20.vapi \
 	gedit-2.20.deps \
-	gedit.vapi \
-	gedit.deps \
 	gio-2.0.vapi \
 	gio-unix-2.0.deps \
 	gio-unix-2.0.vapi \
@@ -471,7 +469,6 @@ GENVAPI = $(VAPIGEN) $(VAPIGENFLAGS)
 METADATADIR = $(srcdir)/metadata
 PACKAGESDIR = $(srcdir)/packages
 GIRDIR = $$($(PKG_CONFIG) gobject-introspection-1.0 --variable=girdir)
-GEDIT_GIRDIR=$$($(PKG_CONFIG) gedit --variable=prefix)/share/gedit/gir-1.0
 
 .PHONY: all-bindings $(BINDINGS)
 
@@ -554,9 +551,6 @@ gdu-gtk:
 
 gedit-2.20:
 	$(GENVAPI) --library $(srcdir)/gedit-2.20 $(PACKAGESDIR)/gedit-2.20/gedit-2.20.gi
-
-gedit:
-	$(GENVAPI) --library $(srcdir)/gedit --metadatadir $(METADATADIR) $(GEDIT_GIRDIR)/Gedit-3.0.gir
 
 gio-2.0:
 	$(GENVAPI) --library $(srcdir)/gio-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/Gio-2.0-custom.vala $(GIRDIR)/Gio-2.0.gir
