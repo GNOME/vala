@@ -75,7 +75,6 @@ dist_vapi_DATA = \
 	gnet-2.0.vapi \
 	gnome-desktop-2.0.deps \
 	gnome-desktop-2.0.vapi \
-	gnome-keyring-1.vapi \
 	gnome-vfs-2.0.vapi \
 	gnutls.vapi \
 	gobject-2.0.vapi \
@@ -340,7 +339,6 @@ GIDL_BINDINGS = \
 	gdk-gtk \
 	gio-unix-2.0 \
 	gnome-desktop-2.0 \
-	gnome-keyring-1 \
 	gnome-vfs-2.0 \
 	goocanvas \
 	gstreamer-0.10 \
@@ -560,9 +558,6 @@ gio-unix-2.0:
 
 gnome-desktop-2.0:
 	$(GENVAPI) --library $(srcdir)/gnome-desktop-2.0 $(PACKAGESDIR)/gnome-desktop-2.0/gnome-desktop-2.0.gi
-
-gnome-keyring-1:
-	$(GENVAPI) --library $(srcdir)/gnome-keyring-1 $(PACKAGESDIR)/gnome-keyring-1/gnome-keyring-1-custom.vala $(PACKAGESDIR)/gnome-keyring-1/gnome-keyring-1.gi
 
 gnome-vfs-2.0:
 	$(GENVAPI) --library $(srcdir)/gnome-vfs-2.0 $(PACKAGESDIR)/gnome-vfs-2.0/gnome-vfs-2.0-custom.vala $(PACKAGESDIR)/gnome-vfs-2.0/gnome-vfs-2.0.gi
