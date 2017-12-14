@@ -1112,17 +1112,17 @@ public class Vala.Parser : CodeVisitor {
 						case TokenType.IDENTIFIER:
 						case TokenType.PARAMS:
 							var inner = parse_unary_expression ();
-							return new CastExpression (inner, type, get_src (begin), false);
+							return new CastExpression (inner, type, get_src (begin));
 						case TokenType.STAR:
 							next ();
 							var op = parse_unary_expression ();
 							var inner = new PointerIndirection (op, get_src (begin));
-							return new CastExpression (inner, type, get_src (begin), false);
+							return new CastExpression (inner, type, get_src (begin));
 						case TokenType.BITWISE_AND:
 							next ();
 							var op = parse_unary_expression ();
 							var inner = new AddressofExpression (op, get_src (begin));
-							return new CastExpression (inner, type, get_src (begin), false);
+							return new CastExpression (inner, type, get_src (begin));
 						default:
 							break;
 						}
@@ -1299,7 +1299,7 @@ public class Vala.Parser : CodeVisitor {
 				case TokenType.AS:
 					next ();
 					var type = parse_type (true, false);
-					left = new CastExpression (left, type, get_src (begin), true);
+					left = new CastExpression.silent (left, type, get_src (begin));
 					break;
 				default:
 					found = false;

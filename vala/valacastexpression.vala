@@ -52,9 +52,9 @@ public class Vala.CastExpression : Expression {
 	/**
 	 * Checked casts return NULL instead of raising an error.
 	 */
-	public bool is_silent_cast { get; set; }
+	public bool is_silent_cast { get; private set; }
 
-	public bool is_non_null_cast { get; set; }
+	public bool is_non_null_cast { get; private set; }
 
 	private Expression _inner;
 
@@ -67,10 +67,19 @@ public class Vala.CastExpression : Expression {
 	 * @param type_reference  target type
 	 * @return                newly created cast expression
 	 */
-	public CastExpression (Expression inner, DataType type_reference, SourceReference source_reference, bool is_silent_cast) {
+	public CastExpression (Expression inner, DataType type_reference, SourceReference source_reference) {
 		this.type_reference = type_reference;
 		this.source_reference = source_reference;
-		this.is_silent_cast = is_silent_cast;
+		this.is_silent_cast = false;
+		this.is_non_null_cast = false;
+		this.inner = inner;
+	}
+
+	public CastExpression.silent (Expression inner, DataType type_reference, SourceReference source_reference) {
+		this.type_reference = type_reference;
+		this.source_reference = source_reference;
+		this.is_silent_cast = true;
+		this.is_non_null_cast = false;
 		this.inner = inner;
 	}
 

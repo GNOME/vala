@@ -1277,7 +1277,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					case TokenType.PARAMS:
 					case TokenType.YIELD:
 						var inner = parse_unary_expression ();
-						return new CastExpression (inner, type, get_src (begin), false);
+						return new CastExpression (inner, type, get_src (begin));
 					default:
 						break;
 					}
@@ -1450,7 +1450,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 				case TokenType.AS:
 					next ();
 					var type = parse_type (true, false);
-					left = new CastExpression (left, type, get_src (begin), true);
+					left = new CastExpression.silent (left, type, get_src (begin));
 					break;
 				default:
 					found = false;
