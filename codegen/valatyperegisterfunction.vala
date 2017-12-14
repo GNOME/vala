@@ -240,7 +240,7 @@ public abstract class Vala.TypeRegisterFunction {
 				cond = condition;
 			} else {
 				cond = new CCodeFunctionCall (new CCodeIdentifier ("G_UNLIKELY"));
-				(cond as CCodeFunctionCall).add_argument (condition);
+				((CCodeFunctionCall) cond).add_argument (condition);
 			}
 			var cif = new CCodeIfStatement (cond, type_init);
 			type_block.add_statement (cif);
