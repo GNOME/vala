@@ -163,8 +163,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType error_type;
 	public Class gsource_type;
 
-	public int next_lambda_id = 0;
-
 	// keep replaced alive to make sure they remain valid
 	// for the whole execution of CodeNode.accept
 	public List<CodeNode> replaced_nodes = new ArrayList<CodeNode> ();
