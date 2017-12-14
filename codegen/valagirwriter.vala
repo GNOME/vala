@@ -835,7 +835,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	private void write_implicit_params (DataType type, ref int index, bool has_array_length, string name, ParameterDirection direction) {
 		if (type is ArrayType && has_array_length) {
-			var int_type = new IntegerType (CodeContext.get ().root.scope.lookup ("int") as Struct);
+			var int_type = new IntegerType (context.root.scope.lookup ("int") as Struct);
 			for (var i = 0; i < ((ArrayType) type).rank; i++) {
 				write_param_or_return (int_type, true, ref index, has_array_length, "%s_length%i".printf (name, i + 1), null, direction);
 			}
@@ -845,7 +845,7 @@ public class Vala.GIRWriter : CodeVisitor {
 				var data_type = new PointerType (new VoidType ());
 				write_param_or_return (data_type, true, ref index, false, "%s_target".printf (name), null, direction);
 				if (deleg_type.is_disposable ()) {
-					var notify_type = new DelegateType (CodeContext.get ().root.scope.lookup ("GLib").scope.lookup ("DestroyNotify") as Delegate);
+					var notify_type = new DelegateType (context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify") as Delegate);
 					write_param_or_return (notify_type, true, ref index, false, "%s_target_destroy_notify".printf (name), null, direction);
 				}
 			}
