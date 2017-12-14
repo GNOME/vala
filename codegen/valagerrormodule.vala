@@ -372,9 +372,9 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		if (!(stop_at is TryStatement || stop_at is CatchClause)) {
 			var finally_block = (Block) null;
 			if (sym.parent_node is TryStatement) {
-				finally_block = (sym.parent_node as TryStatement).finally_body;
+				finally_block = ((TryStatement) sym.parent_node).finally_body;
 			} else if (sym.parent_node is CatchClause) {
-				finally_block = (sym.parent_node.parent_node as TryStatement).finally_body;
+				finally_block = ((TryStatement) sym.parent_node.parent_node).finally_body;
 			}
 
 			if (finally_block != null && finally_block != sym) {
