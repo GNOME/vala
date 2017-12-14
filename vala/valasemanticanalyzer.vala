@@ -679,36 +679,36 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (c == 'd' || c == 'i' || c == 'c') {
 				// integer
 				if (length == -2) {
-					param_type = context.analyzer.int8_type;
+					param_type = int8_type;
 				} else if (length == -1) {
-					param_type = context.analyzer.short_type;
+					param_type = short_type;
 				} else if (length == 0) {
-					param_type = context.analyzer.int_type;
+					param_type = int_type;
 				} else if (length == 1) {
-					param_type = context.analyzer.long_type;
+					param_type = long_type;
 				} else if (length == 2) {
-					param_type = context.analyzer.ssize_t_type;
+					param_type = ssize_t_type;
 				}
 			} else if (c == 'o' || c == 'u' || c == 'x' || c == 'X') {
 				// unsigned integer
 				if (length == -2) {
-					param_type = context.analyzer.uchar_type;
+					param_type = uchar_type;
 				} else if (length == -1) {
-					param_type = context.analyzer.ushort_type;
+					param_type = ushort_type;
 				} else if (length == 0) {
-					param_type = context.analyzer.uint_type;
+					param_type = uint_type;
 				} else if (length == 1) {
-					param_type = context.analyzer.ulong_type;
+					param_type = ulong_type;
 				} else if (length == 2) {
-					param_type = context.analyzer.size_t_type;
+					param_type = size_t_type;
 				}
 			} else if (c == 'e' || c == 'E' || c == 'f' || c == 'F'
 					   || c == 'g' || c == 'G' || c == 'a' || c == 'A') {
 				// double
-				param_type = context.analyzer.double_type;
+				param_type = double_type;
 			} else if (c == 's') {
 				// string
-				param_type = context.analyzer.string_type;
+				param_type = string_type;
 			} else if (c == 'p') {
 				// pointer
 				param_type = new PointerType (new VoidType ());
