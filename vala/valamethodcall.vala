@@ -295,7 +295,7 @@ public class Vala.MethodCall : Expression {
 				struct_creation_expression.add_argument (arg);
 			}
 			struct_creation_expression.target_type = target_type;
-			context.analyzer.replaced_nodes.add (this);
+			context.analyzer.add_replaced_node (this);
 			parent_node.replace_expression (this, struct_creation_expression);
 			struct_creation_expression.check (context);
 			return true;

@@ -165,7 +165,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	// keep replaced alive to make sure they remain valid
 	// for the whole execution of CodeNode.accept
-	public List<CodeNode> replaced_nodes = new ArrayList<CodeNode> ();
+	List<CodeNode> replaced_nodes;
 
 	public SemanticAnalyzer () {
 	}
@@ -177,6 +177,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 */
 	public void analyze (CodeContext context) {
 		this.context = context;
+		replaced_nodes = new ArrayList<CodeNode> ();
 
 		var root_symbol = context.root;
 
@@ -222,7 +223,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		context.root.check (context);
 		context.accept (this);
 
+		replaced_nodes = null;
 		this.context = null;
+	}
+
+	public void add_replaced_node (CodeNode node) {
+		replaced_nodes.add (node);
 	}
 
 	public override void visit_source_file (SourceFile file) {
