@@ -216,8 +216,8 @@ public class Vala.MemberAccess : Expression {
 		symbol_reference = null;
 
 		if (qualified) {
-			base_symbol = context.analyzer.root_symbol;
-			symbol_reference = context.analyzer.root_symbol.scope.lookup (member_name);
+			base_symbol = context.root;
+			symbol_reference = base_symbol.scope.lookup (member_name);
 		} else if (inner == null) {
 			if (member_name == "this") {
 				if (!context.analyzer.is_in_instance_method ()) {

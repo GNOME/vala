@@ -114,7 +114,7 @@ public class Vala.IntegerLiteral : Literal {
 			}
 		}
 
-		var st = (Struct) context.analyzer.root_symbol.scope.lookup (type_name);
+		var st = (Struct) context.root.scope.lookup (type_name);
 		// ensure attributes are already processed
 		st.check (context);
 

@@ -77,7 +77,7 @@ public class Vala.RealLiteral : Literal {
 
 		checked = true;
 
-		var st = (Struct) context.analyzer.root_symbol.scope.lookup (get_type_name ());
+		var st = (Struct) context.root.scope.lookup (get_type_name ());
 		// ensure attributes are already processed
 		st.check (context);
 
