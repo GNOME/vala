@@ -1327,6 +1327,8 @@ public class Vala.GirParser : CodeVisitor {
 		foreach (var metadata in metadata_roots) {
 			report_unused_metadata (metadata);
 		}
+
+		this.context = null;
 	}
 
 	void map_vala_to_gir () {

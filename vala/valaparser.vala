@@ -76,6 +76,7 @@ public class Vala.Parser : CodeVisitor {
 	public void parse (CodeContext context) {
 		this.context = context;
 		context.accept (this);
+		this.context = null;
 	}
 
 	public override void visit_source_file (SourceFile source_file) {

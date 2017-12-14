@@ -42,6 +42,9 @@ public class Vala.SymbolResolver : CodeVisitor {
 		root_symbol = context.root;
 
 		context.root.accept (this);
+
+		root_symbol = null;
+		this.context = null;
 	}
 	
 	public override void visit_namespace (Namespace ns) {

@@ -526,6 +526,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var stream = FileStream.open (context.symbols_filename, "w");
 			if (stream == null) {
 				Report.error (null, "unable to open `%s' for writing".printf (context.symbols_filename));
+				this.context = null;
 				return;
 			}
 
@@ -552,6 +553,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				Report.error (null, "unable to open `%s' for writing".printf (context.internal_header_filename));
 			}
 		}
+
+		this.context = null;
 	}
 
 	public void push_context (EmitContext emit_context) {

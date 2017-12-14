@@ -28,9 +28,8 @@ using GLib;
  * Code visitor analyzing and checking code.
  */
 public class Vala.SemanticAnalyzer : CodeVisitor {
-	public CodeContext context { get; set; }
+	CodeContext context;
 
-	public Symbol root_symbol;
 	public Symbol current_symbol { get; set; }
 	public SourceFile current_source_file { get; set; }
 
@@ -181,7 +180,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public void analyze (CodeContext context) {
 		this.context = context;
 
-		root_symbol = context.root;
+		var root_symbol = context.root;
 
 		bool_type = new BooleanType ((Struct) root_symbol.scope.lookup ("bool"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
@@ -224,6 +223,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_symbol = root_symbol;
 		context.root.check (context);
 		context.accept (this);
+
+		this.context = null;
 	}
 
 	public override void visit_source_file (SourceFile file) {

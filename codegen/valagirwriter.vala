@@ -165,6 +165,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream = FileStream.open (filename, "w");
 		if (stream == null) {
 			Report.error (null, "unable to open `%s' for writing".printf (filename));
+			this.context = null;
 			return;
 		}
 
@@ -196,6 +197,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (our_namespaces.size == 0) {
 			Report.error (null, "No suitable namespace found to export for GIR");
 		}
+
+		this.context = null;
 	}
 
 	private void write_doc (string? comment) {
