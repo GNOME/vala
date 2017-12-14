@@ -34,7 +34,7 @@ public class Vala.Attribute : CodeNode {
 	/**
 	 * Contains all specified attribute arguments.
 	 */
-	public Vala.Map<string,string> args = new HashMap<string,string> (str_hash, str_equal);
+	public Vala.Map<string,string> args { get; private set; }
 
 	/**
 	 * Creates a new attribute.
@@ -46,6 +46,7 @@ public class Vala.Attribute : CodeNode {
 	public Attribute (string name, SourceReference? source_reference = null) {
 		this.name = name;
 		this.source_reference = source_reference;
+		this.args = new HashMap<string,string> (str_hash, str_equal);
 
 		if (!CodeContext.get ().deprecated) {
 			if (name == "Deprecated") {
