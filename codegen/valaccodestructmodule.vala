@@ -59,8 +59,8 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			var macro = "(%s_get_type ())".printf (get_ccode_lower_case_name (st, null));
 			decl_space.add_type_declaration (new CCodeMacroReplacement (get_ccode_type_id (st), macro));
 
-			var type_fun = new StructRegisterFunction (st, context);
-			type_fun.init_from_type (false, true);
+			var type_fun = new StructRegisterFunction (st);
+			type_fun.init_from_type (context, false, true);
 			decl_space.add_type_member_declaration (type_fun.get_declaration ());
 		}
 

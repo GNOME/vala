@@ -30,12 +30,10 @@ public abstract class Vala.TypeRegisterFunction {
 	CCodeFragment declaration_fragment = new CCodeFragment ();
 	CCodeFragment definition_fragment = new CCodeFragment ();
 
-	public CodeContext context { get; set; }
-
 	/**
 	 * Constructs the C function from the specified type.
 	 */
-	public void init_from_type (bool plugin, bool declaration_only) {
+	public void init_from_type (CodeContext context, bool plugin, bool declaration_only) {
 		bool use_thread_safe = !plugin;
 
 		bool fundamental = false;
@@ -215,7 +213,7 @@ public abstract class Vala.TypeRegisterFunction {
 		}
 
 		if (!declaration_only) {
-			get_type_interface_init_statements (type_init, plugin);
+			get_type_interface_init_statements (context, type_init, plugin);
 		}
 
 		if (!plugin) {
@@ -414,7 +412,7 @@ public abstract class Vala.TypeRegisterFunction {
 	/**
 	 * Returns additional C initialization statements to setup interfaces.
 	 */
-	public virtual void get_type_interface_init_statements (CCodeBlock block, bool plugin) {
+	public virtual void get_type_interface_init_statements (CodeContext context, CCodeBlock block, bool plugin) {
 	}
 	
 	public CCodeFragment get_source_declaration () {

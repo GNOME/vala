@@ -38,9 +38,8 @@ public class Vala.EnumRegisterFunction : TypeRegisterFunction {
 	 * @param en an enum
 	 * @return   newly created enum register function
 	 */
-	public EnumRegisterFunction (Enum en, CodeContext context) {
+	public EnumRegisterFunction (Enum en) {
 		enum_reference = en;
-		this.context = context;
 	}
 
 	public override TypeSymbol get_type_declaration () {

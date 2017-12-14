@@ -37,9 +37,8 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	 * @param cl a class
 	 * @return   newly created class register function
 	 */
-	public ClassRegisterFunction (Class cl, CodeContext context) {
+	public ClassRegisterFunction (Class cl) {
 		class_reference = cl;
-		this.context = context;
 	}
 	
 	public override TypeSymbol get_type_declaration () {
@@ -171,7 +170,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 		return frag;
 	}
 
-	public override void get_type_interface_init_statements (CCodeBlock block, bool plugin) {
+	public override void get_type_interface_init_statements (CodeContext context, CCodeBlock block, bool plugin) {
 		foreach (DataType base_type in class_reference.get_base_types ()) {
 			if (!(base_type.data_type is Interface)) {
 				continue;

@@ -33,9 +33,8 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	 */
 	public weak Interface interface_reference { get; set; }
 	
-	public InterfaceRegisterFunction (Interface iface, CodeContext context) {
+	public InterfaceRegisterFunction (Interface iface) {
 		interface_reference = iface;
-		this.context = context;
 	}
 	
 	public override TypeSymbol get_type_declaration () {
@@ -78,7 +77,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 		return interface_reference.access;
 	}
 
-	public override void get_type_interface_init_statements (CCodeBlock block, bool plugin) {
+	public override void get_type_interface_init_statements (CodeContext context, CCodeBlock block, bool plugin) {
 		/* register all prerequisites */
 		foreach (DataType prereq_ref in interface_reference.get_prerequisites ()) {
 			var prereq = prereq_ref.data_type;

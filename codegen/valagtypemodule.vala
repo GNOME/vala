@@ -186,8 +186,8 @@ public class Vala.GTypeModule : GErrorModule {
 		if (is_gtypeinstance) {
 			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%sClass".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("%sClass".printf (get_ccode_name (cl)))));
 
-			var type_fun = new ClassRegisterFunction (cl, context);
-			type_fun.init_from_type (in_plugin, true);
+			var type_fun = new ClassRegisterFunction (cl);
+			type_fun.init_from_type (context, in_plugin, true);
 			decl_space.add_type_member_declaration (type_fun.get_declaration ());
 		}
 	}
@@ -670,8 +670,8 @@ public class Vala.GTypeModule : GErrorModule {
 				cfile.add_type_member_definition (new CCodeComment (cl.comment.content));
 			}
 
-			var type_fun = new ClassRegisterFunction (cl, context);
-			type_fun.init_from_type (in_plugin, false);
+			var type_fun = new ClassRegisterFunction (cl);
+			type_fun.init_from_type (context, in_plugin, false);
 			cfile.add_type_member_declaration (type_fun.get_source_declaration ());
 			cfile.add_type_member_definition (type_fun.get_definition ());
 
@@ -2064,8 +2064,8 @@ public class Vala.GTypeModule : GErrorModule {
 
 		decl_space.add_type_definition (type_struct);
 
-		var type_fun = new InterfaceRegisterFunction (iface, context);
-		type_fun.init_from_type (in_plugin, true);
+		var type_fun = new InterfaceRegisterFunction (iface);
+		type_fun.init_from_type (context, in_plugin, true);
 		decl_space.add_type_member_declaration (type_fun.get_declaration ());
 	}
 
@@ -2110,8 +2110,8 @@ public class Vala.GTypeModule : GErrorModule {
 			cfile.add_type_member_definition (new CCodeComment (iface.comment.content));
 		}
 
-		var type_fun = new InterfaceRegisterFunction (iface, context);
-		type_fun.init_from_type (in_plugin, false);
+		var type_fun = new InterfaceRegisterFunction (iface);
+		type_fun.init_from_type (context, in_plugin, false);
 		cfile.add_type_member_declaration (type_fun.get_source_declaration ());
 		cfile.add_type_member_definition (type_fun.get_definition ());
 
@@ -2213,8 +2213,8 @@ public class Vala.GTypeModule : GErrorModule {
 
 		if (get_ccode_has_type_id (st)) {
 			push_line (st.source_reference);
-			var type_fun = new StructRegisterFunction (st, context);
-			type_fun.init_from_type (false, false);
+			var type_fun = new StructRegisterFunction (st);
+			type_fun.init_from_type (context, false, false);
 			cfile.add_type_member_definition (type_fun.get_definition ());
 			pop_line ();
 		}
@@ -2225,8 +2225,8 @@ public class Vala.GTypeModule : GErrorModule {
 
 		if (get_ccode_has_type_id (en)) {
 			push_line (en.source_reference);
-			var type_fun = new EnumRegisterFunction (en, context);
-			type_fun.init_from_type (false, false);
+			var type_fun = new EnumRegisterFunction (en);
+			type_fun.init_from_type (context, false, false);
 			cfile.add_type_member_definition (type_fun.get_definition ());
 			pop_line ();
 		}
