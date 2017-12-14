@@ -58,7 +58,7 @@ public class Vala.BinaryExpression : Expression {
 		}
 	}
 	
-	public bool chained;
+	public bool is_chained { get; private set; }
 
 	private Expression _left;
 	private Expression _right;
@@ -76,6 +76,15 @@ public class Vala.BinaryExpression : Expression {
 		operator = op;
 		left = _left;
 		right = _right;
+		is_chained = false;
+		source_reference = source;
+	}
+
+	public BinaryExpression.chained (BinaryOperator op, Expression _left, Expression _right, SourceReference? source = null) {
+		operator = op;
+		left = _left;
+		right = _right;
+		is_chained = true;
 		source_reference = source;
 	}
 
@@ -425,7 +434,7 @@ public class Vala.BinaryExpression : Expression {
 			} else {
 				DataType resulting_type;
 
-				if (chained) {
+				if (is_chained) {
 					var lbe = (BinaryExpression) left;
 					resulting_type = context.analyzer.get_arithmetic_result_type (lbe.right.target_type, right.target_type);
 				} else {
@@ -438,7 +447,7 @@ public class Vala.BinaryExpression : Expression {
 					return false;
 				}
 
-				if (!chained) {
+				if (!is_chained) {
 					left.target_type = resulting_type.copy ();
 				}
 				right.target_type = resulting_type.copy ();

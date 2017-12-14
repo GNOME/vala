@@ -5303,14 +5303,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var cright = get_cvalue (expr.right);
 
 		CCodeExpression? left_chain = null;
-		if (expr.chained) {
+		if (expr.is_chained) {
 			var lbe = (BinaryExpression) expr.left;
 
 			var temp_decl = get_temp_variable (lbe.right.target_type, true, null, false);
 			emit_temp_var (temp_decl);
 			var cvar = get_variable_cexpression (temp_decl.name);
 			var clbe = (CCodeBinaryExpression) get_cvalue (lbe);
-			if (lbe.chained) {
+			if (lbe.is_chained) {
 				clbe = (CCodeBinaryExpression) clbe.right;
 			}
 			ccode.add_assignment (cvar, get_cvalue (lbe.right));

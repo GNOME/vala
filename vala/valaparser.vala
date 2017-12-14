@@ -1266,10 +1266,10 @@ public class Vala.Parser : CodeVisitor {
 			case BinaryOperator.GREATER_THAN_OR_EQUAL:
 				next ();
 				var right = parse_shift_expression ();
-				left = new BinaryExpression (operator, left, right, get_src (begin));
-				if (!first) {
-					var be = (BinaryExpression) left;
-					be.chained = true;
+				if (first) {
+					left = new BinaryExpression (operator, left, right, get_src (begin));
+				} else {
+					left = new BinaryExpression.chained (operator, left, right, get_src (begin));
 				}
 				first = false;
 				break;
@@ -1278,10 +1278,10 @@ public class Vala.Parser : CodeVisitor {
 				// ignore >> and >>= (two tokens due to generics)
 				if (current () != TokenType.OP_GT && current () != TokenType.OP_GE) {
 					var right = parse_shift_expression ();
-					left = new BinaryExpression (operator, left, right, get_src (begin));
-					if (!first) {
-						var be = (BinaryExpression) left;
-						be.chained = true;
+					if (first) {
+						left = new BinaryExpression (operator, left, right, get_src (begin));
+					} else {
+						left = new BinaryExpression.chained (operator, left, right, get_src (begin));
 					}
 					first = false;
 				} else {
