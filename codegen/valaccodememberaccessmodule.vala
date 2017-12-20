@@ -742,8 +742,14 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			// special handling for types such as va_list
 			use_temp = false;
 		}
-		if (variable is Parameter && (variable.name == "this" || ((Parameter) variable).direction != ParameterDirection.OUT)) {
-			use_temp = false;
+		if (variable is Parameter) {
+			var param = (Parameter) variable;
+			if (variable.name == "this") {
+				use_temp = false;
+			} else if ((param.direction != ParameterDirection.OUT)
+			    && !(param.variable_type.is_real_non_null_struct_type ())) {
+				use_temp = false;
+			}
 		}
 		if (variable.single_assignment && !result.value_type.is_real_non_null_struct_type ()) {
 			// no need to copy values from variables that are assigned exactly once
