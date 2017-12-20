@@ -58,6 +58,7 @@ TESTS = \
 	chainup/struct-base-foo.vala \
 	chainup/struct-this.vala \
 	chainup/struct-this-foo.vala \
+	chainup/bug791785.vala \
 	pointers/bug590641.vala \
 	namespaces.vala \
 	methods/lambda.vala \
