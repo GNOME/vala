@@ -1375,6 +1375,11 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	public void parse_file (SourceFile source_file) {
+		var has_global_context = (context != null);
+		if (!has_global_context) {
+			context = source_file.context;
+		}
+
 		metadata_stack = new ArrayList<Metadata> ();
 		metadata = Metadata.empty;
 		cheader_filenames = null;
@@ -1391,6 +1396,9 @@ public class Vala.GirParser : CodeVisitor {
 
 		reader = null;
 		this.current_source_file = null;
+		if (!has_global_context) {
+			context = null;
+		}
 	}
 
 	void next () {

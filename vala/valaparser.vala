@@ -80,7 +80,7 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
-		if (context.run_output || source_file.filename.has_suffix (".vala") || source_file.filename.has_suffix (".vapi")) {
+		if ((context != null && context.run_output) || source_file.filename.has_suffix (".vala") || source_file.filename.has_suffix (".vapi")) {
 			parse_file (source_file);
 		}
 	}
@@ -322,6 +322,11 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	public void parse_file (SourceFile source_file) {
+		var has_global_context = (context != null);
+		if (!has_global_context) {
+			context = source_file.context;
+		}
+
 		scanner = new Scanner (source_file);
 		parse_file_comments ();
 
@@ -345,6 +350,9 @@ public class Vala.Parser : CodeVisitor {
 		}
 		
 		scanner = null;
+		if (!has_global_context) {
+			context = null;
+		}
 	}
 
 	void parse_file_comments () {

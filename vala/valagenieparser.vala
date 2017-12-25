@@ -399,6 +399,11 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 
 	public void parse_file (SourceFile source_file) {
+		var has_global_context = (context != null);
+		if (!has_global_context) {
+			context = source_file.context;
+		}
+
 		scanner = new Scanner (source_file);
 		scanner.parse_file_comments ();
 		scanner.indent_spaces = 0;
@@ -430,6 +435,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 		
 		scanner = null;
+		if (!has_global_context) {
+			context = null;
+		}
 	}
 
 	void skip_symbol_name () throws ParseError {
