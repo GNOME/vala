@@ -3216,7 +3216,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.4")]
 		public FontButton ();
-		[Version (since = "2.4")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.4")]
 		public unowned string get_font_name ();
 		[Version (since = "2.4")]
 		public bool get_show_size ();
@@ -3228,7 +3228,7 @@ namespace Gtk {
 		public bool get_use_font ();
 		[Version (since = "2.4")]
 		public bool get_use_size ();
-		[Version (since = "2.4")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.4")]
 		public bool set_font_name (string fontname);
 		[Version (since = "2.4")]
 		public void set_show_size (bool show_size);

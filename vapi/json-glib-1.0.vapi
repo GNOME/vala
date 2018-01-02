@@ -195,10 +195,16 @@ namespace Json {
 		public unowned Json.Array get_array_member (string member_name);
 		[Version (since = "0.8")]
 		public bool get_boolean_member (string member_name);
+		[Version (since = "1.6")]
+		public bool get_boolean_member_with_default (string member_name, bool default_value);
 		[Version (since = "0.8")]
 		public double get_double_member (string member_name);
+		[Version (since = "1.6")]
+		public double get_double_member_with_default (string member_name, double default_value);
 		[Version (since = "0.8")]
 		public int64 get_int_member (string member_name);
+		[Version (since = "1.6")]
+		public int64 get_int_member_with_default (string member_name, int64 default_value);
 		public unowned Json.Node? get_member (string member_name);
 		public GLib.List<weak string>? get_members ();
 		[Version (since = "0.8")]
@@ -208,6 +214,8 @@ namespace Json {
 		public uint get_size ();
 		[Version (since = "0.8")]
 		public unowned string get_string_member (string member_name);
+		[Version (since = "1.6")]
+		public unowned string get_string_member_with_default (string member_name, string default_value);
 		public GLib.List<weak Json.Node>? get_values ();
 		public bool has_member (string member_name);
 		[Version (since = "1.2")]
@@ -255,7 +263,7 @@ namespace Json {
 		[Version (since = "0.12")]
 		public async bool load_from_stream_async (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "1.4")]
-		public Json.Node steal_root ();
+		public Json.Node? steal_root ();
 		[NoAccessorMethod]
 		[Version (since = "1.2")]
 		public bool immutable { get; construct; }
