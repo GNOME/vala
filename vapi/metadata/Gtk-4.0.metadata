@@ -2,6 +2,9 @@
 // but may be some day.
 ////////////////////////////////////////////////////////////////////
 
+*.event type="Gdk.Event"
+*.*.event type="Gdk.Event"
+
 // G-I doesn't support per-sybmol includes
 * cheader_filename="gtk/gtk.h"
 *Accessible cheader_filename="gtk/gtk.h,gtk/gtk-a11y.h"
@@ -325,15 +328,12 @@ TreeView
   .get_cell_area return_void
   .get_visible_rect return_void
 Widget
-  .delete_event.event type="Gdk.EventAny"
-  .destroy_event.event type="Gdk.EventAny"
   .drag_*#method parent="Gtk" symbol_type="function"
   .get_allocation return_void
   .get_clip return_void
   .grab_add parent="Gtk" symbol_type="function"
   .grab_remove parent="Gtk" symbol_type="function"
   .intersect.intersection unowned=false nullable default=null
-  .touch_event.event type="Gdk.EventTouch"
   .size_allocate return_void
 WidgetPath
   .free destroys_instance
