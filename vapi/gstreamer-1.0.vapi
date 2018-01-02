@@ -1302,8 +1302,8 @@ namespace Gst {
 		public bool seek_simple (Gst.Format format, Gst.SeekFlags seek_flags, int64 seek_pos);
 		public virtual bool send_event (owned Gst.Event event);
 		public void set_base_time (Gst.ClockTime time);
-		public virtual void set_bus (Gst.Bus bus);
-		public virtual bool set_clock (Gst.Clock clock);
+		public virtual void set_bus (Gst.Bus? bus);
+		public virtual bool set_clock (Gst.Clock? clock);
 		public virtual void set_context (Gst.Context context);
 		public bool set_locked_state (bool locked_state);
 		[CCode (cname = "gst_element_class_set_metadata")]
@@ -1971,7 +1971,7 @@ namespace Gst {
 	public class Plugin : Gst.Object {
 		[CCode (has_construct_function = false)]
 		protected Plugin ();
-		public void add_dependency (string? env_vars, string? paths, string? names, Gst.PluginDependencyFlags flags);
+		public void add_dependency ([CCode (array_length = false, array_null_terminated = true)] string[]? env_vars, [CCode (array_length = false, array_null_terminated = true)] string[]? paths, [CCode (array_length = false, array_null_terminated = true)] string[]? names, Gst.PluginDependencyFlags flags);
 		public void add_dependency_simple (string? env_vars, string? paths, string? names, Gst.PluginDependencyFlags flags);
 		public unowned Gst.Structure? get_cache_data ();
 		public unowned string get_description ();
@@ -2255,27 +2255,18 @@ namespace Gst {
 		public int to_stream_time_full (Gst.Format format, uint64 position, out uint64 stream_time);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_stream_get_type ()")]
+	[Version (since = "1.10")]
 	public class Stream : Gst.Object {
 		[CCode (has_construct_function = false)]
-		[Version (since = "1.10")]
 		public Stream (string? stream_id, Gst.Caps? caps, Gst.StreamType type, Gst.StreamFlags flags);
-		[Version (since = "1.10")]
 		public Gst.Caps? get_caps ();
-		[Version (since = "1.10")]
 		public Gst.StreamFlags get_stream_flags ();
-		[Version (since = "1.10")]
 		public unowned string? get_stream_id ();
-		[Version (since = "1.10")]
 		public Gst.StreamType get_stream_type ();
-		[Version (since = "1.10")]
 		public Gst.TagList? get_tags ();
-		[Version (since = "1.10")]
 		public void set_caps (Gst.Caps? caps);
-		[Version (since = "1.10")]
 		public void set_stream_flags (Gst.StreamFlags flags);
-		[Version (since = "1.10")]
 		public void set_stream_type (Gst.StreamType stream_type);
-		[Version (since = "1.10")]
 		public void set_tags (Gst.TagList? tags);
 		public Gst.Caps caps { owned get; set; }
 		public Gst.StreamFlags stream_flags { get; set construct; }
@@ -2384,7 +2375,7 @@ namespace Gst {
 		protected SystemClock ();
 		public static Gst.Clock obtain ();
 		[Version (since = "1.4")]
-		public static void set_default (Gst.Clock new_clock);
+		public static void set_default (Gst.Clock? new_clock);
 		[NoAccessorMethod]
 		public Gst.ClockType clock_type { get; set; }
 	}
@@ -2524,6 +2515,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected TracerFactory ();
 		public static GLib.List<Gst.TracerFactory> get_list ();
+		public GLib.Type get_tracer_type ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_tracer_record_get_type ()")]
 	public class TracerRecord : Gst.Object {
@@ -3565,13 +3557,13 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STREAM_TYPE_", type_id = "gst_stream_type_get_type ()")]
 	[Flags]
+	[Version (since = "1.10")]
 	public enum StreamType {
 		UNKNOWN,
 		AUDIO,
 		VIDEO,
 		CONTAINER,
 		TEXT;
-		[Version (since = "1.10")]
 		public static unowned string get_name (Gst.StreamType stype);
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STRUCTURE_CHANGE_TYPE_PAD_", type_id = "gst_structure_change_type_get_type ()")]

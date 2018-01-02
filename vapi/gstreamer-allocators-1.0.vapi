@@ -21,6 +21,12 @@ namespace Gst {
 			public FdAllocator ();
 			public static Gst.Memory alloc (Gst.Allocator allocator, int fd, size_t size, Gst.Allocators.FdMemoryFlags flags);
 		}
+		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GstPhysMemoryAllocator", lower_case_cprefix = "gst_phys_memory_allocator_", type_cname = "GstPhysMemoryAllocatorInterface", type_id = "gst_phys_memory_allocator_get_type ()")]
+		[GIR (name = "PhysMemoryAllocator")]
+		public interface PhysMemoryAllocator : Gst.Allocator {
+			[NoWrapper]
+			public abstract uintptr get_phys_addr (Gst.Memory mem);
+		}
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GstFdMemoryFlags", cprefix = "GST_FD_MEMORY_FLAG_", has_type_id = false)]
 		[Flags]
 		[GIR (name = "FdMemoryFlags")]
@@ -50,5 +56,11 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_is_fd_memory")]
 		[Version (since = "1.6")]
 		public static bool is_fd_memory (Gst.Memory mem);
+		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_is_phys_memory")]
+		[Version (since = "1.14")]
+		public static bool is_phys_memory (Gst.Memory mem);
+		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_phys_memory_get_phys_addr")]
+		[Version (since = "1.14")]
+		public static uintptr phys_memory_get_phys_addr (Gst.Memory mem);
 	}
 }
