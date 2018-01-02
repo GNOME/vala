@@ -596,6 +596,8 @@ namespace WebKit {
 		public bool get_enable_caret_browsing ();
 		public bool get_enable_developer_extras ();
 		public bool get_enable_dns_prefetching ();
+		[Version (since = "2.20")]
+		public bool get_enable_encrypted_media ();
 		public bool get_enable_frame_flattening ();
 		public bool get_enable_fullscreen ();
 		public bool get_enable_html5_database ();
@@ -656,6 +658,8 @@ namespace WebKit {
 		public void set_enable_caret_browsing (bool enabled);
 		public void set_enable_developer_extras (bool enabled);
 		public void set_enable_dns_prefetching (bool enabled);
+		[Version (since = "2.20")]
+		public void set_enable_encrypted_media (bool enabled);
 		public void set_enable_frame_flattening (bool enabled);
 		public void set_enable_fullscreen (bool enabled);
 		public void set_enable_html5_database (bool enabled);
@@ -717,6 +721,8 @@ namespace WebKit {
 		public bool enable_caret_browsing { get; set construct; }
 		public bool enable_developer_extras { get; set construct; }
 		public bool enable_dns_prefetching { get; set construct; }
+		[Version (since = "2.20")]
+		public bool enable_encrypted_media { get; set construct; }
 		public bool enable_frame_flattening { get; set construct; }
 		public bool enable_fullscreen { get; set construct; }
 		public bool enable_html5_database { get; set construct; }
