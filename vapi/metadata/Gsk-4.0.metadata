@@ -55,6 +55,7 @@ shadow_node_new* parent="Gsk.ShadowNode" symbol_type="constructor" name="shadow_
 text_node_* parent="Gsk.TextNode" symbol_type="method" instance_idx=0 name="text_node_(.+)"
 text_node_new* parent="Gsk.TextNode" symbol_type="constructor" name="text_node_(.+)"
 
+texture_node_* parent="Gsk.TextureNode" symbol_type="method" instance_idx=0 name="texture_node_(.+)"
 texture_node_new* parent="Gsk.TextureNode" symbol_type="constructor" name="texture_node_(.+)"
 
 transform_node_* parent="Gsk.TransformNode" symbol_type="method" instance_idx=0 name="transform_node_(.+)"

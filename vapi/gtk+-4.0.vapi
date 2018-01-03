@@ -5487,7 +5487,7 @@ namespace Gdk {
 	public abstract class Texture : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Texture ();
-		public void download (uint8 data, size_t stride);
+		public void download ([CCode (array_length = false)] uint8[] data, size_t stride);
 		[CCode (cname = "gdk_texture_new_for_data")]
 		public static Gdk.Texture for_data ([CCode (array_length = false)] uint8[] data, int width, int height, int stride);
 		[CCode (cname = "gdk_texture_new_for_pixbuf")]
@@ -6350,7 +6350,8 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drop_finish (Gdk.DragContext context, bool success, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static async void drop_read_async (Gdk.DragContext context, string mime_types, int io_priority, GLib.Cancellable? cancellable);
+	[Version (since = "3.94")]
+	public static async GLib.InputStream? drop_read_async (Gdk.DragContext context, [CCode (array_length = false, array_null_terminated = true)] string[] mime_types, int io_priority, GLib.Cancellable? cancellable, out string out_mime_type) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drop_reply (Gdk.DragContext context, bool accepted, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6642,6 +6643,8 @@ namespace Gsk {
 		[CCode (has_construct_function = false)]
 		[Version (since = "3.90")]
 		public TextureNode (Gdk.Texture texture, Graphene.Rect bounds);
+		[Version (since = "3.94")]
+		public unowned Gdk.Texture get_texture ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class TransformNode : Gsk.RenderNode {
@@ -10250,7 +10253,7 @@ namespace Gtk {
 		protected ListBoxAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_list_box_row_get_type ()")]
-	public class ListBoxRow : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
+	public class ListBoxRow : Gtk.Bin, Atk.Implementor, Gtk.Actionable, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "3.10")]
 		public ListBoxRow ();
@@ -14091,10 +14094,6 @@ namespace Gtk {
 		public void remove_tick_callback (uint id);
 		[Version (since = "3.0")]
 		public void reset_style ();
-		[NoWrapper]
-		public virtual void selection_get (Gtk.SelectionData selection_data, uint time_);
-		[NoWrapper]
-		public virtual void selection_received (Gtk.SelectionData selection_data, uint time_);
 		[Version (since = "2.20")]
 		public bool send_focus_change ([CCode (type = "GdkEvent*")] Gdk.Event event);
 		public void set_accel_path (string? accel_path, Gtk.AccelGroup? accel_group);
