@@ -1,3 +1,23 @@
+Vala 0.39.3
+===========
+
+ * Various bug fixes:
+  - Fix chain-up regression with real non-null struct parameters [#791785]
+  - Release taken references to CodeContext after using it [#712694] and keep
+    custom invocations of parse_file() possible [#791936]
+  - parser: Accept comma-separated list in case-statements of switchs [#614015]
+
+ * Bindings:
+  - Remove bindings which are shipped upstream for some years
+    + gedit 3 [#776021], libgnome-keyring [#776022],
+      gtksourceview-3.0 [#776023], libgdata [#776024], librsvg-2.0 [#776025]
+  - glib-2.0: Add GLib.OPTION_REMAINING and GLib.OptionFlags.NONE
+  - gstreamer-1.0: Update from 1.13+ git master
+  - gtk+-2.0: Mark MessageDialog constructor parameter, message_format, as
+    nullable [#791570]
+  - gtk+-4.0: Update to 3.93.0+6aeae2c8
+  - webkit2gtk-4.0: Update to 2.19.3
+
 Vala 0.39.2
 ===========
  * Various bug fixes:
