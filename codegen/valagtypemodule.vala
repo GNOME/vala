@@ -544,6 +544,7 @@ public class Vala.GTypeModule : GErrorModule {
 		var old_instance_finalize_context = instance_finalize_context;
 
 		bool is_gtypeinstance = !cl.is_compact;
+		bool is_gobject = is_gtypeinstance && cl.is_subtype_of (gobject_type);
 		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
 
 		if (get_ccode_name (cl).length < 3) {
@@ -566,7 +567,7 @@ public class Vala.GTypeModule : GErrorModule {
 		generate_class_private_declaration (cl, cfile);
 
 		var last_prop = "%s_NUM_PROPERTIES".printf (get_ccode_upper_case_name (cl));
-		if (is_gtypeinstance) {
+		if (is_gobject) {
 			cfile.add_type_declaration (prop_enum);
 
 			var prop_array_decl = new CCodeDeclaration ("GParamSpec*");
@@ -627,7 +628,9 @@ public class Vala.GTypeModule : GErrorModule {
 				pop_context ();
 			}
 
-			prop_enum.add_value (new CCodeEnumValue (last_prop));
+			if (is_gobject) {
+				prop_enum.add_value (new CCodeEnumValue (last_prop));
+			}
 
 			if (cl.get_signals ().size > 0) {
 				var last_signal = "%s_NUM_SIGNALS".printf (get_ccode_upper_case_name (cl));
