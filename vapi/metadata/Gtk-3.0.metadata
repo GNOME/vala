@@ -240,6 +240,7 @@ TreeModel
 // G-I can't handle delegates w/o targets
 Clipboard
   .set_with_data skip=false
+  .set_with_data.clear_func closure=-1
   .set_with_owner skip=false
 ColorSelection
   .set_change_palette_with_screen_hook skip=false
