@@ -319,6 +319,7 @@ TESTS = \
 	annotations/noaccessormethod.test \
 	parser/switch-statement.vala \
 	parser/template.vala \
+	parser/tuple.vala \
 	$(NULL)
 
 NON_NULL_TESTS = \
