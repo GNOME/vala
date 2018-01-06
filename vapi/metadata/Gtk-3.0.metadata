@@ -588,9 +588,6 @@ ComboBox
   .get_row_separator_func skip=false
 Entry
   .populate_popup#signal.widget type="Gtk.Menu"
-FileChooser
-  .add_choice.options array_null_terminated
-  .add_choice.option_labels array_null_terminated
 FileChooserNative
   .accept_label nullable
   .cancel_label nullable

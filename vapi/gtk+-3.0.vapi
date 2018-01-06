@@ -3970,7 +3970,7 @@ namespace Gtk {
 		[Version (since = "2.8")]
 		public void get_drag_dest_item (out Gtk.TreePath path, out Gtk.IconViewDropPosition pos);
 		[Version (since = "2.8")]
-		public bool get_item_at_pos (int x, int y, out Gtk.TreePath path, out Gtk.CellRenderer cell);
+		public bool get_item_at_pos (int x, int y, out Gtk.TreePath path, out unowned Gtk.CellRenderer cell);
 		[Version (since = "2.22")]
 		public int get_item_column (Gtk.TreePath path);
 		[Version (since = "2.6")]
@@ -4612,7 +4612,7 @@ namespace Gtk {
 		protected ListBoxAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_list_box_row_get_type ()")]
-	public class ListBoxRow : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
+	public class ListBoxRow : Gtk.Bin, Atk.Implementor, Gtk.Actionable, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "3.10")]
 		public ListBoxRow ();
