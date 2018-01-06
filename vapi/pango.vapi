@@ -233,6 +233,8 @@ namespace Pango {
 		public Pango.Stretch get_stretch ();
 		public Pango.Style get_style ();
 		public Pango.Variant get_variant ();
+		[Version (since = "1.42")]
+		public unowned string? get_variations ();
 		public Pango.Weight get_weight ();
 		public uint hash ();
 		public void merge (Pango.FontDescription? desc_to_merge, bool replace_existing);
@@ -247,6 +249,10 @@ namespace Pango {
 		public void set_stretch (Pango.Stretch stretch);
 		public void set_style (Pango.Style style);
 		public void set_variant (Pango.Variant variant);
+		[Version (since = "1.42")]
+		public void set_variations (string settings);
+		[Version (since = "1.42")]
+		public void set_variations_static (string settings);
 		public void set_weight (Pango.Weight weight);
 		public string to_filename ();
 		public string to_string ();
@@ -827,7 +833,8 @@ namespace Pango {
 		WEIGHT,
 		STRETCH,
 		SIZE,
-		GRAVITY
+		GRAVITY,
+		VARIATIONS
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_GRAVITY_", type_id = "pango_gravity_get_type ()")]
 	[Version (since = "1.16")]
