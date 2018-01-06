@@ -312,6 +312,7 @@ TESTS = \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
 	parser/template.vala \
+	parser/tuple.vala \
 	$(NULL)
 
 NON_NULL_TESTS = \
