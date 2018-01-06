@@ -9146,19 +9146,11 @@ namespace Gtk {
 		[Version (since = "2.4")]
 		public FontButton ();
 		[Version (since = "2.4")]
-		public bool get_show_size ();
-		[Version (since = "2.4")]
-		public bool get_show_style ();
-		[Version (since = "2.4")]
 		public unowned string get_title ();
 		[Version (since = "2.4")]
 		public bool get_use_font ();
 		[Version (since = "2.4")]
 		public bool get_use_size ();
-		[Version (since = "2.4")]
-		public void set_show_size (bool show_size);
-		[Version (since = "2.4")]
-		public void set_show_style (bool show_style);
 		[Version (since = "2.4")]
 		public void set_title (string title);
 		[Version (since = "2.4")]
@@ -9168,10 +9160,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.4")]
 		public FontButton.with_font (string fontname);
-		[Version (since = "2.4")]
-		public bool show_size { get; set; }
-		[Version (since = "2.4")]
-		public bool show_style { get; set; }
 		[Version (since = "2.4")]
 		public string title { get; set; }
 		[Version (since = "2.4")]
@@ -9667,7 +9655,7 @@ namespace Gtk {
 		[Version (since = "2.8")]
 		public void get_drag_dest_item (out Gtk.TreePath path, out Gtk.IconViewDropPosition pos);
 		[Version (since = "2.8")]
-		public bool get_item_at_pos (int x, int y, out Gtk.TreePath path, out Gtk.CellRenderer cell);
+		public bool get_item_at_pos (int x, int y, out Gtk.TreePath path, out unowned Gtk.CellRenderer cell);
 		[Version (since = "2.22")]
 		public int get_item_column (Gtk.TreePath path);
 		[Version (since = "2.6")]
@@ -14774,7 +14762,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_chooser_get_type ()")]
 	public interface FileChooser : GLib.Object {
 		[Version (since = "3.22")]
-		public void add_choice (string id, string label, [CCode (array_length = false, array_null_terminated = true, type = "const char**")] string[]? options, [CCode (array_length = false, array_null_terminated = true, type = "const char**")] string[]? option_labels);
+		public void add_choice (string id, string label, [CCode (array_length = false, array_null_terminated = true)] string[]? options, [CCode (array_length = false, array_null_terminated = true)] string[]? option_labels);
 		[Version (since = "2.4")]
 		public void add_filter (owned Gtk.FileFilter filter);
 		[Version (since = "2.4")]
@@ -14939,10 +14927,16 @@ namespace Gtk {
 		public abstract unowned Pango.FontFace? get_font_face ();
 		[Version (since = "3.2")]
 		public abstract unowned Pango.FontFamily? get_font_family ();
+		[Version (since = "3.94")]
+		public string get_font_features ();
 		[Version (since = "3.18")]
 		public abstract Pango.FontMap? get_font_map ();
 		[Version (since = "3.2")]
 		public abstract int get_font_size ();
+		[Version (since = "3.94")]
+		public string get_language ();
+		[Version (since = "3.94")]
+		public Gtk.FontChooserLevel get_level ();
 		[Version (since = "3.2")]
 		public string get_preview_text ();
 		[Version (since = "3.2")]
@@ -14955,6 +14949,8 @@ namespace Gtk {
 		public void set_font_desc (Pango.FontDescription font_desc);
 		[Version (since = "3.18")]
 		public abstract void set_font_map (Pango.FontMap? fontmap);
+		[Version (since = "3.94")]
+		public void set_level (Gtk.FontChooserLevel level);
 		[Version (since = "3.2")]
 		public void set_preview_text (string text);
 		[Version (since = "3.2")]
@@ -14963,6 +14959,15 @@ namespace Gtk {
 		public abstract string font { owned get; set; }
 		[ConcreteAccessor]
 		public abstract Pango.FontDescription font_desc { owned get; set; }
+		[ConcreteAccessor]
+		[Version (since = "3.94")]
+		public abstract string font_features { owned get; }
+		[ConcreteAccessor]
+		[Version (since = "3.94")]
+		public abstract string language { owned get; }
+		[ConcreteAccessor]
+		[Version (since = "3.94")]
+		public abstract Gtk.FontChooserLevel level { get; set; }
 		[ConcreteAccessor]
 		public abstract string preview_text { owned get; set; }
 		[ConcreteAccessor]
@@ -15677,6 +15682,12 @@ namespace Gtk {
 		URI,
 		DISPLAY_NAME,
 		MIME_TYPE
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FONT_CHOOSER_LEVEL_", type_id = "gtk_font_chooser_level_get_type ()")]
+	public enum FontChooserLevel {
+		FONT,
+		FACE,
+		FAMILY
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_LOOKUP_", type_id = "gtk_icon_lookup_flags_get_type ()")]
 	[Flags]
