@@ -10,7 +10,15 @@ AM_CPPFLAGS = \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	$(NULL)
 
-BUILT_SOURCES = vala.vala.stamp
+BUILT_SOURCES = vala.vala.stamp $(srcdir)/valaversion.vala
+
+$(srcdir)/valaversion.vala:
+	sed -e "s#\@VALA_MAJOR_VERSION\@#$(VALA_MAJOR_VERSION)#g" \
+		-e "s#\@VALA_MINOR_VERSION\@#$(VALA_MINOR_VERSION)#g" \
+		-e "s#\@VALA_MICRO_VERSION\@#$(VALA_MICRO_VERSION)#g" \
+		-e "s#\@API_VERSION\@#$(API_VERSION)#g" \
+		-e "s#\@PACKAGE_VERSION\@#$(PACKAGE_VERSION)#g" \
+		< $@.in > $@
 
 lib_LTLIBRARIES = \
 	libvala@PACKAGE_SUFFIX@.la \
@@ -163,6 +171,7 @@ libvala_la_VALASOURCES = \
 	valausingdirective.vala \
 	valavaluetype.vala \
 	valavariable.vala \
+	valaversion.vala \
 	valaversionattribute.vala \
 	valavoidtype.vala \
 	valawhilestatement.vala \
@@ -211,7 +220,7 @@ dist_vapi_DATA = libvala@PACKAGE_SUFFIX@.vapi
 libvala@PACKAGE_SUFFIX@.vapi: $(top_srcdir)/gee/gee.vapi $(top_srcdir)/vala/vala.vapi
 	cat $^ > $@
 
-EXTRA_DIST = $(libvala_la_VALASOURCES) vala.vapi vala.vala.stamp vala.h
+EXTRA_DIST = $(libvala_la_VALASOURCES) vala.vapi vala.vala.stamp vala.h valaversion.vala.in
 
 MAINTAINERCLEANFILES = \
 	vala.vapi \
