@@ -5611,18 +5611,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			CCodeExpression delegate_target = get_result_cexpression ("self");
 			delegate_target = convert_to_generic_pointer (delegate_target, get_this_type ());
 			if (expr_owned || delegate_type.is_called_once) {
-				if (get_this_type () != null) {
-					var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_this_type (), lambda.source_reference));
-					ref_call.add_argument (delegate_target);
-					delegate_target = ref_call;
-					set_delegate_target_destroy_notify (lambda, get_destroy_func_expression (get_this_type ()));
-				} else {
-					// in constructor
-					var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_ref"));
-					ref_call.add_argument (delegate_target);
-					delegate_target = ref_call;
-					set_delegate_target_destroy_notify (lambda, new CCodeIdentifier ("g_object_unref"));
-				}
+				var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_this_type (), lambda.source_reference));
+				ref_call.add_argument (delegate_target);
+				delegate_target = ref_call;
+				set_delegate_target_destroy_notify (lambda, get_destroy_func_expression (get_this_type ()));
 			} else {
 				set_delegate_target_destroy_notify (lambda, new CCodeConstant ("NULL"));
 			}
