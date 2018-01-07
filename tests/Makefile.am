@@ -317,6 +317,7 @@ TESTS = \
 	annotations/deprecated.vala \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
+	parser/do-statement.vala \
 	parser/template.vala \
 	parser/tuple.vala \
 	$(NULL)
