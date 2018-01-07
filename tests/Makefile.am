@@ -48,6 +48,10 @@ TESTS = \
 	basic-types/bug777697.test \
 	basic-types/bug787152.vala \
 	basic-types/bug788775.vala \
+	chainup/base-class-invalid.test \
+	chainup/base-enum-invalid.test \
+	chainup/base-invalid.test \
+	chainup/base-struct-invalid.test \
 	chainup/class-base.vala \
 	chainup/class-base-foo.vala \
 	chainup/class-object.vala \
