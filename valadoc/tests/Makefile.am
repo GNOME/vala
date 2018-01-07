@@ -28,6 +28,7 @@ AM_CFLAGS = \
 	-I$(top_srcdir)/ccode \
 	-I$(top_srcdir)/vala \
 	-I$(top_srcdir)/codegen \
+	$(COVERAGE_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \
 	$(LIBGVC_CFLAGS) \
@@ -63,6 +64,7 @@ driver_LDADD = \
 	$(top_builddir)/vala/libvala@PACKAGE_SUFFIX@.la \
 	$(top_builddir)/ccode/libvalaccode.la \
 	$(top_builddir)/codegen/libvalaccodegen.la \
+	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
 	$(GMODULE_LIBS) \
 	$(LIBGVC_LIBS) \
@@ -70,6 +72,7 @@ driver_LDADD = \
 
 driver.vala.stamp: $(driver_VALASOURCES) $(top_srcdir)/vala/libvala@PACKAGE_SUFFIX@.vapi $(top_srcdir)/libvaladoc/valadoc@PACKAGE_SUFFIX@.vapi
 	$(VALA_V)$(VALAC) \
+		$(COVERAGE_VALAFLAGS) \
 		$(VALAFLAGS) \
 		-C \
 		--vapidir $(top_srcdir)/vapi \
