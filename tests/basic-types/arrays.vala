@@ -227,6 +227,20 @@ void test_explicit_copying () {
 	assert (a0[1] == a1[1]);
 }
 
+void test_array_move () {
+	int[] a = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	assert (a[4] == 5);
+	a.move (4, 0, 5);
+	assert (a[4] == 9);
+}
+
+void test_array_resize () {
+	int[] a = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	assert (a[a.length - 1] == 9);
+	a.resize (5);
+	assert (a[a.length - 1] == 5);
+}
+
 void main () {
 	test_integer_array ();
 	test_string_array ();
@@ -240,4 +254,6 @@ void main () {
 	test_generics_array ();
 	test_void_array ();
 	test_explicit_copying ();
+	test_array_move ();
+	test_array_resize ();
 }
