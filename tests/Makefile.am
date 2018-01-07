@@ -114,6 +114,7 @@ TESTS = \
 	control-flow/nested-conditional.vala \
 	control-flow/switch.vala \
 	control-flow/sideeffects.vala \
+	control-flow/while-false.vala \
 	control-flow/bug628336.vala \
 	control-flow/bug639482.vala \
 	control-flow/bug652549.vala \
