@@ -6,6 +6,7 @@ AM_CFLAGS = \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
 	-DPACKAGE_DATADIR=\"$(libdir)/valadoc\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\" \
+	$(COVERAGE_CFLAGS) \
 	$(LIBGVC_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \
@@ -173,6 +174,7 @@ libvaladoc@PACKAGE_SUFFIX@_la_SOURCES = \
 valadoc@PACKAGE_SUFFIX@.vapi valadoc.h: libvaladoc.vala.stamp
 libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
 	$(VALA_V)$(VALAC) \
+		$(COVERAGE_VALAFLAGS) \
 		$(VALAFLAGS) \
 		--basedir $(srcdir) \
 		--directory $(builddir) \
@@ -193,6 +195,7 @@ libvaladoc@PACKAGE_SUFFIX@_la_LDFLAGS = \
 	$(NULL)
 
 libvaladoc@PACKAGE_SUFFIX@_la_LIBADD = \
+	$(COVERAGE_LIBS) \
 	$(LIBGVC_LIBS) \
 	$(GLIB_LIBS) \
 	$(GMODULE_LIBS) \
