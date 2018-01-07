@@ -1,0 +1,10 @@
+Invalid Code
+
+struct Foo {
+	public Foo () {
+		base ();
+	}
+}
+
+void main () {
+}
