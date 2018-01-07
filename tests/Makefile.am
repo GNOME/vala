@@ -178,6 +178,7 @@ TESTS = \
 	objects/chainup.vala \
 	objects/classes.vala \
 	objects/constructors.vala \
+	objects/dynamic.vala \
 	objects/generics.vala \
 	objects/initially-unowned.vala \
 	objects/fields.vala \
