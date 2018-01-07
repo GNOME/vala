@@ -319,6 +319,7 @@ TESTS = \
 	annotations/noaccessormethod.test \
 	parser/assignment.vala \
 	parser/do-statement.vala \
+	parser/preprocessor.vala \
 	parser/template.vala \
 	parser/tuple.vala \
 	$(NULL)
