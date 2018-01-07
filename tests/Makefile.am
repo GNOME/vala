@@ -318,6 +318,7 @@ TESTS = \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
 	parser/assignment.vala \
+	parser/continue-statement.vala \
 	parser/do-statement.vala \
 	parser/preprocessor.vala \
 	parser/template.vala \
