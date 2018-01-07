@@ -182,6 +182,7 @@ TESTS = \
 	objects/classes.vala \
 	objects/constructors.vala \
 	objects/generics.vala \
+	objects/initially-unowned.vala \
 	objects/fields.vala \
 	objects/interfaces.vala \
 	objects/methods.vala \
