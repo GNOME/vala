@@ -392,6 +392,12 @@ namespace GLib {
 		public static void set_default (GLib.Application? application);
 		public void set_flags (GLib.ApplicationFlags flags);
 		public void set_inactivity_timeout (uint inactivity_timeout);
+		[Version (since = "2.56")]
+		public void set_option_context_description (string? description);
+		[Version (since = "2.56")]
+		public void set_option_context_parameter_string (string? parameter_string);
+		[Version (since = "2.56")]
+		public void set_option_context_summary (string? summary);
 		[Version (since = "2.42")]
 		public void set_resource_base_path (string? resource_path);
 		[Version (since = "2.44")]
