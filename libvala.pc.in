@@ -5,10 +5,12 @@ bindir=@bindir@
 includedir=@includedir@
 datarootdir=@datarootdir@
 datadir=@datadir@
+pkgdatadir=@pkgdatadir@
+pkglibdir=@pkglibdir@
 vapidir=@datadir@/vala@PACKAGE_SUFFIX@/vapi
 
 vapigen=@bindir@/vapigen@PACKAGE_SUFFIX@
-gen_introspect=@libdir@/vala@PACKAGE_SUFFIX@/gen-introspect@PACKAGE_SUFFIX@
+gen_introspect=@pkglibdir@/gen-introspect@PACKAGE_SUFFIX@
 vala_gen_introspect=@bindir@/vala-gen-introspect@PACKAGE_SUFFIX@
 
 Name: Vala
