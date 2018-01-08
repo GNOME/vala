@@ -7,6 +7,7 @@ SUBDIRS = \
 	$(NULL)
 
 AM_CPPFLAGS = \
+	$(COVERAGE_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	-I$(top_srcdir)/gee \
 	-I$(top_srcdir)/ccode \
@@ -42,6 +43,7 @@ vapicheck_SOURCES = \
 
 vapigen.vala.stamp: $(vapigen_VALASOURCES)
 	$(VALA_V)$(VALAC) \
+		$(COVERAGE_VALAFLAGS) \
 		$(VALAFLAGS) \
 		-C \
 		--vapidir $(top_srcdir)/vapi \
@@ -54,6 +56,7 @@ vapigen.vala.stamp: $(vapigen_VALASOURCES)
 
 vapicheck.vala.stamp: $(vapicheck_VALASOURCES)
 	$(VALA_V)$(VALAC) \
+		$(COVERAGE_VALAFLAGS) \
 		$(VALAFLAGS) \
 		-C \
 		--vapidir $(top_srcdir)/vapi \
@@ -65,12 +68,14 @@ vapicheck.vala.stamp: $(vapicheck_VALASOURCES)
 	@touch $@
 
 vapigen_LDADD = \
+	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
 	$(top_builddir)/codegen/libvala@PACKAGE_SUFFIX@.la \
 	$(top_builddir)/gobject-introspection/libgidl.la \
 	$(NULL)
 
 vapicheck_LDADD = \
+	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
 	$(top_builddir)/codegen/libvala@PACKAGE_SUFFIX@.la \
 	$(top_builddir)/gobject-introspection/libgidl.la \
