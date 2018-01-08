@@ -133,7 +133,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		int args_index = -1;
 		foreach (CCodeParameter param in parameters) {
 			if (i > 0) {
-				writer.write_string (", ");
+				writer.write_string (",");
 				writer.write_newline ();
 				writer.write_nspaces (param_pos_begin);
 			}
