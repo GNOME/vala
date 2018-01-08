@@ -1,6 +1,21 @@
+Vala 0.39.4
+===========
+ * Various improvements and bug fixes:
+  - codegen
+    + Only add property-enum and GParamSpec-array for GObject classes
+    + Use g_enum/flags_to_string while targeting glib >= 2.54
+    + Add destroy param when invoking delegate returned by delegate [#792077]
+  - Don't write trailing space in function declarations/definitions [#688447]
+  - vala: Add pkgdatadir and pkglibdir to pkg-config file
+  - gidlparser: Update type qualifiers
+
+ * Bindings:
+  - gtk+-2.0/3.0: Don't hide user_data in Clipboard.set_with_data() [#792237]
+  - gtk+-3.0: Update to 3.22.26+6f26d0dc
+  - gtk+-4.0: Update to 3.93.0+6aeae2c8
+
 Vala 0.39.3
 ===========
-
  * Various bug fixes:
   - Fix chain-up regression with real non-null struct parameters [#791785]
   - Release taken references to CodeContext after using it [#712694] and keep
