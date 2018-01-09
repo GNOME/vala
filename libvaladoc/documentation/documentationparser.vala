@@ -395,7 +395,15 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 						push (taglet);
 						Rule? taglet_rule = taglet.get_parser_rule (multiline_run);
 						if (taglet_rule != null) {
-							_parser.push_rule (Rule.seq ({ TokenType.SPACE, taglet_rule }));
+							_parser.push_rule (
+								Rule.seq ({
+									Rule.one_of({
+										TokenType.SPACE,
+										TokenType.EOL
+									}),
+									taglet_rule
+								})
+							);
 						}
 					}),
 					TokenType.CLOSED_BRACE

@@ -51,7 +51,14 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 
 	public override Rule? get_parser_rule (Rule run_rule) {
 		return Rule.seq ({
-			Rule.option ({ Rule.many ({ TokenType.SPACE }) }),
+			Rule.option ({
+				Rule.many ({
+					Rule.one_of({
+						TokenType.SPACE,
+						TokenType.EOL
+					}),
+				}),
+			}),
 			TokenType.any_word ().action ((token) => { symbol_name = token.to_string (); }),
 			Rule.option ({
 				Rule.many ({
