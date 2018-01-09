@@ -19,6 +19,7 @@ namespace GLib {
 		public bool get_is_hidden ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_keywords ();
+		public string? get_locale_string (string key);
 		public bool get_nodisplay ();
 		public bool get_show_in (string desktop_env);
 		public unowned string get_startup_wm_class ();
@@ -170,6 +171,10 @@ namespace GLib {
 	public const string DESKTOP_APP_INFO_LOOKUP_EXTENSION_POINT_NAME;
 	[CCode (cheader_filename = "gio/gunixmounts.h", cname = "g_unix_is_mount_path_system_internal")]
 	public static bool is_mount_path_system_internal (string mount_path);
+	[CCode (cheader_filename = "gio/gunixmounts.h", cname = "g_unix_is_system_device_path")]
+	public static bool is_system_device_path (string device_path);
+	[CCode (cheader_filename = "gio/gunixmounts.h", cname = "g_unix_is_system_fs_type")]
+	public static bool is_system_fs_type (string fs_type);
 	[CCode (cheader_filename = "gio/gunixmounts.h", cname = "g_unix_mount_points_changed_since")]
 	public static bool mount_points_changed_since (uint64 time);
 	[CCode (cheader_filename = "gio/gunixmounts.h", cname = "g_unix_mounts_changed_since")]

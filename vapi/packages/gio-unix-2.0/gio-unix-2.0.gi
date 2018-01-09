@@ -7,6 +7,18 @@
 				<parameter name="mount_path" type="char*"/>
 			</parameters>
 		</function>
+		<function name="g_unix_is_system_device_path" symbol="g_unix_is_system_device_path">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="device_path" type="char*"/>
+			</parameters>
+		</function>
+		<function name="g_unix_is_system_fs_type" symbol="g_unix_is_system_fs_type">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="fs_type" type="char*"/>
+			</parameters>
+		</function>
 		<function name="g_unix_mount_at" symbol="g_unix_mount_at">
 			<return-type type="GUnixMountEntry*"/>
 			<parameters>
@@ -263,6 +275,13 @@
 				<return-type type="char**"/>
 				<parameters>
 					<parameter name="info" type="GDesktopAppInfo*"/>
+				</parameters>
+			</method>
+			<method name="get_locale_string" symbol="g_desktop_app_info_get_locale_string">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+					<parameter name="key" type="char*"/>
 				</parameters>
 			</method>
 			<method name="get_nodisplay" symbol="g_desktop_app_info_get_nodisplay">
