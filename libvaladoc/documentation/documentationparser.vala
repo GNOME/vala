@@ -548,6 +548,16 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 		// Block rules
 
+		Rule.Action reduce_paragraph = () => {
+			var head = (Paragraph) pop ();
+			((BlockContent) peek ()).content.add (head);
+
+			Text last_element = head.content.last () as Text;
+			if (last_element != null) {
+				last_element.content._chomp ();
+			}
+		};
+
 		Rule paragraph =
 			Rule.seq ({
 				Rule.option ({
@@ -563,15 +573,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			})
 			.set_name ("Paragraph")
 			.set_start (() => { push (_factory.create_paragraph ()); })
-			.set_reduce (() => {
-				var head = (Paragraph) pop ();
-				((BlockContent) peek ()).content.add (head);
-
-				Text last_element = head.content.last () as Text;
-				if (last_element != null) {
-					last_element.content._chomp ();
-				}
-			});
+			.set_reduce (reduce_paragraph);
 
 		Rule warning =
 			Rule.seq ({
@@ -876,7 +878,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				((Comment) peek ()).taglets.add (head);
 			});
 
-		Rule comment =
+		Rule ml_comment =
 			Rule.seq ({
 				TokenType.EOL,
 				Rule.option ({
@@ -885,6 +887,21 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				Rule.option ({
 					Rule.many ({ taglet })
 				})
+			})
+			.set_name ("MultiLineComment");
+
+		Rule sl_comment =
+			Rule.seq ({
+				run
+			})
+			.set_start (() => { push (_factory.create_paragraph ()); })
+			.set_reduce (reduce_paragraph)
+			.set_name ("SingleLineComment");
+
+		Rule comment =
+			Rule.one_of ({
+				ml_comment,
+				sl_comment
 			})
 			.set_name ("Comment")
 			.set_start (() => { push (_factory.create_comment ()); });
