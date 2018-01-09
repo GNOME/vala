@@ -25,40 +25,9 @@ using GLib;
 /**
  * Represents a for iteration statement in the source code.
  */
-public class Vala.ForStatement : CodeNode, Statement {
-	/**
-	 * Specifies the loop condition.
-	 */
-	public Expression? condition {
-		get {
-			return _condition;
-		}
-		private set {
-			_condition = value;
-			if (_condition != null) {
-				_condition.parent_node = this;
-			}
-		}
-	}
-
-	/**
-	 * Specifies the loop body.
-	 */
-	public Block body {
-		get {
-			return _body;
-		}
-		private set {
-			_body = value;
-			_body.parent_node = this;
-		}
-	}
-
+public class Vala.ForStatement : Loop, Statement {
 	private List<Expression> initializer = new ArrayList<Expression> ();
 	private List<Expression> iterator = new ArrayList<Expression> ();
-
-	private Expression _condition;
-	private Block _body;
 
 	/**
 	 * Creates a new for statement.
@@ -69,9 +38,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 	 * @return                 newly created for statement
 	 */
 	public ForStatement (Expression? condition, Block body, SourceReference? source_reference = null) {
-		this.condition = condition;
-		this.body = body;
-		this.source_reference = source_reference;
+		base (condition, body, source_reference);
 	}
 
 	/**
@@ -137,9 +104,8 @@ public class Vala.ForStatement : CodeNode, Statement {
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {
-		if (condition == old_node) {
-			condition = new_node;
-		}
+		base.replace_expression (old_node, new_node);
+
 		for (int i=0; i < initializer.size; i++) {
 			if (initializer[i] == old_node) {
 				initializer[i] = new_node;
@@ -197,7 +163,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 		body.insert_statement (0, first_if);
 		body.insert_statement (1, new ExpressionStatement (new Assignment (new MemberAccess.simple (first_local.name, source_reference), new BooleanLiteral (false, source_reference), AssignmentOperator.SIMPLE, source_reference), source_reference));
 
-		block.add_statement (new Loop (body, source_reference));
+		block.add_statement (new LoopStatement (body, source_reference));
 
 		unowned Block parent_block = (Block) parent_node;
 		parent_block.replace_statement (this, block);

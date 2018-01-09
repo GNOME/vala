@@ -297,7 +297,7 @@ public abstract class Vala.CodeVisitor {
 	 *
 	 * @param stmt a loop
 	 */
-	public virtual void visit_loop (Loop stmt) {
+	public virtual void visit_loop_statement (LoopStatement stmt) {
 	}
 
 	/**

@@ -752,7 +752,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		jump_stack.remove_at (jump_stack.size - 1);
 	}
 
-	public override void visit_loop (Loop stmt) {
+	public override void visit_loop_statement (LoopStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}

@@ -562,7 +562,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		label.accept_children (this);
 	}
 
-	public override void visit_loop (Loop stmt) {
+	public override void visit_loop_statement (LoopStatement stmt) {
 		if (stmt.checked) {
 			return;
 		}

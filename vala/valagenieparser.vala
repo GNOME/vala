@@ -2111,7 +2111,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		expect_terminator ();
 
-		return new DoStatement (body, condition, get_src (begin));
+		return new DoStatement (condition, body, get_src (begin));
 	}
 
 

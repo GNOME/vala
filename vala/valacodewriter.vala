@@ -1081,7 +1081,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 	}
 
-	public override void visit_loop (Loop stmt) {
+	public override void visit_loop_statement (LoopStatement stmt) {
 		write_indent ();
 		write_string ("loop");
 		stmt.body.accept (this);

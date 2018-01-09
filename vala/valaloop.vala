@@ -1,6 +1,6 @@
 /* valaloop.vala
  *
- * Copyright (C) 2009-2010  Jürg Billeter
+ * Copyright (C) 2021  Rico Tzschichholz
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,15 +17,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
- * 	Jürg Billeter <j@bitron.ch>
+ * 	Rico Tzschichholz <ricotz@ubuntu.com>
  */
-
-using GLib;
 
 /**
- * Represents an endless loop.
+ * Base class for all loop statements.
  */
-public class Vala.Loop : CodeNode, Statement {
+public abstract class Vala.Loop : CodeNode {
+	/**
+	 * Specifies the loop condition.
+	 */
+	public Expression? condition {
+		get {
+			return _condition;
+		}
+		private set {
+			_condition = value;
+			if (_condition != null) {
+				_condition.parent_node = this;
+			}
+		}
+	}
+
 	/**
 	 * Specifies the loop body.
 	 */
@@ -33,52 +46,24 @@ public class Vala.Loop : CodeNode, Statement {
 		get {
 			return _body;
 		}
-		set {
+		private set {
 			_body = value;
 			_body.parent_node = this;
 		}
 	}
 
-	private Block _body;
+	Expression _condition;
+	Block _body;
 
-	/**
-	 * Creates a new loop.
-	 *
-	 * @param body             loop body
-	 * @param source_reference reference to source code
-	 * @return                 newly created while statement
-	 */
-	public Loop (Block body, SourceReference? source_reference = null) {
+	protected Loop (Expression? condition, Block body, SourceReference? source_reference = null) {
+		this.condition = condition;
 		this.body = body;
 		this.source_reference = source_reference;
 	}
 
-	public override void accept (CodeVisitor visitor) {
-		visitor.visit_loop (this);
-	}
-
-	public override void accept_children (CodeVisitor visitor) {
-		body.accept (visitor);
-	}
-
-	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
-		body.get_error_types (collection, source_reference);
-	}
-
-	public override bool check (CodeContext context) {
-		if (checked) {
-			return !error;
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		if (condition == old_node) {
+			condition = new_node;
 		}
-
-		checked = true;
-
-		body.check (context);
-
-		return !error;
-	}
-
-	public override void emit (CodeGenerator codegen) {
-		codegen.visit_loop (this);
 	}
 }
-

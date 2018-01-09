@@ -25,48 +25,17 @@ using GLib;
 /**
  * Represents a do iteration statement in the source code.
  */
-public class Vala.DoStatement : CodeNode, Statement {
-	/**
-	 * Specifies the loop body.
-	 */
-	public Block body {
-		get {
-			return _body;
-		}
-		private set {
-			_body = value;
-			_body.parent_node = this;
-		}
-	}
-
-	/**
-	 * Specifies the loop condition.
-	 */
-	public Expression condition {
-		get {
-			return _condition;
-		}
-		private set {
-			_condition = value;
-			_condition.parent_node = this;
-		}
-	}
-
-	private Expression _condition;
-	private Block _body;
-
+public class Vala.DoStatement : Loop, Statement {
 	/**
 	 * Creates a new do statement.
 	 *
-	 * @param body              loop body
 	 * @param condition         loop condition
+	 * @param body              loop body
 	 * @param source_reference  reference to source code
 	 * @return                  newly created do statement
 	 */
-	public DoStatement (Block body, Expression condition, SourceReference? source_reference = null) {
-		this.condition = condition;
-		this.source_reference = source_reference;
-		this.body = body;
+	public DoStatement (Expression condition, Block body, SourceReference? source_reference = null) {
+		base (condition, body, source_reference);
 	}
 
 	public override void accept (CodeVisitor visitor) {
@@ -81,12 +50,6 @@ public class Vala.DoStatement : CodeNode, Statement {
 		visitor.visit_end_full_expression (condition);
 	}
 
-	public override void replace_expression (Expression old_node, Expression new_node) {
-		if (condition == old_node) {
-			condition = new_node;
-		}
-	}
-
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
@@ -98,7 +61,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 
 		// do not generate variable and if block if condition is always true
 		if (condition.is_always_true ()) {
-			var loop = new Loop (body, source_reference);
+			var loop = new LoopStatement (body, source_reference);
 
 			unowned Block parent_block = (Block) parent_node;
 			parent_block.replace_statement (this, loop);
@@ -127,7 +90,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 		body.insert_statement (0, first_if);
 		body.insert_statement (1, new ExpressionStatement (new Assignment (new MemberAccess.simple (first_local.name, source_reference), new BooleanLiteral (false, source_reference), AssignmentOperator.SIMPLE, source_reference), source_reference));
 
-		block.add_statement (new Loop (body, source_reference));
+		block.add_statement (new LoopStatement (body, source_reference));
 
 		unowned Block parent_block = (Block) parent_node;
 		parent_block.replace_statement (this, block);

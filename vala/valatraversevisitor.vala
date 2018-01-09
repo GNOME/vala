@@ -198,7 +198,7 @@ public class Vala.TraverseVisitor : CodeVisitor {
 		}
 	}
 
-	public override void visit_loop (Loop loop) {
+	public override void visit_loop_statement (LoopStatement loop) {
 		if (func (loop) == TraverseStatus.CONTINUE) {
 			loop.accept_children (this);
 		}

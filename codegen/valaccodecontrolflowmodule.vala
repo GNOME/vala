@@ -205,7 +205,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		}
 	}
 
-	public override void visit_loop (Loop stmt) {
+	public override void visit_loop_statement (LoopStatement stmt) {
 		if (context.profile == Profile.GOBJECT) {
 			ccode.open_while (new CCodeConstant ("TRUE"));
 		} else {

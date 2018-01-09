@@ -2124,7 +2124,7 @@ public class Vala.Parser : CodeVisitor {
 		var condition = parse_expression ();
 		expect (TokenType.CLOSE_PARENS);
 		expect (TokenType.SEMICOLON);
-		return new DoStatement (body, condition, get_src (begin));
+		return new DoStatement (condition, body, get_src (begin));
 	}
 
 	Statement parse_for_statement () throws ParseError {

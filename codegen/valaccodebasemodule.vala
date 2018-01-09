@@ -3950,13 +3950,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		append_scope_free (sym, stop_at);
 
 		if (jump_stmt is BreakStatement) {
-			if (b.parent_node is Loop ||
+			if (b.parent_node is LoopStatement ||
 			    b.parent_node is ForeachStatement ||
 			    b.parent_node is SwitchStatement) {
 				return;
 			}
 		} else if (jump_stmt is ContinueStatement) {
-			if (b.parent_node is Loop ||
+			if (b.parent_node is LoopStatement ||
 			    b.parent_node is ForeachStatement) {
 				return;
 			}

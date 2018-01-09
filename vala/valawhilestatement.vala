@@ -25,36 +25,7 @@ using GLib;
 /**
  * Represents a while iteration statement in the source code.
  */
-public class Vala.WhileStatement : CodeNode, Statement {
-	/**
-	 * Specifies the loop condition.
-	 */
-	public Expression condition {
-		get {
-			return _condition;
-		}
-		private set {
-			_condition = value;
-			_condition.parent_node = this;
-		}
-	}
-
-	/**
-	 * Specifies the loop body.
-	 */
-	public Block body {
-		get {
-			return _body;
-		}
-		private set {
-			_body = value;
-			_body.parent_node = this;
-		}
-	}
-
-	private Expression _condition;
-	private Block _body;
-
+public class Vala.WhileStatement : Loop, Statement {
 	/**
 	 * Creates a new while statement.
 	 *
@@ -64,9 +35,7 @@ public class Vala.WhileStatement : CodeNode, Statement {
 	 * @return                  newly created while statement
 	 */
 	public WhileStatement (Expression condition, Block body, SourceReference? source_reference = null) {
-		this.body = body;
-		this.source_reference = source_reference;
-		this.condition = condition;
+		base (condition, body, source_reference);
 	}
 
 	public override void accept (CodeVisitor visitor) {
@@ -79,12 +48,6 @@ public class Vala.WhileStatement : CodeNode, Statement {
 		visitor.visit_end_full_expression (condition);
 
 		body.accept (visitor);
-	}
-
-	public override void replace_expression (Expression old_node, Expression new_node) {
-		if (condition == old_node) {
-			condition = new_node;
-		}
 	}
 
 	public override bool check (CodeContext context) {
@@ -109,7 +72,7 @@ public class Vala.WhileStatement : CodeNode, Statement {
 			body.insert_statement (0, if_stmt);
 		}
 
-		var loop = new Loop (body, source_reference);
+		var loop = new LoopStatement (body, source_reference);
 
 		unowned Block parent_block = (Block) parent_node;
 		parent_block.replace_statement (this, loop);
