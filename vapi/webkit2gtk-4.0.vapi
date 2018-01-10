@@ -294,7 +294,10 @@ namespace WebKit {
 	public class FormSubmissionRequest : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected FormSubmissionRequest ();
-		public unowned GLib.HashTable<void*,void*> get_text_fields ();
+		[Version (deprecated = true, deprecated_since = "2.20.")]
+		public unowned GLib.HashTable<void*,void*>? get_text_fields ();
+		[Version (since = "2.20")]
+		public bool list_text_fields (out unowned GLib.GenericArray<string> field_names, out unowned GLib.GenericArray<string> field_values);
 		public void submit ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_geolocation_permission_request_get_type ()")]
@@ -1134,7 +1137,10 @@ namespace WebKit {
 		[Version (since = "2.8")]
 		public virtual signal bool show_notification (WebKit.Notification notification);
 		public virtual signal void submit_form (WebKit.FormSubmissionRequest request);
+		[Version (deprecated = true, deprecated_since = "2.20")]
 		public virtual signal bool web_process_crashed ();
+		[Version (since = "2.20")]
+		public virtual signal void web_process_terminated (WebKit.WebProcessTerminationReason reason);
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_web_view_base_get_type ()")]
 	public class WebViewBase : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -1462,6 +1468,12 @@ namespace WebKit {
 	public enum UserStyleLevel {
 		USER,
 		AUTHOR
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_WEB_PROCESS_", type_id = "webkit_web_process_termination_reason_get_type ()")]
+	[Version (since = "2.20")]
+	public enum WebProcessTerminationReason {
+		CRASHED,
+		EXCEEDED_MEMORY_LIMIT
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_WEBSITE_DATA_", type_id = "webkit_website_data_types_get_type ()")]
 	[Flags]
