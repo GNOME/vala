@@ -3032,8 +3032,10 @@ namespace WebKit {
 		[Version (since = "2.16")]
 		public signal void form_controls_associated (GLib.GenericArray<WebKit.DOM.Element> elements);
 		public signal bool send_request (WebKit.URIRequest request, WebKit.URIResponse redirected_response);
+		[Version (since = "2.20")]
+		public signal void will_submit_form (WebKit.DOM.HTMLFormElement form, WebKit.FormSubmissionStep step, WebKit.Frame source_frame, WebKit.Frame target_frame, GLib.GenericArray<string> text_field_names, GLib.GenericArray<string> text_field_values);
 	}
-	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_CONSOLE_MESSAGE_LEVEL_", has_type_id = false)]
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_CONSOLE_MESSAGE_LEVEL_", type_id = "webkit_console_message_level_get_type ()")]
 	[Version (since = "2.12")]
 	public enum ConsoleMessageLevel {
 		INFO,
@@ -3042,7 +3044,7 @@ namespace WebKit {
 		ERROR,
 		DEBUG
 	}
-	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_CONSOLE_MESSAGE_SOURCE_", has_type_id = false)]
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_CONSOLE_MESSAGE_SOURCE_", type_id = "webkit_console_message_source_get_type ()")]
 	[Version (since = "2.12")]
 	public enum ConsoleMessageSource {
 		JAVASCRIPT,
@@ -3098,6 +3100,12 @@ namespace WebKit {
 		DOWNLOAD_VIDEO_TO_DISK,
 		DOWNLOAD_AUDIO_TO_DISK,
 		CUSTOM
+	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_FORM_SUBMISSION_WILL_", type_id = "webkit_form_submission_step_get_type ()")]
+	[Version (since = "2.20")]
+	public enum FormSubmissionStep {
+		SEND_DOM_EVENT,
+		COMPLETE
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_HIT_TEST_RESULT_CONTEXT_", has_type_id = false)]
 	[Flags]
