@@ -65,12 +65,16 @@ namespace Wnck {
 	public class Pager : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Pager ();
+		[Version (since = "3.24.0")]
+		public bool get_wrap_on_scroll ();
 		public void set_display_mode (Wnck.PagerDisplayMode mode);
 		public bool set_n_rows (int n_rows);
 		public bool set_orientation (Gtk.Orientation orientation);
 		[Version (since = "2.2")]
 		public void set_shadow_type (Gtk.ShadowType shadow_type);
 		public void set_show_all (bool show_all_workspaces);
+		[Version (since = "3.24.0")]
+		public void set_wrap_on_scroll (bool wrap_on_scroll);
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_screen_get_type ()")]
 	public class Screen : GLib.Object {
@@ -143,6 +147,8 @@ namespace Wnck {
 	public class Tasklist : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Tasklist ();
+		[Version (since = "3.24.0")]
+		public bool get_scroll_enabled ();
 		public int get_size_hint_list (int n_elements);
 		[Version (since = "2.12")]
 		public void set_button_relief (Gtk.ReliefStyle relief);
@@ -153,6 +159,8 @@ namespace Wnck {
 		public void set_middle_click_close (bool middle_click_close);
 		[Version (since = "3.4.6")]
 		public void set_orientation (Gtk.Orientation orient);
+		[Version (since = "3.24.0")]
+		public void set_scroll_enabled (bool scroll_enabled);
 		public void set_switch_workspace_on_unminimize (bool switch_workspace_on_unminimize);
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_window_get_type ()")]
