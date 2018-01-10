@@ -245,8 +245,6 @@ Notebook
   .insert_page#virtual_method.tab_label nullable
   .insert_page#virtual_method.menu_label nullable
   .insert_page_menu skip
-PlacesSidebar
-  .show_starred_location#signal name="on_show_starred_location"
 TreeView
   .row_expanded#method name="is_row_expanded"
 Widget

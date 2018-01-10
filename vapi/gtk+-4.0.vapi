@@ -5185,7 +5185,7 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected DrawingContext ();
 		[Version (since = "3.22")]
-		public unowned Cairo.Context get_cairo_context ();
+		public unowned Cairo.Context? get_cairo_context ();
 		[Version (since = "3.22")]
 		public Cairo.Region? get_clip ();
 		[Version (since = "3.90")]
@@ -11010,91 +11010,6 @@ namespace Gtk {
 		[Version (since = "2.12")]
 		public void to_key_file (GLib.KeyFile key_file, string group_name);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_places_sidebar_get_type ()")]
-	public class PlacesSidebar : Gtk.ScrolledWindow, Atk.Implementor, Gtk.Buildable {
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Version (since = "3.10")]
-		public PlacesSidebar ();
-		[Version (since = "3.10")]
-		public void add_shortcut (GLib.File location);
-		[Version (since = "3.12")]
-		public bool get_local_only ();
-		[Version (since = "3.10")]
-		public GLib.File? get_location ();
-		[Version (since = "3.10")]
-		public GLib.File? get_nth_bookmark (int n);
-		[Version (since = "3.10")]
-		public Gtk.PlacesOpenFlags get_open_flags ();
-		[Version (since = "3.10")]
-		public bool get_show_desktop ();
-		[Version (since = "3.14")]
-		public bool get_show_enter_location ();
-		[Version (since = "3.18")]
-		public bool get_show_other_locations ();
-		[Version (since = "3.18")]
-		public bool get_show_recent ();
-		[Version (since = "3.22.26")]
-		public bool get_show_starred_location ();
-		[Version (since = "3.18")]
-		public bool get_show_trash ();
-		[Version (since = "3.10")]
-		public GLib.SList<GLib.File> list_shortcuts ();
-		[Version (since = "3.10")]
-		public void remove_shortcut (GLib.File location);
-		[Version (since = "3.18")]
-		public void set_drop_targets_visible (bool visible, Gdk.DragContext context);
-		[Version (since = "3.12")]
-		public void set_local_only (bool local_only);
-		[Version (since = "3.10")]
-		public void set_location (GLib.File? location);
-		[Version (since = "3.10")]
-		public void set_open_flags (Gtk.PlacesOpenFlags flags);
-		[Version (since = "3.10")]
-		public void set_show_desktop (bool show_desktop);
-		[Version (since = "3.14")]
-		public void set_show_enter_location (bool show_enter_location);
-		[Version (since = "3.18")]
-		public void set_show_other_locations (bool show_other_locations);
-		[Version (since = "3.18")]
-		public void set_show_recent (bool show_recent);
-		[Version (since = "3.22.26")]
-		public void set_show_starred_location (bool show_starred_location);
-		[Version (since = "3.18")]
-		public void set_show_trash (bool show_trash);
-		public bool local_only { get; set; }
-		public GLib.File location { owned get; set; }
-		public Gtk.PlacesOpenFlags open_flags { get; set; }
-		[NoAccessorMethod]
-		[Version (since = "3.18")]
-		public bool populate_all { get; set; }
-		public bool show_desktop { get; set; }
-		public bool show_enter_location { get; set; }
-		public bool show_other_locations { get; set; }
-		public bool show_recent { get; set; }
-		public bool show_starred_location { get; set; }
-		public bool show_trash { get; set; }
-		[Version (since = "3.10")]
-		public signal int drag_action_ask (int actions);
-		[Version (since = "3.10")]
-		public signal int drag_action_requested (Gdk.DragContext context, GLib.File dest_file, GLib.List<GLib.File> source_file_list);
-		[Version (since = "3.10")]
-		public signal void drag_perform_drop (GLib.File dest_file, GLib.List<GLib.File> source_file_list, int action);
-		[Version (since = "3.20")]
-		public signal void mount (GLib.MountOperation mount_operation);
-		[CCode (cname = "show-starred-location")]
-		[Version (since = "3.22.26")]
-		public signal void on_show_starred_location (Gtk.PlacesOpenFlags flags);
-		[Version (since = "3.10")]
-		public signal void open_location (GLib.File location, Gtk.PlacesOpenFlags open_flags);
-		[Version (since = "3.10")]
-		public signal void populate_popup (Gtk.Widget container, GLib.File? selected_item, GLib.Volume? selected_volume);
-		[Version (since = "3.10")]
-		public signal void show_error_message (string primary, string secondary);
-		[Version (since = "3.20")]
-		public signal void show_other_locations_with_flags (Gtk.PlacesOpenFlags open_flags);
-		[Version (since = "3.20")]
-		public signal void unmount (GLib.MountOperation mount_operation);
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_popover_get_type ()")]
 	public class Popover : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -15572,12 +15487,10 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DEBUG_", type_id = "gtk_debug_flag_get_type ()")]
 	[Flags]
 	public enum DebugFlag {
-		MISC,
 		TEXT,
 		TREE,
 		UPDATES,
 		KEYBINDINGS,
-		MULTIHEAD,
 		MODULES,
 		GEOMETRY,
 		ICONTHEME,
