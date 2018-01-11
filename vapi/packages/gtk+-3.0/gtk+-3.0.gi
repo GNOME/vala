@@ -17545,6 +17545,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkActionable"/>
 			</implements>
 			<method name="changed" symbol="gtk_list_box_row_changed">
 				<return-type type="void"/>
