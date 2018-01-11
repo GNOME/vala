@@ -2,6 +2,9 @@
 // but may be some day.
 ////////////////////////////////////////////////////////////////////
 
+*.event type="Gdk.Event"
+*.*.event type="Gdk.Event"
+
 // G-I doesn't support per-sybmol includes
 * cheader_filename="gtk/gtk.h"
 *Accessible cheader_filename="gtk/gtk.h,gtk/gtk-a11y.h"
@@ -17,7 +20,6 @@ Border struct
 FileFilterInfo struct=false
 FixedChild struct=false
 Requisition struct
-TargetEntry struct
 TextIter struct
 TreeIter struct
 
@@ -139,18 +141,11 @@ TreeModel
   .ref_node#virtual_method virtual
   .unref_node#virtual_method virtual
 
-// G-I can't handle delegates w/o targets
-Clipboard
-  .set_with_data skip=false
-  .set_with_owner skip=false
-
 // Unregistered callback types
 Builder
   .lookup_callback_symbol skip=false
 
 // Bug #: Default values
-Button
-  .new_from_icon_name.size default=Gtk.IconSize.BUTTON
 CellAreaBox
   .pack_*.align default=false
   .pack_*.fixed default=true
@@ -180,7 +175,6 @@ Notebook
   .append_page.tab_label default=null
   .prepend_page.tab_label default=null
 ScaleButton
-  .new.size type="Gtk.IconSize"
   .new.min default=0.0
   .new.max default=100.0
   .new.step default=2.0
@@ -232,8 +226,6 @@ RecentFilterInfo
   .groups nullable
 
 // Skipped for G-I, but usable from Vala
-Clipboard
-  .get_selection skip=false
 FlowBox
   .bind_model skip=false
   .bind_model.create_widget_func nullable
@@ -253,8 +245,6 @@ Notebook
   .insert_page#virtual_method.tab_label nullable
   .insert_page#virtual_method.menu_label nullable
   .insert_page_menu skip
-ToolShell
-  .get_icon_size#method skip
 TreeView
   .row_expanded#method name="is_row_expanded"
 Widget
@@ -279,19 +269,12 @@ TreeModel
   .filter_new parent="Gtk.TreeModelFilter" name="new" symbol_type="constructor"
   .sort_new_with_model parent="Gtk.TreeModelSort" name="new_with_model" symbol_type="constructor"
 
-// These aren't actually used publicly anywhere.
-TargetPair skip
-
 // Vala-specific, not really bugs
 /////////////////////////////////
 
 // Backwards compatibility
 AccelGroup
   .find type="Gtk.AccelKey*"
-Button
-  .new_from_icon_name.size type="Gtk.IconSize"
-ClipboardRichTextReceivedFunc
-  .text type="uint8[]?" array_length_idx=3
 CssProvider
   .load_from_data name="load_from_buffer"
 EntryBuffer
@@ -299,8 +282,6 @@ EntryBuffer
   .emit_inserted_text.chars type="uint8[]" array_length_idx=2
   .insert_text.chars type="uint8[]" array_length_idx=2
   .set_text.chars type="uint8[]" array_length_idx=1
-Image
-  .*.size type="Gtk.IconSize"
 InfoBar
   .get_content_area type="unowned Gtk.Container"
 ListStore
@@ -329,11 +310,6 @@ TextBuffer
 TextView
   .get_iter_location return_void
   .get_visible_rect return_void
-ToolItem
-  .get_icon_size type="Gtk.IconSize"
-ToolPalette
-  .get_icon_size type="Gtk.IconSize"
-  .set_icon_size.icon_size type="Gtk.IconSize"
 TreePath
   .free destroys_instance
   .get_indices skip
@@ -350,15 +326,12 @@ TreeView
   .get_cell_area return_void
   .get_visible_rect return_void
 Widget
-  .delete_event.event type="Gdk.EventAny"
-  .destroy_event.event type="Gdk.EventAny"
   .drag_*#method parent="Gtk" symbol_type="function"
   .get_allocation return_void
   .get_clip return_void
   .grab_add parent="Gtk" symbol_type="function"
   .grab_remove parent="Gtk" symbol_type="function"
   .intersect.intersection unowned=false nullable default=null
-  .touch_event.event type="Gdk.EventTouch"
   .size_allocate return_void
 WidgetPath
   .free destroys_instance
@@ -367,7 +340,6 @@ TreeModel
   .rows_reordered skip
 BindingArg
   .d.* skip
-icon_size_*#function skip
 rc_property_parse_* skip
 show_about_dialog skip=false
 test_init skip=false
@@ -387,9 +359,6 @@ Notebook
   .create_window skip=false
 PrintOperation
   .create_custom_widget skip=false
-Widget
-  .drag_dest_set.targets array_length_idx=3
-  .drag_source_set.targets array_length_idx=3
 
 // Not completely sure
 Button
@@ -406,6 +375,8 @@ FileChooser
 FileChooserNative
   .accept_label nullable
   .cancel_label nullable
+IconView
+  .get_item_at_pos.cell type="unowned Gtk.CellRenderer"
 Menu
   .get_for_attach_widget type="unowned GLib.List<Gtk.Menu>"
   .popped_up.*_rect type="Gdk.Rectangle"

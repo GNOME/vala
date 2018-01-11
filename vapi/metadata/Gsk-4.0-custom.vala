@@ -58,6 +58,9 @@ namespace Gsk {
 	public class TextNode : Gsk.RenderNode {
 	}
 	[CCode (cname = "GskRenderNode")]
+	public class TextureNode : Gsk.RenderNode {
+	}
+	[CCode (cname = "GskRenderNode")]
 	public class TransformNode : Gsk.RenderNode {
 	}
 }
