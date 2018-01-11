@@ -3206,7 +3206,7 @@ namespace Gtk {
 		protected ListBoxAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_list_box_row_get_type ()")]
-	public class ListBoxRow : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
+	public class ListBoxRow : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.Actionable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ListBoxRow ();
 		public void changed ();
