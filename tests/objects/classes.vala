@@ -10,9 +10,6 @@ class CompactClassWithDestructor {
 	~CompactClassWithDestructor () {
 		stdout.printf ("~CompactClassWithDestructor\n");
 	}
-
-	/* FIXME bug 533977 */
-	public char dummy;
 }
 
 class DerivedClass : CompactClass {
