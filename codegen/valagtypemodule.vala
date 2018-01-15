@@ -225,11 +225,6 @@ public class Vala.GTypeModule : GErrorModule {
 			instance_struct.add_field ("volatile int", "ref_count");
 		}
 
-		if (cl.is_compact && cl.base_class == null && cl.get_fields ().size == 0) {
-			// add dummy member, C doesn't allow empty structs
-			instance_struct.add_field ("int", "dummy");
-		}
-
 		if (is_gtypeinstance) {
 			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %sPrivate".printf (instance_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (get_ccode_name (cl)))));
 
@@ -245,8 +240,14 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
+		bool has_struct_member = false;
 		foreach (Method m in cl.get_methods ()) {
-			generate_virtual_method_declaration (m, decl_space, type_struct);
+			if (!cl.is_compact) {
+				generate_virtual_method_declaration (m, decl_space, type_struct);
+			} else if (cl.is_compact && cl.base_class == null) {
+				generate_virtual_method_declaration (m, decl_space, instance_struct);
+				has_struct_member |= (m.is_abstract || m.is_virtual);
+			}
 		}
 
 		foreach (Signal sig in cl.get_signals ()) {
@@ -290,6 +291,11 @@ public class Vala.GTypeModule : GErrorModule {
 				var vdecl = new CCodeDeclaration (creturn_type);
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
+
+				if (cl.is_compact && cl.base_class == null) {
+					instance_struct.add_declaration (vdecl);
+					has_struct_member = true;
+				}
 			}
 			if (prop.set_accessor != null) {
 				CCodeParameter cvalueparam;
@@ -315,6 +321,11 @@ public class Vala.GTypeModule : GErrorModule {
 				var vdecl = new CCodeDeclaration ("void");
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
+
+				if (cl.is_compact && cl.base_class == null) {
+					instance_struct.add_declaration (vdecl);
+					has_struct_member = true;
+				}
 			}
 		}
 
@@ -325,6 +336,7 @@ public class Vala.GTypeModule : GErrorModule {
 					generate_type_declaration (f.variable_type, decl_space);
 
 					instance_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers, get_ccode_declarator_suffix (f.variable_type));
+					has_struct_member = true;
 					if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
 						// create fields to store array dimensions
 						var array_type = (ArrayType) f.variable_type;
@@ -360,6 +372,11 @@ public class Vala.GTypeModule : GErrorModule {
 					type_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers);
 				}
 			}
+		}
+
+		if (cl.is_compact && cl.base_class == null && !has_struct_member) {
+			// add dummy member, C doesn't allow empty structs
+			instance_struct.add_field ("int", "dummy");
 		}
 
 		if (!cl.is_compact || cl.base_class == null || is_gsource) {
@@ -592,7 +609,7 @@ public class Vala.GTypeModule : GErrorModule {
 			begin_class_finalize_function (cl);
 			begin_finalize_function (cl);
 		} else {
-			if (cl.base_class == null || cl.base_class == gsource_type) {
+			if (cl.is_compact || cl.base_class == null || cl.base_class == gsource_type) {
 				begin_instance_init_function (cl);
 				begin_finalize_function (cl);
 			}
@@ -735,8 +752,7 @@ public class Vala.GTypeModule : GErrorModule {
 				cfile.add_function (unref_fun);
 			}
 		} else {
-			if (cl.base_class == null || cl.base_class == gsource_type) {
-				// derived compact classes do not have fields
+			if (cl.is_compact || cl.base_class == null || cl.base_class == gsource_type) {
 				add_instance_init_function (cl);
 				add_finalize_function (cl);
 			}
@@ -1568,6 +1584,49 @@ public class Vala.GTypeModule : GErrorModule {
 			// Add declaration, since the instance_init function is explicitly called
 			// by the creation methods
 			cfile.add_function_declaration (func);
+
+			// connect overridden methods
+			foreach (Method m in cl.get_methods ()) {
+				if (m.base_method == null) {
+					continue;
+				}
+				var base_type = (ObjectTypeSymbol) m.base_method.parent_symbol;
+
+				// there is currently no default handler for abstract async methods
+				if (!m.is_abstract || !m.coroutine) {
+					CCodeExpression cfunc = new CCodeIdentifier (get_ccode_real_name (m));
+					cfunc = cast_method_pointer (m.base_method, cfunc, base_type, (m.coroutine ? 1 : 3));
+					var ccast = new CCodeCastExpression (new CCodeIdentifier ("self"), "%s *".printf (get_ccode_name (base_type)));
+					func.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_vfunc_name (m.base_method)), cfunc);
+
+					if (m.coroutine) {
+						cfunc = new CCodeIdentifier (get_ccode_finish_real_name (m));
+						cfunc = cast_method_pointer (m.base_method, cfunc, base_type, 2);
+						ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_finish_vfunc_name (m.base_method)), cfunc);
+					}
+				}
+			}
+
+			// connect overridden properties
+			foreach (Property prop in cl.get_properties ()) {
+				if (prop.base_property == null) {
+					continue;
+				}
+				var base_type = prop.base_property.parent_symbol;
+
+				var ccast = new CCodeCastExpression (new CCodeIdentifier ("self"), "%s *".printf (get_ccode_name (base_type)));
+
+				if (!get_ccode_no_accessor_method (prop.base_property) && !get_ccode_concrete_accessor (prop.base_property)) {
+					if (prop.get_accessor != null) {
+						string cname = get_ccode_real_name (prop.get_accessor);
+						ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), new CCodeIdentifier (cname));
+					}
+					if (prop.set_accessor != null) {
+						string cname = get_ccode_real_name (prop.set_accessor);
+						ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), new CCodeIdentifier (cname));
+					}
+				}
+			}
 		}
 
 		if (!cl.is_compact && (cl.has_private_fields || cl.get_type_parameters ().size > 0)) {
@@ -2281,6 +2340,11 @@ public class Vala.GTypeModule : GErrorModule {
 			base_prop = prop.base_property;
 		} else if (prop.base_interface_property != null) {
 			base_prop = prop.base_interface_property;
+		}
+
+		if (cl != null && cl.is_compact && (prop.get_accessor == null || prop.get_accessor.automatic_body)) {
+			Report.error (prop.source_reference, "Properties without accessor bodies are not supported in compact classes");
+			return;
 		}
 
 		if (base_prop.get_attribute ("NoAccessorMethod") == null &&

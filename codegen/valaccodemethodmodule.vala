@@ -655,7 +655,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						}
 
 						if (cl.base_class == null) {
-							// derived compact classes do not have fields
 							var cinitcall = new CCodeFunctionCall (new CCodeIdentifier ("%s_instance_init".printf (get_ccode_lower_case_name (cl, null))));
 							cinitcall.add_argument (get_this_cexpression ());
 							ccode.add_expression (cinitcall);
@@ -815,17 +814,19 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			// complain during compile time of such en error.
 
 			// add critical warning that this method should not have been called
-			var type_from_instance_call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_INSTANCE"));
-			type_from_instance_call.add_argument (new CCodeIdentifier ("self"));
-
-			var type_name_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_name"));
-			type_name_call.add_argument (type_from_instance_call);
-
-			var error_string = "\"Type `%%s' does not implement abstract method `%s'\"".printf (get_ccode_name (m));
-
 			var cerrorcall = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
-			cerrorcall.add_argument (new CCodeConstant (error_string));
-			cerrorcall.add_argument (type_name_call);
+			if (!((Class) current_type_symbol).is_compact) {
+				var type_from_instance_call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_INSTANCE"));
+				type_from_instance_call.add_argument (new CCodeIdentifier ("self"));
+
+				var type_name_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_name"));
+				type_name_call.add_argument (type_from_instance_call);
+
+				cerrorcall.add_argument (new CCodeConstant ("\"Type `%%s' does not implement abstract method `%s'\"".printf (get_ccode_name (m))));
+				cerrorcall.add_argument (type_name_call);
+			} else {
+				cerrorcall.add_argument (new CCodeConstant ("\"Abstract method `%s' is not implemented\"".printf (get_ccode_name (m))));
+			}
 
 			ccode.add_expression (cerrorcall);
 
@@ -1087,17 +1088,21 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 		var vfunc = new CCodeFunction (cname + suffix);
 
-		CCodeFunctionCall vcast = null;
+		CCodeExpression vcast;
 		if (m.parent_symbol is Interface) {
 			var iface = (Interface) m.parent_symbol;
 
 			vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface))));
+			((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("self"));
 		} else {
 			var cl = (Class) m.parent_symbol;
-
-			vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (get_ccode_upper_case_name (cl))));
+			if (!cl.is_compact) {
+				vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (get_ccode_upper_case_name (cl))));
+				((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("self"));
+			} else {
+				vcast = new CCodeIdentifier ("self");
+			}
 		}
-		vcast.add_argument (new CCodeIdentifier ("self"));
 	
 		cname = get_ccode_vfunc_name (m);
 		if (suffix == "_finish" && cname.has_suffix ("_async")) {

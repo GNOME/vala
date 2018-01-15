@@ -638,6 +638,15 @@ public class Vala.Method : Subroutine, Callable {
 			get_error_types ().clear ();
 		}
 
+		if (parent_symbol is Class && (is_abstract || is_virtual)) {
+			var cl = (Class) parent_symbol;
+			if (cl.is_compact && cl.base_class != null) {
+				error = true;
+				Report.error (source_reference, "Abstract and virtual methods may not be declared in derived compact classes");
+				return false;
+			}
+		}
+
 		if (is_abstract) {
 			if (parent_symbol is Class) {
 				var cl = (Class) parent_symbol;
@@ -656,14 +665,6 @@ public class Vala.Method : Subroutine, Callable {
 				error = true;
 				Report.error (source_reference, "Virtual methods may not be declared outside of classes and interfaces");
 				return false;
-			}
-
-			if (parent_symbol is Class) {
-				var cl = (Class) parent_symbol;
-				if (cl.is_compact && cl != context.analyzer.gsource_type) {
-					Report.error (source_reference, "Virtual methods may not be declared in compact classes");
-					return false;
-				}
 			}
 		} else if (overrides) {
 			if (!(parent_symbol is Class)) {

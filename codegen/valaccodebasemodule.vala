@@ -1651,17 +1651,21 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 
-			CCodeFunctionCall vcast = null;
+			CCodeExpression vcast;
 			if (prop.parent_symbol is Interface) {
 				var iface = (Interface) prop.parent_symbol;
 
 				vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface, null))));
+				((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("self"));
 			} else {
 				var cl = (Class) prop.parent_symbol;
-
-				vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (get_ccode_upper_case_name (cl, null))));
+				if (!cl.is_compact) {
+					vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (get_ccode_upper_case_name (cl, null))));
+					((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("self"));
+				} else {
+					vcast = new CCodeIdentifier ("self");
+				}
 			}
-			vcast.add_argument (new CCodeIdentifier ("self"));
 
 			if (acc.readable) {
 				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));

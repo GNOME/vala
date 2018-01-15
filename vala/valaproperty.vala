@@ -382,6 +382,15 @@ public class Vala.Property : Symbol, Lockable {
 
 		checked = true;
 
+		if (parent_symbol is Class && (is_abstract || is_virtual)) {
+			var cl = (Class) parent_symbol;
+			if (cl.is_compact && cl.base_class != null) {
+				error = true;
+				Report.error (source_reference, "Abstract and virtual properties may not be declared in derived compact classes");
+				return false;
+			}
+		}
+
 		if (is_abstract) {
 			if (parent_symbol is Class) {
 				var cl = (Class) parent_symbol;
@@ -400,15 +409,6 @@ public class Vala.Property : Symbol, Lockable {
 				error = true;
 				Report.error (source_reference, "Virtual properties may not be declared outside of classes and interfaces");
 				return false;
-			}
-
-			if (parent_symbol is Class) {
-				var cl = (Class) parent_symbol;
-				if (cl.is_compact) {
-					error = true;
-					Report.error (source_reference, "Virtual properties may not be declared in compact classes");
-					return false;
-				}
 			}
 		} else if (overrides) {
 			if (!(parent_symbol is Class)) {
