@@ -31,13 +31,106 @@
 public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	private List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
+	private List<Symbol> members = new ArrayList<Symbol> ();
+
+	// member symbols
+	private List<Field> fields = new ArrayList<Field> ();
+	private List<Method> methods = new ArrayList<Method> ();
+	private List<Property> properties = new ArrayList<Property> ();
+	private List<Signal> signals = new ArrayList<Signal> ();
+
 	public ObjectTypeSymbol (string name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 	}
 
-	public abstract List<Method> get_methods ();
-	public abstract List<Signal> get_signals ();
-	public abstract List<Property> get_properties ();
+	/**
+	 * Returns the list of members.
+	 *
+	 * @return list of members
+	 */
+	public List<Symbol> get_members () {
+		return members;
+	}
+
+	/**
+	 * Returns the list of fields.
+	 *
+	 * @return list of fields
+	 */
+	public List<Field> get_fields () {
+		return fields;
+	}
+
+	/**
+	 * Returns the list of methods.
+	 *
+	 * @return list of methods
+	 */
+	public List<Method> get_methods () {
+		return methods;
+	}
+
+	/**
+	 * Returns the list of properties.
+	 *
+	 * @return list of properties
+	 */
+	public List<Property> get_properties () {
+		return properties;
+	}
+
+	/**
+	 * Returns the list of signals.
+	 *
+	 * @return list of signals
+	 */
+	public List<Signal> get_signals () {
+		return signals;
+	}
+
+	/**
+	 * Adds the specified field as a member to this object-symbol.
+	 *
+	 * @param f a field
+	 */
+	public override void add_field (Field f) {
+		fields.add (f);
+		members.add (f);
+		scope.add (f.name, f);
+	}
+
+	/**
+	 * Adds the specified method as a member to this object-symbol.
+	 *
+	 * @param m a method
+	 */
+	public override void add_method (Method m) {
+		methods.add (m);
+		members.add (m);
+		scope.add (m.name, m);
+	}
+
+	/**
+	 * Adds the specified property as a member to this object-symbol.
+	 *
+	 * @param prop a property
+	 */
+	public override void add_property (Property prop) {
+		properties.add (prop);
+		members.add (prop);
+		scope.add (prop.name, prop);
+	}
+
+	/**
+	 * Adds the specified signal as a member to this object-symbol.
+	 *
+	 * @param sig a signal
+	 */
+	public override void add_signal (Signal sig) {
+		signals.add (sig);
+		members.add (sig);
+		scope.add (sig.name, sig);
+	}
 
 	/**
 	 * Appends the specified parameter to the list of type parameters.

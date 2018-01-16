@@ -28,11 +28,7 @@ using GLib;
 public class Vala.Interface : ObjectTypeSymbol {
 	private List<DataType> prerequisites = new ArrayList<DataType> ();
 
-	private List<Method> methods = new ArrayList<Method> ();
-	private List<Field> fields = new ArrayList<Field> ();
 	private List<Constant> constants = new ArrayList<Constant> ();
-	private List<Property> properties = new ArrayList<Property> ();
-	private List<Signal> signals = new ArrayList<Signal> ();
 	private List<Symbol> virtuals = new ArrayList<Symbol> ();
 
 	// inner types
@@ -139,37 +135,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 			m.result_var.is_result = true;
 		}
 
-		methods.add (m);
-		scope.add (m.name, m);
-	}
-	
-	/**
-	 * Returns a copy of the list of methods.
-	 *
-	 * @return list of methods
-	 */
-	public override List<Method> get_methods () {
-		return methods;
-	}
-	
-	/**
-	 * Adds the specified field as a member to this interface. The field
-	 * must be private and static.
-	 *
-	 * @param f a field
-	 */
-	public override void add_field (Field f) {
-		fields.add (f);
-		scope.add (f.name, f);
-	}
-
-	/**
-	 * Returns a copy of the list of fields.
-	 *
-	 * @return list of fields
-	 */
-	public List<Field> get_fields () {
-		return fields;
+		base.add_method (m);
 	}
 
 	/**
@@ -204,41 +170,12 @@ public class Vala.Interface : ObjectTypeSymbol {
 			return;
 		}
 
-		properties.add (prop);
-		scope.add (prop.name, prop);
+		base.add_property (prop);
 
 		prop.this_parameter = new Parameter ("this", new ObjectType (this));
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 	}
 	
-	/**
-	 * Returns a copy of the list of properties.
-	 *
-	 * @return list of properties
-	 */
-	public override List<Property> get_properties () {
-		return properties;
-	}
-	
-	/**
-	 * Adds the specified signal as a member to this interface.
-	 *
-	 * @param sig a signal
-	 */
-	public override void add_signal (Signal sig) {
-		signals.add (sig);
-		scope.add (sig.name, sig);
-	}
-	
-	/**
-	 * Returns a copy of the list of signals.
-	 *
-	 * @return list of signals
-	 */
-	public override List<Signal> get_signals () {
-		return signals;
-	}
-
 	public virtual List<Symbol> get_virtuals () {
 		return virtuals;
 	}
@@ -301,11 +238,11 @@ public class Vala.Interface : ObjectTypeSymbol {
 			en.accept (visitor);
 		}
 
-		foreach (Method m in methods) {
+		foreach (Method m in get_methods ()) {
 			m.accept (visitor);
 		}
 		
-		foreach (Field f in fields) {
+		foreach (Field f in get_fields ()) {
 			f.accept (visitor);
 		}
 
@@ -313,11 +250,11 @@ public class Vala.Interface : ObjectTypeSymbol {
 			c.accept (visitor);
 		}
 
-		foreach (Property prop in properties) {
+		foreach (Property prop in get_properties ()) {
 			prop.accept (visitor);
 		}
 		
-		foreach (Signal sig in signals) {
+		foreach (Signal sig in get_signals ()) {
 			sig.accept (visitor);
 		}
 		
@@ -426,14 +363,14 @@ public class Vala.Interface : ObjectTypeSymbol {
 			en.check (context);
 		}
 
-		foreach (Method m in methods) {
+		foreach (Method m in get_methods ()) {
 			m.check (context);
 			if (m.is_virtual || m.is_abstract) {
 				virtuals.add (m);
 			}
 		}
 
-		foreach (Field f in fields) {
+		foreach (Field f in get_fields ()) {
 			f.check (context);
 		}
 
@@ -441,14 +378,14 @@ public class Vala.Interface : ObjectTypeSymbol {
 			c.check (context);
 		}
 
-		foreach (Signal sig in signals) {
+		foreach (Signal sig in get_signals ()) {
 			sig.check (context);
 			if (sig.is_virtual) {
 				virtuals.add (sig);
 			}
 		}
 
-		foreach (Property prop in properties) {
+		foreach (Property prop in get_properties ()) {
 			prop.check (context);
 			if (prop.is_virtual || prop.is_abstract) {
 				virtuals.add (prop);

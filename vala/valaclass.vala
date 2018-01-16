@@ -101,10 +101,6 @@ public class Vala.Class : ObjectTypeSymbol {
 	private List<DataType> base_types = new ArrayList<DataType> ();
 
 	private List<Constant> constants = new ArrayList<Constant> ();
-	private List<Field> fields = new ArrayList<Field> ();
-	private List<Method> methods = new ArrayList<Method> ();
-	private List<Property> properties = new ArrayList<Property> ();
-	private List<Signal> signals = new ArrayList<Signal> ();
 
 	// inner types
 	private List<Class> classes = new ArrayList<Class> ();
@@ -254,24 +250,15 @@ public class Vala.Class : ObjectTypeSymbol {
 	 * @param f a field
 	 */
 	public override void add_field (Field f) {
-		fields.add (f);
+		base.add_field (f);
+
 		if (f.access == SymbolAccessibility.PRIVATE && f.binding == MemberBinding.INSTANCE) {
 			has_private_fields = true;
 		} else if (f.access == SymbolAccessibility.PRIVATE && f.binding == MemberBinding.CLASS) {
 			has_class_private_fields = true;
 		}
-		scope.add (f.name, f);
 	}
 	
-	/**
-	 * Returns a copy of the list of fields.
-	 *
-	 * @return list of fields
-	 */
-	public List<Field> get_fields () {
-		return fields;
-	}
-
 	/**
 	 * Returns a copy of the list of constants.
 	 *
@@ -316,32 +303,21 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 		}
 
-		methods.add (m);
-		if (m.base_interface_type == null) {
-			scope.add (m.name, m);
-		} else {
-			// explicit interface method implementation
+		base.add_method (m);
+		// explicit interface method implementation
+		if (m.base_interface_type != null) {
+			scope.remove (m.name);
 			scope.add (null, m);
 		}
 	}
 
-	/**
-	 * Returns a copy of the list of methods.
-	 *
-	 * @return list of methods
-	 */
-	public override List<Method> get_methods () {
-		return methods;
-	}
-	
 	/**
 	 * Adds the specified property as a member to this class.
 	 *
 	 * @param prop a property
 	 */
 	public override void add_property (Property prop) {
-		properties.add (prop);
-		scope.add (prop.name, prop);
+		base.add_property (prop);
 
 		prop.this_parameter = new Parameter ("this", get_this_type ());
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
@@ -351,34 +327,6 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 	}
 	
-	/**
-	 * Returns a copy of the list of properties.
-	 *
-	 * @return list of properties
-	 */
-	public override List<Property> get_properties () {
-		return properties;
-	}
-	
-	/**
-	 * Adds the specified signal as a member to this class.
-	 *
-	 * @param sig a signal
-	 */
-	public override void add_signal (Signal sig) {
-		signals.add (sig);
-		scope.add (sig.name, sig);
-	}
-	
-	/**
-	 * Returns a copy of the list of signals.
-	 *
-	 * @return list of signals
-	 */
-	public override List<Signal> get_signals () {
-		return signals;
-	}
-
 	/**
 	 * Adds the specified class as an inner class.
 	 *
@@ -475,7 +423,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			en.accept (visitor);
 		}
 
-		foreach (Field f in fields) {
+		foreach (Field f in get_fields ()) {
 			f.accept (visitor);
 		}
 		
@@ -483,15 +431,15 @@ public class Vala.Class : ObjectTypeSymbol {
 			c.accept (visitor);
 		}
 		
-		foreach (Method m in methods) {
+		foreach (Method m in get_methods ()) {
 			m.accept (visitor);
 		}
 		
-		foreach (Property prop in properties) {
+		foreach (Property prop in get_properties ()) {
 			prop.accept (visitor);
 		}
 		
-		foreach (Signal sig in signals) {
+		foreach (Signal sig in get_signals ()) {
 			sig.accept (visitor);
 		}
 		
@@ -661,7 +609,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			en.check (context);
 		}
 
-		foreach (Field f in fields) {
+		foreach (Field f in get_fields ()) {
 			f.check (context);
 		}
 		
@@ -669,11 +617,11 @@ public class Vala.Class : ObjectTypeSymbol {
 			c.check (context);
 		}
 		
-		foreach (Method m in methods) {
+		foreach (Method m in get_methods ()) {
 			m.check (context);
 		}
 		
-		foreach (Property prop in properties) {
+		foreach (Property prop in get_properties ()) {
 			if (prop.get_attribute ("NoAccessorMethod") != null && !is_subtype_of (context.analyzer.object_type)) {
 				error = true;
 				Report.error (prop.source_reference, "NoAccessorMethod is only allowed for properties in classes derived from GLib.Object");
@@ -682,7 +630,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			prop.check (context);
 		}
 		
-		foreach (Signal sig in signals) {
+		foreach (Signal sig in get_signals ()) {
 			sig.check (context);
 		}
 		
@@ -732,7 +680,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 
 			if (!external && !external_package && base_class != null && base_class != context.analyzer.gsource_type) {
-				foreach (Field f in fields) {
+				foreach (Field f in get_fields ()) {
 					if (f.binding == MemberBinding.INSTANCE) {
 						error = true;
 						Report.error (source_reference, "derived compact classes may not have instance fields");
