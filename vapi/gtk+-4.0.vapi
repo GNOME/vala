@@ -5405,6 +5405,8 @@ namespace Gdk {
 		[Version (since = "2.20")]
 		public bool map_virtual_modifiers (ref Gdk.ModifierType state);
 		public bool translate_keyboard_state (uint hardware_keycode, Gdk.ModifierType state, int group, out uint keyval, out int effective_group, out int level, out Gdk.ModifierType consumed_modifiers);
+		[NoAccessorMethod]
+		public Gdk.Display display { owned get; construct; }
 		[Version (since = "2.0")]
 		public signal void direction_changed ();
 		[Version (since = "2.2")]
@@ -6093,14 +6095,6 @@ namespace Gdk {
 		TABLET_PAD,
 		ALL_POINTING,
 		ALL
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_", type_id = "gdk_status_get_type ()")]
-	public enum Status {
-		OK,
-		ERROR,
-		ERROR_PARAM,
-		ERROR_FILE,
-		ERROR_MEM
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SUBPIXEL_LAYOUT_", type_id = "gdk_subpixel_layout_get_type ()")]
 	[Version (since = "3.22")]

@@ -3508,6 +3508,8 @@ namespace GLib {
 		[Version (since = "2.22")]
 		public virtual async GLib.FileIOStream open_readwrite_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public static GLib.File parse_name (string parse_name);
+		[Version (since = "2.56")]
+		public unowned string? peek_path ();
 		[Version (since = "2.22")]
 		public abstract async bool poll_mountable (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
@@ -3670,7 +3672,7 @@ namespace GLib {
 		[ConcreteAccessor]
 		[Version (since = "2.46")]
 		public abstract bool network_metered { get; }
-		public virtual signal void network_changed (bool available);
+		public virtual signal void network_changed (bool network_available);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GPollableInputStreamInterface", type_id = "g_pollable_input_stream_get_type ()")]
 	[Version (since = "2.28")]
@@ -3759,10 +3761,12 @@ namespace GLib {
 		public abstract void copy_session_state (GLib.TlsClientConnection source);
 		public GLib.List<GLib.ByteArray> get_accepted_cas ();
 		public unowned GLib.SocketConnectable get_server_identity ();
+		[Version (deprecated = true, deprecated_since = "2.56", since = "2.28")]
 		public bool get_use_ssl3 ();
 		public GLib.TlsCertificateFlags get_validation_flags ();
 		public static GLib.TlsClientConnection? @new (GLib.IOStream base_io_stream, GLib.SocketConnectable? server_identity) throws GLib.Error;
 		public void set_server_identity (GLib.SocketConnectable identity);
+		[Version (deprecated = true, deprecated_since = "2.56", since = "2.28")]
 		public void set_use_ssl3 (bool use_ssl3);
 		public void set_validation_flags (GLib.TlsCertificateFlags flags);
 		[ConcreteAccessor]
@@ -3770,6 +3774,7 @@ namespace GLib {
 		[ConcreteAccessor]
 		public abstract GLib.SocketConnectable server_identity { get; set construct; }
 		[ConcreteAccessor]
+		[Version (deprecated = true, deprecated_since = "2.56", since = "2.28")]
 		public abstract bool use_ssl3 { get; set construct; }
 		[ConcreteAccessor]
 		public abstract GLib.TlsCertificateFlags validation_flags { get; set construct; }
