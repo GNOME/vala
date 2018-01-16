@@ -72,6 +72,11 @@ public class Vala.CodeContext {
 	public bool ccode_only { get; set; }
 
 	/**
+	 * Enable support for ABI stability.
+	 */
+	public bool abi_stability { get; set; }
+
+	/**
 	 * Output C header file.
 	 */
 	public string? header_filename { get; set; }

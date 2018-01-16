@@ -199,6 +199,17 @@ Do not write vala build version in generated files
 .TP
 \fB\-\-run\-args\fR
 Arguments passed to directly compiled executeable
+.TP
+\fB\-\-abi\-stability\fR
+Enable support for ABI stability
+.RS
+This changes the current behaviour to output public members of classes and
+interfaces the same order as they appear in Vala source.
+For libraries is recommended to use \fB--abi-stability\fR to ensure the
+maintainability of the resulting Application Binary Interface (ABI).
+This option is disabled by default for backward compatibility because it can
+break ABI of existing projects.
+.RE
 .SH BUGS
 https://bugzilla.gnome.org/page.cgi?id=browse.html&product=vala
 .SH "HOMEPAGE OR CONTACT"

@@ -53,6 +53,7 @@ class Vala.Compiler {
 	static string[] gresources_directories;
 
 	static bool ccode_only;
+	static bool abi_stability;
 	static string header_filename;
 	static bool use_header;
 	static string internal_header_filename;
@@ -159,6 +160,7 @@ class Vala.Compiler {
 		{ "enable-version-header", 0, 0, OptionArg.NONE, ref enable_version_header, "Write vala build version in generated files", null },
 		{ "disable-version-header", 0, 0, OptionArg.NONE, ref disable_version_header, "Do not write vala build version in generated files", null },
 		{ "run-args", 0, 0, OptionArg.STRING, ref run_args, "Arguments passed to directly compiled executeable", null },
+		{ "abi-stability", 0, 0, OptionArg.NONE, ref abi_stability, "Enable support for ABI stability", null },
 		{ OPTION_REMAINING, 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
 		{ null }
 	};
@@ -236,6 +238,7 @@ class Vala.Compiler {
 		if (ccode_only && cc_options != null) {
 			Report.warning (null, "-X has no effect when -C or --ccode is set");
 		}
+		context.abi_stability = abi_stability;
 		context.compile_only = compile_only;
 		context.header_filename = header_filename;
 		if (header_filename == null && use_header) {
