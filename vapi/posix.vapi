@@ -1668,7 +1668,7 @@ namespace Posix {
 	[CCode (cheader_filename = "netdb.h")]
 	public unowned string gai_strerror (int errcode);
 	[CCode (cheader_filename = "netdb.h")]
-	public unowned HostEnt gethostbyname (string name);
+	public unowned HostEnt? gethostbyname (string name);
 
 	[CCode (cname = "socklen_t", cheader_filename = "sys/socket.h", default_value = "0", has_type_id = false)]
 	public struct socklen_t : int {
@@ -1720,6 +1720,7 @@ namespace Posix {
 		public AddrInfo *ai_next;
 	}
 
+	[Compact]
 	[CCode (cname = "struct hostent", cheader_filename = "netdb.h", destroy_function = "", has_type_id = false)]
 	public class HostEnt {
 		public string h_name;
