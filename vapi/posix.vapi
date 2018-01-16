@@ -1768,6 +1768,9 @@ namespace Posix {
 		public clock_t ();
 	}
 
+	[CCode (cheader_filename = "time.h")]
+	public unowned string? ctime (ref time_t clock);
+
 	[CCode (cname = "struct tm", cheader_filename = "time.h", has_type_id = false)]
 	public struct tm {
 		public int tm_sec;
