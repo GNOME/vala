@@ -293,6 +293,17 @@ public class Vala.GTypeModule : GErrorModule {
 		if (is_gtypeinstance) {
 			if (context.abi_stability) {
 				instance_struct.add_field ("%sPrivate *".printf (get_ccode_name (cl)), "priv");
+
+				var instance_padding = cl.get_attribute_integer ("CCode", "instance_padding", 0);
+				if (instance_padding > 0) {
+					var instance_padding_ctype = cl.get_attribute_string ("CCode", "instance_padding_ctype", "void *");
+					instance_struct.add_field (instance_padding_ctype, "_vala_padding[%i]".printf (instance_padding));
+				}
+				var class_padding = cl.get_attribute_integer ("CCode", "class_padding", 0);
+				if (class_padding > 0) {
+					var class_padding_ctype = cl.get_attribute_string ("CCode", "class_padding_ctype", "void *");
+					type_struct.add_field (class_padding_ctype, "_vala_padding[%i]".printf (class_padding));
+				}
 			}
 			decl_space.add_type_definition (type_struct);
 		}
