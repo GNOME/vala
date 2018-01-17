@@ -39,6 +39,12 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	private List<Property> properties = new ArrayList<Property> ();
 	private List<Signal> signals = new ArrayList<Signal> ();
 
+	// inner types
+	private List<Class> classes = new ArrayList<Class> ();
+	private List<Struct> structs = new ArrayList<Struct> ();
+	private List<Enum> enums = new ArrayList<Enum> ();
+	private List<Delegate> delegates = new ArrayList<Delegate> ();
+
 	public ObjectTypeSymbol (string name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 	}
@@ -130,6 +136,82 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 		signals.add (sig);
 		members.add (sig);
 		scope.add (sig.name, sig);
+	}
+
+	/**
+	 * Returns the list of classes.
+	 *
+	 * @return list of classes
+	 */
+	public List<Class> get_classes () {
+		return classes;
+	}
+
+	/**
+	 * Returns the list of structs.
+	 *
+	 * @return list of structs
+	 */
+	public List<Struct> get_structs () {
+		return structs;
+	}
+
+	/**
+	 * Returns the list of enums.
+	 *
+	 * @return list of enums
+	 */
+	public List<Enum> get_enums () {
+		return enums;
+	}
+
+	/**
+	 * Returns the list of delegates.
+	 *
+	 * @return list of delegates
+	 */
+	public List<Delegate> get_delegates () {
+		return delegates;
+	}
+
+	/**
+	 * Adds the specified class as an inner class.
+	 *
+	 * @param cl a class
+	 */
+	public override void add_class (Class cl) {
+		classes.add (cl);
+		scope.add (cl.name, cl);
+	}
+
+	/**
+	 * Adds the specified struct as an inner struct.
+	 *
+	 * @param st a struct
+	 */
+	public override void add_struct (Struct st) {
+		structs.add (st);
+		scope.add (st.name, st);
+	}
+
+	/**
+	 * Adds the specified enum as an inner enum.
+	 *
+	 * @param en an enum
+	 */
+	public override void add_enum (Enum en) {
+		enums.add (en);
+		scope.add (en.name, en);
+	}
+
+	/**
+	 * Adds the specified delegate as an inner delegate.
+	 *
+	 * @param d a delegate
+	 */
+	public override void add_delegate (Delegate d) {
+		delegates.add (d);
+		scope.add (d.name, d);
 	}
 
 	/**

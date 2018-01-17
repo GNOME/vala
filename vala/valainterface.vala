@@ -31,48 +31,6 @@ public class Vala.Interface : ObjectTypeSymbol {
 	private List<Constant> constants = new ArrayList<Constant> ();
 	private List<Symbol> virtuals = new ArrayList<Symbol> ();
 
-	// inner types
-	private List<Class> classes = new ArrayList<Class> ();
-	private List<Struct> structs = new ArrayList<Struct> ();
-	private List<Enum> enums = new ArrayList<Enum> ();
-	private List<Delegate> delegates = new ArrayList<Delegate> ();
-
-	/**
-	 * Returns a copy of the list of classes.
-	 *
-	 * @return list of classes
-	 */
-	public List<Class> get_classes () {
-		return classes;
-	}
-
-	/**
-	 * Returns a copy of the list of structs.
-	 *
-	 * @return list of structs
-	 */
-	public List<Struct> get_structs () {
-		return structs;
-	}
-
-	/**
-	 * Returns a copy of the list of enums.
-	 *
-	 * @return list of enums
-	 */
-	public List<Enum> get_enums () {
-		return enums;
-	}
-
-	/**
-	 * Returns a copy of the list of delegates.
-	 *
-	 * @return list of delegates
-	 */
-	public List<Delegate> get_delegates () {
-		return delegates;
-	}
-
 	/**
 	 * Creates a new interface.
 	 *
@@ -180,46 +138,6 @@ public class Vala.Interface : ObjectTypeSymbol {
 		return virtuals;
 	}
 
-	/**
-	 * Adds the specified class as an inner class.
-	 *
-	 * @param cl a class
-	 */
-	public override void add_class (Class cl) {
-		classes.add (cl);
-		scope.add (cl.name, cl);
-	}
-
-	/**
-	 * Adds the specified struct as an inner struct.
-	 *
-	 * @param st a struct
-	 */
-	public override void add_struct (Struct st) {
-		structs.add (st);
-		scope.add (st.name, st);
-	}
-
-	/**
-	 * Adds the specified enum as an inner enum.
-	 *
-	 * @param en an enum
-	 */
-	public override void add_enum (Enum en) {
-		enums.add (en);
-		scope.add (en.name, en);
-	}
-
-	/**
-	 * Adds the specified delegate as an inner delegate.
-	 *
-	 * @param d a delegate
-	 */
-	public override void add_delegate (Delegate d) {
-		delegates.add (d);
-		scope.add (d.name, d);
-	}
-
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_interface (this);
 	}
@@ -234,7 +152,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 		}
 
 		/* process enums first to avoid order problems in C code */
-		foreach (Enum en in enums) {
+		foreach (Enum en in get_enums ()) {
 			en.accept (visitor);
 		}
 
@@ -258,15 +176,15 @@ public class Vala.Interface : ObjectTypeSymbol {
 			sig.accept (visitor);
 		}
 		
-		foreach (Class cl in classes) {
+		foreach (Class cl in get_classes ()) {
 			cl.accept (visitor);
 		}
 		
-		foreach (Struct st in structs) {
+		foreach (Struct st in get_structs ()) {
 			st.accept (visitor);
 		}
 
-		foreach (Delegate d in delegates) {
+		foreach (Delegate d in get_delegates ()) {
 			d.accept (visitor);
 		}
 	}
@@ -359,7 +277,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 			p.check (context);
 		}
 
-		foreach (Enum en in enums) {
+		foreach (Enum en in get_enums ()) {
 			en.check (context);
 		}
 
@@ -392,15 +310,15 @@ public class Vala.Interface : ObjectTypeSymbol {
 			}
 		}
 
-		foreach (Class cl in classes) {
+		foreach (Class cl in get_classes ()) {
 			cl.check (context);
 		}
 
-		foreach (Struct st in structs) {
+		foreach (Struct st in get_structs ()) {
 			st.check (context);
 		}
 
-		foreach (Delegate d in delegates) {
+		foreach (Delegate d in get_delegates ()) {
 			d.check (context);
 		}
 
