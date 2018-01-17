@@ -100,8 +100,6 @@ public class Vala.Class : ObjectTypeSymbol {
 
 	private List<DataType> base_types = new ArrayList<DataType> ();
 
-	private List<Constant> constants = new ArrayList<Constant> ();
-
 	/**
 	 * Specifies the default construction method.
 	 */
@@ -193,16 +191,6 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 
 	/**
-	 * Adds the specified constant as a member to this class.
-	 *
-	 * @param c a constant
-	 */
-	public override void add_constant (Constant c) {
-		constants.add (c);
-		scope.add (c.name, c);
-	}
-	
-	/**
 	 * Adds the specified field as a member to this class.
 	 *
 	 * @param f a field
@@ -217,15 +205,6 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 	}
 	
-	/**
-	 * Returns a copy of the list of constants.
-	 *
-	 * @return list of constants
-	 */
-	public List<Constant> get_constants () {
-		return constants;
-	}
-
 	/**
 	 * Adds the specified method as a member to this class.
 	 *
@@ -345,7 +324,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			f.accept (visitor);
 		}
 		
-		foreach (Constant c in constants) {
+		foreach (Constant c in get_constants ()) {
 			c.accept (visitor);
 		}
 		
@@ -531,7 +510,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			f.check (context);
 		}
 		
-		foreach (Constant c in constants) {
+		foreach (Constant c in get_constants ()) {
 			c.check (context);
 		}
 		

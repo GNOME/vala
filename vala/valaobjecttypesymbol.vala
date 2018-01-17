@@ -45,6 +45,8 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	private List<Enum> enums = new ArrayList<Enum> ();
 	private List<Delegate> delegates = new ArrayList<Delegate> ();
 
+	private List<Constant> constants = new ArrayList<Constant> ();
+
 	public ObjectTypeSymbol (string name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 	}
@@ -212,6 +214,25 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	public override void add_delegate (Delegate d) {
 		delegates.add (d);
 		scope.add (d.name, d);
+	}
+
+	/**
+	 * Adds the specified constant as a member to this interface.
+	 *
+	 * @param c a constant
+	 */
+	public override void add_constant (Constant c) {
+		constants.add (c);
+		scope.add (c.name, c);
+	}
+
+	/**
+	 * Returns the list of constants.
+	 *
+	 * @return list of constants
+	 */
+	public List<Constant> get_constants () {
+		return constants;
 	}
 
 	/**

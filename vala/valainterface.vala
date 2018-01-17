@@ -28,7 +28,6 @@ using GLib;
 public class Vala.Interface : ObjectTypeSymbol {
 	private List<DataType> prerequisites = new ArrayList<DataType> ();
 
-	private List<Constant> constants = new ArrayList<Constant> ();
 	private List<Symbol> virtuals = new ArrayList<Symbol> ();
 
 	/**
@@ -97,25 +96,6 @@ public class Vala.Interface : ObjectTypeSymbol {
 	}
 
 	/**
-	 * Adds the specified constant as a member to this interface.
-	 *
-	 * @param c a constant
-	 */
-	public override void add_constant (Constant c) {
-		constants.add (c);
-		scope.add (c.name, c);
-	}
-
-	/**
-	 * Returns a copy of the list of constants.
-	 *
-	 * @return list of constants
-	 */
-	public List<Constant> get_constants () {
-		return constants;
-	}
-
-	/**
 	 * Adds the specified property as a member to this interface.
 	 *
 	 * @param prop a property
@@ -164,7 +144,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 			f.accept (visitor);
 		}
 
-		foreach (Constant c in constants) {
+		foreach (Constant c in get_constants ()) {
 			c.accept (visitor);
 		}
 
@@ -292,7 +272,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 			f.check (context);
 		}
 
-		foreach (Constant c in constants) {
+		foreach (Constant c in get_constants ()) {
 			c.check (context);
 		}
 
