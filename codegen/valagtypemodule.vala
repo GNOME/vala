@@ -222,6 +222,11 @@ public class Vala.GTypeModule : GErrorModule {
 			instance_struct.add_field ("volatile int", "ref_count");
 		}
 
+		if (context.abi_stability) {
+			// add "/*< public >*/" separator
+			instance_struct.add_comment ("< public >");
+		}
+
 		if (is_gtypeinstance) {
 			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %sPrivate".printf (instance_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (get_ccode_name (cl)))));
 
@@ -232,6 +237,11 @@ public class Vala.GTypeModule : GErrorModule {
 				type_struct.add_field ("GTypeClass", "parent_class");
 			} else {
 				type_struct.add_field ("%sClass".printf (get_ccode_name (cl.base_class)), "parent_class");
+			}
+
+			if (context.abi_stability) {
+				// add "/*< public >*/" separator
+				type_struct.add_comment ("< public >");
 			}
 
 			if (is_fundamental) {
@@ -278,6 +288,12 @@ public class Vala.GTypeModule : GErrorModule {
 			foreach (Field f in cl.get_fields ()) {
 				generate_struct_field_declaration (cl, f, instance_struct, type_struct, decl_space, ref has_struct_member);
 			}
+		}
+
+		if (context.abi_stability) {
+			// add "/*< private >*/" separator
+			instance_struct.add_comment ("< private >");
+			type_struct.add_comment ("< private >");
 		}
 
 		if (cl.is_compact && cl.base_class == null && !has_struct_member) {
@@ -2094,6 +2110,11 @@ public class Vala.GTypeModule : GErrorModule {
 
 		type_struct.add_field ("GTypeInterface", "parent_iface");
 
+		if (context.abi_stability) {
+			// add "/*< public >*/" separator
+			type_struct.add_comment ("< public >");
+		}
+
 		if (iface.get_attribute ("GenericAccessors") != null) {
 			foreach (TypeParameter p in iface.get_type_parameters ()) {
 				string method_name = "get_%s_type".printf (p.name.down ());
@@ -2193,6 +2214,11 @@ public class Vala.GTypeModule : GErrorModule {
 			} else {
 				assert_not_reached ();
 			}
+		}
+
+		if (context.abi_stability) {
+			// add "/*< private >*/" separator
+			type_struct.add_comment ("< private >");
 		}
 
 		decl_space.add_type_definition (type_struct);
