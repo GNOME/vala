@@ -242,12 +242,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		bool has_struct_member = false;
 		foreach (Method m in cl.get_methods ()) {
-			if (!cl.is_compact) {
-				generate_virtual_method_declaration (m, decl_space, type_struct);
-			} else if (cl.is_compact && cl.base_class == null) {
-				generate_virtual_method_declaration (m, decl_space, instance_struct);
-				has_struct_member |= (m.is_abstract || m.is_virtual);
-			}
+			generate_struct_method_declaration (cl, m, instance_struct, type_struct, decl_space, ref has_struct_member);
 		}
 
 		foreach (Signal sig in cl.get_signals ()) {
@@ -257,121 +252,11 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		foreach (Property prop in cl.get_properties ()) {
-			if (!prop.is_abstract && !prop.is_virtual) {
-				continue;
-			}
-			generate_type_declaration (prop.property_type, decl_space);
-
-			var t = (ObjectTypeSymbol) prop.parent_symbol;
-
-			var this_type = new ObjectType (t);
-			var cselfparam = new CCodeParameter ("self", get_ccode_name (this_type));
-
-			if (prop.get_accessor != null) {
-				var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
-				vdeclarator.add_parameter (cselfparam);
-				string creturn_type;
-				if (prop.property_type.is_real_non_null_struct_type ()) {
-					var cvalueparam = new CCodeParameter ("result", "%s *".printf (get_ccode_name (prop.get_accessor.value_type)));
-					vdeclarator.add_parameter (cvalueparam);
-					creturn_type = "void";
-				} else {
-					creturn_type = get_ccode_name (prop.get_accessor.value_type);
-				}
-
-				var array_type = prop.property_type as ArrayType;
-				if (array_type != null) {
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), "int*"));
-					}
-				} else if ((prop.property_type is DelegateType) && ((DelegateType) prop.property_type).delegate_symbol.has_target) {
-					vdeclarator.add_parameter (new CCodeParameter (get_delegate_target_cname ("result"), "gpointer*"));
-				}
-
-				var vdecl = new CCodeDeclaration (creturn_type);
-				vdecl.add_declarator (vdeclarator);
-				type_struct.add_declaration (vdecl);
-
-				if (cl.is_compact && cl.base_class == null) {
-					instance_struct.add_declaration (vdecl);
-					has_struct_member = true;
-				}
-			}
-			if (prop.set_accessor != null) {
-				CCodeParameter cvalueparam;
-				if (prop.property_type.is_real_non_null_struct_type ()) {
-					cvalueparam = new CCodeParameter ("value", "%s *".printf (get_ccode_name (prop.set_accessor.value_type)));
-				} else {
-					cvalueparam = new CCodeParameter ("value", get_ccode_name (prop.set_accessor.value_type));
-				}
-
-				var vdeclarator = new CCodeFunctionDeclarator ("set_%s".printf (prop.name));
-				vdeclarator.add_parameter (cselfparam);
-				vdeclarator.add_parameter (cvalueparam);
-
-				var array_type = prop.property_type as ArrayType;
-				if (array_type != null) {
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), "int"));
-					}
-				} else if ((prop.property_type is DelegateType) && ((DelegateType) prop.property_type).delegate_symbol.has_target) {
-					vdeclarator.add_parameter (new CCodeParameter (get_delegate_target_cname ("value"), "gpointer"));
-				}
-
-				var vdecl = new CCodeDeclaration ("void");
-				vdecl.add_declarator (vdeclarator);
-				type_struct.add_declaration (vdecl);
-
-				if (cl.is_compact && cl.base_class == null) {
-					instance_struct.add_declaration (vdecl);
-					has_struct_member = true;
-				}
-			}
+			generate_struct_property_declaration (cl, prop, instance_struct, type_struct, decl_space, ref has_struct_member);
 		}
 
 		foreach (Field f in cl.get_fields ()) {
-			if (f.access != SymbolAccessibility.PRIVATE) {
-				CCodeModifiers modifiers = (f.is_volatile ? CCodeModifiers.VOLATILE : 0) | (f.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
-				if (f.binding == MemberBinding.INSTANCE) {
-					generate_type_declaration (f.variable_type, decl_space);
-
-					instance_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers, get_ccode_declarator_suffix (f.variable_type));
-					has_struct_member = true;
-					if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
-						// create fields to store array dimensions
-						var array_type = (ArrayType) f.variable_type;
-
-						if (!array_type.fixed_length) {
-							var len_type = int_type.copy ();
-
-							for (int dim = 1; dim <= array_type.rank; dim++) {
-								string length_cname;
-								if (get_ccode_array_length_name (f) != null) {
-									length_cname = get_ccode_array_length_name (f);
-								} else {
-									length_cname = get_array_length_cname (get_ccode_name (f), dim);
-								}
-								instance_struct.add_field (get_ccode_name (len_type), length_cname);
-							}
-
-							if (array_type.rank == 1 && f.is_internal_symbol ()) {
-								instance_struct.add_field (get_ccode_name (len_type), get_array_size_cname (get_ccode_name (f)));
-							}
-						}
-					} else if (f.variable_type is DelegateType) {
-						var delegate_type = (DelegateType) f.variable_type;
-						if (delegate_type.delegate_symbol.has_target) {
-							// create field to store delegate target
-							instance_struct.add_field ("gpointer", get_ccode_delegate_target_name (f));
-							if (delegate_type.is_disposable ()) {
-								instance_struct.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_ccode_name (f)));
-							}
-						}
-					}
-				} else if (f.binding == MemberBinding.CLASS) {
-					type_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers);
-				}
-			}
+			generate_struct_field_declaration (cl, f, instance_struct, type_struct, decl_space, ref has_struct_member);
 		}
 
 		if (cl.is_compact && cl.base_class == null && !has_struct_member) {
@@ -386,6 +271,135 @@ public class Vala.GTypeModule : GErrorModule {
 
 		if (is_gtypeinstance) {
 			decl_space.add_type_definition (type_struct);
+		}
+	}
+
+	void generate_struct_method_declaration (Class cl, Method m, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
+		if (!cl.is_compact) {
+			generate_virtual_method_declaration (m, decl_space, type_struct);
+		} else if (cl.is_compact && cl.base_class == null) {
+			generate_virtual_method_declaration (m, decl_space, instance_struct);
+			has_struct_member |= (m.is_abstract || m.is_virtual);
+		}
+	}
+
+	void generate_struct_property_declaration (Class cl, Property prop, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
+		if (!prop.is_abstract && !prop.is_virtual) {
+			return;
+		}
+		generate_type_declaration (prop.property_type, decl_space);
+
+		var t = (ObjectTypeSymbol) prop.parent_symbol;
+
+		var this_type = new ObjectType (t);
+		var cselfparam = new CCodeParameter ("self", get_ccode_name (this_type));
+
+		if (prop.get_accessor != null) {
+			var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
+			vdeclarator.add_parameter (cselfparam);
+			string creturn_type;
+			if (prop.property_type.is_real_non_null_struct_type ()) {
+				var cvalueparam = new CCodeParameter ("result", "%s *".printf (get_ccode_name (prop.get_accessor.value_type)));
+				vdeclarator.add_parameter (cvalueparam);
+				creturn_type = "void";
+			} else {
+				creturn_type = get_ccode_name (prop.get_accessor.value_type);
+			}
+
+			var array_type = prop.property_type as ArrayType;
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), "int*"));
+				}
+			} else if ((prop.property_type is DelegateType) && ((DelegateType) prop.property_type).delegate_symbol.has_target) {
+				vdeclarator.add_parameter (new CCodeParameter (get_delegate_target_cname ("result"), "gpointer*"));
+			}
+
+			var vdecl = new CCodeDeclaration (creturn_type);
+			vdecl.add_declarator (vdeclarator);
+			type_struct.add_declaration (vdecl);
+
+			if (cl.is_compact && cl.base_class == null) {
+				instance_struct.add_declaration (vdecl);
+				has_struct_member = true;
+			}
+		}
+		if (prop.set_accessor != null) {
+			CCodeParameter cvalueparam;
+			if (prop.property_type.is_real_non_null_struct_type ()) {
+				cvalueparam = new CCodeParameter ("value", "%s *".printf (get_ccode_name (prop.set_accessor.value_type)));
+			} else {
+				cvalueparam = new CCodeParameter ("value", get_ccode_name (prop.set_accessor.value_type));
+			}
+
+			var vdeclarator = new CCodeFunctionDeclarator ("set_%s".printf (prop.name));
+			vdeclarator.add_parameter (cselfparam);
+			vdeclarator.add_parameter (cvalueparam);
+
+			var array_type = prop.property_type as ArrayType;
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), "int"));
+				}
+			} else if ((prop.property_type is DelegateType) && ((DelegateType) prop.property_type).delegate_symbol.has_target) {
+				vdeclarator.add_parameter (new CCodeParameter (get_delegate_target_cname ("value"), "gpointer"));
+			}
+
+			var vdecl = new CCodeDeclaration ("void");
+			vdecl.add_declarator (vdeclarator);
+			type_struct.add_declaration (vdecl);
+
+			if (cl.is_compact && cl.base_class == null) {
+				instance_struct.add_declaration (vdecl);
+				has_struct_member = true;
+			}
+		}
+	}
+
+	void generate_struct_field_declaration (Class cl, Field f, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
+		if (f.access == SymbolAccessibility.PRIVATE) {
+			return;
+		}
+
+		CCodeModifiers modifiers = (f.is_volatile ? CCodeModifiers.VOLATILE : 0) | (f.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
+		if (f.binding == MemberBinding.INSTANCE) {
+			generate_type_declaration (f.variable_type, decl_space);
+
+			instance_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers, get_ccode_declarator_suffix (f.variable_type));
+			has_struct_member = true;
+			if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
+				// create fields to store array dimensions
+				var array_type = (ArrayType) f.variable_type;
+
+				if (!array_type.fixed_length) {
+					var len_type = int_type.copy ();
+
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						string length_cname;
+						if (get_ccode_array_length_name (f) != null) {
+							length_cname = get_ccode_array_length_name (f);
+						} else {
+							length_cname = get_array_length_cname (get_ccode_name (f), dim);
+						}
+						instance_struct.add_field (get_ccode_name (len_type), length_cname);
+					}
+
+					if (array_type.rank == 1 && f.is_internal_symbol ()) {
+						instance_struct.add_field (get_ccode_name (len_type), get_array_size_cname (get_ccode_name (f)));
+					}
+				}
+			} else if (f.variable_type is DelegateType) {
+				var delegate_type = (DelegateType) f.variable_type;
+				if (delegate_type.delegate_symbol.has_target) {
+					// create field to store delegate target
+					instance_struct.add_field ("gpointer", get_ccode_delegate_target_name (f));
+					if (delegate_type.is_disposable ()) {
+						instance_struct.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_ccode_name (f)));
+					}
+				}
+			}
+		} else if (f.binding == MemberBinding.CLASS) {
+			type_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers);
 		}
 	}
 
