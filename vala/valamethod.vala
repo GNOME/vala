@@ -723,20 +723,17 @@ public class Vala.Method : Subroutine, Callable {
 			Report.error (parameters[0].source_reference, "Named parameter required before `...'");
 		}
 
-		if (!coroutine) {
-			// TODO: begin and end parameters must be checked separately for coroutines
-			var optional_param = false;
-			foreach (Parameter param in parameters) {
-				param.check (context);
-				if (coroutine && param.direction == ParameterDirection.REF) {
-					error = true;
-					Report.error (param.source_reference, "Reference parameters are not supported for async methods");
-				}
-				if (optional_param && param.initializer == null && !param.ellipsis) {
-					Report.warning (param.source_reference, "parameter without default follows parameter with default");
-				} else if (param.initializer != null) {
-					optional_param = true;
-				}
+		var optional_param = false;
+		foreach (Parameter param in parameters) {
+			param.check (context);
+			if (coroutine && param.direction == ParameterDirection.REF) {
+				error = true;
+				Report.error (param.source_reference, "Reference parameters are not supported for async methods");
+			}
+			if (optional_param && param.initializer == null && !param.ellipsis) {
+				Report.warning (param.source_reference, "parameter without default follows parameter with default");
+			} else if (param.initializer != null) {
+				optional_param = true;
 			}
 		}
 
