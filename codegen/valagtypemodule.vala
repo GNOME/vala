@@ -228,7 +228,9 @@ public class Vala.GTypeModule : GErrorModule {
 		if (is_gtypeinstance) {
 			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %sPrivate".printf (instance_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (get_ccode_name (cl)))));
 
-			instance_struct.add_field ("%sPrivate *".printf (get_ccode_name (cl)), "priv");
+			if (!context.abi_stability) {
+				instance_struct.add_field ("%sPrivate *".printf (get_ccode_name (cl)), "priv");
+			}
 			if (is_fundamental) {
 				type_struct.add_field ("GTypeClass", "parent_class");
 			} else {
@@ -241,22 +243,44 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		bool has_struct_member = false;
-		foreach (Method m in cl.get_methods ()) {
-			generate_struct_method_declaration (cl, m, instance_struct, type_struct, decl_space, ref has_struct_member);
-		}
-
-		foreach (Signal sig in cl.get_signals ()) {
-			if (sig.default_handler != null) {
-				generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
+		if (context.abi_stability) {
+			foreach (Symbol s in cl.get_members ()) {
+				if (s is Method) {
+					var m = (Method) s;
+					generate_struct_method_declaration (cl, m, instance_struct, type_struct, decl_space, ref has_struct_member);
+				} else if (s is Signal) {
+					var sig = (Signal) s;
+					if (sig.default_handler != null) {
+						generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
+					}
+				} else if (s is Property) {
+					var prop = (Property) s;
+					generate_struct_property_declaration (cl, prop, instance_struct, type_struct, decl_space, ref has_struct_member);
+				} else if (s is Field) {
+					var f = (Field) s;
+					generate_struct_field_declaration (cl, f, instance_struct, type_struct, decl_space, ref has_struct_member);
+				} else {
+					assert_not_reached ();
+				}
 			}
-		}
+		} else {
+			foreach (Method m in cl.get_methods ()) {
+				generate_struct_method_declaration (cl, m, instance_struct, type_struct, decl_space, ref has_struct_member);
+			}
 
-		foreach (Property prop in cl.get_properties ()) {
-			generate_struct_property_declaration (cl, prop, instance_struct, type_struct, decl_space, ref has_struct_member);
-		}
+			foreach (Signal sig in cl.get_signals ()) {
+				if (sig.default_handler != null) {
+					generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
+				}
+			}
 
-		foreach (Field f in cl.get_fields ()) {
-			generate_struct_field_declaration (cl, f, instance_struct, type_struct, decl_space, ref has_struct_member);
+			foreach (Property prop in cl.get_properties ()) {
+				generate_struct_property_declaration (cl, prop, instance_struct, type_struct, decl_space, ref has_struct_member);
+			}
+
+			foreach (Field f in cl.get_fields ()) {
+				generate_struct_field_declaration (cl, f, instance_struct, type_struct, decl_space, ref has_struct_member);
+			}
 		}
 
 		if (cl.is_compact && cl.base_class == null && !has_struct_member) {
@@ -270,6 +294,9 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		if (is_gtypeinstance) {
+			if (context.abi_stability) {
+				instance_struct.add_field ("%sPrivate *".printf (get_ccode_name (cl)), "priv");
+			}
 			decl_space.add_type_definition (type_struct);
 		}
 	}
