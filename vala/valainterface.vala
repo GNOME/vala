@@ -261,13 +261,6 @@ public class Vala.Interface : ObjectTypeSymbol {
 			en.check (context);
 		}
 
-		foreach (Method m in get_methods ()) {
-			m.check (context);
-			if (m.is_virtual || m.is_abstract) {
-				virtuals.add (m);
-			}
-		}
-
 		foreach (Field f in get_fields ()) {
 			f.check (context);
 		}
@@ -276,17 +269,48 @@ public class Vala.Interface : ObjectTypeSymbol {
 			c.check (context);
 		}
 
-		foreach (Signal sig in get_signals ()) {
-			sig.check (context);
-			if (sig.is_virtual) {
-				virtuals.add (sig);
+		if (context.abi_stability) {
+			foreach (Symbol s in get_members ()) {
+				if (s is Method) {
+					var m = (Method) s;
+					m.check (context);
+					if (m.is_virtual || m.is_abstract) {
+						virtuals.add (m);
+					}
+				} else if (s is Signal) {
+					var sig = (Signal) s;
+					sig.check (context);
+					if (sig.is_virtual) {
+						virtuals.add (sig);
+					}
+				} else if (s is Property) {
+					var prop = (Property) s;
+					prop.check (context);
+					if (prop.is_virtual || prop.is_abstract) {
+						virtuals.add (prop);
+					}
+				}
 			}
-		}
+		} else {
+			foreach (Method m in get_methods ()) {
+				m.check (context);
+				if (m.is_virtual || m.is_abstract) {
+					virtuals.add (m);
+				}
+			}
 
-		foreach (Property prop in get_properties ()) {
-			prop.check (context);
-			if (prop.is_virtual || prop.is_abstract) {
-				virtuals.add (prop);
+			foreach (Signal sig in get_signals ()) {
+				sig.check (context);
+				if (sig.is_virtual) {
+					virtuals.add (sig);
+				}
+			}
+
+			foreach (Property prop in get_properties ()) {
+				prop.check (context);
+				if (prop.is_virtual || prop.is_abstract) {
+					virtuals.add (prop);
+				}
 			}
 		}
 
