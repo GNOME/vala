@@ -212,7 +212,13 @@ public class Vala.CodeWriter : CodeVisitor {
 			}
 
 			if (header_to_override != null) {
-				cheaders = cheaders.replace (header_to_override, override_header).replace (",,", ",");
+				var cheaders_array = cheaders.split (",");
+				for (int i = 0; i < cheaders_array.length; i++) {
+					if (cheaders_array[i] == header_to_override) {
+						cheaders_array[i] = override_header;
+					}
+				}
+				cheaders = string.joinv (",", cheaders_array);
 			}
 		}
 		return cheaders;
