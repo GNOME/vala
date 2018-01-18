@@ -728,6 +728,10 @@ public class Vala.Method : Subroutine, Callable {
 				error = true;
 				Report.error (param.source_reference, "Reference parameters are not supported for async methods");
 			}
+			// TODO: begin and end parameters must be checked separately for coroutines
+			if (coroutine) {
+				continue;
+			}
 			if (optional_param && param.initializer == null && !param.ellipsis) {
 				Report.warning (param.source_reference, "parameter without default follows parameter with default");
 			} else if (param.initializer != null) {
