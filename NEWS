@@ -1,3 +1,21 @@
+Vala 0.39.5
+===========
+ * Various bug fixes:
+  - libvaladoc: Allow @link tags to be split over multiple lines [#646982]
+  - libvaladoc: Add support for single line documentation comments [#736483]
+  - girparser: Improve instance method detection [#732460]
+  - codegen: Add support for abstract/virtual methods and properties in
+    compact classes [#741465]
+  - vala: Fix parameter type inference of overridden async methods [#792660]
+  - codewriter: Don't use string.replace() to apply header_to_override [#731322]
+
+ * Bindings:
+  - gio-unix-2.0: Update to 2.55.1
+  - gtk+-4.0: Update to 3.93.0+60d3378d
+  - libwnck-3.0: Update to 3.24.1
+  - webkit2gtk-4.0: Update to 2.19.5
+  - webkit2gtk-web-extension-4.0: Fix DOM.EventTarget interface
+
 Vala 0.39.4
 ===========
  * Various improvements and bug fixes:
