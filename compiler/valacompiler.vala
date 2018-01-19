@@ -239,6 +239,9 @@ class Vala.Compiler {
 			Report.warning (null, "-X has no effect when -C or --ccode is set");
 		}
 		context.abi_stability = abi_stability;
+		if (abi_stability) {
+			context.hide_internal = true;
+		}
 		context.compile_only = compile_only;
 		context.header_filename = header_filename;
 		if (header_filename == null && use_header) {
