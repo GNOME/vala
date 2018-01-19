@@ -51,7 +51,7 @@ fi
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
-VALAC_BOOTSTRAP_REQUIRED=0.25.1
+VALAC_BOOTSTRAP_REQUIRED=0.39.5.8
 
 AS_IF([test "$VALAC" != valac], [FOUND_VALAC_VERION=`$VALAC --version | sed 's/Vala  *//'`
 	AS_VERSION_COMPARE(["$VALAC_BOOTSTRAP_REQUIRED"], ["$FOUND_VALAC_VERION"],
@@ -59,7 +59,7 @@ AS_IF([test "$VALAC" != valac], [FOUND_VALAC_VERION=`$VALAC --version | sed 's/V
 
 VALAFLAGS="$VALAFLAGS --disable-version-header"
 if test x$enable_boostrap = xyes; then
-	VALAFLAGS="$VALAFLAGS --hide-internal"
+	VALAFLAGS="$VALAFLAGS --hide-internal --abi-stability"
 fi
 
 AC_SUBST(VALAFLAGS)
