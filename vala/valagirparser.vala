@@ -988,7 +988,7 @@ public class Vala.GirParser : CodeVisitor {
 						}
 					}
 
-					prop.set_attribute ("NoAccessorMethod", false);
+					prop.set_attribute ("NoAccessorMethod", (readable == "0" && construct_only == "1"));
 					if (prop.get_accessor != null) {
 						var m = getter != null ? getter.symbol as Method : null;
 						// ensure getter vfunc if the property is abstract
