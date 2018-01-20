@@ -817,6 +817,7 @@ namespace Gst {
 		public Gst.BusSyncReply sync_signal_handler (Gst.Message message, void* data);
 		public Gst.Message? timed_pop (Gst.ClockTime timeout);
 		public Gst.Message? timed_pop_filtered (Gst.ClockTime timeout, Gst.MessageType types);
+		[NoAccessorMethod]
 		public bool enable_async { construct; }
 		public virtual signal void message (Gst.Message message);
 		public virtual signal void sync_message (Gst.Message message);

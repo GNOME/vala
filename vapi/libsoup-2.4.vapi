@@ -1009,7 +1009,9 @@ namespace Soup {
 		[NoAccessorMethod]
 		public GLib.MainContext async_context { owned get; construct; }
 		public int fd { get; construct; }
+		[NoAccessorMethod]
 		public GLib.Socket gsocket { construct; }
+		[NoAccessorMethod]
 		public GLib.IOStream iostream { construct; }
 		[NoAccessorMethod]
 		public bool ipv6_only { get; set; }

@@ -147,6 +147,7 @@ namespace Gdl {
 		public void set_cursor (bool in_drag);
 		public void set_label (Gtk.Widget label);
 		public void show_handle ();
+		[NoAccessorMethod]
 		public Gdl.DockItem item { construct; }
 	}
 	[CCode (cheader_filename = "gdl/gdl.h", type_id = "gdl_dock_layout_get_type ()")]
