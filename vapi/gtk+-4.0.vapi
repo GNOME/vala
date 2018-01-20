@@ -8925,6 +8925,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.6")]
 		public FileChooserButton.with_dialog (Gtk.Dialog dialog);
+		[NoAccessorMethod]
 		[Version (since = "2.6")]
 		public Gtk.FileChooser dialog { construct; }
 		[Version (since = "2.6")]
@@ -10605,6 +10606,7 @@ namespace Gtk {
 		[PrintfFormat]
 		[Version (since = "2.4")]
 		public MessageDialog.with_markup (Gtk.Window? parent, Gtk.DialogFlags flags, Gtk.MessageType type, Gtk.ButtonsType buttons, string? message_format, ...);
+		[NoAccessorMethod]
 		public Gtk.ButtonsType buttons { construct; }
 		[Version (since = "2.22")]
 		public Gtk.Widget message_area { get; }
@@ -14980,6 +14982,7 @@ namespace Gtk {
 		[ConcreteAccessor]
 		[Version (since = "2.10")]
 		public abstract bool local_only { get; set; }
+		[NoAccessorMethod]
 		[Version (since = "2.10")]
 		public abstract Gtk.RecentManager recent_manager { construct; }
 		[ConcreteAccessor]

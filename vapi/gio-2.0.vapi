@@ -463,9 +463,12 @@ namespace GLib {
 		public virtual void printerr_literal (string message);
 		[Version (since = "2.28")]
 		public void set_exit_status (int exit_status);
+		[NoAccessorMethod]
 		public GLib.Variant arguments { construct; }
 		public bool is_remote { get; }
+		[NoAccessorMethod]
 		public GLib.Variant options { construct; }
+		[NoAccessorMethod]
 		public GLib.Variant platform_data { construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_buffered_input_stream_get_type ()")]
@@ -687,12 +690,15 @@ namespace GLib {
 		public void unexport_menu_model (uint export_id);
 		public bool unregister_object (uint registration_id);
 		public bool unregister_subtree (uint registration_id);
+		[NoAccessorMethod]
 		public string address { construct; }
+		[NoAccessorMethod]
 		public GLib.DBusAuthObserver authentication_observer { construct; }
 		public GLib.DBusCapabilityFlags capabilities { get; }
 		[NoAccessorMethod]
 		public bool closed { get; }
 		public bool exit_on_close { get; set; }
+		[NoAccessorMethod]
 		public GLib.DBusConnectionFlags flags { construct; }
 		public string guid { get; construct; }
 		public GLib.IOStream stream { get; construct; }
@@ -904,6 +910,7 @@ namespace GLib {
 		public static async GLib.DBusObjectManagerClient new_for_bus (GLib.BusType bus_type, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc? get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "GDBusObjectManager*")]
 		public DBusObjectManagerClient.sync (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string? name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc? get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[NoAccessorMethod]
 		public GLib.BusType bus_type { construct; }
 		public GLib.DBusConnection connection { get; construct; }
 		public GLib.DBusObjectManagerClientFlags flags { get; construct; }
@@ -1011,6 +1018,7 @@ namespace GLib {
 		public void set_interface_info (GLib.DBusInterfaceInfo? info);
 		[CCode (has_construct_function = false)]
 		public DBusProxy.sync (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string? name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[NoAccessorMethod]
 		public GLib.BusType g_bus_type { construct; }
 		[NoAccessorMethod]
 		public GLib.DBusConnection g_connection { owned get; construct; }
@@ -1197,6 +1205,7 @@ namespace GLib {
 		public virtual GLib.FileInfo? next_file (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async GLib.List<GLib.FileInfo> next_files_async (int num_files, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_pending (bool pending);
+		[NoAccessorMethod]
 		public GLib.File container { construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_file_io_stream_get_type ()")]
@@ -1973,7 +1982,9 @@ namespace GLib {
 		[NoAccessorMethod]
 		[Version (since = "2.46")]
 		public bool invert_boolean { get; construct; }
+		[NoAccessorMethod]
 		public GLib.Object object { construct; }
+		[NoAccessorMethod]
 		public string property_name { construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_proxy_address_get_type ()")]
@@ -2718,7 +2729,9 @@ namespace GLib {
 		public bool wait_check (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool wait_check_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (array_length = false, array_null_terminated = true)]
+		[NoAccessorMethod]
 		public string[] argv { construct; }
+		[NoAccessorMethod]
 		public GLib.SubprocessFlags flags { construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_subprocess_launcher_get_type ()")]
@@ -2741,6 +2754,7 @@ namespace GLib {
 		public void take_stdin_fd (int fd);
 		public void take_stdout_fd (int fd);
 		public void unsetenv (string variable);
+		[NoAccessorMethod]
 		public GLib.SubprocessFlags flags { construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_task_get_type ()")]
@@ -2858,6 +2872,7 @@ namespace GLib {
 		public void prepend_name (string iconname);
 		[CCode (has_construct_function = false, type = "GIcon*")]
 		public ThemedIcon.with_default_fallbacks (string iconname);
+		[NoAccessorMethod]
 		public string name { construct; }
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] names { get; construct; }
@@ -2894,7 +2909,9 @@ namespace GLib {
 		[NoAccessorMethod]
 		public string certificate_pem { owned get; construct; }
 		public GLib.TlsCertificate issuer { get; construct; }
+		[NoAccessorMethod]
 		public GLib.ByteArray private_key { construct; }
+		[NoAccessorMethod]
 		public string private_key_pem { construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_tls_connection_get_type ()")]
