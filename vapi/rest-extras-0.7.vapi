@@ -37,6 +37,7 @@ namespace Rest {
 	public class FlickrProxyCall : Rest.ProxyCall {
 		[CCode (has_construct_function = false)]
 		protected FlickrProxyCall ();
+		[NoAccessorMethod]
 		public bool upload { construct; }
 	}
 	[CCode (cheader_filename = "rest-extras/lastfm-proxy.h", type_id = "lastfm_proxy_get_type ()")]

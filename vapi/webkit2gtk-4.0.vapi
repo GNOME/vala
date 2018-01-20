@@ -1071,6 +1071,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		[Version (since = "2.8")]
 		public bool is_playing_audio { get; }
+		[NoAccessorMethod]
 		[Version (since = "2.4")]
 		public WebKit.WebView related_view { construct; }
 		[Version (since = "2.6")]

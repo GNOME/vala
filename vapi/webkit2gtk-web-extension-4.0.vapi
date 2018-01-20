@@ -2447,6 +2447,7 @@ namespace WebKit {
 			public void* coreObject;
 			[CCode (has_construct_function = false)]
 			protected Object ();
+			[NoAccessorMethod]
 			public void* core_object { construct; }
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_processing_instruction_get_type ()")]

@@ -7110,6 +7110,7 @@ namespace Clutter {
 		[CCode (has_construct_function = false)]
 		protected Settings ();
 		public static unowned Clutter.Settings get_default ();
+		[NoAccessorMethod]
 		[Version (deprecated = true, deprecated_since = "1.10", since = "1.4")]
 		public Clutter.Backend backend { construct; }
 		[NoAccessorMethod]
@@ -7189,6 +7190,7 @@ namespace Clutter {
 		public virtual string get_static_shader_source ();
 		public bool set_shader_source (string source);
 		public void set_uniform_value (string name, GLib.Value value);
+		[NoAccessorMethod]
 		public Clutter.ShaderType shader_type { construct; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_shader_float_get_type ()")]

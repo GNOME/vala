@@ -153,6 +153,7 @@ namespace Polkit {
 		public UnixSession.for_process_sync (int pid, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public unowned string get_session_id ();
 		public void set_session_id (string session_id);
+		[NoAccessorMethod]
 		public int pid { construct; }
 		public string session_id { get; set construct; }
 	}
