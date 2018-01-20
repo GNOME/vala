@@ -71,6 +71,7 @@ namespace Gst {
 		public Gst.Element pipeline { owned get; }
 		public uint64 position { get; }
 		public double rate { get; set; }
+		[NoAccessorMethod]
 		public Gst.PlayerSignalDispatcher signal_dispatcher { construct; }
 		[NoAccessorMethod]
 		public string suburi { owned get; set; }
@@ -79,6 +80,7 @@ namespace Gst {
 		public Gst.Video.MultiviewFlags video_multiview_flags { get; set; }
 		[NoAccessorMethod]
 		public Gst.Video.MultiviewFramePacking video_multiview_mode { get; set; }
+		[NoAccessorMethod]
 		public Gst.PlayerVideoRenderer video_renderer { construct; }
 		public double volume { get; set; }
 		public signal void buffering (int object);

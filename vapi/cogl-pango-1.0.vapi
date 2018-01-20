@@ -6,6 +6,7 @@ namespace CoglPango {
 	public class Renderer : Pango.Renderer {
 		[CCode (has_construct_function = false)]
 		protected Renderer ();
+		[NoAccessorMethod]
 		public void* context { construct; }
 	}
 	[CCode (cheader_filename = "cogl-pango/cogl-pango.h")]
