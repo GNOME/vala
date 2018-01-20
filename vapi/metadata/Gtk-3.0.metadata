@@ -6,6 +6,8 @@
 * cheader_filename="gtk/gtk.h"
 *Accessible cheader_filename="gtk/gtk.h,gtk/gtk-a11y.h"
 IMContext cheader_filename="gtk/gtk.h,gtk/gtkimmodule.h"
+Plug cheader_filename="gtk/gtkx.h"
+Socket cheader_filename="gtk/gtkx.h"
 
 // Causes vapigen issues, not sure why -- <union> without name
 

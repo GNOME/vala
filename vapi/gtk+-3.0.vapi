@@ -5572,7 +5572,7 @@ namespace Gtk {
 		[Version (since = "3.20")]
 		public signal void unmount (GLib.MountOperation mount_operation);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_plug_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtkx.h", type_id = "gtk_plug_get_type ()")]
 	public class Plug : Gtk.Window, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Plug (X.Window socket_id);
@@ -7032,7 +7032,7 @@ namespace Gtk {
 		public bool ignore_hidden { get; set; }
 		public Gtk.SizeGroupMode mode { get; set; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_socket_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtkx.h", type_id = "gtk_socket_get_type ()")]
 	public class Socket : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Socket ();
