@@ -5037,8 +5037,6 @@ namespace Gdk {
 		[Version (since = "2.2")]
 		public static unowned Gdk.Display? get_default ();
 		[Version (since = "2.4")]
-		public uint get_default_cursor_size ();
-		[Version (since = "2.4")]
 		public unowned Gdk.Window get_default_group ();
 		[Version (since = "3.20")]
 		public unowned Gdk.Seat get_default_seat ();
@@ -5046,8 +5044,6 @@ namespace Gdk {
 		public Gdk.Event? get_event ();
 		[Version (since = "3.94")]
 		public unowned Gdk.Keymap get_keymap ();
-		[Version (since = "2.4")]
-		public void get_maximal_cursor_size (out uint width, out uint height);
 		[Version (since = "3.22")]
 		public unowned Gdk.Monitor? get_monitor (int monitor_num);
 		[Version (since = "3.22")]
@@ -5081,10 +5077,6 @@ namespace Gdk {
 		public Gdk.Event? peek_event ();
 		[Version (since = "2.2")]
 		public void put_event (Gdk.Event event);
-		[Version (since = "2.4")]
-		public bool supports_cursor_alpha ();
-		[Version (since = "2.4")]
-		public bool supports_cursor_color ();
 		[Version (since = "2.10")]
 		public bool supports_input_shapes ();
 		[Version (since = "2.10")]
@@ -5492,6 +5484,8 @@ namespace Gdk {
 		public void download ([CCode (array_length = false)] uint8[] data, size_t stride);
 		[CCode (cname = "gdk_texture_new_for_data")]
 		public static Gdk.Texture for_data ([CCode (array_length = false)] uint8[] data, int width, int height, int stride);
+		[CCode (cname = "gdk_texture_new_for_gl")]
+		public static Gdk.Texture for_gl (Gdk.GLContext context, int id, int width, int height, GLib.DestroyNotify destroy, void* data);
 		[CCode (cname = "gdk_texture_new_for_pixbuf")]
 		public static Gdk.Texture for_pixbuf (Gdk.Pixbuf pixbuf);
 		[CCode (cname = "gdk_texture_new_from_file")]
@@ -5500,6 +5494,7 @@ namespace Gdk {
 		public static Gdk.Texture from_resource (string resource_path);
 		public int get_height ();
 		public int get_width ();
+		public void release_gl ();
 		public int height { get; construct; }
 		public int width { get; construct; }
 	}
@@ -8838,7 +8833,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
 		[Version (since = "3.94")]
 		public EventControllerMotion (Gtk.Widget widget);
-		public signal void enter ();
+		public signal void enter (double x, double y);
 		public signal void leave ();
 		public signal void motion (double x, double y);
 	}
@@ -9212,7 +9207,6 @@ namespace Gtk {
 		public bool get_auto_render ();
 		public unowned Gdk.GLContext get_context ();
 		public unowned GLib.Error? get_error ();
-		public bool get_has_alpha ();
 		public bool get_has_depth_buffer ();
 		public bool get_has_stencil_buffer ();
 		public void get_required_version (out int major, out int minor);
@@ -9222,7 +9216,6 @@ namespace Gtk {
 		public void queue_render ();
 		public void set_auto_render (bool auto_render);
 		public void set_error (GLib.Error? error);
-		public void set_has_alpha (bool has_alpha);
 		public void set_has_depth_buffer (bool has_depth_buffer);
 		public void set_has_stencil_buffer (bool has_stencil_buffer);
 		public void set_required_version (int major, int minor);
@@ -9230,7 +9223,6 @@ namespace Gtk {
 		public void set_use_es (bool use_es);
 		public bool auto_render { get; set; }
 		public Gdk.GLContext context { get; }
-		public bool has_alpha { get; set; }
 		public bool has_depth_buffer { get; set; }
 		public bool has_stencil_buffer { get; set; }
 		[Version (since = "3.22")]
@@ -13942,7 +13934,6 @@ namespace Gtk {
 		public bool has_grab ();
 		[Version (since = "3.2")]
 		public bool has_visible_focus ();
-		public bool hide_on_delete ();
 		public bool in_destruction ();
 		[Version (since = "3.10")]
 		public void init_template ();
@@ -14152,17 +14143,12 @@ namespace Gtk {
 		[Version (since = "2.14")]
 		public Gdk.Window window { get; }
 		public signal void accel_closures_changed ();
-		public virtual signal bool button_press_event (Gdk.Event event);
-		public virtual signal bool button_release_event (Gdk.Event event);
 		[HasEmitter]
 		public virtual signal bool can_activate_accel (uint signal_id);
 		[HasEmitter]
 		public virtual signal void child_notify (GLib.ParamSpec child_property);
-		public virtual signal bool configure_event (Gdk.Event event);
-		public virtual signal bool delete_event (Gdk.Event event);
 		[HasEmitter]
 		public virtual signal void destroy ();
-		public virtual signal bool destroy_event (Gdk.Event event);
 		public virtual signal void direction_changed (Gtk.TextDirection previous_direction);
 		public virtual signal void display_changed (Gdk.Display? previous_display);
 		public virtual signal void drag_begin (Gdk.DragContext context);
@@ -14177,15 +14163,9 @@ namespace Gtk {
 		public virtual signal bool drag_motion (Gdk.DragContext context, int x, int y, uint time_);
 		[Version (since = "3.0")]
 		public virtual signal bool draw (Cairo.Context cr);
-		public virtual signal bool enter_notify_event (Gdk.Event event);
 		[HasEmitter]
 		public virtual signal Gdk.Event event (Gdk.Event event);
-		public signal void event_after (Gdk.Event event);
 		public virtual signal bool focus (Gtk.DirectionType direction);
-		public virtual signal bool focus_in_event (Gdk.Event event);
-		public virtual signal bool focus_out_event (Gdk.Event event);
-		[Version (since = "2.8")]
-		public virtual signal bool grab_broken_event (Gdk.Event event);
 		[HasEmitter]
 		public virtual signal void grab_focus ();
 		public virtual signal void grab_notify (bool was_grabbed);
@@ -14197,22 +14177,16 @@ namespace Gtk {
 		[HasEmitter]
 		[Version (since = "2.12")]
 		public virtual signal bool keynav_failed (Gtk.DirectionType direction);
-		public virtual signal bool leave_notify_event (Gdk.Event event);
 		[HasEmitter]
 		public virtual signal void map ();
-		public virtual signal bool map_event (Gdk.Event event);
 		[HasEmitter]
 		public virtual signal bool mnemonic_activate (bool group_cycling);
-		public virtual signal bool motion_notify_event (Gdk.Event event);
 		public virtual signal void move_focus (Gtk.DirectionType direction);
 		public virtual signal bool popup_menu ();
-		public virtual signal bool proximity_in_event (Gdk.Event event);
-		public virtual signal bool proximity_out_event (Gdk.Event event);
 		[Version (since = "2.12")]
 		public virtual signal bool query_tooltip (int x, int y, bool keyboard_tooltip, Gtk.Tooltip tooltip);
 		[HasEmitter]
 		public virtual signal void realize ();
-		public virtual signal bool scroll_event (Gdk.Event event);
 		[HasEmitter]
 		public virtual signal void show ();
 		[HasEmitter]
@@ -14221,10 +14195,8 @@ namespace Gtk {
 		public virtual signal void state_flags_changed (Gtk.StateFlags previous_state_flags);
 		[Version (since = "3.0")]
 		public virtual signal void style_updated ();
-		public virtual signal bool touch_event (Gdk.Event event);
 		[HasEmitter]
 		public virtual signal void unmap ();
-		public virtual signal bool unmap_event (Gdk.Event event);
 		[HasEmitter]
 		public virtual signal void unrealize ();
 	}
@@ -14342,6 +14314,8 @@ namespace Gtk {
 		public Gdk.Gravity get_gravity ();
 		[Version (since = "2.10")]
 		public unowned Gtk.WindowGroup get_group ();
+		[Version (since = "3.94")]
+		public bool get_hide_on_close ();
 		public unowned Gdk.Texture? get_icon ();
 		public GLib.List<weak Gdk.Texture> get_icon_list ();
 		[Version (since = "2.6")]
@@ -14411,6 +14385,8 @@ namespace Gtk {
 		public void set_gravity (Gdk.Gravity gravity);
 		[Version (since = "3.0")]
 		public void set_has_user_ref_count (bool setting);
+		[Version (since = "3.94")]
+		public void set_hide_on_close (bool setting);
 		public void set_icon (Gdk.Texture? icon);
 		[Version (since = "2.2")]
 		public bool set_icon_from_file (string filename) throws GLib.Error;
@@ -14475,6 +14451,7 @@ namespace Gtk {
 		public bool focus_visible { get; set; }
 		[Version (since = "2.4")]
 		public Gdk.Gravity gravity { get; set; }
+		public bool hide_on_close { get; set; }
 		public Gdk.Texture icon { get; set; }
 		[Version (since = "2.6")]
 		public string icon_name { get; set; }
@@ -14502,6 +14479,7 @@ namespace Gtk {
 		public Gtk.WindowPosition window_position { get; set; }
 		public virtual signal void activate_default ();
 		public virtual signal void activate_focus ();
+		public virtual signal bool close_request ();
 		public virtual signal bool enable_debugging (bool toggle);
 		public virtual signal void keys_changed ();
 		[HasEmitter]

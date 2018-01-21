@@ -346,9 +346,6 @@ test_init skip=false
 
 test_init.argvp unowned
 
-@false skip
-@true skip
-
 *.*.string name="str"
 
 // Forward upstream
