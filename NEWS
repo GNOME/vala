@@ -1,3 +1,23 @@
+Vala 0.36.9
+===========
+ * Various improvements and bug fixes:
+  - codegen: Add destroy param when invoking delegate returned by delegate
+    [#792077]
+  - gidlparser: Update type qualifiers
+  - vala: Fix parameter type inference of overridden async methods [#792660]
+  - codewriter: Don't use string.replace() to apply header_to_override [#731322]
+
+ * Bindings:
+  - glib-2.0: Add GLib.OPTION_REMAINING and GLib.OptionFlags.NONE
+  - gtk+-2.0: Mark MessageDialog constructor parameter, message_format, as
+    nullable [#791570]
+  - gtk+-2.0/3.0: Don't hide user_data in Clipboard.set_with_data() [#792237]
+  - gtk+-3.0: Update to 3.22.26+6f26d0dc
+  - libwnck-3.0: Update to 3.24.1
+  - posix: Add ctime(3) and fix binding of struct hostent and gethostbyname(3)
+  - webkit2gtk-4.0: Update to 2.19.5
+  - webkit2gtk-web-extension-4.0: Fix DOM.EventTarget interface
+
 Vala 0.36.8
 ===========
  * Various bug fixes:
