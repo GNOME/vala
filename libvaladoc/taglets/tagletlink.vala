@@ -56,8 +56,8 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 					Rule.one_of({
 						TokenType.SPACE,
 						TokenType.EOL
-					}),
-				}),
+					})
+				})
 			}),
 			TokenType.any_word ().action ((token) => { symbol_name = token.to_string (); }),
 			Rule.option ({
