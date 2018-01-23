@@ -7510,7 +7510,7 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public virtual Gtk.CellAreaContext create_context ();
 		[Version (since = "3.0")]
-		public virtual Gdk.Event event (Gtk.CellAreaContext context, Gtk.Widget widget, [CCode (type = "GdkEvent*")] Gdk.Event event, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
+		public virtual int event (Gtk.CellAreaContext context, Gtk.Widget widget, [CCode (type = "GdkEvent*")] Gdk.Event event, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
 		[CCode (cname = "gtk_cell_area_class_find_cell_property")]
 		[Version (since = "3.0")]
 		public class unowned GLib.ParamSpec find_cell_property (string property_name);
@@ -14250,7 +14250,7 @@ namespace Gtk {
 		public virtual signal bool draw (Cairo.Context cr);
 		public virtual signal bool enter_notify_event (Gdk.Event event);
 		[HasEmitter]
-		public virtual signal Gdk.Event event (Gdk.Event event);
+		public virtual signal bool event (Gdk.Event event);
 		public signal void event_after (Gdk.Event event);
 		public virtual signal bool focus (Gtk.DirectionType direction);
 		public virtual signal bool focus_in_event (Gdk.Event event);
