@@ -2,8 +2,8 @@
 // but may be some day.
 ////////////////////////////////////////////////////////////////////
 
-*.event type="Gdk.Event"
-*.*.event type="Gdk.Event"
+*.event#parameter type="Gdk.Event"
+*.*.event#parameter type="Gdk.Event"
 
 // G-I doesn't support per-sybmol includes
 * cheader_filename="gtk/gtk.h"
