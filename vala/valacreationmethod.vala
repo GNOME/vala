@@ -99,8 +99,14 @@ public class Vala.CreationMethod : Method {
 		}
 		context.analyzer.current_symbol = this;
 
+		int i = 0;
 		foreach (Parameter param in get_parameters()) {
 			param.check (context);
+			if (i == 0 && param.ellipsis && body != null) {
+				error = true;
+				Report.error (param.source_reference, "Named parameter required before `...'");
+			}
+			i++;
 		}
 
 		foreach (DataType error_type in get_error_types ()) {
