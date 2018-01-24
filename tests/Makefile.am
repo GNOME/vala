@@ -148,6 +148,7 @@ TESTS = \
 	delegates/bug792077.vala \
 	objects/chainup.vala \
 	objects/classes.vala \
+	objects/constructor-variadic.test \
 	objects/constructors.vala \
 	objects/fields.vala \
 	objects/interfaces.vala \
