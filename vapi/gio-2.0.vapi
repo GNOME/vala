@@ -1912,6 +1912,7 @@ namespace GLib {
 		public void set_icon (GLib.Icon icon);
 		public void set_priority (GLib.NotificationPriority priority);
 		public void set_title (string title);
+		[Version (deprecated = true, deprecated_since = "2.42", since = "2.40")]
 		public void set_urgent (bool urgent);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_output_stream_get_type ()")]

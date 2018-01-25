@@ -114,9 +114,11 @@ namespace Gst {
 			public bool drop_buffer ();
 			[NoWrapper]
 			public virtual Gst.FlowReturn flush (Gst.Base.Aggregator aggregator);
-			public Gst.Buffer get_buffer ();
 			public bool is_eos ();
-			public Gst.Buffer steal_buffer ();
+			public Gst.Buffer peek_buffer ();
+			public Gst.Buffer pop_buffer ();
+			[NoWrapper]
+			public virtual bool skip_buffer (Gst.Base.Aggregator aggregator, Gst.Buffer buffer);
 		}
 		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "GstBitReader", has_type_id = false)]
 		[Compact]
@@ -666,7 +668,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.FlowReturn alloc (uint64 offset, uint size, Gst.Buffer buf);
 			[NoWrapper]
-			public virtual Gst.FlowReturn create (uint64 offset, uint size, Gst.Buffer buf);
+			public virtual Gst.FlowReturn create (uint64 offset, uint size, out Gst.Buffer buf);
 			[NoWrapper]
 			public virtual bool decide_allocation (Gst.Query query);
 			[NoWrapper]
@@ -686,7 +688,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool get_size (uint64 size);
 			[NoWrapper]
-			public virtual void get_times (Gst.Buffer buffer, Gst.ClockTime start, Gst.ClockTime end);
+			public virtual void get_times (Gst.Buffer buffer, out Gst.ClockTime start, out Gst.ClockTime end);
 			public bool is_async ();
 			[NoWrapper]
 			public virtual bool is_seekable ();
