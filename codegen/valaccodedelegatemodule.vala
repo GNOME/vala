@@ -32,6 +32,11 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			return;
 		}
 
+		// internally generated delegates don't require a typedef
+		if (d.sender_type != null) {
+			return;
+		}
+
 		string return_type_cname = get_ccode_name (d.return_type);
 
 		if (d.return_type.is_real_non_null_struct_type ()) {
