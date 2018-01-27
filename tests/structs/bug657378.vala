@@ -1,3 +1,4 @@
+[PrintfFormat]
 string foo (string format, ...) {
 	return format.vprintf (va_list ());
 }
