@@ -110,7 +110,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
-		if (m.get_error_types ().size > 0 || (m.base_method != null && m.base_method.get_error_types ().size > 0) || (m.base_interface_method != null && m.base_interface_method.get_error_types ().size > 0)) {
+		if (m.has_error_type_parameter ()) {
 			foreach (DataType error_type in m.get_error_types ()) {
 				generate_type_declaration (error_type, decl_space);
 			}
