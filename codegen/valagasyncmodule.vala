@@ -514,6 +514,7 @@ public class Vala.GAsyncModule : GtkModule {
 			var type_sym = (TypeSymbol) m.parent_symbol;
 			if (type_sym is ObjectTypeSymbol) {
 				ccode.add_declaration (get_ccode_name (type_sym) + "*", new CCodeVariableDeclarator ("result"));
+				return_type = ((ObjectTypeSymbol) type_sym).get_this_type ();
 			}
 		} else if (!(return_type is VoidType) && !return_type.is_real_non_null_struct_type ()) {
 			ccode.add_declaration (get_ccode_name (m.return_type), new CCodeVariableDeclarator ("result"));
