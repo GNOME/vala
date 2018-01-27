@@ -1083,6 +1083,19 @@ public class Vala.Method : Subroutine, Callable {
 		}
 		return -1;
 	}
+
+	public bool has_error_type_parameter () {
+		if (get_error_types ().size > 0) {
+			return true;
+		}
+		if (base_method != null && base_method != this && base_method.has_error_type_parameter ()) {
+			return true;
+		}
+		if (base_interface_method != null && base_interface_method != this && base_interface_method.has_error_type_parameter ()) {
+			return true;
+		}
+		return false;
+	}
 }
 
 // vim:sw=8 noet
