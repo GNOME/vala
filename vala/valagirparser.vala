@@ -3251,13 +3251,17 @@ public class Vala.GirParser : CodeVisitor {
 					if (instance_idx > -2 && instance_idx < closure_idx) {
 						closure_idx--;
 					}
-					current.closure_parameters.add (closure_idx);
+					if (current.closure_parameters.index_of (current_parameter_idx) < 0) {
+						current.closure_parameters.add (closure_idx);
+					}
 				}
 				if (destroy_idx != -1) {
 					if (instance_idx > -2 && instance_idx < destroy_idx) {
 						destroy_idx--;
 					}
-					current.destroy_parameters.add (destroy_idx);
+					if (current.destroy_parameters.index_of (current_parameter_idx) < 0) {
+						current.destroy_parameters.add (destroy_idx);
+					}
 				}
 				if (param_comment != null) {
 					if (comment == null) {
