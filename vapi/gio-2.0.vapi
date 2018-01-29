@@ -2497,12 +2497,14 @@ namespace GLib {
 		public int fd { get; construct; }
 		public bool keepalive { get; set; }
 		public int listen_backlog { get; set; }
+		[NoAccessorMethod]
 		public GLib.SocketAddress local_address { owned get; }
 		[Version (since = "2.32")]
 		public bool multicast_loopback { get; set; }
 		[Version (since = "2.32")]
 		public uint multicast_ttl { get; set; }
 		public GLib.SocketProtocol protocol { get; construct; }
+		[NoAccessorMethod]
 		public GLib.SocketAddress remote_address { owned get; }
 		[Version (since = "2.26")]
 		public uint timeout { get; set; }
