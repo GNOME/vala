@@ -590,7 +590,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.FlowReturn alloc (uint64 offset, uint size, Gst.Buffer buf);
 			[NoWrapper]
-			public virtual Gst.FlowReturn create (uint64 offset, uint size, Gst.Buffer buf);
+			public virtual Gst.FlowReturn create (uint64 offset, uint size, out Gst.Buffer buf);
 			[NoWrapper]
 			public virtual bool decide_allocation (Gst.Query query);
 			[NoWrapper]
@@ -610,7 +610,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool get_size (uint64 size);
 			[NoWrapper]
-			public virtual void get_times (Gst.Buffer buffer, Gst.ClockTime start, Gst.ClockTime end);
+			public virtual void get_times (Gst.Buffer buffer, out Gst.ClockTime start, out Gst.ClockTime end);
 			public bool is_async ();
 			[NoWrapper]
 			public virtual bool is_seekable ();
