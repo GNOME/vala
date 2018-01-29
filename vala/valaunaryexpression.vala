@@ -224,7 +224,7 @@ public class Vala.UnaryExpression : Expression {
 
 			var assignment = new Assignment (ma, bin, AssignmentOperator.SIMPLE, source_reference);
 			assignment.target_type = target_type;
-			context.analyzer.add_replaced_node (this);
+			context.analyzer.replaced_nodes.add (this);
 			parent_node.replace_expression (this, assignment);
 			assignment.check (context);
 			return true;

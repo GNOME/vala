@@ -81,7 +81,7 @@ public class Vala.Template : Expression {
 		}
 		expr.target_type = target_type;
 
-		context.analyzer.add_replaced_node (this);
+		context.analyzer.replaced_nodes.add (this);
 		parent_node.replace_expression (this, expr);
 		return expr.check (context);
 	}

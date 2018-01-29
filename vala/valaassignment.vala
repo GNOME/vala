@@ -133,7 +133,7 @@ public class Vala.Assignment : Expression {
 				i++;
 			}
 
-			context.analyzer.add_replaced_node (this);
+			context.analyzer.replaced_nodes.add (this);
 			parent_node.replace_expression (this, stmt.expression);
 			return stmt.expression.check (context);
 		}
