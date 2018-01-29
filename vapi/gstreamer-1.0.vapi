@@ -1907,8 +1907,12 @@ namespace Gst {
 		[CCode (has_construct_function = false, returns_floating_reference = true)]
 		public PadTemplate (string name_template, Gst.PadDirection direction, Gst.PadPresence presence, Gst.Caps caps);
 		[CCode (has_construct_function = false)]
+		[Version (since = "1.14")]
 		public PadTemplate.from_static_pad_template_with_gtype (Gst.StaticPadTemplate pad_template, GLib.Type pad_type);
 		public Gst.Caps get_caps ();
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.14")]
+		public PadTemplate.with_gtype (string name_template, Gst.PadDirection direction, Gst.PadPresence presence, Gst.Caps caps, GLib.Type pad_type);
 		public Gst.Caps caps { owned get; construct; }
 		[NoAccessorMethod]
 		public Gst.PadDirection direction { get; construct; }
