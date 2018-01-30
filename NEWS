@@ -1,3 +1,29 @@
+Vala 0.39.6
+===========
+ * Highlights
+  - Add --abi-stability option for ABI stability of libraries
+    It ensures that the order of class/interface members in Vala sources will
+    be preserved in generated C source (instance/type structs) [#789069]
+
+ * Various bug fixes:
+  - girparser:
+    + Set NoAccessorMethod for non-readable and construct-only properties
+    + Ignore conflicting closure/destroy indexes
+    + Don't accept methods as property-accessor which throw errors [#792998]
+  - codegen:
+    + Infer error parameter from abstract/virtual base methods [#614294]
+    + Internally generated delegates don't require a typedef [#787521]
+    + Fix return-type for cancelled async creation methods of classes [#792942]
+    + Use G_PARAM_STATIC_STRINGS
+  - vala: Variadic constructors without a real first parameter are not allowed
+  - libvaladoc: Keep bootstrap-support with valac >= 0.16.1
+
+ * Bindings:
+  - gtk+-3.0: Fix cheader_filename of Plug and Socket
+  - gtk+-4.0: Update to 3.93.0+4d36a0bf
+  - gtk+-4.0: Only override type of "event" parameters
+  - posix: Add ctime(3) and fix binding of struct hostent and gethostbyname(3)
+
 Vala 0.39.5
 ===========
  * Various bug fixes:
