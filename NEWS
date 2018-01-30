@@ -1,3 +1,15 @@
+Vala 0.36.10
+============
+ * Various bug fixes:
+  - girparser:
+    + Set NoAccessorMethod for non-readable and construct-only properties
+    + Ignore conflicting closure/destroy indexes
+    + Don't accept methods as property-accessor which throw errors [#792998]
+  - codegen:
+    + Infer error parameter from abstract/virtual base methods [#614294]
+    + Fix return-type for cancelled async creation methods of classes [#792942]
+  - vala: Variadic constructors without a real first parameter are not allowed
+
 Vala 0.36.9
 ===========
  * Various improvements and bug fixes:
