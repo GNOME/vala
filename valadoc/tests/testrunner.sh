@@ -26,7 +26,7 @@ topsrcdir=$TOPSRCDIR
 vapidir=$topsrcdir/vapi
 
 export G_DEBUG=fatal_warnings
-export PKG_CONFIG_PATH=$topbuilddir/libvaladoc
+export PKG_CONFIG_PATH=$topbuilddir:$topbuilddir/libvaladoc
 export LD_LIBRARY_PATH=$topbuilddir/vala/.libs:$topbuilddir/libvaladoc/.libs
 
 VALAC=$topbuilddir/compiler/valac$EXEEXT
