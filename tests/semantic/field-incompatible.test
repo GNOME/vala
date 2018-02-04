@@ -1,0 +1,6 @@
+Invalid Code
+
+string field = 42;
+
+void main () {
+}

@@ -1,0 +1,13 @@
+Invalid Code
+
+[Compact]
+class Foo {
+	public static string field = get_foo ();
+}
+
+string get_foo () {
+	return "foo";
+}
+
+void main () {
+}

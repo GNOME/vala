@@ -1,0 +1,11 @@
+Invalid Code
+
+string get_foo () {
+	return "foo";
+}
+
+unowned string field;
+
+void main () {
+	field = get_foo ();
+}

@@ -340,6 +340,15 @@ TESTS = \
 	parser/switch-statement.vala \
 	parser/template.vala \
 	parser/tuple.vala \
+	semantic/field-accessibility.test \
+	semantic/field-compact-static.test \
+	semantic/field-external.test \
+	semantic/field-incompatible.test \
+	semantic/field-interface.test \
+	semantic/field-invalid-assignment.test \
+	semantic/field-namespace-owned.test \
+	semantic/field-non-constant.test \
+	semantic/field-void.test \
 	$(NULL)
 
 NON_NULL_TESTS = \

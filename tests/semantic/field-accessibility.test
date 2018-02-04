@@ -1,0 +1,9 @@
+Invalid Code
+
+class Foo {
+}
+
+public Foo field;
+
+void main () {
+}
