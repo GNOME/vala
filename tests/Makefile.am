@@ -300,6 +300,7 @@ TESTS = \
 	asynchronous/bug783543.vala \
 	asynchronous/bug792660.vala \
 	asynchronous/bug792942.vala \
+	asynchronous/bug793158.vala \
 	asynchronous/closures.vala \
 	asynchronous/generator.vala \
 	asynchronous/yield.vala \
