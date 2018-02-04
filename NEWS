@@ -1,3 +1,9 @@
+Vala 0.39.7
+===========
+ * Regression fix:
+  - codegen: Don't try to infer error argument on async begin methods [#793158]
+    This was a regression introduced by [#614294]
+
 Vala 0.39.6
 ===========
  * Highlights
