@@ -1,0 +1,11 @@
+Invalid Code
+
+errordomain FooError {
+	BAR
+}
+
+public void foo () throws FooError {
+}
+
+void main () {
+}

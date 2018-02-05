@@ -1,0 +1,7 @@
+Invalid Code
+
+extern void foo () {
+}
+
+void main () {
+}

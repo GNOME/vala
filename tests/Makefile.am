@@ -431,6 +431,29 @@ TESTS = \
 	semantic/field-namespace-owned.test \
 	semantic/field-non-constant.test \
 	semantic/field-void.test \
+	semantic/method-abstract.test \
+	semantic/method-abstract-body.test \
+	semantic/method-async-ref-parameter.test \
+	semantic/method-body.test \
+	semantic/method-class-abstract.test \
+	semantic/method-derived-compact.test \
+	semantic/method-error-accessibility.test \
+	semantic/method-extern-abstract.test \
+	semantic/method-extern-body.test \
+	semantic/method-extern-virtual.test \
+	semantic/method-main-async.test \
+	semantic/method-main-inline.test \
+	semantic/method-main-throws.test \
+	semantic/method-override.test \
+	semantic/method-postcondition.test \
+	semantic/method-precondition.test \
+	semantic/method-private-abstract.test \
+	semantic/method-private-override.test \
+	semantic/method-private-virtual.test \
+	semantic/method-protected.test \
+	semantic/method-return-accessibility.test \
+	semantic/method-virtual.test \
+	semantic/method-virtual-body.test \
 	semantic/parameter-accessibility.test \
 	semantic/parameter-default-type.test \
 	semantic/parameter-out-default.test \

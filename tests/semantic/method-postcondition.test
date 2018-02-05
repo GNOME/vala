@@ -1,0 +1,7 @@
+Invalid Code
+
+void foo (int i) ensures (i) {
+}
+
+void main () {
+}

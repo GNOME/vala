@@ -1,0 +1,8 @@
+Packages: gio-2.0
+Invalid Code
+
+async void foo (ref int i) {
+}
+
+void main () {
+}

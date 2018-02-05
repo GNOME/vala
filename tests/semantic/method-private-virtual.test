@@ -1,0 +1,9 @@
+Invalid Code
+
+class Foo {
+	virtual void foo () {
+	}
+}
+
+void main () {
+}

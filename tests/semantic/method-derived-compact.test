@@ -1,0 +1,13 @@
+Invalid Code
+
+[Compact]
+class Foo {
+}
+
+class Bar : Foo {
+	public virtual void foo () {
+	}
+}
+
+void main () {
+}

@@ -1,0 +1,7 @@
+Invalid Code
+
+virtual void foo () {
+}
+
+void main () {
+}

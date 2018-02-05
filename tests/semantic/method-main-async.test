@@ -1,0 +1,5 @@
+Packages: gio-2.0
+Invalid Code
+
+async void main () {
+}

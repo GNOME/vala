@@ -1,0 +1,8 @@
+Invalid Code
+
+class Foo {
+	public extern virtual void foo ();
+}
+
+void main () {
+}
