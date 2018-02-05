@@ -120,7 +120,8 @@ EOF
 function sourceend() {
 	if [ -n "$testpath" ]; then
 		if [ $INVALIDCODE -eq 1 ]; then
-			echo "! $VALAC $VALAFLAGS -C $SOURCEFILE" > check
+			PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
+			echo "! $VALAC $VALAFLAGS $PACKAGEFLAGS -C $SOURCEFILE" > check
 		elif [ $GIRTEST -eq 1 ]; then
 			if [ $PART -eq 1 ]; then
 				echo "  </namespace>" >> $SOURCEFILE
