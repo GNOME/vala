@@ -1,0 +1,8 @@
+Invalid Code
+
+public class Test {
+	public int i { get; set; delete; }
+}
+
+void main () {
+}

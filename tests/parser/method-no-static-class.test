@@ -1,0 +1,9 @@
+Invalid Code
+
+public class Test {
+	static class void test () {
+	}
+}
+
+void main () {
+}

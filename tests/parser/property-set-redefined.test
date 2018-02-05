@@ -1,0 +1,15 @@
+Invalid Code
+
+public class Test {
+	public int i {
+		get {
+			return 0;
+		}
+		set;
+		set {
+		}
+	}
+}
+
+void main () {
+}

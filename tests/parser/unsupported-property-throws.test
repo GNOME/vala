@@ -1,0 +1,8 @@
+Invalid Code
+
+public class Test {
+	public int i throws int { get; set; }
+}
+
+void main () {
+}

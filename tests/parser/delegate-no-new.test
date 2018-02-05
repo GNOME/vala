@@ -1,0 +1,6 @@
+Invalid Code
+
+public new delegate void MyDelegate ();
+
+void main () {
+}

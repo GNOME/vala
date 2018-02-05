@@ -11,4 +11,8 @@ void main () {
 	(i, j) = BAR;
 	assert (i == 42);
 	assert (j == 4711);
+
+	var (test, test2) = new int[] { 23, 51 };
+	assert (test == 23);
+	assert (test2 == 51);
 }

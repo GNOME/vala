@@ -1,0 +1,9 @@
+Invalid Code
+
+public class Test {
+	override Test () {
+	}
+}
+
+void main () {
+}

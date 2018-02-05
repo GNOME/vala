@@ -1,0 +1,8 @@
+Invalid Code
+
+public class Test {
+	public async int i { get; set; }
+}
+
+void main () {
+}

@@ -334,12 +334,62 @@ TESTS = \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
 	parser/assignment.vala \
+	parser/attribute-duplicate.test \
+	parser/attribute-wrong-number.test \
+	parser/constructor-no-new.test \
+	parser/constructor-no-static-class.test \
 	parser/continue-statement.vala \
+	parser/creation-no-abstract.test \
+	parser/creation-no-override.test \
+	parser/creation-no-virtual.test \
+	parser/delegate-no-new.test \
+	parser/destructor-no-new.test \
+	parser/destructor-no-static-class.test \
+	parser/destructor-wrong-name.test \
 	parser/do-statement.vala \
+	parser/expect-endbrace.test \
+	parser/expect-error.test \
+	parser/field-no-abstract.test \
+	parser/field-no-override.test \
+	parser/field-no-static-class.test \
+	parser/field-no-virtual.test \
+	parser/foreach-no-type.test \
+	parser/function-syntax-error.test \
+	parser/inner-array-size.test \
+	parser/invalid-brace.test \
+	parser/method-no-abstract-override.test \
+	parser/method-no-abstract-virtual-override.test \
+	parser/method-no-abstract-virtual.test \
+	parser/method-no-class-abstract.test \
+	parser/method-no-class-override.test \
+	parser/method-no-class-virtual.test \
+	parser/method-no-static-abstract.test \
+	parser/method-no-static-class.test \
+	parser/method-no-static-override.test \
+	parser/method-no-static-virtual.test \
+	parser/method-no-virtual-override.test \
+	parser/namespace-missing-bracket.test \
 	parser/preprocessor.vala \
+	parser/property-default-redefined.test \
+	parser/property-get-must-have-body.test \
+	parser/property-get-redefined.test \
+	parser/property-get-set-construct.test \
+	parser/property-no-abstract-override.test \
+	parser/property-no-abstract-virtual.test \
+	parser/property-no-abstract-virtual-override.test \
+	parser/property-no-static-class.test \
+	parser/property-no-virtual-override.test \
+	parser/property-set-must-have-body.test \
+	parser/property-set-redefined.test \
+	parser/signal-no-class.test \
+	parser/signal-no-static.test \
+	parser/statement-outside-root.test \
 	parser/switch-statement.vala \
 	parser/template.vala \
 	parser/tuple.vala \
+	parser/unsupported-property-async.test \
+	parser/unsupported-property-throws.test \
+	parser/yield-method.test \
 	semantic/field-accessibility.test \
 	semantic/field-compact-static.test \
 	semantic/field-external.test \

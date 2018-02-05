@@ -1,0 +1,9 @@
+Invalid Code
+
+public class Test {
+	class abstract void test () {
+	}
+}
+
+void main () {
+}

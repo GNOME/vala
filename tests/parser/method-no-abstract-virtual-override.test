@@ -1,0 +1,9 @@
+Invalid Code
+
+public class Test {
+	abstract virtual override void test () {
+	}
+}
+
+void main () {
+}

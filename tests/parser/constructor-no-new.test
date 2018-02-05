@@ -1,0 +1,9 @@
+Invalid Code
+
+public class Test {
+	new construct {
+	}
+}
+
+void main () {
+}

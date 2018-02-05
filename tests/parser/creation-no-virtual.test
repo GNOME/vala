@@ -1,0 +1,9 @@
+Invalid Code
+
+public class Test {
+	virtual Test () {
+	}
+}
+
+void main () {
+}

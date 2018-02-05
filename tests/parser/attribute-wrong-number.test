@@ -1,0 +1,5 @@
+Invalid Code
+
+[Attribute (prop = -a)]
+void main () {
+}

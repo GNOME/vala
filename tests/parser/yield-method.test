@@ -1,0 +1,9 @@
+Invalid Code
+
+async void test () {
+	yield "";
+}
+
+void main () {
+	test.begin ();
+}
