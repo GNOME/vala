@@ -113,12 +113,20 @@ TESTS = \
 	methods/printf-constructor.vala \
 	methods/printf-constructor-invalid.test \
 	control-flow/break.vala \
+	control-flow/break-invalid.test \
+	control-flow/continue-invalid.test \
+	control-flow/double-catch.test \
 	control-flow/expressions-conditional.vala \
+	control-flow/finally-return.test \
 	control-flow/for.vala \
 	control-flow/foreach.vala \
+	control-flow/missing-break.test \
+	control-flow/missing-return.test \
 	control-flow/nested-conditional.vala \
 	control-flow/switch.vala \
 	control-flow/sideeffects.vala \
+	control-flow/unassigned-local-block-variable.test \
+	control-flow/unassigned-local-variable.test \
 	control-flow/while-false.vala \
 	control-flow/bug628336.vala \
 	control-flow/bug639482.vala \

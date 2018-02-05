@@ -1,0 +1,12 @@
+Invalid Code
+
+errordomain FooError {
+	BAR
+}
+
+void main () {
+	try {
+	} catch (FooError err) {
+	} catch (FooError err) {
+	}
+}
