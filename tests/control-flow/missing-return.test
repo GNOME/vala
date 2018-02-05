@@ -1,0 +1,7 @@
+Invalid Code
+
+string get_foo () {
+}
+
+void main () {
+}

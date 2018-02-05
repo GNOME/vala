@@ -1,0 +1,11 @@
+Invalid Code
+
+void main () {
+	bool cond = false;
+
+	string s;
+	if (cond) {
+		s = "foo";
+	}
+	print ("%s", s);
+}
