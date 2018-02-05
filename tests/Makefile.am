@@ -450,6 +450,10 @@ TESTS = \
 	semantic/property-struct-protected.test \
 	semantic/property-struct-virtual.test \
 	semantic/property-void.test \
+	semantic/struct-derived.test \
+	semantic/struct-field-initializer.test \
+	semantic/struct-invalid-base.test \
+	semantic/struct-recursive.test \
 	$(NULL)
 
 NON_NULL_TESTS = \
