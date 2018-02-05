@@ -1,0 +1,13 @@
+Invalid Code
+
+interface Bar {
+	public abstract int foo { get; set; }
+}
+
+class Foo : Bar {
+	public override string foo { get; set; }
+}
+
+void main () {
+}
+

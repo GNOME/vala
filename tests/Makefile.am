@@ -405,6 +405,19 @@ TESTS = \
 	semantic/parameter-params.test \
 	semantic/parameter-ref-default.test \
 	semantic/parameter-void.test \
+	semantic/property-abstract.test \
+	semantic/property-abstract-derived-compact.test \
+	semantic/property-accessibility.test \
+	semantic/property-construct.test \
+	semantic/property-initializer-type.test \
+	semantic/property-override.test \
+	semantic/property-override-class.test \
+	semantic/property-override-interface.test \
+	semantic/property-struct-abstract.test \
+	semantic/property-struct-override.test \
+	semantic/property-struct-protected.test \
+	semantic/property-struct-virtual.test \
+	semantic/property-void.test \
 	$(NULL)
 
 NON_NULL_TESTS = \

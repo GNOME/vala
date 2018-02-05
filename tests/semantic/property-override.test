@@ -1,0 +1,12 @@
+Invalid Code
+
+class Bar {
+}
+
+class Foo : Bar {
+	public override string foo { get; set; }
+}
+
+void main () {
+}
+

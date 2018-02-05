@@ -1,0 +1,12 @@
+Invalid Code
+
+[Compact]
+class Foo {
+}
+
+class Bar : Foo {
+	public abstract string foo { get; }
+}
+
+void main () {
+}
