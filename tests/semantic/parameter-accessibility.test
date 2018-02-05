@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo {
+}
+
+public void foo (Foo arg) {
+}
+
+void main () {
+}

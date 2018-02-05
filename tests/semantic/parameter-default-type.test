@@ -1,0 +1,7 @@
+Invalid Code
+
+void foo (string arg = 42) {
+}
+
+void main () {
+}

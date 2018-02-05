@@ -399,6 +399,12 @@ TESTS = \
 	semantic/field-namespace-owned.test \
 	semantic/field-non-constant.test \
 	semantic/field-void.test \
+	semantic/parameter-accessibility.test \
+	semantic/parameter-default-type.test \
+	semantic/parameter-out-default.test \
+	semantic/parameter-params.test \
+	semantic/parameter-ref-default.test \
+	semantic/parameter-void.test \
 	$(NULL)
 
 NON_NULL_TESTS = \
