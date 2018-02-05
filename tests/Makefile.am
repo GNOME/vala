@@ -187,6 +187,7 @@ TESTS = \
 	objects/classes.vala \
 	objects/constructor-variadic.test \
 	objects/constructors.vala \
+	objects/destructors.vala \
 	objects/dynamic.vala \
 	objects/generics.vala \
 	objects/initially-unowned.vala \
