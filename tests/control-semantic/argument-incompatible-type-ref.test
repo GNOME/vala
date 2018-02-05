@@ -1,0 +1,9 @@
+Invalid Code
+
+void foo (ref string arg) {
+}
+
+void main () {
+	int i = 42;
+	foo (ref i);
+}

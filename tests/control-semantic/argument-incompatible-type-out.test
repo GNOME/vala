@@ -1,0 +1,9 @@
+Invalid Code
+
+void foo (out string arg) {
+}
+
+void main () {
+	int i;
+	foo (out i);
+}

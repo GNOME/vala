@@ -137,6 +137,25 @@ TESTS = \
 	control-flow/bug736774-1.vala \
 	control-flow/bug736774-2.vala \
 	control-flow/bug790903.test \
+	control-semantic/argument-extra.test \
+	control-semantic/argument-incompatible-type-out.test \
+	control-semantic/argument-incompatible-type-ref.test \
+	control-semantic/argument-missing.test \
+	control-semantic/argument-named.test \
+	control-semantic/argument-no-out.test \
+	control-semantic/argument-no-ref.test \
+	control-semantic/argument-null-ref.test \
+	control-semantic/argument-owned-out.test \
+	control-semantic/argument-owned-ref.test \
+	control-semantic/argument-value-out.test \
+	control-semantic/argument-value-ref.test \
+	control-semantic/member-incompatible-type.test \
+	control-semantic/member-invalid.test \
+	control-semantic/member-private.test \
+	control-semantic/member-readonly.test \
+	control-semantic/printf-too-few.test \
+	control-semantic/printf-too-many.test \
+	control-semantic/variadic-argument-invalid.test \
 	enums/enum_only.vala \
 	enums/enums.vala \
 	enums/flags.vala \

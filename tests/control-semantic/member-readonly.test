@@ -1,0 +1,15 @@
+Invalid Code
+
+class Foo {
+	public string foo {
+		get {
+			return "bar";
+		}
+	}
+}
+
+void main () {
+	var foo = new Foo () {
+		foo = "foo"
+	};
+}

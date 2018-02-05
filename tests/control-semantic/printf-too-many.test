@@ -1,0 +1,5 @@
+Invalid Code
+
+void main () {
+	print ("%d", 23, 42);
+}

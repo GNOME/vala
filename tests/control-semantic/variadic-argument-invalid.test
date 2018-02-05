@@ -1,0 +1,13 @@
+Invalid Code
+
+class Foo {
+	public signal void foo ();
+
+	public void bar (...) {
+	}
+}
+
+void main () {
+	var foo = new Foo ();
+	foo.bar (foo.foo);
+}

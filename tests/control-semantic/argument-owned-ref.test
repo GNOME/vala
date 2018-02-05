@@ -1,0 +1,9 @@
+Invalid Code
+
+void foo (ref owned string arg) {
+}
+
+void main () {
+	unowned string s = "foo";
+	foo (ref s);
+}

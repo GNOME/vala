@@ -1,0 +1,11 @@
+Invalid Code
+
+class Foo {
+	public string foo { get; set; }
+}
+
+void main () {
+	var foo = new Foo () {
+		foo = 42
+	};
+}
