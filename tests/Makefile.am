@@ -390,6 +390,11 @@ TESTS = \
 	parser/unsupported-property-async.test \
 	parser/unsupported-property-throws.test \
 	parser/yield-method.test \
+	semantic/constant-extern.test \
+	semantic/constant-value.test \
+	semantic/constant-value-missing.test \
+	semantic/constant-value-type.test \
+	semantic/constant-void.test \
 	semantic/field-accessibility.test \
 	semantic/field-compact-static.test \
 	semantic/field-external.test \

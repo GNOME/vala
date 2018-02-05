@@ -1,0 +1,10 @@
+Invalid Code
+
+const string FOO = get_foo ();
+
+string get_foo () {
+	return "foo";
+}
+
+void main () {
+}

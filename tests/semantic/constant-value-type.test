@@ -1,0 +1,6 @@
+Invalid Code
+
+const string FOO = 23;
+
+void main () {
+}

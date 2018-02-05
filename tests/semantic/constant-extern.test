@@ -1,0 +1,6 @@
+Invalid Code
+
+extern const string FOO = "foo";
+
+void main () {
+}
