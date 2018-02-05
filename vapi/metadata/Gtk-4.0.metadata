@@ -42,8 +42,6 @@ TextView
 Widget
   .compute_expand#virtual_method.* out
   .dispatch_child_properties_changed.pspecs array array_length_idx=0
-RecentChooser
-  .get_recent_manager skip=false
 
 // Bug #657202: Floating references
 FileFilter
@@ -101,9 +99,6 @@ MessageDialog
   .format_secondary_markup skip=false printf_format
   .format_secondary_text skip=false printf_format
   .new_with_markup skip=false printf_format
-RecentChooserDialog
-  .new skip=false
-  .new_for_manager skip=false
 Snapshot
   .append* skip=false
   .push* skip=false
@@ -205,9 +200,6 @@ CellAreaBox
 FileFilter
   .get_name name="get_filter_name"
   .set_name name="set_filter_name"
-RecentFilter
-  .get_name name="get_filter_name"
-  .set_name name="set_filter_name"
 
 // Field ownership
 RecentData
@@ -218,12 +210,6 @@ ComboBox.active_id nullable
 RecentData
   .display_name nullable
   .description nullable
-RecentFilterInfo
-  .uri nullable
-  .display_name nullable
-  .mime_type nullable
-  .applications nullable
-  .groups nullable
 
 // Skipped for G-I, but usable from Vala
 FlowBox

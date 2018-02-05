@@ -64,7 +64,4 @@ EventTouchpadPinch skip
 EventTouchpadSwipe skip
 
 FilterFunc.data closure=2
-threads_add_idle skip=false
-threads_add_timeout skip=false
-threads_add_timeout_seconds skip=false
 XEvent skip
