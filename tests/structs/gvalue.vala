@@ -55,10 +55,29 @@ bool make_bool () {
 	return true;
 }
 
+struct FooStruct {
+    public int i;
+}
+
+void test_try_cast_value () {
+	FooStruct s = { 42 };
+	Value vs = s;
+
+	FooStruct s2 = (FooStruct) vs;
+	assert (s2.i == 42);
+
+	string[] sarray = { "hello", "vala", "world" };
+	Value va = sarray;
+
+	string[] sarray2 = (string[]) va;
+	assert (sarray[1] == "vala");
+}
+
 void main () {
 	test_value ();
 	test_value_array ();
 	test_nullable_value ();
 	test_nullable_value_array ();
 	take_value (make_bool ());
+	test_try_cast_value ();
 }
