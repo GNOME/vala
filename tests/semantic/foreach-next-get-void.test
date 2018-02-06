@@ -1,0 +1,23 @@
+Invalid Code
+
+public class Iterator<G> {
+	public bool next () {
+		return true;
+	}
+
+	public void get () {
+		return;
+	}
+}
+
+public class Test<G> {
+	public Iterator<G> iterator () {
+		return new Iterator<G> ();
+	}
+}
+
+void main () {
+	Test<string?> test = null;
+	foreach (var t in test) {
+	}
+}

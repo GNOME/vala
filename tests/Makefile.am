@@ -445,6 +445,20 @@ TESTS = \
 	semantic/field-namespace-owned.test \
 	semantic/field-non-constant.test \
 	semantic/field-void.test \
+	semantic/foreach-iterator-args.test \
+	semantic/foreach-iterator-void.test \
+	semantic/foreach-iterator-wrong-types.test \
+	semantic/foreach-missing-generic-type.test \
+	semantic/foreach-missing-iterator.test \
+	semantic/foreach-missing-next-value.test \
+	semantic/foreach-next-args.test \
+	semantic/foreach-next-get-args.test \
+	semantic/foreach-next-get-void.test \
+	semantic/foreach-next-missing-get.test \
+	semantic/foreach-next-value-args.test \
+	semantic/foreach-next-value-void.test \
+	semantic/foreach-next-void.test \
+	semantic/foreach-wrong-types.test \
 	semantic/method-abstract.test \
 	semantic/method-abstract-body.test \
 	semantic/method-async-ref-parameter.test \

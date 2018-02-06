@@ -1,0 +1,13 @@
+Invalid Code
+
+public class Test<G> {
+	public void iterator () {
+		return;
+	}
+}
+
+void main () {
+	Test<string?> test = null;
+	foreach (var t in test) {
+	}
+}

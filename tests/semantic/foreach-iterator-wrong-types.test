@@ -1,0 +1,7 @@
+Invalid Code
+
+void main () {
+	var test = new GLib.List<int> ();
+	foreach (string t in test) {
+	}
+}

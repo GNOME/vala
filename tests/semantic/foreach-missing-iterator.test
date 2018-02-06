@@ -1,0 +1,10 @@
+Invalid Code
+
+public class Test<G> {
+}
+
+void main () {
+	Test<string?> test = null;
+	foreach (var t in test) {
+	}
+}
