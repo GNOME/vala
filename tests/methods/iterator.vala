@@ -69,4 +69,18 @@ void main () {
 	foreach (var foo3 in collection3) {
 		assert (foo3 == foo_instance);
 	}
+
+	// GLib.List
+	var list = new List<Foo> ();
+	list.append (foo_instance);
+	foreach (var e in list) {
+		assert (e == foo_instance);
+	}
+
+	// GLib.SList
+	var slist = new SList<Foo> ();
+	slist.append (foo_instance);
+	foreach (var e in slist) {
+		assert (e == foo_instance);
+	}
 }

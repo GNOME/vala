@@ -1,0 +1,10 @@
+Invalid Code
+
+delegate void FooFunc ();
+
+class Foo<G> {
+}
+
+void main () {
+	var foo = new Foo<FooFunc> ();
+}
