@@ -1,0 +1,13 @@
+Invalid Code
+
+[Compact]
+class Foo {
+	class int x = 1;
+
+	class construct {
+		x = 2;
+	}
+}
+
+void main () {
+}

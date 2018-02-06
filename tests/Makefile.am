@@ -79,6 +79,7 @@ TESTS = \
 	methods/bug599892.vala \
 	methods/bug613483.vala \
 	methods/bug615450.test \
+	methods/bug620673.test \
 	methods/bug620673.vala \
 	methods/bug622570.vala \
 	methods/bug626783.vala \
@@ -170,11 +171,15 @@ TESTS = \
 	structs/bug777194.vala \
 	delegates/casting.vala \
 	delegates/delegates.vala \
+	delegates/fields.vala \
 	delegates/reference_transfer.vala \
+	delegates/wrapper.vala \
+	delegates/bug519949.test \
 	delegates/bug539166.vala \
 	delegates/bug595610.vala \
 	delegates/bug595639.vala \
 	delegates/bug598869.test \
+	delegates/bug632017.test \
 	delegates/bug638415.vala \
 	delegates/bug639751.vala \
 	delegates/bug659778.vala \
@@ -201,7 +206,12 @@ TESTS = \
 	objects/test-026.vala \
 	objects/test-029.vala \
 	objects/test-034.vala \
+	objects/bug541728.test \
+	objects/bug564011.test \
+	objects/bug564090.test \
 	objects/bug566909.vala \
+	objects/bug574146.test \
+	objects/bug585344.test \
 	objects/bug587905.test \
 	objects/bug588203.vala \
 	objects/bug589928.vala \
@@ -261,6 +271,7 @@ TESTS = \
 	objects/bug779955.vala \
 	objects/bug783897.vala \
 	objects/bug788964.vala \
+	errors/catch-error-code.vala \
 	errors/errors.vala \
 	errors/bug567181.vala \
 	errors/bug579101.vala \
@@ -280,9 +291,11 @@ TESTS = \
 	asynchronous/bug599568.vala \
 	asynchronous/bug600827.vala \
 	asynchronous/bug601558.vala \
+	asynchronous/bug612641.vala \
 	asynchronous/bug613484.vala \
 	asynchronous/bug614294.vala \
 	asynchronous/bug620740.vala \
+	asynchronous/bug626053.vala \
 	asynchronous/bug639591.vala \
 	asynchronous/bug640721.vala \
 	asynchronous/bug641182.vala \

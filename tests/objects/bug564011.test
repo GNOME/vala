@@ -1,0 +1,9 @@
+Invalid Code
+
+class Foo {
+	static ~Foo () {
+	}
+}
+
+void main () {
+}

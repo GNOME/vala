@@ -1,0 +1,11 @@
+Invalid Code
+
+[Compact]
+class Foo {
+}
+
+void main () {
+	var foo = new Foo ();
+	if (foo is Foo) {
+	}
+}
