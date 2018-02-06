@@ -79,7 +79,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					cparam = new CCodeParameter (get_delegate_target_cname (get_variable_cname (param.name)), "void*");
 					cfundecl.add_parameter (cparam);
 					if (deleg_type.is_disposable ()) {
-						cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)), "GDestroyNotify*");
+						cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)), "GDestroyNotify");
 						cfundecl.add_parameter (cparam);
 					}
 				}
