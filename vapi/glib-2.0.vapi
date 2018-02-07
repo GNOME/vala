@@ -4134,6 +4134,8 @@ namespace GLib {
 		public string get_value (string group_name, string key) throws KeyFileError;
 		public string get_string (string group_name, string key) throws KeyFileError;
 		public string get_locale_string (string group_name, string key, string? locale = null) throws KeyFileError;
+		[Version (since = "2.56")]
+		public string? get_locale_for_key (string group_name, string key, string? locale = null);
 		public bool get_boolean (string group_name, string key) throws KeyFileError;
 		public int get_integer (string group_name, string key) throws KeyFileError;
 		[Version (since = "2.26")]
