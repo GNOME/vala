@@ -308,6 +308,11 @@ namespace Gst {
 			public Gst.Video.OverlayComposition make_writable ();
 			public uint n_rectangles ();
 		}
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
+		[Compact]
+		[GIR (name = "VideoOverlayProperties")]
+		public class OverlayProperties {
+		}
 		[CCode (cheader_filename = "gst/video/video-overlay-composition.h", ref_function = "gst_video_overlay_rectangle_ref", type_id = "gst_video_overlay_rectangle_get_type ()", unref_function = "gst_video_overlay_rectangle_unref")]
 		[Compact]
 		[GIR (name = "VideoOverlayRectangle")]
@@ -474,7 +479,9 @@ namespace Gst {
 			public abstract void expose ();
 			public void got_window_handle ([CCode (type = "guintptr")] uint* handle);
 			public abstract void handle_events (bool handle_events);
+			public static void install_properties (GLib.ObjectClass oclass, int last_prop_id);
 			public void prepare_window_handle ();
+			public static bool set_property (GLib.Object object, int last_prop_id, uint property_id, GLib.Value value);
 			[NoWrapper]
 			public virtual void set_render_rectangle (int x, int y, int width, int height);
 			public abstract void set_window_handle ([CCode (type = "guintptr")] uint* handle);
@@ -899,7 +906,10 @@ namespace Gst {
 			I422_12BE,
 			I422_12LE,
 			Y444_12BE,
-			Y444_12LE
+			Y444_12LE,
+			GRAY10_LE32,
+			NV12_10LE32,
+			NV16_10LE32
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]
@@ -1522,6 +1532,10 @@ namespace Gst {
 		public static GLib.Type overlay_composition_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned Gst.MetaInfo? overlay_composition_meta_get_info ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static void overlay_install_properties (GLib.ObjectClass oclass, int last_prop_id);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static bool overlay_set_property (GLib.Object object, int last_prop_id, uint property_id, GLib.Value value);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static GLib.Type region_of_interest_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/video/video.h")]
