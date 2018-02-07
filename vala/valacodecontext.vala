@@ -72,6 +72,11 @@ public class Vala.CodeContext {
 	public bool ccode_only { get; set; }
 
 	/**
+	 * Command to run pkg-config.
+	 */
+	public string pkg_config_command { get; set; default = "pkg-config"; }
+
+	/**
 	 * Enable support for ABI stability.
 	 */
 	public bool abi_stability { get; set; }
@@ -683,5 +688,62 @@ public class Vala.CodeContext {
 		}
 
 		return rpath;
+	}
+
+	public bool pkg_config_exists (string package_name) {
+		string pc = pkg_config_command + " --exists " + package_name;
+		int exit_status;
+
+		try {
+			Process.spawn_command_line_sync (pc, null, null, out exit_status);
+			return (0 == exit_status);
+		} catch (SpawnError e) {
+			Report.error (null, e.message);
+			return false;
+		}
+	}
+
+	public string? pkg_config_modversion (string package_name) {
+		string pc = pkg_config_command + " --silence-errors --modversion " + package_name;
+		string? output = null;
+		int exit_status;
+
+		try {
+			Process.spawn_command_line_sync (pc, out output, null, out exit_status);
+			if (exit_status != 0) {
+				output = output[0:-1];
+				if (output == "") {
+					output = null;
+				}
+			}
+		} catch (SpawnError e) {
+			output = null;
+		}
+
+		return output;
+	}
+
+	public string? pkg_config_compile_flags (string package_name) {
+		string pc = pkg_config_command + " --cflags";
+		if (!compile_only) {
+			pc += " --libs";
+		}
+		pc += package_name;
+
+		string? output = null;
+		int exit_status;
+
+		try {
+			Process.spawn_command_line_sync (pc, out output, null, out exit_status);
+			if (exit_status != 0) {
+				Report.error (null, "%s exited with status %d".printf (pkg_config_command, exit_status));
+				return null;
+			}
+		} catch (SpawnError e) {
+			Report.error (null, e.message);
+			output = null;
+		}
+
+		return output;
 	}
 }

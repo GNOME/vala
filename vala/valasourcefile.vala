@@ -70,26 +70,8 @@ public class Vala.SourceFile {
 
 			_version_requested = true;
 
-			string pkg_config_name = package_name;
-			if (pkg_config_name == null) {
-				return null;
-			}
-
-			string? standard_output;
-			int exit_status;
-
-			try {
-				Process.spawn_command_line_sync ("pkg-config --silence-errors --modversion %s".printf (pkg_config_name), out standard_output, null, out exit_status);
-				if (exit_status != 0) {
-					return null;
-				}
-			} catch (GLib.SpawnError err) {
-				return null;
-			}
-
-			standard_output = standard_output[0:-1];
-			if (standard_output != "") {
-				_installed_version = standard_output;
+			if (_package_name != null) {
+				_installed_version = context.pkg_config_modversion (package_name);
 			}
 
 			return _installed_version;

@@ -286,6 +286,11 @@ class Vala.Compiler {
 
 		context.run_output = run_output;
 
+		if (pkg_config_command == null) {
+			pkg_config_command = Environment.get_variable ("PKG_CONFIG") ?? "pkg-config";
+		}
+		context.pkg_config_command = pkg_config_command;
+
 		if (defines != null) {
 			foreach (string define in defines) {
 				context.add_define (define);
@@ -495,13 +500,10 @@ class Vala.Compiler {
 			if (cc_command == null && Environment.get_variable ("CC") != null) {
 				cc_command = Environment.get_variable ("CC");
 			}
-			if (pkg_config_command == null && Environment.get_variable ("PKG_CONFIG") != null) {
-				pkg_config_command = Environment.get_variable ("PKG_CONFIG");
-			}
 			if (cc_options == null) {
-				ccompiler.compile (context, cc_command, new string[] { }, pkg_config_command);
+				ccompiler.compile (context, cc_command, new string[] { });
 			} else {
-				ccompiler.compile (context, cc_command, cc_options, pkg_config_command);
+				ccompiler.compile (context, cc_command, cc_options);
 			}
 		}
 
