@@ -29,57 +29,22 @@ public class Vala.CCodeCompiler {
 	public CCodeCompiler () {
 	}
 
-	static bool package_exists(string package_name, string? pkg_config_command = "pkg-config") {
-		string pc = pkg_config_command + " --exists " + package_name;
-		int exit_status;
-
-		try {
-			Process.spawn_command_line_sync (pc, null, null, out exit_status);
-			return (0 == exit_status);
-		} catch (SpawnError e) {
-			Report.error (null, e.message);
-			return false;
-		}
-	}
-
 	/**
 	 * Compile generated C code to object code and optionally link object
 	 * files.
 	 *
 	 * @param context a code context
 	 */
-	public void compile (CodeContext context, string? cc_command, string[] cc_options, string? pkg_config_command = null) {
-		bool use_pkgconfig = false;
-
-		if (pkg_config_command == null) {
-			pkg_config_command = "pkg-config";
-		}
-
-		string pc = pkg_config_command + " --cflags";
-		if (!context.compile_only) {
-			pc += " --libs";
-		}
-		use_pkgconfig = true;
-		pc += " gobject-2.0";
+	public void compile (CodeContext context, string? cc_command, string[] cc_options) {
+		string pc = " gobject-2.0";
 		foreach (string pkg in context.get_packages ()) {
-			if (package_exists (pkg, pkg_config_command)) {
-				use_pkgconfig = true;
+			if (context.pkg_config_exists (pkg)) {
 				pc += " " + pkg;
 			}
 		}
-		string pkgflags = "";
-		if (use_pkgconfig) {
-			try {
-				int exit_status;
-				Process.spawn_command_line_sync (pc, out pkgflags, null, out exit_status);
-				if (exit_status != 0) {
-					Report.error (null, "pkg-config exited with status %d".printf (exit_status));
-					return;
-				}
-			} catch (SpawnError e) {
-				Report.error (null, e.message);
-				return;
-			}
+		string? pkgflags = context.pkg_config_compile_flags (pc);
+		if (pkgflags == null) {
+			return;
 		}
 
 		// TODO compile the C code files in parallel
