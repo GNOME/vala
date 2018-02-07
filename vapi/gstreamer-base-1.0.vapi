@@ -752,16 +752,16 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.Caps fixate_caps (Gst.PadDirection direction, Gst.Caps caps, Gst.Caps othercaps);
 			[NoWrapper]
-			public virtual Gst.FlowReturn generate_output (Gst.Buffer outbuf);
+			public virtual Gst.FlowReturn generate_output (out Gst.Buffer outbuf);
 			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
 			public Gst.BufferPool get_buffer_pool ();
 			[NoWrapper]
-			public virtual bool get_unit_size (Gst.Caps caps, size_t size);
+			public virtual bool get_unit_size (Gst.Caps caps, out size_t size);
 			public bool is_in_place ();
 			public bool is_passthrough ();
 			public bool is_qos_enabled ();
 			[NoWrapper]
-			public virtual Gst.FlowReturn prepare_output_buffer (Gst.Buffer input, Gst.Buffer outbuf);
+			public virtual Gst.FlowReturn prepare_output_buffer (Gst.Buffer input, out Gst.Buffer outbuf);
 			[NoWrapper]
 			public virtual bool propose_allocation (Gst.Query decide_query, Gst.Query query);
 			[NoWrapper]
@@ -795,7 +795,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool transform_meta (Gst.Buffer outbuf, Gst.Meta meta, Gst.Buffer inbuf);
 			[NoWrapper]
-			public virtual bool transform_size (Gst.PadDirection direction, Gst.Caps caps, size_t size, Gst.Caps othercaps, size_t othersize);
+			public virtual bool transform_size (Gst.PadDirection direction, Gst.Caps caps, size_t size, Gst.Caps othercaps, out size_t othersize);
 			public void update_qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
 			[Version (since = "1.6")]
 			public bool update_src_caps (Gst.Caps updated_caps);
