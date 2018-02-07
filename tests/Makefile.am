@@ -65,7 +65,6 @@ TESTS = \
 	chainup/struct-this-foo.vala \
 	chainup/bug791785.vala \
 	pointers/bug590641.vala \
-	namespaces.vala \
 	methods/lambda.vala \
 	methods/closures.vala \
 	methods/contains.vala \
@@ -409,6 +408,7 @@ TESTS = \
 	parser/method-no-static-override.test \
 	parser/method-no-static-virtual.test \
 	parser/method-no-virtual-override.test \
+	parser/namespaces.vala \
 	parser/namespace-missing-bracket.test \
 	parser/preprocessor.vala \
 	parser/property-default-redefined.test \

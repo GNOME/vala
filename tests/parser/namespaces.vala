@@ -6,7 +6,7 @@ public class GlobalTestClass {
 }
 
 namespace Maman {
-	static int main () {
+	static void run () {
 		stdout.printf ("Namespace Test\n");
 
 		Bar.run ();
@@ -14,8 +14,6 @@ namespace Maman {
 		new GlobalTestClass();
 
 		var obj = new ClassInNestedNamespace ();
-
-		return 0;
 	}
 
 	class Bar : Object {
@@ -28,8 +26,7 @@ namespace Maman {
 public class Foo.Sub.ClassInNestedNamespace {
 }
 
-
 void main () {
-	Maman.main ();
+	Maman.run ();
 }
 
