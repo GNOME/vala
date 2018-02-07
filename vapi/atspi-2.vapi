@@ -429,11 +429,6 @@ namespace Atspi {
 		public weak string keystrings;
 		public short len;
 	}
-	[CCode (cheader_filename = "atspi/atspi.h", has_type_id = false)]
-	public struct Reference {
-		public weak string name;
-		public weak string path;
-	}
 	[CCode (cheader_filename = "atspi/atspi.h", cprefix = "ATSPI_CACHE_", type_id = "atspi_cache_get_type ()")]
 	[Flags]
 	public enum Cache {
@@ -493,12 +488,6 @@ namespace Atspi {
 	public enum CoordType {
 		SCREEN,
 		WINDOW
-	}
-	[CCode (cheader_filename = "atspi/atspi.h", cprefix = "ATSPI_ERROR_", has_type_id = false)]
-	public enum Error {
-		APPLICATION_GONE,
-		IPC,
-		SYNC_NOT_ALLOWED
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", cprefix = "ATSPI_", type_id = "atspi_event_type_get_type ()")]
 	public enum EventType {

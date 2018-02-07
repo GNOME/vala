@@ -1098,8 +1098,9 @@ namespace GLib {
 		public uint16 read_uint16 (GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public uint32 read_uint32 (GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public uint64 read_uint64 (GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		[Version (deprecated = true, deprecated_since = "2.56")]
 		public string read_until (string stop_chars, out size_t length, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		[Version (since = "2.20")]
+		[Version (deprecated = true, deprecated_since = "2.56", since = "2.20")]
 		public async string read_until_async (string stop_chars, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t length) throws GLib.IOError, GLib.IOError;
 		[Version (since = "2.26")]
 		public string read_upto (string stop_chars, ssize_t stop_chars_len, out size_t length, GLib.Cancellable? cancellable = null) throws GLib.IOError;

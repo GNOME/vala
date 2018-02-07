@@ -854,6 +854,8 @@ namespace Soup {
 		[NoWrapper]
 		public virtual void auth_required (Soup.Message msg, Soup.Auth auth, bool retrying);
 		public virtual void cancel_message (Soup.Message msg, uint status_code);
+		[Version (since = "2.62")]
+		public async GLib.IOStream connect_async (Soup.URI uri, GLib.Cancellable? cancellable, [CCode (scope = "async")] Soup.SessionConnectProgressCallback? progress_callback) throws GLib.Error;
 		[NoWrapper]
 		public virtual void flush_queue ();
 		public unowned GLib.MainContext? get_async_context ();
@@ -1568,6 +1570,9 @@ namespace Soup {
 	public delegate void ServerWebsocketCallback (Soup.Server server, Soup.WebsocketConnection connection, string path, Soup.ClientContext client);
 	[CCode (cheader_filename = "libsoup/soup.h", instance_pos = 2.9)]
 	public delegate void SessionCallback (Soup.Session session, Soup.Message msg);
+	[CCode (cheader_filename = "libsoup/soup.h", instance_pos = 3.9)]
+	[Version (since = "2.62")]
+	public delegate void SessionConnectProgressCallback (Soup.Session session, GLib.SocketClientEvent event, GLib.IOStream connection);
 	[CCode (cheader_filename = "libsoup/soup.h", instance_pos = 2.9)]
 	public delegate void SocketCallback (Soup.Socket sock, uint status);
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_ADDRESS_ANY_PORT")]
