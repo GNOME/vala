@@ -1,0 +1,20 @@
+GIR
+
+Input:
+
+<class name="Foo" c:type="TestFoo" glib:type-name="TestFoo" glib:get-type="test_foo_get_type" glib:type-struct="FooClass" parent="GObject.Object">
+  <property name="prop" readable="0" writable="1" construct-only="1">
+    <type name="gint" c:type="gint"/>
+  </property>
+</class>
+<record name="FooClass" c:type="TestFooClass" glib:is-gtype-struct-for="Foo"/>
+
+Output:
+
+[CCode (cheader_filename = "test.h", type_id = "test_foo_get_type ()")]
+public class Foo : GLib.Object {
+	[CCode (has_construct_function = false)]
+	protected Foo ();
+	[NoAccessorMethod]
+	public int prop { construct; }
+}

@@ -1,0 +1,19 @@
+GIR
+
+Input:
+
+<function name="function" c:identifier="test_function">
+  <return-value transfer-ownership="none">
+    <type name="none"/>
+  </return-value>
+  <parameters>
+    <parameter name="i" direction="out" transfer-ownership="full" nullable="1">
+      <type name="gint" c:type="gint*"/>
+    </parameter>
+  </parameters>
+</function>
+
+Output:
+
+[CCode (cheader_filename = "test.h")]
+public static void function (out int i);

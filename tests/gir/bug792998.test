@@ -1,0 +1,59 @@
+GIR
+
+Input:
+
+<class name="Foo" c:type="TestFoo" glib:type-name="TestFoo" glib:get-type="test_foo_get_type" glib:type-struct="FooClass" parent="GObject.Object">
+  <method name="get_prop1" c:identifier="test_foo_get_prop1" throws="1">
+    <return-value transfer-ownership="full">
+      <type name="gint" c:type="gint"/>
+    </return-value>
+  </method>
+  <method name="set_prop2" c:identifier="test_foo_set_prop2" throws="1">
+    <return-value transfer-ownership="full">
+      <type name="gboolean" c:type="gboolean"/>
+    </return-value>
+    <parameters>
+      <parameter name="i" transfer-ownership="none">
+        <type name="gint" c:type="gint"/>
+      </parameter>
+    </parameters>
+  </method>
+  <property name="prop1" writable="1">
+    <type name="gint" c:type="gint"/>
+  </property>
+  <method name="set_prop1" c:identifier="test_foo_set_prop1">
+    <return-value transfer-ownership="none">
+      <type name="none"/>
+    </return-value>
+    <parameters>
+      <parameter name="value" transfer-ownership="none">
+        <type name="gint" c:type="gint"/>
+      </parameter>
+    </parameters>
+  </method>
+  <property name="prop2" writable="1">
+    <type name="gint" c:type="gint"/>
+  </property>
+  <method name="get_prop2" c:identifier="test_foo_get_prop2">
+    <return-value transfer-ownership="none">
+      <type name="gint" c:type="gint"/>
+    </return-value>
+  </method>
+</class>
+<record name="FooClass" c:type="TestFooClass" glib:is-gtype-struct-for="Foo"/>
+
+Output:
+
+[CCode (cheader_filename = "test.h", type_id = "test_foo_get_type ()")]
+public class Foo : GLib.Object {
+	[CCode (has_construct_function = false)]
+	protected Foo ();
+	public int get_prop1 () throws GLib.Error;
+	public int get_prop2 ();
+	public void set_prop1 (int value);
+	public bool set_prop2 (int i) throws GLib.Error;
+	[NoAccessorMethod]
+	public int prop1 { get; set; }
+	[NoAccessorMethod]
+	public int prop2 { get; set; }
+}

@@ -1,0 +1,25 @@
+GIR
+
+Input:
+
+<function name="function" c:identifier="test_function">
+  <return-value transfer-ownership="none">
+    <type name="none"/>
+  </return-value>
+  <parameters>
+    <parameter name="callback" transfer-ownership="none" allow-none="1" closure="1" scope="notified" destroy="2">
+      <type name="GLib.Func" c:type="GFunc"/>
+    </parameter>
+    <parameter name="callback_target" transfer-ownership="none" allow-none="1" closure="0">
+      <type name="gpointer" c:type="void*"/>
+    </parameter>
+    <parameter name="callback_target_destroy_notify" transfer-ownership="none" scope="call" destroy="0">
+      <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+    </parameter>
+  </parameters>
+</function>
+
+Output:
+
+[CCode (cheader_filename = "test.h")]
+public static void function (owned GLib.Func? callback);

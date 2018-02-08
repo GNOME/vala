@@ -368,8 +368,13 @@ TESTS = \
 	gir/bug667751.test \
 	gir/bug742012.test \
 	gir/bug788775.test \
+	gir/bug792998.test \
 	gir/array-fixed-length.test \
+	gir/class.test \
 	gir/delegate-alias-without-target.test \
+	gir/delegate-closure-destroy-index-conflict.test \
+	gir/parameter-nullable-out-simple-type.test \
+	gir/property-non-readable.test \
 	annotations/deprecated.vala \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
