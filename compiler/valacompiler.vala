@@ -464,7 +464,15 @@ class Vala.Compiler {
 			}
 
 			var interface_writer = new CodeWriter (CodeWriterType.INTERNAL);
-			interface_writer.set_cheader_override(header_filename, internal_header_filename);
+
+			if (context.includedir != null) {
+				var prefixed_header_filename = Path.build_path ("/", context.includedir, Path.get_basename (header_filename));
+				var prefixed_internal_header_filename = Path.build_path ("/", context.includedir, Path.get_basename (internal_header_filename));
+				interface_writer.set_cheader_override (prefixed_header_filename, prefixed_internal_header_filename);
+			} else {
+				interface_writer.set_cheader_override (header_filename, internal_header_filename);
+			}
+
 			string vapi_filename = internal_vapi_filename;
 
 			// put .vapi file in current directory unless -d has been explicitly specified
