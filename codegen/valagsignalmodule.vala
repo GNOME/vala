@@ -181,7 +181,9 @@ public class Vala.GSignalModule : GObjectModule {
 			}
 		}
 
-		signal_enum.add_value (new CCodeEnumValue ("%s_%s_SIGNAL".printf (get_ccode_upper_case_name ((TypeSymbol)sig.parent_symbol), get_ccode_upper_case_name (sig))));
+		if (signal_enum != null && sig.parent_symbol is TypeSymbol) {
+			signal_enum.add_value (new CCodeEnumValue ("%s_%s_SIGNAL".printf (get_ccode_upper_case_name ((TypeSymbol) sig.parent_symbol), get_ccode_upper_case_name (sig))));
+		}
 
 		sig.accept_children (this);
 
