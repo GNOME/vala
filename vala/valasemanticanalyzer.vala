@@ -160,7 +160,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public Class gerror_type;
 	public DataType list_type;
 	public DataType tuple_type;
-	public DataType error_type;
 	public Class gsource_type;
 
 	// keep replaced alive to make sure they remain valid
