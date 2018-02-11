@@ -856,6 +856,35 @@ public class Vala.Method : Subroutine, Callable {
 			}
 		}
 
+		// check that DBus methods at least throw "GLib.Error" or "GLib.DBusError, GLib.IOError"
+		if (parent_symbol is ObjectTypeSymbol && parent_symbol.get_attribute ("DBus") != null) {
+			Attribute? dbus_attr = get_attribute ("DBus");
+			if (dbus_attr == null || dbus_attr.get_bool ("visible", true)) {
+				bool throws_gerror = false;
+				bool throws_gioerror = false;
+				bool throws_gdbuserror = false;
+				foreach (DataType error_type in get_error_types ()) {
+					if (!(error_type is ErrorType)) {
+						continue;
+					}
+					unowned ErrorDomain? error_domain = ((ErrorType) error_type).error_domain;
+					if (error_domain == null) {
+						throws_gerror = true;
+						break;
+					}
+					string? full_error_domain = error_domain.get_full_name ();
+					if (full_error_domain == "GLib.IOError") {
+						throws_gioerror = true;
+					} else if (full_error_domain == "GLib.DBusError") {
+						throws_gdbuserror = true;
+					}
+				}
+				if (!throws_gerror && !(throws_gioerror && throws_gdbuserror)) {
+					Report.warning (source_reference, "DBus methods are recommended to throw at least `GLib.Error' or `GLib.DBusError, GLib.IOError'");
+				}
+			}
+		}
+
 		if (is_possible_entry_point (context)) {
 			if (context.entry_point != null) {
 				error = true;

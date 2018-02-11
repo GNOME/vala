@@ -363,6 +363,7 @@ TESTS = \
 	dbus/bug596862.vala \
 	dbus/bug602003.test \
 	dbus/bug782719.test \
+	dbus/bug792277.vala \
 	dbus/rawvariants.test \
 	gir/bug651773.test \
 	gir/bug667751.test \
