@@ -3244,7 +3244,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.4")]
 		public FontButton.with_font (string fontname);
-		[Version (since = "2.4")]
+		[Version (deprecated = true, deprecated_since = "3.22", since = "2.4")]
 		public string font_name { get; set; }
 		[Version (since = "2.4")]
 		public bool show_size { get; set; }
@@ -11506,7 +11506,8 @@ namespace Gtk {
 		GPL_3_0_ONLY,
 		LGPL_2_1_ONLY,
 		LGPL_3_0_ONLY,
-		AGPL_3_0
+		AGPL_3_0,
+		AGPL_3_0_ONLY
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_MENU_DIR_", type_id = "gtk_menu_direction_type_get_type ()")]
 	public enum MenuDirectionType {
@@ -12256,7 +12257,7 @@ namespace Gtk {
 	public delegate void ClipboardReceivedFunc (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 3.9)]
 	[Version (since = "2.10")]
-	public delegate void ClipboardRichTextReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom format, [CCode (array_length_cname = "length", array_length_pos = 3.1, array_length_type = "gsize", type = "guint8*")] uint8[]? text);
+	public delegate void ClipboardRichTextReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom format, [CCode (array_length_cname = "length", array_length_pos = 3.1, array_length_type = "gsize", type = "const guint8*")] uint8[]? text);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
 	[Version (since = "2.4")]
 	public delegate void ClipboardTargetsReceivedFunc (Gtk.Clipboard clipboard, [CCode (array_length_cname = "n_atoms", array_length_pos = 2.1)] Gdk.Atom[]? atoms);

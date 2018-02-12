@@ -5249,7 +5249,6 @@ namespace Gdk {
 	public class Window : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Window ();
-		public void add_filter (Gdk.FilterFunc function);
 		public void beep ();
 		public unowned Gdk.DrawingContext begin_draw_frame (Gdk.DrawContext? context, Cairo.Region region);
 		public void begin_move_drag (int button, int root_x, int root_y, uint32 timestamp);
@@ -5333,7 +5332,6 @@ namespace Gdk {
 		public Window.popup (Gdk.Display display, Gdk.Rectangle position);
 		public void raise ();
 		public void register_dnd ();
-		public void remove_filter (Gdk.FilterFunc function);
 		public void resize (int width, int height);
 		public void restack (Gdk.Window? sibling, bool above);
 		public void scroll (int dx, int dy);
@@ -5618,12 +5616,6 @@ namespace Gdk {
 		PAD_GROUP_MODE,
 		EVENT_LAST
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FILTER_", type_id = "gdk_filter_return_get_type ()")]
-	public enum FilterReturn {
-		CONTINUE,
-		TRANSLATE,
-		REMOVE
-	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FRAME_CLOCK_PHASE_", type_id = "gdk_frame_clock_phase_get_type ()")]
 	[Flags]
 	[Version (since = "3.8")]
@@ -5884,8 +5876,6 @@ namespace Gdk {
 	public delegate void ContentSerializeFunc (Gdk.ContentSerializer serializer);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 1.9)]
 	public delegate void EventFunc (Gdk.Event event);
-	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 2.9)]
-	public delegate Gdk.FilterReturn FilterFunc (Gdk.XEvent xevent, Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 2.9)]
 	[Version (since = "3.20")]
 	public delegate void SeatGrabPrepareFunc (Gdk.Seat seat, Gdk.Window window);
