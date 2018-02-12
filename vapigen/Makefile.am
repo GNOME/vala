@@ -17,6 +17,9 @@ AM_CPPFLAGS = \
 
 bin_PROGRAMS = \
 	vapigen \
+	$(NULL)
+
+noinst_PROGRAMS = \
 	vapicheck \
 	$(NULL)
 
@@ -111,7 +114,6 @@ CLEANFILES = \
 if ENABLE_UNVERSIONED
 install-exec-hook:
 	cd $(DESTDIR)$(bindir) && $(LN_S) -f vapigen@PACKAGE_SUFFIX@$(EXEEXT) vapigen$(EXEEXT)
-	cd $(DESTDIR)$(bindir) && $(LN_S) -f vapicheck@PACKAGE_SUFFIX@$(EXEEXT) vapicheck$(EXEEXT)
 
 install-data-hook:
 	cd $(DESTDIR)$(pkgconfigdir) && $(LN_S) -f vapigen@PACKAGE_SUFFIX@.pc vapigen.pc
