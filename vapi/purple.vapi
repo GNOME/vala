@@ -29,7 +29,9 @@ namespace Purple {
 		[CCode (has_construct_function = false)]
 		public Account (string username, string protocol_id);
 		public void add_buddies (GLib.List buddies);
+		public void add_buddies_with_invite (GLib.List buddies, string message);
 		public void add_buddy (Purple.Buddy buddy);
+		public void add_buddy_with_invite (Purple.Buddy buddy, string message);
 		public void change_password (string orig_pw, string new_pw);
 		public void clear_current_error ();
 		public void clear_settings ();
@@ -46,12 +48,16 @@ namespace Purple {
 		public bool get_enabled (string ui);
 		public int get_int (string name, int default_value);
 		public unowned Purple.Log get_log (bool create);
+		public unowned string get_name_for_display ();
 		public unowned string get_password ();
 		public unowned Purple.Presence get_presence ();
+		public Purple.PrivacyType get_privacy_type ();
 		public unowned string get_protocol_id ();
 		public unowned string get_protocol_name ();
 		public unowned Purple.ProxyInfo get_proxy_info ();
+		public void get_public_alias (Purple.GetPublicAliasSuccessCallback success_cb, Purple.GetPublicAliasFailureCallback failure_cb);
 		public bool get_remember_password ();
+		public bool get_silence_suppression ();
 		public unowned Purple.Status get_status (string status_id);
 		public unowned Purple.StatusType get_status_type (string id);
 		public unowned Purple.StatusType get_status_type_with_primitive (Purple.StatusPrimitive primitive);
@@ -67,6 +73,8 @@ namespace Purple {
 		public bool is_disconnected ();
 		public bool is_status_active (string status_id);
 		public void notify_added (string remote_user, string id, string alias, string message);
+		public static unowned Purple.AccountPrefsUiOps prefs_get_ui_ops ();
+		public static void prefs_set_ui_ops (Purple.AccountPrefsUiOps ops);
 		public void register ();
 		public void remove_buddies (GLib.List buddies, GLib.List groups);
 		public void remove_buddy (Purple.Buddy buddy, Purple.Group group);
@@ -87,10 +95,13 @@ namespace Purple {
 		public void set_enabled (string ui, bool value);
 		public void set_int (string name, int value);
 		public void set_password (string password);
+		public void set_privacy_type (Purple.PrivacyType privacy_type);
 		public void set_protocol_id (string protocol_id);
 		public void set_proxy_info (Purple.ProxyInfo info);
+		public void set_public_alias (string alias, Purple.SetPublicAliasSuccessCallback success_cb, Purple.SetPublicAliasFailureCallback failure_cb);
 		public void set_register_callback (Purple.AccountRegistrationCb cb);
 		public void set_remember_password (bool value);
+		public void set_silence_suppression (bool value);
 		public void set_status (string status_id, bool active);
 		public void set_status_list (string status_id, bool active, GLib.List attrs);
 		public void set_status_types (GLib.List status_types);
@@ -131,6 +142,16 @@ namespace Purple {
 		public void set_list (GLib.List values);
 		public void set_masked (bool masked);
 		public static unowned Purple.AccountOption string_new (string text, string pref_name, string default_value);
+	}
+	[CCode (cheader_filename = "purple.h")]
+	[Compact]
+	public class AccountPrefsUiOps {
+		public weak GLib.Callback load;
+		public weak GLib.Callback save;
+		public weak GLib.Callback schedule_save;
+		public weak GLib.Callback set_bool;
+		public weak GLib.Callback set_int;
+		public weak GLib.Callback set_string;
 	}
 	[CCode (cheader_filename = "purple.h")]
 	[Compact]
@@ -228,6 +249,7 @@ namespace Purple {
 		public weak Purple.Account account;
 		public weak string alias;
 		public weak Purple.BuddyIcon icon;
+		public Purple.MediaCaps media_caps;
 		public weak string name;
 		public weak Purple.BlistNode node;
 		public weak Purple.Presence presence;
@@ -244,6 +266,7 @@ namespace Purple {
 		public unowned Purple.BuddyIcon get_icon ();
 		public unowned string get_local_alias ();
 		public unowned string get_local_buddy_alias ();
+		public Purple.MediaCaps get_media_caps ();
 		public unowned string get_name ();
 		public unowned Purple.Presence get_presence ();
 		public void* get_protocol_data ();
@@ -269,6 +292,7 @@ namespace Purple {
 		public static void icons_set_for_user (Purple.Account account, string username, void* icon_data, size_t icon_len, string checksum);
 		public static void icons_uninit ();
 		public void set_icon (Purple.BuddyIcon icon);
+		public void set_media_caps (Purple.MediaCaps media_caps);
 		public void set_protocol_data (void* data);
 	}
 	[CCode (cheader_filename = "purple.h", ref_function = "purple_buddy_icon_ref", unref_function = "purple_buddy_icon_unref")]
@@ -313,6 +337,7 @@ namespace Purple {
 		public static bool check_signature_chain (GLib.List chain);
 		public static bool check_signature_chain_with_failing (GLib.List chain, out unowned Purple.Certificate failing);
 		public bool check_subject_name (string name);
+		public bool compare_pubkeys (Purple.Certificate crt2);
 		public unowned Purple.Certificate copy ();
 		public static unowned GLib.List copy_list (GLib.List crt_list);
 		public static void destroy_list (GLib.List crt_list);
@@ -322,6 +347,7 @@ namespace Purple {
 		public static unowned Purple.CertificateScheme find_scheme (string name);
 		public static unowned Purple.CertificateVerifier find_verifier (string scheme_name, string ver_name);
 		public unowned GLib.ByteArray get_fingerprint_sha1 ();
+		public unowned GLib.ByteArray get_fingerprint_sha256 (bool sha1_fallback);
 		public static void* get_handle ();
 		public unowned string get_issuer_unique_id ();
 		public static unowned GLib.List get_pools ();
@@ -370,18 +396,24 @@ namespace Purple {
 	[Compact]
 	public class CertificateScheme {
 		public weak GLib.Callback check_subject_name;
+		public weak GLib.Callback compare_pubkeys;
 		public weak GLib.Callback copy_certificate;
 		public weak GLib.Callback destroy_certificate;
 		public weak GLib.Callback export_certificate;
 		public weak string fullname;
 		public weak GLib.Callback get_fingerprint_sha1;
+		public weak GLib.Callback get_fingerprint_sha256;
 		public weak GLib.Callback get_issuer_unique_id;
 		public weak GLib.Callback get_subject_name;
 		public weak GLib.Callback get_times;
 		public weak GLib.Callback get_unique_id;
 		public weak GLib.Callback import_certificate;
+		public weak GLib.Callback import_certificates;
 		public weak string name;
+		public weak GLib.Callback register_trusted_tls_cert;
 		public weak GLib.Callback signed_by;
+		public uint struct_size;
+		public weak GLib.Callback verify_cert;
 	}
 	[CCode (cheader_filename = "purple.h")]
 	[Compact]
@@ -491,7 +523,23 @@ namespace Purple {
 	}
 	[CCode (cheader_filename = "purple.h")]
 	[Compact]
+	public class Cmd {
+		public static Purple.CmdStatus do_command (Purple.Conversation conv, string cmdline, string markup, string errormsg);
+		public bool execute (Purple.Conversation conv, string cmdline);
+		public static unowned GLib.List help (Purple.Conversation conv, string cmd);
+		public static unowned GLib.List list (Purple.Conversation conv);
+		public static unowned Purple.CmdId register (string cmd, string args, Purple.CmdPriority p, Purple.CmdFlag f, string prpl_id, Purple.CmdFunc func, string helpstr, void* data);
+		public static void unregister (Purple.CmdId id);
+	}
+	[CCode (cheader_filename = "purple.h")]
+	[Compact]
 	public class CmdId {
+	}
+	[CCode (cheader_filename = "purple.h")]
+	[Compact]
+	public class CommandsUiOps {
+		public weak GLib.Callback register_command;
+		public weak GLib.Callback unregister_command;
 	}
 	[CCode (cheader_filename = "purple.h", free_function = "purple_connection_destroy")]
 	[Compact]
@@ -561,6 +609,7 @@ namespace Purple {
 		[CCode (has_construct_function = false)]
 		public Contact ();
 		public unowned string get_alias ();
+		public unowned Purple.Group get_group ();
 		public unowned Purple.Buddy get_priority_buddy ();
 		public void invalidate_priority_buddy ();
 		public bool on_account (Purple.Account account);
@@ -575,13 +624,18 @@ namespace Purple {
 		public weak GLib.List in_room;
 		public weak string nick;
 		public weak string topic;
+		public weak GLib.HashTable users;
 		public weak string who;
 		public void add_user (string user, string extra_msg, Purple.ConvChatBuddyFlags flags, bool new_arrival);
 		public void add_users (GLib.List users, GLib.List extra_msgs, GLib.List flags, bool new_arrivals);
 		public static void cb_destroy (Purple.ConvChatBuddy cb);
 		public unowned Purple.ConvChatBuddy cb_find (string name);
+		public static unowned string cb_get_attribute (Purple.ConvChatBuddy cb, string key);
+		public static unowned GLib.List cb_get_attribute_keys (Purple.ConvChatBuddy cb);
 		public static unowned string cb_get_name (Purple.ConvChatBuddy cb);
 		public static unowned Purple.ConvChatBuddy cb_new (string name, string alias, Purple.ConvChatBuddyFlags flags);
+		public void cb_set_attribute (Purple.ConvChatBuddy cb, string key, string value);
+		public void cb_set_attributes (Purple.ConvChatBuddy cb, GLib.List keys, GLib.List values);
 		public void clear_users ();
 		public bool find_user (string user);
 		public unowned Purple.Conversation get_conversation ();
@@ -616,9 +670,11 @@ namespace Purple {
 	public class ConvChatBuddy {
 		public weak string alias;
 		public weak string alias_key;
+		public weak GLib.HashTable attributes;
 		public bool buddy;
 		public Purple.ConvChatBuddyFlags flags;
 		public weak string name;
+		public void* ui_data;
 	}
 	[CCode (cheader_filename = "purple.h")]
 	[Compact]
@@ -896,11 +952,15 @@ namespace Purple {
 		public void add_remote_candidates (string sess_id, string participant, GLib.List remote_candidates);
 		public bool add_stream (string sess_id, string who, Purple.MediaSessionType type, bool initiator, string transmitter, uint num_params, GLib.Parameter @params);
 		public bool candidates_prepared (string session_id, string participant);
+		public static GLib.Type caps_get_type ();
 		public bool codecs_ready (string sess_id);
 		public static GLib.Type element_type_get_type ();
 		public void end (string session_id, string participant);
 		public void error (string error);
 		public unowned Purple.Account get_account ();
+		public unowned GLib.List get_active_local_candidates (string sess_id, string participant);
+		public unowned GLib.List get_active_remote_candidates (string sess_id, string participant);
+		public unowned string get_available_params ();
 		public unowned GLib.List get_codecs (string sess_id);
 		public unowned GLib.List get_local_candidates (string sess_id, string participant);
 		public void* get_manager ();
@@ -912,22 +972,69 @@ namespace Purple {
 		public static GLib.Type info_type_get_type ();
 		public bool is_initiator (string sess_id, string participant);
 		public static GLib.Type network_protocol_get_type ();
+		public bool param_is_supported (string param);
 		public void remove_output_windows ();
+		public bool send_dtmf (string session_id, char dtmf, uchar volume, uint16 duration);
 		public static GLib.Type session_type_get_type ();
+		public bool set_decryption_parameters (string sess_id, string participant, string cipher, string auth, string key, size_t key_len);
+		public bool set_encryption_parameters (string sess_id, string cipher, string auth, string key, size_t key_len);
 		public void set_input_volume (string session_id, double level);
 		public void set_output_volume (string session_id, string participant, double level);
 		public ulong set_output_window (string session_id, string participant, ulong window_id);
+		public void set_params (uint num_params, GLib.Parameter @params);
 		public void set_prpl_data (void* prpl_data);
 		public bool set_remote_codecs (string sess_id, string participant, GLib.List codecs);
 		public bool set_send_codec (string sess_id, Purple.MediaCodec codec);
+		public bool set_send_rtcp_mux (string sess_id, string participant, bool send_rtcp_mux);
 		public static GLib.Type state_changed_get_type ();
 		public void stream_info (Purple.MediaInfoType type, string session_id, string participant, bool local);
 	}
 	[CCode (cheader_filename = "purple.h")]
 	[Compact]
+	public class MediaAppDataCallbacks {
+		public weak GLib.Callback readable;
+		public weak GLib.Callback writable;
+	}
+	[CCode (cheader_filename = "purple.h")]
+	[Compact]
+	public class MediaBackend {
+		public void add_remote_candidates (string sess_id, string participant, GLib.List remote_candidates);
+		public bool add_stream (string sess_id, string who, Purple.MediaSessionType type, bool initiator, string transmitter, uint num_params, GLib.Parameter @params);
+		public bool codecs_ready (string sess_id);
+		public unowned string get_available_params ();
+		public unowned GLib.List get_codecs (string sess_id);
+		public unowned GLib.List get_local_candidates (string sess_id, string participant);
+		public bool set_decryption_parameters (string sess_id, string participant, string cipher, string auth, string key, size_t key_len);
+		public bool set_encryption_parameters (string sess_id, string cipher, string auth, string key, size_t key_len);
+		public void set_params (uint num_params, GLib.Parameter @params);
+		public bool set_remote_codecs (string sess_id, string participant, GLib.List codecs);
+		public bool set_send_codec (string sess_id, Purple.MediaCodec codec);
+		public bool set_send_rtcp_mux (string sess_id, string participant, bool send_rtcp_mux);
+	}
+	[CCode (cheader_filename = "purple.h")]
+	[Compact]
+	public class MediaBackendIface {
+		public weak GLib.Callback add_remote_candidates;
+		public weak GLib.Callback add_stream;
+		public weak GLib.Callback codecs_ready;
+		public weak GLib.Callback get_available_params;
+		public weak GLib.Callback get_codecs;
+		public weak GLib.Callback get_local_candidates;
+		public weak GLib.TypeInterface parent_iface;
+		public weak GLib.Callback send_dtmf;
+		public weak GLib.Callback set_decryption_parameters;
+		public weak GLib.Callback set_encryption_parameters;
+		public weak GLib.Callback set_params;
+		public weak GLib.Callback set_remote_codecs;
+		public weak GLib.Callback set_send_codec;
+		public weak GLib.Callback set_send_rtcp_mux;
+	}
+	[CCode (cheader_filename = "purple.h", copy_function = "purple_media_candidate_copy")]
+	[Compact]
 	public class MediaCandidate {
 		[CCode (has_construct_function = false)]
 		public MediaCandidate (string foundation, uint component_id, Purple.MediaCandidateType type, Purple.MediaNetworkProtocol proto, string ip, uint port);
+		public unowned Purple.MediaCandidate copy ();
 		public unowned string get_base_ip ();
 		public uint16 get_base_port ();
 		public Purple.MediaCandidateType get_candidate_type ();
@@ -944,12 +1051,13 @@ namespace Purple {
 		public static void list_free (GLib.List candidates);
 		public static GLib.Type type_get_type ();
 	}
-	[CCode (cheader_filename = "purple.h")]
+	[CCode (cheader_filename = "purple.h", copy_function = "purple_media_codec_copy")]
 	[Compact]
 	public class MediaCodec {
 		[CCode (has_construct_function = false)]
 		public MediaCodec (int id, string encoding_name, Purple.MediaSessionType media_type, uint clock_rate);
 		public void add_optional_parameter (string name, string value);
+		public unowned Purple.MediaCodec copy ();
 		public uint get_channels ();
 		public uint get_clock_rate ();
 		public unowned string get_encoding_name ();
@@ -978,21 +1086,31 @@ namespace Purple {
 	public class MediaManager {
 		public unowned Purple.Media create_media (Purple.Account account, string conference_type, string remote_user, bool initiator);
 		public bool create_output_window (Purple.Media media, string session_id, string participant);
+		public unowned Purple.Media create_private_media (Purple.Account account, string conference_type, string remote_user, bool initiator);
 		public static unowned Purple.MediaManager @get ();
 		public unowned Purple.MediaElementInfo get_active_element (Purple.MediaElementType type);
+		public GLib.Type get_backend_type ();
 		public unowned Gst.Element get_element (Purple.MediaSessionType type, Purple.Media media, string session_id, string participant);
 		public unowned Purple.MediaElementInfo get_element_info (string name);
 		public unowned GLib.List get_media ();
 		public unowned GLib.List get_media_by_account (Purple.Account account);
 		public unowned Gst.Element get_pipeline ();
+		public unowned GLib.List get_private_media ();
+		public unowned GLib.List get_private_media_by_account (Purple.Account account);
 		public Purple.MediaCaps get_ui_caps ();
+		public unowned Gst.Caps get_video_caps ();
+		public int receive_application_data (Purple.Media media, string session_id, string participant, void* buffer, uint max_size, bool blocking);
 		public bool register_element (Purple.MediaElementInfo info);
 		public void remove_media (Purple.Media media);
 		public bool remove_output_window (ulong output_window_id);
 		public void remove_output_windows (Purple.Media media, string session_id, string participant);
+		public int send_application_data (Purple.Media media, string session_id, string participant, void* buffer, uint size, bool blocking);
 		public bool set_active_element (Purple.MediaElementInfo info);
+		public void set_application_data_callbacks (Purple.Media media, string session_id, string participant, Purple.MediaAppDataCallbacks callbacks, GLib.DestroyNotify notify);
+		public void set_backend_type (GLib.Type backend_type);
 		public ulong set_output_window (Purple.Media media, string session_id, string participant, ulong window_id);
 		public void set_ui_caps (Purple.MediaCaps caps);
+		public void set_video_caps (Gst.Caps caps);
 		public bool unregister_element (string name);
 	}
 	[CCode (cheader_filename = "purple.h")]
@@ -1035,6 +1153,13 @@ namespace Purple {
 		public size_t get_length ();
 		public void set_data (string data);
 		public void set_field (string field, string value);
+	}
+	[CCode (cheader_filename = "purple.h")]
+	[Compact]
+	public class Mood {
+		public weak string description;
+		public weak string mood;
+		public void* padding;
 	}
 	[CCode (cheader_filename = "purple.h")]
 	[Compact]
@@ -1099,6 +1224,7 @@ namespace Purple {
 		[CCode (has_construct_function = false)]
 		public NotifyUserInfo ();
 		public void add_pair (string label, string value);
+		public void add_pair_plaintext (string label, string value);
 		public void add_section_break ();
 		public void add_section_header (string label);
 		public unowned GLib.List get_entries ();
@@ -1245,7 +1371,9 @@ namespace Purple {
 	[Compact]
 	public class PluginProtocolInfo {
 		public weak GLib.Callback add_buddies;
+		public weak GLib.Callback add_buddies_with_invite;
 		public weak GLib.Callback add_buddy;
+		public weak GLib.Callback add_buddy_with_invite;
 		public weak GLib.Callback add_deny;
 		public weak GLib.Callback add_permit;
 		public weak GLib.Callback alias_buddy;
@@ -1270,6 +1398,8 @@ namespace Purple {
 		public weak GLib.Callback get_chat_name;
 		public weak GLib.Callback get_info;
 		public weak GLib.Callback get_media_caps;
+		public weak GLib.Callback get_moods;
+		public weak GLib.Callback get_public_alias;
 		public weak GLib.Callback group_buddy;
 		public weak Purple.BuddyIconSpec icon_spec;
 		public weak GLib.Callback initiate_media;
@@ -1305,6 +1435,7 @@ namespace Purple {
 		public weak GLib.Callback set_idle;
 		public weak GLib.Callback set_info;
 		public weak GLib.Callback set_permit_deny;
+		public weak GLib.Callback set_public_alias;
 		public weak GLib.Callback set_status;
 		public weak GLib.Callback status_text;
 		public weak GLib.Callback status_types;
@@ -1340,6 +1471,7 @@ namespace Purple {
 		public void action_set_attribute (string action, string attr, string value);
 		public void action_set_enabled (string action, bool enabled);
 		public static void destroy_all_by_account (Purple.Account account);
+		public static void destroy_all_by_buddy (Purple.Buddy buddy);
 		public static void execute (Purple.Account pouncer, string pouncee, Purple.PounceEvent events);
 		public void* get_data ();
 		public Purple.PounceEvent get_events ();
@@ -1353,6 +1485,38 @@ namespace Purple {
 		public void set_pouncee (string pouncee);
 		public void set_pouncer (Purple.Account pouncer);
 		public void set_save (bool save);
+	}
+	[CCode (cheader_filename = "purple.h")]
+	[Compact]
+	public class PrefCallbackData {
+	}
+	[CCode (cheader_filename = "purple.h")]
+	[Compact]
+	public class PrefsUiOps {
+		public weak GLib.Callback add_bool;
+		public weak GLib.Callback add_int;
+		public weak GLib.Callback add_none;
+		public weak GLib.Callback add_string;
+		public weak GLib.Callback add_string_list;
+		public weak GLib.Callback connect_callback;
+		public weak GLib.Callback disconnect_callback;
+		public weak GLib.Callback exists;
+		public weak GLib.Callback get_bool;
+		public weak GLib.Callback get_children_names;
+		public weak GLib.Callback get_int;
+		public weak GLib.Callback get_string;
+		public weak GLib.Callback get_string_list;
+		public weak GLib.Callback get_type;
+		public weak GLib.Callback load;
+		public weak GLib.Callback remove;
+		public weak GLib.Callback rename;
+		public weak GLib.Callback rename_boolean_toggle;
+		public weak GLib.Callback save;
+		public weak GLib.Callback schedule_save;
+		public weak GLib.Callback set_bool;
+		public weak GLib.Callback set_int;
+		public weak GLib.Callback set_string;
+		public weak GLib.Callback set_string_list;
 	}
 	[CCode (cheader_filename = "purple.h", free_function = "purple_presence_destroy")]
 	[Compact]
@@ -1475,9 +1639,11 @@ namespace Purple {
 		public bool is_visible ();
 		public static unowned Purple.RequestField label_new (string id, string text);
 		public void list_add (string item, void* data);
+		public void list_add_icon (string item, string icon_path, void* data);
 		public void list_add_selected (string item);
 		public void list_clear_selected ();
 		public void* list_get_data (string text);
+		public unowned GLib.List list_get_icons ();
 		public unowned GLib.List list_get_items ();
 		public bool list_get_multi_select ();
 		public unowned GLib.List list_get_selected ();
@@ -1540,6 +1706,7 @@ namespace Purple {
 	public class RequestUiOps {
 		public weak GLib.Callback close_request;
 		public weak GLib.Callback request_action;
+		public weak GLib.Callback request_action_with_icon;
 		public weak GLib.Callback request_choice;
 		public weak GLib.Callback request_fields;
 		public weak GLib.Callback request_file;
@@ -1738,6 +1905,16 @@ namespace Purple {
 	}
 	[CCode (cheader_filename = "purple.h")]
 	[Compact]
+	public class SrvTxtQueryData {
+	}
+	[CCode (cheader_filename = "purple.h")]
+	[Compact]
+	public class SrvTxtQueryUiOps {
+		public weak GLib.Callback destroy;
+		public weak GLib.Callback resolve;
+	}
+	[CCode (cheader_filename = "purple.h")]
+	[Compact]
 	public class SslConnection {
 		public weak Purple.SslInputFunction connect_cb;
 		public void* connect_cb_data;
@@ -1909,9 +2086,14 @@ namespace Purple {
 	public class ThemeManagerClass {
 		public weak GLib.ObjectClass parent_class;
 	}
+	[CCode (cheader_filename = "purple.h")]
+	[Compact]
+	public class ThumbnailSpec {
+	}
 	[CCode (cheader_filename = "purple.h", free_function = "purple_txt_response_destroy")]
 	[Compact]
 	public class TxtResponse {
+		public weak string content;
 		public unowned string get_content ();
 	}
 	[CCode (cheader_filename = "purple.h")]
@@ -2069,11 +2251,15 @@ namespace Purple {
 		public size_t get_size ();
 		public ulong get_start_time ();
 		public Purple.XferStatusType get_status ();
+		public void* get_thumbnail (size_t len);
+		public unowned string get_thumbnail_mimetype ();
 		public unowned Purple.XferUiOps get_ui_ops ();
 		public bool is_canceled ();
 		public bool is_completed ();
+		public void prepare_thumbnail (string formats);
 		public void prpl_ready ();
 		public ssize_t read (uchar[] buffer);
+		public ssize_t read_file (uchar[] buffer, size_t size);
 		public void request ();
 		public void request_accepted (string filename);
 		public void request_denied ();
@@ -2091,15 +2277,18 @@ namespace Purple {
 		public void set_request_denied_fnc (GLib.Callback fnc);
 		public void set_size (size_t size);
 		public void set_start_fnc (GLib.Callback fnc);
+		public void set_thumbnail (void* thumbnail, size_t size, string mimetype);
 		public void set_write_fnc (GLib.Callback fnc);
 		public void start (int fd, string ip, uint port);
 		public void ui_ready ();
 		public void update_progress ();
 		public ssize_t write (uchar[] buffer, size_t size);
+		public bool write_file (uchar[] buffer, size_t size);
 	}
 	[CCode (cheader_filename = "purple.h")]
 	[Compact]
 	public class XferUiOps {
+		public weak GLib.Callback add_thumbnail;
 		public weak GLib.Callback add_xfer;
 		public weak GLib.Callback cancel_local;
 		public weak GLib.Callback cancel_remote;
@@ -2178,6 +2367,13 @@ namespace Purple {
 		[CCode (cname = "xmlnode_to_str")]
 		public static unowned string to_str (Purple.xmlnode node, int len);
 	}
+	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_ACCOUNT_RESPONSE_", has_type_id = false)]
+	public enum AccountRequestResponse {
+		IGNORE,
+		DENY,
+		PASS,
+		ACCEPT
+	}
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_ACCOUNT_REQUEST_", has_type_id = false)]
 	public enum AccountRequestType {
 		AUTHORIZATION
@@ -2193,6 +2389,22 @@ namespace Purple {
 		BUDDY_NODE,
 		CHAT_NODE,
 		OTHER_NODE
+	}
+	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_CERTIFICATE_", has_type_id = false)]
+	public enum CertificateInvalidityFlags {
+		UNKNOWN_ERROR,
+		NO_PROBLEMS,
+		NON_FATALS_MASK,
+		SELF_SIGNED,
+		CA_UNKNOWN,
+		NOT_ACTIVATED,
+		EXPIRED,
+		NAME_MISMATCH,
+		NO_CA_POOL,
+		FATALS_MASK,
+		INVALID_CHAIN,
+		REVOKED,
+		LAST
 	}
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_CERTIFICATE_", has_type_id = false)]
 	public enum CertificateVerificationStatus {
@@ -2289,7 +2501,9 @@ namespace Purple {
 		NO_FONTSIZE,
 		NO_URLDESC,
 		NO_IMAGES,
-		ALLOW_CUSTOM_SMILEY
+		ALLOW_CUSTOM_SMILEY,
+		SUPPORT_MOODS,
+		SUPPORT_MOOD_MESSAGES
 	}
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_", has_type_id = false)]
 	public enum ConnectionState {
@@ -2304,7 +2518,8 @@ namespace Purple {
 		HALFOP,
 		OP,
 		FOUNDER,
-		TYPING
+		TYPING,
+		AWAY
 	}
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_CONV_", has_type_id = false)]
 	public enum ConvUpdateType {
@@ -2413,7 +2628,8 @@ namespace Purple {
 		REQUEST_SINK,
 		UNIQUE,
 		SRC,
-		SINK
+		SINK,
+		APPLICATION
 	}
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_MEDIA_INFO_", has_type_id = false)]
 	public enum MediaInfoType {
@@ -2430,7 +2646,9 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_MEDIA_NETWORK_PROTOCOL_", has_type_id = false)]
 	public enum MediaNetworkProtocol {
 		UDP,
-		TCP
+		TCP_PASSIVE,
+		TCP_ACTIVE,
+		TCP_SO
 	}
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_MEDIA_", has_type_id = false)]
 	public enum MediaSessionType {
@@ -2439,8 +2657,11 @@ namespace Purple {
 		SEND_AUDIO,
 		RECV_VIDEO,
 		SEND_VIDEO,
+		RECV_APPLICATION,
+		SEND_APPLICATION,
 		AUDIO,
-		VIDEO
+		VIDEO,
+		APPLICATION
 	}
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_MEDIA_STATE_", has_type_id = false)]
 	public enum MediaState {
@@ -2464,7 +2685,8 @@ namespace Purple {
 		IMAGES,
 		NOTIFY,
 		NO_LINKIFY,
-		INVISIBLE
+		INVISIBLE,
+		REMOTE_SEND
 	}
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_NOTIFY_MSG_", has_type_id = false)]
 	public enum NotifyMsgType {
@@ -2571,7 +2793,8 @@ namespace Purple {
 		PASSWORD_OPTIONAL,
 		USE_POINTSIZE,
 		REGISTER_NOSCREENNAME,
-		SLASH_COMMANDS_NATIVE
+		SLASH_COMMANDS_NATIVE,
+		INVITE_MESSAGE
 	}
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_PROXY_", has_type_id = false)]
 	public enum ProxyType {
@@ -2580,7 +2803,8 @@ namespace Purple {
 		HTTP,
 		SOCKS4,
 		SOCKS5,
-		USE_ENVVAR
+		USE_ENVVAR,
+		TOR
 	}
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_REQUEST_FIELD_", has_type_id = false)]
 	public enum RequestFieldType {
@@ -2627,6 +2851,7 @@ namespace Purple {
 		SOUND_CHAT_SAY,
 		SOUND_POUNCE_DEFAULT,
 		SOUND_CHAT_NICK,
+		SOUND_GOT_ATTENTION,
 		NUM_SOUNDS
 	}
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_SSL_", has_type_id = false)]
@@ -2646,6 +2871,7 @@ namespace Purple {
 		EXTENDED_AWAY,
 		MOBILE,
 		TUNE,
+		MOOD,
 		NUM_PRIMITIVES
 	}
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_STRING_FORMAT_TYPE_", has_type_id = false)]
@@ -2691,7 +2917,8 @@ namespace Purple {
 		XMLNODE,
 		USERINFO,
 		STORED_IMAGE,
-		CERTIFICATEPOOL
+		CERTIFICATEPOOL,
+		CHATBUDDY
 	}
 	[CCode (cheader_filename = "purple.h", cprefix = "PURPLE_TYPE_", has_type_id = false)]
 	public enum Type {
@@ -2763,6 +2990,10 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h", has_target = false)]
 	public delegate bool FilterAccountFunc (Purple.Account account);
 	[CCode (cheader_filename = "purple.h", has_target = false)]
+	public delegate void GetPublicAliasFailureCallback (Purple.Account account, string error);
+	[CCode (cheader_filename = "purple.h", has_target = false)]
+	public delegate void GetPublicAliasSuccessCallback (Purple.Account account, string alias);
+	[CCode (cheader_filename = "purple.h", has_target = false)]
 	public delegate unowned string InfoFieldFormatCallback (string field, size_t len);
 	[CCode (cheader_filename = "purple.h", has_target = false)]
 	public delegate void InputFunction (void* p1, int p2, Purple.InputCondition p3);
@@ -2795,9 +3026,17 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h", has_target = false)]
 	public delegate void RequestInputCb (void* p1, string p2);
 	[CCode (cheader_filename = "purple.h", has_target = false)]
+	public delegate void SetPublicAliasFailureCallback (Purple.Account account, string error);
+	[CCode (cheader_filename = "purple.h", has_target = false)]
+	public delegate void SetPublicAliasSuccessCallback (Purple.Account account, string new_alias);
+	[CCode (cheader_filename = "purple.h", has_target = false)]
 	public delegate void SignalMarshalFunc (Purple.Callback cb, void* args, void* data, void* return_val);
 	[CCode (cheader_filename = "purple.h")]
 	public delegate void SrvCallback (Purple.SrvResponse resp, int results);
+	[CCode (cheader_filename = "purple.h", has_target = false)]
+	public delegate void SrvTxtQueryFailedCallback (Purple.SrvTxtQueryData query_data, string error_message);
+	[CCode (cheader_filename = "purple.h", has_target = false)]
+	public delegate void SrvTxtQueryResolvedCallback (Purple.SrvTxtQueryData query_data, GLib.List records);
 	[CCode (cheader_filename = "purple.h", has_target = false)]
 	public delegate void SslErrorFunction (Purple.SslConnection p1, Purple.SslErrorType p2, void* p3);
 	[CCode (cheader_filename = "purple.h", has_target = false)]
@@ -2944,6 +3183,10 @@ namespace Purple {
 	public const int MICRO_VERSION;
 	[CCode (cheader_filename = "purple.h")]
 	public const int MINOR_VERSION;
+	[CCode (cheader_filename = "purple.h")]
+	public const string MOOD_COMMENT;
+	[CCode (cheader_filename = "purple.h")]
+	public const string MOOD_NAME;
 	[CCode (cheader_filename = "purple.h")]
 	public const int NO_TZ_OFF;
 	[CCode (cheader_filename = "purple.h")]
@@ -3115,6 +3358,8 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static int build_dir (string path, int mode);
 	[CCode (cheader_filename = "purple.h")]
+	public static unowned GLib.SList certificates_import (Purple.CertificateScheme scheme, string filename);
+	[CCode (cheader_filename = "purple.h")]
 	public static unowned Purple.Cipher ciphers_find_cipher (string name);
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned GLib.List ciphers_get_ciphers ();
@@ -3129,19 +3374,13 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static bool ciphers_unregister_cipher (Purple.Cipher cipher);
 	[CCode (cheader_filename = "purple.h")]
-	public static Purple.CmdStatus cmd_do_command (Purple.Conversation conv, string cmdline, string markup, string errormsg);
-	[CCode (cheader_filename = "purple.h")]
-	public static unowned GLib.List cmd_help (Purple.Conversation conv, string cmd);
-	[CCode (cheader_filename = "purple.h")]
-	public static unowned GLib.List cmd_list (Purple.Conversation conv);
-	[CCode (cheader_filename = "purple.h")]
-	public static unowned Purple.CmdId cmd_register (string cmd, string args, Purple.CmdPriority p, Purple.CmdFlag f, string prpl_id, Purple.CmdFunc func, string helpstr, void* data);
-	[CCode (cheader_filename = "purple.h")]
-	public static void cmd_unregister (Purple.CmdId id);
-	[CCode (cheader_filename = "purple.h")]
 	public static void* cmds_get_handle ();
 	[CCode (cheader_filename = "purple.h")]
+	public static unowned Purple.CommandsUiOps cmds_get_ui_ops ();
+	[CCode (cheader_filename = "purple.h")]
 	public static void cmds_init ();
+	[CCode (cheader_filename = "purple.h")]
+	public static void cmds_set_ui_ops (Purple.CommandsUiOps ops);
 	[CCode (cheader_filename = "purple.h")]
 	public static void cmds_uninit ();
 	[CCode (cheader_filename = "purple.h")]
@@ -3216,6 +3455,8 @@ namespace Purple {
 	public static void debug_warning (string category, string format);
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned Purple.DnsQueryData dnsquery_a (string hostname, int port, Purple.DnsQueryConnectFunction callback, void* data);
+	[CCode (cheader_filename = "purple.h")]
+	public static unowned Purple.DnsQueryData dnsquery_a_account (Purple.Account account, string hostname, int port, Purple.DnsQueryConnectFunction callback, void* data);
 	[CCode (cheader_filename = "purple.h")]
 	public static void dnsquery_destroy (Purple.DnsQueryData query_data);
 	[CCode (cheader_filename = "purple.h")]
@@ -3363,6 +3604,8 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static void marshal_BOOLEAN__POINTER (Purple.Callback cb, void* args, void* data, void* return_val);
 	[CCode (cheader_filename = "purple.h")]
+	public static void marshal_BOOLEAN__POINTER_BOOLEAN (Purple.Callback cb, void* args, void* data, void* return_val);
+	[CCode (cheader_filename = "purple.h")]
 	public static void marshal_BOOLEAN__POINTER_POINTER (Purple.Callback cb, void* args, void* data, void* return_val);
 	[CCode (cheader_filename = "purple.h")]
 	public static void marshal_BOOLEAN__POINTER_POINTER_POINTER (Purple.Callback cb, void* args, void* data, void* return_val);
@@ -3385,7 +3628,11 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static void marshal_INT__POINTER_POINTER (Purple.Callback cb, void* args, void* data, void* return_val);
 	[CCode (cheader_filename = "purple.h")]
+	public static void marshal_INT__POINTER_POINTER_POINTER (Purple.Callback cb, void* args, void* data, void* return_val);
+	[CCode (cheader_filename = "purple.h")]
 	public static void marshal_INT__POINTER_POINTER_POINTER_POINTER_POINTER (Purple.Callback cb, void* args, void* data, void* return_val);
+	[CCode (cheader_filename = "purple.h")]
+	public static void marshal_POINTER__POINTER (Purple.Callback cb, void* args, void* data, void* return_val);
 	[CCode (cheader_filename = "purple.h")]
 	public static void marshal_POINTER__POINTER_INT (Purple.Callback cb, void* args, void* data, void* return_val);
 	[CCode (cheader_filename = "purple.h")]
@@ -3439,6 +3686,8 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static void network_force_online ();
 	[CCode (cheader_filename = "purple.h")]
+	public static unowned GLib.List network_get_all_local_system_ips ();
+	[CCode (cheader_filename = "purple.h")]
 	public static void* network_get_handle ();
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned string network_get_local_system_ip (int fd);
@@ -3463,9 +3712,13 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static void network_listen_cancel (Purple.NetworkListenData listen_data);
 	[CCode (cheader_filename = "purple.h")]
+	public static unowned Purple.NetworkListenData network_listen_family (uint port, int socket_family, int socket_type, Purple.NetworkListenCallback cb, void* cb_data);
+	[CCode (cheader_filename = "purple.h")]
 	public static void network_listen_map_external (bool map_external);
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned Purple.NetworkListenData network_listen_range (uint start, uint end, int socket_type, Purple.NetworkListenCallback cb, void* cb_data);
+	[CCode (cheader_filename = "purple.h")]
+	public static unowned Purple.NetworkListenData network_listen_range_family (uint start, uint end, int socket_family, int socket_type, Purple.NetworkListenCallback cb, void* cb_data);
 	[CCode (cheader_filename = "purple.h")]
 	public static void network_remove_port_mapping (int fd);
 	[CCode (cheader_filename = "purple.h")]
@@ -3631,6 +3884,8 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static Purple.PrefType prefs_get_type (string name);
 	[CCode (cheader_filename = "purple.h")]
+	public static unowned Purple.PrefsUiOps prefs_get_ui_ops ();
+	[CCode (cheader_filename = "purple.h")]
 	public static void prefs_init ();
 	[CCode (cheader_filename = "purple.h")]
 	public static bool prefs_load ();
@@ -3655,7 +3910,11 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static void prefs_set_string_list (string name, GLib.List value);
 	[CCode (cheader_filename = "purple.h")]
+	public static void prefs_set_ui_ops (Purple.PrefsUiOps ops);
+	[CCode (cheader_filename = "purple.h")]
 	public static void prefs_trigger_callback (string name);
+	[CCode (cheader_filename = "purple.h")]
+	public static void prefs_trigger_callback_object (Purple.PrefCallbackData data);
 	[CCode (cheader_filename = "purple.h")]
 	public static void prefs_uninit ();
 	[CCode (cheader_filename = "purple.h")]
@@ -3699,6 +3958,8 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned Purple.ProxyConnectData proxy_connect_socks5 (void* handle, Purple.ProxyInfo gpi, string host, int port, Purple.ProxyConnectFunction connect_cb, void* data);
 	[CCode (cheader_filename = "purple.h")]
+	public static unowned Purple.ProxyConnectData proxy_connect_socks5_account (void* handle, Purple.Account account, Purple.ProxyInfo gpi, string host, int port, Purple.ProxyConnectFunction connect_cb, void* data);
+	[CCode (cheader_filename = "purple.h")]
 	public static unowned Purple.ProxyConnectData proxy_connect_udp (void* handle, Purple.Account account, string host, int port, Purple.ProxyConnectFunction connect_cb, void* data);
 	[CCode (cheader_filename = "purple.h")]
 	public static void* proxy_get_handle ();
@@ -3727,6 +3988,8 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static void prpl_got_attention_in_chat (Purple.Connection gc, int id, string who, uint type_code);
 	[CCode (cheader_filename = "purple.h")]
+	public static void prpl_got_media_caps (Purple.Account account, string who);
+	[CCode (cheader_filename = "purple.h")]
 	public static void prpl_got_user_idle (Purple.Account account, string name, bool idle, ulong idle_time);
 	[CCode (cheader_filename = "purple.h")]
 	public static void prpl_got_user_login_time (Purple.Account account, string name, ulong login_time);
@@ -3744,6 +4007,10 @@ namespace Purple {
 	public static void* request_action (void* handle, string title, string primary, string secondary, int default_action, Purple.Account account, string who, Purple.Conversation conv, size_t action_count);
 	[CCode (cheader_filename = "purple.h")]
 	public static void* request_action_varg (void* handle, string title, string primary, string secondary, int default_action, Purple.Account account, string who, Purple.Conversation conv, size_t action_count, void* actions);
+	[CCode (cheader_filename = "purple.h")]
+	public static void* request_action_with_icon (void* handle, string title, string primary, string secondary, int default_action, Purple.Account account, string who, Purple.Conversation conv, void* icon_data, size_t icon_size, size_t action_count);
+	[CCode (cheader_filename = "purple.h")]
+	public static void* request_action_with_icon_varg (void* handle, string title, string primary, string secondary, int default_action, Purple.Account account, string who, Purple.Conversation conv, void* icon_data, size_t icon_size, size_t action_count, void* actions);
 	[CCode (cheader_filename = "purple.h")]
 	public static void* request_choice (void* handle, string title, string primary, string secondary, int default_value, string ok_text, GLib.Callback ok_cb, string cancel_text, GLib.Callback cancel_cb, Purple.Account account, string who, Purple.Conversation conv);
 	[CCode (cheader_filename = "purple.h")]
@@ -3883,11 +4150,17 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static void smarshal_VOID__ENUM_STRING_STRING_BOOLEAN (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "purple.h")]
+	public static void smarshal_VOID__FLAGS_FLAGS (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+	[CCode (cheader_filename = "purple.h")]
 	public static void smarshal_VOID__POINTER_POINTER_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+	[CCode (cheader_filename = "purple.h")]
+	public static void smarshal_VOID__POINTER_POINTER_OBJECT_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "purple.h")]
 	public static void smarshal_VOID__STRING_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "purple.h")]
 	public static void smarshal_VOID__STRING_STRING_DOUBLE (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+	[CCode (cheader_filename = "purple.h")]
+	public static void smarshal_VOID__STRING_STRING_OBJECT_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned Purple.Smiley smileys_find_by_checksum (string checksum);
 	[CCode (cheader_filename = "purple.h")]
@@ -3900,6 +4173,10 @@ namespace Purple {
 	public static void smileys_init ();
 	[CCode (cheader_filename = "purple.h")]
 	public static void smileys_uninit ();
+	[CCode (cheader_filename = "purple.h")]
+	public static int socket_get_family (int fd);
+	[CCode (cheader_filename = "purple.h")]
+	public static bool socket_speaks_ipv4 (int fd);
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned Purple.SoundUiOps sound_get_ui_ops ();
 	[CCode (cheader_filename = "purple.h")]
@@ -3915,9 +4192,21 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static void* sounds_get_handle ();
 	[CCode (cheader_filename = "purple.h")]
-	public static void srv_cancel (Purple.SrvQueryData query_data);
+	public static void srv_cancel (Purple.SrvTxtQueryData query_data);
 	[CCode (cheader_filename = "purple.h")]
-	public static unowned Purple.SrvQueryData srv_resolve (string protocol, string transport, string domain, Purple.SrvCallback cb, void* extradata);
+	public static unowned Purple.SrvTxtQueryData srv_resolve (string protocol, string transport, string domain, Purple.SrvCallback cb, void* extradata);
+	[CCode (cheader_filename = "purple.h")]
+	public static unowned Purple.SrvTxtQueryData srv_resolve_account (Purple.Account account, string protocol, string transport, string domain, Purple.SrvCallback cb, void* extradata);
+	[CCode (cheader_filename = "purple.h")]
+	public static void srv_txt_query_destroy (Purple.SrvTxtQueryData query_data);
+	[CCode (cheader_filename = "purple.h")]
+	public static unowned string srv_txt_query_get_query (Purple.SrvTxtQueryData query_data);
+	[CCode (cheader_filename = "purple.h")]
+	public static int srv_txt_query_get_type (Purple.SrvTxtQueryData query_data);
+	[CCode (cheader_filename = "purple.h")]
+	public static unowned Purple.SrvTxtQueryUiOps srv_txt_query_get_ui_ops ();
+	[CCode (cheader_filename = "purple.h")]
+	public static void srv_txt_query_set_ui_ops (Purple.SrvTxtQueryUiOps ops);
 	[CCode (cheader_filename = "purple.h")]
 	public static void ssl_close (Purple.SslConnection gsc);
 	[CCode (cheader_filename = "purple.h")]
@@ -3991,13 +4280,17 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static bool timeout_remove (uint handle);
 	[CCode (cheader_filename = "purple.h")]
-	public static void txt_cancel (Purple.SrvQueryData query_data);
+	public static void txt_cancel (Purple.SrvTxtQueryData query_data);
 	[CCode (cheader_filename = "purple.h")]
-	public static unowned Purple.SrvQueryData txt_resolve (string owner, string domain, Purple.TxtCallback cb, void* extradata);
+	public static unowned Purple.SrvTxtQueryData txt_resolve (string owner, string domain, Purple.TxtCallback cb, void* extradata);
+	[CCode (cheader_filename = "purple.h")]
+	public static unowned Purple.SrvTxtQueryData txt_resolve_account (Purple.Account account, string owner, string domain, Purple.TxtCallback cb, void* extradata);
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned string unescape_filename (string str);
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned string unescape_html (string html);
+	[CCode (cheader_filename = "purple.h")]
+	public static unowned string unescape_text (string text);
 	[CCode (cheader_filename = "purple.h")]
 	public static void upnp_cancel_port_mapping (Purple.UPnPMappingAddRemove mapping_data);
 	[CCode (cheader_filename = "purple.h")]
@@ -4045,6 +4338,8 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned Purple.UtilFetchUrlData util_fetch_url_request (string url, bool full, string user_agent, bool http11, string request, bool include_headers, Purple.UtilFetchUrlCallback callback, void* data);
 	[CCode (cheader_filename = "purple.h")]
+	public static unowned Purple.UtilFetchUrlData util_fetch_url_request_data_len_with_account (Purple.Account account, string url, bool full, string user_agent, bool http11, string request, size_t request_len, bool include_headers, ssize_t max_len, Purple.UtilFetchUrlCallback callback);
+	[CCode (cheader_filename = "purple.h")]
 	public static unowned Purple.UtilFetchUrlData util_fetch_url_request_len (string url, bool full, string user_agent, bool http11, string request, bool include_headers, ssize_t max_len, Purple.UtilFetchUrlCallback callback, void* data);
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned Purple.UtilFetchUrlData util_fetch_url_request_len_with_account (Purple.Account account, string url, bool full, string user_agent, bool http11, string request, bool include_headers, ssize_t max_len, Purple.UtilFetchUrlCallback callback, void* data);
@@ -4070,6 +4365,8 @@ namespace Purple {
 	public static bool util_write_data_to_file (string filename, string data, ssize_t size);
 	[CCode (cheader_filename = "purple.h")]
 	public static bool util_write_data_to_file_absolute (string filename_full, string data, ssize_t size);
+	[CCode (cheader_filename = "purple.h")]
+	public static unowned string uuid_random ();
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned string version_check (uint required_major, uint required_minor, uint required_micro);
 	[CCode (cheader_filename = "purple.h")]
