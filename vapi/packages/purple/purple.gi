@@ -355,6 +355,13 @@
 				<parameter name="mode" type="int"/>
 			</parameters>
 		</function>
+		<function name="certificates_import" symbol="purple_certificates_import">
+			<return-type type="GSList*"/>
+			<parameters>
+				<parameter name="scheme" type="PurpleCertificateScheme*"/>
+				<parameter name="filename" type="gchar*"/>
+			</parameters>
+		</function>
 		<function name="ciphers_find_cipher" symbol="purple_ciphers_find_cipher">
 			<return-type type="PurpleCipher*"/>
 			<parameters>
@@ -386,52 +393,20 @@
 				<parameter name="cipher" type="PurpleCipher*"/>
 			</parameters>
 		</function>
-		<function name="cmd_do_command" symbol="purple_cmd_do_command">
-			<return-type type="PurpleCmdStatus"/>
-			<parameters>
-				<parameter name="conv" type="PurpleConversation*"/>
-				<parameter name="cmdline" type="gchar*"/>
-				<parameter name="markup" type="gchar*"/>
-				<parameter name="errormsg" type="gchar**"/>
-			</parameters>
-		</function>
-		<function name="cmd_help" symbol="purple_cmd_help">
-			<return-type type="GList*"/>
-			<parameters>
-				<parameter name="conv" type="PurpleConversation*"/>
-				<parameter name="cmd" type="gchar*"/>
-			</parameters>
-		</function>
-		<function name="cmd_list" symbol="purple_cmd_list">
-			<return-type type="GList*"/>
-			<parameters>
-				<parameter name="conv" type="PurpleConversation*"/>
-			</parameters>
-		</function>
-		<function name="cmd_register" symbol="purple_cmd_register">
-			<return-type type="PurpleCmdId"/>
-			<parameters>
-				<parameter name="cmd" type="gchar*"/>
-				<parameter name="args" type="gchar*"/>
-				<parameter name="p" type="PurpleCmdPriority"/>
-				<parameter name="f" type="PurpleCmdFlag"/>
-				<parameter name="prpl_id" type="gchar*"/>
-				<parameter name="func" type="PurpleCmdFunc"/>
-				<parameter name="helpstr" type="gchar*"/>
-				<parameter name="data" type="void*"/>
-			</parameters>
-		</function>
-		<function name="cmd_unregister" symbol="purple_cmd_unregister">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="id" type="PurpleCmdId"/>
-			</parameters>
-		</function>
 		<function name="cmds_get_handle" symbol="purple_cmds_get_handle">
 			<return-type type="gpointer"/>
 		</function>
+		<function name="cmds_get_ui_ops" symbol="purple_cmds_get_ui_ops">
+			<return-type type="PurpleCommandsUiOps*"/>
+		</function>
 		<function name="cmds_init" symbol="purple_cmds_init">
 			<return-type type="void"/>
+		</function>
+		<function name="cmds_set_ui_ops" symbol="purple_cmds_set_ui_ops">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="ops" type="PurpleCommandsUiOps*"/>
+			</parameters>
 		</function>
 		<function name="cmds_uninit" symbol="purple_cmds_uninit">
 			<return-type type="void"/>
@@ -662,6 +637,16 @@
 		<function name="dnsquery_a" symbol="purple_dnsquery_a">
 			<return-type type="PurpleDnsQueryData*"/>
 			<parameters>
+				<parameter name="hostname" type="char*"/>
+				<parameter name="port" type="int"/>
+				<parameter name="callback" type="PurpleDnsQueryConnectFunction"/>
+				<parameter name="data" type="gpointer"/>
+			</parameters>
+		</function>
+		<function name="dnsquery_a_account" symbol="purple_dnsquery_a_account">
+			<return-type type="PurpleDnsQueryData*"/>
+			<parameters>
+				<parameter name="account" type="PurpleAccount*"/>
 				<parameter name="hostname" type="char*"/>
 				<parameter name="port" type="int"/>
 				<parameter name="callback" type="PurpleDnsQueryConnectFunction"/>
@@ -1096,6 +1081,15 @@
 				<parameter name="return_val" type="void**"/>
 			</parameters>
 		</function>
+		<function name="marshal_BOOLEAN__POINTER_BOOLEAN" symbol="purple_marshal_BOOLEAN__POINTER_BOOLEAN">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="cb" type="PurpleCallback"/>
+				<parameter name="args" type="va_list"/>
+				<parameter name="data" type="void*"/>
+				<parameter name="return_val" type="void**"/>
+			</parameters>
+		</function>
 		<function name="marshal_BOOLEAN__POINTER_POINTER" symbol="purple_marshal_BOOLEAN__POINTER_POINTER">
 			<return-type type="void"/>
 			<parameters>
@@ -1195,7 +1189,25 @@
 				<parameter name="return_val" type="void**"/>
 			</parameters>
 		</function>
+		<function name="marshal_INT__POINTER_POINTER_POINTER" symbol="purple_marshal_INT__POINTER_POINTER_POINTER">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="cb" type="PurpleCallback"/>
+				<parameter name="args" type="va_list"/>
+				<parameter name="data" type="void*"/>
+				<parameter name="return_val" type="void**"/>
+			</parameters>
+		</function>
 		<function name="marshal_INT__POINTER_POINTER_POINTER_POINTER_POINTER" symbol="purple_marshal_INT__POINTER_POINTER_POINTER_POINTER_POINTER">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="cb" type="PurpleCallback"/>
+				<parameter name="args" type="va_list"/>
+				<parameter name="data" type="void*"/>
+				<parameter name="return_val" type="void**"/>
+			</parameters>
+		</function>
+		<function name="marshal_POINTER__POINTER" symbol="purple_marshal_POINTER__POINTER">
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="cb" type="PurpleCallback"/>
@@ -1423,6 +1435,9 @@
 		<function name="network_force_online" symbol="purple_network_force_online">
 			<return-type type="void"/>
 		</function>
+		<function name="network_get_all_local_system_ips" symbol="purple_network_get_all_local_system_ips">
+			<return-type type="GList*"/>
+		</function>
 		<function name="network_get_handle" symbol="purple_network_get_handle">
 			<return-type type="void*"/>
 		</function>
@@ -1480,6 +1495,16 @@
 				<parameter name="listen_data" type="PurpleNetworkListenData*"/>
 			</parameters>
 		</function>
+		<function name="network_listen_family" symbol="purple_network_listen_family">
+			<return-type type="PurpleNetworkListenData*"/>
+			<parameters>
+				<parameter name="port" type="unsigned"/>
+				<parameter name="socket_family" type="int"/>
+				<parameter name="socket_type" type="int"/>
+				<parameter name="cb" type="PurpleNetworkListenCallback"/>
+				<parameter name="cb_data" type="gpointer"/>
+			</parameters>
+		</function>
 		<function name="network_listen_map_external" symbol="purple_network_listen_map_external">
 			<return-type type="void"/>
 			<parameters>
@@ -1491,6 +1516,17 @@
 			<parameters>
 				<parameter name="start" type="unsigned"/>
 				<parameter name="end" type="unsigned"/>
+				<parameter name="socket_type" type="int"/>
+				<parameter name="cb" type="PurpleNetworkListenCallback"/>
+				<parameter name="cb_data" type="gpointer"/>
+			</parameters>
+		</function>
+		<function name="network_listen_range_family" symbol="purple_network_listen_range_family">
+			<return-type type="PurpleNetworkListenData*"/>
+			<parameters>
+				<parameter name="start" type="unsigned"/>
+				<parameter name="end" type="unsigned"/>
+				<parameter name="socket_family" type="int"/>
 				<parameter name="socket_type" type="int"/>
 				<parameter name="cb" type="PurpleNetworkListenCallback"/>
 				<parameter name="cb_data" type="gpointer"/>
@@ -1982,6 +2018,9 @@
 				<parameter name="name" type="char*"/>
 			</parameters>
 		</function>
+		<function name="prefs_get_ui_ops" symbol="purple_prefs_get_ui_ops">
+			<return-type type="PurplePrefsUiOps*"/>
+		</function>
 		<function name="prefs_init" symbol="purple_prefs_init">
 			<return-type type="void"/>
 		</function>
@@ -2057,10 +2096,22 @@
 				<parameter name="value" type="GList*"/>
 			</parameters>
 		</function>
+		<function name="prefs_set_ui_ops" symbol="purple_prefs_set_ui_ops">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="ops" type="PurplePrefsUiOps*"/>
+			</parameters>
+		</function>
 		<function name="prefs_trigger_callback" symbol="purple_prefs_trigger_callback">
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="name" type="char*"/>
+			</parameters>
+		</function>
+		<function name="prefs_trigger_callback_object" symbol="purple_prefs_trigger_callback_object">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="data" type="PurplePrefCallbackData*"/>
 			</parameters>
 		</function>
 		<function name="prefs_uninit" symbol="purple_prefs_uninit">
@@ -2203,6 +2254,18 @@
 				<parameter name="data" type="gpointer"/>
 			</parameters>
 		</function>
+		<function name="proxy_connect_socks5_account" symbol="purple_proxy_connect_socks5_account">
+			<return-type type="PurpleProxyConnectData*"/>
+			<parameters>
+				<parameter name="handle" type="void*"/>
+				<parameter name="account" type="PurpleAccount*"/>
+				<parameter name="gpi" type="PurpleProxyInfo*"/>
+				<parameter name="host" type="char*"/>
+				<parameter name="port" type="int"/>
+				<parameter name="connect_cb" type="PurpleProxyConnectFunction"/>
+				<parameter name="data" type="gpointer"/>
+			</parameters>
+		</function>
 		<function name="proxy_connect_udp" symbol="purple_proxy_connect_udp">
 			<return-type type="PurpleProxyConnectData*"/>
 			<parameters>
@@ -2296,6 +2359,13 @@
 				<parameter name="type_code" type="guint"/>
 			</parameters>
 		</function>
+		<function name="prpl_got_media_caps" symbol="purple_prpl_got_media_caps">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="account" type="PurpleAccount*"/>
+				<parameter name="who" type="char*"/>
+			</parameters>
+		</function>
 		<function name="prpl_got_user_idle" symbol="purple_prpl_got_user_idle">
 			<return-type type="void"/>
 			<parameters>
@@ -2378,6 +2448,41 @@
 				<parameter name="account" type="PurpleAccount*"/>
 				<parameter name="who" type="char*"/>
 				<parameter name="conv" type="PurpleConversation*"/>
+				<parameter name="user_data" type="void*"/>
+				<parameter name="action_count" type="size_t"/>
+				<parameter name="actions" type="va_list"/>
+			</parameters>
+		</function>
+		<function name="request_action_with_icon" symbol="purple_request_action_with_icon">
+			<return-type type="void*"/>
+			<parameters>
+				<parameter name="handle" type="void*"/>
+				<parameter name="title" type="char*"/>
+				<parameter name="primary" type="char*"/>
+				<parameter name="secondary" type="char*"/>
+				<parameter name="default_action" type="int"/>
+				<parameter name="account" type="PurpleAccount*"/>
+				<parameter name="who" type="char*"/>
+				<parameter name="conv" type="PurpleConversation*"/>
+				<parameter name="icon_data" type="gconstpointer"/>
+				<parameter name="icon_size" type="gsize"/>
+				<parameter name="user_data" type="void*"/>
+				<parameter name="action_count" type="size_t"/>
+			</parameters>
+		</function>
+		<function name="request_action_with_icon_varg" symbol="purple_request_action_with_icon_varg">
+			<return-type type="void*"/>
+			<parameters>
+				<parameter name="handle" type="void*"/>
+				<parameter name="title" type="char*"/>
+				<parameter name="primary" type="char*"/>
+				<parameter name="secondary" type="char*"/>
+				<parameter name="default_action" type="int"/>
+				<parameter name="account" type="PurpleAccount*"/>
+				<parameter name="who" type="char*"/>
+				<parameter name="conv" type="PurpleConversation*"/>
+				<parameter name="icon_data" type="gconstpointer"/>
+				<parameter name="icon_size" type="gsize"/>
 				<parameter name="user_data" type="void*"/>
 				<parameter name="action_count" type="size_t"/>
 				<parameter name="actions" type="va_list"/>
@@ -2941,7 +3046,29 @@
 				<parameter name="marshal_data" type="gpointer"/>
 			</parameters>
 		</function>
+		<function name="smarshal_VOID__FLAGS_FLAGS" symbol="purple_smarshal_VOID__FLAGS_FLAGS">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="closure" type="GClosure*"/>
+				<parameter name="return_value" type="GValue*"/>
+				<parameter name="n_param_values" type="guint"/>
+				<parameter name="param_values" type="GValue*"/>
+				<parameter name="invocation_hint" type="gpointer"/>
+				<parameter name="marshal_data" type="gpointer"/>
+			</parameters>
+		</function>
 		<function name="smarshal_VOID__POINTER_POINTER_OBJECT" symbol="purple_smarshal_VOID__POINTER_POINTER_OBJECT">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="closure" type="GClosure*"/>
+				<parameter name="return_value" type="GValue*"/>
+				<parameter name="n_param_values" type="guint"/>
+				<parameter name="param_values" type="GValue*"/>
+				<parameter name="invocation_hint" type="gpointer"/>
+				<parameter name="marshal_data" type="gpointer"/>
+			</parameters>
+		</function>
+		<function name="smarshal_VOID__POINTER_POINTER_OBJECT_OBJECT" symbol="purple_smarshal_VOID__POINTER_POINTER_OBJECT_OBJECT">
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="closure" type="GClosure*"/>
@@ -2964,6 +3091,17 @@
 			</parameters>
 		</function>
 		<function name="smarshal_VOID__STRING_STRING_DOUBLE" symbol="purple_smarshal_VOID__STRING_STRING_DOUBLE">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="closure" type="GClosure*"/>
+				<parameter name="return_value" type="GValue*"/>
+				<parameter name="n_param_values" type="guint"/>
+				<parameter name="param_values" type="GValue*"/>
+				<parameter name="invocation_hint" type="gpointer"/>
+				<parameter name="marshal_data" type="gpointer"/>
+			</parameters>
+		</function>
+		<function name="smarshal_VOID__STRING_STRING_OBJECT_OBJECT" symbol="purple_smarshal_VOID__STRING_STRING_OBJECT_OBJECT">
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="closure" type="GClosure*"/>
@@ -2997,6 +3135,18 @@
 		</function>
 		<function name="smileys_uninit" symbol="purple_smileys_uninit">
 			<return-type type="void"/>
+		</function>
+		<function name="socket_get_family" symbol="purple_socket_get_family">
+			<return-type type="int"/>
+			<parameters>
+				<parameter name="fd" type="int"/>
+			</parameters>
+		</function>
+		<function name="socket_speaks_ipv4" symbol="purple_socket_speaks_ipv4">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="fd" type="int"/>
+			</parameters>
 		</function>
 		<function name="sound_get_ui_ops" symbol="purple_sound_get_ui_ops">
 			<return-type type="PurpleSoundUiOps*"/>
@@ -3033,17 +3183,55 @@
 		<function name="srv_cancel" symbol="purple_srv_cancel">
 			<return-type type="void"/>
 			<parameters>
-				<parameter name="query_data" type="PurpleSrvQueryData*"/>
+				<parameter name="query_data" type="PurpleSrvTxtQueryData*"/>
 			</parameters>
 		</function>
 		<function name="srv_resolve" symbol="purple_srv_resolve">
-			<return-type type="PurpleSrvQueryData*"/>
+			<return-type type="PurpleSrvTxtQueryData*"/>
 			<parameters>
 				<parameter name="protocol" type="char*"/>
 				<parameter name="transport" type="char*"/>
 				<parameter name="domain" type="char*"/>
 				<parameter name="cb" type="PurpleSrvCallback"/>
 				<parameter name="extradata" type="gpointer"/>
+			</parameters>
+		</function>
+		<function name="srv_resolve_account" symbol="purple_srv_resolve_account">
+			<return-type type="PurpleSrvTxtQueryData*"/>
+			<parameters>
+				<parameter name="account" type="PurpleAccount*"/>
+				<parameter name="protocol" type="char*"/>
+				<parameter name="transport" type="char*"/>
+				<parameter name="domain" type="char*"/>
+				<parameter name="cb" type="PurpleSrvCallback"/>
+				<parameter name="extradata" type="gpointer"/>
+			</parameters>
+		</function>
+		<function name="srv_txt_query_destroy" symbol="purple_srv_txt_query_destroy">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="query_data" type="PurpleSrvTxtQueryData*"/>
+			</parameters>
+		</function>
+		<function name="srv_txt_query_get_query" symbol="purple_srv_txt_query_get_query">
+			<return-type type="char*"/>
+			<parameters>
+				<parameter name="query_data" type="PurpleSrvTxtQueryData*"/>
+			</parameters>
+		</function>
+		<function name="srv_txt_query_get_type" symbol="purple_srv_txt_query_get_type">
+			<return-type type="int"/>
+			<parameters>
+				<parameter name="query_data" type="PurpleSrvTxtQueryData*"/>
+			</parameters>
+		</function>
+		<function name="srv_txt_query_get_ui_ops" symbol="purple_srv_txt_query_get_ui_ops">
+			<return-type type="PurpleSrvTxtQueryUiOps*"/>
+		</function>
+		<function name="srv_txt_query_set_ui_ops" symbol="purple_srv_txt_query_set_ui_ops">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="ops" type="PurpleSrvTxtQueryUiOps*"/>
 			</parameters>
 		</function>
 		<function name="ssl_close" symbol="purple_ssl_close">
@@ -3245,7 +3433,7 @@
 		<function name="stun_discover" symbol="purple_stun_discover">
 			<return-type type="PurpleStunNatDiscovery*"/>
 			<parameters>
-				<parameter name="cb" type="StunCallback"/>
+				<parameter name="cb" type="PurpleStunCallback"/>
 			</parameters>
 		</function>
 		<function name="stun_init" symbol="purple_stun_init">
@@ -3299,12 +3487,22 @@
 		<function name="txt_cancel" symbol="purple_txt_cancel">
 			<return-type type="void"/>
 			<parameters>
-				<parameter name="query_data" type="PurpleSrvQueryData*"/>
+				<parameter name="query_data" type="PurpleSrvTxtQueryData*"/>
 			</parameters>
 		</function>
 		<function name="txt_resolve" symbol="purple_txt_resolve">
-			<return-type type="PurpleSrvQueryData*"/>
+			<return-type type="PurpleSrvTxtQueryData*"/>
 			<parameters>
+				<parameter name="owner" type="char*"/>
+				<parameter name="domain" type="char*"/>
+				<parameter name="cb" type="PurpleTxtCallback"/>
+				<parameter name="extradata" type="gpointer"/>
+			</parameters>
+		</function>
+		<function name="txt_resolve_account" symbol="purple_txt_resolve_account">
+			<return-type type="PurpleSrvTxtQueryData*"/>
+			<parameters>
+				<parameter name="account" type="PurpleAccount*"/>
 				<parameter name="owner" type="char*"/>
 				<parameter name="domain" type="char*"/>
 				<parameter name="cb" type="PurpleTxtCallback"/>
@@ -3321,6 +3519,12 @@
 			<return-type type="char*"/>
 			<parameters>
 				<parameter name="html" type="char*"/>
+			</parameters>
+		</function>
+		<function name="unescape_text" symbol="purple_unescape_text">
+			<return-type type="char*"/>
+			<parameters>
+				<parameter name="text" type="char*"/>
 			</parameters>
 		</function>
 		<function name="upnp_cancel_port_mapping" symbol="purple_upnp_cancel_port_mapping">
@@ -3476,6 +3680,22 @@
 				<parameter name="data" type="gpointer"/>
 			</parameters>
 		</function>
+		<function name="util_fetch_url_request_data_len_with_account" symbol="purple_util_fetch_url_request_data_len_with_account">
+			<return-type type="PurpleUtilFetchUrlData*"/>
+			<parameters>
+				<parameter name="account" type="PurpleAccount*"/>
+				<parameter name="url" type="char*"/>
+				<parameter name="full" type="gboolean"/>
+				<parameter name="user_agent" type="char*"/>
+				<parameter name="http11" type="gboolean"/>
+				<parameter name="request" type="char*"/>
+				<parameter name="request_len" type="gsize"/>
+				<parameter name="include_headers" type="gboolean"/>
+				<parameter name="max_len" type="gssize"/>
+				<parameter name="callback" type="PurpleUtilFetchUrlCallback"/>
+				<parameter name="user_data" type="void*"/>
+			</parameters>
+		</function>
 		<function name="util_fetch_url_request_len" symbol="purple_util_fetch_url_request_len">
 			<return-type type="PurpleUtilFetchUrlData*"/>
 			<parameters>
@@ -3577,6 +3797,9 @@
 				<parameter name="data" type="char*"/>
 				<parameter name="size" type="gssize"/>
 			</parameters>
+		</function>
+		<function name="uuid_random" symbol="purple_uuid_random">
+			<return-type type="gchar*"/>
 		</function>
 		<function name="version_check" symbol="purple_version_check">
 			<return-type type="char*"/>
@@ -3681,6 +3904,20 @@
 			<return-type type="gboolean"/>
 			<parameters>
 				<parameter name="account" type="PurpleAccount*"/>
+			</parameters>
+		</callback>
+		<callback name="PurpleGetPublicAliasFailureCallback">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="account" type="PurpleAccount*"/>
+				<parameter name="error" type="char*"/>
+			</parameters>
+		</callback>
+		<callback name="PurpleGetPublicAliasSuccessCallback">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="account" type="PurpleAccount*"/>
+				<parameter name="alias" type="char*"/>
 			</parameters>
 		</callback>
 		<callback name="PurpleInfoFieldFormatCallback">
@@ -3794,6 +4031,20 @@
 				<parameter name="p2" type="char*"/>
 			</parameters>
 		</callback>
+		<callback name="PurpleSetPublicAliasFailureCallback">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="account" type="PurpleAccount*"/>
+				<parameter name="error" type="char*"/>
+			</parameters>
+		</callback>
+		<callback name="PurpleSetPublicAliasSuccessCallback">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="account" type="PurpleAccount*"/>
+				<parameter name="new_alias" type="char*"/>
+			</parameters>
+		</callback>
 		<callback name="PurpleSignalMarshalFunc">
 			<return-type type="void"/>
 			<parameters>
@@ -3811,6 +4062,20 @@
 				<parameter name="data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<callback name="PurpleSrvTxtQueryFailedCallback">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="query_data" type="PurpleSrvTxtQueryData*"/>
+				<parameter name="error_message" type="gchar*"/>
+			</parameters>
+		</callback>
+		<callback name="PurpleSrvTxtQueryResolvedCallback">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="query_data" type="PurpleSrvTxtQueryData*"/>
+				<parameter name="records" type="GList*"/>
+			</parameters>
+		</callback>
 		<callback name="PurpleSslErrorFunction">
 			<return-type type="void"/>
 			<parameters>
@@ -3825,6 +4090,12 @@
 				<parameter name="p1" type="gpointer"/>
 				<parameter name="p2" type="PurpleSslConnection*"/>
 				<parameter name="p3" type="PurpleInputCondition"/>
+			</parameters>
+		</callback>
+		<callback name="PurpleStunCallback">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="p1" type="PurpleStunNatDiscovery*"/>
 			</parameters>
 		</callback>
 		<callback name="PurpleTxtCallback">
@@ -3851,12 +4122,6 @@
 				<parameter name="error_message" type="gchar*"/>
 			</parameters>
 		</callback>
-		<callback name="StunCallback">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="p1" type="PurpleStunNatDiscovery*"/>
-			</parameters>
-		</callback>
 		<struct name="PurpleAccount">
 			<method name="add_buddies" symbol="purple_account_add_buddies">
 				<return-type type="void"/>
@@ -3865,11 +4130,27 @@
 					<parameter name="buddies" type="GList*"/>
 				</parameters>
 			</method>
+			<method name="add_buddies_with_invite" symbol="purple_account_add_buddies_with_invite">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="account" type="PurpleAccount*"/>
+					<parameter name="buddies" type="GList*"/>
+					<parameter name="message" type="char*"/>
+				</parameters>
+			</method>
 			<method name="add_buddy" symbol="purple_account_add_buddy">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="account" type="PurpleAccount*"/>
 					<parameter name="buddy" type="PurpleBuddy*"/>
+				</parameters>
+			</method>
+			<method name="add_buddy_with_invite" symbol="purple_account_add_buddy_with_invite">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="account" type="PurpleAccount*"/>
+					<parameter name="buddy" type="PurpleBuddy*"/>
+					<parameter name="message" type="char*"/>
 				</parameters>
 			</method>
 			<method name="change_password" symbol="purple_account_change_password">
@@ -3982,6 +4263,12 @@
 					<parameter name="create" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="get_name_for_display" symbol="purple_account_get_name_for_display">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="account" type="PurpleAccount*"/>
+				</parameters>
+			</method>
 			<method name="get_password" symbol="purple_account_get_password">
 				<return-type type="char*"/>
 				<parameters>
@@ -3990,6 +4277,12 @@
 			</method>
 			<method name="get_presence" symbol="purple_account_get_presence">
 				<return-type type="PurplePresence*"/>
+				<parameters>
+					<parameter name="account" type="PurpleAccount*"/>
+				</parameters>
+			</method>
+			<method name="get_privacy_type" symbol="purple_account_get_privacy_type">
+				<return-type type="PurplePrivacyType"/>
 				<parameters>
 					<parameter name="account" type="PurpleAccount*"/>
 				</parameters>
@@ -4012,7 +4305,21 @@
 					<parameter name="account" type="PurpleAccount*"/>
 				</parameters>
 			</method>
+			<method name="get_public_alias" symbol="purple_account_get_public_alias">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="account" type="PurpleAccount*"/>
+					<parameter name="success_cb" type="PurpleGetPublicAliasSuccessCallback"/>
+					<parameter name="failure_cb" type="PurpleGetPublicAliasFailureCallback"/>
+				</parameters>
+			</method>
 			<method name="get_remember_password" symbol="purple_account_get_remember_password">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="account" type="PurpleAccount*"/>
+				</parameters>
+			</method>
+			<method name="get_silence_suppression" symbol="purple_account_get_silence_suppression">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="account" type="PurpleAccount*"/>
@@ -4132,6 +4439,15 @@
 					<parameter name="id" type="char*"/>
 					<parameter name="alias" type="char*"/>
 					<parameter name="message" type="char*"/>
+				</parameters>
+			</method>
+			<method name="prefs_get_ui_ops" symbol="purple_account_prefs_get_ui_ops">
+				<return-type type="PurpleAccountPrefsUiOps*"/>
+			</method>
+			<method name="prefs_set_ui_ops" symbol="purple_account_prefs_set_ui_ops">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="ops" type="PurpleAccountPrefsUiOps*"/>
 				</parameters>
 			</method>
 			<method name="register" symbol="purple_account_register">
@@ -4286,6 +4602,13 @@
 					<parameter name="password" type="char*"/>
 				</parameters>
 			</method>
+			<method name="set_privacy_type" symbol="purple_account_set_privacy_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="account" type="PurpleAccount*"/>
+					<parameter name="privacy_type" type="PurplePrivacyType"/>
+				</parameters>
+			</method>
 			<method name="set_protocol_id" symbol="purple_account_set_protocol_id">
 				<return-type type="void"/>
 				<parameters>
@@ -4300,6 +4623,15 @@
 					<parameter name="info" type="PurpleProxyInfo*"/>
 				</parameters>
 			</method>
+			<method name="set_public_alias" symbol="purple_account_set_public_alias">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="account" type="PurpleAccount*"/>
+					<parameter name="alias" type="char*"/>
+					<parameter name="success_cb" type="PurpleSetPublicAliasSuccessCallback"/>
+					<parameter name="failure_cb" type="PurpleSetPublicAliasFailureCallback"/>
+				</parameters>
+			</method>
 			<method name="set_register_callback" symbol="purple_account_set_register_callback">
 				<return-type type="void"/>
 				<parameters>
@@ -4309,6 +4641,13 @@
 				</parameters>
 			</method>
 			<method name="set_remember_password" symbol="purple_account_set_remember_password">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="account" type="PurpleAccount*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_silence_suppression" symbol="purple_account_set_silence_suppression">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="account" type="PurpleAccount*"/>
@@ -4569,6 +4908,18 @@
 			<field name="pref_name" type="char*"/>
 			<field name="default_value" type="gpointer"/>
 			<field name="masked" type="gboolean"/>
+		</struct>
+		<struct name="PurpleAccountPrefsUiOps">
+			<field name="set_int" type="GCallback"/>
+			<field name="set_string" type="GCallback"/>
+			<field name="set_bool" type="GCallback"/>
+			<field name="load" type="GCallback"/>
+			<field name="save" type="GCallback"/>
+			<field name="schedule_save" type="GCallback"/>
+			<field name="_purple_reserved1" type="GCallback"/>
+			<field name="_purple_reserved2" type="GCallback"/>
+			<field name="_purple_reserved3" type="GCallback"/>
+			<field name="_purple_reserved4" type="GCallback"/>
 		</struct>
 		<struct name="PurpleAccountUiOps">
 			<field name="notify_added" type="GCallback"/>
@@ -4918,6 +5269,12 @@
 					<parameter name="buddy" type="PurpleBuddy*"/>
 				</parameters>
 			</method>
+			<method name="get_media_caps" symbol="purple_buddy_get_media_caps">
+				<return-type type="PurpleMediaCaps"/>
+				<parameters>
+					<parameter name="buddy" type="PurpleBuddy*"/>
+				</parameters>
+			</method>
 			<method name="get_name" symbol="purple_buddy_get_name">
 				<return-type type="char*"/>
 				<parameters>
@@ -5074,6 +5431,13 @@
 					<parameter name="icon" type="PurpleBuddyIcon*"/>
 				</parameters>
 			</method>
+			<method name="set_media_caps" symbol="purple_buddy_set_media_caps">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="buddy" type="PurpleBuddy*"/>
+					<parameter name="media_caps" type="PurpleMediaCaps"/>
+				</parameters>
+			</method>
 			<method name="set_protocol_data" symbol="purple_buddy_set_protocol_data">
 				<return-type type="void"/>
 				<parameters>
@@ -5089,6 +5453,7 @@
 			<field name="icon" type="PurpleBuddyIcon*"/>
 			<field name="account" type="PurpleAccount*"/>
 			<field name="presence" type="PurplePresence*"/>
+			<field name="media_caps" type="PurpleMediaCaps"/>
 		</struct>
 		<struct name="PurpleBuddyIcon">
 			<method name="get_account" symbol="purple_buddy_icon_get_account">
@@ -5215,6 +5580,13 @@
 					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="compare_pubkeys" symbol="purple_certificate_compare_pubkeys">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="crt1" type="PurpleCertificate*"/>
+					<parameter name="crt2" type="PurpleCertificate*"/>
+				</parameters>
+			</method>
 			<method name="copy" symbol="purple_certificate_copy">
 				<return-type type="PurpleCertificate*"/>
 				<parameters>
@@ -5276,6 +5648,13 @@
 				<return-type type="GByteArray*"/>
 				<parameters>
 					<parameter name="crt" type="PurpleCertificate*"/>
+				</parameters>
+			</method>
+			<method name="get_fingerprint_sha256" symbol="purple_certificate_get_fingerprint_sha256">
+				<return-type type="GByteArray*"/>
+				<parameters>
+					<parameter name="crt" type="PurpleCertificate*"/>
+					<parameter name="sha1_fallback" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="get_handle" symbol="purple_certificate_get_handle">
@@ -5483,10 +5862,12 @@
 			<field name="get_subject_name" type="GCallback"/>
 			<field name="check_subject_name" type="GCallback"/>
 			<field name="get_times" type="GCallback"/>
-			<field name="_purple_reserved1" type="GCallback"/>
-			<field name="_purple_reserved2" type="GCallback"/>
-			<field name="_purple_reserved3" type="GCallback"/>
-			<field name="_purple_reserved4" type="GCallback"/>
+			<field name="import_certificates" type="GCallback"/>
+			<field name="register_trusted_tls_cert" type="GCallback"/>
+			<field name="verify_cert" type="GCallback"/>
+			<field name="struct_size" type="unsigned"/>
+			<field name="get_fingerprint_sha256" type="GCallback"/>
+			<field name="compare_pubkeys" type="GCallback"/>
 		</struct>
 		<struct name="PurpleCertificateVerificationRequest">
 			<field name="verifier" type="PurpleCertificateVerifier*"/>
@@ -5826,7 +6207,66 @@
 			<field name="inptr" type="gchar*"/>
 			<field name="outptr" type="gchar*"/>
 		</struct>
+		<struct name="PurpleCmd">
+			<method name="do_command" symbol="purple_cmd_do_command">
+				<return-type type="PurpleCmdStatus"/>
+				<parameters>
+					<parameter name="conv" type="PurpleConversation*"/>
+					<parameter name="cmdline" type="gchar*"/>
+					<parameter name="markup" type="gchar*"/>
+					<parameter name="errormsg" type="gchar**"/>
+				</parameters>
+			</method>
+			<method name="execute" symbol="purple_cmd_execute">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="c" type="PurpleCmd*"/>
+					<parameter name="conv" type="PurpleConversation*"/>
+					<parameter name="cmdline" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="help" symbol="purple_cmd_help">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="conv" type="PurpleConversation*"/>
+					<parameter name="cmd" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="list" symbol="purple_cmd_list">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="conv" type="PurpleConversation*"/>
+				</parameters>
+			</method>
+			<method name="register" symbol="purple_cmd_register">
+				<return-type type="PurpleCmdId"/>
+				<parameters>
+					<parameter name="cmd" type="gchar*"/>
+					<parameter name="args" type="gchar*"/>
+					<parameter name="p" type="PurpleCmdPriority"/>
+					<parameter name="f" type="PurpleCmdFlag"/>
+					<parameter name="prpl_id" type="gchar*"/>
+					<parameter name="func" type="PurpleCmdFunc"/>
+					<parameter name="helpstr" type="gchar*"/>
+					<parameter name="data" type="void*"/>
+				</parameters>
+			</method>
+			<method name="unregister" symbol="purple_cmd_unregister">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="id" type="PurpleCmdId"/>
+				</parameters>
+			</method>
+		</struct>
 		<struct name="PurpleCmdId">
+		</struct>
+		<struct name="PurpleCommandsUiOps">
+			<field name="register_command" type="GCallback"/>
+			<field name="unregister_command" type="GCallback"/>
+			<field name="_purple_reserved1" type="GCallback"/>
+			<field name="_purple_reserved2" type="GCallback"/>
+			<field name="_purple_reserved3" type="GCallback"/>
+			<field name="_purple_reserved4" type="GCallback"/>
 		</struct>
 		<struct name="PurpleConnection">
 			<method name="destroy" symbol="purple_connection_destroy">
@@ -6004,6 +6444,12 @@
 					<parameter name="contact" type="PurpleContact*"/>
 				</parameters>
 			</method>
+			<method name="get_group" symbol="purple_contact_get_group">
+				<return-type type="PurpleGroup*"/>
+				<parameters>
+					<parameter name="contact" type="PurpleContact*"/>
+				</parameters>
+			</method>
 			<method name="get_priority_buddy" symbol="purple_contact_get_priority_buddy">
 				<return-type type="PurpleBuddy*"/>
 				<parameters>
@@ -6075,6 +6521,19 @@
 					<parameter name="name" type="char*"/>
 				</parameters>
 			</method>
+			<method name="cb_get_attribute" symbol="purple_conv_chat_cb_get_attribute">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="cb" type="PurpleConvChatBuddy*"/>
+					<parameter name="key" type="char*"/>
+				</parameters>
+			</method>
+			<method name="cb_get_attribute_keys" symbol="purple_conv_chat_cb_get_attribute_keys">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="cb" type="PurpleConvChatBuddy*"/>
+				</parameters>
+			</method>
 			<method name="cb_get_name" symbol="purple_conv_chat_cb_get_name">
 				<return-type type="char*"/>
 				<parameters>
@@ -6087,6 +6546,24 @@
 					<parameter name="name" type="char*"/>
 					<parameter name="alias" type="char*"/>
 					<parameter name="flags" type="PurpleConvChatBuddyFlags"/>
+				</parameters>
+			</method>
+			<method name="cb_set_attribute" symbol="purple_conv_chat_cb_set_attribute">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="chat" type="PurpleConvChat*"/>
+					<parameter name="cb" type="PurpleConvChatBuddy*"/>
+					<parameter name="key" type="char*"/>
+					<parameter name="value" type="char*"/>
+				</parameters>
+			</method>
+			<method name="cb_set_attributes" symbol="purple_conv_chat_cb_set_attributes">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="chat" type="PurpleConvChat*"/>
+					<parameter name="cb" type="PurpleConvChatBuddy*"/>
+					<parameter name="keys" type="GList*"/>
+					<parameter name="values" type="GList*"/>
 				</parameters>
 			</method>
 			<method name="clear_users" symbol="purple_conv_chat_clear_users">
@@ -6295,6 +6772,7 @@
 			<field name="id" type="int"/>
 			<field name="nick" type="char*"/>
 			<field name="left" type="gboolean"/>
+			<field name="users" type="GHashTable*"/>
 		</struct>
 		<struct name="PurpleConvChatBuddy">
 			<field name="name" type="char*"/>
@@ -6302,6 +6780,8 @@
 			<field name="alias_key" type="char*"/>
 			<field name="buddy" type="gboolean"/>
 			<field name="flags" type="PurpleConvChatBuddyFlags"/>
+			<field name="attributes" type="GHashTable*"/>
+			<field name="ui_data" type="gpointer"/>
 		</struct>
 		<struct name="PurpleConvIm">
 			<method name="get_conversation" symbol="purple_conv_im_get_conversation">
@@ -7139,6 +7619,9 @@
 					<parameter name="participant" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="caps_get_type" symbol="purple_media_caps_get_type">
+				<return-type type="GType"/>
+			</method>
 			<method name="codecs_ready" symbol="purple_media_codecs_ready">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -7166,6 +7649,28 @@
 			</method>
 			<method name="get_account" symbol="purple_media_get_account">
 				<return-type type="PurpleAccount*"/>
+				<parameters>
+					<parameter name="media" type="PurpleMedia*"/>
+				</parameters>
+			</method>
+			<method name="get_active_local_candidates" symbol="purple_media_get_active_local_candidates">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="media" type="PurpleMedia*"/>
+					<parameter name="sess_id" type="gchar*"/>
+					<parameter name="participant" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_active_remote_candidates" symbol="purple_media_get_active_remote_candidates">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="media" type="PurpleMedia*"/>
+					<parameter name="sess_id" type="gchar*"/>
+					<parameter name="participant" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_available_params" symbol="purple_media_get_available_params">
+				<return-type type="gchar**"/>
 				<parameters>
 					<parameter name="media" type="PurpleMedia*"/>
 				</parameters>
@@ -7239,14 +7744,54 @@
 			<method name="network_protocol_get_type" symbol="purple_media_network_protocol_get_type">
 				<return-type type="GType"/>
 			</method>
+			<method name="param_is_supported" symbol="purple_media_param_is_supported">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="media" type="PurpleMedia*"/>
+					<parameter name="param" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="remove_output_windows" symbol="purple_media_remove_output_windows">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="media" type="PurpleMedia*"/>
 				</parameters>
 			</method>
+			<method name="send_dtmf" symbol="purple_media_send_dtmf">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="media" type="PurpleMedia*"/>
+					<parameter name="session_id" type="gchar*"/>
+					<parameter name="dtmf" type="gchar"/>
+					<parameter name="volume" type="guint8"/>
+					<parameter name="duration" type="guint16"/>
+				</parameters>
+			</method>
 			<method name="session_type_get_type" symbol="purple_media_session_type_get_type">
 				<return-type type="GType"/>
+			</method>
+			<method name="set_decryption_parameters" symbol="purple_media_set_decryption_parameters">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="media" type="PurpleMedia*"/>
+					<parameter name="sess_id" type="gchar*"/>
+					<parameter name="participant" type="gchar*"/>
+					<parameter name="cipher" type="gchar*"/>
+					<parameter name="auth" type="gchar*"/>
+					<parameter name="key" type="gchar*"/>
+					<parameter name="key_len" type="gsize"/>
+				</parameters>
+			</method>
+			<method name="set_encryption_parameters" symbol="purple_media_set_encryption_parameters">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="media" type="PurpleMedia*"/>
+					<parameter name="sess_id" type="gchar*"/>
+					<parameter name="cipher" type="gchar*"/>
+					<parameter name="auth" type="gchar*"/>
+					<parameter name="key" type="gchar*"/>
+					<parameter name="key_len" type="gsize"/>
+				</parameters>
 			</method>
 			<method name="set_input_volume" symbol="purple_media_set_input_volume">
 				<return-type type="void"/>
@@ -7274,6 +7819,14 @@
 					<parameter name="window_id" type="gulong"/>
 				</parameters>
 			</method>
+			<method name="set_params" symbol="purple_media_set_params">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="media" type="PurpleMedia*"/>
+					<parameter name="num_params" type="guint"/>
+					<parameter name="params" type="GParameter*"/>
+				</parameters>
+			</method>
 			<method name="set_prpl_data" symbol="purple_media_set_prpl_data">
 				<return-type type="void"/>
 				<parameters>
@@ -7298,6 +7851,15 @@
 					<parameter name="codec" type="PurpleMediaCodec*"/>
 				</parameters>
 			</method>
+			<method name="set_send_rtcp_mux" symbol="purple_media_set_send_rtcp_mux">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="media" type="PurpleMedia*"/>
+					<parameter name="sess_id" type="gchar*"/>
+					<parameter name="participant" type="gchar*"/>
+					<parameter name="send_rtcp_mux" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="state_changed_get_type" symbol="purple_media_state_changed_get_type">
 				<return-type type="GType"/>
 			</method>
@@ -7312,7 +7874,142 @@
 				</parameters>
 			</method>
 		</struct>
+		<struct name="PurpleMediaAppDataCallbacks">
+			<field name="readable" type="GCallback"/>
+			<field name="writable" type="GCallback"/>
+		</struct>
+		<struct name="PurpleMediaBackend">
+			<method name="add_remote_candidates" symbol="purple_media_backend_add_remote_candidates">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="PurpleMediaBackend*"/>
+					<parameter name="sess_id" type="gchar*"/>
+					<parameter name="participant" type="gchar*"/>
+					<parameter name="remote_candidates" type="GList*"/>
+				</parameters>
+			</method>
+			<method name="add_stream" symbol="purple_media_backend_add_stream">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="PurpleMediaBackend*"/>
+					<parameter name="sess_id" type="gchar*"/>
+					<parameter name="who" type="gchar*"/>
+					<parameter name="type" type="PurpleMediaSessionType"/>
+					<parameter name="initiator" type="gboolean"/>
+					<parameter name="transmitter" type="gchar*"/>
+					<parameter name="num_params" type="guint"/>
+					<parameter name="params" type="GParameter*"/>
+				</parameters>
+			</method>
+			<method name="codecs_ready" symbol="purple_media_backend_codecs_ready">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="PurpleMediaBackend*"/>
+					<parameter name="sess_id" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_available_params" symbol="purple_media_backend_get_available_params">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="self" type="PurpleMediaBackend*"/>
+				</parameters>
+			</method>
+			<method name="get_codecs" symbol="purple_media_backend_get_codecs">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="self" type="PurpleMediaBackend*"/>
+					<parameter name="sess_id" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_local_candidates" symbol="purple_media_backend_get_local_candidates">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="self" type="PurpleMediaBackend*"/>
+					<parameter name="sess_id" type="gchar*"/>
+					<parameter name="participant" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_decryption_parameters" symbol="purple_media_backend_set_decryption_parameters">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="PurpleMediaBackend*"/>
+					<parameter name="sess_id" type="gchar*"/>
+					<parameter name="participant" type="gchar*"/>
+					<parameter name="cipher" type="gchar*"/>
+					<parameter name="auth" type="gchar*"/>
+					<parameter name="key" type="gchar*"/>
+					<parameter name="key_len" type="gsize"/>
+				</parameters>
+			</method>
+			<method name="set_encryption_parameters" symbol="purple_media_backend_set_encryption_parameters">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="PurpleMediaBackend*"/>
+					<parameter name="sess_id" type="gchar*"/>
+					<parameter name="cipher" type="gchar*"/>
+					<parameter name="auth" type="gchar*"/>
+					<parameter name="key" type="gchar*"/>
+					<parameter name="key_len" type="gsize"/>
+				</parameters>
+			</method>
+			<method name="set_params" symbol="purple_media_backend_set_params">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="PurpleMediaBackend*"/>
+					<parameter name="num_params" type="guint"/>
+					<parameter name="params" type="GParameter*"/>
+				</parameters>
+			</method>
+			<method name="set_remote_codecs" symbol="purple_media_backend_set_remote_codecs">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="PurpleMediaBackend*"/>
+					<parameter name="sess_id" type="gchar*"/>
+					<parameter name="participant" type="gchar*"/>
+					<parameter name="codecs" type="GList*"/>
+				</parameters>
+			</method>
+			<method name="set_send_codec" symbol="purple_media_backend_set_send_codec">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="PurpleMediaBackend*"/>
+					<parameter name="sess_id" type="gchar*"/>
+					<parameter name="codec" type="PurpleMediaCodec*"/>
+				</parameters>
+			</method>
+			<method name="set_send_rtcp_mux" symbol="purple_media_backend_set_send_rtcp_mux">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="PurpleMediaBackend*"/>
+					<parameter name="sess_id" type="gchar*"/>
+					<parameter name="participant" type="gchar*"/>
+					<parameter name="send_rtcp_mux" type="gboolean"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="PurpleMediaBackendIface">
+			<field name="parent_iface" type="GTypeInterface"/>
+			<field name="add_stream" type="GCallback"/>
+			<field name="add_remote_candidates" type="GCallback"/>
+			<field name="codecs_ready" type="GCallback"/>
+			<field name="get_codecs" type="GCallback"/>
+			<field name="get_local_candidates" type="GCallback"/>
+			<field name="set_remote_codecs" type="GCallback"/>
+			<field name="set_send_codec" type="GCallback"/>
+			<field name="set_encryption_parameters" type="GCallback"/>
+			<field name="set_decryption_parameters" type="GCallback"/>
+			<field name="set_params" type="GCallback"/>
+			<field name="get_available_params" type="GCallback"/>
+			<field name="send_dtmf" type="GCallback"/>
+			<field name="set_send_rtcp_mux" type="GCallback"/>
+		</struct>
 		<struct name="PurpleMediaCandidate">
+			<method name="copy" symbol="purple_media_candidate_copy">
+				<return-type type="PurpleMediaCandidate*"/>
+				<parameters>
+					<parameter name="candidate" type="PurpleMediaCandidate*"/>
+				</parameters>
+			</method>
 			<method name="get_base_ip" symbol="purple_media_candidate_get_base_ip">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -7419,6 +8116,12 @@
 					<parameter name="codec" type="PurpleMediaCodec*"/>
 					<parameter name="name" type="gchar*"/>
 					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="copy" symbol="purple_media_codec_copy">
+				<return-type type="PurpleMediaCodec*"/>
+				<parameters>
+					<parameter name="codec" type="PurpleMediaCodec*"/>
 				</parameters>
 			</method>
 			<method name="get_channels" symbol="purple_media_codec_get_channels">
@@ -7545,6 +8248,16 @@
 					<parameter name="participant" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="create_private_media" symbol="purple_media_manager_create_private_media">
+				<return-type type="PurpleMedia*"/>
+				<parameters>
+					<parameter name="manager" type="PurpleMediaManager*"/>
+					<parameter name="account" type="PurpleAccount*"/>
+					<parameter name="conference_type" type="char*"/>
+					<parameter name="remote_user" type="char*"/>
+					<parameter name="initiator" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="get" symbol="purple_media_manager_get">
 				<return-type type="PurpleMediaManager*"/>
 			</method>
@@ -7553,6 +8266,12 @@
 				<parameters>
 					<parameter name="manager" type="PurpleMediaManager*"/>
 					<parameter name="type" type="PurpleMediaElementType"/>
+				</parameters>
+			</method>
+			<method name="get_backend_type" symbol="purple_media_manager_get_backend_type">
+				<return-type type="GType"/>
+				<parameters>
+					<parameter name="manager" type="PurpleMediaManager*"/>
 				</parameters>
 			</method>
 			<method name="get_element" symbol="purple_media_manager_get_element">
@@ -7591,10 +8310,41 @@
 					<parameter name="manager" type="PurpleMediaManager*"/>
 				</parameters>
 			</method>
+			<method name="get_private_media" symbol="purple_media_manager_get_private_media">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="manager" type="PurpleMediaManager*"/>
+				</parameters>
+			</method>
+			<method name="get_private_media_by_account" symbol="purple_media_manager_get_private_media_by_account">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="manager" type="PurpleMediaManager*"/>
+					<parameter name="account" type="PurpleAccount*"/>
+				</parameters>
+			</method>
 			<method name="get_ui_caps" symbol="purple_media_manager_get_ui_caps">
 				<return-type type="PurpleMediaCaps"/>
 				<parameters>
 					<parameter name="manager" type="PurpleMediaManager*"/>
+				</parameters>
+			</method>
+			<method name="get_video_caps" symbol="purple_media_manager_get_video_caps">
+				<return-type type="GstCaps*"/>
+				<parameters>
+					<parameter name="manager" type="PurpleMediaManager*"/>
+				</parameters>
+			</method>
+			<method name="receive_application_data" symbol="purple_media_manager_receive_application_data">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="manager" type="PurpleMediaManager*"/>
+					<parameter name="media" type="PurpleMedia*"/>
+					<parameter name="session_id" type="gchar*"/>
+					<parameter name="participant" type="gchar*"/>
+					<parameter name="buffer" type="gpointer"/>
+					<parameter name="max_size" type="guint"/>
+					<parameter name="blocking" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="register_element" symbol="purple_media_manager_register_element">
@@ -7627,11 +8377,42 @@
 					<parameter name="participant" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="send_application_data" symbol="purple_media_manager_send_application_data">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="manager" type="PurpleMediaManager*"/>
+					<parameter name="media" type="PurpleMedia*"/>
+					<parameter name="session_id" type="gchar*"/>
+					<parameter name="participant" type="gchar*"/>
+					<parameter name="buffer" type="gpointer"/>
+					<parameter name="size" type="guint"/>
+					<parameter name="blocking" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_active_element" symbol="purple_media_manager_set_active_element">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="manager" type="PurpleMediaManager*"/>
 					<parameter name="info" type="PurpleMediaElementInfo*"/>
+				</parameters>
+			</method>
+			<method name="set_application_data_callbacks" symbol="purple_media_manager_set_application_data_callbacks">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="PurpleMediaManager*"/>
+					<parameter name="media" type="PurpleMedia*"/>
+					<parameter name="session_id" type="gchar*"/>
+					<parameter name="participant" type="gchar*"/>
+					<parameter name="callbacks" type="PurpleMediaAppDataCallbacks*"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="notify" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="set_backend_type" symbol="purple_media_manager_set_backend_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="PurpleMediaManager*"/>
+					<parameter name="backend_type" type="GType"/>
 				</parameters>
 			</method>
 			<method name="set_output_window" symbol="purple_media_manager_set_output_window">
@@ -7649,6 +8430,13 @@
 				<parameters>
 					<parameter name="manager" type="PurpleMediaManager*"/>
 					<parameter name="caps" type="PurpleMediaCaps"/>
+				</parameters>
+			</method>
+			<method name="set_video_caps" symbol="purple_media_manager_set_video_caps">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="manager" type="PurpleMediaManager*"/>
+					<parameter name="caps" type="GstCaps*"/>
 				</parameters>
 			</method>
 			<method name="unregister_element" symbol="purple_media_manager_unregister_element">
@@ -7803,6 +8591,11 @@
 				</parameters>
 			</method>
 		</struct>
+		<struct name="PurpleMood">
+			<field name="mood" type="char*"/>
+			<field name="description" type="char*"/>
+			<field name="padding" type="gpointer*"/>
+		</struct>
 		<struct name="PurpleNetworkListenData">
 		</struct>
 		<struct name="PurpleNotifySearchButton">
@@ -7914,6 +8707,14 @@
 		</struct>
 		<struct name="PurpleNotifyUserInfo">
 			<method name="add_pair" symbol="purple_notify_user_info_add_pair">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="user_info" type="PurpleNotifyUserInfo*"/>
+					<parameter name="label" type="char*"/>
+					<parameter name="value" type="char*"/>
+				</parameters>
+			</method>
+			<method name="add_pair_plaintext" symbol="purple_notify_user_info_add_pair_plaintext">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="user_info" type="PurpleNotifyUserInfo*"/>
@@ -8481,6 +9282,11 @@
 			<field name="get_account_text_table" type="GCallback"/>
 			<field name="initiate_media" type="GCallback"/>
 			<field name="get_media_caps" type="GCallback"/>
+			<field name="get_moods" type="GCallback"/>
+			<field name="set_public_alias" type="GCallback"/>
+			<field name="get_public_alias" type="GCallback"/>
+			<field name="add_buddy_with_invite" type="GCallback"/>
+			<field name="add_buddies_with_invite" type="GCallback"/>
 		</struct>
 		<struct name="PurplePluginUiInfo">
 			<field name="get_plugin_pref_frame" type="GCallback"/>
@@ -8541,6 +9347,12 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="account" type="PurpleAccount*"/>
+				</parameters>
+			</method>
+			<method name="destroy_all_by_buddy" symbol="purple_pounce_destroy_all_by_buddy">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="buddy" type="PurpleBuddy*"/>
 				</parameters>
 			</method>
 			<method name="execute" symbol="purple_pounce_execute">
@@ -8647,6 +9459,39 @@
 			<field name="actions" type="GHashTable*"/>
 			<field name="save" type="gboolean"/>
 			<field name="data" type="void*"/>
+		</struct>
+		<struct name="PurplePrefCallbackData">
+		</struct>
+		<struct name="PurplePrefsUiOps">
+			<field name="add_none" type="GCallback"/>
+			<field name="add_bool" type="GCallback"/>
+			<field name="add_int" type="GCallback"/>
+			<field name="add_string" type="GCallback"/>
+			<field name="add_string_list" type="GCallback"/>
+			<field name="set_bool" type="GCallback"/>
+			<field name="set_int" type="GCallback"/>
+			<field name="set_string" type="GCallback"/>
+			<field name="set_string_list" type="GCallback"/>
+			<field name="get_bool" type="GCallback"/>
+			<field name="get_int" type="GCallback"/>
+			<field name="get_string" type="GCallback"/>
+			<field name="get_string_list" type="GCallback"/>
+			<field name="get_type" type="GCallback"/>
+			<field name="get_children_names" type="GCallback"/>
+			<field name="exists" type="GCallback"/>
+			<field name="remove" type="GCallback"/>
+			<field name="rename" type="GCallback"/>
+			<field name="rename_boolean_toggle" type="GCallback"/>
+			<field name="load" type="GCallback"/>
+			<field name="save" type="GCallback"/>
+			<field name="schedule_save" type="GCallback"/>
+			<field name="connect_callback" type="GCallback"/>
+			<field name="disconnect_callback" type="GCallback"/>
+			<field name="_purple_reserved1" type="GCallback"/>
+			<field name="_purple_reserved2" type="GCallback"/>
+			<field name="_purple_reserved3" type="GCallback"/>
+			<field name="_purple_reserved4" type="GCallback"/>
+			<field name="_purple_reserved5" type="GCallback"/>
 		</struct>
 		<struct name="PurplePresence">
 			<method name="add_list" symbol="purple_presence_add_list">
@@ -9191,6 +10036,15 @@
 					<parameter name="data" type="void*"/>
 				</parameters>
 			</method>
+			<method name="list_add_icon" symbol="purple_request_field_list_add_icon">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="field" type="PurpleRequestField*"/>
+					<parameter name="item" type="char*"/>
+					<parameter name="icon_path" type="char*"/>
+					<parameter name="data" type="void*"/>
+				</parameters>
+			</method>
 			<method name="list_add_selected" symbol="purple_request_field_list_add_selected">
 				<return-type type="void"/>
 				<parameters>
@@ -9209,6 +10063,12 @@
 				<parameters>
 					<parameter name="field" type="PurpleRequestField*"/>
 					<parameter name="text" type="char*"/>
+				</parameters>
+			</method>
+			<method name="list_get_icons" symbol="purple_request_field_list_get_icons">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="field" type="PurpleRequestField*"/>
 				</parameters>
 			</method>
 			<method name="list_get_items" symbol="purple_request_field_list_get_items">
@@ -9517,10 +10377,10 @@
 			<field name="request_file" type="GCallback"/>
 			<field name="close_request" type="GCallback"/>
 			<field name="request_folder" type="GCallback"/>
+			<field name="request_action_with_icon" type="GCallback"/>
 			<field name="_purple_reserved1" type="GCallback"/>
 			<field name="_purple_reserved2" type="GCallback"/>
 			<field name="_purple_reserved3" type="GCallback"/>
-			<field name="_purple_reserved4" type="GCallback"/>
 		</struct>
 		<struct name="PurpleRoomlist">
 			<method name="cancel_get_list" symbol="purple_roomlist_cancel_get_list">
@@ -9993,6 +10853,16 @@
 			<field name="port" type="int"/>
 			<field name="weight" type="int"/>
 			<field name="pref" type="int"/>
+		</struct>
+		<struct name="PurpleSrvTxtQueryData">
+		</struct>
+		<struct name="PurpleSrvTxtQueryUiOps">
+			<field name="resolve" type="GCallback"/>
+			<field name="destroy" type="GCallback"/>
+			<field name="_purple_reserved1" type="GCallback"/>
+			<field name="_purple_reserved2" type="GCallback"/>
+			<field name="_purple_reserved3" type="GCallback"/>
+			<field name="_purple_reserved4" type="GCallback"/>
 		</struct>
 		<struct name="PurpleSslConnection">
 			<field name="host" type="char*"/>
@@ -10580,6 +11450,8 @@
 		<struct name="PurpleThemeManagerClass">
 			<field name="parent_class" type="GObjectClass"/>
 		</struct>
+		<struct name="PurpleThumbnailSpec">
+		</struct>
 		<struct name="PurpleTxtResponse">
 			<method name="destroy" symbol="purple_txt_response_destroy">
 				<return-type type="void"/>
@@ -10593,6 +11465,7 @@
 					<parameter name="response" type="PurpleTxtResponse*"/>
 				</parameters>
 			</method>
+			<field name="content" type="char*"/>
 		</struct>
 		<struct name="PurpleUtilFetchUrlData">
 		</struct>
@@ -11141,6 +12014,19 @@
 					<parameter name="xfer" type="PurpleXfer*"/>
 				</parameters>
 			</method>
+			<method name="get_thumbnail" symbol="purple_xfer_get_thumbnail">
+				<return-type type="gconstpointer"/>
+				<parameters>
+					<parameter name="xfer" type="PurpleXfer*"/>
+					<parameter name="len" type="gsize*"/>
+				</parameters>
+			</method>
+			<method name="get_thumbnail_mimetype" symbol="purple_xfer_get_thumbnail_mimetype">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="xfer" type="PurpleXfer*"/>
+				</parameters>
+			</method>
 			<method name="get_ui_ops" symbol="purple_xfer_get_ui_ops">
 				<return-type type="PurpleXferUiOps*"/>
 				<parameters>
@@ -11167,6 +12053,13 @@
 					<parameter name="who" type="char*"/>
 				</parameters>
 			</method>
+			<method name="prepare_thumbnail" symbol="purple_xfer_prepare_thumbnail">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="xfer" type="PurpleXfer*"/>
+					<parameter name="formats" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="prpl_ready" symbol="purple_xfer_prpl_ready">
 				<return-type type="void"/>
 				<parameters>
@@ -11178,6 +12071,14 @@
 				<parameters>
 					<parameter name="xfer" type="PurpleXfer*"/>
 					<parameter name="buffer" type="guchar**"/>
+				</parameters>
+			</method>
+			<method name="read_file" symbol="purple_xfer_read_file">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="xfer" type="PurpleXfer*"/>
+					<parameter name="buffer" type="guchar*"/>
+					<parameter name="size" type="gsize"/>
 				</parameters>
 			</method>
 			<method name="ref" symbol="purple_xfer_ref">
@@ -11303,6 +12204,15 @@
 					<parameter name="fnc" type="GCallback"/>
 				</parameters>
 			</method>
+			<method name="set_thumbnail" symbol="purple_xfer_set_thumbnail">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="xfer" type="PurpleXfer*"/>
+					<parameter name="thumbnail" type="gconstpointer"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="mimetype" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="set_write_fnc" symbol="purple_xfer_set_write_fnc">
 				<return-type type="void"/>
 				<parameters>
@@ -11345,6 +12255,14 @@
 					<parameter name="size" type="gsize"/>
 				</parameters>
 			</method>
+			<method name="write_file" symbol="purple_xfer_write_file">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="xfer" type="PurpleXfer*"/>
+					<parameter name="buffer" type="guchar*"/>
+					<parameter name="size" type="gsize"/>
+				</parameters>
+			</method>
 			<field name="ref" type="guint"/>
 			<field name="type" type="PurpleXferType"/>
 			<field name="account" type="PurpleAccount*"/>
@@ -11380,7 +12298,7 @@
 			<field name="ui_write" type="GCallback"/>
 			<field name="ui_read" type="GCallback"/>
 			<field name="data_not_sent" type="GCallback"/>
-			<field name="_purple_reserved1" type="GCallback"/>
+			<field name="add_thumbnail" type="GCallback"/>
 		</struct>
 		<struct name="UPnPMappingAddRemove">
 		</struct>
@@ -11598,6 +12516,12 @@
 			<field name="prefix" type="char*"/>
 			<field name="namespace_map" type="GHashTable*"/>
 		</struct>
+		<enum name="PurpleAccountRequestResponse">
+			<member name="PURPLE_ACCOUNT_RESPONSE_IGNORE" value="-2"/>
+			<member name="PURPLE_ACCOUNT_RESPONSE_DENY" value="-1"/>
+			<member name="PURPLE_ACCOUNT_RESPONSE_PASS" value="0"/>
+			<member name="PURPLE_ACCOUNT_RESPONSE_ACCEPT" value="1"/>
+		</enum>
 		<enum name="PurpleAccountRequestType">
 			<member name="PURPLE_ACCOUNT_REQUEST_AUTHORIZATION" value="0"/>
 		</enum>
@@ -11610,6 +12534,21 @@
 			<member name="PURPLE_BLIST_BUDDY_NODE" value="2"/>
 			<member name="PURPLE_BLIST_CHAT_NODE" value="3"/>
 			<member name="PURPLE_BLIST_OTHER_NODE" value="4"/>
+		</enum>
+		<enum name="PurpleCertificateInvalidityFlags">
+			<member name="PURPLE_CERTIFICATE_UNKNOWN_ERROR" value="-1"/>
+			<member name="PURPLE_CERTIFICATE_NO_PROBLEMS" value="0"/>
+			<member name="PURPLE_CERTIFICATE_NON_FATALS_MASK" value="65535"/>
+			<member name="PURPLE_CERTIFICATE_SELF_SIGNED" value="1"/>
+			<member name="PURPLE_CERTIFICATE_CA_UNKNOWN" value="2"/>
+			<member name="PURPLE_CERTIFICATE_NOT_ACTIVATED" value="4"/>
+			<member name="PURPLE_CERTIFICATE_EXPIRED" value="8"/>
+			<member name="PURPLE_CERTIFICATE_NAME_MISMATCH" value="16"/>
+			<member name="PURPLE_CERTIFICATE_NO_CA_POOL" value="32"/>
+			<member name="PURPLE_CERTIFICATE_FATALS_MASK" value="-65536"/>
+			<member name="PURPLE_CERTIFICATE_INVALID_CHAIN" value="65536"/>
+			<member name="PURPLE_CERTIFICATE_REVOKED" value="131072"/>
+			<member name="PURPLE_CERTIFICATE_LAST" value="262144"/>
 		</enum>
 		<enum name="PurpleCertificateVerificationStatus">
 			<member name="PURPLE_CERTIFICATE_INVALID" value="0"/>
@@ -11698,6 +12637,8 @@
 			<member name="PURPLE_CONNECTION_NO_URLDESC" value="64"/>
 			<member name="PURPLE_CONNECTION_NO_IMAGES" value="128"/>
 			<member name="PURPLE_CONNECTION_ALLOW_CUSTOM_SMILEY" value="256"/>
+			<member name="PURPLE_CONNECTION_SUPPORT_MOODS" value="512"/>
+			<member name="PURPLE_CONNECTION_SUPPORT_MOOD_MESSAGES" value="1024"/>
 		</enum>
 		<enum name="PurpleConnectionState">
 			<member name="PURPLE_DISCONNECTED" value="0"/>
@@ -11711,6 +12652,7 @@
 			<member name="PURPLE_CBFLAGS_OP" value="4"/>
 			<member name="PURPLE_CBFLAGS_FOUNDER" value="8"/>
 			<member name="PURPLE_CBFLAGS_TYPING" value="16"/>
+			<member name="PURPLE_CBFLAGS_AWAY" value="32"/>
 		</enum>
 		<enum name="PurpleConvUpdateType">
 			<member name="PURPLE_CONV_UPDATE_ADD" value="0"/>
@@ -11808,6 +12750,7 @@
 			<member name="PURPLE_MEDIA_ELEMENT_UNIQUE" value="256"/>
 			<member name="PURPLE_MEDIA_ELEMENT_SRC" value="512"/>
 			<member name="PURPLE_MEDIA_ELEMENT_SINK" value="1024"/>
+			<member name="PURPLE_MEDIA_ELEMENT_APPLICATION" value="2048"/>
 		</enum>
 		<enum name="PurpleMediaInfoType">
 			<member name="PURPLE_MEDIA_INFO_HANGUP" value="0"/>
@@ -11822,7 +12765,9 @@
 		</enum>
 		<enum name="PurpleMediaNetworkProtocol">
 			<member name="PURPLE_MEDIA_NETWORK_PROTOCOL_UDP" value="0"/>
-			<member name="PURPLE_MEDIA_NETWORK_PROTOCOL_TCP" value="1"/>
+			<member name="PURPLE_MEDIA_NETWORK_PROTOCOL_TCP_PASSIVE" value="1"/>
+			<member name="PURPLE_MEDIA_NETWORK_PROTOCOL_TCP_ACTIVE" value="2"/>
+			<member name="PURPLE_MEDIA_NETWORK_PROTOCOL_TCP_SO" value="3"/>
 		</enum>
 		<enum name="PurpleMediaSessionType">
 			<member name="PURPLE_MEDIA_NONE" value="0"/>
@@ -11830,8 +12775,11 @@
 			<member name="PURPLE_MEDIA_SEND_AUDIO" value="2"/>
 			<member name="PURPLE_MEDIA_RECV_VIDEO" value="4"/>
 			<member name="PURPLE_MEDIA_SEND_VIDEO" value="8"/>
+			<member name="PURPLE_MEDIA_RECV_APPLICATION" value="16"/>
+			<member name="PURPLE_MEDIA_SEND_APPLICATION" value="32"/>
 			<member name="PURPLE_MEDIA_AUDIO" value="3"/>
 			<member name="PURPLE_MEDIA_VIDEO" value="12"/>
+			<member name="PURPLE_MEDIA_APPLICATION" value="48"/>
 		</enum>
 		<enum name="PurpleMediaState">
 			<member name="PURPLE_MEDIA_STATE_NEW" value="0"/>
@@ -11854,6 +12802,7 @@
 			<member name="PURPLE_MESSAGE_NOTIFY" value="8192"/>
 			<member name="PURPLE_MESSAGE_NO_LINKIFY" value="16384"/>
 			<member name="PURPLE_MESSAGE_INVISIBLE" value="32768"/>
+			<member name="PURPLE_MESSAGE_REMOTE_SEND" value="65536"/>
 		</enum>
 		<enum name="PurpleNotifyMsgType">
 			<member name="PURPLE_NOTIFY_MSG_ERROR" value="0"/>
@@ -11948,6 +12897,7 @@
 			<member name="OPT_PROTO_USE_POINTSIZE" value="256"/>
 			<member name="OPT_PROTO_REGISTER_NOSCREENNAME" value="512"/>
 			<member name="OPT_PROTO_SLASH_COMMANDS_NATIVE" value="1024"/>
+			<member name="OPT_PROTO_INVITE_MESSAGE" value="2048"/>
 		</enum>
 		<enum name="PurpleProxyType">
 			<member name="PURPLE_PROXY_USE_GLOBAL" value="-1"/>
@@ -11956,6 +12906,7 @@
 			<member name="PURPLE_PROXY_SOCKS4" value="2"/>
 			<member name="PURPLE_PROXY_SOCKS5" value="3"/>
 			<member name="PURPLE_PROXY_USE_ENVVAR" value="4"/>
+			<member name="PURPLE_PROXY_TOR" value="5"/>
 		</enum>
 		<enum name="PurpleRequestFieldType">
 			<member name="PURPLE_REQUEST_FIELD_NONE" value="0"/>
@@ -11997,7 +12948,8 @@
 			<member name="PURPLE_SOUND_CHAT_SAY" value="8"/>
 			<member name="PURPLE_SOUND_POUNCE_DEFAULT" value="9"/>
 			<member name="PURPLE_SOUND_CHAT_NICK" value="10"/>
-			<member name="PURPLE_NUM_SOUNDS" value="11"/>
+			<member name="PURPLE_SOUND_GOT_ATTENTION" value="11"/>
+			<member name="PURPLE_NUM_SOUNDS" value="12"/>
 		</enum>
 		<enum name="PurpleSslErrorType">
 			<member name="PURPLE_SSL_HANDSHAKE_FAILED" value="1"/>
@@ -12014,7 +12966,8 @@
 			<member name="PURPLE_STATUS_EXTENDED_AWAY" value="6"/>
 			<member name="PURPLE_STATUS_MOBILE" value="7"/>
 			<member name="PURPLE_STATUS_TUNE" value="8"/>
-			<member name="PURPLE_STATUS_NUM_PRIMITIVES" value="9"/>
+			<member name="PURPLE_STATUS_MOOD" value="9"/>
+			<member name="PURPLE_STATUS_NUM_PRIMITIVES" value="10"/>
 		</enum>
 		<enum name="PurpleStringFormatType">
 			<member name="PURPLE_STRING_FORMAT_TYPE_NONE" value="0"/>
@@ -12056,6 +13009,7 @@
 			<member name="PURPLE_SUBTYPE_USERINFO" value="17"/>
 			<member name="PURPLE_SUBTYPE_STORED_IMAGE" value="18"/>
 			<member name="PURPLE_SUBTYPE_CERTIFICATEPOOL" value="19"/>
+			<member name="PURPLE_SUBTYPE_CHATBUDDY" value="20"/>
 		</enum>
 		<enum name="PurpleType">
 			<member name="PURPLE_TYPE_UNKNOWN" value="0"/>
@@ -12166,8 +13120,10 @@
 		<constant name="PURPLE_DESKTOP_ITEM_URL" type="char*" value="URL"/>
 		<constant name="PURPLE_DESKTOP_ITEM_VERSION" type="char*" value="Version"/>
 		<constant name="PURPLE_MAJOR_VERSION" type="int" value="2"/>
-		<constant name="PURPLE_MICRO_VERSION" type="int" value="6"/>
-		<constant name="PURPLE_MINOR_VERSION" type="int" value="6"/>
+		<constant name="PURPLE_MICRO_VERSION" type="int" value="0"/>
+		<constant name="PURPLE_MINOR_VERSION" type="int" value="12"/>
+		<constant name="PURPLE_MOOD_COMMENT" type="char*" value="moodtext"/>
+		<constant name="PURPLE_MOOD_NAME" type="char*" value="mood"/>
 		<constant name="PURPLE_NO_TZ_OFF" type="int" value="-500000"/>
 		<constant name="PURPLE_PLUGINS" type="int" value="1"/>
 		<constant name="PURPLE_PLUGIN_FLAG_INVISIBLE" type="int" value="1"/>
