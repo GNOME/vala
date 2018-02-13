@@ -1,3 +1,23 @@
+Vala 0.39.91
+============
+ * Various bug fixes:
+  - Fix GDestroyNotify of delegate parameters in delegate declaration [#639059]
+  - Avoid critical when connecting dynamic signals
+  - valac: Always use the given "pkg-config" and respect PKG_CONFIG envar
+  - compiler: Prefix headers for set_cheader_override() if includedir is given
+    [#793299]
+  - vala: Issue a warning on DBus methods which are not throwing an Error
+  - Don't warn about unused internal methods which are meant to be visible
+    on DBus [#593902]
+  - Don't install vapicheck [#793370]
+
+ * Bindings:
+  - glib-2.0: Add KeyFile.get_locale_for_key()
+  - gstreamer-1.0: Update from 1.13+ git master
+  - gtk+-4.0: Update to 3.93.0+d07b14f4
+  - purple: Update to 2.12.0
+  - Update GIR-based bindings
+
 Vala 0.39.7
 ===========
  * Regression fix:
