@@ -170,6 +170,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		    && !(m is CreationMethod)) {
 			if (!m.is_private_symbol () && (context.internal_header_filename != null || context.use_fast_vapi)) {
 				// do not warn if internal member may be used outside this compilation unit
+			} else if (m.parent_symbol != null && m.parent_symbol.get_attribute ("DBus") != null
+			    && m.get_attribute_bool ("DBus", "visible", true)) {
+				// do not warn if internal member is a visible DBus method
 			} else {
 				Report.warning (m.source_reference, "method `%s' never used".printf (m.get_full_name ()));
 			}
