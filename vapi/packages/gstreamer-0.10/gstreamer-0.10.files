@@ -1,3 +1,0 @@
-include/gstreamer-0.10/gst/gst*.h
-lib/libgstreamer-0.10.so
-

@@ -82,44 +82,6 @@ dist_vapi_DATA = \
 	graphene-1.0.deps \
 	graphene-1.0.vapi \
 	gsl.vapi \
-	gstreamer-0.10.deps \
-	gstreamer-0.10.vapi \
-	gstreamer-app-0.10.deps \
-	gstreamer-app-0.10.vapi \
-	gstreamer-audio-0.10.deps \
-	gstreamer-audio-0.10.vapi \
-	gstreamer-base-0.10.deps \
-	gstreamer-base-0.10.vapi \
-	gstreamer-cdda-0.10.deps \
-	gstreamer-cdda-0.10.vapi \
-	gstreamer-check-0.10.deps \
-	gstreamer-check-0.10.vapi \
-	gstreamer-controller-0.10.deps \
-	gstreamer-controller-0.10.vapi \
-	gstreamer-dataprotocol-0.10.deps \
-	gstreamer-dataprotocol-0.10.vapi \
-	gstreamer-fft-0.10.deps \
-	gstreamer-fft-0.10.vapi \
-	gstreamer-interfaces-0.10.deps \
-	gstreamer-interfaces-0.10.vapi \
-	gstreamer-net-0.10.deps \
-	gstreamer-net-0.10.vapi \
-	gstreamer-netbuffer-0.10.deps \
-	gstreamer-netbuffer-0.10.vapi \
-	gstreamer-pbutils-0.10.deps \
-	gstreamer-pbutils-0.10.vapi \
-	gstreamer-riff-0.10.deps \
-	gstreamer-riff-0.10.vapi \
-	gstreamer-rtp-0.10.deps \
-	gstreamer-rtp-0.10.vapi \
-	gstreamer-rtsp-0.10.deps \
-	gstreamer-rtsp-0.10.vapi \
-	gstreamer-sdp-0.10.deps \
-	gstreamer-sdp-0.10.vapi \
-	gstreamer-tag-0.10.deps \
-	gstreamer-tag-0.10.vapi \
-	gstreamer-video-0.10.deps \
-	gstreamer-video-0.10.vapi \
 	gstreamer-1.0.vapi \
 	gstreamer-allocators-1.0.vapi \
 	gstreamer-allocators-1.0.deps \
@@ -338,25 +300,6 @@ GIDL_BINDINGS = \
 	gnome-desktop-2.0 \
 	gnome-vfs-2.0 \
 	goocanvas \
-	gstreamer-0.10 \
-	gstreamer-app-0.10 \
-	gstreamer-audio-0.10 \
-	gstreamer-base-0.10 \
-	gstreamer-cdda-0.10 \
-	gstreamer-check-0.10 \
-	gstreamer-controller-0.10 \
-	gstreamer-dataprotocol-0.10 \
-	gstreamer-fft-0.10 \
-	gstreamer-interfaces-0.10 \
-	gstreamer-net-0.10 \
-	gstreamer-netbuffer-0.10 \
-	gstreamer-pbutils-0.10 \
-	gstreamer-riff-0.10 \
-	gstreamer-rtp-0.10 \
-	gstreamer-rtsp-0.10 \
-	gstreamer-sdp-0.10 \
-	gstreamer-tag-0.10 \
-	gstreamer-video-0.10 \
 	gtk+-2.0 \
 	gtk+-unix-print-2.0 \
 	gtk+-unix-print-3.0 \
@@ -565,63 +508,6 @@ goocanvas:
 
 graphene-1.0:
 	$(GENVAPI) --library $(srcdir)/graphene-1.0 --pkg gobject-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/Graphene-1.0.gir
-
-gstreamer-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-0.10 $(PACKAGESDIR)/gstreamer-0.10/gstreamer-0.10-custom.vala $(PACKAGESDIR)/gstreamer-0.10/gstreamer-0.10.gi
-
-gstreamer-app-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-app-0.10 $(PACKAGESDIR)/gstreamer-app-0.10/gstreamer-app-0.10.gi
-
-gstreamer-audio-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-audio-0.10 $(PACKAGESDIR)/gstreamer-audio-0.10/gstreamer-audio-0.10.gi
-
-gstreamer-base-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-base-0.10 $(PACKAGESDIR)/gstreamer-base-0.10/gstreamer-base-0.10-custom.vala $(PACKAGESDIR)/gstreamer-base-0.10/gstreamer-base-0.10.gi
-
-gstreamer-cdda-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-cdda-0.10 $(PACKAGESDIR)/gstreamer-cdda-0.10/gstreamer-cdda-0.10-custom.vala $(PACKAGESDIR)/gstreamer-cdda-0.10/gstreamer-cdda-0.10.gi
-
-gstreamer-check-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-check-0.10 $(PACKAGESDIR)/gstreamer-check-0.10/gstreamer-check-0.10.gi
-
-gstreamer-controller-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-controller-0.10 $(PACKAGESDIR)/gstreamer-controller-0.10/gstreamer-controller-0.10-custom.vala $(PACKAGESDIR)/gstreamer-controller-0.10/gstreamer-controller-0.10.gi
-
-gstreamer-dataprotocol-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-dataprotocol-0.10 $(PACKAGESDIR)/gstreamer-dataprotocol-0.10/gstreamer-dataprotocol-0.10-custom.vala $(PACKAGESDIR)/gstreamer-dataprotocol-0.10/gstreamer-dataprotocol-0.10.gi
-
-gstreamer-fft-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-fft-0.10 $(PACKAGESDIR)/gstreamer-fft-0.10/gstreamer-fft-0.10.gi
-
-gstreamer-interfaces-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-interfaces-0.10 $(PACKAGESDIR)/gstreamer-interfaces-0.10/gstreamer-interfaces-0.10-custom.vala $(PACKAGESDIR)/gstreamer-interfaces-0.10/gstreamer-interfaces-0.10.gi
-
-gstreamer-net-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-net-0.10 $(PACKAGESDIR)/gstreamer-net-0.10/gstreamer-net-0.10.gi
-
-gstreamer-netbuffer-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-netbuffer-0.10 $(PACKAGESDIR)/gstreamer-netbuffer-0.10/gstreamer-netbuffer-0.10.gi
-
-gstreamer-pbutils-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-pbutils-0.10 $(PACKAGESDIR)/gstreamer-pbutils-0.10/gstreamer-pbutils-0.10-custom.vala $(PACKAGESDIR)/gstreamer-pbutils-0.10/gstreamer-pbutils-0.10.gi
-
-gstreamer-riff-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-riff-0.10 $(PACKAGESDIR)/gstreamer-riff-0.10/gstreamer-riff-0.10.gi
-
-gstreamer-rtp-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-rtp-0.10 $(PACKAGESDIR)/gstreamer-rtp-0.10/gstreamer-rtp-0.10.gi
-
-gstreamer-rtsp-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-rtsp-0.10 $(PACKAGESDIR)/gstreamer-rtsp-0.10/gstreamer-rtsp-0.10-custom.vala $(PACKAGESDIR)/gstreamer-rtsp-0.10/gstreamer-rtsp-0.10.gi
-
-gstreamer-sdp-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-sdp-0.10 $(PACKAGESDIR)/gstreamer-sdp-0.10/gstreamer-sdp-0.10.gi
-
-gstreamer-tag-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-tag-0.10 $(PACKAGESDIR)/gstreamer-tag-0.10/gstreamer-tag-0.10.gi
-
-gstreamer-video-0.10:
-	$(GENVAPI) --library $(srcdir)/gstreamer-video-0.10 $(PACKAGESDIR)/gstreamer-video-0.10/gstreamer-video-0.10-custom.vala $(PACKAGESDIR)/gstreamer-video-0.10/gstreamer-video-0.10.gi
 
 gstreamer-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/Gst-1.0-custom.vala $(GIRDIR)/Gst-1.0.gir
