@@ -4925,6 +4925,7 @@
 			<member name="GTK_LICENSE_LGPL_2_1_ONLY" value="11"/>
 			<member name="GTK_LICENSE_LGPL_3_0_ONLY" value="12"/>
 			<member name="GTK_LICENSE_AGPL_3_0" value="13"/>
+			<member name="GTK_LICENSE_AGPL_3_0_ONLY" value="14"/>
 		</enum>
 		<enum name="GtkMenuDirectionType" type-name="GtkMenuDirectionType" get-type="gtk_menu_direction_type_get_type">
 			<member name="GTK_MENU_DIR_PARENT" value="0"/>
@@ -36535,15 +36536,15 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="2226"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="2227"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="26"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="27"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_FULL" type="char*" value="full"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="26"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="27"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="22"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
