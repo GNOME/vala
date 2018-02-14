@@ -1060,6 +1060,8 @@ namespace Linux {
     }
 
     [CCode (cheader_filename = "unistd.h")]
+    public int dup3 (int oldfd, int newfd, int flags);
+    [CCode (cheader_filename = "unistd.h")]
     public int sethostname (string name, size_t len);
 
     // additional sysconf(3) constants
