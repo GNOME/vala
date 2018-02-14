@@ -5427,6 +5427,7 @@ namespace Gdk {
 		public void add_virtual_modifiers (ref Gdk.ModifierType state);
 		[Version (since = "2.16")]
 		public bool get_caps_lock_state ();
+		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static unowned Gdk.Keymap get_default ();
 		public Pango.Direction get_direction ();
 		public bool get_entries_for_keycode (uint hardware_keycode, [CCode (array_length_cname = "n_entries", array_length_pos = 3.1)] out Gdk.KeymapKey[] keys, [CCode (array_length_cname = "n_entries", array_length_pos = 3.1)] out uint[] keyvals);

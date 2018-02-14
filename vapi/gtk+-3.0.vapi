@@ -8312,7 +8312,8 @@ namespace Gtk {
 		GPL_3_0_ONLY,
 		LGPL_2_1_ONLY,
 		LGPL_3_0_ONLY,
-		AGPL_3_0
+		AGPL_3_0,
+		AGPL_3_0_ONLY
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_MENU_DIR_")]
 	public enum MenuDirectionType {
