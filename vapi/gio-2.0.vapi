@@ -993,16 +993,16 @@ namespace GLib {
 		public async DBusProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public DBusProxy.for_bus_sync (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public GLib.Variant get_cached_property (string property_name);
+		public GLib.Variant? get_cached_property (string property_name);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public string[] get_cached_property_names ();
+		public string[]? get_cached_property_names ();
 		public unowned GLib.DBusConnection get_connection ();
 		public int get_default_timeout ();
 		public GLib.DBusProxyFlags get_flags ();
-		public GLib.DBusInterfaceInfo get_interface_info ();
+		public unowned GLib.DBusInterfaceInfo? get_interface_info ();
 		public unowned string get_interface_name ();
 		public unowned string get_name ();
-		public string get_name_owner ();
+		public string? get_name_owner ();
 		public unowned string get_object_path ();
 		[CCode (cname = "g_dbus_proxy_new", finish_function = "g_dbus_proxy_new_finish")]
 		[Version (deprecated_since = "vala-0.36", replacement = "DBusProxy")]
