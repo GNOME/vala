@@ -119,9 +119,9 @@ namespace Gst {
 			[CCode (cname = "gst_harness_pull_upstream_event")]
 			public Gst.Event pull_upstream_event ();
 			[CCode (cname = "gst_harness_push")]
-			public Gst.FlowReturn push (Gst.Buffer buffer);
+			public Gst.FlowReturn push (owned Gst.Buffer buffer);
 			[CCode (cname = "gst_harness_push_and_pull")]
-			public Gst.Buffer push_and_pull (Gst.Buffer buffer);
+			public Gst.Buffer push_and_pull (owned Gst.Buffer buffer);
 			[CCode (cname = "gst_harness_push_event")]
 			public bool push_event (Gst.Event event);
 			[CCode (cname = "gst_harness_push_from_src")]
