@@ -1,3 +1,20 @@
+Vala 0.38.8
+===========
+ * Various bug fixes:
+  - Fix GDestroyNotify of delegate parameters in delegate declaration [#639059]
+  - Avoid critical when connecting dynamic signals
+  - compiler: Prefix headers for set_cheader_override() if includedir is given
+    [#793299]
+  - Don't warn about unused internal methods which are meant to be visible
+    on DBus [#593902]
+  - libvaladoc: Prevent WITH_CGRAPH conditional having an impact on generated
+    sources
+
+ * Bindings:
+  - gio-2.0: Cherry-pick some DBusProxy fixes from 0.40
+  - gstreamer-1.0: Update from 1.13+ git master
+  - gdk-3.0,gtk+-3.0: Update to 3.22.27
+
 Vala 0.38.7
 ===========
  * Regression fix:
