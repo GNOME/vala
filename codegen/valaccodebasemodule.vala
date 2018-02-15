@@ -2518,7 +2518,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					clist.append (cexpr);
 
 					var array_type = field.variable_type as ArrayType;
-					if (array_type != null && get_ccode_array_length (field) && !get_ccode_array_null_terminated (field)) {
+					if (array_type != null && !array_type.fixed_length && get_ccode_array_length (field) && !get_ccode_array_null_terminated (field)) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							clist.append (get_array_length_cvalue (expr.target_value, dim));
 						}

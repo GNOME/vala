@@ -191,6 +191,19 @@ void test_void_array () {
 	assert ((void*) null in a);
 }
 
+struct Foo {
+	unowned string array[2];
+	int bar;
+}
+
+const Foo[] FOO_ARRAY_CONST = {
+	{ { "foo", "bar" }, 42 },
+};
+
+void test_struct_array () {
+	assert (FOO_ARRAY_CONST[0].bar == 42);
+}
+
 void main () {
 	test_integer_array ();
 	test_string_array ();
@@ -202,4 +215,5 @@ void main () {
 	test_delegate_array ();
 	test_generics_array ();
 	test_void_array ();
+	test_struct_array ();
 }
