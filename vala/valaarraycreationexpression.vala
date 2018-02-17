@@ -198,6 +198,12 @@ public class Vala.ArrayCreationExpression : Expression {
 			if (ret == -1) {
 				error = true;
 			}
+
+			if (calc_sizes.size != rank) {
+				error = true;
+				var actual_type = new ArrayType (element_type, calc_sizes.size, source_reference);
+				Report.error (initlist.source_reference, "Expected initializer for `%s' but got `%s'".printf (target_type.to_string (), actual_type.to_string ()));
+			}
 		}
 
 		if (sizes.size > 0) {
