@@ -3,6 +3,42 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstAudio", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace Audio {
+		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_aggregator_get_type ()")]
+		[GIR (name = "AudioAggregator")]
+		public abstract class Aggregator : Gst.Base.Aggregator {
+			public weak Gst.Caps current_caps;
+			public weak Gst.Audio.Info info;
+			[CCode (has_construct_function = false)]
+			protected Aggregator ();
+			[NoWrapper]
+			public virtual bool aggregate_one_buffer (Gst.Audio.AggregatorPad pad, Gst.Buffer inbuf, uint in_offset, Gst.Buffer outbuf, uint out_offset, uint num_frames);
+			[NoWrapper]
+			public virtual Gst.Buffer convert_buffer (Gst.Pad pad, Gst.Audio.Info in_info, Gst.Audio.Info out_info, Gst.Buffer buffer);
+			[NoWrapper]
+			public virtual Gst.Buffer create_output_buffer (uint num_frames);
+			public void set_sink_caps (Gst.Audio.AggregatorPad pad, Gst.Caps caps);
+			[NoAccessorMethod]
+			public uint64 alignment_threshold { get; set; }
+			[NoAccessorMethod]
+			public uint64 discont_wait { get; set; }
+			[NoAccessorMethod]
+			public uint64 output_buffer_duration { get; set; }
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_aggregator_convert_pad_get_type ()")]
+		[GIR (name = "AudioAggregatorConvertPad")]
+		public class AggregatorConvertPad : Gst.Audio.AggregatorPad {
+			[CCode (has_construct_function = false)]
+			protected AggregatorConvertPad ();
+			[NoAccessorMethod]
+			public Gst.Structure converter_config { owned get; set; }
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_aggregator_pad_get_type ()")]
+		[GIR (name = "AudioAggregatorPad")]
+		public class AggregatorPad : Gst.Base.AggregatorPad {
+			public weak Gst.Audio.Info info;
+			[CCode (has_construct_function = false)]
+			protected AggregatorPad ();
+		}
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_base_sink_get_type ()")]
 		[GIR (name = "AudioBaseSink")]
 		public class BaseSink : Gst.Base.Sink {
@@ -103,10 +139,14 @@ namespace Gst {
 			public void invalidate ();
 			public void reset (Gst.ClockTime time);
 		}
-		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
+		[CCode (cheader_filename = "gst/audio/audio.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_audio_converter_get_type ()")]
 		[Compact]
 		[GIR (name = "AudioConverter")]
 		public class Converter {
+			[CCode (has_construct_function = false)]
+			public Converter (Gst.Audio.ConverterFlags flags, Gst.Audio.Info in_info, Gst.Audio.Info out_info, owned Gst.Structure? config);
+			[Version (since = "1.14")]
+			public bool convert (Gst.Audio.ConverterFlags flags, [CCode (array_length_cname = "in_size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] @in, [CCode (array_length_cname = "out_size", array_length_pos = 3.1, array_length_type = "gsize")] out uint8[] @out);
 			public void free ();
 			public unowned Gst.Structure get_config (int in_rate, int out_rate);
 			public size_t get_in_frames (size_t out_frames);
@@ -308,7 +348,7 @@ namespace Gst {
 			public void init ();
 			[Version (since = "1.2")]
 			public bool is_equal (Gst.Audio.Info other);
-			public void set_format (Gst.Audio.Format format, int rate, int channels, Gst.Audio.ChannelPosition position);
+			public void set_format (Gst.Audio.Format format, int rate, int channels, [CCode (array_length = false)] Gst.Audio.ChannelPosition position[64]);
 			public Gst.Caps to_caps ();
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
