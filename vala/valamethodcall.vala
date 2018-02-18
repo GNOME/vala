@@ -371,6 +371,10 @@ public class Vala.MethodCall : Expression {
 		var args = get_argument_list ();
 		Iterator<Expression> arg_it = args.iterator ();
 		foreach (Parameter param in params) {
+			if (!param.check (context)) {
+				error = true;
+			}
+
 			if (param.ellipsis) {
 				break;
 			}

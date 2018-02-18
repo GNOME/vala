@@ -367,6 +367,10 @@ public class Vala.ObjectCreationExpression : Expression {
 			var args = get_argument_list ();
 			Iterator<Expression> arg_it = args.iterator ();
 			foreach (Parameter param in m.get_parameters ()) {
+				if (!param.check (context)) {
+					error = true;
+				}
+
 				if (param.ellipsis) {
 					break;
 				}

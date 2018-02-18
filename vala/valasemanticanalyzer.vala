@@ -408,10 +408,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		bool ellipsis = false;
 		int i = 0;
 		foreach (Parameter param in params) {
-			if (!param.check (context)) {
-				return false;
-			}
-
 			if (param.ellipsis) {
 				ellipsis = true;
 				break;
