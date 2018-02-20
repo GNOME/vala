@@ -2431,7 +2431,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (rhs != null) {
 			if (!is_simple_struct_creation (local, local.initializer)) {
-				store_local (local, local.initializer.target_value, true);
+				store_local (local, local.initializer.target_value, true, local.source_reference);
 			}
 		}
 
@@ -2562,7 +2562,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						}
 					}
 
-					store_field (field, instance, expr.target_value);
+					store_field (field, instance, expr.target_value, expr.source_reference);
 				}
 
 				list.target_value = instance;
@@ -4852,7 +4852,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var f = (Field) init.symbol_reference;
 					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 					var typed_inst = transform_value (new GLibValue (expr.type_reference, instance, true), instance_target_type, init);
-					store_field (f, typed_inst, init.initializer.target_value);
+					store_field (f, typed_inst, init.initializer.target_value, init.source_reference);
 
 					var cl = f.parent_symbol as Class;
 					if (cl != null) {
