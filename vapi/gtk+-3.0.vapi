@@ -7217,7 +7217,7 @@ namespace Gtk {
 		[Version (since = "2.10")]
 		public StatusIcon.from_pixbuf (Gdk.Pixbuf pixbuf);
 		[CCode (has_construct_function = false)]
-		[Version (deprecated = true, deprecated_since = "3.10", since = "2.10")]
+		[Version (since = "2.10")]
 		public StatusIcon.from_stock (string stock_id);
 		[Version (since = "2.10")]
 		public bool get_geometry (out unowned Gdk.Screen screen, out Gdk.Rectangle area, out Gtk.Orientation orientation);
@@ -8979,7 +8979,7 @@ namespace Gtk {
 		public int insert_column_with_attributes (int position, string? title, Gtk.CellRenderer cell, ...);
 		public int insert_column_with_data_func (int position, string title, Gtk.CellRenderer cell, owned Gtk.TreeCellDataFunc func);
 		[Version (since = "3.0")]
-		public bool is_blank_at_pos (int x, int y, out Gtk.TreePath path, out Gtk.TreeViewColumn column, out int cell_x, out int cell_y);
+		public bool is_blank_at_pos (int x, int y, out Gtk.TreePath? path, out unowned Gtk.TreeViewColumn? column, out int cell_x, out int cell_y);
 		[CCode (cname = "gtk_tree_view_row_expanded")]
 		public bool is_row_expanded (Gtk.TreePath path);
 		[Version (since = "2.12")]

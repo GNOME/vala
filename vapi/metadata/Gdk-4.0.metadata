@@ -15,9 +15,7 @@ Event
         ._get_center skip
         ._get_distance skip
 Window abstract=false
-        .add_filter skip=false
         .create_similar_image_surface type="Cairo.ImageSurface"
-        .remove_filter skip=false
         .moved_to_rect.*_rect type="Gdk.Rectangle"
 Rectangle struct
         .x skip
@@ -62,6 +60,3 @@ EventSetting skip
 EventTouch skip
 EventTouchpadPinch skip
 EventTouchpadSwipe skip
-
-FilterFunc.data closure=2
-XEvent skip

@@ -9983,8 +9983,6 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public uint gtk_long_press_time { get; set; }
 		[NoAccessorMethod]
-		public string gtk_modules { owned get; set; }
-		[NoAccessorMethod]
 		public bool gtk_primary_button_warps_slider { get; set; }
 		[NoAccessorMethod]
 		public string gtk_print_backends { owned get; set; }
@@ -11114,7 +11112,7 @@ namespace Gtk {
 		public int insert_column (Gtk.TreeViewColumn column, int position);
 		public int insert_column_with_attributes (int position, string? title, Gtk.CellRenderer cell, ...);
 		public int insert_column_with_data_func (int position, string title, Gtk.CellRenderer cell, owned Gtk.TreeCellDataFunc func);
-		public bool is_blank_at_pos (int x, int y, out Gtk.TreePath path, out Gtk.TreeViewColumn column, out int cell_x, out int cell_y);
+		public bool is_blank_at_pos (int x, int y, out Gtk.TreePath? path, out unowned Gtk.TreeViewColumn? column, out int cell_x, out int cell_y);
 		[CCode (cname = "gtk_tree_view_row_expanded")]
 		public bool is_row_expanded (Gtk.TreePath path);
 		public bool is_rubber_banding_active ();
@@ -13226,10 +13224,6 @@ namespace Gtk {
 	public delegate void MenuDetachFunc (Gtk.Widget attach_widget, Gtk.Menu menu);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 4.9)]
 	public delegate void MenuPositionFunc (Gtk.Menu menu, ref int x, ref int y, out bool push_in);
-	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate void ModuleDisplayInitFunc (Gdk.Display display);
-	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate void ModuleInitFunc ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] string[]? argv);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
 	public delegate void PageSetupDoneFunc (Gtk.PageSetup page_setup);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
