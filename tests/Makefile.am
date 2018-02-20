@@ -522,8 +522,15 @@ NON_NULL_TESTS = \
 	nullability/bug611223.vala \
 	$(NULL)
 
+LINUX_TESTS = \
+	linux/bug793444.vala \
+	$(NULL)
+
 check-TESTS: $(TESTS) $(NON_NULL_TESTS)
 	@EXEEXT=$(EXEEXT) EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' $(srcdir)/testrunner.sh $(TESTS)
+if HAVE_LINUX
+	@EXEEXT=$(EXEEXT) EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' VALAFLAGS="--pkg linux" $(srcdir)/testrunner.sh $(LINUX_TESTS)
+endif
 	@EXEEXT=$(EXEEXT) EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' VALAFLAGS="--enable-experimental-non-null" $(srcdir)/testrunner.sh $(NON_NULL_TESTS)
 
 EXTRA_DIST = \

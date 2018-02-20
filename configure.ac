@@ -34,6 +34,19 @@ AC_PROG_LN_S
 AC_PROG_INSTALL
 AC_PROG_MKDIR_P
 
+AC_CANONICAL_HOST
+
+# Detect the target system
+build_linux=no
+case "${host_os}" in
+    linux*)
+        build_linux=yes
+        ;;
+    *)
+        ;;
+esac
+AM_CONDITIONAL([HAVE_LINUX], [test "$build_linux" = "yes"])
+
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
 PKG_PROG_PKG_CONFIG([0.21])
