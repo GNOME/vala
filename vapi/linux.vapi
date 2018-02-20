@@ -833,13 +833,13 @@ namespace Linux {
     }
 
     // Non-Posix file control constants, -D _GNU_SOURCE
-    [CCode (cheader_filename = "fcntl.h")]
+    [CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
     public const int O_DIRECT;
-    [CCode (cheader_filename = "fcntl.h")]
+    [CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
     public const int O_NOATIME;
-    [CCode (cheader_filename = "fcntl.h")]
+    [CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
     public const int O_PATH;
-    [CCode (cheader_filename = "fcntl.h")]
+    [CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
     public const int O_TMPFILE;
 
     /*
@@ -1059,7 +1059,7 @@ namespace Linux {
       public void symbols_fd (void*[] buffer, int fd);
     }
 
-    [CCode (cheader_filename = "unistd.h")]
+    [CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
     public int dup3 (int oldfd, int newfd, int flags);
     [CCode (cheader_filename = "unistd.h")]
     public int sethostname (string name, size_t len);
