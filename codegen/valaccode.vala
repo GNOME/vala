@@ -104,6 +104,10 @@ namespace Vala {
 		return get_ccode_attribute(sym).header_filenames;
 	}
 
+	public static string get_ccode_feature_test_macros (Symbol sym) {
+		return get_ccode_attribute(sym).feature_test_macros;
+	}
+
 	public static string get_ccode_prefix (Symbol sym) {
 		return get_ccode_attribute(sym).prefix;
 	}

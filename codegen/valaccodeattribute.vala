@@ -71,6 +71,20 @@ public class Vala.CCodeAttribute : AttributeCache {
 		}
 	}
 
+	public string feature_test_macros {
+		get {
+			if (_feature_test_macros == null) {
+				if (ccode != null) {
+					_feature_test_macros = ccode.get_string ("feature_test_macro");
+				}
+				if (_feature_test_macros == null) {
+					_feature_test_macros = "";
+				}
+			}
+			return _feature_test_macros;
+		}
+	}
+
 	public string header_filenames {
 		get {
 			if (_header_filenames == null) {
@@ -545,6 +559,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private string _name;
 	private string _const_name;
 	private string _type_name;
+	private string _feature_test_macros;
 	private string _header_filenames;
 	private string _prefix;
 	private string _lower_case_prefix;
