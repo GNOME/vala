@@ -651,6 +651,11 @@ namespace Gst {
 			public uint y;
 			public uint w;
 			public uint h;
+			public weak GLib.List<void*> @params;
+			[Version (since = "1.14")]
+			public void add_param (owned Gst.Structure s);
+			[Version (since = "1.14")]
+			public unowned Gst.Structure? get_param (string name);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoResampler")]

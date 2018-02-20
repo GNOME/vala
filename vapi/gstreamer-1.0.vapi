@@ -370,6 +370,7 @@ namespace Gst {
 	}
 	namespace URI {
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (deprecated = true)]
 		public static string @construct (string protocol, string location);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static GLib.Quark error_quark ();
@@ -1393,7 +1394,7 @@ namespace Gst {
 		public bool parse_group_id (out uint group_id);
 		public void parse_latency (out Gst.ClockTime latency);
 		[Version (since = "1.6")]
-		public void parse_protection (out unowned string system_id, out unowned Gst.Buffer data, string? origin);
+		public void parse_protection (out unowned string system_id, out unowned Gst.Buffer data, out unowned string origin);
 		public void parse_qos (out Gst.QOSType type, out double proportion, out Gst.ClockTimeDiff diff, out Gst.ClockTime timestamp);
 		public void parse_seek (out double rate, out Gst.Format format, out Gst.SeekFlags flags, out Gst.SeekType start_type, out int64 start, out Gst.SeekType stop_type, out int64 stop);
 		public void parse_segment (out unowned Gst.Segment segment);
@@ -1535,8 +1536,8 @@ namespace Gst {
 		public weak Gst.Memory parent;
 		public size_t size;
 		public Gst.Memory copy (ssize_t offset, ssize_t size);
-		public size_t get_sizes (size_t offset, size_t maxsize);
-		public bool is_span (Gst.Memory mem2, size_t offset);
+		public size_t get_sizes (out size_t offset, out size_t maxsize);
+		public bool is_span (Gst.Memory mem2, out size_t offset);
 		[Version (since = "1.2")]
 		public bool is_type (string mem_type);
 		public Gst.Memory? make_mapped (out Gst.MapInfo info, Gst.MapFlags flags);
@@ -1614,25 +1615,25 @@ namespace Gst {
 		public void parse_clock_lost (out unowned Gst.Clock clock);
 		public void parse_clock_provide (out unowned Gst.Clock clock, out bool ready);
 		[Version (since = "1.2")]
-		public bool parse_context_type (out string context_type);
+		public bool parse_context_type (out unowned string context_type);
 		[Version (since = "1.4")]
 		public void parse_device_added (out Gst.Device device);
 		[Version (since = "1.4")]
 		public void parse_device_removed (out Gst.Device device);
 		public void parse_error (out GLib.Error gerror, out string debug);
 		[Version (since = "1.10")]
-		public void parse_error_details (out Gst.Structure structure);
+		public void parse_error_details (out unowned Gst.Structure structure);
 		[Version (since = "1.2")]
 		public bool parse_group_id (out uint group_id);
 		[Version (since = "1.2")]
 		public void parse_have_context (out Gst.Context context);
 		public void parse_info (out GLib.Error gerror, out string debug);
 		[Version (since = "1.10")]
-		public void parse_info_details (out Gst.Structure structure);
+		public void parse_info_details (out unowned Gst.Structure structure);
 		public void parse_new_clock (out unowned Gst.Clock clock);
 		public void parse_progress (out Gst.ProgressType type, out string code, out string text);
 		[Version (since = "1.10")]
-		public void parse_property_notify (out unowned Gst.Object object, out string property_name, out GLib.Value property_value);
+		public void parse_property_notify (out unowned Gst.Object object, out unowned string property_name, out GLib.Value property_value);
 		public void parse_qos (out bool live, out uint64 running_time, out uint64 stream_time, out uint64 timestamp, out uint64 duration);
 		public void parse_qos_stats (out Gst.Format format, out uint64 processed, out uint64 dropped);
 		public void parse_qos_values (out int64 jitter, out double proportion, out int quality);
@@ -1655,7 +1656,7 @@ namespace Gst {
 		public void parse_toc (out Gst.Toc toc, out bool updated);
 		public void parse_warning (out GLib.Error gerror, out string debug);
 		[Version (since = "1.10")]
-		public void parse_warning_details (out Gst.Structure structure);
+		public void parse_warning_details (out unowned Gst.Structure structure);
 		[CCode (has_construct_function = false)]
 		public Message.progress (Gst.Object src, Gst.ProgressType type, string code, string text);
 		[CCode (has_construct_function = false)]
@@ -2109,7 +2110,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Query.latency ();
 		public void parse_accept_caps (out unowned Gst.Caps caps);
-		public void parse_accept_caps_result (bool result);
+		public void parse_accept_caps_result (out bool result);
 		public void parse_allocation (out unowned Gst.Caps caps, out bool need_pool);
 		public void parse_buffering_percent (out bool busy, out int percent);
 		public void parse_buffering_range (out Gst.Format format, out int64 start, out int64 stop, out int64 estimated_total);
@@ -2128,7 +2129,7 @@ namespace Gst {
 		public void parse_nth_allocation_param (uint index, out Gst.Allocator allocator, out unowned Gst.AllocationParams @params);
 		public void parse_nth_allocation_pool (uint index, out Gst.BufferPool pool, out uint size, out uint min_buffers, out uint max_buffers);
 		public bool parse_nth_buffering_range (uint index, out int64 start, out int64 stop);
-		public void parse_nth_format (out uint nth, out Gst.Format format);
+		public void parse_nth_format (uint nth, out Gst.Format format);
 		public Gst.PadMode parse_nth_scheduling_mode (uint index);
 		public void parse_position (out Gst.Format format, out int64 cur);
 		public void parse_scheduling (out Gst.SchedulingFlags flags, out int minsize, out int maxsize, out int align);
@@ -2255,6 +2256,7 @@ namespace Gst {
 		[Version (since = "1.8")]
 		public int position_from_stream_time_full (Gst.Format format, uint64 stream_time, out uint64 position);
 		public bool set_running_time (Gst.Format format, uint64 running_time);
+		[Version (deprecated = true)]
 		public uint64 to_position (Gst.Format format, uint64 running_time);
 		public uint64 to_running_time (Gst.Format format, uint64 position);
 		[Version (since = "1.6")]
@@ -2413,7 +2415,7 @@ namespace Gst {
 		public bool get_float (string tag, out float value);
 		public bool get_float_index (string tag, uint index, out float value);
 		public bool get_int (string tag, out int value);
-		public bool get_int64 (string tag, int64 value);
+		public bool get_int64 (string tag, out int64 value);
 		public bool get_int64_index (string tag, uint index, out int64 value);
 		public bool get_int_index (string tag, uint index, out int value);
 		public bool get_pointer (string tag, out void* value);

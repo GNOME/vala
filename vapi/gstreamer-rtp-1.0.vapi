@@ -161,6 +161,7 @@ namespace Gst {
 		[Version (since = "1.10")]
 		public enum BufferFlags {
 			RETRANSMISSION,
+			REDUNDANT,
 			LAST
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cprefix = "GST_RTP_BUFFER_MAP_FLAG_", type_id = "gst_rtp_buffer_map_flags_get_type ()")]

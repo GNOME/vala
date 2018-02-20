@@ -69,7 +69,7 @@ namespace Gst {
 			public void stop ();
 			[NoAccessorMethod]
 			public uint64 timeout { get; set construct; }
-			public virtual signal void discovered (Gst.PbUtils.DiscovererInfo info, GLib.Error err);
+			public virtual signal void discovered (Gst.PbUtils.DiscovererInfo info, GLib.Error? err);
 			public virtual signal void finished ();
 			public virtual signal void source_setup (Gst.Element source);
 			public virtual signal void starting ();
@@ -203,14 +203,14 @@ namespace Gst {
 			public bool is_enabled ();
 			public bool is_equal (Gst.PbUtils.EncodingProfile b);
 			public void set_allow_dynamic_output (bool allow_dynamic_output);
-			public void set_description (string description);
+			public void set_description (string? description);
 			public void set_enabled (bool enabled);
 			public void set_format (Gst.Caps format);
-			public void set_name (string name);
+			public void set_name (string? name);
 			public void set_presence (uint presence);
 			public void set_preset (string? preset);
-			public void set_preset_name (string preset_name);
-			public void set_restriction (owned Gst.Caps restriction);
+			public void set_preset_name (string? preset_name);
+			public void set_restriction (owned Gst.Caps? restriction);
 			[NoAccessorMethod]
 			public Gst.Caps restriction_caps { owned get; set; }
 		}
