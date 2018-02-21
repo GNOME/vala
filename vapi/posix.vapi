@@ -1259,7 +1259,7 @@ namespace Posix {
 	[CCode (cheader_filename = "signal.h")]
 	public int sigaction (int signum, sigaction_t? act, out sigaction_t? oldact);
 
-	[CCode (has_target = false, cheader_filename = "signal.h")]
+	[CCode (has_target = false, cheader_filename = "signal.h", feature_test_macro = "_GNU_SOURCE")]
 	public delegate void sighandler_t (int signal);
 
 	[CCode (has_target = false, cheader_filename = "signal.h")]
