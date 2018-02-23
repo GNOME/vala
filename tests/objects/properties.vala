@@ -141,6 +141,19 @@ class Maman.Baz : Object, Ibaz {
 	}
 }
 
+interface Maman.IBiz : Object {
+	public abstract int number { get; construct; }
+}
+
+abstract class Maman.ABiz : Object, IBiz {
+	public int number { get; construct; }
+	public abstract int number2 { get; construct; }
+}
+
+class Maman.Biz : ABiz {
+	public override int number2 { get; construct; }
+}
+
 void main () {
 	Sample.main ();
 }
