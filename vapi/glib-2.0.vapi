@@ -1573,7 +1573,9 @@ namespace GLib {
 		public static float log10f (float x);
 		public static double modf (double x, out double iptr);
 		public static float modff (float x, out float iptr);
+		[CCode (feature_test_macro = "_GNU_SOURCE")]
 		public static double exp10 (double x);
+		[CCode (feature_test_macro = "_GNU_SOURCE")]
 		public static float exp10f (float x);
 		[CCode (feature_test_macro = "_GNU_SOURCE")]
 		public static double pow10 (double x);
