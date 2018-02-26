@@ -28,6 +28,7 @@ stamp-h1
 *.pc
 .tarball-version
 .version
+.DS_Store
 
 *.gcda
 *.gcno
