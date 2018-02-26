@@ -202,6 +202,7 @@ dist_vapi_DATA = \
 	libglade-2.0.vapi \
 	libgnome-2.0.vapi \
 	libgnome-menu.vapi \
+	libgnome-menu-3.0.deps \
 	libgnome-menu-3.0.vapi \
 	libgnomeui-2.0.deps \
 	libgnomeui-2.0.vapi \
@@ -724,7 +725,7 @@ libgnome-menu:
 	$(GENVAPI) --library $(srcdir)/libgnome-menu $(PACKAGESDIR)/libgnome-menu/libgnome-menu-custom.vala $(PACKAGESDIR)/libgnome-menu/libgnome-menu.gi
 
 libgnome-menu-3.0:
-	$(GENVAPI) --library $(srcdir)/libgnome-menu-3.0 --metadatadir $(METADATADIR) --pkg gio-unix-2.0 --pkg gtk+-3.0 $(GIRDIR)/GMenu-3.0.gir
+	$(GENVAPI) --library $(srcdir)/libgnome-menu-3.0 --metadatadir $(METADATADIR) --pkg gio-unix-2.0 $(GIRDIR)/GMenu-3.0.gir
 
 libgnomeui-2.0:
 	$(GENVAPI) --library $(srcdir)/libgnomeui-2.0 $(PACKAGESDIR)/libgnomeui-2.0/libgnomeui-2.0-custom.vala $(PACKAGESDIR)/libgnomeui-2.0/libgnomeui-2.0.gi
