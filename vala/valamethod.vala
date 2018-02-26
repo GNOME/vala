@@ -857,7 +857,9 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		// check that DBus methods at least throw "GLib.Error" or "GLib.DBusError, GLib.IOError"
-		if (parent_symbol is ObjectTypeSymbol && parent_symbol.get_attribute ("DBus") != null) {
+		if (!(this is CreationMethod) && binding == MemberBinding.INSTANCE
+		    && !overrides && access == SymbolAccessibility.PUBLIC
+		    && parent_symbol is ObjectTypeSymbol && parent_symbol.get_attribute ("DBus") != null) {
 			Attribute? dbus_attr = get_attribute ("DBus");
 			if (dbus_attr == null || dbus_attr.get_bool ("visible", true)) {
 				bool throws_gerror = false;
