@@ -538,9 +538,9 @@ namespace Posix {
 	public double exp10 (double x);
 	[CCode (cheader_filename = "math.h")]
 	public float exp10f (float x);
-	[CCode (cheader_filename = "math.h")]
+	[CCode (cheader_filename = "math.h", feature_test_macro = "_GNU_SOURCE")]
 	public double pow10 (double x);
-	[CCode (cheader_filename = "math.h")]
+	[CCode (cheader_filename = "math.h", feature_test_macro = "_GNU_SOURCE")]
 	public float pow10f (float x);
 	[CCode (cheader_filename = "math.h")]
 	public double expm1 (double x);
