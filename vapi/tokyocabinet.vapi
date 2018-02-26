@@ -64,7 +64,7 @@ namespace TokyoCabinet {
 		}
 	}
 
-	[Compact, CCode (cname = "TCXSTR", crpefix = "tcxstr", free_function = "tcxstrdel", cheader_filename = "tcutil.h", copy_function = "tcxstrdup")]
+	[Compact, CCode (cname = "TCXSTR", cprefix = "tcxstr", free_function = "tcxstrdel", cheader_filename = "tcutil.h", copy_function = "tcxstrdup")]
 	public class XString {
 		public XString ();
 		[CCode (cname = "tcxstrnew2")]
@@ -433,7 +433,7 @@ namespace TokyoCabinet {
 		public bool remove_string (string key);
 		[CCode (cname = "tcndbget")]
 		private unowned uint8[]? _get (uint8[] key);
-		[CCode (name = "_vala_tcndbget")]
+		[CCode (cname = "_vala_tcndbget")]
 		public uint8[]? get (uint8[] key) {
 			return TokyoCabinet.Memory.copy_and_free (this._get (key));
 		}
