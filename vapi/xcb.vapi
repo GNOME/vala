@@ -1969,7 +1969,7 @@ namespace Xcb {
 		OWNER_GRAB_BUTTON
 	}
 
-	[Simple]
+	[SimpleType]
 	[CCode (cname = "xcb_format_t", has_type_id = false)]
 	public struct Format {
 		public uint8 depth;
