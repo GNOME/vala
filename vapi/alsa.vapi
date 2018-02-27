@@ -1,21 +1,24 @@
 /* asound.vapi
  *
- * Copyright (C) 2009-2011 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
+ * Copyright (C) 2009-2018 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
-
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
-
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
+ * Author:
+ *  Dr. Michael 'Mickey' Lauer
+ *  Wayne Blaszczyk
  */
 
 [CCode (lower_case_cprefix = "snd_", cheader_filename = "alsa/asoundlib.h")]
@@ -806,5 +809,426 @@ namespace Alsa {
 
         public unowned string get_name();
         public uint get_index();
+    }
+
+    [CCode (cname = "snd_seq_client_type_t", cprefix = "SND_SEQ_", has_type_id = false)]
+    public enum SeqClientType
+    {
+        USER_CLIENT,
+        KERNEL_CLIENT
+    }
+
+    [CCode (cname = "snd_seq_event_type_t", cprefix = "SND_SEQ_EVENT_", has_type_id = false)]
+    public enum SeqEventType
+    {
+        SYSTEM,
+        RESULT,
+        NOTE,
+        NOTEON,
+        NOTEOFF,
+        KEYPRESS,
+        CONTROLLER,
+        PGMCHANGE,
+        CHANPRESS,
+        PITCHBEND,
+        CONTROL14,
+        NONREGPARAM,
+        REGPARAM,
+        SONGPOS,
+        SONGSEL,
+        QFRAME,
+        TIMESIGN,
+        KEYSIGN,
+        START,
+        CONTINUE,
+        STOP,
+        SETPOS_TICK,
+        SETPOS_TIME,
+        TEMPO,
+        CLOCK,
+        TICK,
+        QUEUE_SKEW,
+        SYNC_POS,
+        TUNE_REQUEST,
+        RESET,
+        SENSING,
+        ECHO,
+        OSS,
+        CLIENT_START,
+        CLIENT_EXIT,
+        CLIENT_CHANGE,
+        PORT_START,
+        PORT_EXIT,
+        PORT_CHANGE,
+        PORT_SUBSCRIBED,
+        PORT_UNSUBSCRIBED,
+        USR0,
+        USR1,
+        USR2,
+        USR3,
+        USR4,
+        USR5,
+        USR6,
+        USR7,
+        USR8,
+        USR9,
+        SYSEX,
+        BOUNCE,
+        USR_VAR0,
+        USR_VAR1,
+        USR_VAR2,
+        USR_VAR3,
+        USR_VAR4,
+        NONE
+    }
+
+    [CCode (cname = "int", cprefix = "SND_SEQ_OPEN_", has_type_id = false)]
+    public enum SeqOpenMode
+    {
+        OUTPUT,
+        INPUT,
+        DUPLEX
+    }
+
+    [CCode (cname = "uint", cprefix = "SND_SEQ_PORT_CAP_", has_type_id = false)]
+    [Flags]
+    public enum SeqPortCap
+    {
+        READ,
+        WRITE,
+        SYNC_READ,
+        SYNC_WRITE,
+        DUPLEX,
+        SUBS_READ,
+        SUBS_WRITE,
+        NO_EXPORT
+    }
+
+    [CCode (cname = "uint", cprefix = "SND_SEQ_PORT_TYPE_", has_type_id = false)]
+    [Flags]
+    public enum SeqPortType
+    {
+        SPECIFIC,
+        MIDI_GENERIC,
+        MIDI_GM,
+        MIDI_GS,
+        MIDI_XG,
+        MIDI_MT32,
+        MIDI_GM2,
+        SYNTH,
+        DIRECT_SAMPLE,
+        SAMPLE,
+        HARDWARE,
+        SOFTWARE,
+        SYNTHESIZER,
+        PORT,
+        APPLICATION
+    }
+
+    [CCode (cname = "snd_seq_query_subs_type_t", cprefix = "SND_SEQ_QUERY_SUBS_", has_type_id = false)]
+    public enum SeqQuerySubsType
+    {
+        READ,
+        WRITE
+    }
+
+    [CCode (cname = "int", cprefix = "SND_SEQ_TYPE_", has_type_id = false)]
+    public enum SeqType
+    {
+        HW,
+        SHM,
+        INET
+    }
+
+    [Compact]
+    [CCode (cname = "snd_seq_addr_t", free_function = "")]
+    public struct SeqAddr
+    {
+        public uint8 client;
+        public uint8 port;
+    }
+
+    [Compact]
+    [CCode (cname = "snd_seq_client_info_t", cprefix = "snd_seq_client_info_", free_function = "")]
+    public class SeqClientInfo
+    {
+        public static int alloca( out SeqClientInfo info );
+        public static int malloc( out SeqClientInfo info );
+        public void free();
+        public void copy( SeqClientInfo source );
+        public int get_client();
+        public SeqClientType get_type();
+        public unowned string get_name();
+        public int get_broadcast_filter();
+        public int get_error_bounce();
+        public unowned string get_event_filter();
+        public int get_num_ports();
+        public int get_event_lost();
+        public void set_client( int client );
+        public void set_name( string name );
+        public void set_broadcast_filter( int val );
+        public void set_error_bounce( int val );
+        public void set_event_filter( string filter );
+        public void event_filter_clear();
+        public void event_filter_add( SeqEventType event_type );
+        public void event_filter_del( SeqEventType event_type );
+        public void event_filter_check( SeqEventType event_type );
+    }
+
+    [CCode (cname = "snd_seq_connect_t", free_function = "", has_type_id = false)]
+    public struct SeqConnect
+    {
+        public SeqAddr sender;
+        public SeqAddr dest;
+    }
+
+    [Compact]
+    [CCode (cname = "snd_seq_t", cprefix = "snd_seq_", free_function = "")]
+    public class SeqDevice
+    {
+        public static int open( out SeqDevice seq, string name, SeqOpenMode streams, int mode );
+        public unowned string name();
+        public SeqType type();
+        public int close();
+
+        public int poll_descriptors_count( int events );
+        public int poll_descriptors( Posix.pollfd[] pfds, int events );
+        public int poll_descriptors_revents( Posix.pollfd[] pfds, out ushort revents );
+        public int nonblock( int nonblock );
+        public int client_id();
+
+        public size_t get_output_buffer_size();
+        public size_t get_input_buffer_size();
+        public int set_output_buffer_size( size_t size );
+        public int set_input_buffer_size( size_t size );
+
+        public int create_simple_port( string name, SeqPortCap caps, SeqPortType type );
+        public int delete_simple_port( int port );
+
+        public int connect_from( int my_port, int src_client, int src_port );
+        public int connect_to( int my_port, int dest_client, int dest_port );
+        public int disconnect_from( int my_port, int src_client, int src_port );
+        public int disconnect_to( int my_port, int dest_client, int dest_port );
+
+        public int set_client_name( string name );
+        public int set_client_event_filter( SeqEventType event_type );
+        public int set_client_pool_output( size_t size );
+        public int set_client_pool_output_room( size_t size );
+        public int set_client_pool_input( size_t size );
+        public int sync_output_queue();
+        public int parse_address( SeqAddr addr, string str );
+        public int reset_pool_output();
+        public int reset_pool_input();
+
+        public int query_next_client( SeqClientInfo info );
+        public int query_next_port( SeqPortInfo info );
+        public int query_port_subscribers( SeqQuerySubscribe subs );
+        public int query_named_queue( string name );
+
+        public int event_output( SeqEvent ev );
+        public int event_output_buffer( SeqEvent ev );
+        public int event_output_direct( SeqEvent ev );
+        public int event_input( out SeqEvent ev );
+        public int event_input_pending( bool fetch_sequencer );
+        public int drain_output();
+        public int event_output_pending();
+        public int extract_output( out SeqEvent ev );
+        public int drop_output();
+        public int drop_output_buffer();
+        public int drop_input();
+        public int drop_input_buffer();
+    }
+
+    [Compact]
+    [CCode (cname = "snd_seq_event_t", cprefix = "snd_seq_event_", free_function = "snd_seq_free_event")]
+    public class SeqEvent
+    {
+        public size_t length();
+
+        public SeqEventType type;
+        public uint8 flags;
+        public uint8 tag;
+
+        public uint8 queue;
+        public SeqTimestamp time;
+
+        public SeqAddr source;
+        public SeqAddr dest;
+
+        [CCode (cname = "data.note")]
+        public SeqEventNote note;
+        [CCode (cname = "data.control")]
+        public SeqEventControl control;
+        [CCode (cname = "data.raw8")]
+        public SeqEventRaw8 raw8;
+        [CCode (cname = "data.raw32")]
+        public SeqEventRaw32 raw32;
+        [CCode (cname = "data.ext")]
+        public SeqEventExt ext;
+        [CCode (cname = "data.queue")]
+        public SeqEventQueueControl queue_control;
+        [CCode (cname = "data.time")]
+        public SeqTimestamp timestamp;
+        [CCode (cname = "data.addr")]
+        public SeqAddr addr;
+        [CCode (cname = "data.connect")]
+        public SeqConnect connect;
+        [CCode (cname = "data.result")]
+        public SeqResult result;
+    }
+
+    [CCode (cname = "snd_seq_ev_ctrl_t", free_function = "", has_type_id = false)]
+    public struct SeqEventControl
+    {
+        public uint8 channel;
+        public uint8 unused[3];
+        public uint param;
+        public int value;
+    }
+
+    [CCode (cname = "snd_seq_ev_ext_t", free_function = "", has_type_id = false)]
+    public struct SeqEventExt
+    {
+        public uint len;
+        public void* ptr;
+    }
+
+    [CCode (cname = "snd_seq_ev_note_t", free_function = "", has_type_id = false)]
+    public struct SeqEventNote
+    {
+        public uint8 channel;
+        public uint8 note;
+        public uint8 velocity;
+        public uint8 off_velocity;
+        public uint duration;
+    }
+
+    [CCode (cname = "snd_seq_ev_queue_control_t", free_function = "", has_type_id = false)]
+    public struct SeqEventQueueControl
+    {
+        public uint8 queue;
+        public uint8 unused[3];
+        [CCode (cname = "param.value")]
+        public int value;
+        [CCode (cname = "param.time")]
+        public SeqTimestamp time;
+        [CCode (cname = "param.position")]
+        public uint position;
+        [CCode (cname = "param.skew")]
+        public SeqQueueSkew skew;
+        [CCode (cname = "param.d32")]
+        public uint d32[2];
+        [CCode (cname = "param.d8")]
+        public uint8 d8[8];
+    }
+
+    [CCode (cname = "snd_seq_ev_raw8_t", free_function = "", has_type_id = false)]
+    public struct SeqEventRaw8
+    {
+        public uint8 d[12];
+    }
+
+    [CCode (cname = "snd_seq_ev_raw32_t", free_function = "", has_type_id = false)]
+    public struct SeqEventRaw32
+    {
+        public uint d[3];
+    }
+
+    [Compact]
+    [CCode (cname = "snd_seq_port_info_t", cprefix = "snd_seq_port_info_", free_function = "")]
+    public class SeqPortInfo
+    {
+        public static int alloca( out SeqPortInfo info );
+        public static int malloc( out SeqPortInfo info );
+        public void free();
+        public void copy( SeqPortInfo source );
+        public int get_client();
+        public int get_port();
+        public SeqAddr? get_addr();
+        public unowned string get_name();
+        public SeqPortCap get_capability();
+        public SeqPortType get_type();
+        public int get_midi_channels();
+        public int get_midi_voices();
+        public int get_synth_voices();
+        public int get_read_use();
+        public int get_write_use();
+        public int get_port_specified();
+        public int get_timestamping();
+        public int get_timestamp_real();
+        public int get_timestamp_queue();
+        public void set_client( int client );
+        public void set_port( int port );
+        public void set_addr( SeqAddr addr );
+        public void set_name( string name );
+        public void set_capability( uint capability );
+        public void set_type( uint type );
+        public void set_midi_channels( int channels );
+        public void set_midi_voices( int voices );
+        public void set_synth_voices( int voices );
+        public void set_port_specified( int val );
+        public void set_timestamping( int enable );
+        public void set_timestamp_real( int realtime );
+        public void set_timestamp_queue( int queue );
+    }
+
+    [CCode (cname = "snd_seq_queue_skew_t", free_function = "", has_type_id = false)]
+    public struct SeqQueueSkew
+    {
+        public uint value;
+        public uint base;
+    }
+
+    [Compact]
+    [CCode (cname = "snd_seq_query_subscribe_t", cprefix = "snd_seq_query_subscribe_")]
+    public class SeqQuerySubscribe
+    {
+        public static int alloca( out SeqQuerySubscribe subscribe );
+        public static int malloc( out SeqQuerySubscribe subscribe );
+        public void free();
+        public void copy( SeqQuerySubscribe source );
+        public int get_client();
+        public int get_port();
+        public SeqAddr? get_root();
+        public SeqQuerySubsType get_type();
+        public int get_index();
+        public int get_num_subs();
+        public SeqAddr? get_addr();
+        public int get_queue();
+        public int get_exclusive();
+        public int get_time_update();
+        public int get_time_real();
+        public void set_client( int client );
+        public void set_port( int port );
+        public void set_root( SeqAddr addr );
+        public void set_type( SeqQuerySubsType type );
+        public void set_index( int index );
+    }
+
+    [CCode (cname = "snd_seq_real_time_t", has_type_id = false)]
+    public struct SeqRealTime
+    {
+        public uint tv_sec;
+        public uint tv_nsec;
+    }
+
+    [CCode (cname = "snd_seq_result_t", has_type_id = false)]
+    public struct SeqResult
+    {
+        public int event;
+        public int result;
+    }
+
+    [SimpleType]
+    [CCode (cname = "snd_seq_tick_time_t", has_type_id = false)]
+    public struct SeqTickTime : uint
+    {
+    }
+
+    [CCode (cname = "snd_seq_timestamp_t", free_function = "", has_type_id = false)]
+    public struct SeqTimestamp
+    {
+        public SeqTickTime tick;
+        public SeqRealTime time;
     }
 }
