@@ -1,3 +1,34 @@
+Vala 0.39.92
+============
+ * Highlights
+  - Add support for feature test macros [#793444]
+    e.g. [CCode (feature_test_macro = "_GNU_SOURCE")]
+
+ * Various bug fixes:
+  - codegen:
+    + Use pointers when accessing constant multi-dimensional arrays [#604371]
+    + Add valid support for const multi-dimensional arrays [#604371]
+    + Don't append fixed-length of array fields in initializers
+    + Add source_reference to some store_local/_field() calls
+  - Properly handle array-initializers inside struct-initializers [#622178]
+  - The rank of an array-initializer should match the target's rank [#744923]
+  - Make SemanticAnalyzer.check_arguments() independent of context
+  - Check with same rules for dbus compatibility as in GBusModule [#793859]
+  - Fix recursive declaration in generic base type [#688732]
+  - Prevent WITH_CGRAPH conditional having an impact on generated sources
+  - Update manual from wiki.gnome.org
+
+ * Bindings:
+  - glib-2.0, posix: Add feature test macro _GNU_SOURCE for pow10(3),
+    pow10f(3), exp10(3) and exp10f(3) [#614788]
+  - gstreamer-1.0: Update from 1.13.1+ git master
+  - linux: Add dup3 [#729803]
+  - linux: Add feature_test_macros to non-POSIX file control constants and dup3
+  - posix: Fix sig*set and sigprocmask parameters to be out/ref [#727425]
+  - posix: Add feature_test_macro _GNU_SOURCE to sighandler_t [#761975]
+  - libgnome-menu-3.0: Add deps file
+  - Update GIR-based bindings
+
 Vala 0.39.91
 ============
  * Various bug fixes:
