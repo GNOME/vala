@@ -537,5 +537,6 @@ EXTRA_DIST = \
 	testrunner.sh \
 	$(TESTS) \
 	$(NON_NULL_TESTS) \
+	$(LINUX_TESTS) \
 	$(NULL)
 
