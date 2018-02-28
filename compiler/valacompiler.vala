@@ -570,9 +570,11 @@ class Vala.Compiler {
 		}
 
 		string[] target_args = { output };
-		string[] target_run_args = run_args.split (" ");
-		foreach (string arg in target_run_args) {
-			target_args += arg;
+		if (run_args != null) {
+			string[] target_run_args = run_args.split (" ");
+			foreach (string arg in target_run_args) {
+				target_args += arg;
+			}
 		}
 
 		try {
