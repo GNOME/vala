@@ -36,7 +36,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GST_ALLOCATOR_FD")]
 		public const string ALLOCATOR_FD;
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GST_CAPS_FEATURE_MEMORY_DMABUF")]
-		[Version (since = "1.11")]
+		[Version (since = "1.12")]
 		public const string CAPS_FEATURE_MEMORY_DMABUF;
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_dmabuf_memory_get_fd")]
 		[Version (since = "1.2")]

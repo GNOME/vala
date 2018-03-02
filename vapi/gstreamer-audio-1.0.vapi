@@ -308,7 +308,7 @@ namespace Gst {
 			public void init ();
 			[Version (since = "1.2")]
 			public bool is_equal (Gst.Audio.Info other);
-			public void set_format (Gst.Audio.Format format, int rate, int channels, Gst.Audio.ChannelPosition position);
+			public void set_format (Gst.Audio.Format format, int rate, int channels, [CCode (array_length = false)] Gst.Audio.ChannelPosition position[64]);
 			public Gst.Caps to_caps ();
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
