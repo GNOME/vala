@@ -5278,7 +5278,7 @@ namespace Gdk {
 		public double dx;
 		public double dy;
 		public int8 n_fingers;
-		public Gdk.TouchpadGesturePhase phase;
+		public int8 phase;
 		public double scale;
 		public int8 send_event;
 		public Gdk.ModifierType state;
@@ -5296,7 +5296,7 @@ namespace Gdk {
 		public double dx;
 		public double dy;
 		public int8 n_fingers;
-		public Gdk.TouchpadGesturePhase phase;
+		public int8 phase;
 		public int8 send_event;
 		public Gdk.ModifierType state;
 		public uint32 time;

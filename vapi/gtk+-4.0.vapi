@@ -6200,6 +6200,8 @@ namespace Gsk {
 		public unowned Gdk.RGBA? peek_color ();
 		public unowned Pango.Font peek_font ();
 		public unowned Pango.GlyphInfo? peek_glyphs ();
+		[CCode (has_construct_function = false)]
+		public TextNode.with_bounds (Pango.Font font, Pango.GlyphString glyphs, Gdk.RGBA color, double x, double y, Graphene.Rect bounds);
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class TextureNode : Gsk.RenderNode {
@@ -7540,7 +7542,6 @@ namespace Gtk {
 		public unowned Gtk.EntryBuffer get_buffer ();
 		public unowned Gtk.EntryCompletion get_completion ();
 		public int get_current_icon_drag_source ();
-		public unowned Gtk.Adjustment? get_cursor_hadjustment ();
 		public bool get_has_frame ();
 		public bool get_icon_activatable (Gtk.EntryIconPosition icon_pos);
 		public Gdk.Rectangle get_icon_area (Gtk.EntryIconPosition icon_pos);
@@ -7578,7 +7579,6 @@ namespace Gtk {
 		public void set_attributes (Pango.AttrList attrs);
 		public void set_buffer (Gtk.EntryBuffer buffer);
 		public void set_completion (Gtk.EntryCompletion? completion);
-		public void set_cursor_hadjustment (Gtk.Adjustment? adjustment);
 		public void set_has_frame (bool setting);
 		public void set_icon_activatable (Gtk.EntryIconPosition icon_pos, bool activatable);
 		public void set_icon_drag_source (Gtk.EntryIconPosition icon_pos, Gdk.ContentFormats formats, Gdk.DragAction actions);
@@ -7597,7 +7597,7 @@ namespace Gtk {
 		public void set_placeholder_text (string? text);
 		public void set_progress_fraction (double fraction);
 		public void set_progress_pulse_step (double fraction);
-		public void set_tabs (Pango.TabArray tabs);
+		public void set_tabs (Pango.TabArray? tabs);
 		public void set_text (string text);
 		public void set_visibility (bool visible);
 		public void set_width_chars (int n_chars);
@@ -12154,14 +12154,6 @@ namespace Gtk {
 		public void free ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
-	public struct IMContextInfo {
-		public weak string context_id;
-		public weak string context_name;
-		public weak string domain;
-		public weak string domain_dirname;
-		public weak string default_locales;
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
 	public struct PadActionEntry {
 		public Gtk.PadActionType type;
 		public int index;
@@ -13262,6 +13254,8 @@ namespace Gtk {
 	public delegate void TreeViewSearchPositionFunc (Gtk.TreeView tree_view, Gtk.Widget search_dialog);
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_BINARY_AGE")]
 	public const int BINARY_AGE;
+	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_IM_MODULE_EXTENSION_POINT_NAME")]
+	public const string IM_MODULE_EXTENSION_POINT_NAME;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_INPUT_ERROR")]
 	public const int INPUT_ERROR;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_INTERFACE_AGE")]
@@ -13712,6 +13706,8 @@ namespace Gtk {
 	public static void grab_remove (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void hsv_to_rgb (double h, double s, double v, out double r, out double g, out double b);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static void im_modules_init ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void init ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
