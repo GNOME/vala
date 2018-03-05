@@ -7,13 +7,10 @@ namespace Gst {
 		[GIR (name = "AudioAggregator")]
 		public abstract class Aggregator : Gst.Base.Aggregator {
 			public weak Gst.Caps current_caps;
-			public weak Gst.Audio.Info info;
 			[CCode (has_construct_function = false)]
 			protected Aggregator ();
 			[NoWrapper]
 			public virtual bool aggregate_one_buffer (Gst.Audio.AggregatorPad pad, Gst.Buffer inbuf, uint in_offset, Gst.Buffer outbuf, uint out_offset, uint num_frames);
-			[NoWrapper]
-			public virtual Gst.Buffer convert_buffer (Gst.Pad pad, Gst.Audio.Info in_info, Gst.Audio.Info out_info, Gst.Buffer buffer);
 			[NoWrapper]
 			public virtual Gst.Buffer create_output_buffer (uint num_frames);
 			public void set_sink_caps (Gst.Audio.AggregatorPad pad, Gst.Caps caps);
@@ -38,6 +35,10 @@ namespace Gst {
 			public weak Gst.Audio.Info info;
 			[CCode (has_construct_function = false)]
 			protected AggregatorPad ();
+			[NoWrapper]
+			public virtual Gst.Buffer convert_buffer (Gst.Audio.Info in_info, Gst.Audio.Info out_info, Gst.Buffer buffer);
+			[NoWrapper]
+			public virtual void update_conversion_info ();
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_base_sink_get_type ()")]
 		[GIR (name = "AudioBaseSink")]

@@ -56,7 +56,6 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAggregator", lower_case_cprefix = "gst_aggregator_", type_id = "gst_aggregator_get_type ()")]
 		[GIR (name = "Aggregator")]
 		public abstract class Aggregator : Gst.Element {
-			public weak Gst.Segment segment;
 			public weak Gst.Pad srcpad;
 			[CCode (has_construct_function = false)]
 			protected Aggregator ();
