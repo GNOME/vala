@@ -2949,4 +2949,46 @@ namespace Posix {
 	public static int opterr;
 	[CCode (cheader_filename = "unistd.h")]
 	public static int optopt;
+
+	[CCode(cname = "wordexp_t", cheader_filename = "wordexp.h", destroy_function = "wordfree")]
+	public struct Wordexp {
+		[CCode(cname = "we_wordv", array_length_cname = "we_wordc", array_length_type = "size_t")]
+		public string[] words;
+
+		[CCode(cname = "wordexp", instance_pos = 1.1)]
+		private int _wordexp (string s, int flags = 0);
+		[CCode(cname = "wordfree")]
+		private int _wordfree ();
+
+		public int expand (string s, int flags = 0) {
+			if (!(WRDE_APPEND in flags || WRDE_REUSE in flags)) {
+				_wordfree();
+			}
+			return _wordexp (s, flags);
+		}
+		public int append(string s, int flags = 0) {
+			return _wordexp (s, flags | WRDE_APPEND);
+		}
+	}
+
+	[CCode(cheader_filename = "wordexp.h")]
+	private const int WRDE_APPEND;
+	[CCode(cheader_filename = "wordexp.h")]
+	public const int WRDE_BADCHAR;
+	[CCode(cheader_filename = "wordexp.h")]
+	public const int WRDE_BADVAL;
+	[CCode(cheader_filename = "wordexp.h")]
+	public const int WRDE_CMDSUB;
+	[CCode(cheader_filename = "wordexp.h")]
+	public const int WRDE_NOCMD;
+	[CCode(cheader_filename = "wordexp.h")]
+	public const int WRDE_NOSPACE;
+	[CCode(cheader_filename = "wordexp.h")]
+	public const int WRDE_REUSE;
+	[CCode(cheader_filename = "wordexp.h")]
+	public const int WRDE_SHOWERR;
+	[CCode(cheader_filename = "wordexp.h")]
+	public const int WRDE_SYNTAX;
+	[CCode(cheader_filename = "wordexp.h")]
+	public const int WRDE_UNDEF;
 }
