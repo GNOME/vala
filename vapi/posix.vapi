@@ -337,6 +337,26 @@ namespace Posix {
 		public pid_t l_pid;
 	}
 
+	[CCode(cheader_filename = "fnmatch.h")]
+	public int fnmatch (string pattern, string str, int flags = 0);
+
+	[CCode(cheader_filename = "fnmatch.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int FNM_CASEFOLD;
+	[CCode(cheader_filename = "fnmatch.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int FNM_EXTMATCH;
+	[CCode(cheader_filename = "fnmatch.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int FNM_FILE_NAME;
+	[CCode(cheader_filename = "fnmatch.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int FNM_LEADING_DIR;
+	[CCode(cheader_filename = "fnmatch.h")]
+	public const int FNM_NOESCAPE;
+	[CCode(cheader_filename = "fnmatch.h")]
+	public const int FNM_NOMATCH;
+	[CCode(cheader_filename = "fnmatch.h")]
+	public const int FNM_PATHNAME;
+	[CCode(cheader_filename = "fnmatch.h")]
+	public const int FNM_PERIOD;
+
 	[Compact]
 	[CCode (cname = "struct group", cheader_filename = "grp.h")]
 	public class Group {
