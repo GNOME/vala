@@ -2062,6 +2062,10 @@ namespace Posix {
 	[CCode (cname = "readv", cheader_filename = "sys/uio.h")]
 	public ssize_t read_vectors (int fd, iovector[] vector);
 	[CCode (cheader_filename = "unistd.h,sys/types.h")]
+	public int setegid (gid_t egid);
+	[CCode (cheader_filename = "unistd.h,sys/types.h")]
+	public int seteuid (gid_t euid);
+	[CCode (cheader_filename = "unistd.h,sys/types.h")]
 	public int setgid (gid_t gid);
 	[CCode (cheader_filename = "unistd.h,sys/types.h")]
 	public int setuid (uid_t uid);
