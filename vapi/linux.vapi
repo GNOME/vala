@@ -1061,6 +1061,20 @@ namespace Linux {
 
     [CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
     public int dup3 (int oldfd, int newfd, int flags);
+
+    [CCode (cheader_filename = "sys/types.h,unistd.h")]
+    public int getgroups ([CCode (array_length_pos = 0.9)] Posix.gid_t[]? list = null);
+    [CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+    public int getresgid (out Posix.gid_t rgid, out Posix.gid_t egid, out Posix.gid_t sgid);
+    [CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+    public int getresuid (out Posix.uid_t ruid, out Posix.uid_t euid, out Posix.uid_t suid);
+    [CCode (cheader_filename = "sys/types.h,grp.h,unistd.h")]
+    public int setgroups ([CCode (array_length_pos = 0.9)] Posix.gid_t[] list);
+    [CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+    public int setresgid (Posix.gid_t rgid, Posix.gid_t egid, Posix.gid_t sgid);
+    [CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+    public int setresuid (Posix.uid_t ruid, Posix.uid_t euid, Posix.uid_t suid);
+
     [CCode (cheader_filename = "unistd.h")]
     public int sethostname (string name, size_t len);
 
