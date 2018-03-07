@@ -1732,6 +1732,12 @@ namespace Linux {
         public const int SYN_REPORT;
         [CCode (cheader_filename = "linux/input.h")]
         public const int SYN_CONFIG;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int SYN_MT_REPORT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int SYN_DROPPED;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int SYN_MAX;
 
         /*
          * keys, switches, buttons, etc.
@@ -2229,17 +2235,23 @@ namespace Linux {
         [CCode (cheader_filename = "linux/input.h")]
         public const int KEY_BRIGHTNESS_CYCLE;
         [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_BRIGHTNESS_AUTO;
+        [CCode (cheader_filename = "linux/input.h")]
         public const int KEY_BRIGHTNESS_ZERO;
         [CCode (cheader_filename = "linux/input.h")]
         public const int KEY_DISPLAY_OFF;
 
         [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_WWAN;
+        [CCode (cheader_filename = "linux/input.h")]
         public const int KEY_WIMAX;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_RFKILL;
 
         [CCode (cheader_filename = "linux/input.h")]
-        public const int KEY_MAX;
+        public const int KEY_MICMUTE;
 
-        /* Range 248 - 255 is reserved for special needs of AT keyboard driver */
+        /* Code 255 is reserved for special needs of AT keyboard driver */
 
         [CCode (cheader_filename = "linux/input.h")]
         public const int BTN_MISC;
@@ -2364,6 +2376,8 @@ namespace Linux {
         [CCode (cheader_filename = "linux/input.h")]
         public const int BTN_TOOL_LENS;
         [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TOOL_QUINTTAP;
+        [CCode (cheader_filename = "linux/input.h")]
         public const int BTN_TOUCH;
         [CCode (cheader_filename = "linux/input.h")]
         public const int BTN_STYLUS;
@@ -2373,6 +2387,8 @@ namespace Linux {
         public const int BTN_TOOL_DOUBLETAP;
         [CCode (cheader_filename = "linux/input.h")]
         public const int BTN_TOOL_TRIPLETAP;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TOOL_QUADTAP;
 
         [CCode (cheader_filename = "linux/input.h")]
         public const int BTN_WHEEL;
@@ -2542,6 +2558,8 @@ namespace Linux {
         [CCode (cheader_filename = "linux/input.h")]
         public const int KEY_DISPLAYTOGGLE;
         [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_BRIGHTNESS_TOGGLE;
+        [CCode (cheader_filename = "linux/input.h")]
         public const int KEY_SPELLCHECK;
         [CCode (cheader_filename = "linux/input.h")]
         public const int KEY_LOGOFF;
@@ -2559,6 +2577,12 @@ namespace Linux {
         public const int KEY_CONTEXT_MENU;
         [CCode (cheader_filename = "linux/input.h")]
         public const int KEY_MEDIA_REPEAT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_10CHANNELSUP;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_10CHANNELSDOWN;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_IMAGES;
 
         [CCode (cheader_filename = "linux/input.h")]
         public const int KEY_DEL_EOL;
@@ -2657,6 +2681,221 @@ namespace Linux {
         public const int KEY_NUMERIC_STAR;
         [CCode (cheader_filename = "linux/input.h")]
         public const int KEY_NUMERIC_POUND;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_NUMERIC_A;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_NUMERIC_B;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_NUMERIC_C;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_NUMERIC_D;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_CAMERA_FOCUS;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_WPS_BUTTON;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_TOUCHPAD_TOGGLE;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_TOUCHPAD_ON;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_TOUCHPAD_OFF;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_CAMERA_ZOOMIN;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_CAMERA_ZOOMOUT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_CAMERA_UP;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_CAMERA_DOWN;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_CAMERA_LEFT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_CAMERA_RIGHT;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_ATTENDANT_ON;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_ATTENDANT_OFF;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_ATTENDANT_TOGGLE;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_LIGHTS_TOGGLE;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_DPAD_UP;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_DPAD_DOWN;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_DPAD_LEFT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_DPAD_RIGHT;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_ALS_TOGGLE;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_BUTTONCONFIG;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_TASKMANAGER;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_JOURNAL;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_CONTROLPANEL;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_APPSELECT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_SCREENSAVER;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_VOICECOMMAND;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_BRIGHTNESS_MIN;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_BRIGHTNESS_MAX;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_KBDINPUTASSIST_PREV;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_KBDINPUTASSIST_NEXT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_KBDINPUTASSIST_PREVGROUP;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_KBDINPUTASSIST_NEXTGROUP;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_KBDINPUTASSIST_ACCEPT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_KBDINPUTASSIST_CANCEL;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_RIGHT_UP;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_RIGHT_DOWN;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_LEFT_UP;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_LEFT_DOWN;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_ROOT_MENU;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_MEDIA_TOP_MENU;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_NUMERIC_11;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_NUMERIC_12;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_AUDIO_DESC;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_3D_MODE;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_NEXT_FAVORITE;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_STOP_RECORD;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_PAUSE_RECORD;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_VOD;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_UNMUTE;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_FASTREVERSE;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_SLOWREVERSE;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_DATA;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY1;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY2;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY3;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY4;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY5;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY6;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY7;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY8;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY9;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY10;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY11;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY12;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY13;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY14;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY15;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY16;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY17;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY18;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY19;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY20;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY21;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY22;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY23;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY24;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY25;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY26;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY27;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY28;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY29;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY30;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY31;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY32;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY33;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY34;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY35;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY36;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY37;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY38;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY39;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BTN_TRIGGER_HAPPY40;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_MIN_INTERESTING;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_MAX;
 
         /*
         * Relative axes
@@ -2737,10 +2976,44 @@ namespace Linux {
         public const int ABS_TILT_Y;
         [CCode (cheader_filename = "linux/input.h")]
         public const int ABS_TOOL_WIDTH;
+
         [CCode (cheader_filename = "linux/input.h")]
         public const int ABS_VOLUME;
+
         [CCode (cheader_filename = "linux/input.h")]
         public const int ABS_MISC;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_SLOT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_TOUCH_MAJOR;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_TOUCH_MINOR;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_WIDTH_MAJOR;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_WIDTH_MINOR;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_ORIENTATION;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_POSITION_X;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_POSITION_Y;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_TOOL_TYPE;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_BLOB_ID;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_TRACKING_ID;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_PRESSURE;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_DISTANCE;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_TOOL_X;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_MT_TOOL_Y;
+
         [CCode (cheader_filename = "linux/input.h")]
         public const int ABS_MAX;
 
@@ -2763,6 +3036,26 @@ namespace Linux {
         [CCode (cheader_filename = "linux/input.h")]
         public const int SW_DOCK;
         [CCode (cheader_filename = "linux/input.h")]
+        public const int SW_LINEOUT_INSERT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int SW_JACK_PHYSICAL_INSERT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int SW_VIDEOOUT_INSERT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int SW_CAMERA_LENS_COVER;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int SW_KEYPAD_SLIDE;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int SW_FRONT_PROXIMITY;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int SW_ROTATE_LOCK;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int SW_LINEIN_INSERT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int SW_MUTE_DEVICE;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int SW_PEN_INSERTED;
+        [CCode (cheader_filename = "linux/input.h")]
         public const int SW_MAX;
 
         /*
@@ -2779,6 +3072,8 @@ namespace Linux {
         public const int MSC_RAW;
         [CCode (cheader_filename = "linux/input.h")]
         public const int MSC_SCAN;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int MSC_TIMESTAMP;
         [CCode (cheader_filename = "linux/input.h")]
         public const int MSC_MAX;
 
@@ -2885,6 +3180,24 @@ namespace Linux {
         public const int BUS_GSC;
         [CCode (cheader_filename = "linux/input.h")]
         public const int BUS_ATARI;
+
+        /* MT_TOOL types */
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int MT_TOOL_FINGER;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int MT_TOOL_PEN;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int MT_TOOL_PALM;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int MT_TOOL_MAX;
+
+        /* Values describing the status of a force-feedback effect */
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int FF_STATUS_STOPPED;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int FF_STATUS_PLAYING;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int FF_STATUS_MAX;
     }
 
     /*
