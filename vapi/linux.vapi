@@ -1004,7 +1004,10 @@ namespace Linux {
         BLUETOOTH,
         UWB,
         WIMAX,
-        WWAN
+        WWAN,
+        GPS,
+        FM,
+        NFC
     }
 
     /*
