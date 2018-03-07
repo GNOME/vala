@@ -1330,6 +1330,8 @@ namespace Posix {
 	public int grantpt (int fd);
 	[CCode (cheader_filename = "stdlib.h")]
 	public int unlockpt (int fd);
+	[CCode (cheader_filename = "stdlib.h")]
+	public unowned string? ptsname (int fd);
 
 	[CCode (cheader_filename = "stdlib.h")]
 	public int system (string command);
