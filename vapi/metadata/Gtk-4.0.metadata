@@ -100,8 +100,7 @@ MessageDialog
   .format_secondary_text skip=false printf_format
   .new_with_markup skip=false printf_format
 Snapshot
-  .append* skip=false
-  .push* skip=false
+  .* skip=false
 StyleContext
   .get skip=false
 TextBuffer
@@ -281,6 +280,8 @@ PaperSize
 SelectionData
   .free destroys_instance
   .get_data skip=false
+Snapshot
+  .free_to_node destroys_instance
 render_* parent="Gtk.StyleContext"
 render_* symbol_type="method" instance_idx=0
 TextBuffer

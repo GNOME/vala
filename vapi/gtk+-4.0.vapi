@@ -4832,11 +4832,11 @@ namespace Gdk {
 		public Cursor.from_name (string name, Gdk.Cursor? fallback);
 		[CCode (has_construct_function = false)]
 		public Cursor.from_texture (Gdk.Texture texture, int hotspot_x, int hotspot_y, Gdk.Cursor? fallback);
-		public unowned Gdk.Cursor get_fallback ();
+		public unowned Gdk.Cursor? get_fallback ();
 		public int get_hotspot_x ();
 		public int get_hotspot_y ();
-		public unowned string get_name ();
-		public unowned Gdk.Texture get_texture ();
+		public unowned string? get_name ();
+		public unowned Gdk.Texture? get_texture ();
 		public Gdk.Cursor fallback { get; construct; }
 		public int hotspot_x { get; construct; }
 		public int hotspot_y { get; construct; }
@@ -5225,7 +5225,7 @@ namespace Gdk {
 		public void download ([CCode (array_length = false)] uint8[] data, size_t stride);
 		[CCode (cname = "gdk_texture_new_for_data")]
 		public static Gdk.Texture for_data ([CCode (array_length = false)] uint8[] data, int width, int height, int stride);
-		[CCode (cname = "gdk_texture_new_for_gl")]
+		[CCode (cname = "gdk_gl_texture_new")]
 		public static Gdk.Texture for_gl (Gdk.GLContext context, uint id, int width, int height, GLib.DestroyNotify destroy, void* data);
 		[CCode (cname = "gdk_texture_new_for_pixbuf")]
 		public static Gdk.Texture for_pixbuf (Gdk.Pixbuf pixbuf);
@@ -5235,6 +5235,7 @@ namespace Gdk {
 		public static Gdk.Texture from_resource (string resource_path);
 		public int get_height ();
 		public int get_width ();
+		[CCode (cname = "gdk_gl_texture_release")]
 		public void release_gl ();
 		public int height { get; construct; }
 		public int width { get; construct; }
@@ -7812,14 +7813,12 @@ namespace Gtk {
 		public Expander (string? label);
 		public bool get_expanded ();
 		public unowned string? get_label ();
-		public bool get_label_fill ();
 		public unowned Gtk.Widget? get_label_widget ();
 		public bool get_resize_toplevel ();
 		public bool get_use_markup ();
 		public bool get_use_underline ();
 		public void set_expanded (bool expanded);
 		public void set_label (string? label);
-		public void set_label_fill (bool label_fill);
 		public void set_label_widget (Gtk.Widget? label_widget);
 		public void set_resize_toplevel (bool resize_toplevel);
 		public void set_use_markup (bool use_markup);
@@ -7828,7 +7827,6 @@ namespace Gtk {
 		public Expander.with_mnemonic (string? label);
 		public bool expanded { get; set construct; }
 		public string label { get; set construct; }
-		public bool label_fill { get; set construct; }
 		public Gtk.Widget label_widget { get; set; }
 		public bool resize_toplevel { get; set; }
 		public bool use_markup { get; set construct; }
@@ -9166,8 +9164,10 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Overlay ();
 		public void add_overlay (Gtk.Widget widget);
+		public bool get_measure_overlay (Gtk.Widget widget);
 		public bool get_overlay_pass_through (Gtk.Widget widget);
 		public void reorder_overlay (Gtk.Widget child, int position);
+		public void set_measure_overlay (Gtk.Widget widget, bool measure);
 		public void set_overlay_pass_through (Gtk.Widget widget, bool pass_through);
 		public virtual signal bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation);
 	}
@@ -10110,9 +10110,11 @@ namespace Gtk {
 		public void set_mode (Gtk.SizeGroupMode mode);
 		public Gtk.SizeGroupMode mode { get; set; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
+	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_snapshot_ref", type_id = "gtk_snapshot_get_type ()", unref_function = "gtk_snapshot_unref")]
 	[Compact]
 	public class Snapshot {
+		[CCode (has_construct_function = false)]
+		public Snapshot (Gsk.Renderer renderer, bool record_names, Cairo.Region clip, string name, ...);
 		public Cairo.Context append_cairo (Graphene.Rect bounds, string name, ...);
 		public void append_color (Gdk.RGBA color, Graphene.Rect bounds, string name, ...);
 		public void append_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, Gsk.ColorStop stops, size_t n_stops, string name, ...);
@@ -10120,7 +10122,11 @@ namespace Gtk {
 		public void append_repeating_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, Gsk.ColorStop stops, size_t n_stops, string name, ...);
 		public void append_texture (Gdk.Texture texture, Graphene.Rect bounds, string name, ...);
 		public bool clips_rect (Cairo.RectangleInt bounds);
+		[DestroysInstance]
+		public Gsk.RenderNode free_to_node ();
 		public void get_offset (out int x, out int y);
+		public bool get_record_names ();
+		public unowned Gsk.Renderer get_renderer ();
 		public void offset (int x, int y);
 		public void pop ();
 		public void push (bool keep_coordinates, string name, ...);
@@ -10134,11 +10140,14 @@ namespace Gtk {
 		public void push_rounded_clip (Gsk.RoundedRect bounds, string name, ...);
 		public void push_shadow (Gsk.Shadow shadow, size_t n_shadows, string name, ...);
 		public void push_transform (Graphene.Matrix transform, string name, ...);
+		public unowned Gtk.Snapshot @ref ();
 		public void render_background (Gtk.StyleContext context, double x, double y, double width, double height);
 		public void render_focus (Gtk.StyleContext context, double x, double y, double width, double height);
 		public void render_frame (Gtk.StyleContext context, double x, double y, double width, double height);
 		public void render_insertion_cursor (Gtk.StyleContext context, double x, double y, Pango.Layout layout, int index, Pango.Direction direction);
 		public void render_layout (Gtk.StyleContext context, double x, double y, Pango.Layout layout);
+		public Gsk.RenderNode to_node ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_spin_button_get_type ()")]
 	public class SpinButton : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.Editable, Gtk.Orientable {
