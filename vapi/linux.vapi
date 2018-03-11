@@ -1038,6 +1038,11 @@ namespace Linux {
         DT_WHT
     }
 
+    [CCode (cheader_filename = "errno.h", feature_test_macro = "_GNU_SOURCE")]
+    public const string program_invocation_name;
+    [CCode (cheader_filename = "errno.h", feature_test_macro = "_GNU_SOURCE")]
+    public const string program_invocation_short_name;
+
     [Version (deprecated_since = "vala-0.26", replacement = "Backtrace.get"), CCode (cheader_filename = "execinfo.h")]
     public int backtrace (void* buffer, int size);
 
