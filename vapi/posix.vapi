@@ -1534,6 +1534,29 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/ioctl.h", sentinel = "")]
 	public int ioctl (int fildes, int request, ...);
 
+	[CCode (cheader_filename = "sys/ipc.h")]
+	public const int IPC_CREAT;
+	[CCode (cheader_filename = "sys/ipc.h")]
+	public const int IPC_EXCL;
+	[CCode (cheader_filename = "sys/ipc.h")]
+	public const int IPC_NOWAIT;
+	[CCode (cheader_filename = "sys/ipc.h")]
+	public const key_t IPC_PRIVATE;
+	[CCode (cheader_filename = "sys/ipc.h")]
+	public const int IPC_RMID;
+	[CCode (cheader_filename = "sys/ipc.h")]
+	public const int IPC_SET;
+	[CCode (cheader_filename = "sys/ipc.h")]
+	public const int IPC_STAT;
+	[CCode (cheader_filename = "sys/ipc.h")]
+	public const int IPC_R;
+	[CCode (cheader_filename = "sys/ipc.h")]
+	public const int IPC_W;
+	[CCode (cheader_filename = "sys/ipc.h")]
+	public const int IPC_M;
+	[CCode (cheader_filename = "sys/ipc.h")]
+	public key_t ftok (string pathname, int proj_id);
+
 	[CCode (cheader_filename = "syslog.h")]
 	public void openlog (string ident, int option, int facility );
 
@@ -1757,6 +1780,68 @@ namespace Posix {
 		[CCode (array_length=false, array_null_terminated=true)]
 		public string[] h_addr_list;
 	}
+
+	[CCode (cname = "struct msqid_ds", cheader_filename = "sys/msg.h", free_function = "", has_type_id = false)]
+	public struct MsqIdDs {
+	}
+
+	[CCode (cname = "short", cheader_filename = "sys/msg.h", cprefix = "MSG_", has_type_id = false)]
+	public enum MsqCmd {
+		STAT,
+		INFO
+	}
+
+	[CCode (cheader_filename = "sys/msg.h")]
+	public const int MSG_COPY;
+	[CCode (cheader_filename = "sys/msg.h")]
+	public const int MSG_EXCEPT;
+	[CCode (cheader_filename = "sys/msg.h")]
+	public const int MSG_NOERROR;
+	[CCode (cheader_filename = "sys/msg.h")]
+	public int msgctrl (int msqid, MsqCmd cmd, MsqIdDs buf);
+	[CCode (cheader_filename = "sys/msg.h")]
+	public int msgget (key_t key, int msgflg = 0);
+	[CCode (cheader_filename = "sys/msg.h")]
+	public ssize_t msgrcv (int msqid, uint8[] buf, long msgtyp = 0, int msgflg = 0);
+	[CCode (cheader_filename = "sys/msg.h")]
+	public int msgsnd (int msqid, uint8[] buf, int msgflg = 0);
+
+	[CCode (cname = "struct sembuf", cheader_filename = "sys/sem.h", free_function = "", has_type_id = false)]
+	public struct SemBuf {
+		public ushort sem_num;
+		public SemCmd sem_op;
+		public short sem_flg;
+	}
+
+	[CCode (cname = "short", cheader_filename = "sys/sem.h", cprefix = "", has_type_id = false)]
+	public enum SemCmd {
+		GETPID,
+		GETVAL,
+		GETALL,
+		GETNCNT,
+		GETZCNT,
+		SETVAL,
+		SETALL,
+		IPC_STAT,
+		IPC_SET,
+		IPC_RMID,
+	}
+
+	[CCode (cheader_filename = "sys/sem.h")]
+	public const short SEM_UNDO;
+	[CCode (cheader_filename = "sys/sem.h")]
+	public int semctl (int semid, int semnum, int cmd, ...);
+	[CCode (cheader_filename = "sys/sem.h")]
+	public int semget (key_t key, int nsems, int semflg = 0);
+	[CCode (cheader_filename = "sys/sem.h")]
+	public int semop (int semid, SemBuf[] sops);
+
+	[CCode (cheader_filename = "sys/shm.h")]
+	public void* shmat (int shmid, void* shmaddr, int shmflg = 0);
+	[CCode (cheader_filename = "sys/shm.h")]
+	public int shmdt (void* shmaddr);
+	[CCode (cheader_filename = "sys/shm.h")]
+	public int shmget (key_t key, size_t size, int shmflg = 0);
 
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int mkfifo (string filename, mode_t mode);
