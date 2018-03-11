@@ -771,6 +771,29 @@ namespace Posix {
 	[CCode (cheader_filename = "math.h")]
 	public float scalbf (float x, float n);
 
+	[SimpleType]
+	[CCode (cname = "mqd_t", cheader_filename = "mqueue.h", lower_case_cprefix = "mq_", free_function = "mq_close", has_type_id = false)]
+	public struct MessageQueue {
+		[CCode (cname = "mq_open")]
+		public MessageQueue (string name, int oflag, mode_t mode = 0, MqAttr? attr = null);
+		public static int unlink (string name);
+		public int notify (sigevent_t? notification = null);
+		public int getattr (MqAttr attr);
+		public int setattr (MqAttr attr, MqAttr? oldattr = null);
+		public int send (uint8[] msg, uint prio = 0);
+		public int timedsend (uint8[] msg, uint prio, timespec abs_timeout);
+		public ssize_t receive (uint8[] msg, out uint prio);
+		public ssize_t timedreceive (uint8[] msg, out uint prio, timespec abs_timeout);
+	}
+
+	[CCode (cname = "struct mq_attr", cheader_filename = "mqueue.h", destroy_function = "", has_type_id = false)]
+	public struct MqAttr {
+		public long mq_flags;
+		public long mq_maxmsg;
+		public long mq_msgsize;
+		public long mq_curmsgs;
+	}
+
 	[CCode (cheader_filename = "netdb.h")]
 	public const int NI_NAMEREQD;
 	[CCode (cheader_filename = "netdb.h")]
@@ -837,6 +860,20 @@ namespace Posix {
 	public unowned Passwd? getpwnam (string name);
 	[CCode (cheader_filename = "pwd.h")]
 	public unowned Passwd? getpwuid (uid_t uid);
+
+	[Compact]
+	[CCode (cname = "sem_t", cheader_filename = "semaphore.h", cprefix = "SEM_", lower_case_cprefix = "sem_", has_type_id = false, copy_function = "", free_function = "sem_close")]
+	public class NamedSemaphore {
+		[CCode (cname = "sem_open")]
+		public NamedSemaphore (string name, int oflag = 0, mode_t mode = 0, uint val = 0);
+		public int getvalue (out int sval);
+		public int post ();
+		public int wait ();
+		public int trywait ();
+		public int timedwait (Posix.timespec abs_timeout);
+		public static int unlink (string name);
+		public const int FAILED;
+	}
 
 	[CCode (cheader_filename = "sys/resource.h")]
 	public const int PRIO_PROCESS;
@@ -1219,6 +1256,13 @@ namespace Posix {
 		siginfohandler_t sa_sigaction;
 		sigset_t         sa_mask;
 		int              sa_flags;
+	}
+
+	[CCode (cname = "struct sigevent", cheader_filename = "signal.h", has_type_id = false)]
+	public struct sigevent_t {
+		sigval_t         sigev_value;
+		int              sigev_signo;
+		int              sigev_notify;
 	}
 
 	[SimpleType]
@@ -2703,6 +2747,11 @@ namespace Posix {
 	public int mlock(void *addr, size_t len);
 	[CCode (cheader_filename = "sys/mman.h")]
 	public int munlock(void *addr, size_t len);
+	// sys/mman.h - [SHM] Shared Memory
+	[CCode (cheader_filename = "sys/mman.h")]
+	public int shm_open (string name, int oflag, mode_t mode = 0);
+	[CCode (cheader_filename = "sys/mman.h")]
+	public int shm_unlink (string name);
 	// sys/mman.h - Process Memory Locking
 	[CCode (cheader_filename = "sys/mman.h")]
 	public const int MCL_CURRENT;
