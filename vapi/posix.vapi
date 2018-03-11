@@ -1257,6 +1257,8 @@ namespace Posix {
 	[CCode (cheader_filename = "signal.h")]
 	public int raise (int signum);
 	[CCode (cheader_filename = "signal.h")]
+	public void psignal (int signum, string message);
+	[CCode (cheader_filename = "signal.h")]
 	public int sigemptyset (out sigset_t sigset);
 	[CCode (cheader_filename = "signal.h")]
 	public int sigfillset (out sigset_t sigset);
@@ -1395,6 +1397,8 @@ namespace Posix {
 	public unowned string? strpbrk (string s1, string s2);
 	[CCode (cheader_filename = "string.h")]
 	public unowned string? strrchr (string s, int c);
+	[CCode (cheader_filename = "string.h")]
+	public unowned string? strsignal (int signum);
 	[CCode (cheader_filename = "string.h")]
 	public size_t strspn (string s1, string s2);
 	[CCode (cheader_filename = "string.h")]
