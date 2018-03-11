@@ -1,3 +1,16 @@
+Vala 0.40.0
+===========
+ * Various bug fixes:
+  - compiler: Fix critical when vala is called without run args [#793657]
+
+ * Bindings:
+  - alsa: Add the major part of the ALSA Sequencer API [#763127]
+  - gstreamer-1.0: Update to 1.13.90
+  - gtk+-4.0: Update to 3.93.0+527d265b
+  - linux: Add various symbols
+  - posix: Add various symbols [#663633]
+  - Update GIR-based bindings
+
 Vala 0.39.92
 ============
  * Highlights
