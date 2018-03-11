@@ -2702,6 +2702,9 @@ namespace Posix {
 	public static FILE stdout;
 	public static FILE stdin;
 
+	[CCode (cheader_filename = "stdio.h")]
+	public void perror (string s);
+
 	[CCode(cheader_filename = "sched.h", cprefix = "sched_")]
 	namespace Sched {
 		[SimpleType]
