@@ -1062,6 +1062,9 @@ namespace Linux {
       public void symbols_fd (void*[] buffer, int fd);
     }
 
+    [CCode (cheader_filename = "signal.h")]
+    public void psiginfo (Posix.siginfo_t pinfo, string message);
+
     [CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
     public int dup3 (int oldfd, int newfd, int flags);
 
