@@ -251,12 +251,37 @@ public struct time_t {
 	public time_t ();
 }
 
+[SimpleType]
+[CCode (cheader_filename = "stdarg.h", cprefix = "va_", has_type_id = false, destroy_function = "va_end", lvalue_access = false)]
+public struct va_list {
+	[CCode (cname = "va_start")]
+	public va_list ();
+	[CCode (cname = "va_copy")]
+	public va_list.copy (va_list src);
+	[CCode (generic_type_pos = 1.1, simple_generics = true)]
+	public unowned G arg<G> ();
+}
+
 [Compact]
 [Immutable]
 [CCode (cname = "char", const_cname = "const char", copy_function = "strdup", free_function = "free", cheader_filename = "stdlib.h,string.h")]
 public class string {
 	[PrintfFormat]
 	public string printf (...);
+
+	public string concat (...) {
+		string result = this;
+		var l = va_list ();
+		while (true) {
+			unowned string? arg = l.arg ();
+			if (arg == null) {
+				break;
+			} else {
+				result += arg;
+			}
+		}
+		return result;
+	}
 
 	public inline unowned string to_string () {
 		return this;
