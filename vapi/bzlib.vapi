@@ -57,6 +57,8 @@ namespace BZLib {
 		public uint totoal_out_lo32;
 		public uint total_out_hi32;
 		public void *state;
+		public AllocFunc? bzalloc;
+		public FreeFunc? bzfree;
 		public void *opaque;
 		[CCode (cname = "BZ2_bzCompressInit")]
 		public Status compress_init (int block_size_100k, int verbosity, int work_factor);
@@ -81,4 +83,10 @@ namespace BZLib {
 		public int write (uint8[] buf);
 		public unowned string error (out Status status);
 	}
+
+	[CCode (has_target = false, has_typedef = false)]
+	public delegate void* AllocFunc (void* target, int m, int n);
+
+	[CCode (has_target = false, has_typedef = false)]
+	public delegate void FreeFunc (void* target, void* p);
 }
