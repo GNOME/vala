@@ -5342,7 +5342,7 @@ namespace Gdk {
 		[Version (since = "3.8")]
 		public int64 get_history_start ();
 		[Version (since = "3.8")]
-		public void get_refresh_info (int64 base_time, int64 refresh_interval_return, int64 presentation_time_return);
+		public void get_refresh_info (int64 base_time, out int64 refresh_interval_return, out int64 presentation_time_return);
 		[Version (since = "3.8")]
 		public Gdk.FrameTimings? get_timings (int64 frame_counter);
 		[Version (since = "3.8")]

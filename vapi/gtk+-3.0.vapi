@@ -4269,6 +4269,8 @@ namespace Gtk {
 		public unowned Gtk.Container get_content_area ();
 		[Version (since = "2.18")]
 		public Gtk.MessageType get_message_type ();
+		[Version (since = "3.22.29")]
+		public bool get_revealed ();
 		[Version (since = "3.10")]
 		public bool get_show_close_button ();
 		[Version (since = "2.18")]
@@ -4277,12 +4279,15 @@ namespace Gtk {
 		public void set_message_type (Gtk.MessageType message_type);
 		[Version (since = "2.18")]
 		public void set_response_sensitive (int response_id, bool setting);
+		[Version (since = "3.22.29")]
+		public void set_revealed (bool revealed);
 		[Version (since = "3.10")]
 		public void set_show_close_button (bool setting);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public InfoBar.with_buttons (...);
 		[Version (since = "2.18")]
 		public Gtk.MessageType message_type { get; set construct; }
+		public bool revealed { get; set; }
 		[Version (since = "3.10")]
 		public bool show_close_button { get; set construct; }
 		[Version (since = "2.18")]
@@ -4639,6 +4644,7 @@ namespace Gtk {
 		public bool activatable { get; set; }
 		[Version (since = "3.14")]
 		public bool selectable { get; set; }
+		[Version (since = "3.10")]
 		public virtual signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_list_box_row_accessible_get_type ()")]
