@@ -470,24 +470,18 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/audio/audio.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_audio_stream_align_get_type ()")]
 		[Compact]
 		[GIR (name = "AudioStreamAlign")]
+		[Version (since = "1.14")]
 		public class StreamAlign {
 			[CCode (has_construct_function = false)]
-			[Version (since = "1.14")]
 			public StreamAlign (int rate, Gst.ClockTime alignment_threshold, Gst.ClockTime discont_wait);
-			[Version (since = "1.14")]
 			public Gst.Audio.StreamAlign copy ();
-			[Version (since = "1.14")]
 			public void free ();
 			public Gst.ClockTime get_alignment_threshold ();
 			public Gst.ClockTime get_discont_wait ();
 			public int get_rate ();
-			[Version (since = "1.14")]
 			public uint64 get_samples_since_discont ();
-			[Version (since = "1.14")]
 			public Gst.ClockTime get_timestamp_at_discont ();
-			[Version (since = "1.14")]
 			public void mark_discont ();
-			[Version (since = "1.14")]
 			public bool process (bool discont, Gst.ClockTime timestamp, uint n_samples, out Gst.ClockTime out_timestamp, out Gst.ClockTime out_duration, out uint64 out_sample_position);
 			public void set_alignment_threshold (Gst.ClockTime alignment_threshold);
 			public void set_discont_wait (Gst.ClockTime discont_wait);
