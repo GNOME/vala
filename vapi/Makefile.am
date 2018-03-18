@@ -162,6 +162,8 @@ dist_vapi_DATA = \
 	gstreamer-tag-1.0.deps \
 	gstreamer-video-1.0.vapi \
 	gstreamer-video-1.0.deps \
+	gstreamer-webrtc-1.0.vapi \
+	gstreamer-webrtc-1.0.deps \
 	gtk+-2.0.deps \
 	gtk+-2.0.vapi \
 	gtk+-3.0.deps \
@@ -416,6 +418,7 @@ GSTREAMER_1_0_BINDINGS = \
 	gstreamer-rtsp-server-1.0 \
 	gstreamer-tag-1.0 \
 	gstreamer-video-1.0 \
+	gstreamer-webrtc-1.0 \
 	$(NULL)
 
 GIR_BINDINGS = \
@@ -696,6 +699,9 @@ gstreamer-tag-1.0:
 
 gstreamer-video-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-video-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GstVideo-1.0-custom.vala $(GIRDIR)/GstVideo-1.0.gir
+
+gstreamer-webrtc-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-webrtc-1.0 --pkg gstreamer-base-1.0 --pkg gstreamer-sdp-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstWebRTC-1.0.gir
 
 gtk+-2.0:
 	$(GENVAPI) --library $(srcdir)/gtk+-2.0 $(PACKAGESDIR)/gtk+-2.0/gtk+-2.0-custom.vala $(PACKAGESDIR)/gtk+-2.0/gtk+-2.0.gi
