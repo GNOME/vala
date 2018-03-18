@@ -14,9 +14,6 @@ Event
         ._get_angle skip
         ._get_center skip
         ._get_distance skip
-gl_* skip=false
-gl_texture_new parent="Gdk.Texture" name="for_gl" unowned=false
-gl_texture_release parent="Gdk.Texture" symbol_type="method" instance_idx=0 name="release_gl"
 Window abstract=false
         .create_similar_image_surface type="Cairo.ImageSurface"
         .moved_to_rect.*_rect type="Gdk.Rectangle"
