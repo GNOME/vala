@@ -1,4 +1,5 @@
 WebKit cheader_filename="webkit/webkit.h" lower_case_cprefix="webkit_"
+WebKitDOM* cheader_filename="webkitdom/webkitdom.h" lower_case_cprefix="webkit_dom_"
 webkit_dom_dom_application_cache_dispatch_event hidden="1"
 webkit_dom_dom_window_dispatch_event hidden="1"
 webkit_dom_node_dispatch_event hidden="1"

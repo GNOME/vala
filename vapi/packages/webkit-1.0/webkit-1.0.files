@@ -1,2 +1,3 @@
-include/webkit-1.0/webkit
+include/webkitgtk-1.0/webkit
+include/webkitgtk-1.0/webkitdom
 lib/libwebkitgtk-1.0.so
