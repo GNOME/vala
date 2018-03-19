@@ -5238,7 +5238,7 @@ namespace Gdk {
 	public abstract class Texture : GLib.Object, Gdk.Paintable {
 		[CCode (has_construct_function = false)]
 		protected Texture ();
-		public void download (uint8 data, size_t stride);
+		public void download ([CCode (array_length = false)] uint8[] data, size_t stride);
 		[CCode (cname = "gdk_texture_new_for_pixbuf")]
 		public static Gdk.Texture for_pixbuf (Gdk.Pixbuf pixbuf);
 		[CCode (cname = "gdk_texture_new_from_file")]
