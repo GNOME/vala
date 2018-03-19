@@ -1935,7 +1935,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							data.add_field ("gint", get_array_length_cname (get_local_cname (local), dim));
 						}
 						data.add_field ("gint", get_array_size_cname (get_local_cname (local)));
-					} else if (local.variable_type is DelegateType) {
+					} else if (local.variable_type is DelegateType && ((DelegateType) local.variable_type).delegate_symbol.has_target) {
 						data.add_field ("gpointer", get_delegate_target_cname (get_local_cname (local)));
 						if (local.variable_type.value_owned) {
 							data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_local_cname (local)));
