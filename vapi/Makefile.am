@@ -45,6 +45,7 @@ dist_vapi_DATA = \
 	geocode-glib-1.0.deps \
 	geocode-glib-1.0.vapi \
 	glib-2.0.vapi \
+	gdesktopenums-3.0.vapi \
 	gdk-2.0.deps \
 	gdk-2.0.vapi \
 	gdk-3.0.deps \
@@ -75,6 +76,8 @@ dist_vapi_DATA = \
 	gnet-2.0.vapi \
 	gnome-desktop-2.0.deps \
 	gnome-desktop-2.0.vapi \
+	gnome-desktop-3.0.deps \
+	gnome-desktop-3.0.vapi \
 	gnome-vfs-2.0.vapi \
 	gnutls.vapi \
 	gobject-2.0.vapi \
@@ -424,12 +427,14 @@ GIR_BINDINGS = \
 	clutter-gst-3.0 \
 	clutter-x11-1.0 \
 	cogl-pango-1.0 \
+	gdesktopenums-3.0 \
 	gdk-3.0 \
 	gdk-x11-3.0 \
 	gdk-pixbuf-2.0 \
 	gdl-3.0 \
 	geocode-glib-1.0 \
 	gio-2.0 \
+	gnome-desktop-3.0 \
 	gobject-introspection-1.0 \
 	graphene-1.0 \
 	gtk+-3.0 \
@@ -523,6 +528,9 @@ gconf-2.0:
 geocode-glib-1.0:
 	$(GENVAPI) --library $(srcdir)/geocode-glib-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GeocodeGlib-1.0.gir
 
+gdesktopenums-3.0:
+	$(GENVAPI) --library $(srcdir)/gdesktopenums-3.0 --metadatadir $(METADATADIR) $(GIRDIR)/GDesktopEnums-3.0.gir
+
 gdk-2.0:
 	$(GENVAPI) --library $(srcdir)/gdk-2.0 $(PACKAGESDIR)/gdk-2.0/gdk-2.0-custom.vala $(PACKAGESDIR)/gdk-2.0/gdk-2.0.gi
 
@@ -561,6 +569,9 @@ gio-unix-2.0:
 
 gnome-desktop-2.0:
 	$(GENVAPI) --library $(srcdir)/gnome-desktop-2.0 $(PACKAGESDIR)/gnome-desktop-2.0/gnome-desktop-2.0.gi
+
+gnome-desktop-3.0:
+	$(GENVAPI) --library $(srcdir)/gnome-desktop-3.0 --pkg gtk+-3.0 --metadatadir $(METADATADIR) $(METADATADIR)/GnomeDesktop-3.0-custom.vala $(GIRDIR)/GnomeDesktop-3.0.gir
 
 gnome-vfs-2.0:
 	$(GENVAPI) --library $(srcdir)/gnome-vfs-2.0 $(PACKAGESDIR)/gnome-vfs-2.0/gnome-vfs-2.0-custom.vala $(PACKAGESDIR)/gnome-vfs-2.0/gnome-vfs-2.0.gi
