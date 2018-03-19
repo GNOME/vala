@@ -233,10 +233,6 @@ dist_vapi_DATA = \
 	rasqal.vapi \
 	rasqal.deps \
 	readline.vapi \
-	rest-0.6.deps \
-	rest-0.6.vapi \
-	rest-extras-0.6.deps \
-	rest-extras-0.6.vapi \
 	rest-0.7.deps \
 	rest-0.7.vapi \
 	rest-extras-0.7.deps \
@@ -321,8 +317,6 @@ GIDL_BINDINGS = \
 	libwnck-1.0 \
 	loudmouth-1.0 \
 	purple \
-	rest-0.6 \
-	rest-extras-0.6 \
 	tracker-indexer-module-1.0 \
 	twitter-glib-1.0 \
 	unique-1.0 \
@@ -696,12 +690,6 @@ poppler-glib:
 
 purple:
 	$(GENVAPI) --library $(srcdir)/purple $(PACKAGESDIR)/purple/purple-custom.vala $(PACKAGESDIR)/purple/purple.gi
-
-rest-0.6:
-	$(GENVAPI) --library $(srcdir)/rest-0.6 $(PACKAGESDIR)/rest-0.6/rest-0.6-custom.vala $(PACKAGESDIR)/rest-0.6/rest-0.6.gi
-
-rest-extras-0.6:
-	$(GENVAPI) --library $(srcdir)/rest-extras-0.6 $(PACKAGESDIR)/rest-extras-0.6/rest-extras-0.6-custom.vala $(PACKAGESDIR)/rest-extras-0.6/rest-extras-0.6.gi
 
 rest-0.7:
 	$(GENVAPI) --library $(srcdir)/rest-0.7 --metadatadir $(METADATADIR) --pkg gio-2.0 $(GIRDIR)/Rest-0.7.gir

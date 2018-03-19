@@ -1,2 +1,0 @@
-include/rest-0.6/rest/*.h
-lib/librest-0.6.so
