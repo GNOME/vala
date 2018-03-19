@@ -308,7 +308,6 @@ GIDL_BINDINGS = \
 	libgnome-2.0 \
 	libgnome-menu \
 	libgnomeui-2.0 \
-	libgsf-1 \
 	liboobs-1 \
 	libsexy \
 	libwnck-1.0 \
@@ -369,6 +368,7 @@ GIR_BINDINGS = \
 	libgeoclue-2.0 \
 	libgnome-menu-3.0 \
 	libgrss \
+	libgsf-1 \
 	libnotify \
 	libpeas-1.0 \
 	libpeas-gtk-1.0 \
@@ -631,7 +631,7 @@ libgrss:
 	$(GENVAPI) --library $(srcdir)/libgrss --metadatadir $(METADATADIR) --pkg gio-2.0 --pkg libsoup-2.4 --pkg libxml-2.0 $(GIRDIR)/Grss-0.7.gir
 
 libgsf-1:
-	$(GENVAPI) --library $(srcdir)/libgsf-1 $(PACKAGESDIR)/libgsf-1/libgsf-1-custom.vala $(PACKAGESDIR)/libgsf-1/libgsf-1.gi
+	$(GENVAPI) --library $(srcdir)/libgsf-1 --pkg gio-2.0 --pkg libxml-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/Gsf-1.gir
 
 libnotify:
 	$(GENVAPI) --library $(srcdir)/libnotify --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/Notify-0.7.gir
