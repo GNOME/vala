@@ -194,7 +194,6 @@ dist_vapi_DATA = \
 	libpq.vapi \
 	libsexy.deps \
 	libsexy.vapi \
-	libsoup-2.2.vapi \
 	libsoup-2.4.deps \
 	libsoup-2.4.vapi \
 	libusb.vapi \
@@ -312,7 +311,6 @@ GIDL_BINDINGS = \
 	libgsf-1 \
 	liboobs-1 \
 	libsexy \
-	libsoup-2.2 \
 	libwnck-1.0 \
 	loudmouth-1.0 \
 	purple \
@@ -649,9 +647,6 @@ libpeas-gtk-1.0:
 
 libsexy:
 	$(GENVAPI) --library $(srcdir)/libsexy $(PACKAGESDIR)/libsexy/libsexy.gi
-
-libsoup-2.2:
-	$(GENVAPI) --library $(srcdir)/libsoup-2.2 $(PACKAGESDIR)/libsoup-2.2/libsoup-2.2.gi
 
 libsoup-2.4:
 	$(GENVAPI) --library $(srcdir)/libsoup-2.4 --metadatadir $(METADATADIR) $(METADATADIR)/Soup-2.4-custom.vala --pkg gio-2.0 $(GIRDIR)/Soup-2.4.gir
