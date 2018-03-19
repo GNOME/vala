@@ -1949,7 +1949,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 					data.add_field (get_ccode_name (local.variable_type), get_local_cname (local), 0, get_ccode_declarator_suffix (local.variable_type));
 
-					if (local.variable_type is ArrayType) {
+					if (local.variable_type is ArrayType && !((ArrayType) local.variable_type).fixed_length) {
 						var array_type = (ArrayType) local.variable_type;
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							data.add_field ("gint", get_array_length_cname (get_local_cname (local), dim));
