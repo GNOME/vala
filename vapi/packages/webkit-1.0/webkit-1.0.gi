@@ -21,6 +21,12 @@
 				<parameter name="micro" type="guint"/>
 			</parameters>
 		</function>
+		<function name="context_menu_item_get_action" symbol="webkit_context_menu_item_get_action">
+			<return-type type="WebKitContextMenuAction"/>
+			<parameters>
+				<parameter name="item" type="GtkMenuItem*"/>
+			</parameters>
+		</function>
 		<function name="geolocation_policy_allow" symbol="webkit_geolocation_policy_allow">
 			<return-type type="void"/>
 			<parameters>
@@ -42,8 +48,17 @@
 		<function name="get_default_web_database_quota" symbol="webkit_get_default_web_database_quota">
 			<return-type type="guint64"/>
 		</function>
+		<function name="get_favicon_database" symbol="webkit_get_favicon_database">
+			<return-type type="WebKitFaviconDatabase*"/>
+		</function>
 		<function name="get_icon_database" symbol="webkit_get_icon_database">
 			<return-type type="WebKitIconDatabase*"/>
+		</function>
+		<function name="get_security_policy_for_uri_scheme" symbol="webkit_get_security_policy_for_uri_scheme">
+			<return-type type="WebKitSecurityPolicy"/>
+			<parameters>
+				<parameter name="scheme" type="gchar*"/>
+			</parameters>
 		</function>
 		<function name="get_text_checker" symbol="webkit_get_text_checker">
 			<return-type type="GObject*"/>
@@ -87,6 +102,13 @@
 				<parameter name="defaultQuota" type="guint64"/>
 			</parameters>
 		</function>
+		<function name="set_security_policy_for_uri_scheme" symbol="webkit_set_security_policy_for_uri_scheme">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="scheme" type="gchar*"/>
+				<parameter name="policy" type="WebKitSecurityPolicy"/>
+			</parameters>
+		</function>
 		<function name="set_text_checker" symbol="webkit_set_text_checker">
 			<return-type type="void"/>
 			<parameters>
@@ -99,10 +121,6 @@
 				<parameter name="path" type="gchar*"/>
 			</parameters>
 		</function>
-		<struct name="WebKitDOMCustom">
-		</struct>
-		<struct name="WebKitDOMCustomClass">
-		</struct>
 		<struct name="WebKitDOMEventTargetClass">
 		</struct>
 		<struct name="WebKitWebPluginMIMEType">
@@ -115,6 +133,47 @@
 			<member name="WEBKIT_CACHE_MODEL_DOCUMENT_VIEWER" value="1"/>
 			<member name="WEBKIT_CACHE_MODEL_WEB_BROWSER" value="2"/>
 			<member name="WEBKIT_CACHE_MODEL_DOCUMENT_BROWSER" value="3"/>
+		</enum>
+		<enum name="WebKitContextMenuAction" type-name="WebKitContextMenuAction" get-type="webkit_context_menu_action_get_type">
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_NO_ACTION" value="0"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_OPEN_LINK" value="1"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_OPEN_LINK_IN_NEW_WINDOW" value="2"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_DOWNLOAD_LINK_TO_DISK" value="3"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_COPY_LINK_TO_CLIPBOARD" value="4"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_OPEN_IMAGE_IN_NEW_WINDOW" value="5"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_DOWNLOAD_IMAGE_TO_DISK" value="6"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_COPY_IMAGE_TO_CLIPBOARD" value="7"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_COPY_IMAGE_URL_TO_CLIPBOARD" value="8"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_OPEN_FRAME_IN_NEW_WINDOW" value="9"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_GO_BACK" value="10"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_GO_FORWARD" value="11"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_STOP" value="12"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_RELOAD" value="13"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_COPY" value="14"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_CUT" value="15"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_PASTE" value="16"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_DELETE" value="17"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_SELECT_ALL" value="18"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_INPUT_METHODS" value="19"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_UNICODE" value="20"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_SPELLING_GUESS" value="21"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_NO_GUESSES_FOUND" value="22"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_IGNORE_SPELLING" value="23"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_LEARN_SPELLING" value="24"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_IGNORE_GRAMMAR" value="25"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_FONT_MENU" value="26"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_BOLD" value="27"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_ITALIC" value="28"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_UNDERLINE" value="29"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_OUTLINE" value="30"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_INSPECT_ELEMENT" value="31"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_OPEN_MEDIA_IN_NEW_WINDOW" value="32"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_COPY_MEDIA_LINK_TO_CLIPBOARD" value="33"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_TOGGLE_MEDIA_CONTROLS" value="34"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_TOGGLE_MEDIA_LOOP" value="35"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_ENTER_VIDEO_FULLSCREEN" value="36"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_MEDIA_PLAY_PAUSE" value="37"/>
+			<member name="WEBKIT_CONTEXT_MENU_ACTION_MEDIA_MUTE" value="38"/>
 		</enum>
 		<enum name="WebKitDownloadError" type-name="WebKitDownloadError" get-type="webkit_download_error_get_type">
 			<member name="WEBKIT_DOWNLOAD_ERROR_CANCELLED_BY_USER" value="0"/>
@@ -206,6 +265,14 @@
 			<member name="WEBKIT_HIT_TEST_RESULT_CONTEXT_SELECTION" value="32"/>
 			<member name="WEBKIT_HIT_TEST_RESULT_CONTEXT_EDITABLE" value="64"/>
 		</flags>
+		<flags name="WebKitSecurityPolicy" type-name="WebKitSecurityPolicy" get-type="webkit_security_policy_get_type">
+			<member name="WEBKIT_SECURITY_POLICY_LOCAL" value="2"/>
+			<member name="WEBKIT_SECURITY_POLICY_NO_ACCESS_TO_OTHER_SCHEME" value="4"/>
+			<member name="WEBKIT_SECURITY_POLICY_DISPLAY_ISOLATED" value="8"/>
+			<member name="WEBKIT_SECURITY_POLICY_SECURE" value="16"/>
+			<member name="WEBKIT_SECURITY_POLICY_CORS_ENABLED" value="32"/>
+			<member name="WEBKIT_SECURITY_POLICY_EMPTY_DOCUMENT" value="64"/>
+		</flags>
 		<object name="WebKitDOMAttr" parent="WebKitDOMNode" type-name="WebKitDOMAttr" get-type="webkit_dom_attr_get_type">
 			<implements>
 				<interface name="WebKitDOMEventTarget"/>
@@ -254,14 +321,142 @@
 			<property name="specified" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="value" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
+		<object name="WebKitDOMAudioTrack" parent="WebKitDOMObject" type-name="WebKitDOMAudioTrack" get-type="webkit_dom_audio_track_get_type">
+			<method name="get_enabled" symbol="webkit_dom_audio_track_get_enabled">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMAudioTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_id" symbol="webkit_dom_audio_track_get_id">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMAudioTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_kind" symbol="webkit_dom_audio_track_get_kind">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMAudioTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_label" symbol="webkit_dom_audio_track_get_label">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMAudioTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_language" symbol="webkit_dom_audio_track_get_language">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMAudioTrack*"/>
+				</parameters>
+			</method>
+			<method name="set_enabled" symbol="webkit_dom_audio_track_set_enabled">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMAudioTrack*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="enabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="id" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="kind" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="label" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="language" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMAudioTrackList" parent="WebKitDOMObject" type-name="WebKitDOMAudioTrackList" get-type="webkit_dom_audio_track_list_get_type">
+			<implements>
+				<interface name="WebKitDOMEventTarget"/>
+			</implements>
+			<method name="dispatch_event" symbol="webkit_dom_audio_track_list_dispatch_event">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMAudioTrackList*"/>
+					<parameter name="evt" type="WebKitDOMEvent*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_length" symbol="webkit_dom_audio_track_list_get_length">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMAudioTrackList*"/>
+				</parameters>
+			</method>
+			<method name="get_track_by_id" symbol="webkit_dom_audio_track_list_get_track_by_id">
+				<return-type type="WebKitDOMAudioTrack*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMAudioTrackList*"/>
+					<parameter name="id" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="item" symbol="webkit_dom_audio_track_list_item">
+				<return-type type="WebKitDOMAudioTrack*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMAudioTrackList*"/>
+					<parameter name="index" type="gulong"/>
+				</parameters>
+			</method>
+			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
 		<object name="WebKitDOMBarInfo" parent="WebKitDOMObject" type-name="WebKitDOMBarInfo" get-type="webkit_dom_bar_info_get_type">
 			<method name="get_visible" symbol="webkit_dom_bar_info_get_visible">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="self" type="WebKitDOMBarInfo*"/>
+					<parameter name="self" type="void*"/>
 				</parameters>
 			</method>
 			<property name="visible" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMBarProp" parent="WebKitDOMObject" type-name="WebKitDOMBarProp" get-type="webkit_dom_bar_prop_get_type">
+			<method name="get_visible" symbol="webkit_dom_bar_prop_get_visible">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMBarProp*"/>
+				</parameters>
+			</method>
+			<property name="visible" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMBatteryManager" parent="WebKitDOMObject" type-name="WebKitDOMBatteryManager" get-type="webkit_dom_battery_manager_get_type">
+			<implements>
+				<interface name="WebKitDOMEventTarget"/>
+			</implements>
+			<method name="dispatch_event" symbol="webkit_dom_battery_manager_dispatch_event">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMBatteryManager*"/>
+					<parameter name="event" type="WebKitDOMEvent*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_charging" symbol="webkit_dom_battery_manager_get_charging">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMBatteryManager*"/>
+				</parameters>
+			</method>
+			<method name="get_charging_time" symbol="webkit_dom_battery_manager_get_charging_time">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMBatteryManager*"/>
+				</parameters>
+			</method>
+			<method name="get_discharging_time" symbol="webkit_dom_battery_manager_get_discharging_time">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMBatteryManager*"/>
+				</parameters>
+			</method>
+			<method name="get_level" symbol="webkit_dom_battery_manager_get_level">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMBatteryManager*"/>
+				</parameters>
+			</method>
+			<property name="charging" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="charging-time" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="discharging-time" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="level" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMBlob" parent="WebKitDOMObject" type-name="WebKitDOMBlob" get-type="webkit_dom_blob_get_type">
 			<method name="get_size" symbol="webkit_dom_blob_get_size">
@@ -276,7 +471,7 @@
 					<parameter name="self" type="WebKitDOMBlob*"/>
 					<parameter name="start" type="gint64"/>
 					<parameter name="end" type="gint64"/>
-					<parameter name="content_type" type="gchar*"/>
+					<parameter name="contentType" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="webkit_slice" symbol="webkit_dom_blob_webkit_slice">
@@ -367,35 +562,35 @@
 				<return-type type="WebKitDOMCSSValue*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMCSSStyleDeclaration*"/>
-					<parameter name="property_name" type="gchar*"/>
+					<parameter name="propertyName" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_property_priority" symbol="webkit_dom_css_style_declaration_get_property_priority">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMCSSStyleDeclaration*"/>
-					<parameter name="property_name" type="gchar*"/>
+					<parameter name="propertyName" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_property_shorthand" symbol="webkit_dom_css_style_declaration_get_property_shorthand">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMCSSStyleDeclaration*"/>
-					<parameter name="property_name" type="gchar*"/>
+					<parameter name="propertyName" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_property_value" symbol="webkit_dom_css_style_declaration_get_property_value">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMCSSStyleDeclaration*"/>
-					<parameter name="property_name" type="gchar*"/>
+					<parameter name="propertyName" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="is_property_implicit" symbol="webkit_dom_css_style_declaration_is_property_implicit">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMCSSStyleDeclaration*"/>
-					<parameter name="property_name" type="gchar*"/>
+					<parameter name="propertyName" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="item" symbol="webkit_dom_css_style_declaration_item">
@@ -409,7 +604,7 @@
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMCSSStyleDeclaration*"/>
-					<parameter name="property_name" type="gchar*"/>
+					<parameter name="propertyName" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -425,7 +620,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMCSSStyleDeclaration*"/>
-					<parameter name="property_name" type="gchar*"/>
+					<parameter name="propertyName" type="gchar*"/>
 					<parameter name="value" type="gchar*"/>
 					<parameter name="priority" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
@@ -559,6 +754,13 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="remove" symbol="webkit_dom_character_data_remove">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMCharacterData*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="replace_data" symbol="webkit_dom_character_data_replace_data">
 				<return-type type="void"/>
 				<parameters>
@@ -596,7 +798,7 @@
 		</object>
 		<object name="WebKitDOMConsole" parent="WebKitDOMObject" type-name="WebKitDOMConsole" get-type="webkit_dom_console_get_type">
 			<method name="get_memory" symbol="webkit_dom_console_get_memory">
-				<return-type type="WebKitDOMMemoryInfo*"/>
+				<return-type type="void*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMConsole*"/>
 				</parameters>
@@ -614,12 +816,17 @@
 					<parameter name="title" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="memory" type="WebKitDOMMemoryInfo*" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMDOMApplicationCache" parent="WebKitDOMObject" type-name="WebKitDOMDOMApplicationCache" get-type="webkit_dom_dom_application_cache_get_type">
 			<implements>
 				<interface name="WebKitDOMEventTarget"/>
 			</implements>
+			<method name="abort" symbol="webkit_dom_dom_application_cache_abort">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMApplicationCache*"/>
+				</parameters>
+			</method>
 			<method name="dispatch_event" symbol="webkit_dom_dom_application_cache_dispatch_event">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -664,8 +871,8 @@
 				<return-type type="WebKitDOMDocument*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMImplementation*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
-					<parameter name="qualified_name" type="gchar*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
+					<parameter name="qualifiedName" type="gchar*"/>
 					<parameter name="doctype" type="WebKitDOMDocumentType*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -674,9 +881,9 @@
 				<return-type type="WebKitDOMDocumentType*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMImplementation*"/>
-					<parameter name="qualified_name" type="gchar*"/>
-					<parameter name="public_id" type="gchar*"/>
-					<parameter name="system_id" type="gchar*"/>
+					<parameter name="qualifiedName" type="gchar*"/>
+					<parameter name="publicId" type="gchar*"/>
+					<parameter name="systemId" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -738,6 +945,29 @@
 				<return-type type="WebKitDOMDOMMimeType*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMMimeTypeArray*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMDOMNamedFlowCollection" parent="WebKitDOMObject" type-name="WebKitDOMDOMNamedFlowCollection" get-type="webkit_dom_dom_named_flow_collection_get_type">
+			<method name="get_length" symbol="webkit_dom_dom_named_flow_collection_get_length">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMNamedFlowCollection*"/>
+				</parameters>
+			</method>
+			<method name="item" symbol="webkit_dom_dom_named_flow_collection_item">
+				<return-type type="WebKitDOMWebKitNamedFlow*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMNamedFlowCollection*"/>
+					<parameter name="index" type="gulong"/>
+				</parameters>
+			</method>
+			<method name="named_item" symbol="webkit_dom_dom_named_flow_collection_named_item">
+				<return-type type="WebKitDOMWebKitNamedFlow*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMNamedFlowCollection*"/>
 					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
@@ -817,6 +1047,113 @@
 			</method>
 			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
+		<object name="WebKitDOMDOMSecurityPolicy" parent="WebKitDOMObject" type-name="WebKitDOMDOMSecurityPolicy" get-type="webkit_dom_dom_security_policy_get_type">
+			<method name="allows_connection_to" symbol="webkit_dom_dom_security_policy_allows_connection_to">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+					<parameter name="url" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="allows_font_from" symbol="webkit_dom_dom_security_policy_allows_font_from">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+					<parameter name="url" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="allows_form_action" symbol="webkit_dom_dom_security_policy_allows_form_action">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+					<parameter name="url" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="allows_frame_from" symbol="webkit_dom_dom_security_policy_allows_frame_from">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+					<parameter name="url" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="allows_image_from" symbol="webkit_dom_dom_security_policy_allows_image_from">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+					<parameter name="url" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="allows_media_from" symbol="webkit_dom_dom_security_policy_allows_media_from">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+					<parameter name="url" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="allows_object_from" symbol="webkit_dom_dom_security_policy_allows_object_from">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+					<parameter name="url" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="allows_plugin_type" symbol="webkit_dom_dom_security_policy_allows_plugin_type">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+					<parameter name="type" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="allows_script_from" symbol="webkit_dom_dom_security_policy_allows_script_from">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+					<parameter name="url" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="allows_style_from" symbol="webkit_dom_dom_security_policy_allows_style_from">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+					<parameter name="url" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_allows_eval" symbol="webkit_dom_dom_security_policy_get_allows_eval">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+				</parameters>
+			</method>
+			<method name="get_allows_inline_script" symbol="webkit_dom_dom_security_policy_get_allows_inline_script">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+				</parameters>
+			</method>
+			<method name="get_allows_inline_style" symbol="webkit_dom_dom_security_policy_get_allows_inline_style">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+				</parameters>
+			</method>
+			<method name="get_is_active" symbol="webkit_dom_dom_security_policy_get_is_active">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+				</parameters>
+			</method>
+			<method name="get_report_ur_is" symbol="webkit_dom_dom_security_policy_get_report_ur_is">
+				<return-type type="WebKitDOMDOMStringList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMSecurityPolicy*"/>
+				</parameters>
+			</method>
+			<property name="allows-eval" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="allows-inline-script" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="allows-inline-style" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="is-active" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="report-ur-is" type="WebKitDOMDOMStringList*" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
 		<object name="WebKitDOMDOMSelection" parent="WebKitDOMObject" type-name="WebKitDOMDOMSelection" get-type="webkit_dom_dom_selection_get_type">
 			<method name="add_range" symbol="webkit_dom_dom_selection_add_range">
 				<return-type type="void"/>
@@ -853,7 +1190,7 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMSelection*"/>
 					<parameter name="node" type="WebKitDOMNode*"/>
-					<parameter name="allow_partial" type="gboolean"/>
+					<parameter name="allowPartial" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="delete_from_document" symbol="webkit_dom_dom_selection_delete_from_document">
@@ -972,10 +1309,10 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMSelection*"/>
-					<parameter name="base_node" type="WebKitDOMNode*"/>
-					<parameter name="base_offset" type="glong"/>
-					<parameter name="extent_node" type="WebKitDOMNode*"/>
-					<parameter name="extent_offset" type="glong"/>
+					<parameter name="baseNode" type="WebKitDOMNode*"/>
+					<parameter name="baseOffset" type="glong"/>
+					<parameter name="extentNode" type="WebKitDOMNode*"/>
+					<parameter name="extentOffset" type="glong"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -1046,7 +1383,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMTokenList*"/>
-					<parameter name="token" type="gchar*"/>
+					<parameter name="tokens" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -1075,7 +1412,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMTokenList*"/>
-					<parameter name="token" type="gchar*"/>
+					<parameter name="tokens" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -1084,6 +1421,7 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMTokenList*"/>
 					<parameter name="token" type="gchar*"/>
+					<parameter name="force" type="gboolean"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -1120,6 +1458,13 @@
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 					<parameter name="string" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="cancel_animation_frame" symbol="webkit_dom_dom_window_cancel_animation_frame">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMWindow*"/>
+					<parameter name="id" type="glong"/>
 				</parameters>
 			</method>
 			<method name="capture_events" symbol="webkit_dom_dom_window_capture_events">
@@ -1168,12 +1513,12 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 					<parameter name="string" type="gchar*"/>
-					<parameter name="case_sensitive" type="gboolean"/>
+					<parameter name="caseSensitive" type="gboolean"/>
 					<parameter name="backwards" type="gboolean"/>
 					<parameter name="wrap" type="gboolean"/>
-					<parameter name="whole_word" type="gboolean"/>
-					<parameter name="search_in_frames" type="gboolean"/>
-					<parameter name="show_dialog" type="gboolean"/>
+					<parameter name="wholeWord" type="gboolean"/>
+					<parameter name="searchInFrames" type="gboolean"/>
+					<parameter name="showDialog" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="focus" symbol="webkit_dom_dom_window_focus">
@@ -1205,11 +1550,17 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 					<parameter name="element" type="WebKitDOMElement*"/>
-					<parameter name="pseudo_element" type="gchar*"/>
+					<parameter name="pseudoElement" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_console" symbol="webkit_dom_dom_window_get_console">
 				<return-type type="WebKitDOMConsole*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_css" symbol="webkit_dom_dom_window_get_css">
+				<return-type type="WebKitDOMDOMWindowCSS*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 				</parameters>
@@ -1276,13 +1627,13 @@
 				</parameters>
 			</method>
 			<method name="get_locationbar" symbol="webkit_dom_dom_window_get_locationbar">
-				<return-type type="WebKitDOMBarInfo*"/>
+				<return-type type="WebKitDOMBarProp*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 				</parameters>
 			</method>
 			<method name="get_menubar" symbol="webkit_dom_dom_window_get_menubar">
-				<return-type type="WebKitDOMBarInfo*"/>
+				<return-type type="WebKitDOMBarProp*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 				</parameters>
@@ -1341,8 +1692,14 @@
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 				</parameters>
 			</method>
+			<method name="get_performance" symbol="webkit_dom_dom_window_get_performance">
+				<return-type type="WebKitDOMPerformance*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMWindow*"/>
+				</parameters>
+			</method>
 			<method name="get_personalbar" symbol="webkit_dom_dom_window_get_personalbar">
-				<return-type type="WebKitDOMBarInfo*"/>
+				<return-type type="WebKitDOMBarProp*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 				</parameters>
@@ -1390,7 +1747,7 @@
 				</parameters>
 			</method>
 			<method name="get_scrollbars" symbol="webkit_dom_dom_window_get_scrollbars">
-				<return-type type="WebKitDOMBarInfo*"/>
+				<return-type type="WebKitDOMBarProp*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 				</parameters>
@@ -1421,7 +1778,7 @@
 				</parameters>
 			</method>
 			<method name="get_statusbar" symbol="webkit_dom_dom_window_get_statusbar">
-				<return-type type="WebKitDOMBarInfo*"/>
+				<return-type type="WebKitDOMBarProp*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 				</parameters>
@@ -1433,13 +1790,19 @@
 				</parameters>
 			</method>
 			<method name="get_toolbar" symbol="webkit_dom_dom_window_get_toolbar">
-				<return-type type="WebKitDOMBarInfo*"/>
+				<return-type type="WebKitDOMBarProp*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 				</parameters>
 			</method>
 			<method name="get_top" symbol="webkit_dom_dom_window_get_top">
 				<return-type type="WebKitDOMDOMWindow*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_storage_info" symbol="webkit_dom_dom_window_get_webkit_storage_info">
+				<return-type type="WebKitDOMStorageInfo*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 				</parameters>
@@ -1484,7 +1847,7 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 					<parameter name="message" type="gchar*"/>
-					<parameter name="default_value" type="gchar*"/>
+					<parameter name="defaultValue" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="release_events" symbol="webkit_dom_dom_window_release_events">
@@ -1560,6 +1923,20 @@
 					<parameter name="self" type="WebKitDOMDOMWindow*"/>
 				</parameters>
 			</method>
+			<method name="webkit_cancel_animation_frame" symbol="webkit_dom_dom_window_webkit_cancel_animation_frame">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMWindow*"/>
+					<parameter name="id" type="glong"/>
+				</parameters>
+			</method>
+			<method name="webkit_cancel_request_animation_frame" symbol="webkit_dom_dom_window_webkit_cancel_request_animation_frame">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMWindow*"/>
+					<parameter name="id" type="glong"/>
+				</parameters>
+			</method>
 			<method name="webkit_convert_point_from_node_to_page" symbol="webkit_dom_dom_window_webkit_convert_point_from_node_to_page">
 				<return-type type="WebKitDOMWebKitPoint*"/>
 				<parameters>
@@ -1577,47 +1954,60 @@
 				</parameters>
 			</method>
 			<property name="application-cache" type="WebKitDOMDOMApplicationCache*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="client-information" type="WebKitDOMNavigator*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="client-information" type="WebKitDOMNavigator*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="closed" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="console" type="WebKitDOMConsole*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="console" type="WebKitDOMConsole*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="css" type="WebKitDOMDOMWindowCSS*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="default-status" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="device-pixel-ratio" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="device-pixel-ratio" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="document" type="WebKitDOMDocument*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="frame-element" type="WebKitDOMElement*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="frames" type="WebKitDOMDOMWindow*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="history" type="WebKitDOMHistory*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="inner-height" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="inner-width" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="length" type="gulong" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="frames" type="WebKitDOMDOMWindow*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="history" type="WebKitDOMHistory*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="inner-height" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="inner-width" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="local-storage" type="WebKitDOMStorage*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="locationbar" type="WebKitDOMBarInfo*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="menubar" type="WebKitDOMBarInfo*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="locationbar" type="WebKitDOMBarProp*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="menubar" type="WebKitDOMBarProp*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="navigator" type="WebKitDOMNavigator*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="offscreen-buffering" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="opener" type="WebKitDOMDOMWindow*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="outer-height" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="outer-width" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="navigator" type="WebKitDOMNavigator*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="offscreen-buffering" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="opener" type="WebKitDOMDOMWindow*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="outer-height" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="outer-width" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="page-x-offset" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="page-y-offset" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="parent" type="WebKitDOMDOMWindow*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="personalbar" type="WebKitDOMBarInfo*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="screen" type="WebKitDOMScreen*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="screen-left" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="screen-top" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="screen-x" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="screen-y" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="scroll-x" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="scroll-y" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="scrollbars" type="WebKitDOMBarInfo*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="self" type="WebKitDOMDOMWindow*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="parent" type="WebKitDOMDOMWindow*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="performance" type="WebKitDOMPerformance*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="personalbar" type="WebKitDOMBarProp*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="screen" type="WebKitDOMScreen*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="screen-left" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="screen-top" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="screen-x" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="screen-y" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="scroll-x" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="scroll-y" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="scrollbars" type="WebKitDOMBarProp*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="self" type="WebKitDOMDOMWindow*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="session-storage" type="WebKitDOMStorage*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="status" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="statusbar" type="WebKitDOMBarInfo*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="statusbar" type="WebKitDOMBarProp*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="style-media" type="WebKitDOMStyleMedia*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="toolbar" type="WebKitDOMBarInfo*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="top" type="WebKitDOMDOMWindow*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="toolbar" type="WebKitDOMBarProp*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="top" type="WebKitDOMDOMWindow*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-storage-info" type="WebKitDOMStorageInfo*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="window" type="WebKitDOMDOMWindow*" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMDOMWindowCSS" parent="WebKitDOMObject" type-name="WebKitDOMDOMWindowCSS" get-type="webkit_dom_dom_window_css_get_type">
+			<method name="supports" symbol="webkit_dom_dom_window_css_supports">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDOMWindowCSS*"/>
+					<parameter name="property" type="gchar*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
 		</object>
 		<object name="WebKitDOMDatabase" parent="WebKitDOMObject" type-name="WebKitDOMDatabase" get-type="webkit_dom_database_get_type">
 			<method name="get_version" symbol="webkit_dom_database_get_version">
@@ -1660,8 +2050,8 @@
 				<return-type type="WebKitDOMAttr*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
-					<parameter name="qualified_name" type="gchar*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
+					<parameter name="qualifiedName" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -1696,7 +2086,7 @@
 				<return-type type="WebKitDOMElement*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
-					<parameter name="tag_name" type="gchar*"/>
+					<parameter name="tagName" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -1704,8 +2094,8 @@
 				<return-type type="WebKitDOMElement*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
-					<parameter name="qualified_name" type="gchar*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
+					<parameter name="qualifiedName" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -1721,7 +2111,7 @@
 				<return-type type="WebKitDOMEvent*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
-					<parameter name="event_type" type="gchar*"/>
+					<parameter name="eventType" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -1739,9 +2129,9 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
 					<parameter name="root" type="WebKitDOMNode*"/>
-					<parameter name="what_to_show" type="gulong"/>
+					<parameter name="whatToShow" type="gulong"/>
 					<parameter name="filter" type="WebKitDOMNodeFilter*"/>
-					<parameter name="expand_entity_references" type="gboolean"/>
+					<parameter name="expandEntityReferences" type="gboolean"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -1749,7 +2139,7 @@
 				<return-type type="WebKitDOMXPathNSResolver*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
-					<parameter name="node_resolver" type="WebKitDOMNode*"/>
+					<parameter name="nodeResolver" type="WebKitDOMNode*"/>
 				</parameters>
 			</method>
 			<method name="create_processing_instruction" symbol="webkit_dom_document_create_processing_instruction">
@@ -1774,14 +2164,32 @@
 					<parameter name="data" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="create_touch" symbol="webkit_dom_document_create_touch">
+				<return-type type="WebKitDOMTouch*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDocument*"/>
+					<parameter name="window" type="WebKitDOMDOMWindow*"/>
+					<parameter name="target" type="WebKitDOMEventTarget*"/>
+					<parameter name="identifier" type="glong"/>
+					<parameter name="pageX" type="glong"/>
+					<parameter name="pageY" type="glong"/>
+					<parameter name="screenX" type="glong"/>
+					<parameter name="screenY" type="glong"/>
+					<parameter name="webkitRadiusX" type="glong"/>
+					<parameter name="webkitRadiusY" type="glong"/>
+					<parameter name="webkitRotationAngle" type="gfloat"/>
+					<parameter name="webkitForce" type="gfloat"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="create_tree_walker" symbol="webkit_dom_document_create_tree_walker">
 				<return-type type="WebKitDOMTreeWalker*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
 					<parameter name="root" type="WebKitDOMNode*"/>
-					<parameter name="what_to_show" type="gulong"/>
+					<parameter name="whatToShow" type="gulong"/>
 					<parameter name="filter" type="WebKitDOMNodeFilter*"/>
-					<parameter name="expand_entity_references" type="gboolean"/>
+					<parameter name="expandEntityReferences" type="gboolean"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -1798,10 +2206,10 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
 					<parameter name="expression" type="gchar*"/>
-					<parameter name="context_node" type="WebKitDOMNode*"/>
+					<parameter name="contextNode" type="WebKitDOMNode*"/>
 					<parameter name="resolver" type="WebKitDOMXPathNSResolver*"/>
 					<parameter name="type" type="gushort"/>
-					<parameter name="in_result" type="WebKitDOMXPathResult*"/>
+					<parameter name="inResult" type="WebKitDOMXPathResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -1810,7 +2218,7 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
 					<parameter name="command" type="gchar*"/>
-					<parameter name="user_interface" type="gboolean"/>
+					<parameter name="userInterface" type="gboolean"/>
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
@@ -1857,6 +2265,12 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="get_current_script" symbol="webkit_dom_document_get_current_script">
+				<return-type type="WebKitDOMHTMLScriptElement*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDocument*"/>
+				</parameters>
+			</method>
 			<method name="get_default_charset" symbol="webkit_dom_document_get_default_charset">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -1897,7 +2311,7 @@
 				<return-type type="WebKitDOMElement*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
-					<parameter name="element_id" type="gchar*"/>
+					<parameter name="elementId" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_elements_by_class_name" symbol="webkit_dom_document_get_elements_by_class_name">
@@ -1911,7 +2325,7 @@
 				<return-type type="WebKitDOMNodeList*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
-					<parameter name="element_name" type="gchar*"/>
+					<parameter name="elementName" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_elements_by_tag_name" symbol="webkit_dom_document_get_elements_by_tag_name">
@@ -1925,8 +2339,8 @@
 				<return-type type="WebKitDOMNodeList*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
-					<parameter name="local_name" type="gchar*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
+					<parameter name="localName" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_forms" symbol="webkit_dom_document_get_forms">
@@ -1937,6 +2351,12 @@
 			</method>
 			<method name="get_head" symbol="webkit_dom_document_get_head">
 				<return-type type="WebKitDOMHTMLHeadElement*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDocument*"/>
+				</parameters>
+			</method>
+			<method name="get_hidden" symbol="webkit_dom_document_get_hidden">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
 				</parameters>
@@ -1976,7 +2396,7 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
 					<parameter name="element" type="WebKitDOMElement*"/>
-					<parameter name="pseudo_element" type="gchar*"/>
+					<parameter name="pseudoElement" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_preferred_stylesheet_set" symbol="webkit_dom_document_get_preferred_stylesheet_set">
@@ -1993,6 +2413,12 @@
 			</method>
 			<method name="get_referrer" symbol="webkit_dom_document_get_referrer">
 				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDocument*"/>
+				</parameters>
+			</method>
+			<method name="get_security_policy" symbol="webkit_dom_document_get_security_policy">
+				<return-type type="WebKitDOMDOMSecurityPolicy*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
 				</parameters>
@@ -2015,6 +2441,18 @@
 					<parameter name="self" type="WebKitDOMDocument*"/>
 				</parameters>
 			</method>
+			<method name="get_url" symbol="webkit_dom_document_get_url">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDocument*"/>
+				</parameters>
+			</method>
+			<method name="get_visibility_state" symbol="webkit_dom_document_get_visibility_state">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDocument*"/>
+				</parameters>
+			</method>
 			<method name="get_webkit_current_full_screen_element" symbol="webkit_dom_document_get_webkit_current_full_screen_element">
 				<return-type type="WebKitDOMElement*"/>
 				<parameters>
@@ -2022,6 +2460,18 @@
 				</parameters>
 			</method>
 			<method name="get_webkit_full_screen_keyboard_input_allowed" symbol="webkit_dom_document_get_webkit_full_screen_keyboard_input_allowed">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDocument*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_fullscreen_element" symbol="webkit_dom_document_get_webkit_fullscreen_element">
+				<return-type type="WebKitDOMElement*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDocument*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_fullscreen_enabled" symbol="webkit_dom_document_get_webkit_fullscreen_enabled">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
@@ -2035,6 +2485,12 @@
 			</method>
 			<method name="get_webkit_is_full_screen" symbol="webkit_dom_document_get_webkit_is_full_screen">
 				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDocument*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_pointer_lock_element" symbol="webkit_dom_document_get_webkit_pointer_lock_element">
+				<return-type type="WebKitDOMElement*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
 				</parameters>
@@ -2067,7 +2523,7 @@
 				<return-type type="WebKitDOMNode*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMDocument*"/>
-					<parameter name="imported_node" type="WebKitDOMNode*"/>
+					<parameter name="importedNode" type="WebKitDOMNode*"/>
 					<parameter name="deep" type="gboolean"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -2189,13 +2645,32 @@
 					<parameter name="self" type="WebKitDOMDocument*"/>
 				</parameters>
 			</method>
+			<method name="webkit_exit_fullscreen" symbol="webkit_dom_document_webkit_exit_fullscreen">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDocument*"/>
+				</parameters>
+			</method>
+			<method name="webkit_exit_pointer_lock" symbol="webkit_dom_document_webkit_exit_pointer_lock">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDocument*"/>
+				</parameters>
+			</method>
+			<method name="webkit_get_named_flows" symbol="webkit_dom_document_webkit_get_named_flows">
+				<return-type type="WebKitDOMDOMNamedFlowCollection*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDocument*"/>
+				</parameters>
+			</method>
 			<property name="anchors" type="WebKitDOMHTMLCollection*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="applets" type="WebKitDOMHTMLCollection*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="body" type="WebKitDOMHTMLElement*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="body" type="WebKitDOMHTMLElement*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="character-set" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="charset" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="compat-mode" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="cookie" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="current-script" type="WebKitDOMHTMLScriptElement*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="default-charset" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="default-view" type="WebKitDOMDOMWindow*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="doctype" type="WebKitDOMDocumentType*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -2204,6 +2679,7 @@
 			<property name="domain" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="forms" type="WebKitDOMHTMLCollection*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="head" type="WebKitDOMHTMLHeadElement*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="hidden" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="images" type="WebKitDOMHTMLCollection*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="implementation" type="WebKitDOMDOMImplementation*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="input-encoding" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -2212,13 +2688,18 @@
 			<property name="preferred-stylesheet-set" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="ready-state" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="referrer" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="security-policy" type="WebKitDOMDOMSecurityPolicy*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="selected-stylesheet-set" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="style-sheets" type="WebKitDOMStyleSheetList*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="url" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="visibility-state" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="webkit-current-full-screen-element" type="WebKitDOMElement*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="webkit-full-screen-keyboard-input-allowed" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-fullscreen-element" type="WebKitDOMElement*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-fullscreen-enabled" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="webkit-is-full-screen" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-pointer-lock-element" type="WebKitDOMElement*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="xml-encoding" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="xml-standalone" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="xml-version" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -2284,6 +2765,13 @@
 					<parameter name="self" type="WebKitDOMDocumentType*"/>
 				</parameters>
 			</method>
+			<method name="remove" symbol="webkit_dom_document_type_remove">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMDocumentType*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<property name="entities" type="WebKitDOMNamedNodeMap*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="internal-subset" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -2325,20 +2813,38 @@
 				<return-type type="WebKitDOMAttr*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
-					<parameter name="local_name" type="gchar*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
+					<parameter name="localName" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_attribute_ns" symbol="webkit_dom_element_get_attribute_ns">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
-					<parameter name="local_name" type="gchar*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
+					<parameter name="localName" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_attributes" symbol="webkit_dom_element_get_attributes">
+				<return-type type="WebKitDOMNamedNodeMap*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMElement*"/>
 				</parameters>
 			</method>
 			<method name="get_child_element_count" symbol="webkit_dom_element_get_child_element_count">
 				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMElement*"/>
+				</parameters>
+			</method>
+			<method name="get_class_list" symbol="webkit_dom_element_get_class_list">
+				<return-type type="WebKitDOMDOMTokenList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMElement*"/>
+				</parameters>
+			</method>
+			<method name="get_class_name" symbol="webkit_dom_element_get_class_name">
+				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
 				</parameters>
@@ -2385,12 +2891,18 @@
 				<return-type type="WebKitDOMNodeList*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
-					<parameter name="local_name" type="gchar*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
+					<parameter name="localName" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_first_element_child" symbol="webkit_dom_element_get_first_element_child">
 				<return-type type="WebKitDOMElement*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMElement*"/>
+				</parameters>
+			</method>
+			<method name="get_id" symbol="webkit_dom_element_get_id">
+				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
 				</parameters>
@@ -2479,6 +2991,18 @@
 					<parameter name="self" type="WebKitDOMElement*"/>
 				</parameters>
 			</method>
+			<method name="get_webkit_region_overflow" symbol="webkit_dom_element_get_webkit_region_overflow">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="element" type="WebKitDOMElement*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_region_overset" symbol="webkit_dom_element_get_webkit_region_overset">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMElement*"/>
+				</parameters>
+			</method>
 			<method name="has_attribute" symbol="webkit_dom_element_has_attribute">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -2490,8 +3014,14 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
-					<parameter name="local_name" type="gchar*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
+					<parameter name="localName" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="has_attributes" symbol="webkit_dom_element_has_attributes">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMElement*"/>
 				</parameters>
 			</method>
 			<method name="query_selector" symbol="webkit_dom_element_query_selector">
@@ -2510,19 +3040,25 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="remove" symbol="webkit_dom_element_remove">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMElement*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="remove_attribute" symbol="webkit_dom_element_remove_attribute">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
 					<parameter name="name" type="gchar*"/>
-					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="remove_attribute_node" symbol="webkit_dom_element_remove_attribute_node">
 				<return-type type="WebKitDOMAttr*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
-					<parameter name="old_attr" type="WebKitDOMAttr*"/>
+					<parameter name="oldAttr" type="WebKitDOMAttr*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -2530,9 +3066,8 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
-					<parameter name="local_name" type="gchar*"/>
-					<parameter name="error" type="GError**"/>
+					<parameter name="namespaceURI" type="gchar*"/>
+					<parameter name="localName" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="scroll_by_lines" symbol="webkit_dom_element_scroll_by_lines">
@@ -2553,14 +3088,14 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
-					<parameter name="align_with_top" type="gboolean"/>
+					<parameter name="alignWithTop" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="scroll_into_view_if_needed" symbol="webkit_dom_element_scroll_into_view_if_needed">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
-					<parameter name="center_if_needed" type="gboolean"/>
+					<parameter name="centerIfNeeded" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_attribute" symbol="webkit_dom_element_set_attribute">
@@ -2576,7 +3111,7 @@
 				<return-type type="WebKitDOMAttr*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
-					<parameter name="new_attr" type="WebKitDOMAttr*"/>
+					<parameter name="newAttr" type="WebKitDOMAttr*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -2584,7 +3119,7 @@
 				<return-type type="WebKitDOMAttr*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
-					<parameter name="new_attr" type="WebKitDOMAttr*"/>
+					<parameter name="newAttr" type="WebKitDOMAttr*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -2592,10 +3127,24 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMElement*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
-					<parameter name="qualified_name" type="gchar*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
+					<parameter name="qualifiedName" type="gchar*"/>
 					<parameter name="value" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_class_name" symbol="webkit_dom_element_set_class_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMElement*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_id" symbol="webkit_dom_element_set_id">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMElement*"/>
+					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="set_scroll_left" symbol="webkit_dom_element_set_scroll_left">
@@ -2627,12 +3176,28 @@
 					<parameter name="flags" type="gushort"/>
 				</parameters>
 			</method>
+			<method name="webkit_request_fullscreen" symbol="webkit_dom_element_webkit_request_fullscreen">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMElement*"/>
+				</parameters>
+			</method>
+			<method name="webkit_request_pointer_lock" symbol="webkit_dom_element_webkit_request_pointer_lock">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMElement*"/>
+				</parameters>
+			</method>
+			<property name="attributes" type="WebKitDOMNamedNodeMap*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="child-element-count" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="class-list" type="WebKitDOMDOMTokenList*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="class-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="client-height" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="client-left" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="client-top" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="client-width" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="first-element-child" type="WebKitDOMElement*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="id" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="last-element-child" type="WebKitDOMElement*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="next-element-sibling" type="WebKitDOMElement*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="offset-height" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -2647,6 +3212,7 @@
 			<property name="scroll-width" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="style" type="WebKitDOMCSSStyleDeclaration*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="tag-name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-region-overset" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMEntityReference" parent="WebKitDOMNode" type-name="WebKitDOMEntityReference" get-type="webkit_dom_entity_reference_get_type">
 			<implements>
@@ -2718,9 +3284,9 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMEvent*"/>
-					<parameter name="event_type_arg" type="gchar*"/>
-					<parameter name="can_bubble_arg" type="gboolean"/>
-					<parameter name="cancelable_arg" type="gboolean"/>
+					<parameter name="eventTypeArg" type="gchar*"/>
+					<parameter name="canBubbleArg" type="gboolean"/>
+					<parameter name="cancelableArg" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="prevent_default" symbol="webkit_dom_event_prevent_default">
@@ -2768,27 +3334,20 @@
 			<property name="type" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMFile" parent="WebKitDOMBlob" type-name="WebKitDOMFile" get-type="webkit_dom_file_get_type">
-			<method name="get_file_name" symbol="webkit_dom_file_get_file_name">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMFile*"/>
-				</parameters>
-			</method>
-			<method name="get_file_size" symbol="webkit_dom_file_get_file_size">
-				<return-type type="guint64"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMFile*"/>
-				</parameters>
-			</method>
 			<method name="get_name" symbol="webkit_dom_file_get_name">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMFile*"/>
 				</parameters>
 			</method>
-			<property name="file-name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="file-size" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<method name="get_webkit_relative_path" symbol="webkit_dom_file_get_webkit_relative_path">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMFile*"/>
+				</parameters>
+			</method>
 			<property name="name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-relative-path" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMFileList" parent="WebKitDOMObject" type-name="WebKitDOMFileList" get-type="webkit_dom_file_list_get_type">
 			<method name="get_length" symbol="webkit_dom_file_list_get_length">
@@ -2806,12 +3365,51 @@
 			</method>
 			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
+		<object name="WebKitDOMGamepad" parent="WebKitDOMObject" type-name="WebKitDOMGamepad" get-type="webkit_dom_gamepad_get_type">
+			<method name="get_id" symbol="webkit_dom_gamepad_get_id">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMGamepad*"/>
+				</parameters>
+			</method>
+			<method name="get_index" symbol="webkit_dom_gamepad_get_index">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMGamepad*"/>
+				</parameters>
+			</method>
+			<method name="get_timestamp" symbol="webkit_dom_gamepad_get_timestamp">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMGamepad*"/>
+				</parameters>
+			</method>
+			<property name="id" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="index" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="timestamp" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMGamepadList" parent="WebKitDOMObject" type-name="WebKitDOMGamepadList" get-type="webkit_dom_gamepad_list_get_type">
+			<method name="get_length" symbol="webkit_dom_gamepad_list_get_length">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMGamepadList*"/>
+				</parameters>
+			</method>
+			<method name="item" symbol="webkit_dom_gamepad_list_item">
+				<return-type type="WebKitDOMGamepad*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMGamepadList*"/>
+					<parameter name="index" type="gulong"/>
+				</parameters>
+			</method>
+			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
 		<object name="WebKitDOMGeolocation" parent="WebKitDOMObject" type-name="WebKitDOMGeolocation" get-type="webkit_dom_geolocation_get_type">
 			<method name="clear_watch" symbol="webkit_dom_geolocation_clear_watch">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMGeolocation*"/>
-					<parameter name="watch_id" type="glong"/>
+					<parameter name="watchID" type="glong"/>
 				</parameters>
 			</method>
 		</object>
@@ -2819,12 +3417,6 @@
 			<implements>
 				<interface name="WebKitDOMEventTarget"/>
 			</implements>
-			<method name="get_access_key" symbol="webkit_dom_html_anchor_element_get_access_key">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLAnchorElement*"/>
-				</parameters>
-			</method>
 			<method name="get_charset" symbol="webkit_dom_html_anchor_element_get_charset">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -2885,13 +3477,6 @@
 					<parameter name="self" type="WebKitDOMHTMLAnchorElement*"/>
 				</parameters>
 			</method>
-			<method name="get_parameter" symbol="webkit_dom_html_anchor_element_get_parameter">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLAnchorElement*"/>
-					<parameter name="name" type="gchar*"/>
-				</parameters>
-			</method>
 			<method name="get_pathname" symbol="webkit_dom_html_anchor_element_get_pathname">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -2950,13 +3535,6 @@
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLAnchorElement*"/>
-				</parameters>
-			</method>
-			<method name="set_access_key" symbol="webkit_dom_html_anchor_element_set_access_key">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLAnchorElement*"/>
-					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="set_charset" symbol="webkit_dom_html_anchor_element_set_charset">
@@ -3085,9 +3663,9 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="access-key" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="charset" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="coords" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="download" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="hash" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="host" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="hostname" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -3270,12 +3848,6 @@
 			<implements>
 				<interface name="WebKitDOMEventTarget"/>
 			</implements>
-			<method name="get_access_key" symbol="webkit_dom_html_area_element_get_access_key">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLAreaElement*"/>
-				</parameters>
-			</method>
 			<method name="get_alt" symbol="webkit_dom_html_area_element_get_alt">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -3360,13 +3932,6 @@
 					<parameter name="self" type="WebKitDOMHTMLAreaElement*"/>
 				</parameters>
 			</method>
-			<method name="set_access_key" symbol="webkit_dom_html_area_element_set_access_key">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLAreaElement*"/>
-					<parameter name="value" type="gchar*"/>
-				</parameters>
-			</method>
 			<method name="set_alt" symbol="webkit_dom_html_area_element_set_alt">
 				<return-type type="void"/>
 				<parameters>
@@ -3416,7 +3981,6 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="access-key" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="alt" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="coords" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="hash" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -3635,18 +4199,6 @@
 					<parameter name="self" type="WebKitDOMHTMLButtonElement*"/>
 				</parameters>
 			</method>
-			<method name="click" symbol="webkit_dom_html_button_element_click">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLButtonElement*"/>
-				</parameters>
-			</method>
-			<method name="get_access_key" symbol="webkit_dom_html_button_element_get_access_key">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLButtonElement*"/>
-				</parameters>
-			</method>
 			<method name="get_autofocus" symbol="webkit_dom_html_button_element_get_autofocus">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -3731,13 +4283,6 @@
 					<parameter name="self" type="WebKitDOMHTMLButtonElement*"/>
 				</parameters>
 			</method>
-			<method name="set_access_key" symbol="webkit_dom_html_button_element_set_access_key">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLButtonElement*"/>
-					<parameter name="value" type="gchar*"/>
-				</parameters>
-			</method>
 			<method name="set_autofocus" symbol="webkit_dom_html_button_element_set_autofocus">
 				<return-type type="void"/>
 				<parameters>
@@ -3808,7 +4353,6 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="access-key" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="autofocus" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="disabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="form" type="WebKitDOMHTMLFormElement*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -3819,7 +4363,7 @@
 			<property name="form-target" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="labels" type="WebKitDOMNodeList*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="type" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="type" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="validation-message" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="validity" type="WebKitDOMValidityState*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="value" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -4069,6 +4613,12 @@
 					<parameter name="self" type="WebKitDOMHTMLDocument*"/>
 				</parameters>
 			</method>
+			<method name="open" symbol="webkit_dom_html_document_open">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLDocument*"/>
+				</parameters>
+			</method>
 			<method name="release_events" symbol="webkit_dom_html_document_release_events">
 				<return-type type="void"/>
 				<parameters>
@@ -4143,6 +4693,18 @@
 			<implements>
 				<interface name="WebKitDOMEventTarget"/>
 			</implements>
+			<method name="click" symbol="webkit_dom_html_element_click">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+				</parameters>
+			</method>
+			<method name="get_access_key" symbol="webkit_dom_html_element_get_access_key">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+				</parameters>
+			</method>
 			<method name="get_children" symbol="webkit_dom_html_element_get_children">
 				<return-type type="WebKitDOMHTMLCollection*"/>
 				<parameters>
@@ -4152,13 +4714,13 @@
 			<method name="get_class_list" symbol="webkit_dom_html_element_get_class_list">
 				<return-type type="WebKitDOMDOMTokenList*"/>
 				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+					<parameter name="element" type="WebKitDOMHTMLElement*"/>
 				</parameters>
 			</method>
 			<method name="get_class_name" symbol="webkit_dom_html_element_get_class_name">
 				<return-type type="gchar*"/>
 				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+					<parameter name="element" type="WebKitDOMHTMLElement*"/>
 				</parameters>
 			</method>
 			<method name="get_content_editable" symbol="webkit_dom_html_element_get_content_editable">
@@ -4209,6 +4771,36 @@
 					<parameter name="self" type="WebKitDOMHTMLElement*"/>
 				</parameters>
 			</method>
+			<method name="get_item_id" symbol="webkit_dom_html_element_get_item_id">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+				</parameters>
+			</method>
+			<method name="get_item_prop" symbol="webkit_dom_html_element_get_item_prop">
+				<return-type type="WebKitDOMDOMSettableTokenList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+				</parameters>
+			</method>
+			<method name="get_item_ref" symbol="webkit_dom_html_element_get_item_ref">
+				<return-type type="WebKitDOMDOMSettableTokenList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+				</parameters>
+			</method>
+			<method name="get_item_scope" symbol="webkit_dom_html_element_get_item_scope">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+				</parameters>
+			</method>
+			<method name="get_item_type" symbol="webkit_dom_html_element_get_item_type">
+				<return-type type="void*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+				</parameters>
+			</method>
 			<method name="get_lang" symbol="webkit_dom_html_element_get_lang">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -4241,6 +4833,12 @@
 			</method>
 			<method name="get_title" symbol="webkit_dom_html_element_get_title">
 				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+				</parameters>
+			</method>
+			<method name="get_translate" symbol="webkit_dom_html_element_get_translate">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLElement*"/>
 				</parameters>
@@ -4278,10 +4876,17 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
-			<method name="set_class_name" symbol="webkit_dom_html_element_set_class_name">
+			<method name="set_access_key" symbol="webkit_dom_html_element_set_access_key">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_class_name" symbol="webkit_dom_html_element_set_class_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="element" type="WebKitDOMHTMLElement*"/>
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
@@ -4337,6 +4942,20 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="set_item_id" symbol="webkit_dom_html_element_set_item_id">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_item_scope" symbol="webkit_dom_html_element_set_item_scope">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_lang" symbol="webkit_dom_html_element_set_lang">
 				<return-type type="void"/>
 				<parameters>
@@ -4381,6 +5000,13 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_translate" symbol="webkit_dom_html_element_set_translate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLElement*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_webkitdropzone" symbol="webkit_dom_html_element_set_webkitdropzone">
 				<return-type type="void"/>
 				<parameters>
@@ -4388,14 +5014,12 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
+			<property name="access-key" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="children" type="WebKitDOMHTMLCollection*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="class-list" type="WebKitDOMDOMTokenList*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="class-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="content-editable" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="dir" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="draggable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="hidden" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="id" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="inner-html" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="inner-text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="is-content-editable" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -4405,6 +5029,7 @@
 			<property name="spellcheck" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="tab-index" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="translate" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="webkitdropzone" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMHTMLEmbedElement" parent="WebKitDOMHTMLElement" type-name="WebKitDOMHTMLEmbedElement" get-type="webkit_dom_html_embed_element_get_type">
@@ -4493,8 +5118,26 @@
 					<parameter name="self" type="WebKitDOMHTMLFieldSetElement*"/>
 				</parameters>
 			</method>
+			<method name="get_disabled" symbol="webkit_dom_html_field_set_element_get_disabled">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLFieldSetElement*"/>
+				</parameters>
+			</method>
+			<method name="get_elements" symbol="webkit_dom_html_field_set_element_get_elements">
+				<return-type type="WebKitDOMHTMLCollection*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLFieldSetElement*"/>
+				</parameters>
+			</method>
 			<method name="get_form" symbol="webkit_dom_html_field_set_element_get_form">
 				<return-type type="WebKitDOMHTMLFormElement*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLFieldSetElement*"/>
+				</parameters>
+			</method>
+			<method name="get_name" symbol="webkit_dom_html_field_set_element_get_name">
+				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLFieldSetElement*"/>
 				</parameters>
@@ -4524,7 +5167,25 @@
 					<parameter name="error" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_disabled" symbol="webkit_dom_html_field_set_element_set_disabled">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLFieldSetElement*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_name" symbol="webkit_dom_html_field_set_element_set_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLFieldSetElement*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="disabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="elements" type="WebKitDOMHTMLCollection*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="form" type="WebKitDOMHTMLFormElement*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="type" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="validation-message" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="validity" type="WebKitDOMValidityState*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="will-validate" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -4610,8 +5271,20 @@
 					<parameter name="self" type="WebKitDOMHTMLFormElement*"/>
 				</parameters>
 			</method>
+			<method name="get_autocapitalize" symbol="webkit_dom_html_form_element_get_autocapitalize">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLFormElement*"/>
+				</parameters>
+			</method>
 			<method name="get_autocomplete" symbol="webkit_dom_html_form_element_get_autocomplete">
 				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLFormElement*"/>
+				</parameters>
+			</method>
+			<method name="get_autocorrect" symbol="webkit_dom_html_form_element_get_autocorrect">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLFormElement*"/>
 				</parameters>
@@ -4684,11 +5357,25 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_autocapitalize" symbol="webkit_dom_html_form_element_set_autocapitalize">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLFormElement*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="set_autocomplete" symbol="webkit_dom_html_form_element_set_autocomplete">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLFormElement*"/>
 					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_autocorrect" symbol="webkit_dom_html_form_element_set_autocorrect">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLFormElement*"/>
+					<parameter name="value" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_encoding" symbol="webkit_dom_html_form_element_set_encoding">
@@ -4741,7 +5428,9 @@
 			</method>
 			<property name="accept-charset" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="action" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="autocapitalize" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="autocomplete" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="autocorrect" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="elements" type="WebKitDOMHTMLCollection*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="encoding" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="enctype" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -5131,7 +5820,19 @@
 					<parameter name="self" type="WebKitDOMHTMLIFrameElement*"/>
 				</parameters>
 			</method>
+			<method name="get_seamless" symbol="webkit_dom_html_iframe_element_get_seamless">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLIFrameElement*"/>
+				</parameters>
+			</method>
 			<method name="get_src" symbol="webkit_dom_html_iframe_element_get_src">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLIFrameElement*"/>
+				</parameters>
+			</method>
+			<method name="get_srcdoc" symbol="webkit_dom_html_iframe_element_get_srcdoc">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLIFrameElement*"/>
@@ -5206,7 +5907,21 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_seamless" symbol="webkit_dom_html_iframe_element_set_seamless">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLIFrameElement*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_src" symbol="webkit_dom_html_iframe_element_set_src">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLIFrameElement*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_srcdoc" symbol="webkit_dom_html_iframe_element_set_srcdoc">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLIFrameElement*"/>
@@ -5231,7 +5946,9 @@
 			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="sandbox" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="scrolling" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="seamless" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="src" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="srcdoc" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="width" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMHTMLImageElement" parent="WebKitDOMHTMLElement" type-name="WebKitDOMHTMLImageElement" get-type="webkit_dom_html_image_element_get_type">
@@ -5317,6 +6034,12 @@
 				</parameters>
 			</method>
 			<method name="get_src" symbol="webkit_dom_html_image_element_get_src">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLImageElement*"/>
+				</parameters>
+			</method>
+			<method name="get_srcset" symbol="webkit_dom_html_image_element_get_srcset">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLImageElement*"/>
@@ -5429,6 +6152,13 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_srcset" symbol="webkit_dom_html_image_element_set_srcset">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLImageElement*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="set_use_map" symbol="webkit_dom_html_image_element_set_use_map">
 				<return-type type="void"/>
 				<parameters>
@@ -5464,6 +6194,7 @@
 			<property name="natural-height" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="natural-width" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="src" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="srcset" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="use-map" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="vspace" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="width" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -5480,19 +6211,7 @@
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
 				</parameters>
 			</method>
-			<method name="click" symbol="webkit_dom_html_input_element_click">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
-				</parameters>
-			</method>
 			<method name="get_accept" symbol="webkit_dom_html_input_element_get_accept">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
-				</parameters>
-			</method>
-			<method name="get_access_key" symbol="webkit_dom_html_input_element_get_access_key">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
@@ -5510,14 +6229,32 @@
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
 				</parameters>
 			</method>
+			<method name="get_autocapitalize" symbol="webkit_dom_html_input_element_get_autocapitalize">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+				</parameters>
+			</method>
 			<method name="get_autocomplete" symbol="webkit_dom_html_input_element_get_autocomplete">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
 				</parameters>
 			</method>
+			<method name="get_autocorrect" symbol="webkit_dom_html_input_element_get_autocorrect">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+				</parameters>
+			</method>
 			<method name="get_autofocus" symbol="webkit_dom_html_input_element_get_autofocus">
 				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+				</parameters>
+			</method>
+			<method name="get_capture" symbol="webkit_dom_html_input_element_get_capture">
+				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
 				</parameters>
@@ -5535,6 +6272,12 @@
 				</parameters>
 			</method>
 			<method name="get_default_value" symbol="webkit_dom_html_input_element_get_default_value">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+				</parameters>
+			</method>
+			<method name="get_dir_name" symbol="webkit_dom_html_input_element_get_dir_name">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
@@ -5584,6 +6327,12 @@
 			</method>
 			<method name="get_form_target" symbol="webkit_dom_html_input_element_get_form_target">
 				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+				</parameters>
+			</method>
+			<method name="get_height" symbol="webkit_dom_html_input_element_get_height">
+				<return-type type="gulong"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
 				</parameters>
@@ -5666,12 +6415,6 @@
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
 				</parameters>
 			</method>
-			<method name="get_selected_option" symbol="webkit_dom_html_input_element_get_selected_option">
-				<return-type type="WebKitDOMHTMLOptionElement*"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
-				</parameters>
-			</method>
 			<method name="get_size" symbol="webkit_dom_html_input_element_get_size">
 				<return-type type="gulong"/>
 				<parameters>
@@ -5738,6 +6481,12 @@
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
 				</parameters>
 			</method>
+			<method name="get_width" symbol="webkit_dom_html_input_element_get_width">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+				</parameters>
+			</method>
 			<method name="get_will_validate" symbol="webkit_dom_html_input_element_get_will_validate">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -5747,7 +6496,7 @@
 			<method name="is_edited" symbol="webkit_dom_html_input_element_is_edited">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="p1" type="WebKitDOMHTMLInputElement*"/>
+					<parameter name="input" type="WebKitDOMHTMLInputElement*"/>
 				</parameters>
 			</method>
 			<method name="select" symbol="webkit_dom_html_input_element_select">
@@ -5757,13 +6506,6 @@
 				</parameters>
 			</method>
 			<method name="set_accept" symbol="webkit_dom_html_input_element_set_accept">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
-					<parameter name="value" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="set_access_key" symbol="webkit_dom_html_input_element_set_access_key">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
@@ -5784,6 +6526,13 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_autocapitalize" symbol="webkit_dom_html_input_element_set_autocapitalize">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="set_autocomplete" symbol="webkit_dom_html_input_element_set_autocomplete">
 				<return-type type="void"/>
 				<parameters>
@@ -5791,11 +6540,25 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_autocorrect" symbol="webkit_dom_html_input_element_set_autocorrect">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_autofocus" symbol="webkit_dom_html_input_element_set_autofocus">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
 					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_capture" symbol="webkit_dom_html_input_element_set_capture">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="set_checked" symbol="webkit_dom_html_input_element_set_checked">
@@ -5826,11 +6589,25 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_dir_name" symbol="webkit_dom_html_input_element_set_dir_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="set_disabled" symbol="webkit_dom_html_input_element_set_disabled">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
 					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_files" symbol="webkit_dom_html_input_element_set_files">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+					<parameter name="value" type="WebKitDOMFileList*"/>
 				</parameters>
 			</method>
 			<method name="set_form_action" symbol="webkit_dom_html_input_element_set_form_action">
@@ -5866,6 +6643,13 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
 					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_height" symbol="webkit_dom_html_input_element_set_height">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+					<parameter name="value" type="gulong"/>
 				</parameters>
 			</method>
 			<method name="set_incremental" symbol="webkit_dom_html_input_element_set_incremental">
@@ -5932,6 +6716,17 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_range_text" symbol="webkit_dom_html_input_element_set_range_text">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+					<parameter name="replacement" type="gchar*"/>
+					<parameter name="start" type="gulong"/>
+					<parameter name="end" type="gulong"/>
+					<parameter name="selectionMode" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="set_read_only" symbol="webkit_dom_html_input_element_set_read_only">
 				<return-type type="void"/>
 				<parameters>
@@ -5951,6 +6746,7 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
 					<parameter name="value" type="gulong"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="set_src" symbol="webkit_dom_html_input_element_set_src">
@@ -6017,6 +6813,13 @@
 					<parameter name="value" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_width" symbol="webkit_dom_html_input_element_set_width">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLInputElement*"/>
+					<parameter name="value" type="gulong"/>
+				</parameters>
+			</method>
 			<method name="step_down" symbol="webkit_dom_html_input_element_step_down">
 				<return-type type="void"/>
 				<parameters>
@@ -6034,14 +6837,17 @@
 				</parameters>
 			</method>
 			<property name="accept" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="access-key" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="align" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="alt" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="autocapitalize" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="autocomplete" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="autocorrect" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="autofocus" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="capture" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="checked" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="default-checked" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="default-value" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="dir-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="disabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="files" type="WebKitDOMFileList*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="form" type="WebKitDOMHTMLFormElement*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -6050,6 +6856,7 @@
 			<property name="form-method" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="form-no-validate" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="form-target" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="gulong" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="incremental" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="indeterminate" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="labels" type="WebKitDOMNodeList*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -6063,7 +6870,6 @@
 			<property name="placeholder" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="read-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="required" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="selected-option" type="WebKitDOMHTMLOptionElement*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="size" type="gulong" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="src" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="step" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -6073,33 +6879,11 @@
 			<property name="validity" type="WebKitDOMValidityState*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="value" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="value-as-number" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="webkit-grammar" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="webkit-speech" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="webkitdirectory" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="gulong" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="will-validate" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-		</object>
-		<object name="WebKitDOMHTMLIsIndexElement" parent="WebKitDOMHTMLInputElement" type-name="WebKitDOMHTMLIsIndexElement" get-type="webkit_dom_html_is_index_element_get_type">
-			<implements>
-				<interface name="WebKitDOMEventTarget"/>
-			</implements>
-			<method name="get_form" symbol="webkit_dom_html_is_index_element_get_form">
-				<return-type type="WebKitDOMHTMLFormElement*"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLIsIndexElement*"/>
-				</parameters>
-			</method>
-			<method name="get_prompt" symbol="webkit_dom_html_is_index_element_get_prompt">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLIsIndexElement*"/>
-				</parameters>
-			</method>
-			<method name="set_prompt" symbol="webkit_dom_html_is_index_element_set_prompt">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLIsIndexElement*"/>
-					<parameter name="value" type="gchar*"/>
-				</parameters>
-			</method>
-			<property name="form" type="WebKitDOMHTMLFormElement*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="prompt" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMHTMLKeygenElement" parent="WebKitDOMHTMLElement" type-name="WebKitDOMHTMLKeygenElement" get-type="webkit_dom_html_keygen_element_get_type">
 			<implements>
@@ -6249,12 +7033,6 @@
 			<implements>
 				<interface name="WebKitDOMEventTarget"/>
 			</implements>
-			<method name="get_access_key" symbol="webkit_dom_html_label_element_get_access_key">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLLabelElement*"/>
-				</parameters>
-			</method>
 			<method name="get_control" symbol="webkit_dom_html_label_element_get_control">
 				<return-type type="WebKitDOMHTMLElement*"/>
 				<parameters>
@@ -6273,13 +7051,6 @@
 					<parameter name="self" type="WebKitDOMHTMLLabelElement*"/>
 				</parameters>
 			</method>
-			<method name="set_access_key" symbol="webkit_dom_html_label_element_set_access_key">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLLabelElement*"/>
-					<parameter name="value" type="gchar*"/>
-				</parameters>
-			</method>
 			<method name="set_html_for" symbol="webkit_dom_html_label_element_set_html_for">
 				<return-type type="void"/>
 				<parameters>
@@ -6287,7 +7058,6 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="access-key" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="control" type="WebKitDOMHTMLElement*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="form" type="WebKitDOMHTMLFormElement*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="html-for" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -6296,12 +7066,6 @@
 			<implements>
 				<interface name="WebKitDOMEventTarget"/>
 			</implements>
-			<method name="get_access_key" symbol="webkit_dom_html_legend_element_get_access_key">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLLegendElement*"/>
-				</parameters>
-			</method>
 			<method name="get_align" symbol="webkit_dom_html_legend_element_get_align">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -6314,13 +7078,6 @@
 					<parameter name="self" type="WebKitDOMHTMLLegendElement*"/>
 				</parameters>
 			</method>
-			<method name="set_access_key" symbol="webkit_dom_html_legend_element_set_access_key">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMHTMLLegendElement*"/>
-					<parameter name="value" type="gchar*"/>
-				</parameters>
-			</method>
 			<method name="set_align" symbol="webkit_dom_html_legend_element_set_align">
 				<return-type type="void"/>
 				<parameters>
@@ -6328,7 +7085,6 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="access-key" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="align" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="form" type="WebKitDOMHTMLFormElement*" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
@@ -6661,11 +7417,34 @@
 			<implements>
 				<interface name="WebKitDOMEventTarget"/>
 			</implements>
+			<method name="add_text_track" symbol="webkit_dom_html_media_element_add_text_track">
+				<return-type type="WebKitDOMTextTrack*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
+					<parameter name="kind" type="gchar*"/>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="language" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="can_play_type" symbol="webkit_dom_html_media_element_can_play_type">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
 					<parameter name="type" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="fast_seek" symbol="webkit_dom_html_media_element_fast_seek">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
+					<parameter name="time" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="get_audio_tracks" symbol="webkit_dom_html_media_element_get_audio_tracks">
+				<return-type type="WebKitDOMAudioTrackList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
 				</parameters>
 			</method>
 			<method name="get_autoplay" symbol="webkit_dom_html_media_element_get_autoplay">
@@ -6676,6 +7455,12 @@
 			</method>
 			<method name="get_buffered" symbol="webkit_dom_html_media_element_get_buffered">
 				<return-type type="WebKitDOMTimeRanges*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
+				</parameters>
+			</method>
+			<method name="get_controller" symbol="webkit_dom_html_media_element_get_controller">
+				<return-type type="WebKitDOMMediaController*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
 				</parameters>
@@ -6693,7 +7478,7 @@
 				</parameters>
 			</method>
 			<method name="get_current_time" symbol="webkit_dom_html_media_element_get_current_time">
-				<return-type type="gfloat"/>
+				<return-type type="gdouble"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
 				</parameters>
@@ -6705,13 +7490,13 @@
 				</parameters>
 			</method>
 			<method name="get_default_playback_rate" symbol="webkit_dom_html_media_element_get_default_playback_rate">
-				<return-type type="gfloat"/>
+				<return-type type="gdouble"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
 				</parameters>
 			</method>
 			<method name="get_duration" symbol="webkit_dom_html_media_element_get_duration">
-				<return-type type="gfloat"/>
+				<return-type type="gdouble"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
 				</parameters>
@@ -6740,6 +7525,12 @@
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
 				</parameters>
 			</method>
+			<method name="get_media_group" symbol="webkit_dom_html_media_element_get_media_group">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
+				</parameters>
+			</method>
 			<method name="get_muted" symbol="webkit_dom_html_media_element_get_muted">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -6759,7 +7550,7 @@
 				</parameters>
 			</method>
 			<method name="get_playback_rate" symbol="webkit_dom_html_media_element_get_playback_rate">
-				<return-type type="gfloat"/>
+				<return-type type="gdouble"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
 				</parameters>
@@ -6801,13 +7592,25 @@
 				</parameters>
 			</method>
 			<method name="get_start_time" symbol="webkit_dom_html_media_element_get_start_time">
-				<return-type type="gfloat"/>
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
+				</parameters>
+			</method>
+			<method name="get_text_tracks" symbol="webkit_dom_html_media_element_get_text_tracks">
+				<return-type type="WebKitDOMTextTrackList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
+				</parameters>
+			</method>
+			<method name="get_video_tracks" symbol="webkit_dom_html_media_element_get_video_tracks">
+				<return-type type="WebKitDOMVideoTrackList*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
 				</parameters>
 			</method>
 			<method name="get_volume" symbol="webkit_dom_html_media_element_get_volume">
-				<return-type type="gfloat"/>
+				<return-type type="gdouble"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
 				</parameters>
@@ -6819,6 +7622,12 @@
 				</parameters>
 			</method>
 			<method name="get_webkit_closed_captions_visible" symbol="webkit_dom_html_media_element_get_webkit_closed_captions_visible">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_current_playback_target_is_wireless" symbol="webkit_dom_html_media_element_get_webkit_current_playback_target_is_wireless">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
@@ -6846,7 +7655,6 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
-					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="pause" symbol="webkit_dom_html_media_element_pause">
@@ -6879,7 +7687,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
-					<parameter name="value" type="gfloat"/>
+					<parameter name="value" type="gdouble"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -6894,7 +7702,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
-					<parameter name="value" type="gfloat"/>
+					<parameter name="value" type="gdouble"/>
 				</parameters>
 			</method>
 			<method name="set_loop" symbol="webkit_dom_html_media_element_set_loop">
@@ -6902,6 +7710,13 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
 					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_media_group" symbol="webkit_dom_html_media_element_set_media_group">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
+					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="set_muted" symbol="webkit_dom_html_media_element_set_muted">
@@ -6915,7 +7730,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
-					<parameter name="value" type="gfloat"/>
+					<parameter name="value" type="gdouble"/>
 				</parameters>
 			</method>
 			<method name="set_preload" symbol="webkit_dom_html_media_element_set_preload">
@@ -6936,7 +7751,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
-					<parameter name="value" type="gfloat"/>
+					<parameter name="value" type="gdouble"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -6954,33 +7769,45 @@
 					<parameter name="value" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="webkit_show_playback_target_picker" symbol="webkit_dom_html_media_element_webkit_show_playback_target_picker">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLMediaElement*"/>
+				</parameters>
+			</method>
+			<property name="audio-tracks" type="WebKitDOMAudioTrackList*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="autoplay" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="buffered" type="WebKitDOMTimeRanges*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="controller" type="WebKitDOMMediaController*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="controls" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="current-src" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="current-time" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="current-time" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="default-muted" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="default-playback-rate" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="duration" type="gfloat" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="default-playback-rate" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="duration" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="ended" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="error" type="WebKitDOMMediaError*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="initial-time" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="loop" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="media-group" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="muted" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="network-state" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="paused" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="playback-rate" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="playback-rate" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="played" type="WebKitDOMTimeRanges*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="preload" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="ready-state" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="seekable" type="WebKitDOMTimeRanges*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="seeking" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="src" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="start-time" type="gfloat" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="volume" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text-tracks" type="WebKitDOMTextTrackList*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="video-tracks" type="WebKitDOMVideoTrackList*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="volume" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="webkit-audio-decoded-byte-count" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="webkit-closed-captions-visible" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="webkit-current-playback-target-is-wireless" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="webkit-has-closed-captions" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="webkit-preserves-pitch" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="webkit-video-decoded-byte-count" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMHTMLMenuElement" parent="WebKitDOMHTMLElement" type-name="WebKitDOMHTMLMenuElement" get-type="webkit_dom_html_menu_element_get_type">
 			<implements>
@@ -7105,6 +7932,12 @@
 					<parameter name="self" type="WebKitDOMHTMLOListElement*"/>
 				</parameters>
 			</method>
+			<method name="get_reversed" symbol="webkit_dom_htmlo_list_element_get_reversed">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLOListElement*"/>
+				</parameters>
+			</method>
 			<method name="get_start" symbol="webkit_dom_htmlo_list_element_get_start">
 				<return-type type="glong"/>
 				<parameters>
@@ -7112,6 +7945,13 @@
 				</parameters>
 			</method>
 			<method name="set_compact" symbol="webkit_dom_htmlo_list_element_set_compact">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLOListElement*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_reversed" symbol="webkit_dom_htmlo_list_element_set_reversed">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLOListElement*"/>
@@ -7126,6 +7966,7 @@
 				</parameters>
 			</method>
 			<property name="compact" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="reversed" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="start" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="type" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
@@ -7523,10 +8364,23 @@
 			<property name="value" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMHTMLOptionsCollection" parent="WebKitDOMHTMLCollection" type-name="WebKitDOMHTMLOptionsCollection" get-type="webkit_dom_html_options_collection_get_type">
+			<method name="get_length" symbol="webkit_dom_html_options_collection_get_length">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLOptionsCollection*"/>
+				</parameters>
+			</method>
 			<method name="get_selected_index" symbol="webkit_dom_html_options_collection_get_selected_index">
 				<return-type type="glong"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLOptionsCollection*"/>
+				</parameters>
+			</method>
+			<method name="named_item" symbol="webkit_dom_html_options_collection_named_item">
+				<return-type type="WebKitDOMNode*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLOptionsCollection*"/>
+					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="set_selected_index" symbol="webkit_dom_html_options_collection_set_selected_index">
@@ -7536,6 +8390,7 @@
 					<parameter name="value" type="glong"/>
 				</parameters>
 			</method>
+			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="selected-index" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMHTMLParagraphElement" parent="WebKitDOMHTMLElement" type-name="WebKitDOMHTMLParagraphElement" get-type="webkit_dom_html_paragraph_element_get_type">
@@ -7638,6 +8493,36 @@
 			<property name="width" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="wrap" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
+		<object name="WebKitDOMHTMLPropertiesCollection" parent="WebKitDOMHTMLCollection" type-name="WebKitDOMHTMLPropertiesCollection" get-type="webkit_dom_html_properties_collection_get_type">
+			<method name="get_length" symbol="webkit_dom_html_properties_collection_get_length">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="void*"/>
+				</parameters>
+			</method>
+			<method name="get_names" symbol="webkit_dom_html_properties_collection_get_names">
+				<return-type type="WebKitDOMDOMStringList*"/>
+				<parameters>
+					<parameter name="self" type="void*"/>
+				</parameters>
+			</method>
+			<method name="item" symbol="webkit_dom_html_properties_collection_item">
+				<return-type type="WebKitDOMNode*"/>
+				<parameters>
+					<parameter name="self" type="void*"/>
+					<parameter name="index" type="gulong"/>
+				</parameters>
+			</method>
+			<method name="named_item" symbol="webkit_dom_html_properties_collection_named_item">
+				<return-type type="void*"/>
+				<parameters>
+					<parameter name="self" type="void*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="names" type="WebKitDOMDOMStringList*" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
 		<object name="WebKitDOMHTMLQuoteElement" parent="WebKitDOMHTMLElement" type-name="WebKitDOMHTMLQuoteElement" get-type="webkit_dom_html_quote_element_get_type">
 			<implements>
 				<interface name="WebKitDOMEventTarget"/>
@@ -7673,6 +8558,12 @@
 					<parameter name="self" type="WebKitDOMHTMLScriptElement*"/>
 				</parameters>
 			</method>
+			<method name="get_cross_origin" symbol="webkit_dom_html_script_element_get_cross_origin">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLScriptElement*"/>
+				</parameters>
+			</method>
 			<method name="get_defer" symbol="webkit_dom_html_script_element_get_defer">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -7686,6 +8577,12 @@
 				</parameters>
 			</method>
 			<method name="get_html_for" symbol="webkit_dom_html_script_element_get_html_for">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLScriptElement*"/>
+				</parameters>
+			</method>
+			<method name="get_nonce" symbol="webkit_dom_html_script_element_get_nonce">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLScriptElement*"/>
@@ -7717,6 +8614,13 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_cross_origin" symbol="webkit_dom_html_script_element_set_cross_origin">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLScriptElement*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="set_defer" symbol="webkit_dom_html_script_element_set_defer">
 				<return-type type="void"/>
 				<parameters>
@@ -7732,6 +8636,13 @@
 				</parameters>
 			</method>
 			<method name="set_html_for" symbol="webkit_dom_html_script_element_set_html_for">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLScriptElement*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_nonce" symbol="webkit_dom_html_script_element_set_nonce">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLScriptElement*"/>
@@ -7754,9 +8665,11 @@
 			</method>
 			<property name="async" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="charset" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="cross-origin" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="defer" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="event" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="html-for" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="nonce" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="src" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="type" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -7836,6 +8749,12 @@
 			</method>
 			<method name="get_selected_index" symbol="webkit_dom_html_select_element_get_selected_index">
 				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLSelectElement*"/>
+				</parameters>
+			</method>
+			<method name="get_selected_options" symbol="webkit_dom_html_select_element_get_selected_options">
+				<return-type type="WebKitDOMHTMLCollection*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLSelectElement*"/>
 				</parameters>
@@ -7972,6 +8891,7 @@
 			<property name="options" type="WebKitDOMHTMLOptionsCollection*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="required" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="selected-index" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="selected-options" type="WebKitDOMHTMLCollection*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="size" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="type" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="validation-message" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -7995,6 +8915,12 @@
 					<parameter name="self" type="WebKitDOMHTMLStyleElement*"/>
 				</parameters>
 			</method>
+			<method name="get_scoped" symbol="webkit_dom_html_style_element_get_scoped">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLStyleElement*"/>
+				</parameters>
+			</method>
 			<method name="get_sheet" symbol="webkit_dom_html_style_element_get_sheet">
 				<return-type type="WebKitDOMStyleSheet*"/>
 				<parameters>
@@ -8013,6 +8939,13 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLStyleElement*"/>
 					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_scoped" symbol="webkit_dom_html_style_element_set_scoped">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLStyleElement*"/>
+					<parameter name="value" type="gboolean"/>
 				</parameters>
 			</method>
 			<property name="disabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -8346,6 +9279,12 @@
 					<parameter name="self" type="WebKitDOMHTMLTableElement*"/>
 				</parameters>
 			</method>
+			<method name="create_t_body" symbol="webkit_dom_html_table_element_create_t_body">
+				<return-type type="WebKitDOMHTMLElement*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLTableElement*"/>
+				</parameters>
+			</method>
 			<method name="create_t_foot" symbol="webkit_dom_html_table_element_create_t_foot">
 				<return-type type="WebKitDOMHTMLElement*"/>
 				<parameters>
@@ -8566,7 +9505,7 @@
 			<property name="align" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="bg-color" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="border" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="caption" type="WebKitDOMHTMLTableCaptionElement*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="caption" type="WebKitDOMHTMLTableCaptionElement*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="cell-padding" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="cell-spacing" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="frame" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -8574,8 +9513,8 @@
 			<property name="rules" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="summary" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="t-bodies" type="WebKitDOMHTMLCollection*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="t-foot" type="WebKitDOMHTMLTableSectionElement*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="t-head" type="WebKitDOMHTMLTableSectionElement*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="t-foot" type="WebKitDOMHTMLTableSectionElement*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="t-head" type="WebKitDOMHTMLTableSectionElement*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="width" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMHTMLTableRowElement" parent="WebKitDOMHTMLElement" type-name="WebKitDOMHTMLTableRowElement" get-type="webkit_dom_html_table_row_element_get_type">
@@ -8784,8 +9723,14 @@
 					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
 				</parameters>
 			</method>
-			<method name="get_access_key" symbol="webkit_dom_html_text_area_element_get_access_key">
+			<method name="get_autocapitalize" symbol="webkit_dom_html_text_area_element_get_autocapitalize">
 				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
+				</parameters>
+			</method>
+			<method name="get_autocorrect" symbol="webkit_dom_html_text_area_element_get_autocorrect">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
 				</parameters>
@@ -8803,6 +9748,12 @@
 				</parameters>
 			</method>
 			<method name="get_default_value" symbol="webkit_dom_html_text_area_element_get_default_value">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
+				</parameters>
+			</method>
+			<method name="get_dir_name" symbol="webkit_dom_html_text_area_element_get_dir_name">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
@@ -8910,10 +9861,16 @@
 					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
 				</parameters>
 			</method>
+			<method name="get_wrap" symbol="webkit_dom_html_text_area_element_get_wrap">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
+				</parameters>
+			</method>
 			<method name="is_edited" symbol="webkit_dom_html_text_area_element_is_edited">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="p1" type="WebKitDOMHTMLTextAreaElement*"/>
+					<parameter name="input" type="WebKitDOMHTMLTextAreaElement*"/>
 				</parameters>
 			</method>
 			<method name="select" symbol="webkit_dom_html_text_area_element_select">
@@ -8922,11 +9879,18 @@
 					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
 				</parameters>
 			</method>
-			<method name="set_access_key" symbol="webkit_dom_html_text_area_element_set_access_key">
+			<method name="set_autocapitalize" symbol="webkit_dom_html_text_area_element_set_autocapitalize">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
 					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_autocorrect" symbol="webkit_dom_html_text_area_element_set_autocorrect">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
+					<parameter name="value" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_autofocus" symbol="webkit_dom_html_text_area_element_set_autofocus">
@@ -8951,6 +9915,13 @@
 				</parameters>
 			</method>
 			<method name="set_default_value" symbol="webkit_dom_html_text_area_element_set_default_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_dir_name" symbol="webkit_dom_html_text_area_element_set_dir_name">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
@@ -8984,6 +9955,17 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
 					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_range_text" symbol="webkit_dom_html_text_area_element_set_range_text">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
+					<parameter name="replacement" type="gchar*"/>
+					<parameter name="start" type="gulong"/>
+					<parameter name="end" type="gulong"/>
+					<parameter name="selectionMode" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="set_read_only" symbol="webkit_dom_html_text_area_element_set_read_only">
@@ -9044,10 +10026,19 @@
 					<parameter name="value" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="access-key" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<method name="set_wrap" symbol="webkit_dom_html_text_area_element_set_wrap">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLTextAreaElement*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="autocapitalize" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="autocorrect" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="autofocus" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="cols" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="default-value" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="dir-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="disabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="form" type="WebKitDOMHTMLFormElement*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="labels" type="WebKitDOMNodeList*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -9066,6 +10057,7 @@
 			<property name="validity" type="WebKitDOMValidityState*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="value" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="will-validate" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="wrap" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMHTMLTitleElement" parent="WebKitDOMHTMLElement" type-name="WebKitDOMHTMLTitleElement" get-type="webkit_dom_html_title_element_get_type">
 			<implements>
@@ -9158,6 +10150,12 @@
 					<parameter name="self" type="WebKitDOMHTMLVideoElement*"/>
 				</parameters>
 			</method>
+			<method name="get_webkit_wireless_video_playback_disabled" symbol="webkit_dom_html_video_element_get_webkit_wireless_video_playback_disabled">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLVideoElement*"/>
+				</parameters>
+			</method>
 			<method name="get_width" symbol="webkit_dom_html_video_element_get_width">
 				<return-type type="gulong"/>
 				<parameters>
@@ -9176,6 +10174,13 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMHTMLVideoElement*"/>
 					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_webkit_wireless_video_playback_disabled" symbol="webkit_dom_html_video_element_set_webkit_wireless_video_playback_disabled">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMHTMLVideoElement*"/>
+					<parameter name="value" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_width" symbol="webkit_dom_html_video_element_set_width">
@@ -9215,8 +10220,11 @@
 			<property name="poster" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="video-height" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="video-width" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-decoded-frame-count" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="webkit-displaying-fullscreen" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-dropped-frame-count" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="webkit-supports-fullscreen" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-wireless-video-playback-disabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="width" type="gulong" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMHistory" parent="WebKitDOMObject" type-name="WebKitDOMHistory" get-type="webkit_dom_history_get_type">
@@ -9247,21 +10255,288 @@
 			</method>
 			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
+		<object name="WebKitDOMKeyboardEvent" parent="WebKitDOMUIEvent" type-name="WebKitDOMKeyboardEvent" get-type="webkit_dom_keyboard_event_get_type">
+			<method name="get_alt_graph_key" symbol="webkit_dom_keyboard_event_get_alt_graph_key">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMKeyboardEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_alt_key" symbol="webkit_dom_keyboard_event_get_alt_key">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMKeyboardEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_ctrl_key" symbol="webkit_dom_keyboard_event_get_ctrl_key">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMKeyboardEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_key_identifier" symbol="webkit_dom_keyboard_event_get_key_identifier">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMKeyboardEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_key_location" symbol="webkit_dom_keyboard_event_get_key_location">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMKeyboardEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_meta_key" symbol="webkit_dom_keyboard_event_get_meta_key">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMKeyboardEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_modifier_state" symbol="webkit_dom_keyboard_event_get_modifier_state">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMKeyboardEvent*"/>
+					<parameter name="keyIdentifierArg" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_shift_key" symbol="webkit_dom_keyboard_event_get_shift_key">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMKeyboardEvent*"/>
+				</parameters>
+			</method>
+			<method name="init_keyboard_event" symbol="webkit_dom_keyboard_event_init_keyboard_event">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMKeyboardEvent*"/>
+					<parameter name="type" type="gchar*"/>
+					<parameter name="canBubble" type="gboolean"/>
+					<parameter name="cancelable" type="gboolean"/>
+					<parameter name="view" type="WebKitDOMDOMWindow*"/>
+					<parameter name="keyIdentifier" type="gchar*"/>
+					<parameter name="location" type="gulong"/>
+					<parameter name="ctrlKey" type="gboolean"/>
+					<parameter name="altKey" type="gboolean"/>
+					<parameter name="shiftKey" type="gboolean"/>
+					<parameter name="metaKey" type="gboolean"/>
+					<parameter name="altGraphKey" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="alt-graph-key" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="alt-key" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="ctrl-key" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="key-identifier" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="key-location" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="meta-key" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="shift-key" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
 		<object name="WebKitDOMLocation" parent="WebKitDOMObject" type-name="WebKitDOMLocation" get-type="webkit_dom_location_get_type">
+			<method name="get_ancestor_origins" symbol="webkit_dom_location_get_ancestor_origins">
+				<return-type type="WebKitDOMDOMStringList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMLocation*"/>
+				</parameters>
+			</method>
+			<method name="get_hash" symbol="webkit_dom_location_get_hash">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMLocation*"/>
+				</parameters>
+			</method>
+			<method name="get_host" symbol="webkit_dom_location_get_host">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMLocation*"/>
+				</parameters>
+			</method>
+			<method name="get_hostname" symbol="webkit_dom_location_get_hostname">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMLocation*"/>
+				</parameters>
+			</method>
+			<method name="get_href" symbol="webkit_dom_location_get_href">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMLocation*"/>
+				</parameters>
+			</method>
 			<method name="get_origin" symbol="webkit_dom_location_get_origin">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMLocation*"/>
 				</parameters>
 			</method>
-			<method name="get_parameter" symbol="webkit_dom_location_get_parameter">
+			<method name="get_pathname" symbol="webkit_dom_location_get_pathname">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMLocation*"/>
-					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="get_port" symbol="webkit_dom_location_get_port">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMLocation*"/>
+				</parameters>
+			</method>
+			<method name="get_protocol" symbol="webkit_dom_location_get_protocol">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMLocation*"/>
+				</parameters>
+			</method>
+			<method name="get_search" symbol="webkit_dom_location_get_search">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMLocation*"/>
+				</parameters>
+			</method>
+			<property name="ancestor-origins" type="WebKitDOMDOMStringList*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="hash" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="host" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="hostname" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="href" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="origin" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="pathname" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="port" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="protocol" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="search" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMMediaController" parent="WebKitDOMObject" type-name="WebKitDOMMediaController" get-type="webkit_dom_media_controller_get_type">
+			<implements>
+				<interface name="WebKitDOMEventTarget"/>
+			</implements>
+			<method name="get_buffered" symbol="webkit_dom_media_controller_get_buffered">
+				<return-type type="WebKitDOMTimeRanges*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<method name="get_current_time" symbol="webkit_dom_media_controller_get_current_time">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<method name="get_default_playback_rate" symbol="webkit_dom_media_controller_get_default_playback_rate">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<method name="get_duration" symbol="webkit_dom_media_controller_get_duration">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<method name="get_muted" symbol="webkit_dom_media_controller_get_muted">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<method name="get_paused" symbol="webkit_dom_media_controller_get_paused">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<method name="get_playback_rate" symbol="webkit_dom_media_controller_get_playback_rate">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<method name="get_playback_state" symbol="webkit_dom_media_controller_get_playback_state">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<method name="get_played" symbol="webkit_dom_media_controller_get_played">
+				<return-type type="WebKitDOMTimeRanges*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<method name="get_seekable" symbol="webkit_dom_media_controller_get_seekable">
+				<return-type type="WebKitDOMTimeRanges*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<method name="get_volume" symbol="webkit_dom_media_controller_get_volume">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<method name="pause" symbol="webkit_dom_media_controller_pause">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<method name="play" symbol="webkit_dom_media_controller_play">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<method name="set_current_time" symbol="webkit_dom_media_controller_set_current_time">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+					<parameter name="value" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="set_default_playback_rate" symbol="webkit_dom_media_controller_set_default_playback_rate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+					<parameter name="value" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="set_muted" symbol="webkit_dom_media_controller_set_muted">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_playback_rate" symbol="webkit_dom_media_controller_set_playback_rate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+					<parameter name="value" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="set_volume" symbol="webkit_dom_media_controller_set_volume">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+					<parameter name="value" type="gdouble"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="unpause" symbol="webkit_dom_media_controller_unpause">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMediaController*"/>
+				</parameters>
+			</method>
+			<property name="buffered" type="WebKitDOMTimeRanges*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="current-time" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="default-playback-rate" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="duration" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="muted" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="paused" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="playback-rate" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="playback-state" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="played" type="WebKitDOMTimeRanges*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="seekable" type="WebKitDOMTimeRanges*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="volume" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMMediaError" parent="WebKitDOMObject" type-name="WebKitDOMMediaError" get-type="webkit_dom_media_error_get_type">
 			<method name="get_code" symbol="webkit_dom_media_error_get_code">
@@ -9277,7 +10552,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMMediaList*"/>
-					<parameter name="new_medium" type="gchar*"/>
+					<parameter name="newMedium" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -9285,7 +10560,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMMediaList*"/>
-					<parameter name="old_medium" type="gchar*"/>
+					<parameter name="oldMedium" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -9339,19 +10614,19 @@
 			<method name="get_js_heap_size_limit" symbol="webkit_dom_memory_info_get_js_heap_size_limit">
 				<return-type type="gulong"/>
 				<parameters>
-					<parameter name="self" type="WebKitDOMMemoryInfo*"/>
+					<parameter name="self" type="void*"/>
 				</parameters>
 			</method>
 			<method name="get_total_js_heap_size" symbol="webkit_dom_memory_info_get_total_js_heap_size">
 				<return-type type="gulong"/>
 				<parameters>
-					<parameter name="self" type="WebKitDOMMemoryInfo*"/>
+					<parameter name="self" type="void*"/>
 				</parameters>
 			</method>
 			<method name="get_used_js_heap_size" symbol="webkit_dom_memory_info_get_used_js_heap_size">
 				<return-type type="gulong"/>
 				<parameters>
-					<parameter name="self" type="WebKitDOMMemoryInfo*"/>
+					<parameter name="self" type="void*"/>
 				</parameters>
 			</method>
 			<property name="js-heap-size-limit" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -9362,6 +10637,8 @@
 			<implements>
 				<interface name="WebKitDOMEventTarget"/>
 			</implements>
+		</object>
+		<object name="WebKitDOMMicroDataItemValue" parent="WebKitDOMObject" type-name="WebKitDOMMicroDataItemValue" get-type="webkit_dom_micro_data_item_value_get_type">
 		</object>
 		<object name="WebKitDOMMouseEvent" parent="WebKitDOMUIEvent" type-name="WebKitDOMMouseEvent" get-type="webkit_dom_mouse_event_get_type">
 			<method name="get_alt_key" symbol="webkit_dom_mouse_event_get_alt_key">
@@ -9448,6 +10725,18 @@
 					<parameter name="self" type="WebKitDOMMouseEvent*"/>
 				</parameters>
 			</method>
+			<method name="get_webkit_movement_x" symbol="webkit_dom_mouse_event_get_webkit_movement_x">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMouseEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_movement_y" symbol="webkit_dom_mouse_event_get_webkit_movement_y">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMMouseEvent*"/>
+				</parameters>
+			</method>
 			<method name="get_x" symbol="webkit_dom_mouse_event_get_x">
 				<return-type type="glong"/>
 				<parameters>
@@ -9465,20 +10754,20 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMMouseEvent*"/>
 					<parameter name="type" type="gchar*"/>
-					<parameter name="can_bubble" type="gboolean"/>
+					<parameter name="canBubble" type="gboolean"/>
 					<parameter name="cancelable" type="gboolean"/>
 					<parameter name="view" type="WebKitDOMDOMWindow*"/>
 					<parameter name="detail" type="glong"/>
-					<parameter name="screen_x" type="glong"/>
-					<parameter name="screen_y" type="glong"/>
-					<parameter name="client_x" type="glong"/>
-					<parameter name="client_y" type="glong"/>
-					<parameter name="ctrl_key" type="gboolean"/>
-					<parameter name="alt_key" type="gboolean"/>
-					<parameter name="shift_key" type="gboolean"/>
-					<parameter name="meta_key" type="gboolean"/>
+					<parameter name="screenX" type="glong"/>
+					<parameter name="screenY" type="glong"/>
+					<parameter name="clientX" type="glong"/>
+					<parameter name="clientY" type="glong"/>
+					<parameter name="ctrlKey" type="gboolean"/>
+					<parameter name="altKey" type="gboolean"/>
+					<parameter name="shiftKey" type="gboolean"/>
+					<parameter name="metaKey" type="gboolean"/>
 					<parameter name="button" type="gushort"/>
-					<parameter name="related_target" type="WebKitDOMEventTarget*"/>
+					<parameter name="relatedTarget" type="WebKitDOMEventTarget*"/>
 				</parameters>
 			</method>
 			<property name="alt-key" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -9495,6 +10784,8 @@
 			<property name="screen-y" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="shift-key" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="to-element" type="WebKitDOMNode*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-movement-x" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-movement-y" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="x" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="y" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
@@ -9516,8 +10807,8 @@
 				<return-type type="WebKitDOMNode*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMNamedNodeMap*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
-					<parameter name="local_name" type="gchar*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
+					<parameter name="localName" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="item" symbol="webkit_dom_named_node_map_item">
@@ -9539,8 +10830,8 @@
 				<return-type type="WebKitDOMNode*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMNamedNodeMap*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
-					<parameter name="local_name" type="gchar*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
+					<parameter name="localName" type="gchar*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -9659,8 +10950,60 @@
 					<parameter name="self" type="WebKitDOMNavigator*"/>
 				</parameters>
 			</method>
+			<method name="get_webkit_battery" symbol="webkit_dom_navigator_get_webkit_battery">
+				<return-type type="WebKitDOMBatteryManager*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMNavigator*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_persistent_storage" symbol="webkit_dom_navigator_get_webkit_persistent_storage">
+				<return-type type="WebKitDOMStorageQuota*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMNavigator*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_temporary_storage" symbol="webkit_dom_navigator_get_webkit_temporary_storage">
+				<return-type type="WebKitDOMStorageQuota*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMNavigator*"/>
+				</parameters>
+			</method>
+			<method name="is_protocol_handler_registered" symbol="webkit_dom_navigator_is_protocol_handler_registered">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMNavigator*"/>
+					<parameter name="scheme" type="gchar*"/>
+					<parameter name="url" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="java_enabled" symbol="webkit_dom_navigator_java_enabled">
 				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMNavigator*"/>
+				</parameters>
+			</method>
+			<method name="register_protocol_handler" symbol="webkit_dom_navigator_register_protocol_handler">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMNavigator*"/>
+					<parameter name="scheme" type="gchar*"/>
+					<parameter name="url" type="gchar*"/>
+					<parameter name="title" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="unregister_protocol_handler" symbol="webkit_dom_navigator_unregister_protocol_handler">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMNavigator*"/>
+					<parameter name="scheme" type="gchar*"/>
+					<parameter name="url" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="webkit_get_gamepads" symbol="webkit_dom_navigator_webkit_get_gamepads">
+				<return-type type="WebKitDOMGamepadList*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMNavigator*"/>
 				</parameters>
@@ -9680,6 +11023,9 @@
 			<property name="user-agent" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="vendor" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="vendor-sub" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-battery" type="WebKitDOMBatteryManager*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-persistent-storage" type="WebKitDOMStorageQuota*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-temporary-storage" type="WebKitDOMStorageQuota*" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMNode" parent="WebKitDOMObject" type-name="WebKitDOMNode" get-type="webkit_dom_node_get_type">
 			<implements>
@@ -9689,7 +11035,7 @@
 				<return-type type="WebKitDOMNode*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMNode*"/>
-					<parameter name="new_child" type="WebKitDOMNode*"/>
+					<parameter name="newChild" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -9840,8 +11186,8 @@
 				<return-type type="WebKitDOMNode*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMNode*"/>
-					<parameter name="new_child" type="WebKitDOMNode*"/>
-					<parameter name="ref_child" type="WebKitDOMNode*"/>
+					<parameter name="newChild" type="WebKitDOMNode*"/>
+					<parameter name="refChild" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -9849,7 +11195,7 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMNode*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="is_equal_node" symbol="webkit_dom_node_is_equal_node">
@@ -9885,7 +11231,7 @@
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMNode*"/>
-					<parameter name="namespace_uri" type="gchar*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="normalize" symbol="webkit_dom_node_normalize">
@@ -9898,7 +11244,7 @@
 				<return-type type="WebKitDOMNode*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMNode*"/>
-					<parameter name="old_child" type="WebKitDOMNode*"/>
+					<parameter name="oldChild" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -9906,8 +11252,8 @@
 				<return-type type="WebKitDOMNode*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMNode*"/>
-					<parameter name="new_child" type="WebKitDOMNode*"/>
-					<parameter name="old_child" type="WebKitDOMNode*"/>
+					<parameter name="newChild" type="WebKitDOMNode*"/>
+					<parameter name="oldChild" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -9935,7 +11281,6 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
-			<property name="attributes" type="WebKitDOMNamedNodeMap*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="base-uri" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="child-nodes" type="WebKitDOMNodeList*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="first-child" type="WebKitDOMNode*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -10046,7 +11391,243 @@
 			<property name="core-object" type="gpointer" readable="0" writable="1" construct="0" construct-only="1"/>
 			<field name="coreObject" type="gpointer"/>
 		</object>
-		<object name="WebKitDOMProcessingInstruction" parent="WebKitDOMNode" type-name="WebKitDOMProcessingInstruction" get-type="webkit_dom_processing_instruction_get_type">
+		<object name="WebKitDOMPerformance" parent="WebKitDOMObject" type-name="WebKitDOMPerformance" get-type="webkit_dom_performance_get_type">
+			<implements>
+				<interface name="WebKitDOMEventTarget"/>
+			</implements>
+			<method name="get_memory" symbol="webkit_dom_performance_get_memory">
+				<return-type type="void*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformance*"/>
+				</parameters>
+			</method>
+			<method name="get_navigation" symbol="webkit_dom_performance_get_navigation">
+				<return-type type="WebKitDOMPerformanceNavigation*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformance*"/>
+				</parameters>
+			</method>
+			<method name="get_timing" symbol="webkit_dom_performance_get_timing">
+				<return-type type="WebKitDOMPerformanceTiming*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformance*"/>
+				</parameters>
+			</method>
+			<method name="now" symbol="webkit_dom_performance_now">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformance*"/>
+				</parameters>
+			</method>
+			<property name="navigation" type="WebKitDOMPerformanceNavigation*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="timing" type="WebKitDOMPerformanceTiming*" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMPerformanceEntry" parent="WebKitDOMObject" type-name="WebKitDOMPerformanceEntry" get-type="webkit_dom_performance_entry_get_type">
+			<method name="get_duration" symbol="webkit_dom_performance_entry_get_duration">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceEntry*"/>
+				</parameters>
+			</method>
+			<method name="get_entry_type" symbol="webkit_dom_performance_entry_get_entry_type">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceEntry*"/>
+				</parameters>
+			</method>
+			<method name="get_name" symbol="webkit_dom_performance_entry_get_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceEntry*"/>
+				</parameters>
+			</method>
+			<method name="get_start_time" symbol="webkit_dom_performance_entry_get_start_time">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceEntry*"/>
+				</parameters>
+			</method>
+			<property name="duration" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="entry-type" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="start-time" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMPerformanceEntryList" parent="WebKitDOMObject" type-name="WebKitDOMPerformanceEntryList" get-type="webkit_dom_performance_entry_list_get_type">
+			<method name="get_length" symbol="webkit_dom_performance_entry_list_get_length">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceEntryList*"/>
+				</parameters>
+			</method>
+			<method name="item" symbol="webkit_dom_performance_entry_list_item">
+				<return-type type="WebKitDOMPerformanceEntry*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceEntryList*"/>
+					<parameter name="index" type="gulong"/>
+				</parameters>
+			</method>
+			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMPerformanceNavigation" parent="WebKitDOMObject" type-name="WebKitDOMPerformanceNavigation" get-type="webkit_dom_performance_navigation_get_type">
+			<method name="get_redirect_count" symbol="webkit_dom_performance_navigation_get_redirect_count">
+				<return-type type="gushort"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceNavigation*"/>
+				</parameters>
+			</method>
+			<property name="redirect-count" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="type" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMPerformanceTiming" parent="WebKitDOMObject" type-name="WebKitDOMPerformanceTiming" get-type="webkit_dom_performance_timing_get_type">
+			<method name="get_connect_end" symbol="webkit_dom_performance_timing_get_connect_end">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_connect_start" symbol="webkit_dom_performance_timing_get_connect_start">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_dom_complete" symbol="webkit_dom_performance_timing_get_dom_complete">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_dom_content_loaded_event_end" symbol="webkit_dom_performance_timing_get_dom_content_loaded_event_end">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_dom_content_loaded_event_start" symbol="webkit_dom_performance_timing_get_dom_content_loaded_event_start">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_dom_interactive" symbol="webkit_dom_performance_timing_get_dom_interactive">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_dom_loading" symbol="webkit_dom_performance_timing_get_dom_loading">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_domain_lookup_end" symbol="webkit_dom_performance_timing_get_domain_lookup_end">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_domain_lookup_start" symbol="webkit_dom_performance_timing_get_domain_lookup_start">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_fetch_start" symbol="webkit_dom_performance_timing_get_fetch_start">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_load_event_end" symbol="webkit_dom_performance_timing_get_load_event_end">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_load_event_start" symbol="webkit_dom_performance_timing_get_load_event_start">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_navigation_start" symbol="webkit_dom_performance_timing_get_navigation_start">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_redirect_end" symbol="webkit_dom_performance_timing_get_redirect_end">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_redirect_start" symbol="webkit_dom_performance_timing_get_redirect_start">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_request_start" symbol="webkit_dom_performance_timing_get_request_start">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_response_end" symbol="webkit_dom_performance_timing_get_response_end">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_response_start" symbol="webkit_dom_performance_timing_get_response_start">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_secure_connection_start" symbol="webkit_dom_performance_timing_get_secure_connection_start">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_unload_event_end" symbol="webkit_dom_performance_timing_get_unload_event_end">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<method name="get_unload_event_start" symbol="webkit_dom_performance_timing_get_unload_event_start">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMPerformanceTiming*"/>
+				</parameters>
+			</method>
+			<property name="connect-end" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="connect-start" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="dom-complete" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="dom-content-loaded-event-end" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="dom-content-loaded-event-start" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="dom-interactive" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="dom-loading" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="domain-lookup-end" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="domain-lookup-start" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="fetch-start" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="load-event-end" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="load-event-start" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="navigation-start" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="redirect-end" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="redirect-start" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="request-start" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="response-end" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="response-start" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="secure-connection-start" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="unload-event-end" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="unload-event-start" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMProcessingInstruction" parent="WebKitDOMCharacterData" type-name="WebKitDOMProcessingInstruction" get-type="webkit_dom_processing_instruction_get_type">
 			<implements>
 				<interface name="WebKitDOMEventTarget"/>
 			</implements>
@@ -10076,9 +11657,24 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
-			<property name="data" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="sheet" type="WebKitDOMStyleSheet*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="target" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMPropertyNodeList" parent="WebKitDOMNodeList" type-name="WebKitDOMPropertyNodeList" get-type="webkit_dom_property_node_list_get_type">
+			<method name="get_length" symbol="webkit_dom_property_node_list_get_length">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="void*"/>
+				</parameters>
+			</method>
+			<method name="item" symbol="webkit_dom_property_node_list_item">
+				<return-type type="WebKitDOMNode*"/>
+				<parameters>
+					<parameter name="self" type="void*"/>
+					<parameter name="index" type="gulong"/>
+				</parameters>
+			</method>
+			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMRange" parent="WebKitDOMObject" type-name="WebKitDOMRange" get-type="webkit_dom_range_get_type">
 			<method name="clone_contents" symbol="webkit_dom_range_clone_contents">
@@ -10099,7 +11695,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="to_start" type="gboolean"/>
+					<parameter name="toStart" type="gboolean"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -10108,7 +11704,7 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
 					<parameter name="how" type="gushort"/>
-					<parameter name="source_range" type="WebKitDOMRange*"/>
+					<parameter name="sourceRange" type="WebKitDOMRange*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -10116,7 +11712,7 @@
 				<return-type type="gshort"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="ref_node" type="WebKitDOMNode*"/>
+					<parameter name="refNode" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -10124,7 +11720,7 @@
 				<return-type type="gshort"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="ref_node" type="WebKitDOMNode*"/>
+					<parameter name="refNode" type="WebKitDOMNode*"/>
 					<parameter name="offset" type="glong"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -10218,7 +11814,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="new_node" type="WebKitDOMNode*"/>
+					<parameter name="newNode" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -10226,7 +11822,7 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="ref_node" type="WebKitDOMNode*"/>
+					<parameter name="refNode" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -10234,7 +11830,7 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="ref_node" type="WebKitDOMNode*"/>
+					<parameter name="refNode" type="WebKitDOMNode*"/>
 					<parameter name="offset" type="glong"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -10243,7 +11839,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="ref_node" type="WebKitDOMNode*"/>
+					<parameter name="refNode" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -10251,7 +11847,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="ref_node" type="WebKitDOMNode*"/>
+					<parameter name="refNode" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -10259,7 +11855,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="ref_node" type="WebKitDOMNode*"/>
+					<parameter name="refNode" type="WebKitDOMNode*"/>
 					<parameter name="offset" type="glong"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -10268,7 +11864,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="ref_node" type="WebKitDOMNode*"/>
+					<parameter name="refNode" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -10276,7 +11872,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="ref_node" type="WebKitDOMNode*"/>
+					<parameter name="refNode" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -10284,7 +11880,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="ref_node" type="WebKitDOMNode*"/>
+					<parameter name="refNode" type="WebKitDOMNode*"/>
 					<parameter name="offset" type="glong"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -10293,7 +11889,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="ref_node" type="WebKitDOMNode*"/>
+					<parameter name="refNode" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -10301,7 +11897,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="ref_node" type="WebKitDOMNode*"/>
+					<parameter name="refNode" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -10309,7 +11905,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMRange*"/>
-					<parameter name="new_parent" type="WebKitDOMNode*"/>
+					<parameter name="newParent" type="WebKitDOMNode*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -10386,11 +11982,110 @@
 			<property name="pixel-depth" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="width" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
+		<object name="WebKitDOMShadowRoot" parent="WebKitDOMDocumentFragment" type-name="WebKitDOMShadowRoot" get-type="webkit_dom_shadow_root_get_type">
+			<implements>
+				<interface name="WebKitDOMEventTarget"/>
+			</implements>
+			<method name="element_from_point" symbol="webkit_dom_shadow_root_element_from_point">
+				<return-type type="WebKitDOMElement*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMShadowRoot*"/>
+					<parameter name="x" type="glong"/>
+					<parameter name="y" type="glong"/>
+				</parameters>
+			</method>
+			<method name="get_active_element" symbol="webkit_dom_shadow_root_get_active_element">
+				<return-type type="WebKitDOMElement*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMShadowRoot*"/>
+				</parameters>
+			</method>
+			<method name="get_apply_author_styles" symbol="webkit_dom_shadow_root_get_apply_author_styles">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMShadowRoot*"/>
+				</parameters>
+			</method>
+			<method name="get_element_by_id" symbol="webkit_dom_shadow_root_get_element_by_id">
+				<return-type type="WebKitDOMElement*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMShadowRoot*"/>
+					<parameter name="elementId" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_elements_by_class_name" symbol="webkit_dom_shadow_root_get_elements_by_class_name">
+				<return-type type="WebKitDOMNodeList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMShadowRoot*"/>
+					<parameter name="className" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_elements_by_tag_name" symbol="webkit_dom_shadow_root_get_elements_by_tag_name">
+				<return-type type="WebKitDOMNodeList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMShadowRoot*"/>
+					<parameter name="tagName" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_elements_by_tag_name_ns" symbol="webkit_dom_shadow_root_get_elements_by_tag_name_ns">
+				<return-type type="WebKitDOMNodeList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMShadowRoot*"/>
+					<parameter name="namespaceURI" type="gchar*"/>
+					<parameter name="localName" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_inner_html" symbol="webkit_dom_shadow_root_get_inner_html">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMShadowRoot*"/>
+				</parameters>
+			</method>
+			<method name="get_reset_style_inheritance" symbol="webkit_dom_shadow_root_get_reset_style_inheritance">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMShadowRoot*"/>
+				</parameters>
+			</method>
+			<method name="get_selection" symbol="webkit_dom_shadow_root_get_selection">
+				<return-type type="WebKitDOMDOMSelection*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMShadowRoot*"/>
+				</parameters>
+			</method>
+			<method name="set_apply_author_styles" symbol="webkit_dom_shadow_root_set_apply_author_styles">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMShadowRoot*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_inner_html" symbol="webkit_dom_shadow_root_set_inner_html">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMShadowRoot*"/>
+					<parameter name="value" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_reset_style_inheritance" symbol="webkit_dom_shadow_root_set_reset_style_inheritance">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMShadowRoot*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="active-element" type="WebKitDOMElement*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="apply-author-styles" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="inner-html" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="reset-style-inheritance" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
 		<object name="WebKitDOMStorage" parent="WebKitDOMObject" type-name="WebKitDOMStorage" get-type="webkit_dom_storage_get_type">
 			<method name="clear" symbol="webkit_dom_storage_clear">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMStorage*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="get_item" symbol="webkit_dom_storage_get_item">
@@ -10398,12 +12093,14 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMStorage*"/>
 					<parameter name="key" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="get_length" symbol="webkit_dom_storage_get_length">
 				<return-type type="gulong"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMStorage*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="key" symbol="webkit_dom_storage_key">
@@ -10411,6 +12108,7 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMStorage*"/>
 					<parameter name="index" type="gulong"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="remove_item" symbol="webkit_dom_storage_remove_item">
@@ -10418,6 +12116,7 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMStorage*"/>
 					<parameter name="key" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="set_item" symbol="webkit_dom_storage_set_item">
@@ -10430,6 +12129,10 @@
 				</parameters>
 			</method>
 			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMStorageInfo" parent="WebKitDOMObject" type-name="WebKitDOMStorageInfo" get-type="webkit_dom_storage_info_get_type">
+		</object>
+		<object name="WebKitDOMStorageQuota" parent="WebKitDOMObject" type-name="WebKitDOMStorageQuota" get-type="webkit_dom_storage_quota_get_type">
 		</object>
 		<object name="WebKitDOMStyleMedia" parent="WebKitDOMObject" type-name="WebKitDOMStyleMedia" get-type="webkit_dom_style_media_get_type">
 			<method name="match_medium" symbol="webkit_dom_style_media_match_medium">
@@ -10537,9 +12240,337 @@
 			</method>
 			<property name="whole-text" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
+		<object name="WebKitDOMTextTrack" parent="WebKitDOMObject" type-name="WebKitDOMTextTrack" get-type="webkit_dom_text_track_get_type">
+			<implements>
+				<interface name="WebKitDOMEventTarget"/>
+			</implements>
+			<method name="add_cue" symbol="webkit_dom_text_track_add_cue">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrack*"/>
+					<parameter name="cue" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="dispatch_event" symbol="webkit_dom_text_track_dispatch_event">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrack*"/>
+					<parameter name="evt" type="WebKitDOMEvent*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_active_cues" symbol="webkit_dom_text_track_get_active_cues">
+				<return-type type="WebKitDOMTextTrackCueList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_cues" symbol="webkit_dom_text_track_get_cues">
+				<return-type type="WebKitDOMTextTrackCueList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_id" symbol="webkit_dom_text_track_get_id">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_kind" symbol="webkit_dom_text_track_get_kind">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_label" symbol="webkit_dom_text_track_get_label">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_language" symbol="webkit_dom_text_track_get_language">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_mode" symbol="webkit_dom_text_track_get_mode">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrack*"/>
+				</parameters>
+			</method>
+			<method name="remove_cue" symbol="webkit_dom_text_track_remove_cue">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrack*"/>
+					<parameter name="cue" type="WebKitDOMTextTrackCue*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_mode" symbol="webkit_dom_text_track_set_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrack*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="active-cues" type="WebKitDOMTextTrackCueList*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="cues" type="WebKitDOMTextTrackCueList*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="id" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="kind" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="label" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="language" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="mode" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMTextTrackCue" parent="WebKitDOMObject" type-name="WebKitDOMTextTrackCue" get-type="webkit_dom_text_track_cue_get_type">
+			<implements>
+				<interface name="WebKitDOMEventTarget"/>
+			</implements>
+			<method name="dispatch_event" symbol="webkit_dom_text_track_cue_dispatch_event">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+					<parameter name="evt" type="WebKitDOMEvent*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_align" symbol="webkit_dom_text_track_cue_get_align">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="get_cue_as_html" symbol="webkit_dom_text_track_cue_get_cue_as_html">
+				<return-type type="WebKitDOMDocumentFragment*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="get_end_time" symbol="webkit_dom_text_track_cue_get_end_time">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="get_id" symbol="webkit_dom_text_track_cue_get_id">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="get_line" symbol="webkit_dom_text_track_cue_get_line">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="get_pause_on_exit" symbol="webkit_dom_text_track_cue_get_pause_on_exit">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="get_position" symbol="webkit_dom_text_track_cue_get_position">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="get_size" symbol="webkit_dom_text_track_cue_get_size">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="get_snap_to_lines" symbol="webkit_dom_text_track_cue_get_snap_to_lines">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="get_start_time" symbol="webkit_dom_text_track_cue_get_start_time">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="get_text" symbol="webkit_dom_text_track_cue_get_text">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="get_track" symbol="webkit_dom_text_track_cue_get_track">
+				<return-type type="WebKitDOMTextTrack*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="get_vertical" symbol="webkit_dom_text_track_cue_get_vertical">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+				</parameters>
+			</method>
+			<method name="set_align" symbol="webkit_dom_text_track_cue_set_align">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+					<parameter name="value" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_end_time" symbol="webkit_dom_text_track_cue_set_end_time">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+					<parameter name="value" type="gdouble"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_id" symbol="webkit_dom_text_track_cue_set_id">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_line" symbol="webkit_dom_text_track_cue_set_line">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+					<parameter name="value" type="glong"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_pause_on_exit" symbol="webkit_dom_text_track_cue_set_pause_on_exit">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_position" symbol="webkit_dom_text_track_cue_set_position">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+					<parameter name="value" type="glong"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_size" symbol="webkit_dom_text_track_cue_set_size">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+					<parameter name="value" type="glong"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_snap_to_lines" symbol="webkit_dom_text_track_cue_set_snap_to_lines">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_start_time" symbol="webkit_dom_text_track_cue_set_start_time">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+					<parameter name="value" type="gdouble"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_text" symbol="webkit_dom_text_track_cue_set_text">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_vertical" symbol="webkit_dom_text_track_cue_set_vertical">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCue*"/>
+					<parameter name="value" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<property name="align" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="end-time" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="id" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="line" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pause-on-exit" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="position" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="size" type="glong" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="snap-to-lines" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="start-time" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="track" type="WebKitDOMTextTrack*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="vertical" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMTextTrackCueList" parent="WebKitDOMObject" type-name="WebKitDOMTextTrackCueList" get-type="webkit_dom_text_track_cue_list_get_type">
+			<method name="get_cue_by_id" symbol="webkit_dom_text_track_cue_list_get_cue_by_id">
+				<return-type type="WebKitDOMTextTrackCue*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCueList*"/>
+					<parameter name="id" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_length" symbol="webkit_dom_text_track_cue_list_get_length">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCueList*"/>
+				</parameters>
+			</method>
+			<method name="item" symbol="webkit_dom_text_track_cue_list_item">
+				<return-type type="WebKitDOMTextTrackCue*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackCueList*"/>
+					<parameter name="index" type="gulong"/>
+				</parameters>
+			</method>
+			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMTextTrackList" parent="WebKitDOMObject" type-name="WebKitDOMTextTrackList" get-type="webkit_dom_text_track_list_get_type">
+			<implements>
+				<interface name="WebKitDOMEventTarget"/>
+			</implements>
+			<method name="dispatch_event" symbol="webkit_dom_text_track_list_dispatch_event">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackList*"/>
+					<parameter name="evt" type="WebKitDOMEvent*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_length" symbol="webkit_dom_text_track_list_get_length">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackList*"/>
+				</parameters>
+			</method>
+			<method name="get_track_by_id" symbol="webkit_dom_text_track_list_get_track_by_id">
+				<return-type type="WebKitDOMTextTrack*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackList*"/>
+					<parameter name="id" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="item" symbol="webkit_dom_text_track_list_item">
+				<return-type type="WebKitDOMTextTrack*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTextTrackList*"/>
+					<parameter name="index" type="gulong"/>
+				</parameters>
+			</method>
+			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
 		<object name="WebKitDOMTimeRanges" parent="WebKitDOMObject" type-name="WebKitDOMTimeRanges" get-type="webkit_dom_time_ranges_get_type">
 			<method name="end" symbol="webkit_dom_time_ranges_end">
-				<return-type type="gfloat"/>
+				<return-type type="gdouble"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMTimeRanges*"/>
 					<parameter name="index" type="gulong"/>
@@ -10553,7 +12584,7 @@
 				</parameters>
 			</method>
 			<method name="start" symbol="webkit_dom_time_ranges_start">
-				<return-type type="gfloat"/>
+				<return-type type="gdouble"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMTimeRanges*"/>
 					<parameter name="index" type="gulong"/>
@@ -10561,6 +12592,94 @@
 				</parameters>
 			</method>
 			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMTouch" parent="WebKitDOMObject" type-name="WebKitDOMTouch" get-type="webkit_dom_touch_get_type">
+			<method name="get_client_x" symbol="webkit_dom_touch_get_client_x">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTouch*"/>
+				</parameters>
+			</method>
+			<method name="get_client_y" symbol="webkit_dom_touch_get_client_y">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTouch*"/>
+				</parameters>
+			</method>
+			<method name="get_identifier" symbol="webkit_dom_touch_get_identifier">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTouch*"/>
+				</parameters>
+			</method>
+			<method name="get_page_x" symbol="webkit_dom_touch_get_page_x">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTouch*"/>
+				</parameters>
+			</method>
+			<method name="get_page_y" symbol="webkit_dom_touch_get_page_y">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTouch*"/>
+				</parameters>
+			</method>
+			<method name="get_screen_x" symbol="webkit_dom_touch_get_screen_x">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTouch*"/>
+				</parameters>
+			</method>
+			<method name="get_screen_y" symbol="webkit_dom_touch_get_screen_y">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTouch*"/>
+				</parameters>
+			</method>
+			<method name="get_target" symbol="webkit_dom_touch_get_target">
+				<return-type type="WebKitDOMEventTarget*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTouch*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_force" symbol="webkit_dom_touch_get_webkit_force">
+				<return-type type="gfloat"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTouch*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_radius_x" symbol="webkit_dom_touch_get_webkit_radius_x">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTouch*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_radius_y" symbol="webkit_dom_touch_get_webkit_radius_y">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTouch*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_rotation_angle" symbol="webkit_dom_touch_get_webkit_rotation_angle">
+				<return-type type="gfloat"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMTouch*"/>
+				</parameters>
+			</method>
+			<property name="client-x" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="client-y" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="identifier" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="page-x" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="page-y" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="screen-x" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="screen-y" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="target" type="WebKitDOMEventTarget*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-force" type="gfloat" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-radius-x" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-radius-y" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-rotation-angle" type="gfloat" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMTrackEvent" parent="WebKitDOMEvent" type-name="WebKitDOMTrackEvent" get-type="webkit_dom_track_event_get_type">
 		</object>
 		<object name="WebKitDOMTreeWalker" parent="WebKitDOMObject" type-name="WebKitDOMTreeWalker" get-type="webkit_dom_tree_walker_get_type">
 			<method name="first_child" symbol="webkit_dom_tree_walker_first_child">
@@ -10643,7 +12762,7 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
-			<property name="current-node" type="WebKitDOMNode*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="current-node" type="WebKitDOMNode*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="expand-entity-references" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="filter" type="WebKitDOMNodeFilter*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="root" type="WebKitDOMNode*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -10709,7 +12828,7 @@
 				<parameters>
 					<parameter name="self" type="WebKitDOMUIEvent*"/>
 					<parameter name="type" type="gchar*"/>
-					<parameter name="can_bubble" type="gboolean"/>
+					<parameter name="canBubble" type="gboolean"/>
 					<parameter name="cancelable" type="gboolean"/>
 					<parameter name="view" type="WebKitDOMDOMWindow*"/>
 					<parameter name="detail" type="glong"/>
@@ -10726,6 +12845,12 @@
 			<property name="which" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMValidityState" parent="WebKitDOMObject" type-name="WebKitDOMValidityState" get-type="webkit_dom_validity_state_get_type">
+			<method name="get_bad_input" symbol="webkit_dom_validity_state_get_bad_input">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMValidityState*"/>
+				</parameters>
+			</method>
 			<method name="get_custom_error" symbol="webkit_dom_validity_state_get_custom_error">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -10780,6 +12905,7 @@
 					<parameter name="self" type="WebKitDOMValidityState*"/>
 				</parameters>
 			</method>
+			<property name="bad-input" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="custom-error" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="pattern-mismatch" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="range-overflow" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -10790,99 +12916,192 @@
 			<property name="valid" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="value-missing" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
-		<object name="WebKitDOMWebKitAnimation" parent="WebKitDOMObject" type-name="WebKitDOMWebKitAnimation" get-type="webkit_dom_webkit_animation_get_type">
-			<method name="get_delay" symbol="webkit_dom_webkit_animation_get_delay">
-				<return-type type="gdouble"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMWebKitAnimation*"/>
-				</parameters>
-			</method>
-			<method name="get_direction" symbol="webkit_dom_webkit_animation_get_direction">
-				<return-type type="gushort"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMWebKitAnimation*"/>
-				</parameters>
-			</method>
-			<method name="get_duration" symbol="webkit_dom_webkit_animation_get_duration">
-				<return-type type="gdouble"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMWebKitAnimation*"/>
-				</parameters>
-			</method>
-			<method name="get_elapsed_time" symbol="webkit_dom_webkit_animation_get_elapsed_time">
-				<return-type type="gdouble"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMWebKitAnimation*"/>
-				</parameters>
-			</method>
-			<method name="get_ended" symbol="webkit_dom_webkit_animation_get_ended">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMWebKitAnimation*"/>
-				</parameters>
-			</method>
-			<method name="get_fill_mode" symbol="webkit_dom_webkit_animation_get_fill_mode">
-				<return-type type="gushort"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMWebKitAnimation*"/>
-				</parameters>
-			</method>
-			<method name="get_name" symbol="webkit_dom_webkit_animation_get_name">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMWebKitAnimation*"/>
-				</parameters>
-			</method>
-			<method name="get_paused" symbol="webkit_dom_webkit_animation_get_paused">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMWebKitAnimation*"/>
-				</parameters>
-			</method>
-			<method name="pause" symbol="webkit_dom_webkit_animation_pause">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMWebKitAnimation*"/>
-				</parameters>
-			</method>
-			<method name="play" symbol="webkit_dom_webkit_animation_play">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMWebKitAnimation*"/>
-				</parameters>
-			</method>
-			<method name="set_elapsed_time" symbol="webkit_dom_webkit_animation_set_elapsed_time">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="self" type="WebKitDOMWebKitAnimation*"/>
-					<parameter name="value" type="gdouble"/>
-				</parameters>
-			</method>
-			<property name="delay" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="direction" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="duration" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="elapsed-time" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="ended" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="fill-mode" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="iteration-count" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="paused" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-		</object>
-		<object name="WebKitDOMWebKitAnimationList" parent="WebKitDOMObject" type-name="WebKitDOMWebKitAnimationList" get-type="webkit_dom_webkit_animation_list_get_type">
-			<method name="get_length" symbol="webkit_dom_webkit_animation_list_get_length">
+		<object name="WebKitDOMVideoPlaybackQuality" parent="WebKitDOMObject" type-name="WebKitDOMVideoPlaybackQuality" get-type="webkit_dom_video_playback_quality_get_type">
+			<method name="get_corrupted_video_frames" symbol="webkit_dom_video_playback_quality_get_corrupted_video_frames">
 				<return-type type="gulong"/>
 				<parameters>
-					<parameter name="self" type="WebKitDOMWebKitAnimationList*"/>
+					<parameter name="self" type="WebKitDOMVideoPlaybackQuality*"/>
 				</parameters>
 			</method>
-			<method name="item" symbol="webkit_dom_webkit_animation_list_item">
-				<return-type type="WebKitDOMWebKitAnimation*"/>
+			<method name="get_creation_time" symbol="webkit_dom_video_playback_quality_get_creation_time">
+				<return-type type="gdouble"/>
 				<parameters>
-					<parameter name="self" type="WebKitDOMWebKitAnimationList*"/>
+					<parameter name="self" type="WebKitDOMVideoPlaybackQuality*"/>
+				</parameters>
+			</method>
+			<method name="get_dropped_video_frames" symbol="webkit_dom_video_playback_quality_get_dropped_video_frames">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMVideoPlaybackQuality*"/>
+				</parameters>
+			</method>
+			<method name="get_total_frame_delay" symbol="webkit_dom_video_playback_quality_get_total_frame_delay">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMVideoPlaybackQuality*"/>
+				</parameters>
+			</method>
+			<method name="get_total_video_frames" symbol="webkit_dom_video_playback_quality_get_total_video_frames">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMVideoPlaybackQuality*"/>
+				</parameters>
+			</method>
+			<property name="corrupted-video-frames" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="creation-time" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="dropped-video-frames" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="total-frame-delay" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="total-video-frames" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMVideoTrack" parent="WebKitDOMObject" type-name="WebKitDOMVideoTrack" get-type="webkit_dom_video_track_get_type">
+			<method name="get_id" symbol="webkit_dom_video_track_get_id">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMVideoTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_kind" symbol="webkit_dom_video_track_get_kind">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMVideoTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_label" symbol="webkit_dom_video_track_get_label">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMVideoTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_language" symbol="webkit_dom_video_track_get_language">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMVideoTrack*"/>
+				</parameters>
+			</method>
+			<method name="get_selected" symbol="webkit_dom_video_track_get_selected">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMVideoTrack*"/>
+				</parameters>
+			</method>
+			<method name="set_selected" symbol="webkit_dom_video_track_set_selected">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMVideoTrack*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="id" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="kind" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="label" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="language" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="selected" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMVideoTrackList" parent="WebKitDOMObject" type-name="WebKitDOMVideoTrackList" get-type="webkit_dom_video_track_list_get_type">
+			<implements>
+				<interface name="WebKitDOMEventTarget"/>
+			</implements>
+			<method name="dispatch_event" symbol="webkit_dom_video_track_list_dispatch_event">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMVideoTrackList*"/>
+					<parameter name="evt" type="WebKitDOMEvent*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_length" symbol="webkit_dom_video_track_list_get_length">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMVideoTrackList*"/>
+				</parameters>
+			</method>
+			<method name="get_track_by_id" symbol="webkit_dom_video_track_list_get_track_by_id">
+				<return-type type="WebKitDOMVideoTrack*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMVideoTrackList*"/>
+					<parameter name="id" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="item" symbol="webkit_dom_video_track_list_item">
+				<return-type type="WebKitDOMVideoTrack*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMVideoTrackList*"/>
 					<parameter name="index" type="gulong"/>
 				</parameters>
 			</method>
 			<property name="length" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitDOMWebKitNamedFlow" parent="WebKitDOMObject" type-name="WebKitDOMWebKitNamedFlow" get-type="webkit_dom_webkit_named_flow_get_type">
+			<implements>
+				<interface name="WebKitDOMEventTarget"/>
+			</implements>
+			<method name="dispatch_event" symbol="webkit_dom_webkit_named_flow_dispatch_event">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWebKitNamedFlow*"/>
+					<parameter name="event" type="WebKitDOMEvent*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_content" symbol="webkit_dom_webkit_named_flow_get_content">
+				<return-type type="WebKitDOMNodeList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWebKitNamedFlow*"/>
+				</parameters>
+			</method>
+			<method name="get_content_nodes" symbol="webkit_dom_webkit_named_flow_get_content_nodes">
+				<return-type type="WebKitDOMNodeList*"/>
+				<parameters>
+					<parameter name="flow" type="WebKitDOMWebKitNamedFlow*"/>
+				</parameters>
+			</method>
+			<method name="get_first_empty_region_index" symbol="webkit_dom_webkit_named_flow_get_first_empty_region_index">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWebKitNamedFlow*"/>
+				</parameters>
+			</method>
+			<method name="get_name" symbol="webkit_dom_webkit_named_flow_get_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWebKitNamedFlow*"/>
+				</parameters>
+			</method>
+			<method name="get_overflow" symbol="webkit_dom_webkit_named_flow_get_overflow">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="flow" type="WebKitDOMWebKitNamedFlow*"/>
+				</parameters>
+			</method>
+			<method name="get_overset" symbol="webkit_dom_webkit_named_flow_get_overset">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWebKitNamedFlow*"/>
+				</parameters>
+			</method>
+			<method name="get_regions" symbol="webkit_dom_webkit_named_flow_get_regions">
+				<return-type type="WebKitDOMNodeList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWebKitNamedFlow*"/>
+				</parameters>
+			</method>
+			<method name="get_regions_by_content" symbol="webkit_dom_webkit_named_flow_get_regions_by_content">
+				<return-type type="WebKitDOMNodeList*"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWebKitNamedFlow*"/>
+					<parameter name="contentNode" type="WebKitDOMNode*"/>
+				</parameters>
+			</method>
+			<method name="get_regions_by_content_node" symbol="webkit_dom_webkit_named_flow_get_regions_by_content_node">
+				<return-type type="WebKitDOMNodeList*"/>
+				<parameters>
+					<parameter name="flow" type="WebKitDOMWebKitNamedFlow*"/>
+					<parameter name="content_node" type="WebKitDOMNode*"/>
+				</parameters>
+			</method>
+			<property name="first-empty-region-index" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="overset" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitDOMWebKitPoint" parent="WebKitDOMObject" type-name="WebKitDOMWebKitPoint" get-type="webkit_dom_webkit_point_get_type">
 			<method name="get_x" symbol="webkit_dom_webkit_point_get_x">
@@ -10914,14 +13133,89 @@
 			<property name="x" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="y" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
+		<object name="WebKitDOMWheelEvent" parent="WebKitDOMMouseEvent" type-name="WebKitDOMWheelEvent" get-type="webkit_dom_wheel_event_get_type">
+			<method name="get_delta_mode" symbol="webkit_dom_wheel_event_get_delta_mode">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWheelEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_delta_x" symbol="webkit_dom_wheel_event_get_delta_x">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWheelEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_delta_y" symbol="webkit_dom_wheel_event_get_delta_y">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWheelEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_delta_z" symbol="webkit_dom_wheel_event_get_delta_z">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWheelEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_webkit_direction_inverted_from_device" symbol="webkit_dom_wheel_event_get_webkit_direction_inverted_from_device">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWheelEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_wheel_delta" symbol="webkit_dom_wheel_event_get_wheel_delta">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWheelEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_wheel_delta_x" symbol="webkit_dom_wheel_event_get_wheel_delta_x">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWheelEvent*"/>
+				</parameters>
+			</method>
+			<method name="get_wheel_delta_y" symbol="webkit_dom_wheel_event_get_wheel_delta_y">
+				<return-type type="glong"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWheelEvent*"/>
+				</parameters>
+			</method>
+			<method name="init_wheel_event" symbol="webkit_dom_wheel_event_init_wheel_event">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="WebKitDOMWheelEvent*"/>
+					<parameter name="wheelDeltaX" type="glong"/>
+					<parameter name="wheelDeltaY" type="glong"/>
+					<parameter name="view" type="WebKitDOMDOMWindow*"/>
+					<parameter name="screenX" type="glong"/>
+					<parameter name="screenY" type="glong"/>
+					<parameter name="clientX" type="glong"/>
+					<parameter name="clientY" type="glong"/>
+					<parameter name="ctrlKey" type="gboolean"/>
+					<parameter name="altKey" type="gboolean"/>
+					<parameter name="shiftKey" type="gboolean"/>
+					<parameter name="metaKey" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="delta-mode" type="gulong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="delta-x" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="delta-y" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="delta-z" type="gdouble" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="webkit-direction-inverted-from-device" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="wheel-delta" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="wheel-delta-x" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="wheel-delta-y" type="glong" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
 		<object name="WebKitDOMXPathExpression" parent="WebKitDOMObject" type-name="WebKitDOMXPathExpression" get-type="webkit_dom_xpath_expression_get_type">
 			<method name="evaluate" symbol="webkit_dom_xpath_expression_evaluate">
 				<return-type type="WebKitDOMXPathResult*"/>
 				<parameters>
 					<parameter name="self" type="WebKitDOMXPathExpression*"/>
-					<parameter name="context_node" type="WebKitDOMNode*"/>
+					<parameter name="contextNode" type="WebKitDOMNode*"/>
 					<parameter name="type" type="gushort"/>
-					<parameter name="in_result" type="WebKitDOMXPathResult*"/>
+					<parameter name="inResult" type="WebKitDOMXPathResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -11110,6 +13404,108 @@
 				</parameters>
 			</signal>
 		</object>
+		<object name="WebKitFaviconDatabase" parent="GObject" type-name="WebKitFaviconDatabase" get-type="webkit_favicon_database_get_type">
+			<method name="clear" symbol="webkit_favicon_database_clear">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="database" type="WebKitFaviconDatabase*"/>
+				</parameters>
+			</method>
+			<method name="get_favicon_pixbuf" symbol="webkit_favicon_database_get_favicon_pixbuf">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="database" type="WebKitFaviconDatabase*"/>
+					<parameter name="page_uri" type="gchar*"/>
+					<parameter name="width" type="guint"/>
+					<parameter name="height" type="guint"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="get_favicon_pixbuf_finish" symbol="webkit_favicon_database_get_favicon_pixbuf_finish">
+				<return-type type="GdkPixbuf*"/>
+				<parameters>
+					<parameter name="database" type="WebKitFaviconDatabase*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_favicon_uri" symbol="webkit_favicon_database_get_favicon_uri">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="database" type="WebKitFaviconDatabase*"/>
+					<parameter name="page_uri" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_path" symbol="webkit_favicon_database_get_path">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="database" type="WebKitFaviconDatabase*"/>
+				</parameters>
+			</method>
+			<method name="set_path" symbol="webkit_favicon_database_set_path">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="database" type="WebKitFaviconDatabase*"/>
+					<parameter name="path" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="try_get_favicon_pixbuf" symbol="webkit_favicon_database_try_get_favicon_pixbuf">
+				<return-type type="GdkPixbuf*"/>
+				<parameters>
+					<parameter name="database" type="WebKitFaviconDatabase*"/>
+					<parameter name="page_uri" type="gchar*"/>
+					<parameter name="width" type="guint"/>
+					<parameter name="height" type="guint"/>
+				</parameters>
+			</method>
+			<property name="path" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="icon-loaded" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitFaviconDatabase*"/>
+					<parameter name="p0" type="char*"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="WebKitFileChooserRequest" parent="GObject" type-name="WebKitFileChooserRequest" get-type="webkit_file_chooser_request_get_type">
+			<method name="get_mime_types" symbol="webkit_file_chooser_request_get_mime_types">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="request" type="WebKitFileChooserRequest*"/>
+				</parameters>
+			</method>
+			<method name="get_mime_types_filter" symbol="webkit_file_chooser_request_get_mime_types_filter">
+				<return-type type="GtkFileFilter*"/>
+				<parameters>
+					<parameter name="request" type="WebKitFileChooserRequest*"/>
+				</parameters>
+			</method>
+			<method name="get_select_multiple" symbol="webkit_file_chooser_request_get_select_multiple">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="request" type="WebKitFileChooserRequest*"/>
+				</parameters>
+			</method>
+			<method name="get_selected_files" symbol="webkit_file_chooser_request_get_selected_files">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="request" type="WebKitFileChooserRequest*"/>
+				</parameters>
+			</method>
+			<method name="select_files" symbol="webkit_file_chooser_request_select_files">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="request" type="WebKitFileChooserRequest*"/>
+					<parameter name="files" type="gchar**"/>
+				</parameters>
+			</method>
+			<property name="filter" type="GtkFileFilter*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="mime-types" type="GStrv*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="select-multiple" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="selected-files" type="GStrv*" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
 		<object name="WebKitGeolocationPolicyDecision" parent="GObject" type-name="WebKitGeolocationPolicyDecision" get-type="webkit_geolocation_policy_decision_get_type">
 		</object>
 		<object name="WebKitHitTestResult" parent="GObject" type-name="WebKitHitTestResult" get-type="webkit_hit_test_result_get_type">
@@ -11118,6 +13514,8 @@
 			<property name="inner-node" type="WebKitDOMNode*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="link-uri" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="media-uri" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="x" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="y" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="WebKitIconDatabase" parent="GObject" type-name="WebKitIconDatabase" get-type="webkit_icon_database_get_type">
 			<method name="clear" symbol="webkit_icon_database_clear">
@@ -11199,6 +13597,12 @@
 					<parameter name="response" type="WebKitNetworkResponse*"/>
 				</parameters>
 			</method>
+			<method name="get_suggested_filename" symbol="webkit_network_response_get_suggested_filename">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="response" type="WebKitNetworkResponse*"/>
+				</parameters>
+			</method>
 			<method name="get_uri" symbol="webkit_network_response_get_uri">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -11219,6 +13623,7 @@
 				</parameters>
 			</method>
 			<property name="message" type="SoupMessage*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="suggested-filename" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="uri" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="WebKitSecurityOrigin" parent="GObject" type-name="WebKitSecurityOrigin" get-type="webkit_security_origin_get_type">
@@ -11545,6 +13950,12 @@
 					<parameter name="frame" type="WebKitWebFrame*"/>
 				</parameters>
 			</method>
+			<method name="get_dom_document" symbol="webkit_web_frame_get_dom_document">
+				<return-type type="WebKitDOMDocument*"/>
+				<parameters>
+					<parameter name="frame" type="WebKitWebFrame*"/>
+				</parameters>
+			</method>
 			<method name="get_global_context" symbol="webkit_web_frame_get_global_context">
 				<return-type type="JSGlobalContextRef"/>
 				<parameters>
@@ -11716,17 +14127,58 @@
 					<parameter name="p1" type="char*"/>
 				</parameters>
 			</signal>
+			<signal name="insecure-content-run" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebFrame*"/>
+					<parameter name="p0" type="WebKitSecurityOrigin*"/>
+					<parameter name="p1" type="char*"/>
+				</parameters>
+			</signal>
 			<signal name="load-committed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="object" type="WebKitWebFrame*"/>
 				</parameters>
 			</signal>
-			<signal name="load-done" when="LAST">
+			<signal name="resource-content-length-received" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="object" type="WebKitWebFrame*"/>
-					<parameter name="p0" type="gboolean"/>
+					<parameter name="p0" type="WebKitWebResource*"/>
+					<parameter name="p1" type="gint"/>
+				</parameters>
+			</signal>
+			<signal name="resource-load-failed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebFrame*"/>
+					<parameter name="p0" type="WebKitWebResource*"/>
+					<parameter name="p1" type="gpointer"/>
+				</parameters>
+			</signal>
+			<signal name="resource-load-finished" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebFrame*"/>
+					<parameter name="p0" type="WebKitWebResource*"/>
+				</parameters>
+			</signal>
+			<signal name="resource-request-starting" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebFrame*"/>
+					<parameter name="p0" type="WebKitWebResource*"/>
+					<parameter name="p1" type="WebKitNetworkRequest*"/>
+					<parameter name="p2" type="WebKitNetworkResponse*"/>
+				</parameters>
+			</signal>
+			<signal name="resource-response-received" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebFrame*"/>
+					<parameter name="p0" type="WebKitWebResource*"/>
+					<parameter name="p1" type="WebKitNetworkResponse*"/>
 				</parameters>
 			</signal>
 			<signal name="scrollbars-policy-changed" when="LAST">
@@ -11807,7 +14259,7 @@
 			<method name="close" symbol="webkit_web_inspector_close">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webInspector" type="WebKitWebInspector*"/>
+					<parameter name="web_inspector" type="WebKitWebInspector*"/>
 				</parameters>
 			</method>
 			<method name="get_inspected_uri" symbol="webkit_web_inspector_get_inspected_uri">
@@ -11833,14 +14285,14 @@
 			<method name="inspect_node" symbol="webkit_web_inspector_inspect_node">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webInspector" type="WebKitWebInspector*"/>
+					<parameter name="web_inspector" type="WebKitWebInspector*"/>
 					<parameter name="node" type="WebKitDOMNode*"/>
 				</parameters>
 			</method>
 			<method name="show" symbol="webkit_web_inspector_show">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webInspector" type="WebKitWebInspector*"/>
+					<parameter name="web_inspector" type="WebKitWebInspector*"/>
 				</parameters>
 			</method>
 			<property name="inspected-uri" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -11940,38 +14392,38 @@
 			<method name="get_description" symbol="webkit_web_plugin_get_description">
 				<return-type type="char*"/>
 				<parameters>
-					<parameter name="p1" type="WebKitWebPlugin*"/>
+					<parameter name="plugin" type="WebKitWebPlugin*"/>
 				</parameters>
 			</method>
 			<method name="get_enabled" symbol="webkit_web_plugin_get_enabled">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="p1" type="WebKitWebPlugin*"/>
+					<parameter name="plugin" type="WebKitWebPlugin*"/>
 				</parameters>
 			</method>
 			<method name="get_mimetypes" symbol="webkit_web_plugin_get_mimetypes">
 				<return-type type="GSList*"/>
 				<parameters>
-					<parameter name="p1" type="WebKitWebPlugin*"/>
+					<parameter name="plugin" type="WebKitWebPlugin*"/>
 				</parameters>
 			</method>
 			<method name="get_name" symbol="webkit_web_plugin_get_name">
 				<return-type type="char*"/>
 				<parameters>
-					<parameter name="p1" type="WebKitWebPlugin*"/>
+					<parameter name="plugin" type="WebKitWebPlugin*"/>
 				</parameters>
 			</method>
 			<method name="get_path" symbol="webkit_web_plugin_get_path">
 				<return-type type="char*"/>
 				<parameters>
-					<parameter name="p1" type="WebKitWebPlugin*"/>
+					<parameter name="plugin" type="WebKitWebPlugin*"/>
 				</parameters>
 			</method>
 			<method name="set_enabled" symbol="webkit_web_plugin_set_enabled">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="p1" type="WebKitWebPlugin*"/>
-					<parameter name="p2" type="gboolean"/>
+					<parameter name="plugin" type="WebKitWebPlugin*"/>
+					<parameter name="enabled" type="gboolean"/>
 				</parameters>
 			</method>
 			<property name="enabled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -11980,26 +14432,26 @@
 			<method name="get_plugin_for_mimetype" symbol="webkit_web_plugin_database_get_plugin_for_mimetype">
 				<return-type type="WebKitWebPlugin*"/>
 				<parameters>
-					<parameter name="p1" type="WebKitWebPluginDatabase*"/>
-					<parameter name="p2" type="char*"/>
+					<parameter name="database" type="WebKitWebPluginDatabase*"/>
+					<parameter name="mime_type" type="char*"/>
 				</parameters>
 			</method>
 			<method name="get_plugins" symbol="webkit_web_plugin_database_get_plugins">
 				<return-type type="GSList*"/>
 				<parameters>
-					<parameter name="p1" type="WebKitWebPluginDatabase*"/>
+					<parameter name="database" type="WebKitWebPluginDatabase*"/>
 				</parameters>
 			</method>
 			<method name="plugins_list_free" symbol="webkit_web_plugin_database_plugins_list_free">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="p1" type="GSList*"/>
+					<parameter name="list" type="GSList*"/>
 				</parameters>
 			</method>
 			<method name="refresh" symbol="webkit_web_plugin_database_refresh">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="p1" type="WebKitWebPluginDatabase*"/>
+					<parameter name="database" type="WebKitWebPluginDatabase*"/>
 				</parameters>
 			</method>
 		</object>
@@ -12069,6 +14521,33 @@
 			<property name="frame-name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="mime-type" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="uri" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<signal name="content-length-received" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebResource*"/>
+					<parameter name="p0" type="gint"/>
+				</parameters>
+			</signal>
+			<signal name="load-failed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebResource*"/>
+					<parameter name="p0" type="gpointer"/>
+				</parameters>
+			</signal>
+			<signal name="load-finished" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebResource*"/>
+				</parameters>
+			</signal>
+			<signal name="response-received" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebResource*"/>
+					<parameter name="p0" type="WebKitNetworkResponse*"/>
+				</parameters>
+			</signal>
 		</object>
 		<object name="WebKitWebSettings" parent="GObject" type-name="WebKitWebSettings" get-type="webkit_web_settings_get_type">
 			<method name="copy" symbol="webkit_web_settings_copy">
@@ -12095,9 +14574,11 @@
 			<property name="default-font-size" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="default-monospace-font-size" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="editing-behavior" type="WebKitEditingBehavior" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-accelerated-compositing" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-caret-browsing" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-default-context-menu" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-developer-extras" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-display-of-insecure-content" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-dns-prefetching" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-dom-paste" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-file-access-from-file-uris" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
@@ -12107,15 +14588,20 @@
 			<property name="enable-html5-local-storage" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-hyperlink-auditing" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-java-applet" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-media-stream" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-mediasource" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-offline-web-application-cache" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-page-cache" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-plugins" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-private-browsing" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-running-of-insecure-content" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-scripts" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-site-specific-quirks" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-smooth-scrolling" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-spatial-navigation" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-spell-checking" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-universal-access-from-file-uris" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-webaudio" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-webgl" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-xss-auditor" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enforce-96-dpi" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
@@ -12123,11 +14609,14 @@
 			<property name="html5-local-storage-database-path" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="javascript-can-access-clipboard" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="javascript-can-open-windows-automatically" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="media-playback-allows-inline" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="media-playback-requires-user-gesture" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="minimum-font-size" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="minimum-logical-font-size" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="monospace-font-family" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="print-backgrounds" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="resizable-text-areas" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="respect-image-orientation" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="sans-serif-font-family" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="serif-font-family" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="spell-checking-languages" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
@@ -12144,271 +14633,277 @@
 			<method name="can_copy_clipboard" symbol="webkit_web_view_can_copy_clipboard">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="can_cut_clipboard" symbol="webkit_web_view_can_cut_clipboard">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="can_go_back" symbol="webkit_web_view_can_go_back">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="can_go_back_or_forward" symbol="webkit_web_view_can_go_back_or_forward">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="steps" type="gint"/>
 				</parameters>
 			</method>
 			<method name="can_go_forward" symbol="webkit_web_view_can_go_forward">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="can_paste_clipboard" symbol="webkit_web_view_can_paste_clipboard">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="can_redo" symbol="webkit_web_view_can_redo">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="can_show_mime_type" symbol="webkit_web_view_can_show_mime_type">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="mime_type" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="can_undo" symbol="webkit_web_view_can_undo">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="copy_clipboard" symbol="webkit_web_view_copy_clipboard">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="cut_clipboard" symbol="webkit_web_view_cut_clipboard">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="delete_selection" symbol="webkit_web_view_delete_selection">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="execute_script" symbol="webkit_web_view_execute_script">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="script" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_back_forward_list" symbol="webkit_web_view_get_back_forward_list">
 				<return-type type="WebKitWebBackForwardList*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_copy_target_list" symbol="webkit_web_view_get_copy_target_list">
 				<return-type type="GtkTargetList*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_custom_encoding" symbol="webkit_web_view_get_custom_encoding">
 				<return-type type="char*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_dom_document" symbol="webkit_web_view_get_dom_document">
 				<return-type type="WebKitDOMDocument*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_editable" symbol="webkit_web_view_get_editable">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_encoding" symbol="webkit_web_view_get_encoding">
 				<return-type type="gchar*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_focused_frame" symbol="webkit_web_view_get_focused_frame">
 				<return-type type="WebKitWebFrame*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_full_content_zoom" symbol="webkit_web_view_get_full_content_zoom">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_hit_test_result" symbol="webkit_web_view_get_hit_test_result">
 				<return-type type="WebKitHitTestResult*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="event" type="GdkEventButton*"/>
 				</parameters>
 			</method>
 			<method name="get_icon_pixbuf" symbol="webkit_web_view_get_icon_pixbuf">
 				<return-type type="GdkPixbuf*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_icon_uri" symbol="webkit_web_view_get_icon_uri">
 				<return-type type="gchar*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_inspector" symbol="webkit_web_view_get_inspector">
 				<return-type type="WebKitWebInspector*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_load_status" symbol="webkit_web_view_get_load_status">
 				<return-type type="WebKitLoadStatus"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_main_frame" symbol="webkit_web_view_get_main_frame">
 				<return-type type="WebKitWebFrame*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_paste_target_list" symbol="webkit_web_view_get_paste_target_list">
 				<return-type type="GtkTargetList*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_progress" symbol="webkit_web_view_get_progress">
 				<return-type type="gdouble"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_settings" symbol="webkit_web_view_get_settings">
 				<return-type type="WebKitWebSettings*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</method>
+			<method name="get_snapshot" symbol="webkit_web_view_get_snapshot">
+				<return-type type="cairo_surface_t*"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_title" symbol="webkit_web_view_get_title">
 				<return-type type="gchar*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_transparent" symbol="webkit_web_view_get_transparent">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_uri" symbol="webkit_web_view_get_uri">
 				<return-type type="gchar*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_view_mode" symbol="webkit_web_view_get_view_mode">
 				<return-type type="WebKitWebViewViewMode"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_view_source_mode" symbol="webkit_web_view_get_view_source_mode">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_viewport_attributes" symbol="webkit_web_view_get_viewport_attributes">
 				<return-type type="WebKitViewportAttributes*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_window_features" symbol="webkit_web_view_get_window_features">
 				<return-type type="WebKitWebWindowFeatures*"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="get_zoom_level" symbol="webkit_web_view_get_zoom_level">
 				<return-type type="gfloat"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="go_back" symbol="webkit_web_view_go_back">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="go_back_or_forward" symbol="webkit_web_view_go_back_or_forward">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="steps" type="gint"/>
 				</parameters>
 			</method>
 			<method name="go_forward" symbol="webkit_web_view_go_forward">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="go_to_back_forward_item" symbol="webkit_web_view_go_to_back_forward_item">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="item" type="WebKitWebHistoryItem*"/>
 				</parameters>
 			</method>
 			<method name="has_selection" symbol="webkit_web_view_has_selection">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="load_html_string" symbol="webkit_web_view_load_html_string">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="content" type="gchar*"/>
 					<parameter name="base_uri" type="gchar*"/>
 				</parameters>
@@ -12416,14 +14911,14 @@
 			<method name="load_request" symbol="webkit_web_view_load_request">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="request" type="WebKitNetworkRequest*"/>
 				</parameters>
 			</method>
 			<method name="load_string" symbol="webkit_web_view_load_string">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="content" type="gchar*"/>
 					<parameter name="mime_type" type="gchar*"/>
 					<parameter name="encoding" type="gchar*"/>
@@ -12433,14 +14928,14 @@
 			<method name="load_uri" symbol="webkit_web_view_load_uri">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="uri" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="mark_text_matches" symbol="webkit_web_view_mark_text_matches">
 				<return-type type="guint"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="string" type="gchar*"/>
 					<parameter name="case_sensitive" type="gboolean"/>
 					<parameter name="limit" type="guint"/>
@@ -12449,7 +14944,7 @@
 			<method name="move_cursor" symbol="webkit_web_view_move_cursor">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="step" type="GtkMovementStep"/>
 					<parameter name="count" type="gint"/>
 				</parameters>
@@ -12460,38 +14955,38 @@
 			<method name="open" symbol="webkit_web_view_open">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="uri" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="paste_clipboard" symbol="webkit_web_view_paste_clipboard">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="redo" symbol="webkit_web_view_redo">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="reload" symbol="webkit_web_view_reload">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="reload_bypass_cache" symbol="webkit_web_view_reload_bypass_cache">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="search_text" symbol="webkit_web_view_search_text">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="text" type="gchar*"/>
 					<parameter name="case_sensitive" type="gboolean"/>
 					<parameter name="forward" type="gboolean"/>
@@ -12501,107 +14996,115 @@
 			<method name="select_all" symbol="webkit_web_view_select_all">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="set_custom_encoding" symbol="webkit_web_view_set_custom_encoding">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="encoding" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="set_editable" symbol="webkit_web_view_set_editable">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="flag" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_full_content_zoom" symbol="webkit_web_view_set_full_content_zoom">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="full_content_zoom" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_highlight_text_matches" symbol="webkit_web_view_set_highlight_text_matches">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="highlight" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_maintains_back_forward_list" symbol="webkit_web_view_set_maintains_back_forward_list">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="flag" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_settings" symbol="webkit_web_view_set_settings">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="settings" type="WebKitWebSettings*"/>
 				</parameters>
 			</method>
 			<method name="set_transparent" symbol="webkit_web_view_set_transparent">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="flag" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_view_mode" symbol="webkit_web_view_set_view_mode">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="mode" type="WebKitWebViewViewMode"/>
 				</parameters>
 			</method>
 			<method name="set_view_source_mode" symbol="webkit_web_view_set_view_source_mode">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="view_source_mode" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_zoom_level" symbol="webkit_web_view_set_zoom_level">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="zoom_level" type="gfloat"/>
 				</parameters>
 			</method>
 			<method name="stop_loading" symbol="webkit_web_view_stop_loading">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</method>
+			<method name="try_get_favicon_pixbuf" symbol="webkit_web_view_try_get_favicon_pixbuf">
+				<return-type type="GdkPixbuf*"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+					<parameter name="width" type="guint"/>
+					<parameter name="height" type="guint"/>
 				</parameters>
 			</method>
 			<method name="undo" symbol="webkit_web_view_undo">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="unmark_text_matches" symbol="webkit_web_view_unmark_text_matches">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="zoom_in" symbol="webkit_web_view_zoom_in">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="zoom_out" symbol="webkit_web_view_zoom_out">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="webView" type="WebKitWebView*"/>
+					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<property name="copy-target-list" type="GtkTargetList*" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -12637,6 +15140,15 @@
 					<parameter name="message" type="char*"/>
 					<parameter name="line_number" type="gint"/>
 					<parameter name="source_id" type="char*"/>
+				</parameters>
+			</signal>
+			<signal name="context-menu" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebView*"/>
+					<parameter name="p0" type="GtkWidget*"/>
+					<parameter name="p1" type="WebKitHitTestResult*"/>
+					<parameter name="p2" type="gboolean"/>
 				</parameters>
 			</signal>
 			<signal name="copy-clipboard" when="LAST">
@@ -12686,7 +15198,7 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="object" type="WebKitWebView*"/>
-					<parameter name="p0" type="GObject*"/>
+					<parameter name="p0" type="WebKitDownload*"/>
 				</parameters>
 			</signal>
 			<signal name="editing-began" when="LAST">
@@ -12699,6 +15211,13 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="object" type="WebKitWebView*"/>
+				</parameters>
+			</signal>
+			<signal name="entering-fullscreen" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+					<parameter name="p0" type="WebKitDOMHTMLElement*"/>
 				</parameters>
 			</signal>
 			<signal name="frame-created" when="LAST">
@@ -12738,6 +15257,13 @@
 					<parameter name="p0" type="char*"/>
 				</parameters>
 			</signal>
+			<signal name="leaving-fullscreen" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+					<parameter name="p0" type="WebKitDOMHTMLElement*"/>
+				</parameters>
+			</signal>
 			<signal name="load-committed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -12751,7 +15277,7 @@
 					<parameter name="object" type="WebKitWebView*"/>
 					<parameter name="p0" type="WebKitWebFrame*"/>
 					<parameter name="p1" type="char*"/>
-					<parameter name="p2" type="gpointer"/>
+					<parameter name="p2" type="GError*"/>
 				</parameters>
 			</signal>
 			<signal name="load-finished" when="LAST">
@@ -12854,6 +15380,32 @@
 					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</signal>
+			<signal name="resource-content-length-received" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebView*"/>
+					<parameter name="p0" type="WebKitWebFrame*"/>
+					<parameter name="p1" type="WebKitWebResource*"/>
+					<parameter name="p2" type="gint"/>
+				</parameters>
+			</signal>
+			<signal name="resource-load-failed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebView*"/>
+					<parameter name="p0" type="WebKitWebFrame*"/>
+					<parameter name="p1" type="WebKitWebResource*"/>
+					<parameter name="p2" type="GError*"/>
+				</parameters>
+			</signal>
+			<signal name="resource-load-finished" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebView*"/>
+					<parameter name="p0" type="WebKitWebFrame*"/>
+					<parameter name="p1" type="WebKitWebResource*"/>
+				</parameters>
+			</signal>
 			<signal name="resource-request-starting" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -12862,6 +15414,22 @@
 					<parameter name="p1" type="WebKitWebResource*"/>
 					<parameter name="p2" type="WebKitNetworkRequest*"/>
 					<parameter name="p3" type="WebKitNetworkResponse*"/>
+				</parameters>
+			</signal>
+			<signal name="resource-response-received" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebView*"/>
+					<parameter name="p0" type="WebKitWebFrame*"/>
+					<parameter name="p1" type="WebKitWebResource*"/>
+					<parameter name="p2" type="WebKitNetworkResponse*"/>
+				</parameters>
+			</signal>
+			<signal name="run-file-chooser" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+					<parameter name="request" type="WebKitFileChooserRequest*"/>
 				</parameters>
 			</signal>
 			<signal name="script-alert" when="LAST">
@@ -13076,14 +15644,23 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="target" type="WebKitDOMEventTarget*"/>
-					<parameter name="eventName" type="char*"/>
+					<parameter name="event_name" type="char*"/>
 					<parameter name="handler" type="GCallback"/>
-					<parameter name="bubble" type="gboolean"/>
-					<parameter name="userData" type="gpointer"/>
+					<parameter name="use_capture" type="gboolean"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="add_event_listener_with_closure" symbol="webkit_dom_event_target_add_event_listener_with_closure">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="target" type="WebKitDOMEventTarget*"/>
+					<parameter name="event_name" type="char*"/>
+					<parameter name="handler" type="GClosure*"/>
+					<parameter name="use_capture" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="dispatch_event" symbol="webkit_dom_event_target_dispatch_event">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="target" type="WebKitDOMEventTarget*"/>
 					<parameter name="event" type="WebKitDOMEvent*"/>
@@ -13094,23 +15671,31 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="target" type="WebKitDOMEventTarget*"/>
-					<parameter name="eventName" type="char*"/>
+					<parameter name="event_name" type="char*"/>
 					<parameter name="handler" type="GCallback"/>
-					<parameter name="bubble" type="gboolean"/>
+					<parameter name="use_capture" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="remove_event_listener_with_closure" symbol="webkit_dom_event_target_remove_event_listener_with_closure">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="target" type="WebKitDOMEventTarget*"/>
+					<parameter name="event_name" type="char*"/>
+					<parameter name="handler" type="GClosure*"/>
+					<parameter name="use_capture" type="gboolean"/>
 				</parameters>
 			</method>
 			<vfunc name="add_event_listener">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="target" type="WebKitDOMEventTarget*"/>
-					<parameter name="eventName" type="char*"/>
-					<parameter name="handler" type="GCallback"/>
-					<parameter name="bubble" type="gboolean"/>
-					<parameter name="userData" type="gpointer"/>
+					<parameter name="event_name" type="char*"/>
+					<parameter name="handler" type="GClosure*"/>
+					<parameter name="use_capture" type="gboolean"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="dispatch_event">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="target" type="WebKitDOMEventTarget*"/>
 					<parameter name="event" type="WebKitDOMEvent*"/>
@@ -13121,9 +15706,9 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="target" type="WebKitDOMEventTarget*"/>
-					<parameter name="eventName" type="char*"/>
-					<parameter name="handler" type="GCallback"/>
-					<parameter name="bubble" type="gboolean"/>
+					<parameter name="event_name" type="char*"/>
+					<parameter name="handler" type="GClosure*"/>
+					<parameter name="use_capture" type="gboolean"/>
 				</parameters>
 			</vfunc>
 		</interface>
@@ -13180,7 +15765,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="checker" type="WebKitSpellChecker*"/>
-					<parameter name="word" type="char*"/>
+					<parameter name="string" type="char*"/>
 					<parameter name="misspelling_location" type="int*"/>
 					<parameter name="misspelling_length" type="int*"/>
 				</parameters>
@@ -13222,10 +15807,10 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="WEBKIT_MAJOR_VERSION" type="int" value="1"/>
-		<constant name="WEBKIT_MICRO_VERSION" type="int" value="1"/>
-		<constant name="WEBKIT_MINOR_VERSION" type="int" value="6"/>
-		<constant name="WEBKIT_USER_AGENT_MAJOR_VERSION" type="int" value="535"/>
-		<constant name="WEBKIT_USER_AGENT_MINOR_VERSION" type="int" value="4"/>
+		<constant name="WEBKIT_MAJOR_VERSION" type="int" value="2"/>
+		<constant name="WEBKIT_MICRO_VERSION" type="int" value="11"/>
+		<constant name="WEBKIT_MINOR_VERSION" type="int" value="4"/>
+		<constant name="WEBKIT_USER_AGENT_MAJOR_VERSION" type="int" value="538"/>
+		<constant name="WEBKIT_USER_AGENT_MINOR_VERSION" type="int" value="15"/>
 	</namespace>
 </api>
