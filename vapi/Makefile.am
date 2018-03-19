@@ -252,7 +252,6 @@ dist_vapi_DATA = \
 	taglib_c.vapi \
 	tiff.vapi \
 	tokyocabinet.vapi \
-	tracker-indexer-module-1.0.vapi \
 	twitter-glib-1.0.deps \
 	twitter-glib-1.0.vapi \
 	udisks2.deps \
@@ -317,7 +316,6 @@ GIDL_BINDINGS = \
 	libwnck-1.0 \
 	loudmouth-1.0 \
 	purple \
-	tracker-indexer-module-1.0 \
 	twitter-glib-1.0 \
 	unique-1.0 \
 	vte \
@@ -696,9 +694,6 @@ rest-0.7:
 
 rest-extras-0.7:
 	$(GENVAPI) --library $(srcdir)/rest-extras-0.7 --metadatadir $(METADATADIR) --pkg rest-0.7 $(GIRDIR)/RestExtras-0.7.gir
-
-tracker-indexer-module-1.0:
-	$(GENVAPI) --library $(srcdir)/tracker-indexer-module-1.0 $(PACKAGESDIR)/tracker-indexer-module-1.0/tracker-indexer-module-1.0-custom.vala $(PACKAGESDIR)/tracker-indexer-module-1.0/tracker-indexer-module-1.0.gi
 
 twitter-glib-1.0:
 	$(GENVAPI) --library $(srcdir)/twitter-glib-1.0 $(PACKAGESDIR)/twitter-glib-1.0/twitter-glib-1.0.gi
