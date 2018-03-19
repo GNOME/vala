@@ -5587,7 +5587,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			           || expr.operator == BinaryOperator.GREATER_THAN
 			           || expr.operator == BinaryOperator.LESS_THAN_OR_EQUAL
 			           || expr.operator == BinaryOperator.GREATER_THAN_OR_EQUAL) {
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
+				CCodeFunctionCall ccall;
+				if (context.profile == Profile.POSIX) {
+					ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_cmp_wrapper (new CCodeIdentifier ("strcmp"))));
+				} else {
+					ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
+				}
 				ccall.add_argument (cleft);
 				ccall.add_argument (cright);
 				cleft = ccall;
@@ -5684,6 +5689,54 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		cfile.add_function (function);
 
 		return array_contains_func;
+	}
+
+	string generate_cmp_wrapper (CCodeIdentifier cmpid) {
+		// generate and call NULL-aware cmp function to reduce number
+		// of temporary variables and simplify code
+
+		string cmp0_func = "_%s0".printf (cmpid.name);
+
+		// g_strcmp0 is already NULL-safe
+		if (cmpid.name == "g_strcmp0") {
+			cmp0_func = cmpid.name;
+		} else if (add_wrapper (cmp0_func)) {
+			var cmp0_fun = new CCodeFunction (cmp0_func, "int");
+			cmp0_fun.add_parameter (new CCodeParameter ("s1", "const void *"));
+			cmp0_fun.add_parameter (new CCodeParameter ("s2", "const void *"));
+			cmp0_fun.modifiers = CCodeModifiers.STATIC;
+
+			push_function (cmp0_fun);
+
+			// s1 != s2;
+			var noteq = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("s1"), new CCodeIdentifier ("s2"));
+
+			// if (!s1) return -(s1 != s2);
+			{
+				var cexp = new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("s1"));
+				ccode.open_if (cexp);
+				ccode.add_return (new CCodeUnaryExpression (CCodeUnaryOperator.MINUS, noteq));
+				ccode.close ();
+			}
+			// if (!s2) return s1 != s2;
+			{
+				var cexp = new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("s2"));
+				ccode.open_if (cexp);
+				ccode.add_return (noteq);
+				ccode.close ();
+			}
+			// return strcmp (s1, s2);
+			var cmp_call = new CCodeFunctionCall (cmpid);
+			cmp_call.add_argument (new CCodeIdentifier ("s1"));
+			cmp_call.add_argument (new CCodeIdentifier ("s2"));
+			ccode.add_return (cmp_call);
+
+			pop_function ();
+
+			cfile.add_function (cmp0_fun);
+		}
+
+		return cmp0_func;
 	}
 
 	public override void visit_type_check (TypeCheck expr) {
