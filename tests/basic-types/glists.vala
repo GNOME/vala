@@ -40,8 +40,23 @@ void test_gqueue () {
 	queue2 = null;
 }
 
+void test_gnode () {
+	var nodes = new GLib.Node<string> ();
+	nodes.append_data ("foo");
+	nodes.append_data ("bar");
+	assert (nodes.nth_child (1).data == "bar");
+	nodes = null;
+
+	var nodes2 = new GLib.Node<unowned string> ();
+	nodes2.append_data ("foo");
+	nodes2.append_data ("bar");
+	assert (nodes2.nth_child (1).data == "bar");
+	nodes2 = null;
+}
+
 void main () {
 	test_glist ();
 	test_gslist ();
 	test_gqueue ();
+	test_gnode ();
 }
