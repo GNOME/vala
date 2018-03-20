@@ -908,7 +908,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		if (context.profile == Vala.Profile.GOBJECT) {
 			int glib_major = 2;
-			int glib_minor = 24;
+			int glib_minor = 40;
 
 			context.target_glib_major = glib_major;
 			context.target_glib_minor = glib_minor;
