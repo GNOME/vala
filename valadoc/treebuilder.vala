@@ -902,13 +902,13 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			}
 		}
 
-		for (int i = 2; i <= 38; i += 2) {
+		for (int i = 2; i <= 40; i += 2) {
 			context.add_define ("VALA_0_%d".printf (i));
 		}
 
 		if (context.profile == Vala.Profile.GOBJECT) {
 			int glib_major = 2;
-			int glib_minor = 24;
+			int glib_minor = 40;
 
 			context.target_glib_major = glib_major;
 			context.target_glib_minor = glib_minor;
