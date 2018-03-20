@@ -297,7 +297,7 @@ class Vala.Compiler {
 			}
 		}
 
-		for (int i = 2; i <= 40; i += 2) {
+		for (int i = 2; i <= 42; i += 2) {
 			context.add_define ("VALA_0_%d".printf (i));
 		}
 
