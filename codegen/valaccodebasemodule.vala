@@ -3116,17 +3116,30 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// create wrapper function to free list elements if necessary
 
 			bool elements_require_free = false;
+			bool generic_elements = false;
 			CCodeExpression element_destroy_func_expression = null;
 
 			foreach (DataType type_arg in type.get_type_arguments ()) {
 				elements_require_free = requires_destroy (type_arg);
 				if (elements_require_free) {
 					element_destroy_func_expression = get_destroy0_func_expression (type_arg);
+					generic_elements = (type_arg is GenericType);
 				}
 			}
 			
-			if (elements_require_free && element_destroy_func_expression is CCodeIdentifier) {
-				return new CCodeIdentifier (generate_collection_free_wrapper (type, (CCodeIdentifier) element_destroy_func_expression));
+			if (elements_require_free) {
+				CCodeExpression? cexpr = null;
+				if (element_destroy_func_expression is CCodeIdentifier || element_destroy_func_expression is CCodeMemberAccess) {
+					cexpr = new CCodeIdentifier (generate_collection_free_wrapper (type, (generic_elements ? null : element_destroy_func_expression as CCodeIdentifier)));
+					if (generic_elements) {
+						// adding second argument early, instance parameter will be inserted by destroy_value()
+						cexpr = new CCodeFunctionCall (cexpr);
+						((CCodeFunctionCall) cexpr).add_argument (element_destroy_func_expression);
+					}
+				} else {
+					Report.error (null, "internal error: No useable element_destroy_function found");
+				}
+				return cexpr;
 			} else {
 				return new CCodeIdentifier (get_ccode_free_function (type.data_type));
 			}
@@ -3210,32 +3223,47 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	private string generate_collection_free_wrapper (DataType collection_type, CCodeIdentifier element_destroy_func_expression) {
-		string destroy_func = "_%s_%s".printf (get_ccode_free_function (collection_type.data_type), element_destroy_func_expression.name);
+	private string generate_collection_free_wrapper (DataType collection_type, CCodeIdentifier? element_destroy_func_expression) {
+		string destroy_func;
 
-		if (!add_wrapper (destroy_func)) {
-			// wrapper already defined
-			return destroy_func;
+		string? destroy_func_wrapper = null;
+		if (element_destroy_func_expression != null) {
+			destroy_func_wrapper = "_%s_%s".printf (get_ccode_free_function (collection_type.data_type), element_destroy_func_expression.name);
+			if (!add_wrapper (destroy_func_wrapper)) {
+				// wrapper already defined
+				return destroy_func_wrapper;
+			}
 		}
 
-		var function = new CCodeFunction (destroy_func, "void");
-		function.add_parameter (new CCodeParameter ("self", get_ccode_name (collection_type)));
-
-		push_function (function);
-
 		if (collection_type.data_type == gnode_type) {
+			destroy_func = "_g_node_free_all";
+			if (!add_wrapper (destroy_func)) {
+				// wrapper already defined
+				return destroy_func;
+			}
+
+			var function = new CCodeFunction (destroy_func, "void");
+			function.add_parameter (new CCodeParameter ("self", get_ccode_name (collection_type)));
+			function.add_parameter (new CCodeParameter ("free_func", "GDestroyNotify"));
+
+			push_function (function);
+
 			CCodeFunctionCall element_free_call;
-			/* A wrapper which converts GNodeTraverseFunc into GDestroyNotify */
 			string destroy_node_func = "%s_node".printf (destroy_func);
 			var wrapper = new CCodeFunction (destroy_node_func, "gboolean");
 			wrapper.modifiers = CCodeModifiers.STATIC;
 			wrapper.add_parameter (new CCodeParameter ("node", get_ccode_name (collection_type)));
-			wrapper.add_parameter (new CCodeParameter ("unused", "gpointer"));
+			wrapper.add_parameter (new CCodeParameter ("free_func", "GDestroyNotify"));
 			push_function (wrapper);
 
-			var free_call = new CCodeFunctionCall (element_destroy_func_expression);
-			free_call.add_argument (new CCodeMemberAccess.pointer(new CCodeIdentifier("node"), "data"));
-			ccode.add_expression (free_call);
+			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("free_func"));
+			free_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier("node"), "data"));
+
+			var data_isnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (new CCodeIdentifier("node"), "data"), new CCodeConstant ("NULL"));
+			var ccomma_data = new CCodeCommaExpression ();
+			ccomma_data.append_expression (new CCodeConditionalExpression (data_isnull, new CCodeConstant ("NULL"), free_call));
+			ccode.add_expression (ccomma_data);
+
 			ccode.add_return (new CCodeConstant ("FALSE"));
 
 			pop_function ();
@@ -3248,36 +3276,54 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			element_free_call.add_argument (new CCodeConstant ("G_POST_ORDER"));
 			element_free_call.add_argument (new CCodeConstant ("G_TRAVERSE_ALL"));
 			element_free_call.add_argument (new CCodeConstant ("-1"));
-			element_free_call.add_argument (new CCodeIdentifier (destroy_node_func));
-			element_free_call.add_argument (new CCodeConstant ("NULL"));
-			ccode.add_expression (element_free_call);
+			element_free_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (destroy_node_func), "GNodeTraverseFunc"));
+			element_free_call.add_argument (new CCodeIdentifier ("free_func"));
+
+			var free_func_isnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("free_func"), new CCodeConstant ("NULL"));
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.append_expression (new CCodeConditionalExpression (free_func_isnull, new CCodeConstant ("NULL"), element_free_call));
+
+			ccode.add_expression (ccomma);
 
 			var cfreecall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_free_function (gnode_type)));
 			cfreecall.add_argument (new CCodeIdentifier ("self"));
 			ccode.add_expression (cfreecall);
 
 			function.modifiers = CCodeModifiers.STATIC;
-		} else {
-			CCodeFunctionCall collection_free_call;
-			if (collection_type.data_type == glist_type) {
-				collection_free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_list_free_full"));
-			} else if (collection_type.data_type == gslist_type) {
-				collection_free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_slist_free_full"));
-			} else {
-				collection_free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_queue_free_full"));
-			}
+			pop_function ();
 
+			cfile.add_function_declaration (function);
+			cfile.add_function (function);
+		} else if (collection_type.data_type == glist_type) {
+			destroy_func = "g_list_free_full";
+		} else if (collection_type.data_type == gslist_type) {
+			destroy_func = "g_slist_free_full";
+		} else if (collection_type.data_type == gqueue_type) {
+			destroy_func = "g_queue_free_full";
+		} else {
+			Report.error (null, "internal error: type of collection not supported");
+			return "";
+		}
+
+		if (element_destroy_func_expression != null) {
+			var function = new CCodeFunction (destroy_func_wrapper, "void");
+			function.add_parameter (new CCodeParameter ("self", get_ccode_name (collection_type)));
+
+			push_function (function);
+
+			var collection_free_call = new CCodeFunctionCall (new CCodeIdentifier (destroy_func));
 			collection_free_call.add_argument (new CCodeIdentifier ("self"));
 			collection_free_call.add_argument (new CCodeCastExpression (element_destroy_func_expression, "GDestroyNotify"));
 			ccode.add_expression (collection_free_call);
 
 			function.modifiers = CCodeModifiers.STATIC | CCodeModifiers.INLINE;
+			pop_function ();
+
+			cfile.add_function_declaration (function);
+			cfile.add_function (function);
+
+			return destroy_func_wrapper;
 		}
-
-		pop_function ();
-
-		cfile.add_function_declaration (function);
-		cfile.add_function (function);
 
 		return destroy_func;
 	}
@@ -3327,7 +3373,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return ccomma;
 		}
 
-		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
+		bool is_gcollection = (type.data_type == glist_type || type.data_type == gslist_type || type.data_type == gnode_type || type.data_type == gqueue_type);
+		CCodeFunctionCall ccall;
+		var cexpr = get_destroy_func_expression (type);
+		if (is_gcollection && cexpr is CCodeFunctionCall) {
+			ccall = (CCodeFunctionCall) cexpr;
+		} else {
+			ccall = new CCodeFunctionCall (cexpr);
+		}
 
 		if (type is ValueType && !type.nullable) {
 			// normal value type, no null check
@@ -3363,7 +3416,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		if (ccall.call is CCodeIdentifier && !(type is ArrayType) && !is_macro_definition) {
+		if (!is_gcollection && ccall.call is CCodeIdentifier && !(type is ArrayType) && !is_macro_definition) {
 			// generate and use NULL-aware free macro to simplify code
 
 			var freeid = (CCodeIdentifier) ccall.call;
@@ -3399,7 +3452,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cisnull, cunrefisnull);
 		}
 
-		ccall.add_argument (cvar);
+		// glib collections already have the free_func argument, so make sure the instance parameter gets first
+		ccall.insert_argument (0, cvar);
 
 		/* set freed references to NULL to prevent further use */
 		var ccomma = new CCodeCommaExpression ();
