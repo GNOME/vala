@@ -354,6 +354,9 @@ TESTS = \
 	asynchronous/closures.vala \
 	asynchronous/generator.vala \
 	asynchronous/yield.vala \
+	generics/bug694765-1.vala \
+	generics/bug694765-2.vala \
+	generics/bug694765-3.vala \
 	dbus/basic-types.test \
 	dbus/arrays.test \
 	dbus/structs.test \
