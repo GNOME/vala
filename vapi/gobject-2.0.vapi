@@ -152,7 +152,11 @@ namespace GLib {
 		public static unowned GLib.ParamSpec? interface_find_property (GLib.TypeInterface g_iface, string property_name);
 		public static void interface_install_property (GLib.TypeInterface g_iface, GLib.ParamSpec pspec);
 		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
+#if VALA_0_26
 		public static (unowned GLib.ParamSpec)[] interface_list_properties (GLib.TypeInterface g_iface);
+#else
+		public static unowned GLib.ParamSpec[] interface_list_properties (GLib.TypeInterface g_iface);
+#endif
 		public bool is_floating ();
 		public static GLib.Object @new (GLib.Type type, ...);
 		public static GLib.Object new_valist (GLib.Type type, string? firstprop, va_list var_args);
