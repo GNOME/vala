@@ -26,34 +26,6 @@
 
 [CCode (cheader_filename = "glib.h", cprefix = "G", gir_namespace = "GObject", gir_version = "2.0", lower_case_cprefix = "g_")]
 namespace GLib {
-	namespace Signal {
-		public static ulong add_emission_hook (uint signal_id, GLib.Quark detail, owned GLib.SignalEmissionHook hook_func);
-		public static void chain_from_overridden ([CCode (array_length = false)] GLib.Value[] instance_and_params, out GLib.Value return_value);
-		[Version (since = "2.18")]
-		public static void chain_from_overridden_handler (void* instance, ...);
-		public static ulong connect (void* instance, string detailed_signal, GLib.Callback handler, void* data);
-		public static ulong connect_after (void* instance, string detailed_signal, GLib.Callback handler, void* data);
-		public static ulong connect_closure (void* instance, string detailed_signal, GLib.Closure closure, bool after);
-		public static ulong connect_closure_by_id (void* instance, uint signal_id, GLib.Quark detail, GLib.Closure closure, bool after);
-		public static ulong connect_data (void* instance, string detailed_signal, GLib.Callback handler, void* data, GLib.ClosureNotify destroy_data, GLib.ConnectFlags flags);
-		public static ulong connect_object (void* instance, string detailed_signal, GLib.Callback handler, GLib.Object gobject, GLib.ConnectFlags flags);
-		public static ulong connect_swapped (void* instance, string detailed_signal, GLib.Callback handler, void* data);
-		public static void emit (void* instance, uint signal_id, GLib.Quark detail, ...);
-		public static void emit_by_name (void* instance, string detailed_signal, ...);
-		public static unowned GLib.SignalInvocationHint? get_invocation_hint (void* instance);
-		public static bool has_handler_pending (void* instance, uint signal_id, GLib.Quark detail, bool may_be_blocked);
-		public static uint[] list_ids (GLib.Type itype);
-		public static uint lookup (string name, GLib.Type itype);
-		public static unowned string name (uint signal_id);
-		public static void override_class_closure (uint signal_id, GLib.Type instance_type, GLib.Closure class_closure);
-		[Version (since = "2.18")]
-		public static void override_class_handler (string signal_name, GLib.Type instance_type, GLib.Callback class_handler);
-		public static bool parse_name (string detailed_signal, GLib.Type itype, out uint signal_id, out GLib.Quark detail, bool force_detail_quark);
-		public static void query (uint signal_id, out GLib.SignalQuery query);
-		public static void remove_emission_hook (uint signal_id, ulong hook_id);
-		public static void stop_emission (void* instance, uint signal_id, GLib.Quark detail);
-		public static void stop_emission_by_name (void* instance, string detailed_signal);
-	}
 	namespace SignalHandler {
 		public static void block (void* instance, ulong handler_id);
 		[CCode (cname = "g_signal_handlers_block_by_func")]
@@ -530,6 +502,40 @@ namespace GLib {
 		public weak string name;
 		public GLib.Value value;
 	}
+	[CCode (cname = "guint")]
+	public struct Signal : uint {
+		public static ulong add_emission_hook (uint signal_id, GLib.Quark detail, owned GLib.SignalEmissionHook hook_func);
+		public static void chain_from_overridden ([CCode (array_length = false)] GLib.Value[] instance_and_params, out GLib.Value return_value);
+		[Version (since = "2.18")]
+		public static void chain_from_overridden_handler (void* instance, ...);
+		public static ulong connect (void* instance, string detailed_signal, GLib.Callback handler, void* data);
+		public static ulong connect_after (void* instance, string detailed_signal, GLib.Callback handler, void* data);
+		public static ulong connect_closure (void* instance, string detailed_signal, GLib.Closure closure, bool after);
+		public static ulong connect_closure_by_id (void* instance, uint signal_id, GLib.Quark detail, GLib.Closure closure, bool after);
+		public static ulong connect_data (void* instance, string detailed_signal, GLib.Callback handler, void* data, GLib.ClosureNotify destroy_data, GLib.ConnectFlags flags);
+		public static ulong connect_object (void* instance, string detailed_signal, GLib.Callback handler, GLib.Object gobject, GLib.ConnectFlags flags);
+		public static ulong connect_swapped (void* instance, string detailed_signal, GLib.Callback handler, void* data);
+		public static void emit (void* instance, uint signal_id, GLib.Quark detail, ...);
+		public static void emit_by_name (void* instance, string detailed_signal, ...);
+		public static unowned GLib.SignalInvocationHint? get_invocation_hint (void* instance);
+		public static bool has_handler_pending (void* instance, uint signal_id, GLib.Quark detail, bool may_be_blocked);
+		public static uint[] list_ids (GLib.Type itype);
+		public static uint lookup (string name, GLib.Type itype);
+		public static unowned string name (uint signal_id);
+		public static GLib.Signal @new (string signal_name, GLib.Type itype, GLib.SignalFlags signal_flags, uint class_offset, GLib.SignalAccumulator? accumulator, void* accu_data, GLib.SignalCMarshaller? c_marshaller, GLib.Type return_type, uint n_params, ...);
+		[Version (since = "2.18")]
+		public static GLib.Signal new_class_handler (string signal_name, GLib.Type itype, GLib.SignalFlags signal_flags, GLib.Callback? class_handler, GLib.SignalAccumulator? accumulator, void* accu_data, GLib.SignalCMarshaller? c_marshaller, GLib.Type return_type, uint n_params, ...);
+		public static GLib.Signal new_valist (string signal_name, GLib.Type itype, GLib.SignalFlags signal_flags, GLib.Closure? class_closure, GLib.SignalAccumulator? accumulator, void* accu_data, GLib.SignalCMarshaller? c_marshaller, GLib.Type return_type, uint n_params, va_list args);
+		public static GLib.Signal newv (string signal_name, GLib.Type itype, GLib.SignalFlags signal_flags, GLib.Closure? class_closure, GLib.SignalAccumulator? accumulator, void* accu_data, GLib.SignalCMarshaller? c_marshaller, GLib.Type return_type, [CCode (array_length_cname = "n_params", array_length_pos = 7.5, array_length_type = "guint")] GLib.Type[]? param_types);
+		public static void override_class_closure (uint signal_id, GLib.Type instance_type, GLib.Closure class_closure);
+		[Version (since = "2.18")]
+		public static void override_class_handler (string signal_name, GLib.Type instance_type, GLib.Callback class_handler);
+		public static bool parse_name (string detailed_signal, GLib.Type itype, out uint signal_id, out GLib.Quark detail, bool force_detail_quark);
+		public static void query (uint signal_id, out GLib.SignalQuery query);
+		public static void remove_emission_hook (uint signal_id, ulong hook_id);
+		public static void stop_emission (void* instance, uint signal_id, GLib.Quark detail);
+		public static void stop_emission_by_name (void* instance, string detailed_signal);
+	}
 	public struct SignalInvocationHint {
 		public uint signal_id;
 		public GLib.Quark detail;
@@ -868,6 +874,12 @@ namespace GLib {
 	public delegate void ObjectFinalizeFunc (GLib.Object object);
 	[CCode (has_target = false)]
 	public delegate void ObjectSetPropertyFunc (GLib.Object object, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
+	[CCode (has_target = false)]
+	public delegate bool SignalAccumulator (GLib.SignalInvocationHint ihint, GLib.Value return_accu, GLib.Value handler_return, void* data);
+	[CCode (has_target = false)]
+	public delegate void SignalCMarshaller (GLib.Closure closure, GLib.Value? return_value, [CCode (array_length_cname = "n_param_values", array_length_pos = 2.5, array_length_type = "guint")] GLib.Value[] param_values, void* invocation_hint, void* marshal_data);
+	[CCode (has_target = false)]
+	public delegate void SignalCVaMarshaller (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
 	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9, array_length_type = "guint")] GLib.Value[] param_values);
 	[CCode (instance_pos = 0)]
 	public delegate void ToggleNotify (GLib.Object object, bool is_last_ref);
