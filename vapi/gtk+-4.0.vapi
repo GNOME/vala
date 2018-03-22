@@ -10788,15 +10788,15 @@ namespace Gtk {
 		public TextView ();
 		public void add_child_at_anchor (Gtk.Widget child, Gtk.TextChildAnchor anchor);
 		public void add_child_in_window (Gtk.Widget child, Gtk.TextWindowType which_window, int xpos, int ypos);
-		public bool backward_display_line (Gtk.TextIter iter);
-		public bool backward_display_line_start (Gtk.TextIter iter);
+		public bool backward_display_line (ref Gtk.TextIter iter);
+		public bool backward_display_line_start (ref Gtk.TextIter iter);
 		public void buffer_to_surface_coords (Gtk.TextWindowType win, int buffer_x, int buffer_y, out int window_x, out int window_y);
 		[NoWrapper]
 		public virtual Gtk.TextBuffer create_buffer ();
 		[NoWrapper]
 		public virtual void draw_layer (Gtk.TextViewLayer layer, Cairo.Context cr);
-		public bool forward_display_line (Gtk.TextIter iter);
-		public bool forward_display_line_end (Gtk.TextIter iter);
+		public bool forward_display_line (ref Gtk.TextIter iter);
+		public bool forward_display_line_end (ref Gtk.TextIter iter);
 		public bool get_accepts_tab ();
 		public int get_border_window_size (Gtk.TextWindowType type);
 		public int get_bottom_margin ();
@@ -10827,7 +10827,7 @@ namespace Gtk {
 		public bool im_context_filter_keypress ([CCode (type = "GdkEventKey*")] Gdk.Event event);
 		public void move_child (Gtk.Widget child, int xpos, int ypos);
 		public bool move_mark_onscreen (Gtk.TextMark mark);
-		public bool move_visually (Gtk.TextIter iter, int count);
+		public bool move_visually (ref Gtk.TextIter iter, int count);
 		public bool place_cursor_onscreen ();
 		public void reset_cursor_blink ();
 		public void reset_im_context ();
