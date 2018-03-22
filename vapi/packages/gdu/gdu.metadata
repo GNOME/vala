@@ -1,4 +1,0 @@
-Gdu cheader_filename="gdu/gdu.h"
-*.component_objpaths type_name="GLib.GenericArray<string>"
-dev_t name="ulong"
-uid_t name="ulong"

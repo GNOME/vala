@@ -57,10 +57,6 @@ dist_vapi_DATA = \
 	gdl-1.0.vapi \
 	gdl-3.0.deps \
 	gdl-3.0.vapi \
-	gdu.deps \
-	gdu.vapi \
-	gdu-gtk.deps \
-	gdu-gtk.vapi \
 	gedit-2.20.vapi \
 	gedit-2.20.deps \
 	gio-2.0.vapi \
@@ -288,8 +284,6 @@ GIDL_BINDINGS = \
 	gdk-x11-2.0 \
 	gdk-x11-3.0 \
 	gdl-1.0 \
-	gdu \
-	gdk-gtk \
 	gio-unix-2.0 \
 	gnome-desktop-2.0 \
 	gnome-vfs-2.0 \
@@ -468,12 +462,6 @@ gdl-1.0:
 
 gdl-3.0:
 	$(GENVAPI) --library $(srcdir)/gdl-3.0 --pkg gio-2.0 --pkg gtk+-3.0 --metadatadir $(METADATADIR) $(GIRDIR)/Gdl-3.gir
-
-gdu:
-	$(GENVAPI) --library $(srcdir)/gdu $(PACKAGESDIR)/gdu/gdu.gi
-
-gdu-gtk:
-	$(GENVAPI) --library $(srcdir)/gdu-gtk $(PACKAGESDIR)/gdu-gtk/gdu-gtk.gi
 
 gedit-2.20:
 	$(GENVAPI) --library $(srcdir)/gedit-2.20 $(PACKAGESDIR)/gedit-2.20/gedit-2.20.gi
