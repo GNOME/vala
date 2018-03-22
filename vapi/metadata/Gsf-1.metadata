@@ -46,8 +46,8 @@ InputTextline
 
 Outfile
   .* skip=false
-//  .new_child#virtual name="new_child_varg"
-//  .new_child_varg vfunc_name="new_child"
+  .new_child skip
+  .new_child_varg vfunc_name="new_child"
 
 Output
   .* skip=false
@@ -79,14 +79,14 @@ XMLInNode struct=false
 
 XMLInUnknownFunc
   .elem type="string"
-  .attrs array type="string[]"
+  .attrs type="string[]"
 
 XMLProbeFunc
   .name type="string"
   .prefix type="string"
   .URI type="string"
-  .namespaces array array_length_idx=3 type="string[]"
-  .attributes array array_length_idx=5 type="string[]"
+  .namespaces array_length_idx=3 type="string[]"
+  .attributes array_length_idx=5 type="string[]"
 
 base64_*code_*.data array
 base64_*code_*.in array
