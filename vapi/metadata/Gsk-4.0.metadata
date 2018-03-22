@@ -1,6 +1,6 @@
 Renderer
 	// Factory method
-	.new_for_window symbol_type="function" name="for_window"
+	.new_for_surface symbol_type="function" name="for_surface"
 
 blend_node_* parent="Gsk.BlendNode" symbol_type="method" instance_idx=0 name="blend_node_(.+)"
 blend_node_new parent="Gsk.BlendNode" symbol_type="constructor" name="blend_node_(.+)"

@@ -4611,7 +4611,7 @@ namespace Gdk {
 			public void set_cursor_theme (string theme, int size);
 			public static void set_program_class (Gdk.Display display, string program_class);
 			public void set_startup_notification_id (string startup_id);
-			public void set_window_scale (int scale);
+			public void set_surface_scale (int scale);
 			public int string_to_compound_text (string str, out unowned Gdk.Atom encoding, out int format, [CCode (array_length_cname = "length", array_length_pos = 4.1)] out uint8[] ctext);
 			public int text_property_to_text_list (Gdk.Atom encoding, int format, uint8 text, int length, string list);
 			public void ungrab ();
@@ -4659,16 +4659,16 @@ namespace Gdk {
 			public bool supports_net_wm_hint (Gdk.Atom property);
 			public signal void window_manager_changed ();
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_window_get_type ()")]
-		[GIR (name = "X11Window")]
-		public class Window : Gdk.Window {
+		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_surface_get_type ()")]
+		[GIR (name = "X11Surface")]
+		public class Surface : Gdk.Surface {
 			[CCode (has_construct_function = false)]
-			protected Window ();
-			[CCode (cname = "gdk_x11_window_foreign_new_for_display", has_construct_function = false, type = "GdkWindow*")]
-			public Window.foreign_for_display (Gdk.X11.Display display, X.Window window);
+			protected Surface ();
+			[CCode (cname = "gdk_x11_surface_foreign_new_for_display", has_construct_function = false, type = "GdkSurface*")]
+			public Surface.foreign_for_display (Gdk.X11.Display display, X.Window window);
 			public uint32 get_desktop ();
 			public X.Window get_xid ();
-			public static unowned Gdk.X11.Window lookup_for_display (Gdk.X11.Display display, X.Window window);
+			public static unowned Gdk.X11.Surface lookup_for_display (Gdk.X11.Display display, X.Window window);
 			public void move_to_current_desktop ();
 			public void move_to_desktop (uint32 desktop);
 			public void set_frame_sync_enabled (bool frame_sync_enabled);
@@ -4685,7 +4685,7 @@ namespace Gdk {
 		[CCode (cheader_filename = "gdk/gdkx.h")]
 		public static void free_text_list (string list);
 		[CCode (cheader_filename = "gdk/gdkx.h")]
-		public static uint32 get_server_time (Gdk.X11.Window window);
+		public static uint32 get_server_time (Gdk.X11.Surface surface);
 		[CCode (cheader_filename = "gdk/gdkx.h")]
 		public static X.Atom get_xatom_by_name_for_display (Gdk.X11.Display display, string atom_name);
 		[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -4856,9 +4856,9 @@ namespace Gdk {
 		public Gdk.DeviceType get_device_type ();
 		public unowned Gdk.Display get_display ();
 		public bool get_has_cursor ();
-		public bool get_history (Gdk.Window window, uint32 start, uint32 stop, [CCode (array_length_cname = "n_events", array_length_pos = 4.1)] out Gdk.TimeCoord[] events);
+		public bool get_history (Gdk.Surface surface, uint32 start, uint32 stop, [CCode (array_length_cname = "n_events", array_length_pos = 4.1)] out Gdk.TimeCoord[] events);
 		public bool get_key (uint index_, out uint keyval, out Gdk.ModifierType modifiers);
-		public unowned Gdk.Window? get_last_event_window ();
+		public unowned Gdk.Surface? get_last_event_surface ();
 		public Gdk.InputMode get_mode ();
 		public int get_n_axes ();
 		public int get_n_keys ();
@@ -4868,12 +4868,12 @@ namespace Gdk {
 		public unowned string? get_product_id ();
 		public unowned Gdk.Seat get_seat ();
 		public Gdk.InputSource get_source ();
-		public void get_state (Gdk.Window window, [CCode (array_length = false)] double[]? axes, out Gdk.ModifierType mask);
+		public void get_state (Gdk.Surface surface, [CCode (array_length = false)] double[]? axes, out Gdk.ModifierType mask);
+		public unowned Gdk.Surface? get_surface_at_position (out int win_x, out int win_y);
+		public unowned Gdk.Surface? get_surface_at_position_double (out double win_x, out double win_y);
 		public unowned string? get_vendor_id ();
-		public unowned Gdk.Window? get_window_at_position (out int win_x, out int win_y);
-		public unowned Gdk.Window? get_window_at_position_double (out double win_x, out double win_y);
 		[Version (deprecated = true)]
-		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor? cursor, uint32 time_);
+		public Gdk.GrabStatus grab (Gdk.Surface surface, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor? cursor, uint32 time_);
 		public GLib.List<weak Gdk.Atom> list_axes ();
 		public GLib.List<weak Gdk.Device>? list_slave_devices ();
 		public void set_axis_use (uint index_, Gdk.AxisUse use);
@@ -4929,13 +4929,13 @@ namespace Gdk {
 		public Gdk.AppLaunchContext get_app_launch_context ();
 		public unowned Gdk.Clipboard get_clipboard ();
 		public static unowned Gdk.Display? get_default ();
-		public unowned Gdk.Window get_default_group ();
+		public unowned Gdk.Surface get_default_group ();
 		public unowned Gdk.Seat get_default_seat ();
 		public Gdk.Event? get_event ();
 		public unowned Gdk.Keymap get_keymap ();
 		public unowned Gdk.Monitor? get_monitor (int monitor_num);
 		public unowned Gdk.Monitor get_monitor_at_point (int x, int y);
-		public unowned Gdk.Monitor get_monitor_at_window (Gdk.Window window);
+		public unowned Gdk.Monitor get_monitor_at_surface (Gdk.Surface surface);
 		public int get_n_monitors ();
 		public unowned string get_name ();
 		public unowned Gdk.Clipboard get_primary_clipboard ();
@@ -4982,13 +4982,13 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected DragContext ();
 		public Gdk.DragAction get_actions ();
-		public unowned Gdk.Window get_dest_window ();
+		public unowned Gdk.Surface get_dest_surface ();
 		public unowned Gdk.Device get_device ();
 		public unowned Gdk.Display get_display ();
-		public unowned Gdk.Window? get_drag_window ();
+		public unowned Gdk.Surface? get_drag_surface ();
 		public unowned Gdk.ContentFormats get_formats ();
 		public Gdk.DragAction get_selected_action ();
-		public unowned Gdk.Window get_source_window ();
+		public unowned Gdk.Surface get_source_surface ();
 		public Gdk.DragAction get_suggested_action ();
 		public void set_hotspot (int hot_x, int hot_y);
 		[NoAccessorMethod]
@@ -5005,9 +5005,9 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected DrawContext ();
 		public unowned Gdk.Display? get_display ();
-		public unowned Gdk.Window? get_window ();
+		public unowned Gdk.Surface? get_surface ();
 		public Gdk.Display display { get; }
-		public Gdk.Window window { get; construct; }
+		public Gdk.Surface surface { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_drawing_context_get_type ()")]
 	public class DrawingContext : GLib.Object {
@@ -5016,11 +5016,11 @@ namespace Gdk {
 		public unowned Cairo.Context? get_cairo_context ();
 		public Cairo.Region? get_clip ();
 		public unowned Gdk.DrawContext get_paint_context ();
-		public unowned Gdk.Window get_window ();
+		public unowned Gdk.Surface get_surface ();
 		public bool is_valid ();
 		public Cairo.Region clip { owned get; construct; }
 		public Gdk.DrawContext paint_context { get; construct; }
-		public Gdk.Window window { get; construct; }
+		public Gdk.Surface surface { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_event_get_type ()")]
 	public class Event : GLib.Object {
@@ -5042,7 +5042,7 @@ namespace Gdk {
 		public unowned Gdk.EventSequence get_event_sequence ();
 		public Gdk.EventType get_event_type ();
 		public bool get_focus_in (out bool focus_in);
-		public bool get_grab_window (out unowned Gdk.Window window);
+		public bool get_grab_surface (out unowned Gdk.Surface surface);
 		public bool get_key_group (out uint group);
 		public bool get_key_is_modifier (out bool is_modifier);
 		public bool get_keycode (out uint16 keycode);
@@ -5061,6 +5061,7 @@ namespace Gdk {
 		public unowned Gdk.Device? get_source_device ();
 		public bool get_state (out Gdk.ModifierType state);
 		public bool get_string (out unowned string string);
+		public unowned Gdk.Surface get_surface ();
 		public uint32 get_time ();
 		public bool get_touch_emulating_pointer (out bool emulating);
 		public bool get_touchpad_angle_delta (out double delta);
@@ -5068,7 +5069,6 @@ namespace Gdk {
 		public bool get_touchpad_gesture_n_fingers (out uint n_fingers);
 		public bool get_touchpad_gesture_phase (out Gdk.TouchpadGesturePhase phase);
 		public bool get_touchpad_scale (out double scale);
-		public unowned Gdk.Window get_window ();
 		public static void handler_set (owned Gdk.EventFunc func);
 		public bool is_scroll_stop_event ();
 		public bool is_sent ();
@@ -5135,9 +5135,9 @@ namespace Gdk {
 		public bool get_forward_compatible ();
 		public void get_required_version (out int major, out int minor);
 		public unowned Gdk.GLContext? get_shared_context ();
+		public unowned Gdk.Surface? get_surface ();
 		public bool get_use_es ();
 		public void get_version (out int major, out int minor);
-		public unowned Gdk.Window? get_window ();
 		public bool is_legacy ();
 		public void make_current ();
 		public bool realize () throws GLib.Error;
@@ -5221,7 +5221,7 @@ namespace Gdk {
 		public GLib.List<weak Gdk.Device> get_master_pointers (Gdk.SeatCapabilities capabilities);
 		public unowned Gdk.Device? get_pointer ();
 		public GLib.List<weak Gdk.Device> get_slaves (Gdk.SeatCapabilities capabilities);
-		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.SeatCapabilities capabilities, bool owner_events, Gdk.Cursor? cursor, Gdk.Event? event, Gdk.SeatGrabPrepareFunc? prepare_func);
+		public Gdk.GrabStatus grab (Gdk.Surface surface, Gdk.SeatCapabilities capabilities, bool owner_events, Gdk.Cursor? cursor, Gdk.Event? event, Gdk.SeatGrabPrepareFunc? prepare_func);
 		public void ungrab ();
 		public Gdk.Display display { get; construct; }
 		public signal void device_added (Gdk.Device device);
@@ -5233,6 +5233,137 @@ namespace Gdk {
 	public abstract class Snapshot : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Snapshot ();
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_surface_get_type ()")]
+	public class Surface : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Surface ();
+		public void beep ();
+		public unowned Gdk.DrawingContext begin_draw_frame (Gdk.DrawContext? context, Cairo.Region region);
+		public void begin_move_drag (int button, int root_x, int root_y, uint32 timestamp);
+		public void begin_move_drag_for_device (Gdk.Device device, int button, int root_x, int root_y, uint32 timestamp);
+		public void begin_resize_drag (Gdk.SurfaceEdge edge, int button, int root_x, int root_y, uint32 timestamp);
+		public void begin_resize_drag_for_device (Gdk.SurfaceEdge edge, Gdk.Device device, int button, int root_x, int root_y, uint32 timestamp);
+		[CCode (has_construct_function = false)]
+		public Surface.child (Gdk.Surface parent, Gdk.Rectangle position);
+		public static void constrain_size (Gdk.Geometry geometry, Gdk.SurfaceHints flags, int width, int height, out int new_width, out int new_height);
+		public void coords_from_parent (double parent_x, double parent_y, out double x, out double y);
+		public void coords_to_parent (double x, double y, out double parent_x, out double parent_y);
+		public Gdk.GLContext create_gl_context () throws GLib.Error;
+		public Cairo.ImageSurface create_similar_image_surface (int format, int width, int height, int scale);
+		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
+		public Gdk.VulkanContext create_vulkan_context () throws GLib.Error;
+		public void deiconify ();
+		[DestroysInstance]
+		public void destroy ();
+		public void end_draw_frame (Gdk.DrawingContext context);
+		public void focus (uint32 timestamp);
+		public void freeze_updates ();
+		public void fullscreen ();
+		public void fullscreen_on_monitor (Gdk.Monitor monitor);
+		public bool get_accept_focus ();
+		public GLib.List<weak Gdk.Surface> get_children ();
+		public GLib.List<weak Gdk.Surface> get_children_with_user_data (void* user_data);
+		public unowned Gdk.Cursor? get_cursor ();
+		public bool get_decorations (out Gdk.WMDecoration decorations);
+		public unowned Gdk.Cursor? get_device_cursor (Gdk.Device device);
+		public Gdk.EventMask get_device_events (Gdk.Device device);
+		public unowned Gdk.Surface? get_device_position (Gdk.Device device, out int x, out int y, out Gdk.ModifierType mask);
+		public unowned Gdk.Surface? get_device_position_double (Gdk.Device device, out double x, out double y, out Gdk.ModifierType mask);
+		public unowned Gdk.Display get_display ();
+		public Gdk.EventMask get_events ();
+		public bool get_focus_on_map ();
+		public unowned Gdk.FrameClock get_frame_clock ();
+		public void get_frame_extents (out Gdk.Rectangle rect);
+		public Gdk.FullscreenMode get_fullscreen_mode ();
+		public void get_geometry (out int x, out int y, out int width, out int height);
+		public unowned Gdk.Surface get_group ();
+		public int get_height ();
+		public bool get_modal_hint ();
+		public int get_origin (out int x, out int y);
+		public unowned Gdk.Surface get_parent ();
+		public bool get_pass_through ();
+		public void get_position (out int x, out int y);
+		public void get_root_coords (int x, int y, out int root_x, out int root_y);
+		public void get_root_origin (out int x, out int y);
+		public int get_scale_factor ();
+		public Gdk.SurfaceState get_state ();
+		public bool get_support_multidevice ();
+		public Gdk.SurfaceType get_surface_type ();
+		public unowned Gdk.Surface get_toplevel ();
+		public Gdk.SurfaceTypeHint get_type_hint ();
+		public void get_user_data (out void* data);
+		public int get_width ();
+		public bool has_native ();
+		public void hide ();
+		public void iconify ();
+		public void input_shape_combine_region (Cairo.Region shape_region, int offset_x, int offset_y);
+		public void invalidate_rect (Gdk.Rectangle? rect);
+		public void invalidate_region (Cairo.Region region);
+		public bool is_destroyed ();
+		public bool is_input_only ();
+		public bool is_viewable ();
+		public bool is_visible ();
+		public void lower ();
+		public void maximize ();
+		public void merge_child_input_shapes ();
+		public void move (int x, int y);
+		public void move_resize (int x, int y, int width, int height);
+		public unowned GLib.List<Gdk.Surface> peek_children ();
+		[CCode (has_construct_function = false)]
+		public Surface.popup (Gdk.Display display, Gdk.Rectangle position);
+		public void raise ();
+		public void register_dnd ();
+		public void resize (int width, int height);
+		public void restack (Gdk.Surface? sibling, bool above);
+		public void set_accept_focus (bool accept_focus);
+		public void set_child_input_shapes ();
+		public void set_cursor (Gdk.Cursor? cursor);
+		public void set_decorations (Gdk.WMDecoration decorations);
+		public void set_device_cursor (Gdk.Device device, Gdk.Cursor cursor);
+		public void set_device_events (Gdk.Device device, Gdk.EventMask event_mask);
+		public void set_events (Gdk.EventMask event_mask);
+		public void set_focus_on_map (bool focus_on_map);
+		public void set_fullscreen_mode (Gdk.FullscreenMode mode);
+		public void set_functions (Gdk.WMFunction functions);
+		public void set_geometry_hints (Gdk.Geometry geometry, Gdk.SurfaceHints geom_mask);
+		public void set_group (Gdk.Surface? leader);
+		public void set_icon_list (GLib.List<Gdk.Texture> surfaces);
+		public void set_icon_name (string? name);
+		public void set_keep_above (bool setting);
+		public void set_keep_below (bool setting);
+		public void set_modal_hint (bool modal);
+		public void set_opacity (double opacity);
+		public void set_opaque_region (Cairo.Region? region);
+		public void set_pass_through (bool pass_through);
+		public void set_role (string role);
+		public void set_shadow_width (int left, int right, int top, int bottom);
+		public void set_skip_pager_hint (bool skips_pager);
+		public void set_skip_taskbar_hint (bool skips_taskbar);
+		public void set_startup_id (string startup_id);
+		public void set_support_multidevice (bool support_multidevice);
+		public void set_title (string title);
+		public void set_transient_for (Gdk.Surface parent);
+		public void set_type_hint (Gdk.SurfaceTypeHint hint);
+		public void set_urgency_hint (bool urgent);
+		public void set_user_data (GLib.Object? user_data);
+		public void show ();
+		public void show_unraised ();
+		public bool show_window_menu (Gdk.Event event);
+		public void stick ();
+		[CCode (has_construct_function = false)]
+		public Surface.temp (Gdk.Display display);
+		public void thaw_updates ();
+		[CCode (has_construct_function = false)]
+		public Surface.toplevel (Gdk.Display display, int width, int height);
+		public void unfullscreen ();
+		public void unmaximize ();
+		public void unstick ();
+		public void withdraw ();
+		public Gdk.Cursor cursor { get; set; }
+		public Gdk.Display display { get; construct; }
+		public Gdk.SurfaceState state { get; }
+		public signal void moved_to_rect ([CCode (type = "gpointer")] Gdk.Rectangle flipped_rect, [CCode (type = "gpointer")] Gdk.Rectangle final_rect, bool flipped_x, bool flipped_y);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_texture_get_type ()")]
 	public abstract class Texture : GLib.Object, Gdk.Paintable {
@@ -5255,147 +5386,6 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected VulkanContext ();
 		public signal void images_updated ();
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_window_get_type ()")]
-	public class Window : GLib.Object {
-		[CCode (has_construct_function = false)]
-		protected Window ();
-		public void beep ();
-		public unowned Gdk.DrawingContext begin_draw_frame (Gdk.DrawContext? context, Cairo.Region region);
-		public void begin_move_drag (int button, int root_x, int root_y, uint32 timestamp);
-		public void begin_move_drag_for_device (Gdk.Device device, int button, int root_x, int root_y, uint32 timestamp);
-		public void begin_resize_drag (Gdk.WindowEdge edge, int button, int root_x, int root_y, uint32 timestamp);
-		public void begin_resize_drag_for_device (Gdk.WindowEdge edge, Gdk.Device device, int button, int root_x, int root_y, uint32 timestamp);
-		[CCode (has_construct_function = false)]
-		public Window.child (Gdk.Window parent, Gdk.Rectangle position);
-		public static void constrain_size (Gdk.Geometry geometry, Gdk.WindowHints flags, int width, int height, out int new_width, out int new_height);
-		public void coords_from_parent (double parent_x, double parent_y, out double x, out double y);
-		public void coords_to_parent (double x, double y, out double parent_x, out double parent_y);
-		public Gdk.GLContext create_gl_context () throws GLib.Error;
-		public Cairo.ImageSurface create_similar_image_surface (int format, int width, int height, int scale);
-		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
-		public Gdk.VulkanContext create_vulkan_context () throws GLib.Error;
-		public void deiconify ();
-		[DestroysInstance]
-		public void destroy ();
-		public void end_draw_frame (Gdk.DrawingContext context);
-		public void focus (uint32 timestamp);
-		public void freeze_updates ();
-		public void fullscreen ();
-		public void fullscreen_on_monitor (Gdk.Monitor monitor);
-		public bool get_accept_focus ();
-		public GLib.List<weak Gdk.Window> get_children ();
-		public GLib.List<weak Gdk.Window> get_children_with_user_data (void* user_data);
-		public Cairo.Region get_clip_region ();
-		public unowned Gdk.Cursor? get_cursor ();
-		public bool get_decorations (out Gdk.WMDecoration decorations);
-		public unowned Gdk.Cursor? get_device_cursor (Gdk.Device device);
-		public Gdk.EventMask get_device_events (Gdk.Device device);
-		public unowned Gdk.Window? get_device_position (Gdk.Device device, out int x, out int y, out Gdk.ModifierType mask);
-		public unowned Gdk.Window? get_device_position_double (Gdk.Device device, out double x, out double y, out Gdk.ModifierType mask);
-		public unowned Gdk.Display get_display ();
-		public Gdk.EventMask get_events ();
-		public bool get_focus_on_map ();
-		public unowned Gdk.FrameClock get_frame_clock ();
-		public void get_frame_extents (out Gdk.Rectangle rect);
-		public Gdk.FullscreenMode get_fullscreen_mode ();
-		public void get_geometry (out int x, out int y, out int width, out int height);
-		public unowned Gdk.Window get_group ();
-		public int get_height ();
-		public bool get_modal_hint ();
-		public int get_origin (out int x, out int y);
-		public unowned Gdk.Window get_parent ();
-		public bool get_pass_through ();
-		public void get_position (out int x, out int y);
-		public void get_root_coords (int x, int y, out int root_x, out int root_y);
-		public void get_root_origin (out int x, out int y);
-		public int get_scale_factor ();
-		public Gdk.WindowState get_state ();
-		public bool get_support_multidevice ();
-		public unowned Gdk.Window get_toplevel ();
-		public Gdk.WindowTypeHint get_type_hint ();
-		public Cairo.Region get_update_area ();
-		public void get_user_data (out void* data);
-		public Cairo.Region get_visible_region ();
-		public int get_width ();
-		public Gdk.WindowType get_window_type ();
-		public bool has_native ();
-		public void hide ();
-		public void iconify ();
-		public void input_shape_combine_region (Cairo.Region shape_region, int offset_x, int offset_y);
-		public void invalidate_maybe_recurse (Cairo.Region region, Gdk.WindowChildFunc? child_func);
-		public void invalidate_rect (Gdk.Rectangle? rect, bool invalidate_children);
-		public void invalidate_region (Cairo.Region region, bool invalidate_children);
-		public bool is_destroyed ();
-		public bool is_input_only ();
-		public bool is_shaped ();
-		public bool is_viewable ();
-		public bool is_visible ();
-		public void lower ();
-		public void maximize ();
-		public void merge_child_input_shapes ();
-		public void merge_child_shapes ();
-		public void move (int x, int y);
-		public void move_region (Cairo.Region region, int dx, int dy);
-		public void move_resize (int x, int y, int width, int height);
-		public unowned GLib.List<Gdk.Window> peek_children ();
-		[CCode (has_construct_function = false)]
-		public Window.popup (Gdk.Display display, Gdk.Rectangle position);
-		public void raise ();
-		public void register_dnd ();
-		public void resize (int width, int height);
-		public void restack (Gdk.Window? sibling, bool above);
-		public void scroll (int dx, int dy);
-		public void set_accept_focus (bool accept_focus);
-		public void set_child_input_shapes ();
-		public void set_child_shapes ();
-		public void set_cursor (Gdk.Cursor? cursor);
-		public void set_decorations (Gdk.WMDecoration decorations);
-		public void set_device_cursor (Gdk.Device device, Gdk.Cursor cursor);
-		public void set_device_events (Gdk.Device device, Gdk.EventMask event_mask);
-		public void set_events (Gdk.EventMask event_mask);
-		public void set_focus_on_map (bool focus_on_map);
-		public void set_fullscreen_mode (Gdk.FullscreenMode mode);
-		public void set_functions (Gdk.WMFunction functions);
-		public void set_geometry_hints (Gdk.Geometry geometry, Gdk.WindowHints geom_mask);
-		public void set_group (Gdk.Window? leader);
-		public void set_icon_list (GLib.List<Gdk.Texture> surfaces);
-		public void set_icon_name (string? name);
-		public void set_keep_above (bool setting);
-		public void set_keep_below (bool setting);
-		public void set_modal_hint (bool modal);
-		public void set_opacity (double opacity);
-		public void set_opaque_region (Cairo.Region? region);
-		public void set_pass_through (bool pass_through);
-		public void set_role (string role);
-		public void set_shadow_width (int left, int right, int top, int bottom);
-		public void set_skip_pager_hint (bool skips_pager);
-		public void set_skip_taskbar_hint (bool skips_taskbar);
-		public void set_startup_id (string startup_id);
-		public void set_support_multidevice (bool support_multidevice);
-		public void set_title (string title);
-		public void set_transient_for (Gdk.Window parent);
-		public void set_type_hint (Gdk.WindowTypeHint hint);
-		public void set_urgency_hint (bool urgent);
-		public void set_user_data (GLib.Object? user_data);
-		public void shape_combine_region (Cairo.Region? shape_region, int offset_x, int offset_y);
-		public void show ();
-		public void show_unraised ();
-		public bool show_window_menu (Gdk.Event event);
-		public void stick ();
-		[CCode (has_construct_function = false)]
-		public Window.temp (Gdk.Display display);
-		public void thaw_updates ();
-		[CCode (has_construct_function = false)]
-		public Window.toplevel (Gdk.Display display, int width, int height);
-		public void unfullscreen ();
-		public void unmaximize ();
-		public void unstick ();
-		public void withdraw ();
-		public Gdk.Cursor cursor { get; set; }
-		public Gdk.Display display { get; construct; }
-		public Gdk.WindowState state { get; }
-		public signal void moved_to_rect ([CCode (type = "gpointer")] Gdk.Rectangle flipped_rect, [CCode (type = "gpointer")] Gdk.Rectangle final_rect, bool flipped_x, bool flipped_y);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", ref_function = "", unref_function = "")]
 	[Compact]
@@ -5666,7 +5656,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_OWNERSHIP_", type_id = "gdk_grab_ownership_get_type ()")]
 	public enum GrabOwnership {
 		NONE,
-		WINDOW,
+		SURFACE,
 		APPLICATION
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_GRAB_", type_id = "gdk_grab_status_get_type ()")]
@@ -5695,7 +5685,7 @@ namespace Gdk {
 	public enum InputMode {
 		DISABLED,
 		SCREEN,
-		WINDOW
+		SURFACE
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SOURCE_", type_id = "gdk_input_source_get_type ()")]
 	public enum InputSource {
@@ -5800,6 +5790,76 @@ namespace Gdk {
 		VERTICAL_RGB,
 		VERTICAL_BGR
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SURFACE_EDGE_", type_id = "gdk_surface_edge_get_type ()")]
+	public enum SurfaceEdge {
+		NORTH_WEST,
+		NORTH,
+		NORTH_EAST,
+		WEST,
+		EAST,
+		SOUTH_WEST,
+		SOUTH,
+		SOUTH_EAST
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_HINT_", type_id = "gdk_surface_hints_get_type ()")]
+	[Flags]
+	public enum SurfaceHints {
+		POS,
+		MIN_SIZE,
+		MAX_SIZE,
+		BASE_SIZE,
+		ASPECT,
+		RESIZE_INC,
+		WIN_GRAVITY,
+		USER_POS,
+		USER_SIZE
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SURFACE_STATE_", type_id = "gdk_surface_state_get_type ()")]
+	[Flags]
+	public enum SurfaceState {
+		WITHDRAWN,
+		ICONIFIED,
+		MAXIMIZED,
+		STICKY,
+		FULLSCREEN,
+		ABOVE,
+		BELOW,
+		FOCUSED,
+		TILED,
+		TOP_TILED,
+		TOP_RESIZABLE,
+		RIGHT_TILED,
+		RIGHT_RESIZABLE,
+		BOTTOM_TILED,
+		BOTTOM_RESIZABLE,
+		LEFT_TILED,
+		LEFT_RESIZABLE
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SURFACE_", type_id = "gdk_surface_type_get_type ()")]
+	public enum SurfaceType {
+		TOPLEVEL,
+		CHILD,
+		TEMP,
+		FOREIGN,
+		SUBSURFACE
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SURFACE_TYPE_HINT_", type_id = "gdk_surface_type_hint_get_type ()")]
+	public enum SurfaceTypeHint {
+		NORMAL,
+		DIALOG,
+		MENU,
+		TOOLBAR,
+		SPLASHSCREEN,
+		UTILITY,
+		DOCK,
+		DESKTOP,
+		DROPDOWN_MENU,
+		POPUP_MENU,
+		TOOLTIP,
+		NOTIFICATION,
+		COMBO,
+		DND
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_TOUCHPAD_GESTURE_PHASE_", type_id = "gdk_touchpad_gesture_phase_get_type ()")]
 	public enum TouchpadGesturePhase {
 		BEGIN,
@@ -5828,77 +5888,6 @@ namespace Gdk {
 		MAXIMIZE,
 		CLOSE
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_WINDOW_EDGE_", type_id = "gdk_window_edge_get_type ()")]
-	public enum WindowEdge {
-		NORTH_WEST,
-		NORTH,
-		NORTH_EAST,
-		WEST,
-		EAST,
-		SOUTH_WEST,
-		SOUTH,
-		SOUTH_EAST
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_HINT_", type_id = "gdk_window_hints_get_type ()")]
-	[Flags]
-	public enum WindowHints {
-		POS,
-		MIN_SIZE,
-		MAX_SIZE,
-		BASE_SIZE,
-		ASPECT,
-		RESIZE_INC,
-		WIN_GRAVITY,
-		USER_POS,
-		USER_SIZE
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_WINDOW_STATE_", type_id = "gdk_window_state_get_type ()")]
-	[Flags]
-	public enum WindowState {
-		WITHDRAWN,
-		ICONIFIED,
-		MAXIMIZED,
-		STICKY,
-		FULLSCREEN,
-		ABOVE,
-		BELOW,
-		FOCUSED,
-		TILED,
-		TOP_TILED,
-		TOP_RESIZABLE,
-		RIGHT_TILED,
-		RIGHT_RESIZABLE,
-		BOTTOM_TILED,
-		BOTTOM_RESIZABLE,
-		LEFT_TILED,
-		LEFT_RESIZABLE
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_WINDOW_", type_id = "gdk_window_type_get_type ()")]
-	public enum WindowType {
-		ROOT,
-		TOPLEVEL,
-		CHILD,
-		TEMP,
-		FOREIGN,
-		SUBSURFACE
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_WINDOW_TYPE_HINT_", type_id = "gdk_window_type_hint_get_type ()")]
-	public enum WindowTypeHint {
-		NORMAL,
-		DIALOG,
-		MENU,
-		TOOLBAR,
-		SPLASHSCREEN,
-		UTILITY,
-		DOCK,
-		DESKTOP,
-		DROPDOWN_MENU,
-		POPUP_MENU,
-		TOOLTIP,
-		NOTIFICATION,
-		COMBO,
-		DND
-	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_GL_ERROR_")]
 	[Version (since = "3.16")]
 	public errordomain GLError {
@@ -5924,9 +5913,7 @@ namespace Gdk {
 	public delegate void EventFunc (Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 2.9)]
 	[Version (since = "3.20")]
-	public delegate void SeatGrabPrepareFunc (Gdk.Seat seat, Gdk.Window window);
-	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 1.9)]
-	public delegate bool WindowChildFunc (Gdk.Window window);
+	public delegate void SeatGrabPrepareFunc (Gdk.Seat seat, Gdk.Surface surface);
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_BUTTON_MIDDLE")]
 	[Version (since = "3.4")]
 	public const int BUTTON_MIDDLE;
@@ -5985,7 +5972,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const Gdk.Atom TARGET_STRING;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void cairo_draw_from_gl (Cairo.Context cr, Gdk.Window window, int source, int source_type, int buffer_scale, int x, int y, int width, int height);
+	public static void cairo_draw_from_gl (Cairo.Context cr, Gdk.Surface surface, int source, int source_type, int buffer_scale, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool cairo_get_clip_rectangle (Cairo.Context cr, out Gdk.Rectangle rect);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6001,7 +5988,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_set_source_rgba (Cairo.Context cr, Gdk.RGBA rgba);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Cairo.Surface cairo_surface_create_from_pixbuf (Gdk.Pixbuf pixbuf, int scale, Gdk.Window? for_window);
+	public static Cairo.Surface cairo_surface_create_from_pixbuf (Gdk.Pixbuf pixbuf, int scale, Gdk.Surface? for_surface);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_surface_upload_to_gl (Cairo.Surface surface, int target, int width, int height, Gdk.GLContext? context);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6015,7 +6002,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void disable_multidevice ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Gdk.DragContext? drag_begin (Gdk.Window window, Gdk.Device device, Gdk.ContentProvider content, Gdk.DragAction actions, int dx, int dy);
+	public static Gdk.DragContext? drag_begin (Gdk.Surface surface, Gdk.Device device, Gdk.ContentProvider content, Gdk.DragAction actions, int dx, int dy);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_drop_done (Gdk.DragContext context, bool success);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6196,18 +6183,18 @@ namespace Gsk {
 		protected Renderer ();
 		public unowned Gdk.DrawingContext begin_draw_frame (Cairo.Region region);
 		public void end_draw_frame (Gdk.DrawingContext context);
-		[CCode (cname = "gsk_renderer_new_for_window")]
-		public static Gsk.Renderer? for_window (Gdk.Window window);
+		[CCode (cname = "gsk_renderer_new_for_surface")]
+		public static Gsk.Renderer? for_surface (Gdk.Surface surface);
 		public unowned Gdk.Display get_display ();
-		public unowned Gdk.Window? get_window ();
-		public bool realize (Gdk.Window window) throws GLib.Error;
+		public unowned Gdk.Surface? get_surface ();
+		public bool realize (Gdk.Surface surface) throws GLib.Error;
 		public void render (Gsk.RenderNode root, Gdk.DrawingContext context);
 		public Gdk.Texture render_texture (Gsk.RenderNode root, Graphene.Rect? viewport);
 		public void unrealize ();
 		public Gdk.Display display { get; construct; }
 		[NoAccessorMethod]
 		public Gdk.DrawingContext drawing_context { owned get; }
-		public Gdk.Window window { get; }
+		public Gdk.Surface surface { get; }
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class RepeatNode : Gsk.RenderNode {
@@ -8909,7 +8896,7 @@ namespace Gtk {
 		public virtual void pause ();
 		[NoWrapper]
 		public virtual bool play ();
-		public virtual void realize (Gdk.Window window);
+		public virtual void realize (Gdk.Surface surface);
 		public virtual void seek (int64 timestamp);
 		public void seek_failed ();
 		public void seek_success ();
@@ -8918,7 +8905,7 @@ namespace Gtk {
 		public void set_playing (bool playing);
 		public void set_volume (double volume);
 		public void unprepared ();
-		public virtual void unrealize (Gdk.Window window);
+		public virtual void unrealize (Gdk.Surface surface);
 		public void update (int64 timestamp);
 		[NoWrapper]
 		public virtual void update_audio (bool muted, double volume);
@@ -8962,7 +8949,7 @@ namespace Gtk {
 		public void popdown ();
 		public void popup (Gtk.Widget? parent_menu_shell, Gtk.Widget? parent_menu_item, [CCode (delegate_target_pos = 3.5, scope = "async")] Gtk.MenuPositionFunc? func, uint button, uint32 activate_time);
 		public void popup_at_pointer (Gdk.Event? trigger_event = null);
-		public void popup_at_rect (Gdk.Window rect_window, Gdk.Rectangle rect, Gdk.Gravity rect_anchor, Gdk.Gravity menu_anchor, Gdk.Event? trigger_event = null);
+		public void popup_at_rect (Gdk.Surface rect_surface, Gdk.Rectangle rect, Gdk.Gravity rect_anchor, Gdk.Gravity menu_anchor, Gdk.Event? trigger_event = null);
 		public void popup_at_widget (Gtk.Widget widget, Gdk.Gravity widget_anchor, Gdk.Gravity menu_anchor, Gdk.Event? trigger_event = null);
 		public void popup_for_device (Gdk.Device? device, Gtk.Widget? parent_menu_shell, Gtk.Widget? parent_menu_item, [CCode (delegate_target_pos = 4.33333, destroy_notify_pos = 4.66667)] owned Gtk.MenuPositionFunc? func, uint button, uint32 activate_time);
 		public void reorder_child (Gtk.Widget child, int position);
@@ -8981,7 +8968,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Gtk.Widget attach_widget { owned get; set; }
 		[NoAccessorMethod]
-		public Gdk.WindowTypeHint menu_type_hint { get; set construct; }
+		public Gdk.SurfaceTypeHint menu_type_hint { get; set construct; }
 		public int monitor { get; set; }
 		[NoAccessorMethod]
 		public int rect_anchor_dx { get; set construct; }
@@ -10803,7 +10790,7 @@ namespace Gtk {
 		public void add_child_in_window (Gtk.Widget child, Gtk.TextWindowType which_window, int xpos, int ypos);
 		public bool backward_display_line (Gtk.TextIter iter);
 		public bool backward_display_line_start (Gtk.TextIter iter);
-		public void buffer_to_window_coords (Gtk.TextWindowType win, int buffer_x, int buffer_y, out int window_x, out int window_y);
+		public void buffer_to_surface_coords (Gtk.TextWindowType win, int buffer_x, int buffer_y, out int window_x, out int window_y);
 		[NoWrapper]
 		public virtual Gtk.TextBuffer create_buffer ();
 		[NoWrapper]
@@ -11485,8 +11472,8 @@ namespace Gtk {
 		public unowned Cairo.FontOptions? get_font_options ();
 		public unowned Gdk.FrameClock? get_frame_clock ();
 		public Gtk.Align get_halign ();
+		public bool get_has_surface ();
 		public bool get_has_tooltip ();
-		public bool get_has_window ();
 		public int get_height ();
 		public bool get_hexpand ();
 		public bool get_hexpand_set ();
@@ -11501,7 +11488,7 @@ namespace Gtk {
 		public double get_opacity ();
 		public unowned Pango.Context get_pango_context ();
 		public unowned Gtk.Widget? get_parent ();
-		public unowned Gdk.Window? get_parent_window ();
+		public unowned Gdk.Surface? get_parent_surface ();
 		public unowned Gtk.WidgetPath get_path ();
 		public void get_preferred_size (out Gtk.Requisition minimum_size, out Gtk.Requisition natural_size);
 		public unowned Gtk.Widget? get_prev_sibling ();
@@ -11516,6 +11503,7 @@ namespace Gtk {
 		public Gtk.StateFlags get_state_flags ();
 		public unowned Gtk.StyleContext get_style_context ();
 		public bool get_support_multidevice ();
+		public unowned Gdk.Surface? get_surface ();
 		public unowned GLib.Object get_template_child (GLib.Type widget_type, string name);
 		public string? get_tooltip_markup ();
 		public string? get_tooltip_text ();
@@ -11526,7 +11514,6 @@ namespace Gtk {
 		public bool get_vexpand_set ();
 		public bool get_visible ();
 		public int get_width ();
-		public unowned Gdk.Window? get_window ();
 		public void grab_default ();
 		public bool has_grab ();
 		public bool has_visible_focus ();
@@ -11555,7 +11542,7 @@ namespace Gtk {
 		public void queue_draw_region (Cairo.Region region);
 		public void queue_resize ();
 		public void queue_resize_no_redraw ();
-		public void register_window (Gdk.Window window);
+		public void register_surface (Gdk.Surface surface);
 		public bool remove_accelerator (Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods);
 		public void remove_mnemonic_label (Gtk.Widget label);
 		public void remove_tick_callback (uint id);
@@ -11582,8 +11569,8 @@ namespace Gtk {
 		public void set_font_map (Pango.FontMap? font_map);
 		public void set_font_options (Cairo.FontOptions? options);
 		public void set_halign (Gtk.Align align);
+		public void set_has_surface (bool has_surface);
 		public void set_has_tooltip (bool has_tooltip);
-		public void set_has_window (bool has_window);
 		public void set_hexpand (bool expand);
 		public void set_hexpand_set (bool @set);
 		public void set_margin_bottom (int margin);
@@ -11592,13 +11579,14 @@ namespace Gtk {
 		public void set_margin_top (int margin);
 		public void set_opacity (double opacity);
 		public void set_parent (Gtk.Widget parent);
-		public void set_parent_window (Gdk.Window parent_window);
+		public void set_parent_surface (Gdk.Surface parent_surface);
 		public void set_realized (bool realized);
 		public void set_receives_default (bool receives_default);
 		public void set_sensitive (bool sensitive);
 		public void set_size_request (int width, int height);
 		public void set_state_flags (Gtk.StateFlags flags, bool clear);
 		public void set_support_multidevice (bool support_multidevice);
+		public void set_surface (owned Gdk.Surface surface);
 		[CCode (cname = "gtk_widget_class_set_template")]
 		public class void set_template (GLib.Bytes template_bytes);
 		[CCode (cname = "gtk_widget_class_set_template_from_resource")]
@@ -11610,8 +11598,6 @@ namespace Gtk {
 		public void set_vexpand (bool expand);
 		public void set_vexpand_set (bool @set);
 		public void set_visible (bool visible);
-		public void set_window (owned Gdk.Window window);
-		public void shape_combine_region (Cairo.Region? region);
 		[NoWrapper]
 		public virtual void snapshot (Gtk.Snapshot snapshot);
 		public void snapshot_child (Gtk.Widget child, Gtk.Snapshot snapshot);
@@ -11619,7 +11605,7 @@ namespace Gtk {
 		public bool translate_coordinates (Gtk.Widget dest_widget, int src_x, int src_y, out int dest_x, out int dest_y);
 		public void trigger_tooltip_query ();
 		public void unparent ();
-		public void unregister_window (Gdk.Window window);
+		public void unregister_surface (Gdk.Surface surface);
 		public void unset_state_flags (Gtk.StateFlags flags);
 		public bool can_default { get; set; }
 		public bool can_focus { get; set; }
@@ -11653,6 +11639,7 @@ namespace Gtk {
 		public bool receives_default { get; set; }
 		public int scale_factor { get; }
 		public bool sensitive { get; set; }
+		public Gdk.Surface surface { get; }
 		public string tooltip_markup { owned get; set; }
 		public string tooltip_text { owned get; set; }
 		public Gtk.Align valign { get; set; }
@@ -11661,7 +11648,6 @@ namespace Gtk {
 		public bool visible { get; set; }
 		[NoAccessorMethod]
 		public int width_request { get; set; }
-		public Gdk.Window window { get; }
 		public signal void accel_closures_changed ();
 		[HasEmitter]
 		public virtual signal bool can_activate_accel (uint signal_id);
@@ -11767,7 +11753,7 @@ namespace Gtk {
 		public void add_accel_group (Gtk.AccelGroup accel_group);
 		public void add_mnemonic (uint keyval, Gtk.Widget target);
 		public void begin_move_drag (int button, int root_x, int root_y, uint32 timestamp);
-		public void begin_resize_drag (Gdk.WindowEdge edge, int button, int root_x, int root_y, uint32 timestamp);
+		public void begin_resize_drag (Gdk.SurfaceEdge edge, int button, int root_x, int root_y, uint32 timestamp);
 		public void close ();
 		public void deiconify ();
 		public void fullscreen ();
@@ -11803,7 +11789,7 @@ namespace Gtk {
 		public unowned string? get_title ();
 		public unowned Gtk.Widget? get_titlebar ();
 		public unowned Gtk.Window? get_transient_for ();
-		public Gdk.WindowTypeHint get_type_hint ();
+		public Gdk.SurfaceTypeHint get_type_hint ();
 		public bool get_urgency_hint ();
 		public Gtk.WindowType get_window_type ();
 		public bool has_group ();
@@ -11856,7 +11842,7 @@ namespace Gtk {
 		public void set_title (string title);
 		public void set_titlebar (Gtk.Widget? titlebar);
 		public void set_transient_for (Gtk.Window? parent);
-		public void set_type_hint (Gdk.WindowTypeHint hint);
+		public void set_type_hint (Gdk.SurfaceTypeHint hint);
 		public void set_urgency_hint (bool setting);
 		public void stick ();
 		[CCode (cname = "gtk_window_activate_default")]
@@ -11899,7 +11885,7 @@ namespace Gtk {
 		public Gtk.Window transient_for { get; set construct; }
 		[NoAccessorMethod]
 		public Gtk.WindowType type { get; construct; }
-		public Gdk.WindowTypeHint type_hint { get; set; }
+		public Gdk.SurfaceTypeHint type_hint { get; set; }
 		public bool urgency_hint { get; set; }
 		[NoAccessorMethod]
 		public Gtk.WindowPosition window_position { get; set; }
