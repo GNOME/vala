@@ -504,8 +504,11 @@ TextBuffer
   .insert_text.pos ref
   .insert_text#signal.location ref
 TextView
+  .backward*.iter ref
+  .forward*.iter ref
   .get_iter_location return_void
   .get_visible_rect return_void
+  .move_visually.iter ref
 ThemingEngine
   .register_property skip=false
   .render_icon_pixbuf skip=false unowned=false
