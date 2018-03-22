@@ -631,7 +631,7 @@ libgrss:
 	$(GENVAPI) --library $(srcdir)/libgrss --metadatadir $(METADATADIR) --pkg gio-2.0 --pkg libsoup-2.4 --pkg libxml-2.0 $(GIRDIR)/Grss-0.7.gir
 
 libgsf-1:
-	$(GENVAPI) --library $(srcdir)/libgsf-1 --pkg gio-2.0 --pkg libxml-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/Gsf-1.gir
+	$(GENVAPI) --library $(srcdir)/libgsf-1 --pkg gio-2.0 --pkg libxml-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/Gsf-1-custom.vala $(GIRDIR)/Gsf-1.gir
 
 libnotify:
 	$(GENVAPI) --library $(srcdir)/libnotify --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/Notify-0.7.gir

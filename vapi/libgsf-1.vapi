@@ -249,10 +249,10 @@ namespace Gsf {
 	public abstract class Outfile : Gsf.Output {
 		[CCode (has_construct_function = false)]
 		protected Outfile ();
-		[NoWrapper]
-		public virtual unowned Gsf.Output new_child (string name, bool is_dir, string first_property_name, va_list args);
+		public Gsf.Output new_child (string name, bool is_dir);
 		public Gsf.Output new_child_full (string name, bool is_dir, ...);
-		public Gsf.Output new_child_varg (string name, bool is_dir, string first_property_name, va_list args);
+		[CCode (vfunc_name = "new_child")]
+		public virtual Gsf.Output new_child_varg (string name, bool is_dir, string first_property_name, va_list args);
 		public Gsf.Output open_pkg_add_rel (string name, string content_type, Gsf.Outfile parent, string type);
 	}
 	[CCode (cheader_filename = "gsf/gsf.h", lower_case_csuffix = "outfile_msole", type_id = "gsf_outfile_msole_get_type ()")]
