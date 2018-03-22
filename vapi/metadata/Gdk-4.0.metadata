@@ -9,12 +9,12 @@ Device
         .get_axis_value skip=false
         .get_history skip=false
         .get_state skip=false
-        .get_window_at_position skip=false
+        .get_surface_at_position skip=false
 Event
         ._get_angle skip
         ._get_center skip
         ._get_distance skip
-Window abstract=false
+Surface abstract=false
         .create_similar_image_surface type="Cairo.ImageSurface"
         .moved_to_rect.*_rect type="Gdk.Rectangle"
 Rectangle struct
@@ -29,7 +29,7 @@ pango_layout_get_clip_region skip=false
 Texture
         // Factory method
         .new_* symbol_type="function" name="new_(.+)"
-Window
+Surface
         .destroy destroys_instance
 
 // g-i doesn't support nullable fields and properties (bug #730479)
@@ -39,7 +39,7 @@ Device
 
 // vapigen actually generates the correctly, but in away that breaks BC
 Rectangle.union return_void
-Window.get_frame_extents return_void
+Surface.get_frame_extents return_void
 
 EventAny skip
 EventButton skip
