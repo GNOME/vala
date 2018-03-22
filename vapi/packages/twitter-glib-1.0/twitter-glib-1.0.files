@@ -1,2 +1,0 @@
-include/twitter-glib-1.0/twitter-glib/*.h
-lib/libtwitter-glib-1.0.so

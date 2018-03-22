@@ -247,8 +247,6 @@ dist_vapi_DATA = \
 	taglib_c.vapi \
 	tiff.vapi \
 	tokyocabinet.vapi \
-	twitter-glib-1.0.deps \
-	twitter-glib-1.0.vapi \
 	udisks2.deps \
 	udisks2.vapi \
 	unique-1.0.deps \
@@ -307,7 +305,6 @@ GIDL_BINDINGS = \
 	libwnck-1.0 \
 	loudmouth-1.0 \
 	purple \
-	twitter-glib-1.0 \
 	unique-1.0 \
 	vte \
 	webkit-1.0 \
@@ -677,9 +674,6 @@ rest-0.7:
 
 rest-extras-0.7:
 	$(GENVAPI) --library $(srcdir)/rest-extras-0.7 --metadatadir $(METADATADIR) --pkg rest-0.7 $(GIRDIR)/RestExtras-0.7.gir
-
-twitter-glib-1.0:
-	$(GENVAPI) --library $(srcdir)/twitter-glib-1.0 $(PACKAGESDIR)/twitter-glib-1.0/twitter-glib-1.0.gi
 
 udisks2:
 	$(GENVAPI) --library $(srcdir)/udisks2 --metadatadir $(METADATADIR) --pkg gio-2.0 $(GIRDIR)/UDisks-2.0.gir
