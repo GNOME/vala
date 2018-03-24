@@ -1,0 +1,67 @@
+* cheader_filename="glibtop.h" cprefix="glibtop" lower_case_cprefix="glibtop_"
+
+// GBoxed Types
+glibtop struct name="Context"
+glibtop_map_entry struct name="MapEntry" cheader_filename="glibtop/procmap.h"
+glibtop_mountentry struct name="MountEntry" cheader_filename="glibtop/mountlist.h"
+glibtop_mountlist struct name="MountList" cheader_filename="glibtop/mountlist.h"
+glibtop_open_files_entry struct name="OpenFileEntry" cheader_filename="glibtop/procopenfiles.h"
+glibtop_proc_map struct name="ProcMap" cheader_filename="glibtop/procmap.h"
+glibtop_proc_open_files struct name="ProcOpenFiles" cheader_filename="glibtop/procopenfiles.h"
+
+glibtop_machine struct name="Machine" cheader_filename="glibtop/machine.h"
+
+glibtop_command name="Command" cheader_filename="glibtop/command.h"
+glibtop_cpu name="Cpu" cheader_filename="glibtop/cpu.h"
+glibtop_entry name="Entry" cheader_filename="glibtop/sysinfo.h"
+glibtop_fsusage name="FsUsage" cheader_filename="glibtop/fsusage.h"
+glibtop_loadavg name="LoadAvg" cheader_filename="glibtop/loadavg.h"
+glibtop_mem name="Mem" cheader_filename="glibtop/mem.h"
+glibtop_msg_limits name="MsgLimits" cheader_filename="glibtop/msg_limits.h"
+glibtop_netlist name="NetList" cheader_filename="glibtop/netlist.h"
+glibtop_netload name="NetLoad" cheader_filename="glibtop/netload.h"
+glibtop_ppp name="Ppp" cheader_filename="glibtop/ppp.h"
+glibtop_proc_affinity name="ProcAffinity" cheader_filename="glibtop/procaffinity.h"
+glibtop_proc_args name="ProcArgs" cheader_filename="glibtop/procargs.h"
+glibtop_proc_io name="ProcIO" cheader_filename="glibtop/procio.h"
+glibtop_proc_kernel name="ProcKernel" cheader_filename="glibtop/prockernel.h"
+glibtop_proc_mem name="ProcMem" cheader_filename="glibtop/procmem.h"
+glibtop_proc_segment name="Segment" cheader_filename="glibtop/procsegment.h"
+glibtop_proc_signal name="Signal" cheader_filename="glibtop/procsignal.h"
+glibtop_proc_state name="ProcState" cheader_filename="glibtop/procstate.h"
+glibtop_proc_time name="ProcTime" cheader_filename="glibtop/proctime.h"
+glibtop_proc_uid name="ProcUid" cheader_filename="glibtop/procuid.h"
+glibtop_proc_wd name="ProcWd" cheader_filename="glibtop/procwd.h"
+glibtop_proclist name="ProcList" cheader_filename="glibtop/command.h"
+glibtop_response skip // name="Response" cheader_filename="glibtop/command.h"
+glibtop_response_union skip // name="ResponseUnion" cheader_filename="glibtop/command.h"
+glibtop_sem_limits name="SemLimits" cheader_filename="glibtop/sem_limits.h"
+glibtop_shm_limits name="ShmLimits" cheader_filename="glibtop/shm_limits.h"
+glibtop_signame name="Signame" cheader_filename="glibtop/signal.h"
+glibtop_swap name="Swap" cheader_filename="glibtop/swap.h"
+glibtop_sysdeps name="SysDeps" cheader_filename="glibtop/sysdeps.h"
+glibtop_sysinfo name="SysInfo" cheader_filename="glibtop/sysinfo.h"
+glibtop_union skip // name="Union" cheader_filename="glibtop/union.h"
+glibtop_uptime name="Uptime" cheader_filename="glibtop/uptime.h"
+
+glibtop_init* name="glibtop_(.+)"
+glibtop.get_*.buf out
+glibtop.get_* return_void
+glibtop_get_*.buf out
+glibtop_get_* return_void
+glibtop_get_* name="glibtop_(.+)"
+glibtop_close name="close"
+glibtop_internet_addr name="internet_addr"
+glibtop_make_connection name="make_connection"
+
+GLIBTOP_* name="GLIBTOP_(.+)"
+
+*.*#field unowned=false
+
+glibtop_entry
+	.labels type="GLib.GenericArray<unowned string>"
+	.values type="GLib.HashTable<string,string>"
+	.descriptions unowned
+
+glibtop
+	.get_proc_open_files_s array array_null_terminated unowned=false

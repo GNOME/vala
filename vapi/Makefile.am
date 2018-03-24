@@ -183,6 +183,7 @@ dist_vapi_DATA = \
 	libgrss.vapi \
 	libgsf-1.deps \
 	libgsf-1.vapi \
+	libgtop-2.0.vapi \
 	libgvc.vapi \
 	libmagic.vapi \
 	libnl-1.vapi \
@@ -369,6 +370,7 @@ GIR_BINDINGS = \
 	libgnome-menu-3.0 \
 	libgrss \
 	libgsf-1 \
+	libgtop-2.0 \
 	libnotify \
 	libpeas-1.0 \
 	libpeas-gtk-1.0 \
@@ -633,6 +635,9 @@ libgrss:
 
 libgsf-1:
 	$(GENVAPI) --library $(srcdir)/libgsf-1 --pkg gio-2.0 --pkg libxml-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/Gsf-1-custom.vala $(GIRDIR)/Gsf-1.gir
+
+libgtop-2.0:
+	$(GENVAPI) --library $(srcdir)/libgtop-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/GTop-2.0-custom.vala $(GIRDIR)/GTop-2.0.gir
 
 libnotify:
 	$(GENVAPI) --library $(srcdir)/libnotify --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/Notify-0.7.gir
