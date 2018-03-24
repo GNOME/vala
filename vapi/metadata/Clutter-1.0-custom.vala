@@ -72,7 +72,7 @@ namespace Clutter {
 	}
 
 	[CCode (type_id = "clutter_stage_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class Stage : Clutter.Group, Atk.Implementor, Clutter.Animatable, Clutter.Container, Clutter.Scriptable {
+	public class Stage : Clutter.Group {
 		[CCode (cname = "clutter_redraw")]
 		public void redraw ();
 	}
@@ -112,7 +112,7 @@ namespace Clutter {
 	}
 
 	[CCode (type_id = "clutter_texture_get_type ()", cheader_filename = "clutter/clutter.h")]
-	public class Texture : Clutter.Actor, Atk.Implementor, Clutter.Animatable, Clutter.Scriptable {
+	public class Texture : Clutter.Actor {
 		public Cogl.Material cogl_material { get; set; }
 		public Cogl.Texture cogl_texture { get; set; }
 	}
