@@ -132,6 +132,7 @@ namespace Gsf {
 		public bool seek_emulate (Gsf.off_t pos);
 		public bool set_container (Gsf.Infile? container);
 		public bool set_modtime (GLib.DateTime? modtime);
+		public bool set_modtime_from_stat (void* st);
 		public bool set_name (string? name);
 		public bool set_name_from_filename (string filename);
 		public bool set_size (Gsf.off_t size);

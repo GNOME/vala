@@ -6085,7 +6085,7 @@ namespace Gsk {
 	public class CairoNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
 		public CairoNode (Graphene.Rect bounds);
-		public Cairo.Context get_draw_context (Gsk.Renderer? renderer);
+		public Cairo.Context get_draw_context ();
 		public unowned Cairo.Surface peek_surface ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
@@ -10224,7 +10224,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_snapshot_get_type ()")]
 	public class Snapshot : Gdk.Snapshot {
 		[CCode (has_construct_function = false)]
-		public Snapshot (Gsk.Renderer renderer, bool record_names, Cairo.Region? clip, string name, ...);
+		public Snapshot (bool record_names, Cairo.Region? clip, string name, ...);
 		public Cairo.Context append_cairo (Graphene.Rect bounds, string name, ...);
 		public void append_color (Gdk.RGBA color, Graphene.Rect bounds, string name, ...);
 		public void append_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, Gsk.ColorStop stops, size_t n_stops, string name, ...);
@@ -10236,7 +10236,6 @@ namespace Gtk {
 		public Gsk.RenderNode free_to_node ();
 		public void get_offset (out int x, out int y);
 		public bool get_record_names ();
-		public unowned Gsk.Renderer get_renderer ();
 		public void offset (int x, int y);
 		public void pop ();
 		public void push (bool keep_coordinates, string name, ...);
