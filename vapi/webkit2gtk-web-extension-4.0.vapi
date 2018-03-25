@@ -3065,7 +3065,7 @@ namespace WebKit {
 		public signal void form_controls_associated (GLib.GenericArray<WebKit.DOM.Element> elements);
 		public signal bool send_request (WebKit.URIRequest request, WebKit.URIResponse redirected_response);
 		[Version (since = "2.20")]
-		public signal void will_submit_form (WebKit.DOM.HTMLFormElement form, WebKit.FormSubmissionStep step, WebKit.Frame source_frame, WebKit.Frame target_frame, GLib.GenericArray<string> text_field_names, GLib.GenericArray<string> text_field_values);
+		public signal void will_submit_form (WebKit.DOM.Element form, WebKit.FormSubmissionStep step, WebKit.Frame source_frame, WebKit.Frame target_frame, GLib.GenericArray<string> text_field_names, GLib.GenericArray<string> text_field_values);
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_CONSOLE_MESSAGE_LEVEL_", type_id = "webkit_console_message_level_get_type ()")]
 	[Version (since = "2.12")]
