@@ -112,7 +112,7 @@ namespace Atk {
 		[NoAccessorMethod]
 		public Atk.Object accessible_parent { owned get; set; }
 		[NoAccessorMethod]
-		public int accessible_role { get; set; }
+		public Atk.Role accessible_role { get; set; }
 		[NoAccessorMethod]
 		[Version (deprecated = true)]
 		public string accessible_table_caption { owned get; set; }
