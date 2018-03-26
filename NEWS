@@ -1,3 +1,26 @@
+Vala 0.40.1
+===========
+ * Various bug fixes:
+  - codegen: Don't add target fields for captured delegates without target
+  - codegen: Don't add length fields for captured fixed-length array variables
+  - valadoc: Bump VALA_0_xx defines and glib_minor to match 0.40 series
+
+ * Bindings:
+  - Add libgeoclue-2.0 bindings [#794376]
+  - gobject-2.0: Cherry-pick some changes from 0.42
+  - gdk-3.0,gtk+-3.0: Update to 3.22.29
+  - gtk+-4.0: Update to 3.93.0+433517fd
+  - gtk+-*.0: Fix iter parameter of TextView.backward*/forward*/move_visually()
+    [#794345]
+  - gstreamer-1.0: Update to 1.13.91 and add gstreamer-webrtc-1.0 bindings
+  - libgsf-1: Switch to GIR and update to 1.14.42
+  - linux: Add various symbols
+  - posix: Add various symbols
+  - posix: Include sys/sysmacros.h for major(), minor() and makedev() [#794651]
+  - webkit-1.0: Update to 2.4.11
+  - webkit2gtk-4.0: Update to 2.20.0
+  - Update GIR-based bindings
+
 Vala 0.40.0
 ===========
  * Various bug fixes:
