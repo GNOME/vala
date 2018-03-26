@@ -2972,14 +2972,17 @@ namespace Gtk {
 		public unowned Gtk.Widget get_action_area ();
 		public unowned Gtk.Container get_content_area ();
 		public Gtk.MessageType get_message_type ();
+		public bool get_revealed ();
 		public bool get_show_close_button ();
 		public void set_default_response (int response_id);
 		public void set_message_type (Gtk.MessageType message_type);
 		public void set_response_sensitive (int response_id, bool setting);
+		public void set_revealed (bool revealed);
 		public void set_show_close_button (bool setting);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public InfoBar.with_buttons (...);
 		public Gtk.MessageType message_type { get; set construct; }
+		public bool revealed { get; set; }
 		public bool show_close_button { get; set construct; }
 		public virtual signal void close ();
 		[HasEmitter]

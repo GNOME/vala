@@ -16521,6 +16521,12 @@
 					<parameter name="info_bar" type="GtkInfoBar*"/>
 				</parameters>
 			</method>
+			<method name="get_revealed" symbol="gtk_info_bar_get_revealed">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="info_bar" type="GtkInfoBar*"/>
+				</parameters>
+			</method>
 			<method name="get_show_close_button" symbol="gtk_info_bar_get_show_close_button">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -16565,6 +16571,13 @@
 					<parameter name="setting" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_revealed" symbol="gtk_info_bar_set_revealed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="info_bar" type="GtkInfoBar*"/>
+					<parameter name="revealed" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_show_close_button" symbol="gtk_info_bar_set_show_close_button">
 				<return-type type="void"/>
 				<parameters>
@@ -16573,6 +16586,7 @@
 				</parameters>
 			</method>
 			<property name="message-type" type="GtkMessageType" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="revealed" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-close-button" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<signal name="close" when="LAST">
 				<return-type type="void"/>
@@ -36536,15 +36550,15 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="2227"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="2229"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="27"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="29"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_FULL" type="char*" value="full"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="27"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="29"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="22"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
