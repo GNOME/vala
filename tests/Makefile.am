@@ -255,6 +255,7 @@ TESTS = \
 	dbus/enum-string-marshalling.vala \
 	dbus/signals.test \
 	dbus/filedescriptor.test \
+	dbus/filedescriptor-async.test \
 	dbus/filedescriptor-errors.test \
 	dbus/dicts.test \
 	dbus/bug596862.vala \
