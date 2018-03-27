@@ -42,7 +42,7 @@ public class Vala.BooleanLiteral : Literal {
 		value = b;
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_boolean_literal (this);
 

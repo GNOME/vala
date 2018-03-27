@@ -50,7 +50,7 @@ public class Vala.SizeofExpression : Expression {
 		type_reference = type;
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_sizeof_expression (this);
 

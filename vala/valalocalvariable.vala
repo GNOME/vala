@@ -43,7 +43,7 @@ public class Vala.LocalVariable : Variable {
 	public LocalVariable (DataType? variable_type, string name, Expression? initializer = null, SourceReference? source_reference = null) {
 		base (variable_type, name, initializer, source_reference);
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_local_variable (this);
 	}
@@ -51,10 +51,10 @@ public class Vala.LocalVariable : Variable {
 	public override void accept_children (CodeVisitor visitor) {
 		if (initializer != null) {
 			initializer.accept (visitor);
-		
+
 			visitor.visit_end_full_expression (initializer);
 		}
-		
+
 		if (variable_type != null) {
 			variable_type.accept (visitor);
 		}

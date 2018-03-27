@@ -56,7 +56,7 @@ public class Valadoc.Importer.ValadocDocumentationImporter : DocumentationImport
 		_scanner.set_parser (_parser);
 
 		_comment = new StringBuilder ();
-		
+
 		// init parser rules:
 		Rule unprinted_spaces = Rule.many ({
 			Rule.one_of ({

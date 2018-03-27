@@ -175,7 +175,7 @@ myword
 	assert (token.type == Gtkdoc.TokenType.WORD);
 	assert (token.content == "myword");
 	assert (token.attributes == null);
-	
+
 
 	token = scanner.next ();
 	assert (token.type == Gtkdoc.TokenType.SPACE);

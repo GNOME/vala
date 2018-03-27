@@ -40,11 +40,11 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	public ClassRegisterFunction (Class cl) {
 		class_reference = cl;
 	}
-	
+
 	public override TypeSymbol get_type_declaration () {
 		return class_reference;
 	}
-	
+
 	public override string get_type_struct_name () {
 		return "%sClass".printf (get_ccode_name (class_reference));
 	}
@@ -76,15 +76,15 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	public override string get_class_init_func_name () {
 		return "%s_class_init".printf (get_ccode_lower_case_name (class_reference, null));
 	}
-	
+
 	public override string get_instance_struct_size () {
 		return "sizeof (%s)".printf (get_ccode_name (class_reference));
 	}
-	
+
 	public override string get_instance_init_func_name () {
 		return "%s_instance_init".printf (get_ccode_lower_case_name (class_reference, null));
 	}
-	
+
 	public override string get_parent_type_name () {
 		return get_ccode_type_id (class_reference.base_class);
 	}
@@ -151,22 +151,22 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 
 	public override CCodeFragment get_type_interface_init_declaration () {
 		var frag = new CCodeFragment ();
-		
+
 		foreach (DataType base_type in class_reference.get_base_types ()) {
 			if (!(base_type.data_type is Interface)) {
 				continue;
 			}
-			
+
 			var iface = (Interface) base_type.data_type;
-			
+
 			var iface_info_name = "%s_info".printf (get_ccode_lower_case_name (iface, null));
-			
+
 			var ctypedecl = new CCodeDeclaration ("const GInterfaceInfo");
 			ctypedecl.modifiers = CCodeModifiers.STATIC;
 			ctypedecl.add_declarator (new CCodeVariableDeclarator (iface_info_name, new CCodeConstant ("{ (GInterfaceInitFunc) %s_%s_interface_init, (GInterfaceFinalizeFunc) NULL, NULL}".printf (get_ccode_lower_case_name (class_reference), get_ccode_lower_case_name (iface)))));
 			frag.append (ctypedecl);
 		}
-		
+
 		return frag;
 	}
 
@@ -175,9 +175,9 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 			if (!(base_type.data_type is Interface)) {
 				continue;
 			}
-			
+
 			var iface = (Interface) base_type.data_type;
-			
+
 			var iface_info_name = "%s_info".printf (get_ccode_lower_case_name (iface, null));
 			if (!plugin) {
 				var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_interface_static"));
@@ -194,7 +194,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 				block.add_statement (new CCodeExpressionStatement (reg_call));
 			}
 		}
-		
+
 		((CCodeBaseModule) context.codegen).register_dbus_info (block, class_reference);
 	}
 }

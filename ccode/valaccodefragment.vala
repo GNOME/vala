@@ -27,7 +27,7 @@ using GLib;
  */
 public class Vala.CCodeFragment : CCodeNode {
 	private List<CCodeNode> children = new ArrayList<CCodeNode> ();
-	
+
 	/**
 	 * Appends the specified code node to this code fragment.
 	 *
@@ -36,7 +36,7 @@ public class Vala.CCodeFragment : CCodeNode {
 	public void append (CCodeNode node) {
 		children.add (node);
 	}
-	
+
 	/**
 	 * Returns a copy of the list of children.
 	 *

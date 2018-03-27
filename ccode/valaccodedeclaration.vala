@@ -32,11 +32,11 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	public string type_name { get; set; }
 
 	private List<CCodeDeclarator> declarators = new ArrayList<CCodeDeclarator> ();
-	
+
 	public CCodeDeclaration (string type_name) {
 		this.type_name = type_name;
 	}
-	
+
 	/**
 	 * Adds the specified declarator to this declaration.
 	 *
@@ -45,7 +45,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	public void add_declarator (CCodeDeclarator decl) {
 		declarators.add (decl);
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.INTERNAL | CCodeModifiers.EXTERN)) == 0) {
 			foreach (CCodeDeclarator decl in declarators) {
@@ -110,7 +110,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 		}
 		writer.write_string (type_name);
 		writer.write_string (" ");
-	
+
 		bool first = true;
 		foreach (CCodeDeclarator decl in declarators) {
 			if (!first) {

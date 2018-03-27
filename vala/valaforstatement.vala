@@ -40,7 +40,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 			}
 		}
 	}
-	
+
 	/**
 	 * Specifies the loop body.
 	 */
@@ -73,7 +73,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 		this.body = body;
 		this.source_reference = source_reference;
 	}
-	
+
 	/**
 	 * Appends the specified expression to the list of initializers.
 	 *
@@ -83,7 +83,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 		init.parent_node = this;
 		initializer.add (init);
 	}
-	
+
 	/**
 	 * Returns a copy of the list of initializers.
 	 *
@@ -92,7 +92,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 	public List<Expression> get_initializer () {
 		return initializer;
 	}
-	
+
 	/**
 	 * Appends the specified expression to the iterator.
 	 *
@@ -102,7 +102,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 		iter.parent_node = this;
 		iterator.add (iter);
 	}
-	
+
 	/**
 	 * Returns a copy of the iterator.
 	 *
@@ -111,11 +111,11 @@ public class Vala.ForStatement : CodeNode, Statement {
 	public List<Expression> get_iterator () {
 		return iterator;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_for_statement (this);
 	}
-	
+
 	public override void accept_children (CodeVisitor visitor) {
 		foreach (Expression init_expr in initializer) {
 			init_expr.accept (visitor);
@@ -132,7 +132,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 			it_expr.accept (visitor);
 			visitor.visit_end_full_expression (it_expr);
 		}
-		
+
 		body.accept (visitor);
 	}
 

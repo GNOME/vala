@@ -182,7 +182,7 @@ public static void test_enum_global (Api.Enum? en, Api.Package pkg, Api.Namespac
 			Api.NodeType.TYPE_PARAMETER
 		};
 
-	Vala.List<Api.Node> nodes = en.get_children_by_types (forbidden, false);	
+	Vala.List<Api.Node> nodes = en.get_children_by_types (forbidden, false);
 	assert (nodes.size == 0);
 }
 
@@ -339,7 +339,7 @@ public static void test_erroromain_global (Api.ErrorDomain? err, Api.Package pkg
 			Api.NodeType.TYPE_PARAMETER
 		};
 
-	Vala.List<Api.Node> nodes = err.get_children_by_types (forbidden, false);	
+	Vala.List<Api.Node> nodes = err.get_children_by_types (forbidden, false);
 	assert (nodes.size == 0);
 }
 
@@ -756,7 +756,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 
 		case "field2":
 			// (.Field check)
-			assert (field.get_cname () == "field2");	
+			assert (field.get_cname () == "field2");
 			assert (field.is_static == false);
 			assert (field.is_volatile == false);
 			// (.Symbol check)
@@ -833,7 +833,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 			Api.NodeType.TYPE_PARAMETER
 		};
 
-	Vala.List<Api.Node> nodes = cl.get_children_by_types (forbidden, false);	
+	Vala.List<Api.Node> nodes = cl.get_children_by_types (forbidden, false);
 	assert (nodes.size == 0);
 }
 
@@ -1157,7 +1157,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 			Api.NodeType.TYPE_PARAMETER
 		};
 
-	Vala.List<Api.Node> nodes = iface.get_children_by_types (forbidden, false);	
+	Vala.List<Api.Node> nodes = iface.get_children_by_types (forbidden, false);
 	assert (nodes.size == 0);
 }
 
@@ -1362,7 +1362,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 
 		case "field2":
 			// (.Field check)
-			assert (field.get_cname () == "field2");	
+			assert (field.get_cname () == "field2");
 			assert (field.is_static == false);
 			assert (field.is_volatile == false);
 			// (.Symbol check)
@@ -1562,7 +1562,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 			Api.NodeType.TYPE_PARAMETER
 		};
 
-	Vala.List<Api.Node> nodes = stru.get_children_by_types (forbidden, false);	
+	Vala.List<Api.Node> nodes = stru.get_children_by_types (forbidden, false);
 	assert (nodes.size == 0);
 }
 
@@ -1611,7 +1611,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 				Api.NodeType.TYPE_PARAMETER
 			};
 
-		Vala.List<Api.Node> nodes = m.get_children_by_types (forbidden, false);	
+		Vala.List<Api.Node> nodes = m.get_children_by_types (forbidden, false);
 		assert (nodes.size == 0);
 
 		Vala.List<Api.Node> params = m.get_children_by_type (Api.NodeType.FORMAL_PARAMETER, false);
@@ -2325,7 +2325,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			Api.NodeType.TYPE_PARAMETER
 		};
 
-	Vala.List<Api.Node> nodes = ns.get_children_by_types (forbidden, false);	
+	Vala.List<Api.Node> nodes = ns.get_children_by_types (forbidden, false);
 	assert (nodes.size == 0);
 }
 
@@ -2370,7 +2370,7 @@ public static void return_test (Api.Namespace ns, Api.Package pkg) {
 				Api.NodeType.TYPE_PARAMETER
 			};
 
-		Vala.List<Api.Node> nodes = m.get_children_by_types (forbidden, false);	
+		Vala.List<Api.Node> nodes = m.get_children_by_types (forbidden, false);
 		assert (nodes.size == 0);
 
 		Api.TypeReference? ret = m.return_type;
@@ -2723,7 +2723,7 @@ public static void test_global_ns (Api.Namespace global_ns, Api.Package pkg) {
 	Api.Field field = fields.get (0) as Api.Field;
 	assert (field != null);
 	// (.Field check)
-	assert (field.get_cname () == "test_field_global");	
+	assert (field.get_cname () == "test_field_global");
 	assert (field.is_static == false);
 	assert (field.is_volatile == false);
 	// (.Symbol check)
@@ -2744,7 +2744,7 @@ public static void test_global_ns (Api.Namespace global_ns, Api.Package pkg) {
 	Api.Constant constant = constants.get (0) as Api.Constant;
 	assert (constant != null);
 	// (.Constant check)
-	assert (constant.get_cname () == "test_const_global");	
+	assert (constant.get_cname () == "test_const_global");
 	// (.Symbol check)
 	assert (constant.is_deprecated == false);
 	assert (constant.accessibility == Api.SymbolAccessibility.PUBLIC);

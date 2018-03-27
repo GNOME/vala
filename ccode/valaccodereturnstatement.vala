@@ -30,15 +30,15 @@ public class Vala.CCodeReturnStatement : CCodeStatement {
 	 * The optional expression to return.
 	 */
 	public CCodeExpression? return_expression { get; set; }
-	
+
 	public CCodeReturnStatement (CCodeExpression? expr = null) {
 		return_expression = expr;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		writer.write_indent (line);
 		writer.write_string ("return");
-	
+
 		if (return_expression != null) {
 			writer.write_string (" ");
 			return_expression.write (writer);

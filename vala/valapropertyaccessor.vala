@@ -50,12 +50,12 @@ public class Vala.PropertyAccessor : Subroutine {
 	 * Specifies whether this accessor may be used to get the property.
 	 */
 	public bool readable { get; private set; }
-	
+
 	/**
 	 * Specifies whether this accessor may be used to set the property.
 	 */
 	public bool writable { get; private set; }
-	
+
 	/**
 	 * Specifies whether this accessor may be used to construct the
 	 * property.
@@ -77,7 +77,7 @@ public class Vala.PropertyAccessor : Subroutine {
 	public Parameter value_parameter { get; private set; }
 
 	private DataType _value_type;
-	
+
 	/**
 	 * Creates a new property accessor.
 	 *

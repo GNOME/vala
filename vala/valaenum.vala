@@ -54,7 +54,7 @@ public class Vala.Enum : TypeSymbol {
 	public Enum (string name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 	}
-	
+
 	/**
 	 * Appends the specified enum value to the list of values.
 	 *
@@ -75,7 +75,7 @@ public class Vala.Enum : TypeSymbol {
 	public override void add_method (Method m) {
 		if (m is CreationMethod) {
 			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
-		
+
 			m.error = true;
 			return;
 		}

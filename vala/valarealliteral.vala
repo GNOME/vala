@@ -42,13 +42,13 @@ public class Vala.RealLiteral : Literal {
 		value = r;
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_real_literal (this);
 
 		visitor.visit_expression (this);
 	}
-	
+
 	/**
 	 * Returns the type name of the value this literal represents.
 	 *
@@ -58,7 +58,7 @@ public class Vala.RealLiteral : Literal {
 		if (value.has_suffix ("f") || value.has_suffix ("F")) {
 			return "float";
 		}
-		
+
 		return "double";
 	}
 

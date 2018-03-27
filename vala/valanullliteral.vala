@@ -35,7 +35,7 @@ public class Vala.NullLiteral : Literal {
 	public NullLiteral (SourceReference? source = null) {
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_null_literal (this);
 

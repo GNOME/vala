@@ -75,12 +75,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cexpr, csize);
 			}
 		}
-		
+
 		// add extra item to have array NULL-terminated for all reference types
 		if (expr.element_type.data_type != null && expr.element_type.data_type.is_reference_type ()) {
 			cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cexpr, new CCodeConstant ("1"));
 		}
-		
+
 		gnew.add_argument (cexpr);
 
 		var temp_var = get_temp_variable (expr.value_type, true, expr);
@@ -732,7 +732,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			if (param.direction != ParameterDirection.IN) {
 				length_ctype = "%s*".printf (length_ctype);
 			}
-			
+
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				var cparam = new CCodeParameter (get_parameter_array_length_cname (param, dim), length_ctype);
 				cparam_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), cparam);

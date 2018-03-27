@@ -38,7 +38,7 @@ public class Vala.AddressofExpression : Expression {
 			_inner.parent_node = this;
 		}
 	}
-	
+
 	private Expression _inner;
 
 	/**
@@ -51,7 +51,7 @@ public class Vala.AddressofExpression : Expression {
 		this.source_reference = source_reference;
 		this.inner = inner;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_addressof_expression (this);
 

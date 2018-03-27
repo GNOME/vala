@@ -50,7 +50,7 @@ public class Vala.TypeofExpression : Expression {
 		type_reference = type;
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_typeof_expression (this);
 

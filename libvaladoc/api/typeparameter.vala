@@ -34,7 +34,7 @@ public class Valadoc.Api.TypeParameter : Symbol {
 
 	/**
 	 * {@inheritDoc}
-	 */ 
+	 */
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
 			.append_symbol (this)
@@ -43,12 +43,12 @@ public class Valadoc.Api.TypeParameter : Symbol {
 
 	/**
 	 * {@inheritDoc}
-	 */ 
+	 */
 	public override NodeType node_type { get { return NodeType.TYPE_PARAMETER; } }
 
 	/**
 	 * {@inheritDoc}
-	 */ 
+	 */
 	public override void accept (Visitor visitor) {
 		visitor.visit_type_parameter (this);
 	}

@@ -34,13 +34,13 @@ public class Vala.LambdaExpression : Expression {
 	 * expression_body or statement_body may be set.
 	 */
 	public Expression expression_body { get; set; }
-	
+
 	/**
 	 * The statement body of this lambda expression. Only one of
 	 * expression_body or statement_body may be set.
 	 */
 	public Block statement_body { get; set; }
-	
+
 	/**
 	 * The generated method.
 	 */
@@ -59,7 +59,7 @@ public class Vala.LambdaExpression : Expression {
 		this.source_reference = source_reference;
 		this.expression_body = expression_body;
 	}
-	
+
 	/**
 	 * Creates a new lambda expression with statement body.
 	 *
@@ -71,7 +71,7 @@ public class Vala.LambdaExpression : Expression {
 		this.statement_body = statement_body;
 		this.source_reference = source_reference;
 	}
-	
+
 	/**
 	 * Appends implicitly typed parameter.
 	 *
@@ -80,7 +80,7 @@ public class Vala.LambdaExpression : Expression {
 	public void add_parameter (Parameter param) {
 		parameters.add (param);
 	}
-	
+
 	/**
 	 * Returns copy of parameter list.
 	 *
@@ -89,7 +89,7 @@ public class Vala.LambdaExpression : Expression {
 	public List<Parameter> get_parameters () {
 		return parameters;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_lambda_expression (this);
 

@@ -38,17 +38,17 @@ public class Vala.ArrayCreationExpression : Expression {
 			_element_type.parent_node = this;
 		}
 	}
-	
+
 	/**
 	 * The rank of the array.
 	 */
 	public int rank { get; set; }
-	
+
 	/**
 	 * The size for each dimension ascending from left to right.
 	 */
 	private List<Expression> sizes = new ArrayList<Expression> ();
-	
+
 	/**
 	 * The root array initializer list.
 	 */
@@ -74,14 +74,14 @@ public class Vala.ArrayCreationExpression : Expression {
 			size.parent_node = this;
 		}
 	}
-	
+
 	/**
 	 * Get the sizes for all dimensions ascending from left to right.
 	 */
 	public List<Expression> get_sizes () {
 		return sizes;
 	}
-	
+
 	public ArrayCreationExpression (DataType element_type, int rank, InitializerList? initializer_list, SourceReference source_reference) {
 		this.element_type = element_type;
 		this.rank = rank;

@@ -35,7 +35,7 @@ public class Vala.EmptyStatement : CodeNode, Statement {
 	public EmptyStatement (SourceReference source) {
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_empty_statement (this);
 	}

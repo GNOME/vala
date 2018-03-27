@@ -257,7 +257,7 @@ public class Gtkdoc.TextWriter {
 	public void close () {
 		stream = null;
 	}
-	
+
 	public void write_line (string line) {
 		stream.puts (line);
 		stream.putc ('\n');

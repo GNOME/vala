@@ -720,7 +720,7 @@ public class Vala.GTypeModule : GErrorModule {
 					add_interface_init_function (cl, (Interface) base_type.data_type);
 				}
 			}
-			
+
 			add_instance_init_function (cl);
 
 			if (!cl.is_compact && (cl.get_fields ().size > 0 || cl.destructor != null || cl.is_fundamental ())) {
@@ -830,7 +830,7 @@ public class Vala.GTypeModule : GErrorModule {
 		function.modifiers = CCodeModifiers.STATIC;
 
 		push_function (function);
-		
+
 		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%sunref".printf (get_ccode_lower_case_prefix (cl))));
 		ccall.add_argument (vpointer);
@@ -1236,7 +1236,7 @@ public class Vala.GTypeModule : GErrorModule {
 		func.modifiers = CCodeModifiers.STATIC;
 
 		CCodeFunctionCall ccall;
-		
+
 		/* save pointer to parent class */
 		var parent_decl = new CCodeDeclaration ("gpointer");
 		var parent_var_decl = new CCodeVariableDeclarator ("%s_parent_class".printf (get_ccode_lower_case_name (cl, null)));
@@ -1251,7 +1251,7 @@ public class Vala.GTypeModule : GErrorModule {
 		ccall.add_argument (new CCodeIdentifier ("klass"));
 		var parent_assignment = new CCodeAssignment (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (cl, null))), ccall);
 		ccode.add_expression (parent_assignment);
-		
+
 
 		if (!cl.is_compact && !cl.is_subtype_of (gobject_type) && (cl.get_fields ().size > 0 || cl.destructor != null || cl.is_fundamental ())) {
 			// set finalize function
@@ -1310,7 +1310,7 @@ public class Vala.GTypeModule : GErrorModule {
 				continue;
 			}
 			var base_type = prop.base_property.parent_symbol;
-			
+
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_type))));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
 
@@ -1344,7 +1344,7 @@ public class Vala.GTypeModule : GErrorModule {
 	private void add_class_init_function (Class cl) {
 		cfile.add_function (class_init_context.ccode);
 	}
-	
+
 	private void add_generic_accessor_function (string base_name, string return_type, CCodeExpression? expression, TypeParameter p, Class cl, Interface iface) {
 		string name = "%s_%s_%s".printf (get_ccode_lower_case_name (cl), get_ccode_lower_case_name (iface), base_name);
 
@@ -1372,9 +1372,9 @@ public class Vala.GTypeModule : GErrorModule {
 		iface_init.modifiers = CCodeModifiers.STATIC;
 
 		push_function (iface_init);
-		
+
 		CCodeFunctionCall ccall;
-		
+
 		/* save pointer to parent vtable */
 		string parent_iface_var = "%s_%s_parent_iface".printf (get_ccode_lower_case_name (cl), get_ccode_lower_case_name (iface));
 		var parent_decl = new CCodeDeclaration ("%s *".printf (get_ccode_type_name (iface)));
@@ -1396,7 +1396,7 @@ public class Vala.GTypeModule : GErrorModule {
 			if (base_type != iface) {
 				continue;
 			}
-			
+
 			var ciface = new CCodeIdentifier ("iface");
 			CCodeExpression cfunc;
 			if (m.is_abstract || m.is_virtual) {
@@ -1478,7 +1478,7 @@ public class Vala.GTypeModule : GErrorModule {
 			if (base_type != iface) {
 				continue;
 			}
-			
+
 			var ciface = new CCodeIdentifier ("iface");
 
 			if (!get_ccode_no_accessor_method (prop.base_interface_property) && !get_ccode_concrete_accessor (prop.base_interface_property)) {
@@ -1683,7 +1683,7 @@ public class Vala.GTypeModule : GErrorModule {
 		push_context (instance_init_context);
 		end_instance_init (cl);
 		pop_context ();
-		
+
 		cfile.add_function (instance_init_context.ccode);
 	}
 
@@ -2001,7 +2001,7 @@ public class Vala.GTypeModule : GErrorModule {
 		} else {
 			cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
 		}
-		
+
 		var pflags = "G_PARAM_STATIC_STRINGS";
 		if (prop.get_accessor != null && prop.get_accessor.access != SymbolAccessibility.PRIVATE) {
 			pflags = "%s%s".printf (pflags, " | G_PARAM_READABLE");
@@ -2044,7 +2044,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		var type_struct = new CCodeStruct ("_%s".printf (get_ccode_type_name (iface)));
-		
+
 		decl_space.add_type_declaration (new CCodeNewline ());
 		var macro = "(%s_get_type ())".printf (get_ccode_lower_case_name (iface, null));
 		decl_space.add_type_declaration (new CCodeMacroReplacement (get_ccode_type_id (iface), macro));

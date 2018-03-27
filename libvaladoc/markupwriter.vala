@@ -89,7 +89,7 @@ public class Valadoc.MarkupWriter {
 
 	/**
 	 * Initializes a new instance of the MarkupWriter
-	 * 
+	 *
 	 * @param write stream a WriteFunc
 	 * @param xml_declaration specifies whether this file starts with an xml-declaration
 	 */

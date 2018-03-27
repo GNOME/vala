@@ -42,14 +42,14 @@ void main () {
 	var obj1 = new Obj1 ();
 	var iface1 = (Iface1) obj1;
 	var iface2 = (Iface2) obj1;
-	
+
 	assert (iface1.foo () == 1);
 	assert (iface2.foo () == 2);
 
 	var obj2 = new Obj2 ();
 	iface1 = (Iface1) obj2;
 	iface2 = (Iface2) obj2;
-	
+
 	assert (iface1.foo () == 1);
 	assert (iface2.foo () == 2);
 }

@@ -30,15 +30,15 @@ public class Vala.CCodeForStatement : CCodeStatement {
 	 * The loop condition.
 	 */
 	public CCodeExpression? condition { get; set; }
-	
+
 	/**
 	 * The loop body.
 	 */
 	public CCodeStatement body { get; set; }
-	
+
 	private List<CCodeExpression> initializer = new ArrayList<CCodeExpression> ();
 	private List<CCodeExpression> iterator = new ArrayList<CCodeExpression> ();
-	
+
 	public CCodeForStatement (CCodeExpression? condition, CCodeStatement? body = null) {
 		this.condition = condition;
 		this.body = body;
@@ -61,13 +61,13 @@ public class Vala.CCodeForStatement : CCodeStatement {
 	public void add_iterator (CCodeExpression expr) {
 		iterator.add (expr);
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		bool first;
-		
+
 		writer.write_indent (line);
 		writer.write_string ("for (");
-		
+
 		first = true;
 		foreach (CCodeExpression init_expr in initializer) {
 			if (!first) {
@@ -85,7 +85,7 @@ public class Vala.CCodeForStatement : CCodeStatement {
 			condition.write (writer);
 		}
 		writer.write_string ("; ");
-		
+
 		first = true;
 		foreach (CCodeExpression it_expr in iterator) {
 			if (!first) {

@@ -515,7 +515,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		next ();
 
 		ListItem item = factory.create_list_item ();
-	
+
 		item.content.add_all (parse_mixed_content ());
 
 		if (!check_xml_close_tag ("listitem")) {
@@ -1307,7 +1307,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 
 		parse_docbook_spaces ();
-		ListItem? desc = parse_docbook_listitem ();		
+		ListItem? desc = parse_docbook_listitem ();
 		if (desc == null) {
 			return null;
 		}

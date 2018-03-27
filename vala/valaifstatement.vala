@@ -38,7 +38,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 			_condition.parent_node = this;
 		}
 	}
-	
+
 	/**
 	 * The statement to be evaluated if the condition holds.
 	 */
@@ -49,7 +49,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 			_true_statement.parent_node = this;
 		}
 	}
-	
+
 	/**
 	 * The optional statement to be evaluated if the condition doesn't hold.
 	 */
@@ -80,16 +80,16 @@ public class Vala.IfStatement : CodeNode, Statement {
 		false_statement = false_stmt;
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_if_statement (this);
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
 		condition.accept (visitor);
-		
+
 		visitor.visit_end_full_expression (condition);
-		
+
 		true_statement.accept (visitor);
 		if (false_statement != null) {
 			false_statement.accept (visitor);

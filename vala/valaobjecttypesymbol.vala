@@ -25,7 +25,7 @@
 
 /**
  * Represents a runtime data type for objects and interfaces. This data type may
- * be defined in Vala source code or imported from an external library with a 
+ * be defined in Vala source code or imported from an external library with a
  * Vala API file.
  */
 public abstract class Vala.ObjectTypeSymbol : TypeSymbol {

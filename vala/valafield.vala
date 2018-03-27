@@ -59,7 +59,7 @@ public class Vala.Field : Variable, Lockable {
 
 	public override void accept_children (CodeVisitor visitor) {
 		variable_type.accept (visitor);
-		
+
 		if (initializer != null) {
 			initializer.accept (visitor);
 		}
@@ -68,7 +68,7 @@ public class Vala.Field : Variable, Lockable {
 	public bool get_lock_used () {
 		return lock_used;
 	}
-	
+
 	public void set_lock_used (bool used) {
 		lock_used = used;
 	}

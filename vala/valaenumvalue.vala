@@ -36,7 +36,7 @@ public class Vala.EnumValue : Constant {
 	public EnumValue (string name, Expression? value, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, null, value, source_reference, comment);
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_enum_value (this);
 	}

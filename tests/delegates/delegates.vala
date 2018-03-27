@@ -80,7 +80,7 @@ class Maman.Bar : Object, Foo {
 
 	public static int main () {
 		stdout.printf ("Delegate Test: 1");
-		
+
 		VoidCallback void_cb = do_void_action;
 
 		void_cb ();
@@ -88,7 +88,7 @@ class Maman.Bar : Object, Foo {
 		stdout.printf (" 3");
 
 		ActionCallback cb = do_action;
-		
+
 		stdout.printf (" %d", cb ());
 
 		stdout.printf (" 5");

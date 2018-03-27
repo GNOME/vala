@@ -83,7 +83,7 @@ public class Vala.ConditionalExpression : Expression {
 		false_expression = false_expr;
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_conditional_expression (this);
 

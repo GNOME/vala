@@ -40,13 +40,13 @@ public class Vala.CCodeBinaryExpression : CCodeExpression {
 	 * The right operand.
 	 */
 	public CCodeExpression right { get; set; }
-	
+
 	public CCodeBinaryExpression (CCodeBinaryOperator op, CCodeExpression l, CCodeExpression r) {
 		operator = op;
 		left = l;
 		right = r;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		left.write_inner (writer);
 

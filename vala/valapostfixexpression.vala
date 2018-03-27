@@ -36,7 +36,7 @@ public class Vala.PostfixExpression : Expression {
 			_inner.parent_node = this;
 		}
 	}
-	
+
 	/**
 	 * Specifies whether value should be incremented or decremented.
 	 */
@@ -57,7 +57,7 @@ public class Vala.PostfixExpression : Expression {
 		increment = inc;
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_postfix_expression (this);
 

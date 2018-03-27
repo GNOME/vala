@@ -253,7 +253,7 @@ public enum Vala.Genie.TokenType {
 		case NAMESPACE: return "`namespace'";
 		case NEW: return "`new'";
 		case NULL: return "`null'";
-		case OF: return "`of'";		
+		case OF: return "`of'";
 		case OUT: return "`out'";
 		case OP_AND: return "`and'";
 		case OP_DEC: return "`--'";

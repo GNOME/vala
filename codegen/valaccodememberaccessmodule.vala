@@ -25,7 +25,7 @@
 public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	public override void visit_member_access (MemberAccess expr) {
 		CCodeExpression pub_inst = null;
-	
+
 		if (expr.inner != null) {
 			pub_inst = get_cvalue (expr.inner);
 		}
@@ -53,7 +53,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					var base_class = (Class) m.base_method.parent_symbol;
 					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class, null))));
 					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class, null))));
-					
+
 					set_cvalue (expr, new CCodeMemberAccess.pointer (vcast, get_ccode_vfunc_name (m)));
 					return;
 				} else if (m.base_interface_method != null) {
@@ -181,7 +181,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					var base_class = (Class) base_prop.parent_symbol;
 					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class, null))));
 					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class, null))));
-					
+
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
 					ccall.add_argument (get_cvalue (expr.inner));
 					if (prop.property_type.is_real_non_null_struct_type ()) {

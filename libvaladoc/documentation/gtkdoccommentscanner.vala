@@ -213,7 +213,7 @@ public class Valadoc.Gtkdoc.Scanner {
 					builder.append_c ('>');
 				}
 			}
-		} 
+		}
 
 		if (&txt == &start) {
 			return txt;
@@ -359,7 +359,7 @@ public class Valadoc.Gtkdoc.Scanner {
 
 		unowned string start = this.pos;
 		int column_start = this.column;
-		next_char ();		
+		next_char ();
 
 		int id_len = 0;
 
@@ -387,12 +387,12 @@ public class Valadoc.Gtkdoc.Scanner {
 			}
 		} else if (this.pos.has_prefix ("->") || this.pos.has_prefix (".")) {
 			unowned string sep_start = this.pos;
-			int sep_column_start = this.column;			
+			int sep_column_start = this.column;
 			int separator_len = 1;
 
 			if (this.pos.has_prefix ("->")) {
 				separator_len = 2;
-				next_char ();	
+				next_char ();
 			}
 
 			next_char ();
@@ -425,11 +425,11 @@ public class Valadoc.Gtkdoc.Scanner {
 	private inline Token? gtkdoc_property_prefix () {
 		if (get () != ':') {
 			return null;
-		}		
+		}
 
 		unowned string start = this.pos;
 		int column_start = this.column;
-		next_char ();		
+		next_char ();
 
 		int id_len = 0;
 
@@ -452,7 +452,7 @@ public class Valadoc.Gtkdoc.Scanner {
 	private inline Token? gtkdoc_signal_prefix () {
 		if (get () != ':') {
 			return null;
-		}		
+		}
 
 		unowned string start = this.pos;
 		int column_start = this.column;
@@ -464,7 +464,7 @@ public class Valadoc.Gtkdoc.Scanner {
 
 
 		start = this.pos;
-		next_char ();		
+		next_char ();
 
 		int id_len = 0;
 

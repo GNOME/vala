@@ -278,7 +278,7 @@ internal class Vala.TimSort<G> {
 		#endif
 		Slice<G> a = (owned) pending[index];
 		Slice<G> b = (owned) pending[index + 1];
-		
+
 		assert (a.length > 0);
 		assert (b.length > 0);
 		assert (a.index + a.length == b.index);
@@ -648,7 +648,7 @@ internal class Vala.TimSort<G> {
 			this.index = index;
 			this.length = length;
 		}
-		
+
 		~Slice () {
 			if (new_list != null)
 				free (new_list);

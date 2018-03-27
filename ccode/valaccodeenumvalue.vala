@@ -35,7 +35,7 @@ public class Vala.CCodeEnumValue : CCodeNode {
 	 * The numerical representation of this enum value.
 	 */
 	public CCodeExpression? value { get; set; }
-	
+
 	public CCodeEnumValue (string name, CCodeExpression? value = null) {
 		this.name = name;
 		this.value = value;

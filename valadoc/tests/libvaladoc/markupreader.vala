@@ -26,7 +26,7 @@ using Valadoc;
 public static void positive_1 () {
 	var reporter = new ErrorReporter ();
 
-	string content = 
+	string content =
 """<?xml version="1.0" ?>
 <root-element>
 	<subelement level="1" nested="true">my text</subelement>

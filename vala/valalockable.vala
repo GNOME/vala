@@ -31,7 +31,7 @@ public interface Vala.Lockable {
 	 * Indicates a specific lockable object beeing actually locked somewhere.
 	 */
 	public abstract bool get_lock_used ();
-	
+
 	/**
 	 * Set this lockable object as beeing locked somewhere.
 	 */

@@ -53,7 +53,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		this.source_reference = source_reference;
 		this.expression = expression;
 	}
-	
+
 	/**
 	 * Appends the specified section to the list of switch sections.
 	 *
@@ -63,7 +63,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		section.parent_node = this;
 		sections.add (section);
 	}
-	
+
 	/**
 	 * Returns a copy of the list of switch sections.
 	 *
@@ -81,7 +81,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		expression.accept (visitor);
 
 		visitor.visit_end_full_expression (expression);
-		
+
 		foreach (SwitchSection section in sections) {
 			section.accept (visitor);
 		}
@@ -92,7 +92,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 			expression = new_node;
 		}
 	}
-	
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;

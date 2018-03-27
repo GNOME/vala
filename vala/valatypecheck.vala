@@ -36,7 +36,7 @@ public class Vala.TypeCheck : Expression {
 			_expression.parent_node = this;
 		}
 	}
-	
+
 	/**
 	 * The type to be matched against.
 	 */
@@ -58,13 +58,13 @@ public class Vala.TypeCheck : Expression {
 	 * @param type   a data type
 	 * @param source reference to source code
 	 * @return       newly created type check expression
-	 */	
+	 */
 	public TypeCheck (Expression expr, DataType type, SourceReference source) {
 		expression = expr;
 		type_reference = type;
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_type_check (this);
 
@@ -101,7 +101,7 @@ public class Vala.TypeCheck : Expression {
 		checked = true;
 
 		expression.check (context);
-		
+
 		type_reference.check (context);
 
 		if (expression.value_type == null) {

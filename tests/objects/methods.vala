@@ -32,7 +32,7 @@ class Maman.SubBar : Bar {
 
 		var bar = new SubBar ();
 		bar.do_action ();
-		
+
 		stdout.printf (" 3\n");
 
 		stdout.printf ("Static Inheritance Test: 1");
@@ -44,7 +44,7 @@ class Maman.SubBar : Bar {
 		stdout.printf ("Virtual Method Test: 1");
 
 		bar.do_virtual_action ();
-	
+
 		stdout.printf (" 3\n");
 
 		// test symbol resolving to check that methods of implemented
@@ -53,7 +53,7 @@ class Maman.SubBar : Bar {
 
 		var foobar = new SubFooBar ();
 		foobar.do_action ();
-	
+
 		stdout.printf (" 3\n");
 
 		test_classes_methods_ref_parameters ();

@@ -186,7 +186,7 @@ public class Valadoc.Drivers.SymbolResolver : Visitor {
 		}
 
 		resolve_type_reference (item.property_type);
-		
+
 		item.accept_all_children (this, false);
 	}
 

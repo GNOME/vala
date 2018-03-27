@@ -443,7 +443,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		foreach (CodeNode node in block.get_nodes ()) {
 			var used_variables = new ArrayList<Variable> ();
 			node.get_used_variables (used_variables);
-			
+
 			foreach (Variable var_symbol in used_variables) {
 				var variable_stack = var_map.get (var_symbol);
 				if (variable_stack == null || variable_stack.size == 0) {

@@ -26,7 +26,7 @@ class Maman.Bar : Object {
 		assert (do_action (i => { return i * 3; }) == 3);
 		assert (do_out_action ((out i) => { i = 4; }) == 4);
 		assert (do_ref_action ((ref i) => { i += 4; }) == 5);
-		
+
 		return 0;
 	}
 }

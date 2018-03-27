@@ -31,7 +31,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 	CodeContext context;
 	Symbol root_symbol;
 	Scope current_scope;
-	
+
 	/**
 	 * Resolve symbol names in the specified code context.
 	 *
@@ -46,7 +46,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		root_symbol = null;
 		this.context = null;
 	}
-	
+
 	public override void visit_namespace (Namespace ns) {
 		var old_scope = current_scope;
 		current_scope = ns.scope;
@@ -55,7 +55,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		current_scope = old_scope;
 	}
-	
+
 	public override void visit_class (Class cl) {
 		current_scope = cl.scope;
 

@@ -27,7 +27,7 @@
 public class Valadoc.Api.SourceComment {
 	public SourceFile file {
 		private set;
-		get;		
+		get;
 	}
 
 	/**

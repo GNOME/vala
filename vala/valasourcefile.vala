@@ -30,7 +30,7 @@ public class Vala.SourceFile {
 	 * The name of this source file.
 	 */
 	public string filename { get; set; }
-	
+
 	public string? relative_filename {
 		set {
 			this._relative_filename = value;
@@ -359,7 +359,7 @@ public class Vala.SourceFile {
 
 		return mapped_file.get_contents ();
 	}
-	
+
 	public size_t get_mapped_length () {
 		if (content != null) {
 			return content.length;

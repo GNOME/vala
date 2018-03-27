@@ -120,7 +120,7 @@ public class Valadoc.Api.TypeReference : Item {
 
 	/**
 	 * {@inheritDoc}
-	 */ 
+	 */
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 

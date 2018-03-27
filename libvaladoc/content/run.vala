@@ -37,7 +37,7 @@ public class Valadoc.Content.Run : InlineContent, Inline {
 		LANG_PREPROCESSOR,
 		LANG_COMMENT,
 		LANG_ESCAPE,
-		
+
 		XML_ESCAPE,
 		XML_ELEMENT,
 		XML_ATTRIBUTE,
@@ -60,7 +60,7 @@ public class Valadoc.Content.Run : InlineContent, Inline {
 				return Style.UNDERLINED;
 
 			case "monospaced":
-				return Style.MONOSPACED;	
+				return Style.MONOSPACED;
 
 			case "stroke":
 				return Style.STROKE;

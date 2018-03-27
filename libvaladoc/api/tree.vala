@@ -181,7 +181,7 @@ public class Valadoc.Api.Tree {
 			_cresolver = new CTypeResolver (this);
 		}
 
-		return _cresolver.resolve_symbol_type (cname);		
+		return _cresolver.resolve_symbol_type (cname);
 	}
 
 	public Node? search_symbol_cstr (Node? element, string cname) {

@@ -30,7 +30,7 @@ public class Vala.CCodeTypeDefinition : CCodeNode {
 	 * The type name.
 	 */
 	public string type_name { get; set; }
-	
+
 	/**
 	 * The type declarator.
 	 */
@@ -40,18 +40,18 @@ public class Vala.CCodeTypeDefinition : CCodeNode {
 		type_name = type;
 		declarator = decl;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 	}
-	
+
 	public override void write_declaration (CCodeWriter writer) {
 		writer.write_indent ();
 		writer.write_string ("typedef ");
-		
+
 		writer.write_string (type_name);
-		
+
 		writer.write_string (" ");
-		
+
 		declarator.write_declaration (writer);
 
 		if (CCodeModifiers.DEPRECATED in modifiers) {

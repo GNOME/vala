@@ -58,7 +58,7 @@ public class Vala.GObjectModule : GTypeModule {
 		if (class_has_writable_properties (cl) || cl.get_type_parameters ().size > 0) {
 			ccode.add_assignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("_vala_%s_set_property".printf (get_ccode_lower_case_name (cl, null))));
 		}
-	
+
 		/* set constructor */
 		if (cl.constructor != null) {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
@@ -192,7 +192,7 @@ public class Vala.GObjectModule : GTypeModule {
 		get_prop.add_parameter (new CCodeParameter ("pspec", "GParamSpec *"));
 
 		push_function (get_prop);
-		
+
 		CCodeFunctionCall ccall = generate_instance_cast (new CCodeIdentifier ("object"), cl);
 		ccode.add_declaration ("%s *".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("self", ccall));
 
@@ -290,7 +290,7 @@ public class Vala.GObjectModule : GTypeModule {
 		cfile.add_function_declaration (get_prop);
 		cfile.add_function (get_prop);
 	}
-	
+
 	private void add_set_property_function (Class cl) {
 		var set_prop = new CCodeFunction ("_vala_%s_set_property".printf (get_ccode_lower_case_name (cl, null)), "void");
 		set_prop.modifiers = CCodeModifiers.STATIC;
@@ -300,7 +300,7 @@ public class Vala.GObjectModule : GTypeModule {
 		set_prop.add_parameter (new CCodeParameter ("pspec", "GParamSpec *"));
 
 		push_function (set_prop);
-		
+
 		CCodeFunctionCall ccall = generate_instance_cast (new CCodeIdentifier ("object"), cl);
 		ccode.add_declaration ("%s *".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("self", ccall));
 
@@ -442,11 +442,11 @@ public class Vala.GObjectModule : GTypeModule {
 
 			var function = new CCodeFunction ("%s_constructor".printf (get_ccode_lower_case_name (cl, null)), "GObject *");
 			function.modifiers = CCodeModifiers.STATIC;
-		
+
 			function.add_parameter (new CCodeParameter ("type", "GType"));
 			function.add_parameter (new CCodeParameter ("n_construct_properties", "guint"));
 			function.add_parameter (new CCodeParameter ("construct_properties", "GObjectConstructParam *"));
-		
+
 			cfile.add_function_declaration (function);
 
 			push_function (function);
@@ -705,7 +705,7 @@ public class Vala.GObjectModule : GTypeModule {
 					inst_ma.target_value = new GLibValue (get_data_type_for_symbol ((Class) prop.parent_symbol), new CCodeIdentifier ("self"), true);
 					store_property (prop, inst_ma, prop.initializer.target_value);
 
-					temp_ref_values.clear ();			
+					temp_ref_values.clear ();
 					pop_context ();
 				}
 			}

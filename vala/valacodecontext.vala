@@ -189,7 +189,7 @@ public class Vala.CodeContext {
 	public bool vapi_comments { get; set; }
 
 	/**
-	 * Returns true if the target version of glib is greater than or 
+	 * Returns true if the target version of glib is greater than or
 	 * equal to the specified version.
 	 */
 	public bool require_glib_version (int major, int minor) {
@@ -300,7 +300,7 @@ public class Vala.CodeContext {
 	public List<string> get_c_source_files () {
 		return c_source_files;
 	}
-	
+
 	/**
 	 * Adds the specified file to the list of source files.
 	 *

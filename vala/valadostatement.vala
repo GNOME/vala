@@ -77,7 +77,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 		body.accept (visitor);
 
 		condition.accept (visitor);
-		
+
 		visitor.visit_end_full_expression (condition);
 	}
 

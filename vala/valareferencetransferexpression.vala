@@ -37,7 +37,7 @@ public class Vala.ReferenceTransferExpression : Expression {
 			_inner.parent_node = this;
 		}
 	}
-	
+
 	private Expression _inner;
 
 	/**
@@ -50,13 +50,13 @@ public class Vala.ReferenceTransferExpression : Expression {
 		this.inner = inner;
 		this.source_reference = source_reference;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_reference_transfer_expression (this);
 
 		visitor.visit_expression (this);
 	}
-	
+
 	public override void accept_children (CodeVisitor visitor) {
 		inner.accept (visitor);
 	}

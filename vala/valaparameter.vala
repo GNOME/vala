@@ -35,13 +35,13 @@ public class Vala.Parameter : Variable {
 	 * parameters.
 	 */
 	public bool ellipsis { get; set; }
-	
+
 	/**
 	 * Specifies whether the methods accepts an indefinite number of
 	 * parameters.
 	 */
 	public bool params_array { get; set; }
-	
+
 	public bool captured { get; set; }
 
 	public bool format_arg {
@@ -68,7 +68,7 @@ public class Vala.Parameter : Variable {
 
 		access = SymbolAccessibility.PUBLIC;
 	}
-	
+
 	/**
 	 * Creates a new ellipsis parameter representing an indefinite number of
 	 * parameters.
@@ -87,7 +87,7 @@ public class Vala.Parameter : Variable {
 	public override void accept_children (CodeVisitor visitor) {
 		if (!ellipsis) {
 			variable_type.accept (visitor);
-			
+
 			if (initializer != null) {
 				initializer.accept (visitor);
 			}
@@ -151,7 +151,7 @@ public class Vala.Parameter : Variable {
 
 		if (!ellipsis) {
 			variable_type.check (context);
-			
+
 			if (params_array && !(variable_type is ArrayType)) {
 				error = true;
 				Report.error (source_reference, "parameter array expected");

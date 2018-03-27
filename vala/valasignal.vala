@@ -83,7 +83,7 @@ public class Vala.Signal : Symbol, Lockable, Callable {
 		base (name, source_reference, comment);
 		this.return_type = return_type;
 	}
-	
+
 	/**
 	 * Appends parameter to signal handler.
 	 *
@@ -149,14 +149,14 @@ public class Vala.Signal : Symbol, Lockable, Callable {
 
 		return generated_delegate;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_signal (this);
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
 		return_type.accept (visitor);
-		
+
 		foreach (Parameter param in parameters) {
 			param.accept (visitor);
 		}
@@ -173,7 +173,7 @@ public class Vala.Signal : Symbol, Lockable, Callable {
 	public bool get_lock_used () {
 		return lock_used;
 	}
-	
+
 	public void set_lock_used (bool used) {
 		lock_used = used;
 	}
@@ -192,7 +192,7 @@ public class Vala.Signal : Symbol, Lockable, Callable {
 		checked = true;
 
 		return_type.check (context);
-		
+
 		foreach (Parameter param in parameters) {
 			if (param.ellipsis) {
 				Report.error  (param.source_reference, "Signals with variable argument lists are not supported");

@@ -43,7 +43,7 @@ public abstract class Vala.DataType : CodeNode {
 	 * The referred data type.
 	 */
 	public weak TypeSymbol data_type { get; set; }
-	
+
 	/**
 	 * Specifies that the expression transfers a floating reference.
 	 */
@@ -69,7 +69,7 @@ public abstract class Vala.DataType : CodeNode {
 		type_argument_list.add (arg);
 		arg.parent_node = this;
 	}
-	
+
 	/**
 	 * Returns a copy of the list of generic type arguments.
 	 *
@@ -166,7 +166,7 @@ public abstract class Vala.DataType : CodeNode {
 
 		return s;
 	}
-	
+
 	/**
 	 * Creates a shallow copy of this type reference.
 	 *
@@ -214,10 +214,10 @@ public abstract class Vala.DataType : CodeNode {
 			if (!type2_args[i].equals (type_args[i]))
 				return false;
 		}
-	
+
 		return true;
 	}
-	
+
 	/**
 	 * Checks whether this type reference is at least as strict as the
 	 * specified type reference type2.
@@ -229,7 +229,7 @@ public abstract class Vala.DataType : CodeNode {
 		if (type2.is_disposable () != is_disposable ()) {
 			return false;
 		}
-		
+
 		if (!type2.nullable && nullable) {
 			return false;
 		}
@@ -248,7 +248,7 @@ public abstract class Vala.DataType : CodeNode {
 		if (type2.floating_reference != floating_reference) {
 			return false;
 		}
-		
+
 		return true;
 	}
 

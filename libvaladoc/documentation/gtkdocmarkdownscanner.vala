@@ -90,7 +90,7 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 		_skip = 0;
 		_current_string.erase (0, -1);
 		contains_at = false;
-		
+
 		states.clear ();
 		push_state (State.NORMAL);
 	}
@@ -112,7 +112,7 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 		while (!_stop && _index.get_char () != 0) {
 			unichar c = _index.get_char ();
 			accept (c);
-			
+
 			_index = _index.next_char ();
 		}
 
@@ -120,7 +120,7 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 		// Close open blocks:
 		while (peek_state () != State.NORMAL) {
 			if (peek_state () == State.BLOCK) {
-				emit_token (Valadoc.TokenType.MARKDOWN_BLOCK_END);			
+				emit_token (Valadoc.TokenType.MARKDOWN_BLOCK_END);
 				pop_state ();
 			} else {
 				close_block ();
@@ -140,7 +140,7 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 
 		// In headline:
 		string? hash = null;
-		
+
 		if (headline_end != null && is_headline_end (ref _index, headline_end, out hash)) {
 			if (hash != null) {
 				emit_token (Valadoc.TokenType.MARKDOWN_HEADLINE_HASH, hash);
@@ -275,7 +275,7 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 					_iter = _iter.offset (1);
 					_skip++;
 				}
-	
+
 				if (_iter[0].tolower () == 'f' || _iter[0].tolower () == 'l') {
 					_iter = _iter.offset (1);
 					_skip++;
@@ -540,7 +540,7 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 				headline_end = "#";
 			} else {
 				emit_token (Valadoc.TokenType.MARKDOWN_HEADLINE_2);
-				_iter = _iter.offset (2);	
+				_iter = _iter.offset (2);
 				headline_end = "##";
 			}
 
@@ -599,7 +599,7 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 
 		unowned string id_start = _iter;
 		int hash_len = 0;
-		
+
 		while (_iter[0] != '}' && _iter[0] != '\n' && _iter[0] != '\0') {
 			_iter = _iter.offset (1);
 			hash_len++;

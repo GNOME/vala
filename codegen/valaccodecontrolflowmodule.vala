@@ -145,7 +145,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			n++;
 		}
-	
+
 		if (default_section != null) {
 			if (n > 0) {
 				ccode.add_else ();
@@ -228,7 +228,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 		visit_local_variable (collection_backup);
 		ccode.add_assignment (get_variable_cexpression (get_local_cname (collection_backup)), get_cvalue (stmt.collection));
-		
+
 		if (stmt.tree_can_fail && stmt.collection.tree_can_fail) {
 			// exception handling
 			add_simple_check (stmt.collection);
@@ -245,7 +245,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			var iterator_variable = new LocalVariable (int_type.copy (), stmt.variable_name + "_it");
 			visit_local_variable (iterator_variable);
 			var it_name = get_local_cname (iterator_variable);
-		
+
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (it_name), array_len);
 
 			ccode.open_for (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeConstant ("0")),
@@ -278,7 +278,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			var iterator_variable = new LocalVariable (collection_type.copy (), stmt.variable_name + "_it");
 			visit_local_variable (iterator_variable);
 			var it_name = get_local_cname (iterator_variable);
-			
+
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (it_name), new CCodeConstant ("NULL"));
 
 			ccode.open_for (new CCodeAssignment (get_variable_cexpression (it_name), get_variable_cexpression (get_local_cname (collection_backup))),

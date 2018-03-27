@@ -30,11 +30,11 @@ public class Vala.CCodeOnceSection : CCodeFragment {
 	 * The name of the guarding define.
 	 */
 	public string define { get; set; }
-	
+
 	public CCodeOnceSection (string def) {
 		define = def;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		writer.write_indent ();
 		writer.write_string ("#ifndef ");
@@ -50,7 +50,7 @@ public class Vala.CCodeOnceSection : CCodeFragment {
 		writer.write_string ("#endif");
 		writer.write_newline ();
 	}
-	
+
 	public override void write_declaration (CCodeWriter writer) {
 	}
 }

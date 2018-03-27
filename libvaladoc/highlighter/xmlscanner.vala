@@ -270,7 +270,7 @@ public class Valadoc.Highlighter.XmlScanner : Object, Scanner {
 			pos = pos.offset (1);
 			skipped = true;
 		}
-		
+
 		return skipped;
 	}
 
@@ -306,7 +306,7 @@ public class Valadoc.Highlighter.XmlScanner : Object, Scanner {
 			if (pos.has_prefix ("<!--")) {
 				return true;
 			}
-	
+
 			// CDATA:
 			if (pos.has_prefix ("<![CDATA[")) {
 				return true;

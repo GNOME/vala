@@ -64,7 +64,7 @@ public class Vala.ObjectCreationExpression : Expression {
 		this.source_reference = source_reference;
 		this.member_name = member_name;
 	}
-	
+
 	/**
 	 * Appends the specified expression to the list of arguments.
 	 *
@@ -117,7 +117,7 @@ public class Vala.ObjectCreationExpression : Expression {
 		if (member_name != null) {
 			member_name.accept (visitor);
 		}
-		
+
 		foreach (Expression arg in argument_list) {
 			arg.accept (visitor);
 		}
@@ -441,7 +441,7 @@ public class Vala.ObjectCreationExpression : Expression {
 			if (member_name != null) {
 				member_name.check (context);
 			}
-		
+
 			foreach (Expression arg in argument_list) {
 				arg.check (context);
 			}

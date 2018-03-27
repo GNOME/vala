@@ -3,7 +3,7 @@ class Foo {
 
 class FooIterator {
 	bool called = false;
-	
+
 	public bool next () {
 		return !called;
 	}
@@ -23,7 +23,7 @@ class FooCollection {
 
 class FooIterator2 {
 	bool called = false;
-	
+
 	public Foo? next_value () {
 		if (called)
 			return null;

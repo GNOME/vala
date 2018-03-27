@@ -30,7 +30,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 * Specifies the base class.
 	 */
 	public Class base_class { get; set; }
-	
+
 	/**
 	 * Specifies whether this class is abstract. Abstract classes may not be
 	 * instantiated.
@@ -89,7 +89,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 * Specifies whether this class has private fields.
 	 */
 	public bool has_private_fields { get; set; }
-	
+
 	/**
 	 * Specifies whether this class has class fields.
 	 */
@@ -104,7 +104,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 * Specifies the default construction method.
 	 */
 	public CreationMethod default_construction_method { get; set; }
-	
+
 	/**
 	 * Specifies the instance constructor.
 	 */
@@ -141,7 +141,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 * Specifies the class destructor.
 	 */
 	public Destructor? static_destructor { get; set; }
-	
+
 	/**
 	 * Specifies the class destructor.
 	 */
@@ -204,7 +204,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			has_class_private_fields = true;
 		}
 	}
-	
+
 	/**
 	 * Adds the specified method as a member to this class.
 	 *
@@ -263,7 +263,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			add_field (prop.field);
 		}
 	}
-	
+
 	public override void add_constructor (Constructor c) {
 		if (c.binding == MemberBinding.INSTANCE) {
 			if (constructor != null) {
@@ -323,23 +323,23 @@ public class Vala.Class : ObjectTypeSymbol {
 		foreach (Field f in get_fields ()) {
 			f.accept (visitor);
 		}
-		
+
 		foreach (Constant c in get_constants ()) {
 			c.accept (visitor);
 		}
-		
+
 		foreach (Method m in get_methods ()) {
 			m.accept (visitor);
 		}
-		
+
 		foreach (Property prop in get_properties ()) {
 			prop.accept (visitor);
 		}
-		
+
 		foreach (Signal sig in get_signals ()) {
 			sig.accept (visitor);
 		}
-		
+
 		if (constructor != null) {
 			constructor.accept (visitor);
 		}
@@ -363,11 +363,11 @@ public class Vala.Class : ObjectTypeSymbol {
 		if (class_destructor != null) {
 			class_destructor.accept (visitor);
 		}
-		
+
 		foreach (Class cl in get_classes ()) {
 			cl.accept (visitor);
 		}
-		
+
 		foreach (Struct st in get_structs ()) {
 			st.accept (visitor);
 		}
@@ -398,7 +398,7 @@ public class Vala.Class : ObjectTypeSymbol {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -509,15 +509,15 @@ public class Vala.Class : ObjectTypeSymbol {
 		foreach (Field f in get_fields ()) {
 			f.check (context);
 		}
-		
+
 		foreach (Constant c in get_constants ()) {
 			c.check (context);
 		}
-		
+
 		foreach (Method m in get_methods ()) {
 			m.check (context);
 		}
-		
+
 		foreach (Property prop in get_properties ()) {
 			if (prop.get_attribute ("NoAccessorMethod") != null && !is_subtype_of (context.analyzer.object_type)) {
 				error = true;
@@ -526,11 +526,11 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 			prop.check (context);
 		}
-		
+
 		foreach (Signal sig in get_signals ()) {
 			sig.check (context);
 		}
-		
+
 		if (constructor != null) {
 			constructor.check (context);
 		}
@@ -550,15 +550,15 @@ public class Vala.Class : ObjectTypeSymbol {
 		if (static_destructor != null) {
 			static_destructor.check (context);
 		}
-		
+
 		if (class_destructor != null) {
 			class_destructor.check (context);
 		}
-		
+
 		foreach (Class cl in get_classes ()) {
 			cl.check (context);
 		}
-		
+
 		foreach (Struct st in get_structs ()) {
 			st.check (context);
 		}

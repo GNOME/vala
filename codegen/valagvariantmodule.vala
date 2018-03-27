@@ -431,7 +431,7 @@ public class Vala.GVariantModule : GAsyncModule {
 			hash_table_new.add_argument (new CCodeIdentifier ("g_direct_hash"));
 			hash_table_new.add_argument (new CCodeIdentifier ("g_direct_equal"));
 		}
-		
+
 		if (key_type.data_type.is_subtype_of (string_type.data_type)) {
 			hash_table_new.add_argument (new CCodeIdentifier ("g_free"));
 		} else if (key_type.data_type == gvariant_type) {
@@ -441,7 +441,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		} else {
 			hash_table_new.add_argument (new CCodeIdentifier ("NULL"));
 		}
-		
+
 		if (value_type.data_type.is_subtype_of (string_type.data_type)) {
 			hash_table_new.add_argument (new CCodeIdentifier ("g_free"));
 		} else if (value_type.data_type == gvariant_type) {

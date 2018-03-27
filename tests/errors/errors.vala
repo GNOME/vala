@@ -75,7 +75,7 @@ class Maman.Bar : Object {
 
 	public static int main () {
 		stdout.printf ("Exception Test: 1");
-		
+
 		var bar = new Bar ();
 		bar.run ();
 

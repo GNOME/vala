@@ -40,7 +40,7 @@ public class Vala.MemberAccess : Expression {
 			}
 		}
 	}
-	
+
 	/**
 	 * The name of the member.
 	 */
@@ -69,7 +69,7 @@ public class Vala.MemberAccess : Expression {
 
 	private Expression? _inner;
 	private List<DataType> type_argument_list = new ArrayList<DataType> ();
-	
+
 	/**
 	 * Creates a new member access expression.
 	 *
@@ -105,7 +105,7 @@ public class Vala.MemberAccess : Expression {
 		type_argument_list.add (arg);
 		arg.parent_node = this;
 	}
-	
+
 	/**
 	 * Returns a copy of the list of generic type arguments.
 	 *
@@ -125,7 +125,7 @@ public class Vala.MemberAccess : Expression {
 		if (inner != null) {
 			inner.accept (visitor);
 		}
-		
+
 		foreach (DataType type_arg in type_argument_list) {
 			type_arg.accept (visitor);
 		}
@@ -203,7 +203,7 @@ public class Vala.MemberAccess : Expression {
 		if (inner != null) {
 			inner.check (context);
 		}
-		
+
 		foreach (DataType type_arg in type_argument_list) {
 			type_arg.check (context);
 		}

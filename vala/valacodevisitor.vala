@@ -516,7 +516,7 @@ public abstract class Vala.CodeVisitor {
 	 */
 	public virtual void visit_method_call (MethodCall expr) {
 	}
-	
+
 	/**
 	 * Visit operation called for element access expressions.
 	 *

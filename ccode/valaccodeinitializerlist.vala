@@ -27,7 +27,7 @@ using GLib;
  */
 public class Vala.CCodeInitializerList : CCodeExpression {
 	private List<CCodeExpression> initializers = new ArrayList<CCodeExpression> ();
-	
+
 	/**
 	 * Appends the specified expression to this initializer list.
 	 *
@@ -36,7 +36,7 @@ public class Vala.CCodeInitializerList : CCodeExpression {
 	public void append (CCodeExpression expr) {
 		initializers.add (expr);
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		writer.write_string ("{");
 
@@ -47,7 +47,7 @@ public class Vala.CCodeInitializerList : CCodeExpression {
 			} else {
 				first = false;
 			}
-			
+
 			if (expr != null) {
 				expr.write (writer);
 			}

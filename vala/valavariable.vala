@@ -35,7 +35,7 @@ public class Vala.Variable : Symbol {
 			}
 		}
 	}
-	
+
 	/**
 	 * The variable type.
 	 */

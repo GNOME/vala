@@ -33,7 +33,7 @@ public class Valadoc.Importer.InternalIdRegistrar {
 		symbol_map = new Vala.HashMap<string, Api.Node> (str_hash, str_equal);
 	}
 
-	
+
 	public void register_symbol (string id, Api.Node symbol) {
 		this.symbol_map.set (id, symbol);
 	}

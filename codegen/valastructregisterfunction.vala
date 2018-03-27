@@ -40,7 +40,7 @@ public class Vala.StructRegisterFunction : TypeRegisterFunction {
 	public StructRegisterFunction (Struct st) {
 		struct_reference = st;
 	}
-	
+
 	public override TypeSymbol get_type_declaration () {
 		return struct_reference;
 	}

@@ -78,11 +78,11 @@ public class Vala.UnresolvedType : DataType {
 		result.nullable = nullable;
 		result.is_dynamic = is_dynamic;
 		result.unresolved_symbol = unresolved_symbol.copy ();
-		
+
 		foreach (DataType arg in get_type_arguments ()) {
 			result.add_type_argument (arg.copy ());
 		}
-		
+
 		return result;
 	}
 

@@ -769,7 +769,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 
 		en.accept_all_children (this);
 		var gcomment = add_symbol (en.get_filename(), en.get_cname(), en.documentation);
-	
+
 		// Handle attributes for things like deprecation.
 		process_attributes (en, gcomment);
 
@@ -903,7 +903,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			// field not in class/struct/interface
 			var gcomment = add_symbol (f.get_filename(), f.get_cname(), f.documentation);
 			f.accept_all_children (this);
-	
+
 			// Handle attributes for things like deprecation.
 			process_attributes (f, gcomment);
 		} else {
@@ -957,7 +957,7 @@ It is important that your <link linkend=\"GValue\"><type>GValue</type></link> ho
 			*/
 			}
 		}
-	
+
 		// Handle attributes for things like deprecation.
 		process_attributes (d, gcomment);
 

@@ -37,7 +37,7 @@ public class Vala.SwitchSection : Block {
 	public SwitchSection (SourceReference? source_reference) {
 		base (source_reference);
 	}
-	
+
 	/**
 	 * Appends the specified label to the list of switch labels.
 	 *
@@ -51,7 +51,7 @@ public class Vala.SwitchSection : Block {
 		labels.add (label);
 		label.section = this;
 	}
-	
+
 	/**
 	 * Returns a copy of the list of switch labels.
 	 *
@@ -60,17 +60,17 @@ public class Vala.SwitchSection : Block {
 	public List<SwitchLabel> get_labels () {
 		return labels;
 	}
-	
+
 	public bool has_default_label () {
 		foreach (SwitchLabel label in labels) {
 			if (label.expression == null) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_switch_section (this);
 	}

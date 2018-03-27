@@ -29,9 +29,9 @@ using GLib;
  */
 public class Vala.InitializerList : Expression {
 	private List<Expression> initializers = new ArrayList<Expression> ();
-	
+
 	/**
-	 * Appends the specified expression to this initializer 
+	 * Appends the specified expression to this initializer
 	 *
 	 * @param expr an expression
 	 */
@@ -39,9 +39,9 @@ public class Vala.InitializerList : Expression {
 		initializers.add (expr);
 		expr.parent_node = this;
 	}
-	
+
 	/**
-	 * Returns a copy of the expression 
+	 * Returns a copy of the expression
 	 *
 	 * @return expression list
 	 */
@@ -50,14 +50,14 @@ public class Vala.InitializerList : Expression {
 	}
 
 	/**
-	 * Returns the initializer count in this initializer 
+	 * Returns the initializer count in this initializer
 	 */
 	public int size {
 		get { return initializers.size; }
 	}
 
 	/**
-	 * Creates a new initializer 
+	 * Creates a new initializer
 	 *
 	 * @param source_reference reference to source code
 	 * @return                 newly created initializer list

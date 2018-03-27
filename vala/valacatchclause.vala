@@ -37,12 +37,12 @@ public class Vala.CatchClause : CodeNode {
 			}
 		}
 	}
-	
+
 	/**
 	 * Specifies the error variable name.
 	 */
 	public string? variable_name { get; set; }
-	
+
 	/**
 	 * Specifies the error handler body.
 	 */
@@ -53,7 +53,7 @@ public class Vala.CatchClause : CodeNode {
 			_body.parent_node = this;
 		}
 	}
-	
+
 	/**
 	 * Specifies the declarator for the generated error variable.
 	 */

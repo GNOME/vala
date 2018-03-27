@@ -12,7 +12,7 @@ class Foo : Object {
 	public FObject o { get; set; }
 	public FStruct t { get; set; }
 	public void* p { get; set; }
-	
+
 	public int foo { get { return i; } }
 	public int bar { set { i = value; } }
 
@@ -27,7 +27,7 @@ void main () {
 	var o = new FObject ();
 	FStruct t = {};
 	void* p = &o;
-	
+
 	var foo = new Foo ();
 	foo.s = s;
 	foo.a = a;
@@ -35,7 +35,7 @@ void main () {
 	foo.o = o;
 	foo.t = t;
 	foo.p = p;
-	
+
 	foo.notify["s"].connect (() => error ("string-type equality failed"));
 	foo.notify["a"].connect (() => error ("array-type equality failed"));
 	foo.notify["i"].connect (() => error ("simple-type equality failed"));

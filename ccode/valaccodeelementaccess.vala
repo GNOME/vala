@@ -32,18 +32,18 @@ public class Vala.CCodeElementAccess : CCodeExpression {
 	 * Expression representing the container on which we want to access.
 	 */
 	public CCodeExpression container { get; set; }
-	
+
 	/**
 	 * Expression representing the index we want to access inside the
 	 * container.
 	 */
 	public CCodeExpression index { get; set; }
-	
+
 	public CCodeElementAccess (CCodeExpression cont, CCodeExpression i) {
 		container = cont;
 		index = i;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		container.write_inner (writer);
 		writer.write_string ("[");

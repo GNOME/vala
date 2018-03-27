@@ -44,7 +44,7 @@ public class Vala.UnaryExpression : Expression {
 			_inner.parent_node = this;
 		}
 	}
-	
+
 	private Expression _inner;
 
 	/**

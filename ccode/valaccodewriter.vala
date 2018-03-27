@@ -54,14 +54,14 @@ public class Vala.CCodeWriter {
 	private bool file_exists;
 
 	private FileStream? stream;
-	
+
 	private int indent;
 	private int current_line_number = 1;
 	private bool using_line_directive;
 
 	/* at begin of line */
 	private bool _bol = true;
-	
+
 	public CCodeWriter (string filename, string? source_filename = null) {
 		this.filename = filename;
 		this.source_filename = source_filename;
@@ -115,7 +115,7 @@ public class Vala.CCodeWriter {
 	 */
 	public void close () {
 		stream = null;
-		
+
 		if (file_exists) {
 			var changed = true;
 
@@ -133,7 +133,7 @@ public class Vala.CCodeWriter {
 			} catch (FileError e) {
 				// assume changed if mmap comparison doesn't work
 			}
-			
+
 			if (changed) {
 				FileUtils.rename (temp_filename, filename);
 			} else {
@@ -149,7 +149,7 @@ public class Vala.CCodeWriter {
 			}
 		}
 	}
-	
+
 	/**
 	 * Writes tabs according to the current indent level.
 	 */
@@ -169,11 +169,11 @@ public class Vala.CCodeWriter {
 		if (!_bol) {
 			write_newline ();
 		}
-		
+
 		stream.puts (string.nfill (indent, '\t'));
 		_bol = false;
 	}
-	
+
 	/**
 	 * Writes n spaces.
 	 */
@@ -190,7 +190,7 @@ public class Vala.CCodeWriter {
 		stream.puts (s);
 		_bol = false;
 	}
-	
+
 	/**
 	 * Writes a newline.
 	 */
@@ -199,7 +199,7 @@ public class Vala.CCodeWriter {
 		current_line_number++;
 		_bol = true;
 	}
-	
+
 	/**
 	 * Opens a new block, increasing the indent level.
 	 */
@@ -213,18 +213,18 @@ public class Vala.CCodeWriter {
 		write_newline ();
 		indent++;
 	}
-	
+
 	/**
 	 * Closes the current block, decreasing the indent level.
 	 */
 	public void write_end_block () {
 		assert (indent > 0);
-		
+
 		indent--;
 		write_indent ();
 		stream.putc ('}');
 	}
-	
+
 	/**
 	 * Writes the specified text as comment.
 	 *

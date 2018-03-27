@@ -34,11 +34,11 @@ public class Vala.CCodeStruct : CCodeNode {
 	public bool is_empty { get { return declarations.size == 0; } }
 
 	private List<CCodeDeclaration> declarations = new ArrayList<CCodeDeclaration> ();
-	
+
 	public CCodeStruct (string name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * Adds the specified declaration as member to this struct.
 	 *
@@ -47,7 +47,7 @@ public class Vala.CCodeStruct : CCodeNode {
 	public void add_declaration (CCodeDeclaration decl) {
 		declarations.add (decl);
 	}
-	
+
 	/**
 	 * Adds a variable with the specified type and name to this struct.
 	 *
@@ -60,7 +60,7 @@ public class Vala.CCodeStruct : CCodeNode {
 		decl.modifiers = modifiers;
 		add_declaration (decl);
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		writer.write_string ("struct ");
 		writer.write_string (name);

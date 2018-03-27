@@ -1492,7 +1492,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		parent.add_child (node);
 
 		process_children (node, element);
-	}	
+	}
 
 
 	//

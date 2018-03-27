@@ -39,7 +39,7 @@ public class Vala.Property : Symbol, Lockable {
 			}
 		}
 	}
-	
+
 	/**
 	 * The get accessor of this property if available.
 	 */
@@ -52,7 +52,7 @@ public class Vala.Property : Symbol, Lockable {
 			}
 		}
 	}
-	
+
 	/**
 	 * The set/construct accessor of this property if available.
 	 */
@@ -65,7 +65,7 @@ public class Vala.Property : Symbol, Lockable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Represents the generated `this` parameter in this property.
 	 */
@@ -76,20 +76,20 @@ public class Vala.Property : Symbol, Lockable {
 	 * disabled.
 	 */
 	public bool interface_only { get; set; }
-	
+
 	/**
 	 * Specifies whether this property is abstract. Abstract properties have
 	 * no accessor bodies, may only be specified within abstract classes and
 	 * interfaces, and must be overriden by derived non-abstract classes.
 	 */
 	public bool is_abstract { get; set; }
-	
+
 	/**
 	 * Specifies whether this property is virtual. Virtual properties may be
 	 * overridden by derived classes.
 	 */
 	public bool is_virtual { get; set; }
-	
+
 	/**
 	 * Specifies whether this property overrides a virtual or abstract
 	 * property of a base type.
@@ -160,7 +160,7 @@ public class Vala.Property : Symbol, Lockable {
 			return _base_property;
 		}
 	}
-	
+
 	/**
 	 * Specifies the abstract interface property this property implements.
 	 */
@@ -222,7 +222,7 @@ public class Vala.Property : Symbol, Lockable {
 
 	public override void accept_children (CodeVisitor visitor) {
 		property_type.accept (visitor);
-		
+
 		if (get_accessor != null) {
 			get_accessor.accept (visitor);
 		}
@@ -238,11 +238,11 @@ public class Vala.Property : Symbol, Lockable {
 	public bool get_lock_used () {
 		return lock_used;
 	}
-	
+
 	public void set_lock_used (bool used) {
 		lock_used = used;
 	}
-	
+
 	/**
 	 * Checks whether the accessors of this property are compatible
 	 * with the specified base property.

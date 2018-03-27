@@ -37,7 +37,7 @@ public class Vala.CastExpression : Expression {
 			_inner.parent_node = this;
 		}
 	}
-	
+
 	/**
 	 * The target type.
 	 */

@@ -49,18 +49,18 @@ public class Vala.StringLiteral : Literal {
 	 * Evaluates the literal string value.
 	 *
 	 * @return the unescaped string
-	 */	
+	 */
 	public string? eval () {
 		if (value == null) {
 			return null;
 		}
-		
+
 		/* remove quotes */
 		var noquotes = value.substring (1, (uint) (value.length - 2));
 		/* unescape string */
 		return noquotes.compress ();
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_string_literal (this);
 

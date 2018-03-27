@@ -41,7 +41,7 @@ public class Vala.UsingDirective : CodeNode {
 		this.namespace_symbol = namespace_symbol;
 		this.source_reference = source_reference;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_using_directive (this);
 	}

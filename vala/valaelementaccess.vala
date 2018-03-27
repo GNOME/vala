@@ -56,12 +56,12 @@ public class Vala.ElementAccess : Expression {
 	public List<Expression> get_indices () {
 		return indices;
 	}
-	
+
 	public ElementAccess (Expression container, SourceReference source_reference) {
 		this.source_reference = source_reference;
 		this.container = container;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_element_access (this);
 
@@ -79,7 +79,7 @@ public class Vala.ElementAccess : Expression {
 		if (container == old_node) {
 			container = new_node;
 		}
-		
+
 		int index = indices.index_of (old_node);
 		if (index >= 0 && new_node.parent_node == null) {
 			indices[index] = new_node;

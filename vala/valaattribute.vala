@@ -66,7 +66,7 @@ public class Vala.Attribute : CodeNode {
 	public void add_argument (string key, string value) {
 		args.set (key, value);
 	}
-	
+
 	/**
 	 * Returns whether this attribute has the specified named argument.
 	 *
@@ -76,7 +76,7 @@ public class Vala.Attribute : CodeNode {
 	public bool has_argument (string name) {
 		return args.contains (name);
 	}
-	
+
 	/**
 	 * Returns the string value of the specified named argument.
 	 *
@@ -95,7 +95,7 @@ public class Vala.Attribute : CodeNode {
 		/* unescape string */
 		return noquotes.compress ();
 	}
-	
+
 	/**
 	 * Returns the integer value of the specified named argument.
 	 *

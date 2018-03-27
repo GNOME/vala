@@ -30,17 +30,17 @@ public class Vala.CCodeWhileStatement : CCodeStatement {
 	 * The loop condition.
 	 */
 	public CCodeExpression condition { get; set; }
-	
+
 	/**
 	 * The loop body.
 	 */
 	public CCodeStatement body { get; set; }
-	
+
 	public CCodeWhileStatement (CCodeExpression cond, CCodeStatement? stmt = null) {
 		condition = cond;
 		body = stmt;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		writer.write_indent (line);
 		writer.write_string ("while (");

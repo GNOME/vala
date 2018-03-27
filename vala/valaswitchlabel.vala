@@ -54,19 +54,19 @@ public class Vala.SwitchLabel : CodeNode {
 	public SwitchLabel.with_default (SourceReference? source = null) {
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_switch_label (this);
 	}
-	
+
 	public override void accept_children (CodeVisitor visitor) {
 		if (expression != null) {
 			expression.accept (visitor);
-			
+
 			visitor.visit_end_full_expression (expression);
 		}
 	}
-	
+
 	public override bool check (CodeContext context) {
 		if (expression != null) {
 			var switch_statement = (SwitchStatement) section.parent_node;

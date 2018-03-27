@@ -27,7 +27,7 @@ void main () {
 	var baz = new Baz ();
 	baz.foo<Object> (bar);
 	assert (baz.ref_count == 1);
-	
+
 	assert (is_check<Bar> ());
 	assert (!is_check<Baz> ());
 }

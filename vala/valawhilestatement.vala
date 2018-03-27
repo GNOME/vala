@@ -38,7 +38,7 @@ public class Vala.WhileStatement : CodeNode, Statement {
 			_condition.parent_node = this;
 		}
 	}
-	
+
 	/**
 	 * Specifies the loop body.
 	 */
@@ -68,14 +68,14 @@ public class Vala.WhileStatement : CodeNode, Statement {
 		this.source_reference = source_reference;
 		this.condition = condition;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_while_statement (this);
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
 		condition.accept (visitor);
-		
+
 		visitor.visit_end_full_expression (condition);
 
 		body.accept (visitor);

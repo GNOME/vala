@@ -59,7 +59,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 	public override void accept_children (CodeVisitor visitor) {
 		if (return_expression != null) {
 			return_expression.accept (visitor);
-		
+
 			visitor.visit_end_full_expression (return_expression);
 		}
 	}

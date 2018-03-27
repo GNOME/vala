@@ -37,13 +37,13 @@ public class Vala.CharacterLiteral : Literal {
 		}
 		set {
 			_value = value;
-			
+
 			if (!value.validate ()) {
 				error = true;
 			}
 		}
 	}
-	
+
 	private string _value;
 
 	/**
@@ -64,7 +64,7 @@ public class Vala.CharacterLiteral : Literal {
 
 		visitor.visit_expression (this);
 	}
-	
+
 	/**
 	 * Returns the unicode character value this character literal
 	 * represents.

@@ -37,7 +37,7 @@ public class Vala.PointerIndirection : Expression {
 			_inner.parent_node = this;
 		}
 	}
-	
+
 	private Expression _inner;
 
 	/**
@@ -50,7 +50,7 @@ public class Vala.PointerIndirection : Expression {
 		this.source_reference = source_reference;
 		this.inner = inner;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		inner.accept (visitor);
 

@@ -30,7 +30,7 @@ public class Vala.CCodeAssignment : CCodeExpression {
 	 * Left hand side of the assignment.
 	 */
 	public CCodeExpression left { get; set; }
-	
+
 	/**
 	 * Assignment operator.
 	 */
@@ -40,13 +40,13 @@ public class Vala.CCodeAssignment : CCodeExpression {
 	 * Right hand side of the assignment.
 	 */
 	public CCodeExpression right { get; set; }
-	
+
 	public CCodeAssignment (CCodeExpression l, CCodeExpression r, CCodeAssignmentOperator op = CCodeAssignmentOperator.SIMPLE) {
 		left = l;
 		operator = op;
 		right = r;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		left.write (writer);
 
@@ -74,7 +74,7 @@ public class Vala.CCodeAssignment : CCodeExpression {
 		writer.write_string (")");
 	}
 }
-	
+
 public enum Vala.CCodeAssignmentOperator {
 	SIMPLE,
 	BITWISE_OR,

@@ -35,7 +35,7 @@ public class Vala.BreakStatement : CodeNode, Statement {
 	public BreakStatement (SourceReference? source) {
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_break_statement (this);
 	}

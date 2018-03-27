@@ -34,7 +34,7 @@ public class Vala.BaseAccess : Expression {
 	public BaseAccess (SourceReference? source = null) {
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_base_access (this);
 

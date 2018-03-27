@@ -39,7 +39,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 	public ErrorDomain (string name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 	}
-	
+
 	/**
 	 * Appends the specified code to the list of error codes.
 	 *
@@ -58,7 +58,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 	public override void add_method (Method m) {
 		if (m is CreationMethod) {
 			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
-		
+
 			m.error = true;
 			return;
 		}
@@ -106,7 +106,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 	public override bool is_reference_type () {
 		return false;
 	}
-	
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;

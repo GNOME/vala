@@ -30,17 +30,17 @@ public class Vala.CCodeUnaryExpression : CCodeExpression {
 	 * The unary operator.
 	 */
 	public CCodeUnaryOperator operator { get; set; }
-	
+
 	/**
 	 * The operand.
 	 */
 	public CCodeExpression inner { get; set; }
-	
+
 	public CCodeUnaryExpression (CCodeUnaryOperator op, CCodeExpression expr) {
 		operator = op;
 		inner = expr;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		switch (operator) {
 		case CCodeUnaryOperator.PLUS: writer.write_string ("+"); inner.write_inner (writer); break;

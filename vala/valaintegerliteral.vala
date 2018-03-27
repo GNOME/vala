@@ -44,7 +44,7 @@ public class Vala.IntegerLiteral : Literal {
 		value = i;
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_integer_literal (this);
 
@@ -77,7 +77,7 @@ public class Vala.IntegerLiteral : Literal {
 			u = true;
 			value = value.substring (0, value.length - 1);
 		}
-		
+
 		int64 n = int64.parse (value);
 		if (!u && (n > int.MAX || n < int.MIN)) {
 			// value doesn't fit into signed 32-bit

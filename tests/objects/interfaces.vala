@@ -47,7 +47,7 @@ class Maman.SubBaz : Baz {
 		ibaz.do_action ();
 		ibaz.public_mixin();
 		(ibaz as Baz).do_mixin();
-	
+
 		stdout.printf (" 3");
 
 		ibaz.do_virtual_action ();

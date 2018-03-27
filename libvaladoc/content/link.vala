@@ -47,7 +47,7 @@ public class Valadoc.Content.Link : InlineContent, Inline {
 	public override void check (Api.Tree api_root, Api.Node container, string file_path,
 								ErrorReporter reporter, Settings settings)
 	{
-	
+
 		// Internal gktdoc-id? (gir-importer)
 		if (id_registrar != null) {
 			Api.Node? node = id_registrar.map_symbol_id (url);
@@ -61,7 +61,7 @@ public class Valadoc.Content.Link : InlineContent, Inline {
 				replacement.check (api_root, container, file_path, reporter, settings);
 				_parent.replace_node (this, replacement);
 				return ;
-			}		
+			}
 
 
 			string _url = id_registrar.map_url_id (url);

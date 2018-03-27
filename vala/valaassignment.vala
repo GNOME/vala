@@ -37,12 +37,12 @@ public class Vala.Assignment : Expression {
 			_left.parent_node = this;
 		}
 	}
-	
+
 	/**
 	 * Assignment operator.
 	 */
 	public AssignmentOperator operator { get; set; }
-	
+
 	/**
 	 * Right hand side of the assignment.
 	 */
@@ -53,10 +53,10 @@ public class Vala.Assignment : Expression {
 			_right.parent_node = this;
 		}
 	}
-	
+
 	private Expression _left;
 	private Expression _right;
-	
+
 	/**
 	 * Creates a new assignment.
 	 *
@@ -72,7 +72,7 @@ public class Vala.Assignment : Expression {
 		this.source_reference = source_reference;
 		this.left = left;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_assignment (this);
 
@@ -563,7 +563,7 @@ public class Vala.Assignment : Expression {
 		right.get_used_variables (collection);
 	}
 }
-	
+
 public enum Vala.AssignmentOperator {
 	NONE,
 	SIMPLE,

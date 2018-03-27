@@ -193,7 +193,7 @@ public class Vala.GtkModule : GSignalModule {
 						// detailed signal, we don't care about the detail
 						signal_name = signal_name.substring (0, sep_idx);
 					}
-					
+
 					var sig = SemanticAnalyzer.symbol_lookup_inherited (current_class, signal_name.replace ("-", "_")) as Signal;
 					if (sig != null) {
 						current_handler_to_signal_map.set (handler_name, sig);
@@ -326,7 +326,7 @@ public class Vala.GtkModule : GSignalModule {
 		ccode.add_expression (call);
 
 		pop_context ();
-		
+
 		if (!field_class.external && !field_class.external_package) {
 			current_required_app_classes.add (field_class);
 		}
@@ -387,7 +387,7 @@ public class Vala.GtkModule : GSignalModule {
 			call.add_argument (get_type_id_expression (SemanticAnalyzer.get_data_type_for_symbol (req)));
 			ccode.add_expression (call);
 		}
-		
+
 		var call = new CCodeFunctionCall (new CCodeIdentifier ("gtk_widget_init_template"));
 		call.add_argument (new CCodeIdentifier ("GTK_WIDGET (self)"));
 		ccode.add_expression (call);

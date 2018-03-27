@@ -33,14 +33,14 @@ public class Vala.CCodeBlock : CCodeStatement {
 	public bool suppress_newline { get; set; }
 
 	private List<CCodeNode> statements = new ArrayList<CCodeNode> ();
-	
+
 	/**
 	 * Prepend the specified statement to the list of statements.
 	 */
 	public void prepend_statement (CCodeNode statement) {
 		statements.insert (0, statement);
 	}
-	
+
 	/**
 	 * Append the specified statement to the list of statements.
 	 */
@@ -48,7 +48,7 @@ public class Vala.CCodeBlock : CCodeStatement {
 		/* allow generic nodes to include comments */
 		statements.add (statement);
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		// the last reachable statement
 		CCodeNode last_statement = null;

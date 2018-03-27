@@ -50,26 +50,26 @@ public class Vala.Method : Subroutine, Callable {
 	 * the contained type.
 	 */
 	public MemberBinding binding { get; set; default = MemberBinding.INSTANCE; }
-	
+
 	/**
 	 * Specifies whether this method is abstract. Abstract methods have no
 	 * body, may only be specified within abstract classes, and must be
 	 * overriden by derived non-abstract classes.
 	 */
 	public bool is_abstract { get; set; }
-	
+
 	/**
 	 * Specifies whether this method is virtual. Virtual methods may be
 	 * overridden by derived classes.
 	 */
 	public bool is_virtual { get; set; }
-	
+
 	/**
 	 * Specifies whether this method overrides a virtual or abstract method
 	 * of a base type.
 	 */
 	public bool overrides { get; set; }
-	
+
 	/**
 	 * Specifies whether this method should be inlined.
 	 */
@@ -100,7 +100,7 @@ public class Vala.Method : Subroutine, Callable {
 
 	/**
 	 * Specifies the virtual or abstract method this method overrides.
-	 * Reference must be weak as virtual and abstract methods set 
+	 * Reference must be weak as virtual and abstract methods set
 	 * base_method to themselves.
 	 */
 	public Method base_method {
@@ -225,7 +225,7 @@ public class Vala.Method : Subroutine, Callable {
 		parameters.add (param);
 		scope.add (param.name, param);
 	}
-	
+
 	public List<Parameter> get_parameters () {
 		return parameters;
 	}
@@ -350,7 +350,7 @@ public class Vala.Method : Subroutine, Callable {
 			invalid_match = "Base method expected return type `%s', but `%s' was provided".printf (actual_base_type.to_prototype_string (), return_type.to_prototype_string ());
 			return false;
 		}
-		
+
 		Iterator<Parameter> method_params_it = parameters.iterator ();
 		int param_index = 1;
 		foreach (Parameter base_param in base_method.parameters) {
@@ -379,7 +379,7 @@ public class Vala.Method : Subroutine, Callable {
 			}
 			param_index++;
 		}
-		
+
 		/* this method may not expect more arguments */
 		if (method_params_it.next ()) {
 			invalid_match = "too many parameters";
@@ -603,7 +603,7 @@ public class Vala.Method : Subroutine, Callable {
 								continue;
 							}
 						}
-						
+
 						string invalid_match = null;
 						if (!compatible (base_method, out invalid_match)) {
 							error = true;
@@ -611,7 +611,7 @@ public class Vala.Method : Subroutine, Callable {
 							Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method_type.to_prototype_string (), invalid_match));
 							return;
 						}
-						
+
 						_base_interface_method = base_method;
 						return;
 					}
@@ -841,7 +841,7 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		// check that all errors that can be thrown in the method body are declared
-		if (body != null) { 
+		if (body != null) {
 			foreach (DataType body_error_type in body.get_error_types ()) {
 				bool can_propagate_error = false;
 				foreach (DataType method_error_type in get_error_types ()) {
@@ -932,19 +932,19 @@ public class Vala.Method : Subroutine, Callable {
 				return false;
 			}
 		}
-		
+
 		if (binding == MemberBinding.INSTANCE) {
 			// method must be static
 			return false;
 		}
-		
+
 		if (return_type is VoidType) {
 		} else if (return_type.data_type == context.analyzer.int_type.data_type) {
 		} else {
 			// return type must be void or int
 			return false;
 		}
-		
+
 		var params = get_parameters ();
 		if (params.size == 0) {
 			// method may have no parameters
@@ -955,7 +955,7 @@ public class Vala.Method : Subroutine, Callable {
 			// method must not have more than one parameter
 			return false;
 		}
-		
+
 		Iterator<Parameter> params_it = params.iterator ();
 		params_it.next ();
 		var param = params_it.get ();
@@ -964,18 +964,18 @@ public class Vala.Method : Subroutine, Callable {
 			// parameter must not be an out parameter
 			return false;
 		}
-		
+
 		if (!(param.variable_type is ArrayType)) {
 			// parameter must be an array
 			return false;
 		}
-		
+
 		var array_type = (ArrayType) param.variable_type;
 		if (array_type.element_type.data_type != context.analyzer.string_type.data_type) {
 			// parameter must be an array of strings
 			return false;
 		}
-		
+
 		return true;
 	}
 

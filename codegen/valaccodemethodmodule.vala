@@ -1103,7 +1103,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				vcast = new CCodeIdentifier ("self");
 			}
 		}
-	
+
 		cname = get_ccode_vfunc_name (m);
 		if (suffix == "_finish" && cname.has_suffix ("_async")) {
 			cname = cname.substring (0, cname.length - "_async".length);
@@ -1202,7 +1202,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				return;
 			}
 		}
-		
+
 		ccode.add_expression (ccheck);
 	}
 

@@ -60,12 +60,12 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			// handle array parameters
 			if (get_ccode_array_length (param) && param.variable_type is ArrayType) {
 				var array_type = (ArrayType) param.variable_type;
-				
+
 				var length_ctype = "int";
 				if (param.direction != ParameterDirection.IN) {
 					length_ctype = "int*";
 				}
-				
+
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					cparam = new CCodeParameter (get_parameter_array_length_cname (param, dim), length_ctype);
 					cfundecl.add_parameter (cparam);

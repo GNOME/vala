@@ -30,11 +30,11 @@ public class Vala.CCodeCaseStatement : CCodeStatement {
 	 * The case expression.
 	 */
 	public CCodeExpression expression { get; set; }
-	
+
 	public CCodeCaseStatement (CCodeExpression expression) {
 		this.expression = expression;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		writer.write_indent (line);
 		writer.write_string ("case ");

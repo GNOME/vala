@@ -105,7 +105,7 @@ public abstract class Vala.Symbol : CodeNode {
 	public bool hides { get; set; }
 
 	/**
-	 * Check if this symbol is just internal API (and therefore doesn't need 
+	 * Check if this symbol is just internal API (and therefore doesn't need
 	 * to be listed in header files for instance) by traversing parent symbols
 	 * and checking their accessibility.
 	 */
@@ -209,7 +209,7 @@ public abstract class Vala.Symbol : CodeNode {
 		if (parent_symbol == null) {
 			return name;
 		}
-		
+
 		if (name == null) {
 			return parent_symbol.get_full_name ();
 		}
@@ -224,7 +224,7 @@ public abstract class Vala.Symbol : CodeNode {
 			return "%s.%s".printf (parent_symbol.get_full_name (), name);
 		}
 	}
-	
+
 	/**
 	 * Converts a string from CamelCase to lower_case.
 	 *
@@ -261,13 +261,13 @@ public abstract class Vala.Symbol : CodeNode {
 					}
 				}
 			}
-			
+
 			result_builder.append_unichar (c.tolower ());
-			
+
 			first = false;
 			i = i.next_char ();
 		}
-		
+
 		return result_builder.str;
 	}
 
@@ -296,7 +296,7 @@ public abstract class Vala.Symbol : CodeNode {
 			} else {
 				result_builder.append_unichar (c);
 			}
-			
+
 			i = i.next_char ();
 		}
 

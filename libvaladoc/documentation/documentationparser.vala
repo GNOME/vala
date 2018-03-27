@@ -71,7 +71,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	private CommentScanner _comment_scanner;
 	private Parser _wiki_parser;
 	private Parser _comment_parser;
-	
+
 	private Parser _parser;
 	private Scanner _scanner;
 
@@ -331,7 +331,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				Rule.many ({ TokenType.SPACE })
 			});
 
-		Rule optional_spaces = 
+		Rule optional_spaces =
 			Rule.option ({
 				Rule.many ({
 					TokenType.SPACE.action (add_content_space)
@@ -415,7 +415,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		//TODO: Find a nicer way to allow empty tags (''run?'' won't work)
 		Rule bold =
 			Rule.seq ({
-				TokenType.SINGLE_QUOTE_2, 
+				TokenType.SINGLE_QUOTE_2,
 				Rule.one_of ({
 					TokenType.SINGLE_QUOTE_2,
 					Rule.seq ({ optional_spaces, run, TokenType.SINGLE_QUOTE_2 })
@@ -859,7 +859,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 					Rule? taglet_rule;
 					if (taglet is BlockContent) {
-						taglet_rule = taglet.get_parser_rule (multiline_block_run);					
+						taglet_rule = taglet.get_parser_rule (multiline_block_run);
 					} else {
 						taglet_rule = taglet.get_parser_rule (multiline_run);
 					}

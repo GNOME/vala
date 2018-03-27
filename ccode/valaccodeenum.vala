@@ -32,11 +32,11 @@ public class Vala.CCodeEnum : CCodeNode {
 	public string name { get; set; }
 
 	private List<CCodeEnumValue> values = new ArrayList<CCodeEnumValue> ();
-	
+
 	public CCodeEnum (string? name = null) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * Adds the specified value to this enum.
 	 *
@@ -45,7 +45,7 @@ public class Vala.CCodeEnum : CCodeNode {
 	public void add_value (CCodeEnumValue value) {
 		values.add (value);
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		if (name != null) {
 			writer.write_string ("typedef ");

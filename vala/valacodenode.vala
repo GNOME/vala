@@ -61,7 +61,7 @@ public abstract class Vala.CodeNode {
 	/**
 	 * Specifies that this node or a child node may throw an exception.
 	 */
-	public bool tree_can_fail { 
+	public bool tree_can_fail {
 		get { return _error_types != null && _error_types.size > 0; }
 	}
 
@@ -75,7 +75,7 @@ public abstract class Vala.CodeNode {
 	/**
 	 * Specifies the exceptions that can be thrown by this node or a child node
 	 */
-	public List<DataType> get_error_types () { 
+	public List<DataType> get_error_types () {
 		if (_error_types != null) {
 			return _error_types;
 		}
@@ -87,7 +87,7 @@ public abstract class Vala.CodeNode {
 
 	/**
 	 * Adds an error type to the exceptions that can be thrown by this node
-	 * or a child node 
+	 * or a child node
 	 */
 	public void add_error_type (DataType error_type) {
 		if (_error_types == null) {
@@ -99,7 +99,7 @@ public abstract class Vala.CodeNode {
 
 	/**
 	 * Adds a collection of error types to the exceptions that can be thrown by this node
-	 * or a child node 
+	 * or a child node
 	 */
 	public void add_error_types (List<DataType> error_types) {
 		foreach (DataType error_type in error_types) {

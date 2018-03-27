@@ -49,7 +49,7 @@ public class Vala.MethodCall : Expression {
 	public bool is_chainup { get; private set; }
 
 	private Expression _call;
-	
+
 	private List<Expression> argument_list = new ArrayList<Expression> ();
 
 	/**
@@ -63,7 +63,7 @@ public class Vala.MethodCall : Expression {
 		this.source_reference = source_reference;
 		this.call = call;
 	}
-	
+
 	/**
 	 * Appends the specified expression to the list of arguments.
 	 *
@@ -73,7 +73,7 @@ public class Vala.MethodCall : Expression {
 		argument_list.add (arg);
 		arg.parent_node = this;
 	}
-	
+
 	/**
 	 * Returns a copy of the argument list.
 	 *
@@ -101,7 +101,7 @@ public class Vala.MethodCall : Expression {
 		if (call == old_node) {
 			call = new_node;
 		}
-		
+
 		int index = argument_list.index_of (old_node);
 		if (index >= 0 && new_node.parent_node == null) {
 			argument_list[index] = new_node;

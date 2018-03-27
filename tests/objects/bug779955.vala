@@ -1,6 +1,6 @@
 public class Foo : Object {
 	int i = 42;
-	
+
 	public int bar {
 		get {
 			return i;

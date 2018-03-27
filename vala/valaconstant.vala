@@ -88,7 +88,7 @@ public class Vala.Constant : Symbol, Lockable {
 	public bool get_lock_used () {
 		return lock_used;
 	}
-	
+
 	public void set_lock_used (bool used) {
 		lock_used = used;
 	}

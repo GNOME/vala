@@ -924,10 +924,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else {
 			temp_access.target_type = target_type != null ? target_type.copy () : null;
 		}
-		
+
 		return temp_access;
 	}
-	
+
 	public void visit_member_initializer (MemberInitializer init, DataType type) {
 		init.symbol_reference = symbol_lookup_inherited (type.data_type, init.name);
 		if (!(init.symbol_reference is Field || init.symbol_reference is Property)) {

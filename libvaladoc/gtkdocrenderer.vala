@@ -245,7 +245,7 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 		}
 
 		element.accept_children (this);
-		
+
 		writer.end_tag (tag);
 	}
 

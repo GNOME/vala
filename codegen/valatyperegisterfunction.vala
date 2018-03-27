@@ -256,7 +256,7 @@ public abstract class Vala.TypeRegisterFunction {
 
 		definition_fragment.append (fun);
 	}
-	
+
 	/**
 	 * Returns the data type to be registered.
 	 *
@@ -414,7 +414,7 @@ public abstract class Vala.TypeRegisterFunction {
 	 */
 	public virtual void get_type_interface_init_statements (CodeContext context, CCodeBlock block, bool plugin) {
 	}
-	
+
 	public CCodeFragment get_source_declaration () {
 		return source_declaration_fragment;
 	}
@@ -427,7 +427,7 @@ public abstract class Vala.TypeRegisterFunction {
 	public CCodeFragment get_declaration () {
 		return declaration_fragment;
 	}
-	
+
 	/**
 	 * Returns the definition for this type register function in C code.
 	 *

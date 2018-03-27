@@ -30,13 +30,13 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 	 * The declarator name.
 	 */
 	public string name { get; set; }
-	
+
 	private List<CCodeParameter> parameters = new ArrayList<CCodeParameter> ();
-	
+
 	public CCodeFunctionDeclarator (string name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * Appends the specified parameter to the list of function parameters.
 	 *
@@ -45,16 +45,16 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 	public void add_parameter (CCodeParameter param) {
 		parameters.add (param);
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		write_declaration (writer);
 	}
-	
+
 	public override void write_declaration (CCodeWriter writer) {
 		writer.write_string ("(*");
 		writer.write_string (name);
 		writer.write_string (") (");
-		
+
 		bool has_args = (CCodeModifiers.PRINTF in modifiers || CCodeModifiers.SCANF in modifiers);
 		int i = 0;
 		int format_arg_index = -1;
@@ -74,7 +74,7 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 			}
 			i++;
 		}
-		
+
 		writer.write_string (")");
 
 		if (CCodeModifiers.DEPRECATED in modifiers) {

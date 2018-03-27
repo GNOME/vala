@@ -63,11 +63,11 @@ public class Vala.MemberInitializer : CodeNode {
 		this.source_reference = source_reference;
 		this.name = name;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		initializer.accept (visitor);
 	}
-	
+
 	public override bool check (CodeContext context) {
 		return initializer.check (context);
 	}

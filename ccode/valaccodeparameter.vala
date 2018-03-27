@@ -30,7 +30,7 @@ public class Vala.CCodeParameter : CCodeNode {
 	 * The parameter name.
 	 */
 	public string name { get; set; }
-	
+
 	/**
 	 * The parameter type.
 	 */

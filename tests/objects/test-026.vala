@@ -24,7 +24,7 @@ class Maman.SubBar : Bar {
 
 		var bar = new SubBar ();
 		bar.run ();
-	
+
 		stdout.printf (" 5\n");
 
 		return 0;

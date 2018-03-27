@@ -30,14 +30,14 @@ public class Vala.CCodeParenthesizedExpression : CCodeExpression {
 	 * The expression in the parenthesis.
 	 */
 	public CCodeExpression inner { get; set; }
-	
+
 	public CCodeParenthesizedExpression (CCodeExpression expr) {
 		inner = expr;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		writer.write_string ("(");
-		
+
 		inner.write (writer);
 
 		writer.write_string (")");

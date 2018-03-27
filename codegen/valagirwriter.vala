@@ -1090,7 +1090,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_indent ();
 		buffer.append_printf ("</%s>\n", tag_name);
 	}
-	
+
 	public override void visit_creation_method (CreationMethod m) {
 		if (m.external_package) {
 			return;
@@ -1194,7 +1194,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (sig.emitter != null) {
 			sig.emitter.accept (this);
 		}
-		
+
 		write_indent ();
 		buffer.append_printf ("<glib:signal name=\"%s\"", get_ccode_name (sig));
 		write_symbol_attributes (sig);
@@ -1214,7 +1214,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	private void write_indent () {
 		int i;
-		
+
 		for (i = 0; i < indent; i++) {
 			buffer.append_c ('\t');
 		}

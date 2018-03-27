@@ -57,7 +57,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 	public override void visit_comment (Content.Comment c) {
 		c.accept_children (this);
 	}
-  
+
 	public override void visit_embedded (Embedded em) {
 		current_builder.append ("<figure>");
 		if (em.caption != null) {
@@ -83,7 +83,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 		hl.accept_children (this);
 		current_builder.append ("\n");
 	}
-  
+
 	public override void visit_wiki_link (WikiLink link) {
 		// wiki pages are not supported right now
 		if (link.content.size > 0) {
@@ -159,13 +159,13 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 		list.accept_children (this);
 		current_builder.append_printf ("</%s>", tag);
 	}
-  
+
 	public override void visit_list_item (ListItem item) {
 		current_builder.append ("<listitem>");
 		item.accept_children (this);
 		current_builder.append ("</listitem>");
 	}
-  
+
 	public override void visit_paragraph (Paragraph para) {
 		if (!in_brief_comment) {
 			current_builder.append ("<para>");
@@ -196,7 +196,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 	public override void visit_page (Page page) {
 		page.accept_children (this);
 	}
-  
+
 	public override void visit_run (Run run) {
 		string? tag = null;
 		switch (run.style) {
@@ -226,19 +226,19 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			current_builder.append_printf ("</%s>", tag);
 		}
 	}
-  
+
 	public override void visit_source_code (SourceCode code) {
 		current_builder.append ("\n|[\n");
 		current_builder.append (Markup.escape_text (code.code));
 		current_builder.append ("\n]|\n");
 	}
-  
+
 	public override void visit_table (Table t) {
 		current_builder.append ("<table>");
 		t.accept_children (this);
 		current_builder.append ("</table>");
 	}
-  
+
 	public override void visit_table_row (TableRow row) {
 		current_builder.append ("<tr>");
 		row.accept_children (this);
@@ -250,7 +250,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 		cell.accept_children (this);
 		current_builder.append ("</td>");
 	}
-  
+
 	public override void visit_taglet (Taglet t) {
 		var old_builder = (owned)current_builder;
 		current_builder = new StringBuilder ();
@@ -296,7 +296,7 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 		}
 		current_builder = (owned)old_builder;
 	}
-  
+
 	public override void visit_text (Text t) {
 		current_builder.append (Markup.escape_text (t.content));
 		t.accept_children (this);

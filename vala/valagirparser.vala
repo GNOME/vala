@@ -541,7 +541,7 @@ public class Vala.GirParser : CodeVisitor {
 		public Node (string? name) {
 			this.name = name;
 		}
-			
+
 		public void add_member (Node node) {
 			var nodes = scope[node.name];
 			if (nodes == null) {
@@ -852,7 +852,7 @@ public class Vala.GirParser : CodeVisitor {
 					}
 				}
 			}
-			
+
 			if (symbol is Class && girdata != null) {
 				var class_struct = girdata["glib:type-struct"];
 				if (class_struct != null) {
@@ -1015,7 +1015,7 @@ public class Vala.GirParser : CodeVisitor {
 										}
 									}
 								}
-								
+
 								prop.get_accessor.value_type.value_owned = m.return_type.value_owned;
 
 								if (!m.is_abstract && !m.is_virtual && prop.is_abstract) {
@@ -1055,7 +1055,7 @@ public class Vala.GirParser : CodeVisitor {
 							var base_prop_node = parser.base_interface_property (this);
 							if (base_prop_node != null) {
 								base_prop_node.process (parser);
-								
+
 								var base_property = (Property) base_prop_node.symbol;
 								if (base_property.get_attribute ("ConcreteAccessor") != null) {
 									prop.set_attribute ("NoAccessorMethod", false);
@@ -1065,7 +1065,7 @@ public class Vala.GirParser : CodeVisitor {
 									if (prop.set_accessor != null) {
 										prop.set_accessor.value_type.value_owned = base_property.set_accessor.value_type.value_owned;
 									}
-									
+
 								}
 							}
 						}
@@ -1856,7 +1856,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		return type_id;
 	}
-	
+
 	void set_array_ccode (Symbol sym, ParameterInfo info) {
 		sym.set_attribute_double ("CCode", "array_length_pos", info.vala_idx);
 		if (sym is Parameter) {
@@ -3673,24 +3673,24 @@ public class Vala.GirParser : CodeVisitor {
 				base_node.process (this);
 				orig = (Delegate) base_node.symbol;
 			}
-			
+
 			var deleg = new Delegate (alias.name, orig.return_type.copy (), alias.source_reference);
 			deleg.access = orig.access;
-			
+
 			foreach (var param in orig.get_parameters ()) {
 				deleg.add_parameter (param.copy ());
 			}
-			
+
 			foreach (var error_type in orig.get_error_types ()) {
 				deleg.add_error_type (error_type.copy ());
 			}
-			
+
 			foreach (var attribute in orig.attributes) {
 				deleg.attributes.append (attribute);
 			}
-			
+
 			deleg.external = true;
-			
+
 			alias.symbol = deleg;
 		}
 
@@ -3709,7 +3709,7 @@ public class Vala.GirParser : CodeVisitor {
 			// processed in parse_alias
 			return;
 		}
-		
+
 		var s = node.symbol;
 		List<ParameterInfo> parameters = node.parameters;
 

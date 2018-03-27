@@ -30,18 +30,18 @@ public class Vala.CCodeIncludeDirective : CCodeNode {
 	 * The file to be included.
 	 */
 	public string filename { get; set; }
-	
+
 	/**
 	 * Specifies whether the specified file should be searched in the local
 	 * directory.
 	 */
 	public bool local { get; set; }
-	
+
 	public CCodeIncludeDirective (string _filename, bool _local = false) {
 		filename = _filename;
 		local = _local;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		writer.write_indent ();
 		writer.write_string ("#include ");

@@ -54,7 +54,7 @@ public class Vala.MethodType : CallableType {
 			// method types incompatible to anything but delegates
 			return false;
 		}
-		
+
 		return dt.delegate_symbol.matches_method (method_symbol, dt);
 	}
 

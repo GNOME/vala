@@ -43,11 +43,11 @@ public class Vala.ObjectType : ReferenceType {
 		result.nullable = nullable;
 		result.is_dynamic = is_dynamic;
 		result.floating_reference = floating_reference;
-		
+
 		foreach (DataType arg in get_type_arguments ()) {
 			result.add_type_argument (arg.copy ());
 		}
-		
+
 		return result;
 	}
 
@@ -60,7 +60,7 @@ public class Vala.ObjectType : ReferenceType {
 		if (value_owned != target_type.value_owned) {
 			return false;
 		}
-		
+
 		if (nullable && !target_type.nullable) {
 			return false;
 		}

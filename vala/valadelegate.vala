@@ -124,7 +124,7 @@ public class Vala.Delegate : TypeSymbol, Callable {
 	public List<Parameter> get_parameters () {
 		return parameters;
 	}
-	
+
 	/**
 	 * Checks whether the arguments and return type of the specified method
 	 * matches this callback.
@@ -142,7 +142,7 @@ public class Vala.Delegate : TypeSymbol, Callable {
 		if (!m.return_type.stricter (return_type.get_actual_type (dt, null, this))) {
 			return false;
 		}
-		
+
 		var method_params = m.get_parameters ();
 		Iterator<Parameter> method_params_it = method_params.iterator ();
 
@@ -179,7 +179,7 @@ public class Vala.Delegate : TypeSymbol, Callable {
 				return false;
 			}
 		}
-		
+
 		/* method may not expect more arguments */
 		if (method_params_it.next ()) {
 			return false;
@@ -219,9 +219,9 @@ public class Vala.Delegate : TypeSymbol, Callable {
 		foreach (TypeParameter p in type_parameters) {
 			p.accept (visitor);
 		}
-		
+
 		return_type.accept (visitor);
-		
+
 		foreach (Parameter param in parameters) {
 			param.accept (visitor);
 		}
@@ -265,9 +265,9 @@ public class Vala.Delegate : TypeSymbol, Callable {
 		foreach (TypeParameter p in type_parameters) {
 			p.check (context);
 		}
-		
+
 		return_type.check (context);
-		
+
 		foreach (Parameter param in parameters) {
 			param.check (context);
 		}

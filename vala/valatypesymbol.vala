@@ -52,7 +52,7 @@ public abstract class Vala.TypeSymbol : Symbol {
 	public virtual bool is_subtype_of (TypeSymbol t) {
 		return (this == t);
 	}
-	
+
 	/**
 	 * Return the index of the specified type parameter name.
 	 */

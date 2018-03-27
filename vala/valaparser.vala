@@ -332,7 +332,7 @@ public class Vala.Parser : CodeVisitor {
 
 		index = -1;
 		size = 0;
-		
+
 		next ();
 
 
@@ -348,7 +348,7 @@ public class Vala.Parser : CodeVisitor {
 		} catch (ParseError e) {
 			report_parse_error (e);
 		}
-		
+
 		scanner = null;
 		if (!has_global_context) {
 			context = null;
@@ -406,7 +406,7 @@ public class Vala.Parser : CodeVisitor {
 			}
 			accept (TokenType.INTERR);
 		}
-		
+
 		while (accept (TokenType.OPEN_BRACKET)) {
 			do {
 				// required for decision between expression and declaration statement
@@ -423,12 +423,12 @@ public class Vala.Parser : CodeVisitor {
 
 	bool is_inner_array_type () {
 		var begin = get_location ();
-		
+
 		var result = accept (TokenType.OPEN_PARENS) && accept (TokenType.UNOWNED) && current() != TokenType.CLOSE_PARENS;
 		rollback (begin);
 		return result;
 	}
-	
+
 	DataType parse_type (bool owned_by_default, bool can_weak_ref, bool require_unowned = false) throws ParseError {
 		var begin = get_location ();
 
@@ -468,7 +468,7 @@ public class Vala.Parser : CodeVisitor {
 		if (accept (TokenType.OPEN_PARENS)) {
 			type = parse_type (false, false, true);
 			expect (TokenType.CLOSE_PARENS);
-			
+
 			inner_type_owned = false;
 
 			expect (TokenType.OPEN_BRACKET);
@@ -479,7 +479,7 @@ public class Vala.Parser : CodeVisitor {
 			} else {
 				var sym = parse_symbol_name ();
 				List<DataType> type_arg_list = parse_type_argument_list (false);
-				
+
 				type = new UnresolvedType.from_symbol (sym, get_src (begin));
 				if (type_arg_list != null) {
 					foreach (DataType type_arg in type_arg_list) {
@@ -487,7 +487,7 @@ public class Vala.Parser : CodeVisitor {
 					}
 				}
 			}
-			
+
 			while (accept (TokenType.STAR)) {
 				type = new PointerType (type, get_src (begin));
 			}
@@ -496,7 +496,7 @@ public class Vala.Parser : CodeVisitor {
 				type.nullable = accept (TokenType.INTERR);
 			}
 		}
-			
+
 		// array brackets in types are read from right to left,
 		// this is more logical, especially when nullable arrays
 		// or pointers are involved
@@ -914,7 +914,7 @@ public class Vala.Parser : CodeVisitor {
 			expect (TokenType.OPEN_PARENS);
 			expect (TokenType.UNOWNED);
 		}
-		
+
 		var member = parse_member_name ();
 		DataType element_type = UnresolvedType.new_from_expression (member);
 		bool is_pointer_type = false;
@@ -927,14 +927,14 @@ public class Vala.Parser : CodeVisitor {
 				element_type.nullable = true;
 			}
 		}
-		
+
 		if (inner_array_type) {
 			expect (TokenType.CLOSE_PARENS);
 			element_type.value_owned = false;
 		} else {
 			element_type.value_owned = true;
 		}
-		
+
 		expect (TokenType.OPEN_BRACKET);
 
 		bool size_specified = false;
@@ -1624,7 +1624,7 @@ public class Vala.Parser : CodeVisitor {
 		if (current () == TokenType.OPEN_PARENS) {
 			return !is_inner_array_type ();
 		}
-		
+
 		var begin = get_location ();
 
 		// decide between declaration and expression statement
@@ -2231,17 +2231,17 @@ public class Vala.Parser : CodeVisitor {
 	void parse_declaration (Symbol parent, bool root = false) throws ParseError {
 		comment = scanner.pop_comment ();
 		var attrs = parse_attributes ();
-		
+
 		var begin = get_location ();
-		
+
 		TokenType last_keyword = current ();
-		
+
 		while (is_declaration_keyword (current ())) {
 			last_keyword = current ();
 			next ();
 		}
-	
-		switch (current ()) {	
+
+		switch (current ()) {
 		case TokenType.CONSTRUCT:
 			rollback (begin);
 			parse_constructor_declaration (parent, attrs);

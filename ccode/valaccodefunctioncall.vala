@@ -30,13 +30,13 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	 * The function to be called.
 	 */
 	public CCodeExpression? call { get; set; }
-	
+
 	private List<CCodeExpression> arguments = new ArrayList<CCodeExpression> ();
-	
+
 	public CCodeFunctionCall (CCodeExpression? call = null) {
 		this.call = call;
 	}
-	
+
 	/**
 	 * Appends the specified expression to the list of arguments.
 	 *
@@ -70,7 +70,7 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 			} else {
 				first = false;
 			}
-			
+
 			if (expr != null) {
 				expr.write (writer);
 			}

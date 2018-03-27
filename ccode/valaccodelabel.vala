@@ -34,7 +34,7 @@ public class Vala.CCodeLabel : CCodeStatement {
 	public CCodeLabel (string name) {
 		this.name = name;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		writer.write_indent ();
 		writer.write_string (name);

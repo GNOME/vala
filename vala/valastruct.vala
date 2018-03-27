@@ -144,7 +144,7 @@ public class Vala.Struct : TypeSymbol {
 		type_parameters.add (p);
 		scope.add (p.name, p);
 	}
-	
+
 	/**
 	 * Returns a copy of the type parameter list.
 	 *
@@ -163,7 +163,7 @@ public class Vala.Struct : TypeSymbol {
 		constants.add (c);
 		scope.add (c.name, c);
 	}
-	
+
 	/**
 	 * Adds the specified field as a member to this struct.
 	 *
@@ -175,7 +175,7 @@ public class Vala.Struct : TypeSymbol {
 		fields.add (f);
 		scope.add (f.name, f);
 	}
-	
+
 	/**
 	 * Returns a copy of the list of fields.
 	 *
@@ -201,7 +201,7 @@ public class Vala.Struct : TypeSymbol {
 	 */
 	public override void add_method (Method m) {
 		return_if_fail (m != null);
-		
+
 		if (m.binding == MemberBinding.INSTANCE || m is CreationMethod) {
 			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_data_type_for_symbol (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
@@ -228,7 +228,7 @@ public class Vala.Struct : TypeSymbol {
 		methods.add (m);
 		scope.add (m.name, m);
 	}
-	
+
 	/**
 	 * Returns a copy of the list of methods.
 	 *
@@ -276,15 +276,15 @@ public class Vala.Struct : TypeSymbol {
 		foreach (TypeParameter p in type_parameters) {
 			p.accept (visitor);
 		}
-		
+
 		foreach (Field f in fields) {
 			f.accept (visitor);
 		}
-		
+
 		foreach (Constant c in constants) {
 			c.accept (visitor);
 		}
-		
+
 		foreach (Method m in methods) {
 			m.accept (visitor);
 		}
@@ -325,7 +325,7 @@ public class Vala.Struct : TypeSymbol {
 		}
 		return integer_type;
 	}
-	
+
 	/**
 	 * Returns whether this is a floating point type.
 	 *
@@ -388,14 +388,14 @@ public class Vala.Struct : TypeSymbol {
 
 	public override int get_type_parameter_index (string name) {
 		int i = 0;
-		
+
 		foreach (TypeParameter p in type_parameters) {
 			if (p.name == name) {
 				return (i);
 			}
 			i++;
 		}
-		
+
 		return -1;
 	}
 

@@ -101,7 +101,7 @@ public class Valadoc.Api.Attribute : Item {
 		}
 
 		builder.append_attribute ("]");
-	
+
 		return builder.get ();
 	}
 }

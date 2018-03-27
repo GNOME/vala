@@ -52,7 +52,7 @@ public class Vala.ErrorCode : TypeSymbol {
 		this (name, source_reference);
 		this.value = value;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_error_code (this);
 	}

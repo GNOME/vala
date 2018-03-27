@@ -35,12 +35,12 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		Method m = null;
 		Delegate deleg = null;
 		List<Parameter> params;
-		
+
 		var ma = expr.call as MemberAccess;
-		
+
 		var itype = expr.call.value_type;
 		params = itype.get_parameters ();
-		
+
 		if (itype is MethodType) {
 			assert (ma != null);
 			m = ((MethodType) itype).method_symbol;
@@ -238,7 +238,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		} else if (m != null && m.binding == MemberBinding.CLASS) {
 			var cl = (Class) m.parent_symbol;
 			var cast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_upper_case_name (cl, null) + "_CLASS"));
-			
+
 			CCodeExpression klass;
 			if (ma.inner == null) {
 				if (get_this_type () == null) {
@@ -335,7 +335,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		bool ellipsis = false;
-		
+
 		int i = 1;
 		int arg_pos;
 		Iterator<Parameter> params_it = params.iterator ();
@@ -675,7 +675,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		// append C arguments in the right order
-		
+
 		int last_pos;
 		int min_pos;
 
@@ -838,7 +838,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
 			Parameter param = null;
-			
+
 			if (params_it.next ()) {
 				param = params_it.get ();
 				if (param.params_array || param.ellipsis) {
@@ -865,7 +865,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				requires_array_length = true;
 				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 				len_call.add_argument (get_cvalue_ (unary.inner.target_value));
-				
+
 				ccode.add_assignment (get_array_length_cvalue (unary.inner.target_value, 1), len_call);
 			}
 		}

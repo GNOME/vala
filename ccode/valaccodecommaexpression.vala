@@ -27,7 +27,7 @@ using GLib;
  */
 public class Vala.CCodeCommaExpression : CCodeExpression {
 	private List<CCodeExpression> inner = new ArrayList<CCodeExpression> ();
-	
+
 	/**
 	 * Appends the specified expression to the expression list.
 	 *
@@ -47,7 +47,7 @@ public class Vala.CCodeCommaExpression : CCodeExpression {
 
 	public override void write (CCodeWriter writer) {
 		bool first = true;
-	
+
 		writer.write_string ("(");
 		foreach (CCodeExpression expr in inner) {
 			if (!first) {

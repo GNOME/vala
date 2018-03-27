@@ -77,7 +77,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 			Valadoc.TokenType.MARKDOWN_PARAMETER.action ((token) => {
 				Run _run = null;
 
-				if (token.value == gir_comment.instance_param_name) {				
+				if (token.value == gir_comment.instance_param_name) {
 					_run = _factory.create_run (Run.Style.LANG_KEYWORD);
 					_run.content.add (_factory.create_text ("this"));
 				} else if (is_error_parameter (token.value)) {
@@ -434,7 +434,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 		.set_start (() => {
 			var siblings = ((BlockContent) peek ()).content;
 			if (siblings.size > 0 && siblings.last () is Content.List) {
-				push (siblings.last ());				
+				push (siblings.last ());
 			} else {
 				Content.List list = _factory.create_list ();
 				list.bullet = Content.List.Bullet.UNORDERED;
@@ -463,7 +463,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 		.set_start (() => {
 			var siblings = ((BlockContent) peek ()).content;
 			if (siblings.size > 0 && siblings.last () is Content.List) {
-				push (siblings.last ());				
+				push (siblings.last ());
 			} else {
 				Content.List list = _factory.create_list ();
 				list.bullet = Content.List.Bullet.ORDERED_NUMBER;
@@ -529,7 +529,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 		.set_start (() => { push (_factory.create_headline ()); })
 		.set_reduce (() => {
 			Headline h = (Headline) pop ();
-			((BlockContent) peek ()).content.add (h);			
+			((BlockContent) peek ()).content.add (h);
 		})
 		.set_name ("Headline");
 

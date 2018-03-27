@@ -139,7 +139,7 @@ public class Vala.Namespace : Symbol {
 			scope.add (ns.name, ns);
 		}
 	}
-	
+
 	/**
 	 * Returns a copy of the list of namespaces.
 	 *
@@ -148,7 +148,7 @@ public class Vala.Namespace : Symbol {
 	public List<Namespace> get_namespaces () {
 		return namespaces;
 	}
-	
+
 	/**
 	 * Adds the specified class to this namespace.
 	 *
@@ -187,7 +187,7 @@ public class Vala.Namespace : Symbol {
 		scope.add (iface.name, iface);
 
 	}
-	
+
 	/**
 	 * Adds the specified struct to this namespace.
 	 *
@@ -206,7 +206,7 @@ public class Vala.Namespace : Symbol {
 		structs.add (st);
 		scope.add (st.name, st);
 	}
-	
+
 	/**
 	 * Removes the specified struct from this namespace.
 	 *
@@ -216,7 +216,7 @@ public class Vala.Namespace : Symbol {
 		structs.remove (st);
 		scope.remove (st.name);
 	}
-			
+
 	/**
 	 * Adds the specified enum to this namespace.
 	 *
@@ -291,7 +291,7 @@ public class Vala.Namespace : Symbol {
 	public List<Class> get_classes () {
 		return classes;
 	}
-	
+
 	/**
 	 * Returns a copy of the list of interfaces.
 	 *
@@ -300,7 +300,7 @@ public class Vala.Namespace : Symbol {
 	public List<Interface> get_interfaces () {
 		return interfaces;
 	}
-	
+
 	/**
 	 * Returns a copy of the list of enums.
 	 *
@@ -309,7 +309,7 @@ public class Vala.Namespace : Symbol {
 	public List<Enum> get_enums () {
 		return enums;
 	}
-	
+
 	/**
 	 * Returns a copy of the list of error domains.
 	 *
@@ -318,7 +318,7 @@ public class Vala.Namespace : Symbol {
 	public List<ErrorDomain> get_error_domains () {
 		return error_domains;
 	}
-	
+
 	/**
 	 * Returns a copy of the list of fields.
 	 *
@@ -327,7 +327,7 @@ public class Vala.Namespace : Symbol {
 	public List<Field> get_fields () {
 		return fields;
 	}
-	
+
 	/**
 	 * Returns a copy of the list of constants.
 	 *
@@ -336,7 +336,7 @@ public class Vala.Namespace : Symbol {
 	public List<Constant> get_constants () {
 		return constants;
 	}
-	
+
 	/**
 	 * Returns a copy of the list of delegates.
 	 *
@@ -345,7 +345,7 @@ public class Vala.Namespace : Symbol {
 	public List<Delegate> get_delegates () {
 		return delegates;
 	}
-	
+
 	/**
 	 * Returns a copy of the list of methods.
 	 *
@@ -354,7 +354,7 @@ public class Vala.Namespace : Symbol {
 	public List<Method> get_methods () {
 		return methods;
 	}
-	
+
 	/**
 	 * Adds the specified constant to this namespace.
 	 *
@@ -373,7 +373,7 @@ public class Vala.Namespace : Symbol {
 		constants.add (constant);
 		scope.add (constant.name, constant);
 	}
-	
+
 	/**
 	 * Adds the specified field to this namespace.
 	 *
@@ -407,7 +407,7 @@ public class Vala.Namespace : Symbol {
 		fields.add (f);
 		scope.add (f.name, f);
 	}
-	
+
 	/**
 	 * Adds the specified method to this namespace.
 	 *

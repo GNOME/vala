@@ -63,7 +63,7 @@ public class Vala.UsedAttr : CodeVisitor {
 		"Version", "since", "replacement", "deprecated", "deprecated_since", "experimental", "experimental_until", "",
 		"Signal", "detailed", "run", "no_recurse", "action", "no_hooks", "",
 		"Description", "nick", "blurb", "",
-		
+
 		"IntegerType", "rank", "min", "max", "signed", "width", "",
 		"FloatingType", "rank", "decimal", "width", "",
 		"BooleanType", "",
@@ -86,7 +86,7 @@ public class Vala.UsedAttr : CodeVisitor {
 		"GIR", "fullname", "name", ""
 
 	};
-	
+
 	public UsedAttr () {
 		// mark default valac attrs
 		var curattr = "";
@@ -103,7 +103,7 @@ public class Vala.UsedAttr : CodeVisitor {
 			}
 		}
 	}
-	
+
 	/**
 	 * Mark the attribute or attribute argument as used by the compiler
 	 */
@@ -118,7 +118,7 @@ public class Vala.UsedAttr : CodeVisitor {
 			set.add (argument);
 		}
 	}
-	
+
 	/**
 	 * Traverse the code tree and warn about unused attributes.
 	 *
@@ -145,12 +145,12 @@ public class Vala.UsedAttr : CodeVisitor {
 			}
 		}
 	}
-	
+
 	public override void visit_namespace (Namespace ns) {
 		check_unused_attr (ns);
 		ns.accept_children (this);
 	}
-	
+
 	public override void visit_class (Class cl) {
 		check_unused_attr (cl);
 		cl.accept_children (this);

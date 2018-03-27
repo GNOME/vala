@@ -30,17 +30,17 @@ public class Vala.CCodeCastExpression : CCodeExpression {
 	 * The expression to be cast.
 	 */
 	public CCodeExpression inner { get; set; }
-	
+
 	/**
 	 * The target type.
 	 */
 	public string type_name { get; set; }
-	
+
 	public CCodeCastExpression (CCodeExpression expr, string type) {
 		inner = expr;
 		type_name = type;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		writer.write_string ("(");
 		writer.write_string (type_name);

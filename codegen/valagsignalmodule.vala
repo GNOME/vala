@@ -35,9 +35,9 @@ public class Vala.GSignalModule : GObjectModule {
 				prefix = "g_cclosure_user_marshal";
 			}
 		}
-		
+
 		ret = "%s_%s_".printf (prefix, get_ccode_marshaller_type_name (return_type));
-		
+
 		if (params == null || params.size == 0) {
 			ret = ret + "_VOID";
 		} else {
@@ -45,10 +45,10 @@ public class Vala.GSignalModule : GObjectModule {
 				ret = "%s_%s".printf (ret, get_ccode_marshaller_type_name (p).replace (",", "_"));
 			}
 		}
-		
+
 		return ret;
 	}
-	
+
 	private string? get_value_type_name_from_type_reference (DataType t) {
 		if (t is PointerType || t is GenericType) {
 			return "gpointer";
@@ -74,10 +74,10 @@ public class Vala.GSignalModule : GObjectModule {
 		} else if (t is ErrorType) {
 			return "gpointer";
 		}
-		
+
 		return null;
 	}
-	
+
 	private string? get_value_type_name_from_parameter (Parameter p) {
 		if (p.direction != ParameterDirection.IN) {
 			return "gpointer";
@@ -85,10 +85,10 @@ public class Vala.GSignalModule : GObjectModule {
 			return get_value_type_name_from_type_reference (p.variable_type);
 		}
 	}
-	
+
 	private string get_marshaller_signature (List<Parameter> params, DataType return_type) {
 		string signature;
-		
+
 		signature = "%s:".printf (get_ccode_marshaller_type_name (return_type));
 		if (params == null || params.size == 0) {
 			signature = signature + "VOID";
@@ -103,7 +103,7 @@ public class Vala.GSignalModule : GObjectModule {
 				}
 			}
 		}
-		
+
 		return signature;
 	}
 
@@ -198,16 +198,16 @@ public class Vala.GSignalModule : GObjectModule {
 	void generate_marshaller (List<Parameter> params, DataType return_type) {
 		string signature;
 		int n_params, i;
-		
+
 		/* check whether a signal with the same signature already exists for this source file (or predefined) */
 		signature = get_marshaller_signature (params, return_type);
 		if (predefined_marshal_set.contains (signature) || user_marshal_set.contains (signature)) {
 			return;
 		}
-		
+
 		var signal_marshaller = new CCodeFunction (get_marshaller_function (params, return_type, null), "void");
 		signal_marshaller.modifiers = CCodeModifiers.STATIC;
-		
+
 		signal_marshaller.add_parameter (new CCodeParameter ("closure", "GClosure *"));
 		signal_marshaller.add_parameter (new CCodeParameter ("return_value", "GValue *"));
 		signal_marshaller.add_parameter (new CCodeParameter ("n_param_values", "guint"));
@@ -244,7 +244,7 @@ public class Vala.GSignalModule : GObjectModule {
 
 		if (return_type.data_type != null || return_type.is_array ()) {
 			ccode.add_declaration (get_value_type_name_from_type_reference (return_type), new CCodeVariableDeclarator ("v_return"));
-			
+
 			fc = new CCodeFunctionCall (new CCodeIdentifier ("g_return_if_fail"));
 			fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("return_value"), new CCodeConstant ("NULL")));
 			ccode.add_expression (fc);
@@ -268,7 +268,7 @@ public class Vala.GSignalModule : GObjectModule {
 
 		var c_assign_rhs =  new CCodeCastExpression (new CCodeConditionalExpression (new CCodeIdentifier ("marshal_data"), new CCodeIdentifier ("marshal_data"), new CCodeMemberAccess (new CCodeIdentifier ("cc"), "callback", true)), get_marshaller_function (params, return_type, "GMarshalFunc"));
 		ccode.add_assignment (new CCodeIdentifier ("callback"), c_assign_rhs);
-		
+
 		fc = new CCodeFunctionCall (new CCodeIdentifier ("callback"));
 		fc.add_argument (new CCodeIdentifier ("data1"));
 		i = 1;
@@ -306,10 +306,10 @@ public class Vala.GSignalModule : GObjectModule {
 			}
 		}
 		fc.add_argument (new CCodeIdentifier ("data2"));
-		
+
 		if (return_type.data_type != null || return_type.is_array ()) {
 			ccode.add_assignment (new CCodeIdentifier ("v_return"), fc);
-			
+
 			CCodeFunctionCall set_fc;
 			if (return_type.is_array ()) {
 				if (((ArrayType) return_type).element_type.data_type == string_type.data_type) {
@@ -332,14 +332,14 @@ public class Vala.GSignalModule : GObjectModule {
 			}
 			set_fc.add_argument (new CCodeIdentifier ("return_value"));
 			set_fc.add_argument (new CCodeIdentifier ("v_return"));
-			
+
 			ccode.add_expression (set_fc);
 		} else {
 			ccode.add_expression (fc);
 		}
-		
+
 		pop_function ();
-		
+
 		cfile.add_function_declaration (signal_marshaller);
 		cfile.add_function (signal_marshaller);
 		user_marshal_set.add (signature);
@@ -530,20 +530,20 @@ public class Vala.GSignalModule : GObjectModule {
 	public override void visit_member_access (MemberAccess expr) {
 		if (expr.symbol_reference is Signal) {
 			CCodeExpression pub_inst = null;
-	
+
 			if (expr.inner != null) {
 				pub_inst = get_cvalue (expr.inner);
 			}
 
 			var sig = (Signal) expr.symbol_reference;
 			var cl = (TypeSymbol) sig.parent_symbol;
-			
+
 			if (expr.inner is BaseAccess && sig.is_virtual) {
 				var m = sig.default_handler;
 				var base_class = (Class) m.parent_symbol;
 				var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class, null))));
 				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class))));
-				
+
 				set_cvalue (expr, new CCodeMemberAccess.pointer (vcast, m.name));
 				return;
 			}
@@ -574,7 +574,7 @@ public class Vala.GSignalModule : GObjectModule {
 				ccall.add_argument (pub_inst);
 
 				ccall.add_argument (get_signal_canonical_constant (sig));
-				
+
 				set_cvalue (expr, ccall);
 			}
 		} else {

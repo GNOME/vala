@@ -69,7 +69,7 @@ public class Sample : Object {
 
 		Maman.Ibaz ibaz = new Maman.Baz ();
 		ibaz.simple_method ();
-	
+
 		stdout.printf (" 3\n");
 
 		var nonpriv = new NonPrivAccess ();
@@ -114,10 +114,10 @@ class Maman.Bar : Foo {
 
 	public static void run () {
 		stdout.printf ("Property Test: 1");
-		
+
 		var bar = new Bar ();
 		bar.do_action ();
-		
+
 		Foo foo = bar;
 		foo.abstract_base_property = 6;
 		stdout.printf (" %d", foo.abstract_base_property);

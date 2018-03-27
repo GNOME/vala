@@ -26,7 +26,7 @@ namespace Valadoc {
 	public extern const string icons_dir;
 
 	/**
-	 * Makes a copy of the file src to dest. 
+	 * Makes a copy of the file src to dest.
 	 *
 	 * @param src the file to copy
 	 * @param dest the destination path
@@ -50,7 +50,7 @@ namespace Valadoc {
 	}
 
 	/**
-	 * Makes a copy of the directory src to dest. 
+	 * Makes a copy of the directory src to dest.
 	 *
 	 * @param src the directory to copy
 	 * @param dest the destination path

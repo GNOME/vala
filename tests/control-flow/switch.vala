@@ -18,7 +18,7 @@ class Maman.Bar : Object {
 		for (i = 2; i < 7; i++) {
 			stdout.printf (" %d", i);
 		}
-		
+
 		stdout.printf (" 7\n");
 
 		stdout.printf ("Switch statement: 1");
@@ -37,7 +37,7 @@ class Maman.Bar : Object {
 class Maman.Foo : Object {
 	public void run () {
 		stdout.printf (" 2");
-		
+
 		switch (23) {
 		case 23:
 			stdout.printf (" 3");
@@ -46,7 +46,7 @@ class Maman.Foo : Object {
 			stdout.printf (" BAD");
 			break;
 		}
-		
+
 		switch (inc ()) {
 		case 0:
 			stdout.printf (" 4");
@@ -58,7 +58,7 @@ class Maman.Foo : Object {
 			stdout.printf (" BAD");
 			break;
 		}
-		
+
 		switch (42) {
 		case 0:
 			stdout.printf (" BAD");
@@ -70,14 +70,14 @@ class Maman.Foo : Object {
 			stdout.printf (" BAD");
 			break;
 		}
-		
+
 		stdout.printf (" 6");
 	}
-	
+
 	public int inc () {
 		return counter++;
 	}
-	
+
 	private int counter = 0;
 }
 

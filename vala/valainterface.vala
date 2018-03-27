@@ -70,7 +70,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	public List<DataType> get_prerequisites () {
 		return prerequisites;
 	}
-	
+
 	/**
 	 * Adds the specified method as a member to this interface.
 	 *
@@ -79,7 +79,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	public override void add_method (Method m) {
 		if (m is CreationMethod) {
 			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
-		
+
 			m.error = true;
 			return;
 		}
@@ -113,7 +113,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 		prop.this_parameter = new Parameter ("this", new ObjectType (this));
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 	}
-	
+
 	public virtual List<Symbol> get_virtuals () {
 		return virtuals;
 	}
@@ -139,7 +139,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 		foreach (Method m in get_methods ()) {
 			m.accept (visitor);
 		}
-		
+
 		foreach (Field f in get_fields ()) {
 			f.accept (visitor);
 		}
@@ -151,15 +151,15 @@ public class Vala.Interface : ObjectTypeSymbol {
 		foreach (Property prop in get_properties ()) {
 			prop.accept (visitor);
 		}
-		
+
 		foreach (Signal sig in get_signals ()) {
 			sig.accept (visitor);
 		}
-		
+
 		foreach (Class cl in get_classes ()) {
 			cl.accept (visitor);
 		}
-		
+
 		foreach (Struct st in get_structs ()) {
 			st.accept (visitor);
 		}
@@ -172,7 +172,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	public override bool is_reference_type () {
 		return true;
 	}
-	
+
 	public override bool is_subtype_of (TypeSymbol t) {
 		if (this == t) {
 			return true;
@@ -183,10 +183,10 @@ public class Vala.Interface : ObjectTypeSymbol {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public override void replace_type (DataType old_type, DataType new_type) {
 		for (int i = 0; i < prerequisites.size; i++) {
 			if (prerequisites[i] == old_type) {

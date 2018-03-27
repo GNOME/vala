@@ -37,7 +37,7 @@ public class Vala.Block : Symbol, Statement {
 	private List<Statement> statement_list = new ArrayList<Statement> ();
 	private List<LocalVariable> local_variables = new ArrayList<LocalVariable> ();
 	private List<Constant> local_constants = new ArrayList<Constant> ();
-	
+
 	/**
 	 * Creates a new block.
 	 *
@@ -46,7 +46,7 @@ public class Vala.Block : Symbol, Statement {
 	public Block (SourceReference? source_reference) {
 		base (null, source_reference);
 	}
-	
+
 	/**
 	 * Append a statement to this block.
 	 *
@@ -81,7 +81,7 @@ public class Vala.Block : Symbol, Statement {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * Add a local variable to this block.
 	 *

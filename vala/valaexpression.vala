@@ -28,7 +28,7 @@ using GLib;
 public abstract class Vala.Expression : CodeNode {
 	/**
 	 * The static type of the value of this expression.
-	 * 
+	 *
 	 * The semantic analyzer computes this value.
 	 */
 	public DataType value_type { get; set; }

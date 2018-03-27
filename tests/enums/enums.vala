@@ -24,7 +24,7 @@ class Maman.Bar : Object {
 		stdout.printf (" %d", Foo.VAL3);
 
 		stdout.printf (" 4");
-		
+
 		stdout.printf (" %d", Foo.VAL5);
 	}
 
@@ -40,7 +40,7 @@ class Maman.Bar : Object {
 
 	public static int main () {
 		stdout.printf ("Enum Test: 1");
-		
+
 		var bar = new Bar ();
 		bar.run ();
 

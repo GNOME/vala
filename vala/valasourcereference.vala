@@ -57,7 +57,7 @@ public class Vala.SourceReference {
 		this.end = end;
 		using_directives = file.current_using_directives;
 	}
-	
+
 	/**
 	 * Returns a string representation of this source reference.
 	 *

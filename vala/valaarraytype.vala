@@ -118,12 +118,12 @@ public class Vala.ArrayType : ReferenceType {
 			resize_method.access = SymbolAccessibility.PUBLIC;
 
 			resize_method.set_attribute_string ("CCode", "cname", "g_renew");
-			
+
 			var root_symbol = source_reference.file.context.root;
 			var int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
 
 			resize_method.add_parameter (new Parameter ("length", int_type));
-			
+
 			resize_method.returns_modified_pointer = true;
 		}
 		return resize_method;
@@ -185,7 +185,7 @@ public class Vala.ArrayType : ReferenceType {
 		if (element_type.is_weak () && !(parent_node is Constant)) {
 			elem_str = "(unowned %s)".printf (elem_str);
 		}
-		
+
 		if (!fixed_length) {
 			return "%s[%s]%s".printf (elem_str, string.nfill (rank - 1, ','), nullable ? "?" : "");
 		} else {

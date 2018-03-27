@@ -31,7 +31,7 @@ public class Vala.BinaryExpression : Expression {
 	 * The binary operator.
 	 */
 	public BinaryOperator operator { get; set; }
-	
+
 	/**
 	 * The left operand.
 	 */
@@ -44,7 +44,7 @@ public class Vala.BinaryExpression : Expression {
 			_left.parent_node = this;
 		}
 	}
-	
+
 	/**
 	 * The right operand.
 	 */
@@ -57,12 +57,12 @@ public class Vala.BinaryExpression : Expression {
 			_right.parent_node = this;
 		}
 	}
-	
+
 	public bool is_chained { get; private set; }
 
 	private Expression _left;
 	private Expression _right;
-	
+
 	/**
 	 * Creates a new binary expression.
 	 *
@@ -96,7 +96,7 @@ public class Vala.BinaryExpression : Expression {
 
 	public override void accept_children (CodeVisitor visitor) {
 		left.accept (visitor);
-		right.accept (visitor);			
+		right.accept (visitor);
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {
@@ -247,7 +247,7 @@ public class Vala.BinaryExpression : Expression {
 			} else if (right.value_type != null) {
 				local_type = right.value_type.copy ();
 			}
-		
+
 			var local = new LocalVariable (local_type, get_temp_name (), left, source_reference);
 			var decl = new DeclarationStatement (local, source_reference);
 
@@ -539,9 +539,9 @@ public class Vala.BinaryExpression : Expression {
 				parent_node.replace_expression (this, contains_call);
 				return contains_call.check (context);
 			}
-			
+
 			value_type = context.analyzer.bool_type;
-			
+
 		} else {
 			assert_not_reached ();
 		}

@@ -32,15 +32,15 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	 * Specifies the interface to be registered.
 	 */
 	public weak Interface interface_reference { get; set; }
-	
+
 	public InterfaceRegisterFunction (Interface iface) {
 		interface_reference = iface;
 	}
-	
+
 	public override TypeSymbol get_type_declaration () {
 		return interface_reference;
 	}
-	
+
 	public override string get_type_struct_name () {
 		return get_ccode_type_name (interface_reference);
 	}
@@ -64,11 +64,11 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	public override string get_instance_struct_size () {
 		return "0";
 	}
-	
+
 	public override string get_instance_init_func_name () {
 		return "NULL";
 	}
-	
+
 	public override string get_parent_type_name () {
 		return "G_TYPE_INTERFACE";
 	}
@@ -81,11 +81,11 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 		/* register all prerequisites */
 		foreach (DataType prereq_ref in interface_reference.get_prerequisites ()) {
 			var prereq = prereq_ref.data_type;
-			
+
 			var func = new CCodeFunctionCall (new CCodeIdentifier ("g_type_interface_add_prerequisite"));
 			func.add_argument (new CCodeIdentifier ("%s_type_id".printf (get_ccode_lower_case_name (interface_reference))));
 			func.add_argument (new CCodeIdentifier (get_ccode_type_id (prereq)));
-			
+
 			block.add_statement (new CCodeExpressionStatement (func));
 		}
 

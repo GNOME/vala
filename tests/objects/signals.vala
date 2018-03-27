@@ -19,9 +19,9 @@ class Maman.Bar : Object {
 
 	public void run () {
 		stdout.printf (" 2");
-		
+
 		var foo = new Foo ();
-		
+
 		foo.activated.connect ((foo, b) => {
 			if (b) {
 				stdout.printf (" 8");
@@ -33,11 +33,11 @@ class Maman.Bar : Object {
 		foo.activated.connect (activated);
 
 		stdout.printf (" 3");
-		
+
 		foo.do_action (false);
 
 		stdout.printf (" 6");
-		
+
 		foo.activated.disconnect (activated);
 
 		stdout.printf (" 7");
@@ -59,15 +59,15 @@ class Maman.UserFoo : Object {
 class Maman.UserBar : Object {
 	public void run () {
 		stdout.printf (" 2");
-		
+
 		var foo = new UserFoo ();
-		
+
 		foo.activated.connect ((foo, i1, i2) => {
 			stdout.printf (" %d", i1 + i2);
 		});
 
 		stdout.printf (" 3");
-		
+
 		foo.do_action ();
 
 		stdout.printf (" 5");

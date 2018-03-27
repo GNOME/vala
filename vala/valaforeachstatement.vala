@@ -38,12 +38,12 @@ public class Vala.ForeachStatement : Block {
 			}
 		}
 	}
-	
+
 	/**
 	 * Specifies the element variable name.
 	 */
 	public string variable_name { get; set; }
-	
+
 	/**
 	 * Specifies the container.
 	 */
@@ -56,7 +56,7 @@ public class Vala.ForeachStatement : Block {
 			_collection.parent_node = this;
 		}
 	}
-	
+
 	/**
 	 * Specifies the loop body.
 	 */
@@ -109,7 +109,7 @@ public class Vala.ForeachStatement : Block {
 		this.body = body;
 		this.type_reference = type_reference;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		if (use_iterator) {
 			base.accept (visitor);
@@ -167,7 +167,7 @@ public class Vala.ForeachStatement : Block {
 
 		var collection_type = collection.value_type.copy ();
 		collection.target_type = collection_type.copy ();
-		
+
 		if (collection_type.is_array ()) {
 			var array_type = (ArrayType) collection_type;
 

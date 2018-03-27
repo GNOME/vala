@@ -46,7 +46,7 @@ public class Valadoc.Api.SignatureBuilder {
 	}
 
 	/**
-	 * Adds text onto the end of the builder. 
+	 * Adds text onto the end of the builder.
 	 *
 	 * @param text a string
 	 * @param spaced add a space at the front of the string if necessary
@@ -59,7 +59,7 @@ public class Valadoc.Api.SignatureBuilder {
 	}
 
 	/**
-	 * Adds text onto the end of the builder. 
+	 * Adds text onto the end of the builder.
 	 *
 	 * @param text a string
 	 * @param spaced add a space at the front of the string if necessary
@@ -72,7 +72,7 @@ public class Valadoc.Api.SignatureBuilder {
 	}
 
 	/**
-	 * Adds highlighted text onto the end of the builder. 
+	 * Adds highlighted text onto the end of the builder.
 	 *
 	 * @param text a string
 	 * @param spaced add a space at the front of the string if necessary
@@ -86,7 +86,7 @@ public class Valadoc.Api.SignatureBuilder {
 	}
 
 	/**
-	 * Adds a Inline onto the end of the builder. 
+	 * Adds a Inline onto the end of the builder.
 	 *
 	 * @param content a content
 	 * @param spaced add a space at the front of the inline if necessary
@@ -101,7 +101,7 @@ public class Valadoc.Api.SignatureBuilder {
 	}
 
 	/**
-	 * Adds a keyword onto the end of the builder. 
+	 * Adds a keyword onto the end of the builder.
 	 *
 	 * @param keyword a keyword
 	 * @param spaced add a space at the front of the keyword if necessary
@@ -114,7 +114,7 @@ public class Valadoc.Api.SignatureBuilder {
 	}
 
 	/**
-	 * Adds a symbol onto the end of the builder. 
+	 * Adds a symbol onto the end of the builder.
 	 *
 	 * @param node a node
 	 * @param spaced add a space at the front of the node if necessary
@@ -127,7 +127,7 @@ public class Valadoc.Api.SignatureBuilder {
 	}
 
 	/**
-	 * Adds a type onto the end of the builder. 
+	 * Adds a type onto the end of the builder.
 	 *
 	 * @param node a node
 	 * @param spaced add a space at the front of the node if necessary
@@ -145,7 +145,7 @@ public class Valadoc.Api.SignatureBuilder {
 	}
 
 	/**
-	 * Adds a type name onto the end of the builder. 
+	 * Adds a type name onto the end of the builder.
 	 *
 	 * @param name a type name
 	 * @param spaced add a space at the front of the type name if necessary
@@ -158,7 +158,7 @@ public class Valadoc.Api.SignatureBuilder {
 	}
 
 	/**
-	 * Adds a literal onto the end of the builder. 
+	 * Adds a literal onto the end of the builder.
 	 *
 	 * @param literal a literal
 	 * @param spaced add a space at the front of the literal if necessary

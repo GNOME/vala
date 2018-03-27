@@ -30,7 +30,7 @@ public class Vala.CCodeFunction : CCodeNode {
 	 * The name of this function.
 	 */
 	public string name { get; set; }
-	
+
 	/**
 	 * The function return type.
 	 */
@@ -63,7 +63,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		this.block = new CCodeBlock ();
 		current_block = block;
 	}
-	
+
 	/**
 	 * Appends the specified parameter to the list of function parameters.
 	 *
@@ -100,12 +100,12 @@ public class Vala.CCodeFunction : CCodeNode {
 		foreach (CCodeParameter param in parameters) {
 			func.parameters.add (param);
 		}
-		
+
 		func.is_declaration = is_declaration;
 		func.block = block;
 		return func;
 	}
-	
+
 	public override void write (CCodeWriter writer) {
 		writer.write_indent (line);
 		if (CCodeModifiers.INTERNAL in modifiers) {
@@ -126,7 +126,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		writer.write_string (name);
 		writer.write_string (" (");
 		int param_pos_begin = (is_declaration ? return_type.char_count () + 1 : 0 ) + name.char_count () + 2;
-		
+
 		bool has_args = (CCodeModifiers.PRINTF in modifiers || CCodeModifiers.SCANF in modifiers);
 		int i = 0;
 		int format_arg_index = -1;
@@ -151,7 +151,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		if (i == 0) {
 			writer.write_string ("void");
 		}
-		
+
 		writer.write_string (")");
 
 		if (is_declaration) {
