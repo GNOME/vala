@@ -200,6 +200,7 @@ TESTS = \
 	objects/fields.vala \
 	objects/interfaces.vala \
 	objects/methods.vala \
+	objects/paramspec.vala \
 	objects/properties.vala \
 	objects/regex.vala \
 	objects/signals.vala \
