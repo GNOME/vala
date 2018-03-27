@@ -303,6 +303,12 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_float")]
 		public ParamSpecFloat (string name, string nick, string blurb, float minimum, float maximum, float default_value, GLib.ParamFlags flags);
 	}
+	[CCode (type_id = "G_TYPE_PARAM_GTYPE")]
+	public class ParamSpecGType : GLib.ParamSpec {
+		public GLib.Type is_a_type;
+		[CCode (cname = "g_param_spec_gtype")]
+		public ParamSpecGType (string name, string nick, string blurb, GLib.Type is_a_type, GLib.ParamFlags flags);
+	}
 	[CCode (type_id = "G_TYPE_PARAM_INT")]
 	public class ParamSpecInt : GLib.ParamSpec {
 		public int default_value;
