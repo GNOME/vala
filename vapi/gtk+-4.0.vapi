@@ -12284,8 +12284,6 @@ namespace Gtk {
 		public int16 right;
 		public int16 top;
 		public int16 bottom;
-		[CCode (has_construct_function = false, type = "GtkBorder*")]
-		public Border ();
 		public Gtk.Border? copy ();
 		public void free ();
 	}
@@ -12323,8 +12321,6 @@ namespace Gtk {
 	public struct Requisition {
 		public int width;
 		public int height;
-		[CCode (has_construct_function = false, type = "GtkRequisition*")]
-		public Requisition ();
 		public Gtk.Requisition? copy ();
 		public void free ();
 	}
