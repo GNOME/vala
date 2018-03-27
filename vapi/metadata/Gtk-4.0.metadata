@@ -21,6 +21,12 @@ TargetEntry struct
 TextIter struct
 TreeIter struct
 
+// Hide dedicated constructors of former compact classes
+Border
+  .new skip
+Requisition
+  .new skip
+
 // Bug #636812: no support for annotating the type of a closure
 AccelGroup
   .connect*.closure type="owned Gtk.AccelGroupActivate"
