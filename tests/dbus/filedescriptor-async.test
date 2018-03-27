@@ -1,0 +1,99 @@
+Packages: gio-2.0 gio-unix-2.0 posix
+D-Bus
+
+Program: client
+
+[DBus (name = "org.example.Test")]
+interface Test : Object {
+	public abstract async UnixInputStream test_in (UnixInputStream i, out UnixInputStream j) throws IOError;
+}
+
+MainLoop main_loop;
+
+async void run () {
+	// client
+	Test test = yield Bus.get_proxy (BusType.SESSION, "org.example.Test", "/org/example/test");
+
+	uint8[] buffer = new uint8[1];
+
+	int[] pipe1 = new int[2];
+	assert (Posix.pipe (pipe1) == 0);
+	buffer[0] = 42;
+	assert (Posix.write (pipe1[1], buffer, 1) == 1);
+	Posix.close (pipe1[1]);
+
+	UnixInputStream j, k;
+	k = yield test.test_in (new UnixInputStream (pipe1[0], true), out j);
+
+	assert (j.read (buffer) == 1);
+	assert (buffer[0] == 23);
+
+	assert (k.read (buffer) == 1);
+	assert (buffer[0] == 11);
+
+	main_loop.quit ();
+}
+
+void main () {
+	// client
+	run.begin ();
+
+	main_loop = new MainLoop (null, false);
+	main_loop.run ();
+}
+
+Program: server
+
+[DBus (name = "org.example.Test")]
+class Test : Object {
+	public async UnixInputStream test_in (UnixInputStream i, out UnixInputStream j) throws IOError {
+		uint8[] buffer = new uint8[1];
+
+		assert (i.read (buffer) == 1);
+		assert (buffer[0] == 42);
+
+		int[] pipe1 = new int[2];
+		assert (Posix.pipe (pipe1) == 0);
+		buffer[0] = 23;
+		assert (Posix.write (pipe1[1], buffer, 1) == 1);
+		Posix.close (pipe1[1]);
+
+		int[] pipe2 = new int[2];
+		assert (Posix.pipe (pipe2) == 0);
+		buffer[0] = 11;
+		assert (Posix.write (pipe2[1], buffer, 1) == 1);
+		Posix.close (pipe2[1]);
+
+		Idle.add (test_in.callback);
+		yield;
+
+		j = new UnixInputStream (pipe1[0], true);
+		return new UnixInputStream (pipe2[0], true);
+	}
+}
+
+MainLoop main_loop;
+
+void client_exit (Pid pid, int status) {
+	// client finished, terminate server
+	assert (status == 0);
+	main_loop.quit ();
+}
+
+void main () {
+	var conn = Bus.get_sync (BusType.SESSION);
+	conn.register_object ("/org/example/test", new Test ());
+
+	// try to register service in session bus
+	var request_result = conn.call_sync ("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "RequestName",
+	                                      new Variant ("(su)", "org.example.Test", 0x4), null, 0, -1);
+	assert ((uint) request_result.get_child_value (0) == 1);
+
+	// server ready, spawn client
+	Pid client_pid;
+	Process.spawn_async (null, { "test", "/dbus/filedescriptor-async/client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
+	ChildWatch.add (client_pid, client_exit);
+
+	main_loop = new MainLoop ();
+	main_loop.run ();
+}
