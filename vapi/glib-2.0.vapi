@@ -64,7 +64,7 @@ public struct bool {
 
 [SimpleType]
 [GIR (name = "gint8")]
-[CCode (cname = "gchar", cprefix = "g_ascii_", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "\'\\0\'", type_signature = "y")]
+[CCode (cname = "gchar", cprefix = "g_ascii_", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_schar", set_value_function = "g_value_set_schar", default_value = "\'\\0\'", type_signature = "y")]
 [IntegerType (rank = 2, min = 0, max = 127)]
 public struct char {
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
