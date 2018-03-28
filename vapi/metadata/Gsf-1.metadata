@@ -6,19 +6,9 @@ gsf_off_t name="off_t"
 
 DocMetaData
   .foreach.func type="GLib.HFunc<string,Gsf.DocProp>"
-  .insert.name owned
-  .insert.value owned
-  .lookup nullable
-  .steal nullable
-  .write_to_odf.output type="Gsf.XMLOut"
-
-DocProp
-  .get_link nullable
 
 Infile
-  .child_by_aname.names array
   .child_by_vaname skip=false
-  .name_by_index nullable
 
 InfileMSVBA
   .get_modules type="unowned GLib.HashTable<string,uint8[]?>"
@@ -26,23 +16,6 @@ InfileMSVBA
 
 Input
   .* skip=false
-  .Dup unowned=false
-  .dup vfunc_name="Dup"
-  .Read array nullable
-  .Read.optional_buffer array nullable
-  .read array nullable vfunc_name="Read"
-  .read.optional_buffer array nullable
-  .seek vfunc_name="Seek"
-  .OpenSibling unowned=false
-  .sibling vfunc_name="OpenSibling"
-  .set_container.container nullable
-  .set_name.name nullable
-
-InputMemory
-  .new*.buf array array_length_idx=1
-
-InputTextline
-  .*_gets array unowned nullable
 
 Outfile
   .* skip=false
@@ -51,14 +24,6 @@ Outfile
 
 Output
   .* skip=false
-  .close vfunc_name="Close"
-  .seek vfunc_name="Seek"
-  .vprintf vfunc_name="Vprintf"
-  .Write.data array
-  .write vfunc_name="Write"
-
-OutputMemory
-  .get_bytes array
 
 OutputStdio
   .* skip=false
@@ -67,10 +32,7 @@ OutputStdio
 
 XMLIn struct=false
   .* skip=false
-  .push_state.attrs type="string"
-
-XMLInDoc
-  .new.nodes array
+  .push_state.attrs type="string[]"
 
 XMLInNode struct=false
   .* skip=false
@@ -87,12 +49,3 @@ XMLProbeFunc
   .URI type="string"
   .namespaces array_length_idx=3 type="string[]"
   .attributes array_length_idx=5 type="string[]"
-
-base64_*code_*.data array
-base64_*code_*.in array
-base64_*code_*.out array
-base64_*code_*.save out
-base64_*code_*.state out
-
-property_settings_find.params array array_length_idx=2
-property_settings_free.params array array_length_idx=1 owned
