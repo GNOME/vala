@@ -38,7 +38,7 @@ namespace Gsf {
 		[Version (since = "1.14.24")]
 		public bool write_to_msole (Gsf.Output @out, bool doc_not_component);
 		[Version (since = "1.14.24")]
-		public bool write_to_odf ([CCode (type = "gpointer")] Gsf.XMLOut output);
+		public bool write_to_odf (Gsf.XMLOut output);
 	}
 	[CCode (cheader_filename = "gsf/gsf.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gsf_doc_prop_get_type ()")]
 	[Compact]
@@ -66,7 +66,7 @@ namespace Gsf {
 	public abstract class Infile : Gsf.Input {
 		[CCode (has_construct_function = false)]
 		protected Infile ();
-		public Gsf.Input child_by_aname ([CCode (array_length = false, type = "const char*")] string[] names);
+		public Gsf.Input child_by_aname ([CCode (array_length = false, array_null_terminated = true)] string[] names);
 		public Gsf.Input child_by_index (int i);
 		public Gsf.Input child_by_name (string name);
 		public Gsf.Input child_by_vaname (va_list names);
@@ -124,7 +124,7 @@ namespace Gsf {
 		[CCode (cname = "gsf_input_mmap_new", has_construct_function = false)]
 		public Input.mmap_new (string filename) throws GLib.Error;
 		[CCode (array_length = false, vfunc_name = "Read")]
-		public virtual unowned uint8[]? read (size_t num_bytes, [CCode (array_length = false, type = "guint8*")] uint8[]? optional_buffer);
+		public virtual unowned uint8[]? read (size_t num_bytes, [CCode (array_length = false)] uint8[]? optional_buffer);
 		[CCode (array_length_pos = 1.1, array_length_type = "gsize")]
 		public uint8[] read0 (size_t num_bytes);
 		[CCode (vfunc_name = "Seek")]
@@ -186,9 +186,9 @@ namespace Gsf {
 	[CCode (cheader_filename = "gsf/gsf.h", type_id = "gsf_input_memory_get_type ()")]
 	public class InputMemory : Gsf.Input {
 		[CCode (has_construct_function = false, type = "GsfInput*")]
-		public InputMemory ([CCode (array_length_cname = "length", array_length_pos = 1.5, type = "const guint8*")] uint8[] buf, bool needs_free);
+		public InputMemory ([CCode (array_length_cname = "length", array_length_pos = 1.5)] uint8[] buf, bool needs_free);
 		[CCode (has_construct_function = false, type = "GsfInput*")]
-		public InputMemory.clone ([CCode (array_length_cname = "length", array_length_pos = 1.1, type = "const guint8*")] uint8[] buf);
+		public InputMemory.clone ([CCode (array_length_cname = "length", array_length_pos = 1.1)] uint8[] buf);
 		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputMemory.from_bzip (Gsf.Input source) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "GsfInput*")]
@@ -421,7 +421,7 @@ namespace Gsf {
 		[CCode (has_construct_function = false, type = "GsfOutput*")]
 		public OutputMemory ();
 		[CCode (array_length = false)]
-		public unowned uint8[] get_bytes ();
+		public unowned uint8[]? get_bytes ();
 	}
 	[CCode (cheader_filename = "gsf/gsf.h", type_id = "gsf_output_stdio_get_type ()")]
 	public class OutputStdio : Gsf.Output {
@@ -485,18 +485,18 @@ namespace Gsf {
 		public weak Gsf.XMLInNode node;
 		public weak GLib.SList<void*> node_stack;
 		public void* user_state;
-		public unowned string check_ns (string str, uint ns_id);
+		public unowned string? check_ns (string str, uint ns_id);
 		public unowned Gsf.Input get_input ();
 		public bool namecmp (string str, uint ns_id, string name);
-		public void push_state (Gsf.XMLInDoc doc, void* new_state, Gsf.XMLInExtDtor dtor, [CCode (type = "const xmlChar**")] string attrs);
+		public void push_state (Gsf.XMLInDoc doc, void* new_state, Gsf.XMLInExtDtor dtor, [CCode (array_length = false)] string[] attrs);
 		public void set_silent_unknowns (bool silent);
 	}
 	[CCode (cheader_filename = "gsf/gsf.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gsf_xml_in_doc_get_type ()")]
 	[Compact]
 	public class XMLInDoc {
 		[CCode (has_construct_function = false)]
-		public XMLInDoc ([CCode (array_length = false, type = "const GsfXMLInNode*")] Gsf.XMLInNode[] nodes, Gsf.XMLInNS ns);
-		public void add_nodes (Gsf.XMLInNode nodes);
+		public XMLInDoc ([CCode (array_length = false, array_null_terminated = true)] Gsf.XMLInNode[] nodes, [CCode (array_length = false, array_null_terminated = true)] Gsf.XMLInNS[] ns);
+		public void add_nodes ([CCode (array_length = false, array_null_terminated = true)] Gsf.XMLInNode[] nodes);
 		[DestroysInstance]
 		public void free ();
 		public bool parse (Gsf.Input input, void* user_state);
@@ -534,7 +534,7 @@ namespace Gsf {
 		public weak Gsf.Output output;
 		[CCode (has_construct_function = false)]
 		public XMLOut (Gsf.Output output);
-		public void add_base64 (string? id, uint8 data, uint len);
+		public void add_base64 (string? id, [CCode (array_length_cname = "len", array_length_pos = 2.1, array_length_type = "guint")] uint8[] data);
 		public void add_bool (string? id, bool val);
 		public void add_color (string? id, uint r, uint g, uint b);
 		public void add_cstr (string? id, string? val_utf8);
@@ -735,15 +735,15 @@ namespace Gsf {
 	[CCode (cheader_filename = "gsf/gsf.h", cname = "GSF_PARAM_STATIC")]
 	public const int PARAM_STATIC;
 	[CCode (cheader_filename = "gsf/gsf.h")]
-	public static size_t base64_decode_simple ([CCode (array_length = false, type = "guint8*")] uint8[] data, size_t len);
+	public static size_t base64_decode_simple ([CCode (array_length = false)] uint8[] data, size_t len);
 	[CCode (cheader_filename = "gsf/gsf.h")]
-	public static size_t base64_decode_step ([CCode (array_length = false, type = "const guint8*")] uint8[] @in, size_t len, [CCode (array_length = false, type = "guint8*")] uint8[] @out, out int state, out uint save);
+	public static size_t base64_decode_step ([CCode (array_length = false)] uint8[] @in, size_t len, [CCode (array_length = false)] uint8[] @out, ref int state, ref uint save);
 	[CCode (cheader_filename = "gsf/gsf.h")]
-	public static size_t base64_encode_close ([CCode (array_length = false, type = "const guint8*")] uint8[] @in, size_t inlen, bool break_lines, [CCode (array_length = false, type = "guint8*")] uint8[] @out, out int state, out uint save);
+	public static size_t base64_encode_close ([CCode (array_length_cname = "inlen", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] @in, bool break_lines, [CCode (array_length = false)] uint8[] @out, ref int state, ref uint save);
 	[CCode (cheader_filename = "gsf/gsf.h")]
-	public static uint8 base64_encode_simple ([CCode (array_length = false, type = "const guint8*")] uint8[] data, size_t len);
+	public static uint8 base64_encode_simple ([CCode (array_length = false)] uint8[] data, size_t len);
 	[CCode (cheader_filename = "gsf/gsf.h")]
-	public static size_t base64_encode_step ([CCode (array_length = false, type = "const guint8*")] uint8[] @in, size_t len, bool break_lines, [CCode (array_length = false, type = "guint8*")] uint8[] @out, out int state, out uint save);
+	public static size_t base64_encode_step ([CCode (array_length = false)] uint8[] @in, size_t len, bool break_lines, [CCode (array_length = false)] uint8[] @out, ref int state, ref uint save);
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public static bool debug_flag (string flag);
 	[CCode (cheader_filename = "gsf/gsf.h")]
@@ -804,9 +804,9 @@ namespace Gsf {
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public static GLib.Error open_pkg_parse_rel_by_id (Gsf.XMLIn xin, string id, Gsf.XMLInNode dtd, Gsf.XMLInNS ns);
 	[CCode (cheader_filename = "gsf/gsf.h")]
-	public static unowned GLib.Parameter? property_settings_find (string name, [CCode (array_length_cname = "n_params", array_length_pos = 2.1, array_length_type = "gsize", type = "const GParameter*")] GLib.Parameter[] @params);
+	public static unowned GLib.Parameter? property_settings_find (string name, [CCode (array_length_cname = "n_params", array_length_pos = 2.1, array_length_type = "gsize")] GLib.Parameter[] @params);
 	[CCode (cheader_filename = "gsf/gsf.h")]
-	public static void property_settings_free ([CCode (array_length_cname = "n_params", array_length_pos = 1.1, array_length_type = "gsize", type = "GParameter*")] owned GLib.Parameter[] @params);
+	public static void property_settings_free ([CCode (array_length_cname = "n_params", array_length_pos = 1.1, array_length_type = "gsize")] owned GLib.Parameter[] @params);
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public static void shutdown ();
 	[CCode (cheader_filename = "gsf/gsf.h")]
