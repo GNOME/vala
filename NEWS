@@ -1,3 +1,14 @@
+Vala 0.40.2
+===========
+ * Various bug fixes:
+  - gdbus: Fix missing declaration of _fd_list for async methods [#794566]
+
+ * Bindings:
+  - glib-2.0: Use g_value_*et_schar instead of deprecated g_value_*et_char
+  - gobject-2.0: Add ParamSpecGType
+  - gtk+-*.0: Hide dedicated constructors of compact classes bound as structs
+    [#794733]
+
 Vala 0.40.1
 ===========
  * Various bug fixes:
