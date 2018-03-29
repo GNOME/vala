@@ -54,6 +54,12 @@ namespace Gtk {
 	public struct RecentData {
 	}
 
+	public class StatusIcon : GLib.Object {
+		[CCode (instance_pos = -1)]
+		[Version (since = "2.10")]
+		public void position_menu (Gtk.Menu menu, ref int x, ref int y, out bool push_in);
+	}
+
 	[CCode (type_id = "gtk_style_get_type ()")]
 	public class Style : GLib.Object {
 		[NoWrapper]

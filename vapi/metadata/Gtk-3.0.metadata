@@ -482,6 +482,8 @@ PlacesSidebar
 SelectionData
   .free destroys_instance
   .get_data skip=false
+StatusIcon
+  .position_menu skip
 Style
   .base unowned=false
   .bg unowned=false
