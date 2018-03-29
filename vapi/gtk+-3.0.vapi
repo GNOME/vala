@@ -7255,8 +7255,9 @@ namespace Gtk {
 		public uint32 get_x11_window_id ();
 		[Version (since = "2.10")]
 		public bool is_embedded ();
+		[CCode (instance_pos = -1)]
 		[Version (since = "2.10")]
-		public static void position_menu (Gtk.Menu menu, ref int x, ref int y, out bool push_in, Gtk.StatusIcon user_data);
+		public void position_menu (Gtk.Menu menu, ref int x, ref int y, out bool push_in);
 		[Version (since = "2.10")]
 		public void set_from_file (string filename);
 		[Version (since = "2.14")]
