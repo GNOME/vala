@@ -2016,6 +2016,9 @@ public class Vala.GTypeModule : GErrorModule {
 				}
 			}
 		}
+		if (context.require_glib_version (2, 42) && !prop.notify) {
+			pflags = "%s%s".printf (pflags, " | G_PARAM_EXPLICIT_NOTIFY");
+		}
 		if (prop.version.deprecated) {
 			pflags = "%s%s".printf (pflags, " | G_PARAM_DEPRECATED");
 		}

@@ -235,6 +235,7 @@ TESTS = \
 	objects/methods.vala \
 	objects/paramspec.vala \
 	objects/properties.vala \
+	objects/property-notify.vala \
 	objects/regex.vala \
 	objects/signals.vala \
 	objects/signals-delegate.vala \
