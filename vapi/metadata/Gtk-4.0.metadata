@@ -288,6 +288,7 @@ SelectionData
   .get_data skip=false
 Snapshot
   .free_to_node destroys_instance
+  .free_to_paintable destroys_instance
 render_* parent="Gtk.StyleContext"
 render_* symbol_type="method" instance_idx=0
 TextBuffer
