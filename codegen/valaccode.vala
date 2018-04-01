@@ -49,7 +49,7 @@ namespace Vala {
 	}
 
 	public static string get_ccode_lower_case_name (CodeNode node, string? infix = null) {
-		var sym = node as Symbol;
+		unowned Symbol? sym = node as Symbol;
 		if (sym != null) {
 			if (infix == null) {
 				infix = "";
@@ -64,7 +64,7 @@ namespace Vala {
 				return "%s%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), infix, get_ccode_lower_case_suffix (sym));
 			}
 		} else if (node is ErrorType) {
-			var type = (ErrorType) node;
+			unowned ErrorType type = (ErrorType) node;
 			if (type.error_domain == null) {
 				if (infix == null) {
 					return "g_error";
@@ -77,17 +77,17 @@ namespace Vala {
 				return get_ccode_lower_case_name (type.error_code, infix);
 			}
 		} else if (node is DelegateType) {
-			var type = (DelegateType) node;
+			unowned DelegateType type = (DelegateType) node;
 			return get_ccode_lower_case_name (type.delegate_symbol, infix);
 		} else if (node is PointerType) {
-			var type = (PointerType) node;
+			unowned PointerType type = (PointerType) node;
 			return get_ccode_lower_case_name (type.base_type, infix);
 		} else if (node is GenericType) {
 			return "valageneric";
 		} else if (node is VoidType) {
 			return "valavoid";
 		} else {
-			var type = (DataType) node;
+			unowned DataType type = (DataType) node;
 			return get_ccode_lower_case_name (type.data_type, infix);
 		}
 	}
@@ -206,7 +206,7 @@ namespace Vala {
 	}
 
 	public static string get_ccode_type_check_function (TypeSymbol sym) {
-		var cl = sym as Class;
+		unowned Class? cl = sym as Class;
 		var a = sym.get_attribute_string ("CCode", "type_check_function");
 		if (cl != null && a != null) {
 			return a;
@@ -263,7 +263,7 @@ namespace Vala {
 			return a.get_double ("array_length_pos");
 		}
 		if (node is Parameter) {
-			var param = (Parameter) node;
+			unowned Parameter param = (Parameter) node;
 			return get_ccode_pos (param) + 0.1;
 		} else {
 			return -3;
@@ -276,7 +276,7 @@ namespace Vala {
 			return a.get_double ("delegate_target_pos");
 		}
 		if (node is Parameter) {
-			var param = (Parameter) node;
+			unowned Parameter param = (Parameter) node;
 			return get_ccode_pos (param) + 0.1;
 		} else {
 			return -3;
@@ -289,7 +289,7 @@ namespace Vala {
 			return a.get_double ("destroy_notify_pos");
 		}
 		if (node is Parameter) {
-			var param = (Parameter) node;
+			unowned Parameter param = (Parameter) node;
 			return get_ccode_pos (param) + 0.1;
 		} else {
 			return -3;
@@ -323,7 +323,7 @@ namespace Vala {
 	public static string get_ccode_constructv_name (CreationMethod m) {
 		const string infix = "constructv";
 
-		var parent = m.parent_symbol as Class;
+		unowned Class parent = (Class) m.parent_symbol;
 
 		if (m.name == ".new") {
 			return "%s%s".printf (get_ccode_lower_case_prefix (parent), infix);

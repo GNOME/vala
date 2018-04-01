@@ -26,7 +26,7 @@
  */
 public class Vala.CCodeAttribute : AttributeCache {
 	private weak CodeNode node;
-	private weak Symbol sym;
+	private weak Symbol? sym;
 	private Attribute ccode;
 
 	public string name {
@@ -272,7 +272,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				if (ccode != null && ccode.has_argument ("free_function_address_of")) {
 					_free_function_address_of = ccode.get_bool ("free_function_address_of");
 				} else {
-					var cl = (Class) sym;
+					unowned Class cl = (Class) sym;
 					if (cl.base_class != null) {
 						_free_function_address_of = get_ccode_free_function_address_of (cl.base_class);
 					} else {
@@ -403,10 +403,10 @@ public class Vala.CCodeAttribute : AttributeCache {
 				if (ccode != null && ccode.has_argument ("pos")) {
 					_pos = ccode.get_double ("pos");
 				} else {
-					var param = (Parameter) node;
-					var sym = param.parent_symbol;
-					if (sym is Callable) {
-						_pos = ((Callable) sym).get_parameters ().index_of (param) + 1.0;
+					unowned Parameter param = (Parameter) node;
+					unowned Callable? callable = param.parent_symbol as Callable;
+					if (callable != null) {
+						_pos = callable.get_parameters ().index_of (param) + 1.0;
 					} else {
 						_pos = 0.0;
 					}
@@ -437,7 +437,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					_vfunc_name = ccode.get_string ("vfunc_name");
 				}
 				if (_vfunc_name == null) {
-					Method m = node as Method;
+					unowned Method? m = node as Method;
 					if (m != null && m.signal_reference != null) {
 						_vfunc_name = get_ccode_lower_case_name (m.signal_reference);
 					} else {
@@ -492,7 +492,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 	public bool finish_instance {
 		get {
 			if (_finish_instance == null) {
-				Method m = node as Method;
+				unowned Method? m = node as Method;
 				bool is_creation_method = m is CreationMethod;
 				if (ccode == null || m == null || m.is_abstract || m.is_virtual) {
 					_finish_instance = !is_creation_method;
@@ -623,7 +623,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 	}
 
 	private string get_default_name () {
-		var sym = node as Symbol;
 		if (sym != null) {
 			if (sym is Constant && !(sym is EnumValue)) {
 				if (sym.parent_symbol is Block) {
@@ -642,7 +641,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				}
 				return cname;
 			} else if (sym is CreationMethod) {
-				var m = (CreationMethod) sym;
+				unowned CreationMethod m = (CreationMethod) sym;
 				string infix;
 				if (m.parent_symbol is Struct) {
 					infix = "init";
@@ -657,7 +656,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 			} else if (sym is DynamicMethod) {
 				return "_dynamic_%s%d".printf (sym.name, dynamic_method_id++);
 			} else if (sym is Method) {
-				var m = (Method) sym;
+				unowned Method m = (Method) sym;
 				if (m.is_async_callback) {
 					return "%s_co".printf (get_ccode_real_name ((Method) m.parent_symbol));
 				}
@@ -673,7 +672,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					return "%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name);
 				}
 			} else if (sym is PropertyAccessor) {
-				var acc = (PropertyAccessor) sym;
+				unowned PropertyAccessor acc = (PropertyAccessor) sym;
 				var t = (TypeSymbol) acc.prop.parent_symbol;
 
 				if (acc.readable) {
@@ -830,7 +829,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private string? get_default_ref_function () {
 		if (sym is Class) {
-			var cl = (Class) sym;
+			unowned Class cl = (Class) sym;
 			if (cl.is_fundamental ()) {
 				return "%sref".printf (lower_case_prefix);
 			} else if (cl.base_class != null) {
@@ -849,7 +848,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private string? get_default_unref_function () {
 		if (sym is Class) {
-			var cl = (Class) sym;
+			unowned Class cl = (Class) sym;
 			if (cl.is_fundamental ()) {
 				return "%sunref".printf (lower_case_prefix);
 			} else if (cl.base_class != null) {
@@ -882,7 +881,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private string? get_default_free_function () {
 		if (sym is Class) {
-			var cl = (Class) sym;
+			unowned Class cl = (Class) sym;
 			if (cl.base_class != null) {
 				return get_ccode_free_function (cl.base_class);
 			}
@@ -902,9 +901,9 @@ public class Vala.CCodeAttribute : AttributeCache {
 			} else if (sym is ErrorType) {
 				return "G_TYPE_ERROR";
 			} else if (sym is Struct) {
-				var st = (Struct) sym;
+				unowned Struct st = (Struct) sym;
 				if (!get_ccode_has_type_id (st)) {
-					var base_struct = st.base_struct;
+					unowned Struct? base_struct = st.base_struct;
 					if (base_struct != null) {
 						return get_ccode_type_id (base_struct);
 					}
@@ -915,7 +914,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					return get_ccode_upper_case_name (st, "TYPE_");
 				}
 			} else if (sym is Enum) {
-				var en = (Enum) sym;
+				unowned Enum en = (Enum) sym;
 				if (get_ccode_has_type_id (en)) {
 					return get_ccode_upper_case_name (en, "TYPE_");
 				} else {
@@ -944,7 +943,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private string get_default_marshaller_type_name () {
 		if (sym != null) {
 			if (sym is Class) {
-				var cl = (Class) sym;
+				unowned Class cl = (Class) sym;
 				if (cl.base_class != null) {
 					return get_ccode_marshaller_type_name (cl.base_class);
 				} else if (!cl.is_compact) {
@@ -955,7 +954,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					return "BOXED";
 				}
 			} else if (sym is Enum) {
-				var en = (Enum) sym;
+				unowned Enum en = (Enum) sym;
 				if (get_ccode_has_type_id (en)) {
 					if (en.is_flags) {
 						return "FLAGS";
@@ -978,8 +977,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 				}
 				return "POINTER";
 			} else if (sym is Struct) {
-				var st = (Struct) sym;
-				var base_st = st.base_struct;
+				unowned Struct st = (Struct) sym;
+				unowned Struct? base_st = st.base_struct;
 				while (base_st != null) {
 					if (get_ccode_has_type_id (base_st)) {
 						return get_ccode_marshaller_type_name (base_st);
@@ -995,7 +994,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					return "POINTER";
 				}
 			} else if (sym is Parameter) {
-				var param = (Parameter) sym;
+				unowned Parameter param = (Parameter) sym;
 				if (param.direction != ParameterDirection.IN) {
 					return "POINTER";
 				} else {
@@ -1030,7 +1029,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private string get_default_get_value_function () {
 		if (sym is Class) {
-			var cl = (Class) sym;
+			unowned Class cl = (Class) sym;
 			if (cl.is_fundamental ()) {
 				return get_ccode_lower_case_name (cl, "value_get_");
 			} else if (cl.base_class != null) {
@@ -1041,7 +1040,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return "g_value_get_boxed";
 			}
 		} else if (sym is Enum) {
-			var en = (Enum) sym;
+			unowned Enum en = (Enum) sym;
 			if (get_ccode_has_type_id (en)) {
 				if (en.is_flags) {
 					return "g_value_get_flags";
@@ -1064,8 +1063,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 			}
 			return "g_value_get_pointer";
 		} else if (sym is Struct) {
-			var st = (Struct) sym;
-			var base_st = st.base_struct;
+			unowned Struct st = (Struct) sym;
+			unowned Struct? base_st = st.base_struct;
 			while (base_st != null) {
 				if (get_ccode_has_type_id (base_st)) {
 					return get_ccode_get_value_function (base_st);
@@ -1088,7 +1087,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private string get_default_set_value_function () {
 		if (sym is Class) {
-			var cl = (Class) sym;
+			unowned Class cl = (Class) sym;
 			if (cl.is_fundamental ()) {
 				return get_ccode_lower_case_name (cl, "value_set_");
 			} else if (cl.base_class != null) {
@@ -1099,7 +1098,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return "g_value_set_boxed";
 			}
 		} else if (sym is Enum) {
-			var en = (Enum) sym;
+			unowned Enum en = (Enum) sym;
 			if (get_ccode_has_type_id (en)) {
 				if (en.is_flags) {
 					return "g_value_set_flags";
@@ -1122,8 +1121,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 			}
 			return "g_value_set_pointer";
 		} else if (sym is Struct) {
-			var st = (Struct) sym;
-			var base_st = st.base_struct;
+			unowned Struct st = (Struct) sym;
+			unowned Struct? base_st = st.base_struct;
 			while (base_st != null) {
 				if (get_ccode_has_type_id (base_st)) {
 					return get_ccode_set_value_function (base_st);
@@ -1146,7 +1145,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private string get_default_take_value_function () {
 		if (sym is Class) {
-			var cl = (Class) sym;
+			unowned Class cl = (Class) sym;
 			if (cl.is_fundamental ()) {
 				return get_ccode_lower_case_name (cl, "value_take_");
 			} else if (cl.base_class != null) {
@@ -1157,7 +1156,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return "g_value_take_boxed";
 			}
 		} else if (sym is Enum) {
-			var en = (Enum) sym;
+			unowned Enum en = (Enum) sym;
 			if (get_ccode_has_type_id (en)) {
 				if (en.is_flags) {
 					return "g_value_take_flags";
@@ -1180,8 +1179,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 			}
 			return "g_value_set_pointer";
 		} else if (sym is Struct) {
-			var st = (Struct) sym;
-			var base_st = st.base_struct;
+			unowned Struct st = (Struct) sym;
+			unowned Struct? base_st = st.base_struct;
 			while (base_st != null) {
 				if (get_ccode_has_type_id (base_st)) {
 					return get_ccode_take_value_function (base_st);
@@ -1205,7 +1204,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private string get_default_param_spec_function () {
 		if (node is Symbol) {
 			if (sym is Class) {
-				var cl = (Class) sym;
+				unowned Class cl = (Class) sym;
 				if (cl.is_fundamental ()) {
 					return get_ccode_lower_case_name (cl, "param_spec_");
 				} else if (cl.base_class != null) {
@@ -1224,7 +1223,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				}
 				return "g_param_spec_pointer";
 			} else if (sym is Enum) {
-				var e = sym as Enum;
+				unowned Enum e = (Enum) sym;
 				if (get_ccode_has_type_id (e)) {
 					if (e.is_flags) {
 						return "g_param_spec_flags";
@@ -1281,9 +1280,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 		if (sym is Enum) {
 			return "0";
 		} else if (sym is Struct) {
-			var st = (Struct) sym;
-			var base_st = st.base_struct;
-
+			unowned Struct st = (Struct) sym;
+			unowned Struct? base_st = st.base_struct;
 			if (base_st != null) {
 				return get_ccode_default_value (base_st);
 			}
@@ -1301,8 +1299,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private string get_default_real_name () {
 		if (sym is CreationMethod) {
-			var m = (CreationMethod) sym;
-			var parent = m.parent_symbol as Class;
+			unowned CreationMethod m = (CreationMethod) sym;
+			unowned Class? parent = m.parent_symbol as Class;
 
 			if (parent == null || parent.is_compact) {
 				return name;
@@ -1316,7 +1314,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return "%s%s_%s".printf (get_ccode_lower_case_prefix (parent), infix, m.name);
 			}
 		} else if (sym is Method) {
-			var m = (Method) sym;
+			unowned Method m = (Method) sym;
 			if (m.base_method != null || m.base_interface_method != null) {
 				string m_name;
 				if (m.signal_reference != null) {
@@ -1335,8 +1333,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return name;
 			}
 		} else if (sym is PropertyAccessor) {
-			var acc = (PropertyAccessor) sym;
-			var prop = (Property) acc.prop;
+			unowned PropertyAccessor acc = (PropertyAccessor) sym;
+			unowned Property prop = (Property) acc.prop;
 			if (prop.base_property != null || prop.base_interface_property != null) {
 				if (acc.readable) {
 					return "%sreal_get_%s".printf (get_ccode_lower_case_prefix (prop.parent_symbol), prop.name);
@@ -1352,7 +1350,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private string get_default_const_name () {
 		if (node is DataType) {
-			var type = (DataType) node;
+			unowned DataType type = (DataType) node;
 			string ptr;
 			TypeSymbol t;
 			// FIXME: workaround to make constant arrays possible
@@ -1379,12 +1377,12 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private bool get_default_array_length () {
 		if (node is Parameter) {
-			var param = (Parameter) node;
+			unowned Parameter param = (Parameter) node;
 			if (param.base_parameter != null) {
 				return get_ccode_array_length (param.base_parameter);
 			}
 		} else if (node is Method) {
-			var method = (Method) node;
+			unowned Method method = (Method) node;
 			if (method.base_method != null && method.base_method != method) {
 				return get_ccode_array_length (method.base_method);
 			} else if (method.base_interface_method != null && method.base_interface_method != method) {
@@ -1396,12 +1394,12 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private bool get_default_array_null_terminated () {
 		if (node is Parameter) {
-			var param = (Parameter) node;
+			unowned Parameter param = (Parameter) node;
 			if (param.base_parameter != null) {
 				return get_ccode_array_null_terminated (param.base_parameter);
 			}
 		} else if (node is Method) {
-			var method = (Method) node;
+			unowned Method method = (Method) node;
 			if (method.base_method != null && method.base_method != method) {
 				return get_ccode_array_null_terminated (method.base_method);
 			} else if (method.base_interface_method != null && method.base_interface_method != method) {
