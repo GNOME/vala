@@ -142,15 +142,25 @@ public abstract class Vala.CodeNode {
 	 * @param name attribute name
 	 * @return     attribute
 	 */
-	public Attribute? get_attribute (string name) {
+	public unowned Attribute? get_attribute (string name) {
 		// FIXME: use hash table
-		foreach (Attribute a in attributes) {
+		foreach (unowned Attribute a in attributes) {
 			if (a.name == name) {
 				return a;
 			}
 		}
 
 		return null;
+	}
+
+	unowned Attribute get_or_create_attribute (string name) {
+		unowned Attribute? a = get_attribute (name);
+		if (a == null) {
+			var new_a = new Attribute (name, source_reference);
+			attributes.append (new_a);
+			a = new_a;
+		}
+		return (!) a;
 	}
 
 	/**
@@ -161,7 +171,7 @@ public abstract class Vala.CodeNode {
 	 * @return           true if the attribute has the given argument
 	 */
 	public bool has_attribute_argument (string attribute, string argument) {
-		var a = get_attribute (attribute);
+		unowned Attribute? a = get_attribute (attribute);
 		if (a == null) {
 			return false;
 		}
@@ -175,7 +185,7 @@ public abstract class Vala.CodeNode {
 	 * @param value true to add the attribute, false to remove it
 	 */
 	public void set_attribute (string name, bool value, SourceReference? source_reference = null) {
-		var a = get_attribute (name);
+		unowned Attribute? a = get_attribute (name);
 		if (value && a == null) {
 			attributes.append (new Attribute (name, source_reference));
 		} else if (!value && a != null) {
@@ -190,7 +200,7 @@ public abstract class Vala.CodeNode {
 	 * @param argument  argument name
 	 */
 	public void remove_attribute_argument (string attribute, string argument) {
-		var a = get_attribute (attribute);
+		unowned Attribute? a = get_attribute (attribute);
 		if (a != null) {
 			a.args.remove (argument);
 			if (a.args.size == 0) {
@@ -207,7 +217,7 @@ public abstract class Vala.CodeNode {
 	 * @return          string value
 	 */
 	public string? get_attribute_string (string attribute, string argument, string? default_value = null) {
-		var a = get_attribute (attribute);
+		unowned Attribute? a = get_attribute (attribute);
 		if (a == null) {
 			return default_value;
 		}
@@ -222,7 +232,7 @@ public abstract class Vala.CodeNode {
 	 * @return          integer value
 	 */
 	public int get_attribute_integer (string attribute, string argument, int default_value = 0) {
-		var a = get_attribute (attribute);
+		unowned Attribute? a = get_attribute (attribute);
 		if (a == null) {
 			return default_value;
 		}
@@ -240,7 +250,7 @@ public abstract class Vala.CodeNode {
 		if (attributes == null) {
 			return default_value;
 		}
-		var a = get_attribute (attribute);
+		unowned Attribute? a = get_attribute (attribute);
 		if (a == null) {
 			return default_value;
 		}
@@ -258,7 +268,7 @@ public abstract class Vala.CodeNode {
 		if (attributes == null) {
 			return default_value;
 		}
-		var a = get_attribute (attribute);
+		unowned Attribute? a = get_attribute (attribute);
 		if (a == null) {
 			return default_value;
 		}
@@ -278,11 +288,7 @@ public abstract class Vala.CodeNode {
 			return;
 		}
 
-		var a = get_attribute (attribute);
-		if (a == null) {
-			a = new Attribute (attribute, source_reference);
-			attributes.append (a);
-		}
+		unowned Attribute a = get_or_create_attribute (attribute);
 		a.add_argument (argument, "\"%s\"".printf (value));
 	}
 
@@ -294,11 +300,7 @@ public abstract class Vala.CodeNode {
 	 * @param value     integer value
 	 */
 	public void set_attribute_integer (string attribute, string argument, int value, SourceReference? source_reference = null) {
-		var a = get_attribute (attribute);
-		if (a == null) {
-			a = new Attribute (attribute, source_reference);
-			attributes.append (a);
-		}
+		unowned Attribute a = get_or_create_attribute (attribute);
 		a.add_argument (argument, value.to_string ());
 	}
 
@@ -310,11 +312,7 @@ public abstract class Vala.CodeNode {
 	 * @param value     double value
 	 */
 	public void set_attribute_double (string attribute, string argument, double value, SourceReference? source_reference = null) {
-		var a = get_attribute (attribute);
-		if (a == null) {
-			a = new Attribute (attribute, source_reference);
-			attributes.append (a);
-		}
+		unowned Attribute a = get_or_create_attribute (attribute);
 		a.add_argument (argument, value.format (new char[double.DTOSTR_BUF_SIZE]));
 	}
 
@@ -326,11 +324,7 @@ public abstract class Vala.CodeNode {
 	 * @param value     bool value
 	 */
 	public void set_attribute_bool (string attribute, string argument, bool value, SourceReference? source_reference = null) {
-		var a = get_attribute (attribute);
-		if (a == null) {
-			a = new Attribute (attribute, source_reference);
-			attributes.append (a);
-		}
+		unowned Attribute a = get_or_create_attribute (attribute);
 		a.add_argument (argument, value.to_string ());
 	}
 
@@ -340,7 +334,7 @@ public abstract class Vala.CodeNode {
 	 * @param index attribute cache index
 	 * @return      attribute cache
 	 */
-	public AttributeCache? get_attribute_cache (int index) {
+	public unowned AttributeCache? get_attribute_cache (int index) {
 		if (index >= attributes_cache.length) {
 			return null;
 		}
