@@ -34,15 +34,16 @@ public abstract class Vala.TypeRegisterFunction {
 	 * Constructs the C function from the specified type.
 	 */
 	public void init_from_type (CodeContext context, bool plugin, bool declaration_only) {
+		var type_symbol = get_type_declaration ();
 		bool use_thread_safe = !plugin;
 
 		bool fundamental = false;
-		Class cl = get_type_declaration () as Class;
+		unowned Class? cl = type_symbol as Class;
 		if (cl != null && !cl.is_compact && cl.base_class == null) {
 			fundamental = true;
 		}
 
-		string type_id_name = "%s_type_id".printf (get_ccode_lower_case_name (get_type_declaration ()));
+		string type_id_name = "%s_type_id".printf (get_ccode_lower_case_name (type_symbol));
 
 		var type_block = new CCodeBlock ();
 		CCodeDeclaration cdecl;
@@ -65,7 +66,7 @@ public abstract class Vala.TypeRegisterFunction {
 
 		CCodeFunction fun;
 		if (!plugin) {
-			fun = new CCodeFunction ("%s_get_type".printf (get_ccode_lower_case_name (get_type_declaration ())), "GType");
+			fun = new CCodeFunction ("%s_get_type".printf (get_ccode_lower_case_name (type_symbol)), "GType");
 			fun.modifiers = CCodeModifiers.CONST;
 
 			/* Function will not be prototyped anyway */
@@ -81,10 +82,10 @@ public abstract class Vala.TypeRegisterFunction {
 			declaration_fragment.append (fun.copy ());
 			fun.is_declaration = false;
 		} else {
-			fun = new CCodeFunction ("%s_register_type".printf (get_ccode_lower_case_name (get_type_declaration ())), "GType");
+			fun = new CCodeFunction ("%s_register_type".printf (get_ccode_lower_case_name (type_symbol)), "GType");
 			fun.add_parameter (new CCodeParameter ("module", "GTypeModule *"));
 
-			var get_fun = new CCodeFunction ("%s_get_type".printf (get_ccode_lower_case_name (get_type_declaration ())), "GType");
+			var get_fun = new CCodeFunction ("%s_get_type".printf (get_ccode_lower_case_name (type_symbol)), "GType");
 			get_fun.modifiers = CCodeModifiers.CONST;
 
 			get_fun.is_declaration = true;
@@ -113,7 +114,7 @@ public abstract class Vala.TypeRegisterFunction {
 		}
 
 
-		if (get_type_declaration () is ObjectTypeSymbol) {
+		if (type_symbol is ObjectTypeSymbol) {
 			var ctypedecl = new CCodeDeclaration ("const GTypeInfo");
 			ctypedecl.modifiers = CCodeModifiers.STATIC;
 			ctypedecl.add_declarator (new CCodeVariableDeclarator ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) %s, (GBaseFinalizeFunc) %s, (GClassInitFunc) %s, (GClassFinalizeFunc) %s, NULL, %s, 0, (GInstanceInitFunc) %s, %s }".printf (get_type_struct_name (), get_base_init_func_name (), (plugin) ? get_base_finalize_func_name () : "NULL", get_class_init_func_name (), get_class_finalize_func_name (), get_instance_struct_size (), get_instance_init_func_name (), type_value_table_decl_name))));
@@ -129,10 +130,10 @@ public abstract class Vala.TypeRegisterFunction {
 		type_init.add_statement (get_type_interface_init_declaration ());
 
 		CCodeFunctionCall reg_call;
-		if (get_type_declaration () is Struct) {
+		if (type_symbol is Struct) {
 			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_type_register_static"));
-		} else if (get_type_declaration () is Enum) {
-			var en = get_type_declaration () as Enum;
+		} else if (type_symbol is Enum) {
+			unowned Enum en = (Enum) type_symbol;
 			if (en.is_flags) {
 				reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_flags_register_static"));
 			} else {
@@ -149,13 +150,13 @@ public abstract class Vala.TypeRegisterFunction {
 			reg_call.add_argument (new CCodeIdentifier ("module"));
 			reg_call.add_argument (new CCodeIdentifier (get_parent_type_name ()));
 		}
-		reg_call.add_argument (new CCodeConstant ("\"%s\"".printf (get_ccode_name (get_type_declaration ()))));
-		if (get_type_declaration () is Struct) {
-			var st = (Struct) get_type_declaration ();
+		reg_call.add_argument (new CCodeConstant ("\"%s\"".printf (get_ccode_name (type_symbol))));
+		if (type_symbol is Struct) {
+			var st = (Struct) type_symbol;
 			reg_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (get_ccode_dup_function (st)), "GBoxedCopyFunc"));
 			reg_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (get_ccode_free_function (st)), "GBoxedFreeFunc"));
-		} else if (get_type_declaration () is Enum) {
-			var en = get_type_declaration () as Enum;
+		} else if (type_symbol is Enum) {
+			unowned Enum en = (Enum) type_symbol;
 			var clist = new CCodeInitializerList (); /* or during visit time? */
 
 			CCodeInitializerList clist_ev = null;
@@ -208,7 +209,7 @@ public abstract class Vala.TypeRegisterFunction {
 
 			add_class_private_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_class_private"));
 			add_class_private_call.add_argument (new CCodeIdentifier (type_id_name));
-			add_class_private_call.add_argument (new CCodeIdentifier ("sizeof (%sClassPrivate)".printf (get_ccode_name (get_type_declaration ()))));
+			add_class_private_call.add_argument (new CCodeIdentifier ("sizeof (%sClassPrivate)".printf (get_ccode_name (type_symbol))));
 			type_init.add_statement (new CCodeExpressionStatement (add_class_private_call));
 		}
 
