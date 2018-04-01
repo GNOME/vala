@@ -6145,6 +6145,14 @@ namespace Gsk {
 		public unowned Graphene.Point? peek_start ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
+	public class OffsetNode : Gsk.RenderNode {
+		[CCode (has_construct_function = false)]
+		public OffsetNode (Gsk.RenderNode child, double x_offset, double y_offset);
+		public unowned Gsk.RenderNode get_child ();
+		public double get_x_offset ();
+		public double get_y_offset ();
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class OpacityNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
 		public OpacityNode (Gsk.RenderNode child, double opacity);
@@ -6328,7 +6336,8 @@ namespace Gsk {
 		BLEND_NODE,
 		CROSS_FADE_NODE,
 		TEXT_NODE,
-		BLUR_NODE
+		BLUR_NODE,
+		OFFSET_NODE
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SCALING_FILTER_", type_id = "gsk_scaling_filter_get_type ()")]
 	[Version (since = "3.90")]
@@ -8059,6 +8068,8 @@ namespace Gtk {
 	public class FontChooserWidget : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.FontChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FontChooserWidget ();
+		[NoAccessorMethod]
+		public GLib.Action tweak_action { owned get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_frame_get_type ()")]
 	public class Frame : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
@@ -8370,7 +8381,7 @@ namespace Gtk {
 	public class IconView : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.CellLayout, Gtk.Scrollable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public IconView ();
-		public Cairo.Surface create_drag_icon (Gtk.TreePath path);
+		public Gdk.Paintable create_drag_icon (Gtk.TreePath path);
 		public void enable_model_drag_dest (Gdk.ContentFormats formats, Gdk.DragAction actions);
 		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gdk.ContentFormats formats, Gdk.DragAction actions);
 		public bool get_activate_on_single_click ();
@@ -10227,6 +10238,7 @@ namespace Gtk {
 		public Snapshot (bool record_names, Cairo.Region? clip, string name, ...);
 		public Cairo.Context append_cairo (Graphene.Rect bounds, string name, ...);
 		public void append_color (Gdk.RGBA color, Graphene.Rect bounds, string name, ...);
+		public void append_layout (Pango.Layout layout, Gdk.RGBA color, string name, ...);
 		public void append_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, Gsk.ColorStop stops, size_t n_stops, string name, ...);
 		public void append_node (Gsk.RenderNode node);
 		public void append_repeating_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, Gsk.ColorStop stops, size_t n_stops, string name, ...);
@@ -10234,6 +10246,8 @@ namespace Gtk {
 		public bool clips_rect (Cairo.RectangleInt bounds);
 		[DestroysInstance]
 		public Gsk.RenderNode free_to_node ();
+		[DestroysInstance]
+		public Gdk.Paintable free_to_paintable ();
 		public void get_offset (out int x, out int y);
 		public bool get_record_names ();
 		public void offset (int x, int y);
@@ -10255,6 +10269,7 @@ namespace Gtk {
 		public void render_insertion_cursor (Gtk.StyleContext context, double x, double y, Pango.Layout layout, int index, Pango.Direction direction);
 		public void render_layout (Gtk.StyleContext context, double x, double y, Pango.Layout layout);
 		public Gsk.RenderNode to_node ();
+		public Gdk.Paintable to_paintable ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_spin_button_get_type ()")]
 	public class SpinButton : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.Editable, Gtk.Orientable {
@@ -11185,7 +11200,7 @@ namespace Gtk {
 		public void convert_tree_to_widget_coords (int tx, int ty, out int wx, out int wy);
 		public void convert_widget_to_bin_window_coords (int wx, int wy, out int bx, out int by);
 		public void convert_widget_to_tree_coords (int wx, int wy, out int tx, out int ty);
-		public Cairo.Surface create_row_drag_icon (Gtk.TreePath path);
+		public Gdk.Paintable create_row_drag_icon (Gtk.TreePath path);
 		public void enable_model_drag_dest (Gdk.ContentFormats formats, Gdk.DragAction actions);
 		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gdk.ContentFormats formats, Gdk.DragAction actions);
 		public void expand_all ();
@@ -12679,10 +12694,13 @@ namespace Gtk {
 		MIME_TYPE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FONT_CHOOSER_LEVEL_", type_id = "gtk_font_chooser_level_get_type ()")]
+	[Flags]
 	public enum FontChooserLevel {
-		FONT,
-		FACE,
-		FAMILY
+		FAMILY,
+		STYLE,
+		SIZE,
+		VARIATIONS,
+		FEATURES
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_LOOKUP_", type_id = "gtk_icon_lookup_flags_get_type ()")]
 	[Flags]
@@ -13773,8 +13791,6 @@ namespace Gtk {
 	public static void drag_set_icon_name (Gdk.DragContext context, string icon_name, int hot_x, int hot_y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_set_icon_paintable (Gdk.DragContext context, Gdk.Paintable paintable, int hot_x, int hot_y);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_set_icon_surface (Gdk.DragContext context, Cairo.Surface surface);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_set_icon_widget (Gdk.DragContext context, Gtk.Widget widget, int hot_x, int hot_y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
