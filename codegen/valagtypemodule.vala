@@ -111,9 +111,7 @@ public class Vala.GTypeModule : GErrorModule {
 			decl_space.add_function_declaration (unref_fun);
 
 			// GParamSpec and GValue functions
-			string function_name = get_ccode_lower_case_name (cl, "param_spec_");
-
-			var function = new CCodeFunction (function_name, "GParamSpec*");
+			var function = new CCodeFunction (get_ccode_param_spec_function (cl), "GParamSpec*");
 			function.add_parameter (new CCodeParameter ("name", "const gchar*"));
 			function.add_parameter (new CCodeParameter ("nick", "const gchar*"));
 			function.add_parameter (new CCodeParameter ("blurb", "const gchar*"));
@@ -993,9 +991,7 @@ public class Vala.GTypeModule : GErrorModule {
 	}
 
 	private void add_g_param_spec_type_function (Class cl) {
-		string function_name = get_ccode_lower_case_name (cl, "param_spec_");
-
-		var function = new CCodeFunction (function_name, "GParamSpec*");
+		var function = new CCodeFunction (get_ccode_param_spec_function (cl), "GParamSpec*");
 		function.add_parameter (new CCodeParameter ("name", "const gchar*"));
 		function.add_parameter (new CCodeParameter ("nick", "const gchar*"));
 		function.add_parameter (new CCodeParameter ("blurb", "const gchar*"));
