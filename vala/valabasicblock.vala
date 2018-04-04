@@ -73,7 +73,7 @@ public class Vala.BasicBlock {
 		return predecessors;
 	}
 
-	public List<weak BasicBlock> get_successors () {
+	public List<BasicBlock> get_successors () {
 		return successors;
 	}
 
