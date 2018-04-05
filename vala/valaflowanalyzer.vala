@@ -90,6 +90,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	private bool unreachable_reported;
 	private List<JumpTarget> jump_stack = new ArrayList<JumpTarget> ();
 
+	// check_variables
 	Map<Symbol, List<Variable>> var_map;
 	Set<Variable> used_vars;
 	Map<Variable, PhiFunction> phi_functions;
@@ -431,6 +432,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				}
 			}
 		}
+
+		phi_functions = null;
+		used_vars = null;
+		var_map = null;
 	}
 
 	void check_block_variables (BasicBlock block) {
