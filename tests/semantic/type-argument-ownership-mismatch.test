@@ -1,0 +1,11 @@
+Invalid Code
+
+class Foo<T> {
+}
+
+Foo<string> foo () {
+	return new Foo<unowned string> ();
+}
+
+void main () {
+}

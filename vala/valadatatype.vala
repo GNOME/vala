@@ -305,11 +305,25 @@ public abstract class Vala.DataType : CodeNode {
 			return true;
 		}
 
+		// check for matching ownership of type-arguments
+		var type_args = get_type_arguments ();
+		var target_type_args = target_type.get_type_arguments ();
+		if (type_args.size == target_type_args.size) {
+			for (int i = 0; i < type_args.size; i++) {
+				var type_arg = type_args[i];
+				var target_type_arg = target_type_args[i];
+				// Ignore non-boxed simple-type structs
+				if (!type_arg.is_non_null_simple_type ()
+				    && type_arg.is_weak () != target_type_arg.is_weak ()) {
+					return false;
+				}
+			}
+		}
+
 		if (data_type != null && target_type.data_type != null && data_type.is_subtype_of (target_type.data_type)) {
 			var base_type = SemanticAnalyzer.get_instance_base_type_for_member(this, target_type.data_type, this);
 			// check compatibility of generic type arguments
 			var base_type_args = base_type.get_type_arguments();
-			var target_type_args = target_type.get_type_arguments();
 			if (base_type_args.size == target_type_args.size) {
 				for (int i = 0; i < base_type_args.size; i++) {
 					// mutable generic types require type argument equality,
@@ -416,6 +430,14 @@ public abstract class Vala.DataType : CodeNode {
 
 	public bool is_real_non_null_struct_type () {
 		return is_real_struct_type () && !nullable;
+	}
+
+	bool is_non_null_simple_type () {
+		unowned Struct s = data_type as Struct;
+		if (s != null && s.is_simple_type ()) {
+			return !nullable;
+		}
+		return false;
 	}
 
 	/**

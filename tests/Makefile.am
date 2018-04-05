@@ -619,6 +619,7 @@ TESTS = \
 	semantic/struct-field-initializer.test \
 	semantic/struct-invalid-base.test \
 	semantic/struct-recursive.test \
+	semantic/type-argument-ownership-mismatch.test \
 	semantic/yield-call-requires-async-context.test \
 	semantic/yield-call-requires-async-method.test \
 	semantic/yield-creation-requires-async-context.test \
