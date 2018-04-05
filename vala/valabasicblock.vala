@@ -31,12 +31,12 @@ public class Vala.BasicBlock {
 
 	// control flow graph
 	private List<weak BasicBlock> predecessors = new ArrayList<weak BasicBlock> ();
-	private List<BasicBlock> successors = new ArrayList<BasicBlock> ();
+	private List<weak BasicBlock> successors = new ArrayList<weak BasicBlock> ();
 
 	// dominator tree
-	public BasicBlock parent { get; private set; }
-	List<BasicBlock> children = new ArrayList<BasicBlock> ();
-	Set<BasicBlock> df = new HashSet<BasicBlock> ();
+	public weak BasicBlock parent { get; private set; }
+	List<weak BasicBlock> children = new ArrayList<weak BasicBlock> ();
+	Set<weak BasicBlock> df = new HashSet<weak BasicBlock> ();
 
 	Set<PhiFunction> phi_functions = new HashSet<PhiFunction> ();
 
@@ -73,7 +73,7 @@ public class Vala.BasicBlock {
 		return predecessors;
 	}
 
-	public List<BasicBlock> get_successors () {
+	public List<weak BasicBlock> get_successors () {
 		return successors;
 	}
 
@@ -82,7 +82,7 @@ public class Vala.BasicBlock {
 		block.parent = this;
 	}
 
-	public List<BasicBlock> get_children () {
+	public List<weak BasicBlock> get_children () {
 		return children;
 	}
 
@@ -90,7 +90,7 @@ public class Vala.BasicBlock {
 		df.add (block);
 	}
 
-	public Set<BasicBlock> get_dominator_frontier () {
+	public Set<weak BasicBlock> get_dominator_frontier () {
 		return df;
 	}
 
