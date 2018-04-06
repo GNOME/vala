@@ -105,8 +105,6 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAggregatorPad", lower_case_cprefix = "gst_aggregator_pad_", type_id = "gst_aggregator_pad_get_type ()")]
 		[GIR (name = "AggregatorPad")]
 		public class AggregatorPad : Gst.Pad {
-			[CCode (array_length = false)]
-			public weak void* _gst_reserved[4];
 			public weak Gst.Segment segment;
 			[CCode (has_construct_function = false)]
 			protected AggregatorPad ();
