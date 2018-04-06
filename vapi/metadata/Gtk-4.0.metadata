@@ -240,7 +240,6 @@ TreeView
   .row_expanded#method name="is_row_expanded"
 Widget
   .compute_expand#virtual_method name="compute_expand_internal"
-  .draw#method name="draw_to_cairo_context"
 Window
   .activate_default#method name="try_activate_default"
   .activate_focus#method name="try_activate_focus"
@@ -325,11 +324,9 @@ TreeView
 Widget
   .drag_*#method parent="Gtk" symbol_type="function"
   .get_allocation return_void
-  .get_clip return_void
   .grab_add parent="Gtk" symbol_type="function"
   .grab_remove parent="Gtk" symbol_type="function"
   .intersect.intersection unowned=false nullable default=null
-  .size_allocate return_void
 WidgetPath
   .free destroys_instance
 TreeModel
