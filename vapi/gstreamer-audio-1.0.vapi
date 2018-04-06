@@ -348,7 +348,6 @@ namespace Gst {
 			public size_t size;
 			public Gst.Audio.RingBufferSpec spec;
 			public int state;
-			public Gst.ClockTime timestamps;
 			public int waiting;
 			[CCode (has_construct_function = false)]
 			protected RingBuffer ();

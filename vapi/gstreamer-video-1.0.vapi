@@ -24,13 +24,11 @@ namespace Gst {
 		[GIR (name = "VideoCodecFrame")]
 		public class CodecFrame {
 			public Gst.ClockTime deadline;
-			public uint32 decode_frame_number;
 			public int distance_from_sync;
 			public Gst.ClockTime dts;
 			public Gst.ClockTime duration;
 			public weak Gst.Buffer input_buffer;
 			public weak Gst.Buffer output_buffer;
-			public uint32 presentation_frame_number;
 			public Gst.ClockTime pts;
 			public uint32 system_frame_number;
 			[CCode (simple_generics = true)]
