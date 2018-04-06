@@ -14,6 +14,8 @@ Event
         ._get_angle skip
         ._get_center skip
         ._get_distance skip
+Paintable
+        .new_empty name="empty"
 Surface abstract=false
         .create_similar_image_surface type="Cairo.ImageSurface"
         .moved_to_rect.*_rect type="Gdk.Rectangle"
