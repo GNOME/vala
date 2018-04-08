@@ -1,3 +1,14 @@
+Vala 0.40.3
+===========
+ * Various bug fixes:
+  - vala: Fix return-type of BasicBlock.get_successors()
+
+ * Bindings:
+  - gstreamer: Update from 1.15+ git master
+  - gtk+-3.0: Fix regression of StatusIcon.position_menu() [#891629]
+  - gtk+-4.0: Update to 3.93.0+ff738269
+  - libgsf-1: Update to 1.14.42+ [#794777]
+
 Vala 0.40.2
 ===========
  * Various bug fixes:
