@@ -1,3 +1,36 @@
+Vala 0.38.9
+===========
+ * Various bug fixes:
+  - valac: Always use the given "pkg-config" and respect PKG_CONFIG envar
+  - codegen:
+    + Don't append fixed-length of array fields in initializers
+    + Add source_reference to some store_local/_field() calls
+    + Don't add target fields for captured delegates without target
+    + Don't add length fields for captured fixed-length array variables
+  - Properly handle array-initializers inside struct-initializers [#622178]
+  - The rank of an array-initializer should match the target's rank [#744923]
+  - Fix recursive declaration in generic base type [#688732]
+  - valadoc: Bump glib_minor to match 0.38 series
+  - gdbus: Fix missing declaration of _fd_list for async methods [#794566]
+  - vala: Fix return-type of BasicBlock.get_successors()
+
+ * Bindings:
+  - glib-2.0: Use g_value_*et_schar instead of deprecated g_value_*et_char
+  - gobject-2.0: Add ParamSpecGType
+  - gobject-2.0: Cherry-pick some changes from 0.40
+  - gstreamer-1.0: Update to 1.14.0 and add gstreamer-webrtc-1.0 bindings
+  - gdk-3.0,gtk+-3.0: Update to 3.22.29
+  - gtk+-*.0: Fix iter parameter of TextView.backward*/forward*/move_visually()
+    [#794345]
+  - gtk+-*.0: Hide dedicated constructors of compact classes bound as structs
+    [#794733]
+  - gtk+-3.0,gtk+-4.0: Fix TreeView.is_blank_at_pos()
+  - libgnome-menu-3.0: Add deps file
+  - posix: Fix sig*set and sigprocmask parameters to be out/ref [#727425]
+  - posix: Include sys/sysmacros.h for major(), minor() and makedev() [#794651]
+  - purple: Update to 2.12.0
+  - webkit2gtk-4.0: Update to 2.20.0
+
 Vala 0.38.8
 ===========
  * Various bug fixes:
