@@ -5315,6 +5315,9 @@ namespace GLib {
 		[Version (since = "2.6")]
 		[CCode (cname = "g_get_language_names", array_length = false, array_null_terminated = true)]
 		public static unowned string[] get_language_names ();
+		[Version (since = "2.58")]
+		[CCode (cname = "g_get_language_names_with_category", array_length = false, array_null_terminated = true)]
+		public static unowned string[] get_language_names_with_category (string category_name);
 		[Version (since = "2.4")]
 		[CCode (cname = "g_strip_context", cheader_filename = "glib/gi18n-lib.h")]
 		public static unowned string strip_context (string msgid, string msgval);
