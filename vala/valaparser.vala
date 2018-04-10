@@ -3396,6 +3396,12 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			d.external = true;
 		}
+		if (!d.get_attribute_bool ("CCode", "has_typedef", true)) {
+			if (!d.external) {
+				Report.error (get_last_src (), "Delegates without definition must be external");
+			}
+			d.anonymous = true;
+		}
 		foreach (TypeParameter type_param in type_param_list) {
 			d.add_type_parameter (type_param);
 		}

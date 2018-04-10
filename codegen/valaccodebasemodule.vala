@@ -616,6 +616,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (sym.source_reference != null) {
 			sym.source_reference.file.used = true;
 		}
+		if (sym.anonymous) {
+			return !decl_space.is_header && CodeContext.get ().use_header;
+		}
 		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())) {
 			// add feature test macros
 			foreach (unowned string feature_test_macro in get_ccode_feature_test_macros (sym).split (",")) {
