@@ -406,6 +406,18 @@ namespace Gst {
 			public TimeCodeInterval.from_string (string tc_inter_str);
 			public void init (uint hours, uint minutes, uint seconds, uint frames);
 		}
+		[CCode (cheader_filename = "gst/video/video.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_vbi_parser_get_type ()")]
+		[Compact]
+		[GIR (name = "VideoVBIParser")]
+		[Version (since = "1.16")]
+		public class VBIParser {
+			[CCode (has_construct_function = false)]
+			public VBIParser (Gst.Video.Format format, uint32 pixel_width);
+			public void add_line (uint8 data);
+			public Gst.Video.VBIParser copy ();
+			public void free ();
+			public Gst.Video.VBIParserResult get_ancillary (out Gst.Video.Ancillary anc);
+		}
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GstColorBalance", lower_case_cprefix = "gst_color_balance_", type_cname = "GstColorBalanceInterface", type_id = "gst_color_balance_get_type ()")]
 		[GIR (name = "ColorBalance")]
 		public interface ColorBalance : GLib.Object {
@@ -500,6 +512,26 @@ namespace Gst {
 			[CCode (array_length = false)]
 			public weak uint stride_align[4];
 			public void reset ();
+		}
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
+		[GIR (name = "VideoAncillary")]
+		[Version (since = "1.16")]
+		public struct Ancillary {
+			public uint8 DID;
+			public uint8 SDID_block_number;
+			public uint8 data_count;
+			[CCode (array_length_cname = "data_count", array_length_type = "guint8")]
+			public weak uint8[] data;
+		}
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
+		[GIR (name = "VideoCaptionMeta")]
+		[Version (since = "1.16")]
+		public struct CaptionMeta {
+			public Gst.Meta meta;
+			public Gst.Video.CaptionType caption_type;
+			[CCode (array_length_cname = "size", array_length_type = "gsize")]
+			public weak uint8[] data;
+			public size_t size;
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoColorPrimariesInfo")]
@@ -689,6 +721,29 @@ namespace Gst {
 			SET,
 			MULT
 		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_ANCILLARY_DID_", type_id = "gst_video_ancillary_did_get_type ()")]
+		[GIR (name = "VideoAncillaryDID")]
+		public enum AncillaryDID {
+			UNDEFINED,
+			DELETION,
+			HANC_3G_AUDIO_DATA_FIRST,
+			HANC_3G_AUDIO_DATA_LAST,
+			HANC_HDTV_AUDIO_DATA_FIRST,
+			HANC_HDTV_AUDIO_DATA_LAST,
+			HANC_SDTV_AUDIO_DATA_1_FIRST,
+			HANC_SDTV_AUDIO_DATA_1_LAST,
+			CAMERA_POSITION,
+			HANC_ERROR_DETECTION,
+			HANC_SDTV_AUDIO_DATA_2_FIRST,
+			HANC_SDTV_AUDIO_DATA_2_LAST
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_ANCILLARY_DID16_S334_EIA_", type_id = "gst_video_ancillary_di_d16_get_type ()")]
+		[GIR (name = "VideoAncillaryDID16")]
+		[Version (since = "1.16")]
+		public enum AncillaryDID16 {
+			@708,
+			@608
+		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_BUFFER_FLAG_", type_id = "gst_video_buffer_flags_get_type ()")]
 		[Flags]
 		[GIR (name = "VideoBufferFlags")]
@@ -700,6 +755,16 @@ namespace Gst {
 			MULTIPLE_VIEW,
 			FIRST_IN_BUNDLE,
 			LAST
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_CAPTION_TYPE_", type_id = "gst_video_caption_type_get_type ()")]
+		[GIR (name = "VideoCaptionType")]
+		[Version (since = "1.16")]
+		public enum CaptionType {
+			UNKNOWN,
+			CEA608_RAW,
+			CEA608_IN_CEA708_RAW,
+			CEA708_RAW,
+			CEA708_CDP
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_CHROMA_FLAG_", type_id = "gst_video_chroma_flags_get_type ()")]
 		[Flags]
@@ -1176,6 +1241,14 @@ namespace Gst {
 			BT2020_12,
 			ADOBERGB
 		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_VBI_PARSER_RESULT_", type_id = "gst_video_vbi_parser_result_get_type ()")]
+		[GIR (name = "VideoVBIParserResult")]
+		[Version (since = "1.16")]
+		public enum VBIParserResult {
+			DONE,
+			OK,
+			ERROR
+		}
 		[CCode (cheader_filename = "gst/video/video.h", has_target = false)]
 		public delegate bool AffineTransformationGetMatrix (Gst.Video.AffineTransformationMeta meta, float matrix);
 		[CCode (cheader_filename = "gst/video/video.h", instance_pos = 2.9)]
@@ -1343,6 +1416,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_affine_transformation_meta")]
 		[Version (since = "1.8")]
 		public static unowned Gst.Video.AffineTransformationMeta? buffer_add_video_affine_transformation_meta (Gst.Buffer buffer);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_caption_meta")]
+		[Version (since = "1.16")]
+		public static unowned Gst.Video.CaptionMeta? buffer_add_video_caption_meta (Gst.Buffer buffer, Gst.Video.CaptionType caption_type, [CCode (array_length_cname = "size", array_length_pos = 3.1, array_length_type = "gsize")] uint8[] data);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_gl_texture_upload_meta")]
 		public static unowned Gst.Video.GLTextureUploadMeta? buffer_add_video_gl_texture_upload_meta (Gst.Buffer buffer, Gst.Video.GLTextureOrientation texture_orientation, uint n_textures, Gst.Video.GLTextureType texture_type, [CCode (delegate_target_pos = 5.5)] Gst.Video.GLTextureUpload upload, GLib.BoxedCopyFunc user_data_copy, GLib.BoxedFreeFunc user_data_free);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_meta")]
@@ -1373,6 +1449,10 @@ namespace Gst {
 		public static void buffer_pool_config_set_video_alignment (Gst.Structure config, Gst.Video.Alignment align);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool calculate_display_ratio (out uint dar_n, out uint dar_d, uint video_width, uint video_height, uint video_par_n, uint video_par_d, uint display_par_n, uint display_par_d);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static GLib.Type caption_meta_api_get_type ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static unowned Gst.MetaInfo? caption_meta_get_info ();
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Video.ChromaSite chroma_from_string (string s);
 		[CCode (cheader_filename = "gst/video/video.h")]
