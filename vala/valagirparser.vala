@@ -85,7 +85,8 @@ public class Vala.GirParser : CodeVisitor {
 		RETURN_VOID,
 		RETURNS_MODIFIED_POINTER,
 		DELEGATE_TARGET_CNAME,
-		FINISH_VFUNC_NAME;
+		FINISH_VFUNC_NAME,
+		NO_ACCESSOR_METHOD;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -1058,6 +1059,10 @@ public class Vala.GirParser : CodeVisitor {
 								}
 							}
 						}
+					}
+
+					if (metadata.has_argument (ArgumentType.NO_ACCESSOR_METHOD)) {
+						prop.set_attribute ("NoAccessorMethod", metadata.get_bool (ArgumentType.NO_ACCESSOR_METHOD));
 					}
 
 					if (prop.get_attribute ("NoAccessorMethod") != null) {
