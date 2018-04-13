@@ -237,6 +237,9 @@ RecentFilterInfo
   .applications nullable
   .groups nullable
 
+// Bug #: confused girparser
+Radio*.group#property no_accessor_method
+
 // Skipped for G-I, but usable from Vala
 Clipboard
   .get_selection skip=false
