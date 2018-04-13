@@ -2940,6 +2940,8 @@ namespace GLib {
 		public int get_second ();
 		public int get_microsecond ();
 		public double get_seconds ();
+		[Version (since = "2.58")]
+		public unowned TimeZone get_timezone ();
 		public int64 to_unix ();
 		public bool to_timeval (out TimeVal tv);
 		public TimeSpan get_utc_offset ();
@@ -2970,6 +2972,8 @@ namespace GLib {
 		public int find_interval (TimeType type, int64 time);
 		public int adjust_time (TimeType type, ref int64 time);
 		public unowned string get_abbreviation (int interval);
+		[Version (since = "2.58")]
+		public unowned string get_identifier ();
 		public int32 get_offset (int interval);
 		public bool is_dst (int interval);
 	}
