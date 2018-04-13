@@ -51,7 +51,7 @@ namespace Gsf {
 		public unowned string? get_link ();
 		public unowned string get_name ();
 		public unowned GLib.Value? get_val ();
-		public void set_link (owned string link);
+		public void set_link (owned string? link);
 		public void set_val (owned GLib.Value val);
 		public GLib.Value? swap_val (owned GLib.Value val);
 	}
@@ -117,9 +117,9 @@ namespace Gsf {
 		public bool copy (Gsf.Output output);
 		public void dump (bool dump_as_hex);
 		[CCode (vfunc_name = "Dup")]
-		public virtual Gsf.Input dup () throws GLib.Error;
+		public virtual Gsf.Input? dup () throws GLib.Error;
 		public static GLib.Quark error_id ();
-		public Gsf.InfileMSVBA find_vba () throws GLib.Error;
+		public Gsf.InfileMSVBA? find_vba () throws GLib.Error;
 		public unowned GLib.DateTime get_modtime ();
 		[CCode (cname = "gsf_input_mmap_new", has_construct_function = false)]
 		public Input.mmap_new (string filename) throws GLib.Error;
@@ -318,9 +318,9 @@ namespace Gsf {
 		protected Output ();
 		[CCode (vfunc_name = "Close")]
 		public virtual bool close ();
-		public unowned GLib.Error error ();
+		public unowned GLib.Error? error ();
 		public static GLib.Quark error_id ();
-		public unowned GLib.DateTime get_modtime ();
+		public unowned GLib.DateTime? get_modtime ();
 		public bool printf (string format, ...);
 		public bool puts (string line);
 		[CCode (vfunc_name = "Seek")]
@@ -545,7 +545,7 @@ namespace Gsf {
 		public void add_int (string? id, int val);
 		public void add_uint (string? id, uint val);
 		public unowned string end_element ();
-		public unowned Gsf.Output get_output ();
+		public unowned Gsf.Output? get_output ();
 		public bool get_pretty_print ();
 		public void set_doc_type (string type);
 		public bool set_pretty_print (bool pp);

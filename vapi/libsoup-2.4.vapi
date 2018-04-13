@@ -368,7 +368,7 @@ namespace Soup {
 		[Version (since = "2.32")]
 		public unowned string get_domain ();
 		[Version (since = "2.32")]
-		public unowned Soup.Date get_expires ();
+		public unowned Soup.Date? get_expires ();
 		[Version (since = "2.32")]
 		public bool get_http_only ();
 		[Version (since = "2.32")]
@@ -1536,7 +1536,8 @@ namespace Soup {
 		INVALID_HOSTNAME,
 		IS_IP_ADDRESS,
 		NOT_ENOUGH_DOMAINS,
-		NO_BASE_DOMAIN;
+		NO_BASE_DOMAIN,
+		NO_PSL_DATA;
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", instance_pos = 2.9)]
