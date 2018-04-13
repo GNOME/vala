@@ -368,7 +368,7 @@ namespace Soup {
 		[Version (since = "2.32")]
 		public unowned string get_domain ();
 		[Version (since = "2.32")]
-		public unowned Soup.Date get_expires ();
+		public unowned Soup.Date? get_expires ();
 		[Version (since = "2.32")]
 		public bool get_http_only ();
 		[Version (since = "2.32")]
