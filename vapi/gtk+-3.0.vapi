@@ -6041,6 +6041,7 @@ namespace Gtk {
 		public void set_group (GLib.SList<Gtk.RadioAction>? group);
 		[Version (since = "2.10")]
 		public int current_value { get; set; }
+		[NoAccessorMethod]
 		[Version (since = "2.4")]
 		public Gtk.RadioAction group { set; }
 		[NoAccessorMethod]
@@ -6067,6 +6068,7 @@ namespace Gtk {
 		public RadioButton.with_mnemonic (GLib.SList<Gtk.RadioButton>? group, string label);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public RadioButton.with_mnemonic_from_widget (Gtk.RadioButton? radio_group_member, string label);
+		[NoAccessorMethod]
 		public Gtk.RadioButton group { set; }
 		[Version (since = "2.4")]
 		public virtual signal void group_changed ();
@@ -6097,6 +6099,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.4")]
 		public RadioMenuItem.with_mnemonic_from_widget (Gtk.RadioMenuItem? group, string? label);
+		[NoAccessorMethod]
 		[Version (since = "2.8")]
 		public Gtk.RadioMenuItem group { set; }
 		public virtual signal void group_changed ();
@@ -6124,6 +6127,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkToolItem*")]
 		[Version (deprecated = true, deprecated_since = "3.10", since = "2.4")]
 		public RadioToolButton.with_stock_from_widget (Gtk.RadioToolButton? group, string stock_id);
+		[NoAccessorMethod]
 		[Version (since = "2.4")]
 		public Gtk.RadioToolButton group { set; }
 	}

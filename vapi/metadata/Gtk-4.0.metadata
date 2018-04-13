@@ -216,6 +216,9 @@ RecentData
   .display_name nullable
   .description nullable
 
+// Bug #: confused girparser
+Radio*.group#property no_accessor_method
+
 // Skipped for G-I, but usable from Vala
 FlowBox
   .bind_model skip=false
