@@ -166,7 +166,7 @@ namespace WebKit {
 			[Version (since = "2.18")]
 			public ulong get_length ();
 			[Version (since = "2.18")]
-			public unowned WebKit.DOM.ClientRect item (ulong index);
+			public WebKit.DOM.ClientRect item (ulong index);
 			public ulong length { get; }
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_comment_get_type ()")]
