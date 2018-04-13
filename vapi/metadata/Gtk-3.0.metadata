@@ -360,6 +360,9 @@ RecentFilterInfo
 // Bug #: element-type properties
 Settings.color_hash type="GLib.HashTable<string,Gdk.Color>"
 
+// Bug #: confused girparser
+Radio*.group#property no_accessor_method
+
 // Skipped for G-I, but usable from Vala
 FlowBox
   .bind_model skip=false
