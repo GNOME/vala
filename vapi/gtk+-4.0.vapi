@@ -5016,11 +5016,10 @@ namespace Gdk {
 		public unowned Cairo.Context? get_cairo_context ();
 		public Cairo.Region? get_clip ();
 		public unowned Gdk.DrawContext get_paint_context ();
-		public unowned Gdk.Surface get_surface ();
-		public bool is_valid ();
 		public Cairo.Region clip { owned get; construct; }
 		public Gdk.DrawContext paint_context { get; construct; }
-		public Gdk.Surface surface { get; construct; }
+		[NoAccessorMethod]
+		public Gdk.Surface surface { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_event_get_type ()")]
 	public class Event : GLib.Object {
@@ -5250,7 +5249,6 @@ namespace Gdk {
 		public void coords_from_parent (double parent_x, double parent_y, out double x, out double y);
 		public void coords_to_parent (double x, double y, out double parent_x, out double parent_y);
 		public Gdk.GLContext create_gl_context () throws GLib.Error;
-		public Cairo.ImageSurface create_similar_image_surface (int format, int width, int height, int scale);
 		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
 		public Gdk.VulkanContext create_vulkan_context () throws GLib.Error;
 		public void deiconify ();
@@ -5379,6 +5377,7 @@ namespace Gdk {
 		public static Gdk.Texture from_resource (string resource_path);
 		public int get_height ();
 		public int get_width ();
+		public bool save_to_png (string filename);
 		public int height { get; construct; }
 		public int width { get; construct; }
 	}
@@ -5980,8 +5979,6 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool cairo_get_clip_rectangle (Cairo.Context cr, out Gdk.Rectangle rect);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static unowned Gdk.DrawingContext? cairo_get_drawing_context (Cairo.Context cr);
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_rectangle (Cairo.Context cr, Gdk.Rectangle rectangle);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_region (Cairo.Context cr, Cairo.Region region);
@@ -5991,8 +5988,6 @@ namespace Gdk {
 	public static void cairo_set_source_pixbuf (Cairo.Context cr, Gdk.Pixbuf pixbuf, double pixbuf_x, double pixbuf_y);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_set_source_rgba (Cairo.Context cr, Gdk.RGBA rgba);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Cairo.Surface cairo_surface_create_from_pixbuf (Gdk.Pixbuf pixbuf, int scale, Gdk.Surface? for_surface);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_surface_upload_to_gl (Cairo.Surface surface, int target, int width, int height, Gdk.GLContext? context);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -11635,7 +11630,6 @@ namespace Gtk {
 		public void set_opacity (double opacity);
 		public void set_parent (Gtk.Widget parent);
 		public void set_parent_surface (Gdk.Surface parent_surface);
-		public void set_realized (bool realized);
 		public void set_receives_default (bool receives_default);
 		public void set_sensitive (bool sensitive);
 		public void set_size_request (int width, int height);

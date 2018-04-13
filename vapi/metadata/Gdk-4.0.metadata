@@ -17,7 +17,6 @@ Event
 Paintable
         .new_empty name="empty"
 Surface abstract=false
-        .create_similar_image_surface type="Cairo.ImageSurface"
         .moved_to_rect.*_rect type="Gdk.Rectangle"
 Rectangle struct
         .x skip
