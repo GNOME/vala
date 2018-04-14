@@ -4191,6 +4191,7 @@ namespace Gtk {
 		public RadioMenuItem.with_mnemonic (GLib.SList<Gtk.RadioMenuItem>? group, string label);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public RadioMenuItem.with_mnemonic_from_widget (Gtk.RadioMenuItem? group, string label);
+		[NoAccessorMethod]
 		public Gtk.RadioMenuItem group { set; }
 		public virtual signal void group_changed ();
 	}
@@ -4211,6 +4212,7 @@ namespace Gtk {
 		public void set_group (GLib.SList<Gtk.RadioToolButton>? group);
 		[CCode (has_construct_function = false, type = "GtkToolItem*")]
 		public RadioToolButton.with_stock_from_widget (Gtk.RadioToolButton? group, string stock_id);
+		[NoAccessorMethod]
 		public Gtk.RadioToolButton group { set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_range_get_type ()")]
