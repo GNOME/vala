@@ -2392,6 +2392,40 @@ public class Vala.GTypeModule : GErrorModule {
 			Report.error (prop.source_reference, "Property 'type' not allowed");
 			return;
 		}
+
+		if (prop.initializer != null) {
+			if (cl == null || cl.is_compact) {
+				Report.warning (prop.source_reference, "Only properties in non-compact classes are allowed to have initializers");
+			} else if (prop.set_accessor != null && !prop.set_accessor.automatic_body) {
+				// generate a custom initializer if it couldn't be done at class_init time
+				bool has_spec_initializer = prop.property_type.data_type is Enum;
+				if (!has_spec_initializer && prop.property_type.data_type is Struct) {
+					var param_spec_func = get_ccode_param_spec_function (prop.property_type.data_type);
+					has_spec_initializer = param_spec_func != "g_param_spec_boxed";
+				}
+				if (!has_spec_initializer) {
+					push_context (instance_init_context);
+
+					prop.initializer.emit (this);
+
+					var inst_ma = new MemberAccess.simple ("this");
+					inst_ma.target_value = new GLibValue (get_data_type_for_symbol (cl), new CCodeIdentifier ("self"), true);
+
+					var prop_init_value = (GLibValue) prop.initializer.target_value;
+					if (prop_init_value.delegate_target_cvalue == null) {
+						prop_init_value.delegate_target_cvalue = new CCodeConstant ("NULL");
+					}
+					if (prop_init_value.delegate_target_destroy_notify_cvalue == null) {
+						prop_init_value.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
+					}
+					store_property (prop, inst_ma, prop_init_value);
+
+					temp_ref_values.clear ();
+					pop_context ();
+				}
+			}
+		}
+
 		base.visit_property (prop);
 	}
 

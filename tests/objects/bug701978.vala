@@ -16,7 +16,20 @@ public class Bar : Object {
 	}
 }
 
+public class Baz {
+	private Foo _foo;
+
+	public Foo foo {
+		get { return _foo; }
+		set { _foo = value; }
+		default = Foo ();
+	}
+}
+
 void main () {
 	var bar = new Bar();
 	assert (bar.foo.val == 55);
+
+	var baz = new Baz();
+	assert (baz.foo.val == 55);
 }
