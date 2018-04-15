@@ -41,7 +41,8 @@ namespace Archive {
 	[CCode (cname="archive_close_callback")]
 	public delegate int CloseCallback (Archive archive);
 
-	// In reality a "void (*_progress_func)(void *)" parameter without name.
+	// "void (*_progress_func)(void *)" function pointer without typedef.
+	[CCode (has_typedef = false)]
 	public delegate void ExtractProgressCallback ();
 
 	[CCode (cprefix="ARCHIVE_", cname="int", has_type_id = false)]
@@ -374,12 +375,14 @@ namespace Archive {
 		public Result set_options (ExtractFlags flags);
 		public Result set_standard_lookup ();
 
-		// HACK, they have no name in C. May not work correctly.
-		[CCode (instance_pos = 0, cname="gid_t")]
+		// "gid_t (*)(void *, const char *, gid_t)"
+		[CCode (has_typedef = false, instance_pos = 0)]
 		public delegate Posix.gid_t GroupLookup (string group, Posix.gid_t gid);
-		[CCode (instance_pos = 0, cname="uid_t")]
+		// "uid_t (*)(void *, const char *, uid_t)"
+		[CCode (has_typedef = false, instance_pos = 0)]
 		public delegate Posix.uid_t UserLookup (string user, Posix.uid_t uid);
-		[CCode (instance_pos = 0, cname="void")]
+		// "void (*)(void *)"
+		[CCode (has_typedef = false, instance_pos = 0)]
 		public delegate void Cleanup ();
 
 		public Result set_group_lookup (
