@@ -704,6 +704,7 @@ public class Vala.Method : Subroutine, Callable {
 		}
 		context.analyzer.current_symbol = this;
 
+		return_type.floating_reference = returns_floating_reference;
 		return_type.check (context);
 
 		var init_attr = get_attribute ("ModuleInit");
