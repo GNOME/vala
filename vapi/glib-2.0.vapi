@@ -5664,7 +5664,7 @@ namespace GLib {
 		[Version (since = "2.38")]
 		public Variant.printf (string format_string, ...);
 		[Version (since = "2.38")]
-		public Variant.take_string (string str);
+		public Variant.take_string (owned string str);
 
 		[Version (since = "2.40")]
 		public static void parse_error_print_context (GLib.VariantParseError error, string source_str);
