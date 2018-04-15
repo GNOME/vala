@@ -1,3 +1,17 @@
+Vala 0.40.4
+===========
+ * Various improvements and bug fixes:
+  - girparser: Add support for NoAccessorMethod metadata
+
+ * Bindings:
+  - glib-2.0: Mark str parameter of Variant.take_string() as owned
+  - gstreamer: Update from 1.15+ git master
+  - gtk+-*.0: Set NoAccessorMethod on Gtk.Radio*.group properties
+    (Regression in gtk+-3.0)
+  - gtk+-4.0: Update to 3.93.0+fc6018f1
+  - json-glib-1.0: Mark return-type of gvariant_deserialize*() as nullable
+  - webkit2gtk-4.0: Update to 2.20.1
+
 Vala 0.40.3
 ===========
  * Various bug fixes:
