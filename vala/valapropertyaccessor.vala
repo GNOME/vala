@@ -184,6 +184,12 @@ public class Vala.PropertyAccessor : Subroutine {
 			return false;
 		}
 
+		if (body != null && prop.is_abstract) {
+			error = true;
+			Report.error (source_reference, "Accessor of abstract property `%s' cannot have body".printf (prop.get_full_name ()));
+			return false;
+		}
+
 		if (body != null) {
 			if (writable || construction) {
 				body.scope.add (value_parameter.name, value_parameter);

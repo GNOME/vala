@@ -1,0 +1,12 @@
+Invalid Code
+
+abstract class Foo {
+    public abstract int bar {
+		get {
+			return 23;
+		}
+    }
+}
+
+void main () {
+}
