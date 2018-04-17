@@ -353,9 +353,9 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 			generate_dynamic_dbus_call (expr);
 		} else if (m != null && m == symbol_from_string ("GLib.Bus.get_proxy")) {
 			generate_get_proxy_call (expr);
-		} else {
-			base.visit_method_call (expr);
 		}
+
+		base.visit_method_call (expr);
 	}
 
 	private void generate_get_proxy_call (MethodCall expr) {
@@ -369,7 +369,6 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 				accept_external (iface);
 			}
 		}
-		base.visit_method_call (expr);
 	}
 
 	private void generate_dynamic_dbus_call (MethodCall expr) {
@@ -392,6 +391,5 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 
 		pop_builder ();
 		expr.call.symbol_reference = wrapper;
-		base.visit_method_call (expr);
 	}
 }
