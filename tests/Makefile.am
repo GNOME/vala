@@ -310,6 +310,9 @@ TESTS = \
 	objects/bug783897.vala \
 	objects/bug788964.vala \
 	objects/bug795225-1.test \
+	objects/bug795225-2.test \
+	objects/bug795225-3.test \
+	objects/bug795225-4.test \
 	errors/catch-error-code.vala \
 	errors/errors.vala \
 	errors/bug567181.vala \

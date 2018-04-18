@@ -1,0 +1,13 @@
+Invalid Code
+
+class Foo : Object {
+	int _fub = 0;
+
+	public int bar {
+		set { _fub = value / 2; }
+		default = 42;
+	}
+}
+
+void main () {
+}
