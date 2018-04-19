@@ -7,6 +7,7 @@ SUBDIRS = \
 	$(NULL)
 
 AM_CPPFLAGS = \
+	-include config.h \
 	$(COVERAGE_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	-I$(top_srcdir)/gee \

@@ -23,6 +23,7 @@ install-sh
 libtool
 m4
 missing
+mkinstalldirs
 ltmain.sh
 ylwrap
 compile
@@ -31,6 +32,17 @@ stamp-h1
 .tarball-version
 .version
 .DS_Store
+
+ABOUT-NLS
+po/*.gmo
+po/*.header
+po/*.sed
+po/*.sin
+po/Makefile.in.in
+po/Makevars.template
+po/POTFILES
+po/Rules-quot
+po/stamp-po
 
 *.gcda
 *.gcno

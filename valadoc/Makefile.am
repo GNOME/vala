@@ -9,6 +9,7 @@ SUBDIRS = \
 	$(NULL)
 
 AM_CFLAGS = \
+	-include config.h \
 	-DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\" \
 	-I$(top_srcdir)/libvaladoc/ \

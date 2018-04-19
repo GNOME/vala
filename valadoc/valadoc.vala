@@ -290,7 +290,11 @@ public class ValaDoc : Object {
 	}
 
 	static int main (string[] args) {
+		// initialize locale
 		Intl.setlocale (LocaleCategory.ALL, "");
+		Intl.bind_textdomain_codeset (Config.GETTEXT_PACKAGE, "UTF-8");
+		Intl.textdomain (Config.GETTEXT_PACKAGE);
+
 		ErrorReporter reporter = new ErrorReporter();
 
 		try {

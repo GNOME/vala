@@ -611,6 +611,8 @@ class Vala.Compiler {
 	static int main (string[] args) {
 		// initialize locale
 		Intl.setlocale (LocaleCategory.ALL, "");
+		Intl.bind_textdomain_codeset (Config.GETTEXT_PACKAGE, "UTF-8");
+		Intl.textdomain (Config.GETTEXT_PACKAGE);
 
 		if (Path.get_basename (args[0]) == "vala" || Path.get_basename (args[0]) == "vala" + Config.PACKAGE_SUFFIX) {
 			return run_source (args);

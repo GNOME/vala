@@ -54,6 +54,13 @@ case "${host_os}" in
 esac
 AM_CONDITIONAL([HAVE_LINUX], [test "$build_linux" = "yes"])
 
+GETTEXT_PACKAGE=AC_PACKAGE_NAME
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Define the gettext package to be used])
+
+AM_GNU_GETTEXT_VERSION([0.18.3])
+AM_GNU_GETTEXT([external])
+
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
 PKG_PROG_PKG_CONFIG([0.21])
@@ -229,6 +236,7 @@ AC_CONFIG_FILES([Makefile
            valadoc/doclets/gtkdoc/Makefile
            valadoc/icons/Makefile
            valadoc/tests/Makefile
+           po/Makefile.in
 ])
 
 AC_OUTPUT

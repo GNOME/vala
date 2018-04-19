@@ -216,7 +216,11 @@ class Vala.VAPIGen {
 	}
 	
 	static int main (string[] args) {
+		// initialize locale
 		Intl.setlocale (LocaleCategory.ALL, "");
+		Intl.bind_textdomain_codeset (Config.GETTEXT_PACKAGE, "UTF-8");
+		Intl.textdomain (Config.GETTEXT_PACKAGE);
+
 		try {
 			var opt_context = new OptionContext ("- Vala API Generator");
 			opt_context.set_help_enabled (true);

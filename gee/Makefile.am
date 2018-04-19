@@ -3,6 +3,7 @@ include $(top_srcdir)/Makefile.common
 NULL =
 
 AM_CPPFLAGS = \
+	-include config.h \
 	$(COVERAGE_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(NULL)
