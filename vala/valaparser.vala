@@ -2882,28 +2882,6 @@ public class Vala.Parser : CodeVisitor {
 		}
 		expect (TokenType.CLOSE_BRACE);
 
-		if (!prop.is_abstract && prop.source_type == SourceFileType.SOURCE) {
-			bool empty_get = (prop.get_accessor != null && prop.get_accessor.body == null);
-			bool empty_set = (prop.set_accessor != null && prop.set_accessor.body == null);
-
-			if (empty_get != empty_set) {
-				if (empty_get) {
-					Report.error (prop.source_reference, "property getter must have a body");
-				} else if (empty_set) {
-					Report.error (prop.source_reference, "property setter must have a body");
-				}
-				prop.error = true;
-			}
-
-			if (empty_get && empty_set) {
-				/* automatic property accessor body generation */
-				var variable_type = prop.property_type.copy ();
-				prop.field = new Field ("_%s".printf (prop.name), variable_type, prop.initializer, prop.source_reference);
-				prop.field.access = SymbolAccessibility.PRIVATE;
-				prop.field.binding = prop.binding;
-			}
-		}
-
 		parent.add_property (prop);
 	}
 

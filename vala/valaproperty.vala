@@ -97,9 +97,34 @@ public class Vala.Property : Symbol, Lockable {
 	public bool overrides { get; set; }
 
 	/**
-	 * Reference the the Field that holds this property
+	 * Reference the Field that holds this property
 	 */
-	public Field field { get; set; }
+	public Field? field {
+		get {
+			if (!_field_checked) {
+				if (!is_abstract && source_type == SourceFileType.SOURCE) {
+					bool empty_get = (get_accessor != null && get_accessor.body == null);
+					bool empty_set = (set_accessor != null && set_accessor.body == null);
+					if (empty_get != empty_set) {
+						if (empty_get) {
+							Report.error (source_reference, "Property getter must have a body");
+						} else if (empty_set) {
+							Report.error (source_reference, "Property setter must have a body");
+						}
+						error = true;
+					}
+					if (empty_get && empty_set) {
+						/* automatic property accessor body generation */
+						_field = new Field ("_%s".printf (name), property_type.copy (), initializer, source_reference);
+						_field.access = SymbolAccessibility.PRIVATE;
+						_field.binding = binding;
+					}
+				}
+				_field_checked = true;
+			}
+			return _field;
+		}
+	}
 
 	/**
 	 * Specifies whether this field may only be accessed with an instance of
@@ -198,6 +223,8 @@ public class Vala.Property : Symbol, Lockable {
 	private string? _nick;
 	private string? _blurb;
 	private bool? _notify;
+	private Field? _field;
+	private bool _field_checked;
 
 	/**
 	 * Creates a new property.

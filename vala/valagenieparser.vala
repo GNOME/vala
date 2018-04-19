@@ -3202,22 +3202,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			expect_terminator ();
 		}
 
-		if (!prop.is_abstract && scanner.source_file.file_type == SourceFileType.SOURCE) {
-			var needs_var = (readonly && (prop.get_accessor != null && prop.get_accessor.body == null));
-
-			if (!needs_var) {
-				needs_var = (prop.get_accessor != null && prop.get_accessor.body == null) || (prop.set_accessor != null && prop.set_accessor.body == null);
-			}
-
-			if (needs_var) {
-				/* automatic property accessor body generation */
-				var variable_type = prop.property_type.copy ();
-				prop.field = new Field ("_%s".printf (prop.name), variable_type, prop.initializer, prop.source_reference);
-				prop.field.access = SymbolAccessibility.PRIVATE;
-				prop.field.binding = prop.binding;
-			}
-		}
-
 		return prop;
 	}
 
