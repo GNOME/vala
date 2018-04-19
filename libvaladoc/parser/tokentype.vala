@@ -126,7 +126,7 @@ public class Valadoc.TokenType : Object {
 			ALIGN_TOP = new TokenType.basic ("^");
 			ALIGN_BOTTOM = new TokenType.basic ("v");
 			SINGLE_QUOTE_2 = new TokenType.basic ("''");
-			SLASH_2 = new TokenType.basic ("//");
+			SLASH_2 = new TokenType.basic ("""//""");
 			UNDERSCORE_2 = new TokenType.basic ("__");
 			BACK_QUOTE_2 = new TokenType.basic ("``");
 			OPEN_BRACE = new TokenType.basic ("{");

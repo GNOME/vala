@@ -537,9 +537,9 @@ public class Gtkdoc.Generator : Api.Visitor {
 			gcomment = add_symbol (filename, cl.get_set_value_function_cname ());
 			gcomment.brief_comment = "Set the contents of a %s derived <link linkend=\"GValue\"><type>GValue</type></link> to @v_object."
 				.printf (get_docbook_type_link (cl));
-			gcomment.long_comment = "<link linkend=\"%s\"><function>%s()</function></link> increases the reference count of @v_object (the <link linkend=\"GValue\"><type>GValue</type></link> holds a reference to @v_object). If you do not wish to increase the reference count of the object (i.e. you wish to pass your current reference to the <link linkend=\"GValue\"><type>GValue</type></link> because you no longer need it), use <link linkend=\"%s\"><function>%s()</function></link> instead.
+			gcomment.long_comment = """<link linkend="%s"><function>%s()</function></link> increases the reference count of @v_object (the <link linkend="GValue"><type>GValue</type></link> holds a reference to @v_object). If you do not wish to increase the reference count of the object (i.e. you wish to pass your current reference to the <link linkend="GValue"><type>GValue</type></link> because you no longer need it), use <link linkend="%s"><function>%s()</function></link> instead.
 
-It is important that your <link linkend=\"GValue\"><type>GValue</type></link> holds a reference to @v_object (either its own, or one it has taken) to ensure that the object won't be destroyed while the <link linkend=\"GValue\"><type>GValue</type></link> still exists)."
+It is important that your <link linkend="GValue"><type>GValue</type></link> holds a reference to @v_object (either its own, or one it has taken) to ensure that the object won't be destroyed while the <link linkend="GValue"><type>GValue</type></link> still exists)."""
 				.printf (to_docbook_id (cl.get_set_value_function_cname ()),
 						 cl.get_set_value_function_cname (),
 						 to_docbook_id (cl.get_take_value_function_cname ()),
