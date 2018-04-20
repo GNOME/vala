@@ -149,7 +149,7 @@ public class Vala.CastExpression : Expression {
 		}
 
 		if (inner.value_type == null) {
-			Report.error (source_reference, "Invalid cast expression");
+			Report.error (source_reference, _("Invalid cast expression"));
 			error = true;
 			return false;
 		}

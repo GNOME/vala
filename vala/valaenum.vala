@@ -74,7 +74,7 @@ public class Vala.Enum : TypeSymbol {
 	 */
 	public override void add_method (Method m) {
 		if (m is CreationMethod) {
-			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
+			Report.error (m.source_reference, _("construction methods may only be declared within classes and structs"));
 
 			m.error = true;
 			return;
@@ -167,7 +167,7 @@ public class Vala.Enum : TypeSymbol {
 		context.analyzer.current_symbol = this;
 
 		if (values.size <= 0) {
-			Report.error (source_reference, "Enum `%s' requires at least one value".printf (get_full_name ()));
+			Report.error (source_reference, _("Enum `%s' requires at least one value").printf (get_full_name ()));
 			error = true;
 			return false;
 		}

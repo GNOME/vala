@@ -391,11 +391,11 @@ public class Vala.Namespace : Symbol {
 		}
 
 		if (f.binding == MemberBinding.INSTANCE) {
-			Report.error (f.source_reference, "instance members are not allowed outside of data types");
+			Report.error (f.source_reference, _("instance members are not allowed outside of data types"));
 			f.error = true;
 			return;
 		} else if (f.binding == MemberBinding.CLASS) {
-			Report.error (f.source_reference, "class members are not allowed outside of classes");
+			Report.error (f.source_reference, _("class members are not allowed outside of classes"));
 			f.error = true;
 			return;
 		}
@@ -425,16 +425,16 @@ public class Vala.Namespace : Symbol {
 		}
 
 		if (m is CreationMethod) {
-			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
+			Report.error (m.source_reference, _("construction methods may only be declared within classes and structs"));
 			m.error = true;
 			return;
 		}
 		if (m.binding == MemberBinding.INSTANCE) {
-			Report.error (m.source_reference, "instance members are not allowed outside of data types");
+			Report.error (m.source_reference, _("instance members are not allowed outside of data types"));
 			m.error = true;
 			return;
 		} else if (m.binding == MemberBinding.CLASS) {
-			Report.error (m.source_reference, "class members are not allowed outside of classes");
+			Report.error (m.source_reference, _("class members are not allowed outside of classes"));
 			m.error = true;
 			return;
 		}

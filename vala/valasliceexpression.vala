@@ -132,13 +132,13 @@ public class Vala.SliceExpression : Expression {
 
 		if (container.value_type == null) {
 			error = true;
-			Report.error (container.source_reference, "Invalid container expression");
+			Report.error (container.source_reference, _("Invalid container expression"));
 			return false;
 		}
 
 		if (lvalue) {
 			error = true;
-			Report.error (container.source_reference, "Slice expressions cannot be used as lvalue");
+			Report.error (container.source_reference, _("Slice expressions cannot be used as lvalue"));
 			return false;
 		}
 
@@ -150,11 +150,11 @@ public class Vala.SliceExpression : Expression {
 			/* check if the index is of type integer */
 			if (!(start.value_type is IntegerType || start.value_type is EnumValueType)) {
 				error = true;
-				Report.error (start.source_reference, "Expression of integer type expected");
+				Report.error (start.source_reference, _("Expression of integer type expected"));
 			}
 			if (!(stop.value_type is IntegerType || stop.value_type is EnumValueType)) {
 				error = true;
-				Report.error (stop.source_reference, "Expression of integer type expected");
+				Report.error (stop.source_reference, _("Expression of integer type expected"));
 			}
 		} else {
 			var slice_method = container.value_type.get_member ("slice") as Method;
@@ -168,7 +168,7 @@ public class Vala.SliceExpression : Expression {
 			}
 
 			error = true;
-			Report.error (source_reference, "The expression `%s' does not denote an array".printf (container.value_type.to_string ()));
+			Report.error (source_reference, _("The expression `%s' does not denote an array").printf (container.value_type.to_string ()));
 		}
 
 		return !error;

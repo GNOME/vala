@@ -57,7 +57,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 	 */
 	public override void add_method (Method m) {
 		if (m is CreationMethod) {
-			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
+			Report.error (m.source_reference, _("construction methods may only be declared within classes and structs"));
 
 			m.error = true;
 			return;
@@ -115,7 +115,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 		checked = true;
 
 		if (codes.size <= 0) {
-			Report.error (source_reference, "Error domain `%s' requires at least one code".printf (get_full_name ()));
+			Report.error (source_reference, _("Error domain `%s' requires at least one code").printf (get_full_name ()));
 			error = true;
 			return false;
 		}

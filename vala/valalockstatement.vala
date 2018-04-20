@@ -109,7 +109,7 @@ public class Vala.LockStatement : CodeNode, Statement {
 		if (!(resource is MemberAccess && resource.symbol_reference is Lockable)) {
 			error = true;
 			resource.error = true;
-			Report.error (resource.source_reference, "Expression is either not a member access or does not denote a lockable member");
+			Report.error (resource.source_reference, _("Expression is either not a member access or does not denote a lockable member"));
 			return false;
 		}
 
@@ -117,7 +117,7 @@ public class Vala.LockStatement : CodeNode, Statement {
 		if (resource.symbol_reference.parent_symbol != context.analyzer.current_class) {
 			error = true;
 			resource.error = true;
-			Report.error (resource.source_reference, "Only members of the current class are lockable");
+			Report.error (resource.source_reference, _("Only members of the current class are lockable"));
 			return false;
 		}
 
@@ -125,7 +125,7 @@ public class Vala.LockStatement : CodeNode, Statement {
 		if (context.analyzer.current_class.is_compact) {
 			error = true;
 			resource.error = true;
-			Report.error (resource.source_reference, "Only members of the non-compact classes are lockable");
+			Report.error (resource.source_reference, _("Only members of the non-compact classes are lockable"));
 			return false;
 		}
 

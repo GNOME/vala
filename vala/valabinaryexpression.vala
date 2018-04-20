@@ -202,7 +202,7 @@ public class Vala.BinaryExpression : Expression {
 			DataType local_type = null;
 			bool cast_non_null = false;
 			if (left.value_type is NullType && right.value_type != null) {
-				Report.warning (left.source_reference, "left operand is always null");
+				Report.warning (left.source_reference, _("left operand is always null"));
 				local_type = right.value_type.copy ();
 				local_type.nullable = true;
 				if (!right.value_type.nullable) {
@@ -216,7 +216,7 @@ public class Vala.BinaryExpression : Expression {
 				}
 				if (context.experimental_non_null) {
 					if (!local_type.nullable) {
-						Report.warning (left.source_reference, "left operand is never null");
+						Report.warning (left.source_reference, _("left operand is never null"));
 						if (right.value_type != null && right.value_type.nullable) {
 							local_type.nullable = true;
 							cast_non_null = true;
@@ -295,25 +295,25 @@ public class Vala.BinaryExpression : Expression {
 		}
 
 		if (left.value_type == null) {
-			Report.error (left.source_reference, "invalid left operand");
+			Report.error (left.source_reference, _("invalid left operand"));
 			error = true;
 			return false;
 		}
 
 		if (operator != BinaryOperator.IN && right.value_type == null) {
-			Report.error (right.source_reference, "invalid right operand");
+			Report.error (right.source_reference, _("invalid right operand"));
 			error = true;
 			return false;
 		}
 
 		if (left.value_type is FieldPrototype || left.value_type is PropertyPrototype) {
 			error = true;
-			Report.error (left.source_reference, "Access to instance member `%s' denied".printf (left.symbol_reference.get_full_name ()));
+			Report.error (left.source_reference, _("Access to instance member `%s' denied").printf (left.symbol_reference.get_full_name ()));
 			return false;
 		}
 		if (right.value_type is FieldPrototype || right.value_type is PropertyPrototype) {
 			error = true;
-			Report.error (right.source_reference, "Access to instance member `%s' denied".printf (right.symbol_reference.get_full_name ()));
+			Report.error (right.source_reference, _("Access to instance member `%s' denied").printf (right.symbol_reference.get_full_name ()));
 			return false;
 		}
 
@@ -328,7 +328,7 @@ public class Vala.BinaryExpression : Expression {
 
 			if (right.value_type == null || right.value_type.data_type != context.analyzer.string_type.data_type) {
 				error = true;
-				Report.error (source_reference, "Operands must be strings");
+				Report.error (source_reference, _("Operands must be strings"));
 				return false;
 			}
 
@@ -345,7 +345,7 @@ public class Vala.BinaryExpression : Expression {
 
 			if (right.value_type == null || !right.value_type.compatible (array_type.element_type)) {
 				error = true;
-				Report.error (source_reference, "Incompatible operand");
+				Report.error (source_reference, _("Incompatible operand"));
 				return false;
 			}
 
@@ -362,7 +362,7 @@ public class Vala.BinaryExpression : Expression {
 				var pointer_type = (PointerType) left.value_type;
 				if (pointer_type.base_type is VoidType) {
 					error = true;
-					Report.error (source_reference, "Pointer arithmetic not supported for `void*'");
+					Report.error (source_reference, _("Pointer arithmetic not supported for `void*'"));
 					return false;
 				}
 
@@ -388,7 +388,7 @@ public class Vala.BinaryExpression : Expression {
 
 			if (value_type == null) {
 				error = true;
-				Report.error (source_reference, "Arithmetic operation not supported for types `%s' and `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
+				Report.error (source_reference, _("Arithmetic operation not supported for types `%s' and `%s'").printf (left.value_type.to_string (), right.value_type.to_string ()));
 				return false;
 			}
 		} else if (operator == BinaryOperator.MOD
@@ -401,7 +401,7 @@ public class Vala.BinaryExpression : Expression {
 
 			if (value_type == null) {
 				error = true;
-				Report.error (source_reference, "Arithmetic operation not supported for types `%s' and `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
+				Report.error (source_reference, _("Arithmetic operation not supported for types `%s' and `%s'").printf (left.value_type.to_string (), right.value_type.to_string ()));
 				return false;
 			}
 		} else if (operator == BinaryOperator.LESS_THAN
@@ -425,7 +425,7 @@ public class Vala.BinaryExpression : Expression {
 
 				if (resulting_type == null) {
 					error = true;
-					Report.error (source_reference, "Relational operation not supported for types `%s' and `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
+					Report.error (source_reference, _("Relational operation not supported for types `%s' and `%s'").printf (left.value_type.to_string (), right.value_type.to_string ()));
 					return false;
 				}
 
@@ -444,7 +444,7 @@ public class Vala.BinaryExpression : Expression {
 
 			if (!right.value_type.compatible (left.value_type)
 			    && !left.value_type.compatible (right.value_type)) {
-				Report.error (source_reference, "Equality operation: `%s' and `%s' are incompatible".printf (right.value_type.to_string (), left.value_type.to_string ()));
+				Report.error (source_reference, _("Equality operation: `%s' and `%s' are incompatible").printf (right.value_type.to_string (), left.value_type.to_string ()));
 				error = true;
 				return false;
 			}
@@ -481,7 +481,7 @@ public class Vala.BinaryExpression : Expression {
 			   || operator == BinaryOperator.OR) {
 			if (!left.value_type.compatible (context.analyzer.bool_type) || !right.value_type.compatible (context.analyzer.bool_type)) {
 				error = true;
-				Report.error (source_reference, "Operands must be boolean");
+				Report.error (source_reference, _("Operands must be boolean"));
 			}
 			left.target_type.nullable = false;
 			right.target_type.nullable = false;
@@ -495,23 +495,23 @@ public class Vala.BinaryExpression : Expression {
 				right.target_type.nullable = false;
 			} else if (right.value_type is ArrayType) {
 				if (!left.value_type.compatible (((ArrayType) right.value_type).element_type)) {
-					Report.error (source_reference, "Cannot look for `%s' in `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
+					Report.error (source_reference, _("Cannot look for `%s' in `%s'").printf (left.value_type.to_string (), right.value_type.to_string ()));
 				}
 			} else {
 				// otherwise require a bool contains () method
 				var contains_method = right.value_type.get_member ("contains") as Method;
 				if (contains_method == null) {
-					Report.error (source_reference, "`%s' does not have a `contains' method".printf (right.value_type.to_string ()));
+					Report.error (source_reference, _("`%s' does not have a `contains' method").printf (right.value_type.to_string ()));
 					error = true;
 					return false;
 				}
 				if (contains_method.get_parameters ().size != 1) {
-					Report.error (source_reference, "`%s' must have one parameter".printf (contains_method.get_full_name ()));
+					Report.error (source_reference, _("`%s' must have one parameter").printf (contains_method.get_full_name ()));
 					error = true;
 					return false;
 				}
 				if (!contains_method.return_type.compatible (context.analyzer.bool_type)) {
-					Report.error (source_reference, "`%s' must return a boolean value".printf (contains_method.get_full_name ()));
+					Report.error (source_reference, _("`%s' must return a boolean value").printf (contains_method.get_full_name ()));
 					error = true;
 					return false;
 				}

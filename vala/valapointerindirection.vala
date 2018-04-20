@@ -96,13 +96,13 @@ public class Vala.PointerIndirection : Expression {
 			var pointer_type = (PointerType) inner.value_type;
 			if (pointer_type.base_type is ReferenceType || pointer_type.base_type is VoidType) {
 				error = true;
-				Report.error (source_reference, "Pointer indirection not supported for this expression");
+				Report.error (source_reference, _("Pointer indirection not supported for this expression"));
 				return false;
 			}
 			value_type = pointer_type.base_type;
 		} else {
 			error = true;
-			Report.error (source_reference, "Pointer indirection not supported for this expression");
+			Report.error (source_reference, _("Pointer indirection not supported for this expression"));
 			return false;
 		}
 

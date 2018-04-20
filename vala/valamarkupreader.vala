@@ -57,7 +57,7 @@ public class Vala.MarkupReader {
 			line = 1;
 			column = 1;
 		} catch (FileError e) {
-			Report.error (null, "Unable to map file `%s': %s".printf (filename, e.message));
+			Report.error (null, _("Unable to map file `%s': %s").printf (filename, e.message));
 		}
 	}
 
@@ -101,7 +101,7 @@ public class Vala.MarkupReader {
 			if (u != (unichar) (-1)) {
 				current += u.to_utf8 (null);
 			} else {
-				Report.error (null, "invalid UTF-8 character");
+				Report.error (null, _("invalid UTF-8 character"));
 			}
 		}
 		if (current == begin) {
@@ -230,7 +230,7 @@ public class Vala.MarkupReader {
 		while (current < end && current[0] != end_char) {
 			unichar u = ((string) current).get_char_validated ((long) (end - current));
 			if (u == (unichar) (-1)) {
-				Report.error (null, "invalid UTF-8 character");
+				Report.error (null, _("invalid UTF-8 character"));
 			} else if (u == '&') {
 				char* next_pos = current + u.to_utf8 (null);
 				if (((string) next_pos).has_prefix ("amp;")) {

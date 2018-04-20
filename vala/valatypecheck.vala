@@ -105,7 +105,7 @@ public class Vala.TypeCheck : Expression {
 		type_reference.check (context);
 
 		if (expression.value_type == null) {
-			Report.error (expression.source_reference, "invalid left operand");
+			Report.error (expression.source_reference, _("invalid left operand"));
 			error = true;
 			return false;
 		}
@@ -117,13 +117,13 @@ public class Vala.TypeCheck : Expression {
 		}
 
 		if (type_reference is ErrorType && !(expression.value_type is ErrorType)) {
-			Report.error (expression.source_reference, "`%s' must be an error".printf (expression.to_string ()));
+			Report.error (expression.source_reference, _("`%s' must be an error").printf (expression.to_string ()));
 			error = true;
 			return false;
 		}
 
 		if (context.profile == Profile.GOBJECT && type_reference.has_type_arguments ()) {
-			Report.warning (_data_type.source_reference, "Type argument list has no effect");
+			Report.warning (_data_type.source_reference, _("Type argument list has no effect"));
 		}
 
 		value_type = context.analyzer.bool_type;

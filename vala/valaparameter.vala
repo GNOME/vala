@@ -143,7 +143,7 @@ public class Vala.Parameter : Variable {
 		if (variable_type != null) {
 			if (variable_type is VoidType) {
 				error = true;
-				Report.error (source_reference, "'void' not supported as parameter type");
+				Report.error (source_reference, _("'void' not supported as parameter type"));
 				return false;
 			}
 			variable_type.check (context);
@@ -154,7 +154,7 @@ public class Vala.Parameter : Variable {
 
 			if (params_array && !(variable_type is ArrayType)) {
 				error = true;
-				Report.error (source_reference, "parameter array expected");
+				Report.error (source_reference, _("parameter array expected"));
 				return false;
 			}
 
@@ -173,15 +173,15 @@ public class Vala.Parameter : Variable {
 			if (initializer is NullLiteral
 			    && !variable_type.nullable
 			    && direction != ParameterDirection.OUT) {
-				Report.warning (source_reference, "`null' incompatible with parameter type `%s'".printf (variable_type.to_string ()));
+				Report.warning (source_reference, _("`null' incompatible with parameter type `%s'").printf (variable_type.to_string ()));
 			} else if (!(initializer is NullLiteral) && direction == ParameterDirection.OUT) {
-				Report.error (source_reference, "only `null' is allowed as default value for out parameters");
+				Report.error (source_reference, _("only `null' is allowed as default value for out parameters"));
 			} else if (direction == ParameterDirection.IN && !initializer.value_type.compatible (variable_type)) {
-				Report.error (initializer.source_reference, "Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), variable_type.to_string ()));
+				Report.error (initializer.source_reference, _("Cannot convert from `%s' to `%s'").printf (initializer.value_type.to_string (), variable_type.to_string ()));
 			} else if (direction == ParameterDirection.REF) {
-				Report.error (source_reference, "default value not allowed for ref parameter");
+				Report.error (source_reference, _("default value not allowed for ref parameter"));
 			} else if (!initializer.is_accessible (this)) {
-				Report.error (initializer.source_reference, "default value is less accessible than method `%s'".printf (parent_symbol.get_full_name ()));
+				Report.error (initializer.source_reference, _("default value is less accessible than method `%s'").printf (parent_symbol.get_full_name ()));
 			}
 		}
 
@@ -189,7 +189,7 @@ public class Vala.Parameter : Variable {
 			// check whether parameter type is at least as accessible as the method
 			if (!context.analyzer.is_type_accessible (this, variable_type)) {
 				error = true;
-				Report.error (source_reference, "parameter type `%s' is less accessible than method `%s'".printf (variable_type.to_string (), parent_symbol.get_full_name ()));
+				Report.error (source_reference, _("parameter type `%s' is less accessible than method `%s'").printf (variable_type.to_string (), parent_symbol.get_full_name ()));
 			}
 		}
 

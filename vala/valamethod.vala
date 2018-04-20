@@ -615,7 +615,7 @@ public class Vala.Method : Subroutine, Callable {
 				if (!compatible (base_method, out invalid_match)) {
 					error = true;
 					var base_method_type = new MethodType (base_method);
-					Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method_type.to_prototype_string (), invalid_match));
+					Report.error (source_reference, _("overriding method `%s' is incompatible with base method `%s': %s.").printf (get_full_name (), base_method_type.to_prototype_string (), invalid_match));
 					return;
 				}
 
@@ -684,12 +684,12 @@ public class Vala.Method : Subroutine, Callable {
 		} else if (invalid_base_match != null) {
 			error = true;
 			var base_method_type = new MethodType (invalid_base_match);
-			Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method_type.to_prototype_string (), invalid_error));
+			Report.error (source_reference, _("overriding method `%s' is incompatible with base method `%s': %s.").printf (get_full_name (), base_method_type.to_prototype_string (), invalid_error));
 			return;
 		}
 
 		if (base_interface_type != null) {
-			Report.error (source_reference, "`%s': no suitable interface method found to implement".printf (get_full_name ()));
+			Report.error (source_reference, _("`%s': no suitable interface method found to implement").printf (get_full_name ()));
 		}
 	}
 
@@ -711,14 +711,14 @@ public class Vala.Method : Subroutine, Callable {
 			var cl = (Class) parent_symbol;
 			if (cl.is_compact && cl.base_class != null) {
 				error = true;
-				Report.error (source_reference, "Abstract and virtual methods may not be declared in derived compact classes");
+				Report.error (source_reference, _("Abstract and virtual methods may not be declared in derived compact classes"));
 				return false;
 			}
 		}
 
 		if (is_variadic () && (is_abstract || is_virtual)) {
 			error = true;
-			Report.error (source_reference, "Abstract and virtual methods may not be variadic. Use a `va_list' parameter instead of `...'.");
+			Report.error (source_reference, _("Abstract and virtual methods may not be variadic. Use a `va_list' parameter instead of `...'."));
 			return false;
 		}
 
@@ -727,47 +727,47 @@ public class Vala.Method : Subroutine, Callable {
 				var cl = (Class) parent_symbol;
 				if (!cl.is_abstract) {
 					error = true;
-					Report.error (source_reference, "Abstract methods may not be declared in non-abstract classes");
+					Report.error (source_reference, _("Abstract methods may not be declared in non-abstract classes"));
 					return false;
 				}
 			} else if (!(parent_symbol is Interface)) {
 				error = true;
-				Report.error (source_reference, "Abstract methods may not be declared outside of classes and interfaces");
+				Report.error (source_reference, _("Abstract methods may not be declared outside of classes and interfaces"));
 				return false;
 			}
 		} else if (is_virtual) {
 			if (!(parent_symbol is Class) && !(parent_symbol is Interface)) {
 				error = true;
-				Report.error (source_reference, "Virtual methods may not be declared outside of classes and interfaces");
+				Report.error (source_reference, _("Virtual methods may not be declared outside of classes and interfaces"));
 				return false;
 			}
 		} else if (overrides) {
 			if (!(parent_symbol is Class)) {
 				error = true;
-				Report.error (source_reference, "Methods may not be overridden outside of classes");
+				Report.error (source_reference, _("Methods may not be overridden outside of classes"));
 				return false;
 			}
 		} else if (access == SymbolAccessibility.PROTECTED) {
 			if (!(parent_symbol is Class) && !(parent_symbol is Interface)) {
 				error = true;
-				Report.error (source_reference, "Protected methods may not be declared outside of classes and interfaces");
+				Report.error (source_reference, _("Protected methods may not be declared outside of classes and interfaces"));
 				return false;
 			}
 		}
 
 		if (is_abstract && body != null) {
-			Report.error (source_reference, "Abstract methods cannot have bodies");
+			Report.error (source_reference, _("Abstract methods cannot have bodies"));
 		} else if ((is_abstract || is_virtual) && external && !external_package && !parent_symbol.external) {
-			Report.error (source_reference, "Extern methods cannot be abstract or virtual");
+			Report.error (source_reference, _("Extern methods cannot be abstract or virtual"));
 		} else if (external && body != null) {
-			Report.error (source_reference, "Extern methods cannot have bodies");
+			Report.error (source_reference, _("Extern methods cannot have bodies"));
 		} else if (!is_abstract && !external && source_type == SourceFileType.SOURCE && body == null) {
-			Report.error (source_reference, "Non-abstract, non-extern methods must have bodies");
+			Report.error (source_reference, _("Non-abstract, non-extern methods must have bodies"));
 		}
 
 		if (coroutine && !external_package && !context.has_package ("gio-2.0")) {
 			error = true;
-			Report.error (source_reference, "gio-2.0 package required for async methods");
+			Report.error (source_reference, _("gio-2.0 package required for async methods"));
 			return false;
 		}
 
@@ -794,7 +794,7 @@ public class Vala.Method : Subroutine, Callable {
 		if (parameters.size == 1 && parameters[0].ellipsis && body != null && binding != MemberBinding.INSTANCE) {
 			// accept just `...' for external methods and instance methods
 			error = true;
-			Report.error (parameters[0].source_reference, "Named parameter required before `...'");
+			Report.error (parameters[0].source_reference, _("Named parameter required before `...'"));
 		}
 
 		var optional_param = false;
@@ -802,14 +802,14 @@ public class Vala.Method : Subroutine, Callable {
 			param.check (context);
 			if (coroutine && param.direction == ParameterDirection.REF) {
 				error = true;
-				Report.error (param.source_reference, "Reference parameters are not supported for async methods");
+				Report.error (param.source_reference, _("Reference parameters are not supported for async methods"));
 			}
 			// TODO: begin and end parameters must be checked separately for coroutines
 			if (coroutine) {
 				continue;
 			}
 			if (optional_param && param.initializer == null && !param.ellipsis) {
-				Report.warning (param.source_reference, "parameter without default follows parameter with default");
+				Report.warning (param.source_reference, _("parameter without default follows parameter with default"));
 			} else if (param.initializer != null) {
 				optional_param = true;
 			}
@@ -836,7 +836,7 @@ public class Vala.Method : Subroutine, Callable {
 			// check whether error type is at least as accessible as the method
 			if (!context.analyzer.is_type_accessible (this, error_type)) {
 				error = true;
-				Report.error (source_reference, "error type `%s' is less accessible than method `%s'".printf (error_type.to_string (), get_full_name ()));
+				Report.error (source_reference, _("error type `%s' is less accessible than method `%s'").printf (error_type.to_string (), get_full_name ()));
 				return false;
 			}
 		}
@@ -865,14 +865,14 @@ public class Vala.Method : Subroutine, Callable {
 		if (context.analyzer.current_struct != null) {
 			if (is_abstract || is_virtual || overrides) {
 				error = true;
-				Report.error (source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract".printf (get_full_name ()));
+				Report.error (source_reference, _("A struct member `%s' cannot be marked as override, virtual, or abstract").printf (get_full_name ()));
 				return false;
 			}
 		} else if (overrides && base_method == null) {
-			Report.error (source_reference, "`%s': no suitable method found to override".printf (get_full_name ()));
+			Report.error (source_reference, _("`%s': no suitable method found to override").printf (get_full_name ()));
 		} else if ((is_abstract || is_virtual || overrides) && access == SymbolAccessibility.PRIVATE) {
 			error = true;
-			Report.error (source_reference, "Private member `%s' cannot be marked as override, virtual, or abstract".printf (get_full_name ()));
+			Report.error (source_reference, _("Private member `%s' cannot be marked as override, virtual, or abstract").printf (get_full_name ()));
 			return false;
 		}
 
@@ -883,7 +883,7 @@ public class Vala.Method : Subroutine, Callable {
 					m.checked = true;
 					m.error = true;
 					error = true;
-					Report.error (source_reference, "`%s' already contains an implementation for `%s'".printf (cl.get_full_name (), base_interface_method.get_full_name ()));
+					Report.error (source_reference, _("`%s' already contains an implementation for `%s'").printf (cl.get_full_name (), base_interface_method.get_full_name ()));
 					Report.notice (m.source_reference, "previous implementation of `%s' was here".printf (base_interface_method.get_full_name ()));
 					return false;
 				}
@@ -894,13 +894,13 @@ public class Vala.Method : Subroutine, Callable {
 		context.analyzer.current_symbol = old_symbol;
 
 		if (!external_package && !overrides && !hides && get_hidden_member () != null) {
-			Report.warning (source_reference, "%s hides inherited method `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
+			Report.warning (source_reference, _("%s hides inherited method `%s'. Use the `new' keyword if hiding was intentional").printf (get_full_name (), get_hidden_member ().get_full_name ()));
 		}
 
 		// check whether return type is at least as accessible as the method
 		if (!context.analyzer.is_type_accessible (this, return_type)) {
 			error = true;
-			Report.error (source_reference, "return type `%s' is less accessible than method `%s'".printf (return_type.to_string (), get_full_name ()));
+			Report.error (source_reference, _("return type `%s' is less accessible than method `%s'").printf (return_type.to_string (), get_full_name ()));
 			return false;
 		}
 
@@ -913,7 +913,7 @@ public class Vala.Method : Subroutine, Callable {
 
 			if (!precondition.value_type.compatible (context.analyzer.bool_type)) {
 				error = true;
-				Report.error (precondition.source_reference, "Precondition must be boolean");
+				Report.error (precondition.source_reference, _("Precondition must be boolean"));
 				return false;
 			}
 		}
@@ -927,7 +927,7 @@ public class Vala.Method : Subroutine, Callable {
 
 			if (!postcondition.value_type.compatible (context.analyzer.bool_type)) {
 				error = true;
-				Report.error (postcondition.source_reference, "Postcondition must be boolean");
+				Report.error (postcondition.source_reference, _("Postcondition must be boolean"));
 				return false;
 			}
 		}
@@ -947,7 +947,7 @@ public class Vala.Method : Subroutine, Callable {
 				}
 				bool is_dynamic_error = body_error_type is ErrorType && ((ErrorType) body_error_type).dynamic_error;
 				if (!can_propagate_error && !is_dynamic_error) {
-					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+					Report.warning (body_error_type.source_reference, _("unhandled error `%s'").printf (body_error_type.to_string()));
 				}
 			}
 		}
@@ -980,7 +980,7 @@ public class Vala.Method : Subroutine, Callable {
 					}
 				}
 				if (!throws_gerror && !(throws_gioerror && throws_gdbuserror)) {
-					Report.warning (source_reference, "DBus methods are recommended to throw at least `GLib.Error' or `GLib.DBusError, GLib.IOError'");
+					Report.warning (source_reference, _("DBus methods are recommended to throw at least `GLib.Error' or `GLib.DBusError, GLib.IOError'"));
 				}
 			}
 		}
@@ -988,22 +988,22 @@ public class Vala.Method : Subroutine, Callable {
 		if (is_possible_entry_point (context)) {
 			if (context.entry_point != null) {
 				error = true;
-				Report.error (source_reference, "program already has an entry point `%s'".printf (context.entry_point.get_full_name ()));
+				Report.error (source_reference, _("program already has an entry point `%s'").printf (context.entry_point.get_full_name ()));
 				return false;
 			}
 			entry_point = true;
 			context.entry_point = this;
 
 			if (tree_can_fail) {
-				Report.error (source_reference, "\"main\" method cannot throw errors");
+				Report.error (source_reference, _("`main' method cannot throw errors"));
 			}
 
 			if (is_inline) {
-				Report.error (source_reference, "\"main\" method cannot be inline");
+				Report.error (source_reference, _("`main' method cannot be inline"));
 			}
 
 			if (coroutine) {
-				Report.error (source_reference, "\"main\" method cannot be async");
+				Report.error (source_reference, _("`main' method cannot be async"));
 			}
 		}
 

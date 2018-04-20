@@ -138,7 +138,7 @@ public class Vala.InitializerList : Expression {
 
 		if (target_type == null) {
 			error = true;
-			Report.error (source_reference, "initializer list used for unknown type");
+			Report.error (source_reference, _("initializer list used for unknown type"));
 			return false;
 		} else if (target_type is ArrayType) {
 			/* initializer is used as array initializer */
@@ -198,7 +198,7 @@ public class Vala.InitializerList : Expression {
 				while (field == null) {
 					if (!field_it.next ()) {
 						error = true;
-						Report.error (e.source_reference, "too many expressions in initializer list for `%s'".printf (target_type.to_string ()));
+						Report.error (e.source_reference, _("too many expressions in initializer list for `%s'").printf (target_type.to_string ()));
 						return false;
 					}
 					field = field_it.get ();
@@ -215,7 +215,7 @@ public class Vala.InitializerList : Expression {
 			}
 		} else {
 			error = true;
-			Report.error (source_reference, "initializer list used for `%s', which is neither array nor struct".printf (target_type.to_string ()));
+			Report.error (source_reference, _("initializer list used for `%s', which is neither array nor struct").printf (target_type.to_string ()));
 			return false;
 		}
 
@@ -227,7 +227,7 @@ public class Vala.InitializerList : Expression {
 		foreach (Expression e in get_initializers ()) {
 			if (e.value_type == null) {
 				error = true;
-				Report.error (e.source_reference, "expression type not allowed as initializer");
+				Report.error (e.source_reference, _("expression type not allowed as initializer"));
 				continue;
 			}
 
@@ -237,7 +237,7 @@ public class Vala.InitializerList : Expression {
 			} else if (!e.value_type.compatible (e.target_type)) {
 				error = true;
 				e.error = true;
-				Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (e.target_type.to_string (), e.value_type.to_string ()));
+				Report.error (e.source_reference, _("Expected initializer of type `%s' but got `%s'").printf (e.target_type.to_string (), e.value_type.to_string ()));
 			}
 		}
 

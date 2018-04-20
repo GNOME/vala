@@ -162,7 +162,7 @@ public class Vala.UnaryExpression : Expression {
 
 		if (inner.value_type is FieldPrototype || inner.value_type is PropertyPrototype) {
 			error = true;
-			Report.error (inner.source_reference, "Access to instance member `%s' denied".printf (inner.symbol_reference.get_full_name ()));
+			Report.error (inner.source_reference, _("Access to instance member `%s' denied").printf (inner.symbol_reference.get_full_name ()));
 			return false;
 		}
 
@@ -170,7 +170,7 @@ public class Vala.UnaryExpression : Expression {
 			// integer or floating point type
 			if (!is_numeric_type (inner.value_type)) {
 				error = true;
-				Report.error (source_reference, "Operator not supported for `%s'".printf (inner.value_type.to_string ()));
+				Report.error (source_reference, _("Operator not supported for `%s'").printf (inner.value_type.to_string ()));
 				return false;
 			}
 
@@ -179,7 +179,7 @@ public class Vala.UnaryExpression : Expression {
 			// boolean type
 			if (!inner.value_type.compatible (context.analyzer.bool_type)) {
 				error = true;
-				Report.error (source_reference, "Operator not supported for `%s'".printf (inner.value_type.to_string ()));
+				Report.error (source_reference, _("Operator not supported for `%s'").printf (inner.value_type.to_string ()));
 				return false;
 			}
 
@@ -188,7 +188,7 @@ public class Vala.UnaryExpression : Expression {
 			// integer type
 			if (!is_integer_type (inner.value_type) && !(inner.value_type is EnumValueType)) {
 				error = true;
-				Report.error (source_reference, "Operator not supported for `%s'".printf (inner.value_type.to_string ()));
+				Report.error (source_reference, _("Operator not supported for `%s'").printf (inner.value_type.to_string ()));
 				return false;
 			}
 
@@ -198,14 +198,14 @@ public class Vala.UnaryExpression : Expression {
 			// integer type
 			if (!is_integer_type (inner.value_type)) {
 				error = true;
-				Report.error (source_reference, "Operator not supported for `%s'".printf (inner.value_type.to_string ()));
+				Report.error (source_reference, _("Operator not supported for `%s'").printf (inner.value_type.to_string ()));
 				return false;
 			}
 
 			var ma = find_member_access (inner);
 			if (ma == null) {
 				error = true;
-				Report.error (source_reference, "Prefix operators not supported for this expression");
+				Report.error (source_reference, _("Prefix operators not supported for this expression"));
 				return false;
 			}
 
@@ -227,7 +227,7 @@ public class Vala.UnaryExpression : Expression {
 				value_type = inner.value_type;
 			} else {
 				error = true;
-				Report.error (source_reference, "ref and out method arguments can only be used with fields, parameters, local variables, and array element access");
+				Report.error (source_reference, _("ref and out method arguments can only be used with fields, parameters, local variables, and array element access"));
 				return false;
 			}
 		} else {

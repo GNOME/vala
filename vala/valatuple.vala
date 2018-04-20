@@ -73,7 +73,7 @@ public class Vala.Tuple : Expression {
 
 		checked = true;
 
-		Report.error (source_reference, "tuples are not supported");
+		Report.error (source_reference, _("tuples are not supported"));
 		error = true;
 		return false;
 	}

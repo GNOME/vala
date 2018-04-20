@@ -115,7 +115,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		    (!(expression.value_type is IntegerType) &&
 		     !(expression.value_type is EnumValueType) &&
 		     !expression.value_type.compatible (context.analyzer.string_type))) {
-			Report.error (expression.source_reference, "Integer or string expression expected");
+			Report.error (expression.source_reference, _("Integer or string expression expected"));
 			error = true;
 			return false;
 		}
@@ -142,7 +142,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 
 					if (value != null && !labelset.add (value)) {
 						error = true;
-						Report.error (label.expression.source_reference, "Switch statement already contains this label");
+						Report.error (label.expression.source_reference, _("Switch statement already contains this label"));
 					}
 				}
 			}

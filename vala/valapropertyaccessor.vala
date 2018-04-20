@@ -180,13 +180,13 @@ public class Vala.PropertyAccessor : Subroutine {
 
 		if ((prop.is_abstract || prop.is_virtual || prop.overrides) && access == SymbolAccessibility.PRIVATE) {
 			error = true;
-			Report.error (source_reference, "Property `%s' with private accessor cannot be marked as abstract, virtual or override".printf (prop.get_full_name ()));
+			Report.error (source_reference, _("Property `%s' with private accessor cannot be marked as abstract, virtual or override").printf (prop.get_full_name ()));
 			return false;
 		}
 
 		if (body != null && prop.is_abstract) {
 			error = true;
-			Report.error (source_reference, "Accessor of abstract property `%s' cannot have body".printf (prop.get_full_name ()));
+			Report.error (source_reference, _("Accessor of abstract property `%s' cannot have body").printf (prop.get_full_name ()));
 			return false;
 		}
 
@@ -201,7 +201,7 @@ public class Vala.PropertyAccessor : Subroutine {
 			body.get_error_types (error_types);
 			foreach (DataType body_error_type in error_types) {
 				if (!((ErrorType) body_error_type).dynamic_error) {
-					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+					Report.warning (body_error_type.source_reference, _("unhandled error `%s'").printf (body_error_type.to_string()));
 				}
 			}
 		}

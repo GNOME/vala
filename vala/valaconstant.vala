@@ -117,14 +117,14 @@ public class Vala.Constant : Symbol {
 
 		if (!check_const_type (type_reference, context)) {
 			error = true;
-			Report.error (source_reference, "`%s' not supported as type for constants".printf (type_reference.to_string ()));
+			Report.error (source_reference, _("`%s' not supported as type for constants").printf (type_reference.to_string ()));
 			return false;
 		}
 
 		if (!external) {
 			if (value == null) {
 				error = true;
-				Report.error (source_reference, "A const field requires a value to be provided");
+				Report.error (source_reference, _("A const field requires a value to be provided"));
 			} else {
 				value.target_type = type_reference;
 
@@ -135,7 +135,7 @@ public class Vala.Constant : Symbol {
 
 				if (!value.value_type.compatible (type_reference)) {
 					error = true;
-					Report.error (source_reference, "Cannot convert from `%s' to `%s'".printf (value.value_type.to_string (), type_reference.to_string ()));
+					Report.error (source_reference, _("Cannot convert from `%s' to `%s'").printf (value.value_type.to_string (), type_reference.to_string ()));
 					return false;
 				}
 
@@ -156,19 +156,19 @@ public class Vala.Constant : Symbol {
 
 				if (!value.is_constant ()) {
 					error = true;
-					Report.error (value.source_reference, "Value must be constant");
+					Report.error (value.source_reference, _("Value must be constant"));
 					return false;
 				}
 			}
 		} else {
 			if (value != null) {
 				error = true;
-				Report.error (source_reference, "External constants cannot use values");
+				Report.error (source_reference, _("External constants cannot use values"));
 			}
 		}
 
 		if (!external_package && !hides && get_hidden_member () != null) {
-			Report.warning (source_reference, "%s hides inherited constant `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
+			Report.warning (source_reference, _("%s hides inherited constant `%s'. Use the `new' keyword if hiding was intentional").printf (get_full_name (), get_hidden_member ().get_full_name ()));
 		}
 
 		context.analyzer.current_source_file = old_source_file;

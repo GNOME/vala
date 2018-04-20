@@ -149,7 +149,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			if (!f.is_private_symbol () && (context.internal_header_filename != null || context.use_fast_vapi)) {
 				// do not warn if internal member may be used outside this compilation unit
 			} else {
-				Report.warning (f.source_reference, "field `%s' never used".printf (f.get_full_name ()));
+				Report.warning (f.source_reference, _("field `%s' never used").printf (f.get_full_name ()));
 			}
 		}
 	}
@@ -178,7 +178,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			    && m.get_attribute_bool ("DBus", "visible", true)) {
 				// do not warn if internal member is a visible DBus method
 			} else {
-				Report.warning (m.source_reference, "method `%s' never used".printf (m.get_full_name ()));
+				Report.warning (m.source_reference, _("method `%s' never used").printf (m.get_full_name ()));
 			}
 		}
 
@@ -233,7 +233,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			// end of method body reachable
 
 			if (m.has_result) {
-				Report.error (m.source_reference, "missing return statement at end of subroutine body");
+				Report.error (m.source_reference, _("missing return statement at end of subroutine body"));
 				m.error = true;
 			}
 
@@ -425,10 +425,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				foreach (Variable variable in phi.operands) {
 					if (variable == null) {
 						if (used_var is LocalVariable) {
-							Report.error (used_var.source_reference, "use of possibly unassigned local variable `%s'".printf (used_var.name));
+							Report.error (used_var.source_reference, _("use of possibly unassigned local variable `%s'").printf (used_var.name));
 						} else {
 							// parameter
-							Report.warning (used_var.source_reference, "use of possibly unassigned parameter `%s'".printf (used_var.name));
+							Report.warning (used_var.source_reference, _("use of possibly unassigned parameter `%s'").printf (used_var.name));
 						}
 						continue;
 					}
@@ -461,10 +461,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				var variable_stack = var_map.get (var_symbol);
 				if (variable_stack == null || variable_stack.size == 0) {
 					if (var_symbol is LocalVariable) {
-						Report.error (node.source_reference, "use of possibly unassigned local variable `%s'".printf (var_symbol.name));
+						Report.error (node.source_reference, _("use of possibly unassigned local variable `%s'").printf (var_symbol.name));
 					} else {
 						// parameter
-						Report.warning (node.source_reference, "use of possibly unassigned parameter `%s'".printf (var_symbol.name));
+						Report.warning (node.source_reference, _("use of possibly unassigned parameter `%s'").printf (var_symbol.name));
 					}
 					continue;
 				}
@@ -564,7 +564,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		if (!stmt.declaration.used) {
-			Report.warning (stmt.declaration.source_reference, "local variable `%s' declared but never used".printf (stmt.declaration.name));
+			Report.warning (stmt.declaration.source_reference, _("local variable `%s' declared but never used").printf (stmt.declaration.name));
 		}
 
 		current_block.add_node (stmt);
@@ -694,7 +694,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				// end of switch section reachable
 				// we don't allow fall-through
 
-				Report.error (section.source_reference, "missing break statement at end of switch section");
+				Report.error (section.source_reference, _("missing break statement at end of switch section"));
 				section.error = true;
 
 				current_block.connect (after_switch_block);
@@ -809,7 +809,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			}
 		}
 
-		Report.error (stmt.source_reference, "no enclosing loop or switch statement found");
+		Report.error (stmt.source_reference, _("no enclosing loop or switch statement found"));
 		stmt.error = true;
 	}
 
@@ -832,7 +832,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			}
 		}
 
-		Report.error (stmt.source_reference, "no enclosing loop found");
+		Report.error (stmt.source_reference, _("no enclosing loop found"));
 		stmt.error = true;
 	}
 
@@ -861,7 +861,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			}
 		}
 
-		Report.error (stmt.source_reference, "no enclosing loop found");
+		Report.error (stmt.source_reference, _("no enclosing loop found"));
 		stmt.error = true;
 	}
 
@@ -973,7 +973,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 			if (invalid_block.get_predecessors ().size > 0) {
 				// don't allow finally blocks with e.g. return statements
-				Report.error (stmt.source_reference, "jump out of finally block not permitted");
+				Report.error (stmt.source_reference, _("jump out of finally block not permitted"));
 				stmt.error = true;
 				return;
 			}
@@ -1032,12 +1032,12 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				if (context.profile == Profile.GOBJECT) {
 					if (prev_target.error_domain == jump_target.error_domain &&
 					    prev_target.error_code == jump_target.error_code) {
-						Report.error (stmt.source_reference, "double catch clause of same error detected");
+						Report.error (stmt.source_reference, _("double catch clause of same error detected"));
 						stmt.error = true;
 						return;
 					}
 				} else if (prev_target.error_class == jump_target.error_class) {
-					Report.error (stmt.source_reference, "double catch clause of same error detected");
+					Report.error (stmt.source_reference, _("double catch clause of same error detected"));
 					stmt.error = true;
 					return;
 				}
@@ -1045,7 +1045,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 			if (jump_target.basic_block.get_predecessors ().size == 0) {
 				// unreachable
-				Report.warning (jump_target.catch_clause.source_reference, "unreachable catch clause detected");
+				Report.warning (jump_target.catch_clause.source_reference, _("unreachable catch clause detected"));
 			} else {
 				current_block = jump_target.basic_block;
 				current_block.add_node (jump_target.catch_clause);
@@ -1097,7 +1097,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (current_block == null) {
 			node.unreachable = true;
 			if (!unreachable_reported) {
-				Report.warning (node.source_reference, "unreachable code detected");
+				Report.warning (node.source_reference, _("unreachable code detected"));
 				unreachable_reported = true;
 			}
 			return true;

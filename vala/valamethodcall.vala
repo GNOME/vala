@@ -192,7 +192,7 @@ public class Vala.MethodCall : Expression {
 			var ma = (MemberAccess) call;
 			if (ma.prototype_access) {
 				error = true;
-				Report.error (source_reference, "Access to instance member `%s' denied".printf (call.symbol_reference.get_full_name ()));
+				Report.error (source_reference, _("Access to instance member `%s' denied").printf (call.symbol_reference.get_full_name ()));
 				return false;
 			}
 
@@ -261,11 +261,11 @@ public class Vala.MethodCall : Expression {
 			var cm = context.analyzer.find_current_method () as CreationMethod;
 			if (cm == null) {
 				error = true;
-				Report.error (source_reference, "invocation not supported in this context");
+				Report.error (source_reference, _("invocation not supported in this context"));
 				return false;
 			} else if (cm.chain_up) {
 				error = true;
-				Report.error (source_reference, "Multiple constructor calls in the same constructor are not permitted");
+				Report.error (source_reference, _("Multiple constructor calls in the same constructor are not permitted"));
 				return false;
 			}
 			cm.chain_up = true;
@@ -276,25 +276,25 @@ public class Vala.MethodCall : Expression {
 				base_cm = cl.default_construction_method;
 				if (base_cm == null) {
 					error = true;
-					Report.error (source_reference, "chain up to `%s' not supported".printf (cl.get_full_name ()));
+					Report.error (source_reference, _("chain up to `%s' not supported").printf (cl.get_full_name ()));
 					return false;
 				} else if (!base_cm.has_construct_function) {
 					error = true;
-					Report.error (source_reference, "chain up to `%s' not supported".printf (base_cm.get_full_name ()));
+					Report.error (source_reference, _("chain up to `%s' not supported").printf (base_cm.get_full_name ()));
 					return false;
 				}
 			} else if (call.symbol_reference is CreationMethod && call.symbol_reference.parent_symbol is Class) {
 				base_cm = (CreationMethod) call.symbol_reference;
 				if (!base_cm.has_construct_function) {
 					error = true;
-					Report.error (source_reference, "chain up to `%s' not supported".printf (base_cm.get_full_name ()));
+					Report.error (source_reference, _("chain up to `%s' not supported").printf (base_cm.get_full_name ()));
 					return false;
 				}
 			} else if (gobject_chainup) {
 				var cl = cm.parent_symbol as Class;
 				if (cl == null || !cl.is_subtype_of (context.analyzer.object_type)) {
 					error = true;
-					Report.error (source_reference, "chain up to `GLib.Object' not supported");
+					Report.error (source_reference, _("chain up to `GLib.Object' not supported"));
 					return false;
 				}
 				call.value_type = new ObjectType (context.analyzer.object_type);
@@ -310,7 +310,7 @@ public class Vala.MethodCall : Expression {
 			var st = call.symbol_reference as Struct;
 			if (st != null && st.default_construction_method == null && (st.is_boolean_type () || st.is_integer_type () || st.is_floating_type ())) {
 				error = true;
-				Report.error (source_reference, "invocation not supported in this context");
+				Report.error (source_reference, _("invocation not supported in this context"));
 				return false;
 			}
 
@@ -326,24 +326,24 @@ public class Vala.MethodCall : Expression {
 			return true;
 		} else if (!is_chainup && call is MemberAccess && call.symbol_reference is CreationMethod) {
 			error = true;
-			Report.error (source_reference, "use `new' operator to create new objects");
+			Report.error (source_reference, _("use `new' operator to create new objects"));
 			return false;
 		}
 
 		if (!is_chainup && mtype is ObjectType) {
 			// prevent funny stuff like (new Object ()) ()
 			error = true;
-			Report.error (source_reference, "invocation not supported in this context");
+			Report.error (source_reference, _("invocation not supported in this context"));
 			return false;
 		} else if (mtype != null && mtype.is_invokable ()) {
 			// call ok, expression is invokable
 		} else if (call.symbol_reference is Class) {
 			error = true;
-			Report.error (source_reference, "use `new' operator to create new objects");
+			Report.error (source_reference, _("use `new' operator to create new objects"));
 			return false;
 		} else {
 			error = true;
-			Report.error (source_reference, "invocation not supported in this context");
+			Report.error (source_reference, _("invocation not supported in this context"));
 			return false;
 		}
 
@@ -369,7 +369,7 @@ public class Vala.MethodCall : Expression {
 					}
 				} else if (ma.member_name == "begin" || ma.member_name == "end") {
 					error = true;
-					Report.error (ma.source_reference, "use of `%s' not allowed in yield statement".printf (ma.member_name));
+					Report.error (ma.source_reference, _("use of `%s' not allowed in yield statement").printf (ma.member_name));
 				}
 			}
 
@@ -379,11 +379,11 @@ public class Vala.MethodCall : Expression {
 				int n_type_args = ma.get_type_arguments ().size;
 				if (n_type_args > 0 && n_type_args < n_type_params) {
 					error = true;
-					Report.error (ma.source_reference, "too few type arguments");
+					Report.error (ma.source_reference, _("too few type arguments"));
 					return false;
 				} else if (n_type_args > 0 && n_type_args > n_type_params) {
 					error = true;
-					Report.error (ma.source_reference, "too many type arguments");
+					Report.error (ma.source_reference, _("too many type arguments"));
 					return false;
 				}
 			}
@@ -503,7 +503,7 @@ public class Vala.MethodCall : Expression {
 				// A void method invocation can be in the initializer or
 				// iterator of a for statement
 				error = true;
-				Report.error (source_reference, "invocation of void method not allowed as expression");
+				Report.error (source_reference, _("invocation of void method not allowed as expression"));
 				return false;
 			}
 		}
@@ -516,11 +516,11 @@ public class Vala.MethodCall : Expression {
 			if (is_yield_expression) {
 				if (!m.coroutine) {
 					error = true;
-					Report.error (source_reference, "yield expression requires async method");
+					Report.error (source_reference, _("yield expression requires async method"));
 				}
 				if (context.analyzer.current_method == null || !context.analyzer.current_method.coroutine) {
 					error = true;
-					Report.error (source_reference, "yield expression not available outside async method");
+					Report.error (source_reference, _("yield expression not available outside async method"));
 				}
 			}
 
@@ -540,7 +540,7 @@ public class Vala.MethodCall : Expression {
 				var param = get_argument_list ()[0];
 				if (param is LambdaExpression) {
 					error = true;
-					Report.error (source_reference, "Cannot disconnect lambda expression from signal");
+					Report.error (source_reference, _("Cannot disconnect lambda expression from signal"));
 					return false;
 				}
 			}
@@ -593,7 +593,7 @@ public class Vala.MethodCall : Expression {
 
 						if (type_arg == null) {
 							error = true;
-							Report.error (ma.source_reference, "cannot infer generic type argument for type parameter `%s'".printf (type_param.get_full_name ()));
+							Report.error (ma.source_reference, _("cannot infer generic type argument for type parameter `%s'").printf (type_param.get_full_name ()));
 							return false;
 						}
 
@@ -647,7 +647,7 @@ public class Vala.MethodCall : Expression {
 				// simple statements, no side effects after method call
 			} else if (!(context.analyzer.current_symbol is Block)) {
 				// can't handle errors in field initializers
-				Report.error (source_reference, "Field initializers must not throw errors");
+				Report.error (source_reference, _("Field initializers must not throw errors"));
 			} else {
 				// store parent_node as we need to replace the expression in the old parent node later on
 				var old_parent_node = parent_node;

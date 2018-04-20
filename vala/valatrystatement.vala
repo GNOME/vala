@@ -137,7 +137,7 @@ public class Vala.TryStatement : CodeNode, Statement {
 		checked = true;
 
 		if (context.profile == Profile.POSIX) {
-			Report.error (source_reference, "`try' is not supported in POSIX profile");
+			Report.error (source_reference, _("`try' is not supported in POSIX profile"));
 			error = true;
 			return false;
 		}

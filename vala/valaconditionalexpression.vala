@@ -146,7 +146,7 @@ public class Vala.ConditionalExpression : Expression {
 		checked = true;
 
 		if (!(context.analyzer.current_symbol is Block)) {
-			Report.error (source_reference, "Conditional expressions may only be used in blocks");
+			Report.error (source_reference, _("Conditional expressions may only be used in blocks"));
 			error = true;
 			return false;
 		}
@@ -194,7 +194,7 @@ public class Vala.ConditionalExpression : Expression {
 			value_type = false_expression.value_type.copy ();
 		} else {
 			error = true;
-			Report.error (condition.source_reference, "Incompatible expressions");
+			Report.error (condition.source_reference, _("Incompatible expressions"));
 			return false;
 		}
 

@@ -94,7 +94,7 @@ public class Vala.ReferenceTransferExpression : Expression {
 
 		if (!(inner is MemberAccess || inner is ElementAccess)) {
 			error = true;
-			Report.error (source_reference, "Reference transfer not supported for this expression");
+			Report.error (source_reference, _("Reference transfer not supported for this expression"));
 			return false;
 		}
 
@@ -103,7 +103,7 @@ public class Vala.ReferenceTransferExpression : Expression {
 		    && !(inner.value_type is PointerType)
 			&& !is_owned_delegate) {
 			error = true;
-			Report.error (source_reference, "No reference to be transferred");
+			Report.error (source_reference, _("No reference to be transferred"));
 			return false;
 		}
 

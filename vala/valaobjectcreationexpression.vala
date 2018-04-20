@@ -193,7 +193,7 @@ public class Vala.ObjectCreationExpression : Expression {
 		if (type_reference == null) {
 			if (member_name == null) {
 				error = true;
-				Report.error (source_reference, "Incomplete object creation expression");
+				Report.error (source_reference, _("Incomplete object creation expression"));
 				return false;
 			}
 
@@ -213,7 +213,7 @@ public class Vala.ObjectCreationExpression : Expression {
 				var constructor = (Method) constructor_sym;
 				if (!(constructor_sym is CreationMethod)) {
 					error = true;
-					Report.error (source_reference, "`%s' is not a creation method".printf (constructor.get_full_name ()));
+					Report.error (source_reference, _("`%s' is not a creation method").printf (constructor.get_full_name ()));
 					return false;
 				}
 
@@ -241,7 +241,7 @@ public class Vala.ObjectCreationExpression : Expression {
 				symbol_reference = type_sym;
 			} else {
 				error = true;
-				Report.error (source_reference, "`%s' is not a class, struct, or error code".printf (type_sym.get_full_name ()));
+				Report.error (source_reference, _("`%s' is not a class, struct, or error code").printf (type_sym.get_full_name ()));
 				return false;
 			}
 
@@ -265,14 +265,14 @@ public class Vala.ObjectCreationExpression : Expression {
 
 			if (struct_creation) {
 				error = true;
-				Report.error (source_reference, "syntax error, use `new' to create new objects");
+				Report.error (source_reference, _("syntax error, use `new' to create new objects"));
 				return false;
 			}
 
 			if (cl.is_abstract) {
 				value_type = null;
 				error = true;
-				Report.error (source_reference, "Can't create instance of abstract class `%s'".printf (cl.get_full_name ()));
+				Report.error (source_reference, _("Can't create instance of abstract class `%s'").printf (cl.get_full_name ()));
 				return false;
 			}
 
@@ -281,7 +281,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 				if (symbol_reference == null) {
 					error = true;
-					Report.error (source_reference, "`%s' does not have a default constructor".printf (cl.get_full_name ()));
+					Report.error (source_reference, _("`%s' does not have a default constructor").printf (cl.get_full_name ()));
 					return false;
 				}
 
@@ -302,7 +302,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 				if (!in_target_type) {
 					error = true;
-					Report.error (source_reference, "Access to non-public constructor `%s' denied".printf (symbol_reference.get_full_name ()));
+					Report.error (source_reference, _("Access to non-public constructor `%s' denied").printf (symbol_reference.get_full_name ()));
 					return false;
 				}
 			}
@@ -322,7 +322,7 @@ public class Vala.ObjectCreationExpression : Expression {
 			expected_num_type_args = st.get_type_parameters ().size;
 
 			if (!struct_creation && !context.deprecated) {
-				Report.warning (source_reference, "deprecated syntax, don't use `new' to initialize structs");
+				Report.warning (source_reference, _("deprecated syntax, don't use `new' to initialize structs"));
 			}
 
 			if (symbol_reference == null) {
@@ -331,25 +331,25 @@ public class Vala.ObjectCreationExpression : Expression {
 
 			if (context.profile == Profile.GOBJECT && st.is_simple_type () && symbol_reference == null && object_initializer.size == 0) {
 				error = true;
-				Report.error (source_reference, "`%s' does not have a default constructor".printf (st.get_full_name ()));
+				Report.error (source_reference, _("`%s' does not have a default constructor").printf (st.get_full_name ()));
 				return false;
 			}
 		}
 
 		if (expected_num_type_args > given_num_type_args) {
 			error = true;
-			Report.error (source_reference, "too few type arguments");
+			Report.error (source_reference, _("too few type arguments"));
 			return false;
 		} else if (expected_num_type_args < given_num_type_args) {
 			error = true;
-			Report.error (source_reference, "too many type arguments");
+			Report.error (source_reference, _("too many type arguments"));
 			return false;
 		}
 
 		if (symbol_reference == null && get_argument_list ().size != 0) {
 			value_type = null;
 			error = true;
-			Report.error (source_reference, "No arguments allowed when constructing type `%s'".printf (type.get_full_name ()));
+			Report.error (source_reference, _("No arguments allowed when constructing type `%s'").printf (type.get_full_name ()));
 			return false;
 		}
 
@@ -359,11 +359,11 @@ public class Vala.ObjectCreationExpression : Expression {
 			if (is_yield_expression) {
 				if (!m.coroutine) {
 					error = true;
-					Report.error (source_reference, "yield expression requires async method");
+					Report.error (source_reference, _("yield expression requires async method"));
 				}
 				if (context.analyzer.current_method == null || !context.analyzer.current_method.coroutine) {
 					error = true;
-					Report.error (source_reference, "yield expression not available outside async method");
+					Report.error (source_reference, _("yield expression not available outside async method"));
 				}
 			}
 
@@ -449,14 +449,14 @@ public class Vala.ObjectCreationExpression : Expression {
 
 			if (get_argument_list ().size == 0) {
 				error = true;
-				Report.error (source_reference, "Too few arguments, errors need at least 1 argument");
+				Report.error (source_reference, _("Too few arguments, errors need at least 1 argument"));
 			} else {
 				Iterator<Expression> arg_it = get_argument_list ().iterator ();
 				arg_it.next ();
 				var ex = arg_it.get ();
 				if (ex.value_type == null || !ex.value_type.compatible (context.analyzer.string_type)) {
 					error = true;
-					Report.error (source_reference, "Invalid type for argument 1");
+					Report.error (source_reference, _("Invalid type for argument 1"));
 				}
 
 				var format_literal = StringLiteral.get_format_literal (ex);
@@ -486,7 +486,7 @@ public class Vala.ObjectCreationExpression : Expression {
 				// simple statements, no side effects after method call
 			} else if (!(context.analyzer.current_symbol is Block)) {
 				// can't handle errors in field initializers
-				Report.error (source_reference, "Field initializers must not throw errors");
+				Report.error (source_reference, _("Field initializers must not throw errors"));
 			} else {
 				// store parent_node as we need to replace the expression in the old parent node later on
 				var old_parent_node = parent_node;

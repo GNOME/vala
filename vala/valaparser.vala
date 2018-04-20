@@ -118,7 +118,7 @@ public class Vala.Parser : CodeVisitor {
 	void report_parse_error (ParseError e) {
 		var begin = get_location ();
 		next ();
-		Report.error (get_src (begin), "syntax error, " + e.message);
+		Report.error (get_src (begin), _("syntax error, ") + e.message);
 	}
 
 	inline bool expect (TokenType type) throws ParseError {
@@ -293,7 +293,7 @@ public class Vala.Parser : CodeVisitor {
 			// FIXME validate and unescape here and just pass unichar to CharacterLiteral
 			var lit = new CharacterLiteral (get_last_string (), get_src (begin));
 			if (lit.error) {
-				Report.error (lit.source_reference, "invalid character literal");
+				Report.error (lit.source_reference, _("invalid character literal"));
 			}
 			return lit;
 		case TokenType.REGEX_LITERAL:
@@ -343,7 +343,7 @@ public class Vala.Parser : CodeVisitor {
 			if (accept (TokenType.CLOSE_BRACE)) {
 				// only report error if it's not a secondary error
 				if (context.report.get_errors () == 0) {
-					Report.error (get_last_src (), "unexpected `}'");
+					Report.error (get_last_src (), _("unexpected `}'"));
 				}
 			}
 		} catch (ParseError e) {
@@ -444,11 +444,11 @@ public class Vala.Parser : CodeVisitor {
 					value_owned = false;
 				} else if (accept (TokenType.WEAK)) {
 					if (!can_weak_ref && !context.deprecated) {
-						Report.warning (get_last_src (), "deprecated syntax, use `unowned` modifier");
+						Report.warning (get_last_src (), _("deprecated syntax, use `unowned` modifier"));
 					}
 					value_owned = false;
 				} else if (accept (TokenType.OWNED)) {
-					Report.warning (get_last_src (), "`owned' is default in this context");
+					Report.warning (get_last_src (), _("`owned' is default in this context"));
 				}
 			} else {
 				if (accept (TokenType.OWNED)) {
@@ -456,7 +456,7 @@ public class Vala.Parser : CodeVisitor {
 				} else {
 					value_owned = false;
 					if (accept (TokenType.UNOWNED)) {
-						Report.warning (get_last_src (), "`unowned' is default in this context");
+						Report.warning (get_last_src (), _("`unowned' is default in this context"));
 					}
 				}
 			}
@@ -524,7 +524,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		if (accept (TokenType.OP_NEG)) {
-			Report.warning (get_last_src (), "obsolete syntax, types are non-null by default");
+			Report.warning (get_last_src (), _("obsolete syntax, types are non-null by default"));
 		}
 
 		if (type is PointerType) {
@@ -1003,7 +1003,7 @@ public class Vala.Parser : CodeVisitor {
 		var call = expr as MethodCall;
 		var object_creation = expr as ObjectCreationExpression;
 		if (call == null && object_creation == null) {
-			Report.error (expr.source_reference, "syntax error, expected method call");
+			Report.error (expr.source_reference, _("syntax error, expected method call"));
 			throw new ParseError.SYNTAX ("expected method call");
 		}
 
@@ -1717,7 +1717,7 @@ public class Vala.Parser : CodeVisitor {
 		switch (current ()) {
 		case TokenType.SEMICOLON:
 			if (!accept_empty_body) {
-				Report.warning (get_current_src (), "%s-statement without body".printf (statement_name));
+				Report.warning (get_current_src (), _("%s-statement without body").printf (statement_name));
 			}
 			return parse_empty_statement ();
 		case TokenType.IF:        return parse_if_statement ();
@@ -1763,7 +1763,7 @@ public class Vala.Parser : CodeVisitor {
 		if (!accept (TokenType.CLOSE_BRACE)) {
 			// only report error if it's not a secondary error
 			if (context.report.get_errors () == 0) {
-				Report.error (get_current_src (), "expected `}'");
+				Report.error (get_current_src (), _("expected `}'"));
 			}
 		}
 
@@ -2018,7 +2018,7 @@ public class Vala.Parser : CodeVisitor {
 		if (!accept (TokenType.VAR)) {
 			type = parse_type (true, true);
 			if (accept (TokenType.IN)) {
-				Report.error (type.source_reference, "syntax error, expected var or type");
+				Report.error (type.source_reference, _("syntax error, expected var or type"));
 				throw new ParseError.SYNTAX ("expected var or type");
 			}
 		}
@@ -2219,7 +2219,7 @@ public class Vala.Parser : CodeVisitor {
 		if (attributes != null) {
 			foreach (Attribute attr in (List<Attribute>) attributes) {
 				if (node.get_attribute (attr.name) != null) {
-					Report.error (attr.source_reference, "duplicate attribute `%s'".printf (attr.name));
+					Report.error (attr.source_reference, _("duplicate attribute `%s'").printf (attr.name));
 				}
 				node.attributes.append (attr);
 			}
@@ -2233,13 +2233,13 @@ public class Vala.Parser : CodeVisitor {
 		method.body = new Block (get_src (begin));
 		parse_statements (method.body);
 		if (current () != TokenType.EOF) {
-			Report.error (get_current_src (), "expected end of file");
+			Report.error (get_current_src (), _("expected end of file"));
 		}
 
 		method.body.source_reference.end = get_current_src ().end;
 
 		if (!context.experimental) {
-			Report.warning (method.source_reference, "main blocks are experimental");
+			Report.warning (method.source_reference, _("main blocks are experimental"));
 		}
 
 		parent.add_method (method);
@@ -2420,7 +2420,7 @@ public class Vala.Parser : CodeVisitor {
 			if (!accept (TokenType.CLOSE_BRACE)) {
 				// only report error if it's not a secondary error
 				if (context.report.get_errors () == 0) {
-					Report.error (get_current_src (), "expected `}'");
+					Report.error (get_current_src (), _("expected `}'"));
 				}
 			}
 		}
@@ -2508,7 +2508,7 @@ public class Vala.Parser : CodeVisitor {
 		if (!accept (TokenType.CLOSE_BRACE)) {
 			// only report error if it's not a secondary error
 			if (context.report.get_errors () == 0) {
-				Report.error (get_current_src (), "expected `}'");
+				Report.error (get_current_src (), _("expected `}'"));
 			}
 		}
 
@@ -2617,7 +2617,7 @@ public class Vala.Parser : CodeVisitor {
 		set_attributes (c, attrs);
 
 		if (ModifierFlags.STATIC in flags) {
-			Report.warning (c.source_reference, "the modifier `static' is not applicable to constants");
+			Report.warning (c.source_reference, _("the modifier `static' is not applicable to constants"));
 		}
 
 		if (accept (TokenType.ASSIGN)) {
@@ -2641,7 +2641,7 @@ public class Vala.Parser : CodeVisitor {
 
 		set_attributes (f, attrs);
 		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
-			Report.error (f.source_reference, "only one of `static' or `class' may be specified");
+			Report.error (f.source_reference, _("only one of `static' or `class' may be specified"));
 		} else if (ModifierFlags.STATIC in flags) {
 			f.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
@@ -2649,13 +2649,13 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		if (parent is Struct && f.access != SymbolAccessibility.PUBLIC && f.binding == MemberBinding.INSTANCE) {
-			Report.warning (f.source_reference, "accessibility of struct fields can only be `public`");
+			Report.warning (f.source_reference, _("accessibility of struct fields can only be `public`"));
 		}
 
 		if (ModifierFlags.ABSTRACT in flags
 		    || ModifierFlags.VIRTUAL in flags
 		    || ModifierFlags.OVERRIDE in flags) {
-			Report.error (f.source_reference, "abstract, virtual, and override modifiers are not applicable to fields");
+			Report.error (f.source_reference, _("abstract, virtual, and override modifiers are not applicable to fields"));
 		}
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			f.external = true;
@@ -2705,7 +2705,7 @@ public class Vala.Parser : CodeVisitor {
 			method.add_type_parameter (type_param);
 		}
 		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
-			Report.error (method.source_reference, "only one of `static' or `class' may be specified");
+			Report.error (method.source_reference, _("only one of `static' or `class' may be specified"));
 		} else if (ModifierFlags.STATIC in flags) {
 			method.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
@@ -2789,7 +2789,7 @@ public class Vala.Parser : CodeVisitor {
 		prop.access = access;
 		set_attributes (prop, attrs);
 		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
-			Report.error (prop.source_reference, "only one of `static' or `class' may be specified");
+			Report.error (prop.source_reference, _("only one of `static' or `class' may be specified"));
 		} else if (ModifierFlags.STATIC in flags) {
 			prop.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
@@ -2808,7 +2808,7 @@ public class Vala.Parser : CodeVisitor {
 			prop.hides = true;
 		}
 		if (ModifierFlags.ASYNC in flags) {
-			Report.error (prop.source_reference, "async properties are not supported yet");
+			Report.error (prop.source_reference, _("async properties are not supported yet"));
 		}
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			prop.external = true;
@@ -2823,7 +2823,7 @@ public class Vala.Parser : CodeVisitor {
 			do {
 				parse_type (true, false);
 			} while (accept (TokenType.COMMA));
-			Report.error (prop.source_reference, "properties throwing errors are not supported yet");
+			Report.error (prop.source_reference, _("properties throwing errors are not supported yet"));
 		}
 		expect (TokenType.OPEN_BRACE);
 		while (current () != TokenType.CLOSE_BRACE) {
@@ -2847,7 +2847,7 @@ public class Vala.Parser : CodeVisitor {
 				} else {
 					value_type.value_owned = false;
 					if (accept (TokenType.UNOWNED)) {
-						Report.warning (get_last_src (), "property getters are `unowned' by default");
+						Report.warning (get_last_src (), _("property getters are `unowned' by default"));
 					}
 				}
 
@@ -2939,7 +2939,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 		var c = new Constructor (get_src (begin));
 		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
-			Report.error (c.source_reference, "only one of `static' or `class' may be specified");
+			Report.error (c.source_reference, _("only one of `static' or `class' may be specified"));
 		} else if (ModifierFlags.STATIC in flags) {
 			c.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
@@ -2962,10 +2962,10 @@ public class Vala.Parser : CodeVisitor {
 		}
 		var d = new Destructor (get_src (begin));
 		if (identifier != parent.name) {
-			Report.error (d.source_reference, "destructor and parent symbol name do not match");
+			Report.error (d.source_reference, _("destructor and parent symbol name do not match"));
 		}
 		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
-			Report.error (d.source_reference, "only one of `static' or `class' may be specified");
+			Report.error (d.source_reference, _("only one of `static' or `class' may be specified"));
 		} else if (ModifierFlags.STATIC in flags) {
 			d.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
@@ -3346,7 +3346,7 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.ABSTRACT in flags
 		    || ModifierFlags.VIRTUAL in flags
 		    || ModifierFlags.OVERRIDE in flags) {
-			Report.error (method.source_reference, "abstract, virtual, and override modifiers are not applicable to creation methods");
+			Report.error (method.source_reference, _("abstract, virtual, and override modifiers are not applicable to creation methods"));
 		}
 		if (ModifierFlags.ASYNC in flags) {
 			method.coroutine = true;
@@ -3402,7 +3402,7 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.STATIC in flags) {
 			if (!context.deprecated) {
 				// TODO enable warning in future releases
-				Report.warning (get_last_src (), "deprecated syntax, use [CCode (has_target = false)]");
+				Report.warning (get_last_src (), _("deprecated syntax, use [CCode (has_target = false)]"));
 			}
 			d.has_target = false;
 		}
@@ -3411,7 +3411,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (!d.get_attribute_bool ("CCode", "has_typedef", true)) {
 			if (!d.external) {
-				Report.error (get_last_src (), "Delegates without definition must be external");
+				Report.error (get_last_src (), _("Delegates without definition must be external"));
 			}
 			d.anonymous = true;
 		}

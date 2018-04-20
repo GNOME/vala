@@ -79,7 +79,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		if (stream == null) {
-			Report.error (null, "unable to open `%s' for writing".printf (filename));
+			Report.error (null, _("unable to open `%s' for writing").printf (filename));
 			return;
 		}
 
@@ -169,7 +169,7 @@ public class Vala.CodeWriter : CodeVisitor {
 						first = false;
 						first_reference = comment.source_reference;
 					} else {
-						Report.warning (comment.source_reference, "Comment describes namespace, that was already described by another comment.");
+						Report.warning (comment.source_reference, _("Comment describes namespace, that was already described by another comment."));
 						Report.notice (first_reference, "Previous comment was here.");
 					}
 				}

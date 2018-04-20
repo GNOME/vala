@@ -418,59 +418,59 @@ public abstract class Vala.Symbol : CodeNode {
 	}
 
 	public virtual void add_namespace (Namespace ns) {
-		Report.error (ns.source_reference, "unexpected declaration");
+		Report.error (ns.source_reference, _("unexpected declaration"));
 	}
 
 	public virtual void add_class (Class cl) {
-		Report.error (cl.source_reference, "unexpected declaration");
+		Report.error (cl.source_reference, _("unexpected declaration"));
 	}
 
 	public virtual void add_interface (Interface iface) {
-		Report.error (iface.source_reference, "unexpected declaration");
+		Report.error (iface.source_reference, _("unexpected declaration"));
 	}
 
 	public virtual void add_struct (Struct st) {
-		Report.error (st.source_reference, "unexpected declaration");
+		Report.error (st.source_reference, _("unexpected declaration"));
 	}
 
 	public virtual void add_enum (Enum en) {
-		Report.error (en.source_reference, "unexpected declaration");
+		Report.error (en.source_reference, _("unexpected declaration"));
 	}
 
 	public virtual void add_error_domain (ErrorDomain edomain) {
-		Report.error (edomain.source_reference, "unexpected declaration");
+		Report.error (edomain.source_reference, _("unexpected declaration"));
 	}
 
 	public virtual void add_delegate (Delegate d) {
-		Report.error (d.source_reference, "unexpected declaration");
+		Report.error (d.source_reference, _("unexpected declaration"));
 	}
 
 	public virtual void add_constant (Constant constant) {
-		Report.error (constant.source_reference, "unexpected declaration");
+		Report.error (constant.source_reference, _("unexpected declaration"));
 	}
 
 	public virtual void add_field (Field f) {
-		Report.error (f.source_reference, "unexpected declaration");
+		Report.error (f.source_reference, _("unexpected declaration"));
 	}
 
 	public virtual void add_method (Method m) {
-		Report.error (m.source_reference, "unexpected declaration");
+		Report.error (m.source_reference, _("unexpected declaration"));
 	}
 
 	public virtual void add_property (Property prop) {
-		Report.error (prop.source_reference, "unexpected declaration");
+		Report.error (prop.source_reference, _("unexpected declaration"));
 	}
 
 	public virtual void add_signal (Signal sig) {
-		Report.error (sig.source_reference, "unexpected declaration");
+		Report.error (sig.source_reference, _("unexpected declaration"));
 	}
 
 	public virtual void add_constructor (Constructor c) {
-		Report.error (c.source_reference, "unexpected declaration");
+		Report.error (c.source_reference, _("unexpected declaration"));
 	}
 
 	public virtual void add_destructor (Destructor d) {
-		Report.error (d.source_reference, "unexpected declaration");
+		Report.error (d.source_reference, _("unexpected declaration"));
 	}
 
 	public override string to_string () {

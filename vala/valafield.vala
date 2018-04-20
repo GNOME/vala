@@ -94,7 +94,7 @@ public class Vala.Field : Variable, Lockable {
 
 		if (variable_type is VoidType) {
 			error = true;
-			Report.error (source_reference, "'void' not supported as field type");
+			Report.error (source_reference, _("'void' not supported as field type"));
 			return false;
 		}
 
@@ -103,7 +103,7 @@ public class Vala.Field : Variable, Lockable {
 		// check whether field type is at least as accessible as the field
 		if (!context.analyzer.is_type_accessible (this, variable_type)) {
 			error = true;
-			Report.error (source_reference, "field type `%s' is less accessible than field `%s'".printf (variable_type.to_string (), get_full_name ()));
+			Report.error (source_reference, _("field type `%s' is less accessible than field `%s'").printf (variable_type.to_string (), get_full_name ()));
 			return false;
 		}
 
@@ -124,13 +124,13 @@ public class Vala.Field : Variable, Lockable {
 
 			if (initializer.value_type == null) {
 				error = true;
-				Report.error (source_reference, "expression type not allowed as initializer");
+				Report.error (source_reference, _("expression type not allowed as initializer"));
 				return false;
 			}
 
 			if (!initializer.value_type.compatible (variable_type)) {
 				error = true;
-				Report.error (source_reference, "Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), variable_type.to_string ()));
+				Report.error (source_reference, _("Cannot convert from `%s' to `%s'").printf (initializer.value_type.to_string (), variable_type.to_string ()));
 				return false;
 			}
 
@@ -139,40 +139,40 @@ public class Vala.Field : Variable, Lockable {
 				if (!(variable_type is PointerType) && !variable_type.value_owned) {
 					/* lhs doesn't own the value */
 					error = true;
-					Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
+					Report.error (source_reference, _("Invalid assignment from owned expression to unowned variable"));
 					return false;
 				}
 			}
 
 			if (parent_symbol is Namespace && !initializer.is_constant ()) {
 				error = true;
-				Report.error (source_reference, "Non-constant field initializers not supported in this context");
+				Report.error (source_reference, _("Non-constant field initializers not supported in this context"));
 				return false;
 			}
 
 			if (parent_symbol is Namespace && initializer.is_constant () && initializer.is_non_null ()) {
 				if (variable_type.is_disposable () && variable_type.value_owned) {
 					error = true;
-					Report.error (source_reference, "Owned namespace fields can only be initialized in a function or method");
+					Report.error (source_reference, _("Owned namespace fields can only be initialized in a function or method"));
 					return false;
 				}
 			}
 
 			if (binding == MemberBinding.STATIC && parent_symbol is Class && ((Class)parent_symbol).is_compact && !initializer.is_constant ()) {
 				error = true;
-				Report.error (source_reference, "Static fields in compact classes cannot have non-constant initializers");
+				Report.error (source_reference, _("Static fields in compact classes cannot have non-constant initializers"));
 				return false;
 			}
 
 			if (external) {
 				error = true;
-				Report.error (source_reference, "External fields cannot use initializers");
+				Report.error (source_reference, _("External fields cannot use initializers"));
 			}
 		}
 
 		if (binding == MemberBinding.INSTANCE && parent_symbol is Interface) {
 			error = true;
-			Report.error (source_reference, "Interfaces may not have instance fields");
+			Report.error (source_reference, _("Interfaces may not have instance fields"));
 			return false;
 		}
 
@@ -186,7 +186,7 @@ public class Vala.Field : Variable, Lockable {
 		}
 
 		if (!external_package && !hides && get_hidden_member () != null) {
-			Report.warning (source_reference, "%s hides inherited field `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
+			Report.warning (source_reference, _("%s hides inherited field `%s'. Use the `new' keyword if hiding was intentional").printf (get_full_name (), get_hidden_member ().get_full_name ()));
 		}
 
 		context.analyzer.current_source_file = old_source_file;

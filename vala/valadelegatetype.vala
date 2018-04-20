@@ -114,7 +114,7 @@ public class Vala.DelegateType : CallableType {
 
 	public override bool check (CodeContext context) {
 		if (is_called_once && !value_owned) {
-			Report.warning (source_reference, "delegates with scope=\"async\" must be owned");
+			Report.warning (source_reference, _("delegates with scope=\"async\" must be owned"));
 		}
 
 		if (!delegate_symbol.check (context)) {
@@ -124,10 +124,10 @@ public class Vala.DelegateType : CallableType {
 		var n_type_params = delegate_symbol.get_type_parameters ().size;
 		var n_type_args = get_type_arguments ().size;
 		if (n_type_args > 0 && n_type_args < n_type_params) {
-			Report.error (source_reference, "too few type arguments");
+			Report.error (source_reference, _("too few type arguments"));
 			return false;
 		} else if (n_type_args > 0 && n_type_args > n_type_params) {
-			Report.error (source_reference, "too many type arguments");
+			Report.error (source_reference, _("too many type arguments"));
 			return false;
 		}
 

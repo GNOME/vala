@@ -74,7 +74,7 @@ public class Vala.RegexLiteral : Literal {
 			if (regex != null) { /* Regex is valid. */ }
 		} catch (RegexError err) {
 			error = true;
-			Report.error (source_reference, "Invalid regular expression `%s'.".printf (value));
+			Report.error (source_reference, _("Invalid regular expression `%s'.").printf (value));
 			return false;
 		}
 

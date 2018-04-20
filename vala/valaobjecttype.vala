@@ -102,10 +102,10 @@ public class Vala.ObjectType : ReferenceType {
 
 		int n_type_args = get_type_arguments ().size;
 		if (n_type_args > 0 && n_type_args < type_symbol.get_type_parameters ().size) {
-			Report.error (source_reference, "too few type arguments");
+			Report.error (source_reference, _("too few type arguments"));
 			return false;
 		} else if (n_type_args > 0 && n_type_args > type_symbol.get_type_parameters ().size) {
-			Report.error (source_reference, "too many type arguments");
+			Report.error (source_reference, _("too many type arguments"));
 			return false;
 		}
 

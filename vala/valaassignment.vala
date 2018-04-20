@@ -160,19 +160,19 @@ public class Vala.Assignment : Expression {
 
 			if (ma.symbol_reference is Constant) {
 				error = true;
-				Report.error (source_reference, "Assignment to constant after initialization");
+				Report.error (source_reference, _("Assignment to constant after initialization"));
 				return false;
 			}
 
 			if ((!(ma.symbol_reference is DynamicProperty) && ma.value_type == null) ||
 			    (ma.inner == null && ma.member_name == "this" && context.analyzer.is_in_instance_method ())) {
 				error = true;
-				Report.error (source_reference, "unsupported lvalue in assignment");
+				Report.error (source_reference, _("unsupported lvalue in assignment"));
 				return false;
 			}
 			if (ma.prototype_access) {
 				error = true;
-				Report.error (source_reference, "Access to instance member `%s' denied".printf (ma.symbol_reference.get_full_name ()));
+				Report.error (source_reference, _("Access to instance member `%s' denied").printf (ma.symbol_reference.get_full_name ()));
 				return false;
 			}
 
@@ -193,7 +193,7 @@ public class Vala.Assignment : Expression {
 
 			if (ea.container.value_type.data_type == context.analyzer.string_type.data_type) {
 				error = true;
-				Report.error (ea.source_reference, "strings are immutable");
+				Report.error (ea.source_reference, _("strings are immutable"));
 				return false;
 			} else if (ea.container.value_type.get_member ("set") is Method) {
 				var set_call = new MethodCall (new MemberAccess (ea.container, "set", source_reference), source_reference);
@@ -214,7 +214,7 @@ public class Vala.Assignment : Expression {
 			return false;
 		} else {
 			error = true;
-			Report.error (source_reference, "unsupported lvalue in assignment");
+			Report.error (source_reference, _("unsupported lvalue in assignment"));
 			return false;
 		}
 
@@ -275,17 +275,17 @@ public class Vala.Assignment : Expression {
 				if (prop.set_accessor == null
 				    || (!prop.set_accessor.writable && !(context.analyzer.find_current_method () is CreationMethod || context.analyzer.is_in_constructor ()))) {
 					ma.error = true;
-					Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
+					Report.error (ma.source_reference, _("Property `%s' is read-only").printf (prop.get_full_name ()));
 					return false;
 				} else if (!context.deprecated
 				           && !prop.set_accessor.writable
 				           && context.analyzer.find_current_method () is CreationMethod) {
 					if (ma.inner.symbol_reference != context.analyzer.find_current_method ().this_parameter) {
 						// trying to set construct-only property in creation method for foreign instance
-						Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
+						Report.error (ma.source_reference, _("Property `%s' is read-only").printf (prop.get_full_name ()));
 						return false;
 					} else {
-						Report.error (ma.source_reference, "Cannot assign to construct-only properties, use Object (property: value) constructor chain up");
+						Report.error (ma.source_reference, _("Cannot assign to construct-only properties, use Object (property: value) constructor chain up"));
 						return false;
 					}
 				}
@@ -301,14 +301,14 @@ public class Vala.Assignment : Expression {
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m, dt)) {
 						error = true;
-						Report.error (source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.get_full_name (), cb.get_full_name ()));
+						Report.error (source_reference, _("declaration of method `%s' doesn't match declaration of callback `%s'").printf (m.get_full_name (), cb.get_full_name ()));
 						return false;
 					}
 
 					right.value_type = variable.variable_type.copy ();
 				} else {
 					error = true;
-					Report.error (source_reference, "Assignment: Invalid assignment attempt");
+					Report.error (source_reference, _("Assignment: Invalid assignment attempt"));
 					return false;
 				}
 			} else if (ma.symbol_reference is Variable) {
@@ -328,7 +328,7 @@ public class Vala.Assignment : Expression {
 
 				if (!right.value_type.compatible (left.value_type)) {
 					error = true;
-					Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (right.value_type.to_string (), left.value_type.to_string ()));
+					Report.error (source_reference, _("Assignment: Cannot convert from `%s' to `%s'").printf (right.value_type.to_string (), left.value_type.to_string ()));
 					return false;
 				}
 
@@ -338,7 +338,7 @@ public class Vala.Assignment : Expression {
 						if (!(left.value_type is PointerType) && !left.value_type.value_owned) {
 							/* lhs doesn't own the value */
 							error = true;
-							Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
+							Report.error (source_reference, _("Invalid assignment from owned expression to unowned variable"));
 						}
 					} else if (left.value_type.value_owned) {
 						/* lhs wants to own the value
@@ -352,17 +352,17 @@ public class Vala.Assignment : Expression {
 			var right_ma = right as MemberAccess;
 			if (right_ma != null && ma.symbol_reference == right_ma.symbol_reference) {
 				if (ma.symbol_reference is LocalVariable || ma.symbol_reference is Parameter) {
-					Report.warning (source_reference, "Assignment to same variable");
+					Report.warning (source_reference, _("Assignment to same variable"));
 				} else if (ma.symbol_reference is Field) {
 					var f = (Field) ma.symbol_reference;
 					if (f.binding == MemberBinding.STATIC) {
-						Report.warning (source_reference, "Assignment to same variable");
+						Report.warning (source_reference, _("Assignment to same variable"));
 					} else {
 						var ma_inner = ma.inner as MemberAccess;
 						var right_ma_inner = right_ma.inner as MemberAccess;
 						if (ma_inner != null && ma_inner.member_name == "this" && ma_inner.inner == null &&
 						    right_ma_inner != null && right_ma_inner.member_name == "this" && right_ma_inner.inner == null) {
-							Report.warning (source_reference, "Assignment to same variable");
+							Report.warning (source_reference, _("Assignment to same variable"));
 						}
 					}
 				}
@@ -372,7 +372,7 @@ public class Vala.Assignment : Expression {
 
 			if (!right.value_type.compatible (left.value_type)) {
 				error = true;
-				Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (right.value_type.to_string (), left.value_type.to_string ()));
+				Report.error (source_reference, _("Assignment: Cannot convert from `%s' to `%s'").printf (right.value_type.to_string (), left.value_type.to_string ()));
 				return false;
 			}
 
@@ -393,7 +393,7 @@ public class Vala.Assignment : Expression {
 				if (!(element_type is PointerType) && !element_type.value_owned) {
 					/* lhs doesn't own the value */
 					error = true;
-					Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
+					Report.error (source_reference, _("Invalid assignment from owned expression to unowned variable"));
 					return false;
 				}
 			} else if (left.value_type.value_owned) {

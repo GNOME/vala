@@ -165,7 +165,7 @@ public class Vala.VersionAttribute {
 			if (CodeContext.get ().since_check && package_version != null && VersionAttribute.cmp_versions (package_version, since) < 0) {
 				unowned string filename = symbol.source_reference.file.filename;
 				string pkg = Path.get_basename (filename[0:filename.last_index_of_char ('.')]);
-				Report.error (source_ref, "%s is not available in %s %s. Use %s >= %s".printf (symbol.get_full_name (), pkg, package_version, pkg, since));
+				Report.error (source_ref, _("%s is not available in %s %s. Use %s >= %s").printf (symbol.get_full_name (), pkg, package_version, pkg, since));
 			}
 			result = true;
 		}

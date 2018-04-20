@@ -276,7 +276,7 @@ public class Vala.ArrayType : ReferenceType {
 
 	public override bool check (CodeContext context) {
 		if (invalid_syntax) {
-			Report.error (source_reference, "syntax error, no expression allowed between array brackets");
+			Report.error (source_reference, _("syntax error, no expression allowed between array brackets"));
 			error = true;
 			return false;
 		}
@@ -285,18 +285,18 @@ public class Vala.ArrayType : ReferenceType {
 			length.check (context);
 
 			if (length.value_type == null || !(length.value_type is IntegerType) || !length.is_constant ()) {
-				Report.error (length.source_reference, "Expression of constant integer type expected");
+				Report.error (length.source_reference, _("Expression of constant integer type expected"));
 				return false;
 			}
 		}
 
 		if (element_type is ArrayType) {
-			Report.error (source_reference, "Stacked arrays are not supported");
+			Report.error (source_reference, _("Stacked arrays are not supported"));
 			return false;
 		} else if (element_type is DelegateType) {
 			var delegate_type = (DelegateType) element_type;
 			if (delegate_type.delegate_symbol.has_target) {
-				Report.error (source_reference, "Delegates with target are not supported as array element type");
+				Report.error (source_reference, _("Delegates with target are not supported as array element type"));
 				return false;
 			}
 		}

@@ -49,7 +49,7 @@ public class Vala.UnresolvedSymbol : Symbol {
 			}
 		}
 
-		Report.error (expr.source_reference, "Type reference must be simple name or member access expression");
+		Report.error (expr.source_reference, _("Type reference must be simple name or member access expression"));
 		return null;
 	}
 
