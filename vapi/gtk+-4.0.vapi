@@ -6236,8 +6236,6 @@ namespace Gsk {
 		public unowned Gdk.RGBA? peek_color ();
 		public unowned Pango.Font peek_font ();
 		public unowned Pango.GlyphInfo? peek_glyphs ();
-		[CCode (has_construct_function = false)]
-		public TextNode.with_bounds (Pango.Font font, Pango.GlyphString glyphs, Gdk.RGBA color, double x, double y, Graphene.Rect bounds);
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class TextureNode : Gsk.RenderNode {
@@ -10280,7 +10278,6 @@ namespace Gtk {
 		public void append_node (Gsk.RenderNode node);
 		public void append_repeating_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, Gsk.ColorStop stops, size_t n_stops, string name, ...);
 		public void append_texture (Gdk.Texture texture, Graphene.Rect bounds, string name, ...);
-		public bool clips_rect (Graphene.Rect bounds);
 		[DestroysInstance]
 		public Gsk.RenderNode free_to_node ();
 		[DestroysInstance]
@@ -10508,8 +10505,6 @@ namespace Gtk {
 		public void render_handle (Cairo.Context cr, double x, double y, double width, double height);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_icon")]
 		public void render_icon (Cairo.Context cr, Gdk.Texture texture, double x, double y);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_icon_surface")]
-		public void render_icon_surface (Cairo.Context cr, Cairo.Surface surface, double x, double y);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_insertion_cursor")]
 		public void render_insertion_cursor (Cairo.Context cr, double x, double y, Pango.Layout layout, int index, Pango.Direction direction);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_layout")]
