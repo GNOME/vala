@@ -42,6 +42,8 @@ Device
 Rectangle.union return_void
 Surface.get_frame_extents return_void
 
+DrawingContext skip
+
 EventAny skip
 EventButton skip
 EventConfigure skip

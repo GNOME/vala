@@ -4712,6 +4712,12 @@ namespace Gdk {
 	[Compact]
 	public class Atom : string {
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_cairo_context_get_type ()")]
+	public abstract class CairoContext : Gdk.DrawContext {
+		[CCode (has_construct_function = false)]
+		protected CairoContext ();
+		public Cairo.Context? cairo_create ();
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_clipboard_get_type ()")]
 	public class Clipboard : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -4993,7 +4999,8 @@ namespace Gdk {
 		public void set_hotspot (int hot_x, int hot_y);
 		[NoAccessorMethod]
 		public Gdk.ContentProvider content { owned get; construct; }
-		public Gdk.Display display { get; construct; }
+		public Gdk.Device device { get; construct; }
+		public Gdk.Display display { get; }
 		public Gdk.ContentFormats formats { get; }
 		public signal void action_changed (Gdk.DragAction action);
 		public signal void cancel (Gdk.DragCancelReason reason);
@@ -5004,22 +5011,14 @@ namespace Gdk {
 	public abstract class DrawContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected DrawContext ();
+		public void begin_frame (Cairo.Region region);
+		public void end_frame ();
 		public unowned Gdk.Display? get_display ();
+		public unowned Cairo.Region? get_frame_region ();
 		public unowned Gdk.Surface? get_surface ();
+		public bool is_in_frame ();
 		public Gdk.Display display { get; }
 		public Gdk.Surface surface { get; construct; }
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_drawing_context_get_type ()")]
-	public class DrawingContext : GLib.Object {
-		[CCode (has_construct_function = false)]
-		protected DrawingContext ();
-		public unowned Cairo.Context? get_cairo_context ();
-		public Cairo.Region? get_clip ();
-		public unowned Gdk.DrawContext get_paint_context ();
-		public Cairo.Region clip { owned get; construct; }
-		public Gdk.DrawContext paint_context { get; construct; }
-		[NoAccessorMethod]
-		public Gdk.Surface surface { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_event_get_type ()")]
 	public class Event : GLib.Object {
@@ -5128,7 +5127,6 @@ namespace Gdk {
 		protected GLContext ();
 		public static void clear_current ();
 		public static unowned Gdk.GLContext? get_current ();
-		public Cairo.Region get_damage ();
 		public bool get_debug_enabled ();
 		public unowned Gdk.Display? get_display ();
 		public bool get_forward_compatible ();
@@ -5238,7 +5236,6 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected Surface ();
 		public void beep ();
-		public unowned Gdk.DrawingContext begin_draw_frame (Gdk.DrawContext? context, Cairo.Region region);
 		public void begin_move_drag (int button, int root_x, int root_y, uint32 timestamp);
 		public void begin_move_drag_for_device (Gdk.Device device, int button, int root_x, int root_y, uint32 timestamp);
 		public void begin_resize_drag (Gdk.SurfaceEdge edge, int button, int root_x, int root_y, uint32 timestamp);
@@ -5248,13 +5245,13 @@ namespace Gdk {
 		public static void constrain_size (Gdk.Geometry geometry, Gdk.SurfaceHints flags, int width, int height, out int new_width, out int new_height);
 		public void coords_from_parent (double parent_x, double parent_y, out double x, out double y);
 		public void coords_to_parent (double x, double y, out double parent_x, out double parent_y);
+		public Gdk.CairoContext create_cairo_context ();
 		public Gdk.GLContext create_gl_context () throws GLib.Error;
 		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
 		public Gdk.VulkanContext create_vulkan_context () throws GLib.Error;
 		public void deiconify ();
 		[DestroysInstance]
 		public void destroy ();
-		public void end_draw_frame (Gdk.DrawingContext context);
 		public void focus (uint32 timestamp);
 		public void freeze_updates ();
 		public void fullscreen ();
@@ -6124,6 +6121,13 @@ namespace Gsk {
 		public Gsk.RenderNode get_start_child ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
+	public class DebugNode : Gsk.RenderNode {
+		[CCode (has_construct_function = false)]
+		public DebugNode (Gsk.RenderNode child, owned string message);
+		public unowned Gsk.RenderNode get_child ();
+		public unowned string get_message ();
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class InsetShadowNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
 		public InsetShadowNode (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
@@ -6176,11 +6180,9 @@ namespace Gsk {
 		public static Gsk.RenderNode? deserialize (GLib.Bytes bytes) throws GLib.Error;
 		public void draw (Cairo.Context cr);
 		public Graphene.Rect get_bounds ();
-		public unowned string? get_name ();
 		public Gsk.RenderNodeType get_node_type ();
 		public unowned Gsk.RenderNode @ref ();
 		public GLib.Bytes serialize ();
-		public void set_name (string? name);
 		public void unref ();
 		public bool write_to_file (string filename) throws GLib.Error;
 	}
@@ -6236,8 +6238,6 @@ namespace Gsk {
 		public unowned Gdk.RGBA? peek_color ();
 		public unowned Pango.Font peek_font ();
 		public unowned Pango.GlyphInfo? peek_glyphs ();
-		[CCode (has_construct_function = false)]
-		public TextNode.with_bounds (Pango.Font font, Pango.GlyphString glyphs, Gdk.RGBA color, double x, double y, Graphene.Rect bounds);
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class TextureNode : Gsk.RenderNode {
@@ -6332,7 +6332,8 @@ namespace Gsk {
 		CROSS_FADE_NODE,
 		TEXT_NODE,
 		BLUR_NODE,
-		OFFSET_NODE
+		OFFSET_NODE,
+		DEBUG_NODE
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SCALING_FILTER_", type_id = "gsk_scaling_filter_get_type ()")]
 	[Version (since = "3.90")]
@@ -7650,6 +7651,8 @@ namespace Gtk {
 		public int cursor_position { get; }
 		[NoAccessorMethod]
 		public bool editable { get; set; }
+		[NoAccessorMethod]
+		public bool enable_emoji_completion { get; set; }
 		public bool has_frame { get; set; }
 		[NoAccessorMethod]
 		public string im_module { owned get; set; }
@@ -10272,34 +10275,32 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_snapshot_get_type ()")]
 	public class Snapshot : Gdk.Snapshot {
 		[CCode (has_construct_function = false)]
-		public Snapshot (bool record_names, string name, ...);
-		public Cairo.Context append_cairo (Graphene.Rect bounds, string name, ...);
-		public void append_color (Gdk.RGBA color, Graphene.Rect bounds, string name, ...);
-		public void append_layout (Pango.Layout layout, Gdk.RGBA color, string name, ...);
-		public void append_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, Gsk.ColorStop stops, size_t n_stops, string name, ...);
+		public Snapshot ();
+		public Cairo.Context append_cairo (Graphene.Rect bounds);
+		public void append_color (Gdk.RGBA color, Graphene.Rect bounds);
+		public void append_layout (Pango.Layout layout, Gdk.RGBA color);
+		public void append_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
 		public void append_node (Gsk.RenderNode node);
-		public void append_repeating_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, Gsk.ColorStop stops, size_t n_stops, string name, ...);
-		public void append_texture (Gdk.Texture texture, Graphene.Rect bounds, string name, ...);
-		public bool clips_rect (Graphene.Rect bounds);
+		public void append_repeating_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
+		public void append_texture (Gdk.Texture texture, Graphene.Rect bounds);
 		[DestroysInstance]
 		public Gsk.RenderNode free_to_node ();
 		[DestroysInstance]
 		public Gdk.Paintable free_to_paintable (Graphene.Size? size);
 		public void get_offset (out int x, out int y);
-		public bool get_record_names ();
 		public void offset (int x, int y);
 		public void pop ();
-		public void push (bool keep_coordinates, string name, ...);
-		public void push_blend (Gsk.BlendMode blend_mode, string name, ...);
-		public void push_blur (double radius, string name, ...);
-		public void push_clip (Graphene.Rect bounds, string name, ...);
-		public void push_color_matrix (Graphene.Matrix color_matrix, Graphene.Vec4 color_offset, string name, ...);
-		public void push_cross_fade (double progress, string name, ...);
-		public void push_opacity (double opacity, string name, ...);
-		public void push_repeat (Graphene.Rect bounds, Graphene.Rect child_bounds, string name, ...);
-		public void push_rounded_clip (Gsk.RoundedRect bounds, string name, ...);
-		public void push_shadow (Gsk.Shadow shadow, size_t n_shadows, string name, ...);
-		public void push_transform (Graphene.Matrix transform, string name, ...);
+		public void push_blend (Gsk.BlendMode blend_mode);
+		public void push_blur (double radius);
+		public void push_clip (Graphene.Rect bounds);
+		public void push_color_matrix (Graphene.Matrix color_matrix, Graphene.Vec4 color_offset);
+		public void push_cross_fade (double progress);
+		public void push_debug (string message, ...);
+		public void push_opacity (double opacity);
+		public void push_repeat (Graphene.Rect bounds, Graphene.Rect child_bounds);
+		public void push_rounded_clip (Gsk.RoundedRect bounds);
+		public void push_shadow ([CCode (array_length_cname = "n_shadows", array_length_pos = 1.1, array_length_type = "gsize", type = "const GskShadow*")] Gsk.Shadow[] shadow);
+		public void push_transform (Graphene.Matrix transform);
 		public void render_background (Gtk.StyleContext context, double x, double y, double width, double height);
 		public void render_focus (Gtk.StyleContext context, double x, double y, double width, double height);
 		public void render_frame (Gtk.StyleContext context, double x, double y, double width, double height);
@@ -10508,8 +10509,6 @@ namespace Gtk {
 		public void render_handle (Cairo.Context cr, double x, double y, double width, double height);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_icon")]
 		public void render_icon (Cairo.Context cr, Gdk.Texture texture, double x, double y);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_icon_surface")]
-		public void render_icon_surface (Cairo.Context cr, Cairo.Surface surface, double x, double y);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_insertion_cursor")]
 		public void render_insertion_cursor (Cairo.Context cr, double x, double y, Pango.Layout layout, int index, Pango.Direction direction);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_layout")]
