@@ -1923,7 +1923,7 @@ public class Vala.GirParser : CodeVisitor {
 				parse_c_include ();
 			} else {
 				// error
-				Report.error (get_current_src (), _("unknown child element `%s' in `repository'").printf (reader.name));
+				Report.error (get_current_src (), _("unknown child element `%s' in `%s'").printf (reader.name, "repository"));
 				skip_element ();
 			}
 		}
@@ -2189,7 +2189,7 @@ public class Vala.GirParser : CodeVisitor {
 				parse_constant ();
 			} else {
 				// error
-				Report.error (get_current_src (), _("unknown child element `%s' in `namespace'").printf (reader.name));
+				Report.error (get_current_src (), _("unknown child element `%s' in `%s'").printf (reader.name, "namespace"));
 				skip_element ();
 			}
 
@@ -2801,7 +2801,7 @@ public class Vala.GirParser : CodeVisitor {
 				parse_union ();
 			} else {
 				// error
-				Report.error (get_current_src (), _("unknown child element `%s' in `record'").printf (reader.name));
+				Report.error (get_current_src (), _("unknown child element `%s' in `%s'").printf (reader.name, "record"));
 				skip_element ();
 			}
 
@@ -2884,7 +2884,7 @@ public class Vala.GirParser : CodeVisitor {
 				parse_signal ();
 			} else {
 				// error
-				Report.error (get_current_src (), _("unknown child element `%s' in `class'").printf (reader.name));
+				Report.error (get_current_src (), _("unknown child element `%s' in `%s'").printf (reader.name, "class"));
 				skip_element ();
 			}
 
@@ -2942,7 +2942,7 @@ public class Vala.GirParser : CodeVisitor {
 				parse_signal ();
 			} else {
 				// error
-				Report.error (get_current_src (), _("unknown child element `%s' in `interface'").printf (reader.name));
+				Report.error (get_current_src (), _("unknown child element `%s' in `%s'").printf (reader.name, "interface"));
 				skip_element ();
 			}
 
@@ -3423,7 +3423,7 @@ public class Vala.GirParser : CodeVisitor {
 				parse_union ();
 			} else {
 				// error
-				Report.error (get_current_src (), _("unknown child element `%s' in `class'").printf (reader.name));
+				Report.error (get_current_src (), _("unknown child element `%s' in `%s'").printf (reader.name, "class"));
 				skip_element ();
 			}
 
@@ -3466,7 +3466,7 @@ public class Vala.GirParser : CodeVisitor {
 					parse_field ();
 				} else {
 					// error
-					Report.error (get_current_src (), _("unknown child element `%s' in `transparent union'").printf (reader.name));
+					Report.error (get_current_src (), _("unknown child element `%s' in `%s'").printf (reader.name, "transparent union"));
 					skip_element ();
 				}
 
@@ -3511,7 +3511,7 @@ public class Vala.GirParser : CodeVisitor {
 				parse_record ();
 			} else {
 				// error
-				Report.error (get_current_src (), _("unknown child element `%s' in `union'").printf (reader.name));
+				Report.error (get_current_src (), _("unknown child element `%s' in `%s'").printf (reader.name, "union"));
 				skip_element ();
 			}
 
@@ -3776,7 +3776,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		if (return_type is ArrayType && node.return_array_length_idx >= 0) {
 			if (node.return_array_length_idx >= parameters.size) {
-				Report.error (return_type.source_reference, _("invalid array length index"));
+				Report.error (return_type.source_reference, _("invalid array_length index"));
 			} else {
 				parameters[node.return_array_length_idx].keep = false;
 				node.array_length_parameters.add (node.return_array_length_idx);
