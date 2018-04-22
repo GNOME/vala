@@ -2604,6 +2604,10 @@ public class Vala.GirParser : CodeVisitor {
 			type_name = "GLib.GenericArray";
 		}
 
+		if (type_name == null) {
+			type_name = ctype;
+		}
+
 		DataType type = parse_type_from_gir_name (type_name, out no_array_length, out array_null_terminated, ctype);
 
 		// type arguments / element types
