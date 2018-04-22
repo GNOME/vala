@@ -264,7 +264,7 @@ namespace Gst {
 			[Version (since = "1.6")]
 			public Info ();
 			public void align (Gst.Video.Alignment align);
-			public bool convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
+			public bool convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, out int64 dest_value);
 			[Version (since = "1.6")]
 			public Gst.Video.Info copy ();
 			[Version (since = "1.6")]
@@ -419,10 +419,10 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_orientation_get_type ()")]
 		[GIR (name = "VideoOrientation")]
 		public interface Orientation : GLib.Object {
-			public abstract bool get_hcenter (int center);
-			public abstract bool get_hflip (bool flip);
-			public abstract bool get_vcenter (int center);
-			public abstract bool get_vflip (bool flip);
+			public abstract bool get_hcenter (out int center);
+			public abstract bool get_hflip (out bool flip);
+			public abstract bool get_vcenter (out int center);
+			public abstract bool get_vflip (out bool flip);
 			public abstract bool set_hcenter (int center);
 			public abstract bool set_hflip (bool flip);
 			public abstract bool set_vcenter (int center);
@@ -570,7 +570,7 @@ namespace Gst {
 			public weak size_t offset[4];
 			[CCode (array_length = false)]
 			public weak int stride[4];
-			public bool map (uint plane, Gst.MapInfo info, void* data, int stride, Gst.MapFlags flags);
+			public bool map (uint plane, Gst.MapInfo info, out void* data, out int stride, Gst.MapFlags flags);
 			public bool unmap (uint plane, Gst.MapInfo info);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
@@ -1307,12 +1307,12 @@ namespace Gst {
 		public static unowned string chroma_to_string (Gst.Video.ChromaSite site);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.6")]
-		public static bool color_matrix_get_Kr_Kb (Gst.Video.ColorMatrix matrix, double Kr, double Kb);
+		public static bool color_matrix_get_Kr_Kb (Gst.Video.ColorMatrix matrix, out double Kr, out double Kb);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.6")]
 		public static unowned Gst.Video.ColorPrimariesInfo? color_primaries_get_info (Gst.Video.ColorPrimaries primaries);
 		[CCode (cheader_filename = "gst/video/video.h")]
-		public static void color_range_offsets (Gst.Video.ColorRange range, Gst.Video.FormatInfo info, out int offset, out int scale);
+		public static void color_range_offsets (Gst.Video.ColorRange range, Gst.Video.FormatInfo info, [CCode (array_length = false)] out int offset[4], [CCode (array_length = false)] out int scale[4]);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.6")]
 		public static double color_transfer_decode (Gst.Video.TransferFunction func, double val);
@@ -1338,7 +1338,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool event_parse_downstream_force_key_unit (Gst.Event event, out Gst.ClockTime timestamp, out Gst.ClockTime stream_time, out Gst.ClockTime running_time, out bool all_headers, out uint count);
 		[CCode (cheader_filename = "gst/video/video.h")]
-		public static bool event_parse_still_frame (Gst.Event event, bool in_still);
+		public static bool event_parse_still_frame (Gst.Event event, out bool in_still);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool event_parse_upstream_force_key_unit (Gst.Event event, out Gst.ClockTime running_time, out bool all_headers, out uint count);
 		[CCode (cheader_filename = "gst/video/video.h")]
