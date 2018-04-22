@@ -4767,7 +4767,7 @@ namespace Gtk {
 		[Version (deprecated = true, deprecated_since = "3.10")]
 		public void set_tearoff_state (bool torn_off);
 		[Version (deprecated = true, deprecated_since = "3.10")]
-		public void set_title (string title);
+		public void set_title (string? title);
 		[Version (since = "2.14")]
 		public Gtk.AccelGroup accel_group { get; set; }
 		[Version (since = "2.14")]
