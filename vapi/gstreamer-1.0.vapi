@@ -389,7 +389,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void double_to_fraction (double src, out int dest_n, out int dest_d);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void dump_mem (uint8 mem, uint size);
+		public static void dump_mem ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] mem);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool fraction_add (int a_n, int a_d, int b_n, int b_d, out int res_n, out int res_d);
 		[CCode (cheader_filename = "gst/gst.h")]
@@ -663,7 +663,7 @@ namespace Gst {
 		[CCode (instance_pos = 1.9)]
 		public bool copy_into (Gst.Buffer dst, Gst.BufferCopyFlags flags, size_t offset, size_t size);
 		public Gst.Buffer copy_region (Gst.BufferCopyFlags flags, size_t offset, size_t size);
-		public size_t extract (size_t offset, void* dest, size_t size);
+		public size_t extract (size_t offset, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] out unowned uint8[] dest);
 		[Version (since = "1.0.10")]
 		public void extract_dup (size_t offset, size_t size, [CCode (array_length_cname = "dest_size", array_length_pos = 3.1, array_length_type = "gsize")] out uint8[] dest);
 		public size_t fill (size_t offset, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] src);

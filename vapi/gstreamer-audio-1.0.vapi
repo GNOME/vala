@@ -108,7 +108,7 @@ namespace Gst {
 		[GIR (name = "AudioConverter")]
 		public class Converter {
 			public void free ();
-			public unowned Gst.Structure get_config (int in_rate, int out_rate);
+			public unowned Gst.Structure get_config (out int in_rate, out int out_rate);
 			public size_t get_in_frames (size_t out_frames);
 			public size_t get_max_latency ();
 			public size_t get_out_frames (size_t in_frames);
@@ -144,7 +144,7 @@ namespace Gst {
 			public int get_max_errors ();
 			public Gst.ClockTime get_min_latency ();
 			public bool get_needs_format ();
-			public void get_parse_state (bool sync, bool eos);
+			public void get_parse_state (out bool sync, out bool eos);
 			public bool get_plc ();
 			public int get_plc_aware ();
 			public Gst.ClockTime get_tolerance ();
@@ -301,7 +301,7 @@ namespace Gst {
 			public int rate;
 			[CCode (has_construct_function = false)]
 			public Info ();
-			public bool convert (Gst.Format src_fmt, int64 src_val, Gst.Format dest_fmt, int64 dest_val);
+			public bool convert (Gst.Format src_fmt, int64 src_val, Gst.Format dest_fmt, out int64 dest_val);
 			public Gst.Audio.Info copy ();
 			public void free ();
 			public bool from_caps (Gst.Caps caps);
@@ -357,8 +357,8 @@ namespace Gst {
 			public void clear (int segment);
 			public virtual void clear_all ();
 			public virtual bool close_device ();
-			public virtual uint commit (uint64 sample, uint8 data, int in_samples, int out_samples, int accum);
-			public bool convert (Gst.Format src_fmt, int64 src_val, Gst.Format dest_fmt, int64 dest_val);
+			public virtual uint commit (uint64 sample, [CCode (array_length_cname = "in_samples", array_length_pos = 2.5)] uint8[] data, int out_samples, ref int accum);
+			public bool convert (Gst.Format src_fmt, int64 src_val, Gst.Format dest_fmt, out int64 dest_val);
 			public static void debug_spec_buff (Gst.Audio.RingBufferSpec spec);
 			public static void debug_spec_caps (Gst.Audio.RingBufferSpec spec);
 			public virtual uint delay ();
@@ -370,15 +370,15 @@ namespace Gst {
 			public virtual bool open_device ();
 			public static bool parse_caps (Gst.Audio.RingBufferSpec spec, Gst.Caps caps);
 			public virtual bool pause ();
-			public bool prepare_read (int segment, uint8 readptr, int len);
-			public uint read (uint64 sample, uint8 data, uint len, Gst.ClockTime timestamp);
+			public bool prepare_read (out int segment, [CCode (array_length_cname = "len", array_length_pos = 2.1)] out uint8[] readptr);
+			public uint read (uint64 sample, [CCode (array_length_cname = "len", array_length_pos = 2.5, array_length_type = "guint")] uint8[] data, out Gst.ClockTime timestamp);
 			public virtual bool release ();
 			[NoWrapper]
 			public virtual bool resume ();
 			public uint64 samples_done ();
 			[Version (since = "1.12")]
 			public void set_callback_full (owned Gst.Audio.RingBufferCallback? cb);
-			public void set_channel_positions (Gst.Audio.ChannelPosition position);
+			public void set_channel_positions ([CCode (array_length = false)] Gst.Audio.ChannelPosition[] position);
 			public void set_flushing (bool flushing);
 			public void set_sample (uint64 sample);
 			public void set_timestamp (int readseg, Gst.ClockTime timestamp);

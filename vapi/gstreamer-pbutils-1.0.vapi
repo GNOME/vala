@@ -346,10 +346,10 @@ namespace Gst {
 		public static Gst.Buffer codec_utils_opus_create_header (uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, [CCode (array_length = false)] uint8[]? channel_mapping, uint16 pre_skip, int16 output_gain);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_parse_caps")]
 		[Version (since = "1.8")]
-		public static bool codec_utils_opus_parse_caps (Gst.Caps caps, out uint32 rate, out uint8 channels, out uint8 channel_mapping_family, out uint8 stream_count, out uint8 coupled_count, [CCode (array_length = false)] out uint8[] channel_mapping);
+		public static bool codec_utils_opus_parse_caps (Gst.Caps caps, out uint32 rate, out uint8 channels, out uint8 channel_mapping_family, out uint8 stream_count, out uint8 coupled_count, [CCode (array_length = false)] out uint8 channel_mapping[256]);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_parse_header")]
 		[Version (since = "1.8")]
-		public static bool codec_utils_opus_parse_header (Gst.Buffer header, out uint32 rate, out uint8 channels, out uint8 channel_mapping_family, out uint8 stream_count, out uint8 coupled_count, [CCode (array_length = false)] out uint8[] channel_mapping, out uint16 pre_skip, out int16 output_gain);
+		public static bool codec_utils_opus_parse_header (Gst.Buffer header, out uint32 rate, out uint8 channels, out uint8 channel_mapping_family, out uint8 stream_count, out uint8 coupled_count, [CCode (array_length = false)] out uint8 channel_mapping[256], out uint16 pre_skip, out int16 output_gain);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_encoding_list_all_targets")]
 		public static GLib.List<Gst.PbUtils.EncodingTarget> encoding_list_all_targets (string? categoryname);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_encoding_list_available_categories")]
