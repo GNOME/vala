@@ -239,7 +239,7 @@ namespace Gst {
 			public uint masked_scan_uint32 (uint32 mask, uint32 pattern, uint offset, uint size);
 			[CCode (cname = "gst_byte_reader_masked_scan_uint32_peek")]
 			[Version (since = "1.6")]
-			public uint masked_scan_uint32_peek (uint32 mask, uint32 pattern, uint offset, uint size, uint32 value);
+			public uint masked_scan_uint32_peek (uint32 mask, uint32 pattern, uint offset, uint size, out uint32 value);
 			[CCode (cname = "gst_byte_reader_peek_data")]
 			public bool peek_data ([CCode (array_length_cname = "size", array_length_pos = 0.5, array_length_type = "guint")] out unowned uint8[] val);
 			[CCode (cname = "gst_byte_reader_peek_float32_be")]
@@ -361,7 +361,7 @@ namespace Gst {
 			[CCode (cname = "gst_byte_writer_put_string_utf32")]
 			public bool put_string_utf32 ([CCode (array_length = false, array_null_terminated = true)] uint32[] data);
 			[CCode (cname = "gst_byte_writer_put_string_utf8")]
-			public bool put_string_utf8 ([CCode (array_length = false, array_null_terminated = true)] string[] data);
+			public bool put_string_utf8 (string data);
 			[CCode (cname = "gst_byte_writer_put_uint16_be")]
 			public bool put_uint16_be (uint16 val);
 			[CCode (cname = "gst_byte_writer_put_uint16_le")]
@@ -397,7 +397,7 @@ namespace Gst {
 			public CollectPads ();
 			public unowned Gst.Base.CollectData? add_pad (Gst.Pad pad, uint size, [CCode (scope = "async")] Gst.Base.CollectDataDestroyNotify destroy_notify, bool @lock);
 			public uint available ();
-			public Gst.FlowReturn clip_running_time (Gst.Base.CollectData cdata, Gst.Buffer buf, Gst.Buffer? outbuf, void* user_data);
+			public Gst.FlowReturn clip_running_time (Gst.Base.CollectData cdata, Gst.Buffer buf, out Gst.Buffer outbuf, void* user_data);
 			public bool event_default (Gst.Base.CollectData data, Gst.Event event, bool discard);
 			public uint flush (Gst.Base.CollectData data, uint size);
 			public Gst.Buffer? peek (Gst.Base.CollectData data);
@@ -471,7 +471,7 @@ namespace Gst {
 			public bool add_index_entry (uint64 offset, Gst.ClockTime ts, bool key, bool force);
 			[NoWrapper]
 			public virtual bool convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
-			public bool convert_default (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
+			public bool convert_default (Gst.Format src_format, int64 src_value, Gst.Format dest_format, out int64 dest_value);
 			[NoWrapper]
 			public virtual Gst.FlowReturn detect (Gst.Buffer buffer);
 			[Version (since = "1.12")]
@@ -844,7 +844,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstCollectPadsBufferFunction", instance_pos = 3.9)]
 		public delegate Gst.FlowReturn CollectPadsBufferFunction (Gst.Base.CollectPads pads, Gst.Base.CollectData data, owned Gst.Buffer buffer);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstCollectPadsClipFunction", instance_pos = 4.9)]
-		public delegate Gst.FlowReturn CollectPadsClipFunction (Gst.Base.CollectPads pads, Gst.Base.CollectData data, owned Gst.Buffer inbuffer, Gst.Buffer outbuffer);
+		public delegate Gst.FlowReturn CollectPadsClipFunction (Gst.Base.CollectPads pads, Gst.Base.CollectData data, owned Gst.Buffer inbuffer, out Gst.Buffer outbuffer);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstCollectPadsCompareFunction", instance_pos = 5.9)]
 		public delegate int CollectPadsCompareFunction (Gst.Base.CollectPads pads, Gst.Base.CollectData data1, Gst.ClockTime timestamp1, Gst.Base.CollectData data2, Gst.ClockTime timestamp2);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstCollectPadsEventFunction", instance_pos = 3.9)]
@@ -861,7 +861,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstDataQueueFullCallback", has_target = false)]
 		public delegate void DataQueueFullCallback (Gst.Base.DataQueue queue, void* checkdata);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstTypeFindHelperGetRangeFunction", has_target = false)]
-		public delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, Gst.Object? parent, uint64 offset, uint length, Gst.Buffer buffer);
+		public delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, Gst.Object? parent, uint64 offset, uint length, out Gst.Buffer buffer);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GST_BASE_PARSE_FLAG_DRAINING")]
 		public const int PARSE_FLAG_DRAINING;
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GST_BASE_PARSE_FLAG_LOST_SYNC")]
@@ -875,7 +875,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_buffer")]
 		public static Gst.Caps? type_find_helper_for_buffer (Gst.Object? obj, Gst.Buffer buf, out Gst.TypeFindProbability prob);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_data")]
-		public static Gst.Caps? type_find_helper_for_data (Gst.Object? obj, uint8 data, size_t size, out Gst.TypeFindProbability prob);
+		public static Gst.Caps? type_find_helper_for_data (Gst.Object? obj, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, out Gst.TypeFindProbability prob);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_extension")]
 		public static Gst.Caps? type_find_helper_for_extension (Gst.Object? obj, string extension);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_get_range")]

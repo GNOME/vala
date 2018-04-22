@@ -402,7 +402,7 @@ namespace Gst {
 		[Version (since = "1.14")]
 		public static void dump_buffer (Gst.Buffer buf);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void dump_mem (uint8 mem, uint size);
+		public static void dump_mem ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] mem);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool fraction_add (int a_n, int a_d, int b_n, int b_d, out int res_n, out int res_d);
 		[CCode (cheader_filename = "gst/gst.h")]
@@ -678,7 +678,7 @@ namespace Gst {
 		[CCode (instance_pos = 1.9)]
 		public bool copy_into (Gst.Buffer dst, Gst.BufferCopyFlags flags, size_t offset, size_t size);
 		public Gst.Buffer copy_region (Gst.BufferCopyFlags flags, size_t offset, size_t size);
-		public size_t extract (size_t offset, void* dest, size_t size);
+		public size_t extract (size_t offset, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] out unowned uint8[] dest);
 		[Version (since = "1.0.10")]
 		public void extract_dup (size_t offset, size_t size, [CCode (array_length_cname = "dest_size", array_length_pos = 3.1, array_length_type = "gsize")] out uint8[] dest);
 		public size_t fill (size_t offset, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] src);
@@ -835,6 +835,7 @@ namespace Gst {
 		[Version (since = "1.2")]
 		public void append_structure_full (owned Gst.Structure structure, owned Gst.CapsFeatures? features = null);
 		public bool can_intersect (Gst.Caps caps2);
+		public Gst.Caps copy ();
 		public Gst.Caps copy_nth (uint nth);
 		[CCode (has_construct_function = false)]
 		public Caps.empty ();
@@ -2218,8 +2219,16 @@ namespace Gst {
 		public unowned Gst.Caps? get_caps ();
 		public unowned Gst.Structure? get_info ();
 		public unowned Gst.Segment get_segment ();
+		[Version (since = "1.16")]
+		public void set_buffer (Gst.Buffer buffer);
 		[Version (since = "1.6")]
 		public void set_buffer_list (Gst.BufferList buffer_list);
+		[Version (since = "1.16")]
+		public void set_caps (Gst.Caps caps);
+		[Version (since = "1.16")]
+		public bool set_info (Gst.Structure info);
+		[Version (since = "1.16")]
+		public void set_segment (Gst.Segment segment);
 	}
 	[CCode (cheader_filename = "gst/gst.h", copy_function = "gst_segment_copy", free_function = "gst_segment_free", type_id = "gst_segment_get_type ()")]
 	[Compact]
