@@ -2969,6 +2969,8 @@ namespace GLib {
 		public TimeZone (string identifier);
 		public TimeZone.utc ();
 		public TimeZone.local ();
+		[Version (since = "2.58")]
+		public TimeZone.offset (int32 seconds);
 		public int find_interval (TimeType type, int64 time);
 		public int adjust_time (TimeType type, ref int64 time);
 		public unowned string get_abbreviation (int interval);
