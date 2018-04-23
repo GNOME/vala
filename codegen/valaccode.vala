@@ -23,15 +23,16 @@
 namespace Vala {
 	static int? ccode_attribute_cache_index = null;
 
-	static CCodeAttribute get_ccode_attribute (CodeNode node) {
+	static unowned CCodeAttribute get_ccode_attribute (CodeNode node) {
 		if (ccode_attribute_cache_index == null) {
 			ccode_attribute_cache_index = CodeNode.get_attribute_cache_index ();
 		}
 
-		var attr = node.get_attribute_cache (ccode_attribute_cache_index);
+		unowned AttributeCache? attr = node.get_attribute_cache (ccode_attribute_cache_index);
 		if (attr == null) {
-			attr = new CCodeAttribute (node);
-			node.set_attribute_cache (ccode_attribute_cache_index, attr);
+			var new_attr = new CCodeAttribute (node);
+			node.set_attribute_cache (ccode_attribute_cache_index, new_attr);
+			attr = new_attr;
 		}
 		return (CCodeAttribute) attr;
 	}
