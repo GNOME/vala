@@ -252,7 +252,7 @@ public class Vala.GtkModule : GSignalModule {
 
 		var call = new CCodeFunctionCall (new CCodeIdentifier ("gtk_widget_class_set_template_from_resource"));
 		call.add_argument (new CCodeIdentifier ("GTK_WIDGET_CLASS (klass)"));
-		call.add_argument (new CCodeConstant ("\""+cl.get_attribute_string ("GtkTemplate", "ui")+"\""));
+		call.add_argument (new CCodeConstant ("\"%s\"".printf (ui)));
 		ccode.add_expression (call);
 
 		current_required_app_classes.clear ();
