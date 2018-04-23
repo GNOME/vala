@@ -259,8 +259,8 @@ public class Vala.GtkModule : GSignalModule {
 	}
 
 	public override void visit_property (Property prop) {
-		if (prop.get_attribute ("GtkChild") != null) {
-			Report.error (prop.source_reference, "Annotating properties with [GtkChild] is not yet supported");
+		if (prop.get_attribute ("GtkChild") != null && prop.field == null) {
+			Report.error (prop.source_reference, "[GtkChild] is only allowed on automatic properties");
 		}
 
 		base.visit_property (prop);

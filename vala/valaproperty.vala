@@ -118,6 +118,11 @@ public class Vala.Property : Symbol, Lockable {
 						_field = new Field ("_%s".printf (name), property_type.copy (), initializer, source_reference);
 						_field.access = SymbolAccessibility.PRIVATE;
 						_field.binding = binding;
+						// apply gtk-child attribute to backing field for gtk-template support
+						if (get_attribute ("GtkChild") != null) {
+							_field.set_attribute_string ("GtkChild", "name", get_attribute_string ("GtkChild", "name", name));
+							_field.set_attribute_bool ("GtkChild", "internal", get_attribute_bool ("GtkChild", "internal"));
+						}
 					}
 				}
 				_field_checked = true;
