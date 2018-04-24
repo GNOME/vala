@@ -3250,7 +3250,7 @@ namespace WebKit {
 			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool contains (WebKit.DOM.Node other);
 			[Version (since = "2.22")]
-			public static unowned WebKit.DOM.Node for_js_value (JS.Value value);
+			public static unowned WebKit.DOM.Node for_js_value ([CCode (type = "JSCValue*")] JSC.Value value);
 			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_base_uri ();
 			[Version (deprecated = true, deprecated_since = "2.22")]
@@ -4014,13 +4014,13 @@ namespace WebKit {
 		[Version (deprecated = true, deprecated_since = "2.22", since = "2.2")]
 		public unowned JS.GlobalContext get_javascript_global_context ();
 		[Version (since = "2.22")]
-		public JS.Context get_js_context ();
+		public JSC.Context get_js_context ();
 		[Version (since = "2.22")]
-		public JS.Context get_js_context_for_script_world (WebKit.ScriptWorld world);
+		public JSC.Context get_js_context_for_script_world (WebKit.ScriptWorld world);
 		[Version (since = "2.22")]
-		public JS.Value get_js_value_for_dom_object (WebKit.DOM.Object dom_object);
+		public JSC.Value get_js_value_for_dom_object (WebKit.DOM.Object dom_object);
 		[Version (since = "2.22")]
-		public JS.Value get_js_value_for_dom_object_in_script_world (WebKit.DOM.Object dom_object, WebKit.ScriptWorld world);
+		public JSC.Value get_js_value_for_dom_object_in_script_world (WebKit.DOM.Object dom_object, WebKit.ScriptWorld world);
 		[Version (since = "2.2")]
 		public unowned string get_uri ();
 		[Version (since = "2.2")]

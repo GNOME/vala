@@ -3,7 +3,8 @@
  *   Copyright 2011 Jiří Janoušek <janousek.jiri@gmail.com>
  *   Copyright 2017 Michael Gratton <mike@vee.net>
  */
-[CCode (cprefix = "JS", gir_namespace = "JavaScriptCore", gir_version = "4.0", lower_case_cprefix = "JS_")]
+[CCode (cprefix = "JS", gir_namespace = "JavaScript", gir_version = "4.0", lower_case_cprefix = "JS_")]
+[Version (deprecated = true, deprecated_since = "2.22")]
 namespace JS {
 	[CCode (cheader_filename = "JavaScriptCore/JavaScript.h", cname = "void", free_function = "JSClassRelease", has_type_id = false)]
 	[Compact]
@@ -154,5 +155,14 @@ namespace JS {
 		BUFFER,
 		[CCode (cname = "kJSTypedArrayTypeNone")]
 		NONE
+	}
+}
+
+namespace JSC {
+	public class Class : GLib.Object {
+		public void add_property (string name, GLib.Type property_type, [CCode (scope = "async")] GLib.Callback? getter, [CCode (scope = "async")] GLib.Callback? setter, void* user_data, GLib.DestroyNotify? destroy_notify);
+	}
+	public class Value : GLib.Object {
+		public void object_define_property_accessor (global::string property_name, JSC.ValuePropertyFlags flags, GLib.Type property_type, [CCode (scope = "async")] GLib.Callback? getter, [CCode (scope = "async")] GLib.Callback? setter, void* user_data, GLib.DestroyNotify? destroy_notify);
 	}
 }

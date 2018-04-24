@@ -342,7 +342,7 @@ namespace WebKit {
 		[Version (deprecated = true, deprecated_since = "2.22")]
 		public unowned JS.GlobalContext get_global_context ();
 		[Version (since = "2.22")]
-		public unowned JS.Value get_js_value ();
+		public unowned JSC.Value get_js_value ();
 		[Version (deprecated = true, deprecated_since = "2.22")]
 		public unowned JS.Value get_value ();
 		public unowned WebKit.JavascriptResult @ref ();

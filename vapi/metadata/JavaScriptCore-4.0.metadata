@@ -1,4 +1,4 @@
-* cheader_filename="JavaScriptCore/JavaScript.h"
-
-GlobalContext struct=false
-Value struct=false
+Class
+  .add_property skip
+Value
+  .object_define_property_accessor skip
