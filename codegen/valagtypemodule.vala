@@ -549,13 +549,13 @@ public class Vala.GTypeModule : GErrorModule {
 				if (prop.lock_used) {
 					cl.has_private_fields = true;
 					// add field for mutex
-					instance_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (prop.name));
+					instance_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (get_ccode_name (prop)));
 				}
 			} else if (prop.binding == MemberBinding.CLASS) {
 				if (prop.lock_used) {
 					has_class_locks = true;
 					// add field for mutex
-					type_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (prop.name));
+					type_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (get_ccode_name (prop)));
 				}
 			}
 		}
