@@ -562,6 +562,11 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_indent ();
 		write_accessibility (c);
+
+		if (c.hides) {
+			write_string ("new ");
+		}
+
 		write_string ("const ");
 
 		write_type (c.type_reference);
@@ -594,6 +599,10 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_indent ();
 		write_accessibility (f);
+
+		if (f.hides) {
+			write_string ("new ");
+		}
 
 		if (f.binding == MemberBinding.STATIC) {
 			write_string ("static ");
@@ -770,6 +779,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			}
 			write_string (" ");
 		} else {
+			if (m.hides) {
+				write_string ("new ");
+			}
+
 			if (m.binding == MemberBinding.STATIC) {
 				write_string ("static ");
 			} else if (m.binding == MemberBinding.CLASS) {
@@ -780,10 +793,6 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_string ("virtual ");
 			} else if (m.overrides) {
 				write_string ("override ");
-			}
-
-			if (m.hides) {
-				write_string ("new ");
 			}
 
 			if (m.coroutine) {
@@ -826,6 +835,10 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_indent ();
 		write_accessibility (prop);
+
+		if (prop.hides) {
+			write_string ("new ");
+		}
 
 		if (prop.binding == MemberBinding.STATIC) {
 			write_string ("static ");
@@ -888,6 +901,10 @@ public class Vala.CodeWriter : CodeVisitor {
 		
 		write_indent ();
 		write_accessibility (sig);
+
+		if (sig.hides) {
+			write_string ("new ");
+		}
 
 		if (sig.is_virtual) {
 			write_string ("virtual ");
