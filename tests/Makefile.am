@@ -308,6 +308,7 @@ TESTS = \
 	objects/bug779955.vala \
 	objects/bug783897.vala \
 	objects/bug788964.vala \
+	objects/bug795521.vala \
 	errors/catch-error-code.vala \
 	errors/errors.vala \
 	errors/bug567181.vala \
