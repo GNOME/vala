@@ -876,7 +876,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var finalize_context = class_finalize_context;
 
 			if (m.is_instance_member ()) {
-				l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (m.name));
+				l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (get_ccode_name (m)));
 				init_context = instance_init_context;
 				finalize_context = instance_finalize_context;
 			} else if (m.is_class_member ()) {
@@ -884,9 +884,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				var get_class_private_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf(get_ccode_upper_case_name (parent))));
 				get_class_private_call.add_argument (new CCodeIdentifier ("klass"));
-				l = new CCodeMemberAccess.pointer (get_class_private_call, get_symbol_lock_name (m.name));
+				l = new CCodeMemberAccess.pointer (get_class_private_call, get_symbol_lock_name (get_ccode_name (m)));
 			} else {
-				l = new CCodeIdentifier (get_symbol_lock_name ("%s_%s".printf(get_ccode_lower_case_name (m.parent_symbol), m.name)));
+				l = new CCodeIdentifier (get_symbol_lock_name ("%s_%s".printf (get_ccode_lower_case_name (m.parent_symbol), get_ccode_name (m))));
 			}
 
 			push_context (init_context);
@@ -1013,7 +1013,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (f.get_lock_used ()) {
 			// Declare mutex for static member
 			var flock = new CCodeDeclaration (get_ccode_name (mutex_type));
-			var flock_decl =  new CCodeVariableDeclarator (get_symbol_lock_name (get_ccode_name (f)), new CCodeConstant ("{0}"));
+			var flock_decl = new CCodeVariableDeclarator (get_symbol_lock_name ("%s_%s".printf (get_ccode_lower_case_name (f.parent_symbol), get_ccode_name (f))), new CCodeConstant ("{0}"));
 			flock.add_declarator (flock_decl);
 
 			if (f.is_private_symbol ()) {
@@ -3791,13 +3791,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (member.is_instance_member ()) {
 			if (inner_node  == null) {
 				l = new CCodeIdentifier ("self");
-			} else if (resource.symbol_reference.parent_symbol != current_type_symbol) {
+			} else if (parent != current_type_symbol) {
 				l = generate_instance_cast (get_cvalue (inner_node), parent);
 			} else {
 				l = get_cvalue (inner_node);
 			}
 
-			l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (resource.symbol_reference.name));
+			l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (get_ccode_name (member)));
 		} else if (member.is_class_member ()) {
 			CCodeExpression klass;
 
@@ -3811,9 +3811,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			var get_class_private_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf(get_ccode_upper_case_name (parent))));
 			get_class_private_call.add_argument (klass);
-			l = new CCodeMemberAccess.pointer (get_class_private_call, get_symbol_lock_name (resource.symbol_reference.name));
+			l = new CCodeMemberAccess.pointer (get_class_private_call, get_symbol_lock_name (get_ccode_name (member)));
 		} else {
-			string lock_name = "%s_%s".printf(get_ccode_lower_case_name (parent), resource.symbol_reference.name);
+			string lock_name = "%s_%s".printf (get_ccode_lower_case_name (parent), get_ccode_name (member));
 			l = new CCodeIdentifier (get_symbol_lock_name (lock_name));
 		}
 		return l;
