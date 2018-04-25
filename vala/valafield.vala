@@ -38,7 +38,7 @@ public class Vala.Field : Variable, Lockable {
 	 */
 	public bool is_volatile { get; set; }
 
-	private bool lock_used = false;
+	public bool lock_used { get; set; }
 
 	/**
 	 * Creates a new field.
@@ -63,14 +63,6 @@ public class Vala.Field : Variable, Lockable {
 		if (initializer != null) {
 			initializer.accept (visitor);
 		}
-	}
-
-	public bool get_lock_used () {
-		return lock_used;
-	}
-
-	public void set_lock_used (bool used) {
-		lock_used = used;
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {

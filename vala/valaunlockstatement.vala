@@ -64,7 +64,7 @@ public class Vala.UnlockStatement : CodeNode, Statement {
 			Report.error (resource.source_reference, "Only members of the current class are lockable");
 		}
 
-		((Lockable) resource.symbol_reference).set_lock_used (true);
+		((Lockable) resource.symbol_reference).lock_used = true;
 
 		return !error;
 	}

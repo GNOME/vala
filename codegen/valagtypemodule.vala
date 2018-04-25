@@ -526,7 +526,7 @@ public class Vala.GTypeModule : GErrorModule {
 					}
 				}
 
-				if (f.get_lock_used ()) {
+				if (f.lock_used) {
 					cl.has_private_fields = true;
 					// add field for mutex
 					instance_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (get_ccode_name (f)));
@@ -536,7 +536,7 @@ public class Vala.GTypeModule : GErrorModule {
 					type_priv_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers);
 				}
 
-				if (f.get_lock_used ()) {
+				if (f.lock_used) {
 					has_class_locks = true;
 					// add field for mutex
 					type_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (get_ccode_name (f)));
@@ -546,13 +546,13 @@ public class Vala.GTypeModule : GErrorModule {
 
 		foreach (Property prop in cl.get_properties ()) {
 			if (prop.binding == MemberBinding.INSTANCE) {
-				if (prop.get_lock_used ()) {
+				if (prop.lock_used) {
 					cl.has_private_fields = true;
 					// add field for mutex
 					instance_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (prop.name));
 				}
 			} else if (prop.binding == MemberBinding.CLASS) {
-				if (prop.get_lock_used ()) {
+				if (prop.lock_used) {
 					has_class_locks = true;
 					// add field for mutex
 					type_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (prop.name));

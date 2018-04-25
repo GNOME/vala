@@ -874,7 +874,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public void visit_member (Symbol m) {
 		/* stuff meant for all lockable members */
-		if (m is Lockable && ((Lockable) m).get_lock_used ()) {
+		if (m is Lockable && ((Lockable) m).lock_used) {
 			CCodeExpression l = new CCodeIdentifier ("self");
 			var init_context = class_init_context;
 			var finalize_context = class_finalize_context;
@@ -1037,7 +1037,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 		decl_space.add_type_member_declaration (cdecl);
 
-		if (f.get_lock_used ()) {
+		if (f.lock_used) {
 			// Declare mutex for static member
 			var flock = new CCodeDeclaration (get_ccode_name (mutex_type));
 			var flock_decl =  new CCodeVariableDeclarator (get_symbol_lock_name (get_ccode_name (f)), new CCodeConstant ("{0}"));

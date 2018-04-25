@@ -214,9 +214,9 @@ public class Vala.Property : Symbol, Lockable {
 		}
 	}
 
-	private Expression _initializer;
+	public bool lock_used { get; set; }
 
-	private bool lock_used = false;
+	private Expression _initializer;
 
 	private DataType _data_type;
 
@@ -265,14 +265,6 @@ public class Vala.Property : Symbol, Lockable {
 		if (initializer != null) {
 			initializer.accept (visitor);
 		}
-	}
-
-	public bool get_lock_used () {
-		return lock_used;
-	}
-
-	public void set_lock_used (bool used) {
-		lock_used = used;
 	}
 
 	/**
