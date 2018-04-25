@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a type member with a constant value.
  */
-public class Vala.Constant : Symbol, Lockable {
+public class Vala.Constant : Symbol {
 	/**
 	 * The data type of this constant.
 	 */
@@ -49,8 +49,6 @@ public class Vala.Constant : Symbol, Lockable {
 			}
 		}
 	}
-
-	private bool lock_used = false;
 
 	private DataType _data_type;
 
@@ -83,14 +81,6 @@ public class Vala.Constant : Symbol, Lockable {
 		if (value != null) {
 			value.accept (visitor);
 		}
-	}
-
-	public bool get_lock_used () {
-		return lock_used;
-	}
-
-	public void set_lock_used (bool used) {
-		lock_used = used;
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {

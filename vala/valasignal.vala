@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents an object signal. Signals enable objects to provide notifications.
  */
-public class Vala.Signal : Symbol, Lockable, Callable {
+public class Vala.Signal : Symbol, Callable {
 	/**
 	 * The return type of handlers of this signal.
 	 */
@@ -64,8 +64,6 @@ public class Vala.Signal : Symbol, Lockable, Callable {
 	 * function in the scope.
 	 * */
 	public Method emitter { get; private set; }
-
-	private bool lock_used = false;
 
 	private DataType _return_type;
 
@@ -168,14 +166,6 @@ public class Vala.Signal : Symbol, Lockable, Callable {
 		if (emitter != null) {
 			emitter.accept (visitor);
 		}
-	}
-
-	public bool get_lock_used () {
-		return lock_used;
-	}
-
-	public void set_lock_used (bool used) {
-		lock_used = used;
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
