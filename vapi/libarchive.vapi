@@ -30,7 +30,7 @@ namespace Archive {
 	public unowned string version_string ();
 
 	[CCode (instance_pos = 1.9, cname="archive_read_callback")]
-	public delegate ssize_t ReadCallback (Archive archive,[CCode (array_length = false)] out uint8[] buffer);
+	public delegate ssize_t ReadCallback (Archive archive,[CCode (array_length = false)] out unowned uint8[] buffer);
 	[CCode (instance_pos = 1.9, cname="archive_skip_callback")]
 	public delegate int64_t SkipCallback (Archive archive, int64_t request);
 	[CCode (instance_pos = 1.9, cname="archive_write_callback")]
@@ -215,7 +215,7 @@ namespace Archive {
 		[CCode (cname="archive_read_data")]
 		public ssize_t read_data ([CCode (array_length_type = "size_t")] uint8[] buffer);
 		[CCode (cname="archive_read_data_block")]
-		public Result read_data_block ([CCode (array_length_type = "size_t")] out uint8[] buffer, out int64_t offset);
+		public Result read_data_block ([CCode (array_length_type = "size_t")] out unowned uint8[] buffer, out int64_t offset);
 		[CCode (cname="archive_read_data_skip")]
 		public Result read_data_skip ();
 		[CCode (cname="archive_read_data_into_fd")]
