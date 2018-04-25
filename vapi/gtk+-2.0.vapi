@@ -325,7 +325,7 @@ namespace Gtk {
 		public Gdk.ModifierType get_modifier_mask ();
 		public void @lock ();
 		public unowned Gtk.AccelGroupEntry[] query (uint accel_key, Gdk.ModifierType accel_mods);
-		public void unlock ();
+		public void @unlock ();
 		public bool is_locked { get; }
 		public Gdk.ModifierType modifier_mask { get; }
 		public virtual signal bool accel_activate (GLib.Object p0, uint p1, Gdk.ModifierType p2);

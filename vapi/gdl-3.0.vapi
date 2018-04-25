@@ -98,7 +98,7 @@ namespace Gdl {
 		public void show_grip ();
 		public void show_item ();
 		public void unbind ();
-		public void unlock ();
+		public void @unlock ();
 		[Version (since = "3.6")]
 		public void unset_behavior_flags (Gdl.DockItemBehavior behavior);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]

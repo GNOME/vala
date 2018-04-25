@@ -621,7 +621,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool stop ();
 			[NoWrapper]
-			public virtual bool unlock ();
+			public virtual bool @unlock ();
 			[NoWrapper]
 			public virtual bool unlock_stop ();
 			public Gst.FlowReturn wait (Gst.ClockTime time, out Gst.ClockTimeDiff jitter);
@@ -715,7 +715,7 @@ namespace Gst {
 			[Version (since = "1.14")]
 			public void submit_buffer_list (owned Gst.BufferList buffer_list);
 			[NoWrapper]
-			public virtual bool unlock ();
+			public virtual bool @unlock ();
 			[NoWrapper]
 			public virtual bool unlock_stop ();
 			public Gst.FlowReturn wait_playing ();

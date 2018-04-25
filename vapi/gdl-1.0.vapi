@@ -66,7 +66,7 @@ namespace Gdl {
 		public void show_grip ();
 		public void show_item ();
 		public void unbind ();
-		public void unlock ();
+		public void @unlock ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DockItem.with_stock (string name, string long_name, string stock_id, Gdl.DockItemBehavior behavior);
 		[NoAccessorMethod]

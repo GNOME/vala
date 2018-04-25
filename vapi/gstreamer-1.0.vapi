@@ -1742,7 +1742,7 @@ namespace Gst {
 		public void set_qdata<T> (GLib.Quark quark, owned T data);
 		public void* steal_qdata (GLib.Quark quark);
 		public static bool take (ref Gst.MiniObject olddata, Gst.MiniObject newdata);
-		public void unlock (Gst.LockFlags flags);
+		public void @unlock (Gst.LockFlags flags);
 		public void unref ();
 		public void weak_ref (Gst.MiniObjectNotify notify);
 		public void weak_unref (Gst.MiniObjectNotify notify);

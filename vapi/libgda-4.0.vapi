@@ -679,7 +679,7 @@ namespace Gda {
 		public Mutex ();
 		public void @lock ();
 		public bool trylock ();
-		public void unlock ();
+		public void @unlock ();
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "gda_numeric_copy", type_id = "gda_numeric_get_type ()")]
 	[Compact]
@@ -1792,7 +1792,7 @@ namespace Gda {
 		[CCode (vfunc_name = "i_trylock")]
 		public virtual bool trylock ();
 		[CCode (vfunc_name = "i_unlock")]
-		public virtual void unlock ();
+		public virtual void @unlock ();
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public struct DsnInfo {

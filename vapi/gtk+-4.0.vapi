@@ -6426,7 +6426,7 @@ namespace Gtk {
 		public void @lock ();
 		[CCode (array_length_pos = 2.1, array_length_type = "guint")]
 		public unowned Gtk.AccelGroupEntry[]? query (uint accel_key, Gdk.ModifierType accel_mods);
-		public void unlock ();
+		public void @unlock ();
 		public bool is_locked { get; }
 		public Gdk.ModifierType modifier_mask { get; }
 		public signal bool accel_activate (GLib.Object acceleratable, uint keyval, Gdk.ModifierType modifier);
