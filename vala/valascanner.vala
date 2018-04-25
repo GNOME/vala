@@ -473,6 +473,9 @@ public class Vala.Scanner {
 					break;
 				}
 				break;
+			case 'u':
+				if (matches (begin, "unlock")) return TokenType.UNLOCK;
+				break;
 			}
 			break;
 		case 7:

@@ -143,6 +143,7 @@ public enum Vala.TokenType {
 	TRUE,
 	TRY,
 	TYPEOF,
+	UNLOCK,
 	UNOWNED,
 	USING,
 	VAR,
@@ -275,6 +276,7 @@ public enum Vala.TokenType {
 		case TRUE: return "`true'";
 		case TRY: return "`try'";
 		case TYPEOF: return "`typeof'";
+		case UNLOCK: return "`unlock'";
 		case UNOWNED: return "`unowned'";
 		case USING: return "`using'";
 		case VAR: return "`var'";

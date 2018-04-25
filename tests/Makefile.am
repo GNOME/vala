@@ -420,6 +420,7 @@ TESTS = \
 	parser/function-syntax-error.test \
 	parser/inner-array-size.test \
 	parser/invalid-brace.test \
+	parser/lock-statement.vala \
 	parser/method-no-abstract-override.test \
 	parser/method-no-abstract-virtual-override.test \
 	parser/method-no-abstract-virtual.test \

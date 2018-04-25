@@ -238,6 +238,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.TRUE:
 		case TokenType.TRY:
 		case TokenType.TYPEOF:
+		case TokenType.UNLOCK:
 		case TokenType.UNOWNED:
 		case TokenType.USING:
 		case TokenType.VAR:
@@ -1576,6 +1577,9 @@ public class Vala.Parser : CodeVisitor {
 				case TokenType.LOCK:
 					stmt = parse_lock_statement ();
 					break;
+				case TokenType.UNLOCK:
+					stmt = parse_unlock_statement ();
+					break;
 				case TokenType.DELETE:
 					stmt = parse_delete_statement ();
 					break;
@@ -1740,6 +1744,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.THROW:     return parse_throw_statement ();
 		case TokenType.TRY:       return parse_try_statement ();
 		case TokenType.LOCK:      return parse_lock_statement ();
+		case TokenType.UNLOCK:    return parse_unlock_statement ();
 		case TokenType.DELETE:    return parse_delete_statement ();
 		case TokenType.VAR:
 		case TokenType.CONST:
@@ -2134,8 +2139,21 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.OPEN_PARENS);
 		var expr = parse_expression ();
 		expect (TokenType.CLOSE_PARENS);
-		var stmt = parse_embedded_statement ("lock", false);
+		Block? stmt = null;
+		if (current () != TokenType.SEMICOLON) {
+			stmt = parse_embedded_statement ("lock", false);
+		}
 		return new LockStatement (expr, stmt, get_src (begin));
+	}
+
+	Statement parse_unlock_statement () throws ParseError {
+		var begin = get_location ();
+		expect (TokenType.UNLOCK);
+		expect (TokenType.OPEN_PARENS);
+		var expr = parse_expression ();
+		expect (TokenType.CLOSE_PARENS);
+		expect (TokenType.SEMICOLON);
+		return new UnlockStatement (expr, get_src (begin));
 	}
 
 	Statement parse_delete_statement () throws ParseError {
@@ -2265,6 +2283,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.THROW:
 		case TokenType.TRY:
 		case TokenType.LOCK:
+		case TokenType.UNLOCK:
 		case TokenType.DELETE:
 		case TokenType.VAR:
 		case TokenType.OP_INC:
@@ -2450,6 +2469,7 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.SWITCH:
 			case TokenType.THROW:
 			case TokenType.TRY:
+			case TokenType.UNLOCK:
 			case TokenType.VAR:
 			case TokenType.WHILE:
 			case TokenType.YIELD:
