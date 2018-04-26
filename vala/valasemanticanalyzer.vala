@@ -991,7 +991,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (left.is_floating_type () == right.is_floating_type ()) {
 			// both operands integer or floating type
-			if (left.get_rank () >= right.get_rank ()) {
+			if (left.rank >= right.rank) {
 				return left_type;
 			} else {
 				return right_type;

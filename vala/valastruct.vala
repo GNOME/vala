@@ -38,7 +38,7 @@ public class Vala.Struct : TypeSymbol {
 	private bool? floating_type;
 	private bool? decimal_floating_type;
 	private bool? simple_type;
-	private int? rank;
+	private int? _rank;
 	private int? _width;
 	private bool? _signed;
 	private bool? _is_immutable;
@@ -121,6 +121,37 @@ public class Vala.Struct : TypeSymbol {
 		set {
 			_signed = value;
 			set_attribute_bool ("IntegerType", "signed", value);
+		}
+	}
+
+	/**
+	 * Specifies the rank of this integer or floating point type.
+	 */
+	public int rank {
+		get {
+			if (_rank == null) {
+				if (is_integer_type () && has_attribute_argument ("IntegerType", "rank")) {
+					_rank = get_attribute_integer ("IntegerType", "rank");
+				} else if (has_attribute_argument ("FloatingType", "rank")) {
+					_rank = get_attribute_integer ("FloatingType", "rank");
+				} else {
+					var st = base_struct;
+					if (st != null) {
+						_rank = st.rank;
+					} else {
+						Report.error (source_reference, "internal error: struct has no rank");
+					}
+				}
+			}
+			return _rank;
+		}
+		set {
+			_rank = value;
+			if (is_integer_type ()) {
+				set_attribute_integer ("IntegerType", "rank", _rank);
+			} else {
+				set_attribute_integer ("FloatingType", "rank", _rank);
+			}
 		}
 	}
 
@@ -351,39 +382,6 @@ public class Vala.Struct : TypeSymbol {
 			decimal_floating_type = get_attribute_bool ("FloatingType", "decimal");
 		}
 		return decimal_floating_type;
-	}
-
-	/**
-	 * Returns the rank of this integer or floating point type.
-	 *
-	 * @return the rank if this is an integer or floating point type
-	 */
-	public int get_rank () {
-		if (rank == null) {
-			if (is_integer_type () && has_attribute_argument ("IntegerType", "rank")) {
-				rank = get_attribute_integer ("IntegerType", "rank");
-			} else if (has_attribute_argument ("FloatingType", "rank")) {
-				rank = get_attribute_integer ("FloatingType", "rank");
-			} else {
-				var st = base_struct;
-				if (st != null) {
-					rank = st.get_rank ();
-				}
-			}
-		}
-		return rank;
-	}
-
-	/**
-	 * Sets the rank of this integer or floating point type.
-	 */
-	public void set_rank (int rank) {
-		this.rank = rank;
-		if (is_integer_type ()) {
-			set_attribute_integer ("IntegerType", "rank", rank);
-		} else {
-			set_attribute_integer ("FloatingType", "rank", rank);
-		}
 	}
 
 	public override int get_type_parameter_index (string name) {

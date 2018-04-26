@@ -336,7 +336,7 @@ public abstract class Vala.DataType : CodeNode {
 
 			if ((expr_struct.is_integer_type () && expect_struct.is_integer_type ()) ||
 			    (expr_struct.is_floating_type () && expect_struct.is_floating_type ())) {
-				if (expr_struct.get_rank () <= expect_struct.get_rank ()) {
+				if (expr_struct.rank <= expect_struct.rank) {
 					return true;
 				}
 			}

@@ -799,7 +799,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						} else if (nv[0] == "base_type") {
 							st.base_type = parse_type_string (eval (nv[1]));
 						} else if (nv[0] == "rank") {
-							st.set_rank (int.parse (eval (nv[1])));
+							st.rank = int.parse (eval (nv[1]));
 						} else if (nv[0] == "simple_type") {
 							if (eval (nv[1]) == "1") {
 								st.set_simple_type (true);
