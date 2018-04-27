@@ -13,7 +13,4 @@ class Foo {
 }
 
 void main () {
-	var foo = new Foo ();
-	foo.explicit_unlocking ();
-	foo.implicit_unlocking ();
 }

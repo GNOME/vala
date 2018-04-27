@@ -37,6 +37,4 @@ class Foo {
 }
 
 void main () {
-	var foo = new Foo ();
-	foo.use ();
 }
