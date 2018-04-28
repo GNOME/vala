@@ -224,6 +224,18 @@ namespace Sqlite {
 	public const int OPEN_READWRITE;
 	[CCode (cname = "SQLITE_OPEN_CREATE")]
 	public const int OPEN_CREATE;
+	[CCode (cname = "SQLITE_OPEN_URI")]
+	public const int OPEN_URI;
+	[CCode (cname = "SQLITE_OPEN_MEMORY")]
+	public const int OPEN_MEMORY;
+	[CCode (cname = "SQLITE_OPEN_NOMUTEX")]
+	public const int OPEN_NOMUTEX;
+	[CCode (cname = "SQLITE_OPEN_FULLMUTEX")]
+	public const int OPEN_FULLMUTEX;
+	[CCode (cname = "SQLITE_OPEN_SHAREDCACHE")]
+	public const int OPEN_SHAREDCACHE;
+	[CCode (cname = "SQLITE_OPEN_PRIVATECACHE")]
+	public const int OPEN_PRIVATECACHE;
 	[CCode (cname = "SQLITE_INTEGER")]
 	public const int INTEGER;
 	[CCode (cname = "SQLITE_FLOAT")]
