@@ -976,7 +976,7 @@ namespace Posix {
 	/**
 	 * Signal constants
 	 */
-	[CCode (cheader_filename = "signal.h", cprefix = "SIG", has_type_id = false)]
+	[CCode (cheader_filename = "signal.h", cname = "int", cprefix = "SIG", has_type_id = false)]
 	public enum Signal {
 		/**
 		 * Abort signal (ANSI)
