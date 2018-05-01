@@ -31,6 +31,9 @@ namespace Gsk {
 	public class CrossFadeNode : Gsk.RenderNode {
 	}
 	[CCode (cname = "GskRenderNode")]
+	public class DebugNode : Gsk.RenderNode {
+	}
+	[CCode (cname = "GskRenderNode")]
 	public class InsetShadowNode : Gsk.RenderNode {
 	}
 	[CCode (cname = "GskRenderNode")]
