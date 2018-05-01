@@ -111,6 +111,8 @@ namespace Gst {
 			public bool drop_buffer ();
 			[NoWrapper]
 			public virtual Gst.FlowReturn flush (Gst.Base.Aggregator aggregator);
+			[Version (since = "1.16")]
+			public bool has_buffer ();
 			public bool is_eos ();
 			public Gst.Buffer peek_buffer ();
 			public Gst.Buffer pop_buffer ();

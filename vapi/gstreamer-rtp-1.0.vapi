@@ -14,7 +14,7 @@ namespace Gst {
 			protected BaseAudioPayload ();
 			public Gst.FlowReturn flush (uint payload_len, Gst.ClockTime timestamp);
 			public Gst.Base.Adapter get_adapter ();
-			public Gst.FlowReturn push (uint8 data, uint payload_len, Gst.ClockTime timestamp);
+			public Gst.FlowReturn push ([CCode (array_length_cname = "payload_len", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, Gst.ClockTime timestamp);
 			public void set_frame_based ();
 			public void set_frame_options (int frame_duration, int frame_size);
 			public void set_sample_based ();
@@ -272,7 +272,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static uint32 buffer_default_clock_rate (uint8 payload_type);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
-		public static uint64 buffer_ext_timestamp (uint64 exttimestamp, uint32 timestamp);
+		public static uint64 buffer_ext_timestamp (ref uint64 exttimestamp, uint32 timestamp);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static bool buffer_map (Gst.Buffer buffer, Gst.MapFlags flags, out unowned Gst.RTP.Buffer rtp);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
@@ -284,9 +284,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static Gst.Buffer buffer_new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
-		public static bool hdrext_get_ntp_56 (void* data, uint size, uint64 ntptime);
+		public static bool hdrext_get_ntp_56 ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, out uint64 ntptime);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
-		public static bool hdrext_get_ntp_64 (void* data, uint size, uint64 ntptime);
+		public static bool hdrext_get_ntp_64 ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, out uint64 ntptime);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static bool hdrext_set_ntp_56 (void* data, uint size, uint64 ntptime);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
@@ -317,7 +317,7 @@ namespace Gst {
 			public weak Gst.RTPC.Buffer rtcp;
 			public uint offset;
 			[CCode (cname = "gst_rtcp_packet_add_profile_specific_ext")]
-			public bool add_profile_specific_ext (uint8 data, uint len);
+			public bool add_profile_specific_ext ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
 			[CCode (cname = "gst_rtcp_packet_add_rb")]
 			public bool add_rb (uint32 ssrc, uint8 fractionlost, int32 packetslost, uint32 exthighestseq, uint32 jitter, uint32 lsr, uint32 dlsr);
 			[CCode (cname = "gst_rtcp_packet_app_get_data")]
@@ -350,7 +350,7 @@ namespace Gst {
 			[CCode (cname = "gst_rtcp_packet_bye_add_ssrc")]
 			public bool bye_add_ssrc (uint32 ssrc);
 			[CCode (cname = "gst_rtcp_packet_bye_add_ssrcs")]
-			public bool bye_add_ssrcs (uint32 ssrc, uint len);
+			public bool bye_add_ssrcs ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint32[] ssrc);
 			[CCode (cname = "gst_rtcp_packet_bye_get_nth_ssrc")]
 			public uint32 bye_get_nth_ssrc (uint nth);
 			[CCode (cname = "gst_rtcp_packet_bye_get_reason")]
@@ -392,7 +392,7 @@ namespace Gst {
 			[CCode (cname = "gst_rtcp_packet_get_profile_specific_ext_length")]
 			public uint16 get_profile_specific_ext_length ();
 			[CCode (cname = "gst_rtcp_packet_get_rb")]
-			public void get_rb (uint nth, uint32 ssrc, uint8 fractionlost, int32 packetslost, uint32 exthighestseq, uint32 jitter, uint32 lsr, uint32 dlsr);
+			public void get_rb (uint nth, out uint32 ssrc, out uint8 fractionlost, out int32 packetslost, out uint32 exthighestseq, out uint32 jitter, out uint32 lsr, out uint32 dlsr);
 			[CCode (cname = "gst_rtcp_packet_get_rb_count")]
 			public uint get_rb_count ();
 			[CCode (cname = "gst_rtcp_packet_get_type")]
@@ -428,7 +428,7 @@ namespace Gst {
 			[CCode (cname = "gst_rtcp_packet_set_rb")]
 			public void set_rb (uint nth, uint32 ssrc, uint8 fractionlost, int32 packetslost, uint32 exthighestseq, uint32 jitter, uint32 lsr, uint32 dlsr);
 			[CCode (cname = "gst_rtcp_packet_sr_get_sender_info")]
-			public void sr_get_sender_info (uint32 ssrc, uint64 ntptime, uint32 rtptime, uint32 packet_count, uint32 octet_count);
+			public void sr_get_sender_info (out uint32 ssrc, out uint64 ntptime, out uint32 rtptime, out uint32 packet_count, out uint32 octet_count);
 			[CCode (cname = "gst_rtcp_packet_sr_set_sender_info")]
 			public void sr_set_sender_info (uint32 ssrc, uint64 ntptime, uint32 rtptime, uint32 packet_count, uint32 octet_count);
 		}

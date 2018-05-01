@@ -12,6 +12,8 @@ namespace Gst {
 			public DmaBufAllocator ();
 			[Version (since = "1.2")]
 			public static Gst.Memory alloc (Gst.Allocator allocator, int fd, size_t size);
+			[Version (since = "1.16")]
+			public static Gst.Memory alloc_with_flags (Gst.Allocator allocator, int fd, size_t size, Gst.Allocators.FdMemoryFlags flags);
 		}
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GstFdAllocator", lower_case_cprefix = "gst_fd_allocator_", type_id = "gst_fd_allocator_get_type ()")]
 		[GIR (name = "FdAllocator")]

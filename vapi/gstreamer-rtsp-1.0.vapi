@@ -120,15 +120,15 @@ namespace Gst {
 			public Gst.RTSP.Result init_request (Gst.RTSP.Method method, string uri);
 			[CCode (cname = "gst_rtsp_message_init_response")]
 			public Gst.RTSP.Result init_response (Gst.RTSP.StatusCode code, string? reason, Gst.RTSP.Message? request);
-			[CCode (cname = "gst_rtsp_message_parse_auth_credentials")]
+			[CCode (array_length = false, array_null_terminated = true, cname = "gst_rtsp_message_parse_auth_credentials")]
 			[Version (since = "1.12")]
-			public Gst.RTSP.AuthCredential parse_auth_credentials (Gst.RTSP.HeaderField field);
+			public Gst.RTSP.AuthCredential[] parse_auth_credentials (Gst.RTSP.HeaderField field);
 			[CCode (cname = "gst_rtsp_message_parse_data")]
 			public Gst.RTSP.Result parse_data (out uint8 channel);
 			[CCode (cname = "gst_rtsp_message_parse_request")]
-			public Gst.RTSP.Result parse_request (out Gst.RTSP.Method method, out string uri, out Gst.RTSP.Version version);
+			public Gst.RTSP.Result parse_request (out Gst.RTSP.Method method, out unowned string uri, out Gst.RTSP.Version version);
 			[CCode (cname = "gst_rtsp_message_parse_response")]
-			public Gst.RTSP.Result parse_response (out Gst.RTSP.StatusCode code, out string reason, out Gst.RTSP.Version version);
+			public Gst.RTSP.Result parse_response (out Gst.RTSP.StatusCode code, out unowned string reason, out Gst.RTSP.Version version);
 			[CCode (cname = "gst_rtsp_message_remove_header")]
 			public Gst.RTSP.Result remove_header (Gst.RTSP.HeaderField field, int indx);
 			[CCode (cname = "gst_rtsp_message_remove_header_by_name")]
@@ -164,7 +164,7 @@ namespace Gst {
 			[CCode (array_length = false, array_null_terminated = true)]
 			public string[] decode_path_components ();
 			public void free ();
-			public Gst.RTSP.Result get_port (uint16 port);
+			public Gst.RTSP.Result get_port (out uint16 port);
 			public string get_request_uri ();
 			public Gst.RTSP.Result set_port (uint16 port);
 		}
@@ -579,9 +579,9 @@ namespace Gst {
 		public static void range_free (Gst.RTSP.TimeRange range);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		[Version (since = "1.2")]
-		public static bool range_get_times (Gst.RTSP.TimeRange range, Gst.ClockTime min, Gst.ClockTime max);
+		public static bool range_get_times (Gst.RTSP.TimeRange range, out Gst.ClockTime min, out Gst.ClockTime max);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
-		public static Gst.RTSP.Result range_parse (string rangestr, Gst.RTSP.TimeRange range);
+		public static Gst.RTSP.Result range_parse (string rangestr, out Gst.RTSP.TimeRange range);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static string range_to_string (Gst.RTSP.TimeRange range);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
@@ -589,7 +589,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static string strresult (Gst.RTSP.Result result);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
-		public static Gst.RTSP.Result transport_get_manager (Gst.RTSP.TransMode trans, string manager, uint option);
+		public static Gst.RTSP.Result transport_get_manager (Gst.RTSP.TransMode trans, out unowned string? manager, uint option);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		[Version (deprecated = true)]
 		public static Gst.RTSP.Result transport_get_mime (Gst.RTSP.TransMode trans, string mime);
