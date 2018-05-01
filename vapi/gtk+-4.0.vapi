@@ -7822,12 +7822,12 @@ namespace Gtk {
 		public void reset ();
 		public void set_propagation_phase (Gtk.PropagationPhase phase);
 		public Gtk.PropagationPhase propagation_phase { get; set; }
-		public Gtk.Widget widget { get; construct; }
+		public Gtk.Widget widget { get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_key_get_type ()")]
 	public class EventControllerKey : Gtk.EventController {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
-		public EventControllerKey (Gtk.Widget widget);
+		public EventControllerKey ();
 		public bool forward (Gtk.Widget widget);
 		public uint get_group ();
 		[Version (since = "3.94")]
@@ -7843,7 +7843,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_motion_get_type ()")]
 	public class EventControllerMotion : Gtk.EventController {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
-		public EventControllerMotion (Gtk.Widget widget);
+		public EventControllerMotion ();
 		public signal void enter (double x, double y);
 		public signal void leave ();
 		public signal void motion (double x, double y);
@@ -7851,7 +7851,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_scroll_get_type ()")]
 	public class EventControllerScroll : Gtk.EventController {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
-		public EventControllerScroll (Gtk.Widget widget, Gtk.EventControllerScrollFlags flags);
+		public EventControllerScroll (Gtk.EventControllerScrollFlags flags);
 		public Gtk.EventControllerScrollFlags get_flags ();
 		public void set_flags (Gtk.EventControllerScrollFlags flags);
 		public Gtk.EventControllerScrollFlags flags { get; set; }
@@ -8171,7 +8171,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_drag_get_type ()")]
 	public class GestureDrag : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
-		public GestureDrag (Gtk.Widget widget);
+		public GestureDrag ();
 		public bool get_offset (out double x, out double y);
 		public bool get_start_point (out double x, out double y);
 		public signal void drag_begin (double start_x, double start_y);
@@ -8181,7 +8181,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_long_press_get_type ()")]
 	public class GestureLongPress : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
-		public GestureLongPress (Gtk.Widget widget);
+		public GestureLongPress ();
 		[NoAccessorMethod]
 		public double delay_factor { get; set; }
 		public signal void cancelled ();
@@ -8190,7 +8190,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_multi_press_get_type ()")]
 	public class GestureMultiPress : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
-		public GestureMultiPress (Gtk.Widget widget);
+		public GestureMultiPress ();
 		public bool get_area (out Gdk.Rectangle rect);
 		public void set_area (Gdk.Rectangle? rect);
 		public signal void pressed (int n_press, double x, double y);
@@ -8201,7 +8201,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_pan_get_type ()")]
 	public class GesturePan : Gtk.GestureDrag {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
-		public GesturePan (Gtk.Widget widget, Gtk.Orientation orientation);
+		public GesturePan (Gtk.Orientation orientation);
 		public Gtk.Orientation get_orientation ();
 		public void set_orientation (Gtk.Orientation orientation);
 		public Gtk.Orientation orientation { get; set; }
@@ -8210,7 +8210,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_rotate_get_type ()")]
 	public class GestureRotate : Gtk.Gesture {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
-		public GestureRotate (Gtk.Widget widget);
+		public GestureRotate ();
 		public double get_angle_delta ();
 		public signal void angle_changed (double angle, double angle_delta);
 	}
@@ -8234,7 +8234,7 @@ namespace Gtk {
 	public class GestureStylus : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		[Version (since = "3.94")]
-		public GestureStylus (Gtk.Widget widget);
+		public GestureStylus ();
 		public bool get_axes (Gdk.AxisUse axes, out double values);
 		[Version (since = "3.94")]
 		public bool get_axis (Gdk.AxisUse axis, out double value);
@@ -8248,14 +8248,14 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_swipe_get_type ()")]
 	public class GestureSwipe : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
-		public GestureSwipe (Gtk.Widget widget);
+		public GestureSwipe ();
 		public bool get_velocity (out double velocity_x, out double velocity_y);
 		public signal void swipe (double velocity_x, double velocity_y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_zoom_get_type ()")]
 	public class GestureZoom : Gtk.Gesture {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
-		public GestureZoom (Gtk.Widget widget);
+		public GestureZoom ();
 		public double get_scale_delta ();
 		public signal void scale_changed (double scale);
 	}
@@ -9327,7 +9327,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_pad_controller_get_type ()")]
 	public class PadController : Gtk.EventController {
 		[CCode (has_construct_function = false)]
-		public PadController (Gtk.Window window, GLib.ActionGroup group, Gdk.Device? pad);
+		public PadController (GLib.ActionGroup group, Gdk.Device? pad);
 		public void set_action (Gtk.PadActionType type, int index, int mode, string label, string action_name);
 		public void set_action_entries ([CCode (array_length_cname = "n_entries", array_length_pos = 1.1)] Gtk.PadActionEntry[] entries);
 		[NoAccessorMethod]
@@ -11481,6 +11481,7 @@ namespace Gtk {
 		public Widget (GLib.Type type, ...);
 		public bool activate ();
 		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
+		public void add_controller (owned Gtk.EventController controller);
 		public void add_mnemonic_label (Gtk.Widget label);
 		public uint add_tick_callback (owned Gtk.TickCallback callback);
 		[CCode (cname = "gtk_widget_class_bind_template_callback_full")]
@@ -11596,6 +11597,7 @@ namespace Gtk {
 		public void queue_resize_no_redraw ();
 		public void register_surface (Gdk.Surface surface);
 		public bool remove_accelerator (Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods);
+		public void remove_controller (Gtk.EventController controller);
 		public void remove_mnemonic_label (Gtk.Widget label);
 		public void remove_tick_callback (uint id);
 		public void reset_style ();
@@ -11607,7 +11609,7 @@ namespace Gtk {
 		public class void set_accessible_type (GLib.Type type);
 		public void set_can_default (bool can_default);
 		public void set_can_focus (bool can_focus);
-		public void set_child_visible (bool is_visible);
+		public void set_child_visible (bool child_visible);
 		[CCode (cname = "gtk_widget_class_set_connect_func")]
 		public class void set_connect_func (owned Gtk.BuilderConnectFunc connect_func);
 		[CCode (cname = "gtk_widget_class_set_css_name")]
