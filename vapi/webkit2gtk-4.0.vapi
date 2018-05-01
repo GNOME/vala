@@ -67,15 +67,15 @@ namespace WebKit {
 	public class BackForwardList : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected BackForwardList ();
-		public unowned WebKit.BackForwardListItem get_back_item ();
+		public unowned WebKit.BackForwardListItem? get_back_item ();
 		public GLib.List<weak WebKit.BackForwardListItem> get_back_list ();
 		public GLib.List<weak WebKit.BackForwardListItem> get_back_list_with_limit (uint limit);
-		public unowned WebKit.BackForwardListItem get_current_item ();
-		public unowned WebKit.BackForwardListItem get_forward_item ();
+		public unowned WebKit.BackForwardListItem? get_current_item ();
+		public unowned WebKit.BackForwardListItem? get_forward_item ();
 		public GLib.List<weak WebKit.BackForwardListItem> get_forward_list ();
 		public GLib.List<weak WebKit.BackForwardListItem> get_forward_list_with_limit (uint limit);
 		public uint get_length ();
-		public unowned WebKit.BackForwardListItem get_nth_item (int index);
+		public unowned WebKit.BackForwardListItem? get_nth_item (int index);
 		public signal void changed (WebKit.BackForwardListItem? item_added, void* items_removed);
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_back_forward_list_item_get_type ()")]
@@ -404,7 +404,7 @@ namespace WebKit {
 	public class NetworkProxySettings {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.16")]
-		public NetworkProxySettings (string? default_proxy_uri, string? ignore_hosts);
+		public NetworkProxySettings (string? default_proxy_uri, [CCode (array_length = false, array_null_terminated = true)] string[]? ignore_hosts);
 		[Version (since = "2.16")]
 		public void add_proxy_for_scheme (string scheme, string proxy_uri);
 		[Version (since = "2.16")]
