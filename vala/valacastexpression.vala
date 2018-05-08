@@ -160,6 +160,7 @@ public class Vala.CastExpression : Expression {
 
 		value_type = type_reference;
 		value_type.value_owned = inner.value_type.value_owned;
+		value_type.floating_reference = inner.value_type.floating_reference;
 
 		if (is_silent_cast) {
 			value_type.nullable = true;
