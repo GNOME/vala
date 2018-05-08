@@ -289,7 +289,7 @@ namespace GLib {
 	[CCode (type_id = "G_TYPE_PARAM_BOXED")]
 	public class ParamSpecBoxed : GLib.ParamSpec {
 		[CCode (cname = "g_param_spec_boxed")]
-		protected ParamSpecBoxed (string name, string nick, string blurb, GLib.Type boxed_type, GLib.ParamFlags flags);
+		public ParamSpecBoxed (string name, string nick, string blurb, GLib.Type boxed_type, GLib.ParamFlags flags);
 	}
 	[CCode (type_id = "G_TYPE_PARAM_CHAR")]
 	public class ParamSpecChar : GLib.ParamSpec {
