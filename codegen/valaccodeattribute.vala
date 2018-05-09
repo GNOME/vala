@@ -830,7 +830,10 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private string get_default_ref_sink_function () {
 		if (sym is Class) {
-			return CCodeBaseModule.get_ccode_ref_sink_function (((Class) sym).base_class);
+			unowned Class? base_class = ((Class) sym).base_class;
+			if (base_class != null) {
+				return CCodeBaseModule.get_ccode_ref_sink_function (base_class);
+			}
 		} else if (sym is Interface) {
 			foreach (var prereq in ((Interface) sym).get_prerequisites ()) {
 				string ref_sink_func = CCodeBaseModule.get_ccode_ref_sink_function ((ObjectTypeSymbol) prereq.data_type);
