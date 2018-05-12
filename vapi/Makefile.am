@@ -204,8 +204,6 @@ dist_vapi_DATA = \
 	linux.vapi \
 	loudmouth-1.0.vapi \
 	lua.vapi \
-	mx-1.0.deps \
-	mx-1.0.vapi \
 	mysql.vapi \
 	orc-0.4.vapi \
 	packagekit-glib2.deps \
@@ -365,7 +363,6 @@ GIR_BINDINGS = \
 	libpeas-gtk-1.0 \
 	libsoup-2.4 \
 	libwnck-3.0 \
-	mx-1.0 \
 	packagekit-glib2 \
 	pango \
 	pangocairo \
@@ -644,9 +641,6 @@ libwnck-3.0:
 
 loudmouth-1.0:
 	$(GENVAPI) --library $(srcdir)/loudmouth-1.0 $(PACKAGESDIR)/loudmouth-1.0/loudmouth-1.0-custom.vala $(PACKAGESDIR)/loudmouth-1.0/loudmouth-1.0.gi
-
-mx-1.0:
-	$(GENVAPI) --library $(srcdir)/mx-1.0 --metadatadir $(METADATADIR) --pkg clutter-1.0 --pkg cogl-pango-1.0 $(METADATADIR)/Mx-1.0-custom.vala $(GIRDIR)/Mx-1.0.gir
 
 packagekit-glib2:
 	$(GENVAPI) --library $(srcdir)/packagekit-glib2 --metadatadir $(METADATADIR) --pkg gio-2.0 $(GIRDIR)/PackageKitGlib-1.0.gir
