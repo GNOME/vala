@@ -5,6 +5,7 @@ NULL =
 AM_CPPFLAGS = \
 	$(COVERAGE_CFLAGS) \
 	-I$(top_srcdir)/gee \
+	-I$(top_srcdir)/vala \
 	$(GLIB_CFLAGS) \
 	$(NULL)
 
@@ -83,6 +84,7 @@ ccode.vapi ccode.vala.stamp: $(libvalaccode_la_VALASOURCES)
 		-C \
 		--vapidir $(top_srcdir)/vapi --pkg gobject-2.0 \
 		--vapidir $(top_srcdir)/gee --pkg gee \
+		--vapidir $(top_srcdir)/vala --pkg vala \
 		--pkg config \
 		--use-header \
 		-H valaccode.h \
