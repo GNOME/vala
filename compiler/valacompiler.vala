@@ -552,10 +552,10 @@ class Vala.Compiler {
 		}
 
 		if (version) {
-			stdout.printf ("Vala %s\n", Config.BUILD_VERSION);
+			stdout.printf ("Vala %s\n", Vala.BUILD_VERSION);
 			return 0;
 		} else if (api_version) {
-			stdout.printf ("%s\n", Config.API_VERSION);
+			stdout.printf ("%s\n", Vala.API_VERSION);
 			return 0;
 		}
 
@@ -640,10 +640,10 @@ class Vala.Compiler {
 		}
 		
 		if (version) {
-			stdout.printf ("Vala %s\n", Config.BUILD_VERSION);
+			stdout.printf ("Vala %s\n", Vala.BUILD_VERSION);
 			return 0;
 		} else if (api_version) {
-			stdout.printf ("%s\n", Config.API_VERSION);
+			stdout.printf ("%s\n", Vala.API_VERSION);
 			return 0;
 		}
 		

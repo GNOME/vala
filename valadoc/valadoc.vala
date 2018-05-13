@@ -317,7 +317,7 @@ public class ValaDoc : Object {
 		}
 
 		if (version) {
-			stdout.printf ("Valadoc %s\n", Config.BUILD_VERSION);
+			stdout.printf ("Valadoc %s\n", Vala.BUILD_VERSION);
 			return 0;
 		}
 

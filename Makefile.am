@@ -52,11 +52,6 @@ coverage-report: coverage
 	genhtml --title "@PACKAGE_STRING@" --output-directory $(top_builddir)/coverage $(top_builddir)/lcov.info
 #endif
 
-all: version.h
-
-version.h: $(top_srcdir)/.version
-	echo '#define BUILD_VERSION "'`cat $(top_srcdir)/.version`'"' > $@-t && mv $@-t $@
-
 BUILT_SOURCES = $(top_srcdir)/.version
 $(top_srcdir)/.version: gen-version
 	@true
@@ -94,5 +89,3 @@ EXTRA_DIST = \
 	build-aux/git-version-gen \
 	build-aux/gitlog-to-changelog \
 	$(NULL)
-
-DISTCLEANFILES = version.h

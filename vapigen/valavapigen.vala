@@ -218,7 +218,7 @@ class Vala.VAPIGen {
 		}
 
 		if (version) {
-			stdout.printf ("Vala API Generator %s\n", Config.BUILD_VERSION);
+			stdout.printf ("Vala API Generator %s\n", Vala.BUILD_VERSION);
 			return 0;
 		}
 
