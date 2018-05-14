@@ -446,6 +446,7 @@ TESTS = \
 	parser/unsupported-property-async.test \
 	parser/unsupported-property-throws.test \
 	parser/yield-method.test \
+	parser/bug749576.vala \
 	semantic/constant-extern.test \
 	semantic/constant-value.test \
 	semantic/constant-value-missing.test \
