@@ -368,6 +368,9 @@ public class Vala.Struct : TypeSymbol {
 				var st = base_struct;
 				if (st != null) {
 					rank = st.get_rank ();
+				} else {
+					Report.error (source_reference, "internal error: struct has no rank");
+					return 0;
 				}
 			}
 		}
