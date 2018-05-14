@@ -140,6 +140,7 @@ public class Vala.Struct : TypeSymbol {
 						_rank = st.rank;
 					} else {
 						Report.error (source_reference, "internal error: struct has no rank");
+						return 0;
 					}
 				}
 			}
