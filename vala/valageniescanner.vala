@@ -208,7 +208,9 @@ public class Vala.Genie.Scanner {
 						case 'B':
 						case 'f':
 						case 'n':
+						case 'N':
 						case 'r':
+						case 'R':
 						case 't':
 						case 'a':
 						case 'A':

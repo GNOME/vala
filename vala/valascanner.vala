@@ -193,7 +193,9 @@ public class Vala.Scanner {
 						case 'B':
 						case 'f':
 						case 'n':
+						case 'N':
 						case 'r':
+						case 'R':
 						case 't':
 						case 'v':
 						case 'a':
