@@ -355,6 +355,7 @@ TESTS = \
 	parser/preprocessor.vala \
 	parser/template.vala \
 	parser/tuple.vala \
+	parser/bug749576.vala \
 	$(NULL)
 
 NON_NULL_TESTS = \
