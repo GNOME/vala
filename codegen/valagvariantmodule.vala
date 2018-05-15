@@ -61,11 +61,13 @@ public class Vala.GVariantModule : GAsyncModule {
 		return symbol.get_attribute_string ("DBus", "signature");
 	}
 
-	bool get_basic_type_info (string signature, out BasicTypeInfo basic_type) {
-		foreach (BasicTypeInfo info in basic_types) {
-			if (info.signature == signature) {
-				basic_type = info;
-				return true;
+	bool get_basic_type_info (string? signature, out BasicTypeInfo basic_type) {
+		if (signature != null) {
+			foreach (BasicTypeInfo info in basic_types) {
+				if (info.signature == signature) {
+					basic_type = info;
+					return true;
+				}
 			}
 		}
 		basic_type = BasicTypeInfo ();
