@@ -268,6 +268,7 @@ TESTS = \
 	gir/bug742012.test \
 	gir/bug788775.test \
 	gir/delegate-alias-without-target.test \
+	parser/bug728574.vala \
 	parser/bug749576.vala \
 	$(NULL)
 
