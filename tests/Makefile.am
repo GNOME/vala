@@ -353,6 +353,7 @@ TESTS = \
 	parser/preprocessor.vala \
 	parser/template.vala \
 	parser/tuple.vala \
+	parser/bug728574.vala \
 	parser/bug749576.vala \
 	$(NULL)
 
