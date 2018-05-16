@@ -379,7 +379,6 @@ public class Vala.GIRWriter : CodeVisitor {
 
 			foreach (Method m in cl.get_methods ()) {
 				if (m.is_abstract || m.is_virtual) {
-					write_indent ();
 					if (m.coroutine) {
 						string finish_name = m.name;
 						if (finish_name.has_suffix ("_async")) {
