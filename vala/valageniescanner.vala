@@ -240,7 +240,17 @@ public class Vala.Genie.Scanner {
 							}
 							break;
 						default:
-							Report.error (get_source_reference (token_length_in_chars), "invalid escape sequence");
+							// back references \1 through \99
+							if (current[0].isdigit ()) {
+								current++;
+								token_length_in_chars++;
+								if (current[0].isdigit ()) {
+									current++;
+									token_length_in_chars++;
+								}
+							} else {
+								Report.error (get_source_reference (token_length_in_chars), "invalid escape sequence");
+							}
 							break;
 						}
 					} else if (current[0] == '\n') {
