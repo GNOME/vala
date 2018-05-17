@@ -53,16 +53,6 @@ public class Vala.Interface : ObjectTypeSymbol {
 	}
 
 	/**
-	 * Prepends the specified interface or class to the list of
-	 * prerequisites of this interface.
-	 *
-	 * @param type an interface or class reference
-	 */
-	public void prepend_prerequisite (DataType type) {
-		prerequisites.insert (0, type);
-	}
-
-	/**
 	 * Returns a copy of the base type list.
 	 *
 	 * @return list of base types
