@@ -4771,6 +4771,8 @@ namespace GLib {
 		public bool steal (K key);
 		[Version (since = "2.12")]
 		public void steal_all ();
+		[Version (since = "2.58")]
+		public bool steal_extended (K lookup_key, out K stolen_key, out V stolen_value);
 		[CCode (cname = "_vala_g_hash_table_take")]
 		public V? take (K key, out bool exists = null) {
 			GLib.HashTable<K,V>? ht = null;
@@ -5005,6 +5007,11 @@ namespace GLib {
 				return compare_func ((G**) (*a), (G**) (*b));
 			});
 		}
+		[Version (since = "2.58")]
+		public G steal_index (uint index);
+		[Version (since = "2.58")]
+		public G steal_index_fast (uint index);
+
 		private void set_size (int length);
 
 		public int length {
