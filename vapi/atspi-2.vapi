@@ -245,6 +245,8 @@ namespace Atspi {
 		public Atspi.Point get_position (Atspi.CoordType ctype) throws GLib.Error;
 		public Atspi.Point get_size () throws GLib.Error;
 		public bool grab_focus () throws GLib.Error;
+		public bool scroll_to (Atspi.ScrollType type) throws GLib.Error;
+		public bool scroll_to_point (Atspi.CoordType coords, int x, int y) throws GLib.Error;
 		public bool set_extents (int x, int y, int width, int height, Atspi.CoordType ctype) throws GLib.Error;
 		public bool set_position (int x, int y, Atspi.CoordType ctype) throws GLib.Error;
 		public bool set_size (int width, int height) throws GLib.Error;
@@ -487,7 +489,8 @@ namespace Atspi {
 	[CCode (cheader_filename = "atspi/atspi.h", cprefix = "ATSPI_COORD_TYPE_", type_id = "atspi_coord_type_get_type ()")]
 	public enum CoordType {
 		SCREEN,
-		WINDOW
+		WINDOW,
+		PARENT
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", cprefix = "ATSPI_", type_id = "atspi_event_type_get_type ()")]
 	public enum EventType {
@@ -694,6 +697,16 @@ namespace Atspi {
 		LAST_DEFINED;
 		public string get_name ();
 	}
+	[CCode (cheader_filename = "atspi/atspi.h", cprefix = "ATSPI_SCROLL_", type_id = "atspi_scroll_type_get_type ()")]
+	public enum ScrollType {
+		TOP_LEFT,
+		BOTTOM_RIGHT,
+		TOP_EDGE,
+		BOTTOM_EDGE,
+		LEFT_EDGE,
+		RIGHT_EDGE,
+		ANYWHERE
+	}
 	[CCode (cheader_filename = "atspi/atspi.h", cprefix = "ATSPI_STATE_", type_id = "atspi_state_type_get_type ()")]
 	public enum StateType {
 		INVALID,
@@ -849,6 +862,8 @@ namespace Atspi {
 	public const int RELATIONTYPE_COUNT;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_ROLE_COUNT")]
 	public const int ROLE_COUNT;
+	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_SCROLLTYPE_COUNT")]
+	public const int SCROLLTYPE_COUNT;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_SORTORDER_COUNT")]
 	public const int SORTORDER_COUNT;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_STATETYPE_COUNT")]

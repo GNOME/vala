@@ -325,11 +325,11 @@ namespace Gsf {
 		public bool puts (string line);
 		[CCode (vfunc_name = "Seek")]
 		public virtual bool seek (Gsf.off_t offset, GLib.SeekType whence);
-		public bool set_container (Gsf.Outfile container);
+		public bool set_container (Gsf.Outfile? container);
 		public bool set_error (int code, string format, ...);
 		public bool set_modtime (GLib.DateTime? modtime);
-		public bool set_name (string name);
-		public bool set_name_from_filename (string filename);
+		public bool set_name (string? name);
+		public bool set_name_from_filename (string? filename);
 		public Gsf.off_t tell ();
 		public static bool unwrap (GLib.Object wrapper, Gsf.Output wrapee);
 		[CCode (vfunc_name = "Vprintf")]

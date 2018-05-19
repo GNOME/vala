@@ -327,6 +327,10 @@ namespace Atk {
 		public abstract Atk.Object? ref_accessible_at_point (int x, int y, Atk.CoordType coord_type);
 		[Version (deprecated = true, deprecated_since = "2.9.4")]
 		public abstract void remove_focus_handler (uint handler_id);
+		[Version (since = "2.30")]
+		public abstract bool scroll_to (Atk.ScrollType type);
+		[Version (since = "2.30")]
+		public abstract bool scroll_to_point (Atk.CoordType coords, int x, int y);
 		public abstract bool set_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
 		public abstract bool set_position (int x, int y, Atk.CoordType coord_type);
 		public abstract bool set_size (int width, int height);
@@ -617,7 +621,8 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_XY_", type_id = "atk_coord_type_get_type ()")]
 	public enum CoordType {
 		SCREEN,
-		WINDOW
+		WINDOW,
+		PARENT
 	}
 	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_HYPERLINK_IS_", type_id = "atk_hyperlink_state_flags_get_type ()")]
 	[Flags]
@@ -810,6 +815,17 @@ namespace Atk {
 		[CCode (cheader_filename = "atk/atk.h")]
 		[Version (deprecated = true)]
 		public static Atk.Role register (string name);
+	}
+	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_SCROLL_", type_id = "atk_scroll_type_get_type ()")]
+	[Version (since = "2.30")]
+	public enum ScrollType {
+		TOP_LEFT,
+		BOTTOM_RIGHT,
+		TOP_EDGE,
+		BOTTOM_EDGE,
+		LEFT_EDGE,
+		RIGHT_EDGE,
+		ANYWHERE
 	}
 	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_STATE_", type_id = "atk_state_type_get_type ()")]
 	public enum StateType {
