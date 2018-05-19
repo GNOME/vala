@@ -81,6 +81,8 @@ namespace Gst {
 			public virtual bool propose_allocation (Gst.Base.AggregatorPad pad, Gst.Query decide_query, Gst.Query query);
 			public void set_latency (Gst.ClockTime min_latency, Gst.ClockTime max_latency);
 			public void set_src_caps (Gst.Caps caps);
+			[Version (since = "1.16")]
+			public Gst.ClockTime simple_get_next_time ();
 			[NoWrapper]
 			public virtual bool sink_event (Gst.Base.AggregatorPad aggregator_pad, Gst.Event event);
 			[NoWrapper]
@@ -111,7 +113,7 @@ namespace Gst {
 			public bool drop_buffer ();
 			[NoWrapper]
 			public virtual Gst.FlowReturn flush (Gst.Base.Aggregator aggregator);
-			[Version (since = "1.16")]
+			[Version (since = "1.14.1")]
 			public bool has_buffer ();
 			public bool is_eos ();
 			public Gst.Buffer peek_buffer ();
@@ -800,6 +802,50 @@ namespace Gst {
 			public bool update_src_caps (Gst.Caps updated_caps);
 			[NoAccessorMethod]
 			public bool qos { get; set; }
+		}
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstBitWriter", has_type_id = false)]
+		[GIR (name = "BitWriter")]
+		public struct BitWriter {
+			public uint8 data;
+			public uint bit_size;
+			[CCode (cname = "gst_bit_writer_align_bytes")]
+			public bool align_bytes (uint8 trailing_bit);
+			[CCode (cname = "gst_bit_writer_free")]
+			public void free ();
+			[CCode (cname = "gst_bit_writer_free_and_get_buffer")]
+			public Gst.Buffer free_and_get_buffer ();
+			[CCode (array_length = false, cname = "gst_bit_writer_free_and_get_data")]
+			public uint8[] free_and_get_data ();
+			[CCode (cname = "gst_bit_writer_get_data")]
+			public uint8 get_data ();
+			[CCode (cname = "gst_bit_writer_get_remaining")]
+			public uint get_remaining ();
+			[CCode (cname = "gst_bit_writer_get_size")]
+			public uint get_size ();
+			[CCode (cname = "gst_bit_writer_init")]
+			public void init ();
+			[CCode (cname = "gst_bit_writer_init_with_data")]
+			public void init_with_data ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, bool initialized);
+			[CCode (cname = "gst_bit_writer_init_with_size")]
+			public void init_with_size (uint32 size, bool fixed);
+			[CCode (cname = "gst_bit_writer_put_bits_uint16")]
+			public bool put_bits_uint16 (uint16 value, uint nbits);
+			[CCode (cname = "gst_bit_writer_put_bits_uint32")]
+			public bool put_bits_uint32 (uint32 value, uint nbits);
+			[CCode (cname = "gst_bit_writer_put_bits_uint64")]
+			public bool put_bits_uint64 (uint64 value, uint nbits);
+			[CCode (cname = "gst_bit_writer_put_bits_uint8")]
+			public bool put_bits_uint8 (uint8 value, uint nbits);
+			[CCode (cname = "gst_bit_writer_put_bytes")]
+			public bool put_bytes (uint8 data, uint nbytes);
+			[CCode (cname = "gst_bit_writer_reset")]
+			public void reset ();
+			[CCode (cname = "gst_bit_writer_reset_and_get_buffer")]
+			public Gst.Buffer reset_and_get_buffer ();
+			[CCode (array_length = false, cname = "gst_bit_writer_reset_and_get_data")]
+			public uint8[] reset_and_get_data ();
+			[CCode (cname = "gst_bit_writer_set_pos")]
+			public bool set_pos (uint pos);
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstCollectData", has_type_id = false)]
 		[GIR (name = "CollectData")]

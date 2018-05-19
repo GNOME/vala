@@ -118,6 +118,11 @@ namespace Gst {
 		CONNECTING,
 		CONNECTED
 	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_FEC_TYPE_", type_id = "gst_webrtc_fec_type_get_type ()")]
+	public enum WebRTCFECType {
+		NONE,
+		ULP_RED
+	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_ICE_COMPONENT_", type_id = "gst_webrtc_ice_component_get_type ()")]
 	public enum WebRTCICEComponent {
 		RTP,
