@@ -5001,7 +5001,7 @@ namespace Gdk {
 		public Gdk.ContentProvider content { owned get; construct; }
 		public Gdk.Device device { get; construct; }
 		public Gdk.Display display { get; }
-		public Gdk.ContentFormats formats { get; }
+		public Gdk.ContentFormats formats { get; construct; }
 		public signal void action_changed (Gdk.DragAction action);
 		public signal void cancel (Gdk.DragCancelReason reason);
 		public signal void dnd_finished ();
@@ -5406,13 +5406,10 @@ namespace Gdk {
 		public abstract int get_intrinsic_height ();
 		public abstract int get_intrinsic_width ();
 		public static Gdk.Paintable new_empty (int intrinsic_width, int intrinsic_height);
-		[Version (since = "4.0")]
 		public abstract void snapshot (Gdk.Snapshot snapshot, double width, double height);
 		[HasEmitter]
-		[Version (since = "4.0")]
 		public signal void invalidate_contents ();
 		[HasEmitter]
-		[Version (since = "4.0")]
 		public signal void invalidate_size ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
@@ -6002,15 +5999,11 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_drop_done (Gdk.DragContext context, bool success);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool drag_drop_succeeded (Gdk.DragContext context);
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_status (Gdk.DragContext context, Gdk.DragAction action, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drop_finish (Gdk.DragContext context, bool success, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static async GLib.InputStream? drop_read_async (Gdk.DragContext context, [CCode (array_length = false, array_null_terminated = true)] string[] mime_types, int io_priority, GLib.Cancellable? cancellable, out string out_mime_type) throws GLib.Error;
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void drop_reply (Gdk.DragContext context, bool accepted, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool events_get_angle (Gdk.Event event1, Gdk.Event event2, out double angle);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -8887,7 +8880,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public MediaControls (Gtk.MediaStream? stream);
 		public unowned Gtk.MediaStream? get_media_stream ();
-		public void set_media_stream (Gtk.MediaStream stream);
+		public void set_media_stream (Gtk.MediaStream? stream);
 		public Gtk.MediaStream media_stream { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_media_file_get_type ()")]
@@ -9933,7 +9926,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Scrollbar (Gtk.Orientation orientation, Gtk.Adjustment? adjustment);
 		public unowned Gtk.Adjustment get_adjustment ();
-		public double get_wheel_delta ([CCode (type = "const GdkEventScroll*")] Gdk.Event event);
 		public void set_adjustment (Gtk.Adjustment? adjustment);
 		public Gtk.Adjustment adjustment { get; set construct; }
 	}
