@@ -2598,7 +2598,7 @@ namespace GLib {
 	public struct IConv {
 		public static IConv open (string to_codeset, string from_codeset);
 		[CCode (cname = "g_iconv")]
-		public uint iconv (out string inbuf, out uint inbytes_left, out string outbuf, out uint outbytes_left);
+		public size_t iconv ([CCode (array_length = false)] ref char[] inbuf, ref size_t inbytes_left, [CCode (array_length = false)] ref char[] outbuf, ref size_t outbytes_left);
 		public int close ();
 	}
 
