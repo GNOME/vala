@@ -1,5 +1,9 @@
 NULL =
 
+SUBDIRS = \
+	girwriter \
+	$(NULL)
+
 AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(NULL)

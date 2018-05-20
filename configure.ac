@@ -162,6 +162,7 @@ AC_CONFIG_FILES([Makefile
            compiler/Makefile
            vapi/Makefile
            tests/Makefile
+           tests/girwriter/Makefile
            doc/Makefile
            doc/manual/Makefile
            doc/manual/version.xml
