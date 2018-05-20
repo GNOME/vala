@@ -86,6 +86,7 @@ TESTS = \
 	methods/bug620673.vala \
 	methods/bug622570.vala \
 	methods/bug626783.vala \
+	methods/bug634753.vala \
 	methods/bug639054.vala \
 	methods/bug642350.vala \
 	methods/bug642885.vala \
