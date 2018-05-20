@@ -58,7 +58,7 @@ namespace JS {
 		[CCode (cname = "JSStringGetMaximumUTF8CStringSize")]
 		public size_t get_maximum_utf8_cstring_size ();
 		[CCode (cname = "JSStringGetUTF8CString")]
-		public size_t get_utf8_cstring ([CCode (array_length_type = "gsize")] ref uint8[] buffer);
+		public size_t get_utf8_cstring ([CCode (array_length_type = "gsize")] uint8[] buffer);
 		[CCode (cname = "JSStringIsEqual")]
 		public bool is_equal (JS.String b);
 		[CCode (cname = "JSStringIsEqualToUTF8CString")]
