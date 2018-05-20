@@ -365,7 +365,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								CCodeExpression? array_length_expr = null;
 								if (get_ccode_array_length_type (param) != null) {
-									array_length_expr = new CCodeCastExpression (get_array_length_cexpression (arg, dim), get_ccode_array_length_type (param));
+									string length_ctype = get_ccode_array_length_type (param);
+									if (unary.operator == UnaryOperator.REF) {
+										length_ctype = "%s*".printf (length_ctype);
+									}
+									array_length_expr = new CCodeCastExpression (get_array_length_cexpression (arg, dim), length_ctype);
 								} else {
 									array_length_expr = get_array_length_cexpression (arg, dim);
 								}
