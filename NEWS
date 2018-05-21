@@ -1,3 +1,9 @@
+Vala 0.40.6
+===========
+ * Regression fix:
+  - codegen: Avoid critical for array in-parameters with custom length-type
+  - tests: Drop assert which is failing on big-endian archs
+
 Vala 0.40.5
 ===========
  * Various improvements and bug fixes:
