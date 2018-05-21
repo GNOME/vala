@@ -1224,13 +1224,13 @@
 <title>Examples</title>
 <para>Demonstrating... </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[errordomain]]></token><![CDATA[ ]]><methodname><![CDATA[ErrorType1]]></methodname><![CDATA[ {]]>
 <![CDATA[    ]]><methodname><![CDATA[CODE_1A]]></methodname>
-<![CDATA[    }]]>
+<![CDATA[}]]>
 
-<![CDATA[    ]]><token><![CDATA[errordomain]]></token><![CDATA[ ]]><methodname><![CDATA[ErrorType2]]></methodname><![CDATA[ {]]>
+<token><![CDATA[errordomain]]></token><![CDATA[ ]]><methodname><![CDATA[ErrorType2]]></methodname><![CDATA[ {]]>
 <![CDATA[    ]]><methodname><![CDATA[CODE_2A]]></methodname>
-<![CDATA[    }]]>
+<![CDATA[}]]>
 
-<![CDATA[    ]]><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[Test]]></methodname><![CDATA[ : ]]><methodname><![CDATA[GLib]]></methodname><![CDATA[.]]><methodname><![CDATA[Object]]></methodname><![CDATA[ {]]>
+<token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[Test]]></methodname><![CDATA[ : ]]><methodname><![CDATA[GLib]]></methodname><![CDATA[.]]><methodname><![CDATA[Object]]></methodname><![CDATA[ {]]>
 <![CDATA[    ]]><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[static]]></token><![CDATA[ ]]><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[thrower]]></methodname><![CDATA[() ]]><token><![CDATA[throws]]></token><![CDATA[ ]]><methodname><![CDATA[ErrorType1]]></methodname><![CDATA[, ]]><methodname><![CDATA[ErrorType2]]></methodname><![CDATA[ {]]>
 <![CDATA[        ]]><token><![CDATA[throw]]></token><![CDATA[ ]]><token><![CDATA[new]]></token><![CDATA[ ]]><methodname><![CDATA[ErrorType2]]></methodname><![CDATA[.]]><methodname><![CDATA[CODE_1A]]></methodname><![CDATA[(]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[Error]]></phrase><phrase><![CDATA["]]></phrase><![CDATA[);]]>
 <![CDATA[    }]]>
