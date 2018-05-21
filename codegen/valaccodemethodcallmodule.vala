@@ -364,7 +364,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 								CCodeExpression? array_length_expr = null;
 								if (get_ccode_array_length_type (param) != null) {
 									string length_ctype = get_ccode_array_length_type (param);
-									if (unary.operator == UnaryOperator.REF) {
+									if (unary != null && unary.operator == UnaryOperator.REF) {
 										length_ctype = "%s*".printf (length_ctype);
 									}
 									array_length_expr = new CCodeCastExpression (get_array_length_cexpression (arg, dim), length_ctype);
