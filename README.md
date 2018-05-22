@@ -1,3 +1,12 @@
+The Vala compiler
+=================
+
+[![pipeline status](https://gitlab.gnome.org/GNOME/vala/badges/master/pipeline.svg)](https://gitlab.gnome.org/GNOME/vala/commits/master)
+[![coverage report](https://gitlab.gnome.org/GNOME/vala/badges/master/coverage.svg)](https://gitlab.gnome.org/GNOME/vala/commits/master)
+
+General information
+-------------------
+
 Vala is a programming language that aims to bring modern programming
 language features to GNOME developers without imposing any additional
 runtime requirements and without using a different ABI compared to
