@@ -1,3 +1,37 @@
+Vala 0.38.10
+============
+ * Various improvements and bug fixes:
+  - Warn if --gir is used without --library [#708693]
+  - Report an error if rank attribute is required but was not found [#660991]
+  - scanner: Accept \R and \N escape sequences in regex literals [#749576]
+  - scanner: Accept backreferences \1 through \99 in regex literals [#728574]
+  - codegen:
+    + Avoid critical in get_basic_type_info() when there is no signature
+      [#729517]
+    + Fix serializing multidimensional arrays [#735437]
+    + Guard get_default_ref_sink_function() against null base-class
+    + Respect cname ccode-attribute of lockable fields
+    + Fix casting of length for "ref" array parameters
+  - girparser: Add support for NoAccessorMethod metadata
+  - girparser: Deal with missing "name" attribute by falling back on "c:type"
+  - girwriter: Drop errornous indent
+  - girwriter: Properly output variadic methods and use introspectable="0"
+  - genie: Add support for the \v escape character [#664689]
+  - genie: Add support for the \uXXXX escape sequence
+
+ * Bindings:
+  - glib-2.0: Fix IConv.iconv() [#634753]
+  - glib-2.0: Mark str parameter of Variant.take_string() as owned
+  - gobject-2.0: Make constructor of ParamSpecBoxed public
+  - gstreamer: Cherry-pick some fixes from 0.42
+  - gtk+-*.0: Set NoAccessorMethod on Gtk.Radio*.group properties
+  - javascriptcoregtk-4.0: buffer of String.get_utf8_cstring() is not "ref"
+    [#788113]
+  - json-glib-1.0: Mark return-type of gvariant_deserialize*() as nullable
+    [#795265]
+  - sqlite3: Add additional constants for flags of Database.open_v2() [#795627]
+  - webkit2gtk-4.0: Update to 2.20.1 and cherry-pick some fixes from 0.42
+
 Vala 0.38.9
 ===========
  * Various bug fixes:
