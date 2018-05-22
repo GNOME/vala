@@ -1,0 +1,17 @@
+image: fedora:rawhide
+
+before_script:
+    - dnf install -y autoconf automake bison dbus-x11 flex gcc glib2-devel gobject-introspection-devel graphviz-devel libxslt make vala
+
+stages:
+  - build
+
+fedora-x86_64:
+  stage: build
+  script:
+    - ./autogen.sh --enable-coverage --disable-dependency-tracking
+    - make -j4
+    - make -j4 bootstrap
+    - make -j4 check
+  except:
+    - tags
