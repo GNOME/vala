@@ -1,0 +1,34 @@
+image: fedora:rawhide
+
+stages:
+  - build
+  - deploy
+
+fedora-x86_64:
+  stage: build
+  before_script:
+    - dnf install -y autoconf automake bison dbus-x11 flex gcc glib2-devel gobject-introspection-devel graphviz-devel lcov libxslt make vala
+  script:
+    - ./autogen.sh --enable-coverage --disable-dependency-tracking
+    - make -j8
+    - make -j8 check
+    - make -j8 coverage-report
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - coverage
+  except:
+    - tags
+
+pages:
+  stage: deploy
+  script:
+    - mv coverage/ public/
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 week
+#  only:
+#    - master
