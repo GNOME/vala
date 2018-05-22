@@ -1,0 +1,17 @@
+image: fedora:rawhide
+
+before_script:
+    - dnf install -y bison flex glib2-devel gobject-introspection-devel graphviz-devel libxslt vala
+
+stages:
+  - build
+
+fedora-x86_64:
+  stage: build
+  script:
+    - ./autogen.sh --prefix=/usr --enable-debug --enable-coverage
+    - make
+    - make bootstrap
+    - make check
+  except:
+    - tags
