@@ -61,3 +61,59 @@ nightly@25.08@aarch64:
 nightly@24.08@aarch64:
   extends: [".publish_nightly", ".flatpak rules"]
   needs: ["flatpak-extension@24.08@aarch64"]
+
+fedora-gcc-x86_64:
+  stage: build
+  image: fedora:latest
+  except:
+    - tags
+  before_script:
+    - dnf update -y
+    - dnf install -y autoconf autoconf-archive automake bison dbus-x11 diffutils flex gcc git glib2-devel graphviz-devel lcov libxslt make vala
+  script:
+    - git fetch --tags
+    - ./autogen.sh --prefix=$HOME/vala-installed --enable-coverage
+    - make -j4
+    - make install
+    - make -j4 coverage-report VERBOSE=1
+    - make -C doc internal-api-docs
+  coverage: '/^\s+lines\.+:\s+([\d.]+\%)\s+/'
+  artifacts:
+    name: "vala-${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}"
+    paths:
+      - "coverage"
+      - "doc/internal-apis"
+    expire_in: 2 days
+
+ubuntu-clang-x86_64:
+  stage: build
+  image: ubuntu:devel
+  except:
+    - tags
+  variables:
+    CC: clang
+    DEBIAN_FRONTEND: noninteractive
+  before_script:
+    - apt update
+    - apt install -y automake autoconf-archive libtool bison dbus flex clang git libglib2.0-dev libgraphviz-dev libgirepository1.0-dev lcov xsltproc make valac
+  script:
+    - git fetch --tags
+    - ./autogen.sh
+    - make -j4
+    - make -j4 bootstrap
+    - make -j4 check VERBOSE=1
+
+pages:
+  stage: deploy
+  only:
+    - main
+  script:
+    - mkdir public
+    - mv coverage public/.
+    - mv doc/internal-apis public/docs
+    - echo "<html><body><h1>Vala</h1><ul><li><a href="docs/index.html">Documentation</a></li><li><a href="coverage/index.html">Coverage</a></li></ul></body></html>" > public/index.html
+  artifacts:
+    name: "vala-${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}"
+    paths:
+      - public
+    expire_in: 2 days
