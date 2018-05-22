@@ -1,8 +1,8 @@
 The Vala compiler
 =================
 
-[![pipeline status](https://gitlab.gnome.org/GNOME/vala/badges/master/pipeline.svg)](https://gitlab.gnome.org/GNOME/vala/commits/master)
-[![coverage report](https://gitlab.gnome.org/GNOME/vala/badges/master/coverage.svg)](https://gitlab.gnome.org/GNOME/vala/commits/master)
+[![pipeline status](https://gitlab.gnome.org/GNOME/vala/badges/staging/pipeline.svg)](https://gitlab.gnome.org/GNOME/vala/commits/staging)
+[![coverage report](https://gitlab.gnome.org/GNOME/vala/badges/staging/coverage.svg)](https://gitlab.gnome.org/GNOME/vala/commits/staging)
 
 General information
 -------------------
