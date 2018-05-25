@@ -1,17 +1,34 @@
 image: fedora:rawhide
 
 before_script:
-    - dnf install -y autoconf automake bison dbus-x11 flex gcc glib2-devel gobject-introspection-devel graphviz-devel libxslt make vala
+    - dnf install -y autoconf automake bison dbus-x11 flex gcc glib2-devel gobject-introspection-devel graphviz-devel lcov libxslt make vala
 
 stages:
   - build
+  - deploy
 
 fedora-x86_64:
   stage: build
   script:
     - ./autogen.sh --enable-coverage --disable-dependency-tracking
-    - make -j4
-    - make -j4 bootstrap
-    - make -j4 check
+    - make -j8
+    - make -j8 check
+    - make -j8 coverage-report
+  cache:
+    paths:
+      - coverage
   except:
     - tags
+
+pages:
+  stage: deploy
+  script:
+    - mv coverage/ public/
+  dependencies:
+    - build
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+#  only:
+#    - master
