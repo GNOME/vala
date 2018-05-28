@@ -22,8 +22,8 @@ There are a number of ways you can contribute to improving the manual:
  * Raise questions on the Vala communication channels so an edit is then made
  * Post blogs and other tutorials that can then be used as source material
    for updating the manual
- * Raise a report in bugzilla
- * Submit a patch to bugzilla with an amendment to the manual
+ * Raise a report in vala's issue tracker
+ * Submit a patch to vala's gitlab with an amendment to the manual
 
 Editing the manual
 ------------------

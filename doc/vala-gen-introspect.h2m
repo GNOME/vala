@@ -20,7 +20,7 @@ This can then be converted to a Vala API as follows:
 .B vapigen --pkg cairo --vapidir . --library pango packages/pango/pango.gi
 
 [BUGS]
-https://bugzilla.gnome.org/page.cgi?id=browse.html&product=vala
+https://gitlab.gnome.org/GNOME/vala/issues
 
 [HOMEPAGE or CONTACT]
 https://wiki.gnome.org/Projects/Vala

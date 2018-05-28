@@ -34,7 +34,7 @@ break ABI of existing projects.
 .RE
 
 [BUGS]
-https://bugzilla.gnome.org/page.cgi?id=browse.html&product=vala
+https://gitlab.gnome.org/GNOME/vala/issues
 
 [HOMEPAGE or CONTACT]
 https://wiki.gnome.org/Projects/Vala
