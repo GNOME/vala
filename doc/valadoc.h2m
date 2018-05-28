@@ -10,7 +10,7 @@ Valadoc is a documentation generator for generating API documentation
 from Vala source code based on libvala.
 
 [BUGS]
-https://bugzilla.gnome.org/page.cgi?id=browse.html&product=valadoc
+https://gitlab.gnome.org/GNOME/vala/issues
 
 [HOMEPAGE or CONTACT]
 https://wiki.gnome.org/Projects/Valadoc

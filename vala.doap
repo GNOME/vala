@@ -33,7 +33,7 @@ binding.</description>
   <homepage rdf:resource="https://wiki.gnome.org/Projects/Vala" />
   <mailing-list rdf:resource="http://mail.gnome.org/mailman/listinfo/vala-list" />
   <download-page rdf:resource="https://wiki.gnome.org/Projects/Vala/Release" />
-  <bug-database rdf:resource="https://bugzilla.gnome.org/browse.cgi?product=vala" />
+  <bug-database rdf:resource="https://gitlab.gnome.org/GNOME/vala/issues" />
 
   <category rdf:resource="http://api.gnome.org/doap-extensions#core" />
   <programming-language>Vala</programming-language>
