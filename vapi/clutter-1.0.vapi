@@ -9194,12 +9194,6 @@ namespace Clutter {
 	[Version (since = "1.18")]
 	public static int test_run ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
-	[Version (deprecated_since = "vala-0.14", replacement = "Threads.add_repaint_func")]
-	public static uint threads_add_repaint_func (GLib.SourceFunc func, void* data, GLib.DestroyNotify notify);
-	[CCode (cheader_filename = "clutter/clutter.h")]
-	[Version (deprecated_since = "vala-0.14", replacement = "Threads.remove_repaint_func")]
-	public static void threads_remove_repaint_func (uint handle_id);
-	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Version (since = "0.6")]
 	public static void ungrab_keyboard ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
