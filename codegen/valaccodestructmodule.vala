@@ -93,7 +93,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 							instance_struct.add_field (get_ccode_name (len_type), get_array_size_cname (get_ccode_name (f)));
 						}
 					}
-				} else if (f.variable_type is DelegateType) {
+				} else if (f.variable_type is DelegateType && get_ccode_delegate_target (f)) {
 					var delegate_type = (DelegateType) f.variable_type;
 					if (delegate_type.delegate_symbol.has_target) {
 						// create field to store delegate target
@@ -286,7 +286,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		foreach (var f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
 				var value = load_field (f, load_this_parameter ((TypeSymbol) st));
-				if (requires_copy (f.variable_type))  {
+				if (get_ccode_delegate_target (f) && requires_copy (f.variable_type))  {
 					value = copy_value (value, f);
 					if (value == null) {
 						// error case, continue to avoid critical

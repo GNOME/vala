@@ -175,6 +175,7 @@ TESTS = \
 	delegates/casting.vala \
 	delegates/delegates.vala \
 	delegates/fields.vala \
+	delegates/fields-no-target.vala \
 	delegates/reference_transfer.vala \
 	delegates/wrapper.vala \
 	delegates/bug519949.test \
