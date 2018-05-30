@@ -1270,73 +1270,6 @@ namespace Soup {
 		@1_0,
 		@1_1
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_STATUS_", type_id = "soup_known_status_code_get_type ()")]
-	[Version (deprecated_since = "vala-0.22", replacement = "Status")]
-	public enum KnownStatusCode {
-		NONE,
-		CANCELLED,
-		CANT_RESOLVE,
-		CANT_RESOLVE_PROXY,
-		CANT_CONNECT,
-		CANT_CONNECT_PROXY,
-		SSL_FAILED,
-		IO_ERROR,
-		MALFORMED,
-		TRY_AGAIN,
-		TOO_MANY_REDIRECTS,
-		TLS_FAILED,
-		CONTINUE,
-		SWITCHING_PROTOCOLS,
-		PROCESSING,
-		OK,
-		CREATED,
-		ACCEPTED,
-		NON_AUTHORITATIVE,
-		NO_CONTENT,
-		RESET_CONTENT,
-		PARTIAL_CONTENT,
-		MULTI_STATUS,
-		MULTIPLE_CHOICES,
-		MOVED_PERMANENTLY,
-		FOUND,
-		MOVED_TEMPORARILY,
-		SEE_OTHER,
-		NOT_MODIFIED,
-		USE_PROXY,
-		NOT_APPEARING_IN_THIS_PROTOCOL,
-		TEMPORARY_REDIRECT,
-		BAD_REQUEST,
-		UNAUTHORIZED,
-		PAYMENT_REQUIRED,
-		FORBIDDEN,
-		NOT_FOUND,
-		METHOD_NOT_ALLOWED,
-		NOT_ACCEPTABLE,
-		PROXY_AUTHENTICATION_REQUIRED,
-		PROXY_UNAUTHORIZED,
-		REQUEST_TIMEOUT,
-		CONFLICT,
-		GONE,
-		LENGTH_REQUIRED,
-		PRECONDITION_FAILED,
-		REQUEST_ENTITY_TOO_LARGE,
-		REQUEST_URI_TOO_LONG,
-		UNSUPPORTED_MEDIA_TYPE,
-		REQUESTED_RANGE_NOT_SATISFIABLE,
-		INVALID_RANGE,
-		EXPECTATION_FAILED,
-		UNPROCESSABLE_ENTITY,
-		LOCKED,
-		FAILED_DEPENDENCY,
-		INTERNAL_SERVER_ERROR,
-		NOT_IMPLEMENTED,
-		BAD_GATEWAY,
-		SERVICE_UNAVAILABLE,
-		GATEWAY_TIMEOUT,
-		HTTP_VERSION_NOT_SUPPORTED,
-		INSUFFICIENT_STORAGE,
-		NOT_EXTENDED
-	}
 	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_LOGGER_LOG_", type_id = "soup_logger_log_level_get_type ()")]
 	public enum LoggerLogLevel {
 		NONE,
@@ -1947,36 +1880,6 @@ namespace Soup {
 	[Version (since = "2.24")]
 	public static void cookies_to_response (GLib.SList<Soup.Cookie> cookies, Soup.Message msg);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "Form.decode")]
-	public static GLib.HashTable<string,string> form_decode (string encoded_form);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "Form.decode_multipart")]
-	public static GLib.HashTable<string,string> form_decode_multipart (Soup.Message msg, string file_control_name, out string filename, out string content_type, out Soup.Buffer file);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "Form.encode")]
-	public static string form_encode (...);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "Form.encode_datalist")]
-	public static string form_encode_datalist (void* form_data_set);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "Form.encode_hash")]
-	public static string form_encode_hash (GLib.HashTable<string,string> form_data_set);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12")]
-	public static string form_encode_valist (string first_field, void* args);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "Form.request_new")]
-	public static Soup.Message form_request_new (string method, string uri, ...);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "Form.request_new_from_datalist")]
-	public static Soup.Message form_request_new_from_datalist (string method, string uri, void* form_data_set);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "Form.request_new_from_hash")]
-	public static Soup.Message form_request_new_from_hash (string method, string uri, GLib.HashTable<string,string> form_data_set);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "Form.request_new_from_multipart")]
-	public static Soup.Message form_request_new_from_multipart (string uri, Soup.Multipart multipart);
-	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Version (since = "2.42")]
 	public static uint get_major_version ();
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -2015,15 +1918,6 @@ namespace Soup {
 	public static bool headers_parse_status_line (string status_line, out Soup.HTTPVersion ver, out uint status_code, out string reason_phrase);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.Quark http_error_quark ();
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.14", replacement = "SSLError.quark")]
-	public static GLib.Quark ssl_error_quark ();
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.22", replacement = "Status.get_phrase")]
-	public static unowned string status_get_phrase (uint status_code);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.22", replacement = "Status.proxify")]
-	public static uint status_proxify (uint status_code);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool str_case_equal (void* v1, void* v2);
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -2091,42 +1985,4 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Version (since = "2.50")]
 	public static bool websocket_server_process_handshake (Soup.Message msg, string? expected_origin, [CCode (array_length = false, array_null_terminated = true)] string[]? protocols);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[PrintfFormat]
-	[Version (deprecated_since = "vala-0.12", replacement = "XMLRPC.build_fault")]
-	public static unowned string xmlrpc_build_fault (int fault_code, string fault_format, ...);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "XMLRPC.build_method_call")]
-	public static unowned string xmlrpc_build_method_call (string method_name, GLib.Value[] @params);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "XMLRPC.build_method_response")]
-	public static unowned string xmlrpc_build_method_response (GLib.Value value);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "XMLRPC.error_quark")]
-	public static GLib.Quark xmlrpc_error_quark ();
-	[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
-	[Version (deprecated_since = "vala-0.12", replacement = "XMLRPC.extract_method_call")]
-	public static bool xmlrpc_extract_method_call (string method_call, int length, out unowned string method_name, ...);
-	[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
-	[Version (deprecated_since = "vala-0.12", replacement = "XMLRPC.extract_method_response")]
-	public static bool xmlrpc_extract_method_response (string method_response, int length, ...) throws GLib.Error;
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "XMLRPC.fault_quark")]
-	public static GLib.Quark xmlrpc_fault_quark ();
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "XMLRPC.parse_method_call")]
-	public static bool xmlrpc_parse_method_call (string method_call, int length, out unowned string method_name, out unowned GLib.ValueArray @params);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[Version (deprecated_since = "vala-0.12", replacement = "XMLRPC.parse_method_response")]
-	public static bool xmlrpc_parse_method_response (string method_response, int length, GLib.Value value) throws GLib.Error;
-	[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
-	[Version (deprecated_since = "vala-0.12", replacement = "XMLRPC.request_new")]
-	public static unowned Soup.Message xmlrpc_request_new (string uri, string method_name, ...);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	[PrintfFormat]
-	[Version (deprecated_since = "vala-0.12", replacement = "XMLRPC.set_fault")]
-	public static void xmlrpc_set_fault (Soup.Message msg, int fault_code, string fault_format, ...);
-	[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
-	[Version (deprecated_since = "vala-0.12", replacement = "XMLRPC.set_response")]
-	public static void xmlrpc_set_response (Soup.Message msg, ...);
 }
