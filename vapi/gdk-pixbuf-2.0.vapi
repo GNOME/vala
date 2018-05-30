@@ -83,12 +83,6 @@ namespace Gdk {
 		public unowned uint8[] get_pixels_with_length ();
 		public int get_rowstride ();
 		public int get_width ();
-		[CCode (cname = "gdk_pixbuf_new_from_stream_async", finish_name = "gdk_pixbuf_new_from_stream_finish")]
-		[Version (deprecated_since = "vala-0.18", replacement = "Pixbuf.from_stream_async")]
-		public static async Gdk.Pixbuf new_from_stream_async (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (cname = "gdk_pixbuf_new_from_stream_at_scale_async", finish_name = "gdk_pixbuf_new_from_stream_finish")]
-		[Version (deprecated_since = "vala-0.18", replacement = "Pixbuf.from_stream_at_scale_async")]
-		public static async Gdk.Pixbuf new_from_stream_at_scale_async (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.32")]
 		public GLib.Bytes read_pixel_bytes ();
 		[Version (since = "2.32")]
