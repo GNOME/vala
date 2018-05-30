@@ -415,7 +415,7 @@ public class Vala.GTypeModule : GErrorModule {
 						instance_struct.add_field (get_ccode_name (len_type), get_array_size_cname (get_ccode_name (f)));
 					}
 				}
-			} else if (f.variable_type is DelegateType) {
+			} else if (f.variable_type is DelegateType && get_ccode_delegate_target (f)) {
 				var delegate_type = (DelegateType) f.variable_type;
 				if (delegate_type.delegate_symbol.has_target) {
 					// create field to store delegate target
@@ -516,7 +516,7 @@ public class Vala.GTypeModule : GErrorModule {
 								instance_priv_struct.add_field (get_ccode_name (len_type), get_array_size_cname (get_ccode_name (f)));
 							}
 						}
-					} else if (f.variable_type is DelegateType) {
+					} else if (f.variable_type is DelegateType && get_ccode_delegate_target (f)) {
 						var delegate_type = (DelegateType) f.variable_type;
 						if (delegate_type.delegate_symbol.has_target) {
 							// create field to store delegate target

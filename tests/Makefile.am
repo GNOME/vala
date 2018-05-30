@@ -207,6 +207,7 @@ TESTS = \
 	delegates/delegates.vala \
 	delegates/delegates-error.test \
 	delegates/fields.vala \
+	delegates/fields-no-target.vala \
 	delegates/reference_transfer.vala \
 	delegates/wrapper.vala \
 	delegates/bug519949.test \
