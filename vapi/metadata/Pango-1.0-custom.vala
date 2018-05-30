@@ -82,23 +82,4 @@ namespace Pango {
 	public const int VERSION_MINOR;
 	[CCode (cheader_filename = "pango/pango.h")]
 	public const string VERSION_STRING;
-
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.AttrType.get_name")]
-	public static unowned string attr_type_get_name (Pango.AttrType type);
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.AttrType.get_name")]
-	public static Pango.AttrType attr_type_register (string name);
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.BidiType.for_unichar")]
-	public static Pango.BidiType bidi_type_for_unichar (unichar ch);
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.Gravity.get_for_matrix")]
-	public static Pango.Gravity gravity_get_for_matrix (Pango.Matrix matrix);
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.Gravity.get_for_script")]
-	public static Pango.Gravity gravity_get_for_script (Pango.Script script, Pango.Gravity base_gravity, Pango.GravityHint hint);
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.Gravity.get_for_script_and_width")]
-	public static Pango.Gravity gravity_get_for_script_and_width (Pango.Script script, bool wide, Pango.Gravity base_gravity, Pango.GravityHint hint);
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.Gravity.get_to_rotation")]
-	public static double gravity_to_rotation (Pango.Gravity gravity);
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.Script.for_unichar")]
-	public static Pango.Script script_for_unichar (unichar ch);
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.Script.get_sample_language")]
-	public static Pango.Language script_get_sample_language (Pango.Script script);
 }

@@ -1133,12 +1133,6 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Attribute attr_style_new (Pango.Style style);
 	[CCode (cheader_filename = "pango/pango.h")]
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.AttrType.get_name")]
-	public static unowned string attr_type_get_name (Pango.AttrType type);
-	[CCode (cheader_filename = "pango/pango.h")]
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.AttrType.get_name")]
-	public static Pango.AttrType attr_type_register (string name);
-	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (since = "1.8")]
 	public static Pango.Attribute attr_underline_color_new (uint16 red, uint16 green, uint16 blue);
 	[CCode (cheader_filename = "pango/pango.h")]
@@ -1147,9 +1141,6 @@ namespace Pango {
 	public static Pango.Attribute attr_variant_new (Pango.Variant variant);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Attribute attr_weight_new (Pango.Weight weight);
-	[CCode (cheader_filename = "pango/pango.h")]
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.BidiType.for_unichar")]
-	public static Pango.BidiType bidi_type_for_unichar (unichar ch);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static void @break (string text, int length, Pango.Analysis analysis, [CCode (array_length_cname = "attrs_len", array_length_pos = 4.1)] Pango.LogAttr[] attrs);
 	[CCode (cheader_filename = "pango/pango.h")]
@@ -1178,18 +1169,6 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (deprecated = true, deprecated_since = "1.38")]
 	public static unowned string get_sysconf_subdirectory ();
-	[CCode (cheader_filename = "pango/pango.h")]
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.Gravity.get_for_matrix")]
-	public static Pango.Gravity gravity_get_for_matrix (Pango.Matrix matrix);
-	[CCode (cheader_filename = "pango/pango.h")]
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.Gravity.get_for_script")]
-	public static Pango.Gravity gravity_get_for_script (Pango.Script script, Pango.Gravity base_gravity, Pango.GravityHint hint);
-	[CCode (cheader_filename = "pango/pango.h")]
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.Gravity.get_for_script_and_width")]
-	public static Pango.Gravity gravity_get_for_script_and_width (Pango.Script script, bool wide, Pango.Gravity base_gravity, Pango.GravityHint hint);
-	[CCode (cheader_filename = "pango/pango.h")]
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.Gravity.get_to_rotation")]
-	public static double gravity_to_rotation (Pango.Gravity gravity);
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (since = "1.10")]
 	public static bool is_zero_width (unichar ch);
@@ -1240,12 +1219,6 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (deprecated = true, deprecated_since = "1.38")]
 	public static bool scan_word (ref string pos, out unowned GLib.StringBuilder @out);
-	[CCode (cheader_filename = "pango/pango.h")]
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.Script.for_unichar")]
-	public static Pango.Script script_for_unichar (unichar ch);
-	[CCode (cheader_filename = "pango/pango.h")]
-	[Version (deprecated_since = "vala-0.18", replacement = "Pango.Script.get_sample_language")]
-	public static Pango.Language script_get_sample_language (Pango.Script script);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static void shape (string text, int length, Pango.Analysis analysis, Pango.GlyphString glyphs);
 	[CCode (cheader_filename = "pango/pango.h")]
