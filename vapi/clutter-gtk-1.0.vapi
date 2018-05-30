@@ -45,9 +45,6 @@ namespace GtkClutter {
 	[Version (since = "1.0")]
 	public errordomain TextureError {
 		[CCode (cname = "GTK_CLUTTER_TEXTURE_ERROR_INVALID_STOCK_ID")]
-		[Version (deprecated_since = "vala-0.16", replacement = "INVALID_STOCK_ID")]
-		ID,
-		[CCode (cname = "GTK_CLUTTER_TEXTURE_ERROR_INVALID_STOCK_ID")]
 		INVALID_STOCK_ID
 	}
 	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h")]
