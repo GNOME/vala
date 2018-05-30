@@ -1468,7 +1468,7 @@ namespace GLib {
 		public static void cancel_all ();
 		[CCode (cheader_filename = "gio/gio.h", cname = "g_io_scheduler_push_job")]
 		[Version (deprecated = true)]
-		public static void push ([CCode (delegate_target_pos = 1.33333, destroy_notify_pos = 1.66667)] owned GLib.IOSchedulerJobFunc job_func, int io_priority, GLib.Cancellable? cancellable = null);
+		public static void push ([CCode (delegate_target_pos = 1.33333, destroy_notify_pos = 1.66667)] owned GLib.IOSchedulerJobFunc job_func, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
 		[Version (deprecated = true)]
 		public bool send_to_mainloop (owned GLib.SourceFunc func);
 		[Version (deprecated = true)]
