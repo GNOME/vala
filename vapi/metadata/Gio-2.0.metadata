@@ -1,8 +1,9 @@
 Gio name="GLib"
 * cheader_filename="gio/gio.h"
 *.cancellable#parameter nullable default=null
+*.io_priority#parameter default=GLib.Priority.DEFAULT
 *.*.cancellable#parameter nullable default=null
-*.*.io_priority default=GLib.Priority.DEFAULT
+*.*.io_priority#parameter default=GLib.Priority.DEFAULT
 
 // Needs to be in gio-unix-2.0
 DesktopAppInfo* skip
