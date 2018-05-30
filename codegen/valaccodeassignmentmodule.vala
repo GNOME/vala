@@ -221,7 +221,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		if (lvalue.actual_value_type != null) {
 			type = lvalue.actual_value_type;
 		}
-		if (requires_destroy (type)) {
+		if (get_ccode_delegate_target (field) && requires_destroy (type)) {
 			/* unref old value */
 			ccode.add_expression (destroy_field (field, instance));
 		}
