@@ -3845,16 +3845,12 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	public struct ActionEntry {
 		public weak string name;
-		[Version (deprecated = true, deprecated_since = "vala-0.26", replacement = "activate_callback")]
-		public GLib.SimpleActionActivateCallback? activate;
+		[CCode (delegate_target = false)]
+		public weak GLib.SimpleActionActivateCallback? activate;
 		public weak string parameter_type;
 		public weak string state;
-		[Version (deprecated_since = "vala-0.26", replacement = "change_state_callback")]
-		public GLib.SimpleActionChangeStateCallback? change_state;
-		[CCode (cname = "activate")]
-		public GLib.SimpleActionActivateFunc activate_callback;
-		[CCode (cname = "change_state")]
-		public GLib.SimpleActionChangeStateFunc? change_state_callback;
+		[CCode (delegate_target = false)]
+		public weak GLib.SimpleActionChangeStateCallback? change_state;
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	[Version (since = "2.26")]
@@ -4741,15 +4737,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	public delegate bool SettingsGetMapping (GLib.Variant value, out void* result);
 	[CCode (cheader_filename = "gio/gio.h")]
-	[Version (deprecated_since = "vala-0.26", replacement = "SimplActionActivateFunc")]
 	public delegate void SimpleActionActivateCallback (GLib.SimpleAction action, GLib.Variant? parameter);
-	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
-	public delegate void SimpleActionActivateFunc (GLib.SimpleAction action, GLib.Variant? parameter, void* user_data);
 	[CCode (cheader_filename = "gio/gio.h")]
-	[Version (deprecated_since = "vala-0.26", replacement = "SimplActionChangeStateFunc")]
 	public delegate void SimpleActionChangeStateCallback (GLib.SimpleAction action, GLib.Variant value);
-	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
-	public delegate void SimpleActionChangeStateFunc (GLib.SimpleAction action, GLib.Variant value, void* user_data);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	public delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable? cancellable = null);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
