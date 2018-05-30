@@ -12,16 +12,12 @@ namespace GLib {
 
 	public struct ActionEntry {
 		public weak string name;
-		[Version (deprecated = true, deprecated_since = "vala-0.26", replacement = "activate_callback")]
-		public GLib.SimpleActionActivateCallback? activate;
+		[CCode (delegate_target = false)]
+		public weak GLib.SimpleActionActivateCallback? activate;
 		public weak string parameter_type;
 		public weak string state;
-		[Version (deprecated_since = "vala-0.26", replacement = "change_state_callback")]
-		public GLib.SimpleActionChangeStateCallback? change_state;
-		[CCode (cname = "activate")]
-		public GLib.SimpleActionActivateFunc activate_callback;
-		[CCode (cname = "change_state")]
-		public GLib.SimpleActionChangeStateFunc? change_state_callback;
+		[CCode (delegate_target = false)]
+		public weak GLib.SimpleActionChangeStateCallback? change_state;
 	}
 
 	[Compact]
@@ -180,13 +176,7 @@ namespace GLib {
 		public virtual GLib.Icon? from_tokens (string[] tokens, int version) throws GLib.Error;
 	}
 
-	[CCode (has_target = false)]
-	public delegate void SimpleActionActivateFunc (SimpleAction action, Variant? parameter, void* user_data);
-	[CCode (has_target = false)]
-	public delegate void SimpleActionChangeStateFunc (SimpleAction action, Variant value, void* user_data);
-	[Version (deprecated_since = "vala-0.26", replacement = "SimplActionActivateFunc")]
 	public delegate void SimpleActionActivateCallback (SimpleAction action, Variant? parameter);
-	[Version (deprecated_since = "vala-0.26", replacement = "SimplActionChangeStateFunc")]
 	public delegate void SimpleActionChangeStateCallback (SimpleAction action, Variant value);
 	[CCode (cheader_filename = "gio/gio.h", cname = "GAsyncReadyCallback", instance_pos = 2.9)]
 	public delegate void TaskReadyCallback (GLib.Object? source_object, GLib.Task task);
