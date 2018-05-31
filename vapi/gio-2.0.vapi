@@ -3838,15 +3838,21 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	[Version (since = "2.26")]
 	public struct DBusInterfaceVTable {
+		[CCode (delegate_target = false)]
 		public weak GLib.DBusInterfaceMethodCallFunc method_call;
+		[CCode (delegate_target = false)]
 		public weak GLib.DBusInterfaceGetPropertyFunc get_property;
+		[CCode (delegate_target = false)]
 		public weak GLib.DBusInterfaceSetPropertyFunc set_property;
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	[Version (since = "2.26")]
 	public struct DBusSubtreeVTable {
+		[CCode (delegate_target = false)]
 		public weak GLib.DBusSubtreeEnumerateFunc enumerate;
+		[CCode (delegate_target = false)]
 		public weak GLib.DBusSubtreeIntrospectFunc introspect;
+		[CCode (delegate_target = false)]
 		public weak GLib.DBusSubtreeDispatchFunc dispatch;
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
