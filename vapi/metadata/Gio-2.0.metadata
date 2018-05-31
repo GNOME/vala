@@ -109,6 +109,8 @@ DBusMessage
   .print.indent default=0
 DBus*Info
   .*#field unowned=false
+DBus*VTable
+  .*#field delegate_target=false
 DBusInterface
   .get_object skip=false
 DBusMethodInvocation
