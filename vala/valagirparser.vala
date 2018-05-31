@@ -87,7 +87,8 @@ public class Vala.GirParser : CodeVisitor {
 		DELEGATE_TARGET_CNAME,
 		FINISH_VFUNC_NAME,
 		NO_ACCESSOR_METHOD,
-		CNAME;
+		CNAME,
+		DELEGATE_TARGET;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -1093,6 +1094,9 @@ public class Vala.GirParser : CodeVisitor {
 						merged = true;
 					}
 
+					if (metadata.has_argument (ArgumentType.DELEGATE_TARGET)) {
+						field.set_attribute_bool ("CCode", "delegate_target", metadata.get_bool (ArgumentType.DELEGATE_TARGET));
+					}
 					if (metadata.has_argument (ArgumentType.DELEGATE_TARGET_CNAME)) {
 						field.set_attribute_string ("CCode", "delegate_target_cname", metadata.get_string (ArgumentType.DELEGATE_TARGET_CNAME));
 					}
