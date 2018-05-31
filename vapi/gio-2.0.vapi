@@ -3841,8 +3841,8 @@ namespace GLib {
 		public weak string name;
 		[CCode (delegate_target = false)]
 		public weak GLib.SimpleActionActivateCallback? activate;
-		public weak string parameter_type;
-		public weak string state;
+		public weak string? parameter_type;
+		public weak string? state;
 		[CCode (delegate_target = false)]
 		public weak GLib.SimpleActionChangeStateCallback? change_state;
 	}
