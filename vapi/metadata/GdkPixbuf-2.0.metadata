@@ -6,6 +6,7 @@ Pixbuf
         .new_from_stream_at_scale_async symbol_type="constructor" finish_name="gdk_pixbuf_new_from_stream_finish" throws="GLib.Error"
         .new_from_stream_finish skip
         .new_from_data.data owned
+        .new_from_inline skip
         .new_subpixbuf symbol_type="constructor"
         .get_file_info_async.cancellable default=()
         .save* skip=false
@@ -20,19 +21,9 @@ Pixbuf
         .save_to_stream_async finish_name="gdk_pixbuf_save_to_stream_finish" finish_instance=false sentinel="NULL" throws="GLib.Error"
         .save_to_stream_finish skip
 
-// gdk-pixdata.h isn't included by gdk-pixbuf.h
-Pixdata* cheader_filename="gdk-pixbuf/gdk-pixdata.h"
-Pixbuf
-        .from_pixdata cheader_filename="gdk-pixbuf/gdk-pixdata.h"
-
 // default values other than null
 Pixbuf
         .new_from_data.destroy_fn default=GLib.free
-
-// Bug #558620: default values
-Pixbuf
-        .from_pixdata.copy_pixels default=true
-        .new_from_inline.copy_pixels default=true
 
 // Bug #666798: delegates which throw exceptions
 PixbufSaveFunc skip
