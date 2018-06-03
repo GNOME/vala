@@ -2226,7 +2226,7 @@ namespace Gst {
 		[Version (since = "1.16")]
 		public void set_caps (Gst.Caps caps);
 		[Version (since = "1.16")]
-		public bool set_info (Gst.Structure info);
+		public bool set_info (owned Gst.Structure info);
 		[Version (since = "1.16")]
 		public void set_segment (Gst.Segment segment);
 	}
@@ -2794,7 +2794,7 @@ namespace Gst {
 		[Version (since = "1.2")]
 		public static unowned string[] api_type_get_tags (GLib.Type api);
 		public static bool api_type_has_tag (GLib.Type api, GLib.Quark tag);
-		public static GLib.Type api_type_register (string api, string tags);
+		public static GLib.Type api_type_register (string api, [CCode (array_length = false, array_null_terminated = true)] string[] tags);
 		public static unowned Gst.MetaInfo? get_info (string impl);
 		public static unowned Gst.MetaInfo? register (GLib.Type api, string impl, size_t size, [CCode (scope = "async")] Gst.MetaInitFunction init_func, [CCode (scope = "async")] Gst.MetaFreeFunction free_func, [CCode (scope = "async")] Gst.MetaTransformFunction transform_func);
 	}
@@ -4063,7 +4063,7 @@ namespace Gst {
 	public static bool preset_set_app_dir (string app_dir);
 	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gst/gst.h")]
 	[Version (since = "1.14")]
-	public static string[]? protection_filter_systems_by_available_decryptors (string system_identifiers);
+	public static string[]? protection_filter_systems_by_available_decryptors ([CCode (array_length = false, array_null_terminated = true)] string[] system_identifiers);
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (since = "1.6")]
 	public static unowned string? protection_select_system ([CCode (array_length = false, array_null_terminated = true)] string[] system_identifiers);
