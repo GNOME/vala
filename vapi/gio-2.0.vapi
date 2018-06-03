@@ -293,6 +293,7 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_VOLUME_IDENTIFIER_KIND_CLASS")]
 		public const string CLASS;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_VOLUME_IDENTIFIER_KIND_HAL_UDI")]
+		[Version (deprecated = true, deprecated_since = "2.58")]
 		public const string HAL_UDI;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_VOLUME_IDENTIFIER_KIND_LABEL")]
 		public const string LABEL;
@@ -3356,10 +3357,10 @@ namespace GLib {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public abstract string[] enumerate_identifiers ();
 		public abstract GLib.Icon get_icon ();
-		public abstract string get_identifier (string kind);
+		public abstract string? get_identifier (string kind);
 		public abstract string get_name ();
 		[Version (since = "2.32")]
-		public virtual unowned string get_sort_key ();
+		public virtual unowned string? get_sort_key ();
 		[Version (since = "2.22")]
 		public abstract GLib.DriveStartStopType get_start_stop_type ();
 		[Version (since = "2.34")]
@@ -3636,16 +3637,16 @@ namespace GLib {
 		[Version (since = "2.22")]
 		public abstract async bool eject_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.File get_default_location ();
-		public abstract GLib.Drive get_drive ();
+		public abstract GLib.Drive? get_drive ();
 		public abstract GLib.Icon get_icon ();
 		public abstract string get_name ();
 		public abstract GLib.File get_root ();
 		[Version (since = "2.32")]
-		public virtual unowned string get_sort_key ();
+		public virtual unowned string? get_sort_key ();
 		[Version (since = "2.34")]
 		public abstract GLib.Icon get_symbolic_icon ();
-		public abstract string get_uuid ();
-		public abstract GLib.Volume get_volume ();
+		public abstract string? get_uuid ();
+		public abstract GLib.Volume? get_volume ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "2.18")]
 		public abstract async string[] guess_content_type (bool force_rescan, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -3820,16 +3821,16 @@ namespace GLib {
 		public abstract string[] enumerate_identifiers ();
 		[Version (since = "2.18")]
 		public abstract GLib.File? get_activation_root ();
-		public abstract GLib.Drive get_drive ();
+		public abstract GLib.Drive? get_drive ();
 		public abstract GLib.Icon get_icon ();
-		public abstract string get_identifier (string kind);
-		public abstract GLib.Mount get_mount ();
+		public abstract string? get_identifier (string kind);
+		public abstract GLib.Mount? get_mount ();
 		public abstract string get_name ();
 		[Version (since = "2.32")]
-		public virtual unowned string get_sort_key ();
+		public virtual unowned string? get_sort_key ();
 		[Version (since = "2.34")]
 		public abstract GLib.Icon get_symbolic_icon ();
-		public abstract string get_uuid ();
+		public abstract string? get_uuid ();
 		[CCode (finish_vfunc_name = "mount_finish", vfunc_name = "mount_fn")]
 		public abstract async bool mount (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract bool should_automount ();
@@ -4755,6 +4756,9 @@ namespace GLib {
 	public delegate GLib.File VfsFileLookupFunc (GLib.Vfs vfs, string identifier);
 	[CCode (cheader_filename = "glib.h", cname = "g_realloc")]
 	public static GLib.ReallocFunc g_realloc;
+	[CCode (cheader_filename = "gio/gio.h", cname = "G_DRIVE_IDENTIFIER_KIND_UNIX_DEVICE")]
+	[Version (since = "2.58")]
+	public const string DRIVE_IDENTIFIER_KIND_UNIX_DEVICE;
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (since = "2.38")]
 	public static bool action_name_is_valid (string action_name);
