@@ -1384,7 +1384,7 @@ namespace Gst {
 		[Version (since = "1.6")]
 		public static unowned Gst.Video.ColorPrimariesInfo? color_primaries_get_info (Gst.Video.ColorPrimaries primaries);
 		[CCode (cheader_filename = "gst/video/video.h")]
-		public static void color_range_offsets (Gst.Video.ColorRange range, Gst.Video.FormatInfo info, [CCode (array_length = false)] out int offset[4], [CCode (array_length = false)] out int scale[4]);
+		public static void color_range_offsets (Gst.Video.ColorRange range, Gst.Video.FormatInfo info, [CCode (array_length = false)] out unowned int offset[4], [CCode (array_length = false)] out unowned int scale[4]);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.6")]
 		public static double color_transfer_decode (Gst.Video.TransferFunction func, double val);
