@@ -3390,7 +3390,7 @@ namespace Gtk {
 		public unowned Gdk.Device? get_device ();
 		[Version (since = "3.14")]
 		public GLib.List<weak Gtk.Gesture> get_group ();
-		public unowned Gdk.Event? get_last_event (Gdk.EventSequence sequence);
+		public unowned Gdk.Event? get_last_event (Gdk.EventSequence? sequence);
 		[Version (since = "3.14")]
 		public unowned Gdk.EventSequence? get_last_updated_sequence ();
 		[Version (since = "3.14")]
