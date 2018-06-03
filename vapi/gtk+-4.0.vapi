@@ -5025,7 +5025,6 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		public Event (Gdk.EventType type);
 		public Gdk.Event copy ();
-		public void free ();
 		public bool get_axes ([CCode (array_length_cname = "n_axes", array_length_pos = 1.1, array_length_type = "guint")] out unowned double[] axes);
 		public bool get_axis (Gdk.AxisUse axis_use, out double value);
 		public bool get_button (out uint button);
@@ -8140,7 +8139,7 @@ namespace Gtk {
 		public bool get_bounding_box_center (out double x, out double y);
 		public unowned Gdk.Device? get_device ();
 		public GLib.List<weak Gtk.Gesture> get_group ();
-		public unowned Gdk.Event? get_last_event (Gdk.EventSequence sequence);
+		public unowned Gdk.Event? get_last_event (Gdk.EventSequence? sequence);
 		public unowned Gdk.EventSequence? get_last_updated_sequence ();
 		public bool get_point (Gdk.EventSequence? sequence, out double x = null, out double y = null);
 		public Gtk.EventSequenceState get_sequence_state (Gdk.EventSequence sequence);
@@ -11720,8 +11719,6 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void hide ();
 		public virtual signal void hierarchy_changed (Gtk.Widget? previous_toplevel);
-		public virtual signal bool key_press_event (Gdk.Event event);
-		public virtual signal bool key_release_event (Gdk.Event event);
 		[HasEmitter]
 		public virtual signal bool keynav_failed (Gtk.DirectionType direction);
 		[HasEmitter]
