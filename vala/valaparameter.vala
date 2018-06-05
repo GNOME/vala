@@ -50,10 +50,27 @@ public class Vala.Parameter : Variable {
 		}
 	}
 
+	public bool sync_arg {
+		get {
+			return _sync_arg || get_attribute ("SyncArg") != null || (base_parameter != null && base_parameter.sync_arg);
+		}
+		set {
+			if (!value) {
+				set_attribute ("SyncArg", false);
+				_sync_arg = false;
+			} else if (direction != ParameterDirection.IN) {
+				_sync_arg = true;
+			}
+		}
+	}
+
 	/**
 	 * The base parameter of this parameter relative to the base method.
 	 */
 	public Parameter base_parameter { get; set; }
+
+
+	bool _sync_arg = false;
 
 	/**
 	 * Creates a new formal parameter.

@@ -363,6 +363,7 @@ TESTS = \
 	asynchronous/bug793158.vala \
 	asynchronous/closures.vala \
 	asynchronous/generator.vala \
+	asynchronous/sync-args.vala \
 	asynchronous/yield.vala \
 	generics/bug694765-1.vala \
 	generics/bug694765-2.vala \

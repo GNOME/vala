@@ -4767,7 +4767,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					param = params_it.get ();
 					ellipsis = param.ellipsis;
 					if (!ellipsis) {
-						if (param.direction == ParameterDirection.OUT) {
+						if (param.direction == ParameterDirection.OUT && !param.sync_arg) {
 							carg_map = out_arg_map;
 						}
 

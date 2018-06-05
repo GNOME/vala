@@ -728,6 +728,19 @@ public class Vala.Method : Subroutine, Callable {
 			Report.error (parameters[0].source_reference, "Named parameter required before `...'");
 		}
 
+		// implicitly mark synchronous out-parameter as such
+		if (coroutine) {
+			bool requires_attribute = false;
+			for (int i = parameters.size - 1; i >= 0; i--) {
+				var param = parameters[i];
+				if (param.direction == ParameterDirection.IN) {
+					requires_attribute = true;
+				} else if (requires_attribute) {
+					param.sync_arg = true;
+				}
+			}
+		}
+
 		var optional_param = false;
 		foreach (Parameter param in parameters) {
 			param.check (context);
@@ -1042,7 +1055,7 @@ public class Vala.Method : Subroutine, Callable {
 		foreach (var param in parameters) {
 			if (param.ellipsis) {
 				ellipsis = param;
-			} else if (param.direction == ParameterDirection.IN) {
+			} else if (param.direction == ParameterDirection.IN || param.sync_arg) {
 				params.add (param);
 			}
 		}
@@ -1080,7 +1093,7 @@ public class Vala.Method : Subroutine, Callable {
 		params.add (result_param);
 
 		foreach (var param in parameters) {
-			if (param.direction == ParameterDirection.OUT) {
+			if (param.direction == ParameterDirection.OUT && !param.sync_arg) {
 				params.add (param);
 			}
 		}

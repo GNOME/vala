@@ -1015,12 +1015,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		CCodeParameter? prev_cparam = null;
 		foreach (Parameter param in m.get_parameters ()) {
-			if (param.direction != ParameterDirection.OUT) {
+			if (param.direction != ParameterDirection.OUT || param.sync_arg) {
 				if ((direction & 1) == 0) {
 					// no in parameters
 					continue;
 				}
-			} else {
+			} else if (!param.sync_arg) {
 				if ((direction & 2) == 0) {
 					// no out parameters
 					continue;
