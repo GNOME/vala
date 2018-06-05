@@ -183,6 +183,11 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 		bool capturing_parameter_in_coroutine = capturing_parameter && is_in_coroutine ();
 
+		if (capturing_parameter_in_coroutine && param.sync_arg) {
+			Report.error (source_reference, "Assigning synchronous out-parameters of async methods is not supported yet.");
+			return;
+		}
+
 		var param_type = param.variable_type.copy ();
 		if (param.captured || is_in_coroutine ()) {
 			if (!param_type.value_owned && !no_implicit_copy (param_type)) {

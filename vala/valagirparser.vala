@@ -4049,6 +4049,23 @@ public class Vala.GirParser : CodeVisitor {
 
 		Method method = m;
 
+		if (m.coroutine) {
+			var parameters = m.get_parameters ();
+			bool requires_explicit_attribute = true;
+			for (int i = parameters.size - 1; i >= 0; i--) {
+				var param = parameters[i];
+				if (param.direction == ParameterDirection.IN) {
+					requires_explicit_attribute = false;
+				} else {
+					param.sync_arg = true;
+					if (requires_explicit_attribute) {
+						param.set_attribute ("SyncArg", true);
+						requires_explicit_attribute = false;
+					}
+				}
+			}
+		}
+
 		if (finish_method_node != null && finish_method_node.symbol is Method) {
 			finish_method_node.process (this);
 			var finish_method = (Method) finish_method_node.symbol;

@@ -51,6 +51,10 @@ public class Vala.GAsyncModule : GtkModule {
 		}
 
 		foreach (Parameter param in m.get_parameters ()) {
+			if (param.direction == ParameterDirection.OUT && param.sync_arg) {
+				continue;
+			}
+
 			bool is_unowned_delegate = param.variable_type is DelegateType && !param.variable_type.value_owned;
 
 			var param_type = param.variable_type.copy ();
@@ -645,7 +649,7 @@ public class Vala.GAsyncModule : GtkModule {
 
 		emit_context.push_symbol (m);
 		foreach (Parameter param in m.get_parameters ()) {
-			if (param.direction != ParameterDirection.IN) {
+			if (param.direction != ParameterDirection.IN && !param.sync_arg) {
 				return_out_parameter (param);
 				if (!(param.variable_type is ValueType) || param.variable_type.nullable) {
 					ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), new CCodeConstant ("NULL"));
