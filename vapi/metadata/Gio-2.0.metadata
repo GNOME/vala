@@ -327,6 +327,9 @@ AsyncInitable
   .new* skip
   .init_async#virtual_method virtual
 
+// Returns an enum
+io_error_from_errno type="int"
+
 // Bug #684358: GDBusConnection `closed` signal conficts with property
 DBusConnection
   .closed#signal name="on_closed"
