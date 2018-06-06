@@ -489,11 +489,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		if (param.variable_type is DelegateType) {
 			var deleg_type = (DelegateType) param.variable_type;
-			var d = deleg_type.delegate_symbol;
 
-			generate_delegate_declaration (d, decl_space);
+			generate_delegate_declaration (deleg_type.delegate_symbol, decl_space);
 
-			if (d.has_target) {
+			if (deleg_type.delegate_symbol.has_target) {
 				var cparam = new CCodeParameter (get_ccode_delegate_target_name (param), target_ctypename);
 				cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), cparam);
 				if (carg_map != null) {
