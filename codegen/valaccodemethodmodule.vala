@@ -93,8 +93,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		} else if (m.return_type is DelegateType) {
 			// return delegate target if appropriate
 			var deleg_type = (DelegateType) m.return_type;
-			var d = deleg_type.delegate_symbol;
-			if (d.has_target) {
+			if (deleg_type.delegate_symbol.has_target) {
 				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), "void**");
 				cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (m)), cparam);
 				if (carg_map != null) {
@@ -586,8 +585,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							}
 						} else if (param.variable_type is DelegateType) {
 							var deleg_type = (DelegateType) param.variable_type;
-							var d = deleg_type.delegate_symbol;
-							if (d.has_target) {
+							if (deleg_type.delegate_symbol.has_target) {
 								// create variable to store delegate target
 								vardecl = new CCodeVariableDeclarator.zero ("_vala_%s".printf (get_ccode_delegate_target_name (param)), new CCodeConstant ("NULL"));
 								ccode.add_declaration ("void *", vardecl);

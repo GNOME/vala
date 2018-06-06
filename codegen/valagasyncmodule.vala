@@ -51,8 +51,6 @@ public class Vala.GAsyncModule : GtkModule {
 		}
 
 		foreach (Parameter param in m.get_parameters ()) {
-			bool is_unowned_delegate = param.variable_type is DelegateType && !param.variable_type.value_owned;
-
 			var param_type = param.variable_type.copy ();
 			param_type.value_owned = true;
 			data.add_field (get_ccode_name (param_type), get_variable_cname (param.name));
@@ -68,7 +66,7 @@ public class Vala.GAsyncModule : GtkModule {
 				var deleg_type = (DelegateType) param.variable_type;
 				if (deleg_type.delegate_symbol.has_target) {
 					data.add_field ("gpointer", get_ccode_delegate_target_name (param));
-					if (!is_unowned_delegate) {
+					if (deleg_type.is_disposable ()) {
 						data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
 					}
 				}
