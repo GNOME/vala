@@ -631,7 +631,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target && get_ccode_delegate_target (field)) {
 				string target_cname = get_ccode_delegate_target_name (field);
-				string target_destroy_notify_cname = get_delegate_target_destroy_notify_cname (get_ccode_name (field));
+				string target_destroy_notify_cname = get_ccode_delegate_target_destroy_notify_name (field);
 
 				if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
 					result.delegate_target_cvalue = new CCodeMemberAccess.pointer (inst, target_cname);
@@ -698,7 +698,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target && get_ccode_delegate_target (field)) {
 				result.delegate_target_cvalue = new CCodeIdentifier (get_ccode_delegate_target_name (field));
 				if (result.value_type.is_disposable ()) {
-					result.delegate_target_destroy_notify_cvalue = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_ccode_name (field)));
+					result.delegate_target_destroy_notify_cvalue = new CCodeIdentifier (get_ccode_delegate_target_destroy_notify_name (field));
 				}
 			}
 		}

@@ -107,7 +107,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 						// create field to store delegate target
 						instance_struct.add_field (get_ccode_name (delegate_target_type), get_ccode_delegate_target_name (f));
 						if (delegate_type.is_disposable ()) {
-							instance_struct.add_field (get_ccode_name (delegate_target_destroy_type), get_delegate_target_destroy_notify_cname (get_ccode_name (f)));
+							instance_struct.add_field (get_ccode_name (delegate_target_destroy_type), get_ccode_delegate_target_destroy_notify_name (f));
 						}
 					}
 				}

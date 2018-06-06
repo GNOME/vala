@@ -1119,7 +1119,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				if (delegate_type.is_disposable ()) {
 					cdecl = new CCodeDeclaration (get_ccode_name (delegate_target_destroy_type));
-					cdecl.add_declarator (new CCodeVariableDeclarator (get_delegate_target_destroy_notify_cname  (get_ccode_name (f))));
+					cdecl.add_declarator (new CCodeVariableDeclarator (get_ccode_delegate_target_destroy_notify_name (f)));
 					if (f.is_private_symbol ()) {
 						cdecl.modifiers = CCodeModifiers.STATIC;
 					} else if (context.hide_internal && f.is_internal_symbol ()) {
@@ -1329,7 +1329,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 						if (delegate_type.is_disposable ()) {
 							var target_destroy_notify_def = new CCodeDeclaration (get_ccode_name (delegate_target_destroy_type));
-							target_destroy_notify_def.add_declarator (new CCodeVariableDeclarator (get_delegate_target_destroy_notify_cname (get_ccode_name (f)), new CCodeConstant ("NULL")));
+							target_destroy_notify_def.add_declarator (new CCodeVariableDeclarator (get_ccode_delegate_target_destroy_notify_name (f), new CCodeConstant ("NULL")));
 							if (!f.is_private_symbol ()) {
 								target_destroy_notify_def.modifiers = CCodeModifiers.EXTERN;
 							} else {
