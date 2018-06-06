@@ -352,6 +352,10 @@ namespace Vala {
 		return get_ccode_attribute(variable).delegate_target_name;
 	}
 
+	public static string get_ccode_delegate_target_destroy_notify_name (Variable variable) {
+		return get_ccode_attribute(variable).delegate_target_destroy_notify_name;
+	}
+
 	public static double get_ccode_pos (Parameter param) {
 		return get_ccode_attribute(param).pos;
 	}

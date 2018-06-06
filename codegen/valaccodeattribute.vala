@@ -538,6 +538,20 @@ public class Vala.CCodeAttribute : AttributeCache {
 		}
 	}
 
+	public string delegate_target_destroy_notify_name {
+		get {
+			if (_delegate_target_destroy_notify_name == null) {
+				if (ccode != null) {
+					_delegate_target_destroy_notify_name = ccode.get_string ("destroy_notify_cname");
+				}
+				if (_delegate_target_destroy_notify_name == null) {
+					_delegate_target_destroy_notify_name = "%s_destroy_notify".printf (delegate_target_name);
+				}
+			}
+			return _delegate_target_destroy_notify_name;
+		}
+	}
+
 	public bool array_length {
 		get {
 			if (_array_length == null) {
@@ -615,6 +629,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private bool? _finish_instance;
 	private string _real_name;
 	private string _delegate_target_name;
+	private string _delegate_target_destroy_notify_name;
 	private string _ctype;
 	private bool ctype_set = false;
 	private bool? _array_length;
