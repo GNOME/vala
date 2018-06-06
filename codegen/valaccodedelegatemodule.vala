@@ -71,7 +71,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				var deleg_type = (DelegateType) param.variable_type;
 				var param_d = deleg_type.delegate_symbol;
 				if (param_d.has_target) {
-					cparam = new CCodeParameter (get_delegate_target_cname (get_variable_cname (param.name)), "void*");
+					cparam = new CCodeParameter (get_delegate_target_cname (get_variable_cname (param.name)), "gpointer");
 					cfundecl.add_parameter (cparam);
 					if (deleg_type.is_disposable ()) {
 						cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)), "GDestroyNotify");
@@ -95,7 +95,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			var deleg_type = (DelegateType) d.return_type;
 			var result_d = deleg_type.delegate_symbol;
 			if (result_d.has_target) {
-				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), "void**");
+				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), "gpointer*");
 				cfundecl.add_parameter (cparam);
 				if (deleg_type.is_disposable ()) {
 					cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname ("result"), "GDestroyNotify*");
@@ -107,7 +107,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			cfundecl.add_parameter (cparam);
 		}
 		if (d.has_target) {
-			var cparam = new CCodeParameter ("user_data", "void*");
+			var cparam = new CCodeParameter ("user_data", "gpointer");
 			cfundecl.add_parameter (cparam);
 		}
 		if (d.get_error_types ().size > 0) {
@@ -246,7 +246,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			var deleg_type = (DelegateType) d.return_type;
 
 			if (deleg_type.delegate_symbol.has_target) {
-				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), "void**");
+				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), "gpointer*");
 				cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (d)), cparam);
 				if (deleg_type.is_disposable ()) {
 					cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname ("result"), "GDestroyNotify*");
@@ -460,7 +460,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		}
 
 		string ctypename = get_ccode_name (param.variable_type);
-		string target_ctypename = "void*";
+		string target_ctypename = "gpointer";
 		string target_destroy_notify_ctypename = "GDestroyNotify";
 
 		if (param.parent_symbol is Delegate
