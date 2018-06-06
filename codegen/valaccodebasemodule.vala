@@ -1061,7 +1061,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 				decl_space.add_type_member_declaration (cdecl);
 
-				if (delegate_type.value_owned && !delegate_type.is_called_once) {
+				if (delegate_type.is_disposable ()) {
 					cdecl = new CCodeDeclaration ("GDestroyNotify");
 					cdecl.add_declarator (new CCodeVariableDeclarator (get_delegate_target_destroy_notify_cname  (get_ccode_name (f))));
 					if (f.is_private_symbol ()) {
@@ -1963,7 +1963,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						data.add_field ("gint", get_array_size_cname (get_local_cname (local)));
 					} else if (local.variable_type is DelegateType && ((DelegateType) local.variable_type).delegate_symbol.has_target) {
 						data.add_field ("gpointer", get_delegate_target_cname (get_local_cname (local)));
-						if (local.variable_type.value_owned) {
+						if (local.variable_type.is_disposable ()) {
 							data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_local_cname (local)));
 						}
 					}
@@ -2418,13 +2418,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			} else if (local.variable_type is DelegateType) {
 				var deleg_type = (DelegateType) local.variable_type;
-				var d = deleg_type.delegate_symbol;
-				if (d.has_target) {
+				if (deleg_type.delegate_symbol.has_target) {
 					// create variable to store delegate target
 					var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (get_local_cname (local)));
 					target_var.init = local.initializer == null;
 					emit_temp_var (target_var);
-					if (deleg_type.value_owned) {
+					if (deleg_type.is_disposable ()) {
 						var target_destroy_notify_var = new LocalVariable (gdestroynotify_type, get_delegate_target_destroy_notify_cname (get_local_cname (local)));
 						target_destroy_notify_var.init = local.initializer == null;
 						emit_temp_var (target_destroy_notify_var);
@@ -2472,7 +2471,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (local.name), null, node_reference.source_reference);
 			target_var.init = init;
 			emit_temp_var (target_var);
-			if (deleg_type.value_owned) {
+			if (deleg_type.is_disposable ()) {
 				var target_destroy_notify_var = new LocalVariable (gdestroynotify_type.copy (), get_delegate_target_destroy_notify_cname (local.name), null, node_reference.source_reference);
 				target_destroy_notify_var.init = init;
 				emit_temp_var (target_destroy_notify_var);
