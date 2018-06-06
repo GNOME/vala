@@ -94,7 +94,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			// return delegate target if appropriate
 			var deleg_type = (DelegateType) m.return_type;
 			if (deleg_type.delegate_symbol.has_target) {
-				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), "void**");
+				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), "gpointer*");
 				cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (m)), cparam);
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (get_ccode_delegate_target_pos (m)), get_variable_cexpression (cparam.name));
