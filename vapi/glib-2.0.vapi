@@ -5019,7 +5019,7 @@ namespace GLib {
 		public Bytes ([CCode (array_length_type = "gsize")] uint8[] data);
 		public Bytes.take ([CCode (array_length_type = "gsize")] owned uint8[] data);
 		public Bytes.static ([CCode (array_length_type = "gsize")] uint8[] data);
-		public Bytes.with_free_func ([CCode (array_length_type = "gsize")] owned uint8[] data, GLib.DestroyNotify? free_func = GLib.g_free);
+		public Bytes.with_free_func ([CCode (array_length_type = "gsize")] owned uint8[] data, GLib.DestroyNotify? free_func, void* user_data);
 		public Bytes.from_bytes (GLib.Bytes bytes, size_t offset, size_t length);
 
 		[CCode (cname = "g_bytes_new_with_free_func", simple_generics = true)]
