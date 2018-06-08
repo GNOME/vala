@@ -5053,9 +5053,8 @@ namespace GLib {
 		}
 
 		[CCode (cname = "_vala_g_bytes_slice")]
-		public GLib.Bytes slice (int start, int end) {
-			unowned uint8[] data = this.get_data ();
-			return new GLib.Bytes (data[start:end]);
+		public GLib.Bytes slice (size_t start, size_t end) {
+			return new GLib.Bytes.from_bytes (this, start, end - start);
 		}
 
 		public int length {
