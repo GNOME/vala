@@ -25,23 +25,5 @@ public enum Valadoc.Api.Ownership {
 	DEFAULT,
 	UNOWNED,
 	OWNED,
-	WEAK;
-
-	public unowned string to_string () {
-		switch (this) {
-		case Ownership.UNOWNED:
-			return "unowned";
-
-		case Ownership.OWNED:
-			return "owned";
-
-		case Ownership.WEAK:
-			return "weak";
-
-		case Ownership.DEFAULT:
-			return "";
-		}
-
-		assert_not_reached ();
-	}
+	WEAK
 }
