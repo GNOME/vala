@@ -215,75 +215,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 	}
 
-	private string? get_ccode_type_id (Vala.CodeNode node) {
-		return Vala.get_ccode_type_id (node);
-	}
-
-	private string? get_ref_function (Vala.Class sym) {
-		return Vala.get_ccode_ref_function (sym);
-	}
-
-	private string? get_unref_function (Vala.Class sym) {
-		return Vala.get_ccode_unref_function (sym);
-	}
-
-	private string? get_finalize_function_name (Vala.Class element) {
-		if (!element.is_fundamental ()) {
-			return null;
-		}
-
-		return "%s_finalize".printf (Vala.get_ccode_lower_case_name (element, null));
-	}
-
-	private string? get_free_function_name (Vala.Class element) {
-		if (!element.is_compact) {
-			return null;
-		}
-
-		return Vala.get_ccode_free_function (element);
-	}
-
-	private string? get_finish_name (Vala.Method m) {
-		return Vala.get_ccode_finish_name (m);
-	}
-
-	private string? get_take_value_function (Vala.Class sym) {
-		return Vala.get_ccode_take_value_function (sym);
-	}
-
-	private string? get_get_value_function (Vala.Class sym) {
-		return Vala.get_ccode_get_value_function (sym);
-	}
-
-	private string? get_set_value_function (Vala.Class sym) {
-		return Vala.get_ccode_set_value_function (sym);
-	}
-
-
-	private string? get_param_spec_function (Vala.CodeNode sym) {
-		return Vala.get_ccode_param_spec_function (sym);
-	}
-
-	private string? get_dup_function (Vala.TypeSymbol sym) {
-		return Vala.get_ccode_dup_function (sym);
-	}
-
-	private string? get_copy_function (Vala.TypeSymbol sym) {
-		return Vala.get_ccode_copy_function (sym);
-	}
-
-	private string? get_destroy_function (Vala.TypeSymbol sym) {
-		return Vala.get_ccode_destroy_function (sym);
-	}
-
-	private string? get_free_function (Vala.TypeSymbol sym) {
-		return Vala.get_ccode_free_function (sym);
-	}
-
-	private string? get_cname (Vala.Symbol symbol) {
-		return Vala.get_ccode_name (symbol);
-	}
-
 	private SourceComment? create_comment (Vala.Comment? comment) {
 		if (comment != null) {
 			Vala.SourceReference pos = comment.source_reference;
@@ -352,7 +283,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return null;
 		}
 
-		string? cname = get_cname (element);
+		string? cname = Vala.get_ccode_name (element);
 		return (cname != null)? cname + "Private" : null;
 	}
 
@@ -750,7 +681,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								element.name,
 								element.access,
 								comment,
-								get_cname (element),
+								Vala.get_ccode_name (element),
 								get_private_cname (element),
 								get_class_macro_name (element),
 								get_type_macro_name (element),
@@ -760,15 +691,15 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								get_class_type_macro_name (element),
 								get_is_class_type_macro_name (element),
 								Vala.GDBusModule.get_dbus_name (element),
-								get_ccode_type_id (element),
-								get_param_spec_function (element),
-								get_ref_function (element),
-								get_unref_function (element),
-								get_free_function_name (element),
-								get_finalize_function_name (element),
-								get_take_value_function (element),
-								get_get_value_function (element),
-								get_set_value_function (element),
+								Vala.get_ccode_type_id (element),
+								Vala.get_ccode_param_spec_function (element),
+								Vala.get_ccode_ref_function (element),
+								Vala.get_ccode_unref_function (element),
+								(element.is_compact ? Vala.get_ccode_free_function (element) : null),
+								(element.is_fundamental () ? "%s_finalize".printf (Vala.get_ccode_lower_case_name (element, null)) : null),
+								Vala.get_ccode_take_value_function (element),
+								Vala.get_ccode_get_value_function (element),
+								Vala.get_ccode_set_value_function (element),
 								element.is_fundamental (),
 								element.is_abstract,
 								is_basic_type,
@@ -809,7 +740,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 										element.name,
 										element.access,
 										comment,
-										get_cname (element),
+										Vala.get_ccode_name (element),
 										get_type_macro_name (element),
 										get_is_type_macro_name (element),
 										get_type_cast_macro_name (element),
@@ -852,14 +783,14 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								  element.name,
 								  element.access,
 								  comment,
-								  get_cname (element),
+								  Vala.get_ccode_name (element),
 								  get_type_macro_name (element),
 								  get_type_function_name (element),
-								  get_ccode_type_id (element),
-								  get_dup_function (element),
-								  get_copy_function (element),
-								  get_destroy_function (element),
-								  get_free_function (element),
+								  Vala.get_ccode_type_id (element),
+								  Vala.get_ccode_dup_function (element),
+								  Vala.get_ccode_copy_function (element),
+								  Vala.get_ccode_destroy_function (element),
+								  Vala.get_ccode_free_function (element),
 								  is_basic_type,
 								  element);
 		symbol_map.set (element, node);
@@ -888,7 +819,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								element.name,
 								element.access,
 								comment,
-								get_cname (element),
+								Vala.get_ccode_name (element),
 								element.binding == Vala.MemberBinding.STATIC,
 								element.is_volatile,
 								element);
@@ -954,10 +885,10 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								  get_method_name (element),
 								  element.access,
 								  comment,
-								  get_cname (element),
+								  Vala.get_ccode_name (element),
 								  Vala.GDBusModule.get_dbus_name_for_member (element),
 								  Vala.GDBusModule.dbus_result_name (element),
-								  (element.coroutine)? get_finish_name (element) : null,
+								  (element.coroutine)? Vala.get_ccode_finish_name (element) : null,
 								  element.coroutine,
 								  Vala.GDBusModule.is_dbus_visible (element),
 								  element is Vala.CreationMethod,
@@ -983,10 +914,10 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								  get_method_name (element),
 								  element.access,
 								  comment,
-								  get_cname (element),
+								  Vala.get_ccode_name (element),
 								  Vala.GDBusModule.get_dbus_name_for_member (element),
 								  Vala.GDBusModule.dbus_result_name (element),
-								  (element.coroutine)? get_finish_name (element) : null,
+								  (element.coroutine)? Vala.get_ccode_finish_name (element) : null,
 								  element.coroutine,
 								  Vala.GDBusModule.is_dbus_visible (element),
 								  element is Vala.CreationMethod,
@@ -1012,8 +943,8 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 										  element.name,
 										  element.access,
 										  comment,
-										  get_cname (element),
-										  (element.default_handler != null)? get_cname (element.default_handler) : null,
+										  Vala.get_ccode_name (element),
+										  (element.default_handler != null)? Vala.get_ccode_name (element.default_handler) : null,
 										  Vala.GDBusModule.get_dbus_name_for_member (element),
 										  Vala.GDBusModule.is_dbus_visible (element),
 										  element.is_virtual,
@@ -1039,8 +970,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 									  element.name,
 									  element.access,
 									  comment,
-									  get_cname (element),
-									  !element.has_target,
 									  element);
 		node.return_type = create_type_reference (element.return_type, node, node);
 		symbol_map.set (element, node);
@@ -1063,7 +992,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								element.name,
 								element.access,
 								comment,
-								get_cname (element),
+								Vala.get_ccode_name (element),
 								get_type_macro_name (element),
 								get_type_function_name (element),
 								element);
@@ -1086,7 +1015,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 										 file,
 										 element.name,
 										 comment,
-										 get_cname (element),
+										 Vala.get_ccode_name (element),
 										 element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
@@ -1108,7 +1037,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 									  element.name,
 									  element.access,
 									  comment,
-									  get_cname (element),
+									  Vala.get_ccode_name (element),
 									  element);
 		node.constant_type = create_type_reference (element.type_reference, node, node);
 		symbol_map.set (element, node);
@@ -1131,7 +1060,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 									   element.name,
 									   element.access,
 									   comment,
-									   get_cname (element),
+									   Vala.get_ccode_name (element),
 									   get_quark_macro_name (element),
 									   get_quark_function_name (element),
 									   Vala.GDBusModule.get_dbus_name (element),
@@ -1159,7 +1088,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 										 file,
 										 element.name,
 										 comment,
-										 get_cname (element),
+										 Vala.get_ccode_name (element),
 										 Vala.GDBusModule.get_dbus_name_for_member (element),
 										 element);
 		symbol_map.set (element, node);
