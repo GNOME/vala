@@ -52,7 +52,7 @@ public class Valadoc.Api.SignatureBuilder {
 	 * @param spaced add a space at the front of the string if necessary
 	 * @return this
 	 */
-	public SignatureBuilder append (string text, bool spaced = true) {
+	public unowned SignatureBuilder append (string text, bool spaced = true) {
 		string content = (last_appended != null && spaced ? " " : "") + text;
 		append_text (content);
 		return this;
@@ -65,7 +65,7 @@ public class Valadoc.Api.SignatureBuilder {
 	 * @param spaced add a space at the front of the string if necessary
 	 * @return this
 	 */
-	public SignatureBuilder append_attribute (string text, bool spaced = true) {
+	public unowned SignatureBuilder append_attribute (string text, bool spaced = true) {
 		string content = (last_appended != null && spaced ? " " : "") + text;
 		append_text (content);
 		return this;
@@ -78,7 +78,7 @@ public class Valadoc.Api.SignatureBuilder {
 	 * @param spaced add a space at the front of the string if necessary
 	 * @return this
 	 */
-	public SignatureBuilder append_highlighted (string text, bool spaced = true) {
+	public unowned SignatureBuilder append_highlighted (string text, bool spaced = true) {
 		string content = (last_appended != null && spaced ? " " : "") + text;
 		Run inner = new Run (Run.Style.ITALIC);
 		inner.content.add (new Text (content));
@@ -92,7 +92,7 @@ public class Valadoc.Api.SignatureBuilder {
 	 * @param spaced add a space at the front of the inline if necessary
 	 * @return this
 	 */
-	public SignatureBuilder append_content (Inline content, bool spaced = true) {
+	public unowned SignatureBuilder append_content (Inline content, bool spaced = true) {
 		if (last_appended != null && spaced) {
 			append_text (" ");
 		}
@@ -107,7 +107,7 @@ public class Valadoc.Api.SignatureBuilder {
 	 * @param spaced add a space at the front of the keyword if necessary
 	 * @return this
 	 */
-	public SignatureBuilder append_keyword (string keyword, bool spaced = true) {
+	public unowned SignatureBuilder append_keyword (string keyword, bool spaced = true) {
 		Run inner = new Run (Run.Style.LANG_KEYWORD);
 		inner.content.add (new Text (keyword));
 		return append_content (inner, spaced);
@@ -120,7 +120,7 @@ public class Valadoc.Api.SignatureBuilder {
 	 * @param spaced add a space at the front of the node if necessary
 	 * @return this
 	 */
-	public SignatureBuilder append_symbol (Node node, bool spaced = true) {
+	public unowned SignatureBuilder append_symbol (Node node, bool spaced = true) {
 		Run inner = new Run (Run.Style.BOLD);
 		inner.content.add (new SymbolLink (node, node.name));
 		return append_content (inner, spaced);
@@ -133,7 +133,7 @@ public class Valadoc.Api.SignatureBuilder {
 	 * @param spaced add a space at the front of the node if necessary
 	 * @return this
 	 */
-	public SignatureBuilder append_type (Node node, bool spaced = true) {
+	public unowned SignatureBuilder append_type (Node node, bool spaced = true) {
 		Run.Style style = Run.Style.LANG_TYPE;
 		if (node is TypeSymbol && ((TypeSymbol)node).is_basic_type) {
 			style = Run.Style.LANG_BASIC_TYPE;
@@ -151,7 +151,7 @@ public class Valadoc.Api.SignatureBuilder {
 	 * @param spaced add a space at the front of the type name if necessary
 	 * @return this
 	 */
-	public SignatureBuilder append_type_name (string name, bool spaced = true) {
+	public unowned SignatureBuilder append_type_name (string name, bool spaced = true) {
 		Run inner = new Run (Run.Style.LANG_TYPE);
 		inner.content.add (new Text (name));
 		return append_content (inner, spaced);
@@ -164,7 +164,7 @@ public class Valadoc.Api.SignatureBuilder {
 	 * @param spaced add a space at the front of the literal if necessary
 	 * @return this
 	 */
-	public SignatureBuilder append_literal (string literal, bool spaced = true) {
+	public unowned SignatureBuilder append_literal (string literal, bool spaced = true) {
 		Run inner = new Run (Run.Style.LANG_LITERAL);
 		inner.content.add (new Text (literal));
 		return append_content (inner, spaced);
