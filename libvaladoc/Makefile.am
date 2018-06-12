@@ -11,7 +11,9 @@ AM_CFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \
 	-I$(top_srcdir)/gee \
+	-I$(top_srcdir)/ccode \
 	-I$(top_srcdir)/vala \
+	-I$(top_srcdir)/codegen \
 	$(NULL)
 
 AM_VALAFLAGS = \
@@ -185,6 +187,8 @@ libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
 		--vapidir $(top_srcdir)/vapi --pkg libgvc \
 		--vapidir $(top_srcdir)/gee --pkg gee \
 		--vapidir $(top_srcdir)/vala --pkg vala \
+		--vapidir $(top_srcdir)/ccode --pkg ccode \
+		--vapidir $(top_srcdir)/codegen --pkg codegen \
 		--pkg config \
 		$(filter %.vala %.c,$^)
 	touch $@
@@ -199,6 +203,8 @@ libvaladoc@PACKAGE_SUFFIX@_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(GMODULE_LIBS) \
 	$(top_builddir)/vala/libvala@PACKAGE_SUFFIX@.la \
+	$(top_builddir)/ccode/libvalaccode.la \
+	$(top_builddir)/codegen/libvalaccodegen.la \
 	$(NULL)
 
 libvaladocincludedir = $(includedir)/valadoc@PACKAGE_SUFFIX@
