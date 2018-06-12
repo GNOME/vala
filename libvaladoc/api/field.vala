@@ -31,7 +31,7 @@ public class Valadoc.Api.Field : Member {
 
 	public Field (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
 				  SourceComment? comment, string? cname, bool is_static, bool is_volatile,
-				  void* data)
+				  Vala.Field data)
 	{
 		base (parent, file, name, accessibility, comment, data);
 

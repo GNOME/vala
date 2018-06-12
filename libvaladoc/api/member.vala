@@ -26,7 +26,7 @@ public abstract class Valadoc.Api.Member : Symbol {
 	private SourceComment? source_comment;
 
 	public Member (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
-				   SourceComment? comment, void* data)
+				   SourceComment? comment, Vala.Symbol data)
 	{
 		base (parent, file, name, accessibility, data);
 

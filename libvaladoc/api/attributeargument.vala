@@ -48,23 +48,23 @@ public class Valadoc.Api.AttributeArgument : Item {
 		get;
 	}
 
-	public AttributeArgument.boolean (Attribute parent, SourceFile file, string name, bool value, void* data) {
+	public AttributeArgument.boolean (Attribute parent, SourceFile file, string name, bool value, Vala.Attribute data) {
 		this (parent, file, name, Type.BOOLEAN, value.to_string (), data);
 	}
 
-	public AttributeArgument.integer (Attribute parent, SourceFile file, string name, int value, void* data) {
+	public AttributeArgument.integer (Attribute parent, SourceFile file, string name, int value, Vala.Attribute data) {
 		this (parent, file, name, Type.INTEGER, value.to_string (), data);
 	}
 
-	public AttributeArgument.double (Attribute parent, SourceFile file, string name, double value, void* data) {
+	public AttributeArgument.double (Attribute parent, SourceFile file, string name, double value, Vala.Attribute data) {
 		this (parent, file, name, Type.DOUBLE, value.to_string (), data);
 	}
 
-	public AttributeArgument.string (Attribute parent, SourceFile file, string name, string value, void* data) {
+	public AttributeArgument.string (Attribute parent, SourceFile file, string name, string value, Vala.Attribute data) {
 		this (parent, file, name, Type.STRING, value, data);
 	}
 
-	private AttributeArgument (Attribute parent, SourceFile file, string name, Type type, string value, void* data) {
+	private AttributeArgument (Attribute parent, SourceFile file, string name, Type type, string value, Vala.Attribute data) {
 		base (data);
 
 		this.argument_type = type;

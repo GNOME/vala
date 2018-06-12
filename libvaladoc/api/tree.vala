@@ -53,7 +53,7 @@ public class Valadoc.Api.Tree {
 		this.packages.add (package);
 	}
 
-	public void* data {
+	public Vala.CodeContext context {
 		set;
 		get;
 	}
@@ -216,10 +216,10 @@ public class Valadoc.Api.Tree {
 		return params;
 	}
 
-	public Tree (ErrorReporter reporter, Settings settings, void* data = null) {
+	public Tree (ErrorReporter reporter, Settings settings, Vala.CodeContext context) {
 		this.settings = settings;
 		this.reporter = reporter;
-		this.data = data;
+		this.context = context;
 	}
 
 	// copied from valacodecontext.vala

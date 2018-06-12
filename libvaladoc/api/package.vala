@@ -73,7 +73,7 @@ public class Valadoc.Api.Package : Node {
 		return this._dependencies;
 	}
 
-	public Package (string name, bool is_package, void* data) {
+	public Package (string name, bool is_package, Vala.CodeNode? data) {
 		base (null, null, name, data);
 
 		this.is_package = is_package;

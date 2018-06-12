@@ -28,7 +28,7 @@ using Valadoc.Content;
  */
 public class Valadoc.Api.TypeParameter : Symbol {
 
-	public TypeParameter (Node parent, SourceFile file, string name, void* data) {
+	public TypeParameter (Node parent, SourceFile file, string name, Vala.TypeParameter data) {
 		base (parent, file, name, SymbolAccessibility.PUBLIC, data);
 	}
 

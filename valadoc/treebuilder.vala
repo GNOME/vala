@@ -862,12 +862,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 	}
 
-	private Vala.CodeContext create_valac_tree (Settings settings) {
-		// init context:
-		var context = new Vala.CodeContext ();
-		Vala.CodeContext.push (context);
-
-
+	private void create_valac_tree (Vala.CodeContext context, Settings settings) {
 		// settings:
 		context.experimental = settings.experimental;
 		context.experimental_non_null = settings.experimental || settings.experimental_non_null;
@@ -943,21 +938,20 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		// add user defined files:
 		add_depencies (context, settings.packages);
 		if (reporter.errors > 0) {
-			return context;
+			return;
 		}
 
 		add_documented_files (context, settings.source_files);
 		if (reporter.errors > 0) {
-			return context;
+			return;
 		}
-
 
 		// parse vala-code:
 		Vala.Parser parser = new Vala.Parser ();
 
 		parser.parse (context);
 		if (context.report.get_errors () > 0) {
-			return context;
+			return;
 		}
 
 		// parse gir:
@@ -965,18 +959,14 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		gir_parser.parse (context);
 		if (context.report.get_errors () > 0) {
-			return context;
+			return;
 		}
-
-
 
 		// check context:
 		context.check ();
 		if (context.report.get_errors () > 0) {
-			return context;
+			return;
 		}
-
-		return context;
 	}
 
 
@@ -1503,16 +1493,14 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		this.settings = settings;
 		this.reporter = reporter;
 
-		this.tree = new Api.Tree (reporter, settings);
-		var context = create_valac_tree (settings);
-		this.tree.data = context;
+		var context = new Vala.CodeContext ();
+		Vala.CodeContext.push (context);
+
+		this.tree = new Api.Tree (reporter, settings, context);
+		create_valac_tree (context, settings);
 
 		reporter.warnings_offset = context.report.get_warnings ();
 		reporter.errors_offset = context.report.get_errors ();
-
-		if (context == null) {
-			return null;
-		}
 
 		// TODO: Register all packages here
 		// register packages included by gir-files

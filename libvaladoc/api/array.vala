@@ -36,7 +36,7 @@ public class Valadoc.Api.Array : Item {
 		get;
 	}
 
-	public Array (Item parent, void* data) {
+	public Array (Item parent, Vala.ArrayType data) {
 		base (data);
 
 		this.parent = parent;

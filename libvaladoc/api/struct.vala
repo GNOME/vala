@@ -38,7 +38,7 @@ public class Valadoc.Api.Struct : TypeSymbol {
 				   SourceComment? comment, string? cname, string? type_macro_name,
 				   string? type_function_name, string? type_id, string? dup_function_cname,
 				   string? copy_function_cname, string? destroy_function_cname,
-				   string? free_function_cname, bool is_basic_type, void* data)
+				   string? free_function_cname, bool is_basic_type, Vala.Struct data)
 	{
 		base (parent, file, name, accessibility, comment, type_macro_name, null, null,
 			type_function_name, is_basic_type, data);

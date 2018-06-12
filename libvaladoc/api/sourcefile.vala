@@ -45,12 +45,12 @@ public class Valadoc.Api.SourceFile : Object {
 		return Path.get_basename (relative_path);
 	}
 
-	public void* data {
+	public Vala.SourceFile? data {
 		private set;
 		get;
 	}
 
-	public SourceFile (Package package, string relative_path, string? relative_c_path, void* data) {
+	public SourceFile (Package package, string relative_path, string? relative_c_path, Vala.SourceFile? data) {
 		this.relative_c_path = relative_c_path;
 		this.relative_path = relative_path;
 		this.package = package;

@@ -38,7 +38,7 @@ public class Valadoc.Api.Constant : Member {
 	}
 
 	public Constant (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
-					 SourceComment? comment, string? cname, void* data)
+					 SourceComment? comment, string? cname, Vala.Constant data)
 	{
 		base (parent, file, name, accessibility, comment, data);
 

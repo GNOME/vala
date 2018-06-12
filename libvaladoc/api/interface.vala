@@ -35,7 +35,7 @@ public class Valadoc.Api.Interface : TypeSymbol {
 	public Interface (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
 					  SourceComment? comment, string? cname, string? type_macro_name, string? is_type_macro_name,
 					  string? type_cast_macro_name, string? type_function_name, string interface_macro_name,
-					  string? dbus_name, void* data)
+					  string? dbus_name, Vala.Interface data)
 	{
 		base (parent, file, name, accessibility, comment, type_macro_name, is_type_macro_name,
 			  type_cast_macro_name, type_function_name, false, data);

@@ -35,7 +35,7 @@ public abstract class Valadoc.Api.TypeSymbol : Symbol {
 	public TypeSymbol (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
 					   SourceComment? comment, string? type_macro_name, string? is_type_macro_name,
 					   string? type_cast_macro_name, string? type_function_name, bool is_basic_type,
-					   void* data)
+					   Vala.TypeSymbol data)
 	{
 		base (parent, file, name, accessibility, data);
 

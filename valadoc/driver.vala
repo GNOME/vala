@@ -39,7 +39,7 @@ public class Valadoc.Drivers.Driver : Object, Valadoc.Driver {
 			gir_directory = settings.gir_directory;
 		}
 
-		gir_writer.write_file ((Vala.CodeContext) tree.data,
+		gir_writer.write_file (tree.context,
 							   gir_directory,
 							   "%s-%s.gir".printf (settings.gir_namespace, settings.gir_version),
 							   settings.gir_namespace,

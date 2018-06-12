@@ -32,7 +32,7 @@ public class Valadoc.Api.TypeReference : Item {
 	private Ownership ownership;
 
 	public TypeReference (Item parent, Ownership ownership, bool pass_ownership, bool is_dynamic,
-						  bool is_nullable, string? dbus_type_signature, void* data)
+						  bool is_nullable, string? dbus_type_signature, Vala.DataType? data)
 	{
 		base (data);
 

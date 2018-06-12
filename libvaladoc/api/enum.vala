@@ -31,7 +31,7 @@ public class Valadoc.Api.Enum : TypeSymbol {
 
 	public Enum (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
 				 SourceComment? comment, string? cname, string? type_macro_name,
-				 string? type_function_name, void* data)
+				 string? type_function_name, Vala.Enum data)
 	{
 		base (parent, file, name, accessibility, comment, type_macro_name, null, null,
 			type_function_name, false, data);

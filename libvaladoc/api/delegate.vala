@@ -40,7 +40,7 @@ public class Valadoc.Api.Delegate : TypeSymbol, Callable {
 
 
 	public Delegate (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
-					 SourceComment? comment, string? cname, bool is_static, void* data)
+					 SourceComment? comment, string? cname, bool is_static, Vala.Delegate data)
 	{
 		base (parent, file, name, accessibility, comment, null, null, null, null, false, data);
 

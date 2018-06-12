@@ -46,7 +46,7 @@ public class Valadoc.Api.Method : Member, Callable {
 	public Method (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
 				   SourceComment? comment, string? cname, string? dbus_name, string? dbus_result_name,
 				   string? finish_function_cname, MethodBindingType binding_type, bool is_yields,
-				   bool is_dbus_visible, bool is_constructor, void* data)
+				   bool is_dbus_visible, bool is_constructor, Vala.Method data)
 	{
 		base (parent, file, name, accessibility, comment, data);
 

@@ -52,7 +52,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 				  string? dbus_name, string? type_id, string? param_spec_function_name, string? ref_function_name,
 				  string? unref_function_name, string? free_function_name, string? finalize_function_name,
 				  string? take_value_function_cname, string? get_value_function_cname, string? set_value_function_cname,
-				  bool is_fundamental, bool is_abstract, bool is_basic_type, void* data)
+				  bool is_fundamental, bool is_abstract, bool is_basic_type, Vala.Class data)
 	{
 		base (parent, file, name, accessibility, comment, type_macro_name,
 			is_type_macro_name, type_cast_macro_name, type_function_name, is_basic_type, data);

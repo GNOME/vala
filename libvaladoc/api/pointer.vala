@@ -36,7 +36,7 @@ public class Valadoc.Api.Pointer : Item {
 		get;
 	}
 
-	public Pointer (Item parent, void* data) {
+	public Pointer (Item parent, Vala.PointerType data) {
 		base (data);
 
 		this.parent = parent;

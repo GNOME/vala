@@ -32,7 +32,7 @@ public class Valadoc.Api.Attribute : Item {
 		get;
 	}
 
-	public Attribute (Node parent, SourceFile file, string name, void* data) {
+	public Attribute (Node parent, SourceFile file, string name, Vala.Attribute data) {
 		base (data);
 
 		this.parent = parent;
@@ -52,25 +52,25 @@ public class Valadoc.Api.Attribute : Item {
 		return null;
 	}
 
-	public AttributeArgument add_boolean (string name, bool value, void* data = null) {
+	public AttributeArgument add_boolean (string name, bool value, Vala.Attribute data) {
 		AttributeArgument arg = new AttributeArgument.boolean (this, file, name, value, data);
 		args.add (arg);
 		return arg;
 	}
 
-	public AttributeArgument add_integer (string name, int value, void* data = null) {
+	public AttributeArgument add_integer (string name, int value, Vala.Attribute data) {
 		AttributeArgument arg = new AttributeArgument.integer (this, file, name, value, data);
 		args.add (arg);
 		return arg;
 	}
 
-	public AttributeArgument add_double (string name, double value, void* data = null) {
+	public AttributeArgument add_double (string name, double value, Vala.Attribute data) {
 		AttributeArgument arg = new AttributeArgument.double (this, file, name, value, data);
 		args.add (arg);
 		return arg;
 	}
 
-	public AttributeArgument add_string (string name, string value, void* data = null) {
+	public AttributeArgument add_string (string name, string value, Vala.Attribute data) {
 		AttributeArgument arg = new AttributeArgument.string (this, file, name, value, data);
 		args.add (arg);
 		return arg;

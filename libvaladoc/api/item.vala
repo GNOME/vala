@@ -29,7 +29,7 @@ using Valadoc.Content;
 public abstract class Valadoc.Api.Item : Object {
 	private Inline _signature;
 
-	public void* data {
+	public Vala.CodeNode? data {
 		private set;
 		get;
 	}
@@ -42,7 +42,7 @@ public abstract class Valadoc.Api.Item : Object {
 		get;
 	}
 
-	public Item (void* data) {
+	public Item (Vala.CodeNode? data) {
 		this.data = data;
 	}
 

@@ -44,7 +44,7 @@ public class Valadoc.Api.EnumValue: Symbol {
 		}
 	}
 
-	public EnumValue (Enum parent, SourceFile file, string name, SourceComment? comment, string? cname, void* data) {
+	public EnumValue (Enum parent, SourceFile file, string name, SourceComment? comment, string? cname, Vala.EnumValue data) {
 		base (parent, file, name, parent.accessibility, data);
 
 		this.source_comment = comment;

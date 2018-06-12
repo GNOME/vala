@@ -50,7 +50,7 @@ public abstract class Valadoc.Api.Node : Item, Browsable, Documentation {
 	private Vala.Map<NodeType, Vala.List<Node>> per_type_children;
 
 
-	public Node (Node? parent, SourceFile? file, string? name, void* data) {
+	public Node (Node? parent, SourceFile? file, string? name, Vala.CodeNode? data) {
 		base (data);
 
 		per_name_children = new Vala.HashMap<string, Node> (str_hash, str_equal);
