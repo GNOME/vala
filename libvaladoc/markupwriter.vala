@@ -109,7 +109,7 @@ public class Valadoc.MarkupWriter {
 	 * @param attributes a list of name/value pairs
 	 * @return this
 	 */
-	public MarkupWriter start_tag (string name, string[]? attributes=null) {
+	public unowned MarkupWriter start_tag (string name, string[]? attributes=null) {
 		indent++;
 		check_column (name);
 
@@ -139,7 +139,7 @@ public class Valadoc.MarkupWriter {
 	 * @param attributes a list of name/value pairs
 	 * @return this
 	 */
-	public MarkupWriter simple_tag (string name, string[]? attributes=null) {
+	public unowned MarkupWriter simple_tag (string name, string[]? attributes=null) {
 		indent++;
 		check_column (name);
 
@@ -169,7 +169,7 @@ public class Valadoc.MarkupWriter {
 	 * @param name the name of the markup
 	 * @return this
 	 */
-	public MarkupWriter end_tag (string name) {
+	public unowned MarkupWriter end_tag (string name) {
 		check_column (name, true);
 		do_write ("</%s>".printf (name));
 		indent--;
@@ -183,7 +183,7 @@ public class Valadoc.MarkupWriter {
 	 * @see raw_text
 	 * @return this
 	 */
-	public MarkupWriter text (string text) {
+	public unowned MarkupWriter text (string text) {
 		if (wrap && text.length + current_column > MAX_COLUMN) {
 			long wrote = 0;
 			while (wrote < text.length) {
@@ -223,7 +223,7 @@ public class Valadoc.MarkupWriter {
 	 * @see text
 	 * @return this
 	 */
-	public MarkupWriter raw_text (string text) {
+	public unowned MarkupWriter raw_text (string text) {
 		do_write (text);
 		last_was_tag = false;
 		return this;

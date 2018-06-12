@@ -39,7 +39,7 @@ public class Valadoc.Devhelp.MarkupWriter : Valadoc.MarkupWriter {
 			|| name == "sub";
 	}
 
-	public MarkupWriter start_book (string title, string lang, string link, string name, string version, string author) {
+	public unowned MarkupWriter start_book (string title, string lang, string link, string name, string version, string author) {
 		this.start_tag ("book", {"xmlns", "http://www.devhelp.net/book",
 								 "title", title,
 								 "language", lang,
@@ -50,42 +50,42 @@ public class Valadoc.Devhelp.MarkupWriter : Valadoc.MarkupWriter {
 		return this;
 	}
 
-	public MarkupWriter end_book () {
+	public unowned MarkupWriter end_book () {
 		this.end_tag ("book");
 		return this;
 	}
 
-	public MarkupWriter start_functions () {
+	public unowned MarkupWriter start_functions () {
 		this.start_tag ("functions");
 		return this;
 	}
 
-	public MarkupWriter end_functions () {
+	public unowned MarkupWriter end_functions () {
 		this.end_tag ("functions");
 		return this;
 	}
 
-	public MarkupWriter start_chapters () {
+	public unowned MarkupWriter start_chapters () {
 		this.start_tag ("chapters");
 		return this;
 	}
 
-	public MarkupWriter end_chapters () {
+	public unowned MarkupWriter end_chapters () {
 		this.end_tag ("chapters");
 		return this;
 	}
 
-	public MarkupWriter start_sub (string name, string link) {
+	public unowned MarkupWriter start_sub (string name, string link) {
 		this.start_tag ("sub", {"name", name, "link", link});
 		return this;
 	}
 
-	public MarkupWriter end_sub () {
+	public unowned MarkupWriter end_sub () {
 		this.end_tag ("sub");
 		return this;
 	}
 
-	public MarkupWriter keyword (string name, string type, string link) {
+	public unowned MarkupWriter keyword (string name, string type, string link) {
 		this.start_tag ("keyword", {"type", type, "name", name, "link", link});
 		this.end_tag ("keyword");
 		return this;
