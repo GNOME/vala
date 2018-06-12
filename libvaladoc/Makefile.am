@@ -70,7 +70,6 @@ libvaladoc_la_VALASOURCES = \
 	api/errordomain.vala \
 	api/field.vala \
 	api/formalparameter.vala \
-	api/formalparametertype.vala \
 	api/interface.vala \
 	api/item.vala \
 	api/member.vala \

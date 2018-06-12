@@ -720,18 +720,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return PropertyBindingType.UNMODIFIED;
 	}
 
-	private FormalParameterType get_formal_parameter_type (Vala.Parameter element) {
-		if (element.direction == Vala.ParameterDirection.OUT) {
-			return FormalParameterType.OUT;
-		} else if (element.direction == Vala.ParameterDirection.REF) {
-			return FormalParameterType.REF;
-		} else if (element.direction == Vala.ParameterDirection.IN) {
-			return FormalParameterType.IN;
-		}
-
-		error ("Unknown formal parameter type");
-	}
-
 
 	//
 	// Vala tree creation:
@@ -1453,7 +1441,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 													file,
 													element.name,
 													get_access_modifier(element),
-													get_formal_parameter_type (element),
+													element.direction,
 													element.ellipsis,
 													element);
 		node.parameter_type = create_type_reference (element.variable_type, node, node);
