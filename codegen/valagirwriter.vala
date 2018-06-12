@@ -1132,7 +1132,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		buffer.append_printf ("<property name=\"%s\"", prop.name.replace ("_", "-"));
+		buffer.append_printf ("<property name=\"%s\"", get_ccode_name (prop));
 		if (prop.get_accessor == null) {
 			buffer.append_printf (" readable=\"0\"");
 		}

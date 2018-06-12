@@ -3893,7 +3893,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public string get_symbol_lock_name (string symname) {
-		return "__lock_%s".printf (symname);
+		return "__lock_%s".printf (symname.replace ("-", "_"));
 	}
 
 	private CCodeExpression get_lock_expression (Statement stmt, Expression resource) {
@@ -6356,7 +6356,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeConstant get_property_canonical_cconstant (Property prop) {
-		return new CCodeConstant ("\"%s\"".printf (prop.name.replace ("_", "-")));
+		return new CCodeConstant ("\"%s\"".printf (get_ccode_name (prop)));
 	}
 
 	public override void visit_class (Class cl) {

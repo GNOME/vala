@@ -692,6 +692,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 				} else {
 					return "%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name);
 				}
+			} else if (sym is Property) {
+				return sym.name.replace ("_", "-");
 			} else if (sym is PropertyAccessor) {
 				unowned PropertyAccessor acc = (PropertyAccessor) sym;
 				var t = (TypeSymbol) acc.prop.parent_symbol;
