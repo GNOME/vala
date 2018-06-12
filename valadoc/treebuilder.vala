@@ -157,7 +157,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		Vala.DataType vntype = vtyperef.element_type;
 		if (vntype is Vala.ArrayType) {
-			arr.data_type = create_type_reference (vntype, arr, caller);
+			arr.data_type = create_array ((Vala.ArrayType) vntype, arr, caller);
 		} else {
 			arr.data_type = create_type_reference (vntype, arr, caller);
 		}
