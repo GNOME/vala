@@ -31,17 +31,110 @@ public class Valadoc.Api.TypeReference : Item {
 	private string? dbus_type_signature;
 	private Ownership ownership;
 
-	public TypeReference (Item parent, Ownership ownership, bool pass_ownership, bool is_dynamic,
+	public TypeReference (Item parent, bool is_dynamic,
 						  bool is_nullable, string? dbus_type_signature, Vala.DataType? data)
 	{
 		base (data);
 
 		this.dbus_type_signature = dbus_type_signature;
-		this.pass_ownership = pass_ownership;
+		this.pass_ownership = type_reference_pass_ownership (data);
 		this.is_nullable = is_nullable;
 		this.is_dynamic = is_dynamic;
-		this.ownership = ownership;
+		this.ownership = get_type_reference_ownership (data);
 		this.parent = parent;
+	}
+
+	bool is_reference_counting (Vala.TypeSymbol sym) {
+		return Vala.is_reference_counting (sym);
+	}
+
+	bool type_reference_pass_ownership (Vala.DataType? element) {
+		if (element == null) {
+			return false;
+		}
+
+		weak Vala.CodeNode? node = element.parent_node;
+		if (node == null) {
+			return false;
+		}
+		if (node is Vala.Parameter) {
+			return (((Vala.Parameter)node).direction == Vala.ParameterDirection.IN &&
+				((Vala.Parameter)node).variable_type.value_owned);
+		}
+		if (node is Vala.Property) {
+			return ((Vala.Property)node).property_type.value_owned;
+		}
+
+		return false;
+	}
+
+	bool is_type_reference_unowned (Vala.DataType? element) {
+			if (element == null) {
+				return false;
+			}
+
+			// non ref counted types are weak, not unowned
+			if (element.data_type is Vala.TypeSymbol
+				&& is_reference_counting ((Vala.TypeSymbol) element.data_type) == true)
+			{
+				return false;
+			}
+
+			// FormalParameters are weak by default
+			return (element.parent_node is Vala.Parameter == false)
+				? element.is_weak ()
+				: false;
+	}
+
+	bool is_type_reference_owned (Vala.DataType? element) {
+		if (element == null) {
+			return false;
+		}
+
+		weak Vala.CodeNode parent = element.parent_node;
+
+		// parameter:
+		if (parent is Vala.Parameter) {
+			if (((Vala.Parameter)parent).direction != Vala.ParameterDirection.IN) {
+				return false;
+			}
+			return ((Vala.Parameter)parent).variable_type.value_owned;
+		}
+
+		return false;
+	}
+
+	bool is_type_reference_weak (Vala.DataType? element) {
+		if (element == null) {
+			return false;
+		}
+
+		// non ref counted types are unowned, not weak
+		if (element.data_type is Vala.TypeSymbol
+			&& is_reference_counting ((Vala.TypeSymbol) element.data_type) == false)
+		{
+			return false;
+		}
+
+		// arrays are unowned, not weak
+		if (element is Vala.ArrayType) {
+			return false;
+		}
+
+		// FormalParameters are weak by default
+		return (element.parent_node is Vala.Parameter == false)? element.is_weak () : false;
+	}
+
+	Ownership get_type_reference_ownership (Vala.DataType? element) {
+		if (is_type_reference_owned (element)) {
+			return Ownership.OWNED;
+		} else if (is_type_reference_weak (element)) {
+			return Ownership.WEAK;
+		} else if (is_type_reference_unowned (element)) {
+			return Ownership.UNOWNED;
+		}
+
+		return Ownership.DEFAULT;
 	}
 
 	/**
