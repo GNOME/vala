@@ -488,15 +488,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return meta_data.get_namespace ((Vala.Namespace) namespace_symbol, file);
 	}
 
-	private Ownership get_property_ownership (Vala.PropertyAccessor element) {
-		if (element.value_type.value_owned) {
-			return Ownership.OWNED;
-		}
-
-		// the exact type (weak, unowned) does not matter
-		return Ownership.UNOWNED;
-	}
-
 
 	//
 	// Vala tree creation:
@@ -922,9 +913,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 									  element.name,
 									  element.access,
 									  comment,
-									  element.nick,
-									  Vala.GDBusModule.get_dbus_name_for_member (element),
-									  Vala.GDBusModule.is_dbus_visible (element),
 									  element);
 		node.property_type = create_type_reference (element.property_type, node, node);
 		symbol_map.set (element, node);
@@ -937,8 +925,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 												file,
 												element.name,
 												accessor.access,
-												get_cname (accessor),
-												get_property_ownership (accessor),
 												accessor);
 		}
 
@@ -948,8 +934,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 												file,
 												element.name,
 												accessor.access,
-												get_cname (accessor),
-												get_property_ownership (accessor),
 												accessor);
 		}
 

@@ -31,15 +31,15 @@ public class Valadoc.Api.Property : Symbol {
 	private string? cname;
 
 	public Property (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
-					 SourceComment? comment, string? cname, string? dbus_name, bool is_dbus_visible,
+					 SourceComment? comment,
 					 Vala.Property data)
 	{
 		base (parent, file, name, accessibility, comment, data);
 
-		this.is_dbus_visible = is_dbus_visible;
+		this.is_dbus_visible = Vala.GDBusModule.is_dbus_visible (data);
 
-		this.dbus_name = dbus_name;
-		this.cname = cname;
+		this.dbus_name = Vala.GDBusModule.get_dbus_name_for_member (data);
+		this.cname = Vala.get_ccode_name (data);
 	}
 
 	/**

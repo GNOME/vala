@@ -31,12 +31,21 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	private string? cname;
 
 	public PropertyAccessor (Property parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
-							 string? cname, Ownership ownership, Vala.PropertyAccessor data)
+							 Vala.PropertyAccessor data)
 	{
 		base (parent, file, name, accessibility, null, data);
 
-		this.ownership = ownership;
-		this.cname = cname;
+		this.ownership = get_property_ownership (data);
+		this.cname = Vala.get_ccode_name (data);
+	}
+
+	Ownership get_property_ownership (Vala.PropertyAccessor element) {
+		if (element.value_type.value_owned) {
+			return Ownership.OWNED;
+		}
+
+		// the exact type (weak, unowned) does not matter
+		return Ownership.UNOWNED;
 	}
 
 	/**
