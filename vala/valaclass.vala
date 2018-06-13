@@ -51,9 +51,6 @@ public class Vala.Class : ObjectTypeSymbol {
 					_is_compact = get_attribute ("Compact") != null;
 				}
 			}
-			if (_is_compact == null) {
-				_is_compact = get_attribute ("Compact") != null;
-			}
 			return _is_compact;
 		}
 		set {
@@ -73,9 +70,6 @@ public class Vala.Class : ObjectTypeSymbol {
 				} else {
 					_is_immutable = get_attribute ("Immutable") != null;
 				}
-			}
-			if (_is_immutable == null) {
-				_is_immutable = get_attribute ("Immutable") != null;
 			}
 			return _is_immutable;
 		}
