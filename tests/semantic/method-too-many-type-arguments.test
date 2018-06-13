@@ -1,0 +1,8 @@
+Invalid Code
+
+void bar (string s, int i) {
+}
+
+void main () {
+	bar<string> ("foo", 42);
+}

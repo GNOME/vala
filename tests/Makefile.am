@@ -461,11 +461,15 @@ TESTS = \
 	parser/yield-method.test \
 	parser/bug728574.vala \
 	parser/bug749576.vala \
+	semantic/class-too-few-type-arguments.test \
+	semantic/class-too-many-type-arguments.test \
 	semantic/constant-extern.test \
 	semantic/constant-value.test \
 	semantic/constant-value-missing.test \
 	semantic/constant-value-type.test \
 	semantic/constant-void.test \
+	semantic/delegate-too-few-type-arguments.test \
+	semantic/delegate-too-many-type-arguments.test \
 	semantic/field-accessibility.test \
 	semantic/field-compact-static.test \
 	semantic/field-external.test \
@@ -510,6 +514,8 @@ TESTS = \
 	semantic/method-private-virtual.test \
 	semantic/method-protected.test \
 	semantic/method-return-accessibility.test \
+	semantic/method-too-few-type-arguments.test \
+	semantic/method-too-many-type-arguments.test \
 	semantic/method-virtual.test \
 	semantic/method-virtual-body.test \
 	semantic/parameter-accessibility.test \
