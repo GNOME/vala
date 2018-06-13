@@ -456,6 +456,15 @@ TESTS = \
 	parser/yield-method.test \
 	parser/bug728574.vala \
 	parser/bug749576.vala \
+	semantic/class-base-type-invalid.test \
+	semantic/class-base-type-less-accessible.test \
+	semantic/class-compact-derived-instance-field.test \
+	semantic/class-compact-interface.test \
+	semantic/class-missing-implement-interface-method.test \
+	semantic/class-missing-implement-interface-property.test \
+	semantic/class-missing-implement-method.test \
+	semantic/class-missing-implement-property.test \
+	semantic/class-missing-prerequisites.test \
 	semantic/class-too-few-type-arguments.test \
 	semantic/class-too-many-type-arguments.test \
 	semantic/constant-extern.test \

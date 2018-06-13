@@ -1,0 +1,19 @@
+Invalid Code
+
+interface IFoo {
+}
+
+interface IBaz {
+}
+
+interface IBar : IFoo, IBaz {
+}
+
+class Bar : IBar {
+}
+
+class Foo : Bar {
+}
+
+void main () {
+}

@@ -1,0 +1,11 @@
+Invalid Code
+
+abstract class Bar {
+	public abstract string bar { get; set; }
+}
+
+class Foo : Bar {
+}
+
+void main () {
+}

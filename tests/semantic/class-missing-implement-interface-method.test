@@ -1,0 +1,11 @@
+Invalid Code
+
+interface Bar {
+	public abstract void bar ();
+}
+
+class Foo : Bar {
+}
+
+void main () {
+}
