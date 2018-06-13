@@ -99,7 +99,7 @@ namespace Gst {
 		public weak Gst.SDP.Message sdp;
 		public Gst.WebRTCSDPType type;
 		[CCode (has_construct_function = false)]
-		public WebRTCSessionDescription (Gst.WebRTCSDPType type, Gst.SDP.Message sdp);
+		public WebRTCSessionDescription (Gst.WebRTCSDPType type, owned Gst.SDP.Message sdp);
 		public Gst.WebRTCSessionDescription copy ();
 		public void free ();
 	}

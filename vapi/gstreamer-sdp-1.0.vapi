@@ -582,6 +582,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
 		public static Gst.SDP.Result message_new (out Gst.SDP.Message msg);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
+		[Version (since = "1.16")]
+		public static Gst.SDP.Result message_new_from_text (string text, out Gst.SDP.Message msg);
+		[CCode (cheader_filename = "gst/sdp/sdp.h")]
 		public static Gst.SDP.Result message_parse_buffer ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, Gst.SDP.Message msg);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
 		public static Gst.SDP.Result message_parse_uri (string uri, Gst.SDP.Message msg);

@@ -2027,10 +2027,14 @@ namespace Gst {
 		public bool add_fd (Gst.PollFD fd);
 		public bool fd_can_read (Gst.PollFD fd);
 		public bool fd_can_write (Gst.PollFD fd);
+		[Version (since = "1.16")]
+		public bool fd_ctl_pri (Gst.PollFD fd, bool active);
 		public bool fd_ctl_read (Gst.PollFD fd, bool active);
 		public bool fd_ctl_write (Gst.PollFD fd, bool active);
 		public bool fd_has_closed (Gst.PollFD fd);
 		public bool fd_has_error (Gst.PollFD fd);
+		[Version (since = "1.16")]
+		public bool fd_has_pri (Gst.PollFD fd);
 		public void fd_ignored (Gst.PollFD fd);
 		public void free ();
 		public void get_read_gpollfd (GLib.PollFD fd);
