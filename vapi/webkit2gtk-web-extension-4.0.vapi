@@ -4057,6 +4057,11 @@ namespace WebKit {
 		public ScriptWorld ();
 		[Version (since = "2.2")]
 		public static unowned WebKit.ScriptWorld get_default ();
+		[Version (since = "2.22")]
+		public unowned string get_name ();
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.22")]
+		public ScriptWorld.with_name (string name);
 		[Version (since = "2.2")]
 		public signal void window_object_cleared (WebKit.WebPage page, WebKit.Frame frame);
 	}

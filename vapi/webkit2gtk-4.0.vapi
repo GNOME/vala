@@ -1060,6 +1060,8 @@ namespace WebKit {
 		public void restore_session_state (WebKit.WebViewSessionState state);
 		public async WebKit.JavascriptResult run_javascript (string script, GLib.Cancellable? cancellable) throws GLib.Error;
 		public async WebKit.JavascriptResult run_javascript_from_gresource (string resource, GLib.Cancellable? cancellable) throws GLib.Error;
+		[Version (since = "2.22")]
+		public async WebKit.JavascriptResult run_javascript_in_world (string script, string world_name, GLib.Cancellable? cancellable) throws GLib.Error;
 		public async GLib.InputStream save (WebKit.SaveMode save_mode, GLib.Cancellable? cancellable) throws GLib.Error;
 		public async bool save_to_file (GLib.File file, WebKit.SaveMode save_mode, GLib.Cancellable? cancellable) throws GLib.Error;
 		[Version (since = "2.8")]
