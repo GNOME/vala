@@ -403,15 +403,21 @@ TESTS = \
 	parser/assignment.vala \
 	parser/attribute-duplicate.test \
 	parser/attribute-wrong-number.test \
+	parser/constructor-class-exists.test \
+	parser/constructor-exists.test \
 	parser/constructor-no-new.test \
 	parser/constructor-no-static-class.test \
+	parser/constructor-static-exists.test \
 	parser/continue-statement.vala \
 	parser/creation-no-abstract.test \
 	parser/creation-no-override.test \
 	parser/creation-no-virtual.test \
 	parser/delegate-no-new.test \
+	parser/destructor-class-exists.test \
+	parser/destructor-exists.test \
 	parser/destructor-no-new.test \
 	parser/destructor-no-static-class.test \
+	parser/destructor-static-exists.test \
 	parser/destructor-wrong-name.test \
 	parser/do-statement.vala \
 	parser/expect-endbrace.test \
