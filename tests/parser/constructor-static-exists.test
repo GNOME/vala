@@ -1,0 +1,12 @@
+Invalid Code
+
+public class Test {
+	static construct {
+	}
+
+	static construct {
+	}
+}
+
+void main () {
+}

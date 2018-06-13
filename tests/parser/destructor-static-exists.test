@@ -1,0 +1,12 @@
+Invalid Code
+
+public class Test {
+	static ~Test () {
+	}
+
+	static ~Test () {
+	}
+}
+
+void main () {
+}
