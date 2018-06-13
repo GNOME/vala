@@ -5303,6 +5303,7 @@ namespace Gdk {
 		public void merge_child_input_shapes ();
 		public void move (int x, int y);
 		public void move_resize (int x, int y, int width, int height);
+		public void move_to_rect (Gdk.Rectangle rect, Gdk.Gravity rect_anchor, Gdk.Gravity surface_anchor, Gdk.AnchorHints anchor_hints, int rect_anchor_dx, int rect_anchor_dy);
 		public unowned GLib.List<Gdk.Surface> peek_children ();
 		[CCode (has_construct_function = false)]
 		public Surface.popup (Gdk.Display display, Gdk.Rectangle position);
@@ -8515,15 +8516,12 @@ namespace Gtk {
 		public Image.from_pixbuf (Gdk.Pixbuf? pixbuf);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Image.from_resource (string resource_path);
-		public bool get_can_shrink ();
 		public unowned GLib.Icon? get_gicon ();
 		public unowned string? get_icon_name ();
 		public Gtk.IconSize get_icon_size ();
-		public bool get_keep_aspect_ratio ();
 		public unowned Gdk.Paintable? get_paintable ();
 		public int get_pixel_size ();
 		public Gtk.ImageType get_storage_type ();
-		public void set_can_shrink (bool can_shrink);
 		public void set_from_file (string? filename);
 		public void set_from_gicon (GLib.Icon icon);
 		public void set_from_icon_name (string? icon_name);
@@ -8531,9 +8529,7 @@ namespace Gtk {
 		public void set_from_pixbuf (Gdk.Pixbuf? pixbuf);
 		public void set_from_resource (string? resource_path);
 		public void set_icon_size (Gtk.IconSize icon_size);
-		public void set_keep_aspect_ratio (bool keep_aspect_ratio);
 		public void set_pixel_size (int pixel_size);
-		public bool can_shrink { get; set; }
 		[NoAccessorMethod]
 		public string file { owned get; set; }
 		[NoAccessorMethod]
@@ -8541,7 +8537,6 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string icon_name { owned get; set; }
 		public Gtk.IconSize icon_size { get; set; }
-		public bool keep_aspect_ratio { get; set; }
 		[NoAccessorMethod]
 		public Gdk.Paintable paintable { owned get; set; }
 		public int pixel_size { get; set; }
@@ -9309,9 +9304,11 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Overlay ();
 		public void add_overlay (Gtk.Widget widget);
+		public bool get_clip_overlay (Gtk.Widget widget);
 		public bool get_measure_overlay (Gtk.Widget widget);
 		public bool get_overlay_pass_through (Gtk.Widget widget);
 		public void reorder_overlay (Gtk.Widget child, int position);
+		public void set_clip_overlay (Gtk.Widget widget, bool clip_overlay);
 		public void set_measure_overlay (Gtk.Widget widget, bool measure);
 		public void set_overlay_pass_through (Gtk.Widget widget, bool pass_through);
 		public virtual signal bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation);
@@ -9434,6 +9431,39 @@ namespace Gtk {
 		[CCode (returns_floating_reference = true)]
 		public GLib.Variant to_gvariant ();
 		public void to_key_file (GLib.KeyFile key_file, string group_name);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_picture_get_type ()")]
+	public class Picture : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Picture ();
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Picture.for_file (GLib.File? file);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Picture.for_filename (string? filename);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Picture.for_paintable (Gdk.Paintable? paintable);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Picture.for_pixbuf (Gdk.Pixbuf? pixbuf);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Picture.for_resource (string? resource_path);
+		public unowned string? get_alternative_text ();
+		public bool get_can_shrink ();
+		public unowned GLib.File? get_file ();
+		public bool get_keep_aspect_ratio ();
+		public unowned Gdk.Paintable? get_paintable ();
+		public void set_alternative_text (string? alternative_text);
+		public void set_can_shrink (bool can_shrink);
+		public void set_file (GLib.File? file);
+		public void set_filename (string? filename);
+		public void set_keep_aspect_ratio (bool keep_aspect_ratio);
+		public void set_paintable (Gdk.Paintable? paintable);
+		public void set_pixbuf (Gdk.Pixbuf? pixbuf);
+		public void set_resource (string? resource_path);
+		public string alternative_text { get; set; }
+		public bool can_shrink { get; set; }
+		public GLib.File file { get; set; }
+		public bool keep_aspect_ratio { get; set; }
+		public Gdk.Paintable paintable { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_popover_get_type ()")]
 	public class Popover : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
@@ -11609,7 +11639,7 @@ namespace Gtk {
 		public void set_cursor_from_name (string? name);
 		public static void set_default_direction (Gtk.TextDirection dir);
 		public void set_direction (Gtk.TextDirection dir);
-		public void set_focus_child (Gtk.Widget child);
+		public void set_focus_child (Gtk.Widget? child);
 		public void set_focus_on_click (bool focus_on_click);
 		public void set_font_map (Pango.FontMap? font_map);
 		public void set_font_options (Cairo.FontOptions? options);
@@ -13877,6 +13907,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static Gtk.TextDirection get_locale_direction ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static unowned GLib.Thread get_main_thread ();
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint get_major_version ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint get_micro_version ();
@@ -13896,6 +13928,8 @@ namespace Gtk {
 	public static void init ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool init_check ();
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static bool is_initialized ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void main ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
