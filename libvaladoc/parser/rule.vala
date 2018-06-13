@@ -64,19 +64,19 @@ public abstract class Valadoc.Rule : Object {
 
 	public delegate void Action () throws ParserError;
 
-	public unowned Rule set_start (Action action) {
+	public Rule set_start (Action action) {
 		//TODO: Ownership Transfer
 		_start_action = () => { action (); };
 		return this;
 	}
 
-	public unowned Rule set_reduce (Action action) {
+	public Rule set_reduce (Action action) {
 		//TODO: Ownership Transfer
 		_reduce_action = () => { action (); };
 		return this;
 	}
 
-	public unowned Rule set_skip (Action action) {
+	public Rule set_skip (Action action) {
 		//TODO: Ownership Transfer
 		_skip_action = () => { action (); };
 		return this;
