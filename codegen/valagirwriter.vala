@@ -284,7 +284,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	private void write_symbol_attributes (Symbol symbol) {
 		if (symbol.version.deprecated) {
-			buffer.append_printf (" deprecated=\"%s\"", (symbol.version.replacement == null) ? "" : "Use %s".printf (symbol.version.replacement));
+			buffer.append_printf (" deprecated=\"1\"");
 			if (symbol.version.deprecated_since != null) {
 				buffer.append_printf (" deprecated-version=\"%s\"", symbol.version.deprecated_since);
 			}
