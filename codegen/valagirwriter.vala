@@ -601,7 +601,7 @@ public class Vala.GIRWriter : CodeVisitor {
 					buffer.append_printf ("</field>\n");
 				}
 
-				if (prop.set_accessor != null) {
+				if (prop.set_accessor != null && prop.set_accessor.writable) {
 					var m = prop.set_accessor.get_method ();
 					write_indent ();
 					buffer.append_printf("<field name=\"%s\">\n", m.name);
