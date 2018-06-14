@@ -1,0 +1,7 @@
+Invalid Code
+
+void main () {
+	string s = "bar";
+	(unowned string)[] sa = { "foo" };
+	sa[0] = (owned) s;
+}

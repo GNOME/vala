@@ -456,6 +456,11 @@ TESTS = \
 	parser/yield-method.test \
 	parser/bug728574.vala \
 	parser/bug749576.vala \
+	semantic/assignment-element-incompatible-ownership.test \
+	semantic/assignment-element-incompatible-type.test \
+	semantic/assignment-same-variable.vala \
+	semantic/assignment-signal-incompatible-method.test \
+	semantic/assignment-signal-incompatible-type.test \
 	semantic/class-base-type-invalid.test \
 	semantic/class-base-type-less-accessible.test \
 	semantic/class-compact-derived-instance-field.test \
