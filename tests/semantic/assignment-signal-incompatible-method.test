@@ -1,0 +1,15 @@
+Invalid Code
+
+class Foo {
+	signal void bar ();
+
+	Foo () {
+		bar += foo;
+	}
+	
+	void foo (string s) {
+	}
+}
+
+void main () {
+}
