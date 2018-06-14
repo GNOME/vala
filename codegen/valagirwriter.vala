@@ -270,8 +270,6 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf (">\n");
 		indent++;
 
-		write_annotations (ns);
-
 		hierarchy.insert (0, ns);
 		ns.accept_children (this);
 		hierarchy.remove_at (0);
@@ -335,8 +333,6 @@ public class Vala.GIRWriter : CodeVisitor {
 					buffer.append_printf ("<implements name=\"%s\"/>\n", gi_type_name (object_type.type_symbol));
 				}
 			}
-
-			write_annotations (cl);
 
 			write_indent ();
 			buffer.append_printf ("<field name=\"parent_instance\">\n");
@@ -443,8 +439,6 @@ public class Vala.GIRWriter : CodeVisitor {
 
 			write_doc (get_class_comment (cl));
 
-			write_annotations (cl);
-
 			hierarchy.insert (0, cl);
 			cl.accept_children (this);
 			hierarchy.remove_at (0);
@@ -478,8 +472,6 @@ public class Vala.GIRWriter : CodeVisitor {
 		indent++;
 
 		write_doc (get_struct_comment (st));
-
-		write_annotations (st);
 
 		hierarchy.insert (0, st);
 		st.accept_children (this);
@@ -525,8 +517,6 @@ public class Vala.GIRWriter : CodeVisitor {
 				buffer.append_printf ("<prerequisite name=\"%s\"/>\n", gi_type_name (((ObjectType) base_type).type_symbol));
 			}
 		}
-
-		write_annotations (iface);
 
 		hierarchy.insert (0, iface);
 		iface.accept_children (this);
@@ -673,8 +663,6 @@ public class Vala.GIRWriter : CodeVisitor {
 		indent++;
 
 		write_doc (get_enum_comment (en));
-
-		write_annotations (en);
 
 		enum_value = 0;
 		hierarchy.insert (0, en);
@@ -826,8 +814,6 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_doc (get_field_comment (f));
 
-		write_annotations (f);
-
 		write_type (f.variable_type);
 
 		indent--;
@@ -962,8 +948,6 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_doc (get_delegate_comment (cb));
 
-		write_annotations (cb);
-
 		write_params_and_return (cb.get_parameters (), cb.return_type, get_ccode_array_length (cb), get_delegate_return_comment (cb), false, null, cb.has_target);
 
 		indent--;
@@ -1074,8 +1058,6 @@ public class Vala.GIRWriter : CodeVisitor {
 			write_doc (get_method_comment (m));
 		}
 
-		write_annotations (m);
-
 		DataType instance_type = null;
 		if (instance) {
 			instance_type = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
@@ -1126,9 +1108,6 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_doc (get_method_comment (m));
 
-		write_annotations (m);
-
-
 		var datatype = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
 		write_params_and_return (m.get_parameters (), datatype, false, get_method_return_comment (m), true);
 
@@ -1162,8 +1141,6 @@ public class Vala.GIRWriter : CodeVisitor {
 		indent++;
 
 		write_doc (get_property_comment (prop));
-
-		write_annotations (prop);
 
 		write_type (prop.property_type);
 
@@ -1202,8 +1179,6 @@ public class Vala.GIRWriter : CodeVisitor {
 		indent++;
 
 		write_doc (get_signal_comment (sig));
-
-		write_annotations (sig);
 
 		write_params_and_return (sig.get_parameters (), sig.return_type, false, get_signal_return_comment (sig));
 
@@ -1378,23 +1353,6 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 	}
 
-	private void write_annotations (CodeNode node) {
-		foreach (Attribute attr in node.attributes) {
-			string name = camel_case_to_canonical (attr.name);
-			foreach (string arg_name in attr.args.get_keys ()) {
-				string value = attr.args.get (arg_name);
-				if (value.has_prefix ("\"")) {
-					// eval string
-					value = attr.get_string (arg_name);
-				}
-
-				write_indent ();
-				buffer.append_printf ("<attribute name=\"%s.%s\" value=\"%s\"/>\n",
-					name, camel_case_to_canonical (arg_name), value);
-			}
-		}
-	}
-
 	private string? get_full_gir_name (Symbol sym) {
 		string? gir_fullname = sym.get_attribute_string ("GIR", "fullname");
 		if (gir_fullname != null) {
@@ -1482,11 +1440,6 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 		}
 		return null;
-	}
-
-	private string camel_case_to_canonical (string name) {
-		string[] parts = Symbol.camel_case_to_lower_case (name).split ("_");
-		return string.joinv ("-", parts);
 	}
 
 	private bool check_accessibility (Symbol sym) {
