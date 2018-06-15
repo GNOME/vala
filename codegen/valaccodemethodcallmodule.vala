@@ -172,7 +172,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 				string class_prefix = get_ccode_lower_case_name (current_class);
 
-				var funcs = new CCodeDeclaration ("const GSourceFuncs");
+				var funcs = new CCodeDeclaration ("GSourceFuncs");
 				funcs.modifiers = CCodeModifiers.STATIC;
 				funcs.add_declarator (new CCodeVariableDeclarator ("_source_funcs", new CCodeConstant ("{ %s_real_prepare, %s_real_check, %s_real_dispatch, %s_finalize}".printf (class_prefix, class_prefix, class_prefix, class_prefix))));
 				ccode.add_statement (funcs);
