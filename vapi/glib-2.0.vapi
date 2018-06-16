@@ -1834,7 +1834,7 @@ namespace GLib {
 		protected Source ();
 		[Version (since = "2.12")]
 		public void set_funcs (SourceFuncs funcs);
-		public uint attach (MainContext? context);
+		public uint attach (MainContext? context = null);
 		public void destroy ();
 		[Version (since = "2.12")]
 		public bool is_destroyed ();
