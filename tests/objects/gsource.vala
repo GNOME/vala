@@ -8,7 +8,7 @@ class FooSource : Source {
 		return false;
 	}
 
-	public override bool dispatch (SourceFunc callback) {
+	public override bool dispatch (SourceFunc? callback) {
 		return false;
 	}
 }

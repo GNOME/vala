@@ -1903,7 +1903,7 @@ namespace GLib {
 
 		protected abstract bool prepare (out int timeout_);
 		protected abstract bool check ();
-		protected abstract bool dispatch (SourceFunc _callback);
+		protected abstract bool dispatch (SourceFunc? _callback);
 	}
 
 	[CCode (has_target = false)]
@@ -1914,7 +1914,7 @@ namespace GLib {
 	[CCode (has_target = false)]
 	public delegate bool SourceCheckFunc (Source source);
 	[CCode (has_target = false)]
-	public delegate bool SourceDispatchFunc (Source source, SourceFunc _callback);
+	public delegate bool SourceDispatchFunc (Source source, SourceFunc? _callback);
 	[CCode (has_target = false)]
 	public delegate void SourceFinalizeFunc (Source source);
 
