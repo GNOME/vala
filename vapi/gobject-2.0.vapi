@@ -422,7 +422,12 @@ namespace GLib {
 	[CCode (free_function = "g_type_class_unref", lower_case_csuffix = "type_class")]
 	[Compact]
 	public class TypeClass {
+		[Version (deprecated = true, deprecated_since = "2.58")]
 		public void add_private (size_t private_size);
+		[Version (since = "2.38")]
+		public void adjust_private_offset (ref int private_size_or_offset);
+		[Version (since = "2.38")]
+		public int get_instance_private_offset ();
 		[CCode (cname = "G_TYPE_FROM_CLASS")]
 		public GLib.Type get_type ();
 		[CCode (cname = "g_type_interface_peek")]
