@@ -234,6 +234,7 @@ TESTS = \
 	objects/generics.vala \
 	objects/initially-unowned.vala \
 	objects/fields.vala \
+	objects/gsource.vala \
 	objects/interfaces.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \

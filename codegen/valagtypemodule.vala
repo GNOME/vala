@@ -1617,6 +1617,8 @@ public class Vala.GTypeModule : GErrorModule {
 
 		push_function (func);
 
+		bool is_gsource = cl.base_class == gsource_type;
+
 		if (cl.is_compact) {
 			// Add declaration, since the instance_init function is explicitly called
 			// by the creation methods
@@ -1624,7 +1626,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 			// connect overridden methods
 			foreach (Method m in cl.get_methods ()) {
-				if (m.base_method == null) {
+				if (m.base_method == null || is_gsource) {
 					continue;
 				}
 				var base_type = (ObjectTypeSymbol) m.base_method.parent_symbol;
@@ -1646,7 +1648,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 			// connect overridden properties
 			foreach (Property prop in cl.get_properties ()) {
-				if (prop.base_property == null) {
+				if (prop.base_property == null || is_gsource) {
 					continue;
 				}
 				var base_type = prop.base_property.parent_symbol;
