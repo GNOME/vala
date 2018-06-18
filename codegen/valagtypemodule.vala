@@ -567,8 +567,27 @@ public class Vala.GTypeModule : GErrorModule {
 			/* only add the *Private struct if it is not empty, i.e. we actually have private data */
 			if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
 				decl_space.add_type_definition (instance_priv_struct);
-				var macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
-				decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (get_ccode_upper_case_name (cl, null)), macro));
+
+				var parent_decl = new CCodeDeclaration ("gint");
+				var parent_var_decl = new CCodeVariableDeclarator ("%s_private_offset".printf (get_ccode_name (cl)));
+				parent_decl.add_declarator (parent_var_decl);
+				parent_decl.modifiers = CCodeModifiers.STATIC;
+				cfile.add_type_member_declaration (parent_decl);
+
+				var function = new CCodeFunction ("%s_get_instance_private".printf (get_ccode_lower_case_name (cl, null)), "gpointer");
+				function.modifiers = CCodeModifiers.STATIC | CCodeModifiers.INLINE;
+				function.add_parameter (new CCodeParameter ("self", "%s*".printf (get_ccode_name (cl))));
+
+				push_function (function);
+
+				function.block = new CCodeBlock ();
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_STRUCT_MEMBER_P"));
+				ccall.add_argument (new CCodeIdentifier ("self"));
+				ccall.add_argument (new CCodeIdentifier ("%s_private_offset".printf (get_ccode_name (cl))));
+				function.block.add_statement (new CCodeReturnStatement (ccall));
+
+				pop_function ();
+				cfile.add_function (function);
 			}
 
 			if (cl.has_class_private_fields || has_class_locks) {
@@ -1262,9 +1281,9 @@ public class Vala.GTypeModule : GErrorModule {
 
 		/* add struct for private fields */
 		if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
-			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_add_private"));
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_adjust_private_offset"));
 			ccall.add_argument (new CCodeIdentifier ("klass"));
-			ccall.add_argument (new CCodeConstant ("sizeof (%sPrivate)".printf (get_ccode_name (cl))));
+			ccall.add_argument (new CCodeIdentifier ("&%s_private_offset".printf (get_ccode_name (cl))));
 			ccode.add_expression (ccall);
 		}
 
@@ -1668,7 +1687,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		if (!cl.is_compact && (cl.has_private_fields || cl.get_type_parameters ().size > 0)) {
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (get_ccode_upper_case_name (cl, null))));
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_instance_private".printf (get_ccode_lower_case_name (cl, null))));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 			func.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), ccall);
 		}
