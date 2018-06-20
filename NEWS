@@ -1,3 +1,42 @@
+Vala 0.40.7
+===========
+ * Various improvements and bug fixes:
+  - Update bugtracker links to https://gitlab.gnome.org/GNOME/vala/issues
+  - codegen:
+    + Handle delegate_target attribute of fields [#520]
+    + Free generic elements of glib collections [#694765]
+    + Fix warning for source_funcs parameter of g_source_new()
+    + Actually treat GLib.Source as compact class
+    + Custom abstract methods of GLib.Source are handled differently [#641]
+    + Consistently use gpointer for delegate targets
+    + Unify some delegate-type check patterns
+    + Use default_init instead of base_init when registering interfaces
+      [#699550]
+  - girparser: Add support for bool delegate_target [#520]
+  - girwriter:
+    + Output deprecated="1"
+    + construct-only properties don't have a setter method
+    + Don't write any custom attributes [#608]
+  - valadoc: Fix TreeBuilder.create_array() for stacked Arrays
+
+ * Bindings:
+  - glib-2.0:
+    + Do not mark simple-type out-parameters as nullable [#634]
+    + Make Source.attach() use the default MainContext by default
+    + Make Bytes.slice() use the memory-efficient Bytes.from_bytes() [#638]
+    + Fix Bytes.with_free_func()
+  - gio-2.0:
+    + Mark ActionEntry.parameter_type/state fields as nullable [#632]
+    + Delegate fields of DBus*VTable do not have implicit target fields
+    + Apply delegate_target = false on ActionEntry callbacks and make them weak
+      [#630]
+    + Add default to all io_priority parameters
+  - gstreamer: Cherry-pick some fixes from 0.42, add gst-editing-services-1.0
+  - gtk+-3.0: Update to 3.22.30+9ac7f906
+  - gtk+-4.0: Update to 3.93.0+29fee2e8
+  - webkit2gtk-4.0: Update to 2.21.4
+  - Update GIR-based bindings
+
 Vala 0.40.6
 ===========
  * Regression fix:
