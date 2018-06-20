@@ -4664,8 +4664,6 @@ namespace Gdk {
 		public class Surface : Gdk.Surface {
 			[CCode (has_construct_function = false)]
 			protected Surface ();
-			[CCode (cname = "gdk_x11_surface_foreign_new_for_display", has_construct_function = false, type = "GdkSurface*")]
-			public Surface.foreign_for_display (Gdk.X11.Display display, X.Window window);
 			public uint32 get_desktop ();
 			public X.Window get_xid ();
 			public static unowned Gdk.X11.Surface lookup_for_display (Gdk.X11.Display display, X.Window window);
@@ -4984,17 +4982,15 @@ namespace Gdk {
 		public signal void display_opened (Gdk.Display display);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_drag_context_get_type ()")]
-	public class DragContext : GLib.Object {
+	public abstract class DragContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected DragContext ();
 		public Gdk.DragAction get_actions ();
-		public unowned Gdk.Surface get_dest_surface ();
 		public unowned Gdk.Device get_device ();
 		public unowned Gdk.Display get_display ();
 		public unowned Gdk.Surface? get_drag_surface ();
 		public unowned Gdk.ContentFormats get_formats ();
 		public Gdk.DragAction get_selected_action ();
-		public unowned Gdk.Surface get_source_surface ();
 		public Gdk.DragAction get_suggested_action ();
 		public void set_hotspot (int hot_x, int hot_y);
 		[NoAccessorMethod]
@@ -5005,7 +5001,7 @@ namespace Gdk {
 		public signal void action_changed (Gdk.DragAction action);
 		public signal void cancel (Gdk.DragCancelReason reason);
 		public signal void dnd_finished ();
-		public signal void drop_performed (int time);
+		public signal void drop_performed ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_draw_context_get_type ()")]
 	public abstract class DrawContext : GLib.Object {
@@ -5018,6 +5014,28 @@ namespace Gdk {
 		public unowned Gdk.Surface? get_surface ();
 		public bool is_in_frame ();
 		public Gdk.Display display { get; }
+		public Gdk.Surface surface { get; construct; }
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_drop_get_type ()")]
+	public abstract class Drop : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Drop ();
+		public void finish (Gdk.DragAction action);
+		public Gdk.DragAction get_actions ();
+		public unowned Gdk.Device get_device ();
+		public unowned Gdk.Display get_display ();
+		public unowned Gdk.DragContext? get_drag ();
+		public unowned Gdk.ContentFormats get_formats ();
+		public unowned Gdk.Surface get_surface ();
+		public async GLib.InputStream? read_async ([CCode (array_length = false, array_null_terminated = true)] string[] mime_types, int io_priority, GLib.Cancellable? cancellable, out string out_mime_type) throws GLib.Error;
+		public async string? read_text_async (GLib.Cancellable? cancellable) throws GLib.Error;
+		public async unowned GLib.Value? read_value_async (GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
+		public void status (Gdk.DragAction actions);
+		public Gdk.DragAction actions { get; construct; }
+		public Gdk.Device device { get; construct; }
+		public Gdk.Display display { get; }
+		public Gdk.DragContext drag { get; construct; }
+		public Gdk.ContentFormats formats { get; construct; }
 		public Gdk.Surface surface { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_event_get_type ()")]
@@ -5035,7 +5053,7 @@ namespace Gdk {
 		public unowned Gdk.Device? get_device ();
 		public unowned Gdk.DeviceTool get_device_tool ();
 		public unowned Gdk.Display? get_display ();
-		public bool get_drag_context (out unowned Gdk.DragContext context);
+		public unowned Gdk.Drop? get_drop ();
 		public unowned Gdk.EventSequence get_event_sequence ();
 		public Gdk.EventType get_event_type ();
 		public bool get_focus_in (out bool focus_in);
@@ -5261,11 +5279,9 @@ namespace Gdk {
 		public unowned Gdk.Cursor? get_cursor ();
 		public bool get_decorations (out Gdk.WMDecoration decorations);
 		public unowned Gdk.Cursor? get_device_cursor (Gdk.Device device);
-		public Gdk.EventMask get_device_events (Gdk.Device device);
 		public unowned Gdk.Surface? get_device_position (Gdk.Device device, out int x, out int y, out Gdk.ModifierType mask);
 		public unowned Gdk.Surface? get_device_position_double (Gdk.Device device, out double x, out double y, out Gdk.ModifierType mask);
 		public unowned Gdk.Display get_display ();
-		public Gdk.EventMask get_events ();
 		public bool get_focus_on_map ();
 		public unowned Gdk.FrameClock get_frame_clock ();
 		public void get_frame_extents (out Gdk.Rectangle rect);
@@ -5317,8 +5333,6 @@ namespace Gdk {
 		public void set_cursor (Gdk.Cursor? cursor);
 		public void set_decorations (Gdk.WMDecoration decorations);
 		public void set_device_cursor (Gdk.Device device, Gdk.Cursor cursor);
-		public void set_device_events (Gdk.Device device, Gdk.EventMask event_mask);
-		public void set_events (Gdk.EventMask event_mask);
 		public void set_focus_on_map (bool focus_on_map);
 		public void set_fullscreen_mode (Gdk.FullscreenMode mode);
 		public void set_functions (Gdk.WMFunction functions);
@@ -5551,12 +5565,11 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_ACTION_", type_id = "gdk_drag_action_get_type ()")]
 	[Flags]
 	public enum DragAction {
-		DEFAULT,
 		COPY,
 		MOVE,
 		LINK,
-		PRIVATE,
-		ASK
+		ASK;
+		public bool is_unique ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_DRAG_CANCEL_", type_id = "gdk_drag_cancel_reason_get_type ()")]
 	[Version (since = "3.20")]
@@ -5911,6 +5924,8 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 2.9)]
 	[Version (since = "3.20")]
 	public delegate void SeatGrabPrepareFunc (Gdk.Seat seat, Gdk.Surface surface);
+	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_ACTION_ALL")]
+	public const int ACTION_ALL;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_BUTTON_MIDDLE")]
 	[Version (since = "3.4")]
 	public const int BUTTON_MIDDLE;
@@ -5998,12 +6013,6 @@ namespace Gdk {
 	public static Gdk.DragContext? drag_begin (Gdk.Surface surface, Gdk.Device device, Gdk.ContentProvider content, Gdk.DragAction actions, int dx, int dy);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_drop_done (Gdk.DragContext context, bool success);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void drag_status (Gdk.DragContext context, Gdk.DragAction action, uint32 time_);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void drop_finish (Gdk.DragContext context, bool success, uint32 time_);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static async GLib.InputStream? drop_read_async (Gdk.DragContext context, [CCode (array_length = false, array_null_terminated = true)] string[] mime_types, int io_priority, GLib.Cancellable? cancellable, out string out_mime_type) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool events_get_angle (Gdk.Event event1, Gdk.Event event2, out double angle);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6755,16 +6764,16 @@ namespace Gtk {
 		public Builder ();
 		public void add_callback_symbol (string callback_name, [CCode (scope = "async")] GLib.Callback callback_symbol);
 		public void add_callback_symbols (string first_callback_name, ...);
-		public uint add_from_file (string filename) throws GLib.Error;
-		public uint add_from_resource (string resource_path) throws GLib.Error;
-		public uint add_from_string (string buffer, size_t length) throws GLib.Error;
-		public uint add_objects_from_file (string filename, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
-		public uint add_objects_from_resource (string resource_path, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
-		public uint add_objects_from_string (string buffer, size_t length, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
+		public bool add_from_file (string filename) throws GLib.Error;
+		public bool add_from_resource (string resource_path) throws GLib.Error;
+		public bool add_from_string (string buffer, size_t length) throws GLib.Error;
+		public bool add_objects_from_file (string filename, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
+		public bool add_objects_from_resource (string resource_path, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
+		public bool add_objects_from_string (string buffer, size_t length, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
 		public void connect_signals (void* user_data);
 		public void connect_signals_full (Gtk.BuilderConnectFunc func);
 		public void expose_object (string name, GLib.Object object);
-		public uint extend_with_template (Gtk.Widget widget, GLib.Type template_type, string buffer, size_t length) throws GLib.Error;
+		public bool extend_with_template (Gtk.Widget widget, GLib.Type template_type, string buffer, size_t length) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Builder.from_file (string filename);
 		[CCode (has_construct_function = false)]
@@ -6774,7 +6783,7 @@ namespace Gtk {
 		public unowned Gtk.Application? get_application ();
 		public unowned GLib.Object? get_object (string name);
 		public GLib.SList<weak GLib.Object> get_objects ();
-		public unowned string get_translation_domain ();
+		public unowned string? get_translation_domain ();
 		public virtual GLib.Type get_type_from_name (string type_name);
 		public unowned GLib.Callback? lookup_callback_symbol (string callback_name);
 		public void set_application (Gtk.Application application);
@@ -10492,7 +10501,6 @@ namespace Gtk {
 		public Gdk.RGBA get_border_color ();
 		public Gdk.RGBA get_color ();
 		public unowned Gdk.Display get_display ();
-		public unowned Gdk.FrameClock? get_frame_clock ();
 		public Gtk.Border get_margin ();
 		public Gtk.Border get_padding ();
 		public unowned Gtk.StyleContext? get_parent ();
@@ -10544,15 +10552,12 @@ namespace Gtk {
 		public void restore ();
 		public void save ();
 		public void set_display (Gdk.Display display);
-		public void set_frame_clock (Gdk.FrameClock frame_clock);
 		public void set_parent (Gtk.StyleContext? parent);
 		public void set_path (Gtk.WidgetPath path);
 		public void set_scale (int scale);
 		public void set_state (Gtk.StateFlags flags);
 		public string to_string (Gtk.StyleContextPrintFlags flags);
 		public Gdk.Display display { get; set; }
-		[NoAccessorMethod]
-		public Gdk.FrameClock paint_clock { owned get; set; }
 		public Gtk.StyleContext parent { get; set; }
 		public virtual signal void changed ();
 	}
@@ -11733,13 +11738,13 @@ namespace Gtk {
 		public virtual signal void display_changed (Gdk.Display? previous_display);
 		public virtual signal void drag_begin (Gdk.DragContext context);
 		public virtual signal void drag_data_delete (Gdk.DragContext context);
-		public virtual signal void drag_data_get (Gdk.DragContext context, Gtk.SelectionData selection_data, uint time_);
-		public virtual signal void drag_data_received (Gdk.DragContext context, Gtk.SelectionData selection_data, uint time_);
-		public virtual signal bool drag_drop (Gdk.DragContext context, int x, int y, uint time_);
+		public virtual signal void drag_data_get (Gdk.DragContext context, Gtk.SelectionData selection_data);
+		public virtual signal void drag_data_received (Gdk.Drop drop, Gtk.SelectionData selection_data);
+		public virtual signal bool drag_drop (Gdk.Drop drop, int x, int y);
 		public virtual signal void drag_end (Gdk.DragContext context);
 		public virtual signal bool drag_failed (Gdk.DragContext context, Gtk.DragResult result);
-		public virtual signal void drag_leave (Gdk.DragContext context, uint time_);
-		public virtual signal bool drag_motion (Gdk.DragContext context, int x, int y, uint time_);
+		public virtual signal void drag_leave (Gdk.Drop drop);
+		public virtual signal bool drag_motion (Gdk.Drop drop, int x, int y);
 		[HasEmitter]
 		public virtual signal bool event (Gdk.Event event);
 		public virtual signal bool focus (Gtk.DirectionType direction);
@@ -13827,7 +13832,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_dest_add_uri_targets (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned string? drag_dest_find_target (Gtk.Widget widget, Gdk.DragContext context, Gdk.ContentFormats? target_list);
+	public static unowned string? drag_dest_find_target (Gtk.Widget widget, Gdk.Drop drop, Gdk.ContentFormats? target_list);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gdk.ContentFormats? drag_dest_get_target_list (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -13841,9 +13846,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_dest_unset (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_finish (Gdk.DragContext context, bool success, uint32 time_);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_get_data (Gtk.Widget widget, Gdk.DragContext context, Gdk.Atom target, uint32 time_);
+	public static void drag_get_data (Gtk.Widget widget, Gdk.Drop drop, Gdk.Atom target);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Widget? drag_get_source_widget (Gdk.DragContext context);
 	[CCode (cheader_filename = "gtk/gtk.h")]

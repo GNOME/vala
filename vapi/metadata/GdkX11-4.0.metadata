@@ -7,8 +7,8 @@ X11Display
 	.broadcast_startup_message skip=false
 	.xevent.xevent type="X.Event"
 
-X11Surface
-	.foreign_new_for_display name="foreign_for_display"
+//X11Surface
+//	.foreign_new_for_display name="foreign_for_display"
 
 x11_device_manager_lookup name="lookup_for_device_manager" parent="Gdk.X11.DeviceCore"
 x11_free_compound_text.ctext type="uint8[]"
