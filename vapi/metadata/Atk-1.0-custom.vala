@@ -7,9 +7,6 @@ namespace Atk {
 		[Version (replacement = "Document.get_locale", deprecated_since = "vala-0.22")]
 		public virtual unowned string get_document_locale ();
 	}
-	public interface Implementor : GLib.Object {
-		public abstract unowned Atk.Object ref_accessible ();
-	}
 	public class Registry : GLib.Object {
 		[Version (deprecated = true)]
 		public weak GLib.HashTable<GLib.Type,Atk.ObjectFactory> factory_singleton_cache;
