@@ -135,11 +135,11 @@ namespace Atk {
 		[NoAccessorMethod]
 		[Version (deprecated = true)]
 		public double accessible_value { get; set; }
-		public virtual signal void active_descendant_changed (void* child);
-		public virtual signal void children_changed (uint change_index, void* changed_child);
+		public virtual signal void active_descendant_changed (Atk.Object child);
+		public virtual signal void children_changed (uint change_index, Atk.Object changed_child);
 		[Version (deprecated = true, deprecated_since = "2.9.4")]
 		public virtual signal void focus_event (bool focus_in);
-		public virtual signal void property_change (void* values);
+		public virtual signal void property_change (Atk.PropertyValues values);
 		public virtual signal void state_change (string name, bool state_set);
 		public virtual signal void visible_data_changed ();
 	}
@@ -389,9 +389,9 @@ namespace Atk {
 		public abstract void get_image_size (out int width, out int height);
 		public abstract bool set_image_description (string description);
 	}
-	[CCode (cheader_filename = "atk/atk.h")]
+	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_implementor_get_type ()")]
 	public interface Implementor : GLib.Object {
-		public abstract unowned Atk.Object ref_accessible ();
+		public abstract Atk.Object ref_accessible ();
 	}
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_selection_get_type ()")]
 	public interface Selection : GLib.Object {

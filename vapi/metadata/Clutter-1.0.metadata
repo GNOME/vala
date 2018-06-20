@@ -4,6 +4,7 @@ Color struct
 Fog struct
 Geometry struct
 Knot struct
+Matrix struct
 PathNode struct
 Perspective struct
 Units struct

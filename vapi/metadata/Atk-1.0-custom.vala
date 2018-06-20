@@ -2,9 +2,6 @@ namespace Atk {
 	[Compact]
 	public class AttributeSet : GLib.SList<Atk.Attribute?> {
 	}
-	public interface Implementor : GLib.Object {
-		public abstract unowned Atk.Object ref_accessible ();
-	}
 	public class Registry : GLib.Object {
 		[Version (deprecated = true)]
 		public weak GLib.HashTable<GLib.Type,Atk.ObjectFactory> factory_singleton_cache;
