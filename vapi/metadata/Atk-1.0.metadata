@@ -6,13 +6,6 @@ attribute_set_free skip
 KeyEventStruct.string name="str"
 Rectangle struct
 
-Document
-	.get_attribute_value vfunc_name="get_document_attribute_value"
-	.get_attributes vfunc_name="get_document_attributes"
-	.get_document_locale skip
-	.get_locale vfunc_name="get_document_locale"
-	.set_attribute_value vfunc_name="set_document_attribute"
-
 // Move static methods into classes (mostly Util)
 add_focus_tracker parent="Atk.Util"
 add_global_event_listener parent="Atk.Util"
@@ -55,6 +48,3 @@ Component.add_focus_handler skip=false
 // Ownership of fields
 TextRange.content unowned=false
 Attribute.* unowned=false
-
-// Should be fixed upstream
-Implementor* skip // g-ir-scanner doesn't realize this is an interface

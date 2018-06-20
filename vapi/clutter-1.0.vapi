@@ -5152,6 +5152,8 @@ namespace Clutter {
 		[NoAccessorMethod]
 		[Version (since = "1.10")]
 		public bool background_color_set { get; }
+		[Version (since = "1.12")]
+		public Clutter.Matrix child_transform { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "1.12")]
 		public bool child_transform_set { get; }
@@ -5304,6 +5306,8 @@ namespace Clutter {
 		public Clutter.Size size { owned get; set; }
 		[Version (since = "1.0")]
 		public Clutter.TextDirection text_direction { get; set; }
+		[Version (since = "1.12")]
+		public Clutter.Matrix transform { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "1.12")]
 		public bool transform_set { get; }
@@ -8311,18 +8315,13 @@ namespace Clutter {
 		public bool equal (Clutter.Knot knot_b);
 		public void free ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "COGL_TYPE_MATRIX")]
+	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_matrix_get_type ()")]
+	[Version (since = "1.12")]
 	public struct Matrix : Cogl.Matrix {
-		[Version (since = "1.12")]
 		public static Clutter.Matrix? alloc ();
-		[Version (since = "1.12")]
 		public static void free (Clutter.Matrix? matrix);
-		public static GLib.Type get_type ();
-		[Version (since = "1.12")]
 		public static unowned Clutter.Matrix? init_from_array (Clutter.Matrix matrix, [CCode (array_length = false)] float values[16]);
-		[Version (since = "1.12")]
 		public static unowned Clutter.Matrix? init_from_matrix (Clutter.Matrix a, Clutter.Matrix b);
-		[Version (since = "1.12")]
 		public static unowned Clutter.Matrix? init_identity (Clutter.Matrix matrix);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_path_node_get_type ()")]

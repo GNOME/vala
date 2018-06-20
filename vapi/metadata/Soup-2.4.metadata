@@ -12,39 +12,25 @@ xmlrpc_set_response.type skip
 HTTPVersion.http_* name="http_(.+)"
 
 // Backwards compatibility
-KnownStatusCode skip
 Requester deprecated_since="2.42" replacement="Session"
-Requester
-  .request* skip=false unowned=false
+KnownStatusCode deprecated_since="2.44" replacement="Status"
+ProxyResolver deprecated_since="2.28" replacement="ProxyURIResolver"
 
 // Report upstream
-Soup cheader_filename="libsoup/soup.h"
 add_* skip=false type="unowned GLib.TimeoutSource"
 AuthDomain
-	.accepts#method skip
-	.challenge#virtual_method vfunc_name="challenge"
-	.basic_set_auth_callback skip
-	.digest_set_auth_callback skip
+	.accepts#method name="accepts_authorization"
 AuthDomainBasic.new skip=false
 AuthDomainDigest.new skip=false
-Buffer.new.data type="uint8[]" array_length_idx=2
-Buffer.new_with_owner.data type="uint8[]" array_length_idx=1
 Buffer.new_subbuffer skip
-Buffer.new_with_owner.owner_dnotify nullable
-CookieJar.all_cookies type_arguments="Cookie"
-ContentSniffer.sniff.params type_arguments="string,string" nullable out unowned=false
+ContentSniffer.sniff.params nullable
 form_* skip=false
-header_parse_list type_arguments="string"
-header_parse_quality_list type_arguments="string"
-	.unacceptable out type_arguments="string"
 Message
 	.add_header_handler skip=false
 	.add_status_code_handler skip=false
 	.request_*#property skip
 	.response_*#property skip
 	.set_request.req_body type="uint8[]" array_length_idx=3
-MessageHeaders
-	.get_ranges.ranges out type="Soup.Range[]" array_length_idx=2
 Server
 	.new skip=false
 	.async_context type="GLib.MainContext"
@@ -56,14 +42,8 @@ Session*.new_with_options skip=false
 Socket
 	.async_context type="GLib.MainContext"
 	.new skip=false
-	.read.buffer type="uint8[]" array_length_idx=1
-	.read_until.buffer type="uint8[]" array_length_idx=1
-	.read_until.nread out
-	.write.buffer type="uint8[]" array_length_idx=1
 URI
-	.new_with_base skip
 	.set_query_from_fields skip=false
-uri_encode.escape_extra nullable
 // uri_host_*.* type="Soup.URI"
 ProxyURIResolverCallback.user_data skip
 xmlrpc_* skip=false
@@ -72,11 +52,6 @@ xmlrpc_extract_method_response throws="Soup.XMLRPC.Fault"
 	.error skip
 	.type skip
 value_* skip=false
-ProxyURIResolver
-  .get_proxy_uri_async skip=false
-  .get_proxy_uri_async.callback owned scope="async"
-  .get_proxy_uri_async.async_context nullable
-  .get_proxy_uri_sync.proxy_uri out unowned=false
 
 // Not enough GIR information
 Buffer.data type="uint8[]" array_length_field="length"

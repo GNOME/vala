@@ -5,6 +5,9 @@ namespace Clutter {
 		public ActorBox.from_vertices (Clutter.Vertex[] verts);
 	}
 
+	public struct Matrix : Cogl.Matrix {
+	}
+
 	public class Backend : GLib.Object {
 		[NoWrapper]
 		public virtual void add_options (GLib.OptionGroup group);

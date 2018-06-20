@@ -1,41 +1,9 @@
 namespace Soup {
-	[CCode (type_id = "soup_auth_domain_basic_get_type ()", cheader_filename = "libsoup/soup.h")]
-	public class AuthDomainBasic : Soup.AuthDomain {
-		public static void set_auth_callback (Soup.AuthDomain domain, owned Soup.AuthDomainBasicAuthCallback callback);
-	}
-
-	[CCode (type_id = "soup_auth_domain_digest_get_type ()", cheader_filename = "libsoup/soup.h")]
-	public class AuthDomainDigest : Soup.AuthDomain {
-		public static void set_auth_callback (Soup.AuthDomain domain, owned Soup.AuthDomainDigestAuthCallback callback);
-	}
-
 	[Compact]
 	[CCode (copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "soup_buffer_get_type ()", cheader_filename = "libsoup/soup.h")]
 	public class Buffer {
 		[CCode (has_construct_function = false)]
 		public Buffer.subbuffer (Soup.Buffer parent, size_t offset, size_t length);
-	}
-
-	[Version (replacement = "Soup.ProxyURIResolver")]
-	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupProxyResolverInterface", type_id = "soup_proxy_resolver_get_type ()")]
-	public interface ProxyResolver : Soup.SessionFeature, GLib.Object {
-		public abstract void get_proxy_async (Soup.Message msg, GLib.MainContext async_context, GLib.Cancellable? cancellable, Soup.ProxyResolverCallback callback);
-		public abstract uint get_proxy_sync (Soup.Message msg, GLib.Cancellable? cancellable, out unowned Soup.Address addr);
-	}
-
-	public errordomain SSLError {
-		HANDSHAKE_NEEDS_READ,
-		HANDSHAKE_NEEDS_WRITE,
-		CERTIFICATE,
-		HANDSHAKE_FAILED;
-		public static GLib.Quark quark ();
-	}
-
-	[Compact]
-	[CCode (copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "soup_uri_get_type ()", cheader_filename = "libsoup/soup.h")]
-	public class URI {
-		[CCode (has_construct_function = false)]
-		public URI.with_base (Soup.URI @base, string uri_string);
 	}
 
 	[Version (deprecated_since = "vala-0.12", replacement = "XMLRPC.build_fault")]
@@ -96,73 +64,4 @@ namespace Soup {
 	public static unowned string status_get_phrase (uint status_code);
 	[Version (deprecated_since = "vala-0.22", replacement = "Status.proxify")]
 	public static uint status_proxify (uint status_code);
-	[Version (deprecated_since = "vala-0.22", replacement = "Status")]
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_STATUS_", type_id = "soup_known_status_code_get_type ()")]
-	public enum KnownStatusCode {
-		NONE,
-		CANCELLED,
-		CANT_RESOLVE,
-		CANT_RESOLVE_PROXY,
-		CANT_CONNECT,
-		CANT_CONNECT_PROXY,
-		SSL_FAILED,
-		IO_ERROR,
-		MALFORMED,
-		TRY_AGAIN,
-		TOO_MANY_REDIRECTS,
-		TLS_FAILED,
-		CONTINUE,
-		SWITCHING_PROTOCOLS,
-		PROCESSING,
-		OK,
-		CREATED,
-		ACCEPTED,
-		NON_AUTHORITATIVE,
-		NO_CONTENT,
-		RESET_CONTENT,
-		PARTIAL_CONTENT,
-		MULTI_STATUS,
-		MULTIPLE_CHOICES,
-		MOVED_PERMANENTLY,
-		FOUND,
-		MOVED_TEMPORARILY,
-		SEE_OTHER,
-		NOT_MODIFIED,
-		USE_PROXY,
-		NOT_APPEARING_IN_THIS_PROTOCOL,
-		TEMPORARY_REDIRECT,
-		BAD_REQUEST,
-		UNAUTHORIZED,
-		PAYMENT_REQUIRED,
-		FORBIDDEN,
-		NOT_FOUND,
-		METHOD_NOT_ALLOWED,
-		NOT_ACCEPTABLE,
-		PROXY_AUTHENTICATION_REQUIRED,
-		PROXY_UNAUTHORIZED,
-		REQUEST_TIMEOUT,
-		CONFLICT,
-		GONE,
-		LENGTH_REQUIRED,
-		PRECONDITION_FAILED,
-		REQUEST_ENTITY_TOO_LARGE,
-		REQUEST_URI_TOO_LONG,
-		UNSUPPORTED_MEDIA_TYPE,
-		REQUESTED_RANGE_NOT_SATISFIABLE,
-		INVALID_RANGE,
-		EXPECTATION_FAILED,
-		UNPROCESSABLE_ENTITY,
-		LOCKED,
-		FAILED_DEPENDENCY,
-		INTERNAL_SERVER_ERROR,
-		NOT_IMPLEMENTED,
-		BAD_GATEWAY,
-		SERVICE_UNAVAILABLE,
-		GATEWAY_TIMEOUT,
-		HTTP_VERSION_NOT_SUPPORTED,
-		INSUFFICIENT_STORAGE,
-		NOT_EXTENDED
-	}
-
-	public delegate void ProxyResolverCallback (Soup.ProxyResolver p1, Soup.Message p2, uint p3, Soup.Address p4);
 }
