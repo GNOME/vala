@@ -3482,12 +3482,22 @@ public class Vala.GirParser : CodeVisitor {
 
 		var comment = parse_symbol_doc ();
 
-		var type = parse_type ();
+		bool no_array_length;
+		bool array_null_terminated;
+		int array_length_idx;
+		var type = parse_type (null, out array_length_idx, true, out no_array_length, out array_null_terminated);
+		type = element_get_type (type, true, ref no_array_length, ref array_null_terminated);
 		var c = new Constant (current.name, type, null, current.source_reference);
 		current.symbol = c;
 		c.access = SymbolAccessibility.PUBLIC;
 		c.comment = comment;
 		c.external = true;
+		if (no_array_length || array_null_terminated) {
+			c.set_attribute_bool ("CCode", "array_length", !no_array_length);
+		}
+		if (array_null_terminated) {
+			c.set_attribute_bool ("CCode", "array_null_terminated", true);
+		}
 
 		pop_node ();
 		end_element ("constant");
