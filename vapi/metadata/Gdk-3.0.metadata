@@ -1,4 +1,4 @@
-KEY_* name="KEY_(.+)" parent="Gdk.Key"
+KEY_* name="KEY_(.+)" type="uint" parent="Gdk.Key"
 selection_* name="selection_(.+)" parent="Gdk.Selection"
 
 *.ref unowned
