@@ -230,4 +230,4 @@ BinAlignment.start deprecated=false
 BinLayout.new.*_align default=Clutter.BinAlignment.START
 
 // Possibly keep
-KEY_* skip=false name="KEY_(.+)" parent="Clutter.Key"
+KEY_* skip=false name="KEY_(.+)" type="uint" parent="Clutter.Key"
