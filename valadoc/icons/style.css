@@ -116,7 +116,6 @@ div.site_footer {
 
 div.site_body {
 	display: inline-block;
-	overflow-y: auto;
 	position: fixed;
 	top: 40.5px;
 	height: calc(100% - 40.5px);
