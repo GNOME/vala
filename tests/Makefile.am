@@ -644,6 +644,7 @@ NON_NULL_TESTS = \
 
 LINUX_TESTS = \
 	linux/bug793444.vala \
+	posix/file-commandpipe.vala \
 	$(NULL)
 
 check-TESTS: $(TESTS) $(NON_NULL_TESTS)

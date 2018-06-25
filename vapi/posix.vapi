@@ -3074,8 +3074,11 @@ namespace Posix {
 		[CCode (cname = "fdopen")]
 		public static FILE? fdopen (int fildes, string mode);
 		[CCode (cname = "popen")]
-		public static FILE? popen (string command, string mode);
+		public static CommandPipe? popen (string command, string mode);
 
+		[CCode (cname = "fclose")]
+		[DestroysInstance]
+		public int close ();
 		[CCode (cname = "fprintf")]
 		[PrintfFormat ()]
 		public int printf (string format, ...);
@@ -3114,6 +3117,46 @@ namespace Posix {
 	public static FILE stderr;
 	public static FILE stdout;
 	public static FILE stdin;
+
+	/**
+	 * A pipe to the given command run in a child process
+	 *
+	 * This is a binding to popen () and pclose (). popen () is the equivalent
+	 * of pipe (), fork (), dup2 () and then exec () in a single operation
+	 */
+	[Compact]
+	[CCode (cname = "FILE", free_function = "pclose", cheader_filename = "stdio.h")]
+	[Version (since = "vala-0.44")]
+	public class CommandPipe : FILE {
+		/**
+		 * A pipe to the given command run in a child process
+		 *
+		 * @param command The command to run
+		 * @param mode Either 'r' or 'w'. 'r' creates a pipe to the command's
+		 * STDOUT, the command's STDIN is the same as the parent process.
+		 * 'w' creates a pipe to the command's STDIN, the command's STDOUT is
+		 * the same as the parent process
+		 */
+		[CCode (cname = "popen")]
+		public CommandPipe (string command, string mode = "r");
+		/**
+		 * Explicitly close the pipe
+		 *
+		 * Explicitly closing the pipe is only necessary when checking the
+		 * termination status of the command language interpreter. Normally
+		 * Vala will generate code to automatically close the pipe when the
+		 * CommandPipe instance goes out of scope
+		 *
+		 * CommandPipe.close () is synchronous and will return when the child
+		 * process has terminated
+		 *
+		 * @return The termination status of the command language interpreter
+		 * or -1 if status could not be obtained. errno will be set if -1
+		 */
+		[CCode (cname = "pclose")]
+		[DestroysInstance]
+		public int close ();
+	}
 
 	[CCode (cheader_filename = "stdio.h")]
 	public void perror (string s);
