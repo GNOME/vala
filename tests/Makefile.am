@@ -206,6 +206,7 @@ TESTS = \
 	objects/methods.vala \
 	objects/paramspec.vala \
 	objects/properties.vala \
+	objects/property-read-only-auto.vala \
 	objects/regex.vala \
 	objects/signals.vala \
 	objects/test-025.vala \
