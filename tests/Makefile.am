@@ -240,6 +240,7 @@ TESTS = \
 	objects/paramspec.vala \
 	objects/properties.vala \
 	objects/property-notify.vala \
+	objects/property-read-only-automatic-backing.vala \
 	objects/regex.vala \
 	objects/signals.vala \
 	objects/signals-delegate.vala \
