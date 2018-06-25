@@ -29,7 +29,7 @@ public class Vala.GenericType : DataType {
 	/**
 	 * The referred generic type parameter.
 	 */
-	public TypeParameter type_parameter { get; set; }
+	public weak TypeParameter type_parameter { get; set; }
 
 	public GenericType (TypeParameter type_parameter) {
 		this.type_parameter = type_parameter;
