@@ -103,17 +103,19 @@ public class Vala.Property : Symbol, Lockable {
 		get {
 			if (!_field_checked) {
 				if (!is_abstract && source_type == SourceFileType.SOURCE) {
-					bool empty_get = (get_accessor != null && get_accessor.body == null);
-					bool empty_set = (set_accessor != null && set_accessor.body == null);
-					if (empty_get != empty_set) {
-						if (empty_get) {
-							Report.error (source_reference, "Property getter must have a body");
-						} else if (empty_set) {
-							Report.error (source_reference, "Property setter must have a body");
-						}
+					bool has_get = (get_accessor != null);
+					bool get_has_body = (has_get && get_accessor.body != null);
+					bool has_set = (set_accessor != null);
+					bool set_has_body = (has_set && set_accessor.body != null);
+					if (set_has_body && (has_get && !get_has_body)) {
 						error = true;
+						Report.error (source_reference, "Property getter must have a body");
 					}
-					if (empty_get && empty_set) {
+					if (get_has_body && (has_set && !set_has_body)) {
+						error = true;
+						Report.error (source_reference, "Property setter must have a body");
+					}
+					if (!get_has_body && !set_has_body) {
 						/* automatic property accessor body generation */
 						_field = new Field ("_%s".printf (name), property_type.copy (), initializer, source_reference);
 						_field.access = SymbolAccessibility.PRIVATE;
