@@ -54,12 +54,17 @@ public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
 	}
 
 	// edit
-	public unowned MarkupWriter link (string url, string label, string? css_class = null) {
-		if (css_class == null) {
-			start_tag ("a", {"href", url});
-		} else {
-			start_tag ("a", {"href", url, "class", css_class});
+	public unowned MarkupWriter link (string url, string label, string? css_class = null, string? rel = null) {
+		string[] attributes = {"href", url};
+		if (css_class != null) {
+			attributes += "class";
+			attributes += css_class;
 		}
+		if (rel != null) {
+			attributes += "rel";
+			attributes += rel;
+		}
+		start_tag ("a", attributes);
 
 		text (label);
 		end_tag ("a");
