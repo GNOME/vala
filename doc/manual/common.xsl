@@ -184,15 +184,15 @@
   </xsl:template>
 
   <xsl:template match="ulink">
-    <xsl:if test="starts-with(@url,'http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/')">
+    <xsl:if test="starts-with(@url,'https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/')">
       <xsl:variable name="pageid">
         <xsl:call-template name="normalizepath">
-          <xsl:with-param name="title" select="str:decode-uri(str:tokenize(substring-after(@url, 'http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/'),'#')[1])"/>
+          <xsl:with-param name="title" select="str:decode-uri(str:tokenize(substring-after(@url, 'https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/'),'#')[1])"/>
         </xsl:call-template>
       </xsl:variable>
-      <a href="{$pageid}.html#{str:tokenize(substring-after(@url, 'http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/'),'#')[2]}"><xsl:value-of select="."/></a>
+      <a href="{$pageid}.html#{str:tokenize(substring-after(@url, 'https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/'),'#')[2]}"><xsl:value-of select="."/></a>
     </xsl:if>
-    <xsl:if test="not(starts-with(@url,'http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/'))">
+    <xsl:if test="not(starts-with(@url,'https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/'))">
       <a href="{@url}"><xsl:value-of select="."/></a>
     </xsl:if>
   </xsl:template>
