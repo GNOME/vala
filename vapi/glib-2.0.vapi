@@ -2958,7 +2958,7 @@ namespace GLib {
 	[Version (since = "2.26")]
 	[CCode (ref_function = "g_date_time_ref", unref_function = "g_date_time_unref", type_id = "G_TYPE_DATE_TIME")]
 	public class DateTime {
-		public DateTime.now (TimeZone tz);
+		public DateTime.now (TimeZone tz = new TimeZone.local ());
 		public DateTime.now_local ();
 		public DateTime.now_utc ();
 		[Version (since = "2.56")]
