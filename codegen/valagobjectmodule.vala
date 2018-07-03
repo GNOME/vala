@@ -454,6 +454,63 @@ public class Vala.GObjectModule : GTypeModule {
 			ccode.add_declaration ("GObject *", new CCodeVariableDeclarator ("obj"));
 			ccode.add_declaration ("GObjectClass *", new CCodeVariableDeclarator ("parent_class"));
 
+			if (cl.is_singleton) {
+				var singleton_ref_name = "%s_singleton__ref".printf (get_ccode_name (cl));
+				var singleton_lock_name = "%s_singleton__lock".printf (get_ccode_name (cl));
+				var singleton_once_name = "%s_singleton__volatile".printf (get_ccode_name (cl));
+
+				var singleton_ref = new CCodeDeclaration("GObject *");
+				singleton_ref.add_declarator (new CCodeVariableDeclarator (singleton_ref_name, new CCodeConstant ("NULL")));
+				singleton_ref.modifiers = CCodeModifiers.STATIC;
+				ccode.add_statement (singleton_ref);
+
+				var mutex_lock = new CCodeDeclaration("GMutex");
+				mutex_lock.add_declarator (new CCodeVariableDeclarator (singleton_lock_name));
+				mutex_lock.modifiers = CCodeModifiers.STATIC;
+				ccode.add_statement (mutex_lock);
+
+				var once_lock = new CCodeDeclaration("gsize");
+				once_lock.add_declarator (new CCodeVariableDeclarator (singleton_once_name, new CCodeConstant ("0")));
+				once_lock.modifiers = CCodeModifiers.STATIC | CCodeModifiers.VOLATILE;
+				ccode.add_statement (once_lock);
+
+				var once_init = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter"));
+				once_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (singleton_once_name)));
+
+				var once_block = new CCodeBlock();
+
+				var singleton_mutex_init = new CCodeFunctionCall (new CCodeIdentifier ("g_mutex_init"));
+				singleton_mutex_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (singleton_lock_name)));
+				once_block.add_statement (new CCodeExpressionStatement (singleton_mutex_init));
+
+				var once_leave = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
+				once_leave.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (singleton_once_name)));
+				once_leave.add_argument (new CCodeConstant ("42"));
+				once_block.add_statement (new CCodeExpressionStatement (once_leave));
+
+				var if_once = new CCodeIfStatement (once_init, once_block);
+				ccode.add_statement (if_once);
+
+				var singleton_mutex_lock = new CCodeFunctionCall (new CCodeIdentifier ("g_mutex_lock"));
+				singleton_mutex_lock.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (singleton_lock_name)));
+				ccode.add_statement (new CCodeExpressionStatement (singleton_mutex_lock));
+
+				var check_existance = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier (singleton_ref_name), new CCodeConstant ("NULL"));
+				var return_singleton = new CCodeBlock();
+
+				var ref_object = new CCodeFunctionCall (new CCodeIdentifier ("g_object_ref"));
+				ref_object.add_argument (new CCodeIdentifier (singleton_ref_name));
+				return_singleton.add_statement (new CCodeExpressionStatement (ref_object));
+
+				var singleton_mutex_unlock = new CCodeFunctionCall (new CCodeIdentifier ("g_mutex_unlock"));
+				singleton_mutex_unlock.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (singleton_lock_name)));
+				return_singleton.add_statement (new CCodeExpressionStatement (singleton_mutex_unlock));
+				return_singleton.add_statement (new CCodeReturnStatement (new CCodeIdentifier (singleton_ref_name)));
+
+				var if_singleton_alive = new CCodeIfStatement (check_existance, return_singleton);
+				ccode.add_statement (if_singleton_alive);
+			}
+
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 			ccast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (cl, null))));
 			ccode.add_assignment (new CCodeIdentifier ("parent_class"), ccast);
@@ -477,6 +534,22 @@ public class Vala.GObjectModule : GTypeModule {
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
 				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
+			}
+
+			if (cl.is_singleton) {
+				var singleton_ref_name = "%s_singleton__ref".printf (get_ccode_name (cl));
+				var singleton_lock_name = "%s_singleton__lock".printf (get_ccode_name (cl));
+
+				ccode.add_assignment (new CCodeIdentifier (singleton_ref_name), new CCodeIdentifier ("obj"));
+
+				var set_weak_ref_to_volatile = new CCodeFunctionCall (new CCodeIdentifier ("g_object_add_weak_pointer"));
+				set_weak_ref_to_volatile.add_argument (new CCodeIdentifier (singleton_ref_name));
+				set_weak_ref_to_volatile.add_argument (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (singleton_ref_name)), "gpointer"));
+				ccode.add_statement (new CCodeExpressionStatement (set_weak_ref_to_volatile));
+
+				var final_singleton_mutex_unlock = new CCodeFunctionCall (new CCodeIdentifier ("g_mutex_unlock"));
+				final_singleton_mutex_unlock.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (singleton_lock_name)));
+				ccode.add_statement (new CCodeExpressionStatement (final_singleton_mutex_unlock));
 			}
 
 			ccode.add_return (new CCodeIdentifier ("obj"));

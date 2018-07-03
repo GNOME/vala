@@ -43,6 +43,7 @@ public class Vala.UsedAttr : CodeVisitor {
 		"use_inplace", "feature_test_macro", "default_value_on_error", "",
 
 		"Immutable", "",
+		"SingleInstance", "",
 		"Compact", "",
 		"NoWrapper", "",
 		"NoThrow", "",

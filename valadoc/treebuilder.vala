@@ -219,6 +219,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 				"DestroysInstance",
 				"GenericAccessors",
 				"NoAccessorMethod",
+				"SingleInstance",
 				"NoArrayLength",
 				"Experimental",
 				"Diagnostics",

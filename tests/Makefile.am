@@ -256,6 +256,7 @@ TESTS = \
 	objects/regex.vala \
 	objects/signals.vala \
 	objects/signals-delegate.vala \
+	objects/singleton.vala \
 	objects/test-025.vala \
 	objects/test-026.vala \
 	objects/test-029.vala \
@@ -508,6 +509,8 @@ TESTS = \
 	semantic/class-missing-implement-method.test \
 	semantic/class-missing-implement-property.test \
 	semantic/class-missing-prerequisites.test \
+	semantic/class-singleton-base.test \
+	semantic/class-singleton-non-gobject.test \
 	semantic/class-too-few-type-arguments.test \
 	semantic/class-too-many-type-arguments.test \
 	semantic/constant-extern.test \

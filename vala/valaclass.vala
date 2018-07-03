@@ -80,6 +80,22 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 
 	/**
+	 * Instances of immutable classes are immutable after construction.
+	 */
+	public bool is_singleton {
+		get {
+			if (_is_singleton == null) {
+				_is_singleton = get_attribute ("SingleInstance") != null;
+			}
+			return _is_singleton;
+		}
+		set {
+			_is_singleton = value;
+			set_attribute ("SingleInstance", value);
+		}
+	}
+
+	/**
 	 * Specifies whether this class has private fields.
 	 */
 	public bool has_private_fields { get; set; }
@@ -91,6 +107,7 @@ public class Vala.Class : ObjectTypeSymbol {
 
 	private bool? _is_compact;
 	private bool? _is_immutable;
+	private bool? _is_singleton;
 
 	private List<DataType> base_types = new ArrayList<DataType> ();
 
@@ -493,6 +510,23 @@ public class Vala.Class : ObjectTypeSymbol {
 
 		foreach (TypeParameter p in get_type_parameters ()) {
 			p.check (context);
+		}
+
+		if (base_class != null && base_class.is_singleton) {
+			error = true;
+			Report.error (source_reference, "`%s' cannot inherit from SingleInstance class `%s'".printf (get_full_name (), base_class.get_full_name ()));
+		}
+
+		if (is_singleton && !is_subtype_of (context.analyzer.object_type)) {
+			error = true;
+			Report.error (source_reference, "SingleInstance class `%s' requires inheritance from `GLib.Object'".printf (get_full_name ()));
+		}
+
+		/* singleton classes require an instance construtor */
+		if (is_singleton && constructor == null) {
+			var c = new Constructor (source_reference);
+			c.body = new Block (source_reference);
+			add_constructor (c);
 		}
 
 		/* process enums first to avoid order problems in C code */
