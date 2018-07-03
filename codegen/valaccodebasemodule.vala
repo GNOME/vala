@@ -492,7 +492,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (context.module_init_method != null) {
 			foreach (Parameter parameter in context.module_init_method.get_parameters ()) {
-				if (parameter.variable_type.data_type == type_module_type) {
+				if (parameter.variable_type.data_type.is_subtype_of (type_module_type)) {
 					in_plugin = true;
 					module_init_param_name = parameter.name;
 					break;
