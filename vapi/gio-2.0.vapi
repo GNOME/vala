@@ -1822,20 +1822,38 @@ namespace GLib {
 		public bool get_anonymous ();
 		public int get_choice ();
 		public unowned string get_domain ();
+		[Version (since = "2.58")]
+		public bool get_is_tcrypt_hidden_volume ();
+		[Version (since = "2.58")]
+		public bool get_is_tcrypt_system_volume ();
 		public unowned string get_password ();
 		public GLib.PasswordSave get_password_save ();
+		[Version (since = "2.58")]
+		public uint get_pim ();
 		public unowned string get_username ();
 		public void set_anonymous (bool anonymous);
 		public void set_choice (int choice);
 		public void set_domain (string domain);
+		[Version (since = "2.58")]
+		public void set_is_tcrypt_hidden_volume (bool hidden_volume);
+		[Version (since = "2.58")]
+		public void set_is_tcrypt_system_volume (bool system_volume);
 		public void set_password (string password);
 		public void set_password_save (GLib.PasswordSave save);
+		[Version (since = "2.58")]
+		public void set_pim (uint pim);
 		public void set_username (string username);
 		public bool anonymous { get; set; }
 		public int choice { get; set; }
 		public string domain { get; set; }
+		[Version (since = "2.58")]
+		public bool is_tcrypt_hidden_volume { get; set; }
+		[Version (since = "2.58")]
+		public bool is_tcrypt_system_volume { get; set; }
 		public string password { get; set; }
 		public GLib.PasswordSave password_save { get; set; }
+		[Version (since = "2.58")]
+		public uint pim { get; set; }
 		public string username { get; set; }
 		[Version (since = "2.20")]
 		public virtual signal void aborted ();
@@ -3951,7 +3969,8 @@ namespace GLib {
 		NEED_USERNAME,
 		NEED_DOMAIN,
 		SAVING_SUPPORTED,
-		ANONYMOUS_SUPPORTED
+		ANONYMOUS_SUPPORTED,
+		TCRYPT
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_BUS_NAME_OWNER_FLAGS_", type_id = "g_bus_name_owner_flags_get_type ()")]
 	[Flags]
