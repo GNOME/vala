@@ -500,6 +500,18 @@ namespace Gst {
 			public abstract double volume { get; set; }
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
+		[GIR (name = "AudioBuffer")]
+		[Version (since = "1.16")]
+		public struct Buffer {
+			public weak Gst.Audio.Info info;
+			public size_t n_samples;
+			public int n_planes;
+			public void* planes;
+			public weak Gst.Buffer buffer;
+			public bool map (Gst.Audio.Info info, Gst.Buffer gstbuffer, Gst.MapFlags flags);
+			public void unmap ();
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[GIR (name = "AudioCdSrcTrack")]
 		public struct CdSrcTrack {
 			public bool is_audio;
@@ -542,6 +554,15 @@ namespace Gst {
 			public Gst.Audio.Format unpack_format;
 			public weak Gst.Audio.FormatUnpack unpack_func;
 			public weak Gst.Audio.FormatPack pack_func;
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
+		[GIR (name = "AudioMeta")]
+		[Version (since = "1.16")]
+		public struct Meta {
+			public Gst.Meta meta;
+			public weak Gst.Audio.Info info;
+			public size_t samples;
+			public size_t offsets;
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[GIR (name = "AudioRingBufferSpec")]
@@ -935,6 +956,10 @@ namespace Gst {
 		public static uint audio_iec61937_frame_size (Gst.Audio.RingBufferSpec spec);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_iec61937_payload")]
 		public static bool audio_iec61937_payload ([CCode (array_length_cname = "src_n", array_length_pos = 1.5, array_length_type = "guint")] uint8[] src, [CCode (array_length_cname = "dst_n", array_length_pos = 2.5, array_length_type = "guint")] uint8[] dst, Gst.Audio.RingBufferSpec spec, int endianness);
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_meta_api_get_type")]
+		public static GLib.Type audio_meta_api_get_type ();
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_meta_get_info")]
+		public static unowned Gst.MetaInfo? audio_meta_get_info ();
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_reorder_channels")]
 		public static bool audio_reorder_channels ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] data, Gst.Audio.Format format, [CCode (array_length_cname = "channels", array_length_pos = 2.5)] Gst.Audio.ChannelPosition[] from, [CCode (array_length_cname = "channels", array_length_pos = 2.5)] Gst.Audio.ChannelPosition[] to);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_resampler_options_set_quality")]

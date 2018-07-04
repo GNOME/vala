@@ -527,7 +527,7 @@ gstreamer-rtp-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-rtp-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstRtp-1.0.gir
 
 gstreamer-rtsp-1.0:
-	$(GENVAPI) --library $(srcdir)/gstreamer-rtsp-1.0 --pkg gstreamer-sdp-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstRtsp-1.0.gir
+	$(GENVAPI) --library $(srcdir)/gstreamer-rtsp-1.0 --pkg gstreamer-base-1.0 --pkg gstreamer-sdp-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstRtsp-1.0.gir
 
 gstreamer-rtsp-server-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-rtsp-server-1.0 --pkg gstreamer-rtsp-1.0 --pkg gstreamer-net-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstRtspServer-1.0.gir

@@ -555,6 +555,9 @@ namespace Gst {
 		[Version (since = "1.12")]
 		public static string generate_digest_auth_response (string? algorithm, string method, string realm, string username, string password, string uri, string nonce);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
+		[Version (since = "1.16")]
+		public static string generate_digest_auth_response_from_md5 (string? algorithm, string method, string md5, string uri, string nonce);
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static bool header_allow_multiple (Gst.RTSP.HeaderField field);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static unowned string header_as_text (Gst.RTSP.HeaderField field);
