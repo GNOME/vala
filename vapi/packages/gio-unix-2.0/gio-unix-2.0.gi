@@ -345,6 +345,23 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="launch_uris_as_manager_with_fds" symbol="g_desktop_app_info_launch_uris_as_manager_with_fds">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="appinfo" type="GDesktopAppInfo*"/>
+					<parameter name="uris" type="GList*"/>
+					<parameter name="launch_context" type="GAppLaunchContext*"/>
+					<parameter name="spawn_flags" type="GSpawnFlags"/>
+					<parameter name="user_setup" type="GSpawnChildSetupFunc"/>
+					<parameter name="user_setup_data" type="gpointer"/>
+					<parameter name="pid_callback" type="GDesktopAppLaunchCallback"/>
+					<parameter name="pid_callback_data" type="gpointer"/>
+					<parameter name="stdin_fd" type="gint"/>
+					<parameter name="stdout_fd" type="gint"/>
+					<parameter name="stderr_fd" type="gint"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="list_actions" symbol="g_desktop_app_info_list_actions">
 				<return-type type="gchar**"/>
 				<parameters>
