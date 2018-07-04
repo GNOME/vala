@@ -25,22 +25,30 @@ using Valadoc.Content;
 
 public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
 
-	public MarkupWriter (FileStream stream, bool xml_declaration = true) {
+	public MarkupWriter (FileStream stream, bool html5_declaration = true) {
 		// avoid broken implicit copy
 		unowned FileStream _stream = stream;
 
 		base ((str) => {
 			_stream.printf (str);
-		}, xml_declaration);
+		}, false);
+
+		if (html5_declaration) {
+			do_write ("<!DOCTYPE html>");
+		}
 	}
 
-	public MarkupWriter.builder (StringBuilder builder, bool xml_declaration = true) {
+	public MarkupWriter.builder (StringBuilder builder, bool html5_declaration = true) {
 		// avoid broken implicit copy
 		unowned StringBuilder _builder = builder;
 
 		base ((str) => {
 			_builder.append (str);
-		}, xml_declaration);
+		}, false);
+
+		if (html5_declaration) {
+			do_write ("<!DOCTYPE html>");
+		}
 	}
 
 	public MarkupWriter add_usemap (Charts.Chart chart) {
