@@ -85,8 +85,9 @@ public class Valadoc.Html.Doclet : Valadoc.Html.BasicDoclet {
 		_renderer = new HtmlRenderer (settings, link_helper, this.cssresolver);
 
 		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename (settings.path, "index.html"), "w");
-		writer = new Html.MarkupWriter (file);
+		writer = new Html.MarkupWriter (file, false);
 		_renderer.set_writer (writer);
+		writer.start_tag ("!DOCTYPE html");
 		write_file_header (Valadoc.Html.Doclet.css_path_package, Valadoc.Html.Doclet.js_path_package, settings.pkg_name);
 		write_navi_packages (tree);
 		write_package_index_content (tree);
@@ -113,8 +114,9 @@ public class Valadoc.Html.Doclet : Valadoc.Html.BasicDoclet {
 		rt = DirUtils.create (GLib.Path.build_filename (path, "img"), 0777);
 
 		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename (path, "index.htm"), "w");
-		writer = new Html.MarkupWriter (file);
+		writer = new Html.MarkupWriter (file, false);
 		_renderer.set_writer (writer);
+		writer.start_tag ("!DOCTYPE html");
 		write_file_header (Valadoc.Html.Doclet.css_path, Valadoc.Html.Doclet.js_path, pkg_name);
 		write_navi_package (package);
 		write_package_content (package, package);
@@ -129,8 +131,9 @@ public class Valadoc.Html.Doclet : Valadoc.Html.BasicDoclet {
 
 		if (ns.name != null) {
 			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
-			writer = new Html.MarkupWriter (file);
+			writer = new Html.MarkupWriter (file, false);
 			_renderer.set_writer (writer);
+			writer.start_tag ("!DOCTYPE html");
 			write_file_header (Valadoc.Html.Doclet.css_path, Valadoc.Html.Doclet.js_path, ns.get_full_name () + " &ndash; " + ns.package.name);
 			write_navi_symbol (ns);
 			write_namespace_content (ns, ns);
@@ -145,8 +148,9 @@ public class Valadoc.Html.Doclet : Valadoc.Html.BasicDoclet {
 		string rpath = this.get_real_path (node);
 
 		GLib.FileStream file = GLib.FileStream.open (rpath, "w");
-		writer = new Html.MarkupWriter (file);
+		writer = new Html.MarkupWriter (file, false);
 		_renderer.set_writer (writer);
+		writer.start_tag ("!DOCTYPE html");
 		write_file_header (css_path, js_path, node.get_full_name() + " &ndash; " + node.package.name);
 		if (is_internal_node (node)) {
 			write_navi_symbol (node);
