@@ -397,6 +397,20 @@ public class Vala.CCodeAttribute : AttributeCache {
 		}
 	}
 
+	public string default_value_on_error {
+		get {
+			if (_default_value_on_error == null) {
+				if (ccode != null) {
+					_default_value_on_error = ccode.get_string ("default_value_on_error");
+				}
+				if (_default_value_on_error == null) {
+					_default_value_on_error = default_value;
+				}
+			}
+			return _default_value_on_error;
+		}
+	}
+
 	public double pos {
 		get {
 			if (_pos == null) {
@@ -586,6 +600,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private string _take_value_function;
 	private string _param_spec_function;
 	private string _default_value;
+	private string _default_value_on_error;
 	private double? _pos;
 	private string _vfunc_name;
 	private string _finish_name;
