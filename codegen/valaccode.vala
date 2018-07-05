@@ -222,6 +222,10 @@ namespace Vala {
 		return get_ccode_attribute(sym).default_value;
 	}
 
+	public static string get_ccode_default_value_on_error (TypeSymbol sym) {
+		return get_ccode_attribute (sym).default_value_on_error;
+	}
+
 	public static bool get_ccode_has_copy_function (Struct st) {
 		return st.get_attribute_bool ("CCode", "has_copy_function", true);
 	}

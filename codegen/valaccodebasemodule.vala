@@ -3576,7 +3576,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		temp_ref_values.clear ();
 	}
 
-	public void emit_temp_var (LocalVariable local) {
+	public void emit_temp_var (LocalVariable local, bool on_error = false) {
 		var init = (!local.name.has_prefix ("*") && local.init);
 		if (is_in_coroutine ()) {
 			closure_struct.add_field (get_ccode_name (local.variable_type), local.name);
@@ -3585,7 +3585,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// as they might be used multiple times when declared in a loop
 
 			if (init) {
-				var initializer = default_value_for_type (local.variable_type, false);
+				var initializer = default_value_for_type (local.variable_type, false, on_error);
 				if (initializer == null) {
 					cfile.add_include ("string.h");
 					var memset_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
@@ -3600,7 +3600,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else {
 			var cvar = new CCodeVariableDeclarator (local.name, null, get_ccode_declarator_suffix (local.variable_type));
 			if (init) {
-				cvar.initializer = default_value_for_type (local.variable_type, true);
+				cvar.initializer = default_value_for_type (local.variable_type, true, on_error);
 				cvar.init0 = true;
 			}
 			ccode.add_declaration (get_ccode_name (local.variable_type), cvar);
@@ -6224,11 +6224,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return type;
 	}
 
-	public CCodeExpression? default_value_for_type (DataType type, bool initializer_expression) {
+	public CCodeExpression? default_value_for_type (DataType type, bool initializer_expression, bool on_error = false) {
 		var st = type.data_type as Struct;
 		var array_type = type as ArrayType;
-		if (type.data_type != null && !type.nullable && get_ccode_default_value (type.data_type) != "") {
-			return new CCodeConstant (get_ccode_default_value (type.data_type));
+		if (type.data_type != null && !type.nullable
+		    && (on_error ? get_ccode_default_value_on_error (type.data_type) : get_ccode_default_value (type.data_type)) != "") {
+			return new CCodeConstant (on_error ? get_ccode_default_value_on_error (type.data_type) : get_ccode_default_value (type.data_type));
 		} else if (initializer_expression && !type.nullable &&
 				   (st != null || (array_type != null && array_type.fixed_length))) {
 			// 0-initialize struct with struct initializer { 0 }
@@ -6424,16 +6425,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		cfile.add_function (function);
 	}
 
-	public void return_default_value (DataType return_type) {
+	public void return_default_value (DataType return_type, bool on_error = false) {
 		var st = return_type.data_type as Struct;
 		if (st != null && st.is_simple_type () && !return_type.nullable) {
 			// 0-initialize struct with struct initializer { 0 }
 			// only allowed as initializer expression in C
 			var ret_temp_var = get_temp_variable (return_type, true, null, true);
-			emit_temp_var (ret_temp_var);
+			emit_temp_var (ret_temp_var, on_error);
 			ccode.add_return (new CCodeIdentifier (ret_temp_var.name));
 		} else {
-			ccode.add_return (default_value_for_type (return_type, false));
+			ccode.add_return (default_value_for_type (return_type, false, on_error));
 		}
 	}
 

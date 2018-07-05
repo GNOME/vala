@@ -111,7 +111,7 @@ public struct uchar {
 
 [SimpleType]
 [GIR (name = "gint")]
-[CCode (cname = "gint", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0", type_signature = "i")]
+[CCode (cname = "gint", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0", default_value_on_error = "-1", type_signature = "i")]
 [IntegerType (rank = 6)]
 public struct int {
 	[CCode (cname = "G_MININT")]
@@ -189,7 +189,7 @@ public struct uint {
 
 [SimpleType]
 [GIR (name = "gshort")]
-[CCode (cname = "gshort", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0", type_signature = "n")]
+[CCode (cname = "gshort", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0", default_value_on_error = "-1", type_signature = "n")]
 [IntegerType (rank = 4, min = -32768, max = 32767)]
 public struct short {
 	[CCode (cname = "G_MINSHORT")]
@@ -233,7 +233,7 @@ public struct ushort {
 
 [SimpleType]
 [GIR (name = "glong")]
-[CCode (cname = "glong", cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG", get_value_function = "g_value_get_long", set_value_function = "g_value_set_long", default_value = "0L")]
+[CCode (cname = "glong", cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG", get_value_function = "g_value_get_long", set_value_function = "g_value_set_long", default_value = "0L", default_value_on_error = "-1L")]
 [IntegerType (rank = 8)]
 public struct long {
 	[CCode (cname = "G_MINLONG")]
@@ -334,7 +334,7 @@ public struct size_t {
 
 [SimpleType]
 [GIR (name = "glong")]
-[CCode (cname = "gssize", cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG", get_value_function = "g_value_get_long", set_value_function = "g_value_set_long", default_value = "0L")]
+[CCode (cname = "gssize", cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG", get_value_function = "g_value_get_long", set_value_function = "g_value_set_long", default_value = "0L", default_value_on_error = "-1L")]
 [IntegerType (rank = 8)]
 public struct ssize_t {
 	[Version (since = "2.14")]
@@ -420,7 +420,7 @@ public struct intptr {
 
 [SimpleType]
 [GIR (name = "gint8")]
-[CCode (cname = "gint8", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "0", type_signature = "y")]
+[CCode (cname = "gint8", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "0", default_value_on_error = "-1", type_signature = "y")]
 [IntegerType (rank = 1, min = -128, max = 127)]
 public struct int8 {
 	[Version (since = "2.4")]
@@ -465,7 +465,7 @@ public struct uint8 {
 
 [SimpleType]
 [GIR (name = "gint16")]
-[CCode (cname = "gint16", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0", type_signature = "n")]
+[CCode (cname = "gint16", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0", default_value_on_error = "-1", type_signature = "n")]
 [IntegerType (rank = 4, min = -32768, max = 32767)]
 public struct int16 {
 	[Version (since = "2.4")]
@@ -553,7 +553,7 @@ public struct uint16 {
 
 [SimpleType]
 [GIR (name = "gint32")]
-[CCode (cname = "gint32", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0", type_signature = "i")]
+[CCode (cname = "gint32", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0", default_value_on_error = "-1", type_signature = "i")]
 [IntegerType (rank = 6)]
 public struct int32 {
 	[Version (since = "2.4")]
@@ -641,7 +641,7 @@ public struct uint32 {
 
 [SimpleType]
 [GIR (name = "gint64")]
-[CCode (cname = "gint64", cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64", get_value_function = "g_value_get_int64", set_value_function = "g_value_set_int64", default_value = "0LL", type_signature = "x")]
+[CCode (cname = "gint64", cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64", get_value_function = "g_value_get_int64", set_value_function = "g_value_set_int64", default_value = "0LL", default_value_on_error = "-1LL", type_signature = "x")]
 [IntegerType (rank = 10)]
 public struct int64 {
 	[CCode (cname = "G_MININT64")]
@@ -766,7 +766,7 @@ public struct uint64 {
 
 [SimpleType]
 [GIR (name = "gfloat")]
-[CCode (cname = "gfloat", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_FLOAT", marshaller_type_name = "FLOAT", get_value_function = "g_value_get_float", set_value_function = "g_value_set_float", default_value = "0.0F")]
+[CCode (cname = "gfloat", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_FLOAT", marshaller_type_name = "FLOAT", get_value_function = "g_value_get_float", set_value_function = "g_value_set_float", default_value = "0.0F", default_value_on_error = "-1.0F")]
 [FloatingType (rank = 1)]
 public struct float {
 	[CCode (cname = "FLT_ROUNDS")]
@@ -824,7 +824,7 @@ public struct float {
 
 [SimpleType]
 [GIR (name = "gdouble")]
-[CCode (cname = "gdouble", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_DOUBLE", marshaller_type_name = "DOUBLE", get_value_function = "g_value_get_double", set_value_function = "g_value_set_double", default_value = "0.0", type_signature = "d")]
+[CCode (cname = "gdouble", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_DOUBLE", marshaller_type_name = "DOUBLE", get_value_function = "g_value_get_double", set_value_function = "g_value_set_double", default_value = "0.0", default_value_on_error = "-1.0", type_signature = "d")]
 [FloatingType (rank = 2)]
 public struct double {
 	[CCode (cname = "DBL_MANT_DIG")]
