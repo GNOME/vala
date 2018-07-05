@@ -146,16 +146,16 @@ namespace GnomeVFS {
 	[Compact]
 	public class FileInfo {
 		public weak GnomeVFS.ACL acl;
-		public ulong atime;
+		public time_t atime;
 		public GnomeVFS.FileSize block_count;
-		public ulong ctime;
+		public time_t ctime;
 		public GnomeVFS.FileFlags flags;
 		public uint gid;
 		public weak GnomeVFS.InodeNumber inode;
 		public uint io_block_size;
 		public uint link_count;
 		public weak string mime_type;
-		public ulong mtime;
+		public time_t mtime;
 		public weak string name;
 		public GnomeVFS.FilePermissions permissions;
 		public uint refcount;

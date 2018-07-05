@@ -274,7 +274,7 @@ namespace Purple {
 		public static unowned Purple.BuddyIcon icons_find (Purple.Account account, string username);
 		public static unowned Purple.StoredImage icons_find_account_icon (Purple.Account account);
 		public static unowned Purple.StoredImage icons_find_custom_icon (Purple.Contact contact);
-		public static ulong icons_get_account_icon_timestamp (Purple.Account account);
+		public static time_t icons_get_account_icon_timestamp (Purple.Account account);
 		public static unowned string icons_get_cache_dir ();
 		public unowned string icons_get_checksum_for_user ();
 		public static void* icons_get_handle ();
@@ -353,7 +353,7 @@ namespace Purple {
 		public static unowned GLib.List get_pools ();
 		public static unowned GLib.List get_schemes ();
 		public unowned string get_subject_name ();
-		public bool get_times (ulong activation, ulong expiration);
+		public bool get_times (time_t activation, time_t expiration);
 		public unowned string get_unique_id ();
 		public static unowned GLib.List get_verifiers ();
 		public static unowned Purple.Certificate import (Purple.CertificateScheme scheme, string filename);
@@ -551,7 +551,7 @@ namespace Purple {
 		public Purple.ConnectionFlags flags;
 		public int inpa;
 		public uint keepalive;
-		public ulong last_received;
+		public time_t last_received;
 		public weak string password;
 		public void* proto_data;
 		public weak Purple.Plugin prpl;
@@ -663,7 +663,7 @@ namespace Purple {
 		public void unignore (string name);
 		public Purple.ConvChatBuddyFlags user_get_flags (string user);
 		public void user_set_flags (string user, Purple.ConvChatBuddyFlags flags);
-		public void write (string who, string message, Purple.MessageFlags flags, ulong mtime);
+		public void write (string who, string message, Purple.MessageFlags flags, time_t mtime);
 	}
 	[CCode (cheader_filename = "purple.h")]
 	[Compact]
@@ -682,13 +682,13 @@ namespace Purple {
 		public weak Purple.Conversation conv;
 		public weak Purple.BuddyIcon icon;
 		public uint send_typed_timeout;
-		public ulong type_again;
+		public time_t type_again;
 		public Purple.TypingState typing_state;
 		public uint typing_timeout;
 		public unowned Purple.Conversation get_conversation ();
 		public unowned Purple.BuddyIcon get_icon ();
 		public uint get_send_typed_timeout ();
-		public ulong get_type_again ();
+		public time_t get_type_again ();
 		public Purple.TypingState get_typing_state ();
 		public uint get_typing_timeout ();
 		public void send (string message);
@@ -701,7 +701,7 @@ namespace Purple {
 		public void stop_send_typed_timeout ();
 		public void stop_typing_timeout ();
 		public void update_typing ();
-		public void write (string who, string message, Purple.MessageFlags flags, ulong mtime);
+		public void write (string who, string message, Purple.MessageFlags flags, time_t mtime);
 	}
 	[CCode (cheader_filename = "purple.h")]
 	[Compact]
@@ -710,7 +710,7 @@ namespace Purple {
 		public weak Purple.Conversation conv;
 		public Purple.MessageFlags flags;
 		public weak string what;
-		public ulong when;
+		public time_t when;
 		public weak string who;
 	}
 	[CCode (cheader_filename = "purple.h", free_function = "purple_conversation_destroy")]
@@ -751,7 +751,7 @@ namespace Purple {
 		public static Purple.MessageFlags message_get_flags (Purple.ConvMessage msg);
 		public static unowned string message_get_message (Purple.ConvMessage msg);
 		public static unowned string message_get_sender (Purple.ConvMessage msg);
-		public static ulong message_get_timestamp (Purple.ConvMessage msg);
+		public static time_t message_get_timestamp (Purple.ConvMessage msg);
 		public void present ();
 		public void set_account (Purple.Account account);
 		public void set_data (string key, void* data);
@@ -761,7 +761,7 @@ namespace Purple {
 		public void set_title (string title);
 		public void set_ui_ops (Purple.ConversationUiOps ops);
 		public void update (Purple.ConvUpdateType type);
-		public void write (string who, string message, Purple.MessageFlags flags, ulong mtime);
+		public void write (string who, string message, Purple.MessageFlags flags, time_t mtime);
 	}
 	[CCode (cheader_filename = "purple.h")]
 	[Compact]
@@ -878,11 +878,11 @@ namespace Purple {
 		public weak Purple.LogLogger logger;
 		public void* logger_data;
 		public weak string name;
-		public ulong time;
+		public time_t time;
 		public void* tm;
 		public Purple.LogType type;
 		[CCode (has_construct_function = false)]
-		public Log (Purple.LogType type, string name, Purple.Account account, Purple.Conversation conv, ulong time, void* tm);
+		public Log (Purple.LogType type, string name, Purple.Account account, Purple.Conversation conv, time_t time, void* tm);
 		public bool common_deleter ();
 		public bool common_is_deletable ();
 		public static unowned GLib.List common_lister (Purple.LogType type, string name, Purple.Account account, string ext, Purple.LogLogger logger);
@@ -903,7 +903,7 @@ namespace Purple {
 		public bool is_deletable ();
 		public unowned string read (Purple.LogReadFlags flags);
 		public static void uninit ();
-		public void write (Purple.MessageFlags type, string from, ulong time, string message);
+		public void write (Purple.MessageFlags type, string from, time_t time, string message);
 	}
 	[CCode (cheader_filename = "purple.h")]
 	[Compact]
@@ -1538,8 +1538,8 @@ namespace Purple {
 		public unowned string get_chat_user ();
 		public Purple.PresenceContext get_context ();
 		public unowned Purple.Conversation get_conversation ();
-		public ulong get_idle_time ();
-		public ulong get_login_time ();
+		public time_t get_idle_time ();
+		public time_t get_login_time ();
 		public unowned Purple.Status get_status (string status_id);
 		public unowned GLib.List get_statuses ();
 		public bool is_available ();
@@ -1547,8 +1547,8 @@ namespace Purple {
 		public bool is_online ();
 		public bool is_status_active (string status_id);
 		public bool is_status_primitive_active (Purple.StatusPrimitive primitive);
-		public void set_idle (bool idle, ulong idle_time);
-		public void set_login_time (ulong login_time);
+		public void set_idle (bool idle, time_t idle_time);
+		public void set_login_time (time_t login_time);
 		public void set_status_active (string status_id, bool active);
 		public void switch_status (string status_id);
 	}
@@ -1791,11 +1791,11 @@ namespace Purple {
 		[CCode (cname = "purple_savedstatus_find")]
 		public static unowned Purple.SavedStatus find (string title);
 		[CCode (cname = "purple_savedstatus_find_by_creation_time")]
-		public static unowned Purple.SavedStatus find_by_creation_time (ulong creation_time);
+		public static unowned Purple.SavedStatus find_by_creation_time (time_t creation_time);
 		[CCode (cname = "purple_savedstatus_find_transient_by_type_and_message")]
 		public static unowned Purple.SavedStatus find_transient_by_type_and_message (Purple.StatusPrimitive type, string message);
 		[CCode (cname = "purple_savedstatus_get_creation_time")]
-		public ulong get_creation_time ();
+		public time_t get_creation_time ();
 		[CCode (cname = "purple_savedstatus_get_current")]
 		public static unowned Purple.SavedStatus get_current ();
 		[CCode (cname = "purple_savedstatus_get_default")]
@@ -2022,7 +2022,7 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	[Compact]
 	public class StunNatDiscovery {
-		public ulong lookup_time;
+		public time_t lookup_time;
 		[CCode (array_length = false)]
 		public weak GLib.ObjectPath[] publicip;
 		public weak string servername;
@@ -2211,7 +2211,7 @@ namespace Purple {
 		public size_t current_buffer_size;
 		public void* data;
 		public weak GLib.FileStream dest_fp;
-		public ulong end_time;
+		public time_t end_time;
 		public int fd;
 		public weak string filename;
 		public weak string local_filename;
@@ -2222,7 +2222,7 @@ namespace Purple {
 		public weak string remote_ip;
 		public int remote_port;
 		public size_t size;
-		public ulong start_time;
+		public time_t start_time;
 		public Purple.XferStatusType status;
 		public Purple.XferType type;
 		public void* ui_data;
@@ -2240,7 +2240,7 @@ namespace Purple {
 		public unowned Purple.Account get_account ();
 		public size_t get_bytes_remaining ();
 		public size_t get_bytes_sent ();
-		public ulong get_end_time ();
+		public time_t get_end_time ();
 		public unowned string get_filename ();
 		public unowned string get_local_filename ();
 		public uint get_local_port ();
@@ -2249,7 +2249,7 @@ namespace Purple {
 		public uint get_remote_port ();
 		public unowned string get_remote_user ();
 		public size_t get_size ();
-		public ulong get_start_time ();
+		public time_t get_start_time ();
 		public Purple.XferStatusType get_status ();
 		public void* get_thumbnail (size_t len);
 		public unowned string get_thumbnail_mimetype ();
@@ -3528,7 +3528,7 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static void idle_init ();
 	[CCode (cheader_filename = "purple.h")]
-	public static void idle_set (ulong time);
+	public static void idle_set (time_t time);
 	[CCode (cheader_filename = "purple.h")]
 	public static void idle_set_ui_ops (Purple.IdleUiOps ops);
 	[CCode (cheader_filename = "purple.h")]
@@ -3978,9 +3978,9 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static void prpl_got_account_actions (Purple.Account account);
 	[CCode (cheader_filename = "purple.h")]
-	public static void prpl_got_account_idle (Purple.Account account, bool idle, ulong idle_time);
+	public static void prpl_got_account_idle (Purple.Account account, bool idle, time_t idle_time);
 	[CCode (cheader_filename = "purple.h")]
-	public static void prpl_got_account_login_time (Purple.Account account, ulong login_time);
+	public static void prpl_got_account_login_time (Purple.Account account, time_t login_time);
 	[CCode (cheader_filename = "purple.h")]
 	public static void prpl_got_account_status (Purple.Account account, string status_id);
 	[CCode (cheader_filename = "purple.h")]
@@ -3990,9 +3990,9 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static void prpl_got_media_caps (Purple.Account account, string who);
 	[CCode (cheader_filename = "purple.h")]
-	public static void prpl_got_user_idle (Purple.Account account, string name, bool idle, ulong idle_time);
+	public static void prpl_got_user_idle (Purple.Account account, string name, bool idle, time_t idle_time);
 	[CCode (cheader_filename = "purple.h")]
-	public static void prpl_got_user_login_time (Purple.Account account, string name, ulong login_time);
+	public static void prpl_got_user_login_time (Purple.Account account, string name, time_t login_time);
 	[CCode (cheader_filename = "purple.h")]
 	public static void prpl_got_user_status (Purple.Account account, string name, string status_id);
 	[CCode (cheader_filename = "purple.h")]
@@ -4070,13 +4070,13 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h", cname = "serv_got_attention")]
 	public static void serv_got_attention (Purple.Connection gc, string who, uint type_code);
 	[CCode (cheader_filename = "purple.h", cname = "serv_got_chat_in")]
-	public static void serv_got_chat_in (Purple.Connection g, int id, string who, Purple.MessageFlags flags, string message, ulong mtime);
+	public static void serv_got_chat_in (Purple.Connection g, int id, string who, Purple.MessageFlags flags, string message, time_t mtime);
 	[CCode (cheader_filename = "purple.h", cname = "serv_got_chat_invite")]
 	public static void serv_got_chat_invite (Purple.Connection gc, string name, string who, string message, GLib.HashTable data);
 	[CCode (cheader_filename = "purple.h", cname = "serv_got_chat_left")]
 	public static void serv_got_chat_left (Purple.Connection g, int id);
 	[CCode (cheader_filename = "purple.h", cname = "serv_got_im")]
-	public static void serv_got_im (Purple.Connection gc, string who, string msg, Purple.MessageFlags flags, ulong mtime);
+	public static void serv_got_im (Purple.Connection gc, string who, string msg, Purple.MessageFlags flags, time_t mtime);
 	[CCode (cheader_filename = "purple.h")]
 	public static void serv_got_join_chat_failed (Purple.Connection gc, GLib.HashTable data);
 	[CCode (cheader_filename = "purple.h", cname = "serv_got_joined_chat")]
@@ -4252,7 +4252,7 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static void str_strip_char (string str, GLib.ObjectPath thechar);
 	[CCode (cheader_filename = "purple.h")]
-	public static ulong str_to_time (string timestamp, bool utc, void* tm, long tz_off, out unowned string rest);
+	public static time_t str_to_time (string timestamp, bool utc, void* tm, long tz_off, out unowned string rest);
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned string strcasereplace (string str, string delimiter, string replacement);
 	[CCode (cheader_filename = "purple.h")]
@@ -4270,7 +4270,7 @@ namespace Purple {
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned string text_strip_mnemonic (string @in);
 	[CCode (cheader_filename = "purple.h")]
-	public static ulong time_build (int year, int month, int day, int hour, int min, int sec);
+	public static time_t time_build (int year, int month, int day, int hour, int min, int sec);
 	[CCode (cheader_filename = "purple.h")]
 	public static unowned string time_format (void* tm);
 	[CCode (cheader_filename = "purple.h")]

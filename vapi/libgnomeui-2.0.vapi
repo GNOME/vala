@@ -164,16 +164,16 @@ namespace Gnome {
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class DateEdit : Gtk.HBox, Gtk.Buildable, Gtk.Orientable, Atk.Implementor {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public DateEdit (ulong the_time, bool show_time, bool use_24_format);
-		public void @construct (ulong the_time, Gnome.DateEditFlags flags);
+		public DateEdit (time_t the_time, bool show_time, bool use_24_format);
+		public void @construct (time_t the_time, Gnome.DateEditFlags flags);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public DateEdit.flags (ulong the_time, Gnome.DateEditFlags flags);
+		public DateEdit.flags (time_t the_time, Gnome.DateEditFlags flags);
 		public int get_flags ();
-		public ulong get_initial_time ();
-		public ulong get_time ();
+		public time_t get_initial_time ();
+		public time_t get_time ();
 		public void set_flags (Gnome.DateEditFlags flags);
 		public void set_popup_range (int low_hour, int up_hour);
-		public void set_time (ulong the_time);
+		public void set_time (time_t the_time);
 		[NoAccessorMethod]
 		public Gnome.DateEditFlags dateedit_flags { get; set; }
 		[NoAccessorMethod]
@@ -299,12 +299,12 @@ namespace Gnome {
 	public class ThumbnailFactory : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public ThumbnailFactory (Gnome.ThumbnailSize size);
-		public bool can_thumbnail (string uri, string mime_type, ulong mtime);
-		public void create_failed_thumbnail (string uri, ulong mtime);
+		public bool can_thumbnail (string uri, string mime_type, time_t mtime);
+		public void create_failed_thumbnail (string uri, time_t mtime);
 		public unowned Gdk.Pixbuf generate_thumbnail (string uri, string mime_type);
-		public bool has_valid_failed_thumbnail (string uri, ulong mtime);
-		public unowned string lookup (string uri, ulong mtime);
-		public void save_thumbnail (Gdk.Pixbuf thumbnail, string uri, ulong original_mtime);
+		public bool has_valid_failed_thumbnail (string uri, time_t mtime);
+		public unowned string lookup (string uri, time_t mtime);
+		public void save_thumbnail (Gdk.Pixbuf thumbnail, string uri, time_t original_mtime);
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	[Compact]
@@ -678,7 +678,7 @@ namespace Gnome {
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static bool thumbnail_has_uri (Gdk.Pixbuf pixbuf, string uri);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public static bool thumbnail_is_valid (Gdk.Pixbuf pixbuf, string uri, ulong mtime);
+	public static bool thumbnail_is_valid (Gdk.Pixbuf pixbuf, string uri, time_t mtime);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static unowned string thumbnail_md5 (string uri);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]

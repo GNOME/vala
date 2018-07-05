@@ -3559,9 +3559,9 @@ namespace Gtk {
 	[Compact]
 	public class RecentInfo {
 		public bool exists ();
-		public ulong get_added ();
+		public time_t get_added ();
 		public int get_age ();
-		public bool get_application_info (string app_name, out unowned string app_exec, out uint count, out ulong time_);
+		public bool get_application_info (string app_name, out unowned string app_exec, out uint count, out time_t time_);
 		[CCode (array_length_type = "gsize")]
 		public string[] get_applications ();
 		public unowned string get_description ();
@@ -3570,12 +3570,12 @@ namespace Gtk {
 		public string[] get_groups ();
 		public Gdk.Pixbuf? get_icon (int size);
 		public unowned string get_mime_type ();
-		public ulong get_modified ();
+		public time_t get_modified ();
 		public bool get_private_hint ();
 		public string get_short_name ();
 		public unowned string get_uri ();
 		public string? get_uri_display ();
-		public ulong get_visited ();
+		public time_t get_visited ();
 		public bool has_application (string app_name);
 		public bool has_group (string group_name);
 		public bool is_local ();
