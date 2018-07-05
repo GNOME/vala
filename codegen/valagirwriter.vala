@@ -240,6 +240,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		if (!is_visibility (ns)) {
+			return;
+		}
+
 		if (ns.name == null)  {
 			// global namespace
 			hierarchy.insert (0, ns);
@@ -280,6 +284,9 @@ public class Vala.GIRWriter : CodeVisitor {
 	}
 
 	private void write_symbol_attributes (Symbol symbol) {
+		if (!is_introspectable (symbol)) {
+			buffer.append_printf (" introspectable=\"0\"");
+		}
 		if (symbol.version.deprecated) {
 			buffer.append_printf (" deprecated=\"1\"");
 			if (symbol.version.deprecated_since != null) {
@@ -719,6 +726,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf ("<enumeration name=\"%s\"", edomain.name);
 		write_ctype_attributes (edomain);
 		buffer.append_printf (" glib:error-domain=\"%s\"", CCodeBaseModule.get_quark_name (edomain));
+		write_symbol_attributes (edomain);
 		buffer.append_printf (">\n");
 		indent++;
 
@@ -989,7 +997,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		return true;
 	}
 
-	bool is_introspectable (Method m) {
+	bool is_method_introspectable (Method m) {
 		if (!is_type_introspectable (m.return_type)) {
 			return false;
 		}
@@ -999,6 +1007,14 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 		}
 		return true;
+	}
+
+	bool is_introspectable (Symbol sym) {
+		if (sym is Method && !is_method_introspectable ((Method) sym)) {
+			return false;
+		}
+
+		return is_visibility (sym);
 	}
 
 	private void write_signature (Method m, string tag_name, bool write_doc, bool instance = false) {
@@ -1043,9 +1059,6 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf (" throws=\"1\"");
 		}
 		write_symbol_attributes (m);
-		if (!is_introspectable (m)) {
-			buffer.append_printf (" introspectable=\"0\"");
-		}
 		buffer.append_printf (">\n");
 		indent++;
 
@@ -1097,9 +1110,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (m.tree_can_fail) {
 			buffer.append_printf (" throws=\"1\"");
 		}
-		if (!is_introspectable (m)) {
-			buffer.append_printf (" introspectable=\"0\"");
-		}
+		write_symbol_attributes (m);
 		buffer.append_printf (">\n");
 		indent++;
 
@@ -1446,5 +1457,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		return false;
+	}
+
+	private bool is_visibility (Symbol sym) {
+		return sym.get_attribute_bool ("GIR", "visible", true);
 	}
 }
