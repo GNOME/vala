@@ -1946,7 +1946,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			} else if (n == "value_array") {
 				type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "ValueArray");
 			} else if (n == "time_t") {
-				type.unresolved_symbol = new UnresolvedSymbol (null, "ulong");
+				type.unresolved_symbol = new UnresolvedSymbol (null, "time_t");
 			} else if (n == "socklen_t") {
 				type.unresolved_symbol = new UnresolvedSymbol (null, "uint32");
 			} else if (n == "mode_t") {
