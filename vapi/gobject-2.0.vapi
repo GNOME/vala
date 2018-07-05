@@ -437,7 +437,7 @@ namespace GLib {
 		[CCode (cname = "g_param_spec_variant")]
 		public ParamSpecVariant (string name, string nick, string blurb, GLib.VariantType type, GLib.Variant? default_value, GLib.ParamFlags flags);
 	}
-	[CCode (free_function = "g_type_class_unref")]
+	[CCode (free_function = "g_type_class_unref", lower_case_csuffix = "type_class")]
 	[Compact]
 	public class TypeClass {
 		public void add_private (size_t private_size);
@@ -447,10 +447,11 @@ namespace GLib {
 		public unowned GLib.TypeInterface? peek (GLib.Type iface_type);
 		public unowned GLib.TypeClass? peek_parent ();
 	}
+	[CCode (lower_case_csuffix = "type_instance")]
 	[Compact]
 	public class TypeInstance {
 	}
-	[CCode (free_function = "g_type_default_interface_unref")]
+	[CCode (free_function = "g_type_default_interface_unref", lower_case_csuffix = "type_interface")]
 	[Compact]
 	public class TypeInterface {
 		public void add_prerequisite ();
@@ -494,7 +495,7 @@ namespace GLib {
 		public void sort (GLib.CompareFunc<GLib.Value> compare_func);
 		public void sort_with_data (GLib.CompareDataFunc<GLib.Value> compare_func);
 	}
-	[CCode (cheader_filename = "glib-object.h", type_id = "g_type_plugin_get_type ()")]
+	[CCode (cheader_filename = "glib-object.h", lower_case_csuffix = "type_plugin", type_id = "g_type_plugin_get_type ()")]
 	public interface TypePlugin {
 		public void complete_interface_info (GLib.Type instance_type, GLib.Type interface_type, GLib.InterfaceInfo info);
 		public void complete_type_info (GLib.Type g_type, GLib.TypeInfo info, GLib.TypeValueTable value_table);
