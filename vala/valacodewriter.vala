@@ -290,7 +290,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	void visit_sorted (List<Symbol> symbols) {
-		if (type != CodeWriterType.EXTERNAL) {
+		if (type != CodeWriterType.EXTERNAL && type != CodeWriterType.VAPIGEN) {
 			// order of virtual methods matters for fast vapis
 			foreach (Symbol sym in symbols) {
 				sym.accept (this);
@@ -1590,7 +1590,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	void write_code_block (Block? block) {
-		if (block == null || type != CodeWriterType.DUMP) {
+		if (block == null || (type != CodeWriterType.DUMP && type != CodeWriterType.VAPIGEN)) {
 			write_string (";");
 			return;
 		}
@@ -1618,6 +1618,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	private bool check_accessibility (Symbol sym) {
 		switch (type) {
 		case CodeWriterType.EXTERNAL:
+		case CodeWriterType.VAPIGEN:
 			return sym.access == SymbolAccessibility.PUBLIC ||
 			       sym.access == SymbolAccessibility.PROTECTED;
 
@@ -1732,7 +1733,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("private ");
 		}
 
-		if (type != CodeWriterType.EXTERNAL && sym.external && !sym.external_package) {
+		if (type != CodeWriterType.EXTERNAL && type != CodeWriterType.VAPIGEN && sym.external && !sym.external_package) {
 			write_string ("extern ");
 		}
 	}
@@ -1768,5 +1769,6 @@ public enum Vala.CodeWriterType {
 	EXTERNAL,
 	INTERNAL,
 	FAST,
-	DUMP
+	DUMP,
+	VAPIGEN
 }
