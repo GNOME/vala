@@ -1,0 +1,19 @@
+Invalid Code
+
+[Compact]
+public class Foo {
+	public int field = 23;
+	public virtual int prop {
+		get { return field; }
+	}
+}
+
+[Compact]
+public class Bar : Foo {
+	public override int prop {
+		get { return base.prop; }
+	}
+}
+
+void main () {
+}

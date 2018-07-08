@@ -474,6 +474,8 @@ TESTS = \
 	semantic/class-base-type-less-accessible.test \
 	semantic/class-compact-derived-instance-field.test \
 	semantic/class-compact-interface.test \
+	semantic/class-compact-method-baseaccess.test \
+	semantic/class-compact-property-baseaccess.test \
 	semantic/class-missing-implement-interface-method.test \
 	semantic/class-missing-implement-interface-property.test \
 	semantic/class-missing-implement-method.test \
