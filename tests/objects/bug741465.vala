@@ -53,12 +53,21 @@ class Manam {
 	public virtual unowned string foo () {
 		return "Manam";
 	}
+
+	[NoWrapper]
+	public virtual int foo_plain () {
+		return 13;
+	}
 }
 
 [Compact]
 class Baz : Manam {
 	public override unowned string foo () {
 		return "Baz";
+	}
+
+	public override int foo_plain () {
+		return 23;
 	}
 }
 
@@ -78,9 +87,11 @@ void main () {
 	var manam = new Manam ();
 	assert (manam.foo () == "Manam");
 	assert (manam.prop == 24);
+	assert (manam.foo_plain () == 13);
 
 	var baz = new Baz ();
 	assert (baz.foo () == "Baz");
 	baz.prop = 42;
 	assert (baz.prop == 42);
+	assert (baz.foo_plain () == 23);
 }
