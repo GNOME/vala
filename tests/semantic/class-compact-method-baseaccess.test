@@ -1,0 +1,17 @@
+Invalid Code
+
+[Compact]
+public class Foo {
+	public virtual void bar () {
+	}
+}
+
+[Compact]
+public class Bar : Foo {
+	public override void bar () {
+		base ();
+	}
+}
+
+void main () {
+}

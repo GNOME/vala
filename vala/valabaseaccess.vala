@@ -77,6 +77,15 @@ public class Vala.BaseAccess : Expression {
 			error = true;
 			Report.error (source_reference, "Base access invalid without base class");
 			return false;
+		} else if (context.analyzer.current_class.is_compact && context.analyzer.current_method != null
+		    && !(context.analyzer.current_method is CreationMethod)) {
+			error = true;
+			Report.error (source_reference, "Base access invalid in virtual overridden method of compact class");
+			return false;
+		} else if (context.analyzer.current_class.is_compact && context.analyzer.current_property_accessor != null) {
+			error = true;
+			Report.error (source_reference, "Base access invalid in virtual overridden property of compact class");
+			return false;
 		} else {
 			foreach (var base_type in context.analyzer.current_class.get_base_types ()) {
 				if (base_type.data_type is Class) {
