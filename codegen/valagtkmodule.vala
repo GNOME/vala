@@ -230,16 +230,6 @@ public class Vala.GtkModule : GSignalModule {
 			return;
 		}
 
-		// this check is necessary because calling get_instance_private_offset otherwise will result in an error
-		if (cl.has_private_fields) {
-			var private_offset = "%s_private_offset".printf (get_ccode_name (cl));
-			ccode.add_declaration ("gint", new CCodeVariableDeclarator (private_offset));
-
-			var cgetprivcall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_get_instance_private_offset"));
-			cgetprivcall.add_argument (new CCodeIdentifier ("klass"));
-			ccode.add_assignment (new CCodeIdentifier (private_offset), cgetprivcall);
-		}
-
 		/* Gtk builder widget template */
 		var ui = cl.get_attribute_string ("GtkTemplate", "ui");
 		if (ui == null) {
