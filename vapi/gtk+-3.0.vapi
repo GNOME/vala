@@ -2634,6 +2634,8 @@ namespace Gtk {
 		public int cursor_position { get; }
 		[NoAccessorMethod]
 		public bool editable { get; set; }
+		[NoAccessorMethod]
+		public bool enable_emoji_completion { get; set; }
 		public bool has_frame { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.16")]
@@ -3270,6 +3272,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "3.2")]
 		public FontChooserWidget ();
+		[NoAccessorMethod]
+		public GLib.Action tweak_action { owned get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_font_selection_get_type ()")]
 	[Version (deprecated = true, deprecated_since = "3.2", replacement = "FontChooserWidget")]
@@ -5084,6 +5088,9 @@ namespace Gtk {
 		[NoAccessorMethod]
 		[Version (since = "3.16")]
 		public string text { owned get; set; }
+		[NoAccessorMethod]
+		[Version (since = "3.24")]
+		public bool use_markup { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_mount_operation_get_type ()")]
 	public class MountOperation : GLib.MountOperation {
@@ -10581,10 +10588,16 @@ namespace Gtk {
 		public abstract unowned Pango.FontFace? get_font_face ();
 		[Version (since = "3.2")]
 		public abstract unowned Pango.FontFamily? get_font_family ();
+		[Version (since = "3.24")]
+		public string get_font_features ();
 		[Version (since = "3.18")]
 		public abstract Pango.FontMap? get_font_map ();
 		[Version (since = "3.2")]
 		public abstract int get_font_size ();
+		[Version (since = "3.24")]
+		public string get_language ();
+		[Version (since = "3.24")]
+		public Gtk.FontChooserLevel get_level ();
 		[Version (since = "3.2")]
 		public string get_preview_text ();
 		[Version (since = "3.2")]
@@ -10597,12 +10610,22 @@ namespace Gtk {
 		public void set_font_desc (Pango.FontDescription font_desc);
 		[Version (since = "3.18")]
 		public abstract void set_font_map (Pango.FontMap? fontmap);
+		[Version (since = "3.24")]
+		public void set_language (string language);
+		[Version (since = "3.24")]
+		public void set_level (Gtk.FontChooserLevel level);
 		[Version (since = "3.2")]
 		public void set_preview_text (string text);
 		[Version (since = "3.2")]
 		public void set_show_preview_entry (bool show_preview_entry);
 		public string font { owned get; set; }
 		public Pango.FontDescription font_desc { owned get; set; }
+		[Version (since = "3.22.30")]
+		public string font_features { owned get; }
+		[Version (since = "3.22.30")]
+		public string language { owned get; set; }
+		[Version (since = "3.22.30")]
+		public Gtk.FontChooserLevel level { get; set; }
 		public string preview_text { owned get; set; }
 		public bool show_preview_entry { get; set; }
 		public virtual signal void font_activated (string fontname);
@@ -11378,6 +11401,15 @@ namespace Gtk {
 		URI,
 		DISPLAY_NAME,
 		MIME_TYPE
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FONT_CHOOSER_LEVEL_", type_id = "gtk_font_chooser_level_get_type ()")]
+	[Flags]
+	public enum FontChooserLevel {
+		FAMILY,
+		STYLE,
+		SIZE,
+		VARIATIONS,
+		FEATURES
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_IM_PREEDIT_", type_id = "gtk_im_preedit_style_get_type ()")]
 	[Version (deprecated = true, deprecated_since = "3.10")]
