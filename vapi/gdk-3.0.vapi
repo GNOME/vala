@@ -5797,6 +5797,8 @@ namespace Gdk {
 		[Version (since = "2.8")]
 		public void move_region (Cairo.Region region, int dx, int dy);
 		public void move_resize (int x, int y, int width, int height);
+		[Version (since = "3.24")]
+		public void move_to_rect (Gdk.Rectangle rect, Gdk.Gravity rect_anchor, Gdk.Gravity window_anchor, Gdk.AnchorHints anchor_hints, int rect_anchor_dx, int rect_anchor_dy);
 		public unowned GLib.List<Gdk.Window> peek_children ();
 		[Version (deprecated = true, deprecated_since = "3.22")]
 		public static void process_all_updates ();
