@@ -18,7 +18,6 @@ BindingEntry struct=false
 BindingSignal struct=false
 Border struct
 FileFilterInfo struct=false
-FixedChild struct=false
 Requisition struct
 TextIter struct
 TreeIter struct

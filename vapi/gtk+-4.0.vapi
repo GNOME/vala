@@ -6132,10 +6132,10 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class OffsetNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
-		public OffsetNode (Gsk.RenderNode child, double x_offset, double y_offset);
+		public OffsetNode (Gsk.RenderNode child, float x_offset, float y_offset);
 		public unowned Gsk.RenderNode get_child ();
-		public double get_x_offset ();
-		public double get_y_offset ();
+		public float get_x_offset ();
+		public float get_y_offset ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class OpacityNode : Gsk.RenderNode {
@@ -6177,7 +6177,7 @@ namespace Gsk {
 		public unowned Gdk.Display get_display ();
 		public unowned Gdk.Surface? get_surface ();
 		public bool realize (Gdk.Surface surface) throws GLib.Error;
-		public void render (Gsk.RenderNode root, Cairo.Region region);
+		public void render (Gsk.RenderNode root, Cairo.Region? region);
 		public Gdk.Texture render_texture (Gsk.RenderNode root, Graphene.Rect? viewport);
 		public void unrealize ();
 		public Gdk.Display display { get; construct; }
@@ -7955,13 +7955,6 @@ namespace Gtk {
 		public Fixed ();
 		public void move (Gtk.Widget widget, int x, int y);
 		public void put (Gtk.Widget widget, int x, int y);
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
-	[Compact]
-	public class FixedChild {
-		public weak Gtk.Widget widget;
-		public int x;
-		public int y;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_flow_box_get_type ()")]
 	public class FlowBox : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
