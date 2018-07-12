@@ -497,6 +497,8 @@ TESTS = \
 	semantic/constant-void.test \
 	semantic/delegate-too-few-type-arguments.test \
 	semantic/delegate-too-many-type-arguments.test \
+	semantic/enum-empty.test \
+	semantic/errordomain-empty.test \
 	semantic/field-accessibility.test \
 	semantic/field-compact-static.test \
 	semantic/field-external.test \
