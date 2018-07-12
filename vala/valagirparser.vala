@@ -3715,6 +3715,10 @@ public class Vala.GirParser : CodeVisitor {
 			deleg.external = true;
 			
 			alias.symbol = deleg;
+		} else if (type_sym != null) {
+			Report.warning (alias.source_reference, "alias `%s' for `%s' is not supported".printf (alias.get_full_name (), type_sym.get_full_name ()));
+			alias.symbol = type_sym;
+			alias.merged = true;
 		}
 
 		// inherit atributes, like type_id
