@@ -136,6 +136,7 @@ FileInfo
   .list_attributes nullable
 FileEnumerator
   .next_file nullable
+io_error_from_errno type="int" name="io_error__from_errno"
 IOStream
   .close virtual vfunc_name="close_fn" throws="GLib.IOError"
   .close_finish throws="GLib.IOError"

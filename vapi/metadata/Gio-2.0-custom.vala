@@ -186,6 +186,13 @@ namespace GLib {
 		NO_FLAGS
 	}
 
+	public errordomain IOError {
+		[CCode (cname = "vala_g_io_error_from_errno")]
+		public static GLib.IOError from_errno (int err_no) {
+			return (GLib.IOError) new GLib.Error (GLib.IOError.quark (), GLib.IOError._from_errno (err_no), "%s", GLib.strerror (err_no));
+		}
+	}
+
 	public delegate void SimpleActionActivateCallback (SimpleAction action, Variant? parameter);
 	public delegate void SimpleActionChangeStateCallback (SimpleAction action, Variant value);
 	[CCode (cheader_filename = "gio/gio.h", cname = "GAsyncReadyCallback", instance_pos = 2.9)]
@@ -501,7 +508,7 @@ namespace GLib {
 
 	[Version (deprecated_since = "vala-0.16", replacement = "IOError.from_errno")]
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_io_error_from_errno")]
-	public static unowned GLib.IOError g_io_error_from_errno (int err_no);
+	public static int g_io_error_from_errno (int err_no);
 	[Version (deprecated_since = "vala-0.16", replacement = "IOError.quark")]
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_io_error_quark")]
 	public static GLib.Quark g_io_error_quark ();
