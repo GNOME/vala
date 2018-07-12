@@ -4613,8 +4613,12 @@ namespace GLib {
 		CONNECTION_CLOSED,
 		NOT_CONNECTED,
 		MESSAGE_TOO_LARGE;
-		[CCode (cheader_filename = "gio/gio.h")]
-		public static unowned GLib.IOError from_errno (int err_no);
+		[CCode (cname = "vala_g_io_error_from_errno")]
+		public static GLib.IOError from_errno (int err_no) {
+			return (GLib.IOError) new GLib.Error (GLib.IOError.quark (), GLib.IOError._from_errno (err_no), "%s", GLib.strerror (err_no));
+		}
+		[CCode (cheader_filename = "gio/gio.h", cname = "g_io_error_from_errno")]
+		public static int _from_errno (int err_no);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.Quark quark ();
 	}
@@ -5152,7 +5156,7 @@ namespace GLib {
 	public static bool g_dbus_is_unique_name (string str);
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_io_error_from_errno")]
 	[Version (deprecated_since = "vala-0.16", replacement = "IOError.from_errno")]
-	public static unowned GLib.IOError g_io_error_from_errno (int err_no);
+	public static int g_io_error_from_errno (int err_no);
 	[CCode (cheader_filename = "gio/gio.h", cname = "g_io_error_quark")]
 	[Version (deprecated_since = "vala-0.16", replacement = "IOError.quark")]
 	public static GLib.Quark g_io_error_quark ();
