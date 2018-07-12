@@ -3086,10 +3086,17 @@ public class Vala.Parser : CodeVisitor {
 		set_attributes (en, attrs);
 
 		expect (TokenType.OPEN_BRACE);
+		var inner_begin = get_location ();
+		try {
+			// enum methods
+			while (current () != TokenType.CLOSE_BRACE) {
+				parse_declaration (en);
+			}
+		} catch (ParseError e) {
+			rollback (inner_begin);
+		}
 		do {
-			if (current () == TokenType.CLOSE_BRACE
-			    && en.get_values ().size > 0) {
-				// allow trailing comma
+			if (current () == TokenType.CLOSE_BRACE) {
 				break;
 			}
 			var value_attrs = parse_attributes ();
@@ -3143,10 +3150,17 @@ public class Vala.Parser : CodeVisitor {
 		set_attributes (ed, attrs);
 
 		expect (TokenType.OPEN_BRACE);
+		var inner_begin = get_location ();
+		try {
+			// errordomain methods
+			while (current () != TokenType.CLOSE_BRACE) {
+				parse_declaration (ed);
+			}
+		} catch (ParseError e) {
+			rollback (inner_begin);
+		}
 		do {
-			if (current () == TokenType.CLOSE_BRACE
-			    && ed.get_codes ().size > 0) {
-				// allow trailing comma
+			if (current () == TokenType.CLOSE_BRACE) {
 				break;
 			}
 			var code_attrs = parse_attributes ();
