@@ -213,7 +213,7 @@ public abstract class Vala.TypeRegisterFunction {
 			type_init.add_statement (new CCodeExpressionStatement (add_class_private_call));
 		}
 
-		if (cl != null && (cl.has_private_fields || cl.get_type_parameters ().size > 0)) {
+		if (!plugin && cl != null && (cl.has_private_fields || cl.get_type_parameters ().size > 0)) {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_instance_private"));
 			ccall.add_argument (new CCodeIdentifier (type_id_name));
 			ccall.add_argument (new CCodeIdentifier ("sizeof (%sPrivate)".printf (get_ccode_name (cl))));
