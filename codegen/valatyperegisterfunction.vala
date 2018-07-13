@@ -218,10 +218,14 @@ public abstract class Vala.TypeRegisterFunction {
 		}
 
 		if (cl != null && (cl.has_private_fields || cl.get_type_parameters ().size > 0)) {
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_instance_private"));
-			ccall.add_argument (new CCodeIdentifier (type_id_name));
-			ccall.add_argument (new CCodeIdentifier ("sizeof (%sPrivate)".printf (get_ccode_name (cl))));
-			type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("%s_private_offset".printf (get_ccode_name (cl))), ccall)));
+			if (!plugin) {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_instance_private"));
+				ccall.add_argument (new CCodeIdentifier (type_id_name));
+				ccall.add_argument (new CCodeIdentifier ("sizeof (%sPrivate)".printf (get_ccode_name (cl))));
+				type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("%s_private_offset".printf (get_ccode_name (cl))), ccall)));
+			} else {
+				type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("%s_private_offset".printf (get_ccode_name (cl))), new CCodeIdentifier ("sizeof (%sPrivate)".printf (get_ccode_name (cl))))));
+			}
 		}
 
 		if (!plugin) {
