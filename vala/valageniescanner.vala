@@ -136,25 +136,25 @@ public class Vala.Genie.Scanner {
 					switch (current[0]) {
 					case 'i':
 						if (fl_i) {
-							Report.error (get_source_reference (token_length_in_chars), _("modifier 'i' used more than once"));
+							Report.error (get_source_reference (token_length_in_chars), _("modifier '%c' used more than once").printf ('i'));
 						}
 						fl_i = true;
 						break;
 					case 's':
 						if (fl_s) {
-							Report.error (get_source_reference (token_length_in_chars), _("modifier 's' used more than once"));
+							Report.error (get_source_reference (token_length_in_chars), _("modifier '%c' used more than once").printf ('s'));
 						}
 						fl_s = true;
 						break;
 					case 'm':
 						if (fl_m) {
-							Report.error (get_source_reference (token_length_in_chars), _("modifier 'm' used more than once"));
+							Report.error (get_source_reference (token_length_in_chars), _("modifier '%c' used more than once").printf ('m'));
 						}
 						fl_m = true;
 						break;
 					case 'x':
 						if (fl_x) {
-							Report.error (get_source_reference (token_length_in_chars), _("modifier 'x' used more than once"));
+							Report.error (get_source_reference (token_length_in_chars), _("modifier '%c' used more than once").printf ('x'));
 						}
 						fl_x = true;
 						break;
