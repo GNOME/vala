@@ -1,3 +1,24 @@
+Vala 0.40.8
+===========
+ * Various improvements and bug fixes:
+  - Fix links in the Manual
+  - libvaladoc: Change link to Valadoc wiki page for HTML doclet
+  - valadoc: Use HTML5 doctype in HTML doclet
+  - codegen: Let methods return -1 on error by default if possible [#526]
+  - Allow TypeModule subclasses as parameter-type in module-init-method [#648]
+  - girparser: Allow changing the type of constants using metadata [#643]
+  - girwriter: Add boolean GIR visible attribute to allow skipping symbols
+  - vala: Report error for error-domains without any code
+  - parser: Accept "empty" enums/error-domains [#253]
+  - codewriter: Output bodies of code-blocks if in VAPIGEN mode [#253]
+
+ * Bindings:
+  - gobject-2.0: Add lower_case_csuffix attributes to Type* symbols
+  - gdk-3.0,gtk+-3.0: Update to 3.23.0+df045423
+  - gio-2.0: Add custom IOError.from_errno() to make it work as expected [#253]
+  - gtk+-4.0: Update to 3.94.0+bf5f27c6
+  - gstreamer-rtsp-server-1.0: Update from 1.14+ git master [#653]
+
 Vala 0.40.7
 ===========
  * Various improvements and bug fixes:
