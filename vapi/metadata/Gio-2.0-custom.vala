@@ -29,10 +29,10 @@ namespace GLib {
 
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_connection_get_type ()")]
 	public class DBusConnection : GLib.Object {
-		[CCode (cname = "g_dbus_connection_new", finish_function = "g_dbus_connection_new_finish")]
+		[CCode (cname = "g_dbus_connection_new", finish_name = "g_dbus_connection_new_finish")]
 		[Version (deprecated_since = "vala-0.36", replacement = "DBusConnection")]
 		public static async GLib.DBusConnection @new (GLib.IOStream stream, string? guid, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (cname = "g_dbus_connection_new_for_address", finish_function = "g_dbus_connection_new_for_address_finish")]
+		[CCode (cname = "g_dbus_connection_new_for_address", finish_name = "g_dbus_connection_new_for_address_finish")]
 		[Version (deprecated_since = "vala-0.36", replacement = "DBusConnection.for_address")]
 		public static async GLib.DBusConnection @new_for_address (string address, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async T get_proxy<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError; 
@@ -43,25 +43,25 @@ namespace GLib {
 
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_object_manager_client_get_type ()")]
 	public class DBusObjectManagerClient : GLib.Object {
-		[CCode (cname = "g_dbus_object_manager_client_new", finish_function = "g_dbus_object_manager_client_new_finish")]
+		[CCode (cname = "g_dbus_object_manager_client_new", finish_name = "g_dbus_object_manager_client_new_finish")]
 		[Version (deprecated_since = "vala-0.36", replacement = "DBusObjectManagerClient")]
 		public static async GLib.DBusObjectManagerClient @new (GLib.DBusConnection connection, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc? get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (cname = "g_dbus_object_manager_client_new_for_bus", finish_function = "g_dbus_object_manager_client_new_for_bus_finish")]
+		[CCode (cname = "g_dbus_object_manager_client_new_for_bus", finish_name = "g_dbus_object_manager_client_new_for_bus_finish")]
 		[Version (deprecated_since = "vala-0.36", replacement = "DBusObjectManagerClient.for_bus")]
 		public static async GLib.DBusObjectManagerClient @new_for_bus (GLib.BusType bus_type, GLib.DBusObjectManagerClientFlags flags, string name, string object_path, [CCode (delegate_target_pos = 5.33333, destroy_notify_pos = 5.66667)] owned GLib.DBusProxyTypeFunc? get_proxy_type_func, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 
 	public class DBusProxy : GLib.Object {
-		[CCode (cname = "g_dbus_proxy_new", finish_function = "g_dbus_proxy_new_finish")]
+		[CCode (cname = "g_dbus_proxy_new", finish_name = "g_dbus_proxy_new_finish")]
 		[Version (deprecated_since = "vala-0.36", replacement = "DBusProxy")]
 		public static async GLib.DBusProxy @new (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string? name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		[CCode (cname = "g_dbus_proxy_new_for_bus", finish_function = "g_dbus_proxy_new_for_bus_finish")]
+		[CCode (cname = "g_dbus_proxy_new_for_bus", finish_name = "g_dbus_proxy_new_for_bus_finish")]
 		[Version (deprecated_since = "vala-0.36", replacement = "DBusProxy.for_bus")]
 		public static async GLib.DBusProxy create_for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
 
 	public class DataInputStream : GLib.BufferedInputStream {
-		[CCode (cname = "g_data_input_stream_read_line_async", finish_function = "g_data_input_stream_read_line_finish_utf8")]
+		[CCode (cname = "g_data_input_stream_read_line_async", finish_name = "g_data_input_stream_read_line_finish_utf8")]
 		public async string? read_line_utf8_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t length = null) throws GLib.IOError;
 	}
 
@@ -155,11 +155,11 @@ namespace GLib {
 	}
 
 	public interface AsyncInitable : GLib.Object {
-		[CCode (finish_function = "g_async_initable_new_finish")]
+		[CCode (finish_name = "g_async_initable_new_finish")]
 		public static async GLib.Object new_async (GLib.Type object_type, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable, ...) throws GLib.Error;
-		[CCode (finish_function = "g_async_initable_new_finish")]
+		[CCode (finish_name = "g_async_initable_new_finish")]
 		public static async GLib.Object new_valist_async (GLib.Type object_type, string first_property_name, va_list var_args, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
-		[CCode (finish_function = "g_async_initable_new_finish")]
+		[CCode (finish_name = "g_async_initable_new_finish")]
 		[Version (deprecated = true, deprecated_since = "2.54", since = "2.22")]
 		public static async GLib.Object newv_async (GLib.Type object_type, [CCode (array_length_pos = 1.1)] GLib.Parameter[] parameters, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null);
 	}
