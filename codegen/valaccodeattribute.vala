@@ -470,6 +470,9 @@ public class Vala.CCodeAttribute : AttributeCache {
 					_finish_name = ccode.get_string ("finish_name");
 					if (_finish_name == null) {
 						_finish_name = ccode.get_string ("finish_function");
+						if (_finish_name != null) {
+							Report.deprecated (node.source_reference, "[CCode (finish_function = \"...\")] is deprecated, use [CCode (finish_name = \"...\")] instead.");
+						}
 					}
 				}
 				if (_finish_name == null) {
