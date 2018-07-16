@@ -2159,9 +2159,9 @@ namespace GLib {
 		[CCode (cname = "g_once")]
 		public unowned G once (OnceFunc<G> function);
 		[Version (since = "2.14")]
-		public static bool init_enter ([CCode (ctype="volatile gsize *")] size_t *value);
+		public static bool init_enter ([CCode (type="volatile gsize *")] size_t *value);
 		[Version (since = "2.14")]
-		public static void init_leave ([CCode (ctype="volatile gsize *")] size_t *value, size_t set_value);
+		public static void init_leave ([CCode (type="volatile gsize *")] size_t *value, size_t set_value);
 		public OnceStatus status;
 	}
 
