@@ -581,6 +581,8 @@ namespace Gst {
 			[Version (since = "1.2")]
 			public uint64 get_max_bitrate ();
 			public int64 get_max_lateness ();
+			[Version (since = "1.16")]
+			public Gst.ClockTime get_processing_deadline ();
 			public Gst.ClockTime get_render_delay ();
 			public bool get_sync ();
 			public uint64 get_throttle_time ();
@@ -615,6 +617,8 @@ namespace Gst {
 			[Version (since = "1.2")]
 			public void set_max_bitrate (uint64 max_bitrate);
 			public void set_max_lateness (int64 max_lateness);
+			[Version (since = "1.16")]
+			public void set_processing_deadline (Gst.ClockTime processing_deadline);
 			public void set_qos_enabled (bool enabled);
 			public void set_render_delay (Gst.ClockTime delay);
 			public void set_sync (bool sync);
@@ -642,6 +646,8 @@ namespace Gst {
 			[Version (since = "1.2")]
 			public uint64 max_bitrate { get; set; }
 			public int64 max_lateness { get; set; }
+			[Version (since = "1.16")]
+			public uint64 processing_deadline { get; set; }
 			[NoAccessorMethod]
 			public bool qos { get; set; }
 			public uint64 render_delay { get; set; }

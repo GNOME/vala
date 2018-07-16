@@ -917,6 +917,9 @@ namespace Gst {
 		public static Gst.Buffer audio_buffer_clip (owned Gst.Buffer buffer, Gst.Segment segment, int rate, int bpf);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_buffer_reorder_channels")]
 		public static bool audio_buffer_reorder_channels (Gst.Buffer buffer, Gst.Audio.Format format, [CCode (array_length_cname = "channels", array_length_pos = 2.5)] Gst.Audio.ChannelPosition[] from, [CCode (array_length_cname = "channels", array_length_pos = 2.5)] Gst.Audio.ChannelPosition[] to);
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_buffer_truncate")]
+		[Version (since = "1.16")]
+		public static Gst.Buffer audio_buffer_truncate (owned Gst.Buffer buffer, int bpf, size_t trim, size_t samples);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_get_fallback_mask")]
 		[Version (since = "1.8")]
 		public static uint64 audio_channel_get_fallback_mask (int channels);

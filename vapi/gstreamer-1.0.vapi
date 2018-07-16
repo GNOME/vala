@@ -1730,6 +1730,8 @@ namespace Gst {
 		public int lockstate;
 		public int refcount;
 		public GLib.Type type;
+		[Version (since = "1.16")]
+		public void add_parent (Gst.MiniObject parent);
 		[CCode (simple_generics = true)]
 		public T get_qdata<T> (GLib.Quark quark);
 		public bool is_writable ();
@@ -1737,6 +1739,8 @@ namespace Gst {
 		[ReturnsModifiedPointer]
 		public Gst.MiniObject make_writable ();
 		public unowned Gst.MiniObject @ref ();
+		[Version (since = "1.16")]
+		public void remove_parent (Gst.MiniObject parent);
 		public static bool replace (ref Gst.MiniObject? olddata, Gst.MiniObject? newdata);
 		[CCode (simple_generics = true)]
 		public void set_qdata<T> (GLib.Quark quark, owned T data);
