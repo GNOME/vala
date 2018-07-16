@@ -4994,14 +4994,18 @@ namespace Gdk {
 		public unowned Gdk.Surface? get_drag_surface ();
 		public unowned Gdk.ContentFormats get_formats ();
 		public Gdk.DragAction get_selected_action ();
-		public Gdk.DragAction get_suggested_action ();
 		public void set_hotspot (int hot_x, int hot_y);
+		[NoAccessorMethod]
+		public Gdk.DragAction actions { get; set; }
 		[NoAccessorMethod]
 		public Gdk.ContentProvider content { owned get; construct; }
 		public Gdk.Device device { get; construct; }
 		public Gdk.Display display { get; }
 		public Gdk.ContentFormats formats { get; construct; }
-		public signal void action_changed (Gdk.DragAction action);
+		[NoAccessorMethod]
+		public Gdk.DragAction selected_action { get; set; }
+		[NoAccessorMethod]
+		public Gdk.Surface surface { owned get; construct; }
 		public signal void cancel (Gdk.DragCancelReason reason);
 		public signal void dnd_finished ();
 		public signal void drop_performed ();
@@ -5371,11 +5375,14 @@ namespace Gdk {
 		public void unfullscreen ();
 		public void unmaximize ();
 		public void unstick ();
-		public void withdraw ();
 		public Gdk.Cursor cursor { get; set; }
 		public Gdk.Display display { get; construct; }
+		[NoAccessorMethod]
+		public bool mapped { get; }
 		public Gdk.SurfaceState state { get; }
 		public signal void moved_to_rect ([CCode (type = "gpointer")] Gdk.Rectangle flipped_rect, [CCode (type = "gpointer")] Gdk.Rectangle final_rect, bool flipped_x, bool flipped_y);
+		public signal bool render (Cairo.Region object);
+		public signal void size_changed (int object, int p0);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_texture_get_type ()")]
 	public abstract class Texture : GLib.Object, Gdk.Paintable {
@@ -5609,7 +5616,6 @@ namespace Gdk {
 		NOTHING,
 		DELETE,
 		DESTROY,
-		EXPOSE,
 		MOTION_NOTIFY,
 		BUTTON_PRESS,
 		BUTTON_RELEASE,
@@ -5619,8 +5625,6 @@ namespace Gdk {
 		LEAVE_NOTIFY,
 		FOCUS_CHANGE,
 		CONFIGURE,
-		MAP,
-		UNMAP,
 		PROXIMITY_IN,
 		PROXIMITY_OUT,
 		DRAG_ENTER,
@@ -10831,8 +10835,6 @@ namespace Gtk {
 		public void buffer_to_surface_coords (Gtk.TextWindowType win, int buffer_x, int buffer_y, out int window_x, out int window_y);
 		[NoWrapper]
 		public virtual Gtk.TextBuffer create_buffer ();
-		[NoWrapper]
-		public virtual void draw_layer (Gtk.TextViewLayer layer, Cairo.Context cr);
 		public bool forward_display_line (ref Gtk.TextIter iter);
 		public bool forward_display_line_end (ref Gtk.TextIter iter);
 		public bool get_accepts_tab ();
@@ -10892,6 +10894,8 @@ namespace Gtk {
 		public void set_tabs (Pango.TabArray tabs);
 		public void set_top_margin (int top_margin);
 		public void set_wrap_mode (Gtk.WrapMode wrap_mode);
+		[NoWrapper]
+		public virtual void snapshot_layer (Gtk.TextViewLayer layer, Gtk.Snapshot snapshot);
 		public bool starts_display_line (Gtk.TextIter iter);
 		public void window_to_buffer_coords (Gtk.TextWindowType win, int window_x, int window_y, out int buffer_x, out int buffer_y);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -13782,7 +13786,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static int distribute_natural_allocation (int extra_space, uint n_requested_sizes, Gtk.RequestedSize sizes);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gdk.Drag drag_begin_with_coordinates (Gtk.Widget widget, Gdk.Device? device, Gdk.ContentFormats targets, Gdk.DragAction actions, int x, int y);
+	public static unowned Gdk.Drag drag_begin (Gtk.Widget widget, Gdk.Device? device, Gdk.ContentFormats targets, Gdk.DragAction actions, int x, int y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_cancel (Gdk.Drag drag);
 	[CCode (cheader_filename = "gtk/gtk.h")]

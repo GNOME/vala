@@ -49,7 +49,6 @@ EventButton skip
 EventConfigure skip
 EventCrossing skip
 EventDND skip
-EventExpose skip
 EventFocus skip
 EventGrabBroken skip
 EventKey skip
