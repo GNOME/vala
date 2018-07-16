@@ -563,7 +563,7 @@
 <para>bitwise-or-expression:</para><itemizedlist><listitem override="none">
 <para>bitwise-xor-expression <emphasis role="strong">|</emphasis> bitwise-xor-expression</para></listitem></itemizedlist>
 <para> bitwise-xor-expression:</para><itemizedlist><listitem override="none">
-<para>bitwise-and-expression <emphasis role="strong">&amp;</emphasis> bitwise-and-expression</para></listitem></itemizedlist>
+<para>bitwise-and-expression <emphasis role="strong">^</emphasis> bitwise-and-expression</para></listitem></itemizedlist>
 <para> bitwise-and-expression:</para><itemizedlist><listitem override="none">
 <para>equality-expression <emphasis role="strong">&amp;</emphasis> equality-expression</para></listitem></itemizedlist>
 <para> bitwise-not-expression:</para><itemizedlist><listitem override="none">
@@ -2680,7 +2680,7 @@
 <para>class, struct</para></entry><entry colsep="1" rowsep="1"/></row><row rowsep="1"><entry colsep="1" rowsep="1">
 <para>ModuleInit</para></entry><entry colsep="1" rowsep="1">
 <para>method</para></entry><entry colsep="1" rowsep="1">
-<para>Marks the associated type as dynamic, and marks the method as a <ulink url="http://valadoc.org/#!api=gobject-2.0/GLib.TypeModule">TypeModule</ulink> init function. See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/TypeModuleSample#">TypeModule example</ulink></para></entry></row><row rowsep="1"><entry colsep="1" rowsep="1">
+<para>Marks the associated type as dynamic, and marks the method as a <ulink url="https://valadoc.org/gobject-2.0/GLib.TypeModule">TypeModule</ulink> init function. See <ulink url="https://wiki.gnome.org/Projects/Vala/TypeModuleSample">TypeModule example</ulink></para></entry></row><row rowsep="1"><entry colsep="1" rowsep="1">
 <para>NoAccessorMethod</para></entry><entry colsep="1" rowsep="1">
 <para>property</para></entry><entry colsep="1" rowsep="1"/></row><row rowsep="1"><entry colsep="1" rowsep="1">
 <para>NoArrayLength</para></entry><entry colsep="1" rowsep="1">
