@@ -291,6 +291,9 @@ public class Vala.CCodeAttribute : AttributeCache {
 					_ctype = ccode.get_string ("type");
 					if (_ctype == null) {
 						_ctype = ccode.get_string ("ctype");
+						if (_ctype != null) {
+							Report.deprecated (node.source_reference, "[CCode (ctype = \"...\")] is deprecated, use [CCode (type = \"...\")] instead.");
+						}
 					}
 				}
 				ctype_set = true;
