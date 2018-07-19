@@ -2414,6 +2414,7 @@ namespace Gtk {
 	public class CssProvider : GLib.Object, Gtk.StyleProvider {
 		[CCode (has_construct_function = false)]
 		public CssProvider ();
+		[Version (deprecated = true, deprecated_since = "3.24")]
 		public static unowned Gtk.CssProvider get_default ();
 		public static unowned Gtk.CssProvider get_named (string name, string? variant);
 		[CCode (cname = "gtk_css_provider_load_from_data")]
@@ -2928,6 +2929,47 @@ namespace Gtk {
 		public Gtk.PropagationPhase propagation_phase { get; set; }
 		[Version (since = "3.14")]
 		public Gtk.Widget widget { get; construct; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_key_get_type ()")]
+	public class EventControllerKey : Gtk.EventController {
+		[CCode (has_construct_function = false, type = "GtkEventController*")]
+		public EventControllerKey (Gtk.Widget widget);
+		public bool forward (Gtk.Widget widget);
+		public uint get_group ();
+		[Version (since = "3.24")]
+		public unowned Gtk.IMContext get_im_context ();
+		public void set_im_context (Gtk.IMContext im_context);
+		public signal void focus_in ();
+		public signal void focus_out ();
+		public signal void im_update ();
+		public signal bool key_pressed (uint object, uint p0, Gdk.ModifierType p1);
+		public signal void key_released (uint object, uint p0, Gdk.ModifierType p1);
+		public signal bool modifiers (Gdk.ModifierType object);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_motion_get_type ()")]
+	public class EventControllerMotion : Gtk.EventController {
+		[CCode (has_construct_function = false, type = "GtkEventController*")]
+		[Version (since = "3.24")]
+		public EventControllerMotion (Gtk.Widget widget);
+		public signal void enter (double x, double y);
+		public signal void leave ();
+		public signal void motion (double x, double y);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_scroll_get_type ()")]
+	public class EventControllerScroll : Gtk.EventController {
+		[CCode (has_construct_function = false, type = "GtkEventController*")]
+		[Version (since = "3.24")]
+		public EventControllerScroll (Gtk.Widget widget, Gtk.EventControllerScrollFlags flags);
+		[Version (since = "3.24")]
+		public Gtk.EventControllerScrollFlags get_flags ();
+		[Version (since = "3.24")]
+		public void set_flags (Gtk.EventControllerScrollFlags flags);
+		[Version (since = "3.24")]
+		public Gtk.EventControllerScrollFlags flags { get; set; }
+		public signal void decelerate (double vel_x, double vel_y);
+		public signal void scroll (double dx, double dy);
+		public signal void scroll_begin ();
+		public signal void scroll_end ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_expander_get_type ()")]
 	public class Expander : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
@@ -3533,6 +3575,22 @@ namespace Gtk {
 		public bool exclusive { get; set; }
 		[Version (since = "3.14")]
 		public bool touch_only { get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_stylus_get_type ()")]
+	public class GestureStylus : Gtk.GestureSingle {
+		[CCode (has_construct_function = false, type = "GtkGesture*")]
+		[Version (since = "3.24")]
+		public GestureStylus (Gtk.Widget widget);
+		[Version (since = "3.24")]
+		public bool get_axes (Gdk.AxisUse axes, out double values);
+		[Version (since = "3.24")]
+		public bool get_axis (Gdk.AxisUse axis, out double value);
+		[Version (since = "3.24")]
+		public unowned Gdk.DeviceTool? get_device_tool ();
+		public signal void down (double object, double p0);
+		public signal void motion (double object, double p0);
+		public signal void proximity (double object, double p0);
+		public signal void up (double object, double p0);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_swipe_get_type ()")]
 	public class GestureSwipe : Gtk.GestureSingle {
@@ -11365,6 +11423,17 @@ namespace Gtk {
 	public enum EntryIconPosition {
 		PRIMARY,
 		SECONDARY
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_EVENT_CONTROLLER_SCROLL_", type_id = "gtk_event_controller_scroll_flags_get_type ()")]
+	[Flags]
+	[Version (since = "3.24")]
+	public enum EventControllerScrollFlags {
+		NONE,
+		VERTICAL,
+		HORIZONTAL,
+		DISCRETE,
+		KINETIC,
+		BOTH_AXES
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_EVENT_SEQUENCE_", type_id = "gtk_event_sequence_state_get_type ()")]
 	[Version (since = "3.14")]
