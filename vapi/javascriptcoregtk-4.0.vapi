@@ -155,7 +155,9 @@ namespace JSC {
 	public class Class : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Class ();
+		public JSC.Value add_constructor_variadic (string? name, [CCode (delegate_target_pos = 2.33333, destroy_notify_pos = 2.66667)] owned GLib.Callback callback, GLib.Type return_type);
 		public JSC.Value add_constructorv (string? name, [CCode (delegate_target_pos = 2.33333, destroy_notify_pos = 2.66667)] owned GLib.Callback callback, GLib.Type return_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 3.5, array_length_type = "guint")] GLib.Type[]? parameter_types);
+		public void add_method_variadic (string name, [CCode (delegate_target_pos = 2.33333, destroy_notify_pos = 2.66667)] owned GLib.Callback callback, GLib.Type return_type);
 		public void add_methodv (string name, [CCode (delegate_target_pos = 2.33333, destroy_notify_pos = 2.66667)] owned GLib.Callback callback, GLib.Type return_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 3.5, array_length_type = "guint")] GLib.Type[]? parameter_types);
 		public void add_property (string name, GLib.Type property_type, [CCode (scope = "async")] GLib.Callback? getter, [CCode (scope = "async")] GLib.Callback? setter, void* user_data, GLib.DestroyNotify? destroy_notify);
 		public unowned string get_name ();
@@ -169,11 +171,14 @@ namespace JSC {
 	public class Context : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Context ();
+		public JSC.CheckSyntaxResult check_syntax (string code, ssize_t length, JSC.CheckSyntaxMode mode, string uri, uint line_number, out JSC.Exception exception);
 		public void clear_exception ();
 		public JSC.Value evaluate (string code, ssize_t length);
-		public JSC.Value evaluate_with_source_uri (string code, ssize_t length, string uri);
+		public JSC.Value evaluate_in_object (string code, ssize_t length, void* object_instance, JSC.Class? object_class, string uri, uint line_number, out JSC.Value object);
+		public JSC.Value evaluate_with_source_uri (string code, ssize_t length, string uri, uint line_number);
 		public static unowned JSC.Context? get_current ();
 		public unowned JSC.Exception? get_exception ();
+		public JSC.Value get_global_object ();
 		public JSC.Value get_value (string name);
 		public unowned JSC.VirtualMachine get_virtual_machine ();
 		public void pop_exception_handler ();
@@ -201,9 +206,13 @@ namespace JSC {
 		[CCode (has_construct_function = false)]
 		public Value.array_from_garray (JSC.Context context, GLib.GenericArray<JSC.Value>? array);
 		[CCode (has_construct_function = false)]
+		public Value.array_from_strv (JSC.Context context, [CCode (array_length = false, array_null_terminated = true)] global::string[] strv);
+		[CCode (has_construct_function = false)]
 		public Value.boolean (JSC.Context context, bool value);
 		public JSC.Value constructor_callv ([CCode (array_length_cname = "n_parameters", array_length_pos = 0.5, array_length_type = "guint")] JSC.Value[]? parameters);
 		public JSC.Value function_callv ([CCode (array_length_cname = "n_parameters", array_length_pos = 0.5, array_length_type = "guint")] JSC.Value[]? parameters);
+		[CCode (has_construct_function = false)]
+		public Value.function_variadic (JSC.Context context, global::string? name, [CCode (delegate_target_pos = 3.33333, destroy_notify_pos = 3.66667)] owned GLib.Callback callback, GLib.Type return_type);
 		[CCode (has_construct_function = false)]
 		public Value.functionv (JSC.Context context, global::string? name, [CCode (delegate_target_pos = 3.33333, destroy_notify_pos = 3.66667)] owned GLib.Callback callback, GLib.Type return_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 4.5, array_length_type = "guint")] GLib.Type[]? parameter_types);
 		public unowned JSC.Context get_context ();
@@ -268,6 +277,20 @@ namespace JSC {
 		public weak JSC.ClassHasPropertyFunction has_property;
 		public weak JSC.ClassDeletePropertyFunction delete_property;
 		public weak JSC.ClassEnumeratePropertiesFunction enumerate_properties;
+	}
+	[CCode (cheader_filename = "jsc/jsc.h", cprefix = "JSC_CHECK_SYNTAX_MODE_", has_type_id = false)]
+	public enum CheckSyntaxMode {
+		SCRIPT,
+		MODULE
+	}
+	[CCode (cheader_filename = "jsc/jsc.h", cprefix = "JSC_CHECK_SYNTAX_RESULT_", has_type_id = false)]
+	public enum CheckSyntaxResult {
+		SUCCESS,
+		RECOVERABLE_ERROR,
+		IRRECOVERABLE_ERROR,
+		UNTERMINATED_LITERAL_ERROR,
+		OUT_OF_MEMORY_ERROR,
+		STACK_OVERFLOW_ERROR
 	}
 	[CCode (cheader_filename = "jsc/jsc.h", cprefix = "JSC_VALUE_PROPERTY_", has_type_id = false)]
 	[Flags]
