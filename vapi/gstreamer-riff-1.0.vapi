@@ -14,6 +14,8 @@ namespace Gst {
 			public const int AAC_pm;
 			[CCode (cheader_filename = "gst/riff/riff.h", cname = "GST_RIFF_WAVE_FORMAT_ADPCM")]
 			public const int ADPCM;
+			[CCode (cheader_filename = "gst/riff/riff.h", cname = "GST_RIFF_WAVE_FORMAT_ADPCM_G722")]
+			public const int ADPCM_G722;
 			[CCode (cheader_filename = "gst/riff/riff.h", cname = "GST_RIFF_WAVE_FORMAT_ADPCM_IMA_DK3")]
 			public const int ADPCM_IMA_DK3;
 			[CCode (cheader_filename = "gst/riff/riff.h", cname = "GST_RIFF_WAVE_FORMAT_ADPCM_IMA_DK4")]
@@ -26,6 +28,8 @@ namespace Gst {
 			public const int AMR_NB;
 			[CCode (cheader_filename = "gst/riff/riff.h", cname = "GST_RIFF_WAVE_FORMAT_AMR_WB")]
 			public const int AMR_WB;
+			[CCode (cheader_filename = "gst/riff/riff.h", cname = "GST_RIFF_WAVE_FORMAT_ANTEX_ADPCME")]
+			public const int ANTEX_ADPCME;
 			[CCode (cheader_filename = "gst/riff/riff.h", cname = "GST_RIFF_WAVE_FORMAT_APTX")]
 			public const int APTX;
 			[CCode (cheader_filename = "gst/riff/riff.h", cname = "GST_RIFF_WAVE_FORMAT_AUDIOFILE_AF10")]

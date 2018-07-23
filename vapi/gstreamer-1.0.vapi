@@ -805,7 +805,7 @@ namespace Gst {
 		public void disable_sync_message_emission ();
 		public void enable_sync_message_emission ();
 		[Version (since = "1.14")]
-		public void get_pollfd (GLib.PollFD fd);
+		public GLib.PollFD get_pollfd ();
 		public bool have_pending ();
 		public Gst.Message? peek ();
 		public Gst.Message? poll (Gst.MessageType events, Gst.ClockTime timeout);
