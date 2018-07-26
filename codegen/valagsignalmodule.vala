@@ -623,9 +623,7 @@ public class Vala.GSignalModule : GObjectModule {
 				else
 					connect_func = get_dynamic_signal_connect_after_wrapper_name ((DynamicSignal) sig);
 			} else {
-				if ((m != null && m.closure) && in_gobject_instance (m)) {
-					connect_func = "g_signal_connect_closure";
-				} else if ((m != null && m.closure) || (dt != null && dt.value_owned)) {
+				if ((m != null && m.closure) || (dt != null && dt.value_owned)) {
 					connect_func = "g_signal_connect_data";
 				} else if (m != null && in_gobject_instance (m)) {
 					connect_func = "g_signal_connect_object";
@@ -723,40 +721,11 @@ public class Vala.GSignalModule : GObjectModule {
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
 
-		if ((m != null && m.closure) && in_gobject_instance (m)) {
-			// g_signal_connect_closure
+		// third resp. sixth argument: handler
+		ccall.add_argument (new CCodeCastExpression (get_cvalue (handler), "GCallback"));
 
-			// third argument: closure
-			var closure_var = get_temp_variable (new CType ("GClosure*"), false, null, false);
-			var closure_ref = get_variable_cexpression (closure_var.name);
-			emit_temp_var (closure_var);
-
-			var closure_call = new CCodeFunctionCall (new CCodeIdentifier ("g_cclosure_new"));
-			// callback_func
-			closure_call.add_argument (new CCodeCastExpression (get_cvalue (handler), "GCallback"));
-			// user_data
-			CCodeExpression handler_destroy_notify;
-			closure_call.add_argument (get_delegate_target_cexpression (handler, out handler_destroy_notify));
-			// destroy_data
-			closure_call.add_argument (new CCodeCastExpression (handler_destroy_notify, "GClosureNotify"));
-
-			ccode.add_assignment (closure_ref, closure_call);
-
-			var watch_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_watch_closure"));
-			watch_call.add_argument (new CCodeCastExpression (get_result_cexpression ("self"), "GObject *"));
-			watch_call.add_argument (closure_ref);
-
-			ccode.add_expression (watch_call);
-
-			ccall.add_argument (closure_ref);
-
-			// fourth argument: after?
-			ccall.add_argument (new CCodeConstant (after ? "TRUE" : "FALSE"));
-		} else if (m != null && m.closure) {
+		if (m != null && m.closure) {
 			// g_signal_connect_data
-
-			// third argument: handler
-			ccall.add_argument (new CCodeCastExpression (get_cvalue (handler), "GCallback"));
 
 			// fourth argument: user_data
 			CCodeExpression handler_destroy_notify;
@@ -773,9 +742,6 @@ public class Vala.GSignalModule : GObjectModule {
 		} else if (m != null && m.binding == MemberBinding.INSTANCE) {
 			// g_signal_connect_object or g_signal_handlers_disconnect_matched
 			// or dynamic_signal_connect or dynamic_signal_disconnect
-
-			// third resp. sixth argument: handler
-			ccall.add_argument (new CCodeCastExpression (get_cvalue (handler), "GCallback"));
 
 			// fourth resp. seventh argument: object/user_data
 			if (handler is MemberAccess) {
@@ -799,9 +765,6 @@ public class Vala.GSignalModule : GObjectModule {
 					ccall.add_argument (new CCodeConstant ("G_CONNECT_AFTER"));
 			}
 		} else if (dt != null && dt.delegate_symbol.has_target) {
-			// third argument: handler
-			ccall.add_argument (new CCodeCastExpression (get_cvalue (handler), "GCallback"));
-
 			// fourth argument: user_data
 			CCodeExpression handler_destroy_notify;
 			ccall.add_argument (get_delegate_target_cexpression (handler, out handler_destroy_notify));
@@ -818,9 +781,6 @@ public class Vala.GSignalModule : GObjectModule {
 		} else {
 			// g_signal_connect or g_signal_connect_after or g_signal_handlers_disconnect_matched
 			// or dynamic_signal_connect or dynamic_signal_disconnect
-
-			// third resp. sixth argument: handler
-			ccall.add_argument (new CCodeCastExpression (get_cvalue (handler), "GCallback"));
 
 			// fourth resp. seventh argument: user_data
 			ccall.add_argument (new CCodeConstant ("NULL"));

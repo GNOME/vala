@@ -321,7 +321,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			ccode.add_assignment (get_this_cexpression (), new CCodeCastExpression (ccall, get_ccode_name (current_class) + "*"));
 
 			if (current_method.body.captured) {
-				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (current_method.body))), "self"), get_this_cexpression ());
+				// capture self after setting it
+				var ref_call = new CCodeFunctionCall (get_dup_func_expression (new ObjectType (current_class), expr.source_reference));
+				ref_call.add_argument (get_this_cexpression ());
+
+				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (current_method.body))), "self"), ref_call);
 			}
 
 			if (!current_class.is_compact && current_class.get_type_parameters ().size > 0) {

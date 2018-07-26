@@ -2039,7 +2039,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				bool in_creation_method_with_chainup = (current_method is CreationMethod && current_class != null && current_class.base_class != null);
 
 				if (get_this_type () != null && (!in_creation_method_with_chainup || current_method.body != b)) {
-					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "self"), get_result_cexpression ("self"));
+					var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_data_type_for_symbol (current_type_symbol), b.source_reference));
+					ref_call.add_argument (get_result_cexpression ("self"));
+
+					// never increase reference count for self in finalizers to avoid infinite recursion on following unref
+					var instance = (is_in_destructor () ? (CCodeExpression) new CCodeIdentifier ("self") : (CCodeExpression) ref_call);
+
+					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "self"), instance);
 				}
 
 				if (current_method != null) {
@@ -2223,6 +2229,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				unref_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)));
 				ccode.add_expression (unref_call);
 				ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), new CCodeConstant ("NULL"));
+			} else {
+				var this_type = get_this_type ();
+				if (this_type != null) {
+					this_type = this_type.copy ();
+					this_type.value_owned = true;
+					if (this_type.is_disposable () && !is_in_destructor ()) {
+						// reference count for self is not increased in finalizers
+						var this_value = new GLibValue (get_data_type_for_symbol (current_type_symbol), new CCodeIdentifier ("self"), true);
+						ccode.add_expression (destroy_value (this_value));
+					}
+				}
 			}
 
 			var data_free = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
