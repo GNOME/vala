@@ -5545,7 +5545,7 @@ namespace GLib {
 		public int compare (Variant other);
 
 		public Variant.boolean (bool value);
-		public Variant.byte (uchar value);
+		public Variant.byte (uint8 value);
 		public Variant.int16 (int16 value);
 		public Variant.uint16 (uint16 value);
 		public Variant.int32 (int32 value);
