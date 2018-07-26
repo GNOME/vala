@@ -5958,7 +5958,16 @@ namespace GLib {
 		MASARAM_GONDI,          /* Gonm */
 		NUSHU,                  /* Nshu */
 		SOYOMBO,                /* Soyo */
-		ZANABAZAR_SQUARE;       /* Zanb */
+		ZANABAZAR_SQUARE,       /* Zanb */
+
+		/* Unicode 11.0 additions */
+		DOGRA,                  /* Dogr */
+		GUNJALA_GONDI,          /* Gong */
+		HANIFI_ROHINGYA,        /* Rohg */
+		MAKASAR,                /* Maka */
+		MEDEFAIDRIN,            /* Medf */
+		OLD_SOGDIAN,            /* Sogo */
+		SOGDIAN;                /* Sogd */
 
 		[CCode (cname = "g_unicode_script_to_iso15924")]
 		public uint32 to_iso15924 ();
