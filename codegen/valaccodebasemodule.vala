@@ -5868,7 +5868,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					ccode.close ();
 				}
 			} else {
-				Report.error (null, "type `%s' does not support floating references".printf (type.data_type.name));
+				Report.error (node.source_reference, "type `%s' does not support floating references".printf (type.data_type.name));
 			}
 		}
 
