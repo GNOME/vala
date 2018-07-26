@@ -1,3 +1,41 @@
+Vala 0.41.90
+============
+ * Highlights
+  - Reintroduce POSIX profile
+  - parser: Add support for explicit "unlock" syntax
+  - vala: Support anonymous definitions of delegates in bindings
+  - codegen: Support automatic properties as GtkChild
+  - codegen: Apply G_PARAM_EXPLICIT_NOTIFY on properties with "notify = false"
+  - codegen: Drop support for non-auto property initializer in gobjects
+  - codegen: Avoid using deprecated "g_type_class_add_private"
+
+ * Various bug fixes:
+  - vala: Constants and signals are not lockable
+  - codegen: Don't apply ref_sink_function if target_type is floating_reference
+  - vala: Treat floating method-return-type as nullable if error may be thrown
+  - vala: Transfer floating-reference attribute while casting
+  - analyzer: Break cyclic references of BasicBlock
+  - vala: Break reference chain between DataType and Symbol if possible
+  - codegen: Fix invocation of abstract/virtual methods with NoWrapper in
+    compact classes
+  - vala: Report error for invalid base access in method/property of compact
+    class
+  - libvaladoc: Replace void* with corresponding Vala API
+  - codegen: Don't include the full absolute path in line directives
+  - codegen: Add source_reference to unsupported floating reference error
+
+ * Bindings:
+  - gobject-2.0: Make GLib.Signal a struct of uint and bind g_signal_new*
+  - clutter-1.0: Change type of Clutter.Key.* constants to uint
+  - gdk-3.0: Change type of Gdk.Key.* constants to uint
+  - gtk+-4.0: Change type of Gdk.Key.* constants to uint
+  - gstreamer: Update from 1.15+ git master
+  - webkit2gtk-4.0: Add JSC namespace to javascriptcoregtk-4.0 and fix depends
+  - Remove clutter-gst-1.0, GStreamer 0.10, rest-0.6,
+    tracker-indexer-module-1.0, libsoup-2.2, gdu and gdu-gtk,
+    twitter-glib-1.0, mx-1.0
+  - Remove vala-specific deprecations <= vala-0.22
+
 Vala 0.40.8
 ===========
  * Various improvements and bug fixes:
