@@ -1,3 +1,162 @@
+Vala 0.40.8
+===========
+ * Various improvements and bug fixes:
+  - Fix links in the Manual
+  - libvaladoc: Change link to Valadoc wiki page for HTML doclet
+  - valadoc: Use HTML5 doctype in HTML doclet
+  - codegen: Let methods return -1 on error by default if possible [#526]
+  - Allow TypeModule subclasses as parameter-type in module-init-method [#648]
+  - girparser: Allow changing the type of constants using metadata [#643]
+  - girwriter: Add boolean GIR visible attribute to allow skipping symbols
+  - vala: Report error for error-domains without any code
+  - parser: Accept "empty" enums/error-domains [#253]
+  - codewriter: Output bodies of code-blocks if in VAPIGEN mode [#253]
+
+ * Bindings:
+  - gobject-2.0: Add lower_case_csuffix attributes to Type* symbols
+  - gdk-3.0,gtk+-3.0: Update to 3.23.0+df045423
+  - gio-2.0: Add custom IOError.from_errno() to make it work as expected [#253]
+  - gtk+-4.0: Update to 3.94.0+bf5f27c6
+  - gstreamer-rtsp-server-1.0: Update from 1.14+ git master [#653]
+
+Vala 0.40.7
+===========
+ * Various improvements and bug fixes:
+  - Update bugtracker links to https://gitlab.gnome.org/GNOME/vala/issues
+  - codegen:
+    + Handle delegate_target attribute of fields [#520]
+    + Free generic elements of glib collections [#694765]
+    + Fix warning for source_funcs parameter of g_source_new()
+    + Actually treat GLib.Source as compact class
+    + Custom abstract methods of GLib.Source are handled differently [#641]
+    + Consistently use gpointer for delegate targets
+    + Unify some delegate-type check patterns
+    + Use default_init instead of base_init when registering interfaces
+      [#699550]
+  - girparser: Add support for bool delegate_target [#520]
+  - girwriter:
+    + Output deprecated="1"
+    + construct-only properties don't have a setter method
+    + Don't write any custom attributes [#608]
+  - valadoc: Fix TreeBuilder.create_array() for stacked Arrays
+
+ * Bindings:
+  - glib-2.0:
+    + Do not mark simple-type out-parameters as nullable [#634]
+    + Make Source.attach() use the default MainContext by default
+    + Make Bytes.slice() use the memory-efficient Bytes.from_bytes() [#638]
+    + Fix Bytes.with_free_func()
+  - gio-2.0:
+    + Mark ActionEntry.parameter_type/state fields as nullable [#632]
+    + Delegate fields of DBus*VTable do not have implicit target fields
+    + Apply delegate_target = false on ActionEntry callbacks and make them weak
+      [#630]
+    + Add default to all io_priority parameters
+  - gstreamer: Cherry-pick some fixes from 0.42, add gst-editing-services-1.0
+  - gtk+-3.0: Update to 3.22.30+9ac7f906
+  - gtk+-4.0: Update to 3.93.0+29fee2e8
+  - webkit2gtk-4.0: Update to 2.21.4
+  - Update GIR-based bindings
+
+Vala 0.40.6
+===========
+ * Regression fix:
+  - codegen: Avoid critical for array in-parameters with custom length-type
+  - tests: Drop assert which is failing on big-endian archs
+
+Vala 0.40.5
+===========
+ * Various improvements and bug fixes:
+  - Warn if --gir is used without --library [#708693]
+  - Report an error if rank attribute is required but was not found [#660991]
+  - scanner: Accept \R and \N escape sequences in regex literals [#749576]
+  - scanner: Accept backreferences \1 through \99 in regex literals [#728574]
+  - codegen:
+    + Avoid critical in get_basic_type_info() when there is no signature
+      [#729517]
+    + Fix serializing multidimensional arrays [#735437]
+    + Guard get_default_ref_sink_function() against null base-class
+    + Respect cname ccode-attribute of lockable fields
+    + Fix casting of length for "ref" array parameters
+  - codewriter: Add 'new' to symbols if needed to match the original source
+    [#614686]
+  - girparser: Deal with missing "name" attribute by falling back on "c:type"
+  - girwriter: Drop errornous indent
+  - girwriter: Properly output variadic methods and use introspectable="0"
+  - genie: Add support for the \v escape character [#664689]
+  - genie: Add support for the \uXXXX escape sequence
+
+ * Bindings:
+  - glib-2.0: Fix IConv.iconv() [#634753]
+  - gobject-2.0: Make constructor of ParamSpecBoxed public
+  - gstreamer: Cherry-pick some fixes from 0.42
+  - gtk+-3.0: Update to 3.22.30+21fddc39
+  - gtk+-4.0: Update to 3.93.0+3a860719
+  - javascriptcoregtk-4.0: buffer of String.get_utf8_cstring() is not "ref"
+    [#788113]
+  - posix: Add missing cname = "int" to Posix.Signal enum
+  - sqlite3: Add additional constants for flags of Database.open_v2() [#795627]
+  - webkit2gtk-4.0: Cherry-pick some fixes from 0.42
+
+Vala 0.40.4
+===========
+ * Various improvements and bug fixes:
+  - girparser: Add support for NoAccessorMethod metadata
+
+ * Bindings:
+  - glib-2.0: Mark str parameter of Variant.take_string() as owned
+  - gstreamer: Update from 1.15+ git master
+  - gtk+-*.0: Set NoAccessorMethod on Gtk.Radio*.group properties
+    (Regression in gtk+-3.0)
+  - gtk+-4.0: Update to 3.93.0+fc6018f1
+  - json-glib-1.0: Mark return-type of gvariant_deserialize*() as nullable
+  - webkit2gtk-4.0: Update to 2.20.1
+
+Vala 0.40.3
+===========
+ * Various bug fixes:
+  - vala: Fix return-type of BasicBlock.get_successors()
+
+ * Bindings:
+  - gstreamer: Update from 1.15+ git master
+  - gtk+-3.0: Fix regression of StatusIcon.position_menu() [#891629]
+  - gtk+-4.0: Update to 3.93.0+ff738269
+  - libgsf-1: Update to 1.14.42+ [#794777]
+
+Vala 0.40.2
+===========
+ * Various bug fixes:
+  - gdbus: Fix missing declaration of _fd_list for async methods [#794566]
+
+ * Bindings:
+  - glib-2.0: Use g_value_*et_schar instead of deprecated g_value_*et_char
+  - gobject-2.0: Add ParamSpecGType
+  - gtk+-*.0: Hide dedicated constructors of compact classes bound as structs
+    [#794733]
+
+Vala 0.40.1
+===========
+ * Various bug fixes:
+  - codegen: Don't add target fields for captured delegates without target
+  - codegen: Don't add length fields for captured fixed-length array variables
+  - valadoc: Bump VALA_0_xx defines and glib_minor to match 0.40 series
+
+ * Bindings:
+  - Add libgeoclue-2.0 bindings [#794376]
+  - gobject-2.0: Cherry-pick some changes from 0.42
+  - gdk-3.0,gtk+-3.0: Update to 3.22.29
+  - gtk+-4.0: Update to 3.93.0+433517fd
+  - gtk+-*.0: Fix iter parameter of TextView.backward*/forward*/move_visually()
+    [#794345]
+  - gstreamer-1.0: Update to 1.13.91 and add gstreamer-webrtc-1.0 bindings
+  - libgsf-1: Switch to GIR and update to 1.14.42
+  - linux: Add various symbols
+  - posix: Add various symbols
+  - posix: Include sys/sysmacros.h for major(), minor() and makedev() [#794651]
+  - webkit-1.0: Update to 2.4.11
+  - webkit2gtk-4.0: Update to 2.20.0
+  - Update GIR-based bindings
+
 Vala 0.40.0
 ===========
  * Various bug fixes:
