@@ -75,6 +75,7 @@ TESTS = \
 	methods/contains.vala \
 	methods/iterator.vala \
 	methods/prepostconditions.vala \
+	methods/same-name.vala \
 	methods/symbolresolution.vala \
 	methods/bug595538.vala \
 	methods/bug596726.vala \
@@ -532,6 +533,8 @@ TESTS = \
 	semantic/method-extern-abstract.test \
 	semantic/method-extern-body.test \
 	semantic/method-extern-virtual.test \
+	semantic/method-interface-already-found.test \
+	semantic/method-interface-not-found.test \
 	semantic/method-main-async.test \
 	semantic/method-main-inline.test \
 	semantic/method-main-throws.test \
