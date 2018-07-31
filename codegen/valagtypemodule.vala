@@ -188,6 +188,23 @@ public class Vala.GTypeModule : GErrorModule {
 			type_fun.init_from_type (context, in_plugin, true);
 			decl_space.add_type_member_declaration (type_fun.get_declaration ());
 		}
+
+		if (context.require_glib_version (2, 44)) {
+			var base_class = cl;
+			while (base_class.base_class != null) {
+				base_class = base_class.base_class;
+			}
+			string autoptr_cleanup_func;
+			if (!is_gtypeinstance && !is_gsource) {
+				autoptr_cleanup_func = get_ccode_free_function (base_class);
+			} else {
+				autoptr_cleanup_func = get_ccode_unref_function (base_class);
+			}
+			if (autoptr_cleanup_func == null || autoptr_cleanup_func == "") {
+				Report.error (cl.source_reference, "internal error: autoptr_cleanup_func not available");
+			}
+			decl_space.add_type_member_declaration (new CCodeIdentifier ("G_DEFINE_AUTOPTR_CLEANUP_FUNC (%s, %s)".printf (get_ccode_name (cl), autoptr_cleanup_func)));
+		}
 	}
 
 	public override void generate_class_struct_declaration (Class cl, CCodeFile decl_space) {
