@@ -169,7 +169,7 @@ valaversion_source = vcs_tag(
 	output: 'valaversion.vala',
 )
 
-valacore_lib = shared_library(
+valacore_lib = library(
 	'vala@0@'.format(vala_version_suffix),
 	valacore_sources,
 	valaversion_source,
