@@ -2,6 +2,7 @@ NULL =
 
 SUBDIRS = \
 	girwriter \
+	gtktemplate \
 	$(NULL)
 
 AM_CPPFLAGS = \

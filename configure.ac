@@ -163,6 +163,7 @@ AC_CONFIG_FILES([Makefile
            vapi/Makefile
            tests/Makefile
            tests/girwriter/Makefile
+           tests/gtktemplate/Makefile
            doc/Makefile
            doc/manual/Makefile
            doc/manual/version.xml
