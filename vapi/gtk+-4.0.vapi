@@ -5081,7 +5081,6 @@ namespace Gdk {
 		public unowned Gdk.Seat get_seat ();
 		public unowned Gdk.Device? get_source_device ();
 		public bool get_state (out Gdk.ModifierType state);
-		public bool get_string (out unowned string string);
 		public unowned Gdk.Surface get_surface ();
 		public uint32 get_time ();
 		public bool get_touch_emulating_pointer (out bool emulating);
@@ -7448,7 +7447,6 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void get_child_property (Gtk.Widget child, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
 		public GLib.List<weak Gtk.Widget> get_children ();
-		public bool get_focus_chain (out GLib.List<weak Gtk.Widget> focusable_widgets);
 		public unowned Gtk.Adjustment? get_focus_hadjustment ();
 		public unowned Gtk.Adjustment? get_focus_vadjustment ();
 		public virtual Gtk.WidgetPath get_path_for_child (Gtk.Widget child);
@@ -7460,10 +7458,8 @@ namespace Gtk {
 		public class (unowned GLib.ParamSpec)[] list_child_properties ();
 		[NoWrapper]
 		public virtual void set_child_property (Gtk.Widget child, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
-		public void set_focus_chain (GLib.List<Gtk.Widget> focusable_widgets);
 		public void set_focus_hadjustment (Gtk.Adjustment adjustment);
 		public void set_focus_vadjustment (Gtk.Adjustment adjustment);
-		public void unset_focus_chain ();
 		[HasEmitter]
 		public virtual signal void add (Gtk.Widget widget);
 		[HasEmitter]
@@ -8952,11 +8948,9 @@ namespace Gtk {
 		public bool get_reserve_toggle_size ();
 		public void place_on_monitor (Gdk.Monitor monitor);
 		public void popdown ();
-		public void popup (Gtk.Widget? parent_menu_shell, Gtk.Widget? parent_menu_item, [CCode (delegate_target_pos = 3.5, scope = "async")] Gtk.MenuPositionFunc? func, uint button, uint32 activate_time);
 		public void popup_at_pointer (Gdk.Event? trigger_event = null);
 		public void popup_at_rect (Gdk.Surface rect_surface, Gdk.Rectangle rect, Gdk.Gravity rect_anchor, Gdk.Gravity menu_anchor, Gdk.Event? trigger_event = null);
 		public void popup_at_widget (Gtk.Widget widget, Gdk.Gravity widget_anchor, Gdk.Gravity menu_anchor, Gdk.Event? trigger_event = null);
-		public void popup_for_device (Gdk.Device? device, Gtk.Widget? parent_menu_shell, Gtk.Widget? parent_menu_item, [CCode (delegate_target_pos = 4.33333, destroy_notify_pos = 4.66667)] owned Gtk.MenuPositionFunc? func, uint button, uint32 activate_time);
 		public void reorder_child (Gtk.Widget child, int position);
 		public void reposition ();
 		public void set_accel_group (Gtk.AccelGroup? accel_group);
@@ -10497,8 +10491,6 @@ namespace Gtk {
 		public void render_focus (Cairo.Context cr, double x, double y, double width, double height);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_frame")]
 		public void render_frame (Cairo.Context cr, double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_frame_gap")]
-		public void render_frame_gap (Cairo.Context cr, double x, double y, double width, double height, Gtk.PositionType gap_side, double xy0_gap, double xy1_gap);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_handle")]
 		public void render_handle (Cairo.Context cr, double x, double y, double width, double height);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_icon")]
@@ -13398,8 +13390,6 @@ namespace Gtk {
 	public delegate void ListBoxUpdateHeaderFunc (Gtk.ListBoxRow row, Gtk.ListBoxRow? before);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
 	public delegate void MenuDetachFunc (Gtk.Widget attach_widget, Gtk.Menu menu);
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 4.9)]
-	public delegate void MenuPositionFunc (Gtk.Menu menu, ref int x, ref int y, out bool push_in);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
 	public delegate void PageSetupDoneFunc (Gtk.PageSetup page_setup);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
