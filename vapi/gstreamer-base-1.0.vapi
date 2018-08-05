@@ -98,7 +98,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool stop ();
 			[NoWrapper]
-			public virtual Gst.FlowReturn update_src_caps (Gst.Caps caps, Gst.Caps ret);
+			public virtual Gst.FlowReturn update_src_caps (Gst.Caps caps, out Gst.Caps ret);
 			[NoAccessorMethod]
 			public uint64 latency { get; set; }
 			[NoAccessorMethod]
@@ -928,11 +928,20 @@ namespace Gst {
 		public static Gst.Caps? type_find_helper (Gst.Pad src, uint64 size);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_buffer")]
 		public static Gst.Caps? type_find_helper_for_buffer (Gst.Object? obj, Gst.Buffer buf, out Gst.TypeFindProbability prob);
+		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_buffer_with_extension")]
+		[Version (since = "1.16")]
+		public static Gst.Caps? type_find_helper_for_buffer_with_extension (Gst.Object? obj, Gst.Buffer buf, string? extension, out Gst.TypeFindProbability prob);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_data")]
 		public static Gst.Caps? type_find_helper_for_data (Gst.Object? obj, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, out Gst.TypeFindProbability prob);
+		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_data_with_extension")]
+		[Version (since = "1.16")]
+		public static Gst.Caps? type_find_helper_for_data_with_extension (Gst.Object? obj, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, string? extension, out Gst.TypeFindProbability prob);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_extension")]
 		public static Gst.Caps? type_find_helper_for_extension (Gst.Object? obj, string extension);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_get_range")]
-		public static Gst.Caps? type_find_helper_get_range (Gst.Object obj, Gst.Object? parent, Gst.Base.TypeFindHelperGetRangeFunction func, uint64 size, string extension, out Gst.TypeFindProbability prob);
+		public static Gst.Caps? type_find_helper_get_range (Gst.Object obj, Gst.Object? parent, Gst.Base.TypeFindHelperGetRangeFunction func, uint64 size, string? extension, out Gst.TypeFindProbability prob);
+		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_get_range_full")]
+		[Version (since = "1.14.3")]
+		public static Gst.FlowReturn type_find_helper_get_range_full (Gst.Object obj, Gst.Object? parent, Gst.Base.TypeFindHelperGetRangeFunction func, uint64 size, string? extension, out Gst.Caps caps, out Gst.TypeFindProbability prob);
 	}
 }

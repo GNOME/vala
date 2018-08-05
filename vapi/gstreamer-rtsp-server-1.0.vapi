@@ -646,12 +646,14 @@ namespace Gst {
 			public unowned Gst.RTSP.Url? get_url ();
 			public bool is_timed_out ();
 			public void keep_alive ();
+			public void message_sent ();
 			public Gst.FlowReturn recv_data (uint channel, owned Gst.Buffer buffer);
 			public bool send_rtcp (Gst.Buffer buffer);
 			public bool send_rtp (Gst.Buffer buffer);
 			public bool set_active (bool active);
 			public void set_callbacks (Gst.RTSPServer.SendFunc send_rtp, owned Gst.RTSPServer.SendFunc send_rtcp);
 			public void set_keepalive (owned Gst.RTSPServer.KeepAliveFunc keep_alive);
+			public void set_message_sent (owned Gst.RTSPServer.MessageSentFunc message_sent);
 			public void set_timed_out (bool timedout);
 			public void set_transport (owned Gst.RTSP.Transport tr);
 			public void set_url (Gst.RTSP.Url? url);
@@ -807,6 +809,8 @@ namespace Gst {
 		public delegate Gst.RTSPServer.FilterResult ClientSessionFilterFunc (Gst.RTSPServer.Client client, Gst.RTSPServer.Session sess);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPKeepAliveFunc", instance_pos = 0.9)]
 		public delegate void KeepAliveFunc ();
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPMessageSentFunc", instance_pos = 0.9)]
+		public delegate void MessageSentFunc ();
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSendFunc", instance_pos = 2.9)]
 		public delegate bool SendFunc (Gst.Buffer buffer, uint8 channel);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPServerClientFilterFunc", instance_pos = 2.9)]
