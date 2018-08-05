@@ -2349,6 +2349,7 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void get_child_property (Gtk.Widget child, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
 		public GLib.List<weak Gtk.Widget> get_children ();
+		[Version (deprecated = true, deprecated_since = "3.24")]
 		public bool get_focus_chain (out GLib.List<weak Gtk.Widget> focusable_widgets);
 		[Version (since = "2.14")]
 		public unowned Gtk.Widget? get_focus_child ();
@@ -2372,6 +2373,7 @@ namespace Gtk {
 		public void set_border_width (uint border_width);
 		[NoWrapper]
 		public virtual void set_child_property (Gtk.Widget child, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
+		[Version (deprecated = true, deprecated_since = "3.24")]
 		public void set_focus_chain (GLib.List<Gtk.Widget> focusable_widgets);
 		public void set_focus_hadjustment (Gtk.Adjustment adjustment);
 		public void set_focus_vadjustment (Gtk.Adjustment adjustment);
@@ -2379,6 +2381,7 @@ namespace Gtk {
 		public void set_reallocate_redraws (bool needs_redraws);
 		[Version (deprecated = true, deprecated_since = "3.12")]
 		public void set_resize_mode (Gtk.ResizeMode resize_mode);
+		[Version (deprecated = true, deprecated_since = "3.24")]
 		public void unset_focus_chain ();
 		public uint border_width { get; set; }
 		[NoAccessorMethod]
@@ -7624,7 +7627,7 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public void render_frame (Cairo.Context cr, double x, double y, double width, double height);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_frame_gap")]
-		[Version (since = "3.0")]
+		[Version (deprecated = true, deprecated_since = "3.24", since = "3.0")]
 		public void render_frame_gap (Cairo.Context cr, double x, double y, double width, double height, Gtk.PositionType gap_side, double xy0_gap, double xy1_gap);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_handle")]
 		[Version (since = "3.0")]
