@@ -477,6 +477,8 @@ public class Vala.ObjectCreationExpression : Expression {
 			}
 		}
 
+		context.analyzer.check_type (type_reference);
+
 		foreach (MemberInitializer init in get_object_initializer ()) {
 			context.analyzer.visit_member_initializer (init, type_reference);
 		}

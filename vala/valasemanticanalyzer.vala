@@ -134,8 +134,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public DataType void_type = new VoidType ();
 	public DataType bool_type;
-	public DataType string_type;
-	public DataType regex_type;
+	public DataType char_type;
 	public DataType uchar_type;
 	public DataType short_type;
 	public DataType ushort_type;
@@ -143,11 +142,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType uint_type;
 	public DataType long_type;
 	public DataType ulong_type;
+	public DataType int8_type;
+	public DataType uint8_type;
+	public DataType int16_type;
+	public DataType uint16_type;
+	public DataType int32_type;
+	public DataType uint32_type;
 	public DataType size_t_type;
 	public DataType ssize_t_type;
-	public DataType int8_type;
 	public DataType unichar_type;
 	public DataType double_type;
+	public DataType string_type;
+	public DataType regex_type;
 	public DataType type_type;
 	public DataType va_list_type;
 	public Class object_type;
@@ -180,19 +186,24 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var root_symbol = context.root;
 
 		bool_type = new BooleanType ((Struct) root_symbol.scope.lookup ("bool"));
-		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
-		int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
-		uint_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint"));
-
+		char_type = new IntegerType ((Struct) root_symbol.scope.lookup ("char"));
 		uchar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uchar"));
-		int8_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int8"));
 		short_type = new IntegerType ((Struct) root_symbol.scope.lookup ("short"));
 		ushort_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ushort"));
+		int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
+		uint_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint"));
 		long_type = new IntegerType ((Struct) root_symbol.scope.lookup ("long"));
 		ulong_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ulong"));
+		int8_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int8"));
+		uint8_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint8"));
+		int16_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int16"));
+		uint16_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint16"));
+		int32_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int32"));
+		uint32_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint32"));
 		size_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("size_t"));
 		ssize_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ssize_t"));
 		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
+		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
 		va_list_type = new StructValueType ((Struct) root_symbol.scope.lookup ("va_list"));
 
 		var unichar_struct = (Struct) root_symbol.scope.lookup ("unichar");
@@ -1072,5 +1083,111 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			sym = sym.parent_symbol;
 		}
 		return false;
+	}
+
+	public bool is_reference_type_argument (DataType type_arg) {
+		if (type_arg is ErrorType || (type_arg.data_type != null && type_arg.data_type.is_reference_type ())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public bool is_nullable_value_type_argument (DataType type_arg) {
+		if (type_arg is ValueType && type_arg.nullable) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public bool is_signed_integer_type_argument (DataType type_arg) {
+		var st = type_arg.data_type as Struct;
+		if (type_arg is EnumValueType) {
+			return true;
+		} else if (type_arg.nullable) {
+			return false;
+		} else if (st == null) {
+			return false;
+		} else if (st.is_subtype_of (bool_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (char_type.data_type)) {
+			return true;
+		} else if (unichar_type != null && st.is_subtype_of (unichar_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (short_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (int_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (long_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (int8_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (int16_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (int32_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (type_type.data_type)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public bool is_unsigned_integer_type_argument (DataType type_arg) {
+		var st = type_arg.data_type as Struct;
+		if (st == null) {
+			return false;
+		} else if (type_arg.nullable) {
+			return false;
+		} else if (st.is_subtype_of (uchar_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (ushort_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (uint_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (ulong_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (uint8_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (uint16_type.data_type)) {
+			return true;
+		} else if (st.is_subtype_of (uint32_type.data_type)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public void check_type (DataType type) {
+		foreach (var type_arg in type.get_type_arguments ()) {
+			check_type (type_arg);
+			check_type_argument (type_arg);
+		}
+	}
+
+	public void check_type_arguments (MemberAccess access) {
+		foreach (var type_arg in access.get_type_arguments ()) {
+			check_type (type_arg);
+			check_type_argument (type_arg);
+		}
+	}
+
+	void check_type_argument (DataType type_arg) {
+		if (type_arg is GenericType
+		    || type_arg is PointerType
+		    || is_reference_type_argument (type_arg)
+		    || is_nullable_value_type_argument (type_arg)
+		    || is_signed_integer_type_argument (type_arg)
+		    || is_unsigned_integer_type_argument (type_arg)) {
+			// no error
+		} else if (type_arg is DelegateType) {
+			var delegate_type = (DelegateType) type_arg;
+			if (delegate_type.delegate_symbol.has_target) {
+				Report.error (type_arg.source_reference, "Delegates with target are not supported as generic type arguments");
+			}
+		} else {
+			Report.error (type_arg.source_reference, "`%s' is not a supported generic type argument, use `?' to box value types".printf (type_arg.to_string ()));
+		}
 	}
 }

@@ -465,6 +465,7 @@ public class Vala.Property : Symbol, Lockable {
 		}
 
 		property_type.check (context);
+		context.analyzer.check_type (property_type);
 
 		if (get_accessor == null && set_accessor == null) {
 			error = true;

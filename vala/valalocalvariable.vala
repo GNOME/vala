@@ -99,6 +99,7 @@ public class Vala.LocalVariable : Variable {
 				return false;
 			}
 			variable_type.check (context);
+			context.analyzer.check_type (variable_type);
 		}
 
 		// Catch initializer list transformation:
