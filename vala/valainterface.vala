@@ -206,7 +206,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 			// check whether prerequisite is at least as accessible as the interface
 			if (!context.analyzer.is_type_accessible (this, prerequisite_reference)) {
 				error = true;
-				Report.error (source_reference, "prerequisite `%s` is less accessible than interface `%s`".printf (prerequisite_reference.to_string (), get_full_name ()));
+				Report.error (source_reference, "prerequisite `%s' is less accessible than interface `%s'".printf (prerequisite_reference.to_string (), get_full_name ()));
 				return false;
 			}
 		}
@@ -223,7 +223,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 			if (!(class_or_interface is ObjectTypeSymbol)) {
 				error = true;
-				Report.error (source_reference, "Prerequisite `%s` of interface `%s` is not a class or interface".printf (get_full_name (), class_or_interface.to_string ()));
+				Report.error (source_reference, "Prerequisite `%s' of interface `%s' is not a class or interface".printf (get_full_name (), class_or_interface.to_string ()));
 				return false;
 			}
 

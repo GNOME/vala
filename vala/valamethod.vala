@@ -752,7 +752,7 @@ public class Vala.Method : Subroutine, Callable {
 			// check whether error type is at least as accessible as the method
 			if (!context.analyzer.is_type_accessible (this, error_type)) {
 				error = true;
-				Report.error (source_reference, "error type `%s` is less accessible than method `%s`".printf (error_type.to_string (), get_full_name ()));
+				Report.error (source_reference, "error type `%s' is less accessible than method `%s'".printf (error_type.to_string (), get_full_name ()));
 				return false;
 			}
 		}
@@ -815,7 +815,7 @@ public class Vala.Method : Subroutine, Callable {
 		// check whether return type is at least as accessible as the method
 		if (!context.analyzer.is_type_accessible (this, return_type)) {
 			error = true;
-			Report.error (source_reference, "return type `%s` is less accessible than method `%s`".printf (return_type.to_string (), get_full_name ()));
+			Report.error (source_reference, "return type `%s' is less accessible than method `%s'".printf (return_type.to_string (), get_full_name ()));
 			return false;
 		}
 

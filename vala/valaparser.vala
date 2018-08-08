@@ -2220,7 +2220,7 @@ public class Vala.Parser : CodeVisitor {
 		if (attributes != null) {
 			foreach (Attribute attr in (List<Attribute>) attributes) {
 				if (node.get_attribute (attr.name) != null) {
-					Report.error (attr.source_reference, "duplicate attribute `%s`".printf (attr.name));
+					Report.error (attr.source_reference, "duplicate attribute `%s'".printf (attr.name));
 				}
 				node.attributes.append (attr);
 			}

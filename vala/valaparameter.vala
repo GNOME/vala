@@ -173,7 +173,7 @@ public class Vala.Parameter : Variable {
 			if (initializer is NullLiteral
 			    && !variable_type.nullable
 			    && direction != ParameterDirection.OUT) {
-				Report.warning (source_reference, "`null' incompatible with parameter type `%s`".printf (variable_type.to_string ()));
+				Report.warning (source_reference, "`null' incompatible with parameter type `%s'".printf (variable_type.to_string ()));
 			} else if (!(initializer is NullLiteral) && direction == ParameterDirection.OUT) {
 				Report.error (source_reference, "only `null' is allowed as default value for out parameters");
 			} else if (direction == ParameterDirection.IN && !initializer.value_type.compatible (variable_type)) {
@@ -189,7 +189,7 @@ public class Vala.Parameter : Variable {
 			// check whether parameter type is at least as accessible as the method
 			if (!context.analyzer.is_type_accessible (this, variable_type)) {
 				error = true;
-				Report.error (source_reference, "parameter type `%s` is less accessible than method `%s`".printf (variable_type.to_string (), parent_symbol.get_full_name ()));
+				Report.error (source_reference, "parameter type `%s' is less accessible than method `%s'".printf (variable_type.to_string (), parent_symbol.get_full_name ()));
 			}
 		}
 

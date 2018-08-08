@@ -494,7 +494,7 @@ public class Vala.Struct : TypeSymbol {
 
 			if (!(base_type is ValueType)) {
 				error = true;
-				Report.error (source_reference, "The base type `%s` of struct `%s` is not a struct".printf (base_type.to_string (), get_full_name ()));
+				Report.error (source_reference, "The base type `%s' of struct `%s' is not a struct".printf (base_type.to_string (), get_full_name ()));
 				return false;
 			}
 		}

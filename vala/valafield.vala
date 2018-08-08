@@ -103,7 +103,7 @@ public class Vala.Field : Variable, Lockable {
 		// check whether field type is at least as accessible as the field
 		if (!context.analyzer.is_type_accessible (this, variable_type)) {
 			error = true;
-			Report.error (source_reference, "field type `%s` is less accessible than field `%s`".printf (variable_type.to_string (), get_full_name ()));
+			Report.error (source_reference, "field type `%s' is less accessible than field `%s'".printf (variable_type.to_string (), get_full_name ()));
 			return false;
 		}
 
