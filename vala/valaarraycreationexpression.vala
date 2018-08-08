@@ -262,6 +262,10 @@ public class Vala.ArrayCreationExpression : Expression {
 		value_type = new ArrayType (element_type, rank, source_reference);
 		value_type.value_owned = true;
 
+		if (!value_type.check (context)) {
+			return false;
+		}
+
 		return !error;
 	}
 

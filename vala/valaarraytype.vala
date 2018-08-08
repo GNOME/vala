@@ -271,6 +271,17 @@ public class Vala.ArrayType : ReferenceType {
 			}
 		}
 
+		if (element_type is ArrayType) {
+			Report.error (source_reference, "Stacked arrays are not supported");
+			return false;
+		} else if (element_type is DelegateType) {
+			var delegate_type = (DelegateType) element_type;
+			if (delegate_type.delegate_symbol.has_target) {
+				Report.error (source_reference, "Delegates with target are not supported as array element type");
+				return false;
+			}
+		}
+
 		return element_type.check (context);
 	}
 
