@@ -144,7 +144,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				if (rvalue_target != null) {
 					ccode.add_assignment (lvalue_target, rvalue_target);
 				} else {
-					Report.error (source_reference, "Assigning delegate without required target in scope");
+					Report.error (source_reference, _("Assigning delegate without required target in scope"));
 					ccode.add_assignment (lvalue_target, new CCodeInvalidExpression ());
 				}
 				var lvalue_destroy_notify = get_delegate_target_destroy_notify_cvalue (lvalue);

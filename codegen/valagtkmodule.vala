@@ -94,7 +94,7 @@ public class Vala.GtkModule : GSignalModule {
 		gresource_to_file_map = new HashMap<string, string>(str_hash, str_equal);
 		foreach (var gresource in context.gresources) {
 			if (!FileUtils.test (gresource, FileTest.EXISTS)) {
-				Report.error (null, "GResources file `%s' does not exist".printf (gresource));
+				Report.error (null, _("GResources file `%s' does not exist").printf (gresource));
 				continue;
 			}
 
@@ -137,7 +137,7 @@ public class Vala.GtkModule : GSignalModule {
 		var ui_file = gresource_to_file_map.get (ui_resource);
 		if (ui_file == null || !FileUtils.test (ui_file, FileTest.EXISTS)) {
 			node.error = true;
-			Report.error (node.source_reference, "UI resource not found: `%s'. Please make sure to specify the proper GResources xml files with --gresources and alternative search locations with --gresourcesdir.".printf (ui_resource));
+			Report.error (node.source_reference, _("UI resource not found: `%s'. Please make sure to specify the proper GResources xml files with --gresources and alternative search locations with --gresourcesdir.").printf (ui_resource));
 			return;
 		}
 		current_handler_to_signal_map = new HashMap<string, Signal>(str_hash, str_equal);
@@ -165,7 +165,7 @@ public class Vala.GtkModule : GSignalModule {
 				if (current_class == null) {
 					var class_name = reader.get_attribute ("class");
 					if (class_name == null) {
-						Report.error (node.source_reference, "Invalid %s in ui file `%s'".printf (current_name, ui_file));
+						Report.error (node.source_reference, _("Invalid %s in ui file `%s'").printf (current_name, ui_file));
 						current_token = reader.read_token (null, null);
 						continue;
 					}
@@ -184,7 +184,7 @@ public class Vala.GtkModule : GSignalModule {
 
 				if (current_class != null) {
 					if (signal_name == null || handler_name == null) {
-						Report.error (node.source_reference, "Invalid signal in ui file `%s'".printf (ui_file));
+						Report.error (node.source_reference, _("Invalid signal in ui file `%s'").printf (ui_file));
 						current_token = reader.read_token (null, null);
 						continue;
 					}
@@ -204,7 +204,7 @@ public class Vala.GtkModule : GSignalModule {
 		}
 
 		if (!template_tag_found) {
-			Report.error (node.source_reference, "ui resource `%s' does not describe a valid composite template".printf (ui_resource));
+			Report.error (node.source_reference, _("ui resource `%s' does not describe a valid composite template").printf (ui_resource));
 		}
 	}
 
@@ -213,7 +213,7 @@ public class Vala.GtkModule : GSignalModule {
 		if (attr != null) {
 			if (gtk_widget_type == null || !cl.is_subtype_of (gtk_widget_type)) {
 				if (!cl.error) {
-					Report.error (attr.source_reference, "subclassing Gtk.Widget is required for using Gtk templates");
+					Report.error (attr.source_reference, _("subclassing Gtk.Widget is required for using Gtk templates"));
 					cl.error = true;
 				}
 				return false;
@@ -233,7 +233,7 @@ public class Vala.GtkModule : GSignalModule {
 		/* Gtk builder widget template */
 		var ui = cl.get_attribute_string ("GtkTemplate", "ui");
 		if (ui == null) {
-			Report.error (cl.source_reference, "empty ui resource declaration for Gtk widget template");
+			Report.error (cl.source_reference, _("empty ui resource declaration for Gtk widget template"));
 			cl.error = true;
 			return;
 		}
@@ -250,7 +250,7 @@ public class Vala.GtkModule : GSignalModule {
 
 	public override void visit_property (Property prop) {
 		if (prop.get_attribute ("GtkChild") != null && prop.field == null) {
-			Report.error (prop.source_reference, "[GtkChild] is only allowed on automatic properties");
+			Report.error (prop.source_reference, _("[GtkChild] is only allowed on automatic properties"));
 		}
 
 		base.visit_property (prop);
@@ -271,7 +271,7 @@ public class Vala.GtkModule : GSignalModule {
 		/* If the field has a [GtkChild] attribute but its class doesn'thave a
 			 [GtkTemplate] attribute, we throw an error */
 		if (!is_gtk_template (cl)) {
-			Report.error (f.source_reference, "[GtkChild] is only allowed in classes with a [GtkTemplate] attribute");
+			Report.error (f.source_reference, _("[GtkChild] is only allowed in classes with a [GtkTemplate] attribute"));
 			return;
 		}
 
@@ -281,14 +281,14 @@ public class Vala.GtkModule : GSignalModule {
 		var gtk_name = f.get_attribute_string ("GtkChild", "name", f.name);
 		var child_class = current_child_to_class_map.get (gtk_name);
 		if (child_class == null) {
-			Report.error (f.source_reference, "could not find child `%s'".printf (gtk_name));
+			Report.error (f.source_reference, _("could not find child `%s'").printf (gtk_name));
 			return;
 		}
 
 		/* We allow Gtk child to have stricter type than class field */
 		var field_class = f.variable_type.data_type as Class;
 		if (field_class == null || !child_class.is_subtype_of (field_class)) {
-			Report.error (f.source_reference, "cannot convert from Gtk child type `%s' to `%s'".printf (child_class.get_full_name(), field_class.get_full_name()));
+			Report.error (f.source_reference, _("cannot convert from Gtk child type `%s' to `%s'").printf (child_class.get_full_name(), field_class.get_full_name()));
 			return;
 		}
 
@@ -338,7 +338,7 @@ public class Vala.GtkModule : GSignalModule {
 		var handler_name = m.get_attribute_string ("GtkCallback", "name", m.name);
 		var sig = current_handler_to_signal_map.get (handler_name);
 		if (sig == null) {
-			Report.error (m.source_reference, "could not find signal for handler `%s'".printf (handler_name));
+			Report.error (m.source_reference, _("could not find signal for handler `%s'").printf (handler_name));
 			return;
 		}
 
@@ -350,7 +350,7 @@ public class Vala.GtkModule : GSignalModule {
 			var signal_type = new SignalType (sig);
 			var delegate_type = signal_type.get_handler_type ();
 			if (!method_type.compatible (delegate_type)) {
-				Report.error (m.source_reference, "method `%s' is incompatible with signal `%s', expected `%s'".printf (method_type.to_string (), delegate_type.to_string (), delegate_type.to_prototype_string (m.name)));
+				Report.error (m.source_reference, _("method `%s' is incompatible with signal `%s', expected `%s'").printf (method_type.to_string (), delegate_type.to_string (), delegate_type.to_prototype_string (m.name)));
 			} else {
 				var wrapper = generate_delegate_wrapper (m, signal_type.get_handler_type (), m);
 

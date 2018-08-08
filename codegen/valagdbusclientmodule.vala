@@ -57,7 +57,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		if (dynamic_method.dynamic_type.data_type == dbus_proxy_type) {
 			generate_marshalling (method, CallType.SYNC, null, method.name, -1);
 		} else {
-			Report.error (method.source_reference, "dynamic methods are not supported for `%s'".printf (dynamic_method.dynamic_type.to_string ()));
+			Report.error (method.source_reference, _("dynamic methods are not supported for `%s'").printf (dynamic_method.dynamic_type.to_string ()));
 		}
 
 		pop_function ();
@@ -266,7 +266,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 			var iface = (Interface) object_type.type_symbol;
 
 			if (get_dbus_name (iface) == null) {
-				Report.error (expr.source_reference, "`%s' is not a D-Bus interface".printf (iface.get_full_name ()));
+				Report.error (expr.source_reference, _("`%s' is not a D-Bus interface").printf (iface.get_full_name ()));
 				return;
 			}
 
@@ -960,7 +960,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var owned_type = prop.get_accessor.value_type.copy ();
 		owned_type.value_owned = true;
 		if (owned_type.is_disposable () && !prop.get_accessor.value_type.value_owned) {
-			Report.error (prop.get_accessor.value_type.source_reference, "Properties used in D-Bus clients require owned get accessor");
+			Report.error (prop.get_accessor.value_type.source_reference, _("Properties used in D-Bus clients require owned get accessor"));
 		}
 
 		var array_type = prop.get_accessor.value_type as ArrayType;

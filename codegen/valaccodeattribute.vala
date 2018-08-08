@@ -694,7 +694,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					cname = "%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name);
 				}
 				if (cname[0].isdigit ()) {
-					Report.error (node.source_reference, "Field name starts with a digit. Use the `cname' attribute to provide a valid C name if intended");
+					Report.error (node.source_reference, _("Field name starts with a digit. Use the `cname' attribute to provide a valid C name if intended"));
 					return "";
 				}
 				return cname;
@@ -828,7 +828,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 		} else if (node is CType) {
 			return ((CType) node).ctype_name;
 		} else {
-			Report.error (node.source_reference, "Unresolved type reference");
+			Report.error (node.source_reference, _("Unresolved type reference"));
 			return "";
 		}
 	}
@@ -1071,7 +1071,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					}
 				}
 				if (st.is_simple_type ()) {
-					Report.error (st.source_reference, "The type `%s' doesn't declare a marshaller type name".printf (st.get_full_name ()));
+					Report.error (st.source_reference, _("The type `%s' doesn't declare a marshaller type name").printf (st.get_full_name ()));
 				} else if (get_ccode_has_type_id (st)) {
 					return "BOXED";
 				} else {
@@ -1169,7 +1169,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				}
 			}
 			if (st.is_simple_type ()) {
-				Report.error (st.source_reference, "The type `%s' doesn't declare a GValue get function".printf (st.get_full_name ()));
+				Report.error (st.source_reference, _("The type `%s' doesn't declare a GValue get function").printf (st.get_full_name ()));
 			} else if (get_ccode_has_type_id (st)) {
 				return "g_value_get_boxed";
 			} else {
@@ -1227,7 +1227,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				}
 			}
 			if (st.is_simple_type ()) {
-				Report.error (st.source_reference, "The type `%s' doesn't declare a GValue set function".printf (st.get_full_name ()));
+				Report.error (st.source_reference, _("The type `%s' doesn't declare a GValue set function").printf (st.get_full_name ()));
 			} else if (get_ccode_has_type_id (st)) {
 				return "g_value_set_boxed";
 			} else {
@@ -1285,7 +1285,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				}
 			}
 			if (st.is_simple_type ()) {
-				Report.error (st.source_reference, "The type `%s' doesn't declare a GValue take function".printf (st.get_full_name ()));
+				Report.error (st.source_reference, _("The type `%s' doesn't declare a GValue take function").printf (st.get_full_name ()));
 			} else if (get_ccode_has_type_id (st)) {
 				return "g_value_take_boxed";
 			} else {

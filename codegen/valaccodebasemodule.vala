@@ -549,7 +549,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (context.symbols_filename != null) {
 			var stream = FileStream.open (context.symbols_filename, "w");
 			if (stream == null) {
-				Report.error (null, "unable to open `%s' for writing".printf (context.symbols_filename));
+				Report.error (null, _("unable to open `%s' for writing").printf (context.symbols_filename));
 				this.context = null;
 				return;
 			}
@@ -571,7 +571,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ret = header_file.store (context.header_filename, null, context.version_header, false, "#ifdef  __cplusplus\nextern \"C\" {\n#endif", "#ifdef  __cplusplus\n}\n#endif");
 			}
 			if (!ret) {
-				Report.error (null, "unable to open `%s' for writing".printf (context.header_filename));
+				Report.error (null, _("unable to open `%s' for writing").printf (context.header_filename));
 			}
 		}
 
@@ -584,7 +584,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ret = internal_header_file.store (context.internal_header_filename, null, context.version_header, false, "#ifdef  __cplusplus\nextern \"C\" {\n#endif", "#ifdef  __cplusplus\n}\n#endif");
 			}
 			if (!ret) {
-				Report.error (null, "unable to open `%s' for writing".printf (context.internal_header_filename));
+				Report.error (null, _("unable to open `%s' for writing").printf (context.internal_header_filename));
 			}
 		}
 
@@ -818,7 +818,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		if (!cfile.store (source_file.get_csource_filename (), source_file.filename, context.version_header, context.debug)) {
-			Report.error (null, "unable to open `%s' for writing".printf (source_file.get_csource_filename ()));
+			Report.error (null, _("unable to open `%s' for writing").printf (source_file.get_csource_filename ()));
 		}
 
 		cfile = null;
@@ -1387,7 +1387,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							}
 						} else {
 							f.error = true;
-							Report.error (f.source_reference, "Non-constant field initializers not supported in this context");
+							Report.error (f.source_reference, _("Non-constant field initializers not supported in this context"));
 							return;
 						}
 					}
@@ -1639,11 +1639,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var t = (TypeSymbol) prop.parent_symbol;
 
 		if (acc.construction && !t.is_subtype_of (gobject_type)) {
-			Report.error (acc.source_reference, "construct properties require GLib.Object");
+			Report.error (acc.source_reference, _("construct properties require GLib.Object"));
 			acc.error = true;
 			return;
 		} else if (acc.construction && !is_gobject_property (prop)) {
-			Report.error (acc.source_reference, "construct properties not supported for specified property type");
+			Report.error (acc.source_reference, _("construct properties not supported for specified property type"));
 			acc.error = true;
 			return;
 		}
@@ -1929,7 +1929,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public override void visit_destructor (Destructor d) {
 		if (d.binding == MemberBinding.STATIC && !in_plugin) {
-			Report.error (d.source_reference, "static destructors are only supported for dynamic types");
+			Report.error (d.source_reference, _("static destructors are only supported for dynamic types"));
 			d.error = true;
 			return;
 		}
@@ -2703,7 +2703,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	void require_generic_accessors (Interface iface) {
 		if (iface.get_attribute ("GenericAccessors") == null) {
 			Report.error (iface.source_reference,
-			              "missing generic type for interface `%s', add GenericAccessors attribute to interface declaration"
+			              _("missing generic type for interface `%s', add GenericAccessors attribute to interface declaration")
 			              .printf (iface.get_full_name ()));
 		}
 	}
@@ -2750,7 +2750,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (is_reference_counting (type.data_type)) {
 				dup_function = get_ccode_ref_function ((ObjectTypeSymbol) type.data_type);
 				if (type.data_type is Interface && dup_function == null) {
-					Report.error (source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (type.data_type.get_full_name ()));
+					Report.error (source_reference, _("missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure").printf (type.data_type.get_full_name ()));
 					return new CCodeInvalidExpression();
 				}
 			} else if (cl != null && cl.is_immutable) {
@@ -2774,7 +2774,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			} else {
 				// duplicating non-reference counted objects may cause side-effects (and performance issues)
-				Report.error (source_reference, "duplicating %s instance, use unowned variable or explicitly invoke copy method".printf (type.data_type.name));
+				Report.error (source_reference, _("duplicating %s instance, use unowned variable or explicitly invoke copy method").printf (type.data_type.name));
 				return new CCodeInvalidExpression();
 			}
 
@@ -3279,7 +3279,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (is_reference_counting (type.data_type)) {
 					unref_function = get_ccode_unref_function ((ObjectTypeSymbol) type.data_type);
 					if (type.data_type is Interface && unref_function == null) {
-						Report.error (type.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (type.data_type.get_full_name ()));
+						Report.error (type.source_reference, _("missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure").printf (type.data_type.get_full_name ()));
 						return null;
 					}
 				} else {
@@ -4681,10 +4681,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else if (type_arg is DelegateType) {
 			var delegate_type = (DelegateType) type_arg;
 			if (delegate_type.delegate_symbol.has_target) {
-				Report.error (type_arg.source_reference, "Delegates with target are not supported as generic type arguments");
+				Report.error (type_arg.source_reference, _("Delegates with target are not supported as generic type arguments"));
 			}
 		} else {
-			Report.error (type_arg.source_reference, "`%s' is not a supported generic type argument, use `?' to box value types".printf (type_arg.to_string ()));
+			Report.error (type_arg.source_reference, _("`%s' is not a supported generic type argument, use `?' to box value types").printf (type_arg.to_string ()));
 		}
 	}
 
@@ -4830,9 +4830,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						}
 						int nParams = ccode.get_parameter_count ();
 						if (nParams == 0 || !ccode.get_parameter (nParams - 1).ellipsis) {
-							Report.error (expr.source_reference, "`va_list' used in method with fixed args");
+							Report.error (expr.source_reference, _("`va_list' used in method with fixed args"));
 						} else if (nParams == 1) {
-							Report.error (expr.source_reference, "`va_list' used in method without parameter");
+							Report.error (expr.source_reference, _("`va_list' used in method without parameter"));
 						} else {
 							creation_call.add_argument (new CCodeIdentifier (ccode.get_parameter (nParams - 2).name));
 						}
@@ -5420,7 +5420,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (expr.is_silent_cast) {
 				set_cvalue (expr, new CCodeInvalidExpression ());
 				expr.error = true;
-				Report.error (expr.source_reference, "Operation not supported for this type");
+				Report.error (expr.source_reference, _("Operation not supported for this type"));
 				return;
 			}
 
@@ -5922,7 +5922,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		if (get_cvalue (expr) is CCodeInvalidExpression) {
-			Report.error (expr.source_reference, "type check expressions not supported for compact classes, structs, and enums");
+			Report.error (expr.source_reference, _("type check expressions not supported for compact classes, structs, and enums"));
 		}
 	}
 
@@ -6018,7 +6018,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					ccode.close ();
 				}
 			} else {
-				Report.error (node.source_reference, "type `%s' does not support floating references".printf (type.data_type.name));
+				Report.error (node.source_reference, _("type `%s' does not support floating references").printf (type.data_type.name));
 			}
 		}
 
@@ -6089,7 +6089,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 			var type_id = get_ccode_type_id (type);
 			if (type_id == "") {
-				Report.error (node.source_reference, "GValue boxing of type `%s' is not supported".printf (type.to_string ()));
+				Report.error (node.source_reference, _("GValue boxing of type `%s' is not supported").printf (type.to_string ()));
 			}
 			ccall.add_argument (new CCodeIdentifier (type_id));
 			ccode.add_expression (ccall);
@@ -6189,7 +6189,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// need to copy value
 			var copy = (GLibValue) copy_value (result, node);
 			if (target_type.data_type is Interface && copy == null) {
-				Report.error (node.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (target_type.data_type.get_full_name ()));
+				Report.error (node.source_reference, _("missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure").printf (target_type.data_type.get_full_name ()));
 				return result;
 			}
 			result = copy;
@@ -6630,12 +6630,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public virtual string get_dynamic_property_getter_cname (DynamicProperty node) {
-		Report.error (node.source_reference, "dynamic properties are not supported for %s".printf (node.dynamic_type.to_string ()));
+		Report.error (node.source_reference, _("dynamic properties are not supported for %s").printf (node.dynamic_type.to_string ()));
 		return "";
 	}
 
 	public virtual string get_dynamic_property_setter_cname (DynamicProperty node) {
-		Report.error (node.source_reference, "dynamic properties are not supported for %s".printf (node.dynamic_type.to_string ()));
+		Report.error (node.source_reference, _("dynamic properties are not supported for %s").printf (node.dynamic_type.to_string ()));
 		return "";
 	}
 

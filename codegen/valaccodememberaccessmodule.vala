@@ -110,7 +110,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 		} else if (expr.symbol_reference is ArrayLengthField) {
 			if (expr.value_type is ArrayType && !(expr.parent_node is ElementAccess)) {
-				Report.error (expr.source_reference, "unsupported use of length field of multi-dimensional array");
+				Report.error (expr.source_reference, _("unsupported use of length field of multi-dimensional array"));
 			}
 			set_cvalue (expr, get_array_length_cexpression (expr.inner, 1));
 		} else if (expr.symbol_reference is Field) {
@@ -302,7 +302,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					var owned_value_type = prop.get_accessor.value_type.copy ();
 					owned_value_type.value_owned = true;
 					if (requires_copy (owned_value_type)) {
-						Report.error (prop.get_accessor.source_reference, "unowned return value for getter of property `%s' not supported without accessor".printf (prop.get_full_name ()));
+						Report.error (prop.get_accessor.source_reference, _("unowned return value for getter of property `%s' not supported without accessor").printf (prop.get_full_name ()));
 					}
 				}
 
@@ -591,7 +591,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 			if (inst == null) {
 				// FIXME Report this with proper source-reference on the vala side!
-				Report.error (field.source_reference, "Invalid access to instance member `%s'".printf (field.get_full_name ()));
+				Report.error (field.source_reference, _("Invalid access to instance member `%s'").printf (field.get_full_name ()));
 				result.cvalue = new CCodeInvalidExpression ();
 				return result;
 			}

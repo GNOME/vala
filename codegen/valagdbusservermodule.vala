@@ -1001,7 +1001,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		var object_type = type_arg as ObjectType;
 		if (object_type != null) {
 			if (get_dbus_name (object_type.type_symbol) == null) {
-				Report.error (expr.source_reference, "DBusConnection.register_object requires type argument with [DBus (name = ...)] attribute");
+				Report.error (expr.source_reference, _("DBusConnection.register_object requires type argument with [DBus (name = ...)] attribute"));
 				return;
 			}
 
@@ -1125,7 +1125,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		var ref_function = get_ccode_ref_function (sym);
 		if (sym is Interface && ref_function == null) {
-			Report.error (sym.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (sym.get_full_name ()));
+			Report.error (sym.source_reference, _("missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure").printf (sym.get_full_name ()));
 			return;
 		}
 

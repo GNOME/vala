@@ -702,7 +702,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		    && (array_var is LocalVariable || array_var is Field)) {
 			// valid array add
 		} else {
-			Report.error (assignment.source_reference, "Array concatenation not supported for public array variables and parameters");
+			Report.error (assignment.source_reference, _("Array concatenation not supported for public array variables and parameters"));
 			return;
 		}
 

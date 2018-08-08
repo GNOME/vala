@@ -164,7 +164,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		string filename = "%s%c%s".printf (directory, Path.DIR_SEPARATOR, gir_filename);
 		stream = FileStream.open (filename, "w");
 		if (stream == null) {
-			Report.error (null, "unable to open `%s' for writing".printf (filename));
+			Report.error (null, _("unable to open `%s' for writing").printf (filename));
 			this.context = null;
 			return;
 		}
@@ -186,7 +186,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		foreach (var ns in unannotated_namespaces) {
 			if (!our_namespaces.contains(ns)) {
-				Report.warning (ns.source_reference, "Namespace %s does not have a GIR namespace and version annotation".printf (ns.name));
+				Report.warning (ns.source_reference, _("Namespace %s does not have a GIR namespace and version annotation".printf (ns.name)));
 			}
 		}
 		foreach (var ns in our_namespaces) {
@@ -195,7 +195,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		if (our_namespaces.size == 0) {
-			Report.error (null, "No suitable namespace found to export for GIR");
+			Report.error (null, _("No suitable namespace found to export for GIR"));
 		}
 
 		this.context = null;
