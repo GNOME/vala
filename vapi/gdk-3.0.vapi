@@ -4670,7 +4670,7 @@ namespace Gdk {
 		[Version (deprecated = true, deprecated_since = "3.20.", since = "3.0")]
 		public Gdk.GrabStatus grab (Gdk.Window window, Gdk.GrabOwnership grab_ownership, bool owner_events, Gdk.EventMask event_mask, Gdk.Cursor? cursor, uint32 time_);
 		[Version (since = "3.0")]
-		public GLib.List<weak Gdk.Atom> list_axes ();
+		public GLib.List<weak Gdk.Atom?> list_axes ();
 		public GLib.List<weak Gdk.Device>? list_slave_devices ();
 		public void set_axis_use (uint index_, Gdk.AxisUse use);
 		public void set_key (uint index_, uint keyval, Gdk.ModifierType modifiers);
@@ -4898,7 +4898,7 @@ namespace Gdk {
 		[Version (since = "2.22")]
 		public Gdk.DragAction get_suggested_action ();
 		[Version (since = "2.22")]
-		public unowned GLib.List<Gdk.Atom> list_targets ();
+		public unowned GLib.List<Gdk.Atom?> list_targets ();
 		[Version (since = "3.20")]
 		public bool manage_dnd (Gdk.Window ipc_window, Gdk.DragAction actions);
 		public void set_device (Gdk.Device device);
@@ -6699,12 +6699,12 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_abort (Gdk.DragContext context, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Gdk.DragContext drag_begin (Gdk.Window window, GLib.List<Gdk.Atom> targets);
+	public static Gdk.DragContext drag_begin (Gdk.Window window, GLib.List<Gdk.Atom?> targets);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Gdk.DragContext drag_begin_for_device (Gdk.Window window, Gdk.Device device, GLib.List<Gdk.Atom> targets);
+	public static Gdk.DragContext drag_begin_for_device (Gdk.Window window, Gdk.Device device, GLib.List<Gdk.Atom?> targets);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "3.20")]
-	public static Gdk.DragContext drag_begin_from_point (Gdk.Window window, Gdk.Device device, GLib.List<Gdk.Atom> targets, int x_root, int y_root);
+	public static Gdk.DragContext drag_begin_from_point (Gdk.Window window, Gdk.Device device, GLib.List<Gdk.Atom?> targets, int x_root, int y_root);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_drop (Gdk.DragContext context, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]

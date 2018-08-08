@@ -6883,7 +6883,7 @@ namespace Clutter {
 		public uint get_length ();
 		public uint get_n_nodes ();
 		public Clutter.PathNode get_node (uint index_);
-		public GLib.SList<weak Clutter.PathNode> get_nodes ();
+		public GLib.SList<weak Clutter.PathNode?> get_nodes ();
 		public uint get_position (double progress, out Clutter.Knot position);
 		public void insert_node (int index_, Clutter.PathNode node);
 		public void remove_node (uint index_);

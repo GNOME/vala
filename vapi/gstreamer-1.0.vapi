@@ -29,7 +29,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static int construct_win_color (uint colorinfo);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static GLib.SList<weak Gst.DebugCategory> get_all_categories ();
+		public static GLib.SList<weak Gst.DebugCategory?> get_all_categories ();
 		[CCode (cheader_filename = "gst/gst.h")]
 		[Version (since = "1.2")]
 		public static Gst.DebugColorMode get_color_mode ();
@@ -1515,9 +1515,9 @@ namespace Gst {
 		public uint size;
 		public GLib.Type type;
 		[CCode (simple_generics = true)]
-		public Gst.Iterator filter<T> ([CCode (type = "GCompareFunc")] GLib.SearchFunc<GLib.Value,T> func, T user_data);
+		public Gst.Iterator filter<T> ([CCode (type = "GCompareFunc")] GLib.SearchFunc<GLib.Value?,T> func, T user_data);
 		[CCode (simple_generics = true)]
-		public bool find_custom<T> ([CCode (type = "GCompareFunc")] GLib.SearchFunc<GLib.Value,T> func, out GLib.Value elem, T user_data);
+		public bool find_custom<T> ([CCode (type = "GCompareFunc")] GLib.SearchFunc<GLib.Value?,T> func, out GLib.Value elem, T user_data);
 		public Gst.IteratorResult fold ([CCode (delegate_target_pos = 2.1)] Gst.IteratorFoldFunction func, GLib.Value ret);
 		public Gst.IteratorResult @foreach (Gst.IteratorForeachFunction func);
 		public void free ();

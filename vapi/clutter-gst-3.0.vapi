@@ -89,7 +89,7 @@ namespace ClutterGst {
 		public void get_capture_resolution (out int width, out int height);
 		public unowned string get_name ();
 		public unowned string get_node ();
-		public unowned GLib.GenericArray<ClutterGst.VideoResolution> get_supported_resolutions ();
+		public unowned GLib.GenericArray<ClutterGst.VideoResolution?> get_supported_resolutions ();
 		public void set_capture_resolution (int width, int height);
 		[NoAccessorMethod]
 		public Gst.ElementFactory element_factory { owned get; construct; }

@@ -11,8 +11,8 @@ Infile
   .child_by_vaname skip=false
 
 InfileMSVBA
-  .get_modules type="unowned GLib.HashTable<string,uint8[]?>"
-  .steal_modules type="GLib.HashTable<string,uint8[]?>"
+  .get_modules type="unowned GLib.HashTable<string,void*>"
+  .steal_modules type="GLib.HashTable<string,void*>"
 
 Input
   .* skip=false

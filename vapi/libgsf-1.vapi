@@ -83,8 +83,8 @@ namespace Gsf {
 	public class InfileMSVBA : Gsf.Infile {
 		[CCode (has_construct_function = false, type = "GsfInfile*")]
 		public InfileMSVBA (Gsf.Infile source) throws GLib.Error;
-		public unowned GLib.HashTable<string,uint8[]?> get_modules ();
-		public GLib.HashTable<string,uint8[]?> steal_modules ();
+		public unowned GLib.HashTable<string,void*> get_modules ();
+		public GLib.HashTable<string,void*> steal_modules ();
 	}
 	[CCode (cheader_filename = "gsf/gsf.h", type_id = "gsf_infile_stdio_get_type ()")]
 	public class InfileStdio : Gsf.Infile {
