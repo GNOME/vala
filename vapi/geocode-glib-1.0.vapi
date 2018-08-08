@@ -92,7 +92,7 @@ namespace Geocode {
 		public void add_forward_result (GLib.HashTable<string,GLib.Value?> @params, GLib.List<Geocode.Place>? results, GLib.Error? error);
 		public void add_reverse_result (GLib.HashTable<string,GLib.Value?> @params, GLib.List<Geocode.Place>? results, GLib.Error? error);
 		public void clear ();
-		public unowned GLib.GenericArray<Geocode.MockBackendQuery> get_query_log ();
+		public unowned GLib.GenericArray<Geocode.MockBackendQuery?> get_query_log ();
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_id = "geocode_nominatim_get_type ()")]
 	[Version (since = "3.23.1")]

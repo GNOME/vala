@@ -62,9 +62,9 @@ namespace Gst {
 	[Compact, CCode (copy_function = "gst_iterator_copy", free_function = "gst_iterator_free", type_id = "gst_iterator_get_type ()")]
 	public class Iterator {
 		[CCode (simple_generics = true)]
-		public Gst.Iterator filter<T> ([CCode (type = "GCompareFunc")] GLib.SearchFunc<GLib.Value,T> func, T user_data);
+		public Gst.Iterator filter<T> ([CCode (type = "GCompareFunc")] GLib.SearchFunc<GLib.Value?,T> func, T user_data);
 		[CCode (simple_generics = true)]
-		public bool find_custom<T> ([CCode (type = "GCompareFunc")] GLib.SearchFunc<GLib.Value,T> func, out GLib.Value elem, T user_data);
+		public bool find_custom<T> ([CCode (type = "GCompareFunc")] GLib.SearchFunc<GLib.Value?,T> func, out GLib.Value elem, T user_data);
 	}
 
 	[Compact, CCode (ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed")]

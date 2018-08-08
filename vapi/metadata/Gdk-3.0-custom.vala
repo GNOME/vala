@@ -1,5 +1,5 @@
 namespace Gdk {
-	[SimpleType]
+	[IntegerType]
 	public struct Atom : uint {
 		[CCode (cname = "GDK_NONE")]
 		public static Gdk.Atom NONE;

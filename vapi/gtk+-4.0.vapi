@@ -5069,7 +5069,7 @@ namespace Gdk {
 		public bool get_key_is_modifier (out bool is_modifier);
 		public bool get_keycode (out uint16 keycode);
 		public bool get_keyval (out uint keyval);
-		public GLib.List<weak Gdk.TimeCoord>? get_motion_history ();
+		public GLib.List<weak Gdk.TimeCoord?>? get_motion_history ();
 		public bool get_pad_axis_value (out uint index, out double value);
 		public bool get_pad_button (out uint button);
 		public bool get_pad_group_mode (out uint group, out uint mode);

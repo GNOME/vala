@@ -5921,7 +5921,7 @@ namespace Gdk {
 		public int get_n_groups ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
-	[SimpleType]
+	[IntegerType]
 	public struct Atom : uint {
 		[CCode (cname = "GDK_NONE")]
 		public static Gdk.Atom NONE;

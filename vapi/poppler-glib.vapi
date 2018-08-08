@@ -529,9 +529,9 @@ namespace Poppler {
 		protected Page ();
 		[Version (since = "0.16")]
 		public void add_annot (Poppler.Annot annot);
-		public GLib.List<Poppler.Rectangle> find_text (string text);
+		public GLib.List<Poppler.Rectangle?> find_text (string text);
 		[Version (since = "0.22")]
-		public GLib.List<Poppler.Rectangle> find_text_with_options (string text, Poppler.FindFlags options);
+		public GLib.List<Poppler.Rectangle?> find_text_with_options (string text, Poppler.FindFlags options);
 		public static void free_annot_mapping (GLib.List<Poppler.AnnotMapping> list);
 		public static void free_form_field_mapping (GLib.List<Poppler.FormFieldMapping> list);
 		public static void free_image_mapping (GLib.List<Poppler.ImageMapping> list);
@@ -553,7 +553,7 @@ namespace Poppler {
 		[Version (since = "0.16")]
 		public string get_selected_text (Poppler.SelectionStyle style, Poppler.Rectangle selection);
 		[Version (deprecated = true, deprecated_since = "0.16")]
-		public GLib.List<Poppler.Rectangle> get_selection_region (double scale, Poppler.SelectionStyle style, Poppler.Rectangle selection);
+		public GLib.List<Poppler.Rectangle?> get_selection_region (double scale, Poppler.SelectionStyle style, Poppler.Rectangle selection);
 		public void get_size (out double width, out double height);
 		[Version (since = "0.16")]
 		public string get_text ();
@@ -579,7 +579,7 @@ namespace Poppler {
 		public void render_selection ([CCode (type = "cairo_t*")] Cairo.Context cairo, Poppler.Rectangle selection, Poppler.Rectangle old_selection, Poppler.SelectionStyle style, Poppler.Color glyph_color, Poppler.Color background_color);
 		public void render_to_ps (Poppler.PSFile ps_file);
 		[Version (deprecated = true, deprecated_since = "0.16")]
-		public static void selection_region_free (GLib.List<Poppler.Rectangle> region);
+		public static void selection_region_free (GLib.List<Poppler.Rectangle?> region);
 		public string label { owned get; }
 	}
 	[CCode (cheader_filename = "poppler.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "poppler_page_transition_get_type ()")]
@@ -830,7 +830,7 @@ namespace Poppler {
 	[CCode (cheader_filename = "poppler.h", has_type_id = false)]
 	public struct ActionLayer {
 		public Poppler.ActionLayerAction action;
-		public weak GLib.List<Poppler.ActionLayer> layers;
+		public weak GLib.List<Poppler.ActionLayer?> layers;
 	}
 	[CCode (cheader_filename = "poppler.h", has_type_id = false)]
 	public struct ActionMovie {
@@ -849,7 +849,7 @@ namespace Poppler {
 	public struct ActionOCGState {
 		public Poppler.ActionType type;
 		public string title;
-		public GLib.List<Poppler.ActionLayer> state_list;
+		public GLib.List<Poppler.ActionLayer?> state_list;
 	}
 	[CCode (cheader_filename = "poppler.h", has_type_id = false)]
 	public struct ActionRendition {

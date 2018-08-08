@@ -6724,7 +6724,7 @@ namespace Gtk {
 		public void set_string_property (string name, string v_string, string origin);
 		[NoAccessorMethod]
 		[Version (deprecated = true, deprecated_since = "3.8", since = "2.10")]
-		public GLib.HashTable<string,Gdk.Color> color_hash { owned get; }
+		public GLib.HashTable<string,Gdk.Color?> color_hash { owned get; }
 		[NoAccessorMethod]
 		public bool gtk_alternative_button_order { get; set; }
 		[NoAccessorMethod]

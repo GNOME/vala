@@ -12,5 +12,5 @@ ActionLayer.layers unowned
 
 ANNOT_TEXT_ICON_* parent="Poppler.AnnotTextIcon" name="ANNOT_TEXT_ICON_(.+)"
 
-ActionLayer.layers type_arguments="Poppler.ActionLayer"
-ActionOCGState.state_list type_arguments="Poppler.ActionLayer"
+ActionLayer.layers type_arguments="Poppler.ActionLayer?"
+ActionOCGState.state_list type_arguments="Poppler.ActionLayer?"
