@@ -99,6 +99,9 @@ public class Vala.Field : Variable, Lockable {
 		}
 
 		variable_type.check (context);
+		if (!external_package) {
+			context.analyzer.check_type (variable_type);
+		}
 
 		// check whether field type is at least as accessible as the field
 		if (!context.analyzer.is_type_accessible (this, variable_type)) {

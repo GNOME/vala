@@ -785,6 +785,9 @@ public class Vala.Method : Subroutine, Callable {
 
 		return_type.floating_reference = returns_floating_reference;
 		return_type.check (context);
+		if (!external_package) {
+			context.analyzer.check_type (return_type);
+		}
 
 		var init_attr = get_attribute ("ModuleInit");
 		if (init_attr != null) {

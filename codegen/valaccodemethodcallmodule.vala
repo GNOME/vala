@@ -46,7 +46,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			m = ((MethodType) itype).method_symbol;
 
 			if (!get_ccode_simple_generics (m)) {
-				check_type_arguments (ma);
+				context.analyzer.check_type_arguments (ma);
 			}
 
 			if (ma.inner != null && ma.inner.value_type is EnumValueType && ((EnumValueType) ma.inner.value_type).get_to_string_method() == m) {

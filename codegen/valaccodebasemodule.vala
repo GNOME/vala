@@ -1140,8 +1140,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		push_line (f.source_reference);
 		visit_member (f);
 
-		check_type (f.variable_type);
-
 		var cl = f.parent_symbol as Class;
 		bool is_gtypeinstance = (cl != null && !cl.is_compact);
 
@@ -1465,16 +1463,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return false;
 	}
 
-	public override void visit_formal_parameter (Parameter p) {
-		if (!p.ellipsis) {
-			check_type (p.variable_type);
-		}
-	}
-
 	public override void visit_property (Property prop) {
 		visit_member (prop);
-
-		check_type (prop.property_type);
 
 		if (prop.get_accessor != null) {
 			prop.get_accessor.accept (this);
@@ -2454,8 +2444,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_local_variable (LocalVariable local) {
-		check_type (local.variable_type);
-
 		/* Declaration */
 
 		generate_type_declaration (local.variable_type, cfile);
@@ -4546,124 +4534,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	bool is_reference_type_argument (DataType type_arg) {
-		if (type_arg is ErrorType || (type_arg.data_type != null && type_arg.data_type.is_reference_type ())) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	bool is_nullable_value_type_argument (DataType type_arg) {
-		if (type_arg is ValueType && type_arg.nullable) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	bool is_signed_integer_type_argument (DataType type_arg) {
-		var st = type_arg.data_type as Struct;
-		if (type_arg is EnumValueType) {
-			return true;
-		} else if (type_arg.nullable) {
-			return false;
-		} else if (st == null) {
-			return false;
-		} else if (st.is_subtype_of (bool_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (char_type.data_type)) {
-			return true;
-		} else if (unichar_type != null && st.is_subtype_of (unichar_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (short_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (int_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (long_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (int8_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (int16_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (int32_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (gtype_type)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	bool is_unsigned_integer_type_argument (DataType type_arg) {
-		var st = type_arg.data_type as Struct;
-		if (st == null) {
-			return false;
-		} else if (type_arg.nullable) {
-			return false;
-		} else if (st.is_subtype_of (uchar_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (ushort_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (uint_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (ulong_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (uint8_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (uint16_type.data_type)) {
-			return true;
-		} else if (st.is_subtype_of (uint32_type.data_type)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public void check_type (DataType type) {
-		var array_type = type as ArrayType;
-		if (array_type != null) {
-			check_type (array_type.element_type);
-			if (array_type.element_type is ArrayType) {
-				Report.error (type.source_reference, "Stacked arrays are not supported");
-			} else if (array_type.element_type is DelegateType) {
-				var delegate_type = (DelegateType) array_type.element_type;
-				if (delegate_type.delegate_symbol.has_target) {
-					Report.error (type.source_reference, "Delegates with target are not supported as array element type");
-				}
-			}
-		}
-		foreach (var type_arg in type.get_type_arguments ()) {
-			check_type (type_arg);
-			check_type_argument (type_arg);
-		}
-	}
-
-	public void check_type_arguments (MemberAccess access) {
-		foreach (var type_arg in access.get_type_arguments ()) {
-			check_type (type_arg);
-			check_type_argument (type_arg);
-		}
-	}
-
-	void check_type_argument (DataType type_arg) {
-		if (type_arg is GenericType
-		    || type_arg is PointerType
-		    || is_reference_type_argument (type_arg)
-		    || is_nullable_value_type_argument (type_arg)
-		    || is_signed_integer_type_argument (type_arg)
-		    || is_unsigned_integer_type_argument (type_arg)) {
-			// no error
-		} else if (type_arg is DelegateType) {
-			var delegate_type = (DelegateType) type_arg;
-			if (delegate_type.delegate_symbol.has_target) {
-				Report.error (type_arg.source_reference, "Delegates with target are not supported as generic type arguments");
-			}
-		} else {
-			Report.error (type_arg.source_reference, "`%s' is not a supported generic type argument, use `?' to box value types".printf (type_arg.to_string ()));
-		}
-	}
-
 	public virtual void generate_class_declaration (Class cl, CCodeFile decl_space) {
 		if (add_symbol_declaration (decl_space, cl, get_ccode_name (cl))) {
 			return;
@@ -4710,8 +4580,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
 		CCodeExpression instance = null;
 		CCodeExpression creation_expr = null;
-
-		check_type (expr.type_reference);
 
 		var st = expr.type_reference.data_type as Struct;
 		if ((st != null && (!st.is_simple_type () || get_ccode_name (st) == "va_list")) || expr.get_object_initializer ().size > 0) {
@@ -5878,23 +5746,25 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeExpression convert_from_generic_pointer (CCodeExpression cexpr, DataType actual_type) {
+		unowned SemanticAnalyzer analyzer = context.analyzer;
 		var result = cexpr;
-		if (is_reference_type_argument (actual_type) || is_nullable_value_type_argument (actual_type)) {
+		if (analyzer.is_reference_type_argument (actual_type) || analyzer.is_nullable_value_type_argument (actual_type)) {
 			generate_type_declaration (actual_type, cfile);
 			result = new CCodeCastExpression (cexpr, get_ccode_name (actual_type));
-		} else if (is_signed_integer_type_argument (actual_type)) {
+		} else if (analyzer.is_signed_integer_type_argument (actual_type)) {
 			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "gintptr"), get_ccode_name (actual_type));
-		} else if (is_unsigned_integer_type_argument (actual_type)) {
+		} else if (analyzer.is_unsigned_integer_type_argument (actual_type)) {
 			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "guintptr"), get_ccode_name (actual_type));
 		}
 		return result;
 	}
 
 	public CCodeExpression convert_to_generic_pointer (CCodeExpression cexpr, DataType actual_type) {
+		unowned SemanticAnalyzer analyzer = context.analyzer;
 		var result = cexpr;
-		if (is_signed_integer_type_argument (actual_type)) {
+		if (analyzer.is_signed_integer_type_argument (actual_type)) {
 			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "gintptr"), "gpointer");
-		} else if (is_unsigned_integer_type_argument (actual_type)) {
+		} else if (analyzer.is_unsigned_integer_type_argument (actual_type)) {
 			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "guintptr"), "gpointer");
 		}
 		return result;

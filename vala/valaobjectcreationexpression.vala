@@ -188,7 +188,7 @@ public class Vala.ObjectCreationExpression : Expression {
 			}
 		}
 
-		TypeSymbol type = null;
+		TypeSymbol type;
 
 		if (type_reference == null) {
 			if (member_name == null) {
@@ -237,6 +237,7 @@ public class Vala.ObjectCreationExpression : Expression {
 				type = (TypeSymbol) type_sym;
 				type_reference = new StructValueType ((Struct) type);
 			} else if (type_sym is ErrorCode) {
+				type = (TypeSymbol) type_sym;
 				type_reference = new ErrorType ((ErrorDomain) type_sym.parent_symbol, (ErrorCode) type_sym, source_reference);
 				symbol_reference = type_sym;
 			} else {
@@ -484,6 +485,10 @@ public class Vala.ObjectCreationExpression : Expression {
 				var sizeof_type = sizeof_expr.type_reference.get_actual_type (type_reference, type_reference.get_type_arguments (), this);
 				replace_expression (arg, new SizeofExpression (sizeof_type, source_reference));
 			}
+		}
+
+		if (!type.external_package) {
+			context.analyzer.check_type (type_reference);
 		}
 
 		foreach (MemberInitializer init in get_object_initializer ()) {

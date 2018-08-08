@@ -327,8 +327,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		bool in_gobject_creation_method = false;
 		bool in_fundamental_creation_method = false;
 
-		check_type (m.return_type);
-
 		bool profile = m.get_attribute ("Profile") != null;
 
 		if (m is CreationMethod) {

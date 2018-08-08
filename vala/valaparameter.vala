@@ -186,6 +186,10 @@ public class Vala.Parameter : Variable {
 		}
 
 		if (!ellipsis) {
+			if (!external_package) {
+				context.analyzer.check_type (variable_type);
+			}
+
 			// check whether parameter type is at least as accessible as the method
 			if (!context.analyzer.is_type_accessible (this, variable_type)) {
 				error = true;
