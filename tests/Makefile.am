@@ -461,6 +461,7 @@ TESTS = \
 	parser/yield-method.test \
 	parser/bug728574.vala \
 	parser/bug749576.vala \
+	semantic/array-stacked.test \
 	semantic/array-incompatible-initializer.test \
 	semantic/array-incompatible-initializer2.test \
 	semantic/assignment-element-incompatible-ownership.test \
