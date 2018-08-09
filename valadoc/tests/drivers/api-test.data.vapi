@@ -107,7 +107,7 @@ namespace ParamTest {
 
 	public void test_function_param_12 (int[] a);
 	public void test_function_param_13 (int[,,] a);
-	public void test_function_param_14 (int[][] a);
+	//public void test_function_param_14 (int[][] a);
 }
 
 
@@ -122,7 +122,7 @@ namespace ReturnTest {
 
 	public int[] test_function_7 ();
 	public int[,,] test_function_8 ();
-	public int[][] test_function_9 ();
+	//public int[][] test_function_9 ();
 }
 
 
