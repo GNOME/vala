@@ -1306,7 +1306,7 @@ public class Vala.GirParser : CodeVisitor {
 	Set<string> provided_namespaces = new HashSet<string> (str_hash, str_equal);
 	HashMap<UnresolvedSymbol,Symbol> unresolved_symbols_map = new HashMap<UnresolvedSymbol,Symbol> (unresolved_symbol_hash, unresolved_symbol_equal);
 	ArrayList<UnresolvedSymbol> unresolved_gir_symbols = new ArrayList<UnresolvedSymbol> ();
-	ArrayList<DataType> unresolved_type_arguments = new ArrayList<DataType> ();
+	HashMap<UnresolvedType,Node> unresolved_type_arguments = new HashMap<UnresolvedType,Node> ();
 
 	/**
 	 * Parses all .gir source files in the specified code
@@ -2626,7 +2626,14 @@ public class Vala.GirParser : CodeVisitor {
 			var element_type = parse_type ();
 			element_type.value_owned = transfer_elements;
 			type.add_type_argument (element_type);
-			unresolved_type_arguments.add (element_type);
+
+			if (element_type is UnresolvedType) {
+				Node parent = current ?? root;
+				while (parent != root && parent.parent != null && parent.parent != root) {
+					parent = parent.parent;
+				}
+				unresolved_type_arguments[(UnresolvedType) element_type] = parent;
+			}
 		}
 
 		end_element (is_array ? "array" : "type");
@@ -3592,14 +3599,13 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	void resolve_type_arguments () {
-		// box structs in type arguments
-		foreach (var element_type in unresolved_type_arguments) {
-			TypeSymbol sym = null;
-			if (element_type is UnresolvedType) {
-				sym = (TypeSymbol) resolve_symbol (root, ((UnresolvedType) element_type).unresolved_symbol);
-			} else if (element_type.data_type != null) {
-				sym = element_type.data_type;
-			}
+		var it = unresolved_type_arguments.map_iterator ();
+		while (it.next ()) {
+			var element_type = it.get_key ();
+			var parent = it.get_value ();
+			var sym = (TypeSymbol) resolve_symbol (parent, element_type.unresolved_symbol);
+
+			// box structs in type arguments
 			var st = sym as Struct;
 			if (st != null && !st.is_integer_type () && !st.is_floating_type ()) {
 				element_type.nullable = true;
