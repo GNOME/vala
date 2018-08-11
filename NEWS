@@ -1,3 +1,18 @@
+Vala 0.41.91
+============
+ * Various bug fixes:
+   - codegen: Call ref_sink on objects passed to generic type [#655]
+   - codegen: Free errors after returning them on GDBusMethodInvocation [#657]
+   - girparser: Actually resolve type-arguments to be able to box them if needed
+   - vala: Add consts/methods to retrieve and check library version [#304]
+
+ * Bindings:
+   - glib-2.0: Add Array.remove*() wrapper to avoid leaking generic elements
+   - glib-2.0: Add (u)long.parse/try_parse() [#649]
+   - gstreamer: Update from 1.15+ git master
+   - gtk+-3.0: Update to 3.23.2+6b6e53fd
+   - gtk+-4.0: Update to 3.94.0+4e868584
+
 Vala 0.41.90
 ============
  * Highlights
