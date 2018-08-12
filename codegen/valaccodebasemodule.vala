@@ -5847,7 +5847,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var result = ((GLibValue) value).copy ();
 
 		if (type.value_owned
-		    && (target_type is GenericType || (target_type is ObjectType && !target_type.floating_reference))
+		    && (target_type == null || target_type is GenericType || !target_type.floating_reference)
 		    && type.floating_reference) {
 			/* floating reference, sink it.
 			 */
