@@ -165,6 +165,7 @@ public class Vala.ConditionalExpression : Expression {
 		}
 
 		value_type.value_owned = (true_expression.value_type.value_owned || false_expression.value_type.value_owned);
+		value_type.floating_reference = false;
 
 		local.variable_type = value_type;
 		decl.check (context);

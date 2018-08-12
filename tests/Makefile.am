@@ -515,6 +515,7 @@ TESTS = \
 	semantic/field-namespace-owned.test \
 	semantic/field-non-constant.test \
 	semantic/field-void.test \
+	semantic/floating-reference.vala \
 	semantic/foreach-iterator-args.test \
 	semantic/foreach-iterator-void.test \
 	semantic/foreach-iterator-wrong-types.test \
