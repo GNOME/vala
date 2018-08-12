@@ -4651,9 +4651,9 @@ namespace GLib {
 		[Version (since = "2.4")]
 		public int index (G data);
 		[Version (since = "2.4")]
-		public void remove (G data);
+		public bool remove (G data);
 		[Version (since = "2.4")]
-		public void remove_all (G data);
+		public uint remove_all (G data);
 		[Version (since = "2.4")]
 		public void delete_link (List<G> link);
 		[Version (since = "2.4")]
@@ -4781,6 +4781,7 @@ namespace GLib {
 		[Version (since = "2.12")]
 		public void remove_all ();
 		public uint foreach_remove (HRFunc<K,V> predicate);
+		public uint foreach_steal (HRFunc<K,V> predicate);
 		[CCode (cname = "g_hash_table_lookup")]
 		public unowned V? @get (K key);
 		[CCode (cname = "g_hash_table_insert")]
