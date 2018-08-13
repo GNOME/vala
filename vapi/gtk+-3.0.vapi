@@ -950,7 +950,7 @@ namespace Gtk {
 		public void attribute_disconnect (Gtk.CellRenderer renderer, string attribute);
 		public int attribute_get_column (Gtk.CellRenderer renderer, string attribute);
 		public void cell_get (Gtk.CellRenderer renderer, ...);
-		public void cell_get_property (Gtk.CellRenderer renderer, string property_name, GLib.Value value);
+		public void cell_get_property (Gtk.CellRenderer renderer, string property_name, ref GLib.Value value);
 		public void cell_get_valist (Gtk.CellRenderer renderer, string first_property_name, va_list var_args);
 		public void cell_set (Gtk.CellRenderer renderer, ...);
 		public void cell_set_property (Gtk.CellRenderer renderer, string property_name, GLib.Value value);
@@ -966,7 +966,7 @@ namespace Gtk {
 		public Gdk.Rectangle get_cell_allocation (Gtk.CellAreaContext context, Gtk.Widget widget, Gtk.CellRenderer renderer, Gdk.Rectangle cell_area);
 		public unowned Gtk.CellRenderer get_cell_at_position (Gtk.CellAreaContext context, Gtk.Widget widget, Gdk.Rectangle cell_area, int x, int y, out Gdk.Rectangle alloc_area);
 		[NoWrapper]
-		public virtual void get_cell_property (Gtk.CellRenderer renderer, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
+		public virtual void get_cell_property (Gtk.CellRenderer renderer, uint property_id, ref GLib.Value value, GLib.ParamSpec pspec);
 		public unowned string get_current_path_string ();
 		public unowned Gtk.CellEditable get_edit_widget ();
 		public unowned Gtk.CellRenderer get_edited_cell ();
@@ -1622,7 +1622,7 @@ namespace Gtk {
 		protected Container ();
 		public void add_with_properties (Gtk.Widget widget, ...);
 		public void child_get (Gtk.Widget child, ...);
-		public void child_get_property (Gtk.Widget child, string property_name, GLib.Value value);
+		public void child_get_property (Gtk.Widget child, string property_name, ref GLib.Value value);
 		public void child_get_valist (Gtk.Widget child, string first_property_name, va_list var_args);
 		public void child_notify (Gtk.Widget child, string child_property);
 		public void child_notify_by_pspec (Gtk.Widget child, GLib.ParamSpec pspec);
@@ -1641,7 +1641,7 @@ namespace Gtk {
 		public void @foreach (Gtk.Callback callback);
 		public uint get_border_width ();
 		[NoWrapper]
-		public virtual void get_child_property (Gtk.Widget child, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
+		public virtual void get_child_property (Gtk.Widget child, uint property_id, ref GLib.Value value, GLib.ParamSpec pspec);
 		public GLib.List<weak Gtk.Widget> get_children ();
 		public bool get_focus_chain (out GLib.List<weak Gtk.Widget> focusable_widgets);
 		public unowned Gtk.Widget? get_focus_child ();
@@ -5268,7 +5268,7 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void draw_vline (Cairo.Context cr, Gtk.StateType state_type, Gtk.Widget widget, string detail, int y1_, int y2_, int x);
 		public void @get (GLib.Type widget_type, ...);
-		public void get_style_property (GLib.Type widget_type, string property_name, out GLib.Value value);
+		public void get_style_property (GLib.Type widget_type, string property_name, ref GLib.Value value);
 		public void get_valist (GLib.Type widget_type, string first_property_name, void* var_args);
 		public bool has_context ();
 		[NoWrapper]
@@ -5978,7 +5978,7 @@ namespace Gtk {
 		public unowned Gdk.Screen get_screen ();
 		public Gtk.StateFlags get_state ();
 		public void get_style (...);
-		public GLib.Value get_style_property (string property_name);
+		public void get_style_property (string property_name, ref GLib.Value value);
 		public void get_style_valist (va_list args);
 		public void get_valist (Gtk.StateFlags state, va_list args);
 		public bool has_class (string style_class);
@@ -7672,7 +7672,7 @@ namespace Gtk {
 	public interface StyleProvider : GLib.Object {
 		public abstract unowned Gtk.IconFactory get_icon_factory (Gtk.WidgetPath path);
 		public abstract Gtk.StyleProperties get_style (Gtk.WidgetPath path);
-		public abstract bool get_style_property (Gtk.WidgetPath path, Gtk.StateFlags state, GLib.ParamSpec pspec, out GLib.Value value);
+		public abstract bool get_style_property (Gtk.WidgetPath path, Gtk.StateFlags state, GLib.ParamSpec pspec, ref GLib.Value value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface ToolShell : Gtk.Widget {
