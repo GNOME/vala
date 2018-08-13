@@ -13,9 +13,9 @@ AM_MAINTAINER_MODE([enable])
 API_VERSION=0.42
 PACKAGE_SUFFIX="-$API_VERSION"
 
-VALA_MAJOR_VERSION=`echo $PACKAGE_VERSION | cut -d. -f1 | sed s/[a-zA-Z\-].*//g`
-VALA_MINOR_VERSION=`echo $PACKAGE_VERSION | cut -d. -f2 | sed s/[a-zA-Z\-].*//g`
-VALA_MICRO_VERSION=`echo $PACKAGE_VERSION | cut -d. -f3 | sed s/[a-zA-Z\-].*//g`
+VALA_MAJOR_VERSION=`echo $PACKAGE_VERSION | cut -d. -f1 | sed s/[[a-zA-Z\-]].*//g`
+VALA_MINOR_VERSION=`echo $PACKAGE_VERSION | cut -d. -f2 | sed s/[[a-zA-Z\-]].*//g`
+VALA_MICRO_VERSION=`echo $PACKAGE_VERSION | cut -d. -f3 | sed s/[[a-zA-Z\-]].*//g`
 AC_SUBST(VALA_MAJOR_VERSION)
 AC_SUBST(VALA_MINOR_VERSION)
 AC_SUBST(VALA_MICRO_VERSION)
