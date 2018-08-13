@@ -1387,7 +1387,7 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public void cell_get (Gtk.CellRenderer renderer, ...);
 		[Version (since = "3.0")]
-		public void cell_get_property (Gtk.CellRenderer renderer, string property_name, GLib.Value value);
+		public void cell_get_property (Gtk.CellRenderer renderer, string property_name, ref GLib.Value value);
 		[Version (since = "3.0")]
 		public void cell_get_valist (Gtk.CellRenderer renderer, string first_property_name, [CCode (type = "va_list")] va_list var_args);
 		[Version (since = "3.0")]
@@ -1416,7 +1416,7 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public unowned Gtk.CellRenderer get_cell_at_position (Gtk.CellAreaContext context, Gtk.Widget widget, Gdk.Rectangle cell_area, int x, int y, out Gdk.Rectangle alloc_area);
 		[NoWrapper]
-		public virtual void get_cell_property (Gtk.CellRenderer renderer, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
+		public virtual void get_cell_property (Gtk.CellRenderer renderer, uint property_id, ref GLib.Value value, GLib.ParamSpec pspec);
 		[Version (since = "3.0")]
 		public unowned string get_current_path_string ();
 		[Version (since = "3.0")]
@@ -2325,7 +2325,7 @@ namespace Gtk {
 		protected Container ();
 		public void add_with_properties (Gtk.Widget widget, ...);
 		public void child_get (Gtk.Widget child, ...);
-		public void child_get_property (Gtk.Widget child, string property_name, GLib.Value value);
+		public void child_get_property (Gtk.Widget child, string property_name, ref GLib.Value value);
 		public void child_get_valist (Gtk.Widget child, string first_property_name, [CCode (type = "va_list")] va_list var_args);
 		[Version (since = "3.2")]
 		public void child_notify (Gtk.Widget child, string child_property);
@@ -2350,7 +2350,7 @@ namespace Gtk {
 		public void @foreach (Gtk.Callback callback);
 		public uint get_border_width ();
 		[NoWrapper]
-		public virtual void get_child_property (Gtk.Widget child, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
+		public virtual void get_child_property (Gtk.Widget child, uint property_id, ref GLib.Value value, GLib.ParamSpec pspec);
 		public GLib.List<weak Gtk.Widget> get_children ();
 		[Version (deprecated = true, deprecated_since = "3.24")]
 		public bool get_focus_chain (out GLib.List<weak Gtk.Widget> focusable_widgets);
@@ -7501,7 +7501,7 @@ namespace Gtk {
 		[Version (since = "2.16")]
 		public void @get (GLib.Type widget_type, ...);
 		[Version (since = "2.16")]
-		public void get_style_property (GLib.Type widget_type, string property_name, out GLib.Value value);
+		public void get_style_property (GLib.Type widget_type, string property_name, ref GLib.Value value);
 		[Version (since = "2.16")]
 		public void get_valist (GLib.Type widget_type, string first_property_name, [CCode (type = "va_list")] va_list var_args);
 		[Version (since = "3.0")]
@@ -7570,7 +7570,7 @@ namespace Gtk {
 		public Gtk.StateFlags get_state ();
 		[Version (since = "3.0")]
 		public void get_style (...);
-		public void get_style_property (string property_name, GLib.Value value);
+		public void get_style_property (string property_name, ref GLib.Value value);
 		[Version (since = "3.0")]
 		public void get_style_valist ([CCode (type = "va_list")] va_list args);
 		[Version (since = "3.0")]
@@ -8411,7 +8411,7 @@ namespace Gtk {
 		[Version (deprecated = true, deprecated_since = "3.14", since = "3.0")]
 		public void get_style (...);
 		[Version (deprecated = true, deprecated_since = "3.14", since = "3.0")]
-		public GLib.Value get_style_property (string property_name);
+		public void get_style_property (string property_name, ref GLib.Value value);
 		[Version (deprecated = true, deprecated_since = "3.14", since = "3.0")]
 		public void get_style_valist ([CCode (type = "va_list")] va_list args);
 		[Version (deprecated = true, deprecated_since = "3.14", since = "3.0")]
@@ -10842,7 +10842,7 @@ namespace Gtk {
 		[Version (deprecated = true, deprecated_since = "3.8", since = "3.0")]
 		public abstract Gtk.StyleProperties? get_style (Gtk.WidgetPath path);
 		[Version (since = "3.0")]
-		public abstract bool get_style_property (Gtk.WidgetPath path, Gtk.StateFlags state, GLib.ParamSpec pspec, out GLib.Value value);
+		public abstract bool get_style_property (Gtk.WidgetPath path, Gtk.StateFlags state, GLib.ParamSpec pspec, ref GLib.Value value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tool_shell_get_type ()")]
 	public interface ToolShell : Gtk.Widget {
