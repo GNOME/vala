@@ -241,12 +241,12 @@ namespace GLib {
 		public void set_qdata (GLib.Quark quark, void* data);
 		public void set_qdata_full (GLib.Quark quark, void* data, GLib.DestroyNotify destroy);
 		[CCode (cname = "g_param_value_set_default")]
-		public void set_value_default (GLib.Value value);
+		public void set_value_default (ref GLib.Value value);
 		public void sink ();
 		public void* steal_qdata (GLib.Quark quark);
 		public void unref ();
 		[CCode (cname = "g_param_value_convert")]
-		public bool value_convert (GLib.Value src_value, GLib.Value dest_value, bool strict_validation);
+		public bool value_convert (GLib.Value src_value, ref GLib.Value dest_value, bool strict_validation);
 		[CCode (cname = "g_param_value_defaults", vfunc_name = "value_defaults")]
 		public virtual bool value_defaults (GLib.Value value);
 		[CCode (cname = "g_param_value_validate", vfunc_name = "value_validate")]

@@ -264,6 +264,13 @@ TreeModel
 // Vala-specific, not really bugs
 /////////////////////////////////
 
+CellArea
+  .cell_get_property.value ref
+  .get_cell_property.value ref
+Container
+  .get_child_property.value ref
+  .child_get_property.value ref
+
 // Backwards compatibility
 AccelGroup
   .find type="Gtk.AccelKey*"

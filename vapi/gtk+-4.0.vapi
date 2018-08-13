@@ -6881,7 +6881,7 @@ namespace Gtk {
 		public void attribute_disconnect (Gtk.CellRenderer renderer, string attribute);
 		public int attribute_get_column (Gtk.CellRenderer renderer, string attribute);
 		public void cell_get (Gtk.CellRenderer renderer, ...);
-		public void cell_get_property (Gtk.CellRenderer renderer, string property_name, GLib.Value value);
+		public void cell_get_property (Gtk.CellRenderer renderer, string property_name, ref GLib.Value value);
 		public void cell_get_valist (Gtk.CellRenderer renderer, string first_property_name, [CCode (type = "va_list")] va_list var_args);
 		public void cell_set (Gtk.CellRenderer renderer, ...);
 		public void cell_set_property (Gtk.CellRenderer renderer, string property_name, GLib.Value value);
@@ -6897,7 +6897,7 @@ namespace Gtk {
 		public Gdk.Rectangle get_cell_allocation (Gtk.CellAreaContext context, Gtk.Widget widget, Gtk.CellRenderer renderer, Gdk.Rectangle cell_area);
 		public unowned Gtk.CellRenderer get_cell_at_position (Gtk.CellAreaContext context, Gtk.Widget widget, Gdk.Rectangle cell_area, int x, int y, out Gdk.Rectangle alloc_area);
 		[NoWrapper]
-		public virtual void get_cell_property (Gtk.CellRenderer renderer, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
+		public virtual void get_cell_property (Gtk.CellRenderer renderer, uint property_id, ref GLib.Value value, GLib.ParamSpec pspec);
 		public unowned string get_current_path_string ();
 		public unowned Gtk.CellEditable get_edit_widget ();
 		public unowned Gtk.CellRenderer get_edited_cell ();
@@ -7434,7 +7434,7 @@ namespace Gtk {
 		protected Container ();
 		public void add_with_properties (Gtk.Widget widget, ...);
 		public void child_get (Gtk.Widget child, ...);
-		public void child_get_property (Gtk.Widget child, string property_name, GLib.Value value);
+		public void child_get_property (Gtk.Widget child, string property_name, ref GLib.Value value);
 		public void child_get_valist (Gtk.Widget child, string first_property_name, [CCode (type = "va_list")] va_list var_args);
 		public void child_notify (Gtk.Widget child, string child_property);
 		public void child_notify_by_pspec (Gtk.Widget child, GLib.ParamSpec pspec);
@@ -7447,7 +7447,7 @@ namespace Gtk {
 		public virtual void forall (Gtk.Callback callback);
 		public void @foreach (Gtk.Callback callback);
 		[NoWrapper]
-		public virtual void get_child_property (Gtk.Widget child, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
+		public virtual void get_child_property (Gtk.Widget child, uint property_id, ref GLib.Value value, GLib.ParamSpec pspec);
 		public GLib.List<weak Gtk.Widget> get_children ();
 		public unowned Gtk.Adjustment? get_focus_hadjustment ();
 		public unowned Gtk.Adjustment? get_focus_vadjustment ();
