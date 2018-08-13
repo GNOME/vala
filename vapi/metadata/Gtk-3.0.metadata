@@ -424,6 +424,23 @@ RcProperty skip
 // Vala-specific, not really bugs
 /////////////////////////////////
 
+CellArea
+  .cell_get_property.value ref
+  .get_cell_property.value ref
+Container
+  .get_child_property.value ref
+  .child_get_property.value ref
+Style
+  .get_style_property.value ref
+StyleContext
+  .get_style_property.value ref
+StyleProvider
+  .get_style_property.value ref
+ThemingEngine
+  .get_style_property.value ref
+Widget
+  .style_get_property.value ref
+
 // Keep properties non-abstract as before
 *#interface.*#property abstract=false
 
@@ -497,7 +514,6 @@ Style
   .text unowned=false
   .text_aa unowned=false
   .copy skip
-  .get_style_property return_void
 render_* parent="Gtk.StyleContext"
 render_* symbol_type="method" instance_idx=0
 render_icon_pixbuf.size type="Gtk.IconSize"
@@ -557,7 +573,6 @@ Widget
   .new skip
   .render_icon*.size type="Gtk.IconSize"
   .set_parent.parent type="Gtk.Container"
-  .style_get_property.value ref
   .touch_event.event type="Gdk.EventTouch"
   .window skip
 WidgetPath
