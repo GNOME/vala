@@ -647,8 +647,11 @@ public class Vala.GirParser : CodeVisitor {
 			if (name == null) {
 				return "";
 			}
+			string prefix = null;
 
-			var prefix = symbol.get_attribute_string ("CCode", "lower_case_cprefix");
+			if (symbol != null)
+				prefix = symbol.get_attribute_string ("CCode", "lower_case_cprefix");
+
 			if (prefix == null && (symbol is ObjectTypeSymbol || symbol is Struct)) {
 				if (metadata.has_argument (ArgumentType.LOWER_CASE_CPREFIX)) {
 					prefix = metadata.get_string (ArgumentType.LOWER_CASE_CPREFIX);
@@ -697,7 +700,10 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		public string get_lower_case_csuffix () {
-			var suffix = symbol.get_attribute_string ("CCode", "lower_case_csuffix");
+			string suffix = null;
+
+			if (symbol != null)
+				suffix = symbol.get_attribute_string ("CCode", "lower_case_csuffix");
 
 			// we can't rely on gir suffix if metadata changed the name
 			if (suffix == null && girdata != null && girdata["c:symbol-prefix"] != null && !metadata.has_argument (ArgumentType.NAME)) {
@@ -717,11 +723,13 @@ public class Vala.GirParser : CodeVisitor {
 			if (name == null) {
 				return "";
 			}
-			string prefix;
+			string prefix = null;
+
 			if (metadata.has_argument (ArgumentType.CPREFIX)) {
 				prefix = metadata.get_string (ArgumentType.CPREFIX);
 			} else {
-				prefix = symbol.get_attribute_string ("CCode", "cprefix");
+				if (symbol != null)
+					prefix = symbol.get_attribute_string ("CCode", "cprefix");
 			}
 			if (prefix == null && girdata != null && girdata["c:identifier-prefixes"] != null) {
 				prefix = girdata["c:identifier-prefixes"];
@@ -744,11 +752,13 @@ public class Vala.GirParser : CodeVisitor {
 			if (name == null) {
 				return "";
 			}
-			string cname;
+			string cname = null;
+
 			if (metadata.has_argument (ArgumentType.CNAME)) {
 				cname = metadata.get_string (ArgumentType.CNAME);
 			} else {
-				cname = symbol.get_attribute_string ("CCode", "cname");
+				if (symbol != null)
+					cname = symbol.get_attribute_string ("CCode", "cname");
 			}
 			if (girdata != null) {
 				if (cname == null) {
@@ -782,7 +792,9 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		public string get_finish_cname () {
-			var finish_cname = symbol.get_attribute_string ("CCode", "finish_name");
+			string finish_cname = null;
+			if (symbol != null)
+				finish_cname = symbol.get_attribute_string ("CCode", "finish_name");
 			if (finish_cname == null) {
 				finish_cname = get_cname ();
 				if (finish_cname.has_suffix ("_async")) {
@@ -797,7 +809,10 @@ public class Vala.GirParser : CodeVisitor {
 			if (metadata.has_argument (ArgumentType.CHEADER_FILENAME)) {
 				return metadata.get_string (ArgumentType.CHEADER_FILENAME);
 			}
-			var cheader_filename = symbol.get_attribute_string ("CCode", "cheader_filename");
+			string cheader_filename = null;
+			if (symbol != null)
+				cheader_filename = symbol.get_attribute_string ("CCode", "cheader_filename");
+
 			if (cheader_filename != null) {
 				return cheader_filename;
 			}
