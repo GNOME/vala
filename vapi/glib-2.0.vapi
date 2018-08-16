@@ -856,6 +856,25 @@ public struct float {
 	public float clamp (float low, float high);
 	[CCode (cname = "fabsf")]
 	public float abs ();
+
+	[CCode (cname = "strtof", cheader_filename = "stdlib.h")]
+	static float strtof (string nptr, out char* endptr);
+
+	public static float parse (string str) {
+		return strtof (str, null);
+	}
+
+	public static bool try_parse (string str, out float result = null, out unowned string unparsed = null) {
+		char* endptr;
+		result = strtof (str, out endptr);
+		if (endptr == (char*) str + str.length) {
+			unparsed = "";
+			return true;
+		} else {
+			unparsed = (string) endptr;
+			return false;
+		}
+	}
 }
 
 [SimpleType]
