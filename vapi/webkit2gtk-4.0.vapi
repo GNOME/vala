@@ -636,6 +636,8 @@ namespace WebKit {
 		public bool get_enable_hyperlink_auditing ();
 		public bool get_enable_java ();
 		public bool get_enable_javascript ();
+		[Version (since = "2.22")]
+		public bool get_enable_media_capabilities ();
 		[Version (since = "2.4")]
 		public bool get_enable_media_stream ();
 		[Version (since = "2.4")]
@@ -698,6 +700,8 @@ namespace WebKit {
 		public void set_enable_hyperlink_auditing (bool enabled);
 		public void set_enable_java (bool enabled);
 		public void set_enable_javascript (bool enabled);
+		[Version (since = "2.22")]
+		public void set_enable_media_capabilities (bool enabled);
 		[Version (since = "2.4")]
 		public void set_enable_media_stream (bool enabled);
 		[Version (since = "2.4")]
@@ -761,6 +765,8 @@ namespace WebKit {
 		public bool enable_hyperlink_auditing { get; set construct; }
 		public bool enable_java { get; set construct; }
 		public bool enable_javascript { get; set construct; }
+		[Version (since = "2.22")]
+		public bool enable_media_capabilities { get; set construct; }
 		[Version (since = "2.4")]
 		public bool enable_media_stream { get; set construct; }
 		[Version (since = "2.4")]
