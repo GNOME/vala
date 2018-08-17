@@ -480,9 +480,7 @@ public class Vala.Property : Symbol, Lockable {
 		}
 
 		if (initializer != null && field == null && !is_abstract) {
-			error = true;
 			Report.error (source_reference, "Property `%s' with custom `get' accessor and/or `set' mutator cannot have `default' value".printf (get_full_name ()));
-			return false;
 		}
 
 		if (initializer != null) {
