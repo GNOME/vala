@@ -185,6 +185,7 @@ namespace Gst {
 			public bool get_do_retransmission ();
 			public Gst.Element get_element ();
 			public uint get_latency ();
+			public uint get_max_mcast_ttl ();
 			public string? get_multicast_iface ();
 			public Gst.RTSPServer.Permissions? get_permissions ();
 			public Gst.RTSP.Profile get_profiles ();
@@ -222,6 +223,7 @@ namespace Gst {
 			public void set_do_retransmission (bool do_retransmission);
 			public void set_eos_shutdown (bool eos_shutdown);
 			public void set_latency (uint latency);
+			public bool set_max_mcast_ttl (uint ttl);
 			public void set_multicast_iface (string? multicast_iface);
 			public void set_permissions (Gst.RTSPServer.Permissions? permissions);
 			public void set_pipeline_state (Gst.State state);
@@ -250,6 +252,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public bool eos_shutdown { get; set; }
 			public uint latency { get; set; }
+			public uint max_mcast_ttl { get; set; }
 			public Gst.RTSP.Profile profiles { get; set; }
 			public Gst.RTSP.LowerTrans protocols { get; set; }
 			[NoAccessorMethod]
@@ -295,6 +298,7 @@ namespace Gst {
 			public bool get_do_retransmission ();
 			public uint get_latency ();
 			public string? get_launch ();
+			public uint get_max_mcast_ttl ();
 			[Version (since = "1.6")]
 			public GLib.Type get_media_gtype ();
 			public string? get_multicast_iface ();
@@ -318,6 +322,7 @@ namespace Gst {
 			public void set_eos_shutdown (bool eos_shutdown);
 			public void set_latency (uint latency);
 			public void set_launch (string launch);
+			public bool set_max_mcast_ttl (uint ttl);
 			[Version (since = "1.6")]
 			public void set_media_gtype (GLib.Type media_gtype);
 			public void set_multicast_iface (string? multicast_iface);
@@ -337,6 +342,7 @@ namespace Gst {
 			public bool eos_shutdown { get; set; }
 			public uint latency { get; set; }
 			public string launch { owned get; set; }
+			public uint max_mcast_ttl { get; set; }
 			public Gst.RTSP.Profile profiles { get; set; }
 			public Gst.RTSP.LowerTrans protocols { get; set; }
 			[NoAccessorMethod]
@@ -540,6 +546,7 @@ namespace Gst {
 		public class Stream : GLib.Object {
 			[CCode (has_construct_function = false)]
 			public Stream (uint idx, Gst.Element payloader, Gst.Pad pad);
+			public bool add_multicast_client_address (string destination, uint rtp_port, uint rtcp_port, GLib.SocketFamily family);
 			public bool add_transport (Gst.RTSPServer.StreamTransport trans);
 			public bool allocate_udp_sockets (GLib.SocketFamily family, Gst.RTSP.Transport transport, bool use_client_settings);
 			public bool complete_stream (Gst.RTSP.Transport transport);
@@ -552,8 +559,10 @@ namespace Gst {
 			public int get_dscp_qos ();
 			public uint get_index ();
 			public Gst.Bin? get_joined_bin ();
+			public uint get_max_mcast_ttl ();
 			public uint get_mtu ();
 			public Gst.RTSPServer.Address? get_multicast_address (GLib.SocketFamily family);
+			public string get_multicast_client_addresses ();
 			public string? get_multicast_iface ();
 			public Gst.RTSP.Profile get_profiles ();
 			public Gst.RTSP.LowerTrans get_protocols ();
@@ -611,6 +620,7 @@ namespace Gst {
 			public void set_client_side (bool client_side);
 			public void set_control (string? control);
 			public void set_dscp_qos (int dscp_qos);
+			public bool set_max_mcast_ttl (uint ttl);
 			public void set_mtu (uint mtu);
 			public void set_multicast_iface (string? multicast_iface);
 			public void set_profiles (Gst.RTSP.Profile profiles);
@@ -628,6 +638,7 @@ namespace Gst {
 			public GLib.List<Gst.RTSPServer.StreamTransport> transport_filter (Gst.RTSPServer.StreamTransportFilterFunc? func);
 			public bool unblock_linked ();
 			public bool update_crypto (uint ssrc, Gst.Caps? crypto);
+			public bool verify_mcast_ttl (uint ttl);
 			public string control { owned get; set; }
 			public Gst.RTSP.Profile profiles { get; set; }
 			public Gst.RTSP.LowerTrans protocols { get; set; }
