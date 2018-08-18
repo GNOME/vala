@@ -1,3 +1,18 @@
+Vala 0.41.92
+============
+ * Various improvements and bug fixes:
+  - codegen: Fix floating reference regression with Variants [#661]
+  - build: Correctly quote square brackets in regular expression
+  - codegen: Call ref_sink on Object.new_valist/new_with_properties if needed
+  - vala: Don't bail early on property with not supported default value
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - glib-2.0: Add return-type of Queue.remove*(), add HashTable.foreach_steal()
+  - glib-2.0: Add float.parse/try_parse() [#649]
+  - gstreamer: Update from 1.15+ git master
+  - webkit2gtk-4.0: Update to 2.21.91
+
 Vala 0.41.91
 ============
  * Various bug fixes:
