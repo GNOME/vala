@@ -1,3 +1,22 @@
+Vala 0.40.9
+===========
+ * Various improvements and bug fixes:
+  - girparser: Actually resolve type-arguments to be able to box them if needed
+  - girparser: Handle unsupported aliases which could not be fully processed
+  - codegen: Free errors after returning them on GDBusMethodInvocation [#657]
+  - codegen: Fix invocation of abstract/virtual methods with NoWrapper in
+    compact classes
+  - vala: Allow read-only properties
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - glib-2.0: Add Array.remove*() wrapper to avoid leaking generic elements
+  - glib-2.0: Add (u)long.parse/try_parse() and float.parse/try_parse() [#649]
+  - glib-2.0: Add return-type of Queue.remove*(), add HashTable.foreach_steal()
+  - gtk+-3.0: Update to 3.23.2+6b6e53fd
+  - gtk+-4.0: Update to 3.94.0+4e868584
+  - webkit2gtk-4.0: Update to 2.20.5
+
 Vala 0.40.8
 ===========
  * Various improvements and bug fixes:
