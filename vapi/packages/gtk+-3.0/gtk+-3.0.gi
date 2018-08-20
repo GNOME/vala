@@ -2223,6 +2223,12 @@
 		</struct>
 		<struct name="GtkEventControllerClass">
 		</struct>
+		<struct name="GtkEventControllerKeyClass">
+		</struct>
+		<struct name="GtkEventControllerMotionClass">
+		</struct>
+		<struct name="GtkEventControllerScrollClass">
+		</struct>
 		<struct name="GtkFileFilterInfo">
 			<field name="contains" type="GtkFileFilterFlags"/>
 			<field name="filename" type="gchar*"/>
@@ -2248,6 +2254,8 @@
 		<struct name="GtkGestureRotateClass">
 		</struct>
 		<struct name="GtkGestureSingleClass">
+		</struct>
+		<struct name="GtkGestureStylusClass">
 		</struct>
 		<struct name="GtkGestureSwipeClass">
 		</struct>
@@ -5442,11 +5450,26 @@
 			<member name="GTK_DIALOG_DESTROY_WITH_PARENT" value="2"/>
 			<member name="GTK_DIALOG_USE_HEADER_BAR" value="4"/>
 		</flags>
+		<flags name="GtkEventControllerScrollFlags" type-name="GtkEventControllerScrollFlags" get-type="gtk_event_controller_scroll_flags_get_type">
+			<member name="GTK_EVENT_CONTROLLER_SCROLL_NONE" value="0"/>
+			<member name="GTK_EVENT_CONTROLLER_SCROLL_VERTICAL" value="1"/>
+			<member name="GTK_EVENT_CONTROLLER_SCROLL_HORIZONTAL" value="2"/>
+			<member name="GTK_EVENT_CONTROLLER_SCROLL_DISCRETE" value="4"/>
+			<member name="GTK_EVENT_CONTROLLER_SCROLL_KINETIC" value="8"/>
+			<member name="GTK_EVENT_CONTROLLER_SCROLL_BOTH_AXES" value="3"/>
+		</flags>
 		<flags name="GtkFileFilterFlags" type-name="GtkFileFilterFlags" get-type="gtk_file_filter_flags_get_type">
 			<member name="GTK_FILE_FILTER_FILENAME" value="1"/>
 			<member name="GTK_FILE_FILTER_URI" value="2"/>
 			<member name="GTK_FILE_FILTER_DISPLAY_NAME" value="4"/>
 			<member name="GTK_FILE_FILTER_MIME_TYPE" value="8"/>
+		</flags>
+		<flags name="GtkFontChooserLevel" type-name="GtkFontChooserLevel" get-type="gtk_font_chooser_level_get_type">
+			<member name="GTK_FONT_CHOOSER_LEVEL_FAMILY" value="0"/>
+			<member name="GTK_FONT_CHOOSER_LEVEL_STYLE" value="1"/>
+			<member name="GTK_FONT_CHOOSER_LEVEL_SIZE" value="2"/>
+			<member name="GTK_FONT_CHOOSER_LEVEL_VARIATIONS" value="4"/>
+			<member name="GTK_FONT_CHOOSER_LEVEL_FEATURES" value="8"/>
 		</flags>
 		<flags name="GtkIconLookupFlags" type-name="GtkIconLookupFlags" get-type="gtk_icon_lookup_flags_get_type">
 			<member name="GTK_ICON_LOOKUP_NO_SVG" value="1"/>
@@ -12120,6 +12143,7 @@
 			<property name="completion" type="GtkEntryCompletion*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="cursor-position" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="editable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="enable-emoji-completion" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="has-frame" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="im-module" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="inner-border" type="GtkBorder*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -12725,6 +12749,164 @@
 			</method>
 			<property name="propagation-phase" type="GtkPropagationPhase" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GtkEventControllerKey" parent="GtkEventController" type-name="GtkEventControllerKey" get-type="gtk_event_controller_key_get_type">
+			<method name="forward" symbol="gtk_event_controller_key_forward">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="controller" type="GtkEventControllerKey*"/>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="get_group" symbol="gtk_event_controller_key_get_group">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="controller" type="GtkEventControllerKey*"/>
+				</parameters>
+			</method>
+			<method name="get_im_context" symbol="gtk_event_controller_key_get_im_context">
+				<return-type type="GtkIMContext*"/>
+				<parameters>
+					<parameter name="controller" type="GtkEventControllerKey*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_event_controller_key_new">
+				<return-type type="GtkEventController*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</constructor>
+			<method name="set_im_context" symbol="gtk_event_controller_key_set_im_context">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="controller" type="GtkEventControllerKey*"/>
+					<parameter name="im_context" type="GtkIMContext*"/>
+				</parameters>
+			</method>
+			<signal name="focus-in" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkEventControllerKey*"/>
+				</parameters>
+			</signal>
+			<signal name="focus-out" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkEventControllerKey*"/>
+				</parameters>
+			</signal>
+			<signal name="im-update" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkEventControllerKey*"/>
+				</parameters>
+			</signal>
+			<signal name="key-pressed" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="object" type="GtkEventControllerKey*"/>
+					<parameter name="p0" type="guint"/>
+					<parameter name="p1" type="guint"/>
+					<parameter name="p2" type="GdkModifierType"/>
+				</parameters>
+			</signal>
+			<signal name="key-released" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkEventControllerKey*"/>
+					<parameter name="p0" type="guint"/>
+					<parameter name="p1" type="guint"/>
+					<parameter name="p2" type="GdkModifierType"/>
+				</parameters>
+			</signal>
+			<signal name="modifiers" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="object" type="GtkEventControllerKey*"/>
+					<parameter name="p0" type="GdkModifierType"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkEventControllerMotion" parent="GtkEventController" type-name="GtkEventControllerMotion" get-type="gtk_event_controller_motion_get_type">
+			<constructor name="new" symbol="gtk_event_controller_motion_new">
+				<return-type type="GtkEventController*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</constructor>
+			<signal name="enter" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkEventControllerMotion*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+			<signal name="leave" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkEventControllerMotion*"/>
+				</parameters>
+			</signal>
+			<signal name="motion" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkEventControllerMotion*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GtkEventControllerScroll" parent="GtkEventController" type-name="GtkEventControllerScroll" get-type="gtk_event_controller_scroll_get_type">
+			<method name="get_flags" symbol="gtk_event_controller_scroll_get_flags">
+				<return-type type="GtkEventControllerScrollFlags"/>
+				<parameters>
+					<parameter name="controller" type="GtkEventControllerScroll*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_event_controller_scroll_new">
+				<return-type type="GtkEventController*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="flags" type="GtkEventControllerScrollFlags"/>
+				</parameters>
+			</constructor>
+			<method name="set_flags" symbol="gtk_event_controller_scroll_set_flags">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="controller" type="GtkEventControllerScroll*"/>
+					<parameter name="flags" type="GtkEventControllerScrollFlags"/>
+				</parameters>
+			</method>
+			<property name="flags" type="GtkEventControllerScrollFlags" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="decelerate" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkEventControllerScroll*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+			<signal name="scroll" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkEventControllerScroll*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+			<signal name="scroll-begin" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkEventControllerScroll*"/>
+				</parameters>
+			</signal>
+			<signal name="scroll-end" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkEventControllerScroll*"/>
+				</parameters>
+			</signal>
 		</object>
 		<object name="GtkExpander" parent="GtkBin" type-name="GtkExpander" get-type="gtk_expander_get_type">
 			<implements>
@@ -13636,6 +13818,7 @@
 			<constructor name="new" symbol="gtk_font_chooser_widget_new">
 				<return-type type="GtkWidget*"/>
 			</constructor>
+			<property name="tweak-action" type="GAction*" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkFontSelection" parent="GtkBox" type-name="GtkFontSelection" get-type="gtk_font_selection_get_type">
 			<implements>
@@ -14411,6 +14594,68 @@
 			<property name="button" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="exclusive" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="touch-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkGestureStylus" parent="GtkGestureSingle" type-name="GtkGestureStylus" get-type="gtk_gesture_stylus_get_type">
+			<method name="get_axes" symbol="gtk_gesture_stylus_get_axes">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureStylus*"/>
+					<parameter name="axes" type="GdkAxisUse[]"/>
+					<parameter name="values" type="gdouble**"/>
+				</parameters>
+			</method>
+			<method name="get_axis" symbol="gtk_gesture_stylus_get_axis">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureStylus*"/>
+					<parameter name="axis" type="GdkAxisUse"/>
+					<parameter name="value" type="gdouble*"/>
+				</parameters>
+			</method>
+			<method name="get_device_tool" symbol="gtk_gesture_stylus_get_device_tool">
+				<return-type type="GdkDeviceTool*"/>
+				<parameters>
+					<parameter name="gesture" type="GtkGestureStylus*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_gesture_stylus_new">
+				<return-type type="GtkGesture*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+				</parameters>
+			</constructor>
+			<signal name="down" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureStylus*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+			<signal name="motion" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureStylus*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+			<signal name="proximity" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureStylus*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+			<signal name="up" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkGestureStylus*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
 		</object>
 		<object name="GtkGestureSwipe" parent="GtkGestureSingle" type-name="GtkGestureSwipe" get-type="gtk_gesture_swipe_get_type">
 			<method name="get_velocity" symbol="gtk_gesture_swipe_get_velocity">
@@ -18844,6 +19089,7 @@
 			<property name="menu-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="role" type="GtkButtonRole" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-markup" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkMountOperation" parent="GMountOperation" type-name="GtkMountOperation" get-type="gtk_mount_operation_get_type">
 			<method name="get_parent" symbol="gtk_mount_operation_get_parent">
@@ -35255,6 +35501,12 @@
 					<parameter name="fontchooser" type="GtkFontChooser*"/>
 				</parameters>
 			</method>
+			<method name="get_font_features" symbol="gtk_font_chooser_get_font_features">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+				</parameters>
+			</method>
 			<method name="get_font_map" symbol="gtk_font_chooser_get_font_map">
 				<return-type type="PangoFontMap*"/>
 				<parameters>
@@ -35263,6 +35515,18 @@
 			</method>
 			<method name="get_font_size" symbol="gtk_font_chooser_get_font_size">
 				<return-type type="gint"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+				</parameters>
+			</method>
+			<method name="get_language" symbol="gtk_font_chooser_get_language">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+				</parameters>
+			</method>
+			<method name="get_level" symbol="gtk_font_chooser_get_level">
+				<return-type type="GtkFontChooserLevel"/>
 				<parameters>
 					<parameter name="fontchooser" type="GtkFontChooser*"/>
 				</parameters>
@@ -35309,6 +35573,20 @@
 					<parameter name="fontmap" type="PangoFontMap*"/>
 				</parameters>
 			</method>
+			<method name="set_language" symbol="gtk_font_chooser_set_language">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+					<parameter name="language" type="char*"/>
+				</parameters>
+			</method>
+			<method name="set_level" symbol="gtk_font_chooser_set_level">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="fontchooser" type="GtkFontChooser*"/>
+					<parameter name="level" type="GtkFontChooserLevel"/>
+				</parameters>
+			</method>
 			<method name="set_preview_text" symbol="gtk_font_chooser_set_preview_text">
 				<return-type type="void"/>
 				<parameters>
@@ -35325,6 +35603,9 @@
 			</method>
 			<property name="font" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="font-desc" type="PangoFontDescription*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="font-features" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="language" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="level" type="GtkFontChooserLevel" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="preview-text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-preview-entry" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="font-activated" when="FIRST">
@@ -36550,16 +36831,16 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="2229"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="2302"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="29"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_FULL" type="char*" value="full"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_HIGH" type="char*" value="high"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="29"/>
-		<constant name="GTK_MINOR_VERSION" type="int" value="22"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="2"/>
+		<constant name="GTK_MINOR_VERSION" type="int" value="23"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
 		<constant name="GTK_PAPER_NAME_A5" type="char*" value="iso_a5"/>

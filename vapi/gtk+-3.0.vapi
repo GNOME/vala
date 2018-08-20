@@ -1847,6 +1847,8 @@ namespace Gtk {
 		public int cursor_position { get; }
 		[NoAccessorMethod]
 		public bool editable { get; set; }
+		[NoAccessorMethod]
+		public bool enable_emoji_completion { get; set; }
 		public bool has_frame { get; set; }
 		[NoAccessorMethod]
 		public string im_module { owned get; set; }
@@ -2032,6 +2034,41 @@ namespace Gtk {
 		public void set_propagation_phase (Gtk.PropagationPhase phase);
 		public Gtk.PropagationPhase propagation_phase { get; set; }
 		public Gtk.Widget widget { get; construct; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_key_get_type ()")]
+	public class EventControllerKey : Gtk.EventController {
+		[CCode (has_construct_function = false, type = "GtkEventController*")]
+		public EventControllerKey (Gtk.Widget widget);
+		public bool forward (Gtk.Widget widget);
+		public uint get_group ();
+		public unowned Gtk.IMContext get_im_context ();
+		public void set_im_context (Gtk.IMContext im_context);
+		public virtual signal void focus_in ();
+		public virtual signal void focus_out ();
+		public virtual signal void im_update ();
+		public virtual signal bool key_pressed (uint p0, uint p1, Gdk.ModifierType p2);
+		public virtual signal void key_released (uint p0, uint p1, Gdk.ModifierType p2);
+		public virtual signal bool modifiers (Gdk.ModifierType p0);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_motion_get_type ()")]
+	public class EventControllerMotion : Gtk.EventController {
+		[CCode (has_construct_function = false, type = "GtkEventController*")]
+		public EventControllerMotion (Gtk.Widget widget);
+		public virtual signal void enter (double p0, double p1);
+		public virtual signal void leave ();
+		public virtual signal void motion (double p0, double p1);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_scroll_get_type ()")]
+	public class EventControllerScroll : Gtk.EventController {
+		[CCode (has_construct_function = false, type = "GtkEventController*")]
+		public EventControllerScroll (Gtk.Widget widget, Gtk.EventControllerScrollFlags flags);
+		public Gtk.EventControllerScrollFlags get_flags ();
+		public void set_flags (Gtk.EventControllerScrollFlags flags);
+		public Gtk.EventControllerScrollFlags flags { get; set; }
+		public virtual signal void decelerate (double p0, double p1);
+		public virtual signal void scroll (double p0, double p1);
+		public virtual signal void scroll_begin ();
+		public virtual signal void scroll_end ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_expander_get_type ()")]
 	public class Expander : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
@@ -2269,6 +2306,8 @@ namespace Gtk {
 	public class FontChooserWidget : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable, Gtk.FontChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FontChooserWidget ();
+		[NoAccessorMethod]
+		public GLib.Action tweak_action { owned get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_font_selection_get_type ()")]
 	public class FontSelection : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
@@ -2453,6 +2492,18 @@ namespace Gtk {
 		public uint button { get; set; }
 		public bool exclusive { get; set; }
 		public bool touch_only { get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_stylus_get_type ()")]
+	public class GestureStylus : Gtk.GestureSingle {
+		[CCode (has_construct_function = false, type = "GtkGesture*")]
+		public GestureStylus (Gtk.Widget widget);
+		public bool get_axes ([CCode (array_length = false)] Gdk.AxisUse[] axes, [CCode (array_length = false)] out double[] values);
+		public bool get_axis (Gdk.AxisUse axis, out double value);
+		public unowned Gdk.DeviceTool get_device_tool ();
+		public virtual signal void down (double p0, double p1);
+		public virtual signal void motion (double p0, double p1);
+		public virtual signal void proximity (double p0, double p1);
+		public virtual signal void up (double p0, double p1);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_swipe_get_type ()")]
 	public class GestureSwipe : Gtk.GestureSingle {
@@ -3541,6 +3592,8 @@ namespace Gtk {
 		public Gtk.ButtonRole role { get; set; }
 		[NoAccessorMethod]
 		public string text { owned get; set; }
+		[NoAccessorMethod]
+		public bool use_markup { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_mount_operation_get_type ()")]
 	public class MountOperation : GLib.MountOperation {
@@ -7511,18 +7564,26 @@ namespace Gtk {
 		public Pango.FontDescription get_font_desc ();
 		public abstract unowned Pango.FontFace get_font_face ();
 		public abstract unowned Pango.FontFamily get_font_family ();
+		public string get_font_features ();
 		public abstract Pango.FontMap? get_font_map ();
 		public abstract int get_font_size ();
+		public string get_language ();
+		public Gtk.FontChooserLevel get_level ();
 		public string get_preview_text ();
 		public bool get_show_preview_entry ();
 		public abstract void set_filter_func (owned Gtk.FontFilterFunc filter);
 		public void set_font (string fontname);
 		public void set_font_desc (Pango.FontDescription font_desc);
 		public abstract void set_font_map (Pango.FontMap fontmap);
+		public void set_language (string language);
+		public void set_level (Gtk.FontChooserLevel level);
 		public void set_preview_text (string text);
 		public void set_show_preview_entry (bool show_preview_entry);
 		public string font { owned get; set; }
 		public Pango.FontDescription font_desc { owned get; set; }
+		public string font_features { owned get; }
+		public string language { owned get; set; }
+		public Gtk.FontChooserLevel level { get; set; }
 		public string preview_text { owned get; set; }
 		public bool show_preview_entry { get; set; }
 		public signal void font_activated (string fontname);
@@ -8158,6 +8219,16 @@ namespace Gtk {
 		PRIMARY,
 		SECONDARY
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_EVENT_CONTROLLER_SCROLL_")]
+	[Flags]
+	public enum EventControllerScrollFlags {
+		NONE,
+		VERTICAL,
+		HORIZONTAL,
+		DISCRETE,
+		KINETIC,
+		BOTH_AXES
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_EVENT_SEQUENCE_")]
 	public enum EventSequenceState {
 		NONE,
@@ -8191,6 +8262,15 @@ namespace Gtk {
 		URI,
 		DISPLAY_NAME,
 		MIME_TYPE
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FONT_CHOOSER_LEVEL_")]
+	[Flags]
+	public enum FontChooserLevel {
+		FAMILY,
+		STYLE,
+		SIZE,
+		VARIATIONS,
+		FEATURES
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_IM_PREEDIT_")]
 	public enum IMPreeditStyle {
