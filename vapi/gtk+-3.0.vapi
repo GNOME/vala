@@ -3585,7 +3585,7 @@ namespace Gtk {
 		[Version (since = "3.24")]
 		public GestureStylus (Gtk.Widget widget);
 		[Version (since = "3.24")]
-		public bool get_axes (Gdk.AxisUse axes, out double values);
+		public bool get_axes ([CCode (array_length = false)] Gdk.AxisUse[] axes, [CCode (array_length = false)] out double[] values);
 		[Version (since = "3.24")]
 		public bool get_axis (Gdk.AxisUse axis, out double value);
 		[Version (since = "3.24")]

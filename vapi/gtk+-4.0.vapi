@@ -5845,8 +5845,7 @@ namespace Gdk {
 	public enum SurfaceType {
 		TOPLEVEL,
 		CHILD,
-		TEMP,
-		SUBSURFACE
+		TEMP
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SURFACE_TYPE_HINT_", type_id = "gdk_surface_type_hint_get_type ()")]
 	public enum SurfaceTypeHint {
@@ -8203,7 +8202,7 @@ namespace Gtk {
 	public class GestureStylus : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		public GestureStylus ();
-		public bool get_axes (Gdk.AxisUse axes, out double values);
+		public bool get_axes ([CCode (array_length = false)] Gdk.AxisUse[] axes, [CCode (array_length = false)] out double[] values);
 		public bool get_axis (Gdk.AxisUse axis, out double value);
 		public bool get_backlog ([CCode (array_length_cname = "n_elems", array_length_pos = 1.1, array_length_type = "guint")] out Gdk.TimeCoord[] backlog);
 		public unowned Gdk.DeviceTool? get_device_tool ();
