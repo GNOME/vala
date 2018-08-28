@@ -857,12 +857,16 @@ namespace WebKit {
 		public void add_style_sheet (WebKit.UserStyleSheet stylesheet);
 		[Version (since = "2.8")]
 		public bool register_script_message_handler (string name);
+		[Version (since = "2.22")]
+		public bool register_script_message_handler_in_world (string name, string world_name);
 		[Version (since = "2.6")]
 		public void remove_all_scripts ();
 		[Version (since = "2.6")]
 		public void remove_all_style_sheets ();
 		[Version (since = "2.8")]
 		public void unregister_script_message_handler (string name);
+		[Version (since = "2.22")]
+		public void unregister_script_message_handler_in_world (string name, string world_name);
 		[Version (since = "2.8")]
 		public signal void script_message_received (WebKit.JavascriptResult js_result);
 	}
@@ -881,6 +885,9 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.6")]
 		public UserScript (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserScriptInjectionTime injection_time, [CCode (array_length = false, array_null_terminated = true)] string[]? whitelist, [CCode (array_length = false, array_null_terminated = true)] string[]? blacklist);
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.22")]
+		public UserScript.for_world (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserScriptInjectionTime injection_time, string world_name, [CCode (array_length = false, array_null_terminated = true)] string[]? whitelist, [CCode (array_length = false, array_null_terminated = true)] string[]? blacklist);
 		[Version (since = "2.6")]
 		public unowned WebKit.UserScript @ref ();
 		[Version (since = "2.6")]
@@ -892,6 +899,9 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.6")]
 		public UserStyleSheet (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserStyleLevel level, [CCode (array_length = false, array_null_terminated = true)] string[]? whitelist, [CCode (array_length = false, array_null_terminated = true)] string[]? blacklist);
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.22")]
+		public UserStyleSheet.for_world (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserStyleLevel level, string world_name, [CCode (array_length = false, array_null_terminated = true)] string[]? whitelist, [CCode (array_length = false, array_null_terminated = true)] string[]? blacklist);
 		[Version (since = "2.6")]
 		public unowned WebKit.UserStyleSheet @ref ();
 		[Version (since = "2.6")]

@@ -187,6 +187,7 @@ namespace JSC {
 		public void set_value (string name, JSC.Value value);
 		public void @throw (string error_message);
 		public void throw_exception (JSC.Exception exception);
+		public void throw_with_name (string error_name, string error_message);
 		[CCode (has_construct_function = false)]
 		public Context.with_virtual_machine (JSC.VirtualMachine vm);
 		public JSC.VirtualMachine virtual_machine { get; construct; }
@@ -195,9 +196,16 @@ namespace JSC {
 	public class Exception : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Exception (JSC.Context context, string message);
+		public unowned string? get_backtrace_string ();
+		public uint get_column_number ();
 		public uint get_line_number ();
 		public unowned string get_message ();
+		public unowned string get_name ();
 		public unowned string? get_source_uri ();
+		public string report ();
+		public string to_string ();
+		[CCode (has_construct_function = false)]
+		public Exception.with_name (JSC.Context context, string name, string message);
 	}
 	[CCode (cheader_filename = "jsc/jsc.h", type_id = "jsc_value_get_type ()")]
 	public class Value : GLib.Object {
