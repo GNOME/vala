@@ -132,6 +132,8 @@ namespace Gst {
 			public void set_estimate_rate (bool enabled);
 			[NoWrapper]
 			public virtual bool set_format (Gst.Video.CodecState state);
+			[Version (since = "1.16.")]
+			public Gst.Video.CodecState set_interlaced_output_state (Gst.Video.Format fmt, Gst.Video.InterlaceMode mode, uint width, uint height, Gst.Video.CodecState? reference);
 			public void set_latency (Gst.ClockTime min_latency, Gst.ClockTime max_latency);
 			public void set_max_errors (int num);
 			[Version (since = "1.4")]
@@ -283,6 +285,8 @@ namespace Gst {
 			public void init ();
 			public bool is_equal (Gst.Video.Info other);
 			public bool set_format (Gst.Video.Format format, uint width, uint height);
+			[Version (since = "1.16")]
+			public bool set_interlaced_format (Gst.Video.Format format, Gst.Video.InterlaceMode mode, uint width, uint height);
 			public Gst.Caps to_caps ();
 		}
 		[CCode (cheader_filename = "gst/video/video.h", lower_case_cprefix = "gst_video_multiview_flagset_", type_id = "gst_video_multiview_flagset_get_type ()")]
@@ -754,6 +758,8 @@ namespace Gst {
 			ONEFIELD,
 			MULTIPLE_VIEW,
 			FIRST_IN_BUNDLE,
+			TOP_FIELD,
+			BOTTOM_FIELD,
 			LAST
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_CAPTION_TYPE_", type_id = "gst_video_caption_type_get_type ()")]
@@ -999,7 +1005,9 @@ namespace Gst {
 			RFF,
 			ONEFIELD,
 			MULTIPLE_VIEW,
-			FIRST_IN_BUNDLE
+			FIRST_IN_BUNDLE,
+			TOP_FIELD,
+			BOTTOM_FIELD
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FRAME_MAP_FLAG_", type_id = "gst_video_frame_map_flags_get_type ()")]
 		[Flags]
@@ -1041,7 +1049,8 @@ namespace Gst {
 			PROGRESSIVE,
 			INTERLEAVED,
 			MIXED,
-			FIELDS
+			FIELDS,
+			ALTERNATE
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_MATRIX_MODE_", type_id = "gst_video_matrix_mode_get_type ()")]
 		[GIR (name = "VideoMatrixMode")]
@@ -1269,6 +1278,9 @@ namespace Gst {
 		public const string BUFFER_POOL_OPTION_VIDEO_GL_TEXTURE_UPLOAD_META;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_BUFFER_POOL_OPTION_VIDEO_META")]
 		public const string BUFFER_POOL_OPTION_VIDEO_META;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_CAPS_FEATURE_FORMAT_INTERLACED")]
+		[Version (since = "1.16.")]
+		public const string CAPS_FEATURE_FORMAT_INTERLACED;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_CAPS_FEATURE_META_GST_VIDEO_AFFINE_TRANSFORMATION_META")]
 		public const string CAPS_FEATURE_META_GST_VIDEO_AFFINE_TRANSFORMATION_META;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_CAPS_FEATURE_META_GST_VIDEO_GL_TEXTURE_UPLOAD_META")]
