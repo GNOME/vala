@@ -1,3 +1,10 @@
+Vala 0.42.0
+===========
+ * Bindings:
+  - gstreamer: Update from 1.15+ git master
+  - webkit2gtk-4.0: Update to 2.21.92
+  - Update GIR-based bindings
+
 Vala 0.41.92
 ============
  * Various improvements and bug fixes:
