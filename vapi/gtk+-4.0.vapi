@@ -6594,6 +6594,9 @@ namespace Gtk {
 		public GLib.MenuModel menubar { get; set; }
 		[NoAccessorMethod]
 		public bool register_session { get; set; }
+		[NoAccessorMethod]
+		[Version (since = "3.24")]
+		public bool screensaver_active { get; }
 		public virtual signal void window_added (Gtk.Window window);
 		public virtual signal void window_removed (Gtk.Window window);
 	}
