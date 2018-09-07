@@ -2667,6 +2667,8 @@ namespace GLib {
 		public static string display_name (string filename);
 		[Version (since = "2.6")]
 		public static string display_basename (string filename);
+		[Version (cname = "g_canonicalize_filename", since = "2.58")]
+		public static string canonicalize (string filename, string? relative_to = null);
 	}
 
 	public errordomain ConvertError {
@@ -5477,6 +5479,7 @@ namespace GLib {
 		public const uint @2_52;
 		public const uint @2_54;
 		public const uint @2_56;
+		public const uint @2_58;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;
