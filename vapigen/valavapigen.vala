@@ -170,6 +170,9 @@ class Vala.VAPIGen : Object {
 			return quit ();
 		}
 
+		// candidates to match library against
+		string[] package_names = {};
+
 		// interface writer ignores external packages
 		foreach (SourceFile file in context.get_source_files ()) {
 			if (file.filename.has_suffix (".vapi")) {
@@ -187,8 +190,16 @@ class Vala.VAPIGen : Object {
 							}
 						}
 					}
+					if (file.explicit && file.package_name != null) {
+						package_names += file.package_name;
+					}
 				}
 			}
+		}
+
+		var library_name = Path.get_basename (library);
+		if (package_names.length > 0 && !(library_name in package_names)) {
+			Report.warning (null, "Given library name `%s' does not match pkg-config name `%s'".printf (library_name, string.join ("', `", package_names)));
 		}
 
 		var interface_writer = new CodeWriter (CodeWriterType.VAPIGEN);
