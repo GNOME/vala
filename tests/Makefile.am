@@ -20,6 +20,7 @@ TESTS = \
 	basic-types/floats.vala \
 	basic-types/strings.vala \
 	basic-types/arrays.vala \
+	basic-types/array-uint8-uchar-compat.vala \
 	basic-types/pointers.vala \
 	basic-types/sizeof.vala \
 	basic-types/garray.vala \
