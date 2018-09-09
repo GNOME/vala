@@ -1,5 +1,0 @@
-include/libgda-4.0/libgda/gda-data-model-extra.h
-include/libgda-4.0/libgda/gda-connection-private.h
-include/libgda-4.0/libgda/gda-server-provider-private.h
-include/libgda-4.0/libgda/gda-data-model-private.h
-include/libgda-4.0/libgda/gda-transaction-status-private.h

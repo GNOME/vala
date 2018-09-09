@@ -1,3 +1,0 @@
-Gda cheader_filename="libgda-report/libgda-report.h" deprecated_since="4.2.13" replacement="bindings distributed with libgda-4.0"
-xmlNodePtr name="Node" namespace="Xml"
-xmlDocPtr name="Node" namespace="Xml"

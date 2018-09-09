@@ -154,10 +154,6 @@ dist_vapi_DATA = \
 	libesmtp.vapi \
 	libftdi.deps \
 	libftdi.vapi \
-	libgda-report-4.0.deps \
-	libgda-report-4.0.vapi \
-	libgda-4.0.deps \
-	libgda-4.0.vapi \
 	libgeoclue-2.0.vapi \
 	libgeoclue-2.0.deps \
 	libglade-2.0.deps \
@@ -294,8 +290,6 @@ GIDL_BINDINGS = \
 	hildon-1 \
 	hildon-fm-2 \
 	libepc-1.0 \
-	libgda-4.0 \
-	libgda-report-4.0 \
 	libglade-2.0 \
 	libgnome-2.0 \
 	libgnome-menu \
@@ -590,12 +584,6 @@ json-glib-1.0:
 
 libepc-1.0:
 	$(GENVAPI) --library $(srcdir)/libepc-1.0 $(PACKAGESDIR)/libepc-1.0/libepc-1.0.gi
-
-libgda-4.0:
-	$(GENVAPI) --library $(srcdir)/libgda-4.0 $(PACKAGESDIR)/libgda-4.0/libgda-4.0-custom.vala $(PACKAGESDIR)/libgda-4.0/libgda-4.0.gi
-
-libgda-report-4.0:
-	$(GENVAPI) --library $(srcdir)/libgda-report-4.0 $(PACKAGESDIR)/libgda-report-4.0/libgda-report-4.0.gi
 
 libgeoclue-2.0:
 	$(GENVAPI) --library $(srcdir)/libgeoclue-2.0 --pkg gio-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/Geoclue-2.0.gir
