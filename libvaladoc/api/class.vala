@@ -45,7 +45,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 	private string? private_cname;
 	private string? cname;
 
-	public Class (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
+	public Class (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
 				  SourceComment? comment, string? cname, string? private_cname, string? class_macro_name,
 				  string? type_macro_name, string? is_type_macro_name, string? type_cast_macro_name,
 				  string? type_function_name, string? class_type_macro_name, string? is_class_type_macro_name,

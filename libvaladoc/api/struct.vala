@@ -34,7 +34,7 @@ public class Valadoc.Api.Struct : TypeSymbol {
 	private string? type_id;
 	private string? cname;
 
-	public Struct (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
+	public Struct (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
 				   SourceComment? comment, string? cname, string? type_macro_name,
 				   string? type_function_name, string? type_id, string? dup_function_cname,
 				   string? copy_function_cname, string? destroy_function_cname,

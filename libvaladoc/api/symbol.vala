@@ -34,7 +34,7 @@ public abstract class Valadoc.Api.Symbol : Node {
 		get;
 	}
 
-	public Symbol (Node parent, SourceFile file, string? name, SymbolAccessibility accessibility,
+	public Symbol (Node parent, SourceFile file, string? name, Vala.SymbolAccessibility accessibility,
 				   Vala.Symbol data)
 	{
 		base (parent, file, name, data);
@@ -113,7 +113,7 @@ public abstract class Valadoc.Api.Symbol : Node {
 		return true;
 	}
 
-	public SymbolAccessibility accessibility {
+	public Vala.SymbolAccessibility accessibility {
 		private set;
 		get;
 	}
@@ -123,7 +123,7 @@ public abstract class Valadoc.Api.Symbol : Node {
 	 */
 	public bool is_public {
 		get {
-			return accessibility == SymbolAccessibility.PUBLIC;
+			return accessibility == Vala.SymbolAccessibility.PUBLIC;
 		}
 	}
 
@@ -132,7 +132,7 @@ public abstract class Valadoc.Api.Symbol : Node {
 	 */
 	public bool is_protected {
 		get {
-			return accessibility == SymbolAccessibility.PROTECTED;
+			return accessibility == Vala.SymbolAccessibility.PROTECTED;
 		}
 	}
 
@@ -141,7 +141,7 @@ public abstract class Valadoc.Api.Symbol : Node {
 	 */
 	public bool is_internal {
 		get {
-			return accessibility == SymbolAccessibility.INTERNAL;
+			return accessibility == Vala.SymbolAccessibility.INTERNAL;
 		}
 	}
 
@@ -150,7 +150,7 @@ public abstract class Valadoc.Api.Symbol : Node {
 	 */
 	public bool is_private {
 		get {
-			return accessibility == SymbolAccessibility.PRIVATE;
+			return accessibility == Vala.SymbolAccessibility.PRIVATE;
 		}
 	}
 }

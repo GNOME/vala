@@ -30,7 +30,7 @@ public class Valadoc.Api.Namespace : Symbol {
 	private SourceComment? source_comment;
 
 	public Namespace (Api.Node parent, SourceFile file, string? name, SourceComment? comment, Vala.Namespace data) {
-		base (parent, file, name, SymbolAccessibility.PUBLIC, data);
+		base (parent, file, name, Vala.SymbolAccessibility.PUBLIC, data);
 
 		this.source_comment = comment;
 	}

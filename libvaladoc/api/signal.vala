@@ -41,7 +41,7 @@ public class Valadoc.Api.Signal : Member, Callable {
 	}
 
 
-	public Signal (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
+	public Signal (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
 				   SourceComment? comment, string? cname, string? default_impl_cname, string? dbus_name, bool is_dbus_visible,
 				   bool is_virtual, Vala.Signal data)
 	{

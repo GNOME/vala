@@ -31,7 +31,7 @@ public class Valadoc.Api.Property : Member {
 	private string? dbus_name;
 	private string? cname;
 
-	public Property (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
+	public Property (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
 					 SourceComment? comment, string? cname, string? dbus_name, bool is_dbus_visible,
 					 PropertyBindingType binding_type, Vala.Property data)
 	{

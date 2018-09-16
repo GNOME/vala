@@ -29,7 +29,7 @@ using Valadoc.Content;
 public class Valadoc.Api.Field : Member {
 	private string? cname;
 
-	public Field (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
+	public Field (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
 				  SourceComment? comment, string? cname, bool is_static, bool is_volatile,
 				  Vala.Field data)
 	{

@@ -31,7 +31,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	private Ownership ownership;
 	private string? cname;
 
-	public PropertyAccessor (Property parent, SourceFile file, string name, SymbolAccessibility accessibility,
+	public PropertyAccessor (Property parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
 							 string? cname, PropertyAccessorType type, Ownership ownership, Vala.PropertyAccessor data)
 	{
 		base (parent, file, name, accessibility, data);

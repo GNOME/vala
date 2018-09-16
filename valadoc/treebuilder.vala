@@ -575,26 +575,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return MethodBindingType.UNMODIFIED;
 	}
 
-
-	private SymbolAccessibility get_access_modifier(Vala.Symbol symbol) {
-		switch (symbol.access) {
-		case Vala.SymbolAccessibility.PROTECTED:
-			return SymbolAccessibility.PROTECTED;
-
-		case Vala.SymbolAccessibility.INTERNAL:
-			return SymbolAccessibility.INTERNAL;
-
-		case Vala.SymbolAccessibility.PRIVATE:
-			return SymbolAccessibility.PRIVATE;
-
-		case Vala.SymbolAccessibility.PUBLIC:
-			return SymbolAccessibility.PUBLIC;
-
-		default:
-			error ("Unknown symbol accessibility modifier found");
-		}
-	}
-
 	private PropertyAccessorType get_property_accessor_type (Vala.PropertyAccessor element) {
 		if (element.construction) {
 			if (element.writable) {
@@ -980,7 +960,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		Class node = new Class (parent,
 								file,
 								element.name,
-								get_access_modifier (element),
+								element.access,
 								comment,
 								get_cname (element),
 								get_private_cname (element),
@@ -1039,7 +1019,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		Interface node = new Interface (parent,
 										file,
 										element.name,
-										get_access_modifier (element),
+										element.access,
 										comment,
 										get_cname (element),
 										get_type_macro_name (element),
@@ -1082,7 +1062,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		Struct node = new Struct (parent,
 								  file,
 								  element.name,
-								  get_access_modifier (element),
+								  element.access,
 								  comment,
 								  get_cname (element),
 								  get_type_macro_name (element),
@@ -1118,7 +1098,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		Field node = new Field (parent,
 								file,
 								element.name,
-								get_access_modifier (element),
+								element.access,
 								comment,
 								get_cname (element),
 								element.binding == Vala.MemberBinding.STATIC,
@@ -1143,7 +1123,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		Property node = new Property (parent,
 									  file,
 									  element.name,
-									  get_access_modifier (element),
+									  element.access,
 									  comment,
 									  element.nick,
 									  Vala.GDBusModule.get_dbus_name_for_member (element),
@@ -1160,7 +1140,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			node.getter = new PropertyAccessor (node,
 												file,
 												element.name,
-												get_access_modifier (accessor),
+												accessor.access,
 												get_cname (accessor),
 												get_property_accessor_type (accessor),
 												get_property_ownership (accessor),
@@ -1172,7 +1152,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			node.setter = new PropertyAccessor (node,
 												file,
 												element.name,
-												get_access_modifier (accessor),
+												accessor.access,
 												get_cname (accessor),
 												get_property_accessor_type (accessor),
 												get_property_ownership (accessor),
@@ -1194,7 +1174,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		Method node = new Method (parent,
 								  file,
 								  get_method_name (element),
-								  get_access_modifier (element),
+								  element.access,
 								  comment,
 								  get_cname (element),
 								  Vala.GDBusModule.get_dbus_name_for_member (element),
@@ -1224,7 +1204,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		Method node = new Method (parent,
 								  file,
 								  get_method_name (element),
-								  get_access_modifier (element),
+								  element.access,
 								  comment,
 								  get_cname (element),
 								  Vala.GDBusModule.get_dbus_name_for_member (element),
@@ -1254,7 +1234,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		Api.Signal node = new Api.Signal (parent,
 										  file,
 										  element.name,
-										  get_access_modifier (element),
+										  element.access,
 										  comment,
 										  get_cname (element),
 										  (element.default_handler != null)? get_cname (element.default_handler) : null,
@@ -1281,7 +1261,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		Delegate node = new Delegate (parent,
 									  file,
 									  element.name,
-									  get_access_modifier (element),
+									  element.access,
 									  comment,
 									  get_cname (element),
 									  !element.has_target,
@@ -1305,7 +1285,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		Symbol node = new Enum (parent,
 								file,
 								element.name,
-								get_access_modifier (element),
+								element.access,
 								comment,
 								get_cname (element),
 								get_type_macro_name (element),
@@ -1350,7 +1330,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		Constant node = new Constant (parent,
 									  file,
 									  element.name,
-									  get_access_modifier (element),
+									  element.access,
 									  comment,
 									  get_cname (element),
 									  element);
@@ -1373,7 +1353,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		Symbol node = new ErrorDomain (parent,
 									   file,
 									   element.name,
-									   get_access_modifier (element),
+									   element.access,
 									   comment,
 									   get_cname (element),
 									   get_quark_macro_name (element),
@@ -1440,7 +1420,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		FormalParameter node = new FormalParameter (parent,
 													file,
 													element.name,
-													get_access_modifier(element),
+													element.access,
 													element.direction,
 													element.ellipsis,
 													element);
