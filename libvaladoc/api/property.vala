@@ -27,18 +27,16 @@ using Valadoc.Content;
  * Represents a property declaration.
  */
 public class Valadoc.Api.Property : Symbol {
-	private PropertyBindingType binding_type;
 	private string? dbus_name;
 	private string? cname;
 
 	public Property (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
 					 SourceComment? comment, string? cname, string? dbus_name, bool is_dbus_visible,
-					 PropertyBindingType binding_type, Vala.Property data)
+					 Vala.Property data)
 	{
 		base (parent, file, name, accessibility, comment, data);
 
 		this.is_dbus_visible = is_dbus_visible;
-		this.binding_type = binding_type;
 
 		this.dbus_name = dbus_name;
 		this.cname = cname;
@@ -71,7 +69,7 @@ public class Valadoc.Api.Property : Symbol {
 	 */
 	public bool is_virtual {
 		get {
-			return binding_type == PropertyBindingType.VIRTUAL;
+			return ((Vala.Property) data).is_virtual;
 		}
 	}
 
@@ -80,7 +78,7 @@ public class Valadoc.Api.Property : Symbol {
 	 */
 	public bool is_abstract {
 		get {
-			return binding_type == PropertyBindingType.ABSTRACT;
+			return ((Vala.Property) data).is_abstract;
 		}
 	}
 
@@ -89,7 +87,7 @@ public class Valadoc.Api.Property : Symbol {
 	 */
 	public bool is_override {
 		get {
-			return binding_type == PropertyBindingType.OVERRIDE;
+			return ((Vala.Property) data).overrides;
 		}
 	}
 

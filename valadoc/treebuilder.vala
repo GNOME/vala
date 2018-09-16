@@ -609,18 +609,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return Ownership.UNOWNED;
 	}
 
-	private PropertyBindingType get_property_binding_type (Vala.Property element) {
-		if (element.is_abstract) {
-			return PropertyBindingType.ABSTRACT;
-		} else if (element.is_virtual) {
-			return PropertyBindingType.VIRTUAL;
-		} else if (element.overrides) {
-			return PropertyBindingType.OVERRIDE;
-		}
-
-		return PropertyBindingType.UNMODIFIED;
-	}
-
 
 	//
 	// Vala tree creation:
@@ -1049,7 +1037,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 									  element.nick,
 									  Vala.GDBusModule.get_dbus_name_for_member (element),
 									  Vala.GDBusModule.is_dbus_visible (element),
-									  get_property_binding_type (element),
 									  element);
 		node.property_type = create_type_reference (element.property_type, node, node);
 		symbol_map.set (element, node);
