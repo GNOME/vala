@@ -558,23 +558,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return meta_data.get_namespace ((Vala.Namespace) namespace_symbol, file);
 	}
 
-	private MethodBindingType get_method_binding_type (Vala.Method element) {
-		if (element.is_inline) {
-			return MethodBindingType.INLINE;
-		} else if (element.is_abstract) {
-			return MethodBindingType.ABSTRACT;
-		} else if (element.is_virtual) {
-			return MethodBindingType.VIRTUAL;
-		} else if (element.overrides) {
-			return MethodBindingType.OVERRIDE;
-		} else if (element.is_inline) {
-			return MethodBindingType.INLINE;
-		} else if (element.binding != Vala.MemberBinding.INSTANCE) {
-			return MethodBindingType.STATIC;
-		}
-		return MethodBindingType.UNMODIFIED;
-	}
-
 	private PropertyAccessorType get_property_accessor_type (Vala.PropertyAccessor element) {
 		if (element.construction) {
 			if (element.writable) {
@@ -1180,7 +1163,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								  Vala.GDBusModule.get_dbus_name_for_member (element),
 								  Vala.GDBusModule.dbus_result_name (element),
 								  (element.coroutine)? get_finish_name (element) : null,
-								  get_method_binding_type (element),
 								  element.coroutine,
 								  Vala.GDBusModule.is_dbus_visible (element),
 								  element is Vala.CreationMethod,
@@ -1210,7 +1192,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								  Vala.GDBusModule.get_dbus_name_for_member (element),
 								  Vala.GDBusModule.dbus_result_name (element),
 								  (element.coroutine)? get_finish_name (element) : null,
-								  get_method_binding_type (element),
 								  element.coroutine,
 								  Vala.GDBusModule.is_dbus_visible (element),
 								  element is Vala.CreationMethod,
