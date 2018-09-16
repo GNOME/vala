@@ -28,6 +28,9 @@ public class Sample : Object {
 		get { return _read_only; }
 	}
 
+	public int public_prop { get; set; }
+	private int private_prop { get; set; }
+
 	public Sample (string name) {
 		this.name = name;
 	}
@@ -56,7 +59,14 @@ public class Sample : Object {
 		stdout.printf("automatic: %s\n", automatic);
 
 		this.deleg = null;
-        }
+
+		lock (public_prop) {
+			public_prop = 42;
+		}
+		lock (private_prop) {
+			private_prop = 42;
+		}
+	}
 
 	public static int main () {
 		var test = new Sample("InitialName");
