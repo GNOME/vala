@@ -1339,21 +1339,21 @@ It is important that your <link linkend="GValue"><type>GValue</type></link> hold
 		if (sym.is_deprecated) {
 			Attribute? version;
 			Attribute? deprecated;
-			AttributeArgument? deprecated_since;
-			AttributeArgument? replacement;
+			string? deprecated_since;
+			string? replacement;
 			if ((version = sym.get_attribute ("Version")) != null) {
-				deprecated_since = version.get_argument ("deprecated_since");
-				replacement = version.get_argument ("replacement");
+				deprecated_since = ((Vala.Attribute) version.data).get_string ("deprecated_since");
+				replacement = ((Vala.Attribute) version.data).get_string ("replacement");
 			} else if ((deprecated = sym.get_attribute ("Deprecated")) != null) {
-				deprecated_since = deprecated.get_argument ("since");
-				replacement = deprecated.get_argument ("replacement");
+				deprecated_since = ((Vala.Attribute) deprecated.data).get_string ("since");
+				replacement = ((Vala.Attribute) deprecated.data).get_string ("replacement");
 			} else {
 				assert_not_reached ();
 			}
 
 			string? since = null;
 			if (deprecated_since != null) {
-				since = deprecated_since.value;
+				since = deprecated_since;
 
 				// Strip surrounding quotation marks.
 				if (since.has_prefix ("\"")) {
@@ -1368,7 +1368,7 @@ It is important that your <link linkend="GValue"><type>GValue</type></link> hold
 			Api.Node? replacement_symbol = null;
 
 			if (replacement != null) {
-				replacement_symbol_name = replacement.value;
+				replacement_symbol_name = replacement;
 
 				// Strip surrounding quotation marks.
 				if (replacement_symbol_name.has_prefix ("\"")) {

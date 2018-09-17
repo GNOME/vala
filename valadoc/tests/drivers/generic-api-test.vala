@@ -2579,6 +2579,11 @@ public static void version_test (Api.Namespace ns, Api.Package pkg) {
 		Api.TypeReference? ret = m.return_type;
 		assert (ret != null);
 
+		Api.Attribute? dattr = m.get_attribute ("Deprecated");
+		Api.Attribute? vattr = m.get_attribute ("Version");
+		Vala.Attribute? attr_deprecated = (dattr != null ? dattr.data as Vala.Attribute : null);
+		Vala.Attribute? attr_version = (vattr != null ? vattr.data as Vala.Attribute : null);
+
 		switch (m.name) {
 		case "test_function_1":
 			assert (m.get_attribute ("Deprecated") != null);
@@ -2588,8 +2593,8 @@ public static void version_test (Api.Namespace ns, Api.Package pkg) {
 			break;
 
 		case "test_function_2":
-			assert (m.get_attribute ("Deprecated").get_argument ("since").get_value_as_string () == "\"1.0\"");
-			assert (m.get_attribute ("Deprecated").get_argument ("replacement").get_value_as_string () == "\"test_function_4\"");
+			assert (attr_deprecated.get_string ("since") == "1.0");
+			assert (attr_deprecated.get_string ("replacement") == "test_function_4");
 			assert (m.is_deprecated == true);
 
 			func2 = true;
@@ -2602,45 +2607,45 @@ public static void version_test (Api.Namespace ns, Api.Package pkg) {
 			break;
 
 		case "test_function_4":
-			assert (m.get_attribute ("Version").get_argument ("since").get_value_as_string () == "\"2.0\"");
+			assert (attr_version.get_string ("since") == "2.0");
 			assert (m.is_deprecated == false);
 
 			func4 = true;
 			break;
 
 		case "test_function_5":
-			assert (m.get_attribute ("Version").get_argument ("deprecated").get_value_as_boolean () == true);
+			assert (attr_version.get_bool ("deprecated") == true);
 			assert (m.is_deprecated == true);
 
 			func5 = true;
 			break;
 
 		case "test_function_6":
-			assert (m.get_attribute ("Version").get_argument ("deprecated").get_value_as_boolean () == true);
-			assert (m.get_attribute ("Version").get_argument ("deprecated_since").get_value_as_string () == "\"2.0\"");
-			assert (m.get_attribute ("Version").get_argument ("replacement").get_value_as_string () == "\"test_function_4\"");
-			assert (m.get_attribute ("Version").get_argument ("since").get_value_as_string () == "\"1.0\"");
+			assert (attr_version.get_bool ("deprecated") == true);
+			assert (attr_version.get_string ("deprecated_since") == "2.0");
+			assert (attr_version.get_string ("replacement") == "test_function_4");
+			assert (attr_version.get_string ("since") == "1.0");
 			assert (m.is_deprecated == true);
 
 			func6 = true;
 			break;
 
 		case "test_function_7":
-			assert (m.get_attribute ("Version").get_argument ("deprecated_since").get_value_as_string () == "\"2.0\"");
+			assert (attr_version.get_string ("deprecated_since") == "2.0");
 			assert (m.is_deprecated == true);
 
 			func7 = true;
 			break;
 
 		case "test_function_8":
-			assert (m.get_attribute ("Version").get_argument ("deprecated").get_value_as_boolean () == false);
+			assert (attr_version.get_bool ("deprecated") == false);
 			assert (m.is_deprecated == false);
 
 			func8 = true;
 			break;
 
 		case "test_function_9":
-			//assert (m.get_attribute ("Version").get_argument ("experimental").get_value_as_boolean () == true);
+			//assert (attr_version.get_bool ("experimental") == true);
 
 			func9 = true;
 			break;

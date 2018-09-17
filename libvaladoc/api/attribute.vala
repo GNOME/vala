@@ -24,7 +24,6 @@
 using Valadoc.Content;
 
 public class Valadoc.Api.Attribute : Item {
-	private Vala.ArrayList<AttributeArgument> args = new Vala.ArrayList<AttributeArgument> ();
 	private SourceFile file;
 
 	public string name {
@@ -40,42 +39,6 @@ public class Valadoc.Api.Attribute : Item {
 		this.file = file;
 	}
 
-	public AttributeArgument? get_argument (string name) {
-		if (args != null) {
-			foreach (AttributeArgument arg in args) {
-				if (arg.name == name) {
-					return arg;
-				}
-			}
-		}
-
-		return null;
-	}
-
-	public AttributeArgument add_boolean (string name, bool value, Vala.Attribute data) {
-		AttributeArgument arg = new AttributeArgument.boolean (this, file, name, value, data);
-		args.add (arg);
-		return arg;
-	}
-
-	public AttributeArgument add_integer (string name, int value, Vala.Attribute data) {
-		AttributeArgument arg = new AttributeArgument.integer (this, file, name, value, data);
-		args.add (arg);
-		return arg;
-	}
-
-	public AttributeArgument add_double (string name, double value, Vala.Attribute data) {
-		AttributeArgument arg = new AttributeArgument.double (this, file, name, value, data);
-		args.add (arg);
-		return arg;
-	}
-
-	public AttributeArgument add_string (string name, string value, Vala.Attribute data) {
-		AttributeArgument arg = new AttributeArgument.string (this, file, name, value, data);
-		args.add (arg);
-		return arg;
-	}
-
 	public SourceFile get_source_file () {
 		return file;
 	}
@@ -83,23 +46,45 @@ public class Valadoc.Api.Attribute : Item {
 	protected override Inline build_signature () {
 		SignatureBuilder builder = new SignatureBuilder ();
 
-		builder.append_attribute ("[");
-		builder.append_type_name (name);
+		unowned Vala.Attribute attr = (Vala.Attribute) data;
 
-		if (args.size > 0) {
-			builder.append_attribute ("(");
-			bool first = true;
-
-			foreach (AttributeArgument arg in args) {
-				if (first == false) {
-					builder.append_attribute (", ");
-				}
-				builder.append_content (arg.signature);
-				first = false;
+		var keys = new GLib.Sequence<string> ();
+		foreach (var key in attr.args.get_keys ()) {
+			if (key == "cheader_filename") {
+				continue;
 			}
-			builder.append_attribute (")");
+			keys.insert_sorted (key, (CompareDataFunc<string>) strcmp);
 		}
 
+		if (attr.name == "CCode" && keys.get_length () == 0) {
+			// only cheader_filename on namespace
+			return builder.get ();
+		}
+
+		builder.append_attribute ("[");
+		builder.append_type_name (attr.name);
+
+		if (keys.get_length () > 0) {
+			builder.append_attribute ("(");
+
+			unowned string separator = "";
+			var arg_iter = keys.get_begin_iter ();
+			while (!arg_iter.is_end ()) {
+				unowned string arg_name = arg_iter.get ();
+				arg_iter = arg_iter.next ();
+				if (separator != "") {
+					builder.append_attribute (", ");
+				}
+				if (arg_name != "cheader_filename") {
+					builder.append_attribute (arg_name);
+					builder.append_attribute ("=");
+					builder.append_literal (attr.args.get (arg_name));
+				}
+				separator = ", ";
+			}
+
+			builder.append_attribute (")");
+		}
 		builder.append_attribute ("]");
 
 		return builder.get ();

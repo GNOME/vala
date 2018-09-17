@@ -213,71 +213,9 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	//
 
 	private void process_attributes (Api.Symbol parent, GLib.List<Vala.Attribute> lst) {
-		// attributes without arguments:
-		string[] attributes = {
-				"ReturnsModifiedPointer",
-				"DestroysInstance",
-				"GenericAccessors",
-				"NoAccessorMethod",
-				"SingleInstance",
-				"NoArrayLength",
-				"Experimental",
-				"Diagnostics",
-				"PrintfFormat",
-				"PointerType",
-				"ScanfFormat",
-				"ThreadLocal",
-				"SimpleType",
-				"HasEmitter",
-				"ModuleInit",
-				"NoWrapper",
-				"Immutable",
-				"ErrorBase",
-				"NoReturn",
-				"NoThrow",
-				"Compact",
-				"Assert",
-				"Flags"
-			};
-
-		string? tmp = "";
-
 		foreach (Vala.Attribute att in lst) {
-			if (att.name == "CCode" && (tmp = att.args.get ("has_target")) != null && tmp == "false") {
-				Attribute new_attribute = new Attribute (parent, parent.get_source_file (), att.name, att);
-				new_attribute.add_boolean ("has_target", false, att);
-				parent.add_attribute (new_attribute);
-			} else if (att.name == "Version") {
-				Attribute new_attribute = new Attribute (parent, parent.get_source_file (), att.name, att);
-				if ((tmp = att.args.get ("deprecated")) != null) {
-					new_attribute.add_boolean ("deprecated", bool.parse (tmp), att);
-				}
-				if ((tmp = att.args.get ("since")) != null) {
-					new_attribute.add_string ("since", tmp, att);
-				}
-				if ((tmp = att.args.get ("deprecated_since")) != null) {
-					new_attribute.add_string ("deprecated_since", tmp, att);
-					if (att.args.get ("deprecated") == null) {
-						new_attribute.add_boolean ("deprecated", true, att);
-					}
-				}
-				if ((tmp = att.args.get ("replacement")) != null) {
-					new_attribute.add_string ("replacement", tmp, att);
-				}
-				parent.add_attribute (new_attribute);
-			} else if (att.name == "Deprecated") {
-				Attribute new_attribute = new Attribute (parent, parent.get_source_file (), att.name, att);
-				if ((tmp = att.args.get ("since")) != null) {
-					new_attribute.add_string ("since", tmp, att);
-				}
-				if ((tmp = att.args.get ("replacement")) != null) {
-					new_attribute.add_string ("replacement", tmp, att);
-				}
-				parent.add_attribute (new_attribute);
-			} else if (att.name in attributes) {
-				Attribute new_attribute = new Attribute (parent, parent.get_source_file (), att.name, att);
-				parent.add_attribute (new_attribute);
-			}
+			Attribute new_attribute = new Attribute (parent, parent.get_source_file (), att.name, att);
+			parent.add_attribute (new_attribute);
 		}
 	}
 

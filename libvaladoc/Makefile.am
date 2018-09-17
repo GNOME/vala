@@ -55,7 +55,6 @@ libvaladoc_la_VALASOURCES = \
 	importer/internalidregistrar.vala \
 	api/sourcecomment.vala \
 	api/girsourcecomment.vala \
-	api/attributeargument.vala \
 	api/attribute.vala \
 	api/array.vala \
 	api/callable.vala \

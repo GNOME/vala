@@ -49,21 +49,19 @@ public abstract class Valadoc.Api.Symbol : Node {
 			attributes = new Vala.ArrayList<Attribute> ();
 		}
 
+		Vala.Attribute attr = (Vala.Attribute) att.data;
+
 		// register deprecated symbols:
 		if (att.name == "Version") {
-			AttributeArgument? deprecated = att.get_argument ("deprecated");
-			AttributeArgument? version = att.get_argument ("deprecated_since");
-			if ((deprecated != null && deprecated.get_value_as_boolean ()) || version != null) {
-				string? version_str = (version != null) ? version.get_value_as_string () : null;
-
-				package.register_deprecated_symbol (this, version_str);
+			var deprecated = attr.get_bool ("deprecated");
+			var version = attr.get_string ("deprecated_since");
+			if (deprecated || version != null) {
+				package.register_deprecated_symbol (this, version);
 				is_deprecated = true;
 			}
 		} else if (att.name == "Deprecated") {
-			AttributeArgument? version = att.get_argument ("version");
-			string? version_str = (version != null) ? version.get_value_as_string () : null;
-
-			package.register_deprecated_symbol (this, version_str);
+			var version = attr.get_string ("version");
+			package.register_deprecated_symbol (this, version);
 			is_deprecated = true;
 		}
 
