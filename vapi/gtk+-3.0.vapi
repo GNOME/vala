@@ -919,6 +919,9 @@ namespace Gtk {
 		[NoAccessorMethod]
 		[Version (since = "3.4")]
 		public bool register_session { get; set; }
+		[NoAccessorMethod]
+		[Version (since = "3.24")]
+		public bool screensaver_active { get; }
 		[Version (since = "3.2")]
 		public virtual signal void window_added (Gtk.Window window);
 		[Version (since = "3.2")]
@@ -3585,7 +3588,7 @@ namespace Gtk {
 		[Version (since = "3.24")]
 		public GestureStylus (Gtk.Widget widget);
 		[Version (since = "3.24")]
-		public bool get_axes (Gdk.AxisUse axes, out double values);
+		public bool get_axes ([CCode (array_length = false)] Gdk.AxisUse[] axes, [CCode (array_length = false)] out double[] values);
 		[Version (since = "3.24")]
 		public bool get_axis (Gdk.AxisUse axis, out double value);
 		[Version (since = "3.24")]
