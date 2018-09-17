@@ -1,3 +1,16 @@
+Vala 0.42.1
+===========
+ * Various improvements and bug fixes:
+  - vapigen: Warn if the library argument doesn't match any package attribute
+    [#669]
+
+ * Bindings:
+  - glib-2.0: Add some 2.58 symbols
+  - gtk+-4.0: Update to 3.94.0+f3e6d00d
+  - Add gnome-desktop-3.0 bindings [#668]
+  - Remove libgda-4.0, libgda-report-4.0 bindings [#667]
+  - Update GIR-based bindings
+
 Vala 0.42.0
 ===========
  * Bindings:
