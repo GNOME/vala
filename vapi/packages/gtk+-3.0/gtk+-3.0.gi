@@ -7325,6 +7325,7 @@
 			<property name="app-menu" type="GMenuModel*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="menubar" type="GMenuModel*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="register-session" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="screensaver-active" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<signal name="window-added" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -36831,7 +36832,7 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="GTK_BINARY_AGE" type="int" value="2302"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="2400"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
 		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_LEVEL_BAR_OFFSET_FULL" type="char*" value="full"/>
@@ -36839,8 +36840,8 @@
 		<constant name="GTK_LEVEL_BAR_OFFSET_LOW" type="char*" value="low"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="3"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="2"/>
-		<constant name="GTK_MINOR_VERSION" type="int" value="23"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="0"/>
+		<constant name="GTK_MINOR_VERSION" type="int" value="24"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
 		<constant name="GTK_PAPER_NAME_A5" type="char*" value="iso_a5"/>
