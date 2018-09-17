@@ -2719,7 +2719,7 @@ namespace Gst {
 		[Version (since = "1.2")]
 		public static unowned string[] api_type_get_tags (GLib.Type api);
 		public static bool api_type_has_tag (GLib.Type api, GLib.Quark tag);
-		public static GLib.Type api_type_register (string api, string tags);
+		public static GLib.Type api_type_register (string api, [CCode (array_length = false, array_null_terminated = true)] string[] tags);
 		public static unowned Gst.MetaInfo? get_info (string impl);
 		public static unowned Gst.MetaInfo? register (GLib.Type api, string impl, size_t size, [CCode (scope = "async")] Gst.MetaInitFunction init_func, [CCode (scope = "async")] Gst.MetaFreeFunction free_func, [CCode (scope = "async")] Gst.MetaTransformFunction transform_func);
 	}
