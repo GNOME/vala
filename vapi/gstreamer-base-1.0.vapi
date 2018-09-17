@@ -96,7 +96,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool stop ();
 			[NoWrapper]
-			public virtual Gst.FlowReturn update_src_caps (Gst.Caps caps, Gst.Caps ret);
+			public virtual Gst.FlowReturn update_src_caps (Gst.Caps caps, out Gst.Caps ret);
 			[NoAccessorMethod]
 			public uint64 latency { get; set; }
 			[NoAccessorMethod]
