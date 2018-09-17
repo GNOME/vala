@@ -60,6 +60,8 @@ namespace GClue {
 		public unowned GClue.LocationProxy get_location ();
 		[CCode (has_construct_function = false)]
 		public Simple.sync (string desktop_id, GClue.AccuracyLevel accuracy_level, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[NoAccessorMethod]
+		public GClue.AccuracyLevel accuracy_level { construct; }
 		public GClue.ClientProxy client { get; }
 		[NoAccessorMethod]
 		public string desktop_id { construct; }
@@ -130,7 +132,7 @@ namespace GClue {
 		public virtual signal bool handle_add_agent (GLib.DBusMethodInvocation invocation, string arg_id);
 		public virtual signal bool handle_get_client (GLib.DBusMethodInvocation invocation);
 	}
-	[CCode (cheader_filename = "geoclue.h", cprefix = "GCLUE_ACCURACY_LEVEL_", has_type_id = false)]
+	[CCode (cheader_filename = "geoclue.h", cprefix = "GCLUE_ACCURACY_LEVEL_", type_id = "gclue_accuracy_level_get_type ()")]
 	public enum AccuracyLevel {
 		NONE,
 		COUNTRY,
