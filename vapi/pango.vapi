@@ -485,7 +485,7 @@ namespace Pango {
 		[Version (since = "1.20")]
 		public unowned Pango.Layout get_layout ();
 		public void get_layout_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
-		public Pango.LayoutLine get_line ();
+		public unowned Pango.LayoutLine get_line ();
 		public void get_line_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		[Version (since = "1.16")]
 		public unowned Pango.LayoutLine get_line_readonly ();
