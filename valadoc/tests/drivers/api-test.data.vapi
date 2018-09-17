@@ -55,11 +55,11 @@ public class TestClassGlobal {
 	public TestClassGlobal.named ();
 	public void method ();
 	public static void static_method ();
-	public int property1 { get; set; }
-	public int property2 { get; }
-	public int property3 { owned get; construct set; }
+	public int property_1 { get; set; }
+	public int property_2 { get; }
+	public int property_3 { owned get; construct set; }
 	public delegate int Foo ();
-	public signal int sig ();
+	public signal int sig_1 ();
 }
 
 
@@ -68,11 +68,11 @@ public interface TestInterfaceGlobal {
 	public const int constant;
 	public void method ();
 	public static void static_method ();
-	public int property1 { get; set; }
-	public int property2 { get; }
-	public int property3 { owned get; construct set; }
+	public int property_1 { get; set; }
+	public int property_2 { get; }
+	public int property_3 { owned get; construct set; }
 	public delegate int Foo ();
-	public signal int sig ();
+	public signal int sig_1 ();
 }
 
 
@@ -85,9 +85,9 @@ public struct TestStructGlobal {
 	public void method ();
 	public static void static_method ();
 	public const int constant;
-	public int property1 { get; set; }
-	public int property2 { get; }
-	public int property3 { owned get; set; }
+	public int property_1 { get; set; }
+	public int property_2 { get; }
+	public int property_3 { owned get; set; }
 }
 
 
