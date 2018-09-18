@@ -45,11 +45,6 @@ namespace Gtk {
 		public bool load_from_data (string data, ssize_t length = -1) throws GLib.Error;
 	}
 
-	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_icon_info_copy", free_function = "gtk_icon_info_free", type_id = "gtk_icon_info_get_type ()")]
-	[Compact]
-	public class IconInfo {
-	}
-
 	[CCode (cheader_filename = "gtk/gtk.h", has_copy_function = false, has_destroy_function = false, has_type_id = false)]
 	public struct RecentData {
 	}

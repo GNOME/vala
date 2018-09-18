@@ -459,9 +459,6 @@ EntryBuffer
   .emit_inserted_text.chars type="uint8[]" array_length_idx=2
   .insert_text.chars type="uint8[]" array_length_idx=2
   .set_text.chars type="uint8[]" array_length_idx=1
-IconInfo
-  .copy skip=false
-  .free skip=false destroys_instance
 IconSet
   .get_sizes.sizes type="Gtk.IconSize[]"
   .render_icon*.size type="Gtk.IconSize"
@@ -590,6 +587,10 @@ test_init.argvp unowned
 
 *.string name="str"
 *.*.string name="str"
+
+// Broken backwards compat
+//////////////////////////
+IconInfo since="3.8"
 
 // Forward upstream
 ///////////////////

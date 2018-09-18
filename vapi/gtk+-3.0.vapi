@@ -3860,17 +3860,14 @@ namespace Gtk {
 		public static unowned Gtk.IconSet lookup_default (string stock_id);
 		public void remove_default ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "gtk_icon_info_copy", free_function = "gtk_icon_info_free", type_id = "gtk_icon_info_get_type ()")]
-	[Compact]
-	public class IconInfo {
-		[Version (deprecated = true, deprecated_since = "3.8", since = "2.4")]
-		public Gtk.IconInfo copy ();
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_icon_info_get_type ()")]
+	[Version (since = "3.8")]
+	public class IconInfo : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected IconInfo ();
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.14")]
 		public IconInfo.for_pixbuf (Gtk.IconTheme icon_theme, Gdk.Pixbuf pixbuf);
-		[DestroysInstance]
-		[Version (deprecated = true, deprecated_since = "3.8", since = "2.4")]
-		public void free ();
 		[Version (deprecated = true, deprecated_since = "3.14", since = "2.4")]
 		public bool get_attach_points ([CCode (array_length_cname = "n_points", array_length_pos = 1.1)] out Gdk.Point[] points);
 		[Version (since = "3.10")]
@@ -3889,17 +3886,14 @@ namespace Gtk {
 		public bool is_symbolic ();
 		[Version (since = "2.4")]
 		public Gdk.Pixbuf load_icon () throws GLib.Error;
-		[Version (since = "3.8")]
 		public async Gdk.Pixbuf load_icon_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "3.10")]
 		public Cairo.Surface load_surface (Gdk.Window? for_window) throws GLib.Error;
 		[Version (since = "3.0")]
 		public Gdk.Pixbuf load_symbolic (Gdk.RGBA fg, Gdk.RGBA? success_color = null, Gdk.RGBA? warning_color = null, Gdk.RGBA? error_color = null, out bool was_symbolic = null) throws GLib.Error;
-		[Version (since = "3.8")]
 		public async Gdk.Pixbuf load_symbolic_async (Gdk.RGBA fg, Gdk.RGBA? success_color = null, Gdk.RGBA? warning_color = null, Gdk.RGBA? error_color = null, GLib.Cancellable? cancellable = null, out bool was_symbolic = null) throws GLib.Error;
 		[Version (since = "3.0")]
 		public Gdk.Pixbuf load_symbolic_for_context (Gtk.StyleContext context, out bool was_symbolic = null) throws GLib.Error;
-		[Version (since = "3.8")]
 		public async Gdk.Pixbuf load_symbolic_for_context_async (Gtk.StyleContext context, GLib.Cancellable? cancellable = null, out bool was_symbolic = null) throws GLib.Error;
 		[Version (deprecated = true, deprecated_since = "3.0", since = "3.0")]
 		public Gdk.Pixbuf load_symbolic_for_style (Gtk.Style style, Gtk.StateType state, out bool was_symbolic = null) throws GLib.Error;
