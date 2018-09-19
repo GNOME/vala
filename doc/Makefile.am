@@ -6,6 +6,7 @@ SUBDIRS = \
 
 dist_man_MANS = \
 	valac.1 \
+	valadbusgen.1 \
 	vala-gen-introspect.1 \
 	vapigen.1 \
 	$(NULL)
@@ -18,6 +19,7 @@ endif
 
 EXTRA_DIST = \
 	valac.h2m \
+	valadbusgen.h2m \
 	valadoc.h2m \
 	vala-gen-introspect.h2m \
 	vapigen.h2m \
@@ -25,9 +27,9 @@ EXTRA_DIST = \
 
 if HAVE_HELP2MAN
 if ENABLE_VALADOC
-manpages: valac.1 valadoc.1 vala-gen-introspect.1 vapigen.1
+manpages: valac.1 valadbusgen.1 valadoc.1 vala-gen-introspect.1 vapigen.1
 else
-manpages: valac.1 vala-gen-introspect.1 vapigen.1
+manpages: valac.1 valadbusgen.1 vala-gen-introspect.1 vapigen.1
 endif
 	@rm $^
 	$(MAKE) $(AM_MAKEFLAGS) $^
@@ -35,6 +37,11 @@ endif
 valac.1:
 	$(HELP2MAN) $(top_builddir)/compiler/valac \
 		--include $(srcdir)/valac.h2m \
+		--libtool --no-info \
+		--output=$@
+valadbusgen.1:
+	$(HELP2MAN) $(top_builddir)/dbusgen/valadbusgen \
+		--include $(srcdir)/valadbusgen.h2m \
 		--libtool --no-info \
 		--output=$@
 if ENABLE_VALADOC
@@ -60,6 +67,7 @@ endif
 if ENABLE_UNVERSIONED
 install-data-hook:
 	cd $(DESTDIR)$(man1dir) && $(LN_S) -f valac@PACKAGE_SUFFIX@.1 valac.1
+	cd $(DESTDIR)$(man1dir) && $(LN_S) -f valadbusgen@PACKAGE_SUFFIX@.1 valadbusgen.1
 if ENABLE_VALADOC
 	cd $(DESTDIR)$(man1dir) && $(LN_S) -f valadoc@PACKAGE_SUFFIX@.1 valadoc.1
 endif
