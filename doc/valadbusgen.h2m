@@ -1,0 +1,23 @@
+[NAME]
+valadbusgen \- generate a Vala API from DBus xml
+
+[SYNOPSIS]
+.B valadbusgen \fISOURCE\fP \fIPKGBASE\fP
+[\fIOPTION\fR]... [\fIFILE\fR]...
+
+[DESCRIPTION]
+.B valadbusgen
+is a utility which generates Vala API (VAPI) files from DBus xml files.
+
+[EXAMPLES]
+This can then be converted to a Vala API as follows:
+.B valadbusgen /usr/share/dbus-1/interfaces/org.freedesktop.GeoClue2.xml
+
+[BUGS]
+https://gitlab.gnome.org/GNOME/vala/issues
+
+[HOMEPAGE or CONTACT]
+https://wiki.gnome.org/Projects/Vala
+
+[AUTHORS]
+Chris Daley, Rico Tzschichholz.
