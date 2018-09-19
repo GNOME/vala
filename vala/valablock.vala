@@ -125,6 +125,15 @@ public class Vala.Block : Symbol, Statement {
 		scope.add (constant.name, constant);
 	}
 
+	/**
+	 * Returns the list of local constants.
+	 *
+	 * @return constants list
+	 */
+	public List<Constant> get_local_constants () {
+		return local_constants;
+	}
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_block (this);
 	}
