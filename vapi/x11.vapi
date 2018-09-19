@@ -519,6 +519,9 @@ namespace X {
 	[CCode (cname = "XCreateWindow")]
 	public Window create_window (Display display, Window parent, int x, int y, uint width, uint height, uint border_width, int depth, uint @class, Visual? visual, X.CW valuemask, ref SetWindowAttributes attributes);
 
+	[CCode (cname = "XCreateSimpleWindow")]
+	public Window create_simple_window (Display display, Window parent, int x, int y, uint width, uint height, uint border_width, ulong border, ulong background);
+
 	[CCode (cname = "XClearWindow")]
 	public int clear_window (X.Display display, X.Window w);
 
