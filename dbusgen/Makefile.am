@@ -2,6 +2,10 @@ include $(top_srcdir)/Makefile.common
 
 NULL =
 
+SUBDIRS = \
+	tests \
+	$(NULL)
+
 AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	-I$(top_srcdir)/gee \

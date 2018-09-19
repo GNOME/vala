@@ -1,0 +1,201 @@
+[DBus (name = "org.project.Bar", timeout = 120000)]
+public interface OrgProjectBar : GLib.Object {
+	public abstract void hello_world (string greeting, out string response) throws GLib.DBusError, GLib.IOError;
+	public abstract void test_primitive_types (char val_byte, bool val_boolean, int16 val_int16, uint16 val_uint16, int32 val_int32, uint32 val_uint32, int64 val_int64, uint64 val_uint64, double val_double, string val_string, GLib.ObjectPath val_objpath, string val_signature, string val_bytestring, out char ret_byte, out bool ret_boolean, out int16 ret_int16, out uint16 ret_uint16, out int32 ret_int32, out uint32 ret_uint32, out int64 ret_int64, out uint64 ret_uint64, out double ret_double, out string ret_string, out GLib.ObjectPath ret_objpath, out string ret_signature, out string ret_bytestring) throws GLib.DBusError, GLib.IOError;
+	public abstract void test_non_primitive_types (GLib.HashTable<string,string> dict_s_to_s, [DBus (signature = "a{s(ii)}")] GLib.Variant dict_s_to_pairs, [DBus (signature = "(iss)")] GLib.Variant a_struct, string[] array_of_strings, out string[] ret_array_of_strings, GLib.ObjectPath[] array_of_objpaths, out GLib.ObjectPath[] ret_array_of_objpaths, string[] array_of_signatures, out string[] ret_array_of_signatures, string[] array_of_bytestrings, out string[] ret_array_of_bytestrings, out string result) throws GLib.DBusError, GLib.IOError;
+	public abstract void request_signal_emission (int32 which_one) throws GLib.DBusError, GLib.IOError;
+	public abstract void request_multi_property_mods () throws GLib.DBusError, GLib.IOError;
+	public abstract void unimplemented_method () throws GLib.DBusError, GLib.IOError;
+	public abstract void property_cancellation () throws GLib.DBusError, GLib.IOError;
+	[DBus (name = "y")]
+	public abstract char y { get; set; }
+	[DBus (name = "b")]
+	public abstract bool b { get; set; }
+	[DBus (name = "n")]
+	public abstract int16 n { get; set; }
+	[DBus (name = "q")]
+	public abstract uint16 q { get; set; }
+	[DBus (name = "i")]
+	public abstract int32 i { get; set; }
+	[DBus (name = "u")]
+	public abstract uint32 u { get; set; }
+	[DBus (name = "x")]
+	public abstract int64 x { get; set; }
+	[DBus (name = "t")]
+	public abstract uint64 t { get; set; }
+	[DBus (name = "d")]
+	public abstract double d { get; set; }
+	[DBus (name = "s")]
+	public abstract string s { owned get; set; }
+	[DBus (name = "o")]
+	public abstract GLib.ObjectPath o { owned get; set; }
+	[DBus (name = "g")]
+	public abstract string g { owned get; set; }
+	[DBus (name = "ay")]
+	public abstract string ay { owned get; set; }
+	[DBus (name = "as")]
+	public abstract string[] @as { owned get; set; }
+	[DBus (name = "aay")]
+	public abstract string[] aay { owned get; set; }
+	[DBus (name = "ao")]
+	public abstract GLib.ObjectPath[] ao { owned get; set; }
+	[DBus (name = "ag")]
+	public abstract string[] ag { owned get; set; }
+	public abstract string finally_normal_name { owned get; set; }
+	public abstract string readonly_property { owned get; }
+	public abstract string writeonly_property { set; }
+	[DBus (name = "quiet")]
+	public abstract string quiet { owned get; set; }
+	[DBus (name = "quiet_too")]
+	public abstract string quiet_too { owned get; set; }
+	[DBus (name = "unset_i")]
+	public abstract int32 unset_i { get; set; }
+	[DBus (name = "unset_d")]
+	public abstract double unset_d { get; set; }
+	[DBus (name = "unset_s")]
+	public abstract string unset_s { owned get; set; }
+	[DBus (name = "unset_o")]
+	public abstract GLib.ObjectPath unset_o { owned get; set; }
+	[DBus (name = "unset_g")]
+	public abstract string unset_g { owned get; set; }
+	[DBus (name = "unset_ay")]
+	public abstract string unset_ay { owned get; set; }
+	[DBus (name = "unset_as")]
+	public abstract string[] unset_as { owned get; set; }
+	[DBus (name = "unset_ao")]
+	public abstract GLib.ObjectPath[] unset_ao { owned get; set; }
+	[DBus (name = "unset_ag")]
+	public abstract string[] unset_ag { owned get; set; }
+	[DBus (name = "unset_struct", signature = "(idsogayasaoag)")]
+	public abstract GLib.Variant unset_struct { owned get; set; }
+	public signal void test_signal (int32 val_int32, string[] array_of_strings, string[] array_of_bytestrings, [DBus (signature = "a{s(ii)}")] GLib.Variant dict_s_to_pairs);
+	public signal void another_signal (string word);
+}
+[DBus (name = "org.project.Bar.Frobnicator", timeout = 120000)]
+public interface OrgProjectBarFrobnicator : GLib.Object {
+	public abstract void random_method () throws GLib.DBusError, GLib.IOError;
+}
+[DBus (name = "org.project.Baz", timeout = 120000)]
+public interface OrgProjectBaz : GLib.Object {
+}
+[DBus (name = "com.acme.Coyote", timeout = 120000)]
+public interface ComAcmeCoyote : GLib.Object {
+	public abstract void run () throws GLib.DBusError, GLib.IOError;
+	public abstract void sleep () throws GLib.DBusError, GLib.IOError;
+	public abstract void attack () throws GLib.DBusError, GLib.IOError;
+	public abstract string mood { owned get; }
+	public signal void surprised ();
+}
+[CCode (cname = "Rocket123")]
+[DBus (name = "com.acme.Rocket", timeout = 120000)]
+public interface ComAcmeRocket : GLib.Object {
+	[CCode (cname = "ignite_xyz")]
+	public abstract void ignite () throws GLib.DBusError, GLib.IOError;
+	[CCode (cname = "speed-xyz")]
+	public abstract double speed { get; }
+	[DBus (signature = "(ddd)")]
+	public abstract GLib.Variant direction { owned get; }
+	public abstract string type { owned get; }
+	[CCode (cname = "exploded-xyz")]
+	public signal void exploded ();
+}
+[DBus (name = "org.project.Bat", timeout = 120000)]
+public interface OrgProjectBat : GLib.Object {
+	public abstract void force_method ([DBus (signature = "i")] GLib.Variant force_in_i, [DBus (signature = "s")] GLib.Variant force_in_s, [DBus (signature = "ay")] GLib.Variant force_in_ay, [DBus (signature = "(i)")] GLib.Variant force_in_struct, [DBus (signature = "i")] out GLib.Variant force_out_i, [DBus (signature = "s")] out GLib.Variant force_out_s, [DBus (signature = "ay")] out GLib.Variant force_out_ay, [DBus (signature = "(i)")] out GLib.Variant force_out_struct) throws GLib.DBusError, GLib.IOError;
+	[DBus (name = "force_i", signature = "i")]
+	public abstract GLib.Variant force_i { owned get; set; }
+	[DBus (name = "force_s", signature = "s")]
+	public abstract GLib.Variant force_s { owned get; set; }
+	[DBus (name = "force_ay", signature = "ay")]
+	public abstract GLib.Variant force_ay { owned get; set; }
+	[DBus (name = "force_struct", signature = "(i)")]
+	public abstract GLib.Variant force_struct { owned get; set; }
+	public signal void force_signal ([DBus (signature = "i")] GLib.Variant force_i, [DBus (signature = "s")] GLib.Variant force_s, [DBus (signature = "ay")] GLib.Variant force_ay, [DBus (signature = "(i)")] GLib.Variant force_struct);
+}
+[DBus (name = "org.project.Authorize", timeout = 120000)]
+public interface OrgProjectAuthorize : GLib.Object {
+	public abstract void check_not_authorized () throws GLib.DBusError, GLib.IOError;
+	public abstract void check_authorized () throws GLib.DBusError, GLib.IOError;
+	public abstract void check_not_authorized_from_object () throws GLib.DBusError, GLib.IOError;
+}
+[DBus (name = "org.project.MethodThreads", timeout = 120000)]
+public interface OrgProjectMethodThreads : GLib.Object {
+	public abstract void get_self (out string self_pointer) throws GLib.DBusError, GLib.IOError;
+}
+[DBus (name = "org.project.InlineDocs", timeout = 120000)]
+public interface OrgProjectInlineDocs : GLib.Object {
+	public abstract void foo_method (string greeting, out string response) throws GLib.DBusError, GLib.IOError;
+	public abstract void method2 (string greeting, out string response) throws GLib.DBusError, GLib.IOError;
+	public abstract string baz_property { owned get; }
+	public abstract string property2 { owned get; }
+	public abstract string property3 { owned get; }
+	public abstract string property4 { owned get; }
+	public abstract string property5 { owned get; }
+	public abstract string fancy_property { owned get; }
+	public signal void bar_signal (string blah, string boo);
+}
+[DBus (name = "ChangingInterfaceV1", timeout = 120000)]
+public interface ChangingInterfaceV1 : GLib.Object {
+	public abstract void foo_method () throws GLib.DBusError, GLib.IOError;
+	public abstract void bar_method () throws GLib.DBusError, GLib.IOError;
+	public abstract void baz_method () throws GLib.DBusError, GLib.IOError;
+	public signal void foo_signal ();
+	public signal void bar_signal ();
+	public signal void baz_signal ();
+}
+[DBus (name = "ChangingInterfaceV2", timeout = 120000)]
+public interface ChangingInterfaceV2 : GLib.Object {
+	public abstract void new_method_in2 () throws GLib.DBusError, GLib.IOError;
+	public abstract void baz_method () throws GLib.DBusError, GLib.IOError;
+	public abstract void bar_method () throws GLib.DBusError, GLib.IOError;
+	public abstract void foo_method () throws GLib.DBusError, GLib.IOError;
+	public signal void new_signal_in2 ();
+	public signal void baz_signal ();
+	public signal void bar_signal ();
+	public signal void foo_signal ();
+}
+[DBus (name = "ChangingInterfaceV10", timeout = 120000)]
+public interface ChangingInterfaceV10 : GLib.Object {
+	public abstract void added_method_in10 () throws GLib.DBusError, GLib.IOError;
+	public abstract void new_method_in2 () throws GLib.DBusError, GLib.IOError;
+	public abstract void baz_method () throws GLib.DBusError, GLib.IOError;
+	public abstract void bar_method () throws GLib.DBusError, GLib.IOError;
+	public abstract void foo_method () throws GLib.DBusError, GLib.IOError;
+	public signal void added_signal_in10 ();
+	public signal void new_signal_in2 ();
+	public signal void baz_signal ();
+	public signal void bar_signal ();
+	public signal void foo_signal ();
+}
+[CCode (cname = "TesT_ugly_CASE_Interface")]
+[DBus (name = "TestUglyCaseInterface", timeout = 120000)]
+public interface TestUglyCaseInterface : GLib.Object {
+	[CCode (cname = "Get_iSCSI_Servers")]
+	[DBus (name = "GetiSCSIServers")]
+	public abstract void GetiSCSIServers () throws GLib.DBusError, GLib.IOError;
+	[CCode (cname = "UGLY_NAME")]
+	[DBus (name = "UGLYNAME")]
+	public abstract int32 UGLYNAME { get; set; }
+	[CCode (cname = "Servers_UPDATED_NOW")]
+	[DBus (name = "serversUPDATEDNOW")]
+	public signal void serversUPDATEDNOW ();
+}
+[DBus (name = "OldieInterface", timeout = 120000)]
+[Version (deprecated = true)]
+public interface OldieInterface : GLib.Object {
+	[Version (deprecated = true)]
+	public abstract void foo () throws GLib.DBusError, GLib.IOError;
+	[Version (deprecated = true)]
+	public abstract int32 bat { get; set; }
+	[Version (deprecated = true)]
+	public signal void bar ();
+}
+[DBus (name = "FDPassing", timeout = 120000)]
+public interface FDPassing : GLib.Object {
+	[DBus (name = "HelloFD")]
+	public abstract void HelloFD (string greeting, out string response) throws GLib.DBusError, GLib.IOError;
+}
+[DBus (name = "Naming", timeout = 120000)]
+public interface Naming : GLib.Object {
+	public abstract int32 type { get; set; }
+}
