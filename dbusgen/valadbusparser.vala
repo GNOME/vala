@@ -255,7 +255,13 @@ public class Vala.DBusParser : CodeVisitor {
 			case "org.gtk.GDBus.C.ForceGVariant":
 				// If set to a non-empty string, a #GVariant instance will be used instead of the natural C type. This annotation can be
 				// used on any <arg> and <property> element.
-				//TODO
+				if (current_node is Parameter) {
+					var type = dbus_module.gvariant_type.copy ();
+					type.value_owned = false;
+					((Parameter) current_node).variable_type = type;
+				} else if (current_node is Property) {
+					((Property) current_node).property_type = dbus_module.gvariant_type.copy ();
+				}
 				break;
 			case "org.gtk.GDBus.C.UnixFD":
 				// If set to a non-empty string, the generated code will include parameters to exchange file descriptors using the
@@ -374,10 +380,6 @@ public class Vala.DBusParser : CodeVisitor {
 		current_property.access = SymbolAccessibility.PUBLIC;
 		current_iface.add_property (current_property);
 
-		if (needs_signature) {
-			current_node.set_attribute_string ("DBus", "signature", type);
-		}
-
 		next ();
 
 		while (current_token == MarkupTokenType.START_ELEMENT) {
@@ -386,6 +388,10 @@ public class Vala.DBusParser : CodeVisitor {
 			} else if (reader.name == "doc:doc") {
 				parse_doc ();
 			}
+		}
+
+		if (needs_signature || !current_property.property_type.equals (data_type)) {
+			current_node.set_attribute_string ("DBus", "signature", type);
 		}
 
 		end_element ("property");
@@ -416,10 +422,6 @@ public class Vala.DBusParser : CodeVisitor {
 		current_node = current_param = new Parameter (name, data_type, get_current_src ());
 		current_method.add_parameter (current_param);
 
-		if (needs_signature) {
-			current_node.set_attribute_string ("DBus", "signature", type);
-		}
-
 		if (current_method is Method) {
 			string? direction = reader.get_attribute ("direction");
 			if (direction == "out") {
@@ -438,6 +440,10 @@ public class Vala.DBusParser : CodeVisitor {
 			} else {
 				parse_extension ();
 			}
+		}
+
+		if (needs_signature || !current_param.variable_type.equals (data_type)) {
+			current_node.set_attribute_string ("DBus", "signature", type);
 		}
 
 		end_element ("arg");
