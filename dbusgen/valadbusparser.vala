@@ -293,7 +293,10 @@ public class Vala.DBusParser : CodeVisitor {
 			return;
 		}
 
-		name = Vala.Symbol.camel_case_to_lower_case (name);
+		var vala_name = Vala.Symbol.camel_case_to_lower_case (name);
+		if (name == Vala.Symbol.lower_case_to_camel_case (vala_name)) {
+			name = vala_name;
+		}
 		current_node = current_method = new Method (name, dbus_module.void_type.copy (), get_current_src ());
 		current_iface.add_method ((Method)current_method);
 		((Method)current_method).is_abstract = true;
@@ -357,7 +360,10 @@ public class Vala.DBusParser : CodeVisitor {
 			set_access = new PropertyAccessor (false, true, false, data_type, null, get_current_src ());
 		}
 
-		name = Vala.Symbol.camel_case_to_lower_case (name);
+		var vala_name = Vala.Symbol.camel_case_to_lower_case (name);
+		if (name == Vala.Symbol.lower_case_to_camel_case (vala_name)) {
+			name = vala_name;
+		}
 		current_node = current_property = new Property (name, data_type, get_access, set_access, get_current_src ());
 		current_property.is_abstract = true;
 		current_property.access = SymbolAccessibility.PUBLIC;
@@ -475,7 +481,10 @@ public class Vala.DBusParser : CodeVisitor {
 			return;
 		}
 
-		name = Vala.Symbol.camel_case_to_lower_case (name);
+		var vala_name = Vala.Symbol.camel_case_to_lower_case (name);
+		if (name == Vala.Symbol.lower_case_to_camel_case (vala_name)) {
+			name = vala_name;
+		}
 		current_node = current_method = new Signal (name, dbus_module.void_type.copy ());
 		current_iface.add_signal ((Signal)current_node);
 		((Signal)current_node).access = SymbolAccessibility.PUBLIC;
