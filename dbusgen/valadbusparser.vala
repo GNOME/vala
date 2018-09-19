@@ -347,7 +347,12 @@ public class Vala.DBusParser : CodeVisitor {
 			return;
 		}
 
+		var needs_signature = false;
 		var data_type = dbus_module.get_dbus_type (type);
+		if (data_type == null) {
+			data_type = dbus_module.gvariant_type.copy ();
+			needs_signature = true;
+		}
 
 		PropertyAccessor get_access = null;
 		PropertyAccessor set_access = null;
@@ -368,6 +373,10 @@ public class Vala.DBusParser : CodeVisitor {
 		current_property.is_abstract = true;
 		current_property.access = SymbolAccessibility.PUBLIC;
 		current_iface.add_property (current_property);
+
+		if (needs_signature) {
+			current_node.set_attribute_string ("DBus", "signature", type);
+		}
 
 		next ();
 
@@ -396,11 +405,20 @@ public class Vala.DBusParser : CodeVisitor {
 			return;
 		}
 
+		var needs_signature = false;
 		var data_type = dbus_module.get_dbus_type (type);
+		if (data_type == null) {
+			data_type = dbus_module.gvariant_type.copy ();
+			needs_signature = true;
+		}
 		data_type.value_owned = false;
 
 		current_node = current_param = new Parameter (name, data_type, get_current_src ());
 		current_method.add_parameter (current_param);
+
+		if (needs_signature) {
+			current_node.set_attribute_string ("DBus", "signature", type);
+		}
 
 		if (current_method is Method) {
 			string? direction = reader.get_attribute ("direction");
