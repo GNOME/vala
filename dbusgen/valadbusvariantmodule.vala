@@ -120,7 +120,7 @@ public class Vala.DBusVariantModule {
 		}
 	}
 
-	private DataType get_variant_type (VariantType type) {
+	private DataType? get_variant_type (VariantType type) {
 		if (type.is_basic ()) {
 			if (type.equal (VariantType.BOOLEAN)) {
 				return bool_type.copy ();
@@ -155,16 +155,26 @@ public class Vala.DBusVariantModule {
 		return get_complex_type (type);
 	}
 
-	private DataType get_complex_type (VariantType type) {
+	private DataType? get_complex_type (VariantType type) {
 		if (type.is_array ()) {
 			var element = type.element ();
 			if (element.equal (VariantType.DICTIONARY) || element.is_dict_entry ()) {
 				var res = dictionary_type.copy ();
-				res.add_type_argument (get_variant_type (element.key ()));
-				res.add_type_argument (get_variant_type (element.value ()));
-				return res;
+				var key = get_variant_type (element.key ());
+				var value = get_variant_type (element.value ());
+				if (key != null && value != null) {
+					res.add_type_argument (key);
+					res.add_type_argument (value);
+					return res;
+				}
+			} else {
+				var element_type = get_variant_type (element);
+				if (element != null && !(element_type is ArrayType)) {
+					var array = new ArrayType (element_type, 1, null);
+					array.value_owned = true;
+					return array;
+				}
 			}
-			return new ArrayType (get_variant_type (element), 1, null);
 		} else if (type.equal (VariantType.BYTESTRING)) {
 			return string_type.copy (); //new ArrayType (uchar_type.copy (), 1, null);
 		} else if (type.equal (VariantType.BYTESTRING_ARRAY)) {
@@ -177,7 +187,7 @@ public class Vala.DBusVariantModule {
 
 		Report.warning (null, "Unresolved type: %s".printf ((string) type.peek_string ()));
 
-		return gvariant_type.copy ();
+		return null;
 
 		if (type.equal (VariantType.DICT_ENTRY) || type.is_dict_entry ()) {
 			return dictionary_type.copy ();
