@@ -298,6 +298,8 @@ public class Vala.DBusParser : CodeVisitor {
 		current_iface.add_method ((Method)current_method);
 		((Method)current_method).is_abstract = true;
 		((Method)current_method).access = SymbolAccessibility.PUBLIC;
+		((Method)current_method).add_error_type (dbus_module.gio_error_type);
+		((Method)current_method).add_error_type (dbus_module.gdbus_error_type);
 
 		next ();
 
