@@ -49,6 +49,8 @@ public class Vala.DBusVariantModule {
 	public TypeSymbol gtype_type;
 	public TypeSymbol gobject_type;
 	public ErrorType gerror_type;
+	public ErrorType gdbus_error_type;
+	public ErrorType gio_error_type;
 	public ObjectType dictionary_type;
 	public ObjectType gvariant_type;
 	public Struct gvalue_type;
@@ -90,6 +92,8 @@ public class Vala.DBusVariantModule {
 		gtype_type = (TypeSymbol) glib_ns.scope.lookup ("Type");
 		gobject_type = (TypeSymbol) glib_ns.scope.lookup ("Object");
 		gerror_type = new ErrorType (null, null);
+		gio_error_type = new ErrorType ((ErrorDomain) glib_ns.scope.lookup ("DBusError"), null);
+		gdbus_error_type = new ErrorType ((ErrorDomain) glib_ns.scope.lookup ("IOError"), null);
 
 		gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
 		gvariant_type = new ObjectType ((Class) glib_ns.scope.lookup ("Variant"));
