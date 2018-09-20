@@ -2909,9 +2909,9 @@ namespace GLib {
 		[CCode (cname = "tm_isdst")]
 		public int isdst;
 
-		[CCode (cname = "gmtime_r")]
+		[CCode (cname = "gmtime_r", feature_test_macro = "_XOPEN_SOURCE")]
 		static void gmtime_r (ref time_t time, out Time result);
-		[CCode (cname = "localtime_r")]
+		[CCode (cname = "localtime_r", feature_test_macro = "_XOPEN_SOURCE")]
 		static void localtime_r (ref time_t time, out Time result);
 
 		public static Time gm (time_t time) {
@@ -2940,7 +2940,7 @@ namespace GLib {
 
 		[CCode (cname = "strftime", instance_pos = -1)]
 		public size_t strftime (char[] s, string format);
-		[CCode (cname = "strptime", instance_pos = -1)]
+		[CCode (cname = "strptime", instance_pos = -1, feature_test_macro = "_XOPEN_SOURCE")]
 		public unowned string? strptime (string buf, string format);
 	}
 
