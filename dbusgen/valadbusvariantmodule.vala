@@ -188,6 +188,8 @@ public class Vala.DBusVariantModule {
 					return array;
 				}
 			}
+		} else if (type.equal (VariantType.TUPLE)) {
+			
 		}
 
 		Report.warning (null, "Unresolved type: %s".printf ((string) type.peek_string ()));
