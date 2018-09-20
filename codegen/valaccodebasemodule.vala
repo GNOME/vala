@@ -1383,7 +1383,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return true;
 		} else if (cexpr is CCodeBinaryExpression) {
 			var cbinary = (CCodeBinaryExpression) cexpr;
-			return is_pure_ccode_expression (cbinary.left) && is_constant_ccode_expression (cbinary.right);
+			return is_pure_ccode_expression (cbinary.left) && is_pure_ccode_expression (cbinary.right);
 		} else if (cexpr is CCodeUnaryExpression) {
 			var cunary = (CCodeUnaryExpression) cexpr;
 			switch (cunary.operator) {
