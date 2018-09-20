@@ -29,7 +29,7 @@ namespace Goo {
 		public void convert_to_pixels (ref double x, ref double y);
 		public unowned Cairo.Context create_cairo_context ();
 		public virtual unowned Goo.CanvasItem create_item (Goo.CanvasItemModel model);
-		public static void create_path (GLib.Array<Goo.CanvasPathCommand> commands, Cairo.Context cr);
+		public static void create_path (GLib.Array<Goo.CanvasPathCommand?> commands, Cairo.Context cr);
 		public void get_bounds (out unowned double? left, out unowned double? top, out unowned double? right, out unowned double? bottom);
 		public double get_default_line_width ();
 		public unowned Goo.CanvasItem? get_item (Goo.CanvasItemModel model);
@@ -44,7 +44,7 @@ namespace Goo {
 		public void grab_focus (Goo.CanvasItem item);
 		public Gdk.GrabStatus keyboard_grab (Goo.CanvasItem item, bool owner_events, uint32 time);
 		public void keyboard_ungrab (Goo.CanvasItem item, uint32 time);
-		public static GLib.Array<Goo.CanvasPathCommand> parse_path_data (string path_data);
+		public static GLib.Array<Goo.CanvasPathCommand?> parse_path_data (string path_data);
 		public Gdk.GrabStatus pointer_grab (Goo.CanvasItem item, Gdk.EventMask event_mask, Gdk.Cursor? cursor, uint32 time);
 		public void pointer_ungrab (Goo.CanvasItem item, uint32 time);
 		public void register_widget_item (Goo.CanvasWidget witem);
@@ -630,7 +630,7 @@ namespace Goo {
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasStyle : GLib.Object {
 		public weak Goo.CanvasStyle? parent;
-		public weak GLib.Array<Goo.CanvasStyleProperty> properties;
+		public weak GLib.Array<Goo.CanvasStyleProperty?> properties;
 		[CCode (has_construct_function = false)]
 		public CanvasStyle ();
 		public Goo.CanvasStyle copy ();
@@ -912,7 +912,7 @@ namespace Goo {
 	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasItemSimpleData {
 		public Cairo.Matrix? transform;
-		public weak GLib.Array<Goo.CanvasPathCommand> clip_path_commands;
+		public weak GLib.Array<Goo.CanvasPathCommand?> clip_path_commands;
 		public weak Goo.CanvasStyle style;
 		public weak string tooltip;
 		public double visibility_threshold;

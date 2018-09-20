@@ -5088,8 +5088,8 @@ namespace Gdk {
 		public virtual signal void to_embedder (double p0, double p1, void* p2, void* p3);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	[SimpleType]
-	public struct Atom {
+	[IntegerType]
+	public struct Atom : uint {
 		[CCode (cname = "GDK_NONE")]
 		public static Gdk.Atom NONE;
 		public static Gdk.Atom intern (string atom_name, bool only_if_exists);
