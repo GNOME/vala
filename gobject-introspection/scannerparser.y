@@ -54,10 +54,10 @@ csymbol_new (CSymbolType type)
 static void
 ctype_free (CType * type)
 {
-  g_free (type);
   g_free (type->name);
   g_list_foreach (type->child_list, (GFunc)ctype_free, NULL);
   g_list_free (type->child_list);
+  g_free (type);
 }
 
 void
@@ -66,9 +66,9 @@ csymbol_free (CSymbol * symbol)
   g_free (symbol->ident);
   ctype_free (symbol->base_type);
   g_free (symbol->const_string);
-  g_free (symbol);
   g_slist_foreach (symbol->directives, (GFunc)cdirective_free, NULL);
   g_slist_free (symbol->directives);
+  g_free (symbol);
 }
  
 gboolean
