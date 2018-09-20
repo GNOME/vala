@@ -118,7 +118,7 @@ public class Vala.Parser : CodeVisitor {
 	void report_parse_error (ParseError e) {
 		var begin = get_location ();
 		next ();
-		Report.error (get_src (begin), "syntax error, " + e.message);
+		Report.error (get_src (begin), e.message);
 	}
 
 	inline bool expect (TokenType type) throws ParseError {
@@ -1003,7 +1003,6 @@ public class Vala.Parser : CodeVisitor {
 		var call = expr as MethodCall;
 		var object_creation = expr as ObjectCreationExpression;
 		if (call == null && object_creation == null) {
-			Report.error (expr.source_reference, "syntax error, expected method call");
 			throw new ParseError.SYNTAX ("expected method call");
 		}
 
@@ -2018,7 +2017,6 @@ public class Vala.Parser : CodeVisitor {
 		if (!accept (TokenType.VAR)) {
 			type = parse_type (true, true);
 			if (accept (TokenType.IN)) {
-				Report.error (type.source_reference, "syntax error, expected var or type");
 				throw new ParseError.SYNTAX ("expected var or type");
 			}
 		}
