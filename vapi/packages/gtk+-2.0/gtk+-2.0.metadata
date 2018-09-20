@@ -672,7 +672,7 @@ gtk_selection_data_get_uris is_array="1" transfer_ownership="1" array_null_termi
 gtk_selection_data_set.length hidden="1"
 gtk_selection_data_set_uris.uris is_array="1" no_array_length="1" array_null_terminated="1"
 GtkSettings.queued_settings hidden="1"
-GtkSettings:color-hash type_arguments="string,Gdk.Color"
+GtkSettings:color-hash type_arguments="string,Gdk.Color?"
 GtkSettingsValue is_value_type="1"
 gtk_show_about_dialog ellipsis="1"
 gtk_show_about_dialog.parent nullable="1"
