@@ -21,6 +21,7 @@
  */
 
 public abstract class Vala.NamespaceStrategy {
+	public string root_name { get; set; }
 
 	public abstract string? get_namespace (string ns);
 

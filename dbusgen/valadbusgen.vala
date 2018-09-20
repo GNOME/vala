@@ -29,7 +29,7 @@ public class Vala.DBusGen {
 	public class ConcatenationStrategy : NamespaceStrategy {
 
 		public override string? get_namespace (string ns) {
-			return null;
+			return root_name;
 		}
 
 		public override string get_name (string ns) {
@@ -58,6 +58,11 @@ public class Vala.DBusGen {
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] packages;
 	static int dbus_timeout = 120000;
+	static string root_namespace;
+	[CCode (array_length = false, array_null_terminated = true)]
+	static string[] rename_namespaces;
+	[CCode (array_length = false, array_null_terminated = true)]
+	static string[] strip_namespaces;
 
 	CodeContext context;
 
@@ -66,6 +71,9 @@ public class Vala.DBusGen {
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "directory", 'd', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
 		{ "disable-warnings", 0, 0, OptionArg.NONE, ref disable_warnings, "Disable warnings", null },
+		{ "namespace", 'n', 0, OptionArg.STRING, ref root_namespace, "Name of the parent namespace", null },
+		{ "rename-namespace", 0, 0, OptionArg.STRING_ARRAY, ref rename_namespaces, "Namespace to rename to", "SOURCE_NS:TARGET_NS..." },
+		{ "strip-namespace", 0, 0, OptionArg.STRING_ARRAY, ref strip_namespaces, "Namespace to strip", "NAMESPACE..." },
 		{ "dbus-timeout", 0, 0, OptionArg.INT, ref dbus_timeout, "DBus timeout", null },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
@@ -152,7 +160,9 @@ public class Vala.DBusGen {
 
 		var parser = new DBusParser ();
 		parser.dbus_timeout = dbus_timeout;
-		parser.namespace_strategy = new ConcatenationStrategy ();
+		parser.namespace_strategy = new ConcatenationStrategy () {
+			root_name = root_namespace
+		};
 		parser.parse (context);
 
 		if (context.report.get_errors () > 0) {
