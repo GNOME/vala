@@ -127,7 +127,7 @@ public class Vala.DBusParser : CodeVisitor {
 		}
 
 		string? ns_name = namespace_strategy.get_namespace (name);
-		if (ns_name != null) {
+		if (ns_name != null && current_ns.name != ns_name) {
 			var ns = new Namespace (ns_name, get_current_src ());
 			current_ns.add_namespace (ns);
 			current_ns = ns;
