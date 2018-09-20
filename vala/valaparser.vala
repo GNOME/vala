@@ -3585,8 +3585,7 @@ public class Vala.Parser : CodeVisitor {
 	}
 }
 
-public errordomain Vala.ParseError {
-	FAILED,
-	SYNTAX
+internal errordomain Vala.ParseError {
+	SYNTAX,
 }
 
