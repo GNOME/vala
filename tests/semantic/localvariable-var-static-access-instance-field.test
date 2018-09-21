@@ -1,0 +1,12 @@
+Invalid Code
+
+class Foo {
+	int field;
+
+	static void bar () {
+		var f = field;
+	}
+}
+
+void main () {
+}
