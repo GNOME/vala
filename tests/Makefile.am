@@ -240,6 +240,7 @@ TESTS = \
 	objects/constructor-variadic.test \
 	objects/constructors.vala \
 	objects/destructors.vala \
+	objects/duplicating-instance-invalid.test \
 	objects/dynamic.vala \
 	objects/generics.vala \
 	objects/initially-unowned.vala \
