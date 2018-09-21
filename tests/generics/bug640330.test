@@ -1,0 +1,13 @@
+Invalid Code
+
+interface Foo<G> : Object {
+	public virtual G get_foo (G g) {
+		return g;
+	}
+}
+
+class Bar<G> : Object, Foo<G> {
+}
+
+void main () {
+}
