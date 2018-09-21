@@ -1,0 +1,10 @@
+Invalid Code
+
+[Compact]
+class Foo {
+}
+
+void main () {
+	Foo foo = new Foo ();
+	var foo_copy = foo;
+}
