@@ -1,0 +1,19 @@
+Invalid Code
+
+delegate void Func ();
+
+class Foo : Object {
+	public Func f { get; construct; }
+}
+
+class Bar : Foo {
+	public Bar () {
+		Object (f: func);
+	}
+
+	void func () {
+	}
+}
+
+void main () {
+}

@@ -479,6 +479,9 @@ TESTS = \
 	semantic/assignment-same-variable.vala \
 	semantic/assignment-signal-incompatible-method.test \
 	semantic/assignment-signal-incompatible-type.test \
+	semantic/chainup-gobject-incompatible-type-property.test \
+	semantic/chainup-gobject-unknown-property.test \
+	semantic/chainup-gobject-unsupported-type-property.test \
 	semantic/class-base-type-invalid.test \
 	semantic/class-base-type-less-accessible.test \
 	semantic/class-compact-derived-instance-field.test \
