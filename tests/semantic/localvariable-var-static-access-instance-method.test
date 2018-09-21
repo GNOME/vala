@@ -1,0 +1,14 @@
+Invalid Code
+
+class Foo {
+	void method () {
+	}
+
+	static void bar () {
+		var m = method;
+	}
+}
+
+void main () {
+}
+
