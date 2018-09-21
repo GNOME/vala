@@ -103,7 +103,10 @@ public class Vala.LocalVariable : Variable {
 				is_initializer_list = true;
 			}
 
-			initializer.check (context);
+			if (!initializer.check (context)) {
+				error = true;
+				return false;
+			}
 		}
 
 		if (variable_type == null) {
