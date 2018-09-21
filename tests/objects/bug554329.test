@@ -1,0 +1,16 @@
+Invalid Code
+
+interface IFoo {
+    public abstract void bar ();
+}
+
+class Foo : IFoo {
+    public void bar () {
+    }
+}
+
+void main () {
+	Foo foo = new Foo ();
+	IFoo ifoo = foo;
+	ifoo.bar ();
+}
