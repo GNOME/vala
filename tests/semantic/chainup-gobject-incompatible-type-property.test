@@ -1,0 +1,14 @@
+Invalid Code
+
+class Foo : Object {
+	public string s { get; construct; }
+}
+
+class Bar : Foo {
+	public Bar () {
+		Object (s: 42);
+	}
+}
+
+void main () {
+}

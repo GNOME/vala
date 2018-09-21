@@ -1,0 +1,13 @@
+Invalid Code
+
+class Foo : Object {
+}
+
+class Bar : Foo {
+	public Bar () {
+		Object (unknown: "foo");
+	}
+}
+
+void main () {
+}
