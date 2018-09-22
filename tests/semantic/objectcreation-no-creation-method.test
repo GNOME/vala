@@ -1,0 +1,8 @@
+Invalid Code
+
+void bar () {
+}
+
+void main () {
+	var foo = new Foo.bar ();
+}

@@ -1,0 +1,9 @@
+Invalid Code
+
+enum Bar {
+	NONE
+}
+
+void main () {
+	var foo = new Bar ();
+}
