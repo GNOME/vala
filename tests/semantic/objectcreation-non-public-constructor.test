@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo {
+	Foo () {
+	}
+}
+
+void main () {
+	var foo = new Foo ();
+}
