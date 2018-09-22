@@ -1,0 +1,11 @@
+Invalid Code
+
+class Foo {
+	[Signal (detailed = true)]
+	public signal void foo ();
+}
+
+void main () {
+	var foo = new Foo ();
+	foo.foo["detail", "fail"].connect (() => {});
+}
