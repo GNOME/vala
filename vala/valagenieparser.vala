@@ -484,7 +484,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 		accept (TokenType.OP_NEG);
 		accept (TokenType.INTERR);
-		accept (TokenType.HASH);
 	}
 
 
@@ -611,10 +610,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 					type = array_type;
 				}
 			}
-		}
-
-		if (!owned_by_default) {
-			value_owned = accept (TokenType.HASH);
 		}
 
 		if (type is PointerType) {
@@ -1235,13 +1230,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			return new UnaryExpression (operator, op, get_src (begin));
 		}
 		switch (current ()) {
-		case TokenType.HASH:
-			if (!context.deprecated) {
-				Report.warning (get_src (begin), "deprecated syntax, use `(owned)` cast");
-			}
-			next ();
-			var op = parse_unary_expression ();
-			return new ReferenceTransferExpression (op, get_src (begin));
 		case TokenType.OPEN_PARENS:
 			next ();
 			switch (current ()) {

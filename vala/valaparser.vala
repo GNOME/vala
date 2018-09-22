@@ -419,7 +419,6 @@ public class Vala.Parser : CodeVisitor {
 			accept (TokenType.INTERR);
 		}
 		accept (TokenType.OP_NEG);
-		accept (TokenType.HASH);
 	}
 
 	bool is_inner_array_type () {
@@ -526,15 +525,6 @@ public class Vala.Parser : CodeVisitor {
 
 		if (accept (TokenType.OP_NEG)) {
 			Report.warning (get_last_src (), "obsolete syntax, types are non-null by default");
-		}
-
-		if (!owned_by_default) {
-			if (accept (TokenType.HASH)) {
-				if (!context.deprecated) {
-					Report.warning (get_last_src (), "deprecated syntax, use `owned` modifier");
-				}
-				value_owned = true;
-			}
 		}
 
 		if (type is PointerType) {
@@ -1069,13 +1059,6 @@ public class Vala.Parser : CodeVisitor {
 			return new UnaryExpression (operator, op, get_src (begin));
 		}
 		switch (current ()) {
-		case TokenType.HASH:
-			if (!context.deprecated) {
-				Report.warning (get_last_src (), "deprecated syntax, use `(owned)` cast");
-			}
-			next ();
-			var op = parse_unary_expression ();
-			return new ReferenceTransferExpression (op, get_src (begin));
 		case TokenType.OPEN_PARENS:
 			next ();
 			switch (current ()) {
@@ -2785,15 +2768,6 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
 		var type = parse_type (true, true);
-
-		bool getter_owned = false;
-		if (accept (TokenType.HASH)) {
-			if (!context.deprecated) {
-				Report.warning (get_last_src (), "deprecated syntax, use `owned` modifier before `get'");
-			}
-			getter_owned = true;
-		}
-
 		string id = parse_identifier ();
 		var prop = new Property (id, type, null, null, get_src (begin), comment);
 		prop.access = access;
@@ -2864,10 +2838,6 @@ public class Vala.Parser : CodeVisitor {
 				if (accept (TokenType.GET)) {
 					if (prop.get_accessor != null) {
 						throw new ParseError.SYNTAX ("property get accessor already defined");
-					}
-
-					if (getter_owned) {
-						value_type.value_owned = true;
 					}
 
 					Block block = null;
