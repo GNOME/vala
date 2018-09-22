@@ -1103,10 +1103,6 @@ public class Vala.CodeWriter : CodeVisitor {
 	public override void visit_yield_statement (YieldStatement y) {
 		write_indent ();
 		write_string ("yield");
-		if (y.yield_expression != null) {
-			write_string (" ");
-			y.yield_expression.accept (this);
-		}
 		write_string (";");
 		write_newline ();
 	}

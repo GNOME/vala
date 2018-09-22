@@ -2070,17 +2070,17 @@ public class Vala.Parser : CodeVisitor {
 	Statement parse_yield_statement () throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.YIELD);
-		if (current () != TokenType.SEMICOLON && current () != TokenType.RETURN) {
+		var token = current ();
+		if (token != TokenType.SEMICOLON) {
 			// yield expression
 			prev ();
+			if (token == TokenType.RETURN) {
+				throw new ParseError.SYNTAX ("expected `return yield'");
+			}
 			return parse_expression_statement ();
 		}
-		Expression expr = null;
-		if (accept (TokenType.RETURN)) {
-			expr = parse_expression ();
-		}
 		expect (TokenType.SEMICOLON);
-		return new YieldStatement (expr, get_src (begin));
+		return new YieldStatement (get_src (begin));
 	}
 
 	Statement parse_throw_statement () throws ParseError {

@@ -482,6 +482,7 @@ TESTS = \
 	parser/unsupported-property-async.test \
 	parser/unsupported-property-throws.test \
 	parser/yield-method.test \
+	parser/yield-return.test \
 	parser/yield-return.vala \
 	parser/bug728574.vala \
 	parser/bug749576.vala \

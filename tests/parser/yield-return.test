@@ -1,0 +1,13 @@
+Invalid Code
+
+class Foo {
+	public async Foo () {
+	}
+}
+
+async Foo bar () {
+	yield return new Foo ();
+}
+
+void main () {
+}

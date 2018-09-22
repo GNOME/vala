@@ -2260,16 +2260,12 @@ public class Vala.Genie.Parser : CodeVisitor {
 	Statement parse_yield_statement () throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.YIELD);
-		if (current () != TokenType.SEMICOLON && current () != TokenType.EOL && current () != TokenType.RETURN) {
+		if (current () != TokenType.SEMICOLON && current () != TokenType.EOL) {
 			prev ();
 			return parse_expression_statement ();
 		}
-		Expression expr = null;
-		if (accept (TokenType.RETURN)) {
-			expr = parse_expression ();
-		}
 		expect_terminator ();
-		return new YieldStatement (expr, get_src (begin));
+		return new YieldStatement (get_src (begin));
 	}
 
 	Statement parse_throw_statement () throws ParseError {

@@ -773,37 +773,12 @@ public class Vala.GAsyncModule : GtkModule {
 			return;
 		}
 
-		if (stmt.yield_expression == null) {
-			int state = emit_context.next_coroutine_state++;
+		int state = emit_context.next_coroutine_state++;
 
-			ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_"), new CCodeConstant (state.to_string ()));
-			ccode.add_return (new CCodeConstant ("FALSE"));
-			ccode.add_label ("_state_%d".printf (state));
-			ccode.add_statement (new CCodeEmptyStatement ());
-
-			return;
-		}
-
-		if (stmt.yield_expression.error) {
-			stmt.error = true;
-			return;
-		}
-
-		ccode.add_expression (get_cvalue (stmt.yield_expression));
-
-		if (stmt.tree_can_fail && stmt.yield_expression.tree_can_fail) {
-			// simple case, no node breakdown necessary
-
-			add_simple_check (stmt.yield_expression);
-		}
-
-		/* free temporary objects */
-
-		foreach (var value in temp_ref_values) {
-			ccode.add_expression (destroy_value (value));
-		}
-
-		temp_ref_values.clear ();
+		ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_"), new CCodeConstant (state.to_string ()));
+		ccode.add_return (new CCodeConstant ("FALSE"));
+		ccode.add_label ("_state_%d".printf (state));
+		ccode.add_statement (new CCodeEmptyStatement ());
 	}
 
 	public override void return_with_exception (CCodeExpression error_expr)
