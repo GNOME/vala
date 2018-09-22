@@ -1,0 +1,9 @@
+Invalid Code
+
+[Compact]
+class Foo {
+	public signal void foo ();
+}
+
+void main () {
+}

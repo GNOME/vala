@@ -599,6 +599,10 @@ TESTS = \
 	semantic/property-struct-protected.test \
 	semantic/property-struct-virtual.test \
 	semantic/property-void.test \
+	semantic/signal-clash-inherited.test \
+	semantic/signal-compact-class.test \
+	semantic/signal-detail-invalid.test \
+	semantic/signal-detail-non-string.test \
 	semantic/struct-derived.test \
 	semantic/struct-field-initializer.test \
 	semantic/struct-invalid-base.test \
