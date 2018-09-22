@@ -34,8 +34,4 @@ public class Vala.DynamicSignal : Signal {
 		base (name, return_type, source_reference, comment);
 		this.dynamic_type = dynamic_type;
 	}
-
-	public override bool check (CodeContext context) {
-		return true;
-	}
 }

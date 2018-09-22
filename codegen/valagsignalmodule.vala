@@ -112,12 +112,6 @@ public class Vala.GSignalModule : GObjectModule {
 			return get_signal_canonical_constant (sig);
 		}
 
-		if (detail_expr.value_type is NullType || !detail_expr.value_type.compatible (string_type)) {
-			node.error = true;
-			Report.error (detail_expr.source_reference, "only string details are supported");
-			return null;
-		}
-
 		if (detail_expr is StringLiteral) {
 			return get_signal_canonical_constant (sig, ((StringLiteral) detail_expr).eval ());
 		}
@@ -143,12 +137,6 @@ public class Vala.GSignalModule : GObjectModule {
 	}
 
 	private CCodeExpression? get_detail_cexpression (Expression detail_expr, CodeNode node) {
-		if (detail_expr.value_type is NullType || !detail_expr.value_type.compatible (string_type)) {
-			node.error = true;
-			Report.error (detail_expr.source_reference, "only string details are supported");
-			return null;
-		}
-
 		var detail_cexpr = get_cvalue (detail_expr);
 		CCodeFunctionCall detail_ccall;
 		if (is_constant_ccode_expression (detail_cexpr)) {
@@ -162,25 +150,6 @@ public class Vala.GSignalModule : GObjectModule {
 	}
 
 	public override void visit_signal (Signal sig) {
-		// parent_symbol may be null for dynamic signals
-
-		var cl = sig.parent_symbol as Class;
-		if (cl != null && cl.is_compact) {
-			sig.error = true;
-			Report.error (sig.source_reference, "Signals are not supported in compact classes");
-			return;
-		}
-
-		if (cl != null) {
-			foreach (DataType base_type in cl.get_base_types ()) {
-				if (SemanticAnalyzer.symbol_lookup_inherited (base_type.data_type, sig.name) is Signal) {
-					sig.error = true;
-					Report.error (sig.source_reference, "Signals with the same name as a signal in a base type are not supported");
-					return;
-				}
-			}
-		}
-
 		if (signal_enum != null && sig.parent_symbol is TypeSymbol) {
 			signal_enum.add_value (new CCodeEnumValue ("%s_%s_SIGNAL".printf (get_ccode_upper_case_name ((TypeSymbol) sig.parent_symbol), get_ccode_upper_case_name (sig))));
 		}

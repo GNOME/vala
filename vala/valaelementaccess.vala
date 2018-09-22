@@ -132,7 +132,16 @@ public class Vala.ElementAccess : Expression {
 				Report.error (source_reference, "Element access with more than one dimension is not supported for signals");
 				return false;
 			}
-			get_indices ().get (0).target_type = context.analyzer.string_type.copy ();
+
+			var detail_expr = get_indices ().get (0);
+			detail_expr.target_type = context.analyzer.string_type.copy ();
+			detail_expr.check (context);
+
+			if (detail_expr.value_type is NullType || !detail_expr.value_type.compatible (context.analyzer.string_type)) {
+				error = true;
+				Report.error (detail_expr.source_reference, "only string details are supported");
+				return false;
+			}
 		}
 
 		foreach (Expression index in get_indices ()) {

@@ -181,6 +181,28 @@ public class Vala.Signal : Symbol, Callable {
 
 		checked = true;
 
+		// parent_symbol may be null for dynamic signals
+		var parent_cl = parent_symbol as Class;
+		if (parent_cl != null && parent_cl.is_compact) {
+			error = true;
+			Report.error (source_reference, "Signals are not supported in compact classes");
+			return false;
+		}
+
+		if (parent_cl != null) {
+			foreach (DataType base_type in parent_cl.get_base_types ()) {
+				if (SemanticAnalyzer.symbol_lookup_inherited (base_type.data_type, name) is Signal) {
+					error = true;
+					Report.error (source_reference, "Signals with the same name as a signal in a base type are not supported");
+					return false;
+				}
+			}
+		}
+
+		if (this is DynamicSignal) {
+			return !error;
+		}
+
 		return_type.check (context);
 
 		foreach (Parameter param in parameters) {
