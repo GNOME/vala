@@ -155,7 +155,7 @@ public class Vala.Assignment : Expression {
 				return false;
 			}
 
-			if ((!(ma.symbol_reference is Signal || ma.symbol_reference is DynamicProperty) && ma.value_type == null) ||
+			if ((!(ma.symbol_reference is DynamicProperty) && ma.value_type == null) ||
 			    (ma.inner == null && ma.member_name == "this" && context.analyzer.is_in_instance_method ())) {
 				error = true;
 				Report.error (source_reference, "unsupported lvalue in assignment");
@@ -173,18 +173,7 @@ public class Vala.Assignment : Expression {
 				return false;
 			}
 
-			if (ma.symbol_reference is DynamicSignal) {
-				// target_type not available for dynamic signals
-				if (!context.deprecated) {
-					Report.warning (source_reference, "deprecated syntax, use `connect' method instead");
-				}
-			} else if (ma.symbol_reference is Signal) {
-				if (!context.deprecated) {
-					Report.warning (source_reference, "deprecated syntax, use `connect' method instead");
-				}
-				var sig = (Signal) ma.symbol_reference;
-				right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type, this));
-			} else if (ma.symbol_reference is DynamicProperty) {
+			if (ma.symbol_reference is DynamicProperty) {
 				// target_type not available for dynamic properties
 			} else {
 				right.formal_target_type = ma.formal_value_type.copy ();
@@ -197,10 +186,6 @@ public class Vala.Assignment : Expression {
 				error = true;
 				Report.error (ea.source_reference, "strings are immutable");
 				return false;
-			} else if (ea.container is MemberAccess && ea.container.symbol_reference is Signal) {
-				var ma = (MemberAccess) ea.container;
-				var sig = (Signal) ea.container.symbol_reference;
-				right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type, this));
 			} else if (ea.container.value_type.get_member ("set") is Method) {
 				var set_call = new MethodCall (new MemberAccess (ea.container, "set", source_reference), source_reference);
 				foreach (Expression e in ea.get_indices ()) {
@@ -233,70 +218,33 @@ public class Vala.Assignment : Expression {
 
 			var ma = (MemberAccess) left;
 
-			if (!(ma.symbol_reference is Signal)) {
-				var old_value = new MemberAccess (ma.inner, ma.member_name);
+			var old_value = new MemberAccess (ma.inner, ma.member_name);
 
-				var bin = new BinaryExpression (BinaryOperator.PLUS, old_value, right, source_reference);
-				bin.target_type = right.target_type;
-				right.target_type = right.target_type.copy ();
-				right.target_type.value_owned = false;
+			var bin = new BinaryExpression (BinaryOperator.PLUS, old_value, right, source_reference);
+			bin.target_type = right.target_type;
+			right.target_type = right.target_type.copy ();
+			right.target_type.value_owned = false;
 
-				switch (operator) {
-				case AssignmentOperator.BITWISE_OR: bin.operator = BinaryOperator.BITWISE_OR; break;
-				case AssignmentOperator.BITWISE_AND: bin.operator = BinaryOperator.BITWISE_AND; break;
-				case AssignmentOperator.BITWISE_XOR: bin.operator = BinaryOperator.BITWISE_XOR; break;
-				case AssignmentOperator.ADD: bin.operator = BinaryOperator.PLUS; break;
-				case AssignmentOperator.SUB: bin.operator = BinaryOperator.MINUS; break;
-				case AssignmentOperator.MUL: bin.operator = BinaryOperator.MUL; break;
-				case AssignmentOperator.DIV: bin.operator = BinaryOperator.DIV; break;
-				case AssignmentOperator.PERCENT: bin.operator = BinaryOperator.MOD; break;
-				case AssignmentOperator.SHIFT_LEFT: bin.operator = BinaryOperator.SHIFT_LEFT; break;
-				case AssignmentOperator.SHIFT_RIGHT: bin.operator = BinaryOperator.SHIFT_RIGHT; break;
-				}
-
-				right = bin;
-				right.check (context);
-
-				operator = AssignmentOperator.SIMPLE;
+			switch (operator) {
+			case AssignmentOperator.BITWISE_OR: bin.operator = BinaryOperator.BITWISE_OR; break;
+			case AssignmentOperator.BITWISE_AND: bin.operator = BinaryOperator.BITWISE_AND; break;
+			case AssignmentOperator.BITWISE_XOR: bin.operator = BinaryOperator.BITWISE_XOR; break;
+			case AssignmentOperator.ADD: bin.operator = BinaryOperator.PLUS; break;
+			case AssignmentOperator.SUB: bin.operator = BinaryOperator.MINUS; break;
+			case AssignmentOperator.MUL: bin.operator = BinaryOperator.MUL; break;
+			case AssignmentOperator.DIV: bin.operator = BinaryOperator.DIV; break;
+			case AssignmentOperator.PERCENT: bin.operator = BinaryOperator.MOD; break;
+			case AssignmentOperator.SHIFT_LEFT: bin.operator = BinaryOperator.SHIFT_LEFT; break;
+			case AssignmentOperator.SHIFT_RIGHT: bin.operator = BinaryOperator.SHIFT_RIGHT; break;
 			}
+
+			right = bin;
+			right.check (context);
+
+			operator = AssignmentOperator.SIMPLE;
 		}
 
-		if (left.symbol_reference is Signal) {
-			var sig = (Signal) left.symbol_reference;
-
-			var m = right.symbol_reference as Method;
-
-			if (m == null) {
-				error = true;
-				Report.error (right.source_reference, "unsupported expression for signal handler");
-				return false;
-			}
-
-			var dynamic_sig = sig as DynamicSignal;
-			var right_ma = right as MemberAccess;
-			if (dynamic_sig != null) {
-				bool first = true;
-				foreach (Parameter param in dynamic_sig.handler.value_type.get_parameters ()) {
-					if (first) {
-						// skip sender parameter
-						first = false;
-					} else {
-						dynamic_sig.add_parameter (param.copy ());
-					}
-				}
-				right.target_type = new DelegateType (sig.get_delegate (new ObjectType ((ObjectTypeSymbol) sig.parent_symbol), this));
-			} else if (!right.value_type.compatible (right.target_type)) {
-				var delegate_type = (DelegateType) right.target_type;
-
-				error = true;
-				Report.error (right.source_reference, "method `%s' is incompatible with signal `%s', expected `%s'".printf (right.value_type.to_string (), right.target_type.to_string (), delegate_type.to_prototype_string (m.name)));
-				return false;
-			} else if (right_ma != null && right_ma.prototype_access) {
-				error = true;
-				Report.error (right.source_reference, "Access to instance member `%s' denied".printf (m.get_full_name ()));
-				return false;
-			}
-		} else if (left is MemberAccess) {
+		if (left is MemberAccess) {
 			var ma = (MemberAccess) left;
 
 			if (ma.symbol_reference is Property) {

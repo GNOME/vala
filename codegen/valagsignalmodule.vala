@@ -464,38 +464,6 @@ public class Vala.GSignalModule : GObjectModule {
 		return result;
 	}
 
-	void emit_signal_assignment (Assignment assignment) {
-		var sig = (Signal) assignment.left.symbol_reference;
-
-		bool disconnect = false;
-
-		if (assignment.operator == AssignmentOperator.ADD) {
-			// connect
-		} else if (assignment.operator == AssignmentOperator.SUB) {
-			// disconnect
-			disconnect = true;
-		} else {
-			assignment.error = true;
-			Report.error (assignment.source_reference, "Specified compound assignment type for signals not supported.");
-			return;
-		}
-
-		connect_signal (sig, assignment.left, assignment.right, disconnect, false, assignment);
-	}
-
-	public override void visit_assignment (Assignment assignment) {
-		if (assignment.left.symbol_reference is Signal) {
-			if (assignment.left.error || assignment.right.error) {
-				assignment.error = true;
-				return;
-			}
-
-			emit_signal_assignment (assignment);
-		} else {
-			base.visit_assignment (assignment);
-		}
-	}
-
 	public override void visit_member_access (MemberAccess expr) {
 		if (expr.symbol_reference is Signal) {
 			CCodeExpression pub_inst = null;
