@@ -575,6 +575,10 @@ TESTS = \
 	semantic/method-too-many-type-arguments.test \
 	semantic/method-virtual.test \
 	semantic/method-virtual-body.test \
+	semantic/objectcreation-abstract-class.test \
+	semantic/objectcreation-no-creation-method.test \
+	semantic/objectcreation-non-public-constructor.test \
+	semantic/objectcreation-unsupported-type.test \
 	semantic/parameter-accessibility.test \
 	semantic/parameter-default-type.test \
 	semantic/parameter-out-default.test \
