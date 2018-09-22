@@ -469,6 +469,7 @@ TESTS = \
 	parser/unsupported-property-async.test \
 	parser/unsupported-property-throws.test \
 	parser/yield-method.test \
+	parser/yield-return.vala \
 	parser/bug728574.vala \
 	parser/bug749576.vala \
 	semantic/array-stacked.test \
@@ -586,6 +587,10 @@ TESTS = \
 	semantic/struct-field-initializer.test \
 	semantic/struct-invalid-base.test \
 	semantic/struct-recursive.test \
+	semantic/yield-call-requires-async-context.test \
+	semantic/yield-call-requires-async-method.test \
+	semantic/yield-creation-requires-async-context.test \
+	semantic/yield-creation-requires-async-method.test \
 	$(NULL)
 
 NON_NULL_TESTS = \
