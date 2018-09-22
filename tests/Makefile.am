@@ -523,9 +523,9 @@ TESTS = \
 	semantic/field-external.test \
 	semantic/field-incompatible.test \
 	semantic/field-interface.test \
-	semantic/field-invalid-assignment.test \
 	semantic/field-namespace-owned.test \
 	semantic/field-non-constant.test \
+	semantic/field-owned-to-unowned.test \
 	semantic/field-void.test \
 	semantic/floating-reference.vala \
 	semantic/foreach-iterator-args.test \
