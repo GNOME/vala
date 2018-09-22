@@ -4,8 +4,7 @@ string get_foo () {
 	return "foo";
 }
 
-unowned string field;
+unowned string foo = get_foo ();
 
 void main () {
-	field = get_foo ();
 }
