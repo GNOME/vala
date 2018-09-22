@@ -1237,6 +1237,10 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_method_call (MethodCall expr) {
+		if (expr.is_yield_expression) {
+			write_string ("yield ");
+		}
+
 		expr.call.accept (this);
 		write_string (" (");
 
@@ -1293,6 +1297,10 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
+		if (expr.is_yield_expression) {
+			write_string ("yield ");
+		}
+
 		if (!expr.struct_creation) {
 			write_string ("new ");
 		}
