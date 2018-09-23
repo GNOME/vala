@@ -124,8 +124,14 @@ namespace GLib {
 		public const string ACCESS_CAN_WRITE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_DOS_IS_ARCHIVE")]
 		public const string DOS_IS_ARCHIVE;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_DOS_IS_MOUNTPOINT")]
+		[Version (since = "2.60")]
+		public const string DOS_IS_MOUNTPOINT;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_DOS_IS_SYSTEM")]
 		public const string DOS_IS_SYSTEM;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_DOS_REPARSE_POINT_TAG")]
+		[Version (since = "2.60")]
+		public const string DOS_REPARSE_POINT_TAG;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_ETAG_VALUE")]
 		public const string ETAG_VALUE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_FILESYSTEM_FREE")]
@@ -3784,6 +3790,8 @@ namespace GLib {
 		[Version (since = "2.30")]
 		public abstract GLib.Type get_file_database_type ();
 		public abstract GLib.Type get_server_connection_type ();
+		[Version (since = "2.60")]
+		public void set_default_database (GLib.TlsDatabase? database);
 		[Version (since = "2.48")]
 		public abstract bool supports_dtls ();
 		public abstract bool supports_tls ();
@@ -4684,7 +4692,8 @@ namespace GLib {
 		NOT_TLS,
 		HANDSHAKE,
 		CERTIFICATE_REQUIRED,
-		EOF
+		EOF,
+		INAPPROPRIATE_FALLBACK
 	}
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	public delegate void AsyncReadyCallback (GLib.Object? source_object, GLib.AsyncResult res);
