@@ -41,10 +41,10 @@ public class Sample : Object {
 	}
 
 	public void run() {
-		notify += (s, p) => {
+		notify.connect ((s, p) => {
 			stdout.printf("property `%s' has changed!\n",
 				      p.name);
-		};
+		});
 
 
 		automatic = "TheNewAutomatic";
