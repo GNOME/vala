@@ -11139,7 +11139,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected TreeListModel ();
 		public bool get_autoexpand ();
-		public Gtk.TreeListRow? get_child (uint position);
+		public Gtk.TreeListRow? get_child_row (uint position);
 		public unowned GLib.ListModel get_model ();
 		public bool get_passthrough ();
 		public Gtk.TreeListRow? get_row (uint position);
@@ -11152,7 +11152,7 @@ namespace Gtk {
 	public class TreeListRow : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected TreeListRow ();
-		public Gtk.TreeListRow? get_child (uint position);
+		public Gtk.TreeListRow? get_child_row (uint position);
 		public unowned GLib.ListModel? get_children ();
 		public uint get_depth ();
 		public bool get_expanded ();
