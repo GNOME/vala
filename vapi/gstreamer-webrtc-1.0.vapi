@@ -118,6 +118,14 @@ namespace Gst {
 		CONNECTING,
 		CONNECTED
 	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_DATA_CHANNEL_STATE_", type_id = "gst_webrtc_data_channel_state_get_type ()")]
+	public enum WebRTCDataChannelState {
+		NEW,
+		CONNECTING,
+		OPEN,
+		CLOSING,
+		CLOSED
+	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_FEC_TYPE_", type_id = "gst_webrtc_fec_type_get_type ()")]
 	public enum WebRTCFECType {
 		NONE,
@@ -158,6 +166,13 @@ namespace Gst {
 		FAILED,
 		CLOSED
 	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_PRIORITY_TYPE_", type_id = "gst_webrtc_priority_type_get_type ()")]
+	public enum WebRTCPriorityType {
+		VERY_LOW,
+		LOW,
+		MEDIUM,
+		HIGH
+	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_RTP_TRANSCEIVER_DIRECTION_", type_id = "gst_webrtc_rtp_transceiver_direction_get_type ()")]
 	public enum WebRTCRTPTransceiverDirection {
 		NONE,
@@ -165,6 +180,13 @@ namespace Gst {
 		SENDONLY,
 		RECVONLY,
 		SENDRECV
+	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_SCTP_TRANSPORT_STATE_", type_id = "gst_webrtc_sctp_transport_state_get_type ()")]
+	public enum WebRTCSCTPTransportState {
+		NEW,
+		CONNECTING,
+		CONNECTED,
+		CLOSED
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_SDP_TYPE_", type_id = "gst_webrtc_sdp_type_get_type ()")]
 	public enum WebRTCSDPType {
