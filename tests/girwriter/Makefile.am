@@ -5,8 +5,10 @@ check-girwriter: $(top_builddir)/compiler/valac
 		-C \
 		--disable-version-header \
 		--vapidir $(top_srcdir)/vapi \
+		--pkg gio-2.0 \
 		--gir GirTest-1.0.gir \
 		--library girtest \
+		--shared-library girtest \
 		$(srcdir)/girtest.vala; \
 	tail -n +3 girtest.vapi | diff -wu $(srcdir)/girtest.vapi-expected - || exit 1; \
 	diff -wu $(srcdir)/GirTest-1.0.gir-expected GirTest-1.0.gir || exit 1; \

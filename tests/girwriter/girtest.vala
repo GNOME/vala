@@ -20,7 +20,7 @@ namespace GirTest {
 	public enum EnumTest {
 		VALUE1,
 		VALUE2,
-		VALUE3
+		VALUE3 = 4711
 	}
 
 	[Flags]
@@ -40,8 +40,17 @@ namespace GirTest {
 		VALUE1
 	}
 
-	public interface InterfaceTest {
+	public errordomain ErrorTest {
+		FAILED,
+		SMELLY,
+		FISHY = 23
+	}
+
+	public interface InterfaceTest : Object {
+		public abstract int property { get; construct set; }
 		public virtual void int8_in (int8 param) {
+		}
+		public virtual async void coroutine_async () {
 		}
 	}
 
@@ -63,6 +72,16 @@ namespace GirTest {
 		public signal void skipped_signal (int param);
 
 		public int field = 42;
+
+		public string some_property { get; construct set; }
+
+		public string write_only_property { set; }
+
+		public string construct_only_property { construct; }
+
+		[GIR (visible = false)]
+		public string skipped_property { get; construct set; }
+
 		public ObjectTest () {
 		}
 		public ObjectTest.with_int (int param) {
@@ -141,6 +160,14 @@ namespace GirTest {
 			return new int[8];
 		}
 
+		public void string_array_out (out string[] array) {
+			array = { "foo" };
+		}
+
+		public string[] string_array_return () {
+			return { "foo" };
+		}
+
 		public void none_in () {
 		}
 
@@ -162,6 +189,15 @@ namespace GirTest {
 			return str_equal;
 		}
 
+		public async void coroutine_async () {
+		}
+
+		public void simple_throw () throws ErrorTest {
+		}
+
+		public virtual void method_throw () throws ErrorTest {
+		}
+
 		[GIR (visible = false)]
 		public void skipped_method () {
 		}
@@ -173,9 +209,22 @@ namespace GirTest {
 		public abstract void method_int8_inout (ref int8 param);
 
 		public abstract void method_int8_out (out int8 param);
+
+		public abstract void method_throw () throws ErrorTest;
+	}
+
+	public interface PrerequisiteTest : InterfaceTest {
+	}
+
+	public class ImplementionTest : Object, InterfaceTest {
+		public int property { get; construct set; }
 	}
 
 	[GIR (visible = false)]
 	public class SkippedClass {
+	}
+
+	[Version (deprecated = true, deprecated_since = "0.1.2", since = "0.1.0")]
+	public class DeprecatedClassTest {
 	}
 }

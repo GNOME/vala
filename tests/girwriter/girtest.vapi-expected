@@ -6,6 +6,16 @@ namespace GirTest {
 		public abstract void method_int8_in (int8 param);
 		public abstract void method_int8_inout (ref int8 param);
 		public abstract void method_int8_out (out int8 param);
+		public abstract void method_throw () throws GirTest.ErrorTest;
+	}
+	[CCode (cheader_filename = "girtest.h")]
+	[Version (deprecated = true, deprecated_since = "0.1.2", since = "0.1.0")]
+	public class DeprecatedClassTest {
+		public DeprecatedClassTest ();
+	}
+	[CCode (cheader_filename = "girtest.h")]
+	public class ImplementionTest : GLib.Object, GirTest.InterfaceTest {
+		public ImplementionTest ();
 	}
 	[CCode (cheader_filename = "girtest.h")]
 	public class ObjectTest : GLib.Object {
@@ -16,6 +26,7 @@ namespace GirTest {
 		public void array_out (out int[] array);
 		public int[] array_return ();
 		public int[] array_return_int_in_delegate_out (int i1, out GirTest.DelegateTest d);
+		public async void coroutine_async ();
 		public GirTest.DelegateTest delegate_return ();
 		public GirTest.DelegateTest delegate_return_int_in_array_out (int i1, out int[] a);
 		public static void full_inout (ref GirTest.ObjectTest obj);
@@ -26,6 +37,7 @@ namespace GirTest {
 		public void int_in_int_in_array_out (int param1, int param2, out int[] array);
 		public int[] int_in_int_in_array_return (int param1, int param2);
 		public void method ();
+		public virtual void method_throw () throws GirTest.ErrorTest;
 		public void method_valist (int param, va_list vargs);
 		public void method_varargs (int param, ...);
 		public virtual void method_with_default_impl (int8 param);
@@ -36,10 +48,18 @@ namespace GirTest {
 		public static void none_out (out unowned GirTest.ObjectTest obj);
 		public static unowned GirTest.ObjectTest none_return ();
 		public GLib.EqualFunc simple_delegate_return ();
+		public void simple_throw () throws GirTest.ErrorTest;
 		[GIR (visible = false)]
 		public void skipped_method ();
 		public static void static_method ();
+		public void string_array_out (out string[] array);
+		public string[] string_array_return ();
 		public ObjectTest.with_int (int param);
+		public string construct_only_property { construct; }
+		[GIR (visible = false)]
+		public string skipped_property { get; set construct; }
+		public string some_property { get; set construct; }
+		public string write_only_property { set; }
 		[GIR (visible = false)]
 		public signal void skipped_signal (int param);
 		public signal void some_signal (int param);
@@ -55,8 +75,13 @@ namespace GirTest {
 		public SkippedStruct ();
 	}
 	[CCode (cheader_filename = "girtest.h")]
-	public interface InterfaceTest {
+	public interface InterfaceTest : GLib.Object {
+		public virtual async void coroutine_async ();
 		public virtual void int8_in (int8 param);
+		public abstract int property { get; set construct; }
+	}
+	[CCode (cheader_filename = "girtest.h")]
+	public interface PrerequisiteTest : GirTest.InterfaceTest {
 	}
 	[CCode (cheader_filename = "girtest.h")]
 	[GIR (visible = false)]
@@ -90,6 +115,12 @@ namespace GirTest {
 	[GIR (visible = false)]
 	public enum SkippedFlags {
 		VALUE1
+	}
+	[CCode (cheader_filename = "girtest.h")]
+	public errordomain ErrorTest {
+		FAILED,
+		SMELLY,
+		FISHY
 	}
 	[CCode (cheader_filename = "girtest.h")]
 	public delegate bool DelegateTest (void* a, void* b);
