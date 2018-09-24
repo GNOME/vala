@@ -1,3 +1,25 @@
+Vala 0.40.10
+============
+ * Various improvements and bug fixes:
+  - codewriter: Prepend "yield" if is_yield_expression is set on
+    MethodCall and ObjectCreationExpression
+  - codegen: Fix typo in is_pure_ccode_expression() [#673]
+  - gobject-introspection: Fix use after free in scanner [#674]
+  - vala: Check if ArrayType supports its given element-type in analyzer pass
+  - valadoc: Fix some string escaping which gettext complains about
+
+ * Bindings:
+  - Update GIDL-based bindings to fix unsupported type-arguments
+  - Add gnome-desktop-3.0 bindings [#668]
+  - glib-2.0: Add feature_test_macro details for Time struct's methods
+  - glib-2.0: Set DateTime.now () to use local time zone as the default
+  - gstreamer: Cherry-pick some fixes from 0.42
+  - gtk+-3.0: Update to 3.24.0
+  - gtk+-4.0: Update to 3.94.0+d90e2733
+  - libxml-2.0: Add missing context parameter in OutputWriteCallback
+  - pango: Update to 1.42.3
+  - x11: Add binding for XCreateSimpleWindow
+
 Vala 0.40.9
 ===========
  * Various improvements and bug fixes:
