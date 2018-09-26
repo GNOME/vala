@@ -31,7 +31,8 @@ libvala@PACKAGE_SUFFIX@.pc: libvala.pc
 .PHONY: bootstrap
 bootstrap: all
 	find $(top_srcdir) -name "*.vala.stamp" | xargs rm -f
-	$(MAKE) $(AM_MAKEFLAGS) all VALAC=$(abs_top_builddir)/compiler/valac$(EXEEXT) V=$V
+	$(MAKE) $(AM_MAKEFLAGS) all VALAC=$(abs_top_builddir)/compiler/valac$(EXEEXT) V=$V \
+		VALAFLAGS="$(VALAFLAGS) --hide-internal --abi-stability"
 
 .PHONY: test
 test:
