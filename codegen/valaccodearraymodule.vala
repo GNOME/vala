@@ -172,7 +172,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				int dim = int.parse (lit.value);
 				set_cvalue (expr, get_array_length_cexpression (memberaccess.inner, dim + 1));
 			} else {
-				Report.error (expr.source_reference, "only integer literals supported as index");
+				Report.error (expr.source_reference, "internal error: only integer literals supported as index");
 			}
 		} else {
 			// access to element in an array
