@@ -147,7 +147,10 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 
 		List<CCodeExpression> size = ((GLibValue) value).array_length_cvalues;
-		assert (size != null && size.size >= dim);
+		if (size == null || size.size < dim) {
+			Report.error (null, "internal error: invalid array_length for given dimension");
+			return new CCodeInvalidExpression ();
+		}
 		return size[dim - 1];
 	}
 
