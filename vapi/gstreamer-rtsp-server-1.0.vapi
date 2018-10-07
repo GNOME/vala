@@ -202,6 +202,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool handle_message (Gst.Message message);
 			public virtual bool handle_sdp (Gst.SDP.Message sdp);
+			public bool is_bind_mcast_address ();
 			public bool is_eos_shutdown ();
 			public bool is_reusable ();
 			public bool is_shared ();
@@ -217,6 +218,7 @@ namespace Gst {
 			public bool seek_full (Gst.RTSP.TimeRange range, Gst.SeekFlags flags);
 			public Gst.ClockTimeDiff seekable ();
 			public void set_address_pool (Gst.RTSPServer.AddressPool? pool);
+			public void set_bind_mcast_address (bool bind_mcast_addr);
 			public void set_buffer_size (uint size);
 			public void set_clock (Gst.Clock? clock);
 			[Version (since = "1.16")]
@@ -246,6 +248,8 @@ namespace Gst {
 			public virtual bool unprepare ();
 			public virtual bool unsuspend ();
 			public void use_time_provider (bool time_provider);
+			[NoAccessorMethod]
+			public bool bind_mcast_address { get; set; }
 			public uint buffer_size { get; set; }
 			public Gst.Clock clock { owned get; set; }
 			public Gst.Element element { owned get; construct; }
@@ -310,10 +314,12 @@ namespace Gst {
 			public Gst.ClockTime get_retransmission_time ();
 			public Gst.RTSPServer.SuspendMode get_suspend_mode ();
 			public Gst.RTSPServer.TransportMode get_transport_mode ();
+			public bool is_bind_mcast_address ();
 			public bool is_eos_shutdown ();
 			public bool is_shared ();
 			public bool is_stop_on_disonnect ();
 			public void set_address_pool (Gst.RTSPServer.AddressPool? pool);
+			public void set_bind_mcast_address (bool bind_mcast_addr);
 			public void set_buffer_size (uint size);
 			[Version (since = "1.8")]
 			public void set_clock (Gst.Clock? clock);
@@ -336,6 +342,8 @@ namespace Gst {
 			public void set_stop_on_disconnect (bool stop_on_disconnect);
 			public void set_suspend_mode (Gst.RTSPServer.SuspendMode mode);
 			public void set_transport_mode (Gst.RTSPServer.TransportMode mode);
+			[NoAccessorMethod]
+			public bool bind_mcast_address { get; set; }
 			public uint buffer_size { get; set; }
 			public Gst.Clock clock { owned get; set; }
 			[NoAccessorMethod]
@@ -590,6 +598,7 @@ namespace Gst {
 			[Version (since = "1.16")]
 			public bool handle_keymgmt (string keymgmt);
 			public bool has_control (string? control);
+			public bool is_bind_mcast_address ();
 			public bool is_blocking ();
 			public bool is_client_side ();
 			public bool is_complete ();
@@ -614,6 +623,7 @@ namespace Gst {
 			public Gst.RTSPServer.Address? reserve_address (string address, uint port, uint n_ports, uint ttl);
 			public bool seekable ();
 			public void set_address_pool (Gst.RTSPServer.AddressPool? pool);
+			public void set_bind_mcast_address (bool bind_mcast_addr);
 			public bool set_blocked (bool blocked);
 			[Version (since = "1.6")]
 			public void set_buffer_size (uint size);

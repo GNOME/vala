@@ -102,6 +102,9 @@ namespace Gst {
 			[NoAccessorMethod]
 			public uint64 latency { get; set; }
 			[NoAccessorMethod]
+			[Version (since = "1.16")]
+			public uint64 min_upstream_latency { get; set; }
+			[NoAccessorMethod]
 			public uint64 start_time { get; set; }
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAggregatorPad", lower_case_cprefix = "gst_aggregator_pad_", type_id = "gst_aggregator_pad_get_type ()")]
