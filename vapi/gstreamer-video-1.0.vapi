@@ -1437,7 +1437,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_meta")]
 		public static unowned Gst.Video.Meta? buffer_add_video_meta (Gst.Buffer buffer, Gst.Video.FrameFlags flags, Gst.Video.Format format, uint width, uint height);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_meta_full")]
-		public static unowned Gst.Video.Meta? buffer_add_video_meta_full (Gst.Buffer buffer, Gst.Video.FrameFlags flags, Gst.Video.Format format, uint width, uint height, uint n_planes, size_t offset, int stride);
+		public static unowned Gst.Video.Meta? buffer_add_video_meta_full (Gst.Buffer buffer, Gst.Video.FrameFlags flags, Gst.Video.Format format, uint width, uint height, uint n_planes, [CCode (array_length = false)] size_t offset[4], [CCode (array_length = false)] int stride[4]);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_overlay_composition_meta")]
 		public static unowned Gst.Video.OverlayCompositionMeta? buffer_add_video_overlay_composition_meta (Gst.Buffer buf, Gst.Video.OverlayComposition? comp);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_region_of_interest_meta")]

@@ -3986,6 +3986,9 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PROTECTION_SYSTEM_ID_CAPS_FIELD")]
 	[Version (since = "1.6")]
 	public const string PROTECTION_SYSTEM_ID_CAPS_FIELD;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PROTECTION_UNSPECIFIED_SYSTEM_ID")]
+	[Version (since = "1.16")]
+	public const string PROTECTION_UNSPECIFIED_SYSTEM_ID;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PTR_FORMAT")]
 	public const string PTR_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_QUERY_NUM_SHIFT")]
