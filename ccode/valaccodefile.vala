@@ -170,7 +170,7 @@ public class Vala.CCodeFile {
 			once.append (constant_declaration);
 			once.append (new CCodeNewline ());
 
-			if (begin_decls != null) {
+			if (end_decls != null) {
 				once.append (new CCodeIdentifier (end_decls));
 				once.append (new CCodeNewline ());
 			}
