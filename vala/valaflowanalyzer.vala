@@ -85,7 +85,6 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
-	private CodeContext context;
 	private BasicBlock current_block;
 	private bool unreachable_reported;
 	private List<JumpTarget> jump_stack = new ArrayList<JumpTarget> ();
@@ -105,7 +104,6 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	 * @param context a code context
 	 */
 	public void analyze (CodeContext context) {
-		this.context = context;
 		all_basic_blocks = new HashSet<BasicBlock> ();
 
 		/* we're only interested in non-pkg source files */
@@ -117,7 +115,6 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		all_basic_blocks = null;
-		this.context = null;
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
@@ -146,7 +143,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 	public override void visit_field (Field f) {
 		if (f.is_internal_symbol () && !f.used) {
-			if (!f.is_private_symbol () && (context.internal_header_filename != null || context.use_fast_vapi)) {
+			if (!f.is_private_symbol () && (CodeContext.get ().internal_header_filename != null || CodeContext.get ().use_fast_vapi)) {
 				// do not warn if internal member may be used outside this compilation unit
 			} else {
 				Report.warning (f.source_reference, "field `%s' never used".printf (f.get_full_name ()));
@@ -172,7 +169,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (m.is_internal_symbol () && !m.used && !m.entry_point
 		    && !m.overrides && (m.base_interface_method == null || m.base_interface_method == m)
 		    && !(m is CreationMethod)) {
-			if (!m.is_private_symbol () && (context.internal_header_filename != null || context.use_fast_vapi)) {
+			if (!m.is_private_symbol () && (CodeContext.get ().internal_header_filename != null || CodeContext.get ().use_fast_vapi)) {
 				// do not warn if internal member may be used outside this compilation unit
 			} else if (m.parent_symbol != null && m.parent_symbol.get_attribute ("DBus") != null
 			    && m.get_attribute_bool ("DBus", "visible", true)) {
@@ -883,7 +880,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 						mark_unreachable ();
 						break;
 					} else if (jump_target.is_error_target) {
-						if (context.profile == Profile.GOBJECT) {
+						if (CodeContext.get ().profile == Profile.GOBJECT) {
 							if (jump_target.error_domain == null
 							    || (jump_target.error_domain == error_type.error_domain
 								&& (jump_target.error_code == null
@@ -989,7 +986,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			all_basic_blocks.add (error_block);
 
 			if (catch_clause.error_type != null) {
-				if (context.profile == Profile.GOBJECT) {
+				if (CodeContext.get ().profile == Profile.GOBJECT) {
 					var error_type = (ErrorType) catch_clause.error_type;
 					jump_stack.add (new JumpTarget.error_target (error_block, catch_clause, catch_clause.error_type.data_type as ErrorDomain, error_type.error_code, null));
 				} else {
@@ -1027,7 +1024,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 					break;
 				}
 
-				if (context.profile == Profile.GOBJECT) {
+				if (CodeContext.get ().profile == Profile.GOBJECT) {
 					if (prev_target.error_domain == jump_target.error_domain &&
 					    prev_target.error_code == jump_target.error_code) {
 						Report.error (stmt.source_reference, "double catch clause of same error detected");
