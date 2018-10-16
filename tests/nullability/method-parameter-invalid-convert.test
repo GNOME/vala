@@ -1,0 +1,9 @@
+Invalid Code
+
+void foo (string s) {
+}
+
+void main () {
+	string? s = null;
+	foo (s);
+}
