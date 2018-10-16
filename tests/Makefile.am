@@ -615,6 +615,9 @@ TESTS = \
 
 NON_NULL_TESTS = \
 	nullability/bug611223.vala \
+	nullability/local-variable-invalid-convert.test \
+	nullability/method-parameter-invalid-convert.test \
+	nullability/method-return-invalid-convert.test \
 	$(NULL)
 
 LINUX_TESTS = \
