@@ -627,7 +627,7 @@ check-TESTS: $(TESTS) $(NON_NULL_TESTS)
 if HAVE_LINUX
 	@EXEEXT=$(EXEEXT) EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' VALAFLAGS="--pkg linux" $(srcdir)/testrunner.sh $(LINUX_TESTS)
 endif
-	@EXEEXT=$(EXEEXT) EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' VALAFLAGS="--enable-experimental-non-null" $(srcdir)/testrunner.sh $(NON_NULL_TESTS)
+	@EXEEXT=$(EXEEXT) EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' VALAFLAGS="--enable-experimental-non-null -D NON_NULL" $(srcdir)/testrunner.sh $(NON_NULL_TESTS)
 
 EXTRA_DIST = \
 	testrunner.sh \

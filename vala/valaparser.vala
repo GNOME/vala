@@ -1811,6 +1811,18 @@ public class Vala.Parser : CodeVisitor {
 				type_copy = variable_type.copy ();
 			}
 			var local = parse_local_variable (type_copy);
+			if (!CodeContext.get ().experimental_non_null) {
+				// local reference variables are considered nullable
+				// except when using experimental non-null enhancements
+				if (local.variable_type is ReferenceType) {
+					var array_type = local.variable_type as ArrayType;
+					if (array_type != null && array_type.fixed_length) {
+						// local fixed length arrays are not nullable
+					} else {
+						local.variable_type.nullable = true;
+					}
+				}
+			}
 			block.add_statement (new DeclarationStatement (local, local.source_reference));
 		} while (accept (TokenType.COMMA));
 		expect (TokenType.SEMICOLON);
