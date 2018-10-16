@@ -79,6 +79,19 @@ public class Vala.LocalVariable : Variable {
 
 		checked = true;
 
+		if (!context.experimental_non_null) {
+			// local reference variables are considered nullable
+			// except when using experimental non-null enhancements
+			if (variable_type is ReferenceType) {
+				var array_type = variable_type as ArrayType;
+				if (array_type != null && array_type.fixed_length) {
+					// local fixed length arrays are not nullable
+				} else {
+					variable_type.nullable = true;
+				}
+			}
+		}
+
 		if (variable_type != null) {
 			if (variable_type is VoidType) {
 				error = true;
