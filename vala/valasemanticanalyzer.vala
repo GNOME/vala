@@ -28,7 +28,6 @@ using GLib;
  * Code visitor analyzing and checking code.
  */
 public class Vala.SemanticAnalyzer : CodeVisitor {
-	CodeContext context;
 
 	public Symbol current_symbol { get; set; }
 	public SourceFile current_source_file { get; set; }
@@ -175,7 +174,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 * @param context a code context
 	 */
 	public void analyze (CodeContext context) {
-		this.context = context;
 
 		var root_symbol = context.root;
 
@@ -223,13 +221,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		context.root.check (context);
 		context.accept (this);
 
-		this.context = null;
 	}
 
 	public override void visit_source_file (SourceFile file) {
 		current_source_file = file;
 
-		file.check (context);
+		file.check (CodeContext.get ());
 	}
 
 	// check whether type is at least as accessible as the specified symbol
@@ -959,7 +956,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		init.initializer.formal_target_type = member_type;
 		init.initializer.target_type = init.initializer.formal_target_type.get_actual_type (type, null, init);
 
-		init.check (context);
+		init.check (CodeContext.get ());
 
 		if (init.initializer.value_type == null || !init.initializer.value_type.compatible (init.initializer.target_type)) {
 			init.error = true;
