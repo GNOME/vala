@@ -215,6 +215,7 @@ TESTS = \
 	structs/bug775761.vala \
 	structs/bug777194.vala \
 	delegates/casting.vala \
+	delegates/compatible.vala \
 	delegates/delegates.vala \
 	delegates/delegates-error.test \
 	delegates/fields.vala \
