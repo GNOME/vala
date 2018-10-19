@@ -110,7 +110,7 @@ public class Vala.TypeCheck : Expression {
 			return false;
 		}
 
-		if (type_reference.data_type == null) {
+		if (type_reference.type_symbol == null) {
 			/* if type resolving didn't succeed, skip this check */
 			error = true;
 			return false;

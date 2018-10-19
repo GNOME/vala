@@ -644,7 +644,7 @@ public class Vala.MethodCall : Expression {
 		/* Check for constructv chain up */
 		if (base_cm != null && base_cm.is_variadic () && args.size == base_cm.get_parameters ().size) {
 			var this_last_arg = args[args.size-1];
-			if (this_last_arg.value_type is StructValueType && this_last_arg.value_type.data_type == context.analyzer.va_list_type.data_type) {
+			if (this_last_arg.value_type is StructValueType && this_last_arg.value_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
 				is_constructv_chainup = true;
 			}
 		}

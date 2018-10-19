@@ -41,7 +41,7 @@ public class Vala.ErrorType : ReferenceType {
 
 	public ErrorType (ErrorDomain? error_domain, ErrorCode? error_code, SourceReference? source_reference = null) {
 		this.error_domain = error_domain;
-		this.data_type = error_domain;
+		this.type_symbol = error_domain;
 		this.error_code = error_code;
 		this.source_reference = source_reference;
 	}

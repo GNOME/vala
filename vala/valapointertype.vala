@@ -69,7 +69,7 @@ public class Vala.PointerType : DataType {
 			return base_type.compatible (tt.base_type);
 		}
 
-		if ((target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
+		if ((target_type.type_symbol != null && target_type.type_symbol.get_attribute ("PointerType") != null)) {
 			return true;
 		}
 
@@ -83,7 +83,7 @@ public class Vala.PointerType : DataType {
 			return base_type.compatible (target_type);
 		}
 
-		if (CodeContext.get ().profile == Profile.GOBJECT && target_type.data_type != null && target_type.data_type.is_subtype_of (CodeContext.get ().analyzer.gvalue_type.data_type)) {
+		if (CodeContext.get ().profile == Profile.GOBJECT && target_type.type_symbol != null && target_type.type_symbol.is_subtype_of (CodeContext.get ().analyzer.gvalue_type.type_symbol)) {
 			// allow implicit conversion to GValue
 			return true;
 		}
@@ -96,7 +96,7 @@ public class Vala.PointerType : DataType {
 	}
 
 	public override Symbol? get_pointer_member (string member_name) {
-		Symbol base_symbol = base_type.data_type;
+		Symbol base_symbol = base_type.type_symbol;
 
 		if (base_symbol == null) {
 			return null;

@@ -63,7 +63,7 @@ public class Vala.Struct : TypeSymbol {
 	public Struct? base_struct {
 		get {
 			if (_base_type != null) {
-				return _base_type.data_type as Struct;
+				return _base_type.type_symbol as Struct;
 			}
 			return null;
 		}
@@ -434,7 +434,7 @@ public class Vala.Struct : TypeSymbol {
 		}
 
 		if (base_type != null) {
-			if (base_type.data_type != null && base_type.data_type.is_subtype_of (t)) {
+			if (base_type.type_symbol != null && base_type.type_symbol.is_subtype_of (t)) {
 				return true;
 			}
 		}

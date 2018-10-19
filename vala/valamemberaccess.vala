@@ -365,8 +365,8 @@ public class Vala.MemberAccess : Expression {
 				if (pointer_member_access) {
 					symbol_reference = inner.value_type.get_pointer_member (member_name);
 				} else {
-					if (inner.value_type.data_type != null) {
-						base_symbol = inner.value_type.data_type;
+					if (inner.value_type.type_symbol != null) {
+						base_symbol = inner.value_type.type_symbol;
 					}
 					symbol_reference = inner.value_type.get_member (member_name);
 				}
@@ -412,7 +412,7 @@ public class Vala.MemberAccess : Expression {
 						var prop = new DynamicProperty (inner.value_type, member_name, source_reference);
 						prop.access = SymbolAccessibility.PUBLIC;
 						prop.set_accessor = new PropertyAccessor (false, true, false, null, null, prop.source_reference);
-						prop.owner = inner.value_type.data_type.scope;
+						prop.owner = inner.value_type.type_symbol.scope;
 						dynamic_object_type.type_symbol.scope.add (null, prop);
 						symbol_reference = prop;
 					}
@@ -442,7 +442,7 @@ public class Vala.MemberAccess : Expression {
 					}
 					prop.access = SymbolAccessibility.PUBLIC;
 					prop.get_accessor = new PropertyAccessor (true, false, false, prop.property_type.copy (), null, prop.source_reference);
-					prop.owner = inner.value_type.data_type.scope;
+					prop.owner = inner.value_type.type_symbol.scope;
 					dynamic_object_type.type_symbol.scope.add (null, prop);
 					symbol_reference = prop;
 				}
@@ -454,8 +454,8 @@ public class Vala.MemberAccess : Expression {
 		}
 
 		// enum-type inference
-		if (inner == null && symbol_reference == null && target_type != null && target_type.data_type is Enum) {
-			var enum_type = (Enum) target_type.data_type;
+		if (inner == null && symbol_reference == null && target_type != null && target_type.type_symbol is Enum) {
+			var enum_type = (Enum) target_type.type_symbol;
 			foreach (var val in enum_type.get_values ()) {
 				if (member_name == val.name) {
 					symbol_reference = val;
@@ -471,7 +471,7 @@ public class Vala.MemberAccess : Expression {
 			unowned Symbol? base_type = null;
 			if (inner != null && inner.value_type != null) {
 				base_type_name = inner.value_type.to_string ();
-				base_type = inner.value_type.data_type;
+				base_type = inner.value_type.type_symbol;
 			} else if (base_symbol != null) {
 				base_type_name = base_symbol.get_full_name ();
 				base_type = base_symbol;
@@ -778,7 +778,7 @@ public class Vala.MemberAccess : Expression {
 			// instance type might be a subtype of the parent symbol of the member
 			// that subtype might not be generic, so do not report an error in that case
 			var object_type = instance_type as ObjectType;
-			if (object_type != null && object_type.type_symbol.has_type_parameters ()
+			if (object_type != null && object_type.object_type_symbol.has_type_parameters ()
 			    && !instance_type.has_type_arguments ()) {
 				error = true;
 				Report.error (inner.source_reference, "missing generic type arguments");

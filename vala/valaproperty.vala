@@ -381,8 +381,8 @@ public class Vala.Property : Symbol, Lockable {
 	private void find_base_interface_property (Class cl) {
 		// FIXME report error if multiple possible base properties are found
 		foreach (DataType type in cl.get_base_types ()) {
-			if (type.data_type is Interface) {
-				var sym = type.data_type.scope.lookup (name);
+			if (type.type_symbol is Interface) {
+				var sym = type.type_symbol.scope.lookup (name);
 				if (sym is Property) {
 					var base_property = (Property) sym;
 					if (base_property.is_abstract || base_property.is_virtual) {

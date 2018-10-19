@@ -27,7 +27,7 @@ using GLib;
  */
 public class Vala.StructValueType : ValueType {
 	public StructValueType (Struct type_symbol) {
-		base (type_symbol);
+		this.type_symbol = type_symbol;
 	}
 
 	public override bool is_invokable () {

@@ -29,15 +29,15 @@ public class Vala.ObjectType : ReferenceType {
 	/**
 	 * The referred class or interface.
 	 */
-	public weak ObjectTypeSymbol type_symbol { get; set; }
+	public weak ObjectTypeSymbol object_type_symbol { get; set; }
 
 	public ObjectType (ObjectTypeSymbol type_symbol) {
 		this.type_symbol = type_symbol;
-		data_type = type_symbol;
+		this.object_type_symbol = type_symbol;
 	}
 
 	public override DataType copy () {
-		var result = new ObjectType (type_symbol);
+		var result = new ObjectType (object_type_symbol);
 		result.source_reference = source_reference;
 		result.value_owned = value_owned;
 		result.nullable = nullable;
@@ -101,10 +101,10 @@ public class Vala.ObjectType : ReferenceType {
 		}
 
 		int n_type_args = get_type_arguments ().size;
-		if (n_type_args > 0 && n_type_args < type_symbol.get_type_parameters ().size) {
+		if (n_type_args > 0 && n_type_args < object_type_symbol.get_type_parameters ().size) {
 			Report.error (source_reference, "too few type arguments");
 			return false;
-		} else if (n_type_args > 0 && n_type_args > type_symbol.get_type_parameters ().size) {
+		} else if (n_type_args > 0 && n_type_args > object_type_symbol.get_type_parameters ().size) {
 			Report.error (source_reference, "too many type arguments");
 			return false;
 		}

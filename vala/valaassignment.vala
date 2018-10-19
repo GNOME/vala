@@ -191,7 +191,7 @@ public class Vala.Assignment : Expression {
 		} else if (left is ElementAccess) {
 			var ea = (ElementAccess) left;
 
-			if (ea.container.value_type.data_type == context.analyzer.string_type.data_type) {
+			if (ea.container.value_type.type_symbol == context.analyzer.string_type.type_symbol) {
 				error = true;
 				Report.error (ea.source_reference, "strings are immutable");
 				return false;

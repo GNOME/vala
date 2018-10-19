@@ -26,16 +26,6 @@ using GLib;
  * A value type, i.e. a struct or an enum type.
  */
 public abstract class Vala.ValueType : DataType {
-	/**
-	 * The referred struct or enum.
-	 */
-	public weak TypeSymbol type_symbol { get; set; }
-
-	protected ValueType (TypeSymbol type_symbol) {
-		this.type_symbol = type_symbol;
-		data_type = type_symbol;
-	}
-
 	public override bool is_disposable () {
 		if (!value_owned) {
 			return false;
@@ -46,7 +36,7 @@ public abstract class Vala.ValueType : DataType {
 			return true;
 		}
 
-		var st = type_symbol as Struct;
+		unowned Struct? st = type_symbol as Struct;
 		if (st != null) {
 			return st.is_disposable ();
 		}

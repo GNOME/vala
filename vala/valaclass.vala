@@ -473,7 +473,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		foreach (DataType base_type in base_types) {
-			if (base_type.data_type != null && base_type.data_type.is_subtype_of (t)) {
+			if (base_type.type_symbol != null && base_type.type_symbol.is_subtype_of (t)) {
 				return true;
 			}
 		}
@@ -493,7 +493,7 @@ public class Vala.Class : ObjectTypeSymbol {
 
 	private void get_all_prerequisites (Interface iface, List<TypeSymbol> list) {
 		foreach (DataType prereq in iface.get_prerequisites ()) {
-			TypeSymbol type = prereq.data_type;
+			TypeSymbol type = prereq.type_symbol;
 			/* skip on previous errors */
 			if (type == null) {
 				continue;
@@ -513,11 +513,11 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		foreach (DataType base_type in cl.get_base_types ()) {
-			if (base_type.data_type is Class) {
-				if (class_is_a ((Class) base_type.data_type, t)) {
+			if (base_type.type_symbol is Class) {
+				if (class_is_a ((Class) base_type.type_symbol, t)) {
 					return true;
 				}
-			} else if (base_type.data_type == t) {
+			} else if (base_type.type_symbol == t) {
 				return true;
 			}
 		}
@@ -560,7 +560,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 
 			int n_type_args = base_type_reference.get_type_arguments ().size;
-			int n_type_params = ((ObjectTypeSymbol) base_type_reference.data_type).get_type_parameters ().size;
+			int n_type_params = ((ObjectTypeSymbol) base_type_reference.type_symbol).get_type_parameters ().size;
 			if (n_type_args < n_type_params) {
 				error = true;
 				Report.error (base_type_reference.source_reference, "too few type arguments");
@@ -678,7 +678,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		/* compact classes cannot implement interfaces */
 		if (is_compact) {
 			foreach (DataType base_type in get_base_types ()) {
-				if (base_type.data_type is Interface) {
+				if (base_type.type_symbol is Interface) {
 					error = true;
 					Report.error (source_reference, "compact classes `%s' may not implement interfaces".printf (get_full_name ()));
 				}
@@ -698,8 +698,8 @@ public class Vala.Class : ObjectTypeSymbol {
 		/* gather all prerequisites */
 		List<TypeSymbol> prerequisites = new ArrayList<TypeSymbol> ();
 		foreach (DataType base_type in get_base_types ()) {
-			if (base_type.data_type is Interface) {
-				get_all_prerequisites ((Interface) base_type.data_type, prerequisites);
+			if (base_type.type_symbol is Interface) {
+				get_all_prerequisites ((Interface) base_type.type_symbol, prerequisites);
 			}
 		}
 		/* check whether all prerequisites are met */
@@ -731,8 +731,8 @@ public class Vala.Class : ObjectTypeSymbol {
 		if (source_type == SourceFileType.SOURCE) {
 			/* all abstract symbols defined in base types have to be at least defined (or implemented) also in this type */
 			foreach (DataType base_type in get_base_types ()) {
-				if (base_type.data_type is Interface) {
-					Interface iface = (Interface) base_type.data_type;
+				if (base_type.type_symbol is Interface) {
+					Interface iface = (Interface) base_type.type_symbol;
 
 					if (base_class != null && base_class.is_subtype_of (iface)) {
 						// reimplementation of interface, class is not required to reimplement all methods
@@ -752,7 +752,7 @@ public class Vala.Class : ObjectTypeSymbol {
 								foreach (var impl in base_class.get_methods ()) {
 									if (impl.base_interface_method == m || (base_class != this
 									    && impl.base_interface_method == null && impl.name == m.name
-									    && (impl.base_interface_type == null || impl.base_interface_type.data_type == iface)
+									    && (impl.base_interface_type == null || impl.base_interface_type.type_symbol == iface)
 									    && impl.compatible_no_error (m))) {
 										// method is used as interface implementation, so it is not unused
 										impl.version.check (source_reference);

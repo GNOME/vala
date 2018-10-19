@@ -156,7 +156,7 @@ public class Vala.InitializerList : Expression {
 			}
 
 			if (!(parent_node is ArrayCreationExpression) && !requires_constants_only
-			    && (!(parent_node is InitializerList) || ((InitializerList) parent_node).target_type.data_type is Struct)) {
+			    && (!(parent_node is InitializerList) || ((InitializerList) parent_node).target_type.type_symbol is Struct)) {
 				// transform shorthand form
 				//     int[] array = { 42 };
 				// into
@@ -187,9 +187,9 @@ public class Vala.InitializerList : Expression {
 			foreach (Expression e in get_initializers ()) {
 				e.target_type = inner_target_type;
 			}
-		} else if (target_type.data_type is Struct) {
+		} else if (target_type.type_symbol is Struct) {
 			/* initializer is used as struct initializer */
-			var st = (Struct) target_type.data_type;
+			var st = (Struct) target_type.type_symbol;
 			while (st.base_struct != null) {
 				st = st.base_struct;
 			}

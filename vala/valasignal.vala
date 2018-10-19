@@ -191,7 +191,7 @@ public class Vala.Signal : Symbol, Callable {
 
 		if (parent_cl != null) {
 			foreach (DataType base_type in parent_cl.get_base_types ()) {
-				if (SemanticAnalyzer.symbol_lookup_inherited (base_type.data_type, name) is Signal) {
+				if (SemanticAnalyzer.symbol_lookup_inherited (base_type.type_symbol, name) is Signal) {
 					error = true;
 					Report.error (source_reference, "Signals with the same name as a signal in a base type are not supported");
 					return false;

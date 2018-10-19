@@ -271,18 +271,18 @@ public class Vala.BinaryExpression : Expression {
 		}
 
 		// enum-type inference
-		if (target_type != null && target_type.data_type is Enum
+		if (target_type != null && target_type.type_symbol is Enum
 		    && (operator == BinaryOperator.BITWISE_AND || operator == BinaryOperator.BITWISE_OR)) {
 			left.target_type = target_type.copy ();
 			right.target_type = target_type.copy ();
 		}
 		left.check (context);
-		if (left.value_type != null && left.value_type.data_type is Enum
+		if (left.value_type != null && left.value_type.type_symbol is Enum
 		    && (operator == BinaryOperator.EQUALITY || operator == BinaryOperator.INEQUALITY)) {
 			right.target_type = left.value_type.copy ();
 		}
 		right.check (context);
-		if (right.value_type != null && right.value_type.data_type is Enum
+		if (right.value_type != null && right.value_type.type_symbol is Enum
 		    && (operator == BinaryOperator.EQUALITY || operator == BinaryOperator.INEQUALITY)) {
 			left.target_type = right.value_type.copy ();
 			//TODO bug 666035 -- re-check left how?
@@ -322,11 +322,11 @@ public class Vala.BinaryExpression : Expression {
 		right.target_type = right.value_type.copy ();
 		right.target_type.value_owned = false;
 
-		if (left.value_type.data_type == context.analyzer.string_type.data_type
+		if (left.value_type.type_symbol == context.analyzer.string_type.type_symbol
 		    && operator == BinaryOperator.PLUS) {
 			// string concatenation
 
-			if (right.value_type == null || right.value_type.data_type != context.analyzer.string_type.data_type) {
+			if (right.value_type == null || right.value_type.type_symbol != context.analyzer.string_type.type_symbol) {
 				error = true;
 				Report.error (source_reference, "Operands must be strings");
 				return false;
@@ -366,7 +366,7 @@ public class Vala.BinaryExpression : Expression {
 					return false;
 				}
 
-				var offset_type = right.value_type.data_type as Struct;
+				var offset_type = right.value_type.type_symbol as Struct;
 				if (offset_type != null && offset_type.is_integer_type ()) {
 					if (operator == BinaryOperator.PLUS
 					    || operator == BinaryOperator.MINUS) {
@@ -444,12 +444,12 @@ public class Vala.BinaryExpression : Expression {
 
 			if (context.profile == Profile.GOBJECT) {
 				// Implicit cast for comparsion expression of GValue with other type
-				var gvalue_type = context.analyzer.gvalue_type.data_type;
-				if ((left.target_type.data_type == gvalue_type && right.target_type.data_type != gvalue_type)
-					|| (left.target_type.data_type != gvalue_type && right.target_type.data_type == gvalue_type)) {
+				var gvalue_type = context.analyzer.gvalue_type.type_symbol;
+				if ((left.target_type.type_symbol == gvalue_type && right.target_type.type_symbol != gvalue_type)
+					|| (left.target_type.type_symbol != gvalue_type && right.target_type.type_symbol == gvalue_type)) {
 					Expression gvalue_expr;
 					DataType target_type;
-					if (left.target_type.data_type == gvalue_type) {
+					if (left.target_type.type_symbol == gvalue_type) {
 						gvalue_expr = left;
 						target_type = right.target_type;
 					} else {

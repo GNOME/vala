@@ -3691,7 +3691,7 @@ public class Vala.GirParser : CodeVisitor {
 				var unresolved_symbol = ((UnresolvedType) prereq).unresolved_symbol;
 				sym = resolve_symbol (iface_node.parent, unresolved_symbol);
 			} else {
-				sym = prereq.data_type;
+				sym = prereq.type_symbol;
 			}
 			if (sym is Class) {
 				has_instantiable_prereq = true;
@@ -3722,7 +3722,7 @@ public class Vala.GirParser : CodeVisitor {
 			simple_type = true;
 		} else {
 			base_type = alias.base_type;
-			type_sym = base_type.data_type;
+			type_sym = base_type.type_symbol;
 			if (type_sym != null) {
 				base_node = resolve_node (alias.parent, parse_symbol_from_string (type_sym.get_full_name (), alias.source_reference));
 			}
@@ -3881,7 +3881,7 @@ public class Vala.GirParser : CodeVisitor {
 				if (type is UnresolvedType) {
 					st = resolve_symbol (node.parent, ((UnresolvedType) type).unresolved_symbol) as Struct;
 				} else if (type is ValueType) {
-					st = type.data_type as Struct;
+					st = type.type_symbol as Struct;
 				}
 				if (st != null && st.is_simple_type ()) {
 					type.nullable = false;
