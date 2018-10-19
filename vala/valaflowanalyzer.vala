@@ -871,7 +871,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			node.get_error_types (error_types);
 			foreach (DataType error_data_type in error_types) {
 				var error_type = error_data_type as ErrorType;
-				var error_class = error_data_type.data_type as Class;
+				var error_class = error_data_type.type_symbol as Class;
 				current_block = last_block;
 				unreachable_reported = true;
 
@@ -990,9 +990,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			if (catch_clause.error_type != null) {
 				if (context.profile == Profile.GOBJECT) {
 					var error_type = (ErrorType) catch_clause.error_type;
-					jump_stack.add (new JumpTarget.error_target (error_block, catch_clause, catch_clause.error_type.data_type as ErrorDomain, error_type.error_code, null));
+					jump_stack.add (new JumpTarget.error_target (error_block, catch_clause, catch_clause.error_type.type_symbol as ErrorDomain, error_type.error_code, null));
 				} else {
-					var error_class = catch_clause.error_type.data_type as Class;
+					var error_class = catch_clause.error_type.type_symbol as Class;
 					jump_stack.add (new JumpTarget.error_target (error_block, catch_clause, null, null, error_class));
 				}
 			} else {

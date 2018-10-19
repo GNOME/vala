@@ -305,8 +305,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			// first check interfaces without prerequisites
 			// (prerequisites can be assumed to be met already)
 			foreach (DataType base_type in cl.get_base_types ()) {
-				if (base_type.data_type is Interface) {
-					result = base_type.data_type.scope.lookup (name);
+				if (base_type.type_symbol is Interface) {
+					result = base_type.type_symbol.scope.lookup (name);
 					if (result != null) {
 						return result;
 					}
@@ -319,7 +319,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (sym is Struct) {
 			var st = (Struct) sym;
 			if (st.base_type != null) {
-				result = symbol_lookup_inherited (st.base_type.data_type, name);
+				result = symbol_lookup_inherited (st.base_type.type_symbol, name);
 				if (result != null) {
 					return result;
 				}
@@ -328,8 +328,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var iface = (Interface) sym;
 			// first check interface prerequisites recursively
 			foreach (DataType prerequisite in iface.get_prerequisites ()) {
-				if (prerequisite.data_type is Interface) {
-					result = symbol_lookup_inherited (prerequisite.data_type, name);
+				if (prerequisite.type_symbol is Interface) {
+					result = symbol_lookup_inherited (prerequisite.type_symbol, name);
 					if (result != null) {
 						return result;
 					}
@@ -337,8 +337,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 			// then check class prerequisite recursively
 			foreach (DataType prerequisite in iface.get_prerequisites ()) {
-				if (prerequisite.data_type is Class) {
-					result = symbol_lookup_inherited (prerequisite.data_type, name);
+				if (prerequisite.type_symbol is Class) {
+					result = symbol_lookup_inherited (prerequisite.type_symbol, name);
 					if (result != null) {
 						return result;
 					}
@@ -460,7 +460,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public bool is_gobject_property_type (DataType property_type) {
-		var st = property_type.data_type as Struct;
+		var st = property_type.type_symbol as Struct;
 		if (st != null) {
 			if (!st.is_simple_type () && st.get_attribute_bool ("CCode", "has_type_id", true)) {
 				// Allow GType-based struct types
@@ -469,7 +469,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		if (property_type is ArrayType && ((ArrayType) property_type).element_type.data_type != string_type.data_type) {
+		if (property_type is ArrayType && ((ArrayType) property_type).element_type.type_symbol != string_type.type_symbol) {
 			return false;
 		}
 
@@ -825,10 +825,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	private static DataType? get_instance_base_type (DataType instance_type, DataType base_type, CodeNode node_reference) {
 		// construct a new type reference for the base type with correctly linked type arguments
 		DataType instance_base_type;
-		if (base_type.data_type is ObjectTypeSymbol) {
-			instance_base_type = new ObjectType ((ObjectTypeSymbol) base_type.data_type);
-		} else if (base_type.data_type is Struct) {
-			instance_base_type = new StructValueType ((Struct) base_type.data_type);
+		if (base_type.type_symbol is ObjectTypeSymbol) {
+			instance_base_type = new ObjectType ((ObjectTypeSymbol) base_type.type_symbol);
+		} else if (base_type.type_symbol is Struct) {
+			instance_base_type = new StructValueType ((Struct) base_type.type_symbol);
 		} else {
 			assert_not_reached ();
 		}
@@ -850,19 +850,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (instance_type is DelegateType && ((DelegateType) instance_type).delegate_symbol == type_symbol) {
 			return instance_type;
-		} else if (instance_type.data_type == type_symbol) {
+		} else if (instance_type.type_symbol == type_symbol) {
 			return instance_type;
 		}
 
 		DataType instance_base_type = null;
 
 		// use same algorithm as symbol_lookup_inherited
-		if (instance_type.data_type is Class) {
-			var cl = (Class) instance_type.data_type;
+		if (instance_type.type_symbol is Class) {
+			unowned Class cl = (Class) instance_type.type_symbol;
 			// first check interfaces without prerequisites
 			// (prerequisites can be assumed to be met already)
 			foreach (DataType base_type in cl.get_base_types ()) {
-				if (base_type.data_type is Interface) {
+				if (base_type.type_symbol is Interface) {
 					instance_base_type = get_instance_base_type_for_member (get_instance_base_type (instance_type, base_type, node_reference), type_symbol, node_reference);
 					if (instance_base_type != null) {
 						return instance_base_type;
@@ -872,7 +872,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			// then check base class recursively
 			if (instance_base_type == null) {
 				foreach (DataType base_type in cl.get_base_types ()) {
-					if (base_type.data_type is Class) {
+					if (base_type.type_symbol is Class) {
 						instance_base_type = get_instance_base_type_for_member (get_instance_base_type (instance_type, base_type, node_reference), type_symbol, node_reference);
 						if (instance_base_type != null) {
 							return instance_base_type;
@@ -880,19 +880,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					}
 				}
 			}
-		} else if (instance_type.data_type is Struct) {
-			var st = (Struct) instance_type.data_type;
+		} else if (instance_type.type_symbol is Struct) {
+			unowned Struct st = (Struct) instance_type.type_symbol;
 			if (st.base_type != null) {
 				instance_base_type = get_instance_base_type_for_member (get_instance_base_type (instance_type, st.base_type, node_reference), type_symbol, node_reference);
 				if (instance_base_type != null) {
 					return instance_base_type;
 				}
 			}
-		} else if (instance_type.data_type is Interface) {
-			var iface = (Interface) instance_type.data_type;
+		} else if (instance_type.type_symbol is Interface) {
+			unowned Interface iface = (Interface) instance_type.type_symbol;
 			// first check interface prerequisites recursively
 			foreach (DataType prerequisite in iface.get_prerequisites ()) {
-				if (prerequisite.data_type is Interface) {
+				if (prerequisite.type_symbol is Interface) {
 					instance_base_type = get_instance_base_type_for_member (get_instance_base_type (instance_type, prerequisite, node_reference), type_symbol, node_reference);
 					if (instance_base_type != null) {
 						return instance_base_type;
@@ -902,7 +902,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (instance_base_type == null) {
 				// then check class prerequisite recursively
 				foreach (DataType prerequisite in iface.get_prerequisites ()) {
-					if (prerequisite.data_type is Class) {
+					if (prerequisite.type_symbol is Class) {
 						instance_base_type = get_instance_base_type_for_member (get_instance_base_type (instance_type, prerequisite, node_reference), type_symbol, node_reference);
 						if (instance_base_type != null) {
 							return instance_base_type;
@@ -935,7 +935,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (instance_type is DelegateType) {
 					param_index = ((DelegateType) instance_type).delegate_symbol.get_type_parameter_index (generic_type.type_parameter.name);
 				} else {
-					param_index = instance_type.data_type.get_type_parameter_index (generic_type.type_parameter.name);
+					param_index = instance_type.type_symbol.get_type_parameter_index (generic_type.type_parameter.name);
 				}
 				if (param_index == -1) {
 					if (node_reference != null) {
@@ -1019,10 +1019,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public void visit_member_initializer (MemberInitializer init, DataType type) {
-		init.symbol_reference = symbol_lookup_inherited (type.data_type, init.name);
+		init.symbol_reference = symbol_lookup_inherited (type.type_symbol, init.name);
 		if (!(init.symbol_reference is Field || init.symbol_reference is Property)) {
 			init.error = true;
-			Report.error (init.source_reference, "Invalid member `%s' in `%s'".printf (init.name, type.data_type.get_full_name ()));
+			Report.error (init.source_reference, "Invalid member `%s' in `%s'".printf (init.name, type.type_symbol.get_full_name ()));
 			return;
 		}
 		if (init.symbol_reference.access != SymbolAccessibility.PUBLIC) {
@@ -1057,9 +1057,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	Struct? get_arithmetic_struct (DataType type) {
-		var result = type.data_type as Struct;
+		unowned Struct? result = type.type_symbol as Struct;
 		if (result == null && type is EnumValueType) {
-			return (Struct) int_type.data_type;
+			return (Struct) int_type.type_symbol;
 		}
 		return result;
 	}
@@ -1200,7 +1200,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public bool is_reference_type_argument (DataType type_arg) {
-		if (type_arg is ErrorType || (type_arg.data_type != null && type_arg.data_type.is_reference_type ())) {
+		if (type_arg is ErrorType || (type_arg.type_symbol != null && type_arg.type_symbol.is_reference_type ())) {
 			return true;
 		} else {
 			return false;
@@ -1216,32 +1216,32 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public bool is_signed_integer_type_argument (DataType type_arg) {
-		var st = type_arg.data_type as Struct;
+		unowned Struct? st = type_arg.type_symbol as Struct;
 		if (type_arg is EnumValueType) {
 			return true;
 		} else if (type_arg.nullable) {
 			return false;
 		} else if (st == null) {
 			return false;
-		} else if (st.is_subtype_of (bool_type.data_type)) {
+		} else if (st.is_subtype_of (bool_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (char_type.data_type)) {
+		} else if (st.is_subtype_of (char_type.type_symbol)) {
 			return true;
-		} else if (unichar_type != null && st.is_subtype_of (unichar_type.data_type)) {
+		} else if (unichar_type != null && st.is_subtype_of (unichar_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (short_type.data_type)) {
+		} else if (st.is_subtype_of (short_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (int_type.data_type)) {
+		} else if (st.is_subtype_of (int_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (long_type.data_type)) {
+		} else if (st.is_subtype_of (long_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (int8_type.data_type)) {
+		} else if (st.is_subtype_of (int8_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (int16_type.data_type)) {
+		} else if (st.is_subtype_of (int16_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (int32_type.data_type)) {
+		} else if (st.is_subtype_of (int32_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (type_type.data_type)) {
+		} else if (st.is_subtype_of (type_type.type_symbol)) {
 			return true;
 		} else {
 			return false;
@@ -1249,24 +1249,24 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public bool is_unsigned_integer_type_argument (DataType type_arg) {
-		var st = type_arg.data_type as Struct;
+		unowned Struct? st = type_arg.type_symbol as Struct;
 		if (st == null) {
 			return false;
 		} else if (type_arg.nullable) {
 			return false;
-		} else if (st.is_subtype_of (uchar_type.data_type)) {
+		} else if (st.is_subtype_of (uchar_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (ushort_type.data_type)) {
+		} else if (st.is_subtype_of (ushort_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (uint_type.data_type)) {
+		} else if (st.is_subtype_of (uint_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (ulong_type.data_type)) {
+		} else if (st.is_subtype_of (ulong_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (uint8_type.data_type)) {
+		} else if (st.is_subtype_of (uint8_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (uint16_type.data_type)) {
+		} else if (st.is_subtype_of (uint16_type.type_symbol)) {
 			return true;
-		} else if (st.is_subtype_of (uint32_type.data_type)) {
+		} else if (st.is_subtype_of (uint32_type.type_symbol)) {
 			return true;
 		} else {
 			return false;

@@ -185,7 +185,7 @@ public class Vala.Constant : Symbol {
 		} else if (type is ArrayType) {
 			var array_type = type as ArrayType;
 			return check_const_type (array_type.element_type, context);
-		} else if (type.data_type.is_subtype_of (context.analyzer.string_type.data_type)) {
+		} else if (type.type_symbol.is_subtype_of (context.analyzer.string_type.type_symbol)) {
 			return true;
 		} else {
 			return false;

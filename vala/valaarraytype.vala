@@ -200,19 +200,19 @@ public class Vala.ArrayType : ReferenceType {
 	}
 
 	public override bool compatible (DataType target_type) {
-		if (CodeContext.get ().profile == Profile.GOBJECT && target_type.data_type != null) {
-			if (target_type.data_type.is_subtype_of (CodeContext.get ().analyzer.gvalue_type.data_type) && element_type.data_type == CodeContext.get ().root.scope.lookup ("string")) {
+		if (CodeContext.get ().profile == Profile.GOBJECT && target_type.type_symbol != null) {
+			if (target_type.type_symbol.is_subtype_of (CodeContext.get ().analyzer.gvalue_type.type_symbol) && element_type.type_symbol == CodeContext.get ().root.scope.lookup ("string")) {
 				// allow implicit conversion from string[] to GValue
 				return true;
 			}
 
-			if (target_type.data_type.is_subtype_of (CodeContext.get ().analyzer.gvariant_type.data_type)) {
+			if (target_type.type_symbol.is_subtype_of (CodeContext.get ().analyzer.gvariant_type.type_symbol)) {
 				// allow implicit conversion to GVariant
 				return true;
 			}
 		}
 
-		if (target_type is PointerType || (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
+		if (target_type is PointerType || (target_type.type_symbol != null && target_type.type_symbol.get_attribute ("PointerType") != null)) {
 			/* any array type can be cast to a generic pointer */
 			return true;
 		}

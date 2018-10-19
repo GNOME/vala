@@ -30,7 +30,7 @@ public class Vala.IntegerType : ValueType {
 	string? literal_type_name;
 
 	public IntegerType (Struct type_symbol, string? literal_value = null, string? literal_type_name = null) {
-		base (type_symbol);
+		this.type_symbol = type_symbol;
 		this.literal_value = literal_value;
 		this.literal_type_name = literal_type_name;
 	}
@@ -44,11 +44,11 @@ public class Vala.IntegerType : ValueType {
 	}
 
 	public override bool compatible (DataType target_type) {
-		if (target_type.data_type is Struct && literal_type_name == "int") {
+		if (target_type.type_symbol is Struct && literal_type_name == "int") {
 			// int literals are implicitly convertible to integer types
 			// of a lower rank if the value of the literal is within
 			// the range of the target type
-			var target_st = (Struct) target_type.data_type;
+			var target_st = (Struct) target_type.type_symbol;
 			if (target_st.is_integer_type ()) {
 				var int_attr = target_st.get_attribute ("IntegerType");
 				if (int_attr != null && int_attr.has_argument ("min") && int_attr.has_argument ("max")) {
@@ -59,7 +59,7 @@ public class Vala.IntegerType : ValueType {
 					return true;
 				}
 			}
-		} else if (target_type.data_type is Enum && (literal_type_name == "int" || literal_type_name == "uint")) {
+		} else if (target_type.type_symbol is Enum && (literal_type_name == "int" || literal_type_name == "uint")) {
 			// allow implicit conversion from 0 to enum and flags types
 			if (int.parse (literal_value) == 0) {
 				return true;

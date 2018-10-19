@@ -207,7 +207,7 @@ public class Vala.LambdaExpression : Expression {
 			var block = new Block (source_reference);
 			block.scope.parent_scope = method.scope;
 
-			if (method.return_type.data_type != null) {
+			if (method.return_type.type_symbol != null) {
 				block.add_statement (new ReturnStatement (expression_body, source_reference));
 			} else {
 				block.add_statement (new ExpressionStatement (expression_body, source_reference));

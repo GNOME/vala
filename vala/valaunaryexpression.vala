@@ -111,20 +111,20 @@ public class Vala.UnaryExpression : Expression {
 	}
 
 	bool is_numeric_type (DataType type) {
-		if (type.nullable || !(type.data_type is Struct)) {
+		if (type.nullable || !(type.type_symbol is Struct)) {
 			return false;
 		}
 
-		var st = (Struct) type.data_type;
+		var st = (Struct) type.type_symbol;
 		return st.is_integer_type () || st.is_floating_type ();
 	}
 
 	bool is_integer_type (DataType type) {
-		if (type.nullable || !(type.data_type is Struct)) {
+		if (type.nullable || !(type.type_symbol is Struct)) {
 			return false;
 		}
 
-		var st = (Struct) type.data_type;
+		var st = (Struct) type.type_symbol;
 		return st.is_integer_type ();
 	}
 

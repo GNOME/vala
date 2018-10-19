@@ -250,7 +250,7 @@ public class Vala.ObjectCreationExpression : Expression {
 				type_reference.add_type_argument (type_arg);
 			}
 		} else {
-			type = type_reference.data_type;
+			type = type_reference.type_symbol;
 		}
 
 		value_type = type_reference.copy ();

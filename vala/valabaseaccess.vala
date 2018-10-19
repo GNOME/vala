@@ -88,14 +88,14 @@ public class Vala.BaseAccess : Expression {
 			return false;
 		} else {
 			foreach (var base_type in context.analyzer.current_class.get_base_types ()) {
-				if (base_type.data_type is Class) {
+				if (base_type.type_symbol is Class) {
 					value_type = base_type.copy ();
 					value_type.value_owned = false;
 				}
 			}
 		}
 
-		symbol_reference = value_type.data_type;
+		symbol_reference = value_type.type_symbol;
 
 		return !error;
 	}

@@ -169,7 +169,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 		}
 
 		foreach (DataType prerequisite in prerequisites) {
-			if (prerequisite.data_type != null && prerequisite.data_type.is_subtype_of (t)) {
+			if (prerequisite.type_symbol != null && prerequisite.type_symbol.is_subtype_of (t)) {
 				return true;
 			}
 		}
@@ -214,7 +214,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 		/* check prerequisites */
 		Class prereq_class = null;
 		foreach (DataType prereq in get_prerequisites ()) {
-			TypeSymbol class_or_interface = prereq.data_type;
+			TypeSymbol class_or_interface = prereq.type_symbol;
 			/* skip on previous errors */
 			if (class_or_interface == null) {
 				error = true;

@@ -339,7 +339,7 @@ public class Vala.Method : Subroutine, Callable {
 		ObjectType object_type = null;
 		if (parent_symbol is ObjectTypeSymbol) {
 			object_type = new ObjectType ((ObjectTypeSymbol) parent_symbol);
-			foreach (TypeParameter type_parameter in object_type.type_symbol.get_type_parameters ()) {
+			foreach (TypeParameter type_parameter in object_type.object_type_symbol.get_type_parameters ()) {
 				var type_arg = new GenericType (type_parameter);
 				type_arg.value_owned = true;
 				object_type.add_type_argument (type_arg);
@@ -641,12 +641,12 @@ public class Vala.Method : Subroutine, Callable {
 		Method? invalid_base_match = null;
 
 		foreach (DataType type in cl.get_base_types ()) {
-			if (type.data_type is Interface) {
-				if (base_interface_type != null && base_interface_type.data_type != type.data_type) {
+			if (type.type_symbol is Interface) {
+				if (base_interface_type != null && base_interface_type.type_symbol != type.type_symbol) {
 					continue;
 				}
 
-				var sym = type.data_type.scope.lookup (name);
+				var sym = type.type_symbol.scope.lookup (name);
 				if (sym is Signal) {
 					var sig = (Signal) sym;
 					sym = sig.default_handler;
@@ -811,7 +811,7 @@ public class Vala.Method : Subroutine, Callable {
 				error = true;
 				Report.error (param.source_reference, "Reference parameters are not supported for async methods");
 			}
-			if (!external_package && coroutine && (param.ellipsis || param.variable_type.data_type == context.analyzer.va_list_type.data_type)) {
+			if (!external_package && coroutine && (param.ellipsis || param.variable_type.type_symbol == context.analyzer.va_list_type.type_symbol)) {
 				error = true;
 				Report.error (param.source_reference, "Variadic parameters are not supported for async methods");
 				return false;
@@ -1049,7 +1049,7 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		if (return_type is VoidType) {
-		} else if (return_type.data_type == context.analyzer.int_type.data_type) {
+		} else if (return_type.type_symbol == context.analyzer.int_type.type_symbol) {
 		} else {
 			// return type must be void or int
 			return false;
@@ -1081,7 +1081,7 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		var array_type = (ArrayType) param.variable_type;
-		if (array_type.element_type.data_type != context.analyzer.string_type.data_type) {
+		if (array_type.element_type.type_symbol != context.analyzer.string_type.type_symbol) {
 			// parameter must be an array of strings
 			return false;
 		}

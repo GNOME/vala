@@ -64,13 +64,13 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		cl.base_class = null;
 		foreach (DataType type in cl.get_base_types ()) {
-			if (type.data_type is Class) {
+			if (type.type_symbol is Class) {
 				if (cl.base_class != null) {
 					cl.error = true;
-					Report.error (type.source_reference, "%s: Classes cannot have multiple base classes (`%s' and `%s')".printf (cl.get_full_name (), cl.base_class.get_full_name (), type.data_type.get_full_name ()));
+					Report.error (type.source_reference, "%s: Classes cannot have multiple base classes (`%s' and `%s')".printf (cl.get_full_name (), cl.base_class.get_full_name (), type.type_symbol.get_full_name ()));
 					return;
 				}
-				cl.base_class = (Class) type.data_type;
+				cl.base_class = (Class) type.type_symbol;
 				if (cl.base_class.is_subtype_of (cl)) {
 					cl.error = true;
 					Report.error (type.source_reference, "Base class cycle (`%s' and `%s')".printf (cl.get_full_name (), cl.base_class.get_full_name ()));
@@ -115,9 +115,9 @@ public class Vala.SymbolResolver : CodeVisitor {
 		iface.accept_children (this);
 
 		foreach (DataType type in iface.get_prerequisites ()) {
-			if (type.data_type != null && type.data_type.is_subtype_of (iface)) {
+			if (type.type_symbol != null && type.type_symbol.is_subtype_of (iface)) {
 				iface.error = true;
-				Report.error (type.source_reference, "Prerequisite cycle (`%s' and `%s')".printf (iface.get_full_name (), type.data_type.get_full_name ()));
+				Report.error (type.source_reference, "Prerequisite cycle (`%s' and `%s')".printf (iface.get_full_name (), type.type_symbol.get_full_name ()));
 				return;
 			}
 		}
