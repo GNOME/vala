@@ -217,7 +217,7 @@
 			</return-value>
 			<parameters>
 				<parameter name="array" transfer-ownership="none">
-					<array length="1">
+					<array length="1" c:type="gint*">
 						<type name="gint" c:type="gint"/>
 					</array>
 				</parameter>
@@ -232,7 +232,7 @@
 			</return-value>
 			<parameters>
 				<parameter name="array" direction="inout" transfer-ownership="full">
-					<array length="1">
+					<array length="1" c:type="gint**">
 						<type name="gint" c:type="gint"/>
 					</array>
 				</parameter>
@@ -247,7 +247,7 @@
 			</return-value>
 			<parameters>
 				<parameter name="array" direction="out" transfer-ownership="full">
-					<array length="1">
+					<array length="1" c:type="gint**">
 						<type name="gint" c:type="gint"/>
 					</array>
 				</parameter>
@@ -258,7 +258,7 @@
 		</method>
 		<method name="array_return" c:identifier="gir_test_object_test_array_return">
 			<return-value transfer-ownership="full">
-				<array length="0">
+				<array length="0" c:type="gint*">
 					<type name="gint" c:type="gint"/>
 				</array>
 			</return-value>
@@ -280,7 +280,7 @@
 					<type name="gint" c:type="gint"/>
 				</parameter>
 				<parameter name="array" direction="out" transfer-ownership="full">
-					<array length="3">
+					<array length="3" c:type="gint**">
 						<type name="gint" c:type="gint"/>
 					</array>
 				</parameter>
@@ -291,7 +291,7 @@
 		</method>
 		<method name="int_in_int_in_array_return" c:identifier="gir_test_object_test_int_in_int_in_array_return">
 			<return-value transfer-ownership="full">
-				<array length="2">
+				<array length="2" c:type="gint*">
 					<type name="gint" c:type="gint"/>
 				</array>
 			</return-value>
@@ -313,7 +313,7 @@
 			</return-value>
 			<parameters>
 				<parameter name="array" direction="out" transfer-ownership="full">
-					<array length="1">
+					<array length="1" c:type="gchar***">
 						<type name="utf8" c:type="gchar*"/>
 					</array>
 				</parameter>
@@ -324,7 +324,7 @@
 		</method>
 		<method name="string_array_return" c:identifier="gir_test_object_test_string_array_return">
 			<return-value transfer-ownership="full">
-				<array length="0">
+				<array length="0" c:type="gchar**">
 					<type name="utf8" c:type="gchar*"/>
 				</array>
 			</return-value>
@@ -345,10 +345,10 @@
 			</return-value>
 			<parameters>
 				<parameter name="result_target" direction="out" transfer-ownership="none" allow-none="1">
-					<type name="gpointer" c:type="void*"/>
+					<type name="gpointer" c:type="void**"/>
 				</parameter>
 				<parameter name="result_target_destroy_notify" direction="out" transfer-ownership="none" scope="call">
-					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify*"/>
 				</parameter>
 			</parameters>
 		</method>
@@ -361,7 +361,7 @@
 					<type name="gint" c:type="gint"/>
 				</parameter>
 				<parameter name="a" direction="out" transfer-ownership="full">
-					<array length="2">
+					<array length="2" c:type="gint**">
 						<type name="gint" c:type="gint"/>
 					</array>
 				</parameter>
@@ -369,16 +369,16 @@
 					<type name="gint" c:type="gint*"/>
 				</parameter>
 				<parameter name="result_target" direction="out" transfer-ownership="none" allow-none="1">
-					<type name="gpointer" c:type="void*"/>
+					<type name="gpointer" c:type="void**"/>
 				</parameter>
 				<parameter name="result_target_destroy_notify" direction="out" transfer-ownership="none" scope="call">
-					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify*"/>
 				</parameter>
 			</parameters>
 		</method>
 		<method name="array_return_int_in_delegate_out" c:identifier="gir_test_object_test_array_return_int_in_delegate_out">
 			<return-value transfer-ownership="full">
-				<array length="4">
+				<array length="4" c:type="gint*">
 					<type name="gint" c:type="gint"/>
 				</array>
 			</return-value>
@@ -387,13 +387,13 @@
 					<type name="gint" c:type="gint"/>
 				</parameter>
 				<parameter name="d" direction="out" transfer-ownership="none" closure="2" scope="notified" destroy="3">
-					<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+					<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest*"/>
 				</parameter>
 				<parameter name="d_target" direction="out" transfer-ownership="none" allow-none="1">
-					<type name="gpointer" c:type="void*"/>
+					<type name="gpointer" c:type="void**"/>
 				</parameter>
 				<parameter name="d_target_destroy_notify" direction="out" transfer-ownership="none" scope="call">
-					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify*"/>
 				</parameter>
 				<parameter name="result_length1" direction="out" transfer-ownership="none">
 					<type name="gint" c:type="gint*"/>
