@@ -815,6 +815,20 @@ public class Vala.Method : Subroutine, Callable {
 			}
 		}
 
+		if (coroutine) {
+			// TODO: async methods with out-parameters before in-parameters are not supported
+			bool requires_pointer = false;
+			for (int i = parameters.size - 1; i >= 0; i--) {
+				var param = parameters[i];
+				if (param.direction == ParameterDirection.IN) {
+					requires_pointer = true;
+				} else if (requires_pointer) {
+					error = true;
+					Report.error (param.source_reference, "Synchronous out-parameters are not supported in async methods");
+				}
+			}
+		}
+
 		if (error_types != null) {
 			foreach (DataType error_type in error_types) {
 			error_type.check (context);
