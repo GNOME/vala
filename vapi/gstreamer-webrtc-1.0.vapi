@@ -103,6 +103,13 @@ namespace Gst {
 		public Gst.WebRTCSessionDescription copy ();
 		public void free ();
 	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_BUNDLE_POLICY_", type_id = "gst_webrtc_bundle_policy_get_type ()")]
+	public enum WebRTCBundlePolicy {
+		NONE,
+		BALANCED,
+		MAX_COMPAT,
+		MAX_BUNDLE
+	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_DTLS_SETUP_", type_id = "gst_webrtc_dtls_setup_get_type ()")]
 	public enum WebRTCDTLSSetup {
 		NONE,

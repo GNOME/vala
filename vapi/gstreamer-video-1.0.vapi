@@ -1166,7 +1166,8 @@ namespace Gst {
 			AUTO,
 			CUSTOM
 		}
-		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_OVERLAY_FORMAT_FLAG_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_OVERLAY_FORMAT_FLAG_", type_id = "gst_video_overlay_format_flags_get_type ()")]
+		[Flags]
 		[GIR (name = "VideoOverlayFormatFlags")]
 		public enum OverlayFormatFlags {
 			NONE,

@@ -98,6 +98,9 @@ namespace Gst {
 		public const string ENCRYPTOR;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_KLASS_FORMATTER")]
 		public const string FORMATTER;
+		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_KLASS_HARDWARE")]
+		[Version (since = "1.16")]
+		public const string HARDWARE;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_KLASS_MEDIA_AUDIO")]
 		public const string MEDIA_AUDIO;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_KLASS_MEDIA_IMAGE")]
