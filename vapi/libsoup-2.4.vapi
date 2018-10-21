@@ -1878,10 +1878,16 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.HashTable<string,string> header_parse_param_list (string header);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (since = "2.66")]
+	public static GLib.HashTable<string,string>? header_parse_param_list_strict (string header);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.SList<string> header_parse_quality_list (string header, out GLib.SList<string> unacceptable);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Version (since = "2.24")]
 	public static GLib.HashTable<string,string> header_parse_semi_param_list (string header);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (since = "2.66")]
+	public static GLib.HashTable<string,string>? header_parse_semi_param_list_strict (string header);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Version (since = "2.26")]
 	public static bool headers_parse (string str, int len, Soup.MessageHeaders dest);
