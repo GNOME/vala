@@ -35,6 +35,8 @@ namespace Gst {
 			protected BaseDepayload ();
 			[NoWrapper]
 			public virtual bool handle_event (Gst.Event event);
+			[Version (since = "1.16")]
+			public bool is_source_info_enabled ();
 			[NoWrapper]
 			public virtual bool packet_lost (Gst.Event event);
 			[NoWrapper]
@@ -45,6 +47,11 @@ namespace Gst {
 			public Gst.FlowReturn push_list (Gst.BufferList out_list);
 			[NoWrapper]
 			public virtual bool set_caps (Gst.Caps caps);
+			[Version (since = "1.16")]
+			public void set_source_info_enabled (bool enable);
+			[NoAccessorMethod]
+			[Version (since = "1.16")]
+			public bool source_info { get; set; }
 			[NoAccessorMethod]
 			public Gst.Structure stats { owned get; }
 		}
@@ -53,11 +60,17 @@ namespace Gst {
 		public abstract class BasePayload : Gst.Element {
 			[CCode (has_construct_function = false)]
 			protected BasePayload ();
+			[Version (since = "1.16")]
+			public Gst.Buffer allocate_output_buffer (uint payload_len, uint8 pad_len, uint8 csrc_count);
 			[NoWrapper]
 			public virtual Gst.Caps get_caps (Gst.Pad pad, Gst.Caps filter);
+			[Version (since = "1.16")]
+			public uint get_source_count (Gst.Buffer buffer);
 			[NoWrapper]
 			public virtual Gst.FlowReturn handle_buffer (Gst.Buffer buffer);
 			public bool is_filled (uint size, Gst.ClockTime duration);
+			[Version (since = "1.16")]
+			public bool is_source_info_enabled ();
 			public Gst.FlowReturn push (Gst.Buffer buffer);
 			public Gst.FlowReturn push_list (Gst.BufferList list);
 			[NoWrapper]
@@ -65,6 +78,8 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool set_caps (Gst.Caps caps);
 			public void set_options (string media, bool @dynamic, string encoding_name, uint32 clock_rate);
+			[Version (since = "1.16")]
+			public void set_source_info_enabled (bool enable);
 			[NoWrapper]
 			public virtual bool sink_event (Gst.Event event);
 			[NoWrapper]
@@ -85,6 +100,9 @@ namespace Gst {
 			public uint seqnum { get; }
 			[NoAccessorMethod]
 			public int seqnum_offset { get; set; }
+			[NoAccessorMethod]
+			[Version (since = "1.16")]
+			public bool source_info { get; set; }
 			[NoAccessorMethod]
 			public uint ssrc { get; set; }
 			[NoAccessorMethod]
@@ -154,6 +172,20 @@ namespace Gst {
 			public uint clock_rate;
 			public weak string encoding_parameters;
 			public uint bitrate;
+		}
+		[CCode (cheader_filename = "gst/rtp/rtp.h", has_type_id = false)]
+		[GIR (name = "RTPSourceMeta")]
+		[Version (since = "1.16")]
+		public struct SourceMeta {
+			public Gst.Meta meta;
+			public uint32 ssrc;
+			public bool ssrc_valid;
+			[CCode (array_length = false)]
+			public weak uint32 csrc[15];
+			public uint csrc_count;
+			public bool append_csrc (uint32 csrc, uint csrc_count);
+			public uint get_source_count ();
+			public bool set_ssrc (uint32? ssrc);
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cprefix = "GST_RTP_BUFFER_FLAG_", type_id = "gst_rtp_buffer_flags_get_type ()")]
 		[Flags]
@@ -257,8 +289,13 @@ namespace Gst {
 		public const string HDREXT_NTP_64;
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_HDREXT_NTP_64_SIZE")]
 		public const int HDREXT_NTP_64_SIZE;
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_SOURCE_META_MAX_CSRC_COUNT")]
+		public const int SOURCE_META_MAX_CSRC_COUNT;
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_VERSION")]
 		public const int VERSION;
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_buffer_add_rtp_source_meta")]
+		[Version (since = "1.16")]
+		public static unowned Gst.RTP.SourceMeta? buffer_add_rtp_source_meta (Gst.Buffer buf, uint32? ssrc, uint32? csrc, uint csrc_count);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static void buffer_allocate_data (Gst.Buffer buffer, uint payload_len, uint8 pad_len, uint8 csrc_count);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
@@ -273,6 +310,9 @@ namespace Gst {
 		public static uint32 buffer_default_clock_rate (uint8 payload_type);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static uint64 buffer_ext_timestamp (ref uint64 exttimestamp, uint32 timestamp);
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_buffer_get_rtp_source_meta")]
+		[Version (since = "1.16")]
+		public static unowned Gst.RTP.SourceMeta? buffer_get_rtp_source_meta (Gst.Buffer buf);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static bool buffer_map (Gst.Buffer buffer, Gst.MapFlags flags, out unowned Gst.RTP.Buffer rtp);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
@@ -295,6 +335,10 @@ namespace Gst {
 		public static unowned Gst.RTP.PayloadInfo? payload_info_for_name (string media, string encoding_name);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static unowned Gst.RTP.PayloadInfo? payload_info_for_pt (uint8 payload_type);
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
+		public static GLib.Type source_meta_api_get_type ();
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
+		public static unowned Gst.MetaInfo? source_meta_get_info ();
 	}
 	namespace RTPC {
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GstRTCPBuffer", has_type_id = false)]
