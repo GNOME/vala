@@ -429,6 +429,7 @@ TESTS = \
 	gir/bug792998.test \
 	gir/array-fixed-length.test \
 	gir/async-result-pos.test \
+	gir/async-sync-out.test \
 	gir/class.test \
 	gir/delegate-alias-without-target.test \
 	gir/delegate-closure-destroy-index-conflict.test \
