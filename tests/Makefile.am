@@ -374,6 +374,7 @@ TESTS = \
 	gir/bug788775.test \
 	gir/array-fixed-length.test \
 	gir/async-result-pos.test \
+	gir/async-sync-out.test \
 	gir/delegate-alias-without-target.test \
 	annotations/deprecated.vala \
 	annotations/description.vala \
