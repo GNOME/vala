@@ -4062,6 +4062,20 @@ public class Vala.GirParser : CodeVisitor {
 
 	void process_async_method (Node node) {
 		var m = (Method) node.symbol;
+
+		// TODO: async methods with out-parameters before in-parameters are not supported
+		bool requires_pointer = false;
+		foreach (var param in m.get_parameters ()) {
+			if (param.direction == ParameterDirection.IN) {
+				requires_pointer = true;
+			} else if (requires_pointer) {
+				param.direction = ParameterDirection.IN;
+				param.variable_type.nullable = false;
+				param.variable_type = new PointerType (param.variable_type);
+				Report.warning (param.source_reference, "Synchronous out-parameters are not supported in async methods");
+			}
+		}
+
 		string finish_method_base;
 		if (m.name == null) {
 			assert (m is CreationMethod);
