@@ -746,6 +746,20 @@ public class Vala.Method : Subroutine, Callable {
 			}
 		}
 
+		if (coroutine) {
+			// async methods don't allow out-parameters before in-parameters
+			bool requires_attribute = false;
+			for (int i = parameters.size - 1; i >= 0; i--) {
+				var param = parameters[i];
+				if (param.direction == ParameterDirection.IN) {
+					requires_attribute = true;
+				} else if (requires_attribute) {
+					error = true;
+					Report.error (param.source_reference, "Output parameters are not allowed before input parameters in async methods");
+				}
+			}
+		}
+
 		foreach (DataType error_type in get_error_types ()) {
 			error_type.check (context);
 

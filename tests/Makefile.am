@@ -381,6 +381,7 @@ TESTS = \
 	asynchronous/bug793158.vala \
 	asynchronous/closures.vala \
 	asynchronous/generator.vala \
+	asynchronous/out-parameter-invalid.test \
 	asynchronous/yield.vala \
 	generics/bug640330.test \
 	generics/bug640330.vala \
