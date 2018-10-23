@@ -221,10 +221,10 @@ public class Vala.Assignment : Expression {
 				parent_node.replace_expression (this, set_call);
 				return set_call.check (context);
 			} else {
-				right.target_type = left.value_type;
+				right.target_type = left.value_type.copy ();
 			}
 		} else if (left is PointerIndirection) {
-			right.target_type = left.value_type;
+			right.target_type = left.value_type.copy ();
 		} else {
 			error = true;
 			Report.error (source_reference, "unsupported lvalue in assignment");
@@ -247,7 +247,7 @@ public class Vala.Assignment : Expression {
 			var old_value = new MemberAccess (ma.inner, ma.member_name);
 
 			var bin = new BinaryExpression (BinaryOperator.PLUS, old_value, right, source_reference);
-			bin.target_type = right.target_type;
+			bin.target_type = right.target_type.copy ();
 			right.target_type = right.target_type.copy ();
 			right.target_type.value_owned = false;
 
@@ -315,7 +315,7 @@ public class Vala.Assignment : Expression {
 						return false;
 					}
 
-					right.value_type = variable.variable_type;
+					right.value_type = variable.variable_type.copy ();
 				} else {
 					error = true;
 					Report.error (source_reference, "Assignment: Invalid assignment attempt");
