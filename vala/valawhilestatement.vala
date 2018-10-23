@@ -98,6 +98,12 @@ public class Vala.WhileStatement : CodeNode, Statement {
 	}
 
 	public override bool check (CodeContext context) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
 		// convert to simple loop
 
 		if (always_true (condition)) {
@@ -118,7 +124,11 @@ public class Vala.WhileStatement : CodeNode, Statement {
 		var parent_block = (Block) parent_node;
 		parent_block.replace_statement (this, loop);
 
-		return loop.check (context);
+		if (!loop.check (context)) {
+			error = true;
+		}
+
+		return !error;
 	}
 }
 
