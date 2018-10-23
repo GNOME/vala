@@ -78,7 +78,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 		checked = true;
 
 		if (return_expression != null) {
-			return_expression.target_type = context.analyzer.current_return_type;
+			return_expression.target_type = context.analyzer.current_return_type.copy ();
 		}
 
 		if (return_expression != null && !return_expression.check (context)) {
