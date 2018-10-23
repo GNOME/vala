@@ -143,11 +143,13 @@ public class Vala.ForStatement : CodeNode, Statement {
 		for (int i=0; i < initializer.size; i++) {
 			if (initializer[i] == old_node) {
 				initializer[i] = new_node;
+				new_node.parent_node = this;
 			}
 		}
 		for (int i=0; i < iterator.size; i++) {
 			if (iterator[i] == old_node) {
 				iterator[i] = new_node;
+				new_node.parent_node = this;
 			}
 		}
 	}

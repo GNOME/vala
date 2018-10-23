@@ -28,7 +28,15 @@ public class Vala.UnlockStatement : CodeNode, Statement {
 	/**
 	 * Expression representing the resource to be unlocked.
 	 */
-	public Expression resource { get; set; }
+	public Expression resource {
+		get { return _resource; }
+		set {
+			_resource = value;
+			_resource.parent_node = this;
+		}
+	}
+
+	private Expression _resource;
 
 	public UnlockStatement (Expression resource, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;

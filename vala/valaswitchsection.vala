@@ -49,7 +49,7 @@ public class Vala.SwitchSection : Block {
 		}
 
 		labels.add (label);
-		label.section = this;
+		label.parent_node = this;
 	}
 
 	/**
