@@ -78,6 +78,12 @@ public class Vala.SwitchLabel : CodeNode {
 	}
 
 	public override bool check (CodeContext context) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
 		if (expression != null) {
 			var switch_statement = (SwitchStatement) section.parent_node;
 
@@ -94,7 +100,10 @@ public class Vala.SwitchLabel : CodeNode {
 				}
 			}
 
-			expression.check (context);
+			if (!expression.check (context)) {
+				error = true;
+				return false;
+			}
 
 			if (!expression.is_constant ()) {
 				error = true;

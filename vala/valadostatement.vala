@@ -93,6 +93,12 @@ public class Vala.DoStatement : CodeNode, Statement {
 	}
 
 	public override bool check (CodeContext context) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
 		// convert to simple loop
 
 		// do not generate variable and if block if condition is always true
@@ -102,7 +108,11 @@ public class Vala.DoStatement : CodeNode, Statement {
 			var parent_block = (Block) parent_node;
 			parent_block.replace_statement (this, loop);
 
-			return loop.check (context);
+			if (!loop.check (context)) {
+				error = true;
+			}
+
+			return !error;
 		}
 
 		var block = new Block (source_reference);
@@ -127,6 +137,10 @@ public class Vala.DoStatement : CodeNode, Statement {
 		var parent_block = (Block) parent_node;
 		parent_block.replace_statement (this, block);
 
-		return block.check (context);
+		if (!block.check (context)) {
+			error = true;
+		}
+
+		return !error;
 	}
 }

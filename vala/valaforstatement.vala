@@ -165,6 +165,12 @@ public class Vala.ForStatement : CodeNode, Statement {
 	}
 
 	public override bool check (CodeContext context) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
 		// convert to simple loop
 
 		var block = new Block (source_reference);
@@ -206,6 +212,10 @@ public class Vala.ForStatement : CodeNode, Statement {
 		var parent_block = (Block) parent_node;
 		parent_block.replace_statement (this, block);
 
-		return block.check (context);
+		if (!block.check (context)) {
+			error = true;
+		}
+
+		return !error;
 	}
 }
