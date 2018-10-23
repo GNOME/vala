@@ -46,6 +46,7 @@ public class Vala.Tuple : Expression {
 
 	public void add_expression (Expression expr) {
 		expression_list.add (expr);
+		expr.parent_node = this;
 	}
 
 	public List<Expression> get_expressions () {
@@ -60,6 +61,7 @@ public class Vala.Tuple : Expression {
 		for (int i = 0; i < expression_list.size; i++) {
 			if (expression_list[i] == old_node) {
 				expression_list[i] = new_node;
+				new_node.parent_node = this;
 			}
 		}
 	}

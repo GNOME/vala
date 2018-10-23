@@ -29,9 +29,20 @@ public class Vala.SwitchLabel : CodeNode {
 	/**
 	 * Specifies the label expression.
 	 */
-	public Expression expression { get; set; }
+	public Expression expression {
+		get { return _expression; }
+		set {
+			_expression = value;
+			_expression.parent_node = this;
+		}
+	}
 
-	public weak SwitchSection section { get; set; }
+	public weak SwitchSection section {
+		get { return (SwitchSection) parent_node; }
+		set { parent_node = value; }
+	}
+
+	private Expression _expression;
 
 	/**
 	 * Creates a new switch case label.

@@ -149,6 +149,7 @@ public class Vala.ArrayCreationExpression : Expression {
 		for (int i = 0; i < sizes.size; i++) {
 			if (sizes[i] == old_node) {
 				sizes[i] = new_node;
+				new_node.parent_node = this;
 				return;
 			}
 		}
