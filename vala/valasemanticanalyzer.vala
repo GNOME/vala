@@ -343,8 +343,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		List<TypeParameter> type_parameters = null;
 		if (sym is ObjectTypeSymbol) {
-			type = new ObjectType ((ObjectTypeSymbol) sym);
-			type_parameters = ((ObjectTypeSymbol) sym).get_type_parameters ();
+			var cl = sym as Class;
+			if (cl != null && cl.is_error_base) {
+				type = new ErrorType (null, null);
+			} else {
+				type = new ObjectType ((ObjectTypeSymbol) sym);
+				type_parameters = ((ObjectTypeSymbol) sym).get_type_parameters ();
+			}
 		} else if (sym is Struct) {
 			var st = (Struct) sym;
 			if (st.is_boolean_type ()) {
