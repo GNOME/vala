@@ -124,6 +124,7 @@ public class Vala.InitializerList : Expression {
 		for (int i = 0; i < initializers.size; i++) {
 			if (initializers[i] == old_node) {
 				initializers[i] = new_node;
+				new_node.parent_node = this;
 			}
 		}
 	}

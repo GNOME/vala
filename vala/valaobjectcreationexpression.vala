@@ -41,7 +41,15 @@ public class Vala.ObjectCreationExpression : Expression {
 	 * The construction method to use or the data type to be created
 	 * with the default construction method.
 	 */
-	public MemberAccess member_name { get; set; }
+	public MemberAccess? member_name {
+		get { return _member_name; }
+		set {
+			_member_name = value;
+			if (_member_name != null) {
+				_member_name.parent_node = this;
+			}
+		}
+	}
 
 	public bool is_yield_expression { get; set; }
 
@@ -52,6 +60,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	private List<MemberInitializer> object_initializer = new ArrayList<MemberInitializer> ();
 
 	private DataType _data_type;
+	private MemberAccess? _member_name;
 
 	/**
 	 * Creates a new object creation expression.
@@ -60,7 +69,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 * @param source_reference reference to source code
 	 * @return                 newly created object creation expression
 	 */
-	public ObjectCreationExpression (MemberAccess member_name, SourceReference source_reference) {
+	public ObjectCreationExpression (MemberAccess? member_name, SourceReference source_reference) {
 		this.source_reference = source_reference;
 		this.member_name = member_name;
 	}
@@ -129,7 +138,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		int index = argument_list.index_of (old_node);
-		if (index >= 0 && new_node.parent_node == null) {
+		if (index >= 0) {
 			argument_list[index] = new_node;
 			new_node.parent_node = this;
 		}
