@@ -95,7 +95,7 @@ public class Vala.ElementAccess : Expression {
 		}
 		
 		int index = indices.index_of (old_node);
-		if (index >= 0 && new_node.parent_node == null) {
+		if (index >= 0) {
 			indices[index] = new_node;
 			new_node.parent_node = this;
 		}

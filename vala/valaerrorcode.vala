@@ -29,7 +29,17 @@ public class Vala.ErrorCode : TypeSymbol {
 	/**
 	 * Specifies the numerical representation of this enum value.
 	 */
-	public Expression value { get; set; }
+	public Expression? value {
+		get { return _value; }
+		set {
+			_value = value;
+			if (_value != null) {
+				_value.parent_node = this;
+			}
+		}
+	}
+
+	private Expression _value;
 
 	/**
 	 * Creates a new enum value.

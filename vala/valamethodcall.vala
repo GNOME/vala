@@ -103,7 +103,7 @@ public class Vala.MethodCall : Expression {
 		}
 		
 		int index = argument_list.index_of (old_node);
-		if (index >= 0 && new_node.parent_node == null) {
+		if (index >= 0) {
 			argument_list[index] = new_node;
 			new_node.parent_node = this;
 		}

@@ -40,6 +40,7 @@ public class Vala.Template : Expression {
 
 	public void add_expression (Expression expr) {
 		expression_list.add (expr);
+		expr.parent_node = this;
 	}
 
 	public List<Expression> get_expressions () {
