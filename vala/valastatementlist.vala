@@ -54,6 +54,15 @@ public class Vala.StatementList : CodeNode, Statement {
 		}
 	}
 
+	public override bool check (CodeContext context) {
+		foreach (Statement stmt in list) {
+			if (!stmt.check (context)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public override void emit (CodeGenerator codegen) {
 		foreach (Statement stmt in list) {
 			stmt.emit (codegen);
