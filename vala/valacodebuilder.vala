@@ -23,12 +23,13 @@
 using GLib;
 
 public class Vala.CodeBuilder {
-	public Block current_block;
-	public Statement insert_statement;
-	public Block insert_block;
-	public ArrayList<Statement> statement_stack = new ArrayList<Statement> ();
-	public ArrayList<CodeNode> decl_nodes = new ArrayList<CodeNode> ();
-	public SourceReference source_reference;
+	public SourceReference source_reference { get; private set; }
+
+	Block current_block;
+	Statement insert_statement;
+	Block insert_block;
+	ArrayList<Statement> statement_stack = new ArrayList<Statement> ();
+	ArrayList<CodeNode> decl_nodes = new ArrayList<CodeNode> ();
 
 	public void* data = null;
 
