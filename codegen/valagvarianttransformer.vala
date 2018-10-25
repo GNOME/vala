@@ -157,7 +157,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 
 			string[] indices = new string[array_type.rank];
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				indices[dim - 1] = b.add_temp_declaration (null, new IntegerLiteral ("0"));
+				indices[dim - 1] = b.add_temp_declaration (data_type ("int"));
 			}
 			b.add_return (serialize_array_dim (array_type, 1, indices, "array"));
 
@@ -170,9 +170,12 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 	}
 
 	Expression serialize_array_dim (ArrayType array_type, int dim, string[] indices, string array_var) {
-		var builderinit = expression (@"new GLib.VariantBuilder (new GLib.VariantType (\"$(get_type_signature (array_type))\"))");
+		var builder = b.add_temp_declaration (data_type ("GLib.VariantBuilder"));
 
-		var builder = b.add_temp_declaration (null, builderinit);
+		ArrayType array_type_copy = (ArrayType) array_type.copy ();
+		array_type_copy.rank -= dim - 1;
+		b.add_assignment (expression (builder), expression (@"new GLib.VariantBuilder (new GLib.VariantType (\"$(get_type_signature (array_type_copy))\"))"));
+		b.add_assignment (expression (@"$(indices[dim - 1])"), expression ("0"));
 
 		Expression length = expression (array_var + ".length");
 		if (array_type.rank > 1) {
@@ -307,7 +310,7 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 				string length = b.add_temp_declaration (data_type ("size_t"));
 				b.add_assignment (expression (length), expression (@"$iterator.n_children ()"));
 				array_new.append_size (expression (length));
-				indices[dim - 1] = b.add_temp_declaration (null, expression ("0"));
+				indices[dim - 1] = b.add_temp_declaration (data_type ("int"));
 				if (dim < array_type.rank) {
 					statements (@"$iterator.next_value ();");
 				}
@@ -327,13 +330,15 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 	void deserialize_array_dim (ArrayType array_type, string variant, string[] indices, int dim, string array) {
 		var iter = b.add_temp_declaration (data_type ("GLib.VariantIter"));
 		b.add_assignment (expression (iter), expression (@"$variant.iterator ()"));
+		b.add_assignment (expression (@"$(indices[dim - 1])"), expression ("0"));
+
 		var new_variant = b.add_temp_declaration (data_type ("GLib.Variant"));
 		b.open_while (expression (@"($new_variant = $iter.next_value ()) != null"));
 
 		if (dim == array_type.rank) {
 			var element_access = new ElementAccess (expression (array), b.source_reference);
 			for (int i = 0; i < array_type.rank; i++) {
-				element_access.append_index (expression (@"$(indices[i])++"));
+				element_access.append_index (expression (indices[i]));
 			}
 			if (is_gvariant_type (array_type.element_type)) {
 				b.add_assignment (element_access, expression (@"$new_variant.get_variant ()"));
@@ -343,6 +348,8 @@ public class Vala.GVariantTransformer : CCodeTransformer {
 		} else {
 			deserialize_array_dim (array_type, new_variant, indices, dim + 1, array);
 		}
+
+		b.add_expression (expression (@"$(indices[dim - 1])++"));
 
 		b.close ();
 	}
