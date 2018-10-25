@@ -30,6 +30,7 @@ TESTS = \
 	basic-types/sizeof.vala \
 	basic-types/garray.vala \
 	basic-types/glists.vala \
+	basic-types/gvariants.vala \
 	basic-types/bug570846.test \
 	basic-types/bug571486.vala \
 	basic-types/bug591552.vala \
