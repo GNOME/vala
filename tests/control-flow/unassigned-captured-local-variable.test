@@ -1,0 +1,11 @@
+Invalid Code
+
+delegate void Func ();
+
+void main () {
+	string s;
+	Func foo = () => {
+		print ("%s", s);
+	};
+	foo ();
+}
