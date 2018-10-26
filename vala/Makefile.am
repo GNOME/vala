@@ -159,6 +159,7 @@ libvala_la_VALASOURCES = \
 	valatemplate.vala \
 	valathrowstatement.vala \
 	valatokentype.vala \
+	valatraversevisitor.vala \
 	valatrystatement.vala \
 	valatuple.vala \
 	valatypecheck.vala \
