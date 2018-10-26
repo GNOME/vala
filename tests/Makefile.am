@@ -129,6 +129,7 @@ TESTS = \
 	methods/printf-invalid.test \
 	methods/printf-constructor.vala \
 	methods/printf-constructor-invalid.test \
+	control-flow/assigned-local-variable.vala \
 	control-flow/break.vala \
 	control-flow/break-invalid.test \
 	control-flow/continue-invalid.test \
