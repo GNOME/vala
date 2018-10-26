@@ -137,6 +137,7 @@ TESTS = \
 	control-flow/nested-conditional.vala \
 	control-flow/switch.vala \
 	control-flow/sideeffects.vala \
+	control-flow/unassigned-captured-local-variable.test \
 	control-flow/unassigned-local-block-variable.test \
 	control-flow/unassigned-local-variable.test \
 	control-flow/while-false.vala \
