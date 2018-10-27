@@ -157,6 +157,7 @@ SOURCEFILES=
 for testfile in "$@"; do
 	rm -f prepare check
 	echo 'set -e' >> prepare
+	run_prefix=""
 
 	case "$testfile" in
 	*.vala)
