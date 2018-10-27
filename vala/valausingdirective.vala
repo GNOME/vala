@@ -29,7 +29,26 @@ public class Vala.UsingDirective : CodeNode {
 	/**
 	 * The symbol of the namespace this using directive is referring to.
 	 */
-	public Symbol namespace_symbol { get; set; }
+	public weak Symbol namespace_symbol {
+		get {
+			if (unresolved_symbol != null) {
+				return unresolved_symbol;
+			}
+			return _namespace_symbol;
+		}
+		set {
+			if (value is UnresolvedSymbol) {
+				unresolved_symbol = (UnresolvedSymbol) value;
+				_namespace_symbol = null;
+			} else {
+				_namespace_symbol = value;
+				unresolved_symbol = null;
+			}
+		}
+	}
+
+	weak Symbol _namespace_symbol;
+	UnresolvedSymbol unresolved_symbol;
 
 	/**
 	 * Creates a new using directive.
