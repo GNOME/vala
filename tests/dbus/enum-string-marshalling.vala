@@ -7,7 +7,7 @@ public enum FooEnum {
 public interface Test : GLib.Object {
 	public abstract async void test1 (FooEnum e) throws DBusError;
 	public abstract void test2 (FooEnum e) throws DBusError;
-	public abstract void test3 (FooEnum e1, UnixOutputStream output_stream, FooEnum e2) throws DBusError;
+	public abstract void test3 (FooEnum e1, int fd, FooEnum e2) throws DBusError;
 	public abstract void test4 (FooEnum e);
 	public abstract async void test5 (FooEnum e);
 }

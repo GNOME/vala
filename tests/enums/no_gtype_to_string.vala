@@ -14,9 +14,9 @@ enum Bar {
 }
 
 void main () {
-	assert ("ENUMS_NO_GTYPE_TO_STRING_FOO_BAR" == Foo.BAR.to_string ());
-	assert ("ENUMS_NO_GTYPE_TO_STRING_FOO_BAZ_FAZ" == Foo.BAZ_FAZ.to_string ());
+	assert ("FOO_BAR" == Foo.BAR.to_string ());
+	assert ("FOO_BAZ_FAZ" == Foo.BAZ_FAZ.to_string ());
 
-	assert ("ENUMS_NO_GTYPE_TO_STRING_BAR_FOO" == Bar.FOO.to_string ());
-	assert ("ENUMS_NO_GTYPE_TO_STRING_BAR_FAZ_BAZ" == Bar.FAZ_BAZ.to_string ());
+	assert ("BAR_FOO" == Bar.FOO.to_string ());
+	assert ("BAR_FAZ_BAZ" == Bar.FAZ_BAZ.to_string ());
 }

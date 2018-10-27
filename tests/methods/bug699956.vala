@@ -4,7 +4,7 @@ class Foo {
 class Bar : Foo {
 }
 
-[CCode (type = "methodsbug699956Foo*")]
+[CCode (type = "Foo*")]
 Bar? foo () {
 	return null;
 }
