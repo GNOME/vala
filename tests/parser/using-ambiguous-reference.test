@@ -1,0 +1,18 @@
+Invalid Code
+
+using Foo;
+using Bar;
+
+namespace Foo {
+	public void manam () {
+	}
+}
+
+namespace Bar {
+	public void manam () {
+	}
+}
+
+void main () {
+	manam ();
+}
