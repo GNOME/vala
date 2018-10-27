@@ -485,6 +485,9 @@ TESTS = \
 	parser/tuple.vala \
 	parser/unsupported-property-async.test \
 	parser/unsupported-property-throws.test \
+	parser/using-ambiguous-reference.test \
+	parser/using-directive.vala \
+	parser/using-invalid-namespace.test \
 	parser/yield-method.test \
 	parser/yield-return.vala \
 	parser/bug728574.vala \
