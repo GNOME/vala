@@ -217,13 +217,13 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		m.add_parameter (new Parameter ("object_path", data_type ("string", false)));
 		m.add_parameter (new Parameter ("interface_name", data_type ("string", false)));
 		m.add_parameter (new Parameter ("property_name", data_type ("string", false)));
-		m.add_parameter (new Parameter ("error", new PointerType (new PointerType (new VoidType ()))));
+		m.add_parameter (new Parameter ("error", new PointerType (new ErrorType (null, null))));
 		m.add_parameter (new Parameter ("user_data", new PointerType (new VoidType ())));
 		sym.add_method (m);
 
 		push_builder (new CodeBuilder.for_subroutine (m));
 		var object_type = SemanticAnalyzer.get_data_type_for_symbol (sym);
-		var object = b.add_temp_declaration (null, expression (@"($object_type) (((GLib.Object[]) user_data)[0])"));
+		var object = b.add_temp_declaration (data_type (@"$object_type", false), expression (@"($object_type) (((GLib.Object[]) user_data)[0])"));
 		b.open_switch (expression ("property_name"), null);
 		statements ("return null;");
 		foreach (var prop in sym.get_properties ()) {
@@ -254,13 +254,13 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		m.add_parameter (new Parameter ("interface_name", data_type ("string", false)));
 		m.add_parameter (new Parameter ("property_name", data_type ("string", false)));
 		m.add_parameter (new Parameter ("value", data_type ("GLib.Variant", false)));
-		m.add_parameter (new Parameter ("error", new PointerType (new PointerType (new VoidType ()))));
+		m.add_parameter (new Parameter ("error", new PointerType (new ErrorType (null, null))));
 		m.add_parameter (new Parameter ("user_data", new PointerType (new VoidType ())));
 		sym.add_method (m);
 
 		push_builder (new CodeBuilder.for_subroutine (m));
 		var object_type = SemanticAnalyzer.get_data_type_for_symbol (sym);
-		var object = b.add_temp_declaration (null, expression (@"($object_type) (((GLib.Object[]) user_data)[0])"));
+		var object = b.add_temp_declaration (data_type (@"$object_type", false), expression (@"($object_type) (((GLib.Object[]) user_data)[0])"));
 		b.open_switch (expression ("property_name"), null);
 		statements ("return false;");
 		foreach (var prop in sym.get_properties ()) {
