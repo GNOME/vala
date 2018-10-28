@@ -185,7 +185,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 
 		push_builder (new CodeBuilder.for_subroutine (im));
 		var object_type = SemanticAnalyzer.get_data_type_for_symbol (sym);
-		var object = b.add_temp_declaration (null, expression (@"($object_type) (((GLib.Object[]) user_data)[0])"));
+		var object = b.add_temp_declaration (data_type (@"$object_type", false), expression (@"($object_type) (((GLib.Object[]) user_data)[0])"));
 		b.open_switch (expression ("method_name"), null);
 		b.add_return ();
 		foreach (var m in sym.get_methods ()) {
