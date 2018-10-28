@@ -361,6 +361,9 @@
 <title>Array types</title>
 <para>TODO: Check correctness. </para>
 <para>An array is a data structure that can contains zero or more elements of the same type, up to a limit defined by the type.  An array may have multiple dimensions; for each possible set of dimensions a new type is implied, but there is a meta type available that describes an array of any size with the same number of dimensions, i.e. int[1] is not the same type as int[2], while int[] is the same type as either. </para>
+<para>A size can be retrieved from an array using the <code>length</code> member, this returns an int if the array has one dimension or an int[] if the array contains several dimensions. </para>
+<para>You can also move or copy and array using respectively the <code>move</code> and <code>copy</code> members. </para>
+<para>For single-dimension arrays, a <code>resize</code> member is also available to change the length of the array. </para>
 <para>See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Array_instantiation">Expressions/Array instantiation</ulink> for how to instantiate an array type. </para>
 </section>
 
