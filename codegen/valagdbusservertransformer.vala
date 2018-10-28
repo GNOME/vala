@@ -67,6 +67,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		b.open_try ();
 
 		var out_args = new string[0];
+		var out_params = new Parameter[0];
 		var out_types = new DataType[0];
 		string fd_list = null;
 		string fd_index = null;
@@ -87,7 +88,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 
 			if (param.direction == ParameterDirection.IN) {
 				var arg = b.add_temp_declaration (copy_type (param.variable_type, true));
-				b.add_assignment (expression (arg), read_dbus_value (param.variable_type, iter, "invocation.get_message ()", ref fd_list, ref fd_index));
+				b.add_assignment (expression (arg), read_dbus_value (param.variable_type, get_dbus_signature (param) != null, iter, "invocation.get_message ()", ref fd_list, ref fd_index));
 				call.add_argument (expression (arg));
 			} else if (param.direction == ParameterDirection.OUT) {
 				if (m.coroutine) {
@@ -96,6 +97,7 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 				}
 				var arg = b.add_temp_declaration (copy_type (param.variable_type, true));
 				out_args += arg;
+				out_params += param;
 				out_types += param.variable_type.copy ();
 				finish_call.add_argument (new UnaryExpression (UnaryOperator.OUT, expression (arg), m.source_reference));
 				if (m.coroutine) {
@@ -130,10 +132,10 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 		var reply = b.add_temp_declaration (null, expression ("new GLib.DBusMessage.method_reply (invocation.get_message ())"));
 		var builder = b.add_temp_declaration (null, expression ("new GLib.VariantBuilder (GLib.VariantType.TUPLE)"));
 		for (int i = 0; i < out_args.length; i++) {
-			write_dbus_value (out_types[i], builder, out_args[i], ref fd_list);
+			write_dbus_value (out_types[i], get_dbus_signature (out_params[i]) != null, builder, out_args[i], ref fd_list);
 		}
 		if (result != null) {
-			write_dbus_value (m.return_type.copy (), builder, result, ref fd_list);
+			write_dbus_value (m.return_type.copy (), get_dbus_signature (m) != null, builder, result, ref fd_list);
 		}
 		statements (@"$reply.set_body ($builder.end ());");
 		if (fd_list != null) {
@@ -297,7 +299,9 @@ public class Vala.GDBusServerTransformer : GDBusClientTransformer {
 
 		var builder = b.add_temp_declaration (null, expression ("new GLib.VariantBuilder (GLib.VariantType.TUPLE)"));
 		foreach (var param in sig.get_parameters ()) {
-			if (is_gvariant_type (param.variable_type)) {
+			if (get_dbus_signature (param) != null) {
+				statements (@"$builder.add_value ($(param.name));");
+			} else if (is_gvariant_type (param.variable_type)) {
 				statements (@"$builder.add (\"v\", $(param.name));");
 			} else {
 				statements (@"$builder.add_value ($(param.name));");

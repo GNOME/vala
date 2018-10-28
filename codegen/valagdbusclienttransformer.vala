@@ -41,12 +41,14 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		return Symbol.lower_case_to_camel_case (symbol.name);
 	}
 
-	public Expression read_dbus_value (DataType type, string iter, string message, ref string? fd_list, ref string? fd_index) {
+	public Expression read_dbus_value (DataType type, bool is_raw_variant, string iter, string message, ref string? fd_list, ref string? fd_index) {
 		string? type_name = null;
 		if (type.data_type != null) {
 			type_name = type.data_type.get_full_name ();
 		}
-		if (type_name == "GLib.UnixInputStream" || type_name == "GLib.UnixOutputStream" || type_name == "GLib.Socket") {
+		if (is_raw_variant) {
+			return expression (@"$iter.next_value ()");
+		} else if (type_name == "GLib.UnixInputStream" || type_name == "GLib.UnixOutputStream" || type_name == "GLib.Socket") {
 			if (fd_list == null) {
 				fd_list = b.add_temp_declaration (data_type ("GLib.UnixFDList"), null);
 				fd_index = b.add_temp_declaration (null, expression ("0"));
@@ -69,7 +71,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		}
 	}
 
-	public void write_dbus_value (DataType type, string builder, string value, ref string? fd_list) {
+	public void write_dbus_value (DataType type, bool is_raw_variant, string builder, string value, ref string? fd_list) {
 		string? type_name = null;
 		if (type is ObjectType) {
 			type_name = type.data_type.get_full_name ();
@@ -77,7 +79,9 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		if (type_name == "GLib.Cancellable" || type_name == "GLib.BusName") {
 			return;
 		}
-		if (type_name == "GLib.UnixInputStream" || type_name == "GLib.UnixOutputStream" || type_name == "GLib.Socket") {
+		if (is_raw_variant) {
+			statements (@"$builder.add_value ($value);");
+		} else if (type_name == "GLib.UnixInputStream" || type_name == "GLib.UnixOutputStream" || type_name == "GLib.Socket") {
 			if (fd_list == null) {
 				fd_list = b.add_temp_declaration (null, expression ("new GLib.UnixFDList ()"));
 			}
@@ -106,7 +110,7 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
 					cancellable = param.name;
 				}
-				write_dbus_value (param.variable_type, builder, param.name, ref fd_list);
+				write_dbus_value (param.variable_type, get_dbus_signature (param) != null, builder, param.name, ref fd_list);
 			} else if (param.direction == ParameterDirection.OUT) {
 				has_result = true;
 			}
@@ -136,11 +140,11 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 			statements (@"$iter = $reply.get_body ().iterator ();");
 			foreach (var param in m.get_parameters ()) {
 				if (param.direction == ParameterDirection.OUT) {
-					b.add_assignment (expression (param.name), read_dbus_value (param.variable_type, iter, reply, ref fd_list, ref fd_index));
+					b.add_assignment (expression (param.name), read_dbus_value (param.variable_type, get_dbus_signature (param) != null, iter, reply, ref fd_list, ref fd_index));
 				}
 			}
 			if (m.has_result) {
-				b.add_return (read_dbus_value (m.return_type, iter, reply, ref fd_list, ref fd_index));
+				b.add_return (read_dbus_value (m.return_type, get_dbus_signature (m) != null, iter, reply, ref fd_list, ref fd_index));
 			}
 		}
 	}
@@ -194,7 +198,9 @@ public class Vala.GDBusClientTransformer : GVariantTransformer {
 		var call = new MethodCall (expression (sig.name), sig.source_reference);
 		foreach (var param in sig.get_parameters ()) {
 			var temp = b.add_temp_declaration (copy_type (param.variable_type, true));
-			if (is_gvariant_type (param.variable_type)) {
+			if (get_dbus_signature (param) != null) {
+				statements (@"$temp = $iter.next_value ();");
+			} else if (is_gvariant_type (param.variable_type)) {
 				statements (@"$temp = $iter.next_value ().get_variant ();");
 			} else {
 				statements (@"$temp = ($(param.variable_type)) ($iter.next_value ());");
