@@ -100,6 +100,7 @@ internal-apis/ccode: $(ccode_VALASOURCES) internal-apis/gee
 		--package-name ccode \
 		--package-version $(PACKAGE_VERSION) \
 		--vapidir=$(top_builddir)/gee --pkg gee \
+		--vapidir=$(top_builddir)/vala --pkg vala \
 		$(filter %.vala,$^)
 	@touch $@
 
