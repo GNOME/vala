@@ -11,7 +11,7 @@ class Maman.Bar : Object {
 
 		throw new BarError.FOO (" 8");
 
-		stdout.printf (" BAD");
+		assert_not_reached ();
 	}
 
 	public int bad () throws BarError {
@@ -19,7 +19,7 @@ class Maman.Bar : Object {
 
 		foo ();
 
-		stdout.printf (" BAD");
+		assert_not_reached ();
 
 		return 0;
 	}
@@ -42,7 +42,7 @@ class Maman.Bar : Object {
 
 			good ();
 
-			stdout.printf (" BAD");
+			assert_not_reached ();
 		} catch (BarError e) {
 			stdout.printf (" 7");
 
