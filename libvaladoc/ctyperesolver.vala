@@ -161,7 +161,7 @@ public class Valadoc.CTypeResolver : Visitor {
 			return this.tree.search_symbol_str (null, "GLib.FileStream.printf");
 		}
 
-		int dotpos = name.index_of_char ('.');
+		var dotpos = name.index_of_char ('.');
 		if (dotpos > 0) {
 			string fst = name.substring (0, dotpos);
 			string snd = name.substring (dotpos + 1);

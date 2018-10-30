@@ -31,7 +31,7 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 		C;
 
 		public static Language from_path (string path) {
-			int pos = path.last_index_of (".");
+			var pos = path.last_index_of (".");
 			if (pos < 0) {
 				return Language.UNKNOWN;
 			}

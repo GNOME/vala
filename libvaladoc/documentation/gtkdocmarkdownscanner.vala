@@ -36,7 +36,7 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 	private Valadoc.Parser parser;
 
 	private unowned string _content;
-	private int _skip;
+	private long _skip;
 
 	private StringBuilder _current_string = new StringBuilder ();
 	private unowned string _index;
@@ -411,7 +411,7 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 		case '|':
 			if (get_next_char () == '[') {
 				unowned string _iter = _index.offset (2);
-				int end = _iter.index_of ("]|");
+				var end = _iter.index_of ("]|");
 				if (end < 0) {
 					append_char ('|');
 				} else {
@@ -717,8 +717,8 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 		return Vala.SourceLocation (_index, _last_line, get_line_start_column () + _last_column);
 	}
 
-	private Vala.SourceLocation get_end (int offset = 0) {
-		return Vala.SourceLocation (_index, _line, get_line_start_column () + _column + offset);
+	private Vala.SourceLocation get_end (long offset = 0) {
+		return Vala.SourceLocation (_index, _line, (int) (get_line_start_column () + _column + offset));
 	}
 
 	public int get_line_start_column () {
@@ -729,7 +729,7 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 		_current_string.append_unichar (c);
 	}
 
-	private unichar get_next_char (int offset = 1) {
+	private unichar get_next_char (long offset = 1) {
 		return _index.get_char (_index.index_of_nth_char (offset));
 	}
 

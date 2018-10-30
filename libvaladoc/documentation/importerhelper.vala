@@ -161,7 +161,7 @@ namespace Valadoc.ImporterHelper {
 	}
 
 	private inline Text? split_text (Text text, ContentFactory factory) {
-		int offset = 0;
+		long offset = 0;
 		while ((offset = text.content.index_of_char ('.', offset)) >= 0) {
 			if (offset >= 2) {
 				// ignore "e.g."
