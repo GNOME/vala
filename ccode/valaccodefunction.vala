@@ -130,7 +130,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		}
 		writer.write_string (name);
 		writer.write_string (" (");
-		int param_pos_begin = (is_declaration ? return_type.char_count () + 1 : 0 ) + name.char_count () + 2;
+		int param_pos_begin = (int) ((is_declaration ? return_type.char_count () + 1L : 0L ) + name.char_count () + 2L);
 
 		bool has_args = (CCodeModifiers.PRINTF in modifiers || CCodeModifiers.SCANF in modifiers);
 		int i = 0;

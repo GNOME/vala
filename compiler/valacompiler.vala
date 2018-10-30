@@ -240,7 +240,7 @@ class Vala.Compiler {
 			// strip extension if there is one
 			// else we use the default output file of the C compiler
 			if (sources[0].last_index_of_char ('.') != -1) {
-				int dot = sources[0].last_index_of_char ('.');
+				var dot = sources[0].last_index_of_char ('.');
 				output = Path.get_basename (sources[0].substring (0, dot));
 			}
 		}
@@ -435,7 +435,7 @@ class Vala.Compiler {
 				if (context.profile == Profile.GOBJECT) {
 					string gir_base = Path.get_basename (gir);
 					long gir_len = gir_base.length;
-					int last_hyphen = gir_base.last_index_of_char ('-');
+					var last_hyphen = gir_base.last_index_of_char ('-');
 
 					if (last_hyphen == -1 || !gir_base.has_suffix (".gir")) {
 						Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir", gir);
