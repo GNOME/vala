@@ -40,6 +40,19 @@ public class Vala.ArrayCreationExpression : Expression {
 	}
 
 	/**
+	 * The length type.
+	 */
+	public DataType? length_type {
+		get { return _length_type; }
+		set {
+			_length_type = value;
+			if (_length_type != null) {
+				_length_type.parent_node = this;
+			}
+		}
+	}
+
+	/**
 	 * The rank of the array.
 	 */
 	public int rank { get; set; }
@@ -63,6 +76,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	}
 
 	private DataType _element_type;
+	private DataType _length_type;
 	private InitializerList? _initializer_list;
 
 	/**
@@ -94,6 +108,10 @@ public class Vala.ArrayCreationExpression : Expression {
 			element_type.accept (visitor);
 		}
 
+		if (length_type != null) {
+			length_type.accept (visitor);
+		}
+
 		foreach (Expression e in sizes) {
 			e.accept (visitor);
 		}
@@ -114,6 +132,14 @@ public class Vala.ArrayCreationExpression : Expression {
 	}
 
 	public override bool is_accessible (Symbol sym) {
+		if (element_type != null && !element_type.is_accessible (sym)) {
+			return false;
+		}
+
+		if (length_type != null && !length_type.is_accessible (sym)) {
+			return false;
+		}
+
 		foreach (Expression e in sizes) {
 			if (!e.is_accessible (sym)) {
 				return false;
@@ -158,6 +184,9 @@ public class Vala.ArrayCreationExpression : Expression {
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (element_type == old_type) {
 			element_type = new_type;
+		}
+		if (length_type == old_type) {
+			length_type = new_type;
 		}
 	}
 
@@ -215,6 +244,17 @@ public class Vala.ArrayCreationExpression : Expression {
 			element_type.check (context);
 		}
 
+		if (length_type == null) {
+			// Make sure that "int" is still picked up as default
+			length_type = context.analyzer.int_type.copy ();
+		} else {
+			length_type.check (context);
+			if (!(length_type is IntegerType)) {
+				error = true;
+				Report.error (length_type.source_reference, "Expected integer type as length type of array");
+			}
+		}
+
 		foreach (Expression e in sizes) {
 			e.check (context);
 		}
@@ -222,6 +262,7 @@ public class Vala.ArrayCreationExpression : Expression {
 		var calc_sizes = new ArrayList<Literal> ();
 		if (initlist != null) {
 			initlist.target_type = new ArrayType (element_type, rank, source_reference);
+			((ArrayType) initlist.target_type).length_type = length_type.copy ();
 
 			if (!initlist.check (context)) {
 				error = true;
@@ -235,6 +276,7 @@ public class Vala.ArrayCreationExpression : Expression {
 			if (calc_sizes.size != rank) {
 				error = true;
 				var actual_type = new ArrayType (element_type, calc_sizes.size, source_reference);
+				((ArrayType) actual_type).length_type = length_type;
 				Report.error (initlist.source_reference, "Expected initializer for `%s' but got `%s'".printf (target_type.to_string (), actual_type.to_string ()));
 			}
 		}
@@ -279,6 +321,7 @@ public class Vala.ArrayCreationExpression : Expression {
 		}
 
 		value_type = new ArrayType (element_type, rank, source_reference);
+		((ArrayType) value_type).length_type = length_type.copy ();
 		value_type.value_owned = true;
 
 		if (!value_type.check (context)) {

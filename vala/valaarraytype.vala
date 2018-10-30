@@ -37,6 +37,19 @@ public class Vala.ArrayType : ReferenceType {
 		}
 	}
 
+	/**
+	 * The length type.
+	 */
+	public DataType? length_type {
+		get { return _length_type; }
+		set {
+			_length_type = value;
+			if (_length_type != null) {
+				_length_type.parent_node = this;
+			}
+		}
+	}
+
 	public bool invalid_syntax { get; set; }
 
 	public bool inline_allocated { get; set; }
@@ -62,6 +75,7 @@ public class Vala.ArrayType : ReferenceType {
 	public int rank { get; set; }
 
 	private DataType _element_type;
+	private DataType _length_type;
 	private Expression _length;
 
 	private ArrayLengthField length_field;
@@ -97,13 +111,11 @@ public class Vala.ArrayType : ReferenceType {
 
 			length_field.access = SymbolAccessibility.PUBLIC;
 
-			var root_symbol = source_reference.file.context.root;
 			if (rank > 1) {
 				// length is an int[] containing the dimensions of the array, starting at 0
-				ValueType integer = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
-				length_field.variable_type = new ArrayType (integer, 1, source_reference);
+				length_field.variable_type = new ArrayType (length_type.copy (), 1, source_reference);
 			} else {
-				length_field.variable_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
+				length_field.variable_type = length_type.copy ();
 			}
 
 		}
@@ -119,10 +131,7 @@ public class Vala.ArrayType : ReferenceType {
 
 			resize_method.set_attribute_string ("CCode", "cname", "g_renew");
 
-			var root_symbol = source_reference.file.context.root;
-			var int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
-
-			resize_method.add_parameter (new Parameter ("length", int_type));
+			resize_method.add_parameter (new Parameter ("length", length_type));
 
 			resize_method.returns_modified_pointer = true;
 		}
@@ -138,12 +147,9 @@ public class Vala.ArrayType : ReferenceType {
 
 			move_method.set_attribute_string ("CCode", "cname", "_vala_array_move");
 
-			var root_symbol = source_reference.file.context.root;
-			var int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
-
-			move_method.add_parameter (new Parameter ("src", int_type));
-			move_method.add_parameter (new Parameter ("dest", int_type));
-			move_method.add_parameter (new Parameter ("length", int_type));
+			move_method.add_parameter (new Parameter ("src", length_type));
+			move_method.add_parameter (new Parameter ("dest", length_type));
+			move_method.add_parameter (new Parameter ("length", length_type));
 		}
 		return move_method;
 	}
@@ -163,6 +169,10 @@ public class Vala.ArrayType : ReferenceType {
 
 	public override DataType copy () {
 		var result = new ArrayType (element_type.copy (), rank, source_reference);
+		if (length_type != null) {
+			result.length_type = length_type.copy ();
+		}
+
 		result.value_owned = value_owned;
 		result.nullable = nullable;
 		result.floating_reference = floating_reference;
@@ -230,6 +240,10 @@ public class Vala.ArrayType : ReferenceType {
 			return true;
 		}
 
+		if (length_type.compatible (target_array_type.length_type)) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -239,15 +253,24 @@ public class Vala.ArrayType : ReferenceType {
 
 	public override void accept_children (CodeVisitor visitor) {
 		element_type.accept (visitor);
+		if (length_type != null) {
+			length_type.accept (visitor);
+		}
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (element_type == old_type) {
 			element_type = new_type;
 		}
+		if (length_type == old_type) {
+			length_type = new_type;
+		}
 	}
 
 	public override bool is_accessible (Symbol sym) {
+		if (length_type != null && !length_type.is_accessible (sym)) {
+			return false;
+		}
 		return element_type.is_accessible (sym);
 	}
 
@@ -274,6 +297,18 @@ public class Vala.ArrayType : ReferenceType {
 			var delegate_type = (DelegateType) element_type;
 			if (delegate_type.delegate_symbol.has_target) {
 				Report.error (source_reference, "Delegates with target are not supported as array element type");
+				return false;
+			}
+		}
+
+		if (length_type == null) {
+			// Make sure that "int" is still picked up as default
+			length_type = context.analyzer.int_type.copy ();
+		} else {
+			length_type.check (context);
+			if (!(length_type is IntegerType)) {
+				error = true;
+				Report.error (length_type.source_reference, "Expected integer type as length type of array");
 				return false;
 			}
 		}
