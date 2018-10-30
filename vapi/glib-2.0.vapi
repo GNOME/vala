@@ -1385,7 +1385,7 @@ public class string {
 			str_size = ((!)(str)).length;
 		}
 
-		string* result = GLib.malloc0 (this.length - (end - start) + str_size + 1);
+		string* result = GLib.malloc0 (string_length - (end - start) + str_size + 1);
 
 		char* dest = (char*) result;
 
@@ -1433,9 +1433,10 @@ public class string {
 	}
 
 	public char[] to_utf8 () {
-		char[] result = new char[this.length + 1];
+		var string_length = this.length;
+		char[] result = new char[string_length + 1];
 		result.length--;
-		GLib.Memory.copy (result, this, this.length);
+		GLib.Memory.copy (result, this, string_length);
 		return result;
 	}
 
