@@ -1044,12 +1044,14 @@ public class Vala.CCodeAttribute : AttributeCache {
 		} else if (node is ErrorType) {
 			return "POINTER";
 		} else if (node is ArrayType) {
-			if (((ArrayType) node).element_type.data_type.get_full_name () == "string") {
-				return "BOXED,INT";
+			unowned ArrayType array_type = (ArrayType) node;
+			if (array_type.element_type.data_type.get_full_name () == "string") {
+				return "BOXED,%s".printf (get_ccode_marshaller_type_name (array_type.length_type.data_type));
 			} else {
 				var ret = "POINTER";
-				for (var i = 0; i < ((ArrayType) node).rank; i++) {
-					ret = "%s,INT".printf (ret);
+				var length_marshaller_type_name = get_ccode_marshaller_type_name (array_type.length_type.data_type);
+				for (var i = 0; i < array_type.rank; i++) {
+					ret = "%s,%s".printf (ret, length_marshaller_type_name);
 				}
 				return ret;
 			}
