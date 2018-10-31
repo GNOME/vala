@@ -250,6 +250,7 @@ namespace Vala {
 		if (node is ArrayType) {
 			return get_ccode_name (((ArrayType) node).length_type);
 		} else {
+			assert (node is Method || node is Parameter || node is Delegate);
 			return get_ccode_attribute(node).array_length_type;
 		}
 	}

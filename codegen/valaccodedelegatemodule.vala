@@ -88,7 +88,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		if (get_ccode_array_length (d) && d.return_type is ArrayType) {
 			// return array length if appropriate
 			var array_type = (ArrayType) d.return_type;
-			var length_ctype = get_ccode_array_length_type (array_type) + "*";
+			var length_ctype = (get_ccode_array_length_type (d) ?? get_ccode_array_length_type (array_type)) + "*";
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), length_ctype);
@@ -238,7 +238,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		if (get_ccode_array_length (d) && d.return_type is ArrayType) {
 			// return array length if appropriate
 			var array_type = (ArrayType) d.return_type;
-			var length_ctype = get_ccode_array_length_type (array_type) + "*";
+			var length_ctype = (get_ccode_array_length_type (d) ?? get_ccode_array_length_type (array_type)) + "*";
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), length_ctype);
