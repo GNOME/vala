@@ -194,9 +194,7 @@ public class Vala.GSignalModule : GObjectModule {
 			n_params++;
 			if (p.variable_type is ArrayType) {
 				var array_type = (ArrayType) p.variable_type;
-				//FIXME Only int length-type
-				//var length_ctype = get_ccode_array_length_type (array_type);
-				var length_ctype = get_ccode_name (int_type);
+				var length_ctype = get_ccode_array_length_type (array_type);
 				for (var j = 0; j < array_type.rank; j++) {
 					callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), length_ctype));
 					n_params++;
@@ -270,9 +268,10 @@ public class Vala.GSignalModule : GObjectModule {
 			i++;
 			if (p.variable_type is ArrayType) {
 				var array_type = (ArrayType) p.variable_type;
+				var length_value_function = get_ccode_get_value_function (array_type.length_type.data_type);
+				assert (length_value_function != null && length_value_function != "");
 				for (var j = 0; j < array_type.rank; j++) {
-					//FIXME Only int length-type
-					inner_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_int"));
+					inner_fc = new CCodeFunctionCall (new CCodeIdentifier (length_value_function));
 					inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
 					fc.add_argument (inner_fc);
 					i++;
@@ -399,13 +398,16 @@ public class Vala.GSignalModule : GObjectModule {
 		csignew.add_argument (new CCodeConstant ("%d".printf (params_len)));
 		foreach (Parameter param in params) {
 			if (param.variable_type is ArrayType) {
-				if (((ArrayType) param.variable_type).element_type.data_type == string_type.data_type) {
+				var array_type = (ArrayType) param.variable_type;
+				if (array_type.element_type.data_type == string_type.data_type) {
 					csignew.add_argument (new CCodeConstant ("G_TYPE_STRV"));
 				} else {
 					csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 				}
-				for (var i = 0; i < ((ArrayType) param.variable_type).rank; i++) {
-					csignew.add_argument (new CCodeConstant ("G_TYPE_INT"));
+				assert (get_ccode_has_type_id (array_type.length_type.data_type));
+				var length_type_id = get_ccode_type_id (array_type.length_type.data_type);
+				for (var i = 0; i < array_type.rank; i++) {
+					csignew.add_argument (new CCodeConstant (length_type_id));
 				}
 			} else if (param.variable_type is PointerType || param.variable_type is GenericType || param.direction != ParameterDirection.IN) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
