@@ -831,9 +831,8 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	private void write_implicit_params (DataType? type, ref int index, bool has_array_length, string? name, ParameterDirection direction) {
 		if (type is ArrayType && has_array_length) {
-			var int_type = new IntegerType (context.root.scope.lookup ("int") as Struct);
 			for (var i = 0; i < ((ArrayType) type).rank; i++) {
-				write_param_or_return (int_type, true, ref index, has_array_length, "%s_length%i".printf (name, i + 1), null, direction);
+				write_param_or_return (((ArrayType) type).length_type, true, ref index, has_array_length, "%s_length%i".printf (name, i + 1), null, direction);
 			}
 		} else if (type is DelegateType) {
 			var deleg_type = (DelegateType) type;
