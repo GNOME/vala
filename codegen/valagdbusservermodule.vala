@@ -149,14 +149,15 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				}
 
 				var array_type = param.variable_type as ArrayType;
+				var length_ctype = get_ccode_array_length_type (array_type);
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						string length_cname = get_parameter_array_length_cname (param, dim);
 
 						if (ready_data_struct != null) {
-							ready_data_struct.add_field ("int", length_cname);
+							ready_data_struct.add_field (length_ctype, length_cname);
 						} else {
-							ccode.add_declaration ("int", new CCodeVariableDeclarator.zero (length_cname, new CCodeConstant ("0")));
+							ccode.add_declaration (length_ctype, new CCodeVariableDeclarator.zero (length_cname, new CCodeConstant ("0")));
 						}
 					}
 				}
@@ -340,10 +341,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 				var array_type = param.variable_type as ArrayType;
 				if (array_type != null) {
+					var length_ctype = get_ccode_array_length_type (array_type);
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						string length_cname = get_parameter_array_length_cname (param, dim);
 
-						ccode.add_declaration ("int", new CCodeVariableDeclarator.zero (length_cname, new CCodeConstant ("0")));
+						ccode.add_declaration (length_ctype, new CCodeVariableDeclarator.zero (length_cname, new CCodeConstant ("0")));
 					}
 				}
 
@@ -366,10 +368,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 					var array_type = m.return_type as ArrayType;
 					if (array_type != null) {
+						var length_ctype = get_ccode_array_length_type (array_type);
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							string length_cname = get_array_length_cname ("result", dim);
 
-							ccode.add_declaration ("int", new CCodeVariableDeclarator.zero (length_cname, new CCodeConstant ("0")));
+							ccode.add_declaration (length_ctype, new CCodeVariableDeclarator.zero (length_cname, new CCodeConstant ("0")));
 						}
 					}
 
@@ -504,8 +507,9 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			function.add_parameter (cparam);
 			if (param.variable_type is ArrayType) {
 				var array_type = (ArrayType) param.variable_type;
+				var length_ctype = get_ccode_array_length_type (array_type);
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeParameter (get_parameter_array_length_cname (param, dim), "int"));
+					function.add_parameter (new CCodeParameter (get_parameter_array_length_cname (param, dim), length_ctype));
 				}
 			}
 		}
@@ -578,10 +582,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 			var array_type = prop.get_accessor.value_type as ArrayType;
 			if (array_type != null) {
+				var length_ctype = get_ccode_array_length_type (array_type);
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					string length_cname = get_array_length_cname ("result", dim);
 
-					ccode.add_declaration ("int", new CCodeVariableDeclarator.zero (length_cname, new CCodeConstant ("0")));
+					ccode.add_declaration (length_ctype, new CCodeVariableDeclarator.zero (length_cname, new CCodeConstant ("0")));
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
 				}
 			}
@@ -640,8 +645,9 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 			var array_type = prop.property_type as ArrayType;
 			if (array_type != null) {
+				var length_ctype = get_ccode_array_length_type (array_type);
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					ccode.add_declaration ("int", new CCodeVariableDeclarator (get_array_length_cname ("value", dim)));
+					ccode.add_declaration (length_ctype, new CCodeVariableDeclarator (get_array_length_cname ("value", dim)));
 					ccall.add_argument (new CCodeIdentifier (get_array_length_cname ("value", dim)));
 				}
 			}
