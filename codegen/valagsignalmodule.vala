@@ -192,7 +192,7 @@ public class Vala.GSignalModule : GObjectModule {
 		foreach (Parameter p in params) {
 			callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), get_value_type_name_from_parameter (p)));
 			n_params++;
-			if (p.variable_type.is_array ()) {
+			if (p.variable_type is ArrayType) {
 				for (var j = 0; j < ((ArrayType) p.variable_type).rank; j++) {
 					callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), "gint"));
 					n_params++;
@@ -211,7 +211,7 @@ public class Vala.GSignalModule : GObjectModule {
 
 		CCodeFunctionCall fc;
 
-		if (return_type.data_type != null || return_type.is_array ()) {
+		if (return_type.data_type != null || return_type is ArrayType) {
 			ccode.add_declaration (get_value_type_name_from_type_reference (return_type), new CCodeVariableDeclarator ("v_return"));
 
 			fc = new CCodeFunctionCall (new CCodeIdentifier ("g_return_if_fail"));
@@ -243,10 +243,9 @@ public class Vala.GSignalModule : GObjectModule {
 		i = 1;
 		foreach (Parameter p in params) {
 			string get_value_function;
-			bool is_array = p.variable_type.is_array ();
 			if (p.direction != ParameterDirection.IN) {
 				get_value_function = "g_value_get_pointer";
-			} else if (is_array) {
+			} else if (p.variable_type is ArrayType) {
 				if (((ArrayType) p.variable_type).element_type.data_type == string_type.data_type) {
 					get_value_function = "g_value_get_boxed";
 				} else {
@@ -265,7 +264,7 @@ public class Vala.GSignalModule : GObjectModule {
 			inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
 			fc.add_argument (inner_fc);
 			i++;
-			if (is_array) {
+			if (p.variable_type is ArrayType) {
 				for (var j = 0; j < ((ArrayType) p.variable_type).rank; j++) {
 					inner_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_int"));
 					inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
@@ -276,11 +275,11 @@ public class Vala.GSignalModule : GObjectModule {
 		}
 		fc.add_argument (new CCodeIdentifier ("data2"));
 
-		if (return_type.data_type != null || return_type.is_array ()) {
+		if (return_type.data_type != null || return_type is ArrayType) {
 			ccode.add_assignment (new CCodeIdentifier ("v_return"), fc);
 
 			CCodeFunctionCall set_fc;
-			if (return_type.is_array ()) {
+			if (return_type is ArrayType) {
 				if (((ArrayType) return_type).element_type.data_type == string_type.data_type) {
 					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
 				} else {
@@ -386,14 +385,14 @@ public class Vala.GSignalModule : GObjectModule {
 		int params_len = 0;
 		foreach (Parameter param in params) {
 			params_len++;
-			if (param.variable_type.is_array ()) {
+			if (param.variable_type is ArrayType) {
 				params_len += ((ArrayType) param.variable_type).rank;
 			}
 		}
 
 		csignew.add_argument (new CCodeConstant ("%d".printf (params_len)));
 		foreach (Parameter param in params) {
-			if (param.variable_type.is_array ()) {
+			if (param.variable_type is ArrayType) {
 				if (((ArrayType) param.variable_type).element_type.data_type == string_type.data_type) {
 					csignew.add_argument (new CCodeConstant ("G_TYPE_STRV"));
 				} else {

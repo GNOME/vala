@@ -378,10 +378,6 @@ public abstract class Vala.DataType : CodeNode {
 		       this is GenericType;
 	}
 
-	public virtual bool is_array () {
-		return false;
-	}
-
 	// check whether this type is at least as accessible as the specified symbol
 	public virtual bool is_accessible (Symbol sym) {
 		foreach (var type_arg in get_type_arguments ()) {

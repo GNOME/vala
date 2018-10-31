@@ -176,10 +176,6 @@ public class Vala.ArrayType : ReferenceType {
 		return result;
 	}
 
-	public override bool is_array () {
-		return true;
-	}
-
 	public override string to_qualified_string (Scope? scope) {
 		var elem_str = element_type.to_qualified_string (scope);
 		if (element_type.is_weak () && !(parent_node is Constant)) {

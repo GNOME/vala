@@ -1912,7 +1912,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		// note: implicit copy of array is planned to be forbidden
 		var cl = type.data_type as Class;
 		return (type is DelegateType ||
-				type.is_array () ||
+				type is ArrayType ||
 				(cl != null && !cl.is_immutable && !is_reference_counting (cl) && !get_ccode_is_gboxed (cl)));
 	}
 
