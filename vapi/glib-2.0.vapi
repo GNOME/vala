@@ -5443,6 +5443,22 @@ namespace GLib {
 
 	/* Strings */
 
+	[CCode (cprefix = "g_ref_string_", ref_function = "g_ref_string_acquire", unref_function = "g_ref_string_release", type_id = "G_TYPE_STRING")]
+	[Version (since = "2.58")]
+	public class RefString {
+		public RefString (string str);
+		public RefString.intern (string str);
+		public RefString.len (string str, ssize_t len);
+
+		public size_t length {
+			[CCode (cname = "g_ref_string_length")]
+			get;
+		}
+
+		[CCode (cname = "(const char*)")]
+		public unowned string to_string ();
+	}
+
 	[Compact]
 	[GIR (name = "String")]
 	[CCode (cname = "GString", cprefix = "g_string_", free_function = "g_string_free", type_id = "G_TYPE_GSTRING")]
