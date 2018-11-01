@@ -4015,7 +4015,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			fun.modifiers = CCodeModifiers.STATIC | CCodeModifiers.INLINE;
 			fun.add_parameter (new CCodeParameter ("re", "GRegex**"));
 			fun.add_parameter (new CCodeParameter ("pattern", "const gchar *"));
-			fun.add_parameter (new CCodeParameter ("match_options", "GRegexMatchFlags"));
+			fun.add_parameter (new CCodeParameter ("compile_flags", "GRegexCompileFlags"));
 
 			push_function (fun);
 
@@ -4025,7 +4025,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			var regex_new_call = new CCodeFunctionCall (new CCodeIdentifier ("g_regex_new"));
 			regex_new_call.add_argument (new CCodeConstant ("pattern"));
-			regex_new_call.add_argument (new CCodeConstant ("match_options"));
+			regex_new_call.add_argument (new CCodeConstant ("compile_flags"));
 			regex_new_call.add_argument (new CCodeConstant ("0"));
 			regex_new_call.add_argument (new CCodeConstant ("NULL"));
 			ccode.add_assignment (new CCodeIdentifier ("GRegex* val"), regex_new_call);
