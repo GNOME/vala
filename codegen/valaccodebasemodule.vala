@@ -5119,7 +5119,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (variant_func));
 		ccall.add_argument (get_cvalue_ (variant));
 
-		var result = create_temp_value (to, false, node);
+		var needs_init = (to is ArrayType);
+		var result = create_temp_value (to, needs_init, node);
 
 		var cfunc = new CCodeFunction (variant_func);
 		cfunc.modifiers = CCodeModifiers.STATIC;
