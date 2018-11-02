@@ -54,6 +54,7 @@ VALAFLAGS="$VALAFLAGS \
 	-X -Werror=duplicated-branches \
 	-X -Werror=duplicated-cond \
 	-X -Werror=declaration-after-statement \
+	-X -Werror=maybe-uninitialized \
 	-X -Werror=int-conversion"
 VAPIGEN=$topbuilddir/vapigen/vapigen$EXEEXT
 VAPIGENFLAGS="--vapidir $vapidir"
