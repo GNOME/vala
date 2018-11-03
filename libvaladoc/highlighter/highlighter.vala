@@ -79,6 +79,7 @@ public class Valadoc.Highlighter.Highlighter : Object {
 			// ** Keywords: **
 			vala_keywords.set ("return", CodeTokenType.KEYWORD);
 			vala_keywords.set ("lock", CodeTokenType.KEYWORD);
+			vala_keywords.set ("unlock", CodeTokenType.KEYWORD);
 			vala_keywords.set ("var", CodeTokenType.KEYWORD);
 			vala_keywords.set ("yield", CodeTokenType.KEYWORD);
 			vala_keywords.set ("global", CodeTokenType.KEYWORD);
