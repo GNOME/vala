@@ -544,7 +544,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (context.profile == Profile.GOBJECT) {
 				ret = header_file.store (context.header_filename, null, context.version_header, false, "G_BEGIN_DECLS", "G_END_DECLS");
 			} else {
-				ret = header_file.store (context.header_filename, null, context.version_header, false);
+				ret = header_file.store (context.header_filename, null, context.version_header, false, "#ifdef  __cplusplus\nextern \"C\" {\n#endif", "#ifdef  __cplusplus\n}\n#endif");
 			}
 			if (!ret) {
 				Report.error (null, "unable to open `%s' for writing".printf (context.header_filename));
@@ -557,7 +557,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (context.profile == Profile.GOBJECT) {
 				ret = internal_header_file.store (context.internal_header_filename, null, context.version_header, false, "G_BEGIN_DECLS", "G_END_DECLS");
 			} else {
-				ret = internal_header_file.store (context.internal_header_filename, null, context.version_header, false);
+				ret = internal_header_file.store (context.internal_header_filename, null, context.version_header, false, "#ifdef  __cplusplus\nextern \"C\" {\n#endif", "#ifdef  __cplusplus\n}\n#endif");
 			}
 			if (!ret) {
 				Report.error (null, "unable to open `%s' for writing".printf (context.internal_header_filename));
