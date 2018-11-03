@@ -106,6 +106,35 @@ AC_SUBST(COVERAGE_VALAFLAGS)
 AC_SUBST(COVERAGE_CFLAGS)
 AC_SUBST(COVERAGE_LIBS)
 
+
+# Check supported compiler flags used in testrunner.sh
+TEST_EXTRA_CFLAGS="-Werror=init-self \
+-Werror=implicit \
+-Werror=pointer-arith \
+-Werror=redundant-decls \
+-Werror=return-type \
+-Werror=sequence-point \
+-Werror=uninitialized \
+-Werror=int-to-pointer-cast \
+-Werror=pointer-to-int-cast \
+-Wformat=2 \
+-Werror=format-security \
+-Werror=format-nonliteral \
+-Werror=int-conversion \
+-Werror=duplicated-branches \
+-Werror=duplicated-cond \
+-Werror=declaration-after-statement \
+-Werror=maybe-uninitialized \
+-Werror=enum-conversion"
+
+TEST_CFLAGS=
+for flag in $TEST_EXTRA_CFLAGS; do
+	AX_CHECK_COMPILE_FLAG([$flag],[TEST_CFLAGS="$TEST_CFLAGS $flag"])
+done
+
+AC_SUBST(TEST_CFLAGS)
+
+
 GLIB_REQUIRED=2.40.0
 LIBGVC_REQUIRED=2.16
 

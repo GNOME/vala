@@ -37,27 +37,14 @@ VALAFLAGS="$VALAFLAGS \
 	-X -O0 \
 	-X -pipe \
 	-X -lm \
-	-X -DGETTEXT_PACKAGE=\\\"valac\\\" \
-	-X -Werror=return-type \
-	-X -Werror=init-self \
-	-X -Werror=implicit \
-	-X -Werror=sequence-point \
-	-X -Werror=return-type \
-	-X -Werror=uninitialized \
-	-X -Werror=pointer-arith \
-	-X -Werror=int-to-pointer-cast \
-	-X -Werror=pointer-to-int-cast \
-	-X -Wformat \
-	-X -Werror=format-security \
-	-X -Werror=format-nonliteral \
-	-X -Werror=redundant-decls \
-	-X -Werror=duplicated-branches \
-	-X -Werror=duplicated-cond \
-	-X -Werror=declaration-after-statement \
-	-X -Werror=maybe-uninitialized \
-	-X -Werror=int-conversion"
+	-X -DGETTEXT_PACKAGE=\\\"valac\\\""
 VAPIGEN=$topbuilddir/vapigen/vapigen$EXEEXT
 VAPIGENFLAGS="--vapidir $vapidir"
+
+# Incorporate the TEST_CFLAGS.
+for cflag in ${TEST_CFLAGS}; do
+    VALAFLAGS="${VALAFLAGS} -X ${cflag}"
+done
 
 # Incorporate the user's CFLAGS. Matters if the user decided to insert
 # -m32 in CFLAGS, for example.
