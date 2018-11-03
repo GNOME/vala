@@ -232,7 +232,7 @@ public enum Vala.Genie.TokenType {
 		case FINALLY: return "`finally'";
 		case FOR: return "`for'";
 		case GET: return "`get'";
-		case HASH: return "`hash'";
+		case HASH: return "`#'";
 		case IDENTIFIER: return "identifier";
 		case IF: return "`if'";
 		case IMPLEMENTS: return "`implements'";
