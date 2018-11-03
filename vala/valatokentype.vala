@@ -209,7 +209,7 @@ public enum Vala.TokenType {
 		case FOR: return "`for'";
 		case FOREACH: return "`foreach'";
 		case GET: return "`get'";
-		case HASH: return "`hash'";
+		case HASH: return "`#'";
 		case IDENTIFIER: return "identifier";
 		case IF: return "`if'";
 		case IN: return "`in'";
