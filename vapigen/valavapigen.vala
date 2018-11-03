@@ -132,7 +132,7 @@ class Vala.VAPIGen {
 		foreach (string source in sources) {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
 				var source_file = new SourceFile (context, SourceFileType.PACKAGE, source);
-				source_file.explicit = true;
+				source_file.from_commandline = true;
 				context.add_source_file (source_file);
 			} else {
 				Report.error (null, "%s not found".printf (source));
@@ -190,7 +190,7 @@ class Vala.VAPIGen {
 							}
 						}
 					}
-					if (file.explicit && file.package_name != null) {
+					if (file.from_commandline && file.package_name != null) {
 						package_names += file.package_name;
 					}
 				}
