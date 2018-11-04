@@ -99,7 +99,7 @@ public class Vala.UnresolvedType : DataType {
 				} else {
 					first = false;
 				}
-				if (!type_arg.value_owned) {
+				if (type_arg.is_weak ()) {
 					s += "weak ";
 				}
 				s += type_arg.to_qualified_string (scope);
