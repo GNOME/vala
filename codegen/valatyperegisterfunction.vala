@@ -84,6 +84,10 @@ public abstract class Vala.TypeRegisterFunction {
 			fun = new CCodeFunction ("%s_register_type".printf (get_ccode_lower_case_name (get_type_declaration ())), "GType");
 			fun.add_parameter (new CCodeParameter ("module", "GTypeModule *"));
 
+			fun.is_declaration = true;
+			declaration_fragment.append (fun.copy ());
+			fun.is_declaration = false;
+
 			var get_fun = new CCodeFunction ("%s_get_type".printf (get_ccode_lower_case_name (get_type_declaration ())), "GType");
 			get_fun.modifiers = CCodeModifiers.CONST;
 
