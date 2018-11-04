@@ -149,8 +149,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				}
 
 				var array_type = param.variable_type as ArrayType;
-				var length_ctype = get_ccode_array_length_type (array_type);
 				if (array_type != null) {
+					var length_ctype = get_ccode_array_length_type (array_type);
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						string length_cname = get_parameter_array_length_cname (param, dim);
 

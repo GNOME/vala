@@ -800,9 +800,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 						ccode.add_declaration (get_ccode_name (param.variable_type), new CCodeVariableDeclarator.zero ("_vala_%s".printf (param.name), default_value_for_type (param.variable_type, true)));
 
 						var array_type = param.variable_type as ArrayType;
-						var length_ctype = get_ccode_array_length_type (array_type);
-
 						if (array_type != null) {
+							var length_ctype = get_ccode_array_length_type (array_type);
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								ccode.add_declaration (length_ctype, new CCodeVariableDeclarator ("_vala_%s_length%d".printf (param.name, dim), new CCodeConstant ("0")));
 							}
@@ -841,9 +840,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 						ccode.add_declaration (get_ccode_name (m.return_type), new CCodeVariableDeclarator.zero ("_result", default_value_for_type (m.return_type, true)));
 
 						var array_type = m.return_type as ArrayType;
-						var length_ctype = get_ccode_array_length_type (array_type);
-
 						if (array_type != null) {
+							var length_ctype = get_ccode_array_length_type (array_type);
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								ccode.add_declaration (length_ctype, new CCodeVariableDeclarator ("_result_length%d".printf (dim), new CCodeConstant ("0")));
 							}
