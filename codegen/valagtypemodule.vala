@@ -1773,7 +1773,7 @@ public class Vala.GTypeModule : GErrorModule {
 				call.add_argument (new CCodeIdentifier ("self"));
 				ccode.add_expression (call);
 			}
-		} else {
+		} else if (cl.base_class == null) {
 			var function = new CCodeFunction ("%sfree".printf (get_ccode_lower_case_prefix (cl)), "void");
 			if (cl.is_private_symbol ()) {
 				function.modifiers = CCodeModifiers.STATIC;
@@ -1821,6 +1821,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			cfile.add_function_declaration (instance_finalize_context.ccode);
+			cfile.add_function (instance_finalize_context.ccode);
 		} else if (cl.base_class == null) {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 			ccall.add_argument (new CCodeIdentifier (get_ccode_name (cl)));
@@ -1828,9 +1829,11 @@ public class Vala.GTypeModule : GErrorModule {
 			push_context (instance_finalize_context);
 			ccode.add_expression (ccall);
 			pop_context ();
-		}
 
-		cfile.add_function (instance_finalize_context.ccode);
+			cfile.add_function (instance_finalize_context.ccode);
+		} else if (cl.base_class == gsource_type) {
+			cfile.add_function (instance_finalize_context.ccode);
+		}
 	}
 
 	public override CCodeExpression get_param_spec_cexpression (Property prop) {
