@@ -197,7 +197,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		var cl = m.parent_symbol as Class;
 
 		// do not generate _new functions for creation methods of abstract classes
-		if (!(m is CreationMethod && cl != null && cl.is_abstract)) {
+		if (!(m is CreationMethod && cl != null && cl.is_abstract && !cl.is_compact)) {
 			bool etv_tmp = ellipses_to_valist;
 			ellipses_to_valist = false;
 			generate_cparameters (m, decl_space, cparam_map, function, null, carg_map, new CCodeFunctionCall (new CCodeIdentifier ("fake")));
