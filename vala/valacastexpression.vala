@@ -176,7 +176,8 @@ public class Vala.CastExpression : Expression {
 			value_type.nullable = true;
 		}
 
-		if (is_gvariant (context, inner.value_type) && !is_gvariant (context, value_type)) {
+		if (context.profile == Profile.GOBJECT
+		    && is_gvariant (context, inner.value_type) && !is_gvariant (context, value_type)) {
 			// GVariant unboxing returns owned value
 			value_type.value_owned = true;
 		}
