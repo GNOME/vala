@@ -1372,7 +1372,7 @@ public class string {
 	public string ascii_down (ssize_t len = -1);
 
 	[CCode (cname = "g_utf8_skip")]
-	public static char[] skip;
+	public static char skip[256];
 
 	/* modifies string in place */
 	[CCode (cname = "g_strcanon")]
