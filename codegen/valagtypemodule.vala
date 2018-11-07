@@ -1591,7 +1591,6 @@ public class Vala.GTypeModule : GErrorModule {
 		} else {
 			cast = "%s (*)".printf (get_ccode_name (m.return_type));
 		}
-		string cast_args = "%s *".printf (get_ccode_name (base_type));
 
 		var vdeclarator = new CCodeFunctionDeclarator (get_ccode_vfunc_name (m));
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
@@ -1601,6 +1600,7 @@ public class Vala.GTypeModule : GErrorModule {
 		// append C arguments in the right order
 		int last_pos = -1;
 		int min_pos;
+		string cast_args = "";
 		while (true) {
 			min_pos = -1;
 			foreach (int pos in cparam_map.get_keys ()) {
@@ -1608,17 +1608,17 @@ public class Vala.GTypeModule : GErrorModule {
 					min_pos = pos;
 				}
 			}
-			if (last_pos != -1) { // Skip the 1st parameter
-				if (min_pos == -1) {
-					break;
-				}
-
-				var tmp = cparam_map.get (min_pos);
-				if (tmp.ellipsis) {
-					cast_args = "%s, ...".printf (cast_args);
-				} else {
-					cast_args = "%s, %s".printf (cast_args, tmp.type_name);
-				}
+			if (min_pos == -1) {
+				break;
+			}
+			if (last_pos != -1) {
+				cast_args = "%s, ".printf (cast_args);
+			}
+			var cparam = cparam_map.get (min_pos);
+			if (cparam.ellipsis) {
+				cast_args = "%s...".printf (cast_args);
+			} else {
+				cast_args = "%s%s".printf (cast_args, cparam.type_name);
 			}
 			last_pos = min_pos;
 		}
