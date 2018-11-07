@@ -734,6 +734,9 @@ namespace Gst {
 		public bool unset_flags (Gst.BufferFlags flags);
 		[CCode (has_construct_function = false)]
 		public Buffer.wrapped ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.16")]
+		public Buffer.wrapped_bytes (GLib.Bytes bytes);
 	}
 	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_buffer_list_ref", type_id = "gst_buffer_list_get_type ()", unref_function = "gst_buffer_list_unref")]
 	[Compact]
@@ -964,10 +967,14 @@ namespace Gst {
 		public Gst.ClockTime get_time ();
 		public Gst.ClockTime get_timeout ();
 		public static int id_compare_func (void* id1, void* id2);
+		[Version (since = "1.16")]
+		public static Gst.Clock? id_get_clock (Gst.ClockID id);
 		public static Gst.ClockTime id_get_time (Gst.ClockID id);
 		public static Gst.ClockID id_ref (Gst.ClockID id);
 		public static void id_unref (owned Gst.ClockID id);
 		public static void id_unschedule (Gst.ClockID id);
+		[Version (since = "1.16")]
+		public static bool id_uses_clock (Gst.ClockID id, Gst.Clock clock);
 		public static Gst.ClockReturn id_wait (Gst.ClockID id, out Gst.ClockTimeDiff jitter);
 		public static Gst.ClockReturn id_wait_async (Gst.ClockID id, owned Gst.ClockCallback func);
 		[Version (since = "1.6")]
@@ -3945,8 +3952,6 @@ namespace Gst {
 	public const string ELEMENT_METADATA_KLASS;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_METADATA_LONGNAME")]
 	public const string ELEMENT_METADATA_LONGNAME;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_ERROR_SYSTEM")]
-	public const string ERROR_SYSTEM;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_EVENT_NUM_SHIFT")]
 	public const int EVENT_NUM_SHIFT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_EVENT_TYPE_BOTH")]
@@ -3958,8 +3963,6 @@ namespace Gst {
 	public const int64 FORMAT_PERCENT_MAX;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_FORMAT_PERCENT_SCALE")]
 	public const int64 FORMAT_PERCENT_SCALE;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_FOURCC_FORMAT")]
-	public const string FOURCC_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_GROUP_ID_INVALID")]
 	[Version (since = "1.14")]
 	public const int GROUP_ID_INVALID;
@@ -3992,24 +3995,15 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PROTECTION_UNSPECIFIED_SYSTEM_ID")]
 	[Version (since = "1.16")]
 	public const string PROTECTION_UNSPECIFIED_SYSTEM_ID;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PTR_FORMAT")]
-	public const string PTR_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_QUERY_NUM_SHIFT")]
 	public const int QUERY_NUM_SHIFT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_QUERY_TYPE_BOTH")]
 	public const Gst.QueryTypeFlags QUERY_TYPE_BOTH;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SECOND")]
 	public const Gst.ClockTimeDiff SECOND;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEGMENT_FORMAT")]
-	public const string SEGMENT_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEQNUM_INVALID")]
 	[Version (since = "1.14")]
 	public const int SEQNUM_INVALID;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_STIME_FORMAT")]
-	[Version (since = "1.6")]
-	public const string STIME_FORMAT;
-	[CCode (cheader_filename = "gst/gst.h", cname = "GST_TIME_FORMAT")]
-	public const string TIME_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_TOC_REPEAT_COUNT_INFINITE")]
 	[Version (since = "1.4")]
 	public const int TOC_REPEAT_COUNT_INFINITE;
