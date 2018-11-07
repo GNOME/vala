@@ -919,6 +919,7 @@ namespace Gst {
 			V210,
 			[CCode (cname = "GST_VIDEO_FORMAT_v216")]
 			V216,
+			Y210,
 			NV12,
 			NV21,
 			GRAY8,

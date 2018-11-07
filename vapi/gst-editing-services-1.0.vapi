@@ -314,20 +314,6 @@ namespace GES {
 		public virtual signal void loaded (GES.Timeline timeline);
 		public virtual signal string? missing_uri (GLib.Error error, GES.Asset wrong_asset);
 	}
-	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_smart_adder_get_type ()")]
-	public class SmartAdder : Gst.Bin, Gst.ChildProxy {
-		[CCode (array_length = false)]
-		public weak void* _ges_reserved[4];
-		public weak Gst.Element adder;
-		public weak Gst.Caps caps;
-		public weak Gst.Element capsfilter;
-		public GLib.Mutex @lock;
-		public weak GLib.HashTable<void*,void*> pads_infos;
-		public weak Gst.Pad srcpad;
-		public weak GES.Track track;
-		[CCode (has_construct_function = false, type = "GstElement*")]
-		public SmartAdder (GES.Track track);
-	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_source_get_type ()")]
 	public class Source : GES.TrackElement, GES.Extractable, GES.MetaContainer {
 		[CCode (has_construct_function = false)]
@@ -491,17 +477,13 @@ namespace GES {
 		[NoWrapper]
 		public virtual void set_child_property (GLib.Object child, GLib.ParamSpec pspec, GLib.Value value);
 		public void set_child_property_by_pspec (GLib.ParamSpec pspec, GLib.Value value);
-		[NoWrapper]
 		public virtual bool set_duration (Gst.ClockTime duration);
-		[NoWrapper]
 		public virtual bool set_inpoint (Gst.ClockTime inpoint);
-		[NoWrapper]
 		public virtual bool set_max_duration (Gst.ClockTime maxduration);
 		public bool set_name (string? name);
 		public virtual bool set_parent (GES.TimelineElement parent);
-		[NoWrapper]
+		[Version (deprecated = true)]
 		public virtual bool set_priority (uint32 priority);
-		[NoWrapper]
 		public virtual bool set_start (Gst.ClockTime start);
 		public bool set_timeline (GES.Timeline timeline);
 		public virtual bool trim (uint64 start);

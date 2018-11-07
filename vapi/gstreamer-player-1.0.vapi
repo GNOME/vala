@@ -33,6 +33,7 @@ namespace Gst {
 		public double get_rate ();
 		public static unowned GLib.List<Gst.PlayerSubtitleInfo> get_subtitle_streams (Gst.PlayerMediaInfo info);
 		public string get_subtitle_uri ();
+		public int64 get_subtitle_video_offset ();
 		public string get_uri ();
 		public Gst.Sample get_video_snapshot (Gst.PlayerSnapshotFormat format, Gst.Structure? config);
 		public static unowned GLib.List<Gst.PlayerVideoInfo> get_video_streams (Gst.PlayerMediaInfo info);
@@ -55,6 +56,7 @@ namespace Gst {
 		public bool set_subtitle_track (int stream_index);
 		public void set_subtitle_track_enabled (bool enabled);
 		public void set_subtitle_uri (string uri);
+		public void set_subtitle_video_offset (int64 offset);
 		public void set_uri (string uri);
 		public bool set_video_track (int stream_index);
 		public void set_video_track_enabled (bool enabled);
@@ -77,6 +79,7 @@ namespace Gst {
 		public double rate { get; set; }
 		[NoAccessorMethod]
 		public Gst.PlayerSignalDispatcher signal_dispatcher { construct; }
+		public int64 subtitle_video_offset { get; set; }
 		[NoAccessorMethod]
 		public string suburi { owned get; set; }
 		public string uri { owned get; set; }

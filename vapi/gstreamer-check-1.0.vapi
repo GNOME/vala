@@ -42,6 +42,8 @@ namespace Gst {
 			public uint process_id_list (GLib.List<Gst.ClockID?>? pending_list);
 			public Gst.ClockID process_next_clock_id ();
 			public void set_time (Gst.ClockTime new_time);
+			[Version (since = "1.16")]
+			public bool timed_wait_for_multiple_pending_ids (uint count, uint timeout_ms, out GLib.List<Gst.ClockID?> pending_list);
 			[Version (since = "1.4")]
 			public void wait_for_multiple_pending_ids (uint count, out GLib.List<Gst.ClockID?> pending_list);
 			public void wait_for_next_pending_id (out Gst.ClockID pending_id);
@@ -74,6 +76,9 @@ namespace Gst {
 			public void add_element_src_pad (Gst.Pad srcpad);
 			[CCode (cname = "gst_harness_add_probe")]
 			public void add_probe (string element_name, string pad_name, Gst.PadProbeType mask, owned Gst.PadProbeCallback callback);
+			[CCode (cname = "gst_harness_add_propose_allocation_meta")]
+			[Version (since = "1.16")]
+			public void add_propose_allocation_meta (GLib.Type api, Gst.Structure? @params);
 			[CCode (cname = "gst_harness_add_sink")]
 			public void add_sink (string sink_element_name);
 			[CCode (cname = "gst_harness_add_sink_harness")]
