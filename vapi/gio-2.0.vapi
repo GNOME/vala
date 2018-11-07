@@ -778,7 +778,7 @@ namespace GLib {
 		public unowned string get_destination ();
 		public unowned string get_error_name ();
 		public GLib.DBusMessageFlags get_flags ();
-		public GLib.Variant get_header (GLib.DBusMessageHeaderField header_field);
+		public unowned GLib.Variant? get_header (GLib.DBusMessageHeaderField header_field);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public uchar[] get_header_fields ();
 		public unowned string get_interface ();
