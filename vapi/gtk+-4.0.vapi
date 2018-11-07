@@ -7818,6 +7818,12 @@ namespace Gtk {
 		public signal void key_released (uint keyval, uint keycode, Gdk.ModifierType state);
 		public signal bool modifiers (Gdk.ModifierType object);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_legacy_get_type ()")]
+	public class EventControllerLegacy : Gtk.EventController {
+		[CCode (has_construct_function = false, type = "GtkEventController*")]
+		public EventControllerLegacy ();
+		public signal bool event (Gdk.Event object);
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_motion_get_type ()")]
 	public class EventControllerMotion : Gtk.EventController {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
@@ -11594,6 +11600,7 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void dispatch_child_properties_changed ([CCode (array_length_cname = "n_pspecs", array_length_pos = 0.5, array_length_type = "guint", type = "GParamSpec**")] GLib.ParamSpec[] pspecs);
 		public void error_bell ();
+		public virtual bool event ([CCode (type = "GdkEvent*")] Gdk.Event event);
 		public void freeze_child_notify ();
 		public virtual unowned Atk.Object get_accessible ();
 		public unowned GLib.ActionGroup? get_action_group (string prefix);
@@ -11813,8 +11820,6 @@ namespace Gtk {
 		public virtual signal bool drag_failed (Gdk.Drag drag, Gtk.DragResult result);
 		public virtual signal void drag_leave (Gdk.Drop drop);
 		public virtual signal bool drag_motion (Gdk.Drop drop, int x, int y);
-		[HasEmitter]
-		public virtual signal bool event (Gdk.Event event);
 		public virtual signal bool focus (Gtk.DirectionType direction);
 		[HasEmitter]
 		public virtual signal void grab_focus ();
