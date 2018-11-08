@@ -76,7 +76,7 @@ namespace Tiff {
 
 	[CCode (cname = "TIFFDisplay", has_type_id = false)]
 	public struct Display {
-		public float[][] d_mat;
+		public float[,] d_mat;
 		public float d_YCR;
 		public float d_YCG;
 		public float d_YCB;
