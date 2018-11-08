@@ -601,6 +601,7 @@ public class Vala.Method : Subroutine, Callable {
 				}
 
 				_base_method = base_method;
+				copy_attribute_double (base_method, "CCode", "instance_pos");
 				return;
 			}
 		}
@@ -648,6 +649,7 @@ public class Vala.Method : Subroutine, Callable {
 						}
 
 						_base_interface_method = base_method;
+						copy_attribute_double (base_method, "CCode", "instance_pos");
 						return;
 					}
 				}
