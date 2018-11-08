@@ -77,6 +77,7 @@ TESTS = \
 	methods/iterator.vala \
 	methods/prepostconditions.vala \
 	methods/symbolresolution.vala \
+	methods/bug540483.vala \
 	methods/bug595538.vala \
 	methods/bug596726.vala \
 	methods/bug597426.vala \
