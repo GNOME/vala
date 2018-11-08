@@ -335,6 +335,70 @@ public abstract class Vala.CodeNode {
 	}
 
 	/**
+	 * Copy the string value of the specified attribute argument if available.
+	 *
+	 * @param source    codenode to copy from
+	 * @param attribute attribute name
+	 * @param argument  argument name
+	 * @return          true if successful
+	 */
+	public bool copy_attribute_string (CodeNode source, string attribute, string argument) {
+		if (source.has_attribute_argument (attribute, argument)) {
+			set_attribute_string (attribute, argument, source.get_attribute_string (attribute, argument));
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Copy the integer value of the specified attribute argument if available.
+	 *
+	 * @param source    codenode to copy from
+	 * @param attribute attribute name
+	 * @param argument  argument name
+	 * @return          true if successful
+	 */
+	public bool copy_attribute_integer (CodeNode source, string attribute, string argument) {
+		if (source.has_attribute_argument (attribute, argument)) {
+			set_attribute_integer (attribute, argument, source.get_attribute_integer (attribute, argument));
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Copy the double value of the specified attribute argument if available.
+	 *
+	 * @param source    codenode to copy from
+	 * @param attribute attribute name
+	 * @param argument  argument name
+	 * @return          true if successful
+	 */
+	public bool copy_attribute_double (CodeNode source, string attribute, string argument) {
+		if (source.has_attribute_argument (attribute, argument)) {
+			set_attribute_double (attribute, argument, source.get_attribute_double (attribute, argument));
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Copy the boolean value of the specified attribute argument if available.
+	 *
+	 * @param source    codenode to copy from
+	 * @param attribute attribute name
+	 * @param argument  argument name
+	 * @return          true if successful
+	 */
+	public bool copy_attribute_bool (CodeNode source, string attribute, string argument) {
+		if (source.has_attribute_argument (attribute, argument)) {
+			set_attribute_bool (attribute, argument, source.get_attribute_bool (attribute, argument));
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Returns the attribute cache at the specified index.
 	 *
 	 * @param index attribute cache index
