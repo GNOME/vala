@@ -325,6 +325,7 @@ dist_vapi_DATA = \
 	x11.vapi \
 	xcb.vapi \
 	xcb-icccm.vapi \
+	xcb-icccm.deps \
 	xtst.vapi \
 	xtst.deps \
 	zlib.vapi \
