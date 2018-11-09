@@ -3963,6 +3963,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		ccode.add_expression (ccall);
 	}
 
+	bool is_compact_class_destructor_call (Expression expr) {
+		unowned Class? cl = expr.value_type.data_type as Class;
+		if (cl != null && cl.is_compact && expr.parent_node is MemberAccess) {
+			unowned MethodType? mt = ((MemberAccess) expr.parent_node).value_type as MethodType;
+			if (mt != null && mt.method_symbol != null && mt.method_symbol.get_attribute ("DestroysInstance") != null) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public override void visit_expression (Expression expr) {
 		if (get_cvalue (expr) != null && !expr.lvalue) {
 			if (expr.formal_value_type is GenericType && !(expr.value_type is GenericType)) {
@@ -3980,7 +3991,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (expr.value_type != null) {
 				// FIXME: temporary workaround until the refactoring is complete, not all target_value have a value_type
 				expr.target_value.value_type = expr.value_type;
-				expr.target_value = transform_value (expr.target_value, expr.target_type, expr);
+
+				if (is_compact_class_destructor_call (expr)) {
+					// transfer ownership here and consume given instance
+					var temp_value = store_temp_value (expr.target_value, expr);
+					ccode.add_assignment (get_cvalue (expr), new CCodeConstant ("NULL"));
+					expr.target_value = temp_value;
+				} else {
+					expr.target_value = transform_value (expr.target_value, expr.target_type, expr);
+				}
 			}
 
 			if (expr.target_value == null) {
