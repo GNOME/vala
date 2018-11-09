@@ -209,6 +209,7 @@ TESTS = \
 	delegates/bug792077.vala \
 	objects/chainup.vala \
 	objects/classes.vala \
+	objects/compact-class-destructor.vala \
 	objects/constructor-variadic.test \
 	objects/constructors.vala \
 	objects/destructors.vala \
