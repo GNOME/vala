@@ -3549,6 +3549,8 @@ namespace GLib {
 		public static GLib.File new_for_uri (string uri);
 		[Version (since = "2.32")]
 		public static GLib.File new_tmp (string? tmpl, out GLib.FileIOStream iostream) throws GLib.Error;
+		[Version (since = "2.56")]
+		public static GLib.File new_build_filename (string arg, ...);
 		[Version (since = "2.22")]
 		public abstract GLib.FileIOStream open_readwrite (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
