@@ -3542,6 +3542,8 @@ namespace GLib {
 		public abstract async bool mount_enclosing_volume (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async GLib.File mount_mountable (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract bool move (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable? cancellable = null, GLib.FileProgressCallback? progress_callback = null) throws GLib.Error;
+		[Version (since = "2.56")]
+		public static GLib.File new_build_filename (string first_element, ...);
 		public static GLib.File new_for_commandline_arg (string arg);
 		[Version (since = "2.36")]
 		public static GLib.File new_for_commandline_arg_and_cwd (string arg, string cwd);
