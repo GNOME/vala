@@ -35,21 +35,24 @@ public class Valadoc.Api.Struct : TypeSymbol {
 	private string? cname;
 
 	public Struct (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
-				   SourceComment? comment, string? cname, string? type_macro_name,
-				   string? type_function_name, string? type_id, string? dup_function_cname,
-				   string? copy_function_cname, string? destroy_function_cname,
-				   string? free_function_cname, bool is_basic_type, Vala.Struct data)
+				   SourceComment? comment, string? type_macro_name,
+				   string? type_function_name, Vala.Struct data)
 	{
+		bool is_basic_type = data.base_type == null
+			&& (data.is_boolean_type ()
+			|| data.is_floating_type ()
+			|| data.is_integer_type ());
+
 		base (parent, file, name, accessibility, comment, type_macro_name, null, null,
 			type_function_name, is_basic_type, data);
 
-		this.dup_function_cname = dup_function_cname;
-		this.copy_function_cname = copy_function_cname;
-		this.free_function_cname = free_function_cname;
-		this.destroy_function_cname = destroy_function_cname;
+		this.dup_function_cname = Vala.get_ccode_dup_function (data);
+		this.copy_function_cname = Vala.get_ccode_copy_function (data);
+		this.free_function_cname = Vala.get_ccode_free_function (data);
+		this.destroy_function_cname = Vala.get_ccode_destroy_function (data);
 
-		this.cname = cname;
-		this.type_id = type_id;
+		this.cname = Vala.get_ccode_name (data);
+		this.type_id = Vala.get_ccode_type_id (data);
 	}
 
 	/**

@@ -716,25 +716,13 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceFile? file = get_source_file (element);
 		SourceComment? comment = create_comment (element.comment);
 
-		bool is_basic_type = element.base_type == null
-			&& (element.is_boolean_type ()
-			|| element.is_floating_type ()
-			|| element.is_integer_type ());
-
 		Struct node = new Struct (parent,
 								  file,
 								  element.name,
 								  element.access,
 								  comment,
-								  Vala.get_ccode_name (element),
 								  get_type_macro_name (element),
 								  get_type_function_name (element),
-								  Vala.get_ccode_type_id (element),
-								  Vala.get_ccode_dup_function (element),
-								  Vala.get_ccode_copy_function (element),
-								  Vala.get_ccode_destroy_function (element),
-								  Vala.get_ccode_free_function (element),
-								  is_basic_type,
 								  element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
