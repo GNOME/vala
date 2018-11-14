@@ -816,13 +816,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								  get_method_name (element),
 								  element.access,
 								  comment,
-								  Vala.get_ccode_name (element),
-								  Vala.GDBusModule.get_dbus_name_for_member (element),
-								  Vala.GDBusModule.dbus_result_name (element),
-								  (element.coroutine)? Vala.get_ccode_finish_name (element) : null,
-								  element.coroutine,
-								  Vala.GDBusModule.is_dbus_visible (element),
-								  element is Vala.CreationMethod,
 								  element);
 		node.return_type = create_type_reference (element.return_type, node, node);
 		symbol_map.set (element, node);
@@ -845,13 +838,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								  get_method_name (element),
 								  element.access,
 								  comment,
-								  Vala.get_ccode_name (element),
-								  Vala.GDBusModule.get_dbus_name_for_member (element),
-								  Vala.GDBusModule.dbus_result_name (element),
-								  (element.coroutine)? Vala.get_ccode_finish_name (element) : null,
-								  element.coroutine,
-								  Vala.GDBusModule.is_dbus_visible (element),
-								  element is Vala.CreationMethod,
 								  element);
 		node.return_type = create_type_reference (element.return_type, node, node);
 		symbol_map.set (element, node);

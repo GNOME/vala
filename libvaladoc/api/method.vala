@@ -42,20 +42,18 @@ public class Valadoc.Api.Method : Symbol, Callable {
 
 
 	public Method (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
-				   SourceComment? comment, string? cname, string? dbus_name, string? dbus_result_name,
-				   string? finish_function_cname, bool is_yields,
-				   bool is_dbus_visible, bool is_constructor, Vala.Method data)
+				   SourceComment? comment, Vala.Method data)
 	{
 		base (parent, file, name, accessibility, comment, data);
 
-		this.finish_function_cname = finish_function_cname;
-		this.dbus_result_name = dbus_result_name;
-		this.dbus_name = dbus_name;
-		this.cname = cname;
+		this.finish_function_cname = (data.coroutine ? Vala.get_ccode_finish_name (data) : null);
+		this.dbus_result_name = Vala.GDBusModule.dbus_result_name (data);
+		this.dbus_name = Vala.GDBusModule.get_dbus_name_for_member (data);
+		this.cname = Vala.get_ccode_name (data);
 
-		this.is_dbus_visible = is_dbus_visible;
-		this.is_constructor = is_constructor;
-		this.is_yields = is_yields;
+		this.is_dbus_visible = Vala.GDBusModule.is_dbus_visible (data);
+		this.is_constructor = data is Vala.CreationMethod;
+		this.is_yields = data.coroutine;
 	}
 
 	/**
