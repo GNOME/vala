@@ -318,10 +318,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 	}
 
-	private string? get_interface_macro_name (Vala.Interface element) {
-		return "%s_GET_INTERFACE".printf (Vala.get_ccode_upper_case_name (element, null));
-	}
-
 	private string get_quark_function_name (Vala.ErrorDomain element) {
 		return Vala.get_ccode_lower_case_prefix (element) + "quark";
 	}
@@ -690,13 +686,10 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 										element.name,
 										element.access,
 										comment,
-										Vala.get_ccode_name (element),
 										get_type_macro_name (element),
 										get_is_type_macro_name (element),
 										get_type_cast_macro_name (element),
 										get_type_function_name (element),
-										get_interface_macro_name (element),
-										Vala.GDBusModule.get_dbus_name (element),
 										element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
