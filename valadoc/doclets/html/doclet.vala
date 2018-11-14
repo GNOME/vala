@@ -109,6 +109,10 @@ public class Valadoc.Html.Doclet : Valadoc.Html.BasicDoclet {
 		string pkg_name = package.name;
 		string path = GLib.Path.build_filename ( this.settings.path, pkg_name );
 
+		if (package.is_package && FileUtils.test (path, FileTest.EXISTS)) {
+			return;
+		}
+
 		var rt = DirUtils.create (path, 0777);
 		rt = DirUtils.create (GLib.Path.build_filename (path, "img"), 0777);
 
