@@ -482,7 +482,17 @@ public enum Vala.SymbolAccessibility {
 	PRIVATE,
 	INTERNAL,
 	PROTECTED,
-	PUBLIC
+	PUBLIC;
+
+	public unowned string to_string () {
+		switch (this) {
+		case PROTECTED: return "protected";
+		case INTERNAL: return "internal";
+		case PRIVATE: return "private";
+		case PUBLIC: return "public";
+		default: assert_not_reached ();
+		}
+	}
 }
 
 public enum Vala.MemberBinding {
