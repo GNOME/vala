@@ -49,6 +49,7 @@ public class Valadoc.Api.Struct : TypeSymbol {
 		this.destroy_function_cname = destroy_function_cname;
 
 		this.cname = cname;
+		this.type_id = type_id;
 	}
 
 	/**

@@ -808,7 +808,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 	assert (substru.get_cname () == "TestClassGlobalInnerStruct");
 	assert (substru.get_free_function_cname () == null);
 	assert (substru.get_dup_function_cname () == null);
-	assert (substru.get_type_id () == null);
+	assert (substru.get_type_id () == "TEST_CLASS_GLOBAL_TYPE_INNER_STRUCT");
 	// (.Symbol check)
 	assert (substru.is_deprecated == false);
 	assert (substru.accessibility == Api.SymbolAccessibility.PUBLIC);
@@ -1169,7 +1169,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 	assert (stru.get_cname () == "TestStructGlobal");
 	assert (stru.get_free_function_cname () == null);
 	assert (stru.get_dup_function_cname () == null);
-	assert (stru.get_type_id () == null);
+	assert (stru.get_type_id () == "TYPE_TEST_STRUCT_GLOBAL");
 	// (.Symbol check)
 	assert (stru.is_deprecated == false);
 	assert (stru.accessibility == Api.SymbolAccessibility.PUBLIC);
