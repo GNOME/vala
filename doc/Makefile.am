@@ -94,6 +94,7 @@ internal-apis/gee: $(gee_VALASOURCES)
 		$(COMMON_VALADOCFLAGS) \
 		--package-name gee \
 		--package-version $(PACKAGE_VERSION) \
+		--deps \
 		$(filter %.vala,$^)
 	@touch $@
 
@@ -104,6 +105,7 @@ internal-apis/vala: $(vala_VALASOURCES) internal-apis/gee
 		--package-name vala \
 		--package-version $(PACKAGE_VERSION) \
 		--vapidir=$(top_builddir)/gee --pkg gee \
+		--deps \
 		$(filter %.vala,$^)
 	@touch $@
 
@@ -115,6 +117,7 @@ internal-apis/ccode: $(ccode_VALASOURCES) internal-apis/gee
 		--package-version $(PACKAGE_VERSION) \
 		--vapidir=$(top_builddir)/gee --pkg gee \
 		--vapidir=$(top_builddir)/vala --pkg vala \
+		--deps \
 		$(filter %.vala,$^)
 	@touch $@
 
@@ -127,6 +130,7 @@ internal-apis/codegen: $(codegen_VALASOURCES) internal-apis/vala internal-apis/c
 		--vapidir=$(top_builddir)/gee --pkg gee \
 		--vapidir=$(top_builddir)/vala --pkg vala \
 		--vapidir=$(top_builddir)/ccode --pkg ccode \
+		--deps \
 		$(filter %.vala,$^)
 	@touch $@
 
@@ -141,6 +145,7 @@ internal-apis/valadoc: $(valadoc_VALASOURCES) internal-apis/codegen
 		--vapidir=$(top_builddir)/vala --pkg vala \
 		--vapidir=$(top_builddir)/ccode --pkg ccode \
 		--vapidir=$(top_builddir)/codegen --pkg codegen \
+		--deps \
 		$(filter %.vala,$^)
 	@touch $@
 
