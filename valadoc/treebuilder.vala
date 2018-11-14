@@ -278,39 +278,9 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return Vala.get_ccode_upper_case_name (element, null);
 	}
 
-	private string? get_private_cname (Vala.Class element) {
-		if (element.is_compact) {
-			return null;
-		}
-
-		string? cname = Vala.get_ccode_name (element);
-		return (cname != null)? cname + "Private" : null;
-	}
-
-	private string? get_class_macro_name (Vala.Class element) {
-		if (element.is_compact) {
-			return null;
-		}
-
-		return "%s_GET_CLASS".printf (Vala.get_ccode_upper_case_name (element, null));
-	}
-
-	private string? get_class_type_macro_name (Vala.Class element) {
-		if (element.is_compact) {
-			return null;
-		}
-
-		return "%s_CLASS".printf (Vala.get_ccode_upper_case_name (element, null));
-	}
-
 	private string? get_is_type_macro_name (Vala.TypeSymbol element) {
 		string? name = Vala.get_ccode_type_check_function (element);
 		return (name != null && name != "")? name : null;
-	}
-
-	private string? get_is_class_type_macro_name (Vala.TypeSymbol element) {
-		string? name = get_is_type_macro_name (element);
-		return (name != null)? name + "_CLASS" : null;
 	}
 
 	private string? get_type_function_name (Vala.TypeSymbol element) {
@@ -674,35 +644,15 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		SourceFile? file = get_source_file (element);
 		SourceComment? comment = create_comment (element.comment);
 
-		bool is_basic_type = element.base_class == null && element.name == "string";
-
 		Class node = new Class (parent,
 								file,
 								element.name,
 								element.access,
 								comment,
-								Vala.get_ccode_name (element),
-								get_private_cname (element),
-								get_class_macro_name (element),
 								get_type_macro_name (element),
 								get_is_type_macro_name (element),
 								get_type_cast_macro_name (element),
 								get_type_function_name (element),
-								get_class_type_macro_name (element),
-								get_is_class_type_macro_name (element),
-								Vala.GDBusModule.get_dbus_name (element),
-								Vala.get_ccode_type_id (element),
-								Vala.get_ccode_param_spec_function (element),
-								Vala.get_ccode_ref_function (element),
-								Vala.get_ccode_unref_function (element),
-								(element.is_compact ? Vala.get_ccode_free_function (element) : null),
-								(element.is_fundamental () ? "%s_finalize".printf (Vala.get_ccode_lower_case_name (element, null)) : null),
-								Vala.get_ccode_take_value_function (element),
-								Vala.get_ccode_get_value_function (element),
-								Vala.get_ccode_set_value_function (element),
-								element.is_fundamental (),
-								element.is_abstract,
-								is_basic_type,
 								element);
 		symbol_map.set (element, node);
 		parent.add_child (node);

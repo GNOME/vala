@@ -46,40 +46,50 @@ public class Valadoc.Api.Class : TypeSymbol {
 	private string? cname;
 
 	public Class (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
-				  SourceComment? comment, string? cname, string? private_cname, string? class_macro_name,
+				  SourceComment? comment,
 				  string? type_macro_name, string? is_type_macro_name, string? type_cast_macro_name,
-				  string? type_function_name, string? class_type_macro_name, string? is_class_type_macro_name,
-				  string? dbus_name, string? type_id, string? param_spec_function_name, string? ref_function_name,
-				  string? unref_function_name, string? free_function_name, string? finalize_function_name,
-				  string? take_value_function_cname, string? get_value_function_cname, string? set_value_function_cname,
-				  bool is_fundamental, bool is_abstract, bool is_basic_type, Vala.Class data)
+				  string? type_function_name,
+				  Vala.Class data)
 	{
+		bool is_basic_type = data.base_class == null && data.name == "string";
+
 		base (parent, file, name, accessibility, comment, type_macro_name,
 			is_type_macro_name, type_cast_macro_name, type_function_name, is_basic_type, data);
 
 		this.interfaces = new Vala.ArrayList<TypeReference> ();
 
-		this.is_class_type_macro_name = is_class_type_macro_name;
-		this.class_type_macro_name = class_type_macro_name;
-		this.class_macro_name = class_macro_name;
-		this.private_cname = private_cname;
-		this.dbus_name = dbus_name;
-		this.type_id = type_id;
-		this.cname = cname;
+		if (!data.is_compact) {
+			this.is_class_type_macro_name = Vala.get_ccode_class_type_check_function (data);
+			this.class_type_macro_name = Vala.get_ccode_class_type_function (data);
+			this.class_macro_name = Vala.get_ccode_class_get_function (data);
+			this.private_cname = _get_private_cname (data);
+		}
+		this.dbus_name = Vala.GDBusModule.get_dbus_name (data);
+		this.type_id = Vala.get_ccode_type_id (data);
+		this.cname = Vala.get_ccode_name (data);
 
-		this.param_spec_function_name = param_spec_function_name;
+		this.param_spec_function_name = Vala.get_ccode_param_spec_function (data);
 
-		this.unref_function_name = unref_function_name;
-		this.ref_function_name = ref_function_name;
-		this.finalize_function_name = finalize_function_name;
-		this.free_function_name = free_function_name;
+		this.unref_function_name = Vala.get_ccode_unref_function (data);
+		this.ref_function_name = Vala.get_ccode_ref_function (data);
+		this.finalize_function_name = (data.is_fundamental () ? "%s_finalize".printf (Vala.get_ccode_lower_case_name (data, null)) : null);
+		this.free_function_name = (data.is_compact ? Vala.get_ccode_free_function (data) : null);
 
-		this.take_value_function_cname = take_value_function_cname;
-		this.get_value_function_cname = get_value_function_cname;
-		this.set_value_function_cname = set_value_function_cname;
+		this.take_value_function_cname = Vala.get_ccode_take_value_function (data);
+		this.get_value_function_cname = Vala.get_ccode_get_value_function (data);
+		this.set_value_function_cname = Vala.get_ccode_set_value_function (data);
 
-		this.is_fundamental = is_fundamental;
-		this.is_abstract = is_abstract;
+		this.is_fundamental = data.is_fundamental ();
+		this.is_abstract = data.is_abstract;
+	}
+
+	string? _get_private_cname (Vala.Class element) {
+		if (element.is_compact) {
+			return null;
+		}
+
+		string? cname = Vala.get_ccode_name (element);
+		return (cname != null ? cname + "Private" : null);
 	}
 
 	/**
