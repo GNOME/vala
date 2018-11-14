@@ -169,12 +169,12 @@ public class Valadoc.Api.Property : Member {
 		signature.append_symbol (this);
 		signature.append ("{");
 
-		if (setter != null && setter.do_document) {
-			signature.append_content (setter.signature);
-		}
-
 		if (getter != null && getter.do_document) {
 			signature.append_content (getter.signature);
+		}
+
+		if (setter != null && setter.do_document) {
+			signature.append_content (setter.signature);
 		}
 
 		signature.append ("}");
