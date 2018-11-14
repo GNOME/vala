@@ -226,6 +226,7 @@ public class Valadoc.CTypeResolver : Visitor {
 	 * {@inheritDoc}
 	 */
 	public override void visit_interface (Interface item) {
+		register_symbol_type (item.get_type_id (), item);
 		register_symbol (item.get_cname (), item);
 		item.accept_all_children (this, false);
 	}
@@ -391,6 +392,7 @@ public class Valadoc.CTypeResolver : Visitor {
 	 * {@inheritDoc}
 	 */
 	public override void visit_enum (Api.Enum item) {
+		register_symbol_type (item.get_type_id (), item);
 		register_symbol (item.get_cname (), item);
 		item.accept_all_children (this, false);
 	}

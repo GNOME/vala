@@ -30,7 +30,7 @@ public class Valadoc.Api.Interface : TypeSymbol {
 	private string? interface_macro_name;
 	private string? dbus_name;
 	private string? cname;
-
+	private string? type_id;
 
 	public Interface (Node parent, SourceFile file, string name, SymbolAccessibility accessibility,
 					  SourceComment? comment, string? cname, string? type_macro_name, string? is_type_macro_name,
@@ -43,6 +43,7 @@ public class Valadoc.Api.Interface : TypeSymbol {
 		this.interface_macro_name = interface_macro_name;
 		this.dbus_name = dbus_name;
 		this.cname = cname;
+		this.type_id = Vala.get_ccode_type_id ((Vala.CodeNode) data);
 	}
 
 	/**
@@ -91,6 +92,13 @@ public class Valadoc.Api.Interface : TypeSymbol {
 	 */
 	public string? get_cname () {
 		return cname;
+	}
+
+	/**
+	 * Returns the C symbol representing the runtime type id for this data type.
+	 */
+	public string? get_type_id () {
+		return type_id;
 	}
 
 	/**
