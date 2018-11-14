@@ -113,11 +113,14 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 		}
 
 		if (is_set || is_construct) {
-			if (is_construct) {
-				signature.append_keyword ("construct");
+			if (is_owned) {
+				signature.append_keyword ("owned");
 			}
 			if (is_set) {
 				signature.append_keyword ("set");
+			}
+			if (is_construct) {
+				signature.append_keyword ("construct");
 			}
 		} else if (is_get) {
 			if (is_owned) {
