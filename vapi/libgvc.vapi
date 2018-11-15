@@ -91,7 +91,7 @@ namespace Gvc {
 		public int render_jobs (Graph graph);
 
 		[CCode (cname = "gvRenderData")]
-		public int render_data (Graph graph, [CCode (type = "char*")] string file_type, [CCode (type = "char**")] out uint8[] output_data);
+		public int render_data (Graph graph, [CCode (type = "char*")] string file_type, [CCode (array_length_type = "unsigned int", type = "char**")] out uint8[] output_data);
 	}
 
 	[Compact]
@@ -104,7 +104,7 @@ namespace Gvc {
 		public unowned string? get ([CCode (type = "char*")] string attribute_name);
 
 		[CCode (cname = "agset")]
-		public void set ([CCode (type = "char*")] string attribute_name, [CCode (type = "char*")] string attribute_value);
+		public int set ([CCode (type = "char*")] string attribute_name, [CCode (type = "char*")] string attribute_value);
 
 		[CCode (cname = "agsafeset")]
 		public void safe_set ([CCode (type = "char*")] string attribute_name, [CCode (type = "char*")] string attribute_value, [CCode (type = "char*")] string? default_value);
@@ -141,47 +141,58 @@ namespace Gvc {
 
 		[CCode (cname = "agnode")]
 #if WITH_CGRAPH
-		public Node create_node ([CCode (type = "char*")] string node_name, int createflag = 1);
+		public unowned Node create_node ([CCode (type = "char*")] string node_name, int createflag = 1);
 #else
-		public Node create_node ([CCode (type = "char*")] string node_name);
+		public unowned Node create_node ([CCode (type = "char*")] string node_name);
 #endif
 
 		[CCode (cname = "agedge")]
 #if WITH_CGRAPH
-		public Edge create_edge (Node from, Node to, string? name = null, int createflag = 1);
+		public unowned Edge create_edge (Node from, Node to, string? name = null, int createflag = 1);
 #else
-		public Edge create_edge (Node from, Node to);
+		public unowned Edge create_edge (Node from, Node to);
 #endif
 
+		[CCode (cname = "agfindedge")]
+		public unowned Edge? find_edge (Node from, Node tO);
+
 		[CCode (cname = "agsubg")]
+#if WITH_CGRAPH
+		public unowned Graph create_subgraph ([CCode (type = "char*")] string? name, int createflag = 1);
+#else
 		public unowned Graph create_subgraph ([CCode (type = "char*")] string? name);
+#endif
 
 		[CCode (cname = "agfindsubg")]
-		public Graph find_subgraph ([CCode (type = "char*")] string name);
+		public unowned Graph? find_subgraph ([CCode (type = "char*")] string name);
 
 		[CCode (cname = "agidsubg")]
-		public Graph create_subgraph_id (ulong id);
+#if WITH_CGRAPH
+		public unowned Graph create_subgraph_id (ulong id, int createflag = 1);
+#else
+		public unowned Graph create_subgraph_id (ulong id);
+#endif
 
 		[CCode (cname = "agfstsubg")]
-		public Graph get_first_subgraph ();
+		public unowned Graph? get_first_subgraph ();
 
 		[CCode (cname = "agnxtsubg")]
-		public Graph get_next_subgraph ();
+		public unowned Graph? get_next_subgraph ();
 
 		[CCode (cname = "agparent")]
-		public Graph get_parent_graph ();
+		public unowned Graph? get_parent_graph ();
 
 		[CCode (cname = "agdelsubg")]
 		public int delete_subgraph (Graph subgraph);
 
 		[CCode (cname = "agfindnode")]
-		public Node? find_node ([CCode (type = "char*")] string node_name);
+		public unowned Node? find_node ([CCode (type = "char*")] string node_name);
 
 		[CCode (cname = "agfstnode")]
-		public Node? get_first_node ();
+		public unowned Node? get_first_node ();
 
 		[CCode (cname = "agnxtnode")]
-		public Node? get_next_node (Node node);
+		public unowned Node? get_next_node (Node node);
 
 		[CCode (cname = "agget")]
 		public unowned string? get ([CCode (type = "char*")] string attribute_name);
@@ -197,7 +208,6 @@ namespace Gvc {
 
 		[CCode (cname = "AG_IS_STRICT")]
 		public bool is_strict ();
-
 	}
 
 	[CCode (cname = "char", copy_function = "agdupstr_html", free_function = "agstrfree")]
