@@ -1,0 +1,45 @@
+GIR
+
+Input:
+
+<enumeration name="TestError"
+             c:type="TestError"
+             glib:error-domain="test-error-quark">
+  <member name="bar"
+          value="0"
+          c:identifier="TEST_ERROR_BAR">
+  </member>
+  <member name="foo"
+          value="1"
+          c:identifier="TEST_ERROR_FOO">
+  </member>
+</enumeration>
+<enumeration name="TestErrorWithType"
+             glib:type-name="TestErrorWithType"
+             glib:get-type="test_error_with_type_get_type"
+             c:type="TestErrorWithType"
+             glib:error-domain="test-error-with-type-quark">
+  <member name="bar"
+          value="0"
+          c:identifier="TEST_ERROR_WITH_TYPE_BAR"
+          glib:nick="bar">
+  </member>
+  <member name="foo"
+          value="1"
+          c:identifier="TEST_ERROR_WITH_TYPE_FOO"
+          glib:nick="foo">
+  </member>
+</enumeration>
+
+Output:
+
+[CCode (cheader_filename = "test.h", cname = "TestError", cprefix = "TEST_ERROR_")]
+public errordomain TestError {
+	BAR,
+	FOO
+}
+[CCode (cheader_filename = "test.h", cname = "TestErrorWithType", cprefix = "TEST_ERROR_WITH_TYPE_")]
+public errordomain TestErrorWithType {
+	BAR,
+	FOO
+}

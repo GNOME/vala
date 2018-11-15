@@ -1,0 +1,81 @@
+GIR
+
+Input:
+
+<enumeration name="Test"
+             c:type="Test">
+  <member name="bar"
+          value="0"
+          c:identifier="TEST_BAR">
+  </member>
+  <member name="foo"
+          value="1"
+          c:identifier="TEST_FOO">
+  </member>
+</enumeration>
+<enumeration name="TestWithType"
+             glib:type-name="TestWithType"
+             glib:get-type="test_with_type_get_type"
+             c:type="TestWithType">
+  <member name="bar"
+          value="0"
+          c:identifier="TEST_WITH_TYPE_BAR"
+          glib:nick="bar">
+  </member>
+  <member name="foo"
+          value="1"
+          c:identifier="TEST_WITH_TYPE_FOO"
+          glib:nick="foo">
+  </member>
+</enumeration>
+<bitfield name="TestFlag"
+             c:type="TestFlag">
+  <member name="bar"
+          value="0"
+          c:identifier="TEST_FLAG_BAR">
+  </member>
+  <member name="foo"
+          value="1"
+          c:identifier="TEST_FLAG_FOO">
+  </member>
+</bitfield>
+<bitfield name="TestFlagWithType"
+             glib:type-name="TestFlagWithType"
+             glib:get-type="test_flag_with_type_get_type"
+             c:type="TestFlagWithType">
+  <member name="bar"
+          value="0"
+          c:identifier="TEST_FLAG_WITH_TYPE_BAR"
+          glib:nick="bar">
+  </member>
+  <member name="foo"
+          value="1"
+          c:identifier="TEST_FLAG_WITH_TYPE_FOO"
+          glib:nick="foo">
+  </member>
+</bitfield>
+
+Output:
+
+[CCode (cheader_filename = "test.h", cname = "Test", cprefix = "TEST_", has_type_id = false)]
+public enum Test {
+	BAR,
+	FOO
+}
+[CCode (cheader_filename = "test.h", cname = "TestFlag", cprefix = "TEST_FLAG_", has_type_id = false)]
+[Flags]
+public enum TestFlag {
+	BAR,
+	FOO
+}
+[CCode (cheader_filename = "test.h", cname = "TestFlagWithType", cprefix = "TEST_FLAG_WITH_TYPE_", type_id = "test_flag_with_type_get_type ()")]
+[Flags]
+public enum TestFlagWithType {
+	BAR,
+	FOO
+}
+[CCode (cheader_filename = "test.h", cname = "TestWithType", cprefix = "TEST_WITH_TYPE_", type_id = "test_with_type_get_type ()")]
+public enum TestWithType {
+	BAR,
+	FOO
+}
