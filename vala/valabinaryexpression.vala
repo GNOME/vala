@@ -108,34 +108,8 @@ public class Vala.BinaryExpression : Expression {
 		}
 	}
 
-	private unowned string get_operator_string () {
-		switch (_operator) {
-		case BinaryOperator.PLUS: return "+";
-		case BinaryOperator.MINUS: return "-";
-		case BinaryOperator.MUL: return "*";
-		case BinaryOperator.DIV: return "/";
-		case BinaryOperator.MOD: return "%";
-		case BinaryOperator.SHIFT_LEFT: return "<<";
-		case BinaryOperator.SHIFT_RIGHT: return ">>";
-		case BinaryOperator.LESS_THAN: return "<";
-		case BinaryOperator.GREATER_THAN: return ">";
-		case BinaryOperator.LESS_THAN_OR_EQUAL: return "<=";
-		case BinaryOperator.GREATER_THAN_OR_EQUAL: return ">=";
-		case BinaryOperator.EQUALITY: return "==";
-		case BinaryOperator.INEQUALITY: return "!=";
-		case BinaryOperator.BITWISE_AND: return "&";
-		case BinaryOperator.BITWISE_OR: return "|";
-		case BinaryOperator.BITWISE_XOR: return "^";
-		case BinaryOperator.AND: return "&&";
-		case BinaryOperator.OR: return "||";
-		case BinaryOperator.IN: return "in";
-		case BinaryOperator.COALESCE: return "??";
-		default: assert_not_reached ();
-		}
-	}
-
 	public override string to_string () {
-		return "(%s %s %s)".printf (_left.to_string (), get_operator_string (), _right.to_string ());
+		return "(%s %s %s)".printf (_left.to_string (), operator.to_string (), _right.to_string ());
 	}
 
 	public override bool is_constant () {
@@ -598,5 +572,31 @@ public enum Vala.BinaryOperator {
 	AND,
 	OR,
 	IN,
-	COALESCE
+	COALESCE;
+
+	public unowned string to_string () {
+		switch (this) {
+		case PLUS: return "+";
+		case MINUS: return "-";
+		case MUL: return "*";
+		case DIV: return "/";
+		case MOD: return "%";
+		case SHIFT_LEFT: return "<<";
+		case SHIFT_RIGHT: return ">>";
+		case LESS_THAN: return "<";
+		case GREATER_THAN: return ">";
+		case LESS_THAN_OR_EQUAL: return "<=";
+		case GREATER_THAN_OR_EQUAL: return ">=";
+		case EQUALITY: return "==";
+		case INEQUALITY: return "!=";
+		case BITWISE_AND: return "&";
+		case BITWISE_OR: return "|";
+		case BITWISE_XOR: return "^";
+		case AND: return "&&";
+		case OR: return "||";
+		case IN: return "in";
+		case COALESCE: return "??";
+		default: assert_not_reached ();
+		}
+	}
 }
