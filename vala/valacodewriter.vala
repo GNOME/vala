@@ -1323,34 +1323,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_unary_expression (UnaryExpression expr) {
-		switch (expr.operator) {
-		case UnaryOperator.PLUS:
-			write_string ("+");
-			break;
-		case UnaryOperator.MINUS:
-			write_string ("-");
-			break;
-		case UnaryOperator.LOGICAL_NEGATION:
-			write_string ("!");
-			break;
-		case UnaryOperator.BITWISE_COMPLEMENT:
-			write_string ("~");
-			break;
-		case UnaryOperator.INCREMENT:
-			write_string ("++");
-			break;
-		case UnaryOperator.DECREMENT:
-			write_string ("--");
-			break;
-		case UnaryOperator.REF:
-			write_string ("ref ");
-			break;
-		case UnaryOperator.OUT:
-			write_string ("out ");
-			break;
-		default:
-			assert_not_reached ();
-		}
+		write_string (expr.operator.to_string ());
 		expr.inner.accept (this);
 	}
 
@@ -1392,72 +1365,9 @@ public class Vala.CodeWriter : CodeVisitor {
 
 	public override void visit_binary_expression (BinaryExpression expr) {
 		expr.left.accept (this);
-
-		switch (expr.operator) {
-		case BinaryOperator.PLUS:
-			write_string (" + ");
-			break;
-		case BinaryOperator.MINUS:
-			write_string (" - ");
-			break;
-		case BinaryOperator.MUL:
-			write_string (" * ");
-			break;
-		case BinaryOperator.DIV:
-			write_string (" / ");
-			break;
-		case BinaryOperator.MOD:
-			write_string (" % ");
-			break;
-		case BinaryOperator.SHIFT_LEFT:
-			write_string (" << ");
-			break;
-		case BinaryOperator.SHIFT_RIGHT:
-			write_string (" >> ");
-			break;
-		case BinaryOperator.LESS_THAN:
-			write_string (" < ");
-			break;
-		case BinaryOperator.GREATER_THAN:
-			write_string (" > ");
-			break;
-		case BinaryOperator.LESS_THAN_OR_EQUAL:
-			write_string (" <= ");
-			break;
-		case BinaryOperator.GREATER_THAN_OR_EQUAL:
-			write_string (" >= ");
-			break;
-		case BinaryOperator.EQUALITY:
-			write_string (" == ");
-			break;
-		case BinaryOperator.INEQUALITY:
-			write_string (" != ");
-			break;
-		case BinaryOperator.BITWISE_AND:
-			write_string (" & ");
-			break;
-		case BinaryOperator.BITWISE_OR:
-			write_string (" | ");
-			break;
-		case BinaryOperator.BITWISE_XOR:
-			write_string (" ^ ");
-			break;
-		case BinaryOperator.AND:
-			write_string (" && ");
-			break;
-		case BinaryOperator.OR:
-			write_string (" || ");
-			break;
-		case BinaryOperator.IN:
-			write_string (" in ");
-			break;
-		case BinaryOperator.COALESCE:
-			write_string (" ?? ");
-			break;
-		default:
-			assert_not_reached ();
-		}
-
+		write_string (" ");
+		write_string (expr.operator.to_string ());
+		write_string (" ");
 		expr.right.accept (this);
 	}
 
@@ -1714,15 +1624,8 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	private void write_accessibility (Symbol sym) {
-		if (sym.access == SymbolAccessibility.PUBLIC) {
-			write_string ("public ");
-		} else if (sym.access == SymbolAccessibility.PROTECTED) {
-			write_string ("protected ");
-		} else if (sym.access == SymbolAccessibility.INTERNAL) {
-			write_string ("internal ");
-		} else if (sym.access == SymbolAccessibility.PRIVATE) {
-			write_string ("private ");
-		}
+		write_string (sym.access.to_string ());
+		write_string (" ");
 
 		if (type != CodeWriterType.EXTERNAL && type != CodeWriterType.VAPIGEN && sym.external && !sym.external_package) {
 			write_string ("extern ");
@@ -1730,13 +1633,12 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	void write_property_accessor_accessibility (Symbol sym) {
-		if (sym.access == SymbolAccessibility.PROTECTED) {
-			write_string (" protected");
-		} else if (sym.access == SymbolAccessibility.INTERNAL) {
-			write_string (" internal");
-		} else if (sym.access == SymbolAccessibility.PRIVATE) {
-			write_string (" private");
+		if (sym.access == SymbolAccessibility.PUBLIC) {
+			return;
 		}
+
+		write_string (" ");
+		write_string (sym.access.to_string ());
 	}
 
 	void write_type_parameters (List<TypeParameter> type_params) {
