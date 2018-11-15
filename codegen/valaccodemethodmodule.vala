@@ -279,7 +279,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 			// register base types first
 			foreach (var base_type in cl.get_base_types ()) {
-				register_plugin_type ((ObjectTypeSymbol) base_type.data_type, registered_types);
+				register_plugin_type ((ObjectTypeSymbol) base_type.type_symbol, registered_types);
 			}
 		}
 
@@ -559,7 +559,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					}
 
 					if (param.direction != ParameterDirection.OUT) {
-						var t = param.variable_type.data_type;
+						unowned TypeSymbol? t = param.variable_type.type_symbol;
 						if (t != null && (t.is_reference_type () || param.variable_type.is_real_struct_type ())) {
 							var cname = get_ccode_name (param);
 							if (param.direction == ParameterDirection.REF && !param.variable_type.is_real_struct_type ()) {
@@ -889,8 +889,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			generate_type_declaration (param.variable_type, decl_space);
 
 			// pass non-simple structs always by reference
-			if (param.variable_type.data_type is Struct) {
-				var st = (Struct) param.variable_type.data_type;
+			unowned Struct? st = param.variable_type.type_symbol as Struct;
+			if (st != null) {
 				if (!st.is_simple_type () && param.direction == ParameterDirection.IN) {
 					if (st.is_immutable && !param.variable_type.value_owned) {
 						ctypename = "const " + ctypename;
@@ -1100,7 +1100,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		push_function (vfunc);
 
-		if (context.assert && m.return_type.data_type is Struct && ((Struct) m.return_type.data_type).is_simple_type () && default_value_for_type (m.return_type, false) == null) {
+		if (context.assert && m.return_type.type_symbol is Struct && ((Struct) m.return_type.type_symbol).is_simple_type () && default_value_for_type (m.return_type, false) == null) {
 			// the type check will use the result variable
 			var vardecl = new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
 			vardecl.init0 = true;

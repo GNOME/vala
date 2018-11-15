@@ -123,11 +123,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					continue;
 				}
 
-				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+				if (param.variable_type is ObjectType && param.variable_type.type_symbol.get_full_name () == "GLib.Cancellable") {
 					continue;
 				}
 
-				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
+				if (param.variable_type is ObjectType && param.variable_type.type_symbol.get_full_name () == "GLib.BusName") {
 					// ignore BusName sender parameters
 					continue;
 				}
@@ -208,12 +208,12 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			}
 
 			if (param.direction == ParameterDirection.IN && !ready) {
-				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+				if (param.variable_type is ObjectType && param.variable_type.type_symbol.get_full_name () == "GLib.Cancellable") {
 					ccall.add_argument (new CCodeConstant ("NULL"));
 					continue;
 				}
 
-				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
+				if (param.variable_type is ObjectType && param.variable_type.type_symbol.get_full_name () == "GLib.BusName") {
 					// ignore BusName sender parameters
 					var sender = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_get_sender"));
 					sender.add_argument (new CCodeIdentifier ("invocation"));
@@ -221,7 +221,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					continue;
 				}
 
-				var st = param.variable_type.data_type as Struct;
+				unowned Struct? st = param.variable_type.type_symbol as Struct;
 				if (st != null && !st.is_simple_type ()) {
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, param_expr));
 				} else {
@@ -435,11 +435,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		foreach (Parameter param in m.get_parameters ()) {
 			if ((param.direction == ParameterDirection.IN && (ready_data_expr == null || ready)) ||
 			    (param.direction == ParameterDirection.OUT && !no_reply && (!m.coroutine || ready))) {
-				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+				if (param.variable_type is ObjectType && param.variable_type.type_symbol.get_full_name () == "GLib.Cancellable") {
 					continue;
 				}
 
-				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
+				if (param.variable_type is ObjectType && param.variable_type.type_symbol.get_full_name () == "GLib.BusName") {
 					// ignore BusName sender parameters
 					continue;
 				}
@@ -637,7 +637,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		ccode.add_declaration (get_ccode_name (owned_type), new CCodeVariableDeclarator.zero ("value", default_value_for_type (prop.property_type, true)));
 
-		var st = prop.property_type.data_type as Struct;
+		unowned Struct? st = prop.property_type.type_symbol as Struct;
 		if (st != null && !st.is_simple_type ()) {
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("value")));
 		} else {

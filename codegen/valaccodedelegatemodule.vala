@@ -222,7 +222,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		foreach (Parameter param in d_params) {
 			if (dynamic_sig != null
 			    && param.variable_type is ArrayType
-			    && ((ArrayType) param.variable_type).element_type.data_type == string_type.data_type) {
+			    && ((ArrayType) param.variable_type).element_type.type_symbol == string_type.type_symbol) {
 				// use null-terminated string arrays for dynamic signals for compatibility reasons
 				param.set_attribute_bool ("CCode", "array_length", false);
 				param.set_attribute_bool ("CCode", "array_null_terminated", true);
@@ -427,7 +427,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			if (m.closure) {
 				int block_id = get_block_id (current_closure_block);
 				destroy_notify = new CCodeIdentifier ("block%d_data_unref".printf (block_id));
-			} else if (get_this_type () != null && m.binding != MemberBinding.STATIC && !m.is_async_callback && is_reference_counting (m.this_parameter.variable_type.data_type)) {
+			} else if (get_this_type () != null && m.binding != MemberBinding.STATIC && !m.is_async_callback && is_reference_counting (m.this_parameter.variable_type.type_symbol)) {
 				destroy_notify = get_destroy_func_expression (m.this_parameter.variable_type);
 			}
 

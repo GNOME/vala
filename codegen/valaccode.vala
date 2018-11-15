@@ -113,7 +113,7 @@ namespace Vala {
 			return "valavoid";
 		} else {
 			unowned DataType type = (DataType) node;
-			return get_ccode_lower_case_name (type.data_type, infix);
+			return get_ccode_lower_case_name (type.type_symbol, infix);
 		}
 	}
 
@@ -164,7 +164,7 @@ namespace Vala {
 	}
 
 	public static bool is_ref_function_void (DataType type) {
-		unowned Class? cl = type.data_type as Class;
+		unowned Class? cl = type.type_symbol as Class;
 		if (cl != null) {
 			return get_ccode_ref_function_void (cl);
 		} else {
@@ -173,7 +173,7 @@ namespace Vala {
 	}
 
 	public static bool is_free_function_address_of (DataType type) {
-		unowned Class? cl = type.data_type as Class;
+		unowned Class? cl = type.type_symbol as Class;
 		if (cl != null) {
 			return get_ccode_free_function_address_of (cl);
 		} else {

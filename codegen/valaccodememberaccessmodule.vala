@@ -100,7 +100,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				// expr.inner is null in the special case of referencing the method in a constant initializer
 				var delegate_target = (CCodeExpression) get_ccodenode (expr.inner);
 				delegate_type = expr.target_type as DelegateType;
-				if ((expr.value_type.value_owned || (delegate_type != null && delegate_type.is_called_once)) && expr.inner.value_type.data_type != null && is_reference_counting (expr.inner.value_type.data_type)) {
+				if ((expr.value_type.value_owned || (delegate_type != null && delegate_type.is_called_once)) && expr.inner.value_type.type_symbol != null && is_reference_counting (expr.inner.value_type.type_symbol)) {
 					var ref_call = new CCodeFunctionCall (get_dup_func_expression (expr.inner.value_type, expr.source_reference));
 					ref_call.add_argument (delegate_target);
 					delegate_target = ref_call;
@@ -452,7 +452,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				// use closure
 				result.cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "self");
 			} else {
-				var st = result.value_type.data_type as Struct;
+				unowned Struct? st = result.value_type.type_symbol as Struct;
 				if (st != null && !st.is_simple_type ()) {
 					result.cvalue = new CCodeIdentifier ("(*self)");
 				} else {
@@ -489,7 +489,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					}
 				}
 			} else {
-				var type_as_struct = result.value_type.data_type as Struct;
+				unowned Struct? type_as_struct = result.value_type.type_symbol as Struct;
 
 				if (param.direction == ParameterDirection.OUT) {
 					name = "_vala_%s".printf (name);
@@ -576,8 +576,8 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 			var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
 
-			var cl = instance_target_type.data_type as Class;
-			bool is_gtypeinstance = ((instance_target_type.data_type == cl) && (cl == null || !cl.is_compact));
+			unowned Class? cl = instance_target_type.type_symbol as Class;
+			bool is_gtypeinstance = ((instance_target_type.type_symbol == cl) && (cl == null || !cl.is_compact));
 
 			CCodeExpression inst;
 			if (is_gtypeinstance && field.access == SymbolAccessibility.PRIVATE) {
@@ -596,7 +596,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				return result;
 			}
 
-			if (instance_target_type.data_type.is_reference_type () || (instance != null && instance.value_type is PointerType)) {
+			if (instance_target_type.type_symbol.is_reference_type () || (instance != null && instance.value_type is PointerType)) {
 				result.cvalue = new CCodeMemberAccess.pointer (inst, get_ccode_name (field));
 			} else {
 				result.cvalue = new CCodeMemberAccess (inst, get_ccode_name (field));

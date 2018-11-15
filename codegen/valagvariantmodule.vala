@@ -106,7 +106,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		var value = expr.inner.target_value;
 		var target_type = expr.type_reference;
 
-		if (expr.is_non_null_cast || value.value_type == null || gvariant_type == null || value.value_type.data_type != gvariant_type) {
+		if (expr.is_non_null_cast || value.value_type == null || gvariant_type == null || value.value_type.type_symbol != gvariant_type) {
 			base.visit_cast_expression (expr);
 			return;
 		}
@@ -478,10 +478,10 @@ public class Vala.GVariantModule : GAsyncModule {
 		ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator (value_name));
 
 		var hash_table_new = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_new_full"));
-		if (key_type.data_type.is_subtype_of (string_type.data_type)) {
+		if (key_type.type_symbol.is_subtype_of (string_type.type_symbol)) {
 			hash_table_new.add_argument (new CCodeIdentifier ("g_str_hash"));
 			hash_table_new.add_argument (new CCodeIdentifier ("g_str_equal"));
-		} else if (key_type.data_type == gvariant_type) {
+		} else if (key_type.type_symbol == gvariant_type) {
 			hash_table_new.add_argument (new CCodeIdentifier ("g_variant_hash"));
 			hash_table_new.add_argument (new CCodeIdentifier ("g_variant_equal"));
 		} else {
@@ -489,21 +489,21 @@ public class Vala.GVariantModule : GAsyncModule {
 			hash_table_new.add_argument (new CCodeIdentifier ("g_direct_equal"));
 		}
 
-		if (key_type.data_type.is_subtype_of (string_type.data_type)) {
+		if (key_type.type_symbol.is_subtype_of (string_type.type_symbol)) {
 			hash_table_new.add_argument (new CCodeIdentifier ("g_free"));
-		} else if (key_type.data_type == gvariant_type) {
+		} else if (key_type.type_symbol == gvariant_type) {
 			hash_table_new.add_argument (new CCodeCastExpression (new CCodeIdentifier ("g_variant_unref"), "GDestroyNotify"));
-		} else if (key_type.data_type.get_full_name () == "GLib.HashTable") {
+		} else if (key_type.type_symbol.get_full_name () == "GLib.HashTable") {
 			hash_table_new.add_argument (new CCodeCastExpression (new CCodeIdentifier ("g_hash_table_unref"), "GDestroyNotify"));
 		} else {
 			hash_table_new.add_argument (new CCodeIdentifier ("NULL"));
 		}
 
-		if (value_type.data_type.is_subtype_of (string_type.data_type)) {
+		if (value_type.type_symbol.is_subtype_of (string_type.type_symbol)) {
 			hash_table_new.add_argument (new CCodeIdentifier ("g_free"));
-		} else if (value_type.data_type == gvariant_type) {
+		} else if (value_type.type_symbol == gvariant_type) {
 			hash_table_new.add_argument (new CCodeCastExpression (new CCodeIdentifier ("g_variant_unref"), "GDestroyNotify"));
-		} else if (value_type.data_type.get_full_name () == "GLib.HashTable") {
+		} else if (value_type.type_symbol.get_full_name () == "GLib.HashTable") {
 			hash_table_new.add_argument (new CCodeCastExpression (new CCodeIdentifier ("g_hash_table_unref"), "GDestroyNotify"));
 		} else {
 			hash_table_new.add_argument (new CCodeIdentifier ("NULL"));
@@ -544,7 +544,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		BasicTypeInfo basic_type;
 		CCodeExpression result = null;
 		may_fail = false;
-		if (is_string_marshalled_enum (type.data_type)) {
+		if (is_string_marshalled_enum (type.type_symbol)) {
 			get_basic_type_info ("s", out basic_type);
 			result = deserialize_basic (basic_type, variant_expr, true);
 			result = generate_enum_value_from_string (type as EnumValueType, result, error_expr);
@@ -553,8 +553,8 @@ public class Vala.GVariantModule : GAsyncModule {
 			result = deserialize_basic (basic_type, variant_expr);
 		} else if (type is ArrayType) {
 			result = deserialize_array ((ArrayType) type, variant_expr, expr);
-		} else if (type.data_type is Struct) {
-			var st = (Struct) type.data_type;
+		} else if (type.type_symbol is Struct) {
+			unowned Struct st = (Struct) type.type_symbol;
 			result = deserialize_struct (st, variant_expr);
 			if (result != null && type.nullable) {
 				var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
@@ -565,11 +565,11 @@ public class Vala.GVariantModule : GAsyncModule {
 				result = cdup;
 			}
 		} else if (type is ObjectType) {
-			if (type.data_type.get_full_name () == "GLib.Variant") {
+			if (type.type_symbol.get_full_name () == "GLib.Variant") {
 				var variant_get = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_get_variant"));
 				variant_get.add_argument (variant_expr);
 				result = variant_get;
-			} else if (type.data_type.get_full_name () == "GLib.HashTable") {
+			} else if (type.type_symbol.get_full_name () == "GLib.HashTable") {
 				result = deserialize_hash_table ((ObjectType) type, variant_expr);
 			}
 		}
@@ -842,7 +842,7 @@ public class Vala.GVariantModule : GAsyncModule {
 	public override CCodeExpression? serialize_expression (DataType type, CCodeExpression expr) {
 		BasicTypeInfo basic_type;
 		CCodeExpression result = null;
-		if (is_string_marshalled_enum (type.data_type)) {
+		if (is_string_marshalled_enum (type.type_symbol)) {
 			get_basic_type_info ("s", out basic_type);
 			result = generate_enum_value_to_string (type as EnumValueType, expr);
 			result = serialize_basic (basic_type, result);
@@ -850,18 +850,18 @@ public class Vala.GVariantModule : GAsyncModule {
 			result = serialize_basic (basic_type, expr);
 		} else if (type is ArrayType) {
 			result = serialize_array ((ArrayType) type, expr);
-		} else if (type.data_type is Struct) {
+		} else if (type.type_symbol is Struct) {
 			var st_expr = expr;
 			if (type.nullable) {
 				st_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, st_expr);
 			}
-			result = serialize_struct ((Struct) type.data_type, st_expr);
+			result = serialize_struct ((Struct) type.type_symbol, st_expr);
 		} else if (type is ObjectType) {
-			if (type.data_type.get_full_name () == "GLib.Variant") {
+			if (type.type_symbol.get_full_name () == "GLib.Variant") {
 				var variant_new = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_new_variant"));
 				variant_new.add_argument (expr);
 				result = variant_new;
-			} else if (type.data_type.get_full_name () == "GLib.HashTable") {
+			} else if (type.type_symbol.get_full_name () == "GLib.HashTable") {
 				result = serialize_hash_table ((ObjectType) type, expr);
 			}
 		}

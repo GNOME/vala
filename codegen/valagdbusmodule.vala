@@ -100,7 +100,7 @@ public class Vala.GDBusModule : GVariantModule {
 
 		string quark_fun_name = get_ccode_lower_case_prefix (edomain) + "quark";
 
-		var cquark_fun = new CCodeFunction (quark_fun_name, get_ccode_name (gquark_type.data_type));
+		var cquark_fun = new CCodeFunction (quark_fun_name, get_ccode_name (gquark_type.type_symbol));
 		push_function (cquark_fun);
 
 		string quark_name = "%squark_volatile".printf (get_ccode_lower_case_prefix (edomain));
@@ -124,10 +124,10 @@ public class Vala.GDBusModule : GVariantModule {
 
 	bool is_file_descriptor (DataType type) {
 		if (type is ObjectType) {
-			if (type.data_type.get_full_name () == "GLib.UnixInputStream" ||
-			    type.data_type.get_full_name () == "GLib.UnixOutputStream" ||
-			    type.data_type.get_full_name () == "GLib.Socket" ||
-			    type.data_type.get_full_name () == "GLib.FileDescriptorBased") {
+			if (type.type_symbol.get_full_name () == "GLib.UnixInputStream" ||
+			    type.type_symbol.get_full_name () == "GLib.UnixOutputStream" ||
+			    type.type_symbol.get_full_name () == "GLib.Socket" ||
+			    type.type_symbol.get_full_name () == "GLib.FileDescriptorBased") {
 				return true;
 			}
 		}
@@ -151,19 +151,19 @@ public class Vala.GDBusModule : GVariantModule {
 
 	CCodeExpression? get_file_descriptor (DataType type, CCodeExpression expr) {
 		if (type is ObjectType) {
-			if (type.data_type.get_full_name () == "GLib.UnixInputStream") {
+			if (type.type_symbol.get_full_name () == "GLib.UnixInputStream") {
 				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_unix_input_stream_get_fd"));
 				result.add_argument (expr);
 				return result;
-			} else if (type.data_type.get_full_name () == "GLib.UnixOutputStream") {
+			} else if (type.type_symbol.get_full_name () == "GLib.UnixOutputStream") {
 				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_unix_output_stream_get_fd"));
 				result.add_argument (expr);
 				return result;
-			} else if (type.data_type.get_full_name () == "GLib.Socket") {
+			} else if (type.type_symbol.get_full_name () == "GLib.Socket") {
 				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_socket_get_fd"));
 				result.add_argument (expr);
 				return result;
-			} else if (type.data_type.get_full_name () == "GLib.FileDescriptorBased") {
+			} else if (type.type_symbol.get_full_name () == "GLib.FileDescriptorBased") {
 				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_file_descriptor_based_get_fd"));
 				result.add_argument (expr);
 				return result;
@@ -195,17 +195,17 @@ public class Vala.GDBusModule : GVariantModule {
 
 	CCodeExpression? create_from_file_descriptor (DataType type, CCodeExpression expr) {
 		if (type is ObjectType) {
-			if (type.data_type.get_full_name () == "GLib.UnixInputStream") {
+			if (type.type_symbol.get_full_name () == "GLib.UnixInputStream") {
 				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_unix_input_stream_new"));
 				result.add_argument (expr);
 				result.add_argument (new CCodeConstant ("TRUE"));
 				return new CCodeCastExpression (result, "GUnixInputStream *");
-			} else if (type.data_type.get_full_name () == "GLib.UnixOutputStream") {
+			} else if (type.type_symbol.get_full_name () == "GLib.UnixOutputStream") {
 				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_unix_output_stream_new"));
 				result.add_argument (expr);
 				result.add_argument (new CCodeConstant ("TRUE"));
 				return new CCodeCastExpression (result, "GUnixOutputStream *");
-			} else if (type.data_type.get_full_name () == "GLib.Socket") {
+			} else if (type.type_symbol.get_full_name () == "GLib.Socket") {
 				var result = new CCodeFunctionCall (new CCodeIdentifier ("g_socket_new_from_fd"));
 				result.add_argument (expr);
 				result.add_argument (new CCodeConstant ("NULL"));
@@ -276,10 +276,10 @@ public class Vala.GDBusModule : GVariantModule {
 			var out_args_info = new CCodeInitializerList ();
 
 			foreach (Parameter param in m.get_parameters ()) {
-				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+				if (param.variable_type is ObjectType && param.variable_type.type_symbol.get_full_name () == "GLib.Cancellable") {
 					continue;
 				}
-				if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
+				if (param.variable_type is ObjectType && param.variable_type.type_symbol.get_full_name () == "GLib.BusName") {
 					continue;
 				}
 

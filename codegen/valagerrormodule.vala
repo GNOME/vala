@@ -53,7 +53,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		var error_domain_define = new CCodeMacroReplacement (get_ccode_upper_case_name (edomain), quark_fun_name + " ()");
 		decl_space.add_type_definition (error_domain_define);
 
-		var cquark_fun = new CCodeFunction (quark_fun_name, get_ccode_name (gquark_type.data_type));
+		var cquark_fun = new CCodeFunction (quark_fun_name, get_ccode_name (gquark_type.type_symbol));
 
 		decl_space.add_function_declaration (cquark_fun);
 	}
@@ -76,7 +76,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 		string quark_fun_name = get_ccode_lower_case_prefix (edomain) + "quark";
 
-		var cquark_fun = new CCodeFunction (quark_fun_name, get_ccode_name (gquark_type.data_type));
+		var cquark_fun = new CCodeFunction (quark_fun_name, get_ccode_name (gquark_type.type_symbol));
 		push_function (cquark_fun);
 
 		var cquark_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
@@ -227,7 +227,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 							/* catch clause specifies a specific error code */
 							var error_match = new CCodeFunctionCall (new CCodeIdentifier ("g_error_matches"));
 							error_match.add_argument (get_inner_error_cexpression ());
-							error_match.add_argument (new CCodeIdentifier (get_ccode_upper_case_name (catch_type.data_type)));
+							error_match.add_argument (new CCodeIdentifier (get_ccode_upper_case_name (catch_type.type_symbol)));
 							error_match.add_argument (new CCodeIdentifier (get_ccode_name (catch_type.error_code)));
 
 							ccode.open_if (error_match);
@@ -235,7 +235,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 							/* catch clause specifies a full error domain */
 							var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY,
 									new CCodeMemberAccess.pointer (get_inner_error_cexpression (), "domain"), new CCodeIdentifier
-									(get_ccode_upper_case_name (clause.error_type.data_type)));
+									(get_ccode_upper_case_name (clause.error_type.type_symbol)));
 
 							ccode.open_if (ccond);
 						}
@@ -277,7 +277,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 				// Check the allowed error domains to propagate
 				var domain_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer
-					(get_inner_error_cexpression (), "domain"), new CCodeIdentifier (get_ccode_upper_case_name (error_type.data_type)));
+					(get_inner_error_cexpression (), "domain"), new CCodeIdentifier (get_ccode_upper_case_name (error_type.type_symbol)));
 				if (ccond == null) {
 					ccond = domain_check;
 				} else {

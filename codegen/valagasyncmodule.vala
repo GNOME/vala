@@ -223,7 +223,7 @@ public class Vala.GAsyncModule : GtkModule {
 		Parameter cancellable_param = null;
 
 		foreach (Parameter param in m.get_parameters ()) {
-			if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+			if (param.variable_type is ObjectType && param.variable_type.type_symbol.get_full_name () == "GLib.Cancellable") {
 				cancellable_param = param;
 				break;
 			}
@@ -558,7 +558,7 @@ public class Vala.GAsyncModule : GtkModule {
 		bool has_cancellable = false;
 
 		foreach (Parameter param in m.get_parameters ()) {
-			if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+			if (param.variable_type is ObjectType && param.variable_type.type_symbol.get_full_name () == "GLib.Cancellable") {
 				has_cancellable = true;
 				break;
 			}

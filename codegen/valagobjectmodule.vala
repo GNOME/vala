@@ -263,7 +263,7 @@ public class Vala.GObjectModule : GTypeModule {
 				ccall = new CCodeFunctionCall (cfunc);
 				ccall.add_argument (cself);
 				var array_type = prop.property_type as ArrayType;
-				if (array_type != null && array_type.element_type.data_type == string_type.data_type) {
+				if (array_type != null && array_type.element_type.type_symbol == string_type.type_symbol) {
 					// G_TYPE_STRV
 					ccode.open_block ();
 					ccode.add_declaration ("int", new CCodeVariableDeclarator ("length"));
@@ -278,7 +278,7 @@ public class Vala.GObjectModule : GTypeModule {
 				csetcall.add_argument (new CCodeIdentifier ("value"));
 				csetcall.add_argument (ccall);
 				add_guarded_expression (prop, csetcall);
-				if (array_type != null && array_type.element_type.data_type == string_type.data_type) {
+				if (array_type != null && array_type.element_type.type_symbol == string_type.type_symbol) {
 					ccode.close ();
 				}
 			}
@@ -346,7 +346,7 @@ public class Vala.GObjectModule : GTypeModule {
 			ccode.add_case (new CCodeIdentifier ("%s_PROPERTY".printf (get_ccode_upper_case_name (prop))));
 			ccall = new CCodeFunctionCall (cfunc);
 			ccall.add_argument (cself);
-			if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.data_type == string_type.data_type) {
+			if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.type_symbol == string_type.type_symbol) {
 				ccode.open_block ();
 				ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("boxed"));
 
@@ -365,8 +365,8 @@ public class Vala.GObjectModule : GTypeModule {
 				ccode.close ();
 			} else {
 				var cgetcall = new CCodeFunctionCall ();
-				if (prop.property_type.data_type != null) {
-					cgetcall.call = new CCodeIdentifier (get_ccode_get_value_function (prop.property_type.data_type));
+				if (prop.property_type.type_symbol != null) {
+					cgetcall.call = new CCodeIdentifier (get_ccode_get_value_function (prop.property_type.type_symbol));
 				} else {
 					cgetcall.call = new CCodeIdentifier ("g_value_get_pointer");
 				}
@@ -614,8 +614,8 @@ public class Vala.GObjectModule : GTypeModule {
 	}
 
 	public override string get_dynamic_property_getter_cname (DynamicProperty prop) {
-		if (prop.dynamic_type.data_type == null
-		    || !prop.dynamic_type.data_type.is_subtype_of (gobject_type)) {
+		if (prop.dynamic_type.type_symbol == null
+		    || !prop.dynamic_type.type_symbol.is_subtype_of (gobject_type)) {
 			return base.get_dynamic_property_getter_cname (prop);
 		}
 
@@ -650,8 +650,8 @@ public class Vala.GObjectModule : GTypeModule {
 	}
 
 	public override string get_dynamic_property_setter_cname (DynamicProperty prop) {
-		if (prop.dynamic_type.data_type == null
-		    || !prop.dynamic_type.data_type.is_subtype_of (gobject_type)) {
+		if (prop.dynamic_type.type_symbol == null
+		    || !prop.dynamic_type.type_symbol.is_subtype_of (gobject_type)) {
 			return base.get_dynamic_property_setter_cname (prop);
 		}
 
@@ -686,8 +686,8 @@ public class Vala.GObjectModule : GTypeModule {
 	}
 
 	public override string get_dynamic_signal_connect_wrapper_name (DynamicSignal sig) {
-		if (sig.dynamic_type.data_type == null
-		    || !sig.dynamic_type.data_type.is_subtype_of (gobject_type)) {
+		if (sig.dynamic_type.type_symbol == null
+		    || !sig.dynamic_type.type_symbol.is_subtype_of (gobject_type)) {
 			return base.get_dynamic_signal_connect_wrapper_name (sig);
 		}
 
@@ -709,8 +709,8 @@ public class Vala.GObjectModule : GTypeModule {
 	}
 
 	public override string get_dynamic_signal_connect_after_wrapper_name (DynamicSignal sig) {
-		if (sig.dynamic_type.data_type == null
-		    || !sig.dynamic_type.data_type.is_subtype_of (gobject_type)) {
+		if (sig.dynamic_type.type_symbol == null
+		    || !sig.dynamic_type.type_symbol.is_subtype_of (gobject_type)) {
 			return base.get_dynamic_signal_connect_wrapper_name (sig);
 		}
 

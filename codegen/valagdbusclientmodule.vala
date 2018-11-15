@@ -54,7 +54,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		push_function (func);
 
-		if (dynamic_method.dynamic_type.data_type == dbus_proxy_type) {
+		if (dynamic_method.dynamic_type.type_symbol == dbus_proxy_type) {
 			generate_marshalling (method, CallType.SYNC, null, method.name, -1);
 		} else {
 			Report.error (method.source_reference, "dynamic methods are not supported for `%s'".printf (dynamic_method.dynamic_type.to_string ()));
@@ -69,8 +69,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 	void generate_proxy_interface_init (Interface main_iface, Interface iface) {
 		// also generate proxy for prerequisites
 		foreach (var prereq in iface.get_prerequisites ()) {
-			if (prereq.data_type is Interface) {
-				generate_proxy_interface_init (main_iface, (Interface) prereq.data_type);
+			if (prereq.type_symbol is Interface) {
+				generate_proxy_interface_init (main_iface, (Interface) prereq.type_symbol);
 			}
 		}
 
@@ -122,8 +122,8 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		// also implement prerequisites
 		foreach (var prereq in iface.get_prerequisites ()) {
-			if (prereq.data_type is Interface) {
-				result += implement_interface (define_type, main_iface, (Interface) prereq.data_type);
+			if (prereq.type_symbol is Interface) {
+				result += implement_interface (define_type, main_iface, (Interface) prereq.type_symbol);
 			}
 		}
 
@@ -463,7 +463,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 			ccode.add_declaration (get_ccode_name (owned_type), new CCodeVariableDeclarator.zero (param_name, default_value_for_type (param.variable_type, true)));
 
-			var st = param.variable_type.data_type as Struct;
+			unowned Struct? st = param.variable_type.type_symbol as Struct;
 			if (st != null && !st.is_simple_type ()) {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param_name)));
 			} else {
@@ -639,12 +639,12 @@ public class Vala.GDBusClientModule : GDBusModule {
 						expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
 					}
 
-					if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.Cancellable") {
+					if (param.variable_type is ObjectType && param.variable_type.type_symbol.get_full_name () == "GLib.Cancellable") {
 						cancellable = expr;
 						continue;
 					}
 
-					if (param.variable_type is ObjectType && param.variable_type.data_type.get_full_name () == "GLib.BusName") {
+					if (param.variable_type is ObjectType && param.variable_type.type_symbol.get_full_name () == "GLib.BusName") {
 						// ignore BusName sender parameters
 						continue;
 					}

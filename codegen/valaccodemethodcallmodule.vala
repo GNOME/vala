@@ -51,9 +51,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			if (ma.inner != null && ma.inner.value_type is EnumValueType && ((EnumValueType) ma.inner.value_type).get_to_string_method() == m) {
 				// Enum.VALUE.to_string()
-				var en = (Enum) ma.inner.value_type.data_type;
+				unowned Enum en = (Enum) ma.inner.value_type.type_symbol;
 				ccall.call = new CCodeIdentifier (generate_enum_to_string_function (en));
-			} else if (context.profile == Profile.POSIX && ma.inner != null && ma.inner.value_type != null && ma.inner.value_type.data_type == string_type.data_type && ma.member_name == "printf") {
+			} else if (context.profile == Profile.POSIX && ma.inner != null && ma.inner.value_type != null && ma.inner.value_type.type_symbol == string_type.type_symbol && ma.member_name == "printf") {
 				ccall.call = new CCodeIdentifier (generate_string_printf_function ());
 			} else if (expr.is_constructv_chainup) {
 				ccall.call = new CCodeIdentifier (get_ccode_constructv_name ((CreationMethod) m));
@@ -146,11 +146,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				if (current_class != m.parent_symbol) {
 					// chain up to base class
 					foreach (DataType base_type in current_class.get_base_types ()) {
-						if (base_type.data_type is Class) {
+						if (base_type.type_symbol is Class) {
 							List<TypeParameter> type_parameters = null;
 							if (get_ccode_real_name (m) == "g_object_new") {
 								// gobject-style chainup
-								type_parameters = ((Class) base_type.data_type).get_type_parameters ();
+								type_parameters = ((Class) base_type.type_symbol).get_type_parameters ();
 							}
 							add_generic_type_arguments (in_arg_map, base_type.get_type_arguments (), expr, true, type_parameters);
 							break;
