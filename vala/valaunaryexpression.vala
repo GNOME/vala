@@ -77,22 +77,8 @@ public class Vala.UnaryExpression : Expression {
 		}
 	}
 
-	private unowned string get_operator_string () {
-		switch (_operator) {
-		case UnaryOperator.PLUS: return "+";
-		case UnaryOperator.MINUS: return "-";
-		case UnaryOperator.LOGICAL_NEGATION: return "!";
-		case UnaryOperator.BITWISE_COMPLEMENT: return "~";
-		case UnaryOperator.INCREMENT: return "++";
-		case UnaryOperator.DECREMENT: return "--";
-		case UnaryOperator.REF: return "ref ";
-		case UnaryOperator.OUT: return "out ";
-		default: assert_not_reached ();
-		}
-	}
-
 	public override string to_string () {
-		return get_operator_string () + _inner.to_string ();
+		return operator.to_string () + _inner.to_string ();
 	}
 
 	public override bool is_constant () {
@@ -291,5 +277,20 @@ public enum Vala.UnaryOperator {
 	INCREMENT,
 	DECREMENT,
 	REF,
-	OUT
+	OUT;
+
+	public unowned string to_string () {
+		switch (this) {
+		case PLUS: return "+";
+		case MINUS: return "-";
+		case LOGICAL_NEGATION: return "!";
+		case BITWISE_COMPLEMENT: return "~";
+		case INCREMENT: return "++";
+		case DECREMENT: return "--";
+		case REF: return "ref ";
+		case OUT: return "out ";
+		default: assert_not_reached ();
+		}
+	}
+
 }
