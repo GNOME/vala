@@ -421,6 +421,8 @@ TESTS = \
 	gir/class.test \
 	gir/delegate-alias-without-target.test \
 	gir/delegate-closure-destroy-index-conflict.test \
+	gir/enum.test \
+	gir/errordomain.test \
 	gir/parameter-nullable-out-simple-type.test \
 	gir/property-non-readable.test \
 	annotations/deprecated.vala \
