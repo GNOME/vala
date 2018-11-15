@@ -83,7 +83,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 
 		// add extra item to have array NULL-terminated for all reference types
-		if (expr.element_type.data_type != null && expr.element_type.data_type.is_reference_type ()) {
+		if (expr.element_type.type_symbol != null && expr.element_type.type_symbol.is_reference_type ()) {
 			cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cexpr, new CCodeConstant ("1"));
 		}
 
@@ -514,7 +514,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 			CCodeExpression length_expr = new CCodeIdentifier ("length");
 			// add extra item to have array NULL-terminated for all reference types
-			if (array_type.element_type.data_type != null && array_type.element_type.data_type.is_reference_type ()) {
+			if (array_type.element_type.type_symbol != null && array_type.element_type.type_symbol.is_reference_type ()) {
 				length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, length_expr, new CCodeConstant ("1"));
 			}
 			gnew.add_argument (length_expr);

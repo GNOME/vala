@@ -1448,7 +1448,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		unowned DelegateType? delegate_type = type as DelegateType;
 		unowned ArrayType? array_type = type as ArrayType;
 
-		if (type != null && ((type.value_owned && delegate_type == null) || (constructor && !type.data_type.is_subtype_of (ginitiallyunowned_type)))) {
+		if (type != null && ((type.value_owned && delegate_type == null) || (constructor && !type.type_symbol.is_subtype_of (ginitiallyunowned_type)))) {
 			var any_owned = false;
 			foreach (var generic_arg in type.get_type_arguments ()) {
 				any_owned |= generic_arg.value_owned;
@@ -1544,14 +1544,14 @@ public class Vala.GIRWriter : CodeVisitor {
 		} else if (type is PointerType) {
 			write_indent ();
 			buffer.append_printf ("<type name=\"gpointer\" c:type=\"%s%s\"/>\n", get_ccode_name (type), direction == ParameterDirection.IN ? "" : "*");
-		} else if (type.data_type != null) {
+		} else if (type.type_symbol != null) {
 			write_indent ();
-			string type_name = gi_type_name (type.data_type);
+			string type_name = gi_type_name (type.type_symbol);
 			bool is_array = false;
 			if ((type_name == "GLib.Array") || (type_name == "GLib.PtrArray")) {
 				is_array = true;
 			}
-			buffer.append_printf ("<%s name=\"%s\" c:type=\"%s%s\"", is_array ? "array" : "type", gi_type_name (type.data_type), get_ccode_name (type), direction == ParameterDirection.IN ? "" : "*");
+			buffer.append_printf ("<%s name=\"%s\" c:type=\"%s%s\"", is_array ? "array" : "type", gi_type_name (type.type_symbol), get_ccode_name (type), direction == ParameterDirection.IN ? "" : "*");
 
 			List<DataType> type_arguments = type.get_type_arguments ();
 			if (type_arguments.size == 0) {

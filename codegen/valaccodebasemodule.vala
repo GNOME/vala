@@ -503,7 +503,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (context.module_init_method != null) {
 				foreach (Parameter parameter in context.module_init_method.get_parameters ()) {
-					if (parameter.variable_type.data_type.is_subtype_of (type_module_type)) {
+					if (parameter.variable_type.type_symbol.is_subtype_of (type_module_type)) {
 						in_plugin = true;
 						module_init_param_name = parameter.name;
 						break;
@@ -678,9 +678,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public CCodeIdentifier get_value_setter_function (DataType type_reference) {
 		var array_type = type_reference as ArrayType;
-		if (type_reference.data_type != null) {
-			return new CCodeIdentifier (get_ccode_set_value_function (type_reference.data_type));
-		} else if (array_type != null && array_type.element_type.data_type == string_type.data_type) {
+		if (type_reference.type_symbol != null) {
+			return new CCodeIdentifier (get_ccode_set_value_function (type_reference.type_symbol));
+		} else if (array_type != null && array_type.element_type.type_symbol == string_type.type_symbol) {
 			// G_TYPE_STRV
 			return new CCodeIdentifier ("g_value_set_boxed");
 		} else {
@@ -690,9 +690,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public CCodeIdentifier get_value_taker_function (DataType type_reference) {
 		var array_type = type_reference as ArrayType;
-		if (type_reference.data_type != null) {
-			return new CCodeIdentifier (get_ccode_take_value_function (type_reference.data_type));
-		} else if (array_type != null && array_type.element_type.data_type == string_type.data_type) {
+		if (type_reference.type_symbol != null) {
+			return new CCodeIdentifier (get_ccode_take_value_function (type_reference.type_symbol));
+		} else if (array_type != null && array_type.element_type.type_symbol == string_type.type_symbol) {
 			// G_TYPE_STRV
 			return new CCodeIdentifier ("g_value_take_boxed");
 		} else {
@@ -702,9 +702,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	CCodeIdentifier get_value_getter_function (DataType type_reference) {
 		var array_type = type_reference as ArrayType;
-		if (type_reference.data_type != null) {
-			return new CCodeIdentifier (get_ccode_get_value_function (type_reference.data_type));
-		} else if (array_type != null && array_type.element_type.data_type == string_type.data_type) {
+		if (type_reference.type_symbol != null) {
+			return new CCodeIdentifier (get_ccode_get_value_function (type_reference.type_symbol));
+		} else if (array_type != null && array_type.element_type.type_symbol == string_type.type_symbol) {
 			// G_TYPE_STRV
 			return new CCodeIdentifier ("g_value_get_boxed");
 		} else {
@@ -1500,8 +1500,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					generate_type_declaration (delegate_target_destroy_type, decl_space);
 				}
 			}
-		} else if (type.data_type is Enum) {
-			var en = (Enum) type.data_type;
+		} else if (type.type_symbol is Enum) {
+			var en = (Enum) type.type_symbol;
 			generate_enum_declaration (en, decl_space);
 		} else if (type is ValueType) {
 			var value_type = (ValueType) type;
@@ -1879,7 +1879,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							get_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("old_value")));
 							ccode.add_expression (get_call);
 						}
-						var equalfunc = generate_struct_equal_function ((Struct) property_type.data_type);
+						var equalfunc = generate_struct_equal_function ((Struct) property_type.type_symbol);
 						var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
 						ccall.add_argument (new CCodeIdentifier ("value"));
 						if (property_type.nullable) {
@@ -1935,7 +1935,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public bool no_implicit_copy (DataType type) {
 		// note: implicit copy of array is planned to be forbidden
-		var cl = type.data_type as Class;
+		unowned Class? cl = type.type_symbol as Class;
 		return (type is DelegateType ||
 				type is ArrayType ||
 				(cl != null && !cl.is_immutable && !is_reference_counting (cl) && !get_ccode_is_gboxed (cl)));
@@ -2422,10 +2422,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public bool is_simple_struct_creation (Variable variable, Expression expr) {
-		var st = variable.variable_type.data_type as Struct;
+		unowned Struct? st = variable.variable_type.type_symbol as Struct;
 		var creation = expr as ObjectCreationExpression;
 		if (creation != null && st != null && (!st.is_simple_type () || get_ccode_name (st) == "va_list") && !variable.variable_type.nullable &&
-		    variable.variable_type.data_type != gvalue_type && creation.get_object_initializer ().size == 0) {
+		    variable.variable_type.type_symbol != gvalue_type && creation.get_object_initializer ().size == 0) {
 			return true;
 		} else {
 			return false;
@@ -2599,9 +2599,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_initializer_list (InitializerList list) {
-		if (list.target_type.data_type is Struct) {
+		if (list.target_type.type_symbol is Struct) {
 			/* initializer is used as struct initializer */
-			var st = (Struct) list.target_type.data_type;
+			unowned Struct st = (Struct) list.target_type.type_symbol;
 			while (st.base_struct != null) {
 				st = st.base_struct;
 			}
@@ -2737,18 +2737,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual CCodeExpression? get_dup_func_expression (DataType type, SourceReference? source_reference, bool is_chainup = false) {
 		if (type is ErrorType) {
 			return new CCodeIdentifier ("g_error_copy");
-		} else if (type.data_type != null) {
+		} else if (type.type_symbol != null) {
 			string dup_function;
-			var cl = type.data_type as Class;
-			if (is_reference_counting (type.data_type)) {
-				dup_function = get_ccode_ref_function ((ObjectTypeSymbol) type.data_type);
-				if (type.data_type is Interface && dup_function == null) {
-					Report.error (source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (type.data_type.get_full_name ()));
+			unowned Class? cl = type.type_symbol as Class;
+			if (is_reference_counting (type.type_symbol)) {
+				dup_function = get_ccode_ref_function ((ObjectTypeSymbol) type.type_symbol);
+				if (type.type_symbol is Interface && dup_function == null) {
+					Report.error (source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (type.type_symbol.get_full_name ()));
 					return new CCodeInvalidExpression();
 				}
 			} else if (cl != null && cl.is_immutable) {
 				// allow duplicates of immutable instances as for example strings
-				dup_function = get_ccode_dup_function (type.data_type);
+				dup_function = get_ccode_dup_function (type.type_symbol);
 				if (dup_function == null) {
 					dup_function = "";
 				}
@@ -2759,7 +2759,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					dup_function = "";
 				}
 			} else if (type is ValueType) {
-				dup_function = get_ccode_dup_function (type.data_type);
+				dup_function = get_ccode_dup_function (type.type_symbol);
 				if (dup_function == null && type.nullable) {
 					dup_function = generate_struct_dup_wrapper ((ValueType) type);
 				} else if (dup_function == null) {
@@ -2767,7 +2767,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			} else {
 				// duplicating non-reference counted objects may cause side-effects (and performance issues)
-				Report.error (source_reference, "duplicating %s instance, use unowned variable or explicitly invoke copy method".printf (type.data_type.name));
+				Report.error (source_reference, "duplicating %s instance, use unowned variable or explicitly invoke copy method".printf (type.type_symbol.name));
 				return new CCodeInvalidExpression();
 			}
 
@@ -2802,10 +2802,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	void make_comparable_cexpression (ref DataType left_type, ref CCodeExpression cleft, ref DataType right_type, ref CCodeExpression cright) {
-		unowned Struct? left_type_as_struct = left_type.data_type as Struct;
-		unowned Struct? right_type_as_struct = right_type.data_type as Struct;
-		unowned ObjectTypeSymbol? left_type_as_object_type = left_type.data_type as ObjectTypeSymbol;
-		unowned ObjectTypeSymbol? right_type_as_object_type = right_type.data_type as ObjectTypeSymbol;
+		unowned Struct? left_type_as_struct = left_type.type_symbol as Struct;
+		unowned Struct? right_type_as_struct = right_type.type_symbol as Struct;
+		unowned ObjectTypeSymbol? left_type_as_object_type = left_type.type_symbol as ObjectTypeSymbol;
+		unowned ObjectTypeSymbol? right_type_as_object_type = right_type.type_symbol as ObjectTypeSymbol;
 
 		if (left_type_as_object_type != null && (!(left_type_as_object_type is Class) || !((Class) left_type_as_object_type).is_compact)
 		    && right_type_as_object_type != null && (!(right_type_as_object_type is Class) || !((Class) right_type_as_object_type).is_compact)) {
@@ -2902,7 +2902,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccall.add_argument (s2);
 				cexp = ccall;
 			} else if (f.variable_type is StructValueType) {
-				var equalfunc = generate_struct_equal_function (f.variable_type.data_type as Struct);
+				var equalfunc = generate_struct_equal_function (f.variable_type.type_symbol as Struct);
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
 				ccall.add_argument (s1);
 				ccall.add_argument (s2);
@@ -3010,11 +3010,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_declaration (get_ccode_name (value_type), new CCodeVariableDeclarator ("dup"));
 
 			var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-			creation_call.add_argument (new CCodeConstant (get_ccode_name (value_type.data_type)));
+			creation_call.add_argument (new CCodeConstant (get_ccode_name (value_type.type_symbol)));
 			creation_call.add_argument (new CCodeConstant ("1"));
 			ccode.add_assignment (new CCodeIdentifier ("dup"), creation_call);
 
-			var st = value_type.data_type as Struct;
+			var st = value_type.type_symbol as Struct;
 			if (st != null && st.is_disposable ()) {
 				if (!get_ccode_has_copy_function (st)) {
 					generate_struct_copy_function (st);
@@ -3028,7 +3028,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				cfile.add_include ("string.h");
 
 				var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-				sizeof_call.add_argument (new CCodeConstant (get_ccode_name (value_type.data_type)));
+				sizeof_call.add_argument (new CCodeConstant (get_ccode_name (value_type.type_symbol)));
 
 				var copy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
 				copy_call.add_argument (new CCodeIdentifier ("dup"));
@@ -3049,7 +3049,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	protected string generate_dup_func_wrapper (DataType type) {
-		string destroy_func = "_vala_%s_copy".printf (get_ccode_name (type.data_type));
+		string destroy_func = "_vala_%s_copy".printf (get_ccode_name (type.type_symbol));
 
 		if (!add_wrapper (destroy_func)) {
 			// wrapper already defined
@@ -3062,7 +3062,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		push_function (function);
 
-		var cl = type.data_type as Class;
+		unowned Class? cl = type.type_symbol as Class;
 		assert (cl != null && get_ccode_is_gboxed (cl));
 
 		var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_copy"));
@@ -3080,7 +3080,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	protected string generate_free_function_address_of_wrapper (DataType type) {
-		string destroy_func = "_vala_%s_free_function_address_of".printf (get_ccode_name (type.data_type));
+		string destroy_func = "_vala_%s_free_function_address_of".printf (get_ccode_name (type.type_symbol));
 
 		if (!add_wrapper (destroy_func)) {
 			// wrapper already defined
@@ -3093,7 +3093,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		push_function (function);
 
-		var cl = type.data_type as Class;
+		unowned Class? cl = type.type_symbol as Class;
+		assert (cl != null);
+
 		var free_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_free_function (cl)));
 		free_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("self")));
 
@@ -3109,7 +3111,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	protected string generate_destroy_function_content_of_wrapper (DataType type) {
 		// g_array_set_clear_func has a specific GDestroyNotify where the content of an element is given
-		string destroy_func = "_vala_%s_free_function_content_of".printf (get_ccode_name (type.data_type));
+		string destroy_func = "_vala_%s_free_function_content_of".printf (get_ccode_name (type.type_symbol));
 
 		if (!add_wrapper (destroy_func)) {
 			// wrapper already defined
@@ -3139,7 +3141,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	protected string generate_free_func_wrapper (DataType type) {
-		string destroy_func = "_vala_%s_free".printf (get_ccode_name (type.data_type));
+		string destroy_func = "_vala_%s_free".printf (get_ccode_name (type.type_symbol));
 
 		if (!add_wrapper (destroy_func)) {
 			// wrapper already defined
@@ -3152,7 +3154,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		push_function (function);
 
-		var cl = type.data_type as Class;
+		unowned Class? cl = type.type_symbol as Class;
 		if (cl != null && get_ccode_is_gboxed (cl)) {
 			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_free"));
 			free_call.add_argument (new CCodeIdentifier (get_ccode_type_id (cl)));
@@ -3160,7 +3162,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			ccode.add_expression (free_call);
 		} else {
-			var st = type.data_type as Struct;
+			unowned Struct? st = type.type_symbol as Struct;
 			if (st != null && st.is_disposable ()) {
 				if (!get_ccode_has_destroy_function (st)) {
 					generate_struct_destroy_function (st);
@@ -3215,7 +3217,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeExpression? get_destroy_func_expression (DataType type, bool is_chainup = false) {
-		if (context.profile == Profile.GOBJECT && (type.data_type == glist_type || type.data_type == gslist_type || type.data_type == gnode_type || type.data_type == gqueue_type)) {
+		if (context.profile == Profile.GOBJECT && (type.type_symbol == glist_type || type.type_symbol == gslist_type || type.type_symbol == gnode_type || type.type_symbol == gqueue_type)) {
 			// create wrapper function to free list elements if necessary
 
 			bool elements_require_free = false;
@@ -3244,36 +3246,36 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 				return cexpr;
 			} else {
-				return new CCodeIdentifier (get_ccode_free_function (type.data_type));
+				return new CCodeIdentifier (get_ccode_free_function (type.type_symbol));
 			}
 		} else if (type is ErrorType) {
 			return new CCodeIdentifier ("g_error_free");
-		} else if (type.data_type != null) {
+		} else if (type.type_symbol != null) {
 			string unref_function;
 			if (type is ReferenceType) {
-				if (is_reference_counting (type.data_type)) {
-					unref_function = get_ccode_unref_function ((ObjectTypeSymbol) type.data_type);
-					if (type.data_type is Interface && unref_function == null) {
-						Report.error (type.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (type.data_type.get_full_name ()));
+				if (is_reference_counting (type.type_symbol)) {
+					unref_function = get_ccode_unref_function ((ObjectTypeSymbol) type.type_symbol);
+					if (type.type_symbol is Interface && unref_function == null) {
+						Report.error (type.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (type.type_symbol.get_full_name ()));
 						return null;
 					}
 				} else {
-					var cl = type.data_type as Class;
+					unowned Class? cl = type.type_symbol as Class;
 					if (cl != null && get_ccode_is_gboxed (cl)) {
 						unref_function = generate_free_func_wrapper (type);
 					} else {
 						if (is_free_function_address_of (type)) {
 							unref_function = generate_free_function_address_of_wrapper (type);
 						} else {
-							unref_function = get_ccode_free_function (type.data_type);
+							unref_function = get_ccode_free_function (type.type_symbol);
 						}
 					}
 				}
 			} else {
 				if (type.nullable) {
-					unref_function = get_ccode_free_function (type.data_type);
+					unref_function = get_ccode_free_function (type.type_symbol);
 					if (unref_function == null) {
-						if (type.data_type is Struct && ((Struct) type.data_type).is_disposable ()) {
+						if (type.type_symbol is Struct && ((Struct) type.type_symbol).is_disposable ()) {
 							unref_function = generate_free_func_wrapper (type);
 						} else {
 							unref_function = "g_free";
@@ -3282,8 +3284,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				} else if (type is EnumValueType) {
 					unref_function = null;
 				} else {
-					var st = (Struct) type.data_type;
-					if (st.is_disposable ()) {
+					unowned Struct? st = type.type_symbol as Struct;
+					if (st != null && st.is_disposable ()) {
 						if (!get_ccode_has_destroy_function (st)) {
 							generate_struct_destroy_function (st);
 						}
@@ -3340,14 +3342,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		string? destroy_func_wrapper = null;
 		if (element_destroy_func_expression != null) {
-			destroy_func_wrapper = "_%s_%s".printf (get_ccode_free_function (collection_type.data_type), element_destroy_func_expression.name);
+			destroy_func_wrapper = "_%s_%s".printf (get_ccode_free_function (collection_type.type_symbol), element_destroy_func_expression.name);
 			if (!add_wrapper (destroy_func_wrapper)) {
 				// wrapper already defined
 				return destroy_func_wrapper;
 			}
 		}
 
-		if (collection_type.data_type == gnode_type) {
+		if (collection_type.type_symbol == gnode_type) {
 			destroy_func = "_g_node_free_all";
 			if (!add_wrapper (destroy_func)) {
 				// wrapper already defined
@@ -3406,11 +3408,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			cfile.add_function_declaration (function);
 			cfile.add_function (function);
-		} else if (collection_type.data_type == glist_type) {
+		} else if (collection_type.type_symbol == glist_type) {
 			destroy_func = "g_list_free_full";
-		} else if (collection_type.data_type == gslist_type) {
+		} else if (collection_type.type_symbol == gslist_type) {
 			destroy_func = "g_slist_free_full";
-		} else if (collection_type.data_type == gqueue_type) {
+		} else if (collection_type.type_symbol == gqueue_type) {
 			destroy_func = "g_queue_free_full";
 		} else {
 			Report.error (null, "internal error: type of collection not supported");
@@ -3490,7 +3492,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return ccomma;
 		}
 
-		bool is_gcollection = (type.data_type == glist_type || type.data_type == gslist_type || type.data_type == gnode_type || type.data_type == gqueue_type);
+		bool is_gcollection = (type.type_symbol == glist_type || type.type_symbol == gslist_type || type.type_symbol == gnode_type || type.type_symbol == gqueue_type);
 		CCodeFunctionCall ccall;
 		var cexpr = get_destroy_func_expression (type);
 		if (is_gcollection && cexpr is CCodeFunctionCall) {
@@ -3501,7 +3503,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (type is ValueType && !type.nullable) {
 			// normal value type, no null check
-			var st = type.data_type as Struct;
+			unowned Struct? st = type.type_symbol as Struct;
 			if (st != null && st.is_simple_type ()) {
 				// used for va_list
 				ccall.add_argument (cvar);
@@ -3509,7 +3511,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
 			}
 
-			if (gvalue_type != null && type.data_type == gvalue_type) {
+			if (gvalue_type != null && type.type_symbol == gvalue_type) {
 				// g_value_unset must not be called for already unset values
 				var cisvalid = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_VALUE"));
 				cisvalid.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
@@ -3519,14 +3521,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccomma.append_expression (new CCodeConstant ("NULL"));
 
 				return new CCodeConditionalExpression (cisvalid, ccomma, new CCodeConstant ("NULL"));
-			} else if ((type.data_type == gmutex_type ||
-			            type.data_type == grecmutex_type ||
-			            type.data_type == grwlock_type ||
-			            type.data_type == gcond_type)) {
+			} else if ((type.type_symbol == gmutex_type ||
+			            type.type_symbol == grecmutex_type ||
+			            type.type_symbol == grwlock_type ||
+			            type.type_symbol == gcond_type)) {
 				// g_mutex_clear must not be called for uninitialized mutex
 				// also, g_mutex_clear does not clear the struct
 				requires_clear_mutex = true;
-				ccall.call = new CCodeIdentifier ("_vala_clear_" + get_ccode_name (type.data_type));
+				ccall.call = new CCodeIdentifier ("_vala_clear_" + get_ccode_name (type.type_symbol));
 				return ccall;
 			} else {
 				return ccall;
@@ -3581,13 +3583,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var ccomma = new CCodeCommaExpression ();
 
 		if (context.profile == Profile.GOBJECT) {
-			if (type.data_type != null && !is_reference_counting (type.data_type) &&
-			    (type.data_type.is_subtype_of (gstringbuilder_type)
-			     || type.data_type.is_subtype_of (garray_type)
-			     || type.data_type.is_subtype_of (gbytearray_type)
-			     || type.data_type.is_subtype_of (gptrarray_type))) {
+			if (type.type_symbol != null && !is_reference_counting (type.type_symbol) &&
+			    (type.type_symbol.is_subtype_of (gstringbuilder_type)
+			     || type.type_symbol.is_subtype_of (garray_type)
+			     || type.type_symbol.is_subtype_of (gbytearray_type)
+			     || type.type_symbol.is_subtype_of (gptrarray_type))) {
 				ccall.add_argument (new CCodeConstant ("TRUE"));
-			} else if (type.data_type == gthreadpool_type) {
+			} else if (type.type_symbol == gthreadpool_type) {
 				ccall.add_argument (new CCodeConstant ("FALSE"));
 				ccall.add_argument (new CCodeConstant ("TRUE"));
 			} else if (type is ArrayType) {
@@ -3606,7 +3608,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 
 					if (csizeexpr != null) {
-						var st = array_type.element_type.data_type as Struct;
+						unowned Struct? st = array_type.element_type.type_symbol as Struct;
 						if (st != null && !array_type.element_type.nullable) {
 							ccall.call = new CCodeIdentifier (append_struct_array_free (st));
 							ccall.add_argument (csizeexpr);
@@ -3627,7 +3629,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var cassign = new CCodeAssignment (cvar, ccomma);
 
 		// g_free (NULL) is allowed
-		bool uses_gfree = (type.data_type != null && !is_reference_counting (type.data_type) && get_ccode_free_function (type.data_type) == "g_free");
+		bool uses_gfree = (type.type_symbol != null && !is_reference_counting (type.type_symbol) && get_ccode_free_function (type.type_symbol) == "g_free");
 		uses_gfree = uses_gfree || type is ArrayType;
 		if (uses_gfree) {
 			return cassign;
@@ -4025,7 +4027,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public override void visit_delete_statement (DeleteStatement stmt) {
 		unowned DataType type = stmt.expression.value_type;
 		unowned PointerType? pointer_type = type as PointerType;
-		if (pointer_type != null && pointer_type.base_type.data_type != null && pointer_type.base_type.data_type.is_reference_type ()) {
+		if (pointer_type != null && pointer_type.base_type.type_symbol != null && pointer_type.base_type.type_symbol.is_reference_type ()) {
 			type = pointer_type.base_type;
 		}
 
@@ -4035,7 +4037,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	static bool is_compact_class_destructor_call (Expression expr) {
-		unowned Class? cl = expr.value_type.data_type as Class;
+		unowned Class? cl = expr.value_type.type_symbol as Class;
 		if (cl != null && cl.is_compact && expr.parent_node is MemberAccess) {
 			unowned MethodType? mt = ((MemberAccess) expr.parent_node).value_type as MethodType;
 			if (mt != null && mt.method_symbol != null && mt.method_symbol.get_attribute ("DestroysInstance") != null) {
@@ -4257,7 +4259,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_base_access (BaseAccess expr) {
-		set_cvalue (expr, generate_instance_cast (get_this_cexpression (), expr.value_type.data_type));
+		set_cvalue (expr, generate_instance_cast (get_this_cexpression (), expr.value_type.type_symbol));
 	}
 
 	public override void visit_postfix_expression (PostfixExpression expr) {
@@ -4302,8 +4304,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	static bool is_limited_generic_type (GenericType type) {
-		var cl = type.type_parameter.parent_symbol as Class;
-		var st = type.type_parameter.parent_symbol as Struct;
+		unowned Class? cl = type.type_parameter.parent_symbol as Class;
+		unowned Struct? st = type.type_parameter.parent_symbol as Struct;
 		if ((cl != null && cl.is_compact) || st != null) {
 			// compact classes and structs only
 			// have very limited generics support
@@ -4317,7 +4319,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return false;
 		}
 
-		var cl = type.data_type as Class;
+		unowned Class? cl = type.type_symbol as Class;
 		if (cl != null && is_reference_counting (cl)
 		    && get_ccode_ref_function (cl) == "") {
 			// empty ref_function => no ref necessary
@@ -4343,7 +4345,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return requires_destroy (array_type.element_type);
 		}
 
-		var cl = type.data_type as Class;
+		unowned Class? cl = type.type_symbol as Class;
 		if (cl != null && is_reference_counting (cl)
 		    && get_ccode_unref_function (cl) == "") {
 			// empty unref_function => no unref necessary
@@ -4394,7 +4396,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				generate_struct_copy_function (st);
 			}
 
-			if (gvalue_type != null && type.data_type == gvalue_type) {
+			if (gvalue_type != null && type.type_symbol == gvalue_type) {
 				var cisvalid = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_VALUE"));
 				cisvalid.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
 
@@ -4510,7 +4512,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			CCodeExpression cifnull;
-			if (type.data_type != null) {
+			if (type.type_symbol != null) {
 				cifnull = new CCodeConstant ("NULL");
 			} else {
 				// the value might be non-null even when the dup function is null,
@@ -4581,7 +4583,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		CCodeExpression instance = null;
 		CCodeExpression creation_expr = null;
 
-		var st = expr.type_reference.data_type as Struct;
+		unowned Struct? st = expr.type_reference.type_symbol as Struct;
 		if ((st != null && (!st.is_simple_type () || get_ccode_name (st) == "va_list")) || expr.get_object_initializer ().size > 0) {
 			// value-type initialization or object creation expression with object initializer
 
@@ -4619,7 +4621,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (expr.symbol_reference == null) {
 			// no creation method
-			if (expr.type_reference.data_type is Struct) {
+			if (expr.type_reference.type_symbol is Struct) {
 				// memset needs string.h
 				cfile.add_include ("string.h");
 				var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
@@ -4629,8 +4631,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				creation_expr = creation_call;
 			}
-		} else if (expr.type_reference.data_type == glist_type ||
-		           expr.type_reference.data_type == gslist_type) {
+		} else if (expr.type_reference.type_symbol == glist_type ||
+		           expr.type_reference.type_symbol == gslist_type) {
 			// NULL is an empty list
 			set_cvalue (expr, new CCodeConstant ("NULL"));
 		} else if (expr.symbol_reference is Method) {
@@ -4644,7 +4646,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			generate_method_declaration (m, cfile);
 
-			var cl = expr.type_reference.data_type as Class;
+			unowned Class? cl = expr.type_reference.type_symbol as Class;
 
 			if (!get_ccode_has_new_function (m)) {
 				// use construct function directly
@@ -4910,7 +4912,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_expression (creation_expr);
 			set_cvalue (expr, instance);
 		} else if (instance != null) {
-			if (expr.type_reference.data_type is Struct) {
+			if (expr.type_reference.type_symbol is Struct) {
 				ccode.add_expression (creation_expr);
 			} else {
 				ccode.add_assignment (instance, creation_expr);
@@ -4947,7 +4949,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_assignment (get_cvalue_ (temp_value), creation_expr);
 			expr.target_value = temp_value;
 
-			var cl = expr.type_reference.data_type as Class;
+			unowned Class? cl = expr.type_reference.type_symbol as Class;
 			if (context.gobject_tracing) {
 				// GObject creation tracing enabled
 
@@ -4984,7 +4986,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					clear_func.add_argument (get_cvalue_ (expr.target_value));
 					string destroy_func;
 					if (type_arg.is_non_null_simple_type () || type_arg.is_real_non_null_struct_type ()) {
-						destroy_func = get_ccode_destroy_function (type_arg.data_type);
+						destroy_func = get_ccode_destroy_function (type_arg.type_symbol);
 					} else {
 						destroy_func = generate_destroy_function_content_of_wrapper (type_arg);
 					}
@@ -5095,7 +5097,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeExpression? try_cast_value_to_type (CCodeExpression ccodeexpr, DataType from, DataType to, Expression? expr = null) {
-		if (from == null || gvalue_type == null || from.data_type != gvalue_type || to.data_type == gvalue_type || get_ccode_type_id (to) == "") {
+		if (from == null || gvalue_type == null || from.type_symbol != gvalue_type || to.type_symbol == gvalue_type || get_ccode_type_id (to) == "") {
 			return null;
 		}
 
@@ -5156,8 +5158,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		var cl = expr.type_reference.data_type as Class;
-		var iface = expr.type_reference.data_type as Interface;
+		unowned Class? cl = expr.type_reference.type_symbol as Class;
+		unowned Interface? iface = expr.type_reference.type_symbol as Interface;
 		if (context.profile == Profile.GOBJECT && (iface != null || (cl != null && !cl.is_compact))) {
 			// checked cast for strict subtypes of GTypeInstance
 			if (expr.is_silent_cast) {
@@ -5181,7 +5183,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					expr.target_value = cast_value;
 				}
 			} else {
-				set_cvalue (expr, generate_instance_cast (get_cvalue (expr.inner), expr.type_reference.data_type));
+				set_cvalue (expr, generate_instance_cast (get_cvalue (expr.inner), expr.type_reference.type_symbol));
 			}
 		} else {
 			if (expr.is_silent_cast) {
@@ -5219,12 +5221,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				var value_type = expr.inner.value_type;
 				if (value_type is ValueType) {
-					var data_type = ((ValueType) value_type).data_type;
-					sizeof_from.add_argument (new CCodeConstant (get_ccode_name (data_type)));
+					sizeof_from.add_argument (new CCodeConstant (get_ccode_name (value_type.type_symbol)));
 					array_length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.DIV, sizeof_from, sizeof_to);
 				} else if (value_type is PointerType && ((PointerType) value_type).base_type is ValueType) {
-					var data_type = ((ValueType) (((PointerType) value_type).base_type)).data_type;
-					sizeof_from.add_argument (new CCodeConstant (get_ccode_name (data_type)));
+					sizeof_from.add_argument (new CCodeConstant (get_ccode_name (((PointerType) value_type).base_type.type_symbol)));
 					array_length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.DIV, sizeof_from, sizeof_to);
 				} else {
 					// cast from unsupported non-array to array, set invalid length
@@ -5435,7 +5435,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			make_comparable_cexpression (ref left_type, ref cleft, ref right_type, ref cright);
 
 			if (left_type is StructValueType && right_type is StructValueType) {
-				var equalfunc = generate_struct_equal_function ((Struct) left_type.data_type);
+				var equalfunc = generate_struct_equal_function ((Struct) left_type.type_symbol);
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
 				ccall.add_argument (cleft);
 				ccall.add_argument (cright);
@@ -5443,7 +5443,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				cright = new CCodeConstant ("TRUE");
 			} else if ((left_type is IntegerType || left_type is FloatingType || left_type is BooleanType || left_type is EnumValueType) && left_type.nullable &&
 			           (right_type is IntegerType || right_type is FloatingType || right_type is BooleanType || right_type is EnumValueType) && right_type.nullable) {
-				var equalfunc = generate_numeric_equal_function ((TypeSymbol) left_type.data_type);
+				var equalfunc = generate_numeric_equal_function ((TypeSymbol) left_type.type_symbol);
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
 				ccall.add_argument (cleft);
 				ccall.add_argument (cright);
@@ -5554,7 +5554,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, instance_domain, type_domain);
 		} else {
 			CCodeFunctionCall ccheck;
-			if (type.data_type == null || type.data_type.external_package) {
+			if (type.type_symbol == null || type.type_symbol.external_package) {
 				var type_id = get_type_id_expression (type);
 				if (type_id == null) {
 					return new CCodeInvalidExpression ();
@@ -5563,7 +5563,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccheck.add_argument ((CCodeExpression) ccodenode);
 				ccheck.add_argument (type_id);
 			} else {
-				ccheck = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_check_function (type.data_type)));
+				ccheck = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_check_function (type.type_symbol)));
 				ccheck.add_argument ((CCodeExpression) ccodenode);
 			}
 
@@ -5607,7 +5607,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccall.add_argument (cneedle);
 			cif_condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccall, new CCodeConstant ("0"));
 		} else if (array_type.element_type is StructValueType) {
-			var equalfunc = generate_struct_equal_function ((Struct) array_type.element_type.data_type);
+			var equalfunc = generate_struct_equal_function ((Struct) array_type.element_type.type_symbol);
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, celement));
 			ccall.add_argument (cneedle);
@@ -5688,8 +5688,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (pointer_type != null) {
 			type = pointer_type.base_type;
 		}
-		var cl = type.data_type as Class;
-		var iface = type.data_type as Interface;
+		unowned Class? cl = type.type_symbol as Class;
+		unowned Interface? iface = type.type_symbol as Interface;
 		if ((cl != null && !cl.is_compact) || iface != null || type is GenericType || type is ErrorType) {
 			set_cvalue (expr, create_type_check (get_cvalue (expr.expression), expr.type_reference));
 		} else {
@@ -5781,7 +5781,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		    && type.floating_reference) {
 			/* floating reference, sink it.
 			 */
-			var cl = type.data_type as ObjectTypeSymbol;
+			unowned ObjectTypeSymbol? cl = type.type_symbol as ObjectTypeSymbol;
 			var sink_func = (cl != null) ? get_ccode_ref_sink_function (cl) : "";
 
 			if (sink_func != "") {
@@ -5798,7 +5798,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					ccode.close ();
 				}
 			} else {
-				Report.error (node.source_reference, "type `%s' does not support floating references".printf (type.data_type.name));
+				Report.error (node.source_reference, "type `%s' does not support floating references".printf (type.type_symbol.name));
 			}
 		}
 
@@ -5809,14 +5809,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		bool gvalue_boxing = (context.profile == Profile.GOBJECT
 		                      && target_type != null
-		                      && target_type.data_type == gvalue_type
+		                      && target_type.type_symbol == gvalue_type
 		                      && !(type is NullType)
 		                      && get_ccode_type_id (type) != "G_TYPE_VALUE");
 		bool gvariant_boxing = (context.profile == Profile.GOBJECT
 		                        && target_type != null
-		                        && target_type.data_type == gvariant_type
+		                        && target_type.type_symbol == gvariant_type
 		                        && !(type is NullType)
-		                        && type.data_type != gvariant_type);
+		                        && type.type_symbol != gvariant_type);
 
 		if (type.value_owned
 		    && (target_type == null || !target_type.value_owned || boxing || unboxing || gvariant_boxing)
@@ -5968,8 +5968,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (!gvalue_boxing && !gvariant_boxing && target_type.value_owned && (!type.value_owned || boxing || unboxing || array_needs_copy) && requires_copy (target_type) && !(type is NullType)) {
 			// need to copy value
 			var copy = (GLibValue) copy_value (result, node);
-			if (target_type.data_type is Interface && copy == null) {
-				Report.error (node.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (target_type.data_type.get_full_name ()));
+			if (target_type.type_symbol is Interface && copy == null) {
+				Report.error (node.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (target_type.type_symbol.get_full_name ()));
 				return result;
 			}
 			result = copy;
@@ -5988,7 +5988,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual CCodeExpression get_implicit_cast_expression (CCodeExpression source_cexpr, DataType? expression_type, DataType? target_type, CodeNode? node) {
 		var cexpr = source_cexpr;
 
-		if (expression_type.data_type != null && expression_type.data_type == target_type.data_type) {
+		if (expression_type.type_symbol != null && expression_type.type_symbol == target_type.type_symbol) {
 			// same type, no cast required
 			return cexpr;
 		}
@@ -6000,14 +6000,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		generate_type_declaration (target_type, cfile);
 
-		var cl = target_type.data_type as Class;
-		var iface = target_type.data_type as Interface;
+		unowned Class? cl = target_type.type_symbol as Class;
+		unowned Interface? iface = target_type.type_symbol as Interface;
 		if (context.checking && (iface != null || (cl != null && !cl.is_compact))) {
 			// checked cast for strict subtypes of GTypeInstance
-			return generate_instance_cast (cexpr, target_type.data_type);
-		} else if (target_type.data_type != null && get_ccode_name (expression_type) != get_ccode_name (target_type)) {
-			var st = target_type.data_type as Struct;
-			if (target_type.data_type.is_reference_type () || (st != null && st.is_simple_type ())) {
+			return generate_instance_cast (cexpr, target_type.type_symbol);
+		} else if (target_type.type_symbol != null && get_ccode_name (expression_type) != get_ccode_name (target_type)) {
+			unowned Struct? st = target_type.type_symbol as Struct;
+			if (target_type.type_symbol.is_reference_type () || (st != null && st.is_simple_type ())) {
 				// don't cast non-simple structs
 				return new CCodeCastExpression (cexpr, get_ccode_name (target_type));
 			} else {
@@ -6172,11 +6172,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeExpression? default_value_for_type (DataType type, bool initializer_expression, bool on_error = false) {
-		var st = type.data_type as Struct;
+		unowned Struct? st = type.type_symbol as Struct;
 		var array_type = type as ArrayType;
-		if (type.data_type != null && !type.nullable
-		    && (on_error ? get_ccode_default_value_on_error (type.data_type) : get_ccode_default_value (type.data_type)) != "") {
-			return new CCodeConstant (on_error ? get_ccode_default_value_on_error (type.data_type) : get_ccode_default_value (type.data_type));
+		if (type.type_symbol != null && !type.nullable
+		    && (on_error ? get_ccode_default_value_on_error (type.type_symbol) : get_ccode_default_value (type.type_symbol)) != "") {
+			return new CCodeConstant (on_error ? get_ccode_default_value_on_error (type.type_symbol) : get_ccode_default_value (type.type_symbol));
 		} else if (initializer_expression && !type.nullable &&
 				   (st != null || (array_type != null && array_type.fixed_length))) {
 			// 0-initialize struct with struct initializer { 0 }
@@ -6184,7 +6184,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var clist = new CCodeInitializerList ();
 			clist.append (new CCodeConstant ("0"));
 			return clist;
-		} else if ((type.data_type != null && type.data_type.is_reference_type ())
+		} else if ((type.type_symbol != null && type.type_symbol.is_reference_type ())
 		           || type.nullable
 		           || type is PointerType || type is DelegateType
 		           || (array_type != null && !array_type.fixed_length)) {
@@ -6238,8 +6238,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (array_type != null && array_type.inline_allocated) {
 			return false;
 		}
-		if (type.data_type != null) {
-			return type.data_type.get_attribute_bool ("CCode", "lvalue_access", true);
+		if (type.type_symbol != null) {
+			return type.type_symbol.get_attribute_bool ("CCode", "lvalue_access", true);
 		}
 		return true;
 	}
@@ -6367,7 +6367,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public void return_default_value (DataType return_type, bool on_error = false) {
-		var st = return_type.data_type as Struct;
+		unowned Struct? st = return_type.type_symbol as Struct;
 		if (st != null && st.is_simple_type () && !return_type.nullable) {
 			// 0-initialize struct with struct initializer { 0 }
 			// only allowed as initializer expression in C

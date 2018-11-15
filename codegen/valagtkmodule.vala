@@ -286,7 +286,7 @@ public class Vala.GtkModule : GSignalModule {
 		}
 
 		/* We allow Gtk child to have stricter type than class field */
-		var field_class = f.variable_type.data_type as Class;
+		unowned Class? field_class = f.variable_type.type_symbol as Class;
 		if (field_class == null || !child_class.is_subtype_of (field_class)) {
 			Report.error (f.source_reference, "cannot convert from Gtk child type `%s' to `%s'".printf (child_class.get_full_name(), field_class.get_full_name()));
 			return;

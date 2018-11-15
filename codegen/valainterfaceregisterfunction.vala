@@ -80,7 +80,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	public override void get_type_interface_init_statements (CodeContext context, CCodeBlock block, bool plugin) {
 		/* register all prerequisites */
 		foreach (DataType prereq_ref in interface_reference.get_prerequisites ()) {
-			var prereq = prereq_ref.data_type;
+			unowned TypeSymbol prereq = prereq_ref.type_symbol;
 
 			var func = new CCodeFunctionCall (new CCodeIdentifier ("g_type_interface_add_prerequisite"));
 			func.add_argument (new CCodeIdentifier ("%s_type_id".printf (get_ccode_lower_case_name (interface_reference))));

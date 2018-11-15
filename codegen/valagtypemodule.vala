@@ -226,7 +226,7 @@ public class Vala.GTypeModule : GErrorModule {
 			generate_class_struct_declaration (cl.base_class, decl_space);
 		}
 		foreach (DataType base_type in cl.get_base_types ()) {
-			var iface = base_type.data_type as Interface;
+			unowned Interface? iface = base_type.type_symbol as Interface;
 			if (iface != null) {
 				generate_interface_declaration (iface, decl_space);
 			}
@@ -753,8 +753,8 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			foreach (DataType base_type in cl.get_base_types ()) {
-				if (base_type.data_type is Interface) {
-					add_interface_init_function (cl, (Interface) base_type.data_type);
+				if (base_type.type_symbol is Interface) {
+					add_interface_init_function (cl, (Interface) base_type.type_symbol);
 				}
 			}
 
@@ -1888,19 +1888,19 @@ public class Vala.GTypeModule : GErrorModule {
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.blurb)));
 
 
-		if (prop.property_type.data_type is Class || prop.property_type.data_type is Interface) {
-			string param_spec_name = get_ccode_param_spec_function (prop.property_type.data_type);
+		if (prop.property_type.type_symbol is Class || prop.property_type.type_symbol is Interface) {
+			string param_spec_name = get_ccode_param_spec_function (prop.property_type.type_symbol);
 			cspec.call = new CCodeIdentifier (param_spec_name);
 			if (param_spec_name == "g_param_spec_string") {
 				cspec.add_argument (new CCodeConstant ("NULL"));
 			} else if (param_spec_name == "g_param_spec_variant") {
 				cspec.add_argument (new CCodeConstant ("G_VARIANT_TYPE_ANY"));
 				cspec.add_argument (new CCodeConstant ("NULL"));
-			} else if (get_ccode_type_id (prop.property_type.data_type) != "G_TYPE_POINTER") {
-				cspec.add_argument (new CCodeIdentifier (get_ccode_type_id (prop.property_type.data_type)));
+			} else if (get_ccode_type_id (prop.property_type.type_symbol) != "G_TYPE_POINTER") {
+				cspec.add_argument (new CCodeIdentifier (get_ccode_type_id (prop.property_type.type_symbol)));
 			}
-		} else if (prop.property_type.data_type is Enum) {
-			var e = prop.property_type.data_type as Enum;
+		} else if (prop.property_type.type_symbol is Enum) {
+			unowned Enum e = (Enum) prop.property_type.type_symbol;
 			if (get_ccode_has_type_id (e)) {
 				if (e.is_flags) {
 					cspec.call = new CCodeIdentifier ("g_param_spec_flags");
@@ -1923,10 +1923,10 @@ public class Vala.GTypeModule : GErrorModule {
 			if (prop.initializer != null) {
 				cspec.add_argument ((CCodeExpression) get_ccodenode (prop.initializer));
 			} else {
-				cspec.add_argument (new CCodeConstant (get_ccode_default_value (prop.property_type.data_type)));
+				cspec.add_argument (new CCodeConstant (get_ccode_default_value (prop.property_type.type_symbol)));
 			}
-		} else if (prop.property_type.data_type is Struct) {
-			var st = (Struct) prop.property_type.data_type;
+		} else if (prop.property_type.type_symbol is Struct) {
+			unowned Struct st = (Struct) prop.property_type.type_symbol;
 			var type_id = get_ccode_type_id (st);
 			if (type_id == "G_TYPE_INT") {
 				cspec.call = new CCodeIdentifier ("g_param_spec_int");
@@ -2036,7 +2036,7 @@ public class Vala.GTypeModule : GErrorModule {
 				cspec.call = new CCodeIdentifier ("g_param_spec_boxed");
 				cspec.add_argument (new CCodeIdentifier (type_id));
 			}
-		} else if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.data_type == string_type.data_type) {
+		} else if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.type_symbol == string_type.type_symbol) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_boxed");
 			cspec.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
 		} else {
@@ -2099,8 +2099,8 @@ public class Vala.GTypeModule : GErrorModule {
 		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (get_ccode_type_name (iface))));
 
 		foreach (DataType prerequisite in iface.get_prerequisites ()) {
-			var prereq_cl = prerequisite.data_type as Class;
-			var prereq_iface = prerequisite.data_type as Interface;
+			unowned Class? prereq_cl = prerequisite.type_symbol as Class;
+			unowned Interface? prereq_iface = prerequisite.type_symbol as Interface;
 			if (prereq_cl != null) {
 				generate_class_declaration (prereq_cl, decl_space);
 			} else if (prereq_iface != null) {
@@ -2380,7 +2380,7 @@ public class Vala.GTypeModule : GErrorModule {
 		var ma = expr.call as MemberAccess;
 		var mtype = expr.call.value_type as MethodType;
 		if (mtype == null || ma == null || ma.inner == null ||
-			!(ma.inner.value_type is EnumValueType) || !get_ccode_has_type_id (ma.inner.value_type.data_type) ||
+			!(ma.inner.value_type is EnumValueType) || !get_ccode_has_type_id (ma.inner.value_type.type_symbol) ||
 			mtype.method_symbol != ((EnumValueType) ma.inner.value_type).get_to_string_method ()) {
 			base.visit_method_call (expr);
 			return;
@@ -2487,7 +2487,7 @@ public class Vala.GTypeModule : GErrorModule {
 			var cdefault = default_value_for_type (ret_type, false);
 			if (cdefault != null) {
 				ccheck.add_argument (cdefault);
-			} else if (ret_type.data_type is Struct && !((Struct) ret_type.data_type).is_simple_type ()) {
+			} else if (ret_type.type_symbol is Struct && !((Struct) ret_type.type_symbol).is_simple_type ()) {
 				ccheck.add_argument (new CCodeIdentifier ("result"));
 			} else {
 				return;
