@@ -5321,6 +5321,8 @@ namespace GLib {
 		[CCode (generic_type_pos = 0.1)]
 		public unowned G index (uint index);
 		public void set_size (uint length);
+		[Version (since = "2.32")]
+		public void set_clear_func (GLib.DestroyNotify clear_func);
 	}
 
 	/* GTree */
