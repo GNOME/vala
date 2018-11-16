@@ -5296,6 +5296,7 @@ namespace GLib {
 		public G remove_index (uint index) {
 			assert (length > index);
 			G g = data[index];
+			data[index] = null;
 			_remove_index (index);
 			return g;
 		}
@@ -5303,6 +5304,7 @@ namespace GLib {
 		public G remove_index_fast (uint index) {
 			assert (length > index);
 			G g = data[index];
+			data[index] = null;
 			_remove_index_fast (index);
 			return g;
 		}
@@ -5312,6 +5314,7 @@ namespace GLib {
 			G[] ga = new G[length];
 			for (uint i = 0; i < length; i++) {
 				ga[i] = data[i + index];
+				data[i + index]  = null;
 			}
 			_remove_range (index, length);
 			return ga;
