@@ -5278,14 +5278,14 @@ namespace GLib {
 		[CCode (cname = "vala_g_array_remove_index")]
 		public G remove_index (uint index) {
 			assert (length > index);
-			G g = data[index];
+			G g = (owned) data[index];
 			_remove_index (index);
 			return g;
 		}
 		[CCode (cname = "vala_g_array_remove_index_fast")]
 		public G remove_index_fast (uint index) {
 			assert (length > index);
-			G g = data[index];
+			G g = (owned) data[index];
 			_remove_index_fast (index);
 			return g;
 		}
@@ -5294,7 +5294,7 @@ namespace GLib {
 			assert (this.length >= index + length);
 			G[] ga = new G[length];
 			for (uint i = 0; i < length; i++) {
-				ga[i] = data[i + index];
+				ga[i] = (owned) data[i + index];
 			}
 			_remove_range (index, length);
 			return ga;
