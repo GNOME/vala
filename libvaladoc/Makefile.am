@@ -79,7 +79,6 @@ libvaladoc_la_VALASOURCES = \
 	api/pointer.vala \
 	api/property.vala \
 	api/propertyaccessor.vala \
-	api/propertyaccessortype.vala \
 	api/signal.vala \
 	api/signaturebuilder.vala \
 	api/sourcefile.vala \

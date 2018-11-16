@@ -27,18 +27,16 @@ using Valadoc.Content;
  * Represents a get or set accessor of a property.
  */
 public class Valadoc.Api.PropertyAccessor : Symbol {
-	private PropertyAccessorType type;
 	private Ownership ownership;
 	private string? cname;
 
 	public PropertyAccessor (Property parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
-							 string? cname, PropertyAccessorType type, Ownership ownership, Vala.PropertyAccessor data)
+							 string? cname, Ownership ownership, Vala.PropertyAccessor data)
 	{
 		base (parent, file, name, accessibility, null, data);
 
 		this.ownership = ownership;
 		this.cname = cname;
-		this.type = type;
 	}
 
 	/**
@@ -66,7 +64,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	 */
 	public bool is_construct {
 		get {
-			return (type & PropertyAccessorType.CONSTRUCT) != 0;
+			return ((Vala.PropertyAccessor) data).construction;
 		}
 	}
 
@@ -75,7 +73,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	 */
 	public bool is_set {
 		get {
-			return (type & PropertyAccessorType.SET) != 0;
+			return ((Vala.PropertyAccessor) data).writable;
 		}
 	}
 
@@ -84,7 +82,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 	 */
 	public bool is_get {
 		get {
-			return (type & PropertyAccessorType.GET) != 0;
+			return ((Vala.PropertyAccessor) data).readable;
 		}
 	}
 

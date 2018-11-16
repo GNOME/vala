@@ -496,21 +496,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return meta_data.get_namespace ((Vala.Namespace) namespace_symbol, file);
 	}
 
-	private PropertyAccessorType get_property_accessor_type (Vala.PropertyAccessor element) {
-		if (element.construction) {
-			if (element.writable) {
-				return (PropertyAccessorType.CONSTRUCT | PropertyAccessorType.SET);
-			}
-			return PropertyAccessorType.CONSTRUCT;
-		} else if (element.writable) {
-			return PropertyAccessorType.SET;
-		} else if (element.readable) {
-			return PropertyAccessorType.GET;
-		}
-
-		error ("Unknown symbol accessibility type");
-	}
-
 	private bool type_reference_pass_ownership (Vala.DataType? element) {
 		if (element == null) {
 			return false;
@@ -1050,7 +1035,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 												element.name,
 												accessor.access,
 												get_cname (accessor),
-												get_property_accessor_type (accessor),
 												get_property_ownership (accessor),
 												accessor);
 		}
@@ -1062,7 +1046,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 												element.name,
 												accessor.access,
 												get_cname (accessor),
-												get_property_accessor_type (accessor),
 												get_property_ownership (accessor),
 												accessor);
 		}
