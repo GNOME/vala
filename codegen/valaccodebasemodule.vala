@@ -3083,6 +3083,37 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return destroy_func;
 	}
 
+	// g_array_set_clear_func has a specific GDestroyNotify and returns the content of the given data
+	protected string generate_destroy_function_content_of_wrapper (DataType type) {
+		string destroy_func = "_vala_%s_free_function_content_of".printf (get_ccode_name (type.data_type));
+
+		if (!add_wrapper (destroy_func)) {
+			// wrapper already defined
+			return destroy_func;
+		}
+
+		var function = new CCodeFunction (destroy_func, "void");
+		function.modifiers = CCodeModifiers.STATIC;
+		function.add_parameter (new CCodeParameter ("data", "gpointer"));
+		push_function (function);
+
+		ccode.add_declaration (get_ccode_name (type), new CCodeVariableDeclarator ("self"));
+		var cast = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeCastExpression (new CCodeIdentifier ("data"), get_ccode_name (type) + "*"));
+		ccode.add_assignment (new CCodeIdentifier ("self"), cast);
+
+		var free_call = new CCodeFunctionCall (get_destroy0_func_expression (type));
+		free_call.add_argument (new CCodeIdentifier ("self"));
+
+		ccode.add_expression (free_call);
+
+		pop_function ();
+
+		cfile.add_function_declaration (function);
+		cfile.add_function (function);
+
+		return destroy_func;
+	}
+
 	protected string generate_free_func_wrapper (DataType type) {
 		string destroy_func = "_vala_%s_free".printf (get_ccode_name (type.data_type));
 
@@ -5052,6 +5083,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 					ccode.close ();
 				}
+			}
+		}
+
+		// We need a g_array_set_clear_func right after the g_array_new
+		var cl = expr.type_reference.data_type as Class;
+		if (cl == garray_type && expr.symbol_reference is CreationMethod) {
+			var clear_func = new CCodeFunctionCall (new CCodeIdentifier ("g_array_set_clear_func"));
+			var type_arg = expr.type_reference.get_type_arguments ().get (0);
+			clear_func.add_argument (get_cvalue_ (expr.target_value));
+			if (requires_copy (type_arg)) {
+				var free_wrapper = generate_destroy_function_content_of_wrapper (type_arg);
+				clear_func.add_argument (new CCodeIdentifier (free_wrapper));
+				ccode.add_expression (clear_func);
 			}
 		}
 
