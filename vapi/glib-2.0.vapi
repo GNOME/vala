@@ -5281,11 +5281,11 @@ namespace GLib {
 		[CCode (cname = "g_array_sized_new")]
 		public Array.sized (bool zero_terminated, bool clear, ulong element_size, uint reserved_size);
 		public void append_val (owned G value);
-		public void append_vals (void* data, uint len);
+		public void append_vals (owned G[] data);
 		public void prepend_val (owned G value);
-		public void prepend_vals (void* data, uint len);
+		public void prepend_vals (owned G[] data);
 		public void insert_val (uint index, owned G value);
-		public void insert_vals (uint index, void* data, uint len);
+		public void insert_vals (uint index, owned G[] data);
 		[CCode (cname = "g_array_remove_index")]
 		public void _remove_index (uint index);
 		[CCode (cname = "g_array_remove_index_fast")]
@@ -5296,6 +5296,7 @@ namespace GLib {
 		public G remove_index (uint index) {
 			assert (length > index);
 			G g = data[index];
+			data[index] = null;
 			_remove_index (index);
 			return g;
 		}
@@ -5303,6 +5304,7 @@ namespace GLib {
 		public G remove_index_fast (uint index) {
 			assert (length > index);
 			G g = data[index];
+			data[index] = null;
 			_remove_index_fast (index);
 			return g;
 		}
@@ -5312,6 +5314,7 @@ namespace GLib {
 			G[] ga = new G[length];
 			for (uint i = 0; i < length; i++) {
 				ga[i] = data[i + index];
+				data[i + index] = null;
 			}
 			_remove_range (index, length);
 			return ga;
