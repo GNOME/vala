@@ -100,93 +100,12 @@ private class Valadoc.Api.InitializerBuilder : Vala.CodeVisitor {
 	 */
 	public override void visit_binary_expression (Vala.BinaryExpression expr) {
 		expr.left.accept (this);
-
-		switch (expr.operator) {
-		case Vala.BinaryOperator.PLUS:
-			signature.append ("+ ");
-			break;
-
-		case Vala.BinaryOperator.MINUS:
-			signature.append ("- ");
-			break;
-
-		case Vala.BinaryOperator.MUL:
-			signature.append ("* ");
-			break;
-
-		case Vala.BinaryOperator.DIV:
-			signature.append ("/ ");
-			break;
-
-		case Vala.BinaryOperator.MOD:
-			signature.append ("% ");
-			break;
-
-		case Vala.BinaryOperator.SHIFT_LEFT:
-			signature.append ("<< ");
-			break;
-
-		case Vala.BinaryOperator.SHIFT_RIGHT:
-			signature.append (">> ");
-			break;
-
-		case Vala.BinaryOperator.LESS_THAN:
-			signature.append ("< ");
-			break;
-
-		case Vala.BinaryOperator.GREATER_THAN:
-			signature.append ("> ");
-			break;
-
-		case Vala.BinaryOperator.LESS_THAN_OR_EQUAL:
-			signature.append ("<= ");
-			break;
-
-		case Vala.BinaryOperator.GREATER_THAN_OR_EQUAL:
-			signature.append (">= ");
-			break;
-
-		case Vala.BinaryOperator.EQUALITY:
-			signature.append ("== ");
-			break;
-
-		case Vala.BinaryOperator.INEQUALITY:
-			signature.append ("!= ");
-			break;
-
-		case Vala.BinaryOperator.BITWISE_AND:
-			signature.append ("& ");
-			break;
-
-		case Vala.BinaryOperator.BITWISE_OR:
-			signature.append ("| ");
-			break;
-
-		case Vala.BinaryOperator.BITWISE_XOR:
-			signature.append ("^ ");
-			break;
-
-		case Vala.BinaryOperator.AND:
-			signature.append ("&& ");
-			break;
-
-		case Vala.BinaryOperator.OR:
-			signature.append ("|| ");
-			break;
-
-		case Vala.BinaryOperator.IN:
-			signature.append_keyword ("in");
-			signature.append (" ");
-			break;
-
-		case Vala.BinaryOperator.COALESCE:
-			signature.append ("?? ");
-			break;
-
-		default:
-			assert_not_reached ();
+		if (expr.operator == Vala.BinaryOperator.IN) {
+			signature.append_keyword (Vala.BinaryOperator.IN.to_string ());
+		} else {
+			signature.append (expr.operator.to_string ());
 		}
-
+		signature.append (" ");
 		expr.right.accept (this);
 	}
 
@@ -194,41 +113,10 @@ private class Valadoc.Api.InitializerBuilder : Vala.CodeVisitor {
 	 * {@inheritDoc}
 	 */
 	public override void visit_unary_expression (Vala.UnaryExpression expr) {
-		switch (expr.operator) {
-		case Vala.UnaryOperator.PLUS:
-			signature.append ("+");
-			break;
-
-		case Vala.UnaryOperator.MINUS:
-			signature.append ("-");
-			break;
-
-		case Vala.UnaryOperator.LOGICAL_NEGATION:
-			signature.append ("!");
-			break;
-
-		case Vala.UnaryOperator.BITWISE_COMPLEMENT:
-			signature.append ("~");
-			break;
-
-		case Vala.UnaryOperator.INCREMENT:
-			signature.append ("++");
-			break;
-
-		case Vala.UnaryOperator.DECREMENT:
-			signature.append ("--");
-			break;
-
-		case Vala.UnaryOperator.REF:
-			signature.append_keyword ("ref");
-			break;
-
-		case Vala.UnaryOperator.OUT:
-			signature.append_keyword ("out");
-			break;
-
-		default:
-			assert_not_reached ();
+		if (expr.operator == Vala.UnaryOperator.REF || expr.operator == Vala.UnaryOperator.OUT) {
+			signature.append_keyword (expr.operator.to_string ());
+		} else {
+			signature.append (expr.operator.to_string ());
 		}
 		expr.inner.accept (this);
 	}
@@ -238,56 +126,7 @@ private class Valadoc.Api.InitializerBuilder : Vala.CodeVisitor {
 	 */
 	public override void visit_assignment (Vala.Assignment a) {
 		a.left.accept (this);
-
-		switch (a.operator) {
-		case Vala.AssignmentOperator.SIMPLE:
-			signature.append ("=");
-			break;
-
-		case Vala.AssignmentOperator.BITWISE_OR:
-			signature.append ("|");
-			break;
-
-		case Vala.AssignmentOperator.BITWISE_AND:
-			signature.append ("&");
-			break;
-
-		case Vala.AssignmentOperator.BITWISE_XOR:
-			signature.append ("^");
-			break;
-
-		case Vala.AssignmentOperator.ADD:
-			signature.append ("+");
-			break;
-
-		case Vala.AssignmentOperator.SUB:
-			signature.append ("-");
-			break;
-
-		case Vala.AssignmentOperator.MUL:
-			signature.append ("*");
-			break;
-
-		case Vala.AssignmentOperator.DIV:
-			signature.append ("/");
-			break;
-
-		case Vala.AssignmentOperator.PERCENT:
-			signature.append ("%");
-			break;
-
-		case Vala.AssignmentOperator.SHIFT_LEFT:
-			signature.append ("<<");
-			break;
-
-		case Vala.AssignmentOperator.SHIFT_RIGHT:
-			signature.append (">>");
-			break;
-
-		default:
-			assert_not_reached ();
-		}
-
+		signature.append (a.operator.to_string ());
 		a.right.accept (this);
 	}
 
