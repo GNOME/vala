@@ -155,6 +155,8 @@ public abstract class Vala.TypeRegisterFunction {
 			} else {
 				reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_enum_register_static"));
 			}
+		} else if (type_symbol is ErrorDomain) {
+			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_enum_register_static"));
 		} else if (fundamental) {
 			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_register_fundamental"));
 			reg_call.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("g_type_fundamental_next")));
@@ -199,6 +201,34 @@ public abstract class Vala.TypeRegisterFunction {
 			}
 
 			cdecl.add_declarator (enum_decl);
+			cdecl.modifiers = CCodeModifiers.STATIC;
+
+			type_init.add_statement (cdecl);
+
+			reg_call.add_argument (new CCodeIdentifier ("values"));
+		} else if (type_symbol is ErrorDomain) {
+			unowned ErrorDomain edomain = (ErrorDomain) type_symbol;
+			var clist = new CCodeInitializerList (); /* or during visit time? */
+
+			CCodeInitializerList clist_ec = null;
+			foreach (ErrorCode ec in edomain.get_codes ()) {
+				clist_ec = new CCodeInitializerList ();
+				clist_ec.append (new CCodeConstant (get_ccode_name (ec)));
+				clist_ec.append (new CCodeConstant ("\"%s\"".printf (get_ccode_name (ec))));
+				clist_ec.append (new CCodeConstant ("\"%s\"".printf (ec.nick)));
+				clist.append (clist_ec);
+			}
+
+			clist_ec = new CCodeInitializerList ();
+			clist_ec.append (new CCodeConstant ("0"));
+			clist_ec.append (new CCodeConstant ("NULL"));
+			clist_ec.append (new CCodeConstant ("NULL"));
+			clist.append (clist_ec);
+
+			var edomain_decl = new CCodeVariableDeclarator ("values[]", clist);
+
+			cdecl = new CCodeDeclaration ("const GEnumValue");
+			cdecl.add_declarator (edomain_decl);
 			cdecl.modifiers = CCodeModifiers.STATIC;
 
 			type_init.add_statement (cdecl);

@@ -2,9 +2,9 @@
  * generated from delegates_error_pos.vala, do not modify */
 
 #include <glib.h>
+#include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
-#include <glib-object.h>
 #include <gobject/gvaluecollector.h>
 
 #if !defined(VALA_EXTERN)
@@ -17,6 +17,7 @@
 #endif
 #endif
 
+#define TYPE_FOO_ERROR (foo_error_get_type ())
 typedef gchar* (*FooFunc) (gint i, GError** error, gpointer user_data);
 
 #define TYPE_BAR (bar_get_type ())
@@ -42,6 +43,7 @@ typedef enum  {
 	FOO_ERROR_BAR
 } FooError;
 #define FOO_ERROR foo_error_quark ()
+
 struct _Bar {
 	GTypeInstance parent_instance;
 	volatile int ref_count;
@@ -60,6 +62,7 @@ struct _ParamSpecBar {
 static gpointer bar_parent_class = NULL;
 
 VALA_EXTERN GQuark foo_error_quark (void);
+GType foo_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN gpointer bar_ref (gpointer instance);
 VALA_EXTERN void bar_unref (gpointer instance);
 VALA_EXTERN GParamSpec* param_spec_bar (const gchar* name,
@@ -95,6 +98,27 @@ GQuark
 foo_error_quark (void)
 {
 	return g_quark_from_static_string ("foo-error-quark");
+}
+
+static GType
+foo_error_get_type_once (void)
+{
+	static const GEnumValue values[] = {{FOO_ERROR_BAR, "FOO_ERROR_BAR", "bar"}, {0, NULL, NULL}};
+	GType foo_error_type_id;
+	foo_error_type_id = g_enum_register_static ("FooError", values);
+	return foo_error_type_id;
+}
+
+GType
+foo_error_get_type (void)
+{
+	static volatile gsize foo_error_type_id__once = 0;
+	if (g_once_init_enter (&foo_error_type_id__once)) {
+		GType foo_error_type_id;
+		foo_error_type_id = foo_error_get_type_once ();
+		g_once_init_leave (&foo_error_type_id__once, foo_error_type_id);
+	}
+	return foo_error_type_id__once;
 }
 
 gchar*

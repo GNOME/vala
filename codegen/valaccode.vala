@@ -237,7 +237,7 @@ namespace Vala {
 	}
 
 	public static string get_ccode_type_function (TypeSymbol sym) {
-		assert (!((sym is Class && ((Class) sym).is_compact) || sym is ErrorCode || sym is ErrorDomain || sym is Delegate));
+		assert (!((sym is Class && ((Class) sym).is_compact) || sym is ErrorCode || sym is Delegate));
 		return "%s_get_type".printf (get_ccode_lower_case_name (sym));
 	}
 

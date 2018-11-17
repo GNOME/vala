@@ -15,6 +15,8 @@
 #endif
 #endif
 
+#define TYPE_FOO_ERROR (foo_error_get_type ())
+
 #define TYPE_MANAM (manam_get_type ())
 #define MANAM(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_MANAM, Manam))
 #define MANAM_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_MANAM, ManamClass))
@@ -43,6 +45,7 @@ typedef enum  {
 	FOO_ERROR_FAIL
 } FooError;
 #define FOO_ERROR foo_error_quark ()
+
 struct _Manam {
 	GObject parent_instance;
 	ManamPrivate * priv;
@@ -82,6 +85,7 @@ VALA_EXTERN GMainLoop* loop;
 GMainLoop* loop = NULL;
 
 VALA_EXTERN GQuark foo_error_quark (void);
+GType foo_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType manam_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Manam, g_object_unref)
 VALA_EXTERN Manam* manam_new (void);
@@ -109,6 +113,27 @@ GQuark
 foo_error_quark (void)
 {
 	return g_quark_from_static_string ("foo-error-quark");
+}
+
+static GType
+foo_error_get_type_once (void)
+{
+	static const GEnumValue values[] = {{FOO_ERROR_FAIL, "FOO_ERROR_FAIL", "fail"}, {0, NULL, NULL}};
+	GType foo_error_type_id;
+	foo_error_type_id = g_enum_register_static ("FooError", values);
+	return foo_error_type_id;
+}
+
+GType
+foo_error_get_type (void)
+{
+	static volatile gsize foo_error_type_id__once = 0;
+	if (g_once_init_enter (&foo_error_type_id__once)) {
+		GType foo_error_type_id;
+		foo_error_type_id = foo_error_get_type_once ();
+		g_once_init_leave (&foo_error_type_id__once, foo_error_type_id);
+	}
+	return foo_error_type_id__once;
 }
 
 Manam*

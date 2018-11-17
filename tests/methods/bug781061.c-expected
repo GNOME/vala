@@ -2,6 +2,7 @@
  * generated from methods_bug781061.vala, do not modify */
 
 #include <glib.h>
+#include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
@@ -16,12 +17,15 @@
 #endif
 #endif
 
+#define TYPE_FOO_ERROR (foo_error_get_type ())
+
 typedef enum  {
 	FOO_ERROR_FAILED
 } FooError;
 #define FOO_ERROR foo_error_quark ()
 
 VALA_EXTERN GQuark foo_error_quark (void);
+GType foo_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN void print_something_throws (gboolean ok,
                              const gchar* format,
                              GError** error,
@@ -44,6 +48,27 @@ GQuark
 foo_error_quark (void)
 {
 	return g_quark_from_static_string ("foo-error-quark");
+}
+
+static GType
+foo_error_get_type_once (void)
+{
+	static const GEnumValue values[] = {{FOO_ERROR_FAILED, "FOO_ERROR_FAILED", "failed"}, {0, NULL, NULL}};
+	GType foo_error_type_id;
+	foo_error_type_id = g_enum_register_static ("FooError", values);
+	return foo_error_type_id;
+}
+
+GType
+foo_error_get_type (void)
+{
+	static volatile gsize foo_error_type_id__once = 0;
+	if (g_once_init_enter (&foo_error_type_id__once)) {
+		GType foo_error_type_id;
+		foo_error_type_id = foo_error_get_type_once ();
+		g_once_init_leave (&foo_error_type_id__once, foo_error_type_id);
+	}
+	return foo_error_type_id__once;
 }
 
 void

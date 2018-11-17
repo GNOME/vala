@@ -2,6 +2,7 @@
  * generated from errors_delegate_throws_error_code.vala, do not modify */
 
 #include <glib.h>
+#include <glib-object.h>
 
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
@@ -13,6 +14,7 @@
 #endif
 #endif
 
+#define TYPE_FOO_ERROR (foo_error_get_type ())
 typedef void (*FooFunc) (gpointer user_data, GError** error);
 
 typedef enum  {
@@ -22,6 +24,7 @@ typedef enum  {
 #define FOO_ERROR foo_error_quark ()
 
 VALA_EXTERN GQuark foo_error_quark (void);
+GType foo_error_get_type (void) G_GNUC_CONST ;
 static void _vala_main (void);
 static void __lambda4_ (GError** error);
 static void ___lambda4__foo_func (gpointer self,
@@ -31,6 +34,27 @@ GQuark
 foo_error_quark (void)
 {
 	return g_quark_from_static_string ("foo-error-quark");
+}
+
+static GType
+foo_error_get_type_once (void)
+{
+	static const GEnumValue values[] = {{FOO_ERROR_FOO, "FOO_ERROR_FOO", "foo"}, {FOO_ERROR_BAR, "FOO_ERROR_BAR", "bar"}, {0, NULL, NULL}};
+	GType foo_error_type_id;
+	foo_error_type_id = g_enum_register_static ("FooError", values);
+	return foo_error_type_id;
+}
+
+GType
+foo_error_get_type (void)
+{
+	static volatile gsize foo_error_type_id__once = 0;
+	if (g_once_init_enter (&foo_error_type_id__once)) {
+		GType foo_error_type_id;
+		foo_error_type_id = foo_error_get_type_once ();
+		g_once_init_leave (&foo_error_type_id__once, foo_error_type_id);
+	}
+	return foo_error_type_id__once;
 }
 
 static void

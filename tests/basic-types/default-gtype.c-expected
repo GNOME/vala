@@ -35,6 +35,8 @@ typedef enum  {
 
 #define TYPE_FOO_FLAG (foo_flag_get_type ())
 
+#define TYPE_FOO_ERROR (foo_error_get_type ())
+
 #define TYPE_FOO_STRUCT (foo_struct_get_type ())
 typedef struct _FooStruct FooStruct;
 typedef enum  {
@@ -60,6 +62,7 @@ typedef enum  {
 	FOO_ERROR_FAIL
 } FooError;
 #define FOO_ERROR foo_error_quark ()
+
 struct _FooStruct {
 	gint i;
 };
@@ -77,6 +80,7 @@ static GType ifoo_get_type_once (void);
 VALA_EXTERN GType foo_enum_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType foo_flag_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GQuark foo_error_quark (void);
+GType foo_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType foo_struct_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN FooStruct* foo_struct_dup (const FooStruct* self);
 VALA_EXTERN void foo_struct_free (FooStruct* self);
@@ -157,6 +161,27 @@ GQuark
 foo_error_quark (void)
 {
 	return g_quark_from_static_string ("foo-error-quark");
+}
+
+static GType
+foo_error_get_type_once (void)
+{
+	static const GEnumValue values[] = {{FOO_ERROR_FAIL, "FOO_ERROR_FAIL", "fail"}, {0, NULL, NULL}};
+	GType foo_error_type_id;
+	foo_error_type_id = g_enum_register_static ("FooError", values);
+	return foo_error_type_id;
+}
+
+GType
+foo_error_get_type (void)
+{
+	static volatile gsize foo_error_type_id__once = 0;
+	if (g_once_init_enter (&foo_error_type_id__once)) {
+		GType foo_error_type_id;
+		foo_error_type_id = foo_error_get_type_once ();
+		g_once_init_leave (&foo_error_type_id__once, foo_error_type_id);
+	}
+	return foo_error_type_id__once;
 }
 
 FooStruct*

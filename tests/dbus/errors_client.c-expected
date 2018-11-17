@@ -17,6 +17,8 @@
 #endif
 #endif
 
+#define TYPE_TEST_ERROR (test_error_get_type ())
+
 #define TYPE_TEST (test_get_type ())
 #define TEST(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_TEST, Test))
 #define IS_TEST(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_TEST))
@@ -42,6 +44,7 @@ typedef enum  {
 	TEST_ERROR_WORSE
 } TestError;
 #define TEST_ERROR test_error_quark ()
+
 struct _TestIface {
 	GTypeInterface parent_iface;
 	void (*test_void) (Test* self, GError** error);
@@ -52,6 +55,7 @@ struct _TestIface {
 };
 
 VALA_EXTERN GQuark test_error_quark (void);
+GType test_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType test_proxy_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN guint test_register_object (void* object,
                             GDBusConnection* connection,

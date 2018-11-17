@@ -2,10 +2,10 @@
  * generated from asynchronous_catch_error_scope.vala, do not modify */
 
 #include <glib.h>
+#include <glib-object.h>
 #include <gio/gio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <glib-object.h>
 
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
@@ -17,6 +17,7 @@
 #endif
 #endif
 
+#define TYPE_FOO_ERROR (foo_error_get_type ())
 #define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
 typedef struct _FooData FooData;
 typedef struct _Block1Data Block1Data;
@@ -30,6 +31,7 @@ typedef enum  {
 	FOO_ERROR_FAIL
 } FooError;
 #define FOO_ERROR foo_error_quark ()
+
 struct _FooData {
 	int _state_;
 	GObject* _source_object_;
@@ -50,6 +52,7 @@ struct _Block1Data {
 };
 
 VALA_EXTERN GQuark foo_error_quark (void);
+GType foo_error_get_type (void) G_GNUC_CONST ;
 static void foo_data_free (gpointer _data);
 VALA_EXTERN void foo (GAsyncReadyCallback _callback_,
           gpointer _user_data_);
@@ -69,6 +72,27 @@ GQuark
 foo_error_quark (void)
 {
 	return g_quark_from_static_string ("foo-error-quark");
+}
+
+static GType
+foo_error_get_type_once (void)
+{
+	static const GEnumValue values[] = {{FOO_ERROR_FAIL, "FOO_ERROR_FAIL", "fail"}, {0, NULL, NULL}};
+	GType foo_error_type_id;
+	foo_error_type_id = g_enum_register_static ("FooError", values);
+	return foo_error_type_id;
+}
+
+GType
+foo_error_get_type (void)
+{
+	static volatile gsize foo_error_type_id__once = 0;
+	if (g_once_init_enter (&foo_error_type_id__once)) {
+		GType foo_error_type_id;
+		foo_error_type_id = foo_error_get_type_once ();
+		g_once_init_leave (&foo_error_type_id__once, foo_error_type_id);
+	}
+	return foo_error_type_id__once;
 }
 
 static void

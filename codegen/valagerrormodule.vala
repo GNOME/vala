@@ -56,6 +56,31 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		requires_vala_extern = true;
 
 		decl_space.add_function_declaration (cquark_fun);
+		decl_space.add_type_definition (new CCodeNewline ());
+
+		if (!get_ccode_has_type_id (edomain)) {
+			return;
+		}
+
+		decl_space.add_include ("glib-object.h");
+		decl_space.add_type_declaration (new CCodeNewline ());
+
+		var fun_name = get_ccode_type_function (edomain);
+
+		var macro = "(%s ())".printf (fun_name);
+		decl_space.add_type_declaration (new CCodeMacroReplacement (get_ccode_type_id (edomain), macro));
+
+		var regfun = new CCodeFunction (fun_name, "GType");
+		regfun.modifiers = CCodeModifiers.CONST;
+
+		if (edomain.is_private_symbol ()) {
+			// avoid C warning as this function is not always used
+			regfun.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.UNUSED;
+		} else if (context.hide_internal && edomain.is_internal_symbol ()) {
+			regfun.modifiers |= CCodeModifiers.INTERNAL;
+		}
+
+		decl_space.add_function_declaration (regfun);
 	}
 
 	public override void visit_error_domain (ErrorDomain edomain) {

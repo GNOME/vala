@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 #include <stdarg.h>
 
 #if !defined(VALA_EXTERN)
@@ -18,6 +19,8 @@
 
 typedef void (*FooFunc) (const gchar* first, ...);
 typedef void (*BarFunc) (const gchar* first, ...);
+
+#define TYPE_BAZ_ERROR (baz_error_get_type ())
 typedef void (*BazFunc) (const gchar* first, GError** error, ...);
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
@@ -32,6 +35,7 @@ typedef enum  {
 #define BAZ_ERROR baz_error_quark ()
 
 VALA_EXTERN GQuark baz_error_quark (void);
+GType baz_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN void foo (const gchar* first,
           ...);
 VALA_EXTERN void baz (const gchar* first,
@@ -47,6 +51,27 @@ GQuark
 baz_error_quark (void)
 {
 	return g_quark_from_static_string ("baz-error-quark");
+}
+
+static GType
+baz_error_get_type_once (void)
+{
+	static const GEnumValue values[] = {{BAZ_ERROR_BAD, "BAZ_ERROR_BAD", "bad"}, {BAZ_ERROR_WORSE, "BAZ_ERROR_WORSE", "worse"}, {0, NULL, NULL}};
+	GType baz_error_type_id;
+	baz_error_type_id = g_enum_register_static ("BazError", values);
+	return baz_error_type_id;
+}
+
+GType
+baz_error_get_type (void)
+{
+	static volatile gsize baz_error_type_id__once = 0;
+	if (g_once_init_enter (&baz_error_type_id__once)) {
+		GType baz_error_type_id;
+		baz_error_type_id = baz_error_get_type_once ();
+		g_once_init_leave (&baz_error_type_id__once, baz_error_type_id);
+	}
+	return baz_error_type_id__once;
 }
 
 void

@@ -14,6 +14,8 @@
 #endif
 #endif
 
+#define TYPE_FOO (foo_get_type ())
+
 #define TYPE_CLS_A (cls_a_get_type ())
 #define CLS_A(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_CLS_A, ClsA))
 #define CLS_A_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_CLS_A, ClsAClass))
@@ -51,6 +53,7 @@ typedef enum  {
 	FOO_BAR
 } Foo;
 #define FOO foo_quark ()
+
 struct _ClsA {
 	GObject parent_instance;
 	ClsAPrivate * priv;
@@ -73,6 +76,7 @@ static gpointer cls_a_parent_class = NULL;
 static gpointer cls_b_parent_class = NULL;
 
 VALA_EXTERN GQuark foo_quark (void);
+GType foo_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType cls_a_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ClsA, g_object_unref)
 VALA_EXTERN ClsA* cls_a_new (GError** error);
@@ -91,6 +95,27 @@ GQuark
 foo_quark (void)
 {
 	return g_quark_from_static_string ("foo-quark");
+}
+
+static GType
+foo_get_type_once (void)
+{
+	static const GEnumValue values[] = {{FOO_BAR, "FOO_BAR", "bar"}, {0, NULL, NULL}};
+	GType foo_type_id;
+	foo_type_id = g_enum_register_static ("Foo", values);
+	return foo_type_id;
+}
+
+GType
+foo_get_type (void)
+{
+	static volatile gsize foo_type_id__once = 0;
+	if (g_once_init_enter (&foo_type_id__once)) {
+		GType foo_type_id;
+		foo_type_id = foo_get_type_once ();
+		g_once_init_leave (&foo_type_id__once, foo_type_id);
+	}
+	return foo_type_id__once;
 }
 
 ClsA*

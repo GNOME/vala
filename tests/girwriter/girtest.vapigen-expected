@@ -251,13 +251,19 @@ namespace GirTest {
 	public enum RenamedEnumeration {
 		VALUE1
 	}
-	[CCode (cheader_filename = "girtest.h", cprefix = "GIR_TEST_ERROR_TEST_")]
+	[CCode (cheader_filename = "girtest.h", cprefix = "GIR_TEST_ERROR_TEST_", type_id = "gir_test_error_test_get_type ()")]
 	public errordomain ErrorTest {
 		FAILED,
 		SMELLY,
 		FISHY
 	}
-	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedError", cprefix = "GIR_TEST_NAMED_ERROR_")]
+	[CCode (cheader_filename = "girtest.h", cprefix = "GIR_TEST_PLAIN_ERROR_TEST_", has_type_id = false)]
+	public errordomain PlainErrorTest {
+		FAILED,
+		SMELLY,
+		FISHY
+	}
+	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedError", cprefix = "GIR_TEST_NAMED_ERROR_", type_id = "gir_test_named_error_get_type ()")]
 	public errordomain RenamedError {
 		FAILED
 	}

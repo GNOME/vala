@@ -17,6 +17,8 @@
 #endif
 #endif
 
+#define TYPE_TEST_ERROR (test_error_get_type ())
+
 #define TYPE_TEST (test_get_type ())
 #define TEST(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_TEST, Test))
 #define TEST_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_TEST, TestClass))
@@ -47,6 +49,7 @@ typedef enum  {
 	TEST_ERROR_WORSE
 } TestError;
 #define TEST_ERROR test_error_quark ()
+
 struct _Test {
 	GObject parent_instance;
 	TestPrivate * priv;
@@ -61,6 +64,7 @@ VALA_EXTERN GMainLoop* main_loop;
 GMainLoop* main_loop = NULL;
 
 VALA_EXTERN GQuark test_error_quark (void);
+GType test_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType test_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Test, g_object_unref)
 VALA_EXTERN guint test_register_object (void* object,

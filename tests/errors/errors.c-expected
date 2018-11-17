@@ -17,6 +17,8 @@
 #endif
 #endif
 
+#define TYPE_BAR_ERROR (bar_error_get_type ())
+
 #define TYPE_BAR (bar_get_type ())
 #define BAR(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_BAR, Bar))
 #define BAR_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_BAR, BarClass))
@@ -40,6 +42,7 @@ typedef enum  {
 	BAR_ERROR_BAR
 } BarError;
 #define BAR_ERROR bar_error_quark ()
+
 struct _Bar {
 	GObject parent_instance;
 	BarPrivate * priv;
@@ -52,6 +55,7 @@ struct _BarClass {
 static gpointer bar_parent_class = NULL;
 
 VALA_EXTERN GQuark bar_error_quark (void);
+GType bar_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, g_object_unref)
 VALA_EXTERN void bar_foo (Bar* self,
@@ -74,6 +78,27 @@ GQuark
 bar_error_quark (void)
 {
 	return g_quark_from_static_string ("bar-error-quark");
+}
+
+static GType
+bar_error_get_type_once (void)
+{
+	static const GEnumValue values[] = {{BAR_ERROR_FOO, "BAR_ERROR_FOO", "foo"}, {BAR_ERROR_BAR, "BAR_ERROR_BAR", "bar"}, {0, NULL, NULL}};
+	GType bar_error_type_id;
+	bar_error_type_id = g_enum_register_static ("BarError", values);
+	return bar_error_type_id;
+}
+
+GType
+bar_error_get_type (void)
+{
+	static volatile gsize bar_error_type_id__once = 0;
+	if (g_once_init_enter (&bar_error_type_id__once)) {
+		GType bar_error_type_id;
+		bar_error_type_id = bar_error_get_type_once ();
+		g_once_init_leave (&bar_error_type_id__once, bar_error_type_id);
+	}
+	return bar_error_type_id__once;
 }
 
 void

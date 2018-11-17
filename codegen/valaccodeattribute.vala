@@ -1073,6 +1073,13 @@ public class Vala.CCodeAttribute : AttributeCache {
 				} else {
 					return en.is_flags ? "G_TYPE_UINT" : "G_TYPE_INT";
 				}
+			} else if (sym is ErrorDomain) {
+				unowned ErrorDomain edomain = (ErrorDomain) sym;
+				if (get_ccode_has_type_id (edomain)) {
+					return get_ccode_upper_case_name (edomain, "TYPE_");
+				} else {
+					return "G_TYPE_ERROR";
+				}
 			} else {
 				return "G_TYPE_POINTER";
 			}
@@ -1199,7 +1206,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return get_ccode_lower_case_name (cl, "value_get_");
 			} else if (cl.base_class != null) {
 				return get_ccode_get_value_function (cl.base_class);
-			} else if (type_id == "G_TYPE_POINTER") {
+			} else if (type_id == "G_TYPE_POINTER" || cl.is_error_base) {
 				return "g_value_get_pointer";
 			} else {
 				return "g_value_get_boxed";
@@ -1257,7 +1264,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return get_ccode_lower_case_name (cl, "value_set_");
 			} else if (cl.base_class != null) {
 				return get_ccode_set_value_function (cl.base_class);
-			} else if (type_id == "G_TYPE_POINTER") {
+			} else if (type_id == "G_TYPE_POINTER" || cl.is_error_base) {
 				return "g_value_set_pointer";
 			} else {
 				return "g_value_set_boxed";
@@ -1315,7 +1322,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return get_ccode_lower_case_name (cl, "value_take_");
 			} else if (cl.base_class != null) {
 				return get_ccode_take_value_function (cl.base_class);
-			} else if (type_id == "G_TYPE_POINTER") {
+			} else if (type_id == "G_TYPE_POINTER" || cl.is_error_base) {
 				return "g_value_set_pointer";
 			} else {
 				return "g_value_take_boxed";

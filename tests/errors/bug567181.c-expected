@@ -23,6 +23,8 @@
 
 typedef struct _Foo Foo;
 typedef struct _FooClass FooClass;
+
+#define TYPE_ERROR (error_get_type ())
 typedef struct _FooPrivate FooPrivate;
 enum  {
 	FOO_0_PROPERTY,
@@ -39,6 +41,7 @@ typedef enum  {
 	ERROR_FOOBAR
 } Error;
 #define ERROR error_quark ()
+
 struct _Foo {
 	GObject parent_instance;
 	FooPrivate * priv;
@@ -55,6 +58,7 @@ static gpointer foo_parent_class = NULL;
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 VALA_EXTERN GQuark error_quark (void);
+GType error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN Foo* foo_new (GError** error);
 VALA_EXTERN Foo* foo_construct (GType object_type,
                     GError** error);
@@ -67,6 +71,27 @@ GQuark
 error_quark (void)
 {
 	return g_quark_from_static_string ("error-quark");
+}
+
+static GType
+error_get_type_once (void)
+{
+	static const GEnumValue values[] = {{ERROR_FOOBAR, "ERROR_FOOBAR", "foobar"}, {0, NULL, NULL}};
+	GType error_type_id;
+	error_type_id = g_enum_register_static ("Error", values);
+	return error_type_id;
+}
+
+GType
+error_get_type (void)
+{
+	static volatile gsize error_type_id__once = 0;
+	if (g_once_init_enter (&error_type_id__once)) {
+		GType error_type_id;
+		error_type_id = error_get_type_once ();
+		g_once_init_leave (&error_type_id__once, error_type_id);
+	}
+	return error_type_id__once;
 }
 
 static gpointer

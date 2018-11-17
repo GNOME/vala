@@ -2,9 +2,9 @@
  * generated from methods_params_array_with_throws.vala, do not modify */
 
 #include <glib.h>
+#include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
-#include <glib-object.h>
 #include <gobject/gvaluecollector.h>
 
 #if !defined(VALA_EXTERN)
@@ -16,6 +16,8 @@
 #define VALA_EXTERN extern
 #endif
 #endif
+
+#define TYPE_FOO_ERROR (foo_error_get_type ())
 
 #define TYPE_FOO (foo_get_type ())
 #define FOO(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_FOO, Foo))
@@ -39,6 +41,7 @@ typedef enum  {
 	FOO_ERROR_WORSE
 } FooError;
 #define FOO_ERROR foo_error_quark ()
+
 struct _Foo {
 	GTypeInstance parent_instance;
 	volatile int ref_count;
@@ -57,6 +60,7 @@ struct _ParamSpecFoo {
 static gpointer foo_parent_class = NULL;
 
 VALA_EXTERN GQuark foo_error_quark (void);
+GType foo_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN void foo (GError** error,
           const gchar* _first_array,
           ...);
@@ -111,6 +115,27 @@ GQuark
 foo_error_quark (void)
 {
 	return g_quark_from_static_string ("foo-error-quark");
+}
+
+static GType
+foo_error_get_type_once (void)
+{
+	static const GEnumValue values[] = {{FOO_ERROR_BAD, "FOO_ERROR_BAD", "bad"}, {FOO_ERROR_WORSE, "FOO_ERROR_WORSE", "worse"}, {0, NULL, NULL}};
+	GType foo_error_type_id;
+	foo_error_type_id = g_enum_register_static ("FooError", values);
+	return foo_error_type_id;
+}
+
+GType
+foo_error_get_type (void)
+{
+	static volatile gsize foo_error_type_id__once = 0;
+	if (g_once_init_enter (&foo_error_type_id__once)) {
+		GType foo_error_type_id;
+		foo_error_type_id = foo_error_get_type_once ();
+		g_once_init_leave (&foo_error_type_id__once, foo_error_type_id);
+	}
+	return foo_error_type_id__once;
 }
 
 static void

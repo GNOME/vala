@@ -37,12 +37,17 @@
 	<bitfield name="RenamedBitfield" c:type="GirTestNamedBitfield" glib:type-name="GirTestNamedBitfield" glib:get-type="gir_test_named_bitfield_get_type">
 		<member name="value1" c:identifier="GIR_TEST_NAMED_BITFIELD_VALUE1" value="1"/>
 	</bitfield>
-	<enumeration name="ErrorTest" c:type="GirTestErrorTest" glib:error-domain="gir-test-error-test-quark">
+	<enumeration name="ErrorTest" c:type="GirTestErrorTest" glib:type-name="GirTestErrorTest" glib:get-type="gir_test_error_test_get_type" glib:error-domain="gir-test-error-test-quark">
 		<member name="failed" c:identifier="GIR_TEST_ERROR_TEST_FAILED" value="0"/>
 		<member name="smelly" c:identifier="GIR_TEST_ERROR_TEST_SMELLY" value="1"/>
 		<member name="fishy" c:identifier="GIR_TEST_ERROR_TEST_FISHY" value="23"/>
 	</enumeration>
-	<enumeration name="RenamedError" c:type="GirTestNamedError" glib:error-domain="gir-test-named-error-quark">
+	<enumeration name="PlainErrorTest" c:type="GirTestPlainErrorTest" glib:error-domain="gir-test-plain-error-test-quark">
+		<member name="failed" c:identifier="GIR_TEST_PLAIN_ERROR_TEST_FAILED" value="0"/>
+		<member name="smelly" c:identifier="GIR_TEST_PLAIN_ERROR_TEST_SMELLY" value="1"/>
+		<member name="fishy" c:identifier="GIR_TEST_PLAIN_ERROR_TEST_FISHY" value="23"/>
+	</enumeration>
+	<enumeration name="RenamedError" c:type="GirTestNamedError" glib:type-name="GirTestNamedError" glib:get-type="gir_test_named_error_get_type" glib:error-domain="gir-test-named-error-quark">
 		<member name="failed" c:identifier="GIR_TEST_NAMED_ERROR_FAILED" value="0"/>
 	</enumeration>
 	<class name="TypeTest" c:type="GirTestTypeTest" c:symbol-prefix="typetest" glib:type-name="GirTestTypeTest" glib:get-type="gir_test_typetest_get_type" glib:type-struct="TypeTestClass" glib:fundamental="1" glib:ref-func="gir_test_typetest_ref" glib:unref-func="gir_test_typetest_unref" glib:set-value-func="gir_test_value_set_typetest" glib:get-value-func="gir_test_value_get_typetest">
