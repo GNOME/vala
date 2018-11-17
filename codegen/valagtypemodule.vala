@@ -616,10 +616,6 @@ public class Vala.GTypeModule : GErrorModule {
 				string macro = "(G_TYPE_CLASS_GET_PRIVATE (klass, %s, %sClassPrivate))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
 				decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_CLASS_PRIVATE(klass)".printf (get_ccode_upper_case_name (cl, null)), macro));
 			}
-		} else {
-			if (cl.has_private_fields) {
-				Report.error (cl.source_reference, "Private fields not supported in compact classes");
-			}
 		}
 	}
 
