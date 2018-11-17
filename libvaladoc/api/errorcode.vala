@@ -31,12 +31,12 @@ public class Valadoc.Api.ErrorCode : Symbol {
 	private string? cname;
 
 	public ErrorCode (ErrorDomain parent, SourceFile file, string name, SourceComment? comment,
-					  string? cname, string? dbus_name, Vala.ErrorCode data)
+					  Vala.ErrorCode data)
 	{
 		base (parent, file, name, parent.accessibility, comment, data);
 
-		this.dbus_name = dbus_name;
-		this.cname = cname;
+		this.dbus_name = Vala.GDBusModule.get_dbus_name_for_member (data);
+		this.cname = Vala.get_ccode_name (data);
 	}
 
 	/**

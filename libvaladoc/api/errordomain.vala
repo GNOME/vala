@@ -33,15 +33,22 @@ public class Valadoc.Api.ErrorDomain : TypeSymbol {
 	private string? cname;
 
 	public ErrorDomain (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
-						SourceComment? comment, string? cname, string? quark_macro_name,
-						string? quark_function_name, string? dbus_name, Vala.ErrorDomain data)
+						SourceComment? comment, Vala.ErrorDomain data)
 	{
 		base (parent, file, name, accessibility, comment, null, null, null, null, false, data);
 
-		this.quark_function_name = quark_function_name;
-		this.quark_macro_name = quark_macro_name;
-		this.dbus_name = dbus_name;
-		this.cname = cname;
+		this.quark_function_name = _get_quark_function_name (data);
+		this.quark_macro_name = _get_quark_macro_name (data);
+		this.dbus_name = Vala.GDBusModule.get_dbus_name (data);
+		this.cname = Vala.get_ccode_name (data);
+	}
+
+	string _get_quark_function_name (Vala.ErrorDomain element) {
+		return Vala.get_ccode_lower_case_prefix (element) + "quark";
+	}
+
+	string? _get_quark_macro_name (Vala.ErrorDomain element) {
+		return Vala.get_ccode_upper_case_name (element, null);
 	}
 
 	/**

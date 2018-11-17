@@ -274,10 +274,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return element.name;
 	}
 
-	private string? get_quark_macro_name (Vala.ErrorDomain element) {
-		return Vala.get_ccode_upper_case_name (element, null);
-	}
-
 	private string? get_is_type_macro_name (Vala.TypeSymbol element) {
 		string? name = Vala.get_ccode_type_check_function (element);
 		return (name != null && name != "")? name : null;
@@ -316,10 +312,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		} else {
 			return null;
 		}
-	}
-
-	private string get_quark_function_name (Vala.ErrorDomain element) {
-		return Vala.get_ccode_lower_case_prefix (element) + "quark";
 	}
 
 	private PackageMetaData? get_package_meta_data (Package pkg) {
@@ -977,11 +969,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 									   element.name,
 									   element.access,
 									   comment,
-									   Vala.get_ccode_name (element),
-									   get_quark_macro_name (element),
-									   get_quark_function_name (element),
-									   Vala.GDBusModule.get_dbus_name (element),
-									  element);
+									   element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
 
@@ -1005,8 +993,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 										 file,
 										 element.name,
 										 comment,
-										 Vala.get_ccode_name (element),
-										 Vala.GDBusModule.get_dbus_name_for_member (element),
 										 element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
