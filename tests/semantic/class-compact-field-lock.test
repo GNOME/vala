@@ -1,0 +1,13 @@
+Invalid Code
+
+[Compact]
+class Foo {
+	public int i;
+	public void foo () {
+		lock (i) {
+		}
+	}
+}
+
+void main () {
+}

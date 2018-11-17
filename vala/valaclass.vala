@@ -547,6 +547,18 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		foreach (Field f in get_fields ()) {
+			if (is_compact && f.binding != MemberBinding.STATIC) {
+				//FIXME Should external bindings follow this too?
+				if (!external_package && f.access == SymbolAccessibility.PRIVATE) {
+					Report.error (source_reference, "private fields are not supported in compact classes");
+					error = true;
+				}
+				if (f.binding == MemberBinding.CLASS) {
+					Report.error (f.source_reference, "class fields are not supported in compact classes");
+					error = true;
+				}
+			}
+
 			f.check (context);
 		}
 		
