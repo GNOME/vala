@@ -200,8 +200,6 @@ public class Vala.Struct : TypeSymbol {
 	 * @param m a method
 	 */
 	public override void add_method (Method m) {
-		return_if_fail (m != null);
-		
 		if (m.binding == MemberBinding.INSTANCE || m is CreationMethod) {
 			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_data_type_for_symbol (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
