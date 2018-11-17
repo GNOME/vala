@@ -86,6 +86,22 @@ public abstract class Vala.Expression : CodeNode {
 		return true;
 	}
 
+	/**
+	 * Check whether this expression is always true.
+	 */
+	public bool is_always_true () {
+		unowned BooleanLiteral? literal = this as BooleanLiteral;
+		return (literal != null && literal.value);
+	}
+
+	/**
+	 * Check whether this expression is always false.
+	 */
+	public bool is_always_false () {
+		unowned BooleanLiteral? literal = this as BooleanLiteral;
+		return (literal != null && !literal.value);
+	}
+
 	public Statement? parent_statement {
 		get {
 			unowned Expression? expr = parent_node as Expression;
