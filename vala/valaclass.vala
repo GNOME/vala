@@ -323,19 +323,19 @@ public class Vala.Class : ObjectTypeSymbol {
 
 	public override void add_constructor (Constructor c) {
 		switch (c.binding) {
-		case INSTANCE:
+		case MemberBinding.INSTANCE:
 			if (constructor != null) {
 				Report.error (c.source_reference, "class already contains a constructor");
 			}
 			constructor = c;
 			break;
-		case CLASS:
+		case MemberBinding.CLASS:
 			if (class_constructor != null) {
 				Report.error (c.source_reference, "class already contains a class constructor");
 			}
 			class_constructor = c;
 			break;
-		case STATIC:
+		case MemberBinding.STATIC:
 			if (static_constructor != null) {
 				Report.error (c.source_reference, "class already contains a static constructor");
 			}
@@ -348,19 +348,19 @@ public class Vala.Class : ObjectTypeSymbol {
 
 	public override void add_destructor (Destructor d) {
 		switch (d.binding) {
-		case INSTANCE:
+		case MemberBinding.INSTANCE:
 			if (destructor != null) {
 				Report.error (d.source_reference, "class already contains a destructor");
 			}
 			destructor = d;
 			break;
-		case CLASS:
+		case MemberBinding.CLASS:
 			if (class_destructor != null) {
 				Report.error (d.source_reference, "class already contains a class destructor");
 			}
 			class_destructor = d;
 			break;
-		case STATIC:
+		case MemberBinding.STATIC:
 			if (static_destructor != null) {
 				Report.error (d.source_reference, "class already contains a static destructor");
 			}
