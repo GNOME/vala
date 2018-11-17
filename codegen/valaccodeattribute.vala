@@ -1015,6 +1015,13 @@ public class Vala.CCodeAttribute : AttributeCache {
 				} else {
 					return en.is_flags ? "G_TYPE_UINT" : "G_TYPE_INT";
 				}
+			} else if (sym is ErrorDomain) {
+				unowned ErrorDomain edomain = (ErrorDomain) sym;
+				if (get_ccode_has_type_id (edomain)) {
+					return get_ccode_upper_case_name (edomain, "TYPE_");
+				} else {
+					return "G_TYPE_INT";
+				}
 			} else {
 				return "G_TYPE_POINTER";
 			}

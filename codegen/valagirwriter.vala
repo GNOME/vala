@@ -860,7 +860,11 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		buffer.append_printf ("<enumeration name=\"%s\"", edomain.name);
-		write_ctype_attributes (edomain);
+		if (get_ccode_has_type_id (edomain)) {
+			write_gtype_attributes (edomain);
+		} else {
+			write_ctype_attributes (edomain);
+		}
 		buffer.append_printf (" glib:error-domain=\"%s\"", get_ccode_quark_name (edomain));
 		write_symbol_attributes (edomain);
 		buffer.append_printf (">\n");
