@@ -3,6 +3,8 @@ using GLib;
 [Compact]
 class CompactTest {
 	public int initialized_field = 24;
+	private static int private_static_field = 25;
+	public static int public_static_field = 26;
 }
 
 class Maman.Foo : Object {
@@ -92,7 +94,7 @@ class Maman.Bar : Foo {
 		var compact = new CompactTest ();
 		stdout.printf (" %d", compact.initialized_field);
 
-		stdout.printf (" 25\n");
+		stdout.printf (" 27\n");
 
 		return 0;
 	}
