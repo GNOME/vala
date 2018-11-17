@@ -54,8 +54,24 @@ public class Vala.ErrorCode : TypeSymbol {
 		}
 	}
 
+	/**
+	 * The nick of this error code
+	 */
+	public string nick {
+		get {
+			if (_nick == null) {
+				_nick = get_attribute_string ("Description", "nick");
+				if (_nick == null) {
+					_nick = name.down ().replace ("_", "-");
+				}
+			}
+			return _nick;
+		}
+	}
+
 	private Expression _value;
 	private Constant _code;
+	private string? _nick = null;
 
 	/**
 	 * Creates a new enum value.

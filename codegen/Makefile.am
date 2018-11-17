@@ -38,6 +38,7 @@ libvalaccodegen_la_VALASOURCES = \
 	valaclassregisterfunction.vala \
 	valactype.vala \
 	valaenumregisterfunction.vala \
+	valaerrordomainregisterfunction.vala \
 	valagasyncmodule.vala \
 	valagdbusclientmodule.vala \
 	valagdbusmodule.vala \
