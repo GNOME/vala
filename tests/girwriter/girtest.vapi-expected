@@ -134,6 +134,12 @@ namespace GirTest {
 		SMELLY,
 		FISHY
 	}
+	[CCode (cheader_filename = "girtest.h", has_type_id = false)]
+	public errordomain PlainErrorTest {
+		FAILED,
+		SMELLY,
+		FISHY
+	}
 	[CCode (cheader_filename = "girtest.h")]
 	public delegate bool DelegateTest (void* a, void* b);
 	[CCode (cheader_filename = "girtest.h")]
