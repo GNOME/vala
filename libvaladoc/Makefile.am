@@ -93,7 +93,6 @@ libvaladoc_la_VALASOURCES = \
 	api/typeparameter.vala \
 	api/typereference.vala \
 	api/typesymbol.vala \
-	api/browsable.vala \
 	api/visitor.vala \
 	api/driver.vala \
 	content/block.vala \
