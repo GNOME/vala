@@ -114,14 +114,14 @@ public class Vala.Class : ObjectTypeSymbol {
 	/**
 	 * Specifies the default construction method.
 	 */
-	public CreationMethod default_construction_method { get; set; }
+	public CreationMethod? default_construction_method { get; private set; }
 
 	/**
 	 * Specifies the instance constructor.
 	 */
-	public Constructor constructor {
+	public Constructor? constructor {
 		get { return _constructor; }
-		set {
+		private set {
 			_constructor = value;
 			if (_constructor != null) {
 				_constructor.owner = scope;
@@ -132,9 +132,9 @@ public class Vala.Class : ObjectTypeSymbol {
 	/**
 	 * Specifies the class constructor.
 	 */
-	public Constructor class_constructor {
+	public Constructor? class_constructor {
 		get { return _class_constructor; }
-		set {
+		private set {
 			_class_constructor = value;
 			if (_class_constructor != null) {
 				_class_constructor.owner = scope;
@@ -145,9 +145,9 @@ public class Vala.Class : ObjectTypeSymbol {
 	/**
 	 * Specifies the static class constructor.
 	 */
-	public Constructor static_constructor {
+	public Constructor? static_constructor {
 		get { return _static_constructor; }
-		set {
+		private set {
 			_static_constructor = value;
 			if (_static_constructor != null) {
 				_static_constructor.owner = scope;
@@ -160,7 +160,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 */
 	public Destructor? destructor {
 		get { return _destructor; }
-		set {
+		private set {
 			_destructor = value;
 			if (_destructor != null) {
 				_destructor.owner = scope;
@@ -178,7 +178,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 */
 	public Destructor? static_destructor {
 		get { return _static_destructor; }
-		set {
+		private set {
 			_static_destructor = value;
 			if (_static_destructor != null) {
 				_static_destructor.owner = scope;
@@ -191,7 +191,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 */
 	public Destructor? class_destructor {
 		get { return _class_destructor; }
-		set {
+		private set {
 			_class_destructor = value;
 			if (_class_destructor != null) {
 				_class_destructor.owner = scope;
@@ -208,9 +208,9 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 	}
 
-	Constructor _constructor;
-	Constructor _class_constructor;
-	Constructor _static_constructor;
+	Constructor? _constructor;
+	Constructor? _class_constructor;
+	Constructor? _static_constructor;
 	Destructor? _destructor;
 	Destructor? _class_destructor;
 	Destructor? _static_destructor;
@@ -322,40 +322,52 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 
 	public override void add_constructor (Constructor c) {
-		if (c.binding == MemberBinding.INSTANCE) {
+		switch (c.binding) {
+		case INSTANCE:
 			if (constructor != null) {
 				Report.error (c.source_reference, "class already contains a constructor");
 			}
 			constructor = c;
-		} else if (c.binding == MemberBinding.CLASS) {
+			break;
+		case CLASS:
 			if (class_constructor != null) {
 				Report.error (c.source_reference, "class already contains a class constructor");
 			}
 			class_constructor = c;
-		} else {
+			break;
+		case STATIC:
 			if (static_constructor != null) {
 				Report.error (c.source_reference, "class already contains a static constructor");
 			}
 			static_constructor = c;
+			break;
+		default:
+			assert_not_reached ();
 		}
 	}
 
 	public override void add_destructor (Destructor d) {
-		if (d.binding == MemberBinding.INSTANCE) {
+		switch (d.binding) {
+		case INSTANCE:
 			if (destructor != null) {
 				Report.error (d.source_reference, "class already contains a destructor");
 			}
 			destructor = d;
-		} else if (d.binding == MemberBinding.CLASS) {
+			break;
+		case CLASS:
 			if (class_destructor != null) {
 				Report.error (d.source_reference, "class already contains a class destructor");
 			}
 			class_destructor = d;
-		} else {
+			break;
+		case STATIC:
 			if (static_destructor != null) {
 				Report.error (d.source_reference, "class already contains a static destructor");
 			}
 			static_destructor = d;
+			break;
+		default:
+			assert_not_reached ();
 		}
 	}
 

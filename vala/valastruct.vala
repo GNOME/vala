@@ -71,7 +71,7 @@ public class Vala.Struct : TypeSymbol {
 	/**
 	 * Specifies the default construction method.
 	 */
-	public Method default_construction_method { get; set; }
+	public CreationMethod? default_construction_method { get; private set; }
 
 	/**
 	 * Specifies if 'const' should be emitted for input parameters
@@ -244,7 +244,7 @@ public class Vala.Struct : TypeSymbol {
 		}
 		if (m is CreationMethod) {
 			if (m.name == null) {
-				default_construction_method = m;
+				default_construction_method = (CreationMethod) m;
 				m.name = ".new";
 			}
 
