@@ -511,6 +511,9 @@ TESTS = \
 	semantic/chainup-gobject-unsupported-type-property.test \
 	semantic/class-base-type-invalid.test \
 	semantic/class-base-type-less-accessible.test \
+	semantic/class-compact-field-class.test \
+	semantic/class-compact-field-lock.test \
+	semantic/class-compact-field-private.test \
 	semantic/class-compact-derived-instance-field.test \
 	semantic/class-compact-interface.test \
 	semantic/class-compact-method-baseaccess.test \

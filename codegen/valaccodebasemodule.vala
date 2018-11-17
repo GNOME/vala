@@ -1200,12 +1200,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				pop_context ();
 			}
 		} else if (f.binding == MemberBinding.CLASS)  {
-			if (!is_gtypeinstance) {
-				Report.error (f.source_reference, "class fields are not supported in compact classes");
-				f.error = true;
-				return;
-			}
-
 			if (f.access == SymbolAccessibility.PRIVATE) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (get_ccode_upper_case_name (cl))));
 				ccall.add_argument (new CCodeIdentifier ("klass"));
