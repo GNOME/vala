@@ -301,7 +301,7 @@ namespace Gdk {
 		ENCODING_RLE,
 		ENCODING_MASK
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_PIXBUF_ERROR_")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_PIXBUF_ERROR_", type_id = "gdk_pixbuf_error_get_type ()")]
 	public errordomain PixbufError {
 		CORRUPT_IMAGE,
 		INSUFFICIENT_MEMORY,

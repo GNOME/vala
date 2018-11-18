@@ -8965,13 +8965,13 @@ namespace Clutter {
 		Y_AXIS,
 		BOTH
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_IMAGE_ERROR_INVALID_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_IMAGE_ERROR_INVALID_", type_id = "clutter_image_error_get_type ()")]
 	[Version (since = "1.10")]
 	public errordomain ImageError {
 		DATA;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SCRIPT_ERROR_INVALID_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SCRIPT_ERROR_INVALID_", type_id = "clutter_script_error_get_type ()")]
 	[Version (since = "0.6")]
 	public errordomain ScriptError {
 		TYPE_FUNCTION,
@@ -8979,7 +8979,7 @@ namespace Clutter {
 		VALUE;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SHADER_ERROR_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SHADER_ERROR_", type_id = "clutter_shader_error_get_type ()")]
 	[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 	public errordomain ShaderError {
 		NO_ASM,
@@ -8987,7 +8987,7 @@ namespace Clutter {
 		COMPILE;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TEXTURE_ERROR_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TEXTURE_ERROR_", type_id = "clutter_texture_error_get_type ()")]
 	[Version (since = "0.4")]
 	public errordomain TextureError {
 		OUT_OF_MEMORY,
