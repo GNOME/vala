@@ -4541,7 +4541,7 @@ namespace GLib {
 		GZIP,
 		RAW
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_ERROR_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_ERROR_", type_id = "g_dbus_error_get_type ()")]
 	[Version (since = "2.26")]
 	public errordomain DBusError {
 		FAILED,
@@ -4608,7 +4608,7 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static bool unregister_error (GLib.Quark error_domain, int error_code, string dbus_error_name);
 	}
-	[CCode (cheader_filename = "gio/gio.h", cname = "GIOErrorEnum", cprefix = "G_IO_ERROR_")]
+	[CCode (cheader_filename = "gio/gio.h", cname = "GIOErrorEnum", cprefix = "G_IO_ERROR_", type_id = "g_io_error_enum_get_type ()")]
 	[GIR (name = "IOErrorEnum")]
 	public errordomain IOError {
 		FAILED,
@@ -4668,7 +4668,7 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOLVER_ERROR_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOLVER_ERROR_", type_id = "g_resolver_error_get_type ()")]
 	[Version (since = "2.22")]
 	public errordomain ResolverError {
 		NOT_FOUND,
@@ -4677,7 +4677,7 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOURCE_ERROR_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOURCE_ERROR_", type_id = "g_resource_error_get_type ()")]
 	[Version (since = "2.32")]
 	public errordomain ResourceError {
 		NOT_FOUND,
@@ -4685,7 +4685,7 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_ERROR_")]
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_ERROR_", type_id = "g_tls_error_get_type ()")]
 	[Version (since = "2.28")]
 	public errordomain TlsError {
 		UNAVAILABLE,

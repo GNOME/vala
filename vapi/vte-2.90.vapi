@@ -306,7 +306,7 @@ namespace Vte {
 	public enum TerminalWriteFlags {
 		DEFAULT
 	}
-	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_PTY_ERROR_")]
+	[CCode (cheader_filename = "vte/vte.h", cprefix = "VTE_PTY_ERROR_", type_id = "vte_pty_error_get_type ()")]
 	[Version (since = "0.26")]
 	public errordomain PtyError {
 		PTY_HELPER_FAILED,
