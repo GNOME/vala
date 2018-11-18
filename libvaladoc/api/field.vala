@@ -26,7 +26,7 @@ using Valadoc.Content;
 /**
  * Represents a field.
  */
-public class Valadoc.Api.Field : Member {
+public class Valadoc.Api.Field : Symbol {
 	private string? cname;
 
 	public Field (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,

@@ -27,6 +27,7 @@
  */
 public abstract class Valadoc.Api.Symbol : Node {
 	private Vala.ArrayList<Attribute> attributes;
+	private SourceComment? source_comment;
 
 	public bool is_deprecated {
 		default = false;
@@ -35,11 +36,12 @@ public abstract class Valadoc.Api.Symbol : Node {
 	}
 
 	public Symbol (Node parent, SourceFile file, string? name, Vala.SymbolAccessibility accessibility,
-				   Vala.Symbol data)
+				   SourceComment? comment, Vala.Symbol data)
 	{
 		base (parent, file, name, data);
 
 		this.accessibility = accessibility;
+		this.source_comment = comment;
 	}
 
 	public void add_attribute (Attribute att) {
@@ -152,6 +154,32 @@ public abstract class Valadoc.Api.Symbol : Node {
 		get {
 			return accessibility == Vala.SymbolAccessibility.PRIVATE;
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	internal override void parse_comments (Settings settings, DocumentationParser parser) {
+		if (documentation != null) {
+			return ;
+		}
+
+		if (source_comment != null) {
+			documentation = parser.parse (this, source_comment);
+		}
+
+		base.parse_comments (settings, parser);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	internal override void check_comments (Settings settings, DocumentationParser parser) {
+		if (documentation != null) {
+			parser.check (this, documentation);
+		}
+
+		base.check_comments (settings, parser);
 	}
 }
 

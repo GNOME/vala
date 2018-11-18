@@ -71,7 +71,6 @@ libvaladoc_la_VALASOURCES = \
 	api/formalparameter.vala \
 	api/interface.vala \
 	api/item.vala \
-	api/member.vala \
 	api/method.vala \
 	api/methodbindingtype.vala \
 	api/namespace.vala \

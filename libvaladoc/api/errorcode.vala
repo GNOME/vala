@@ -27,44 +27,16 @@ using Valadoc.Content;
  * Represents an errordomain member in the source code.
  */
 public class Valadoc.Api.ErrorCode : Symbol {
-	private SourceComment? source_comment;
 	private string? dbus_name;
 	private string? cname;
 
 	public ErrorCode (ErrorDomain parent, SourceFile file, string name, SourceComment? comment,
 					  string? cname, string? dbus_name, Vala.ErrorCode data)
 	{
-		base (parent, file, name, parent.accessibility, data);
+		base (parent, file, name, parent.accessibility, comment, data);
 
-		this.source_comment = comment;
 		this.dbus_name = dbus_name;
 		this.cname = cname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void parse_comments (Settings settings, DocumentationParser parser) {
-		if (documentation != null) {
-			return ;
-		}
-
-		if (source_comment != null) {
-			documentation = parser.parse (this, source_comment);
-		}
-
-		base.parse_comments (settings, parser);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void check_comments (Settings settings, DocumentationParser parser) {
-		if (documentation != null) {
-			parser.check (this, documentation);
-		}
-
-		base.check_comments (settings, parser);
 	}
 
 	/**

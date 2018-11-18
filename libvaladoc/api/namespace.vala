@@ -27,41 +27,9 @@ using Valadoc.Content;
  * Represents a namespace declaration.
  */
 public class Valadoc.Api.Namespace : Symbol {
-	private SourceComment? source_comment;
-
 	public Namespace (Api.Node parent, SourceFile file, string? name, SourceComment? comment, Vala.Namespace data) {
-		base (parent, file, name, Vala.SymbolAccessibility.PUBLIC, data);
-
-		this.source_comment = comment;
+		base (parent, file, name, Vala.SymbolAccessibility.PUBLIC, comment, data);
 	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void parse_comments (Settings settings, DocumentationParser parser) {
-		if (documentation != null) {
-			return ;
-		}
-
-		if (source_comment != null) {
-			documentation = parser.parse (this, source_comment);
-		}
-
-		base.parse_comments (settings, parser);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void check_comments (Settings settings, DocumentationParser parser) {
-		if (documentation != null) {
-			parser.check (this, documentation);
-		}
-
-		base.check_comments (settings, parser);
-	}
-
 
 	/**
 	 * {@inheritDoc}

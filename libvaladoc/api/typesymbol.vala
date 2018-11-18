@@ -26,7 +26,6 @@
  * Represents a runtime data type.
  */
 public abstract class Valadoc.Api.TypeSymbol : Symbol {
-	private SourceComment? source_comment;
 	private string? type_macro_name;
 	private string? is_type_macro_name;
 	private string? type_cast_macro_name;
@@ -37,7 +36,7 @@ public abstract class Valadoc.Api.TypeSymbol : Symbol {
 					   string? type_cast_macro_name, string? type_function_name, bool is_basic_type,
 					   Vala.TypeSymbol data)
 	{
-		base (parent, file, name, accessibility, data);
+		base (parent, file, name, accessibility, comment, data);
 
 		this.type_cast_macro_name = type_cast_macro_name;
 		this.is_type_macro_name = is_type_macro_name;
@@ -45,7 +44,6 @@ public abstract class Valadoc.Api.TypeSymbol : Symbol {
 		this.type_macro_name = type_macro_name;
 
 		this.is_basic_type = is_basic_type;
-		this.source_comment = comment;
 	}
 
 	/**
@@ -82,31 +80,5 @@ public abstract class Valadoc.Api.TypeSymbol : Symbol {
 	 */
 	public string get_type_function_name () {
 		return type_function_name;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void parse_comments (Settings settings, DocumentationParser parser) {
-		if (documentation != null) {
-			return ;
-		}
-
-		if (source_comment != null) {
-			documentation = parser.parse (this, source_comment);
-		}
-
-		base.parse_comments (settings, parser);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void check_comments (Settings settings, DocumentationParser parser) {
-		if (documentation != null) {
-			parser.check (this, documentation);
-		}
-
-		base.check_comments (settings, parser);
 	}
 }

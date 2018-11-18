@@ -26,7 +26,7 @@ using Valadoc.Content;
 /**
  * Represents a property declaration.
  */
-public class Valadoc.Api.Property : Member {
+public class Valadoc.Api.Property : Symbol {
 	private PropertyBindingType binding_type;
 	private string? dbus_name;
 	private string? cname;

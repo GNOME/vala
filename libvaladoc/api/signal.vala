@@ -26,7 +26,7 @@ using Valadoc.Content;
 /**
  * Represents an signal.
  */
-public class Valadoc.Api.Signal : Member, Callable {
+public class Valadoc.Api.Signal : Symbol, Callable {
 	private string? default_impl_cname;
 	private string? dbus_name;
 	private string? cname;

@@ -27,7 +27,6 @@ using Valadoc.Content;
  * Represents an enum member.
  */
 public class Valadoc.Api.EnumValue: Symbol {
-	private SourceComment? source_comment;
 	private string? cname;
 
 	public Content.Run default_value {
@@ -45,36 +44,9 @@ public class Valadoc.Api.EnumValue: Symbol {
 	}
 
 	public EnumValue (Enum parent, SourceFile file, string name, SourceComment? comment, string? cname, Vala.EnumValue data) {
-		base (parent, file, name, parent.accessibility, data);
+		base (parent, file, name, parent.accessibility, comment, data);
 
-		this.source_comment = comment;
 		this.cname = cname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void parse_comments (Settings settings, DocumentationParser parser) {
-		if (documentation != null) {
-			return ;
-		}
-
-		if (source_comment != null) {
-			documentation = parser.parse (this, source_comment);
-		}
-
-		base.parse_comments (settings, parser);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	internal override void check_comments (Settings settings, DocumentationParser parser) {
-		if (documentation != null) {
-			parser.check (this, documentation);
-		}
-
-		base.check_comments (settings, parser);
 	}
 
 	/**

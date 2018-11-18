@@ -26,7 +26,7 @@ using Valadoc.Content;
 /**
  * Represents a function or a method.
  */
-public class Valadoc.Api.Method : Member, Callable {
+public class Valadoc.Api.Method : Symbol, Callable {
 	private string? finish_function_cname;
 	private string? dbus_result_name;
 	private string? dbus_name;

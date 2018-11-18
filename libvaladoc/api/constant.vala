@@ -26,7 +26,7 @@ using Valadoc.Content;
 /**
  * Represents a type member with a constant value.
  */
-public class Valadoc.Api.Constant : Member {
+public class Valadoc.Api.Constant : Symbol {
 	private string? cname;
 
 	/**
