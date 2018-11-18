@@ -485,7 +485,7 @@ public class Vala.GSignalModule : GObjectModule {
 			if (expr.inner is BaseAccess && sig.is_virtual) {
 				var m = sig.default_handler;
 				var base_class = (Class) m.parent_symbol;
-				var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class, null))));
+				var vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_type_function (base_class)));
 				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class))));
 
 				set_cvalue (expr, new CCodeMemberAccess.pointer (vcast, m.name));

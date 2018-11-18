@@ -49,6 +49,30 @@ namespace Vala {
 		return get_ccode_attribute(iface).type_name;
 	}
 
+	public static string get_ccode_type_cast_function (ObjectTypeSymbol sym) {
+		assert (!(sym is Class && ((Class) sym).is_compact));
+		return get_ccode_upper_case_name (sym);
+	}
+
+	public static string get_ccode_interface_get_function (Interface iface) {
+		return "%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface));
+	}
+
+	public static string get_ccode_class_get_function (Class cl) {
+		assert (!cl.is_compact);
+		return "%s_GET_CLASS".printf (get_ccode_upper_case_name (cl));
+	}
+
+	public static string get_ccode_class_get_private_function (Class cl) {
+		assert (!cl.is_compact);
+		return "%s_GET_CLASS_PRIVATE".printf (get_ccode_upper_case_name (cl));
+	}
+
+	public static string get_ccode_class_type_function (Class cl) {
+		assert (!cl.is_compact);
+		return "%s_CLASS".printf (get_ccode_upper_case_name (cl));
+	}
+
 	public static string get_ccode_lower_case_name (CodeNode node, string? infix = null) {
 		unowned Symbol? sym = node as Symbol;
 		if (sym != null) {
@@ -186,6 +210,11 @@ namespace Vala {
 		return get_ccode_attribute(node).type_id;
 	}
 
+	public static string get_ccode_type_function (TypeSymbol sym) {
+		assert (!((sym is Class && ((Class) sym).is_compact) || sym is ErrorCode || sym is ErrorDomain || sym is Delegate));
+		return "%s_get_type".printf (get_ccode_lower_case_name (sym));
+	}
+
 	public static string get_ccode_marshaller_type_name (CodeNode node) {
 		return get_ccode_attribute(node).marshaller_type_name;
 	}
@@ -216,6 +245,11 @@ namespace Vala {
 		} else {
 			return get_ccode_upper_case_name (sym, "IS_");
 		}
+	}
+
+	public static string get_ccode_class_type_check_function (Class cl) {
+		assert (!cl.is_compact);
+		return "%s_CLASS".printf (get_ccode_type_check_function (cl));
 	}
 
 	public static string get_ccode_default_value (TypeSymbol sym) {

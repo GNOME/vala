@@ -71,19 +71,19 @@ public class Vala.GTypeModule : GErrorModule {
 			decl_space.add_type_declaration (new CCodeMacroReplacement (get_ccode_type_id (cl), macro));
 
 			macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
-			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_upper_case_name (cl, null)), macro));
+			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_type_cast_function (cl)), macro));
 
 			macro = "(G_TYPE_CHECK_CLASS_CAST ((klass), %s, %sClass))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
-			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (get_ccode_upper_case_name (cl, null)), macro));
+			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(klass)".printf (get_ccode_class_type_function (cl)), macro));
 
 			macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (get_ccode_type_id (cl));
 			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_type_check_function (cl)), macro));
 
 			macro = "(G_TYPE_CHECK_CLASS_TYPE ((klass), %s))".printf (get_ccode_type_id (cl));
-			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (get_ccode_type_check_function (cl)), macro));
+			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(klass)".printf (get_ccode_class_type_check_function (cl)), macro));
 
 			macro = "(G_TYPE_INSTANCE_GET_CLASS ((obj), %s, %sClass))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
-			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s_GET_CLASS(obj)".printf (get_ccode_upper_case_name (cl, null)), macro));
+			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_class_get_function (cl)), macro));
 			decl_space.add_type_declaration (new CCodeNewline ());
 		}
 
@@ -614,7 +614,7 @@ public class Vala.GTypeModule : GErrorModule {
 				decl_space.add_type_member_declaration (type_priv_struct);
 
 				string macro = "(G_TYPE_CLASS_GET_PRIVATE (klass, %s, %sClassPrivate))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
-				decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_CLASS_PRIVATE(klass)".printf (get_ccode_upper_case_name (cl, null)), macro));
+				decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s(klass)".printf (get_ccode_class_get_private_function (cl)), macro));
 			}
 		}
 	}
@@ -805,11 +805,11 @@ public class Vala.GTypeModule : GErrorModule {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ref_count));
 				ccode.open_if (ccall);
 
-				var get_class = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (get_ccode_upper_case_name (cl, null))));
+				var get_class = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_function (cl)));
 				get_class.add_argument (new CCodeIdentifier ("self"));
 
 				// finalize class
-				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (get_ccode_upper_case_name (cl, null))));
+				var ccast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_function (cl)));
 				ccast.add_argument (new CCodeIdentifier ("self"));
 				ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (ccast, "finalize"));
 				ccall.add_argument (new CCodeIdentifier ("self"));
@@ -1339,9 +1339,9 @@ public class Vala.GTypeModule : GErrorModule {
 			if (prop.base_property == null) {
 				continue;
 			}
-			var base_type = prop.base_property.parent_symbol;
+			var base_type = (Class) prop.base_property.parent_symbol;
 
-			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_type))));
+			var ccast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_type_function (base_type)));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
 
 			if (!get_ccode_no_accessor_method (prop.base_property) && !get_ccode_concrete_accessor (prop.base_property)) {
@@ -1842,7 +1842,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 			// chain up to finalize function of the base class
 			if (cl.base_class != null) {
-				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (fundamental_class))));
+				var ccast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_type_function (fundamental_class)));
 				ccast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (cl, null))));
 				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (ccast, "finalize"));
 				ccall.add_argument (new CCodeIdentifier ("obj"));
@@ -2088,13 +2088,13 @@ public class Vala.GTypeModule : GErrorModule {
 		decl_space.add_type_declaration (new CCodeMacroReplacement (get_ccode_type_id (iface), macro));
 
 		macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (get_ccode_type_id (iface), get_ccode_name (iface));
-		decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_upper_case_name (iface, null)), macro));
+		decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_type_cast_function (iface)), macro));
 
 		macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (get_ccode_type_id (iface));
 		decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_type_check_function (iface)), macro));
 
 		macro = "(G_TYPE_INSTANCE_GET_INTERFACE ((obj), %s, %s))".printf (get_ccode_type_id (iface), get_ccode_type_name (iface));
-		decl_space.add_type_declaration (new CCodeMacroReplacement ("%s_GET_INTERFACE(obj)".printf (get_ccode_upper_case_name (iface, null)), macro));
+		decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_interface_get_function (iface)), macro));
 		decl_space.add_type_declaration (new CCodeNewline ());
 
 		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (get_ccode_name (iface)), new CCodeVariableDeclarator (get_ccode_name (iface))));

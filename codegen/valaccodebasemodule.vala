@@ -844,10 +844,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		decl_space.add_include ("glib-object.h");
 		decl_space.add_type_declaration (new CCodeNewline ());
 
-		var macro = "(%s_get_type ())".printf (get_ccode_lower_case_name (en, null));
+		var fun_name = get_ccode_type_function (en);
+
+		var macro = "(%s ())".printf (fun_name);
 		decl_space.add_type_declaration (new CCodeMacroReplacement (get_ccode_type_id (en), macro));
 
-		var fun_name = "%s_get_type".printf (get_ccode_lower_case_name (en, null));
 		var regfun = new CCodeFunction (fun_name, "GType");
 		regfun.modifiers = CCodeModifiers.CONST;
 
@@ -896,9 +897,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				init_context = instance_init_context;
 				finalize_context = instance_finalize_context;
 			} else if (m.is_class_member ()) {
-				TypeSymbol parent = (TypeSymbol)m.parent_symbol;
-
-				var get_class_private_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf(get_ccode_upper_case_name (parent))));
+				var get_class_private_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_private_function ((Class) m.parent_symbol)));
 				get_class_private_call.add_argument (new CCodeIdentifier ("klass"));
 				l = new CCodeMemberAccess.pointer (get_class_private_call, get_symbol_lock_name (get_ccode_name (m)));
 			} else {
@@ -1201,7 +1200,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		} else if (f.binding == MemberBinding.CLASS)  {
 			if (f.access == SymbolAccessibility.PRIVATE) {
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (get_ccode_upper_case_name (cl))));
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_private_function (cl)));
 				ccall.add_argument (new CCodeIdentifier ("klass"));
 				lhs = new CCodeMemberAccess (ccall, get_ccode_name (f), true);
 			} else {
@@ -1691,12 +1690,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (prop.parent_symbol is Interface) {
 				var iface = (Interface) prop.parent_symbol;
 
-				vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface, null))));
+				vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (iface)));
 				((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("self"));
 			} else {
 				var cl = (Class) prop.parent_symbol;
 				if (!cl.is_compact) {
-					vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (get_ccode_upper_case_name (cl, null))));
+					vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_function (cl)));
 					((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("self"));
 				} else {
 					vcast = new CCodeIdentifier ("self");
@@ -2663,7 +2662,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				require_generic_accessors (iface);
 
 				string method_name = "get_%s_type".printf (type_parameter.name.down ());
-				var cast_self = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface))));
+				var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (iface)));
 				cast_self.add_argument (new CCodeIdentifier ("self"));
 				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
 				function_call.add_argument (new CCodeIdentifier ("self"));
@@ -2733,7 +2732,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				require_generic_accessors (iface);
 
 				string method_name = "get_%s_dup_func".printf (type_parameter.name.down ());
-				var cast_self = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface))));
+				var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (iface)));
 				cast_self.add_argument (new CCodeIdentifier ("self"));
 				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
 				function_call.add_argument (new CCodeIdentifier ("self"));
@@ -3276,7 +3275,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				require_generic_accessors (iface);
 
 				string method_name = "get_%s_destroy_func".printf (type_parameter.name.down ());
-				var cast_self = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface))));
+				var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (iface)));
 				cast_self.add_argument (new CCodeIdentifier ("self"));
 				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
 				function_call.add_argument (new CCodeIdentifier ("self"));
@@ -3948,7 +3947,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				klass = new CCodeIdentifier ("klass");
 			}
 
-			var get_class_private_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf(get_ccode_upper_case_name (parent))));
+			var get_class_private_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_private_function ((Class) parent)));
 			get_class_private_call.add_argument (klass);
 			l = new CCodeMemberAccess.pointer (get_class_private_call, get_symbol_lock_name (get_ccode_name (member)));
 		} else {
@@ -6152,7 +6151,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (instance is BaseAccess) {
 			if (prop.base_property != null) {
 				var base_class = (Class) prop.base_property.parent_symbol;
-				var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class, null))));
+				var vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_type_function (base_class)));
 				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class, null))));
 
 				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));

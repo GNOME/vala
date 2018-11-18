@@ -66,7 +66,7 @@ public abstract class Vala.TypeRegisterFunction {
 
 		CCodeFunction fun;
 		if (!plugin) {
-			fun = new CCodeFunction ("%s_get_type".printf (get_ccode_lower_case_name (type_symbol)), "GType");
+			fun = new CCodeFunction (get_ccode_type_function (type_symbol), "GType");
 			fun.modifiers = CCodeModifiers.CONST;
 
 			/* Function will not be prototyped anyway */
@@ -89,7 +89,7 @@ public abstract class Vala.TypeRegisterFunction {
 			declaration_fragment.append (fun.copy ());
 			fun.is_declaration = false;
 
-			var get_fun = new CCodeFunction ("%s_get_type".printf (get_ccode_lower_case_name (type_symbol)), "GType");
+			var get_fun = new CCodeFunction (get_ccode_type_function (type_symbol), "GType");
 			get_fun.modifiers = CCodeModifiers.CONST;
 
 			get_fun.is_declaration = true;
