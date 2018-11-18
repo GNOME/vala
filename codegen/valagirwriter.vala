@@ -471,6 +471,11 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		buffer.append_printf ("<record name=\"%s\"", get_gir_name (st));
+		if (CCodeBaseModule.get_ccode_has_type_id (st)) {
+			write_gtype_attributes (st);
+		} else {
+			write_ctype_attributes (st);
+		}
 		write_symbol_attributes (st);
 		buffer.append_printf (">\n");
 		indent++;
@@ -661,7 +666,11 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		buffer.append_printf ("<%s name=\"%s\"", element_name, get_gir_name (en));
-		write_gtype_attributes (en);
+		if (CCodeBaseModule.get_ccode_has_type_id (en)) {
+			write_gtype_attributes (en);
+		} else {
+			write_ctype_attributes (en);
+		}
 		write_symbol_attributes (en);
 		buffer.append_printf (">\n");
 		indent++;
