@@ -33,12 +33,12 @@ Input:
 
 Output:
 
-[CCode (cheader_filename = "test.h", cname = "TestError", cprefix = "TEST_ERROR_")]
+[CCode (cheader_filename = "test.h", cname = "TestError", cprefix = "TEST_ERROR_", has_type_id = false)]
 public errordomain TestError {
 	BAR,
 	FOO
 }
-[CCode (cheader_filename = "test.h", cname = "TestErrorWithType", cprefix = "TEST_ERROR_WITH_TYPE_")]
+[CCode (cheader_filename = "test.h", cname = "TestErrorWithType", cprefix = "TEST_ERROR_WITH_TYPE_", type_id = "test_error_with_type_get_type ()")]
 public errordomain TestErrorWithType {
 	BAR,
 	FOO
