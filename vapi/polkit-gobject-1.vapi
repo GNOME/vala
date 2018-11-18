@@ -208,7 +208,7 @@ namespace Polkit {
 		public static bool from_string (string string, Polkit.ImplicitAuthorization out_implicit_authorization);
 		public unowned string to_string ();
 	}
-	[CCode (cheader_filename = "polkit/polkit.h", cprefix = "POLKIT_ERROR_")]
+	[CCode (cheader_filename = "polkit/polkit.h", cprefix = "POLKIT_ERROR_", type_id = "polkit_error_get_type ()")]
 	public errordomain Error {
 		FAILED,
 		CANCELLED,

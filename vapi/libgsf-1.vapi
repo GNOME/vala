@@ -615,7 +615,7 @@ namespace Gsf {
 		DEFLATED_BETTER,
 		IMPLODED_BETTER
 	}
-	[CCode (cheader_filename = "gsf/gsf.h", cprefix = "GSF_ERROR_")]
+	[CCode (cheader_filename = "gsf/gsf.h", cprefix = "GSF_ERROR_", has_type_id = false)]
 	public errordomain Error {
 		OUT_OF_MEMORY,
 		INVALID_DATA;
