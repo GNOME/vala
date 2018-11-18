@@ -2347,8 +2347,7 @@ public class Vala.GirParser : CodeVisitor {
 			sym = current.symbol;
 		}
 
-		if (!error_domain)
-			set_type_id_ccode (sym);
+		set_type_id_ccode (sym);
 
 		sym.access = SymbolAccessibility.PUBLIC;
 
