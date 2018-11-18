@@ -352,7 +352,7 @@ namespace Json {
 		VALUE,
 		NULL
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PARSER_ERROR_")]
+	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PARSER_ERROR_", type_id = "json_parser_error_get_type ()")]
 	public errordomain ParserError {
 		PARSE,
 		TRAILING_COMMA,
@@ -364,13 +364,13 @@ namespace Json {
 		UNKNOWN;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PATH_ERROR_INVALID_")]
+	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_PATH_ERROR_INVALID_", type_id = "json_path_error_get_type ()")]
 	[Version (since = "0.14")]
 	public errordomain PathError {
 		QUERY;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_READER_ERROR_")]
+	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_READER_ERROR_", type_id = "json_reader_error_get_type ()")]
 	[Version (since = "0.12")]
 	public errordomain ReaderError {
 		NO_ARRAY,

@@ -5925,7 +5925,7 @@ namespace Gdk {
 		END,
 		CANCEL
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_GL_ERROR_")]
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_GL_ERROR_", type_id = "gdk_gl_error_get_type ()")]
 	public errordomain GLError {
 		NOT_AVAILABLE,
 		UNSUPPORTED_FORMAT,
@@ -5934,7 +5934,7 @@ namespace Gdk {
 		LINK_FAILED;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_TEXTURE_ERROR_")]
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_TEXTURE_ERROR_", type_id = "gdk_texture_error_get_type ()")]
 	[Version (since = "4.6")]
 	public errordomain TextureError {
 		TOO_LARGE,
@@ -5943,7 +5943,7 @@ namespace Gdk {
 		UNSUPPORTED_FORMAT;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_VULKAN_ERROR_")]
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_VULKAN_ERROR_", type_id = "gdk_vulkan_error_get_type ()")]
 	public errordomain VulkanError {
 		UNSUPPORTED,
 		NOT_AVAILABLE;
@@ -6502,7 +6502,7 @@ namespace Gsk {
 		@2D_TRANSLATE,
 		IDENTITY
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SERIALIZATION_")]
+	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SERIALIZATION_", type_id = "gsk_serialization_error_get_type ()")]
 	public errordomain SerializationError {
 		UNSUPPORTED_FORMAT,
 		UNSUPPORTED_VERSION,
@@ -14166,7 +14166,7 @@ namespace Gtk {
 		WORD,
 		WORD_CHAR
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_BUILDER_ERROR_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_BUILDER_ERROR_", type_id = "gtk_builder_error_get_type ()")]
 	public errordomain BuilderError {
 		INVALID_TYPE_FUNCTION,
 		UNHANDLED_TAG,
@@ -14185,7 +14185,7 @@ namespace Gtk {
 		INVALID_FUNCTION;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CONSTRAINT_VFL_PARSER_ERROR_INVALID_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CONSTRAINT_VFL_PARSER_ERROR_INVALID_", type_id = "gtk_constraint_vfl_parser_error_get_type ()")]
 	public errordomain ConstraintVflParserError {
 		SYMBOL,
 		ATTRIBUTE,
@@ -14195,7 +14195,7 @@ namespace Gtk {
 		RELATION;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_PARSER_ERROR_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_PARSER_ERROR_", has_type_id = false)]
 	public errordomain CssParserError {
 		FAILED,
 		SYNTAX,
@@ -14205,7 +14205,7 @@ namespace Gtk {
 		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FILE_CHOOSER_ERROR_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FILE_CHOOSER_ERROR_", type_id = "gtk_file_chooser_error_get_type ()")]
 	public errordomain FileChooserError {
 		NONEXISTENT,
 		BAD_FILENAME,
@@ -14213,13 +14213,13 @@ namespace Gtk {
 		INCOMPLETE_HOSTNAME;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_THEME_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_THEME_", type_id = "gtk_icon_theme_error_get_type ()")]
 	public errordomain IconThemeError {
 		NOT_FOUND,
 		FAILED;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_ERROR_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_ERROR_", type_id = "gtk_print_error_get_type ()")]
 	public errordomain PrintError {
 		GENERAL,
 		INTERNAL_ERROR,
@@ -14227,7 +14227,7 @@ namespace Gtk {
 		INVALID_FILE;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_MANAGER_ERROR_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_MANAGER_ERROR_", type_id = "gtk_recent_manager_error_get_type ()")]
 	public errordomain RecentManagerError {
 		NOT_FOUND,
 		INVALID_URI,

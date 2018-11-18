@@ -32,7 +32,7 @@ namespace GLib {
 		LOCAL,
 		MASK
 	}
-	[CCode (cheader_filename = "gmodule.h", cprefix = "G_MODULE_ERROR_")]
+	[CCode (cheader_filename = "gmodule.h", cprefix = "G_MODULE_ERROR_", has_type_id = false)]
 	[Version (since = "2.70")]
 	public errordomain ModuleError {
 		FAILED,

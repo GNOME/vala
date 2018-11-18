@@ -163,7 +163,7 @@ namespace GnomeRR {
 		REFLECT_X,
 		REFLECT_Y
 	}
-	[CCode (cheader_filename = "libgnome-desktop/gnome-rr.h", cprefix = "GNOME_RR_ERROR_")]
+	[CCode (cheader_filename = "libgnome-desktop/gnome-rr.h", cprefix = "GNOME_RR_ERROR_", has_type_id = false)]
 	public errordomain Error {
 		UNKNOWN,
 		NO_RANDR_EXTENSION,

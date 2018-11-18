@@ -244,7 +244,7 @@ namespace Gst {
 		PLAYING;
 		public unowned string get_name ();
 	}
-	[CCode (cheader_filename = "gst/player/player.h", cprefix = "GST_PLAYER_ERROR_")]
+	[CCode (cheader_filename = "gst/player/player.h", cprefix = "GST_PLAYER_ERROR_", type_id = "gst_player_error_get_type ()")]
 	public errordomain PlayerError {
 		FAILED;
 		public unowned string get_name ();

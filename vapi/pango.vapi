@@ -1221,7 +1221,7 @@ namespace Pango {
 		CHAR,
 		WORD_CHAR
 	}
-	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_LAYOUT_DESERIALIZE_")]
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_LAYOUT_DESERIALIZE_", type_id = "pango_layout_deserialize_error_get_type ()")]
 	[Version (since = "1.50")]
 	public errordomain LayoutDeserializeError {
 		INVALID,

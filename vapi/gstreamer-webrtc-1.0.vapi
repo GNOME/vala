@@ -288,7 +288,7 @@ namespace Gst {
 		REMOTE_CANDIDATE,
 		CERTIFICATE
 	}
-	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_ERROR_")]
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_ERROR_", type_id = "gst_webrtc_error_get_type ()")]
 	[Version (since = "1.20")]
 	public errordomain WebRTCError {
 		DATA_CHANNEL_FAILURE,

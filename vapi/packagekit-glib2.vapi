@@ -1872,7 +1872,7 @@ namespace Pk {
 		[Version (replacement = "UpgradeKindEnum.to_string", since = "0.6.11")]
 		public unowned string enum_to_string ();
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_CLIENT_ERROR_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_CLIENT_ERROR_", type_id = "pk_client_error_get_type ()")]
 	public errordomain ClientError {
 		FAILED,
 		FAILED_AUTH,
@@ -1889,14 +1889,14 @@ namespace Pk {
 		[Version (since = "0.5.2")]
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_CONTROL_ERROR_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_CONTROL_ERROR_", type_id = "pk_control_error_get_type ()")]
 	public errordomain ControlError {
 		FAILED,
 		CANNOT_START_DAEMON;
 		[Version (since = "0.5.2")]
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_OFFLINE_ERROR_")]
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_OFFLINE_ERROR_", type_id = "pk_offline_error_get_type ()")]
 	public errordomain OfflineError {
 		FAILED,
 		INVALID_VALUE,

@@ -277,7 +277,7 @@ namespace Gst {
 			PLAYING;
 			public unowned string get_name ();
 		}
-		[CCode (cheader_filename = "gst/play/play.h", cprefix = "GST_PLAY_ERROR_")]
+		[CCode (cheader_filename = "gst/play/play.h", cprefix = "GST_PLAY_ERROR_", type_id = "gst_play_error_get_type ()")]
 		[GIR (name = "PlayError")]
 		[Version (since = "1.20")]
 		public errordomain Error {

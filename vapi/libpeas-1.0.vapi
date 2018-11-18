@@ -128,7 +128,7 @@ namespace Peas {
 		[NoAccessorMethod]
 		public abstract GLib.Object object { owned get; construct; }
 	}
-	[CCode (cheader_filename = "libpeas/peas.h", cprefix = "PEAS_PLUGIN_INFO_ERROR_")]
+	[CCode (cheader_filename = "libpeas/peas.h", cprefix = "PEAS_PLUGIN_INFO_ERROR_", has_type_id = false)]
 	public errordomain PluginInfoError {
 		LOADING_FAILED,
 		LOADER_NOT_FOUND,

@@ -871,7 +871,7 @@ namespace Soup {
 		CLOSING,
 		CLOSED
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_SESSION_ERROR_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_SESSION_ERROR_", type_id = "soup_session_error_get_type ()")]
 	public errordomain SessionError {
 		PARSING,
 		ENCODING,
@@ -882,7 +882,7 @@ namespace Soup {
 		MESSAGE_ALREADY_IN_QUEUE;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_TLD_ERROR_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_TLD_ERROR_", type_id = "soup_tld_error_get_type ()")]
 	public errordomain TLDError {
 		INVALID_HOSTNAME,
 		IS_IP_ADDRESS,
@@ -891,7 +891,7 @@ namespace Soup {
 		NO_PSL_DATA;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_WEBSOCKET_ERROR_")]
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_WEBSOCKET_ERROR_", type_id = "soup_websocket_error_get_type ()")]
 	public errordomain WebsocketError {
 		FAILED,
 		NOT_WEBSOCKET,
