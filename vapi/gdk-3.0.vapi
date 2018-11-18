@@ -6605,7 +6605,7 @@ namespace Gdk {
 		[CCode (cname = "GDK_INPUT_ONLY")]
 		INPUT_ONLY
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_GL_ERROR_")]
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_GL_ERROR_", type_id = "gdk_gl_error_get_type ()")]
 	[Version (since = "3.16")]
 	public errordomain GLError {
 		NOT_AVAILABLE,
