@@ -16,6 +16,11 @@
 		<member name="value2" c:identifier="GIR_TEST_FLAGS_TEST_VALUE2" value="2"/>
 		<member name="value3" c:identifier="GIR_TEST_FLAGS_TEST_VALUE3" value="4"/>
 	</bitfield>
+	<enumeration name="PlainEnumTest" c:type="GirTestPlainEnumTest">
+		<member name="value1" c:identifier="GIR_TEST_PLAIN_ENUM_TEST_VALUE1" value="0"/>
+		<member name="value2" c:identifier="GIR_TEST_PLAIN_ENUM_TEST_VALUE2" value="1"/>
+		<member name="value3" c:identifier="GIR_TEST_PLAIN_ENUM_TEST_VALUE3" value="4711"/>
+	</enumeration>
 	<enumeration name="SkippedEnum" c:type="GirTestSkippedEnum" glib:type-name="GirTestSkippedEnum" glib:get-type="gir_test_skipped_enum_get_type" introspectable="0">
 		<member name="value1" c:identifier="GIR_TEST_SKIPPED_ENUM_VALUE1" value="0"/>
 	</enumeration>
@@ -928,7 +933,7 @@
 			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
 		</field>
 	</record>
-	<record name="BoxedStruct">
+	<record name="BoxedStruct" c:type="GirTestBoxedStruct" glib:type-name="GirTestBoxedStruct" glib:get-type="gir_test_boxed_struct_get_type">
 		<field name="field_name">
 			<type name="gint" c:type="gint"/>
 		</field>
@@ -943,6 +948,26 @@
 			</parameters>
 		</function>
 		<method name="inv" c:identifier="gir_test_boxed_struct_inv">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</method>
+	</record>
+	<record name="Struct" c:type="GirTestStruct">
+		<field name="field_name">
+			<type name="gint" c:type="gint"/>
+		</field>
+		<function name="init" c:identifier="gir_test_struct_init">
+			<return-value transfer-ownership="none">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
+					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
+				</parameter>
+			</parameters>
+		</function>
+		<method name="inv" c:identifier="gir_test_struct_inv">
 			<return-value transfer-ownership="full">
 				<type name="none"/>
 			</return-value>

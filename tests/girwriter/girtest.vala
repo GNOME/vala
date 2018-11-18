@@ -10,6 +10,17 @@ namespace GirTest {
 		}
 	}
 
+	[CCode (has_type_id = false)]
+	public struct Struct {
+		public int field_name;
+
+		public Struct () {
+		}
+
+		public void inv () {
+		}
+	}
+
 	[GIR (visible = false)]
 	public class SkippedStruct {
 	}
@@ -28,6 +39,13 @@ namespace GirTest {
 		VALUE1,
 		VALUE2,
 		VALUE3
+	}
+
+	[CCode (has_type_id = false)]
+	public enum PlainEnumTest {
+		VALUE1,
+		VALUE2,
+		VALUE3 = 4711
 	}
 
 	[GIR (visible = false)]
