@@ -126,7 +126,7 @@ namespace Vala {
 	}
 
 	public static string get_ccode_quark_name (ErrorDomain edomain) {
-		return get_ccode_lower_case_name (edomain) + "-quark";
+		return "%s-quark".printf (get_ccode_lower_case_name (edomain).replace ("_", "-"));
 	}
 
 	public static bool is_reference_counting (TypeSymbol sym) {
