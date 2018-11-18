@@ -415,7 +415,7 @@ namespace GI {
 		MUST_NOT_OVERRIDE,
 		THROWS
 	}
-	[CCode (cheader_filename = "girepository.h", cname = "GInvokeError", cprefix = "G_INVOKE_ERROR_")]
+	[CCode (cheader_filename = "girepository.h", cname = "GInvokeError", cprefix = "G_INVOKE_ERROR_", has_type_id = false)]
 	[GIR (name = "nvokeError")]
 	public errordomain InvokeError {
 		FAILED,
@@ -423,7 +423,7 @@ namespace GI {
 		ARGUMENT_MISMATCH;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "girepository.h", cprefix = "G_IREPOSITORY_ERROR_")]
+	[CCode (cheader_filename = "girepository.h", cprefix = "G_IREPOSITORY_ERROR_", has_type_id = false)]
 	public errordomain RepositoryError {
 		TYPELIB_NOT_FOUND,
 		NAMESPACE_MISMATCH,

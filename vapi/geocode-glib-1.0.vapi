@@ -255,7 +255,7 @@ namespace Geocode {
 		BAR,
 		LIGHT_RAIL_STATION
 	}
-	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", cprefix = "GEOCODE_ERROR_")]
+	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", cprefix = "GEOCODE_ERROR_", type_id = "geocode_error_get_type ()")]
 	public errordomain Error {
 		PARSE,
 		NOT_SUPPORTED,
