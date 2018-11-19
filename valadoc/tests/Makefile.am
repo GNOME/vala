@@ -3,7 +3,7 @@ include $(top_srcdir)/Makefile.common
 NULL =
 
 TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) PACKAGE_SUFFIX=$(PACKAGE_SUFFIX) TOPBUILDDIR=$(abs_top_builddir) TOPSRCDIR=$(abs_top_srcdir) \
-	CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' $(srcdir)/testrunner.sh
+	CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' $(srcdir)/testrunner.sh
 
 TESTS = \
 	libvaladoc/errorreporter.vala \
@@ -18,7 +18,7 @@ TESTS = \
 
 check-TESTS: $(TESTS)
 	@EXEEXT=$(EXEEXT) PACKAGE_SUFFIX=$(PACKAGE_SUFFIX) TOPBUILDDIR=$(abs_top_builddir) TOPSRCDIR=$(abs_top_srcdir) \
-		CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' $(srcdir)/testrunner.sh $(TESTS)
+		CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' $(srcdir)/testrunner.sh $(TESTS)
 	G_DEBUG=fatal_warnings $(builddir)/driver
 
 AM_CFLAGS = \
