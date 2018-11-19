@@ -126,6 +126,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=declaration-after-statement \
 -Werror=maybe-uninitialized \
 -Werror=missing-prototypes \
+-Werror=strict-prototypes \
 -Werror=enum-conversion"
 
 TEST_CFLAGS=
