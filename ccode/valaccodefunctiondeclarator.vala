@@ -74,6 +74,9 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 			}
 			i++;
 		}
+		if (i == 0) {
+			writer.write_string ("void");
+		}
 
 		writer.write_string (")");
 
