@@ -61,6 +61,8 @@ public class Vala.CCodeWriter {
 
 	/* at begin of line */
 	private bool _bol = true;
+	/* at begin after empty line */
+	private bool _bael = false;
 
 	public CCodeWriter (string filename, string? source_filename = null) {
 		this.filename = filename;
@@ -195,6 +197,13 @@ public class Vala.CCodeWriter {
 	 * Writes a newline.
 	 */
 	public void write_newline () {
+		if (!_bol) {
+			_bael = false;
+		} else if (!_bael) {
+			_bael = true;
+		} else {
+			return;
+		}
 		stream.putc ('\n');
 		current_line_number++;
 		_bol = true;
