@@ -1,9 +1,10 @@
+## What is Vala?
 Vala is a programming language that aims to bring modern programming
 language features to GNOME developers without imposing any additional
 runtime requirements and without using a different ABI compared to
 applications and libraries written in C.
 
-valac, the Vala compiler, is a self-hosting compiler that translates
+`valac`, the Vala compiler, is a self-hosting compiler that translates
 Vala source code into C source and header files. It uses the GObject
 type system to create classes and interfaces declared in the Vala source
 code.
@@ -11,23 +12,22 @@ code.
 The syntax of Vala is similar to C#, modified to better fit the GObject
 type system. Vala supports modern language features as the following:
 
-	* Interfaces
-	* Properties
-	* Signals
-	* Foreach
-	* Lambda expressions
-	* Type inference for local variables
-	* Generics
-	* Non-null types
-	* Assisted memory management
-	* Exception handling
+ * Interfaces
+ * Properties
+ * Signals
+ * Foreach
+ * Lambda expressions
+ * Type inference for local variables
+ * Generics
+ * Non-null types
+ * Assisted memory management
+ * Exception handling
 
 Vala is designed to allow access to existing C libraries, especially
 GObject-based libraries, without the need for runtime bindings. All that
 is needed to use a library with Vala is an API file, containing the class
 and method declarations in Vala syntax. Vala currently comes with
-bindings for GLib and GTK+. It's planned to provide generated bindings for
-the full GNOME Platform at a later stage.
+bindings for GLib and GTK+.
 
 Using classes and methods written in Vala from an application written in
 C is not difficult. The Vala library only has to install the generated
@@ -37,6 +37,4 @@ bindings generator for access to Vala libraries from applications
 written in e.g. C# as the Vala parser is written as a library, so that
 all compile-time information is available when generating a binding.
 
-More information about Vala is available at
-
-	https://wiki.gnome.org/Projects/Vala/
+More information about Vala is available at [https://wiki.gnome.org/Projects/Vala/](https://wiki.gnome.org/Projects/Vala/)
