@@ -94,6 +94,7 @@ CLEANFILES = \
 EXTRA_DIST = \
 	ChangeLog.pre-0-4 \
 	ChangeLog.pre-0-5-7 \
+	README.md \
 	libvala.pc.in \
 	vala.m4 \
 	.version \
