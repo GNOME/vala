@@ -761,13 +761,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		wrappers = new HashSet<string> (str_hash, str_equal);
 		generated_external_symbols = new HashSet<Symbol> ();
 
-		if (context.profile == Profile.GOBJECT) {
-			header_file.add_include ("glib.h");
-			internal_header_file.add_include ("glib.h");
-			cfile.add_include ("glib.h");
-			cfile.add_include ("glib-object.h");
-		}
-
 		source_file.accept_children (this);
 
 		if (context.report.get_errors () > 0) {
