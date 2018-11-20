@@ -410,6 +410,18 @@ namespace Gst {
 			public TimeCodeInterval.from_string (string tc_inter_str);
 			public void init (uint hours, uint minutes, uint seconds, uint frames);
 		}
+		[CCode (cheader_filename = "gst/video/video.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_vbi_encoder_get_type ()")]
+		[Compact]
+		[GIR (name = "VideoVBIEncoder")]
+		[Version (since = "1.16")]
+		public class VBIEncoder {
+			[CCode (has_construct_function = false)]
+			public VBIEncoder (Gst.Video.Format format, uint32 pixel_width);
+			public bool add_ancillary (bool composite, uint8 DID, uint8 SDID_block_number, [CCode (array_length_cname = "data_count", array_length_pos = 4.1, array_length_type = "guint")] uint8[] data);
+			public Gst.Video.VBIEncoder copy ();
+			public void free ();
+			public void write_line (uint8 data);
+		}
 		[CCode (cheader_filename = "gst/video/video.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_vbi_parser_get_type ()")]
 		[Compact]
 		[GIR (name = "VideoVBIParser")]
@@ -919,7 +931,6 @@ namespace Gst {
 			V210,
 			[CCode (cname = "GST_VIDEO_FORMAT_v216")]
 			V216,
-			Y210,
 			NV12,
 			NV21,
 			GRAY8,
@@ -980,7 +991,8 @@ namespace Gst {
 			GRAY10_LE32,
 			NV12_10LE32,
 			NV16_10LE32,
-			NV12_10LE40
+			NV12_10LE40,
+			Y210
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]
