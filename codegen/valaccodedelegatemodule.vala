@@ -459,6 +459,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			return base.generate_parameter (param, decl_space, cparam_map, carg_map);
 		}
 
+		generate_type_declaration (param.variable_type, decl_space);
+
 		string ctypename = get_ccode_name (param.variable_type);
 		string target_ctypename = "gpointer";
 		string target_destroy_notify_ctypename = "GDestroyNotify";
