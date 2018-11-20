@@ -3103,7 +3103,9 @@ public class Vala.Parser : CodeVisitor {
 			var value_attrs = parse_attributes ();
 			var value_begin = get_location ();
 			string id = parse_identifier ();
-			comment = scanner.pop_comment ();
+			if (comment == null) {
+				comment = scanner.pop_comment ();
+			}
 
 			Expression value = null;
 			if (accept (TokenType.ASSIGN)) {
@@ -3114,6 +3116,7 @@ public class Vala.Parser : CodeVisitor {
 			ev.access = SymbolAccessibility.PUBLIC;
 			set_attributes (ev, value_attrs);
 			en.add_value (ev);
+			comment = null;
 		} while (accept (TokenType.COMMA));
 		if (accept (TokenType.SEMICOLON)) {
 			// enum methods
@@ -3167,13 +3170,17 @@ public class Vala.Parser : CodeVisitor {
 			var code_attrs = parse_attributes ();
 			var code_begin = get_location ();
 			string id = parse_identifier ();
-			comment = scanner.pop_comment ();
+			if (comment == null) {
+				comment = scanner.pop_comment ();
+			}
+
 			var ec = new ErrorCode (id, get_src (code_begin), comment);
 			set_attributes (ec, code_attrs);
 			if (accept (TokenType.ASSIGN)) {
 				ec.value = parse_expression ();
 			}
 			ed.add_code (ec);
+			comment = null;
 		} while (accept (TokenType.COMMA));
 		if (accept (TokenType.SEMICOLON)) {
 			// errordomain methods
