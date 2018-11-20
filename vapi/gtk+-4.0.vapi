@@ -4608,7 +4608,7 @@ namespace Gdk {
 			[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_x11_lookup_xdisplay")]
 			public static unowned Gdk.X11.Display lookup_for_xdisplay (X.Display xdisplay);
 			public static Gdk.Display? open (string? display_name);
-			public void set_cursor_theme (string theme, int size);
+			public void set_cursor_theme (string? theme, int size);
 			public static void set_program_class (Gdk.Display display, string program_class);
 			public void set_startup_notification_id (string startup_id);
 			public void set_surface_scale (int scale);
@@ -4691,7 +4691,7 @@ namespace Gdk {
 		[CCode (cheader_filename = "gdk/gdkx.h")]
 		public static void register_standard_event_type (Gdk.X11.Display display, int event_base, int n_events);
 		[CCode (cheader_filename = "gdk/gdkx.h")]
-		public static void set_sm_client_id (string sm_client_id);
+		public static void set_sm_client_id (string? sm_client_id);
 		[CCode (cheader_filename = "gdk/gdkx.h")]
 		public static unowned Gdk.Atom xatom_to_atom_for_display (Gdk.X11.Display display, X.Atom xatom);
 	}
@@ -6509,7 +6509,7 @@ namespace Gtk {
 		public virtual signal void value_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_app_chooser_button_get_type ()")]
-	public class AppChooserButton : Gtk.ComboBox, Atk.Implementor, Gtk.AppChooser, Gtk.Buildable, Gtk.CellEditable, Gtk.CellLayout {
+	public class AppChooserButton : Gtk.Widget, Atk.Implementor, Gtk.AppChooser, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AppChooserButton (string content_type);
 		public void append_custom_item (string name, string label, GLib.Icon icon);
@@ -6524,6 +6524,7 @@ namespace Gtk {
 		public string heading { get; set; }
 		public bool show_default_item { get; set construct; }
 		public bool show_dialog_item { get; set construct; }
+		public virtual signal void changed ();
 		public virtual signal void custom_item_activated (string item_name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_app_chooser_dialog_get_type ()")]
@@ -7822,7 +7823,7 @@ namespace Gtk {
 	public class EventControllerLegacy : Gtk.EventController {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
 		public EventControllerLegacy ();
-		public signal bool event (Gdk.Event object);
+		public signal bool event (Gdk.Event event);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_motion_get_type ()")]
 	public class EventControllerMotion : Gtk.EventController {
@@ -7840,7 +7841,7 @@ namespace Gtk {
 		public void set_flags (Gtk.EventControllerScrollFlags flags);
 		public Gtk.EventControllerScrollFlags flags { get; set; }
 		public signal void decelerate (double vel_x, double vel_y);
-		public signal void scroll (double dx, double dy);
+		public signal bool scroll (double dx, double dy);
 		public signal void scroll_begin ();
 		public signal void scroll_end ();
 	}
@@ -9378,7 +9379,7 @@ namespace Gtk {
 		public bool to_file (string file_name) throws GLib.Error;
 		[CCode (returns_floating_reference = true)]
 		public GLib.Variant to_gvariant ();
-		public void to_key_file (GLib.KeyFile key_file, string group_name);
+		public void to_key_file (GLib.KeyFile key_file, string? group_name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_paned_get_type ()")]
 	public class Paned : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
@@ -9429,7 +9430,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public PaperSize.from_ipp (string ipp_name, double width, double height);
 		[CCode (has_construct_function = false)]
-		public PaperSize.from_key_file (GLib.KeyFile key_file, string group_name) throws GLib.Error;
+		public PaperSize.from_key_file (GLib.KeyFile key_file, string? group_name) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public PaperSize.from_ppd (string ppd_name, string ppd_display_name, double width, double height);
 		[CCode (cheader_filename = "gtk/gtk.h")]
@@ -9699,7 +9700,7 @@ namespace Gtk {
 		public bool to_file (string file_name) throws GLib.Error;
 		[CCode (returns_floating_reference = true)]
 		public GLib.Variant to_gvariant ();
-		public void to_key_file (GLib.KeyFile key_file, string group_name);
+		public void to_key_file (GLib.KeyFile key_file, string? group_name);
 		public void unset (string key);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_progress_bar_get_type ()")]
@@ -11282,7 +11283,7 @@ namespace Gtk {
 		public void select_range (Gtk.TreePath start_path, Gtk.TreePath end_path);
 		public void selected_foreach (Gtk.TreeSelectionForeachFunc func);
 		public void set_mode (Gtk.SelectionMode type);
-		public void set_select_function (owned Gtk.TreeSelectionFunc func);
+		public void set_select_function (owned Gtk.TreeSelectionFunc? func);
 		public void unselect_all ();
 		public void unselect_iter (Gtk.TreeIter iter);
 		public void unselect_path (Gtk.TreePath path);
@@ -11393,7 +11394,7 @@ namespace Gtk {
 		public void set_drag_dest_row (Gtk.TreePath? path, Gtk.TreeViewDropPosition pos);
 		public void set_enable_search (bool enable_search);
 		public void set_enable_tree_lines (bool enabled);
-		public void set_expander_column (Gtk.TreeViewColumn column);
+		public void set_expander_column (Gtk.TreeViewColumn? column);
 		public void set_fixed_height_mode (bool enable);
 		public void set_grid_lines (Gtk.TreeViewGridLines grid_lines);
 		public void set_headers_clickable (bool setting);
@@ -11841,7 +11842,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void show ();
 		[HasEmitter]
-		public virtual signal void size_allocate (Gtk.Allocation allocation, int baseline);
+		public virtual signal void size_allocate (int width, int height, int baseline);
 		public virtual signal void state_flags_changed (Gtk.StateFlags previous_state_flags);
 		public virtual signal void style_updated ();
 		[HasEmitter]
@@ -12080,7 +12081,7 @@ namespace Gtk {
 		public abstract unowned GLib.Variant get_action_target_value ();
 		public abstract void set_action_name (string? action_name);
 		public void set_action_target (string format_string, ...);
-		public abstract void set_action_target_value (GLib.Variant target_value);
+		public abstract void set_action_target_value (GLib.Variant? target_value);
 		public void set_detailed_action_name (string detailed_action_name);
 		public abstract string action_name { get; set; }
 		[NoAccessorMethod]
