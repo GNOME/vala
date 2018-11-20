@@ -276,6 +276,8 @@ namespace Pango {
 		public virtual unowned string get_name ();
 		[Version (since = "1.4")]
 		public virtual bool is_monospace ();
+		[Version (since = "1.44")]
+		public virtual bool is_variable ();
 		public virtual void list_faces ([CCode (array_length_cname = "n_faces", array_length_pos = 1.1)] out (unowned Pango.FontFace)[] faces);
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_font_map_get_type ()")]
@@ -777,7 +779,7 @@ namespace Pango {
 		public static Pango.AttrType register (string name);
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_BIDI_TYPE_", type_id = "pango_bidi_type_get_type ()")]
-	[Version (since = "1.22")]
+	[Version (deprecated = true, deprecated_since = "1.44", since = "1.22")]
 	public enum BidiType {
 		L,
 		LRE,
@@ -808,6 +810,7 @@ namespace Pango {
 		EXACT
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_DIRECTION_", type_id = "pango_direction_get_type ()")]
+	[Version (deprecated = true, deprecated_since = "1.44")]
 	public enum Direction {
 		LTR,
 		RTL,
