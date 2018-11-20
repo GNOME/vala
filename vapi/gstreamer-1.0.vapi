@@ -2101,6 +2101,9 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Query.allocation (Gst.Caps caps, bool need_pool);
 		[CCode (has_construct_function = false)]
+		[Version (since = "1.16")]
+		public Query.bitrate ();
+		[CCode (has_construct_function = false)]
 		public Query.buffering (Gst.Format format);
 		[CCode (has_construct_function = false)]
 		public Query.caps (Gst.Caps filter);
@@ -2131,6 +2134,8 @@ namespace Gst {
 		public void parse_accept_caps (out unowned Gst.Caps caps);
 		public void parse_accept_caps_result (out bool result);
 		public void parse_allocation (out unowned Gst.Caps caps, out bool need_pool);
+		[Version (since = "1.16")]
+		public void parse_bitrate (out uint nominal_bitrate);
 		public void parse_buffering_percent (out bool busy, out int percent);
 		public void parse_buffering_range (out Gst.Format format, out int64 start, out int64 stop, out int64 estimated_total);
 		public void parse_buffering_stats (out Gst.BufferingMode mode, out int avg_in, out int avg_out, out int64 buffering_left);
@@ -2173,6 +2178,8 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Query.segment (Gst.Format format);
 		public void set_accept_caps_result (bool result);
+		[Version (since = "1.16")]
+		public void set_bitrate (uint nominal_bitrate);
 		public void set_buffering_percent (bool busy, int percent);
 		public void set_buffering_range (Gst.Format format, int64 start, int64 stop, int64 estimated_total);
 		public void set_buffering_stats (Gst.BufferingMode mode, int avg_in, int avg_out, int64 buffering_left);
@@ -3476,7 +3483,8 @@ namespace Gst {
 		ACCEPT_CAPS,
 		CAPS,
 		DRAIN,
-		CONTEXT;
+		CONTEXT,
+		BITRATE;
 		public Gst.QueryTypeFlags get_flags ();
 		public unowned string get_name ();
 		public GLib.Quark to_quark ();
