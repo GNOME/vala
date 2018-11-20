@@ -5439,7 +5439,7 @@ namespace Gtk {
 		[Version (since = "3.22")]
 		public GLib.Variant to_gvariant ();
 		[Version (since = "2.12")]
-		public void to_key_file (GLib.KeyFile key_file, string group_name);
+		public void to_key_file (GLib.KeyFile key_file, string? group_name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_paned_get_type ()")]
 	public class Paned : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
@@ -5513,7 +5513,7 @@ namespace Gtk {
 		public PaperSize.from_ipp (string ipp_name, double width, double height);
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.12")]
-		public PaperSize.from_key_file (GLib.KeyFile key_file, string group_name) throws GLib.Error;
+		public PaperSize.from_key_file (GLib.KeyFile key_file, string? group_name) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.10")]
 		public PaperSize.from_ppd (string ppd_name, string ppd_display_name, double width, double height);
@@ -5716,6 +5716,7 @@ namespace Gtk {
 		public Gtk.Widget relative_to { get; set; }
 		[Version (deprecated = true, deprecated_since = "3.22", since = "3.16")]
 		public bool transitions_enabled { get; set; }
+		[Version (since = "3.12")]
 		public virtual signal void closed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_popover_accessible_get_type ()")]
@@ -6049,7 +6050,7 @@ namespace Gtk {
 		[Version (since = "3.22")]
 		public GLib.Variant to_gvariant ();
 		[Version (since = "2.12")]
-		public void to_key_file (GLib.KeyFile key_file, string group_name);
+		public void to_key_file (GLib.KeyFile key_file, string? group_name);
 		[Version (since = "2.10")]
 		public void unset (string key);
 	}
@@ -8918,7 +8919,7 @@ namespace Gtk {
 		public void select_range (Gtk.TreePath start_path, Gtk.TreePath end_path);
 		public void selected_foreach (Gtk.TreeSelectionForeachFunc func);
 		public void set_mode (Gtk.SelectionMode type);
-		public void set_select_function (owned Gtk.TreeSelectionFunc func);
+		public void set_select_function (owned Gtk.TreeSelectionFunc? func);
 		public void unselect_all ();
 		public void unselect_iter (Gtk.TreeIter iter);
 		public void unselect_path (Gtk.TreePath path);
@@ -9077,7 +9078,7 @@ namespace Gtk {
 		public void set_enable_search (bool enable_search);
 		[Version (since = "2.10")]
 		public void set_enable_tree_lines (bool enabled);
-		public void set_expander_column (Gtk.TreeViewColumn column);
+		public void set_expander_column (Gtk.TreeViewColumn? column);
 		[Version (since = "2.6")]
 		public void set_fixed_height_mode (bool enable);
 		[Version (since = "2.10")]
@@ -10340,7 +10341,7 @@ namespace Gtk {
 		[Version (since = "3.4")]
 		public void set_action_target (string format_string, ...);
 		[Version (since = "3.4")]
-		public abstract void set_action_target_value (GLib.Variant target_value);
+		public abstract void set_action_target_value (GLib.Variant? target_value);
 		[Version (since = "3.4")]
 		public void set_detailed_action_name (string detailed_action_name);
 		public string action_name { get; set; }
