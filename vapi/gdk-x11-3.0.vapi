@@ -77,7 +77,7 @@ namespace Gdk {
 			[Version (since = "2.2")]
 			public static unowned Gdk.X11.Display lookup_for_xdisplay (X.Display xdisplay);
 			[Version (since = "2.8")]
-			public void set_cursor_theme (string theme, int size);
+			public void set_cursor_theme (string? theme, int size);
 			[Version (since = "3.0")]
 			public void set_startup_notification_id (string startup_id);
 			[Version (since = "3.10")]
@@ -212,7 +212,7 @@ namespace Gdk {
 		public static void register_standard_event_type (Gdk.X11.Display display, int event_base, int n_events);
 		[CCode (cheader_filename = "gdk/gdkx.h")]
 		[Version (since = "2.24")]
-		public static void set_sm_client_id (string sm_client_id);
+		public static void set_sm_client_id (string? sm_client_id);
 		[CCode (cheader_filename = "gdk/gdkx.h")]
 		public static void ungrab_server ();
 		[CCode (cheader_filename = "gdk/gdkx.h")]
