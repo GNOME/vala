@@ -4925,8 +4925,6 @@ namespace GLib {
 	public static GLib.EqualFunc<string> str_equal;
 	[CCode (cname = "g_free")]
 	public static GLib.DestroyNotify g_free;
-	[CCode (cname = "g_object_unref")]
-	public static GLib.DestroyNotify g_object_unref;
 	[CCode (cname = "g_list_free")]
 	public static GLib.DestroyNotify g_list_free;
 	[CCode (cname = "((GDestroyNotify) g_variant_unref)")]
