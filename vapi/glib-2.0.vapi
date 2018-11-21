@@ -1493,6 +1493,12 @@ public class string16 {
 
 [CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h", gir_namespace = "GLib", gir_version = "2.0")]
 namespace GLib {
+	[PointerType]
+	[GIR (fullname = "gpointer")]
+	[CCode (cname = "gpointer", const_cname = "gconstpointer", cheader_filename = "glib.h")]
+	public struct pointer {
+	}
+
 	[CCode (lower_case_cprefix = "", cheader_filename = "math.h")]
 	namespace Math {
 		[CCode (cname = "G_E")]
