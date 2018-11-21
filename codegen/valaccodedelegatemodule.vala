@@ -76,10 +76,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				var deleg_type = (DelegateType) param.variable_type;
 				var param_d = deleg_type.delegate_symbol;
 				if (param_d.has_target) {
-					cparam = new CCodeParameter (get_delegate_target_cname (get_variable_cname (param.name)), "gpointer");
+					cparam = new CCodeParameter (get_delegate_target_cname (get_variable_cname (param.name)), get_ccode_name (delegate_target_type));
 					cfundecl.add_parameter (cparam);
 					if (deleg_type.is_disposable ()) {
-						cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)), "GDestroyNotify");
+						cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)), get_ccode_name (delegate_target_destroy_type));
 						cfundecl.add_parameter (cparam);
 					}
 				}
@@ -99,10 +99,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			var deleg_type = (DelegateType) d.return_type;
 			var result_d = deleg_type.delegate_symbol;
 			if (result_d.has_target) {
-				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), "gpointer*");
+				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), get_ccode_name (delegate_target_type) + "*");
 				cfundecl.add_parameter (cparam);
 				if (deleg_type.is_disposable ()) {
-					cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname ("result"), "GDestroyNotify*");
+					cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname ("result"), get_ccode_name (delegate_target_destroy_type) + "*");
 					cfundecl.add_parameter (cparam);
 				}
 			}
@@ -111,7 +111,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			cfundecl.add_parameter (cparam);
 		}
 		if (d.has_target) {
-			var cparam = new CCodeParameter ("user_data", "gpointer");
+			var cparam = new CCodeParameter ("user_data", get_ccode_name (delegate_target_type));
 			cfundecl.add_parameter (cparam);
 		}
 		if (d.tree_can_fail) {
@@ -214,7 +214,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
 		if (d.has_target) {
-			var cparam = new CCodeParameter ("self", "gpointer");
+			var cparam = new CCodeParameter ("self", get_ccode_name (delegate_target_type));
 			cparam_map.set (get_param_pos (get_ccode_instance_pos (d)), cparam);
 		}
 
@@ -249,10 +249,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			var deleg_type = (DelegateType) d.return_type;
 
 			if (deleg_type.delegate_symbol.has_target) {
-				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), "gpointer*");
+				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), get_ccode_name (delegate_target_type) + "*");
 				cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (d)), cparam);
 				if (deleg_type.is_disposable ()) {
-					cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname ("result"), "GDestroyNotify*");
+					cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname ("result"), get_ccode_name (delegate_target_destroy_type) + "*");
 					cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (d) + 0.01), cparam);
 				}
 			}
@@ -465,8 +465,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		generate_type_declaration (param.variable_type, decl_space);
 
 		string ctypename = get_ccode_name (param.variable_type);
-		string target_ctypename = "gpointer";
-		string target_destroy_notify_ctypename = "GDestroyNotify";
+		string target_ctypename = get_ccode_name (delegate_target_type);
+		string target_destroy_notify_ctypename = get_ccode_name (delegate_target_destroy_type);
 
 		if (param.parent_symbol is Delegate
 		    && get_ccode_name (param.variable_type) == get_ccode_name (param.parent_symbol)) {

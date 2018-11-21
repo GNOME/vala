@@ -66,9 +66,9 @@ public class Vala.GAsyncModule : GtkModule {
 			} else if (param.variable_type is DelegateType) {
 				var deleg_type = (DelegateType) param.variable_type;
 				if (deleg_type.delegate_symbol.has_target) {
-					data.add_field ("gpointer", get_ccode_delegate_target_name (param));
+					data.add_field (get_ccode_name (delegate_target_type), get_ccode_delegate_target_name (param));
 					if (deleg_type.is_disposable ()) {
-						data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+						data.add_field (get_ccode_name (delegate_target_destroy_type), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
 					}
 				}
 			}
@@ -93,8 +93,8 @@ public class Vala.GAsyncModule : GtkModule {
 			} else if (m.return_type is DelegateType) {
 				var deleg_type = (DelegateType) m.return_type;
 				if (deleg_type.delegate_symbol.has_target) {
-					data.add_field ("gpointer", get_delegate_target_cname ("result"));
-					data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname ("result"));
+					data.add_field (get_ccode_name (delegate_target_type), get_delegate_target_cname ("result"));
+					data.add_field (get_ccode_name (delegate_target_destroy_type), get_delegate_target_destroy_notify_cname ("result"));
 				}
 			}
 		}

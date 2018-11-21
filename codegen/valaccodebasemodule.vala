@@ -322,6 +322,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public TypeSymbol type_module_type;
 	public TypeSymbol dbus_proxy_type;
 	public Class gtk_widget_type;
+	public DataType delegate_target_type;
+	public DelegateType delegate_target_destroy_type;
+	Delegate destroy_notify;
 
 	public bool in_plugin = false;
 	public string module_init_param_name;
@@ -500,6 +503,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			dbus_proxy_type = (TypeSymbol) glib_ns.scope.lookup ("DBusProxy");
+
+			delegate_target_type = new CType ("gpointer");
+			destroy_notify = (Delegate) glib_ns.scope.lookup ("DestroyNotify");
+			delegate_target_destroy_type = new DelegateType (destroy_notify);
+		} else {
+			delegate_target_type = new PointerType (new VoidType ());
+			destroy_notify = new Delegate ("ValaDestroyNotify", new VoidType ());
+			destroy_notify.add_parameter (new Parameter ("data", new PointerType (new VoidType ())));
+			destroy_notify.has_target = false;
+			delegate_target_destroy_type = new DelegateType (destroy_notify);
 		}
 
 		var gtk_ns = root_symbol.scope.lookup ("Gtk");
@@ -1088,7 +1101,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (delegate_type.delegate_symbol.has_target) {
 				// create field to store delegate target
 
-				cdecl = new CCodeDeclaration ("gpointer");
+				cdecl = new CCodeDeclaration (get_ccode_name (delegate_target_type));
 				cdecl.add_declarator (new CCodeVariableDeclarator (get_ccode_delegate_target_name (f)));
 				if (f.is_private_symbol ()) {
 					cdecl.modifiers = CCodeModifiers.STATIC;
@@ -1100,7 +1113,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				decl_space.add_type_member_declaration (cdecl);
 
 				if (delegate_type.is_disposable ()) {
-					cdecl = new CCodeDeclaration ("GDestroyNotify");
+					cdecl = new CCodeDeclaration (get_ccode_name (delegate_target_destroy_type));
 					cdecl.add_declarator (new CCodeVariableDeclarator (get_delegate_target_destroy_notify_cname  (get_ccode_name (f))));
 					if (f.is_private_symbol ()) {
 						cdecl.modifiers = CCodeModifiers.STATIC;
@@ -1300,7 +1313,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					if (delegate_type.delegate_symbol.has_target) {
 						// create field to store delegate target
 
-						var target_def = new CCodeDeclaration ("gpointer");
+						var target_def = new CCodeDeclaration (get_ccode_name (delegate_target_type));
 						target_def.add_declarator (new CCodeVariableDeclarator (get_ccode_delegate_target_name (f), new CCodeConstant ("NULL")));
 						if (!f.is_private_symbol ()) {
 							target_def.modifiers = CCodeModifiers.EXTERN;
@@ -1310,7 +1323,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						cfile.add_type_member_declaration (target_def);
 
 						if (delegate_type.is_disposable ()) {
-							var target_destroy_notify_def = new CCodeDeclaration ("GDestroyNotify");
+							var target_destroy_notify_def = new CCodeDeclaration (get_ccode_name (delegate_target_destroy_type));
 							target_destroy_notify_def.add_declarator (new CCodeVariableDeclarator (get_delegate_target_destroy_notify_cname (get_ccode_name (f)), new CCodeConstant ("NULL")));
 							if (!f.is_private_symbol ()) {
 								target_destroy_notify_def.modifiers = CCodeModifiers.EXTERN;
@@ -1559,9 +1572,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? length_ctype + "*" : length_ctype));
 			}
 		} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
-			function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
+			function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? get_ccode_name (delegate_target_type) + "*" : get_ccode_name (delegate_target_type)));
 			if (!acc.readable && acc.value_type.value_owned) {
-				function.add_parameter (new CCodeParameter (get_delegate_target_destroy_notify_cname ("value"), "GDestroyNotify"));
+				function.add_parameter (new CCodeParameter (get_delegate_target_destroy_notify_cname ("value"), get_ccode_name (delegate_target_destroy_type)));
 			}
 		}
 
@@ -1662,9 +1675,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? length_ctype + "*": length_ctype));
 				}
 			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
-				function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
+				function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? get_ccode_name (delegate_target_type) + "*" : get_ccode_name (delegate_target_type)));
 				if (!acc.readable && acc.value_type.value_owned) {
-					function.add_parameter (new CCodeParameter (get_delegate_target_destroy_notify_cname ("value"), "GDestroyNotify"));
+					function.add_parameter (new CCodeParameter (get_delegate_target_destroy_notify_cname ("value"), get_ccode_name (delegate_target_destroy_type)));
 				}
 			}
 
@@ -1786,9 +1799,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? length_ctype + "*" : length_ctype));
 				}
 			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
-				function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
+				function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? get_ccode_name (delegate_target_type) + "*" : get_ccode_name (delegate_target_type)));
 				if (!acc.readable && acc.value_type.value_owned) {
-					function.add_parameter (new CCodeParameter (get_delegate_target_destroy_notify_cname ("value"), "GDestroyNotify"));
+					function.add_parameter (new CCodeParameter (get_delegate_target_destroy_notify_cname ("value"), get_ccode_name (delegate_target_destroy_type)));
 				}
 			}
 
@@ -1932,9 +1945,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				data.add_field (length_ctype, get_parameter_array_length_cname (param, dim));
 			}
 		} else if (deleg_type != null && deleg_type.delegate_symbol.has_target) {
-			data.add_field ("gpointer", get_ccode_delegate_target_name (param));
+			data.add_field (get_ccode_name (delegate_target_type), get_ccode_delegate_target_name (param));
 			if (param.variable_type.is_disposable ()) {
-				data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+				data.add_field (get_ccode_name (delegate_target_destroy_type), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
 				// reference transfer for delegates
 				var lvalue = get_parameter_cvalue (param);
 				((GLibValue) value).delegate_target_destroy_notify_cvalue = get_delegate_target_destroy_notify_cvalue (lvalue);
@@ -2001,9 +2014,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						}
 						data.add_field (length_ctype, get_array_size_cname (get_local_cname (local)));
 					} else if (local.variable_type is DelegateType && ((DelegateType) local.variable_type).delegate_symbol.has_target) {
-						data.add_field ("gpointer", get_delegate_target_cname (get_local_cname (local)));
+						data.add_field (get_ccode_name (delegate_target_type), get_delegate_target_cname (get_local_cname (local)));
 						if (local.variable_type.is_disposable ()) {
-							data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_local_cname (local)));
+							data.add_field (get_ccode_name (delegate_target_destroy_type), get_delegate_target_destroy_notify_cname (get_local_cname (local)));
 						}
 					}
 				}
@@ -2459,11 +2472,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var deleg_type = (DelegateType) local.variable_type;
 				if (deleg_type.delegate_symbol.has_target) {
 					// create variable to store delegate target
-					var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (get_local_cname (local)));
+					var target_var = new LocalVariable (delegate_target_type.copy (), get_delegate_target_cname (get_local_cname (local)));
 					target_var.init = local.initializer == null;
 					emit_temp_var (target_var);
 					if (deleg_type.is_disposable ()) {
-						var target_destroy_notify_var = new LocalVariable (gdestroynotify_type, get_delegate_target_destroy_notify_cname (get_local_cname (local)));
+						var target_destroy_notify_var = new LocalVariable (delegate_target_destroy_type.copy (), get_delegate_target_destroy_notify_cname (get_local_cname (local)));
 						target_destroy_notify_var.init = local.initializer == null;
 						emit_temp_var (target_destroy_notify_var);
 					}
@@ -2507,11 +2520,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				emit_temp_var (len_var);
 			}
 		} else if (deleg_type != null && deleg_type.delegate_symbol.has_target) {
-			var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (local.name), null, node_reference.source_reference);
+			var target_var = new LocalVariable (delegate_target_type.copy (), get_delegate_target_cname (local.name), null, node_reference.source_reference);
 			target_var.init = init;
 			emit_temp_var (target_var);
 			if (deleg_type.is_disposable ()) {
-				var target_destroy_notify_var = new LocalVariable (gdestroynotify_type.copy (), get_delegate_target_destroy_notify_cname (local.name), null, node_reference.source_reference);
+				var target_destroy_notify_var = new LocalVariable (delegate_target_destroy_type.copy (), get_delegate_target_destroy_notify_cname (local.name), null, node_reference.source_reference);
 				target_destroy_notify_var.init = init;
 				emit_temp_var (target_destroy_notify_var);
 			}
