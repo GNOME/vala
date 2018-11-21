@@ -651,6 +651,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 						if (!((CreationMethod) m).chain_up) {
 							// TODO implicitly chain up to base class as in add_object_creation
+							// g_slice_new0 needs glib.h
+							cfile.add_include ("glib.h");
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 							ccall.add_argument (new CCodeIdentifier (get_ccode_name (cl)));
 							ccode.add_assignment (get_this_cexpression (), ccall);

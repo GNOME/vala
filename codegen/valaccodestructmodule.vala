@@ -215,11 +215,15 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		ccode.add_declaration (get_ccode_name (st) + "*", new CCodeVariableDeclarator ("dup"));
 
 		if (context.profile == Profile.GOBJECT) {
+			// g_new0 needs glib.h
+			cfile.add_include ("glib.h");
 			var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 			creation_call.add_argument (new CCodeConstant (get_ccode_name (st)));
 			creation_call.add_argument (new CCodeConstant ("1"));
 			ccode.add_assignment (new CCodeIdentifier ("dup"), creation_call);
 		} else if (context.profile == Profile.POSIX) {
+			// calloc needs stdlib.h
+			cfile.add_include ("stdlib.h");
 			var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("calloc"));
 			creation_call.add_argument (new CCodeConstant ("1"));
 			creation_call.add_argument (new CCodeIdentifier ("sizeof (%s*)".printf (get_ccode_name (st))));
@@ -270,10 +274,14 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		}
 
 		if (context.profile == Profile.GOBJECT) {
+			// g_free needs glib.h
+			cfile.add_include ("glib.h");
 			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
 			free_call.add_argument (new CCodeIdentifier ("self"));
 			ccode.add_expression (free_call);
 		} else if (context.profile == Profile.POSIX) {
+			// free needs stdlib.h
+			cfile.add_include ("stdlib.h");
 			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("free"));
 			free_call.add_argument (new CCodeIdentifier ("self"));
 			ccode.add_expression (free_call);

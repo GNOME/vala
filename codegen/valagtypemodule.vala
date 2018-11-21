@@ -1854,6 +1854,8 @@ public class Vala.GTypeModule : GErrorModule {
 			cfile.add_function_declaration (instance_finalize_context.ccode);
 			cfile.add_function (instance_finalize_context.ccode);
 		} else if (cl.base_class == null) {
+			// g_slice_free needs glib.h
+			cfile.add_include ("glib.h");
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 			ccall.add_argument (new CCodeIdentifier (get_ccode_name (cl)));
 			ccall.add_argument (new CCodeIdentifier ("self"));
