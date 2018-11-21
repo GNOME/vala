@@ -179,6 +179,7 @@ TESTS = \
 	control-semantic/printf-too-many.test \
 	control-semantic/variadic-argument-invalid.test \
 	enums/enum_only.vala \
+	enums/enum-no-gtype.vala \
 	enums/enums.vala \
 	enums/flags.vala \
 	enums/bug666035.vala \
@@ -186,6 +187,7 @@ TESTS = \
 	enums/bug763831.vala \
 	enums/bug780050.vala \
 	structs/struct_only.vala \
+	structs/struct-no-gtype.vala \
 	structs/structs.vala \
 	structs/gvalue.vala \
 	structs/bug530605.vala \
@@ -222,6 +224,7 @@ TESTS = \
 	structs/bug777194.vala \
 	delegates/casting.vala \
 	delegates/compatible.vala \
+	delegates/delegate_only.vala \
 	delegates/delegates.vala \
 	delegates/delegates-error.test \
 	delegates/fields.vala \
@@ -245,6 +248,7 @@ TESTS = \
 	delegates/bug792077.vala \
 	objects/chainup.vala \
 	objects/classes.vala \
+	objects/compact-class.vala \
 	objects/compact-class-destructor.vala \
 	objects/constructor-variadic.test \
 	objects/constructors.vala \
@@ -343,6 +347,8 @@ TESTS = \
 	objects/bug795521.vala \
 	errors/catch-error-code.vala \
 	errors/errors.vala \
+	errors/errordomain.vala \
+	errors/method-throws.vala \
 	errors/bug567181.vala \
 	errors/bug579101.vala \
 	errors/bug596228.vala \
