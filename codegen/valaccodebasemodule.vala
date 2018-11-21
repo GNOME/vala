@@ -1486,6 +1486,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var deleg_type = (DelegateType) type;
 			var d = deleg_type.delegate_symbol;
 			generate_delegate_declaration (d, decl_space);
+			if (d.has_target) {
+				generate_type_declaration (delegate_target_type, decl_space);
+				if (deleg_type.is_disposable ()) {
+					generate_type_declaration (delegate_target_destroy_type, decl_space);
+				}
+			}
 		} else if (type.data_type is Enum) {
 			var en = (Enum) type.data_type;
 			generate_enum_declaration (en, decl_space);
