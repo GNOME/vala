@@ -33,6 +33,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			return;
 		}
 
+		generate_type_declaration (gquark_type, decl_space);
+
 		var cenum = new CCodeEnum (get_ccode_name (edomain));
 
 		foreach (ErrorCode ecode in edomain.get_codes ()) {

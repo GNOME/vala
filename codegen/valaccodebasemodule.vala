@@ -325,6 +325,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public DataType delegate_target_type;
 	public DelegateType delegate_target_destroy_type;
 	Delegate destroy_notify;
+	Class gerror;
 
 	public bool in_plugin = false;
 	public string module_init_param_name;
@@ -475,6 +476,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			gthreadpool_type = (TypeSymbol) glib_ns.scope.lookup ("ThreadPool");
 			gdestroynotify_type = new DelegateType ((Delegate) glib_ns.scope.lookup ("DestroyNotify"));
 
+			gerror = (Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Error");
 			gquark_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Quark"));
 			gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
 			gvariant_type = (Class) glib_ns.scope.lookup ("Variant");
@@ -1513,6 +1515,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var error_type = (ErrorType) type;
 			if (error_type.error_domain != null) {
 				generate_error_domain_declaration (error_type.error_domain, decl_space);
+			} else {
+				generate_class_declaration (gerror, decl_space);
 			}
 		} else if (type is PointerType) {
 			var pointer_type = (PointerType) type;
