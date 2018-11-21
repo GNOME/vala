@@ -394,6 +394,8 @@ public class Vala.GAsyncModule : GtkModule {
 				return;
 			}
 
+			generate_type_declaration (new MethodType (m), decl_space);
+
 			var cl = m.parent_symbol as Class;
 
 			var asyncfunc = new CCodeFunction (get_ccode_name (m), "void");

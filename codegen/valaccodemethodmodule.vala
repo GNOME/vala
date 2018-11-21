@@ -177,6 +177,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			return;
 		}
 
+		generate_type_declaration (new MethodType (m), decl_space);
+
 		var function = new CCodeFunction (get_ccode_name (m));
 
 		if (m.is_private_symbol () && !m.external) {

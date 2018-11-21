@@ -1478,9 +1478,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (type is ObjectType) {
 			var object_type = (ObjectType) type;
 			if (object_type.type_symbol is Class) {
-				generate_class_declaration ((Class) object_type.type_symbol, decl_space);
+				var cl = (Class) object_type.type_symbol;
+				generate_class_declaration (cl, decl_space);
+				if (!cl.is_compact && cl.has_type_parameters ()) {
+					generate_struct_declaration ((Struct) gtype_type, decl_space);
+				}
 			} else if (object_type.type_symbol is Interface) {
-				generate_interface_declaration ((Interface) object_type.type_symbol, decl_space);
+				var iface = (Interface) object_type.type_symbol;
+				generate_interface_declaration (iface, decl_space);
+				if (iface.has_type_parameters ()) {
+					generate_struct_declaration ((Struct) gtype_type, decl_space);
+				}
 			}
 		} else if (type is DelegateType) {
 			var deleg_type = (DelegateType) type;
@@ -1509,6 +1517,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else if (type is PointerType) {
 			var pointer_type = (PointerType) type;
 			generate_type_declaration (pointer_type.base_type, decl_space);
+		} else if (type is MethodType) {
+			var method = ((MethodType) type).method_symbol;
+			if (method.has_type_parameters () && !get_ccode_simple_generics (method)) {
+				generate_struct_declaration ((Struct) gtype_type, decl_space);
+			}
 		}
 
 		foreach (DataType type_arg in type.get_type_arguments ()) {
