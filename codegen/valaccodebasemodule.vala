@@ -506,7 +506,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			dbus_proxy_type = (TypeSymbol) glib_ns.scope.lookup ("DBusProxy");
 
-			delegate_target_type = new CType ("gpointer");
+			delegate_target_type = new StructValueType ((Struct) glib_ns.scope.lookup ("pointer"));
 			destroy_notify = (Delegate) glib_ns.scope.lookup ("DestroyNotify");
 			delegate_target_destroy_type = new DelegateType (destroy_notify);
 		} else {
