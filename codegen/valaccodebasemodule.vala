@@ -845,7 +845,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		decl_space.add_type_definition (cenum);
 		decl_space.add_type_definition (new CCodeNewline ());
 
-		if (!get_ccode_has_type_id (en)) {
+		if (context.profile != Profile.GOBJECT || !get_ccode_has_type_id (en)) {
 			return true;
 		}
 
