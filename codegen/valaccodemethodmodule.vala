@@ -779,7 +779,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 
 					if (current_type_symbol is Class && gobject_type != null && current_class.is_subtype_of (gobject_type)
-					    && current_class.get_type_parameters ().size > 0
+					    && current_class.has_type_parameters ()
 					    && !((CreationMethod) m).chain_up) {
 						var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("__params_it"), new CCodeIdentifier ("__params"));
 						ccode.open_while (ccond);

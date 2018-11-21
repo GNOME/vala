@@ -66,7 +66,7 @@ public class Vala.SignalType : CallableType {
 		var result = new DelegateType (signal_symbol.get_delegate (sender_type, this));
 		result.value_owned = true;
 
-		if (result.delegate_symbol.get_type_parameters ().size > 0) {
+		if (result.delegate_symbol.has_type_parameters ()) {
 			foreach (var type_param in type_sym.get_type_parameters ()) {
 				var type_arg = new GenericType (type_param);
 				type_arg.value_owned = true;

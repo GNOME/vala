@@ -185,7 +185,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		} else if (m is CreationMethod && m.parent_symbol is Struct) {
 			ccall.add_argument (get_this_cexpression ());
-		} else if (m != null && m.get_type_parameters ().size > 0 && !get_ccode_has_generic_type_parameter (m) && !get_ccode_simple_generics (m) && (ccall != finish_call || expr.is_yield_expression)) {
+		} else if (m != null && m.has_type_parameters () && !get_ccode_has_generic_type_parameter (m) && !get_ccode_simple_generics (m) && (ccall != finish_call || expr.is_yield_expression)) {
 			// generic method
 			// don't add generic arguments for .end() calls
 			add_generic_type_arguments (in_arg_map, ma.get_type_arguments (), expr);
@@ -270,7 +270,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 		if (m != null && get_ccode_has_generic_type_parameter (m)) {
 			// insert type argument for macros
-			if (m.get_type_parameters ().size > 0) {
+			if (m.has_type_parameters ()) {
 				// generic method
 				int type_param_index = 0;
 				foreach (var type_arg in ma.get_type_arguments ()) {
@@ -328,7 +328,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (current_method.body))), "self"), ref_call);
 			}
 
-			if (!current_class.is_compact && current_class.get_type_parameters ().size > 0) {
+			if (!current_class.is_compact && current_class.has_type_parameters ()) {
 				/* type, dup func, and destroy func fields for generic types */
 				var suffices = new string[] {"type", "dup_func", "destroy_func"};
 				foreach (TypeParameter type_param in current_class.get_type_parameters ()) {

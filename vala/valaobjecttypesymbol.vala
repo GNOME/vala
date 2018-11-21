@@ -254,6 +254,10 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 		return type_parameters;
 	}
 
+	public bool has_type_parameters () {
+		return (type_parameters != null && type_parameters.size > 0);
+	}
+
 	public override int get_type_parameter_index (string name) {
 		int i = 0;
 		foreach (TypeParameter parameter in type_parameters) {

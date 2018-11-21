@@ -35,10 +35,10 @@ public class Vala.GObjectModule : GTypeModule {
 		}
 
 		push_line (cl.source_reference);
-		if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
+		if (class_has_readable_properties (cl) || cl.has_type_parameters ()) {
 			add_get_property_function (cl);
 		}
-		if (class_has_writable_properties (cl) || cl.get_type_parameters ().size > 0) {
+		if (class_has_writable_properties (cl) || cl.has_type_parameters ()) {
 			add_set_property_function (cl);
 		}
 		pop_line ();
@@ -52,10 +52,10 @@ public class Vala.GObjectModule : GTypeModule {
 		/* set property handlers */
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 		ccall.add_argument (new CCodeIdentifier ("klass"));
-		if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
+		if (class_has_readable_properties (cl) || cl.has_type_parameters ()) {
 			ccode.add_assignment (new CCodeMemberAccess.pointer (ccall, "get_property"), new CCodeIdentifier ("_vala_%s_get_property".printf (get_ccode_lower_case_name (cl, null))));
 		}
-		if (class_has_writable_properties (cl) || cl.get_type_parameters ().size > 0) {
+		if (class_has_writable_properties (cl) || cl.has_type_parameters ()) {
 			ccode.add_assignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("_vala_%s_set_property".printf (get_ccode_lower_case_name (cl, null))));
 		}
 

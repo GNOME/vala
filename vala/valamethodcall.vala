@@ -535,7 +535,7 @@ public class Vala.MethodCall : Expression {
 				dynamic_sig.handler.target_type = new DelegateType (dynamic_sig.get_delegate (new ObjectType ((ObjectTypeSymbol) dynamic_sig.parent_symbol), this));
 			}
 
-			if (m != null && m.get_type_parameters ().size > 0) {
+			if (m != null && m.has_type_parameters ()) {
 				var ma = (MemberAccess) call;
 				if (ma.get_type_arguments ().size == 0) {
 					// infer type arguments

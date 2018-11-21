@@ -221,7 +221,7 @@ public abstract class Vala.TypeRegisterFunction {
 			get_type_interface_init_statements (context, type_init, plugin);
 		}
 
-		if (cl != null && (cl.has_private_fields || cl.get_type_parameters ().size > 0)) {
+		if (cl != null && (cl.has_private_fields || cl.has_type_parameters ())) {
 			if (!plugin) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_instance_private"));
 				ccall.add_argument (new CCodeIdentifier (type_id_name));

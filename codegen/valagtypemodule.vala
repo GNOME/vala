@@ -585,7 +585,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			/* only add the *Private struct if it is not empty, i.e. we actually have private data */
-			if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
+			if (cl.has_private_fields || cl.has_type_parameters ()) {
 				decl_space.add_type_definition (instance_priv_struct);
 
 				var parent_decl = new CCodeDeclaration ("gint");
@@ -1296,7 +1296,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		/* add struct for private fields */
-		if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
+		if (cl.has_private_fields || cl.has_type_parameters ()) {
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_adjust_private_offset"));
 			ccall.add_argument (new CCodeIdentifier ("klass"));
 			ccall.add_argument (new CCodeIdentifier ("&%s_private_offset".printf (get_ccode_name (cl))));
@@ -1702,7 +1702,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		if (!cl.is_compact && (cl.has_private_fields || cl.get_type_parameters ().size > 0)) {
+		if (!cl.is_compact && (cl.has_private_fields || cl.has_type_parameters ())) {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_instance_private".printf (get_ccode_lower_case_name (cl, null))));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 			func.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), ccall);

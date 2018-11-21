@@ -340,7 +340,7 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		List<DataType> method_type_args = null;
-		if (this.get_type_parameters ().size > 0) {
+		if (this.has_type_parameters ()) {
 			method_type_args = new ArrayList<DataType> ();
 			foreach (TypeParameter type_parameter in this.get_type_parameters ()) {
 				var type_arg = new GenericType (type_parameter);
@@ -459,6 +459,10 @@ public class Vala.Method : Subroutine, Callable {
 			i++;
 		}
 		return -1;
+	}
+
+	public bool has_type_parameters () {
+		return (type_parameters != null && type_parameters.size > 0);
 	}
 
 	/**
