@@ -40,28 +40,19 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			store_value (assignment.left.target_value, assignment.right.target_value, assignment.source_reference);
 		} else {
 			CCodeAssignmentOperator cop;
-			if (assignment.operator == AssignmentOperator.BITWISE_OR) {
-				cop = CCodeAssignmentOperator.BITWISE_OR;
-			} else if (assignment.operator == AssignmentOperator.BITWISE_AND) {
-				cop = CCodeAssignmentOperator.BITWISE_AND;
-			} else if (assignment.operator == AssignmentOperator.BITWISE_XOR) {
-				cop = CCodeAssignmentOperator.BITWISE_XOR;
-			} else if (assignment.operator == AssignmentOperator.ADD) {
-				cop = CCodeAssignmentOperator.ADD;
-			} else if (assignment.operator == AssignmentOperator.SUB) {
-				cop = CCodeAssignmentOperator.SUB;
-			} else if (assignment.operator == AssignmentOperator.MUL) {
-				cop = CCodeAssignmentOperator.MUL;
-			} else if (assignment.operator == AssignmentOperator.DIV) {
-				cop = CCodeAssignmentOperator.DIV;
-			} else if (assignment.operator == AssignmentOperator.PERCENT) {
-				cop = CCodeAssignmentOperator.PERCENT;
-			} else if (assignment.operator == AssignmentOperator.SHIFT_LEFT) {
-				cop = CCodeAssignmentOperator.SHIFT_LEFT;
-			} else if (assignment.operator == AssignmentOperator.SHIFT_RIGHT) {
-				cop = CCodeAssignmentOperator.SHIFT_RIGHT;
-			} else {
-				assert_not_reached ();
+
+			switch (assignment.operator) {
+			case AssignmentOperator.BITWISE_OR: cop = CCodeAssignmentOperator.BITWISE_OR; break;
+			case AssignmentOperator.BITWISE_AND: cop = CCodeAssignmentOperator.BITWISE_AND; break;
+			case AssignmentOperator.BITWISE_XOR: cop = CCodeAssignmentOperator.BITWISE_XOR; break;
+			case AssignmentOperator.ADD: cop = CCodeAssignmentOperator.ADD; break;
+			case AssignmentOperator.SUB: cop = CCodeAssignmentOperator.SUB; break;
+			case AssignmentOperator.MUL: cop = CCodeAssignmentOperator.MUL; break;
+			case AssignmentOperator.DIV: cop = CCodeAssignmentOperator.DIV; break;
+			case AssignmentOperator.PERCENT: cop = CCodeAssignmentOperator.PERCENT; break;
+			case AssignmentOperator.SHIFT_LEFT: cop = CCodeAssignmentOperator.SHIFT_LEFT; break;
+			case AssignmentOperator.SHIFT_RIGHT: cop = CCodeAssignmentOperator.SHIFT_RIGHT; break;
+			default: assert_not_reached ();
 			}
 
 			CCodeExpression codenode = new CCodeAssignment (get_cvalue (assignment.left), get_cvalue (assignment.right), cop);
