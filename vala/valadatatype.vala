@@ -432,7 +432,7 @@ public abstract class Vala.DataType : CodeNode {
 		return is_real_struct_type () && !nullable;
 	}
 
-	bool is_non_null_simple_type () {
+	public bool is_non_null_simple_type () {
 		unowned Struct s = data_type as Struct;
 		if (s != null && s.is_simple_type ()) {
 			return !nullable;
