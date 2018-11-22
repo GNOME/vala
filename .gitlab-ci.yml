@@ -9,8 +9,9 @@ fedora-x86_64:
   except:
     - tags
   before_script:
-    - dnf install -y autoconf autoconf-archive automake bison dbus-x11 flex gcc glib2-devel graphviz-devel lcov libxslt make vala
+    - dnf install -y autoconf autoconf-archive automake bison dbus-x11 flex gcc git glib2-devel graphviz-devel lcov libxslt make vala
   script:
+    - git fetch --tags
     - ./autogen.sh --enable-coverage
     - make -j8
     - make -j8 check
