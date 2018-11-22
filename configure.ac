@@ -82,6 +82,12 @@ if test x$enable_boostrap = xyes; then
 	VALAFLAGS="$VALAFLAGS --hide-internal --abi-stability"
 fi
 
+AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], [Enable debug build]), enable_debug=$enableval, enable_debug=no)
+if test "$enable_coverage" = "yes"; then
+	VALAFLAGS="$VALAFLAGS -g"
+	CFLAGS="$CFLAGS -g -O0"
+fi
+
 AC_SUBST(VALAFLAGS)
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
