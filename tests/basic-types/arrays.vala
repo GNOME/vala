@@ -48,6 +48,19 @@ void test_integer_array () {
 	d[1] = null;
 	assert (d[0] == 10);
 	assert (d[1] == null);
+
+	// element assignment
+	int[] e = { 13, 47 };
+	e[0] = 96;
+	assert (e[0] == 96);
+	e[0] /= 24;
+	assert (e[0] == 4);
+	e[0] += 2;
+	assert (e[0] == 6);
+	e[0] *= 4;
+	assert (e[0] == 24);
+	e[0] -= 23;
+	assert (e[0] == 1);
 }
 
 void test_string_array () {
