@@ -16,42 +16,62 @@ void test_int () {
 	// +
 	i = 42 + 23;
 	assert (i == 65);
+	i += 7;
+	assert (i == 72);
 
 	// -
 	i = 42 - 23;
 	assert (i == 19);
+	i -= 7;
+	assert (i == 12);
 
 	// *
 	i = 42 * 23;
 	assert (i == 966);
+	i *= 7;
+	assert (i == 6762);
 
 	// /
 	i = 42 / 23;
+	assert (i == 1);
+	i /= 1;
 	assert (i == 1);
 
 	// %
 	i = 42 % 23;
 	assert (i == 19);
+	i %= 7;
+	assert (i == 5);
 
 	// <<
 	i = 42 << 3;
 	assert (i == 336);
+	i <<= 7;
+	assert (i == 43008);
 
 	// >>
 	i = 42 >> 3;
 	assert (i == 5);
+	i >>= 2;
+	assert (i == 1);
 
 	// &
 	i = 42 & 23;
 	assert (i == 2);
+	i &= 1;
+	assert (i == 0);
 
 	// |
 	i = 42 | 23;
 	assert (i == 63);
+	i |= 128;
+	assert (i == 191);
 
 	// ^
 	i = 42 ^ 23;
 	assert (i == 61);
+	i ^= 23;
+	assert (i == 42);
 
 	// equality and relational
 	i = 42;
