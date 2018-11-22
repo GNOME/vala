@@ -229,23 +229,26 @@ public class Vala.Assignment : Expression {
 
 			var old_value = new MemberAccess (ma.inner, ma.member_name);
 
-			var bin = new BinaryExpression (BinaryOperator.PLUS, old_value, right, source_reference);
-			bin.target_type = right.target_type.copy ();
-			right.target_type = right.target_type.copy ();
-			right.target_type.value_owned = false;
+			BinaryOperator bop;
 
 			switch (operator) {
-			case AssignmentOperator.BITWISE_OR: bin.operator = BinaryOperator.BITWISE_OR; break;
-			case AssignmentOperator.BITWISE_AND: bin.operator = BinaryOperator.BITWISE_AND; break;
-			case AssignmentOperator.BITWISE_XOR: bin.operator = BinaryOperator.BITWISE_XOR; break;
-			case AssignmentOperator.ADD: bin.operator = BinaryOperator.PLUS; break;
-			case AssignmentOperator.SUB: bin.operator = BinaryOperator.MINUS; break;
-			case AssignmentOperator.MUL: bin.operator = BinaryOperator.MUL; break;
-			case AssignmentOperator.DIV: bin.operator = BinaryOperator.DIV; break;
-			case AssignmentOperator.PERCENT: bin.operator = BinaryOperator.MOD; break;
-			case AssignmentOperator.SHIFT_LEFT: bin.operator = BinaryOperator.SHIFT_LEFT; break;
-			case AssignmentOperator.SHIFT_RIGHT: bin.operator = BinaryOperator.SHIFT_RIGHT; break;
+			case AssignmentOperator.BITWISE_OR: bop = BinaryOperator.BITWISE_OR; break;
+			case AssignmentOperator.BITWISE_AND: bop = BinaryOperator.BITWISE_AND; break;
+			case AssignmentOperator.BITWISE_XOR: bop = BinaryOperator.BITWISE_XOR; break;
+			case AssignmentOperator.ADD: bop = BinaryOperator.PLUS; break;
+			case AssignmentOperator.SUB: bop = BinaryOperator.MINUS; break;
+			case AssignmentOperator.MUL: bop = BinaryOperator.MUL; break;
+			case AssignmentOperator.DIV: bop = BinaryOperator.DIV; break;
+			case AssignmentOperator.PERCENT: bop = BinaryOperator.MOD; break;
+			case AssignmentOperator.SHIFT_LEFT: bop = BinaryOperator.SHIFT_LEFT; break;
+			case AssignmentOperator.SHIFT_RIGHT: bop = BinaryOperator.SHIFT_RIGHT; break;
+			default: assert_not_reached ();
 			}
+
+			var bin = new BinaryExpression (bop, old_value, right, source_reference);
+			bin.target_type = right.target_type;
+			right.target_type = right.target_type.copy ();
+			right.target_type.value_owned = false;
 
 			right = bin;
 			right.check (context);
