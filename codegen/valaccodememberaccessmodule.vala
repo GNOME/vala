@@ -765,6 +765,10 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			// except for structs that are always passed by reference
 			use_temp = false;
 		}
+		if (result.value_type.is_non_null_simple_type ()) {
+			// no need to an extra copy of variables that are stack allocated simple types
+			use_temp = false;
+		}
 		var local = variable as LocalVariable;
 		if (local != null && local.name[0] == '.') {
 			// already a temporary variable generated internally
