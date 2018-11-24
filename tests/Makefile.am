@@ -480,6 +480,8 @@ TESTS = \
 	parser/namespaces.vala \
 	parser/namespace-missing-bracket.test \
 	parser/preprocessor.vala \
+	parser/preprocessor-glib.vala \
+	parser/preprocessor-vala.vala \
 	parser/property-default-redefined.test \
 	parser/property-get-must-have-body.test \
 	parser/property-get-redefined.test \
