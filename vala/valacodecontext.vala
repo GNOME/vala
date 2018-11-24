@@ -165,16 +165,6 @@ public class Vala.CodeContext {
 
 	public Profile profile { get; set; }
 
-	/**
-	 * Target major version number of glib for code generation.
-	 */
-	public int target_glib_major { get; set; }
-
-	/**
-	 * Target minor version number of glib for code generation.
-	 */
-	public int target_glib_minor { get; set; }
-
 	public bool verbose_mode { get; set; }
 
 	public bool version_header { get; set; }
@@ -222,6 +212,9 @@ public class Vala.CodeContext {
 
 	static StaticPrivate context_stack_key = StaticPrivate ();
 
+	int target_glib_major;
+	int target_glib_minor;
+
 	/**
 	 * The root namespace of the symbol tree.
 	 */
@@ -246,6 +239,8 @@ public class Vala.CodeContext {
 	public UsedAttr used_attr { get; set; }
 
 	public CodeContext () {
+		add_default_defines ();
+
 		resolver = new SymbolResolver ();
 		analyzer = new SemanticAnalyzer ();
 		flow_analyzer = new FlowAnalyzer ();
@@ -511,11 +506,75 @@ public class Vala.CodeContext {
 	}
 
 	public void add_define (string define) {
+		if (is_defined (define)) {
+			Report.warning (null, "`%s' is already defined".printf (define));
+			if (/VALA_0_\d+/.match_all (define)) {
+				Report.warning (null, "`VALA_0_XX' defines are automatically added up to current compiler version in use");
+			} else if (/GLIB_2_\d+/.match_all (define)) {
+				Report.warning (null, "`GLIB_2_XX' defines are automatically added up to targeted glib version");
+			}
+		}
 		defines.add (define);
 	}
 
 	public bool is_defined (string define) {
 		return (define in defines);
+	}
+
+	void add_default_defines () {
+		int api_major = 0;
+		int api_minor = 0;
+
+		if (API_VERSION.scanf ("%d.%d", out api_major, out api_minor) != 2
+		    || api_major > 0
+		    || api_minor % 2 != 0) {
+			Report.error (null, "Invalid format for Vala.API_VERSION");
+			return;
+		}
+
+		for (int i = 2; i <= api_minor; i += 2) {
+			defines.add ("VALA_0_%d".printf (i));
+		}
+
+		target_glib_major = 2;
+		target_glib_minor = 40;
+
+		for (int i = 16; i <= target_glib_minor; i += 2) {
+			defines.add ("GLIB_2_%d".printf (i));
+		}
+	}
+
+	/**
+	 * Set the target version of glib for code generation.
+	 *
+	 * This may be called once or not at all.
+	 *
+	 * @param target_glib a string of the format "%d.%d"
+	 */
+	public void set_target_glib_version (string target_glib) {
+		int glib_major = target_glib_major;
+		int glib_minor = target_glib_minor;
+
+		if (target_glib != null && target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2
+		    || glib_minor % 2 != 0) {
+			Report.error (null, "Invalid format or version for target GLib");
+		}
+
+		if (glib_major != 2) {
+			Report.error (null, "This version of valac only supports GLib 2");
+		}
+
+		if (glib_minor <= target_glib_minor) {
+			// no additional defines needed
+			return;
+		}
+
+		for (int i = target_glib_major + 2; i <= glib_minor; i += 2) {
+			defines.add ("GLIB_2_%d".printf (i));
+		}
+
+		target_glib_major = glib_minor;
+		target_glib_minor = glib_major;
 	}
 
 	public string? get_vapi_path (string pkg) {

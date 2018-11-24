@@ -300,30 +300,14 @@ class Vala.Compiler {
 			}
 		}
 
-		for (int i = 2; i <= 44; i += 2) {
-			context.add_define ("VALA_0_%d".printf (i));
-		}
-
 		if (context.profile == Profile.POSIX) {
 			if (!nostdpkg) {
 				/* default package */
 				context.add_external_package ("posix");
 			}
 		} else if (context.profile == Profile.GOBJECT) {
-			int glib_major = 2;
-			int glib_minor = 40;
-			if (target_glib != null && target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2) {
-				Report.error (null, "Invalid format for --target-glib");
-			}
-
-			context.target_glib_major = glib_major;
-			context.target_glib_minor = glib_minor;
-			if (context.target_glib_major != 2) {
-				Report.error (null, "This version of valac only supports GLib 2");
-			}
-
-			for (int i = 16; i <= glib_minor; i += 2) {
-				context.add_define ("GLIB_2_%d".printf (i));
+			if (target_glib != null) {
+				context.set_target_glib_version (target_glib);
 			}
 
 			if (!nostdpkg) {

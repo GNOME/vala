@@ -898,32 +898,9 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			}
 		}
 
-		for (int i = 2; i <= 44; i += 2) {
-			context.add_define ("VALA_0_%d".printf (i));
-		}
-
 		if (context.profile == Vala.Profile.GOBJECT) {
-			int glib_major = 2;
-			int glib_minor = 40;
-
-			context.target_glib_major = glib_major;
-			context.target_glib_minor = glib_minor;
-			if (context.target_glib_major != 2) {
-				Vala.Report.error (null, "This version of valac only supports GLib 2");
-			}
-
-			if (settings.target_glib != null && settings.target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2) {
-				Vala.Report.error (null, "Invalid format for --target-glib");
-			}
-
-			context.target_glib_major = glib_major;
-			context.target_glib_minor = glib_minor;
-			if (context.target_glib_major != 2) {
-				Vala.Report.error (null, "This version of valac only supports GLib 2");
-			}
-
-			for (int i = 16; i <= glib_minor; i += 2) {
-				context.add_define ("GLIB_2_%d".printf (i));
+			if (settings.target_glib != null) {
+				context.set_target_glib_version (settings.target_glib);
 			}
 
 			// default packages
