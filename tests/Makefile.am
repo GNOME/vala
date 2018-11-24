@@ -376,6 +376,8 @@ TESTS = \
 	parser/continue-statement.vala \
 	parser/do-statement.vala \
 	parser/preprocessor.vala \
+	parser/preprocessor-glib.vala \
+	parser/preprocessor-vala.vala \
 	parser/template.vala \
 	parser/tuple.vala \
 	parser/bug728574.vala \
