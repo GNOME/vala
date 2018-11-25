@@ -4623,7 +4623,7 @@ namespace GLib {
 	public delegate int CompareDataFunc<G> (G a, G b);
 
 	[Version (since = "2.16")]
-	[CCode (cname = "g_strcmp0")]
+	[CCode (cname = "((GCompareFunc) g_strcmp0)")]
 	public static GLib.CompareFunc<string> strcmp;
 
 	public delegate G CopyFunc<G> (G src);
