@@ -49,6 +49,7 @@ public class ValaDoc : Object {
 	private static bool disable_diagnostic_colors = false;
 	private static bool verbose = false;
 	private static bool force = false;
+	private static bool fatal_warnings = false;
 
 	private static string basedir = null;
 	[CCode (array_length = false, array_null_terminated = true)]
@@ -114,6 +115,7 @@ public class ValaDoc : Object {
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 
 		{ "force", 0, 0, OptionArg.NONE, ref force, "force", null },
+		{ "fatal-warnings", 0, 0, OptionArg.NONE, ref fatal_warnings, "Treat warnings as fatal", null },
 		{ "verbose", 0, 0, OptionArg.NONE, ref verbose, "Show all warnings", null },
 		{ "no-color", 0, 0, OptionArg.NONE, ref disable_diagnostic_colors, "Disable colored output", null },
 		{ "target-glib", 0, 0, OptionArg.STRING, ref target_glib, "Target version of glib for code generation", "MAJOR.MINOR" },
@@ -123,7 +125,7 @@ public class ValaDoc : Object {
 	};
 
 	private static int quit (ErrorReporter reporter) {
-		if (reporter.errors == 0) {
+		if (reporter.errors == 0 && (!fatal_warnings || reporter.warnings == 0)) {
 			stdout.printf ("Succeeded - %d warning(s)\n", reporter.warnings);
 			return 0;
 		} else {
