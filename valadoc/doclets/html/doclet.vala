@@ -73,7 +73,7 @@ public class Valadoc.Html.Doclet : Valadoc.Html.BasicDoclet {
 		base.process (settings, tree, reporter);
 
 		DirUtils.create_with_parents (this.settings.path, 0777);
-		copy_directory (icons_dir, settings.path);
+		copy_directory (Config.PACKAGE_VALADOC_ICONDIR, settings.path);
 
 		write_wiki_pages (tree, css_path_wiki, js_path_wiki, Path.build_filename(settings.path, settings.pkg_name));
 

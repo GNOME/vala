@@ -64,7 +64,7 @@ public class Valadoc.ModuleLoader : Object {
 			if (is_doclet(local_path)) {
 				return local_path;
 			} else {
-				return Path.build_filename (Config.PACKAGE_DATADIR, pluginsubdir, pluginpath);
+				return Path.build_filename (Config.PACKAGE_VALADOC_LIBDIR, pluginsubdir, pluginpath);
 			}
 		}
 
@@ -73,7 +73,7 @@ public class Valadoc.ModuleLoader : Object {
 
 	public static string get_doclet_path (string? docletpath, ErrorReporter reporter) {
 		if (docletpath == null) {
-			return Path.build_filename (Config.PACKAGE_DATADIR, "doclets", "html");
+			return Path.build_filename (Config.PACKAGE_VALADOC_LIBDIR, "doclets", "html");
 		}
 
 		return get_plugin_path (docletpath, "doclets");

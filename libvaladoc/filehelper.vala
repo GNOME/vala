@@ -22,9 +22,6 @@
 
 
 namespace Valadoc {
-	[CCode (cprefix = "", cname = "PACKAGE_ICONDIR")]
-	public extern const string icons_dir;
-
 	/**
 	 * Makes a copy of the file src to dest.
 	 *

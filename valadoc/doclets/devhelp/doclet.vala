@@ -82,7 +82,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		var rt = DirUtils.create (path, 0777);
 		rt = DirUtils.create (imgpath, 0777);
-		copy_directory (icons_dir, path);
+		copy_directory (Config.PACKAGE_VALADOC_ICONDIR, path);
 
 		var devfile = FileStream.open (devpath, "w");
 		_devhelpwriter = new Devhelp.MarkupWriter (devfile);

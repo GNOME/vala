@@ -3,7 +3,7 @@ include $(top_srcdir)/Makefile.common
 NULL =
 
 AM_CFLAGS = \
-	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
+	-DPACKAGE_VALADOC_ICONDIR=\"$(datadir)/valadoc/icons/\" \
 	-I$(top_srcdir)/gee/ \
 	-I$(top_srcdir)/vala/ \
 	-I$(top_srcdir)/libvaladoc/ \
@@ -35,7 +35,7 @@ libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES)
 		$(VALAFLAGS) \
 		-C \
 		--vapidir $(top_srcdir)/vala --pkg libvala@PACKAGE_SUFFIX@ \
-		--vapidir $(top_srcdir)/vapi \
+		--vapidir $(top_srcdir)/vapi --pkg config \
 		--vapidir $(top_srcdir)/libvaladoc --pkg valadoc@PACKAGE_SUFFIX@ \
 		$(filter %.vala %.c,$^)
 	touch $@

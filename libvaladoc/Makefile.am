@@ -3,8 +3,7 @@ include $(top_srcdir)/Makefile.common
 NULL =
 
 AM_CFLAGS = \
-	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
-	-DPACKAGE_DATADIR=\"$(libdir)/valadoc\" \
+	-DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\" \
 	$(COVERAGE_CFLAGS) \
 	$(LIBGVC_CFLAGS) \
