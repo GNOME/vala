@@ -38,11 +38,11 @@ public class Valadoc.Api.Constant : Symbol {
 	}
 
 	public Constant (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
-					 SourceComment? comment, string? cname, Vala.Constant data)
+					 SourceComment? comment, Vala.Constant data)
 	{
 		base (parent, file, name, accessibility, comment, data);
 
-		this.cname = cname;
+		this.cname = Vala.get_ccode_name (data);
 	}
 
 	/**

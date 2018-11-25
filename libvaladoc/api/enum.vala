@@ -31,11 +31,12 @@ public class Valadoc.Api.Enum : TypeSymbol {
 	private string? type_id;
 
 	public Enum (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
-				 SourceComment? comment, string? cname,
+				 SourceComment? comment,
 				 Vala.Enum data)
 	{
 		base (parent, file, name, accessibility, comment, false, data);
-		this.cname = cname;
+
+		this.cname = Vala.get_ccode_name (data);
 		this.type_id = Vala.get_ccode_type_id (data);
 	}
 

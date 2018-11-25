@@ -843,7 +843,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								element.name,
 								element.access,
 								comment,
-								Vala.get_ccode_name (element),
 								element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
@@ -864,7 +863,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 										 file,
 										 element.name,
 										 comment,
-										 Vala.get_ccode_name (element),
 										 element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
@@ -886,7 +884,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 									  element.name,
 									  element.access,
 									  comment,
-									  Vala.get_ccode_name (element),
 									  element);
 		node.constant_type = create_type_reference (element.type_reference, node, node);
 		symbol_map.set (element, node);

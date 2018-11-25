@@ -43,10 +43,10 @@ public class Valadoc.Api.EnumValue: Symbol {
 		}
 	}
 
-	public EnumValue (Enum parent, SourceFile file, string name, SourceComment? comment, string? cname, Vala.EnumValue data) {
+	public EnumValue (Enum parent, SourceFile file, string name, SourceComment? comment, Vala.EnumValue data) {
 		base (parent, file, name, parent.accessibility, comment, data);
 
-		this.cname = cname;
+		this.cname = Vala.get_ccode_name (data);
 	}
 
 	/**
