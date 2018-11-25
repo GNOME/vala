@@ -802,11 +802,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 										  element.name,
 										  element.access,
 										  comment,
-										  Vala.get_ccode_name (element),
-										  (element.default_handler != null)? Vala.get_ccode_name (element.default_handler) : null,
-										  Vala.GDBusModule.get_dbus_name_for_member (element),
-										  Vala.GDBusModule.is_dbus_visible (element),
-										  element.is_virtual,
 										  element);
 		node.return_type = create_type_reference (element.return_type, node, node);
 		symbol_map.set (element, node);

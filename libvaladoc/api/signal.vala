@@ -42,17 +42,17 @@ public class Valadoc.Api.Signal : Symbol, Callable {
 
 
 	public Signal (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
-				   SourceComment? comment, string? cname, string? default_impl_cname, string? dbus_name, bool is_dbus_visible,
-				   bool is_virtual, Vala.Signal data)
+				   SourceComment? comment,
+				   Vala.Signal data)
 	{
 		base (parent, file, name, accessibility, comment, data);
 
-		this.default_impl_cname = default_impl_cname;
-		this.dbus_name = dbus_name;
-		this.cname = cname;
+		this.default_impl_cname = (data.default_handler != null ? Vala.get_ccode_name (data.default_handler) : null);
+		this.dbus_name = Vala.GDBusModule.get_dbus_name_for_member (data);
+		this.cname = Vala.get_ccode_name (data);
 
-		this.is_dbus_visible = is_dbus_visible;
-		this.is_virtual = is_virtual;
+		this.is_dbus_visible = Vala.GDBusModule.is_dbus_visible (data);
+		this.is_virtual = data.is_virtual;
 	}
 
 	/**
