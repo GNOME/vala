@@ -1264,6 +1264,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		var func = new CCodeFunction ("%s_class_init".printf (get_ccode_lower_case_name (cl, null)));
 		func.add_parameter (new CCodeParameter ("klass", "%sClass *".printf (get_ccode_name (cl))));
+		func.add_parameter (new CCodeParameter ("klass_data", "gpointer"));
 		func.modifiers = CCodeModifiers.STATIC;
 
 		CCodeFunctionCall ccall;
@@ -1400,6 +1401,7 @@ public class Vala.GTypeModule : GErrorModule {
 	private void add_interface_init_function (Class cl, Interface iface) {
 		var iface_init = new CCodeFunction ("%s_%s_interface_init".printf (get_ccode_lower_case_name (cl), get_ccode_lower_case_name (iface)), "void");
 		iface_init.add_parameter (new CCodeParameter ("iface", "%s *".printf (get_ccode_type_name (iface))));
+		iface_init.add_parameter (new CCodeParameter ("iface_data", "gpointer"));
 		iface_init.modifiers = CCodeModifiers.STATIC;
 
 		push_function (iface_init);
@@ -1635,6 +1637,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		var func = new CCodeFunction ("%s_instance_init".printf (get_ccode_lower_case_name (cl, null)));
 		func.add_parameter (new CCodeParameter ("self", "%s *".printf (get_ccode_name (cl))));
+		func.add_parameter (new CCodeParameter ("klass", "gpointer"));
 		func.modifiers = CCodeModifiers.STATIC;
 
 		push_function (func);
@@ -1736,6 +1739,7 @@ public class Vala.GTypeModule : GErrorModule {
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeParameter ("klass", "%sClass *".printf (get_ccode_name (cl))));
+		function.add_parameter (new CCodeParameter ("klass_data", "gpointer"));
 
 		push_function (function);
 
@@ -2261,6 +2265,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		var default_init = new CCodeFunction ("%s_default_init".printf (get_ccode_lower_case_name (iface, null)), "void");
 		default_init.add_parameter (new CCodeParameter ("iface", "%sIface *".printf (get_ccode_name (iface))));
+		default_init.add_parameter (new CCodeParameter ("iface_data", "gpointer"));
 		default_init.modifiers = CCodeModifiers.STATIC;
 
 		push_function (default_init);
