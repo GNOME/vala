@@ -1463,10 +1463,11 @@ public class Vala.GTypeModule : GErrorModule {
 					// method inherited from base class
 
 					var base_method = cl_method;
-					if (cl_method.base_method != null) {
-						base_method = cl_method.base_method;
-					} else if (cl_method.base_interface_method != null) {
+					if (cl_method.base_interface_method != null) {
 						base_method = cl_method.base_interface_method;
+					} else if (cl_method.base_method != null) {
+						//FIXME should this ever be possible here?
+						base_method = cl_method.base_method;
 					}
 
 					generate_method_declaration (base_method, cfile);
