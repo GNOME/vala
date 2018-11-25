@@ -692,9 +692,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								element.name,
 								element.access,
 								comment,
-								Vala.get_ccode_name (element),
-								element.binding == Vala.MemberBinding.STATIC,
-								element.is_volatile,
 								element);
 		node.field_type = create_type_reference (element.variable_type, node, node);
 		symbol_map.set (element, node);
