@@ -35,7 +35,7 @@ public class Valadoc.Api.ErrorDomain : TypeSymbol {
 	public ErrorDomain (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
 						SourceComment? comment, Vala.ErrorDomain data)
 	{
-		base (parent, file, name, accessibility, comment, null, null, null, null, false, data);
+		base (parent, file, name, accessibility, comment, false, data);
 
 		this.quark_function_name = _get_quark_function_name (data);
 		this.quark_macro_name = _get_quark_macro_name (data);

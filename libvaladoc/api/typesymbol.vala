@@ -26,22 +26,11 @@
  * Represents a runtime data type.
  */
 public abstract class Valadoc.Api.TypeSymbol : Symbol {
-	private string? type_macro_name;
-	private string? is_type_macro_name;
-	private string? type_cast_macro_name;
-	private string? type_function_name;
-
 	public TypeSymbol (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
-					   SourceComment? comment, string? type_macro_name, string? is_type_macro_name,
-					   string? type_cast_macro_name, string? type_function_name, bool is_basic_type,
+					   SourceComment? comment, bool is_basic_type,
 					   Vala.TypeSymbol data)
 	{
 		base (parent, file, name, accessibility, comment, data);
-
-		this.type_cast_macro_name = type_cast_macro_name;
-		this.is_type_macro_name = is_type_macro_name;
-		this.type_function_name = type_function_name;
-		this.type_macro_name = type_macro_name;
 
 		this.is_basic_type = is_basic_type;
 	}
@@ -57,28 +46,58 @@ public abstract class Valadoc.Api.TypeSymbol : Symbol {
 	/**
 	 * Gets the name of the GType macro which represents the type symbol
 	 */
-	public string get_type_macro_name () {
-		return type_macro_name;
+	public string? get_type_macro_name () {
+		if ((data is Vala.Class
+			&& ((Vala.Class) data).is_compact)
+			|| data is Vala.ErrorDomain
+			|| data is Vala.Delegate)
+		{
+			return null;
+		}
+
+		return Vala.get_ccode_type_id (data);
 	}
 
 	/**
 	 * Gets the name of the GType macro which casts a type instance to the given type.
 	 */
-	public string get_type_cast_macro_name () {
-		return type_cast_macro_name;
+	public string? get_type_cast_macro_name () {
+		if ((data is Vala.Class
+			&& !((Vala.Class) data).is_compact)
+			|| data is Vala.Interface)
+		{
+			return Vala.get_ccode_upper_case_name ((Vala.TypeSymbol) data, null);
+		} else {
+			return null;
+		}
 	}
 
 	/**
 	 * Gets the name of the GType macro which determines whether a type instance is of a given type.
 	 */
-	public string get_is_type_macro_name () {
-		return is_type_macro_name;
+	public string? get_is_type_macro_name () {
+		if ((data is Vala.Class
+			&& !((Vala.Class) data).is_compact)
+			|| data is Vala.Interface)
+		{
+			return Vala.get_ccode_type_check_function ((Vala.TypeSymbol) data);
+		} else {
+			return null;
+		}
 	}
 
 	/**
 	 * Gets the name of the get_type() function which represents the type symbol
 	 */
-	public string get_type_function_name () {
-		return type_function_name;
+	public string? get_type_function_name () {
+		if ((data is Vala.Class
+			&& ((Vala.Class) data).is_compact)
+			|| data is Vala.ErrorDomain
+			|| data is Vala.Delegate)
+		{
+			return null;
+		}
+
+		return "%s_get_type".printf (Vala.get_ccode_lower_case_name (data, null));
 	}
 }

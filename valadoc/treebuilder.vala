@@ -274,46 +274,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return element.name;
 	}
 
-	private string? get_is_type_macro_name (Vala.TypeSymbol element) {
-		string? name = Vala.get_ccode_type_check_function (element);
-		return (name != null && name != "")? name : null;
-	}
-
-	private string? get_type_function_name (Vala.TypeSymbol element) {
-		if ((element is Vala.Class
-			&& ((Vala.Class) element).is_compact)
-			|| element is Vala.ErrorDomain
-			|| element is Vala.Delegate)
-		{
-			return null;
-		}
-
-		return "%s_get_type".printf (Vala.get_ccode_lower_case_name (element, null));
-	}
-
-	private string? get_type_macro_name (Vala.TypeSymbol element) {
-		if ((element is Vala.Class
-			&& ((Vala.Class) element).is_compact)
-			|| element is Vala.ErrorDomain
-			|| element is Vala.Delegate)
-		{
-			return null;
-		}
-
-		return Vala.get_ccode_type_id (element);
-	}
-
-	private string? get_type_cast_macro_name (Vala.TypeSymbol element) {
-		if ((element is Vala.Class
-			&& !((Vala.Class) element).is_compact)
-			|| element is Vala.Interface)
-		{
-			return Vala.get_ccode_upper_case_name (element, null);
-		} else {
-			return null;
-		}
-	}
-
 	private PackageMetaData? get_package_meta_data (Package pkg) {
 		foreach (PackageMetaData data in packages) {
 			if (data.package == pkg) {
@@ -637,10 +597,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								element.name,
 								element.access,
 								comment,
-								get_type_macro_name (element),
-								get_is_type_macro_name (element),
-								get_type_cast_macro_name (element),
-								get_type_function_name (element),
 								element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
@@ -678,10 +634,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 										element.name,
 										element.access,
 										comment,
-										get_type_macro_name (element),
-										get_is_type_macro_name (element),
-										get_type_cast_macro_name (element),
-										get_type_function_name (element),
 										element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
@@ -713,8 +665,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								  element.name,
 								  element.access,
 								  comment,
-								  get_type_macro_name (element),
-								  get_type_function_name (element),
 								  element);
 		symbol_map.set (element, node);
 		parent.add_child (node);
@@ -902,8 +852,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 								element.access,
 								comment,
 								Vala.get_ccode_name (element),
-								get_type_macro_name (element),
-								get_type_function_name (element),
 								element);
 		symbol_map.set (element, node);
 		parent.add_child (node);

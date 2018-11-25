@@ -47,14 +47,11 @@ public class Valadoc.Api.Class : TypeSymbol {
 
 	public Class (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
 				  SourceComment? comment,
-				  string? type_macro_name, string? is_type_macro_name, string? type_cast_macro_name,
-				  string? type_function_name,
 				  Vala.Class data)
 	{
 		bool is_basic_type = data.base_class == null && data.name == "string";
 
-		base (parent, file, name, accessibility, comment, type_macro_name,
-			is_type_macro_name, type_cast_macro_name, type_function_name, is_basic_type, data);
+		base (parent, file, name, accessibility, comment, is_basic_type, data);
 
 		this.interfaces = new Vala.ArrayList<TypeReference> ();
 
