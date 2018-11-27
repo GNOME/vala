@@ -1,0 +1,11 @@
+Invalid Code
+
+void main () {
+	int foo = 23;
+	const int BAR = 42;
+
+	switch (foo) {
+	case BAR: break;
+	case BAR: break;
+	}
+}

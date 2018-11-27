@@ -1,0 +1,11 @@
+Invalid Code
+
+struct Foo {
+}
+
+void main () {
+	Foo foo = {};
+
+	switch (foo) {
+	}
+}
