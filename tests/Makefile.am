@@ -343,7 +343,7 @@ TESTS = \
 	objects/signals.vala \
 	objects/signals-enum-marshal.vala \
 	objects/signals-delegate.vala \
-	objects/signals-lambda-delegate.vala \
+	objects/signals-delegate-parameter.vala \
 	objects/test-025.vala \
 	objects/test-026.vala \
 	objects/test-029.vala \

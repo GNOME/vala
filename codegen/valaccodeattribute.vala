@@ -1037,6 +1037,16 @@ public class Vala.CCodeAttribute : AttributeCache {
 				}
 				return ret;
 			}
+		} else if (node is DelegateType) {
+			unowned DelegateType delegate_type = (DelegateType) node;
+			var ret = "POINTER";
+			if (delegate_type.delegate_symbol.has_target) {
+				ret = "%s,POINTER".printf (ret);
+				if (delegate_type.is_disposable ()) {
+					ret = "%s,POINTER".printf (ret);
+				}
+			}
+			return ret;
 		} else if (node is VoidType) {
 			return "VOID";
 		} else {
