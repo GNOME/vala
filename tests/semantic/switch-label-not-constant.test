@@ -1,0 +1,10 @@
+Invalid Code
+
+void main () {
+	int foo = 23
+	int bar = 42;
+
+	switch (foo) {
+	case bar: break;
+	}
+}
