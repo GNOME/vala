@@ -631,6 +631,10 @@ TESTS = \
 	semantic/struct-field-initializer.test \
 	semantic/struct-invalid-base.test \
 	semantic/struct-recursive.test \
+	semantic/switch-duplicate-label.test \
+	semantic/switch-label-not-compatible.test \
+	semantic/switch-label-not-constant.test \
+	semantic/switch-type-unsupported.test \
 	semantic/yield-call-requires-async-context.test \
 	semantic/yield-call-requires-async-method.test \
 	semantic/yield-creation-requires-async-context.test \
