@@ -1,11 +1,11 @@
 using GLib;
 
-errordomain Maman.BarError {
+errordomain BarError {
 	FOO,
 	BAR
 }
 
-class Maman.Bar : Object {
+class Bar : Object {
 	public void foo () throws BarError {
 		stdout.printf (" 6");
 
@@ -54,7 +54,7 @@ class Maman.Bar : Object {
 		stdout.printf (" 10");
 	}
 
-	static void test_generic_catch () {
+	public static void test_generic_catch () {
 		try {
 			throw new BarError.FOO ("error message");
 		} catch (Error e) {
@@ -66,28 +66,22 @@ class Maman.Bar : Object {
 		assert_not_reached ();
 	}
 
-	static void test_try_without_error () {
+	public static void test_try_without_error () {
 		try {
 		} catch (Error e) {
 			assert_not_reached ();
 		}
 	}
-
-	public static int main () {
-		stdout.printf ("Exception Test: 1");
-		
-		var bar = new Bar ();
-		bar.run ();
-
-		stdout.printf (" 11\n");
-
-		test_generic_catch ();
-
-		return 0;
-	}
 }
 
 void main () {
-	Maman.Bar.main ();
-}
+	stdout.printf ("Exception Test: 1");
 
+	var bar = new Bar ();
+	bar.run ();
+
+	stdout.printf (" 11\n");
+
+	Bar.test_generic_catch ();
+	Bar.test_try_without_error ();
+}
