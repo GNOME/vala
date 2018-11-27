@@ -535,6 +535,7 @@ TESTS = \
 	semantic/field-owned-to-unowned.test \
 	semantic/field-void.test \
 	semantic/foreach-iterator-args.test \
+	semantic/foreach-iterator-element-owned.test \
 	semantic/foreach-iterator-void.test \
 	semantic/foreach-iterator-wrong-types.test \
 	semantic/foreach-missing-generic-type.test \

@@ -18,6 +18,6 @@ public class Test<G> {
 
 void main () {
 	Test<string?> test = null;
-	foreach (int t in test) {
+	foreach (unowned string? t in test) {
 	}
 }
