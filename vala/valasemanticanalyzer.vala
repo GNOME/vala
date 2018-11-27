@@ -405,6 +405,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public bool check_arguments (Expression expr, DataType mtype, List<Parameter> params, List<Expression> args) {
+		bool error = false;
+
 		Expression prev_arg = null;
 		Iterator<Expression> arg_it = args.iterator ();
 
@@ -423,7 +425,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					var arg = arg_it.get ();
 					if (!check_argument (arg, i, param.direction)) {
 						expr.error = true;
-						return false;
+						error = true;
 					}
 
 					i++;
@@ -441,7 +443,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					} else {
 						Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (mtype.to_string (), args.size));
 					}
-					return false;
+					error = true;
 				} else {
 					var invocation_expr = expr as MethodCall;
 					var object_creation_expr = expr as ObjectCreationExpression;
@@ -458,7 +460,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				var arg = arg_it.get ();
 				if (!check_argument (arg, i, param.direction)) {
 					expr.error = true;
-					return false;
+					error = true;
 				}
 
 				prev_arg = arg;
@@ -469,7 +471,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (ellipsis && !check_variadic_arguments (arg_it, i, expr.source_reference)) {
 			expr.error = true;
-			return false;
+			error = true;
 		} else if (!ellipsis && arg_it != null && arg_it.next ()) {
 			expr.error = true;
 			var m = mtype as MethodType;
@@ -478,7 +480,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			} else {
 				Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (mtype.to_string (), args.size));
 			}
-			return false;
+			error = true;
 		}
 
 		if (diag && prev_arg != null) {
@@ -488,7 +490,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		return true;
+		return !error;
 	}
 
 	bool check_argument (Expression arg, int i, ParameterDirection direction) {
