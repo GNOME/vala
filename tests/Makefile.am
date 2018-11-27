@@ -268,6 +268,7 @@ TESTS = \
 	objects/regex.vala \
 	objects/signals.vala \
 	objects/signals-delegate.vala \
+	objects/signals-delegate-parameter.vala \
 	objects/singleton.vala \
 	objects/test-025.vala \
 	objects/test-026.vala \

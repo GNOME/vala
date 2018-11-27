@@ -71,6 +71,8 @@ public class Vala.GSignalModule : GObjectModule {
 			return "gint";
 		} else if (t is ArrayType) {
 			return "gpointer";
+		} else if (t is DelegateType) {
+			return "gpointer";
 		} else if (t is ErrorType) {
 			return "gpointer";
 		}
@@ -199,6 +201,16 @@ public class Vala.GSignalModule : GObjectModule {
 					callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), length_ctype));
 					n_params++;
 				}
+			} else if (p.variable_type is DelegateType) {
+				unowned DelegateType delegate_type = (DelegateType) p.variable_type;
+				if (delegate_type.delegate_symbol.has_target) {
+					callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), get_ccode_name (delegate_target_type)));
+					n_params++;
+					if (delegate_type.is_disposable ()) {
+						callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), get_ccode_name (delegate_target_destroy_type)));
+						n_params++;
+					}
+				}
 			}
 		}
 		callback_decl.add_parameter (new CCodeParameter ("data2", "gpointer"));
@@ -253,6 +265,8 @@ public class Vala.GSignalModule : GObjectModule {
 				} else {
 					get_value_function = "g_value_get_pointer";
 				}
+			} else if (p.variable_type is DelegateType) {
+				get_value_function = "g_value_get_pointer";
 			} else if (p.variable_type is PointerType || p.variable_type is GenericType) {
 				get_value_function = "g_value_get_pointer";
 			} else if (p.variable_type is ErrorType) {
@@ -275,6 +289,20 @@ public class Vala.GSignalModule : GObjectModule {
 					inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
 					fc.add_argument (inner_fc);
 					i++;
+				}
+			} else if (p.variable_type is DelegateType) {
+				unowned DelegateType delegate_type = (DelegateType) p.variable_type;
+				if (delegate_type.delegate_symbol.has_target) {
+					inner_fc = new CCodeFunctionCall (new CCodeIdentifier (get_value_function));
+					inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
+					fc.add_argument (inner_fc);
+					i++;
+					if (delegate_type.is_disposable ()) {
+						inner_fc = new CCodeFunctionCall (new CCodeIdentifier (get_value_function));
+						inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
+						fc.add_argument (inner_fc);
+						i++;
+					}
 				}
 			}
 		}
@@ -392,6 +420,14 @@ public class Vala.GSignalModule : GObjectModule {
 			params_len++;
 			if (param.variable_type is ArrayType) {
 				params_len += ((ArrayType) param.variable_type).rank;
+			} else if (param.variable_type is DelegateType) {
+				unowned DelegateType delegate_type = (DelegateType) param.variable_type;
+				if (delegate_type.delegate_symbol.has_target) {
+					params_len++;
+					if (delegate_type.is_disposable ()) {
+						params_len++;
+					}
+				}
 			}
 		}
 
@@ -408,6 +444,15 @@ public class Vala.GSignalModule : GObjectModule {
 				var length_type_id = get_ccode_type_id (array_type.length_type.data_type);
 				for (var i = 0; i < array_type.rank; i++) {
 					csignew.add_argument (new CCodeConstant (length_type_id));
+				}
+			} else if (param.variable_type is DelegateType) {
+				unowned DelegateType delegate_type = (DelegateType) param.variable_type;
+				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
+				if (delegate_type.delegate_symbol.has_target) {
+					csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
+					if (delegate_type.is_disposable ()) {
+						csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
+					}
 				}
 			} else if (param.variable_type is PointerType || param.variable_type is GenericType || param.direction != ParameterDirection.IN) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
