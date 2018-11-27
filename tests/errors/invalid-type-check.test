@@ -1,0 +1,12 @@
+Invalid Code
+
+errordomain FooError {
+	FAIL;
+}
+
+void main () {
+	Object? e = null;
+
+	if (e is FooError) {
+	}
+}
