@@ -116,6 +116,12 @@ public class Vala.TypeCheck : Expression {
 			return false;
 		}
 
+		if (type_reference is ErrorType && !(expression.value_type is ErrorType)) {
+			Report.error (expression.source_reference, "`%s' must be an error".printf (expression.to_string ()));
+			error = true;
+			return false;
+		}
+
 		if (type_reference.get_type_arguments ().size > 0) {
 			Report.warning (_data_type.source_reference, "Type argument list has no effect");
 		}

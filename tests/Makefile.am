@@ -298,6 +298,7 @@ TESTS = \
 	objects/bug795521.vala \
 	errors/catch-error-code.vala \
 	errors/errors.vala \
+	errors/invalid-type-check.test \
 	errors/bug567181.vala \
 	errors/bug579101.vala \
 	errors/bug596228.vala \
