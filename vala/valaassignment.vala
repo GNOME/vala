@@ -533,7 +533,7 @@ public class Vala.Assignment : Expression {
 
 			if (instance && ma.inner != null && property != null) {
 				ma.inner.emit (codegen);
-			} else {
+			} else if (property == null) {
 				// always process full lvalue
 				// current codegen depends on it
 				// should be removed when moving codegen from
