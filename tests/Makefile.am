@@ -490,6 +490,9 @@ TESTS = \
 	parser/yield-return.vala \
 	parser/bug728574.vala \
 	parser/bug749576.vala \
+	resolver/class-base-cycle.test \
+	resolver/interface-prerequisite-cycle.test \
+	resolver/struct-base-cycle.test \
 	semantic/array-stacked.test \
 	semantic/array-incompatible-initializer.test \
 	semantic/array-incompatible-initializer2.test \
