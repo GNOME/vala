@@ -83,7 +83,7 @@ if test x$enable_boostrap = xyes; then
 fi
 
 AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], [Enable debug build]), enable_debug=$enableval, enable_debug=no)
-if test "$enable_coverage" = "yes"; then
+if test "$enable_debug" = "yes"; then
 	VALAFLAGS="$VALAFLAGS -g"
 	CFLAGS="$CFLAGS -g -O0"
 fi
