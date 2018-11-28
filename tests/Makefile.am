@@ -265,6 +265,7 @@ TESTS = \
 	objects/properties.vala \
 	objects/property-notify.vala \
 	objects/property-read-only-auto.vala \
+	objects/property-static.vala \
 	objects/regex.vala \
 	objects/signals.vala \
 	objects/signals-delegate.vala \
