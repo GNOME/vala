@@ -15,6 +15,8 @@ class Foo {
 }
 
 struct Bar {
+	public int foo;
+
 	static int _bar;
 	static int _baz;
 
