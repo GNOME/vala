@@ -27,12 +27,13 @@ class Obj2 : Object, Iface1, Iface2 {
 }
 
 class Base : Object {
-	public void foo () {
+	public int foo () {
+		return 42;
 	}
 }
 
 interface Iface : Object {
-	public abstract void foo ();
+	public abstract int foo ();
 }
 
 class Concrete : Base, Iface {
@@ -52,4 +53,7 @@ void main () {
 
 	assert (iface1.foo () == 1);
 	assert (iface2.foo () == 2);
+
+	var concrete = new Concrete ();
+	assert (((Iface) concrete).foo () == 42);
 }

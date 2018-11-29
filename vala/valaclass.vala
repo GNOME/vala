@@ -740,7 +740,10 @@ public class Vala.Class : ObjectTypeSymbol {
 							var base_class = this;
 							while (base_class != null) {
 								foreach (var impl in base_class.get_methods ()) {
-									if (impl.name == m.name && (impl.base_interface_type == null || impl.base_interface_type.data_type == iface)) {
+									if (impl.base_interface_method == m || (base_class != this
+									    && impl.base_interface_method == null && impl.name == m.name
+									    && (impl.base_interface_type == null || impl.base_interface_type.data_type == iface)
+									    && impl.compatible_no_error (m))) {
 										// method is used as interface implementation, so it is not unused
 										impl.version.check (source_reference);
 										impl.used = true;

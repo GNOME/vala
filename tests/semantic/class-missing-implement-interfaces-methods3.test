@@ -1,0 +1,23 @@
+Invalid Code
+
+class Base : Object {
+	public void foo () {
+	}
+}
+
+interface IFoo : Base {
+	public abstract string foo ();
+}
+
+interface IBar : Base {
+	public abstract int foo ();
+}
+
+class Manam : Base, IFoo, IBar {
+	public int IBar.foo () {
+		return 23;
+	}
+}
+
+void main () {
+}

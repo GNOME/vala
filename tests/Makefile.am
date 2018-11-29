@@ -267,6 +267,7 @@ TESTS = \
 	objects/gsource.vala \
 	objects/interface_only.vala \
 	objects/interfaces.vala \
+	objects/interface-generics.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \
 	objects/properties.vala \
@@ -550,6 +551,8 @@ TESTS = \
 	semantic/class-compact-property-baseaccess.test \
 	semantic/class-missing-implement-interface-method.test \
 	semantic/class-missing-implement-interface-property.test \
+	semantic/class-missing-implement-interfaces-methods.test \
+	semantic/class-missing-implement-interfaces-methods3.test \
 	semantic/class-missing-implement-method.test \
 	semantic/class-missing-implement-property.test \
 	semantic/class-missing-prerequisites.test \
