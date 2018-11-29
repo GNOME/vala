@@ -31,6 +31,7 @@ public class Vala.Struct : TypeSymbol {
 	private List<Field> fields = new ArrayList<Field> ();
 	private List<Method> methods = new ArrayList<Method> ();
 	private List<Property> properties = new ArrayList<Property> ();
+	private Set<weak Field> property_fields = new HashSet<weak Field> ();
 	private DataType _base_type = null;
 
 	private bool? boolean_type;
@@ -282,6 +283,7 @@ public class Vala.Struct : TypeSymbol {
 
 		if (prop.field != null) {
 			add_field (prop.field);
+			property_fields.add (prop.field);
 		}
 	}
 
@@ -515,6 +517,14 @@ public class Vala.Struct : TypeSymbol {
 				Report.error (f.source_reference, "Instance field initializers not supported");
 				return false;
 			}
+
+			if (f.binding == MemberBinding.STATIC && f.initializer != null) {
+				// for backing property fields a dedicated error will be reported later
+				if (!(f in property_fields) && f.variable_type.is_disposable () && f.variable_type.value_owned) {
+					error = true;
+					Report.error (f.initializer.source_reference, "Owned static struct fields can only be initialized in a function or method");
+				}
+			}
 		}
 
 		foreach (Constant c in constants) {
@@ -527,6 +537,14 @@ public class Vala.Struct : TypeSymbol {
 
 		foreach (Property prop in properties) {
 			prop.check (context);
+
+			if (prop.binding == MemberBinding.STATIC) {
+				unowned Field? field = prop.field;
+				if (field != null && field.initializer != null && field.variable_type.is_disposable () && field.variable_type.value_owned) {
+					error = true;
+					Report.error (field.initializer.source_reference, "Owned static struct properties can only be initialized in a function or method");
+				}
+			}
 		}
 
 		if (!external && !external_package) {

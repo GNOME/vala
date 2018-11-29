@@ -1,0 +1,9 @@
+Invalid Code
+
+struct Foo {
+	public int i;
+	public static string bar = "Foobar";
+}
+
+void main () {
+}
