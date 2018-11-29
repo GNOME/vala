@@ -631,6 +631,11 @@ public class Vala.Method : Subroutine, Callable {
 	}
 
 	private void find_base_interface_method (Class cl) {
+		Method? base_match = null;
+
+		string? invalid_error = null;
+		Method? invalid_base_match = null;
+
 		foreach (DataType type in cl.get_base_types ()) {
 			if (type.data_type is Interface) {
 				if (base_interface_type != null && base_interface_type.data_type != type.data_type) {
@@ -661,18 +666,26 @@ public class Vala.Method : Subroutine, Callable {
 
 						string invalid_match = null;
 						if (!compatible (base_method, out invalid_match)) {
-							error = true;
-							var base_method_type = new MethodType (base_method);
-							Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method_type.to_prototype_string (), invalid_match));
-							return;
+							invalid_error = invalid_match;
+							invalid_base_match = base_method;
+						} else {
+							base_match = base_method;
+							break;
 						}
-
-						_base_interface_method = base_method;
-						copy_attribute_double (base_method, "CCode", "instance_pos");
-						return;
 					}
 				}
 			}
+		}
+
+		if (base_match != null) {
+			_base_interface_method = base_match;
+			copy_attribute_double (base_match, "CCode", "instance_pos");
+			return;
+		} else if (invalid_base_match != null) {
+			error = true;
+			var base_method_type = new MethodType (invalid_base_match);
+			Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method_type.to_prototype_string (), invalid_error));
+			return;
 		}
 
 		if (base_interface_type != null) {

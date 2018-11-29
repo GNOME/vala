@@ -552,6 +552,7 @@ TESTS = \
 	semantic/class-missing-implement-interface-method.test \
 	semantic/class-missing-implement-interface-property.test \
 	semantic/class-missing-implement-interfaces-methods.test \
+	semantic/class-missing-implement-interfaces-methods2.test \
 	semantic/class-missing-implement-interfaces-methods3.test \
 	semantic/class-missing-implement-method.test \
 	semantic/class-missing-implement-property.test \

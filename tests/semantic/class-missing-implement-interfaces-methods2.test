@@ -1,0 +1,18 @@
+Invalid Code
+
+interface IFoo : Object {
+	public abstract string foo ();
+}
+
+interface IBar : Object {
+	public abstract int foo ();
+}
+
+class Manam : Object, IFoo, IBar {
+	public int foo () {
+		return 23;
+	}
+}
+
+void main() {
+}
