@@ -801,6 +801,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		cenum.modifiers |= (en.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 
+		var current_cfile = cfile;
+		cfile = decl_space;
+
 		int flag_shift = 0;
 		foreach (EnumValue ev in en.get_values ()) {
 			CCodeEnumValue c_ev;
@@ -817,6 +820,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			c_ev.modifiers |= (ev.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 			cenum.add_value (c_ev);
 		}
+
+		cfile = current_cfile;
 
 		decl_space.add_type_definition (cenum);
 		decl_space.add_type_definition (new CCodeNewline ());
