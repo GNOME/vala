@@ -520,7 +520,7 @@ public class Vala.Struct : TypeSymbol {
 
 			if (f.binding == MemberBinding.STATIC && f.initializer != null) {
 				// for backing property fields a dedicated error will be reported later
-				if (!(f in property_fields) && f.variable_type.is_disposable () && f.variable_type.value_owned) {
+				if (!(f in property_fields) && !(f.initializer.value_type is NullType) && f.variable_type.is_disposable () && f.variable_type.value_owned) {
 					error = true;
 					Report.error (f.initializer.source_reference, "Owned static struct fields can only be initialized in a function or method");
 				}
@@ -540,7 +540,7 @@ public class Vala.Struct : TypeSymbol {
 
 			if (prop.binding == MemberBinding.STATIC) {
 				unowned Field? field = prop.field;
-				if (field != null && field.initializer != null && field.variable_type.is_disposable () && field.variable_type.value_owned) {
+				if (field != null && field.initializer != null && !(field.initializer.value_type is NullType) && field.variable_type.is_disposable () && field.variable_type.value_owned) {
 					error = true;
 					Report.error (field.initializer.source_reference, "Owned static struct properties can only be initialized in a function or method");
 				}

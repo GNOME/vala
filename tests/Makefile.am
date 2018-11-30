@@ -189,6 +189,7 @@ TESTS = \
 	structs/struct_only.vala \
 	structs/struct-empty-still.test \
 	structs/struct-no-gtype.vala \
+	structs/struct-static-field-initializer.vala \
 	structs/struct-static-field-initializer.test \
 	structs/struct-static-property-initializer.test \
 	structs/structs.vala \
