@@ -110,6 +110,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	private bool? _is_singleton;
 
 	private List<DataType> base_types = new ArrayList<DataType> ();
+	private HashMap<Method,Method> implicit_implementations = new HashMap<Method,Method> ();
 
 	/**
 	 * Specifies the default construction method.
@@ -303,6 +304,10 @@ public class Vala.Class : ObjectTypeSymbol {
 			scope.remove (m.name);
 			scope.add (null, m);
 		}
+	}
+
+	public HashMap<Method,Method> get_implicit_implementations () {
+		return implicit_implementations;
 	}
 
 	/**
@@ -748,6 +753,9 @@ public class Vala.Class : ObjectTypeSymbol {
 										impl.version.check (source_reference);
 										impl.used = true;
 										implemented = true;
+										if (impl.base_interface_method == null) {
+											implicit_implementations.set (m, impl);
+										}
 										break;
 									}
 								}

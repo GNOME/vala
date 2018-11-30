@@ -1472,32 +1472,18 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		// connect inherited implementations
-		foreach (Method m in iface.get_methods ()) {
-			if (m.is_abstract) {
-				Method cl_method = null;
-				var base_class = cl;
-				while (base_class != null && cl_method == null) {
-					cl_method = base_class.scope.lookup (m.name) as Method;
-					base_class = base_class.base_class;
-				}
-				if (base_class != null && cl_method.parent_symbol != cl) {
-					// method inherited from base class
+		var it = cl.get_implicit_implementations ().map_iterator ();
+		while (it.next ()) {
+			Method m = it.get_key ();
+			if (m.parent_symbol == iface) {
+				Method base_method = it.get_value ();
 
-					var base_method = cl_method;
-					if (cl_method.base_interface_method != null) {
-						base_method = cl_method.base_interface_method;
-					} else if (cl_method.base_method != null) {
-						//FIXME should this ever be possible here?
-						base_method = cl_method.base_method;
-					}
+				generate_method_declaration (base_method, cfile);
 
-					generate_method_declaration (base_method, cfile);
-
-					CCodeExpression cfunc = new CCodeIdentifier (get_ccode_name (base_method));
-					cfunc = cast_method_pointer (base_method, cfunc, iface);
-					var ciface = new CCodeIdentifier ("iface");
-					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, get_ccode_vfunc_name (m)), cfunc);
-				}
+				CCodeExpression cfunc = new CCodeIdentifier (get_ccode_name (base_method));
+				cfunc = cast_method_pointer (m, cfunc, iface);
+				var ciface = new CCodeIdentifier ("iface");
+				ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, get_ccode_vfunc_name (m)), cfunc);
 			}
 		}
 
