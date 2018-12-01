@@ -123,7 +123,7 @@ public class Vala.PointerType : DataType {
 		return false;
 	}
 
-	public override DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, CodeNode node_reference) {
+	public override DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, CodeNode? node_reference) {
 		PointerType result = (PointerType) this.copy ();
 
 		if (derived_instance_type == null && method_type_arguments == null) {

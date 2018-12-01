@@ -47,7 +47,7 @@ public class Vala.GenericType : DataType {
 		return result;
 	}
 
-	public override DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, CodeNode node_reference) {
+	public override DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, CodeNode? node_reference) {
 		var result = this.copy ();
 
 		if (derived_instance_type == null && method_type_arguments == null) {

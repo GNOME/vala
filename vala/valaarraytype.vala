@@ -316,7 +316,7 @@ public class Vala.ArrayType : ReferenceType {
 		return element_type.check (context);
 	}
 
-	public override DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, CodeNode node_reference) {
+	public override DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, CodeNode? node_reference) {
 		ArrayType result = (ArrayType) this.copy ();
 
 		if (derived_instance_type == null && method_type_arguments == null) {

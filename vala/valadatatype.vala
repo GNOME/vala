@@ -456,7 +456,7 @@ public abstract class Vala.DataType : CodeNode {
 		return false;
 	}
 
-	public virtual DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, CodeNode node_reference) {
+	public virtual DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, CodeNode? node_reference) {
 		DataType result = this.copy ();
 
 		if (derived_instance_type == null && method_type_arguments == null) {
