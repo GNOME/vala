@@ -92,7 +92,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 */
 	public override void add_property (Property prop) {
 		if (prop.field != null) {
-			Report.error (prop.source_reference, "automatic properties are not allowed in interfaces");
+			Report.error (prop.source_reference, "interface properties should be `abstract' or have `get' accessor and/or `set' mutator");
 
 			prop.error = true;
 			return;
