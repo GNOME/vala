@@ -115,7 +115,14 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	public override void add_method (Method m) {
 		methods.add (m);
 		members.add (m);
-		scope.add (m.name, m);
+
+		// explicit interface method implementation
+		// virtual/abstract methods needs to be scoped and overridable
+		if (this is Class && m.base_interface_type != null && !(m.is_abstract || m.is_virtual)) {
+			scope.add (null, m);
+		} else {
+			scope.add (m.name, m);
+		}
 	}
 
 	/**

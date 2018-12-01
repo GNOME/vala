@@ -255,6 +255,7 @@ TESTS = \
 	objects/class_only.vala \
 	objects/classes.vala \
 	objects/classes-interfaces.vala \
+	objects/classes-interfaces-virtuals.vala \
 	objects/classes-implicit-implementation.vala \
 	objects/compact-class.vala \
 	objects/compact-class-destructor.vala \

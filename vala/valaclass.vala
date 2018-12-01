@@ -299,11 +299,6 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		base.add_method (m);
-		// explicit interface method implementation
-		if (m.base_interface_type != null) {
-			scope.remove (m.name);
-			scope.add (null, m);
-		}
 	}
 
 	public HashMap<Method,Method> get_implicit_implementations () {
