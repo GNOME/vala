@@ -555,9 +555,12 @@ public class Vala.CodeContext {
 		int glib_major = target_glib_major;
 		int glib_minor = target_glib_minor;
 
-		if (target_glib != null && target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2
-		    || glib_minor % 2 != 0) {
-			Report.error (null, "Invalid format or version for target GLib");
+		if (target_glib != null && target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2) {
+			Report.error (null, "Invalid format for target GLib, it should be MAJOR.MINOR");
+		}
+
+		if (glib_minor % 2 != 0) {
+			Report.error (null, "Invalid version for target GLib, only stable versions (with even minor number) are supported");
 		}
 
 		if (glib_major != 2) {
