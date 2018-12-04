@@ -557,7 +557,7 @@ public class Vala.CodeContext {
 
 		if (target_glib != null && target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2
 		    || glib_minor % 2 != 0) {
-			Report.error (null, "Invalid format or version for target GLib");
+			Report.error (null, "Only a stable version of GLib can be targeted, use MAJOR.MINOR format with MINOR as an even number");
 		}
 
 		if (glib_major != 2) {
