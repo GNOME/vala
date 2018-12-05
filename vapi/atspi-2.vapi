@@ -518,7 +518,9 @@ namespace Atspi {
 		RELEASE,
 		PRESSRELEASE,
 		SYM,
-		STRING
+		STRING,
+		LOCKMODIFIERS,
+		UNLOCKMODIFIERS
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", cprefix = "ATSPI_LOCALE_TYPE_", type_id = "atspi_locale_type_get_type ()")]
 	public enum LocaleType {

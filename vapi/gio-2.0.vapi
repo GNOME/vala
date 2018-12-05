@@ -427,6 +427,8 @@ namespace GLib {
 		public virtual signal int command_line (GLib.ApplicationCommandLine command_line);
 		[Version (since = "2.40")]
 		public virtual signal int handle_local_options (GLib.VariantDict options);
+		[Version (since = "2.60")]
+		public virtual signal bool name_lost ();
 		[HasEmitter]
 		public virtual signal void open ([CCode (array_length_cname = "n_files", array_length_pos = 1.5)] GLib.File[] files, string hint);
 		public virtual signal void shutdown ();
@@ -669,7 +671,7 @@ namespace GLib {
 		public async T get_proxy<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public T get_proxy_sync<T> (string? name, string object_path, GLib.DBusProxyFlags flags = 0, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public unowned GLib.IOStream get_stream ();
-		public unowned string get_unique_name ();
+		public unowned string? get_unique_name ();
 		public bool is_closed ();
 		[CCode (cname = "g_dbus_connection_new", finish_name = "g_dbus_connection_new_finish")]
 		[Version (deprecated_since = "vala-0.36", replacement = "DBusConnection")]
@@ -2956,6 +2958,7 @@ namespace GLib {
 		public unowned GLib.TlsInteraction get_interaction ();
 		public unowned GLib.TlsCertificate get_peer_certificate ();
 		public GLib.TlsCertificateFlags get_peer_certificate_errors ();
+		[Version (deprecated = true, deprecated_since = "2.60.", since = "2.28")]
 		public GLib.TlsRehandshakeMode get_rehandshake_mode ();
 		public bool get_require_close_notify ();
 		[Version (deprecated = true, deprecated_since = "2.30")]
@@ -2967,6 +2970,7 @@ namespace GLib {
 		public void set_database (GLib.TlsDatabase database);
 		[Version (since = "2.30")]
 		public void set_interaction (GLib.TlsInteraction? interaction);
+		[Version (deprecated = true, deprecated_since = "2.60.", since = "2.28")]
 		public void set_rehandshake_mode (GLib.TlsRehandshakeMode mode);
 		public void set_require_close_notify (bool require_close_notify);
 		[Version (deprecated = true, deprecated_since = "2.30")]
@@ -3441,6 +3445,7 @@ namespace GLib {
 		public void set_certificate (GLib.TlsCertificate certificate);
 		public void set_database (GLib.TlsDatabase database);
 		public void set_interaction (GLib.TlsInteraction? interaction);
+		[Version (deprecated = true, deprecated_since = "2.60.", since = "2.48")]
 		public void set_rehandshake_mode (GLib.TlsRehandshakeMode mode);
 		public void set_require_close_notify (bool require_close_notify);
 		public abstract bool shutdown (bool shutdown_read, bool shutdown_write, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -3458,6 +3463,7 @@ namespace GLib {
 		[ConcreteAccessor]
 		public abstract GLib.TlsCertificateFlags peer_certificate_errors { get; }
 		[ConcreteAccessor]
+		[Version (deprecated = true, deprecated_since = "2.60.", since = "2.48")]
 		public abstract GLib.TlsRehandshakeMode rehandshake_mode { get; set construct; }
 		[ConcreteAccessor]
 		public abstract bool require_close_notify { get; set construct; }
@@ -3970,7 +3976,9 @@ namespace GLib {
 		HANDLES_COMMAND_LINE,
 		SEND_ENVIRONMENT,
 		NON_UNIQUE,
-		CAN_OVERRIDE_APP_ID
+		CAN_OVERRIDE_APP_ID,
+		ALLOW_REPLACEMENT,
+		REPLACE
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_ASK_PASSWORD_", type_id = "g_ask_password_flags_get_type ()")]
 	[Flags]
@@ -4519,7 +4527,7 @@ namespace GLib {
 		FINAL_TRY
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_REHANDSHAKE_", type_id = "g_tls_rehandshake_mode_get_type ()")]
-	[Version (since = "2.28")]
+	[Version (deprecated = true, deprecated_since = "2.60.", since = "2.28")]
 	public enum TlsRehandshakeMode {
 		NEVER,
 		SAFELY,
