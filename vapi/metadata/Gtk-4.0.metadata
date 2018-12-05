@@ -335,7 +335,7 @@ Widget
   .get_allocation return_void
   .grab_add parent="Gtk" symbol_type="function"
   .grab_remove parent="Gtk" symbol_type="function"
-  .intersect.intersection unowned=false nullable default=null
+  .size_allocate#method name="size_allocate_emit"
 WidgetPath
   .free destroys_instance
 TreeModel

@@ -11678,7 +11678,6 @@ namespace Gtk {
 		public void insert_action_group (string name, GLib.ActionGroup? group);
 		public void insert_after (Gtk.Widget parent, Gtk.Widget? previous_sibling);
 		public void insert_before (Gtk.Widget parent, Gtk.Widget? next_sibling);
-		public bool intersect (Gdk.Rectangle area, out Gdk.Rectangle? intersection = null);
 		public bool is_ancestor (Gtk.Widget ancestor);
 		public bool is_drawable ();
 		public bool is_sensitive ();
@@ -11753,6 +11752,8 @@ namespace Gtk {
 		public void set_vexpand (bool expand);
 		public void set_vexpand_set (bool @set);
 		public void set_visible (bool visible);
+		[CCode (cname = "gtk_widget_size_allocate")]
+		public void size_allocate_emit (Gtk.Allocation allocation, int baseline);
 		[NoWrapper]
 		public virtual void snapshot (Gtk.Snapshot snapshot);
 		public void snapshot_child (Gtk.Widget child, Gtk.Snapshot snapshot);
@@ -11841,7 +11842,6 @@ namespace Gtk {
 		public virtual signal void realize ();
 		[HasEmitter]
 		public virtual signal void show ();
-		[HasEmitter]
 		public virtual signal void size_allocate (int width, int height, int baseline);
 		public virtual signal void state_flags_changed (Gtk.StateFlags previous_state_flags);
 		public virtual signal void style_updated ();
