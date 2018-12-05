@@ -215,6 +215,8 @@ namespace Gst {
 			public void set_max_errors (int num);
 			public void set_min_latency (Gst.ClockTime num);
 			public void set_needs_format (bool enabled);
+			[Version (since = "1.16")]
+			public bool set_output_caps (Gst.Caps caps);
 			public bool set_output_format (Gst.Audio.Info info);
 			public void set_plc (bool enabled);
 			public void set_plc_aware (bool plc);

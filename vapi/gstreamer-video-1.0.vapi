@@ -992,7 +992,8 @@ namespace Gst {
 			NV12_10LE32,
 			NV16_10LE32,
 			NV12_10LE40,
-			Y210
+			Y210,
+			Y410
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]
