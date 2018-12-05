@@ -47,6 +47,18 @@ public class Vala.GenericType : DataType {
 		return result;
 	}
 
+	public override DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, CodeNode node_reference) {
+		var result = this.copy ();
+
+		if (derived_instance_type == null && method_type_arguments == null) {
+			return result;
+		}
+
+		result = SemanticAnalyzer.get_actual_type (derived_instance_type, method_type_arguments, (GenericType) result, node_reference);
+
+		return result;
+	}
+
 	public override DataType? infer_type_argument (TypeParameter type_param, DataType value_type) {
 		if (type_parameter == type_param) {
 			var ret = value_type.copy ();
