@@ -3439,6 +3439,8 @@ public class Vala.GirParser : CodeVisitor {
 		if (element_name == null) {
 			next ();
 
+			parse_symbol_doc ();
+
 			while (current_token == MarkupTokenType.START_ELEMENT) {
 				if (!push_metadata ()) {
 					skip_element ();
