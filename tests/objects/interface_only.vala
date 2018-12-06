@@ -1,0 +1,5 @@
+interface Foo {
+}
+
+void main () {
+}

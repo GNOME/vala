@@ -251,6 +251,7 @@ TESTS = \
 	delegates/bug772204.test \
 	delegates/bug792077.vala \
 	objects/chainup.vala \
+	objects/class_only.vala \
 	objects/classes.vala \
 	objects/compact-class.vala \
 	objects/compact-class-destructor.vala \
@@ -263,6 +264,7 @@ TESTS = \
 	objects/initially-unowned.vala \
 	objects/fields.vala \
 	objects/gsource.vala \
+	objects/interface_only.vala \
 	objects/interfaces.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \

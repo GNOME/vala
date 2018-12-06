@@ -2084,6 +2084,8 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
+		decl_space.add_include ("glib-object.h");
+
 		var type_struct = new CCodeStruct ("_%s".printf (get_ccode_type_name (iface)));
 
 		decl_space.add_type_declaration (new CCodeNewline ());
