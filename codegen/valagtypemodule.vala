@@ -2052,16 +2052,6 @@ public class Vala.GTypeModule : GErrorModule {
 			return;
 		}
 
-		foreach (DataType prerequisite in iface.get_prerequisites ()) {
-			var prereq_cl = prerequisite.data_type as Class;
-			var prereq_iface = prerequisite.data_type as Interface;
-			if (prereq_cl != null) {
-				generate_class_declaration (prereq_cl, decl_space);
-			} else if (prereq_iface != null) {
-				generate_interface_declaration (prereq_iface, decl_space);
-			}
-		}
-
 		var type_struct = new CCodeStruct ("_%s".printf (get_ccode_type_name (iface)));
 
 		decl_space.add_type_declaration (new CCodeNewline ());
@@ -2080,6 +2070,16 @@ public class Vala.GTypeModule : GErrorModule {
 
 		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (get_ccode_name (iface)), new CCodeVariableDeclarator (get_ccode_name (iface))));
 		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (get_ccode_type_name (iface))));
+
+		foreach (DataType prerequisite in iface.get_prerequisites ()) {
+			var prereq_cl = prerequisite.data_type as Class;
+			var prereq_iface = prerequisite.data_type as Interface;
+			if (prereq_cl != null) {
+				generate_class_declaration (prereq_cl, decl_space);
+			} else if (prereq_iface != null) {
+				generate_interface_declaration (prereq_iface, decl_space);
+			}
+		}
 
 		type_struct.add_field ("GTypeInterface", "parent_iface");
 
