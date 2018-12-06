@@ -124,7 +124,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		var ctypedef = new CCodeTypeDefinition (return_type_cname, cfundecl);
 		ctypedef.modifiers |= (d.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 
-		decl_space.add_type_definition (ctypedef);
+		decl_space.add_type_declaration (ctypedef);
 	}
 
 	public override void visit_delegate (Delegate d) {
