@@ -1,3 +1,56 @@
+Vala 0.42.4
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Fix method pointer cast if instance isn't at first position
+    + Transfer ownership of compact class to DestroysInstance method [#645]
+    + Add destroy function for GLib.Array [#572]
+    + Fix canonical string for quark of error domains
+    + Make sure to include declarations for delegate typed parameters
+    + Don't emit type_id for enum in non GOBJECT profile
+    + Don't emit unused temp variable for element access assignments
+    + Actually create method cast for base interface method as needed
+    + Mark needle parameter of internal array-contains methods as const [#504]
+    + Emit initializer for enum-value into wanted declaration space [#167]
+    + Add void to delegate typedef declarations without parameters
+    + Emit delegate/enum typedefs to type-declaration section [#318]
+    + Always emit constants with initializer-list [#81]
+    + Handle non-default AsyncResult parameter position [#709]
+  - vala:
+    + Copy instance_pos argument from virtual/abstract base methods [#540483]
+    + Compact classes don't allow private/class fields and to lock fields
+    + Use comment which was already retrieved in parse_declaration()
+    + Add missing re-check guards for Do/For/WhileStatement and SwitchLabel
+    + Type check for errors require an error expression [#362]
+    + Make check_arguments() more verbose and don't bail on first error [#438]
+    + Don't emit member access of assignments on static properties [#573]
+    + Use clearer error message for automatic properties in interfaces [#656]
+    + Break possible endless loop in SymbolResolver.get_type_for_struct() [#444]
+  - girwriter: Write glib-type attributes for Enums/Structs with type_id
+  - girparser: Skip "source-position" elements and docs in transparent union
+  - valadoc:
+    + Match property signature with vala's codewriter
+    + Sort symbols and members where possible
+    + Actually assign type_id of Api.Structs
+    + Add type_id to Api.Enum/Interface
+    + Skip package dependency if target directory already exists
+    + Fix a few errors and warnings in stylesheet
+    + Adjust stylesheet to unbreak Epiphany [#644]
+  - docs: Use Markdown for README and include build instructions
+  - testrunner: Pass buildsystem's CC through to valac
+
+ * Bindings:
+  - gio-2.0: Add missing File.new_build_filename()
+  - glib-2.0: Add missing Array.set_clear_func() binding
+  - glib-2.0: Avoid double-free in GLib.Array if clear_func is set
+  - glib-2.0: Add GLib.pointer aka gpointer binding
+  - gobject-2.0: Attribute all symbols with cheader_filename = "glib-object.h"
+  - gobject-introspection-1.0: Pick up version attribute fixes
+  - gdk-x11-3.0,gtk+-3.0: Update to 3.24.2+eb821cb8
+  - gtk+-4.0: Update to 3.94.0+a99bd2a4
+  - gstreamer: Update from 1.15+ git master
+  - poppler-glib: Update to 0.71
+
 Vala 0.42.3
 ===========
  * Various improvements and bug fixes:
