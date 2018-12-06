@@ -823,8 +823,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		cfile = current_cfile;
 
-		decl_space.add_type_definition (cenum);
-		decl_space.add_type_definition (new CCodeNewline ());
+		decl_space.add_type_declaration (cenum);
+		decl_space.add_type_declaration (new CCodeNewline ());
 
 		if (!get_ccode_has_type_id (en)) {
 			return true;
