@@ -521,6 +521,10 @@ TESTS = \
 	resolver/class-base-cycle.test \
 	resolver/interface-prerequisite-cycle.test \
 	resolver/struct-base-cycle.test \
+	ordering/delegate-class.vala \
+	ordering/delegate-enum.vala \
+	ordering/delegate-interface.vala \
+	ordering/delegate-struct.vala \
 	semantic/array-stacked.test \
 	semantic/array-incompatible-initializer.test \
 	semantic/array-incompatible-initializer2.test \
