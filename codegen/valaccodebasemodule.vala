@@ -619,6 +619,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (sym.source_reference != null) {
 			sym.source_reference.file.used = true;
 		}
+		// constants with initializer-list are special
+		if (sym is Constant && ((Constant) sym).value is InitializerList) {
+			return false;
+		}
 		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())) {
 			// add appropriate include file
 			foreach (unowned string header_filename in get_ccode_header_filenames (sym).split (",")) {
