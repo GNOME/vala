@@ -41,8 +41,6 @@ ubuntu-clang-x86_64:
 
 pages:
   stage: deploy
-  only:
-    - master
   script:
     - mv coverage/ public/
   artifacts:
