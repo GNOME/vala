@@ -978,6 +978,7 @@ public class Vala.Method : Subroutine, Callable {
 			foreach (var param in get_type_parameters ()) {
 				end_method.add_type_parameter (param);
 			}
+			end_method.copy_attribute_double (this, "CCode", "async_result_pos");
 		}
 		return end_method;
 	}
@@ -1042,7 +1043,7 @@ public class Vala.Method : Subroutine, Callable {
 		var result_type = new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("AsyncResult"));
 
 		var result_param = new Parameter ("_res_", result_type);
-		result_param.set_attribute_double ("CCode", "pos", 0.1);
+		result_param.set_attribute_double ("CCode", "pos", get_attribute_double ("CCode", "async_result_pos", 0.1));
 		params.add (result_param);
 
 		foreach (var param in parameters) {

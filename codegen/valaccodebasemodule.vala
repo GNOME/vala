@@ -4711,7 +4711,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				// output arguments used separately
 				out_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 				// pass GAsyncResult stored in closure to finish function
-				out_arg_map.set (get_param_pos (0.1), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"));
+				out_arg_map.set (get_param_pos (get_ccode_async_result_pos (m)), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"));
 			}
 
 			if (cl != null && !cl.is_compact) {
@@ -6502,6 +6502,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public static string get_ccode_vfunc_name (Method m) {
 		return get_ccode_attribute(m).vfunc_name;
+	}
+
+	public static double get_ccode_async_result_pos (Method m) {
+		assert (m.coroutine);
+		return m.get_attribute_double ("CCode", "async_result_pos", 0.1);
 	}
 
 	public static string get_ccode_finish_name (Method m) {

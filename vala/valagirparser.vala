@@ -3823,6 +3823,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		int i = 0, j=1;
 
+		int first_out = -1;
 		int last = -1;
 		foreach (ParameterInfo info in parameters) {
 			if (s is Delegate && info.closure_idx == i) {
@@ -3853,6 +3854,16 @@ public class Vala.GirParser : CodeVisitor {
 				// the above if branch does not set vala_idx for
 				// hidden parameters at the end of the parameter list
 				info.vala_idx = (j - 1) + (i - last) * 0.1F;
+			}
+			if (first_out < 0 && info.param.direction == ParameterDirection.OUT) {
+				first_out = i;
+			}
+			if (s is Method && first_out >= 0 && info.param.variable_type != null) {
+				var type_name = info.param.variable_type.to_string ();
+				if (type_name == "GLib.AsyncResult" || type_name == "Gio.AsyncResult") {
+					var shift = ((Method) s).binding == MemberBinding.INSTANCE ? 1.1 : 0.1;
+					s.set_attribute_double ("CCode", "async_result_pos", i + shift);
+				}
 			}
 			i++;
 		}
@@ -4092,6 +4103,8 @@ public class Vala.GirParser : CodeVisitor {
 					method.set_attribute_bool ("CCode", "array_null_terminated", a.get_bool ("array_null_terminated"));
 				}
 			}
+
+			method.copy_attribute_double (finish_method, "CCode", "async_result_pos");
 
 			foreach (var param in finish_method.get_parameters ()) {
 				if (param.direction == ParameterDirection.OUT) {
