@@ -394,6 +394,7 @@ TESTS = \
 	asynchronous/bug793158.vala \
 	asynchronous/closures.vala \
 	asynchronous/generator.vala \
+	asynchronous/result-pos.vala \
 	asynchronous/yield.vala \
 	generics/bug640330.test \
 	generics/bug640330.vala \
@@ -425,6 +426,7 @@ TESTS = \
 	gir/bug788775.test \
 	gir/bug792998.test \
 	gir/array-fixed-length.test \
+	gir/async-result-pos.test \
 	gir/class.test \
 	gir/delegate-alias-without-target.test \
 	gir/delegate-closure-destroy-index-conflict.test \

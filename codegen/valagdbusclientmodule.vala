@@ -933,7 +933,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
-		cparam_map.set (get_param_pos (0.1), new CCodeParameter ("_res_", "GAsyncResult*"));
+		cparam_map.set (get_param_pos (get_ccode_async_result_pos (m)), new CCodeParameter ("_res_", "GAsyncResult*"));
 
 		generate_cparameters (m, cfile, cparam_map, function, null, null, null, 2);
 

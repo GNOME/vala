@@ -341,6 +341,11 @@ namespace Vala {
 		return get_ccode_attribute(m).vfunc_name;
 	}
 
+	public static double get_ccode_async_result_pos (Method m) {
+		assert (m.coroutine);
+		return m.get_attribute_double ("CCode", "async_result_pos", 0.1);
+	}
+
 	public static string get_ccode_finish_name (Method m) {
 		return get_ccode_attribute(m).finish_name;
 	}
