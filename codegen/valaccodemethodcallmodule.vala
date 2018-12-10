@@ -129,7 +129,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				// output arguments used separately
 				out_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 				// pass GAsyncResult stored in closure to finish function
-				out_arg_map.set (get_param_pos (0.1), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"));
+				out_arg_map.set (get_param_pos (get_ccode_async_result_pos (m)), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"));
 			}
 		}
 

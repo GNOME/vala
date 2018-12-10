@@ -586,7 +586,7 @@ public class Vala.GAsyncModule : GtkModule {
 
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 
-		cparam_map.set (get_param_pos (0.1), new CCodeParameter ("_res_", "GAsyncResult*"));
+		cparam_map.set (get_param_pos (get_ccode_async_result_pos (m)), new CCodeParameter ("_res_", "GAsyncResult*"));
 
 		generate_cparameters (m, cfile, cparam_map, finishfunc, null, null, null, 2);
 
@@ -832,9 +832,9 @@ public class Vala.GAsyncModule : GtkModule {
 					carg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("_user_data_"));
 				}
 			} else if (direction == 2) {
-				cparam_map.set (get_param_pos (0.1), new CCodeParameter ("_res_", "GAsyncResult*"));
+				cparam_map.set (get_param_pos (get_ccode_async_result_pos (m)), new CCodeParameter ("_res_", "GAsyncResult*"));
 				if (carg_map != null) {
-					carg_map.set (get_param_pos (0.1), new CCodeIdentifier ("_res_"));
+					carg_map.set (get_param_pos (get_ccode_async_result_pos (m)), new CCodeIdentifier ("_res_"));
 				}
 			}
 		}
