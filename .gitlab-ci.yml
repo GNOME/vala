@@ -164,8 +164,6 @@ alpinelinux-gcc-x86_64:
 
 pages:
   stage: deploy
-  only:
-    - main
   script:
     - mkdir public
     - mv coverage public/.
