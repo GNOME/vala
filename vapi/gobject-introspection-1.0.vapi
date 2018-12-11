@@ -14,7 +14,7 @@ namespace GI {
 		public bool is_caller_allocates ();
 		public bool is_optional ();
 		public bool is_return_value ();
-		[Version (since = "1.29.0")]
+		[Version (since = "1.30")]
 		public bool is_skip ();
 		public void load_type (out unowned GI.TypeInfo type);
 		public bool may_be_null ();
@@ -41,6 +41,7 @@ namespace GI {
 		public bool can_throw_gerror ();
 		public GI.ArgInfo get_arg (int n);
 		public GI.Transfer get_caller_owns ();
+		[Version (since = "1.42")]
 		public GI.Transfer get_instance_ownership_transfer ();
 		public int get_n_args ();
 		public unowned string get_return_attribute (string name);
@@ -61,7 +62,7 @@ namespace GI {
 	[CCode (cheader_filename = "girepository.h", type_id = "g_base_info_gtype_get_type ()")]
 	[Compact]
 	public class ConstantInfo : GI.BaseInfo {
-		[Version (since = "1.30.1")]
+		[Version (since = "1.32")]
 		public void free_value (GI.Argument value);
 		public GI.TypeInfo get_type ();
 		public int get_value (out GI.Argument value);
@@ -69,11 +70,11 @@ namespace GI {
 	[CCode (cheader_filename = "girepository.h", type_id = "g_base_info_gtype_get_type ()")]
 	[Compact]
 	public class EnumInfo : GI.BaseInfo {
-		[Version (since = "1.29.17")]
+		[Version (since = "1.30")]
 		public unowned string get_error_domain ();
-		[Version (since = "1.29.17")]
+		[Version (since = "1.30")]
 		public GI.FunctionInfo get_method (int n);
-		[Version (since = "1.29.17")]
+		[Version (since = "1.30")]
 		public int get_n_methods ();
 		public int get_n_values ();
 		public GI.TypeTag get_storage_type ();
@@ -176,7 +177,7 @@ namespace GI {
 		protected Repository ();
 		public static bool dump (string arg) throws GI.RepositoryError;
 		public GLib.List<string> enumerate_versions (string namespace_);
-		[Version (since = "1.29.17")]
+		[Version (since = "1.30")]
 		public GI.EnumInfo find_by_error_domain (GLib.Quark domain);
 		public GI.BaseInfo find_by_gtype (GLib.Type gtype);
 		public GI.BaseInfo find_by_name (string namespace_, string name);
@@ -213,6 +214,7 @@ namespace GI {
 	[CCode (cheader_filename = "girepository.h", type_id = "g_base_info_gtype_get_type ()")]
 	[Compact]
 	public class StructInfo : GI.BaseInfo {
+		[Version (since = "1.46")]
 		public GI.FieldInfo find_field (string name);
 		public GI.FunctionInfo find_method (string name);
 		public size_t get_alignment ();
