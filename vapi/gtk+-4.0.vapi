@@ -4724,6 +4724,7 @@ namespace Gdk {
 		public unowned Gdk.Display get_display ();
 		public unowned Gdk.ContentFormats get_formats ();
 		public bool is_local ();
+		[CCode (async_result_pos = 2.1)]
 		public async GLib.InputStream read_async (string mime_types, int io_priority, GLib.Cancellable? cancellable, out unowned string out_mime_type) throws GLib.Error;
 		public async string? read_text_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async Gdk.Texture? read_texture_async (GLib.Cancellable? cancellable) throws GLib.Error;
@@ -5034,6 +5035,7 @@ namespace Gdk {
 		public unowned Gdk.Drag? get_drag ();
 		public unowned Gdk.ContentFormats get_formats ();
 		public unowned Gdk.Surface get_surface ();
+		[CCode (async_result_pos = 2.1)]
 		public async GLib.InputStream? read_async ([CCode (array_length = false, array_null_terminated = true)] string[] mime_types, int io_priority, GLib.Cancellable? cancellable, out string out_mime_type) throws GLib.Error;
 		public async string? read_text_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async unowned GLib.Value? read_value_async (GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
