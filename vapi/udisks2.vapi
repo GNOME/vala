@@ -316,12 +316,16 @@ namespace UDisks {
 		public bool call_add_configuration_item_sync (GLib.Variant arg_item, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_format (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_format_sync (string arg_type, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (async_result_pos = 2.1)]
 		public async bool call_get_secret_configuration (GLib.Variant arg_options, GLib.Cancellable? cancellable, out GLib.Variant out_configuration) throws GLib.Error;
 		public bool call_get_secret_configuration_sync (GLib.Variant arg_options, out GLib.Variant out_configuration, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (async_result_pos = 3.1)]
 		public async bool call_open_for_backup (GLib.Variant arg_options, GLib.UnixFDList? fd_list, GLib.Cancellable? cancellable, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list) throws GLib.Error;
 		public bool call_open_for_backup_sync (GLib.Variant arg_options, GLib.UnixFDList? fd_list, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (async_result_pos = 3.1)]
 		public async bool call_open_for_benchmark (GLib.Variant arg_options, GLib.UnixFDList? fd_list, GLib.Cancellable? cancellable, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list) throws GLib.Error;
 		public bool call_open_for_benchmark_sync (GLib.Variant arg_options, GLib.UnixFDList? fd_list, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (async_result_pos = 3.1)]
 		public async bool call_open_for_restore (GLib.Variant arg_options, GLib.UnixFDList? fd_list, GLib.Cancellable? cancellable, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list) throws GLib.Error;
 		public bool call_open_for_restore_sync (GLib.Variant arg_options, GLib.UnixFDList? fd_list, out GLib.Variant out_fd, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_remove_configuration_item (GLib.Variant arg_item, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -488,6 +492,7 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_drive_ata_get_type ()")]
 	public interface DriveAta : GLib.Object {
+		[CCode (async_result_pos = 2.1)]
 		public async bool call_pm_get_state (GLib.Variant arg_options, GLib.Cancellable? cancellable, out uint8 out_state) throws GLib.Error;
 		public bool call_pm_get_state_sync (GLib.Variant arg_options, out uint8 out_state, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_pm_standby (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -496,6 +501,7 @@ namespace UDisks {
 		public bool call_pm_wakeup_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_security_erase_unit (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_security_erase_unit_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (async_result_pos = 2.1)]
 		public async bool call_smart_get_attributes (GLib.Variant arg_options, GLib.Cancellable? cancellable, out GLib.Variant out_attributes) throws GLib.Error;
 		public bool call_smart_get_attributes_sync (GLib.Variant arg_options, out GLib.Variant out_attributes, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_smart_selftest_abort (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -591,6 +597,7 @@ namespace UDisks {
 		public bool call_change_passphrase_sync (string arg_passphrase, string arg_new_passphrase, GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_lock (GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_lock_sync (GLib.Variant arg_options, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (async_result_pos = 2.1)]
 		public async bool call_unlock (string arg_passphrase, GLib.Variant arg_options, GLib.Cancellable? cancellable, out string out_cleartext_device) throws GLib.Error;
 		public bool call_unlock_sync (string arg_passphrase, GLib.Variant arg_options, out string out_cleartext_device, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_change_passphrase (owned GLib.DBusMethodInvocation invocation);
@@ -606,6 +613,7 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_filesystem_get_type ()")]
 	public interface Filesystem : GLib.Object {
+		[CCode (async_result_pos = 2.1)]
 		public async bool call_mount (GLib.Variant arg_options, GLib.Cancellable? cancellable, out string out_mount_path) throws GLib.Error;
 		public bool call_mount_sync (GLib.Variant arg_options, out string out_mount_path, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool call_set_label (string arg_label, GLib.Variant arg_options, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -745,8 +753,10 @@ namespace UDisks {
 	public interface Manager : GLib.Object {
 		public async bool call_enable_modules (bool arg_enable, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_enable_modules_sync (bool arg_enable, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (async_result_pos = 3.1)]
 		public async bool call_loop_setup (GLib.Variant arg_fd, GLib.Variant arg_options, GLib.UnixFDList? fd_list, GLib.Cancellable? cancellable, out string out_resulting_device, out GLib.UnixFDList out_fd_list) throws GLib.Error;
 		public bool call_loop_setup_sync (GLib.Variant arg_fd, GLib.Variant arg_options, GLib.UnixFDList? fd_list, out string out_resulting_device, out GLib.UnixFDList out_fd_list, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (async_result_pos = 2.1)]
 		[Version (since = "2.0.0")]
 		public async bool call_mdraid_create (string arg_blocks, string arg_level, string arg_name, uint64 arg_chunk, GLib.Variant arg_options, GLib.Cancellable? cancellable, out string out_resulting_array) throws GLib.Error;
 		[Version (since = "2.0.0")]
@@ -851,7 +861,9 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_partition_table_get_type ()")]
 	public interface PartitionTable : GLib.Object {
+		[CCode (async_result_pos = 2.1)]
 		public async bool call_create_partition (uint64 arg_offset, uint64 arg_size, string arg_type, string arg_name, GLib.Variant arg_options, GLib.Cancellable? cancellable, out string out_created_partition) throws GLib.Error;
+		[CCode (async_result_pos = 2.1)]
 		public async bool call_create_partition_and_format (uint64 arg_offset, uint64 arg_size, string arg_type, string arg_name, GLib.Variant arg_options, string arg_format_type, GLib.Variant arg_format_options, GLib.Cancellable? cancellable, out string out_created_partition) throws GLib.Error;
 		public bool call_create_partition_and_format_sync (uint64 arg_offset, uint64 arg_size, string arg_type, string arg_name, GLib.Variant arg_options, string arg_format_type, GLib.Variant arg_format_options, out string out_created_partition, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool call_create_partition_sync (uint64 arg_offset, uint64 arg_size, string arg_type, string arg_name, GLib.Variant arg_options, out string out_created_partition, GLib.Cancellable? cancellable = null) throws GLib.Error;
