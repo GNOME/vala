@@ -119,6 +119,7 @@ namespace GClue {
 	public interface Manager : GLib.Object {
 		public async bool call_add_agent (string arg_id, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_add_agent_sync (string arg_id, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (async_result_pos = 2.1)]
 		public async bool call_get_client (GLib.Cancellable? cancellable, out string out_client) throws GLib.Error;
 		public bool call_get_client_sync (out string out_client, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_add_agent (owned GLib.DBusMethodInvocation invocation);
