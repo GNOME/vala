@@ -66,6 +66,8 @@ public class Vala.GTypeModule : GErrorModule {
 		bool is_gsource = cl.base_class == gsource_type;
 
 		if (is_gtypeinstance) {
+			decl_space.add_include ("glib-object.h");
+
 			decl_space.add_type_declaration (new CCodeNewline ());
 			var macro = "(%s_get_type ())".printf (get_ccode_lower_case_name (cl, null));
 			decl_space.add_type_declaration (new CCodeMacroReplacement (get_ccode_type_id (cl), macro));
@@ -234,7 +236,6 @@ public class Vala.GTypeModule : GErrorModule {
 		if (cl.base_class != null) {
 			instance_struct.add_field (get_ccode_name (cl.base_class), "parent_instance");
 		} else if (is_fundamental) {
-			decl_space.add_include ("glib-object.h");
 			instance_struct.add_field ("GTypeInstance", "parent_instance");
 			instance_struct.add_field ("volatile int", "ref_count");
 		}
