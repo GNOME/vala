@@ -1,3 +1,17 @@
+Vala 0.43.2
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + GType classes and interfaces require including "glib-object.h"
+    + Handle non-default AsyncResult parameter position [#709]
+      and regenerate GIR-based bindings to fix non-standard async methods
+    + Always emit constants with initializer-list [#81]
+    + Emit delegate/enum typedefs to type-declaration section [#318]
+  - Break possible endless loop in SymbolResolver.get_type_for_struct() [#444]
+
+ * Bindings:
+  - gobject-introspection-1.0: Pick up version attribute fixes
+
 Vala 0.43.1
 ===========
  * Highlights:
