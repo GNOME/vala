@@ -121,10 +121,10 @@ function sourceend() {
 				echo "  </namespace>" >> $SOURCEFILE
 				echo "</repository>" >> $SOURCEFILE
 			fi
-			echo "$VAPIGEN $VAPIGENFLAGS --library $ns $ns.gir && tail -n +5 $ns.vapi|sed '\$d'|diff -wu $ns.vapi.ref -" > check
+			echo "G_DEBUG=fatal-warnings $VAPIGEN $VAPIGENFLAGS --library $ns $ns.gir && tail -n +5 $ns.vapi|sed '\$d'|diff -wu $ns.vapi.ref -" > check
 		else
 			PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
-			echo "$VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
+			echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
 			if [ $DBUSTEST -eq 1 ]; then
 				if [ $ISSERVER -eq 1 ]; then
 					echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
@@ -164,7 +164,7 @@ for testfile in "$@"; do
 		cat "$srcdir/$testfile" >> $SOURCEFILE
 
 		PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
-		echo "$VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
+		echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
 		echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
 		;;
 	*.test)
