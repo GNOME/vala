@@ -1,7 +1,7 @@
 NULL =
 
 check-girwriter: $(top_builddir)/compiler/valac
-	$(top_builddir)/compiler/valac \
+	G_DEBUG=fatal-warnings $(top_builddir)/compiler/valac \
 		-C \
 		--disable-version-header \
 		--vapidir $(top_srcdir)/vapi \

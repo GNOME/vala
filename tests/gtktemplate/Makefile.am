@@ -1,7 +1,7 @@
 NULL =
 
 check-gtktemplate: $(top_builddir)/compiler/valac
-	$(top_builddir)/compiler/valac \
+	G_DEBUG=fatal-warnings $(top_builddir)/compiler/valac \
 		-C \
 		--vapidir $(top_srcdir)/vapi \
 		--pkg gtk+-3.0 \
