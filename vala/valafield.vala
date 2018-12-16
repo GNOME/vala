@@ -107,6 +107,13 @@ public class Vala.Field : Variable, Lockable {
 			return false;
 		}
 
+		unowned ArrayType? variable_array_type = variable_type as ArrayType;
+		if (variable_array_type != null && variable_array_type.fixed_length
+		    && initializer is ArrayCreationExpression && ((ArrayCreationExpression) initializer).initializer_list == null) {
+			Report.warning (source_reference, "Arrays with fixed length don't require an explicit instantiation");
+			initializer = null;
+		}
+
 		if (initializer != null) {
 			initializer.target_type = variable_type;
 

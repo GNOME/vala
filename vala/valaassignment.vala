@@ -305,6 +305,15 @@ public class Vala.Assignment : Expression {
 					Report.error (source_reference, "Assignment: Invalid assignment attempt");
 					return false;
 				}
+			} else if (ma.symbol_reference is Variable) {
+				unowned Variable variable = (Variable) ma.symbol_reference;
+				unowned ArrayType? variable_array_type = variable.variable_type as ArrayType;
+				if (variable_array_type != null && variable_array_type.fixed_length
+				    && right is ArrayCreationExpression && ((ArrayCreationExpression) right).initializer_list == null) {
+					Report.warning (source_reference, "Arrays with fixed length don't require an explicit instantiation");
+					((Block) parent_node.parent_node).replace_statement ((Statement) parent_node, new EmptyStatement (source_reference));
+					return true;
+				}
 			}
 
 			if (left.value_type != null && right.value_type != null) {
