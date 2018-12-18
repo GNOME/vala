@@ -310,6 +310,21 @@ public class Vala.Method : Subroutine, Callable {
 	 * @return true if the specified method is compatible to this method
 	 */
 	public bool compatible (Method base_method, out string? invalid_match) {
+		return compatible_internal (base_method, out invalid_match, this);
+	}
+
+	/**
+	 * Checks whether the parameters and return type of this method are
+	 * compatible with the specified method
+	 *
+	 * @param base_method a method
+	 * @return true if the specified method is compatible to this method
+	 */
+	public bool compatible_no_error (Method base_method) {
+		return compatible_internal (base_method, null, null);
+	}
+
+	bool compatible_internal (Method base_method, out string? invalid_match, CodeNode? node_reference) {
 		// method is always compatible to itself
 		if (this == base_method) {
 			invalid_match = null;
@@ -349,7 +364,7 @@ public class Vala.Method : Subroutine, Callable {
 			}
 		}
 
-		var actual_base_type = base_method.return_type.get_actual_type (object_type, method_type_args, this);
+		var actual_base_type = base_method.return_type.get_actual_type (object_type, method_type_args, node_reference);
 		if (!return_type.equals (actual_base_type)) {
 			invalid_match = "Base method expected return type `%s', but `%s' was provided".printf (actual_base_type.to_prototype_string (), return_type.to_prototype_string ());
 			return false;
@@ -375,7 +390,7 @@ public class Vala.Method : Subroutine, Callable {
 					return false;
 				}
 
-				actual_base_type = base_param.variable_type.get_actual_type (object_type, method_type_args, this);
+				actual_base_type = base_param.variable_type.get_actual_type (object_type, method_type_args, node_reference);
 				if (!actual_base_type.equals (param.variable_type)) {
 					invalid_match = "incompatible type of parameter %d".printf (param_index);
 					return false;
