@@ -810,7 +810,6 @@ namespace Pango {
 		EXACT
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_DIRECTION_", type_id = "pango_direction_get_type ()")]
-	[Version (deprecated = true, deprecated_since = "1.44")]
 	public enum Direction {
 		LTR,
 		RTL,

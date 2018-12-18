@@ -437,4 +437,18 @@ namespace GI {
 	public delegate void ObjectInfoSetValueFunction (GLib.Value value, void* object);
 	[CCode (cheader_filename = "girepository.h", has_target = false)]
 	public delegate void ObjectInfoUnrefFunction (void* object);
+	[CCode (cheader_filename = "girepository.h", cname = "GI_MAJOR_VERSION")]
+	public const int MAJOR_VERSION;
+	[CCode (cheader_filename = "girepository.h", cname = "GI_MICRO_VERSION")]
+	public const int MICRO_VERSION;
+	[CCode (cheader_filename = "girepository.h", cname = "GI_MINOR_VERSION")]
+	public const int MINOR_VERSION;
+	[CCode (cheader_filename = "girepository.h", cname = "GI_TYPE_TAG_N_TYPES")]
+	public const int TYPE_TAG_N_TYPES;
+	[CCode (cheader_filename = "girepository.h", cname = "gi_get_major_version")]
+	public static uint get_major_version ();
+	[CCode (cheader_filename = "girepository.h", cname = "gi_get_micro_version")]
+	public static uint get_micro_version ();
+	[CCode (cheader_filename = "girepository.h", cname = "gi_get_minor_version")]
+	public static uint get_minor_version ();
 }

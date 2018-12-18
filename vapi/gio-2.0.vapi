@@ -2069,6 +2069,10 @@ namespace GLib {
 		public virtual GLib.List<GLib.InetAddress> lookup_by_name (string hostname, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
 		public virtual async GLib.List<GLib.InetAddress> lookup_by_name_async (string hostname, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.60")]
+		public virtual GLib.List<GLib.InetAddress> lookup_by_name_with_flags (string hostname, GLib.ResolverNameLookupFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.60")]
+		public virtual async GLib.List<GLib.InetAddress> lookup_by_name_with_flags_async (string hostname, GLib.ResolverNameLookupFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.34")]
 		public virtual GLib.List<GLib.Variant> lookup_records (string rrname, GLib.ResolverRecordType record_type, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.34")]
@@ -4365,6 +4369,14 @@ namespace GLib {
 		NEVER,
 		FOR_SESSION,
 		PERMANENTLY
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOLVER_NAME_LOOKUP_FLAGS_", type_id = "g_resolver_name_lookup_flags_get_type ()")]
+	[Flags]
+	[Version (since = "2.60")]
+	public enum ResolverNameLookupFlags {
+		DEFAULT,
+		IPV4_ONLY,
+		IPV6_ONLY
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOLVER_RECORD_", type_id = "g_resolver_record_type_get_type ()")]
 	[Version (since = "2.34")]
