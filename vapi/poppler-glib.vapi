@@ -288,6 +288,14 @@ namespace Poppler {
 		public Poppler.PageLayout get_page_layout ();
 		[Version (since = "0.16")]
 		public Poppler.PageMode get_page_mode ();
+		[Version (since = "0.70")]
+		public Poppler.PDFConformance get_pdf_conformance ();
+		[Version (since = "0.70")]
+		public Poppler.PDFPart get_pdf_part ();
+		[Version (since = "0.70")]
+		public Poppler.PDFSubtype get_pdf_subtype ();
+		[Version (since = "0.70")]
+		public string? get_pdf_subtype_string ();
 		[Version (since = "0.16")]
 		public void get_pdf_version (out uint major_version, out uint minor_version);
 		[Version (since = "0.16")]
@@ -341,6 +349,14 @@ namespace Poppler {
 		public Poppler.Permissions permissions { get; }
 		public string producer { owned get; set; }
 		public string subject { owned get; set; }
+		[NoAccessorMethod]
+		public Poppler.PDFSubtype subtype { get; }
+		[NoAccessorMethod]
+		public Poppler.PDFConformance subtype_conformance { get; }
+		[NoAccessorMethod]
+		public Poppler.PDFPart subtype_part { get; }
+		[NoAccessorMethod]
+		public string subtype_string { owned get; }
 		public string title { owned get; set; }
 		[NoAccessorMethod]
 		public Poppler.ViewerPreferences viewer_preferences { get; }
@@ -1050,6 +1066,54 @@ namespace Poppler {
 		OPEN,
 		REPEAT,
 		PALINDROME
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_PDF_SUBTYPE_CONF_", type_id = "poppler_pdf_conformance_get_type ()")]
+	[Version (since = "0.70")]
+	public enum PDFConformance {
+		UNSET,
+		A,
+		B,
+		G,
+		N,
+		P,
+		PG,
+		U,
+		NONE
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_PDF_SUBTYPE_", type_id = "poppler_pdf_part_get_type ()")]
+	[Version (since = "0.70")]
+	public enum PDFPart {
+		[CCode (cname = "POPPLER_PDF_SUBTYPE_PART_UNSET")]
+		UNSET,
+		[CCode (cname = "POPPLER_PDF_SUBTYPE_PART_1")]
+		@1,
+		[CCode (cname = "POPPLER_PDF_SUBTYPE_PART_2")]
+		@2,
+		[CCode (cname = "POPPLER_PDF_SUBTYPE_PART_3")]
+		@3,
+		[CCode (cname = "POPPLER_PDF_SUBTYPE_PART_4")]
+		@4,
+		[CCode (cname = "POPPLER_PDF_SUBTYPE_PART_5")]
+		@5,
+		[CCode (cname = "POPPLER_PDF_SUBTYPE_PART_6")]
+		@6,
+		[CCode (cname = "POPPLER_PDF_SUBTYPE_PART_7")]
+		@7,
+		[CCode (cname = "POPPLER_PDF_SUBTYPE_PART_8")]
+		@8,
+		[CCode (cname = "POPPLER_PDF_SUBTYPE_PART_NONE")]
+		NONE
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_PDF_SUBTYPE_", type_id = "poppler_pdf_subtype_get_type ()")]
+	[Version (since = "0.70")]
+	public enum PDFSubtype {
+		UNSET,
+		PDF_A,
+		PDF_E,
+		PDF_UA,
+		PDF_VT,
+		PDF_X,
+		NONE
 	}
 	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_PAGE_LAYOUT_", type_id = "poppler_page_layout_get_type ()")]
 	public enum PageLayout {
