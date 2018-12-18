@@ -780,7 +780,7 @@ namespace Gst {
 		public enum CaptionType {
 			UNKNOWN,
 			CEA608_RAW,
-			CEA608_IN_CEA708_RAW,
+			CEA608_S334_1A,
 			CEA708_RAW,
 			CEA708_CDP
 		}
@@ -1481,6 +1481,12 @@ namespace Gst {
 		public static GLib.Type caption_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned Gst.MetaInfo? caption_meta_get_info ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.16")]
+		public static Gst.Video.CaptionType caption_type_from_caps (Gst.Caps caps);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.16")]
+		public static Gst.Caps caption_type_to_caps (Gst.Video.CaptionType type);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Video.ChromaSite chroma_from_string (string s);
 		[CCode (cheader_filename = "gst/video/video.h")]

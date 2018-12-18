@@ -884,6 +884,8 @@ namespace Gst {
 		public void remove_structure (uint idx);
 		[Version (since = "1.2")]
 		public void set_features (uint index, owned Gst.CapsFeatures? features);
+		[Version (since = "1.16")]
+		public void set_features_simple (owned Gst.CapsFeatures? features);
 		public void set_simple (string field, ...);
 		public void set_simple_valist (string field, va_list varargs);
 		public void set_value (string field, GLib.Value value);

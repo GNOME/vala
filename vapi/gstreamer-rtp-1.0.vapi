@@ -295,7 +295,7 @@ namespace Gst {
 		public const int VERSION;
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_buffer_add_rtp_source_meta")]
 		[Version (since = "1.16")]
-		public static unowned Gst.RTP.SourceMeta? buffer_add_rtp_source_meta (Gst.Buffer buf, uint32? ssrc, uint32? csrc, uint csrc_count);
+		public static unowned Gst.RTP.SourceMeta? buffer_add_rtp_source_meta (Gst.Buffer buffer, uint32? ssrc, uint32? csrc, uint csrc_count);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static void buffer_allocate_data (Gst.Buffer buffer, uint payload_len, uint8 pad_len, uint8 csrc_count);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
@@ -312,7 +312,7 @@ namespace Gst {
 		public static uint64 buffer_ext_timestamp (ref uint64 exttimestamp, uint32 timestamp);
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_buffer_get_rtp_source_meta")]
 		[Version (since = "1.16")]
-		public static unowned Gst.RTP.SourceMeta? buffer_get_rtp_source_meta (Gst.Buffer buf);
+		public static unowned Gst.RTP.SourceMeta? buffer_get_rtp_source_meta (Gst.Buffer buffer);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static bool buffer_map (Gst.Buffer buffer, Gst.MapFlags flags, out unowned Gst.RTP.Buffer rtp);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
@@ -475,6 +475,75 @@ namespace Gst {
 			public void sr_get_sender_info (out uint32 ssrc, out uint64 ntptime, out uint32 rtptime, out uint32 packet_count, out uint32 octet_count);
 			[CCode (cname = "gst_rtcp_packet_sr_set_sender_info")]
 			public void sr_set_sender_info (uint32 ssrc, uint64 ntptime, uint32 rtptime, uint32 packet_count, uint32 octet_count);
+			[CCode (cname = "gst_rtcp_packet_xr_first_rb")]
+			[Version (since = "1.16")]
+			public bool xr_first_rb ();
+			[CCode (cname = "gst_rtcp_packet_xr_get_block_length")]
+			[Version (since = "1.16")]
+			public uint16 xr_get_block_length ();
+			[CCode (cname = "gst_rtcp_packet_xr_get_block_type")]
+			[Version (since = "1.16")]
+			public Gst.RTPC.XRType xr_get_block_type ();
+			[CCode (cname = "gst_rtcp_packet_xr_get_dlrr_block")]
+			[Version (since = "1.16")]
+			public bool xr_get_dlrr_block (uint nth, uint32 ssrc, uint32 last_rr, uint32 delay);
+			[CCode (cname = "gst_rtcp_packet_xr_get_prt_by_seq")]
+			[Version (since = "1.16")]
+			public bool xr_get_prt_by_seq (uint16 seq, uint32 receipt_time);
+			[CCode (cname = "gst_rtcp_packet_xr_get_prt_info")]
+			[Version (since = "1.16")]
+			public bool xr_get_prt_info (uint32 ssrc, uint8 thining, uint16 begin_seq, uint16 end_seq);
+			[CCode (cname = "gst_rtcp_packet_xr_get_rle_info")]
+			[Version (since = "1.16")]
+			public bool xr_get_rle_info (uint32 ssrc, uint8 thining, uint16 begin_seq, uint16 end_seq, uint32 chunk_count);
+			[CCode (cname = "gst_rtcp_packet_xr_get_rle_nth_chunk")]
+			[Version (since = "1.16")]
+			public bool xr_get_rle_nth_chunk (uint nth, uint16 chunk);
+			[CCode (cname = "gst_rtcp_packet_xr_get_rrt")]
+			[Version (since = "1.16")]
+			public bool xr_get_rrt (uint64 timestamp);
+			[CCode (cname = "gst_rtcp_packet_xr_get_ssrc")]
+			[Version (since = "1.16")]
+			public uint32 xr_get_ssrc ();
+			[CCode (cname = "gst_rtcp_packet_xr_get_summary_info")]
+			[Version (since = "1.16")]
+			public bool xr_get_summary_info (uint32 ssrc, uint16 begin_seq, uint16 end_seq);
+			[CCode (cname = "gst_rtcp_packet_xr_get_summary_jitter")]
+			[Version (since = "1.16")]
+			public bool xr_get_summary_jitter (uint32 min_jitter, uint32 max_jitter, uint32 mean_jitter, uint32 dev_jitter);
+			[CCode (cname = "gst_rtcp_packet_xr_get_summary_pkt")]
+			[Version (since = "1.16")]
+			public bool xr_get_summary_pkt (uint32 lost_packets, uint32 dup_packets);
+			[CCode (cname = "gst_rtcp_packet_xr_get_summary_ttl")]
+			[Version (since = "1.16")]
+			public bool xr_get_summary_ttl (bool is_ipv4, uint8 min_ttl, uint8 max_ttl, uint8 mean_ttl, uint8 dev_ttl);
+			[CCode (cname = "gst_rtcp_packet_xr_get_voip_burst_metrics")]
+			[Version (since = "1.16")]
+			public bool xr_get_voip_burst_metrics (uint8 burst_density, uint8 gap_density, uint16 burst_duration, uint16 gap_duration);
+			[CCode (cname = "gst_rtcp_packet_xr_get_voip_configuration_params")]
+			[Version (since = "1.16")]
+			public bool xr_get_voip_configuration_params (uint8 gmin, uint8 rx_config);
+			[CCode (cname = "gst_rtcp_packet_xr_get_voip_delay_metrics")]
+			[Version (since = "1.16")]
+			public bool xr_get_voip_delay_metrics (uint16 roundtrip_delay, uint16 end_system_delay);
+			[CCode (cname = "gst_rtcp_packet_xr_get_voip_jitter_buffer_params")]
+			[Version (since = "1.16")]
+			public bool xr_get_voip_jitter_buffer_params (uint16 jb_nominal, uint16 jb_maximum, uint16 jb_abs_max);
+			[CCode (cname = "gst_rtcp_packet_xr_get_voip_metrics_ssrc")]
+			[Version (since = "1.16")]
+			public bool xr_get_voip_metrics_ssrc (uint32 ssrc);
+			[CCode (cname = "gst_rtcp_packet_xr_get_voip_packet_metrics")]
+			[Version (since = "1.16")]
+			public bool xr_get_voip_packet_metrics (uint8 loss_rate, uint8 discard_rate);
+			[CCode (cname = "gst_rtcp_packet_xr_get_voip_quality_metrics")]
+			[Version (since = "1.16")]
+			public bool xr_get_voip_quality_metrics (uint8 r_factor, uint8 ext_r_factor, uint8 mos_lq, uint8 mos_cq);
+			[CCode (cname = "gst_rtcp_packet_xr_get_voip_signal_metrics")]
+			[Version (since = "1.16")]
+			public bool xr_get_voip_signal_metrics (uint8 signal_level, uint8 noise_level, uint8 rerl, uint8 gmin);
+			[CCode (cname = "gst_rtcp_packet_xr_next_rb")]
+			[Version (since = "1.16")]
+			public bool xr_next_rb ();
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GstRTCPFBType", cprefix = "GST_RTCP_", type_id = "gst_rtcpfb_type_get_type ()")]
 		[GIR (name = "RTCPFBType")]
@@ -519,6 +588,19 @@ namespace Gst {
 			RTPFB,
 			PSFB,
 			XR
+		}
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GstRTCPXRType", cprefix = "GST_RTCP_XR_TYPE_", type_id = "gst_rtcpxr_type_get_type ()")]
+		[GIR (name = "RTCPXRType")]
+		[Version (since = "1.16")]
+		public enum XRType {
+			INVALID,
+			LRLE,
+			DRLE,
+			PRT,
+			RRT,
+			DLRR,
+			SSUMM,
+			VOIP_METRICS
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTCP_MAX_BYE_SSRC_COUNT")]
 		public const int MAX_BYE_SSRC_COUNT;
