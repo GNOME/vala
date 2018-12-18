@@ -2948,8 +2948,10 @@ namespace Gtk {
 		public signal void focus_in ();
 		public signal void focus_out ();
 		public signal void im_update ();
-		public signal bool key_pressed (uint object, uint p0, Gdk.ModifierType p1);
-		public signal void key_released (uint object, uint p0, Gdk.ModifierType p1);
+		[Version (since = "3.24")]
+		public signal bool key_pressed (uint keyval, uint keycode, Gdk.ModifierType state);
+		[Version (since = "3.24")]
+		public signal void key_released (uint keyval, uint keycode, Gdk.ModifierType state);
 		public signal bool modifiers (Gdk.ModifierType object);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_motion_get_type ()")]
