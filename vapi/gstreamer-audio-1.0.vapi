@@ -153,6 +153,8 @@ namespace Gst {
 			public size_t get_in_frames (size_t out_frames);
 			public size_t get_max_latency ();
 			public size_t get_out_frames (size_t in_frames);
+			[Version (since = "1.16")]
+			public bool is_passthrough ();
 			public void reset ();
 			public bool samples (Gst.Audio.ConverterFlags flags, void* @in, size_t in_frames, void* @out, size_t out_frames);
 			public bool supports_inplace ();
