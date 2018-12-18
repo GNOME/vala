@@ -12117,8 +12117,11 @@ namespace Gtk {
 		public abstract void expand_collapse (Gtk.CellAccessible cell);
 		public abstract void get_cell_area (Gtk.CellAccessible cell, Gdk.Rectangle cell_rect);
 		public abstract void get_cell_extents (Gtk.CellAccessible cell, int x, int y, int width, int height, Atk.CoordType coord_type);
+		public abstract void get_cell_position (Gtk.CellAccessible cell, int row, int column);
 		public abstract int get_child_index (Gtk.CellAccessible cell);
+		public abstract GLib.GenericArray<Atk.Object> get_column_header_cells (Gtk.CellAccessible cell);
 		public abstract Gtk.CellRendererState get_renderer_state (Gtk.CellAccessible cell);
+		public abstract GLib.GenericArray<Atk.Object> get_row_header_cells (Gtk.CellAccessible cell);
 		public abstract bool grab_focus (Gtk.CellAccessible cell);
 		public abstract void update_relationset (Gtk.CellAccessible cell, Atk.RelationSet relationset);
 	}
