@@ -192,6 +192,11 @@ namespace WebKit {
 		[Version (since = "2.2")]
 		public bool has_password ();
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_device_info_permission_request_get_type ()")]
+	public class DeviceInfoPermissionRequest : GLib.Object, WebKit.PermissionRequest {
+		[CCode (has_construct_function = false)]
+		protected DeviceInfoPermissionRequest ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_download_get_type ()")]
 	public class Download : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -552,14 +557,20 @@ namespace WebKit {
 		public WebKit.URIRequest request { get; }
 		public WebKit.URIResponse response { get; }
 	}
-	[CCode (cheader_filename = "webkit2/webkit2.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_script_dialog_get_type ()")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_script_dialog_ref", type_id = "webkit_script_dialog_get_type ()", unref_function = "webkit_script_dialog_unref")]
 	[Compact]
 	public class ScriptDialog {
+		[Version (since = "2.24")]
+		public void close ();
 		public void confirm_set_confirmed (bool confirmed);
 		public WebKit.ScriptDialogType get_dialog_type ();
 		public unowned string get_message ();
 		public unowned string prompt_get_default_text ();
 		public void prompt_set_text (string text);
+		[Version (since = "2.24")]
+		public unowned WebKit.ScriptDialog @ref ();
+		[Version (since = "2.24")]
+		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_security_manager_get_type ()")]
 	public class SecurityManager : GLib.Object {
@@ -642,6 +653,8 @@ namespace WebKit {
 		public bool get_enable_media_stream ();
 		[Version (since = "2.4")]
 		public bool get_enable_mediasource ();
+		[Version (since = "2.24")]
+		public bool get_enable_mock_capture_devices ();
 		public bool get_enable_offline_web_application_cache ();
 		public bool get_enable_page_cache ();
 		public bool get_enable_plugins ();
@@ -706,6 +719,8 @@ namespace WebKit {
 		public void set_enable_media_stream (bool enabled);
 		[Version (since = "2.4")]
 		public void set_enable_mediasource (bool enabled);
+		[Version (since = "2.4")]
+		public void set_enable_mock_capture_devices (bool enabled);
 		public void set_enable_offline_web_application_cache (bool enabled);
 		public void set_enable_page_cache (bool enabled);
 		public void set_enable_plugins (bool enabled);
@@ -771,6 +786,8 @@ namespace WebKit {
 		public bool enable_media_stream { get; set construct; }
 		[Version (since = "2.4")]
 		public bool enable_mediasource { get; set construct; }
+		[Version (since = "2.24")]
+		public bool enable_mock_capture_devices { get; set construct; }
 		public bool enable_offline_web_application_cache { get; set construct; }
 		public bool enable_page_cache { get; set construct; }
 		public bool enable_plugins { get; set construct; }
@@ -927,6 +944,8 @@ namespace WebKit {
 		public async GLib.List<WebKit.Plugin> get_plugins (GLib.Cancellable? cancellable) throws GLib.Error;
 		[Version (since = "2.4")]
 		public WebKit.ProcessModel get_process_model ();
+		[Version (since = "2.24")]
+		public bool get_sandbox_enabled ();
 		public unowned WebKit.SecurityManager get_security_manager ();
 		public bool get_spell_checking_enabled ();
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -954,6 +973,8 @@ namespace WebKit {
 		public void set_preferred_languages ([CCode (array_length = false, array_null_terminated = true)] string[]? languages);
 		[Version (since = "2.4")]
 		public void set_process_model (WebKit.ProcessModel process_model);
+		[Version (since = "2.24")]
+		public void set_sandbox_enabled (bool enabled);
 		public void set_spell_checking_enabled (bool enabled);
 		public void set_spell_checking_languages ([CCode (array_length = false, array_null_terminated = true)] string[] languages);
 		public void set_tls_errors_policy (WebKit.TLSErrorsPolicy policy);
@@ -1504,6 +1525,7 @@ namespace WebKit {
 		INDEXEDDB_DATABASES,
 		PLUGIN_DATA,
 		COOKIES,
+		DEVICE_ID_HASH_SALT,
 		ALL
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_DOWNLOAD_ERROR_")]
