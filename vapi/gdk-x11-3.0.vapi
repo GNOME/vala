@@ -194,6 +194,9 @@ namespace Gdk {
 		[CCode (cheader_filename = "gdk/gdkx.h")]
 		public static unowned X.Display get_default_xdisplay ();
 		[CCode (cheader_filename = "gdk/gdkx.h")]
+		[Version (deprecated = true, deprecated_since = "3.24", since = "3.24.2")]
+		public static Cairo.Pattern get_parent_relative_pattern ();
+		[CCode (cheader_filename = "gdk/gdkx.h")]
 		public static uint32 get_server_time (Gdk.X11.Window window);
 		[CCode (cheader_filename = "gdk/gdkx.h")]
 		public static X.Atom get_xatom_by_name (string atom_name);
