@@ -738,7 +738,7 @@ public class Vala.Class : ObjectTypeSymbol {
 						if (m.is_abstract) {
 							var implemented = false;
 							var base_class = this;
-							while (base_class != null) {
+							while (base_class != null && !implemented) {
 								foreach (var impl in base_class.get_methods ()) {
 									if (impl.base_interface_method == m || (base_class != this
 									    && impl.base_interface_method == null && impl.name == m.name
