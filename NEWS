@@ -1,3 +1,58 @@
+Vala 0.36.17
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Initialize internal temp-variables used as reference parameter
+    + Improve ccode for fixed-length array parameters (#163)
+    + Fix regex literal compile flags
+    + Add prototype for *_register_type() function
+    + Don't emit *_free() of derived compact classes
+    + Add prototype for *_new() of abstact compact classes
+    + Fix method pointer cast if instance isn't at first position
+    + Transfer ownership of compact class to DestroysInstance method [#645]
+    + Make sure to include declarations for delegate typed parameters
+    + Don't emit unused temp variable for element access assignments
+    + Actually create method cast for base interface method as needed
+    + Mark needle parameter of internal array-contains methods as const [#504]
+    + Emit initializer for enum-value into wanted declaration space [#167]
+    + Add void to delegate typedef declarations without parameters
+    + Emit delegate/enum typedefs to type-declaration section [#318]
+    + Always emit constants with initializer-list [#81]
+    + Handle non-default AsyncResult parameter position [#709]
+  - ccode: Fix typo and actually check "end_decls" (#672)
+  - abstract syntax tree:
+    + Always analyze nodes after they are inserted into the AST
+    + Add source_reference to local variable of catch-clause
+    + Add missing replace_expression() implementations
+    + Fix several construction/parenting issues
+    + DataType for GLib.Error should be should resolved as ErrorType
+  - vala:
+    + Copy instance_pos argument from virtual/abstract base methods [#540483]
+    + Use comment which was already retrieved in parse_declaration()
+    + Type check for errors require an error expression [#362]
+    + Make check_arguments() more verbose and don't bail on first error [#438]
+    + Don't emit member access of assignments on static properties [#573]
+    + Use clearer error message for automatic properties in interfaces [#656]
+    + Break possible endless loop in SymbolResolver.get_type_for_struct() [#444]
+  - girwriter: Fix ctype of out/ref and array parameters
+  - girwriter: Write glib-type attributes for Enums/Structs with type_id
+  - girparser: Skip "source-position" elements and docs in transparent union
+  - docs: Use Markdown for README and include build instructions
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - gdk-x11-3.0: Update to 3.24.2+eb821cb8
+  - gio-2.0: Result of DBusMessage.get_header() is unowned
+  - glib-2.0: Add missing Array.set_clear_func() binding
+  - glib-2.0: Avoid double-free in GLib.Array if clear_func is set
+  - glib-2.0: Add GLib.pointer aka gpointer binding
+  - glib-2.0: Computing length once is enough in string.to_utf8()/splice()
+  - glib-2.0: Add binding for g_test_add()
+  - glib-2.0: Add array length to string.skip (#695)
+  - gobject-2.0: Attribute all symbols with cheader_filename = "glib-object.h"
+  - gobject-2.0,gtk+-*.0: Fix some GLib.Value out/ref parameters
+  - gobject-introspection-1.0: Pick up version attribute fixes
+
 Vala 0.36.16
 ============
  * Various improvements and bug fixes:
