@@ -203,7 +203,6 @@ libvaladoc@PACKAGE_SUFFIX@_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(GMODULE_LIBS) \
 	$(top_builddir)/vala/libvala@PACKAGE_SUFFIX@.la \
-	$(top_builddir)/ccode/libvalaccode.la \
 	$(top_builddir)/codegen/libvalaccodegen.la \
 	$(NULL)
 
