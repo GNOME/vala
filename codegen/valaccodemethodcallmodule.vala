@@ -354,10 +354,13 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			var carg_map = in_arg_map;
 
+			Parameter? param = null;
 			if (params_it.next ()) {
-				var param = params_it.get ();
+				param = params_it.get ();
 				ellipsis = param.params_array || param.ellipsis;
-				if (!ellipsis) {
+			}
+
+			if (param != null && !ellipsis) {
 					if (param.direction == ParameterDirection.OUT) {
 						carg_map = out_arg_map;
 					}
@@ -454,16 +457,27 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					if (get_ccode_type (param) != null) {
 						cexpr = new CCodeCastExpression (cexpr, get_ccode_type (param));
 					}
+			} else {
+				// ellipsis arguments
+				var unary = arg as UnaryExpression;
+				if (ellipsis && unary != null && unary.operator == UnaryOperator.OUT) {
+					carg_map = out_arg_map;
+
+					arg.target_value = null;
+
+					// infer type and ownership from argument expression
+					var temp_var = get_temp_variable (arg.value_type, arg.value_type.value_owned, null, true);
+					emit_temp_var (temp_var);
+					set_cvalue (arg, get_variable_cexpression (temp_var.name));
+					arg.target_value.value_type = arg.value_type;
+
+					cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (arg));
 				} else {
 					cexpr = handle_struct_argument (null, arg, cexpr);
 				}
-				arg_pos = get_param_pos (get_ccode_pos (param), ellipsis);
-			} else {
-				// default argument position
-				cexpr = handle_struct_argument (null, arg, cexpr);
-				arg_pos = get_param_pos (i, ellipsis);
 			}
 
+			arg_pos = get_param_pos (param != null ? get_ccode_pos (param) : i, ellipsis);
 			carg_map.set (arg_pos, cexpr);
 
 			if (arg is NamedArgument && ellipsis) {
@@ -838,10 +852,6 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			if (params_it.next ()) {
 				param = params_it.get ();
-				if (param.params_array || param.ellipsis) {
-					// ignore ellipsis arguments as we currently don't use temporary variables for them
-					break;
-				}
 			}
 
 			var unary = arg as UnaryExpression;
