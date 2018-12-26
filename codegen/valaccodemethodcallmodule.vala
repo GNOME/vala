@@ -821,7 +821,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			} else if (m != null && m.get_attribute_bool ("CCode", "use_inplace", false)) {
 				set_cvalue (expr, ccall_expr);
 			} else if (!return_result_via_out_param
-			    && ((m != null && !has_ref_out_param (m)) || (deleg != null && !has_ref_out_param (deleg)))
+			    && !has_ref_out_argument (expr)
 			    && (result_type is ValueType && !result_type.is_disposable ())) {
 				set_cvalue (expr, ccall_expr);
 			} else if (!return_result_via_out_param) {
@@ -916,9 +916,10 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		return to_string_func;
 	}
 
-	bool has_ref_out_param (Callable c) {
-		foreach (var param in c.get_parameters ()) {
-			if (param.direction != ParameterDirection.IN) {
+	bool has_ref_out_argument (MethodCall c) {
+		foreach (var arg in c.get_argument_list ()) {
+			unowned UnaryExpression? unary = arg as UnaryExpression;
+			if (unary != null && (unary.operator == UnaryOperator.OUT || unary.operator == UnaryOperator.REF)) {
 				return true;
 			}
 		}
