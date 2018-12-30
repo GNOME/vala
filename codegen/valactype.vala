@@ -29,11 +29,17 @@ public class Vala.CType : DataType {
 	 */
 	public string ctype_name { get; set; }
 
-	public CType (string ctype_name) {
+	/**
+	 * The default value of the C type.
+	 */
+	public string cdefault_value { get; set; }
+
+	public CType (string ctype_name, string cdefault_value) {
 		this.ctype_name = ctype_name;
+		this.cdefault_value = cdefault_value;
 	}
 
 	public override DataType copy () {
-		return new CType (ctype_name);
+		return new CType (ctype_name, cdefault_value);
 	}
 }

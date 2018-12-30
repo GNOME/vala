@@ -431,7 +431,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 							var array_type = (ArrayType) param.variable_type;
 							var array_length_type = int_type;
 							if (get_ccode_array_length_type (param) != null) {
-								array_length_type = new CType (get_ccode_array_length_type (param));
+								array_length_type = new CType (get_ccode_array_length_type (param), "0");
 							}
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								var temp_array_length = get_temp_variable (array_length_type);
@@ -525,7 +525,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					if (get_ccode_array_length_type (m) == null) {
 						temp_var = get_temp_variable (int_type, true, null, true);
 					} else {
-						temp_var = get_temp_variable (new CType (get_ccode_array_length_type (m)), true, null, true);
+						temp_var = get_temp_variable (new CType (get_ccode_array_length_type (m), "0"), true, null, true);
 					}
 					var temp_ref = get_variable_cexpression (temp_var.name);
 

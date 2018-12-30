@@ -6167,6 +6167,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return new CCodeConstant ("NULL");
 		} else if (type is ErrorType) {
 			return new CCodeConstant ("NULL");
+		} else if (type is CType) {
+			return new CCodeConstant (((CType) type).cdefault_value);
 		}
 		return null;
 	}
