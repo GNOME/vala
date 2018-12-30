@@ -2367,7 +2367,7 @@ public class Vala.GTypeModule : GErrorModule {
 			expr.value_type.value_owned = true;
 			set_cvalue (expr, to_string);
 		} else {
-			var temp_var = get_temp_variable (new CType (is_flags ? "GFlagsValue*" : "GEnumValue*"), false, expr, false);
+			var temp_var = get_temp_variable (new CType (is_flags ? "GFlagsValue*" : "GEnumValue*", "NULL"), false, expr, false);
 			emit_temp_var (temp_var);
 
 			var class_ref = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_ref"));
