@@ -432,7 +432,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 							var array_type = (ArrayType) param.variable_type;
 							var length_ctype = get_ccode_array_length_type (param) ?? get_ccode_array_length_type (array_type);
 							for (int dim = 1; dim <= array_type.rank; dim++) {
-								var temp_array_length = get_temp_variable (new CType (length_ctype));
+								var temp_array_length = get_temp_variable (new CType (length_ctype, "0"), true, null, true);
 								emit_temp_var (temp_array_length);
 								append_array_length (arg, get_variable_cexpression (temp_array_length.name));
 								carg_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_lengths (arg).get (dim - 1)));
@@ -519,7 +519,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					append_array_length (expr, len_call);
 				} else if (get_ccode_array_length (m)) {
 					var length_ctype = get_ccode_array_length_type (m) ?? get_ccode_array_length_type (array_type);
-					var temp_var = get_temp_variable (new CType (length_ctype), true, null, true);
+					var temp_var = get_temp_variable (new CType (length_ctype, "0"), true, null, true);
 					var temp_ref = get_variable_cexpression (temp_var.name);
 
 					emit_temp_var (temp_var);
@@ -582,7 +582,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 					append_array_length (expr, len_call);
 				} else if (get_ccode_array_length (deleg)) {
-					var temp_var = get_temp_variable (new CType (get_ccode_array_length_type (array_type)), true, null, true);
+					var temp_var = get_temp_variable (array_type.length_type, true, null, true);
 					var temp_ref = get_variable_cexpression (temp_var.name);
 
 					emit_temp_var (temp_var);
