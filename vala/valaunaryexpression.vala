@@ -170,7 +170,7 @@ public class Vala.UnaryExpression : Expression {
 			return false;
 		}
 
-		if (inner.value_type is FieldPrototype) {
+		if (inner.value_type is FieldPrototype || inner.value_type is PropertyPrototype) {
 			error = true;
 			Report.error (inner.source_reference, "Access to instance member `%s' denied".printf (inner.symbol_reference.get_full_name ()));
 			return false;

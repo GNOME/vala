@@ -327,12 +327,12 @@ public class Vala.BinaryExpression : Expression {
 			return false;
 		}
 
-		if (left.value_type is FieldPrototype) {
+		if (left.value_type is FieldPrototype || left.value_type is PropertyPrototype) {
 			error = true;
 			Report.error (left.source_reference, "Access to instance member `%s' denied".printf (left.symbol_reference.get_full_name ()));
 			return false;
 		}
-		if (right.value_type is FieldPrototype) {
+		if (right.value_type is FieldPrototype || right.value_type is PropertyPrototype) {
 			error = true;
 			Report.error (right.source_reference, "Access to instance member `%s' denied".printf (right.symbol_reference.get_full_name ()));
 			return false;

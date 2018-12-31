@@ -116,7 +116,7 @@ public class Vala.LocalVariable : Variable {
 				Report.error (source_reference, "var declaration not allowed with non-typed initializer");
 				return false;
 			}
-			if (initializer.value_type is FieldPrototype) {
+			if (initializer.value_type is FieldPrototype || initializer.value_type is PropertyPrototype) {
 				error = true;
 				Report.error (initializer.source_reference, "Access to instance member `%s' denied".printf (initializer.symbol_reference.get_full_name ()));
 				return false;

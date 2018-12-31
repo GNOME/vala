@@ -159,6 +159,7 @@ TESTS = \
 	control-flow/bug736774-1.vala \
 	control-flow/bug736774-2.vala \
 	control-flow/bug790903.test \
+	control-flow/bug790903-2.test \
 	control-semantic/argument-extra.test \
 	control-semantic/argument-incompatible-type-out.test \
 	control-semantic/argument-incompatible-type-ref.test \
@@ -563,6 +564,7 @@ TESTS = \
 	semantic/field-namespace-owned.test \
 	semantic/field-non-constant.test \
 	semantic/field-owned-to-unowned.test \
+	semantic/field-static-instance-access.test \
 	semantic/field-void.test \
 	semantic/floating-reference.vala \
 	semantic/foreach-iterator-args.test \
@@ -584,6 +586,7 @@ TESTS = \
 	semantic/localvariable-owned-to-unowned.test \
 	semantic/localvariable-var-static-access-instance-field.test \
 	semantic/localvariable-var-static-access-instance-method.test \
+	semantic/localvariable-var-static-access-instance-property.test \
 	semantic/localvariable-var-without-initializer.test \
 	semantic/localvariable-void.test \
 	semantic/method-abstract.test \
@@ -631,6 +634,7 @@ TESTS = \
 	semantic/property-override.test \
 	semantic/property-override-class.test \
 	semantic/property-override-interface.test \
+	semantic/property-static-instance-access.test \
 	semantic/property-struct-abstract.test \
 	semantic/property-struct-override.test \
 	semantic/property-struct-protected.test \

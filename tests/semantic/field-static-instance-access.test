@@ -1,0 +1,13 @@
+Invalid Code
+
+class Foo {
+	string? field;
+
+	static void foo () {
+		if (field == null) {
+		}
+	}
+}
+
+void main() {
+}
