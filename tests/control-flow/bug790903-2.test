@@ -1,0 +1,9 @@
+Invalid Code
+
+class Foo {
+	public string prop { get; set; }
+}
+
+void main () {
+	var foo = (string) Foo.prop;
+}

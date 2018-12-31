@@ -1,0 +1,12 @@
+Invalid Code
+
+class Foo {
+	int prop { get; set; }
+
+	static void bar () {
+		var p = prop;
+	}
+}
+
+void main () {
+}

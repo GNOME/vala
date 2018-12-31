@@ -174,6 +174,13 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 			}
 
+			if (pub_inst == null && prop.binding == MemberBinding.INSTANCE) {
+				// FIXME Report this with proper source-reference on the vala side!
+				Report.error (prop.source_reference, "Invalid access to instance member `%s'".printf (prop.get_full_name ()));
+				set_cvalue (expr, new CCodeInvalidExpression ());
+				return;
+			}
+
 			if (expr.inner is BaseAccess) {
 				var base_prop = prop;
 				if (prop.base_property != null) {
@@ -312,6 +319,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				ccode.add_expression (ccall);
 				set_cvalue (expr, ctemp);
 			}
+
 			expr.target_value.value_type = expr.value_type;
 			expr.target_value = store_temp_value (expr.target_value, expr);
 		} else if (expr.symbol_reference is LocalVariable) {

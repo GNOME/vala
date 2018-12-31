@@ -782,6 +782,8 @@ public class Vala.MemberAccess : Expression {
 				value_type = context.analyzer.get_value_type_for_symbol (symbol_reference, lvalue);
 			} else if (symbol_reference is Field) {
 				value_type = new FieldPrototype ((Field) symbol_reference);
+			} else if (symbol_reference is Property) {
+				value_type = new PropertyPrototype ((Property) symbol_reference);
 			} else {
 				value_type = new InvalidType ();
 			}

@@ -1,0 +1,13 @@
+Invalid Code
+
+class Foo {
+	string? prop { get; set; }
+
+	static void foo () {
+		if (prop == null) {
+		}
+	}
+}
+
+void main() {
+}
