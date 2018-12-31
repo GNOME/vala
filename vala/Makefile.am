@@ -117,6 +117,7 @@ libvalacore_la_VALASOURCES = \
 	valaprofile.vala \
 	valapropertyaccessor.vala \
 	valaproperty.vala \
+	valapropertyprototype.vala \
 	valarealliteral.vala \
 	valareferencetransferexpression.vala \
 	valareferencetype.vala \
