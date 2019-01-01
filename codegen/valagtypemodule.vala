@@ -96,8 +96,8 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		if (is_fundamental) {
-			var ref_fun = new CCodeFunction ("%sref".printf (get_ccode_lower_case_prefix (cl)), "gpointer");
-			var unref_fun = new CCodeFunction ("%sunref".printf (get_ccode_lower_case_prefix (cl)), "void");
+			var ref_fun = new CCodeFunction (get_ccode_ref_function (cl), "gpointer");
+			var unref_fun = new CCodeFunction (get_ccode_unref_function (cl), "void");
 			if (cl.is_private_symbol ()) {
 				ref_fun.modifiers = CCodeModifiers.STATIC;
 				unref_fun.modifiers = CCodeModifiers.STATIC;
@@ -170,7 +170,7 @@ public class Vala.GTypeModule : GErrorModule {
 			decl_space.add_function_declaration (function);
 		} else if (!is_gtypeinstance && !is_gsource) {
 			if (cl.base_class == null) {
-				var function = new CCodeFunction ("%sfree".printf (get_ccode_lower_case_prefix (cl)), "void");
+				var function = new CCodeFunction (get_ccode_free_function (cl), "void");
 				if (cl.is_private_symbol ()) {
 					function.modifiers = CCodeModifiers.STATIC;
 				} else if (context.hide_internal && cl.is_internal_symbol ()) {
@@ -773,7 +773,7 @@ public class Vala.GTypeModule : GErrorModule {
 				var ref_count = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "ref_count");
 
 				// ref function
-				var ref_fun = new CCodeFunction ("%sref".printf (get_ccode_lower_case_prefix (cl)), "gpointer");
+				var ref_fun = new CCodeFunction (get_ccode_ref_function (cl), "gpointer");
 				ref_fun.add_parameter (new CCodeParameter ("instance", "gpointer"));
 				if (cl.is_private_symbol ()) {
 					ref_fun.modifiers = CCodeModifiers.STATIC;
@@ -792,7 +792,7 @@ public class Vala.GTypeModule : GErrorModule {
 				cfile.add_function (ref_fun);
 
 				// unref function
-				var unref_fun = new CCodeFunction ("%sunref".printf (get_ccode_lower_case_prefix (cl)), "void");
+				var unref_fun = new CCodeFunction (get_ccode_unref_function (cl), "void");
 				unref_fun.add_parameter (new CCodeParameter ("instance", "gpointer"));
 				if (cl.is_private_symbol ()) {
 					unref_fun.modifiers = CCodeModifiers.STATIC;
@@ -865,7 +865,7 @@ public class Vala.GTypeModule : GErrorModule {
 		push_function (function);
 
 		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%sunref".printf (get_ccode_lower_case_prefix (cl))));
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_unref_function (cl)));
 		ccall.add_argument (vpointer);
 
 		ccode.open_if (vpointer);
@@ -887,7 +887,7 @@ public class Vala.GTypeModule : GErrorModule {
 		var dest_vpointer = new CCodeMemberAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest_value"), "data[0]"), "v_pointer");
 		var src_vpointer = new CCodeMemberAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("src_value"), "data[0]"), "v_pointer");
 
-		var ref_ccall = new CCodeFunctionCall (new CCodeIdentifier ("%sref".printf (get_ccode_lower_case_prefix (cl))));
+		var ref_ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_ref_function (cl)));
 		ref_ccall.add_argument ( src_vpointer );
 
 		ccode.open_if (src_vpointer);
@@ -1793,7 +1793,7 @@ public class Vala.GTypeModule : GErrorModule {
 				ccode.add_expression (call);
 			}
 		} else if (cl.base_class == null) {
-			var function = new CCodeFunction ("%sfree".printf (get_ccode_lower_case_prefix (cl)), "void");
+			var function = new CCodeFunction (get_ccode_free_function (cl), "void");
 			if (cl.is_private_symbol ()) {
 				function.modifiers = CCodeModifiers.STATIC;
 			} else if (context.hide_internal && cl.is_internal_symbol ()) {
