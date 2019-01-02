@@ -347,127 +347,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return file_name.substring (0, file_name.last_index_of_char ('.'));
 	}
 
-	private bool add_package (Vala.CodeContext context, string pkg) {
-		// ignore multiple occurences of the same package
-		if (context.has_package (pkg)) {
-			return true;
-		}
-
-		string vapi_name = pkg + ".vapi";
-		string gir_name = pkg + ".gir";
-		foreach (string source_file in settings.source_files) {
-			string basename = Path.get_basename (source_file);
-			if (basename == vapi_name || basename == gir_name) {
-				return true;
-			}
-		}
-
-
-		var package_path = context.get_vapi_path (pkg) ?? context.get_gir_path (pkg);
-		if (package_path == null) {
-			Vala.Report.error (null, "Package `%s' not found in specified Vala API directories or GObject-Introspection GIR directories".printf (pkg));
-			return false;
-		}
-
-		context.add_package (pkg);
-
-		var vfile = new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, package_path);
-		context.add_source_file (vfile);
-		Package vdpkg = new Package (pkg, true, null);
-		register_source_file (register_package (vdpkg), vfile);
-
-		add_deps (context, Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg)), pkg);
-		return true;
-	}
-
-	private void add_deps (Vala.CodeContext context, string file_path, string pkg_name) {
-		if (FileUtils.test (file_path, FileTest.EXISTS)) {
-			try {
-				string deps_content;
-				ulong deps_len;
-				FileUtils.get_contents (file_path, out deps_content, out deps_len);
-				foreach (string dep in deps_content.split ("\n")) {
-					dep = dep.strip ();
-					if (dep != "") {
-						if (!add_package (context, dep)) {
-							Vala.Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg_name));
-						}
-					}
-				}
-			} catch (FileError e) {
-				Vala.Report.error (null, "Unable to read dependency file: %s".printf (e.message));
-			}
-		}
-	}
-
-	/**
-	 * Adds the specified packages to the list of used packages.
-	 *
-	 * @param context The code context
-	 * @param packages a list of package names
-	 */
-	private void add_depencies (Vala.CodeContext context, string[] packages) {
-		foreach (string package in packages) {
-			if (!add_package (context, package)) {
-				Vala.Report.error (null, "Package `%s' not found in specified Vala API directories or GObject-Introspection GIR directories".printf (package));
-			}
-		}
-	}
-
-	/**
-	 * Add the specified source file to the context. Only .vala, .vapi, .gs,
-	 * and .c files are supported.
-	 */
-	private void add_documented_files (Vala.CodeContext context, string[] sources) {
-		if (sources == null) {
-			return;
-		}
-
-		foreach (string source in sources) {
-			if (FileUtils.test (source, FileTest.EXISTS)) {
-				var rpath = Vala.CodeContext.realpath (source);
-				if (source.has_suffix (".vala") || source.has_suffix (".gs")) {
-					var source_file = new Vala.SourceFile (context, Vala.SourceFileType.SOURCE, rpath);
-
-					if (source_package == null) {
-						source_package = register_package (new Package (settings.pkg_name, false, null));
-					}
-
-					register_source_file (source_package, source_file);
-
-					if (context.profile == Vala.Profile.GOBJECT) {
-						// import the GLib namespace by default (namespace of backend-specific standard library)
-						var ns_ref = new Vala.UsingDirective (new Vala.UnresolvedSymbol (null, "GLib", null));
-						source_file.add_using_directive (ns_ref);
-						context.root.add_using_directive (ns_ref);
-					}
-
-					context.add_source_file (source_file);
-				} else if (source.has_suffix (".vapi") || source.has_suffix (".gir")) {
-					string file_name = get_package_name (source);
-
-					var vfile = new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, rpath);
-					context.add_source_file (vfile);
-
-					if (source_package == null) {
-						source_package = register_package (new Package (settings.pkg_name, false, null));
-					}
-
-					register_source_file (source_package, vfile);
-
-					add_deps (context, Path.build_filename (Path.get_dirname (source), "%s.deps".printf (file_name)), file_name);
-				} else if (source.has_suffix (".c")) {
-					context.add_c_source_file (rpath);
-					tree.add_external_c_files (rpath);
-				} else {
-					Vala.Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.".printf (source));
-				}
-			} else {
-				Vala.Report.error (null, "%s not found".printf (source));
-			}
-		}
-	}
-
 	private void create_valac_tree (Vala.CodeContext context, Settings settings) {
 		// settings:
 		context.experimental = settings.experimental;
@@ -509,23 +388,18 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			}
 
 			// default packages
-			if (!this.add_package (context, "glib-2.0")) { //
-				Vala.Report.error (null, "glib-2.0 not found in specified Vala API directories");
-			}
-
-			if (!this.add_package (context, "gobject-2.0")) { //
-				Vala.Report.error (null, "gobject-2.0 not found in specified Vala API directories");
-			}
+			context.add_external_package ("glib-2.0");
+			context.add_external_package ("gobject-2.0");
 		}
 
 		// add user defined files:
-		add_depencies (context, settings.packages);
-		if (reporter.errors > 0) {
-			return;
+		foreach (string package in settings.packages) {
+			context.add_external_package (package);
 		}
-
-		add_documented_files (context, settings.source_files);
-		if (reporter.errors > 0) {
+		foreach (string source in settings.source_files) {
+			context.add_source_filename (source, false, true);
+		}
+		if (context.report.get_errors () > 0) {
 			return;
 		}
 
@@ -993,15 +867,17 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		reporter.warnings_offset = context.report.get_warnings ();
 		reporter.errors_offset = context.report.get_errors ();
 
-		// TODO: Register all packages here
-		// register packages included by gir-files
 		foreach (Vala.SourceFile vfile in context.get_source_files ()) {
-			if (vfile.file_type == Vala.SourceFileType.PACKAGE
-				&& vfile.get_nodes ().size > 0
-				&& files.contains (vfile) == false)
-			{
-				Package vdpkg = new Package (get_package_name (vfile.filename), true, null);
-				register_source_file (register_package (vdpkg), vfile);
+			if (vfile.get_nodes ().size > 0) {
+				if (vfile.file_type == Vala.SourceFileType.SOURCE) {
+					if (source_package == null) {
+						source_package = register_package (new Package (settings.pkg_name, false, null));
+					}
+					register_source_file (source_package, vfile);
+				} else if (vfile.file_type == Vala.SourceFileType.PACKAGE) {
+					Package vdpkg = new Package (get_package_name (vfile.filename), true, null);
+					register_source_file (register_package (vdpkg), vfile);
+				}
 			}
 		}
 
