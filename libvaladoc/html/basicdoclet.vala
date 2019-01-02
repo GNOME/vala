@@ -497,7 +497,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 			writer.text (".");
 
-			if (replacement != null) {
+			if (replacement != null && replacement.length > 2) {
 				Api.Node? replacement_node = tree.search_symbol_str (pos,
 					replacement.substring (1, replacement.length - 2));
 
