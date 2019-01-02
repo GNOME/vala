@@ -403,16 +403,7 @@ public class Vala.MemberAccess : Expression {
 					}
 				} else if (parent_node is Assignment) {
 					var a = (Assignment) parent_node;
-					if (a.left == this
-					    && (a.operator == AssignmentOperator.ADD
-					        || a.operator == AssignmentOperator.SUB)) {
-						// dynamic signal
-						var s = new DynamicSignal (inner.value_type, member_name, new VoidType (), source_reference);
-						s.handler = a.right;
-						s.access = SymbolAccessibility.PUBLIC;
-						dynamic_object_type.type_symbol.scope.add (null, s);
-						symbol_reference = s;
-					} else if (a.left == this) {
+					if (a.left == this) {
 						// dynamic property assignment
 						var prop = new DynamicProperty (inner.value_type, member_name, source_reference);
 						prop.access = SymbolAccessibility.PUBLIC;
