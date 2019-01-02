@@ -43,7 +43,7 @@ public class Vala.Template : Expression {
 		expr.parent_node = this;
 	}
 
-	public List<Expression> get_expressions () {
+	public unowned List<Expression> get_expressions () {
 		return expression_list;
 	}
 

@@ -127,7 +127,7 @@ public class Vala.Scope {
 		return false;
 	}
 
-	public Map<string,Symbol> get_symbol_table () {
+	public unowned Map<string,Symbol> get_symbol_table () {
 		return symbol_table;
 	}
 }

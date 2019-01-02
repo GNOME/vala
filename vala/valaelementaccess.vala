@@ -53,7 +53,7 @@ public class Vala.ElementAccess : Expression {
 		index.parent_node = this;
 	}
 
-	public List<Expression> get_indices () {
+	public unowned List<Expression> get_indices () {
 		return indices;
 	}
 

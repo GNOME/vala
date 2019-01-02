@@ -40,7 +40,7 @@ public class Vala.MethodType : CallableType {
 		return method_symbol.return_type;
 	}
 
-	public override List<Parameter>? get_parameters () {
+	public override unowned List<Parameter>? get_parameters () {
 		return method_symbol.get_parameters ();
 	}
 

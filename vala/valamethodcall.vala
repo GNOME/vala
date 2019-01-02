@@ -75,11 +75,11 @@ public class Vala.MethodCall : Expression {
 	}
 
 	/**
-	 * Returns a copy of the argument list.
+	 * Returns the argument list.
 	 *
 	 * @return argument list
 	 */
-	public List<Expression> get_argument_list () {
+	public unowned List<Expression> get_argument_list () {
 		return argument_list;
 	}
 

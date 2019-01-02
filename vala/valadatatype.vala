@@ -71,11 +71,11 @@ public abstract class Vala.DataType : CodeNode {
 	}
 
 	/**
-	 * Returns a copy of the list of generic type arguments.
+	 * Returns the list of generic type arguments.
 	 *
 	 * @return type argument list
 	 */
-	public List<DataType> get_type_arguments () {
+	public unowned List<DataType> get_type_arguments () {
 		if (type_argument_list != null) {
 			return type_argument_list;
 		}
@@ -378,11 +378,11 @@ public abstract class Vala.DataType : CodeNode {
 	}
 
 	/**
-	 * Returns copy of the list of invocation parameters.
+	 * Returns the list of invocation parameters.
 	 *
 	 * @return parameter list
 	 */
-	public virtual List<Parameter>? get_parameters () {
+	public virtual unowned List<Parameter>? get_parameters () {
 		return null;
 	}
 

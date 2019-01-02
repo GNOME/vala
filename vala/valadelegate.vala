@@ -93,7 +93,7 @@ public class Vala.Delegate : TypeSymbol, Callable {
 		scope.add (p.name, p);
 	}
 
-	public List<TypeParameter> get_type_parameters () {
+	public unowned List<TypeParameter> get_type_parameters () {
 		return type_parameters;
 	}
 
@@ -123,11 +123,11 @@ public class Vala.Delegate : TypeSymbol, Callable {
 	}
 
 	/**
-	 * Return copy of parameter list.
+	 * Return the parameter list.
 	 *
 	 * @return parameter list
 	 */
-	public List<Parameter> get_parameters () {
+	public unowned List<Parameter> get_parameters () {
 		return parameters;
 	}
 

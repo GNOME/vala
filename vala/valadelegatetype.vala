@@ -43,7 +43,7 @@ public class Vala.DelegateType : CallableType {
 		return delegate_symbol.return_type;
 	}
 
-	public override List<Parameter>? get_parameters () {
+	public override unowned List<Parameter>? get_parameters () {
 		return delegate_symbol.get_parameters ();
 	}
 

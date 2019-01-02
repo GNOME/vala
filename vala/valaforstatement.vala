@@ -85,11 +85,11 @@ public class Vala.ForStatement : CodeNode, Statement {
 	}
 
 	/**
-	 * Returns a copy of the list of initializers.
+	 * Returns the list of initializers.
 	 *
 	 * @return initializer list
 	 */
-	public List<Expression> get_initializer () {
+	public unowned List<Expression> get_initializer () {
 		return initializer;
 	}
 
@@ -104,11 +104,11 @@ public class Vala.ForStatement : CodeNode, Statement {
 	}
 
 	/**
-	 * Returns a copy of the iterator.
+	 * Returns the iterator.
 	 *
 	 * @return iterator
 	 */
-	public List<Expression> get_iterator () {
+	public unowned List<Expression> get_iterator () {
 		return iterator;
 	}
 

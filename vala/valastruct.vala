@@ -179,11 +179,11 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	/**
-	 * Returns a copy of the type parameter list.
+	 * Returns the type parameter list.
 	 *
 	 * @return list of type parameters
 	 */
-	public List<TypeParameter> get_type_parameters () {
+	public unowned List<TypeParameter> get_type_parameters () {
 		return type_parameters;
 	}
 
@@ -210,20 +210,20 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	/**
-	 * Returns a copy of the list of fields.
+	 * Returns the list of fields.
 	 *
 	 * @return list of fields
 	 */
-	public List<Field> get_fields () {
+	public unowned List<Field> get_fields () {
 		return fields;
 	}
 
 	/**
-	 * Returns a copy of the list of constants.
+	 * Returns the list of constants.
 	 *
 	 * @return list of constants
 	 */
-	public List<Constant> get_constants () {
+	public unowned List<Constant> get_constants () {
 		return constants;
 	}
 
@@ -261,11 +261,11 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	/**
-	 * Returns a copy of the list of methods.
+	 * Returns the list of methods.
 	 *
 	 * @return list of methods
 	 */
-	public List<Method> get_methods () {
+	public unowned List<Method> get_methods () {
 		return methods;
 	}
 
@@ -288,11 +288,11 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	/**
-	 * Returns a copy of the list of properties.
+	 * Returns the list of properties.
 	 *
 	 * @return list of properties
 	 */
-	public List<Property> get_properties () {
+	public unowned List<Property> get_properties () {
 		return properties;
 	}
 

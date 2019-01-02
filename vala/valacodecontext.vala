@@ -285,20 +285,20 @@ public class Vala.CodeContext {
 	}
 
 	/**
-	 * Returns a copy of the list of source files.
+	 * Returns the list of source files.
 	 *
 	 * @return list of source files
 	 */
-	public List<SourceFile> get_source_files () {
+	public unowned List<SourceFile> get_source_files () {
 		return source_files;
 	}
 
 	/**
-	 * Returns a copy of the list of C source files.
+	 * Returns the list of C source files.
 	 *
 	 * @return list of C source files
 	 */
-	public List<string> get_c_source_files () {
+	public unowned List<string> get_c_source_files () {
 		return c_source_files;
 	}
 
@@ -337,11 +337,11 @@ public class Vala.CodeContext {
 	}
 
 	/**
-	 * Returns a copy of the list of used packages.
+	 * Returns the list of used packages.
 	 *
 	 * @return list of used packages
 	 */
-	public List<string> get_packages () {
+	public unowned List<string> get_packages () {
 		return packages;
 	}
 

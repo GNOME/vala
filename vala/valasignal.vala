@@ -92,7 +92,7 @@ public class Vala.Signal : Symbol, Callable {
 		scope.add (param.name, param);
 	}
 
-	public List<Parameter> get_parameters () {
+	public unowned List<Parameter> get_parameters () {
 		return parameters;
 	}
 

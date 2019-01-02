@@ -228,7 +228,7 @@ public class Vala.Method : Subroutine, Callable {
 		scope.add (param.name, param);
 	}
 
-	public List<Parameter> get_parameters () {
+	public unowned List<Parameter> get_parameters () {
 		return parameters;
 	}
 
@@ -451,11 +451,11 @@ public class Vala.Method : Subroutine, Callable {
 	}
 
 	/**
-	 * Returns a copy of the type parameter list.
+	 * Returns the type parameter list.
 	 *
 	 * @return list of type parameters
 	 */
-	public List<TypeParameter> get_type_parameters () {
+	public unowned List<TypeParameter> get_type_parameters () {
 		if (type_parameters != null) {
 			return type_parameters;
 		}
@@ -498,11 +498,11 @@ public class Vala.Method : Subroutine, Callable {
 	}
 
 	/**
-	 * Returns a copy of the list of preconditions of this method.
+	 * Returns the list of preconditions of this method.
 	 *
 	 * @return list of preconditions
 	 */
-	public List<Expression> get_preconditions () {
+	public unowned List<Expression> get_preconditions () {
 		if (preconditions != null) {
 			return preconditions;
 		}
@@ -526,11 +526,11 @@ public class Vala.Method : Subroutine, Callable {
 	}
 
 	/**
-	 * Returns a copy of the list of postconditions of this method.
+	 * Returns the list of postconditions of this method.
 	 *
 	 * @return list of postconditions
 	 */
-	public List<Expression> get_postconditions () {
+	public unowned List<Expression> get_postconditions () {
 		if (postconditions != null) {
 			return postconditions;
 		}
