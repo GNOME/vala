@@ -41,11 +41,11 @@ public class Vala.InitializerList : Expression {
 	}
 
 	/**
-	 * Returns a copy of the expression
+	 * Returns the initalizer expression list
 	 *
 	 * @return expression list
 	 */
-	public List<Expression> get_initializers () {
+	public unowned List<Expression> get_initializers () {
 		return initializers;
 	}
 

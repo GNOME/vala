@@ -92,7 +92,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	/**
 	 * Get the sizes for all dimensions ascending from left to right.
 	 */
-	public List<Expression> get_sizes () {
+	public unowned List<Expression> get_sizes () {
 		return sizes;
 	}
 

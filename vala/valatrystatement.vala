@@ -80,11 +80,11 @@ public class Vala.TryStatement : CodeNode, Statement {
 	}
 
 	/**
-	 * Returns a copy of the list of catch clauses.
+	 * Returns the list of catch clauses.
 	 *
 	 * @return list of catch clauses
 	 */
-	public List<CatchClause> get_catch_clauses () {
+	public unowned List<CatchClause> get_catch_clauses () {
 		return catch_clauses;
 	}
 

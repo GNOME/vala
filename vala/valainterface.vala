@@ -53,11 +53,11 @@ public class Vala.Interface : ObjectTypeSymbol {
 	}
 
 	/**
-	 * Returns a copy of the base type list.
+	 * Returns the base type list.
 	 *
 	 * @return list of base types
 	 */
-	public List<DataType> get_prerequisites () {
+	public unowned List<DataType> get_prerequisites () {
 		return prerequisites;
 	}
 

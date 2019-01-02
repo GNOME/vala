@@ -68,11 +68,11 @@ public class Vala.Namespace : Symbol {
 	}
 
 	/**
-	 * Returns a copy of the list of namespaces.
+	 * Returns the list of namespaces.
 	 *
 	 * @return comment list
 	 */
-	public List<Comment> get_comments () {
+	public unowned List<Comment> get_comments () {
 		return comments;
 	}
 
@@ -141,11 +141,11 @@ public class Vala.Namespace : Symbol {
 	}
 
 	/**
-	 * Returns a copy of the list of namespaces.
+	 * Returns the list of namespaces.
 	 *
 	 * @return namespace list
 	 */
-	public List<Namespace> get_namespaces () {
+	public unowned List<Namespace> get_namespaces () {
 		return namespaces;
 	}
 
@@ -275,83 +275,83 @@ public class Vala.Namespace : Symbol {
 	}
 
 	/**
-	 * Returns a copy of the list of structs.
+	 * Returns the list of structs.
 	 *
 	 * @return struct list
 	 */
-	public List<Struct> get_structs () {
+	public unowned List<Struct> get_structs () {
 		return structs;
 	}
 
 	/**
-	 * Returns a copy of the list of classes.
+	 * Returns the list of classes.
 	 *
 	 * @return class list
 	 */
-	public List<Class> get_classes () {
+	public unowned List<Class> get_classes () {
 		return classes;
 	}
 
 	/**
-	 * Returns a copy of the list of interfaces.
+	 * Returns the list of interfaces.
 	 *
 	 * @return interface list
 	 */
-	public List<Interface> get_interfaces () {
+	public unowned List<Interface> get_interfaces () {
 		return interfaces;
 	}
 
 	/**
-	 * Returns a copy of the list of enums.
+	 * Returns the list of enums.
 	 *
 	 * @return enum list
 	 */
-	public List<Enum> get_enums () {
+	public unowned List<Enum> get_enums () {
 		return enums;
 	}
 
 	/**
-	 * Returns a copy of the list of error domains.
+	 * Returns the list of error domains.
 	 *
 	 * @return error domain list
 	 */
-	public List<ErrorDomain> get_error_domains () {
+	public unowned List<ErrorDomain> get_error_domains () {
 		return error_domains;
 	}
 
 	/**
-	 * Returns a copy of the list of fields.
+	 * Returns the list of fields.
 	 *
 	 * @return field list
 	 */
-	public List<Field> get_fields () {
+	public unowned List<Field> get_fields () {
 		return fields;
 	}
 
 	/**
-	 * Returns a copy of the list of constants.
+	 * Returns the list of constants.
 	 *
 	 * @return constant list
 	 */
-	public List<Constant> get_constants () {
+	public unowned List<Constant> get_constants () {
 		return constants;
 	}
 
 	/**
-	 * Returns a copy of the list of delegates.
+	 * Returns the list of delegates.
 	 *
 	 * @return delegate list
 	 */
-	public List<Delegate> get_delegates () {
+	public unowned List<Delegate> get_delegates () {
 		return delegates;
 	}
 
 	/**
-	 * Returns a copy of the list of methods.
+	 * Returns the list of methods.
 	 *
 	 * @return method list
 	 */
-	public List<Method> get_methods () {
+	public unowned List<Method> get_methods () {
 		return methods;
 	}
 

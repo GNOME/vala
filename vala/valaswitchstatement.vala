@@ -65,11 +65,11 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 	}
 
 	/**
-	 * Returns a copy of the list of switch sections.
+	 * Returns the list of switch sections.
 	 *
 	 * @return section list
 	 */
-	public List<SwitchSection> get_sections () {
+	public unowned List<SwitchSection> get_sections () {
 		return sections;
 	}
 

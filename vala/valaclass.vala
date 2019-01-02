@@ -240,11 +240,11 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 
 	/**
-	 * Returns a copy of the base type list.
+	 * Returns the base type list.
 	 *
 	 * @return list of base types
 	 */
-	public List<DataType> get_base_types () {
+	public unowned List<DataType> get_base_types () {
 		return base_types;
 	}
 

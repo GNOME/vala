@@ -72,20 +72,20 @@ public class Vala.ErrorDomain : TypeSymbol {
 	}
 
 	/**
-	 * Returns a copy of the list of error codes.
+	 * Returns the list of error codes.
 	 *
 	 * @return list of error codes
 	 */
-	public List<ErrorCode> get_codes () {
+	public unowned List<ErrorCode> get_codes () {
 		return codes;
 	}
 
 	/**
-	 * Returns a copy of the list of methods.
+	 * Returns the list of methods.
 	 *
 	 * @return list of methods
 	 */
-	public List<Method> get_methods () {
+	public unowned List<Method> get_methods () {
 		return methods;
 	}
 

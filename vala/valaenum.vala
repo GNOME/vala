@@ -103,29 +103,29 @@ public class Vala.Enum : TypeSymbol {
 	}
 
 	/**
-	 * Returns a copy of the list of enum values.
+	 * Returns the list of enum values.
 	 *
 	 * @return list of enum values
 	 */
-	public List<EnumValue> get_values () {
+	public unowned List<EnumValue> get_values () {
 		return values;
 	}
 
 	/**
-	 * Returns a copy of the list of methods.
+	 * Returns the list of methods.
 	 *
 	 * @return list of methods
 	 */
-	public List<Method> get_methods () {
+	public unowned List<Method> get_methods () {
 		return methods;
 	}
 
 	/**
-	 * Returns a copy of the list of constants.
+	 * Returns the list of constants.
 	 *
 	 * @return list of constants
 	 */
-	public List<Constant> get_constants () {
+	public unowned List<Constant> get_constants () {
 		return constants;
 	}
 

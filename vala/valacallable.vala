@@ -41,5 +41,5 @@ public interface Vala.Callable : CodeNode {
 	/**
 	 * Returns the parameter list.
 	 */
-	public abstract List<Parameter> get_parameters ();
+	public abstract unowned List<Parameter> get_parameters ();
 }

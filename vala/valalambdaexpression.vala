@@ -82,11 +82,11 @@ public class Vala.LambdaExpression : Expression {
 	}
 
 	/**
-	 * Returns copy of parameter list.
+	 * Returns the parameter list.
 	 *
 	 * @return parameter list
 	 */
-	public List<Parameter> get_parameters () {
+	public unowned List<Parameter> get_parameters () {
 		return parameters;
 	}
 

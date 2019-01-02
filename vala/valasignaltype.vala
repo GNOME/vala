@@ -44,7 +44,7 @@ public class Vala.SignalType : CallableType {
 		return signal_symbol.return_type;
 	}
 
-	public override List<Parameter>? get_parameters () {
+	public override unowned List<Parameter>? get_parameters () {
 		return signal_symbol.get_parameters ();
 	}
 

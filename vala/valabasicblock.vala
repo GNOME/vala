@@ -56,7 +56,7 @@ public class Vala.BasicBlock {
 		nodes.add (node);
 	}
 
-	public List<CodeNode> get_nodes () {
+	public unowned List<CodeNode> get_nodes () {
 		return nodes;
 	}
 
@@ -69,11 +69,11 @@ public class Vala.BasicBlock {
 		}
 	}
 
-	public List<weak BasicBlock> get_predecessors () {
+	public unowned List<weak BasicBlock> get_predecessors () {
 		return predecessors;
 	}
 
-	public List<weak BasicBlock> get_successors () {
+	public unowned List<weak BasicBlock> get_successors () {
 		return successors;
 	}
 
@@ -82,7 +82,7 @@ public class Vala.BasicBlock {
 		block.parent = this;
 	}
 
-	public List<weak BasicBlock> get_children () {
+	public unowned List<weak BasicBlock> get_children () {
 		return children;
 	}
 
@@ -90,7 +90,7 @@ public class Vala.BasicBlock {
 		df.add (block);
 	}
 
-	public Set<weak BasicBlock> get_dominator_frontier () {
+	public unowned Set<weak BasicBlock> get_dominator_frontier () {
 		return df;
 	}
 
@@ -98,7 +98,7 @@ public class Vala.BasicBlock {
 		phi_functions.add (phi);
 	}
 
-	public Set<PhiFunction> get_phi_functions () {
+	public unowned Set<PhiFunction> get_phi_functions () {
 		return phi_functions;
 	}
 }

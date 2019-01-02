@@ -85,11 +85,11 @@ public class Vala.ObjectCreationExpression : Expression {
 	}
 
 	/**
-	 * Returns a copy of the argument list.
+	 * Returns the argument list.
 	 *
 	 * @return argument list
 	 */
-	public List<Expression> get_argument_list () {
+	public unowned List<Expression> get_argument_list () {
 		return argument_list;
 	}
 
@@ -108,7 +108,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 *
 	 * @return member initializer list
 	 */
-	public List<MemberInitializer> get_object_initializer () {
+	public unowned List<MemberInitializer> get_object_initializer () {
 		return object_initializer;
 	}
 

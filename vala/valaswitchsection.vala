@@ -53,11 +53,11 @@ public class Vala.SwitchSection : Block {
 	}
 
 	/**
-	 * Returns a copy of the list of switch labels.
+	 * Returns the list of switch labels.
 	 *
 	 * @return switch label list
 	 */
-	public List<SwitchLabel> get_labels () {
+	public unowned List<SwitchLabel> get_labels () {
 		return labels;
 	}
 

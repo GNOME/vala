@@ -107,11 +107,11 @@ public class Vala.MemberAccess : Expression {
 	}
 
 	/**
-	 * Returns a copy of the list of generic type arguments.
+	 * Returns the list of generic type arguments.
 	 *
 	 * @return type argument list
 	 */
-	public List<DataType> get_type_arguments () {
+	public unowned List<DataType> get_type_arguments () {
 		return type_argument_list;
 	}
 

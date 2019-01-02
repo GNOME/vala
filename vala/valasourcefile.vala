@@ -163,11 +163,11 @@ public class Vala.SourceFile {
 	}
 
 	/**
-	 * Returns a copy of the list of header comments.
+	 * Returns the list of header comments.
 	 *
 	 * @return list of comments
 	 */
-	public List<Comment> get_comments () {
+	public unowned List<Comment> get_comments () {
 		return comments;
 	}
 
@@ -201,11 +201,11 @@ public class Vala.SourceFile {
 	}
 
 	/**
-	 * Returns a copy of the list of code nodes.
+	 * Returns the list of code nodes.
 	 *
 	 * @return code node list
 	 */
-	public List<CodeNode> get_nodes () {
+	public unowned List<CodeNode> get_nodes () {
 		return nodes;
 	}
 

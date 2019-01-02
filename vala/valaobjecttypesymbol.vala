@@ -56,7 +56,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	 *
 	 * @return list of members
 	 */
-	public List<Symbol> get_members () {
+	public unowned List<Symbol> get_members () {
 		return members;
 	}
 
@@ -65,7 +65,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	 *
 	 * @return list of fields
 	 */
-	public List<Field> get_fields () {
+	public unowned List<Field> get_fields () {
 		return fields;
 	}
 
@@ -74,7 +74,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	 *
 	 * @return list of methods
 	 */
-	public List<Method> get_methods () {
+	public unowned List<Method> get_methods () {
 		return methods;
 	}
 
@@ -83,7 +83,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	 *
 	 * @return list of properties
 	 */
-	public List<Property> get_properties () {
+	public unowned List<Property> get_properties () {
 		return properties;
 	}
 
@@ -92,7 +92,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	 *
 	 * @return list of signals
 	 */
-	public List<Signal> get_signals () {
+	public unowned List<Signal> get_signals () {
 		return signals;
 	}
 
@@ -152,7 +152,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	 *
 	 * @return list of classes
 	 */
-	public List<Class> get_classes () {
+	public unowned List<Class> get_classes () {
 		return classes;
 	}
 
@@ -161,7 +161,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	 *
 	 * @return list of structs
 	 */
-	public List<Struct> get_structs () {
+	public unowned List<Struct> get_structs () {
 		return structs;
 	}
 
@@ -170,7 +170,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	 *
 	 * @return list of enums
 	 */
-	public List<Enum> get_enums () {
+	public unowned List<Enum> get_enums () {
 		return enums;
 	}
 
@@ -179,7 +179,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	 *
 	 * @return list of delegates
 	 */
-	public List<Delegate> get_delegates () {
+	public unowned List<Delegate> get_delegates () {
 		return delegates;
 	}
 
@@ -238,7 +238,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	 *
 	 * @return list of constants
 	 */
-	public List<Constant> get_constants () {
+	public unowned List<Constant> get_constants () {
 		return constants;
 	}
 
@@ -253,11 +253,11 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	}
 
 	/**
-	 * Returns a copy of the type parameter list.
+	 * Returns the type parameter list.
 	 *
 	 * @return list of type parameters
 	 */
-	public List<TypeParameter> get_type_parameters () {
+	public unowned List<TypeParameter> get_type_parameters () {
 		return type_parameters;
 	}
 
