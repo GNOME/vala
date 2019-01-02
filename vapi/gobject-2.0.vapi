@@ -541,6 +541,7 @@ namespace GLib {
 		public static void emit_by_name (void* instance, string detailed_signal, ...);
 		public static unowned GLib.SignalInvocationHint? get_invocation_hint (void* instance);
 		public static bool has_handler_pending (void* instance, uint signal_id, GLib.Quark detail, bool may_be_blocked);
+		[CCode (array_length_type = "guint")]
 		public static uint[] list_ids (GLib.Type itype);
 		public static uint lookup (string name, GLib.Type itype);
 		public static unowned string name (uint signal_id);
