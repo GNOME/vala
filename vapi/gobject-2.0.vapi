@@ -56,7 +56,7 @@ namespace GLib {
 		public static unowned GLib.SignalInvocationHint? get_invocation_hint (void* instance);
 		[CCode (cheader_filename = "glib-object.h")]
 		public static bool has_handler_pending (void* instance, uint signal_id, GLib.Quark detail, bool may_be_blocked);
-		[CCode (cheader_filename = "glib-object.h")]
+		[CCode (array_length_type = "guint", cheader_filename = "glib-object.h")]
 		public static uint[] list_ids (GLib.Type itype);
 		[CCode (cheader_filename = "glib-object.h")]
 		public static uint lookup (string name, GLib.Type itype);
@@ -565,6 +565,7 @@ namespace GLib {
 		public weak string name;
 		public GLib.Value value;
 	}
+	[CCode (cheader_filename = "glib-object.h", has_type_id = false)]
 	public struct SignalInvocationHint {
 		public uint signal_id;
 		public GLib.Quark detail;
