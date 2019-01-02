@@ -4315,6 +4315,7 @@ namespace GLib {
 		public bool has_group (string uri, string group) throws BookmarkFileError;
 		public bool has_application (string uri, string name) throws BookmarkFileError;
 		public int get_size ();
+		[CCode (array_length_type = "gsize")]
 		public string[] get_uris ();
 		public string get_title (string uri) throws BookmarkFileError;
 		public string get_description (string uri) throws BookmarkFileError;
@@ -4324,7 +4325,9 @@ namespace GLib {
 		public time_t get_added (string uri) throws BookmarkFileError;
 		public time_t get_modified (string uri) throws BookmarkFileError;
 		public time_t get_visited (string uri) throws BookmarkFileError;
+		[CCode (array_length_type = "gsize")]
 		public string[] get_groups (string uri) throws BookmarkFileError;
+		[CCode (array_length_type = "gsize")]
 		public string[] get_applications (string uri) throws BookmarkFileError;
 		public bool get_app_info (string uri, string name, out string exec, out uint count, out time_t stamp) throws BookmarkFileError;
 		public void set_title (string uri, string title);
@@ -4827,6 +4830,7 @@ namespace GLib {
 		[Version (since = "2.14")]
 		public List<unowned K> get_keys ();
 #if VALA_0_26
+		[CCode (array_length_type = "guint")]
 		[Version (since = "2.40")]
 		public (unowned K)[] get_keys_as_array ();
 #endif
@@ -5113,6 +5117,7 @@ namespace GLib {
 		public size_t get_size ();
 		public uint hash ();
 		public int compare (GLib.Bytes bytes2);
+		[CCode (array_length_type = "gsize")]
 		public static uint8[] unref_to_data (owned GLib.Bytes bytes);
 		public static GLib.ByteArray unref_to_array (owned GLib.Bytes bytes);
 
