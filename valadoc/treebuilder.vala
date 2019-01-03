@@ -489,32 +489,15 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 			context.directory = context.basedir;
 		}
 
+		context.set_target_profile (settings.profile, true);
 
-		// add default packages:
-		if (settings.profile == "gobject-2.0" || settings.profile == "gobject" || settings.profile == null) {
-			context.profile = Vala.Profile.GOBJECT;
-			context.add_define ("GOBJECT");
+		if (settings.target_glib != null) {
+			context.set_target_glib_version (settings.target_glib);
 		}
-
 
 		if (settings.defines != null) {
 			foreach (string define in settings.defines) {
 				context.add_define (define);
-			}
-		}
-
-		if (context.profile == Vala.Profile.GOBJECT) {
-			if (settings.target_glib != null) {
-				context.set_target_glib_version (settings.target_glib);
-			}
-
-			// default packages
-			if (!this.add_package (context, "glib-2.0")) { //
-				Vala.Report.error (null, "glib-2.0 not found in specified Vala API directories");
-			}
-
-			if (!this.add_package (context, "gobject-2.0")) { //
-				Vala.Report.error (null, "gobject-2.0 not found in specified Vala API directories");
 			}
 		}
 

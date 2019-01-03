@@ -91,9 +91,9 @@ public class Valadoc.Settings : Object {
 	public bool experimental_non_null;
 
 	/**
-	 * Use the given profile (dova, gobject, posix, ...) instead of the defaul
+	 * Use the given profile (gobject, posix, ...) instead of the default
 	 */
-	public string? profile;
+	public Vala.Profile profile;
 
 	/**
 	 * Base source directory.
