@@ -22,5 +22,6 @@
 
 public enum Vala.Profile {
 	GOBJECT,
-	POSIX
+	LIBC,
+	POSIX = LIBC
 }

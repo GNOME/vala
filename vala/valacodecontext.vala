@@ -561,7 +561,7 @@ public class Vala.CodeContext {
 				add_external_package ("glib-2.0");
 				add_external_package ("gobject-2.0");
 			}
-		} else if (profile == "posix") {
+		} else if (profile == "posix" || profile == "libc") {
 			this.profile = Profile.POSIX;
 			add_define ("POSIX");
 
