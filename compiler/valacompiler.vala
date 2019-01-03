@@ -272,18 +272,7 @@ class Vala.Compiler {
 		if (ccode_only && save_temps) {
 			Report.warning (null, "--save-temps has no effect when -C or --ccode is set");
 		}
-		if (profile == "posix") {
-			context.profile = Profile.POSIX;
-			context.add_define ("POSIX");
-		} else if (profile == "gobject-2.0" || profile == "gobject" || profile == null) {
-			// default profile
-			context.profile = Profile.GOBJECT;
-			context.add_define ("GOBJECT");
-		} else {
-			Report.error (null, "Unknown profile %s".printf (profile));
-		}
 		nostdpkg |= fast_vapi_filename != null;
-		context.nostdpkg = nostdpkg;
 
 		context.entry_point_name = entry_point;
 
@@ -294,26 +283,15 @@ class Vala.Compiler {
 		}
 		context.pkg_config_command = pkg_config_command;
 
+		context.set_target_profile (profile, !nostdpkg);
+
+		if (target_glib != null) {
+			context.set_target_glib_version (target_glib);
+		}
+
 		if (defines != null) {
 			foreach (string define in defines) {
 				context.add_define (define);
-			}
-		}
-
-		if (context.profile == Profile.POSIX) {
-			if (!nostdpkg) {
-				/* default package */
-				context.add_external_package ("posix");
-			}
-		} else if (context.profile == Profile.GOBJECT) {
-			if (target_glib != null) {
-				context.set_target_glib_version (target_glib);
-			}
-
-			if (!nostdpkg) {
-				/* default packages */
-				context.add_external_package ("glib-2.0");
-				context.add_external_package ("gobject-2.0");
 			}
 		}
 
