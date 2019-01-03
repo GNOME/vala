@@ -87,7 +87,7 @@ class Vala.Compiler {
 	static string[] defines;
 	static bool quiet_mode;
 	static bool verbose_mode;
-	static string profile;
+	static Profile profile;
 	static bool nostdpkg;
 	static bool enable_version_header;
 	static bool disable_version_header;
@@ -154,7 +154,7 @@ class Vala.Compiler {
 		{ "pkg-config", 0, 0, OptionArg.STRING, ref pkg_config_command, "Use COMMAND as pkg-config command", "COMMAND" },
 		{ "dump-tree", 0, 0, OptionArg.FILENAME, ref dump_tree, "Write code tree to FILE", "FILE" },
 		{ "save-temps", 0, 0, OptionArg.NONE, ref save_temps, "Keep temporary files", null },
-		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
+		{ "profile", 0, OptionFlags.OPTIONAL_ARG, OptionArg.CALLBACK, (void*) option_parse_profile, "Use the given profile instead of the default, options are 'gobject' or 'posix'", "PROFILE" },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
 		{ "verbose", 'v', 0, OptionArg.NONE, ref verbose_mode, "Print additional messages to the console", null },
 		{ "no-color", 0, 0, OptionArg.NONE, ref disable_colored_output, "Disable colored output, alias for --color=never", null },
@@ -177,6 +177,17 @@ class Vala.Compiler {
 			case null:
 			case "always": colored_output = Report.Colored.ALWAYS; break;
 			default: throw new OptionError.FAILED ("Invalid --color argument '%s'", val);
+		}
+		return true;
+	}
+
+	static bool option_parse_profile (string option_name, string? val, void* data) throws OptionError {
+		switch (val) {
+			case null:
+			case "gobject-2.0":
+			case "gobject": profile = Profile.GOBJECT; break;
+			case "posix": profile = Profile.POSIX; break;
+			default: throw new OptionError.FAILED ("Invalid --profile argument '%s'", val);
 		}
 		return true;
 	}
@@ -283,18 +294,7 @@ class Vala.Compiler {
 		if (ccode_only && save_temps) {
 			Report.warning (null, "--save-temps has no effect when -C or --ccode is set");
 		}
-		if (profile == "posix") {
-			context.profile = Profile.POSIX;
-			context.add_define ("POSIX");
-		} else if (profile == "gobject-2.0" || profile == "gobject" || profile == null) {
-			// default profile
-			context.profile = Profile.GOBJECT;
-			context.add_define ("GOBJECT");
-		} else {
-			Report.error (null, "Unknown profile %s".printf (profile));
-		}
 		nostdpkg |= fast_vapi_filename != null;
-		context.nostdpkg = nostdpkg;
 
 		context.entry_point_name = entry_point;
 
@@ -305,26 +305,15 @@ class Vala.Compiler {
 		}
 		context.pkg_config_command = pkg_config_command;
 
+		context.set_target_profile (profile, !nostdpkg);
+
+		if (target_glib != null) {
+			context.set_target_glib_version (target_glib);
+		}
+
 		if (defines != null) {
 			foreach (string define in defines) {
 				context.add_define (define);
-			}
-		}
-
-		if (context.profile == Profile.POSIX) {
-			if (!nostdpkg) {
-				/* default package */
-				context.add_external_package ("posix");
-			}
-		} else if (context.profile == Profile.GOBJECT) {
-			if (target_glib != null) {
-				context.set_target_glib_version (target_glib);
-			}
-
-			if (!nostdpkg) {
-				/* default packages */
-				context.add_external_package ("glib-2.0");
-				context.add_external_package ("gobject-2.0");
 			}
 		}
 

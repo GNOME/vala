@@ -163,13 +163,11 @@ public class Vala.CodeContext {
 	 */
 	public bool save_temps { get; set; }
 
-	public Profile profile { get; set; }
+	public Profile profile { get; private set; }
 
 	public bool verbose_mode { get; set; }
 
 	public bool version_header { get; set; }
-
-	public bool nostdpkg { get; set; }
 
 	public bool use_fast_vapi { get; set; }
 
@@ -571,6 +569,40 @@ public class Vala.CodeContext {
 
 		for (int i = 16; i <= target_glib_minor; i += 2) {
 			defines.add ("GLIB_2_%d".printf (i));
+		}
+	}
+
+	/**
+	 * Set the target profile for code generation.
+	 *
+	 * This must be called once.
+	 *
+	 * @param profile the profile to use
+	 * @param include_stdpkg whether to include profile-specific default packages
+	 */
+	public void set_target_profile (Profile profile, bool include_stdpkg = true) {
+		switch (profile) {
+		default:
+		case Profile.GOBJECT:
+			// default profile
+			this.profile = profile;
+			add_define ("GOBJECT");
+
+			if (include_stdpkg) {
+				/* default packages */
+				add_external_package ("glib-2.0");
+				add_external_package ("gobject-2.0");
+			}
+			break;
+		case Profile.POSIX:
+			this.profile = profile;
+			add_define ("POSIX");
+
+			if (include_stdpkg) {
+				/* default package */
+				add_external_package ("posix");
+			}
+			break;
 		}
 	}
 
