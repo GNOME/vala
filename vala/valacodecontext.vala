@@ -594,8 +594,10 @@ public class Vala.CodeContext {
 				add_external_package ("gobject-2.0");
 			}
 			break;
+		case Profile.LIBC:
 		case Profile.POSIX:
 			this.profile = profile;
+			add_define ("LIBC");
 			add_define ("POSIX");
 
 			if (include_stdpkg) {
