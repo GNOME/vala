@@ -3571,8 +3571,9 @@ namespace GLib {
 		public virtual async GLib.FileOutputStream replace_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool replace_contents ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, out string new_etag, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool replace_contents_async ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string new_etag) throws GLib.Error;
+		[CCode (finish_name = "g_file_replace_contents_finish")]
 		[Version (since = "2.40")]
-		public async void replace_contents_bytes_async (GLib.Bytes contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null);
+		public async bool replace_contents_bytes_async (GLib.Bytes contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string new_etag) throws GLib.Error;
 		[Version (since = "2.22")]
 		public abstract GLib.FileIOStream replace_readwrite (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
