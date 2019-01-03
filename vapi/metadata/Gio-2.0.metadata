@@ -132,6 +132,7 @@ File
   .load_contents.cancellable#parameter default=()
   .monitor_dir* throws="GLib.IOError"
   .monitor_file throws="GLib.IOError"
+  .replace_contents_bytes_async finish_name="g_file_replace_contents_finish"
 FileInfo
   .list_attributes nullable
 FileEnumerator
