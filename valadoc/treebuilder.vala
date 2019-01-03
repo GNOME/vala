@@ -368,28 +368,16 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			context.directory = context.basedir;
 		}
 
+		context.set_target_profile (settings.profile, true);
 
-		// add default packages:
-		if (settings.profile == "gobject-2.0" || settings.profile == "gobject" || settings.profile == null) {
-			context.profile = Vala.Profile.GOBJECT;
-			context.add_define ("GOBJECT");
+		if (settings.target_glib != null) {
+			context.set_target_glib_version (settings.target_glib);
 		}
-
 
 		if (settings.defines != null) {
 			foreach (string define in settings.defines) {
 				context.add_define (define);
 			}
-		}
-
-		if (context.profile == Vala.Profile.GOBJECT) {
-			if (settings.target_glib != null) {
-				context.set_target_glib_version (settings.target_glib);
-			}
-
-			// default packages
-			context.add_external_package ("glib-2.0");
-			context.add_external_package ("gobject-2.0");
 		}
 
 		// add user defined files:
