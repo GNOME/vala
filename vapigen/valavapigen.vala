@@ -73,20 +73,13 @@ class Vala.VAPIGen {
 	
 	private int run () {
 		context = new CodeContext ();
-		context.profile = Profile.GOBJECT;
 		context.vapi_directories = vapi_directories;
 		context.gir_directories = gir_directories;
 		context.metadata_directories = metadata_directories;
 		context.report.enable_warnings = !disable_warnings;
 		context.report.set_verbose_errors (!quiet_mode);
 		CodeContext.push (context);
-		context.nostdpkg = nostdpkg;
-
-		if (!nostdpkg) {
-			/* default package */
-			context.add_external_package ("glib-2.0");
-			context.add_external_package ("gobject-2.0");
-		}
+		context.set_target_profile ("gobject", !nostdpkg);
 
 		if (context.report.get_errors () > 0) {
 			return quit ();
