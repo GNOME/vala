@@ -91,17 +91,21 @@ void test_int () {
 	assert (s == "42");
 
 	unowned string unparsed;
+	s = "%lim".printf (long.MIN);
 	long l;
-	long.try_parse ("%lim".printf (long.MIN), out l, out unparsed);
+	long.try_parse (s, out l, out unparsed);
 	assert (l == long.MIN);
 	assert (unparsed == "m");
-	assert (!long.try_parse ("%lum".printf (ulong.MAX), out l));
+	s = "%lum".printf (ulong.MAX);
+	assert (!long.try_parse (s, out l));
 
+	s = "%lum".printf (ulong.MAX);
 	ulong ul;
-	ulong.try_parse ("%lum".printf (ulong.MAX), out ul, out unparsed);
+	ulong.try_parse (s, out ul, out unparsed);
 	assert (ul == ulong.MAX);
 	assert (unparsed == "m");
-	assert (!ulong.try_parse ("%lim".printf (long.MIN), out ul));
+	s = "%lim".printf (long.MIN);
+	assert (!ulong.try_parse (s, out ul));
 
 	int64 i64;
 	int64.try_parse ("-4711inch", out i64, out unparsed);
