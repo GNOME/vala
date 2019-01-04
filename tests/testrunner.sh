@@ -35,12 +35,14 @@ VALAFLAGS="$VALAFLAGS \
 	--save-temps \
 	--cc $CC \
 	-X -g \
-	-X -O0 \
+	-X -O3 \
+	-X -flto \
 	-X -pipe \
 	-X -lm \
 	-X -DGETTEXT_PACKAGE=\\\"valac\\\""
 VAPIGEN=$topbuilddir/vapigen/vapigen$EXEEXT
 VAPIGENFLAGS="--vapidir $vapidir"
+VALGRIND="G_SLICE=always-malloc valgrind --errors-for-leak-kinds=definite --show-leak-kinds=definite --leak-check=full --track-origins=yes --malloc-fill=0x00 --free-fill=0xFF"
 
 # Incorporate the TEST_CFLAGS.
 for cflag in ${TEST_CFLAGS}; do
@@ -127,10 +129,10 @@ function sourceend() {
 			echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
 			if [ $DBUSTEST -eq 1 ]; then
 				if [ $ISSERVER -eq 1 ]; then
-					echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
+					echo "G_DEBUG=fatal-warnings $VALGRIND ./$ns$EXEEXT" >> check
 				fi
 			else
-				echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
+				echo "G_DEBUG=fatal-warnings $VALGRIND ./$ns$EXEEXT" >> check
 			fi
 		fi
 	fi
@@ -165,7 +167,7 @@ for testfile in "$@"; do
 
 		PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
 		echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
-		echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
+		echo "G_DEBUG=fatal-warnings $VALGRIND ./$ns$EXEEXT" >> check
 		;;
 	*.test)
 		PART=0
