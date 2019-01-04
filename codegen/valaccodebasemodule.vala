@@ -4972,10 +4972,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						generate_class_struct_declaration (cl, cfile);
 					}
 				} else if (init.symbol_reference is Property) {
-					var inst_ma = new MemberAccess.simple ("new");
-					inst_ma.value_type = expr.type_reference;
-					set_cvalue (inst_ma, instance);
-					store_property ((Property) init.symbol_reference, inst_ma, init.initializer.target_value);
+					var p = (Property) init.symbol_reference;
+					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) p.parent_symbol);
+					var typed_inst = transform_value (new GLibValue (expr.type_reference, instance), instance_target_type, init);
+					var inst_ma = new MemberAccess.simple ("fake");
+					inst_ma.target_value = typed_inst;
+					store_property (p, inst_ma, init.initializer.target_value);
 					// FIXME Do not ref/copy in the first place
 					if (requires_destroy (init.initializer.target_value.value_type)) {
 						ccode.add_expression (destroy_value (init.initializer.target_value));
