@@ -274,6 +274,8 @@ Container
 // Backwards compatibility
 AccelGroup
   .find type="Gtk.AccelKey*"
+CellAccessibleParent
+  .get_cell_area return_void
 CssProvider
   .load_from_data name="load_from_buffer"
 EntryBuffer

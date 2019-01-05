@@ -6719,7 +6719,7 @@ namespace Gtk {
 		public weak string signal_name;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_boolean_cell_accessible_get_type ()")]
-	public class BooleanCellAccessible : Gtk.RendererCellAccessible, Atk.Action, Atk.Component {
+	public class BooleanCellAccessible : Gtk.RendererCellAccessible, Atk.Action, Atk.Component, Atk.TableCell {
 		[CCode (has_construct_function = false)]
 		protected BooleanCellAccessible ();
 	}
@@ -6865,7 +6865,7 @@ namespace Gtk {
 		public virtual signal void prev_year ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_cell_accessible_get_type ()")]
-	public class CellAccessible : Gtk.Accessible, Atk.Action, Atk.Component {
+	public class CellAccessible : Gtk.Accessible, Atk.Action, Atk.Component, Atk.TableCell {
 		[CCode (has_construct_function = false)]
 		protected CellAccessible ();
 		[NoWrapper]
@@ -7483,7 +7483,7 @@ namespace Gtk {
 		public virtual int remove_gtk (Gtk.Widget widget, void* data);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_container_cell_accessible_get_type ()")]
-	public class ContainerCellAccessible : Gtk.CellAccessible, Atk.Action, Atk.Component {
+	public class ContainerCellAccessible : Gtk.CellAccessible, Atk.Action, Atk.Component, Atk.TableCell {
 		[CCode (has_construct_function = false)]
 		public ContainerCellAccessible ();
 		public void add_child (Gtk.CellAccessible child);
@@ -8563,7 +8563,7 @@ namespace Gtk {
 		protected ImageAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_image_cell_accessible_get_type ()")]
-	public class ImageCellAccessible : Gtk.RendererCellAccessible, Atk.Action, Atk.Component, Atk.Image {
+	public class ImageCellAccessible : Gtk.RendererCellAccessible, Atk.Action, Atk.Component, Atk.Image, Atk.TableCell {
 		[CCode (has_construct_function = false)]
 		protected ImageCellAccessible ();
 	}
@@ -9897,7 +9897,7 @@ namespace Gtk {
 		public virtual signal void changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_renderer_cell_accessible_get_type ()")]
-	public class RendererCellAccessible : Gtk.CellAccessible, Atk.Action, Atk.Component {
+	public class RendererCellAccessible : Gtk.CellAccessible, Atk.Action, Atk.Component, Atk.TableCell {
 		[CCode (has_construct_function = false, type = "AtkObject*")]
 		public RendererCellAccessible (Gtk.CellRenderer renderer);
 		[NoAccessorMethod]
@@ -10712,7 +10712,7 @@ namespace Gtk {
 		public virtual signal void remove_tag (Gtk.TextTag tag, Gtk.TextIter start, Gtk.TextIter end);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_text_cell_accessible_get_type ()")]
-	public class TextCellAccessible : Gtk.RendererCellAccessible, Atk.Action, Atk.Component, Atk.Text {
+	public class TextCellAccessible : Gtk.RendererCellAccessible, Atk.Action, Atk.Component, Atk.TableCell, Atk.Text {
 		[CCode (has_construct_function = false)]
 		protected TextCellAccessible ();
 	}
@@ -12115,9 +12115,9 @@ namespace Gtk {
 		public abstract void activate (Gtk.CellAccessible cell);
 		public abstract void edit (Gtk.CellAccessible cell);
 		public abstract void expand_collapse (Gtk.CellAccessible cell);
-		public abstract void get_cell_area (Gtk.CellAccessible cell, Gdk.Rectangle cell_rect);
-		public abstract void get_cell_extents (Gtk.CellAccessible cell, int x, int y, int width, int height, Atk.CoordType coord_type);
-		public abstract void get_cell_position (Gtk.CellAccessible cell, int row, int column);
+		public abstract void get_cell_area (Gtk.CellAccessible cell, out Gdk.Rectangle cell_rect);
+		public abstract void get_cell_extents (Gtk.CellAccessible cell, out int x, out int y, out int width, out int height, Atk.CoordType coord_type);
+		public abstract void get_cell_position (Gtk.CellAccessible cell, out int row, out int column);
 		public abstract int get_child_index (Gtk.CellAccessible cell);
 		public abstract GLib.GenericArray<Atk.Object> get_column_header_cells (Gtk.CellAccessible cell);
 		public abstract Gtk.CellRendererState get_renderer_state (Gtk.CellAccessible cell);
