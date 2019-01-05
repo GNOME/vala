@@ -438,17 +438,23 @@ namespace GI {
 	[CCode (cheader_filename = "girepository.h", has_target = false)]
 	public delegate void ObjectInfoUnrefFunction (void* object);
 	[CCode (cheader_filename = "girepository.h", cname = "GI_MAJOR_VERSION")]
+	[Version (since = "1.60")]
 	public const int MAJOR_VERSION;
 	[CCode (cheader_filename = "girepository.h", cname = "GI_MICRO_VERSION")]
+	[Version (since = "1.60")]
 	public const int MICRO_VERSION;
 	[CCode (cheader_filename = "girepository.h", cname = "GI_MINOR_VERSION")]
+	[Version (since = "1.60")]
 	public const int MINOR_VERSION;
 	[CCode (cheader_filename = "girepository.h", cname = "GI_TYPE_TAG_N_TYPES")]
 	public const int TYPE_TAG_N_TYPES;
 	[CCode (cheader_filename = "girepository.h", cname = "gi_get_major_version")]
+	[Version (since = "1.60")]
 	public static uint get_major_version ();
 	[CCode (cheader_filename = "girepository.h", cname = "gi_get_micro_version")]
+	[Version (since = "1.60")]
 	public static uint get_micro_version ();
 	[CCode (cheader_filename = "girepository.h", cname = "gi_get_minor_version")]
+	[Version (since = "1.60")]
 	public static uint get_minor_version ();
 }

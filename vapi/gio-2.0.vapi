@@ -45,6 +45,9 @@ namespace GLib {
 		public static string? get_generic_icon_name (string type);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.Icon get_icon (string type);
+		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gio/gio.h")]
+		[Version (since = "2.60")]
+		public static unowned string[] get_mime_dirs ();
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static string? get_mime_type (string type);
 		[CCode (cheader_filename = "gio/gio.h")]
@@ -64,6 +67,9 @@ namespace GLib {
 		public static bool is_unknown (string type);
 		[CCode (cheader_filename = "gio/gio.h", cname = "g_content_types_get_registered")]
 		public static GLib.List<string> list_registered ();
+		[CCode (cheader_filename = "gio/gio.h")]
+		[Version (since = "2.60")]
+		public static void set_mime_dirs ([CCode (array_length = false, array_null_terminated = true)] string[]? dirs);
 	}
 	namespace DBus {
 		[CCode (cheader_filename = "gio/gio.h")]
@@ -664,6 +670,8 @@ namespace GLib {
 		public DBusConnection.for_address_sync (string address, GLib.DBusConnectionFlags flags, GLib.DBusAuthObserver? observer = null, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.DBusCapabilityFlags get_capabilities ();
 		public bool get_exit_on_close ();
+		[Version (since = "2.60")]
+		public GLib.DBusConnectionFlags get_flags ();
 		public unowned string get_guid ();
 		[Version (since = "2.34")]
 		public uint32 get_last_serial ();
@@ -707,8 +715,7 @@ namespace GLib {
 		[NoAccessorMethod]
 		public bool closed { get; }
 		public bool exit_on_close { get; set; }
-		[NoAccessorMethod]
-		public GLib.DBusConnectionFlags flags { construct; }
+		public GLib.DBusConnectionFlags flags { get; construct; }
 		public string guid { get; construct; }
 		public GLib.IOStream stream { get; construct; }
 		public string unique_name { get; }
@@ -2807,6 +2814,8 @@ namespace GLib {
 		public bool get_completed ();
 		[Version (since = "2.36")]
 		public unowned GLib.MainContext get_context ();
+		[Version (since = "2.60")]
+		public unowned string? get_name ();
 		[Version (since = "2.36")]
 		public int get_priority ();
 		[Version (since = "2.36")]
@@ -2852,6 +2861,8 @@ namespace GLib {
 		public void run_in_thread_sync (GLib.TaskThreadFunc task_func);
 		[Version (since = "2.36")]
 		public void set_check_cancellable (bool check_cancellable);
+		[Version (since = "2.60")]
+		public void set_name (string? name);
 		[Version (since = "2.36")]
 		public void set_priority (int priority);
 		[Version (since = "2.36")]
@@ -2960,6 +2971,8 @@ namespace GLib {
 		public unowned GLib.TlsDatabase get_database ();
 		[Version (since = "2.30")]
 		public unowned GLib.TlsInteraction get_interaction ();
+		[Version (since = "2.60")]
+		public unowned string? get_negotiated_protocol ();
 		public unowned GLib.TlsCertificate get_peer_certificate ();
 		public GLib.TlsCertificateFlags get_peer_certificate_errors ();
 		[Version (deprecated = true, deprecated_since = "2.60.", since = "2.28")]
@@ -2969,6 +2982,8 @@ namespace GLib {
 		public bool get_use_system_certdb ();
 		public virtual bool handshake (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async bool handshake_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.60")]
+		public void set_advertised_protocols ([CCode (array_length = false, array_null_terminated = true)] string[]? protocols);
 		public void set_certificate (GLib.TlsCertificate certificate);
 		[Version (since = "2.30")]
 		public void set_database (GLib.TlsDatabase database);
@@ -2979,6 +2994,10 @@ namespace GLib {
 		public void set_require_close_notify (bool require_close_notify);
 		[Version (deprecated = true, deprecated_since = "2.30")]
 		public void set_use_system_certdb (bool use_system_certdb);
+		[CCode (array_length = false, array_null_terminated = true)]
+		[NoAccessorMethod]
+		[Version (since = "2.60")]
+		public string[] advertised_protocols { owned get; set; }
 		[NoAccessorMethod]
 		public GLib.IOStream base_io_stream { owned get; construct; }
 		public GLib.TlsCertificate certificate { get; set; }
@@ -2986,6 +3005,8 @@ namespace GLib {
 		public GLib.TlsDatabase database { get; set; }
 		[Version (since = "2.30")]
 		public GLib.TlsInteraction interaction { get; set; }
+		[Version (since = "2.60")]
+		public string negotiated_protocol { get; }
 		public GLib.TlsCertificate peer_certificate { get; }
 		public GLib.TlsCertificateFlags peer_certificate_errors { get; }
 		public GLib.TlsRehandshakeMode rehandshake_mode { get; set construct; }
@@ -3440,12 +3461,16 @@ namespace GLib {
 		public unowned GLib.TlsCertificate get_certificate ();
 		public unowned GLib.TlsDatabase get_database ();
 		public unowned GLib.TlsInteraction get_interaction ();
+		[Version (since = "2.60")]
+		public abstract unowned string? get_negotiated_protocol ();
 		public unowned GLib.TlsCertificate get_peer_certificate ();
 		public GLib.TlsCertificateFlags get_peer_certificate_errors ();
 		public GLib.TlsRehandshakeMode get_rehandshake_mode ();
 		public bool get_require_close_notify ();
 		public abstract bool handshake (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async bool handshake_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.60")]
+		public abstract void set_advertised_protocols ([CCode (array_length = false, array_null_terminated = true)] string[]? protocols);
 		public void set_certificate (GLib.TlsCertificate certificate);
 		public void set_database (GLib.TlsDatabase database);
 		public void set_interaction (GLib.TlsInteraction? interaction);
@@ -3454,6 +3479,10 @@ namespace GLib {
 		public void set_require_close_notify (bool require_close_notify);
 		public abstract bool shutdown (bool shutdown_read, bool shutdown_write, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async bool shutdown_async (bool shutdown_read, bool shutdown_write, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (array_length = false, array_null_terminated = true)]
+		[NoAccessorMethod]
+		[Version (since = "2.60")]
+		public abstract string[] advertised_protocols { owned get; set; }
 		[NoAccessorMethod]
 		public abstract GLib.DatagramBased base_socket { owned get; construct; }
 		[ConcreteAccessor]
@@ -3462,6 +3491,8 @@ namespace GLib {
 		public abstract GLib.TlsDatabase database { get; set; }
 		[ConcreteAccessor]
 		public abstract GLib.TlsInteraction interaction { get; set; }
+		[Version (since = "2.60")]
+		public abstract string negotiated_protocol { get; }
 		[ConcreteAccessor]
 		public abstract GLib.TlsCertificate peer_certificate { get; }
 		[ConcreteAccessor]

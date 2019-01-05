@@ -120,10 +120,21 @@ namespace GClue {
 		public async bool call_add_agent (string arg_id, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool call_add_agent_sync (string arg_id, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (async_result_pos = 2.1)]
+		public async bool call_create_client (GLib.Cancellable? cancellable, out string out_client) throws GLib.Error;
+		public bool call_create_client_sync (out string out_client, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool call_delete_client (string arg_client, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool call_delete_client_sync (string arg_client, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (async_result_pos = 2.1)]
 		public async bool call_get_client (GLib.Cancellable? cancellable, out string out_client) throws GLib.Error;
 		public bool call_get_client_sync (out string out_client, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void complete_add_agent (owned GLib.DBusMethodInvocation invocation);
+		public void complete_create_client (owned GLib.DBusMethodInvocation invocation, string client);
+		public void complete_delete_client (owned GLib.DBusMethodInvocation invocation);
 		public void complete_get_client (owned GLib.DBusMethodInvocation invocation, string client);
+		[NoWrapper]
+		public abstract bool handle_create_client (GLib.DBusMethodInvocation invocation);
+		[NoWrapper]
+		public abstract bool handle_delete_client (GLib.DBusMethodInvocation invocation, string arg_client);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
