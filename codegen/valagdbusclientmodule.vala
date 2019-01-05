@@ -319,14 +319,14 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccode.add_assignment (source_ref, source);
 
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_async_initable_new_finish"));
-				ccall.add_argument (source_ref);
+				ccall.add_argument (new CCodeCastExpression (source_ref, "GAsyncInitable *"));
 				ccall.add_argument (get_cvalue (res));
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
 
 				var temp_var = get_temp_variable (expr.value_type, expr.value_type.value_owned);
 				var temp_ref = get_variable_cexpression (temp_var.name);
 				emit_temp_var (temp_var);
-				ccode.add_assignment (temp_ref, ccall);
+				ccode.add_assignment (temp_ref, new CCodeCastExpression (ccall, get_ccode_name (expr.value_type)));
 
 				// g_async_result_get_source_object transfers ownership, unref after use
 				var unref_proxy = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
@@ -415,7 +415,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccode.add_label ("_state_%d".printf (state));
 
 				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_async_initable_new_finish"));
-				ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_source_object_"));
+				ccall.add_argument (new CCodeCastExpression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_source_object_"), "GAsyncInitable *"));
 				// pass GAsyncResult stored in closure to finish function
 				ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"));
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
@@ -431,7 +431,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		emit_temp_var (temp_var);
 
-		ccode.add_assignment (temp_ref, ccall);
+		ccode.add_assignment (temp_ref, new CCodeCastExpression (ccall, get_ccode_name (expr.value_type)));
 		set_cvalue (expr, temp_ref);
 	}
 
