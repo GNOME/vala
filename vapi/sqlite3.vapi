@@ -149,7 +149,7 @@ namespace Sqlite {
 		public int to_int ();
 		[CCode (cname = "sqlite3_value_int64")]
 		public int64 to_int64 ();
-		[CCode (cname = "sqlite3_value_text")]
+		[CCode (cname = "sqlite3_value_text", type = "const unsigned char*")]
 		public unowned string to_text ();
 		[CCode (cname = "sqlite3_value_type")]
 		public int to_type ();
@@ -388,6 +388,7 @@ namespace Sqlite {
 		public double column_double (int col);
 		public int column_int (int col);
 		public int64 column_int64 (int col);
+		[CCode (type = "const unsigned char*")]
 		public unowned string? column_text (int col);
 		public int column_type (int col);
 		public unowned Value column_value (int col);
