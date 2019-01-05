@@ -3,12 +3,20 @@ D-Bus
 
 Program: client
 
+[DBus (name = "org.example.TestError")]
+errordomain TestError {
+	NOT_SO_GOOD,
+	BAD,
+	WORSE
+}
+
 [DBus (name = "org.example.Test")]
 interface Test : Object {
 	public abstract void test_void () throws Error;
 	public abstract int test_int (int i, out int j) throws Error;
 	public abstract string test_string (string s, out string t) throws Error;
 	public abstract void test_cancellable (Cancellable? cancellable = null) throws Error;
+	public abstract void test_custom_error () throws TestError;
 }
 
 void main () {
@@ -44,9 +52,26 @@ void main () {
 		assert_not_reached ();
 	} catch {
 	}
+
+	try {
+		test.test_custom_error ();
+		assert_not_reached ();
+	} catch (TestError e) {
+		assert (e is TestError.BAD);
+		assert (e.message == "GDBus.Error:org.example.TestError.Bad: Something failed badly");
+	} catch {
+		assert_not_reached ();
+	}
 }
 
 Program: server
+
+[DBus (name = "org.example.TestError")]
+errordomain TestError {
+	NOT_SO_GOOD,
+	BAD,
+	WORSE
+}
 
 [DBus (name = "org.example.Test")]
 class Test : Object {
@@ -63,6 +88,10 @@ class Test : Object {
 	}
 
 	public void test_cancellable (Cancellable? cancellable = null) throws Error {
+	}
+
+	public void test_custom_error () throws TestError {
+		throw new TestError.BAD ("Something failed badly");
 	}
 }
 
