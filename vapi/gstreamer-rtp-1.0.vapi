@@ -492,10 +492,10 @@ namespace Gst {
 			public bool xr_get_prt_by_seq (uint16 seq, uint32 receipt_time);
 			[CCode (cname = "gst_rtcp_packet_xr_get_prt_info")]
 			[Version (since = "1.16")]
-			public bool xr_get_prt_info (uint32 ssrc, uint8 thining, uint16 begin_seq, uint16 end_seq);
+			public bool xr_get_prt_info (uint32 ssrc, uint8 thinning, uint16 begin_seq, uint16 end_seq);
 			[CCode (cname = "gst_rtcp_packet_xr_get_rle_info")]
 			[Version (since = "1.16")]
-			public bool xr_get_rle_info (uint32 ssrc, uint8 thining, uint16 begin_seq, uint16 end_seq, uint32 chunk_count);
+			public bool xr_get_rle_info (uint32 ssrc, uint8 thinning, uint16 begin_seq, uint16 end_seq, uint32 chunk_count);
 			[CCode (cname = "gst_rtcp_packet_xr_get_rle_nth_chunk")]
 			[Version (since = "1.16")]
 			public bool xr_get_rle_nth_chunk (uint nth, uint16 chunk);
