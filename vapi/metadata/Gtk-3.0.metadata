@@ -456,6 +456,8 @@ ActionGroup
   .add_radio_actions_full.on_change type="owned Gtk.RadioActionCallback"
 Button
   .new_from_icon_name.size type="Gtk.IconSize"
+CellAccessibleParent
+  .get_cell_area return_void
 Clipboard
   .get_selection skip=false
 ClipboardRichTextReceivedFunc
