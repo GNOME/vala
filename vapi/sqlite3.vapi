@@ -388,6 +388,7 @@ namespace Sqlite {
 		public double column_double (int col);
 		public int column_int (int col);
 		public int64 column_int64 (int col);
+		[CCode (type = "const unsigned char*")]
 		public unowned string? column_text (int col);
 		public int column_type (int col);
 		public unowned Value column_value (int col);
