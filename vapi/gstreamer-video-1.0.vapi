@@ -3,6 +3,53 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstVideo", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace Video {
+		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_aggregator_get_type ()")]
+		[GIR (name = "VideoAggregator")]
+		public abstract class Aggregator : Gst.Base.Aggregator {
+			public weak Gst.Video.Info info;
+			[CCode (has_construct_function = false)]
+			protected Aggregator ();
+			[NoWrapper]
+			public virtual Gst.FlowReturn aggregate_frames (Gst.Buffer outbuffer);
+			[NoWrapper]
+			public virtual Gst.FlowReturn create_output_buffer (Gst.Buffer outbuffer);
+			[NoWrapper]
+			public virtual void find_best_format (Gst.Caps downstream_caps, Gst.Video.Info best_info, bool at_least_one_alpha);
+			[NoWrapper]
+			public virtual Gst.Caps update_caps (Gst.Caps caps);
+		}
+		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_aggregator_convert_pad_get_type ()")]
+		[GIR (name = "VideoAggregatorConvertPad")]
+		public class AggregatorConvertPad : Gst.Video.AggregatorPad {
+			[CCode (has_construct_function = false)]
+			protected AggregatorConvertPad ();
+			[NoWrapper]
+			public virtual void create_conversion_info (Gst.Video.Aggregator agg, Gst.Video.Info conversion_info);
+			public void update_conversion_info ();
+			[NoAccessorMethod]
+			public Gst.Structure converter_config { owned get; set; }
+		}
+		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_aggregator_pad_get_type ()")]
+		[GIR (name = "VideoAggregatorPad")]
+		public class AggregatorPad : Gst.Base.AggregatorPad {
+			public weak Gst.Video.Info info;
+			[CCode (has_construct_function = false)]
+			protected AggregatorPad ();
+			[NoWrapper]
+			public virtual void clean_frame (Gst.Video.Aggregator videoaggregator, Gst.Video.Frame prepared_frame);
+			public unowned Gst.Buffer get_current_buffer ();
+			public unowned Gst.Video.Frame? get_prepared_frame ();
+			public bool has_current_buffer ();
+			[NoWrapper]
+			public virtual bool prepare_frame (Gst.Video.Aggregator videoaggregator, Gst.Buffer buffer, Gst.Video.Frame prepared_frame);
+			public void set_needs_alpha (bool needs_alpha);
+			[NoWrapper]
+			public virtual void update_conversion_info ();
+			[NoAccessorMethod]
+			public bool repeat_after_eos { get; set; }
+			[NoAccessorMethod]
+			public uint zorder { get; set; }
+		}
 		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_buffer_pool_get_type ()")]
 		[GIR (name = "VideoBufferPool")]
 		public class BufferPool : Gst.BufferPool {
@@ -369,7 +416,7 @@ namespace Gst {
 			public TimeCode (uint fps_n, uint fps_d, GLib.DateTime latest_daily_jam, Gst.Video.TimeCodeFlags flags, uint hours, uint minutes, uint seconds, uint frames, uint field_count);
 			public void add_frames (int64 frames);
 			[Version (since = "1.12")]
-			public Gst.Video.TimeCode add_interval (Gst.Video.TimeCodeInterval tc_inter);
+			public Gst.Video.TimeCode? add_interval (Gst.Video.TimeCodeInterval tc_inter);
 			public void clear ();
 			public int compare (Gst.Video.TimeCode tc2);
 			public Gst.Video.TimeCode copy ();
@@ -381,15 +428,20 @@ namespace Gst {
 			[Version (since = "1.12")]
 			public TimeCode.from_date_time (uint fps_n, uint fps_d, GLib.DateTime dt, Gst.Video.TimeCodeFlags flags, uint field_count);
 			[CCode (has_construct_function = false)]
+			[Version (since = "1.16")]
+			public TimeCode.from_date_time_full (uint fps_n, uint fps_d, GLib.DateTime dt, Gst.Video.TimeCodeFlags flags, uint field_count);
+			[CCode (has_construct_function = false)]
 			[Version (since = "1.12")]
 			public TimeCode.from_string (string tc_str);
 			public void increment_frame ();
 			public void init (uint fps_n, uint fps_d, GLib.DateTime latest_daily_jam, Gst.Video.TimeCodeFlags flags, uint hours, uint minutes, uint seconds, uint frames, uint field_count);
 			[Version (since = "1.12")]
 			public void init_from_date_time (uint fps_n, uint fps_d, GLib.DateTime dt, Gst.Video.TimeCodeFlags flags, uint field_count);
+			[Version (since = "1.16")]
+			public bool init_from_date_time_full (uint fps_n, uint fps_d, GLib.DateTime dt, Gst.Video.TimeCodeFlags flags, uint field_count);
 			public bool is_valid ();
 			public uint64 nsec_since_daily_jam ();
-			public GLib.DateTime to_date_time ();
+			public GLib.DateTime? to_date_time ();
 			public string to_string ();
 		}
 		[CCode (cheader_filename = "gst/video/video.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_time_code_interval_get_type ()")]
