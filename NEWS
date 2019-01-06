@@ -1,3 +1,46 @@
+Vala 0.43.4
+===========
+ * Various improvements and bug fixes:
+  - vala:
+    + Array with fixed length don't require explicit instantiation (#720)
+    + Add GenericType.get_actual_type()
+    + Allow get_actual_type() to be used for expected failures
+    + Add Method.compatible_no_error()
+    + Don't just guess and check for a matching base_interface_method (#548)
+    + Search in all interfaces for an implementation match (#548)
+    + Allow explicit interface methods to be virtual (#548)
+    + Report invalid instance member access to property (#605)
+  - codegen:
+    + Use properly checked implicit interface implementations (#548)
+    + Use temp-var for MethodCall with out/ref arguments (#722)
+    + Use temp-vars for ellipsis out-arguments to fix memory management (#722)
+    + Add default_value for CType to initialize variables if needed (#724)
+    + Cast instance parameter for property access in object-initializer
+    + Don't check boolean values for (in)equality in GTask API (#726)
+    + Add missing data parameter to GTypeInfo callbacks
+    + Properly set annotations field of GDBus*Info struct to NULL
+    + Cast instance and result of g_async_initable_new_finish() call
+  - valadoc: Drop duplicated code to add source files and use CodeContext API
+  - libvaladoc: Skip empty Version.replacement attribute to avoid critical
+  - build: Don't leak libvalaccode symbols to libvaladoc
+  - Add a basic CONTRIBUTING.md file that links to the relevant Wiki page
+  - tests:
+    + Fix try_parse() tests to not compare to already free'd memory
+    + Warnings and criticals should be fatal on compile time too
+
+ * Bindings:
+  - glib-2.0: Use correct array-length-type for returned arrays (#171)
+  - glib-2.0: Add RecMutexLocker since 2.60
+  - gio-2.0: Fix File.replace_contents_bytes_async() (!37)
+  - gobject-2.0: Use correct array-length-type for returned arrays
+  - poppler-glib: Update to 0.71
+  - gstreamer: Update from 1.15+ git master
+  - gtk+-3.0: Update to 3.24.2+a8e07254
+  - gtk+-4.0: Update to 3.94.0+4404afc9
+  - sqlite3: Correct return C type of Statement.column_text & Value.to_text
+  - webkitgtk-4.0: Update to 2.23.1
+  - vapi: Update GIR-based bindings
+
 Vala 0.43.2
 ===========
  * Various improvements and bug fixes:
