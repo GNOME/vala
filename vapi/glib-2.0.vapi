@@ -2082,6 +2082,13 @@ namespace GLib {
 		public void unlock ();
 	}
 
+	[Version (since = "2.60")]
+	[CCode (destroy_function = "g_rec_mutex_locker_free")]
+	public struct RecMutexLocker {
+		public RecMutexLocker (RecMutex rec_mutex);
+		public void free ();
+	}
+
 	[Version (since = "2.32")]
 	[CCode (destroy_function = "g_rw_lock_clear")]
 	public struct RWLock {
