@@ -148,21 +148,21 @@ namespace GLib {
 		public int maximum;
 		public int minimum;
 		public uint n_values;
-		[CCode (array_length_cname = "n_values")]
+		[CCode (array_length_cname = "n_values", array_length_type = "guint")]
 		public weak GLib.EnumValue[] values;
 		public unowned GLib.EnumValue? get_value (int value);
 		public unowned GLib.EnumValue? get_value_by_name (string name);
-		public unowned GLib.EnumValue? get_value_by_nick (string name);
+		public unowned GLib.EnumValue? get_value_by_nick (string nick);
 	}
 	[CCode (cheader_filename = "glib-object.h", lower_case_csuffix = "flags")]
 	public class FlagsClass : GLib.TypeClass {
 		public uint mask;
 		public uint n_values;
-		[CCode (array_length_cname = "n_values")]
+		[CCode (array_length_cname = "n_values", array_length_type = "guint")]
 		public weak GLib.FlagsValue[] values;
 		public unowned GLib.FlagsValue? get_first_value (uint value);
 		public unowned GLib.FlagsValue? get_value_by_name (string name);
-		public unowned GLib.FlagsValue? get_value_by_nick (string name);
+		public unowned GLib.FlagsValue? get_value_by_nick (string nick);
 	}
 	[CCode (cheader_filename = "glib-object.h", ref_sink_function = "g_object_ref_sink", type_id = "G_TYPE_INITIALLY_UNOWNED")]
 	public class InitiallyUnowned : GLib.Object {
@@ -175,7 +175,7 @@ namespace GLib {
 		[CCode (construct_function = "g_object_new", has_new_function = false)]
 		public Object (...);
 		public void add_toggle_ref (GLib.ToggleNotify notify);
-		public void add_weak_pointer (void** data);
+		public void add_weak_pointer (void** weak_pointer_location);
 		[CCode (cname = "g_object_bind_property_with_closures")]
 		[Version (since = "2.26")]
 		public unowned GLib.Binding bind_property (string source_property, GLib.Object target, string target_property, GLib.BindingFlags flags = GLib.BindingFlags.DEFAULT, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_to = null, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_from = null);
@@ -226,7 +226,7 @@ namespace GLib {
 		[Version (since = "2.34")]
 		public bool replace_qdata<G,T> (GLib.Quark quark, G oldval, owned T newval, out GLib.DestroyNotify? old_destroy);
 		public void remove_toggle_ref (GLib.ToggleNotify notify);
-		public void remove_weak_pointer (void** data);
+		public void remove_weak_pointer (void** weak_pointer_location);
 		public void @set (string first_property_name, ...);
 		[CCode (cname = "g_object_set_data_full", simple_generics = true)]
 		public void set_data<T> (string key, owned T data);
@@ -323,6 +323,7 @@ namespace GLib {
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_DOUBLE")]
 	public class ParamSpecDouble : GLib.ParamSpec {
 		public double default_value;
+		public double epsilon;
 		public double maximum;
 		public double minimum;
 		[CCode (cname = "g_param_spec_double")]
@@ -345,6 +346,7 @@ namespace GLib {
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_FLOAT")]
 	public class ParamSpecFloat : GLib.ParamSpec {
 		public float default_value;
+		public float epsilon;
 		public float maximum;
 		public float minimum;
 		[CCode (cname = "g_param_spec_float")]
@@ -384,6 +386,13 @@ namespace GLib {
 	public class ParamSpecObject : GLib.ParamSpec {
 		[CCode (cname = "g_param_spec_object")]
 		public ParamSpecObject (string name, string nick, string blurb, GLib.Type object_type, GLib.ParamFlags flags);
+	}
+	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_OVERRIDE")]
+	[Version (since = "2.4")]
+	public class ParamSpecOverride : GLib.ParamSpec {
+		public weak GLib.ParamSpec overridden;
+		[CCode (cname = "g_param_spec_object")]
+		public ParamSpecOverride (string name, GLib.ParamSpec overridden);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_PARAM")]
 	public class ParamSpecParam : GLib.ParamSpec {
@@ -691,8 +700,8 @@ namespace GLib {
 		public Value (GLib.Type g_type);
 		public void copy (ref GLib.Value dest_value);
 		public void* dup_boxed ();
-		public GLib.ParamSpec dup_param ();
 		public GLib.Object dup_object ();
+		public GLib.ParamSpec dup_param ();
 		public string dup_string ();
 		[Version (since = "2.26")]
 		public GLib.Variant? dup_variant ();
@@ -833,6 +842,7 @@ namespace GLib {
 		MASK
 	}
 	[CCode (cheader_filename = "glib-object.h", cprefix = "G_SIGNAL_MATCH_", has_type_id = false)]
+	[Flags]
 	public enum SignalMatchType {
 		ID,
 		DETAIL,
@@ -867,12 +877,12 @@ namespace GLib {
 		DEEP_DERIVABLE
 	}
 	[CCode (cheader_filename = "glib-object.h", has_target = false)]
-	public delegate void BaseInitFunc (GLib.TypeClass g_class);
-	[CCode (cheader_filename = "glib-object.h", has_target = false)]
 	public delegate void BaseFinalizeFunc (GLib.TypeClass g_class);
-	[CCode (cheader_filename = "glib-object.h")]
+	[CCode (cheader_filename = "glib-object.h", has_target = false)]
+	public delegate void BaseInitFunc (GLib.TypeClass g_class);
+	[CCode (cheader_filename = "glib-object.h", instance_pos = 3.9)]
 	[Version (since = "2.26")]
-	public delegate bool BindingTransformFunc (GLib.Binding binding, GLib.Value source_value, ref GLib.Value target_value);
+	public delegate bool BindingTransformFunc (GLib.Binding binding, GLib.Value from_value, ref GLib.Value to_value);
 	[CCode (cheader_filename = "glib-object.h", has_target = false)]
 	public delegate void* BoxedCopyFunc (void* boxed);
 	[CCode (cheader_filename = "glib-object.h", has_target = false)]
@@ -880,28 +890,28 @@ namespace GLib {
 	[CCode (cheader_filename = "glib-object.h", has_target = false)]
 	public delegate void Callback ();
 	[CCode (cheader_filename = "glib-object.h", has_target = false)]
-	public delegate void ClassInitFunc (GLib.TypeClass g_class, void* class_data);
-	[CCode (cheader_filename = "glib-object.h", has_target = false)]
 	public delegate void ClassFinalizeFunc (GLib.TypeClass g_class, void* class_data);
+	[CCode (cheader_filename = "glib-object.h", has_target = false)]
+	public delegate void ClassInitFunc (GLib.TypeClass g_class, void* class_data);
 	[CCode (cheader_filename = "glib-object.h", has_target = false, instance_pos = 0)]
-	public delegate void ClosureMarshal (GLib.Closure closure, out GLib.Value return_value, [CCode (array_length_pos = 2.9, array_length_type = "guint")] GLib.Value[] param_values, void* invocation_hint, void* marshal_data);
+	public delegate void ClosureMarshal (GLib.Closure closure, out GLib.Value return_value, [CCode (array_length_cname = "n_param_values", array_length_pos = 2.5, array_length_type = "guint")] GLib.Value[] param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "glib-object.h", has_target = false)]
 	public delegate void ClosureNotify (void* data, GLib.Closure closure);
 	[CCode (cheader_filename = "glib-object.h", has_target = false)]
 	public delegate void InstanceInitFunc (GLib.TypeInstance instance, GLib.TypeClass g_class);
 	[CCode (cheader_filename = "glib-object.h", has_target = false)]
-	public delegate void InterfaceInitFunc (GLib.TypeInterface g_iface, void* iface_data);
-	[CCode (cheader_filename = "glib-object.h", has_target = false)]
 	public delegate void InterfaceFinalizeFunc (GLib.TypeInterface g_iface, void* iface_data);
+	[CCode (cheader_filename = "glib-object.h", has_target = false)]
+	public delegate void InterfaceInitFunc (GLib.TypeInterface g_iface, void* iface_data);
 	[CCode (cheader_filename = "glib-object.h", cname = "GCallback", has_target = false)]
 	public delegate GLib.Object ObjectConstructorFunc (GLib.Type type, [CCode (array_length_pos = 1.9, array_length_type = "guint")] GLib.ObjectConstructParam[] construct_properties);
 	[CCode (cheader_filename = "glib-object.h", has_target = false)]
-	public delegate void ObjectGetPropertyFunc (GLib.Object object, uint property_id, ref GLib.Value value, GLib.ParamSpec pspec);
-	[CCode (cheader_filename = "glib-object.h", has_target = false)]
 	public delegate void ObjectFinalizeFunc (GLib.Object object);
 	[CCode (cheader_filename = "glib-object.h", has_target = false)]
+	public delegate void ObjectGetPropertyFunc (GLib.Object object, uint property_id, ref GLib.Value value, GLib.ParamSpec pspec);
+	[CCode (cheader_filename = "glib-object.h", has_target = false)]
 	public delegate void ObjectSetPropertyFunc (GLib.Object object, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
-	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9, array_length_type = "guint")] GLib.Value[] param_values);
+	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_cname = "n_param_values", array_length_pos = 1.9, array_length_type = "guint")] GLib.Value[] param_values);
 	[CCode (cheader_filename = "glib-object.h", instance_pos = 0)]
 	public delegate void ToggleNotify (GLib.Object object, bool is_last_ref);
 	[CCode (cheader_filename = "glib-object.h", has_target = false)]
