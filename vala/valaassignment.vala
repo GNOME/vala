@@ -208,6 +208,10 @@ public class Vala.Assignment : Expression {
 			}
 		} else if (left is PointerIndirection) {
 			right.target_type = left.value_type.copy ();
+		} else if (left is Literal) {
+			error = true;
+			Report.error (source_reference, "Literals are immutable");
+			return false;
 		} else {
 			error = true;
 			Report.error (source_reference, "unsupported lvalue in assignment");
