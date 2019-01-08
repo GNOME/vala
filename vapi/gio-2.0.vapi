@@ -3070,7 +3070,7 @@ namespace GLib {
 		public void set_flags (GLib.TlsPasswordFlags flags);
 		public void set_value ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gssize")] uint8[] value);
 		[CCode (vfunc_name = "set_value")]
-		public virtual void set_value_full ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gssize", type = "guchar*")] owned uint8[] value, GLib.DestroyNotify? notify = GLib.g_free);
+		public virtual void set_value_full ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gssize")] owned uint8[] value, GLib.DestroyNotify? destroy = GLib.free);
 		public void set_warning (string warning);
 		public string description { get; set; }
 		public GLib.TlsPasswordFlags flags { get; set; }

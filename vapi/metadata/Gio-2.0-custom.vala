@@ -140,11 +140,6 @@ namespace GLib {
 		public static void report_new_error (GLib.Object? source_object, [CCode (scope = "async")] GLib.AsyncReadyCallback callback, void* source_tag, GLib.Quark domain, int code, string format, ...);
 	}
 
-	public class TlsPassword : GLib.Object {
-		[CCode (vfunc_name = "set_value")]
-		public virtual void set_value_full ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gssize", type = "guchar*")] owned uint8[] value, GLib.DestroyNotify? notify = GLib.g_free);
-	}
-
 	public class VolumeMonitor : GLib.Object {
 		[NoWrapper]
 		public virtual bool is_supported ();
