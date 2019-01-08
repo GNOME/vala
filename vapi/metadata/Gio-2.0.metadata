@@ -221,6 +221,7 @@ SimpleProxyResolver
   .new symbol_type="constructor"
 Socket
   .condition_wait throws="GLib.IOError"
+  .connection_factory_create_connection parent="GLib.SocketConnection" name="factory_create_connection" symbol_type="function"
   .create_source skip=false type="GLib.SocketSource"
 SocketControlMessage
   .serialize.data type="uint8[]"
@@ -337,10 +338,6 @@ DBusConnection
 // Bug #666797: No support for generic methods in GIR parser
 DBusConnection
   .register_object skip
-
-// Bug #: Reparenting instance method breaks arguments
-Socket
-  .connection_factory_create_connection skip // parent="GLib.SocketConnection" name="factory_create_connection"
 
 // Bug #: out + allow-none parameters missing ? in vapi
 LoadableIcon

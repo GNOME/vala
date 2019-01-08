@@ -130,10 +130,6 @@ namespace GLib {
 		public void set_callback ([CCode (type = "GSourceFunc")] owned SocketSourceFunc func);
 	}
 
-	public class SocketConnection : GLib.IOStream {
-		public static GLib.SocketConnection factory_create_connection (GLib.Socket socket);
-	}
-
 	public class Task : GLib.Object {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.36")]
