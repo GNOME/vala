@@ -79,7 +79,7 @@ Cancellable
   .connect.callback type="owned GLib.Func<GLib.Cancellable>"
   .get_current nullable
   .set_error_if_cancelled throws="GLib.IOError"
-  .source_new skip=false type="GLib.CancellableSource"
+  .source_new skip=false parent="GLib.CancellableSource" symbol_type="constructor" name="new"
 Credentials
   .get_native skip=false
 DatagramBased
@@ -309,7 +309,9 @@ OutputMessage
 DBusError errordomain
 DBusSubtreeEnumerateFunc unowned=false skip=false
 ReallocFunc skip=false
-pollable_source_new_full skip
+pollable_source_new parent="GLib.PollableSource" symbol_type="constructor" name="new"
+pollable_source_new_full parent="GLib.PollableSource" symbol_type="constructor" name="new_full"
+  .child_source default=null
 pollable_stream_read
   .buffer type="uint8[]" array_length_idx=2
 
@@ -318,7 +320,6 @@ content_types_get_registered parent="GLib.ContentType" name="list_registered"
 io_modules_* parent="GLib.IOModule" name="io_modules_(.*)"
 io_scheduler_cancel_all_jobs parent="GLib.IOSchedulerJob" name="cancel_all"
 io_scheduler_push_job parent="GLib.IOSchedulerJob" name="push"
-pollable_source_new skip
 network_monitor_get_default skip
 proxy_get_default_for_protocol skip
 proxy_resolver_get_default skip

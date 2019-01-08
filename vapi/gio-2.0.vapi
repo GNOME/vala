@@ -545,13 +545,16 @@ namespace GLib {
 		public void release_fd ();
 		public void reset ();
 		public bool set_error_if_cancelled () throws GLib.IOError;
-		[Version (since = "2.28")]
+		[Version (deprecated_since = "vala-0.44", replacement = "CancellableSource", since = "2.28")]
 		public GLib.CancellableSource source_new ();
 		public virtual signal void cancelled ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", cname = "GSource", ref_function = "g_source_ref", unref_function = "g_source_unref")]
 	[Compact]
 	public class CancellableSource : GLib.Source {
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.28")]
+		public CancellableSource (GLib.Cancellable? cancellable);
 		[CCode (cname = "g_source_set_callback")]
 		public void set_callback ([CCode (type = "GSourceFunc")] owned GLib.CancellableSourceFunc func);
 	}
@@ -2003,10 +2006,12 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", cname = "GSource", ref_function = "g_source_ref", unref_function = "g_source_unref")]
 	[Compact]
 	public class PollableSource : GLib.Source {
-		[CCode (type = "GSource*")]
+		[CCode (cheader_filename = "gio/gio.h", has_construct_function = false)]
+		[Version (since = "2.28")]
 		public PollableSource (GLib.Object pollable_stream);
-		[CCode (type = "GSource*")]
-		public PollableSource.full (GLib.Object pollable_stream, GLib.Source? child_source, GLib.Cancellable? cancellable = null);
+		[CCode (cheader_filename = "gio/gio.h", has_construct_function = false)]
+		[Version (since = "2.34")]
+		public PollableSource.full (GLib.Object pollable_stream, GLib.Source? child_source = null, GLib.Cancellable? cancellable = null);
 		[CCode (cname = "g_source_set_callback")]
 		public void set_callback ([CCode (type = "GSourceFunc")] owned GLib.PollableSourceFunc func);
 	}

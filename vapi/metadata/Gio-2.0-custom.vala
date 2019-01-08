@@ -20,6 +20,11 @@ namespace GLib {
 		public weak GLib.SimpleActionChangeStateCallback? change_state;
 	}
 
+	public class Cancellable : GLib.Object {
+		[Version (since = "2.28", deprecated_since = "vala-0.44", replacement = "CancellableSource")]
+		public GLib.CancellableSource source_new ();
+	}
+
 	[Compact]
 	[CCode (cname = "GSource", ref_function = "g_source_ref", unref_function = "g_source_unref")]
 	public class CancellableSource : GLib.Source {
@@ -95,10 +100,6 @@ namespace GLib {
 	[Compact]
 	[CCode (cname = "GSource", ref_function = "g_source_ref", unref_function = "g_source_unref")]
 	public class PollableSource : GLib.Source {
-		[CCode (type = "GSource*")]
-		public PollableSource (GLib.Object pollable_stream);
-		[CCode (type = "GSource*")]
-		public PollableSource.full (GLib.Object pollable_stream, GLib.Source? child_source, GLib.Cancellable? cancellable = null);
 		[CCode (cname = "g_source_set_callback")]
 		public void set_callback ([CCode (type = "GSourceFunc")] owned PollableSourceFunc func);
 	}
