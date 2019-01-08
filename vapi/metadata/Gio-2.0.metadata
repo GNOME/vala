@@ -99,6 +99,7 @@ DBusAuthObserver.authorize_authenticated_peer virtual
 DBusConnection
   .*.observer#parameter default=null
   .send_message_with_reply*.out_serial default=null
+  .send_message_with_reply_finish throws="GLib.IOError"
   .send_message_with_reply_sync throws="GLib.IOError"
 DBusInterfaceSkeleton
   .get_vtable skip=false nullable unowned=false
@@ -367,11 +368,6 @@ File
 
 // Need to ask about this... annotated as out, but that seems wrong
 DBus*Info.generate_xml.string_builder out=false
-
-// out_serial must not be out in the async function
-DBusConnection
-  .send_message_with_reply skip
-  .send_message_with_reply_finish skip
 
 // Back compat
 TlsCertificate abstract=false
