@@ -182,10 +182,6 @@ namespace GLib {
 	public delegate void TaskReadyCallback (GLib.Object? source_object, GLib.Task task);
 	[CCode (has_target = false, cname = "GSourceFunc")]
 	public delegate bool TaskSourceFunc (Task task);
-	[CCode (cheader_filename = "gio/gio.h", instance_pos = 6.9)]
-	public delegate GLib.Variant DBusInterfaceGetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name) throws GLib.Error;
-	[CCode (cheader_filename = "gio/gio.h", instance_pos = 7.9)]
-	public delegate bool DBusInterfaceSetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name, GLib.Variant value) throws GLib.Error;
 
 	[CCode (cheader_filename = "gio/gio.h", has_target = false, cname = "GSettingsBindGetMapping")]
 	public delegate bool SettingsBindGetMappingShared (GLib.Value value, GLib.Variant variant, void* user_data);

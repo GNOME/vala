@@ -4775,12 +4775,14 @@ namespace GLib {
 	[Version (since = "2.28")]
 	public delegate bool CancellableSourceFunc (GLib.Cancellable? cancellable = null);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 6.9)]
-	public delegate GLib.Variant DBusInterfaceGetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name) throws GLib.Error;
+	[Version (since = "2.26")]
+	public delegate GLib.Variant DBusInterfaceGetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name, out GLib.Error error);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 7.9)]
 	[Version (since = "2.26")]
 	public delegate void DBusInterfaceMethodCallFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string method_name, GLib.Variant parameters, owned GLib.DBusMethodInvocation invocation);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 7.9)]
-	public delegate bool DBusInterfaceSetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name, GLib.Variant value) throws GLib.Error;
+	[Version (since = "2.26")]
+	public delegate bool DBusInterfaceSetPropertyFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string property_name, GLib.Variant value, out GLib.Error error);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 3.9)]
 	[Version (since = "2.26")]
 	public delegate GLib.DBusMessage? DBusMessageFilterFunction (GLib.DBusConnection connection, owned GLib.DBusMessage message, bool incoming);

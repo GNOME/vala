@@ -326,8 +326,9 @@ LoadableIcon
   .load.type nullable
 
 // Bug #666798: GIR parser should detect delegate types which throw errors
-DBusInterfaceGetPropertyFunc skip
-DBusInterfaceSetPropertyFunc skip
+// Issue #728: Support non-default error parameter position
+DBusInterfaceGetPropertyFunc.error out unowned=false
+DBusInterfaceSetPropertyFunc.error out unowned=false
 
 // Bug #666799: symbols with moved-to annotations should be deprecated at the old locations
 app_info*#function skip
