@@ -9,7 +9,4 @@ namespace Gdk {
 		[Version (deprecated = true, deprecated_since = "2.32")]
 		public static Gdk.Pixbuf from_pixdata (Gdk.Pixdata pixdata, bool copy_pixels = true) throws GLib.Error;
 	}
-
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", instance_pos = -0.9)]
-	public delegate bool PixbufSaveFunc ([CCode (array_length_type = "gsize")] uint8[] buf) throws GLib.Error;
 }
