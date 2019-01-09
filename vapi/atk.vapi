@@ -476,7 +476,7 @@ namespace Atk {
 		public abstract bool add_selection (int start_offset, int end_offset);
 		[Version (since = "1.3")]
 		public static void free_ranges ([CCode (array_length = false)] Atk.TextRange[] ranges);
-		[CCode (array_length = false, array_null_terminated = true, cname = "atk_text_get_bounded_ranges")]
+		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "1.3")]
 		public virtual Atk.TextRange[] get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
 		public abstract int get_caret_offset ();
