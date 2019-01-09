@@ -264,7 +264,7 @@ namespace Atk {
 		[Version (deprecated = true, deprecated_since = "2.9.4")]
 		public static uint add_focus_tracker (Atk.EventListener focus_tracker);
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_add_global_event_listener")]
-		public static uint add_global_event_listener ([CCode (type = "GSignalEmissionHook")] Atk.SignalEmissionHook listener, string event_type);
+		public static uint add_global_event_listener (GLib.SignalEmissionHook listener, string event_type);
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_add_key_event_listener")]
 		public static uint add_key_event_listener (Atk.KeySnoopFunc listener);
 		[CCode (cheader_filename = "atk/atk.h", cname = "atk_focus_tracker_init")]
@@ -958,8 +958,6 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
 	[Version (deprecated = true)]
 	public delegate void PropertyChangeHandler (Atk.Object obj, Atk.PropertyValues vals);
-	[CCode (cheader_filename = "atk/atk.h", cname = "GSignalEmissionHook", has_target = false)]
-	public delegate bool SignalEmissionHook (GLib.SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] Atk.Value[] param_values, void* data);
 	[CCode (cheader_filename = "atk/atk.h", cname = "ATK_BINARY_AGE")]
 	[Version (since = "2.7.4")]
 	public const int BINARY_AGE;
