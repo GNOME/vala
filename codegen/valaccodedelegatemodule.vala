@@ -94,7 +94,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		}
 		if (d.tree_can_fail) {
 			var cparam = new CCodeParameter ("error", "GError**");
-			cparam_map.set (get_param_pos (-1), cparam);
+			cparam_map.set (get_param_pos (get_ccode_error_pos (d)), cparam);
 		}
 
 		// append C parameters in the right order
@@ -258,7 +258,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		if (m.tree_can_fail) {
 			var cparam = new CCodeParameter ("error", "GError**");
-			cparam_map.set (get_param_pos (-1), cparam);
+			cparam_map.set (get_param_pos (get_ccode_error_pos (d)), cparam);
 		}
 
 		// append C parameters in the right order
@@ -381,7 +381,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		}
 
 		if (m.tree_can_fail) {
-			carg_map.set (get_param_pos (-1), new CCodeIdentifier ("error"));
+			carg_map.set (get_param_pos (get_ccode_error_pos (m)), new CCodeIdentifier ("error"));
 		}
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (m)));

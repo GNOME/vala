@@ -116,9 +116,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 
 			var cparam = new CCodeParameter ("error", "GError**");
-			cparam_map.set (get_param_pos (-1), cparam);
+			cparam_map.set (get_param_pos (get_ccode_error_pos (m)), cparam);
 			if (carg_map != null) {
-				carg_map.set (get_param_pos (-1), new CCodeIdentifier (cparam.name));
+				carg_map.set (get_param_pos (get_ccode_error_pos (m)), new CCodeIdentifier (cparam.name));
 			}
 		}
 	}

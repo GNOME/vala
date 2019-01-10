@@ -276,6 +276,10 @@ namespace Vala {
 		}
 	}
 
+	public static double get_ccode_error_pos (Callable c) {
+		return c.get_attribute_double ("CCode", "error_pos", -1);
+	}
+
 	public static bool get_ccode_array_length (CodeNode node) {
 		return get_ccode_attribute(node).array_length;
 	}

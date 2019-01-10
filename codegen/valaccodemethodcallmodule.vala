@@ -631,10 +631,10 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			// method can fail
 			current_method_inner_error = true;
 			// add &inner_error before the ellipsis arguments
-			out_arg_map.set (get_param_pos (-1), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+			out_arg_map.set (get_param_pos (get_ccode_error_pos ((Callable) m ?? deleg)), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
 		} else if (m != null && m.has_error_type_parameter () && async_call != ccall) {
 			// inferred error argument from base method
-			out_arg_map.set (get_param_pos (-1), new CCodeConstant ("NULL"));
+			out_arg_map.set (get_param_pos (get_ccode_error_pos (m)), new CCodeConstant ("NULL"));
 		}
 
 		if (ellipsis) {

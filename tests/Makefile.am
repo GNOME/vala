@@ -234,6 +234,7 @@ TESTS = \
 	delegates/delegate_only.vala \
 	delegates/delegates.vala \
 	delegates/delegates-error.test \
+	delegates/error-pos.vala \
 	delegates/fields.vala \
 	delegates/fields-no-target.vala \
 	delegates/instance-method-to-no-target.test \
