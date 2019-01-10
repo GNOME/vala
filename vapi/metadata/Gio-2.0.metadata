@@ -325,7 +325,6 @@ DBusConnection
 LoadableIcon
   .load.type nullable
 
-// Bug #666798: GIR parser should detect delegate types which throw errors
 // Issue #728: Support non-default error parameter position
 DBusInterfaceGetPropertyFunc.error out unowned=false
 DBusInterfaceSetPropertyFunc.error out unowned=false

@@ -25,6 +25,5 @@ Pixbuf
 Pixbuf
         .new_from_data.destroy_fn default=GLib.free
 
-// Bug #666798: delegates which throw exceptions
 // Issue #728: Support non-default error parameter position
 PixbufSaveFunc.error out unowned=false
