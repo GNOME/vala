@@ -2,7 +2,7 @@
 delegate Foo Func (Foo p);
 
 struct Foo {
-	public int i;
+	public Func f;
 }
 
 void main () {

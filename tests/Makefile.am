@@ -519,6 +519,7 @@ TESTS = \
 	ordering/delegate-enum.vala \
 	ordering/delegate-interface.vala \
 	ordering/delegate-struct.vala \
+	ordering/struct-delegate.vala \
 	semantic/array-stacked.test \
 	semantic/array-incompatible-initializer.test \
 	semantic/array-incompatible-initializer2.test \
