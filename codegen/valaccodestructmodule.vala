@@ -66,6 +66,12 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			}
 		}
 
+		if (st.base_struct == null) {
+			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (get_ccode_name (st)), new CCodeVariableDeclarator (get_ccode_name (st))));
+		} else {
+			decl_space.add_type_declaration (new CCodeTypeDefinition (get_ccode_name (st.base_struct), new CCodeVariableDeclarator (get_ccode_name (st))));
+		}
+
 		var instance_struct = new CCodeStruct ("_%s".printf (get_ccode_name (st)));
 		instance_struct.modifiers |= (st.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 
@@ -109,11 +115,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		}
 
 		if (st.base_struct == null) {
-			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (get_ccode_name (st)), new CCodeVariableDeclarator (get_ccode_name (st))));
-
 			decl_space.add_type_definition (instance_struct);
-		} else {
-			decl_space.add_type_declaration (new CCodeTypeDefinition (get_ccode_name (st.base_struct), new CCodeVariableDeclarator (get_ccode_name (st))));
 		}
 
 		var function = new CCodeFunction (get_ccode_dup_function (st), get_ccode_name (st) + "*");
