@@ -3060,6 +3060,7 @@ public class Vala.GirParser : CodeVisitor {
 		public int destroy_idx;
 		public bool keep;
 		public bool is_async;
+		public bool is_error;
 	}
 
 	void parse_function (string element_name) {
@@ -3201,6 +3202,7 @@ public class Vala.GirParser : CodeVisitor {
 						((Delegate) s).add_error_type (error_type);
 					}
 				}
+				throws_string = "1";
 			} else if (throws_string == "1") {
 				if (s is Method) {
 					((Method) s).add_error_type (new ErrorType (null, null));
@@ -3317,12 +3319,20 @@ public class Vala.GirParser : CodeVisitor {
 				}
 
 				var info = new ParameterInfo (param, array_length_idx, closure_idx, destroy_idx, scope == "async");
+				unowned UnresolvedType? unresolved_type = param.variable_type as UnresolvedType;
 
 				if (s is Method && scope == "async") {
-					var unresolved_type = param.variable_type as UnresolvedType;
 					if (unresolved_type != null && unresolved_type.unresolved_symbol.name == "AsyncReadyCallback") {
 						// GAsync-style method
 						((Method) s).coroutine = true;
+						info.keep = false;
+					}
+				}
+
+				if (s is Delegate && throws_string != "1" && param.direction == ParameterDirection.OUT) {
+					if (unresolved_type != null && unresolved_type.unresolved_symbol.to_string () == "GLib.Error") {
+						((Delegate) s).add_error_type (new ErrorType (null, null));
+						info.is_error = true;
 						info.keep = false;
 					}
 				}
@@ -3894,6 +3904,11 @@ public class Vala.GirParser : CodeVisitor {
 				if (type_name == "GLib.AsyncResult" || type_name == "Gio.AsyncResult") {
 					var shift = ((Method) s).binding == MemberBinding.INSTANCE ? 1.1 : 0.1;
 					s.set_attribute_double ("CCode", "async_result_pos", i + shift);
+				}
+			}
+			if (s is Delegate && info.is_error) {
+				if (!s.has_attribute_argument ("CCode", "instance_pos")) {
+					s.set_attribute_double ("CCode", "error_pos", j - 0.2);
 				}
 			}
 			i++;

@@ -1,0 +1,29 @@
+GIR
+
+Input:
+
+<callback name="Foo" c:type="TestFoo">
+  <return-value transfer-ownership="none">
+    <type name="none" c:type="void"/>
+  </return-value>
+  <parameters>
+    <parameter name="s" transfer-ownership="none">
+      <type name="utf8" c:type="const gchar*"/>
+    </parameter>
+    <parameter name="error" direction="out" transfer-ownership="full">
+      <type name="GLib.Error" c:type="GError**"/>
+    </parameter>
+    <parameter name="user_data"
+               transfer-ownership="none"
+               nullable="1"
+               allow-none="1"
+               closure="2">
+      <type name="gpointer" c:type="gpointer"/>
+    </parameter>
+  </parameters>
+</callback>
+
+Output:
+
+[CCode (cheader_filename = "test.h", error_pos = 1.8, instance_pos = 1.9)]
+public delegate void Foo (string s) throws GLib.Error;
