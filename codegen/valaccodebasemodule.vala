@@ -514,6 +514,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			destroy_notify = new Delegate ("ValaDestroyNotify", new VoidType ());
 			destroy_notify.add_parameter (new Parameter ("data", new PointerType (new VoidType ())));
 			destroy_notify.has_target = false;
+			destroy_notify.owner = root_symbol.scope;
 			delegate_target_destroy_type = new DelegateType (destroy_notify);
 		}
 
