@@ -3472,6 +3472,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var cvar = get_cvalue_ (value);
 
 		if (type is DelegateType) {
+			if (context.profile != Profile.GOBJECT) {
+				// Required for NULL
+				cfile.add_include ("stddef.h");
+			}
+
 			var delegate_target = get_delegate_target_cvalue (value);
 			var delegate_target_destroy_notify = get_delegate_target_destroy_notify_cvalue (value);
 
@@ -3550,6 +3555,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccall = new CCodeFunctionCall (new CCodeIdentifier (free0_func));
 			ccall.add_argument (cvar);
 			return ccall;
+		}
+
+		if (context.profile != Profile.GOBJECT) {
+			// Required for NULL
+			cfile.add_include ("stddef.h");
 		}
 
 		/* (foo == NULL ? NULL : foo = (unref (foo), NULL)) */
