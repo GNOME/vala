@@ -343,7 +343,7 @@ class Vala.Compiler {
 		if (context.profile == Profile.GOBJECT) {
 			context.codegen = new GDBusServerModule ();
 		} else {
-			context.codegen = new CCodeDelegateModule ();
+			context.codegen = new CCodeClassModule ();
 		}
 
 		bool has_c_files = false;

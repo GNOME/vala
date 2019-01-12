@@ -651,17 +651,30 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 						if (!((CreationMethod) m).chain_up) {
 							// TODO implicitly chain up to base class as in add_object_creation
-							// g_slice_new0 needs glib.h
-							cfile.add_include ("glib.h");
-							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
-							ccall.add_argument (new CCodeIdentifier (get_ccode_name (cl)));
+							CCodeFunctionCall ccall;
+							if (context.profile == Profile.POSIX) {
+								// calloc needs stdlib.h
+								cfile.add_include ("stdlib.h");
+								ccall = new CCodeFunctionCall (new CCodeIdentifier ("calloc"));
+								ccall.add_argument (new CCodeConstant ("1"));
+								var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+								sizeof_call.add_argument (new CCodeConstant (get_ccode_name (cl)));
+								ccall.add_argument (sizeof_call);
+							} else {
+								// g_slice_new0 needs glib.h
+								cfile.add_include ("glib.h");
+								ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
+								ccall.add_argument (new CCodeIdentifier (get_ccode_name (cl)));
+							}
 							ccode.add_assignment (get_this_cexpression (), ccall);
 						}
 
 						if (cl.base_class == null) {
 							var cinitcall = new CCodeFunctionCall (new CCodeIdentifier ("%s_instance_init".printf (get_ccode_lower_case_name (cl, null))));
 							cinitcall.add_argument (get_this_cexpression ());
-							cinitcall.add_argument (new CCodeConstant ("NULL"));
+							if (context.profile == Profile.GOBJECT) {
+								cinitcall.add_argument (new CCodeConstant ("NULL"));
+							}
 							ccode.add_expression (cinitcall);
 						}
 					} else {
