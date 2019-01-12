@@ -324,6 +324,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public Class gtk_widget_type;
 	public DataType delegate_target_type;
 	public DelegateType delegate_target_destroy_type;
+	public DataType pointer_type;
 	Delegate destroy_notify;
 	Class gerror;
 
@@ -505,12 +506,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			dbus_proxy_type = (TypeSymbol) glib_ns.scope.lookup ("DBusProxy");
+			pointer_type = new StructValueType ((Struct) glib_ns.scope.lookup ("pointer"));
 
-			delegate_target_type = new StructValueType ((Struct) glib_ns.scope.lookup ("pointer"));
+			delegate_target_type = pointer_type.copy ();
 			destroy_notify = (Delegate) glib_ns.scope.lookup ("DestroyNotify");
 			delegate_target_destroy_type = new DelegateType (destroy_notify);
 		} else {
-			delegate_target_type = new PointerType (new VoidType ());
+			pointer_type = new PointerType (new VoidType ());
+
+			delegate_target_type = pointer_type.copy ();
 			destroy_notify = new Delegate ("ValaDestroyNotify", new VoidType ());
 			destroy_notify.add_parameter (new Parameter ("data", new PointerType (new VoidType ())));
 			destroy_notify.has_target = false;
