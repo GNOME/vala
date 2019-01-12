@@ -30,6 +30,7 @@ libvalaccodegen_la_VALASOURCES = \
 	valaccodeassignmentmodule.vala \
 	valaccodeattribute.vala \
 	valaccodebasemodule.vala \
+	valaccodeclassmodule.vala \
 	valaccodecompiler.vala \
 	valaccodecontrolflowmodule.vala \
 	valaccodedelegatemodule.vala \
