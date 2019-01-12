@@ -703,6 +703,9 @@ public class Vala.MemberAccess : Expression {
 		} else if (member is Signal) {
 			instance = true;
 			access = member.access;
+		} else if (!creation_member && member is ErrorCode) {
+			symbol_reference = ((ErrorCode) member).code;
+			member = symbol_reference;
 		}
 
 		member.used = true;

@@ -363,6 +363,7 @@ TESTS = \
 	objects/bug795521.vala \
 	errors/catch-error-code.vala \
 	errors/errors.vala \
+	errors/errorcode.vala \
 	errors/errordomain.vala \
 	errors/invalid-type-check.test \
 	errors/method-throws.vala \
