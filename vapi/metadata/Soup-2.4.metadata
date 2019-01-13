@@ -27,7 +27,9 @@ ContentSniffer.sniff.params nullable
 form_* skip=false
 Message
 	.add_header_handler skip=false
+	.add_header_handler.callback closure=-1
 	.add_status_code_handler skip=false
+	.add_status_code_handler.callback closure=-1
 	.request_*#property skip
 	.response_*#property skip
 	.set_request.req_body type="uint8[]" array_length_idx=3
