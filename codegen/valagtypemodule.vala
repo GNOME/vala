@@ -1637,7 +1637,9 @@ public class Vala.GTypeModule : GErrorModule {
 
 		var func = new CCodeFunction ("%s_instance_init".printf (get_ccode_lower_case_name (cl, null)));
 		func.add_parameter (new CCodeParameter ("self", "%s *".printf (get_ccode_name (cl))));
-		func.add_parameter (new CCodeParameter ("klass", "gpointer"));
+		if (!cl.is_compact) {
+			func.add_parameter (new CCodeParameter ("klass", "gpointer"));
+		}
 		func.modifiers = CCodeModifiers.STATIC;
 
 		push_function (func);

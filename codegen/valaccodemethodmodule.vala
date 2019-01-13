@@ -661,7 +661,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						if (cl.base_class == null) {
 							var cinitcall = new CCodeFunctionCall (new CCodeIdentifier ("%s_instance_init".printf (get_ccode_lower_case_name (cl, null))));
 							cinitcall.add_argument (get_this_cexpression ());
-							cinitcall.add_argument (new CCodeConstant ("NULL"));
+							if (!cl.is_compact) {
+								cinitcall.add_argument (new CCodeConstant ("NULL"));
+							}
 							ccode.add_expression (cinitcall);
 						}
 					} else {
