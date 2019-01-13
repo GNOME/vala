@@ -511,8 +511,8 @@ namespace Soup {
 		public weak Soup.MessageHeaders response_headers;
 		[CCode (has_construct_function = false)]
 		public Message (string method, string uri_string);
-		public uint add_header_handler (string @signal, string header, GLib.Callback callback);
-		public uint add_status_code_handler (string @signal, uint status_code, GLib.Callback callback);
+		public uint add_header_handler (string @signal, string header, GLib.Callback callback, void* user_data);
+		public uint add_status_code_handler (string @signal, uint status_code, GLib.Callback callback, void* user_data);
 		[Version (since = "2.28")]
 		public void disable_feature (GLib.Type feature_type);
 		[CCode (has_construct_function = false)]
