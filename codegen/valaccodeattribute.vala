@@ -597,10 +597,22 @@ public class Vala.CCodeAttribute : AttributeCache {
 		}
 	}
 
+	public string sentinel {
+		get {
+			if (_sentinel == null) {
+				if (ccode != null) {
+					_sentinel = ccode.get_string ("sentinel", "NULL");
+				} else {
+					_sentinel = "NULL";
+				}
+			}
+			return _sentinel;
+		}
+	}
+
 	public string? array_length_type { get; private set; }
 	public string? array_length_name { get; private set; }
 	public string? array_length_expr { get; private set; }
-	public string sentinel { get; private set; }
 
 	private string _name;
 	private string _const_name;
@@ -647,6 +659,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private bool ctype_set = false;
 	private bool? _array_length;
 	private bool? _array_null_terminated;
+	private string _sentinel;
 
 	private static int dynamic_method_id;
 
@@ -659,10 +672,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 			array_length_type = ccode.get_string ("array_length_type");
 			array_length_name = ccode.get_string ("array_length_cname");
 			array_length_expr = ccode.get_string ("array_length_cexpr");
-			sentinel = ccode.get_string ("sentinel");
-		}
-		if (sentinel == null) {
-			sentinel = "NULL";
 		}
 	}
 
