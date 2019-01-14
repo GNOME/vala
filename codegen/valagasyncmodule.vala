@@ -53,7 +53,7 @@ public class Vala.GAsyncModule : GtkModule {
 		foreach (Parameter param in m.get_parameters ()) {
 			var param_type = param.variable_type.copy ();
 			param_type.value_owned = true;
-			data.add_field (get_ccode_name (param_type), get_variable_cname (param.name));
+			data.add_field (get_ccode_name (param_type), get_ccode_name (param));
 
 			if (param.variable_type is ArrayType) {
 				var array_type = (ArrayType) param.variable_type;
@@ -68,7 +68,7 @@ public class Vala.GAsyncModule : GtkModule {
 				if (deleg_type.delegate_symbol.has_target) {
 					data.add_field (get_ccode_name (delegate_target_type), get_ccode_delegate_target_name (param));
 					if (deleg_type.is_disposable ()) {
-						data.add_field (get_ccode_name (delegate_target_destroy_type), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+						data.add_field (get_ccode_name (delegate_target_destroy_type), get_ccode_delegate_target_destroy_notify_name (param));
 					}
 				}
 			}
@@ -290,7 +290,7 @@ public class Vala.GAsyncModule : GtkModule {
 		if (cancellable_param == null) {
 			create_result.add_argument (new CCodeConstant ("NULL"));
 		} else {
-			create_result.add_argument (new CCodeIdentifier (get_variable_cname (cancellable_param.name)));
+			create_result.add_argument (new CCodeIdentifier (get_ccode_name (cancellable_param)));
 		}
 
 		if (context.require_glib_version (2, 44)) {
@@ -650,7 +650,7 @@ public class Vala.GAsyncModule : GtkModule {
 			if (param.direction != ParameterDirection.IN) {
 				return_out_parameter (param);
 				if (!(param.variable_type is ValueType) || param.variable_type.nullable) {
-					ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), new CCodeConstant ("NULL"));
+					ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, get_ccode_name (param)), new CCodeConstant ("NULL"));
 				}
 			}
 		}

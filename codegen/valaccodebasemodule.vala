@@ -1956,7 +1956,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (!param.variable_type.value_owned) {
 			param_type.value_owned = !no_implicit_copy (param.variable_type);
 		}
-		data.add_field (get_ccode_name (param_type), get_variable_cname (param.name));
+		data.add_field (get_ccode_name (param_type), get_ccode_name (param));
 
 		// create copy if necessary as captured variables may need to be kept alive
 		param.captured = false;
@@ -1973,7 +1973,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else if (deleg_type != null && deleg_type.delegate_symbol.has_target) {
 			data.add_field (get_ccode_name (delegate_target_type), get_ccode_delegate_target_name (param));
 			if (param.variable_type.is_disposable ()) {
-				data.add_field (get_ccode_name (delegate_target_destroy_type), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+				data.add_field (get_ccode_name (delegate_target_destroy_type), get_ccode_delegate_target_destroy_notify_name (param));
 				// reference transfer for delegates
 				var lvalue = get_parameter_cvalue (param);
 				((GLibValue) value).delegate_target_destroy_notify_cvalue = get_delegate_target_destroy_notify_cvalue (lvalue);
@@ -2355,6 +2355,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public CCodeExpression get_local_cexpression (LocalVariable local) {
 		return get_cexpression (get_local_cname (local));
+	}
+
+	public CCodeExpression get_parameter_cexpression (Parameter param) {
+		return get_cexpression (get_ccode_name (param));
 	}
 
 	public CCodeExpression get_variable_cexpression (string name) {
@@ -3795,13 +3799,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var old_coroutine = is_in_coroutine ();
 		current_method.coroutine = false;
 
-		ccode.open_if (get_variable_cexpression (param.name));
-		ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), get_cvalue_ (value));
+		ccode.open_if (get_parameter_cexpression (param));
+		ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_parameter_cexpression (param)), get_cvalue_ (value));
 
 		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-			ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_ccode_delegate_target_name (param))), get_delegate_target_cvalue (value));
+			ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_cexpression (get_ccode_delegate_target_name (param))), get_delegate_target_cvalue (value));
 			if (delegate_type.is_disposable ()) {
-				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_delegate_target_destroy_notify_cname (param.name))), get_delegate_target_destroy_notify_cvalue (get_parameter_cvalue (param)));
+				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_cexpression (get_ccode_delegate_target_destroy_notify_name (param))), get_delegate_target_destroy_notify_cvalue (get_parameter_cvalue (param)));
 			}
 		}
 
@@ -3816,8 +3820,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var array_type = param.variable_type as ArrayType;
 		if (array_type != null && !array_type.fixed_length && get_ccode_array_length (param)) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				ccode.open_if (get_variable_cexpression (get_parameter_array_length_cname (param, dim)));
-				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (get_parameter_array_length_cname (param, dim))), get_array_length_cvalue (value, dim));
+				ccode.open_if (get_cexpression (get_parameter_array_length_cname (param, dim)));
+				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_cexpression (get_parameter_array_length_cname (param, dim))), get_array_length_cvalue (value, dim));
 				ccode.close ();
 			}
 		}

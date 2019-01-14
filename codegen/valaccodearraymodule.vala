@@ -118,7 +118,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		if (get_ccode_array_length_name (param) != null) {
 			return get_ccode_array_length_name (param);
 		} else {
-			return get_array_length_cname (get_variable_cname (param.name), dim);
+			return get_array_length_cname (get_ccode_name (param), dim);
 		}
 	}
 
@@ -723,7 +723,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 
 		string ctypename = get_ccode_name (param.variable_type);
-		string name = get_variable_cname (param.name);
+		string name = get_ccode_name (param);
 		var array_type = (ArrayType) param.variable_type;
 
 		if (array_type.fixed_length) {
@@ -740,7 +740,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		cparam_map.set (get_param_pos (get_ccode_pos (param)), main_cparam);
 		if (carg_map != null) {
-			carg_map.set (get_param_pos (get_ccode_pos (param)), get_variable_cexpression (param.name));
+			carg_map.set (get_param_pos (get_ccode_pos (param)), get_parameter_cexpression (param));
 		}
 
 		if (!array_type.fixed_length && get_ccode_array_length (param)) {
@@ -753,7 +753,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				var cparam = new CCodeParameter (get_parameter_array_length_cname (param, dim), length_ctype);
 				cparam_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), cparam);
 				if (carg_map != null) {
-					carg_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), get_variable_cexpression (cparam.name));
+					carg_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), get_cexpression (cparam.name));
 				}
 			}
 		}

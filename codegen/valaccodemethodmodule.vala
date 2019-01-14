@@ -86,7 +86,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), length_ctype);
 				cparam_map.set (get_param_pos (get_ccode_array_length_pos (m) + 0.01 * dim), cparam);
 				if (carg_map != null) {
-					carg_map.set (get_param_pos (get_ccode_array_length_pos (m) + 0.01 * dim), get_variable_cexpression (cparam.name));
+					carg_map.set (get_param_pos (get_ccode_array_length_pos (m) + 0.01 * dim), get_cexpression (cparam.name));
 				}
 			}
 		} else if (m.return_type is DelegateType) {
@@ -96,13 +96,13 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), get_ccode_name (delegate_target_type) + "*");
 				cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (m)), cparam);
 				if (carg_map != null) {
-					carg_map.set (get_param_pos (get_ccode_delegate_target_pos (m)), get_variable_cexpression (cparam.name));
+					carg_map.set (get_param_pos (get_ccode_delegate_target_pos (m)), get_cexpression (cparam.name));
 				}
 				if (deleg_type.is_disposable ()) {
 					cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname ("result"), get_ccode_name (delegate_target_destroy_type) + "*");
 					cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (m) + 0.01), cparam);
 					if (carg_map != null) {
-						carg_map.set (get_param_pos (get_ccode_delegate_target_pos (m) + 0.01), get_variable_cexpression (cparam.name));
+						carg_map.set (get_param_pos (get_ccode_delegate_target_pos (m) + 0.01), get_cexpression (cparam.name));
 					}
 				}
 			}
@@ -565,7 +565,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					if (param.direction != ParameterDirection.OUT) {
 						var t = param.variable_type.data_type;
 						if (t != null && (t.is_reference_type () || param.variable_type.is_real_struct_type ())) {
-							var cname = get_variable_cname (param.name);
+							var cname = get_ccode_name (param);
 							if (param.direction == ParameterDirection.REF && !param.variable_type.is_real_struct_type ()) {
 								cname = "*"+cname;
 							}
@@ -573,7 +573,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						}
 					} else if (!m.coroutine) {
 						// declare local variable for out parameter to allow assignment even when caller passes NULL
-						var vardecl = new CCodeVariableDeclarator.zero (get_variable_cname ("_vala_%s".printf (param.name)), default_value_for_type (param.variable_type, true), get_ccode_declarator_suffix (param.variable_type));
+						var vardecl = new CCodeVariableDeclarator.zero ("_vala_%s".printf (get_ccode_name (param)), default_value_for_type (param.variable_type, true), get_ccode_declarator_suffix (param.variable_type));
 						ccode.add_declaration (get_ccode_name (param.variable_type), vardecl);
 
 						if (param.variable_type is ArrayType) {
@@ -583,7 +583,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							if (!array_type.fixed_length) {
 								var length_ctype = get_ccode_array_length_type (array_type);
 								for (int dim = 1; dim <= array_type.rank; dim++) {
-									vardecl = new CCodeVariableDeclarator.zero (get_array_length_cname (get_variable_cname ("_vala_%s".printf (param.name)), dim), new CCodeConstant ("0"));
+									vardecl = new CCodeVariableDeclarator.zero (get_array_length_cname ("_vala_%s".printf (get_ccode_name (param)), dim), new CCodeConstant ("0"));
 									ccode.add_declaration (length_ctype, vardecl);
 								}
 							}
@@ -595,7 +595,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 								ccode.add_declaration (get_ccode_name (delegate_target_type), vardecl);
 
 								if (deleg_type.is_disposable ()) {
-									vardecl = new CCodeVariableDeclarator.zero (get_delegate_target_destroy_notify_cname (get_variable_cname ("_vala_%s".printf (param.name))), new CCodeConstant ("NULL"));
+									vardecl = new CCodeVariableDeclarator.zero ("_vala_%s".printf (get_ccode_delegate_target_destroy_notify_name (param)), new CCodeConstant ("NULL"));
 									ccode.add_declaration (get_ccode_name (delegate_target_destroy_type), vardecl);
 								}
 							}
@@ -918,7 +918,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				ctypename += "*";
 			}
 
-			cparam = new CCodeParameter (get_variable_cname (param.name), ctypename);
+			cparam = new CCodeParameter (get_ccode_name (param), ctypename);
 			if (param.format_arg) {
 				cparam.modifiers = CCodeModifiers.FORMAT_ARG;
 			}
@@ -930,7 +930,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		cparam_map.set (get_param_pos (get_ccode_pos (param), param.ellipsis), cparam);
 		if (carg_map != null && !param.ellipsis) {
-			carg_map.set (get_param_pos (get_ccode_pos (param), param.ellipsis), get_variable_cexpression (param.name));
+			carg_map.set (get_param_pos (get_ccode_pos (param), param.ellipsis), get_parameter_cexpression (param));
 		}
 
 		return cparam;

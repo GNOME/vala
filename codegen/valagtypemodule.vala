@@ -37,14 +37,14 @@ public class Vala.GTypeModule : GErrorModule {
 			ctypename = "%s *".printf (ctypename);
 		}
 
-		var cparam = new CCodeParameter (get_variable_cname (param.name), ctypename);
+		var cparam = new CCodeParameter (get_ccode_name (param), ctypename);
 		if (param.format_arg) {
 			cparam.modifiers = CCodeModifiers.FORMAT_ARG;
 		}
 
 		cparam_map.set (get_param_pos (get_ccode_pos (param)), cparam);
 		if (carg_map != null) {
-			carg_map.set (get_param_pos (get_ccode_pos (param)), get_variable_cexpression (param.name));
+			carg_map.set (get_param_pos (get_ccode_pos (param)), get_parameter_cexpression (param));
 		}
 
 		return cparam;
