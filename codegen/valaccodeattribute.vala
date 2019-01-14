@@ -659,9 +659,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 			array_length_type = ccode.get_string ("array_length_type");
 			array_length_name = ccode.get_string ("array_length_cname");
 			array_length_expr = ccode.get_string ("array_length_cexpr");
-			if (ccode.has_argument ("pos")) {
-				_pos = ccode.get_double ("pos");
-			}
 			sentinel = ccode.get_string ("sentinel");
 		}
 		if (sentinel == null) {
