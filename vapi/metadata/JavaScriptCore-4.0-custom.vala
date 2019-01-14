@@ -159,10 +159,4 @@ namespace JS {
 }
 
 namespace JSC {
-	public class Class : GLib.Object {
-		public void add_property (string name, GLib.Type property_type, [CCode (scope = "async")] GLib.Callback? getter, [CCode (scope = "async")] GLib.Callback? setter, void* user_data, GLib.DestroyNotify? destroy_notify);
-	}
-	public class Value : GLib.Object {
-		public void object_define_property_accessor (global::string property_name, JSC.ValuePropertyFlags flags, GLib.Type property_type, [CCode (scope = "async")] GLib.Callback? getter, [CCode (scope = "async")] GLib.Callback? setter, void* user_data, GLib.DestroyNotify? destroy_notify);
-	}
 }
