@@ -1,4 +1,12 @@
 Class
-  .add_property skip
+  .add_property.getter closure=-1 destroy=-1 owned=false
+  .add_property.setter closure=-1 destroy=-1 owned=false
+  .add_constructor_variadic.callback closure=-1 destroy=-1 owned=false
+  .add_constructorv.callback closure=-1 destroy=-1 owned=false
+  .add_method_variadic.callback closure=-1 destroy=-1 owned=false
+  .add_methodv.callback closure=-1 destroy=-1 owned=false
 Value
-  .object_define_property_accessor skip
+  .new_function_variadic.callback closure=-1 destroy=-1 owned=false
+  .new_functionv.callback closure=-1 destroy=-1 owned=false
+  .object_define_property_accessor.getter closure=-1 destroy=-1 owned=false
+  .object_define_property_accessor.setter closure=-1 destroy=-1 owned=false
