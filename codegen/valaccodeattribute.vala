@@ -524,6 +524,19 @@ public class Vala.CCodeAttribute : AttributeCache {
 		}
 	}
 
+	public bool delegate_target {
+		get {
+			if (_delegate_target == null) {
+				if (ccode != null) {
+					_delegate_target = ccode.get_bool ("delegate_target", get_default_delegate_target ());
+				} else {
+					_delegate_target = get_default_delegate_target ();
+				}
+			}
+			return _delegate_target;
+		}
+	}
+
 	public string delegate_target_name {
 		get {
 			if (_delegate_target_name == null) {
@@ -587,7 +600,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 	public string? array_length_type { get; private set; }
 	public string? array_length_name { get; private set; }
 	public string? array_length_expr { get; private set; }
-	public bool delegate_target { get; private set; }
 	public string sentinel { get; private set; }
 
 	private string _name;
@@ -628,6 +640,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private string _finish_real_name;
 	private bool? _finish_instance;
 	private string _real_name;
+	private bool? _delegate_target;
 	private string _delegate_target_name;
 	private string _delegate_target_destroy_notify_name;
 	private string _ctype;
@@ -641,7 +654,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 		this.node = node;
 		this.sym = node as Symbol;
 
-		delegate_target = true;
 		ccode = node.get_attribute ("CCode");
 		if (ccode != null) {
 			array_length_type = ccode.get_string ("array_length_type");
@@ -650,7 +662,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 			if (ccode.has_argument ("pos")) {
 				_pos = ccode.get_double ("pos");
 			}
-			delegate_target = ccode.get_bool ("delegate_target", true);
 			sentinel = ccode.get_string ("sentinel");
 		}
 		if (sentinel == null) {
@@ -1442,6 +1453,17 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return name;
 			}
 		}
+	}
+
+	private bool get_default_delegate_target () {
+		if (node is Field || node is Parameter || node is LocalVariable) {
+			unowned DelegateType? delegate_type = ((Variable) node).variable_type as DelegateType;
+			return delegate_type != null && delegate_type.delegate_symbol.has_target;
+		} else if (node is Callable) {
+			unowned DelegateType? delegate_type = ((Callable) node).return_type as DelegateType;
+			return delegate_type != null && delegate_type.delegate_symbol.has_target;
+		}
+		return false;
 	}
 
 	private bool get_default_array_length () {
