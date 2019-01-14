@@ -565,7 +565,6 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		result.ctype = get_ccode_type (field);
 
 		var array_type = result.value_type as ArrayType;
-		var delegate_type = result.value_type as DelegateType;
 		if (field.binding == MemberBinding.INSTANCE) {
 			CCodeExpression pub_inst = null;
 
@@ -629,7 +628,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						set_array_size_cvalue (result, new CCodeMemberAccess (inst, size_cname));
 					}
 				}
-			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target && get_ccode_delegate_target (field)) {
+			} else if (get_ccode_delegate_target (field)) {
 				string target_cname = get_ccode_delegate_target_name (field);
 				string target_destroy_notify_cname = get_ccode_delegate_target_destroy_notify_name (field);
 
@@ -695,7 +694,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				if (array_type.rank == 1 && field.is_internal_symbol ()) {
 					set_array_size_cvalue (result, new CCodeIdentifier (get_array_size_cname (get_ccode_name (field))));
 				}
-			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target && get_ccode_delegate_target (field)) {
+			} else if (get_ccode_delegate_target (field)) {
 				result.delegate_target_cvalue = new CCodeIdentifier (get_ccode_delegate_target_name (field));
 				if (result.value_type.is_disposable ()) {
 					result.delegate_target_destroy_notify_cvalue = new CCodeIdentifier (get_ccode_delegate_target_destroy_notify_name (field));
@@ -744,7 +743,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 			result.array_size_cvalue = null;
 		} else if (delegate_type != null) {
-			if (!delegate_type.delegate_symbol.has_target || !get_ccode_delegate_target (variable)) {
+			if (!get_ccode_delegate_target (variable)) {
 				result.delegate_target_cvalue = new CCodeConstant ("NULL");
 			}
 

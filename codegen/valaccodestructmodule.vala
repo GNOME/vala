@@ -101,7 +101,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 							instance_struct.add_field (length_ctype, get_array_size_cname (get_ccode_name (f)));
 						}
 					}
-				} else if (f.variable_type is DelegateType && get_ccode_delegate_target (f)) {
+				} else if (get_ccode_delegate_target (f)) {
 					var delegate_type = (DelegateType) f.variable_type;
 					if (delegate_type.delegate_symbol.has_target) {
 						// create field to store delegate target

@@ -1101,7 +1101,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					decl_space.add_type_member_declaration (cdecl);
 				}
 			}
-		} else if (f.variable_type is DelegateType && get_ccode_delegate_target (f)) {
+		} else if (get_ccode_delegate_target (f)) {
 			var delegate_type = (DelegateType) f.variable_type;
 			if (delegate_type.delegate_symbol.has_target) {
 				// create field to store delegate target
@@ -1189,7 +1189,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							var rhs_array_len = get_array_length_cvalue (field_value, 1);
 							ccode.add_assignment (lhs_array_size, rhs_array_len);
 						}
-					} else if (f.variable_type is DelegateType && get_ccode_delegate_target (f)) {
+					} else if (get_ccode_delegate_target (f)) {
 						var delegate_type = (DelegateType) f.variable_type;
 						if (delegate_type.delegate_symbol.has_target) {
 							var field_value = get_field_cvalue (f, load_this_parameter ((TypeSymbol) f.parent_symbol));
@@ -1313,7 +1313,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							cfile.add_type_member_declaration (cdecl);
 						}
 					}
-				} else if (f.variable_type is DelegateType && get_ccode_delegate_target (f)) {
+				} else if (get_ccode_delegate_target (f)) {
 					var delegate_type = (DelegateType) f.variable_type;
 					if (delegate_type.delegate_symbol.has_target) {
 						// create field to store delegate target
