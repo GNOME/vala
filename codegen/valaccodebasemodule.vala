@@ -1211,7 +1211,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				pop_context ();
 			}
 
-			if (get_ccode_delegate_target (f) && requires_destroy (f.variable_type) && instance_finalize_context != null) {
+			if ((!(f.variable_type is DelegateType) || get_ccode_delegate_target (f)) && requires_destroy (f.variable_type) && instance_finalize_context != null) {
 				push_context (instance_finalize_context);
 				ccode.add_expression (destroy_field (f, load_this_parameter ((TypeSymbol) f.parent_symbol)));
 				pop_context ();
@@ -6505,7 +6505,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var this_value = load_this_parameter (st);
 		foreach (Field f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
-				if (get_ccode_delegate_target (f) && requires_destroy (f.variable_type)) {
+				if ((!(f.variable_type is DelegateType) || get_ccode_delegate_target (f)) && requires_destroy (f.variable_type)) {
 					ccode.add_expression (destroy_field (f, this_value));
 				}
 			}
@@ -6536,7 +6536,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		foreach (Field f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
 				var value = load_field (f, load_this_parameter ((TypeSymbol) st));
-				if (get_ccode_delegate_target (f) && requires_copy (f.variable_type))  {
+				if ((!(f.variable_type is DelegateType) || get_ccode_delegate_target (f)) && requires_copy (f.variable_type))  {
 					value = copy_value (value, f);
 					if (value == null) {
 						// error case, continue to avoid critical
