@@ -250,7 +250,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	/* (constant) hash table with all predefined marshallers */
 	public Set<string> predefined_marshal_set;
 	/* (constant) hash table with all reserved identifiers in the generated code */
-	Set<string> reserved_identifiers;
+	public static Set<string> reserved_identifiers;
 
 	public int next_temp_var_id {
 		get { return emit_context.next_temp_var_id; }
