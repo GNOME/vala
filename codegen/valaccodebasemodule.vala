@@ -2345,28 +2345,24 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		stmt.declaration.accept (this);
 	}
 
-	public CCodeExpression get_local_cexpression (LocalVariable local) {
+	public CCodeExpression get_cexpression (string name) {
 		if (is_in_coroutine ()) {
-			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), get_local_cname (local));
+			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), name);
 		} else {
-			return new CCodeIdentifier (get_local_cname (local));
+			return new CCodeIdentifier (name);
 		}
+	}
+
+	public CCodeExpression get_local_cexpression (LocalVariable local) {
+		return get_cexpression (get_local_cname (local));
 	}
 
 	public CCodeExpression get_variable_cexpression (string name) {
-		if (is_in_coroutine ()) {
-			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), get_variable_cname (name));
-		} else {
-			return new CCodeIdentifier (get_variable_cname (name));
-		}
+		return get_cexpression (get_variable_cname (name));
 	}
 
 	public CCodeExpression get_this_cexpression () {
-		if (is_in_coroutine ()) {
-			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "self");
-		} else {
-			return new CCodeIdentifier ("self");
-		}
+		return get_cexpression ("self");
 	}
 
 	public string get_local_cname (LocalVariable local) {
@@ -2402,11 +2398,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public CCodeExpression get_result_cexpression (string cname = "result") {
-		if (is_in_coroutine ()) {
-			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), cname);
-		} else {
-			return new CCodeIdentifier (cname);
-		}
+		return get_cexpression (cname);
 	}
 
 	public bool is_simple_struct_creation (Variable variable, Expression expr) {
@@ -4262,15 +4254,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_base_access (BaseAccess expr) {
-		CCodeExpression this_access;
-		if (is_in_coroutine ()) {
-			// use closure
-			this_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "self");
-		} else {
-			this_access = new CCodeIdentifier ("self");
-		}
-
-		set_cvalue (expr, generate_instance_cast (this_access, expr.value_type.data_type));
+		set_cvalue (expr, generate_instance_cast (get_this_cexpression (), expr.value_type.data_type));
 	}
 
 	public override void visit_postfix_expression (PostfixExpression expr) {
