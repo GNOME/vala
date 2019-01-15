@@ -75,7 +75,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			var cparam = new CCodeParameter ("result", get_ccode_name (m.return_type) + "*");
 			cparam_map.set (get_param_pos (-3), cparam);
 			if (carg_map != null) {
-				carg_map.set (get_param_pos (-3), get_result_cexpression ());
+				carg_map.set (get_param_pos (-3), get_cexpression ("result"));
 			}
 		} else if (get_ccode_array_length (m) && m.return_type is ArrayType) {
 			// return array length if appropriate
