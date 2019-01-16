@@ -131,10 +131,6 @@ namespace GClue {
 		public void complete_create_client (owned GLib.DBusMethodInvocation invocation, string client);
 		public void complete_delete_client (owned GLib.DBusMethodInvocation invocation);
 		public void complete_get_client (owned GLib.DBusMethodInvocation invocation, string client);
-		[NoWrapper]
-		public abstract bool handle_create_client (GLib.DBusMethodInvocation invocation);
-		[NoWrapper]
-		public abstract bool handle_delete_client (GLib.DBusMethodInvocation invocation, string arg_client);
 		public static unowned GLib.DBusInterfaceInfo interface_info ();
 		public static uint override_properties (GLib.ObjectClass klass, uint property_id_begin);
 		[NoAccessorMethod]
@@ -142,6 +138,8 @@ namespace GClue {
 		[NoAccessorMethod]
 		public abstract bool in_use { get; set; }
 		public virtual signal bool handle_add_agent (GLib.DBusMethodInvocation invocation, string arg_id);
+		public virtual signal bool handle_create_client (GLib.DBusMethodInvocation invocation);
+		public virtual signal bool handle_delete_client (GLib.DBusMethodInvocation invocation, string arg_client);
 		public virtual signal bool handle_get_client (GLib.DBusMethodInvocation invocation);
 	}
 	[CCode (cheader_filename = "geoclue.h", cprefix = "GCLUE_ACCURACY_LEVEL_", type_id = "gclue_accuracy_level_get_type ()")]

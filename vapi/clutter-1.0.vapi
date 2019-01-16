@@ -5791,7 +5791,7 @@ namespace Clutter {
 		public static unowned Clutter.BindingPool get_for_class (void* klass);
 		public void install_action (string action_name, uint key_val, Clutter.ModifierType modifiers, owned Clutter.BindingActionFunc callback);
 		public void install_closure (string action_name, uint key_val, Clutter.ModifierType modifiers, GLib.Closure closure);
-		public void override_action (uint key_val, Clutter.ModifierType modifiers, owned GLib.Callback callback);
+		public void override_action (uint key_val, Clutter.ModifierType modifiers, owned Clutter.BindingActionFunc callback);
 		public void override_closure (uint key_val, Clutter.ModifierType modifiers, GLib.Closure closure);
 		public void remove_action (uint key_val, Clutter.ModifierType modifiers);
 		public void unblock_action (string action_name);
