@@ -283,6 +283,7 @@ namespace GES {
 		public Gst.Element video_sink { owned get; set; }
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_pitivi_formatter_get_type ()")]
+	[Version (deprecated = true, deprecated_since = "1.0")]
 	public class PitiviFormatter : GES.Formatter, GES.Extractable {
 		[CCode (has_construct_function = false)]
 		public PitiviFormatter ();
@@ -1050,6 +1051,8 @@ namespace GES {
 	public static bool init ();
 	[CCode (cheader_filename = "ges/ges.h")]
 	public static bool init_check ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref string[]? argv) throws GLib.Error;
+	[CCode (cheader_filename = "ges/ges.h")]
+	public static bool is_initialized ();
 	[CCode (cheader_filename = "ges/ges.h")]
 	public static GLib.List<weak GES.Asset> list_assets (GLib.Type filter);
 	[CCode (cheader_filename = "ges/ges.h")]

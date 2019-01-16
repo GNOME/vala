@@ -25,6 +25,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GstPhysMemoryAllocator", lower_case_cprefix = "gst_phys_memory_allocator_", type_cname = "GstPhysMemoryAllocatorInterface", type_id = "gst_phys_memory_allocator_get_type ()")]
 		[GIR (name = "PhysMemoryAllocator")]
+		[Version (since = "1.14")]
 		public interface PhysMemoryAllocator : Gst.Allocator {
 			[NoWrapper]
 			public abstract uintptr get_phys_addr (Gst.Memory mem);

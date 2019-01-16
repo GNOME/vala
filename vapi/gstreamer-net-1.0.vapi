@@ -34,9 +34,9 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/net/net.h", cname = "GstPtpClock", lower_case_cprefix = "gst_ptp_clock_", type_id = "gst_ptp_clock_get_type ()")]
 		[GIR (name = "PtpClock")]
+		[Version (since = "1.6")]
 		public class PtpClock : Gst.SystemClock {
 			[CCode (has_construct_function = false, type = "GstClock*")]
-			[Version (since = "1.6")]
 			public PtpClock (string name, uint domain);
 			[NoAccessorMethod]
 			public uint domain { get; construct; }

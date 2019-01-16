@@ -899,55 +899,35 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_caps_features_get_type ()")]
 	[Compact]
+	[Version (since = "1.2")]
 	public class CapsFeatures {
 		[CCode (has_construct_function = false)]
-		[Version (since = "1.2")]
 		public CapsFeatures (string feature1, ...);
-		[Version (since = "1.2")]
 		public void add (string feature);
-		[Version (since = "1.2")]
 		public void add_id (GLib.Quark feature);
 		[CCode (has_construct_function = false)]
-		[Version (since = "1.2")]
 		public CapsFeatures.any ();
-		[Version (since = "1.2")]
 		public bool contains (string feature);
-		[Version (since = "1.2")]
 		public bool contains_id (GLib.Quark feature);
-		[Version (since = "1.2")]
 		public Gst.CapsFeatures copy ();
 		[CCode (has_construct_function = false)]
-		[Version (since = "1.2")]
 		public CapsFeatures.empty ();
-		[Version (since = "1.2")]
 		public void free ();
-		[Version (since = "1.2")]
 		public static Gst.CapsFeatures? from_string (string features);
-		[Version (since = "1.2")]
 		public unowned string? get_nth (uint i);
-		[Version (since = "1.2")]
 		public GLib.Quark get_nth_id (uint i);
-		[Version (since = "1.2")]
 		public uint get_size ();
 		[CCode (has_construct_function = false)]
 		public CapsFeatures.id (params GLib.Quark[] features);
 		[CCode (has_construct_function = false)]
-		[Version (since = "1.2")]
 		public CapsFeatures.id_valist (GLib.Quark feature1, va_list varargs);
-		[Version (since = "1.2")]
 		public bool is_any ();
-		[Version (since = "1.2")]
 		public bool is_equal (Gst.CapsFeatures features2);
-		[Version (since = "1.2")]
 		public void remove (string feature);
-		[Version (since = "1.2")]
 		public void remove_id (GLib.Quark feature);
-		[Version (since = "1.2")]
 		public bool set_parent_refcount (int refcount);
-		[Version (since = "1.2")]
 		public string to_string ();
 		[CCode (has_construct_function = false)]
-		[Version (since = "1.2")]
 		public CapsFeatures.valist (string feature1, va_list varargs);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_clock_get_type ()")]
@@ -1012,19 +992,14 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_context_get_type ()")]
 	[Compact]
+	[Version (since = "1.2")]
 	public class Context {
 		[CCode (has_construct_function = false)]
-		[Version (since = "1.2")]
 		public Context (string context_type, bool persistent);
-		[Version (since = "1.2")]
 		public unowned string get_context_type ();
-		[Version (since = "1.2")]
 		public unowned Gst.Structure get_structure ();
-		[Version (since = "1.2")]
 		public bool has_context_type (string context_type);
-		[Version (since = "1.2")]
 		public bool is_persistent ();
-		[Version (since = "1.2")]
 		public Gst.Structure writable_structure ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_control_binding_get_type ()")]
@@ -2551,6 +2526,7 @@ namespace Gst {
 		public void set_tags (owned Gst.TagList? tags);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_tracer_get_type ()")]
+	[Version (since = "1.8")]
 	public abstract class Tracer : Gst.Object {
 		[CCode (has_construct_function = false)]
 		protected Tracer ();
@@ -2566,6 +2542,7 @@ namespace Gst {
 		public GLib.Type get_tracer_type ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_tracer_record_get_type ()")]
+	[Version (since = "1.8")]
 	public class TracerRecord : Gst.Object {
 		[CCode (has_construct_function = false)]
 		protected TracerRecord ();
