@@ -6800,7 +6800,7 @@ namespace Gdk {
 	public static unowned Cairo.Surface? offscreen_window_get_surface (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "2.18")]
-	public static void offscreen_window_set_embedder (Gdk.Window window, Gdk.Window embedder);
+	public static void offscreen_window_set_embedder (Gdk.Window window, Gdk.Window? embedder);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Pango.Context pango_context_get ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
