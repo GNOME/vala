@@ -2081,20 +2081,19 @@ namespace Gtk {
 		public virtual signal void color_set ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_color_chooser_dialog_get_type ()")]
+	[Version (since = "3.4")]
 	public class ColorChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.ColorChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Version (since = "3.4")]
 		public ColorChooserDialog (string? title, Gtk.Window? parent);
 		[NoAccessorMethod]
 		public bool show_editor { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_color_chooser_widget_get_type ()")]
+	[Version (since = "3.4")]
 	public class ColorChooserWidget : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.ColorChooser, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Version (since = "3.4")]
 		public ColorChooserWidget ();
 		[NoAccessorMethod]
-		[Version (since = "3.4")]
 		public bool show_editor { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_color_selection_get_type ()")]
@@ -2772,42 +2771,27 @@ namespace Gtk {
 		protected EntryAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_entry_buffer_get_type ()")]
+	[Version (since = "2.18")]
 	public class EntryBuffer : GLib.Object {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.18")]
 		public EntryBuffer ([CCode (array_length_cname = "n_initial_chars", array_length_pos = 1.1, type = "const gchar*")] uint8[]? initial_chars = null);
-		[Version (since = "2.18")]
 		public virtual uint delete_text (uint position, uint n_chars);
-		[Version (since = "2.18")]
 		public void emit_deleted_text (uint position, uint n_chars);
-		[Version (since = "2.18")]
 		public void emit_inserted_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, array_length_type = "guint", type = "const gchar*")] uint8[] chars);
-		[Version (since = "2.18")]
 		public size_t get_bytes ();
-		[Version (since = "2.18")]
 		public virtual uint get_length ();
-		[Version (since = "2.18")]
 		public int get_max_length ();
-		[Version (since = "2.18")]
 		public unowned string get_text ();
 		[CCode (vfunc_name = "get_text")]
 		[NoWrapper]
 		public virtual unowned string get_text_internal (out size_t n_bytes = null);
-		[Version (since = "2.18")]
 		public virtual uint insert_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, array_length_type = "guint", type = "const gchar*")] uint8[] chars);
-		[Version (since = "2.18")]
 		public void set_max_length (int max_length);
-		[Version (since = "2.18")]
 		public void set_text ([CCode (array_length_cname = "n_chars", array_length_pos = 1.1, type = "const gchar*")] uint8[] chars);
-		[Version (since = "2.18")]
 		public uint length { get; }
-		[Version (since = "2.18")]
 		public int max_length { get; set; }
-		[Version (since = "2.18")]
 		public string text { get; set; }
-		[Version (since = "2.18")]
 		public virtual signal void deleted_text (uint position, uint n_chars);
-		[Version (since = "2.18")]
 		public virtual signal void inserted_text (uint position, string chars, uint n_chars);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_entry_completion_get_type ()")]
@@ -3312,15 +3296,15 @@ namespace Gtk {
 		public virtual signal void font_set ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_font_chooser_dialog_get_type ()")]
+	[Version (since = "3.2")]
 	public class FontChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.FontChooser {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Version (since = "3.2")]
 		public FontChooserDialog (string? title, Gtk.Window? parent);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_font_chooser_widget_get_type ()")]
+	[Version (since = "3.2")]
 	public class FontChooserWidget : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.FontChooser, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Version (since = "3.2")]
 		public FontChooserWidget ();
 		[NoAccessorMethod]
 		public GLib.Action tweak_action { owned get; }
@@ -5672,24 +5656,20 @@ namespace Gtk {
 		public Gdk.Window socket_window { get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_popover_get_type ()")]
+	[Version (since = "3.12")]
 	public class Popover : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Version (since = "3.12")]
 		public Popover (Gtk.Widget? relative_to);
-		[Version (since = "3.12")]
 		public void bind_model (GLib.MenuModel? model, string? action_namespace);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Version (since = "3.12")]
 		public Popover.from_model (Gtk.Widget? relative_to, GLib.MenuModel model);
 		[Version (since = "3.20")]
 		public Gtk.PopoverConstraint get_constrain_to ();
 		[Version (since = "3.18")]
 		public unowned Gtk.Widget? get_default_widget ();
-		[Version (since = "3.12")]
 		public bool get_modal ();
 		public bool get_pointing_to (out Gdk.Rectangle rect);
 		public Gtk.PositionType get_position ();
-		[Version (since = "3.12")]
 		public unowned Gtk.Widget get_relative_to ();
 		[Version (deprecated = true, deprecated_since = "3.22", since = "3.16")]
 		public bool get_transitions_enabled ();
@@ -5701,30 +5681,21 @@ namespace Gtk {
 		public void set_constrain_to (Gtk.PopoverConstraint constraint);
 		[Version (since = "3.18")]
 		public void set_default_widget (Gtk.Widget? widget);
-		[Version (since = "3.12")]
 		public void set_modal (bool modal);
-		[Version (since = "3.12")]
 		public void set_pointing_to (Gdk.Rectangle rect);
-		[Version (since = "3.12")]
 		public void set_position (Gtk.PositionType position);
-		[Version (since = "3.12")]
 		public void set_relative_to (Gtk.Widget? relative_to);
 		[Version (deprecated = true, deprecated_since = "3.22", since = "3.16")]
 		public void set_transitions_enabled (bool transitions_enabled);
 		[Version (since = "3.20")]
 		public Gtk.PopoverConstraint constrain_to { get; set; }
-		[Version (since = "3.12")]
 		public bool modal { get; set; }
 		[NoAccessorMethod]
-		[Version (since = "3.12")]
 		public Gdk.Rectangle pointing_to { get; set; }
-		[Version (since = "3.12")]
 		public Gtk.PositionType position { get; set; }
-		[Version (since = "3.12")]
 		public Gtk.Widget relative_to { get; set; }
 		[Version (deprecated = true, deprecated_since = "3.22", since = "3.16")]
 		public bool transitions_enabled { get; set; }
-		[Version (since = "3.12")]
 		public virtual signal void closed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_popover_accessible_get_type ()")]
@@ -6665,30 +6636,24 @@ namespace Gtk {
 		protected ScrolledWindowAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_search_bar_get_type ()")]
+	[Version (since = "3.10")]
 	public class SearchBar : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Version (since = "3.10")]
 		public SearchBar ();
-		[Version (since = "3.10")]
 		public void connect_entry (Gtk.Entry entry);
-		[Version (since = "3.10")]
 		public bool get_search_mode ();
-		[Version (since = "3.10")]
 		public bool get_show_close_button ();
-		[Version (since = "3.10")]
 		public bool handle_event (Gdk.Event event);
-		[Version (since = "3.10")]
 		public void set_search_mode (bool search_mode);
-		[Version (since = "3.10")]
 		public void set_show_close_button (bool visible);
 		[NoAccessorMethod]
 		public bool search_mode_enabled { get; set; }
 		public bool show_close_button { get; set construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_search_entry_get_type ()")]
+	[Version (since = "3.6")]
 	public class SearchEntry : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.CellEditable, Gtk.Editable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Version (since = "3.6")]
 		public SearchEntry ();
 		[Version (since = "3.16")]
 		public bool handle_event (Gdk.Event event);
@@ -7258,13 +7223,11 @@ namespace Gtk {
 		protected StackAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_stack_sidebar_get_type ()")]
+	[Version (since = "3.16")]
 	public class StackSidebar : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Version (since = "3.16")]
 		public StackSidebar ();
-		[Version (since = "3.16")]
 		public unowned Gtk.Stack? get_stack ();
-		[Version (since = "3.16")]
 		public void set_stack (Gtk.Stack stack);
 		public Gtk.Stack stack { get; set; }
 	}
@@ -8638,41 +8601,25 @@ namespace Gtk {
 		public virtual signal void toolbar_reconfigured ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tool_item_group_get_type ()")]
+	[Version (since = "2.20")]
 	public class ToolItemGroup : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.ToolShell {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Version (since = "2.20")]
 		public ToolItemGroup (string label);
-		[Version (since = "2.20")]
 		public bool get_collapsed ();
-		[Version (since = "2.20")]
 		public unowned Gtk.ToolItem get_drop_item (int x, int y);
-		[Version (since = "2.20")]
 		public Pango.EllipsizeMode get_ellipsize ();
-		[Version (since = "2.20")]
 		public Gtk.ReliefStyle get_header_relief ();
-		[Version (since = "2.20")]
 		public int get_item_position (Gtk.ToolItem item);
-		[Version (since = "2.20")]
 		public unowned string get_label ();
-		[Version (since = "2.20")]
 		public unowned Gtk.Widget get_label_widget ();
-		[Version (since = "2.20")]
 		public uint get_n_items ();
-		[Version (since = "2.20")]
 		public unowned Gtk.ToolItem get_nth_item (uint index);
-		[Version (since = "2.20")]
 		public void insert (Gtk.ToolItem item, int position);
-		[Version (since = "2.20")]
 		public void set_collapsed (bool collapsed);
-		[Version (since = "2.20")]
 		public void set_ellipsize (Pango.EllipsizeMode ellipsize);
-		[Version (since = "2.20")]
 		public void set_header_relief (Gtk.ReliefStyle style);
-		[Version (since = "2.20")]
 		public void set_item_position (Gtk.ToolItem item, int position);
-		[Version (since = "2.20")]
 		public void set_label (string label);
-		[Version (since = "2.20")]
 		public void set_label_widget (Gtk.Widget label_widget);
 		public bool collapsed { get; set; }
 		public Pango.EllipsizeMode ellipsize { get; set; }
@@ -8681,59 +8628,37 @@ namespace Gtk {
 		public Gtk.Widget label_widget { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tool_palette_get_type ()")]
+	[Version (since = "2.20")]
 	public class ToolPalette : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Orientable, Gtk.Scrollable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		[Version (since = "2.20")]
 		public ToolPalette ();
-		[Version (since = "2.20")]
 		public void add_drag_dest (Gtk.Widget widget, Gtk.DestDefaults flags, Gtk.ToolPaletteDragTargets targets, Gdk.DragAction actions);
-		[Version (since = "2.20")]
 		public unowned Gtk.Widget get_drag_item (Gtk.SelectionData selection);
-		[Version (since = "2.20")]
 		public static unowned Gtk.TargetEntry? get_drag_target_group ();
-		[Version (since = "2.20")]
 		public static unowned Gtk.TargetEntry? get_drag_target_item ();
-		[Version (since = "2.20")]
 		public unowned Gtk.ToolItemGroup? get_drop_group (int x, int y);
-		[Version (since = "2.20")]
 		public unowned Gtk.ToolItem? get_drop_item (int x, int y);
-		[Version (since = "2.20")]
 		public bool get_exclusive (Gtk.ToolItemGroup group);
-		[Version (since = "2.20")]
 		public bool get_expand (Gtk.ToolItemGroup group);
-		[Version (since = "2.20")]
 		public int get_group_position (Gtk.ToolItemGroup group);
 		[Version (deprecated = true, deprecated_since = "3.0", since = "2.20")]
 		public unowned Gtk.Adjustment get_hadjustment ();
-		[Version (since = "2.20")]
 		public Gtk.IconSize get_icon_size ();
-		[Version (since = "2.20")]
 		public Gtk.ToolbarStyle get_style ();
 		[Version (deprecated = true, deprecated_since = "3.0", since = "2.20")]
 		public unowned Gtk.Adjustment get_vadjustment ();
-		[Version (since = "2.20")]
 		public void set_drag_source (Gtk.ToolPaletteDragTargets targets);
-		[Version (since = "2.20")]
 		public void set_exclusive (Gtk.ToolItemGroup group, bool exclusive);
-		[Version (since = "2.20")]
 		public void set_expand (Gtk.ToolItemGroup group, bool expand);
-		[Version (since = "2.20")]
 		public void set_group_position (Gtk.ToolItemGroup group, int position);
-		[Version (since = "2.20")]
 		public void set_icon_size ([CCode (type = "GtkIconSize")] Gtk.IconSize icon_size);
-		[Version (since = "2.20")]
 		public void set_style (Gtk.ToolbarStyle style);
-		[Version (since = "2.20")]
 		public void unset_icon_size ();
-		[Version (since = "2.20")]
 		public void unset_style ();
-		[Version (since = "2.20")]
 		public Gtk.IconSize icon_size { get; set; }
 		[NoAccessorMethod]
-		[Version (since = "2.20")]
 		public bool icon_size_set { get; set; }
 		[NoAccessorMethod]
-		[Version (since = "2.20")]
 		public Gtk.ToolbarStyle toolbar_style { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_toolbar_get_type ()")]
@@ -10339,18 +10264,13 @@ namespace Gtk {
 		public void remove_window (Gtk.Window window);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkActionableInterface", type_id = "gtk_actionable_get_type ()")]
+	[Version (since = "3.4")]
 	public interface Actionable : Gtk.Widget {
-		[Version (since = "3.4")]
 		public abstract unowned string? get_action_name ();
-		[Version (since = "3.4")]
 		public abstract unowned GLib.Variant get_action_target_value ();
-		[Version (since = "3.4")]
 		public abstract void set_action_name (string? action_name);
-		[Version (since = "3.4")]
 		public void set_action_target (string format_string, ...);
-		[Version (since = "3.4")]
 		public abstract void set_action_target_value (GLib.Variant? target_value);
-		[Version (since = "3.4")]
 		public void set_detailed_action_name (string detailed_action_name);
 		public string action_name { get; set; }
 		[NoAccessorMethod]
@@ -10461,22 +10381,15 @@ namespace Gtk {
 		public abstract void set_cell_data_func (Gtk.CellRenderer cell, owned Gtk.CellLayoutDataFunc? func);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkColorChooserInterface", type_id = "gtk_color_chooser_get_type ()")]
+	[Version (since = "3.4")]
 	public interface ColorChooser : GLib.Object {
-		[Version (since = "3.4")]
 		public abstract void add_palette (Gtk.Orientation orientation, int colors_per_line, [CCode (array_length_cname = "n_colors", array_length_pos = 2.5)] Gdk.RGBA[]? colors);
-		[Version (since = "3.4")]
 		public abstract Gdk.RGBA get_rgba ();
-		[Version (since = "3.4")]
 		public bool get_use_alpha ();
-		[Version (since = "3.4")]
 		public abstract void set_rgba (Gdk.RGBA color);
-		[Version (since = "3.4")]
 		public void set_use_alpha (bool use_alpha);
-		[Version (since = "3.4")]
 		public Gdk.RGBA rgba { get; set; }
-		[Version (since = "3.4")]
 		public bool use_alpha { get; set; }
-		[Version (since = "3.4")]
 		public virtual signal void color_activated (Gdk.RGBA color);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkEditableInterface", type_id = "gtk_editable_get_type ()")]
