@@ -55,6 +55,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAggregator", lower_case_cprefix = "gst_aggregator_", type_id = "gst_aggregator_get_type ()")]
 		[GIR (name = "Aggregator")]
+		[Version (since = "1.14")]
 		public abstract class Aggregator : Gst.Element {
 			public weak Gst.Pad srcpad;
 			[CCode (has_construct_function = false)]
@@ -109,6 +110,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAggregatorPad", lower_case_cprefix = "gst_aggregator_pad_", type_id = "gst_aggregator_pad_get_type ()")]
 		[GIR (name = "AggregatorPad")]
+		[Version (since = "1.14")]
 		public class AggregatorPad : Gst.Pad {
 			public weak Gst.Segment segment;
 			[CCode (has_construct_function = false)]
