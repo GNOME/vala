@@ -7819,7 +7819,7 @@ namespace Gtk {
 		public signal void im_update ();
 		public signal bool key_pressed (uint keyval, uint keycode, Gdk.ModifierType state);
 		public signal void key_released (uint keyval, uint keycode, Gdk.ModifierType state);
-		public signal bool modifiers (Gdk.ModifierType object);
+		public signal bool modifiers (Gdk.ModifierType keyval);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_legacy_get_type ()")]
 	public class EventControllerLegacy : Gtk.EventController {
@@ -8608,7 +8608,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Label (string? str);
 		public unowned Pango.AttrList? get_attributes ();
-		public unowned string get_current_uri ();
+		public unowned string? get_current_uri ();
 		public Pango.EllipsizeMode get_ellipsize ();
 		public Gtk.Justification get_justify ();
 		public unowned string get_label ();
