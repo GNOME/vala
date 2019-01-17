@@ -4670,6 +4670,8 @@ namespace GLib {
 
 		[Version (since = "2.14")]
 		public void clear ();
+		[Version (since = "2.60")]
+		public void clear_full (GLib.DestroyNotify? free_func);
 		public bool is_empty ();
 		[Version (since = "2.4")]
 		public uint get_length ();
