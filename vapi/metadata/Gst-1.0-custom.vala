@@ -120,6 +120,13 @@ namespace Gst {
 	public class TocEntry {
 	}
 
+	public struct StaticCaps {
+		[CCode (cheader_filename = "gst/gst.h", cname = "GST_STATIC_CAPS_ANY")]
+		public const Gst.StaticCaps ANY;
+		[CCode (cheader_filename = "gst/gst.h", cname = "GST_STATIC_CAPS_NONE")]
+		public const Gst.StaticCaps NONE;
+	}
+
 	[Compact, CCode (ref_function = "gst_atomic_queue_ref", type_id = "gst_atomic_queue_get_type ()", unref_function = "gst_atomic_queue_unref")]
 	public class AtomicQueue<T> {
 		public unowned T? peek<T> ();
