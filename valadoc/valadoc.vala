@@ -36,7 +36,6 @@ public class ValaDoc : Object {
 	private static string gir_name = null;
 	private static string gir_namespace = null;
 	private static string gir_version = null;
-	private static string driverpath = null;
 
 	private static bool add_inherited = false;
 	private static bool _protected = true;
@@ -89,7 +88,7 @@ public class ValaDoc : Object {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 
-		{ "driver", 0, 0, OptionArg.STRING, ref driverpath, "Name of an driver or path to a custom driver", null },
+		{ "driver", 0, OptionFlags.OPTIONAL_ARG, OptionArg.CALLBACK, (void*) option_deprecated, "Name of an driver or path to a custom driver (DEPRECATED AND IGNORED)", null },
 
 		{ "importdir", 0, 0, OptionArg.FILENAME_ARRAY, ref import_directories, "Look for external documentation in DIRECTORY", "DIRECTORY..." },
 		{ "import", 0, 0, OptionArg.STRING_ARRAY, ref import_packages, "Include binding for PACKAGE", "PACKAGE..." },
@@ -121,6 +120,11 @@ public class ValaDoc : Object {
 
 		{ null }
 	};
+
+	static bool option_deprecated (string option_name, string? val, void* data) throws OptionError {
+		stdout.printf ("Command-line option `%s` is deprecated and will be ignored\n", option_name);
+		return true;
+	}
 
 	private static int quit (ErrorReporter reporter) {
 		if (reporter.errors == 0) {
@@ -161,11 +165,10 @@ public class ValaDoc : Object {
 		return ValaDoc.pkg_name;
 	}
 
-	private ModuleLoader? create_module_loader (ErrorReporter reporter, out Doclet? doclet, out Driver? driver) {
+	private ModuleLoader? create_module_loader (ErrorReporter reporter, out Doclet? doclet) {
 		ModuleLoader modules = ModuleLoader.get_instance ();
 
 		doclet = null;
-		driver = null;
 
 		// doclet:
 		string? pluginpath = ModuleLoader.get_doclet_path (docletpath, reporter);
@@ -178,12 +181,6 @@ public class ValaDoc : Object {
 			reporter.simple_error (null, "failed to load doclet");
 			return null;
 		}
-
-
-		// driver:
-		driver = new Valadoc.Drivers.Driver ();
-
-		assert (driver != null && doclet != null);
 
 		return modules;
 	}
@@ -233,20 +230,18 @@ public class ValaDoc : Object {
 		settings.alternative_resource_dirs = alternative_resource_dirs;
 
 
+		var driver = new Valadoc.Drivers.Driver ();
+
 		// load plugins:
 		Doclet? doclet = null;
-		Driver? driver = null;
-
-		ModuleLoader? modules = create_module_loader (reporter, out doclet, out driver);
+		ModuleLoader? modules = create_module_loader (reporter, out doclet);
 		if (reporter.errors > 0 || modules == null) {
 			return quit (reporter);
 		}
 
-
 		// Create tree:
 		Valadoc.Api.Tree doctree = driver.build (settings, reporter);
 		if (reporter.errors > 0) {
-			driver = null;
 			doclet = null;
 			return quit (reporter);
 		}
