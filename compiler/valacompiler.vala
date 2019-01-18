@@ -64,7 +64,6 @@ class Vala.Compiler {
 	static bool compile_only;
 	static string output;
 	static bool debug;
-	static bool thread;
 	static bool mem_profiler;
 	static bool disable_assert;
 	static bool enable_checking;
@@ -126,7 +125,7 @@ class Vala.Compiler {
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
 		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
-		{ "thread", 0, 0, OptionArg.NONE, ref thread, "Enable multithreading support (DEPRECATED AND IGNORED)", null },
+		{ "thread", 0, OptionFlags.OPTIONAL_ARG, OptionArg.CALLBACK, (void*) option_deprecated, "Enable multithreading support (DEPRECATED AND IGNORED)", null },
 		{ "enable-mem-profiler", 0, 0, OptionArg.NONE, ref mem_profiler, "Enable GLib memory profiler", null },
 		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
 		{ "main", 0, 0, OptionArg.STRING, ref entry_point, "Use SYMBOL as entry point", "SYMBOL..." },
@@ -158,6 +157,11 @@ class Vala.Compiler {
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
 		{ null }
 	};
+
+	static bool option_deprecated (string option_name, string? val, void* data) throws OptionError {
+		stdout.printf ("Command-line option `%s` is deprecated and will be ignored\n", option_name);
+		return true;
+	}
 
 	private int quit () {
 		if (context.report.get_errors () == 0 && context.report.get_warnings () == 0) {
