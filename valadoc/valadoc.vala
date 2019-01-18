@@ -90,7 +90,7 @@ public class ValaDoc : Object {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 
-		{ "driver", 0, 0, OptionArg.STRING, ref driverpath, "Name of an driver or path to a custom driver", null },
+		{ "driver", 0, 0, OptionArg.STRING, ref driverpath, "Name of an driver or path to a custom driver (deprecated, not used anymore)", null },
 
 		{ "importdir", 0, 0, OptionArg.FILENAME_ARRAY, ref import_directories, "Look for external documentation in DIRECTORY", "DIRECTORY..." },
 		{ "import", 0, 0, OptionArg.STRING_ARRAY, ref import_packages, "Include binding for PACKAGE", "PACKAGE..." },
@@ -351,6 +351,10 @@ public class ValaDoc : Object {
 				reporter.simple_error (null, "Wiki-directory does not exist.");
 				return quit (reporter);
 			}
+		}
+
+		if (driverpath != null) {
+			stdout.printf ("The --driver argument is deprecated and won't have any effect\n");
 		}
 
 		foreach (unowned string dir in alternative_resource_dirs) {
