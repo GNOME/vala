@@ -1,3 +1,35 @@
+Vala 0.43.5
+===========
+ * Various improvements and bug fixes:
+  - vala:
+    + Use dedicated error message for assignments to literals
+    + Async methods don't allow out-parameters before in-parameters [#636]
+    + Allow direct access to the integer constants of an error-domain [#732]
+    + Multiple lamdba arguments in method call should all use same scope [#59]
+  - codegen:
+    + Use a parameter-map for creation of delegate declaration [#728]
+    + Add "error_pos" CCode attribute and use it as needed [#728]
+    + Emit struct declaration typedef before resolving its fields [#318]
+    + Add "destroy_notify_cname" CCode attribute
+    + Use get_ccode_*name/get_parameter_cexpression() for Parameters
+    + Set owner for ValaDestroyNotify (POSIX) [#730]
+    + Include "stddef.h" in CCodeBaseModule.destroy_value() (POSIX) [#730]
+  - girparser: Recognize error parameter before delegate target parameter [#265]
+  - compiler: Report deprecated command-line option "--thread"
+  - valadoc: Specify that the "--driver" option is deprecated [#736]
+
+ * Bindings:
+  - atk: Don't use a custom SignalEmissionHook while it is part of gobject-2.0
+  - gdk-pixbuf-2.0: Make PixbufSaveFunc usable [#728]
+  - gio-2.0: Make DBusInterface[GS]etPropertyFunc usable [#728]
+  - gio-2.0: Add CancellableSource ctor and update PollableSource ctors
+  - glib-2.0: Add Queue.clear_full() since 2.60
+  - gstreamer: Update from 1.15+ git master
+  - gdk-3.0,gtk+-3.0: Update to 3.24.3+9c8f1478
+  - gtk+-4.0: Update to 3.94.0+9b15c690
+  - libsoup-2.4: Fix Message.add_*_handler() [#731]
+  - vapi: Update GIR-based bindings
+
 Vala 0.43.4
 ===========
  * Various improvements and bug fixes:
