@@ -223,6 +223,7 @@ TESTS = \
 	structs/bug764041.test \
 	structs/bug775761.vala \
 	structs/bug777194.vala \
+	structs/bug777194-2.vala \
 	delegates/casting.vala \
 	delegates/compatible.vala \
 	delegates/delegate_only.vala \

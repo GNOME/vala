@@ -5414,7 +5414,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				expr.inner.value_type is ValueType && expr.inner.value_type.nullable) {
 				// nullable integer or float or boolean or struct or enum cast to non-nullable
 				innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, innercexpr);
-			} else if (expr.type_reference is ArrayType
+			} else if (expr.type_reference is ArrayType && !(expr.inner is Literal)
 			    && expr.inner.value_type is ValueType && !expr.inner.value_type.nullable) {
 				// integer or float or boolean or struct or enum to array cast
 				innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, innercexpr);
