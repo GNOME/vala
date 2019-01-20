@@ -68,7 +68,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 		VIRTUAL = 1 << 7,
 		PRIVATE = 1 << 8,
 		ASYNC = 1 << 9,
-		SEALED = 1 << 10
+		SEALED = 1 << 10,
+		PUBLIC = 1 << 11,
+		PROTECTED = 1 << 12,
 	}
 
 	public Parser () {
@@ -234,8 +236,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 	}
 
-	inline  SymbolAccessibility get_access (string s) {
-		if (s[0] == '_') {
+	inline  SymbolAccessibility get_default_accessibility (string s) {
+		if (s.has_prefix("_")) {
 			return SymbolAccessibility.PRIVATE;
 		}
 
@@ -295,6 +297,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.PASS:
 		case TokenType.PRINT:
 		case TokenType.PRIVATE:
+		case TokenType.PROTECTED:
 		case TokenType.PROP:
 		case TokenType.RAISE:
 		case TokenType.RAISES:
@@ -2661,13 +2664,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		if (ModifierFlags.PRIVATE in flags) {
 			cl.access = SymbolAccessibility.PRIVATE;
+		} else if (ModifierFlags.PROTECTED in flags) {
+			cl.access = SymbolAccessibility.PROTECTED;
 		} else {
-			/* class must always be Public unless its name starts with underscore */
-			if (sym.name[0] == '_') {
-				cl.access = SymbolAccessibility.PRIVATE;
-			} else {
-				cl.access = SymbolAccessibility.PUBLIC;
-			}
+			cl.access = get_default_accessibility (sym.name);
 		}
 
 		if (ModifierFlags.ABSTRACT in flags) {
@@ -2763,7 +2763,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 
 		var c = new Constant (id, type, initializer, get_src (begin), comment);
-		c.access = get_access (id);
+		c.access = get_default_accessibility (id);
 
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			c.external = true;
@@ -2800,8 +2800,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		if (ModifierFlags.PRIVATE in flags) {
 			f.access = SymbolAccessibility.PRIVATE;
+		} else if (ModifierFlags.PROTECTED in flags) {
+			f.access = SymbolAccessibility.PROTECTED;
 		} else {
-			f.access = get_access (id);
+			f.access = get_default_accessibility (id);
 		}
 
 		set_attributes (f, attrs);
@@ -2912,8 +2914,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var method = new Method (id, type, get_src (begin), comment);
 		if (ModifierFlags.PRIVATE in flags) {
 			method.access = SymbolAccessibility.PRIVATE;
+		} else if (ModifierFlags.PROTECTED in flags) {
+			method.access = SymbolAccessibility.PROTECTED;
 		} else {
-			method.access = get_access (id);
+			method.access = get_default_accessibility (id);
 		}
 
 
@@ -3049,8 +3053,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var prop = new Property (id, type, null, null, get_src (begin), comment);
 		if (ModifierFlags.PRIVATE in flags) {
 			prop.access = SymbolAccessibility.PRIVATE;
+		} else if (ModifierFlags.PROTECTED in flags) {
+			prop.access = SymbolAccessibility.PROTECTED;
 		} else {
-			prop.access = get_access (id);
+			prop.access = get_default_accessibility (id);
 		}
 
 		set_attributes (prop, attrs);
@@ -3187,8 +3193,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var sig = new Vala.Signal (id, type, get_src (begin), comment);
 		if (ModifierFlags.PRIVATE in flags) {
 			sig.access = SymbolAccessibility.PRIVATE;
+		} else if (ModifierFlags.PROTECTED in flags) {
+			sig.access = SymbolAccessibility.PROTECTED;
 		} else {
-			sig.access = get_access (id);
+			sig.access = get_default_accessibility (id);
 		}
 
 		if (ModifierFlags.VIRTUAL in flags) {
@@ -3258,8 +3266,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var st = new Struct (sym.name, get_src (begin), comment);
 		if (ModifierFlags.PRIVATE in flags) {
 			st.access = SymbolAccessibility.PRIVATE;
+		} else if (ModifierFlags.PROTECTED in flags) {
+			st.access = SymbolAccessibility.PROTECTED;
 		} else {
-			st.access = get_access (sym.name);
+			st.access = get_default_accessibility (sym.name);
 		}
 		set_attributes (st, attrs);
 		foreach (TypeParameter type_param in type_param_list) {
@@ -3320,8 +3330,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var iface = new Interface (sym.name, get_src (begin), comment);
 		if (ModifierFlags.PRIVATE in flags) {
 			iface.access = SymbolAccessibility.PRIVATE;
+		} else if (ModifierFlags.PROTECTED in flags) {
+			iface.access = SymbolAccessibility.PROTECTED;
 		} else {
-			iface.access = get_access (sym.name);
+			iface.access = get_default_accessibility (sym.name);
 		}
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			iface.external = true;
@@ -3388,8 +3400,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var en = new Enum (sym.name, get_src (begin), comment);
 		if (ModifierFlags.PRIVATE in flags) {
 			en.access = SymbolAccessibility.PRIVATE;
+		} else if (ModifierFlags.PROTECTED in flags) {
+			en.access = SymbolAccessibility.PROTECTED;
 		} else {
-			en.access = get_access (sym.name);
+			en.access = get_default_accessibility (sym.name);
 		}
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			en.external = true;
@@ -3448,8 +3462,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var ed = new ErrorDomain (sym.name, get_src (begin), comment);
 		if (ModifierFlags.PRIVATE in flags) {
 			ed.access = SymbolAccessibility.PRIVATE;
+		} else if (ModifierFlags.PROTECTED in flags) {
+			ed.access = SymbolAccessibility.PROTECTED;
 		} else {
-			ed.access = get_access (sym.name);
+			ed.access = get_default_accessibility (sym.name);
 		}
 
 		set_attributes (ed, attrs);
@@ -3517,6 +3533,16 @@ public class Vala.Genie.Parser : CodeVisitor {
 				flags |= ModifierFlags.PRIVATE;
 				break;
 
+			case TokenType.PUBLIC:
+				next ();
+				flags |= ModifierFlags.PUBLIC;
+				break;
+
+			case TokenType.PROTECTED:
+				next ();
+				flags |= ModifierFlags.PROTECTED;
+				break;
+
 			default:
 				return flags;
 			}
@@ -3570,6 +3596,14 @@ public class Vala.Genie.Parser : CodeVisitor {
 			case TokenType.PRIVATE:
 				next ();
 				flags |= ModifierFlags.PRIVATE;
+				break;
+			case TokenType.PUBLIC:
+				next ();
+				flags |= ModifierFlags.PUBLIC;
+				break;
+			case TokenType.PROTECTED:
+				next ();
+				flags |= ModifierFlags.PROTECTED;
 				break;
 			default:
 				return flags;
@@ -3714,8 +3748,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		if (ModifierFlags.PRIVATE in flags) {
 			d.access = SymbolAccessibility.PRIVATE;
+		} else if (ModifierFlags.PROTECTED in flags) {
+			d.access = SymbolAccessibility.PROTECTED;
 		} else {
-			d.access = get_access (sym.name);
+			d.access = get_default_accessibility (sym.name);
 		}
 
 		if (ModifierFlags.STATIC in flags) {
