@@ -358,6 +358,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 					comment.stability_comment = doc_stability;
 				}
+			} else if (reader.name == "source-position") {
+				skip_element ();
 			} else {
 				break;
 			}
