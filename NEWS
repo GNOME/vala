@@ -1,3 +1,18 @@
+Vala 0.43.6
+===========
+ * Various improvements and bug fixes:
+  - codegen: Don't apply address-of operator on literals when casting to array
+  - vala: Don't tweak closure on static lambdas [#740]
+  - Revert "codegen: Use copies of error_variable of catch-clauses for nested
+    usage" and add asynchronous "catch-error-scope" regression test [#741]
+  - libvaladoc: Build backing Vala.SourceFile for GIRs processed by importer
+  - libvaladoc/girimporter: Skip "source-position" elements
+  - genie: Support "protected" accessibility and allow explicit "public" [#346]
+
+ * Bindings:
+  - gst-editing-services-1.0: Fix some construtors and (un)hide symbols
+  - javascriptcoregtk-4.0: Fix GLib.Callback parameters which can't hold target
+
 Vala 0.43.5
 ===========
  * Various improvements and bug fixes:
