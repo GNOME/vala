@@ -239,6 +239,7 @@ TESTS = \
 	delegates/fields.vala \
 	delegates/fields-no-target.vala \
 	delegates/instance-method-to-no-target.test \
+	delegates/lambda-mixed-instance-static.vala \
 	delegates/lambda-shared-closure.vala \
 	delegates/reference_transfer.vala \
 	delegates/wrapper.vala \

@@ -488,8 +488,9 @@ public class Vala.MethodCall : Expression {
 		// TODO https://gitlab.gnome.org/GNOME/vala/issues/59
 		if (force_lambda_method_closure) {
 			foreach (Expression arg in get_argument_list ()) {
-				if (arg is LambdaExpression) {
-					((LambdaExpression) arg).method.closure = true;
+				unowned LambdaExpression? lambda = arg as LambdaExpression;
+				if (lambda != null && lambda.method.binding != MemberBinding.STATIC) {
+					lambda.method.closure = true;
 				}
 			}
 		}
