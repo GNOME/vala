@@ -1,0 +1,41 @@
+* cheader_filename="goocanvas.h"
+* skip=false
+*.* skip=false
+
+CanvasBounds struct
+*.get_*bounds return_void
+
+CairoMatrix skip
+cairo_matrix_* skip
+*.transform type="Cairo.Matrix?"
+
+CairoPattern skip
+*.*_pattern type="Cairo.Pattern?"
+*.pattern type="Cairo.Pattern?"
+
+CANVAS_POLYLINE_NUM_ARROW_POINTS name="NUM_ARROW_POINTS"
+
+// Returns unowned instance if parent is not null
+*.new*.parent nullable
+*.new* symbol_type="constructor"
+
+canvas_item*_class_* skip
+
+//Upstream
+Canvas
+	.*#field skip
+	.convert_bounds_to_item_space.bounds ref unowned=false
+	.marshal* skip
+CanvasItemSimple
+	.get_path_bounds.bounds out unowned=false
+CanvasItemModel
+	.get_simple_transform.* out
+	.get_transform.transform out
+CanvasLineDash
+	.dashes array array_length_field="num_dashes" unowned=false
+CanvasPoints
+	.coords array array_length_field="num_points" unowned=false
+CanvasItemSimpleData
+	.clip_path_commands type="GLib.Array<Goo.CanvasPathCommand?>"
+CanvasPathData
+	.path_commands type="GLib.Array<Goo.CanvasPathCommand?>"
