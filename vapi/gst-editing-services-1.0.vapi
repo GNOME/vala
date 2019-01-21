@@ -15,12 +15,16 @@ namespace GES {
 		public unowned GES.Asset? get_proxy_target ();
 		[NoWrapper]
 		public virtual void inform_proxy (string proxy_id);
+		[CCode (cname = "ges_list_assets")]
+		public static GLib.List<weak GES.Asset> list_assets (GLib.Type filter);
 		public unowned GLib.List<GES.Asset> list_proxies ();
 		public static bool needs_reload (GLib.Type extractable_type, string id);
 		[NoWrapper]
 		public virtual void proxied (GES.Asset proxy);
-		public static GES.Asset? request (GLib.Type extractable_type, string? id) throws GLib.Error;
-		public static async GES.Asset? request_async (GLib.Type extractable_type, string id, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (cname = "ges_asset_request", has_construct_function = false)]
+		public Asset.request (GLib.Type extractable_type, string? id) throws GLib.Error;
+		[CCode (cname = "ges_asset_request_async", has_construct_function = false, type = "void")]
+		public async Asset.request_async (GLib.Type extractable_type, string id, GLib.Cancellable? cancellable) throws GLib.Error;
 		[NoWrapper]
 		public virtual bool request_id_update (string proposed_new_id, GLib.Error error);
 		public bool set_proxy (GES.Asset? proxy);
@@ -151,8 +155,6 @@ namespace GES {
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_effect_asset_get_type ()")]
 	public class EffectAsset : GES.TrackElementAsset, GES.MetaContainer, GLib.AsyncInitable, GLib.Initable {
-		[CCode (array_length = false)]
-		public weak void* _ges_reserved[4];
 		[CCode (has_construct_function = false)]
 		protected EffectAsset ();
 	}
@@ -202,8 +204,6 @@ namespace GES {
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_layer_get_type ()")]
 	public class Layer : GLib.InitiallyUnowned, GES.Extractable, GES.MetaContainer {
-		[CCode (array_length = false)]
-		public weak void* _ges_reserved[4];
 		public uint32 max_nle_priority;
 		public uint32 min_nle_priority;
 		public weak GES.Timeline timeline;
@@ -682,14 +682,14 @@ namespace GES {
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_uri_clip_asset_get_type ()")]
 	public class UriClipAsset : GES.ClipAsset, GES.MetaContainer, GLib.AsyncInitable, GLib.Initable {
-		[CCode (has_construct_function = false)]
-		protected UriClipAsset ();
+		[CCode (finish_name = "ges_asset_request_finish", has_construct_function = false, type = "void")]
+		public async UriClipAsset (string uri, GLib.Cancellable? cancellable) throws GLib.Error;
 		public Gst.ClockTime get_duration ();
 		public unowned Gst.PbUtils.DiscovererInfo get_info ();
 		public unowned GLib.List<GES.UriSourceAsset> get_stream_assets ();
 		public bool is_image ();
-		public static async void @new (string uri, GLib.Cancellable? cancellable);
-		public static unowned GES.UriClipAsset? request_sync (string uri) throws GLib.Error;
+		[CCode (cname = "ges_uri_clip_asset_request_sync", has_construct_function = false)]
+		public UriClipAsset.request_sync (string uri) throws GLib.Error;
 		[CCode (cname = "ges_uri_clip_asset_class_set_timeout")]
 		public class void set_timeout (Gst.ClockTime timeout);
 		[NoAccessorMethod]
@@ -744,8 +744,6 @@ namespace GES {
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_xml_formatter_get_type ()")]
 	public class XmlFormatter : GES.BaseXmlFormatter, GES.Extractable {
-		[CCode (array_length = false)]
-		public weak void* _ges_reserved[4];
 		[CCode (has_construct_function = false)]
 		protected XmlFormatter ();
 	}
@@ -1054,11 +1052,9 @@ namespace GES {
 	[CCode (cheader_filename = "ges/ges.h")]
 	public static bool is_initialized ();
 	[CCode (cheader_filename = "ges/ges.h")]
-	public static GLib.List<weak GES.Asset> list_assets (GLib.Type filter);
-	[CCode (cheader_filename = "ges/ges.h")]
 	public static Gst.Sample play_sink_convert_frame (Gst.Element playsink, Gst.Caps caps);
 	[CCode (cheader_filename = "ges/ges.h")]
-	public static bool pspec_equal (void* key_spec_1, void* key_spec_2);
+	public static bool pspec_equal ([CCode (type = "gconstpointer")] GLib.ParamSpec key_spec_1, [CCode (type = "gconstpointer")] GLib.ParamSpec key_spec_2);
 	[CCode (cheader_filename = "ges/ges.h")]
 	public static uint pspec_hash (void* key_spec);
 	[CCode (cheader_filename = "ges/ges.h")]

@@ -1,0 +1,13 @@
+*._ges_reserved skip=true
+
+Asset
+	.request_async symbol_type="constructor"
+	.request symbol_type="constructor"
+SmartAdder
+	.pads_infos type_arguments="unowned Gst.Pad,void*"
+UriClipAsset
+	.new symbol_type="constructor" finish_name="ges_asset_request_finish" throws="GLib.Error"
+	.request_sync symbol_type="constructor"
+list_assets parent="GES.Asset"
+pspec_equal.key_spec_1 type="GLib.ParamSpec"
+pspec_equal.key_spec_2 type="GLib.ParamSpec"
