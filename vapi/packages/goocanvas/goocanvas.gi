@@ -311,6 +311,22 @@
 					<parameter name="y" type="gdouble*"/>
 				</parameters>
 			</method>
+			<method name="convert_units_from_pixels" symbol="goo_canvas_convert_units_from_pixels">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="canvas" type="GooCanvas*"/>
+					<parameter name="x" type="gdouble*"/>
+					<parameter name="y" type="gdouble*"/>
+				</parameters>
+			</method>
+			<method name="convert_units_to_pixels" symbol="goo_canvas_convert_units_to_pixels">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="canvas" type="GooCanvas*"/>
+					<parameter name="x" type="gdouble*"/>
+					<parameter name="y" type="gdouble*"/>
+				</parameters>
+			</method>
 			<method name="create_cairo_context" symbol="goo_canvas_create_cairo_context">
 				<return-type type="cairo_t*"/>
 				<parameters>
@@ -685,6 +701,7 @@
 			<field name="bounds_from_origin" type="guint"/>
 			<field name="clear_background" type="guint"/>
 			<field name="redraw_when_scrolled" type="guint"/>
+			<field name="before_initial_expose" type="guint"/>
 			<field name="bounds_padding" type="gdouble"/>
 			<field name="pointer_item" type="GooCanvasItem*"/>
 			<field name="pointer_grab_item" type="GooCanvasItem*"/>
@@ -893,6 +910,7 @@
 					<parameter name="y" type="gdouble"/>
 				</parameters>
 			</constructor>
+			<property name="alpha" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
@@ -915,6 +933,7 @@
 					<parameter name="y" type="gdouble"/>
 				</parameters>
 			</constructor>
+			<property name="alpha" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
@@ -1582,6 +1601,15 @@
 					<parameter name="requested_area" type="GooCanvasBounds*"/>
 				</parameters>
 			</method>
+			<method name="get_requested_area_for_width" symbol="goo_canvas_item_get_requested_area_for_width">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="item" type="GooCanvasItem*"/>
+					<parameter name="cr" type="cairo_t*"/>
+					<parameter name="width" type="gdouble"/>
+					<parameter name="requested_area" type="GooCanvasBounds*"/>
+				</parameters>
+			</method>
 			<method name="get_requested_height" symbol="goo_canvas_item_get_requested_height">
 				<return-type type="gdouble"/>
 				<parameters>
@@ -2028,6 +2056,15 @@
 				<parameters>
 					<parameter name="item" type="GooCanvasItem*"/>
 					<parameter name="cr" type="cairo_t*"/>
+					<parameter name="requested_area" type="GooCanvasBounds*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_requested_area_for_width">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="item" type="GooCanvasItem*"/>
+					<parameter name="cr" type="cairo_t*"/>
+					<parameter name="width" type="gdouble"/>
 					<parameter name="requested_area" type="GooCanvasBounds*"/>
 				</parameters>
 			</vfunc>
