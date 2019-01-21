@@ -353,12 +353,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		ccode.open_block ();
 
 		if (clause.error_variable != null) {
-			// use a copy for possible nested usage
-			var error_variable = new LocalVariable (clause.error_type.copy (), clause.variable_name);
-			error_variable.active = true;
-			error_variable.checked = true;
-			visit_local_variable (error_variable);
-			ccode.add_assignment (get_variable_cexpression (get_local_cname (error_variable)), get_variable_cexpression ("_inner_error_"));
+			visit_local_variable (clause.error_variable);
+			ccode.add_assignment (get_variable_cexpression (get_local_cname (clause.error_variable)), get_variable_cexpression ("_inner_error_"));
 		} else {
 			// error object is not used within catch statement, clear it
 			var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
