@@ -78,6 +78,8 @@ dist_vapi_DATA = \
 	gobject-introspection-1.0.vapi \
 	goocanvas.deps \
 	goocanvas.vapi \
+	goocanvas-2.0.deps \
+	goocanvas-2.0.vapi \
 	graphene-1.0.deps \
 	graphene-1.0.vapi \
 	gsl.vapi \
@@ -351,6 +353,7 @@ GIR_BINDINGS = \
 	gio-2.0 \
 	gnome-desktop-3.0 \
 	gobject-introspection-1.0 \
+	goocanvas-2.0 \
 	graphene-1.0 \
 	gtk+-3.0 \
 	gtk+-4.0 \
@@ -486,6 +489,9 @@ gobject-introspection-1.0:
 
 goocanvas:
 	$(GENVAPI) --library $(srcdir)/goocanvas $(PACKAGESDIR)/goocanvas/goocanvas-custom.vala $(PACKAGESDIR)/goocanvas/goocanvas.gi
+
+goocanvas-2.0:
+	$(GENVAPI) --library $(srcdir)/goocanvas-2.0 --pkg cairo --pkg gtk+-3.0 --metadatadir $(METADATADIR) $(GIRDIR)/GooCanvas-2.0.gir
 
 graphene-1.0:
 	$(GENVAPI) --library $(srcdir)/graphene-1.0 --pkg gobject-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/Graphene-1.0.gir
