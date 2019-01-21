@@ -412,6 +412,7 @@ TESTS = \
 	asynchronous/bug792660.vala \
 	asynchronous/bug792942.vala \
 	asynchronous/bug793158.vala \
+	asynchronous/catch-error-scope.vala \
 	asynchronous/closures.vala \
 	asynchronous/generator.vala \
 	asynchronous/out-parameter-invalid.test \
