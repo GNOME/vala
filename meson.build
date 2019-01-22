@@ -1,6 +1,6 @@
 project('vala',
 	'c', 'vala',
-	version: '0.43.6',
+	version: '0.43.90',
 	meson_version: '>= 0.44',
 	license: 'LGPL2.1'
 )
