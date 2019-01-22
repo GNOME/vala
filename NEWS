@@ -1,3 +1,40 @@
+Vala 0.42.5
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Use temp-var for MethodCall with out/ref arguments (#722)
+    + Use temp-vars for ellipsis out-arguments to fix memory management (#722)
+    + Add default_value for CType to initialize variables if needed (#724)
+    + Cast instance parameter for property access in object-initializer
+    + Don't check boolean values for (in)equality in GTask API (#726)
+    + Properly set annotations field of GDBus*Info struct to NULL
+    + Cast instance and result of g_async_initable_new_finish() call
+    + Use a parameter-map for creation of delegate declaration [#728]
+    + Emit struct declaration typedef before resolving its fields [#318]
+    + Don't apply address-of operator on literals when casting to array
+  - vala: Report invalid instance member access to property (#605)
+  - girparser: Async methods don't allow out-parameters before in-parameters
+  - libvaladoc: Build backing Vala.SourceFile for GIRs processed by importer
+  - libvaladoc/girimporter: Skip "source-position" elements
+  - valadoc: Specify that the "--driver" option is deprecated [#736]
+  - compiler: Report deprecated command-line option "--thread"
+  - build: Don't leak libvalaccode symbols to libvaladoc
+  - Add a basic CONTRIBUTING.md file that links to the relevant Wiki page
+  - tests: Fix try_parse() tests to not compare to already free'd memory
+
+ * Bindings:
+  - clutter-1.0: Fix BindingPool.override_action()
+  - gdk-3.0,gtk+-3.0: Update to 3.24.3+9c8f1478
+  - glib-2.0: Use correct array-length-type for returned arrays (#171)
+  - gio-2.0: Fix File.replace_contents_bytes_async() (!37)
+  - gobject-2.0: Minor syncing from GIR
+  - gobject-2.0: Use correct array-length-type for returned arrays
+  - gstreamer: Update from 1.15+ git master
+  - gtk+-4.0: Update to 3.94.0+9b15c690
+  - javascriptcoregtk-4.0: Fix GLib.Callback parameters which can't hold target
+  - libsoup-2.4: Fix Message.add_*_handler() [#731]
+  - sqlite3: Correct return C type of Statement.column_text & Value.to_text
+
 Vala 0.42.4
 ===========
  * Various improvements and bug fixes:
