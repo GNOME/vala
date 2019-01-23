@@ -36,6 +36,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		public ArrayList<CCodeFunction> ccode_stack = new ArrayList<CCodeFunction> ();
 		public ArrayList<TargetValue> temp_ref_values = new ArrayList<TargetValue> ();
 		public int next_temp_var_id;
+		public int current_inner_error_id;
 		public bool current_method_inner_error;
 		public bool current_method_return;
 		public int next_coroutine_state = 1;
@@ -79,6 +80,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public CatchClause current_catch {
 		get { return emit_context.current_catch; }
 		set { emit_context.current_catch = value; }
+	}
+
+	public int current_inner_error_id {
+		get { return emit_context.current_inner_error_id; }
+		set { emit_context.current_inner_error_id = value; }
 	}
 
 	public TypeSymbol? current_type_symbol {
@@ -272,6 +278,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	int next_block_id = 0;
 	Map<Block,int> block_map = new HashMap<Block,int> ();
+
+	/* count of emitted inner_error variables in methods */
+	Map<weak Method,int> method_inner_error_var_count = new HashMap<weak Method,int> ();
 
 	public DataType void_type = new VoidType ();
 	public DataType bool_type;
@@ -1884,7 +1893,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			if (current_method_inner_error) {
-				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
+				ccode.add_declaration ("GError*", new CCodeVariableDeclarator.zero ("_inner_error%d_".printf (current_inner_error_id), new CCodeConstant ("NULL")));
 			}
 
 			cfile.add_function (function);
@@ -1960,6 +1969,24 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (b.parent_node is Block || b.parent_node is SwitchStatement || b.parent_node is TryStatement) {
 			ccode.open_block ();
+		}
+
+		if (b.parent_node is TryStatement && b == ((TryStatement) b.parent_node).finally_body) {
+			// finally-block with nested error handling
+			if (((TryStatement) b.parent_node).body.tree_can_fail) {
+				if (is_in_coroutine ()) {
+					// _inner_error0_ gets added to closure_struct in CCodeMethodModule.visit_method()
+					if (current_inner_error_id > 0
+					    && (!method_inner_error_var_count.contains (current_method)
+					    || method_inner_error_var_count.get (current_method) < current_inner_error_id)) {
+						// no initialization necessary, closure struct is zeroed
+						closure_struct.add_field ("GError*", "_inner_error%d_".printf (current_inner_error_id));
+						method_inner_error_var_count.set (current_method, current_inner_error_id);
+					}
+				} else {
+					ccode.add_declaration ("GError*", new CCodeVariableDeclarator.zero ("_inner_error%d_".printf (current_inner_error_id), new CCodeConstant ("NULL")));
+				}
+			}
 		}
 
 		if (b.captured) {
@@ -2334,6 +2361,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "self");
 		} else {
 			return new CCodeIdentifier ("self");
+		}
+	}
+
+	public CCodeExpression get_inner_error_cexpression () {
+		if (is_in_coroutine ()) {
+			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_inner_error%d_".printf (current_inner_error_id));
+		} else {
+			return new CCodeIdentifier ("_inner_error%d_".printf (current_inner_error_id));
 		}
 	}
 
@@ -4900,7 +4935,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				// method can fail
 				current_method_inner_error = true;
 				// add &inner_error before the ellipsis arguments
-				out_arg_map.set (get_param_pos (-1), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+				out_arg_map.set (get_param_pos (-1), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_inner_error_cexpression ()));
 			}
 
 			if (ellipsis) {

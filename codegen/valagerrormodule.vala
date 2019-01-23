@@ -87,7 +87,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	public override void visit_throw_statement (ThrowStatement stmt) {
 		// method will fail
 		current_method_inner_error = true;
-		ccode.add_assignment (get_variable_cexpression ("_inner_error_"), get_cvalue (stmt.error_expression));
+		ccode.add_assignment (get_inner_error_cexpression (), get_cvalue (stmt.error_expression));
 
 		add_simple_check (stmt, true);
 	}
@@ -168,13 +168,11 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	public override void add_simple_check (CodeNode node, bool always_fails = false) {
 		current_method_inner_error = true;
 
-		var inner_error = get_variable_cexpression ("_inner_error_");
-
 		if (always_fails) {
 			// inner_error is always set, avoid unnecessary if statement
 			// eliminates C warnings
 		} else {
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, inner_error, new CCodeConstant ("NULL"));
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_inner_error_cexpression (), new CCodeConstant ("NULL"));
 			var unlikely = new CCodeFunctionCall (new CCodeIdentifier ("G_UNLIKELY"));
 			unlikely.add_argument (ccond);
 			ccode.open_if (unlikely);
@@ -222,7 +220,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 						if (catch_type.error_code != null) {
 							/* catch clause specifies a specific error code */
 							var error_match = new CCodeFunctionCall (new CCodeIdentifier ("g_error_matches"));
-							error_match.add_argument (inner_error);
+							error_match.add_argument (get_inner_error_cexpression ());
 							error_match.add_argument (new CCodeIdentifier (get_ccode_upper_case_name (catch_type.data_type)));
 							error_match.add_argument (new CCodeIdentifier (get_ccode_name (catch_type.error_code)));
 
@@ -230,7 +228,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 						} else {
 							/* catch clause specifies a full error domain */
 							var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY,
-									new CCodeMemberAccess.pointer (inner_error, "domain"), new CCodeIdentifier
+									new CCodeMemberAccess.pointer (get_inner_error_cexpression (), "domain"), new CCodeIdentifier
 									(get_ccode_upper_case_name (clause.error_type.data_type)));
 
 							ccode.open_if (ccond);
@@ -256,7 +254,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 				// as jump out of finally block is not supported
 			} else {
 				// should never happen with correct bindings
-				uncaught_error_statement (inner_error, true);
+				uncaught_error_statement (get_inner_error_cexpression (), true);
 			}
 		} else if (current_method != null && current_method.get_error_types ().size > 0) {
 			// current method can fail, propagate error
@@ -271,7 +269,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 				// Check the allowed error domains to propagate
 				var domain_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer
-					(inner_error, "domain"), new CCodeIdentifier (get_ccode_upper_case_name (error_type.data_type)));
+					(get_inner_error_cexpression (), "domain"), new CCodeIdentifier (get_ccode_upper_case_name (error_type.data_type)));
 				if (ccond == null) {
 					ccond = domain_check;
 				} else {
@@ -281,16 +279,16 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 			if (ccond != null) {
 				ccode.open_if (ccond);
-				return_with_exception (inner_error);
+				return_with_exception (get_inner_error_cexpression ());
 
 				ccode.add_else ();
-				uncaught_error_statement (inner_error);
+				uncaught_error_statement (get_inner_error_cexpression ());
 				ccode.close ();
 			} else {
-				return_with_exception (inner_error);
+				return_with_exception (get_inner_error_cexpression ());
 			}
 		} else {
-			uncaught_error_statement (inner_error);
+			uncaught_error_statement (get_inner_error_cexpression ());
 		}
 
 		if (!always_fails) {
@@ -330,7 +328,11 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 		ccode.add_label ("__finally%d".printf (this_try_id));
 		if (stmt.finally_body != null) {
+			// use a dedicated inner_error variable, if there
+			// is some error handling happening in finally-block
+			current_inner_error_id++;
 			stmt.finally_body.emit (this);
+			current_inner_error_id--;
 		}
 
 		// check for errors not handled by this try statement
@@ -352,14 +354,14 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 		if (clause.error_variable != null) {
 			visit_local_variable (clause.error_variable);
-			ccode.add_assignment (get_variable_cexpression (get_local_cname (clause.error_variable)), get_variable_cexpression ("_inner_error_"));
+			ccode.add_assignment (get_variable_cexpression (get_local_cname (clause.error_variable)), get_inner_error_cexpression ());
 		} else {
 			// error object is not used within catch statement, clear it
 			var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
-			cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+			cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_inner_error_cexpression ()));
 			ccode.add_expression (cclear);
 		}
-		ccode.add_assignment (get_variable_cexpression ("_inner_error_"), new CCodeConstant ("NULL"));
+		ccode.add_assignment (get_inner_error_cexpression (), new CCodeConstant ("NULL"));
 
 		clause.body.emit (this);
 

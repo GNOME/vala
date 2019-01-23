@@ -348,6 +348,7 @@ TESTS = \
 	objects/bug795225-4.test \
 	objects/bug795521.vala \
 	errors/catch-error-code.vala \
+	errors/catch-in-finally.vala \
 	errors/errors.vala \
 	errors/errordomain.vala \
 	errors/invalid-type-check.test \
@@ -395,6 +396,7 @@ TESTS = \
 	asynchronous/bug792660.vala \
 	asynchronous/bug792942.vala \
 	asynchronous/bug793158.vala \
+	asynchronous/catch-in-finally.vala \
 	asynchronous/closures.vala \
 	asynchronous/generator.vala \
 	asynchronous/result-pos.vala \
