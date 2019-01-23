@@ -257,7 +257,7 @@ public class Vala.GTypeModule : GErrorModule {
 					var f = (Field) s;
 					generate_struct_field_declaration (cl, f, instance_struct, type_struct, decl_space, ref has_struct_member);
 				} else {
-					assert_not_reached ();
+					Report.error (s.source_reference, "internal: Unsupported symbol");
 				}
 			}
 		} else {
@@ -2180,7 +2180,7 @@ public class Vala.GTypeModule : GErrorModule {
 					type_struct.add_declaration (vdecl);
 				}
 			} else {
-				assert_not_reached ();
+				Report.error (sym.source_reference, "internal: Unsupported symbol");
 			}
 		}
 
