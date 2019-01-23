@@ -756,11 +756,14 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					 * as error may be set to NULL but we're always interested in inner errors
 					 */
 					if (m.coroutine) {
-						closure_struct.add_field ("GError *", "_inner_error_");
-
 						// no initialization necessary, closure struct is zeroed
+						if (!method_inner_error_var_count.contains (current_method)
+						    || method_inner_error_var_count.get (current_method) < current_inner_error_id) {
+							closure_struct.add_field ("GError*", "_inner_error%d_".printf (current_inner_error_id));
+							method_inner_error_var_count.set (m, current_inner_error_id);
+						}
 					} else {
-						ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
+						ccode.add_declaration ("GError*", new CCodeVariableDeclarator.zero ("_inner_error%d_".printf (current_inner_error_id), new CCodeConstant ("NULL")));
 					}
 				}
 

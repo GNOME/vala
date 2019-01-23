@@ -365,6 +365,7 @@ TESTS = \
 	objects/bug795225-4.test \
 	objects/bug795521.vala \
 	errors/catch-error-code.vala \
+	errors/catch-in-finally.vala \
 	errors/errors.vala \
 	errors/errorcode.vala \
 	errors/errordomain.vala \
