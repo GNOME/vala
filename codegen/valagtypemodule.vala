@@ -2039,7 +2039,7 @@ public class Vala.GTypeModule : GErrorModule {
 					type_struct.add_declaration (vdecl);
 				}
 			} else {
-				assert_not_reached ();
+				Report.error (sym.source_reference, "internal: Unsupported symbol");
 			}
 		}
 
