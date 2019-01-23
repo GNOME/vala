@@ -321,7 +321,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_async_initable_new_finish"));
 				ccall.add_argument (new CCodeCastExpression (source_ref, "GAsyncInitable *"));
 				ccall.add_argument (get_cvalue (res));
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_inner_error_cexpression ()));
 
 				var temp_var = get_temp_variable (expr.value_type, expr.value_type.value_owned);
 				var temp_ref = get_variable_cexpression (temp_var.name);
@@ -376,7 +376,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccall.add_argument (get_delegate_target (callback));
 			}
 		} else {
-			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_inner_error_cexpression ()));
 		}
 		ccall.add_argument (new CCodeConstant ("\"g-flags\""));
 		ccall.add_argument (get_cvalue (flags));
@@ -418,7 +418,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccall.add_argument (new CCodeCastExpression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_source_object_"), "GAsyncInitable *"));
 				// pass GAsyncResult stored in closure to finish function
 				ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"));
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_inner_error_cexpression ()));
 			} else {
 				// begin
 				ccode.add_expression (ccall);

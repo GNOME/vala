@@ -943,7 +943,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		cregister.add_argument (get_cvalue (obj_arg));
 		cregister.add_argument (get_cvalue (ma.inner));
 		cregister.add_argument (get_cvalue (path_arg));
-		cregister.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+		cregister.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_inner_error_cexpression ()));
 
 		if (expr.parent_node is ExpressionStatement) {
 			ccode.add_expression (cregister);
