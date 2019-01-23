@@ -1815,7 +1815,7 @@ public class Vala.GTypeModule : GErrorModule {
 			cl.destructor.body.emit (this);
 
 			if (current_method_inner_error) {
-				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
+				ccode.add_declaration ("GError*", new CCodeVariableDeclarator.zero ("_inner_error%d_".printf (current_inner_error_id), new CCodeConstant ("NULL")));
 			}
 
 			if (current_method_return) {
