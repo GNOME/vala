@@ -960,7 +960,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			} else if (parent_type is Enum) {
 				this_type = new EnumValueType ((Enum) parent_type);
 			} else {
-				assert_not_reached ();
+				Report.error (parent_type.source_reference, "internal: Unsupported symbol type");
+				this_type = new InvalidType ();
 			}
 
 			generate_type_declaration (this_type, decl_space);

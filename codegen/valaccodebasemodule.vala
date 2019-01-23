@@ -5644,14 +5644,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					} else if (cleft is CCodeConstant) {
 						left = ((CCodeConstant) cleft).name;
 					} else {
-						assert_not_reached ();
+						Report.error (expr.source_reference, "internal: Unsupported expression");
+						left = "NULL";
 					}
 					if (cright is CCodeIdentifier) {
 						right = ((CCodeIdentifier) cright).name;
 					} else if (cright is CCodeConstant) {
 						right = ((CCodeConstant) cright).name;
 					} else {
-						assert_not_reached ();
+						Report.error (expr.source_reference, "internal: Unsupported expression");
+						right = "NULL";
 					}
 
 					set_cvalue (expr, new CCodeConstant ("%s %s".printf (left, right)));
