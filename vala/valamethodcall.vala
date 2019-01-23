@@ -120,8 +120,8 @@ public class Vala.MethodCall : Expression {
 				// first argument is string
 				return argument_list[0].is_constant ();
 			} else if (method_type.method_symbol.get_full_name () == "GLib.NC_") {
-				// second argument is string
-				return argument_list[1].is_constant ();
+				// first and second argument is string
+				return argument_list[0].is_constant () && argument_list[1].is_constant ();
 			}
 		}
 
