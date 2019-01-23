@@ -473,7 +473,7 @@ public class Vala.GObjectModule : GTypeModule {
 				/* always separate error parameter and inner_error local variable
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
-				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
+				ccode.add_declaration ("GError*", new CCodeVariableDeclarator.zero ("_inner_error%d_".printf (current_inner_error_id), new CCodeConstant ("NULL")));
 			}
 
 			ccode.add_return (new CCodeIdentifier ("obj"));
@@ -499,7 +499,7 @@ public class Vala.GObjectModule : GTypeModule {
 				/* always separate error parameter and inner_error local variable
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
-				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
+				ccode.add_declaration ("GError*", new CCodeVariableDeclarator.zero ("_inner_error%d_".printf (current_inner_error_id), new CCodeConstant ("NULL")));
 			}
 
 			pop_context ();
@@ -521,7 +521,7 @@ public class Vala.GObjectModule : GTypeModule {
 				/* always separate error parameter and inner_error local variable
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
-				ccode.add_declaration ("GError *", new CCodeVariableDeclarator.zero ("_inner_error_", new CCodeConstant ("NULL")));
+				ccode.add_declaration ("GError*", new CCodeVariableDeclarator.zero ("_inner_error%d_".printf (current_inner_error_id), new CCodeConstant ("NULL")));
 			}
 
 			pop_context ();
