@@ -127,6 +127,7 @@ public class Vala.LocalVariable : Variable {
 			variable_type.floating_reference = false;
 
 			initializer.target_type = variable_type;
+			variable_type.check (context);
 		}
 
 		if (initializer != null && !initializer.error) {
