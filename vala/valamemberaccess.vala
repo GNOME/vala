@@ -700,7 +700,7 @@ public class Vala.MemberAccess : Expression {
 		member.used = true;
 		member.version.check (source_reference);
 
-		if (access == SymbolAccessibility.PROTECTED) {
+		if (access == SymbolAccessibility.PROTECTED && member.parent_symbol is TypeSymbol) {
 			var target_type = (TypeSymbol) member.parent_symbol;
 
 			bool in_subtype = false;
