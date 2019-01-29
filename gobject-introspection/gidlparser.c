@@ -1562,9 +1562,16 @@ start_discriminator (GMarkupParseContext *context,
       type = find_attribute ("type", attribute_names, attribute_values);
       offset = find_attribute ("offset", attribute_names, attribute_values);
       if (type == NULL)
-	MISSING_ATTRIBUTE (error, element_name, "type");
+        {
+          MISSING_ATTRIBUTE (error, element_name, "type");
+          return FALSE;
+        }
       else if (offset == NULL)
-	MISSING_ATTRIBUTE (error, element_name, "offset");
+        {
+          MISSING_ATTRIBUTE (error, element_name, "offset");
+          return FALSE;
+        }
+      else
 	{
 	  ((GIdlNodeUnion *)ctx->current_node)->discriminator_type 
 	    = parse_type (type);
