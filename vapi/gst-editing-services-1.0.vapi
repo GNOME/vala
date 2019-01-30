@@ -436,8 +436,8 @@ namespace GES {
 		public virtual signal void layer_added (GES.Layer layer);
 		public virtual signal void layer_removed (GES.Layer layer);
 		public signal GLib.GenericArray<GES.Track> select_tracks_for_object (GES.Clip clip, GES.TrackElement track_element);
-		public signal void snapping_ended (GES.TrackElement object, GES.TrackElement p0, uint64 p1);
-		public signal void snapping_started (GES.TrackElement object, GES.TrackElement p0, uint64 p1);
+		public signal void snapping_ended (GES.TrackElement obj1, GES.TrackElement obj2, uint64 position);
+		public signal void snapping_started (GES.TrackElement obj1, GES.TrackElement obj2, uint64 position);
 		public virtual signal void track_added (GES.Track track);
 		public virtual signal void track_removed (GES.Track track);
 	}
@@ -684,6 +684,7 @@ namespace GES {
 	public class UriClipAsset : GES.ClipAsset, GES.MetaContainer, GLib.AsyncInitable, GLib.Initable {
 		[CCode (finish_name = "ges_asset_request_finish", has_construct_function = false, type = "void")]
 		public async UriClipAsset (string uri, GLib.Cancellable? cancellable) throws GLib.Error;
+		public static GES.UriClipAsset finish (GLib.AsyncResult res) throws GLib.Error;
 		public Gst.ClockTime get_duration ();
 		public unowned Gst.PbUtils.DiscovererInfo get_info ();
 		public unowned GLib.List<GES.UriSourceAsset> get_stream_assets ();

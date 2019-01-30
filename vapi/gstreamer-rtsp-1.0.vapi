@@ -52,6 +52,8 @@ namespace Gst {
 			public Gst.RTSP.Result receive (Gst.RTSP.Message message, GLib.TimeVal timeout);
 			public Gst.RTSP.Result reset_timeout ();
 			public Gst.RTSP.Result send (Gst.RTSP.Message message, GLib.TimeVal timeout);
+			[Version (since = "1.16")]
+			public Gst.RTSP.Result send_messages ([CCode (array_length_cname = "n_messages", array_length_pos = 1.5, array_length_type = "guint")] Gst.RTSP.Message[] messages, GLib.TimeVal timeout);
 			[Version (since = "1.14")]
 			public void set_accept_certificate_func (owned Gst.RTSP.ConnectionAcceptCertificateFunc func);
 			public Gst.RTSP.Result set_auth (Gst.RTSP.AuthMethod method, string user, string pass);
@@ -105,6 +107,9 @@ namespace Gst {
 			public Gst.RTSP.Result free ();
 			[CCode (cname = "gst_rtsp_message_get_body")]
 			public Gst.RTSP.Result get_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] out unowned uint8[] data);
+			[CCode (cname = "gst_rtsp_message_get_body_buffer")]
+			[Version (since = "1.16")]
+			public Gst.RTSP.Result get_body_buffer (out unowned Gst.Buffer buffer);
 			[CCode (cname = "gst_rtsp_message_get_header")]
 			public Gst.RTSP.Result get_header (Gst.RTSP.HeaderField field, out unowned string value, int indx);
 			[CCode (cname = "gst_rtsp_message_get_header_by_name")]
@@ -112,6 +117,9 @@ namespace Gst {
 			public Gst.RTSP.Result get_header_by_name (string header, out unowned string value, int index);
 			[CCode (cname = "gst_rtsp_message_get_type")]
 			public Gst.RTSP.MsgType get_type ();
+			[CCode (cname = "gst_rtsp_message_has_body_buffer")]
+			[Version (since = "1.16")]
+			public bool has_body_buffer ();
 			[CCode (cname = "gst_rtsp_message_init")]
 			public Gst.RTSP.Result init ();
 			[CCode (cname = "gst_rtsp_message_init_data")]
@@ -136,10 +144,19 @@ namespace Gst {
 			public Gst.RTSP.Result remove_header_by_name (string header, int index);
 			[CCode (cname = "gst_rtsp_message_set_body")]
 			public Gst.RTSP.Result set_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+			[CCode (cname = "gst_rtsp_message_set_body_buffer")]
+			[Version (since = "1.16")]
+			public Gst.RTSP.Result set_body_buffer (Gst.Buffer buffer);
 			[CCode (cname = "gst_rtsp_message_steal_body")]
 			public Gst.RTSP.Result steal_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] out uint8[] data);
+			[CCode (cname = "gst_rtsp_message_steal_body_buffer")]
+			[Version (since = "1.16")]
+			public Gst.RTSP.Result steal_body_buffer (out Gst.Buffer buffer);
 			[CCode (cname = "gst_rtsp_message_take_body")]
 			public Gst.RTSP.Result take_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] owned uint8[] data);
+			[CCode (cname = "gst_rtsp_message_take_body_buffer")]
+			[Version (since = "1.16")]
+			public Gst.RTSP.Result take_body_buffer (owned Gst.Buffer buffer);
 			[CCode (cname = "gst_rtsp_message_take_header")]
 			public Gst.RTSP.Result take_header (Gst.RTSP.HeaderField field, owned string value);
 			[CCode (cname = "gst_rtsp_message_take_header_by_name")]
@@ -177,6 +194,8 @@ namespace Gst {
 			public void get_send_backlog (out size_t bytes, out uint messages);
 			public void reset ();
 			public Gst.RTSP.Result send_message (Gst.RTSP.Message message, out uint id);
+			[Version (since = "1.16")]
+			public Gst.RTSP.Result send_messages ([CCode (array_length_cname = "n_messages", array_length_pos = 1.5, array_length_type = "guint")] Gst.RTSP.Message[] messages, out uint id);
 			[Version (since = "1.4")]
 			public void set_flushing (bool flushing);
 			[Version (since = "1.2")]

@@ -164,6 +164,11 @@ namespace Gst {
 		CONTROLLED,
 		CONTROLLING
 	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_ICE_TRANSPORT_POLICY_", type_id = "gst_webrtc_ice_transport_policy_get_type ()")]
+	public enum WebRTCICETransportPolicy {
+		ALL,
+		RELAY
+	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_PEER_CONNECTION_STATE_", type_id = "gst_webrtc_peer_connection_state_get_type ()")]
 	public enum WebRTCPeerConnectionState {
 		NEW,
