@@ -500,6 +500,10 @@ namespace Atk {
 		[Version (deprecated = true, deprecated_since = "2.9.3")]
 		public abstract string get_text_before_offset (int offset, Atk.TextBoundary boundary_type, out int start_offset, out int end_offset);
 		public abstract bool remove_selection (int selection_num);
+		[Version (since = "2.32")]
+		public abstract bool scroll_substring_to (int start_offset, int end_offset, Atk.ScrollType type);
+		[Version (since = "2.32")]
+		public abstract bool scroll_substring_to_point (int start_offset, int end_offset, Atk.CoordType coords, int x, int y);
 		public abstract bool set_caret_offset (int offset);
 		public abstract bool set_selection (int selection_num, int start_offset, int end_offset);
 		public virtual signal void text_attributes_changed ();

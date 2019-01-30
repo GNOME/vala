@@ -1309,7 +1309,7 @@ namespace GLib {
 		[Version (since = "2.22")]
 		public bool set_attribute_status (string attribute, GLib.FileAttributeStatus status);
 		public void set_attribute_string (string attribute, string attr_value);
-		public void set_attribute_stringv (string attribute, [CCode (array_length = false)] string[] attr_value);
+		public void set_attribute_stringv (string attribute, [CCode (array_length = false, array_null_terminated = true)] string[] attr_value);
 		public void set_attribute_uint32 (string attribute, uint32 attr_value);
 		public void set_attribute_uint64 (string attribute, uint64 attr_value);
 		public void set_content_type (string content_type);
@@ -1968,6 +1968,15 @@ namespace GLib {
 		public virtual async ssize_t write_async ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[]? buffer, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public ssize_t write_bytes (GLib.Bytes bytes, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async ssize_t write_bytes_async (GLib.Bytes bytes, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (vfunc_name = "writev_fn")]
+		[Version (since = "2.60")]
+		public virtual bool writev ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.60")]
+		public bool writev_all ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.60")]
+		public async bool writev_all_async ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t bytes_written) throws GLib.Error;
+		[Version (since = "2.60")]
+		public virtual async bool writev_async ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t bytes_written) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_permission_get_type ()")]
 	public abstract class Permission : GLib.Object {
@@ -2459,7 +2468,7 @@ namespace GLib {
 		public bool close () throws GLib.Error;
 		public GLib.IOCondition condition_check (GLib.IOCondition condition);
 		[Version (since = "2.32")]
-		public bool condition_timed_wait (GLib.IOCondition condition, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public bool condition_timed_wait (GLib.IOCondition condition, int64 timeout_us, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool condition_wait (GLib.IOCondition condition, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public bool connect (GLib.SocketAddress address, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.SocketSource create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable = null);
@@ -2503,15 +2512,17 @@ namespace GLib {
 		public bool listen () throws GLib.Error;
 		public ssize_t receive ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t receive_from (out GLib.SocketAddress address, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public ssize_t receive_message (out GLib.SocketAddress? address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.InputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] out GLib.SocketControlMessage[]? messages, ref int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t receive_message (out GLib.SocketAddress? address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.InputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] out GLib.SocketControlMessage[]? messages, GLib.SocketMsgFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.48")]
-		public int receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.InputMessage[] messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public int receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.InputMessage[] messages, GLib.SocketMsgFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.26")]
 		public ssize_t receive_with_blocking ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t send ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public ssize_t send_message (GLib.SocketAddress? address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.OutputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] GLib.SocketControlMessage[]? messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t send_message (GLib.SocketAddress? address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.OutputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] GLib.SocketControlMessage[]? messages, GLib.SocketMsgFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.60")]
+		public GLib.PollableReturn send_message_with_timeout (GLib.SocketAddress? address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.OutputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] GLib.SocketControlMessage[]? messages, GLib.SocketMsgFlags flags, int64 timeout_us, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.44")]
-		public int send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.OutputMessage[] messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public int send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.OutputMessage[] messages, GLib.SocketMsgFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t send_to (GLib.SocketAddress? address, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.26")]
 		public ssize_t send_with_blocking ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -3281,6 +3292,8 @@ namespace GLib {
 		[Version (since = "2.50")]
 		public static async bool launch_default_for_uri_async (string uri, GLib.AppLaunchContext? context, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract bool launch_uris (GLib.List<string>? uris, GLib.AppLaunchContext? context) throws GLib.Error;
+		[Version (since = "2.60")]
+		public abstract async bool launch_uris_async (GLib.List<string>? uris, GLib.AppLaunchContext? context, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract bool remove_supports_type (string content_type) throws GLib.Error;
 		[Version (since = "2.20")]
 		public static void reset_type_associations (string content_type);
@@ -3587,6 +3600,8 @@ namespace GLib {
 		[Version (since = "2.22")]
 		public abstract async bool poll_mountable (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.AppInfo query_default_handler (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.60")]
+		public async GLib.AppInfo query_default_handler_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool query_exists (GLib.Cancellable? cancellable = null);
 		[Version (since = "2.18")]
 		public GLib.FileType query_file_type (GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null);
@@ -3760,6 +3775,8 @@ namespace GLib {
 		public abstract GLib.PollableSource create_source (GLib.Cancellable? cancellable = null);
 		public abstract bool is_writable ();
 		public abstract ssize_t write_nonblocking ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[]? buffer) throws GLib.Error;
+		[Version (since = "2.60")]
+		public abstract GLib.PollableReturn writev_nonblocking ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, out size_t bytes_written) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GProxyInterface", type_id = "g_proxy_get_type ()")]
 	[Version (since = "2.26")]
@@ -4385,6 +4402,13 @@ namespace GLib {
 		NEVER,
 		FOR_SESSION,
 		PERMANENTLY
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_POLLABLE_RETURN_", type_id = "g_pollable_return_get_type ()")]
+	[Version (since = "2.60")]
+	public enum PollableReturn {
+		FAILED,
+		OK,
+		WOULD_BLOCK
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_RESOLVER_NAME_LOOKUP_FLAGS_", type_id = "g_resolver_name_lookup_flags_get_type ()")]
 	[Flags]
