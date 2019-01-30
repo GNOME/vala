@@ -5100,7 +5100,6 @@ namespace Gdk {
 		public void set_display (Gdk.Display display);
 		public void set_keyval (uint keyval);
 		public void set_source_device (Gdk.Device device);
-		public void set_user_data (GLib.Object user_data);
 		public bool triggers_context_menu ();
 		public Gdk.EventType event_type { get; construct; }
 	}
@@ -5118,12 +5117,12 @@ namespace Gdk {
 		protected FrameClock ();
 		public void begin_updating ();
 		public void end_updating ();
-		public Gdk.FrameTimings? get_current_timings ();
+		public unowned Gdk.FrameTimings? get_current_timings ();
 		public int64 get_frame_counter ();
 		public int64 get_frame_time ();
 		public int64 get_history_start ();
 		public void get_refresh_info (int64 base_time, out int64 refresh_interval_return, out int64 presentation_time_return);
-		public Gdk.FrameTimings? get_timings (int64 frame_counter);
+		public unowned Gdk.FrameTimings? get_timings (int64 frame_counter);
 		public void request_phase (Gdk.FrameClockPhase phase);
 		public signal void after_paint ();
 		public signal void before_paint ();
@@ -6730,12 +6729,9 @@ namespace Gtk {
 		public Gtk.BaselinePosition get_baseline_position ();
 		public bool get_homogeneous ();
 		public int get_spacing ();
-		public void pack_end (Gtk.Widget child);
-		public void pack_start (Gtk.Widget child);
-		public void query_child_packing (Gtk.Widget child, out Gtk.PackType pack_type);
-		public void reorder_child (Gtk.Widget child, int position);
+		public void insert_child_after (Gtk.Widget child, Gtk.Widget? sibling);
+		public void reorder_child_after (Gtk.Widget child, Gtk.Widget? sibling);
 		public void set_baseline_position (Gtk.BaselinePosition position);
-		public void set_child_packing (Gtk.Widget child, Gtk.PackType pack_type);
 		public void set_homogeneous (bool homogeneous);
 		public void set_spacing (int spacing);
 		public Gtk.BaselinePosition baseline_position { get; set; }
@@ -7579,7 +7575,7 @@ namespace Gtk {
 		public int get_max_length ();
 		public int get_max_width_chars ();
 		public bool get_overwrite_mode ();
-		public unowned string get_placeholder_text ();
+		public unowned string? get_placeholder_text ();
 		public double get_progress_fraction ();
 		public double get_progress_pulse_step ();
 		public unowned Pango.TabArray? get_tabs ();
@@ -8984,7 +8980,6 @@ namespace Gtk {
 	public class Menu : Gtk.MenuShell, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Menu ();
-		public void attach (Gtk.Widget child, uint left_attach, uint right_attach, uint top_attach, uint bottom_attach);
 		public void attach_to_widget (Gtk.Widget attach_widget, [CCode (scope = "async")] Gtk.MenuDetachFunc? detacher);
 		public void detach ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -11135,7 +11130,6 @@ namespace Gtk {
 		public void set_markup (string? markup);
 		public void set_text (string? text);
 		public void set_tip_area (Gdk.Rectangle rect);
-		public static void trigger_tooltip_query (Gdk.Display display);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_toplevel_accessible_get_type ()")]
 	public class ToplevelAccessible : Atk.Object {
