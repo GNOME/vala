@@ -2,6 +2,9 @@
 * skip=false
 *.* skip=false
 
+CanvasBounds struct
+*.get_*bounds return_void
+
 CairoMatrix skip
 cairo_matrix_* skip
 *.transform type="Cairo.Matrix?"

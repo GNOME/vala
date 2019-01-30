@@ -97,14 +97,6 @@ namespace Goo {
 		[CCode (has_construct_function = false)]
 		protected CanvasAccessibleFactory ();
 	}
-	[CCode (cheader_filename = "goocanvas.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "goo_canvas_bounds_get_type ()")]
-	[Compact]
-	public class CanvasBounds {
-		public double x1;
-		public double x2;
-		public double y1;
-		public double y2;
-	}
 	[CCode (cheader_filename = "goocanvas.h", type_id = "goo_canvas_ellipse_get_type ()")]
 	public class CanvasEllipse : Goo.CanvasItemSimple, Goo.CanvasItem {
 		public Goo.CanvasEllipseData ellipse_data;
@@ -414,7 +406,7 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h", type_id = "goo_canvas_item_simple_get_type ()")]
 	public class CanvasItemSimple : GLib.Object, Goo.CanvasItem {
-		public weak Goo.CanvasBounds bounds;
+		public Goo.CanvasBounds bounds;
 		public weak Goo.Canvas canvas;
 		public weak Goo.CanvasItemModelSimple model;
 		public uint need_entire_subtree_update;
@@ -798,7 +790,7 @@ namespace Goo {
 		public static (unowned GLib.ParamSpec)[] class_list_child_properties (GLib.ObjectClass iclass);
 		public void ensure_updated ();
 		public int find_child (Goo.CanvasItem child);
-		public abstract void get_bounds (out unowned Goo.CanvasBounds bounds);
+		public abstract void get_bounds (out Goo.CanvasBounds bounds);
 		public abstract unowned Goo.Canvas get_canvas ();
 		public abstract unowned Goo.CanvasItem get_child (int child_num);
 		public void get_child_properties (Goo.CanvasItem child, ...);
@@ -941,6 +933,13 @@ namespace Goo {
 		public virtual signal void child_moved (int old_child_num, int new_child_num);
 		public virtual signal void child_notify (GLib.ParamSpec pspec);
 		public virtual signal void child_removed (int child_num);
+	}
+	[CCode (cheader_filename = "goocanvas.h", type_id = "goo_canvas_bounds_get_type ()")]
+	public struct CanvasBounds {
+		public double x1;
+		public double y1;
+		public double x2;
+		public double y2;
 	}
 	[CCode (cheader_filename = "goocanvas.h", has_type_id = false)]
 	public struct CanvasEllipseData {
