@@ -595,11 +595,14 @@ public class Vala.GSignalModule : GObjectModule {
 		string connect_func;
 
 		DelegateType? dt = null;
-		var p = handler.symbol_reference as Parameter;
-		if (p != null) {
-			dt = p.variable_type as DelegateType;
+		if (handler.symbol_reference is Variable) {
+			dt = ((Variable) handler.symbol_reference).variable_type as DelegateType;
 			if (dt != null && !context.experimental) {
-				Report.warning (dt.source_reference, "Connecting delegates to signals is experimental");
+				Report.warning (handler.source_reference, "Connecting delegates to signals is experimental");
+			}
+			// Use actual lambda expression if available for proper target/destroy handling
+			if (((Variable) handler.symbol_reference).initializer is LambdaExpression) {
+				handler = ((Variable) handler.symbol_reference).initializer;
 			}
 		}
 		var m = handler.symbol_reference as Method;
