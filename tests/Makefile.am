@@ -271,6 +271,7 @@ TESTS = \
 	objects/regex.vala \
 	objects/signals.vala \
 	objects/signals-delegate.vala \
+	objects/signals-lambda-delegate.vala \
 	objects/test-025.vala \
 	objects/test-026.vala \
 	objects/test-029.vala \
