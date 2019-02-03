@@ -1,3 +1,24 @@
+Vala 0.43.90
+============
+ * Various improvements and bug fixes:
+  - codegen: Replace some unfortunate asserts with internal error reports
+  - codegen: Properly handle and catch inner-error of finally-block (#742)
+  - codegen: Pass lambda expression of variable initializer to signal connect
+  - vala: Check inferred variable_type of LocalVariables
+  - vala: Parser doesn't ensure "protected" to be applied on TypeSymbol members
+  - libvaladoc: Don't change the size of an array in-parameter
+  - g-i: Fix return value on error in start_discriminator()
+
+ * Bindings:
+  - Add goocanvas-2.0 bindings (#739)
+  - gdk-3.0: Update to 3.24.4+a0129f55
+  - glib-2.0: Bind g_log_writer_journald/_standard_streams/_default as
+    LogWriterFunc (#559)
+  - goocanvas: Update from 1.0.0+af07af5d
+  - gstreamer: Update from 1.15.1+
+  - gtk+-4.0: Update to 3.94.0+a7fa1cf6
+  - vapi: Update GIR-based bindings
+
 Vala 0.43.6
 ===========
  * Various improvements and bug fixes:
