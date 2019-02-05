@@ -26,7 +26,6 @@ using Valadoc;
 [CCode (cname = "TOP_SRC_DIR")]
 extern const string TOP_SRC_DIR;
 
-const string TEST_DATA_FILENAME = TOP_SRC_DIR + "/valadoc/tests/drivers/api-test.data.vapi";
 
 public static void test_enum_global (Api.Enum? en, Api.Package pkg, Api.Namespace global_ns) {
 	assert (en != null);
@@ -40,7 +39,7 @@ public static void test_enum_global (Api.Enum? en, Api.Package pkg, Api.Namespac
 	assert (en.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (en.get_full_name () == "TestEnumGlobal");
-	assert (en.get_filename () == TEST_DATA_FILENAME);
+	assert (en.get_filename () == "api-test.data.vapi");
 	assert (en.name == "TestEnumGlobal");
 	assert (en.nspace == global_ns);
 	assert (en.package == pkg);
@@ -68,7 +67,7 @@ public static void test_enum_global (Api.Enum? en, Api.Package pkg, Api.Namespac
 			assert (enval.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (enval.get_full_name () == "TestEnumGlobal.ENVAL1");
-			assert (enval.get_filename () == TEST_DATA_FILENAME);
+			assert (enval.get_filename () == "api-test.data.vapi");
 			assert (enval.nspace == global_ns);
 			assert (enval.package == pkg);
 
@@ -85,7 +84,7 @@ public static void test_enum_global (Api.Enum? en, Api.Package pkg, Api.Namespac
 			assert (enval.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (enval.get_full_name () == "TestEnumGlobal.ENVAL2");
-			assert (enval.get_filename () == TEST_DATA_FILENAME);
+			assert (enval.get_filename () == "api-test.data.vapi");
 			assert (enval.nspace == global_ns);
 			assert (enval.package == pkg);
 
@@ -126,7 +125,7 @@ public static void test_enum_global (Api.Enum? en, Api.Package pkg, Api.Namespac
 	assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (method.get_full_name () == "TestEnumGlobal.method");
-	assert (method.get_filename () == TEST_DATA_FILENAME);
+	assert (method.get_filename () == "api-test.data.vapi");
 	assert (method.name == "method");
 	assert (method.nspace == global_ns);
 	assert (method.package == pkg);
@@ -157,7 +156,7 @@ public static void test_enum_global (Api.Enum? en, Api.Package pkg, Api.Namespac
 	assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (method.get_full_name () == "TestEnumGlobal.static_method");
-	assert (method.get_filename () == TEST_DATA_FILENAME);
+	assert (method.get_filename () == "api-test.data.vapi");
 	assert (method.name == "static_method");
 	assert (method.nspace == global_ns);
 	assert (method.package == pkg);
@@ -201,7 +200,7 @@ public static void test_erroromain_global (Api.ErrorDomain? err, Api.Package pkg
 	assert (err.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (err.get_full_name () == "TestErrDomGlobal");
-	assert (err.get_filename () == TEST_DATA_FILENAME);
+	assert (err.get_filename () == "api-test.data.vapi");
 	assert (err.name == "TestErrDomGlobal");
 	assert (err.nspace == global_ns);
 	assert (err.package == pkg);
@@ -227,7 +226,7 @@ public static void test_erroromain_global (Api.ErrorDomain? err, Api.Package pkg
 			assert (errc.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (errc.get_full_name () == "TestErrDomGlobal.ERROR1");
-			assert (errc.get_filename () == TEST_DATA_FILENAME);
+			assert (errc.get_filename () == "api-test.data.vapi");
 			assert (errc.nspace == global_ns);
 			assert (errc.package == pkg);
 
@@ -242,7 +241,7 @@ public static void test_erroromain_global (Api.ErrorDomain? err, Api.Package pkg
 			assert (errc.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (errc.get_full_name () == "TestErrDomGlobal.ERROR2");
-			assert (errc.get_filename () == TEST_DATA_FILENAME);
+			assert (errc.get_filename () == "api-test.data.vapi");
 			assert (errc.nspace == global_ns);
 			assert (errc.package == pkg);
 
@@ -283,7 +282,7 @@ public static void test_erroromain_global (Api.ErrorDomain? err, Api.Package pkg
 	assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (method.get_full_name () == "TestErrDomGlobal.method");
-	assert (method.get_filename () == TEST_DATA_FILENAME);
+	assert (method.get_filename () == "api-test.data.vapi");
 	assert (method.name == "method");
 	assert (method.nspace == global_ns);
 	assert (method.package == pkg);
@@ -314,7 +313,7 @@ public static void test_erroromain_global (Api.ErrorDomain? err, Api.Package pkg
 	assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (method.get_full_name () == "TestErrDomGlobal.static_method");
-	assert (method.get_filename () == TEST_DATA_FILENAME);
+	assert (method.get_filename () == "api-test.data.vapi");
 	assert (method.name == "static_method");
 	assert (method.nspace == global_ns);
 	assert (method.package == pkg);
@@ -369,7 +368,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 	// (.Node)
 	//assert (property.getter.get_full_name () == "TestClassGlobal.property_3");
 	assert (cl.get_full_name () == "TestClassGlobal");
-	assert (cl.get_filename () == TEST_DATA_FILENAME);
+	assert (cl.get_filename () == "api-test.data.vapi");
 	assert (cl.name == "TestClassGlobal");
 	assert (cl.nspace == global_ns);
 	assert (cl.package == pkg);
@@ -399,7 +398,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 	assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (method.get_full_name () == "TestClassGlobal.method");
-	assert (method.get_filename () == TEST_DATA_FILENAME);
+	assert (method.get_filename () == "api-test.data.vapi");
 	assert (method.name == "method");
 	assert (method.nspace == global_ns);
 	assert (method.package == pkg);
@@ -430,7 +429,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 	assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (method.get_full_name () == "TestClassGlobal.static_method");
-	assert (method.get_filename () == TEST_DATA_FILENAME);
+	assert (method.get_filename () == "api-test.data.vapi");
 	assert (method.name == "static_method");
 	assert (method.nspace == global_ns);
 	assert (method.package == pkg);
@@ -465,7 +464,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 				assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 				// (.Node)
 				assert (method.get_full_name () == "TestClassGlobal.TestClassGlobal");
-				assert (method.get_filename () == TEST_DATA_FILENAME);
+				assert (method.get_filename () == "api-test.data.vapi");
 				assert (method.nspace == global_ns);
 				assert (method.package == pkg);
 
@@ -491,7 +490,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 				assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 				// (.Node)
 				assert (method.get_full_name () == "TestClassGlobal.TestClassGlobal.named");
-				assert (method.get_filename () == TEST_DATA_FILENAME);
+				assert (method.get_filename () == "api-test.data.vapi");
 				assert (method.nspace == global_ns);
 				assert (method.package == pkg);
 
@@ -533,7 +532,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 			assert (property.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (property.get_full_name () == "TestClassGlobal.property_1");
-			assert (property.get_filename () == TEST_DATA_FILENAME);
+			assert (property.get_filename () == "api-test.data.vapi");
 			assert (property.nspace == global_ns);
 			assert (property.package == pkg);
 
@@ -548,7 +547,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 			assert (property.getter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestClassGlobal.property_2");
-			assert (property.getter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.getter.get_filename () == "api-test.data.vapi");
 			assert (property.getter.nspace == global_ns);
 			assert (property.getter.package == pkg);
 
@@ -563,7 +562,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 			assert (property.setter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestClassGlobal.property_2");
-			assert (property.setter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.setter.get_filename () == "api-test.data.vapi");
 			assert (property.setter.nspace == global_ns);
 			assert (property.setter.package == pkg);
 
@@ -585,7 +584,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 			assert (property.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (property.get_full_name () == "TestClassGlobal.property_2");
-			assert (property.get_filename () == TEST_DATA_FILENAME);
+			assert (property.get_filename () == "api-test.data.vapi");
 			assert (property.nspace == global_ns);
 			assert (property.package == pkg);
 
@@ -599,7 +598,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 			assert (property.getter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestClassGlobal.property_2");
-			assert (property.getter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.getter.get_filename () == "api-test.data.vapi");
 			assert (property.getter.nspace == global_ns);
 			assert (property.getter.package == pkg);
 
@@ -622,7 +621,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 			assert (property.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (property.get_full_name () == "TestClassGlobal.property_3");
-			assert (property.get_filename () == TEST_DATA_FILENAME);
+			assert (property.get_filename () == "api-test.data.vapi");
 			assert (property.nspace == global_ns);
 			assert (property.package == pkg);
 
@@ -636,7 +635,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 			assert (property.getter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestClassGlobal.property_3");
-			assert (property.getter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.getter.get_filename () == "api-test.data.vapi");
 			assert (property.getter.nspace == global_ns);
 			assert (property.getter.package == pkg);
 
@@ -651,7 +650,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 			assert (property.setter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestClassGlobal.property_3");
-			assert (property.setter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.setter.get_filename () == "api-test.data.vapi");
 			assert (property.setter.nspace == global_ns);
 			assert (property.setter.package == pkg);
 
@@ -683,7 +682,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 	assert (del.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	//assert (property.getter.get_full_name () == "TestClassGlobal.property_3");
-	assert (del.get_filename () == TEST_DATA_FILENAME);
+	assert (del.get_filename () == "api-test.data.vapi");
 	assert (del.nspace == global_ns);
 	assert (del.package == pkg);
 
@@ -705,7 +704,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 	assert (sig.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	//assert (sig.get_full_name () == "TestClassGlobal.property_3");
-	assert (sig.get_filename () == TEST_DATA_FILENAME);
+	assert (sig.get_filename () == "api-test.data.vapi");
 	assert (sig.nspace == global_ns);
 	assert (sig.package == pkg);
 
@@ -723,7 +722,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 	assert (constant.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (constant.get_full_name () == "TestClassGlobal.constant");
-	assert (constant.get_filename () == TEST_DATA_FILENAME);
+	assert (constant.get_filename () == "api-test.data.vapi");
 	assert (constant.name == "constant");
 	assert (constant.nspace == global_ns);
 	assert (constant.package == pkg);
@@ -748,7 +747,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 			assert (field.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (field.get_full_name () == "TestClassGlobal.field1");
-			assert (field.get_filename () == TEST_DATA_FILENAME);
+			assert (field.get_filename () == "api-test.data.vapi");
 			assert (field.nspace == global_ns);
 			assert (field.package == pkg);
 
@@ -765,7 +764,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 			assert (field.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (field.get_full_name () == "TestClassGlobal.field2");
-			assert (field.get_filename () == TEST_DATA_FILENAME);
+			assert (field.get_filename () == "api-test.data.vapi");
 			assert (field.nspace == global_ns);
 			assert (field.package == pkg);
 
@@ -793,7 +792,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 	assert (subcl.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (subcl.get_full_name () == "TestClassGlobal.InnerClass");
-	assert (subcl.get_filename () == TEST_DATA_FILENAME);
+	assert (subcl.get_filename () == "api-test.data.vapi");
 	assert (subcl.nspace == global_ns);
 	assert (subcl.package == pkg);
 
@@ -815,7 +814,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 	assert (substru.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (substru.get_full_name () == "TestClassGlobal.InnerStruct");
-	assert (substru.get_filename () == TEST_DATA_FILENAME);
+	assert (substru.get_filename () == "api-test.data.vapi");
 	assert (substru.name == "InnerStruct");
 	assert (substru.nspace == global_ns);
 	assert (substru.package == pkg);
@@ -853,7 +852,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 	assert (iface.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (iface.get_full_name () == "TestInterfaceGlobal");
-	assert (iface.get_filename () == TEST_DATA_FILENAME);
+	assert (iface.get_filename () == "api-test.data.vapi");
 	assert (iface.name == "TestInterfaceGlobal");
 	assert (iface.nspace == global_ns);
 	assert (iface.package == pkg);
@@ -883,7 +882,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 	assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (method.get_full_name () == "TestInterfaceGlobal.method");
-	assert (method.get_filename () == TEST_DATA_FILENAME);
+	assert (method.get_filename () == "api-test.data.vapi");
 	assert (method.name == "method");
 	assert (method.nspace == global_ns);
 	assert (method.package == pkg);
@@ -914,7 +913,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 	assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (method.get_full_name () == "TestInterfaceGlobal.static_method");
-	assert (method.get_filename () == TEST_DATA_FILENAME);
+	assert (method.get_filename () == "api-test.data.vapi");
 	assert (method.name == "static_method");
 	assert (method.nspace == global_ns);
 	assert (method.package == pkg);
@@ -945,7 +944,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 			assert (property.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (property.get_full_name () == "TestInterfaceGlobal.property_1");
-			assert (property.get_filename () == TEST_DATA_FILENAME);
+			assert (property.get_filename () == "api-test.data.vapi");
 			assert (property.nspace == global_ns);
 			assert (property.package == pkg);
 
@@ -960,7 +959,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 			assert (property.getter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property_2");
-			assert (property.getter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.getter.get_filename () == "api-test.data.vapi");
 			assert (property.getter.nspace == global_ns);
 			assert (property.getter.package == pkg);
 
@@ -975,7 +974,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 			assert (property.setter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property_2");
-			assert (property.setter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.setter.get_filename () == "api-test.data.vapi");
 			assert (property.setter.nspace == global_ns);
 			assert (property.setter.package == pkg);
 
@@ -997,7 +996,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 			assert (property.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (property.get_full_name () == "TestInterfaceGlobal.property_2");
-			assert (property.get_filename () == TEST_DATA_FILENAME);
+			assert (property.get_filename () == "api-test.data.vapi");
 			assert (property.nspace == global_ns);
 			assert (property.package == pkg);
 
@@ -1011,7 +1010,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 			assert (property.getter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property_2");
-			assert (property.getter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.getter.get_filename () == "api-test.data.vapi");
 			assert (property.getter.nspace == global_ns);
 			assert (property.getter.package == pkg);
 
@@ -1034,7 +1033,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 			assert (property.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (property.get_full_name () == "TestInterfaceGlobal.property_3");
-			assert (property.get_filename () == TEST_DATA_FILENAME);
+			assert (property.get_filename () == "api-test.data.vapi");
 			assert (property.nspace == global_ns);
 			assert (property.package == pkg);
 
@@ -1048,7 +1047,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 			assert (property.getter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property_3");
-			assert (property.getter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.getter.get_filename () == "api-test.data.vapi");
 			assert (property.getter.nspace == global_ns);
 			assert (property.getter.package == pkg);
 
@@ -1063,7 +1062,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 			assert (property.setter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property_3");
-			assert (property.setter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.setter.get_filename () == "api-test.data.vapi");
 			assert (property.setter.nspace == global_ns);
 			assert (property.setter.package == pkg);
 
@@ -1096,7 +1095,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 	assert (del.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	//assert (del.get_full_name () == "TestClassGlobal.property_3");
-	assert (del.get_filename () == TEST_DATA_FILENAME);
+	assert (del.get_filename () == "api-test.data.vapi");
 	assert (del.nspace == global_ns);
 	assert (del.package == pkg);
 
@@ -1118,7 +1117,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 	assert (sig.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	//assert (sig.get_full_name () == "TestClassGlobal.property_3");
-	assert (sig.get_filename () == TEST_DATA_FILENAME);
+	assert (sig.get_filename () == "api-test.data.vapi");
 	assert (sig.nspace == global_ns);
 	assert (sig.package == pkg);
 
@@ -1136,7 +1135,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 	assert (constant.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (constant.get_full_name () == "TestInterfaceGlobal.constant");
-	assert (constant.get_filename () == TEST_DATA_FILENAME);
+	assert (constant.get_filename () == "api-test.data.vapi");
 	assert (constant.name == "constant");
 	assert (constant.nspace == global_ns);
 	assert (constant.package == pkg);
@@ -1177,7 +1176,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 	// (.Node)
 	//assert (property.getter.get_full_name () == "TestClassGlobal.property_3");
 	assert (stru.get_full_name () == "TestStructGlobal");
-	assert (stru.get_filename () == TEST_DATA_FILENAME);
+	assert (stru.get_filename () == "api-test.data.vapi");
 	assert (stru.name == "TestStructGlobal");
 	assert (stru.nspace == global_ns);
 	assert (stru.package == pkg);
@@ -1207,7 +1206,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 	assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (method.get_full_name () == "TestStructGlobal.method");
-	assert (method.get_filename () == TEST_DATA_FILENAME);
+	assert (method.get_filename () == "api-test.data.vapi");
 	assert (method.name == "method");
 	assert (method.nspace == global_ns);
 	assert (method.package == pkg);
@@ -1238,7 +1237,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 	assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (method.get_full_name () == "TestStructGlobal.static_method");
-	assert (method.get_filename () == TEST_DATA_FILENAME);
+	assert (method.get_filename () == "api-test.data.vapi");
 	assert (method.name == "static_method");
 	assert (method.nspace == global_ns);
 	assert (method.package == pkg);
@@ -1273,7 +1272,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 				assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 				// (.Node)
 				assert (method.get_full_name () == "TestStructGlobal.TestStructGlobal");
-				assert (method.get_filename () == TEST_DATA_FILENAME);
+				assert (method.get_filename () == "api-test.data.vapi");
 				assert (method.nspace == global_ns);
 				assert (method.package == pkg);
 
@@ -1299,7 +1298,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 				assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 				// (.Node)
 				assert (method.get_full_name () == "TestStructGlobal.TestStructGlobal.named");
-				assert (method.get_filename () == TEST_DATA_FILENAME);
+				assert (method.get_filename () == "api-test.data.vapi");
 				assert (method.nspace == global_ns);
 				assert (method.package == pkg);
 
@@ -1328,7 +1327,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 	assert (constant.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (constant.get_full_name () == "TestStructGlobal.constant");
-	assert (constant.get_filename () == TEST_DATA_FILENAME);
+	assert (constant.get_filename () == "api-test.data.vapi");
 	assert (constant.name == "constant");
 	assert (constant.nspace == global_ns);
 	assert (constant.package == pkg);
@@ -1354,7 +1353,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 			assert (field.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (field.get_full_name () == "TestStructGlobal.field1");
-			assert (field.get_filename () == TEST_DATA_FILENAME);
+			assert (field.get_filename () == "api-test.data.vapi");
 			assert (field.nspace == global_ns);
 			assert (field.package == pkg);
 
@@ -1371,7 +1370,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 			assert (field.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (field.get_full_name () == "TestStructGlobal.field2");
-			assert (field.get_filename () == TEST_DATA_FILENAME);
+			assert (field.get_filename () == "api-test.data.vapi");
 			assert (field.nspace == global_ns);
 			assert (field.package == pkg);
 
@@ -1412,7 +1411,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 			assert (property.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (property.get_full_name () == "TestStructGlobal.property_1");
-			assert (property.get_filename () == TEST_DATA_FILENAME);
+			assert (property.get_filename () == "api-test.data.vapi");
 			assert (property.nspace == global_ns);
 			assert (property.package == pkg);
 
@@ -1427,7 +1426,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 			assert (property.getter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property_2");
-			assert (property.getter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.getter.get_filename () == "api-test.data.vapi");
 			assert (property.getter.nspace == global_ns);
 			assert (property.getter.package == pkg);
 
@@ -1442,7 +1441,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 			assert (property.setter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property_2");
-			assert (property.setter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.setter.get_filename () == "api-test.data.vapi");
 			assert (property.setter.nspace == global_ns);
 			assert (property.setter.package == pkg);
 
@@ -1464,7 +1463,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 			assert (property.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (property.get_full_name () == "TestStructGlobal.property_2");
-			assert (property.get_filename () == TEST_DATA_FILENAME);
+			assert (property.get_filename () == "api-test.data.vapi");
 			assert (property.nspace == global_ns);
 			assert (property.package == pkg);
 
@@ -1478,7 +1477,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 			assert (property.getter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property_2");
-			assert (property.getter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.getter.get_filename () == "api-test.data.vapi");
 			assert (property.getter.nspace == global_ns);
 			assert (property.getter.package == pkg);
 
@@ -1500,7 +1499,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 			assert (property.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (property.get_full_name () == "TestStructGlobal.property_3");
-			assert (property.get_filename () == TEST_DATA_FILENAME);
+			assert (property.get_filename () == "api-test.data.vapi");
 			assert (property.nspace == global_ns);
 			assert (property.package == pkg);
 
@@ -1514,7 +1513,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 			assert (property.getter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property_3");
-			assert (property.getter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.getter.get_filename () == "api-test.data.vapi");
 			assert (property.getter.nspace == global_ns);
 			assert (property.getter.package == pkg);
 
@@ -1529,7 +1528,7 @@ public static void test_struct_global (Api.Struct? stru, Api.Package pkg, Api.Na
 			assert (property.setter.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			//assert (property.getter.get_full_name () == "TestInterfaceGlobal.property_3");
-			assert (property.setter.get_filename () == TEST_DATA_FILENAME);
+			assert (property.setter.get_filename () == "api-test.data.vapi");
 			assert (property.setter.nspace == global_ns);
 			assert (property.setter.package == pkg);
 
@@ -1641,7 +1640,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_2.a");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "a");
@@ -1677,7 +1676,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_3.a");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "a");
@@ -1713,7 +1712,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_4.a");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "a");
@@ -1749,7 +1748,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_5.o");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "o");
@@ -1785,7 +1784,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_6.a");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "a");
@@ -1821,7 +1820,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == null);
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == null);
@@ -1848,7 +1847,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_8.a");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "a");
@@ -1884,7 +1883,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_9.a");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "a");
@@ -1916,7 +1915,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_9.b");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "b");
@@ -1948,7 +1947,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_9.c");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "c");
@@ -1980,7 +1979,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_9.d");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "d");
@@ -2012,7 +2011,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_9.e");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "e");
@@ -2044,7 +2043,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_9.f");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "f");
@@ -2076,7 +2075,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == null);
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == null);
@@ -2103,7 +2102,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_10.a");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "a");
@@ -2141,7 +2140,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_11.a");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "a");
@@ -2180,7 +2179,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_12.a");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "a");
@@ -2219,7 +2218,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_13.a");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "a");
@@ -2258,7 +2257,7 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.accessibility == Vala.SymbolAccessibility.PUBLIC);
 			// (.Node)
 			assert (param.get_full_name () == "ParamTest.test_function_param_14.a");
-			assert (param.get_filename () == TEST_DATA_FILENAME);
+			assert (param.get_filename () == "api-test.data.vapi");
 			assert (param.nspace == ns);
 			assert (param.package == pkg);
 			assert (param.name == "a");
@@ -2692,8 +2691,7 @@ public static void test_global_ns (Api.Namespace global_ns, Api.Package pkg) {
 	assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (method.get_full_name () == "test_function_global");
-	stderr.printf ("%s\n", method.get_filename ());
-	assert (method.get_filename () == TEST_DATA_FILENAME);
+	assert (method.get_filename () == "api-test.data.vapi");
 	assert (method.name == "test_function_global");
 	assert (method.nspace == global_ns);
 	assert (method.package == pkg);
@@ -2715,7 +2713,7 @@ public static void test_global_ns (Api.Namespace global_ns, Api.Package pkg) {
 	assert (del.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (del.get_full_name () == "test_delegate_global");
-	assert (del.get_filename () == TEST_DATA_FILENAME);
+	assert (del.get_filename () == "api-test.data.vapi");
 	assert (del.name == "test_delegate_global");
 	assert (del.nspace == global_ns);
 	assert (del.package == pkg);
@@ -2736,7 +2734,7 @@ public static void test_global_ns (Api.Namespace global_ns, Api.Package pkg) {
 	assert (field.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (field.get_full_name () == "test_field_global");
-	assert (field.get_filename () == TEST_DATA_FILENAME);
+	assert (field.get_filename () == "api-test.data.vapi");
 	assert (field.name == "test_field_global");
 	assert (field.nspace == global_ns);
 	assert (field.package == pkg);
@@ -2755,7 +2753,7 @@ public static void test_global_ns (Api.Namespace global_ns, Api.Package pkg) {
 	assert (constant.accessibility == Vala.SymbolAccessibility.PUBLIC);
 	// (.Node)
 	assert (constant.get_full_name () == "test_const_global");
-	assert (constant.get_filename () == TEST_DATA_FILENAME);
+	assert (constant.get_filename () == "api-test.data.vapi");
 	assert (constant.name == "test_const_global");
 	assert (constant.nspace == global_ns);
 	assert (constant.package == pkg);
@@ -2842,7 +2840,7 @@ public static void test_global_ns (Api.Namespace global_ns, Api.Package pkg) {
 
 
 public static void test_package_out (Api.Package pkg) {
-	assert (pkg.is_package == true);
+	assert (pkg.is_package == false);
 	assert (pkg.nspace == null);
 	assert (pkg.package == pkg);
 	//assert (pkg.get_full_name () == null);
@@ -2873,7 +2871,7 @@ public static void test_driver () {
 	var reporter = new ErrorReporter ();
 
 	settings.source_files = {
-			TEST_DATA_FILENAME
+			TOP_SRC_DIR + "/valadoc/tests/drivers/api-test.data.vapi"
 		};
 
 	settings._protected = false;
@@ -2919,7 +2917,7 @@ public static void test_driver () {
 			gobj = true;
 			break;
 
-		case "api-test.data":
+		case "@out":
 			test_package_out (pkg);
 			test = true;
 			break;
