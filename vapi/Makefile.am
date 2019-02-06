@@ -128,14 +128,14 @@ dist_vapi_DATA = \
 	gtk+-2.0.vapi \
 	gtk+-3.0.deps \
 	gtk+-3.0.vapi \
-	gtk+-4.0.deps \
-	gtk+-4.0.vapi \
 	gtk+-unix-print-2.0.deps \
 	gtk+-unix-print-2.0.vapi \
 	gtk+-unix-print-3.0.deps \
 	gtk+-unix-print-3.0.vapi \
-	gtk+-unix-print-4.0.deps \
-	gtk+-unix-print-4.0.vapi \
+	gtk4.deps \
+	gtk4.vapi \
+	gtk4-unix-print.deps \
+	gtk4-unix-print.vapi \
 	gtkmozembed.deps \
 	gtkmozembed.vapi \
 	gtksourceview-2.0.deps \
@@ -291,7 +291,7 @@ GIDL_BINDINGS = \
 	gtk+-2.0 \
 	gtk+-unix-print-2.0 \
 	gtk+-unix-print-3.0 \
-	gtk+-unix-print-4.0 \
+	gtk4-unix-print \
 	gtksourceview-2.0 \
 	hildon-1 \
 	hildon-fm-2 \
@@ -356,7 +356,7 @@ GIR_BINDINGS = \
 	goocanvas-2.0 \
 	graphene-1.0 \
 	gtk+-3.0 \
-	gtk+-4.0 \
+	gtk4 \
 	gudev-1.0 \
 	javascriptcoregtk-4.0 \
 	json-glib-1.0 \
@@ -565,8 +565,8 @@ gtk+-2.0:
 gtk+-3.0:
 	$(GENVAPI) --library $(srcdir)/gtk+-3.0 --pkg atk --pkg gdk-3.0 --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --pkg pango --pkg cairo --metadatadir $(METADATADIR) $(METADATADIR)/Gtk-3.0-custom.vala $(GIRDIR)/Gtk-3.0.gir
 
-gtk+-4.0:
-	$(GENVAPI) --library $(srcdir)/gtk+-4.0 --pkg atk --pkg cairo --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --pkg graphene-1.0 --pkg pango --pkg x11 \
+gtk4:
+	$(GENVAPI) --library $(srcdir)/gtk4 --pkg atk --pkg cairo --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --pkg graphene-1.0 --pkg pango --pkg x11 \
 		--metadatadir $(METADATADIR) \
 		$(METADATADIR)/GdkX11-4.0-custom.vala $(GIRDIR)/GdkX11-4.0.gir \
 		$(METADATADIR)/Gdk-4.0-custom.vala $(GIRDIR)/Gdk-4.0.gir \
@@ -579,8 +579,8 @@ gtk+-unix-print-2.0:
 gtk+-unix-print-3.0:
 	$(GENVAPI) --library $(srcdir)/gtk+-unix-print-3.0 $(PACKAGESDIR)/gtk+-unix-print-3.0/gtk+-unix-print-3.0-custom.vala $(PACKAGESDIR)/gtk+-unix-print-3.0/gtk+-unix-print-3.0.gi
 
-gtk+-unix-print-4.0:
-	$(GENVAPI) --library $(srcdir)/gtk+-unix-print-4.0 $(PACKAGESDIR)/gtk+-unix-print-4.0/gtk+-unix-print-4.0-custom.vala $(PACKAGESDIR)/gtk+-unix-print-4.0/gtk+-unix-print-4.0.gi
+gtk4-unix-print:
+	$(GENVAPI) --library $(srcdir)/gtk4-unix-print $(PACKAGESDIR)/gtk4-unix-print/gtk4-unix-print-custom.vala $(PACKAGESDIR)/gtk4-unix-print/gtk4-unix-print.gi
 
 gtksourceview-2.0:
 	$(GENVAPI) --library $(srcdir)/gtksourceview-2.0 $(PACKAGESDIR)/gtksourceview-2.0/gtksourceview-2.0.gi
