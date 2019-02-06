@@ -6803,19 +6803,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected ButtonAccessible ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_button_box_get_type ()")]
-	public class ButtonBox : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public ButtonBox (Gtk.Orientation orientation);
-		public bool get_child_non_homogeneous (Gtk.Widget child);
-		public bool get_child_secondary (Gtk.Widget child);
-		public Gtk.ButtonBoxStyle get_layout ();
-		public void set_child_non_homogeneous (Gtk.Widget child, bool non_homogeneous);
-		public void set_child_secondary (Gtk.Widget child, bool is_secondary);
-		public void set_layout (Gtk.ButtonBoxStyle layout_style);
-		[NoAccessorMethod]
-		public Gtk.ButtonBoxStyle layout_style { get; set; }
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_calendar_get_type ()")]
 	public class Calendar : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -7386,7 +7373,6 @@ namespace Gtk {
 		public int active { get; set; }
 		public string? active_id { get; set; }
 		public Gtk.SensitivityType button_sensitivity { get; set; }
-		public int column_span_column { get; set; }
 		public int entry_text_column { get; set; }
 		public bool has_entry { get; construct; }
 		[NoAccessorMethod]
@@ -7396,8 +7382,6 @@ namespace Gtk {
 		public bool popup_fixed_width { get; set; }
 		[NoAccessorMethod]
 		public bool popup_shown { get; }
-		public int row_span_column { get; set; }
-		public int wrap_width { get; set; }
 		public virtual signal void changed ();
 		public virtual signal string format_entry_text (string path);
 		public signal void move_active (Gtk.ScrollType scroll_type);
@@ -8588,16 +8572,6 @@ namespace Gtk {
 		public virtual signal void close ();
 		[HasEmitter]
 		public virtual signal void response (int response_id);
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_invisible_get_type ()")]
-	public class Invisible : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public Invisible ();
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public Invisible.for_display (Gdk.Display display);
-		public unowned Gdk.Display get_display ();
-		public void set_display (Gdk.Display display);
-		public Gdk.Display display { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_label_get_type ()")]
 	public class Label : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
@@ -11916,7 +11890,6 @@ namespace Gtk {
 		public unowned Gtk.Application? get_application ();
 		public unowned Gtk.Widget? get_attached_to ();
 		public bool get_decorated ();
-		public static GLib.List<weak Gdk.Texture> get_default_icon_list ();
 		public static unowned string get_default_icon_name ();
 		public void get_default_size (out int width, out int height);
 		public unowned Gtk.Widget? get_default_widget ();
@@ -11928,8 +11901,6 @@ namespace Gtk {
 		public Gdk.Gravity get_gravity ();
 		public unowned Gtk.WindowGroup get_group ();
 		public bool get_hide_on_close ();
-		public unowned Gdk.Texture? get_icon ();
-		public GLib.List<weak Gdk.Texture> get_icon_list ();
 		public unowned string? get_icon_name ();
 		public Gdk.ModifierType get_mnemonic_modifier ();
 		public bool get_mnemonics_visible ();
@@ -11965,9 +11936,6 @@ namespace Gtk {
 		public static void set_auto_startup_notification (bool setting);
 		public void set_decorated (bool setting);
 		public void set_default (Gtk.Widget? default_widget);
-		public static void set_default_icon (Gdk.Texture icon);
-		public static bool set_default_icon_from_file (string filename) throws GLib.Error;
-		public static void set_default_icon_list (owned GLib.List<weak Gdk.Texture> list);
 		public static void set_default_icon_name (string name);
 		public void set_default_size (int width, int height);
 		public void set_deletable (bool setting);
@@ -11978,9 +11946,6 @@ namespace Gtk {
 		public void set_gravity (Gdk.Gravity gravity);
 		public void set_has_user_ref_count (bool setting);
 		public void set_hide_on_close (bool setting);
-		public void set_icon (Gdk.Texture? icon);
-		public bool set_icon_from_file (string filename) throws GLib.Error;
-		public void set_icon_list (GLib.List<Gdk.Texture> list);
 		public void set_icon_name (string? name);
 		public static void set_interactive_debugging (bool enable);
 		public void set_keep_above (bool setting);
@@ -12023,7 +11988,6 @@ namespace Gtk {
 		public bool focus_visible { get; set; }
 		public Gdk.Gravity gravity { get; set; }
 		public bool hide_on_close { get; set; }
-		public Gdk.Texture icon { get; set; }
 		public string icon_name { get; set; }
 		[NoAccessorMethod]
 		public bool is_active { get; }
@@ -12655,15 +12619,6 @@ namespace Gtk {
 		DOUBLE,
 		GROOVE,
 		RIDGE
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_BUTTONBOX_", type_id = "gtk_button_box_style_get_type ()")]
-	public enum ButtonBoxStyle {
-		SPREAD,
-		EDGE,
-		START,
-		END,
-		CENTER,
-		EXPAND
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_BUTTON_ROLE_", type_id = "gtk_button_role_get_type ()")]
 	public enum ButtonRole {
