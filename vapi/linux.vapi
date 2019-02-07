@@ -3209,6 +3209,86 @@ namespace Linux {
     }
 
     /*
+     * Connector
+     */
+    [CCode (cheader_filename = "linux/connector.h", cprefix = "", lower_case_cprefix = "")]
+    namespace Connector {
+        [CCode (cname="CONNECTOR_MAX_MSG_SIZE")]
+        public const int MAX_MSG_SIZE;
+        [CCode (cname="CN_NETLINK_USERS")]
+        public const int NETLINK_USERS;
+
+        [CCode (cname = "struct cb_id", has_type_id = false, destroy_function = "")]
+        public struct CbId {
+            public Linux.Connector.IDX idx;
+            public Linux.Connector.Val val;
+        }
+
+        [CCode (cname = "struct cn_msg", has_type_id = false, destroy_function = "")]
+        public struct CnMsg {
+            public Linux.Connector.CbId id;
+
+            public uint32 seq;
+            public uint32 ack;
+
+            public uint16 len;
+            public uint16 flags;
+            [CCode (array_length_cname = "len", array_length_type = "uint16")]
+            public uint8 data[0];
+        }
+
+        [CCode (cheader_filename = "linux/cn_proc.h", cname = "enum proc_cn_mcast_op", cprefix = "PROC_CN_MCAST_", has_type_id = false)]
+        public enum ProcMcastOp {
+            LISTEN,
+            IGNORE
+        }
+
+        [CCode (cname = "__u32", has_type_id = false)]
+        public enum IDX {
+            [CCode (cname = "CN_IDX_PROC")]
+            PROC,
+            [CCode (cname = "CN_IDX_CIFS")]
+            CIFS,
+            [CCode (cname = "CN_W1_IDX")]
+            W1,
+            [CCode (cname = "CN_IDX_V86D")]
+            V86D,
+            [CCode (cname = "CN_IDX_BB")]
+            BB,
+            [CCode (cname = "CN_DST_IDX")]
+            DST,
+            [CCode (cname = "CN_IDX_DM")]
+            DM,
+            [CCode (cname = "CN_IDX_DRBD")]
+            DRBD,
+            [CCode (cname = "CN_KVP_IDX")]
+            KVP,
+            [CCode (cname = "CN_VSS_IDX")]
+            VSS,
+        }
+
+        [CCode (cname = "__u32", has_type_id = false)]
+        public enum Val {
+            [CCode (cname = "CN_VAL_PROC")]
+            PROC,
+            [CCode (cname = "CN_VAL_CIFS")]
+            CIFS,
+            [CCode (cname = "CN_W1_VAL")]
+            W1,
+            [CCode (cname = "CN_VAL_V86D_UVESAFB")]
+            V86D_UVESAFB,
+            [CCode (cname = "CN_DST_VAL")]
+            DST,
+            [CCode (cname = "CN_VAL_DM_USERSPACE_LOG")]
+            DM_USERSPACE_LOG,
+            [CCode (cname = "CN_KVP_VAL")]
+            KVP,
+            [CCode (cname = "CN_VSS_VAL")]
+            VSS,
+        }
+    }
+
+    /*
      * Netlink subsystem
      */
     [CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "linux/netlink.h")]
@@ -3561,6 +3641,106 @@ namespace Linux {
         public const int SOCK_NONBLOCK;
         [CCode (cheader_filename = "sys/socket.h")]
         public const int SOCK_CLOEXEC;
+
+        [CCode (cprefix = "", lower_case_cprefix = "PF_")]
+        namespace ProtocolFamily {
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int UNSPEC;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int LOCAL;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int UNIX;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int FILE;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int INET;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int AX25;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int IPX;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int APPLETALK;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int NETROM;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int BRIDGE;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int ATMPVC;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int X25;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int INET6;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int ROSE;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int DECnet;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int NETBEUI;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int SECURITY;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int KEY;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int NETLINK;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int ROUTE;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int PACKET;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int ASH;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int ECONET;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int ATMSVC;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int RDS;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int SNA;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int IRDA;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int PPPOX;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int WANPIPE;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int LLC;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int IB;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int MPLS;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int CAN;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int TIPC;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int BLUETOOTH;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int IUCV;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int RXRPC;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int ISDN;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int PHONET;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int IEEE802154;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int CAIF;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int ALG;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int NFC;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int VSOCK;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int KCM;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int QIPCRTR;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int SMC;
+            [CCode (cheader_filename = "sys/socket.h")]
+            public const int MAX;
+        }
 
         [CCode (cname = "struct ucred", has_type_id = false, cheader_filename = "linux/socket.h", destroy_function = "")]
         public struct ucred {
