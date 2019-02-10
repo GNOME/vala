@@ -280,7 +280,6 @@ GIDL_BINDINGS = \
 	gconf-2.0 \
 	gdk-2.0 \
 	gdk-x11-2.0 \
-	gdk-x11-3.0 \
 	gdl-1.0 \
 	gio-unix-2.0 \
 	gnome-desktop-2.0 \
