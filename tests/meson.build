@@ -699,27 +699,41 @@ vala_flags = [
 	'-X', '-pipe',
 	'-X', '-lm',
 	'-X', '-DGETTEXT_PACKAGE="valac"',
-	'-X', '-Werror=init-self',
-	'-X', '-Werror=implicit',
-	'-X', '-Werror=pointer-arith',
-	'-X', '-Werror=redundant-decls',
-	'-X', '-Werror=return-type',
-	'-X', '-Werror=sequence-point',
-	'-X', '-Werror=uninitialized',
-	'-X', '-Werror=int-to-pointer-cast',
-	'-X', '-Werror=pointer-to-int-cast',
-	'-X', '-Wformat=2',
-	'-X', '-Werror=format-security',
-	'-X', '-Werror=format-nonliteral',
-	'-X', '-Werror=int-conversion',
-	'-X', '-Werror=duplicated-branches',
-	'-X', '-Werror=duplicated-cond',
-	'-X', '-Werror=declaration-after-statement',
-	'-X', '-Werror=maybe-uninitialized',
-#	'-X', '-Werror=missing-prototypes',
-#	'-X', '-Werror=strict-prototypes',
-#	'-X', '-Werror=enum-conversion',
 ]
+
+cc = meson.get_compiler('c')
+if cc.get_id() == 'gcc' or cc.get_id() == 'clang'
+  test_cflags = [
+	'-Werror=init-self',
+	'-Werror=implicit',
+	'-Werror=pointer-arith',
+	'-Werror=redundant-decls',
+	'-Werror=return-type',
+	'-Werror=sequence-point',
+	'-Werror=uninitialized',
+	'-Werror=int-to-pointer-cast',
+	'-Werror=pointer-to-int-cast',
+	'-Wformat=2',
+	'-Werror=format-security',
+	'-Werror=format-nonliteral',
+	'-Werror=int-conversion',
+	'-Werror=duplicated-branches',
+	'-Werror=duplicated-cond',
+	'-Werror=declaration-after-statement',
+	'-Werror=maybe-uninitialized',
+	'-Werror=missing-prototypes',
+	'-Werror=strict-prototypes',
+	'-Werror=enum-conversion',
+  ]
+else
+  test_cflags = []
+endif
+
+supported_test_cflags = cc.get_supported_arguments(test_cflags)
+
+foreach flag : supported_test_cflags
+	vala_flags += ['-X', flag]
+endforeach
 
 vg = find_program('valgrind', required: false)
 if (vg.found())
