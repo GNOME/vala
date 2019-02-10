@@ -54,6 +54,7 @@ coverage:
 	find $(top_srcdir) -name "*.gcda" | xargs rm -f
 	$(MAKE) $(AM_MAKEFLAGS) bootstrap
 	$(MAKE) $(AM_MAKEFLAGS) test
+	$(MAKE) $(AM_MAKEFLAGS) -C vapi gidl-bindings
 
 coverage-report: coverage
 	lcov --directory $(top_srcdir) --capture --output-file $(top_builddir)/lcov.info
