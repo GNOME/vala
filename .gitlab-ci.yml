@@ -4,7 +4,7 @@ stages:
 
 fedora-gcc-x86_64:
   stage: build
-  image: fedora:rawhide
+  image: fedora:29
   except:
     - tags
   before_script:
