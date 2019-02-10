@@ -56,3 +56,7 @@ RTSPThread base_type="Gst.MiniObject"
   .mini_object skip
 RTSPToken base_type="Gst.MiniObject"
   .mini_object skip
+
+// Upstream
+RTSPClientSendMessagesFunc
+  .messages array array_length_idx=2

@@ -1131,6 +1131,8 @@ namespace Gst {
 		public bool can_monitor ();
 		public class unowned string? class_get_metadata (string key);
 		public void device_add (Gst.Device device);
+		[Version (since = "1.16")]
+		public void device_changed (Gst.Device device, Gst.Device changed_device);
 		public void device_remove (Gst.Device device);
 		public Gst.Bus get_bus ();
 		public GLib.List<Gst.Device> get_devices ();
@@ -1563,6 +1565,9 @@ namespace Gst {
 		[Version (since = "1.4")]
 		public Message.device_added (Gst.Object src, Gst.Device device);
 		[CCode (has_construct_function = false)]
+		[Version (since = "1.16")]
+		public Message.device_changed (Gst.Object src, Gst.Device device, Gst.Device changed_device);
+		[CCode (has_construct_function = false)]
 		[Version (since = "1.4")]
 		public Message.device_removed (Gst.Object src, Gst.Device device);
 		[CCode (has_construct_function = false)]
@@ -1606,6 +1611,8 @@ namespace Gst {
 		public bool parse_context_type (out unowned string context_type);
 		[Version (since = "1.4")]
 		public void parse_device_added (out Gst.Device device);
+		[Version (since = "1.16")]
+		public void parse_device_changed (out Gst.Device device, out Gst.Device changed_device);
 		[Version (since = "1.4")]
 		public void parse_device_removed (out Gst.Device device);
 		public void parse_error (out GLib.Error gerror, out string debug);

@@ -117,6 +117,8 @@ namespace Gst {
 			public bool set_connection (owned Gst.RTSP.Connection conn);
 			public void set_mount_points (Gst.RTSPServer.MountPoints? mounts);
 			public void set_send_func (owned Gst.RTSPServer.ClientSendFunc func);
+			[Version (since = "1.16")]
+			public void set_send_messages_func (owned Gst.RTSPServer.ClientSendMessagesFunc func);
 			public void set_session_pool (Gst.RTSPServer.SessionPool? pool);
 			public void set_thread_pool (Gst.RTSPServer.ThreadPool? pool);
 			[NoWrapper]
@@ -639,7 +641,6 @@ namespace Gst {
 			public void set_ulpfec_percentage (uint percentage);
 			[Version (since = "1.16")]
 			public void set_ulpfec_pt (uint pt);
-			public void set_watch_context (GLib.MainContext context);
 			public GLib.List<Gst.RTSPServer.StreamTransport> transport_filter (Gst.RTSPServer.StreamTransportFilterFunc? func);
 			public bool unblock_linked ();
 			public bool update_crypto (uint ssrc, Gst.Caps? crypto);
@@ -665,10 +666,16 @@ namespace Gst {
 			public void message_sent ();
 			public Gst.FlowReturn recv_data (uint channel, owned Gst.Buffer buffer);
 			public bool send_rtcp (Gst.Buffer buffer);
+			[Version (since = "1.16")]
+			public bool send_rtcp_list (Gst.BufferList buffer_list);
 			public bool send_rtp (Gst.Buffer buffer);
+			[Version (since = "1.16")]
+			public bool send_rtp_list (Gst.BufferList buffer_list);
 			public bool set_active (bool active);
 			public void set_callbacks (Gst.RTSPServer.SendFunc send_rtp, owned Gst.RTSPServer.SendFunc send_rtcp);
 			public void set_keepalive (owned Gst.RTSPServer.KeepAliveFunc keep_alive);
+			[Version (since = "1.16")]
+			public void set_list_callbacks (Gst.RTSPServer.SendListFunc send_rtp_list, owned Gst.RTSPServer.SendListFunc send_rtcp_list);
 			public void set_message_sent (owned Gst.RTSPServer.MessageSentFunc message_sent);
 			public void set_timed_out (bool timedout);
 			public void set_transport (owned Gst.RTSP.Transport tr);
@@ -821,6 +828,9 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPClientSendFunc", instance_pos = 3.9)]
 		public delegate bool ClientSendFunc (Gst.RTSPServer.Client client, Gst.RTSP.Message message, bool close);
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPClientSendMessagesFunc", instance_pos = 3.9)]
+		[Version (since = "1.16")]
+		public delegate bool ClientSendMessagesFunc (Gst.RTSPServer.Client client, [CCode (array_length_cname = "n_messages", array_length_pos = 2.5, array_length_type = "guint", type = "GstRTSPMessage*")] Gst.RTSP.Message[] messages, bool close);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPClientSessionFilterFunc", instance_pos = 2.9)]
 		public delegate Gst.RTSPServer.FilterResult ClientSessionFilterFunc (Gst.RTSPServer.Client client, Gst.RTSPServer.Session sess);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPKeepAliveFunc", instance_pos = 0.9)]
@@ -829,6 +839,9 @@ namespace Gst {
 		public delegate void MessageSentFunc ();
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSendFunc", instance_pos = 2.9)]
 		public delegate bool SendFunc (Gst.Buffer buffer, uint8 channel);
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSendListFunc", instance_pos = 2.9)]
+		[Version (since = "1.16")]
+		public delegate bool SendListFunc (Gst.BufferList buffer_list, uint8 channel);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPServerClientFilterFunc", instance_pos = 2.9)]
 		public delegate Gst.RTSPServer.FilterResult ServerClientFilterFunc (Gst.RTSPServer.Server server, Gst.RTSPServer.Client client);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSessionFilterFunc", instance_pos = 2.9)]
