@@ -1,0 +1,2 @@
+/* Define to the build version of this package. */
+#define BUILD_VERSION "@VCS_TAG@"
