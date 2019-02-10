@@ -20,3 +20,4 @@ meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs --relative @1@ vala
 
 subdir('doclets')
 subdir('icons')
+subdir('tests')

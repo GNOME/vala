@@ -168,6 +168,17 @@ if valadoc_enabled and cc.run('''#include <gvc.h>
 	add_project_arguments('-D', 'WITH_CGRAPH', language: 'vala')
 endif
 
+add_test_setup('default', is_default: true, env: 'G_SLICE=debug-blocks G_DEBUG=fatal-warnings')
+
+vg = find_program('valgrind', required: false)
+if (vg.found())
+	add_test_setup('valgrind',
+		env: 'G_SLICE=always-malloc G_DEBUG=fatal-warnings',
+		exe_wrapper: [vg, '--error-exitcode=1', '--leak-check=full', '--track-origins=yes'],
+		timeout_multiplier: 100,
+	)
+endif
+
 subdir('gobject-introspection')
 subdir('gee')
 subdir('vala')
@@ -183,5 +194,6 @@ if valadoc_enabled
 endif
 
 subdir('doc')
+subdir('tests')
 
 install_data('vala.m4', install_dir: join_paths('share', 'aclocal'))
