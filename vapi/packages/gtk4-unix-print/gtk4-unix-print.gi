@@ -29,9 +29,21 @@
 		</struct>
 		<struct name="GtkPrintJob_autoptr">
 		</struct>
+		<struct name="GtkPrintJob_listautoptr">
+		</struct>
+		<struct name="GtkPrintJob_slistautoptr">
+		</struct>
 		<struct name="GtkPrintUnixDialog_autoptr">
 		</struct>
+		<struct name="GtkPrintUnixDialog_listautoptr">
+		</struct>
+		<struct name="GtkPrintUnixDialog_slistautoptr">
+		</struct>
 		<struct name="GtkPrinter_autoptr">
+		</struct>
+		<struct name="GtkPrinter_listautoptr">
+		</struct>
+		<struct name="GtkPrinter_slistautoptr">
 		</struct>
 		<flags name="GtkPrintCapabilities" type-name="GtkPrintCapabilities" get-type="gtk_print_capabilities_get_type">
 			<member name="GTK_PRINT_CAPABILITY_PAGE_SET" value="1"/>
@@ -487,6 +499,17 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="printer" type="GtkPrinter*"/>
+					<parameter name="top" type="gdouble*"/>
+					<parameter name="bottom" type="gdouble*"/>
+					<parameter name="left" type="gdouble*"/>
+					<parameter name="right" type="gdouble*"/>
+				</parameters>
+			</method>
+			<method name="get_hard_margins_for_paper_size" symbol="gtk_printer_get_hard_margins_for_paper_size">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="printer" type="GtkPrinter*"/>
+					<parameter name="paper_size" type="GtkPaperSize*"/>
 					<parameter name="top" type="gdouble*"/>
 					<parameter name="bottom" type="gdouble*"/>
 					<parameter name="left" type="gdouble*"/>
