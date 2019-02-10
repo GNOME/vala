@@ -80,7 +80,7 @@ namespace Gtk {
 		public Gtk.PrintCapabilities get_capabilities ();
 		public Gtk.PageSetup get_default_page_size ();
 		public unowned string get_description ();
-		public bool get_hard_margins (double top, double bottom, double left, double right);
+		public bool get_hard_margins (out double top, out double bottom, out double left, out double right);
 		public unowned string get_icon_name ();
 		[CCode (cname = "gtk_printer_is_virtual")]
 		public bool get_is_virtual ();
