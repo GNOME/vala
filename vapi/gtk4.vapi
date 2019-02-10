@@ -6637,6 +6637,7 @@ namespace Gtk {
 		public int get_current_page ();
 		public int get_n_pages ();
 		public unowned Gtk.Widget? get_nth_page (int page_num);
+		public unowned Gtk.AssistantPage get_page (Gtk.Widget child);
 		public bool get_page_complete (Gtk.Widget page);
 		public bool get_page_has_padding (Gtk.Widget page);
 		public unowned string get_page_title (Gtk.Widget page);
@@ -6661,6 +6662,21 @@ namespace Gtk {
 		public virtual signal void close ();
 		public signal void escape ();
 		public virtual signal void prepare (Gtk.Widget page);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_assistant_page_get_type ()")]
+	public class AssistantPage : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected AssistantPage ();
+		public unowned Gtk.Widget get_child ();
+		public Gtk.Widget child { get; construct; }
+		[NoAccessorMethod]
+		public bool complete { get; set; }
+		[NoAccessorMethod]
+		public bool has_padding { get; set; }
+		[NoAccessorMethod]
+		public Gtk.AssistantPageType page_type { get; set; }
+		[NoAccessorMethod]
+		public string title { owned get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_bin_get_type ()")]
 	public abstract class Bin : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -10434,6 +10450,7 @@ namespace Gtk {
 		public bool get_hhomogeneous ();
 		public bool get_homogeneous ();
 		public bool get_interpolate_size ();
+		public unowned Gtk.StackPage get_page (Gtk.Widget child);
 		public uint get_transition_duration ();
 		public bool get_transition_running ();
 		public Gtk.StackTransitionType get_transition_type ();
@@ -10463,6 +10480,23 @@ namespace Gtk {
 	public class StackAccessible : Gtk.ContainerAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected StackAccessible ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_stack_page_get_type ()")]
+	public class StackPage : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected StackPage ();
+		public unowned Gtk.Widget get_child ();
+		public Gtk.Widget child { get; construct; }
+		[NoAccessorMethod]
+		public string icon_name { owned get; set; }
+		[NoAccessorMethod]
+		public string name { owned get; construct; }
+		[NoAccessorMethod]
+		public bool needs_attention { get; set; }
+		[NoAccessorMethod]
+		public int position { get; set; }
+		[NoAccessorMethod]
+		public string title { owned get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_stack_sidebar_get_type ()")]
 	public class StackSidebar : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
@@ -11611,6 +11645,7 @@ namespace Gtk {
 		public Gdk.ModifierType get_modifier_mask (Gdk.ModifierIntent intent);
 		public unowned Gtk.Widget? get_next_sibling ();
 		public double get_opacity ();
+		public Gtk.Overflow get_overflow ();
 		public unowned Pango.Context get_pango_context ();
 		public unowned Gtk.Widget? get_parent ();
 		public unowned Gdk.Surface? get_parent_surface ();
@@ -11703,6 +11738,7 @@ namespace Gtk {
 		public void set_margin_start (int margin);
 		public void set_margin_top (int margin);
 		public void set_opacity (double opacity);
+		public void set_overflow (Gtk.Overflow overflow);
 		public void set_parent (Gtk.Widget parent);
 		public void set_parent_surface (Gdk.Surface parent_surface);
 		public void set_receives_default (bool receives_default);
@@ -11761,6 +11797,7 @@ namespace Gtk {
 		public int margin_top { get; set; }
 		public string name { get; set; }
 		public double opacity { get; set; }
+		public Gtk.Overflow overflow { get; set; }
 		public Gtk.Widget parent { get; }
 		public bool receives_default { get; set; }
 		public int scale_factor { get; }
@@ -12951,6 +12988,11 @@ namespace Gtk {
 	public enum Orientation {
 		HORIZONTAL,
 		VERTICAL
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_OVERFLOW_", type_id = "gtk_overflow_get_type ()")]
+	public enum Overflow {
+		VISIBLE,
+		HIDDEN
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PACK_DIRECTION_", type_id = "gtk_pack_direction_get_type ()")]
 	public enum PackDirection {
