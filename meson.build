@@ -155,6 +155,7 @@ subdir('compiler')
 subdir('vapigen')
 subdir('vapi')
 subdir('doc')
+subdir('tests')
 
 if valadoc_enabled
 	subdir('libvaladoc')
