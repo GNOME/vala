@@ -42,6 +42,24 @@ ubuntu-clang-x86_64:
     - make -j4 bootstrap
     - make -j4 check
 
+ubuntu-lts-16-gcc-x86_64:
+  stage: build
+  image: ubuntu:16.04
+  except:
+    - tags
+  variables:
+    DEBIAN_FRONTEND: noninteractive
+  before_script:
+    - apt update
+    - apt install -y automake autoconf-archive libtool bison dbus flex git libglib2.0-dev libgraphviz-dev libgirepository1.0-dev lcov xsltproc make valac
+  script:
+    - git fetch --tags
+    - ./autogen.sh
+    - make -j4
+    - make -j4 bootstrap
+    - make -j4 check
+  allow_failure: true
+
 pages:
   stage: deploy
   only:
