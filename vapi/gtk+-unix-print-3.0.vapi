@@ -22,7 +22,7 @@ namespace Gtk {
 		public uint get_n_up ();
 		public Gtk.NumberUpLayout get_n_up_layout ();
 		public int get_num_copies ();
-		public Gtk.PageRange get_page_ranges (int n_ranges);
+		public unowned Gtk.PageRange[] get_page_ranges ();
 		public Gtk.PageSet get_page_set ();
 		public Gtk.PrintPages get_pages ();
 		public unowned Gtk.Printer get_printer ();
@@ -100,7 +100,7 @@ namespace Gtk {
 		public Gtk.PrintCapabilities get_capabilities ();
 		public Gtk.PageSetup get_default_page_size ();
 		public unowned string get_description ();
-		public bool get_hard_margins (double top, double bottom, double left, double right);
+		public bool get_hard_margins (out double top, out double bottom, out double left, out double right);
 		public unowned string get_icon_name ();
 		[CCode (cname = "gtk_printer_is_virtual")]
 		public bool get_is_virtual ();
