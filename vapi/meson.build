@@ -272,3 +272,133 @@ install_data(
 	vapis,
 	install_dir: join_paths('share', 'vala@0@'.format(vala_version_suffix), 'vapi'),
 )
+
+gidl_bindings = [
+	'clutter-gtk-0.10',
+	'cogl-1.0',
+	'gconf-2.0',
+	'gdk-2.0',
+	'gdk-x11-2.0',
+	'gdl-1.0',
+	'gio-unix-2.0',
+	'gnome-desktop-2.0',
+	'gnome-vfs-2.0',
+	'goocanvas',
+	'gtk+-2.0',
+	'gtk+-unix-print-2.0',
+	'gtk+-unix-print-3.0',
+	'gtk4-unix-print',
+	'gtksourceview-2.0',
+	'hildon-1',
+	'hildon-fm-2',
+	'libepc-1.0',
+	'libglade-2.0',
+	'libgnome-2.0',
+	'libgnome-menu',
+	'libgnomeui-2.0',
+	'liboobs-1',
+	'libsexy',
+	'libwnck-1.0',
+	'loudmouth-1.0',
+	'purple',
+	'unique-1.0',
+	'vte',
+	'webkit-1.0',
+]
+
+gir_bindings = [
+	# vapi-name, gir-namespace, custom.vala-exists, dependencies
+	['atk', 'Atk-1.0', true, []],
+	['atspi-2', 'Atspi-2.0', true, []],
+	['clutter-1.0', 'Clutter-1.0', true, ['atk', 'cairo', 'pango', 'cogl-1.0', 'cogl-pango-1.0', 'json-glib-1.0']],
+	['clutter-gdk-1.0', 'ClutterGdk-1.0', false, ['clutter-1.0', 'gdk-3.0']],
+	['clutter-gtk-1.0', 'ClutterGtk-1.0', true, []],
+	['clutter-gst-2.0', 'ClutterGst-2.0', true, ['cogl-1.0', 'clutter-1.0', 'gstreamer-base-1.0', 'gstreamer-video-1.0']],
+	['clutter-gst-3.0', 'ClutterGst-3.0', true, ['cogl-1.0', 'clutter-1.0', 'gdk-pixbuf-2.0', 'gstreamer-1.0', 'gstreamer-audio-1.0', 'gstreamer-base-1.0', 'gstreamer-pbutils-1.0', 'gstreamer-video-1.0']],
+	['clutter-x11-1.0', 'ClutterX11-1.0', false, ['clutter-1.0']],
+	['cogl-pango-1.0', '', false, []],
+	['gdk-3.0', '', true, ['gio-2.0']],
+	['gdk-x11-3.0', '', true, ['gio-2.0', 'gdk-3.0', 'x11']],
+	['gdk-pixbuf-2.0', '', false, []],
+	['gdl-3.0', '', false, []],
+	['geocode-glib-1.0', '', false, []],
+	['gio-2.0', '', false, []],
+	['gobject-introspection-1.0', '', false, []],
+	['graphene-1.0', '', false, []],
+	['gtk+-4.0', '', false, []],
+	['gudev-1.0', '', false, []],
+	['json-glib-1.0', '', false, []],
+	['libgnome-menu-3.0', '', false, []],
+	['libgrss', '', false, []],
+	['libnotify', '', false, []],
+	['libpeas-1.0', '', false, []],
+	['libpeas-gtk-1.0', '', false, []],
+	['libsoup-2.4', '', false, []],
+	['libwnck-3.0', '', false, []],
+	['mx-1.0', '', false, []],
+	['packagekit-glib2', '', false, []],
+	['pango', '', false, []],
+	['pangocairo', '', false, []],
+	['polkit-agent-1', '', false, []],
+	['polkit-gobject-1', '', false, []],
+	['poppler-glib', '', false, []],
+	['rest-0.7', '', false, []],
+	['rest-extras-0.7', '', false, []],
+	['udisks2', '', false, []],
+	['vte-2.90', '', false, []],
+	['webkit2gtk-4.0', '', false, []],
+	['webkit2gtk-web-extension-4.0', '', false, []],
+]
+
+gir_bindings = [
+	# GStreamer 1.0
+	['gstreamer-1.0', 'Gst-1.0', true, []],
+	['gstreamer-base-1.0', 'GstBase-1.0', true, ['gstreamer-1.0']],
+
+	['gstreamer-allocators-1.0', 'GstAllocators-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
+	['gstreamer-app-1.0', 'GstApp-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
+	['gstreamer-audio-1.0', 'GstAudio-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
+	['gstreamer-bad-allocators-1.0', 'GstBadAllocators-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
+	['gstreamer-check-1.0', 'GstCheck-1.0', true, ['gstreamer-1.0', 'gstreamer-base-1.0']],
+	['gstreamer-controller-1.0', 'GstController-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
+#	['gstreamer-fft-1.0', 'GstFft-1.0', true, ['gstreamer-1.0', 'gstreamer-base-1.0']],
+	['gstreamer-net-1.0', 'GstNet-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0', 'gio-2.0']],
+#	['gstreamer-riff-1.0', 'GstRiff-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
+	['gstreamer-rtp-1.0', 'GstRtp-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
+	['gstreamer-sdp-1.0', 'GstSdp-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
+	['gstreamer-tag-1.0', 'GstTag-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
+	['gstreamer-video-1.0', 'GstVideo-1.0', true, ['gstreamer-1.0', 'gstreamer-base-1.0']],
+
+	['gstreamer-pbutils-1.0', 'GstPbutils-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0', 'gstreamer-audio-1.0', 'gstreamer-video-1.0']],
+	['gstreamer-player-1.0', 'GstPlayer-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0', 'gstreamer-video-1.0']],
+	['gstreamer-rtsp-1.0', 'GstRtsp-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0', 'gstreamer-sdp-1.0', 'gio-2.0']],
+#	['gstreamer-rtsp-server-1.0', 'GstRtspServer-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0', 'gstreamer-rtsp-1.0']],
+]
+
+gobject_introspection_dep = dependency('gobject-introspection-1.0', required: false)
+girdir = gobject_introspection_dep.get_pkgconfig_variable('girdir')
+
+metadatadir = join_paths(meson.current_source_dir(), 'metadata')
+vapigen_args = ['--metadatadir', metadatadir, '--vapidir', meson.current_source_dir()]
+
+foreach gir_vapi : gir_bindings
+	pkg_args = []
+	foreach pkg : gir_vapi[3]
+		pkg_args += ['--pkg', pkg]
+	endforeach
+	custom_target(gir_vapi[0],
+		output: '@0@.vapi'.format(gir_vapi[0]),
+		input: [
+			join_paths(girdir, '@0@.gir'.format(gir_vapi[1])),
+			gir_vapi[2] ? join_paths(metadatadir, '@0@-custom.vala'.format(gir_vapi[1])) : [],
+		],
+		command: [vapigen_exe,
+			'--library', gir_vapi[0],
+			vapigen_args,
+			pkg_args,
+			'@INPUT@',
+		],
+#		install: true,
+#		install_dir: join_paths(get_option('datadir'), 'vala@0@'.format(vala_version_suffix), 'vapi'),
+	)
+endforeach
