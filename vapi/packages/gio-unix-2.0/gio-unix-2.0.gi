@@ -316,6 +316,14 @@
 					<parameter name="key" type="char*"/>
 				</parameters>
 			</method>
+			<method name="get_string_list" symbol="g_desktop_app_info_get_string_list">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="info" type="GDesktopAppInfo*"/>
+					<parameter name="key" type="char*"/>
+					<parameter name="length" type="gsize*"/>
+				</parameters>
+			</method>
 			<method name="has_key" symbol="g_desktop_app_info_has_key">
 				<return-type type="gboolean"/>
 				<parameters>

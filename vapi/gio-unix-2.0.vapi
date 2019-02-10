@@ -24,6 +24,8 @@ namespace GLib {
 		public bool get_show_in (string desktop_env);
 		public unowned string get_startup_wm_class ();
 		public unowned string get_string (string key);
+		[CCode (array_length_type = "gsize")]
+		public string[] get_string_list (string key);
 		public bool has_key (string key);
 		public void launch_action (string action_name, GLib.AppLaunchContext launch_context);
 		public bool launch_uris_as_manager (GLib.List<string> uris, GLib.AppLaunchContext? launch_context, GLib.SpawnFlags spawn_flags, GLib.SpawnChildSetupFunc? user_setup = null, GLib.DesktopAppLaunchCallback? pid_callback = null) throws GLib.Error;
