@@ -7,3 +7,7 @@ option('documentation', type: 'boolean', value: 'false',
 	description : 'Build API reference and tools documentation')
 option('man-pages', type: 'boolean', value: 'false',
 	description : 'Build man pages for installed tools')
+
+# Resource directories
+option('girdir', type: 'string', value: '',
+	description : 'Directory to use GIRs from')
