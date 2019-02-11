@@ -136,16 +136,16 @@ subdir('tests')
 install_data('vala.m4', install_dir: join_paths('share', 'aclocal'))
 
 pycat = find_program(join_paths(meson.source_root(), 'build-aux', 'meson', 'cat.py'))
-#custom_target(
-#	'libvala@0@.vapi'.format(vala_version_suffix),
-#	command: [pycat, '@INPUT@'],
-#	depends: [valagee_lib, valacore_lib],
-#	capture: true,
-#	install: true,
-#	install_dir: join_paths('share', 'vala', 'vapi'),
-#	input: [
-#		join_paths(meson.current_build_dir(), 'gee', 'gee.vapi'),
-#		join_paths(meson.current_build_dir(), 'vala', 'vala.vapi'),
-#	],
-#	output: 'libvala@0@.vapi'.format(vala_version_suffix),
-#)
+custom_target(
+	'libvala@0@.vapi'.format(vala_version_suffix),
+	command: [
+		pycat,
+		join_paths(meson.current_build_dir(), 'gee', 'gee.vapi'),
+		join_paths(meson.current_build_dir(), 'vala', 'vala.vapi'),
+	],
+	depends: [valagee_lib, valacore_lib],
+	capture: true,
+	install: true,
+	install_dir: join_paths('share', 'vala', 'vapi'),
+	output: 'libvala@0@.vapi'.format(vala_version_suffix),
+)
