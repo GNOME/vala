@@ -706,17 +706,6 @@ foreach flag : supported_test_cflags
 	vala_flags += ['-X', flag]
 endforeach
 
-add_test_setup('default', is_default: true, env: 'G_SLICE=debug-blocks G_DEBUG=fatal-warnings')
-
-vg = find_program('valgrind', required: false)
-if (vg.found())
-	add_test_setup('valgrind',
-		env: 'G_SLICE=always-malloc G_DEBUG=fatal-warnings',
-		exe_wrapper: [vg, '--error-exitcode=1', '--leak-check=full', '--track-origins=yes'],
-		timeout_multiplier: 10,
-	)
-endif
-
 preparetest = find_program('prepare-test.py')
 
 foreach case : test_cases
