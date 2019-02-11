@@ -5,6 +5,8 @@ project('vala',
 	license: 'LGPL2.1'
 )
 
+cc = meson.get_compiler('c')
+
 vala_version = meson.project_version()
 version_array = vala_version.split('.')
 vala_api_version = '0.44'
@@ -101,14 +103,15 @@ add_project_arguments([
 glib_version_required = '2.40.0'
 libgvc_version_required = '2.16'
 
+valadoc_enabled = get_option('valadoc')
+
 glib_dep = dependency('glib-2.0', version: '>= @0@'.format(glib_version_required))
 gobject_dep = dependency('gobject-2.0', version: '>= @0@'.format(glib_version_required))
 gmodule_dep = dependency('gmodule-2.0', version: '>= @0@'.format(glib_version_required))
-libgvc_dep = dependency('libgvc', version: '>= @0@'.format(libgvc_version_required))
+libgvc_dep = dependency('libgvc', version: '>= @0@'.format(libgvc_version_required), required: valadoc_enabled)
 
 # Check for CGraph support of libgvc
-cc = meson.get_compiler('c')
-if cc.run('''#include <gvc.h>
+if valadoc_enabled and cc.run('''#include <gvc.h>
 		int main(void) {
 		#ifdef WITH_CGRAPH
 			return 0;
@@ -127,11 +130,14 @@ subdir('ccode')
 subdir('codegen')
 subdir('compiler')
 subdir('vapigen')
-subdir('libvaladoc')
-subdir('valadoc')
 subdir('vapi')
 subdir('doc')
 subdir('tests')
+
+if valadoc_enabled
+	subdir('libvaladoc')
+	subdir('valadoc')
+endif
 
 install_data('vala.m4', install_dir: join_paths('share', 'aclocal'))
 
