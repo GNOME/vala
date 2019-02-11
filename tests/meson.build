@@ -694,6 +694,7 @@ vala_flags = [
 	'--pkg', 'gio-2.0',
 	'--disable-warnings',
 	'--main', 'main', '--save-temps',
+	'--cc', cc.cmd_array()[-1],
 	'-X', '-g',
 	'-X', '-O0',
 	'-X', '-pipe',
@@ -701,7 +702,6 @@ vala_flags = [
 	'-X', '-DGETTEXT_PACKAGE="valac"',
 ]
 
-cc = meson.get_compiler('c')
 if cc.get_id() == 'gcc' or cc.get_id() == 'clang'
   test_cflags = [
 	'-Werror=init-self',
