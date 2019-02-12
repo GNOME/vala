@@ -82,7 +82,9 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		var rt = DirUtils.create (path, 0777);
 		rt = DirUtils.create (imgpath, 0777);
-		copy_directory (icons_dir, path);
+		if (!copy_directory (icons_dir, path)) {
+			reporter.simple_warning ("Devhelp", "Couldn't copy resources from `%s'".printf (icons_dir));
+		}
 
 		var devfile = FileStream.open (devpath, "w");
 		_devhelpwriter = new Devhelp.MarkupWriter (devfile);
