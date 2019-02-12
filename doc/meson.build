@@ -59,3 +59,104 @@ meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs --relative vap
 if valadoc_enabled
 	meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs --relative valadoc.1 @1@'.format(join_paths(get_option('prefix'), get_option('mandir')), 'valadoc@0@.1'.format(vala_version_suffix)))
 endif
+
+if valadoc_enabled
+
+valadoc_flags = [
+	'--force',
+	'--verbose',
+	'--private',
+	'--internal',
+	'--deps',
+	'--use-svg-images',
+	'--vapidir', join_paths(meson.source_root(), 'vapi'),
+	'--pkg', 'config',
+	'--pkg', 'gmodule-2.0',
+	'--directory', join_paths(meson.current_build_dir(), 'internal-apis'),
+	'--doclet', join_paths(meson.build_root(), 'valadoc', 'doclets', 'html'),
+	'--doclet-arg', '"--no-browsable-check"',
+	'--basedir', join_paths(meson.current_build_dir(), 'internal-apis')
+]
+
+gee_doc = custom_target('gee_doc',
+	command: [
+		valadoc_exe,
+		valadoc_flags + [
+			'--package-name', 'gee', '--package-version', meson.project_version(),
+		],
+		'@INPUT@'
+	],
+	build_by_default: false,
+	input: valagee_sources,
+	output: 'gee-apis',
+)
+
+vala_doc = custom_target('vala_doc',
+	command: [
+		valadoc_exe,
+		valadoc_flags + [
+			'--package-name', 'vala', '--package-version', meson.project_version(),
+			'--vapidir', join_paths(meson.build_root(), 'gee'), '--pkg', 'gee',
+		],
+		'@INPUT@'
+	],
+	build_by_default: false,
+	depends: gee_doc,
+	input: [valacore_sources, valaversion_source],
+	output: 'vala-apis',
+)
+
+ccode_doc = custom_target('ccode_doc',
+	command: [
+		valadoc_exe,
+		valadoc_flags + [
+			'--package-name', 'ccode', '--package-version', meson.project_version(),
+			'--vapidir', join_paths(meson.build_root(), 'gee'), '--pkg', 'gee',
+			'--vapidir', join_paths(meson.build_root(), 'vala'), '--pkg', 'vala',
+		],
+		'@INPUT@'
+	],
+	build_by_default: false,
+	depends: [gee_doc, vala_doc],
+	input: valaccode_sources,
+	output: 'ccode-apis',
+)
+
+codegen_doc = custom_target('codegen_doc',
+	command: [
+		valadoc_exe,
+		valadoc_flags + [
+			'--package-name', 'codegen', '--package-version', meson.project_version(),
+			'--vapidir', join_paths(meson.build_root(), 'gee'), '--pkg', 'gee',
+			'--vapidir', join_paths(meson.build_root(), 'vala'), '--pkg', 'vala',
+			'--vapidir', join_paths(meson.build_root(), 'ccode'), '--pkg', 'valaccode',
+		],
+		'@INPUT@'
+	],
+	build_by_default: false,
+	depends: [gee_doc, vala_doc, ccode_doc],
+	input: valacodegen_sources,
+	output: 'codegen-apis',
+)
+
+valadoc_doc = custom_target('valadoc_doc',
+	command: [
+		valadoc_exe,
+		valadoc_flags + [
+			'--package-name', 'codegen', '--package-version', meson.project_version(),
+			'--pkg', 'libgvc',
+			'--vapidir', join_paths(meson.build_root(), 'gee'), '--pkg', 'gee',
+			'--vapidir', join_paths(meson.build_root(), 'vala'), '--pkg', 'vala',
+			'--vapidir', join_paths(meson.build_root(), 'ccode'), '--pkg', 'valaccode',
+			'--vapidir', join_paths(meson.build_root(), 'codegen'), '--pkg', 'valacodegen',
+		],
+		'@INPUT@'
+	],
+	build_by_default: false,
+	depends: [gee_doc, vala_doc, ccode_doc, codegen_doc],
+	input: libvaladoc_sources,
+	output: 'valadoc-apis',
+)
+
+internal_api_docs = valadoc_doc
+endif
