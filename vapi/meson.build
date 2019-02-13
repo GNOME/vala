@@ -358,7 +358,7 @@ gir_bindings = [
 	['gstreamer-allocators-1.0', 'GstAllocators-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
 	['gstreamer-app-1.0', 'GstApp-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
 	['gstreamer-audio-1.0', 'GstAudio-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
-	['gstreamer-bad-allocators-1.0', 'GstBadAllocators-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
+#	['gstreamer-bad-allocators-1.0', 'GstBadAllocators-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
 	['gstreamer-check-1.0', 'GstCheck-1.0', true, ['gstreamer-1.0', 'gstreamer-base-1.0']],
 	['gstreamer-controller-1.0', 'GstController-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
 #	['gstreamer-fft-1.0', 'GstFft-1.0', true, ['gstreamer-1.0', 'gstreamer-base-1.0']],
@@ -375,30 +375,53 @@ gir_bindings = [
 #	['gstreamer-rtsp-server-1.0', 'GstRtspServer-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0', 'gstreamer-rtsp-1.0']],
 ]
 
+vapigen_prog = find_program('vapigen', required: false)
+if not vapigen_prog.found()
+	vapigen_prog = vapigen_exe
+endif
+
 gobject_introspection_dep = dependency('gobject-introspection-1.0', required: false)
 girdir = gobject_introspection_dep.get_pkgconfig_variable('girdir')
+#girdir = get_options('girdir')
 
 metadatadir = join_paths(meson.current_source_dir(), 'metadata')
-vapigen_args = ['--metadatadir', metadatadir, '--vapidir', meson.current_source_dir()]
+vapigen_args = ['--metadatadir', metadatadir, '--directory', meson.current_source_dir(), '--vapidir', meson.current_source_dir()]
 
+girs = []
 foreach gir_vapi : gir_bindings
 	pkg_args = []
 	foreach pkg : gir_vapi[3]
 		pkg_args += ['--pkg', pkg]
 	endforeach
-	custom_target(gir_vapi[0],
-		output: '@0@.vapi'.format(gir_vapi[0]),
-		input: [
+	girs += custom_target(gir_vapi[0],
+		command: [
+			vapigen_prog, '--library', gir_vapi[0], vapigen_args, pkg_args,
 			join_paths(girdir, '@0@.gir'.format(gir_vapi[1])),
 			gir_vapi[2] ? join_paths(metadatadir, '@0@-custom.vala'.format(gir_vapi[1])) : [],
 		],
-		command: [vapigen_exe,
-			'--library', gir_vapi[0],
-			vapigen_args,
-			pkg_args,
-			'@INPUT@',
-		],
-#		install: true,
-#		install_dir: join_paths(get_option('datadir'), 'vala@0@'.format(vala_version_suffix), 'vapi'),
+		output: gir_vapi[0],
 	)
 endforeach
+
+girs_target = custom_target('gir-bindings',
+	command: [],
+	depends: girs,
+	output: 'gir-bindings',
+)
+
+gidls = []
+foreach gidl_vapi : gidl_bindings
+	#TODO
+endforeach
+
+gidls_target = custom_target('gidl-bindings',
+	command: [],
+	depends: gidls,
+	output: 'gidl-bindings',
+)
+
+all_target = custom_target('all-bindings',
+	command: [],
+	depends: [girs_target, gidls_target],
+	output: 'all-bindings',
+)
