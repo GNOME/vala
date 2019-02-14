@@ -5370,7 +5370,7 @@ namespace Clutter {
 		public virtual signal void paint ();
 		[Version (since = "0.2")]
 		public virtual signal void parent_set (Clutter.Actor? old_parent);
-		[Version (deprecated = true, deprecated_since = "1.12", since = "1.0")]
+		[Version (since = "1.0")]
 		public virtual signal void pick (Clutter.Color color);
 		[HasEmitter]
 		[Version (since = "1.2")]
