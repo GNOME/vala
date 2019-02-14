@@ -30,6 +30,9 @@ Actor.has_pointer#method name="get_has_pointer"
 InitError errordomain=false
 redraw skip
 
+// Not all backing symbols are deprecated
+Actor.pick deprecated=false
+
 // Nullable return values
 Actor
 	.get_parent nullable
