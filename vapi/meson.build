@@ -348,13 +348,10 @@ gir_bindings = [
 	['vte-2.90', '', false, []],
 	['webkit2gtk-4.0', '', false, []],
 	['webkit2gtk-web-extension-4.0', '', false, []],
-]
 
-gir_bindings = [
 	# GStreamer 1.0
 	['gstreamer-1.0', 'Gst-1.0', true, []],
 	['gstreamer-base-1.0', 'GstBase-1.0', true, ['gstreamer-1.0']],
-
 	['gstreamer-allocators-1.0', 'GstAllocators-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
 	['gstreamer-app-1.0', 'GstApp-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
 	['gstreamer-audio-1.0', 'GstAudio-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
@@ -368,7 +365,6 @@ gir_bindings = [
 	['gstreamer-sdp-1.0', 'GstSdp-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
 	['gstreamer-tag-1.0', 'GstTag-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0']],
 	['gstreamer-video-1.0', 'GstVideo-1.0', true, ['gstreamer-1.0', 'gstreamer-base-1.0']],
-
 	['gstreamer-pbutils-1.0', 'GstPbutils-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0', 'gstreamer-audio-1.0', 'gstreamer-video-1.0']],
 	['gstreamer-player-1.0', 'GstPlayer-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0', 'gstreamer-video-1.0']],
 	['gstreamer-rtsp-1.0', 'GstRtsp-1.0', false, ['gstreamer-1.0', 'gstreamer-base-1.0', 'gstreamer-sdp-1.0', 'gio-2.0']],
