@@ -188,10 +188,13 @@ public class Valadoc.Api.Method : Symbol, Callable {
 			if (is_inline) {
 				signature.append_keyword ("inline");
 			}
-			if (is_yields) {
-				signature.append_keyword ("async");
-			}
+		}
 
+		if (is_yields) {
+			signature.append_keyword ("async");
+		}
+
+		if (!is_constructor) {
 			signature.append_content (return_type.signature);
 		}
 
