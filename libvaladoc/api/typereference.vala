@@ -74,8 +74,8 @@ public class Valadoc.Api.TypeReference : Item {
 			}
 
 			// non ref counted types are weak, not unowned
-			if (element.data_type is Vala.TypeSymbol
-				&& is_reference_counting ((Vala.TypeSymbol) element.data_type) == true)
+			if (element.type_symbol is Vala.TypeSymbol
+				&& is_reference_counting ((Vala.TypeSymbol) element.type_symbol) == true)
 			{
 				return false;
 			}
@@ -110,8 +110,8 @@ public class Valadoc.Api.TypeReference : Item {
 		}
 
 		// non ref counted types are unowned, not weak
-		if (element.data_type is Vala.TypeSymbol
-			&& is_reference_counting ((Vala.TypeSymbol) element.data_type) == false)
+		if (element.type_symbol is Vala.TypeSymbol
+			&& is_reference_counting ((Vala.TypeSymbol) element.type_symbol) == false)
 		{
 			return false;
 		}
