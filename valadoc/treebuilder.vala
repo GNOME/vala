@@ -171,7 +171,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 			&& !(vtyperef is Vala.GenericType)
 			&& !(vtyperef is Vala.PointerType);
 		string? signature = (vtyperef != null
-			&& vtyperef.data_type != null)? Vala.GVariantModule.get_dbus_signature (vtyperef.data_type) : null;
+			&& vtyperef.type_symbol != null)? Vala.GVariantModule.get_dbus_signature (vtyperef.type_symbol) : null;
 		bool is_dynamic = vtyperef != null && vtyperef.is_dynamic;
 
 		TypeReference type_ref = new TypeReference (parent,
@@ -605,9 +605,9 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 		foreach (Vala.DataType vala_type_ref in element.get_base_types ()) {
 			var type_ref = create_type_reference (vala_type_ref, node, node);
 
-			if (vala_type_ref.data_type is Vala.Interface) {
+			if (vala_type_ref.type_symbol is Vala.Interface) {
 				node.add_interface (type_ref);
-			} else if (vala_type_ref.data_type is Vala.Class) {
+			} else if (vala_type_ref.type_symbol is Vala.Class) {
 				node.base_type = type_ref;
 			}
 		}
@@ -641,7 +641,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 		// prerequisites:
 		foreach (Vala.DataType vala_type_ref in element.get_prerequisites ()) {
 			TypeReference type_ref = create_type_reference (vala_type_ref, node, node);
-			if (vala_type_ref.data_type is Vala.Interface) {
+			if (vala_type_ref.type_symbol is Vala.Interface) {
 				node.add_interface (type_ref);
 			} else {
 				node.base_type = type_ref;

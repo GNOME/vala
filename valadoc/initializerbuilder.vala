@@ -36,8 +36,8 @@ private class Valadoc.Api.InitializerBuilder : Vala.CodeVisitor {
 	}
 
 	private void write_type (Vala.DataType vsymbol) {
-		if (vsymbol.data_type != null) {
-			write_node (vsymbol.data_type);
+		if (vsymbol.type_symbol != null) {
+			write_node (vsymbol.type_symbol);
 		} else {
 			signature.append_literal ("null");
 		}
