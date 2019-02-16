@@ -334,6 +334,12 @@ namespace Graphene {
 		[Version (since = "1.4")]
 		public static unowned Graphene.Rect? zero ();
 	}
+	[CCode (cheader_filename = "graphene-gobject.h", cname = "graphene_simd4f_t", has_type_id = false)]
+	public struct Simd4F {
+	}
+	[CCode (cheader_filename = "graphene-gobject.h", cname = "graphene_simd4x4f_t", has_type_id = false)]
+	public struct Simd4X4F {
+	}
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "graphene_size_t", type_id = "graphene_size_get_type ()")]
 	[Version (since = "1.0")]
 	public struct Size {
@@ -567,10 +573,18 @@ namespace Graphene {
 		YXZ,
 		ZYX
 	}
+	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_HAS_GCC")]
+	public const int HAS_GCC;
+	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_HAS_SCALAR")]
+	public const int HAS_SCALAR;
+	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_HAS_SSE")]
+	public const int HAS_SSE;
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_PI")]
 	public const double PI;
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_PI_2")]
 	public const double PI_2;
+	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_SIMD_S")]
+	public const string SIMD_S;
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_VEC2_LEN")]
 	[Version (since = "1.0")]
 	public const int VEC2_LEN;

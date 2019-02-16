@@ -2806,7 +2806,11 @@ namespace Gst {
 		public static unowned string[] api_type_get_tags (GLib.Type api);
 		public static bool api_type_has_tag (GLib.Type api, GLib.Quark tag);
 		public static GLib.Type api_type_register (string api, [CCode (array_length = false, array_null_terminated = true)] string[] tags);
+		[Version (since = "1.16")]
+		public int compare_seqnum (Gst.Meta meta2);
 		public static unowned Gst.MetaInfo? get_info (string impl);
+		[Version (since = "1.16")]
+		public uint64 get_seqnum ();
 		public static unowned Gst.MetaInfo? register (GLib.Type api, string impl, size_t size, [CCode (scope = "async")] Gst.MetaInitFunction init_func, [CCode (scope = "async")] Gst.MetaFreeFunction free_func, [CCode (scope = "async")] Gst.MetaTransformFunction transform_func);
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
@@ -3274,6 +3278,7 @@ namespace Gst {
 		STREAM_COLLECTION,
 		STREAMS_SELECTED,
 		REDIRECT,
+		DEVICE_CHANGED,
 		ANY;
 		public unowned string get_name ();
 		public GLib.Quark to_quark ();
