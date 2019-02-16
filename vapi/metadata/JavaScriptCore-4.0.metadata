@@ -1,3 +1,6 @@
+options_* parent="JSC.Options" name="options_(.+)"
+OPTIONS_* parent="JSC.Options" name="OPTIONS_(.+)"
+
 Class
   .add_property.getter closure=-1 destroy=-1 owned=false
   .add_property.setter closure=-1 destroy=-1 owned=false

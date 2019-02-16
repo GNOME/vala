@@ -151,6 +151,68 @@ namespace JS {
 }
 [CCode (cprefix = "JSC", gir_namespace = "JavaScriptCore", gir_version = "4.0", lower_case_cprefix = "jsc_")]
 namespace JSC {
+	namespace Options {
+		[CCode (cheader_filename = "jsc/jsc.h", cname = "JSC_OPTIONS_USE_DFG")]
+		[Version (since = "2.24")]
+		public const string USE_DFG;
+		[CCode (cheader_filename = "jsc/jsc.h", cname = "JSC_OPTIONS_USE_FTL")]
+		[Version (since = "2.24")]
+		public const string USE_FTL;
+		[CCode (cheader_filename = "jsc/jsc.h", cname = "JSC_OPTIONS_USE_JIT")]
+		[Version (since = "2.24")]
+		public const string USE_JIT;
+		[CCode (cheader_filename = "jsc/jsc.h", cname = "JSC_OPTIONS_USE_LLINT")]
+		[Version (since = "2.24")]
+		public const string USE_LLINT;
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static void @foreach (JSC.OptionsFunc function);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool get_boolean (string option, out bool value);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool get_double (string option, out double value);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool get_int (string option, out int value);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static GLib.OptionGroup get_option_group ();
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool get_range_string (string option, out string value);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool get_size (string option, out size_t value);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool get_string (string option, out string value);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool get_uint (string option, out uint value);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool set_boolean (string option, bool value);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool set_double (string option, double value);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool set_int (string option, int value);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool set_range_string (string option, string value);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool set_size (string option, size_t value);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool set_string (string option, string value);
+		[CCode (cheader_filename = "jsc/jsc.h")]
+		[Version (since = "2.24")]
+		public static bool set_uint (string option, uint value);
+	}
 	[CCode (cheader_filename = "jsc/jsc.h", type_id = "jsc_class_get_type ()")]
 	public class Class : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -300,6 +362,17 @@ namespace JSC {
 		OUT_OF_MEMORY_ERROR,
 		STACK_OVERFLOW_ERROR
 	}
+	[CCode (cheader_filename = "jsc/jsc.h", cprefix = "JSC_OPTION_", has_type_id = false)]
+	[Version (since = "2.24")]
+	public enum OptionType {
+		BOOLEAN,
+		INT,
+		UINT,
+		SIZE,
+		DOUBLE,
+		STRING,
+		RANGE_STRING
+	}
 	[CCode (cheader_filename = "jsc/jsc.h", cprefix = "JSC_VALUE_PROPERTY_", has_type_id = false)]
 	[Flags]
 	public enum ValuePropertyFlags {
@@ -319,6 +392,9 @@ namespace JSC {
 	public delegate bool ClassSetPropertyFunction (JSC.Class jsc_class, JSC.Context context, void* instance, string name, JSC.Value value);
 	[CCode (cheader_filename = "jsc/jsc.h", instance_pos = 2.9)]
 	public delegate void ExceptionHandler (JSC.Context context, JSC.Exception exception);
+	[CCode (cheader_filename = "jsc/jsc.h", instance_pos = 3.9)]
+	[Version (since = "2.24")]
+	public delegate bool OptionsFunc (string option, JSC.OptionType type, string? description);
 	[CCode (cheader_filename = "jsc/jsc.h", cname = "JSC_MAJOR_VERSION")]
 	public const int MAJOR_VERSION;
 	[CCode (cheader_filename = "jsc/jsc.h", cname = "JSC_MICRO_VERSION")]

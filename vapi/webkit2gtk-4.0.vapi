@@ -635,6 +635,8 @@ namespace WebKit {
 		public bool get_draw_compositing_indicators ();
 		[Version (since = "2.2")]
 		public bool get_enable_accelerated_2d_canvas ();
+		[Version (since = "2.24")]
+		public bool get_enable_back_forward_navigation_gestures ();
 		public bool get_enable_caret_browsing ();
 		public bool get_enable_developer_extras ();
 		public bool get_enable_dns_prefetching ();
@@ -647,6 +649,8 @@ namespace WebKit {
 		public bool get_enable_hyperlink_auditing ();
 		public bool get_enable_java ();
 		public bool get_enable_javascript ();
+		[Version (since = "2.24")]
+		public bool get_enable_javascript_markup ();
 		[Version (since = "2.22")]
 		public bool get_enable_media_capabilities ();
 		[Version (since = "2.4")]
@@ -701,6 +705,8 @@ namespace WebKit {
 		public void set_draw_compositing_indicators (bool enabled);
 		[Version (since = "2.2")]
 		public void set_enable_accelerated_2d_canvas (bool enabled);
+		[Version (since = "2.24")]
+		public void set_enable_back_forward_navigation_gestures (bool enabled);
 		public void set_enable_caret_browsing (bool enabled);
 		public void set_enable_developer_extras (bool enabled);
 		public void set_enable_dns_prefetching (bool enabled);
@@ -713,6 +719,8 @@ namespace WebKit {
 		public void set_enable_hyperlink_auditing (bool enabled);
 		public void set_enable_java (bool enabled);
 		public void set_enable_javascript (bool enabled);
+		[Version (since = "2.24")]
+		public void set_enable_javascript_markup (bool enabled);
 		[Version (since = "2.22")]
 		public void set_enable_media_capabilities (bool enabled);
 		[Version (since = "2.4")]
@@ -768,6 +776,8 @@ namespace WebKit {
 		public bool draw_compositing_indicators { get; set construct; }
 		[Version (since = "2.2")]
 		public bool enable_accelerated_2d_canvas { get; set construct; }
+		[Version (since = "2.24")]
+		public bool enable_back_forward_navigation_gestures { get; set construct; }
 		public bool enable_caret_browsing { get; set construct; }
 		public bool enable_developer_extras { get; set construct; }
 		public bool enable_dns_prefetching { get; set construct; }
@@ -780,6 +790,8 @@ namespace WebKit {
 		public bool enable_hyperlink_auditing { get; set construct; }
 		public bool enable_java { get; set construct; }
 		public bool enable_javascript { get; set construct; }
+		[Version (since = "2.24")]
+		public bool enable_javascript_markup { get; set construct; }
 		[Version (since = "2.22")]
 		public bool enable_media_capabilities { get; set construct; }
 		[Version (since = "2.4")]
@@ -944,8 +956,6 @@ namespace WebKit {
 		public async GLib.List<WebKit.Plugin> get_plugins (GLib.Cancellable? cancellable) throws GLib.Error;
 		[Version (since = "2.4")]
 		public WebKit.ProcessModel get_process_model ();
-		[Version (since = "2.24")]
-		public bool get_sandbox_enabled ();
 		public unowned WebKit.SecurityManager get_security_manager ();
 		public bool get_spell_checking_enabled ();
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -973,8 +983,6 @@ namespace WebKit {
 		public void set_preferred_languages ([CCode (array_length = false, array_null_terminated = true)] string[]? languages);
 		[Version (since = "2.4")]
 		public void set_process_model (WebKit.ProcessModel process_model);
-		[Version (since = "2.24")]
-		public void set_sandbox_enabled (bool enabled);
 		public void set_spell_checking_enabled (bool enabled);
 		public void set_spell_checking_languages ([CCode (array_length = false, array_null_terminated = true)] string[] languages);
 		public void set_tls_errors_policy (WebKit.TLSErrorsPolicy policy);
@@ -1619,6 +1627,9 @@ namespace WebKit {
 	public static uint get_micro_version ();
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static uint get_minor_version ();
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	[Version (since = "2.24")]
+	public static string? uri_for_display (string uri);
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	[Version (since = "2.8")]
 	public static bool user_media_permission_is_for_audio_device (WebKit.UserMediaPermissionRequest request);
