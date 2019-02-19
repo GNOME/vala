@@ -6599,6 +6599,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		[Version (since = "3.24")]
 		public bool screensaver_active { get; }
+		public signal void query_end ();
 		public virtual signal void window_added (Gtk.Window window);
 		public virtual signal void window_removed (Gtk.Window window);
 	}
@@ -7566,8 +7567,6 @@ namespace Gtk {
 		public Gtk.InputHints get_input_hints ();
 		public Gtk.InputPurpose get_input_purpose ();
 		public unichar get_invisible_char ();
-		public unowned Pango.Layout get_layout ();
-		public void get_layout_offsets (out int x, out int y);
 		public int get_max_length ();
 		public int get_max_width_chars ();
 		public bool get_overwrite_mode ();
@@ -7575,13 +7574,10 @@ namespace Gtk {
 		public double get_progress_fraction ();
 		public double get_progress_pulse_step ();
 		public unowned Pango.TabArray? get_tabs ();
-		public unowned string get_text ();
 		public uint16 get_text_length ();
 		public bool get_visibility ();
 		public int get_width_chars ();
 		public void grab_focus_without_selecting ();
-		public bool im_context_filter_keypress ([CCode (type = "GdkEventKey*")] Gdk.Event event);
-		public int layout_index_to_text_index (int layout_index);
 		public void progress_pulse ();
 		public void reset_im_context ();
 		public void set_activates_default (bool setting);
@@ -7611,20 +7607,13 @@ namespace Gtk {
 		public void set_text (string text);
 		public void set_visibility (bool visible);
 		public void set_width_chars (int n_chars);
-		public int text_index_to_layout_index (int text_index);
 		public void unset_invisible_char ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Entry.with_buffer (Gtk.EntryBuffer buffer);
 		public bool activates_default { get; set; }
 		public Pango.AttrList attributes { get; set; }
 		public Gtk.EntryBuffer buffer { get; set construct; }
-		[NoAccessorMethod]
-		public bool caps_lock_warning { get; set; }
 		public Gtk.EntryCompletion completion { get; set; }
-		[NoAccessorMethod]
-		public int cursor_position { get; }
-		[NoAccessorMethod]
-		public bool editable { get; set; }
 		[NoAccessorMethod]
 		public bool enable_emoji_completion { get; set; }
 		public bool has_frame { get; set; }
@@ -7636,7 +7625,6 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool invisible_char_set { get; set; }
 		public int max_length { get; set; }
-		public int max_width_chars { get; set; }
 		public bool overwrite_mode { get; set; }
 		public string placeholder_text { get; set; }
 		[NoAccessorMethod]
@@ -7678,32 +7666,15 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string secondary_icon_tooltip_text { owned get; set; }
 		[NoAccessorMethod]
-		public int selection_bound { get; }
-		[NoAccessorMethod]
 		public bool show_emoji_icon { get; set; }
 		public Pango.TabArray tabs { get; set; }
-		public string text { get; set; }
 		public uint text_length { get; }
 		[NoAccessorMethod]
 		public bool truncate_multiline { get; set; }
 		public bool visibility { get; set; }
-		public int width_chars { get; set; }
-		[NoAccessorMethod]
-		public float xalign { get; set; }
 		public virtual signal void activate ();
-		public virtual signal void backspace ();
-		public virtual signal void copy_clipboard ();
-		public virtual signal void cut_clipboard ();
-		public virtual signal void delete_from_cursor (Gtk.DeleteType type, int count);
 		public signal void icon_press (Gtk.EntryIconPosition icon_pos);
 		public signal void icon_release (Gtk.EntryIconPosition icon_pos);
-		public virtual signal void insert_at_cursor (string str);
-		public virtual signal void insert_emoji ();
-		public virtual signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
-		public virtual signal void paste_clipboard ();
-		public virtual signal void populate_popup (Gtk.Menu popup);
-		public signal void preedit_changed (string preedit);
-		public virtual signal void toggle_overwrite ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_entry_accessible_get_type ()")]
 	public class EntryAccessible : Gtk.WidgetAccessible, Atk.Action, Atk.Component, Atk.EditableText, Atk.Text {
@@ -9437,6 +9408,11 @@ namespace Gtk {
 		public GLib.Variant to_gvariant ();
 		public void to_key_file (GLib.KeyFile key_file, string group_name);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_password_entry_get_type ()")]
+	public class PasswordEntry : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.Editable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public PasswordEntry ();
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_picture_get_type ()")]
 	public class Picture : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -10029,7 +10005,7 @@ namespace Gtk {
 	public class SearchBar : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SearchBar ();
-		public void connect_entry (Gtk.Entry entry);
+		public void connect_entry (Gtk.Editable entry);
 		public unowned Gtk.Widget get_key_capture_widget ();
 		public bool get_search_mode ();
 		public bool get_show_close_button ();
@@ -10042,12 +10018,17 @@ namespace Gtk {
 		public bool show_close_button { get; set construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_search_entry_get_type ()")]
-	public class SearchEntry : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.CellEditable, Gtk.Editable {
+	public class SearchEntry : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.Editable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SearchEntry ();
 		public unowned Gtk.Widget get_key_capture_widget ();
 		public bool handle_event ([CCode (type = "GdkEvent*")] Gdk.Event event);
 		public void set_key_capture_widget (Gtk.Widget? widget);
+		[NoAccessorMethod]
+		public bool activates_default { get; set; }
+		[NoAccessorMethod]
+		public string placeholder_text { owned get; set; }
+		public virtual signal void activate ();
 		public virtual signal void next_match ();
 		public virtual signal void previous_match ();
 		public virtual signal void search_changed ();
@@ -10395,7 +10376,6 @@ namespace Gtk {
 		public bool get_numeric ();
 		public void get_range (out double min, out double max);
 		public bool get_snap_to_ticks ();
-		public unowned string get_text ();
 		public Gtk.SpinButtonUpdatePolicy get_update_policy ();
 		public double get_value ();
 		public int get_value_as_int ();
@@ -10421,13 +10401,10 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public double climb_rate { get; set; }
 		public uint digits { get; set; }
-		public int max_width_chars { get; set; }
 		public bool numeric { get; set; }
 		public bool snap_to_ticks { get; set; }
-		public string text { get; set; }
 		public Gtk.SpinButtonUpdatePolicy update_policy { get; set; }
 		public double value { get; set; }
-		public int width_chars { get; set; }
 		public bool wrap { get; set; }
 		public virtual signal void change_value (Gtk.ScrollType scroll);
 		public virtual signal int input (out double new_value);
@@ -10638,6 +10615,81 @@ namespace Gtk {
 	public class SwitchAccessible : Gtk.WidgetAccessible, Atk.Action, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected SwitchAccessible ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_text_get_type ()")]
+	public class Text : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.Editable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Text ();
+		public bool get_activates_default ();
+		public unowned Pango.AttrList? get_attributes ();
+		public unowned Gtk.EntryBuffer get_buffer ();
+		public bool get_has_frame ();
+		public Gtk.InputHints get_input_hints ();
+		public Gtk.InputPurpose get_input_purpose ();
+		public unichar get_invisible_char ();
+		public int get_max_length ();
+		public bool get_overwrite_mode ();
+		public unowned string? get_placeholder_text ();
+		public unowned Pango.TabArray? get_tabs ();
+		public uint16 get_text_length ();
+		public bool get_visibility ();
+		public void grab_focus_without_selecting ();
+		public void set_activates_default (bool activates);
+		public void set_attributes (Pango.AttrList attrs);
+		public void set_buffer (Gtk.EntryBuffer buffer);
+		public void set_has_frame (bool has_frame);
+		public void set_input_hints (Gtk.InputHints hints);
+		public void set_input_purpose (Gtk.InputPurpose purpose);
+		public void set_invisible_char (unichar ch);
+		public void set_max_length (int length);
+		public void set_overwrite_mode (bool overwrite);
+		public void set_placeholder_text (string? text);
+		public void set_tabs (Pango.TabArray? tabs);
+		public void set_visibility (bool visible);
+		public void unset_invisible_char ();
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Text.with_buffer (Gtk.EntryBuffer buffer);
+		public bool activates_default { get; set; }
+		public Pango.AttrList attributes { get; set; }
+		public Gtk.EntryBuffer buffer { get; set construct; }
+		[NoAccessorMethod]
+		public bool enable_emoji_completion { get; set; }
+		public bool has_frame { get; set; }
+		[NoAccessorMethod]
+		public string im_module { owned get; set; }
+		public Gtk.InputHints input_hints { get; set; }
+		public Gtk.InputPurpose input_purpose { get; set; }
+		public uint invisible_char { get; set; }
+		[NoAccessorMethod]
+		public bool invisible_char_set { get; set; }
+		public int max_length { get; set; }
+		public bool overwrite_mode { get; set; }
+		public string placeholder_text { get; set; }
+		[NoAccessorMethod]
+		public bool populate_all { get; set; }
+		[NoAccessorMethod]
+		public int scroll_offset { get; }
+		public Pango.TabArray tabs { get; set; }
+		[NoAccessorMethod]
+		public bool truncate_multiline { get; set; }
+		public bool visibility { get; set; }
+		public virtual signal void activate ();
+		public virtual signal void backspace ();
+		public virtual signal void copy_clipboard ();
+		public virtual signal void cut_clipboard ();
+		public virtual signal void delete_from_cursor (Gtk.DeleteType type, int count);
+		public virtual signal void insert_at_cursor (string str);
+		public virtual signal void insert_emoji ();
+		public virtual signal void move_cursor (Gtk.MovementStep step, int count, bool extend);
+		public virtual signal void paste_clipboard ();
+		public virtual signal void populate_popup (Gtk.Widget popup);
+		public signal void preedit_changed (string preedit);
+		public virtual signal void toggle_overwrite ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_text_accessible_get_type ()")]
+	public class TextAccessible : Gtk.WidgetAccessible, Atk.Action, Atk.Component, Atk.EditableText, Atk.Text {
+		[CCode (has_construct_function = false)]
+		protected TextAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
 	[Compact]
@@ -11386,7 +11438,7 @@ namespace Gtk {
 		public unowned Gtk.TreeViewRowSeparatorFunc get_row_separator_func ();
 		public bool get_rubber_banding ();
 		public int get_search_column ();
-		public unowned Gtk.Entry get_search_entry ();
+		public unowned Gtk.Editable get_search_entry ();
 		public unowned Gtk.TreeViewSearchEqualFunc get_search_equal_func ();
 		public unowned Gtk.TreeViewSearchPositionFunc get_search_position_func ();
 		public unowned Gtk.TreeSelection get_selection ();
@@ -11427,7 +11479,7 @@ namespace Gtk {
 		public void set_row_separator_func (owned Gtk.TreeViewRowSeparatorFunc? func);
 		public void set_rubber_banding (bool enable);
 		public void set_search_column (int column);
-		public void set_search_entry (Gtk.Entry? entry);
+		public void set_search_entry (Gtk.Editable? entry);
 		public void set_search_equal_func (owned Gtk.TreeViewSearchEqualFunc search_equal_func);
 		public void set_search_position_func (owned Gtk.TreeViewSearchPositionFunc? func);
 		public void set_show_expanders (bool enabled);
@@ -11603,6 +11655,7 @@ namespace Gtk {
 		public void add_controller (owned Gtk.EventController controller);
 		public void add_mnemonic_label (Gtk.Widget label);
 		public uint add_tick_callback (owned Gtk.TickCallback callback);
+		public void allocate (int width, int height, int baseline, Graphene.Matrix transform);
 		[CCode (cname = "gtk_widget_class_bind_template_callback_full")]
 		public class void bind_template_callback_full (string callback_name, [CCode (scope = "async")] GLib.Callback callback_symbol);
 		[CCode (cname = "gtk_widget_class_bind_template_child_full")]
@@ -11613,6 +11666,8 @@ namespace Gtk {
 		[CCode (vfunc_name = "compute_expand")]
 		[NoWrapper]
 		public virtual void compute_expand_internal (out bool hexpand_p, out bool vexpand_p);
+		public bool compute_point (Gtk.Widget target, Graphene.Point point, out Graphene.Point out_point);
+		public bool compute_transform (Gtk.Widget target, out Graphene.Matrix out_transform);
 		public virtual bool contains (double x, double y);
 		public Pango.Context create_pango_context ();
 		public Pango.Layout create_pango_layout (string? text);
@@ -11627,7 +11682,6 @@ namespace Gtk {
 		public unowned GLib.ActionGroup? get_action_group (string prefix);
 		public int get_allocated_baseline ();
 		public int get_allocated_height ();
-		public void get_allocated_size (out Gtk.Allocation allocation, out int baseline);
 		public int get_allocated_width ();
 		public void get_allocation (out Gtk.Allocation allocation);
 		public unowned Gtk.Widget? get_ancestor (GLib.Type widget_type);
@@ -12177,26 +12231,49 @@ namespace Gtk {
 		public virtual signal void color_activated (Gdk.RGBA color);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkEditableInterface", type_id = "gtk_editable_get_type ()")]
-	public interface Editable : GLib.Object {
-		public void copy_clipboard ();
-		public void cut_clipboard ();
+	public interface Editable : Gtk.Widget {
+		public static bool delegate_get_property (GLib.Object object, uint prop_id, GLib.Value value, GLib.ParamSpec pspec);
+		public static bool delegate_set_property (GLib.Object object, uint prop_id, GLib.Value value, GLib.ParamSpec pspec);
 		public void delete_selection ();
 		[NoWrapper]
 		public abstract void do_delete_text (int start_pos, int end_pos);
 		[NoWrapper]
-		public abstract void do_insert_text (string new_text, int new_text_length, ref int position);
-		public abstract string get_chars (int start_pos = 0, int end_pos = -1);
+		public abstract void do_insert_text (string text, int length, ref int position);
+		public void finish_delegate ();
+		public float get_alignment ();
+		public string get_chars (int start_pos = 0, int end_pos = -1);
 		public bool get_editable ();
-		public abstract int get_position ();
+		public int get_max_width_chars ();
+		public int get_position ();
 		public abstract bool get_selection_bounds (out int start_pos, out int end_pos);
-		public void paste_clipboard ();
+		public abstract unowned string get_text ();
+		public int get_width_chars ();
+		public void init_delegate ();
+		public static uint install_properties (GLib.ObjectClass object_class, uint first_prop);
 		[CCode (vfunc_name = "set_selection_bounds")]
 		public abstract void select_region (int start_pos, int end_pos);
+		public void set_alignment (float xalign);
 		public void set_editable (bool is_editable);
-		public abstract void set_position (int position);
+		public void set_max_width_chars (int n_chars);
+		public void set_position (int position);
+		public void set_text (string text);
+		public void set_width_chars (int n_chars);
+		[NoAccessorMethod]
+		public abstract int cursor_position { get; }
+		[ConcreteAccessor]
+		public abstract bool editable { get; set; }
+		[ConcreteAccessor]
+		public abstract int max_width_chars { get; set; }
+		[NoAccessorMethod]
+		public abstract int selection_bound { get; }
+		public abstract string text { get; set; }
+		[ConcreteAccessor]
+		public abstract int width_chars { get; set; }
+		[NoAccessorMethod]
+		public abstract float xalign { get; set; }
 		public virtual signal void changed ();
 		public virtual signal void delete_text (int start_pos, int end_pos);
-		public virtual signal void insert_text (string new_text, int new_text_length, ref int position);
+		public virtual signal void insert_text (string text, int length, ref int position);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_chooser_get_type ()")]
 	public interface FileChooser : GLib.Object {
@@ -12824,6 +12901,17 @@ namespace Gtk {
 		TIMEOUT_EXPIRED,
 		GRAB_BROKEN,
 		ERROR
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_EDITABLE_", type_id = "gtk_editable_properties_get_type ()")]
+	public enum EditableProperties {
+		PROP_TEXT,
+		PROP_CURSOR_POSITION,
+		PROP_SELECTION_BOUND,
+		PROP_EDITABLE,
+		PROP_WIDTH_CHARS,
+		PROP_MAX_WIDTH_CHARS,
+		PROP_XALIGN,
+		NUM_PROPERTIES
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ENTRY_ICON_", type_id = "gtk_entry_icon_position_get_type ()")]
 	public enum EntryIconPosition {

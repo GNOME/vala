@@ -371,8 +371,6 @@ Button
   .set_label.label nullable
 ComboBox
   .get_row_separator_func skip=false
-Entry
-  .populate_popup#signal.widget type="Gtk.Menu"
 FileChooserNative
   .accept_label nullable
   .cancel_label nullable
@@ -401,6 +399,10 @@ TextView
   .populate_popup.popup type="Gtk.Menu"
 TreeView
   .get_*_func skip=false
+
+editable_delegate_get_property skip
+editable_delegate_set_property skip
+editable_install_properties skip
 
 // Sure
 binding_set_by_class.object_class type="GLib.ObjectClass"

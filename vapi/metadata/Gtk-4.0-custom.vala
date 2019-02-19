@@ -37,10 +37,9 @@ namespace Gtk {
 		public virtual void notify_gtk (GLib.ParamSpec pspec);
 	}
 
-	[CCode (type_id = "gtk_editable_get_type ()")]
-	public interface Editable : GLib.Object {
+	public interface Editable {
 		[NoWrapper]
-		public abstract void do_insert_text (string new_text, int new_text_length, ref int position);
+		public abstract void do_insert_text (string text, int length, ref int position);
 		[NoWrapper]
 		public abstract void do_delete_text (int start_pos, int end_pos);
 	}
