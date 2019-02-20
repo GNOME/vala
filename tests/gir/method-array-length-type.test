@@ -1,0 +1,21 @@
+GIR
+
+Input:
+
+<function name="function" c:identifier="test_function">
+  <return-value transfer-ownership="full">
+    <array length="0" c:type="gchar**">
+      <type name="utf8"/>
+    </array>
+  </return-value>
+  <parameters>
+    <parameter name="result_length" direction="out" transfer-ownership="none">
+      <type name="gsize" c:type="gsize*"/>
+    </parameter>
+  </parameters>
+</function>
+
+Output:
+
+[CCode (array_length_pos = 0.1, array_length_type = "gsize", cheader_filename = "test.h")]
+public static string[] function ();
