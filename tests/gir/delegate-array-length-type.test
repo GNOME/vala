@@ -1,0 +1,28 @@
+GIR
+
+Input:
+
+<callback name="Foo" c:type="TestFoo">
+  <return-value transfer-ownership="full">
+    <array length="0" c:type="gchar**">
+      <type name="utf8"/>
+    </array>
+  </return-value>
+  <parameters>
+    <parameter name="result_length" direction="out" transfer-ownership="none">
+      <type name="gsize" c:type="gsize*"/>
+    </parameter>
+    <parameter name="user_data"
+               transfer-ownership="none"
+               nullable="1"
+               allow-none="1"
+               closure="1">
+      <type name="gpointer" c:type="gpointer"/>
+    </parameter>
+  </parameters>
+</callback>
+
+Output:
+
+[CCode (array_length_pos = 0.1, array_length_type = "gsize", cheader_filename = "test.h", instance_pos = 0.9)]
+public delegate string[] Foo ();
