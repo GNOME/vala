@@ -1855,12 +1855,8 @@ public class Vala.GirParser : CodeVisitor {
 		if (type_name != "int") {
 			var st = root.lookup (type_name);
 			if (st != null) {
-				if (sym is Method) {
-					var m = (Method) sym;
-					m.set_attribute_string ("CCode", "array_length_type", st.get_cname ());
-				} else {
-					var param = (Parameter) sym;
-					param.set_attribute_string ("CCode", "array_length_type", st.get_cname ());
+				if (sym is Callable || sym is Parameter) {
+					sym.set_attribute_string ("CCode", "array_length_type", st.get_cname ());
 				}
 			}
 		}

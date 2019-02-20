@@ -379,6 +379,9 @@ TESTS = \
 	gir/async-result-pos.test \
 	gir/async-sync-out.test \
 	gir/delegate-alias-without-target.test \
+	gir/delegate-array-length-type.test \
+	gir/method-array-length-type.test \
+	gir/parameter-array-length-type.test \
 	annotations/deprecated.vala \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
