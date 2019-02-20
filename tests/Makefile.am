@@ -456,10 +456,13 @@ TESTS = \
 	gir/async-sync-out.test \
 	gir/class.test \
 	gir/delegate-alias-without-target.test \
+	gir/delegate-array-length-type.test \
 	gir/delegate-closure-destroy-index-conflict.test \
 	gir/delegate-error-pos.test \
 	gir/enum.test \
 	gir/errordomain.test \
+	gir/method-array-length-type.test \
+	gir/parameter-array-length-type.test \
 	gir/parameter-nullable-out-simple-type.test \
 	gir/property-non-readable.test \
 	annotations/deprecated.vala \
