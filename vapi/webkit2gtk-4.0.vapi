@@ -156,19 +156,19 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected CookieManager ();
 		[Version (since = "2.20")]
-		public async bool add_cookie (Soup.Cookie cookie, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async bool add_cookie (Soup.Cookie cookie, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (deprecated = true, deprecated_since = "2.16")]
 		public void delete_all_cookies ();
 		[Version (since = "2.20")]
-		public async bool delete_cookie (Soup.Cookie cookie, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async bool delete_cookie (Soup.Cookie cookie, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (deprecated = true, deprecated_since = "2.16")]
 		public void delete_cookies_for_domain (string domain);
-		public async WebKit.CookieAcceptPolicy get_accept_policy (GLib.Cancellable? cancellable) throws GLib.Error;
+		public async WebKit.CookieAcceptPolicy get_accept_policy (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.20")]
-		public async GLib.List<Soup.Cookie> get_cookies (string uri, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async GLib.List<Soup.Cookie> get_cookies (string uri, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (deprecated = true, deprecated_since = "2.16")]
-		public async string[] get_domains_with_cookies (GLib.Cancellable? cancellable) throws GLib.Error;
+		public async string[] get_domains_with_cookies (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_accept_policy (WebKit.CookieAcceptPolicy policy);
 		public void set_persistent_storage (string filename, WebKit.CookiePersistentStorage storage);
 		public signal void changed ();
@@ -249,7 +249,7 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected FaviconDatabase ();
 		public void clear ();
-		public async Cairo.Surface get_favicon (string page_uri, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async Cairo.Surface get_favicon (string page_uri, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public string get_favicon_uri (string page_uri);
 		public signal void favicon_changed (string page_uri, string favicon_uri);
 	}
@@ -875,11 +875,44 @@ namespace WebKit {
 		public unowned string get_uri ();
 		public unowned WebKit.WebView get_web_view ();
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_user_content_filter_ref", type_id = "webkit_user_content_filter_get_type ()", unref_function = "webkit_user_content_filter_unref")]
+	[Compact]
+	public class UserContentFilter {
+		[Version (since = "2.24")]
+		public unowned string get_identifier ();
+		[Version (since = "2.24")]
+		public unowned WebKit.UserContentFilter @ref ();
+		[Version (since = "2.24")]
+		public void unref ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_user_content_filter_store_get_type ()")]
+	public class UserContentFilterStore : GLib.Object {
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.24")]
+		public UserContentFilterStore (string storage_path);
+		[CCode (array_length = false, array_null_terminated = true)]
+		[Version (since = "2.24")]
+		public async string[] fetch_identifiers (GLib.Cancellable? cancellable = null);
+		[Version (since = "2.24")]
+		public unowned string get_path ();
+		[Version (since = "2.24")]
+		public async WebKit.UserContentFilter load (string identifier, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.24")]
+		public async bool remove (string identifier, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.24")]
+		public async WebKit.UserContentFilter save (string identifier, GLib.Bytes source, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.24")]
+		public async WebKit.UserContentFilter save_from_file (string identifier, GLib.File file, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.24")]
+		public string path { get; construct; }
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_user_content_manager_get_type ()")]
 	public class UserContentManager : GLib.Object {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.6")]
 		public UserContentManager ();
+		[Version (since = "2.24")]
+		public void add_filter (WebKit.UserContentFilter filter);
 		[Version (since = "2.6")]
 		public void add_script (WebKit.UserScript script);
 		[Version (since = "2.6")]
@@ -888,10 +921,13 @@ namespace WebKit {
 		public bool register_script_message_handler (string name);
 		[Version (since = "2.22")]
 		public bool register_script_message_handler_in_world (string name, string world_name);
+		[Version (since = "2.24")]
+		public void remove_all_filters ();
 		[Version (since = "2.6")]
 		public void remove_all_scripts ();
 		[Version (since = "2.6")]
 		public void remove_all_style_sheets ();
+		public void remove_filter (WebKit.UserContentFilter filter);
 		[Version (since = "2.8")]
 		public void unregister_script_message_handler (string name);
 		[Version (since = "2.22")]
@@ -953,7 +989,7 @@ namespace WebKit {
 		public static unowned WebKit.WebContext get_default ();
 		public unowned WebKit.FaviconDatabase get_favicon_database ();
 		public unowned string get_favicon_database_directory ();
-		public async GLib.List<WebKit.Plugin> get_plugins (GLib.Cancellable? cancellable) throws GLib.Error;
+		public async GLib.List<WebKit.Plugin> get_plugins (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.4")]
 		public WebKit.ProcessModel get_process_model ();
 		public unowned WebKit.SecurityManager get_security_manager ();
@@ -1036,7 +1072,7 @@ namespace WebKit {
 	public class WebResource : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebResource ();
-		public async uint8[] get_data (GLib.Cancellable? cancellable) throws GLib.Error;
+		public async uint8[] get_data (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public unowned WebKit.URIResponse get_response ();
 		public unowned string get_uri ();
 		public WebKit.URIResponse response { get; }
@@ -1052,7 +1088,7 @@ namespace WebKit {
 	public class WebView : WebKit.WebViewBase, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public WebView ();
-		public async bool can_execute_editing_command (string command, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async bool can_execute_editing_command (string command, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool can_go_back ();
 		public bool can_go_forward ();
 		public bool can_show_mime_type (string mime_type);
@@ -1078,7 +1114,7 @@ namespace WebKit {
 		[Version (since = "2.12")]
 		public WebKit.WebViewSessionState get_session_state ();
 		public unowned WebKit.Settings get_settings ();
-		public async Cairo.Surface get_snapshot (WebKit.SnapshotRegion region, WebKit.SnapshotOptions options, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async Cairo.Surface get_snapshot (WebKit.SnapshotRegion region, WebKit.SnapshotOptions options, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public unowned string get_title ();
 		public bool get_tls_info (out unowned GLib.TlsCertificate certificate, out GLib.TlsCertificateFlags errors);
 		public unowned string get_uri ();
@@ -1103,12 +1139,12 @@ namespace WebKit {
 		public void reload_bypass_cache ();
 		[Version (since = "2.12")]
 		public void restore_session_state (WebKit.WebViewSessionState state);
-		public async WebKit.JavascriptResult run_javascript (string script, GLib.Cancellable? cancellable) throws GLib.Error;
-		public async WebKit.JavascriptResult run_javascript_from_gresource (string resource, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async WebKit.JavascriptResult run_javascript (string script, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async WebKit.JavascriptResult run_javascript_from_gresource (string resource, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
-		public async WebKit.JavascriptResult run_javascript_in_world (string script, string world_name, GLib.Cancellable? cancellable) throws GLib.Error;
-		public async GLib.InputStream save (WebKit.SaveMode save_mode, GLib.Cancellable? cancellable) throws GLib.Error;
-		public async bool save_to_file (GLib.File file, WebKit.SaveMode save_mode, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async WebKit.JavascriptResult run_javascript_in_world (string script, string world_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async GLib.InputStream save (WebKit.SaveMode save_mode, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool save_to_file (GLib.File file, WebKit.SaveMode save_mode, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.8")]
 		public void set_background_color (Gdk.RGBA rgba);
 		public void set_custom_charset (string? charset);
@@ -1232,12 +1268,12 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected WebsiteDataManager ();
 		[Version (since = "2.16")]
-		public async bool clear (WebKit.WebsiteDataTypes types, GLib.TimeSpan timespan, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async bool clear (WebKit.WebsiteDataTypes types, GLib.TimeSpan timespan, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.16")]
 		public WebsiteDataManager.ephemeral ();
 		[Version (since = "2.16")]
-		public async GLib.List<WebKit.WebsiteData> fetch (WebKit.WebsiteDataTypes types, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async GLib.List<WebKit.WebsiteData> fetch (WebKit.WebsiteDataTypes types, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.10")]
 		public unowned string? get_base_cache_directory ();
 		[Version (since = "2.10")]
@@ -1255,7 +1291,7 @@ namespace WebKit {
 		[Version (since = "2.10")]
 		public unowned string? get_websql_directory ();
 		[Version (since = "2.16")]
-		public async bool remove (WebKit.WebsiteDataTypes types, GLib.List<WebKit.WebsiteData> website_data, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async bool remove (WebKit.WebsiteDataTypes types, GLib.List<WebKit.WebsiteData> website_data, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.10")]
 		public string base_cache_directory { get; construct; }
 		[Version (since = "2.10")]
@@ -1593,6 +1629,13 @@ namespace WebKit {
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_SNAPSHOT_ERROR_FAILED_TO_")]
 	public errordomain SnapshotError {
 		CREATE;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_USER_CONTENT_FILTER_ERROR_")]
+	[Version (since = "2.24")]
+	public errordomain UserContentFilterError {
+		INVALID_SOURCE,
+		NOT_FOUND;
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", instance_pos = 1.9)]

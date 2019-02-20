@@ -1,3 +1,6 @@
+*.cancellable#parameter nullable default=null
+*.*.cancellable#parameter nullable default=null
+
 //Forward upstream
 Download
   .failed#signal.error type="WebKit.DownloadError"
