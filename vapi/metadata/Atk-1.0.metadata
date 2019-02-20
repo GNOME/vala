@@ -48,3 +48,7 @@ Component.add_focus_handler skip=false
 // Ownership of fields
 TextRange.content unowned=false
 Attribute.* unowned=false
+
+// Should be fixed upstream
+// https://gitlab.gnome.org/GNOME/atk/commit/96d13ae47f6f77445483ee8a0d7d6569a95f35bf
+Implementor* skip // g-ir-scanner doesn't realize this is an interface

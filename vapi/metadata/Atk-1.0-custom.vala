@@ -7,6 +7,10 @@ namespace Atk {
 		[Version (replacement = "Document.get_locale", deprecated_since = "vala-0.22")]
 		public virtual unowned string get_document_locale ();
 	}
+	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_implementor_get_type ()")]
+	public interface Implementor : GLib.Object {
+		public abstract Atk.Object ref_accessible ();
+	}
 	public class Registry : GLib.Object {
 		[Version (deprecated = true)]
 		public weak GLib.HashTable<GLib.Type,Atk.ObjectFactory> factory_singleton_cache;
