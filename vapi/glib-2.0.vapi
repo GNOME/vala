@@ -2625,10 +2625,13 @@ namespace GLib {
 		[Version (since = "2.50")]
 		public static string writer_format_fields (LogLevelFlags log_levels, [CCode (array_length_type = "gsize")] LogField[] fields, bool use_color);
 		[Version (since = "2.50")]
+		[CCode (delegate_target = false)]
 		public static LogWriterFunc writer_journald;
 		[Version (since = "2.50")]
+		[CCode (delegate_target = false)]
 		public static LogWriterFunc writer_standard_streams;
 		[Version (since = "2.50")]
+		[CCode (delegate_target = false)]
 		public static LogWriterFunc writer_default;
 	}
 
