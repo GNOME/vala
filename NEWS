@@ -1,3 +1,28 @@
+Vala 0.43.91
+============
+ * Various improvements and bug fixes:
+  - Revert "valadoc: Drop duplicated code to add source files and use
+    CodeContext API" and "valadoc: Update API tests" (#748)
+  - valadoc: Report warning if resources for doclet could not be copied
+  - libvaladoc: Properly support the output of async constructors (#753)
+  - girparser: Correctly set array_length_type for delegates returning an array
+  - Revert "vala: Don't replace assignments for local variables with non-null
+    simple-types" (#755)
+
+ * Bindings:
+  - Follow GTK upstream rename to gtk4 and gtk4-unix-print
+  - gtk4,gtk4-unix-printer: Update to 3.94.0+02e856f6
+  - gtk+-unix-print-*.0: Fix PrintJob.get_page_ranges(),
+    Printer.get_hard_margins()
+  - atk-1.0: Adjust for upstream revert of Implementor using G_DEFINE_INTERFACE
+  - clutter-1.0: Drop deprecated from Actor.pick() (#625)
+  - glib-2.0: Add "delegate_target = false" to Log.writer_journald/
+    _standard_streams/_default
+  - gio-unix-2.0: Add DesktopAppInfo.get_string_list() since 2.60
+  - gstreamer: Update from 1.15.1+ git master
+  - webkit2gtk-4.0: Update to 2.23.91
+  - vapi: Update GIR-based bindings
+
 Vala 0.43.90
 ============
  * Various improvements and bug fixes:
