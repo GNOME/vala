@@ -41,6 +41,7 @@ TESTS = \
 	basic-types/bug596785.vala \
 	basic-types/bug604371.vala \
 	basic-types/bug604589.test \
+	basic-types/bug610660.vala \
 	basic-types/bug622178.vala \
 	basic-types/bug632322.vala \
 	basic-types/bug641308.test \
