@@ -224,12 +224,12 @@ public class Vala.Assignment : Expression {
 			return false;
 		}
 
-		unowned MemberAccess? ma = left as MemberAccess;
-		if (operator != AssignmentOperator.SIMPLE && ma != null
-		    && !(left.value_type.is_non_null_simple_type () && ma.symbol_reference is LocalVariable)) {
+		if (operator != AssignmentOperator.SIMPLE && left is MemberAccess) {
 			// transform into simple assignment
 			// FIXME: only do this if the backend doesn't support
 			// the assignment natively
+
+			var ma = (MemberAccess) left;
 
 			var old_value = new MemberAccess (ma.inner, ma.member_name);
 
@@ -260,7 +260,9 @@ public class Vala.Assignment : Expression {
 			operator = AssignmentOperator.SIMPLE;
 		}
 
-		if (ma != null) {
+		if (left is MemberAccess) {
+			var ma = (MemberAccess) left;
+
 			if (ma.symbol_reference is Property) {
 				var prop = (Property) ma.symbol_reference;
 
