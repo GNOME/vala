@@ -289,10 +289,13 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		// Add function prototypes for required register-type-calls which are likely external
-		var register_func = new CCodeFunction ("%s_register_type".printf (get_ccode_lower_case_name (type_symbol, null)), "GType");
-		register_func.add_parameter (new CCodeParameter ("module", "GTypeModule *"));
-		register_func.is_declaration = true;
-		cfile.add_function_declaration (register_func);
+		if (type_symbol.source_reference.file != cfile.file) {
+			// TODO Duplicated source with TypeRegisterFunction.init_from_type()
+			var register_func = new CCodeFunction ("%s_register_type".printf (get_ccode_lower_case_name (type_symbol, null)), "GType");
+			register_func.add_parameter (new CCodeParameter ("module", "GTypeModule *"));
+			register_func.is_declaration = true;
+			cfile.add_function_declaration (register_func);
+		}
 
 		var register_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_register_type".printf (get_ccode_lower_case_name (type_symbol, null))));
 		register_call.add_argument (new CCodeIdentifier (module_init_param_name));
