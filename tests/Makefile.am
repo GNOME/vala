@@ -389,6 +389,7 @@ TESTS = \
 	asynchronous/generator.vala \
 	asynchronous/result-pos.vala \
 	asynchronous/yield.vala \
+	generics/constructor-chain-up.vala \
 	generics/bug640330.test \
 	generics/bug640330.vala \
 	generics/bug694765-1.vala \
