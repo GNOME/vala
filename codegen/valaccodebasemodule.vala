@@ -759,7 +759,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
-		cfile = new CCodeFile ();
+		cfile = new CCodeFile (source_file);
 
 		user_marshal_set = new HashSet<string> (str_hash, str_equal);
 
