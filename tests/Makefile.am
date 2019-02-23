@@ -244,6 +244,7 @@ TESTS = \
 	delegates/lambda-mixed-instance-static.vala \
 	delegates/lambda-shared-closure.vala \
 	delegates/reference_transfer.vala \
+	delegates/return-array-null-terminated.vala \
 	delegates/wrapper.vala \
 	delegates/bug519949.test \
 	delegates/bug539166.vala \
