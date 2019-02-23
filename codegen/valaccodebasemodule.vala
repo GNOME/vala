@@ -5230,19 +5230,26 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		CCodeUnaryOperator op;
-		if (expr.operator == UnaryOperator.PLUS) {
+		switch (expr.operator) {
+		case UnaryOperator.PLUS:
 			op = CCodeUnaryOperator.PLUS;
-		} else if (expr.operator == UnaryOperator.MINUS) {
+			break;
+		case UnaryOperator.MINUS:
 			op = CCodeUnaryOperator.MINUS;
-		} else if (expr.operator == UnaryOperator.LOGICAL_NEGATION) {
+			break;
+		case UnaryOperator.LOGICAL_NEGATION:
 			op = CCodeUnaryOperator.LOGICAL_NEGATION;
-		} else if (expr.operator == UnaryOperator.BITWISE_COMPLEMENT) {
+			break;
+		case UnaryOperator.BITWISE_COMPLEMENT:
 			op = CCodeUnaryOperator.BITWISE_COMPLEMENT;
-		} else if (expr.operator == UnaryOperator.INCREMENT) {
+			break;
+		case UnaryOperator.INCREMENT:
 			op = CCodeUnaryOperator.PREFIX_INCREMENT;
-		} else if (expr.operator == UnaryOperator.DECREMENT) {
+			break;
+		case UnaryOperator.DECREMENT:
 			op = CCodeUnaryOperator.PREFIX_DECREMENT;
-		} else {
+			break;
+		default:
 			assert_not_reached ();
 		}
 		set_cvalue (expr, new CCodeUnaryExpression (op, get_cvalue (expr.inner)));
