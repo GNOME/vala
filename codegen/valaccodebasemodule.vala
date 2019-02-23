@@ -5572,15 +5572,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		CCodeBinaryOperator op;
-		if (expr.operator == BinaryOperator.PLUS) {
+		switch (expr.operator) {
+		case BinaryOperator.PLUS:
 			op = CCodeBinaryOperator.PLUS;
-		} else if (expr.operator == BinaryOperator.MINUS) {
+			break;
+		case BinaryOperator.MINUS:
 			op = CCodeBinaryOperator.MINUS;
-		} else if (expr.operator == BinaryOperator.MUL) {
+			break;
+		case BinaryOperator.MUL:
 			op = CCodeBinaryOperator.MUL;
-		} else if (expr.operator == BinaryOperator.DIV) {
+			break;
+		case BinaryOperator.DIV:
 			op = CCodeBinaryOperator.DIV;
-		} else if (expr.operator == BinaryOperator.MOD) {
+			break;
+		case BinaryOperator.MOD:
 			if (expr.value_type.equals (double_type)) {
 				cfile.add_include ("math.h");
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("fmod"));
@@ -5598,33 +5603,47 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else {
 				op = CCodeBinaryOperator.MOD;
 			}
-		} else if (expr.operator == BinaryOperator.SHIFT_LEFT) {
+			break;
+		case BinaryOperator.SHIFT_LEFT:
 			op = CCodeBinaryOperator.SHIFT_LEFT;
-		} else if (expr.operator == BinaryOperator.SHIFT_RIGHT) {
+			break;
+		case BinaryOperator.SHIFT_RIGHT:
 			op = CCodeBinaryOperator.SHIFT_RIGHT;
-		} else if (expr.operator == BinaryOperator.LESS_THAN) {
+			break;
+		case BinaryOperator.LESS_THAN:
 			op = CCodeBinaryOperator.LESS_THAN;
-		} else if (expr.operator == BinaryOperator.GREATER_THAN) {
+			break;
+		case BinaryOperator.GREATER_THAN:
 			op = CCodeBinaryOperator.GREATER_THAN;
-		} else if (expr.operator == BinaryOperator.LESS_THAN_OR_EQUAL) {
+			break;
+		case BinaryOperator.LESS_THAN_OR_EQUAL:
 			op = CCodeBinaryOperator.LESS_THAN_OR_EQUAL;
-		} else if (expr.operator == BinaryOperator.GREATER_THAN_OR_EQUAL) {
+			break;
+		case BinaryOperator.GREATER_THAN_OR_EQUAL:
 			op = CCodeBinaryOperator.GREATER_THAN_OR_EQUAL;
-		} else if (expr.operator == BinaryOperator.EQUALITY) {
+			break;
+		case BinaryOperator.EQUALITY:
 			op = CCodeBinaryOperator.EQUALITY;
-		} else if (expr.operator == BinaryOperator.INEQUALITY) {
+			break;
+		case BinaryOperator.INEQUALITY:
 			op = CCodeBinaryOperator.INEQUALITY;
-		} else if (expr.operator == BinaryOperator.BITWISE_AND) {
+			break;
+		case BinaryOperator.BITWISE_AND:
 			op = CCodeBinaryOperator.BITWISE_AND;
-		} else if (expr.operator == BinaryOperator.BITWISE_OR) {
+			break;
+		case BinaryOperator.BITWISE_OR:
 			op = CCodeBinaryOperator.BITWISE_OR;
-		} else if (expr.operator == BinaryOperator.BITWISE_XOR) {
+			break;
+		case BinaryOperator.BITWISE_XOR:
 			op = CCodeBinaryOperator.BITWISE_XOR;
-		} else if (expr.operator == BinaryOperator.AND) {
+			break;
+		case BinaryOperator.AND:
 			op = CCodeBinaryOperator.AND;
-		} else if (expr.operator == BinaryOperator.OR) {
+			break;
+		case BinaryOperator.OR:
 			op = CCodeBinaryOperator.OR;
-		} else if (expr.operator == BinaryOperator.IN) {
+			break;
+		case BinaryOperator.IN:
 			if (expr.right.value_type is ArrayType) {
 				var array_type = (ArrayType) expr.right.value_type;
 				var node = new CCodeFunctionCall (new CCodeIdentifier (generate_array_contains_wrapper (array_type)));
@@ -5640,7 +5659,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				set_cvalue (expr, new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeBinaryExpression (CCodeBinaryOperator.BITWISE_AND, cright, cleft), cleft));
 			}
 			return;
-		} else {
+		default:
 			assert_not_reached ();
 		}
 
