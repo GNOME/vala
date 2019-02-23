@@ -263,8 +263,17 @@ const Foo[] FOO_ARRAY_CONST = {
 	{ { "foo", "bar" }, 42 },
 };
 
+struct Bar {
+	public int bar;
+}
+
 void test_struct_array () {
 	assert (FOO_ARRAY_CONST[0].bar == 42);
+
+	Bar b = { 4711 };
+	var bar = new Bar[23];
+	bar[7] = b;
+	assert (b in bar);
 }
 
 void give_fixed_array (out int i[3]) {
