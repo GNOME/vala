@@ -280,6 +280,7 @@ TESTS = \
 	objects/interface-generics.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \
+	objects/plugin-module-init.vala \
 	objects/properties.vala \
 	objects/property-notify.vala \
 	objects/property-read-only-auto.vala \
