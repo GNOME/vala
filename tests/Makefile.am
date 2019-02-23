@@ -235,6 +235,7 @@ TESTS = \
 	delegates/fields-no-target.vala \
 	delegates/instance-method-to-no-target.test \
 	delegates/reference_transfer.vala \
+	delegates/return-array-null-terminated.vala \
 	delegates/wrapper.vala \
 	delegates/bug519949.test \
 	delegates/bug539166.vala \
