@@ -52,7 +52,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if (ma.inner != null && ma.inner.value_type is EnumValueType && ((EnumValueType) ma.inner.value_type).get_to_string_method() == m) {
 				// Enum.VALUE.to_string()
 				var en = (Enum) ma.inner.value_type.data_type;
-				ccall.call = new CCodeIdentifier (generate_enum_tostring_function (en));
+				ccall.call = new CCodeIdentifier (generate_enum_to_string_function (en));
 			} else if (context.profile == Profile.POSIX && ma.inner != null && ma.inner.value_type != null && ma.inner.value_type.data_type == string_type.data_type && ma.member_name == "printf") {
 				ccall.call = new CCodeIdentifier (generate_string_printf_function ());
 			} else if (expr.is_constructv_chainup) {
@@ -887,7 +887,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 	}
 
-	private string generate_enum_tostring_function (Enum en) {
+	private string generate_enum_to_string_function (Enum en) {
 		var to_string_func = "_%s_to_string".printf (get_ccode_lower_case_name (en));
 
 		if (!add_wrapper (to_string_func)) {
