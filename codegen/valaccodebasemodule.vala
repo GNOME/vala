@@ -1050,9 +1050,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (!array_type.fixed_length) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var len_type = int_type.copy ();
+					string? length_cname = get_ccode_array_length_name (f);
+					if (length_cname == null) {
+						length_cname = get_array_length_cname (get_ccode_name (f), dim);
+					}
 
 					cdecl = new CCodeDeclaration (get_ccode_name (len_type));
-					cdecl.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (get_ccode_name (f), dim)));
+					cdecl.add_declarator (new CCodeVariableDeclarator (length_cname));
 					if (f.is_private_symbol ()) {
 						cdecl.modifiers = CCodeModifiers.STATIC;
 					} else if (context.hide_internal && f.is_internal_symbol ()) {
@@ -1263,9 +1267,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					if (!array_type.fixed_length) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							var len_type = int_type.copy ();
+							string? length_cname = get_ccode_array_length_name (f);
+							if (length_cname == null) {
+								length_cname = get_array_length_cname (get_ccode_name (f), dim);
+							}
 
 							var len_def = new CCodeDeclaration (get_ccode_name (len_type));
-							len_def.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (get_ccode_name (f), dim), new CCodeConstant ("0")));
+							len_def.add_declarator (new CCodeVariableDeclarator (length_cname, new CCodeConstant ("0")));
 							if (!f.is_private_symbol ()) {
 								len_def.modifiers = CCodeModifiers.EXTERN;
 							} else {
