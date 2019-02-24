@@ -67,6 +67,9 @@ TESTS = \
 	basic-types/bug777697.test \
 	basic-types/bug787152.vala \
 	basic-types/bug788775.vala \
+	arrays/class-field-length-cname.vala \
+	arrays/field-global-length-cname.vala \
+	arrays/struct-field-length-cname.vala \
 	chainup/base-class-invalid.test \
 	chainup/base-enum-invalid.test \
 	chainup/base-invalid.test \
