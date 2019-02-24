@@ -60,7 +60,7 @@ public class Vala.GAsyncModule : GtkModule {
 				if (get_ccode_array_length (param)) {
 					var length_ctype = get_ccode_array_length_type (array_type);
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						data.add_field (length_ctype, get_parameter_array_length_cname (param, dim));
+						data.add_field (length_ctype, get_variable_array_length_cname (param, dim));
 					}
 				}
 			} else if (param.variable_type is DelegateType) {

@@ -1977,7 +1977,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (array_type != null && get_ccode_array_length (param)) {
 			var length_ctype = get_ccode_array_length_type (array_type);
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				data.add_field (length_ctype, get_parameter_array_length_cname (param, dim));
+				data.add_field (length_ctype, get_variable_array_length_cname (param, dim));
 			}
 		} else if (deleg_type != null && deleg_type.delegate_symbol.has_target) {
 			data.add_field (get_ccode_name (delegate_target_type), get_ccode_delegate_target_name (param));
@@ -3851,8 +3851,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var array_type = param.variable_type as ArrayType;
 		if (array_type != null && !array_type.fixed_length && get_ccode_array_length (param)) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				ccode.open_if (get_cexpression (get_parameter_array_length_cname (param, dim)));
-				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_cexpression (get_parameter_array_length_cname (param, dim))), get_array_length_cvalue (value, dim));
+				string length_cname = get_variable_array_length_cname (param, dim);
+				ccode.open_if (get_cexpression (length_cname));
+				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_cexpression (length_cname)), get_array_length_cvalue (value, dim));
 				ccode.close ();
 			}
 		}
@@ -6662,7 +6663,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return "";
 	}
 
-	public virtual string get_parameter_array_length_cname (Parameter param, int dim) {
+	public virtual string get_variable_array_length_cname (Variable variable, int dim) {
 		return "";
 	}
 

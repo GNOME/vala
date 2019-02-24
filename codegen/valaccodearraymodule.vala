@@ -114,12 +114,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		return "%s_length%d".printf (array_cname, dim);
 	}
 
-	public override string get_parameter_array_length_cname (Parameter param, int dim) {
-		if (get_ccode_array_length_name (param) != null) {
-			return get_ccode_array_length_name (param);
-		} else {
-			return get_array_length_cname (get_ccode_name (param), dim);
+	public override string get_variable_array_length_cname (Variable variable, int dim) {
+		string? length_cname = get_ccode_array_length_name (variable);
+		if (length_cname == null) {
+			length_cname = get_array_length_cname (get_ccode_name (variable), dim);
 		}
+		return (!) length_cname;
 	}
 
 	public override CCodeExpression get_array_length_cexpression (Expression array_expr, int dim = -1) {
@@ -750,7 +750,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeParameter (get_parameter_array_length_cname (param, dim), length_ctype);
+				var cparam = new CCodeParameter (get_variable_array_length_cname (param, dim), length_ctype);
 				cparam_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), cparam);
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), get_cexpression (cparam.name));

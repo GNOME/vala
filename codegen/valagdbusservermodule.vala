@@ -152,7 +152,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				if (array_type != null) {
 					var length_ctype = get_ccode_array_length_type (array_type);
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						string length_cname = get_parameter_array_length_cname (param, dim);
+						string length_cname = get_variable_array_length_cname (param, dim);
 
 						if (ready_data_struct != null) {
 							ready_data_struct.add_field (length_ctype, length_cname);
@@ -234,7 +234,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			var array_type = param.variable_type as ArrayType;
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					string length_cname = get_parameter_array_length_cname (param, dim);
+					string length_cname = get_variable_array_length_cname (param, dim);
 
 					CCodeExpression length_expr;
 					if (ready_data_expr != null && param.direction == ParameterDirection.IN)
@@ -343,7 +343,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				if (array_type != null) {
 					var length_ctype = get_ccode_array_length_type (array_type);
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						string length_cname = get_parameter_array_length_cname (param, dim);
+						string length_cname = get_variable_array_length_cname (param, dim);
 
 						ccode.add_declaration (length_ctype, new CCodeVariableDeclarator.zero (length_cname, new CCodeConstant ("0")));
 					}
@@ -454,7 +454,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 						var array_type = owned_type as ArrayType;
 						if (array_type != null) {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
-								string length_cname = get_parameter_array_length_cname (param, dim);
+								string length_cname = get_variable_array_length_cname (param, dim);
 
 								target.append_array_length_cvalue (new CCodeMemberAccess.pointer (ready_data_expr, length_cname));
 							}
@@ -509,7 +509,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				var array_type = (ArrayType) param.variable_type;
 				var length_ctype = get_ccode_array_length_type (array_type);
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					function.add_parameter (new CCodeParameter (get_parameter_array_length_cname (param, dim), length_ctype));
+					function.add_parameter (new CCodeParameter (get_variable_array_length_cname (param, dim), length_ctype));
 				}
 			}
 		}

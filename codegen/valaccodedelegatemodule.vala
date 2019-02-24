@@ -335,7 +335,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					} else if (!get_ccode_array_length (d_params.get (i))) {
 						clength = new CCodeConstant ("-1");
 					} else {
-						clength = new CCodeIdentifier (get_parameter_array_length_cname (d_params.get (i), dim));
+						clength = new CCodeIdentifier (get_variable_array_length_cname (d_params.get (i), dim));
 					}
 					carg_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), clength);
 				}

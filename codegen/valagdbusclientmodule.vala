@@ -475,7 +475,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 				var length_ctype = get_ccode_array_length_type (array_type);
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					string length_cname = get_parameter_array_length_cname (param, dim);
+					string length_cname = get_variable_array_length_cname (param, dim);
 
 					ccode.add_declaration (length_ctype, new CCodeVariableDeclarator (length_cname, new CCodeConstant ("0")));
 					ccall.add_argument (new CCodeIdentifier (length_cname));

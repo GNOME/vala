@@ -88,12 +88,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 						var length_ctype = get_ccode_array_length_type (array_type);
 
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							string length_cname;
-							if (get_ccode_array_length_name (f) != null) {
-								length_cname = get_ccode_array_length_name (f);
-							} else {
-								length_cname = get_array_length_cname (get_ccode_name (f), dim);
-							}
+							string length_cname = get_variable_array_length_cname (f, dim);
 							instance_struct.add_field (length_ctype, length_cname);
 						}
 
