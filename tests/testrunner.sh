@@ -167,6 +167,18 @@ for testfile in "$@"; do
 		echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
 		echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
 		;;
+	*.gs)
+		testpath=${testfile/.gs/}
+		ns=${testpath//\//_}
+		ns=${ns//-/_}
+		SOURCEFILE=$ns.gs
+
+		cat "$srcdir/$testfile" >> $SOURCEFILE
+
+		PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
+		echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
+		echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
+		;;
 	*.test)
 		PART=0
 		INHEADER=1

@@ -1,0 +1,2 @@
+init
+	assert( true )

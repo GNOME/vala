@@ -711,6 +711,70 @@ NON_NULL_TESTS = \
 	nullability/method-return-invalid-convert.test \
 	$(NULL)
 
+GENIE_TESTS = \
+	genie/class.gs \
+	genie/control-flow-if-do.gs \
+	genie/control-flow-if-else.gs \
+	genie/control-flow-if-else-if.gs \
+	genie/control-flow-if-greater-than.gs \
+	genie/control-flow-if.gs \
+	genie/control-flow-if-identity.gs \
+	genie/control-flow-if-less-than.gs \
+	genie/enum.gs \
+	genie/enum-with-keyword-values.gs \
+	genie/function.gs \
+	genie/function-returns-closure.gs \
+	genie/function-with-argument.gs \
+	genie/function-with-return-value.gs \
+	genie/indentation-with-spaces.gs \
+	genie/init.gs \
+	genie/literal-boolean-assignment.gs \
+	genie/literal-boolean.gs \
+	genie/literal-character.gs \
+	genie/literal-hexadecimal.gs \
+	genie/literal-integer.gs \
+	genie/literal-integer-long-long-suffix.gs \
+	genie/literal-null.gs \
+	genie/literal-octal.gs \
+	genie/literal-real.gs \
+	genie/literal-regex.gs \
+	genie/literal-template-string.gs \
+	genie/literal-verbatim-string.gs \
+	genie/operator-addition.gs \
+	genie/operator-assignment-combined.gs \
+	genie/operator-assignment.gs \
+	genie/operator-bitwise-and.gs \
+	genie/operator-bitwise-left-shift.gs \
+	genie/operator-bitwise-not.gs \
+	genie/operator-bitwise-or.gs \
+	genie/operator-bitwise-right-shift.gs \
+	genie/operator-bitwise-xor.gs \
+	genie/operator-division.gs \
+	genie/operator-equal.gs \
+	genie/operator-greater-than-equal.gs \
+	genie/operator-less-than-equal.gs \
+	genie/operator-less-than.gs \
+	genie/operator-logical-and.gs \
+	genie/operator-logical-not.gs \
+	genie/operator-logical-or.gs \
+	genie/operator-modulo.gs \
+	genie/operator-multiply.gs \
+	genie/operator-not-equal.gs \
+	genie/operator-post-decrement.gs \
+	genie/operator-post-increment.gs \
+	genie/operator-pre-decrement.gs \
+	genie/operator-pre-increment.gs \
+	genie/operators-greater-than.gs \
+	genie/operator-subtraction.gs \
+	genie/operator-ternary.gs \
+	genie/preparser-and-expression.gs \
+	genie/preparser-elif.gs \
+	genie/preparser-equality-expression.gs \
+	genie/preparser.gs \
+	genie/preparser-not.gs \
+	genie/preparser-or-expression.gs \
+	$(NULL)
+
 LINUX_TESTS = \
 	linux/bug793444.vala \
 	posix/file-commandpipe.vala \
@@ -725,6 +789,8 @@ if HAVE_LINUX
 endif
 	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
 		VALAFLAGS="--enable-experimental-non-null" $(srcdir)/testrunner.sh $(NON_NULL_TESTS)
+	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
+		$(srcdir)/testrunner.sh $(GENIE_TESTS)
 
 EXTRA_DIST = \
 	testrunner.sh \
