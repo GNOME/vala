@@ -35,6 +35,9 @@ namespace GLib {
 		public static uint block_matched (void* instance, GLib.SignalMatchType mask, uint signal_id, GLib.Quark detail, GLib.Closure? closure, void* func, void* data);
 		[CCode (cheader_filename = "glib-object.h")]
 		public static void disconnect (void* instance, ulong handler_id);
+		[CCode (cheader_filename = "glib-object.h", cname = "g_signal_handlers_disconnect_by_data")]
+		[Version (since = "2.32")]
+		public static uint disconnect_by_data (void* instance, void* data);
 		[CCode (cheader_filename = "glib-object.h", cname = "g_signal_handlers_disconnect_by_func")]
 		public static uint disconnect_by_func (void* instance, void* func, void* data);
 		[CCode (cheader_filename = "glib-object.h", cname = "g_signal_handlers_disconnect_matched")]
