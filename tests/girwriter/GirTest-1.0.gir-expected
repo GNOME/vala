@@ -49,6 +49,14 @@
 		<field name="field">
 			<type name="gint" c:type="gint"/>
 		</field>
+		<field name="fixed_array_field">
+			<array fixed-size="23" c:type="gint*">
+				<type name="gint" c:type="gint"/>
+			</array>
+		</field>
+		<field name="nullable_field" allow-none="1">
+			<type name="utf8" c:type="gchar*"/>
+		</field>
 		<constructor name="new" c:identifier="gir_test_object_test_new">
 			<return-value transfer-ownership="full">
 				<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
@@ -412,6 +420,25 @@
 			<parameters>
 			</parameters>
 		</method>
+		<method name="container_return" c:identifier="gir_test_object_test_container_return">
+			<return-value transfer-ownership="container">
+				<array length="0" c:type="const gchar**">
+					<type name="utf8" c:type="const gchar*"/>
+				</array>
+			</return-value>
+			<parameters>
+				<parameter name="result_length1" direction="out" transfer-ownership="none">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="generic_array_container_return" c:identifier="gir_test_object_test_generic_array_container_return">
+			<return-value transfer-ownership="container" allow-none="1">
+				<array name="GLib.PtrArray" c:type="GPtrArray*">
+					<type name="utf8" c:type="const gchar*"/>
+				</array>
+			</return-value>
+		</method>
 		<method name="coroutine_async" c:identifier="gir_test_object_test_coroutine_async">
 			<return-value transfer-ownership="none">
 				<type name="none"/>
@@ -435,6 +462,64 @@
 				</parameter>
 			</parameters>
 		</method>
+		<method name="coroutine_method_throw" c:identifier="gir_test_object_test_coroutine_method_throw">
+			<return-value transfer-ownership="none">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="i1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="coroutine_method_throw_finish" c:identifier="gir_test_object_test_coroutine_method_throw_finish" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+				<parameter name="o1" direction="out" transfer-ownership="full">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="coroutine_method_throw" invoker="coroutine_method_throw">
+			<return-value transfer-ownership="none">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="i1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<virtual-method name="coroutine_method_throw_finish" invoker="coroutine_method_throw_finish" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+				<parameter name="o1" direction="out" transfer-ownership="full">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
 		<method name="simple_throw" c:identifier="gir_test_object_test_simple_throw" throws="1">
 			<return-value transfer-ownership="full">
 				<type name="none"/>
@@ -527,6 +612,16 @@
 				</parameter>
 			</parameters>
 		</glib:signal>
+		<glib:signal name="signal-with-default-handlder">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="i1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</glib:signal>
 	</class>
 	<record name="ObjectTestClass" c:type="GirTestObjectTestClass" glib:is-gtype-struct-for="ObjectTest">
 		<field name="parent_class">
@@ -547,6 +642,45 @@
 				</parameters>
 			</callback>
 		</field>
+		<field name="coroutine_method_throw">
+			<callback name="coroutine_method_throw" c:type="coroutine_method_throw">
+				<return-value transfer-ownership="none">
+					<type name="none"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+					</parameter>
+					<parameter name="i1" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="3" scope="async">
+						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+					</parameter>
+					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+						<type name="gpointer" c:type="void*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="coroutine_method_throw_finish">
+			<callback name="coroutine_method_throw_finish" c:type="coroutine_method_throw_finish" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+					</parameter>
+					<parameter name="_res_" transfer-ownership="none">
+						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+					</parameter>
+					<parameter name="o1" direction="out" transfer-ownership="full">
+						<type name="gint" c:type="gint*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
 		<field name="method_throw">
 			<callback name="method_throw" c:type="method_throw" throws="1">
 				<return-value transfer-ownership="full">
@@ -555,6 +689,18 @@
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="signal_with_default_handlder">
+			<callback name="object_test_signal_with_default_handlder" c:type="object_test_signal_with_default_handlder">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
+				<parameters>
+					<parameter name="i1" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
 					</parameter>
 				</parameters>
 			</callback>

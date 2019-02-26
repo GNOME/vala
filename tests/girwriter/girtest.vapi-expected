@@ -20,18 +20,23 @@ namespace GirTest {
 	[CCode (cheader_filename = "girtest.h")]
 	public class ObjectTest : GLib.Object {
 		public int field;
+		public int fixed_array_field[23];
+		public string? nullable_field;
 		public ObjectTest ();
 		public void array_in (int[] array);
 		public void array_inout (ref int[] array);
 		public void array_out (out int[] array);
 		public int[] array_return ();
 		public int[] array_return_int_in_delegate_out (int i1, out GirTest.DelegateTest d);
+		public (unowned string)[] container_return ();
 		public async void coroutine_async ();
+		public virtual async void coroutine_method_throw (int i1, out int o1) throws GirTest.ErrorTest;
 		public GirTest.DelegateTest delegate_return ();
 		public GirTest.DelegateTest delegate_return_int_in_array_out (int i1, out int[] a);
 		public static void full_inout (ref GirTest.ObjectTest obj);
 		public static void full_out (out GirTest.ObjectTest obj);
 		public static GirTest.ObjectTest full_return ();
+		public GLib.GenericArray<weak string>? generic_array_container_return ();
 		public void int8_in (int8 param);
 		public void int8_out (out int8 param);
 		public void int_in_int_in_array_out (int param1, int param2, out int[] array);
@@ -60,6 +65,7 @@ namespace GirTest {
 		public string skipped_property { get; set construct; }
 		public string some_property { get; set construct; }
 		public string write_only_property { set; }
+		public virtual signal void signal_with_default_handlder (int i1);
 		[GIR (visible = false)]
 		public signal void skipped_signal (int param);
 		public signal void some_signal (int param);

@@ -91,6 +91,10 @@ namespace GirTest {
 
 		public int field = 42;
 
+		public int fixed_array_field[23];
+
+		public string? nullable_field;
+
 		public string some_property { get; construct set; }
 
 		public string write_only_property { set; }
@@ -207,13 +211,28 @@ namespace GirTest {
 			return str_equal;
 		}
 
+		public (unowned string)[] container_return () {
+			return { "foo", "bar" };
+		}
+
+		public GenericArray<unowned string>? generic_array_container_return () {
+			return null;
+		}
+
 		public async void coroutine_async () {
+		}
+
+		public virtual async void coroutine_method_throw (int i1, out int o1) throws ErrorTest {
+			o1 = i1;
 		}
 
 		public void simple_throw () throws ErrorTest {
 		}
 
 		public virtual void method_throw () throws ErrorTest {
+		}
+
+		public virtual signal void signal_with_default_handlder (int i1) {
 		}
 
 		[GIR (visible = false)]
