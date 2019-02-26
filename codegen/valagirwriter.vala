@@ -1240,7 +1240,8 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf (" direction=\"out\"");
 		}
 
-		DelegateType delegate_type = type as DelegateType;
+		unowned DelegateType? delegate_type = type as DelegateType;
+		unowned ArrayType? array_type = type as ArrayType;
 
 		if (type != null && ((type.value_owned && delegate_type == null) || (constructor && !type.data_type.is_subtype_of (ginitiallyunowned_type)))) {
 			var any_owned = false;
@@ -1248,6 +1249,8 @@ public class Vala.GIRWriter : CodeVisitor {
 				any_owned |= generic_arg.value_owned;
 			}
 			if (type.has_type_arguments () && !any_owned) {
+				buffer.append_printf (" transfer-ownership=\"container\"");
+			} else if (array_type != null && !array_type.element_type.value_owned) {
 				buffer.append_printf (" transfer-ownership=\"container\"");
 			} else {
 				buffer.append_printf (" transfer-ownership=\"full\"");
