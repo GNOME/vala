@@ -2892,7 +2892,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	Method parse_method_declaration (List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
-		DataType type = new VoidType ();
+		DataType type;
+
 		expect (TokenType.DEF);
 		var flags = parse_member_declaration_modifiers ();
 
@@ -2914,6 +2915,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 		/* deal with return value */
 		if (accept (TokenType.COLON)) {
 			type = parse_type (true, false);
+		} else {
+			type = new VoidType ();
 		}
 
 		var type_param_list = parse_type_parameter_list ();
@@ -3737,7 +3740,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		if (accept (TokenType.COLON)) {
 			type = parse_type (true, false);
-
 		} else {
 			type = new VoidType ();
 		}
