@@ -302,6 +302,8 @@ namespace Poppler {
 		public string get_pdf_version_string ();
 		[Version (since = "0.16")]
 		public Poppler.Permissions get_permissions ();
+		[Version (since = "0.73")]
+		public Poppler.PrintScaling get_print_scaling ();
 		[Version (since = "0.16")]
 		public string get_producer ();
 		[Version (since = "0.16")]
@@ -347,6 +349,8 @@ namespace Poppler {
 		public Poppler.PageLayout page_layout { get; }
 		public Poppler.PageMode page_mode { get; }
 		public Poppler.Permissions permissions { get; }
+		[Version (since = "0.73")]
+		public Poppler.PrintScaling print_scaling { get; }
 		public string producer { owned get; set; }
 		public string subject { owned get; set; }
 		[NoAccessorMethod]
@@ -407,6 +411,8 @@ namespace Poppler {
 		public void choice_unselect_all ();
 		[Version (since = "0.18")]
 		public unowned Poppler.Action get_action ();
+		[Version (since = "0.72")]
+		public unowned Poppler.Action get_additional_action (Poppler.AdditionalActionType type);
 		public Poppler.FormFieldType get_field_type ();
 		public double get_font_size ();
 		public int get_id ();
@@ -646,6 +652,7 @@ namespace Poppler {
 	public class StructureElement : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected StructureElement ();
+		[Version (since = "0.26")]
 		public string get_abbreviation ();
 		[Version (since = "0.26")]
 		public string get_actual_text ();
@@ -920,6 +927,14 @@ namespace Poppler {
 		OCG_STATE,
 		JAVASCRIPT
 	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_ADDITIONAL_ACTION_", type_id = "poppler_additional_action_type_get_type ()")]
+	[Version (since = "0.72")]
+	public enum AdditionalActionType {
+		FIELD_MODIFIED,
+		FORMAT_FIELD,
+		VALIDATE_FIELD,
+		CALCULATE_FIELD
+	}
 	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_ANNOT_EXTERNAL_DATA_MARKUP_", type_id = "poppler_annot_external_data_type_get_type ()")]
 	public enum AnnotExternalDataType {
 		@3D,
@@ -1017,7 +1032,8 @@ namespace Poppler {
 		DEFAULT,
 		CASE_SENSITIVE,
 		BACKWARDS,
-		WHOLE_WORDS_ONLY
+		WHOLE_WORDS_ONLY,
+		IGNORE_DIACRITICS
 	}
 	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_FONT_TYPE_", type_id = "poppler_font_type_get_type ()")]
 	public enum FontType {
@@ -1181,6 +1197,12 @@ namespace Poppler {
 		MARKUP_ANNOTS,
 		STAMP_ANNOTS_ONLY,
 		ALL
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_PRINT_SCALING_", type_id = "poppler_print_scaling_get_type ()")]
+	[Version (since = "0.73")]
+	public enum PrintScaling {
+		APP_DEFAULT,
+		NONE
 	}
 	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_SELECTION_", type_id = "poppler_selection_style_get_type ()")]
 	public enum SelectionStyle {
@@ -1405,4 +1427,10 @@ namespace Poppler {
 	public static Poppler.Backend get_backend ();
 	[CCode (cheader_filename = "poppler.h")]
 	public static unowned string get_version ();
+	[CCode (cheader_filename = "poppler.h")]
+	[Version (since = "0.73")]
+	public static string named_dest_from_bytestring ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] data);
+	[CCode (array_length_pos = 1.1, array_length_type = "gsize", cheader_filename = "poppler.h")]
+	[Version (since = "0.73")]
+	public static uint8[]? named_dest_to_bytestring (string named_dest);
 }
