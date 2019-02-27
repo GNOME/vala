@@ -689,9 +689,6 @@ public class Vala.GTypeModule : GErrorModule {
 
 				cfile.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (param_spec_struct.name), new CCodeVariableDeclarator ( "%sParamSpec%s".printf(get_ccode_prefix (cl.parent_symbol), cl.name))));
 
-
-				gvaluecollector_h_needed = true;
-
 				add_type_value_table_init_function (cl);
 				add_type_value_table_free_function (cl);
 				add_type_value_table_copy_function (cl);
@@ -905,6 +902,9 @@ public class Vala.GTypeModule : GErrorModule {
 	}
 
 	private void add_type_value_table_lcopy_value_function ( Class cl ) {
+		// Required for GTypeCValue
+		cfile.add_include ("gobject/gvaluecollector.h");
+
 		var function = new CCodeFunction ("%s_lcopy_value".printf (get_ccode_lower_case_name (cl, "value_")), "gchar*");
 		function.add_parameter (new CCodeParameter ("value", "const GValue*"));
 		function.add_parameter (new CCodeParameter ("n_collect_values", "guint"));
@@ -949,6 +949,9 @@ public class Vala.GTypeModule : GErrorModule {
 	}
 
 	private void add_type_value_table_collect_value_function (Class cl) {
+		// Required for GTypeCValue
+		cfile.add_include ("gobject/gvaluecollector.h");
+
 		var function = new CCodeFunction ("%s_collect_value".printf (get_ccode_lower_case_name (cl, "value_")), "gchar*");
 		function.add_parameter (new CCodeParameter ("value", "GValue*"));
 		function.add_parameter (new CCodeParameter ("n_collect_values", "guint"));

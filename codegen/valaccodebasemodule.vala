@@ -339,7 +339,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public bool in_plugin = false;
 	public string module_init_param_name;
 
-	public bool gvaluecollector_h_needed;
 	public bool requires_assert;
 	public bool requires_array_free;
 	public bool requires_array_move;
@@ -765,7 +764,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		next_regex_id = 0;
 
-		gvaluecollector_h_needed = false;
 		requires_assert = false;
 		requires_array_free = false;
 		requires_array_move = false;
@@ -809,10 +807,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			append_vala_clear_mutex ("GRecMutex", "g_rec_mutex");
 			append_vala_clear_mutex ("GRWLock", "g_rw_lock");
 			append_vala_clear_mutex ("GCond", "g_cond");
-		}
-
-		if (gvaluecollector_h_needed) {
-			cfile.add_include ("gobject/gvaluecollector.h");
 		}
 
 		var comments = source_file.get_comments();
