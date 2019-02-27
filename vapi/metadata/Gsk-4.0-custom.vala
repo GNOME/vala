@@ -40,9 +40,6 @@ namespace Gsk {
 	public class LinearGradientNode : Gsk.RenderNode {
 	}
 	[CCode (cname = "GskRenderNode")]
-	public class OffsetNode : Gsk.RenderNode {
-	}
-	[CCode (cname = "GskRenderNode")]
 	public class OpacityNode : Gsk.RenderNode {
 	}
 	[CCode (cname = "GskRenderNode")]

@@ -38,9 +38,6 @@ inset_shadow_node_new* parent="Gsk.InsetShadowNode" symbol_type="constructor" na
 linear_gradient_node_* parent="Gsk.LinearGradientNode" symbol_type="method" instance_idx=0 name="linear_gradient_node_(.+)"
 linear_gradient_node_new* parent="Gsk.LinearGradientNode" symbol_type="constructor" name="linear_gradient_node_(.+)"
 
-offset_node_* parent="Gsk.OffsetNode" symbol_type="method" instance_idx=0 name="offset_node_(.+)"
-offset_node_new* parent="Gsk.OffsetNode" symbol_type="constructor" name="offset_node_(.+)"
-
 opacity_node_* parent="Gsk.OpacityNode" symbol_type="method" instance_idx=0 name="opacity_node_(.+)"
 opacity_node_new* parent="Gsk.OpacityNode" symbol_type="constructor" name="opacity_node_(.+)"
 
