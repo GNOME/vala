@@ -503,7 +503,12 @@ public class Vala.CCodeAttribute : AttributeCache {
 	public string finish_real_name {
 		get {
 			if (_finish_real_name == null) {
-				_finish_real_name = get_finish_name_for_basename (real_name);
+				unowned Method? m = node as Method;
+				if (m != null && !(m is CreationMethod) && !(m.is_abstract || m.is_virtual)) {
+					_finish_real_name = finish_name;
+				} else {
+					_finish_real_name = get_finish_name_for_basename (real_name);
+				}
 			}
 			return _finish_real_name;
 		}

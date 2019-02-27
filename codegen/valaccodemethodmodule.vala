@@ -1094,11 +1094,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	public void generate_vfunc (Method m, DataType return_type, Map<int,CCodeParameter> cparam_map, Map<int,CCodeExpression> carg_map, string suffix = "", int direction = 3) {
 		push_context (new EmitContext ());
 
-		string cname = get_ccode_name (m);
-		if (suffix == "_finish" && cname.has_suffix ("_async")) {
-			cname = cname.substring (0, cname.length - "_async".length);
+		CCodeFunction vfunc;
+		if (suffix == "_finish") {
+			vfunc = new CCodeFunction (get_ccode_finish_name (m));
+		} else {
+			vfunc = new CCodeFunction (get_ccode_name (m));
 		}
-		var vfunc = new CCodeFunction (cname + suffix);
 
 		CCodeExpression vcast;
 		if (m.parent_symbol is Interface) {
@@ -1116,11 +1117,13 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
-		cname = get_ccode_vfunc_name (m);
-		if (suffix == "_finish" && cname.has_suffix ("_async")) {
-			cname = cname.substring (0, cname.length - "_async".length);
+		CCodeFunctionCall vcall;
+		if (suffix == "_finish") {
+			vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, get_ccode_finish_vfunc_name (m)));
+		} else {
+			vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, get_ccode_vfunc_name (m)));
 		}
-		var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, cname + suffix));
+
 		carg_map.set (get_param_pos (get_ccode_instance_pos (m)), new CCodeIdentifier ("self"));
 
 		generate_cparameters (m, cfile, cparam_map, vfunc, null, carg_map, vcall, direction);

@@ -426,6 +426,7 @@ TESTS = \
 	asynchronous/catch-error-scope.vala \
 	asynchronous/catch-in-finally.vala \
 	asynchronous/closures.vala \
+	asynchronous/finish-name.vala \
 	asynchronous/generator.vala \
 	asynchronous/out-parameter-invalid.test \
 	asynchronous/result-pos.vala \
