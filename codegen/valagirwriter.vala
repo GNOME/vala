@@ -370,7 +370,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			write_indent ();
 			buffer.append_printf ("<record name=\"%s\"", gtype_struct_name);
 			write_ctype_attributes (cl, "Class");
-			buffer.append_printf (" glib:is-gtype-struct-for=\"%s\"", cl.name);
+			buffer.append_printf (" glib:is-gtype-struct-for=\"%s\"", get_gir_name (cl));
 			buffer.append_printf (">\n");
 			indent++;
 
@@ -510,7 +510,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
-		string gtype_struct_name = iface.name + "Iface";
+		string gtype_struct_name = get_gir_name (iface) + "Iface";
 
 		write_indent ();
 		buffer.append_printf ("<interface name=\"%s\"", get_gir_name (iface));
@@ -541,7 +541,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_indent ();
 		buffer.append_printf ("<record name=\"%s\"", gtype_struct_name);
 		write_ctype_attributes (iface, "Iface");
-		buffer.append_printf (" glib:is-gtype-struct-for=\"%s\"", iface.name);
+		buffer.append_printf (" glib:is-gtype-struct-for=\"%s\"", get_gir_name (iface));
 		buffer.append_printf (">\n");
 		indent++;
 
