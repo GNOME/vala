@@ -1,0 +1,9 @@
+Invalid Code
+
+void main () {
+	GLib.BindingFlags foo = 0;
+
+	switch (foo) {
+		case GLib.Binding.SYNC_CREATE: break;
+	}
+}

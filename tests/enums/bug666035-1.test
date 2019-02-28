@@ -1,0 +1,5 @@
+Invalid Code
+
+void main () {
+	GLib.BindingFlags foo = GLib.Binding.SYNC_CREATE;
+}
