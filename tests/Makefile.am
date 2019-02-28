@@ -70,6 +70,7 @@ TESTS = \
 	arrays/class-field-length-cname.vala \
 	arrays/field-global-length-cname.vala \
 	arrays/struct-field-length-cname.vala \
+	arrays/incompatible-integer-elements.test \
 	chainup/base-class-invalid.test \
 	chainup/base-enum-invalid.test \
 	chainup/base-invalid.test \

@@ -235,12 +235,12 @@ public class Vala.ArrayType : ReferenceType {
 			return false;
 		}
 
-		if (element_type.compatible (target_array_type.element_type)
-		    && target_array_type.element_type.compatible (element_type)) {
-			return true;
+		if (!length_type.compatible (target_array_type.length_type)) {
+			return false;
 		}
 
-		if (length_type.compatible (target_array_type.length_type)) {
+		if (element_type.compatible (target_array_type.element_type)
+		    && target_array_type.element_type.compatible (element_type)) {
 			return true;
 		}
 
